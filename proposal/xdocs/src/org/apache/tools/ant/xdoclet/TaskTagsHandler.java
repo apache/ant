@@ -53,12 +53,11 @@
  */
 package org.apache.tools.ant.xdoclet;
 
-import com.sun.javadoc.ClassDoc;
-import com.sun.javadoc.MethodDoc;
-import com.sun.javadoc.Parameter;
+import com.sun.javadoc.*;
 import org.apache.tools.ant.IntrospectionHelper;
 import xdoclet.XDocletException;
 import xdoclet.XDocletTagSupport;
+import xdoclet.util.TypeConversionUtil;
 import xdoclet.tags.AbstractProgramElementTagsHandler;
 
 import java.util.ArrayList;
@@ -222,6 +221,36 @@ public class TaskTagsHandler extends XDocletTagSupport {
         return getTaskName(getCurrentClass());
     }
 
+    private static String[] fluffPrefixes = { "set a","set the","sets a","sets the" };
+
+    public String shortMethodDescription() throws XDocletException {
+		Tag[] tags = getCurrentMethod().firstSentenceTags();
+		String desc = null;
+
+		if( tags != null && tags.length > 0 ) {
+			desc = tags[0].text();
+        }
+
+		if( desc == null || desc.length() == 0 )
+		{
+        	desc = "no description";
+		}
+
+        desc = desc.trim();
+        String descLower = desc.toLowerCase();
+        for (int i=0; i < fluffPrefixes.length; i++) {
+            String prefix = fluffPrefixes[i].toLowerCase() + " ";
+            if (descLower.startsWith(prefix)) {
+                desc = desc.substring(prefix.length());
+                break;
+            }
+        }
+
+        desc = desc.substring(0,1).toUpperCase() + desc.substring(1);
+
+		return desc;
+    }
+
     /**
      * Provides the Ant task name.
      *
@@ -286,7 +315,7 @@ public class TaskTagsHandler extends XDocletTagSupport {
         try {
             is = IntrospectionHelper.getHelper(Class.forName(cur_class.qualifiedName()));
         } catch (ClassNotFoundException e) {
-            throw new XDocletException(e.getMessage());
+            throw new XDocletException(e,e.getMessage());
         }
 
         // Regroup the attributes, since IntrospectionHelper
@@ -320,7 +349,14 @@ public class TaskTagsHandler extends XDocletTagSupport {
             }
             String attributeType = method.parameters()[0].typeName();
 
-            if (!attributeType.equals(attributeTypeMap.getProperty(attributeName))) {
+            String mapAttribute = attributeTypeMap.getProperty(attributeName);
+            if (mapAttribute == null) {
+                continue;
+            }
+
+            // inner classes are noted with $ in our map, but not
+            // n the parameter type name.
+            if (!attributeType.equals(mapAttribute.replace('$','.'))) {
                 continue;
             }
 
@@ -392,7 +428,7 @@ public class TaskTagsHandler extends XDocletTagSupport {
                 continue;
             }
 
-            //System.out.println("elementName = " + elementName);
+            System.out.println("elementName = " + elementName);
             String elementType = null;
             if (adder) {
                 if (method.parameters().length != 1) {
@@ -407,8 +443,15 @@ public class TaskTagsHandler extends XDocletTagSupport {
                 continue;
             }
 
-            //System.out.println(elementName + " = " + elementType);
-            if (!elementType.equals(elementTypeMap.getProperty(elementName))) {
+            String mapElementType = elementTypeMap.getProperty(elementName);
+            System.out.println("elementType = " + elementType + " mapElementType = " + mapElementType);
+            if (mapElementType == null) {
+                continue;
+            }
+
+            // inner classes are noted with $ in our map, but not
+            // the parameter type name.
+            if (!elementType.equals(mapElementType.replace('$','.'))) {
                 continue;
             }
 
@@ -432,16 +475,21 @@ public class TaskTagsHandler extends XDocletTagSupport {
         while (cur_class != null) {
             // hardcoded to stop when it hits Task, nothing there
             // or above that needs to be processed
-            if (cur_class.qualifiedName().equals("org.apache.tools.ant.Task")) {
+            if (cur_class.qualifiedName().equals("org.apache.tools.ant.Task") ||
+                cur_class.qualifiedName().equals("org.apache.tools.ant.taskdefs.MatchingTask")) {
                 break;
             }
             List curMethods = Arrays.asList(cur_class.methods());
 
             for (int j = 0; j < curMethods.size(); j++) {
                 MethodDoc method = (MethodDoc) curMethods.get(j);
+                if (isDeprecated(method)) {
+                  continue;
+                }
+                String methodName = method.name();
                 if (method.containingClass() == cur_class) {
-                    if (already.containsKey(method) == false) {
-                        already.put(method, method);
+                    if (already.containsKey(methodName) == false) {
+                        already.put(methodName, method);
                         methods.add(method);
                     }
                 }
@@ -451,6 +499,17 @@ public class TaskTagsHandler extends XDocletTagSupport {
         }
 
         return sortMethods(methods);
+    }
+
+    private boolean isDeprecated (MethodDoc method) {
+        Tag[] tags = method.tags();
+        for (int i=0; i < tags.length; i++) {
+            System.out.println("tag = " + tags[i].name());
+            if (tags[i].name().equals("@deprecated")) {
+                return true;
+            }
+        }
+        return false;
     }
 
     private MethodDoc[] sortMethods(List methods) {

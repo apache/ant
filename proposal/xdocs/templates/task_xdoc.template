@@ -1,7 +1,8 @@
 <XDtTagDef:tagDef namespace="Ant" handler="org.apache.tools.ant.xdoclet.TaskTagsHandler"/>
 <task name="<XDtAnt:taskName/>" category="<XDtAnt:categoryName/>"
       classname="<XDtClass:fullClassName/>"
-      <XDtClass:ifHasClassTag tagName="deprecated">deprecated="true"</XDtClass:ifHasClassTag>>
+      <XDtClass:ifHasClassTag tagName="deprecated">deprecated="true"</XDtClass:ifHasClassTag>
+      <XDtType:ifIsOfType type="org.apache.tools.ant.taskdefs.MatchingTask">matchingTask="true"</XDtType:ifIsOfType>>
 
   <XDtMerge:merge file="{0}.xml" generateMergedFile="false"></XDtMerge:merge>
 
@@ -16,6 +17,7 @@
     <XDtAnt:forAllAttributes>
       <attribute name="<XDtMethod:propertyName/>" type="<XDtParameter:forAllMethodParams><XDtParameter:methodParamType/></XDtParameter:forAllMethodParams>"
                  <XDtMethod:ifHasMethodTag tagName="deprecated">deprecated="true"</XDtMethod:ifHasMethodTag>>
+        <short-description><![CDATA[<XDtAnt:shortMethodDescription/>]]></short-description>
         <description><![CDATA[
           <XDtMethod:methodComment no-comment-signs="true"/>
         ]]></description>
@@ -29,18 +31,8 @@
                <XDtMethod:ifHasMethodTag tagName="deprecated">deprecated="true"</XDtMethod:ifHasMethodTag>
         <XDtClass:pushClass value="<XDtAnt:elementType/>">
                <XDtClass:ifIsClassAbstract>abstract="true"</XDtClass:ifIsClassAbstract>>
-        <XDtAnt:ifHasAttributes>
-        <attributes>
-          <XDtAnt:forAllAttributes>
-          <attribute name="<XDtMethod:propertyName/>" type="<XDtParameter:forAllMethodParams><XDtParameter:methodParamType/></XDtParameter:forAllMethodParams>">
-            <description><![CDATA[
-              <XDtMethod:methodComment no-comment-signs="true"/>
-            ]]></description>
-          </attribute>
-          </XDtAnt:forAllAttributes>
-        </attributes>
-        </XDtAnt:ifHasAttributes>
         </XDtClass:pushClass>
+        <short-description><![CDATA[<XDtAnt:shortMethodDescription/>]]></short-description>
         <description>
           <![CDATA[<XDtMethod:methodComment no-comment-signs="true"/>]]>
         </description>
