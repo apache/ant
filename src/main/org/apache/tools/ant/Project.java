@@ -1958,7 +1958,8 @@ public class Project {
     public void fireBuildStarted() {
         BuildEvent event = new BuildEvent(this);
         Vector listeners = getBuildListeners();
-        for (int i = 0; i < listeners.size(); i++) {
+        int size = listeners.size();
+        for (int i = 0; i < size; i++) {
             BuildListener listener = (BuildListener) listeners.elementAt(i);
             listener.buildStarted(event);
         }
@@ -1974,7 +1975,8 @@ public class Project {
         BuildEvent event = new BuildEvent(this);
         event.setException(exception);
         Vector listeners = getBuildListeners();
-        for (int i = 0; i < listeners.size(); i++) {
+        int size = listeners.size();
+        for (int i = 0; i < size; i++) {
             BuildListener listener = (BuildListener) listeners.elementAt(i);
             listener.buildFinished(event);
         }
@@ -1990,7 +1992,8 @@ public class Project {
     protected void fireTargetStarted(Target target) {
         BuildEvent event = new BuildEvent(target);
         Vector listeners = getBuildListeners();
-        for (int i = 0; i < listeners.size(); i++) {
+        int size = listeners.size();
+        for (int i = 0; i < size; i++) {
             BuildListener listener = (BuildListener) listeners.elementAt(i);
             listener.targetStarted(event);
         }
@@ -2010,7 +2013,8 @@ public class Project {
         BuildEvent event = new BuildEvent(target);
         event.setException(exception);
         Vector listeners = getBuildListeners();
-        for (int i = 0; i < listeners.size(); i++) {
+        int size = listeners.size();
+        for (int i = 0; i < size; i++) {
             BuildListener listener = (BuildListener) listeners.elementAt(i);
             listener.targetFinished(event);
         }
@@ -2027,7 +2031,8 @@ public class Project {
         registerThreadTask(Thread.currentThread(), task);
         BuildEvent event = new BuildEvent(task);
         Vector listeners = getBuildListeners();
-        for (int i = 0; i < listeners.size(); i++) {
+        int size = listeners.size();
+        for (int i = 0; i < size; i++) {
             BuildListener listener = (BuildListener) listeners.elementAt(i);
             listener.taskStarted(event);
         }
@@ -2050,7 +2055,8 @@ public class Project {
         BuildEvent event = new BuildEvent(task);
         event.setException(exception);
         Vector listeners = getBuildListeners();
-        for (int i = 0; i < listeners.size(); i++) {
+        int size = listeners.size();
+        for (int i = 0; i < size; i++) {
             BuildListener listener = (BuildListener) listeners.elementAt(i);
             listener.taskFinished(event);
         }
@@ -2076,8 +2082,9 @@ public class Project {
                     + (priority == MSG_ERR ? "System.err" : "System.out")
                     + " - infinite loop terminated");
             }
-            loggingMessage = true;
-            for (int i = 0; i < listeners.size(); i++) {
+            loggingMessage = true;  
+            int size = listeners.size();              
+            for (int i = 0; i < size; i++) {
                 BuildListener listener = (BuildListener) listeners.elementAt(i);
                 listener.messageLogged(event);
             }
