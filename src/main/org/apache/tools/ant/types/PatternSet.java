@@ -121,26 +121,26 @@ public class PatternSet extends DataType {
             return true;
         }
 
-	public String toString() {
-	    StringBuffer buf = new StringBuffer(name);
-	    if ((ifCond != null) || (unlessCond != null)) {
-		buf.append(":");
-		String connector = "";
-		
-		if (ifCond != null) {
-		    buf.append("if->");
-		    buf.append(ifCond);
-		    connector = ";";
-		}
-		if (unlessCond != null) {
-		    buf.append(connector);
-		    buf.append("unless->");
-		    buf.append(unlessCond);
-		}
-	    }
+        public String toString() {
+            StringBuffer buf = new StringBuffer(name);
+            if ((ifCond != null) || (unlessCond != null)) {
+                buf.append(":");
+                String connector = "";
+                
+                if (ifCond != null) {
+                    buf.append("if->");
+                    buf.append(ifCond);
+                    connector = ";";
+                }
+                if (unlessCond != null) {
+                    buf.append(connector);
+                    buf.append("unless->");
+                    buf.append(unlessCond);
+                }
+            }
 
-	    return buf.toString();
-	}
+            return buf.toString();
+        }
     }
 
     public PatternSet() {
@@ -402,16 +402,16 @@ public class PatternSet extends DataType {
         if (includesFileList.size() > 0) {
             Enumeration e = includesFileList.elements();
             while (e.hasMoreElements()) {
-            	NameEntry ne = (NameEntry)e.nextElement();
-            	String fileName = ne.evalName(p);
-            	if (fileName != null) {
+                NameEntry ne = (NameEntry)e.nextElement();
+                String fileName = ne.evalName(p);
+                if (fileName != null) {
                     File inclFile = p.resolveFile(fileName);
                     if (!inclFile.exists())
                         throw new BuildException("Includesfile "
                                                  + inclFile.getAbsolutePath()
                                                  + " not found.");
                     readPatterns(inclFile, includeList, p);
-            	}
+                }
             }
             includesFileList.clear();
         }
@@ -419,19 +419,25 @@ public class PatternSet extends DataType {
         if (excludesFileList.size() > 0) {
             Enumeration e = includesFileList.elements();
             while (e.hasMoreElements()) {
-            	NameEntry ne = (NameEntry)e.nextElement();
-            	String fileName = ne.evalName(p);
-            	if (fileName != null) {
+                NameEntry ne = (NameEntry)e.nextElement();
+                String fileName = ne.evalName(p);
+                if (fileName != null) {
                     File exclFile = p.resolveFile(fileName);
                     if (!exclFile.exists())
                         throw new BuildException("Excludesfile "
                                                  + exclFile.getAbsolutePath()
                                                  + " not found.");
                     readPatterns(exclFile, excludeList, p);
-            	}
+                }
             }
             excludesFileList.clear();
         }
+    }
+
+    public String toString()
+    {
+        return "patternSet{ includes: " + includeList + 
+            " excludes: " + excludeList + " }";
     }
 
 }
