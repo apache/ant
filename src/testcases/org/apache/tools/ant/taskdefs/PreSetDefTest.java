@@ -70,6 +70,17 @@ public class PreSetDefTest extends BuildFileTest {
         expectLog("antTypeTest", "");
     }
 
+    public void testCorrectTaskNameBadAttr() {
+        expectBuildExceptionContaining(
+            "correct_taskname_badattr", "attribute message", "javac doesn't support the");
+    }
+
+    public void testCorrectTaskNameBadEl() {
+        expectBuildExceptionContaining(
+            "correct_taskname_badel", "element message", "javac doesn't support the");
+    }
+    
+    
     /**
      * A test class to check default properties
      */

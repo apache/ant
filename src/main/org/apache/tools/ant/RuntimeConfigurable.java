@@ -364,9 +364,26 @@ public class RuntimeConfigurable implements Serializable {
                 value = p.replaceProperties(value);
                 try {
                     ih.setAttribute(p, target, name, value);
-                } catch (BuildException be) {
+                } catch (UnsupportedAttributeException be) {
                     // id attribute must be set externally
-                    if (!name.equals("id")) {
+                    if (name.equals("id")) {
+                        // Do nothing
+                    } else  if (getElementTag() == null) {
+                        throw be;
+                    } else {
+                        be.setMessage(
+                            getElementTag()
+                            +  " doesn't support the \""
+                            + be.getAttribute()
+                            + "\" attribute");
+                        throw be;
+                    }
+                } catch (BuildException be) {
+                    if (name.equals("id")) {
+                        // Assume that this is an not supported attribute type
+                        // thrown for example by a dymanic attribute task
+                        // Do nothing
+                    } else {
                         throw be;
                     }
                 }

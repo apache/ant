@@ -1,0 +1,64 @@
+/*
+ * Copyright  2004 The Apache Software Foundation
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ *
+ */
+package org.apache.tools.ant;
+
+/**
+ * Used to report attempts to set an unsupported attribute
+ *
+ * @since Ant 1.7
+ */
+public class UnsupportedAttributeException extends BuildException {
+
+    private String myMessage;
+    private String attribute;
+
+    /**
+     * Constructs an unsupport attribute exception
+     * @param msg       The string containing the message
+     * @param attribute The unsupported attribute
+     */
+    public UnsupportedAttributeException(String msg, String attribute) {
+        super(msg);
+        this.attribute = attribute;
+        this.myMessage = msg;
+    }
+
+    /**
+     * The attribute that is wrong
+     *
+     * @return the attribute name
+     */
+    public String getAttribute() {
+        return attribute;
+    }
+
+    /**
+     * Override throwable#getMessage
+     * @return the message
+     */
+    public String getMessage() {
+        return myMessage;
+    }
+
+    /**
+     * Set the message
+     * @param message a new message
+     */
+    public void setMessage(String message) {
+        this.myMessage = message;
+    }
+}

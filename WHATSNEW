@@ -23,6 +23,9 @@ Fixed bugs:
   <exec>, <apply>, or <java> tasks was always logged to System.out
   instead of to the managing Task.
 
+* Incorrect task name with invalid "javac" task after a "presetdef.
+  Bugzilla reports 31389 and 29499.
+
 Other changes:
 --------------
 

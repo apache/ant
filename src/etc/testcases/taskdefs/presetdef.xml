@@ -100,4 +100,22 @@
     </el.order2>
   </target>
 
+  <target name="correct_taskname_badattr">
+    <presetdef name="mytask">
+       <javac srcdir="whatever"/>
+    </presetdef>
+
+    <javac srcdir="whatever" badattr="whatever"/>
+  </target>
+
+  <target name="correct_taskname_badel">
+    <presetdef name="mytask">
+       <javac srcdir="whatever"/>
+    </presetdef>
+
+    <javac srcdir="whatever">
+      <badel/>
+    </javac>
+  </target>
+
 </project>

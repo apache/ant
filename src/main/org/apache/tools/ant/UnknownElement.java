@@ -328,17 +328,25 @@ public class UnknownElement extends Task {
             for (int i = 0; it.hasNext(); i++) {
                 RuntimeConfigurable childWrapper = parentWrapper.getChild(i);
                 UnknownElement child = (UnknownElement) it.next();
-                if (!handleChild(
-                        parentUri, ih, parent, child, childWrapper)) {
-                    if (!(parent instanceof TaskContainer)) {
-                        ih.throwNotSupported(getProject(), parent,
-                                             child.getTag());
-                    } else {
-                        // a task container - anything could happen - just add the
-                        // child to the container
-                        TaskContainer container = (TaskContainer) parent;
-                        container.addTask(child);
+                try {
+                    if (!handleChild(
+                            parentUri, ih, parent, child, childWrapper)) {
+                        if (!(parent instanceof TaskContainer)) {
+                            ih.throwNotSupported(getProject(), parent,
+                                                 child.getTag());
+                        } else {
+                            // a task container - anything could happen - just add the
+                            // child to the container
+                            TaskContainer container = (TaskContainer) parent;
+                            container.addTask(child);
+                        }
                     }
+                } catch (UnsupportedElementException ex) {
+                    ex.setMessage(
+                        parentWrapper.getElementTag()
+                        + " doesn't support the nested \"" + ex.getElement()
+                        + "\" element.");
+                    throw ex;
                 }
             }
         }
@@ -530,7 +538,7 @@ public class UnknownElement extends Task {
 
     /**
      * Set the configured object
-     *
+     * @param realThing the configured object
      * @since ant 1.7
      */
     public void setRealThing(Object realThing) {

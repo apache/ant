@@ -490,7 +490,7 @@ public final class IntrospectionHelper implements BuildListener {
                 String msg = getElementName(p, element)
                     + " doesn't support the \"" + attributeName
                     + "\" attribute.";
-                throw new BuildException(msg);
+                throw new UnsupportedAttributeException(msg, attributeName);
             }
         }
         try {
@@ -564,7 +564,7 @@ public final class IntrospectionHelper implements BuildListener {
         String elementName) {
         String msg = project.getElementName(parent)
             + " doesn't support the nested \"" + elementName + "\" element.";
-        throw new BuildException(msg);
+        throw new UnsupportedElementException(msg, elementName);
     }
 
     private NestedCreator getNestedCreator(
@@ -825,7 +825,7 @@ public final class IntrospectionHelper implements BuildListener {
             String msg = "Class " + bean.getName()
                 + " doesn't support the nested \"" + elementName
                 + "\" element.";
-            throw new BuildException(msg);
+            throw new UnsupportedElementException(msg, elementName);
         }
         return nt;
     }
@@ -848,7 +848,7 @@ public final class IntrospectionHelper implements BuildListener {
         if (at == null) {
             String msg = "Class " + bean.getName()
                 + " doesn't support the \"" + attributeName + "\" attribute.";
-            throw new BuildException(msg);
+            throw new UnsupportedAttributeException(msg, attributeName);
         }
         return at;
     }
@@ -892,7 +892,7 @@ public final class IntrospectionHelper implements BuildListener {
             String msg = "Class " + bean.getName()
                 + " doesn't support the nested \"" + elementName
                 + "\" element.";
-            throw new BuildException(msg);
+            throw new UnsupportedElementException(msg, elementName);
         }
         return ((NestedCreator) creator).method;
     }
@@ -914,7 +914,7 @@ public final class IntrospectionHelper implements BuildListener {
         if (setter == null) {
             String msg = "Class " + bean.getName()
                 + " doesn't support the \"" + attributeName + "\" attribute.";
-            throw new BuildException(msg);
+            throw new UnsupportedAttributeException(msg, attributeName);
         }
         return ((AttributeSetter) setter).method;
     }
