@@ -1601,6 +1601,31 @@
         </table>
       </subsection>
 
+      <subsection name="Gel">
+
+        <p>Java IDE with support for Ant.  Gel is a native Microsoft
+        Windows software.</p>
+
+        <table>
+          <tr>
+            <th>Compatibility:</th>
+            <td>Ant 1.4 and above</td>
+          </tr>
+          <tr>
+            <th>URL:</th>
+            <td><a href="http://www.gexperts.com/gel.html">http://www.gexperts.com/gel.html</a></td>
+          </tr>
+          <tr>
+            <th>Contact:</th>
+            <td><a href="http://groups.yahoo.com/group/gelide/">Project Mailing List</a></td>
+          </tr>
+          <tr>
+            <th>License:</th>
+            <td>Freeware</td>
+          </tr>
+        </table>
+      </subsection>
+
       <subsection name="HP RadPak">
 
         <p>
@@ -1645,6 +1670,33 @@
           <tr>
             <th>Contact:</th>
             <td><a href="mailto:support@intellij.com">support@intellij.com</a></td>
+          </tr>
+          <tr>
+            <th>License:</th>
+            <td>Commercial</td>
+          </tr>
+        </table>
+      </subsection>
+
+      <subsection name="JBuilder 8 Enterprise">
+
+        <p>JBuilder 8 Enterprise and &quot;Performance Bundle&quot;
+        come with built-in Ant support.  JBuilder 8 Personal and SE
+        don't support Ant directly, but <a href="#AntRunner">an
+        OpenTool</a> is available for them.</p>
+
+        <table>
+          <tr>
+            <th>Compatibility:</th>
+            <td>Bundles Ant 1.5.1</td>
+          </tr>
+          <tr>
+            <th>URL:</th>
+            <td><a href="http://www.borland.com/jbuilder/index.html">http://www.borland.com/jbuilder/index.html</a></td>
+          </tr>
+          <tr>
+            <th>Contact:</th>
+            <td><a href="mailto:customer_service@borland.com">customer_service@borland.com</a></td>
           </tr>
           <tr>
             <th>License:</th>
