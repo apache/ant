@@ -261,8 +261,8 @@ public abstract class DefaultCompilerAdapter implements CompilerAdapter {
             } else {
                 cmd.createArgument().setValue("-g");
             }
-        } else if (!assumeJava11()) {
-            cmd.createArgument().setValue("-g:none");
+        } else if (getNoDebugArgument() != null) {
+            cmd.createArgument().setValue(getNoDebugArgument());
         }
         if (optimize) {
             cmd.createArgument().setValue("-O");
@@ -297,13 +297,36 @@ public abstract class DefaultCompilerAdapter implements CompilerAdapter {
         if (attributes.getSource() != null && !assumeJava13()) {
             cmd.createArgument().setValue("-source");
             String source = attributes.getSource();
-            if (assumeJava14() && 
-                (source.equals("1.1") || source.equals("1.2"))) {
+            if ((assumeJava14() || assumeJava15())
+                && (source.equals("1.1") || source.equals("1.2"))) {
                 // support for -source 1.1 and -source 1.2 has been
-                // added with JDK 1.4.2
+                // added with JDK 1.4.2 - and isn't present in 1.5.0 either
                 cmd.createArgument().setValue("1.3");
             } else {
                 cmd.createArgument().setValue(source);
+            }
+        } else if (assumeJava15() && attributes.getTarget() != null) {
+            String t = attributes.getTarget();
+            if (t.equals("1.1") || t.equals("1.2") || t.equals("1.3")
+                || t.equals("1.4")) {
+                String s = t;
+                if (t.equals("1.1")) {
+                    // 1.5.0 doesn't support -source 1.1
+                    s = "1.2";
+                }
+                attributes.log("", Project.MSG_WARN);
+                attributes.log("          WARNING", Project.MSG_WARN);
+                attributes.log("", Project.MSG_WARN);
+                attributes.log("The -source switch defaults to 1.5 in JDK 1.5.",
+                               Project.MSG_WARN);
+                attributes.log("If you specify -target " + t
+                               + " you now must also specify -source " + s
+                               + ".", Project.MSG_WARN);
+                attributes.log("Ant will implicitly add -source " + s
+                               + " for you.  Please change your build file.",
+                               Project.MSG_WARN);
+                cmd.createArgument().setValue("-source");
+                cmd.createArgument().setValue(s);
             }
         }
         return cmd;
@@ -523,5 +546,33 @@ public abstract class DefaultCompilerAdapter implements CompilerAdapter {
                 && JavaEnvUtils.isJavaVersion(JavaEnvUtils.JAVA_1_4));
     }
 
+    /**
+     * Shall we assume JDK 1.5 command line switches?
+     * @return true if JDK 1.5
+     * @since Ant 1.6.3
+     */
+    protected boolean assumeJava15() {
+        return "javac1.5".equals(attributes.getCompilerVersion())
+            || ("classic".equals(attributes.getCompilerVersion())
+                && JavaEnvUtils.isJavaVersion(JavaEnvUtils.JAVA_1_5))
+            || ("modern".equals(attributes.getCompilerVersion())
+                && JavaEnvUtils.isJavaVersion(JavaEnvUtils.JAVA_1_5))
+            || ("extJavac".equals(attributes.getCompilerVersion())
+                && JavaEnvUtils.isJavaVersion(JavaEnvUtils.JAVA_1_5));
+    }
+
+    /**
+     * The argument the compiler wants to see if the debug attribute
+     * has been set to false.
+     *
+     * <p>A return value of <code>null</code> means no argument at all.</p>
+     *
+     * @return "-g:none" unless we expect to invoke a JDK 1.1 compiler.
+     *
+     * @since Ant 1.6.3
+     */
+    protected String getNoDebugArgument() {
+        return assumeJava11() ? null : "-g:none";
+    }
 }
 

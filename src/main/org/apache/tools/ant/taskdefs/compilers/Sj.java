@@ -1,5 +1,5 @@
 /*
- * Copyright  2001-2004 The Apache Software Foundation
+ * Copyright  2001-2005 The Apache Software Foundation
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -45,6 +45,14 @@ public class Sj extends DefaultCompilerAdapter {
             executeExternalCompile(cmd.getCommandline(), firstFileName) == 0;
     }
 
-
+    /**
+     * Returns null since sj either has -g for debug=true or no
+     * argument at all.
+     *
+     * @since Ant 1.6.3
+     */
+    protected String getNoDebugArgument() {
+        return null;
+    }
 }
 
