@@ -158,7 +158,7 @@ public class MSVSSLABEL extends MSVSS {
      * @param  label The label to apply.
      */
     public void setLabel(String label) {
-        m_Label = label;
+        super.setInternalLabel(label);
     }
 
     /**
@@ -166,7 +166,7 @@ public class MSVSSLABEL extends MSVSS {
      * @param  version The version to label.
      */
     public void setVersion(String version) {
-        m_Version = version;
+        super.setInternalVersion(version);
     }
 
     /**
@@ -175,7 +175,7 @@ public class MSVSSLABEL extends MSVSS {
      * @param comment The comment to apply in SourceSafe
      */
     public void setComment(String comment) {
-        m_Comment = comment;
+        super.setInternalComment(comment);
     }
 
     /**
@@ -185,6 +185,6 @@ public class MSVSSLABEL extends MSVSS {
      * @param response The auto response value.
      */
     public void setAutoresponse(String response){
-        m_AutoResponse = response;
+        super.setInternalAutoResponse(response);
     }
 }

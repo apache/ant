@@ -156,7 +156,7 @@ public class MSVSSCREATE extends MSVSS {
      * @param comment The comment to apply in SourceSafe
      */
     public void setComment(String comment) {
-        m_Comment = comment;
+        super.setInternalComment(comment);
     }
 
     /**
@@ -164,16 +164,16 @@ public class MSVSSCREATE extends MSVSS {
      * @param   quiet The boolean value for quiet.
      */
     public final void setQuiet (boolean quiet) {
-        m_Quiet = quiet;
+        super.setInternalQuiet(quiet);
     }
 
     /**
      * Sets behaviour, whether task should fail if there is an error creating
-     * the project.; optional.
+     * the project.; optional, default true
      * @param failOnError True if task should fail on any error.
      */
     public final void setFailOnError (boolean failOnError) {
-        m_FailOnError = failOnError;
+        super.setInternalFailOnError(failOnError);
     }
 
     /**
@@ -183,6 +183,6 @@ public class MSVSSCREATE extends MSVSS {
      * @param response The auto response value.
      */
     public void setAutoresponse(String response) {
-        m_AutoResponse = response;
+        super.setInternalAutoResponse(response);
     }
 }

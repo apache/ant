@@ -93,43 +93,43 @@ public abstract class MSVSS extends Task implements MSVSSConstants {
     private String m_serverPath = null;
 
     /**  Version */
-    protected String m_Version = null;
+    private String m_Version = null;
     /**  Date */
-    protected String m_Date = null;
+    private String m_Date = null;
     /**  Label */
-    protected String m_Label = null;
+    private String m_Label = null;
     /**  Auto response */
-    protected String m_AutoResponse = null;
+    private String m_AutoResponse = null;
     /**  Local path */
-    protected String m_LocalPath = null;
+    private String m_LocalPath = null;
     /**  Comment */
-    protected String m_Comment = null;
+    private String m_Comment = null;
     /**  From label */
-    protected String m_FromLabel = null;
+    private String m_FromLabel = null;
     /**  To label */
-    protected String m_ToLabel = null;
+    private String m_ToLabel = null;
     /**  Output file name */
-    protected String m_OutputFileName = null;
+    private String m_OutputFileName = null;
     /**  User */
-    protected String m_User = null;
+    private String m_User = null;
     /**  From date */
-    protected String m_FromDate = null;
+    private String m_FromDate = null;
     /**  To date */
-    protected String m_ToDate = null;
+    private String m_ToDate = null;
     /**  History style */
-    protected String m_Style = null;
+    private String m_Style = null;
     /**  Quiet defaults to false */
-    protected boolean m_Quiet = false;
+    private boolean m_Quiet = false;
     /**  Recursive defaults to false */
-    protected boolean m_Recursive = false;
+    private boolean m_Recursive = false;
     /**  Writable defaults to false */
-    protected boolean m_Writable = false;
+    private boolean m_Writable = false;
     /**  Fail on error defaults to true */
-    protected boolean m_FailOnError = true;
+    private boolean m_FailOnError = true;
     /**  Number of days offset for History */
-    protected int m_NumDays = Integer.MIN_VALUE;
+    private int m_NumDays = Integer.MIN_VALUE;
     /**  Date format for History */
-    protected DateFormat m_DateFormat = DateFormat.getDateInstance(DateFormat.SHORT);
+    private DateFormat m_DateFormat = DateFormat.getDateInstance(DateFormat.SHORT);
 
     /**
      * Each sub-class must implemnt this method and return the constructed
@@ -214,12 +214,90 @@ public abstract class MSVSS extends Task implements MSVSSConstants {
         }
     }
 
+    // Special setters for the sub-classes
+
+    protected void setInternalComment(String text) {
+        m_Comment = text;
+    }
+
+    protected void setInternalAutoResponse(String text) {
+        m_AutoResponse = text;
+    }
+
+    protected void setInternalDate(String text) {
+        m_Date = text;
+    }
+
+    protected void setInternalDateFormat(DateFormat date) {
+        m_DateFormat = date;
+    }
+
+    protected void setInternalFailOnError(boolean fail) {
+        m_FailOnError = fail;
+    }
+
+    protected void setInternalFromDate(String text) {
+        m_FromDate = text;
+    }
+
+    protected void setInternalFromLabel(String text) {
+        m_FromLabel = text;
+    }
+
+    protected void setInternalLabel(String text) {
+        m_Label = text;
+    }
+
+    protected void setInternalLocalPath(String text) {
+        m_LocalPath = text;
+    }
+
+    protected void setInternalNumDays(int days) {
+        m_NumDays = days;
+    }
+
+    protected void setInternalOutputFilename(String text) {
+        m_OutputFileName = text;
+    }
+
+    protected void setInternalQuiet(boolean quiet) {
+        m_Quiet = quiet;
+    }
+
+    protected void setInternalRecursive(boolean recursive) {
+        m_Recursive = recursive;
+    }
+
+    protected void setInternalStyle(String style) {
+        m_Style = style;
+    }
+
+    protected void setInternalToDate(String text) {
+        m_ToDate = text;
+    }
+
+    protected void setInternalToLabel(String text) {
+        m_ToLabel = text;
+    }
+
+    protected void setInternalUser(String user) {
+        m_User = user;
+    }
+
+    protected void setInternalVersion(String text) {
+        m_Version = text;
+    }
+
+    protected void setInternalWritable(boolean writable) {
+        m_Writable = writable;
+    }
+
     /**
      * Gets the sscommand string. "ss" or "c:\path\to\ss"
      *
      * @return    The path to ss.exe or just ss if sscommand is not set.
      */
-    public String getSSCommand() {
+    protected String getSSCommand() {
         if (m_SSDir == null) {
             return SS_EXE;
         }

@@ -113,7 +113,7 @@ public class MSVSSCHECKOUT extends MSVSS {
      * @param   localPath   The path on disk.
      */
     public void setLocalpath(Path localPath) {
-        m_LocalPath = localPath.toString();
+        super.setInternalLocalPath(localPath.toString());
     }
 
     /**
@@ -122,7 +122,7 @@ public class MSVSSCHECKOUT extends MSVSS {
      * @param recursive  The boolean value for recursive.
      */
     public void setRecursive(boolean recursive) {
-        m_Recursive = recursive;
+        super.setInternalRecursive(recursive);
     }
 
     /**
@@ -130,7 +130,7 @@ public class MSVSSCHECKOUT extends MSVSS {
      * @param  version The version to checkout.
      */
     public void setVersion(String version) {
-        m_Version = version;
+        super.setInternalVersion(version);
     }
 
     /**
@@ -138,7 +138,7 @@ public class MSVSSCHECKOUT extends MSVSS {
      * @param  date The date to checkout.
      */
     public void setDate(String date) {
-        m_Date = date;
+        super.setInternalDate(date);
     }
 
     /**
@@ -146,7 +146,7 @@ public class MSVSSCHECKOUT extends MSVSS {
      * @param  label The label to apply.
      */
     public void setLabel(String label) {
-        m_Label = label;
+        super.setInternalLabel(label);
     }
 
     /**
@@ -156,6 +156,6 @@ public class MSVSSCHECKOUT extends MSVSS {
      * @param response The auto response value.
      */
     public void setAutoresponse(String response){
-        m_AutoResponse = response;
+        super.setInternalAutoResponse(response);
     }
 }

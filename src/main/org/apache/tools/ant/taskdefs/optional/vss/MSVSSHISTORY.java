@@ -55,15 +55,12 @@
 package org.apache.tools.ant.taskdefs.optional.vss;
 
 import java.io.File;
-import java.text.DateFormat;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.GregorianCalendar;
+
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.types.Commandline;
 import org.apache.tools.ant.types.EnumeratedAttribute;
+
 /**
  * Performs History commands to Microsoft Visual SourceSafe.
  *
@@ -120,7 +117,7 @@ public class MSVSSHISTORY extends MSVSS {
      * @param recursive  The boolean value for recursive.
      */
     public void setRecursive(boolean recursive) {
-        m_Recursive = recursive;
+        super.setInternalRecursive(recursive);
     }
 
     /**
@@ -128,7 +125,7 @@ public class MSVSSHISTORY extends MSVSS {
      * @param   user The username.
      */
     public void setUser(String user) {
-        m_User = user;
+        super.setInternalUser(user);
     }
 
     /**
@@ -137,7 +134,7 @@ public class MSVSSHISTORY extends MSVSS {
      * @param   fromDate    The start date.
      */
     public void setFromDate(String fromDate) {
-        m_FromDate = fromDate;
+        super.setInternalFromDate(fromDate);
     }
 
     /**
@@ -145,7 +142,7 @@ public class MSVSSHISTORY extends MSVSS {
      * @param   toDate    The end date.
      */
     public void setToDate(String toDate) {
-        m_ToDate = toDate;
+        super.setInternalToDate(toDate);
     }
 
     /**
@@ -153,7 +150,7 @@ public class MSVSSHISTORY extends MSVSS {
      * @param   fromLabel    The start label.
      */
     public void setFromLabel(String fromLabel) {
-        m_FromLabel = fromLabel;
+        super.setInternalFromLabel(fromLabel);
     }
 
     /**
@@ -161,7 +158,7 @@ public class MSVSSHISTORY extends MSVSS {
      * @param   toLabel    The end label.
      */
     public void setToLabel(String toLabel) {
-        m_ToLabel = toLabel;
+        super.setInternalToLabel(toLabel);
     }
 
     /**
@@ -172,7 +169,7 @@ public class MSVSSHISTORY extends MSVSS {
      * @param   numd    The number of days.
      */
     public void setNumdays(int numd) {
-        m_NumDays = numd;
+        super.setInternalNumDays(numd);
     }
 
     /**
@@ -180,10 +177,8 @@ public class MSVSSHISTORY extends MSVSS {
      * @param   outfile The output file name.
      */
     public void setOutput(File outfile) {
-        if (outfile == null) {
-            m_OutputFileName = null;
-        } else {
-            m_OutputFileName = outfile.getAbsolutePath();
+        if (outfile != null) {
+            super.setInternalOutputFilename(outfile.getAbsolutePath());
         }
     }
 
@@ -196,7 +191,7 @@ public class MSVSSHISTORY extends MSVSS {
      * @param   dateFormat  The date format.
      */
     public void setDateFormat(String dateFormat) {
-        m_DateFormat = new SimpleDateFormat(dateFormat);
+        super.setInternalDateFormat(new SimpleDateFormat(dateFormat));
     }
 
    /**
@@ -213,15 +208,15 @@ public class MSVSSHISTORY extends MSVSS {
     public void setStyle(BriefCodediffNofile attr) {
         String option = attr.getValue();
         if (option.equals(STYLE_BRIEF)) {
-            m_Style = FLAG_BRIEF;
+            super.setInternalStyle(FLAG_BRIEF);
         } else if (option.equals(STYLE_CODEDIFF)) {
-            m_Style = FLAG_CODEDIFF;
+            super.setInternalStyle(FLAG_CODEDIFF);
         } else if (option.equals(STYLE_DEFAULT)) {
-            m_Style = "";
+            super.setInternalStyle("");
         } else if (option.equals(STYLE_NOFILE)) {
-            m_Style = FLAG_NO_FILE;
+            super.setInternalStyle(FLAG_NO_FILE);
         } else {
-            throw new BuildException("Style " + attr + " unknown.");
+            throw new BuildException("Style " + attr + " unknown.", getLocation());
         }
     }
 

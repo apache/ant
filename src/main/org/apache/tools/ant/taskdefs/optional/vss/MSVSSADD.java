@@ -69,6 +69,8 @@ import org.apache.tools.ant.types.Path;
  */
 public class MSVSSADD extends MSVSS {
 
+    private String m_LocalPath = null;
+
     /**
      * Builds a command line to execute ss.
      * @return     The constructed commandline.
@@ -119,15 +121,15 @@ public class MSVSSADD extends MSVSS {
      * @param recursive  The boolean value for recursive.
      */
     public void setRecursive(boolean recursive) {
-        m_Recursive = recursive;
+        super.setInternalRecursive(recursive);
     }
 
     /**
      * Leave checked in files writable? Default: false.
-     * @param   argWritable The boolean value for writable.
+     * @param   writable The boolean value for writable.
      */
-    public final void setWritable(boolean argWritable) {
-        m_Writable = argWritable;
+    public final void setWritable(boolean writable) {
+        super.setInternalWritable(writable);
     }
 
     /**
@@ -137,7 +139,7 @@ public class MSVSSADD extends MSVSS {
      * @param response The auto response value.
      */
     public void setAutoresponse(String response){
-        m_AutoResponse = response;
+        super.setInternalAutoResponse(response);
     }
 
     /**
@@ -148,7 +150,7 @@ public class MSVSSADD extends MSVSS {
      * @param comment The comment to apply in SourceSafe
      */
     public void setComment(String comment) {
-        m_Comment = comment;
+        super.setInternalComment(comment);
     }
 
     /**

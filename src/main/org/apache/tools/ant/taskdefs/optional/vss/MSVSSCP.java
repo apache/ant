@@ -105,6 +105,6 @@ public class MSVSSCP extends MSVSS {
      * @param response The auto response value.
      */
     public void setAutoresponse(String response) {
-        m_AutoResponse = response;
+        super.setInternalAutoResponse(response);
     }
 }

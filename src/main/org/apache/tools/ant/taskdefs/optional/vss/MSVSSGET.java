@@ -54,7 +54,6 @@
 
 package org.apache.tools.ant.taskdefs.optional.vss;
 
-import java.io.File;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.types.Commandline;
 import org.apache.tools.ant.types.Path;
@@ -175,7 +174,7 @@ public class MSVSSGET extends MSVSS {
      * @param   localPath   The path on disk.
      */
     public void setLocalpath(Path localPath) {
-        m_LocalPath = localPath.toString();
+        super.setInternalLocalPath(localPath.toString());
     }
 
     /**
@@ -184,7 +183,7 @@ public class MSVSSGET extends MSVSS {
      * @param recursive  The boolean value for recursive.
      */
     public final void setRecursive(boolean recursive) {
-        m_Recursive = recursive;
+        super.setInternalRecursive(recursive);
     }
 
     /**
@@ -192,15 +191,15 @@ public class MSVSSGET extends MSVSS {
      * @param   quiet The boolean value for quiet.
      */
     public final void setQuiet (boolean quiet) {
-        m_Quiet = quiet;
+        super.setInternalQuiet(quiet);
     }
 
     /**
-     * Sets behaviour, unset the READ-ONLY flag on files retrieved from VSS.; optional
-     * @param   argWritable The boolean value for writable.
+     * Sets behaviour, unset the READ-ONLY flag on files retrieved from VSS.; optional, default false
+     * @param   writable The boolean value for writable.
      */
-    public final void setWritable(boolean argWritable) {
-        m_Writable = argWritable;
+    public final void setWritable(boolean writable) {
+        super.setInternalWritable(writable);
     }
 
     /**
@@ -208,7 +207,7 @@ public class MSVSSGET extends MSVSS {
      * @param  version The version to get.
      */
     public void setVersion(String version) {
-        m_Version = version;
+        super.setInternalVersion(version);
     }
 
     /**
@@ -216,7 +215,7 @@ public class MSVSSGET extends MSVSS {
      * @param  date The date to checkout.
      */
     public void setDate(String date) {
-        m_Date = date;
+        super.setInternalDate(date);
     }
 
     /**
@@ -224,7 +223,7 @@ public class MSVSSGET extends MSVSS {
      * @param  label The label to apply.
      */
     public void setLabel(String label) {
-        m_Label = label;
+        super.setInternalLabel(label);
     }
 
     /**
@@ -234,6 +233,6 @@ public class MSVSSGET extends MSVSS {
      * @param response The auto response value.
      */
     public void setAutoresponse(String response){
-        m_AutoResponse = response;
+        super.setInternalAutoResponse(response);
     }
 }
