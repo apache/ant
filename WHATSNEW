@@ -65,6 +65,8 @@ Other changes:
 * Added searchpath attribute to <exec> for searching path variable(s)
   when resolveexecutable = true.
 
+* Added revision and userid attributes to <pvcs> documentation.
+
 Fixed bugs:
 -----------
 
