@@ -9,7 +9,6 @@ package org.apache.tools.ant.taskdefs.optional.ccm;
 
 import java.io.File;
 import org.apache.myrmidon.api.TaskException;
-import org.apache.tools.ant.Project;
 import org.apache.tools.ant.types.Commandline;
 
 /**
@@ -111,8 +110,6 @@ public class CCMCheck extends Continuus
         throws TaskException
     {
         Commandline commandLine = new Commandline();
-        Project aProj = getProject();
-        int result = 0;
 
         // build the command line from what we got the format is
         // ccm co /t .. files
@@ -122,11 +119,11 @@ public class CCMCheck extends Continuus
 
         checkOptions( commandLine );
 
-        result = run( commandLine );
+        final int result = run( commandLine, null );
         if( result != 0 )
         {
-            String msg = "Failed executing: " + commandLine.toString();
-            throw new TaskException( msg );
+            final String message = "Failed executing: " + commandLine.toString();
+            throw new TaskException( message );
         }
     }
 

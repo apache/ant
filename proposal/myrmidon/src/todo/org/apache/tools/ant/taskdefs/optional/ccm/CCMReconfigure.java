@@ -8,7 +8,6 @@
 package org.apache.tools.ant.taskdefs.optional.ccm;
 
 import org.apache.myrmidon.api.TaskException;
-import org.apache.tools.ant.Project;
 import org.apache.tools.ant.types.Commandline;
 
 /**
@@ -16,9 +15,9 @@ import org.apache.tools.ant.types.Commandline;
  *
  * @author Benoit Moussaud benoit.moussaud@criltelecom.com
  */
-public class CCMReconfigure extends Continuus
+public class CCMReconfigure
+    extends Continuus
 {
-
     /**
      * /recurse --
      */
@@ -34,9 +33,9 @@ public class CCMReconfigure extends Continuus
      */
     public final static String FLAG_PROJECT = "/project";
 
-    private String project = null;
-    private boolean recurse = false;
-    private boolean verbose = false;
+    private String m_ccmProject;
+    private boolean m_recurse;
+    private boolean m_verbose;
 
     public CCMReconfigure()
     {
@@ -46,62 +45,26 @@ public class CCMReconfigure extends Continuus
 
     /**
      * Set the value of project.
-     *
-     * @param v Value to assign to project.
      */
-    public void setCcmProject( String v )
+    public void setCcmProject( final String ccmProject )
     {
-        this.project = v;
+        m_ccmProject = ccmProject;
     }
 
     /**
      * Set the value of recurse.
-     *
-     * @param v Value to assign to recurse.
      */
-    public void setRecurse( boolean v )
+    public void setRecurse( final boolean recurse )
     {
-        this.recurse = v;
+        m_recurse = recurse;
     }
 
     /**
      * Set the value of verbose.
-     *
-     * @param v Value to assign to verbose.
      */
-    public void setVerbose( boolean v )
+    public void setVerbose( final boolean verbose )
     {
-        this.verbose = v;
-    }
-
-    /**
-     * Get the value of project.
-     *
-     * @return value of project.
-     */
-    public String getCcmProject()
-    {
-        return project;
-    }
-
-    /**
-     * Get the value of recurse.
-     *
-     * @return value of recurse.
-     */
-    public boolean isRecurse()
-    {
-        return recurse;
-    }
-
-    /**
-     * Get the value of verbose.
-     *
-     * @return value of verbose.
-     */
-    public boolean isVerbose()
-    {
-        return verbose;
+        m_verbose = verbose;
     }
 
     /**
@@ -109,56 +72,47 @@ public class CCMReconfigure extends Continuus
      *
      * Builds a command line to execute ccm and then calls Exec's run method to
      * execute the command line. </p>
-     *
-     * @exception TaskException Description of Exception
      */
     public void execute()
         throws TaskException
     {
-        Commandline commandLine = new Commandline();
-        Project aProj = getProject();
-        int result = 0;
+        final Commandline cmd = new Commandline();
 
         // build the command line from what we got the format
         // as specified in the CCM.EXE help
-        commandLine.setExecutable( getCcmCommand() );
-        commandLine.createArgument().setValue( getCcmAction() );
+        cmd.setExecutable( getCcmCommand() );
+        cmd.createArgument().setValue( getCcmAction() );
 
-        checkOptions( commandLine );
+        checkOptions( cmd );
 
-        result = run( commandLine );
+        final int result = run( cmd, null );
         if( result != 0 )
         {
-            String msg = "Failed executing: " + commandLine.toString();
-            throw new TaskException( msg );
+            final String message = "Failed executing: " + cmd.toString();
+            throw new TaskException( message );
         }
     }
 
     /**
-     * Check the command line options.
-     *
-     * @param cmd Description of Parameter
+     * Build the command line options.
      */
-    private void checkOptions( Commandline cmd )
+    private void checkOptions( final Commandline cmd )
     {
-
-        if( isRecurse() == true )
+        if( m_recurse == true )
         {
             cmd.createArgument().setValue( FLAG_RECURSE );
-        }// end of if ()
-
-        if( isVerbose() == true )
-        {
-            cmd.createArgument().setValue( FLAG_VERBOSE );
-        }// end of if ()
-
-        if( getCcmProject() != null )
-        {
-            cmd.createArgument().setValue( FLAG_PROJECT );
-            cmd.createArgument().setValue( getCcmProject() );
         }
 
-    }
+        if( m_verbose == true )
+        {
+            cmd.createArgument().setValue( FLAG_VERBOSE );
+        }
 
+        if( m_ccmProject != null )
+        {
+            cmd.createArgument().setValue( FLAG_PROJECT );
+            cmd.createArgument().setValue( m_ccmProject );
+        }
+    }
 }
 
