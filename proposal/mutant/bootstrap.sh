@@ -25,4 +25,4 @@ java -classpath bin/init:bin/bootstrap org.apache.ant.bootstrap.Bootstrap
 java -classpath bootstrap/lib/start.jar:bootstrap/lib/init.jar org.apache.ant.start.Main $*
 
 # Use the full build as the build used by the build script
-cp -r dist/* bootstrap
+cp -r dist/lib bootstrap

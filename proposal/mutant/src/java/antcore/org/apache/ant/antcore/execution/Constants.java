@@ -52,88 +52,19 @@
  * <http://www.apache.org/>.
  */
 package org.apache.ant.antcore.execution;
-import org.apache.ant.common.antlib.Task;
-import org.apache.ant.common.model.ModelElement;
-import org.apache.ant.common.util.ExecutionException;
+
 /**
- * This is the core's implementation of the AntContext for Tasks.
+ * Core constants
  *
  * @author <a href="mailto:conor@apache.org">Conor MacNeill</a>
- * @created 17 January 2002
+ * @created 20 February 2002
  */
-public class TaskContext extends ExecutionContext {
+public abstract class Constants {
+    /** The prefix for library ids that are automatically imported */
+    public static final String ANT_LIB_PREFIX = "ant.";
 
-    /** The task being managed by this context */
-    private Task task;
+    /** The Ant aspect used to identify Ant metadata */
+    public static final String ANT_ASPECT = "ant";
 
-    /**
-     * the loader used to load this task. Note that this is not necessarily
-     * the loader which is used to load the Task class as loading may have
-     * been delegated to a parent loader.
-     */
-    private ClassLoader loader;
-
-    /**
-     * Initilaise this context's environment
-     *
-     * @param frame the frame containing this context
-     */
-    public TaskContext(Frame frame) {
-        super(frame);
-    }
-
-    /**
-     * Get the task associated with this context
-     *
-     * @return the task instance
-     */
-    protected Task getTask() {
-        return task;
-    }
-
-    /**
-     * Gets the loader for this task
-     *
-     * @return the task's loader
-     */
-    protected ClassLoader getLoader() {
-        return loader;
-    }
-
-    /**
-     * Associate a task with this context
-     *
-     * @param task the task to be manager
-     * @param loader the classloader
-     * @param modelElement the model element associated with this context
-     * @exception ExecutionException if the task cannot be initialized
-     */
-    protected void init(ClassLoader loader, Task task,
-                        ModelElement modelElement) throws ExecutionException {
-        this.task = task;
-        this.loader = loader;
-        setModelElement(modelElement);
-        task.init(this);
-    }
-
-    /**
-     * execute this context's task
-     *
-     * @exception ExecutionException if there is a problem executing the
-     *      task
-     */
-    protected void execute() throws ExecutionException {
-        task.execute();
-    }
-
-    /**
-     * Destroy this context. The context can be reused for another task
-     * after this one
-     */
-    protected void destroy() {
-        task.destroy();
-        task = null;
-        loader = null;
-    }
 }
 

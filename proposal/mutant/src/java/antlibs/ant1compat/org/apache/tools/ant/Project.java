@@ -474,7 +474,7 @@ public class Project implements org.apache.ant.common.event.BuildListener {
     public void targetStarted(org.apache.ant.common.event.BuildEvent event) {
         Target newTarget = new Target(this);
         org.apache.ant.common.model.Target realTarget =
-            (org.apache.ant.common.model.Target)event.getModelElement();
+            (org.apache.ant.common.model.Target)event.getSource();
         newTarget.setName(realTarget.getName());
         targetStack.push(newTarget);
         fireTargetStarted(newTarget);
@@ -487,7 +487,7 @@ public class Project implements org.apache.ant.common.event.BuildListener {
      */
     public void targetFinished(org.apache.ant.common.event.BuildEvent event) {
         org.apache.ant.common.model.Target realTarget =
-            (org.apache.ant.common.model.Target)event.getModelElement();
+            (org.apache.ant.common.model.Target)event.getSource();
         Target currentTarget = (Target)targetStack.pop();
         fireTargetFinished(currentTarget, event.getCause());
         currentTarget = null;
@@ -881,7 +881,7 @@ public class Project implements org.apache.ant.common.event.BuildListener {
         try {
             task = (Task)c.newInstance();
             task.setProject(this);
-            task.init(context);
+            task.init(context, taskType);
             return task;
         } catch (Throwable e) {
             throw new BuildException(e);

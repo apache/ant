@@ -59,6 +59,7 @@ import java.util.List;
 import org.apache.ant.common.model.ModelElement;
 import org.apache.ant.common.event.BuildListener;
 import org.apache.ant.common.event.BuildEvent;
+import org.apache.ant.common.antlib.Task;
 
 /**
  * BuildEventSupport is used by classes which which to send build events to
@@ -162,10 +163,10 @@ public class BuildEventSupport {
     /**
      * fire a task started event
      *
-     * @param element the build element with which the event is associated
+     * @param task the task with which the event is associated
      */
-    public void fireTaskStarted(ModelElement element) {
-        BuildEvent event = new BuildEvent(element, BuildEvent.TASK_STARTED);
+    public void fireTaskStarted(Task task) {
+        BuildEvent event = new BuildEvent(task, BuildEvent.TASK_STARTED);
         for (Iterator i = listeners.iterator(); i.hasNext(); ) {
             BuildListener listener = (BuildListener)i.next();
             listener.taskStarted(event);
@@ -175,12 +176,12 @@ public class BuildEventSupport {
     /**
      * fire a task finished event
      *
-     * @param element the build element with which the event is associated
+     * @param task the task with which the event is associated
      * @param cause an exception if there was a failure in the task
      */
-    public void fireTaskFinished(ModelElement element,
+    public void fireTaskFinished(Task task,
                                  Throwable cause) {
-        BuildEvent event = new BuildEvent(element, BuildEvent.TASK_FINISHED,
+        BuildEvent event = new BuildEvent(task, BuildEvent.TASK_FINISHED,
             cause);
         for (Iterator i = listeners.iterator(); i.hasNext(); ) {
             BuildListener listener = (BuildListener)i.next();

@@ -54,50 +54,73 @@
 package org.apache.ant.cli;
 
 import java.io.PrintStream;
-import org.apache.ant.common.model.BuildElement;
-import org.apache.ant.common.model.Target;
+import org.apache.ant.common.antlib.ExecutionComponent;
+import org.apache.ant.common.antlib.Task;
 import org.apache.ant.common.event.BuildEvent;
+import org.apache.ant.common.event.MessageLevel;
+import org.apache.ant.common.model.Target;
 import org.apache.ant.common.util.AntException;
 import org.apache.ant.common.util.Location;
-import org.apache.ant.common.event.MessageLevel;
 
 /**
- *  Writes build event to a PrintStream. Currently, it only writes which
- *  targets are being executed, and any messages that get logged.
+ * Writes build event to a PrintStream. Currently, it only writes which
+ * targets are being executed, and any messages that get logged.
  *
- * @author  <a href="mailto:conor@apache.org">Conor MacNeill</a>
- * @created  15 January 2002
+ * @author <a href="mailto:conor@apache.org">Conor MacNeill</a>
+ * @created 15 January 2002
  */
 public class DefaultLogger implements BuildLogger {
 
-    /**  The stream where output should be written */
-    private PrintStream out;
-    /**  The stream to where errors should be written */
-    private PrintStream err;
-    /**  The level of messages which should be let through */
-    private int messageOutputLevel = MessageLevel.MSG_ERR;
-
-    /**  Controls whether adornments are added */
-    private boolean emacsMode = false;
-    /**  The time at which the build started */
-    private long startTime = System.currentTimeMillis();
-
-    /**  Standard field separator */
+    /** Standard field separator */
     private static String lSep = System.getProperty("line.separator");
-    /**  spacing to allow for task tags */
+    /** spacing to allow for task tags */
     private static final int LEFT_COLUMN_SIZE = 12;
 
+    /** The stream where output should be written */
+    private PrintStream out;
+    /** The stream to where errors should be written */
+    private PrintStream err;
+    /** The level of messages which should be let through */
+    private int messageOutputLevel = MessageLevel.MSG_ERR;
+
+    /** Controls whether adornments are added */
+    private boolean emacsMode = false;
+    /** The time at which the build started */
+    private long startTime = System.currentTimeMillis();
+
     /**
-     *  Set the messageOutputLevel this logger is to respond to. Only
-     *  messages with a message level lower than or equal to the given level
-     *  are output to the log. <P>
+     * Format the time into something readable
      *
-     *  Constants for the message levels are in Project.java. The order of
-     *  the levels, from least to most verbose, is MSG_ERR, MSG_WARN,
-     *  MSG_INFO, MSG_VERBOSE, MSG_DEBUG. The default message level for
-     *  DefaultLogger is Project.MSG_ERR.
+     * @param millis Java millis value
+     * @return the formatted time
+     */
+    protected static String formatTime(long millis) {
+        long seconds = millis / 1000;
+        long minutes = seconds / 60;
+
+        if (minutes > 0) {
+            return Long.toString(minutes) + " minute"
+                 + (minutes == 1 ? " " : "s ")
+                 + Long.toString(seconds % 60) + " second"
+                 + (seconds % 60 == 1 ? "" : "s");
+        } else {
+            return Long.toString(seconds) + " second"
+                 + (seconds % 60 == 1 ? "" : "s");
+        }
+
+    }
+
+    /**
+     * Set the messageOutputLevel this logger is to respond to. Only
+     * messages with a message level lower than or equal to the given level
+     * are output to the log. <P>
      *
-     * @param  level the logging level for the logger.
+     * Constants for the message levels are in Project.java. The order of
+     * the levels, from least to most verbose, is MSG_ERR, MSG_WARN,
+     * MSG_INFO, MSG_VERBOSE, MSG_DEBUG. The default message level for
+     * DefaultLogger is Project.MSG_ERR.
+     *
+     * @param level the logging level for the logger.
      */
     public void setMessageOutputLevel(int level) {
         this.messageOutputLevel = level;
@@ -105,28 +128,27 @@ public class DefaultLogger implements BuildLogger {
 
 
     /**
-     *  Set the output stream to which this logger is to send its output.
+     * Set the output stream to which this logger is to send its output.
      *
-     * @param  output the output stream for the logger.
+     * @param output the output stream for the logger.
      */
     public void setOutputPrintStream(PrintStream output) {
         this.out = output;
     }
 
     /**
-     *  Set the output stream to which this logger is to send error
-     *  messages.
+     * Set the output stream to which this logger is to send error messages.
      *
-     * @param  err the error stream for the logger.
+     * @param err the error stream for the logger.
      */
     public void setErrorPrintStream(PrintStream err) {
         this.err = err;
     }
 
     /**
-     *  Set this logger to produce emacs (and other editor) friendly output.
+     * Set this logger to produce emacs (and other editor) friendly output.
      *
-     * @param  emacsMode true if output is to be unadorned so that emacs and
+     * @param emacsMode true if output is to be unadorned so that emacs and
      *      other editors can parse files names, etc.
      */
     public void setEmacsMode(boolean emacsMode) {
@@ -134,9 +156,9 @@ public class DefaultLogger implements BuildLogger {
     }
 
     /**
-     *  Report an exception
+     * Report an exception
      *
-     * @param  t The exception to be reported.
+     * @param t The exception to be reported.
      */
     public void reportException(Throwable t) {
         if (t instanceof AntException) {
@@ -161,18 +183,18 @@ public class DefaultLogger implements BuildLogger {
     }
 
     /**
-     *  Description of the Method
+     * Description of the Method
      *
-     * @param  event Description of Parameter
+     * @param event Description of Parameter
      */
     public void buildStarted(BuildEvent event) {
         startTime = System.currentTimeMillis();
     }
 
     /**
-     *  Description of the Method
+     * Description of the Method
      *
-     * @param  event Description of Parameter
+     * @param event Description of Parameter
      */
     public void buildFinished(BuildEvent event) {
         Throwable cause = event.getCause();
@@ -190,9 +212,9 @@ public class DefaultLogger implements BuildLogger {
     }
 
     /**
-     *  Description of the Method
+     * Description of the Method
      *
-     * @param  event Description of Parameter
+     * @param event Description of Parameter
      */
     public void targetStarted(BuildEvent event) {
         if (MessageLevel.MSG_INFO <= messageOutputLevel) {
@@ -202,33 +224,33 @@ public class DefaultLogger implements BuildLogger {
     }
 
     /**
-     *  Description of the Method
+     * Description of the Method
      *
-     * @param  event Description of Parameter
+     * @param event Description of Parameter
      */
     public void targetFinished(BuildEvent event) {
     }
 
     /**
-     *  Description of the Method
+     * Description of the Method
      *
-     * @param  event Description of Parameter
+     * @param event Description of Parameter
      */
     public void taskStarted(BuildEvent event) {
     }
 
     /**
-     *  Description of the Method
+     * Description of the Method
      *
-     * @param  event Description of Parameter
+     * @param event Description of Parameter
      */
     public void taskFinished(BuildEvent event) {
     }
 
     /**
-     *  Description of the Method
+     * Description of the Method
      *
-     * @param  event Description of Parameter
+     * @param event Description of Parameter
      */
     public void messageLogged(BuildEvent event) {
         PrintStream logTo
@@ -236,48 +258,32 @@ public class DefaultLogger implements BuildLogger {
 
         // Filter out messages based on priority
         if (event.getPriority() <= messageOutputLevel) {
-            
-            if (event.getModelElement() instanceof BuildElement) {
-                // Print out the name of the task if we're in one
-                BuildElement buildElement
-                     = (BuildElement)event.getModelElement();
-                String name = buildElement.getType();
 
+            String name = null;
+            Object source = event.getSource();
+            if (source instanceof Task) {
+                name = ((Task)source).getTaskName();
+            }
+
+            if (name == null && source instanceof ExecutionComponent) {
+                name = ((ExecutionComponent)source).getComponentType();
+            }
+
+            if (name != null) {
+                // Print out the name of the task if we're in one
                 if (!emacsMode) {
-                    String msg = "[" + name + "] ";
-                    int indentSize = LEFT_COLUMN_SIZE - msg.length();
+                    String tag = "[" + name + "] ";
+                    int indentSize = LEFT_COLUMN_SIZE - tag.length();
                     for (int i = 0; i < indentSize; i++) {
                         logTo.print(" ");
                     }
-                    logTo.print(msg);
+                    logTo.print(tag);
                 }
             }
 
             // Print the message
             logTo.println(event.getMessage());
         }
-    }
-
-    /**
-     *  Format the time into something readable
-     *
-     * @param  millis Java millis value
-     * @return  the formatted time
-     */
-    protected static String formatTime(long millis) {
-        long seconds = millis / 1000;
-        long minutes = seconds / 60;
-
-        if (minutes > 0) {
-            return Long.toString(minutes) + " minute"
-                 + (minutes == 1 ? " " : "s ")
-                 + Long.toString(seconds % 60) + " second"
-                 + (seconds % 60 == 1 ? "" : "s");
-        } else {
-            return Long.toString(seconds) + " second"
-                 + (seconds % 60 == 1 ? "" : "s");
-        }
-
     }
 }
 

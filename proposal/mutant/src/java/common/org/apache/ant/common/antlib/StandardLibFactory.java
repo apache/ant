@@ -66,9 +66,9 @@ public class StandardLibFactory implements AntLibFactory {
     private AntContext context;
 
     /**
-     * Create an instance of the given task class
+     * Create an instance of the given component class
      *
-     * @param taskClass the class for which an instance is required
+     * @param componentClass the class for which an instance is required
      * @param localName the name within the library under which the task is
      *      defined
      * @return an instance of the required class
@@ -76,27 +76,10 @@ public class StandardLibFactory implements AntLibFactory {
      * @exception IllegalAccessException if the instance cannot be accessed
      * @exception ExecutionException if there is a problem creating the task
      */
-    public Object createTaskInstance(Class taskClass, String localName)
+    public Object createComponent(Class componentClass, String localName)
          throws InstantiationException, IllegalAccessException,
         ExecutionException {
-        return taskClass.newInstance();
-    }
-
-    /**
-     * Create an instance of the given type class
-     *
-     * @param typeClass the class for which an instance is required
-     * @param localName the name within the library under which the type is
-     *      defined, if any.
-     * @return an instance of the required class
-     * @exception InstantiationException if the class cannot be instantiated
-     * @exception IllegalAccessException if the instance cannot be accessed
-     * @exception ExecutionException if there is a problem creating the type
-     */
-    public Object createTypeInstance(Class typeClass, String localName)
-         throws InstantiationException, IllegalAccessException,
-        ExecutionException {
-        return typeClass.newInstance();
+        return componentClass.newInstance();
     }
 
     /**

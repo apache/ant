@@ -66,14 +66,42 @@ public abstract class AbstractComponent implements ExecutionComponent {
     private AntContext context;
 
     /**
+     * the type of the component. The type is the name of the component in
+     * the build file. This may be different from the name under which this
+     * componenent is known in its library due to aliasing
+     */
+    private String componentType;
+
+    /**
+     * Get this component's context
+     *
+     * @return the component context
+     */
+    public AntContext getAntContext() {
+        return context;
+    }
+
+    /**
+     * Gets the componentType of the AbstractComponent
+     *
+     * @return the componentType value
+     */
+    public String getComponentType() {
+        return componentType;
+    }
+
+    /**
      * Initialise the component. The component may use the AntContext to
      * request services from the Ant core.
      *
      * @param context the component's context
+     * @param componentType the type of the component
      * @exception ExecutionException if initialisation fails
      */
-    public void init(AntContext context) throws ExecutionException {
+    public void init(AntContext context, String componentType)
+         throws ExecutionException {
         this.context = context;
+        this.componentType = componentType;
     }
 
     /**
@@ -85,15 +113,6 @@ public abstract class AbstractComponent implements ExecutionComponent {
      */
     public void validateComponent() throws ExecutionException {
         // no validation by default
-    }
-
-    /**
-     * Get this component's context
-     *
-     * @return the component context
-     */
-    protected AntContext getContext() {
-        return context;
     }
 
     /**

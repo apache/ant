@@ -28,8 +28,8 @@
     <exclude name="org/apache/tools/ant/taskdefs/RecorderEntry.java"/>
     <exclude name="org/apache/tools/ant/taskdefs/optional/Native2Ascii.java"/>
     <exclude name="org/apache/tools/ant/taskdefs/optional/Javah.java"/>
-    <exclude name="org/apache/tools/ant/taskdefs/Parallel.java"/>
-    <exclude name="org/apache/tools/ant/taskdefs/Sequential.java"/>
+    <!-- <exclude name="org/apache/tools/ant/taskdefs/Parallel.java"/> -->
+    <!-- <exclude name="org/apache/tools/ant/taskdefs/Sequential.java"/> -->
     <exclude name="org/apache/tools/ant/taskdefs/optional/jdepend/*.java"/>
   </patternset>
   

@@ -55,6 +55,7 @@ package org.apache.ant.common.service;
 import java.io.File;
 import java.util.List;
 import java.util.Map;
+import org.apache.ant.common.antlib.Task;
 import org.apache.ant.common.model.Project;
 import org.apache.ant.common.util.ExecutionException;
 
@@ -97,5 +98,13 @@ public interface ExecService {
     void callTarget(Map properties, List targets)
          throws ExecutionException;
 
+    /**
+     * execute a task. The task should have already been initialised by
+     * the core
+     *
+     * @param task the task to be executed. 
+     * @exception ExecutionException if there is a problem in execution.
+     */
+    void executeTask(Task task) throws ExecutionException;
 }
 

@@ -59,14 +59,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.StringTokenizer;
-import org.apache.ant.antcore.antlib.AntLibrary;
-import org.apache.ant.antcore.antlib.ComponentLibrary;
 import org.apache.ant.antcore.config.AntConfig;
-import org.apache.ant.common.antlib.AntLibFactory;
-import org.apache.ant.common.antlib.DeferredTask;
-import org.apache.ant.common.antlib.ExecutionComponent;
 import org.apache.ant.common.antlib.Task;
-import org.apache.ant.common.antlib.TaskContainer;
 import org.apache.ant.common.event.BuildListener;
 import org.apache.ant.common.event.MessageLevel;
 import org.apache.ant.common.model.BuildElement;
@@ -93,9 +87,6 @@ import org.apache.ant.init.InitConfig;
  * @created 14 January 2002
  */
 public class Frame {
-    /** The Ant aspect used to identify Ant metadata */
-    public static final String ANT_ASPECT = "ant";
-
     /** the base dir of the project */
     private File baseDir;
 
@@ -104,9 +95,6 @@ public class Frame {
 
     /** The referenced frames corresponding to the referenced projects */
     private Map referencedFrames = new HashMap();
-
-    /** Reflector objects used to configure Tasks from the Task models. */
-    private Map setters = new HashMap();
 
     /**
      * The context of this execution. This contains all data object's
@@ -156,6 +144,11 @@ public class Frame {
     private ComponentManager componentManager;
 
     /**
+     * The core's execution Service
+     */
+    private CoreExecService execService;
+    
+    /**
      * Create an Execution Frame for the given project
      *
      * @param standardLibs The libraries of tasks and types available to
@@ -170,20 +163,6 @@ public class Frame {
         this.standardLibs = standardLibs;
         this.config = config;
         this.initConfig = initConfig;
-    }
-
-    /**
-     * Set the context loader of the current thread and returns the existing
-     * classloader
-     *
-     * @param newLoader the new context loader
-     * @return the old context loader
-     */
-    private static ClassLoader setContextLoader(ClassLoader newLoader) {
-        Thread thread = Thread.currentThread();
-        ClassLoader currentLoader = thread.getContextClassLoader();
-        thread.setContextClassLoader(newLoader);
-        return currentLoader;
     }
 
     /**
@@ -210,6 +189,18 @@ public class Frame {
         setMagicProperties();
     }
 
+    /**
+     * Replace ${} style constructions in the given value with the string
+     * value of the corresponding data values in the frame
+     *
+     * @param value the string to be scanned for property references.
+     * @return the string with all property references replaced
+     * @exception ExecutionException if any of the properties do not exist
+     */
+    public String replacePropertyRefs(String value) throws ExecutionException {
+        return dataService.replacePropertyRefs(value);
+    }
+    
     /**
      * Set a value in this frame or any of its imported frames.
      *
@@ -625,48 +616,29 @@ public class Frame {
     protected void executeTasks(Iterator taskIterator)
          throws ExecutionException {
         while (taskIterator.hasNext()) {
-            Throwable failureCause = null;
             BuildElement model = (BuildElement)taskIterator.next();
             // what sort of element is this.
-            ImportInfo importInfo
-                 = componentManager.getDefinition(model.getType());
-            if (importInfo == null) {
-                throw new ExecutionException("There is no definition for the <"
-                     + model.getType() + "> element", model.getLocation());
-            }
-
             try {
-                if (importInfo.getDefinitionType() == AntLibrary.TASKDEF) {
-                    TaskContext taskContext = configureTask(model);
-                    eventSupport.fireTaskStarted(model);
-
-                    ClassLoader currentLoader
-                         = setContextLoader(taskContext.getLoader());
-                    taskContext.execute();
-                    setContextLoader(currentLoader);
-                    taskContext.destroy();
+                Object component = componentManager.createComponent(model);
+                if (component instanceof Task) {
+                    execService.executeTask((Task)component);
                 } else {
-                    // typedef
-                    String typeId = model.getAspectValue(ANT_ASPECT, "id");
-                    Object typeInstance = configureType(model.getType(), model);
+                    String typeId 
+                        = model.getAspectValue(Constants.ANT_ASPECT, "id");
                     if (typeId != null) {
-                        setDataValue(typeId, typeInstance, true);
+                        setDataValue(typeId, component, true);
                     }
                 }
             } catch (AntException te) {
                 ExecutionException e
                      = new ExecutionException(te, te.getLocation());
                 e.setLocation(model.getLocation(), false);
-                failureCause = e;
                 throw e;
             } catch (RuntimeException e) {
                 ExecutionException ee =
                     new ExecutionException(e.getClass().getName() + ": "
                      + e.getMessage(), e, model.getLocation());
-                failureCause = ee;
                 throw ee;
-            } finally {
-                eventSupport.fireTaskFinished(model, failureCause);
             }
         }
 
@@ -737,30 +709,6 @@ public class Frame {
         executeTasks(taskIterator);
     }
 
-
-    /**
-     * Gets the setter for the given class
-     *
-     * @param c the class for which the reflector is desired
-     * @return the reflector
-     */
-    private Setter getSetter(Class c) {
-        if (setters.containsKey(c)) {
-            return (Setter)setters.get(c);
-        }
-        Setter setter = null;
-        if (DeferredTask.class.isAssignableFrom(c)) {
-            setter = new DeferredSetter();
-        } else {
-            ClassIntrospector introspector
-                 = new ClassIntrospector(c, componentManager.getConverters());
-            setter = introspector.getReflector();
-        }
-
-        setters.put(c, setter);
-        return setter;
-    }
-
     /**
      * Determine the base directory for each frame in the frame hierarchy
      *
@@ -806,383 +754,13 @@ public class Frame {
             config.isRemoteLibAllowed(), config.getLibraryPathsMap());
         dataService = new CoreDataService(this,
             config.isUnsetPropertiesAllowed());
-
+        execService = new CoreExecService(this);
+            
         services.put(FileService.class, fileService);
         services.put(ComponentService.class, componentManager);
         services.put(DataService.class, dataService);
         services.put(EventService.class, new CoreEventService(this));
-        services.put(ExecService.class, new CoreExecService(this));
-    }
-
-    /**
-     * Configure an element according to the given model.
-     *
-     * @param element the object to be configured
-     * @param model the BuildElement describing the object in the build file
-     * @param factory Ant Library factory associated with the element being
-     *      configured
-     * @exception ExecutionException if the element cannot be configured
-     */
-    private void configureElement(AntLibFactory factory, Object element,
-                                  BuildElement model)
-         throws ExecutionException {
-
-        Setter setter = getSetter(element.getClass());
-
-        // start by setting the attributes of this element
-        for (Iterator i = model.getAttributeNames(); i.hasNext(); ) {
-            String attributeName = (String)i.next();
-            String attributeValue = model.getAttributeValue(attributeName);
-            if (!setter.supportsAttribute(attributeName)) {
-                throw new ExecutionException(model.getType()
-                     + " does not support the \"" + attributeName
-                     + "\" attribute", model.getLocation());
-            }
-            setter.setAttribute(element, attributeName,
-                dataService.replacePropertyRefs(attributeValue));
-        }
-        String modelText = model.getText().trim();
-        if (modelText.length() != 0) {
-            if (!setter.supportsText()) {
-                throw new ExecutionException(model.getType()
-                     + " does not support content", model.getLocation());
-            }
-            setter.addText(element,
-                dataService.replacePropertyRefs(modelText));
-        }
-
-        // now do the nested elements
-        for (Iterator i = model.getNestedElements(); i.hasNext(); ) {
-            BuildElement nestedElementModel = (BuildElement)i.next();
-            String nestedElementName = nestedElementModel.getType();
-
-            ImportInfo info = componentManager.getDefinition(nestedElementName);
-            if (element instanceof TaskContainer
-                 && info != null
-                 && info.getDefinitionType() == AntLibrary.TASKDEF
-                 && !setter.supportsNestedElement(nestedElementName)) {
-                // it is a nested task
-                TaskContext nestedContext
-                     = configureTask(nestedElementModel);
-                TaskContainer container = (TaskContainer)element;
-                // XXX what should we be adding - need to understand container
-                // method of executing tasks
-                container.addTask(nestedContext.getTask());
-            } else {
-                if (setter.supportsNestedAdder(nestedElementName)) {
-                    addNestedElement(factory, setter, element,
-                        nestedElementModel);
-                } else if (setter.supportsNestedCreator(nestedElementName)) {
-                    createNestedElement(factory, setter, element,
-                        nestedElementModel);
-                } else {
-                    throw new ExecutionException(model.getType()
-                         + " does not support the \"" + nestedElementName
-                         + "\" nested element",
-                        nestedElementModel.getLocation());
-                }
-            }
-        }
-
-    }
-
-    /**
-     * Create a nested element for the given object according to the model.
-     *
-     * @param setter the Setter instance of the container object
-     * @param element the container object for which a nested element is
-     *      required.
-     * @param model the build model for the nestd element
-     * @param factory Ant Library factory associated with the element
-     *      creating the nested element
-     * @exception ExecutionException if the nested element cannot be
-     *      created.
-     */
-    private void createNestedElement(AntLibFactory factory, Setter setter,
-                                     Object element, BuildElement model)
-         throws ExecutionException {
-        String nestedElementName = model.getType();
-        try {
-            Object nestedElement
-                 = setter.createElement(element, nestedElementName);
-            factory.registerCreatedElement(nestedElement);
-            if (nestedElement instanceof ExecutionComponent) {
-                ExecutionComponent component
-                     = (ExecutionComponent)nestedElement;
-                ExecutionContext context
-                     = new ExecutionContext(this);
-                context.setModelElement(model);
-                component.init(context);
-                configureElement(factory, nestedElement, model);
-                component.validateComponent();
-            } else {
-                configureElement(factory, nestedElement, model);
-            }
-        } catch (ExecutionException e) {
-            e.setLocation(model.getLocation(), false);
-            throw e;
-        } catch (RuntimeException e) {
-            throw new ExecutionException(e.getClass().getName() + ": "
-                 + e.getMessage(), e, model.getLocation());
-        }
-    }
-
-
-    /**
-     * Create and add a nested element
-     *
-     * @param setter The Setter instance for the container element
-     * @param element the container element in which the nested element will
-     *      be created
-     * @param model the model of the nested element
-     * @param factory Ant Library factory associated with the element to
-     *      which the attribute is to be added.
-     * @exception ExecutionException if the nested element cannot be created
-     */
-    private void addNestedElement(AntLibFactory factory, Setter setter,
-                                  Object element, BuildElement model)
-         throws ExecutionException {
-
-        String nestedElementName = model.getType();
-        Class nestedType = setter.getType(nestedElementName);
-
-        // is there a polymorph indicator - look in Ant aspects
-        String typeName = model.getAspectValue(ANT_ASPECT, "type");
-        String refId = model.getAspectValue(ANT_ASPECT, "refid");
-        if (refId != null && typeName != null) {
-            throw new ExecutionException("Only one of " + ANT_ASPECT
-                 + ":type and " + ANT_ASPECT
-                 + ":refid may be specified at a time", model.getLocation());
-        }
-
-        Object typeInstance = null;
-        if (typeName != null) {
-            // the build file has specified the actual type of the element.
-            // we need to look up that type and use it
-            typeInstance = configureType(typeName, model);
-        } else if (refId != null) {
-            // We have a reference to an existing instance. Need to check if
-            // it is compatible with the type expected by the nested element's
-            // adder method
-            typeInstance = getDataValue(refId);
-            if (model.getAttributeNames().hasNext() ||
-                model.getNestedElements().hasNext() ||
-                model.getText().length() != 0) {
-                throw new ExecutionException("Element <" + nestedElementName
-                     + "> is defined by reference and hence may not specify "
-                     + "any attributes, nested elements or content",
-                    model.getLocation());
-            }
-            if (typeInstance == null) {
-                throw new ExecutionException("The given ant:refid value '"
-                     + refId + "' is not defined", model.getLocation());
-            }
-        } else if (nestedType != null) {
-            // We need to create an instance of the class expected by the nested
-            // element's adder method if that is possible
-            if (nestedType.isInterface()) {
-                throw new ExecutionException("No element can be created for "
-                     + "nested element <" + nestedElementName + ">. Please "
-                     + "provide a value by reference or specify the value type",
-                    model.getLocation());
-            }
-
-            typeInstance = createTypeInstance(nestedType, factory, model, null);
-        } else {
-            throw new ExecutionException("The type of the <"
-                 + nestedElementName + "> nested element is not known. "
-                 + "Please specify by the type using the \"ant:type\" "
-                 + "attribute or provide a reference to an instance with "
-                 + "the \"ant:id\" attribute");
-        }
-
-        // is the typeInstance compatible with the type expected
-        // by the element's add method
-        if (!nestedType.isInstance(typeInstance)) {
-            if (refId != null) {
-                throw new ExecutionException("The value specified by refId "
-                     + refId + " is not compatible with the <"
-                     + nestedElementName + "> nested element",
-                    model.getLocation());
-            } else if (typeName != null) {
-                throw new ExecutionException("The type "
-                     + typeName + " is not compatible with the <"
-                     + nestedElementName + "> nested element",
-                    model.getLocation());
-            }
-        }
-        setter.addElement(element, nestedElementName, typeInstance);
-    }
-
-
-    /**
-     * Create a Task and configure it according to the given model.
-     *
-     * @param model the model for the task from the build file
-     * @return an execution context for managing the task
-     * @exception ExecutionException if there is a problem configuring the
-     *      task
-     */
-    private TaskContext configureTask(BuildElement model)
-         throws ExecutionException {
-
-        String taskType = model.getType();
-        ImportInfo taskDefInfo = componentManager.getDefinition(taskType);
-        if (taskDefInfo == null
-             || taskDefInfo.getDefinitionType() != AntLibrary.TASKDEF) {
-            throw new ExecutionException("There is no defintion for a "
-                 + "task of type <" + taskType + ">", model.getLocation());
-        }
-
-        String className = taskDefInfo.getClassName();
-        ComponentLibrary componentLibrary
-             = taskDefInfo.getComponentLibrary();
-        String localName = taskDefInfo.getLocalName();
-
-        try {
-            ClassLoader taskClassLoader = componentLibrary.getClassLoader();
-            Class elementClass
-                 = Class.forName(className, true, taskClassLoader);
-            AntLibFactory libFactory
-                 = componentManager.getLibFactory(componentLibrary);
-            Object element
-                 = libFactory.createTaskInstance(elementClass, localName);
-
-            Task task = null;
-            if (element instanceof Task) {
-                // create a Task context for the Task
-                task = (Task)element;
-            } else {
-                task = new TaskAdapter(taskType, element);
-            }
-
-            // set the context loader while configuring the element
-            ClassLoader currentLoader = setContextLoader(taskClassLoader);
-            TaskContext taskContext = new TaskContext(this);
-            taskContext.init(taskClassLoader, task, model);
-            configureElement(libFactory, element, model);
-            task.validateComponent();
-            setContextLoader(currentLoader);
-            return taskContext;
-        } catch (ClassNotFoundException e) {
-            throw new ExecutionException("Class " + className
-                 + " for task <" + taskType + "> was not found", e,
-                model.getLocation());
-        } catch (NoClassDefFoundError e) {
-            throw new ExecutionException("Could not load a dependent class ("
-                 + e.getMessage() + ") for task " + taskType,
-                e, model.getLocation());
-        } catch (InstantiationException e) {
-            throw new ExecutionException("Unable to instantiate task class "
-                 + className + " for task <" + taskType + ">",
-                e, model.getLocation());
-        } catch (IllegalAccessException e) {
-            throw new ExecutionException("Unable to access task class "
-                 + className + " for task <" + taskType + ">",
-                e, model.getLocation());
-        } catch (ExecutionException e) {
-            e.setLocation(model.getLocation(), false);
-            throw e;
-        } catch (RuntimeException e) {
-            throw new ExecutionException(e.getClass().getName() + ": "
-                 + e.getMessage(), e, model.getLocation());
-        }
-    }
-
-
-    /**
-     * Configure a type instance from the given build model. The name given
-     * may not match the name in the model type value. This allows the
-     * caller to provide a polymorphic type for the type model
-     *
-     * @param typeName the name of the type which should be created
-     * @param model the model describing the type
-     * @return an instance of the type, configured from the model
-     * @exception ExecutionException if the type could not be created
-     */
-    private Object configureType(String typeName, BuildElement model)
-         throws ExecutionException {
-        ImportInfo typeDefInfo = componentManager.getDefinition(typeName);
-        if (typeDefInfo == null
-             || typeDefInfo.getDefinitionType() != AntLibrary.TYPEDEF) {
-            throw new ExecutionException("There is no defintion for a "
-                 + "type <" + typeName + ">", model.getLocation());
-        }
-
-        String className = typeDefInfo.getClassName();
-        ComponentLibrary componentLibrary
-             = typeDefInfo.getComponentLibrary();
-        String localName = typeDefInfo.getLocalName();
-
-        try {
-            ClassLoader typeClassLoader = componentLibrary.getClassLoader();
-            Class typeClass
-                 = Class.forName(className, true, typeClassLoader);
-
-            ClassLoader currentLoader = setContextLoader(typeClassLoader);
-            AntLibFactory libFactory
-                 = componentManager.getLibFactory(componentLibrary);
-            Object typeInstance
-                 = createTypeInstance(typeClass, libFactory, model, localName);
-            setContextLoader(currentLoader);
-
-            return typeInstance;
-        } catch (ClassNotFoundException e) {
-            throw new ExecutionException("Class " + className
-                 + " for type <" + typeName + "> was not found", e,
-                model.getLocation());
-        } catch (NoClassDefFoundError e) {
-            throw new ExecutionException("Could not load a dependent class ("
-                 + e.getMessage() + ") for type " + typeName);
-        }
-    }
-
-    /**
-     * Create an instance of a type given its required class
-     *
-     * @param typeClass the class from which the instance should be created
-     * @param model the model describing the required configuration of the
-     *      instance
-     * @param libFactory the factory object of the typeClass's Ant library
-     * @param localName the name of the type within its Ant library
-     * @return an instance of the given class appropriately configured
-     * @exception ExecutionException if there is a problem creating the type
-     *      instance
-     */
-    private Object createTypeInstance(Class typeClass, AntLibFactory libFactory,
-                                      BuildElement model, String localName)
-         throws ExecutionException {
-        try {
-            Object typeInstance
-                 = libFactory.createTypeInstance(typeClass, localName);
-
-            if (typeInstance instanceof ExecutionComponent) {
-                ExecutionComponent component = (ExecutionComponent)typeInstance;
-                ExecutionContext context
-                     = new ExecutionContext(this);
-                context.setModelElement(model);
-                component.init(context);
-                configureElement(libFactory, typeInstance, model);
-                component.validateComponent();
-            } else {
-                configureElement(libFactory, typeInstance, model);
-            }
-            return typeInstance;
-        } catch (InstantiationException e) {
-            throw new ExecutionException("Unable to instantiate type class "
-                 + typeClass.getName() + " for type <" + model.getType() + ">",
-                e, model.getLocation());
-        } catch (IllegalAccessException e) {
-            throw new ExecutionException("Unable to access type class "
-                 + typeClass.getName() + " for type <" + model.getType() + ">",
-                e, model.getLocation());
-        } catch (ExecutionException e) {
-            e.setLocation(model.getLocation(), false);
-            throw e;
-        } catch (RuntimeException e) {
-            throw new ExecutionException(e.getClass().getName() + ": "
-                 + e.getMessage(), e, model.getLocation());
-        }
+        services.put(ExecService.class, execService);
     }
 }
 

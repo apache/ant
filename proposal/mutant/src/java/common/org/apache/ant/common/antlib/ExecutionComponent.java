@@ -67,17 +67,34 @@ public interface ExecutionComponent {
      * services from the Ant core.
      *
      * @param context the Task's context
+     * @param componentType the type of the component
      * @exception ExecutionException if the component cannot be initialised
      */
-    void init(AntContext context) throws ExecutionException;
+    void init(AntContext context, String componentType)
+         throws ExecutionException;
 
     /**
      * Validate the component. This is called after the element has been
      * configured from its build model. The element may perform validation
      * of its configuration
      *
-     * @exception ExecutionException if the component is not validly configured
+     * @exception ExecutionException if the component is not validly
+     *      configured
      */
     void validateComponent() throws ExecutionException;
+
+    /**
+     * Get the AntContext associated with this component
+     *
+     * @return the component's context
+     */
+    AntContext getAntContext();
+
+    /**
+     * Get the type of the component in the build file
+     *
+     * @return the type of the component
+     */
+    String getComponentType();
 }
 

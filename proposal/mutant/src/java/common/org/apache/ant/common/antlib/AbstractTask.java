@@ -60,9 +60,26 @@ package org.apache.ant.common.antlib;
  * @created 16 January 2002
  */
 public abstract class AbstractTask extends AbstractComponent implements Task {
-    /** Task is about to be cleaned up */
-    public void destroy() {
-        // do nothing here
+    /** The name of this task. */
+    private String taskName;
+
+    /**
+     * Sets the taskName of the AbstractTask
+     *
+     * @param taskName the new taskName value
+     */
+    public final void setTaskName(String taskName) {
+        this.taskName = taskName;
     }
+
+    /**
+     * Gets the taskName of the AbstractTask
+     *
+     * @return the taskName value
+     */
+    public final String getTaskName() {
+        return taskName;
+    }
+
 }
 

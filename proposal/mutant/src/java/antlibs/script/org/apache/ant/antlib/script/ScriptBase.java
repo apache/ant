@@ -122,7 +122,7 @@ public class ScriptBase extends AbstractTask implements DeferredTask {
         try {
             BSFManager manager = new BSFManager();
             manager.declareBean("self", this, getClass());
-            manager.declareBean("context", getContext(), AntContext.class);
+            manager.declareBean("context", getAntContext(), AntContext.class);
             
             // execute the script
             BSFEngine engine = manager.loadScriptingEngine(language);

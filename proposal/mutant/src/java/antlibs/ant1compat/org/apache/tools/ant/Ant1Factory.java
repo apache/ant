@@ -102,63 +102,46 @@ public class Ant1Factory extends StandardLibFactory {
 
 
     /**
-     * Create an instance of the requested type class
+     * Create an instance of the given component class
      *
-     * @param typeClass the class from which an instance is required
-     * @param localName the name of the type within its library
-     * @return an instance of the requested class
-     * @exception ExecutionException the instance could not be created.
-     * @exception InstantiationException if the type cannot be instantiated
-     * @exception IllegalAccessException if the type cannot be accessed
+     * @param componentClass the class for which an instance is required
+     * @param localName the name within the library under which the task is
+     *      defined
+     * @return an instance of the required class
+     * @exception InstantiationException if the class cannot be instantiated
+     * @exception IllegalAccessException if the instance cannot be accessed
+     * @exception ExecutionException if there is a problem creating the task
      */
-    public Object createTypeInstance(Class typeClass, String localName)
+    public Object createComponent(Class componentClass, String localName)
          throws InstantiationException, IllegalAccessException,
         ExecutionException {
         try {
-            java.lang.reflect.Constructor ctor = null;
+            java.lang.reflect.Constructor constructor = null;
             // DataType can have a "no arg" constructor or take a single
             // Project argument.
-            Object o = null;
+            Object component = null;
             try {
-                ctor = typeClass.getConstructor(new Class[0]);
-                o = ctor.newInstance(new Object[0]);
+                constructor = componentClass.getConstructor(new Class[0]);
+                component = constructor.newInstance(new Object[0]);
             } catch (NoSuchMethodException nse) {
-                ctor = typeClass.getConstructor(new Class[]{Project.class});
-                o = ctor.newInstance(new Object[]{project});
+                constructor 
+                    = componentClass.getConstructor(new Class[]{Project.class});
+                component = constructor.newInstance(new Object[]{project});
             }
 
-            if (o instanceof ProjectComponent) {
-                ((ProjectComponent)o).setProject(project);
+            if (component instanceof ProjectComponent) {
+                ((ProjectComponent)component).setProject(project);
             }
-            return o;
+            return component;
         } catch (java.lang.reflect.InvocationTargetException ite) {
             Throwable t = ite.getTargetException();
-            String msg = "Could not create datatype of type: "
-                 + typeClass.getName() + " due to " + t;
+            String msg = "Could not create component of type: "
+                 + componentClass.getName() + " due to " + t;
             throw new ExecutionException(msg, t);
         } catch (NoSuchMethodException e) {
             throw new ExecutionException("Unable to find an appropriate "
-                 + "constructor for type " + typeClass.getName(), e);
+                 + "constructor for component " + componentClass.getName(), e);
         }
-    }
-
-    /**
-     * Create an instance of the requested task class
-     *
-     * @param taskClass the class from which an instance is required
-     * @param localName the name of the task within its library
-     * @return an instance of the requested class
-     * @exception InstantiationException if the task cannot be instantiated
-     * @exception IllegalAccessException if the task cannot be accessed
-     */
-    public Object createTaskInstance(Class taskClass, String localName)
-         throws InstantiationException, IllegalAccessException {
-        Object instance = taskClass.newInstance();
-        if (instance instanceof ProjectComponent) {
-            ((ProjectComponent)instance).setProject(project);
-        }
-
-        return instance;
     }
 
     /**

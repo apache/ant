@@ -54,8 +54,9 @@
 package org.apache.ant.antcore.execution;
 import java.io.File;
 import org.apache.ant.common.antlib.AntContext;
-import org.apache.ant.common.model.ModelElement;
+import org.apache.ant.common.antlib.ExecutionComponent;
 import org.apache.ant.common.util.ExecutionException;
+import org.apache.ant.common.util.Location;
 
 /**
  * This is the core's implementation of the AntContext for all core objects.
@@ -71,26 +72,32 @@ public class ExecutionContext implements AntContext {
     /** the event support instance used to manage build events */
     private BuildEventSupport eventSupport;
 
-    /** the model in the build model with which this context is associated */
-    private ModelElement modelElement;
+    /** The location of the object associated with this context */
+    private Location location;
+
+    /** the execution component associated with the context, if any */
+    private ExecutionComponent component;
+
+    /**
+     * the loader used to load this context. Note that this is not
+     * necessarily the loader which is used to load the component as loading
+     * may have been delegated to a parent loader.
+     */
+    private ClassLoader loader;
 
     /**
      * Initilaise this context's environment
      *
      * @param frame the frame containing this context
+     * @param component the component associated with this context - may be null
+     * @param location the location associated with the component
      */
-    protected ExecutionContext(Frame frame) {
+    protected ExecutionContext(Frame frame, ExecutionComponent component,
+                               Location location) {
         this.frame = frame;
         this.eventSupport = frame.getEventSupport();
-    }
-
-    /**
-     * Set the model element associated with this context
-     *
-     * @param modelElement the model element associated with this context
-     */
-    protected void setModelElement(ModelElement modelElement) {
-        this.modelElement = modelElement;
+        this.location = location;
+        this.component = component;
     }
 
     /**
@@ -107,19 +114,6 @@ public class ExecutionContext implements AntContext {
         return frame.getCoreService(serviceInterfaceClass);
     }
 
-    /**
-     * Get the model element associated with this context. If the context is
-     * not associated with any particular model element, the project model
-     * is returned.
-     *
-     * @return the model element.
-     */
-    public ModelElement getModelElement() {
-        if (modelElement == null) {
-            return frame.getProject();
-        }
-        return modelElement;
-    }
 
     /**
      * Get the base directory for this execution of this frame
@@ -131,13 +125,22 @@ public class ExecutionContext implements AntContext {
     }
 
     /**
+     * Gets the location associated with the ExecutionContext
+     *
+     * @return the location in the build model associated with this context.
+     */
+    public Location getLocation() {
+        return location;
+    }
+
+    /**
      * Log a message as a build event
      *
      * @param message the message to be logged
      * @param level the priority level of the message
      */
     public void log(String message, int level) {
-        Object source = modelElement;
+        Object source = component;
         if (source == null) {
             source = frame.getProject();
             if (source == null) {
@@ -145,6 +148,33 @@ public class ExecutionContext implements AntContext {
             }
         }
         eventSupport.fireMessageLogged(source, message, level);
+    }
+
+    /**
+     * Sets the classLoader of the ExecutionContext
+     *
+     * @param loader the new classLoader value
+     */
+    protected void setClassLoader(ClassLoader loader) {
+        this.loader = loader;
+    }
+
+    /**
+     * Gets the loader for this task
+     *
+     * @return the task's loader
+     */
+    protected ClassLoader getLoader() {
+        return loader;
+    }
+
+    /**
+     * Gets the executionComponent of the ExecutionContext
+     *
+     * @return the executionComponent value
+     */
+    protected ExecutionComponent getExecutionComponent() {
+        return component;
     }
 }
 

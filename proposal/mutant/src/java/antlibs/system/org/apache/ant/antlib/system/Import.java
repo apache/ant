@@ -143,7 +143,7 @@ public class Import extends AbstractTask {
      * @exception ExecutionException if the components cannot be imported
      */
     public void execute() throws ExecutionException {
-        AntContext context = getContext();
+        AntContext context = getAntContext();
         ComponentService componentService = (ComponentService)
             context.getCoreService(ComponentService.class);
         if (ref != null) {

@@ -253,10 +253,13 @@ public abstract class AntBase extends AbstractTask {
      * Initialise this task
      *
      * @param context core's context
+     * @param componentType the component type of this component (i.e its
+     *      defined name in the build file)
      * @exception ExecutionException if we can't access the data service
      */
-    public void init(AntContext context) throws ExecutionException {
-        super.init(context);
+    public void init(AntContext context, String componentType)
+         throws ExecutionException {
+        super.init(context, componentType);
         dataService = (DataService)getCoreService(DataService.class);
     }
 

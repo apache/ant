@@ -54,7 +54,6 @@
 package org.apache.ant.common.event;
 
 import java.util.EventObject;
-import org.apache.ant.common.model.ModelElement;
 
 /**
  * A BuildEvent indicates the occurence of a significant event in the build.
@@ -170,18 +169,5 @@ public class BuildEvent extends EventObject {
         return cause;
     }
 
-    /**
-     * Gets the modelElement of the BuildEvent
-     *
-     * @return the model element this event is associated with
-     */
-    public ModelElement getModelElement() {
-        Object source = getSource();
-        if (source instanceof ModelElement) {
-            return (ModelElement)getSource();
-        }
-        
-        return null;
-    }
 }
 

@@ -53,9 +53,8 @@
  */
 package org.apache.ant.common.antlib;
 import java.io.File;
-import org.apache.ant.common.model.ModelElement;
-
 import org.apache.ant.common.util.ExecutionException;
+import org.apache.ant.common.util.Location;
 
 /**
  * The AntContext is the interface through which the Ant container and the
@@ -95,10 +94,10 @@ public interface AntContext {
     File getBaseDir();
 
     /**
-     * Get the model element associated with this context
+     * Gets the location associated witj the AntContext
      *
-     * @return the modelElement associated with this context
+     * @return the location
      */
-    ModelElement getModelElement();
+    Location getLocation();
 }
 

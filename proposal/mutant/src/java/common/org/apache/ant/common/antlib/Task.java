@@ -68,7 +68,18 @@ public interface Task extends ExecutionComponent {
      */
     void execute() throws ExecutionException;
 
-    /** Task is about to be cleaned up */
-    void destroy();
+    /**
+     * Sets the taskName of the Task
+     *
+     * @param name the new taskName value
+     */
+    void setTaskName(String name);
+
+    /**
+     * Gets the taskName of the Task
+     *
+     * @return the taskName value
+     */
+    String getTaskName();
 }
 

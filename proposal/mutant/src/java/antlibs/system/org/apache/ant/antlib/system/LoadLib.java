@@ -148,7 +148,7 @@ public class LoadLib extends AbstractTask {
      *      loaded.
      */
     public void execute() throws ExecutionException {
-        AntContext context = getContext();
+        AntContext context = getAntContext();
         ComponentService componentService = (ComponentService)
             context.getCoreService(ComponentService.class);
         componentService.loadLib(url.toString(), importAll);

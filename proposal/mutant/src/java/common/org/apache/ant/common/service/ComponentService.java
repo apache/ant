@@ -158,5 +158,18 @@ public interface ComponentService {
      */
     void importFrameComponent(String relativeName, String alias)
          throws ExecutionException;
+
+    /**
+     * Create a component. The component will have a context but will not be
+     * configured. It should be configured using the appropriate set methods
+     * and then validated before being used.
+     *
+     * @param componentName the name of the component
+     * @return the created component. The return type of this method depends
+     *      on the component type.
+     * @exception ExecutionException if the component cannot be created
+     */
+    Object createComponent(String componentName) throws ExecutionException;
+
 }
 

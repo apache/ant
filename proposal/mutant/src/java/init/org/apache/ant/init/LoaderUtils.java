@@ -267,5 +267,20 @@ public class LoaderUtils {
         }
         return urls;
     }
+
+    /**
+     * Set the context loader of the current thread and returns the existing
+     * classloader
+     *
+     * @param newLoader the new context loader
+     * @return the old context loader
+     */
+    public static ClassLoader setContextLoader(ClassLoader newLoader) {
+        Thread thread = Thread.currentThread();
+        ClassLoader currentLoader = thread.getContextClassLoader();
+        thread.setContextClassLoader(newLoader);
+        return currentLoader;
+    }
+
 }
 

@@ -139,9 +139,9 @@ public class ScriptFactory extends StandardLibFactory {
     }
 
     /**
-     * Create an instance of the given task class
+     * Create an instance of the given component class
      *
-     * @param taskClass the class for which an instance is required
+     * @param componentClass the class for which an instance is required
      * @param localName the name within the library undeer which the task is
      *      defined
      * @return an instance of the required class
@@ -149,20 +149,20 @@ public class ScriptFactory extends StandardLibFactory {
      * @exception IllegalAccessException if the instance cannot be accessed
      * @exception ExecutionException if there is a problem creating the task
      */
-    public Object createTaskInstance(Class taskClass, String localName)
+    public Object createComponent(Class componentClass, String localName)
          throws InstantiationException, IllegalAccessException,
         ExecutionException {
-        Object task = super.createTaskInstance(taskClass, localName);
+        Object component = super.createComponent(componentClass, localName);
 
-        if (task instanceof ScriptDef) {
-            ScriptDef scriptDef = (ScriptDef)task;
+        if (component instanceof ScriptDef) {
+            ScriptDef scriptDef = (ScriptDef)component;
             scriptDef.setFactory(this);
-        } else if (task instanceof ScriptBase) {
-            ScriptBase scriptBase = (ScriptBase)task;
+        } else if (component instanceof ScriptBase) {
+            ScriptBase scriptBase = (ScriptBase)component;
             scriptBase.setFactory(this);
             scriptBase.setScriptName(localName);
         }
-        return task;
+        return component;
     }
 
     /**

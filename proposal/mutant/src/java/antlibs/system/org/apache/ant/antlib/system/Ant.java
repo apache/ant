@@ -105,7 +105,7 @@ public class Ant extends AntBase {
      */
     public void execute() throws ExecutionException {
         if (baseDir == null) {
-            baseDir = getContext().getBaseDir();
+            baseDir = getAntContext().getBaseDir();
         }
         if (antFile == null) {
             antFile = new File(baseDir, "build.ant");

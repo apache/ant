@@ -54,8 +54,8 @@
 package org.apache.tools.ant;
 
 import org.apache.ant.common.antlib.AntContext;
+import org.apache.ant.common.service.ExecService;
 import org.apache.ant.common.util.ExecutionException;
-import org.apache.ant.common.model.BuildElement;
 
 /**
  * Ant1 Task facade
@@ -74,22 +74,6 @@ public abstract class Task extends ProjectComponent
     /** The description of this task */
     protected String description = null;
 
-    /**
-     * Initialise this component
-     *
-     * @param context the core context for this component
-     * @exception ExecutionException if the component cannot be initialized
-     */
-    public void init(AntContext context) throws ExecutionException {
-        super.init(context);
-        
-        if (context.getModelElement() instanceof BuildElement) {
-            BuildElement buildElement = (BuildElement)context.getModelElement();
-            taskType = buildElement.getType();
-            taskName = taskType;
-        }
-    }
-        
     /**
      * Set the name to use in logging messages.
      *
@@ -147,10 +131,37 @@ public abstract class Task extends ProjectComponent
         return description;
     }
 
+    /**
+     * Initialise this component
+     *
+     * @param context the core context for this component
+     * @param componentType the component type of this component
+     * @exception ExecutionException if the component cannot be initialized
+     */
+    public void init(AntContext context, String componentType)
+         throws ExecutionException {
+        super.init(context, componentType);
+
+        taskType = componentType;
+        taskName = componentType;
+    }
+
 
     /** Validate this component */
     public void validateComponent() {
         // no default validation for Ant1 tasks
+    }
+
+    /** Execute this task sending the appropriate build events */
+    public final void perform() {
+        try {
+            AntContext context = getAntContext();
+            ExecService execService
+                 = (ExecService)context.getCoreService(ExecService.class);
+            execService.executeTask(this);
+        } catch (ExecutionException e) {
+            throw new BuildException(e);
+        }
     }
 
     /**

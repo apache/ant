@@ -138,6 +138,7 @@ public class Builder {
         files.add(new File(TASKDEFS_ROOT, "LogStreamHandler.java"));
         files.add(new File(TASKDEFS_ROOT, "LogOutputStream.java"));
         files.add(new File(TASKDEFS_ROOT, "condition/Os.java"));
+        files.add(new File(TASKDEFS_ROOT, "condition/Contains.java"));
         files.add(new File(TASKDEFS_ROOT, "condition/Condition.java"));
         files.add(new File(TASKDEFS_ROOT, "Available.java"));
         files.add(new File(TASKDEFS_ROOT, "Mkdir.java"));

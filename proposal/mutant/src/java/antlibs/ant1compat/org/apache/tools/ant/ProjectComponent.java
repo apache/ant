@@ -69,6 +69,8 @@ public abstract class ProjectComponent {
     protected Location location;
     /** The core context for this component */
     private AntContext context;
+    /** The type of the component bneing created */
+    private String componentType;
 
     /**
      * Sets the project of the ProjectComponent
@@ -109,15 +111,38 @@ public abstract class ProjectComponent {
     }
 
     /**
+     * Gets the componentType of the ProjectComponent
+     *
+     * @return the componentType value
+     */
+    public String getComponentType() {
+        return componentType;
+    }
+
+
+    /**
+     * Get the context associated with this component
+     *
+     * @return the AntContext
+     */
+    public AntContext getAntContext() {
+        return context;
+    }
+
+    /**
      * Initialise this component
      *
      * @param context the core context for this component
+     * @param componentType the component type of this component
      * @exception ExecutionException if the component cannot be initialized
      */
-    public void init(AntContext context) throws ExecutionException {
+    public void init(AntContext context, String componentType) 
+            throws ExecutionException {
         this.context = context;
+        this.componentType = componentType;
+
         org.apache.ant.common.util.Location contextLocation
-             = context.getModelElement().getLocation();
+             = context.getLocation();
 
         if (contextLocation
              == org.apache.ant.common.util.Location.UNKNOWN_LOCATION) {
@@ -127,11 +152,6 @@ public abstract class ProjectComponent {
                 contextLocation.getLineNumber(),
                 contextLocation.getColumnNumber());
         }
-    }
-
-    /** Destroy this component */
-    public void destroy() {
-        // nothing to do
     }
 
     /**
@@ -153,16 +173,6 @@ public abstract class ProjectComponent {
      */
     public void log(String message) {
         log(message, Project.MSG_INFO);
-    }
-
-
-    /**
-     * Get the context associated with this component
-     *
-     * @return the AntContext 
-     */
-    protected AntContext getContext() {
-        return context;
     }
 }
 
