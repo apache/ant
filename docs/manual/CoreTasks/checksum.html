@@ -50,10 +50,17 @@ perform checksum verifications.
   </tr>
   <tr>
     <td valign="top">property</td>
-    <td valign="top">Specifies the name of the property to be set
-    with the generated checksum value.  This cannot be specified
-    when fileext is being used or when the number of files
-    for which checksums is to be generated is greater than 1.
+    <td valign="top">This attribute can mean two different things, it
+    depends on the presence of the verifyproperty attribute.<br/>
+    <b>If you don't set the verifyproperty attribute</b>, property
+    specifies the name of the property to be set with the generated
+    checksum value.<br/>
+    <b>If you set the verifyproperty attribute</b>, property specifies
+    the checksum you expect to be generated (the checksum itself, not
+    a name of a property containing the checksum).<br/>
+    This cannot be specified when fileext is being used or when the
+    number of files for which checksums is to be generated is greater
+    than 1.
     </td>
     <td valign="top" align="center">No</td>
   </tr>
@@ -151,7 +158,7 @@ When working with more than one file, if condition and/or verifyproperty is used
 the result will be true only if the checksums matched correctly for all files being
 considered.
 
-<hr><p align="center">Copyright &copy; 2001-2002 Apache Software Foundation. All rights
+<hr><p align="center">Copyright &copy; 2001-2003 Apache Software Foundation. All rights
 Reserved.</p>
 
 </body>
