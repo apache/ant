@@ -1,0 +1,55 @@
+<?xml version="1.0"?>
+
+<project name="depend" basedir="." default="help">
+  <property name="cvssrc.dir" value="java"/>
+  <property name="tempsrc.dir" value="working"/>
+  <property name="classes.dir" value="classes"/>
+  <target name="help">
+    <echo>This buildfile is used as part of Ant's test suite.</echo>
+  </target>
+
+  <target name="setup">
+    <mkdir dir="${tempsrc.dir}"/>
+    <copy todir="${tempsrc.dir}">
+      <fileset dir="${cvssrc.dir}"/>
+    </copy>
+  </target>
+  
+  <target name="compile" depends="setup">
+    <mkdir dir="${classes.dir}"/>
+    <javac srcdir="${tempsrc.dir}" destdir="${classes.dir}"/>
+  </target>
+  
+  <target name="clean">
+    <delete dir="${classes.dir}"/>
+    <delete dir="${tempsrc.dir}"/>
+  </target>
+
+  <target name="testdirect" depends="compile">
+    <sleep seconds="3"/>
+    <touch file="${tempsrc.dir}/C.java"/>
+    <depend srcdir="${tempsrc.dir}" destdir="${classes.dir}"/>
+    <fileset id="result" dir="${classes.dir}"/>
+  </target>
+
+  <target name="testclosure" depends="compile">
+    <sleep seconds="3"/>
+    <touch file="${tempsrc.dir}/C.java"/>
+    <depend srcdir="${tempsrc.dir}" destdir="${classes.dir}" closure="yes"/>
+    <fileset id="result" dir="${classes.dir}"/>
+  </target>
+
+  <target name="testbasicset" depends="compile">
+    <classfileset id="result" dir="${classes.dir}" rootclass="A"/>
+  </target>
+
+  <target name="testsmallset" depends="compile">
+    <classfileset id="result" dir="${classes.dir}" rootclass="B"/>
+  </target>
+
+  <target name="testcomboset" depends="compile">
+    <classfileset id="result" dir="${classes.dir}" rootclass="B">
+      <include name="**/C.class"/>
+    </classfileset>
+  </target>
+</project>
