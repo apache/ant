@@ -242,5 +242,7 @@ public abstract class MSVSS extends Task {
     public static final String VALUE_NO = "-N";
     /** */
     public static final String VALUE_YES = "-Y";
+    /** */
+    public static final String FLAG_QUIET = "-O-";
 }
 

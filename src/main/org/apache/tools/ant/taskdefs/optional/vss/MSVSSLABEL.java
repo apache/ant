@@ -93,13 +93,25 @@ import org.apache.tools.ant.types.Commandline;
  *      <td>An existing file or project version to label</td>
  *      <td>No</td>
  *   </tr>
+ *   <tr>
+ *      <td>autoresponse</td>
+ *      <td>What to respond with (sets the -I option). By default, -I- is
+ *      used; values of Y or N will be appended to this.</td>
+ *      <td>No</td>
+ *   </tr>
+ *   <tr>
+ *      <td>comment</td>
+ *      <td>The comment to use for this label. Empty or '-' for no comment.</td>
+ *      <td>No</td>
+ *   </tr>
+ *      
  * </table>
  *
  * @author Phillip Wells
  */
 public class MSVSSLABEL extends MSVSS
 {
-
+    private String m_AutoResponse = null;
     private String m_Label = null;
     private String m_Version = null;
     private String m_Comment = "-";
@@ -140,8 +152,8 @@ public class MSVSSLABEL extends MSVSS
         // -C
         commandLine.createArgument().setValue("-C"+getComment());
 
-        // -I-
-        commandLine.createArgument().setValue("-I-");  // ignore all errors
+        // -I- or -I-Y or -I-N
+        getAutoresponse(commandLine);
 
         // -L
         // Specify the new label on the command line (instead of being prompted)
@@ -242,5 +254,34 @@ public class MSVSSLABEL extends MSVSS
      */
     public String getComment() {
         return m_Comment;
+    }
+    
+    public void setAutoresponse(String response){
+        if ( response.equals("") || response.equals("null") ) {
+            m_AutoResponse = null;
+        } else {
+            m_AutoResponse = response;
+        }
+    }
+    
+    /**
+     * Checks the value set for the autoResponse.
+     * if it equals "Y" then we return -I-Y
+     * if it equals "N" then we return -I-N
+     * otherwise we return -I
+     */
+    public void getAutoresponse(Commandline cmd) {
+        
+        if ( m_AutoResponse == null) {
+            cmd.createArgument().setValue(FLAG_AUTORESPONSE_DEF);
+        } else if ( m_AutoResponse.equalsIgnoreCase("Y")) {
+            cmd.createArgument().setValue(FLAG_AUTORESPONSE_YES);
+            
+        } else if ( m_AutoResponse.equalsIgnoreCase("N")) {
+            cmd.createArgument().setValue(FLAG_AUTORESPONSE_NO);
+        }else {
+            cmd.createArgument().setValue(FLAG_AUTORESPONSE_DEF);
+        } // end of else
+
     }
 }

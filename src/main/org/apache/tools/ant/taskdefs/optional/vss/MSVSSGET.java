@@ -74,42 +74,53 @@ import java.io.File;
  *      <td>login</td>
  *      <td>username,password</td>
  *      <td>No</td>
- *   <tr>
+ *   </tr>
  *   <tr>
  *      <td>vsspath</td>
  *      <td>SourceSafe path</td>
  *      <td>Yes</td>
- *   <tr>
+ *   </tr>
  *   <tr>
  *      <td>localpath</td>
  *      <td>Override the working directory and get to the specified path</td>
  *      <td>No</td>
- *   <tr>
+ *   </tr>
  *   <tr>
  *      <td>writable</td>
  *      <td>true or false</td>
  *      <td>No</td>
- *   <tr>
+ *   </tr>
  *   <tr>
  *      <td>recursive</td>
  *      <td>true or false</td>
  *      <td>No</td>
- *   <tr>
+ *   </tr>
  *   <tr>
  *      <td>version</td>
  *      <td>a version number to get</td>
  *      <td>No</td>
- *   <tr>
+ *   </tr>
  *   <tr>
  *      <td>date</td>
  *      <td>a date stamp to get at</td>
  *      <td>No</td>
- *   <tr>
+ *   </tr>
  *   <tr>
  *      <td>label</td>
  *      <td>a label to get for</td>
  *      <td>No</td>
+ *   </tr>
  *   <tr>
+ *      <td>quiet</td>
+ *      <td>suppress output (off by default)</td>
+ *      <td>No</td>
+ *   </tr>
+ *   <tr>
+ *      <td>autoresponse</td>
+ *      <td>What to respond with (sets the -I option). By default, -I- is
+ *      used; values of Y or N will be appended to this.</td>
+ *      <td>No</td>
+ *   </tr>
  * </table>
  * <p>Note that only one of version, date or label should be specified</p>
  *
@@ -125,6 +136,7 @@ public class MSVSSGET extends MSVSS {
     private String m_Date = null;
     private String m_Label = null;
     private String m_AutoResponse = null;
+    private boolean m_Quiet = false;
 
     /**
      * Executes the task.
@@ -156,6 +168,8 @@ public class MSVSSGET extends MSVSS {
         getLocalpathCommand(commandLine);
         // -I- or -I-Y or -I-N
         getAutoresponse(commandLine);
+        // -O-
+        getQuietCommand(commandLine);
         // -R
         getRecursiveCommand(commandLine);
         // -V
@@ -222,6 +236,19 @@ public class MSVSSGET extends MSVSS {
         }
     }
 
+    /**
+     * Sets/clears quiet mode
+     */
+    public final void setQuiet (boolean quiet) {
+        this.m_Quiet=quiet;
+    }
+    
+    public void getQuietCommand (Commandline cmd) {
+        if (m_Quiet) {
+            cmd.createArgument().setValue (FLAG_QUIET);
+        }
+    }
+    
     /**
      * Set behaviour, used in get command to make files that are 'got' writable
      */
