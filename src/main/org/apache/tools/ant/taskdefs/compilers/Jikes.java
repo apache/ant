@@ -155,6 +155,12 @@ public class Jikes extends DefaultCompilerAdapter {
         if (depend) {
             cmd.createArgument().setValue("-depend");
         } 
+        
+        if (target != null) {
+            cmd.createArgument().setValue("-target");
+            cmd.createArgument().setValue(target);
+        }
+        
         /**
          * XXX
          * Perhaps we shouldn't use properties for these
