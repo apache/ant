@@ -2,11 +2,15 @@ REM   Copyright (c) 2001 The Apache Software Foundation.  All rights
 REM   reserved.
 
 set _CLASSPATHCOMPONENT=%1
-:argCheck
-if %2a==a goto gotAllArgs
+if ""%1""=="""" goto gotAllArgs
 shift
+
+:argCheck
+if ""%1""=="""" goto gotAllArgs
 set _CLASSPATHCOMPONENT=%_CLASSPATHCOMPONENT% %1
+shift
 goto argCheck
+
 :gotAllArgs
 set LOCALCLASSPATH=%_CLASSPATHCOMPONENT%;%LOCALCLASSPATH%
 
