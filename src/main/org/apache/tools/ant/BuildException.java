@@ -173,7 +173,7 @@ public class BuildException extends RuntimeException {
     
     public void printStackTrace(PrintStream ps) {
         synchronized (ps) {
-            ps.println(this);
+            super.printStackTrace(ps);
             if (cause != null) {
                 ps.println("--- Nested Exception ---");
                 cause.printStackTrace(ps);
@@ -183,7 +183,7 @@ public class BuildException extends RuntimeException {
     
     public void printStackTrace(PrintWriter pw) {
         synchronized (pw) {
-            pw.println(this);
+            super.printStackTrace(pw);
             if (cause != null) {
                 pw.println("--- Nested Exception ---");
                 cause.printStackTrace(pw);
