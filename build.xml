@@ -920,7 +920,11 @@
     <delete file="${dist.base}/bin/${dist.name}-bin.tar"/>
     <delete dir="${dist.name}" />
     <checksum fileext=".md5">
-      <fileset dir="${dist.base}/bin/" />
+      <fileset dir="${dist.base}/bin/">
+        <include name="**/*" />
+        <exclude name="**/*.asc" />
+        <exclude name="**/*.md5" />
+      </fileset>
     </checksum>
 
     <antcall inheritAll="false" target="src-dist">
@@ -948,7 +952,11 @@
     <delete file="${dist.base}/src/${dist.name}-src.tar"/>
     <delete dir="${dist.name}" />
     <checksum fileext=".md5">
-      <fileset dir="${dist.base}/src/" />
+      <fileset dir="${dist.base}/src/">
+        <include name="**/*" />
+        <exclude name="**/*.asc" />
+        <exclude name="**/*.md5" />
+      </fileset>
     </checksum>
   </target>
 
