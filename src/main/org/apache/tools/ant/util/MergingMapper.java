@@ -1,5 +1,5 @@
 /*
- * Copyright  2000,2004 The Apache Software Foundation
+ * Copyright  2000,2004-2005 The Apache Software Foundation
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -30,12 +30,14 @@ public class MergingMapper implements FileNameMapper {
 
     /**
      * Ignored.
+     * @param from ignored.
      */
     public void setFrom(String from) {
     }
 
     /**
      * Sets the name of the merged file.
+     * @param to the name of the merged file.
      */
     public void setTo(String to) {
         mergedFile = new String[] {to};
@@ -43,6 +45,8 @@ public class MergingMapper implements FileNameMapper {
 
     /**
      * Returns an one-element array containing the file name set via setTo.
+     * @param sourceFileName ignored.
+     * @return a one-element array containing the merged filename.
      */
     public String[] mapFileName(String sourceFileName) {
         return mergedFile;

@@ -1,5 +1,5 @@
 /*
- * Copyright  2002,2004 The Apache Software Foundation
+ * Copyright  2002,2004-2005 The Apache Software Foundation
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -36,13 +36,20 @@ import java.io.OutputStream;
  */
 public class KeepAliveOutputStream extends FilterOutputStream {
 
+    /**
+     * Constructor of KeepAliveOutputStream.
+     *
+     * @param out an OutputStream value, it shoudl be standard output.
+     */
     public KeepAliveOutputStream(OutputStream out) {
         super(out);
     }
 
-    /** this method does nothing */
+    /**
+     * This method does nothing.
+     * @throws IOException as we are overridding FilterOutputStream.
+     */
     public void close() throws IOException {
-        //
+        // do not close the stream
     }
 }
-

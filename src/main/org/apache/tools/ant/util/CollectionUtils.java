@@ -1,5 +1,5 @@
 /*
- * Copyright  2002-2004 The Apache Software Foundation
+ * Copyright  2002-2005 The Apache Software Foundation
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -29,8 +29,10 @@ import java.util.Vector;
 public class CollectionUtils {
 
     /**
-     * Please use Vector.equals() or List.equals()
-     *
+     * Please use Vector.equals() or List.equals().
+     * @param v1 the first vector.
+     * @param v2 the second vector.
+     * @return true if the vectors are equal.
      * @since Ant 1.5
      * @deprecated
      */
@@ -48,10 +50,12 @@ public class CollectionUtils {
 
     /**
      * Dictionary does not have an equals.
-     * Please use  Map.equals()
+     * Please use  Map.equals().
      *
      * <p>Follows the equals contract of Java 2's Map.</p>
-     *
+     * @param d1 the first directory.
+     * @param d2 the second directory.
+     * @return true if the directories are equal.
      * @since Ant 1.5
      * @deprecated
      */
@@ -86,7 +90,8 @@ public class CollectionUtils {
 
     /**
      * Dictionary does not know the putAll method. Please use Map.putAll().
-     *
+     * @param m1 the to directory.
+     * @param m2 the from directory.
      * @since Ant 1.6
      * @deprecated
      */
@@ -98,16 +103,25 @@ public class CollectionUtils {
     }
 
     /**
+     * An empty enumeration.
      * @since Ant 1.6
      */
     public static final class EmptyEnumeration implements Enumeration {
+        /** Constructor for the EmptyEnumeration */
         public EmptyEnumeration() {
         }
 
+        /**
+         * @return false always.
+         */
         public boolean hasMoreElements() {
             return false;
         }
 
+        /**
+         * @return nothing.
+         * @throws NoSuchElementException always.
+         */
         public Object nextElement() throws NoSuchElementException {
             throw new NoSuchElementException();
         }
@@ -116,9 +130,9 @@ public class CollectionUtils {
     /**
      * Append one enumeration to another.
      * Elements are evaluated lazily.
-     * @param e1 the first enumeration
-     * @param e2 the subsequent enumeration
-     * @return an enumeration representing e1 followed by e2
+     * @param e1 the first enumeration.
+     * @param e2 the subsequent enumeration.
+     * @return an enumeration representing e1 followed by e2.
      * @since Ant 1.6.3
      */
     public static Enumeration append(Enumeration e1, Enumeration e2) {

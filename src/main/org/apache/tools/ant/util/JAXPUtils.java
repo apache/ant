@@ -71,7 +71,8 @@ public class JAXPUtils {
      * Returns the parser factory to use. Only one parser factory is
      * ever created by this method and is then cached for future use.
      *
-     * @return a SAXParserFactory to use
+     * @return a SAXParserFactory to use.
+     * @throws BuildException on error.
      *
      * @since Ant 1.5
      */
@@ -88,7 +89,8 @@ public class JAXPUtils {
      * Returns the parser factory to use to create namespace aware parsers.
      *
      * @return a SAXParserFactory to use which supports manufacture of
-     * namespace aware parsers
+     * namespace aware parsers.
+     * @throws BuildException on error.
      *
      * @since Ant 1.6
      */
@@ -105,6 +107,8 @@ public class JAXPUtils {
     /**
      * Returns a new  parser factory instance.
      *
+     * @return the parser factory.
+     * @throws BuildException on error.
      * @since Ant 1.5
      */
     public static SAXParserFactory newParserFactory() throws BuildException {
@@ -123,6 +127,7 @@ public class JAXPUtils {
      * factory.
      *
      * @return a SAX 1 Parser.
+     * @throws BuildException on error.
      * @see #getParserFactory
      * @since Ant 1.5
      */
@@ -139,6 +144,7 @@ public class JAXPUtils {
      * factory.
      *
      * @return a SAX 2 XMLReader.
+     * @throws BuildException on error.
      * @see #getParserFactory
      * @since Ant 1.5
      */
@@ -154,6 +160,7 @@ public class JAXPUtils {
      * Returns a newly created SAX 2 XMLReader, which is namespace aware
      *
      * @return a SAX 2 XMLReader.
+     * @throws BuildException on error.
      * @see #getParserFactory
      * @since Ant 1.6
      */
@@ -181,7 +188,8 @@ public class JAXPUtils {
     /**
      * Returns a newly created DocumentBuilder.
      *
-     * @return a DocumentBuilder
+     * @return a DocumentBuilder.
+     * @throws BuildException on error.
      * @since Ant 1.6
      */
     public static DocumentBuilder getDocumentBuilder() throws BuildException {

@@ -1,5 +1,5 @@
 /*
- * Copyright  2000-2004 The Apache Software Foundation
+ * Copyright  2000-2005 The Apache Software Foundation
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -145,6 +145,8 @@ public class DOMElementWriter {
                 }
                 out.write("?>");
                 break;
+            default:
+                // Do nothing
             }
         }
 
@@ -168,6 +170,8 @@ public class DOMElementWriter {
     /**
      * Escape &lt;, &gt; &amp; &apos;, &quot; as their entities and
      * drop characters that are illegal in XML documents.
+     * @param value the string to encode.
+     * @return the encoded string.
      */
     public String encode(String value) {
         StringBuffer sb = new StringBuffer();
@@ -217,6 +221,8 @@ public class DOMElementWriter {
      * href="http://www.w3.org/TR/1998/REC-xml-19980210#charsets">http://www.w3.org/TR/1998/REC-xml-19980210#charsets</a> and
      * 2.7 <a
      * href="http://www.w3.org/TR/1998/REC-xml-19980210#sec-cdata-sect">http://www.w3.org/TR/1998/REC-xml-19980210#sec-cdata-sect</a>.</p>
+     * @param value the value to be encoded.
+     * @return the encoded value.
 
      */
     public String encodedata(final String value) {
@@ -244,6 +250,8 @@ public class DOMElementWriter {
 
     /**
      * Is the given argument a character or entity reference?
+     * @param ent the value to be checked.
+     * @return true if it is an entity.
      */
     public boolean isReference(String ent) {
         if (!(ent.charAt(0) == '&') || !ent.endsWith(";")) {
@@ -283,7 +291,8 @@ public class DOMElementWriter {
      * <p>See XML 1.0 2.2 <a
      * href="http://www.w3.org/TR/1998/REC-xml-19980210#charsets">
      * http://www.w3.org/TR/1998/REC-xml-19980210#charsets</a>.</p>
-     *
+     * @param c the character to test.
+     * @return true if the character is allowed.
      * @since 1.10, Ant 1.5
      */
     public boolean isLegalCharacter(char c) {

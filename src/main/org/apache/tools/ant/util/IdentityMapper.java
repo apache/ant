@@ -1,5 +1,5 @@
 /*
- * Copyright  2000,2004 The Apache Software Foundation
+ * Copyright  2000,2004-2005 The Apache Software Foundation
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -28,18 +28,22 @@ public class IdentityMapper implements FileNameMapper {
 
     /**
      * Ignored.
+     * @param from ignored.
      */
     public void setFrom(String from) {
     }
 
     /**
      * Ignored.
+     * @param to ignored.
      */
     public void setTo(String to) {
     }
 
     /**
      * Returns an one-element array containing the source file name.
+     * @param sourceFileName the name to map.
+     * @return the source filename in a one-element array.
      */
     public String[] mapFileName(String sourceFileName) {
         return new String[] {sourceFileName};

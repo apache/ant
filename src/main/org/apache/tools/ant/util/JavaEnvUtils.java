@@ -30,20 +30,20 @@ import org.apache.tools.ant.taskdefs.condition.Os;
  *
  * @since Ant 1.5
  */
-public class JavaEnvUtils {
+public final class JavaEnvUtils {
 
     private JavaEnvUtils() {
     }
 
     /** Are we on a DOS-based system */
-    private static final boolean isDos = Os.isFamily("dos");
+    private static final boolean IS_DOS = Os.isFamily("dos");
     /** Are we on Novell NetWare */
-    private static final boolean isNetware = Os.isName("netware");
+    private static final boolean IS_NETWARE = Os.isName("netware");
     /** Are we on AIX */
-    private static final boolean isAix = Os.isName("aix");
+    private static final boolean IS_AIX = Os.isName("aix");
 
     /** shortcut for System.getProperty("java.home") */
-    private static final String javaHome = System.getProperty("java.home");
+    private static final String JAVA_HOME = System.getProperty("java.home");
 
     /** FileUtils instance for path normalization */
     private static final FileUtils FILE_UTILS = FileUtils.getFileUtils();
@@ -127,8 +127,8 @@ public class JavaEnvUtils {
      * Compares the current Java version to the passed in String -
      * assumes the argument is one of the constants defined in this
      * class.
-     * @return true if the version of Java is the same as the given
-     * version.
+     * @param version the version to check against the current version.
+     * @return true if the version of Java is the same as the given version.
      * @since Ant 1.5
      */
     public static boolean isJavaVersion(String version) {
@@ -159,11 +159,12 @@ public class JavaEnvUtils {
      * <code>JAVA_HOME</code> points to your JDK installation.  JDK
      * &lt; 1.2 has them in the same directory as the JDK
      * executables.</p>
-     *
+     * @param command the java executable to find.
+     * @return the path to the command.
      * @since Ant 1.5
      */
     public static String getJreExecutable(String command) {
-        if (isNetware) {
+        if (IS_NETWARE) {
             // Extrapolating from:
             // "NetWare may have a "java" in that directory, but 99% of
             // the time, you don't want to execute it" -- Jeff Tulley
@@ -173,14 +174,14 @@ public class JavaEnvUtils {
 
         File jExecutable = null;
 
-        if (isAix) {
+        if (IS_AIX) {
             // On IBM's JDK 1.2 the directory layout is different, 1.3 follows
             // Sun's layout.
-            jExecutable = findInDir(javaHome + "/sh", command);
+            jExecutable = findInDir(JAVA_HOME + "/sh", command);
         }
 
         if (jExecutable == null) {
-            jExecutable = findInDir(javaHome + "/bin", command);
+            jExecutable = findInDir(JAVA_HOME + "/bin", command);
         }
 
         if (jExecutable != null) {
@@ -199,11 +200,12 @@ public class JavaEnvUtils {
      *
      * <p>You typically find them in <code>JAVA_HOME/bin</code> if
      * <code>JAVA_HOME</code> points to your JDK installation.</p>
-     *
+     * @param command the java executable to find.
+     * @return the path to the command.
      * @since Ant 1.5
      */
     public static String getJdkExecutable(String command) {
-        if (isNetware) {
+        if (IS_NETWARE) {
             // Extrapolating from:
             // "NetWare may have a "java" in that directory, but 99% of
             // the time, you don't want to execute it" -- Jeff Tulley
@@ -213,14 +215,14 @@ public class JavaEnvUtils {
 
         File jExecutable = null;
 
-        if (isAix) {
+        if (IS_AIX) {
             // On IBM's JDK 1.2 the directory layout is different, 1.3 follows
             // Sun's layout.
-            jExecutable = findInDir(javaHome + "/../sh", command);
+            jExecutable = findInDir(JAVA_HOME + "/../sh", command);
         }
 
         if (jExecutable == null) {
-            jExecutable = findInDir(javaHome + "/../bin", command);
+            jExecutable = findInDir(JAVA_HOME + "/../bin", command);
         }
 
         if (jExecutable != null) {
@@ -241,7 +243,7 @@ public class JavaEnvUtils {
     private static String addExtension(String command) {
         // This is the most common extension case - exe for windows and OS/2,
         // nothing for *nix.
-        return command + (isDos ? ".exe" : "");
+        return command + (IS_DOS ? ".exe" : "");
     }
 
     /**
@@ -263,7 +265,7 @@ public class JavaEnvUtils {
 
     /**
      * demand creation of the package list.
-     * When you add a new package, add a new test below
+     * When you add a new package, add a new test below.
      */
 
     private static void buildJrePackages() {
@@ -307,6 +309,7 @@ public class JavaEnvUtils {
 
     /**
      * Testing helper method; kept here for unification of changes.
+     * @return a list of test classes depending on the java version.
      */
     public static Vector getJrePackageTestCases() {
         Vector tests = new Vector();
@@ -351,7 +354,7 @@ public class JavaEnvUtils {
     /**
      * get a vector of strings of packages built into
      * that platforms runtime jar(s)
-     * @return list of packages
+     * @return list of packages.
      */
     public static Vector getJrePackages() {
         if (jrePackages == null) {
@@ -365,9 +368,9 @@ public class JavaEnvUtils {
      * Writes the command into a temporary DCL script and returns the
      * corresponding File object.
      * It is the job of the caller to delete the file on exit.
-     * @param cmd
-     * @return
-     * @throws IOException
+     * @param cmd the command.
+     * @return the file containing the command.
+     * @throws IOException if there is an error writing to the file.
      */
     public static File createVmsJavaOptionFile(String[] cmd)
             throws IOException {

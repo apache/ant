@@ -1,5 +1,5 @@
 /*
- * Copyright  2002-2004 The Apache Software Foundation
+ * Copyright  2002-2005 The Apache Software Foundation
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -171,6 +171,8 @@ public final class DateUtils {
      * + 11/22 for rounding
      * </pre>
      *
+     * @param cal the calander.
+     *
      * @return The phase of the moon as a number between 0 and 7 with
      *         0 meaning new moon and 4 meaning full moon.
      *
@@ -189,7 +191,7 @@ public final class DateUtils {
     /**
      * Returns the current Date in a format suitable for a SMTP date
      * header.
-     *
+     * @return the current date.
      * @since Ant 1.5.2
      */
     public static String getDateForHeader() {
