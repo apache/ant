@@ -116,12 +116,12 @@ public class ZipTest extends BuildFileTest {
 
         ZipFile zipFile = new ZipFile(new File(getProjectDir(), "zipgroupfileset.zip"));
 
-        assert(zipFile.getEntry("ant.xml") != null);
-        assert(zipFile.getEntry("optional/jspc.xml") != null);
-        assert(zipFile.getEntry("zip/zipgroupfileset3.zip") != null);
+        assertTrue(zipFile.getEntry("ant.xml") != null);
+        assertTrue(zipFile.getEntry("optional/jspc.xml") != null);
+        assertTrue(zipFile.getEntry("zip/zipgroupfileset3.zip") != null);
 
-        assert(zipFile.getEntry("test6.mf") == null);
-        assert(zipFile.getEntry("test7.mf") == null);
+        assertTrue(zipFile.getEntry("test6.mf") == null);
+        assertTrue(zipFile.getEntry("test7.mf") == null);
 
         zipFile.close();
     }
