@@ -1,3 +1,63 @@
+<xsl:stylesheet	xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version="1.0"
+	xmlns:lxslt="http://xml.apache.org/xslt"
+	xmlns:redirect="org.apache.xalan.xslt.extensions.Redirect"
+	extension-element-prefixes="redirect">
+<xsl:output	method="html" indent="yes"/>
+<xsl:decimal-format decimal-separator="." grouping-separator="," />
+<!--
+ The Apache Software License, Version 1.1
+
+ Copyright (c) 2001-2002 The Apache Software Foundation.  All rights
+ reserved.
+
+ Redistribution and use in source and binary forms, with or without
+ modification, are permitted provided that the following conditions
+ are met:
+
+ 1. Redistributions of source code must retain the above copyright
+    notice, this list of conditions and the following disclaimer.
+
+ 2. Redistributions in binary form must reproduce the above copyright
+    notice, this list of conditions and the following disclaimer in
+    the documentation and/or other materials provided with the
+    distribution.
+
+ 3. The end-user documentation included with the redistribution, if
+    any, must include the following acknowlegement:
+       "This product includes software developed by the
+        Apache Software Foundation (http://www.apache.org/)."
+    Alternately, this acknowlegement may appear in the software itself,
+    if and wherever such third-party acknowlegements normally appear.
+
+ 4. The names "The Jakarta Project", "Ant", and "Apache Software
+    Foundation" must not be used to endorse or promote products derived
+    from this software without prior written permission. For written
+    permission, please contact apache@apache.org.
+
+ 5. Products derived from this software may not be called "Apache"
+    nor may "Apache" appear in their names without prior written
+    permission of the Apache Group.
+
+ THIS SOFTWARE IS PROVIDED ``AS IS'' AND ANY EXPRESSED OR IMPLIED
+ WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
+ OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+ DISCLAIMED.  IN NO EVENT SHALL THE APACHE SOFTWARE FOUNDATION OR
+ ITS CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+ SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+ LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF
+ USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
+ ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
+ OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT
+ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
+ SUCH DAMAGE.
+ ====================================================================
+
+ This software consists of voluntary contributions made by many
+ individuals on behalf of the Apache Software Foundation.  For more
+ information on the Apache Software Foundation, please see
+ <http://www.apache.org/>.
+ -->
+
 <!--
  
  Sample stylesheet to be used with JProbe 3.0 XML output.
@@ -9,16 +69,9 @@
  of a reference classpath so that you have the list of classes/methods
  that are not used at all in a given classpath.
  
- @author Stephane Bailliez <a href="sbailliez@imediation.com"/>
+ @author Stephane Bailliez <a href="mailto:sbailliez@apache.org"/>
  
 -->
-<xsl:stylesheet	xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version="1.0"
-	xmlns:lxslt="http://xml.apache.org/xslt"
-	xmlns:redirect="org.apache.xalan.xslt.extensions.Redirect"
-	extension-element-prefixes="redirect">
-
-<xsl:output	method="html" indent="yes"/>
-<xsl:decimal-format decimal-separator="." grouping-separator="," />
 
 <!-- default output directory is current directory -->
 <xsl:param name="output.dir" select="'.'"/>
@@ -82,39 +135,57 @@
 <!-- =======================================================================
 	Stylesheet CSS used
     ======================================================================= -->
+<!-- this is the stylesheet css to use for nearly everything -->
 <xsl:template name="stylesheet.css">
-	BODY {
-		font:normal 68% verdana,arial,helvetica;
-		color:#000000;
-	}
-	TD {
-		FONT-SIZE: 68%
-	}
-	TH {
-		FONT-SIZE: 68%;font-weight:bold;
-	}
-	P {
-		line-height:1.5em;
-		margin-top:0.5em; margin-bottom:1.0em;
-	}
-	H1 {
-		MARGIN: 0px 0px 5px; FONT: 165% verdana,arial,helvetica
-	}
-	H2 {
-		MARGIN-TOP: 1em; MARGIN-BOTTOM: 0.5em; FONT: bold 125% verdana,arial,helvetica
-	}
-	H3 {
-		MARGIN-BOTTOM: 0.5em; FONT: bold 115% verdana,arial,helvetica
-	}
-	H4 {
-		MARGIN-BOTTOM: 0.5em; FONT: bold 100% verdana,arial,helvetica
-	}
-	H5 {
-		MARGIN-BOTTOM: 0.5em; FONT: bold 100% verdana,arial,helvetica
-	}
-	H6 {
-		MARGIN-BOTTOM: 0.5em; FONT: bold 100% verdana,arial,helvetica
-	}
+    .bannercell {
+      border: 0px;
+      padding: 0px;
+    }
+    body {
+      margin-left: 10;
+      margin-right: 10;
+      font:normal 80% arial,helvetica,sanserif;
+      background-color:#FFFFFF;
+      color:#000000;
+    }
+    .a td { 
+      background: #efefef;
+    }
+    .b td { 
+      background: #fff;
+    }
+    th, td {
+      text-align: left;
+      vertical-align: top;
+    }
+    th {
+      font-weight:bold;
+      background: #ccc;
+      color: black;
+    }
+    table, th, td {
+      font-size:100%;
+      border: none
+    }
+    table.log tr td, tr th {
+      
+    }
+    h2 {
+      font-weight:bold;
+      font-size:140%;
+      margin-bottom: 5;
+    }
+    h3 {
+      font-size:100%;
+      font-weight:bold;
+      background: #525D76;
+      color: white;
+      text-decoration: none;
+      padding: 5px;
+      margin-right: 2px;
+      margin-left: 2px;
+      margin-bottom: 0;
+    }
 </xsl:template>
 
 <!-- =======================================================================
@@ -128,7 +199,6 @@
 		</head>
 		<body>
 			<h2>Classes</h2>
-			<p>
 			<table width="100%">
 				<xsl:for-each select="package/class">
 					<xsl:sort select="@name"/>
@@ -145,7 +215,6 @@
 					</tr>
 				</xsl:for-each>
 			</table>
-			</p>
 		</body>
 	</html>
 </xsl:template>
@@ -159,7 +228,6 @@
 		<body>
 			<h2><a href="overview-summary.html" target="classFrame">Home</a></h2>
 			<h2>Packages</h2>
-			<p>
 			<table width="100%">
 				<xsl:for-each select="package">
 					<xsl:sort select="@name" order="ascending"/>
@@ -172,7 +240,6 @@
 					</tr>
 				</xsl:for-each>
 			</table>
-			</p>
 		</body>
 	</html>
 </xsl:template>
@@ -185,24 +252,24 @@
 		</head>
 		<body onload="open('allclasses-frame.html','classListFrame')">
 		<xsl:call-template name="pageHeader"/>
-		<h2>Summary</h2>
-		<table border="0" cellpadding="5" cellspacing="2" width="95%">
-			<tr bgcolor="#A6CAF0" valign="top">
-				<th width="10%" nowrap="nowrap">Date</th>
-				<th width="10%" nowrap="nowrap">Elapsed time</th>
+		<h3>Summary</h3>
+		<table class="log" cellpadding="5" cellspacing="2" width="100%">
+			<tr>
+				<!--th width="10%" nowrap="nowrap">Date</th>
+				<th width="10%" nowrap="nowrap">Elapsed time</th-->
 				<th width="10%" nowrap="nowrap">Reported Classes</th>
 				<th width="10%" nowrap="nowrap">Methods Hit</th>
 				<th width="10%" nowrap="nowrap">Lines Hit</th>
 			</tr>
-			<tr bgcolor="#EEEEE" valign="top">
-				<td nowrap="nowrap"><xsl:value-of select="execution_log/@program_start"/></td>
-				<td><xsl:value-of select="format-number(execution_log/@elapsed_time div 1000,'0.0')"/>secs</td>
+			<tr class="a">
+				<!--td nowrap="nowrap"><xsl:value-of select="execution_log/@program_start"/></td>
+				<td><xsl:value-of select="format-number(execution_log/@elapsed_time div 1000,'0.0')"/>secs</td-->
 				<td><xsl:value-of select="count(package/class)"/></td>
 				<td><xsl:value-of select="format-number(cov.data/@hit_methods div cov.data/@total_methods,'0.0%')"/></td>
 				<td><xsl:value-of select="format-number(cov.data/@hit_lines div cov.data/@total_lines,'0.0%')"/></td>
 			</tr>
 		</table>
-		<table border="0" width="95%">
+		<table border="0" width="100%">
 		<tr>
 		<td	style="text-align: justify;">
 		To ensure accurate test runs on Java applications, developers need to know how much of
@@ -214,19 +281,21 @@
 		</tr>
 		</table>
 
-		<h2>Packages</h2>
-		<table border="0" cellpadding="5" cellspacing="2" width="95%">
+		<h3>Packages</h3>
+		<table class="log" cellpadding="5" cellspacing="2" width="100%">
 			<xsl:apply-templates select="package[1]" mode="stats.header"/>
 			<!-- display packages and sort them via their coverage rate -->
 			<xsl:for-each select="package">
 				<xsl:sort data-type="number" select="cov.data/@hit_lines div cov.data/@total_lines"/>
-				<tr bgcolor="#EEEEE" valign="top">
+				<tr>
+				  <xsl:call-template name="alternate-row"/>
 					<td><a href="{translate(@name,'.','/')}/package-summary.html"><xsl:value-of select="@name"/></a></td>
 					<td><xsl:value-of select="format-number(cov.data/@hit_methods div cov.data/@total_methods,'0.0%')"/></td>
 					<td><xsl:value-of select="format-number(cov.data/@hit_lines div cov.data/@total_lines,'0.0%')"/></td>
 				</tr>
 			</xsl:for-each>
 		</table>
+		<xsl:call-template name="pageFooter"/>
 		</body>
 		</html>
 </xsl:template>
@@ -277,7 +346,6 @@
 			</table>
 	
 			<H2>Classes</H2>
-			<p>
 			<TABLE WIDTH="100%">
 				<xsl:for-each select="class">
 					<xsl:sort select="@name"/>
@@ -288,7 +356,6 @@
 					</tr>
 				</xsl:for-each>
 			</TABLE>
-			</p>
 		</BODY>
 	</html>
 </xsl:template>
@@ -304,24 +371,22 @@
 		<!-- when loading this package, it will open the classes into the frame -->
 		<BODY onload="open('package-frame.html','classListFrame')">
 			<xsl:call-template name="pageHeader"/>
-			<h3>Package <xsl:value-of select="@name"/></h3>
-			
-			<table border="0" cellpadding="5" cellspacing="2" width="95%">
+			<h3>Package <xsl:value-of select="@name"/></h3>			
+			<table class="log" cellpadding="5" cellspacing="2" width="100%">
 				<xsl:apply-templates select="." mode="stats.header"/>
 				<xsl:apply-templates select="." mode="stats"/>
 			</table>
 					
 			<xsl:if test="count(class) &gt; 0">
-				<H2>Classes</H2>
-				<p>
-				<table border="0" cellpadding="5" cellspacing="2" width="95%">
+				<H3>Classes</H3>
+				<table class="log" cellpadding="5" cellspacing="2" width="100%">
 					<xsl:apply-templates select="." mode="stats.header"/>
 					<xsl:apply-templates select="class" mode="stats">
 						<xsl:sort data-type="number" select="cov.data/@hit_lines div cov.data/@total_lines"/>
 					</xsl:apply-templates>
 				</table>
-				</p>
 			</xsl:if>
+			<xsl:call-template name="pageFooter"/>
 		</BODY>
 	</HTML>
 </xsl:template>
@@ -340,41 +405,59 @@
 			<H3>Class <xsl:if test="not($package.name = '')"><xsl:value-of select="$package.name"/>.</xsl:if><xsl:value-of select="@name"/></H3>
 
 			<!-- class summary -->
-			<table border="0" cellpadding="5" cellspacing="2" width="95%">
+			<table class="log" cellpadding="5" cellspacing="2" width="100%">
 				<xsl:apply-templates select="." mode="stats.header"/>
 				<xsl:apply-templates select="." mode="stats"/>
 			</table>
 	
 			<!-- details of methods -->
-			<H2>Methods</H2>
-			<p>
-			<table border="0" cellpadding="5" cellspacing="2" width="95%">
+			<H3>Methods</H3>
+			<table class="log" cellpadding="5" cellspacing="2" width="100%">
 				<xsl:apply-templates select="method[1]" mode="stats.header"/>
 				<xsl:apply-templates select="method" mode="stats">
 					<xsl:sort data-type="number" select="cov.data/@hit_lines div cov.data/@total_lines"/>
 				</xsl:apply-templates>
 			</table>
-			
-			</p>
+			<xsl:call-template name="pageFooter"/>
 		</BODY>
 	</HTML>
 
 </xsl:template>
 
-<!-- Page HEADER -->
+<!-- Page Header -->
 <xsl:template name="pageHeader">
-	<h1>Coverage Results</h1>
-	<table width="100%">
-	<tr>
-		<td align="left"></td>
-		<td align="right">Designed for use with <a href='http://www.sitraka.com/jprobe'>Sitraka JProbe</a> and <a href='http://jakarta.apache.org'>Ant</a>.</td>
-	</tr>
-	</table>
+  <!-- jakarta logo -->
+  <table border="0" cellpadding="0" cellspacing="0" width="100%">
+  <tr>
+    <td class="bannercell" rowspan="2">
+      <a href="http://jakarta.apache.org/">
+      <img src="http://jakarta.apache.org/images/jakarta-logo.gif" alt="http://jakarta.apache.org" align="left" border="0"/>
+      </a>
+    </td>
+		<td style="text-align:right"><h2>Source Code Coverage</h2></td>
+		</tr>
+		<tr>
+		<td style="text-align:right">Designed for use with <a href='http://www.sitraka.com/jprobe'>Sitraka JProbe</a> and <a href='http://jakarta.apache.org'>Ant</a>.</td>
+		</tr>
+  </table>
 	<hr size="1"/>
 </xsl:template>
 
+<!-- Page Footer -->
+<xsl:template name="pageFooter">
+    <table width="100%">
+      <tr><td><hr noshade="yes" size="1"/></td></tr>
+      <tr><td>
+      <div align="center"><font color="#525D76" size="-1"><em>
+      Copyright &#169; 1999-2001, Apache Software Foundation
+      </em></font></div>
+      </td></tr>
+    </table>
+</xsl:template>
+
+
 <xsl:template name="table.header">
-	<tr bgcolor="#A6CAF0" valign="top">
+	<tr>
 		<th width="80%">Name</th>
 		<th width="10%" nowrap="nowrap">Methods Hit</th>
 		<th width="10%" nowrap="nowrap">Lines Hit</th>
@@ -382,13 +465,14 @@
 </xsl:template>
 
 <xsl:template match="method" mode="stats.header">
-	<tr bgcolor="#A6CAF0" valign="top">
+	<tr>
 		<th width="90%">Name</th>
 		<th width="10%" nowrap="nowrap">Lines Hit</th>
 	</tr>
 </xsl:template>
 <xsl:template match="method" mode="stats">
-	<tr bgcolor="#EEEEE" valign="top">
+	<tr>
+	  <xsl:call-template name="alternate-row"/>
 		<td><xsl:value-of select="@name"/></td>
 		<td>
 		<xsl:value-of select="format-number(cov.data/@hit_lines div cov.data/@total_lines,'0.0%')"/>
@@ -397,14 +481,15 @@
 </xsl:template>
 
 <xsl:template match="package|class" mode="stats.header">
-	<tr bgcolor="#A6CAF0" valign="top">
+	<tr>
 		<th width="80%">Name</th>
 		<th width="10%" nowrap="nowrap">Methods Hit</th>
 		<th width="10%" nowrap="nowrap">Lines Hit</th>
 	</tr>
 </xsl:template>
 <xsl:template match="package|class" mode="stats">
-	<tr bgcolor="#EEEEE" valign="top">
+	<tr>
+	  <xsl:call-template name="alternate-row"/>
 		<td><xsl:value-of select="@name"/></td>
 		<td><xsl:value-of select="format-number(cov.data/@hit_methods div cov.data/@total_methods,'0.0%')"/></td>
 		<td><xsl:value-of select="format-number(cov.data/@hit_lines div cov.data/@total_lines,'0.0%')"/></td>
@@ -433,6 +518,14 @@
 <xsl:template name="create.stylesheet.link">
 	<xsl:param name="package.name"/>
 	<LINK REL ="stylesheet" TYPE="text/css" TITLE="Style"><xsl:attribute name="href"><xsl:if test="not($package.name = 'unnamed package')"><xsl:call-template name="path"><xsl:with-param name="path" select="$package.name"/></xsl:call-template></xsl:if>stylesheet.css</xsl:attribute></LINK>
+</xsl:template>
+
+<!-- alternated row style -->
+<xsl:template name="alternate-row">
+<xsl:attribute name="class">
+  <xsl:if test="position() mod 2 = 1">a</xsl:if>
+  <xsl:if test="position() mod 2 = 0">b</xsl:if>
+</xsl:attribute>
 </xsl:template>
 
 </xsl:stylesheet>
