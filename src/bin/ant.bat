@@ -1,4 +1,20 @@
 @echo off
+
+rem Slurp the command line arguments.  This loop allows for an unlimited number of 
+rem agruments (up to the command line limit, anyway).
+
+set ANT_CMD_LINE_ARGS=
+
+:setupArgs
+if %1a==a goto doneArgs
+set ANT_CMD_LINE_ARGS=%ANT_CMD_LINE_ARGS% %1
+shift
+goto setupArgs
+
+:doneArgs
+rem The doneArgs label is here just to provide a place for the argument list loop
+rem to break out to.
+
 rem find ANT_HOME
 if not "%ANT_HOME%"=="" goto checkJava
 
@@ -40,12 +56,13 @@ echo.
 if not "%JIKESPATH%" == "" goto runAntWithJikes
 
 :runAnt
-%JAVACMD% -classpath "%LOCALCLASSPATH%" -Dant.home="%ANT_HOME%" %ANT_OPTS% org.apache.tools.ant.Main %1 %2 %3 %4 %5 %6 %7 %8 %9
+%JAVACMD% -classpath "%LOCALCLASSPATH%" -Dant.home="%ANT_HOME%" %ANT_OPTS% org.apache.tools.ant.Main %ANT_CMD_LINE_ARGS%
 goto end
 
 :runAntWithJikes
-%JAVACMD% -classpath "%LOCALCLASSPATH%" -Dant.home="%ANT_HOME%" -Djikes.class.path=%JIKESPATH% %ANT_OPTS% org.apache.tools.ant.Main %1 %2 %3 %4 %5 %6 %7 %8 %9
+%JAVACMD% -classpath "%LOCALCLASSPATH%" -Dant.home="%ANT_HOME%" -Djikes.class.path=%JIKESPATH% %ANT_OPTS% org.apache.tools.ant.Main %ANT_CMD_LINE_ARGS%
 
 :end
 set LOCALCLASSPATH=
+set ANT_CMD_LINE_ARGS=
 
