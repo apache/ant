@@ -324,6 +324,10 @@ Legal:
       <zipfileset dir="${manifest.dir}" fullpath="META-INF/ant-descriptor.xml">
         <include name="builtin-ant-descriptor.xml"/>
       </zipfileset>
+
+      <zipfileset dir="${manifest.dir}" fullpath="META-INF/ant-services.xml">
+        <include name="core-services.xml"/>
+      </zipfileset>
     </jar>
 
 <!--
