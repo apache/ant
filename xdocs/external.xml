@@ -616,6 +616,30 @@
         </table>
       </subsection>
 
+     <subsection name="Jing Task">
+
+        <p> Validates XML files against the RELAX NG alternative to XML Schema.
+        The Jing task for Ant allows you to efficiently validate 
+        multiple files against multiple RELAX NG patterns and integrate 
+        RELAX NG validation with other XML processing.</p>
+
+        <table>
+          <tr>
+            <th>Compatibility:</th>
+            <td>Ant 1.4 and later</td>  
+          </tr>
+          <tr>
+            <th>URL:</th>
+            <td><a href="http://www.thaiopensource.com/relaxng/jing-ant.html">
+            http://www.thaiopensource.com/relaxng/jing-ant.html</a></td>
+          </tr>
+          <tr>
+            <th>License:</th>
+            <td>BSD-like</td>
+          </tr>
+        </table>
+      </subsection>
+      
     </section>
 
     <section name="Compiler Implementations">
