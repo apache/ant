@@ -94,6 +94,7 @@
        destdir="${classes2.dir}"
        debug="on"
        compile="true"
+       fork="true"
        factory="DistributedAnnotationFactory"
        preprocessdir="${preprocess.dir}">
        <factorypath path="${classes.dir}" />
