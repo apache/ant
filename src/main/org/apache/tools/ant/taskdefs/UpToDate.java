@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2000-2002 The Apache Software Foundation.  All rights
+ * Copyright (c) 2000-2003 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -54,20 +54,19 @@
 
 package org.apache.tools.ant.taskdefs;
 
+import java.io.File;
+import java.util.Enumeration;
+import java.util.Vector;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.DirectoryScanner;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.Task;
 import org.apache.tools.ant.taskdefs.condition.Condition;
-import org.apache.tools.ant.types.Mapper;
 import org.apache.tools.ant.types.FileSet;
-import org.apache.tools.ant.util.SourceFileScanner;
+import org.apache.tools.ant.types.Mapper;
 import org.apache.tools.ant.util.FileNameMapper;
 import org.apache.tools.ant.util.MergingMapper;
-import java.io.File;
-import java.util.Enumeration;
-
-import java.util.Vector;
+import org.apache.tools.ant.util.SourceFileScanner;
 
 /**
  * Sets the given property if the specified target has a timestamp
@@ -154,9 +153,9 @@ public class UpToDate extends Task implements Condition {
     public Mapper createMapper() throws BuildException {
         if (mapperElement != null) {
             throw new BuildException("Cannot define more than one mapper",
-                                     location);
+                                     getLocation());
         }
-        mapperElement = new Mapper(project);
+        mapperElement = new Mapper(getProject());
         return mapperElement;
     }
 
@@ -196,15 +195,15 @@ public class UpToDate extends Task implements Condition {
         boolean upToDate = true;
         while (upToDate && enum.hasMoreElements()) {
             FileSet fs = (FileSet) enum.nextElement();
-            DirectoryScanner ds = fs.getDirectoryScanner(project);
-            upToDate = upToDate && scanDir(fs.getDir(project), 
+            DirectoryScanner ds = fs.getDirectoryScanner(getProject());
+            upToDate = upToDate && scanDir(fs.getDir(getProject()),
                                            ds.getIncludedFiles());
         }
 
         if (_sourceFile != null) {
             if (mapperElement == null) {
                 upToDate = upToDate &&
-                    (_targetFile.lastModified() > _sourceFile.lastModified());
+                    (_targetFile.lastModified() >= _sourceFile.lastModified());
             } else {
                 SourceFileScanner sfs = new SourceFileScanner(this);
                 upToDate = upToDate &&
@@ -225,11 +224,11 @@ public class UpToDate extends Task implements Condition {
     public void execute() throws BuildException {
         if (_property == null) {
             throw new BuildException("property attribute is required.", 
-                                     location);
+                                     getLocation());
         }
         boolean upToDate = eval();
         if (upToDate) {
-            this.project.setNewProperty(_property, getValue());
+            this.getProject().setNewProperty(_property, getValue());
             if (mapperElement == null) {
                 log("File \"" + _targetFile.getAbsolutePath() 
                     + "\" is up-to-date.", Project.MSG_VERBOSE);
