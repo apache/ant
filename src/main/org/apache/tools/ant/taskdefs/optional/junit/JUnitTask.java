@@ -847,9 +847,7 @@ public class JUnitTask extends Task {
         }
 
         File vmWatcher = createTempPropertiesFile("junitvmwatcher");
-        formatterArg.append("formatter=");
-        formatterArg.append(ForkedVMWatcher.class.getName());
-        formatterArg.append(",");
+        formatterArg.append("nocrashfile=");
         formatterArg.append(vmWatcher);
         cmd.createArgument().setValue(formatterArg.toString());
 

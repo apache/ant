@@ -21,6 +21,7 @@ import java.io.BufferedReader;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.PrintStream;
 import java.io.PrintWriter;
@@ -475,6 +476,7 @@ public class JUnitTestRunner implements TestListener {
         boolean stackfilter = true;
         Properties props = new Properties();
         boolean showOut = false;
+        String noCrashFile = null;
 
         if (args.length == 0) {
             System.err.println("required argument TestClassName missing");
@@ -493,6 +495,8 @@ public class JUnitTestRunner implements TestListener {
                 haltFail = Project.toBoolean(args[i].substring(14));
             } else if (args[i].startsWith("filtertrace=")) {
                 stackfilter = Project.toBoolean(args[i].substring(12));
+            } else if (args[i].startsWith("nocrashfile=")) {
+                noCrashFile = args[i].substring(12);
             } else if (args[i].startsWith("formatter=")) {
                 try {
                     createAndStoreFormatter(args[i].substring(10));
@@ -540,6 +544,7 @@ public class JUnitTestRunner implements TestListener {
                     if (errorOccured || failureOccured ) {
                         if ((errorOccured && haltError) 
                             || (failureOccured && haltFail)) {
+                            registerNonCrash(noCrashFile);
                             System.exit(code);
                         } else {
                             if (code > returnCode) {
@@ -558,6 +563,7 @@ public class JUnitTestRunner implements TestListener {
                                 stackfilter, haltFail, showOut, props);
         }
 
+        registerNonCrash(noCrashFile);
         System.exit(returnCode);
     }
 
@@ -655,4 +661,21 @@ public class JUnitTestRunner implements TestListener {
         runner.run();
         return runner.getRetCode();
      }
+
+    /**
+     * @since Ant 1.7
+     */
+    private static void registerNonCrash(String noCrashFile) 
+        throws IOException {
+        if (noCrashFile != null) {
+            FileOutputStream out = null;
+            try {
+                out = new FileOutputStream(noCrashFile);
+                out.write(0);
+                out.flush();
+            } finally {
+                out.close();
+            }
+        }
+    }
 } // JUnitTestRunner
