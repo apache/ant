@@ -896,7 +896,7 @@ while(<STDIN>) {
     ...
   </target>
 
-  <import file="../common.xml"/>
+  <import file="./common.xml"/>
 
   ...
 
