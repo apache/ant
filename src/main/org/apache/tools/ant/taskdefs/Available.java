@@ -70,6 +70,7 @@ public class Available extends Task {
     private String property;
     private String classname;
     private File file;
+    private File dir;
     private String resource;
     private Path classpath;
     private AntClassLoader loader;
@@ -112,6 +113,10 @@ public class Available extends Task {
         this.file = file;
     }
 
+    public void setDir(File dir) {
+        this.dir = dir;
+    }
+
     public void setResource(String resource) {
         this.resource = resource;
     }
@@ -121,8 +126,8 @@ public class Available extends Task {
             throw new BuildException("property attribute is required", location);
         }
         
-        if (classname == null && file == null && resource == null) {
-            throw new BuildException("At least one of (classname|file|resource) is required", location);
+        if (classname == null && file == null && dir == null && resource == null) {
+            throw new BuildException("At least one of (classname|file|dir|resource) is required", location);
         }
 
         if (classpath != null) {
@@ -139,6 +144,11 @@ public class Available extends Task {
             return;
         }
         
+        if ((dir != null) && !checkDir(dir)) {
+            log("Unable to find dir " + dir + " to set property " + property, Project.MSG_VERBOSE);
+            return;
+        }
+        
         if ((resource != null) && !checkResource(resource)) {
             log("Unable to load resource " + resource + " to set property " + property, Project.MSG_VERBOSE);
             return;
@@ -148,7 +158,11 @@ public class Available extends Task {
     }
 
     private boolean checkFile(File file) {
-        return file.exists();
+        return file.isFile();
+    }
+
+    private boolean checkDir(File dir) {
+        return dir.isDirectory();
     }
 
     private boolean checkResource(String resource) {
