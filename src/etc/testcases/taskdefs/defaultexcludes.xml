@@ -7,13 +7,11 @@
   </target>
 
   <target name="test2">
-    <defaultexcludes add="foo" echo="true"/>
-    <defaultexcludes remove="foo" echo="false"/>
+    <defaultexcludes default="true" add="foo" echo="true"/>
   </target>
 
   <target name="test3">
-    <defaultexcludes remove="**/CVS" echo="true"/>
-    <defaultexcludes add="**/CVS" echo="false"/>
+    <defaultexcludes default="true" remove="**/CVS" echo="true"/>
   </target>
 
 </project>

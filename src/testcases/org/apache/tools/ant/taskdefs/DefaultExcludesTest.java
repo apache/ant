@@ -55,6 +55,7 @@
 package org.apache.tools.ant.taskdefs;
 
 import org.apache.tools.ant.BuildFileTest;
+import org.apache.tools.ant.DirectoryScanner;
 
 /**
  * @author Gus Heck <gus.heck@olin.edu>
@@ -71,59 +72,73 @@ public class DefaultExcludesTest extends BuildFileTest {
 
     // Output the default excludes
     public void test1() {
-        expectLog("test1", "Current Default Excludes:\n"+
-                  "  **/*~\n"+
-                  "  **/#*#\n"+
-                  "  **/.#*\n"+
-                  "  **/%*%\n"+
-                  "  **/._*\n"+
-                  "  **/CVS\n"+
-                  "  **/CVS/**\n"+
-                  "  **/.cvsignore\n"+
-                  "  **/SCCS\n"+
-                  "  **/SCCS/**\n"+
-                  "  **/vssver.scc\n"+
-                  "  **/.svn\n"+
-                  "  **/.svn/**\n"+
-                  "  **/.DS_Store");
+        String[] expected = {
+                          "**/*~",
+                          "**/#*#",
+                          "**/.#*",
+                          "**/%*%",
+                          "**/._*",
+                          "**/CVS",
+                          "**/CVS/**",
+                          "**/.cvsignore",
+                          "**/SCCS",
+                          "**/SCCS/**",
+                          "**/vssver.scc",
+                          "**/.svn",
+                          "**/.svn/**",
+                          "**/.DS_Store"};
+        project.executeTarget("test1");
+        assertEquals("current default excludes", expected, DirectoryScanner.getDefaultExcludes());
     }
 
     // adding something to the excludes'
     public void test2() {
-        expectLog("test2", "Current Default Excludes:\n"+
-                  "  **/*~\n"+
-                  "  **/#*#\n"+
-                  "  **/.#*\n"+
-                  "  **/%*%\n"+
-                  "  **/._*\n"+
-                  "  **/CVS\n"+
-                  "  **/CVS/**\n"+
-                  "  **/.cvsignore\n"+
-                  "  **/SCCS\n"+
-                  "  **/SCCS/**\n"+
-                  "  **/vssver.scc\n"+
-                  "  **/.svn\n"+
-                  "  **/.svn/**\n"+
-                  "  **/.DS_Store\n"+
-                  "  foo");             // foo added
+        String[] expected = {
+                          "**/*~",
+                          "**/#*#",
+                          "**/.#*",
+                          "**/%*%",
+                          "**/._*",
+                          "**/CVS",
+                          "**/CVS/**",
+                          "**/.cvsignore",
+                          "**/SCCS",
+                          "**/SCCS/**",
+                          "**/vssver.scc",
+                          "**/.svn",
+                          "**/.svn/**",
+                          "**/.DS_Store",
+                          "foo"};
+        project.executeTarget("test2");
+        assertEquals("current default excludes", expected, DirectoryScanner.getDefaultExcludes());
     }
 
     // removing something from the defaults
     public void test3() {
-        expectLog("test3", "Current Default Excludes:\n"+
-                  "  **/*~\n"+
-                  "  **/#*#\n"+
-                  "  **/.#*\n"+
-                  "  **/%*%\n"+
-                  "  **/._*\n"+
-                  //CVS missing
-                  "  **/CVS/**\n"+
-                  "  **/.cvsignore\n"+
-                  "  **/SCCS\n"+
-                  "  **/SCCS/**\n"+
-                  "  **/vssver.scc\n"+
-                  "  **/.svn\n"+
-                  "  **/.svn/**\n"+
-                  "  **/.DS_Store");
+        String[] expected = {
+                          "**/*~",
+                          "**/#*#",
+                          "**/.#*",
+                          "**/%*%",
+                          "**/._*",
+                          //CVS missing
+                          "**/CVS/**",
+                          "**/.cvsignore",
+                          "**/SCCS",
+                          "**/SCCS/**",
+                          "**/vssver.scc",
+                          "**/.svn",
+                          "**/.svn/**",
+                          "**/.DS_Store"};
+        project.executeTarget("test3");
+        assertEquals("current default excludes", expected, DirectoryScanner.getDefaultExcludes());
+    }
+    private void assertEquals(String message, String[] expected, String[] actual) {
+        // check that both arrays have the same size
+        assertEquals(message + " : string array length match", expected.length, actual.length);
+        for (int counter=0; counter <expected.length; counter++) {
+            assertEquals(message + " : " + counter + "th element in array match", expected[counter], actual[counter]);
+        }
+
     }
 }

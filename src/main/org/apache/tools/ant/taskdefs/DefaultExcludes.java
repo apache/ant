@@ -71,7 +71,7 @@ import org.apache.tools.ant.DirectoryScanner;
 public class DefaultExcludes extends Task {
     private String add = "";
     private String remove = "";
-
+    private boolean defaultrequested = false;
     private boolean echo = false;
 
     // by default, messages are always displayed
@@ -83,10 +83,13 @@ public class DefaultExcludes extends Task {
      * @exception BuildException if someting goes wrong with the build
      */
     public void execute() throws BuildException {
-        if (add.equals("") && remove.equals("") && (echo == false)) {
+        if (defaultrequested == false && add.equals("") && remove.equals("") && (echo == false)) {
             throw new BuildException("<defaultexcludes> task must set "
-                + "at least one atribute (echo=\"false\""
+                + "at least one attribute (echo=\"false\""
                 + " doesn't count since that is the default");
+        }
+        if (defaultrequested == true) {
+            DirectoryScanner.resetDefaultExcludes();
         }
         if (!add.equals("")) {
             DirectoryScanner.addDefaultExclude(add);
@@ -105,6 +108,14 @@ public class DefaultExcludes extends Task {
         }
     }
 
+    /**
+     * go back to standard default patterns
+     *
+     * @param def if true go back to default patterns
+     */
+    public void setDefault(boolean def) {
+        defaultrequested = def;
+    }
     /**
      * Pattern to add to the default excludes
      *

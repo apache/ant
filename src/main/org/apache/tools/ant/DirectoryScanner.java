@@ -205,11 +205,8 @@ public class DirectoryScanner
      * @see #addDefaultExcludes()
      */
     private static Vector defaultExcludes = new Vector();
-
     static {
-        for (int i = 0; i < DEFAULTEXCLUDES.length; i++) {
-            defaultExcludes.add(DEFAULTEXCLUDES[i]);
-        }
+        resetDefaultExcludes();
     }
 
     /** The base directory to be scanned. */
@@ -452,6 +449,19 @@ public class DirectoryScanner
      */
     public static boolean removeDefaultExclude(String s) {
         return defaultExcludes.remove(s);
+    }
+
+    /**
+     *  Go back to the hard wired default exclude patterns
+     *
+     * @since Ant 1.6
+     */
+    public static void resetDefaultExcludes() {
+    defaultExcludes = new Vector();
+
+        for (int i = 0; i < DEFAULTEXCLUDES.length; i++) {
+            defaultExcludes.add(DEFAULTEXCLUDES[i]);
+        }
     }
 
     /**

@@ -25,18 +25,24 @@ build, and prints out the current default excludes if desired.
   <tr>
     <td valign="top">echo</td>
     <td valign="top">whether or not to print out the default excludes.(defaults to false)</td>
-    <td valign="top" align="center">atribute "true" required if no 
-                                    other argument specified</td>
+    <td valign="top" align="center">attribute "true" required if no
+                                    other attribute specified</td>
+  </tr>
+  <tr>
+    <td valign="top">default</td>
+    <td valign="top">go back to hard wired default excludes</td>
+    <td valign="top" align="center">attribute "true" required if no
+    if no other attribute is specified</td>
   </tr>
   <tr>
     <td valign="top">add</td>
     <td valign="top">the pattern to add to the default excludes</td>
-    <td valign="top" align="center">if no other atribute is specified</td>
+    <td valign="top" align="center">if no other attribute is specified</td>
   </tr>
   <tr>
     <td valign="top">remove</td>
     <td valign="top">remove the specified pattern from the default excludes</td>
-    <td valign="top" align="center">if no other atribute is specified</td>
+    <td valign="top" align="center">if no other attribute is specified</td>
   </tr>
 </table>
 
@@ -59,7 +65,7 @@ backup files and then restore normal behavior</p>
 
   (do several fileset based tasks here)
 
-  &lt;defaultexcludes add=&quot;**/*~&quot;/&gt;
+  &lt;defaultexcludes default=&quot;true&quot;/&gt;
 </pre>
 
 
