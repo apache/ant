@@ -9,11 +9,11 @@ package org.apache.tools.ant.taskdefs;
 
 import java.io.File;
 import org.apache.myrmidon.api.TaskException;
-import org.apache.tools.ant.types.DirectoryScanner;
 import org.apache.tools.ant.Task;
+import org.apache.tools.ant.types.DirectoryScanner;
 import org.apache.tools.ant.types.FileSet;
-import org.apache.tools.ant.types.PatternSet;
 import org.apache.tools.ant.types.NameEntry;
+import org.apache.tools.ant.types.PatternSet;
 
 /**
  * This is an abstract task that should be used by all those tasks that require
@@ -26,22 +26,18 @@ import org.apache.tools.ant.types.NameEntry;
  * @author Jon S. Stevens <a href="mailto:jon@clearink.com">jon@clearink.com</a>
  * @author <a href="mailto:stefan.bodewig@epost.de">Stefan Bodewig</a>
  */
-
 public abstract class MatchingTask
     extends Task
 {
-    protected boolean useDefaultExcludes = true;
-    protected FileSet fileset = new FileSet();
+    private boolean m_useDefaultExcludes = true;
+    private FileSet m_fileset = new FileSet();
 
     /**
      * Sets whether default exclusions should be used or not.
-     *
-     * @param useDefaultExcludes "true"|"on"|"yes" when default exclusions
-     *      should be used, "false"|"off"|"no" when they shouldn't be used.
      */
-    public void setDefaultexcludes( boolean useDefaultExcludes )
+    public void setDefaultexcludes( final boolean useDefaultExcludes )
     {
-        this.useDefaultExcludes = useDefaultExcludes;
+        m_useDefaultExcludes = useDefaultExcludes;
     }
 
     /**
@@ -50,10 +46,10 @@ public abstract class MatchingTask
      *
      * @param excludes the string containing the exclude patterns
      */
-    public void setExcludes( String excludes )
+    public void setExcludes( final String excludes )
         throws TaskException
     {
-        fileset.setExcludes( excludes );
+        m_fileset.setExcludes( excludes );
     }
 
     /**
@@ -62,10 +58,10 @@ public abstract class MatchingTask
      * @param excludesfile A string containing the filename to fetch the include
      *      patterns from.
      */
-    public void setExcludesfile( File excludesfile )
+    public void setExcludesfile( final File excludesfile )
         throws TaskException
     {
-        fileset.setExcludesfile( excludesfile );
+        m_fileset.setExcludesfile( excludesfile );
     }
 
     /**
@@ -74,10 +70,10 @@ public abstract class MatchingTask
      *
      * @param includes the string containing the include patterns
      */
-    public void setIncludes( String includes )
+    public void setIncludes( final String includes )
         throws TaskException
     {
-        fileset.setIncludes( includes );
+        m_fileset.setIncludes( includes );
     }
 
     /**
@@ -86,10 +82,10 @@ public abstract class MatchingTask
      * @param includesfile A string containing the filename to fetch the include
      *      patterns from.
      */
-    public void setIncludesfile( File includesfile )
+    public void setIncludesfile( final File includesfile )
         throws TaskException
     {
-        fileset.setIncludesfile( includesfile );
+        m_fileset.setIncludesfile( includesfile );
     }
 
     /**
@@ -100,7 +96,7 @@ public abstract class MatchingTask
     public NameEntry createExclude()
         throws TaskException
     {
-        return fileset.createExclude();
+        return m_fileset.createExclude();
     }
 
     /**
@@ -111,7 +107,7 @@ public abstract class MatchingTask
     public NameEntry createExcludesFile()
         throws TaskException
     {
-        return fileset.createExcludesFile();
+        return m_fileset.createExcludesFile();
     }
 
     /**
@@ -122,7 +118,7 @@ public abstract class MatchingTask
     public NameEntry createInclude()
         throws TaskException
     {
-        return fileset.createInclude();
+        return m_fileset.createInclude();
     }
 
     /**
@@ -133,7 +129,7 @@ public abstract class MatchingTask
     public NameEntry createIncludesFile()
         throws TaskException
     {
-        return fileset.createIncludesFile();
+        return m_fileset.createIncludesFile();
     }
 
     /**
@@ -144,7 +140,7 @@ public abstract class MatchingTask
     public PatternSet createPatternSet()
         throws TaskException
     {
-        return fileset.createPatternSet();
+        return m_fileset.createPatternSet();
     }
 
     /**
@@ -153,12 +149,11 @@ public abstract class MatchingTask
      * @param baseDir Description of Parameter
      * @return The DirectoryScanner value
      */
-    protected DirectoryScanner getDirectoryScanner( File baseDir )
+    protected DirectoryScanner getDirectoryScanner( final File baseDir )
         throws TaskException
     {
-        fileset.setDir( baseDir );
-        fileset.setDefaultexcludes( useDefaultExcludes );
-        return fileset.getDirectoryScanner();
+        m_fileset.setDir( baseDir );
+        m_fileset.setDefaultexcludes( m_useDefaultExcludes );
+        return m_fileset.getDirectoryScanner();
     }
-
 }
