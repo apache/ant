@@ -41,7 +41,7 @@ public class Execute
 
     private static File getAntHomeDirectory()
     {
-        final String antHome = System.getProperty( "ant.home" );
+        final String antHome = System.getProperty( "myrmidon.home" );
         if( null == antHome )
         {
             final String message =
