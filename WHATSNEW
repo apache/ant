@@ -69,6 +69,8 @@ Other changes:
   Added an outputdir attribute to allow the destination to be a
   directory into which the exploded jar is written.
 
+* ejbjar now supports Borland Enterprise Server 5 and Jonas 2.5
+
 Changes from Ant 1.5beta1 to Ant 1.5beta2
 =========================================
 

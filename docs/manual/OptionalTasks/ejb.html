@@ -49,7 +49,7 @@ In general these tasks are specific to the particular vendor's EJB Server.</p>
   <li><a href="http://www.bea.com" target="_top">Weblogic</a>
    4.5.1 through to 7.0 EJB servers</li>
   <li><a href="http://www.objectweb.org/jonas/" target="_top">JOnAS</a>
-   2.4 Open Source EJB server</li>
+   2.4.x and 2.5 Open Source EJB server</li>
   <li><a href="http://www.ibm.com/websphere">IBM WebSphere</a> 4.0</li>
 </ul>
   Over time we expect further optional tasks  to support additional EJB Servers.
@@ -67,7 +67,7 @@ In general these tasks are specific to the particular vendor's EJB Server.</p>
  <tr><td><a href="BorlandEJBTasks.html">borland</a></td><td>Borland Application Server 4.5</td></tr>
  <tr><td><a href="#ejbjar_iplanet">iPlanet</a></td><td>iPlanet Application Server 6.0</td></tr>
  <tr><td><a href="#ejbjar_jboss">jboss</a></td><td>JBoss</td></tr>
- <tr><td><a href="#ejbjar_jonas">jonas</a></td><td>JOnAS 2.4</td></tr>
+ <tr><td><a href="#ejbjar_jonas">jonas</a></td><td>JOnAS 2.4.x and 2.5</td></tr>
  <tr><td><a href="#ejbjar_weblogic">weblogic</a></td><td>Weblogic 5.1 to 7.0</td></tr>
  <tr><td><a href="#ejbjar_websphere">websphere</a></td><td>IBM WebSphere 4.0</td></tr>
  <tr><td><a href="#wlrun">wlrun</a></td><td colspan="2">Weblogic 4.5.1 to 7.0</td></tr>
@@ -533,7 +533,7 @@ include: </p>
   <li>Weblogic 5.1/6.0 session/entity beans using the weblogic.ejbc tool</li>
   <li>IBM WebSphere 4.0</li>
   <li>TOPLink for WebLogic 2.5.1-enabled entity beans</li>
-  <li><a href="http://www.objectweb.org/jonas/">JOnAS</a> 2.4 Open Source EJB server</li>
+  <li><a href="http://www.objectweb.org/jonas/">JOnAS</a> 2.4.x and 2.5 Open Source EJB server</li>
 </ul>
 
 
@@ -1513,35 +1513,40 @@ local DTDs are found in the [iAS-install-directory]/dtd directory.
             &lt;dtd publicId="-//Sun Microsystems, Inc.//DTD iAS Enterprise JavaBeans 1.0//EN"
                  location="${ias.home}/APPS/IASEjb_jar_1_0.dtd"/>
     &lt;/ejbjar></pre>
-<h3><a name="ejbjar_jonas">
-<h3>JOnAS (Java Open Application Server) element</h3>
-</a>
-</h3>
-<p>The &lt;jonas&gt; nested element is used to build JOnAS-specific stubs
-and skeletons thanks to the GenIC specific tool, and construct a JAR file
-which may be deployed to the JOnAS Application Server. The build process
-will always determine if the EJB stubs/skeletons and the EJB-JAR file are
-up to date, and it will do the minimum amount of work required. </p>
 
-<p>Like the WebLogic element, a naming convention for the EJB descriptors
- is most commonly used to specify the name for the completed JAR file.  For
- example, if the EJB descriptor ejb/Account.xml (or ejb/Account-ejb-jar.xml )
- is found in the descriptor directory, the jonas element will search for a
- JOnAS-specific EJB descriptor file named ejb/Account-jonas-ejb-jar.xml
- (if it isn't found, the task will fail) and a JAR file named ejb/Account.jar
- will be written in the destination directory. Note that when the EJB
- descriptors are added to the JAR file, they are automatically  renamed
- META-INF/ejb-jar.xml and META-INF/jonas-ejb-jar.xml.<br><br>
- But if you prefer, you can use JOnAS convention naming and keep your
- XML file name : ejb/Account.xml and ejb/jonas-Account.xml, a JAR file named
- ejb/Account.jar will be written in the destination directory.
+<h3><a name="ejbjar_jonas">JOnAS (Java Open Application Server) element</a></h3>
 
- </p>
-<p>Of course, this naming behaviour can be modified by specifying attributes
- in the ejbjar task (for example, basejarname, basenameterminator, and flatdestdir)
- as well as the iplanet element (for example, suffix).  Refer to the appropriate
- documentation for more details.</p>
+<p>The &lt;jonas&gt; nested element is used to build JOnAS-specific stubs and
+skeletons thanks to the <code>GenIC</code> specific tool, and construct a JAR
+file which may be deployed to the JOnAS Application Server. The build process
+will always determine if the EJB stubs/skeletons and the EJB-JAR file are up to
+date, and it will do the minimum amount of work required.</p>
+
+<p>Like the WebLogic element, a naming convention for the EJB descriptors is
+most commonly used to specify the name for the completed JAR file. For example,
+if the EJB descriptor <code>ejb/Account-ejb-jar.xml</code> is found in the
+descriptor directory, the &lt;jonas&gt; element will search for a JOnAS-specific
+EJB descriptor file named <code>ejb/Account-jonas-ejb-jar.xml</code> and a JAR
+file named <code>ejb/Account.jar</code> will be written in the destination
+directory. But the &lt;jonas&gt; element can also use the JOnAS naming
+convention. With the same example as below, the EJB descriptor can also be named
+<code>ejb/Account.xml</code> (no base name terminator here) in the descriptor
+directory. Then the &lt;jonas&gt; element will search for a JOnAS-specific EJB
+descriptor file called <code>ejb/jonas-Account.xml</code>. This convention do
+not follow strictly the ejb-jar naming convention recommendation but is
+supported for backward compatibility with previous version of JOnAS.</p>
+
+<p>Note that when the EJB descriptors are added to the JAR file, they are
+automatically renamed <code>META-INF/ejb-jar.xml</code> and
+<code>META-INF/jonas-ejb-jar.xml</code>.</p>
+
+<p>Of course, this naming behavior can be modified by specifying attributes in
+the ejbjar task (for example, basejarname, basenameterminator, and flatdestdir)
+as well as the iplanet element (for example, suffix). Refer to the appropriate
+documentation for more details.</p>
+
 <h3> Parameters:</h3>
+
 <table border="1" cellspacing="0" cellpadding="2">
   <tbody>
     <tr>
@@ -1552,148 +1557,121 @@ up to date, and it will do the minimum amount of work required. </p>
     <tr>
       <td valign="Top">destdir</td>
       <td valign="Top">The base directory into which the generated JAR files
- will be written. Each JAR file is written in directories which correspond
- to their location within the "descriptordir" namespace.</td>
+      will be written. Each JAR file is written in directories which correspond
+      to their location within the "<code>descriptordir</code>" namespace.</td>
       <td align="Center" valign="Top">Yes</td>
     </tr>
     <tr>
-      <td valign="Top">jonasroot<br>
-      </td>
-      <td valign="Top">The root directory for JOnAS. <br>
-      </td>
-      <td valign="Top">
-      <div align="Center">Yes<br>
-      </div>
-      </td>
-    </tr>
-    <tr>
-      <td valign="Top">workdir<br>
-      </td>
-      <td valign="Top">The work directory to use. Specify where to place
-the generated files, before to add to the jar. The directory should be empty.
-If omitted, it defaults to a temporary directory.<br>
-      </td>
-      <td valign="Top">
-      <div align="Center">No<br>
-      </div>
-      </td>
-    </tr>
-    <tr>
-      <td valign="Top">cleanworkdir<br>
-      </td>
-      <td valign="Top">Clean the working directory after work.
-         If omitted, it defaults to false, but your jar will contain
-         wrong files if you don't clean the workdir yourself.<br>
-         Temporary working directory is always cleaned.<br>
-      </td>
-      <td valign="Top">
-      <div align="Center">No<br>
-      </div>
-      </td>
+      <td valign="Top">jonasroot</td>
+      <td valign="Top">The root directory for JOnAS.</td>
+      <td valign="Top" align="Center">Yes</td>
     </tr>
     <tr>
       <td valign="Top">classpath</td>
-      <td valign="Top">The classpath used when generating EJB stubs and skeletons.
-      If omitted, the classpath specified in the "ejbjar" parent task will
-      be used. If specified, the classpath elements will be prepended to the
-      classpath specified in the parent "ejbjar" task (see also the ORB
-      attribute documentation below). Note that nested "classpath" elements
-      may also be used.</td>
-      <td align="Center" valign="Top">No</td>
+      <td valign="Top">The classpath used when generating EJB stubs and
+      skeletons. If omitted, the classpath specified in the "ejbjar" parent
+      task will be used. If specified, the classpath elements will be prepended
+      to the classpath specified in the parent "ejbjar" task (see also the ORB
+      attribute documentation below). Note that nested "classpath" elements may
+      also be used.</td>
+      <td valign="Top" align="Center">No</td>
     </tr>
     <tr>
       <td valign="Top">keepgenerated</td>
-      <td valign="Top">Indicates whether or not the Java source files which
- are generated by GenIC will be saved or automatically deleted. If "yes", the
-source files will be retained.  If omitted, it defaults to "no". </td>
-      <td align="Center" valign="Top">No</td>
-    </tr>
-  <tr>
-    <td valign="top">keepgeneric</td>
-    <td valign="top">This controls whether the generic file used as input to
-                     GenIC is retained.</td>
-    <td valign="top" align="center">No, defaults to false</td>
-  </tr>
-  <tr>
-    <td valign="top">secpropag</td>
-    <td valign="top">Modify the RMI Skel. and Stub. to implement the
-                     implicit propagation of the security context (note that
-                     the transactional context is always provided).
-                     </td>
-    <td valign="top" align="center">No, defaults to false.</td>
-  </tr>
-    <tr>
-      <td valign="Top">orb<br>
-      </td>
-      <td>Choose your ORB : RMI, JEREMIE, DAVID, ... If omitted, it defaults
-to the one present in classpath. If specified, the corresponding JOnAS JAR is
-automatically added to the classpath. <br>
-      </td>
+      <td valign="Top"><code>true</code> if the intermediate Java
+      source files generated by GenIC must be deleted or not. If
+      omitted, it defaults to <code>false</code>.</td>
       <td align="Center" valign="Top">No</td>
     </tr>
     <tr>
-      <td valign="Top">noGENIC<br>
-      </td>
-      <td valign="Top">If this attribute is set to true, JOnAS's GenIC will
- not be run on the EJB jar. Use this if you prefer to
- run GenIC at deployment time.</td>
-      <td>
-      <div align="Center">No</div>
-      </td>
+      <td valign="Top">nocompil</td>
+      <td valign="Top"><code>true</code> if the generated source files
+      must not be compiled via the java and rmi compilers. If omitted,
+      it defaults to <code>false</code>.</td>
+      <td align="Center" valign="Top">No</td>
+    </tr>
+    <tr>
+      <td valign="Top">novalidation</td>
+      <td valign="Top"><code>true</code> if the XML deployment descriptors must
+      be parsed without validation. If omitted, it defaults to <code>false</code>.</td>
+      <td align="Center" valign="Top">No</td>
+    </tr>
+    <tr>
+      <td valign="Top">javac</td>
+      <td valign="Top">Java compiler to use. If omitted, it defaults
+      to the value of <code>build.compiler</code> property.</td>
+      <td align="Center" valign="Top">No</td>
+    </tr>
+    <tr>
+      <td valign="Top">javacopts</td>
+      <td valign="Top">Options to pass to the java compiler.</td>
+      <td align="Center" valign="Top">No</td>
+    </tr>
+    <tr>
+      <td valign="Top">rmicopts</td>
+      <td valign="Top">Options to pass to the rmi compiler.</td>
+      <td align="Center" valign="Top">No</td>
+    </tr>
+    <tr>
+      <td valign="top">secpropag</td>
+      <td valign="top"><code>true</code> if the RMI Skel. and
+      Stub. must be modified to implement the implicit propagation of
+      the security context (the transactional context is always
+      provided). If omitted, it defaults to <code>false</code>.</td>
+      <td valign="top" align="center">No</td>
+    </tr>
+    <tr>
+      <td valign="Top">verbose</td>
+      <td valign="Top">Indicates whether or not to use -verbose switch. If
+      omitted, it defaults to <code>false</code>.</td>
+      <td align="Center" valign="Top">No</td>
+    </tr>
+      <td valign="Top">additionalargs</td>
+      <td valign="Top">Add additional args to GenIC.</td>
+      <td align="Center" valign="Top">No</td>
+    </tr>
+    <tr>
+      <td valign="Top">keepgeneric</td>
+      <td valign="Top"><code>true</code> if the generic JAR file used as input
+      to GenIC must be retained. If omitted, it defaults to <code>false</code>.</td>
+      <td align="Center" valign="Top">No</td>
     </tr>
     <tr>
       <td valign="Top">suffix</td>
-      <td>String value appended to the JAR filename when creating each JAR.
-  If omitted, it defaults to ".jar". </td>
+      <td>String value appended to the JAR filename when creating each JAR.  If
+      omitted, it defaults to ".jar". </td>
       <td align="Center" valign="Top">No</td>
     </tr>
     <tr>
-      <td valign="Top">verbose<br>
-      </td>
-      <td valign="Top">Indicates whether or not to use -verbose switch. If
-omitted, it defaults to "no".</td>
-      <td valign="Top">
-      <div align="Center">No<br>
-      </div>
-      </td>
+      <td valign="Top">orb</td>
+      <td>Choose your ORB : RMI, JEREMIE, DAVID. If omitted, it defaults to the
+      one present in classpath. If specified, the corresponding JOnAS JAR is
+      automatically added to the classpath.</td>
+      <td align="Center" valign="Top">No</td>
     </tr>
     <tr>
-      <td valign="Top">compiler<br>
-      </td>
-      <td valign="Top">This allows for the selection of a different compiler
-                      to be used for the compilation of the generated Java
-                      files. This could be set, for example, to Jikes to
-                     compile with the Jikes compiler. If this is not set
-                    and the <code>build.compiler</code> property is set
-                    to jikes, the Jikes compiler will be used. If this
-                   is not desired, the value "<code>default</code>"
-                 may be given to use the default compiler<br>
-      </td>
-      <td valign="Top">
-      <div align="Center">No<br>
-      </div>
-      </td>
+      <td valign="Top">nogenic</td>
+      <td valign="Top">If this attribute is set to <code>true</code>,
+      JOnAS's GenIC will not be run on the EJB JAR. Use this if you
+      prefer to run GenIC at deployment time. If omitted, it defaults
+      to <code>false</code>.</td>
+      <td align="Center" valign="Top">No</td>
     </tr>
     <tr>
-      <td valign="Top">args<br>
-      </td>
-      <td valign="Top">Add additional args to GenIC.<br>
-      </td>
-      <td valign="Top">
-      <div align="Center">No<br>
-      </div>
-      </td>
-    </tr>
   </tbody>
 </table>
+
 <p>As noted above, the jonas element supports additional &lt;classpath&gt;
- nested elements. </p>
+nested elements.</p>
+
 <h3>Examples</h3>
-<p>This example shows ejbjar being used to generate deployment jars using
- a  JOnAS EJB container. This example requires the naming standard to be
- used for  the deployment descriptors. Using this format will create a ejb
- jar file for each variation of &nbsp;'*-jar.xml' that is found in the
-deployment  descriptor  directory.&nbsp;</p>
+
+<p>This example shows ejbjar being used to generate deployment jars using a
+JOnAS EJB container. This example requires the naming standard to be used for
+the deployment descriptors. Using this format will create a EJB JAR file for
+each variation of &nbsp;'*-jar.xml' that is found in the deployment descriptor
+directory.&nbsp;</p>
+
 <pre>
       &lt;ejbjar srcdir="${build.classes}"
               descriptordir="${descriptor.dir}"&gt;
@@ -1707,11 +1685,12 @@ deployment  descriptor  directory.&nbsp;</p>
         &lt;/support&gt;
       &lt;/ejbjar&gt;
 </pre>
-<p></p>
+
 <p>This example shows ejbjar being used to generate a single deployment jar
-  using a JOnAS EJB container. This example does require the deployment
-  descriptors to use the naming standard. This will create only one ejb jar
- file - 'TheEJBJar.jar'.</p>
+using a JOnAS EJB container. This example does require the deployment
+descriptors to use the naming standard. This will create only one ejb jar file -
+'TheEJBJar.jar'.</p>
+
 <pre>
       &lt;ejbjar srcdir="${build.classes}"
               descriptordir="${descriptor.dir}"
