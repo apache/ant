@@ -42,7 +42,7 @@
     <td valign="top">destDir</td>
     <td valign="top">Destination directory for all downloads
     </td>
-    <td valign="top" align="center">Yes</td>
+    <td valign="top" align="center">No - default is ${user.home}/.maven/repository</td>
   </tr>
   <tr>
     <td valign="top">offline</td>
@@ -68,10 +68,15 @@
     <td valign="top">repositoryRef</td>
     <td valign="top">Reference to a predefined repository
     </td>
-    <td valign="top" align="center">Only if no repository is defined inline</td>
+    <td valign="top" align="center">No</td>
   </tr>
 </table>
 
+<p>
+The default destination is that used by Maven,
+${user.home}/.maven/repository . It can be overridden by setting the
+property <code>ant.maven.repository.dir</code> to a new location. 
+</p>
  
 </table>
 <h3>Nested Elements</h3>
@@ -127,9 +132,12 @@ This is the core of the system; a library to (potentially) download.
 </table>
 
 <h4>Repository</h4>
-
+<p>
 A repository is Ant datatype that extends the <code>Repository</code> type.
-Ant only ships with one: the mavenrepository;  
+Ant only ships with one: the mavenrepository. If no repository is
+declared inline, and no repositoryref attribute set, the task
+will default to the maven repository.
+</p>
 
 <table border="1" cellpadding="2" cellspacing="0">
   <tr>
@@ -143,12 +151,6 @@ Ant only ships with one: the mavenrepository;
     </td>
     <td valign="top" align="center">No</td>
   </tr>
-  <tr>
-    <td valign="top"></td>
-    <td valign="top">
-    </td>
-    <td valign="top" align="center">No</td>
-  </tr>
 </table>
   
 <p>Example:</p>
@@ -157,6 +159,15 @@ Ant only ships with one: the mavenrepository;
 </pre>    
 
 <h4>mavenrepository</h4>
+
+<p>
+This connects to the Maven repository at ibiblio.org, or another 
+chosen. Private repositories should copy the existing layout.
+</p>
+<p>
+If no <code>url</code> is set, the default URL is 
+<code>http://ibiblio.org/maven</code>, unless the property
+<code>ant.maven.repository.url</code> is set to something else. 
 
 <table border="1" cellpadding="2" cellspacing="0">
   <tr>

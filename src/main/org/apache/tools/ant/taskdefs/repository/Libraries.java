@@ -85,7 +85,7 @@ public final class Libraries extends Task {
     private boolean flatten = false;
 
     public static final String ERROR_ONE_REPOSITORY_ONLY = "Only one repository is allowed";
-    public static final String ERROR_NO_DEST_DIR = "No destination directory";
+    //public static final String ERROR_NO_DEST_DIR = "No destination directory";
     public static final String ERROR_NO_REPOSITORY = "No repository defined";
     public static final String ERROR_NO_LIBRARIES = "No libraries declared";
     public static final String ERROR_REPO_PROBE_FAILED = "Repository probe failed with ";
@@ -94,6 +94,22 @@ public final class Libraries extends Task {
     public static final String MSG_NO_RETRIEVE = "Connections disabled";
     public static final String MSG_NO_LIBRARIES_TO_FETCH = "No libraries marked for retrieval";
 
+
+    /**
+     * where maven stores stuff, and where we save stuff too, unless
+     * declared otherwise.
+     */
+    public static final String MAVEN_LOCATION=".maven/repository";
+
+    /**
+     * name of the property which can provide an override of the repository dir
+     * from {@link #MAVEN_LOCATION}
+     */
+    public static final String REPOSITORY_DIR_PROPERTY="ant.maven.repository.dir";
+    /**
+     * name of the property which can provide an override of the repository URL
+     */
+    public static final String REPOSITORY_URL_PROPERTY = "ant.maven.repository.url";
 
     /**
      * Init the task
@@ -105,6 +121,23 @@ public final class Libraries extends Task {
         super.init();
         //set our default polocy
         add(new AbsentFilesPolicy());
+    }
+
+    /**
+     * locate the default directory, by looking for the property
+     * {@link #REPOSITORY_DIR_PROPERTY}, and if not defined,
+     * ${user.home}/.maven/repository
+     * @return file for the default dest dir; may not exist yet.
+     */
+    private File locateDefaultDestDirectory() {
+        //set the dest dir up to the default.
+        File mavenDir
+                = new File(System.getProperty("user.home"), MAVEN_LOCATION);
+        String propertyDir = getProject().getProperty(REPOSITORY_DIR_PROPERTY);
+        if(propertyDir!=null) {
+            mavenDir=getProject().resolveFile(propertyDir);
+        }
+        return mavenDir;
     }
 
     /**
@@ -325,13 +358,12 @@ public final class Libraries extends Task {
      * @throws BuildException
      */
     public void validate() {
-        if (destDir == null
-        //        || !destDir.isDirectory()
-        ) {
-            throw new BuildException(ERROR_NO_DEST_DIR);
+        if (destDir == null) {
+            destDir=locateDefaultDestDirectory();
         }
         if (repository == null) {
-            throw new BuildException(ERROR_NO_REPOSITORY);
+            MavenRepository maven=(MavenRepository)getProject().createDataType(MavenRepository.TYPE_NAME);
+            repository=maven;
         }
         Iterator it = libraries.iterator();
         while (it.hasNext()) {
@@ -365,9 +397,12 @@ public final class Libraries extends Task {
      */
     private void doExecute() throws BuildException {
         destDir.mkdirs();
+        //get the ultimate repository
         Repository repo = repository.resolve();
+        //validate it
         repo.validate();
         if (libraries.size() == 0) {
+            //bail out on an empty library
             throw new BuildException(ERROR_NO_LIBRARIES);
         }
         log("Getting libraries from " + repo.toString(), Project.MSG_VERBOSE);

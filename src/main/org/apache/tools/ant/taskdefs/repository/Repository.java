@@ -27,9 +27,9 @@ import java.io.IOException;
  * retrieval. To use this type, you must use a non-abstract class, either one
  * that ships with Ant, or one you implement and declare yourself.
  * <p/>
- * The &lt;getlibraries&gt; task lets you supply a repository by reference
+ * The &lt;libraries&gt; task lets you supply a repository by reference
  * inline {@link Libraries#add(Repository)} or on the command line {@link
- * GetLibraries#setRepositoryRef(org.apache.tools.ant.types.Reference)}
+ * Libraries#setRepositoryRef(org.apache.tools.ant.types.Reference)}
  *
  * @since Ant1.7
  */

@@ -47,11 +47,11 @@ public class LibrariesTest extends BuildFileTest {
     }
 
     public void testEmpty() {
-        expectBuildException("testEmpty",Libraries.ERROR_NO_DEST_DIR);
+        expectBuildException("testEmpty", Libraries.ERROR_NO_LIBRARIES);
     }
 
     public void testEmpty2() {
-        expectBuildException("testEmpty2", Libraries.ERROR_NO_REPOSITORY);
+        expectBuildException("testEmpty2", Libraries.ERROR_NO_LIBRARIES);
     }
 
     public void testEmpty3() {
@@ -59,7 +59,7 @@ public class LibrariesTest extends BuildFileTest {
     }
 
     public void testNoRepo() {
-        expectBuildException("testNoRepo", Libraries.ERROR_NO_REPOSITORY);
+        execIfOnline("testNoRepo");
     }
 
     public void testUnknownReference() {

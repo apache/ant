@@ -18,6 +18,7 @@
 package org.apache.tools.ant.taskdefs.repository;
 
 import org.apache.tools.ant.util.FileUtils;
+import org.apache.tools.ant.BuildException;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -48,12 +49,12 @@ public class MavenRepository extends HttpRepository {
      * this is what we think the MD5 type is
      */
     protected static final String MAVEN_MD5_FILE_TYPE = "US-ASCII";
+    public static final String TYPE_NAME = "mavenrepository";
 
     /**
      * bind to the main maven repository
      */
     public MavenRepository() {
-        setUrl(MAVEN_URL);
     }
 
     
@@ -63,6 +64,29 @@ public class MavenRepository extends HttpRepository {
      */
     public void setCheckMD5(boolean checkMD5) {
         this.checkMD5 = checkMD5;
+    }
+
+
+    /**
+     * Validation time is where the final fixup of repositories exist; this
+     * is the last chance to examine properties to see if there is an override.
+     *
+     * @throws BuildException if unhappy
+     */
+    public void validate() {
+        if(getUrl()==null) {
+            //we have no URL yet; so use the maven one
+            if(getProject()!=null) {
+                String urlProperty=getProject()
+                        .getProperty(Libraries.REPOSITORY_URL_PROPERTY);
+                if(urlProperty!=null) {
+                    setUrl(urlProperty);
+                } else {
+                    setUrl(MAVEN_URL);
+                }
+            }
+        }
+        super.validate();
     }
 
     /**

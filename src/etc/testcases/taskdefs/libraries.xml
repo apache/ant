@@ -2,10 +2,28 @@
 <project name="getlibraries" basedir="." default="init">
 
 
+
+
   <!-- use the normal one at ibiblio-->
   <mavenrepository id="maven"/>
 
-  <target name="init">
+  
+    <!-- configure an HTTP proxy -->
+  <target name="setproxy" unless="setproxy.disabled" >
+    <!-- put your proxy settings here -->
+    <property file="${user.home}/.ant/proxy.properties" />
+    <property name="proxy.host" value="" />
+    <property name="proxy.port" value="80" />
+    <property name="proxy.user" value="" />
+    <property name="proxy.pass" value="" />
+    <echo level="verbose">
+      proxy: ${proxy.host}:${proxy.port} [${proxy.user}/${proxy.pass}]
+    </echo>
+      <setproxy proxyhost="${proxy.host}" proxyport="${proxy.port}"
+        proxyuser="${proxy.user}" proxypassword="${proxy.pass}" />
+  </target> 
+  
+  <target name="init" depends="setproxy">
     <property name="lib.dir" value="getlib"/>
     
     <property name="commons.logging.project" value="commons-logging"/>
@@ -15,6 +33,9 @@
     <property name="commons.logging"
       value="${commons.logging.project}/jars/${commons.logging.filename}"/>
 
+    <property name="maven.repository.dir"
+        location="${user.home}/.maven/repository" />      
+      
     <presetdef name="gl1">
       <libraries destDir="${lib.dir}">
       </libraries>
@@ -29,6 +50,21 @@
 
     <macrodef name="assert-downloaded">
       <attribute name="library" default="${commons.logging}"/>
+      <attribute name="repository" default="${lib.dir}"/>
+      <sequential>
+        <fail >
+          Not found: "@{repository}/@{library}"
+          <condition>
+            <not>
+              <available file="@{repository}/@{library}"/>
+            </not>
+          </condition>
+        </fail>
+      </sequential>
+    </macrodef>
+    
+<!--     <macrodef name="assert-downloaded">
+      <attribute name="library" default="${commons.logging}"/>
       <sequential>
         <property name="@{library}.path" location="${lib.dir}/@{library}" />
         <available property="@{library}.exists"
@@ -37,20 +73,21 @@
           Not found: ${@{library}.path}
         </fail>
       </sequential>
-    </macrodef>
+    </macrodef> -->
 
     <macrodef name="assert-not-downloaded">
       <attribute name="library" default="${commons.logging}"/>
+      <attribute name="repository" default="${lib.dir}"/>
       <sequential>
-        <property name="@{library}.path" location="${lib.dir}/@{library}" />
-        <available property="@{library}.exists"
-          file="${@{library}.path}"/>
-        <fail if="@{library}.exists">
-          Found: ${@{library}.path}
+        <fail>
+          Unexpectedly found: "@{repository}/@{library}"
+          <condition>
+            <available file="@{repository}/@{library}"/>
+          </condition>
         </fail>
       </sequential>
     </macrodef>
-
+    
   </target>
 
   <target name="cleanup"  depends="init">
@@ -77,6 +114,7 @@
 
   <target name="testNoRepo" depends="init">
     <getlib/>
+    <assert-downloaded/>
   </target>
 
   <target name="testUnknownReference" depends="init">
@@ -84,7 +122,6 @@
       <repository refid="unknown"/>
     </getlib>
   </target>
-
 
   <target name="testFunctionalInline" depends="init">
     <getlib repositoryref="maven">
@@ -202,12 +239,10 @@
 
   <target name="testForceDisabled" depends="init">
     <getlib>
-      <mavenrepository/>
       <force enabled="true" />
       <assertdownloaded count="1" />
     </getlib>
     <getlib >
-      <mavenrepository/>
       <force enabled="false" />
       <assertdownloaded count="0" />
     </getlib>
@@ -215,7 +250,6 @@
 
   <target name="testAbsentFiles" depends="init">
     <getlib >
-      <mavenrepository/>
       <absentfiles enabled="true" />
       <assertdownloaded count="1" />
     </getlib>
@@ -223,7 +257,6 @@
 
   <target name="testAbsentFilesTwice" depends="testAbsentFiles">
     <getlib >
-      <mavenrepository/>
       <absentfiles enabled="true" />
       <assertdownloaded count="0" />
     </getlib>
