@@ -52,28 +52,94 @@
  * <http://www.apache.org/>.
  */
 
-package org.apache.tools.ant;
+package org.apache.tools.ant.taskdefs;
 
-import junit.framework.Test;
-import junit.framework.TestCase;
-import junit.framework.TestSuite;
+import org.apache.tools.ant.BuildException;
 
 /**
- * Simple class to build a TestSuite out of the individual test classes.
+ * Destroys a process running for too long.
  *
- * @author Stefan Bodewig <a href="mailto:stefan.bodewig@megabit.net">stefan.bodewig@megabit.net</a> 
+ * @author thomas.haas@softwired-inc.com
  */
-public class AllJUnitTests extends TestCase {
+public class ExecuteWatchdog implements Runnable {
 
-    public AllJUnitTests(String name) {
-        super(name);
+    private Process process;
+    private int timeout;
+    private boolean watch = true;
+    private Exception caught = null;
+
+
+    /**
+     * Creates a new watchdog.
+     *
+     * @param timeout the timeout for the process.
+     */
+    public ExecuteWatchdog(int timeout) {
+        if (timeout < 1) {
+            throw new IllegalArgumentException("timeout lesser than 1.");
+        }
+        this.timeout = timeout;
     }
 
-    public static Test suite() {
-        TestSuite suite = new TestSuite(IntrospectionHelperTest.class);
-        suite.addTest(new TestSuite(EnumeratedAttributeTest.class));
-        suite.addTest(new TestSuite(PathTest.class));
-	suite.addTest(org.apache.tools.ant.types.AllJUnitTests.suite());
-        return suite;
-   }
+
+    /**
+     * Watches the given process and terminates it, if it runs for to long.
+     *
+     * @param process the process to watch.
+     */
+    public synchronized void start(Process process) {
+        if (process == null) {
+            throw new NullPointerException("process is null.");
+        }
+        if (this.process != null) {
+            throw new IllegalStateException("Already running.");
+        }
+        watch = true;
+        this.process = process;
+        final Thread thread = new Thread(this, "WATCHDOG");
+        thread.setDaemon(true);
+        thread.start();
+    }
+
+
+    /**
+     * Stops the watcher.
+     */
+    public synchronized void stop() {
+        watch = false;
+        notifyAll();
+        process = null;
+    }
+
+
+    /**
+     * Watches the process and terminates it, if it runs for to long.
+     */
+    public synchronized void run() {
+	try {
+	    // This isn't a Task, don't have a Project object to log.
+	    // project.log("ExecuteWatchdog: timeout = "+timeout+" msec",  Project.MSG_VERBOSE);
+	    final long until = System.currentTimeMillis() + timeout;
+	    long now;
+	    while (watch && until > (now = System.currentTimeMillis())) {
+		try {
+		    wait(until - now);
+		} catch (InterruptedException e) {}
+	    }
+	    if (watch) {
+		process.destroy();
+	    }
+	    stop();
+	} catch(Exception e) {
+            caught = e;
+        }
+    }
+
+    public void checkException() throws BuildException {
+        if (caught != null) {
+            throw new BuildException("Exception in ExecuteWatchdog.run: "
+                                     + caught.getMessage(), caught);
+        }
+    }
 }
+

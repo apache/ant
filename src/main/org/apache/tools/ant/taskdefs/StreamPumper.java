@@ -52,28 +52,56 @@
  * <http://www.apache.org/>.
  */
 
-package org.apache.tools.ant;
+package org.apache.tools.ant.taskdefs;
 
-import junit.framework.Test;
-import junit.framework.TestCase;
-import junit.framework.TestSuite;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 
 /**
- * Simple class to build a TestSuite out of the individual test classes.
+ * Copies all data from an input stream to an output stream.
  *
- * @author Stefan Bodewig <a href="mailto:stefan.bodewig@megabit.net">stefan.bodewig@megabit.net</a> 
+ * @author thomas.haas@softwired-inc.com
  */
-public class AllJUnitTests extends TestCase {
+public class StreamPumper implements Runnable {
 
-    public AllJUnitTests(String name) {
-        super(name);
+    // TODO: make SIZE and SLEEP instance variables.
+    // TODO: add a status flag to note if an error occured in run.
+
+    private final static int SLEEP = 5;
+    private final static int SIZE = 128;
+    private InputStream is;
+    private OutputStream os;
+
+
+    /**
+     * Create a new stream pumper.
+     *
+     * @param is input stream to read data from
+     * @param os output stream to write data to.
+     */
+    public StreamPumper(InputStream is, OutputStream os) {
+        this.is = is;
+        this.os = os;
     }
 
-    public static Test suite() {
-        TestSuite suite = new TestSuite(IntrospectionHelperTest.class);
-        suite.addTest(new TestSuite(EnumeratedAttributeTest.class));
-        suite.addTest(new TestSuite(PathTest.class));
-	suite.addTest(org.apache.tools.ant.types.AllJUnitTests.suite());
-        return suite;
-   }
+
+    /**
+     * Copies data from the input stream to the output stream.
+     *
+     * Terminates as soon as the input stream is closed or an error occurs.
+     */
+    public void run() {
+        final byte[] buf = new byte[SIZE];
+
+        int length;
+        try {
+            while ((length = is.read(buf)) > 0) {
+                os.write(buf, 0, length);
+                try {
+                    Thread.sleep(SLEEP);
+                } catch (InterruptedException e) {}
+            }
+        } catch(IOException e) {}
+    }
 }

@@ -52,28 +52,49 @@
  * <http://www.apache.org/>.
  */
 
-package org.apache.tools.ant;
+package org.apache.tools.ant.taskdefs;
 
-import junit.framework.Test;
-import junit.framework.TestCase;
-import junit.framework.TestSuite;
+import java.io.InputStream;
+import java.io.IOException;
+import java.io.OutputStream;
 
 /**
- * Simple class to build a TestSuite out of the individual test classes.
+ * Used by <code>Execute</code> to handle input and output stream of
+ * subprocesses.
  *
- * @author Stefan Bodewig <a href="mailto:stefan.bodewig@megabit.net">stefan.bodewig@megabit.net</a> 
+ * @author thomas.haas@softwired-inc.com
  */
-public class AllJUnitTests extends TestCase {
+public interface ExecuteStreamHandler {
 
-    public AllJUnitTests(String name) {
-        super(name);
-    }
+    /**
+     * Install a handler for the input stream of the subprocess.
+     *
+     * @param os output stream to write to the standard input stream of the
+     *           subprocess
+     */
+    public void setProcessInputStream(OutputStream os) throws IOException;
 
-    public static Test suite() {
-        TestSuite suite = new TestSuite(IntrospectionHelperTest.class);
-        suite.addTest(new TestSuite(EnumeratedAttributeTest.class));
-        suite.addTest(new TestSuite(PathTest.class));
-	suite.addTest(org.apache.tools.ant.types.AllJUnitTests.suite());
-        return suite;
-   }
+    /**
+     * Install a handler for the error stream of the subprocess.
+     *
+     * @param is input stream to read from the error stream from the subprocess
+     */
+    public void setProcessErrorStream(InputStream is) throws IOException;
+
+    /**
+     * Install a handler for the output stream of the subprocess.
+     *
+     * @param is input stream to read from the error stream from the subprocess
+     */
+    public void setProcessOutputStream(InputStream is) throws IOException;
+
+    /**
+     * Start handling of the streams.
+     */
+    public void start() throws IOException;
+
+    /**
+     * Stop handling of the streams - will not be restarted.
+     */
+    public void stop();
 }

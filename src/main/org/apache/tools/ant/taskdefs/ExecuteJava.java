@@ -52,28 +52,49 @@
  * <http://www.apache.org/>.
  */
 
-package org.apache.tools.ant;
 
-import junit.framework.Test;
-import junit.framework.TestCase;
-import junit.framework.TestSuite;
+package org.apache.tools.ant.taskdefs;
 
-/**
- * Simple class to build a TestSuite out of the individual test classes.
+import org.apache.tools.ant.BuildException;
+import org.apache.tools.ant.Path;
+import org.apache.tools.ant.types.Commandline;
+
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+
+/*
  *
- * @author Stefan Bodewig <a href="mailto:stefan.bodewig@megabit.net">stefan.bodewig@megabit.net</a> 
+ * @author thomas.haas@softwired-inc.com
  */
-public class AllJUnitTests extends TestCase {
+public class ExecuteJava {
 
-    public AllJUnitTests(String name) {
-        super(name);
+    private Commandline javaCommand = null;
+
+    public void setJavaCommand(Commandline javaCommand) {
+        this.javaCommand = javaCommand;
     }
 
-    public static Test suite() {
-        TestSuite suite = new TestSuite(IntrospectionHelperTest.class);
-        suite.addTest(new TestSuite(EnumeratedAttributeTest.class));
-        suite.addTest(new TestSuite(PathTest.class));
-	suite.addTest(org.apache.tools.ant.types.AllJUnitTests.suite());
-        return suite;
+    public void execute() throws BuildException{
+        final String classname = javaCommand.getExecutable();
+        final Object[] argument = { javaCommand.getArguments() };
+        final Class[] param = { argument[0].getClass() };
+        try {
+            final Class target = Class.forName(classname);
+            final Method main = target.getMethod("main", param);
+            main.invoke(null, argument);
+        } catch (NullPointerException e) {
+            throw new BuildException("Could not find main() method in " + classname);
+        } catch (ClassNotFoundException e) {
+            throw new BuildException("Could not find " + classname + ". Make sure you have it in your classpath");
+        } catch (InvocationTargetException e) {
+            Throwable t = e.getTargetException();
+            if (!(t instanceof SecurityException)) {
+                throw new BuildException(t.toString());
+            }
+            // else ignore because the security exception is thrown
+            // if the invoked application tried to call System.exit()
+        } catch (Exception e) {
+            throw new BuildException(e);
+        }
    }
 }

@@ -52,28 +52,49 @@
  * <http://www.apache.org/>.
  */
 
-package org.apache.tools.ant;
+package org.apache.tools.ant.types;
 
-import junit.framework.Test;
 import junit.framework.TestCase;
-import junit.framework.TestSuite;
+import junit.framework.AssertionFailedError;
+
+import java.io.File;
 
 /**
- * Simple class to build a TestSuite out of the individual test classes.
+ * JUnit 3 testcases for org.apache.tools.ant.CommandlineJava
  *
  * @author Stefan Bodewig <a href="mailto:stefan.bodewig@megabit.net">stefan.bodewig@megabit.net</a> 
  */
-public class AllJUnitTests extends TestCase {
+public class CommandlineJavaTest extends TestCase {
 
-    public AllJUnitTests(String name) {
+    public CommandlineJavaTest(String name) {
         super(name);
     }
 
-    public static Test suite() {
-        TestSuite suite = new TestSuite(IntrospectionHelperTest.class);
-        suite.addTest(new TestSuite(EnumeratedAttributeTest.class));
-        suite.addTest(new TestSuite(PathTest.class));
-	suite.addTest(org.apache.tools.ant.types.AllJUnitTests.suite());
-        return suite;
-   }
+    public void testGetCommandline() {
+        CommandlineJava c = new CommandlineJava();
+        c.createArgument().setValue("org.apache.tools.ant.CommandlineJavaTest");
+        c.setClassname("junit.textui.TestRunner");
+        c.createVmArgument().setValue("-Djava.compiler=NONE");
+        String[] s = c.getCommandline();
+        assertEquals("no classpath", 4, s.length);
+        assertEquals("no classpath", "java", s[0]);
+        assertEquals("no classpath", "-Djava.compiler=NONE", s[1]);
+        assertEquals("no classpath", "junit.textui.TestRunner", s[2]);
+        assertEquals("no classpath", 
+                     "org.apache.tools.ant.CommandlineJavaTest", s[3]);
+
+        c.createClasspath().setLocation("junit.jar");
+        c.createClasspath().setLocation("ant.jar");
+        s = c.getCommandline();
+        assertEquals("with classpath", 6, s.length);
+        assertEquals("with classpath", "java", s[0]);
+        assertEquals("with classpath", "-Djava.compiler=NONE", s[1]);
+        assertEquals("with classpath", "-classpath", s[2]);
+        assertEquals("with classpath", 
+                     "junit.jar"+java.io.File.pathSeparator+"ant.jar", s[3]);
+        assertEquals("with classpath", "junit.textui.TestRunner", s[4]);
+        assertEquals("with classpath", 
+                     "org.apache.tools.ant.CommandlineJavaTest", s[5]);
+    }
+
 }

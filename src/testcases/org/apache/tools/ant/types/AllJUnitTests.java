@@ -52,7 +52,7 @@
  * <http://www.apache.org/>.
  */
 
-package org.apache.tools.ant;
+package org.apache.tools.ant.types;
 
 import junit.framework.Test;
 import junit.framework.TestCase;
@@ -70,10 +70,8 @@ public class AllJUnitTests extends TestCase {
     }
 
     public static Test suite() {
-        TestSuite suite = new TestSuite(IntrospectionHelperTest.class);
-        suite.addTest(new TestSuite(EnumeratedAttributeTest.class));
-        suite.addTest(new TestSuite(PathTest.class));
-	suite.addTest(org.apache.tools.ant.types.AllJUnitTests.suite());
+        TestSuite suite = new TestSuite(CommandlineTest.class);
+        suite.addTest(new TestSuite(CommandlineJavaTest.class));
         return suite;
    }
 }

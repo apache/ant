@@ -52,28 +52,59 @@
  * <http://www.apache.org/>.
  */
 
-package org.apache.tools.ant;
+package org.apache.tools.ant.types;
 
-import junit.framework.Test;
-import junit.framework.TestCase;
-import junit.framework.TestSuite;
+import org.apache.tools.ant.BuildException;
+import java.util.Vector;
 
 /**
- * Simple class to build a TestSuite out of the individual test classes.
+ * Wrapper for environment variables.
  *
- * @author Stefan Bodewig <a href="mailto:stefan.bodewig@megabit.net">stefan.bodewig@megabit.net</a> 
+ * @author <a href="mailto:stefan.bodewig@megabit.net">Stefan Bodewig</a>
  */
-public class AllJUnitTests extends TestCase {
+public class Environment {
 
-    public AllJUnitTests(String name) {
-        super(name);
+    private Vector variables;
+
+    public static class Variable {
+        private String key, value;
+
+        public Variable() {
+            super();
+        }
+
+        public void setKey(String key) {
+            this.key = key;
+        }
+        public void setValue(String value) {
+            this.value = value;
+        }
+        public String getContent() throws BuildException {
+            if (key == null || value == null) {
+                throw new BuildException("key and value must be specified for environment variables.");
+            }
+            StringBuffer sb = new StringBuffer(key.trim());
+            sb.append("=").append(value.trim());
+            return sb.toString();
+        }
     }
 
-    public static Test suite() {
-        TestSuite suite = new TestSuite(IntrospectionHelperTest.class);
-        suite.addTest(new TestSuite(EnumeratedAttributeTest.class));
-        suite.addTest(new TestSuite(PathTest.class));
-	suite.addTest(org.apache.tools.ant.types.AllJUnitTests.suite());
-        return suite;
-   }
+    public Environment() {
+        variables = new Vector();
+    }
+
+    public void addVariable(Variable var) {
+        variables.addElement(var);
+    }
+
+    public String[] getVariables() throws BuildException {
+        if (variables.size() == 0) {
+            return null;
+        }
+        String[] result = new String[variables.size()];
+        for (int i=0; i<result.length; i++) {
+            result[i] = ((Variable) variables.elementAt(i)).getContent();
+        }
+        return result;
+    }
 }

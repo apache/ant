@@ -52,28 +52,31 @@
  * <http://www.apache.org/>.
  */
 
-package org.apache.tools.ant;
+package org.apache.tools.ant.taskdefs;
 
-import junit.framework.Test;
-import junit.framework.TestCase;
-import junit.framework.TestSuite;
+import org.apache.tools.ant.Project;
+import org.apache.tools.ant.Task;
+
+import java.io.OutputStream;
+import java.io.InputStream;
 
 /**
- * Simple class to build a TestSuite out of the individual test classes.
+ * Logs standard output and error of a subprocess to the log system of ant.
  *
- * @author Stefan Bodewig <a href="mailto:stefan.bodewig@megabit.net">stefan.bodewig@megabit.net</a> 
+ * @author thomas.haas@softwired-inc.com
  */
-public class AllJUnitTests extends TestCase {
+public class LogStreamHandler extends PumpStreamHandler {
 
-    public AllJUnitTests(String name) {
-        super(name);
+    /**
+     * Creates a new instance of this class.
+     *
+     * @param task the task for whom to log
+     * @param outlevel the loglevel used to log standard output
+     * @param errlevel the loglevel used to log standard error
+     */
+    public LogStreamHandler(Task task, int outlevel, int errlevel) {
+        super(new LogOutputStream(task, outlevel),
+              new LogOutputStream(task, errlevel));
     }
 
-    public static Test suite() {
-        TestSuite suite = new TestSuite(IntrospectionHelperTest.class);
-        suite.addTest(new TestSuite(EnumeratedAttributeTest.class));
-        suite.addTest(new TestSuite(PathTest.class));
-	suite.addTest(org.apache.tools.ant.types.AllJUnitTests.suite());
-        return suite;
-   }
 }

@@ -52,28 +52,84 @@
  * <http://www.apache.org/>.
  */
 
-package org.apache.tools.ant;
+package org.apache.tools.ant.types;
 
-import junit.framework.Test;
-import junit.framework.TestCase;
-import junit.framework.TestSuite;
+import org.apache.tools.ant.Path;
 
-/**
- * Simple class to build a TestSuite out of the individual test classes.
+/*
  *
- * @author Stefan Bodewig <a href="mailto:stefan.bodewig@megabit.net">stefan.bodewig@megabit.net</a> 
+ * @author thomas.haas@softwired-inc.com
  */
-public class AllJUnitTests extends TestCase {
+public class CommandlineJava {
 
-    public AllJUnitTests(String name) {
-        super(name);
+    private Commandline vmCommand = new Commandline();
+    private Commandline javaCommand = new Commandline();
+    private Path classpath = new Path();
+    private String vmVersion;
+
+
+    public CommandlineJava() {
+        setVm("java");
+        setVmversion(org.apache.tools.ant.Project.getJavaVersion());
     }
 
-    public static Test suite() {
-        TestSuite suite = new TestSuite(IntrospectionHelperTest.class);
-        suite.addTest(new TestSuite(EnumeratedAttributeTest.class));
-        suite.addTest(new TestSuite(PathTest.class));
-	suite.addTest(org.apache.tools.ant.types.AllJUnitTests.suite());
-        return suite;
-   }
+    public Commandline.Argument createArgument() {
+        return javaCommand.createArgument();
+    }
+
+    public Commandline.Argument createVmArgument() {
+        return vmCommand.createArgument();
+    }
+
+    public void setVm(String vm) {
+        vmCommand.setExecutable(vm);
+    }
+
+    public void setVmversion(String value) {
+        vmVersion = value;
+    }
+
+    public void setClassname(String classname) {
+        javaCommand.setExecutable(classname);
+    }
+
+    public Path createClasspath() {
+        return classpath;
+    }
+
+    public String getVmversion() {
+        return vmVersion;
+    }
+
+    public String[] getCommandline() {
+        int size = vmCommand.size() + javaCommand.size();
+        if (classpath.size() > 0) {
+            size += 2;
+        }
+        
+        String[] result = new String[size];
+        System.arraycopy(vmCommand.getCommandline(), 0, 
+                         result, 0, vmCommand.size());
+        if (classpath.size() > 0) {
+            result[vmCommand.size()] = "-classpath";
+            result[vmCommand.size()+1] = classpath.toString();
+        }
+        System.arraycopy(javaCommand.getCommandline(), 0, 
+                         result, result.length-javaCommand.size(), 
+                         javaCommand.size());
+        return result;
+    }
+
+
+    public String toString() {
+        return Commandline.toString(getCommandline());
+    }
+
+    public int size() {
+        int size = vmCommand.size() + javaCommand.size();
+        if (classpath.size() > 0) {
+            size += 2;
+        }
+        return size;
+    }
 }

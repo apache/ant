@@ -183,8 +183,8 @@ public class IntrospectionHelperTest extends TestCase {
         Hashtable h = new Hashtable();
         h.put("six", java.lang.String.class);
         h.put("thirteen", java.lang.StringBuffer.class);
-        h.put("fourteen", java.lang.String.class);
-        h.put("fifteen", java.lang.String.class);
+        h.put("fourteen", java.lang.StringBuffer.class);
+        h.put("fifteen", java.lang.StringBuffer.class);
         IntrospectionHelper ih = IntrospectionHelper.getHelper(getClass());
         Enumeration enum = ih.getNestedElements();
         while (enum.hasMoreElements()) {
@@ -216,7 +216,7 @@ public class IntrospectionHelperTest extends TestCase {
         return "test";
     }
 
-    public String createFifteen() {
+    public StringBuffer createFifteen() {
         throw new NullPointerException();
     }
 
@@ -238,7 +238,7 @@ public class IntrospectionHelperTest extends TestCase {
         sb.append("test");
     }
     
-    public void addFourteen(String s) {
+    public void addFourteen(StringBuffer s) {
         throw new NullPointerException();
     }
 

@@ -52,28 +52,85 @@
  * <http://www.apache.org/>.
  */
 
-package org.apache.tools.ant;
+package org.apache.tools.ant.taskdefs;
 
-import junit.framework.Test;
-import junit.framework.TestCase;
-import junit.framework.TestSuite;
+import java.io.InputStream;
+import java.io.IOException;
+import java.io.OutputStream;
 
 /**
- * Simple class to build a TestSuite out of the individual test classes.
+ * Copies standard output and error of subprocesses to standard output and
+ * error of the parent process.
  *
- * @author Stefan Bodewig <a href="mailto:stefan.bodewig@megabit.net">stefan.bodewig@megabit.net</a> 
+ * TODO: standard input of the subprocess is not implemented.
+ *
+ * @author thomas.haas@softwired-inc.com
  */
-public class AllJUnitTests extends TestCase {
+public class PumpStreamHandler implements ExecuteStreamHandler {
 
-    public AllJUnitTests(String name) {
-        super(name);
+    private Thread inputThread;
+    private Thread errorThread;
+
+    private OutputStream out, err;
+
+    public PumpStreamHandler(OutputStream out, OutputStream err) {
+        this.out = out;
+        this.err = err;
     }
 
-    public static Test suite() {
-        TestSuite suite = new TestSuite(IntrospectionHelperTest.class);
-        suite.addTest(new TestSuite(EnumeratedAttributeTest.class));
-        suite.addTest(new TestSuite(PathTest.class));
-	suite.addTest(org.apache.tools.ant.types.AllJUnitTests.suite());
-        return suite;
-   }
+    public PumpStreamHandler(OutputStream outAndErr) {
+        this(outAndErr, outAndErr);
+    }
+
+    public PumpStreamHandler() {
+        this(System.out, System.err);
+    }
+
+    public void setProcessOutputStream(InputStream is) {
+        createProcessOutputPump(is, out);
+    }
+
+
+    public void setProcessErrorStream(InputStream is) {
+        createProcessErrorPump(is, err);
+    }
+
+
+    public void setProcessInputStream(OutputStream os) {
+    }
+
+
+    public void start() {
+        inputThread.start();
+        errorThread.start();
+    }
+
+
+    public void stop() {
+        try {
+            inputThread.join();
+        } catch(InterruptedException e) {}
+        try {
+            errorThread.join();
+        } catch(InterruptedException e) {}
+    }
+
+    protected void createProcessOutputPump(InputStream is, OutputStream os) {
+        inputThread = createPump(is, os);
+    }
+
+    protected void createProcessErrorPump(InputStream is, OutputStream os) {
+        errorThread = createPump(is, os);
+    }
+
+
+    /**
+     * Creates a stream pumper to copy the given input stream to the given output stream.
+     */
+    protected Thread createPump(InputStream is, OutputStream os) {
+        final Thread result = new Thread(new StreamPumper(is, os));
+        result.setDaemon(true);
+        return result;
+    }
+
 }

@@ -85,6 +85,7 @@ import java.text.StringCharacterIterator;
  * to define a path from an environment variable.
  *
  * @author Thomas.Haas@softwired-inc.com
+ * @author <a href="mailto:stefan.bodewig@megabit.net">Stefan Bodewig</a> 
  */
 
 public class Path {
@@ -220,5 +221,9 @@ public class Path {
             return true;
         }
         return false;
+    }
+
+    public int size() {
+        return definition.size();
     }
 }

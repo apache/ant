@@ -52,28 +52,83 @@
  * <http://www.apache.org/>.
  */
 
-package org.apache.tools.ant;
+package org.apache.tools.ant.taskdefs;
 
-import junit.framework.Test;
-import junit.framework.TestCase;
-import junit.framework.TestSuite;
+import org.apache.tools.ant.Project;
+import org.apache.tools.ant.Task;
+
+import java.io.IOException;
+import java.io.OutputStream;
+import java.io.ByteArrayOutputStream;
+
 
 /**
- * Simple class to build a TestSuite out of the individual test classes.
+ * Logs each line written to this stream to the log system of ant.
  *
- * @author Stefan Bodewig <a href="mailto:stefan.bodewig@megabit.net">stefan.bodewig@megabit.net</a> 
+ * Tries to be smart about line separators.<br>
+ * TODO: This class can be split to implement other line based processing
+ * of data written to the stream.
+ *
+ * @author thomas.haas@softwired-inc.com
  */
-public class AllJUnitTests extends TestCase {
+public class LogOutputStream extends OutputStream {
 
-    public AllJUnitTests(String name) {
-        super(name);
+    private ByteArrayOutputStream buffer = new ByteArrayOutputStream();
+    private boolean skip = false;
+
+    private Task task;
+    private int level = Project.MSG_INFO;
+
+    /**
+     * Creates a new instance of this class.
+     *
+     * @param task the task for whom to log
+     * @param level loglevel used to log data written to this stream.
+     */
+    public LogOutputStream(Task task, int level) {
+        this.task = task;
+        this.level = level;
     }
 
-    public static Test suite() {
-        TestSuite suite = new TestSuite(IntrospectionHelperTest.class);
-        suite.addTest(new TestSuite(EnumeratedAttributeTest.class));
-        suite.addTest(new TestSuite(PathTest.class));
-	suite.addTest(org.apache.tools.ant.types.AllJUnitTests.suite());
-        return suite;
-   }
+
+    /**
+     * Write the data to the buffer and flush the buffer, if a line
+     * separator is detected.
+     *
+     * @param cc data to log (byte).
+     */
+    public void write(int cc) throws IOException {
+        final byte c = (byte)cc;
+        if ((c == '\n') || (c == '\r')) {
+            if (!skip) processBuffer();
+        } else buffer.write(cc);
+        skip = (c == '\r');
+    }
+
+
+    /**
+     * Converts the buffer to a string and sends it to <code>processLine</code>
+     */
+    protected void processBuffer() {
+        processLine(buffer.toString());
+        buffer.reset();
+    }
+
+    /**
+     * Logs a line to the log system of ant.
+     *
+     * @param line the line to log.
+     */
+    protected void processLine(String line) {
+        task.log(line, level);
+    }
+
+
+    /**
+     * Writes all remaining
+     */
+    public void close() throws IOException {
+        if (buffer.size() > 0) processBuffer();
+        super.close();
+    }
 }

@@ -171,6 +171,7 @@ public class IntrospectionHelper  {
             } else if (name.startsWith("add")
                        && java.lang.Void.TYPE.equals(returnType)
                        && args.length == 1
+                       && !java.lang.String.class.equals(args[0])
                        && !args[0].isArray()
                        && !args[0].isPrimitive()) {
                  

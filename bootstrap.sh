@@ -39,6 +39,7 @@ echo ... Compiling Ant Classes
 
 javac  -d ${CLASSDIR} ${TOOLS}/tar/*.java
 javac  -d ${CLASSDIR} ${TOOLS}/ant/*.java
+javac  -d ${CLASSDIR} ${TOOLS}/ant/types/*.java
 javac  -d ${CLASSDIR} ${TOOLS}/ant/taskdefs/*.java
 
 echo ... Copying Required Files
