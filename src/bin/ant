@@ -114,6 +114,3 @@ if $cygwin; then
 fi
 
 $JAVACMD -classpath "$LOCALCLASSPATH" -Dant.home="${ANT_HOME}" $ANT_OPTS org.apache.tools.ant.Main $@
-
-
-$JAVACMD -classpath $LOCALCLASSPATH -Dant.home=${ANT_HOME} $ANT_OPTS org.apache.tools.ant.Main $@
