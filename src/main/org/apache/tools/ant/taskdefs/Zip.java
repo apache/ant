@@ -278,11 +278,13 @@ public class Zip extends MatchingTask {
         File zipSrc = fs.getSrc();
 
         ZipEntry entry;
+        java.util.zip.ZipEntry origEntry;
         ZipInputStream in = null;
         try {
             in = new ZipInputStream(new FileInputStream(zipSrc));
 
-            while ((entry = new ZipEntry(in.getNextEntry())) != null) {
+            while ((origEntry = in.getNextEntry()) != null) {
+                entry = new ZipEntry(origEntry);
                 String vPath = entry.getName();
                 if (zipScanner.match(vPath)) {
                     addParentDirs(null, vPath, zOut, prefix);
