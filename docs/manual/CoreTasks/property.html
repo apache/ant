@@ -120,10 +120,20 @@ to be your home directory.  This technique is more appropriate for Unix than
 Windows since the notion of a home directory doesn't exist on Windows.  On the
 JVM that I tested, the home directory on Windows is &quot;C:\&quot;.  Different JVM
 implementations may use other values for the home directory on Windows.</p>
+
+<pre>
+  &lt;property environment=&quot;env&quot;/&gt;
+  &lt;echo message=&quot;Number of Processors = ${env.NUMBER_OF_PROCESSORS}&quot;/&gt;
+  &lt;echo message=&quot;ANT_HOME is set to = ${env.ANT_HOME}&quot;/&gt;
+</pre>
+<p>reads the system environment variables and stores them in properties, prefixed with &quot;env&quot;.
+Note that this only works on <em>select</em> operating systems.
+Two of the values are shown being echoed. 
+</p> 
+
 <hr>
 <p align="center">Copyright &copy; 2000,2001 Apache Software Foundation. All rights
 Reserved.</p>
-
 </body>
 </html>
 
