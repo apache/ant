@@ -19,6 +19,8 @@ Fixed bugs:
 * <javah>'s outputfile attribute will be resolved as relative to the
   projects basedir.
 
+* <antstructure> should create a valid DTD for propertyfile.operation.entry
+
 Changes from Ant 1.2 to Ant 1.3
 ===========================================
 

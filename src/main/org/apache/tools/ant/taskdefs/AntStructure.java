@@ -256,7 +256,9 @@ public class AntStructure extends Task {
                     EnumeratedAttribute ea = 
                         (EnumeratedAttribute)type.newInstance();
                     String[] values = ea.getValues();
-                    if (values == null || values.length == 0) {
+                    if (values == null
+                        || values.length == 0
+                        || !areNmtokens(values)) {
                         sb.append("CDATA ");
                     } else {
                         sb.append("(");
@@ -290,5 +292,36 @@ public class AntStructure extends Task {
     }
     
     private void printTail(PrintWriter out) {}
+
+    /**
+     * Does this String match the XML-NMTOKEN production?
+     */
+    protected boolean isNmtoken(String s) {
+        for (int i = 0; i < s.length(); i++) {
+            char c = s.charAt(i);
+            // XXX - we are ommitting CombiningChar and Extender here
+            if (!Character.isLetterOrDigit(c) &&
+                c != '.' && c != '-' &&
+                c != '_' && c != ':') {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    /**
+     * Do the Strings all match the XML-NMTOKEN production?
+     *
+     * <p>Otherwise they are not suitable as an enumerated attribute,
+     * for example.</p>
+     */
+    protected boolean areNmtokens(String[] s) {
+        for (int i = 0; i < s.length; i++) {
+            if (!isNmtoken(s[i])) {
+                return false;
+            }
+        }
+        return true;
+    }
 
 }
