@@ -208,7 +208,8 @@ public class RuntimeConfigurable {
         }
         Enumeration enum = children.elements();
         while (enum.hasMoreElements()) {
-            RuntimeConfigurable child = (RuntimeConfigurable) enum.nextElement();
+            RuntimeConfigurable child 
+                = (RuntimeConfigurable) enum.nextElement();
             if (child.wrappedObject instanceof Task) {
                 Task childTask = (Task) child.wrappedObject;
                 childTask.setRuntimeConfigurableWrapper(child);
@@ -216,7 +217,8 @@ public class RuntimeConfigurable {
             } else {
                 child.maybeConfigure(p);
             }
-            ProjectHelper.storeChild(p, wrappedObject, child.wrappedObject, child.getElementTag().toLowerCase(Locale.US));
+            ProjectHelper.storeChild(p, wrappedObject, child.wrappedObject, 
+                child.getElementTag().toLowerCase(Locale.US));
         }
 
         if (id != null) {

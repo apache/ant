@@ -104,8 +104,7 @@ public class PathTokenizer {
             // For NetWare, use the boolean=true mode, so we can use delimiter 
             // information to make a better decision later.
             tokenizer = new StringTokenizer(path, ":;", true);
-        }
-        else {
+        } else {
             // on Windows and Unix, we can ignore delimiters and still have
             // enough information to tokenize correctly.
             tokenizer = new StringTokenizer(path, ":;", false);
@@ -142,8 +141,7 @@ public class PathTokenizer {
         if (lookahead != null) {
             token = lookahead;
             lookahead = null;
-        }
-        else {
+        } else {
             token = tokenizer.nextToken().trim();
         }            
             
@@ -159,14 +157,12 @@ public class PathTokenizer {
                     // starts with a slash or backslash, so we know this is a 
                     // drive spec
                     token += ":" + nextToken;
-                }
-                else {
+                } else {
                     // store the token just read for next time
                     lookahead = nextToken;
                 }
             }
-        }
-        else {
+        } else {
             // we are on NetWare, tokenizing is handled a little differently,
             // due to the fact that NetWare has multiple-character volume names.
             if (token.equals(File.pathSeparator)) {
@@ -186,15 +182,13 @@ public class PathTokenizer {
                             String oneMore = tokenizer.nextToken().trim();
                             if (!oneMore.equals(File.pathSeparator)) {
                                 token += ":" + oneMore;
-                            }
-                            else {
+                            } else {
                                 token += ":";
                             }
                         }
                         // implicit else: ignore the ':' since we have either a
                         // UNIX or a relative path
-                    }
-                    else {
+                    } else {
                         // store the token just read for next time
                         lookahead = nextToken;
                     }

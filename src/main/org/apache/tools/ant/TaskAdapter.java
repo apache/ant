@@ -9,7 +9,7 @@
  * are met:
  *
  * 1. Redistributions of source code must retain the above copyright
- *    notice, this list of conditions and the following disclaimer. 
+ *    notice, this list of conditions and the following disclaimer.
  *
  * 2. Redistributions in binary form must reproduce the above copyright
  *    notice, this list of conditions and the following disclaimer in
@@ -17,7 +17,7 @@
  *    distribution.
  *
  * 3. The end-user documentation included with the redistribution, if
- *    any, must include the following acknowlegement:  
+ *    any, must include the following acknowlegement:
  *       "This product includes software developed by the 
  *        Apache Software Foundation (http://www.apache.org/)."
  *    Alternately, this acknowlegement may appear in the software itself,
@@ -66,7 +66,7 @@ import java.lang.reflect.Method;
 public class TaskAdapter extends Task {
 
     /** Object to act as a proxy for. */
-    Object proxy;
+    private Object proxy;
     
     /**
      * Checks whether or not a class is suitable to be adapted by TaskAdapter.
@@ -86,20 +86,23 @@ public class TaskAdapter extends Task {
      * 
      * @see Project#checkTaskClass(Class)
      */
-    public static void checkTaskClass(final Class taskClass, final Project project) {
+    public static void checkTaskClass(final Class taskClass, 
+                                      final Project project) {
         // don't have to check for interface, since then
         // taskClass would be abstract too.
         try {
-            final Method executeM = taskClass.getMethod( "execute", null );
+            final Method executeM = taskClass.getMethod("execute", null);
             // don't have to check for public, since
             // getMethod finds public method only.
             // don't have to check for abstract, since then
             // taskClass would be abstract too.
-            if(!Void.TYPE.equals(executeM.getReturnType())) {
-                final String message = "return type of execute() should be void but was \""+executeM.getReturnType()+"\" in " + taskClass;
+            if (!Void.TYPE.equals(executeM.getReturnType())) {
+                final String message = "return type of execute() should be " 
+                    + "void but was \"" + executeM.getReturnType() + "\" in " 
+                    + taskClass;
                 project.log(message, Project.MSG_WARN);
             }
-        } catch(NoSuchMethodException e) {
+        } catch (NoSuchMethodException e) {
             final String message = "No public execute() in " + taskClass;
             project.log(message, Project.MSG_ERR);
             throw new BuildException(message);
@@ -117,27 +120,29 @@ public class TaskAdapter extends Task {
         try {
             Class c = proxy.getClass();
             setProjectM = 
-                c.getMethod( "setProject", new Class[] {Project.class});
-            if(setProjectM != null) {
+                c.getMethod("setProject", new Class[] {Project.class});
+            if (setProjectM != null) {
                 setProjectM.invoke(proxy, new Object[] {project});
             }
         } catch (NoSuchMethodException e) {
             // ignore this if the class being used as a task does not have
             // a set project method.
-        } catch( Exception ex ) {
+        } catch (Exception ex) {
             log("Error setting project in " + proxy.getClass(), 
                 Project.MSG_ERR);
-            throw new BuildException( ex );
+            throw new BuildException(ex);
         }
 
 
-        Method executeM=null;
+        Method executeM = null;
         try {
-            Class c=proxy.getClass();
-            executeM=c.getMethod( "execute", new Class[0] );
-            if( executeM == null ) {
-                log("No public execute() in " + proxy.getClass(), Project.MSG_ERR);
-                throw new BuildException("No public execute() in " + proxy.getClass());
+            Class c = proxy.getClass();
+            executeM = c.getMethod("execute", new Class[0]);
+            if (executeM == null) {
+                log("No public execute() in " + proxy.getClass(), 
+                    Project.MSG_ERR);
+                throw new BuildException("No public execute() in " 
+                    + proxy.getClass());
             }
             executeM.invoke(proxy, null);
             return; 
@@ -149,9 +154,9 @@ public class TaskAdapter extends Task {
             } else {
                 throw new BuildException(t);
             }
-        } catch( Exception ex ) {
+        } catch (Exception ex) {
             log("Error in " + proxy.getClass(), Project.MSG_ERR);
-            throw new BuildException( ex );
+            throw new BuildException(ex);
         }
 
     }

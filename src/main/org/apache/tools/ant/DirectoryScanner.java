@@ -147,7 +147,7 @@ public class DirectoryScanner implements FileScanner {
      *
      * @see #addDefaultExcludes()
      */
-    protected final static String[] DEFAULTEXCLUDES = {
+    protected static final String[] DEFAULTEXCLUDES = {
         "**/*~",
         "**/#*#",
         "**/.#*",
@@ -264,17 +264,17 @@ public class DirectoryScanner implements FileScanner {
         Vector strDirs = tokenizePath (str);
 
         int patIdxStart = 0;
-        int patIdxEnd   = patDirs.size()-1;
+        int patIdxEnd   = patDirs.size() - 1;
         int strIdxStart = 0;
-        int strIdxEnd   = strDirs.size()-1;
+        int strIdxEnd   = strDirs.size() - 1;
 
         // up to first '**'
         while (patIdxStart <= patIdxEnd && strIdxStart <= strIdxEnd) {
-            String patDir = (String)patDirs.elementAt(patIdxStart);
+            String patDir = (String) patDirs.elementAt(patIdxStart);
             if (patDir.equals("**")) {
                 break;
             }
-            if (!match(patDir,(String)strDirs.elementAt(strIdxStart), isCaseSensitive)) {
+            if (!match(patDir, (String) strDirs.elementAt(strIdxStart), isCaseSensitive)) {
                 return false;
             }
             patIdxStart++;
@@ -322,7 +322,8 @@ public class DirectoryScanner implements FileScanner {
      * @return <code>true</code> if the pattern matches against the string, 
      *         or <code>false</code> otherwise.
      */
-    protected static boolean matchPath(String pattern, String str, boolean isCaseSensitive) {
+    protected static boolean matchPath(String pattern, String str, 
+                                       boolean isCaseSensitive) {
         // When str starts with a File.separator, pattern has to start with a
         // File.separator.
         // When pattern starts with a File.separator, str has to start with a
@@ -336,17 +337,17 @@ public class DirectoryScanner implements FileScanner {
         Vector strDirs = tokenizePath (str);
 
         int patIdxStart = 0;
-        int patIdxEnd   = patDirs.size()-1;
+        int patIdxEnd   = patDirs.size() - 1;
         int strIdxStart = 0;
-        int strIdxEnd   = strDirs.size()-1;
+        int strIdxEnd   = strDirs.size() - 1;
 
         // up to first '**'
         while (patIdxStart <= patIdxEnd && strIdxStart <= strIdxEnd) {
-            String patDir = (String)patDirs.elementAt(patIdxStart);
+            String patDir = (String) patDirs.elementAt(patIdxStart);
             if (patDir.equals("**")) {
                 break;
             }
-            if (!match(patDir,(String)strDirs.elementAt(strIdxStart), isCaseSensitive)) {
+            if (!match(patDir, (String) strDirs.elementAt(strIdxStart), isCaseSensitive)) {
                 return false;
             }
             patIdxStart++;
@@ -369,11 +370,11 @@ public class DirectoryScanner implements FileScanner {
 
         // up to last '**'
         while (patIdxStart <= patIdxEnd && strIdxStart <= strIdxEnd) {
-            String patDir = (String)patDirs.elementAt(patIdxEnd);
+            String patDir = (String) patDirs.elementAt(patIdxEnd);
             if (patDir.equals("**")) {
                 break;
             }
-            if (!match(patDir,(String)strDirs.elementAt(strIdxEnd), isCaseSensitive)) {
+            if (!match(patDir, (String) strDirs.elementAt(strIdxEnd), isCaseSensitive)) {
                 return false;
             }
             patIdxEnd--;
@@ -391,33 +392,35 @@ public class DirectoryScanner implements FileScanner {
 
         while (patIdxStart != patIdxEnd && strIdxStart <= strIdxEnd) {
             int patIdxTmp = -1;
-            for (int i = patIdxStart+1; i <= patIdxEnd; i++) {
+            for (int i = patIdxStart + 1; i <= patIdxEnd; i++) {
                 if (patDirs.elementAt(i).equals("**")) {
                     patIdxTmp = i;
                     break;
                 }
             }
-            if (patIdxTmp == patIdxStart+1) {
+            if (patIdxTmp == patIdxStart + 1) {
                 // '**/**' situation, so skip one
                 patIdxStart++;
                 continue;
             }
             // Find the pattern between padIdxStart & padIdxTmp in str between
             // strIdxStart & strIdxEnd
-            int patLength = (patIdxTmp-patIdxStart-1);
-            int strLength = (strIdxEnd-strIdxStart+1);
+            int patLength = (patIdxTmp - patIdxStart - 1);
+            int strLength = (strIdxEnd - strIdxStart + 1);
             int foundIdx  = -1;
 strLoop:
             for (int i = 0; i <= strLength - patLength; i++) {
                 for (int j = 0; j < patLength; j++) {
-                    String subPat = (String)patDirs.elementAt(patIdxStart+j+1);
-                    String subStr = (String)strDirs.elementAt(strIdxStart+i+j);
-                    if (!match(subPat,subStr, isCaseSensitive)) {
+                    String subPat 
+                        = (String) patDirs.elementAt(patIdxStart + j + 1);
+                    String subStr 
+                        = (String) strDirs.elementAt(strIdxStart + i + j);
+                    if (!match(subPat, subStr, isCaseSensitive)) {
                         continue strLoop;
                     }
                 }
 
-                foundIdx = strIdxStart+i;
+                foundIdx = strIdxStart + i;
                 break;
             }
 
@@ -426,7 +429,7 @@ strLoop:
             }
 
             patIdxStart = patIdxTmp;
-            strIdxStart = foundIdx+patLength;
+            strIdxStart = foundIdx + patLength;
         }
 
         for (int i = patIdxStart; i <= patIdxEnd; i++) {
@@ -473,13 +476,14 @@ strLoop:
      * @return <code>true</code> if the string matches against the pattern, 
      *         or <code>false</code> otherwise.
      */
-    protected static boolean match(String pattern, String str, boolean isCaseSensitive) {
+    protected static boolean match(String pattern, String str, 
+                                   boolean isCaseSensitive) {
         char[] patArr = pattern.toCharArray();
         char[] strArr = str.toCharArray();
         int patIdxStart = 0;
-        int patIdxEnd   = patArr.length-1;
+        int patIdxEnd   = patArr.length - 1;
         int strIdxStart = 0;
-        int strIdxEnd   = strArr.length-1;
+        int strIdxEnd   = strArr.length - 1;
         char ch;
 
         boolean containsStar = false;
@@ -515,7 +519,7 @@ strLoop:
         }
 
         // Process characters before first star
-        while((ch = patArr[patIdxStart]) != '*' && strIdxStart <= strIdxEnd) {
+        while ((ch = patArr[patIdxStart]) != '*' && strIdxStart <= strIdxEnd) {
             if (ch != '?') {
                 if (isCaseSensitive && ch != strArr[strIdxStart]) {
                     return false;// Character mismatch
@@ -540,7 +544,7 @@ strLoop:
         }
 
         // Process characters after last star
-        while((ch = patArr[patIdxEnd]) != '*' && strIdxStart <= strIdxEnd) {
+        while ((ch = patArr[patIdxEnd]) != '*' && strIdxStart <= strIdxEnd) {
             if (ch != '?') {
                 if (isCaseSensitive && ch != strArr[strIdxEnd]) {
                     return false;// Character mismatch
@@ -568,38 +572,39 @@ strLoop:
         // always to a '*'.
         while (patIdxStart != patIdxEnd && strIdxStart <= strIdxEnd) {
             int patIdxTmp = -1;
-            for (int i = patIdxStart+1; i <= patIdxEnd; i++) {
+            for (int i = patIdxStart + 1; i <= patIdxEnd; i++) {
                 if (patArr[i] == '*') {
                     patIdxTmp = i;
                     break;
                 }
             }
-            if (patIdxTmp == patIdxStart+1) {
+            if (patIdxTmp == patIdxStart + 1) {
                 // Two stars next to each other, skip the first one.
                 patIdxStart++;
                 continue;
             }
             // Find the pattern between padIdxStart & padIdxTmp in str between
             // strIdxStart & strIdxEnd
-            int patLength = (patIdxTmp-patIdxStart-1);
-            int strLength = (strIdxEnd-strIdxStart+1);
+            int patLength = (patIdxTmp - patIdxStart - 1);
+            int strLength = (strIdxEnd - strIdxStart + 1);
             int foundIdx  = -1;
             strLoop:
             for (int i = 0; i <= strLength - patLength; i++) {
                 for (int j = 0; j < patLength; j++) {
-                    ch = patArr[patIdxStart+j+1];
+                    ch = patArr[patIdxStart + j + 1];
                     if (ch != '?') {
-                        if (isCaseSensitive && ch != strArr[strIdxStart+i+j]) {
+                        if (isCaseSensitive 
+                             && ch != strArr[strIdxStart + i + j]) {
                             continue strLoop;
                         }
                         if (!isCaseSensitive && Character.toUpperCase(ch) !=
-                            Character.toUpperCase(strArr[strIdxStart+i+j])) {
+                            Character.toUpperCase(strArr[strIdxStart + i + j])) {
                             continue strLoop;
                         }
                     }
                 }
 
-                foundIdx = strIdxStart+i;
+                foundIdx = strIdxStart + i;
                 break;
             }
 
@@ -608,7 +613,7 @@ strLoop:
             }
 
             patIdxStart = patIdxTmp;
-            strIdxStart = foundIdx+patLength;
+            strIdxStart = foundIdx + patLength;
         }
 
         // All characters in the string are used. Check if only '*'s are left
@@ -631,7 +636,7 @@ strLoop:
      */
     private static Vector tokenizePath (String path) {
         Vector ret = new Vector();
-        StringTokenizer st = new StringTokenizer(path,File.separator);
+        StringTokenizer st = new StringTokenizer(path, File.separator);
         while (st.hasMoreTokens()) {
             ret.addElement(st.nextToken());
         }
@@ -648,7 +653,7 @@ strLoop:
      *                Must not be <code>null</code>.
      */
     public void setBasedir(String basedir) {
-        setBasedir(new File(basedir.replace('/',File.separatorChar).replace('\\',File.separatorChar)));
+        setBasedir(new File(basedir.replace('/', File.separatorChar).replace('\\', File.separatorChar)));
     }
 
     /**
@@ -702,7 +707,7 @@ strLoop:
             this.includes = new String[includes.length];
             for (int i = 0; i < includes.length; i++) {
                 String pattern;
-                pattern = includes[i].replace('/',File.separatorChar).replace('\\',File.separatorChar);
+                pattern = includes[i].replace('/', File.separatorChar).replace('\\', File.separatorChar);
                 if (pattern.endsWith(File.separator)) {
                     pattern += "**";
                 }
@@ -730,7 +735,7 @@ strLoop:
             this.excludes = new String[excludes.length];
             for (int i = 0; i < excludes.length; i++) {
                 String pattern;
-                pattern = excludes[i].replace('/',File.separatorChar).replace('\\',File.separatorChar);
+                pattern = excludes[i].replace('/', File.separatorChar).replace('\\', File.separatorChar);
                 if (pattern.endsWith(File.separator)) {
                     pattern += "**";
                 }
@@ -818,17 +823,17 @@ strLoop:
         String[] notIncl = new String[dirsNotIncluded.size()];
         dirsNotIncluded.copyInto(notIncl);
 
-        for (int i=0; i<excl.length; i++) {
+        for (int i = 0; i < excl.length; i++) {
             if (!couldHoldIncluded(excl[i])) {
                 scandir(new File(basedir, excl[i]),
-                        excl[i]+File.separator, false);
+                        excl[i] + File.separator, false);
             }
         }
 
-        for (int i=0; i<notIncl.length; i++) {
+        for (int i = 0; i < notIncl.length; i++) {
             if (!couldHoldIncluded(notIncl[i])) {
                 scandir(new File(basedir, notIncl[i]),
-                        notIncl[i]+File.separator, false);
+                        notIncl[i] + File.separator, false);
             }
         }
 
@@ -871,31 +876,31 @@ strLoop:
         }
 
         for (int i = 0; i < newfiles.length; i++) {
-            String name = vpath+newfiles[i];
-            File   file = new File(dir,newfiles[i]);
+            String name = vpath + newfiles[i];
+            File   file = new File(dir, newfiles[i]);
             if (file.isDirectory()) {
                 if (isIncluded(name)) {
                     if (!isExcluded(name)) {
                         dirsIncluded.addElement(name);
                         if (fast) {
-                            scandir(file, name+File.separator, fast);
+                            scandir(file, name + File.separator, fast);
                         }
                     } else {
                         everythingIncluded = false;
                         dirsExcluded.addElement(name);
                         if (fast && couldHoldIncluded(name)) {
-                            scandir(file, name+File.separator, fast);
+                            scandir(file, name + File.separator, fast);
                         }
                     }
                 } else {
                     everythingIncluded = false;
                     dirsNotIncluded.addElement(name);
                     if (fast && couldHoldIncluded(name)) {
-                        scandir(file, name+File.separator, fast);
+                        scandir(file, name + File.separator, fast);
                     }
                 }
                 if (!fast) {
-                    scandir(file, name+File.separator, fast);
+                    scandir(file, name + File.separator, fast);
                 }
             } else if (file.isFile()) {
                 if (isIncluded(name)) {
@@ -940,7 +945,7 @@ strLoop:
      */
     protected boolean couldHoldIncluded(String name) {
         for (int i = 0; i < includes.length; i++) {
-            if (matchPatternStart(includes[i],name, isCaseSensitive)) {
+            if (matchPatternStart(includes[i], name, isCaseSensitive)) {
                 return true;
             }
         }
@@ -957,7 +962,7 @@ strLoop:
      */
     protected boolean isExcluded(String name) {
         for (int i = 0; i < excludes.length; i++) {
-            if (matchPath(excludes[i],name, isCaseSensitive)) {
+            if (matchPath(excludes[i], name, isCaseSensitive)) {
                 return true;
             }
         }
@@ -976,7 +981,7 @@ strLoop:
         int count = filesIncluded.size();
         String[] files = new String[count];
         for (int i = 0; i < count; i++) {
-            files[i] = (String)filesIncluded.elementAt(i);
+            files[i] = (String) filesIncluded.elementAt(i);
         }
         return files;
     }
@@ -996,7 +1001,7 @@ strLoop:
         int count = filesNotIncluded.size();
         String[] files = new String[count];
         for (int i = 0; i < count; i++) {
-            files[i] = (String)filesNotIncluded.elementAt(i);
+            files[i] = (String) filesNotIncluded.elementAt(i);
         }
         return files;
     }
@@ -1017,7 +1022,7 @@ strLoop:
         int count = filesExcluded.size();
         String[] files = new String[count];
         for (int i = 0; i < count; i++) {
-            files[i] = (String)filesExcluded.elementAt(i);
+            files[i] = (String) filesExcluded.elementAt(i);
         }
         return files;
     }
@@ -1034,7 +1039,7 @@ strLoop:
         int count = dirsIncluded.size();
         String[] directories = new String[count];
         for (int i = 0; i < count; i++) {
-            directories[i] = (String)dirsIncluded.elementAt(i);
+            directories[i] = (String) dirsIncluded.elementAt(i);
         }
         return directories;
     }
@@ -1054,7 +1059,7 @@ strLoop:
         int count = dirsNotIncluded.size();
         String[] directories = new String[count];
         for (int i = 0; i < count; i++) {
-            directories[i] = (String)dirsNotIncluded.elementAt(i);
+            directories[i] = (String) dirsNotIncluded.elementAt(i);
         }
         return directories;
     }
@@ -1075,7 +1080,7 @@ strLoop:
         int count = dirsExcluded.size();
         String[] directories = new String[count];
         for (int i = 0; i < count; i++) {
-            directories[i] = (String)dirsExcluded.elementAt(i);
+            directories[i] = (String) dirsExcluded.elementAt(i);
         }
         return directories;
     }
@@ -1088,10 +1093,10 @@ strLoop:
         String[] newExcludes;
         newExcludes = new String[excludesLength + DEFAULTEXCLUDES.length];
         if (excludesLength > 0) {
-            System.arraycopy(excludes,0,newExcludes,0,excludesLength);
+            System.arraycopy(excludes, 0, newExcludes, 0, excludesLength);
         }
         for (int i = 0; i < DEFAULTEXCLUDES.length; i++) {
-            newExcludes[i+excludesLength] = DEFAULTEXCLUDES[i].replace('/',File.separatorChar).replace('\\',File.separatorChar);
+            newExcludes[i + excludesLength] = DEFAULTEXCLUDES[i].replace('/', File.separatorChar).replace('\\', File.separatorChar);
         }
         excludes = newExcludes;
     }

@@ -151,7 +151,7 @@ public abstract class Task extends ProjectComponent {
      *             available.
      *             
      */
-    public void setDescription( String desc ) {
+    public void setDescription(String desc) {
         description = desc;
     }
 
@@ -312,8 +312,7 @@ public abstract class Task extends ProjectComponent {
                 maybeConfigure();
                 execute();
                 project.fireTaskFinished(this, null);
-            }
-            catch (RuntimeException exc) {
+            } catch (RuntimeException exc) {
                 if (exc instanceof BuildException) {
                     BuildException be = (BuildException) exc;
                     if (be.getLocation() == Location.UNKNOWN_LOCATION) {

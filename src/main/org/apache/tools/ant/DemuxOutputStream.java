@@ -88,7 +88,8 @@ public class DemuxOutputStream extends OutputStream {
     }
     
     /** Maximum buffer size. */
-    private final static int MAX_SIZE = 1024;
+    private static final int MAX_SIZE = 1024;
+    
     /** Mapping from thread to buffer (Thread to BufferInfo). */
     private Hashtable buffers = new Hashtable();
 
@@ -124,7 +125,7 @@ public class DemuxOutputStream extends OutputStream {
      */
     private BufferInfo getBufferInfo() {
         Thread current = Thread.currentThread();
-        BufferInfo bufferInfo = (BufferInfo)buffers.get(current);
+        BufferInfo bufferInfo = (BufferInfo) buffers.get(current);
         if (bufferInfo == null) {
             bufferInfo = new BufferInfo();
             bufferInfo.buffer = new ByteArrayOutputStream();
@@ -139,11 +140,10 @@ public class DemuxOutputStream extends OutputStream {
      */
     private void resetBufferInfo() {    
         Thread current = Thread.currentThread();
-        BufferInfo bufferInfo = (BufferInfo)buffers.get(current);
+        BufferInfo bufferInfo = (BufferInfo) buffers.get(current);
         try {
             bufferInfo.buffer.close();
-        }
-        catch (IOException e) {
+        } catch (IOException e) {
             // Shouldn't happen
         }
         bufferInfo.buffer = new ByteArrayOutputStream();
@@ -166,7 +166,7 @@ public class DemuxOutputStream extends OutputStream {
      * @exception IOException if the data cannot be written to the stream
      */
     public void write(int cc) throws IOException {
-        final byte c = (byte)cc;
+        final byte c = (byte) cc;
 
         BufferInfo bufferInfo = getBufferInfo();
         if ((c == '\n') || (c == '\r')) {

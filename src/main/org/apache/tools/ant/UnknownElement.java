@@ -136,7 +136,7 @@ public class UnknownElement extends Task {
      */
     protected void handleOutput(String line) {
         if (realThing instanceof Task) {
-            ((Task)realThing).handleOutput(line);
+            ((Task) realThing).handleOutput(line);
         } else {
             super.handleOutput(line);
         }
@@ -149,7 +149,7 @@ public class UnknownElement extends Task {
      */
     protected void handleErrorOutput(String line) {
         if (realThing instanceof Task) {
-            ((Task)realThing).handleErrorOutput(line);
+            ((Task) realThing).handleErrorOutput(line);
         } else {
             super.handleErrorOutput(line);
         }

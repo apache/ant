@@ -120,9 +120,9 @@ public class Target implements TaskContainer {
 
                 // Make sure the dependency is not empty string
                 if (token.equals("") || token.equals(",")) {
-                    throw new BuildException( "Syntax Error: Depend attribute " +
-                                              "for target \"" + getName() + 
-                                              "\" has an empty string for dependency." );
+                    throw new BuildException("Syntax Error: Depend "
+                        + "attribute for target \"" + getName() 
+                        + "\" has an empty string for dependency.");
                 }
 
                 addDependency(token);
@@ -132,9 +132,9 @@ public class Target implements TaskContainer {
                 if (tok.hasMoreTokens()) {
                     token = tok.nextToken();
                     if (!tok.hasMoreTokens() || !token.equals(",")) {
-                        throw new BuildException( "Syntax Error: Depend attribute " +
-                                                  "for target \"" + getName() + 
-                                                  "\" ends with a , character" );
+                        throw new BuildException("Syntax Error: Depend " 
+                            + "attribute for target \"" + getName() 
+                            + "\" ends with a , character");
                     }
                 }
             }
@@ -313,11 +313,11 @@ public class Target implements TaskContainer {
                 }
             }
         } else if (!testIfCondition()) {
-            project.log(this, "Skipped because property '" + this.ifCondition + "' not set.", 
-                        Project.MSG_VERBOSE);
+            project.log(this, "Skipped because property '" + this.ifCondition 
+                + "' not set.", Project.MSG_VERBOSE);
         } else {
-            project.log(this, "Skipped because property '" + this.unlessCondition + "' set.",
-                        Project.MSG_VERBOSE);
+            project.log(this, "Skipped because property '" 
+                + this.unlessCondition + "' set.", Project.MSG_VERBOSE);
         }
     }
 
@@ -333,8 +333,7 @@ public class Target implements TaskContainer {
             project.fireTargetStarted(this);
             execute();
             project.fireTargetFinished(this, null);
-        }
-        catch(RuntimeException exc) {
+        } catch (RuntimeException exc) {
             project.fireTargetFinished(this, exc);
             throw exc;
         }

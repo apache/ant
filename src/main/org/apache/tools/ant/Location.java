@@ -69,7 +69,7 @@ public class Location {
     private int columnNumber;
 
     /** Location to use when one is needed but no information is available */
-    public final static Location UNKNOWN_LOCATION = new Location();
+    public static final Location UNKNOWN_LOCATION = new Location();
 
     /**
      * Creates an "unknown" location.

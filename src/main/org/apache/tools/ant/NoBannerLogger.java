@@ -107,17 +107,17 @@ public class NoBannerLogger extends DefaultLogger {
      */
     public void messageLogged(BuildEvent event) {
 
-        if( event.getPriority() > msgOutputLevel ||
-                null == event.getMessage() ||
-            "".equals( event.getMessage().trim() ) ) {
-            return;
+        if (event.getPriority() > msgOutputLevel 
+            || null == event.getMessage() 
+            || "".equals(event.getMessage().trim())) {
+                return;
         }
 
-        if( null != targetName ) {
+        if (null != targetName) {
             out.println(StringUtils.LINE_SEP + targetName + ":");
             targetName = null;
         }
 
-        super.messageLogged( event );
+        super.messageLogged(event);
     }
 }

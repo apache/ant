@@ -135,7 +135,7 @@ public class IntrospectionHelper implements BuildListener {
         Class[] wrappers = {Boolean.class, Byte.class, Character.class, 
                             Short.class, Integer.class, Long.class, 
                             Float.class, Double.class};
-        for (int i=0; i < primitives.length; i++) {
+        for (int i = 0; i < primitives.length; i++) {
             PRIMITIVE_TYPE_MAP.put (primitives[i], wrappers[i]);
         }
     }
@@ -204,7 +204,7 @@ public class IntrospectionHelper implements BuildListener {
         this.bean = bean;
 
         Method[] methods = bean.getMethods();
-        for (int i=0; i<methods.length; i++) {
+        for (int i = 0; i < methods.length; i++) {
             final Method m = methods[i];
             final String name = m.getName();
             Class returnType = m.getReturnType();
@@ -392,7 +392,8 @@ public class IntrospectionHelper implements BuildListener {
     public void setAttribute(Project p, Object element, String attributeName,
                              String value)
         throws BuildException {
-        AttributeSetter as = (AttributeSetter) attributeSetters.get(attributeName);
+        AttributeSetter as 
+            = (AttributeSetter) attributeSetters.get(attributeName);
         if (as == null) {
             String msg = p.getElementName(element) +
             //String msg = "Class " + element.getClass().getName() +
@@ -434,11 +435,10 @@ public class IntrospectionHelper implements BuildListener {
         throws BuildException {
         if (addText == null) {
             // Element doesn't handle text content
-            if ( text.trim().length() == 0 ) {
+            if (text.trim().length() == 0) {
                 // Only whitespace - ignore
                 return;
-            }
-            else {
+            } else {
                 // Not whitespace - fail
                 String msg = project.getElementName(element) +
                     " doesn't support nested text data.";
@@ -480,8 +480,8 @@ public class IntrospectionHelper implements BuildListener {
      *                           element instance, or if the creating method
      *                           fails.
      */
-    public Object createElement(Project project, Object parent, String elementName)
-        throws BuildException {
+    public Object createElement(Project project, Object parent, 
+        String elementName) throws BuildException {
         NestedCreator nc = (NestedCreator) nestedCreators.get(elementName);
         if (nc == null) {
             String msg = project.getElementName(parent) +
@@ -529,12 +529,12 @@ public class IntrospectionHelper implements BuildListener {
      * 
      * @exception BuildException if the storage method fails.
      */
-    public void storeElement(Project project, Object parent, Object child, String elementName)
-        throws BuildException {
+    public void storeElement(Project project, Object parent, Object child, 
+        String elementName) throws BuildException {
         if (elementName == null) {
             return;
         }
-        NestedStorer ns = (NestedStorer)nestedStorers.get(elementName);
+        NestedStorer ns = (NestedStorer) nestedStorers.get(elementName);
         if (ns == null) {
             return;
         }
@@ -663,7 +663,8 @@ public class IntrospectionHelper implements BuildListener {
      */
     private AttributeSetter createAttributeSetter(final Method m,
                                                   Class arg) {
-        // use wrappers for primitive classes, e.g. int and Integer are treated identically
+        // use wrappers for primitive classes, e.g. int and 
+        // Integer are treated identically
         final Class reflectedArg = PRIMITIVE_TYPE_MAP.containsKey (arg) 
             ? (Class) PRIMITIVE_TYPE_MAP.get(arg) : arg;
 
@@ -685,8 +686,8 @@ public class IntrospectionHelper implements BuildListener {
                     }
 
                 };
-        // boolean and Boolean get special treatment because we have a nice method
-        // in Project
+        // boolean and Boolean get special treatment because we 
+        // have a nice method in Project
         } else if (java.lang.Boolean.class.equals(reflectedArg)) {
             return new AttributeSetter() {
                     public void set(Project p, Object parent, String value)
@@ -737,7 +738,7 @@ public class IntrospectionHelper implements BuildListener {
                         throws InvocationTargetException, IllegalAccessException, BuildException {
                         try {
                             org.apache.tools.ant.types.EnumeratedAttribute ea = 
-                                (org.apache.tools.ant.types.EnumeratedAttribute)reflectedArg.newInstance();
+                                (org.apache.tools.ant.types.EnumeratedAttribute) reflectedArg.newInstance();
                             ea.setValue(value);
                             m.invoke(parent, new EnumeratedAttribute[] {ea});
                         } catch (InstantiationException ie) {
@@ -792,8 +793,7 @@ public class IntrospectionHelper implements BuildListener {
      * 
      * @return a description of the element type
      */
-    protected String getElementName(Project project, Object element)
-    {
+    protected String getElementName(Project project, Object element) {
         return project.getElementName(element);
     }
 

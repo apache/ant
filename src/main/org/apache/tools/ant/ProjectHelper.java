@@ -198,7 +198,7 @@ public class ProjectHelper {
                     if (helperClassName != null &&
                         !"".equals(helperClassName)) {
                         
-                        helper = newHelper( helperClassName );
+                        helper = newHelper(helperClassName);
                     }
                 }
             } catch (Exception ex) {
@@ -281,7 +281,7 @@ public class ProjectHelper {
     public static void configure(Object target, AttributeList attrs, 
                                  Project project) throws BuildException {
         if (target instanceof TaskAdapter) {
-            target = ((TaskAdapter)target).getProxy();
+            target = ((TaskAdapter) target).getProxy();
         }
 
         IntrospectionHelper ih = 
@@ -292,7 +292,7 @@ public class ProjectHelper {
         for (int i = 0; i < attrs.getLength(); i++) {
             // reflect these into the target
             String value = replaceProperties(project, attrs.getValue(i), 
-                                           project.getProperties() );
+                                           project.getProperties());
             try {
                 ih.setAttribute(project, target, 
                                 attrs.getName(i).toLowerCase(Locale.US), value);
@@ -341,7 +341,7 @@ public class ProjectHelper {
     public static void addText(Project project, Object target, String text)
         throws BuildException {
 
-        if (text == null ) {
+        if (text == null) {
             return;
         }
 
@@ -368,7 +368,8 @@ public class ProjectHelper {
      */
     public static void storeChild(Project project, Object parent, 
          Object child, String tag) {
-        IntrospectionHelper ih = IntrospectionHelper.getHelper(parent.getClass());
+        IntrospectionHelper ih 
+            = IntrospectionHelper.getHelper(parent.getClass());
         ih.storeElement(project, parent, child, tag);
     }
 
@@ -427,9 +428,9 @@ public class ProjectHelper {
         Enumeration i = fragments.elements();
         Enumeration j = propertyRefs.elements();
         while (i.hasMoreElements()) {
-            String fragment = (String)i.nextElement();
+            String fragment = (String) i.nextElement();
             if (fragment == null) {
-                String propertyName = (String)j.nextElement();
+                String propertyName = (String) j.nextElement();
                 if (!keys.containsKey(propertyName)) {
                     project.log("Property ${" + propertyName 
                         + "} has not been set", Project.MSG_VERBOSE);
@@ -476,12 +477,11 @@ public class ProjectHelper {
             }
             //if we are at the end of the string, we tack on a $
             //then move past it
-            if( pos == (value.length() - 1)) {
+            if (pos == (value.length() - 1)) {
                 fragments.addElement("$");
                 prev = pos + 1;
-            }
-            //peek ahead to see if the next char is a property or not
-            else if (value.charAt(pos + 1) != '{' ) {
+            } else if (value.charAt(pos + 1) != '{') {
+                //peek ahead to see if the next char is a property or not
                 //not a property: insert the char as a literal
                 fragments.addElement(value.substring(pos + 1, pos + 2));
                 prev = pos + 2;
@@ -490,7 +490,7 @@ public class ProjectHelper {
                 int endName = value.indexOf('}', pos);
                 if (endName < 0) {
                     throw new BuildException("Syntax error in property: "
-                                                 + value );
+                                                 + value);
                 }
                 String propertyName = value.substring(pos + 2, endName);
                 fragments.addElement(null);

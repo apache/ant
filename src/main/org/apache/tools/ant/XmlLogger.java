@@ -87,7 +87,7 @@ import org.apache.tools.ant.util.StringUtils;
 public class XmlLogger implements BuildListener {
 
     /** DocumentBuilder to use when creating the document to start with. */
-    private final static DocumentBuilder builder = getDocumentBuilder();
+    private static final DocumentBuilder builder = getDocumentBuilder();
 
     /** 
      * Returns a default DocumentBuilder instance or throws an
@@ -98,32 +98,31 @@ public class XmlLogger implements BuildListener {
     private static DocumentBuilder getDocumentBuilder() {
         try {
             return DocumentBuilderFactory.newInstance().newDocumentBuilder();
-        }
-        catch(Exception exc) {
+        } catch (Exception exc) {
             throw new ExceptionInInitializerError(exc);
         }
     }
 
     /** XML element name for a build. */
-    private final static String BUILD_TAG = "build";
+    private static final String BUILD_TAG = "build";
     /** XML element name for a target. */
-    private final static String TARGET_TAG = "target";
+    private static final String TARGET_TAG = "target";
     /** XML element name for a task. */
-    private final static String TASK_TAG = "task";
+    private static final String TASK_TAG = "task";
     /** XML element name for a message. */
-    private final static String MESSAGE_TAG = "message";
+    private static final String MESSAGE_TAG = "message";
     /** XML attribute name for a name. */
-    private final static String NAME_ATTR = "name";
+    private static final String NAME_ATTR = "name";
     /** XML attribute name for a time. */
-    private final static String TIME_ATTR = "time";
+    private static final String TIME_ATTR = "time";
     /** XML attribute name for a message priority. */
-    private final static String PRIORITY_ATTR = "priority";
+    private static final String PRIORITY_ATTR = "priority";
     /** XML attribute name for a file location. */
-    private final static String LOCATION_ATTR = "location";
+    private static final String LOCATION_ATTR = "location";
     /** XML attribute name for an error description. */
-    private final static String ERROR_ATTR = "error";
+    private static final String ERROR_ATTR = "error";
     /** XML element name for a stack trace. */
-    private final static String STACKTRACE_TAG = "stacktrace";
+    private static final String STACKTRACE_TAG = "stacktrace";
 
     /** The complete log document for this build. */
     private Document doc = builder.newDocument();
@@ -147,9 +146,9 @@ public class XmlLogger implements BuildListener {
          * Start time in milliseconds 
          * (as returned by <code>System.currentTimeMillis()</code>). 
          */
-        long startTime;
+        private long startTime;
         /** Element created at the start time. */ 
-        Element element;
+        private Element element;
     }
 
     /**
@@ -179,14 +178,16 @@ public class XmlLogger implements BuildListener {
      */
     public void buildFinished(BuildEvent event) {
         long totalTime = System.currentTimeMillis() - buildElement.startTime;
-        buildElement.element.setAttribute(TIME_ATTR, DefaultLogger.formatTime(totalTime));
+        buildElement.element.setAttribute(TIME_ATTR, 
+            DefaultLogger.formatTime(totalTime));
 
         if (event.getException() != null) {
-            buildElement.element.setAttribute(ERROR_ATTR, event.getException().toString());
+            buildElement.element.setAttribute(ERROR_ATTR, 
+                event.getException().toString());
             // print the stacktrace in the build file it is always useful...
             // better have too much info than not enough.
             Throwable t = event.getException();
-            Text errText =  doc.createCDATASection(StringUtils.getStackTrace(t));
+            Text errText = doc.createCDATASection(StringUtils.getStackTrace(t));
             Element stacktrace = doc.createElement(STACKTRACE_TAG);
             stacktrace.appendChild(errText);
             buildElement.element.appendChild(stacktrace);
@@ -196,9 +197,10 @@ public class XmlLogger implements BuildListener {
         if (outFilename == null) {
             outFilename = "log.xml";
         }
-        String xslUri=event.getProject().getProperty("ant.XmlLogger.stylesheet.uri");
-        if(xslUri==null) {
-            xslUri="log.xsl";
+        String xslUri 
+            = event.getProject().getProperty("ant.XmlLogger.stylesheet.uri");
+        if (xslUri == null) {
+            xslUri = "log.xsl";
         }
         Writer out = null;
         try {
@@ -207,12 +209,13 @@ public class XmlLogger implements BuildListener {
             FileOutputStream fos = new FileOutputStream(outFilename);
             out = new OutputStreamWriter(fos, "UTF8");
             out.write("<?xml version=\"1.0\" encoding=\"UTF-8\" ?>\n");
-            if(xslUri.length()>0) {
-                out.write("<?xml-stylesheet type=\"text/xsl\" href=\""+xslUri+"\"?>\n\n");
+            if (xslUri.length() > 0) {
+                out.write("<?xml-stylesheet type=\"text/xsl\" href=\""
+                    + xslUri + "\"?>\n\n");
             }
             (new DOMElementWriter()).write(buildElement.element, out, 0, "\t");
             out.flush();
-        } catch(IOException exc) {
+        } catch (IOException exc) {
             throw new BuildException("Unable to write log file", exc);
         } finally {
             if (out != null){
@@ -229,7 +232,7 @@ public class XmlLogger implements BuildListener {
      * @return the stack of timed elements for the current thread
      */
     private Stack getStack() {    
-        Stack threadStack = (Stack)threadStacks.get(Thread.currentThread());
+        Stack threadStack = (Stack) threadStacks.get(Thread.currentThread());
         if (threadStack == null) {
             threadStack = new Stack();
             threadStacks.put(Thread.currentThread(), threadStack);
@@ -264,27 +267,29 @@ public class XmlLogger implements BuildListener {
      */
     public void targetFinished(BuildEvent event) {
         Target target = event.getTarget();
-        TimedElement targetElement = (TimedElement)targets.get(target);
+        TimedElement targetElement = (TimedElement) targets.get(target);
         if (targetElement != null) {
-            long totalTime = System.currentTimeMillis() - targetElement.startTime;
-            targetElement.element.setAttribute(TIME_ATTR, DefaultLogger.formatTime(totalTime));
+            long totalTime 
+                = System.currentTimeMillis() - targetElement.startTime;
+            targetElement.element.setAttribute(TIME_ATTR, 
+                DefaultLogger.formatTime(totalTime));
 
             TimedElement parentElement = null;
             Stack threadStack = getStack();
             if (!threadStack.empty()) {
-                TimedElement poppedStack = (TimedElement)threadStack.pop();
+                TimedElement poppedStack = (TimedElement) threadStack.pop();
                 if (poppedStack != targetElement) {
-                    throw new RuntimeException("Mismatch - popped element = " + poppedStack.element +
-                    " finished target element = " + targetElement.element);
+                    throw new RuntimeException("Mismatch - popped element = " 
+                        + poppedStack.element + " finished target element = " 
+                        + targetElement.element);
                 }
                 if (!threadStack.empty()) {
-                    parentElement = (TimedElement)threadStack.peek();
+                    parentElement = (TimedElement) threadStack.peek();
                 }
             }
             if (parentElement == null) {
                 buildElement.element.appendChild(targetElement.element);
-            }
-            else {
+            } else {
                 parentElement.element.appendChild(targetElement.element);
             }
         }
@@ -306,7 +311,8 @@ public class XmlLogger implements BuildListener {
         
         String name = event.getTask().getTaskName();
         taskElement.element.setAttribute(NAME_ATTR, name);
-        taskElement.element.setAttribute(LOCATION_ATTR, event.getTask().getLocation().toString());
+        taskElement.element.setAttribute(LOCATION_ATTR, 
+            event.getTask().getLocation().toString());
         tasks.put(task, taskElement);
         getStack().push(taskElement);
     }
@@ -320,27 +326,28 @@ public class XmlLogger implements BuildListener {
      */
     public void taskFinished(BuildEvent event) {
         Task task = event.getTask();
-        TimedElement taskElement = (TimedElement)tasks.get(task);
+        TimedElement taskElement = (TimedElement) tasks.get(task);
         if (taskElement != null) {
             long totalTime = System.currentTimeMillis() - taskElement.startTime;
-            taskElement.element.setAttribute(TIME_ATTR, DefaultLogger.formatTime(totalTime));
+            taskElement.element.setAttribute(TIME_ATTR, 
+                DefaultLogger.formatTime(totalTime));
             Target target = task.getOwningTarget();
             TimedElement targetElement = null;
             if (target != null) {
-                targetElement = (TimedElement)targets.get(target);
+                targetElement = (TimedElement) targets.get(target);
             }
             if (targetElement == null) {
                 buildElement.element.appendChild(taskElement.element);
-            }
-            else {
+            } else {
                 targetElement.element.appendChild(taskElement.element);
             }
             Stack threadStack = getStack();
             if (!threadStack.empty()) {
-                TimedElement poppedStack = (TimedElement)threadStack.pop();
+                TimedElement poppedStack = (TimedElement) threadStack.pop();
                 if (poppedStack != taskElement) {
-                    throw new RuntimeException("Mismatch - popped element = " + poppedStack.element +
-                    " finished task element = " + taskElement.element);
+                    throw new RuntimeException("Mismatch - popped element = " 
+                        + poppedStack.element + " finished task element = " 
+                        + taskElement.element);
                 }
             }
         }
@@ -374,25 +381,25 @@ public class XmlLogger implements BuildListener {
         Task task = event.getTask();
         Target target = event.getTarget();
         if (task != null) {
-            parentElement = (TimedElement)tasks.get(task);
+            parentElement = (TimedElement) tasks.get(task);
         }
         if (parentElement == null && target != null) {
-            parentElement = (TimedElement)targets.get(target);
+            parentElement = (TimedElement) targets.get(target);
         }
 
         if (parentElement == null) {
-            Stack threadStack = (Stack)threadStacks.get(Thread.currentThread());
+            Stack threadStack 
+                = (Stack) threadStacks.get(Thread.currentThread());
             if (threadStack != null) {
                 if (!threadStack.empty()) {
-                    parentElement = (TimedElement)threadStack.peek();
+                    parentElement = (TimedElement) threadStack.peek();
                 }
             }
         }
 
         if (parentElement != null) {
             parentElement.element.appendChild(messageElement);
-        }
-        else {
+        } else {
             buildElement.element.appendChild(messageElement);
         }
     }

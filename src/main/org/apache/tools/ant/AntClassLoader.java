@@ -160,7 +160,7 @@ public class AntClassLoader extends ClassLoader implements BuildListener {
                    (url == null)) {
                 try {
                     File pathComponent
-                        = (File)pathComponents.elementAt(pathElementsIndex);
+                        = (File) pathComponents.elementAt(pathElementsIndex);
                     url = getResourceURL(pathComponent, this.resourceName);
                     pathElementsIndex++;
                 } catch (BuildException e) {
@@ -649,7 +649,7 @@ public class AntClassLoader extends ClassLoader implements BuildListener {
 
         Enumeration e = pathComponents.elements();
         while (e.hasMoreElements() && stream == null) {
-            File pathComponent = (File)e.nextElement();
+            File pathComponent = (File) e.nextElement();
             stream = getResourceStream(pathComponent, name);
         }
         return stream;
@@ -699,7 +699,7 @@ public class AntClassLoader extends ClassLoader implements BuildListener {
                 }
             } else {
                 // is the zip file in the cache
-                ZipFile zipFile = (ZipFile)zipFiles.get(file);
+                ZipFile zipFile = (ZipFile) zipFiles.get(file);
                 if (zipFile == null) {
                     zipFile = new ZipFile(file);
                     zipFiles.put(file, zipFile);
@@ -741,7 +741,7 @@ public class AntClassLoader extends ClassLoader implements BuildListener {
         boolean useParentFirst = parentFirst;
 
         for (Enumeration e = systemPackages.elements(); e.hasMoreElements();) {
-            String packageName = (String)e.nextElement();
+            String packageName = (String) e.nextElement();
             if (resourceName.startsWith(packageName)) {
                 useParentFirst = true;
                 break;
@@ -749,7 +749,7 @@ public class AntClassLoader extends ClassLoader implements BuildListener {
         }
 
         for (Enumeration e = loaderPackages.elements(); e.hasMoreElements();) {
-            String packageName = (String)e.nextElement();
+            String packageName = (String) e.nextElement();
             if (resourceName.startsWith(packageName)) {
                 useParentFirst = false;
                 break;
@@ -789,7 +789,7 @@ public class AntClassLoader extends ClassLoader implements BuildListener {
             // it or wasn't consulted.
             Enumeration e = pathComponents.elements();
             while (e.hasMoreElements() && url == null) {
-                File pathComponent = (File)e.nextElement();
+                File pathComponent = (File) e.nextElement();
                 url = getResourceURL(pathComponent, name);
                 if (url != null) {
                     log("Resource " + name
@@ -859,7 +859,7 @@ public class AntClassLoader extends ClassLoader implements BuildListener {
                     }
                 }
             } else {
-                ZipFile zipFile = (ZipFile)zipFiles.get(file);
+                ZipFile zipFile = (ZipFile) zipFiles.get(file);
                 if (zipFile == null) {
                     zipFile = new ZipFile(file);
                     zipFiles.put(file, zipFile);
@@ -993,18 +993,16 @@ public class AntClassLoader extends ClassLoader implements BuildListener {
                 Object[] args
                     = new Object[] {classname, classData, new Integer(0),
                                     new Integer(classData.length), domain};
-                return (Class)defineClassProtectionDomain.invoke(this, args);
+                return (Class) defineClassProtectionDomain.invoke(this, args);
             } catch (InvocationTargetException ite) {
                 Throwable t = ite.getTargetException();
                 if (t instanceof ClassFormatError) {
-                    throw (ClassFormatError)t;
+                    throw (ClassFormatError) t;
                 } else if (t instanceof NoClassDefFoundError) {
-                    throw (NoClassDefFoundError)t;
-                }
-                else if (t instanceof SecurityException) {
-                    throw (SecurityException)t;
-                }
-                else {
+                    throw (NoClassDefFoundError) t;
+                } else if (t instanceof SecurityException) {
+                    throw (SecurityException) t;
+                } else {
                     throw new IOException(t.toString());
                 }
             } catch (Exception e) {
@@ -1053,17 +1051,15 @@ public class AntClassLoader extends ClassLoader implements BuildListener {
         try {
             Enumeration e = pathComponents.elements();
             while (e.hasMoreElements()) {
-                File pathComponent = (File)e.nextElement();
+                File pathComponent = (File) e.nextElement();
                 try {
                     stream = getResourceStream(pathComponent, classFilename);
                     if (stream != null) {
                         return getClassFromStream(stream, name);
                     }
-                }
-                catch (SecurityException se) {
+                } catch (SecurityException se) {
                     throw se;
-                }
-                catch (IOException ioe) {
+                } catch (IOException ioe) {
                     // ioe.printStackTrace();
                     log("Exception reading component " + pathComponent ,
                         Project.MSG_VERBOSE);
@@ -1110,8 +1106,8 @@ public class AntClassLoader extends ClassLoader implements BuildListener {
     public void cleanup() {
         pathComponents = null;
         project = null;
-        for (Enumeration e = zipFiles.elements(); e.hasMoreElements(); ) {
-            ZipFile zipFile = (ZipFile)e.nextElement();
+        for (Enumeration e = zipFiles.elements(); e.hasMoreElements();) {
+            ZipFile zipFile = (ZipFile) e.nextElement();
             try {
                 zipFile.close();
             } catch (IOException ioe) {

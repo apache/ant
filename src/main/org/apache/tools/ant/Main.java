@@ -79,7 +79,7 @@ import java.util.Enumeration;
 public class Main {
 
     /** The default build file name. */
-    public final static String DEFAULT_BUILD_FILENAME = "build.xml";
+    public static final String DEFAULT_BUILD_FILENAME = "build.xml";
 
     /** Our current message output status. Follows Project.MSG_XXX. */
     private int msgOutputLevel = Project.MSG_INFO;
@@ -174,7 +174,7 @@ public class Main {
 
         if (additionalUserProperties != null) {
             for (Enumeration e = additionalUserProperties.keys();
-                    e.hasMoreElements(); ) {
+                    e.hasMoreElements();) {
                 String key = (String) e.nextElement();
                 String property = additionalUserProperties.getProperty(key);
                 m.definedProps.put(key, property);
@@ -334,8 +334,7 @@ public class Main {
                 }
                 try {
                     loggerClassname = args[++i];
-                }
-                catch (ArrayIndexOutOfBoundsException aioobe) {
+                } catch (ArrayIndexOutOfBoundsException aioobe) {
                     System.out.println("You must specify a classname when " +
                                        "using the -logger argument");
                     return;
@@ -410,8 +409,7 @@ public class Main {
             try {
                 fis = new FileInputStream(filename);
                 props.load(fis);
-            }
-            catch (IOException e) {
+            } catch (IOException e) {
                 System.out.println("Could not load property file "
                    + filename + ": " + e.getMessage());
             } finally {
@@ -537,8 +535,8 @@ public class Main {
             // use a system manager that prevents from System.exit()
             // only in JDK > 1.1
             SecurityManager oldsm = null;
-            if ( !Project.JAVA_1_0.equals(Project.getJavaVersion()) &&
-                !Project.JAVA_1_1.equals(Project.getJavaVersion()) ){
+            if (!Project.JAVA_1_0.equals(Project.getJavaVersion()) &&
+                !Project.JAVA_1_1.equals(Project.getJavaVersion())){
                 oldsm = System.getSecurityManager();
 
                 //SecurityManager can not be installed here for backwards
@@ -559,13 +557,13 @@ public class Main {
                 // set user-define properties
                 Enumeration e = definedProps.keys();
                 while (e.hasMoreElements()) {
-                    String arg = (String)e.nextElement();
-                    String value = (String)definedProps.get(arg);
+                    String arg = (String) e.nextElement();
+                    String value = (String) definedProps.get(arg);
                     project.setUserProperty(arg, value);
                 }
 
                 project.setUserProperty("ant.file",
-                    buildFile.getAbsolutePath() );
+                    buildFile.getAbsolutePath());
 
                 // first use the ProjectHelper to create the project object
                 // from the given build file.
@@ -585,7 +583,7 @@ public class Main {
 
                 if (projectHelp) {
                     printDescription(project);
-                    printTargets(project, msgOutputLevel > Project.MSG_INFO );
+                    printTargets(project, msgOutputLevel > Project.MSG_INFO);
                     return;
                 }
 
@@ -595,8 +593,7 @@ public class Main {
                 }
 
                 project.executeTargets(targets);
-            }
-            finally {
+            } finally {
                 // put back the original security manager
                 //The following will never eval to true. (PD)
                 if (oldsm != null){
@@ -606,16 +603,13 @@ public class Main {
                 System.setOut(out);
                 System.setErr(err);
             }
-        }
-        catch (RuntimeException exc) {
+        } catch (RuntimeException exc) {
             error = exc;
             throw exc;
-        }
-        catch (Error err) {
+        } catch (Error err) {
             error = err;
             throw err;
-        }
-        finally {
+        } finally {
             if (!projectHelp) {
                 project.fireBuildFinished(error);
             }
@@ -640,8 +634,7 @@ public class Main {
                 BuildListener listener =
                     (BuildListener) Class.forName(className).newInstance();
                 project.addBuildListener(listener);
-            }
-            catch (Throwable exc) {
+            } catch (Throwable exc) {
                 throw new BuildException("Unable to instantiate listener "
                     + className, exc);
             }
@@ -662,21 +655,19 @@ public class Main {
         BuildLogger logger = null;
         if (loggerClassname != null) {
             try {
-                logger = (BuildLogger)(Class.forName(loggerClassname).newInstance());
-            }
-            catch (ClassCastException e) {
+                logger = (BuildLogger) (Class.forName(loggerClassname).newInstance());
+            } catch (ClassCastException e) {
                 System.err.println("The specified logger class "
                     + loggerClassname
                     + " does not implement the BuildLogger interface");
                 throw new RuntimeException();
-            }
-            catch (Exception e) {
+            } catch (Exception e) {
                 System.err.println("Unable to instantiate specified logger "
-                    + "class " + loggerClassname + " : " + e.getClass().getName());
+                    + "class " + loggerClassname + " : " 
+                    + e.getClass().getName());
                 throw new RuntimeException();
             }
-        }
-        else {
+        } else {
             logger = new DefaultLogger();
         }
 
@@ -801,7 +792,7 @@ public class Main {
         Vector subNames = new Vector();
 
         while (ptargets.hasMoreElements()) {
-            currentTarget = (Target)ptargets.nextElement();
+            currentTarget = (Target) ptargets.nextElement();
             targetName = currentTarget.getName();
             targetDescription = currentTarget.getDescription();
             // maintain a sorted list of targets
@@ -827,7 +818,7 @@ public class Main {
         String defaultTarget = project.getDefaultTarget();
         if (defaultTarget != null && !"".equals(defaultTarget)) {
             // shouldn't need to check but...
-            System.out.println( "Default target: " + defaultTarget);
+            System.out.println("Default target: " + defaultTarget);
         }
     }
 
@@ -844,7 +835,7 @@ public class Main {
     private static int findTargetPosition(Vector names, String name) {
         int res = names.size();
         for (int i = 0; i < names.size() && res == names.size(); i++) {
-            if (name.compareTo((String)names.elementAt(i)) < 0) {
+            if (name.compareTo((String) names.elementAt(i)) < 0) {
                 res = i;
             }
         }
@@ -884,7 +875,7 @@ public class Main {
             msg.append(" ");
             msg.append(names.elementAt(i));
             if (descriptions != null) {
-                msg.append(spaces.substring(0, maxlen - ((String)names.elementAt(i)).length() + 2));
+                msg.append(spaces.substring(0, maxlen - ((String) names.elementAt(i)).length() + 2));
                 msg.append(descriptions.elementAt(i));
             }
             msg.append(lSep);

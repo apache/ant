@@ -88,42 +88,42 @@ import org.apache.tools.ant.util.JavaEnvUtils;
 public class Project {
 
     /** Message priority of "error". */
-    public final static int MSG_ERR = 0;
+    public static final int MSG_ERR = 0;
     /** Message priority of "warning". */
-    public final static int MSG_WARN = 1;
+    public static final int MSG_WARN = 1;
     /** Message priority of "information". */
-    public final static int MSG_INFO = 2;
+    public static final int MSG_INFO = 2;
     /** Message priority of "verbose". */
-    public final static int MSG_VERBOSE = 3;
+    public static final int MSG_VERBOSE = 3;
     /** Message priority of "debug". */
-    public final static int MSG_DEBUG = 4;
+    public static final int MSG_DEBUG = 4;
 
     /** 
      * Constant for the "visiting" state, used when
      * traversing a DFS of target dependencies.
      */
-    private final static String VISITING = "VISITING";
+    private static final String VISITING = "VISITING";
     /** 
      * Constant for the "visited" state, used when
      * traversing a DFS of target dependencies.
      */
-    private final static String VISITED = "VISITED";
+    private static final String VISITED = "VISITED";
 
     /** Version constant for Java 1.0 */
-    public final static String JAVA_1_0 = JavaEnvUtils.JAVA_1_0;
+    public static final String JAVA_1_0 = JavaEnvUtils.JAVA_1_0;
     /** Version constant for Java 1.1 */
-    public final static String JAVA_1_1 = JavaEnvUtils.JAVA_1_1;
+    public static final String JAVA_1_1 = JavaEnvUtils.JAVA_1_1;
     /** Version constant for Java 1.2 */
-    public final static String JAVA_1_2 = JavaEnvUtils.JAVA_1_2;
+    public static final String JAVA_1_2 = JavaEnvUtils.JAVA_1_2;
     /** Version constant for Java 1.3 */
-    public final static String JAVA_1_3 = JavaEnvUtils.JAVA_1_3;
+    public static final String JAVA_1_3 = JavaEnvUtils.JAVA_1_3;
     /** Version constant for Java 1.4 */
-    public final static String JAVA_1_4 = JavaEnvUtils.JAVA_1_4;
+    public static final String JAVA_1_4 = JavaEnvUtils.JAVA_1_4;
 
     /** Default filter start token. */
-    public final static String TOKEN_START = FilterSet.DEFAULT_TOKEN_START;
+    public static final String TOKEN_START = FilterSet.DEFAULT_TOKEN_START;
     /** Default filter end token. */
-    public final static String TOKEN_END = FilterSet.DEFAULT_TOKEN_END;
+    public static final String TOKEN_END = FilterSet.DEFAULT_TOKEN_END;
 
     /** Name of this project. */
     private String name;
@@ -676,7 +676,7 @@ public class Project {
                 + " is not a directory");
         }
         this.baseDir = baseDir;
-        setPropertyInternal( "basedir", this.baseDir.getPath());
+        setPropertyInternal("basedir", this.baseDir.getPath());
         String msg = "Project base dir set to: " + this.baseDir;
         log(msg, MSG_VERBOSE);
     }
@@ -768,7 +768,7 @@ public class Project {
      */
     public void addTaskDefinition(String taskName, Class taskClass) 
          throws BuildException {
-        Class old = (Class)taskClassDefinitions.get(taskName);
+        Class old = (Class) taskClassDefinitions.get(taskName);
         if (null != old) {
             if (old.equals(taskClass)) {
                 log("Ignoring override for task " + taskName 
@@ -812,7 +812,7 @@ public class Project {
             throw new BuildException(message);
         }
         try {
-            taskClass.getConstructor( null );
+            taskClass.getConstructor(null);
             // don't have to check for public, since
             // getConstructor finds public constructors only.
         } catch (NoSuchMethodException e) {
@@ -821,7 +821,7 @@ public class Project {
             log(message, Project.MSG_ERR);
             throw new BuildException(message);
         }
-        if (!Task.class.isAssignableFrom(taskClass) ) {
+        if (!Task.class.isAssignableFrom(taskClass)) {
             TaskAdapter.checkTaskClass(taskClass, this);
         }
     }
@@ -851,7 +851,7 @@ public class Project {
      *                  Must not be <code>null</code>.
      */
     public void addDataTypeDefinition(String typeName, Class typeClass) {
-        Class old = (Class)dataClassDefinitions.get(typeName);
+        Class old = (Class) dataClassDefinitions.get(typeName);
         if (null != old) {
             if (old.equals(typeClass)) {
                 log("Ignoring override for datatype " + typeName 
@@ -978,7 +978,7 @@ public class Project {
             Object o = c.newInstance();
             Task task = null;
             if (o instanceof Task) {
-               task = (Task)o;
+               task = (Task) o;
             } else {
                 // "Generic" Bean - use the setter pattern
                 // and an Adapter
@@ -1085,7 +1085,7 @@ public class Project {
                  o = ctor.newInstance(new Object[] {this});
             }
             if (o instanceof ProjectComponent) {
-                ((ProjectComponent)o).setProject(this);
+                ((ProjectComponent) o).setProject(this);
             }
             String msg = "   +DataType: " + typeName;
             log (msg, MSG_DEBUG);
@@ -1115,7 +1115,7 @@ public class Project {
         Throwable error = null;
 
         for (int i = 0; i < targetNames.size(); i++) {
-            executeTarget((String)targetNames.elementAt(i));
+            executeTarget((String) targetNames.elementAt(i));
         }
     }
 
@@ -1129,15 +1129,13 @@ public class Project {
      *        or information (<code>false</code>).
      */
     public void demuxOutput(String line, boolean isError) {
-        Task task = (Task)threadTasks.get(Thread.currentThread());
+        Task task = (Task) threadTasks.get(Thread.currentThread());
         if (task == null) {
             fireMessageLogged(this, line, isError ? MSG_ERR : MSG_INFO);
-        }
-        else {
+        } else {
             if (isError) {
                 task.handleErrorOutput(line);
-            }
-            else {
+            } else {
                 task.handleOutput(line);
             }
         }
@@ -1231,7 +1229,7 @@ public class Project {
      * @see PathTokenizer
      */
     public static String translatePath(String toProcess) {
-        if ( toProcess == null || toProcess.length() == 0 ) {
+        if (toProcess == null || toProcess.length() == 0) {
             return "";
         }
 
@@ -1510,12 +1508,11 @@ public class Project {
         tsort(root, targets, state, visiting, ret);
         log("Build sequence for target `" + root + "' is " + ret, MSG_VERBOSE);
         for (Enumeration en = targets.keys(); en.hasMoreElements();) {
-            String curTarget = (String)(en.nextElement());
+            String curTarget = (String) en.nextElement();
             String st = (String) state.get(curTarget);
             if (st == null) {
                 tsort(curTarget, targets, state, visiting, ret);
-            }
-            else if (st == VISITING) {
+            } else if (st == VISITING) {
                 throw new RuntimeException("Unexpected node in visiting state: "
                     + curTarget);
             }
@@ -1571,7 +1568,7 @@ public class Project {
         state.put(root, VISITING);
         visiting.push(root);
 
-        Target target = (Target)(targets.get(root));
+        Target target = (Target) targets.get(root);
 
         // Make sure we exist
         if (target == null) {
@@ -1580,7 +1577,7 @@ public class Project {
             sb.append("' does not exist in this project. ");
             visiting.pop();
             if (!visiting.empty()) {
-                String parent = (String)visiting.peek();
+                String parent = (String) visiting.peek();
                 sb.append("It is used from target `");
                 sb.append(parent);
                 sb.append("'.");
@@ -1591,12 +1588,11 @@ public class Project {
 
         for (Enumeration en = target.getDependencies(); en.hasMoreElements();) {
             String cur = (String) en.nextElement();
-            String m = (String)state.get(cur);
+            String m = (String) state.get(cur);
             if (m == null) {
                 // Not been visited
                 tsort(cur, targets, state, visiting, ret);
-            }
-            else if (m == VISITING) {
+            } else if (m == VISITING) {
                 // Currently visiting this node, so have a cycle
                 throw makeCircularException(cur, visiting);
             }
@@ -1625,7 +1621,7 @@ public class Project {
         sb.append(end);
         String c;
         do {
-            c = (String)stk.pop();
+            c = (String) stk.pop();
             sb.append(" <- ");
             sb.append(c);
         } while (!c.equals(end));
@@ -1899,7 +1895,7 @@ public class Project {
      *         null if no task is registered. 
      */
     public Task getThreadTask(Thread thread) {
-        return (Task)threadTasks.get(thread);
+        return (Task) threadTasks.get(thread);
     }
     
     

@@ -140,7 +140,7 @@ public interface FileScanner {
      *            incorrectly (i.e. if it is <code>null</code>, doesn't exist,
      *            or isn't a directory).
      */
-    void scan();
+    void scan() throws IllegalStateException;
     
     /**
      * Sets the base directory to be scanned. This is the directory which is

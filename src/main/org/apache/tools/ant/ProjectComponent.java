@@ -105,7 +105,8 @@ public abstract class ProjectComponent {
      * Logs a mesage with the given priority.
      *
      * @param msg The message to be logged. Should not be <code>null</code>.
-     * @param msgLevel the message priority at which this message is to be logged.
+     * @param msgLevel the message priority at which this message is 
+     *                 to be logged.
      */
     public void log(String msg, int msgLevel) {
         if (project != null) {
