@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 1999 The Apache Software Foundation.  All rights 
+ * Copyright (c) 1999 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -9,7 +9,7 @@
  * are met:
  *
  * 1. Redistributions of source code must retain the above copyright
- *    notice, this list of conditions and the following disclaimer. 
+ *    notice, this list of conditions and the following disclaimer.
  *
  * 2. Redistributions in binary form must reproduce the above copyright
  *    notice, this list of conditions and the following disclaimer in
@@ -17,15 +17,15 @@
  *    distribution.
  *
  * 3. The end-user documentation included with the redistribution, if
- *    any, must include the following acknowlegement:  
- *       "This product includes software developed by the 
+ *    any, must include the following acknowlegement:
+ *       "This product includes software developed by the
  *        Apache Software Foundation (http://www.apache.org/)."
  *    Alternately, this acknowlegement may appear in the software itself,
  *    if and wherever such third-party acknowlegements normally appear.
  *
  * 4. The names "The Jakarta Project", "Ant", and "Apache Software
  *    Foundation" must not be used to endorse or promote products derived
- *    from this software without prior written permission. For written 
+ *    from this software without prior written permission. For written
  *    permission, please contact apache@apache.org.
  *
  * 5. Products derived from this software may not be called "Apache"
@@ -54,14 +54,14 @@
 
 package org.apache.tools.ant.taskdefs;
 
-import org.apache.tools.ant.BuildException;
-import org.apache.tools.ant.taskdefs.condition.Os;
-import org.apache.tools.ant.types.FileSet;
-import org.apache.tools.ant.types.PatternSet;
-
 import java.io.File;
 import java.io.IOException;
 
+import org.apache.tools.ant.BuildException;
+import org.apache.tools.ant.taskdefs.condition.Os;
+import org.apache.tools.ant.types.Commandline;
+import org.apache.tools.ant.types.FileSet;
+import org.apache.tools.ant.types.PatternSet;
 
 /**
  * Chmod equivalent for unix-like environments.
@@ -70,13 +70,12 @@ import java.io.IOException;
  * @author Mariusz Nowostawski (Marni) <a href="mailto:mnowostawski@infoscience.otago.ac.nz">mnowostawski@infoscience.otago.ac.nz</a>
  * @author <a href="mailto:stefan.bodewig@epost.de">Stefan Bodewig</a>
  */
-
 public class Chmod extends ExecuteOn {
 
     private FileSet defaultSet = new FileSet();
     private boolean defaultSetDefined = false;
     private boolean havePerm = false;
-    
+
     public Chmod() {
         super.setExecutable("chmod");
         super.setParallel(true);
@@ -106,7 +105,7 @@ public class Chmod extends ExecuteOn {
         defaultSetDefined = true;
         return defaultSet.createInclude();
     }
-    
+
     /**
      * add a name entry on the exclude list
      */
@@ -148,7 +147,7 @@ public class Chmod extends ExecuteOn {
     /**
      * Sets whether default exclusions should be used or not.
      *
-     * @param useDefaultExcludes "true"|"on"|"yes" when default exclusions 
+     * @param useDefaultExcludes "true"|"on"|"yes" when default exclusions
      *                           should be used, "false"|"off"|"no" when they
      *                           shouldn't be used.
      */
@@ -156,13 +155,13 @@ public class Chmod extends ExecuteOn {
         defaultSetDefined = true;
         defaultSet.setDefaultexcludes(useDefaultExcludes);
     }
-    
+
     protected void checkConfiguration() {
         if (!havePerm) {
-            throw new BuildException("Required attribute perm not set in chmod", 
-                                     location);
+            throw new BuildException("Required attribute perm not set in chmod",
+                    location);
         }
-        
+
         if (defaultSetDefined && defaultSet.getDir(project) != null) {
             addFileset(defaultSet);
         }
@@ -172,8 +171,7 @@ public class Chmod extends ExecuteOn {
     public void execute() throws BuildException {
         if (defaultSetDefined || defaultSet.getDir(project) == null) {
             super.execute();
-        }
-        else if (isValidOs()) {
+        } else if (isValidOs()) {
             // we are chmodding the given directory
             createArg().setValue(defaultSet.getDir(project).getPath());
             Execute execute = prepareExec();
@@ -188,18 +186,18 @@ public class Chmod extends ExecuteOn {
             }
         }
     }
-    
+
 
     public void setExecutable(String e) {
-        throw new BuildException(taskType+" doesn\'t support the executable attribute", location);
+        throw new BuildException(taskType + " doesn\'t support the executable attribute", location);
     }
 
-    public void setCommand(String e) {
-        throw new BuildException(taskType+" doesn\'t support the command attribute", location);
+    public void setCommand(Commandline cmdl) {
+        throw new BuildException(taskType + " doesn\'t support the command attribute", location);
     }
 
     public void setSkipEmptyFilesets(boolean skip) {
-        throw new BuildException(taskType+" doesn\'t support the skipemptyfileset attribute", location);
+        throw new BuildException(taskType + " doesn\'t support the skipemptyfileset attribute", location);
     }
 
     protected boolean isValidOs() {
