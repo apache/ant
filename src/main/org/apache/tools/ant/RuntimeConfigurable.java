@@ -79,7 +79,7 @@ public class RuntimeConfigurable implements Serializable {
 
     /** Polymorphic attribute (May be XML NS attribute later) */
     private static final String ANT_TYPE = "ant-type";
-    
+
     /** Name of the element to configure. */
     private String elementTag = null;
 
@@ -94,7 +94,7 @@ public class RuntimeConfigurable implements Serializable {
     /** the creator used to make the wrapped object */
     private transient IntrospectionHelper.Creator creator;
 
-    /** 
+    /**
      * @deprecated
      * XML attributes for the element.
      */
@@ -120,7 +120,7 @@ public class RuntimeConfigurable implements Serializable {
 
     /** the polymorphic type */
     private String polyType = null;
-    
+
     /**
      * Sole constructor creating a wrapper for the specified object.
      *
@@ -157,7 +157,7 @@ public class RuntimeConfigurable implements Serializable {
     void setCreator(IntrospectionHelper.Creator creator) {
         this.creator = creator;
     }
-    
+
     /**
      * Get the object for which this RuntimeConfigurable holds the configuration
      * information
@@ -170,6 +170,7 @@ public class RuntimeConfigurable implements Serializable {
 
     /**
      * get the polymorphic type for this element
+     * @return the ant component type name, null if not set
      */
     public String getPolyType() {
         return polyType;
@@ -419,7 +420,6 @@ public class RuntimeConfigurable implements Serializable {
                 childTask.setRuntimeConfigurableWrapper(child);
             }
 
- 
             if ((child.creator != null) && configureChildren) {
                 child.maybeConfigure(p);
                 child.creator.store();

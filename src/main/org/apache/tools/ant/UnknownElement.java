@@ -318,7 +318,7 @@ public class UnknownElement extends Task {
             for (int i = 0; it.hasNext(); i++) {
                 RuntimeConfigurable childWrapper = parentWrapper.getChild(i);
                 UnknownElement child = (UnknownElement) it.next();
-                if (!handleChild(ih, parent, child, 
+                if (!handleChild(ih, parent, child,
                                  childWrapper)) {
                     if (!(parent instanceof TaskContainer)) {
                         ih.throwNotSupported(getProject(), parent,
@@ -480,7 +480,7 @@ public class UnknownElement extends Task {
             IntrospectionHelper.Creator creator =
                 ih.getElementCreator(getProject(), parent, childName);
             creator.setPolyType(childWrapper.getPolyType());
-            Object realChild=creator.create();
+            Object realChild = creator.create();
             childWrapper.setCreator(creator);
             childWrapper.setProxy(realChild);
             if (realChild instanceof Task) {
