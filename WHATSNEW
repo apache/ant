@@ -76,6 +76,8 @@ Other changes:
   jarsigner tool to be specified. The jarsigner from the JDK's JAVA_HOME bin
   dir is now used rather than the first jarsigner on the path.
 
+* **/.DS_Store has been added to the list of default pattern excludes.
+
 Changes from Ant 1.5.1Beta1 to 1.5.1
 ====================================
 

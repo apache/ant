@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2000-2002 The Apache Software Foundation.  All rights
+ * Copyright (c) 2000-2003 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -159,19 +159,31 @@ public class DirectoryScanner implements FileScanner, SelectorScanner {
      * @see #addDefaultExcludes()
      */
     protected static final String[] DEFAULTEXCLUDES = {
+        // Miscellaneous typical temporary files
         "**/*~",
         "**/#*#",
         "**/.#*",
         "**/%*%",
         "**/._*",
+
+        // CVS
         "**/CVS",
         "**/CVS/**",
         "**/.cvsignore",
+
+        // SCCS
         "**/SCCS",
         "**/SCCS/**",
+
+        // Visual SourceSafe
         "**/vssver.scc",
+
+        // Subversion
         "**/.svn",
-        "**/.svn/**"
+        "**/.svn/**",
+
+        // Mac
+        "**/.DS_Store"
     };
 
     /** The base directory to be scanned. */
@@ -855,11 +867,13 @@ public class DirectoryScanner implements FileScanner, SelectorScanner {
     }
 
     /**
-     * Returns the names of the files which were selected. The names
-     * are relative to the base directory. This involves performing
-     * a slow scan if one has not already been completed.
+     * <p>Returns the names of the files which were selected out and
+     * therefore not ultimately included.</p>
      *
-     * @return the names of the files which were selected.
+     * <p>The names are relative to the base directory. This involves
+     * performing a slow scan if one has not already been completed.</p>
+     *
+     * @return the names of the files which were deselected.
      *
      * @see #slowScan
      */
@@ -932,11 +946,13 @@ public class DirectoryScanner implements FileScanner, SelectorScanner {
     }
 
     /**
-     * Returns the names of the directories which were selected. The names
-     * are relative to the base directory. This involves performing a
-     * slow scan if one has not already been completed.
+     * <p>Returns the names of the directories which were selected out and
+     * therefore not ultimately included.</p>
      *
-     * @return the names of the directories which were selected.
+     * <p>The names are relative to the base directory. This involves
+     * performing a slow scan if one has not already been completed.</p>
+     *
+     * @return the names of the directories which were deselected.
      *
      * @see #slowScan
      */
