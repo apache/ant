@@ -25,12 +25,16 @@ package org.apache.tools.ant.taskdefs;
 
 import java.io.File;
 
-import java.util.Hashtable;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.Set;
 
 import org.apache.tools.ant.BuildException;
+import org.apache.tools.ant.DirectoryScanner;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.Task;
 import org.apache.tools.ant.types.FileSet;
+import org.apache.tools.ant.types.PatternSet;
 import org.apache.tools.ant.util.FileNameMapper;
 import org.apache.tools.ant.util.IdentityMapper;
 
@@ -82,7 +86,7 @@ public class Sync extends Task {
         File toDir = _copy.getToDir();
 
         // The complete list of files to copy
-        Hashtable allFiles = _copy._dest2src;
+        Set allFiles = _copy.nonOrphans;
 
         // If the destination directory didn't already exist,
         // or was empty, then no previous file removal is necessary!
@@ -143,54 +147,29 @@ public class Sync extends Task {
      * @return the number of orphaned files and directories actually removed.
      * Position 0 of the array is the number of orphaned directories.
      * Position 1 of the array is the number or orphaned files.
-     * Position 2 is meaningless.
      */
-    private int[] removeOrphanFiles(Hashtable nonOrphans, File file) {
-        int[] removedCount = new int[] {0, 0, 0};
-        if (file.isDirectory()) {
-            File[] children = file.listFiles();
-            for (int i = 0; i < children.length; ++i) {
-                int[] temp = removeOrphanFiles(nonOrphans, children[i]);
-                removedCount[0] += temp[0];
-                removedCount[1] += temp[1];
-                removedCount[2] += temp[2];
-            }
-
-            if (nonOrphans.get(file) == null && removedCount[2] == 0) {
-                log("Removing orphan directory: " + file, Project.MSG_DEBUG);
-                file.delete();
-                ++removedCount[0];
-            } else {
-                /*
-                  Contrary to what is said above, position 2 is not
-                  meaningless inside the recursion.
-                  Position 2 is used to carry information back up the
-                  recursion about whether or not a directory contains
-                  a directory or file at any depth that is not an
-                  orphan
-                  This has to be done, because if you have the
-                  following directory structure: c:\src\a\file and
-                  your mapper src files were constructed like so:
-                  <include name="**\a\**\*"/>
-                  The folder 'a' will not be in the hashtable of
-                  nonorphans.  So, before deleting it as an orphan, we
-                  have to know whether or not any of its children at
-                  any level are orphans.
-                  If no, then this folder is also an orphan, and may
-                  be deleted.  I do this by changing position 2 to a
-                  '1'.
-                */
-                removedCount[2] = 1;
-            }
-
-        } else {
-            if (nonOrphans.get(file) == null) {
-                log("Removing orphan file: " + file, Project.MSG_DEBUG);
-                file.delete();
-                ++removedCount[1];
-            } else {
-                removedCount[2] = 1;
-            }
+    private int[] removeOrphanFiles(Set nonOrphans, File toDir) {
+        int[] removedCount = new int[] {0, 0};
+        DirectoryScanner ds = new DirectoryScanner();
+        ds.setBasedir(toDir);
+        Set s = new HashSet(nonOrphans);
+        s.add("");
+        String[] excls = (String[]) s.toArray(new String[s.size()]);
+        ds.setExcludes(excls);
+        ds.scan();
+        String[] files = ds.getIncludedFiles();
+        for (int i = 0; i < files.length; i++) {
+            File f = new File(toDir, files[i]);
+            log("Removing orphan file: " + f, Project.MSG_DEBUG);
+            f.delete();
+            ++removedCount[1];
+        }
+        String[] dirs = ds.getIncludedDirectories();
+        for (int i = dirs.length - 1 ; i >= 0 ; --i) {
+            File f = new File(toDir, dirs[i]);
+            log("Removing orphan directory: " + f, Project.MSG_DEBUG);
+            f.delete();
+            ++removedCount[0];
         }
         return removedCount;
     }
@@ -303,25 +282,22 @@ public class Sync extends Task {
 
         // List of files that must be copied, irrelevant from the
         // fact that they are newer or not than the destination.
-        private Hashtable _dest2src = new Hashtable();
+        private Set nonOrphans = new HashSet();
 
         public MyCopy() {
         }
 
-        protected void buildMap(File fromDir, File toDir, String[] names,
-                                FileNameMapper mapper, Hashtable map) {
-            assertTrue("No mapper", mapper instanceof IdentityMapper);
+        protected void scan(File fromDir, File toDir, String[] files,
+                            String[] dirs) {
+            assertTrue("No mapper", mapperElement == null);
 
-            super.buildMap(fromDir, toDir, names, mapper, map);
+            super.scan(fromDir, toDir, files, dirs);
 
-            for (int i = 0; i < names.length; ++i) {
-                String name = names[i];
-                File dest = new File(toDir, name);
-                // No need to instantiate the src file, as we use the
-                // table as a set (to remain Java 1.1 compatible!!!).
-                //File src = new File(fromDir, name);
-                //_dest2src.put(dest, src);
-                _dest2src.put(dest, fromDir);
+            for (int i = 0; i < files.length; ++i) {
+                nonOrphans.add(files[i]);
+            }
+            for (int i = 0; i < dirs.length; ++i) {
+                nonOrphans.add(dirs[i]);
             }
         }
 

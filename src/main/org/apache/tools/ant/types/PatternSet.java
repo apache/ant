@@ -434,7 +434,7 @@ public class PatternSet extends DataType implements Cloneable {
      */
     private String[] makeArray(Vector list, Project p) {
         if (list.size() == 0) {
-          return null;
+            return null;
         }
 
         Vector tmpNames = new Vector();

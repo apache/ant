@@ -112,6 +112,18 @@ public abstract class BuildFileTest extends TestCase {
     }
 
     /**
+     * Assert that the given substring is in the log messages
+     */
+
+    protected void assertDebuglogContaining(String substring) {
+        String realLog = getFullLog();
+        assertTrue("expecting debug log to contain \"" + substring 
+                   + "\" log was \""
+                   + realLog + "\"",
+                   realLog.indexOf(substring) >= 0);
+    }
+
+    /**
      *  Gets the log the BuildFileTest object.
      *  only valid if configureProject() has
      *  been called.
