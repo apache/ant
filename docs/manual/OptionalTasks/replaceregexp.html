@@ -112,7 +112,7 @@ value, in the file <code>${src}/build.properties</code></p>
 <blockquote>
   <pre>
 &lt;replaceregexp byline=&quot;true&quot;&gt;
-  &lt;regexp expression=&quot;OldProperty=(.*)&quot;/&gt;
+  &lt;regexp pattern=&quot;OldProperty=(.*)&quot;/&gt;
   &lt;substitution expression=&quot;NewProperty=\1&quot;/&gt;
   &lt;fileset dir=&quot;.&quot;&gt;
    &lt;includes=&quot;*.properties&quot;/&gt;
