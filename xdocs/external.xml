@@ -107,6 +107,36 @@
         </table>
       </subsection>
 
+      <subsection name="Ant Pretty Build">
+
+        <p>Ant Pretty Build is a tool to show and run Ant buildfiles
+        directly from within a browser window.  It consists of a
+        single XSL file that will generate, on the fly, from
+        buildfile, a pretty interface showing project name,
+        description, properties and targets, etc. allowing to run the
+        whole project, or run selected targets in a specific
+        order.</p>
+
+        <table class="externals">
+          <tr>
+            <th>Compatibility:</th>
+            <td>All Ant versions</td>
+          </tr>
+          <tr>
+            <th>URL:</th>
+            <td><a href="http://antprettybuild.free.fr/">http://antprettybuild.free.fr/</a></td>
+          </tr>
+          <tr>
+            <th>Contact:</th>
+            <td><a href="mailto:antprettybuild@free.fr">Charbel BITAR</a></td>
+          </tr>
+          <tr>
+            <th>License:</th>
+            <td>GNU General Public License (GPL)</td>
+          </tr>
+        </table>
+      </subsection>
+
       <subsection name="Checkstyle">
 
         <p>Checkstyle is a development tool to help programmers write
