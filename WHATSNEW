@@ -99,6 +99,9 @@ Fixed bugs:
 
 Other changes:
 --------------
+* A new filter reader namely tokenfilter has been added.  Bugzilla 
+  Report 18312.
+
 * A new attribute named skip is added to the TailFilter and
   HeadFilter filter readers.
   

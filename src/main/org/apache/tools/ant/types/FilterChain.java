@@ -54,7 +54,13 @@
 package org.apache.tools.ant.types;
 
 import java.util.Vector;
+import java.io.StringWriter;
+import java.io.Reader;
+import java.io.IOException;
+
 import org.apache.tools.ant.BuildException;
+import org.apache.tools.ant.DynamicConfigurator;
+import org.apache.tools.ant.filters.ChainableReader;
 import org.apache.tools.ant.filters.ClassConstants;
 import org.apache.tools.ant.filters.EscapeUnicode;
 import org.apache.tools.ant.filters.ExpandProperties;
@@ -68,13 +74,19 @@ import org.apache.tools.ant.filters.StripLineBreaks;
 import org.apache.tools.ant.filters.StripLineComments;
 import org.apache.tools.ant.filters.TabsToSpaces;
 import org.apache.tools.ant.filters.TailFilter;
+import org.apache.tools.ant.filters.TokenFilter;
+import org.apache.tools.ant.filters.BaseFilterReader;
+import org.apache.tools.ant.taskdefs.Concat;
+
 
 /**
  * FilterChain may contain a chained set of filter readers.
  *
  * @author Magesh Umasankar
  */
-public final class FilterChain extends DataType implements Cloneable {
+public final class FilterChain extends DataType
+    implements Cloneable, DynamicConfigurator
+{
 
     private Vector filterReaders = new Vector();
 
@@ -146,6 +158,69 @@ public final class FilterChain extends DataType implements Cloneable {
     }
 
     /**
+     * @since Ant 1.6
+     */
+    public final void addTokenFilter(final TokenFilter tokenFilter) {
+        filterReaders.addElement(tokenFilter);
+    }
+
+    /**
+     * delete characters filter
+     * @since Ant 1.6
+     */
+    public void addDeleteCharacters(TokenFilter.DeleteCharacters filter) {
+        filterReaders.addElement(filter);
+    }
+
+    /**
+     * containsregex
+     * @since Ant 1.6
+     */
+    public void addContainsRegex(TokenFilter.ContainsRegex filter)
+    {
+        filterReaders.addElement(filter);
+    }
+    
+    /**
+     * replaceregex
+     * @since Ant 1.6
+     */
+    public void addReplaceRegex(TokenFilter.ReplaceRegex filter)
+    {
+        filterReaders.addElement(filter);
+    }
+    
+    /**
+     * trim
+     * @since Ant 1.6
+     */
+    public void addTrim(TokenFilter.Trim filter)
+    {
+        filterReaders.addElement(filter);
+    }
+    
+    /**
+     * replacestring
+     * @since Ant 1.6
+     */
+    public void addReplaceString(
+        TokenFilter.ReplaceString filter)
+    {
+        filterReaders.addElement(filter);
+    }
+
+    /**
+     * ignoreBlank
+     * @since Ant 1.6
+     */
+    public void addIgnoreBlank(
+        TokenFilter.IgnoreBlank filter)
+    {
+        filterReaders.addElement(filter);
+    }
+
+    
+    /**
      * Makes this instance in effect a reference to another FilterChain 
      * instance.
      *
@@ -171,4 +246,38 @@ public final class FilterChain extends DataType implements Cloneable {
 
         super.setRefid(r);
     }
+    
+    /**
+     * create the named datatype and check if it
+     * is a filter.
+     *
+     * @throws BuildException if unknown datatype or incorrect datatype
+     * @since Ant 1.6
+     */
+    
+    public Object createDynamicElement(String name)
+    {
+        if (getProject() == null)
+            throw new BuildException("Unable to get the project");
+
+        Object obj = getProject().createDataType(name);
+        if (obj == null)
+            throw new BuildException("Unknown type " + name);
+        if (! (obj instanceof ChainableReader))
+            throw new BuildException(
+                "type " + name + " is not a filterreader");
+        filterReaders.addElement(obj);
+        return obj;
+    }
+
+    /**
+     * Needed for dynamic element support.
+     *
+     * @throws BuildException always
+     */
+    
+    public void setDynamicAttribute(String name, String value) {
+        throw new BuildException("Unknown attribute " + name);
+    }
+
 }

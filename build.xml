@@ -202,7 +202,10 @@
     <filename name="${ant.package}/listener/CommonsLoggingListener*"/>
   </selector>
   <selector id="needs.bsf">
-    <filename name="${optional.package}/Script*"/>
+    <or>
+      <filename name="${optional.package}/Script*"/>
+      <filename name="${optional.type.package}/Script*"/>
+    </or>
   </selector>
   <selector id="needs.stylebook">
     <filename name="${optional.package}/StyleBook*"/>
