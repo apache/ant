@@ -30,7 +30,12 @@ import java.util.StringTokenizer;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.taskdefs.AbstractCvsTask;
+import org.apache.tools.ant.util.DOMElementWriter;
+import org.apache.tools.ant.util.DOMUtils;
 import org.apache.tools.ant.util.FileUtils;
+
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
 
 /**
  * Examines the output of cvs rdiff between two tags.
@@ -69,6 +74,9 @@ public class CvsTagDiff extends AbstractCvsTask {
      * Used to create the temp file for cvs log
      */
     private static final FileUtils FILE_UTILS = FileUtils.getFileUtils();
+
+    /** stateless helper for writing the XML document */
+    private static final DOMElementWriter DOM_WRITER = new DOMElementWriter();
 
     /**
      * Token to identify the word file in the rdiff log
@@ -352,26 +360,27 @@ public class CvsTagDiff extends AbstractCvsTask {
             PrintWriter writer = new PrintWriter(
                                      new OutputStreamWriter(output, "UTF-8"));
             writer.println("<?xml version=\"1.0\" encoding=\"UTF-8\"?>");
-            writer.print("<tagdiff ");
+            Document doc = DOMUtils.newDocument();
+            Element root = doc.createElement("tagdiff");
             if (mystartTag != null) {
-                writer.print("startTag=\"" + mystartTag + "\" ");
+                root.setAttribute("startTag", mystartTag);
             } else {
-                writer.print("startDate=\"" + mystartDate + "\" ");
+                root.setAttribute("startDate", mystartDate);
             }
             if (myendTag != null) {
-                writer.print("endTag=\"" + myendTag + "\" ");
+                root.setAttribute("endTag", myendTag);
             } else {
-                writer.print("endDate=\"" + myendDate + "\" ");
+                root.setAttribute("endDate", myendDate);
             }
 
-            writer.print("cvsroot=\"" + getCvsRoot() + "\" ");
-            writer.print("package=\"" + mypackage + "\" ");
-
-            writer.println(">");
+            root.setAttribute("cvsroot", getCvsRoot());
+            root.setAttribute("package", mypackage);
+            DOM_WRITER.openElement(root, writer, 0, "\t");
+            writer.println();
             for (int i = 0, c = entries.length; i < c; i++) {
-                writeTagEntry(writer, entries[i]);
+                writeTagEntry(doc, writer, entries[i]);
             }
-            writer.println("</tagdiff>");
+            DOM_WRITER.closeElement(root, writer, 0, "\t", true);
             writer.flush();
             writer.close();
         } catch (UnsupportedEncodingException uee) {
@@ -392,23 +401,22 @@ public class CvsTagDiff extends AbstractCvsTask {
     /**
      * Write a single entry to the given writer.
      *
+     * @param doc Document used to create elements.
      * @param writer a <code>PrintWriter</code> value
      * @param entry a <code>CvsTagEntry</code> value
      */
-    private void writeTagEntry(PrintWriter writer, CvsTagEntry entry) {
-        writer.println("\t<entry>");
-        writer.println("\t\t<file>");
-        writer.println("\t\t\t<name>" + entry.getFile() + "</name>");
-        if (entry.getRevision() != null) {
-            writer.println("\t\t\t<revision>" + entry.getRevision()
-                           + "</revision>");
-        }
+    private void writeTagEntry(Document doc, PrintWriter writer,
+                               CvsTagEntry entry)
+        throws IOException {
+        Element ent = doc.createElement("entry");
+        Element f = DOMUtils.createChildElement(ent, "file");
+        DOMUtils.appendCDATAElement(f, "name", entry.getFile());
+        DOMUtils.appendTextElement(f, "revision", entry.getRevision());
         if (entry.getPreviousRevision() != null) {
-            writer.println("\t\t\t<prevrevision>"
-                           + entry.getPreviousRevision() + "</prevrevision>");
+            DOMUtils.appendTextElement(f, "prevrevision",
+                                       entry.getPreviousRevision());
         }
-        writer.println("\t\t</file>");
-        writer.println("\t</entry>");
+        DOM_WRITER.write(ent, writer, 1, "\t");
     }
 
     /**
