@@ -325,15 +325,19 @@ public class EchoProperties extends Task {
      *@exception  IOException  trouble
      */
     protected void saveProperties(Hashtable allProps, OutputStream os)
-             throws IOException, BuildException {
-        Properties props = new Properties();
-        Enumeration e = allProps.keys();
-        while (e.hasMoreElements()) {
-            String name = e.nextElement().toString();
+        throws IOException, BuildException {
+        final List keyList = new ArrayList(allProps.keySet());
+        Collections.sort(keyList);
+        Properties props = new Properties() {
+            public Enumeration keys() {
+                return CollectionUtils.asEnumeration(keyList.iterator());
+            }
+        };
+        for (int i = 0; i < keyList.size(); i++) {
+            String name = keyList.get(i).toString();
             String value = allProps.get(name).toString();
-            props.put(name, value);
+            props.setProperty(name, value);
         }
-
         if ("text".equals(format)) {
             jdkSaveProperties(props, os, "Ant properties");
         } else if ("xml".equals(format)) {

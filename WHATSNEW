@@ -67,7 +67,7 @@ Other changes:
 --------------
 
 * <echoproperties> now (alphanumerically) sorts the property list
-  before echoing, when you request XML output (format="xml"). 
+  before echoing. Bugzilla report 18976.
 
 * A new base class DispatchTask has been added to facilitate elegant 
   creation of tasks with multiple actions.

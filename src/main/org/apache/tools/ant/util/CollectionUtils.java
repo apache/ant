@@ -16,10 +16,11 @@
  */
 package org.apache.tools.ant.util;
 
+import java.util.Vector;
+import java.util.Iterator;
 import java.util.Dictionary;
 import java.util.Enumeration;
 import java.util.NoSuchElementException;
-import java.util.Vector;
 
 /**
  * A set of helper methods related to collection manipulation.
@@ -137,6 +138,41 @@ public class CollectionUtils {
      */
     public static Enumeration append(Enumeration e1, Enumeration e2) {
         return new CompoundEnumeration(e1, e2);
+    }
+
+    /**
+     * Adapt the specified Iterator to the Enumeration interface.
+     * @param iter the Iterator to adapt.
+     * @return an Enumeration.
+     */
+    public static Enumeration asEnumeration(final Iterator iter) {
+        return new Enumeration() {
+            public boolean hasMoreElements() {
+                return iter.hasNext();
+            }
+            public Object nextElement() {
+                return iter.next();
+            }
+        };
+    }
+
+    /**
+     * Adapt the specified Enumeration to the Iterator interface.
+     * @param enum the Enumeration to adapt.
+     * @return an Iterator.
+     */
+    public static Iterator asIterator(final Enumeration enum) {
+        return new Iterator() {
+            public boolean hasNext() {
+                return enum.hasMoreElements();
+            }
+            public Object next() {
+                return enum.nextElement();
+            }
+            public void remove() {
+                throw new UnsupportedOperationException();
+            }
+        };
     }
 
     private static final class CompoundEnumeration implements Enumeration {
