@@ -105,7 +105,7 @@ Note: This document was updated in the context of releasing Ant 1.6.
     Add instructions and warnings (GNU tar format issues, etc).
 
     You may choose to use the text2html convertor present at
-    http://www.aigeek.com/txt2html/
+    http://txt2html.sourceforge.net/#test
 
     Name the generated file RELEASE-NOTES-x.y.z.html.
 
