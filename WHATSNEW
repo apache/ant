@@ -30,6 +30,8 @@ Fixed bugs:
 
 * <cab> could hang listcab on large <fileset>s.
 
+* <junit> will now produce output when a test times out as well.
+
 Other changes:
 --------------
 

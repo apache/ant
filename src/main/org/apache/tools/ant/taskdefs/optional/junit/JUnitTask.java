@@ -77,6 +77,9 @@ import org.apache.tools.ant.types.EnumeratedAttribute;
 import org.apache.tools.ant.types.Environment;
 import org.apache.tools.ant.types.Path;
 import org.apache.tools.ant.util.FileUtils;
+import junit.framework.AssertionFailedError;
+import junit.framework.Test;
+import junit.framework.TestResult;
 
 /**
  * Runs JUnit tests.
@@ -142,6 +145,7 @@ import org.apache.tools.ant.util.FileUtils;
  * @author <a href="mailto:sbailliez@imediation.com">Stephane Bailliez</a>
  * @author <a href="mailto:Gerrit.Riessen@web.de">Gerrit Riessen</a>
  * @author <a href="mailto:ehatcher@apache.org">Erik Hatcher</a>
+ * @author <a href="mailto:martijn@kruithof.xs4all.nl">Martijn Kruithof></a>
  *
  * @version $Revision$
  *
@@ -678,6 +682,10 @@ public class JUnitTask extends Task {
         } catch (IOException e) {
             throw new BuildException("Process fork failed.", e, getLocation());
         } finally {
+            if (watchdog.killedProcess()) {
+                logTimeout(feArray, test);
+            }
+
             if (!propsFile.delete()) {
                 throw new BuildException("Could not delete temporary "
                                          + "properties file.");
@@ -917,6 +925,41 @@ public class JUnitTask extends Task {
             }
         } else {
             log("Couldn\'t find " + resource, Project.MSG_DEBUG);
+        }
+    }
+
+    /**
+     * Take care that some output is produced in report files if the 
+     * watchdog kills the test.
+     *
+     * @since Ant 1.5.2
+     */
+
+    private void logTimeout(FormatterElement[] feArray, JUnitTest test) {
+        for (int i = 0; i < feArray.length; i++) {
+            FormatterElement fe = feArray[i];
+            File outFile = getOutput(fe, test);
+            JUnitResultFormatter formatter = fe.createFormatter();
+            if (outFile != null && formatter != null) {
+                try {
+                    OutputStream out = new FileOutputStream(outFile);
+                    formatter.setOutput(out);
+                    formatter.startTestSuite(test);
+                    test.setCounts(0,0,1);
+                    Test t = new Test() {
+                        public int countTestCases() { return 0; }
+                        public void run(TestResult r) { 
+                            throw new AssertionFailedError("Timeout occured");
+                        }
+                    };
+                    formatter.startTest(t);
+                    formatter
+                        .addError(t, 
+                                  new AssertionFailedError("Timeout occured"));
+
+                    formatter.endTestSuite(test);
+                } catch (IOException e) {}
+            }
         }
     }
 
