@@ -32,6 +32,9 @@ Changes that could break older environments:
 
 Fixed bugs:
 -----------
+* A new attribute named skip is added to the TailFilter and
+  HeadFilter filter readers.
+  
 * Expand tasks did not behave as expected with PatternSets.
 
 * <property environment=... /> now works on OS/400.

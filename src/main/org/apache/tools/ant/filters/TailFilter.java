@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2002 The Apache Software Foundation.  All rights
+ * Copyright (c) 2002-2003 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -78,11 +78,17 @@ public final class TailFilter
     /** Parameter name for the number of lines to be returned. */
     private static final String LINES_KEY = "lines";
 
+    /** Parameter name for the number of lines to be skipped. */
+    private static final String SKIP_KEY = "skip";
+
     /** Number of lines currently read in. */
     private long linesRead = 0;
 
     /** Number of lines to be returned in the filtered stream. */
     private long lines = 10;
+
+    /** Number of lines to be skipped. */
+    private long skip = 0;
 
     /** Buffer to hold in characters read ahead. */
     private char[] buffer = new char[4096];
@@ -98,7 +104,7 @@ public final class TailFilter
 
     /**
      * Constructor for "dummy" instances.
-     * 
+     *
      * @see BaseFilterReader#BaseFilterReader()
      */
     public TailFilter() {
@@ -121,12 +127,12 @@ public final class TailFilter
      * Otherwise, the stream is read to the end and buffered (with the buffer
      * growing as necessary), then the appropriate position in the buffer is
      * set to read from.
-     * 
+     *
      * @return the next character in the resulting stream, or -1
      * if the end of the resulting stream has been reached
-     * 
+     *
      * @exception IOException if the underlying stream throws an IOException
-     * during reading     
+     * during reading
      */
     public final int read() throws IOException {
         if (!getInitialized()) {
@@ -152,16 +158,18 @@ public final class TailFilter
                     }
                 }
 
-                if (ch == '\n' || ch == -1) {
-                    ++linesRead;
+                if (lines > 0) {
+                    if (ch == '\n' || ch == -1) {
+                        ++linesRead;
 
-                    if (linesRead == lines) {
-                        int i = 0;
-                        for (i = returnedCharPos + 1;
-                            buffer[i] != 0 && buffer[i] != '\n'; i++) {
+                        if ((linesRead == lines + skip)) {
+                            int i = 0;
+                            for (i = returnedCharPos + 1;
+                                buffer[i] != 0 && buffer[i] != '\n'; i++) {
+                            }
+                            returnedCharPos = i;
+                            --linesRead;
                         }
-                        returnedCharPos = i;
-                        --linesRead;
                     }
                 }
                 if (ch == -1) {
@@ -174,6 +182,26 @@ public final class TailFilter
             completedReadAhead = true;
         }
 
+        // Because the complete stream is read into the buffer I can delete
+        // the "skip lines" from back to the beginning.
+        if (skip > 0) {
+            // searching...
+            int i;
+            for (i = buffer.length - 1; skip > 0; i--) {
+                if (buffer[i]=='\n') {
+                    skip--;
+                }
+            }
+
+           // cut the buffer to the new length
+           char[] newBuffer = new char[i];
+           System.arraycopy(buffer, 0, newBuffer, 0, i);
+           buffer = newBuffer;
+
+           // don´t forget to set the "lastposition" new
+           bufferPos = i;
+        }
+
         ++returnedCharPos;
         if (returnedCharPos >= bufferPos) {
             return -1;
@@ -184,7 +212,7 @@ public final class TailFilter
 
     /**
      * Sets the number of lines to be returned in the filtered stream.
-     * 
+     *
      * @param lines the number of lines to be returned in the filtered stream
      */
     public final void setLines(final long lines) {
@@ -193,7 +221,7 @@ public final class TailFilter
 
     /**
      * Returns the number of lines to be returned in the filtered stream.
-     * 
+     *
      * @return the number of lines to be returned in the filtered stream
      */
     private final long getLines() {
@@ -201,18 +229,37 @@ public final class TailFilter
     }
 
     /**
+     * Sets the number of lines to be skipped in the filtered stream.
+     *
+     * @param lines the number of lines to be skipped in the filtered stream
+     */
+    public final void setSkip(final long skip) {
+        this.skip = skip;
+    }
+
+    /**
+     * Returns the number of lines to be skipped in the filtered stream.
+     *
+     * @return the number of lines to be skipped in the filtered stream
+     */
+    private final long getSkip() {
+        return skip;
+    }
+
+    /**
      * Creates a new TailFilter using the passed in
      * Reader for instantiation.
-     * 
+     *
      * @param rdr A Reader object providing the underlying stream.
      *            Must not be <code>null</code>.
-     * 
+     *
      * @return a new filter based on this configuration, but filtering
      *         the specified reader
      */
     public final Reader chain(final Reader rdr) {
         TailFilter newFilter = new TailFilter(rdr);
         newFilter.setLines(getLines());
+        newFilter.setSkip(getSkip());
         newFilter.setInitialized(true);
         return newFilter;
     }
@@ -227,6 +274,10 @@ public final class TailFilter
             for (int i = 0; i < params.length; i++) {
                 if (LINES_KEY.equals(params[i].getName())) {
                     setLines(new Long(params[i].getValue()).longValue());
+                    break;
+                }
+                if (SKIP_KEY.equals(params[i].getName())) {
+                    skip = new Long(params[i].getValue()).longValue();
                     break;
                 }
             }

@@ -240,7 +240,14 @@ This filter reads the first few lines from the data supplied to it.
   <TR>
     <TD vAlign=top>lines</TD>
     <TD vAlign=top align="center">Number of lines to be read.
-    Defaults to &quot;10&quot;</TD>
+    Defaults to &quot;10&quot; <BR> A negative value means that all lines are
+    passed (useful with <I>skip</I>)</TD>
+    <TD vAlign=top align="center">No</TD>
+  </TR>
+  <TR>
+    <TD vAlign=top>skip</TD>
+    <TD vAlign=top align="center">Number of lines to be skipped (from the beginning).
+    Defaults to &quot;0&quot;</TD>
     <TD vAlign=top align="center">No</TD>
   </TR>
 </TABLE>
@@ -266,6 +273,19 @@ Convenience method:
   &lt;/filterchain&gt;
 &lt;/loadfile&gt;
 </PRE></BLOCKQUOTE>
+
+This stores the first 15 lines, skipping the first 2 lines, of the supplied data
+in the porperty ${src.file.head}. (Means: lines 3-17)
+<BLOCKQUOTE><PRE>
+&lt;loadfile srcfile=&quot;${src.file}&quot; property=&quot;${src.file.head}&quot;&gt;
+  &lt;filterchain&gt;
+    &lt;headfilter lines=&quot;15&quot; skip=&quot;2&quot;/&gt;
+  &lt;/filterchain&gt;
+&lt;/loadfile&gt;
+</PRE></BLOCKQUOTE>
+
+See the testcases for more examples (<I>src\etc\testcases\filters\head-tail.xml</I> in the
+source distribution).
 
 <H3><a name="linecontains">LineContains</a></H3>
 
@@ -602,11 +622,110 @@ This filter reads the last few lines from the data supplied to it.
   <TR>
     <TD vAlign=top>lines</TD>
     <TD vAlign=top align="center">Number of lines to be read.
-    Defaults to &quot;10&quot;</TD>
+    Defaults to &quot;10&quot; <BR> A negative value means that all lines are
+    passed (useful with <I>skip</I>)</TD>
+    <TD vAlign=top align="center">No</TD>
+  </TR>
+  <TR>
+    <TD vAlign=top>skip</TD>
+    <TD vAlign=top align="center">Number of lines to be skipped (from the end).
+    Defaults to &quot;0&quot; </TD>
     <TD vAlign=top align="center">No</TD>
   </TR>
 </TABLE>
 <P>
+
+<H4>Background:</H4>
+With HeadFilter and TailFilter you can extract each part of a text file you want.
+This graphic shows the dependencies:
+
+<TABLE cellSpacing=0 cellPadding=2 border=1>
+<TR>
+ <TH> Content </TH>
+ <TH></TH>
+ <TH></TH>
+ <TH></TH>
+ <TH> Filter </TH>
+</TR>
+<TR>
+ <TD> Line 1 </TD>
+ <TD rowspan="2" bgcolor="#C0C0C0">&nbsp;</TD>
+ <TD rowspan="9" bgcolor="#FF00FF">&nbsp;</TD>
+ <TD rowspan="4">&nbsp;</TD>
+ <TD rowspan="11">
+    <TABLE>
+    <TR>
+     <TD bgcolor="#C0C0C0">&nbsp;</TD>
+     <TD><PRE>&lt;filterchain>
+    &lt;headfilter lines="2"/&gt;
+&lt;/filterchain></PRE></TD>
+    </TR>
+    <TR>
+     <TD bgcolor="#FF00FF">&nbsp;</TD>
+     <TD><PRE>&lt;filterchain>
+    &lt;tailfilter lines="-1" skip="2"/&gt;
+&lt;/filterchain></PRE></TD>
+    </TR>
+    <TR>
+     <TD bgcolor="#008000">&nbsp;</TD>
+     <TD><PRE>&lt;filterchain>
+    &lt;headfilter lines="-1" skip="2"/&gt;
+&lt;/filterchain></PRE></TD>
+    </TR>
+    <TR>
+     <TD bgcolor="#0000FF">&nbsp;</TD>
+     <TD><PRE>&lt;filterchain>
+    &lt;headfilter lines="-1" skip="2"/>
+    &lt;tailfilter lines="-1" skip="2"/>
+&lt;/filterchain></PRE></TD>
+    </TR>
+    <TR>
+     <TD bgcolor="#00FF00">&nbsp;</TD>
+     <TD><PRE>&lt;filterchain>
+    &lt;tailfilter lines="2"/&gt;
+&lt;/filterchain></PRE></TD>
+    </TR>
+    </TABLE>
+ </TD>
+</TR>
+<TR>
+ <TD> Line 2 </TD>
+</TR>
+<TR>
+ <TD> Line 3 </TD>
+ <TD rowspan="9" bgcolor="#008000">&nbsp;</TD>
+</TR>
+<TR>
+ <TD> Line 4 </TD>
+</TR>
+<TR>
+ <TD> Line 5 </TD>
+ <TD rowspan="3" bgcolor="#0000FF">&nbsp;</TD>
+</TR>
+<TR>
+ <TD> Lines ... </TD>
+</TR>
+<TR>
+ <TD> Line 95 </TD>
+</TR>
+<TR>
+ <TD> Line 96 </TD>
+ <TD rowspan="4">&nbsp;</TD>
+</TR>
+<TR>
+ <TD> Line 97 </TD>
+</TR>
+<TR>
+ <TD> Line 98 </TD>
+ <TD rowspan="2" bgcolor="#00FF00">&nbsp;</TD>
+</TR>
+<TR>
+ <TD> Line 99 </TD>
+</TR>
+</TABLE>
+
+
+
 <H4>Examples:</H4>
 
 This stores the last 15 lines of the supplied data in the property ${src.file.tail}
@@ -651,6 +770,18 @@ Convenience method:
   &lt;filterchain&gt;
     &lt;headfilter lines=&quot;15&quot;/&gt;
     &lt;tailfilter lines=&quot;5&quot;/&gt;
+  &lt;/filterchain&gt;
+&lt;/loadfile&gt;
+</PRE></BLOCKQUOTE>
+
+
+This stores the last 10 lines, skipping the last 2 lines, of the supplied data
+in the porperty ${src.file.head}. (Means: if supplied data contains 60 lines,
+lines 49-58 are extracted)
+<BLOCKQUOTE><PRE>
+&lt;loadfile srcfile=&quot;${src.file}&quot; property=&quot;${src.file.head}&quot;&gt;
+  &lt;filterchain&gt;
+    &lt;tailfilter lines=&quot;10&quot; skip=&quot;2&quot;/&gt;
   &lt;/filterchain&gt;
 &lt;/loadfile&gt;
 </PRE></BLOCKQUOTE>

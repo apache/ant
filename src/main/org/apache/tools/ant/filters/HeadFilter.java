@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2002 The Apache Software Foundation.  All rights
+ * Copyright (c) 2002-2003 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -76,15 +76,21 @@ public final class HeadFilter
     /** Parameter name for the number of lines to be returned. */
     private static final String LINES_KEY = "lines";
 
+    /** Parameter name for the number of lines to be skipped. */
+    private static final String SKIP_KEY = "skip";
+
     /** Number of lines currently read in. */
     private long linesRead = 0;
 
     /** Number of lines to be returned in the filtered stream. */
     private long lines = 10;
 
+    /** Number of lines to be skipped. */
+    private long skip = 0;
+
     /**
      * Constructor for "dummy" instances.
-     * 
+     *
      * @see BaseFilterReader#BaseFilterReader()
      */
     public HeadFilter() {
@@ -104,14 +110,14 @@ public final class HeadFilter
     /**
      * Returns the next character in the filtered stream. If the desired
      * number of lines have already been read, the resulting stream is
-     * effectively at an end. Otherwise, the next character from the 
+     * effectively at an end. Otherwise, the next character from the
      * underlying stream is read and returned.
-     * 
+     *
      * @return the next character in the resulting stream, or -1
      * if the end of the resulting stream has been reached
-     * 
+     *
      * @exception IOException if the underlying stream throws an IOException
-     * during reading     
+     * during reading
      */
     public final int read() throws IOException {
         if (!getInitialized()) {
@@ -121,7 +127,13 @@ public final class HeadFilter
 
         int ch = -1;
 
-        if (linesRead < lines) {
+        // skip the lines (if set)
+        while (skip > 0) {
+            for (int tmp = in.read(); tmp != '\n'; tmp = in.read());
+            skip--;
+        }
+
+        if ( (linesRead < lines) || (lines < 0) ){
 
             ch = in.read();
 
@@ -135,7 +147,7 @@ public final class HeadFilter
 
     /**
      * Sets the number of lines to be returned in the filtered stream.
-     * 
+     *
      * @param lines the number of lines to be returned in the filtered stream
      */
     public final void setLines(final long lines) {
@@ -144,7 +156,7 @@ public final class HeadFilter
 
     /**
      * Returns the number of lines to be returned in the filtered stream.
-     * 
+     *
      * @return the number of lines to be returned in the filtered stream
      */
     private final long getLines() {
@@ -152,18 +164,37 @@ public final class HeadFilter
     }
 
     /**
+     * Sets the number of lines to be skipped in the filtered stream.
+     *
+     * @param lines the number of lines to be skipped in the filtered stream
+     */
+    public final void setSkip(final long skip) {
+        this.skip = skip;
+    }
+
+    /**
+     * Returns the number of lines to be skipped in the filtered stream.
+     *
+     * @return the number of lines to be skipped in the filtered stream
+     */
+    private final long getSkip() {
+        return skip;
+    }
+
+    /**
      * Creates a new HeadFilter using the passed in
      * Reader for instantiation.
-     * 
+     *
      * @param rdr A Reader object providing the underlying stream.
      *            Must not be <code>null</code>.
-     * 
+     *
      * @return a new filter based on this configuration, but filtering
      *         the specified reader
      */
     public final Reader chain(final Reader rdr) {
         HeadFilter newFilter = new HeadFilter(rdr);
         newFilter.setLines(getLines());
+        newFilter.setSkip(getSkip());
         newFilter.setInitialized(true);
         return newFilter;
     }
@@ -178,6 +209,10 @@ public final class HeadFilter
             for (int i = 0; i < params.length; i++) {
                 if (LINES_KEY.equals(params[i].getName())) {
                     lines = new Long(params[i].getValue()).longValue();
+                    break;
+                }
+                if (SKIP_KEY.equals(params[i].getName())) {
+                    skip = new Long(params[i].getValue()).longValue();
                     break;
                 }
             }
