@@ -8,15 +8,24 @@
 package org.apache.antlib.xml;
 
 import java.io.File;
-import java.net.URL;
-import java.net.URLClassLoader;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Iterator;
+import javax.xml.transform.Templates;
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.stream.StreamResult;
+import javax.xml.transform.stream.StreamSource;
+import org.apache.avalon.excalibur.io.FileUtil;
+import org.apache.avalon.excalibur.io.IOUtil;
 import org.apache.myrmidon.api.TaskException;
-import org.apache.tools.ant.taskdefs.MatchingTask;
+import org.apache.myrmidon.framework.AbstractMatchingTask;
+import org.apache.myrmidon.framework.FileSet;
 import org.apache.tools.ant.types.DirectoryScanner;
 import org.apache.tools.ant.types.Path;
-import org.apache.tools.ant.types.PathUtil;
+import org.apache.tools.ant.types.ScannerUtil;
 
 /**
  * A Task to process via XSLT a set of XML documents. This is useful for
@@ -40,323 +49,344 @@ import org.apache.tools.ant.types.PathUtil;
  * @author <a href="stefan.bodewig@epost.de">Stefan Bodewig</a>
  */
 public class XSLTProcess
-    extends MatchingTask
+    extends AbstractMatchingTask
 {
-    private File m_destDir;
-    private File m_baseDir;
-    private String m_xslFile;
+    private File m_destdir;
+    private File m_basedir;
     private String m_targetExtension = ".html";
     private ArrayList m_params = new ArrayList();
-    private File m_inFile;
-    private File m_outFile;
+    private File m_in;
+    private File m_out;
     private Path m_classpath;
-    private boolean m_stylesheetLoaded;
     private boolean m_force;
-    private String m_outputtype;
-    private XSLTLiaison m_liaison;
-    private String m_processor;
+    private File m_stylesheet;
+
+    private boolean m_processorPrepared;
+    private TransformerFactory m_transformerFactory;
+    private Transformer m_transformer;
 
     /**
      * Set the base directory.
-     *
-     * @param dir The new Basedir value
      */
-    public void setBasedir( File dir )
+    public void setBasedir( final File basedir )
     {
-        m_baseDir = dir;
+        m_basedir = basedir;
     }
 
     /**
      * Set the classpath to load the Processor through (attribute).
-     *
-     * @param classpath The new Classpath value
      */
-    public void setClasspath( Path classpath )
+    public void setClasspath( final Path classpath )
         throws TaskException
     {
-        createClasspath().append( classpath );
+        addClasspath( classpath );
     }
 
     /**
      * Set the destination directory into which the XSL result files should be
      * copied to
-     *
-     * @param dir The new Destdir value
      */
-    public void setDestdir( File dir )
+    public void setDestdir( final File destdir )
     {
-        m_destDir = dir;
+        m_destdir = destdir;
     }
 
     /**
      * Set the desired file extension to be used for the target
-     *
-     * @param name the extension to use
      */
-    public void setExtension( String name )
+    public void setExtension( final String targetExtension )
     {
-        m_targetExtension = name;
+        m_targetExtension = targetExtension;
     }
 
     /**
      * Set whether to check dependencies, or always generate.
-     *
-     * @param force The new Force value
      */
-    public void setForce( boolean force )
+    public void setForce( final boolean force )
     {
-        this.m_force = force;
+        m_force = force;
     }
 
     /**
      * Sets an input xml file to be styled
-     *
-     * @param inFile The new In value
      */
-    public void setIn( File inFile )
+    public void setIn( final File in )
     {
-        this.m_inFile = inFile;
+        m_in = in;
     }
 
     /**
      * Sets an out file
-     *
-     * @param outFile The new Out value
      */
-    public void setOut( File outFile )
+    public void setOut( final File out )
     {
-        this.m_outFile = outFile;
+        m_out = out;
     }
-
-    /**
-     * Set the output type to use for the transformation. Only "xml" (the
-     * default) is guaranteed to work for all parsers. Xalan2 also supports
-     * "html" and "text".
-     *
-     * @param type the output method to use
-     */
-    public void setOutputtype( String type )
-    {
-        this.m_outputtype = type;
-    }
-
-    public void setProcessor( String processor )
-    {
-        this.m_processor = processor;
-    }//-- setDestDir
 
     /**
      * Sets the file to use for styling relative to the base directory of this
      * task.
-     *
-     * @param xslFile The new Style value
      */
-    public void setStyle( String xslFile )
+    public void setStyle( final File stylesheet )
     {
-        this.m_xslFile = xslFile;
+        m_stylesheet = stylesheet;
     }
 
     /**
      * Set the classpath to load the Processor through (nested element).
-     *
-     * @return Description of the Returned Value
      */
-    public Path createClasspath()
+    public void addClasspath( final Path path )
         throws TaskException
     {
         if( m_classpath == null )
         {
             m_classpath = new Path();
         }
-        Path path1 = m_classpath;
-        final Path path = new Path();
-        path1.addPath( path );
-        return path;
+        m_classpath.addPath( path );
     }
 
-    public XSLTParam createParam()
+    public void addParam( final XSLTParam param )
     {
-        XSLTParam p = new XSLTParam();
-        m_params.add( p );
-        return p;
-    }//-- XSLTProcess
-
-    /**
-     * Executes the task.
-     *
-     * @exception TaskException Description of Exception
-     */
+        m_params.add( param );
+    }
 
     public void execute()
         throws TaskException
     {
-        DirectoryScanner scanner;
-        String[] list;
-        String[] dirs;
+        validate();
 
-        if( m_xslFile == null )
-        {
-            throw new TaskException( "no stylesheet specified" );
-        }
+        final FileSet fileSet = getFileSet();
+        fileSet.setDir( m_basedir );
+        final DirectoryScanner scanner = ScannerUtil.getDirectoryScanner( fileSet );
 
-        if( m_baseDir == null )
-        {
-            m_baseDir = getBaseDirectory();
-        }
-
-        m_liaison = getLiaison();
-
-        // check if liaison wants to log errors using us as logger
-        setupLogger( m_liaison );
-
-        getLogger().debug( "Using " + m_liaison.getClass().toString() );
-        File stylesheet = resolveFile( m_xslFile );
+        prepareProcessor();
 
         // if we have an in file and out then process them
-        if( m_inFile != null && m_outFile != null )
+        if( m_in != null && m_out != null )
         {
-            process( m_inFile, m_outFile, stylesheet );
+            processSingleFile( m_in, m_out );
             return;
         }
 
-        /*
-         * if we get here, in and out have not been specified, we are
-         * in batch processing mode.
-         */
-        //-- make sure Source directory exists...
-        if( m_destDir == null )
-        {
-            String msg = "destdir attributes must be set!";
-            throw new TaskException( msg );
-        }
-        scanner = getDirectoryScanner( m_baseDir );
-        getLogger().info( "Transforming into " + m_destDir );
+        final String message = "Transforming into " + m_destdir;
+        getLogger().info( message );
 
         // Process all the files marked for styling
-        list = scanner.getIncludedFiles();
-        for( int i = 0; i < list.length; ++i )
-        {
-            process( m_baseDir, list[ i ], m_destDir, stylesheet );
-        }
+        processFiles( scanner );
 
         // Process all the directoried marked for styling
-        dirs = scanner.getIncludedDirectories();
-        for( int j = 0; j < dirs.length; ++j )
+        processDirs( scanner );
+    }
+
+    private void validate()
+        throws TaskException
+    {
+        if( null == m_stylesheet )
         {
-            list = new File( m_baseDir, dirs[ j ] ).list();
-            for( int i = 0; i < list.length; ++i )
+            final String message = "no stylesheet specified";
+            throw new TaskException( message );
+        }
+
+        if( null == m_basedir )
+        {
+            m_basedir = getBaseDirectory();
+        }
+
+        //-- make sure Source directory exists...
+        if( null == m_destdir )
+        {
+            final String message = "destdir attributes must be set!";
+            throw new TaskException( message );
+        }
+    }
+
+    private void processDirs( final DirectoryScanner scanner )
+        throws TaskException
+    {
+        final String[] dirs = scanner.getIncludedDirectories();
+        for( int i = 0; i < dirs.length; i++ )
+        {
+            final String[] list = new File( m_basedir, dirs[ i ] ).list();
+            for( int j = 0; j < list.length; j++ )
             {
-                process( m_baseDir, list[ i ], m_destDir, stylesheet );
+                process( m_basedir, list[ j ], m_destdir );
             }
         }
     }
 
-    protected XSLTLiaison getLiaison()
+    private void processFiles( final DirectoryScanner scanner )
         throws TaskException
     {
-        // if processor wasn't specified, see if TraX is available.  If not,
-        // default it to xslp or xalan, depending on which is in the classpath
-        if( m_liaison == null )
+        final String[] list = scanner.getIncludedFiles();
+        for( int i = 0; i < list.length; ++i )
         {
-            if( m_processor != null )
-            {
-                try
-                {
-                    resolveProcessor( m_processor );
-                }
-                catch( Exception e )
-                {
-                    throw new TaskException( "Error", e );
-                }
-            }
-            else
-            {
-                try
-                {
-                    resolveProcessor( "trax" );
-                }
-                catch( Throwable e1 )
-                {
-                    try
-                    {
-                        resolveProcessor( "xalan" );
-                    }
-                    catch( Throwable e2 )
-                    {
-                        try
-                        {
-                            resolveProcessor( "adaptx" );
-                        }
-                        catch( Throwable e3 )
-                        {
-                            try
-                            {
-                                resolveProcessor( "xslp" );
-                            }
-                            catch( Throwable e4 )
-                            {
-                                e4.printStackTrace();
-                                e3.printStackTrace();
-                                e2.printStackTrace();
-                                throw new TaskException( "Error", e1 );
-                            }
-                        }
-                    }
-                }
-            }
+            process( m_basedir, list[ i ], m_destdir );
         }
-        return m_liaison;
     }
 
     /**
-     * Loads the stylesheet and set xsl:param parameters.
-     *
-     * @param stylesheet Description of Parameter
-     * @exception TaskException Description of Exception
+     * Create transformer factory, loads the stylesheet and set xsl:param parameters.
      */
-    protected void configureLiaison( File stylesheet )
+    protected void prepareProcessor()
         throws TaskException
     {
-        if( m_stylesheetLoaded )
+        if( m_processorPrepared )
         {
             return;
         }
-        m_stylesheetLoaded = true;
+        m_processorPrepared = true;
+
+        //Note the next line should use the specified Classpath
+        //and load the class dynaically
+        m_transformerFactory = TransformerFactory.newInstance();
+        m_transformerFactory.setErrorListener( new TraxErrorListener( true ) );
+        //m_transformer.setOutputProperty( OutputKeys.METHOD, m_type );
 
         try
         {
-            getLogger().info( "Loading stylesheet " + stylesheet );
-            m_liaison.setStylesheet( stylesheet );
-            final Iterator params = m_params.iterator();
-            while( params.hasNext() )
-            {
-                final XSLTParam param = (XSLTParam)params.next();
-
-                final String expression = param.getExpression();
-                if( expression == null )
-                {
-                    throw new TaskException( "Expression attribute is missing." );
-                }
-
-                final String name = param.getName();
-                if( name == null )
-                {
-                    throw new TaskException( "Name attribute is missing." );
-                }
-
-                m_liaison.addParam( name, expression );
-            }
+            getLogger().info( "Loading stylesheet " + m_stylesheet );
+            specifyStylesheet();
+            specifyParams();
         }
         catch( final Exception e )
         {
-            getLogger().info( "Failed to read stylesheet " + stylesheet );
+            final String message = "Failed to read stylesheet " + m_stylesheet;
+            getLogger().info( message );
             throw new TaskException( e.getMessage(), e );
         }
     }
 
-    private void ensureDirectoryFor( File targetFile )
+    private void specifyStylesheet()
+        throws Exception
+    {
+        final FileInputStream xslStream = new FileInputStream( m_stylesheet );
+        try
+        {
+            final StreamSource source = new StreamSource( xslStream );
+            source.setSystemId( getSystemId( m_stylesheet ) );
+            final Templates template = m_transformerFactory.newTemplates( source );
+            m_transformer = template.newTransformer();
+            m_transformer.setErrorListener( new TraxErrorListener( true ) );
+        }
+        finally
+        {
+            IOUtil.shutdownStream( xslStream );
+        }
+    }
+
+    private void specifyParams() throws TaskException
+    {
+        final Iterator params = m_params.iterator();
+        while( params.hasNext() )
+        {
+            final XSLTParam param = (XSLTParam)params.next();
+
+            final String expression = param.getExpression();
+            if( expression == null )
+            {
+                throw new TaskException( "Expression attribute is missing." );
+            }
+
+            final String name = param.getName();
+            if( name == null )
+            {
+                throw new TaskException( "Name attribute is missing." );
+            }
+
+            m_transformer.setParameter( name, expression );
+        }
+    }
+
+    /**
+     * Processes the given input XML file and stores the result in the given
+     * resultFile.
+     */
+    private void process( final File baseDir, final String xmlFile, final File destDir )
         throws TaskException
     {
+        final String filename = FileUtil.removeExtension( xmlFile );
+
+        final File in = new File( baseDir, xmlFile );
+        final File out = new File( destDir, filename + m_targetExtension );
+
+        processFile( in, out );
+    }
+
+    private void processFile( final File in, final File out )
+        throws TaskException
+    {
+        final long styleSheetLastModified = m_stylesheet.lastModified();
+        try
+        {
+            if( m_force ||
+                in.lastModified() > out.lastModified() ||
+                styleSheetLastModified > out.lastModified() )
+            {
+                ensureDirectoryFor( out );
+
+                final String notice = "Processing " + in + " to " + out;
+                getLogger().info( notice );
+                transform( in, out );
+            }
+        }
+        catch( final Exception e )
+        {
+            // If failed to process document, must delete target document,
+            // or it will not attempt to process it the second time
+            final String message = "Failed to process " + in;
+            getLogger().info( message );
+            if( out != null )
+            {
+                out.delete();
+            }
+
+            throw new TaskException( e.getMessage(), e );
+        }
+    }
+
+    private void processSingleFile( final File in, final File out )
+        throws TaskException
+    {
+        final long styleSheetLastModified = m_stylesheet.lastModified();
+        getLogger().debug( "In file " + in + " time: " + in.lastModified() );
+        getLogger().debug( "Out file " + out + " time: " + out.lastModified() );
+        getLogger().debug( "Style file " + m_stylesheet + " time: " + styleSheetLastModified );
+
+        processFile( in, out );
+    }
+
+    private void transform( final File in, final File out )
+        throws Exception
+    {
+        FileInputStream fis = null;
+        FileOutputStream fos = null;
+        try
+        {
+            fis = new FileInputStream( in );
+            fos = new FileOutputStream( out );
+            final StreamSource source = new StreamSource( fis, getSystemId( in ) );
+            final StreamResult result = new StreamResult( fos );
+
+            m_transformer.transform( source, result );
+        }
+        finally
+        {
+            IOUtil.shutdownStream( fis );
+            IOUtil.shutdownStream( fos );
+        }
+    }
+
+    private String getSystemId( final File file )
+        throws IOException
+    {
+        return file.getCanonicalFile().toURL().toExternalForm();
+    }
+
+    private void ensureDirectoryFor( final File targetFile )
+        throws TaskException
+    {
+        //In future replace me with
+        //FileUtil.forceMkdir( targetFile.getParent() );
         File directory = new File( targetFile.getParent() );
         if( !directory.exists() )
         {
@@ -367,139 +397,4 @@ public class XSLTProcess
             }
         }
     }
-
-    /**
-     * Load named class either via the system classloader or a given custom
-     * classloader.
-     *
-     * @param classname Description of Parameter
-     * @return Description of the Returned Value
-     * @exception Exception Description of Exception
-     */
-    private Class loadClass( String classname )
-        throws Exception
-    {
-        if( m_classpath == null )
-        {
-            return Class.forName( classname );
-        }
-        else
-        {
-            final URL[] urls = PathUtil.toURLs( m_classpath );
-            final ClassLoader classLoader = new URLClassLoader( urls );
-            return classLoader.loadClass( classname );
-        }
-    }
-
-    /**
-     * Processes the given input XML file and stores the result in the given
-     * resultFile.
-     *
-     * @param baseDir Description of Parameter
-     * @param xmlFile Description of Parameter
-     * @param destDir Description of Parameter
-     * @param stylesheet Description of Parameter
-     * @exception TaskException Description of Exception
-     */
-    private void process( File baseDir, String xmlFile, File destDir,
-                          File stylesheet )
-        throws TaskException
-    {
-
-        String fileExt = m_targetExtension;
-        File outFile = null;
-        File inFile = null;
-
-        try
-        {
-            long styleSheetLastModified = stylesheet.lastModified();
-            inFile = new File( baseDir, xmlFile );
-            int dotPos = xmlFile.lastIndexOf( '.' );
-            if( dotPos > 0 )
-            {
-                outFile = new File( destDir, xmlFile.substring( 0, xmlFile.lastIndexOf( '.' ) ) + fileExt );
-            }
-            else
-            {
-                outFile = new File( destDir, xmlFile + fileExt );
-            }
-            if( m_force ||
-                inFile.lastModified() > outFile.lastModified() ||
-                styleSheetLastModified > outFile.lastModified() )
-            {
-                ensureDirectoryFor( outFile );
-                getLogger().info( "Processing " + inFile + " to " + outFile );
-
-                configureLiaison( stylesheet );
-                m_liaison.transform( inFile, outFile );
-            }
-        }
-        catch( Exception ex )
-        {
-            // If failed to process document, must delete target document,
-            // or it will not attempt to process it the second time
-            getLogger().info( "Failed to process " + inFile );
-            if( outFile != null )
-            {
-                outFile.delete();
-            }
-
-            throw new TaskException( "Error", ex );
-        }
-
-    }//-- processXML
-
-    private void process( File inFile, File outFile, File stylesheet )
-        throws TaskException
-    {
-        try
-        {
-            final long styleSheetLastModified = stylesheet.lastModified();
-            getLogger().debug( "In file " + inFile + " time: " + inFile.lastModified() );
-            getLogger().debug( "Out file " + outFile + " time: " + outFile.lastModified() );
-            getLogger().debug( "Style file " + m_xslFile + " time: " + styleSheetLastModified );
-
-            if( m_force ||
-                inFile.lastModified() > outFile.lastModified() ||
-                styleSheetLastModified > outFile.lastModified() )
-            {
-                ensureDirectoryFor( outFile );
-                getLogger().info( "Processing " + inFile + " to " + outFile );
-                configureLiaison( stylesheet );
-                m_liaison.transform( inFile, outFile );
-            }
-        }
-        catch( Exception ex )
-        {
-            getLogger().info( "Failed to process " + inFile );
-            if( outFile != null )
-            {
-                outFile.delete();
-            }
-            throw new TaskException( "Error", ex );
-        }
-    }
-
-    /**
-     * Load processor here instead of in setProcessor - this will be called from
-     * within execute, so we have access to the latest classpath.
-     *
-     * @param proc Description of Parameter
-     * @exception Exception Description of Exception
-     */
-    private void resolveProcessor( String proc )
-        throws Exception
-    {
-        if( proc.equals( "trax" ) )
-        {
-            final Class clazz =
-                loadClass( "org.apache.tools.ant.taskdefs.optional.TraXLiaison" );
-            m_liaison = (XSLTLiaison)clazz.newInstance();
-        }
-        else
-        {
-            m_liaison = (XSLTLiaison)loadClass( proc ).newInstance();
-        }
-    }
-
 }
