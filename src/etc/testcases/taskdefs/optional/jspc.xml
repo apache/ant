@@ -2,53 +2,65 @@
 
 <project name="jspc-test" default="main" basedir=".">
 
-   <target name="main" depends="simple,missing_tld">
-
+   <target name="main" depends="simple,missing_tld,uriroot,xml">
    </target>
 
-	<target name="init">
-		<property name="jsp.dir" location="jsp"/>
-		<property name="jsp.output.dir" location="${jsp.dir}/java"/>
-		<property name="jsp.verbosity" value="3"/>
-		
-		<mkdir dir="${jsp.output.dir}"/>
-	</target>
-	
-	<target name="cleanup">
-		<delete dir="${jsp.output.dir}"/>   
-	</target>
+    <target name="init">
+        <property name="jsp.dir" location="jsp"/>
+        <property name="jsp.output.dir" location="${jsp.dir}/java"/>
+        <property name="jsp.verbosity" value="3"/>
+        <mkdir dir="${jsp.output.dir}"/>
+    </target>
+    
+    <target name="cleanup">
+        <delete dir="${jsp.output.dir}"/>   
+    </target>
    
    <!-- this should fail -->
+   <!-- it should not create an output file, but it does, which needs
+        cleanup -->
    <target name="missing_tld" depends="init">
-		<jspc
-		   destdir="${jsp.output.dir}"
-		   srcdir="${jsp.dir}"
-		   verbose="${jsp.verbosity}">
-			<include
+        <jspc
+           destdir="${jsp.output.dir}"
+           srcdir="${jsp.dir}"
+           verbose="${jsp.verbosity}">
+            <include
                name="missing_tld.jsp"/>
-		</jspc>
+        </jspc>
    </target>
 
    <!-- this should compile to simple.java -->
    <target name="simple" depends="init">
-		<jspc
-		   destdir="${jsp.output.dir}"
-		   srcdir="${jsp.dir}"
-		   verbose="${jsp.verbosity}">
-			<include
+        <jspc
+           destdir="${jsp.output.dir}"
+           srcdir="${jsp.dir}"
+           verbose="${jsp.verbosity}">
+            <include
                name="simple.jsp"/>
-		</jspc>
+        </jspc>
    </target>   
 
-   <!-- this should also compile to simple.java -->
-   <target name="uriroot" depends="init">
-		<jspc
-		   destdir="${jsp.output.dir}"
-		   uriroot="${jsp.dir}"
-		   srcdir="${jsp.dir}"
-		   verbose="${jsp.verbosity}">
-			<include
-               name="uriroot.jsp"/>
-		</jspc>
-   </target>   
+    <!-- this should compile to uriroot.java -->
+    <target name="uriroot" depends="init">
+        <jspc
+           destdir="${jsp.output.dir}"
+           uriroot="${jsp.dir}"
+           srcdir="${jsp.dir}"
+           verbose="${jsp.verbosity}">
+            <include
+                name="uriroot.jsp"/>
+        </jspc>
+    </target> 
+   
+   <!-- this should compile an xml format jsp page to xml.java -->
+    <target name="xml" depends="init">
+      <jspc
+        destdir="${jsp.output.dir}"
+        uriroot="${jsp.dir}"
+        srcdir="${jsp.dir}"
+        verbose="${jsp.verbosity}">
+          <include name="xml.jsp"/>
+      </jspc>
+   </target>
+   
 </project>
