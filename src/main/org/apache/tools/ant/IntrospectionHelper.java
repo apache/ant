@@ -125,8 +125,6 @@ public class IntrospectionHelper  {
                 (
                  (
                   "setLocation".equals(name) && org.apache.tools.ant.Location.class.equals(args[0])
-                  ) || ( 
-                   "setDescription".equals(name) && java.lang.String.class.equals(args[0])
                   ) || (
                    "setTaskType".equals(name) && java.lang.String.class.equals(args[0])
                   )

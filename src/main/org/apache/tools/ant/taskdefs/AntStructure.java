@@ -175,11 +175,12 @@ public class AntStructure extends Task {
         out.println("");
 
         out.println("<!ATTLIST target");
-        out.println("          id      ID    #IMPLIED");
-        out.println("          name    CDATA #REQUIRED");
-        out.println("          if      CDATA #IMPLIED");
-        out.println("          unless  CDATA #IMPLIED");
-        out.println("          depends CDATA #IMPLIED>");
+        out.println("          id          ID    #IMPLIED");
+        out.println("          name        CDATA #REQUIRED");
+        out.println("          if          CDATA #IMPLIED");
+        out.println("          unless      CDATA #IMPLIED");
+        out.println("          depends     CDATA #IMPLIED");
+        out.println("          description CDATA #IMPLIED>");
         out.println("");
     }
 
