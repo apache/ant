@@ -712,8 +712,7 @@ V. Things we probably don't agree on.
 * allow sequence to be specified in depends attribute or enhance
   antcall to work with current list of executed targets
 
-  [REJECTED - veto by Peter Donald (which doesn't apply to the antcall
-              option)]
+  [ACCEPTED]
 
 * Support nesting tasks into other elements - not just as children of
   target - as proposed by Thomas Christen in
@@ -733,7 +732,7 @@ V. Things we probably don't agree on.
 * provide a way to define the order in which targets a given target
   depends upon get executed.
 
-  [REJECTED - veto by Peter Donald]
+  [ACCEPTED]
 
 * define task contexts that define various common aspects (logging,
   failure handling ...) and assign them to tasks.
