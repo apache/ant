@@ -177,6 +177,12 @@ public class TarEntry implements TarConstants {
         this.groupName = new StringBuffer("");
         this.devMajor = 0;
         this.devMinor = 0;
+
+        if (this.name.length() > NAMELEN) {
+            throw new RuntimeException("file name '" + this.name 
+                                             + "' is too long ( > " 
+                                             + NAMELEN + " bytes)");
+        } 
     }   
         
     /** 
