@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<project name="validate" default="testValidate" basedir=".">
+
+ <target name="testValidate">
+    <xmlvalidate warn="false">
+      <fileset dir="." includes="about.xml"/>  
+       <dtd publicID="-//stevo//DTD doc 1.0//EN"
+         location="doc.dtd"/>
+    </xmlvalidate>
+  </target>
+  
+</project>
