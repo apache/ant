@@ -95,7 +95,7 @@ public class LoadFileCmd implements Command {
         }
         else {
             try {
-                ProjectProxy project = new ProjectProxy(_file);
+                ProjectProxy project = new ProjectProxy(_context, _file);
                 _context.setProject(project);
             }
             catch(IOException ex) {

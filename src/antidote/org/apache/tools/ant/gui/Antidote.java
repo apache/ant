@@ -66,11 +66,6 @@ import java.lang.reflect.Constructor;
  * @author Simeon Fitch 
  */
 public class Antidote extends JPanel {
-
-
-    /** Logging console. */
-    private Console _console = null;
-
     /** Source of application state data. */
     private AppContext _context = null;
 
@@ -83,18 +78,25 @@ public class Antidote extends JPanel {
 
         _context = context;
 
-        _console = new Console(_context);
-
-
         // Add the various editors/views to the editing area.
         JSplitPane splitter = new JSplitPane();
         splitter.add(JSplitPane.LEFT, populateEditors("left"));
         splitter.add(JSplitPane.RIGHT, populateEditors("right"));
+        // This is necessary because, frankly, the JSplitPane widget
+        // sucks, and doesn't provide enought (working) control over the
+        // initial size of it's subcomponents. setDividerLocation(double)
+        // doesn't seem to work until after the widget is visible.
+        splitter.setPreferredSize(new Dimension(500, 300));
 
-        add(BorderLayout.CENTER, splitter);
+        // Top bottom splitter. 
+        JSplitPane splitter2 = new JSplitPane(JSplitPane.VERTICAL_SPLIT);
+        splitter2.setOneTouchExpandable(true);
 
-        add(BorderLayout.SOUTH, _console);
+        splitter2.add(JSplitPane.TOP, splitter);
+        splitter2.add(JSplitPane.BOTTOM, populateEditors("bottom"));
 
+        add(BorderLayout.CENTER, splitter2);
+        splitter2.resetToPreferredSizes();
         setPreferredSize(new Dimension(640, 480));
     }
 

@@ -54,6 +54,7 @@
 package org.apache.tools.ant.gui;
 
 import javax.swing.JPanel;
+import javax.swing.BorderFactory;
 
 /**
  * Abstract base class for an "editor", which is really anything that
@@ -78,6 +79,7 @@ public abstract class AntEditor extends JPanel {
 	 */
 	protected AntEditor(AppContext context) {
         _context = context;
+        setBorder(BorderFactory.createTitledBorder(getName()));
 	}
 
 	/** 

@@ -50,8 +50,8 @@
     <javac srcdir="${src.dir}"
            destdir="${build.classes}"
            debug="on"
-           deprecation="off"
-           optimize="on" >
+           deprecation="on"
+           optimize="off" >
       <classpath refid="classpath" />
     </javac>
  

@@ -52,7 +52,7 @@
  * <http://www.apache.org/>.
  */
 package org.apache.tools.ant.gui;
-
+import org.apache.tools.ant.gui.util.WindowUtils;
 import javax.swing.*;
 import java.awt.BorderLayout;
 
@@ -82,10 +82,19 @@ public class Main {
             f.getContentPane().add(BorderLayout.NORTH, 
                                    context.getActions().createToolBar());
 
+            ImageIcon icon = 
+                context.getResources().getImageIcon("icon-small.gif");
+            if(icon != null) {
+                f.setIconImage(icon.getImage());
+            }
+            else {
+                System.out.println("Application icon not found.");
+            }
             f.pack();
+
             f.setVisible(true);
             // Hack around linux window placement annoyance.
-            f.setLocation(100, 100);
+            WindowUtils.centerWindow(f);
 
         }
         catch(Exception ex) {

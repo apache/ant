@@ -54,10 +54,15 @@
 package org.apache.tools.ant.gui;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.ProjectHelper;
+import org.apache.tools.ant.BuildEvent;
+import org.apache.tools.ant.BuildException;
+import org.apache.tools.ant.BuildListener;
+import org.apache.tools.ant.gui.event.*;
 import java.io.File;
 import java.io.IOException;
 import javax.swing.tree.TreeModel;
 import javax.swing.text.Document;
+import java.util.Enumeration;
 
 /**
  * This class provides the gateway interface to the data model for
@@ -70,44 +75,59 @@ import javax.swing.text.Document;
  */
 public class ProjectProxy {
 
+    /** Application context */
+    private AppContext _context = null;
     /** The file where the project was last saved. */
     private File _file = null;
-
     /** The real Ant Project instance. */
     private Project _project = null;
-
-	/** 
-	 * Default constructor. NB: right now it is private, but
-     * will be opened up once the gui supports creating new projects.
-	 * 
-	 */
-    private ProjectProxy() {
-    }
+    /** Private the current thread executing a build. */
+    private Thread _buildThread = null;
 
 	/** 
 	 * File loading ctor.
 	 * 
 	 * @param file File containing build file to load.
 	 */
-    public ProjectProxy(File file) throws IOException {
-        this();
+    public ProjectProxy(AppContext context, File file) throws IOException {
         _file = file;
+        _context = context;
         loadProject();
     }
 
-
+	/** 
+	 * Load the project from the build file.
+	 * 
+	 */
     private void loadProject() throws IOException {
         _project = new Project();
-        _project.init();
+        synchronized(_project) {
+            _project.init();
 
-        // XXX there is a bunch of stuff in the class org.apache.tools.ant.Main
-        // that needs to be abstracted out so that it doesn't 
-        // have to be replicated here.
+            // XXX there is a bunch of stuff in the class
+            // org.apache.tools.ant.Main that needs to be
+            // abstracted out so that it doesn't have to be
+            // replicated here.
         
-        // XXX need to provide a way to pass in externally defined properties.
-        // Perhaps define an external Antidote properties file.
-        _project.setUserProperty("ant.file" , _file.getAbsolutePath());
-        ProjectHelper.configureProject(_project, _file);
+            // XXX need to provide a way to pass in externally
+            // defined properties.  Perhaps define an external
+            // Antidote properties file.
+            _project.setUserProperty("ant.file" , _file.getAbsolutePath());
+            ProjectHelper.configureProject(_project, _file);
+        }
+    }
+
+	/** 
+	 * Build the project with the current target (or the default target
+     * if none is selected.  Build occurs on a separate thread, so method
+     * returns immediately.
+	 * 
+	 */
+    public void build() throws BuildException {
+        if(_project == null) return;
+
+        _buildThread = new Thread(new BuildRunner());
+        _buildThread.start();
     }
 
 	/** 
@@ -146,4 +166,56 @@ public class ProjectProxy {
         }
         return null;
     }
+
+	/** 
+	 * Convenience method for causeing the project to fire a build event.
+     * Implemented because the corresponding method in the Project class
+     * is not publically accessible.
+	 * 
+	 * @param event Event to fire.
+	 */
+    private void fireBuildEvent(BuildEvent event, BuildEventType type) {
+        synchronized(_project) {
+            Enumeration enum = _project.getBuildListeners().elements();
+            while(enum.hasMoreElements()) {
+                BuildListener l = (BuildListener) enum.nextElement();
+                type.fireEvent(event, l);
+            }
+        }
+    }
+
+    /** Class for executing the build in a separate thread. */
+    private class BuildRunner implements Runnable {
+        public void run() {
+            synchronized(_project) {
+                // Add the build listener for
+                // dispatching BuildEvent objects to the
+                // EventBus.
+                BuildEventForwarder handler = 
+                    new BuildEventForwarder(_context);
+                _project.addBuildListener(handler);
+                try {
+                    fireBuildEvent(new BuildEvent(
+                        _project), BuildEventType.BUILD_STARTED);
+                    // XXX add code to indicate target execution
+                    // on the targets that are selected.
+                    _project.executeTarget(
+                        _project.getDefaultTarget());
+                }
+                catch(BuildException ex) {
+                    BuildEvent errorEvent = new BuildEvent(_project);
+                    errorEvent.setException(ex);
+                    errorEvent.setMessage(ex.getMessage(), Project.MSG_ERR);
+                    fireBuildEvent(errorEvent, BuildEventType.MESSAGE_LOGGED);
+                }
+                finally {
+                    fireBuildEvent(new BuildEvent(
+                        _project), BuildEventType.BUILD_FINISHED);
+                    _project.removeBuildListener(handler);
+                    _buildThread = null;
+                }
+            }
+        }
+    }
+
 }

@@ -52,10 +52,13 @@
  * <http://www.apache.org/>.
  */
 package org.apache.tools.ant.gui;
-
+import org.apache.tools.ant.gui.event.*;
 import javax.swing.*;
-import java.awt.GridLayout;
+import javax.swing.text.Document;
+import java.awt.BorderLayout;
+import java.awt.FlowLayout;
 import java.awt.Dimension;
+import java.util.EventObject;
 
 /**
  * Logging console display.
@@ -63,22 +66,114 @@ import java.awt.Dimension;
  * @version $Revision$ 
  * @author Simeon Fitch 
  */
-public class Console extends JPanel {
-    private AppContext _context = null;
+public class Console extends AntEditor {
+    /** Area where messages are printed. */
     private JTextPane _text = null;
-
+    /** Selection of logging levels. */
+    private JComboBox _logLevel = null;
+        
+	/** 
+	 * Standard ctor.
+	 * 
+	 * @param context Application context;
+	 */
     public Console(AppContext context) {
-        setLayout(new GridLayout(1,1));
-        _context = context;
+        super(context);
+        context.getEventBus().addMember(EventBus.MONITORING, new Handler());
+        setLayout(new BorderLayout());
 
         _text = new JTextPane();
         _text.setEditable(false);
         JScrollPane scroller = new JScrollPane(_text);
-        
-        add(scroller);
+        scroller.setVerticalScrollBarPolicy(
+            JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
+        add(BorderLayout.CENTER, scroller);
 
-        _text.setText(
-            "This is the console area. \nLots of stuff to see here...");
-        setPreferredSize(new Dimension(200, 40));
+        JPanel controls = new JPanel(new FlowLayout(FlowLayout.LEFT));
+        JLabel label = new JLabel(
+            context.getResources().getString(getClass(), "logLevel"));
+        controls.add(label);
+        _logLevel = new JComboBox(LogLevelEnum.getValues());
+        controls.add(_logLevel);
+        
+        add(BorderLayout.NORTH, controls);
+
     }
+
+    /** Class for handling project events. */
+    private class Handler implements BusMember {
+        private final Filter _filter = new Filter();
+
+        /** 
+         * Get the filter to that is used to determine if an event should
+         * to to the member.
+         * 
+         * @return Filter to use.
+         */
+        public BusFilter getBusFilter() {
+            return _filter;
+        }
+        
+        /** 
+         * Called when an event is to be posed to the member.
+         * 
+         * @param event Event to post.
+         */
+        public void eventPosted(EventObject event) {
+            AntBuildEvent buildEvent = (AntBuildEvent) event;
+            String text = null;
+
+            Document doc = _text.getDocument();
+
+            switch(buildEvent.getType().getValue()) {
+              case BuildEventType.BUILD_STARTED_VAL:
+                  try {
+                      doc.remove(0, doc.getLength());
+                  }
+                  catch(Exception ex) {
+                      // Intentionally ignored.
+                  }
+                  break;
+              case BuildEventType.TARGET_STARTED_VAL:
+                  text = buildEvent.getEvent().getTarget().getName() + ":";
+                  break;
+              case BuildEventType.TARGET_FINISHED_VAL:
+              case BuildEventType.TASK_STARTED_VAL:
+              case BuildEventType.TASK_FINISHED_VAL:
+                  break;
+              case BuildEventType.MESSAGE_LOGGED_VAL:
+                  text = buildEvent.toString();
+                  break;
+            }
+
+            // Filter out events that are below our selected filterint level.
+            LogLevelEnum level = (LogLevelEnum) _logLevel.getSelectedItem();
+            if(buildEvent.getEvent().getPriority() > level.getValue()) return;
+
+            if(text != null) {
+                try {
+                    doc.insertString(doc.getLength(), text, null);
+                    doc.insertString(doc.getLength(), "\n", null);
+                }
+                catch(Exception ex) {
+                    // XXX log me.
+                    ex.printStackTrace();
+                }
+            }
+        }
+    }
+
+    /** Class providing filtering for project events. */
+    private static class Filter implements BusFilter {
+        /** 
+         * Determines if the given event should be accepted.
+         * 
+         * @param event Event to test.
+         * @return True if event should be given to BusMember, false otherwise.
+         */
+        public boolean accept(EventObject event) {
+            return event instanceof AntBuildEvent;
+        }
+    }
+
 }

@@ -15,7 +15,7 @@
  *    notice, this list of conditions and the following disclaimer in
  *    the documentation and/or other materials provided with the
  *    distribution.
- *
+q *
  * 3. The end-user documentation included with the redistribution, if
  *    any, must include the following acknowlegement:
  *       "This product includes software developed by the
@@ -51,58 +51,40 @@
  * information on the Apache Software Foundation, please see
  * <http://www.apache.org/>.
  */
-package org.apache.tools.ant.gui.util;
-
-import java.awt.Window;
-import java.awt.Rectangle;
-import java.awt.Dimension;
-import java.awt.event.WindowEvent;
+package org.apache.tools.ant.gui.command;
+import org.apache.tools.ant.gui.AppContext;
+import org.apache.tools.ant.gui.ProjectProxy;
 
 /**
- * Function container for various window operations.
+ * Starts an Ant build.
  * 
  * @version $Revision$ 
  * @author Simeon Fitch 
  */
-public class WindowUtils {
-	/** 
-	 * Default ctor.
-	 * 
-	 */
-	private WindowUtils() {}
+public class BuildCmd implements Command {
+    /** Name of the action the command maps to. */
+    public static final String ACTION_NAME = "startBuild";
+
+    /** The application context */
+    private AppContext _context = null;
 
 	/** 
-	 * Send a close event to the given window.
+	 * Standard ctor.
 	 * 
-	 * @param window Window to send close event to.
+	 * @param context Application context. 
 	 */
-	public static void sendCloseEvent(Window window) {
-        window.dispatchEvent(
-            new WindowEvent(window, WindowEvent.WINDOW_CLOSING));
-	}
+    public BuildCmd(AppContext context) {
+        _context = context;
+    }
 
 	/** 
-	 * Center the given child window with repsect to the parent window.
+	 * Start the Ant build.
 	 * 
-	 * @param parent Window to base centering on.
-	 * @param child Window to center.
 	 */
-	public static void centerWindow(Window parent, Window child) {
-		Rectangle bounds = parent.getBounds();
-		Dimension size = child.getSize();
-		child.setLocation(bounds.x + (bounds.width - size.width)/2,
-						  bounds.y + (bounds.height - size.height)/2);
-	}
-
-	/** 
-	 * Center the given child window with repsect to the root.
-	 * 
-	 * @param child Window to center.
-	 */
-	public static void centerWindow(Window child) {
-        Dimension rsize = child.getToolkit().getScreenSize();
-        Dimension size = child.getSize();
-        child.setLocation((rsize.width - size.width)/2,
-                          (rsize.height - size.height)/2);
+    public void execute() {
+        ProjectProxy project = _context.getProject();
+        if(project != null) {
+            project.build();
+        }
     }
 }

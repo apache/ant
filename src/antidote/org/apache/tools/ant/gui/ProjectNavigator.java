@@ -85,7 +85,7 @@ class ProjectNavigator extends AntEditor {
         JScrollPane scroller = new JScrollPane(_tree);
         add(scroller);
 
-        setPreferredSize(new Dimension(100, 100));
+        setPreferredSize(new Dimension(150, 100));
 
 	}
 

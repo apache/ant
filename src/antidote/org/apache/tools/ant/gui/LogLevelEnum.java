@@ -51,58 +51,113 @@
  * information on the Apache Software Foundation, please see
  * <http://www.apache.org/>.
  */
-package org.apache.tools.ant.gui.util;
-
-import java.awt.Window;
-import java.awt.Rectangle;
-import java.awt.Dimension;
-import java.awt.event.WindowEvent;
+package org.apache.tools.ant.gui;
 
 /**
- * Function container for various window operations.
+ * Enumeration class of the different log levels.
  * 
  * @version $Revision$ 
  * @author Simeon Fitch 
  */
-public class WindowUtils {
-	/** 
-	 * Default ctor.
-	 * 
-	 */
-	private WindowUtils() {}
+public class LogLevelEnum {
+    /** Enum value. */
+    private int _value = 0;
 
 	/** 
-	 * Send a close event to the given window.
+	 * Standard ctor.
 	 * 
-	 * @param window Window to send close event to.
+	 * @param value Index value.
 	 */
-	public static void sendCloseEvent(Window window) {
-        window.dispatchEvent(
-            new WindowEvent(window, WindowEvent.WINDOW_CLOSING));
-	}
-
-	/** 
-	 * Center the given child window with repsect to the parent window.
-	 * 
-	 * @param parent Window to base centering on.
-	 * @param child Window to center.
-	 */
-	public static void centerWindow(Window parent, Window child) {
-		Rectangle bounds = parent.getBounds();
-		Dimension size = child.getSize();
-		child.setLocation(bounds.x + (bounds.width - size.width)/2,
-						  bounds.y + (bounds.height - size.height)/2);
-	}
-
-	/** 
-	 * Center the given child window with repsect to the root.
-	 * 
-	 * @param child Window to center.
-	 */
-	public static void centerWindow(Window child) {
-        Dimension rsize = child.getToolkit().getScreenSize();
-        Dimension size = child.getSize();
-        child.setLocation((rsize.width - size.width)/2,
-                          (rsize.height - size.height)/2);
+    private LogLevelEnum(int value) {
+        _value = value;
     }
+
+	/** 
+	 * Get the enumeration value.
+	 * 
+	 * @return 
+	 */
+    public int getValue() {
+        return _value;
+    }
+
+	/** 
+	 * Get the enumeration value with the given index value.
+	 * 
+	 * @param value Index value.
+	 * @return Enumeration value.
+	 */
+    public static LogLevelEnum fromInt(int value) {
+        return _objectMap[value];
+    }
+
+	/** 
+	 * Get the set of enumeration values.
+	 * 
+	 * @return Value set.
+	 */
+    public static LogLevelEnum[] getValues() {
+        return _objectMap;
+    }
+
+	/** 
+	 * Determine if the given object is logically equal to this one.
+	 * 
+	 * @param o Object to compare to 
+	 * @return True if equal, false otherwise.
+	 */
+    public boolean equals(Object o) {
+        if(o instanceof LogLevelEnum) {
+            return ((LogLevelEnum)o)._value == _value;
+        }
+        return false;
+    }
+	/** 
+	 * Generate a hash value.
+	 * 
+	 * @return Hash value.
+	 */
+    public int hashValue() {
+        return _value;
+    }
+
+	/** 
+	 * Provide a string representation of this. 
+	 * 
+	 * @return String representation.
+	 */
+    public String toString() {
+        return _stringMap[_value];
+    }
+
+
+    /* Index values. */ 
+    public static final int ERROR_VAL = 0;
+    public static final int WARNING_VAL = 1;
+    public static final int INFO_VAL = 2;
+    public static final int VERBOSE_VAL = 3;
+    public static final int DEBUG_VAL = 4;
+
+    /* Enumeration values. */ 
+    public static final LogLevelEnum ERROR = 
+      new LogLevelEnum(ERROR_VAL);
+    public static final LogLevelEnum WARNING = 
+      new LogLevelEnum(WARNING_VAL);
+    public static final LogLevelEnum INFO = 
+      new LogLevelEnum(INFO_VAL);
+    public static final LogLevelEnum VERBOSE = 
+      new LogLevelEnum(VERBOSE_VAL);
+    public static final LogLevelEnum DEBUG = 
+      new LogLevelEnum(DEBUG_VAL);
+
+    /** Index to object mapping. */
+    private static final LogLevelEnum[] _objectMap = {
+        ERROR, WARNING, INFO, VERBOSE, DEBUG
+    };
+
+    /** String map. XXX needs to be localized. */
+    private static final String[] _stringMap = {
+        "Error", "Warning", "Info", "Verbose", "Debug"
+    };
+
 }

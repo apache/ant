@@ -1,3 +1,43 @@
+2000-11-05  Simeon H.K. Fitch  <simeon@fitch.net>
+
+	* org/apache/tools/ant/gui/LogLevelEnum.java: Added log level
+	enumeration for use with combo boxes (drops nicely into default model).
+
+	* org/apache/tools/ant/gui/event/BuildEventType.java: Added
+	delivering of event to a BuildListener based on enumeration value.
+
+	* org/apache/tools/ant/gui/ProjectProxy.java: Added generation of
+	BuildEvent on project start and finish, as the project itself
+	doesn't generate theses events (unfortunately).
+
+	* org/apache/tools/ant/gui/Console.java: Added filtering level,
+	and clearing of buffer when a new build starts.
+
+	* org/apache/tools/ant/gui/AntEditor.java: Added automatic border
+	for all subclasses.
+
+2000-11-04  Simeon H.K. Fitch  <simeon@fitch.net>
+
+	* org/apache/tools/ant/gui/ProjectProxy.java: Added inner class to
+	execute the build in a separate thread.
+
+	* org/apache/tools/ant/gui/event/EventBus.java: Added check to see
+	if postEvent() is being called on the AWTEvent thread, and if not,
+	post the dispatching of the event to that thread. This is needed
+	as most of the listeners will be bound to GUI components and will
+	be updating their state (which must occur on the event thread).
+
+	* org/apache/tools/ant/gui/ProjectProxy.java: Added a
+	BuildListener to forward events to the EventBus.
+
+2000-11-03  Simeon H.K. Fitch  <simeon@fitch.net>
+
+	* org/apache/tools/ant/gui/Antidote.java: Removed hard-coded
+	Console class.
+
+	* org/apache/tools/ant/gui/Console.java: Changed to a real
+	AntEditor class, initialized by the config file.
+
 2000-11-02  Simeon H.K. Fitch  <simeon@fitch.net>
 
 	* org/apache/tools/ant/gui/event/EventBus.java: Added interrupt

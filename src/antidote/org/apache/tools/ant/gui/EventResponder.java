@@ -117,6 +117,9 @@ class EventResponder {
             if(command.equals(OpenCmd.ACTION_NAME)) {
                 new OpenCmd(_context).execute();
             }
+            else if(command.equals(BuildCmd.ACTION_NAME)) {
+                new BuildCmd(_context).execute();
+            }
             else if(command.equals(CloseCmd.ACTION_NAME)) {
                 new CloseCmd(_context).execute();
             }

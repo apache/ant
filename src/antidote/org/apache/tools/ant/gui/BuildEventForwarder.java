@@ -51,58 +51,101 @@
  * information on the Apache Software Foundation, please see
  * <http://www.apache.org/>.
  */
-package org.apache.tools.ant.gui.util;
-
-import java.awt.Window;
-import java.awt.Rectangle;
-import java.awt.Dimension;
-import java.awt.event.WindowEvent;
+package org.apache.tools.ant.gui;
+import org.apache.tools.ant.gui.event.*;
+import org.apache.tools.ant.BuildListener;
+import org.apache.tools.ant.BuildEvent;
 
 /**
- * Function container for various window operations.
+ * BuildListener for forwarding events to the EventBus.
  * 
  * @version $Revision$ 
  * @author Simeon Fitch 
  */
-public class WindowUtils {
-	/** 
-	 * Default ctor.
-	 * 
-	 */
-	private WindowUtils() {}
+public class BuildEventForwarder implements BuildListener {
 
-	/** 
-	 * Send a close event to the given window.
-	 * 
-	 * @param window Window to send close event to.
-	 */
-	public static void sendCloseEvent(Window window) {
-        window.dispatchEvent(
-            new WindowEvent(window, WindowEvent.WINDOW_CLOSING));
-	}
+    /** Application context. */
+    private AppContext _context = null;
 
-	/** 
-	 * Center the given child window with repsect to the parent window.
-	 * 
-	 * @param parent Window to base centering on.
-	 * @param child Window to center.
-	 */
-	public static void centerWindow(Window parent, Window child) {
-		Rectangle bounds = parent.getBounds();
-		Dimension size = child.getSize();
-		child.setLocation(bounds.x + (bounds.width - size.width)/2,
-						  bounds.y + (bounds.height - size.height)/2);
-	}
-
-	/** 
-	 * Center the given child window with repsect to the root.
-	 * 
-	 * @param child Window to center.
-	 */
-	public static void centerWindow(Window child) {
-        Dimension rsize = child.getToolkit().getScreenSize();
-        Dimension size = child.getSize();
-        child.setLocation((rsize.width - size.width)/2,
-                          (rsize.height - size.height)/2);
+    public BuildEventForwarder(AppContext context) {
+        _context = context;
     }
+
+    /**
+     *  Fired before any targets are started.
+     */
+    public void buildStarted(BuildEvent event){
+        postEvent(event, BuildEventType.BUILD_STARTED);
+    }
+
+    /**
+     *  Fired after the last target has finished. This event
+     *  will still be thrown if an error occured during the build.
+     *
+     *  @see BuildEvent#getException()
+     */
+    public void buildFinished(BuildEvent event) {
+        postEvent(event, BuildEventType.BUILD_FINISHED);
+    }
+
+    /**
+     *  Fired when a target is started.
+     *
+     *  @see BuildEvent#getTarget()
+     */
+    public void targetStarted(BuildEvent event) {
+        postEvent(event, BuildEventType.TARGET_STARTED);
+    }
+
+    /**
+     *  Fired when a target has finished. This event will
+     *  still be thrown if an error occured during the build.
+     *
+     *  @see BuildEvent#getException()
+     */
+    public void targetFinished(BuildEvent event) {
+        postEvent(event, BuildEventType.TARGET_FINISHED);
+    }
+
+    /**
+     *  Fired when a task is started.
+     *
+     *  @see BuildEvent#getTask()
+     */
+    public void taskStarted(BuildEvent event) {
+        postEvent(event, BuildEventType.TASK_STARTED);
+    }
+
+    /**
+     *  Fired when a task has finished. This event will still
+     *  be throw if an error occured during the build.
+     *
+     *  @see BuildEvent#getException()
+     */
+    public void taskFinished(BuildEvent event) {
+        postEvent(event, BuildEventType.TASK_FINISHED);
+    }
+
+    /**
+     *  Fired whenever a message is logged.
+     *
+     *  @see BuildEvent#getMessage()
+     *  @see BuildEvent#getPriority()
+     */
+    public void messageLogged(BuildEvent event) {
+        postEvent(event, BuildEventType.MESSAGE_LOGGED);
+    }
+
+	/** 
+	 * Forward the event.
+	 * 
+	 * @param event Event to forward.
+	 * @param type Description of how the event came in.
+	 */
+    private void postEvent(BuildEvent event, BuildEventType type) {
+        _context.getEventBus().postEvent(
+            new AntBuildEvent(_context, event, type));
+    }
+
+
 }

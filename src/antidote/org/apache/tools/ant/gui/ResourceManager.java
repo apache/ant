@@ -55,6 +55,9 @@ package org.apache.tools.ant.gui;
 
 import java.util.*;
 import java.text.MessageFormat;
+import javax.swing.ImageIcon;
+import java.net.URL;
+import java.io.File;
 
 /**
  * Singleton class for accessing various resources by the application.
@@ -141,6 +144,24 @@ public class ResourceManager {
     public String getMessage(Class clazz, String name, Object[] arguments) {
         String format = getString(clazz, name);
         return MessageFormat.format(format, arguments);
+    }
+
+	/** 
+	 * Get the image as an ImageIcon with the given file name. 
+     * For example "open.gif". The image is loaded from the resources package.
+	 * 
+	 * @param fileName Image file to load.
+	 * @return Image as an ImageIcon, or null if not found.
+	 */
+    public ImageIcon getImageIcon(String fileName) {
+        ImageIcon icon = null;
+
+        URL location = getClass().getResource("resources/" + fileName);
+
+        if(location != null) {
+            icon = new ImageIcon(location);
+        }
+        return icon;
     }
 
 }

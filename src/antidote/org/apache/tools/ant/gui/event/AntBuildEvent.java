@@ -51,58 +51,88 @@
  * information on the Apache Software Foundation, please see
  * <http://www.apache.org/>.
  */
-package org.apache.tools.ant.gui.util;
-
-import java.awt.Window;
-import java.awt.Rectangle;
-import java.awt.Dimension;
-import java.awt.event.WindowEvent;
+package org.apache.tools.ant.gui.event;
+import org.apache.tools.ant.BuildEvent;
+import org.apache.tools.ant.gui.util.StackFrame;
+import org.apache.tools.ant.gui.command.Command;
+import org.apache.tools.ant.gui.command.NoOpCmd;
+import org.apache.tools.ant.gui.AppContext;
+import java.util.EventObject;
 
 /**
- * Function container for various window operations.
+ * Wrapper event for the events generated during an Ant build.
  * 
  * @version $Revision$ 
  * @author Simeon Fitch 
  */
-public class WindowUtils {
-	/** 
-	 * Default ctor.
-	 * 
-	 */
-	private WindowUtils() {}
+public class AntBuildEvent extends AntEvent {
 
-	/** 
-	 * Send a close event to the given window.
-	 * 
-	 * @param window Window to send close event to.
-	 */
-	public static void sendCloseEvent(Window window) {
-        window.dispatchEvent(
-            new WindowEvent(window, WindowEvent.WINDOW_CLOSING));
-	}
+    /** The original event we are wrapping. */
+    private BuildEvent _buildEvent = null;
+    /** The type of event we are wrapping. */
+    private BuildEventType _type = null;
 
-	/** 
-	 * Center the given child window with repsect to the parent window.
+    /**
+	 * Standard ctor.
 	 * 
-	 * @param parent Window to base centering on.
-	 * @param child Window to center.
+	 * @param context application context.
 	 */
-	public static void centerWindow(Window parent, Window child) {
-		Rectangle bounds = parent.getBounds();
-		Dimension size = child.getSize();
-		child.setLocation(bounds.x + (bounds.width - size.width)/2,
-						  bounds.y + (bounds.height - size.height)/2);
-	}
+    public AntBuildEvent(AppContext context, 
+                            BuildEvent buildEvent, BuildEventType type) {
+        super(context);
+        _buildEvent = buildEvent;
+        _type = type;
 
-	/** 
-	 * Center the given child window with repsect to the root.
-	 * 
-	 * @param child Window to center.
-	 */
-	public static void centerWindow(Window child) {
-        Dimension rsize = child.getToolkit().getScreenSize();
-        Dimension size = child.getSize();
-        child.setLocation((rsize.width - size.width)/2,
-                          (rsize.height - size.height)/2);
+        if(_buildEvent == null || _type == null) {
+            throw new IllegalArgumentException("Null parameter passed");
+        }
     }
+
+	/** 
+	 * Get the wrapped build event.
+	 * 
+	 * @return Build event.
+	 */
+    public BuildEvent getEvent() {
+        return _buildEvent;
+    }
+
+	/** 
+	 * Get the build event type.
+	 * 
+	 * @return Event type.
+	 */
+    public BuildEventType getType() {
+        return _type;
+    }
+
+	/** 
+	 * Create the appropriate default response command to this event.
+	 * 
+	 * @return Command representing an appropriate response to this event.
+	 */
+    public Command createDefaultCmd() {
+        return new NoOpCmd();
+    }
+    
+	/** 
+	 * Create a string representation of this.
+	 * 
+	 * @return String representation.
+	 */
+    public String toString() {
+        StringBuffer buf = new StringBuffer();
+
+        if(_buildEvent.getMessage() != null) {
+            buf.append(_buildEvent.getMessage());
+            buf.append('\n');
+        }
+
+        if(_buildEvent.getException() != null) {
+            buf.append(StackFrame.toString(_buildEvent.getException()));
+        }
+
+        return buf.toString();
+    }
+
 }

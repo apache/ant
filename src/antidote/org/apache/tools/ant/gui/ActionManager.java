@@ -113,7 +113,24 @@ public class ActionManager {
         while(tok.hasMoreTokens()) {
             String name = tok.nextToken();
             JMenu menu = new JMenu(name);
-            retval.add(menu);
+
+            // XXX should be in config file
+            menu.setMnemonic(name.charAt(0));
+
+            // XXX need to i18n here...
+            if(name.equalsIgnoreCase("help")) {
+                try {
+                    retval.setHelpMenu(menu);
+                }
+                catch(Error err) {
+                    // Catch the "not implemented" error in
+                    // some (all?) Swing implementations
+                    retval.add(menu);
+                }
+            }
+            else {
+                retval.add(menu);
+            }
             menus.put(name, menu);
         }
 
@@ -130,10 +147,13 @@ public class ActionManager {
                     menus.put(parent, menu);
                 }
 
-                if(action.isPreceededBySeparator()) {
+                // See if we should add a separator.
+                if(action.isPreceededBySeparator() && 
+                   menu.getMenuComponentCount() > 0) {
                     menu.addSeparator();
                 }
                 JMenuItem item = menu.add(action);
+                item.setAccelerator(action.getAccelerator());
                 addNiceStuff(item, action);
             }
         }
@@ -171,6 +191,13 @@ public class ActionManager {
         // Set the action command so that it is consitent
         // no matter what language the display is in.
         button.setActionCommand(action.getID());
+
+        // XXX this should be moved to the config file.
+        String label = button.getText();
+        if(label != null) {
+            button.setMnemonic(label.charAt(0));
+        }
+
         String tip = action.getShortDescription();
         if(tip != null) {
             button.setToolTipText(tip);
@@ -202,6 +229,7 @@ public class ActionManager {
         /** Property name for the parent menu item. */
         public static final String PARENT_MENU_NAME = "parentMenuName";
         public static final String SEPARATOR = "separator";
+        public static final String ACCELERATOR = "accelerator";
 
         /** Unique id. */
         private String _id = null;
@@ -215,8 +243,14 @@ public class ActionManager {
             _id = id;
             putValue(NAME, getString(id, "name"));
             putValue(SHORT_DESCRIPTION, getString(id, "shortDescription"));
-            putValue(PARENT_MENU_NAME, getString(id, "parentMenuName"));
-            putValue(SEPARATOR, getString(id, "separator"));
+            putValue(PARENT_MENU_NAME, getString(id, PARENT_MENU_NAME));
+            putValue(SEPARATOR, getString(id, SEPARATOR));
+
+            String accelerator = getString(id, ACCELERATOR);
+
+            if(accelerator != null) {
+                putValue(ACCELERATOR, KeyStroke.getKeyStroke(accelerator));
+            }
 
             String iconName = getString(id, "icon");
             if(iconName != null) {
@@ -232,7 +266,6 @@ public class ActionManager {
                     ex.printStackTrace();
                 }
             }
-            
         }
         
         /** 
@@ -289,6 +322,10 @@ public class ActionManager {
          */
         public Icon getIcon() {
             return (Icon) getValue(SMALL_ICON);
+        }
+
+        public KeyStroke getAccelerator() {
+            return (KeyStroke) getValue(ACCELERATOR);
         }
 
         /** 

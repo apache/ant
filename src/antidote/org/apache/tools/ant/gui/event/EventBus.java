@@ -54,7 +54,7 @@
 package org.apache.tools.ant.gui.event;
 
 import java.util.*;
-
+import javax.swing.SwingUtilities;
 /**
  * An event "bus" providing a centralized place for posting
  * and recieving generic application events. To receive events a class must 
@@ -142,29 +142,55 @@ public class EventBus {
 	 * @param event Event to post.
 	 */
     public void postEvent(EventObject event) {
-        synchronized(_memberSet) {
-            // XXX need to insert code here to test whether we are being
-            // executed by the AWTEventQueue, or some other thread. If 
-            // the latter, then we need to insert our execution on the 
-            // AWTEventQueue thread as all code executing commands assumes 
-            // that context.
+        EventDispatcher disp = new EventDispatcher(event);
 
-			for(int i = 0; i < _memberSet.length; i++) {
-				if(_memberSet[i] == null) continue;
+        // Events need to be dispatched on the AWTEvent thread, as the UI
+        // components assume that.
+        if(SwingUtilities.isEventDispatchThread()) {
+            disp.run();
+        }
+        else {
+            SwingUtilities.invokeLater(disp);
+        }
+    }
 
-				Iterator it = _memberSet[i].iterator();
-				while(it.hasNext()) {
-					BusMember next = (BusMember) it.next();
-					BusFilter filter = next.getBusFilter();
-					if(filter == null || filter.accept(event)) {
-						next.eventPosted(event);
-					}
-					// Check to see if the member cancelled the event. If so
-					// then don't send it on to the other members.
-					if(event instanceof AntEvent &&
-					   ((AntEvent)event).isCancelled()) break;
-				}
-			}
+    /** Class that performs the duty of dispatching events to the members. */
+    private class EventDispatcher implements Runnable {
+        /** Event to dispatch. */
+        private EventObject _event = null;
+        
+        /** 
+         * Standard ctor.
+         * 
+         * @param event Event to dispatch.
+         */
+        public EventDispatcher(EventObject event) {
+            _event = event;
+        }
+
+        /** 
+         * Perform dispatching.
+         * 
+         */
+        public void run() {
+            synchronized(_memberSet) {
+                for(int i = 0; i < _memberSet.length; i++) {
+                    if(_memberSet[i] == null) continue;
+                    
+                    Iterator it = _memberSet[i].iterator();
+                    while(it.hasNext()) {
+                        BusMember next = (BusMember) it.next();
+                        BusFilter filter = next.getBusFilter();
+                        if(filter == null || filter.accept(_event)) {
+                            next.eventPosted(_event);
+                        }
+                        // Check to see if the member cancelled the event. If so
+                        // then don't send it on to the other members.
+                        if(_event instanceof AntEvent &&
+                           ((AntEvent)_event).isCancelled()) break;
+                    }
+                }
+            }
         }
     }
 }
