@@ -1,5 +1,5 @@
 /*
- * Copyright  2000,2002-2004 The Apache Software Foundation
+ * Copyright  2000,2002-2005 The Apache Software Foundation
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -64,6 +64,8 @@ public class TaskOutputStream extends OutputStream {
      * Write a character to the output stream. This method looks
      * to make sure that there isn't an error being reported and
      * will flush each line of input out to the project's log stream.
+     * @param c the character to write
+     * @throws IOException on error
      */
 
     public void write(int c) throws IOException {

@@ -1,5 +1,5 @@
 /*
- * Copyright  2001-2004 The Apache Software Foundation
+ * Copyright  2001-2005 The Apache Software Foundation
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -74,7 +74,6 @@ public class RecorderEntry implements BuildLogger, SubBuildListener {
         return filename;
     }
 
-
     /**
      * Turns off or on this recorder.
      *
@@ -87,12 +86,16 @@ public class RecorderEntry implements BuildLogger, SubBuildListener {
         }
     }
 
-
+    /**
+     * @see BuildListener#buildStarted(BuildEvent)
+     */
     public void buildStarted(BuildEvent event) {
         log("> BUILD STARTED", Project.MSG_DEBUG);
     }
 
-
+    /**
+     * @see BuildListener#buildFinished(BuildEvent)
+     */
     public void buildFinished(BuildEvent event) {
         log("< BUILD FINISHED", Project.MSG_DEBUG);
 
@@ -135,7 +138,9 @@ public class RecorderEntry implements BuildLogger, SubBuildListener {
     public void subBuildStarted(BuildEvent event) {
     }
 
-
+    /**
+     * @see BuildListener#targetStarted(BuildEvent)
+     */
     public void targetStarted(BuildEvent event) {
         log(">> TARGET STARTED -- " + event.getTarget(), Project.MSG_DEBUG);
         log(StringUtils.LINE_SEP + event.getTarget().getName() + ":",
@@ -143,7 +148,9 @@ public class RecorderEntry implements BuildLogger, SubBuildListener {
         targetStartTime = System.currentTimeMillis();
     }
 
-
+    /**
+     * @see BuildListener#targetFinished(BuildEvent)
+     */
     public void targetFinished(BuildEvent event) {
         log("<< TARGET FINISHED -- " + event.getTarget(), Project.MSG_DEBUG);
 
@@ -153,18 +160,24 @@ public class RecorderEntry implements BuildLogger, SubBuildListener {
         flush();
     }
 
-
+    /**
+     * @see BuildListener#taskStarted(BuildEvent)
+     */
     public void taskStarted(BuildEvent event) {
         log(">>> TASK STARTED -- " + event.getTask(), Project.MSG_DEBUG);
     }
 
-
+    /**
+     * @see BuildListener#taskFinished(BuildEvent)
+     */
     public void taskFinished(BuildEvent event) {
         log("<<< TASK FINISHED -- " + event.getTask(), Project.MSG_DEBUG);
         flush();
     }
 
-
+    /**
+     * @see BuildListener#messageLogged(BuildEvent)
+     */
     public void messageLogged(BuildEvent event) {
         log("--- MESSAGE LOGGED", Project.MSG_DEBUG);
 
@@ -207,25 +220,35 @@ public class RecorderEntry implements BuildLogger, SubBuildListener {
         }
     }
 
-
+    /**
+     * @see BuildLogger#setMessageOutputLevel(int)
+     */
     public void setMessageOutputLevel(int level) {
         if (level >= Project.MSG_ERR && level <= Project.MSG_DEBUG) {
             loglevel = level;
         }
     }
 
-
+    /**
+     * @see BuildLogger#setOutputPrintStream(PrintStream)
+     */
     public void setOutputPrintStream(PrintStream output) {
         closeFile();
         out = output;
     }
 
 
+    /**
+     * @see BuildLogger#setEmacMode(boolean)
+     */
     public void setEmacsMode(boolean emacsMode) {
         this.emacsMode = emacsMode;
     }
 
 
+    /**
+     * @see BuildLogger#setErrorPrintStream(PrintStream)
+     */
     public void setErrorPrintStream(PrintStream err) {
         setOutputPrintStream(err);
     }

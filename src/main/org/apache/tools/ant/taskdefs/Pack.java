@@ -1,5 +1,5 @@
 /*
- * Copyright  2001-2004 The Apache Software Foundation
+ * Copyright  2001-2005 The Apache Software Foundation
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -39,7 +39,7 @@ public abstract class Pack extends Task {
 
     /**
      * the required destination file.
-     * @param zipFile
+     * @param zipFile the destination file
      */
     public void setZipfile(File zipFile) {
         this.zipFile = zipFile;
@@ -47,7 +47,7 @@ public abstract class Pack extends Task {
 
     /**
      * the required destination file.
-     * @param zipFile
+     * @param zipFile the destination file
      */
     public void setDestfile(File zipFile) {
         setZipfile(zipFile);
@@ -55,7 +55,7 @@ public abstract class Pack extends Task {
 
     /**
      * the file to compress; required.
-     * @param src
+     * @param src the source file
      */
     public void setSrc(File src) {
         source = src;
@@ -88,7 +88,7 @@ public abstract class Pack extends Task {
 
     /**
      * validate, then hand off to the subclass
-     * @throws BuildException
+     * @throws BuildException on error
      */
     public void execute() throws BuildException {
         validate();
@@ -107,8 +107,8 @@ public abstract class Pack extends Task {
 
     /**
      * zip a stream to an output stream
-     * @param in
-     * @param zOut
+     * @param in   the stream to zip
+     * @param zOut the output stream
      * @throws IOException
      */
     private void zipFile(InputStream in, OutputStream zOut)
@@ -123,9 +123,9 @@ public abstract class Pack extends Task {
 
     /**
      * zip a file to an output stream
-     * @param file
-     * @param zOut
-     * @throws IOException
+     * @param file the file to zip
+     * @param zOut the output stream
+     * @throws IOException on error
      */
     protected void zipFile(File file, OutputStream zOut)
         throws IOException {

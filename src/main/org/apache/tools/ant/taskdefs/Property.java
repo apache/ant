@@ -1,5 +1,5 @@
 /*
- * Copyright  2000-2004 The Apache Software Foundation
+ * Copyright  2000-2005 The Apache Software Foundation
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -81,11 +81,16 @@ public class Property extends Task {
 
     protected boolean userProperty; // set read-only properties
 
+    /**
+     * Constructor for Property.
+     */
     public Property() {
         this(false);
     }
 
     /**
+     * Constructor for Property.
+     * @param userProperty if true this is a user property
      * @since Ant 1.5
      */
     protected Property(boolean userProperty) {
@@ -93,6 +98,10 @@ public class Property extends Task {
     }
 
     /**
+     * Constructor for Property.
+     * @param userProperty if true this is a user property
+     * @param fallback a project to use to look for references if the reference is
+     *                 not in the current project
      * @since Ant 1.5
      */
     protected Property(boolean userProperty, Project fallback) {
@@ -108,6 +117,10 @@ public class Property extends Task {
         this.name = name;
     }
 
+    /**
+     * Get the property name.
+     * @return the property name
+     */
     public String getName() {
         return name;
     }
@@ -136,6 +149,10 @@ public class Property extends Task {
         this.value = value;
     }
 
+    /**
+     * Get the property value.
+     * @return the property value
+     */
     public String getValue() {
         return value;
     }
@@ -150,6 +167,10 @@ public class Property extends Task {
         this.file = file;
     }
 
+    /**
+     * Get the file attribute.
+     * @return the file attribute
+     */
     public File getFile() {
         return file;
     }
@@ -164,6 +185,10 @@ public class Property extends Task {
         this.url = url;
     }
 
+    /**
+     * Get the url attribute.
+     * @return the url attribute
+     */
     public URL getUrl() {
         return url;
     }
@@ -183,6 +208,8 @@ public class Property extends Task {
     }
 
     /**
+     * Get the prefix attribute.
+     * @return the prefix attribute
      * @since Ant 1.5
      */
     public String getPrefix() {
@@ -202,6 +229,10 @@ public class Property extends Task {
         this.ref = ref;
     }
 
+    /**
+     * Get the refid attribute.
+     * @return the refid attribute
+     */
     public Reference getRefid() {
         return ref;
     }
@@ -216,6 +247,10 @@ public class Property extends Task {
         this.resource = resource;
     }
 
+    /**
+     * Get the resource attribute.
+     * @return the resource attribute
+     */
     public String getResource() {
         return resource;
     }
@@ -245,6 +280,8 @@ public class Property extends Task {
     }
 
     /**
+     * Get the environment attribute.
+     * @return the environment attribute
      * @since Ant 1.5
      */
     public String getEnvironment() {
@@ -265,6 +302,7 @@ public class Property extends Task {
 
     /**
      * The classpath to use when looking up a resource.
+     * @return a path to be configured
      */
     public Path createClasspath() {
         if (this.classpath == null) {
@@ -276,12 +314,15 @@ public class Property extends Task {
     /**
      * the classpath to use when looking up a resource,
      * given as reference to a &lt;path&gt; defined elsewhere
+     * @param r a reference to a classpath
      */
     public void setClasspathRef(Reference r) {
         createClasspath().setRefid(r);
     }
 
     /**
+     * Get the classpath used when looking up a resource.
+     * @return the classpath
      * @since Ant 1.5
      */
     public Path getClasspath() {
@@ -289,6 +330,7 @@ public class Property extends Task {
     }
 
     /**
+     * @param userProperty ignored
      * @deprecated This was never a supported feature and has been
      * deprecated without replacement
      * @ant.attribute ignore="true"
@@ -310,6 +352,7 @@ public class Property extends Task {
      * set the property in the project to the value.
      * if the task was give a file, resource or env attribute
      * here is where it is loaded
+     * @throws BuildException on error
      */
     public void execute() throws BuildException {
         if (getProject() == null) {
@@ -373,6 +416,7 @@ public class Property extends Task {
     /**
      * load properties from a url
      * @param url url to load from
+     * @throws BuildException on error
      */
     protected void loadUrl(URL url) throws BuildException {
         Properties props = new Properties();
@@ -396,6 +440,7 @@ public class Property extends Task {
     /**
      * load properties from a file
      * @param file file to load
+     * @throws BuildException on error
      */
     protected void loadFile(File file) throws BuildException {
         Properties props = new Properties();
@@ -490,6 +535,7 @@ public class Property extends Task {
     /**
      * iterate through a set of properties,
      * resolve them then assign them
+     * @param props the properties to iterate over
      */
     protected void addProperties(Properties props) {
         resolveAllProperties(props);
