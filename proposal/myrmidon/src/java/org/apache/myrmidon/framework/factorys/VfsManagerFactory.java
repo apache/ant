@@ -9,10 +9,10 @@ package org.apache.myrmidon.framework.factorys;
 
 import org.apache.aut.vfs.FileSystemManager;
 import org.apache.aut.vfs.impl.DefaultFileSystemManager;
-import org.apache.myrmidon.interfaces.service.ServiceFactory;
-import org.apache.myrmidon.interfaces.service.ServiceException;
-import org.apache.avalon.excalibur.i18n.Resources;
 import org.apache.avalon.excalibur.i18n.ResourceManager;
+import org.apache.avalon.excalibur.i18n.Resources;
+import org.apache.myrmidon.interfaces.service.ServiceException;
+import org.apache.myrmidon.interfaces.service.ServiceFactory;
 
 /**
  * A factory that creates the {@link FileSystemManager} service.
