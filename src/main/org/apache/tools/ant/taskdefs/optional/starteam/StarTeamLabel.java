@@ -98,7 +98,7 @@ public class StarTeamLabel extends StarTeamTask {
      * true.
      */
     private boolean buildlabel = false;
-    
+
     /**
      * If true, this will be a revision label.  If false, it will be a build
      * label.  The default is false.
@@ -130,31 +130,31 @@ public class StarTeamLabel extends StarTeamTask {
     }
 
     /**
-     * set the type of label based on the supplied value - if true, this 
+     * set the type of label based on the supplied value - if true, this
      * label will be a revision label, if false, a build label.
-     * 
-     * @param revision If true this will be a revision label; if false, 
+     *
+     * @param buildlabel If true this will be a revision label; if false,
      * a build label
      */
-    public void setBuildLabel( boolean buildlabel ) {
+    public void setBuildLabel(boolean buildlabel) {
         this.buildlabel = buildlabel;
     }
-    
+
     /**
-     * set the type of label based on the supplied value - if true, this 
+     * set the type of label based on the supplied value - if true, this
      * label will be a revision label, if false, a build label.
-     * 
-     * @param revision If true this will be a revision label; if false, 
+     *
+     * @param revisionlabel If true this will be a revision label; if false,
      * a build label
      */
-    public void setRevisionLabel( boolean revisionlabel ) {
+    public void setRevisionLabel(boolean revisionlabel) {
         this.revisionlabel = revisionlabel;
     }
 
 
 
     /**
-     * The timestamp of the build that will be stored with the label; required.  
+     * The timestamp of the build that will be stored with the label; required.
      * Must be formatted <code>yyyyMMddHHmmss</code>
      */
     public void setLastBuild(String lastbuild) throws BuildException {
@@ -162,8 +162,8 @@ public class StarTeamLabel extends StarTeamTask {
             Date lastBuildTime = DATE_FORMAT.parse(lastbuild);
             this.lastBuild = new OLEDate(lastBuildTime);
         } catch (ParseException e) {
-            throw new BuildException("Unable to parse the date '" + 
-                                     lastbuild + "'", e);
+            throw new BuildException("Unable to parse the date '"
+                + lastbuild + "'", e);
         }
     }
 
@@ -175,9 +175,8 @@ public class StarTeamLabel extends StarTeamTask {
     public void execute() throws BuildException {
 
         if (this.revisionlabel && this.buildlabel) {
-            throw new BuildException(
-                "'revisionlabel' and 'buildlabel' both specified.  " +
-                "A revision label cannot be a build label.");
+            throw new BuildException("'revisionlabel' and 'buildlabel' "
+                + "both specified.  A revision label cannot be a build label.");
         }
 
         View snapshot = openView();
@@ -187,19 +186,17 @@ public class StarTeamLabel extends StarTeamTask {
         if (this.revisionlabel) {
             new Label(snapshot, this.labelName, this.description).update();
             log("Created Revision Label " + this.labelName);
-        } 
-        else if (null != lastBuild){
-            new Label(snapshot, this.labelName, this.description,this.lastBuild,
+        } else if (null != lastBuild) {
+            new Label(snapshot, this.labelName, this.description, this.lastBuild,
                       this.buildlabel).update();
-            log("Created View Label (" 
-                +(this.buildlabel ? "" : "non-") + "build) " + this.labelName
-                +" as of " + this.lastBuild.toString());
-        }
-        else {
+            log("Created View Label ("
+                + (this.buildlabel ? "" : "non-") + "build) " + this.labelName
+                + " as of " + this.lastBuild.toString());
+        } else {
             new Label(snapshot, this.labelName, this.description,
                       this.buildlabel).update();
-            log("Created View Label (" 
-                +(this.buildlabel ? "" : "non-") + "build) " + this.labelName);
+            log("Created View Label ("
+                + (this.buildlabel ? "" : "non-") + "build) " + this.labelName);
         }
     }
 

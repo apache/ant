@@ -164,7 +164,7 @@ public abstract class TreeBasedTask extends StarTeamTask {
     ///////////////////////////////////////////////////////////////
 
     /**
-     * Set the root of the subtree in the StarTeam repository from which to 
+     * Set the root of the subtree in the StarTeam repository from which to
      * work; optional.  Defaults to the root folder of the view ('/').
      * @param rootStarteamFolder the root folder
      */
@@ -186,11 +186,11 @@ public abstract class TreeBasedTask extends StarTeamTask {
      * to which files are checked out; optional.
      * If this is not supplied, then the StarTeam "default folder"
      * associated with <tt>rootstarteamfolder</tt> is used.
-     * 
+     *
      * @param rootLocalFolder
      *               the local folder that will mirror
      *               this.rootStarteamFolder
-     * 
+     *
      * @see rootLocalFolder
      */
     public void setRootLocalFolder(String rootLocalFolder) {
@@ -203,7 +203,7 @@ public abstract class TreeBasedTask extends StarTeamTask {
      * Returns the local folder specified by the user,
      * corresponding to the starteam folder for this operation
      * or null if not specified.
-     * 
+     *
      * @return the local folder that mirrors this.rootStarteamFolder
      * @see rootLocalFolder
      */
@@ -213,7 +213,7 @@ public abstract class TreeBasedTask extends StarTeamTask {
 
 
     /**
-     * Declare files to include using standard <tt>includes</tt> patterns; optional. 
+     * Declare files to include using standard <tt>includes</tt> patterns; optional.
      * @param includes A string of filter patterns to include. Separate the
      *                 patterns by spaces.
      * @see #getIncludes()
@@ -243,12 +243,12 @@ public abstract class TreeBasedTask extends StarTeamTask {
      */
     protected void logIncludes() {
         if (this.DEFAULT_INCLUDESETTING != this.includes) {
-            log("  Includes specified: "+ this.includes);
+            log("  Includes specified: " + this.includes);
         }
     }
 
     /**
-     * Declare files to exclude using standard <tt>excludes</tt> patterns; optional. 
+     * Declare files to exclude using standard <tt>excludes</tt> patterns; optional.
      * When filtering files, AntStarTeamCheckOut
      * uses an unmodified version of <CODE>DirectoryScanner</CODE>'s
      * <CODE>match</CODE> method, so here are the patterns straight from the
@@ -304,7 +304,7 @@ public abstract class TreeBasedTask extends StarTeamTask {
      */
     protected void logExcludes() {
         if (this.DEFAULT_EXCLUDESETTING != this.excludes) {
-            log("  Excludes specified: "+ this.excludes);
+            log("  Excludes specified: " + this.excludes);
         }
     }
 
@@ -373,11 +373,11 @@ public abstract class TreeBasedTask extends StarTeamTask {
     }
 
     /**
-     * Flag to force actions regardless of the status 
-     * that StarTeam is maintaining for the file; optional, default false.  
-     * If <tt>rootlocalfolder</tt> is set then 
-     * this should be set "true" as otherwise the checkout will be based on statuses 
-     * which do not relate to the target folder.  
+     * Flag to force actions regardless of the status
+     * that StarTeam is maintaining for the file; optional, default false.
+     * If <tt>rootlocalfolder</tt> is set then
+     * this should be set "true" as otherwise the checkout will be based on statuses
+     * which do not relate to the target folder.
      * @param v  Value to assign to forced.
      */
     public void setForced(boolean v) {
@@ -386,27 +386,25 @@ public abstract class TreeBasedTask extends StarTeamTask {
 
     /**
      *  returns true if a label has been specified and it is a view label.
-     * 
+     *
      * @return  true if a label has been specified and it is a view label
      */
     protected boolean isUsingViewLabel() {
-        return null != this.labelInUse && 
-            this.labelInUse.isViewLabel();
+        return null != this.labelInUse && this.labelInUse.isViewLabel();
     }
     /**
      *  returns true if a label has been specified and it is a revision label.
-     * 
+     *
      * @return  true if a label has been specified and it is a revision label
      */
     protected boolean isUsingRevisionLabel() {
-        return null != this.labelInUse && 
-            this.labelInUse.isRevisionLabel();
+        return null != this.labelInUse && this.labelInUse.isRevisionLabel();
     }
 
     /**
      * returns the label being used
-     * 
-     * @return 
+     *
+     * @return
      */
     protected Label getLabelInUse() {
         return this.labelInUse;
@@ -418,8 +416,7 @@ public abstract class TreeBasedTask extends StarTeamTask {
     protected void logLabel() {
         if (this.isUsingViewLabel()) {
             log("  Using view label " + getLabel());
-        }
-        else if (this.isUsingRevisionLabel()) {
+        } else if (this.isUsingRevisionLabel()) {
             log("  Using revision label " + getLabel());
         }
     }
@@ -435,9 +432,9 @@ public abstract class TreeBasedTask extends StarTeamTask {
      * Look if the file should be processed by the task.
      * Don't process it if it fits no include filters or if
      * it fits an exclude filter.
-     * 
+     *
      * @param pName  the item name to look for being included.
-     * 
+     *
      * @return whether the file should be processed or not.
      */
     protected boolean shouldProcess(String pName) {
@@ -469,14 +466,13 @@ public abstract class TreeBasedTask extends StarTeamTask {
     /**
      * Finds and opens the root starteam folder of the operation specified
      * by this task.  This will be one of the following cases:
-     * 
+     *
      * @return Starteam's root folder for the operation.
      * @exception BuildException
      *                   if the root folder cannot be found in the repository
      */
-    private final Folder configureRootStarteamFolder() 
-        throws BuildException 
-    {
+    private final Folder configureRootStarteamFolder()
+        throws BuildException {
         Folder starteamrootfolder = null;
         try {
             // no root local mapping has been specified.
@@ -502,37 +498,33 @@ public abstract class TreeBasedTask extends StarTeamTask {
             }
 
 
-        } 
-        catch (BuildException e) {
+        } catch (BuildException e) {
             throw e;
-        }
-        catch (Exception e) {
-            throw new BuildException(
-                "Unable to find root folder " + this.rootStarteamFolder + 
-                " in repository at " + getURL(), e);
+        } catch (Exception e) {
+            throw new BuildException("Unable to find root folder "
+                + this.rootStarteamFolder + " in repository at " + getURL(), e);
 
         }
 
         if (null == starteamrootfolder) {
-            throw new BuildException(
-                "Unable to find root folder " + this.rootStarteamFolder + 
-                " in repository at " + getURL());
-        }  
-        
+            throw new BuildException("Unable to find root folder "
+                + this.rootStarteamFolder + " in repository at " + getURL());
+        }
+
         return starteamrootfolder;
     }
-    
+
     /**
      * Returns the local folder mapped to the given StarTeam root folder
      * of the operation.  There are two cases here, depending on whether
-     * <code>rootLocalFolder</code> is defined.  
-     * If <code>rootLocalFolder</code> is defined, it will be used to 
-     * establish a root mapping.  Otherwise, the repository's default root 
+     * <code>rootLocalFolder</code> is defined.
+     * If <code>rootLocalFolder</code> is defined, it will be used to
+     * establish a root mapping.  Otherwise, the repository's default root
      * folder will be used.
-     * 
+     *
      * @param starteamrootfolder
      *               root Starteam folder initialized for the operation
-     * 
+     *
      * @return the local folder corresponding to the root Starteam folder.
      * @see findRootStarteamFolder
      */
@@ -541,33 +533,32 @@ public abstract class TreeBasedTask extends StarTeamTask {
         String localrootfolder;
         if (null != this.rootLocalFolder) {
             localrootfolder = rootLocalFolder;
-        }
-        else  {
+        } else  {
             // either use default path or root local mapping,
             // which is now embedded in the root folder
             localrootfolder = starteamrootfolder.getPathFragment();
         }
 
         return new java.io.File(localrootfolder);
-        
+
     }
 
     /**
      * extenders should emit to the log an entry describing the parameters
      * that will be used by this operation.
-     * 
+     *
      * @param starteamrootFolder
      *               root folder in StarTeam for the operation
      * @param targetrootFolder
      *               root local folder for the operation (whether specified by the user or not.
      */
-    protected abstract void logOperationDescription( 
+    protected abstract void logOperationDescription(
         Folder starteamrootFolder, java.io.File targetrootFolder);
 
     /**
      * This method does the work of opening the supplied  Starteam view and
      * calling the <code>visit()</code> method to perform the task.
-     * Derived classes can customize the called methods 
+     * Derived classes can customize the called methods
      * <code>testPreconditions()</code> and <code>visit()</code>.
      *
      * @exception BuildException if any error occurs in the processing
@@ -581,14 +572,14 @@ public abstract class TreeBasedTask extends StarTeamTask {
             Folder starteamrootfolder = configureRootStarteamFolder();
 
             // set the local folder.
-            java.io.File localrootfolder = 
+            java.io.File localrootfolder =
                 getLocalRootMapping(starteamrootfolder);
 
             testPreconditions();
-            
+
             // Tell user what he is doing
             logOperationDescription(starteamrootfolder, localrootfolder);
-            
+
             // Inspect everything in the root folder and then recursively
             visit(starteamrootfolder, localrootfolder);
 
@@ -645,12 +636,12 @@ public abstract class TreeBasedTask extends StarTeamTask {
     /**
      * Derived classes must override this class to define actual processing
      * to be performed on each folder in the tree defined for the task
-     * 
+     *
      * @param rootStarteamFolder
      *               the StarTeam folderto be visited
      * @param rootLocalFolder
      *               the local mapping of rootStarteamFolder
-     * 
+     *
      * @exception BuildException
      */
     protected abstract void visit(Folder rootStarteamFolder,
@@ -676,14 +667,13 @@ public abstract class TreeBasedTask extends StarTeamTask {
     /**
      * Return the full repository path name of a file.  Surprisingly there's
      * no method in com.starbase.starteam.File to provide this.
-     * 
+     *
      * @param remotefile the Star Team file whose path is to be returned
-     * 
+     *
      * @return the full repository path name of a file.
      */
     public static String getFullRepositoryPath(
-        com.starbase.starteam.File remotefile)
-    {
+        com.starbase.starteam.File remotefile) {
         StringBuffer sb = new StringBuffer();
         sb.append(remotefile.getParentFolderHierarchy())
           .append(remotefile.getName());
@@ -696,24 +686,24 @@ public abstract class TreeBasedTask extends StarTeamTask {
      * upon recursing into a directory.  Each local item is mapped to an
      * unattached StarTeam object of the proper type, File->File and
      * Directory->Folder.
-     * 
+     *
      * As the TreeBased does its work, it deletes from the map all items
-     * it has processed.  
-     * 
+     * it has processed.
+     *
      * When the TreeBased task processes all the items from the repository,
      * whatever items left in the UnmatchedFileMap are uncontrolled items
      * and can be processed as appropriate to the task.  In the case of
-     * Checkouts, they can be optionally deleted from the local tree.  In the 
+     * Checkouts, they can be optionally deleted from the local tree.  In the
      * case of Checkins they can optionally be added to the repository.
      */
     protected abstract class UnmatchedFileMap extends Hashtable {
-    
+
         /**
          * initializes the UnmatchedFileMap with entries from the local folder
          * These will be mapped to the corresponding StarTeam entry even though
-         * it will not, in fact, exist in the repository.  But through it, it 
+         * it will not, in fact, exist in the repository.  But through it, it
          * can be added, listed, etc.
-         * 
+         *
          * @param localFolder
          *        the local folder from which the mappings will be made.
          * @param remoteFolder
@@ -725,20 +715,19 @@ public abstract class TreeBasedTask extends StarTeamTask {
             }
 
             String[] localFiles = localFolder.list();
-    
-            for (int i=0; i < localFiles.length; i++) {
+
+            for (int i = 0; i < localFiles.length; i++) {
                 String fn = localFiles[i];
-                java.io.File localFile = 
+                java.io.File localFile =
                     new java.io.File(localFolder, localFiles[i]).getAbsoluteFile();
-                
+
                 log("adding " + localFile + " to UnmatchedFileMap",
                     Project.MSG_DEBUG);
-    
+
                 if (localFile.isDirectory()) {
-                    this.put(localFile, new Folder( remoteFolder, fn, fn));
-                } 
-                else {
-                    com.starbase.starteam.File remoteFile = 
+                    this.put(localFile, new Folder(remoteFolder, fn, fn));
+                } else {
+                    com.starbase.starteam.File remoteFile =
                         new com.starbase.starteam.File(remoteFolder);
                     remoteFile.setName(fn);
                     this.put(localFile, remoteFile);
@@ -746,37 +735,37 @@ public abstract class TreeBasedTask extends StarTeamTask {
             }
             return this;
         }
-    
+
         /**
          * remove an item found to be controlled from the map.
-         * 
+         *
          * @param localFile the local item found to be controlled.
          */
         void removeControlledItem(java.io.File localFile) {
             if (isActive()) {
-                log("removing processed " + localFile.getAbsoluteFile() + 
-                    " from UnmatchedFileMap", Project.MSG_DEBUG);
+                log("removing processed " + localFile.getAbsoluteFile()
+                    + " from UnmatchedFileMap", Project.MSG_DEBUG);
                 this.remove(localFile.getAbsoluteFile());
             }
         }
         /**
          * override will perform the action appropriate for its task to perform
-         * on items which are on the local tree but not in StarTeam.  It is 
+         * on items which are on the local tree but not in StarTeam.  It is
          * assumed that this method will not be called until all the items in
-         * the corresponding folder have been processed, and that the internal 
+         * the corresponding folder have been processed, and that the internal
          * map * will contain only uncontrolled items.
          */
         abstract void processUncontrolledItems() throws BuildException;
-    
+
         /**
-         * overrides must define this to declare how this method knows if it 
+         * overrides must define this to declare how this method knows if it
          * is active.  This presents extra clock cycles when the functionality
          * is not called for.
-         * 
+         *
          * @return True if this object is to perform its functionality.
          */
-        abstract protected boolean isActive();
-    
+        protected abstract boolean isActive();
+
     }
 
 }

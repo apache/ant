@@ -81,7 +81,7 @@ public class StarTeamList extends TreeBasedTask {
     private boolean listUncontrolled = true;
     /**
      * List files, dates, and statuses as of this label; optional.
-     * The label must exist in starteam or an exception will be thrown.  
+     * The label must exist in starteam or an exception will be thrown.
      * If not specified, the most recent version of each file will be listed.
      *
      * @param label the label to be listed
@@ -93,7 +93,7 @@ public class StarTeamList extends TreeBasedTask {
     /**
      * Override of base-class abstract function creates an
      * appropriately configured view for checkoutlists - either
-     * the current view or a view from this.label.   
+     * the current view or a view from this.label.
      *
      * @param raw the unconfigured <code>View</code>
      * @return the snapshot <code>View</code> appropriately configured.
@@ -130,11 +130,11 @@ public class StarTeamList extends TreeBasedTask {
      *               root local folder for the operation (whether specified by the user or not.
      */
     protected void logOperationDescription(Folder starteamrootFolder, java.io.File targetrootFolder) {
-        log((this.isRecursive() ? "Recursive" : "Non-recursive") + 
-            " Listing of: " + starteamrootFolder.getFolderHierarchy());
+        log((this.isRecursive() ? "Recursive" : "Non-recursive")
+            + " Listing of: " + starteamrootFolder.getFolderHierarchy());
 
-        log("Listing against local folder" 
-            + (null == getRootLocalFolder() ? " (default): " : ": ") 
+        log("Listing against local folder"
+            + (null == getRootLocalFolder() ? " (default): " : ": ")
             + targetrootFolder.getAbsolutePath(),
                     Project.MSG_INFO);
         logLabel();
@@ -161,16 +161,15 @@ public class StarTeamList extends TreeBasedTask {
             }
             Folder[] subFolders = starteamFolder.getSubFolders();
             Item[] files = starteamFolder.getItems(getTypeNames().FILE);
-            
-            UnmatchedFileMap ufm = 
+
+            UnmatchedFileMap ufm =
                 new UnmatchedListingMap().init(
                     targetFolder.getAbsoluteFile(), starteamFolder);
 
             log("");
-            log("Listing StarTeam folder " + 
-                starteamFolder.getFolderHierarchy()); 
-            log(" against local folder " + 
-                targetFolder.getAbsolutePath());
+            log("Listing StarTeam folder "
+                + starteamFolder.getFolderHierarchy());
+            log(" against local folder " + targetFolder.getAbsolutePath());
 
 
             // For all Files in this folder, we need to check
@@ -212,7 +211,7 @@ public class StarTeamList extends TreeBasedTask {
         }
     }
 
-    private static final SimpleDateFormat SDF = 
+    private static final SimpleDateFormat SDF =
         new SimpleDateFormat("yyyy-MM-dd hh:mm:ss zzz");
 
     protected void list(File reposFile, java.io.File localFile)
@@ -220,7 +219,7 @@ public class StarTeamList extends TreeBasedTask {
         StringBuffer b = new StringBuffer();
         int status = reposFile.getStatus();
         java.util.Date displayDate = null;
-        if (status==Status.NEW) {
+        if (status == Status.NEW) {
             displayDate = new java.util.Date(localFile.lastModified());
         } else {
             displayDate = reposFile.getModifiedTime().createDate();
@@ -263,23 +262,23 @@ public class StarTeamList extends TreeBasedTask {
         protected boolean isActive() {
             return StarTeamList.this.listUncontrolled;
         }
-    
+
         /**
          * lists uncontrolled items from the local tree.  It is assumed
          * that this method will not be called until all the items in the
          * corresponding folder have been processed, and that the internal map
          * will contain only uncontrolled items.
          */
-        void processUncontrolledItems() throws BuildException{
+        void processUncontrolledItems() throws BuildException {
             if (this.isActive()) {
                 Enumeration e = this.keys();
-                
+
                 // handle the files so they appear first
                 while (e.hasMoreElements()) {
                     java.io.File local = (java.io.File) e.nextElement();
                     Item remoteItem = (Item) this.get(local);
 
-                    // once we find a folder that isn't in the repository, 
+                    // once we find a folder that isn't in the repository,
                     // we know we can add it.
                     if (local.isFile()) {
                         com.starbase.starteam.File remoteFile =
@@ -287,7 +286,7 @@ public class StarTeamList extends TreeBasedTask {
                         try {
                             list(remoteFile, local);
                         } catch (IOException ie) {
-                            throw new BuildException("IOError in stlist",ie);
+                            throw new BuildException("IOError in stlist", ie);
                         }
                     }
                 }
@@ -297,15 +296,15 @@ public class StarTeamList extends TreeBasedTask {
                     java.io.File local = (java.io.File) e.nextElement();
                     Item remoteItem = (Item) this.get(local);
 
-                    // once we find a folder that isn't in the repository, 
+                    // once we find a folder that isn't in the repository,
                     // we know we can add it.
                     if (local.isDirectory()) {
                         Folder folder = (Folder) remoteItem;
                         if (isRecursive()) {
-                            log("Listing uncontrolled folder " 
+                            log("Listing uncontrolled folder "
                                 + folder.getFolderHierarchy()
                                 + " from " + local.getAbsoluteFile());
-                            UnmatchedFileMap submap = 
+                            UnmatchedFileMap submap =
                                 new UnmatchedListingMap().init(local, folder);
                             submap.processUncontrolledItems();
                         }
@@ -313,11 +312,7 @@ public class StarTeamList extends TreeBasedTask {
                 }
             }
         }
-
-
     }
-
-
-}// StarTeamList
+}
 
 

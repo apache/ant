@@ -116,8 +116,8 @@ public abstract class StarTeamTask extends Task {
     private Server server = null;
 
     private void logStarteamVersion() {
-        log("StarTeam version: "+ 
-            BuildNumber.getDisplayString(), Project.MSG_DEBUG);
+        log("StarTeam version: "
+            + BuildNumber.getDisplayString(), Project.MSG_DEBUG);
     }
 
 
@@ -191,7 +191,7 @@ public abstract class StarTeamTask extends Task {
      * set the name of the StarTeam view to be acted on;
      * required if <tt>URL</tt> is not set.
      *
-     * @param projectname the name of the StarTeam view to be acted on
+     * @param viewname the name of the StarTeam view to be acted on
      * @see #setURL(String)
      */
     public final void setViewname(String viewname) {
@@ -212,7 +212,7 @@ public abstract class StarTeamTask extends Task {
     /**
      * Set the server name, server port,
      * project name and project folder in one shot;
-     * optional, but the server connection must be specified somehow. 
+     * optional, but the server connection must be specified somehow.
      *
      * @param url a <code>String</code> of the form
      *             "servername:portnum/project/view"
@@ -256,17 +256,16 @@ public abstract class StarTeamTask extends Task {
      * @see #getViewname()
      */
     public final String getURL() {
-        return
-                this.servername + ":" +
-                this.serverport + "/" +
-                this.projectname + "/" +
-                ((null == this.viewname) ? "" : this.viewname);
+        return this.servername + ":"
+            + this.serverport + "/"
+            + this.projectname + "/"
+            + ((null == this.viewname) ? "" : this.viewname);
     }
 
     /**
      * returns an URL string useful for interacting with many StarTeamFinder
      * methods.
-     * 
+     *
      * @return the URL string for this task.
      */
     protected final String getViewURL() {
@@ -333,7 +332,7 @@ public abstract class StarTeamTask extends Task {
      * @param rawview the unconfigured <code>View</code>
      * @return the snapshot <code>View</code> appropriately configured.
      */
-    protected abstract View createSnapshotView(View rawview) 
+    protected abstract View createSnapshotView(View rawview)
     throws BuildException;
 
     /**
@@ -358,8 +357,8 @@ public abstract class StarTeamTask extends Task {
         }
 
         if (null == view) {
-            throw new BuildException("Cannot find view" + getURL() +
-                    " in repository()");
+            throw new BuildException("Cannot find view" + getURL()
+                + " in repository()");
         }
 
         View snapshot = createSnapshotView(view);
