@@ -80,7 +80,6 @@ public abstract class AbstractComponent implements ExecutionComponent {
      * Validate the component. This is called after the element has been
      * configured from its build model. The element may perform validation
      * of its configuration
-
      *
      * @exception ExecutionException if validation fails
      */
@@ -100,9 +99,11 @@ public abstract class AbstractComponent implements ExecutionComponent {
     /**
      * Short cut to get a core service instance
      *
-     * @param serviceClass the required interface of which an instance is required
+     * @param serviceClass the required interface of which an instance is
+     *      required
      * @return the core's instance of the requested service
-     * @exception ExecutionException if the core does not support the requested service
+     * @exception ExecutionException if the core does not support the
+     *      requested service
      */
     protected Object getCoreService(Class serviceClass)
          throws ExecutionException {

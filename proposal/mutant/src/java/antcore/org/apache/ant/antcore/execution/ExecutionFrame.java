@@ -76,7 +76,6 @@ import org.apache.ant.common.util.AntException;
 import org.apache.ant.common.util.ConfigException;
 import org.apache.ant.common.util.ExecutionException;
 import org.apache.ant.common.util.FileUtils;
-import org.apache.ant.common.util.Location;
 import org.apache.ant.common.util.MessageLevel;
 import org.apache.ant.init.InitConfig;
 

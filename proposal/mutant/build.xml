@@ -162,7 +162,7 @@
              classname="com.puppycrawl.tools.checkstyle.CheckStyleTask">
         <classpath refid="checkstyle.path"/>
     </taskdef>
-    <mkdir dir="${bin.dir}/checkstyle"/>
+    <mkdir dir="${bin.dir}/check"/>
     <checkstyle maxlinelen="80"
                 memberpattern="[a-z].*"
                 parampattern="[a-z].*"

@@ -146,7 +146,8 @@ public abstract class AntException extends Exception {
      * Sets the file location where the error occured.
      *
      * @param newLocation the new location value
-     * @param override true if the location should override any currently set location
+     * @param override true if the location should override any currently
+     *      set location
      */
     public void setLocation(Location newLocation, boolean override) {
         if (override || location == Location.UNKNOWN_LOCATION) {

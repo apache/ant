@@ -56,9 +56,9 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import org.apache.ant.common.antlib.AbstractComponent;
 import org.apache.ant.common.antlib.AbstractTask;
 import org.apache.ant.common.antlib.AntContext;
-import org.apache.ant.common.antlib.AbstractComponent;
 import org.apache.ant.common.service.DataService;
 import org.apache.ant.common.util.ExecutionException;
 
@@ -80,7 +80,7 @@ public abstract class AntBase extends AbstractTask {
         /** The property name */
         private String name;
 
-        /** The property value*/
+        /** The property value */
         private String value;
 
 
@@ -103,7 +103,7 @@ public abstract class AntBase extends AbstractTask {
         }
 
         /**
-         *  Gets the name of the Property
+         * Gets the name of the Property
          *
          * @return the name value
          */
@@ -119,13 +119,20 @@ public abstract class AntBase extends AbstractTask {
         public String getValue() {
             return value;
         }
-        
+
+        /**
+         * Validate this data type instance
+         *
+         * @exception ExecutionException if either attribute has not been set
+         */
         public void validateComponent() throws ExecutionException {
             if (name == null) {
-                throw new ExecutionException("\"name\" attribute of <property> must be supplied");
+                throw new ExecutionException("\"name\" attribute of "
+                     + "<property> must be supplied");
             }
             if (value == null) {
-                throw new ExecutionException("\"value\" attribute of <property> must be supplied");
+                throw new ExecutionException("\"value\" attribute of "
+                     + "<property> must be supplied");
             }
         }
     }
@@ -178,9 +185,15 @@ public abstract class AntBase extends AbstractTask {
             return toId;
         }
 
+        /**
+         * Validate this data type instance
+         *
+         * @exception ExecutionException if the refid attribute has not been set
+         */
         public void validateComponent() throws ExecutionException {
             if (refId == null) {
-                throw new ExecutionException("\"refid\" attribute of <reference> must be supplied");
+                throw new ExecutionException("\"refid\" attribute of "
+                     + "<reference> must be supplied");
             }
         }
     }
@@ -188,10 +201,16 @@ public abstract class AntBase extends AbstractTask {
     /** The name of the target to be evaluated in the sub-build */
     private String targetName;
 
-    /** flag which indicates if all current properties should be passed to the subbuild */
+    /**
+     * flag which indicates if all current properties should be passed to
+     * the subbuild
+     */
     private boolean inheritAll = true;
 
-    /** flag which indicates if all current references should be passed to the subbuild */
+    /**
+     * flag which indicates if all current references should be passed to
+     * the subbuild
+     */
     private boolean inheritRefs = false;
 
     /** The properties which will be passed to the sub-build */
@@ -203,7 +222,7 @@ public abstract class AntBase extends AbstractTask {
     /**
      * Sets the target to be executed in the subbuild
      *
-     * @param targetName the name of the target to build 
+     * @param targetName the name of the target to build
      */
     public void setTarget(String targetName) {
         this.targetName = targetName;
@@ -221,7 +240,8 @@ public abstract class AntBase extends AbstractTask {
     /**
      * Indicate if all references are to be passed to the subbuild
      *
-     * @param inheritRefs true if the sub-build should be given all the current references
+     * @param inheritRefs true if the sub-build should be given all the
+     *      current references
      */
     public void setInheritRefs(boolean inheritRefs) {
         this.inheritRefs = inheritRefs;
@@ -251,7 +271,8 @@ public abstract class AntBase extends AbstractTask {
      * Add a reference to be passed
      *
      * @param reference the descriptor of the reference to be passed
-     * @exception ExecutionException if the reference does not reference a valid object
+     * @exception ExecutionException if the reference does not reference a
+     *      valid object
      */
     public void addReference(Reference reference) throws ExecutionException {
         String refId = reference.getRefId();
