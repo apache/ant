@@ -237,6 +237,10 @@ public class Javac extends MatchingTask {
         // copy the support files
 
         if (filecopyList.size() > 0) {
+            project.log("The implicit copying of support files by javac has been deprecated. " + 
+                        "Use the copydir task to copy support files explicitly.",
+                        Project.MSG_WARN);
+                
             project.log("Copying " + filecopyList.size() +
                         " support files to " + destDir.getAbsolutePath());
             Enumeration enum = filecopyList.keys();
@@ -271,22 +275,21 @@ public class Javac extends MatchingTask {
             File srcFile = new File(srcDir, files[i]);
             if (files[i].endsWith(".java")) {
                 File classFile = new File(destDir, files[i].substring(0,
-                        files[i].indexOf(".java"))
-                                                    + ".class");
+                                          files[i].indexOf(".java")) + ".class");
 
-                    if (srcFile.lastModified() > now) {
-                        project.log("Warning: file modified in the future: " +
-                            files[i], project.MSG_WARN);
-                    }
+                if (srcFile.lastModified() > now) {
+                    project.log("Warning: file modified in the future: " +
+                        files[i], project.MSG_WARN);
+                }
 
-                    if (srcFile.lastModified() > classFile.lastModified()) {
-                        compileList.addElement(srcFile.getAbsolutePath());
-                    }
-                } else {
+                if (srcFile.lastModified() > classFile.lastModified()) {
+                    compileList.addElement(srcFile.getAbsolutePath());
+                }
+            } else {
                 File destFile = new File(destDir, files[i]);
-                    if (srcFile.lastModified() > destFile.lastModified()) {
-                        filecopyList.put(srcFile.getAbsolutePath(),
-                                         destFile.getAbsolutePath());
+                if (srcFile.lastModified() > destFile.lastModified()) {
+                    filecopyList.put(srcFile.getAbsolutePath(),
+                                     destFile.getAbsolutePath());
                 }
             }
         }
