@@ -77,7 +77,7 @@ public class TokenFilterTest extends BuildFileTest {
     }
 
     public void tearDown() {
-        //executeTarget("cleanup");
+        executeTarget("cleanup");
     }
 
     /** make sure tokenfilter exists */
@@ -147,6 +147,12 @@ public class TokenFilterTest extends BuildFileTest {
         assertStringContains(contents, "world world world world");
     }
 
+    public void testHandleDollerMatch() throws IOException {
+        if (! hasRegex("testFilterReplaceRegex"))
+            return;
+        executeTarget("dollermatch");
+    }
+    
     public void testTrimFile() throws IOException {
         String contents = getFileString(
             "trimfile", "result/trimfile");

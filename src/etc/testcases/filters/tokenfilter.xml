@@ -181,6 +181,15 @@
     </concat>
   </target>
 
+  <target name="dollermatch">
+    <concat>
+      @hello@
+      <filterchain>
+        <replaceregex pattern="@([^@]*)@" replace="${\1}"/>
+      </filterchain>
+    </concat>
+  </target>
+
   <!-- need to check for existance of regex -->
   <target name="containsregex">
     <concat destfile="result/input">

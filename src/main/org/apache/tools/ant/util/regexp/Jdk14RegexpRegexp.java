@@ -83,7 +83,10 @@ public class Jdk14RegexpRegexp extends Jdk14RegexpMatcher implements Regexp {
         StringBuffer subst = new StringBuffer();
         for (int i = 0; i < argument.length(); i++) {
             char c = argument.charAt(i);
-            if (c == '\\') {
+            if (c == '$') {
+                subst.append('\\');
+                subst.append('$');
+            } else if (c == '\\') {
                 if (++i < argument.length()) {
                     c = argument.charAt(i);
                     int value = Character.digit(c, 10);
