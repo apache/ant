@@ -552,6 +552,7 @@ public class UnknownElement extends Task {
             return false;
         }
         UnknownElement other = (UnknownElement) obj;
+        // Are the names the same ?
         if (!equalsString(elementName, other.elementName)) {
             return false;
         }
@@ -561,12 +562,25 @@ public class UnknownElement extends Task {
         if (!qname.equals(other.qname)) {
             return false;
         }
+        // Are attributes the same ?
         if (!getWrapper().getAttributeMap().equals(
                 other.getWrapper().getAttributeMap())) {
             return false;
         }
-        if (children == null) {
-            return other.children == null;
+        // Is the text the same?
+        //   Need to use equals on the string and not
+        //   on the stringbuffer as equals on the string buffer
+        //   does not compare the contents.
+        if (!getWrapper().getText().toString().equals(
+                other.getWrapper().getText().toString())) {
+            return false;
+        }
+        // Are the sub elements the same ?
+        if (children == null || children.size() == 0) {
+            return other.children == null || other.children.size() == 0;
+        }
+        if (other.children == null) {
+            return false;
         }
         if (children.size() != other.children.size()) {
             return false;
