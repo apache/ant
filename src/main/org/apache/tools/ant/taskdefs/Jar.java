@@ -58,7 +58,7 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
-import java.io.FileReader;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -204,7 +204,7 @@ public class Jar extends Zip {
      * or the name of a jar added through a fileset. If its the name of an added
      * jar, the task expects the manifest to be in the jar at META-INF/MANIFEST.MF.
      *
-     * @param manifestFile
+     * @param manifestFile the manifest file to use.
      */
     public void setManifest(File manifestFile) {
         if (!manifestFile.exists()) {
@@ -218,18 +218,20 @@ public class Jar extends Zip {
     private Manifest getManifest(File manifestFile) {
 
         Manifest newManifest = null;
-        Reader r = null;
+        FileInputStream fis = null;
+        InputStreamReader isr = null;
         try {
-            r = new FileReader(manifestFile);
-            newManifest = getManifest(r);
+            fis = new FileInputStream(manifestFile);
+            isr = new InputStreamReader(fis, "UTF-8");
+            newManifest = getManifest(isr);
         } catch (IOException e) {
             throw new BuildException("Unable to read manifest file: "
                                      + manifestFile
                                      + " (" + e.getMessage() + ")", e);
         } finally {
-            if (r != null) {
+            if (isr != null) {
                 try {
-                    r.close();
+                    isr.close();
                 } catch (IOException e) {
                     // do nothing
                 }
@@ -254,8 +256,9 @@ public class Jar extends Zip {
             while (enum.hasMoreElements()) {
                 ZipEntry ze = (ZipEntry) enum.nextElement();
                 if (ze.getName().equalsIgnoreCase(MANIFEST_NAME)) {
-                    return getManifest(new InputStreamReader(zf
-                                                             .getInputStream(ze)));
+                    InputStreamReader isr =
+                        new InputStreamReader(zf.getInputStream(ze), "UTF-8");
+                    return getManifest(isr);
                 }
             }
             return null;
@@ -467,13 +470,13 @@ public class Jar extends Zip {
         }
     }
 
-    private void filesetManifest(File file, InputStream is) {
+    private void filesetManifest(File file, InputStream is) throws IOException {
         if (manifestFile != null && manifestFile.equals(file)) {
             // If this is the same name specified in 'manifest', this
             // is the manifest to use
             log("Found manifest " + file, Project.MSG_VERBOSE);
             if (is != null) {
-                manifest = getManifest(new InputStreamReader(is));
+                manifest = getManifest(new InputStreamReader(is, "UTF-8"));
             } else {
                 manifest = getManifest(file);
             }
@@ -486,7 +489,8 @@ public class Jar extends Zip {
             try {
                 Manifest newManifest = null;
                 if (is != null) {
-                    newManifest = getManifest(new InputStreamReader(is));
+                    newManifest 
+                        = getManifest(new InputStreamReader(is, "UTF-8"));
                 } else {
                     newManifest = getManifest(file);
                 }
