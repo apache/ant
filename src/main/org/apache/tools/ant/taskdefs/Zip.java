@@ -141,7 +141,7 @@ public class Zip extends MatchingTask {
     /**
      * This is the name/location of where to
      * create the .zip file.
-     * @since 1.5alpha
+     * @since Ant 1.5alpha
      * @deprecated Use setDestFile(File) instead
      */
     public void setFile(File file) {
@@ -151,7 +151,7 @@ public class Zip extends MatchingTask {
 
     /**
      * Sets the destfile attribute.
-     * @since 1.5
+     * @since Ant 1.5
      * @param destFile The new destination File
      */
     public void setDestFile(File destFile) {

@@ -64,7 +64,7 @@ import org.apache.tools.ant.Task;
  *
  * @author <a href="mailto:umagesh@apache.org">Magesh Umasankar</a>
  *
- * @since 1.5
+ * @since Ant 1.5
  */
 
 public abstract class Unpack extends Task {

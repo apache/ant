@@ -77,7 +77,7 @@ import java.util.Vector;
  * @author Glenn McAllister <a href="mailto:glennm@ca.ibm.com">glennm@ca.ibm.com</a>
  * @author Jon S. Stevens <a href="mailto:jon@latchkey.com">jon@latchkey.com</a>
  *
- * @since 1.2
+ * @since Ant 1.2
  *
  * @ant.task category="filesystem"
  */

@@ -80,7 +80,7 @@ import java.util.Enumeration;
  * @author James Davidson <a href="mailto:duncan@x180.com">duncan@x180.com</a>
  * @author Brian Deitte <a href="mailto:bdeitte@macromedia.com">bdeitte@macromedia.com</a>
  *
- * @since 1.1
+ * @since Ant 1.1
  *
  * @ant.task category="packaging"
  */

@@ -83,21 +83,21 @@ public class ConditionTask extends ConditionBase {
     /**
      * The name of the property to set. Required.
      *
-     * @since 1.1
+     * @since Ant 1.4
      */
     public void setProperty(String p) {property = p;}
 
     /**
      * The value for the property to set. Defaults to "true".
      *
-     * @since 1.1
+     * @since Ant 1.4
      */
     public void setValue(String v) {value = v;}
 
     /**
      * See whether our nested condition holds and set the property.
      *
-     * @since 1.1
+     * @since Ant 1.4
      */
     public void execute() throws BuildException {
         if (countConditions() > 1) {

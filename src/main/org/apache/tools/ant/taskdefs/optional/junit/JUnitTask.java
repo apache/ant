@@ -331,7 +331,7 @@ public class JUnitTask extends Task {
      * declaring the test as 'timed-out'
      * @see #setFork(boolean)
      *
-     * @since 1.2
+     * @since Ant 1.2
      */
     public void setTimeout(Integer value) {
         timeout = value;
@@ -342,7 +342,7 @@ public class JUnitTask extends Task {
      * @param   max     the value as defined by <tt>-mx</tt> or <tt>-Xmx</tt>
      *                  in the java command line options.
      *
-     * @since 1.2
+     * @since Ant 1.2
      */
     public void setMaxmemory(String max) {
         commandline.setMaxmemory(max);
@@ -354,7 +354,7 @@ public class JUnitTask extends Task {
      * @param   value   the new VM to use instead of <tt>java</tt>
      * @see #setFork(boolean)
      *
-     * @since 1.2
+     * @since Ant 1.2
      */
     public void setJvm(String value) {
         commandline.setVm(value);
@@ -366,7 +366,7 @@ public class JUnitTask extends Task {
      * passed to the JVM.
      * @see #setFork(boolean)
      *
-     * @since 1.2
+     * @since Ant 1.2
      */
     public Commandline.Argument createJvmarg() {
         return commandline.createVmArgument();
@@ -377,7 +377,7 @@ public class JUnitTask extends Task {
      * @param   dir     the directory to invoke the JVM from.
      * @see #setFork(boolean)
      *
-     * @since 1.2
+     * @since Ant 1.2
      */
     public void setDir(File dir) {
         this.dir = dir;
@@ -387,7 +387,7 @@ public class JUnitTask extends Task {
      * Add a nested sysproperty element. This might be useful to tranfer
      * Ant properties to the testcases when JVM forking is not enabled.
      *
-     * @since 1.3
+     * @since Ant 1.3
      */
     public void addSysproperty(Environment.Variable sysp) {
         commandline.addSysproperty(sysp);
@@ -396,7 +396,7 @@ public class JUnitTask extends Task {
     /**
      * <code>&lt;classpath&gt;</code> allows classpath to be set for tests.
      *
-     * @since 1.2
+     * @since Ant 1.2
      */
     public Path createClasspath() {
         return commandline.createClasspath(project).createPath();
@@ -429,7 +429,7 @@ public class JUnitTask extends Task {
      * @param   test    a new single testcase
      * @see JUnitTest
      *
-     * @since 1.2
+     * @since Ant 1.2
      */
     public void addTest(JUnitTest test) {
         tests.addElement(test);
@@ -441,7 +441,7 @@ public class JUnitTask extends Task {
      * @return  a new instance of a batch test.
      * @see BatchTest
      *
-     * @since 1.2
+     * @since Ant 1.2
      */
     public BatchTest createBatchTest() {
         BatchTest test = new BatchTest(project);
@@ -452,7 +452,7 @@ public class JUnitTask extends Task {
     /**
      * Add a new formatter to all tests of this task.
      *
-     * @since 1.2
+     * @since Ant 1.2
      */
     public void addFormatter(FormatterElement fe) {
         formatters.addElement(fe);
@@ -470,7 +470,7 @@ public class JUnitTask extends Task {
     /**
      * Creates a new JUnitRunner and enables fork of a new Java VM.
      *
-     * @since 1.2
+     * @since Ant 1.2
      */
     public JUnitTask() throws Exception {
         commandline
@@ -482,7 +482,7 @@ public class JUnitTask extends Task {
      * JUnit to the classpath - this should make the forked JVM work
      * without having to specify them directly.
      *
-     * @since 1.4
+     * @since Ant 1.4
      */
     public void init() {
         antRuntimeClasses = new Path(getProject());
@@ -494,7 +494,7 @@ public class JUnitTask extends Task {
     /**
      * Runs the testcase.
      *
-     * @since 1.2
+     * @since Ant 1.2
      */
     public void execute() throws BuildException {
         Enumeration list = getIndividualTests();
@@ -781,7 +781,7 @@ public class JUnitTask extends Task {
      * @return <tt>null</tt> if there is a timeout value, otherwise the
      * watchdog instance.
      *
-     * @since 1.2
+     * @since Ant 1.2
      */
     protected ExecuteWatchdog createWatchdog() throws BuildException {
         if (timeout == null){
@@ -793,7 +793,7 @@ public class JUnitTask extends Task {
     /**
      * Get the default output for a formatter.
      *
-     * @since 1.3
+     * @since Ant 1.3
      */
     protected OutputStream getDefaultOutput(){
         return new LogOutputStream(this, Project.MSG_INFO);
@@ -803,7 +803,7 @@ public class JUnitTask extends Task {
      * Merge all individual tests from the batchtest with all individual tests
      * and return an enumeration over all <tt>JUnitTest</tt>.
      *
-     * @since 1.3
+     * @since Ant 1.3
      */
     protected Enumeration getIndividualTests(){
         final int count = batchTests.size();
@@ -817,7 +817,7 @@ public class JUnitTask extends Task {
     }
 
     /**
-     * @since 1.3
+     * @since Ant 1.3
      */
     protected Enumeration allTests() {
         Enumeration[] enums = { tests.elements(), batchTests.elements() };
@@ -825,7 +825,7 @@ public class JUnitTask extends Task {
     }
 
     /**
-     * @since 1.3
+     * @since Ant 1.3
      */
     private FormatterElement[] mergeFormatters(JUnitTest test){
         Vector feVector = (Vector)formatters.clone();
@@ -839,7 +839,7 @@ public class JUnitTask extends Task {
      * If the formatter sends output to a file, return that file.
      * null otherwise.
      *
-     * @since 1.3
+     * @since Ant 1.3
      */
     protected File getOutput(FormatterElement fe, JUnitTest test){
         if (fe.getUseFile()) {
@@ -858,7 +858,7 @@ public class JUnitTask extends Task {
      * <p>Doesn't work for archives in JDK 1.1 as the URL returned by
      * getResource doesn't contain the name of the archive.</p>
      *
-     * @since 1.4
+     * @since Ant 1.4
      */
     protected void addClasspathEntry(String resource) {
         URL url = getClass().getResource(resource);

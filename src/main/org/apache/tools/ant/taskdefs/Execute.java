@@ -394,7 +394,7 @@ public class Execute {
      * @param the working directory for the command
      * @param useVM use the built-in exec command for JDK 1.3 if available.
      *
-     * @since 1.35, Ant 1.5
+     * @since Ant 1.5
      */
     public static Process launch(Project project, String[] command, 
                                  String[] env, File dir, boolean useVM)
@@ -475,7 +475,7 @@ public class Execute {
     /**
      * test for an untimely death of the process
      * @return true iff a watchdog had to kill the process
-     * @since 1.5
+     * @since Ant 1.5
      */
     public boolean killedProcess() {
         return watchdog != null && watchdog.killedProcess();
