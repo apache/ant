@@ -78,11 +78,12 @@ public class DescriptorHandler extends org.xml.sax.HandlerBase {
     static private final int STATE_IN_BEANS = 3;
     static private final int STATE_IN_SESSION = 4;
     static private final int STATE_IN_ENTITY = 5;
-    
+    static private final int STATE_IN_MESSAGE = 6;
+
     private Task owningTask;
-    
+
     private String publicId = null;
-    
+
     /**
      * Bunch of constants used for storing entries in a hashtable, and for
      * constructing the filenames of various parts of the ejb jar.
@@ -97,6 +98,7 @@ public class DescriptorHandler extends org.xml.sax.HandlerBase {
     private static final String ENTERPRISE_BEANS = "enterprise-beans";
     private static final String ENTITY_BEAN      = "entity";
     private static final String SESSION_BEAN     = "session";
+    private static final String MESSAGE_BEAN     = "message-driven";
 
     /**
      * The state of the parsing
@@ -128,7 +130,7 @@ public class DescriptorHandler extends org.xml.sax.HandlerBase {
     protected String ejbName = null;
 
     private Hashtable fileDTDs = new Hashtable();
-    
+
     private Hashtable resourceDTDs = new Hashtable();
 
     private boolean inEJBRef = false;
@@ -136,7 +138,7 @@ public class DescriptorHandler extends org.xml.sax.HandlerBase {
     private Hashtable urlDTDs = new Hashtable();
 
     /**
-     * The directory containing the bean classes and interfaces. This is 
+     * The directory containing the bean classes and interfaces. This is
      * used for performing dependency file lookups.
      */
     private File srcDir;
@@ -145,12 +147,12 @@ public class DescriptorHandler extends org.xml.sax.HandlerBase {
         this.owningTask = task;
         this.srcDir = srcDir;
     }
-    
+
     public void registerDTD(String publicId, String location) {
         if (location == null) {
             return;
         }
-        
+
         File fileDTD = new File(location);
         if (fileDTD.exists()) {
             if (publicId != null) {
@@ -159,7 +161,7 @@ public class DescriptorHandler extends org.xml.sax.HandlerBase {
             }
             return;
         }
-        
+
         if (getClass().getResource(location) != null) {
             if (publicId != null) {
                 resourceDTDs.put(publicId, location);
@@ -171,18 +173,18 @@ public class DescriptorHandler extends org.xml.sax.HandlerBase {
             if (publicId != null) {
                 URL urldtd = new URL(location);
                 urlDTDs.put(publicId, urldtd);
-            }            
+            }
         } catch ( java.net.MalformedURLException   e) {
             //ignored
-        } 
-        
+        }
+
     }
 
     public InputSource resolveEntity(String publicId, String systemId)
         throws SAXException
     {
         this.publicId = publicId;
-        
+
         File dtdFile = (File) fileDTDs.get(publicId);
         if (dtdFile != null) {
             try {
@@ -193,7 +195,7 @@ public class DescriptorHandler extends org.xml.sax.HandlerBase {
             }
         }
 
-        String dtdResourceName = (String)resourceDTDs.get(publicId); 
+        String dtdResourceName = (String)resourceDTDs.get(publicId);
         if (dtdResourceName != null) {
             InputStream is = this.getClass().getResourceAsStream(dtdResourceName);
             if (is != null) {
@@ -210,12 +212,12 @@ public class DescriptorHandler extends org.xml.sax.HandlerBase {
                 return new InputSource(is);
             } catch ( IOException ioe) {
                 //ignore
-            }            
-        } 
-                
-        owningTask.log("Could not resolve ( publicId: " + publicId + ", systemId: " + systemId + ") to a local entity", 
+            }
+        }
+
+        owningTask.log("Could not resolve ( publicId: " + publicId + ", systemId: " + systemId + ") to a local entity",
                         Project.MSG_INFO);
-        
+
         return null;
     }
 
@@ -232,7 +234,7 @@ public class DescriptorHandler extends org.xml.sax.HandlerBase {
     public String getPublicId() {
         return publicId;
     }
-    
+
      /**
      * Getter method that returns the value of the <ejb-name> element.
      */
@@ -258,7 +260,7 @@ public class DescriptorHandler extends org.xml.sax.HandlerBase {
      * @param name The name of the element being entered.
      * @param attrs Attributes associated to the element.
      */
-    public void startElement(String name, AttributeList attrs) 
+    public void startElement(String name, AttributeList attrs)
         throws SAXException {
         this.currentElement = name;
         currentText = "";
@@ -276,6 +278,9 @@ public class DescriptorHandler extends org.xml.sax.HandlerBase {
         }
         else if (parseState == STATE_IN_BEANS && name.equals(ENTITY_BEAN )) {
             parseState = STATE_IN_ENTITY;
+        }
+        else if (parseState == STATE_IN_BEANS && name.equals(MESSAGE_BEAN )) {
+            parseState = STATE_IN_MESSAGE;
         }
     }
 
@@ -296,10 +301,14 @@ public class DescriptorHandler extends org.xml.sax.HandlerBase {
         if (name.equals(EJB_REF)) {
             inEJBRef = false;
         }
-        else if (parseState == STATE_IN_ENTITY && name.equals(ENTITY_BEAN )) {
+        else if (parseState == STATE_IN_ENTITY && name.equals(ENTITY_BEAN)) {
+        if (parseState == STATE_IN_ENTITY && name.equals(ENTITY_BEAN )) {
             parseState = STATE_IN_BEANS;
         }
         else if (parseState == STATE_IN_SESSION && name.equals(SESSION_BEAN)) {
+            parseState = STATE_IN_BEANS;
+        }
+        else if (parseState == STATE_IN_MESSAGE && name.equals(MESSAGE_BEAN)) {
             parseState = STATE_IN_BEANS;
         }
         else if (parseState == STATE_IN_BEANS && name.equals(ENTERPRISE_BEANS)) {
@@ -330,19 +339,23 @@ public class DescriptorHandler extends org.xml.sax.HandlerBase {
 
         currentText += new String(ch, start, length);
     }
-    
-    
+
+
     protected void processElement() {
+<<<<<<< DescriptorHandler.java
+        if (parseState != STATE_IN_ENTITY && parseState != STATE_IN_SESSION && parseState != STATE_IN_MESSAGE) {
+=======
         if (inEJBRef || 
             (parseState != STATE_IN_ENTITY && parseState != STATE_IN_SESSION)) {
+>>>>>>> 1.12
             return;
         }
-        
+
         if (currentElement.equals(HOME_INTERFACE)   ||
             currentElement.equals(REMOTE_INTERFACE) ||
             currentElement.equals(BEAN_CLASS)       ||
             currentElement.equals(PK_CLASS)) {
-            
+
             // Get the filename into a String object
             File classFile = null;
             String className = currentText.trim();
