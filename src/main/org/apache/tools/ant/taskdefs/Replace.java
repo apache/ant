@@ -73,14 +73,14 @@ public class Replace extends MatchingTask {
     private FileUtils fileUtils = FileUtils.newFileUtils();
 
     /**
-     * an inline string to use as the replacement text
+     * An inline string to use as the replacement text.
      */
     public class NestedString {
 
         private StringBuffer buf = new StringBuffer();
 
         /**
-         * the text of the element
+         * The text of the element.
          *
          * @param val the string to add
          */
@@ -109,8 +109,8 @@ public class Replace extends MatchingTask {
         private StringBuffer outputBuffer = new StringBuffer();
 
         /**
-         * validate the filter's configuration
-         * @throws BuildException if any part is invalid
+         * Validate the filter's configuration.
+         * @throws BuildException if any part is invalid.
          */
         public void validate() throws BuildException {
             //Validate mandatory attributes
@@ -173,16 +173,16 @@ public class Replace extends MatchingTask {
         }
 
         /**
-         * Set the token to replace
-         * @param token token
+         * Set the token to replace,
+         * @param token <code>String</code> token.
          */
         public void setToken(String token) {
             this.token = token;
         }
 
         /**
-         * Get the string to search for
-         * @return current token
+         * Get the string to search for.
+         * @return current <code>String</code> token.
          */
         public String getToken() {
             return token;
@@ -190,16 +190,16 @@ public class Replace extends MatchingTask {
 
         /**
          * The replacement string; required if <code>property<code>
-         * is not set
-         * @param value value to replace
+         * is not set.
+         * @param value <code>String</code> value to replace.
          */
         public void setValue(String value) {
             this.value = value;
         }
 
         /**
-         * Get replacements string
-         * @return replacement or null
+         * Get replacement <code>String</code>.
+         * @return replacement or null.
          */
         public String getValue() {
             return value;
@@ -208,7 +208,7 @@ public class Replace extends MatchingTask {
         /**
          * Set the name of the property whose value is to serve as
          * the replacement value; required if <code>value</code> is not set.
-         * @param property propname
+         * @param property property name.
          */
         public void setProperty(String property) {
             this.property = property;
@@ -216,8 +216,8 @@ public class Replace extends MatchingTask {
 
         /**
          * Get the name of the property whose value is to serve as
-         * the replacement value;
-         * @return property or null
+         * the replacement value.
+         * @return property or null.
          */
         public String getProperty() {
             return property;
@@ -235,7 +235,7 @@ public class Replace extends MatchingTask {
         /**
          * Sets the input buffer for this filter.
          * The filter expects from the component providing the input that data
-         * is only addded by that component to the end of this StringBuffer.
+         * is only added by that component to the end of this StringBuffer.
          * This StringBuffer will be modified by this filter, and expects that
          * another component will only apped to this StringBuffer.
          * @param input The input for this filter.
@@ -250,7 +250,7 @@ public class Replace extends MatchingTask {
          * received data, when the token is split over the "old" and the "new"
          * part.
          * @return true if some data has been made available in the
-         *         outputBuffer.
+         *         output buffer.
          */
         boolean process() {
             if (inputBuffer.length() > token.length()) {
@@ -294,7 +294,7 @@ public class Replace extends MatchingTask {
     }
 
     /**
-     * Class reading a file in small chuncks, and presenting these chuncks in
+     * Class reading a file in small chunks, and presenting these chunks in
      * a StringBuffer. Compatible with the Replacefilter.
      * @since 1.7
      */
@@ -334,7 +334,7 @@ public class Replace extends MatchingTask {
          * @return true when the end of the file has not been reached.
          * @throws IOException When the file cannot be read from.
          */
-        boolean readChunck() throws IOException {
+        boolean readChunk() throws IOException {
             int bufferLength = 0;
             bufferLength = reader.read(buffer);
             if (bufferLength < 0) {
@@ -355,7 +355,7 @@ public class Replace extends MatchingTask {
     }
 
     /**
-     * Component writing a file in chuncks, taking the chunks from the
+     * Component writing a file in chunks, taking the chunks from the
      * Replacefilter.
      * @since 1.7
      */
@@ -380,9 +380,9 @@ public class Replace extends MatchingTask {
         /**
          * Sets the input buffer for this component.
          * The filter expects from the component providing the input that data
-         * is only addded by that component to the end of this StringBuffer.
+         * is only added by that component to the end of this StringBuffer.
          * This StringBuffer will be modified by this filter, and expects that
-         * another component will only apped to this StringBuffer.
+         * another component will only append to this StringBuffer.
          * @param input The input for this filter.
          */
         void setInputBuffer(StringBuffer input) {
@@ -494,7 +494,7 @@ public class Replace extends MatchingTask {
      * Validate attributes provided for this task in .xml build file.
      *
      * @exception BuildException if any supplied attribute is invalid or any
-     * mandatory attribute is missing
+     * mandatory attribute is missing.
      */
     public void validateAttributes() throws BuildException {
         if (src == null && dir == null) {
@@ -522,7 +522,7 @@ public class Replace extends MatchingTask {
      * Validate nested elements.
      *
      * @exception BuildException if any supplied attribute is invalid or any
-     * mandatory attribute is missing
+     * mandatory attribute is missing.
      */
     public void validateReplacefilters()
             throws BuildException {
@@ -534,11 +534,10 @@ public class Replace extends MatchingTask {
     }
 
     /**
-     * helper method to load a properties file and throw a build exception
-     * if it cannot be loaded
-     * @param propertyFile the file to load the properties from
-     * @return loaded properties collection
-     * @throws BuildException if the file could not be found or read
+     * Load a properties file.
+     * @param propertyFile the file to load the properties from.
+     * @return loaded <code>Properties</code> object.
+     * @throws BuildException if the file could not be found or read.
      */
     public Properties getProperties(File propertyFile) throws BuildException {
         Properties props = new Properties();
@@ -574,7 +573,7 @@ public class Replace extends MatchingTask {
      * The replacement is performed on a temporary file which then
      * replaces the original file.
      *
-     * @param src the source file
+     * @param src the source <code>File</code>.
      */
     private void processFile(File src) throws BuildException {
         if (!src.exists()) {
@@ -598,7 +597,7 @@ public class Replace extends MatchingTask {
 
             out.setInputBuffer(buildFilterChain(in.getOutputBuffer()));
 
-            while (in.readChunck()) {
+            while (in.readChunk()) {
                 if (processFilterChain()) {
                     out.process();
                 }
@@ -670,8 +669,9 @@ public class Replace extends MatchingTask {
 
     /**
      * Creates the chain of filters to operate.
-     * @param inputBuffer The buffer that contains the input for the first filter
-     * @return The StringBuffer that cointains the output of the last filter.
+     * @param inputBuffer <code>StringBuffer</code> containing the input for the
+     *                    first filter.
+     * @return <code>StringBuffer</code> containing the output of the last filter.
      */
     private StringBuffer buildFilterChain(StringBuffer inputBuffer) {
         StringBuffer buf = inputBuffer;
@@ -685,7 +685,7 @@ public class Replace extends MatchingTask {
 
     /**
      * Logs the chain of filters to operate on the file.
-     * @param filename
+     * @param filename <code>String</code>.
      */
     private void logFilterChain(String filename) {
         for (int i = 0; i < replacefilters.size(); i++) {
@@ -696,7 +696,7 @@ public class Replace extends MatchingTask {
     }
     /**
      * Set the source file; required unless <code>dir</code> is set.
-     * @param file source file
+     * @param file source <code>File</code>.
      */
     public void setFile(File file) {
         this.src = file;
@@ -705,10 +705,10 @@ public class Replace extends MatchingTask {
     /**
      * Indicates whether a summary of the replace operation should be
      * produced, detailing how many token occurrences and files were
-     * processed; optional, default=false
+     * processed; optional, default=<code>false</code>.
      *
-     * @param summary true if you would like a summary logged of the
-     * replace operation
+     * @param summary <code>boolean</code> whether a summary of the
+     *                replace operation should be logged.
      */
     public void setSummary(boolean summary) {
         this.summary = summary;
@@ -717,30 +717,28 @@ public class Replace extends MatchingTask {
 
     /**
      * Sets the name of a property file containing filters; optional.
-     * Each property will be treated as a
-     * replacefilter where token is the name of the property and value
-     * is the value of the property.
-     * @param filename file to load
+     * Each property will be treated as a replacefilter where token is the name
+     * of the property and value is the value of the property.
+     * @param replaceFilterFile <code>File</code> to load.
      */
-    public void setReplaceFilterFile(File filename) {
-        replaceFilterFile = filename;
+    public void setReplaceFilterFile(File replaceFilterFile) {
+        this.replaceFilterFile = replaceFilterFile;
     }
 
     /**
      * The base directory to use when replacing a token in multiple files;
      * required if <code>file</code> is not defined.
-     * @param dir base dir
+     * @param dir <code>File</code> representing the base directory.
      */
     public void setDir(File dir) {
         this.dir = dir;
     }
 
     /**
-     * Set the string token to replace;
-     * required unless a nested
+     * Set the string token to replace; required unless a nested
      * <code>replacetoken</code> element or the <code>replacefilterfile</code>
      * attribute is used.
-     * @param token token string
+     * @param token token <code>String</code>.
      */
     public void setToken(String token) {
         createReplaceToken().addText(token);
@@ -748,8 +746,8 @@ public class Replace extends MatchingTask {
 
     /**
      * Set the string value to use as token replacement;
-     * optional, default is the empty string ""
-     * @param value replacement value
+     * optional, default is the empty string "".
+     * @param value replacement value.
      */
     public void setValue(String value) {
         createReplaceValue().addText(value);
@@ -757,17 +755,17 @@ public class Replace extends MatchingTask {
 
     /**
      * Set the file encoding to use on the files read and written by the task;
-     * optional, defaults to default JVM encoding
+     * optional, defaults to default JVM encoding.
      *
-     * @param encoding the encoding to use on the files
+     * @param encoding the encoding to use on the files.
      */
     public void setEncoding(String encoding) {
         this.encoding = encoding;
     }
 
     /**
-     * the token to filter as the text of a nested element
-     * @return nested token to configure
+     * Create a token to filter as the text of a nested element.
+     * @return nested token <code>NestedString</code> to configure.
      */
     public NestedString createReplaceToken() {
         if (token == null) {
@@ -777,27 +775,26 @@ public class Replace extends MatchingTask {
     }
 
     /**
-     * the string to replace the token as the text of a nested element
-     * @return replacement value to configure
+     * Create a string to replace the token as the text of a nested element.
+     * @return replacement value <code>NestedString</code> to configure.
      */
     public NestedString createReplaceValue() {
         return value;
     }
 
     /**
-     * The name of a property file from which properties specified using
-     * nested <code>&lt;replacefilter&gt;</code> elements are drawn;
-     * Required only if <i>property</i> attribute of
-     * <code>&lt;replacefilter&gt;</code> is used.
-     * @param filename file to load
+     * The name of a property file from which properties specified using nested
+     * <code>&lt;replacefilter&gt;</code> elements are drawn; required only if
+     * the <i>property</i> attribute of <code>&lt;replacefilter&gt;</code> is used.
+     * @param propertyFile <code>File</code> to load.
      */
-    public void setPropertyFile(File filename) {
-        propertyFile = filename;
+    public void setPropertyFile(File propertyFile) {
+        this.propertyFile = propertyFile;
     }
 
     /**
      * Add a nested &lt;replacefilter&gt; element.
-     * @return a nested ReplaceFilter object to be configured
+     * @return a nested <code>Replacefilter</code> object to be configured.
      */
     public Replacefilter createReplacefilter() {
         Replacefilter filter = new Replacefilter();
@@ -808,15 +805,16 @@ public class Replace extends MatchingTask {
     /**
      * Adds the token and value as first &lt;replacefilter&gt; element.
      * The token and value are always processed first.
-     * @return a nested ReplaceFilter object to be configured
+     * @return a nested <code>Replacefilter</code> object to be configured.
      */
     private Replacefilter createPrimaryfilter() {
         Replacefilter filter = new Replacefilter();
         replacefilters.insertElementAt(filter, 0);
         return filter;
     }
+
     /**
-     * Replace occurrences of str1 in stringbuffer str with str2
+     * Replace occurrences of str1 in StringBuffer str with str2.
      */
     private void stringReplace(StringBuffer str, String str1, String str2) {
         int found = str.toString().indexOf(str1);
