@@ -53,10 +53,8 @@
  */
 package org.apache.ant.antlib.system;
 import java.io.File;
-import org.apache.ant.common.antlib.AbstractTask;
 import org.apache.ant.common.antlib.AntContext;
 import org.apache.ant.common.model.Project;
-import org.apache.ant.common.service.ExecService;
 import org.apache.ant.common.util.ExecutionException;
 
 /**
