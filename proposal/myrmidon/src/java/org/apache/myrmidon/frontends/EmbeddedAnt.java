@@ -56,6 +56,7 @@ public class EmbeddedAnt
     private ClassLoader m_sharedClassLoader;
     private Embeddor m_embeddor;
     private File m_homeDir;
+    private String m_projectType;
 
     /**
      * Sets the Myrmidon home directory.  Default is to use the current
@@ -76,6 +77,15 @@ public class EmbeddedAnt
     {
         m_projectFile = projectFile;
         m_project = null;
+    }
+
+    /**
+     * Sets the project file type.  Ignored if {@link #setProject} is used.
+     * Set to null to use the default project type.
+     */
+    public void setProjectType( final String projectType )
+    {
+        m_projectType = projectType;
     }
 
     /**
@@ -312,7 +322,7 @@ public class EmbeddedAnt
         if( m_project == null )
         {
             final File buildFile = getProjectFile();
-            m_project = embeddor.createProject( buildFile.toString(), null, m_builderProps );
+            m_project = embeddor.createProject( buildFile.toString(), m_projectType, m_builderProps );
         }
         return m_project;
     }
@@ -368,5 +378,4 @@ public class EmbeddedAnt
             throw new Exception( message );
         }
     }
-
 }

@@ -55,6 +55,7 @@ public class CLIMain
     private static final int HOME_DIR_OPT = 7;
     private static final int DRY_RUN_OPT = 8;
     private static final int DEBUG_OPT = 9;
+    private static final int TYPE_OPT = 10;
 
     //incompatable options for info options
     private static final int[] INFO_OPT_INCOMPAT = new int[]
@@ -62,7 +63,7 @@ public class CLIMain
         HELP_OPT, QUIET_OPT, VERBOSE_OPT, FILE_OPT,
         LOG_LEVEL_OPT, BUILDER_PARAM_OPT, NO_PREFIX_OPT,
         VERSION_OPT, LISTENER_OPT, TASKLIB_DIR_OPT,
-        INCREMENTAL_OPT, HOME_DIR_OPT, DRY_RUN_OPT
+        INCREMENTAL_OPT, HOME_DIR_OPT, DRY_RUN_OPT, TYPE_OPT
     };
 
     //incompatable options for other logging options
@@ -214,7 +215,11 @@ public class CLIMain
             new CLOptionDescriptor( "dry-run",
                                     CLOptionDescriptor.ARGUMENT_DISALLOWED,
                                     DRY_RUN_OPT,
-                                    REZ.getString( "dry-run.opt" ) )
+                                    REZ.getString( "dry-run.opt" ) ),
+            new CLOptionDescriptor( "type",
+                                    CLOptionDescriptor.ARGUMENT_REQUIRED,
+                                    TYPE_OPT,
+                                    REZ.getString( "type.opt" ) )
         };
 
         return options;
@@ -293,6 +298,10 @@ public class CLIMain
 
                 case DRY_RUN_OPT:
                     m_dryRun = true;
+                    break;
+
+                case TYPE_OPT:
+                    m_embedded.setProjectType( option.getArgument( 0 ) );
                     break;
 
                 case 0:

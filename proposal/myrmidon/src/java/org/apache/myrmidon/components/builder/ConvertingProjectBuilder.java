@@ -21,6 +21,8 @@ import org.apache.myrmidon.interfaces.builder.ProjectException;
  * @version $Revision$ $Date$
  *
  * @ant.type type="project-builder" name="xml"
+ * @ant.type type="project-builder" name="ant"
+ * @ant.type type="project-builder" name="default"
  */
 public class ConvertingProjectBuilder
     extends DefaultProjectBuilder
@@ -34,10 +36,10 @@ public class ConvertingProjectBuilder
      * @return the configured project
      * @throws ProjectException if an error occurs parsing the project file
      */
-    protected Configuration parseProject( String systemID )
+    protected Configuration parseProject( final String systemID )
         throws ProjectException
     {
-        Configuration originalConfig = super.parseProject( systemID );
+        final Configuration originalConfig = super.parseProject( systemID );
 
         // Check the version, if it's present, just use this config.
         // TODO: check for version < 2.0
@@ -48,21 +50,21 @@ public class ConvertingProjectBuilder
 
         // Convert the config by prepending "ant1." on tasks,
         // and using <if> tasks instead of target 'if=' and 'unless='
-        DefaultConfiguration newConfig = copyConfiguration( originalConfig );
+        final DefaultConfiguration newConfig = copyConfiguration( originalConfig );
 
         // Put a new version attribute.
         newConfig.setAttribute( VERSION_ATTRIBUTE, "2.0" );
 
         // Copy the remaining attributes.
-        Set omitAttributes = new HashSet();
+        final Set omitAttributes = new HashSet();
         omitAttributes.add( VERSION_ATTRIBUTE );
         copyAttributes( originalConfig, newConfig, omitAttributes );
 
         // Now copy/convert the children
-        Configuration[] children = originalConfig.getChildren();
+        final Configuration[] children = originalConfig.getChildren();
         for( int i = 0; i < children.length; i++ )
         {
-            Configuration child = children[ i ];
+            final Configuration child = children[ i ];
 
             if( child.getName().equals( "target" ) )
             {
@@ -82,12 +84,12 @@ public class ConvertingProjectBuilder
      * @param originalTarget The Ant1 Target
      * @return the converted target
      */
-    private Configuration convertTarget( Configuration originalTarget )
+    private Configuration convertTarget( final Configuration originalTarget )
     {
-        DefaultConfiguration newTarget = copyConfiguration( originalTarget );
+        final DefaultConfiguration newTarget = copyConfiguration( originalTarget );
 
         // Copy all attributes except 'if' and 'unless'
-        Set omitAttributes = new HashSet();
+        final Set omitAttributes = new HashSet();
         omitAttributes.add( "if" );
         omitAttributes.add( "unless" );
         copyAttributes( originalTarget, newTarget, omitAttributes );
@@ -95,10 +97,10 @@ public class ConvertingProjectBuilder
         DefaultConfiguration containerElement = newTarget;
 
         // For 'if="prop-name"', replace with <if> task.
-        String ifAttrib = originalTarget.getAttribute( "if", null );
+        final String ifAttrib = originalTarget.getAttribute( "if", null );
         if ( ifAttrib != null )
         {
-            DefaultConfiguration ifElement =
+            final DefaultConfiguration ifElement =
                 buildIfElement( ifAttrib, false, originalTarget.getLocation() );
             containerElement.addChild( ifElement );
             // Treat the ifElement as the enclosing target.
@@ -106,10 +108,10 @@ public class ConvertingProjectBuilder
         }
 
         // For 'unless="prop-name"', replace with <if> task (negated).
-        String unlessAttrib = originalTarget.getAttribute( "unless", null );
+        final String unlessAttrib = originalTarget.getAttribute( "unless", null );
         if ( unlessAttrib != null )
         {
-            DefaultConfiguration unlessElement =
+            final DefaultConfiguration unlessElement =
                 buildIfElement( unlessAttrib, true, originalTarget.getLocation() );
             containerElement.addChild( unlessElement );
             // Treat the unlessElement as the enclosing target.
@@ -117,7 +119,7 @@ public class ConvertingProjectBuilder
         }
 
         // Now copy in converted tasks.
-        Configuration[] tasks = originalTarget.getChildren();
+        final Configuration[] tasks = originalTarget.getChildren();
         for( int i = 0; i < tasks.length; i++ )
         {
             containerElement.addChild( convertTask( tasks[ i ] ) );
@@ -134,8 +136,8 @@ public class ConvertingProjectBuilder
      * @param location the configuration location to use
      * @return The configuration for an <if> task
      */
-    private DefaultConfiguration buildIfElement( String ifProperty,
-                                                 boolean unless,
+    private DefaultConfiguration buildIfElement( final String ifProperty,
+                                                 final boolean unless,
                                                  final String location )
     {
         // <if>
@@ -144,17 +146,17 @@ public class ConvertingProjectBuilder
         //      </condition>
         //      .. tasks
         // </if>
-        DefaultConfiguration isSetElement =
+        final DefaultConfiguration isSetElement =
             new DefaultConfiguration( "is-set", location );
         isSetElement.setAttribute( "property", ifProperty );
 
-        DefaultConfiguration conditionElement =
+        final DefaultConfiguration conditionElement =
             new DefaultConfiguration( "condition", location );
 
         if ( unless )
         {
             // Surround <is-set> with <not>
-            DefaultConfiguration notElement =
+            final DefaultConfiguration notElement =
                 new DefaultConfiguration( "not", location );
             notElement.addChild( isSetElement );
             conditionElement.addChild( notElement );
@@ -165,7 +167,7 @@ public class ConvertingProjectBuilder
         }
 
 
-        DefaultConfiguration ifElement =
+        final DefaultConfiguration ifElement =
             new DefaultConfiguration( "if", location );
         ifElement.addChild( conditionElement );
 
@@ -177,11 +179,11 @@ public class ConvertingProjectBuilder
      * @param originalTask The Ant1 Task
      * @return the converted task
      */
-    private Configuration convertTask( Configuration originalTask )
+    private Configuration convertTask( final Configuration originalTask )
     {
         // Create a new configuration with the "ant1." prefix.
-        String newTaskName = "ant1." + originalTask.getName();
-        DefaultConfiguration newTask =
+        final String newTaskName = "ant1." + originalTask.getName();
+        final DefaultConfiguration newTask =
             new DefaultConfiguration( newTaskName, originalTask.getLocation() );
 
         // Copy all attributes and elements of the task.
@@ -196,9 +198,10 @@ public class ConvertingProjectBuilder
      * @param from Configuration to copy from
      * @param to Configuration to copy to
      */
-    private void copyChildren( Configuration from, DefaultConfiguration to )
+    private void copyChildren( final Configuration from,
+                               final DefaultConfiguration to )
     {
-        Configuration[] children = from.getChildren();
+        final Configuration[] children = from.getChildren();
         for( int i = 0; i < children.length; i++ )
         {
             to.addChild( children[ i ] );
@@ -212,20 +215,20 @@ public class ConvertingProjectBuilder
      * @param to Configuration to copy to
      * @param omitAttributes a Set of attribute names to exclude
      */
-    private void copyAttributes( Configuration from,
-                                 DefaultConfiguration to,
-                                 Set omitAttributes )
+    private void copyAttributes( final Configuration from,
+                                 final DefaultConfiguration to,
+                                 final Set omitAttributes )
     {
         // Copy other attributes
-        String[] attribs = from.getAttributeNames();
+        final String[] attribs = from.getAttributeNames();
         for( int i = 0; i < attribs.length; i++ )
         {
-            String name = attribs[ i ];
+            final String name = attribs[ i ];
             if( omitAttributes.contains( name ) )
             {
                 continue;
             }
-            String value = from.getAttribute( name, "" );
+            final String value = from.getAttribute( name, "" );
             to.setAttribute( name, value );
         }
     }
@@ -236,7 +239,7 @@ public class ConvertingProjectBuilder
      * @param originalConfig the COnfiguration to copy.
      * @return the new Configuration
      */
-    private DefaultConfiguration copyConfiguration( Configuration originalConfig )
+    private DefaultConfiguration copyConfiguration( final Configuration originalConfig )
     {
         return new DefaultConfiguration( originalConfig.getName(),
                                          originalConfig.getLocation() );
