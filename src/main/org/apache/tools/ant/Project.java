@@ -153,27 +153,13 @@ public class Project {
     /** Description for this project (if any). */
     private String description;
 
-    /** Project properties map (usually String to String). */
-    private Hashtable properties = new Hashtable();
-    /**
-     * Map of "user" properties (as created in the Ant task, for example).
-     * Note that these key/value pairs are also always put into the
-     * project properties, so only the project properties need to be queried.
-     * Mapping is String to String.
-     */
-    private Hashtable userProperties = new Hashtable();
-    /**
-     * Map of inherited "user" properties - that are those "user"
-     * properties that have been created by tasks and not been set
-     * from the command line or a GUI tool.
-     * Mapping is String to String.
-     */
-    private Hashtable inheritedProperties = new Hashtable();
+
     /** Map of references within the project (paths etc) (String to Object). */
     private Hashtable references = new AntRefTable(this);
 
     /** Name of the project's default target. */
     private String defaultTarget;
+
     /** Map from data type names to implementing classes (String to Class). */
     private Hashtable dataClassDefinitions = new AntTaskTable(this, false);
     /** Map from task names to implementing classes (String to Class). */
@@ -184,6 +170,7 @@ public class Project {
      * the task definition changes.
      */
     private Hashtable createdTasks = new Hashtable();
+
     /** Map from target names to targets (String to Target). */
     private Hashtable targets = new Hashtable();
     /** Set of global filters. */
@@ -402,20 +389,8 @@ public class Project {
      *              Must not be <code>null</code>.
      */
     public synchronized void setProperty(String name, String value) {
-        // command line properties take precedence
-        if (null != userProperties.get(name)) {
-            log("Override ignored for user property " + name, MSG_VERBOSE);
-            return;
-        }
-
-        if (null != properties.get(name)) {
-            log("Overriding previous definition of property " + name,
-                MSG_VERBOSE);
-        }
-
-        log("Setting project property: " + name + " -> " +
-             value, MSG_DEBUG);
-        properties.put(name, value);
+        PropertyHelper.getPropertyHelper(this).
+                setProperty(null, name, value, true);
     }
 
     /**
@@ -430,13 +405,7 @@ public class Project {
      * @since 1.5
      */
     public synchronized void setNewProperty(String name, String value) {
-        if (null != properties.get(name)) {
-            log("Override ignored for property " + name, MSG_VERBOSE);
-            return;
-        }
-        log("Setting project property: " + name + " -> " +
-            value, MSG_DEBUG);
-        properties.put(name, value);
+        PropertyHelper.getPropertyHelper(this).setNewProperty( null, name, value);
     }
 
     /**
@@ -449,10 +418,7 @@ public class Project {
      * @see #setProperty(String,String)
      */
     public synchronized void setUserProperty(String name, String value) {
-        log("Setting ro project property: " + name + " -> " +
-            value, MSG_DEBUG);
-        userProperties.put(name, value);
-        properties.put(name, value);
+        PropertyHelper.getPropertyHelper(this).setUserProperty( null, name, value);
     }
 
     /**
@@ -468,8 +434,8 @@ public class Project {
      * @see #setProperty(String,String)
      */
     public synchronized void setInheritedProperty(String name, String value) {
-        inheritedProperties.put(name, value);
-        setUserProperty(name, value);
+        PropertyHelper ph=PropertyHelper.getPropertyHelper(this);
+        ph.setInheritedProperty(null, name, value);
     }
 
     /**
@@ -481,10 +447,8 @@ public class Project {
      * @param value The property value. Must not be <code>null</code>.
      */
     private void setPropertyInternal(String name, String value) {
-        if (null != userProperties.get(name)) {
-            return;
-        }
-        properties.put(name, value);
+        PropertyHelper ph=PropertyHelper.getPropertyHelper(this);
+        ph.setProperty(null, name, value, false );
     }
 
     /**
@@ -497,11 +461,8 @@ public class Project {
      *         or if a <code>null</code> name is provided.
      */
     public String getProperty(String name) {
-        if (name == null) {
-          return null;
-        }
-        String property = (String) properties.get(name);
-        return property;
+        PropertyHelper ph=PropertyHelper.getPropertyHelper(this);
+        return (String)ph.getProperty(null, name);
     }
 
     /**
@@ -519,8 +480,10 @@ public class Project {
      *                           property name, e.g. <code>${xxx</code>
      */
     public String replaceProperties(String value)
-        throws BuildException {
-        return ProjectHelper.replaceProperties(this, value, properties);
+        throws BuildException
+    {
+        PropertyHelper ph=PropertyHelper.getPropertyHelper(this);
+        return ph.replaceProperties(null, value, null);
     }
 
     /**
@@ -533,11 +496,8 @@ public class Project {
      *         or if a <code>null</code> name is provided.
      */
      public String getUserProperty(String name) {
-        if (name == null) {
-            return null;
-        }
-        String property = (String) userProperties.get(name);
-        return property;
+        PropertyHelper ph=PropertyHelper.getPropertyHelper(this);
+        return (String)ph.getUserProperty( null, name );
     }
 
     /**
@@ -546,16 +506,8 @@ public class Project {
      *         (including user properties).
      */
     public Hashtable getProperties() {
-        Hashtable propertiesCopy = new Hashtable();
-
-        Enumeration e = properties.keys();
-        while (e.hasMoreElements()) {
-            Object name = e.nextElement();
-            Object value = properties.get(name);
-            propertiesCopy.put(name, value);
-        }
-
-        return propertiesCopy;
+        PropertyHelper ph=PropertyHelper.getPropertyHelper(this);
+        return ph.getProperties();
     }
 
     /**
@@ -563,16 +515,8 @@ public class Project {
      * @return a hashtable containing just the user properties
      */
     public Hashtable getUserProperties() {
-        Hashtable propertiesCopy = new Hashtable();
-
-        Enumeration e = userProperties.keys();
-        while (e.hasMoreElements()) {
-            Object name = e.nextElement();
-            Object value = properties.get(name);
-            propertiesCopy.put(name, value);
-        }
-
-        return propertiesCopy;
+        PropertyHelper ph=PropertyHelper.getPropertyHelper(this);
+        return ph.getUserProperties();
     }
 
     /**
@@ -588,15 +532,8 @@ public class Project {
      * @since Ant 1.5
      */
     public void copyUserProperties(Project other) {
-        Enumeration e = userProperties.keys();
-        while (e.hasMoreElements()) {
-            Object arg = e.nextElement();
-            if (inheritedProperties.containsKey(arg)) {
-                continue;
-            }
-            Object value = userProperties.get(arg);
-            other.setUserProperty(arg.toString(), value.toString());
-        }
+        PropertyHelper ph=PropertyHelper.getPropertyHelper(this);
+        ph.copyUserProperties(other);
     }
 
     /**
@@ -612,15 +549,8 @@ public class Project {
      * @since Ant 1.5
      */
     public void copyInheritedProperties(Project other) {
-        Enumeration e = inheritedProperties.keys();
-        while (e.hasMoreElements()) {
-            String arg = e.nextElement().toString();
-            if (other.getUserProperty(arg) != null) {
-                continue;
-            }
-            Object value = inheritedProperties.get(arg);
-            other.setInheritedProperty(arg, value.toString());
-        }
+        PropertyHelper ph=PropertyHelper.getPropertyHelper(this);
+        ph.copyInheritedProperties(other);
     }
 
     /**
