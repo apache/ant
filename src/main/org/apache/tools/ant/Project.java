@@ -537,7 +537,13 @@ public class Project {
         } while (!curtarget.getName().equals(targetName));
     }
 
-    public File resolveFile(String fileName) {
+    /**
+     * Return the canonical form of fileName as an absolute path.
+     *
+     * <p>If fileName is a relative file name, resolve it relative to
+     * rootDir.</p>
+     */
+    public File resolveFile(String fileName, File rootDir) {
         fileName = fileName.replace('/', File.separatorChar).replace('\\', File.separatorChar);
 
         // deal with absolute files
@@ -580,14 +586,14 @@ public class Project {
             return new File(sb.toString());
         }
 
-        File file = new File(baseDir.getAbsolutePath());
+        File file = new File(rootDir.getAbsolutePath());
         StringTokenizer tok = new StringTokenizer(fileName, File.separator, false);
         while (tok.hasMoreTokens()) {
             String part = tok.nextToken();
             if (part.equals("..")) {
                 String parentFile = file.getParent();
                 if (parentFile == null) {
-                    throw new BuildException("The file or path you specified (" + fileName + ") is invalid releative to " + baseDir.getAbsolutePath());
+                    throw new BuildException("The file or path you specified (" + fileName + ") is invalid releative to " + rootDir.getAbsolutePath());
                 }
                 file = new File(parentFile);
             } else if (part.equals(".")) {
@@ -605,6 +611,10 @@ public class Project {
                 e.getMessage(), MSG_ERR);
             return new File(file.getAbsolutePath());
         }
+    }
+
+    public File resolveFile(String fileName) {
+        return resolveFile(fileName, baseDir);
     }
 
     /**

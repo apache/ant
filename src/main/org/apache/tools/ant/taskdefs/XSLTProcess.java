@@ -92,7 +92,7 @@ public class XSLTProcess extends MatchingTask {
 
     private File baseDir = null;
 
-    private File xslFile = null;
+    private String xslFile = null;
 
     private String targetExtension = ".html";
     private Vector params = new Vector();
@@ -153,10 +153,11 @@ public class XSLTProcess extends MatchingTask {
         long styleSheetLastModified = 0;
         if (xslFile != null) {
             try {
+                File file = project.resolveFile(xslFile, baseDir);
                 // Create a new XSL processor with the specified stylesheet
-                styleSheetLastModified = xslFile.lastModified();
-                log( "Loading stylesheet " + xslFile, Project.MSG_INFO);
-                liaison.setStylesheet( xslFile.toString() );
+                styleSheetLastModified = file.lastModified();
+                log( "Loading stylesheet " + file, Project.MSG_INFO);
+                liaison.setStylesheet( file.toString() );
                 for(Enumeration e = params.elements();e.hasMoreElements();) {
                     Param p = (Param)e.nextElement();
                     liaison.addParam( p.getName(), p.getExpression() );
@@ -213,15 +214,13 @@ public class XSLTProcess extends MatchingTask {
     } //-- setDestDir
 
     /**
-     * Sets the file to use for styling relative to the base directory.
+     * Sets the file to use for styling relative to the base directory
+     * of this task.
      */
-    public void setStyle(File xslFile) {
+    public void setStyle(String xslFile) {
         this.xslFile = xslFile;
     }
 
-    /**
-     * Sets the file to use for styling relative to the base directory.
-     */
     public void setProcessor(String processor) throws Exception {
 
         if (processor.equals("trax")) {

@@ -6,9 +6,6 @@ Changes that could break older environments:
 
 * Zip.setWhenempty() has changed its signature.
 
-* <style>'s style attribute will be resolved as relative to the
-  projects basedir instead of the basedir attribute of the task.
-
 Fixed bugs:
 -----------
 
@@ -26,6 +23,8 @@ Fixed bugs:
   and omit tasks it fails to load.
 
 * won't try to pass a -bootclasspath flag to javac 1.1 anymore
+
+* <style>'s style attribute no handles absolute paths correctly.
 
 Changes from Ant 1.2 to Ant 1.3
 ===========================================
