@@ -143,7 +143,7 @@ public class Ejbc extends MatchingTask {
         }
                                     
         helperTask.setArgs(args);
-        helperTask.setClasspath(execClassPath);
+        helperTask.setClasspath(new Path(execClassPath));
         if (helperTask.executeJava() != 0) {                         
             throw new BuildException("Execution of ejbc helper failed");
         }

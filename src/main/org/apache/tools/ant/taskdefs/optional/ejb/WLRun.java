@@ -156,7 +156,7 @@ public class WLRun extends Task {
         jvmArgs += " -Dweblogic.system.propertiesFile=" + weblogicPropertiesFile;
 
         weblogicServer.setJvmargs(jvmArgs);
-        weblogicServer.setClasspath(execClassPath);                         
+        weblogicServer.setClasspath(new Path(execClassPath));                         
         if (weblogicServer.executeJava() != 0) {                         
             throw new BuildException("Execution of weblogic server failed");
         }

@@ -116,7 +116,7 @@ public class WLStop extends Task {
         String args = serverURL + " SHUTDOWN " + username + " " + password + " " + delay;
 
         weblogicAdmin.setArgs(args);
-        weblogicAdmin.setClasspath(execClassPath);                         
+        weblogicAdmin.setClasspath(new Path(execClassPath));                         
         weblogicAdmin.execute();
     }
     

@@ -124,7 +124,7 @@ public class DDCreator extends MatchingTask {
         ddCreatorTask.setFork("yes");
         ddCreatorTask.setClassname("org.apache.tools.ant.taskdefs.optional.ejb.DDCreatorHelper");
         ddCreatorTask.setArgs(args);
-        ddCreatorTask.setClasspath(execClassPath);                         
+        ddCreatorTask.setClasspath(new Path(execClassPath));                         
         if (ddCreatorTask.executeJava() != 0) {                         
             throw new BuildException("Execution of ddcreator helper failed");
         }
