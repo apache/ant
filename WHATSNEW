@@ -21,6 +21,8 @@ Fixed bugs:
 * The ExpandProperties filter threw NPEs when defined using
   the <filterreader> format.
 
+* If a task got redefined via <taskdef>, it lost its child elements.
+
 Other changes:
 --------------
 

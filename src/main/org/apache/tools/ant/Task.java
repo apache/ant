@@ -54,6 +54,8 @@
 
 package org.apache.tools.ant;
 
+import java.util.Enumeration;
+
 /**
  * Base class for all tasks.
  *
@@ -372,9 +374,31 @@ public abstract class Task extends ProjectComponent {
             replacement.setOwningTarget(target);
             replacement.setRuntimeConfigurableWrapper(wrapper);
             wrapper.setProxy(replacement);
+            replaceChildren(wrapper, replacement);
             target.replaceChild(this, replacement);
             replacement.maybeConfigure();
         }
         return replacement;
+    }
+
+    /**
+     * Recursively adds an UnknownElement instances for each child
+     * element of replacement.
+     *
+     * @since Ant 1.6
+     */
+    private void replaceChildren(RuntimeConfigurable wrapper,
+                                 UnknownElement parentElement) {
+        Enumeration enum = wrapper.getChildren();
+        while (enum.hasMoreElements()) {
+            RuntimeConfigurable childWrapper =
+                (RuntimeConfigurable) enum.nextElement();
+            UnknownElement childElement = 
+                new UnknownElement(childWrapper.getElementTag());
+            parentElement.addChild(childElement);
+            childElement.setRuntimeConfigurableWrapper(childWrapper);
+            childWrapper.setProxy(childElement);
+            replaceChildren(childWrapper, childElement);
+        }
     }
 }

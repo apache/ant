@@ -149,6 +149,15 @@ public class RuntimeConfigurable {
     }
 
     /**
+     * Returns an enumeration of all child wrappers.
+     *
+     * @since Ant 1.6
+     */
+    Enumeration getChildren() {
+        return children.elements();
+    }
+
+    /**
      * Adds characters from #PCDATA areas to the wrapped element.
      *
      * @param data Text to add to the wrapped element.
