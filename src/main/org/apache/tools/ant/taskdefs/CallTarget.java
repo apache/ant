@@ -82,6 +82,7 @@ public class CallTarget extends Task {
 
     private Ant callee;
     private String subTarget;
+    private boolean initialized = false;
 
     public void init() {
         callee = (Ant) project.createTask("ant");
@@ -89,9 +90,14 @@ public class CallTarget extends Task {
         callee.setTaskName(getTaskName());
         callee.setLocation(location);
         callee.init();
+        initialized = true;
     }
 
     public void execute() {
+        if (!initialized) {
+            init();
+        }
+        
         if (subTarget == null) {
             throw new BuildException("Attribute target is required.", 
                                      location);

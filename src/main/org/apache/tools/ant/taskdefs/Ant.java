@@ -205,6 +205,7 @@ public class Ant extends Task {
             // Are we trying to call the target in which we are defined?
             if (p1.getBaseDir().equals(project.getBaseDir()) &&
                 p1.getProperty("ant.file").equals(project.getProperty("ant.file")) &&
+                getOwningTarget() != null &&
                 target.equals(this.getOwningTarget().getName())) { 
 
                 throw new BuildException("ant task calling its own parent target");
