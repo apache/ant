@@ -609,7 +609,7 @@ public class XSLTProcess extends MatchingTask implements XSLTLogger {
         /** The parameter name */
         private String name = null;
 
-        /** The parameter's XSL expression */
+        /** The parameter's value */
         private String expression = null;
 
         /**
@@ -622,10 +622,9 @@ public class XSLTProcess extends MatchingTask implements XSLTLogger {
         }
 
         /**
-         * The XSL expression for the parameter value
-         *
-         * @param expression the XSL expression representing the
-         *   parameter's value.
+         * The parameter value
+         * NOTE : was intended to be an XSL expression.
+         * @param expression the parameter's value.
          */
         public void setExpression(String expression) {
             this.expression = expression;
@@ -645,10 +644,10 @@ public class XSLTProcess extends MatchingTask implements XSLTLogger {
         }
 
         /**
-         * Get the parameter expression
+         * Get the parameter's value
          *
-         * @return the parameter expression
-         * @exception BuildException if the expression is not set.
+         * @return the parameter value
+         * @exception BuildException if the value is not set.
          */
         public String getExpression() throws BuildException {
             if (expression == null) {
