@@ -22,7 +22,7 @@
   </properties>
 
   <body>
-    
+
     <section name="Related Projects">
 
       <p>Nothing listed here is directly supported by the Ant
@@ -37,7 +37,7 @@
         (J2EE or other) specific for your application
         architecture.</p>
 
-        <table>
+        <table class="externals">
           <tr>
             <th>Compatibility:</th>
             <td>1.4.1 and above</td>
@@ -64,7 +64,7 @@
         playground for experimental tasks like a C/C++ compilation
         task for different compilers.</p>
 
-        <table>
+        <table class="externals">
           <tr>
             <th>Compatibility:</th>
             <td>1.4.1 and above</td>
@@ -96,14 +96,14 @@
         Try/Catch/Finally, Switch, Variable, Stopwatch, Limit, Math,
         Post, SSH, SCP, AntFetch, AntCallBack.</p>
 
-        <table>
+        <table class="externals">
           <tr>
             <th>Compatibility:</th>
-            <td>Tested extensively with Ant 1.5.x.</td>
+            <td>Ant 1.5 and higher.</td>
           </tr>
           <tr>
             <th>URL:</th>
-            <td><a href="http://antelope.sourceforge.net/">http://antelope.sourceforge.net/</a></td>
+            <td><a href="http://antelope.tigris.org/">http://antelope.tigris.org/</a></td>
           </tr>
           <tr>
             <th>Contact:</th>
@@ -126,7 +126,7 @@
         updating a project intranet site with artifacts from the
         latest build.</p>
 
-        <table>
+        <table class="externals">
           <tr>
             <th>Compatibility:</th>
             <td>bundles Ant 1.3, is compatible with Ant 1.3 to 1.4.1</td>
@@ -146,6 +146,70 @@
         </table>
       </subsection>
 
+      <subsection name="Antworks">
+
+        <p>The antworks project is a set of tools and standardized targets that
+        greatly simplifies using ant in your project.</p>
+        <p>
+            The driver behind antworks is Importer. Importer is an extension to the
+            ant import task that will download and
+            cache an ant build.xml file and it's associated resources called
+            antlets.  Antlets are available for Java compiling
+            and packaging,  JUnit, Forrest, J2EE and
+            <a href="http://antworks.sourceforge.net/antlets/">more</a>.
+            </p>
+            <p>
+            See the <a href="http://antworks.sourceforge.net/start.html ">Getting Started</a>
+            guide for more information.
+            </p>
+
+        <table class="externals">
+          <tr>
+            <th>Compatibility:</th>
+            <td>1.6 and later</td>
+          </tr>
+          <tr>
+            <th>URL:</th>
+            <td><a href="http://antworks.sourceforge.net/">http://antworks.sourceforge.net/index.html</a></td>
+          </tr>
+          <tr>
+            <th>Contact:</th>
+            <td><a href ="http://lists.sourceforge.net/lists/listinfo/antworks-developers">Antworks Developers mailing lists</a></td>
+          </tr>
+          <tr>
+            <th>License:</th>
+            <td>The Apache License 2.0</td>
+          </tr>
+        </table>
+      </subsection>
+
+      <subsection name="BuildMonkey">
+
+        <p>BuildMonkey is a Web-based automated build dashboard, with upload
+           capability and google web search. It schedules the running of Ant
+           build scripts - checking sources out of CM - and makes the results
+           available centrally.</p>
+
+        <table class="externals">
+          <tr>
+            <th>Compatibility:</th>
+            <td>Ant 1.5.4 or later</td>
+          </tr>
+          <tr>
+            <th>URL:</th>
+            <td><a href="http://www.buildmonkey.com">http://www.buildmonkey.com</a></td>
+          </tr>
+          <tr>
+            <th>Contact:</th>
+            <td><a href="mailto:jb@buildmonkey.com">jb@buildmonkey.com</a></td>
+          </tr>
+          <tr>
+            <th>License:</th>
+            <td>Freeware, commercial/support licences available</td>
+          </tr>
+        </table>
+      </subsection>
+
       <subsection name="CruiseControl">
 
         <p>CruiseControl is a tool for setting up a continuous build
@@ -154,7 +218,7 @@
         also comes bundled with a servlet for viewing the status of
         the current build, as well as previous build results.</p>
 
-        <table>
+        <table class="externals">
           <tr>
             <th>Compatibility:</th>
             <td>Ant 1.2 and higher</td>
@@ -204,50 +268,18 @@
         </subsection>
 
       <subsection name="Krysalis Centipede">
-
-        <p>Krysalis Centipede is a project build system based on
-        Apache Ant. Centipede uses pre-packaged modules called "cents"
-        that it downloads and installs automatically.  Cents can be
-        used as Ant tasks or easy to use targets.</p>
-
-        <p>For example, Forrest is an XML standards oriented project
-        documentation framework based on Apache Cocoon. In order to
-        assist your projects adoption of this powerful documentation
-        generation tool we have packaged it as a cent that will
-        (optionally) be automatically downloaded, installed and used
-        to build project documentation which includes output from
-        other cents such as Javadoc, JDepend, Checkstyle and many
-        others.</p>
-
-        <table>
-          <tr>
-            <th>Compatibility:</th>
-            <td>1.4.1 an later</td>
-          </tr>
-          <tr>
-            <th>URL:</th>
-            <td><a href="http://krysalis.org/centipede/">http://krysalis.org/centipede/</a></td>
-          </tr>
-          <tr>
-            <th>Contact:</th>
-            <td><a href ="http://sourceforge.net/mail/?group_id=36516">mailing lists</a></td>
-          </tr>
-          <tr>
-            <th>License:</th>
-            <td>The Krysalis Patchy Software License, based on and
-            fully compatible with the Apache Software Foundation
-            license</td>
-          </tr>
-        </table>
+        <p>The Centipede admin told us, that that project
+           "is no more" and that "Antworks has taken it place."
+        </p>
       </subsection>
-      
+
       <subsection name="NAnt">
 
         <p>NAnt is a .NET based build tool. In theory it is kind of
         like make without make's wrinkles. In practice it's a lot like
         Ant.</p>
 
-        <table>
+        <table class="externals">
           <tr>
             <th>Compatibility:</th>
             <td>compatible in spirit.</td>
@@ -273,7 +305,7 @@
         system that allows an Ant build file to launch builds on other
         systems and receive exceptions should they occur.</p>
 
-        <table>
+        <table class="externals">
           <tr>
             <th>Compatibility:</th>
             <td>Ant 1.4</td>
@@ -299,7 +331,7 @@
         from desktop documents or other structured documents using
         XSLT and Ant.</p>
 
-        <table>
+        <table class="externals">
           <tr>
             <th>Compatibility:</th>
             <td>Ant 1.4</td>
