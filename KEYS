@@ -80,6 +80,8 @@ sig 3       F88341D9 2003-03-17   Lars Eilebrecht <lars@eilebrecht.org>
 sig 3       2261D073 2003-03-17   Astrid Keáler (Kess) <kess@kess-net.de>
 sig         21D0A71B 2003-03-17   Dirk-Willem van Gulik <dirkx@apache.org>
 sig         75A67692 2003-03-18   Erik Abele <erik@codefaktor.de>
+sig         B3B2A12C 2003-05-20   ct magazine CERTIFICATE <pgpCA@ct.heise.de>
+sig 3       8103A37E 2003-04-04   Andre Malo <nd@apache.org>
 uid                            Stefan Bodewig <bodewig@bost.de>
 sig 3       5F6B8B72 2001-05-28   Stefan Bodewig <bodewig@apache.org>
 sig         51898504 2002-01-11   Conor MacNeill <conor@cortexebusiness.com.au>
@@ -87,12 +89,16 @@ sig 3       F88341D9 2003-03-17   Lars Eilebrecht <lars@eilebrecht.org>
 sig 3       2261D073 2003-03-17   Astrid Keáler (Kess) <kess@kess-net.de>
 sig         21D0A71B 2003-03-17   Dirk-Willem van Gulik <dirkx@apache.org>
 sig         75A67692 2003-03-18   Erik Abele <erik@codefaktor.de>
+sig         B3B2A12C 2003-05-20   ct magazine CERTIFICATE <pgpCA@ct.heise.de>
+sig 3       8103A37E 2003-04-04   Andre Malo <nd@apache.org>
 uid                            Stefan Bodewig <stefan.bodewig@freenet.de>
 sig 3       5F6B8B72 2003-03-07   Stefan Bodewig <bodewig@apache.org>
 sig 3       F88341D9 2003-03-17   Lars Eilebrecht <lars@eilebrecht.org>
 sig 3       2261D073 2003-03-17   Astrid Keáler (Kess) <kess@kess-net.de>
 sig         21D0A71B 2003-03-17   Dirk-Willem van Gulik <dirkx@apache.org>
 sig         75A67692 2003-03-18   Erik Abele <erik@codefaktor.de>
+sig         B3B2A12C 2003-05-20   ct magazine CERTIFICATE <pgpCA@ct.heise.de>
+sig 3       8103A37E 2003-04-04   Andre Malo <nd@apache.org>
 sub  1024g/24774157 2001-05-28
 sig         5F6B8B72 2001-05-28   Stefan Bodewig <bodewig@apache.org>
 
@@ -119,7 +125,10 @@ eK0hZb3IvSd5iEYEExECAAYFAj512sEACgkQ7tHqOSJh0HNFuACfb7quMJZHOk5p
 pmTxf4GVS5bh3E4AniLa5788ktdcZCBE5Or+G+yuIGooiD8DBRA+daoa/W+IxiHQ
 pxsRAkQFAKDmlWVuQnWfaGK9z8CP4vESTfiXyQCgpnf1yJWDgqWvUHOAvOeaTPDR
 cOmIRgQQEQIABgUCPnekEAAKCRAVP6DNdaZ2ki/rAJ9Q0x5m4SE3hMNGUoMgS0MN
-mYXDOQCdGa0QW2fZW4B1wSjiUIi6VgY+F7G0IFN0ZWZhbiBCb2Rld2lnIDxib2Rl
+mYXDOQCdGa0QW2fZW4B1wSjiUIi6VgY+F7GIRgQQEQIABgUCPsoulgAKCRDb0kX8
+s7KhLBfwAKDV6uwqf9AMBJlr4aE45rWOnlWAeQCgjBYQVHWFjV1cmpT06vE4bMDV
+J6+IRgQTEQIABgUCPo3OLAAKCRDKaTl0gQOjfpFKAJ9TY+mKmq0INLC9iqxbEETj
+NwOn0gCgspeNEqX1SUjt932Lj3IvXR6fkAi0IFN0ZWZhbiBCb2Rld2lnIDxib2Rl
 d2lnQGJvc3QuZGU+iFcEExECABcFAjsSOYEFCwcKAwQDFQMCAxYCAQIXgAAKCRCi
 EVrhX2uLcsm6AKDaA//SYJv2pcXwGBC89OSzGvxy3gCg1kx6qu6zJKaWaE1L9oFq
 Vc65OUSIRgQQEQIABgUCPD7VlQAKCRCBBGRPUYmFBNCzAJ9tv7tNS6NwaOZQ8cR0
@@ -131,7 +140,10 @@ BQI+ddrHAAoJEO7R6jkiYdBzruYAnAzvTrvDQNvoAoaDQJ+o/ydqMA8ZAJwNEOQD
 Hsz+6ynbMPoQmKmUqfEISIg/AwUQPnWqIf1viMYh0KcbEQIkpwCeInf4o3C5Ykh/
 xBodVImrp2Cvcy8AoMn3me5p4Sl2rm2tjVxTJZt2sUr7iEYEEBECAAYFAj53pBoA
 CgkQFT+gzXWmdpIpGgCgiTARP6Cf+JKOxUaVFr0L9DC5oUcAoIxF7D5mOVK/AFcp
-1cxNk3BLtdq3tCpTdGVmYW4gQm9kZXdpZyA8c3RlZmFuLmJvZGV3aWdAZnJlZW5l
+1cxNk3BLtdq3iEYEEBECAAYFAj7KLjIACgkQ29JF/LOyoSwAbACglNp7V2Pw4U57
+5IuooM677bZf8pwAn2U2TcHj7PYprU+qYRkyJ3pa7FyyiEYEExECAAYFAj6NzjUA
+CgkQymk5dIEDo35YPwCeJIU/monN96nP4jJjAuflEXMbemUAoJXq7oVCYuOCqWr/
+T3VW0DM3W+dntCpTdGVmYW4gQm9kZXdpZyA8c3RlZmFuLmJvZGV3aWdAZnJlZW5l
 dC5kZT6IXAQTEQIAHAUCPmiBXAIbAwQLBwMCAxUCAwMWAgECHgECF4AACgkQohFa
 4V9ri3JPKACfXhFOr4gMMIQwEGvUb6J/X4asuzIAnje2H9T1r/jSVi1NbIEtQfbp
 myQXiJkEEwECAAYFAj513w8ACgkQPo+38viDQdmGkgPnUYJfHlDrQ2jYJWuPDve9
@@ -141,7 +153,10 @@ aoRYhtiKzTqNuoC+0x+IRgQTEQIABgUCPnXaxwAKCRDu0eo5ImHQc5lcAJ9FOoAL
 4uHMuqHXrrxsEVPJvEJ2/ACggaOR62EziUqcqpdm/1Zy3P4T22iIPwMFED51qjj9
 b4jGIdCnGxECWssAoKnkR63bWGCFDB5YJtfZJ+nQq3TAAKD1bzG/kITQpIHsT2vC
 Y1yBmlWbBYhGBBARAgAGBQI+d6QaAAoJEBU/oM11pnaS+9IAn0kFlXAzOhhu4r5f
-glMVuw5bTAd0AKCtYRX2ESU/+tsE8vuXWtsMCGeI5bkBDQQ7EiJUEAQAzVKWS8Qr
+glMVuw5bTAd0AKCtYRX2ESU/+tsE8vuXWtsMCGeI5YhGBBARAgAGBQI+yi67AAoJ
+ENvSRfyzsqEsSccAoKqG39X2y6xoQa56nviF5iCj/oTFAJwLKx9GyKEUbSM9f/IQ
+7AsZPhHT54hGBBMRAgAGBQI+jc41AAoJEMppOXSBA6N+xYgAn1HbGamcXTDYSFjn
+3U5ik2vQa8nuAKC/uUM01gsdn+71EiAkmrjlH6H9MLkBDQQ7EiJUEAQAzVKWS8Qr
 kysydbTJu2/14wIbz2Coi93aAGelwCwXSxf50JpYdY3Lkcvd0FqT8bcEnz43MCSx
 8vlKubQtUpx9WMGIb4ixtShLJ4lAa6FJldhychz/dnxSNyz5N8W6sby4dTVxac0r
 loxjAOurGanhG7TMtgfDi0cEEoXRyAVoKyMAAwUD/j1pJm4Npq2mlJoE7MK3vAhg
@@ -149,7 +164,7 @@ KwYHFflmJusmqvSAtRuFdT15pbMJrA5bAK+lA3SVOOhhWTCItlphSR2qxJCAcBTe
 OMqUi5ohFcCkSRNvwmDtH+80B3BehlEsEKNk8Z3moa2ch7Oxnb6XEXH5tGJ5Qvx9
 Qid6ZfBaXx7bc8yKyCb4iEYEGBECAAYFAjsSIlQACgkQohFa4V9ri3INMgCgnc22
 kj8TfjktU6u4SUUqud25ZZcAn0B2b0zPjKjGuiwdKSnkFbNcFS3g
-=gzOQ
+=9dY9
 -----END PGP PUBLIC KEY BLOCK-----
 
 pub  1024R/697ECEDD 2000-04-06 Henri Gomez <hgomez@slib.fr>
