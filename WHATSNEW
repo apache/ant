@@ -54,6 +54,12 @@ Fixed bugs:
 
 * <jar> fails early if a given manifest file doesn't exist
 
+* <rmic> doesn't search for the _Skel file anymore when stubversion is
+  set to 1.2.
+
+* <rmic> uses the the same classpath to verify a class can be rmic'd
+  as it passes to the compiler. 
+
 Changes from Ant 1.1 to Ant 1.2
 ===============================
 

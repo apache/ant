@@ -54,11 +54,14 @@
 
 package org.apache.tools.ant.taskdefs;
 
+import org.apache.tools.ant.AntClassLoader;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.DirectoryScanner;
 import org.apache.tools.ant.Project;
+import org.apache.tools.ant.types.Commandline;
 import org.apache.tools.ant.types.Path;
 import org.apache.tools.ant.types.Reference;
+import org.apache.tools.ant.util.*;
 
 import java.io.*;
 import java.util.StringTokenizer;
@@ -88,13 +91,14 @@ import java.util.Date;
  * @author duncan@x180.com
  * @author ludovic.claude@websitewatchers.co.uk
  * @author David Maclean <a href="mailto:david@cm.co.za">david@cm.co.za</a>
+ * @author <a href="mailto:stefan.bodewig@epost.de">Stefan Bodewig</a> 
  */
 
 public class Rmic extends MatchingTask {
 
-    private String base;
+    private File baseDir;
     private String classname;
-    private String sourceBase;
+    private File sourceBase;
     private String stubVersion;
     private Path compileClasspath;
     private boolean verify = false;
@@ -107,15 +111,17 @@ public class Rmic extends MatchingTask {
 
     private Vector compileList = new Vector();
 
-    public void setBase(String base) {
-        this.base = base;
+    private ClassLoader loader = null;
+
+    public void setBase(File base) {
+        this.baseDir = base;
     }
 
     public void setClassname(String classname) {
         this.classname = classname;
     }
 
-    public void setSourceBase(String sourceBase) {
+    public void setSourceBase(File sourceBase) {
         this.sourceBase = sourceBase;
     }
 
@@ -196,7 +202,6 @@ public class Rmic extends MatchingTask {
     }
 
     public void execute() throws BuildException {
-        File baseDir = project.resolveFile(base);
         if (baseDir == null) {
             throw new BuildException("base attribute must be set!", location);
         }
@@ -219,97 +224,76 @@ public class Rmic extends MatchingTask {
                 log("IDL Options: " + idlopts, Project.MSG_INFO );
             }
         }
-        File sourceBaseFile = null;
-        if (null != sourceBase) {
-            sourceBaseFile = project.resolveFile(sourceBase);
-        }
+
         Path classpath = getCompileClasspath(baseDir);
+        loader = new AntClassLoader(project, classpath);
 
         // scan base dirs to build up compile lists only if a
         // specific classname is not given
         if (classname == null) {
             DirectoryScanner ds = this.getDirectoryScanner(baseDir);
             String[] files = ds.getIncludedFiles();
-            scanDir(baseDir, files, verify);
+            scanDir(baseDir, files);
+        } else {
+            // otherwise perform a timestamp comparison - at least
+            scanDir(baseDir, 
+                    new String[] {classname.replace('.', File.separatorChar) + ".class"});
         }
         
         // XXX
         // need to provide an input stream that we read in from!
 
-        sun.rmi.rmic.Main compiler = new sun.rmi.rmic.Main(System.out, "rmic");
-        int argCount = 5;
-        int i = 0;
-        if (null != stubVersion) argCount++;
-        if (null != sourceBase) argCount++;
-        if (iiop) {
-            argCount++;
-            if( iiopopts != null ) {
-                argCount++;
-            }
-        }
-        if (idl) {
-            argCount++;
-            if( idlopts != null ) {
-                argCount++;
-            }
-        }
+        OutputStream logstr = new LogOutputStream(this, Project.MSG_WARN);
+        sun.rmi.rmic.Main compiler = new sun.rmi.rmic.Main(logstr, "rmic");
+        Commandline cmd = new Commandline();
         
-        if (compileList.size() > 0) argCount += compileList.size() - 1;
-        String[] args = new String[argCount];
-        args[i++] = "-d";
-        args[i++] = baseDir.getAbsolutePath();
-        args[i++] = "-classpath";
-        args[i++] = classpath.toString();
+        cmd.createArgument().setValue("-d");
+        cmd.createArgument().setFile(baseDir);
+        cmd.createArgument().setValue("-classpath");
+        cmd.createArgument().setPath(classpath);
         if (null != stubVersion) {
             if ("1.1".equals(stubVersion))
-                args[i++] = "-v1.1";
+                cmd.createArgument().setValue("-v1.1");
             else if ("1.2".equals(stubVersion))
-                args[i++] = "-v1.2";
+                cmd.createArgument().setValue("-v1.2");
             else
-                args[i++] = "-vcompat";
+                cmd.createArgument().setValue("-vcompat");
         }
-        if (null != sourceBase) args[i++] = "-keepgenerated";
+        if (null != sourceBase)
+            cmd.createArgument().setValue("-keepgenerated");
 
         if( iiop ) {
-             args[i++] = "-iiop";
-             if( iiopopts != null ) 
-                args[i++] = iiopopts;
+            cmd.createArgument().setValue("-iiop");
+            if( iiopopts != null ) 
+                cmd.createArgument().setValue(iiopopts);
         }
 
         if( idl )  {
-             args[i++] = "-idl";
-             if( idlopts != null ) 
-                args[i++] = idlopts;
+            cmd.createArgument().setValue("-idl");
+            if( idlopts != null ) 
+                cmd.createArgument().setValue(idlopts);
         }
 
-
-        if (classname != null) {
-            if (shouldCompile(new File(baseDir, classname.replace('.', File.separatorChar) + ".class"))) {
-                args[i++] = classname;
-                compiler.compile(args);
+        int fileCount = compileList.size();
+        if (fileCount > 0) {
+            log("RMI Compiling " + fileCount +
+                " class"+ (fileCount > 1 ? "es" : "")+" to " + baseDir, 
+                Project.MSG_INFO);
+            
+            for (int j = 0; j < fileCount; j++) {
+                cmd.createArgument().setValue((String) compileList.elementAt(j));
             }
-        } else {
-            if (compileList.size() > 0) {
-                log("RMI Compiling " + compileList.size() +
-                    " classes to " + baseDir, Project.MSG_INFO);
-
-                for (int j = 0; j < compileList.size(); j++) {
-                    args[i++] = (String) compileList.elementAt(j);
-                }
-                compiler.compile(args);
-            }
+            log("Compilation args: " + cmd.toString(), Project.MSG_VERBOSE);
+            compiler.compile(cmd.getArguments());
         }
 
         // Move the generated source file to the base directory
         if (null != sourceBase) {
-            if (classname != null) {
-                moveGeneratedFile(baseDir, sourceBaseFile, classname);
-            } else {
-                for (int j = 0; j < compileList.size(); j++) {
-                    moveGeneratedFile(baseDir, sourceBaseFile, (String) compileList.elementAt(j));
-                }
+            for (int j = 0; j < fileCount; j++) {
+                moveGeneratedFile(baseDir, sourceBase, (String) compileList.elementAt(j));
             }
         }
+        compileList.removeAllElements();
     }
 
     /**
@@ -350,97 +334,17 @@ public class Rmic extends MatchingTask {
      * The result is returned in the class variable compileList.
      */
 
-    protected void scanDir(File baseDir, String files[], boolean shouldVerify) {
-        compileList.removeAllElements();
-        for (int i = 0; i < files.length; i++) {
-            File baseFile = new File(baseDir, files[i]);
-            if (files[i].endsWith(".class") &&
-                !files[i].endsWith("_Stub.class") &&
-                !files[i].endsWith("_Skel.class")) {
-                if (shouldCompile(baseFile)) {
-                    String classname = files[i].replace(File.separatorChar, '.');
-                    classname = classname.substring(0, classname.indexOf(".class"));
-                    boolean shouldAdd = true;
-                    if (shouldVerify) {
-                        try {
-                            Class testClass = Class.forName(classname);
-                            // One cannot RMIC an interface
-                            if (testClass.isInterface() || !isValidRmiRemote(testClass)) {
-                                shouldAdd = false;
-                            }
-                        } catch (ClassNotFoundException e) {
-                            log("Unable to verify class " + classname + 
-                                    ". It could not be found.", Project.MSG_WARN);
-                        } catch (NoClassDefFoundError e) {
-                            log("Unable to verify class " + classname + 
-                                        ". It is not defined.", Project.MSG_WARN);
-                        }
-                    }
-                    if (shouldAdd) {
-                        log("Adding: " + classname + " to compile list",
-                            Project.MSG_VERBOSE);
-                        compileList.addElement(classname);
-                    }
-                }
-            }
+    protected void scanDir(File baseDir, String files[]) {
+        SourceFileScanner sfs = new SourceFileScanner(this);
+        String[] newFiles = sfs.restrict(files, baseDir, baseDir,
+                                         new RmicFileNameMapper());
+        for (int i = 0; i < newFiles.length; i++) {
+            String classname = newFiles[i].replace(File.separatorChar, '.');
+            classname = classname.substring(0, classname.indexOf(".class"));
+            compileList.addElement(classname);
         }
     }
-
  
-    /**
-     * Check to see if the class or superclasses/interfaces implement
-     * java.rmi.Remote.
-     */
-    private boolean isValidRmiRemote (Class testClass) {
-        Class rmiRemote = java.rmi.Remote.class;
-        
-        if (rmiRemote.equals(testClass)) {
-            // This class is java.rmi.Remote
-            return true;
-        }
-        
-        Class [] interfaces = testClass.getInterfaces();
-        if (interfaces != null) {
-            for (int i = 0; i < interfaces.length; i++) {
-                if (rmiRemote.equals(interfaces[i])) {
-                    // This class directly implements java.rmi.Remote
-                    return true;
-                }
-                if (isValidRmiRemote(interfaces[i])) {
-                    return true;
-                }
-            }
-        }
-        return false;
-    }
-
-    /**
-     * Determine whether the class needs to be RMI compiled. It looks at the _Stub.class
-     * and _Skel.class files' last modification date and compares it with the class' class file.
-     */
-    private boolean shouldCompile (File classFile) {
-        long now = (new Date()).getTime();
-        File stubFile = new File(classFile.getAbsolutePath().substring(0,
-                classFile.getAbsolutePath().indexOf(".class")) + "_Stub.class");
-        File skelFile = new File(classFile.getAbsolutePath().substring(0,
-                classFile.getAbsolutePath().indexOf(".class")) + "_Skel.class");
-        if (classFile.exists()) {
-            if (classFile.lastModified() > now) {
-                log("Warning: file modified in the future: " +
-                    classFile, Project.MSG_WARN);
-            }
-
-            if (classFile.lastModified() > stubFile.lastModified()) {
-                return true;
-            } else if (classFile.lastModified() > skelFile.lastModified()) {
-                return true;
-            } else {
-                return false;
-            }
-        }
-        return true;
-    }
-
     /**
      * Builds the compilation classpath.
      */
@@ -470,6 +374,103 @@ public class Rmic extends MatchingTask {
             }
         }
         return classpath;
+    }
+
+    /**
+     * Mapper that possibly returns two file names, *_Stub and *_Skel.
+     */
+    private class RmicFileNameMapper implements FileNameMapper {
+
+        private GlobPatternMapper stubMapper;
+        private GlobPatternMapper skelMapper;
+
+        RmicFileNameMapper() {
+            stubMapper = new GlobPatternMapper();
+            stubMapper.setFrom("*.class");
+            stubMapper.setTo("*_Stub.class");
+
+            // no _Skel file in stub version 1.2
+            if (!"1.2".equals(stubVersion)) {
+                skelMapper = new GlobPatternMapper();
+                skelMapper.setFrom("*.class");
+                skelMapper.setTo("*_Skel.class");
+            }
+        }
+
+        /**
+         * Empty implementation.
+         */
+        public void setFrom(String s) {}
+        /**
+         * Empty implementation.
+         */
+        public void setTo(String s) {}
+
+        public String[] mapFileName(String name) {
+            String[] stubName = stubMapper.mapFileName(name);
+
+            if (stubName == null || name.endsWith("_Stub.class") 
+                || name.endsWith("_Skel.class")) {
+                // Not a .class file
+                return null;
+            }
+
+            String classname = name.replace(File.separatorChar, '.');
+            classname = classname.substring(0, classname.indexOf(".class"));
+            if (verify) {
+                try {
+                    Class testClass = loader.loadClass(classname);
+                    // One cannot RMIC an interface
+                    if (testClass.isInterface() || 
+                        !isValidRmiRemote(testClass)) {
+                        return null;
+                    }
+                } catch (ClassNotFoundException e) {
+                    log("Unable to verify class " + classname + 
+                        ". It could not be found.", Project.MSG_WARN);
+                } catch (NoClassDefFoundError e) {
+                    log("Unable to verify class " + classname + 
+                        ". It is not defined.", Project.MSG_WARN);
+                }
+            }
+
+            if (skelMapper != null) {
+                return new String[] {
+                    stubName[0], 
+                    skelMapper.mapFileName(name)[0]
+                };
+            } else {
+                return stubName;
+            }
+        }
+
+        /**
+         * Check to see if the class or superclasses/interfaces implement
+         * java.rmi.Remote.
+         */
+        private boolean isValidRmiRemote (Class testClass) {
+            Class rmiRemote = java.rmi.Remote.class;
+            
+            if (rmiRemote.equals(testClass)) {
+                // This class is java.rmi.Remote
+                return true;
+            }
+            
+            Class [] interfaces = testClass.getInterfaces();
+            if (interfaces != null) {
+                for (int i = 0; i < interfaces.length; i++) {
+                    if (rmiRemote.equals(interfaces[i])) {
+                        // This class directly implements java.rmi.Remote
+                        return true;
+                    }
+                    if (isValidRmiRemote(interfaces[i])) {
+                        return true;
+                    }
+                }
+            }
+            return false;
+        }
+        
     }
 
 }
