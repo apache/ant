@@ -39,7 +39,9 @@ To use a fileset, the <var>todir</var> attribute must be set.</p>
     <td valign="top">The file to copy to.</td>
     <td valign="top" align="center" rowspan="2">With the <var>file</var> attribute, 
     either <var>tofile</var> or <var>todir</var> can be used.  With nested filesets, 
-    only <var>todir</var> is allowed.</td>
+    if the fileset size is greater than 1 or if the only entry in the fileset is a
+    directory or if the file attribute is already specified, only
+    <var>todir</var> is allowed</td>
   </tr>
   <tr>
     <td valign="top">todir</td>

@@ -74,6 +74,7 @@ import java.util.*;
  * @author Glenn McAllister <a href="mailto:glennm@ca.ibm.com">glennm@ca.ibm.com</a>
  * @author <a href="mailto:stefan.bodewig@epost.de">Stefan Bodewig</a>
  * @author <A href="gholam@xtra.co.nz">Michael McCallum</A>
+ * @author <a href="mailto:umagesh@rediffmail.com">Magesh Umasankar</a>
  */
 public class Copy extends Task {
     protected File file = null;     // the source file 
@@ -287,7 +288,27 @@ public class Copy extends Task {
         }
            
         if (destFile != null && filesets.size() > 0) {
-            throw new BuildException("Cannot concatenate multple files into a single file.");
+            if (filesets.size() > 1) {
+                throw new BuildException(
+                    "Cannot concatenate multiple files into a single file.");
+            } else {
+                FileSet fs = (FileSet) filesets.elementAt(0);
+                DirectoryScanner ds = fs.getDirectoryScanner(project);
+                String[] srcFiles = ds.getIncludedFiles();
+
+                if (srcFiles.length > 0) {
+                    if (file == null) {
+                        file = new File(srcFiles[0]);
+                        filesets.removeElementAt(0);
+                    } else {
+                        throw new BuildException(
+                            "Cannot concatenate multiple files into a single file.");
+                    }
+                } else {
+                    throw new BuildException(
+                        "Cannot perform operation from directory to file.");
+                }
+            }
         }
 
         if (destFile != null) {
