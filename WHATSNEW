@@ -68,6 +68,13 @@ Changes that could break older environments:
   command line parameters any longer - please use the environment
   variable ANT_OPTS for such parameters now.
 
+* A delete task like
+  <delete includeEmptyFilesets="true">
+    <fileset dir="somedir" />
+  </delete>
+  will now remove "somedir" as well, unless there are still files left
+  in it (matched by the default excludes).
+
 Other changes:
 --------------
 
