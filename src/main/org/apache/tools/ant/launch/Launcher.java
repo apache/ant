@@ -195,7 +195,13 @@ public class Launcher {
             AntMain main = (AntMain) mainClass.newInstance();
             main.startAnt(newArgs, null, null);
         } catch (Throwable t) {
-            t.printStackTrace();
+            if (t instanceof InstantiationException) {
+                InstantiationException ie = (InstantiationException) t;
+                System.err.println("Instantiation Exception - root cause:");
+                ie.getCause().printStackTrace();
+            } else {
+                t.printStackTrace();
+            }
         }
     }
 }
