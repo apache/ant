@@ -99,8 +99,8 @@ public abstract class HttpRepository extends Repository {
      */
     public void setBaseDir(File basedir) {
         try {
-            URL url=basedir.toURL();
-            setUrl(url.toExternalForm());
+            URL u = basedir.toURL();
+            setUrl(u.toExternalForm());
         } catch (MalformedURLException e) {
             throw new BuildException(e);
         }
