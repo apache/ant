@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2001-2002 The Apache Software Foundation.  All rights
+ * Copyright (c) 2001-2003 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -403,7 +403,14 @@ public class JspC extends MatchingTask {
      */
     public void execute()
         throws BuildException {
-        if (destDir != null && !destDir.isDirectory()) {
+
+        // make sure that we've got a destdir
+        if (destDir == null) {
+            throw new BuildException("destdir attribute must be set!",
+                                     getLocation());
+        }
+
+        if (!destDir.isDirectory()) {
             throw new
                 BuildException("destination directory \"" + destDir +
                                "\" does not exist or is not a directory",
