@@ -51,7 +51,12 @@
 ## This is where the common macro's live
 
 #macro ( table $table)
-  <table class="ForrestTable" cellspacing="1" cellpadding="4">
+  #if ($table.getAttributeValue("class"))
+    #set ($class = $table.getAttributeValue("class"))
+  #else
+    #set ($class = "ForrestTable")
+  #end
+  <table class="$!class" cellspacing="1" cellpadding="4">
   #foreach ( $items in $table.getChildren() )
     #if ($items.getName().equals("tr"))
       #tr ($items)

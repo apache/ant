@@ -9,13 +9,37 @@
   </properties>
 
 <body>
+  <section name="Java Pro 2003 Readers Choice Award">
+    <a href="http://www.ftponline.com/javapro/">
+      <img style="padding: 5px" src="images/jp_rcwinner_2003.gif" alt="" border="0" height="80" width="139" align="right"/></a>
+    <h3>June 11th, 2003: Ant wins a Java Pro readers' choice award</h3>
+    <p>
+      Ant has won the Java Pro 2003 Readers' Choice Award for 
+    </p>
+    <p>
+      <strong>Most Valuable Java Deployment Technology</strong>.
+    </p>
+    
+    <p>
+      Thanks to Java Pro and all its readers. You can read about
+      these 
+      <a href="http://www.ftponline.com/reports/javaone/2003/awards/">awards</a>
+      at the Java Pro website.
+    </p>
+  </section>
+
   <section name="Ant keeps on winning!">
     <a href="http://www.javaworld.com"><img src="images/jw_ec_logo_winner2003.gif" alt="" border="0" height="108" width="252" align="right"/></a>
     <h3>June 9th, 2003: Ant wins the JavaWorld Editors&apos; Choice Award</h3>
 
     <p>
     Ant has won the JavaWorld Editors&apos; Choice Award for
-    <strong>Most Useful Java Community-Developed Technology</strong> 
+    </p>
+    <p>
+    <strong>Most Useful Java Community-Developed Technology</strong>
+    </p>
+    
+    <p>
     for the second time in a row! Read the
     <a href="http://www.javaworld.com/javaworld/jw-06-2003/jw-0609-eca.html"> full article</a> -- or jump directly to the bit about
     <a href="http://www.javaworld.com/javaworld/jw-06-2003/jw-0609-eca-p4.html"> our award</a> <code>:)</code></p>
