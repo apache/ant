@@ -112,7 +112,7 @@ public class ComponentHelper  {
      */
     private Stack antLibStack = new Stack();
     /** current antlib context */
-    private AntTypeTable antLibTypeTable = null;
+    private AntTypeTable antLibCurrentTypeTable = null;
 
     /**
      * Map from task names to vectors of created tasks
@@ -268,8 +268,10 @@ public class ComponentHelper  {
     public AntTypeDefinition getDefinition(String componentName) {
         checkNamespace(componentName);
         AntTypeDefinition ret = null;
-        if (antLibTypeTable != null && componentName.indexOf(':') == -1) {
-            ret = antLibTypeTable.getDefinition(componentName);
+        if (antLibCurrentTypeTable != null
+            && ProjectHelper.ANT_CURRENT_URI.equals(
+                ProjectHelper.extractUriFromComponentName(componentName))) {
+            ret = antLibCurrentTypeTable.getDefinition(componentName);
         }
         if (ret == null) {
             ret = antTypeTable.getDefinition(componentName);
@@ -689,9 +691,11 @@ public class ComponentHelper  {
                         Project.MSG_DEBUG);
             antTypeTable.put(name, def);
 
-            if (antLibTypeTable != null && name.lastIndexOf(':') != -1) {
+            if (antLibCurrentTypeTable != null && name.lastIndexOf(':') != -1) {
                 String baseName = name.substring(name.lastIndexOf(':') + 1);
-                antLibTypeTable.put(baseName, def);
+                antLibCurrentTypeTable.put(
+                    ProjectHelper.genComponentName(
+                        ProjectHelper.ANT_CURRENT_URI, baseName), def);
             }
         }
     }
@@ -700,8 +704,8 @@ public class ComponentHelper  {
      * Called at the start of processing an antlib
      */
     public void enterAntLib() {
-        antLibTypeTable = new AntTypeTable(project);
-        antLibStack.push(antLibTypeTable);
+        antLibCurrentTypeTable = new AntTypeTable(project);
+        antLibStack.push(antLibCurrentTypeTable);
     }
 
     /**
@@ -710,9 +714,9 @@ public class ComponentHelper  {
     public void exitAntLib() {
         antLibStack.pop();
         if (antLibStack.size() != 0) {
-            antLibTypeTable = (AntTypeTable) antLibStack.peek();
+            antLibCurrentTypeTable = (AntTypeTable) antLibStack.peek();
         } else {
-            antLibTypeTable = null;
+            antLibCurrentTypeTable = null;
         }
     }
 

@@ -88,6 +88,9 @@ public class ProjectHelper {
     /** The URI for ant name space */
     public static final String ANT_CORE_URI       = "ant:core";
 
+    /** The URI for antlib current definitions */
+    public static final String ANT_CURRENT_URI      = "ant:current";
+
     /** The URI for defined types/tasks - the format is antlib:<package> */
     public static final String ANTLIB_URI     = "antlib:";
 
