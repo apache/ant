@@ -54,9 +54,10 @@
 
 package org.apache.tools.ant;
 
-import junit.framework.*;
-import org.apache.tools.ant.*;
-import java.io.*;
+import junit.framework.TestCase;
+import org.apache.tools.ant.Project;
+import java.io.File;
+import java.io.PrintStream;
 import java.net.URL;
 
 /**

@@ -61,7 +61,7 @@ import org.apache.tools.ant.*;
 /**
  * stress out java task
  * @author steve loughran
- * @author <a href="mailto:sbailliez@apache.org>Stephane Bailliez</a> 
+ * @author <a href="mailto:sbailliez@apache.org">Stephane Bailliez</a> 
  */
 public class JavaTest extends BuildFileTest {
     
@@ -100,7 +100,8 @@ public class JavaTest extends BuildFileTest {
     public void testJarNoFork() {
         expectBuildExceptionContaining("testJarNoFork",
             "parameter validation",
-            "Cannot execute a jar in non-forked mode. Please set fork='true'. ");        
+            "Cannot execute a jar in non-forked mode. " 
+                + "Please set fork='true'. ");        
     }
       
     public void testJarAndClassName() { 
