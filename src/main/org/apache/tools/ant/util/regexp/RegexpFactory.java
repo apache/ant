@@ -62,6 +62,7 @@ import org.apache.tools.ant.Project;
  * <code>ant.regexp.regexpimpl</code>.
  *
  * @author Matthew Inger <a href="mailto:mattinger@mindless.com">mattinger@mindless.com</a>
+ * @version $Revision$
  */
 public class RegexpFactory extends RegexpMatcherFactory
 {
@@ -110,12 +111,21 @@ public class RegexpFactory extends RegexpMatcherFactory
         throw new BuildException("No supported regular expression matcher found");
     }
 
-    protected Regexp createRegexpInstance(String classname) {
+    /**
+     * Wrapper over {@seee RegexpMatcherFactory#createInstance
+     * createInstance} that ensures that we are dealing with a Regexp
+     * implementation.
+     *
+     * @since 1.3
+     */
+    protected Regexp createRegexpInstance(String classname) 
+        throws BuildException {
+
         RegexpMatcher m = createInstance(classname);
         if (m instanceof Regexp) {
             return (Regexp) m;
         } else {
-            return new MatcherWrappedAsRegexp(m);
+            throw new BuildException(classname + " doesn't implement the Regexp interface");
         }
     }
 
