@@ -129,7 +129,7 @@ public class ProjectHelperImpl2 extends ProjectHelper {
             ex.printStackTrace();
         }
     }
-    
+
     /**
      * Parses the project file, configuring the project as it goes.
      * 
@@ -835,7 +835,7 @@ public class ProjectHelperImpl2 extends ProjectHelper {
                 }
             } else {
                 task.init();
-                RuntimeConfigurable2.configure(task, attrs, context.project);
+                PropertyHelper.getPropertyHelper(context.project).configure(task, attrs, context.project);
             }
         }
 
@@ -999,7 +999,7 @@ public class ProjectHelperImpl2 extends ProjectHelper {
                     childWrapper.setAttributes2(attrs);
                     parentWrapper.addChild(childWrapper);
                 } else {
-                    RuntimeConfigurable2.configure(child, attrs, context.project);
+                    PropertyHelper.getPropertyHelper(context.project).configure(child, attrs, context.project);
                     ih.storeElement(context.project, parent, child, elementName);
                 }
             } catch (BuildException exc) {
@@ -1117,7 +1117,7 @@ public class ProjectHelperImpl2 extends ProjectHelper {
                     wrapper.setAttributes2(attrs);
                     target.addDataType(wrapper);
                 } else {
-                    RuntimeConfigurable2.configure(element, attrs, context.project);
+                    PropertyHelper.getPropertyHelper(context.project).configure(element, attrs, context.project);
                     context.configureId(element, attrs);
                 }
             } catch (BuildException exc) {

@@ -8,6 +8,10 @@
           todir="${ant.src}/src/main/org/apache/tools/ant/helper" />
     <copy file="RuntimeConfigurable2.java"  
           todir="${ant.src}/src/main/org/apache/tools/ant" />
+    <copy file="PropertyInterceptor.java"  
+          todir="${ant.src}/src/main/org/apache/tools/ant" />
+    <copy file="PropertyHelper.java"  
+          todir="${ant.src}/src/main/org/apache/tools/ant" />
 
     <echo message="${toString:test}" />
 
@@ -16,6 +20,8 @@
            destdir="${ant.build}/classes" >
       <classpath location="${ant.build}/classes" />
       <include name="**/ProjectHelperImpl2.java" />
+      <include name="**/PropertyHelper.java" />
+      <include name="**/PropertyInterceptor.java" />
       <include name="**/RuntimeConfigurable2.java" />
     </javac>
 
@@ -28,6 +34,8 @@
       <include name="META-INF/**" />
       <include name="org/apache/tools/ant/helper/ProjectHelperImpl2*" />
       <include name="org/apache/tools/ant/RuntimeConfigurable2*" />
+      <include name="org/apache/tools/ant/PropertyHelper*" />
+      <include name="org/apache/tools/ant/PropertyInterceptor*" />
     </jar>
 
     <copy file="ant-sax2.jar" todir="${ant.home}/lib" />

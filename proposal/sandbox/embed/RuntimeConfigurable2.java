@@ -176,7 +176,7 @@ public class RuntimeConfigurable2 extends RuntimeConfigurable {
      * @return The child wrapper at position <code>index</code> within the
      *         list.
      */
-    RuntimeConfigurable getChild(int index) {
+    public RuntimeConfigurable getChild(int index) {
         return (RuntimeConfigurable) children.elementAt(index);
     }
 
@@ -234,7 +234,8 @@ public class RuntimeConfigurable2 extends RuntimeConfigurable {
         String id = null;
 
         if (attributes != null) {
-            configure(wrappedObject, attributes, p);
+            PropertyHelper ph=PropertyHelper.getPropertyHelper(p);
+            ph.configure(wrappedObject, attributes, p);
             id = attributes.getValue("id");
             attributes = null;
         }
@@ -255,125 +256,11 @@ public class RuntimeConfigurable2 extends RuntimeConfigurable {
                 child.maybeConfigure(p);
             }
             ProjectHelper.storeChild(p, wrappedObject, child.wrappedObject, 
-                child.getElementTag().toLowerCase(Locale.US));
+                                     child.getElementTag().toLowerCase(Locale.US));
         }
 
         if (id != null) {
             p.addReference(id, wrappedObject);
         }
-    }
-
-
-    public static void configure( Object target, Attributes attrs, Project project )
-        throws BuildException
-    {
-        if (target instanceof TaskAdapter) {
-            target = ((TaskAdapter) target).getProxy();
-        }
-        
-        IntrospectionHelper ih = 
-            IntrospectionHelper.getHelper(target.getClass());
-        
-        project.addBuildListener(ih);
-        
-        for (int i = 0; i < attrs.getLength(); i++) {
-            // reflect these into the target
-            String value = RuntimeConfigurable2.replaceProperties(project, attrs.getValue(i));
-            
-            try {
-                ih.setAttribute(project, target, 
-                                attrs.getQName(i).toLowerCase(Locale.US), value);
-            } catch (BuildException be) {
-                // id attribute must be set externally
-                if (!attrs.getQName(i).equals("id")) {
-                    throw be;
-                }
-            }
-        }
-    }
-
-    public static String replaceProperties( Project project ,String value ) {
-        if (value == null) {
-            return null;
-        }
-
-        Vector fragments = new Vector();
-        Vector propertyRefs = new Vector();
-
-        ProjectHelper.parsePropertyString(value, fragments, propertyRefs);
-
-        StringBuffer sb = new StringBuffer();
-        Enumeration i = fragments.elements();
-        Enumeration j = propertyRefs.elements();
-        while (i.hasMoreElements()) {
-            
-            String fragment = (String) i.nextElement();
-            if (fragment == null) {
-                String propertyName = (String) j.nextElement();
-                Object repl=project.getProperty( propertyName );
-
-                if( repl==null) {
-                    // Try a dynamic substitiution using ref
-                    repl=processReference( project, propertyName );
-                }
-                
-                if (repl==null ) {
-                    project.log("Property ${" + propertyName 
-                        + "} has not been set", Project.MSG_VERBOSE);
-                    fragment="${" + propertyName + "}"; 
-                } else {
-                    fragment = (String) repl;
-                }
-            }
-            sb.append(fragment);
-        }                        
-        
-        return sb.toString();
-
-    }
-
-    static Hashtable propertySources=new Hashtable();
-
-    public static interface ProjectPropertySource {
-
-	public String getProperty( Project project, String key );
-	
-    }
-    
-    public static void addPropertySource( String ns, ProjectPropertySource src ) {
-        propertySources.put( ns, src );
-    }
-
-    
-    /** Use the reference table to generate values for ${} substitution.
-     *  To preserve backward compat ( as much as possible ) we'll only process
-     *  ids with a 'namespace-like' syntax.
-     *
-     *  Currently we support:
-     *    dom:idName:/xpath/like/syntax  - the referenced node must be a DOM, we'll use
-     *                      XPath to extract a node. ( a simplified syntax is handled
-     *                      directly, XXX used for 'real' xpaths ).
-     *    toString:idName - we use toString on the referenced object
-     *    bean:idName.propertyName - we get the idName and call the getter for the property. 
-     */
-    static String processReference( Project project, String name ) {
-        if( name.startsWith( "toString:" )) {
-            name=name.substring( "toString:".length());
-            Object v=project.getReference( name );
-            if( v==null ) return null;
-            return v.toString();
-        }
-
-        int idx=name.indexOf(":");
-        if( idx<0 ) return null;
-
-        String ns=name.substring( 0, idx );
-        String path=name.substring( idx );
-
-        ProjectPropertySource ps=(ProjectPropertySource)propertySources.get( ns );
-        if( ps == null )
-            return null;
-
-        return ps.getProperty( project, path );
     }
 }
