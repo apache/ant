@@ -23,7 +23,7 @@
  *    Alternately, this acknowlegement may appear in the software itself,
  *    if and wherever such third-party acknowlegements normally appear.
  *
- * 4. The names "The Jakarta Project", "Tomcat", and "Apache Software
+ * 4. The names "The Jakarta Project", "Ant", and "Apache Software
  *    Foundation" must not be used to endorse or promote products derived
  *    from this software without prior written permission. For written
  *    permission, please contact apache@apache.org.
@@ -97,6 +97,16 @@ public class SourceFileScanner {
 
         long now = (new java.util.Date()).getTime();
         StringBuffer targetList = new StringBuffer();
+
+        /*
+          If we're on Windows, we have to munge the time up to 2 secs to
+          be able to check file modification times.
+          (Windows has a max resolution of two secs for modification times)
+        */
+        String osname = System.getProperty("os.name").toLowerCase();
+        if ( osname.indexOf("windows") >= 0 ) {
+            now += 2000;
+        }
 
         Vector v = new Vector();
         for (int i=0; i< files.length; i++) {
