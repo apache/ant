@@ -1599,6 +1599,8 @@
                    unless="trax.impl.present"/>
           <exclude name="${optional.package}/junit/JUnitReportTest.java"
                    unless="run.junitreport"/>
+          <exclude name="${ant.package}/taskdefs/StyleTest.java"
+                   unless="trax.impl.present"/>
 
           <!-- needs BSF to work -->
           <exclude name="${optional.package}/XalanLiaisonTest.java"
