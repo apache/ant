@@ -140,6 +140,14 @@
                     <li><a href="#always-recompiles">
   Why does Ant always recompile all my Java files?
   </a></li>
+                    <li><a href="#passing-cli-args">
+  How do I pass parameters from the command line to my
+        build file?
+  </a></li>
+                    <li><a href="#jikes-switches">
+  How can I use Jikes specific command line
+        switches?
+  </a></li>
                 </ul>
       </blockquote>
     </td></tr>
@@ -411,6 +419,147 @@
                                         <p>If your setup is different, Ant's heuristic won't work and
         it will recompile classes that are up to date.  Ant is not the
         only tool, that expects a source tree layout like this.</p>
+                        </blockquote>
+    </td></tr>
+  </table>
+  </a>
+        <a name="passing-cli-args">
+  <table border="0" cellspacing="0" cellpadding="2" width="100%">
+    <tr><td bgcolor="#828DA6">
+      <font color="#ffffff" face="arial,helvetica,sanserif">
+        <strong>
+          How do I pass parameters from the command line to my
+        build file?
+        </strong>
+      </font>
+    </td></tr>
+    <tr><td>
+      <blockquote>
+                              <p>Use properties: <code>ant
+        -D&lt;name&gt;=&lt;value&gt;</code> lets you define values for
+        properties.  These can then be used within your build file as
+        any normal property: <code>${&lt;name&gt;}</code> will put in
+        <code>&lt;value&gt;</code>.</p>
+                        </blockquote>
+    </td></tr>
+  </table>
+  </a>
+        <a name="jikes-switches">
+  <table border="0" cellspacing="0" cellpadding="2" width="100%">
+    <tr><td bgcolor="#828DA6">
+      <font color="#ffffff" face="arial,helvetica,sanserif">
+        <strong>
+          How can I use Jikes specific command line
+        switches?
+        </strong>
+      </font>
+    </td></tr>
+    <tr><td>
+      <blockquote>
+                              <p>A couple of switches are supported via magic
+          properties:</p>
+                                          <table>
+              <tr>
+                  <td bgcolor="#039acc" colspan="" rowspan="" 
+      valign="top" align="left">
+    <font color="#000000" size="-1" face="arial,helvetica,sanserif">
+          switch
+        </font>
+  </td>
+                      <td bgcolor="#039acc" colspan="" rowspan="" 
+      valign="top" align="left">
+    <font color="#000000" size="-1" face="arial,helvetica,sanserif">
+          property
+        </font>
+  </td>
+                      <td bgcolor="#039acc" colspan="" rowspan="" 
+      valign="top" align="left">
+    <font color="#000000" size="-1" face="arial,helvetica,sanserif">
+          default
+        </font>
+  </td>
+      </tr>
+                  <tr>
+                  <td bgcolor="#a0ddf0" colspan="" rowspan="" 
+      valign="top" align="left">
+    <font color="#000000" size="-1" face="arial,helvetica,sanserif">
+          +E
+        </font>
+  </td>
+                      <td bgcolor="#a0ddf0" colspan="" rowspan="" 
+      valign="top" align="left">
+    <font color="#000000" size="-1" face="arial,helvetica,sanserif">
+          build.compiler.emacs
+        </font>
+  </td>
+                      <td bgcolor="#a0ddf0" colspan="" rowspan="" 
+      valign="top" align="left">
+    <font color="#000000" size="-1" face="arial,helvetica,sanserif">
+          false == not set
+        </font>
+  </td>
+      </tr>
+                  <tr>
+                  <td bgcolor="#a0ddf0" colspan="" rowspan="" 
+      valign="top" align="left">
+    <font color="#000000" size="-1" face="arial,helvetica,sanserif">
+          -nowarn
+        </font>
+  </td>
+                      <td bgcolor="#a0ddf0" colspan="" rowspan="" 
+      valign="top" align="left">
+    <font color="#000000" size="-1" face="arial,helvetica,sanserif">
+          build.compiler.warnings
+        </font>
+  </td>
+                      <td bgcolor="#a0ddf0" colspan="" rowspan="" 
+      valign="top" align="left">
+    <font color="#000000" size="-1" face="arial,helvetica,sanserif">
+          true == not set
+        </font>
+  </td>
+      </tr>
+                  <tr>
+                  <td bgcolor="#a0ddf0" colspan="" rowspan="" 
+      valign="top" align="left">
+    <font color="#000000" size="-1" face="arial,helvetica,sanserif">
+          +P
+        </font>
+  </td>
+                      <td bgcolor="#a0ddf0" colspan="" rowspan="" 
+      valign="top" align="left">
+    <font color="#000000" size="-1" face="arial,helvetica,sanserif">
+          build.compiler.pedantic
+        </font>
+  </td>
+                      <td bgcolor="#a0ddf0" colspan="" rowspan="" 
+      valign="top" align="left">
+    <font color="#000000" size="-1" face="arial,helvetica,sanserif">
+          false == not set
+        </font>
+  </td>
+      </tr>
+                  <tr>
+                  <td bgcolor="#a0ddf0" colspan="" rowspan="" 
+      valign="top" align="left">
+    <font color="#000000" size="-1" face="arial,helvetica,sanserif">
+          +F
+        </font>
+  </td>
+                      <td bgcolor="#a0ddf0" colspan="" rowspan="" 
+      valign="top" align="left">
+    <font color="#000000" size="-1" face="arial,helvetica,sanserif">
+          build.compiler.fulldepend
+        </font>
+  </td>
+                      <td bgcolor="#a0ddf0" colspan="" rowspan="" 
+      valign="top" align="left">
+    <font color="#000000" size="-1" face="arial,helvetica,sanserif">
+          false == not set
+        </font>
+  </td>
+      </tr>
+        </table>
                         </blockquote>
     </td></tr>
   </table>

@@ -138,6 +138,64 @@
 
       </answer>
     </faq>
+
+    <faq id="passing-cli-args">
+      <question>How do I pass parameters from the command line to my
+        build file?</question>
+      <answer>
+
+        <p>Use properties: <code>ant
+        -D&lt;name&gt;=&lt;value&gt;</code> lets you define values for
+        properties.  These can then be used within your build file as
+        any normal property: <code>${&lt;name&gt;}</code> will put in
+        <code>&lt;value&gt;</code>.</p>
+
+      </answer>
+    </faq>
+
+    <faq id="jikes-switches">
+      <question>How can I use Jikes specific command line
+        switches?</question>
+
+      <answer>
+
+        <p>A couple of switches are supported via magic
+          properties:</p>
+
+        <table>
+          <tr>
+            <th>switch</th>
+            <th>property</th>
+            <th>default</th>
+          </tr>
+
+          <tr>
+            <td>+E</td>
+            <td>build.compiler.emacs</td>
+            <td>false == not set</td>
+          </tr>
+
+          <tr>
+            <td>-nowarn</td>
+            <td>build.compiler.warnings</td>
+            <td>true == not set</td>
+          </tr>
+
+          <tr>
+            <td>+P</td>
+            <td>build.compiler.pedantic</td>
+            <td>false == not set</td>
+          </tr>
+
+          <tr>
+            <td>+F</td>
+            <td>build.compiler.fulldepend</td>
+            <td>false == not set</td>
+          </tr>
+        </table>
+
+      </answer>
+    </faq>
   </faqsection>
 
   <faqsection title="Ant and IDEs/Editors">
