@@ -19,7 +19,7 @@
       note that any HTML parts sent to the lists will be removed by our
       mailing list software - you shouldn&apos;t be sending HTML mails
       anyway.</p>
-        
+
       <p>These lists are archived at</p>
 
         <ul>
@@ -30,13 +30,13 @@
 
       <subsection name="User List">
         <p>
-          <b>Medium Traffic</b> 
-          <a href="mailto:user-subscribe@ant.apache.org">Subscribe</a>  
-          <a href="mailto:user-unsubscribe@ant.apache.org">Unsubscribe</a> 
+          <b>High Traffic</b>
+          <a href="mailto:user-subscribe@ant.apache.org">Subscribe</a>
+          <a href="mailto:user-unsubscribe@ant.apache.org">Unsubscribe</a>
 <!--
-          <a href="http://archives.apache.org/eyebrowse/SummarizeList?listName=user@ant.apache.org">Archive</a> 
+          <a href="http://archives.apache.org/eyebrowse/SummarizeList?listName=user@ant.apache.org">Archive</a>
 -->
-          <a href="http://marc.theaimsgroup.com/?l=ant-user&amp;r=1&amp;w=2">Archive</a> 
+          <a href="http://marc.theaimsgroup.com/?l=ant-user&amp;r=1&amp;w=2">Archive</a>
         </p>
 
         <p>This list is for developers that are using Ant in their own
@@ -46,13 +46,13 @@
 
       <subsection name="Developer List">
         <p>
-          <b>High Traffic</b> 
-          <a href="mailto:dev-subscribe@ant.apache.org">Subscribe</a>  
-          <a href="mailto:dev-unsubscribe@ant.apache.org">Unsubscribe</a> 
+          <b>High Traffic</b>
+          <a href="mailto:dev-subscribe@ant.apache.org">Subscribe</a>
+          <a href="mailto:dev-unsubscribe@ant.apache.org">Unsubscribe</a>
 <!--
-          <a href="http://archives.apache.org/eyebrowse/SummarizeList?listName=dev@ant.apache.org">Archive</a> 
+          <a href="http://archives.apache.org/eyebrowse/SummarizeList?listName=dev@ant.apache.org">Archive</a>
 -->
-          <a href="http://marc.theaimsgroup.com/?l=ant-dev&amp;r=1&amp;w=2">Archive</a> 
+          <a href="http://marc.theaimsgroup.com/?l=ant-dev&amp;r=1&amp;w=2">Archive</a>
         </p>
 
         <p>This is the list where participating developers of the Ant
