@@ -439,8 +439,7 @@ public abstract class DefaultCompilerAdapter implements CompilerAdapter
                                                                  Project.MSG_WARN ) );
                 exe.setWorkingDirectory( project.getBaseDir() );
                 exe.setCommandline( commandArray );
-                exe.execute();
-                return exe.getExitValue();
+                return exe.execute();
             }
             catch( IOException e )
             {

@@ -287,17 +287,6 @@ public class Execute
     }
 
     /**
-     * query the exit value of the process.
-     *
-     * @return the exit value, 1 if the process was killed, or Project.INVALID
-     *      if no exit value has been received
-     */
-    public int getExitValue()
-    {
-        return m_exitValue;
-    }
-
-    /**
      * Runs a process defined by the command line and returns its exit status.
      *
      * @return the exit status of the subprocess or <code>INVALID</code>
@@ -346,7 +335,7 @@ public class Execute
         m_streamHandler.stop();
         if( m_watchdog != null )
             m_watchdog.checkException();
-        return getExitValue();
+        return m_exitValue;
     }
 
     /**
