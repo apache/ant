@@ -1,42 +1,84 @@
 <document>
 
     <properties>
-        <author email="adammurdoch@apache.org">Adam Murdoch</author>
-        <title>Introduction</title>
+        <author email="peter@apache.org">Peter Donald</author>
+        <title>Myrmidon</title>
     </properties>
 
     <body>
+        <section name="What is Ant?">
+
+            <p>Ant is a cross-platform build tool that features ease of
+            use and extensibility as it's primary goal.</p>
+
+            <p>Why another build tool when there is already make, gnumake,
+            nmake, jam, and others? Make-like tools are inherently shell-based;
+            they execute native commands and shell scripts to perform the work
+            associated with the build process. So to extend the the tool by
+            writing a program or script executable by the OS you are on. This
+            makes it difficult to achieve portability between platforms.</p>
+
+            <p>Ant is a different beast. Instead of using OS-specific commands
+            to extend the build process, you leverage the cross-platform features
+            of Java to write &quot;tasks&quot;. This makes it much easier to achieve
+            a portal build process between platforms. Ant also differs in that it uses
+            XML to describe the build process.</p>
+
+        </section>
 
         <section name="What is Myrmidon?">
 
-            <p>
-            Myrmidon is one of the Ant 2 proposals currently in development.  You can
-            read more about the goals of Ant 2
+            <p>Myrmidon is a proposal for Ant 2. Ant2 is the next evolution of the
+            Ant build tool aimed at removing many of the limitations of the Ant1.x
+            product. In particular it aims to;</p>
 
+            <ul>
+                <li>Remove ambiguities and points of confusion for build file
+                writers.</li>
+                <li>Ease deployment and management of 3rd party tasks and
+                dependencies.</li>
+                <li>Simplify development of tasks by task-writers.</li>
+                <li>Enable ad-hoc &quot;tasks&quot; to be written inside build file,
+                probably using well known scripting languages such as python and
+                javascript. (Possible in ant1.x but prohibitively difficult).</li>
+                <li>Integrate templating technologies such as XSLT, velocity etc
+                to enable development of reusable build file elements.</li>
+            </ul>
+
+            <p> You can read more about the goals of Ant 2
                 <a href="http://jakarta.apache.org/ant/ant2/">here</a>.
-
             </p>
 
-            <p>
-            Myrmidon is a general-purpose
-                <i>task engine</i>.  It contains the basic
-            building blocks for assembling any sort of task-based tool.  Ant 2
-            is an example of such a tool, which could be assembled using the Myrmidon task
-            engine, and a library of build related tasks.
-
-            </p>
-
-            <p>
-            Currently, Myrmidon is a prototype of what a task engine might look.  It
-            includes a small set of tasks and data types.  We are currently porting
-            many of the Ant 1.x tasks to the Myrmidon task engine.
-            </p>
-
-            <p>
+            <p>Myrmidon was specifically designed as both a tool and as
+            an API library that can be reused in other products. It contains the
+            basic building blocks for assembling any sort of task-based tool. Ant 2
+            is an example of such a tool, which could be assembled using the Myrmidon
+            task container, and a library of build related tasks.
             </p>
 
         </section>
 
-    </body>
+        <section name="A Rose by any other name ...">
+            <p>
+              The name Myrmidon is a derivation of a mythological name for some ants that were turned
+              into soldiers by the god Zeus. It came to mean "a subordinate who executes orders
+              unquestioningly" which seemed suitable for a task execution/build tool. A more complete
+              description stolen from
+                <a href="http://bondi-blue.parlez.com/previous_words/myrmidon.txt">
+                                            http://bondi-blue.parlez.com/previous_words/myrmidon.txt</a>.
+            </p>
 
+            <quote>
+                <i>The appellation Myrmidon was derived from the Greek word "myrmex",
+                meaning ant.  According to Greek mythology, the Myrmidons were
+                transformed into humans by the god Zeus as an act of kindness to his
+                son Aeacus.  King Aeacus, captivated by a colony of ants, prayed
+                that he should receive an increase in population equal to the
+                number of ants before him.  When he awoke the next day, the ants
+                were his human subjects.  Thereafter, they were known as the
+                Myrmidons.  See "The Iliad" for Homers' account of the Myrmidons
+                during the Trojan War.</i>
+            </quote>
+        </section>
+    </body>
 </document>
