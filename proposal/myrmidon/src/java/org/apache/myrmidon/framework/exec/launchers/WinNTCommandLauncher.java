@@ -8,8 +8,8 @@
 package org.apache.myrmidon.framework.exec.launchers;
 
 import java.io.IOException;
-import org.apache.myrmidon.api.TaskException;
 import org.apache.myrmidon.framework.exec.CommandLauncher;
+import org.apache.myrmidon.framework.exec.ExecException;
 import org.apache.myrmidon.framework.exec.ExecMetaData;
 
 /**
@@ -28,7 +28,7 @@ public class WinNTCommandLauncher
      * set the working directory.
      */
     public Process exec( final ExecMetaData metaData )
-        throws IOException, TaskException
+        throws IOException, ExecException
     {
         // Use cmd.exe to change to the specified directory before running
         // the command

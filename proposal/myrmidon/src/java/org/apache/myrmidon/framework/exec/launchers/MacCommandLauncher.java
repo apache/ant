@@ -9,8 +9,8 @@ package org.apache.myrmidon.framework.exec.launchers;
 
 import java.io.File;
 import java.io.IOException;
-import org.apache.myrmidon.api.TaskException;
 import org.apache.myrmidon.framework.exec.CommandLauncher;
+import org.apache.myrmidon.framework.exec.ExecException;
 import org.apache.myrmidon.framework.exec.ExecMetaData;
 
 /**
@@ -31,7 +31,7 @@ public class MacCommandLauncher
      * Execute the specified native command.
      */
     public Process exec( final ExecMetaData metaData )
-        throws IOException, TaskException
+        throws IOException, ExecException
     {
         final File directory = metaData.getWorkingDirectory().getCanonicalFile();
         if( ExecUtil.isCwd( directory ) )

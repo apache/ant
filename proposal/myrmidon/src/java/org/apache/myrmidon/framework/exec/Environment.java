@@ -15,8 +15,8 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.Locale;
 import java.util.Properties;
-import org.apache.myrmidon.api.TaskException;
 import org.apache.myrmidon.framework.Os;
+import org.apache.myrmidon.api.TaskException;
 import org.apache.tools.ant.taskdefs.exec.Execute;
 import org.apache.tools.ant.taskdefs.exec.PumpStreamHandler;
 
@@ -49,7 +49,7 @@ public final class Environment
     }
 
     public static String[] toNativeFormat( final Properties environment )
-        throws TaskException
+        throws ExecException
     {
         final ArrayList newEnvironment = new ArrayList();
 
@@ -68,7 +68,7 @@ public final class Environment
      * @deprecated Dont use me!!!
      */
     public static Properties createEnvVars( final String[] environment )
-        throws TaskException
+        throws ExecException
     {
         final Properties newEnvironment = new Properties();
 
@@ -82,7 +82,7 @@ public final class Environment
     }
 
     public static void addNativeEnvironment( final Properties environment )
-        throws TaskException, IOException
+        throws ExecException, IOException
     {
         final Properties nativeEnvironment = getEnvironmentVariables();
         final Iterator nativeKeys = nativeEnvironment.keySet().iterator();
@@ -105,7 +105,7 @@ public final class Environment
      * native EnvironmentData Variables for the current process.
      */
     private static String[] getNativeEnvironmentAsArray()
-        throws IOException, TaskException
+        throws IOException, ExecException
     {
         final Properties environment = getEnvironmentVariables();
 
@@ -128,7 +128,7 @@ public final class Environment
      * native EnvironmentData Variables for the current process.
      */
     public static Properties getNativeEnvironment()
-        throws IOException, TaskException
+        throws IOException, ExecException
     {
         return new Properties( getEnvironmentVariables() );
     }
@@ -138,7 +138,7 @@ public final class Environment
      * attempt to load it if it has not already been loaded.
      */
     private synchronized static Properties getEnvironmentVariables()
-        throws IOException, TaskException
+        throws IOException, ExecException
     {
         if( null == c_procEnvironment )
         {
@@ -152,7 +152,7 @@ public final class Environment
      * Retrieve a last of environment variables from the native OS.
      */
     private static synchronized Properties retrieveEnvironmentVariables()
-        throws IOException, TaskException
+        throws IOException, ExecException
     {
         final Properties properties = new Properties();
         final String data = getEnvironmentText();
@@ -198,7 +198,7 @@ public final class Environment
      */
     private static void addProperty( final Properties properties,
                                      final String data )
-        throws TaskException
+        throws ExecException
     {
         final int index = data.indexOf( '=' );
         if( -1 == index )
@@ -206,7 +206,7 @@ public final class Environment
             //Our env variable does not have any = in it.
             final String message = "EnvironmentData variable '" + data +
                 "' does not have a '=' character in it";
-            throw new TaskException( message );
+            throw new ExecException( message );
         }
         else
         {
@@ -221,7 +221,7 @@ public final class Environment
      * running the environment command.
      */
     private static String getEnvironmentText()
-        throws IOException, TaskException
+        throws IOException, ExecException
     {
         final ByteArrayOutputStream output = new ByteArrayOutputStream();
         final Execute exe = new Execute( new PumpStreamHandler( output ) );
@@ -230,10 +230,17 @@ public final class Environment
         // Make sure we do not recurse forever
         exe.setNewenvironment( true );
 
-        final int retval = exe.execute();
-        if( retval != 0 )
+        try
         {
-            // Just try to use what we got
+            final int retval = exe.execute();
+            if( retval != 0 )
+            {
+                // Just try to use what we got
+            }
+        }
+        catch( final TaskException te )
+        {
+            throw new ExecException( te.getMessage(), te );
         }
 
         return output.toString();
@@ -244,7 +251,7 @@ public final class Environment
      * variables.
      */
     private static String[] getEnvCommand()
-        throws TaskException
+        throws ExecException
     {
         if( Os.isFamily( "os/2" ) )
         {
@@ -280,7 +287,7 @@ public final class Environment
         {
             final String message =
                 "Unable to determine native environment variables";
-            throw new TaskException( message );
+            throw new ExecException( message );
         }
     }
 }

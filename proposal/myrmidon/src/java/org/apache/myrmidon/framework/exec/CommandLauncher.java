@@ -8,7 +8,6 @@
 package org.apache.myrmidon.framework.exec;
 
 import java.io.IOException;
-import org.apache.myrmidon.api.TaskException;
 
 /**
  * This is the interface implemented by objects which are capable of
@@ -32,9 +31,9 @@ public interface CommandLauncher
      *            launch the application for some reason. Usually due
      *            to the command not being fully specified and not in
      *            the PATH env var.
-     * @exception TaskException if the command launcher detects that
+     * @exception ExecException if the command launcher detects that
      *            it can not execute the native command for some reason.
      */
     Process exec( ExecMetaData metaData )
-        throws IOException, TaskException;
+        throws IOException, ExecException;
 }

@@ -10,7 +10,6 @@ package org.apache.myrmidon.framework.exec;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import org.apache.myrmidon.api.TaskException;
 
 /**
  * Interface via which clients can request that a native
@@ -53,5 +52,5 @@ public interface ExecManager
                  OutputStream output,
                  OutputStream error,
                  long timeout )
-        throws IOException, TaskException /*TimeoutException*/;
+        throws IOException, ExecException /*TimeoutException*/;
 }

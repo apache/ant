@@ -11,8 +11,8 @@ import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import org.apache.myrmidon.api.TaskException;
 import org.apache.myrmidon.framework.exec.CommandLauncher;
+import org.apache.myrmidon.framework.exec.ExecException;
 import org.apache.myrmidon.framework.exec.ExecMetaData;
 
 /**
@@ -56,11 +56,11 @@ public class DefaultCommandLauncher
      *            launch the application for some reason. Usually due
      *            to the command not being fully specified and not in
      *            the PATH env var.
-     * @exception TaskException if the command launcher detects that
+     * @exception ExecException if the command launcher detects that
      *            it can not execute the native command for some reason.
      */
     public Process exec( final ExecMetaData metaData )
-        throws IOException, TaskException
+        throws IOException, ExecException
     {
         if( ExecUtil.isCwd( metaData.getWorkingDirectory() ) )
         {
@@ -71,7 +71,7 @@ public class DefaultCommandLauncher
         {
             final String message = "Unable to launch native command in a " +
                 "working directory other than \".\"";
-            throw new TaskException( message );
+            throw new ExecException( message );
         }
         else
         {
@@ -85,7 +85,7 @@ public class DefaultCommandLauncher
      * under 1.2.
      */
     private Process execJava13( final ExecMetaData metaData )
-        throws IOException, TaskException
+        throws IOException, ExecException
     {
         final Object[] args =
             {metaData.getCommand(),
@@ -97,11 +97,11 @@ public class DefaultCommandLauncher
         }
         catch( final IllegalAccessException iae )
         {
-            throw new TaskException( iae.getMessage(), iae );
+            throw new ExecException( iae.getMessage(), iae );
         }
         catch( final IllegalArgumentException iae )
         {
-            throw new TaskException( iae.getMessage(), iae );
+            throw new ExecException( iae.getMessage(), iae );
         }
         catch( final InvocationTargetException ite )
         {
@@ -113,7 +113,7 @@ public class DefaultCommandLauncher
             }
             else
             {
-                throw new TaskException( t.getMessage(), t );
+                throw new ExecException( t.getMessage(), t );
             }
         }
     }

@@ -16,6 +16,7 @@ import java.util.Iterator;
 import java.util.Properties;
 import org.apache.myrmidon.api.TaskException;
 import org.apache.myrmidon.framework.exec.Environment;
+import org.apache.myrmidon.framework.exec.ExecException;
 import org.apache.tools.ant.AntClassLoader;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.Task;
@@ -231,6 +232,10 @@ public class Property extends Task
                     props.put( prefix + key, value );
                 }
             }
+        }
+        catch( final ExecException ee )
+        {
+            throw new TaskException( ee.getMessage(), ee );
         }
         catch( final IOException ioe )
         {

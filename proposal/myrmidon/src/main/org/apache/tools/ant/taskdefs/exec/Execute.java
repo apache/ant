@@ -16,6 +16,7 @@ import org.apache.myrmidon.api.TaskException;
 import org.apache.myrmidon.framework.Os;
 import org.apache.myrmidon.framework.exec.CommandLauncher;
 import org.apache.myrmidon.framework.exec.Environment;
+import org.apache.myrmidon.framework.exec.ExecException;
 import org.apache.myrmidon.framework.exec.ExecMetaData;
 import org.apache.myrmidon.framework.exec.launchers.DefaultCommandLauncher;
 import org.apache.myrmidon.framework.exec.launchers.MacCommandLauncher;
@@ -269,58 +270,65 @@ public class Execute
         throws IOException, TaskException
     {
 
-        final ExecMetaData metaData =
-            new ExecMetaData( m_command, getNativeEnvironment(),
-                              m_workingDirectory, false );
-
-        final CommandLauncher launcher = getLauncher();
-        final Process process = launcher.exec( metaData );
-
         try
         {
-            m_streamHandler.setProcessInputStream( process.getOutputStream() );
-            m_streamHandler.setProcessOutputStream( process.getInputStream() );
-            m_streamHandler.setProcessErrorStream( process.getErrorStream() );
-        }
-        catch( final IOException ioe )
-        {
-            process.destroy();
-            throw ioe;
-        }
+            final ExecMetaData metaData =
+                new ExecMetaData( m_command, getNativeEnvironment(),
+                                  m_workingDirectory, false );
 
-        m_streamHandler.start();
+            final CommandLauncher launcher = getLauncher();
+            final Process process = launcher.exec( metaData );
 
-        // add the process to the list of those to destroy if the VM exits
-        //
-        c_processDestroyer.add( process );
+            try
+            {
+                m_streamHandler.setProcessInputStream( process.getOutputStream() );
+                m_streamHandler.setProcessOutputStream( process.getInputStream() );
+                m_streamHandler.setProcessErrorStream( process.getErrorStream() );
+            }
+            catch( final IOException ioe )
+            {
+                process.destroy();
+                throw ioe;
+            }
 
-        if( m_watchdog != null )
-        {
-            m_watchdog.start( process );
-        }
-        try
-        {
-            process.waitFor();
-        }
-        catch( final InterruptedException ie )
-        {
-            //shu\ould never happen
-        }
+            m_streamHandler.start();
 
-        // remove the process to the list of those to destroy if the VM exits
-        //
-        c_processDestroyer.remove( process );
+            // add the process to the list of those to destroy if the VM exits
+            //
+            c_processDestroyer.add( process );
 
-        if( m_watchdog != null )
-        {
-            m_watchdog.stop();
+            if( m_watchdog != null )
+            {
+                m_watchdog.start( process );
+            }
+            try
+            {
+                process.waitFor();
+            }
+            catch( final InterruptedException ie )
+            {
+                //shu\ould never happen
+            }
+
+            // remove the process to the list of those to destroy if the VM exits
+            //
+            c_processDestroyer.remove( process );
+
+            if( m_watchdog != null )
+            {
+                m_watchdog.stop();
+            }
+            m_streamHandler.stop();
+            if( m_watchdog != null )
+            {
+                m_watchdog.checkException();
+            }
+            return process.exitValue();
         }
-        m_streamHandler.stop();
-        if( m_watchdog != null )
+        catch( final ExecException ee )
         {
-            m_watchdog.checkException();
+            throw new TaskException( ee.getMessage(), ee );
         }
-        return process.exitValue();
     }
 
     private CommandLauncher getLauncher()
@@ -339,7 +347,7 @@ public class Execute
      * @return the environment used to create a subprocess
      */
     private String[] getNativeEnvironment()
-        throws TaskException
+        throws ExecException
     {
         if( m_newEnvironment )
         {
@@ -354,7 +362,7 @@ public class Execute
             }
             catch( final IOException ioe )
             {
-                throw new TaskException( ioe.getMessage(), ioe );
+                throw new ExecException( ioe.getMessage(), ioe );
             }
         }
     }

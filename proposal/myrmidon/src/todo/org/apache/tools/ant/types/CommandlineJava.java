@@ -13,6 +13,7 @@ import java.util.Properties;
 import org.apache.myrmidon.api.TaskException;
 import org.apache.myrmidon.framework.Os;
 import org.apache.myrmidon.framework.exec.Environment;
+import org.apache.myrmidon.framework.exec.ExecException;
 import org.apache.tools.ant.Project;
 
 /**
@@ -355,7 +356,15 @@ public class CommandlineJava implements Cloneable
         public String[] getJavaVariables()
             throws TaskException
         {
-            String props[] = Environment.toNativeFormat( super.getVariables() );
+            String props[] = new String[ 0 ];
+            try
+            {
+                props = Environment.toNativeFormat( super.getVariables() );
+            }
+            catch( final ExecException ee )
+            {
+                throw new TaskException( ee.getMessage(), ee );
+            }
 
             if( props == null )
                 return null;
