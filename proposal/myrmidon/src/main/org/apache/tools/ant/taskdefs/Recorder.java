@@ -15,6 +15,7 @@ import java.util.Hashtable;
 import org.apache.myrmidon.api.TaskException;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.Task;
+import org.apache.antlib.core.LogLevel;
 
 /**
  * This task is the manager for RecorderEntry's. It is this class that holds all
@@ -87,29 +88,24 @@ public class Recorder
      * @param level The new Loglevel value
      * @see VerbosityLevelChoices
      */
-    public void setLoglevel( final VerbosityLevelChoices level )
+    public void setLoglevel( final LogLevel level )
     {
         //I hate cascading if/elseif clauses !!!
-        String lev = level.getValue();
-        if( lev.equalsIgnoreCase( "error" ) )
+        if( LogLevel.ERROR == level )
         {
             loglevel = Project.MSG_ERR;
         }
-        else if( lev.equalsIgnoreCase( "warn" ) )
+        else if( LogLevel.WARN == level )
         {
             loglevel = Project.MSG_WARN;
         }
-        else if( lev.equalsIgnoreCase( "info" ) )
+        else if( LogLevel.INFO == level )
         {
             loglevel = Project.MSG_INFO;
         }
-        else if( lev.equalsIgnoreCase( "verbose" ) )
+        else if( LogLevel.DEBUG == level )
         {
             loglevel = Project.MSG_VERBOSE;
-        }
-        else if( lev.equalsIgnoreCase( "debug" ) )
-        {
-            loglevel = Project.MSG_DEBUG;
         }
     }
 
@@ -193,7 +189,6 @@ public class Recorder
             outputStream = new FileOutputStream( name, m_append.booleanValue() );
         }
 
-        final PrintStream out = new PrintStream( outputStream );
-        return out;
+        return new PrintStream( outputStream );
     }
 }
