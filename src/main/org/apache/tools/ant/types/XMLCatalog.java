@@ -104,13 +104,9 @@ import org.xml.sax.XMLReader;
  * href="http://www.oasis-open.org/committees/entity/spec-2001-08-06.html">
  * XML format</a>.  If the xml-commons resolver library is not found
  * in the classpath, external catalog files, specified in
- * <code>&lt;catalogfiles&gt;</code> filesets and
  * <code>&lt;catalogpath&gt;</code> paths, will be ignored and a warning will
  * be logged.  In this case, however, processing of inline entries will proceed
  * normally.</p>
- * <p>Note that, as <code>&lt;catalogpath&gt;</code> can contain nested
- * filesets, it is more general than <code>&lt;catalogfiles&gt;</code>, which
- * should be considered deprecated.</p>
  *
  * <p>Currently, only <code>&lt;dtd&gt;</code> and
  * <code>&lt;entity&gt;</code> elements may be specified inline; these
@@ -168,7 +164,7 @@ public class XMLCatalog extends DataType
 
     //-- Fields ----------------------------------------------------------------
 
-    /** Holds dtd/entity objects and catalog filesets until needed. */
+    /** Holds dtd/entity objects until needed. */
     private Vector elements = new Vector();
 
     /**
@@ -196,11 +192,9 @@ public class XMLCatalog extends DataType
     }
 
     /**
-     * Returns the elements of the catalog - ResourceLocation and FileSet
-     * objects.
+     * Returns the elements of the catalog - ResourceLocation objects.
      *
-     * @return the elements of the catalog - ResourceLocation and FileSet
-     * objects
+     * @return the elements of the catalog - ResourceLocation objects
      */
     private Vector getElements() {
         return elements;
@@ -216,12 +210,12 @@ public class XMLCatalog extends DataType
     }
 
     /**
-     * Set the list of ResourceLocation objects and FileSets in the catalog.
+     * Set the list of ResourceLocation objects in the catalog.
      * Not allowed if this catalog is itself a reference to another catalog --
      * that is, a catalog cannot both refer to another <em>and</em> contain
      * elements or other attributes.
      *
-     * @param aVector the new list of ResourceLocations and FileSets
+     * @param aVector the new list of ResourceLocations
      * to use in the catalog.
      */
     private void setElements(Vector aVector) {
@@ -280,30 +274,11 @@ public class XMLCatalog extends DataType
         setChecked( false );
     }
 
-    /** 
-     * Creates the nested <code>&lt;catalogfiles&gt;</code> element.
-     * Not allowed if this catalog is itself a reference to another
-     * catalog -- that is, a catalog cannot both refer to another
-     * <em>and</em> contain elements or other attributes.
-     *
-     * @param fs the fileset of external catalogs.
-     * @exception BuildException
-     * if this is a reference and no nested elements are allowed.
-     */
-    public void addCatalogfiles(FileSet fs) throws BuildException {
-        if (isReference()) {
-            throw noChildrenAllowed();
-        }
-        getElements().addElement(fs);
-    }
-
-
     /** Creates a nested <code>&lt;catalogpath&gt;</code> element.
      * Not allowed if this catalog is itself a reference to another
      * catalog -- that is, a catalog cannot both refer to another
      * <em>and</em> contain elements or other attributes.
      *
-     * @param fs the fileset of external catalogs.
      * @exception BuildException
      * if this is a reference and no nested elements are allowed.
      */
@@ -559,19 +534,6 @@ public class XMLCatalog extends DataType
                 // available, so we can't use it.
                 //
                 catalogResolver = new InternalResolver();
-                //
-                // If any <catalogfiles> are specified, warn that they
-                // will be ignored.
-                //
-                Enumeration enum = getElements().elements();
-                while (enum.hasMoreElements()) {
-                    Object o = enum.nextElement();
-                    if (o instanceof FileSet) {
-                        log("Warning: External catalogfiles will be ignored",
-                            Project.MSG_WARN);
-                        break;
-                    }
-                }
                 if (getCatalogPath() != null &&
                     getCatalogPath().list().length != 0) {
                         log("Warning: catalogpath listing external catalogs"+
@@ -1125,7 +1087,7 @@ public class XMLCatalog extends DataType
 
         /**
          * Process each external catalog file specified in a
-         * <code>&lt;catalogfiles&gt;</code> FileSet.  It will be
+         * <code>&lt;catalogpath&gt;</code>.  It will be
          * parsed by the resolver library, and the individual elements
          * will be added back to us (that is, the controlling
          * XMLCatalog instance) via a callback mechanism.
@@ -1141,29 +1103,6 @@ public class XMLCatalog extends DataType
                 }
                 catch (Exception ex) {
                     throw new BuildException(ex);
-                }
-
-                // Parse each catalog listed in nested <catalogfile> elements.
-                Enumeration enum = getElements().elements();
-                while (enum.hasMoreElements()) {
-                    Object o = enum.nextElement();
-                    if (o instanceof FileSet) {
-                        FileSet fs = (FileSet)o;
-                        DirectoryScanner ds = 
-                            fs.getDirectoryScanner(getProject());
-                        String[] files = ds.getIncludedFiles();
-                        for (int i = 0; i < files.length; i++) {
-                            File catFile = new File(ds.getBasedir(), files[i]); 
-                            try {
-                                parseCatalog.invoke(resolverImpl, 
-                                                    new Object[] 
-                                { catFile.getPath() });
-                            }
-                            catch (Exception ex) {
-                                throw new BuildException(ex);
-                            }
-                        }
-                    }
                 }
 
                 // Parse each catalog listed in nested <catalogpath> elements

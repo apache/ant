@@ -84,8 +84,8 @@ href="http://oasis-open.org/committees/entity/background/9401.html">
 plain text format</a> or <a
 href="http://www.oasis-open.org/committees/entity/spec-2001-08-06.html">
 XML format</a>.  If the xml-commons resolver library is not found in the
-classpath, external catalog files, specified in <code>catalogpath</code> (or
-the deprecated <code>catalogfiles</code>) , will be ignored and a warning
+classpath, external catalog files, specified in <code>catalogpath</code>, 
+will be ignored and a warning
 will be logged.  In this case, however, processing of inline entries will
 proceed normally.</p>
 <p>Currently, only <code>&lt;dtd&gt;</code> and
@@ -220,13 +220,6 @@ href="http://www.oasis-open.org/committees/entity/spec-2001-08-06.html">
 XML format</a>. Entries specifying nonexistent files will be ignored. If the
 resolver library from xml-commons is not available in the classpath, all
 <code>catalogpaths</code> will be ignored and a warning will be logged.
-</p>
-<h4>catalogfiles (deprecated)</h4>
-<p>
-The nested <code>catalogfiles</code> element specifies a <a
-href="../CoreTypes/fileset.html">FileSet</a>.  This is equivalent to
-specifying a <code>&lt;fileset&gt;</code> inside a <code>catalogpath</code>,
-and is retained for backwards-compatibility.
 </p>
 <h3>Examples</h3>
 <p>Set up an XMLCatalog with a single dtd referenced locally in a user's 
