@@ -182,12 +182,14 @@ if $rpm_mode && [ -f /usr/bin/build-classpath ] ; then
   #
   # if CLASSPATH_OVERRIDE is not set, we'll have the normal behaviour
   # with ant-found jars first and user CLASSPATH after
-  if [ -n "$CLASSPATH" -a -n "$CLASSPATH_OVERRIDE" ] ; then
-     # prepend local class path with class path override
-     if [ -z "$LOCALCLASSPATH" ] ; then 
-       LOCALCLASSPATH="$CLASSPATH"
-     else
-       LOCALCLASSPATH="$CLASSPATH:$LOCALCLASSPATH"
+  if [ -n "$CLASSPATH" ] ; then
+    # merge local and specified classpath 
+    if [ -z "$LOCALCLASSPATH" ] ; then 
+      LOCALCLASSPATH="$CLASSPATH"
+    elif [ -n "$CLASSPATH_OVERRIDE" ] ; then
+      LOCALCLASSPATH="$CLASSPATH:$LOCALCLASSPATH"
+    else
+      LOCALCLASSPATH="$LOCALCLASSPATH:$CLASSPATH"
     fi
 
     # remove class path from launcher -lib option
