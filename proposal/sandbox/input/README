@@ -35,10 +35,10 @@ the main trunk of Ant except for the input task itself and two minor
 changes to Project and Main, that allow InputHandlers to be plugged in
 programmatically or via a commandline switch -inputhandler.
 
-With this version of Ant, run the build file in proposals/testcases,
-Ant should behave the same way the input task for the main branch does
-- except that it won't allow you to enter invalid input in the multi
-target.
+With this version of Ant, run the input.xml build file in
+proposals/testcases, Ant should behave the same way the input task for
+the main branch does - except that it won't allow you to enter invalid
+input in the multi target.
 
 If you invoke Ant like this:
 
@@ -49,7 +49,7 @@ You'll get the ugliest dialog you've ever seen, but it works ;-)
 Use 
 
 ANT_OPTS=-Dant.input.properties=proposal/sandbox/input/src/testcases/works.properties\
-ant -f proposal/sandbox/input/src/testcases/input.xml -inputhandler org.apache.tools.ant.input.PropertyFileInputHandler
+ ant -f proposal/sandbox/input/src/testcases/input.xml -inputhandler org.apache.tools.ant.input.PropertyFileInputHandler
 
 to see the non-interactive build process in action.  fails.properties
 provides a sample of possible input failures.
