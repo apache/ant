@@ -2,6 +2,7 @@
 
   <types>
     <task name="load-environment" classname="org.apache.antlib.nativelib.LoadEnvironment" />
+    <task name="exec" classname="org.apache.antlib.nativelib.Exec" />
   </types>
 
 </ant-lib>
