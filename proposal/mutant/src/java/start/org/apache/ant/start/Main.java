@@ -53,9 +53,13 @@
  */
 package org.apache.ant.start;
 
+import java.io.IOException;
 import java.lang.reflect.Method;
 import java.net.URL;
 import java.net.URLClassLoader;
+import java.util.jar.Manifest;
+import java.util.jar.Attributes;
+import java.util.jar.JarInputStream;
 import org.apache.ant.init.InitConfig;
 
 /**
@@ -67,9 +71,8 @@ import org.apache.ant.init.InitConfig;
  */
 public class Main {
     /** The actual class that implements the command line front end. */
-    public static final String COMMANDLINE_CLASS
+    public static final String DEFAULT_COMMANDLINE_CLASS
          = "org.apache.ant.cli.Commandline";
-
          
     /** The default front end name */
     public static final String DEFAULT_FRONTEND = "cli";
@@ -103,8 +106,14 @@ public class Main {
             //System.out.println("Front End Loader config");
             //LoaderUtils.dumpLoader(System.out, frontEndLoader);
 
+            String mainClass = getMainClass(frontendJar);
+            System.out.println("Front end main class = " + mainClass);
+            if (mainClass == null) {
+                mainClass = DEFAULT_COMMANDLINE_CLASS;
+            }
+            
             // Now start the front end by reflection.
-            Class commandLineClass = Class.forName(COMMANDLINE_CLASS, true,
+            Class commandLineClass = Class.forName(mainClass, true,
                 frontEndLoader);
 
             final Class[] param = {Class.forName("[Ljava.lang.String;"),
@@ -115,6 +124,35 @@ public class Main {
             startMethod.invoke(null, argument);
         } catch (Exception e) {
             e.printStackTrace();
+        }
+    }
+    
+    /**
+     * Pick up the main class from a jar's manifest
+     *
+     * @param jarURL the URL to the jar
+     * @return the jar's main-class or null if it is not specified or cannot be 
+     *         determined.
+     */
+    private String getMainClass(URL jarURL) {
+        try {
+            JarInputStream stream = null;
+            try {
+                stream = new JarInputStream(jarURL.openStream());
+                Manifest manifest = stream.getManifest();
+                if (manifest == null) {
+                    return null;
+                }
+                Attributes mainAttributes = manifest.getMainAttributes();
+                return mainAttributes.getValue("Main-Class");
+            } finally {
+                if (stream != null) {
+                    stream.close();
+                }
+            }
+        } catch (IOException e) {
+                // ignore
+            return null;
         }
     }
 }

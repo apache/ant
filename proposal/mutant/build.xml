@@ -84,7 +84,11 @@
     <javac destdir="${bin.dir}/cli" srcdir="${java.dir}/cli" debug="${debug}">
       <classpath refid="classpath.cli"/>
     </javac>
-    <jar basedir="${bin.dir}/cli" jarfile="${distlib.dir}/frontend/cli.jar"/>
+    <jar basedir="${bin.dir}/cli" jarfile="${distlib.dir}/frontend/cli.jar">
+      <manifest>
+        <attribute name="Main-Class" value="org.apache.ant.cli.Commandline"/>
+      </manifest>
+    </jar>
   </target>
 
   <target name="start" depends="init">
@@ -199,7 +203,7 @@
     <mkdir dir="${javadocs.dir}"/>
     <javadoc packagenames="org.apache.*"
              useexternalfile="yes"
-             sourcepath="${java.dir}/antcore:${java.dir}/init:${java.dir}/common:${java.dir}/frontend:${java.dir}/start"
+             sourcepath="${java.dir}/antcore:${java.dir}/init:${java.dir}/common:${java.dir}/cli:${java.dir}/start"
              destdir="${javadocs.dir}"
              author="true" 
              private ="true"
