@@ -119,7 +119,7 @@ public class JspC extends MatchingTask
     private int verbose = 0;
     protected Vector compileList = new Vector();
     protected boolean failOnError = true;
-	
+        
     /**
      *  -uribase <dir>The uri directory compilations should be relative to
      *  (Default is "/")
@@ -132,7 +132,7 @@ public class JspC extends MatchingTask
      *  against, 
      */
     private File uriroot;
-	
+        
     private final static String FAIL_MSG
         = "Compile failed, messages should have been provided.";
     /* ------------------------------------------------------------ */
@@ -213,8 +213,8 @@ public class JspC extends MatchingTask
     {
         mapped = mapped_;
     }
-	
-	    /**
+        
+    /**
      *  -uribase. the uri context of relative URI 
      * references in the JSP pages. If it does not 
      * exist then it is derived from the location of the file
@@ -226,9 +226,9 @@ public class JspC extends MatchingTask
         this.uribase = uribase;
     }
 
-	public File getUribase() {
-		return uriroot;
-	}
+    public File getUribase() {
+        return uriroot;
+    }
 
     /**
      *  -uriroot <dir>The root directory that uri files should be resolved
@@ -240,11 +240,11 @@ public class JspC extends MatchingTask
         this.uriroot = uriroot;
     }
 
-	public File getUriroot() {
-		return uriroot;
-	}
-	
-	
+    public File getUriroot() {
+        return uriroot;
+    }
+        
+        
     /* ------------------------------------------------------------ */
     /** Set the classpath to be used for this compilation */
     public void setClasspath(Path cp) {
@@ -305,7 +305,7 @@ public class JspC extends MatchingTask
         // scan source directories and dest directory to build up both copy
         // lists and compile lists
         resetFileLists();
-		int filecount=0;
+        int filecount=0;
         for (int i = 0; i < list.length; i++) {
             File srcDir = (File)project.resolveFile(list[i]);
             if (!srcDir.exists()) {
@@ -316,7 +316,7 @@ public class JspC extends MatchingTask
             DirectoryScanner ds = this.getDirectoryScanner(srcDir);
 
             String[] files = ds.getIncludedFiles();
-			filecount=files.length;
+            filecount=files.length;
             scanDir(srcDir, dest, files);
         }
 
@@ -326,7 +326,7 @@ public class JspC extends MatchingTask
         if (compiler == null) {
             compiler = "jasper";
         }
-		log("compiling "+compileList.size()+" files",Project.MSG_VERBOSE);
+        log("compiling "+compileList.size()+" files",Project.MSG_VERBOSE);
 
         if (compileList.size() > 0) {
 
@@ -350,14 +350,14 @@ public class JspC extends MatchingTask
                 }
             }
         }
-		else {
-			if(filecount==0) {
-				log("there were no files to compile",Project.MSG_INFO);
-			}
-			else {
-				log("all files are up to date",Project.MSG_VERBOSE);
-			}
-		}
+        else {
+            if(filecount==0) {
+                log("there were no files to compile",Project.MSG_INFO);
+            }
+            else {
+                log("all files are up to date",Project.MSG_VERBOSE);
+            }
+        }
     }
     /* ------------------------------------------------------------ */
     /**
@@ -391,19 +391,19 @@ public class JspC extends MatchingTask
 
                 if (!javaFile.exists() ||
                     srcFile.lastModified() > javaFile.lastModified())
-                {
-                    if (!javaFile.exists()) {
-                        log("Compiling " + srcFile.getPath() +
-                            " because java file "
-                            + javaFile.getPath() + " does not exist",
-                            Project.MSG_DEBUG);
-                    } else {
-                        log("Compiling " + srcFile.getPath() +
-                            " because it is out of date with respect to "
-                            + javaFile.getPath(), Project.MSG_DEBUG);
+                    {
+                        if (!javaFile.exists()) {
+                            log("Compiling " + srcFile.getPath() +
+                                " because java file "
+                                + javaFile.getPath() + " does not exist",
+                                Project.MSG_DEBUG);
+                        } else {
+                            log("Compiling " + srcFile.getPath() +
+                                " because it is out of date with respect to "
+                                + javaFile.getPath(), Project.MSG_DEBUG);
+                        }
+                        compileList.addElement(srcFile.getAbsolutePath());
                     }
-                    compileList.addElement(srcFile.getAbsolutePath());
-                }
             }
         }
     }

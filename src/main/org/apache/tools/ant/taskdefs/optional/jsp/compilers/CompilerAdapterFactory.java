@@ -87,14 +87,14 @@ public class CompilerAdapterFactory {
      */
     public static CompilerAdapter getCompiler( String compilerType, Task task ) 
         throws BuildException {
-            /* If I've done things right, this should be the extent of the
-             * conditional statements required.
-             */
-            if ( compilerType.equalsIgnoreCase("jasper") ) {
-                return new JasperC();
-            }
-            return resolveClassName( compilerType );
+        /* If I've done things right, this should be the extent of the
+         * conditional statements required.
+         */
+        if ( compilerType.equalsIgnoreCase("jasper") ) {
+            return new JasperC();
         }
+        return resolveClassName( compilerType );
+    }
 
     /**
      * Tries to resolve the given classname into a compiler adapter.
@@ -114,11 +114,11 @@ public class CompilerAdapterFactory {
             throw new BuildException( className + " can\'t be found.", cnfe );
         } catch ( ClassCastException cce ) {
             throw new BuildException(className + " isn\'t the classname of "
-                    + "a compiler adapter.", cce);
+                                     + "a compiler adapter.", cce);
         } catch ( Throwable t ) {
             // for all other possibilities
             throw new BuildException(className + " caused an interesting "
-                    + "exception.", t);
+                                     + "exception.", t);
         }
     }
 
