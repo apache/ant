@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2000-2001 The Apache Software Foundation.  All rights
+ * Copyright (c) 2000-2002 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -80,7 +80,7 @@ import java.util.StringTokenizer;
  * <code>createAcommandline</code> which returns an instance of this class.
  *
  * @author thomas.haas@softwired-inc.com
- * @author <a href="mailto:stefan.bodewig@epost.de">Stefan Bodewig</a> 
+ * @author <a href="mailto:stefan.bodewig@epost.de">Stefan Bodewig</a>
  */
 public class Commandline implements Cloneable {
 
@@ -124,6 +124,9 @@ public class Commandline implements Cloneable {
          * @param line line to split into several commandline arguments
          */
         public void setLine(String line) {
+            if( line == null ) {
+                return;
+            }
             parts = translateCommandline(line);
         }
 
@@ -132,7 +135,7 @@ public class Commandline implements Cloneable {
          * PATH - ensures the right separator for the local platform
          * is used.
          *
-         * @param value a single commandline argument.  
+         * @param value a single commandline argument.
          */
         public void setPath(Path value) {
             parts = new String[] {value.toString()};
@@ -140,9 +143,9 @@ public class Commandline implements Cloneable {
 
         /**
          * Sets a single commandline argument to the absolute filename
-         * of the given file.  
+         * of the given file.
          *
-         * @param value a single commandline argument.  
+         * @param value a single commandline argument.
          */
         public void setFile(File value) {
             parts = new String[] {value.getAbsolutePath()};
@@ -191,15 +194,36 @@ public class Commandline implements Cloneable {
 
     /**
      * Creates an argument object.
-     * Each commandline object has at most one instance of the argument class.
+     *
+     * <p>Each commandline object has at most one instance of the
+     * argument class.  This method calls
+     * <code>this.createArgument(false)</code>.</p>
+     *
+     * @see #createArgument(boolean)
      * @return the argument object.
      */
     public Argument createArgument() {
-        Argument argument = new Argument();
-        arguments.addElement(argument);
-        return argument;
+        return this.createArgument( false );
     }
 
+    /**
+     * Creates an argument object and adds it to our list of args.
+     *
+     * <p>Each commandline object has at most one instance of the
+     * argument class.</p>
+     *
+     * @param insertAtStart if true, the argument is inserted at the
+     * beginning of the list of args, otherwise it is appended.
+     */
+    public Argument createArgument( boolean insertAtStart ) {
+        Argument argument = new Argument();
+        if(insertAtStart) {
+            arguments.insertElementAt(argument,0);
+        } else {
+            arguments.addElement(argument);
+        }
+        return argument;
+    }
 
     /**
      * Sets the executable to run.
@@ -248,11 +272,13 @@ public class Commandline implements Cloneable {
         for (int i=0; i<arguments.size(); i++) {
             Argument arg = (Argument) arguments.elementAt(i);
             String[] s = arg.getParts();
-            for (int j=0; j<s.length; j++) {
-                result.addElement(s[j]);
+            if( s != null ) {
+                for (int j=0; j<s.length; j++) {
+                    result.addElement(s[j]);
+                }
             }
         }
-        
+
         String [] res = new String[result.size()];
         result.copyInto(res);
         return res;
@@ -271,7 +297,7 @@ public class Commandline implements Cloneable {
      * surround the argument by double quotes.</p>
      *
      * @exception BuildException if the argument contains both, single
-     *                           and double quotes.  
+     *                           and double quotes.
      */
     public static String quoteArgument(String argument) {
         if (argument.indexOf("\"") > -1) {
@@ -310,7 +336,7 @@ public class Commandline implements Cloneable {
         }
 
         // parse with a simple finite state machine
-        
+
         final int normal = 0;
         final int inQuote = 1;
         final int inDoubleQuote = 2;
@@ -390,7 +416,7 @@ public class Commandline implements Cloneable {
     public void clearArgs() {
         arguments.removeAllElements();
     }
-        
+
     /**
      * Return a marker.
      *
@@ -401,4 +427,5 @@ public class Commandline implements Cloneable {
     public Marker createMarker() {
         return new Marker(arguments.size());
     }
+
 }

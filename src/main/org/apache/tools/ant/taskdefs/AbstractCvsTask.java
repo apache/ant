@@ -60,11 +60,13 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.PrintStream;
+import java.util.Vector;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.Task;
 import org.apache.tools.ant.types.Commandline;
 import org.apache.tools.ant.types.Environment;
+import org.apache.tools.ant.util.StringUtils;
 
 /**
  * original Cvs.java 1.20
@@ -79,8 +81,12 @@ import org.apache.tools.ant.types.Environment;
  * @author Kevin Ross <a href="mailto:kevin.ross@bredex.com">kevin.ross@bredex.com</a>
  */
 public abstract class AbstractCvsTask extends Task {
-
+    /** Default compression level to use, if compression is enabled via setCompression( true ). */
+    public static final int DEFAULT_COMPRESSION_LEVEL = 3;
     private Commandline cmd = new Commandline();
+
+    /** list of Commandline children */
+    private Vector vecCommandlines = new Vector();
 
     /**
      * the CVSROOT variable.
@@ -98,14 +104,23 @@ public abstract class AbstractCvsTask extends Task {
     private String cvsPackage;
 
     /**
+     * the default command.
+     */
+    private static final String default_command = "checkout";
+    /**
      * the CVS command to execute.
      */
-    private String command = "checkout";
+    private String command = null;
 
     /**
      * suppress information messages.
      */
     private boolean quiet = false;
+
+    /**
+     * compression level to use.
+     */
+    private int compression = 0;
 
     /**
      * report only, don't change any files.
@@ -146,14 +161,18 @@ public abstract class AbstractCvsTask extends Task {
      */
     private boolean failOnError = false;
 
-
     /**
      * Create accessors for the following, to allow different handling of
-     *  the output.
+     * the output.
      */
     private ExecuteStreamHandler executeStreamHandler;
     private OutputStream outputStream;
     private OutputStream errorStream;
+
+    /** empty no-arg constructor*/
+    public AbstractCvsTask() {
+        super();
+    }
 
     public void setExecuteStreamHandler(ExecuteStreamHandler executeStreamHandler){
 
@@ -222,42 +241,20 @@ public abstract class AbstractCvsTask extends Task {
         return this.errorStream;
     }
 
-    public void execute() throws BuildException {
-
+    /**
+     * Sets up the environment for toExecute and then runs it.
+     * @throws BuildException
+     */
+    protected void runCommand( Commandline toExecute ) throws BuildException {
         // XXX: we should use JCVS (www.ice.com/JCVS) instead of command line
         // execution so that we don't rely on having native CVS stuff around (SM)
 
         // We can't do it ourselves as jCVS is GPLed, a third party task
         // outside of jakarta repositories would be possible though (SB).
 
-        Commandline toExecute = new Commandline();
-
-        toExecute.setExecutable("cvs");
-        if (cvsRoot != null) {
-            toExecute.createArgument().setValue("-d");
-            toExecute.createArgument().setValue(cvsRoot);
-        }
-        if (noexec) {
-            toExecute.createArgument().setValue("-n");
-        }
-        if (quiet) {
-            toExecute.createArgument().setValue("-q");
-        }
-
-        toExecute.createArgument().setLine(command);
-
-        //
-        // get the other arguments.
-        //
-        toExecute.addArguments(cmd.getCommandline());
-
-        if (cvsPackage != null) {
-            toExecute.createArgument().setLine(cvsPackage);
-        }
-
         Environment env = new Environment();
 
-        if(port>0){
+        if (port>0) {
             Environment.Variable var = new Environment.Variable();
             var.setKey("CVS_CLIENT_PORT");
             var.setValue(String.valueOf(port));
@@ -277,7 +274,7 @@ public abstract class AbstractCvsTask extends Task {
         }
          */
 
-        if(passFile!=null){
+        if (passFile!=null) {
             Environment.Variable var = new Environment.Variable();
             var.setKey("CVS_PASSFILE");
             var.setValue(String.valueOf(passFile));
@@ -285,7 +282,7 @@ public abstract class AbstractCvsTask extends Task {
             log("Using cvs passfile: " + String.valueOf(passFile), Project.MSG_INFO);
         }
 
-        if(cvsRsh!=null){
+        if (cvsRsh!=null) {
             Environment.Variable var = new Environment.Variable();
             var.setKey("CVS_RSH");
             var.setValue(String.valueOf(cvsRsh));
@@ -309,16 +306,47 @@ public abstract class AbstractCvsTask extends Task {
         exe.setEnvironment(env.getVariables());
 
         try {
-            log("Executing: " + executeToString(exe), Project.MSG_DEBUG);
-
+            String actualCommandLine = executeToString(exe);
+            log("running cvs command: " + actualCommandLine, 
+                Project.MSG_DEBUG);
             int retCode = exe.execute();
+            log( "retCode="+retCode, Project.MSG_DEBUG );
             /*Throw an exception if cvs exited with error. (Iulian)*/
             if(failOnError && retCode != 0) {
-                throw new BuildException("cvs exited with error code "+ retCode);
+                throw new BuildException("cvs exited with error code "
+                                         + retCode 
+                                         + StringUtils.LINE_SEP
+                                         + "Command line was ["
+                                         + actualCommandLine + "]", location );
             }
         }
         catch (IOException e) {
-            throw new BuildException(e, location);
+            if( failOnError ) {
+                throw new BuildException(e, location);
+            }
+            else {
+                log("Caught exception: "+e.getMessage(), Project.MSG_WARN);
+            }
+        }
+        catch (BuildException e) {
+            if( failOnError ) {
+                throw( e );
+            }
+            else {
+                Throwable t = e.getException();
+                if (t == null) {
+                    t = e;
+                }
+                log("Caught exception: "+t.getMessage(), Project.MSG_WARN);
+            }
+        }
+        catch (Exception e) {
+            if( failOnError ) {
+                throw new BuildException(e, location);
+            }
+            else {
+                log("Caught exception: "+e.getMessage(), Project.MSG_WARN);
+            }
         }
         finally {
             //
@@ -330,12 +358,31 @@ public abstract class AbstractCvsTask extends Task {
                     outputStream.close();
                 } catch (IOException e) {}
             }
-
             if (errorStream != null) {
                 try {
                     errorStream.close();
                 } catch (IOException e) {}
             }
+        }
+    }
+
+    public void execute() throws BuildException {
+
+
+        if( this.getCommand() == null
+            && vecCommandlines.size() == 0 ) {
+            // re-implement legacy behaviour:
+            this.setCommand( AbstractCvsTask.default_command );
+        }
+
+        String c = this.getCommand();
+        if( c != null ) {
+            this.addConfiguredCommandline( this.cmd, true );
+            this.cmd.createArgument().setLine(c);
+        }
+
+        for( int i = 0; i < vecCommandlines.size(); i++ ) {
+            this.runCommand( (Commandline)vecCommandlines.elementAt( i ) );
         }
     }
 
@@ -348,18 +395,16 @@ public abstract class AbstractCvsTask extends Task {
             stringBuffer.append(commandLine[i]);
             stringBuffer.append(" ");
         }
-        String newLine = System.getProperty("line.separator");
-        stringBuffer.append(newLine);
-        stringBuffer.append(newLine);
-        stringBuffer.append("environment:");
-        stringBuffer.append(newLine);
 
-
+        String newLine = StringUtils.LINE_SEP;
         String[] variableArray = execute.getEnvironment();
 
         if(variableArray != null){
+	    stringBuffer.append(newLine);
+	    stringBuffer.append(newLine);
+	    stringBuffer.append("environment:");
+	    stringBuffer.append(newLine);
             for(int z=0; z<variableArray.length; z++){
-
                 stringBuffer.append(newLine);
                 stringBuffer.append("\t");
                 stringBuffer.append(variableArray[z]);
@@ -451,9 +496,13 @@ public abstract class AbstractCvsTask extends Task {
      *      of commands externally.
      */
     public void addCommandArgument(String arg){
-
-        this.cmd.createArgument().setValue(arg);
+        this.addCommandArgument( cmd, arg);
     }
+
+    public void addCommandArgument(Commandline c, String arg){
+        c.createArgument().setValue(arg);
+    }
+
 
     public void setDate(String p) {
         if(p != null && p.trim().length() > 0) {
@@ -464,6 +513,9 @@ public abstract class AbstractCvsTask extends Task {
 
     public void setCommand(String c) {
         this.command = c;
+    }
+    public String getCommand() {
+        return this.command;
     }
 
     public void setQuiet(boolean q) {
@@ -489,6 +541,66 @@ public abstract class AbstractCvsTask extends Task {
     public void setFailOnError(boolean failOnError) {
         this.failOnError = failOnError;
     }
+
+    /**
+     * Configure a commandline element for things like cvsRoot, quiet, etc.
+     */
+    protected void configureCommandline( Commandline c ) {
+        if( c == null ) {
+            return;
+        }
+        c.setExecutable( "cvs" );
+        if (cvsPackage != null) {
+            c.createArgument(true).setLine(cvsPackage);
+        }
+        if ( this.compression > 0 && this.compression < 10 ) {
+            c.createArgument(true).setValue("-z"+this.compression);
+        }
+        if (quiet) {
+            c.createArgument(true).setValue("-q");
+        }
+        if (noexec) {
+            c.createArgument(true).setValue("-n");
+        }
+        if (cvsRoot != null) {
+            c.createArgument(true).setLine("-d"+cvsRoot);
+        }
+    }
+
+    public void addConfiguredCommandline( Commandline c ) {
+        this.addConfiguredCommandline( c, false );
+    }
+
+    /**
+    * Configures and adds the given Commandline.
+    * @param insertAtStart If true, c is
+    */
+    public void addConfiguredCommandline( Commandline c, boolean insertAtStart ) {
+        if( c == null ) { return; }
+        this.configureCommandline( c );
+        if( insertAtStart ) {
+            vecCommandlines.insertElementAt( c, 0 );
+        }
+        else {
+            vecCommandlines.addElement( c );
+        }
+    }
+
+    /**
+    * If set to a value 1-9 it adds -zN to the cvs command line, else
+    * it disables compression.
+    */
+    public void setCompression( int level ) {
+        this.compression = level;
+    }
+
+    /**
+     * @param usecomp If true, turns on compression using default
+     * level, AbstractCvsTask.DEFAULT_COMPRESSION_LEVEL.
+     */
+    public void setCompression( boolean usecomp ) {
+        this.setCompression( usecomp ? 
+                             AbstractCvsTask.DEFAULT_COMPRESSION_LEVEL : 0 );
+    }
+
 }
-
-
