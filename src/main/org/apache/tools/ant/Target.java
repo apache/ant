@@ -84,6 +84,7 @@ public class Target implements TaskContainer {
     /** Project this target belongs to. */
     private Project project;
 
+    /** Description of this target, if any. */
     private String description = null;
 
     /** Sole constructor. */
@@ -231,7 +232,7 @@ public class Target implements TaskContainer {
 
     /**
      * Does this target depend on the named target?
-     *
+     * @return true if the target does depend on the named target
      * @since Ant 1.6
      */
     public boolean dependsOn(String other) {
