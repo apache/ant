@@ -11,7 +11,7 @@ import java.io.File;
 import java.util.Properties;
 import org.apache.ant.configuration.Configurer;
 import org.apache.ant.convert.ConverterEngine;
-import org.apache.ant.datatypes.DataTypeEngine;
+import org.apache.ant.tasklet.engine.DataTypeEngine;
 import org.apache.ant.project.ProjectBuilder;
 import org.apache.ant.project.ProjectEngine;
 import org.apache.ant.tasklet.JavaVersion;
@@ -160,7 +160,7 @@ public class DefaultAntEngine
         defaults.setProperty( "ant.comp.converter",
                               "org.apache.ant.convert.DefaultConverterEngine" );
         defaults.setProperty( "ant.comp.datatype",
-                              "org.apache.ant.datatypes.DefaultDataTypeEngine" );
+                              "org.apache.ant.tasklet.engine.DefaultDataTypeEngine" );
         defaults.setProperty( "ant.comp.tasklet",
                               "org.apache.ant.tasklet.engine.DefaultTaskletEngine" );
         defaults.setProperty( "ant.comp.project",
@@ -188,7 +188,7 @@ public class DefaultAntEngine
         componentManager.put( "org.apache.ant.project.ProjectEngine", m_projectEngine );
         componentManager.put( "org.apache.ant.convert.ConverterEngine", m_converterEngine );
         componentManager.put( "org.apache.ant.convert.Converter", m_converterEngine );
-        componentManager.put( "org.apache.ant.datatypes.DataTypeEngine", m_dataTypeEngine );
+        componentManager.put( "org.apache.ant.tasklet.engine.DataTypeEngine", m_dataTypeEngine );
         componentManager.put( "org.apache.ant.project.ProjectBuilder", m_builder );
         componentManager.put( "org.apache.ant.tasklet.engine.TskDeployer", m_deployer );
         componentManager.put( "org.apache.avalon.camelot.Factory", m_factory );
