@@ -11,7 +11,11 @@
     <delete file="TESTDEST"/>
     <delete file="${tmp.file}"/>
     <delete file="${tmp.file.2}"/>
-  </target>    
+    <delete file="concat.line4"/>
+    <delete file="concat.noeol"/>
+    <delete file="concat.linecr"/>
+    <delete file="concat.utf8"/>
+  </target>
 
   <target name="test1">
     <concat>
@@ -153,4 +157,32 @@
       </filterchain>
     </concat>
   </target>
+  
+  <target name="create-noel">
+    <concat destfile="concat.noeol">This has no end of line</concat>
+  </target>
+
+  <target name="testfixlastline" depends="create-noel">
+    <concat destfile="concat.line4" fixlastline="yes">
+      <path path="concat.noeol"/>
+      <path path="concat.noeol"/>
+      <path path="concat.noeol"/>
+      <path path="concat.noeol"/>
+    </concat>
+  </target>
+
+  <target name="testfixlastlineeol" depends="create-noel">
+    <concat destfile="concat.linecr" fixlastline="yes" eol="mac">
+      <path path="concat.noeol"/>
+      <path path="concat.noeol"/>
+    </concat>
+  </target>
+
+  <target name="testTranscoding">
+    <concat destfile="concat.utf8"
+            encoding="ISO8859_1" outputencoding="UTF8">
+      <path path="copy/input/iso8859-1"/>
+    </concat>
+  </target>
+
 </project>

@@ -55,8 +55,12 @@
 package org.apache.tools.ant.taskdefs;
 
 import org.apache.tools.ant.BuildFileTest;
+import org.apache.tools.ant.util.FileUtils;
 
 import java.io.File;
+import java.io.FileReader;
+import java.io.IOException;
+import java.io.Reader;
 
 /**
  * A test class for the 'concat' task, used to concatenate a series of
@@ -241,5 +245,70 @@ public class ConcatTest
         assertTrue(getLog().indexOf("Bye") > -1);
         assertTrue(getLog().indexOf("Hello") == -1);
     }        
+    /**
+     * Check if fixlastline works
+     */
+    public void testfixlastline()
+        throws IOException
+    {
+        expectFileContains(
+            "testfixlastline", "concat.line4",
+            "end of line" + System.getProperty("line.separator")
+            + "This has");
+    }        
+
+    /**
+     * Check if fixlastline works with eol
+     */
+    public void testfixlastlineeol()
+        throws IOException
+    {
+        expectFileContains(
+            "testfixlastlineeol", "concat.linecr",
+            "end of line\rThis has");
+    }        
+
+    // ------------------------------------------------------
+    //   Helper methods - should be in BuildFileTest
+    // -----------------------------------------------------
+
+    private String getFileString(String filename)
+        throws IOException
+    {
+        Reader r = null;
+        try {
+            r = new FileReader(getProject().resolveFile(filename));
+            return  FileUtils.newFileUtils().readFully(r);
+        }
+        finally {
+            try {r.close();} catch (Throwable ignore) {}
+        }
         
+    }
+        
+    private String getFileString(String target, String filename)
+        throws IOException
+    {
+        executeTarget(target);
+        return getFileString(filename);
+    }
+    
+    private void expectFileContains(
+        String target, String filename, String contains)
+        throws IOException
+    {
+        String content = getFileString(target, filename);
+        assertTrue(
+            "expecting file " + filename + " to contain " +
+            contains +
+            " but got " + content, content.indexOf(contains) > -1);
+    }
+
+    public void testTranscoding() throws IOException {
+        executeTarget("testTranscoding");
+        FileUtils fileUtils = FileUtils.newFileUtils();
+        File f1 = getProject().resolveFile("copy/expected/utf-8");
+        File f2 = getProject().resolveFile("concat.utf8");
+        assertTrue(fileUtils.contentEquals(f1, f2));
+    }
 }

@@ -122,6 +122,9 @@ public class Concat extends Task {
      */
     private String encoding = null;
 
+    /** Stores the output file encoding. */
+    private String outputEncoding = null;
+
     // Child elements.
 
     /**
@@ -143,6 +146,14 @@ public class Concat extends Task {
     private TextElement   footer;
     /** String to place at the end of the concatented stream */
     private TextElement   header;
+    /** add missing line.separator to files **/
+    private boolean       fixLastLine = false;
+    /** endofline for fixlast line */
+    private String       eolString = System.getProperty("line.separator");
+    /** outputwriter */
+    private Writer       outputWriter = null;
+
+    /** internal variable - used to collect the source files from sources */
     private Vector        sourceFiles = new Vector();
 
     /** 1.1 utilities and copy utilities */
@@ -179,6 +190,17 @@ public class Concat extends Task {
      */
     public void setEncoding(String encoding) {
         this.encoding = encoding;
+        if (outputEncoding == null) {
+            outputEncoding = encoding;
+        }
+    }
+
+    /**
+     * Sets the character encoding for outputting
+     * @since Ant 1.6
+     */
+    public void setOutputEncoding(String outputEncoding) {
+        this.outputEncoding = outputEncoding;
     }
 
     /**
@@ -220,8 +242,9 @@ public class Concat extends Task {
      * @since Ant 1.6
      */
     public void addFilterChain(FilterChain filterChain) {
-        if (filterChains == null)
+        if (filterChains == null) {
             filterChains = new Vector();
+        }
         filterChains.addElement(filterChain);
     }
 
@@ -244,18 +267,51 @@ public class Concat extends Task {
      * Add a header to the concatenated output
      * @since Ant 1.6
      */
-    public void addHeader(TextElement el) {
-        this.header = el;
+    public void addHeader(TextElement header) {
+        this.header = header;
     }
 
     /**
      * Add a footer to the concatenated output
      * @since Ant 1.6
      */
-    public void addFooter(TextElement el) {
-        this.footer = el;
+    public void addFooter(TextElement footer) {
+        this.footer = footer;
     }
 
+    /**
+     * Append line.separator to files that do not end
+     * with a line.separator, default false.
+     * @since Ant 1.6
+     */
+    public void setFixLastLine(boolean fixLastLine) {
+        this.fixLastLine = fixLastLine;
+    }
+
+    /**
+     * Specify the end of line to find and to add if
+     * not present at end of each input file.
+     */
+    public void setEol(FixCRLF.CrLf enum) {
+        String s = enum.getValue();
+        if (s.equals("cr") || s.equals("mac")) {
+            eolString = "\r";
+        } else if (s.equals("lf") || s.equals("unix")) {
+            eolString = "\n";
+        } else if (s.equals("crlf") || s.equals("dos")) {
+            eolString = "\r\n";
+        }
+    }
+
+    /**
+     * set the output writer, this is to allow
+     * concat to be used as a nested element
+     * @since Ant 1.6
+     */
+    public void setWriter(Writer outputWriter) {
+        this.outputWriter = outputWriter;
+    }
+    
     /**
      * This method performs the concatenation.
      */
@@ -265,6 +321,11 @@ public class Concat extends Task {
         // treat empty nested text as no text
         sanitizeText();
 
+        if (destinationFile != null && outputWriter != null) {
+            throw new BuildException(
+                "Cannot specify both a destination file and an output writer");
+        }
+        
         // Sanity check our inputs.
         if (sources.size() == 0 && textBuffer == null) {
             // Nothing to concatenate!
@@ -339,6 +400,8 @@ public class Concat extends Task {
         forceOverwrite = true;
         destinationFile = null;
         encoding = null;
+        outputEncoding = null;
+        fixLastLine = false;
         sources.removeAllElements();
         sourceFiles.removeAllElements();
         filterChains = null;
@@ -371,31 +434,35 @@ public class Concat extends Task {
 
         try {
 
-            if (destinationFile == null) {
-                // Log using WARN so it displays in 'quiet' mode.
-                os = new LogOutputStream(this, Project.MSG_WARN);
+            PrintWriter writer = null;
+
+            if (outputWriter != null) {
+                writer = new PrintWriter(outputWriter);
             } else {
-                // ensure that the parent dir of dest file exists
-                File parent = fileUtils.getParentFile(destinationFile);
-                if (!parent.exists()) {
-                    parent.mkdirs();
+                if (destinationFile == null) {
+                    // Log using WARN so it displays in 'quiet' mode.
+                    os = new LogOutputStream(this, Project.MSG_WARN);
+                } else {
+                    // ensure that the parent dir of dest file exists
+                    File parent = fileUtils.getParentFile(destinationFile);
+                    if (!parent.exists()) {
+                        parent.mkdirs();
+                    }
+
+                    os = new FileOutputStream(destinationFile.getAbsolutePath(),
+                                              append);
                 }
 
-                os = new FileOutputStream(destinationFile.getAbsolutePath(),
-                                          append);
+                if (outputEncoding == null) {
+                    writer = new PrintWriter(
+                        new BufferedWriter(
+                            new OutputStreamWriter(os)));
+                } else {
+                    writer = new PrintWriter(
+                        new BufferedWriter(
+                            new OutputStreamWriter(os, outputEncoding)));
+                }
             }
-
-            PrintWriter writer = null;
-            if (encoding == null) {
-                writer = new PrintWriter(
-                    new BufferedWriter(
-                        new OutputStreamWriter(os)));
-            } else {
-                writer = new PrintWriter(
-                    new BufferedWriter(
-                        new OutputStreamWriter(os, encoding)));
-            }
-
 
             if (header != null) {
                 if (header.getFiltering()) {
@@ -425,7 +492,9 @@ public class Concat extends Task {
             }
 
             writer.flush();
-            os.flush();
+            if (os != null) {
+                os.flush();
+            }
 
         } catch (IOException ioex) {
             throw new BuildException("Error while concatenating: "
@@ -486,6 +555,7 @@ public class Concat extends Task {
         private boolean  trimLeading = false;
         private boolean  trim = false;
         private boolean  filtering = true;
+        private String   encoding = null;
 
         /**
          * whether to filter the text in this element
@@ -502,6 +572,10 @@ public class Concat extends Task {
         private boolean getFiltering() {
             return filtering;
         }
+
+        public void setEncoding(String encoding) {
+            this.encoding = encoding;
+        }
         
         /**
          * set the text using a file
@@ -517,7 +591,13 @@ public class Concat extends Task {
 
             BufferedReader reader = null;
             try {
-                reader = new BufferedReader(new FileReader(file));
+                if (this.encoding == null) {
+                    reader = new BufferedReader(new FileReader(file));
+                } else {
+                    reader = new BufferedReader(
+                        new InputStreamReader(new FileInputStream(file),
+                                              this.encoding));
+                }
                 value = fileUtils.readFully(reader);
             } catch (IOException ex) {
                 throw new BuildException(ex);
@@ -596,9 +676,12 @@ public class Concat extends Task {
      * a single stream.
      */
     private class MultiReader extends Reader {
-        private int pos = 0;
+        private int    pos = 0;
         private Reader reader = null;
-
+        private int    lastPos = 0;
+        private char[] lastChars = new char[eolString.length()];
+        private boolean needAddSeparator = false;
+        
         private Reader getReader() throws IOException {
             if (reader == null) {
                 if (encoding == null) {
@@ -611,7 +694,10 @@ public class Concat extends Task {
                             new FileInputStream(
                                 (File) sourceFiles.elementAt(pos)),
                             encoding));
-                }                
+                }
+                for (int i = 0; i < lastChars.length; ++i) {
+                    lastChars[i] = 0;
+                }
             }
             return reader;
         }
@@ -624,12 +710,26 @@ public class Concat extends Task {
          *            object.
          */
         public int read() throws IOException {
+            if (needAddSeparator) {
+                int ret = eolString.charAt(lastPos++);
+                if (lastPos >= eolString.length()) {
+                    lastPos = 0;
+                    needAddSeparator = false;
+                }
+                return ret;
+            }
+            
             while (pos < sourceFiles.size()) {
                 int ch = getReader().read();
                 if (ch == -1) {
                     reader.close();
                     reader = null;
+                    if (fixLastLine && isMissingEndOfLine()) {
+                        needAddSeparator = true;
+                        lastPos = 0;
+                    }
                 } else {
+                    addLastChar((char) ch);
                     return ch;
                 }
                 pos++; 
@@ -647,15 +747,45 @@ public class Concat extends Task {
          */
         public int read(char cbuf[], int off, int len)
             throws IOException {
+
             int amountRead = 0;
             int iOff = off;
-            while (pos < sourceFiles.size()) {
+            while (pos < sourceFiles.size() || (needAddSeparator)) {
+                if (needAddSeparator) {
+                    cbuf[off] = eolString.charAt(lastPos++);
+                    if (lastPos >= eolString.length()) {
+                        lastPos = 0;
+                        needAddSeparator = false;
+                        pos++;
+                    }
+                    len--;
+                    off++;
+                    amountRead++;
+                    if (len == 0)
+                        return amountRead;
+                    continue;
+                }
+
                 int nRead = getReader().read(cbuf, off, len);
                 if (nRead == -1 || nRead == 0) {
                     reader.close();
                     reader = null;
-                    pos++;
+                    if (fixLastLine && isMissingEndOfLine()) {
+                        needAddSeparator = true;
+                        lastPos = 0;
+                    } else {
+                        pos++;
+                    }
                 } else {
+                    if (fixLastLine) {
+                        for (int i = nRead; i > (nRead-lastChars.length);
+                             --i) {
+                            if (i < 0) {
+                                break;
+                            }
+                            addLastChar(cbuf[off+i]);
+                        }
+                    }
                     len -= nRead;
                     off += nRead;
                     amountRead += nRead;
@@ -671,11 +801,37 @@ public class Concat extends Task {
             }
         }
 
+        /**
+         * Close the current reader
+         */
         public void close() throws IOException {
             if (reader != null) {
                 reader.close();
             }
         }
+        /**
+         * if checking for end of line at end of file
+         * add a character to the lastchars buffer
+         */
+        private void addLastChar(char ch) {
+            for (int i = lastChars.length-2; i >= 0; --i) {
+                lastChars[i] = lastChars[i+1];
+            }
+            lastChars[lastChars.length-1] = ch;
+        }
+
+        /**
+         * return true if the lastchars buffer does
+         * not contain the lineseparator
+         */
+        private boolean isMissingEndOfLine() {
+            for (int i = 0; i < lastChars.length; ++i) {
+                if (lastChars[i] != eolString.charAt(i))
+                    return true;
+            }
+            return false;
+        }
     }
- }
+
+}
 

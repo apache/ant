@@ -76,6 +76,53 @@
           </td>
           <td valign="top" align="center">No</td>
         </tr>
+        <tr>
+          <td valign="top">outputencoding</td>
+          <td valign="top">
+            The encoding to use when writing the output file
+            <em>since Ant 1.6</em>.
+            Defaults to the value of the encoding attribute
+            if given or the default JVM encoding otherwise.
+          </td>
+          <td valign="top" align="center">No</td>
+        </tr>
+        <tr>
+          <td valign="top">fixlastline</td>
+          <td valign="top">
+ 	        Specifies whether or not to check if
+            each file concatenated is terminated by
+            a new line. If this attribute is &quot;yes&quot;
+            a new line will be appended to the stream if
+            the file did not end in a new line.
+            <em>since Ant 1.6</em>.
+            Defaults to &quot;no&quot;.
+            This attribute does not apply to embedded text.
+          </td>
+          <td valign="top" align="center">No</td>
+        </tr>
+        <tr>
+          <td valign="top">eol</td>
+          <td valign="top">
+            Specifies what the end of line character are
+            for use by the fixlastline attribute.
+            <em>since Ant 1.6</em>
+            Valid values for this property are:
+            <ul>
+	      <li>cr: a single CR</li>
+	      <li>lf: a single LF</li>
+	      <li>crlf: the pair CRLF</li>
+	      <li>mac: a single CR</li>
+	      <li>unix: a single LF</li>
+	      <li>dos: the pair CRLF</li>
+	    </ul>
+            The default is &quot;platform&quot;.
+            For Unix platforms, the default is &quot;lf&quot;.
+	    For DOS based systems (including Windows),
+            the default is &quot;crlf&quot;. 
+            For Mac OS, the default is &quot;cr&quot;.
+          </td>
+          <td valign="top" align="center">No</td>
+        </tr>
 
       </table>
 
@@ -86,7 +133,7 @@
       <p>
         This is a <a href="../CoreTypes/path.html">Path</a>. This is
         used to select file files to be concatenated. Note that
-        if a file can only appear once in a path. If this is
+        a file can only appear once in a path. If this is
         an issue consider using multiple paths.
       </p>
 

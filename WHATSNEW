@@ -308,6 +308,10 @@ Other changes:
 * There is a new data type <propertyset> that can be used to collect
   properties.
 
+* <concat> can now control the encoding of the output as well and optionally
+  add new-line characters at the end files that get concatenated but
+  don't end in newlines.  Bugzilla Report 12511.
+
 Changes from Ant 1.5.2 to Ant 1.5.3
 ===================================
 
