@@ -1187,6 +1187,7 @@
 
       <patternset refid="needs.jakarta.regexp" />
       <patternset refid="needs.jakarta.oro" />
+      <patternset refid="needs.jai"/>
 
       <patternset refid="needs.trax" />
       <patternset refid="needs.xslp" />
@@ -1284,6 +1285,7 @@
           <patternset refid="needs.jdk1.4+" />
           <patternset refid="needs.jakarta.regexp" />
           <patternset refid="needs.jakarta.oro" />
+          <patternset refid="needs.jai" />
           <patternset refid="needs.vaj" />
           <patternset refid="needs.antlr" />
           <patternset refid="needs.xalan1" />

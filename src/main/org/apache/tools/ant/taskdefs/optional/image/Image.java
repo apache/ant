@@ -207,9 +207,6 @@ public class Image extends MatchingTask {
             }
             input.close();
 
-
-            log("Encoding As " + str_encoding);
-
             if (str_encoding.toLowerCase().equals("jpg")) {
                 str_encoding = "JPEG";
             } else if (str_encoding.toLowerCase().equals("tif")) {
@@ -224,9 +221,6 @@ public class Image extends MatchingTask {
 
             if ((overwrite && new_file.exists()) && (!new_file.equals(file))) {
                 new_file.delete();
-            }
-            else if (!overwrite && new_file.exists()){
-              return;
             }
 
             FileOutputStream stream = new FileOutputStream(new_file);
@@ -286,6 +280,21 @@ public class Image extends MatchingTask {
                   filesList.add(new File(fromDir.getAbsolutePath() + File.separator + files[j]));
                 }
             }
+
+            if (!overwrite){
+             // remove any files that shouldn't be overwritten.
+             ArrayList filesToRemove = new ArrayList();
+             for(Iterator i = filesList.iterator();i.hasNext();){
+               File f = (File)i.next();
+               File new_file = new File(destDir.getAbsolutePath() + File.separator + f.getName());
+               if (new_file.exists()){
+                 filesToRemove.add(f);
+               }
+             }
+             filesList.removeAll(filesToRemove);
+            }
+
+
             // iterator through all the files and process them.
             for (Iterator i = filesList.iterator();i.hasNext();){
               File file = (File)i.next();
