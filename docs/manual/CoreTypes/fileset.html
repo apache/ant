@@ -11,7 +11,8 @@
 <p>FileSets are groups of files. These files can be found in a
 directory tree starting in a base directory and are matched by
 patterns taken from a number of <a
-href="patternset.html">PatternSets</a>. FileSets can appear inside tasks
+href="patternset.html">PatternSets</a> and
+<a href="selectors.html">Selectors</a>. FileSets can appear inside tasks
 that support this feature or at the same level as <code>target</code>
 - i.e., as children of <code>project</code>.</p>
 <p>PatternSets can be specified as nested
@@ -21,6 +22,10 @@ an implicit PatternSet and supports the nested
 <code>&lt;exclude&gt;</code> and <code>&lt;excludesfile&gt;</code>
 elements of PatternSet directly, as well as PatternSet's
 attributes.</p>
+<p>Selectors are available as nested elements.within the FileSet.
+If any of the selectors within the FileSet do not select the file, the
+file is not considered part of the FileSet. This makes FileSets
+euqivalent to an <code>&lt;and&gt;</code> selector container.</p>
 <table border="1" cellpadding="2" cellspacing="0">
   <tr>
     <td valign="top"><b>Attribute</b></td>
@@ -110,6 +115,25 @@ a PatternSet that can be referenced in other
 </pre></blockquote>
 <p>Groups all files in directory <code>${client.src}</code>, using the
 same patterns as the above example.</p>
+<blockquote><pre>
+&lt;fileset dir=&quot;${server.src}&quot; casesensitive=&quot;yes&quot;&gt;
+  &lt;filename name=&quot;**/*.java&quot;/&gt;
+  &lt;filename name=&quot;**/*Test*&quot; negate=&quot;true&quot;/&gt;
+&lt;/fileset&gt;
+</pre></blockquote>
+<p>Groups the same files as the top example, but using the
+<code>&lt;filename&gt;</code> selector.</p>
+<blockquote><pre>
+&lt;fileset dir=&quot;${server.src}&quot; casesensitive=&quot;yes&quot;&gt;
+  &lt;filename name=&quot;**/*.java&quot;/&gt;
+  &lt;not&gt;
+    &lt;filename name=&quot;**/*Test*&quot;/&gt;
+  &lt;/not&gt;
+&lt;/fileset&gt;
+</pre></blockquote>
+<p>Groups the same files as the previous example using a combination of the
+<code>&lt;filename&gt;</code> selector and the <code>&lt;not&gt;</code>
+selector container.</p>
 
 <hr>
 <p align="center">Copyright &copy; 2000-2002 Apache Software Foundation.
