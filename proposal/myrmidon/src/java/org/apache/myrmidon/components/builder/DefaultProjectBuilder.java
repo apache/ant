@@ -123,8 +123,7 @@ public class DefaultProjectBuilder
 
         //get project-level attributes
         final String baseDirectoryName = configuration.getAttribute( "basedir", null );
-        final String defaultTarget = configuration.getAttribute( "default" );
-        //final String name = configuration.getAttribute( "name" );
+        final String defaultTarget = configuration.getAttribute( "default", "main" );
 
         //determine base directory for project.  Use the directory containing
         //the build file as the default.
@@ -145,7 +144,6 @@ public class DefaultProjectBuilder
         final DefaultProject project = new DefaultProject();
         project.setDefaultTargetName( defaultTarget );
         project.setBaseDirectory( baseDirectory );
-        //project.setName( name );
 
         return project;
     }
