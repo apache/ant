@@ -201,13 +201,13 @@ public class ClassFileSetTest extends BuildFileTest {
         }
         assertEquals("Classfileset did not pick up expected number of "
             + "class files", 4, files.size());
-        assertTrue("Result did not contain test/Outer$Inner.class",
-            files.containsKey("test/Outer$Inner.class"));
-        assertTrue("Result did not contain test/Outer.class",
-            files.containsKey("test/Outer.class"));
-        assertTrue("Result did not contain test/ContainsOnlyInner.class",
-            files.containsKey("test/ContainsOnlyInner.class"));
-        assertTrue("Result did not contain test/ContainsOnlyInner.class",
-            files.containsKey("test/MethodParam.class"));            
+        assertTrue("Result did not contain test" + File.separator + "Outer$Inner.class",
+            files.containsKey("test" + File.separator + "Outer$Inner.class"));
+        assertTrue("Result did not contain test" + File.separator + "Outer.class",
+            files.containsKey("test" + File.separator + "Outer.class"));
+        assertTrue("Result did not contain test" + File.separator + "ContainsOnlyInner.class",
+            files.containsKey("test" + File.separator + "ContainsOnlyInner.class"));
+        assertTrue("Result did not contain test" + File.separator + "ContainsOnlyInner.class",
+            files.containsKey("test" + File.separator + "MethodParam.class"));
     }
 }
