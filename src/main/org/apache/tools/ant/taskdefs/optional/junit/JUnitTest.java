@@ -23,7 +23,7 @@
  *    Alternately, this acknowlegement may appear in the software itself,
  *    if and wherever such third-party acknowlegements normally appear.
  *
- * 4. The names "The Jakarta Project", "Tomcat", and "Apache Software
+ * 4. The names "The Jakarta Project", "Ant", and "Apache Software
  *    Foundation" must not be used to endorse or promote products derived
  *    from this software without prior written permission. For written
  *    permission, please contact apache@apache.org.
@@ -63,12 +63,17 @@ import java.util.Vector;
 /**
  *
  * @author Thomas Haas
- * @author <a href="mailto:stefan.bodewig@megabit.net">Stefan Bodewig</a> 
+ * @author <a href="mailto:stefan.bodewig@epost.de">Stefan Bodewig</a>,
+ * @author <a href="mailto:sbailliez@imediation.com">Stephane Bailliez</a>
  */
 public class JUnitTest extends BaseTest {
+    
+    /** the name of the test case */
     private String name = null;
-    private File outfile = null;
-
+    
+    /** the name of the result file */
+    private String outfile = null;
+    
     private long runs, failures, errors;
     private long runTime;
 
@@ -89,7 +94,7 @@ public class JUnitTest extends BaseTest {
         name = value;
     }
 
-    public void setOutfile(File value) {
+    public void setOutfile(String value) {
         outfile = value;
     }
 
@@ -97,11 +102,11 @@ public class JUnitTest extends BaseTest {
         return name;
     }
 
+    /**
+     * @return the name of the output file.
+     */
     public String getOutfile() {
-        if (outfile != null) {
-            return outfile.getAbsolutePath();
-        }
-        return null;
+        return outfile;
     }
 
     public void setCounts(long runs, long failures, long errors) {

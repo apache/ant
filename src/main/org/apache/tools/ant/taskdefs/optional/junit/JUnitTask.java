@@ -23,7 +23,7 @@
  *    Alternately, this acknowlegement may appear in the software itself,
  *    if and wherever such third-party acknowlegements normally appear.
  *
- * 4. The names "The Jakarta Project", "Tomcat", and "Apache Software
+ * 4. The names "The Jakarta Project", "Ant", and "Apache Software
  *    Foundation" must not be used to endorse or promote products derived
  *    from this software without prior written permission. For written
  *    permission, please contact apache@apache.org.
@@ -84,6 +84,7 @@ import java.util.Vector;
  *
  * @author Thomas Haas 
  * @author <a href="mailto:stefan.bodewig@epost.de">Stefan Bodewig</a> 
+ * @author <a href="mailto:sbailliez@imediation.com">Stephane Bailliez</a>
  */
 public class JUnitTask extends Task {
 
@@ -204,8 +205,12 @@ public class JUnitTask extends Task {
                 continue;
             }
 
+            if (test.getTodir() == null){
+                test.setTodir(project.resolveFile("."));
+            }
+
             if (test.getOutfile() == null) {
-                test.setOutfile(project.resolveFile("TEST-" + test.getName()));
+                test.setOutfile( "TEST-" + test.getName() );
             }
 
             int exitValue = JUnitTestRunner.ERRORS;
@@ -246,22 +251,12 @@ public class JUnitTask extends Task {
 
                 for (int i=0; i<formatters.size(); i++) {
                     FormatterElement fe = (FormatterElement) formatters.elementAt(i);
-                    if (fe.getUseFile()) {
-                        fe.setOutfile(project.resolveFile(test.getOutfile()
-                                                          +fe.getExtension()));
-                    } else {
-                        fe.setOutput(new LogOutputStream(this, Project.MSG_INFO));
-                    }
+                    setOutput(fe, test);
                     runner.addFormatter(fe.createFormatter());
                 }
                 FormatterElement[] add = test.getFormatters();
                 for (int i=0; i<add.length; i++) {
-                    if (add[i].getUseFile()) {
-                        add[i].setOutfile(project.resolveFile(test.getOutfile()
-                                                              +add[i].getExtension()));
-                    } else {
-                        add[i].setOutput(new LogOutputStream(this, Project.MSG_INFO));
-                    }
+                    setOutput(add[i], test);
                     runner.addFormatter(add[i].createFormatter());
                 }
 
@@ -290,9 +285,10 @@ public class JUnitTask extends Task {
                     formatterArg.append(fe.getClassname());
                     if (fe.getUseFile()) {
                         formatterArg.append(",");
-                        formatterArg.append(project.resolveFile(test.getOutfile()
-                                                                +fe.getExtension())
-                                            .getAbsolutePath());
+                    	File destFile = new File( test.getTodir(),
+                                                  test.getOutfile() + fe.getExtension() );
+                        String filename = destFile.getAbsolutePath();
+                        formatterArg.append( project.resolveFile(filename) );
                     }
                     cmd.createArgument().setValue(formatterArg.toString());
                     formatterArg.setLength(0);
@@ -304,9 +300,10 @@ public class JUnitTask extends Task {
                     formatterArg.append(add[i].getClassname());
                     if (add[i].getUseFile()) {
                         formatterArg.append(",");
-                        formatterArg.append(project.resolveFile(test.getOutfile()
-                                                                +add[i].getExtension())
-                                            .getAbsolutePath());
+                    	File destFile = new File( test.getTodir(),
+                                                  test.getOutfile() + add[i].getExtension() );
+                        String filename = destFile.getAbsolutePath();
+                        formatterArg.append( project.resolveFile(filename) );
                     }
                     cmd.createArgument().setValue(formatterArg.toString());
                     formatterArg.setLength(0);
@@ -371,5 +368,16 @@ public class JUnitTask extends Task {
                     return batchEnum.nextElement();
                 }
             };
+    }
+
+    protected void setOutput(FormatterElement fe, JUnitTest test) {
+        if (fe.getUseFile()) {
+            File destFile = new File( test.getTodir(),
+                                      test.getOutfile() + fe.getExtension() );
+            String filename = destFile.getAbsolutePath();
+            fe.setOutfile( project.resolveFile(filename) );
+        } else {
+            fe.setOutput(new LogOutputStream(this, Project.MSG_INFO));
+        }
     }
 }

@@ -23,7 +23,7 @@
  *    Alternately, this acknowlegement may appear in the software itself,
  *    if and wherever such third-party acknowlegements normally appear.
  *
- * 4. The names "The Jakarta Project", "Tomcat", and "Apache Software
+ * 4. The names "The Jakarta Project", "Ant", and "Apache Software
  *    Foundation" must not be used to endorse or promote products derived
  *    from this software without prior written permission. For written
  *    permission, please contact apache@apache.org.
@@ -61,12 +61,14 @@ import org.apache.tools.ant.types.FileSet;
 import org.apache.tools.ant.types.Reference;
 
 import java.util.*;
+import java.io.File;
 
 /**
  * Create JUnitTests from a list of files.
  *
  * @author <a href="mailto:jeff.martin@synamic.co.uk">Jeff Martin</a>
- * @author <a href="mailto:stefan.bodewig@megabit.net">Stefan Bodewig</a> 
+ * @author <a href="mailto:stefan.bodewig@epost.de">Stefan Bodewig</a>
+ * @author <a href="mailto:sbailliez@imediation.com">Stephane Bailliez</a>
  */
 public final class BatchTest extends BaseTest {
     private Project project;
@@ -87,8 +89,9 @@ public final class BatchTest extends BaseTest {
 
     public class FileList implements Enumeration{
         private String files[]=null;
+
         private int i=0;
-        
+
         private FileList(){
             Vector v = new Vector();
             for (int j=0; j<filesets.size(); j++) {
@@ -108,10 +111,12 @@ public final class BatchTest extends BaseTest {
             files = new String[v.size()];
             v.copyInto(files);
         }
+
         public final boolean hasMoreElements(){
             if(i<files.length)return true;
             return false;
         }
+
         public final Object nextElement() throws NoSuchElementException{
             if(hasMoreElements()){
                 JUnitTest test = new JUnitTest(javaToClass(files[i]));
@@ -120,6 +125,7 @@ public final class BatchTest extends BaseTest {
                 test.setFork(fork);
                 test.setIf(ifProperty);
                 test.setUnless(unlessProperty);
+                test.setTodir(destDir);
                 Enumeration list = formatters.elements();
                 while (list.hasMoreElements()) {
                     test.addFormatter((FormatterElement)list.nextElement());
@@ -129,6 +135,7 @@ public final class BatchTest extends BaseTest {
             }
             throw new NoSuchElementException();
         }
+
         public final String javaToClass(String fileName){
             return fileName.replace(java.io.File.separatorChar, '.');
         }

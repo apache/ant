@@ -23,7 +23,7 @@
  *    Alternately, this acknowlegement may appear in the software itself,
  *    if and wherever such third-party acknowlegements normally appear.
  *
- * 4. The names "The Jakarta Project", "Tomcat", and "Apache Software
+ * 4. The names "The Jakarta Project", "Ant", and "Apache Software
  *    Foundation" must not be used to endorse or promote products derived
  *    from this software without prior written permission. For written
  *    permission, please contact apache@apache.org.
@@ -54,12 +54,14 @@
 
 package org.apache.tools.ant.taskdefs.optional.junit;
 
+import java.io.File;
 import java.util.Vector;
 
 /**
  * Baseclass for BatchTest and JUnitTest.
  *
- * @author <a href="mailto:stefan.bodewig@megabit.net">Stefan Bodewig</a> 
+ * @author <a href="mailto:stefan.bodewig@epost.de">Stefan Bodewig</a> 
+ * @author <a href="mailto:sbailliez@imediation.com">Stephane Bailliez</a>
  */
 public abstract class BaseTest {
     protected boolean haltOnError = false;
@@ -68,6 +70,8 @@ public abstract class BaseTest {
     protected String ifProperty = null;
     protected String unlessProperty = null;
     protected Vector formatters = new Vector();
+    /** destination directory */
+    protected File destDir = null;
 
     public void setFork(boolean value) {
         fork = value;
@@ -104,4 +108,23 @@ public abstract class BaseTest {
     public void addFormatter(FormatterElement elem) {
         formatters.addElement(elem);
     }
+
+    /**
+     * Sets the destination directory.
+     */
+    public void setTodir(File destDir) {
+        this.destDir = destDir; 
+    }
+
+    /**
+     * @return the destination directory as an absolute path if it exists
+     *			otherwise return <tt>null</tt>
+     */
+    public String getTodir(){
+        if (destDir != null){
+            return destDir.getAbsolutePath();
+        }
+        return null;
+    }
+
 }
