@@ -227,6 +227,8 @@ V. Things we probably don't agree on.
                 value="29th Feb 2003"/>
  </include>
 
+  2003 is no leap year 8-)
+
 * provide datatypes through property tag and remove need for separate free
   standing entities. ie
   <property name="foo">
@@ -288,11 +290,6 @@ V. Things we probably don't agree on.
 
 * Simple flow control (if-then-else, for)
 
-  Either in core or - with the help of something like Thomas
-  Christen's proposal
-  <http://marc.theaimsgroup.com/?l=ant-dev&m=98130655812010&w=2> 
-  as tasks.
-
 * Multithreaded execution of tasks within the same target.
 
 * Multithreaded execution of targets.
@@ -333,3 +330,8 @@ V. Things we probably don't agree on.
 
 * specify an onfail task or target that runs in case of a build
   failure.
+
+* Support nesting tasks into other elements - not just as children of
+  target - as proposed by Thomas Christen in
+  <http://marc.theaimsgroup.com/?l=ant-dev&m=98130655812010&w=2>.
+
