@@ -129,7 +129,6 @@ public class ExecuteJava {
             }
             final Method main = target.getMethod("main", param);
             main.invoke(null, argument);
-
         } catch (NullPointerException e) {
             throw new BuildException("Could not find main() method in " + classname);
         } catch (ClassNotFoundException e) {

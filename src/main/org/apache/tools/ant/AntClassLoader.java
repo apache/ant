@@ -163,7 +163,7 @@ public class AntClassLoader extends ClassLoader implements BuildListener {
     /**
      * The size of buffers to be used in this classloader.
      */
-    static private final int BUFFER_SIZE = 1024;
+    static private final int BUFFER_SIZE = 8192;
     
     /**
      * The components of the classpath that the classloader searches for classes
@@ -204,6 +204,11 @@ public class AntClassLoader extends ClassLoader implements BuildListener {
      */
     private ClassLoader parent = null;
 
+    /**
+     * A hashtable of zip files opened by the classloader
+     */
+    private Hashtable zipFiles = new Hashtable();     
+    
     /**
      * The context loader saved when setting the thread's current context loader.
      */
@@ -579,28 +584,15 @@ public class AntClassLoader extends ClassLoader implements BuildListener {
                 }
             }
             else {
-                ZipFile zipFile = null;
-                try {
+                // is the zip file in the cache
+                ZipFile zipFile = (ZipFile)zipFiles.get(file);
+                if (zipFile == null) {
                     zipFile = new ZipFile(file);
-        
-                    ZipEntry entry = zipFile.getEntry(resourceName);
-                    if (entry != null) {
-                        // we need to read the entry out of the zip file into
-                        // a baos and then 
-                        ByteArrayOutputStream baos = new ByteArrayOutputStream();
-                        byte[] buffer = new byte[BUFFER_SIZE];
-                        int bytesRead;
-                        InputStream stream = zipFile.getInputStream(entry);
-                        while ((bytesRead = stream.read(buffer, 0, BUFFER_SIZE)) != -1) {
-                            baos.write(buffer, 0, bytesRead);
-                        }
-                        return new ByteArrayInputStream(baos.toByteArray());   
-                    }
+                    zipFiles.put(file, zipFile);                    
                 }
-                finally {
-                    if (zipFile != null) {
-                        zipFile.close();
-                    }
+                ZipEntry entry = zipFile.getEntry(resourceName);
+                if (entry != null) {
+                    return zipFile.getInputStream(entry);
                 }
             }
         }
@@ -788,7 +780,7 @@ public class AntClassLoader extends ClassLoader implements BuildListener {
         if (theClass != null) {
             return theClass;
         }
-        
+
         if (isParentFirst(classname)) {
             try {
                 theClass = findBaseClass(classname);
@@ -816,7 +808,7 @@ public class AntClassLoader extends ClassLoader implements BuildListener {
         if (resolve) {
             resolveClass(theClass);
         }
-        
+
         return theClass;
     }
 
@@ -847,9 +839,9 @@ public class AntClassLoader extends ClassLoader implements BuildListener {
                 throws IOException {
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         int bytesRead = -1;
-        byte[] buffer = new byte[1024];
+        byte[] buffer = new byte[BUFFER_SIZE];
         
-        while ((bytesRead = stream.read(buffer, 0, 1024)) != -1) {
+        while ((bytesRead = stream.read(buffer, 0, BUFFER_SIZE)) != -1) {
             baos.write(buffer, 0, bytesRead);
         }
         
@@ -951,6 +943,15 @@ public class AntClassLoader extends ClassLoader implements BuildListener {
     public void buildFinished(BuildEvent event) {
         pathComponents = null;
         project = null;
+        for (Enumeration e = zipFiles.elements(); e.hasMoreElements(); ) {
+            ZipFile zipFile = (ZipFile)e.nextElement();
+            try {
+                zipFile.close();
+            }
+            catch (IOException ioe) {
+                // ignore
+            }
+        }
     }
 
     public void targetStarted(BuildEvent event) {
