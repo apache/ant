@@ -11,7 +11,7 @@ import java.io.IOException;
 import org.apache.avalon.framework.logger.AbstractLogEnabled;
 import org.apache.myrmidon.api.TaskContext;
 import org.apache.myrmidon.api.TaskException;
-import org.apache.myrmidon.framework.Condition;
+import org.apache.myrmidon.framework.conditions.Condition;
 
 /**
  * Condition to wait for a TCP/IP socket to have a listener. Its attribute(s)

@@ -14,7 +14,7 @@ import java.net.URLConnection;
 import org.apache.avalon.framework.logger.AbstractLogEnabled;
 import org.apache.myrmidon.api.TaskContext;
 import org.apache.myrmidon.api.TaskException;
-import org.apache.myrmidon.framework.Condition;
+import org.apache.myrmidon.framework.conditions.Condition;
 
 /**
  * Condition to wait for a HTTP request to succeed. Its attribute(s) are: url -

@@ -7,7 +7,6 @@
  */
 package org.apache.antlib.vfile.selectors;
 
-import org.apache.antlib.vfile.FileSelector;
 import org.apache.aut.vfs.FileObject;
 import org.apache.aut.vfs.FileSystemException;
 import org.apache.myrmidon.api.TaskContext;

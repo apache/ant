@@ -5,7 +5,7 @@
  * version 1.1, a copy of which has been included with this distribution in
  * the LICENSE.txt file.
  */
-package org.apache.myrmidon.framework;
+package org.apache.myrmidon.framework.conditions;
 
 import org.apache.myrmidon.api.TaskContext;
 import org.apache.myrmidon.api.TaskException;

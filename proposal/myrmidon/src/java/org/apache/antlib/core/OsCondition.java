@@ -10,7 +10,7 @@ package org.apache.antlib.core;
 import org.apache.aut.nativelib.Os;
 import org.apache.myrmidon.api.TaskContext;
 import org.apache.myrmidon.api.TaskException;
-import org.apache.myrmidon.framework.Condition;
+import org.apache.myrmidon.framework.conditions.Condition;
 
 /**
  * Condition to check the current OS.</p>

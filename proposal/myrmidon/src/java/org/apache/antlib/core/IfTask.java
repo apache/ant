@@ -13,7 +13,7 @@ import org.apache.avalon.excalibur.i18n.Resources;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.myrmidon.api.TaskException;
 import org.apache.myrmidon.framework.AbstractContainerTask;
-import org.apache.myrmidon.framework.Condition;
+import org.apache.myrmidon.framework.conditions.Condition;
 import org.apache.myrmidon.framework.conditions.IsSetCondition;
 import org.apache.myrmidon.framework.conditions.NotCondition;
 

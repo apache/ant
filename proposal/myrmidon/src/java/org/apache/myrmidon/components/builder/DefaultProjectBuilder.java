@@ -22,7 +22,7 @@ import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
 import org.apache.avalon.framework.configuration.SAXConfigurationHandler;
 import org.apache.avalon.framework.logger.AbstractLogEnabled;
-import org.apache.myrmidon.framework.Condition;
+import org.apache.myrmidon.framework.conditions.Condition;
 import org.apache.myrmidon.framework.conditions.AndCondition;
 import org.apache.myrmidon.framework.conditions.IsSetCondition;
 import org.apache.myrmidon.framework.conditions.NotCondition;

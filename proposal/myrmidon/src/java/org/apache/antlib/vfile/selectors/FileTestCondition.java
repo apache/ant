@@ -7,11 +7,10 @@
  */
 package org.apache.antlib.vfile.selectors;
 
-import org.apache.myrmidon.framework.Condition;
+import org.apache.myrmidon.framework.conditions.Condition;
 import org.apache.myrmidon.api.TaskContext;
 import org.apache.myrmidon.api.TaskException;
 import org.apache.aut.vfs.FileObject;
-import org.apache.antlib.vfile.FileSelector;
 import org.apache.avalon.excalibur.i18n.ResourceManager;
 import org.apache.avalon.excalibur.i18n.Resources;
 

@@ -9,6 +9,7 @@ package org.apache.antlib.vfile;
 
 import java.util.ArrayList;
 import org.apache.antlib.vfile.selectors.AndFileSelector;
+import org.apache.antlib.vfile.selectors.FileSelector;
 import org.apache.aut.vfs.FileObject;
 import org.apache.myrmidon.api.TaskContext;
 import org.apache.myrmidon.api.TaskException;

@@ -13,6 +13,7 @@ import org.apache.myrmidon.api.TaskContext;
 import org.apache.myrmidon.api.TaskException;
 import org.apache.myrmidon.framework.conditions.IsSetCondition;
 import org.apache.myrmidon.framework.conditions.NotCondition;
+import org.apache.myrmidon.framework.conditions.Condition;
 
 /**
  * Basic data type for holding patterns.

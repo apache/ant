@@ -8,7 +8,7 @@
 
 import org.apache.myrmidon.api.TaskException;
 import org.apache.myrmidon.api.TaskContext;
-import org.apache.myrmidon.framework.Condition;
+import org.apache.myrmidon.framework.conditions.Condition;
 
 /**
  * Simple String comparison condition.

@@ -9,7 +9,7 @@ package org.apache.myrmidon.interfaces.model;
 
 import java.util.ArrayList;
 import org.apache.avalon.framework.configuration.Configuration;
-import org.apache.myrmidon.framework.Condition;
+import org.apache.myrmidon.framework.conditions.Condition;
 
 /**
  * Targets in build file.
