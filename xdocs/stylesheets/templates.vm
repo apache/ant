@@ -1,5 +1,5 @@
 #* 
- * Copyright  2000-2004 The Apache Software Foundation
+ * Copyright  2000-2005 The Apache Software Foundation
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -277,7 +277,7 @@
 
 #macro (footer)
       <p class="copyright">
-        Copyright &copy; 2000-2004&nbsp;The Apache Software Foundation. All rights reserved.
+        Copyright &copy; 2000-2005&nbsp;The Apache Software Foundation. All rights reserved.
         <script type="text/javascript" language="JavaScript"><!--
                 document.write(" - "+"Last Published: " + document.lastModified);
               //  -->
