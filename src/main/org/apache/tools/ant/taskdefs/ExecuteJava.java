@@ -59,6 +59,7 @@ import org.apache.tools.ant.AntClassLoader;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.types.Commandline;
+import org.apache.tools.ant.types.CommandlineJava;
 import org.apache.tools.ant.types.Path;
 
 import java.lang.reflect.InvocationTargetException;
@@ -72,6 +73,7 @@ public class ExecuteJava {
 
     private Commandline javaCommand = null;
     private Path classpath = null;
+    private CommandlineJava.SysProperties sysProperties = null;
 
     public void setJavaCommand(Commandline javaCommand) {
         this.javaCommand = javaCommand;
@@ -81,10 +83,18 @@ public class ExecuteJava {
         classpath = p;
     }
 
+    public void setSystemProperties(CommandlineJava.SysProperties s) {
+        sysProperties = s;
+    }
+
     public void execute(Project project) throws BuildException{
         final String classname = javaCommand.getExecutable();
         final Object[] argument = { javaCommand.getArguments() };
         try {
+            if (sysProperties != null) {
+                sysProperties.restoreSystem();
+            }
+
             final Class[] param = { Class.forName("[Ljava.lang.String;") };
             Class target = null;
             if (classpath == null) {
@@ -95,6 +105,7 @@ public class ExecuteJava {
             }
             final Method main = target.getMethod("main", param);
             main.invoke(null, argument);
+
         } catch (NullPointerException e) {
             throw new BuildException("Could not find main() method in " + classname);
         } catch (ClassNotFoundException e) {
@@ -108,6 +119,10 @@ public class ExecuteJava {
             // if the invoked application tried to call System.exit()
         } catch (Exception e) {
             throw new BuildException(e);
+        } finally {
+            if (sysProperties != null) {
+                sysProperties.restoreSystem();
+            }
         }
-   }
+    }
 }

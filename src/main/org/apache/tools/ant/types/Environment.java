@@ -64,7 +64,7 @@ import java.util.Vector;
  */
 public class Environment {
 
-    private Vector variables;
+    protected Vector variables;
 
     public static class Variable {
         private String key, value;
@@ -79,6 +79,14 @@ public class Environment {
         
         public void setValue(String value) {
             this.value = value;
+        }
+        
+        public String getKey() {
+            return this.key;
+        }
+        
+        public String getValue() {
+            return this.value;
         }
         
         public void setPath(Path path) {
