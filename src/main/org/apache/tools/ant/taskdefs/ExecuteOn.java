@@ -277,16 +277,15 @@ public class ExecuteOn extends ExecTask {
             throw new BuildException("no filesets and no filelists specified",
                                      getLocation());
         }
-        if (targetFilePos != null || mapperElement != null
-            || destDir != null) {
-
-            if (mapperElement == null) {
-                throw new BuildException("no mapper specified", getLocation());
-            }
-            if (destDir == null) {
-                throw new BuildException("no dest attribute specified",
-                                         getLocation());
-            }
+        if (targetFilePos != null && mapperElement == null) {
+            throw new BuildException("targetfile specified without mapper",
+                                     getLocation());
+        }
+        if (destDir != null && mapperElement == null) {
+            throw new BuildException("dest specified without mapper",
+                                     getLocation());
+        }
+        if (mapperElement != null) {
             mapper = mapperElement.getImplementation();
         }
     }

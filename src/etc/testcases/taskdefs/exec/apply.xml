@@ -406,6 +406,28 @@
         </fail>
     </target>
 
+    <target name="testNoDest" depends="init,xyz" if="echo.can.run">
+      <presetdef name="ekko">
+        <apply executable="echo" addsourcefile="false" force="true">
+          <filelist dir="${basedir}" files="x" />
+          <globmapper from="*" to="${basedir}/*" />
+          <targetfile />
+        </apply>
+      </presetdef>
+      <ekko outputproperty="dest" dest="${basedir}" />
+      <ekko outputproperty="nodest" />
+      <fail>
+        <condition>
+          <or>
+            <available file="${dest}" />
+            <not>
+              <available file="${nodest}" />
+            </not>
+          </or>
+        </condition>
+      </fail>
+    </target>
+
     <target name="cleanup">
         <delete>
             <fileset refid="xyz" />

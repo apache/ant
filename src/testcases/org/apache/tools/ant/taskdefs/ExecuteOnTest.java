@@ -558,6 +558,10 @@ public class ExecuteOnTest extends BuildFileTest {
         executeTarget("force");
     }
 
+    public void testNoDest() {
+        executeTarget("testNoDest");
+    }
+
     //borrowed from TokenFilterTest
     private String getFileString(String filename) throws IOException {
         String result = null;

@@ -188,6 +188,9 @@ Other changes:
 * Added a comment attribute to the zip task.
   Bugzilla report 22793.
 
+* Made the dest attribute of the apply task optional; mapped target
+  filenames will be interpreted as absolute pathnames when dest is omitted.
+
 Fixed bugs:
 -----------
 
