@@ -1,6 +1,5 @@
 <project name="ftp-test" basedir=".">
     <property file="../../../../../../ftp.properties"/>
-    <property environment="env"/>
     <property name="ftp.user" value="${user.name}"/>
     <property name="ftp.host" value="localhost"/>
     <property name="ftp.port" value="21" />
