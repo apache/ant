@@ -72,7 +72,8 @@ public class ExecTaskTest extends BuildFileTest {
     private final int TIME_TO_WAIT = 4;
     /** maximum time allowed for the build in milliseconds */
     private final int MAX_BUILD_TIME = 4000;
-    private final int SECURITY_MARGIN = 100; // wait 100 millis extras
+    private final int SECURITY_MARGIN = 1000; // wait 1 second extras
+    // the test failed with 100 ms of margin on cvs.apache.org on August 1st, 2003
     private File logFile;
     private MonitoredBuild myBuild = null;
     volatile private boolean buildFinished = false;
