@@ -87,7 +87,7 @@ ${JAVA_HOME}/bin/java -classpath ${CLASSPATH} org.apache.tools.ant.Main \
 
 echo ... Cleaning Up Build Directories
 
-chmod +x bin/ant bin/antRun
+chmod +x bootstrap/bin/ant bootstrap/bin/antRun
 
 rm -rf ${CLASSDIR}
 
