@@ -362,15 +362,19 @@ public abstract class Task extends ProjectComponent {
             try {
                 maybeConfigure();
                 execute();
-            } catch (RuntimeException exc) {
-                if (exc instanceof BuildException) {
-                    BuildException be = (BuildException) exc;
-                    if (be.getLocation() == Location.UNKNOWN_LOCATION) {
-                        be.setLocation(getLocation());
-                    }
+            } catch (BuildException ex) {
+                if (ex.getLocation() == Location.UNKNOWN_LOCATION) {
+                    ex.setLocation(getLocation());
                 }
-                reason = exc;
-                throw exc;
+                reason = ex;
+            } catch (Exception ex) {
+                reason = ex;
+                BuildException be = new BuildException(ex);
+                be.setLocation(getLocation());
+                throw be;
+            } catch (Error ex) {
+                reason = ex;
+                throw ex;
             } finally {
                 getProject().fireTaskFinished(this, reason);
             }
