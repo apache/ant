@@ -8,7 +8,7 @@
   <property file=".ant.properties"/>
   <property file="${user.home}/.ant.properties"/>
 
-  <property name="log4j.jar" location="../myrmidon/lib/log4j-core.jar"/>
+  <property name="log4j.jar" location="lib/log4j-core.jar"/>
   <property name="xdoclet.jar" location="lib/xdoclet.jar"/>
 
   <property name="src.dir"
