@@ -226,6 +226,10 @@ public class TraXLiaison implements XSLTLiaison, ErrorListener, XSLTLoggerAware 
     }
     
     private void logError(TransformerException e, String type) {
+        if (logger == null) {
+            return;
+        }
+        
         StringBuffer msg = new StringBuffer();
         if(e.getLocator() != null) {
             if(e.getLocator().getSystemId() != null) {

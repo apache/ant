@@ -1,10 +1,13 @@
 package org.apache.tools.ant.taskdefs.optional;
 
 import org.apache.tools.ant.taskdefs.XSLTLiaison;
+import org.apache.tools.ant.taskdefs.XSLTLogger;
 import org.apache.tools.ant.taskdefs.condition.Os;
 import org.apache.tools.ant.BuildException;
 
 import java.io.File;
+
+import junit.framework.AssertionFailedError;
 
 /* 
  * The Apache Software License, Version 1.1
@@ -65,7 +68,9 @@ import java.io.File;
  * TraX XSLTLiaison testcase
  * @author <a href="mailto:sbailliez@apache.org">Stephane Bailliez</a>
  */
-public class TraXLiaisonTest extends AbstractXSLTLiaisonTest {
+public class TraXLiaisonTest extends AbstractXSLTLiaisonTest 
+    implements XSLTLogger {
+
     public TraXLiaisonTest(String name){
         super(name);
     }
@@ -78,7 +83,9 @@ public class TraXLiaisonTest extends AbstractXSLTLiaisonTest {
     }
 
     public XSLTLiaison createLiaison() throws Exception {
-        return new TraXLiaison();
+        TraXLiaison l = new TraXLiaison();
+        l.setLogger(this);
+        return l;
     }
 
     public void testXalan2Redirect() throws Exception {
@@ -122,6 +129,10 @@ public class TraXLiaisonTest extends AbstractXSLTLiaisonTest {
         String systemid = ((TraXLiaison)liaison).getSystemId(file);
         assertTrue("SystemIDs should start by file:///", systemid.startsWith("file:///"));
         assertTrue("SystemIDs should not start with file:////", !systemid.startsWith("file:////"));
+    }
+
+    public void log(String message) {
+        throw new AssertionFailedError("Liaison sent message: "+message);
     }
 
 }
