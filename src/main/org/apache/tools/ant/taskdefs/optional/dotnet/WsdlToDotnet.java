@@ -295,7 +295,7 @@ public class WsdlToDotnet extends Task  {
             command.addArgument("/protocol:"+protocol);
         }
         if(parseableErrors) {
-            command.addArgument("/parseableErrors");
+            command.addArgument("/parsableErrors");
         }
         command.addArgument(extraOptions);
 
