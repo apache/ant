@@ -16,7 +16,7 @@
 
         <table>
           <tr>
-            <th>FAQ</th>
+            <th>FAQ:</th>
             <td><a href="faq.html">http://jakarta.apache.org/ant/faq.html</a></td>
           </tr>
         </table>
@@ -27,17 +27,42 @@
 
         <table>
           <tr>
-            <th>Forum</th>
+            <th>Forum:</th>
             <td><a href="http://www.jguru.com/forums/home.jsp?topic=Ant">http://www.jguru.com/forums/home.jsp?topic=Ant</a></td>
           </tr>
           <tr>
-            <th>FAQ</th>
+            <th>FAQ:</th>
             <td><a href="http://www.jguru.com/faq/home.jsp?topic=Ant">http://www.jguru.com/faq/home.jsp?topic=Ant</a></td>
           </tr>
         </table>
       </subsection>
     </section>
     
+    <section name="Books">
+      <subsection name="Java Tools for eXtreme Programming">
+        <p>This book covers the following XP subjects:
+            <ul>
+                <li>Automated unit and functional testing</li>
+                <li>Continuous integration through build and deployment automation</li>
+                <li>The value of refactoring and continuous integration</li>
+                <li>How Ant, JUnit, JUnitPerf, Cactus, HTTPUnit, and JMeter
+                can be used to achieve the goals of the XP methodology</li>
+            </ul>
+        </p>
+
+        <table>
+          <tr>
+            <th>Authors:</th>
+            <td>Richard Hightower and Nicholas Lesiecki</td>
+          </tr>
+          <tr>
+            <th>URL:</th>
+            <td><a href="http://www.wiley.com/cda/product/0,,047120708X,00.html">http://www.wiley.com/cda/product/0,,047120708X,00.html</a></td>
+          </tr>
+        </table>
+      </subsection>
+    </section>
+
     <section name="Articles and Presentations">
 
       <p>The following sections list articles and presentations written about Apache Ant.  If
