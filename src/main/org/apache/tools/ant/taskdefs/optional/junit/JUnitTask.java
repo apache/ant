@@ -1476,9 +1476,9 @@ public class JUnitTask extends Task {
      */
     protected void actOnTestResult(int exitValue, boolean wasKilled,
                                    JUnitTest test, String name) {
-        TestResult t = new TestResult();
-        t.exitValue = exitValue;
-        t.wasKilled = wasKilled;
+        TestResultHolder t = new TestResultHolder();
+        t.exitCode = exitValue;
+        t.timedOut = wasKilled;
         actOnTestResult(t, test, name);
     }
 
