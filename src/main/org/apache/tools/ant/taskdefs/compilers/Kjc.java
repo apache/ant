@@ -129,7 +129,7 @@ public class Kjc extends DefaultCompilerAdapter {
 	}
 
 	if (extdirs != null) {
-            addExtdirsToClasspath(cp);
+            cp.addExtdirs(extdirs);
 	}
 
 	cp.append(classpath);

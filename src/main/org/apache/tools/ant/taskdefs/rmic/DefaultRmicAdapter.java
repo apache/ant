@@ -182,7 +182,7 @@ public abstract class DefaultRmicAdapter implements RmicAdapter {
                 /*
                  * XXX - This doesn't mix very well with build.systemclasspath,
                  */
-                addExtdirsToClasspath(classpath);
+                classpath.addExtdirs(attributes.getExtdirs());
             } else {
                 cmd.createArgument().setValue("-extdirs");
                 cmd.createArgument().setPath(attributes.getExtdirs());
@@ -257,37 +257,6 @@ public abstract class DefaultRmicAdapter implements RmicAdapter {
         }
 
         attributes.log(niceSourceList.toString(), Project.MSG_VERBOSE);
-    }
-
-    /**
-     * Emulation of extdirs feature in java >= 1.2.
-     * This method adds all files in the given
-     * directories (but not in sub-directories!) to the classpath,
-     * so that you don't have to specify them all one by one.
-     * @param classpath - Path to append files to
-     */
-    protected void addExtdirsToClasspath(Path classpath) {
-        Path extdirs = attributes.getExtdirs();
-        if (extdirs == null) {
-            String extProp = System.getProperty("java.ext.dirs");
-            if (extProp != null) {
-                extdirs = new Path(attributes.getProject(), extProp);
-            } else {
-                return;
-            }
-        }
-
-        String[] dirs = extdirs.list();
-        for (int i=0; i<dirs.length; i++) {
-            if (!dirs[i].endsWith(File.separator)) {
-                dirs[i] += File.separator;
-            }
-            File dir = attributes.getProject().resolveFile(dirs[i]);
-            FileSet fs = new FileSet();
-            fs.setDir(dir);
-            fs.setIncludes("*");
-            classpath.addFileset(fs);
-        }
     }
 
     private final static Random rand = new Random();

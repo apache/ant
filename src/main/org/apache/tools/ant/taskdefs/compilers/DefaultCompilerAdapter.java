@@ -229,7 +229,7 @@ public abstract class DefaultCompilerAdapter implements CompilerAdapter {
                 cp.append(bootclasspath);
             }
             if (extdirs != null) {
-                addExtdirsToClasspath(cp);
+                cp.addExtdirs(extdirs);
             }
             cp.append(classpath);
             cp.append(src);
@@ -404,36 +404,6 @@ public abstract class DefaultCompilerAdapter implements CompilerAdapter {
             if (tmpFile != null) {
                 tmpFile.delete();
             }
-        }
-    }
-
-    /**
-     * Emulation of extdirs feature in java >= 1.2.
-     * This method adds all files in the given
-     * directories (but not in sub-directories!) to the classpath,
-     * so that you don't have to specify them all one by one.
-     * @param classpath - Path to append files to
-     */
-    protected void addExtdirsToClasspath(Path classpath) {
-        if (extdirs == null) {
-            String extProp = System.getProperty("java.ext.dirs");
-            if (extProp != null) {
-                extdirs = new Path(project, extProp);
-            } else {
-                return;
-            }
-        }
-
-        String[] dirs = extdirs.list();
-        for (int i=0; i<dirs.length; i++) {
-            if (!dirs[i].endsWith(File.separator)) {
-                dirs[i] += File.separator;
-            }
-            File dir = project.resolveFile(dirs[i]);
-            FileSet fs = new FileSet();
-            fs.setDir(dir);
-            fs.setIncludes("*");
-            classpath.addFileset(fs);
         }
     }
 
