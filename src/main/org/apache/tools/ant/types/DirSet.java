@@ -60,16 +60,18 @@ package org.apache.tools.ant.types;
  *
  * @since Ant 1.5
  */
-public class DirSet extends FileSet {
+public class DirSet extends AbstractFileSet {
     
     public DirSet() {
         super();
-        setDataTypeName("dirset");
     }
 
     protected DirSet(DirSet dirset) {
         super(dirset);
-        setDataTypeName("dirset");
+    }
+
+    protected String getDataTypeName() {
+        return "dirset";
     }
 
     /**
