@@ -180,7 +180,24 @@ public abstract class DefaultRmicAdapter implements RmicAdapter {
      * setup rmic argument for rmic.
      */
     protected Commandline setupRmicCommand() {
+        return setupRmicCommand(null);
+    }
+
+    /**
+     * setup rmic argument for rmic.
+     *
+     * @param options additional parameters needed by a specific
+     *                implementation.
+     */
+    protected Commandline setupRmicCommand(String[] options) {
         Commandline cmd = new Commandline();
+
+        if (options != null) {
+            for (int i=0; i<options.length; i++) {
+                cmd.createArgument().setValue(options[i]);
+            }
+        }
+
         Path classpath = getCompileClasspath();
 
         cmd.createArgument().setValue("-d");

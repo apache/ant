@@ -73,7 +73,7 @@ public class WLRmic extends DefaultRmicAdapter {
 
     public boolean execute() throws BuildException {
         getRmic().log("Using WebLogic rmic", Project.MSG_VERBOSE);
-        Commandline cmd = setupRmicCommand();
+        Commandline cmd = setupRmicCommand(new String[] {"-noexit"});
 
         PrintStream err = System.err;
         PrintStream out = System.out;
@@ -88,7 +88,7 @@ public class WLRmic extends DefaultRmicAdapter {
             Class c = Class.forName("weblogic.rmic");
             Method doRmic = c.getMethod("main", 
                                         new Class [] { String[].class });
-            doRmic.invoke(null, new Object[] { cmd.getArguments() });
+            doRmic.invoke(null, new Object[] {  });
             return true;
         } catch (ClassNotFoundException ex) {
             throw new BuildException("Cannot use WebLogic rmic, as it is not available"+
