@@ -24,6 +24,9 @@ Fixed bugs:
   when Ant core loader != Java application loader and Path.systemClassPath taken from ${java.class.path}
   Bugzilla 30161.  
 
+* Enable to choose the regexp implementation without system property.
+  Bugzilla Report 15390.
+
 Changes from Ant 1.6.1 to Ant 1.6.2
 ===================================
 
