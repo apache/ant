@@ -244,7 +244,7 @@ public class JUnitTestRunner implements TestListener {
         if (exception != null) { // had an exception in the constructor
             for (int i = 0; i < formatters.size(); i++) {
                 ((TestListener) formatters.elementAt(i)).addError(null,
-                                                                 exception);
+                                                                  exception);
             }
             junitTest.setCounts(1, 0, 1);
             junitTest.setRunTime(0);
