@@ -51,6 +51,7 @@
   <property name="ant.package" value="org/apache/tools/ant"/>
   <property name="optional.package" value="${ant.package}/taskdefs/optional"/>
   <property name="optional.type.package" value="${ant.package}/types/optional"/>
+  <property name="apache.resolver.type.package" value="${ant.package}/types/resolver"/>
   <property name="util.package" value="${ant.package}/util"/>
   <property name="regexp.package" value="${util.package}/regexp"/>
 
@@ -194,6 +195,9 @@
   </selector>
   <selector id="needs.xslp">
     <filename name="${optional.package}/XslpLiaison*"/>
+  </selector>
+  <selector id="needs.apache.resolver">
+    <filename name="${apache.resolver.type.package}/**"/>
   </selector>
   <selector id="needs.junit">
     <filename name="${optional.package}/junit/**"/>
@@ -341,6 +345,9 @@
     <available property="xslp.present"
                classname="com.kvisco.xsl.XSLProcessor"
                classpathref="classpath"/>
+   <available property="apache.resolver.present"
+              classname="org.apache.xml.resolver.tools.CatalogResolver"
+              classpathref="classpath" />
     <available property="xalan.present"
                classname="org.apache.xalan.xslt.XSLTProcessorFactory"
                classpathref="classpath"/>
@@ -570,6 +577,7 @@
             <selector refid="needs.xalan1" unless="xalan.present"/>
             <selector refid="needs.xalan2" unless="xalan2.present"/>
             <selector refid="needs.xslp" unless="xslp.present"/>
+            <selector refid="needs.apache.resolver" unless="apache.resolver.present"/>
             <selector refid="needs.junit" unless="junit.present"/>
             <selector refid="needs.jakarta.regexp" 
                       unless="jakarta.regexp.present"/>
@@ -739,6 +747,7 @@
             <selector refid="needs.xalan1"/>
             <selector refid="needs.xalan2"/>
             <selector refid="needs.xslp"/>
+            <selector refid="needs.apache.resolver"/>
             <selector refid="needs.junit"/>
             <selector refid="needs.jakarta.regexp"/>
             <selector refid="needs.jakarta.oro"/>
@@ -790,6 +799,12 @@
          basedir="${build.classes}"
          manifest="${manifest.tmp}">
       <selector refid="needs.xslp"/>
+    </jar>
+
+    <jar destfile="${build.lib}/${optional.jars.prefix}-apache-resolver.jar"
+         basedir="${build.classes}"
+         manifest="${manifest.tmp}">
+      <selector refid="needs.apache.resolver"/>
     </jar>
 
     <jar destfile="${build.lib}/${optional.jars.prefix}-junit.jar"

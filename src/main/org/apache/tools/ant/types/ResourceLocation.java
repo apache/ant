@@ -53,15 +53,22 @@
  */
 package org.apache.tools.ant.types;
 
+import java.net.URL;
+
 /**
- * <p>Helper class to handle the DTD nested element.  Instances of
- * this class correspond to the <code>PUBLIC</code> catalog entry type
- * of the <a
+ * <p>Helper class to handle the <code>&lt;dtd&gt;</code> and
+ * <code>&lt;entity&gt;</code> nested elements.  These correspond to
+ * the <code>PUBLIC</code> and <code>URI</code> catalog entry types,
+ * respectively, as defined in the <a
  * href="http://oasis-open.org/committees/entity/spec-2001-08-06.html">
  * OASIS "Open Catalog" standard</a>.</p>
  *
- * <p>Possible Future Enhancement: Bring the Ant element name into
- * conformance with the OASIS standard.</p>
+ * <p>Possible Future Enhancements:
+ * <ul>
+ * <li>Bring the Ant element names into conformance with the OASIS standard</li>
+ * <li>Add support for additional OASIS catalog entry types</li>
+ * </ul>
+ * </p>
  *
  * @see org.apache.xml.resolver.Catalog
  * @author Conor MacNeill
@@ -69,10 +76,90 @@ package org.apache.tools.ant.types;
  * @author <a href="mailto:cstrong@arielpartners.com">Craeg Strong</a>
  * @version $Id$
  */
-public class DTDLocation extends ResourceLocation {
+public class ResourceLocation {
 
-    public DTDLocation() {
-        super("PUBLIC");
+    //-- Fields ----------------------------------------------------------------
+
+    /** 
+     * name of the catalog entry type, as per OASIS spec.
+     */
+    protected String name = null;
+
+    /** publicId of the dtd/entity. */
+    private String publicId = null;
+
+    /** location of the dtd/entity - a file/resource/URL. */
+    private String location = null;
+
+    /** 
+     * base URL of the dtd/entity, or null. If null, the Ant project
+     * basedir is assumed.  If the location specifies a relative
+     * URL/pathname, it is resolved using the base.  The default base
+     * for an external catalog file is the directory in which it is
+     * located.
+     */
+    private String base = null;
+
+    //-- Methods ---------------------------------------------------------------
+
+    protected ResourceLocation(String name) {
+        this.name = name;
+    }
+   
+    /**
+     * @param publicId uniquely identifies the resource.
+     */
+    public void setPublicId(String publicId) {
+        this.publicId = publicId;
     }
 
-}
+    /**
+     * @param location the location of the resource associated with the
+     *      publicId.
+     */
+    public void setLocation(String location) {
+        this.location = location;
+    }
+
+    /**
+     * @param base the base URL of the resource associated with the
+     * publicId.  If the location specifies a relative URL/pathname,
+     * it is resolved using the base.  The default base for an
+     * external catalog file is the directory in which it is located.
+     */
+    public void setBase(String base) {
+        this.base = base;
+    }
+
+    /**
+     * @return the publicId of the resource.
+     */
+    public String getPublicId() {
+        return publicId;
+    }
+
+    /**
+     * @return the location of the resource identified by the publicId.
+     */
+    public String getLocation() {
+        return location;
+    }
+
+    /**
+     * @return the base of the resource identified by the publicId.
+     */
+    public String getBase() {
+        return base;
+    }
+
+    /**
+     * @return the name of the catalog entry type.  Currently this is
+     * one of <code>PUBLIC</code> or <code>URI</code>.
+     * 
+     * @see org.apache.xml.resolver.Catalog
+     */
+    public String getName() {
+        return name;
+    }
+
+} //-- ResourceLocation

@@ -19,6 +19,10 @@ documents
 to efficiently allow a local substitution for a resource available on the 
 web.
 </p>
+<p><b>Note:</b> This task <em>uses, but does not depend on</em> external
+libraries not included in the Ant distribution.  See <a
+  href="../install.html#librarydependencies">Library Dependencies</a> for more
+information.</p>
 <p>This data type provides a catalog of resource locations based
 on the <a
 href="http://oasis-open.org/committees/entity/spec-2001-08-06.html">
@@ -59,17 +63,34 @@ task uses XMLCatalogs for both entity and URI resolution.</p>
 <p>XMLCatalogs are specified as either a reference to another XMLCatalog, 
 defined
 previously in a build file, or as a list of <code>dtd</code> or
-<code>entity</code> locations.  A separate classpath for entity resolution 
+<code>entity</code> locations.  In addition, external catalog files
+may be specified in <code>catalogfiles</code> filesets, but they will
+be ignored unless the resolver library from xml-commons is available
+in the system classpath.  A separate classpath for entity resolution 
 may be specified inline via nested <code>classpath</code> elements; 
 otherwise the system classpath is used for this as well.</p>
 <p>XMLCatalogs can also be nested inside other XMLCatalogs.  For
 example, a "superset" XMLCatalog could be made by including several
 nested XMLCatalogs that referred to other, previously defined
 XMLCatalogs.</p>
+<p>Resource locations can be specified either in-line or in
+external catalog file(s), or both.  In order to use an external
+catalog file, the xml-commons resolver library ("resolver.jar")
+must be in your path.  External catalog files may be either <a
+href="http://oasis-open.org/committees/entity/background/9401.html">
+plain text format</a> or <a
+href="http://www.oasis-open.org/committees/entity/spec-2001-08-06.html">
+XML format</a>.  If the xml-commons resolver library is not found in the
+classpath, external catalog files, specified in <code>catalogfiles</code>
+filesets, will be ignored and a warning will be logged.  In this case, however,
+processing of inline entries will proceed normally.</p>
 <p>Currently, only <code>&lt;dtd&gt;</code> and
 <code>&lt;entity&gt;</code> elements may be specified inline; these
 roughly correspond to OASIS catalog entry types <code>PUBLIC</code> and
-<code>URI</code> respectively.</p>  
+<code>URI</code> respectively.  By contrast, external catalog files
+may use any of the entry types defined in the 
+<a href="http://oasis-open.org/committees/entity/spec-2001-08-06.html">
++OASIS specification</a>.</p>
 <h3><a name="ResolverAlgorithm">Entity/DTD/URI Resolution Algorithm</a></h3>
 
 When an entity, DTD, or URI is looked up by the XML processor, the
@@ -100,6 +121,18 @@ contains <code>foo/bar/blat.dtd</code> it will resolve an entity whose
 will <em>not</em> resolve an entity whose <code>location</code> is
 <code>blat.dtd</code>.
 
+
+<h4>3a. Apache xml-commons resolver lookup</h4>
+
+<p>What happens next depends on whether the resolver library from
+xml-commons is available on the classpath.  If so, we defer all
+further attempts at resolving to it.  The resolver library supports
+extremely sophisticated functionality like URL rewriting and so on,
+which can be accessed by making the appropriate entries in external
+catalog files (XMLCatalog does not yet provide inline support for all
+of the entries defined in the <a
+href="http://oasis-open.org/committees/entity/spec-2001-08-06.html">OASIS
+standard</a>).</p>
 
 <h4>3. URL-space lookup</h4>
 
@@ -171,6 +204,22 @@ basedir.
 <p>The classpath to use for <a href="#ResolverAlgorithm">entity
 resolution</a>.  The nested <code>&lt;classpath&gt;</code> is a
 <a href="../using.html#path">path</a>-like structure.</p>
+<h4>catalogfiles</h4>
+<p>
+The nested <code>catalogfiles</code> element specifies a <a
+href="../CoreTypes/fileset.html">FileSet</a>.  All files included in
+this fileset are assumed to be OASIS catalog files, in either
+<a href="http://oasis-open.org/committees/entity/background/9401.html">
+plain text format</a> or <a
+href="http://www.oasis-open.org/committees/entity/spec-2001-08-06.html">
+XML format</a>.  Multiple <code>catalogfiles</code> filesets may be
+specified.  Of course, if you use wildcards in your fileset, you will
+want to use some sort of naming convention to ensure that you don't
+accidentally match non-catalog files.  If the resolver library from
+xml-commons is not available in the classpath, all
+<code>catalogfiles</code> will be ignored and a warning will be
+logged.
+</p>
 <h3>Examples</h3>
 <p>Set up an XMLCatalog with a single dtd referenced locally in a user's 
 home 
@@ -197,7 +246,8 @@ filesystem (relative to the Ant project basedir) or in the classpath:
 </pre></blockquote>
 
 <p>Set up an XMLCatalog with a combination of DTDs and entities as
-well as a nested XMLCatalog:</p>
+well as a nested XMLCatalog and external catalog files in both
+formats:</p>
 
 <blockquote><pre>
     &lt;xmlcatalog id=&quot;allcatalogs&quot;&gt;
@@ -207,7 +257,13 @@ well as a nested XMLCatalog:</p>
         &lt;entity 
             publicId=&quot;LargeLogo&quot;
             location=&quot;com/arielpartners/images/ariel-logo-large.gif&quot;/&gt;
-	&lt;xmlcatalog refid="commonDTDs"/&gt;
+    &lt;xmlcatalog refid="commonDTDs"/&gt;
+        &lt;catalogfiles 
+            dir=&quot;/anetwork/drive&quot;
+            includes=&quot;**/catalog&quot;/&gt;
+        &lt;catalogfiles 
+            dir=&quot;/my/catalogs&quot;
+            includes=&quot;**/catalog.xml&quot;/&gt;
     &lt;/xmlcatalog&gt;
 </pre></blockquote>
 <p>To reference the above XMLCatalog in an <code>xslt</code> task:<p>

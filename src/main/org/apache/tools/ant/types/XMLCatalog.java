@@ -54,6 +54,8 @@
 
 package org.apache.tools.ant.types;
 
+import java.lang.reflect.Method;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -72,6 +74,7 @@ import javax.xml.transform.URIResolver;
 import javax.xml.transform.sax.SAXSource;
 import org.apache.tools.ant.AntClassLoader;
 import org.apache.tools.ant.BuildException;
+import org.apache.tools.ant.DirectoryScanner;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.util.FileUtils;
 import org.xml.sax.EntityResolver;
@@ -138,19 +141,28 @@ import org.xml.sax.XMLReader;
  * @author <a href="mailto:cstrong@arielpartners.com">Craeg Strong</a>
  * @version $Id$
  */
-public class XMLCatalog extends DataType implements Cloneable, EntityResolver, URIResolver {
+public class XMLCatalog extends DataType 
+    implements Cloneable, EntityResolver, URIResolver {
     /** File utilities instance */
     private FileUtils fileUtils = FileUtils.newFileUtils();
 
     //-- Fields ----------------------------------------------------------------
 
-    /** holds dtd/entity objects until needed */
+    /** Holds dtd/entity objects and catalog filesets until needed. */
     private Vector elements = new Vector();
 
     /**
      * Classpath in which to attempt to resolve resources.
      */
     private Path classpath;
+
+    /**
+     * The name of the bridge to the Apache xml-commons resolver
+     * class, used to determine whether resolver.jar is present in the
+     * classpath.
+     */
+    public static final String APACHE_RESOLVER
+        = "org.apache.tools.ant.types.resolver.ApacheCatalogResolver";
 
     //-- Methods ---------------------------------------------------------------
 
@@ -159,9 +171,11 @@ public class XMLCatalog extends DataType implements Cloneable, EntityResolver, U
     }
 
     /**
-     * Returns the elements of the catalog - DTDLocation objects.
+     * Returns the elements of the catalog - ResolverLocation and FileSet
+     * objects.
      *
-     * @return the elements of the catalog - DTDLocation objects
+     * @return the elements of the catalog - ResolverLocation and FileSet
+     * objects
      */
     private Vector getElements() {
         return elements;
@@ -177,14 +191,18 @@ public class XMLCatalog extends DataType implements Cloneable, EntityResolver, U
     }
 
     /**
-     * Set the list of DTDLocation objects in the catalog.  Not
-     * allowed if this catalog is itself a reference to another
-     * catalog -- that is, a catalog cannot both refer to another
-     * <em>and</em> contain elements or other attributes.
+     * Set the list of ResourceLocation objects and FileSets in the catalog.
+     * Not allowed if this catalog is itself a reference to another catalog --
+     * that is, a catalog cannot both refer to another <em>and</em> contain
+     * elements or other attributes.
      *
-     * @param aVector the new list of DTD Locations to use in the catalog.
+     * @param aVector the new list of ResourceLocations and FileSets
+     * to use in the catalog.
      */
     private void setElements(Vector aVector) {
+        if (isReference()) {
+            throw noChildrenAllowed();
+        }
         elements = aVector;
     }
 
@@ -237,6 +255,22 @@ public class XMLCatalog extends DataType implements Cloneable, EntityResolver, U
         setChecked( false );
     }
 
+    /** Creates the nested <code>&lt;catalogfiles&gt;</code> element.  Not
+     * allowed if this catalog is itself a reference to another catalog -- that
+     * is, a catalog cannot both refer to another <em>and</em> contain elements
+     * or other attributes.
+     *
+     * @param fs the fileset of external catalogs.
+     * @exception BuildException
+     * if this is a reference and no nested elements are allowed.
+     */
+    public void addCatalogfiles(FileSet fs) throws BuildException {
+        if (isReference()) {
+            throw noChildrenAllowed();
+        }
+        getElements().addElement(fs);
+    }
+
     /**
      * Creates the nested <code>&lt;dtd&gt;</code> element.  Not
      * allowed if this catalog is itself a reference to another
@@ -248,13 +282,16 @@ public class XMLCatalog extends DataType implements Cloneable, EntityResolver, U
      * @exception BuildException if this is a reference and no nested
      *       elements are allowed.
      */
-    public void addDTD(DTDLocation dtd) throws BuildException {
+    public void addDTD(ResourceLocation dtd) throws BuildException {
         if (isReference()) {
             throw noChildrenAllowed();
         }
 
         getElements().addElement(dtd);
         setChecked( false );
+    }
+    public void addDTD(DTDLocation dtd) throws BuildException {
+        addDTD((ResourceLocation)dtd);
     }
 
     /**
@@ -263,13 +300,34 @@ public class XMLCatalog extends DataType implements Cloneable, EntityResolver, U
      * catalog -- that is, a catalog cannot both refer to another
      * <em>and</em> contain elements or other attributes.
      *
-     * @param dtd the information about the URI resource mapping to be
-     *       added to the catalog
+     * @param entity the information about the URI resource mapping to
+     * be added to the catalog.
      * @exception BuildException if this is a reference and no nested
      *       elements are allowed.
      */
-    public void addEntity(DTDLocation dtd) throws BuildException {
-        addDTD(dtd);
+    public void addEntity(EntityLocation entity) throws BuildException {
+        if (isReference()) {
+            throw noChildrenAllowed();
+        }
+        getElements().addElement(entity);
+    }
+
+    /**
+     * Creates the nested <code>&lt;entity&gt;</code> element.    Not
+     * allowed if this catalog is itself a reference to another
+     * catalog -- that is, a catalog cannot both refer to another
+     * <em>and</em> contain elements or other attributes.
+     *
+     * @param entity the information about the URI resource mapping to
+     * be added to the catalog.
+     * @exception BuildException if this is a reference and no nested
+     *       elements are allowed.
+     */
+    public void addEntity(DTDLocation entity) throws BuildException {
+        if (isReference()) {
+            throw noChildrenAllowed();
+        }
+        getElements().addElement(entity);
     }
 
     /**
@@ -337,17 +395,18 @@ public class XMLCatalog extends DataType implements Cloneable, EntityResolver, U
     public InputSource resolveEntity(String publicId, String systemId)
         throws SAXException, IOException {
 
-       if (!isChecked()) {
-          // make sure we don't have a circular reference here
-          Stack stk = new Stack();
-          stk.push(this);
-          dieOnCircularReference(stk, getProject());
-       }
+        if (!isChecked()) {
+            // make sure we don't have a circular reference here
+            Stack stk = new Stack();
+            stk.push(this);
+            dieOnCircularReference(stk, getProject());
+        }
 
         log("resolveEntity: '" + publicId + "': '" + systemId + "'",
             Project.MSG_DEBUG);
 
-        InputSource inputSource = resolveEntityImpl(publicId );
+        InputSource inputSource = 
+            getCatalogResolver().resolveEntity(publicId, systemId);
 
         if (inputSource == null) {
             log("No matching catalog entry found, parser will use: '" +
@@ -365,12 +424,12 @@ public class XMLCatalog extends DataType implements Cloneable, EntityResolver, U
     public Source resolve(String href, String base)
         throws TransformerException {
 
-       if (!isChecked()) {
-          // make sure we don't have a circular reference here
-          Stack stk = new Stack();
-          stk.push(this);
-          dieOnCircularReference(stk, getProject());
-       }
+        if (!isChecked()) {
+            // make sure we don't have a circular reference here
+            Stack stk = new Stack();
+            stk.push(this);
+            dieOnCircularReference(stk, getProject());
+        }
 
         SAXSource source = null;
 
@@ -389,11 +448,11 @@ public class XMLCatalog extends DataType implements Cloneable, EntityResolver, U
             //
             source = new SAXSource();
             try
-            {
-                URL baseURL = new URL(base);
-                URL url = (uri.length() == 0 ? baseURL : new URL(baseURL, uri));
-                source.setInputSource(new InputSource(url.toString()));
-            }
+                {
+                    URL baseURL = new URL(base);
+                    URL url = (uri.length() == 0 ? baseURL : new URL(baseURL, uri));
+                    source.setInputSource(new InputSource(url.toString()));
+                }
             catch (MalformedURLException ex) {
                 // At this point we are probably in failure mode, but
                 // try to use the bare URI as a last gasp
@@ -406,24 +465,66 @@ public class XMLCatalog extends DataType implements Cloneable, EntityResolver, U
     }
 
     /**
-     * Find a DTDLocation instance for the given publicId.
+     * The instance of the CatalogResolver strategy to use.
+     */
+    private static CatalogResolver catalogResolver = null;
+
+    /**
+     * Factory method for creating the appropriate CatalogResolver
+     * strategy implementation.  
+     * <p> Until we query the classpath, we don't know whether the Apache
+     * resolver (Norm Walsh's library from xml-commons) is available or not.
+     * This method determines whether the library is available and creates the
+     * appropriate implementation of CatalogResolver based on the answer.</p>
+     * <p>This is an application of the Gang of Four Strategy Pattern
+     * combined with Template Method.</p>
      *
      * @param publicId the publicId of the Resource for which local information
      *        is required
-     * @return a DTDLocation instance with information on the local location
+     * @return a ResourceLocation instance with information on the local location
      *         of the Resource or null if no such information is available
      */
-    private DTDLocation findMatchingEntry(String publicId) {
-        Enumeration elements = getElements().elements();
-        DTDLocation element = null;
-        while (elements.hasMoreElements()) {
-            element = (DTDLocation) elements.nextElement();
-            if (element.getPublicId().equals(publicId)) {
-                return element;
+    private CatalogResolver getCatalogResolver() {
+
+        if (catalogResolver == null) {
+
+            AntClassLoader loader = null;
+
+            loader = new AntClassLoader(project, Path.systemClasspath);
+
+            try {
+                Class clazz = loader.forceLoadSystemClass(APACHE_RESOLVER);
+                Object obj  = clazz.newInstance();
+                //
+                // Success!  The xml-commons resolver library is
+                // available, so use it.
+                //
+                catalogResolver = new ApacheResolver(clazz, obj);
+            } 
+            catch (Throwable ex) {
+                //
+                // The xml-commons resolver library is not 
+                // available, so we can't use it.
+                //
+                catalogResolver = new InternalResolver();
+                //
+                // If any <catalogfiles> are specified, warn that they
+                // will be ignored.
+                //
+                Enumeration enum = getElements().elements();
+                while (enum.hasMoreElements()) {
+                    Object o = enum.nextElement();
+                    if (o instanceof FileSet) {
+                        log("Warning: External catalogfiles will be ignored",
+                            Project.MSG_WARN);
+                        break;
+                    }
+                }
             }
         }
-        return null;
+        return catalogResolver;
     }
+
 
     /**
      * <p>This is called from the URIResolver to set an EntityResolver
@@ -465,6 +566,29 @@ public class XMLCatalog extends DataType implements Cloneable, EntityResolver, U
     }
 
     /**
+     * Find a ResourceLocation instance for the given publicId.
+     *
+     * @param publicId the publicId of the Resource for which local information is 
+     *        required.
+     * @return a ResourceLocation instance with information on the local location 
+     *         of the Resource or null if no such information is available.
+     */
+    private ResourceLocation findMatchingEntry(String publicId) {
+        Enumeration enum = getElements().elements();
+        ResourceLocation element = null;
+        while (enum.hasMoreElements()) {
+            Object o = enum.nextElement();
+            if (o instanceof ResourceLocation) {
+                element = (ResourceLocation)o;
+                if (element.getPublicId().equals(publicId)) {
+                    return element;
+                }
+            }
+        }
+        return null;
+    }
+
+    /**
      * Utility method to remove trailing fragment from a URI.
      * For example,
      * <code>http://java.sun.com/index.html#chapter1</code>
@@ -484,17 +608,17 @@ public class XMLCatalog extends DataType implements Cloneable, EntityResolver, U
     }
 
     /**
-     * Utility method to lookup a DTDLocation in the filesystem.
+     * Utility method to lookup a ResourceLocation in the filesystem.
      *
      * @return An InputSource for reading the file, or <code>null</code>
      *     if the file does not exist or is not readable.
      */
-    private InputSource filesystemLookup(DTDLocation matchingEntry) {
+    private InputSource filesystemLookup(ResourceLocation matchingEntry) {
 
         String uri = matchingEntry.getLocation();
 
         //
-        // The DTDLocation may specify a relative path for its
+        // The ResourceLocation may specify a relative path for its
         // location attribute.  This is resolved using the appropriate
         // base.
         //
@@ -522,12 +646,12 @@ public class XMLCatalog extends DataType implements Cloneable, EntityResolver, U
     }
 
     /**
-     * Utility method to lookup a DTDLocation in the classpath.
+     * Utility method to lookup a ResourceLocation in the classpath.
      *
      * @return An InputSource for reading the resource, or <code>null</code>
      *    if the resource does not exist in the classpath or is not readable.
      */
-    private InputSource classpathLookup(DTDLocation matchingEntry) {
+    private InputSource classpathLookup(ResourceLocation matchingEntry) {
 
         InputSource source = null;
 
@@ -557,7 +681,7 @@ public class XMLCatalog extends DataType implements Cloneable, EntityResolver, U
     }
 
     /**
-     * Utility method to lookup a DTDLocation in URL-space.
+     * Utility method to lookup a ResourceLocation in URL-space.
      *
      * @return An InputSource for reading the resource, or <code>null</code>
      *    if the resource does not identify a valid URL or is not readable.
@@ -602,31 +726,33 @@ public class XMLCatalog extends DataType implements Cloneable, EntityResolver, U
     /**
      * Implements the guts of the resolveEntity() lookup strategy.
      */
-    private InputSource resolveEntityImpl(String publicId) {
+    /*
+      private InputSource resolveEntityImpl(String publicId) {
 
-        InputSource result = null;
+      InputSource result = null;
 
-        DTDLocation matchingEntry = findMatchingEntry(publicId);
+      ResourceLocation matchingEntry = findMatchingEntry(publicId);
 
-        if (matchingEntry != null) {
+      if (matchingEntry != null) {
 
-            log("Matching catalog entry found for publicId: '" +
-                matchingEntry.getPublicId() + "' location: '" +
-                matchingEntry.getLocation() + "'",
-                Project.MSG_DEBUG);
+      log("Matching catalog entry found for publicId: '" +
+      matchingEntry.getPublicId() + "' location: '" +
+      matchingEntry.getLocation() + "'",
+      Project.MSG_DEBUG);
 
-            result = filesystemLookup(matchingEntry);
+      result = filesystemLookup(matchingEntry);
 
-            if (result == null) {
-                result = classpathLookup(matchingEntry);
-            }
+      if (result == null) {
+      result = classpathLookup(matchingEntry);
+      }
 
-            if (result == null) {
-                result = urlLookup(matchingEntry.getLocation(), null);
-            }
-        }
-        return result;
-    }
+      if (result == null) {
+      result = urlLookup(matchingEntry.getLocation(), null);
+      }
+      }
+      return result;
+      }
+    */
 
     /**
      * Implements the guts of the resolve() lookup strategy.
@@ -636,7 +762,7 @@ public class XMLCatalog extends DataType implements Cloneable, EntityResolver, U
         SAXSource result = null;
         InputSource source = null;
 
-        DTDLocation matchingEntry = findMatchingEntry(href);
+        ResourceLocation matchingEntry = findMatchingEntry(href);
 
         if (matchingEntry != null) {
 
@@ -660,5 +786,313 @@ public class XMLCatalog extends DataType implements Cloneable, EntityResolver, U
             }
         }
         return result;
+    }
+
+    /**
+     * Interface implemented by both the InternalResolver strategy and
+     * the ApacheResolver strategy.
+     */
+    private interface CatalogResolver extends URIResolver, EntityResolver {
+
+        InputSource resolveEntity(String publicId, String systemId);
+
+        Source resolve(String href, String base) throws TransformerException;
+    }
+
+    /**
+     * The InternalResolver strategy is used if the Apache resolver
+     * library (Norm Walsh's library from xml-commons) is not
+     * available.  In this case, external catalog files will be
+     * ignored.
+     * 
+     */
+    private class InternalResolver implements CatalogResolver {
+
+        public InternalResolver() {
+            log("Apache resolver library not found, internal resolver will be used",
+                Project.MSG_INFO);
+        }
+
+        public InputSource resolveEntity(String publicId,
+                                         String systemId) {
+
+            InputSource result = null;
+
+            ResourceLocation matchingEntry = findMatchingEntry(publicId);
+
+            if (matchingEntry != null) {
+
+                log("Matching catalog entry found for publicId: '" + 
+                    matchingEntry.getPublicId() + "' location: '" + 
+                    matchingEntry.getLocation() + "'",
+                    Project.MSG_DEBUG);
+
+                result = filesystemLookup(matchingEntry);
+
+                if (result == null) {
+                    result = classpathLookup(matchingEntry);
+                }
+
+                if (result == null) {
+                    result = urlLookup(matchingEntry.getLocation(), null);
+                }
+            }
+            return result;
+        }
+
+
+
+        public Source resolve(String href, String base)
+            throws TransformerException {
+
+            SAXSource result = null;
+            InputSource source = null;
+
+            ResourceLocation matchingEntry = findMatchingEntry(href);
+
+            if (matchingEntry != null) {
+
+                log("Matching catalog entry found for uri: '" + 
+                    matchingEntry.getPublicId() + "' location: '" + 
+                    matchingEntry.getLocation() + "'",
+                    Project.MSG_DEBUG);
+
+                source = filesystemLookup(matchingEntry);
+
+                if (source == null) {
+                    source = classpathLookup(matchingEntry);
+                }
+
+                if (source == null) {
+                    source = urlLookup(matchingEntry.getLocation(), base);
+                }
+
+                if (source != null) {
+                    result = new SAXSource(source);
+                }
+            }
+            return result;
+        }
+    }
+
+    /**
+     * The ApacheResolver strategy is used if the Apache resolver
+     * library (Norm Walsh's library from xml-commons) is available in
+     * the classpath.  The ApacheResolver is a essentially a superset
+     * of the InternalResolver.
+     * 
+     */
+    private class ApacheResolver implements CatalogResolver {
+
+        private Method setXMLCatalog = null;
+        private Method parseCatalog = null;
+        private Method resolveEntity = null;
+        private Method resolve = null;
+
+        /** The instance of the ApacheCatalogResolver bridge class */
+        private Object resolverImpl = null;
+
+        private boolean externalCatalogsProcessed = false;
+
+        public ApacheResolver(Class resolverImplClass, 
+                              Object resolverImpl) {
+
+            this.resolverImpl = resolverImpl;
+
+            //
+            // Get Method instances for each of the methods we need to
+            // call on the resolverImpl using reflection.  We can't
+            // call them directly, because they require on the
+            // xml-commons resolver library which may not be available
+            // in the classpath.
+            //
+            try {
+                setXMLCatalog =
+                    resolverImplClass.getMethod("setXMLCatalog",
+                                                new Class[] 
+                        { XMLCatalog.class });
+
+                parseCatalog =
+                    resolverImplClass.getMethod("parseCatalog",
+                                                new Class[] 
+                        { String.class });
+
+                resolveEntity =
+                    resolverImplClass.getMethod("resolveEntity",
+                                                new Class[] 
+                        { String.class, String.class });
+
+                resolve =
+                    resolverImplClass.getMethod("resolve",
+                                                new Class[] 
+                        { String.class, String.class });
+            }
+            catch (NoSuchMethodException ex) {
+                throw new BuildException(ex);
+            }
+
+            log("Apache resolver library found, xml-commons resolver will be used",
+                Project.MSG_INFO);
+        }
+
+        public InputSource resolveEntity(String publicId,
+                                         String systemId) {
+            InputSource result = null;
+
+            processExternalCatalogs();
+
+            ResourceLocation matchingEntry = findMatchingEntry(publicId);
+
+            if (matchingEntry != null) {
+
+                log("Matching catalog entry found for publicId: '" + 
+                    matchingEntry.getPublicId() + "' location: '" + 
+                    matchingEntry.getLocation() + "'",
+                    Project.MSG_DEBUG);
+
+                result = filesystemLookup(matchingEntry);
+
+                if (result == null) {
+                    result = classpathLookup(matchingEntry);
+                }
+
+                if (result == null) {
+                    try {
+                        result = 
+                            (InputSource)resolveEntity.invoke(resolverImpl,
+                                                              new Object[]
+                                { publicId, systemId });
+                    }
+                    catch (Exception ex) {
+                        throw new BuildException(ex);
+                    }
+                }
+            }
+            else {
+                //
+                // We didn't match a ResourceLocation, but since we
+                // only support PUBLIC and URI entry types, it is
+                // still possible that there is another entry in an
+                // external catalog that will match.  We call Apache
+                // resolver's resolveEntity method to cover this
+                // possibility.
+                //
+                try {
+                    result = 
+                        (InputSource)resolveEntity.invoke(resolverImpl,
+                                                          new Object[]
+                            { publicId, systemId });
+                }
+                catch (Exception ex) {
+                    throw new BuildException(ex);
+                }
+            }
+
+            return result;
+        }
+
+        public Source resolve(String href, String base)
+            throws TransformerException {
+
+            SAXSource result = null;
+            InputSource source = null;
+
+            processExternalCatalogs();
+
+            ResourceLocation matchingEntry = findMatchingEntry(href);
+
+            if (matchingEntry != null) {
+
+                log("Matching catalog entry found for uri: '" + 
+                    matchingEntry.getPublicId() + "' location: '" + 
+                    matchingEntry.getLocation() + "'",
+                    Project.MSG_DEBUG);
+
+                source = filesystemLookup(matchingEntry);
+
+                if (source == null) {
+                    source = classpathLookup(matchingEntry);
+                }
+
+                if (source != null) {
+                    result = new SAXSource(source);
+                } else {
+                    try {
+                        result = 
+                            (SAXSource)resolve.invoke(resolverImpl,
+                                                      new Object[]
+                                { href, base });
+                    }
+                    catch (Exception ex) {
+                        throw new BuildException(ex);
+                    }
+                }
+            }
+            else {
+                //
+                // We didn't match a ResourceLocation, but since we
+                // only support PUBLIC and URI entry types, it is
+                // still possible that there is another entry in an
+                // external catalog that will match.  We call Apache
+                // resolver's resolveEntity method to cover this
+                // possibility.
+                //
+                try {
+                    result = 
+                        (SAXSource)resolve.invoke(resolverImpl,
+                                                  new Object[]
+                            { href, base });
+                }
+                catch (Exception ex) {
+                    throw new BuildException(ex);
+                }
+            }
+            return result;
+        }
+
+        /**
+         * Process each external catalog file specified in a
+         * <code>&lt;catalogfiles&gt;</code> FileSet.  It will be
+         * parsed by the resolver library, and the individual elements
+         * will be added back to us (that is, the controlling
+         * XMLCatalog instance) via a callback mechanism.
+         */
+        private void processExternalCatalogs() {
+
+            if (externalCatalogsProcessed == false) {
+
+                try {
+                    setXMLCatalog.invoke(resolverImpl, 
+                                         new Object[] 
+                    { XMLCatalog.this });
+                }
+                catch (Exception ex) {
+                    throw new BuildException(ex);
+                }
+
+                Enumeration enum = getElements().elements();
+                while (enum.hasMoreElements()) {
+                    Object o = enum.nextElement();
+                    if (o instanceof FileSet) {
+                        FileSet fs = (FileSet)o;
+                        DirectoryScanner ds = 
+                            fs.getDirectoryScanner(getProject());
+                        String[] files = ds.getIncludedFiles();
+                        for (int i = 0; i < files.length; i++) {
+                            File catFile = new File(ds.getBasedir(), files[i]); 
+                            try {
+                                parseCatalog.invoke(resolverImpl, 
+                                                    new Object[] 
+                                { catFile.getPath() });
+                            }
+                            catch (Exception ex) {
+                                throw new BuildException(ex);
+                            }
+                        }
+                    }
+                }
+            }
+            externalCatalogsProcessed = true;
+        }
     }
 }

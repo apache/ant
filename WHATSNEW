@@ -67,6 +67,10 @@ Other changes:
   define ids or paths and use Ant's location magic for filename resolutions
   in the XML file.
 
+* <xmlcatalog> will now support external catalogs according to the
+  OASIS "Open Catalog" standard - if resolver.jar from Apache's
+  xml-commons is in your CLASSPATH.
+
 Changes from Ant 1.5.1Beta1 to 1.5.1
 ====================================
 

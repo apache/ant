@@ -54,9 +54,9 @@
 package org.apache.tools.ant.types;
 
 /**
- * <p>Helper class to handle the DTD nested element.  Instances of
- * this class correspond to the <code>PUBLIC</code> catalog entry type
- * of the <a
+ * Helper class to handle the Entity nested element.  Instances of
+ * this class correspond to the <code>URI</code> catalog entry type of
+ * the <a
  * href="http://oasis-open.org/committees/entity/spec-2001-08-06.html">
  * OASIS "Open Catalog" standard</a>.</p>
  *
@@ -67,12 +67,11 @@ package org.apache.tools.ant.types;
  * @author Conor MacNeill
  * @author dIon Gillard
  * @author <a href="mailto:cstrong@arielpartners.com">Craeg Strong</a>
- * @version $Id$
  */
-public class DTDLocation extends ResourceLocation {
+public class EntityLocation extends ResourceLocation {
 
-    public DTDLocation() {
-        super("PUBLIC");
+    public EntityLocation() {
+        super("URI");
     }
 
 }
