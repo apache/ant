@@ -206,7 +206,7 @@ import org.apache.tools.todo.types.Path;
 public class MSVSSGET extends MSVSS
 {
 
-    private String m_LocalPath = null;
+    private File m_LocalPath = null;
     private boolean m_Recursive = false;
     private boolean m_Writable = false;
     private String m_Version = null;
@@ -296,9 +296,9 @@ public class MSVSSGET extends MSVSS
      *
      * @param localPath The new Localpath value
      */
-    public void setLocalpath( Path localPath )
+    public void setLocalpath( final File localPath )
     {
-        m_LocalPath = localPath.toString();
+        m_LocalPath = localPath;
     }
 
     /**
@@ -379,17 +379,16 @@ public class MSVSSGET extends MSVSS
         else
         {
             // make sure m_LocalDir exists, create it if it doesn't
-            File dir = getContext().resolveFile( m_LocalPath );
-            if( !dir.exists() )
+            if( !m_LocalPath.exists() )
             {
-                boolean done = dir.mkdirs();
+                boolean done = m_LocalPath.mkdirs();
                 if( done == false )
                 {
                     String msg = "Directory " + m_LocalPath + " creation was not " +
                         "successful for an unknown reason";
                     throw new TaskException( msg );
                 }
-                getContext().info( "Created dir: " + dir.getAbsolutePath() );
+                getContext().info( "Created dir: " + m_LocalPath.getAbsolutePath() );
             }
 
             cmd.addArgument( FLAG_OVERRIDE_WORKING_DIR + m_LocalPath );

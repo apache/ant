@@ -15,25 +15,18 @@ import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.StringTokenizer;
-import org.apache.aut.nativelib.ExecManager;
 import org.apache.aut.nativelib.ExecOutputHandler;
 import org.apache.aut.nativelib.Os;
 import org.apache.myrmidon.api.AbstractTask;
 import org.apache.myrmidon.api.TaskException;
-import org.apache.myrmidon.api.TaskContext;
 import org.apache.myrmidon.framework.Execute;
 import org.apache.myrmidon.framework.Pattern;
 import org.apache.tools.todo.types.Commandline;
 import org.apache.tools.todo.types.DirectoryScanner;
 import org.apache.tools.todo.types.FileSet;
 import org.apache.tools.todo.types.Path;
+import org.apache.tools.todo.types.PathUtil;
 import org.apache.tools.todo.types.ScannerUtil;
-import org.apache.tools.todo.util.FileUtils;
-import org.apache.tools.todo.taskdefs.javadoc.AccessType;
-import org.apache.tools.todo.taskdefs.javadoc.DocletInfo;
-import org.apache.tools.todo.taskdefs.javadoc.DocletParam;
-import org.apache.tools.todo.taskdefs.javadoc.GroupArgument;
-import org.apache.tools.todo.taskdefs.javadoc.Html;
 
 /**
  * This task makes it easy to generate Javadoc documentation for a collection of
@@ -85,7 +78,6 @@ public class Javadoc
     private Path m_classpath;
     private Path m_bootclasspath;
     private String m_group;
-    private ArrayList m_compileList = new ArrayList( 10 );
     private String m_packageList;
     private ArrayList m_links = new ArrayList( 2 );
     private ArrayList m_groups = new ArrayList( 2 );
@@ -122,7 +114,7 @@ public class Javadoc
         }
         else
         {
-            m_bootclasspath.append( src );
+            m_bootclasspath.addPath( src );
         }
     }
 
@@ -147,7 +139,7 @@ public class Javadoc
         }
         else
         {
-            m_classpath.append( src );
+            m_classpath.addPath( src );
         }
     }
 
@@ -392,7 +384,7 @@ public class Javadoc
         }
         else
         {
-            m_sourcePath.append( src );
+            m_sourcePath.addPath( src );
         }
     }
 
@@ -578,7 +570,7 @@ public class Javadoc
             classpath.addPath( m_classpath );
         }
         cmd.addArgument( "-classpath" );
-        cmd.addArgument( classpath.toString() );
+        cmd.addArgument( PathUtil.formatPath( classpath ) );
 
         if( m_version && m_doclet == null )
         {
@@ -615,7 +607,7 @@ public class Javadoc
                 if( m_doclet.getPath() != null )
                 {
                     cmd.addArgument( "-docletpath" );
-                    cmd.addArguments( FileUtils.translateCommandline( m_doclet.getPath() ) );
+                    cmd.addArgument( PathUtil.formatPath( m_doclet.getPath() ) );
                 }
                 for( Iterator e = m_doclet.getParams(); e.hasNext(); )
                 {
@@ -636,7 +628,7 @@ public class Javadoc
             if( m_bootclasspath != null )
             {
                 cmd.addArgument( "-bootclasspath" );
-                cmd.addArguments( FileUtils.translateCommandline( m_bootclasspath ) );
+                cmd.addArgument( PathUtil.formatPath( m_bootclasspath ) );
             }
 
             // add the links arguments
@@ -896,7 +888,7 @@ public class Javadoc
                                    ArrayList packages, ArrayList excludePackages )
         throws TaskException
     {
-        getContext().debug( "Source path = " + sourcePath.toString() );
+        getContext().debug( "Source path = " + PathUtil.formatPath( sourcePath ) );
         StringBuffer msg = new StringBuffer( "Packages = " );
         for( int i = 0; i < packages.size(); i++ )
         {

@@ -10,9 +10,8 @@ package org.apache.tools.todo.taskdefs.metamata;
 import java.io.File;
 import java.util.ArrayList;
 import org.apache.myrmidon.api.TaskException;
-import org.apache.myrmidon.api.AbstractTask;
-import org.apache.myrmidon.api.TaskContext;
 import org.apache.tools.todo.types.Path;
+import org.apache.tools.todo.types.PathUtil;
 
 /**
  * Metamata Audit evaluates Java code for programming errors, weaknesses, and
@@ -119,22 +118,29 @@ public class MAudit
         throws TaskException
     {
         ArrayList options = new ArrayList( 512 );
+
+        final Path classpath = new Path();
+
         // there is a bug in Metamata 2.0 build 37. The sourcepath argument does
         // not work. So we will use the sourcepath prepended to classpath. (order
         // is important since Metamata looks at .class and .java)
-        if( getSourcePath() != null )
+        final Path sourcePath = getSourcePath();
+        if( sourcePath != null )
         {
-            getSourcePath().append( getClassPath() );// srcpath is prepended
-            setClassPath( getSourcePath() );
+            classpath.addPath( sourcePath );
             setSourcePath( null );// prevent from using -sourcepath
         }
 
         // don't forget to modify the pattern if you change the options reporting
-        if( getClassPath() != null )
+        classpath.addPath( getClassPath() );
+
+        final String formattedClasspath = PathUtil.formatPath( classpath );
+        if( formattedClasspath.length() > 0 )
         {
             options.add( "-classpath" );
-            options.add( getClassPath().toString() );
+            options.add( formattedClasspath );
         }
+
         // suppress copyright msg when running, we will let it so that this
         // will be the only output to the console if in xml mode
         //      options.add("-quiet");
@@ -154,13 +160,13 @@ public class MAudit
         if( getSourcePath() != null )
         {
             options.add( "-sourcepath" );
-            options.add( getSourcePath().toString() );
+            options.add( PathUtil.formatPath( getSourcePath() ) );
         }
 
         if( m_unused )
         {
             options.add( "-unused" );
-            options.add( m_searchPath.toString() );
+            options.add( PathUtil.formatPath( m_searchPath ) );
         }
         addAllArrayList( options, getIncludedFiles().keySet().iterator() );
         return options;

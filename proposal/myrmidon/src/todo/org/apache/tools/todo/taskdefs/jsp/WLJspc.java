@@ -17,6 +17,7 @@ import org.apache.tools.todo.taskdefs.MatchingTask;
 import org.apache.tools.todo.types.Argument;
 import org.apache.tools.todo.types.DirectoryScanner;
 import org.apache.tools.todo.types.Path;
+import org.apache.tools.todo.types.PathUtil;
 
 /**
  * Class to precompile JSP's using weblogic's jsp compiler (weblogic.jspc)
@@ -82,7 +83,7 @@ public class WLJspc extends MatchingTask
         }
         else
         {
-            compileClasspath.append( classpath );
+            compileClasspath.addPath( classpath );
         }
     }
 
@@ -194,7 +195,7 @@ public class WLJspc extends MatchingTask
         // Does not take the classpath from the env....
         // Am i missing something about the Java task??
         args[ j++ ] = "-classpath";
-        args[ j++ ] = compileClasspath.toString();
+        args[ j++ ] = PathUtil.formatPath( compileClasspath );
 
         this.scanDir( files );
         getContext().info( "Compiling " + filesToDo.size() + " JSP files" );

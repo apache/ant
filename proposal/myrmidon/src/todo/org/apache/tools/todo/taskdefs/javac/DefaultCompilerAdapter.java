@@ -19,8 +19,6 @@ import org.apache.myrmidon.framework.Execute;
 import org.apache.tools.todo.types.Commandline;
 import org.apache.tools.todo.types.Path;
 import org.apache.tools.todo.types.PathUtil;
-import org.apache.tools.todo.util.FileUtils;
-import org.apache.tools.todo.taskdefs.javac.CompilerAdapter;
 
 /**
  * This is the default implementation for the CompilerAdapter interface.
@@ -132,7 +130,8 @@ public abstract class DefaultCompilerAdapter
                                                          boolean useDebugLevel )
         throws TaskException
     {
-        Path classpath = getCompileClasspath();
+        Path classpath = new Path();
+        addCompileClasspath( classpath );
         String memoryParameterPrefix = "-J-X";
         if( m_memoryInitialSize != null )
         {
@@ -177,10 +176,10 @@ public abstract class DefaultCompilerAdapter
         }
 
         cmd.addArgument( "-classpath" );
-        cmd.addArguments( FileUtils.translateCommandline( classpath ) );
+        cmd.addArgument( PathUtil.formatPath( classpath ) );
 
         cmd.addArgument( "-sourcepath" );
-        cmd.addArguments( FileUtils.translateCommandline( src ) );
+        cmd.addArgument( PathUtil.formatPath( src ) );
 
         if( target != null )
         {
@@ -191,13 +190,13 @@ public abstract class DefaultCompilerAdapter
         if( m_bootclasspath != null )
         {
             cmd.addArgument( "-bootclasspath" );
-            cmd.addArguments( FileUtils.translateCommandline( m_bootclasspath ) );
+            cmd.addArgument( PathUtil.formatPath( m_bootclasspath ) );
         }
 
         if( m_extdirs != null )
         {
             cmd.addArgument( "-extdirs" );
-            cmd.addArguments( FileUtils.translateCommandline( m_extdirs ) );
+            cmd.addArgument( PathUtil.formatPath( m_extdirs ) );
         }
 
         if( m_encoding != null )
@@ -279,15 +278,11 @@ public abstract class DefaultCompilerAdapter
     }
 
     /**
-     * Builds the compilation classpath.
-     *
-     * @return The CompileClasspath value
+     * Adds the compilation classpath to a path.
      */
-    protected Path getCompileClasspath()
+    protected void addCompileClasspath( final Path classpath )
         throws TaskException
     {
-        Path classpath = new Path();
-
         // add dest dir to classpath so that previously compiled and
         // untouched classes are on classpath
 
@@ -299,10 +294,8 @@ public abstract class DefaultCompilerAdapter
         // add the classpath
         if( m_compileClasspath != null )
         {
-            classpath.addExisting( m_compileClasspath );
+            classpath.addPath( m_compileClasspath );
         }
-
-        return classpath;
     }
 
     /**

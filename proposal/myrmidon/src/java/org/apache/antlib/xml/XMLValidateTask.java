@@ -109,7 +109,7 @@ public class XMLValidateTask
         }
         else
         {
-            m_classpath.append( classpath );
+            m_classpath.addPath( classpath );
         }
     }
 

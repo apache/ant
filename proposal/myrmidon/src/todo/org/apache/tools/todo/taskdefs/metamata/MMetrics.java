@@ -15,6 +15,7 @@ import java.util.ArrayList;
 import org.apache.myrmidon.api.TaskException;
 import org.apache.tools.todo.taskdefs.exec.ExecuteStreamHandler;
 import org.apache.tools.todo.types.Path;
+import org.apache.tools.todo.types.PathUtil;
 
 /**
  * Calculates global complexity and quality metrics on Java source code. You
@@ -120,22 +121,28 @@ public class MMetrics extends AbstractMetamataTask
         throws TaskException
     {
         ArrayList options = new ArrayList( 512 );
+
+        final Path classpath = new Path();
+
         // there is a bug in Metamata 2.0 build 37. The sourcepath argument does
         // not work. So we will use the sourcepath prepended to classpath. (order
         // is important since Metamata looks at .class and .java)
         if( getSourcePath() != null )
         {
-            getSourcePath().append( getClassPath() );// srcpath is prepended
-            setClassPath( getSourcePath() );
+            classpath.addPath( getSourcePath() );
             setSourcePath( null );// prevent from using -sourcepath
         }
 
         // don't forget to modify the pattern if you change the options reporting
-        if( getClassPath() != null )
+        classpath.addPath( getClassPath() );
+
+        final String formattedClasspath = PathUtil.formatPath( classpath );
+        if( formattedClasspath.length() > 0 )
         {
             options.add( "-classpath" );
-            options.add( getClassPath() );
+            options.add( formattedClasspath );
         }
+
         options.add( "-output" );
         options.add( tmpFile.toString() );
 

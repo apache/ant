@@ -8,6 +8,7 @@
 package org.apache.tools.todo.types;
 
 import java.io.File;
+import org.apache.myrmidon.api.TaskException;
 
 public class EnvironmentVariable
 {
@@ -24,9 +25,9 @@ public class EnvironmentVariable
         m_key = key;
     }
 
-    public void setPath( final Path path )
+    public void setPath( final Path path ) throws TaskException
     {
-        m_value = path.toString();
+        m_value = PathUtil.formatPath( path );
     }
 
     public void setValue( final String value )

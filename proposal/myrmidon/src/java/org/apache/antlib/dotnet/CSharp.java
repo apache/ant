@@ -396,7 +396,7 @@ public class CSharp
         {
             m_referenceFiles = new Path();
         }
-        m_referenceFiles.append( path );
+        m_referenceFiles.addPath( path );
     }
 
     /**

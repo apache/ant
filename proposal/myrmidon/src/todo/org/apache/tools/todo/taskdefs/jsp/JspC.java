@@ -109,7 +109,7 @@ public class JspC extends MatchingTask
         }
         else
         {
-            classpath.append( cp );
+            classpath.addPath( cp );
         }
     }
 
@@ -187,7 +187,7 @@ public class JspC extends MatchingTask
         }
         else
         {
-            src.append( srcDir );
+            src.addPath( srcDir );
         }
     }
 

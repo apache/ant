@@ -14,7 +14,10 @@ import org.apache.tools.todo.types.Path;
 /**
  * A converter from String to Path.
  *
- * @author Adam Murdoch
+ * @author <a href="mailto:adammurdoch@apache.org">Adam Murdoch</a>
+ * @version $Revision$ $Date$
+ *
+ * @ant:converter source="java.lang.String" destination="org.apache.tools.todo.types.Path"
  */
 public class StringToPathConverter
     extends AbstractConverter
@@ -33,20 +36,13 @@ public class StringToPathConverter
      * @param original the original Object
      * @param context the context in which to convert
      * @return the converted object
-     * @exception java.lang.Exception if an error occurs
      */
-    protected Object convert( Object original, Object context )
+    protected Object convert( final Object original, final Object context )
         throws ConverterException
     {
-        /*
         String path = (String)original;
-        TaskContext taskContext = (TaskContext)context;
-
         Path retval = new Path( path );
-        retval.setBaseDirectory( taskContext.getBaseDirectory() );
         return retval;
-        */
-        return null;
     }
 }
 

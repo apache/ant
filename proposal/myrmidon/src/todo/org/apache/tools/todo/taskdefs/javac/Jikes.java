@@ -11,6 +11,7 @@ import org.apache.myrmidon.api.TaskException;
 import org.apache.myrmidon.api.TaskContext;
 import org.apache.tools.todo.types.Commandline;
 import org.apache.tools.todo.types.Path;
+import org.apache.tools.todo.types.PathUtil;
 import org.apache.tools.todo.util.FileUtils;
 import org.apache.tools.todo.taskdefs.javac.DefaultCompilerAdapter;
 
@@ -50,14 +51,14 @@ public class Jikes
         // so we'll emulate it for compatibility and convenience.
         if( m_bootclasspath != null )
         {
-            classpath.append( m_bootclasspath );
+            classpath.addPath( m_bootclasspath );
         }
 
         // Jikes doesn't support an extension dir (-extdir)
         // so we'll emulate it for compatibility and convenience.
         addExtdirs( classpath );
 
-        if( ( m_bootclasspath == null ) || ( m_bootclasspath.size() == 0 ) )
+        if( ( m_bootclasspath == null ) || m_bootclasspath.isEmpty() )
         {
             // no bootclasspath, therefore, get one from the java runtime
             m_includeJavaRuntime = true;
@@ -69,17 +70,17 @@ public class Jikes
             // bootclasspath and said to include the java runtime, it's on
             // their head!
         }
-        classpath.append( getCompileClasspath() );
+        addCompileClasspath( classpath );
 
         // Jikes has no option for source-path so we
         // will add it to classpath.
-        classpath.append( src );
+        classpath.addPath( src );
 
         // if the user has set JIKESPATH we should add the contents as well
         String jikesPath = System.getProperty( "jikes.class.path" );
         if( jikesPath != null )
         {
-            classpath.append( new Path( jikesPath ) );
+            classpath.addPath( jikesPath );
         }
 
         Commandline cmd = new Commandline();
@@ -97,7 +98,7 @@ public class Jikes
         }
 
         cmd.addArgument( "-classpath" );
-        cmd.addArguments( FileUtils.translateCommandline( classpath ) );
+        cmd.addArgument( PathUtil.formatPath( classpath ) );
 
         if( m_encoding != null )
         {

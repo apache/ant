@@ -9,11 +9,9 @@ package org.apache.tools.todo.taskdefs.javac;
 
 import java.lang.reflect.Method;
 import org.apache.myrmidon.api.TaskException;
-import org.apache.myrmidon.api.TaskContext;
 import org.apache.tools.todo.types.Commandline;
 import org.apache.tools.todo.types.Path;
-import org.apache.tools.todo.util.FileUtils;
-import org.apache.tools.todo.taskdefs.javac.DefaultCompilerAdapter;
+import org.apache.tools.todo.types.PathUtil;
 
 /**
  * The implementation of the Java compiler for KJC. This is primarily a
@@ -71,7 +69,8 @@ public class Kjc extends DefaultCompilerAdapter
         Commandline cmd = new Commandline();
 
         // generate classpath, because kjc does't support sourcepath.
-        Path classpath = getCompileClasspath();
+        Path classpath = new Path();
+        addCompileClasspath( classpath );
 
         if( m_deprecation == true )
         {
@@ -92,7 +91,7 @@ public class Kjc extends DefaultCompilerAdapter
         // kjc don't have bootclasspath option.
         if( m_bootclasspath != null )
         {
-            cp.append( m_bootclasspath );
+            cp.addPath( m_bootclasspath );
         }
 
         if( m_extdirs != null )
@@ -100,10 +99,10 @@ public class Kjc extends DefaultCompilerAdapter
             addExtdirs( cp );
         }
 
-        cp.append( classpath );
-        cp.append( src );
+        cp.addPath( classpath );
+        cp.addPath( src );
 
-        cmd.addArguments( FileUtils.translateCommandline( cp ) );
+        cmd.addArgument( PathUtil.formatPath( cp ) );
 
         // kjc-1.5A doesn't support -encoding option now.
         // but it will be supported near the feature.

@@ -17,6 +17,7 @@ import org.apache.myrmidon.api.TaskException;
 import org.apache.myrmidon.api.TaskContext;
 import org.apache.tools.todo.types.Commandline;
 import org.apache.tools.todo.types.Path;
+import org.apache.tools.todo.types.PathUtil;
 import org.apache.tools.todo.util.FileUtils;
 import org.apache.tools.todo.taskdefs.ClassArgument;
 
@@ -270,7 +271,7 @@ public class Javah
         if( m_classpath != null )
         {
             cmd.addArgument( "-classpath" );
-            cmd.addArguments( FileUtils.translateCommandline( m_classpath ) );
+            cmd.addArgument( PathUtil.formatPath( m_classpath ) );
         }
 
         if( m_verbose )
@@ -298,7 +299,7 @@ public class Javah
         if( m_bootclasspath != null )
         {
             cmd.addArgument( "-bootclasspath" );
-            cmd.addArguments( FileUtils.translateCommandline( m_bootclasspath ) );
+            cmd.addArgument( PathUtil.formatPath( m_bootclasspath ) );
         }
 
         logAndAddFilesToCompile( cmd );

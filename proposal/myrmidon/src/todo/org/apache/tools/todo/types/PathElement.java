@@ -24,7 +24,7 @@ class PathElement
         m_location = location.getAbsolutePath();
     }
 
-    public void setPath( String path )
+    public void setPath( final String path )
     {
         m_path = path;
     }

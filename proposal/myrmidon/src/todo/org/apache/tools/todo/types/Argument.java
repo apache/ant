@@ -60,9 +60,9 @@ public class Argument
      *
      * @param value a single commandline argument.
      */
-    public void setPath( final Path value )
+    public void setPath( final Path value ) throws TaskException
     {
-        m_parts = new String[]{value.toString()};
+        m_parts = new String[]{ PathUtil.formatPath( value ) };
     }
 
     /**

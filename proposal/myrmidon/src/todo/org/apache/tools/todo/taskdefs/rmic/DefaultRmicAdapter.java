@@ -15,7 +15,7 @@ import org.apache.myrmidon.api.TaskException;
 import org.apache.myrmidon.framework.FileNameMapper;
 import org.apache.tools.todo.types.Commandline;
 import org.apache.tools.todo.types.Path;
-import org.apache.tools.todo.util.FileUtils;
+import org.apache.tools.todo.types.PathUtil;
 
 /**
  * This is the default implementation for the RmicAdapter interface. Currently,
@@ -120,11 +120,11 @@ public abstract class DefaultRmicAdapter
         if( attributes.getExtdirs() != null )
         {
             cmd.addArgument( "-extdirs" );
-            cmd.addArguments( FileUtils.translateCommandline( attributes.getExtdirs() ) );
+            cmd.addArgument( PathUtil.formatPath( attributes.getExtdirs() ) );
         }
 
         cmd.addArgument( "-classpath" );
-        cmd.addArguments( FileUtils.translateCommandline( classpath ) );
+        cmd.addArgument( PathUtil.formatPath( classpath ) );
 
         String stubVersion = attributes.getStubVersion();
         if( null != stubVersion )
@@ -195,7 +195,7 @@ public abstract class DefaultRmicAdapter
         // add the classpath
         if( attributes.getClasspath() != null )
         {
-            classpath.addExisting( attributes.getClasspath() );
+            classpath.addPath( attributes.getClasspath() );
         }
 
         return classpath;

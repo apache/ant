@@ -13,16 +13,15 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.util.ArrayList;
-import org.apache.aut.nativelib.ExecManager;
 import org.apache.myrmidon.api.AbstractTask;
 import org.apache.myrmidon.api.TaskException;
-import org.apache.myrmidon.api.TaskContext;
 import org.apache.myrmidon.framework.Execute;
 import org.apache.tools.todo.types.Argument;
 import org.apache.tools.todo.types.Commandline;
 import org.apache.tools.todo.types.CommandlineJava;
 import org.apache.tools.todo.types.FileSet;
 import org.apache.tools.todo.types.Path;
+import org.apache.tools.todo.types.PathUtil;
 
 /**
  * Convenient task to run Sitraka JProbe Coverage from Ant. Options are pretty
@@ -313,9 +312,9 @@ public class Coverage
         }
         // classpath
         Path classpath = cmdlJava.getClasspath();
-        if( classpath != null && classpath.size() > 0 )
+        if( classpath != null && ! classpath.isEmpty() )
         {
-            params.add( "-classpath " + classpath.toString() );
+            params.add( "-classpath " + PathUtil.formatPath( classpath ) );
         }
         // classname (runner or standalone)
         if( cmdlJava.getClassname() != null )

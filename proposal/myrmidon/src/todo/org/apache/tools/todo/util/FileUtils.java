@@ -13,8 +13,6 @@ import java.util.Stack;
 import java.util.StringTokenizer;
 import org.apache.avalon.excalibur.io.FileUtil;
 import org.apache.myrmidon.api.TaskException;
-import org.apache.tools.todo.types.Path;
-import org.apache.tools.todo.util.PathTokenizer;
 
 /**
  * This class also encapsulates methods which allow Files to be refered to using
@@ -242,13 +240,7 @@ public class FileUtils
         }
     }
 
-    public static String[] translateCommandline( Path to_process )
-        throws TaskException
-    {
-        return translateCommandline( to_process.toString() );
-    }
-
-    public static String[] translateCommandline( String to_process )
+    public static String[] translateCommandline( final String to_process )
         throws TaskException
     {
         if( to_process == null || to_process.length() == 0 )

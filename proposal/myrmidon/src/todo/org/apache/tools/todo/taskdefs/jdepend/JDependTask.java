@@ -17,6 +17,7 @@ import org.apache.myrmidon.framework.Execute;
 import org.apache.tools.todo.types.Commandline;
 import org.apache.tools.todo.types.CommandlineJava;
 import org.apache.tools.todo.types.Path;
+import org.apache.tools.todo.types.PathUtil;
 import org.apache.tools.todo.util.FileUtils;
 
 /**
@@ -54,7 +55,7 @@ public class JDependTask
         }
         else
         {
-            m_compileClasspath.append( classpath );
+            m_compileClasspath.addPath( classpath );
         }
     }
 
@@ -192,10 +193,11 @@ public class JDependTask
 
         // not sure whether this test is needed but cost nothing to put.
         // hope it will be reviewed by anybody competent
-        if( m_compileClasspath.toString().length() > 0 )
+        final String compileClasspath = PathUtil.formatPath( m_compileClasspath );
+        if( compileClasspath.length() > 0 )
         {
             commandline.addVmArgument( "-classpath" );
-            commandline.addVmArgument( m_compileClasspath.toString() );
+            commandline.addVmArgument( compileClasspath );
         }
 
         if( m_outputFile != null )
@@ -207,7 +209,7 @@ public class JDependTask
             // we have to find a cleaner way to put this output
         }
 
-        final String[] elements = FileUtils.parsePath( m_sourcesPath.toString() );
+        final String[] elements = m_sourcesPath.list();
         for( int i = 0; i < elements.length; i++ )
         {
             File f = new File( elements[ i ] );
@@ -276,7 +278,7 @@ public class JDependTask
             getContext().info( "Output to be stored in " + m_outputFile.getPath() );
         }
 
-        final String[] elements = FileUtils.parsePath( m_sourcesPath.toString() );
+        final String[] elements = m_sourcesPath.list();
         for( int i = 0; i < elements.length; i++ )
         {
             File f = new File( elements[ i ] );

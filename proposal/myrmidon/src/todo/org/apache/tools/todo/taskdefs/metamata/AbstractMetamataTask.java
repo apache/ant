@@ -15,10 +15,8 @@ import java.util.ArrayList;
 import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.Random;
-import org.apache.aut.nativelib.ExecManager;
 import org.apache.myrmidon.api.AbstractTask;
 import org.apache.myrmidon.api.TaskException;
-import org.apache.myrmidon.api.TaskContext;
 import org.apache.myrmidon.framework.Execute;
 import org.apache.tools.todo.types.Argument;
 import org.apache.tools.todo.types.Commandline;
@@ -43,7 +41,7 @@ public abstract class AbstractMetamataTask
      * command line. The classpath must includes both the <tt>.class</tt> and
      * the <tt>.java</tt> files for accurate audit.
      */
-    private Path m_classPath;
+    private Path m_classPath = new Path();
 
     /**
      * the path to the source file
@@ -142,13 +140,9 @@ public abstract class AbstractMetamataTask
     /**
      * user classpath
      */
-    public Path createClasspath()
+    public void addClasspath( final Path path )
     {
-        if( m_classPath == null )
-        {
-            m_classPath = new Path();
-        }
-        return m_classPath;
+        m_classPath.addPath( path );
     }
 
     /**
@@ -362,11 +356,6 @@ public abstract class AbstractMetamataTask
     protected Path getClassPath()
     {
         return m_classPath;
-    }
-
-    protected void setClassPath( Path classPath )
-    {
-        m_classPath = classPath;
     }
 
     protected Path getSourcePath()

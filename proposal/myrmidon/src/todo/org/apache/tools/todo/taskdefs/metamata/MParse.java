@@ -13,16 +13,15 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Random;
-import org.apache.aut.nativelib.ExecManager;
 import org.apache.avalon.excalibur.io.IOUtil;
 import org.apache.myrmidon.api.AbstractTask;
 import org.apache.myrmidon.api.TaskException;
-import org.apache.myrmidon.api.TaskContext;
 import org.apache.myrmidon.framework.Execute;
 import org.apache.tools.todo.types.Argument;
 import org.apache.tools.todo.types.Commandline;
 import org.apache.tools.todo.types.CommandlineJava;
 import org.apache.tools.todo.types.Path;
+import org.apache.tools.todo.types.PathUtil;
 
 /**
  * Simple Metamata MParse task based on the original written by <a
@@ -240,7 +239,7 @@ public class MParse
      *
      * @return The Options value
      */
-    protected String[] getOptions()
+    protected String[] getOptions() throws TaskException
     {
         ArrayList options = new ArrayList();
         if( m_verbose )
@@ -258,12 +257,12 @@ public class MParse
         if( m_classpath != null )
         {
             options.add( "-classpath" );
-            options.add( m_classpath.toString() );
+            options.add( PathUtil.formatPath( m_classpath ) );
         }
         if( m_sourcepath != null )
         {
             options.add( "-sourcepath" );
-            options.add( m_sourcepath.toString() );
+            options.add( PathUtil.formatPath( m_sourcepath ) );
         }
         options.add( m_target.getAbsolutePath() );
 

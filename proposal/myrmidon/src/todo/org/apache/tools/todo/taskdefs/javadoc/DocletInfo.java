@@ -32,7 +32,7 @@ public class DocletInfo
         }
         else
         {
-            m_path.append( path );
+            m_path.addPath( path );
         }
     }
 

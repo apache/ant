@@ -49,18 +49,12 @@ import org.apache.tools.todo.types.FileSet;
 public class Path
     implements DataType
 {
-    private ArrayList m_elements = new ArrayList();
+    private final ArrayList m_elements = new ArrayList();
     private File m_baseDirectory;
 
-    /**
-     * Invoked by IntrospectionHelper for <code>setXXX(Path p)</code> attribute
-     * setters.
-     */
     public Path( final String path )
     {
-        final PathElement pathElement = new PathElement();
-        m_elements.add( pathElement );
-        pathElement.setPath( path );
+        addPath( path );
     }
 
     public Path()
@@ -87,6 +81,14 @@ public class Path
     }
 
     /**
+     * Adds an element to the path.
+     */
+    public void setLocation( final File location )
+    {
+        addLocation( location );
+    }
+
+    /**
      * Adds a element definition to the path.
      *
      * @param location the location of the element to add (must not be <code>null</code>
@@ -100,26 +102,6 @@ public class Path
     }
 
     /**
-     * Adds the components on the given path which exist to this Path.
-     * Components that don't exist, aren't added.
-     *
-     * @param source - source path whose components are examined for existence
-     */
-    public void addExisting( final Path source )
-        throws TaskException
-    {
-        final String[] list = source.list();
-        for( int i = 0; i < list.length; i++ )
-        {
-            final File file = new File( list[ i ] );
-            if( file.exists() )
-            {
-                addLocation( file );
-            }
-        }
-    }
-
-    /**
      * Adds a nested <code>&lt;fileset&gt;</code> element.
      */
     public void addFileset( final FileSet fileSet )
@@ -128,25 +110,21 @@ public class Path
     }
 
     /**
-     * Append the contents of the other Path instance to this.
+     * Adds a path.
      */
-    public void append( final Path other )
-        throws TaskException
+    public void setPath( final String path )
     {
-        if( null == other )
-        {
-            throw new NullPointerException( "other" );
-        }
+        addPath( path );
+    }
 
-        final String[] list = other.list();
-        for( int i = 0; i < list.length; i++ )
-        {
-            final String file = list[ i ];
-            if( m_elements.contains( file ) )
-            {
-                m_elements.add( file );
-            }
-        }
+    /**
+     * Adds a path.
+     */
+    public void addPath( final String path )
+    {
+        final PathElement pathElement = new PathElement();
+        m_elements.add( pathElement );
+        pathElement.setPath( path );
     }
 
     /**
@@ -213,45 +191,11 @@ public class Path
     }
 
     /**
-     * How many parts does this Path instance consist of.
+     * Determines if this path is empty.
      */
-    public int size()
+    public boolean isEmpty()
         throws TaskException
     {
-        return list().length;
-    }
-
-    /**
-     * Returns a textual representation of the path, which can be used as
-     * CLASSPATH or PATH environment variable definition.
-     *
-     * @return a textual representation of the path.
-     */
-    public String toString()
-    {
-        try
-        {
-            final String[] list = list();
-
-            // empty path return empty string
-            if( list.length == 0 )
-            {
-                return "";
-            }
-
-            // path containing one or more elements
-            final StringBuffer result = new StringBuffer( list[ 0 ].toString() );
-            for( int i = 1; i < list.length; i++ )
-            {
-                result.append( File.pathSeparatorChar );
-                result.append( list[ i ] );
-            }
-
-            return result.toString();
-        }
-        catch( final TaskException te )
-        {
-            throw new Error( te.toString() );
-        }
+        return ( list().length == 0 );
     }
 }

@@ -10,7 +10,6 @@ package org.apache.tools.todo.taskdefs.vss;
 import java.io.File;
 import org.apache.myrmidon.api.TaskException;
 import org.apache.tools.todo.types.Commandline;
-import org.apache.tools.todo.types.Path;
 
 /**
  * Task to perform CheckIn commands to Microsoft Visual Source Safe.
@@ -20,7 +19,7 @@ import org.apache.tools.todo.types.Path;
 public class MSVSSCHECKIN
     extends MSVSS
 {
-    private String m_localPath;
+    private File m_localPath;
     private boolean m_recursive;
     private boolean m_writable;
     private String m_autoResponse;
@@ -67,9 +66,9 @@ public class MSVSSCHECKIN
     /**
      * Set the local path.
      */
-    public void setLocalpath( final Path localPath )
+    public void setLocalpath( final File localPath )
     {
-        m_localPath = localPath.toString();
+        m_localPath = localPath;
     }
 
     /**
@@ -117,27 +116,22 @@ public class MSVSSCHECKIN
         {
             return;
         }
-        else
-        {
-            // make sure m_LocalDir exists, create it if it doesn't
-            final File dir = getContext().resolveFile( m_localPath );
-            if( !dir.exists() )
-            {
-                final boolean done = dir.mkdirs();
-                if( !done )
-                {
-                    final String message =
-                        "Directory " + m_localPath + " creation was not " +
-                        "succesful for an unknown reason";
-                    throw new TaskException( message );
-                }
 
-                final String message = "Created dir: " + dir.getAbsolutePath();
-                getContext().info( message );
+        // make sure m_LocalDir exists, create it if it doesn't
+        if( !m_localPath.exists() )
+        {
+            if( !m_localPath.mkdirs() )
+            {
+                final String message =
+                    "Directory " + m_localPath + " creation was not " +
+                    "succesful for an unknown reason";
+                throw new TaskException( message );
             }
 
-            cmd.addArgument( FLAG_OVERRIDE_WORKING_DIR + m_localPath );
+            final String message = "Created dir: " + m_localPath.getAbsolutePath();
+            getContext().info( message );
         }
+        cmd.addArgument( FLAG_OVERRIDE_WORKING_DIR + m_localPath );
     }
 
     private void getRecursiveCommand( final Commandline cmd )

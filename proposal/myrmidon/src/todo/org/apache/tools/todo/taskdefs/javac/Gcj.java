@@ -11,6 +11,7 @@ import org.apache.myrmidon.api.TaskException;
 import org.apache.myrmidon.api.TaskContext;
 import org.apache.tools.todo.types.Commandline;
 import org.apache.tools.todo.types.Path;
+import org.apache.tools.todo.types.PathUtil;
 import org.apache.tools.todo.util.FileUtils;
 import org.apache.tools.todo.taskdefs.javac.DefaultCompilerAdapter;
 
@@ -53,23 +54,23 @@ public class Gcj extends DefaultCompilerAdapter
         // so we'll emulate it for compatibility and convenience.
         if( m_bootclasspath != null )
         {
-            classpath.append( m_bootclasspath );
+            classpath.addPath( m_bootclasspath );
         }
 
         // gcj doesn't support an extension dir (-extdir)
         // so we'll emulate it for compatibility and convenience.
         addExtdirs( classpath );
 
-        if( ( m_bootclasspath == null ) || ( m_bootclasspath.size() == 0 ) )
+        if( ( m_bootclasspath == null ) || m_bootclasspath.isEmpty() )
         {
             // no bootclasspath, therefore, get one from the java runtime
             m_includeJavaRuntime = true;
         }
-        classpath.append( getCompileClasspath() );
+        addCompileClasspath( classpath );
 
         // Gcj has no option for source-path so we
         // will add it to classpath.
-        classpath.append( src );
+        classpath.addPath( src );
 
         cmd.setExecutable( "gcj" );
 
@@ -86,7 +87,7 @@ public class Gcj extends DefaultCompilerAdapter
         }
 
         cmd.addArgument( "-classpath" );
-        cmd.addArguments( FileUtils.translateCommandline( classpath ) );
+        cmd.addArgument( PathUtil.formatPath( classpath ) );
 
         if( m_encoding != null )
         {

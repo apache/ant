@@ -24,6 +24,31 @@ import org.apache.tools.todo.types.Path;
 public class PathUtil
 {
     /**
+     * Formats a Path into its native representation.
+     */
+    public static String formatPath( final Path path )
+        throws TaskException
+    {
+        final String[] list = path.list();
+
+        // empty path return empty string
+        if( list.length == 0 )
+        {
+            return "";
+        }
+
+        // path containing one or more elements
+        final StringBuffer result = new StringBuffer( list[ 0 ].toString() );
+        for( int i = 1; i < list.length; i++ )
+        {
+            result.append( File.pathSeparatorChar );
+            result.append( list[ i ] );
+        }
+
+        return result.toString();
+    }
+
+    /**
      * Returns an array of URLs - useful for building a ClassLoader.
      */
     public static URL[] toURLs( final Path path )
@@ -45,11 +70,13 @@ public class PathUtil
         }
         catch( final IOException ioe )
         {
-            final String message = "Malformed path entry. Reason:" + ioe;
-            throw new TaskException( message, ioe );
+            throw new TaskException( "Malformed path entry.", ioe );
         }
     }
 
+    /**
+     * Adds the JVM's runtime to a path.
+     */
     public static void addJavaRuntime( final Path path )
         throws TaskException
     {
@@ -76,26 +103,29 @@ public class PathUtil
             // JDK > 1.1 seems to set java.home to the JRE directory.
             final String rt = System.getProperty( "java.home" ) +
                 File.separator + "lib" + File.separator + "rt.jar";
-            path.addExisting( new Path( rt ) );
+            path.addLocation( new File( rt ) );
             // Just keep the old version as well and let addExisting
             // sort it out.
             final String rt2 = System.getProperty( "java.home" ) +
                 File.separator + "jre" + File.separator + "lib" +
                 File.separator + "rt.jar";
-            path.addExisting( new Path( rt2 ) );
+            path.addLocation( new File( rt2 ) );
 
             // Added for MacOS X
             final String classes = System.getProperty( "java.home" ) +
                 File.separator + ".." + File.separator + "Classes" +
                 File.separator + "classes.jar";
-            path.addExisting( new Path( classes ) );
+            path.addLocation( new File( classes ) );
             final String ui = System.getProperty( "java.home" ) +
                 File.separator + ".." + File.separator + "Classes" +
                 File.separator + "ui.jar";
-            path.addExisting( new Path( ui ) );
+            path.addLocation( new File( ui ) );
         }
     }
 
+    /**
+     * Adds the contents of a set of directories to a path.
+     */
     public static void addExtdirs( final Path toPath, final Path extDirs )
         throws TaskException
     {
