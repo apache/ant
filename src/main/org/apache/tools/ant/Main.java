@@ -509,7 +509,11 @@ public class Main {
         System.out.println(msg.toString());
     }
 
-    private static void printVersion() {
+    private static void printVersion() throws BuildException {
+        System.out.println(getAntVersion());
+    }
+
+    public static String getAntVersion() throws BuildException {
         try {
             Properties props = new Properties();
             InputStream in =
@@ -523,13 +527,12 @@ public class Main {
             msg.append(props.getProperty("VERSION"));
             msg.append(" compiled on ");
             msg.append(props.getProperty("DATE"));
-            msg.append(lSep);
-            System.out.println(msg.toString());
+            return msg.toString();
         } catch (IOException ioe) {
-            System.err.println("Could not load the version information.");
-            System.err.println(ioe.getMessage());
+            throw new BuildException("Could not load the version information:"
+                                     + ioe.getMessage());
         } catch (NullPointerException npe) {
-            System.err.println("Could not load the version information.");
+            throw new BuildException("Could not load the version information.");
         }
     }
 

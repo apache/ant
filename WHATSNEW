@@ -68,6 +68,10 @@ Other changes:
 
 * <execon> and <apply> can now optionally skip empty filesets.
 
+* <javadoc> has a new useexternalfile attribute that makes it use a
+  temporary file for sourcefile and package names - helps to defeat
+  command line length limitations.
+
 Fixed bugs:
 -----------
 

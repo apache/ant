@@ -264,6 +264,16 @@ public class Javadoc extends Task {
     private Html header = null;
     private Html footer = null;
     private Html bottom = null;
+    private boolean useExternalFile = false;
+    private File tmpList = null;
+
+    /**
+     * Work around command line length limit by using an external file
+     * for the sourcefiles.
+     */
+    public void setUseExternalFile(boolean b) {
+        useExternalFile = b;
+    }
 
     /**
      * Sets whether default exclusions should be used or not.
@@ -498,6 +508,7 @@ public class Javadoc extends Task {
             header = text;
         }
     }
+
     public void setFooter(String src) {
         Html h = new Html();
         h.addText(src);
@@ -508,6 +519,7 @@ public class Javadoc extends Task {
             footer = text;
         }
     }
+
     public void setBottom(String src) {
         Html h = new Html();
         h.addText(src);
@@ -518,6 +530,7 @@ public class Javadoc extends Task {
             bottom = text;
         }
     }
+
     public void setLinkoffline(String src) {
         if (!javadoc1) {
             LinkArgument le = createLink();
@@ -854,6 +867,7 @@ public class Javadoc extends Task {
 
         }
 
+        tmpList = null;
         if (packageNames.size() > 0) {
             Vector packages = new Vector();
             Enumeration enum = packageNames.elements();
@@ -881,10 +895,39 @@ public class Javadoc extends Task {
         }
 
         if (sourceFiles.size() > 0) {
-            Enumeration enum = sourceFiles.elements();
-            while (enum.hasMoreElements()) {
-                SourceFile sf = (SourceFile) enum.nextElement();
-                toExecute.createArgument().setValue(sf.getFile().getAbsolutePath());
+            PrintWriter srcListWriter = null;
+            try {
+
+                /**
+                 * Write sourcefiles to a temporary file if requested.
+                 */
+                if (useExternalFile) {
+                    if (tmpList == null) {
+                        tmpList = createTempFile();
+                        toExecute.createArgument().setValue("@" + tmpList.getAbsolutePath());
+                    }
+                    srcListWriter = new PrintWriter(new FileWriter(tmpList.getAbsolutePath(), 
+                                                                   true));
+                }
+            
+                Enumeration enum = sourceFiles.elements();
+                while (enum.hasMoreElements()) {
+                    SourceFile sf = (SourceFile) enum.nextElement();
+                    String sourceFileName = sf.getFile().getAbsolutePath();
+                    if (useExternalFile) {
+                        srcListWriter.println(sourceFileName);
+                    } else {
+                        toExecute.createArgument().setValue(sourceFileName);
+                    }
+                }
+
+            } catch (IOException e) {
+                throw new BuildException("Error creating temporary file", 
+                                         e, location);
+            } finally {
+                if (srcListWriter != null) {
+                    srcListWriter.close();
+                }
             }
         }
 
@@ -909,6 +952,12 @@ public class Javadoc extends Task {
         } catch (IOException e) {
             throw new BuildException("Javadoc failed: " + e, e, location);
         } finally {
+
+            if (tmpList != null) {
+                tmpList.delete();
+                tmpList = null;
+            }
+            
             out.logFlush();
             err.logFlush();
             try {
@@ -975,31 +1024,52 @@ public class Javadoc extends Task {
             fs.createExclude().setName(pkg);
         }
         
-        for (int j=0; j<list.length; j++) {
-            File source = project.resolveFile(list[j]);
-            fs.setDir(source);
+        PrintWriter packageListWriter = null;
+        try {
+            if (useExternalFile) {
+                tmpList = createTempFile();
+                toExecute.createArgument().setValue("@" + tmpList.getAbsolutePath());
+                packageListWriter = new PrintWriter(new FileWriter(tmpList));
+            }
 
-            DirectoryScanner ds = fs.getDirectoryScanner(project);
-            String[] packageDirs = ds.getIncludedDirectories();
 
-            for (int i=0; i<packageDirs.length; i++) {
-                File pd = new File(source, packageDirs[i]);
-                String[] files = pd.list(new FilenameFilter () {
-                    public boolean accept(File dir1, String name) {
-                        if (name.endsWith(".java")) {
-                            return true;
+            for (int j=0; j<list.length; j++) {
+                File source = project.resolveFile(list[j]);
+                fs.setDir(source);
+                
+                DirectoryScanner ds = fs.getDirectoryScanner(project);
+                String[] packageDirs = ds.getIncludedDirectories();
+                
+                for (int i=0; i<packageDirs.length; i++) {
+                    File pd = new File(source, packageDirs[i]);
+                    String[] files = pd.list(new FilenameFilter () {
+                            public boolean accept(File dir1, String name) {
+                                if (name.endsWith(".java")) {
+                                    return true;
+                                }
+                                return false;	// ignore dirs
+                            }
+                        });
+                    
+                    if (files.length > 0) {
+                        String pkgDir = packageDirs[i].replace('/','.').replace('\\','.');
+                        if (!addedPackages.contains(pkgDir)) {
+                            if (useExternalFile) {
+                                packageListWriter.println(pkgDir);
+                            } else {
+                                toExecute.createArgument().setValue(pkgDir);
+                            }
+                            addedPackages.addElement(pkgDir);
                         }
-                        return false;	// ignore dirs
-                    }
-                });
-
-                if (files.length > 0) {
-                    String pkgDir = packageDirs[i].replace('/','.').replace('\\','.');
-                    if (!addedPackages.contains(pkgDir)) {
-                        toExecute.createArgument().setValue(pkgDir);
-                        addedPackages.addElement(pkgDir);
                     }
                 }
+            }
+        } catch (IOException ioex) {
+            throw new BuildException("Error creating temporary file", 
+                                     ioex, location);
+        } finally {
+            if (packageListWriter != null) {
+                packageListWriter.close();
             }
         }
     }
@@ -1050,4 +1120,11 @@ public class Javadoc extends Task {
                                                project.getProperties());
     }
 
+    /**
+     * Creates a temporary file.
+     */
+    private File createTempFile() {
+        return new File("javadoc" + (new Random(System.currentTimeMillis())).nextLong());
+    }
+    
 }
