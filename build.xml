@@ -174,9 +174,6 @@
                classname="javax.servlet.Servlet"
                classpathref="classpath"/>
 
-    <available property="adaptx.present"
-               classname="org.exolab.adaptx.xslt.XSLTProcessor"
-               classpathref="classpath" />
     <available property="xerces.present"
                classname="org.apache.xerces.parsers.SAXParser"
                classpathref="classpath" />
@@ -269,7 +266,6 @@
                unless="trax.present" />
       <exclude name="${optional.package}/XslpLiaison.java" unless="xslp.present" />
       <exclude name="${optional.package}/XalanLiaison.java" unless="xalan.present" />
-      <exclude name="${optional.package}/AdaptxLiaison.java" unless="adaptx.present" />
       <exclude name="${optional.package}/ejb/Ejbc*.java" unless="ejb.ejbc.present" />
       <exclude name="${optional.package}/ejb/DDCreator*.java" unless="ejb.DDCreator.present" />
       <exclude name="${optional.package}/ejb/WLRun.java" unless="ejb.wls.present" />
@@ -813,8 +809,6 @@
                unless="xslp.present"/>
       <exclude name="org/apache/tools/ant/taskdefs/optional/XalanLiaisonTest.java"
                unless="xalan.present"/>
-      <exclude name="org/apache/tools/ant/taskdefs/optional/AdaptxLiaisonTest.java"
-               unless="adaptx.present"/>
       <exclude name="${optional.package}/TraXLiaisonTest.java"
                unless="trax.present"/>
 
@@ -897,10 +891,6 @@
           <exclude name="org/apache/tools/ant/taskdefs/optional/XalanLiaisonTest.java" 
                    unless="xalan.present"/>
 
-          <exclude name="org/apache/tools/ant/taskdefs/optional/AdaptxLiaisonTest.java"
-                   unless="adaptx.present"/>
-          <exclude name="org/apache/tools/ant/taskdefs/optional/AdaptxLiaisonTest.java"
-                   unless="xerces.present"/>
           <exclude name="${optional.package}/perforce/*.java"
                    unless="jakarta.oro.present" />
 

@@ -288,11 +288,6 @@ public class XSLTProcess extends MatchingTask implements XSLTLogger {
             final Class clazz =
                 loadClass("org.apache.tools.ant.taskdefs.optional.XalanLiaison");
             liaison = (XSLTLiaison)clazz.newInstance();
-        } else if (proc.equals("adaptx")) {
-            log("DEPRECATED - adaptx processor is deprecated. Use trax or xalan instead.");
-            final Class clazz =
-                loadClass("org.apache.tools.ant.taskdefs.optional.AdaptxLiaison");
-            liaison = (XSLTLiaison) clazz.newInstance();
         } else {
             liaison = (XSLTLiaison) loadClass(proc).newInstance();
         }
@@ -422,16 +417,11 @@ public class XSLTProcess extends MatchingTask implements XSLTLogger {
                         resolveProcessor("xalan");
                     } catch (Throwable e2) {
                         try {
-                            resolveProcessor("adaptx");
+                            resolveProcessor("xslp");
                         } catch (Throwable e3) {
-                            try {
-                                resolveProcessor("xslp");
-                            } catch (Throwable e4) {
-                                e4.printStackTrace();
-                                e3.printStackTrace();
-                                e2.printStackTrace();
-                                throw new BuildException(e1);
-                            }
+                            e3.printStackTrace();
+                            e2.printStackTrace();
+                            throw new BuildException(e1);
                         }
                     }
                 }
