@@ -22,6 +22,7 @@ import org.apache.myrmidon.api.TaskException;
 import org.apache.tools.ant.types.DirectoryScanner;
 import org.apache.tools.ant.types.FileSet;
 import org.apache.tools.ant.types.PatternSet;
+import org.apache.tools.ant.types.ScannerUtil;
 
 /**
  * Unzip a file.
@@ -205,7 +206,7 @@ public class Expand extends MatchingTask
                 {
                     for( int w = 0; w < incls.length; w++ )
                     {
-                        boolean isIncl = DirectoryScanner.match( incls[ w ], name );
+                        boolean isIncl = ScannerUtil.match( incls[ w ], name );
                         if( isIncl )
                         {
                             included = true;
@@ -218,7 +219,7 @@ public class Expand extends MatchingTask
                 {
                     for( int w = 0; w < excls.length; w++ )
                     {
-                        boolean isExcl = DirectoryScanner.match( excls[ w ], name );
+                        boolean isExcl = ScannerUtil.match( excls[ w ], name );
                         if( isExcl )
                         {
                             included = false;

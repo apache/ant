@@ -13,23 +13,18 @@ import java.util.StringTokenizer;
 import org.apache.myrmidon.api.TaskContext;
 import org.apache.myrmidon.api.TaskException;
 import org.apache.myrmidon.framework.Pattern;
-import org.apache.tools.ant.ProjectComponent;
 
 /**
  * Named collection of include/exclude tags. <p>
  *
- * Moved out of MatchingTask to make it a standalone object that could be
- * referenced (by scripts for example).
- *
- * @author Arnout J. Kuiper <a href="mailto:ajkuiper@wxs.nl">ajkuiper@wxs.nl</a>
- * @author Stefano Mazzocchi <a href="mailto:stefano@apache.org">
- *      stefano@apache.org</a>
- * @author Sam Ruby <a href="mailto:rubys@us.ibm.com">rubys@us.ibm.com</a>
- * @author Jon S. Stevens <a href="mailto:jon@clearink.com">jon@clearink.com</a>
+ * @author <a href="mailto:ajkuiper@wxs.nl">Arnout J. Kuiper</a>
+ * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
+ * @author <a href="mailto:rubys@us.ibm.com">Sam Ruby</a>
+ * @author <a href="mailto:jon@clearink.com">Jon S. Stevens</a>
  * @author <a href="mailto:stefan.bodewig@epost.de">Stefan Bodewig</a>
+ * @author <a href="mailto:peter@apache.org">Peter Donald</a>
  */
 public class PatternSet
-    extends ProjectComponent
 {
     private ArrayList m_includeList = new ArrayList();
     private ArrayList m_excludeList = new ArrayList();
@@ -106,8 +101,8 @@ public class PatternSet
 
     public String toString()
     {
-        return "patternSet{ includes: " + m_includeList +
-            " excludes: " + m_excludeList + " }";
+        return "PatternSet [ includes: " + m_includeList +
+            " excludes: " + m_excludeList + " ]";
     }
 
     private Pattern[] parsePatterns( final String patternString )

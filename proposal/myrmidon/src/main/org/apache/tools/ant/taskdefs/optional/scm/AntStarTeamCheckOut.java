@@ -18,6 +18,7 @@ import com.starbase.util.Platform;
 import java.util.StringTokenizer;
 import org.apache.myrmidon.api.TaskException;
 import org.apache.tools.ant.types.DirectoryScanner;
+import org.apache.tools.ant.types.ScannerUtil;
 
 /**
  * Checks out files from a specific StarTeam server, project, view, and folder.
@@ -765,7 +766,7 @@ public class AntStarTeamCheckOut extends org.apache.tools.ant.Task
         StringTokenizer exStr = new StringTokenizer( patterns, " " );
         while( exStr.hasMoreTokens() )
         {
-            if( DirectoryScanner.match( exStr.nextToken(), pName ) )
+            if( ScannerUtil.match( exStr.nextToken(), pName ) )
             {
                 return true;
             }

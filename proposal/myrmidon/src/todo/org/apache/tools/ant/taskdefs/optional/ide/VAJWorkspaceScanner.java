@@ -15,6 +15,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.StringTokenizer;
 import org.apache.tools.ant.types.DirectoryScanner;
+import org.apache.tools.ant.types.ScannerUtil;
 
 /**
  * Class for scanning a Visual Age for Java workspace for packages matching a
@@ -69,7 +70,7 @@ class VAJWorkspaceScanner extends DirectoryScanner
      */
     protected static boolean match( String pattern, String str )
     {
-        return DirectoryScanner.match( pattern, str );
+        return ScannerUtil.match( pattern, str );
     }
 
     /**
