@@ -54,8 +54,8 @@ public class Property
         {
             try
             {
-                final TypeFactory typeFactory = getTypeFactory( DataType.class );
-                final DataType value = (DataType)typeFactory.create( children[ i ].getName() );
+                final String typeName = children[ i ].getName();
+                final DataType value = (DataType)newInstance( DataType.class, typeName );
                 configure( value, children[ i ] );
                 setValue( value );
             }

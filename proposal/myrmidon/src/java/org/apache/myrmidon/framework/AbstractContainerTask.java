@@ -108,6 +108,27 @@ public abstract class AbstractContainerTask
     }
 
     /**
+     * Create an instance of type with specified type and in specified role.
+     */
+    protected final Object newInstance( final Class roleType, final String typeName )
+        throws TaskException
+    {
+        final TypeFactory typeFactory = getTypeFactory( roleType );
+        try
+        {
+            return typeFactory.create( typeName );
+        }
+        catch( final TypeException te )
+        {
+            final String message =
+                REZ.getString( "container.no-create-type.error",
+                               roleType.getName(),
+                               typeName );
+            throw new TaskException( message, te );
+        }
+    }
+
+    /**
      * Locates a type factory.
      */
     protected final TypeFactory getTypeFactory( final Class roleType )

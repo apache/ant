@@ -15,7 +15,6 @@ import org.apache.avalon.framework.configuration.ConfigurationException;
 import org.apache.avalon.framework.configuration.DefaultConfiguration;
 import org.apache.myrmidon.api.TaskContext;
 import org.apache.myrmidon.api.TaskException;
-import org.apache.myrmidon.interfaces.type.TypeFactory;
 
 /**
  * This is the property "task" to declare a binding of a datatype to a name.
@@ -64,8 +63,7 @@ public class TypeInstanceTask
 
         try
         {
-            final TypeFactory typeFactory = getTypeFactory( DataType.class );
-            m_value = typeFactory.create( configuration.getName() );
+            m_value = newInstance( DataType.class, configuration.getName() );
         }
         catch( final Exception e )
         {

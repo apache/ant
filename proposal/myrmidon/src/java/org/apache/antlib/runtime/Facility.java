@@ -49,15 +49,15 @@ public class Facility
 
         if( 1 == children.length )
         {
+            final String typeName = children[ 0 ].getName();
             try
             {
-                final TypeFactory typeFactory = getTypeFactory( AspectHandler.class );
-                m_aspectHandler = (AspectHandler)typeFactory.create( children[ 0 ].getName() );
+                m_aspectHandler = (AspectHandler)newInstance( AspectHandler.class, typeName );
             }
             catch( final Exception e )
             {
                 final String message =
-                    REZ.getString( "facility.no-create.error", children[ 0 ].getName() );
+                    REZ.getString( "facility.no-create.error", typeName );
                 throw new ConfigurationException( message, e );
             }
 
