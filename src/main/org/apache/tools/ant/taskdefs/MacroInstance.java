@@ -57,6 +57,7 @@ package org.apache.tools.ant.taskdefs;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Iterator;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 import java.util.HashSet;
@@ -200,7 +201,7 @@ public class MacroInstance extends Task implements DynamicConfigurator {
                 case STATE_EXPECT_NAME:
                     if (ch == '}') {
                         state = STATE_NORMAL;
-                        String name = macroName.toString();
+                        String name = macroName.toString().toLowerCase(Locale.US);
                         String value = (String) macroMapping.get(name);
                         if (value == null) {
                             ret.append("@{" + name + "}");
