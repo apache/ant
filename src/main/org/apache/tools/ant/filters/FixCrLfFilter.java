@@ -531,11 +531,13 @@ public final class FixCrLfFilter
                 case '"' : state    = IN_STR_CONST; break;
                 default  : state    = JAVA;
                 }
+                break;
             case TRANS_FROM_MULTI:
                 // The current character is always emitted.
                 switch (thisChar) {
                 case '/': state = JAVA; break;
                 }
+                break;
             }
             return thisChar;
         }
