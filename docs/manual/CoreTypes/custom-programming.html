@@ -75,7 +75,7 @@ public class AllUpperCaseCondition extends Condition {
     </blockquote>
 
     <p>
-      Adding the condition to the system is achieved as follows:
+        Adding the condition to the system is achieved as follows:
     </p>
     <blockquote>
       <pre>
@@ -100,13 +100,14 @@ public class AllUpperCaseCondition extends Condition {
     <p>
       Custom selectors are datatypes that implement
       <code>org.apache.tools.ant.types.selectors.FileSelector</code>.
-      <p>There is only one method required.
-        <code>public boolean isSelected(File basedir, String filename,
-          File file)</code>.
-        It returns true
-        or false depending on whether the given file should be
-        selected or not.
-      </p>
+    </p>
+    <p>There is only one method required.
+      <code>public boolean isSelected(File basedir, String filename,
+        File file)</code>.
+      It returns true
+      or false depending on whether the given file should be
+      selected or not.
+    </p>
     <p>
       An example of a custom selection that selects filenames ending
       in ".java" would be:
@@ -114,16 +115,15 @@ public class AllUpperCaseCondition extends Condition {
     <blockquote>
       <pre>
 package com.mydomain;
+import java.io.File;
 import org.apache.tools.ant.types.selectors.FileSelector;
-public class JavaSelector {
+public class JavaSelector implements FileSelector {
     public boolean isSelected(File b, String filename, File f) {
        return filename.toLowerCase().endsWith(".java");
     }
 }
       </pre>
     </blockquote>
-    <p>
-    </p>
     <p>
       Adding the selector to the system is achieved as follows:
     </p>
@@ -135,10 +135,20 @@ public class JavaSelector {
     classpath="${mydomain.classes"/&gt;
       </pre>
     </blockquote>
-    <p>
+        <p>
       This selector can now be used wherever a Core Ant selector
-      is used.
+      is used, for example:
     </p>
+    <blockquote>
+      <pre>
+&lt;copy todir="to"&gt;
+   &lt;fileset dir="src"&gt;
+      &lt;javaselector/&gt;
+   &lt;/fileset&gt;
+&lt;/copy&gt;
+      </pre>
+    </blockquote>
+     
       <p>
         One may use
         <code>org.apache.tools.ant.types.selectors.BaseSelector</code>,
