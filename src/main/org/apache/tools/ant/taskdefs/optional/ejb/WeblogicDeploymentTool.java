@@ -254,6 +254,8 @@ public class WeblogicDeploymentTool extends GenericDeploymentTool {
                          weblogicDD);
         }
         else {
+            log("Unable to locate weblogic deployment descriptor. It was expected to be in " + 
+                weblogicDD.getPath(), Project.MSG_WARN);
             return;
         }
 
