@@ -38,7 +38,6 @@ import org.apache.tools.ant.types.FilterSetCollection;
 public class FileUtils
 {
     private static Random rand = new Random( System.currentTimeMillis() );
-    private static Object lockReflection = new Object();
 
     /**
      * Empty constructor.
@@ -55,26 +54,6 @@ public class FileUtils
     public static FileUtils newFileUtils()
     {
         return new FileUtils();
-    }
-
-    /**
-     * Emulation of File.getParentFile for JDK 1.1
-     *
-     * @param f Description of Parameter
-     * @return The ParentFile value
-     * @since 1.10
-     */
-    public File getParentFile( File f )
-    {
-        if( f != null )
-        {
-            String p = f.getParent();
-            if( p != null )
-            {
-                return new File( p );
-            }
-        }
-        return null;
     }
 
     /**
@@ -300,7 +279,7 @@ public class FileUtils
 
             // ensure that parent dir of dest file exists!
             // not using getParentFile method to stay 1.1 compat
-            File parent = getParentFile( destFile );
+            File parent = destFile.getParentFile();
             if( !parent.exists() )
             {
                 parent.mkdirs();
@@ -577,7 +556,7 @@ public class FileUtils
             String part = tok.nextToken();
             if( part.equals( ".." ) )
             {
-                helpFile = getParentFile( helpFile );
+                helpFile = helpFile.getParentFile();
                 if( helpFile == null )
                 {
                     String msg = "The file or path you specified ("

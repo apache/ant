@@ -237,7 +237,7 @@ public class Zip extends MatchingTask
         {
             FileUtils fileUtils = FileUtils.newFileUtils();
             renamedFile = fileUtils.createTempFile( "zip", ".tmp",
-                                                    fileUtils.getParentFile( zipFile ) );
+                                                    zipFile.getParentFile() );
 
             try
             {

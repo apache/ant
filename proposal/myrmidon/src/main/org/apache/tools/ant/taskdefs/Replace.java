@@ -296,7 +296,7 @@ public class Replace extends MatchingTask
         }
 
         File temp = fileUtils.createTempFile( "rep", ".tmp",
-                                              fileUtils.getParentFile( src ) );
+                                              src.getParentFile() );
 
         Reader reader = null;
         Writer writer = null;

@@ -251,7 +251,7 @@ public class Expand extends MatchingTask
             log( "expanding " + entryName + " to " + f,
                  Project.MSG_VERBOSE );
             // create intermediary directories - sometimes zip don't add them
-            File dirF = fileUtils.getParentFile( f );
+            File dirF = f.getParentFile();
             dirF.mkdirs();
 
             if( isDirectory )
