@@ -114,6 +114,21 @@
         <td>Peter Donald<br />(peter at apache.org)</td>
         <td>Not Started</td>
       </tr>
+      <tr>
+        <td><a href="#embeddor">Design an API to embed Ant into other applications</a></td>
+        <td>None</td>
+        <td>Not Started</td>
+      </tr>
+      <tr>
+        <td><a href="#info">Design a TypeInfo system similar to BeanInfo to describe Tasks</a></td>
+        <td>None</td>
+        <td>Not Started</td>
+      </tr>
+      <tr>
+        <td><a href="#antdoc">Design Antdoc to generate manual from .java files</a></td>
+        <td>None</td>
+        <td>Not Started</td>
+      </tr>
     </table>
     </div>
   </blockquote>
@@ -407,6 +422,53 @@ File[] files = cm.getOutOfDate();
       Look at the feasability of performing i18n on Ant runtime and core tasks. Look at
       how much work it will be and how useful it would be. Look at utilizing i18n from 
       existing projects such as Avalon.
+    </p>
+  </blockquote>
+
+  <h3>Embeddor API for Ant</h3>
+  <a name="embeddor" />
+  <blockquote>
+    <p>
+      Identify different environments in which it would be useful to embed Ant or an Ant-like 
+      tool. Identify what these environments are likely to demand in terms of API and support
+      and then design a system that works in these environments without compromising ants 
+      core goal (ie a build system). Some suggestions for such an API include;
+    </p>
+    <ul>
+      <li>Pluggable ProjectBuilders to allow building of project from a variety of sources,
+       file, URL, InputStream, SAX etc</li>
+      <li>Pluggable ClassLoader arrangement</li>
+      <li>Ability to set User Properties</li>
+      <li>Ability to add Task/Data/Type definitions</li>
+      <li>Ability to add/remove Listeners</li>
+      <li>Ability to add/remove Loggers</li>
+      <li>Ability to get meta-information about targets (such as name and description)</li>
+      <li>The ability to execute a task and/or targets</li>
+      <li>The ability to add tasklibs</li>
+      <li>The ability to add VFS mount points</li>
+      <li>The ability to manipulate ProjectModel and build it from GUIs</li>
+      <li>A general task engine API</li>
+    </ul>
+  </blockquote>
+
+  <h3>TypeInfo system</h3>
+  <a name="info" />
+  <blockquote>
+    <p>
+      Add in the ability to represent tasks using specified meta-info, This would allow 
+      generation and manipulation of information such as what attributes are available, 
+      what elements are supported etc. 
+    </p>
+  </blockquote>
+
+  <h3>Antdoc</h3>
+  <a name="antdoc" />
+  <blockquote>
+    <p>
+      This is partially based on the above TypeInfo system. It involves the ability to 
+      take the TypeInfo made available and generate documentation for the tasks. This 
+      would allow multiple formats of documentaiton to be easily maintained and reduce 
+      the chance that documentation gets out of whack.
     </p>
   </blockquote>
 
