@@ -417,7 +417,7 @@ public class PatternSet extends DataType {
         }
 
         if (excludesFileList.size() > 0) {
-            Enumeration e = includesFileList.elements();
+            Enumeration e = excludesFileList.elements();
             while (e.hasMoreElements()) {
                 NameEntry ne = (NameEntry)e.nextElement();
                 String fileName = ne.evalName(p);
