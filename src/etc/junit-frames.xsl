@@ -254,7 +254,7 @@ h6 {
 
   <!--
    Write properties into a JavaScript data structure.
-   This is based on the original idea by Erik Hatcher (erik@hatcher.net)
+   This is based on the original idea by Erik Hatcher (ehatcher@apache.org)
    -->
   <xsl:template match="properties">
     cur = TestCases['<xsl:value-of select="../@package"/>.<xsl:value-of select="../@name"/>'] = new Array();

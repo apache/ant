@@ -100,7 +100,7 @@ import org.apache.tools.ant.types.FileSet;
  *
  * @author glenn_twiggs@bmc.com
  * @author steve_l@iseran.com steve loughran
- * @author erik@hatcher.net Erik Hatcher
+ * @author ehatcher@apache.org Erik Hatcher
  * @author paulo.gaspar@krankikom.de Paulo Gaspar
  * @created 01 May 2001
  */

@@ -139,7 +139,7 @@ import java.net.URL;
  * @author <a href="mailto:stefan.bodewig@epost.de">Stefan Bodewig</a>
  * @author <a href="mailto:sbailliez@imediation.com">Stephane Bailliez</a>
  * @author <a href="mailto:Gerrit.Riessen@web.de">Gerrit Riessen</a>
- * @author <a href="mailto:erik@hatcher.net">Erik Hatcher</a>
+ * @author <a href="mailto:ehatcher@apache.org">Erik Hatcher</a>
  *
  * @see JUnitTest
  * @see BatchTest

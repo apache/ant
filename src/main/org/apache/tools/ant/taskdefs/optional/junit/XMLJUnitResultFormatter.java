@@ -81,7 +81,7 @@ import junit.framework.TestCase;
  * Prints XML output of the test to a specified Writer.
  *
  * @author <a href="mailto:stefan.bodewig@epost.de">Stefan Bodewig</a>
- * @author <a href="mailto:erik@hatcher.net">Erik Hatcher</a>
+ * @author <a href="mailto:ehatcher@apache.org">Erik Hatcher</a>
  *
  * @see FormatterElement 
  */
