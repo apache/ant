@@ -69,33 +69,15 @@ public class DOMElementWriter {
      * @param element the Root DOM element of the tree
      * @param out where to send the output
      * @param indent number of
-     * @param indentWith string that should be used to indent the corresponding tag.
+     * @param indentWith string that should be used to indent the
+     * corresponding tag.
      * @throws IOException if an error happens while writing to the stream.
      */
     public void write(Element element, Writer out, int indent,
                       String indentWith)
         throws IOException {
 
-        // Write indent characters
-        for (int i = 0; i < indent; i++) {
-            out.write(indentWith);
-        }
-
-        // Write element
-        out.write("<");
-        out.write(element.getTagName());
-
-        // Write attributes
-        NamedNodeMap attrs = element.getAttributes();
-        for (int i = 0; i < attrs.getLength(); i++) {
-            Attr attr = (Attr) attrs.item(i);
-            out.write(" ");
-            out.write(attr.getName());
-            out.write("=\"");
-            out.write(encode(attr.getValue()));
-            out.write("\"");
-        }
-        out.write(">");
+        openElement(element, out, indent, indentWith);
 
         // Write child elements and text
         boolean hasChildren = false;
@@ -150,6 +132,58 @@ public class DOMElementWriter {
             }
         }
 
+        closeElement(element, out, indent, indentWith, hasChildren);
+    }
+
+    /**
+     * Writes the opening tag - including all attributes -
+     * correspondong to a DOM element.
+     *
+     * @param element the DOM element to write
+     * @param out where to send the output
+     * @param indent number of
+     * @param indentWith string that should be used to indent the
+     * corresponding tag.
+     * @throws IOException if an error happens while writing to the stream.
+     */
+    public void openElement(Element element, Writer out, int indent,
+                            String indentWith)
+        throws IOException {
+        // Write indent characters
+        for (int i = 0; i < indent; i++) {
+            out.write(indentWith);
+        }
+
+        // Write element
+        out.write("<");
+        out.write(element.getTagName());
+
+        // Write attributes
+        NamedNodeMap attrs = element.getAttributes();
+        for (int i = 0; i < attrs.getLength(); i++) {
+            Attr attr = (Attr) attrs.item(i);
+            out.write(" ");
+            out.write(attr.getName());
+            out.write("=\"");
+            out.write(encode(attr.getValue()));
+            out.write("\"");
+        }
+        out.write(">");
+    }
+
+    /**
+     * Writes a DOM tree to a stream.
+     *
+     * @param element the Root DOM element of the tree
+     * @param out where to send the output
+     * @param indent number of
+     * @param indentWith string that should be used to indent the
+     * corresponding tag.
+     * @throws IOException if an error happens while writing to the stream.
+     */
+    public void closeElement(Element element, Writer out, int indent,
+                             String indentWith, boolean hasChildren)
+        throws IOException {
         // If we had child elements, we need to indent before we close
         // the element, otherwise we're on the same line and don't need
         // to indent
