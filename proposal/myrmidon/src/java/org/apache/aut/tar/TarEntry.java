@@ -56,12 +56,11 @@ import java.util.Date;
  * @author <a href="mailto:peter@apache.org">Peter Donald</a>
  */
 public class TarEntry
-//    implements TarConstants
 {
     /**
      * The length of the name field in a header buffer.
      */
-    public static final int NAMELEN = 100;
+    public final static int NAMELEN = 100;
 
     /**
      * The entry's modification time.
