@@ -96,9 +96,9 @@ decisions.
 
 * Ant should be cancelable
 
-* no commit without documentation (ouch 8-)
+* no commit of new features without documentation (ouch 8-)
 
-* no commit without testcases
+* no commit of new features without testcases
 
 III. Things that are simple, easy to implement, where we expect the
 committers to agree
