@@ -184,7 +184,8 @@ public class JavacTest extends TestCase {
         assertEquals("extJavac", compiler);
 
         // check build.compiler provides defaults
-        javac.setFork(false);
+        javac = new Javac();
+        javac.setProject(project);
         project.setNewProperty("build.compiler", "jikes");
         compiler = javac.getCompiler();
         assertNotNull(compiler);

@@ -63,6 +63,7 @@ import org.apache.tools.ant.types.Reference;
 import org.apache.tools.ant.util.GlobPatternMapper;
 import org.apache.tools.ant.util.JavaEnvUtils;
 import org.apache.tools.ant.util.SourceFileScanner;
+import org.apache.tools.ant.util.facade.FacadeTaskHelper;
 import org.apache.tools.ant.taskdefs.compilers.CompilerAdapter;
 import org.apache.tools.ant.taskdefs.compilers.CompilerAdapterFactory;
 
@@ -135,7 +136,7 @@ public class Javac extends MatchingTask {
     private boolean nowarn = false;
     private String memoryInitialSize;
     private String memoryMaximumSize;
-    private Vector implementationSpecificArgs = new Vector();
+    private FacadeTaskHelper facade = null;
 
     protected boolean failOnError = true;
     protected boolean listFiles = false;
@@ -144,14 +145,14 @@ public class Javac extends MatchingTask {
     private String source;
     private String debugLevel;
 
-    /**
-     * The compiler set via the compiler attribute.
-     *
-     * <p>default is null</p>
-     *
-     * @since Ant 1.5
-     */
-    private String compiler = null;
+    public Javac() {
+        if (JavaEnvUtils.getJavaVersion() != JavaEnvUtils.JAVA_1_1 &&
+            JavaEnvUtils.getJavaVersion() != JavaEnvUtils.JAVA_1_2) {
+            facade = new FacadeTaskHelper("modern");
+        } else {
+            facade = new FacadeTaskHelper("classic");
+        }
+    }
 
     /**
      * Get the value of debugLevel.
@@ -604,7 +605,7 @@ public class Javac extends MatchingTask {
     public ImplementationSpecificArgument createCompilerArg() {
         ImplementationSpecificArgument arg =
             new ImplementationSpecificArgument();
-        implementationSpecificArgs.addElement(arg);
+        facade.addImplementationArgument(arg);
         return arg;
     }
 
@@ -613,19 +614,10 @@ public class Javac extends MatchingTask {
      * @return array of command line arguments, guaranteed to be non-null.
      */
     public String[] getCurrentCompilerArgs() {
-        Vector args = new Vector();
-        for (Enumeration enum = implementationSpecificArgs.elements();
-             enum.hasMoreElements();) {
-            ImplementationSpecificArgument arg = 
-                ((ImplementationSpecificArgument) enum.nextElement());
-            String[] curr = arg.getParts();
-            for (int i = 0; i < curr.length; i++) {
-                args.addElement(curr[i]);
-            }
-        }
-        String[] res = new String[args.size()];
-        args.copyInto(res);
-        return res;
+        // make sure facade knows about magic properties and fork setting
+        getCompiler();
+
+        return facade.getArgs();
     }
 
     /**
@@ -708,7 +700,7 @@ public class Javac extends MatchingTask {
      * @since Ant 1.5
      */
     public void setCompiler(String compiler) {
-        this.compiler = compiler;
+        facade.setImplementation(compiler);
     }
 
     /**
@@ -720,33 +712,19 @@ public class Javac extends MatchingTask {
      * @since Ant 1.5
      */
     public String getCompiler() {
-        String compilerImpl = 
-            this.compiler != null ? this.compiler 
-                                  : project.getProperty("build.compiler");
+        facade.setMagicValue(getProject().getProperty("build.compiler"));
+        String compilerImpl = facade.getImplementation();
 
         if (fork) {
-            if (compilerImpl != null) {
-                if (isJdkCompiler(compilerImpl)) {
-                    log("Since fork is true, ignoring compiler setting.",
-                        Project.MSG_WARN);
-                    compilerImpl = "extJavac";
-                }
-                else {
-                    log("Since compiler setting isn't classic or modern,"
-                        + "ignoring fork setting.", Project.MSG_WARN);
-                }
-            }
-            else {
+            if (isJdkCompiler(compilerImpl)) {
+                log("Since fork is true, ignoring compiler setting.",
+                    Project.MSG_WARN);
+                facade.setImplementation("extJavac");
                 compilerImpl = "extJavac";
             }
-        }
-
-        if (compilerImpl == null) {
-            if (JavaEnvUtils.getJavaVersion() != JavaEnvUtils.JAVA_1_1 &&
-                JavaEnvUtils.getJavaVersion() != JavaEnvUtils.JAVA_1_2) {
-                compilerImpl = "modern";
-            } else {
-                compilerImpl = "classic";
+            else {
+                log("Since compiler setting isn't classic or modern,"
+                    + "ignoring fork setting.", Project.MSG_WARN);
             }
         }
         return compilerImpl;
@@ -816,25 +794,15 @@ public class Javac extends MatchingTask {
     }
 
     /**
-     * Adds an "implementation" attribute to Commandline$Attribute
-     * used to filter command line attributes based on the current
+     * Adds an "compiler" attribute to Commandline$Attribute used to
+     * filter command line attributes based on the current
      * implementation.
      */
-    public class ImplementationSpecificArgument
-        extends Commandline.Argument {
-
-        private String impl;
+    public class ImplementationSpecificArgument extends 
+        org.apache.tools.ant.util.facade.ImplementationSpecificArgument {
 
         public void setCompiler(String impl) {
-            this.impl = impl;
-        }
-
-        public String[] getParts() {
-            if (impl == null || impl.equals(getCompiler())) {
-                return super.getParts();
-            } else {
-                return new String[0];
-            }
+            super.setImplementation(impl);
         }
     }
 
