@@ -27,6 +27,8 @@ Fixed bugs:
 
 * tagdiff.xml was broken in ant 1.6.1. Bugzilla Report 27057.
 
+* if the basedir contained .. or . dirs, and the build file name contained
+  .. or ., the basedir was set incorrectly. Bugzilla Report 26765.
 Other changes:
 --------------
 
