@@ -1,5 +1,5 @@
 /*
- * Copyright  2003-2004 The Apache Software Foundation
+ * Copyright  2003-2005 The Apache Software Foundation
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -26,7 +26,6 @@ package org.apache.tools.ant.taskdefs;
 import java.io.File;
 
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.Set;
 
 import org.apache.tools.ant.BuildException;
@@ -34,9 +33,6 @@ import org.apache.tools.ant.DirectoryScanner;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.Task;
 import org.apache.tools.ant.types.FileSet;
-import org.apache.tools.ant.types.PatternSet;
-import org.apache.tools.ant.util.FileNameMapper;
-import org.apache.tools.ant.util.IdentityMapper;
 
 /**
  * Synchronize a local target directory from the files defined
@@ -57,19 +53,19 @@ import org.apache.tools.ant.util.IdentityMapper;
 public class Sync extends Task {
 
     // Same as regular <copy> task... see at end-of-file!
-    private MyCopy _copy;
+    private MyCopy myCopy;
 
     // Override Task#init
     public void init()
         throws BuildException {
         // Instantiate it
-        _copy = new MyCopy();
-        configureTask(_copy);
+        myCopy = new MyCopy();
+        configureTask(myCopy);
 
         // Default config of <mycopy> for our purposes.
-        _copy.setFiltering(false);
-        _copy.setIncludeEmptyDirs(false);
-        _copy.setPreserveLastModified(true);
+        myCopy.setFiltering(false);
+        myCopy.setIncludeEmptyDirs(false);
+        myCopy.setPreserveLastModified(true);
     }
 
     private void configureTask(Task helper) {
@@ -83,10 +79,10 @@ public class Sync extends Task {
     public void execute()
         throws BuildException {
         // The destination of the files to copy
-        File toDir = _copy.getToDir();
+        File toDir = myCopy.getToDir();
 
         // The complete list of files to copy
-        Set allFiles = _copy.nonOrphans;
+        Set allFiles = myCopy.nonOrphans;
 
         // If the destination directory didn't already exist,
         // or was empty, then no previous file removal is necessary!
@@ -94,7 +90,7 @@ public class Sync extends Task {
 
         // Copy all the necessary out-of-date files
         log("PASS#1: Copying files to " + toDir, Project.MSG_DEBUG);
-        _copy.execute();
+        myCopy.execute();
 
         // Do we need to perform further processing?
         if (noRemovalNecessary) {
@@ -109,7 +105,7 @@ public class Sync extends Task {
         logRemovedCount(removedFileCount[1], "dangling file", "", "s");
 
         // Get rid of empty directories on the destination side
-        if (!_copy.getIncludeEmptyDirs()) {
+        if (!myCopy.getIncludeEmptyDirs()) {
             log("PASS#3: Removing empty directories from " + toDir,
                 Project.MSG_DEBUG);
             int removedDirCount = removeEmptyDirectories(toDir, false);
@@ -119,7 +115,7 @@ public class Sync extends Task {
 
     private void logRemovedCount(int count, String prefix,
                                  String singularSuffix, String pluralSuffix) {
-        File toDir = _copy.getToDir();
+        File toDir = myCopy.getToDir();
 
         String what = (prefix == null) ? "" : prefix;
         what += (count < 2) ? singularSuffix : pluralSuffix;
@@ -230,28 +226,28 @@ public class Sync extends Task {
      * Sets the destination directory.
      */
     public void setTodir(File destDir) {
-        _copy.setTodir(destDir);
+        myCopy.setTodir(destDir);
     }
 
     /**
      * Used to force listing of all names of copied files.
      */
     public void setVerbose(boolean verbose) {
-        _copy.setVerbose(verbose);
+        myCopy.setVerbose(verbose);
     }
 
     /**
      * Overwrite any existing destination file(s).
      */
     public void setOverwrite(boolean overwrite) {
-        _copy.setOverwrite(overwrite);
+        myCopy.setOverwrite(overwrite);
     }
 
     /**
      * Used to copy empty directories.
      */
     public void setIncludeEmptyDirs(boolean includeEmpty) {
-        _copy.setIncludeEmptyDirs(includeEmpty);
+        myCopy.setIncludeEmptyDirs(includeEmpty);
     }
 
     /**
@@ -259,14 +255,14 @@ public class Sync extends Task {
      * @param failonerror true or false
      */
     public void setFailOnError(boolean failonerror) {
-        _copy.setFailOnError(failonerror);
+        myCopy.setFailOnError(failonerror);
     }
 
     /**
      * Adds a set of files to copy.
      */
     public void addFileset(FileSet set) {
-        _copy.addFileset(set);
+        myCopy.addFileset(set);
     }
 
     /**
@@ -278,7 +274,7 @@ public class Sync extends Task {
      * @since Ant 1.6.2
      */
     public void setGranularity(long granularity) {
-        _copy.setGranularity(granularity);
+        myCopy.setGranularity(granularity);
     }
 
     /**
