@@ -36,8 +36,6 @@ remove items from this list once they are complete.
 * <junitreport> and JDK 1.5 [Stefan hopes that Stephane solves it for
   him, otherwise he'll do it himself]
 
-* symlink creates cyclic links. [Stefan]
-
 * telnet doesn't disconnect properly (PR 25935) [Stefan unless Peter
   is faster].
 

@@ -160,7 +160,26 @@ public class Symlink extends Task {
                 while (keys.hasMoreElements()) {
                     link = (String) keys.nextElement();
                     resource = listOfLinks.getProperty(link);
-                    doLink(resource, link);
+		    // handle the case where the link exists 
+		    // and points to a directory (bug 25181)
+		    try {
+			FileUtils fu = FileUtils.newFileUtils();
+			File test = new File(link);
+			File testRes = new File(resource);
+			if (!fu.isSymbolicLink(test.getParentFile(), 
+					       test.getName())) {
+			    doLink(resource, link);
+			} else {
+			    if (!test.getCanonicalPath().
+			    	equals(testRes.getCanonicalPath())) {
+			    	Symlink.deleteSymlink(link);
+			    	doLink(resource,link);
+			    } // else the link exists, do nothing
+			}
+		    } catch (IOException ioe) {
+			handleError("IO exception while creating "
+				    + "link");
+		    }
                 }
             } else if (action.equals("record")) {
                 Vector vectOfLinks;
@@ -735,7 +754,6 @@ public class Symlink extends Task {
                 keys = propTemp.keys();
                 propTemp.list(System.out);
                 // Write the contents to our master list of links
-
                 // This method assumes that all links are defined in
                 // terms of absolute paths, or paths relative to the
                 // working directory

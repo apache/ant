@@ -128,6 +128,9 @@ public class SymlinkTest extends BuildFileTest {
             assertNotNull("Failed to create dirlink",
                           p.getProperty("test.record.dirlink.created"));
 
+            assertNotNull("Failed to create dirlink2",
+                          p.getProperty("test.record.dirlink2.created"));
+
             assertNotNull("Couldn't record links in dir1",
                           p.getProperty("test.record.dir1.recorded"));
 
@@ -173,6 +176,16 @@ public class SymlinkTest extends BuildFileTest {
                           p.getProperty("test.recreate.link3.recreated"));
             assertNotNull("Failed to recreate dirlink",
                           p.getProperty("test.recreate.dirlink.recreated"));
+	    
+	    String doubleRecreate = p.getProperty("test.recreate.dirlink2.recreated.twice");
+
+	    if (doubleRecreate != null) {
+		fail(doubleRecreate);
+	    }
+
+            assertNotNull("Failed to alter dirlink3",
+                          p.getProperty("test.recreate.dirlink3.was.altered"));
+
         }
         testfail = false;
     }
