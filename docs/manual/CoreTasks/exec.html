@@ -306,8 +306,9 @@ but some configuration problem on your machine.
 <p>starts <code>emacs</code> on display 1 of the X Window System.</p>
 
 <blockquote><pre>
+&lt;property environment=&quot;env&quot;/&gt;
 &lt;exec ... &gt;
-  &lt;env key=&quot;PATH&quot; path=&quot;${java.library.path}:${basedir}/bin&quot;/&gt;
+  &lt;env key=&quot;PATH&quot; path=&quot;${env.PATH}:${basedir}/bin&quot;/&gt;
 &lt;/exec&gt;
 </pre></blockquote>
 <p>adds <code>${basedir}/bin</code> to the <code>PATH</code> of the
