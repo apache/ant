@@ -33,6 +33,7 @@ public class LazyFileOutputStream extends OutputStream {
     private FileOutputStream fos;
     private File file;
     private boolean append;
+    private boolean alwaysCreate;
     private boolean opened = false;
     private boolean closed = false;
 
@@ -67,8 +68,19 @@ public class LazyFileOutputStream extends OutputStream {
      * it.
      */
     public LazyFileOutputStream(File file, boolean append) {
+        this(file, append, false);
+    }
+
+    /**
+     * Creates a stream that will eventually write to the file with
+     * the given name, optionally append to instead of replacing
+     * it, and optionally always create a file (even if zero length).
+     */
+    public LazyFileOutputStream(File file, boolean append,
+                                boolean alwaysCreate) {
         this.file = file;
         this.append = append;
+        this.alwaysCreate = alwaysCreate;
     }
 
     /**
@@ -81,6 +93,9 @@ public class LazyFileOutputStream extends OutputStream {
     }
 
     public synchronized void close() throws IOException {
+        if (alwaysCreate && !closed) {
+            ensureOpened();
+        }
         if (opened) {
             fos.close();
         }

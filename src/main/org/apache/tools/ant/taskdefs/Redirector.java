@@ -231,7 +231,7 @@ public class Redirector {
             errorStream = new LogOutputStream(managingTask, Project.MSG_WARN);
         } else {
             if (out != null)  {
-                outputStream = new LazyFileOutputStream(out, append);
+                outputStream = new LazyFileOutputStream(out, append, true);
                 managingTask.log("Output redirected to " + out,
                                  Project.MSG_VERBOSE);
             }
@@ -257,7 +257,7 @@ public class Redirector {
         }
 
         if (error != null)  {
-            errorStream = new LazyFileOutputStream(error, append);
+            errorStream = new LazyFileOutputStream(error, append, true);
             managingTask.log("Error redirected to " + error,
                              Project.MSG_VERBOSE);
         }
@@ -421,15 +421,9 @@ public class Redirector {
             inputStream.close();
         }
 
-        if (outputStream instanceof LazyFileOutputStream) {
-            ((LazyFileOutputStream) outputStream).open();
-        }
         outputStream.close();
 
         if (errorStream != outputStream) {
-            if (errorStream instanceof LazyFileOutputStream) {
-                ((LazyFileOutputStream) errorStream).open();
-            }
             errorStream.close();
         }
 
