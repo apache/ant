@@ -9,6 +9,7 @@ package org.apache.tools.ant;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import org.apache.myrmidon.api.AbstractTask;
 import org.apache.myrmidon.api.TaskException;
 
 /**
@@ -18,7 +19,7 @@ import org.apache.myrmidon.api.TaskException;
  * @author costin@dnt.ro
  */
 public class TaskAdapter
-    extends Task
+    extends AbstractTask
 {
     private Object m_proxy;
 
