@@ -47,6 +47,7 @@ import org.apache.tools.ant.util.IdentityMapper;
 import org.apache.tools.ant.util.MergingMapper;
 import org.apache.tools.ant.util.ResourceUtils;
 import org.apache.tools.zip.ZipEntry;
+import org.apache.tools.zip.ZipExtraField;
 import org.apache.tools.zip.ZipFile;
 import org.apache.tools.zip.ZipOutputStream;
 
@@ -1030,6 +1031,22 @@ public class Zip extends MatchingTask {
     protected void zipDir(File dir, ZipOutputStream zOut, String vPath,
                           int mode)
         throws IOException {
+        zipDir(dir, zOut, vPath, mode, null);
+    }
+
+    /**
+     * Add a directory to the zip stream.
+     * @param dir  the directort to add to the archive
+     * @param zOut the stream to write to
+     * @param vPath the name this entry shall have in the archive
+     * @param mode the Unix permissions to set.
+     * @param extra ZipExtraFields to add
+     * @throws IOException on error
+     * @since Ant 1.6.3
+     */
+    protected void zipDir(File dir, ZipOutputStream zOut, String vPath,
+                          int mode, ZipExtraField[] extra)
+        throws IOException {
         if (addedDirs.get(vPath) != null) {
             // don't add directories we've already added.
             // no warning if we try, it is harmless in and of itself
@@ -1054,7 +1071,11 @@ public class Zip extends MatchingTask {
             ze.setCrc (EMPTY_CRC);
             ze.setUnixMode(mode);
 
-            zOut.putNextEntry (ze);
+            if (extra != null) {
+                ze.setExtraFields(extra);
+            }
+
+            zOut.putNextEntry(ze);
         }
     }
 

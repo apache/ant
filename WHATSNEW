@@ -253,6 +253,9 @@ Other changes:
 * Add else attribute to the condition task, which specifies an
   optional alternate value to set the property to if the nested
   condition evaluates to false. Bugzilla report 33074.
+
+* Ant generated jar files should now be detected as jar files by
+  Solaris.  Bugzilla Report 32649.
   
 Fixed bugs:
 -----------

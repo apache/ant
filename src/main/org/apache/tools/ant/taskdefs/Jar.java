@@ -1,5 +1,5 @@
 /*
- * Copyright  2000-2004 The Apache Software Foundation
+ * Copyright  2000-2005 The Apache Software Foundation
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -47,6 +47,8 @@ import org.apache.tools.ant.types.EnumeratedAttribute;
 import org.apache.tools.ant.types.FileSet;
 import org.apache.tools.ant.types.Path;
 import org.apache.tools.ant.types.ZipFileSet;
+import org.apache.tools.zip.JarMarker;
+import org.apache.tools.zip.ZipExtraField;
 import org.apache.tools.zip.ZipOutputStream;
 
 /**
@@ -129,6 +131,15 @@ public class Jar extends Zip {
      * @since Ant 1.6.2
      */
     private Path indexJars;
+
+    /**
+     * Extra fields needed to make Solaris recognize the archive as a jar file.
+     *
+     * @since Ant 1.6.3
+     */
+    private ZipExtraField[] JAR_MARKER = new ZipExtraField[] {
+        JarMarker.getInstance()
+    };
 
     /** constructor */
     public Jar() {
@@ -382,7 +393,8 @@ public class Jar extends Zip {
                 Project.MSG_WARN);
         }
 
-        zipDir(null, zOut, "META-INF/", ZipFileSet.DEFAULT_DIR_MODE);
+        zipDir(null, zOut, "META-INF/", ZipFileSet.DEFAULT_DIR_MODE,
+               JAR_MARKER);
         // time to write the manifest
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         OutputStreamWriter osw = new OutputStreamWriter(baos, "UTF-8");

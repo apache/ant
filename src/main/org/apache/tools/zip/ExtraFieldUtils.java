@@ -37,6 +37,7 @@ public class ExtraFieldUtils {
     static {
         implementations = new Hashtable();
         register(AsiExtraField.class);
+        register(JarMarker.class);
     }
 
     /**
