@@ -24,6 +24,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.ListIterator;
 import java.util.LinkedList;
+import java.util.Iterator;
 
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.ProjectComponent;
@@ -598,5 +599,14 @@ public class Commandline implements Cloneable {
         }
         buf.append(DISCLAIMER);
         return buf.toString();
+    }
+
+    /**
+     * get an iterator to the list
+     * @since ant1.7
+     * @return an iterator
+     */
+    public Iterator iterator() {
+        return arguments.iterator();
     }
 }
