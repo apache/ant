@@ -44,7 +44,7 @@ public class JavaTask
     public void addClasspath( final Path classpath )
         throws TaskException
     {
-        m_exec.getClassPath().addPath( classpath );
+        m_exec.getClassPath().add( classpath );
     }
 
     /**

@@ -59,7 +59,7 @@ public class Path
 
     public Path( final String path )
     {
-        addPath( path );
+        add( path );
     }
 
     public Path()
@@ -110,13 +110,13 @@ public class Path
      */
     public void setPath( final String path )
     {
-        addPath( path );
+        add( path );
     }
 
     /**
      * Adds a path.
      */
-    public void addPath( final String path )
+    public void add( final String path )
     {
         final FileList pathElement = new ParsedPathElement( path );
         m_elements.add( pathElement );
@@ -125,18 +125,18 @@ public class Path
     /**
      * Adds a path.
      */
-    public void addPath( final String[] path )
+    public void add( final String[] path )
     {
         final FileList pathElement = new ArrayFileList( path );
         m_elements.add( pathElement );
     }
 
     /**
-     * Creates a nested <code>&lt;path&gt;</code> element.
+     * Adds a path.
      */
-    public void addPath( final Path path )
+    public void add( final FileList list )
     {
-        m_elements.add( path );
+        m_elements.add( list );
     }
 
     /**

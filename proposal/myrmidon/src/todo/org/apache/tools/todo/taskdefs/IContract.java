@@ -488,7 +488,7 @@ public class IContract extends MatchingTask
      */
     public void setClasspath( final Path path )
     {
-        createClasspath().addPath( path );
+        createClasspath().add( path );
     }
 
     /**
@@ -709,12 +709,12 @@ public class IContract extends MatchingTask
 
             // Create the classpath required to compile the sourcefiles BEFORE instrumentation
             Path beforeInstrumentationClasspath = new Path();
-            beforeInstrumentationClasspath.addPath( baseClasspath );
+            beforeInstrumentationClasspath.add( baseClasspath );
             beforeInstrumentationClasspath.addLocation( srcDir );
 
             // Create the classpath required to compile the sourcefiles AFTER instrumentation
             Path afterInstrumentationClasspath = new Path();
-            afterInstrumentationClasspath.addPath( baseClasspath );
+            afterInstrumentationClasspath.add( baseClasspath );
             afterInstrumentationClasspath.addLocation( instrumentDir );
             afterInstrumentationClasspath.addLocation( repositoryDir );
             afterInstrumentationClasspath.addLocation( srcDir );
@@ -722,7 +722,7 @@ public class IContract extends MatchingTask
 
             // Create the classpath required to automatically compile the repository files
             Path repositoryClasspath = new Path();
-            repositoryClasspath.addPath( baseClasspath );
+            repositoryClasspath.add( baseClasspath );
             repositoryClasspath.addLocation( instrumentDir );
             repositoryClasspath.addLocation( srcDir );
             repositoryClasspath.addLocation( repositoryDir );
@@ -730,7 +730,7 @@ public class IContract extends MatchingTask
 
             // Create the classpath required for iContract itself
             Path iContractClasspath = new Path();
-            iContractClasspath.addPath( baseClasspath );
+            iContractClasspath.add( baseClasspath );
             iContractClasspath.addLocation( new File(System.getProperty( "java.home" ) + File.separator + ".." + File.separator + "lib" + File.separator + "tools.jar" ) );
             iContractClasspath.addLocation( srcDir );
             iContractClasspath.addLocation( repositoryDir );

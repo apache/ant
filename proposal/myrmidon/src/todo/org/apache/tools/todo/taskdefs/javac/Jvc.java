@@ -35,7 +35,7 @@ public class Jvc extends DefaultCompilerAdapter
         // jvc doesn't support bootclasspath dir (-bootclasspath)
         // so we'll emulate it for compatibility and convenience.
         final String[] bootclasspath = m_bootclasspath.listFiles( getTaskContext() );
-        classpath.addPath( bootclasspath );
+        classpath.add( bootclasspath );
 
         // jvc doesn't support an extension dir (-extdir)
         // so we'll emulate it for compatibility and convenience.
@@ -55,7 +55,7 @@ public class Jvc extends DefaultCompilerAdapter
 
         // jvc has no option for source-path so we
         // will add it to classpath.
-        classpath.addPath( src );
+        classpath.add( src );
 
         Commandline cmd = new Commandline();
         cmd.setExecutable( "jvc" );

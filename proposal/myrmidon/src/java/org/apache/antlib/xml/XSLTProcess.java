@@ -142,7 +142,7 @@ public class XSLTProcess
         {
             m_classpath = new Path();
         }
-        m_classpath.addPath( path );
+        m_classpath.add( path );
     }
 
     public void addParam( final XSLTParam param )

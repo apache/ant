@@ -114,7 +114,7 @@ public class Javadoc
         }
         else
         {
-            m_bootclasspath.addPath( src );
+            m_bootclasspath.add( src );
         }
     }
 
@@ -139,7 +139,7 @@ public class Javadoc
         }
         else
         {
-            m_classpath.addPath( src );
+            m_classpath.add( src );
         }
     }
 
@@ -384,7 +384,7 @@ public class Javadoc
         }
         else
         {
-            m_sourcePath.addPath( src );
+            m_sourcePath.add( src );
         }
     }
 
@@ -475,7 +475,7 @@ public class Javadoc
         }
         Path path1 = m_bootclasspath;
         final Path path = new Path();
-        path1.addPath( path );
+        path1.add( path );
         return path;
     }
 
@@ -488,7 +488,7 @@ public class Javadoc
         }
         Path path1 = m_classpath;
         final Path path = new Path();
-        path1.addPath( path );
+        path1.add( path );
         return path;
     }
 
@@ -521,7 +521,7 @@ public class Javadoc
         }
         Path path1 = m_sourcePath;
         final Path path = new Path();
-        path1.addPath( path );
+        path1.add( path );
         return path;
     }
 
@@ -564,10 +564,10 @@ public class Javadoc
 
         // Build the classpath to pass to Javadoc
         Path classpath = new Path();
-        classpath.addPath( m_sourcePath );
+        classpath.add( m_sourcePath );
         if( m_classpath != null )
         {
-            classpath.addPath( m_classpath );
+            classpath.add( m_classpath );
         }
         cmd.addArgument( "-classpath" );
         cmd.addArgument( PathUtil.formatPath( classpath, getContext() ) );

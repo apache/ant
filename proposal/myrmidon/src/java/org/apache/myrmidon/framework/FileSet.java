@@ -15,6 +15,8 @@ import java.io.File;
  *
  * @author <a href="mailto:peter@apache.org">Peter Donald</a>
  * @version $Revision$ $Date$
+ *
+ * @ant:data-type name="fileset"
  */
 public class FileSet
     extends AbstractFileSet

@@ -79,7 +79,7 @@ public class Javah
         }
         else
         {
-            m_bootclasspath.addPath( bootclasspath );
+            m_bootclasspath.add( bootclasspath );
         }
     }
 
@@ -100,7 +100,7 @@ public class Javah
         }
         else
         {
-            m_classpath.addPath( classpath );
+            m_classpath.add( classpath );
         }
     }
 

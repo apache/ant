@@ -69,7 +69,7 @@ public class ANTLR
      */
     public void addClasspath( final Path path )
     {
-        m_exe.getClassPath().addPath( path );
+        m_exe.getClassPath().add( path );
     }
 
     /**

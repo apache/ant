@@ -568,8 +568,16 @@ Legal:
         </jar>
 
         <!-- Prepare the project tests -->
-        <copy file="${test.working.dir}/org/apache/antlib/core/test/ant-descriptor.xml"
-            tofile="${test.classes}/META-INF/ant-descriptor.xml"/>
+        <antlib-descriptor libName="unittests"
+                           destdir="${gen.dir}"
+                           classpathref="project.class.path">
+            <fileset dir="src/testcases">
+                <include name="org/apache/antlib/**"/>
+                <include name="org/apache/myrmidon/framework/**"/>
+            </fileset>
+        </antlib-descriptor>
+        <copy file="${gen.dir}/unittests-ant-descriptor.xml"
+              tofile="${test.classes}/META-INF/ant-descriptor.xml"/>
 
         <!-- Run all the tests -->
         <junit printsummary="on" fork="true" failureProperty="test.failed">

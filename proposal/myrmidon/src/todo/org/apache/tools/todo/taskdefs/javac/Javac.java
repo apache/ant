@@ -89,7 +89,7 @@ public class Javac
      */
     public void addBootclasspath( final Path bootclasspath )
     {
-        m_bootclasspath.addPath( bootclasspath );
+        m_bootclasspath.add( bootclasspath );
     }
 
     /**
@@ -103,7 +103,7 @@ public class Javac
         }
         else
         {
-            m_compileClasspath.addPath( classpath );
+            m_compileClasspath.add( classpath );
         }
     }
 
@@ -181,7 +181,7 @@ public class Javac
         }
         else
         {
-            m_extdirs.addPath( extdirs );
+            m_extdirs.add( extdirs );
         }
     }
 
@@ -282,7 +282,7 @@ public class Javac
         }
         else
         {
-            m_src.addPath( srcDir );
+            m_src.add( srcDir );
         }
     }
 

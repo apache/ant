@@ -206,7 +206,7 @@ public class CovReport
         }
         Path path1 = coveragePath;
         final Path path = new Path();
-        path1.addPath( path );
+        path1.add( path );
         return path;
     }
 
@@ -227,7 +227,7 @@ public class CovReport
         }
         Path path1 = sourcePath;
         final Path path = new Path();
-        path1.addPath( path );
+        path1.add( path );
         return path;
     }
 
@@ -292,7 +292,7 @@ public class CovReport
             sourcePath = new Path();
             Path path1 = sourcePath;
             final Path path = new Path();
-            path1.addPath( path );
+            path1.add( path );
             path.setLocation( getBaseDirectory() );
         }
         v.add( "-sourcepath=" + sourcePath );
@@ -368,7 +368,7 @@ public class CovReport
             }
             Path path1 = classPath;
             final Path path = new Path();
-            path1.addPath( path );
+            path1.add( path );
             return path;
         }
 

@@ -108,7 +108,7 @@ public class PathConvert extends AbstractTask
         }
         else
         {
-            m_path.addPath( path );
+            m_path.add( path );
         }
     }
 

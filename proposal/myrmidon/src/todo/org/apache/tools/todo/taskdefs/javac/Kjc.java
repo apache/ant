@@ -89,15 +89,15 @@ public class Kjc extends DefaultCompilerAdapter
         Path cp = new Path();
 
         // kjc don't have bootclasspath option.
-        cp.addPath( m_bootclasspath );
+        cp.add( m_bootclasspath );
 
         if( m_extdirs != null )
         {
             addExtdirs( cp );
         }
 
-        cp.addPath( classpath );
-        cp.addPath( src );
+        cp.add( classpath );
+        cp.add( src );
 
         cmd.addArgument( PathUtil.formatPath( cp, getTaskContext() ) );
 

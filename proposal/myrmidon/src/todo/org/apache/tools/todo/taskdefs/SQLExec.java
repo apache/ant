@@ -178,7 +178,7 @@ public class SQLExec
         }
         else
         {
-            this.classpath.addPath( classpath );
+            this.classpath.add( classpath );
         }
     }
 

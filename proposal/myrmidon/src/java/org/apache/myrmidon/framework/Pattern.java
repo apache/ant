@@ -100,7 +100,8 @@ public class Pattern
     {
         try
         {
-            final boolean result = getCondition().evaluate( context );
+            final Condition condition = getCondition();
+            final boolean result = ( condition == null || condition.evaluate( context ) );
             if( result )
             {
                 return getName();

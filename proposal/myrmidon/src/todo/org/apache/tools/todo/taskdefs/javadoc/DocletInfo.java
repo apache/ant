@@ -32,7 +32,7 @@ public class DocletInfo
         }
         else
         {
-            m_path.addPath( path );
+            m_path.add( path );
         }
     }
 
@@ -67,7 +67,7 @@ public class DocletInfo
         }
         Path path1 = m_path;
         final Path path = new Path();
-        path1.addPath( path );
+        path1.add( path );
         return path;
     }
 }

@@ -82,7 +82,7 @@ public class WLJspc extends MatchingTask
         }
         else
         {
-            compileClasspath.addPath( classpath );
+            compileClasspath.add( classpath );
         }
     }
 
@@ -219,7 +219,7 @@ public class WLJspc extends MatchingTask
             ExecuteJava helperTask = new ExecuteJava();
             helperTask.setClassName( "weblogic.jspc" );
             helperTask.getArguments().addArguments( args );
-            helperTask.getClassPath().addPath( compileClasspath );
+            helperTask.getClassPath().add( compileClasspath );
             helperTask.executeForked( getContext() );
         }
     }

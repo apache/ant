@@ -331,7 +331,7 @@ public class JUnitTask extends AbstractTask
      */
     public void addClasspath( final Path path )
     {
-        classPath.addPath( path );
+        classPath.add( path );
     }
 
     /**
@@ -567,7 +567,7 @@ public class JUnitTask extends AbstractTask
         cmd.setIgnoreReturnCode( true );
         cmd.setWorkingDirectory( dir );
         cmd.setMaxMemory( maxMem );
-        cmd.getClassPath().addPath( classPath );
+        cmd.getClassPath().add( classPath );
         cmd.getVmArguments().addArguments( vmArgs );
         cmd.getSysProperties().addVariables( sysProperties );
 

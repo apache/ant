@@ -47,7 +47,7 @@ public class Jikes
         // Jikes doesn't support bootclasspath dir (-bootclasspath)
         // so we'll emulate it for compatibility and convenience.
         final String[] bootclasspath = m_bootclasspath.listFiles( getTaskContext() );
-        classpath.addPath( bootclasspath );
+        classpath.add( bootclasspath );
 
         // Jikes doesn't support an extension dir (-extdir)
         // so we'll emulate it for compatibility and convenience.
@@ -67,13 +67,13 @@ public class Jikes
 
         // Jikes has no option for source-path so we
         // will add it to classpath.
-        classpath.addPath( src );
+        classpath.add( src );
 
         // if the user has set JIKESPATH we should add the contents as well
         String jikesPath = System.getProperty( "jikes.class.path" );
         if( jikesPath != null )
         {
-            classpath.addPath( jikesPath );
+            classpath.add( jikesPath );
         }
 
         Commandline cmd = new Commandline();

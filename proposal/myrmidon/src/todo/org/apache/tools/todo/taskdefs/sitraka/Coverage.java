@@ -184,7 +184,7 @@ public class Coverage
      */
     public void setClasspath( final Path path )
     {
-        m_classpath.addPath( path );
+        m_classpath.add( path );
     }
 
     public Filters createFilters()

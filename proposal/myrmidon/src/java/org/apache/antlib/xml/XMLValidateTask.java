@@ -109,7 +109,7 @@ public class XMLValidateTask
         }
         else
         {
-            m_classpath.addPath( classpath );
+            m_classpath.add( classpath );
         }
     }
 
@@ -170,7 +170,7 @@ public class XMLValidateTask
         }
         Path path1 = m_classpath;
         final Path path = new Path();
-        path1.addPath( path );
+        path1.add( path );
         return path;
     }
 

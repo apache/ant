@@ -295,7 +295,7 @@ public abstract class DefaultCompilerAdapter
         // add the classpath
         if( m_compileClasspath != null )
         {
-            classpath.addPath( m_compileClasspath );
+            classpath.add( m_compileClasspath );
         }
     }
 

@@ -33,7 +33,7 @@ public abstract class AbstractAvailableCondition
     public void addClasspath( final Path classpath )
         throws TaskException
     {
-        m_classpath.addPath( classpath );
+        m_classpath.add( classpath );
     }
 
     /**

@@ -105,7 +105,7 @@ public class JDependTask
      */
     public void addClasspath( final Path path )
     {
-        m_compileClasspath.addPath( path );
+        m_compileClasspath.add( path );
     }
 
     /**
@@ -119,7 +119,7 @@ public class JDependTask
         }
         Path path1 = m_sourcesPath;
         final Path path = new Path();
-        path1.addPath( path );
+        path1.add( path );
         return path;
     }
 
@@ -169,7 +169,7 @@ public class JDependTask
             exe.setJvm( m_jvm );
         }
 
-        exe.getClassPath().addPath( m_compileClasspath );
+        exe.getClassPath().add( m_compileClasspath );
 
         if( m_outputFile != null )
         {

@@ -132,7 +132,7 @@ public class MParse
      */
     public void addClasspath( final Path path )
     {
-        m_classpath.addPath( path );
+        m_classpath.add( path );
     }
 
     /**
@@ -148,7 +148,7 @@ public class MParse
      */
     public void addSourcepath( final Path path )
     {
-        m_sourcepath.addPath( path );
+        m_sourcepath.add( path );
     }
 
     /**

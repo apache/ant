@@ -15,6 +15,8 @@ import org.apache.myrmidon.api.TaskException;
  *
  * @author <a href="mailto:adammurdoch@apache.org">Adam Murdoch</a>
  * @version $Revision$ $Date$
+ *
+ * @ant:role shorthand="path"
  */
 public interface FileList
 {

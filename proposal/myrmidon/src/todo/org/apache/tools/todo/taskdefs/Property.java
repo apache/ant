@@ -45,7 +45,7 @@ public class Property
         }
         else
         {
-            m_classpath.addPath( classpath );
+            m_classpath.add( classpath );
         }
     }
 

@@ -128,7 +128,7 @@ public abstract class AbstractMetamataTask
      */
     public void addClasspath( final Path path )
     {
-        m_exe.getClassPath().addPath( path );
+        m_exe.getClassPath().add( path );
     }
 
     /**
@@ -144,7 +144,7 @@ public abstract class AbstractMetamataTask
      */
     public void addSourcepath( final Path path )
     {
-        m_sourcePath.addPath( path );
+        m_sourcePath.add( path );
     }
 
     /**

@@ -116,7 +116,7 @@ public class Rmic extends MatchingTask
         }
         else
         {
-            compileClasspath.addPath( classpath );
+            compileClasspath.add( classpath );
         }
     }
 
@@ -145,7 +145,7 @@ public class Rmic extends MatchingTask
         }
         else
         {
-            this.extdirs.addPath( extdirs );
+            this.extdirs.add( extdirs );
         }
     }
 

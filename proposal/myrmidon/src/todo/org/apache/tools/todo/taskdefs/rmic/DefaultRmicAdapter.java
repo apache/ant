@@ -195,7 +195,7 @@ public abstract class DefaultRmicAdapter
         // add the classpath
         if( attributes.getClasspath() != null )
         {
-            classpath.addPath( attributes.getClasspath() );
+            classpath.add( attributes.getClasspath() );
         }
 
         return classpath;
