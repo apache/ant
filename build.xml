@@ -164,6 +164,9 @@
              windowtitle="${Name} API"
              doctitle="${Name}"
              bottom="Copyright &#169; 2000 Apache Software Foundation. All Rights Reserved.">
+      <group title="Ant Core" packages="org.apache.tools.ant*" />
+      <group title="Core Tasks" packages="org.apache.tools.ant.taskdefs*" />
+      <group title="Optional Tasks" packages="org.apache.tools.ant.taskdefs.optional*" />
     </javadoc>
   </target>
 
