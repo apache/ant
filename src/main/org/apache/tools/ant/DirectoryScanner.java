@@ -282,7 +282,7 @@ public class DirectoryScanner
      * isIncluded or isExcluded and cleared at the end of the scan
      * method (cleared in clearCaches, actually).</p>
      *
-     * @since Ant 1.7
+     * @since Ant 1.6.3
      */
     private Set includeNonPatterns = new HashSet();
 
@@ -297,7 +297,7 @@ public class DirectoryScanner
      * isIncluded or isExcluded and cleared at the end of the scan
      * method (cleared in clearCaches, actually).</p>
      *
-     * @since Ant 1.7
+     * @since Ant 1.6.3
      */
     private Set excludeNonPatterns = new HashSet();
 
@@ -308,7 +308,7 @@ public class DirectoryScanner
      * isIncluded or isExcluded and cleared at the end of the scan
      * method (cleared in clearCaches, actually).</p>
      *
-     * @since Ant 1.7
+     * @since Ant 1.6.3
      */
     private String[] includePatterns;
 
@@ -319,7 +319,7 @@ public class DirectoryScanner
      * isIncluded or isExcluded and cleared at the end of the scan
      * method (cleared in clearCaches, actually).</p>
      *
-     * @since Ant 1.7
+     * @since Ant 1.6.3
      */
     private String[] excludePatterns;
 
@@ -327,42 +327,42 @@ public class DirectoryScanner
      * Have the non-pattern sets and pattern arrays for in- and
      * excludes been initialized?
      *
-     * @since Ant 1.7
+     * @since Ant 1.6.3
      */
     private boolean areNonPatternSetsReady = false;
 
     /**
      * Scanning flag.
      *
-     * @since Ant 1.7
+     * @since Ant 1.6.3
      */
     private boolean scanning = false;
 
     /**
      * Scanning lock.
      *
-     * @since Ant 1.7
+     * @since Ant 1.6.3
      */
     private Object scanLock = new Object();
 
     /**
      * Slow scanning flag.
      *
-     * @since Ant 1.7
+     * @since Ant 1.6.3
      */
     private boolean slowScanning = false;
 
     /**
      * Slow scanning lock.
      *
-     * @since Ant 1.7
+     * @since Ant 1.6.3
      */
     private Object slowScanLock = new Object();
 
     /**
      * Exception thrown during scan.
      *
-     * @since Ant 1.7
+     * @since Ant 1.6.3
      */
     private IllegalStateException illegal = null;
 
@@ -682,7 +682,7 @@ public class DirectoryScanner
      *                 May be <code>null</code>, in which case the
      *                 exclude patterns don't get changed at all.
      *
-     * @since Ant 1.7
+     * @since Ant 1.6.3
      */
     public synchronized void addExcludes(String[] excludes) {
         if (excludes != null && excludes.length > 0) {
@@ -709,7 +709,7 @@ public class DirectoryScanner
      *
      * <p> When a pattern ends with a '/' or '\', "**" is appended.
      *
-     * @since Ant 1.7
+     * @since Ant 1.6.3
      */
     private static String normalizePattern(String p) {
         String pattern = p.replace('/', File.separatorChar)
@@ -1179,7 +1179,7 @@ public class DirectoryScanner
      * @param pattern the pattern to check.
      * @param name the name to check.
      * @return whether the pattern is deeper than the name.
-     * @since Ant 1.7
+     * @since Ant 1.6.3
      */
     private boolean isDeeper(String pattern, String name) {
         Vector p = SelectorUtils.tokenizePath(pattern);
@@ -1498,7 +1498,7 @@ public class DirectoryScanner
      * @param cs whether to scan case-sensitively.
      * @return File object that points to the file in question or null.
      *
-     * @since Ant 1.7
+     * @since Ant 1.6.3
      */
     private File findFile(File base, String path, boolean cs) {
         return findFile(base, SelectorUtils.tokenizePath(path), cs);
@@ -1513,7 +1513,7 @@ public class DirectoryScanner
      * @param cs whether to scan case-sensitively.
      * @return File object that points to the file in question or null.
      *
-     * @since Ant 1.7
+     * @since Ant 1.6.3
      */
     private File findFile(File base, Vector pathElements, boolean cs) {
         if (pathElements.size() == 0) {
@@ -1614,7 +1614,7 @@ public class DirectoryScanner
      * Ensure that the in|exclude &quot;patterns&quot;
      * have been properly divided up.
      *
-     * @since Ant 1.7
+     * @since Ant 1.6.3
      */
     private synchronized void ensureNonPatternSetsReady() {
         if (!areNonPatternSetsReady) {
@@ -1630,7 +1630,7 @@ public class DirectoryScanner
      *
      * @param set Set to populate.
      * @param patterns String[] of patterns.
-     * @since Ant 1.7
+     * @since Ant 1.6.3
      */
     private String[] fillNonPatternSet(Set set, String[] patterns) {
         ArrayList al = new ArrayList(patterns.length);
