@@ -460,7 +460,7 @@ public abstract class DefaultCompilerAdapter implements CompilerAdapter {
                     out = new PrintWriter(new FileWriter(tmpFile));
                     for (int i = firstFileName; i < args.length; i++) {
                         if (quoteFiles && args[i].indexOf(" ") > -1) {
-                            args[i] = args[i].replace('\\', '/');
+                            args[i] = args[i].replace(File.separatorChar, '/');
                             out.println("\"" + args[i] + "\"");
                         } else {
                             out.println(args[i]);
