@@ -3,6 +3,7 @@
   <types>
 
     <listener name="default" classname="org.apache.myrmidon.listeners.DefaultProjectListener"/>
+    <listener name="classic" classname="org.apache.myrmidon.listeners.ClassicProjectListener"/>
     <aspect name="noop" classname="org.apache.myrmidon.aspects.NoopAspectHandler"/>
     <project-builder name="ant" classname="org.apache.myrmidon.components.builder.DefaultProjectBuilder"/>
     <project-builder name="ati" classname="org.apache.myrmidon.components.builder.ATIProjectBuilder"/>

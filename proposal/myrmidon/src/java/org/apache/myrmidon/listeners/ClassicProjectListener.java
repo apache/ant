@@ -14,11 +14,10 @@ import org.apache.avalon.framework.ExceptionUtil;
  *
  * @author <a href="mailto:peter@apache.org">Peter Donald</a>
  */
-public class DefaultProjectListener
+public class ClassicProjectListener
     extends AbstractProjectListener
 {
     private String        m_prefix;
-    private String        m_targetName;
 
     /**
      * Notify listener of targetStarted event.
@@ -27,7 +26,7 @@ public class DefaultProjectListener
      */
     public void targetStarted( final String targetName )
     {
-        m_targetName = targetName;
+        output( targetName + ":\n" );
     }
 
     /**
@@ -77,12 +76,6 @@ public class DefaultProjectListener
      */
     protected void output( final String data )
     {
-        if( null != m_targetName )
-        {
-            output( m_targetName + ":\n" );
-            m_targetName = null;
-        }
-
         if( null != getPrefix() ) System.out.println( "\t[" + getPrefix() + "] " + data );
         else System.out.println( data );
     }
