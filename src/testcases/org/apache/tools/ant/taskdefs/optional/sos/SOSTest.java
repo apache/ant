@@ -61,6 +61,7 @@ import org.apache.tools.ant.types.Commandline;
 import org.apache.tools.ant.types.Path;
 import org.apache.tools.ant.util.FileUtils;
 import org.apache.tools.ant.taskdefs.optional.sos.*;
+import java.io.File;
 
 /**
  * Basic testcase to ensure that command line generation is ok
@@ -75,13 +76,13 @@ public class SOSTest extends TestCase {
     private Project project;
     private Commandline commandline;
     private FileUtils fileUtils;
-    
+
     private static final String VSS_SERVER_PATH = "\\\\server\\vss\\srcsafe.ini";
     private static final String VSS_PROJECT_PATH = "/SourceRoot/Project";
     private static final String SOS_SERVER_PATH = "192.168.0.1:8888";
     private static final String SOS_USERNAME = "ant";
     private static final String SOS_PASSWORD = "rocks";
-    private static final String LOCAL_PATH = "/home/jesse/source/dir";
+    private static final String LOCAL_PATH = "testdir";
     private static final String SRC_FILE = "Class1.java";
     private static final String SRC_LABEL = "label1";
     private static final String SRC_COMMENT = "I fixed a bug";
@@ -102,6 +103,13 @@ public class SOSTest extends TestCase {
         fileUtils = FileUtils.newFileUtils();
     }
 
+    protected void tearDown() throws Exception {
+        File file = new File(project.getBaseDir(), LOCAL_PATH);
+        if (file.exists()) {
+            file.delete();
+        }
+	}
+
     /**
      * Test SOSGetFile flags & commandline generation
      */
@@ -110,7 +118,8 @@ public class SOSTest extends TestCase {
             SRC_FILE, "-revision", "007", "-server", SOS_SERVER_PATH, "-name",
             SOS_USERNAME, "-password", SOS_PASSWORD, "-database", VSS_SERVER_PATH,
             "-project", "$"+VSS_PROJECT_PATH, "-verbose", "-nocompress",
-            "-nocache", "-workdir", fileUtils.normalize(LOCAL_PATH).getAbsolutePath() };
+            "-nocache", "-workdir", project.getBaseDir().getAbsolutePath()
+			+ File.separator + LOCAL_PATH };
 
         Path path = new Path(project, LOCAL_PATH);
 
@@ -265,7 +274,8 @@ public class SOSTest extends TestCase {
             SRC_FILE, "-server", SOS_SERVER_PATH, "-name", SOS_USERNAME,
             "-password", SOS_PASSWORD, "-database", VSS_SERVER_PATH, "-project",
             "$"+VSS_PROJECT_PATH, "-verbose", "-nocompress", "-nocache",
-            "-workdir", fileUtils.normalize(LOCAL_PATH).getAbsolutePath(), "-log", SRC_COMMENT };
+            "-workdir", project.getBaseDir().getAbsolutePath() + File.separator
+			+ LOCAL_PATH, "-log", SRC_COMMENT };
 
         Path path = new Path(project, LOCAL_PATH);
 
@@ -422,7 +432,8 @@ public class SOSTest extends TestCase {
             SRC_FILE, "-server", SOS_SERVER_PATH, "-name", SOS_USERNAME,
             "-password", SOS_PASSWORD, "-database", VSS_SERVER_PATH, "-project",
             "$"+VSS_PROJECT_PATH, "-verbose", "-nocompress", "-nocache",
-            "-workdir", fileUtils.normalize(LOCAL_PATH).getAbsolutePath() };
+            "-workdir", project.getBaseDir().getAbsolutePath()
+			+ File.separator + LOCAL_PATH };
 
         Path path = new Path(project, LOCAL_PATH);
 
