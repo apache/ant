@@ -1,5 +1,5 @@
 /*
- * Copyright  2000-2004 The Apache Software Foundation
+ * Copyright  2000-2005 The Apache Software Foundation
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -19,10 +19,9 @@ package org.apache.tools.ant.taskdefs.optional.javacc;
 
 import java.io.File;
 import java.io.InputStream;
-import java.io.IOException;
 import java.util.Enumeration;
 import java.util.Hashtable;
-import java.util.zip.ZipFile;
+
 import org.apache.tools.ant.AntClassLoader;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;

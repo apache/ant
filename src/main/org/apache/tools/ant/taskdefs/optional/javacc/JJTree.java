@@ -1,5 +1,5 @@
 /*
- * Copyright  2000-2004 The Apache Software Foundation
+ * Copyright  2000-2005 The Apache Software Foundation
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -21,6 +21,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.Enumeration;
 import java.util.Hashtable;
+
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.Task;
@@ -175,6 +176,9 @@ public class JJTree extends Task {
         this.javaccHome = javaccHome;
     }
 
+    /**
+     * Constructor
+     */
     public JJTree() {
         cmdl.setVm(JavaEnvUtils.getJreExecutable("java"));
     }
@@ -264,11 +268,11 @@ public class JJTree extends Task {
         }
     }
 
-    private String createOutputFileName(File targetFile, String optionalOutputFile,
-                                        String outputDirectory) {
+    private String createOutputFileName(File destFile, String optionalOutputFile,
+                                        String outputDir) {
         optionalOutputFile = validateOutputFile(optionalOutputFile,
-                                                outputDirectory);
-        String jjtreeFile = targetFile.getAbsolutePath().replace('\\', '/');
+                                                outputDir);
+        String jjtreeFile = destFile.getAbsolutePath().replace('\\', '/');
 
         if ((optionalOutputFile == null) || optionalOutputFile.equals("")) {
             int filePos = jjtreeFile.lastIndexOf("/");
@@ -293,57 +297,51 @@ public class JJTree extends Task {
             }
         }
 
-        if ((outputDirectory == null) || outputDirectory.equals("")) {
-            outputDirectory = getDefaultOutputDirectory();
+        if ((outputDir == null) || outputDir.equals("")) {
+            outputDir = getDefaultOutputDirectory();
         }
 
-        return (outputDirectory + "/" + optionalOutputFile).replace('\\', '/');
+        return (outputDir + "/" + optionalOutputFile).replace('\\', '/');
     }
 
- /*
-  * Not used anymore
-    private boolean isAbsolute(String fileName) {
-        return (fileName.startsWith("/") || (new File(fileName).isAbsolute()));
-    }
-*/
     /**
      * When running JJTree from an Ant taskdesk the -OUTPUT_DIRECTORY must
      * always be set. But when -OUTPUT_DIRECTORY is set, -OUTPUT_FILE is
      * handled as if relative of this -OUTPUT_DIRECTORY. Thus when the
      * -OUTPUT_FILE is absolute or contains a drive letter we have a problem.
      *
-     * @param outputFile
-     * @param outputDirectory
+     * @param destFile
+     * @param outputDir
      * @return
      * @throws BuildException
      */
-    private String validateOutputFile(String outputFile,
-                                      String outputDirectory)
+    private String validateOutputFile(String destFile,
+                                      String outputDir)
         throws BuildException {
-        if (outputFile == null) {
+        if (destFile == null) {
             return null;
         }
 
-        if ((outputDirectory == null)
-            && (outputFile.startsWith("/") || outputFile.startsWith("\\"))) {
-            String relativeOutputFile = makeOutputFileRelative(outputFile);
+        if ((outputDir == null)
+            && (destFile.startsWith("/") || destFile.startsWith("\\"))) {
+            String relativeOutputFile = makeOutputFileRelative(destFile);
             setOutputfile(relativeOutputFile);
 
             return relativeOutputFile;
         }
 
-        String root = getRoot(new File(outputFile)).getAbsolutePath();
+        String root = getRoot(new File(destFile)).getAbsolutePath();
 
         if ((root.length() > 1)
-            && outputFile.startsWith(root.substring(0, root.length() - 1))) {
+            && destFile.startsWith(root.substring(0, root.length() - 1))) {
             throw new BuildException("Drive letter in 'outputfile' not "
-                                     + "supported: " + outputFile);
+                                     + "supported: " + destFile);
         }
 
-        return outputFile;
+        return destFile;
     }
 
-    private String makeOutputFileRelative(String outputFile) {
+    private String makeOutputFileRelative(String destFile) {
         StringBuffer relativePath = new StringBuffer();
         String defaultOutputDirectory = getDefaultOutputDirectory();
         int nextPos = defaultOutputDirectory.indexOf('/');
@@ -360,7 +358,7 @@ public class JJTree extends Task {
             }
         }
 
-        relativePath.append(outputFile);
+        relativePath.append(destFile);
 
         return relativePath.toString();
     }
