@@ -39,6 +39,7 @@
 
   <target name="verifyFromProperty">
     <checksum property="checksum" file="checksum.xml"/>
-    <checksum property="checksum" file="checksum.xml" verifyproperty="verify"/>
+    <checksum property="${checksum}" file="checksum.xml"
+              verifyproperty="verify"/>
   </target>
 </project>
