@@ -195,7 +195,7 @@ public class JUnitTask extends Task {
      * Tells this task to set the named property to "true" when there is a error in a test.
      * This property is applied on all BatchTest (batchtest) and JUnitTest (test),
      * however, it can possibly be overriden by their own properties.
-     * @param  value  the name of the property to set in the event of an error.
+     * @param  propertyName  the name of the property to set in the event of an error.
      */
     public void setErrorProperty(String propertyName) {
         Enumeration enum = allTests();
@@ -223,7 +223,7 @@ public class JUnitTask extends Task {
      * Tells this task to set the named property to "true" when there is a failure in a test.
      * This property is applied on all BatchTest (batchtest) and JUnitTest (test),
      * however, it can possibly be overriden by their own properties.
-     * @param  value  the name of the property to set in the event of an failure.
+     * @param  propertyName  the name of the property to set in the event of an failure.
      */
     public void setFailureProperty(String propertyName) {
         Enumeration enum = allTests();
@@ -603,9 +603,9 @@ public class JUnitTask extends Task {
         if (sysProperties != null) {
             sysProperties.setSystem();
         }
+        AntClassLoader cl = null;
         try {
             log("Using System properties " + System.getProperties(), Project.MSG_VERBOSE);
-            AntClassLoader cl = null;
             Path classpath = commandline.getClasspath();
             if (classpath != null) {
                 cl = new AntClassLoader(null, project, classpath, false);
@@ -616,6 +616,7 @@ public class JUnitTask extends Task {
                 cl.addSystemPackageRoot("junit");
                 // will cause trouble in JDK 1.1 if omitted
                 cl.addSystemPackageRoot("org.apache.tools.ant");
+                cl.setThreadContextLoader();
             }
             runner = new JUnitTestRunner(test, test.getHaltonerror(), test.getFiltertrace(), test.getHaltonfailure(), cl);
             if (summary) {
@@ -646,6 +647,7 @@ public class JUnitTask extends Task {
             if (sysProperties != null) {
                 sysProperties.restoreSystem();
             }
+            cl.resetThreadContextLoader();
         }
     }
 
