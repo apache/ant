@@ -7,21 +7,12 @@
  */
 package org.apache.tools.ant.util;
 
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Stack;
 import java.util.StringTokenizer;
 import org.apache.avalon.excalibur.io.FileUtil;
-import org.apache.avalon.excalibur.io.IOUtil;
 import org.apache.myrmidon.api.TaskException;
-import org.apache.myrmidon.framework.FilterSetCollection;
 import org.apache.tools.ant.types.Path;
 
 /**
