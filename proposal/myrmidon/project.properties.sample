@@ -1,0 +1,15 @@
+project.dir=.
+project.url=http://jakarta.apache.org/ant/myrmidon
+
+## Should be passed in
+## project.class.path=
+
+project.src.path=src/java:src/main
+
+#Specify mail properties
+mail.from=
+mail.to=
+mail.host=
+
+#Specify location of QA tool
+metamata.home=D:/QAnalyzer
