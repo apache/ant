@@ -509,14 +509,14 @@ public class AntClassLoader extends ClassLoader implements BuildListener {
     public String getClasspath() {
         StringBuffer sb = new StringBuffer();
         boolean firstPass = true;
-        Enumeration enum = pathComponents.elements();
-        while (enum.hasMoreElements()) {
+        Enumeration componentEnum = pathComponents.elements();
+        while (componentEnum.hasMoreElements()) {
             if (!firstPass) {
                 sb.append(System.getProperty("path.separator"));
             } else {
                 firstPass = false;
             }
-            sb.append(((File) enum.nextElement()).getAbsolutePath());
+            sb.append(((File) componentEnum.nextElement()).getAbsolutePath());
         }
         return sb.toString();
     }

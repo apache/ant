@@ -528,10 +528,10 @@ public class ComponentHelper  {
         synchronized (createdTasks) {
             Vector v = (Vector) createdTasks.get(type);
             if (v != null) {
-                Enumeration enum = v.elements();
-                while (enum.hasMoreElements()) {
+                Enumeration taskEnum = v.elements();
+                while (taskEnum.hasMoreElements()) {
                     WeakishReference ref =
-                            (WeakishReference) enum.nextElement();
+                            (WeakishReference) taskEnum.nextElement();
                     Task t = (Task) ref.get();
                     //being a weak ref, it may be null by this point
                     if (t != null) {
