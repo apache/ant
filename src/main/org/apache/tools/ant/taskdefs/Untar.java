@@ -57,8 +57,6 @@ package org.apache.tools.ant.taskdefs;
 import org.apache.tools.ant.*;
 import org.apache.tools.tar.*;
 import java.io.*;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
 
 /**
  * Untar a file.
@@ -78,35 +76,23 @@ public class Untar extends Task {
      */
     public void execute() throws BuildException {
 
-        Method setLastModified = null;
-        Long[] times = null;
-        // 1.0 is ruled out anyway, so this ensures 1.2 or above
-        if (project.getJavaVersion() != Project.JAVA_1_1) {
-            try {
-                setLastModified = 
-                    java.io.File.class.getMethod("setLastModified", 
-                                                 new Class[] {Long.TYPE});
-
-                times = new Long[1];
-            } catch (Exception e) {
-                project.log("File.setLastModified(long) not found",
-                            Project.MSG_VERBOSE);
-            }
-        }
+        Touch touch = new Touch();
+        touch.setProject(project);
+        touch.setTarget(target);
                     
         try {
             if (source == null) {
-                throw new BuildException("No source specified");
+                throw new BuildException("No source specified", location);
             }
             File srcF=project.resolveFile(source);
             if (!srcF.exists()) {
-                throw new BuildException("source doesn't exist");
+                throw new BuildException("source "+srcF+" doesn't exist",
+                                         location);
             }
 
             if (dest == null) {
-                throw new BuildException("No destination specified");
+                throw new BuildException("No destination specified", location);
             }
-
             File dir=project.resolveFile(dest);
 
             project.log("Expanding: " + srcF + " into " + dir, Project.MSG_INFO);
@@ -117,7 +103,8 @@ public class Untar extends Task {
             while ((te = tis.getNextEntry()) != null) {
                 try {
                     File f = new File(dir, project.translatePath(te.getName()));
-                    project.log("expand-file " + te.getName() , "untar", Project.MSG_VERBOSE );
+                    project.log("expand-file " + te.getName() , "untar", 
+                                Project.MSG_VERBOSE );
                     // create intermediary directories - sometimes tar don't add them
                     File dirF=new File(f.getParent());
                     dirF.mkdirs();
@@ -136,15 +123,10 @@ public class Untar extends Task {
                         fos.close();
                     }
 
-                    if (setLastModified != null) {
-                        times[0] = new Long(te.getModTime().getTime());
-                        try {
-                            setLastModified.invoke(f, times);
-                        } catch (Exception e) {
-                            project.log("cannot invoke File.setLastModified(long)",
-                                        Project.MSG_VERBOSE);
-                            setLastModified = null;
-                        }
+                    if (project.getJavaVersion() != Project.JAVA_1_1) {
+                        touch.setFile(f.getAbsolutePath());
+                        touch.setMillis(te.getModTime().getTime());
+                        touch.touch();
                     }
 
                 } catch(FileNotFoundException ex) {

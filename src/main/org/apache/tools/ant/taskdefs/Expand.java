@@ -61,6 +61,7 @@ import java.util.zip.*;
  * Unzip a file. 
  *
  * @author costin@dnt.ro
+ * @author Stefan Bodewig <a href="mailto:stefan.bodewig@megabit.net">stefan.bodewig@megabit.net</a>
  */
 public class Expand extends Task {
     private String dest; // req
@@ -73,6 +74,10 @@ public class Expand extends Task {
      */
     // XXX move it to util or tools
     public void execute() throws BuildException {
+        Touch touch = new Touch();
+        touch.setProject(project);
+        touch.setTarget(target);
+                    
 	try {
 	    File srcF=project.resolveFile(source);
 	    File dir=project.resolveFile(dest);
@@ -103,6 +108,13 @@ public class Expand extends Task {
 			
 			fos.close();
 		    }
+
+                    if (project.getJavaVersion() != Project.JAVA_1_1) {
+                        touch.setFile(f.getAbsolutePath());
+                        touch.setMillis(ze.getTime());
+                        touch.touch();
+                    }
+
 		} catch( FileNotFoundException ex ) {
 		    System.out.println("FileNotFoundException: " +  ze.getName()  );
 		}
