@@ -12,8 +12,7 @@
   <section name="Ant 1.5.1">
     <h3>Apache Ant 1.5.1 Released!</h3>
     <p>Version 1.5.1 of Ant has been released. It is available for download 
-      <a href="http://jakarta.apache.org/builds/jakarta-ant/release/v1.5.1/">
-      here</a>.
+      <a href="http://www.apache.org/dist/ant/">here</a>.
     </p>
   </section>
 
@@ -83,11 +82,11 @@ Comprehensive documentation is included in the source and binary distributions.
     You can download the latest release:
     </p>
     <ul>
-        <li><a href="http://www.apache.org/dist/jakarta/jakarta-ant/release/v1.5.1/bin/">
+        <li><a href="http://www.apache.org/dist/ant/binaries/">
                 Download the binary release</a></li>
-        <li><a href="http://www.apache.org/dist/jakarta/jakarta-ant/release/v1.5.1/src/">
+        <li><a href="http://www.apache.org/dist/ant/source/">
                 Download the source release</a></li>
-        <li><a href="http://www.apache.org/dist/jakarta/jakarta-ant/release/v1.5.1/rpms/">
+        <li><a href="http://www.apache.org/dist/ant/binaries/rpms/">
                 Download source or binary RPMs</a></li>
     </ul>  
   </section>
