@@ -54,6 +54,9 @@ Other changes:
 * Added nested format elements to the tstamp task allowing additional time 
   formats to be defined for arbitrary properties.   
 
+* Added classpath attribute and nested classpath element to <property>
+  to make the resource attribute more powerful.
+
 Fixed bugs:
 -----------
 

@@ -3954,7 +3954,24 @@ This also holds for properties loaded from a property file.</p>
       current platforms conventions). Otherwise it is taken as a path
       relative to the project's basedir and expanded.</td>
   </tr>
+  <tr>
+    <td valign="top">classpath</td> 
+    <td valign="top">the classpath to use when looking up a resource.</td>
+    <td align="center" valign="top">No</td>
+  </tr>
+  <tr>
+    <td valign="top">classpathref</td> 
+    <td valign="top">the classpath to use when looking up a resource,
+      given as <a href="#references">reference</a> to a PATH defined
+      elsewhere..</td>
+    <td align="center" valign="top">No</td>
+  </tr>
 </table>
+<h3>Parameters specified as nested elements</h3>
+<h4>classpath</h4>
+<p><code>Property</code>'s <em>classpath</em> attribute is a <a
+href="#path">PATH like structure</a> and can also be set via a nested
+<em>classpath</em> element.</p>
 <h3>Examples</h3>
 <pre>  &lt;property name=&quot;foo.dist&quot; value=&quot;dist&quot; /&gt;</pre>
 <p>sets the property <code>foo.dist</code> to the value &quot;dist&quot;.</p>

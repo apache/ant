@@ -55,6 +55,7 @@
 package org.apache.tools.ant.taskdefs;
 
 import org.apache.tools.ant.*;
+import org.apache.tools.ant.types.Path;
 import org.apache.tools.ant.types.Reference;
 import java.io.*;
 import java.util.*;
@@ -73,6 +74,7 @@ public class Property extends Task {
     protected String value;
     protected File file;
     protected String resource;
+    protected Path classpath;
     protected String env;
     protected Reference ref = null;
 
@@ -128,6 +130,25 @@ public class Property extends Task {
 
     public String getEnvironment() {
         return env;
+    }
+
+    public void setClasspath(Path classpath) {
+        if (this.classpath == null) {
+            this.classpath = classpath;
+        } else {
+            this.classpath.append(classpath);
+        }
+    }
+    
+    public Path createClasspath() {
+        if (this.classpath == null) {
+            this.classpath = new Path(project);
+        }
+        return this.classpath.createPath();
+    }
+    
+    public void setClasspathRef(Reference r) {
+        createClasspath().setRefid(r);
     }
 
     public void setUserProperty(boolean userProperty) {
@@ -189,8 +210,14 @@ public class Property extends Task {
         Properties props = new Properties();
         log("Resource Loading " + name, Project.MSG_VERBOSE);
         try {
-            ClassLoader cL = this.getClass().getClassLoader();
+            ClassLoader cL = null; 
             InputStream is = null;
+
+            if (classpath != null) { 
+                cL = new AntClassLoader(project, classpath, false); 
+            } else { 
+                cL = this.getClass().getClassLoader(); 
+            } 
 
             if (cL == null) {
                 is = ClassLoader.getSystemResourceAsStream(name);
