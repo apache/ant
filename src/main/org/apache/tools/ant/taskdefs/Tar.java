@@ -119,6 +119,16 @@ public class Tar extends MatchingTask {
                                      location);
         }
 
+        if (tarFile.exists() && tarFile.isDirectory()) {
+            throw new BuildException("tarfile is a directory!", 
+                                     location);
+        }
+
+        if (tarFile.exists() && !tarFile.canWrite()) {
+            throw new BuildException("Can not write to the specified tarfile!", 
+                                     location);
+        }
+
         if (baseDir != null) {
             if (!baseDir.exists()) {
                 throw new BuildException("basedir does not exist!", location);
