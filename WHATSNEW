@@ -9,8 +9,8 @@ Other changes:
 * <echoproperties> has a new srcfile attribute that can make it read
 properties files and output them instead of Ant's properties.
 
-Changes from Ant 1.4.1 to current CVS version
-==============================================
+Changes from Ant 1.4.1 to Ant 1.5
+=================================
 
 Changes that could break older environments:
 --------------------------------------------
