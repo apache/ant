@@ -4336,11 +4336,11 @@ supports all attributes of <code>&lt;fileset&gt;</code>
   </tr>
   <tr>
     <td valign="top">processor</td>
-    <td valign="top">name of the XSLT processor to use.  Permissible
-values are &quot;xslp&quot; for the XSL:P processor, &quot;xalan&quot; 
-for the Apache XML Xalan processor, or the name of an arbitrary XSLTLiaison class.
-Defaults to xslp or xalan (in that order), if one is found in your
-class path</td>
+    <td valign="top">name of the XSLT processor to use.  Permissible values are
+&quot;trax&quot; for a TraX compliant processor, &quot;xslp&quot; for the XSL:P
+processor, &quot;xalan&quot; for the Apache XML Xalan (version 1) processor, or the name of an arbitrary XSLTLiaison class.
+Defaults to trax, followed by xslp then xalan (in that order).  The first one
+found in your class path is the one that is used.</td>
     <td align="center" valign="top">No</td>
   </tr>
   <tr>

@@ -9,9 +9,9 @@ Changes that could break older environments:
 
 * <perforce> has been replaced by a number of new tasks.
 
-* Ant now throws a BuildException when an attempt is made to use a property which has
-  not been set. Any build files which rely on non-set properties being passed
-  through untranslated will now break.
+* Ant now throws a BuildException when an attempt is made to use a property 
+  which has not been set. Any build files which rely on non-set properties 
+  being passed through untranslated will now break.
 
 Other changes:
 --------------
@@ -45,15 +45,18 @@ Other changes:
   of the source files are no longer required to be at the end of the
   command.
 
+* Style tasks will now support TraX compliant XSL processors if one is present
+  in your classpath.  
+
 * Ant now prints a warning when an attempt is made to use a property which has
   not been set. Any build files which rely on non-set properties being passed
   through untranslated will now break.
   
-* Added a failonerror to the javac task. If set to false, the build will continue
-  even if there are compilation errors.
+* Added a failonerror to the javac task. If set to false, the build will 
+  continue even if there are compilation errors.
   
-* Added nested format elements to the tstamp task allowing additional time formats
-  to be defined for arbitrary properties.   
+* Added nested format elements to the tstamp task allowing additional time 
+  formats to be defined for arbitrary properties.   
 
 Fixed bugs:
 -----------
@@ -68,8 +71,8 @@ Fixed bugs:
   keppgenerated in ejbc can now be turned off
   
 * ejbjar now correctly ignores <ejb-ref> elements in the deployment descriptor.
-  CMP files are included by parsing the weblogic deployment descriptor rather than
-  relying on the naming convention used in ant 1.2
+  CMP files are included by parsing the weblogic deployment descriptor rather 
+  than relying on the naming convention used in ant 1.2
   Include super classes and super interfaces into the generated ejb jar files
 
 * <vssget> now correctly deals with spaces in arguments
