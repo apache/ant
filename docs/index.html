@@ -465,6 +465,23 @@ you can define them with a <code>&lt;path&gt;</code> element at the
 same level as <em>target</em>s and reference them via their
 <em>id</em> attribute - see <a href="#references">References</a> for an
 example.</p>
+<p>A PATH like structure can include a reference to another PATH like
+structure via a nested <code>&lt;path&gt;</code> elements.</p>
+<pre>
+    &lt;path id=&quot;base.path&quot;&gt;
+      &lt;pathelement path=&quot;${classpath}&quot; /&gt;
+      &lt;fileset dir=&quot;lib&quot;&gt;
+        &lt;include name=&quot;**/*.jar&quot; /&gt;
+      &lt;/fileset;&gt;
+      &lt;pathelement location=&quot;classes&quot; /&gt;
+    &lt;/path&gt;
+
+    &lt;path id=&quot;tests.path&quot;&gt;
+      &lt;path refid=&quot;base.path&quot; /&gt;
+      &lt;pathelement location=&quot;testclasses&quot; /&gt;
+    &lt;/path&gt;
+</pre>
+
 <h3><a name="arg">Command line arguments</a></h3>
 
 <p>Several tasks take arguments that shall be passed to another

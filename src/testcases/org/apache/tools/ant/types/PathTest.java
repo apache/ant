@@ -171,6 +171,9 @@ public class PathTest extends TestCase {
         p.append(new Path(project, "\\f"));
         l = p.list();
         assertEquals("6 after append", 6, l.length);
+        p.createPath().setLocation(new File("/g"));
+        l = p.list();
+        assertEquals("7 after append", 7, l.length);
     }
 
     public void testEmpyPath() {
@@ -181,6 +184,9 @@ public class PathTest extends TestCase {
         l = p.list();
         assertEquals("0 after setPath", 0, l.length);
         p.append(new Path(project));
+        l = p.list();
+        assertEquals("0 after append", 0, l.length);
+        p.createPath();
         l = p.list();
         assertEquals("0 after append", 0, l.length);
     }
@@ -198,6 +204,127 @@ public class PathTest extends TestCase {
         p.append(new Path(project, "/a;\\a:\\a"));
         l = p.list();
         assertEquals("1 after append", 1, l.length);
+        p.createPath().setPath("\\a:/a");
+        l = p.list();
+        assertEquals("1 after append", 1, l.length);
+    }
+
+    public void testEmptyElementIfIsReference() {
+        Path p = new Path(project, "/a:/a");
+        try {
+            p.setRefid(new Reference("dummyref"));
+            fail("Can add reference to Path with elements from constructor");
+        } catch (BuildException be) {
+            assertEquals("You must not specify more than one attribute when using refid",
+                         be.getMessage());
+        }
+
+        p = new Path(project);
+        p.setLocation(new File("/a"));
+        try {
+            p.setRefid(new Reference("dummyref"));
+            fail("Can add reference to Path with elements from setLocation");
+        } catch (BuildException be) {
+            assertEquals("You must not specify more than one attribute when using refid",
+                         be.getMessage());
+        }
+
+        p = new Path(project);
+        p.setRefid(new Reference("dummyref"));
+        try {
+            p.setLocation(new File("/a"));
+            fail("Can set location in Path that is a reference.");
+        } catch (BuildException be) {
+            assertEquals("You must not specify more than one attribute when using refid",
+                         be.getMessage());
+        }
+
+        try {
+            p.setPath("/a;\\a");
+            fail("Can set path in Path that is a reference.");
+        } catch (BuildException be) {
+            assertEquals("You must not specify more than one attribute when using refid",
+                         be.getMessage());
+        }
+
+        try {
+            p.createPath();
+            fail("Can create nested Path in Path that is a reference.");
+        } catch (BuildException be) {
+            assertEquals("You must not specify nested elements when using refid",
+                         be.getMessage());
+        }
+
+        try {
+            p.createPathElement();
+            fail("Can create nested PathElement in Path that is a reference.");
+        } catch (BuildException be) {
+            assertEquals("You must not specify nested elements when using refid",
+                         be.getMessage());
+        }
+
+        try {
+            p.addFileset(new FileSet());
+            fail("Can add nested FileSet in Path that is a reference.");
+        } catch (BuildException be) {
+            assertEquals("You must not specify nested elements when using refid",
+                         be.getMessage());
+        }
+
+        try {
+            p.addFilesetRef(new Reference("dummy2"));
+            fail("Can add nested FileSetRef in Path that is a reference.");
+        } catch (BuildException be) {
+            assertEquals("You must not specify nested elements when using refid",
+                         be.getMessage());
+        }
+
+    }
+
+    public void testCircularReferenceCheck() {
+        Path p = new Path(project);
+        project.addReference("dummy", p);
+        p.setRefid(new Reference("dummy"));
+        try {
+            p.list();
+            fail("Can make Path a Reference to itself.");
+        } catch (BuildException be) {
+            assertEquals("This path contains a circular reference.",
+                         be.getMessage());
+        }
+
+        // dummy1 --> dummy2 --> dummy3 --> dummy1
+        Path p1 = new Path(project);
+        project.addReference("dummy1", p1);
+        Path p2 = p1.createPath();
+        project.addReference("dummy2", p2);
+        Path p3 = p2.createPath();
+        project.addReference("dummy3", p3);
+        p3.setRefid(new Reference("dummy1"));
+        try {
+            p1.list();
+            fail("Can make circular reference.");
+        } catch (BuildException be) {
+            assertEquals("This path contains a circular reference.",
+                         be.getMessage());
+        }
+
+        // dummy1 --> dummy2 --> dummy3 (with Path "/a")
+        p1 = new Path(project);
+        project.addReference("dummy1", p1);
+        p2 = p1.createPath();
+        project.addReference("dummy2", p2);
+        p3 = p2.createPath();
+        project.addReference("dummy3", p3);
+        p3.setLocation(new File("/a"));
+        String[] l = p1.list();
+        assertEquals("One element burried deep inside a nested path structure",
+                     1, l.length);
+        if (isUnixStyle) {
+            assertEquals("/a", l[0]);
+        } else {
+            assertEquals("\\a", l[0]);
+        }
     }
 
 }

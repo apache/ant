@@ -90,7 +90,7 @@ public class Reference {
         
         Object o = project.getReferences().get(refid);
         if (o == null) {
-            throw new BuildException("Refernce "+refid+" not found.");
+            throw new BuildException("Reference "+refid+" not found.");
         }
         return o;
     }
