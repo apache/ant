@@ -61,6 +61,8 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 
 
 /**
@@ -78,12 +80,22 @@ public class Execute {
     private int exitValue = INVALID;
     private ExecuteStreamHandler streamHandler;
     private ExecuteWatchdog watchdog;
-    private File workingDirectory;
+    private File workingDirectory = null;
     private String antRun;
 
-    private static String antWorkingDirectory = 
-        (new File((new File(".")).getAbsolutePath())).getParent();
+    private static String antWorkingDirectory = System.getProperty("user.dir");
     private static String myos = System.getProperty("os.name");
+
+    private static Method execWithCWD = null;
+    static {
+	try {
+	    // JDK 1.3 API extension:
+	    // Runtime.exec(String[] cmdarray, String[] envp, File dir)
+	    execWithCWD = Runtime.class.getMethod("exec", new Class[] {String[].class, String[].class, File.class});
+	} catch (NoSuchMethodException nsme) {
+	    // OK.
+	}
+    }
 
     /**
      * Creates a new execute object using <code>PumpStreamHandler</code> for
@@ -124,33 +136,7 @@ public class Execute {
      * @return the commandline used to create a subprocess
      */
     public String[] getCommandline() {
-        String[] commandLine = cmdl;
-
-        if (workingDirectory != null && 
-            !antWorkingDirectory.equals(workingDirectory.getAbsolutePath()) &&
-            !myos.equals("Mac OS")) {
-
-            if (myos.toLowerCase().indexOf("windows") >= 0 &&
-                (myos.toLowerCase().indexOf("nt") >= 0 ||
-                 myos.indexOf("2000") >= 0)) {
-
-                commandLine = new String[cmdl.length+5];
-                commandLine[0] = "cmd";
-                commandLine[1] = "/c";
-                commandLine[2] = "cd";
-                commandLine[3] = workingDirectory.getAbsolutePath();
-                commandLine[4] = "&&";
-                System.arraycopy(cmdl, 0, commandLine, 5, cmdl.length);
-
-            } else {
-                commandLine = new String[cmdl.length+2];
-                commandLine[0] = antRun;
-                commandLine[1] = workingDirectory.getAbsolutePath();
-                System.arraycopy(cmdl, 0, commandLine, 2, cmdl.length);
-            }
-        }
-        
-        return commandLine;
+        return cmdl;
     }
 
 
@@ -187,12 +173,17 @@ public class Execute {
      * Sets the working directory of the process to execute.
      *
      * <p>This is emulated using the antRun scripts unless the OS is
-     * Windows NT in which case a cmd.exe is spawned.  
+     * Windows NT in which case a cmd.exe is spawned,
+     * or MRJ and setting user.dir works, or JDK 1.3 and there is
+     * official support in java.lang.Runtime.
      *
      * @param wd the working directory of the process.
      */
     public void setWorkingDirectory(File wd) {
-        workingDirectory = wd;
+	if (wd == null || wd.getAbsolutePath().equals(antWorkingDirectory))
+	    workingDirectory = null;
+	else
+	    workingDirectory = wd;
     }
 
     /**
@@ -201,7 +192,7 @@ public class Execute {
      * @param project the current project.
      */
     public void setAntRun(Project project) throws BuildException {
-    	if (myos.equals("Mac OS"))
+    	if (myos.equals("Mac OS") || execWithCWD != null)
             return;
 
         String ant = project.getProperty("ant.home");
@@ -244,19 +235,56 @@ public class Execute {
 
 
     protected Process exec() throws IOException {
-        String userDir = System.getProperty("user.dir");
-        try {
-            if (myos.equals("Mac OS") && workingDirectory != null) {
-                System.getProperties().put("user.dir", 
-                                           workingDirectory.getAbsolutePath());
-            }
-
-            return Runtime.getRuntime().exec(getCommandline(), getEnvironment());
-        } finally {
-            if (myos.equals("Mac OS") && workingDirectory != null) {
-                System.getProperties().put("user.dir", userDir);
-            }
-        }
+	if (workingDirectory == null) {
+	    // Easy.
+	    return Runtime.getRuntime().exec(cmdl, getEnvironment());
+	} else if (execWithCWD != null) {
+	    // The best way to set cwd, if you have JDK 1.3.
+	    try {
+		Object[] arguments = new Object[] {getCommandline(), getEnvironment(), workingDirectory};
+		return (Process)execWithCWD.invoke(Runtime.getRuntime(), arguments);
+            } catch (InvocationTargetException ite) {
+                Throwable t = ite.getTargetException();
+                if (t instanceof ThreadDeath) {
+                    throw (ThreadDeath)t;
+                } else if (t instanceof IOException) {
+                    throw (IOException)t;
+                } else {
+                    throw new IOException(t.toString());
+                }
+	    } catch (Exception e) {
+		// IllegalAccess, IllegalArgument, ClassCast
+		throw new IOException(e.toString());
+	    }
+	} else if (myos.equals("Mac OS")) {
+	    // Dubious Mac hack.
+	    System.getProperties().put("user.dir", 
+				       workingDirectory.getAbsolutePath());
+	    try {
+		return Runtime.getRuntime().exec(cmdl, getEnvironment());
+	    } finally {
+                System.getProperties().put("user.dir", antWorkingDirectory);
+	    }
+	} else if (myos.toLowerCase().indexOf("windows") >= 0 &&
+		   (myos.toLowerCase().indexOf("nt") >= 0 ||
+		    myos.indexOf("2000") >= 0)) {
+	    // cmd /c cd works OK on Windows NT & friends.
+	    String[] commandLine = new String[cmdl.length+5];
+	    commandLine[0] = "cmd";
+	    commandLine[1] = "/c";
+	    commandLine[2] = "cd";
+	    commandLine[3] = workingDirectory.getAbsolutePath();
+	    commandLine[4] = "&&";
+	    System.arraycopy(cmdl, 0, commandLine, 5, cmdl.length);
+	    return Runtime.getRuntime().exec(commandLine, getEnvironment());
+	} else {
+	    // Fallback to the antRun wrapper script (POSIX, Win95/98, etc.):
+	    String[] commandLine = new String[cmdl.length+2];
+	    commandLine[0] = antRun;
+	    commandLine[1] = workingDirectory.getAbsolutePath();
+	    System.arraycopy(cmdl, 0, commandLine, 2, cmdl.length);
+	    return Runtime.getRuntime().exec(commandLine, getEnvironment());
+	}
     }
 
     protected void waitFor(Process process) {
