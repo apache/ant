@@ -15,7 +15,7 @@
   </target>
 
   <target name="test4">
-    <gzip src="." zipfile=""/>
+    <gzip src="gzip.xml" zipfile=""/>
   </target>
 
   <target name="test5">
