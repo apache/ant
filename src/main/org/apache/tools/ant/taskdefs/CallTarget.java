@@ -76,7 +76,7 @@ import org.apache.tools.ant.*;
  * defined in the project itself.
  *
  *
- * @author <a href="mailto:stefan.bodewig@megabit.net">Stefan Bodewig</a> 
+ * @author <a href="mailto:stefan.bodewig@epost.de">Stefan Bodewig</a> 
  */
 public class CallTarget extends Task {
 

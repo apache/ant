@@ -64,7 +64,7 @@ import java.util.zip.*;
  * algorightm. Normally used to compress non-compressed archives such
  * as TAR files.
  *
- * @author Stefan Bodewig <a href="mailto:stefan.bodewig@megabit.net">stefan.bodewig@megabit.net</a>
+ * @author <a href="mailto:stefan.bodewig@epost.de">Stefan Bodewig</a>
  */
 
 public class GUnzip extends Task {

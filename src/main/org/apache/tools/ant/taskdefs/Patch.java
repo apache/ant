@@ -62,7 +62,7 @@ import java.io.IOException;
 /**
  * Task as a layer on top of patch. Patch applies a diff file to an original.
  *
- * @author <a href="mailto:stefan.bodewig@megabit.net">Stefan Bodewig</a>
+ * @author <a href="mailto:stefan.bodewig@epost.de">Stefan Bodewig</a>
  */
 public class Patch extends Task {
 

@@ -60,7 +60,7 @@ import java.util.Vector;
  * Wrapper class that holds all information necessary to create a task
  * that did not exist when Ant started.
  *
- * @author <a href="stefan.bodewig@megabit.net">Stefan Bodewig</a> 
+ * @author <a href="mailto:stefan.bodewig@epost.de">Stefan Bodewig</a>
  */
 public class UnknownElement extends Task {
 

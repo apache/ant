@@ -61,7 +61,7 @@ import junit.framework.TestListener;
  * This Interface describes classes that format the results of a JUnit
  * testrun.
  * 
- * @author <a href="mailto:stefan.bodewig@megabit.net">Stefan Bodewig</a>
+ * @author <a href="mailto:stefan.bodewig@epost.de">Stefan Bodewig</a>
  */
 public interface JUnitResultFormatter extends TestListener {
     /**

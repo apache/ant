@@ -65,7 +65,7 @@ import java.io.OutputStream;
  * Serves as a wrapper the implementations of JUnitResultFormatter,
  * for example as a nested <formatter> element in <junit>.
  *
- * @author <a href="mailto:stefan.bodewig@megabit.net">Stefan Bodewig</a> 
+ * @author <a href="mailto:stefan.bodewig@epost.de">Stefan Bodewig</a>
  */
 public class FormatterElement {
 

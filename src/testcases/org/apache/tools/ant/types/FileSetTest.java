@@ -67,7 +67,7 @@ import java.io.File;
  *
  * <p>This doesn't actually test much, mainly reference handling.
  *
- * @author <a href="mailto:stefan.bodewig@megabit.net">Stefan Bodewig</a> 
+ * @author <a href="mailto:stefan.bodewig@epost.de">Stefan Bodewig</a>
  */
 
 public class FileSetTest extends TestCase {

@@ -63,7 +63,7 @@ import java.io.*;
  *
  * Heavily based on the Expand task.
  *
- * @author <a href="mailto:stefan.bodewig@megabit.net">Stefan Bodewig</a>
+ * @author <a href="mailto:stefan.bodewig@epost.de">Stefan Bodewig</a>
  */
 public class Untar extends Task {
     private String dest; // req

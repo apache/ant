@@ -60,7 +60,7 @@ import java.util.Vector;
 /**
  * Wrapper for environment variables.
  *
- * @author <a href="mailto:stefan.bodewig@megabit.net">Stefan Bodewig</a>
+ * @author <a href="mailto:stefan.bodewig@epost.de">Stefan Bodewig</a>
  */
 public class Environment {
 

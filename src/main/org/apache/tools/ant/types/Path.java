@@ -93,7 +93,7 @@ import java.text.StringCharacterIterator;
  * to define a path from an environment variable.
  *
  * @author Thomas.Haas@softwired-inc.com
- * @author <a href="mailto:stefan.bodewig@megabit.net">Stefan Bodewig</a> 
+ * @author <a href="mailto:stefan.bodewig@epost.de">Stefan Bodewig</a>
  */
 
 public class Path extends DataType implements Cloneable {

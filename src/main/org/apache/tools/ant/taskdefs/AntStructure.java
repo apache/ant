@@ -68,7 +68,7 @@ import java.io.*;
 /**
  * Creates a partial DTD for Ant from the currently known tasks.
  *
- * @author <a href="mailto:stefan.bodewig@megabit.net">Stefan Bodewig</a>
+ * @author <a href="mailto:stefan.bodewig@epost.de">Stefan Bodewig</a>
  */
 
 public class AntStructure extends Task {

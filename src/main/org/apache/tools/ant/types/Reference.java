@@ -60,7 +60,7 @@ import org.apache.tools.ant.BuildException;
 /**
  * Class to hold a reference to another object in the project.
  *
- * @author <a href="mailto:stefan.bodewig@megabit.net">Stefan Bodewig</a> 
+ * @author <a href="mailto:stefan.bodewig@epost.de">Stefan Bodewig</a>
  */
 public class Reference {
 

@@ -61,7 +61,7 @@ import java.util.zip.*;
  * Unzip a file. 
  *
  * @author costin@dnt.ro
- * @author <a href="mailto:stefan.bodewig@megabit.net">Stefan Bodewig</a>
+ * @author <a href="mailto:stefan.bodewig@epost.de">Stefan Bodewig</a>
  */
 public class Expand extends MatchingTask {
     private File dest; // req

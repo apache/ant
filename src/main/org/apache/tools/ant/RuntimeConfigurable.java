@@ -64,7 +64,7 @@ import org.xml.sax.helpers.AttributeListImpl;
  * nested below that level) and takes care of configuring that element
  * at runtime.
  *
- * @author <a href="stefan.bodewig@megabit.net">Stefan Bodewig</a> 
+ * @author <a href="mailto:stefan.bodewig@epost.de">Stefan Bodewig</a>
  */
 public class RuntimeConfigurable {
 

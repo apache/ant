@@ -66,7 +66,7 @@ import java.util.*;
  * holds to set attributes, create nested elements or hold PCDATA
  * elements.
  *
- * @author Stefan Bodewig <a href="mailto:stefan.bodewig@megabit.net">stefan.bodewig@megabit.net</a> 
+ * @author <a href="mailto:stefan.bodewig@epost.de">Stefan Bodewig</a>
  */
 public class IntrospectionHelper  {
 
