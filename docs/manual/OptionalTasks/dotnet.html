@@ -115,6 +115,13 @@ version crimson.jar and jaxp.jar.</li>
 <hr>
 <h2> Change Log </h2>
 
+<h4>Version 0.5</h4>
+This revision goes along with NET 1.0 (SP1) 
+<ol>
+<li>CSC: added filealign</li>
+<li>CSC: added reference to office.dll</li>
+</ol>
+
 <h4>Version 0.4</h4>
 This is the beta-2 revision of the tasks. 
 <ol>
@@ -210,7 +217,7 @@ Specifying the output file with <b>'outfile'</b> seems prudent. </p>
     <td valign="top">indicates whether default excludes should be used or not
       </td>
     <td valign="top">&quot;true&quot;(default) or &quot;false&quot;</td>
-	</tr>
+    </tr>
 <tr>
     <td valign="top">definitions</td>
     <td valign="top">defined constants</td>
@@ -240,16 +247,25 @@ Specifying the output file with <b>'outfile'</b> seems prudent. </p>
   <tr>
     <td valign="top">extraOptions</td>
     <td valign="top">Any extra options which aren't explicitly 
-		supported by the CSharp task </td>
-	<td>&quot;/warnaserror+ /baseaddress:0x12840000&quot;</td>
+        supported by the CSharp task </td>
+    <td>&quot;/warnaserror+ /baseaddress:0x12840000&quot;</td>
   </tr>
 
-  
-<tr>
+  <tr>
     <td valign="top">failOnError</td>
     <td valign="top">Should a failed compile halt the build?</td>
     <td valign="top">&quot;true&quot;(default) or &quot;false&quot;</td>
-    </tr>
+  </tr>
+  
+  <tr>
+    <td valign="top">fileAlign</td>
+    <td valign="top">
+     set the file alignment.
+     Valid values are 0,512, 1024, 2048, 4096, 8192, and 16384
+     0 means 'leave to the compiler'    
+    </td>
+    <td valign="top">512</td>
+  </tr>
   <tr>
     <td valign="top">fullpaths</td>
     <td valign="top">print the full path of files on on errors</td>
@@ -263,9 +279,9 @@ Specifying the output file with <b>'outfile'</b> seems prudent. </p>
   <tr>
     <td valign="top">includeDefaultReferences</td>
     <td valign="top">Flag which when true automatically includes
-	the common assemblies in dotnet beta1, and tells the compiler to link in
-	mscore.dll
-	</td>
+    the common assemblies in dotnet, and tells the compiler to link in
+    mscore.dll
+    </td>
     <td valign="top">&quot;true&quot;(default) or &quot;false&quot;</td>
   </tr>
 
@@ -305,15 +321,15 @@ Specifying the output file with <b>'outfile'</b> seems prudent. </p>
 <tr>
     <td valign="top">references</td>
     <td valign="top">Semicolon separated list of dlls to refer to</td>
-	<td valign="top">&quot;mylib.dll;nunit.dll&quot;</td>
+    <td valign="top">&quot;mylib.dll;nunit.dll&quot;</td>
     </tr>
 <tr>
     <td valign="top">referenceFiles </td>
     <td valign="top">Ant Path descriptioon of references to include. 
-	Wildcards should work. </td>
-	<td valign="top"></td>
+    Wildcards should work. </td>
+    <td valign="top"></td>
     </tr>
-	
+    
 <tr>
     <td valign="top">srcDir</td>
     <td valign="top">source directory (default = project directory)</td>
@@ -337,19 +353,19 @@ Specifying the output file with <b>'outfile'</b> seems prudent. </p>
 <tr>
     <td valign="top">warnLevel</td>
     <td valign="top">level of warning currently between 1 and 4 with 4
-	being the strictest. </td>
+    being the strictest. </td>
     <td valign="top">&quot;1&quot;-&quot;4&quot;</td>
     </tr>
 <tr>
     <td valign="top">win32Icon</td>
     <td valign="top">filename of icon to include</td>
- 	<td valign="top">&quot;res/myicon.ico&quot;</td>
+    <td valign="top">&quot;res/myicon.ico&quot;</td>
    </tr>
 <tr>
     <td valign="top">win32res</td>
     <td valign="top">filename of a win32 resource (.RES)file to include
     This is not a .NET resource, but it what windows is used to.</td>
- 	<td valign="top">&quot;res/myapp.res&quot;</td>
+    <td valign="top">&quot;res/myapp.res&quot;</td>
    </tr>
 
 </table>
@@ -428,9 +444,9 @@ manually specified with <b>outfile</b>
   <tr>
     <td valign="top">extraOptions</td>
     <td valign="top">Any extra options which aren't explicitly 
-		supported by the ilasm task, primarily because they
+        supported by the ilasm task, primarily because they
                 arent really documented: use ilasm /? to see them</td>
-	<td></td>
+    <td></td>
   </tr>
   
 <tr>
@@ -462,7 +478,7 @@ manually specified with <b>outfile</b>
 <tr>
     <td valign="top">listing</td>
     <td valign="top">Produce a listing (off by default). Listings go to the
-	current output stream</td>
+    current output stream</td>
     <td valign="top">&quot;on&quot;, &quot;off&quot; (default)</td>
     </tr>
 <tr>
@@ -502,7 +518,7 @@ Example</p>
         /&gt;
 </pre>
 <hr>
-<p align="center">Copyright &copy; 2000 Apache Software Foundation. All rights
+<p align="center">Copyright &copy; 2000-2002 Apache Software Foundation. All rights
 Reserved.</p>
 
 </body>
