@@ -63,6 +63,7 @@ import org.apache.tools.ant.util.GlobPatternMapper;
 import org.apache.tools.ant.util.SourceFileScanner;
 import org.apache.tools.ant.taskdefs.compilers.CompilerAdapter;
 import org.apache.tools.ant.taskdefs.compilers.CompilerAdapterFactory;
+import org.apache.tools.ant.taskdefs.condition.Os;
 
 import java.io.File;
 
@@ -118,7 +119,8 @@ public class Javac extends MatchingTask {
     private Path extdirs;
     private boolean includeAntRuntime = true;
     private boolean includeJavaRuntime = false;
-    private boolean fork = false;
+    private String fork = "false";
+    private String forkedExecutable = null;
     private boolean nowarn = false;
     private String memoryInitialSize;
     private String memoryMaximumSize;
@@ -452,20 +454,40 @@ public class Javac extends MatchingTask {
 
     /**
      * Sets whether to fork the javac compiler.
+     *
+     * @param f "true|false|on|off|yes|no" or the name of the javac
+     * executable.
      */
-    public void setFork(boolean fork)
-    {
-        this.fork = fork;
+    public void setFork(String f) {
+        if (f.equalsIgnoreCase("on")
+            || f.equalsIgnoreCase("true")
+            || f.equalsIgnoreCase("yes")) {
+            fork = "true";
+            forkedExecutable = getSystemJavac();
+        } else if (f.equalsIgnoreCase("off")
+                   || f.equalsIgnoreCase("false")
+                   || f.equalsIgnoreCase("no")) {
+            fork = "false";
+        } else {
+            fork = "true";
+            forkedExecutable = f;
+        }
     }
 
     /**
      * Is this a forked invocation of JDK's javac?
      */
     public boolean isForkedJavac() {
-        return fork || 
+        return !"false".equals(fork) || 
             "extJavac".equals(project.getProperty("build.compiler"));
     }
 
+    /**
+     * The name of the javac executable to use in fork-mode.
+     */
+    public String getJavacExecutable() {
+        return forkedExecutable;
+    }
 
     /**
      * Sets whether the -nowarn option should be used.
@@ -519,7 +541,7 @@ public class Javac extends MatchingTask {
 
         String compiler = project.getProperty("build.compiler");
 
-        if (fork) {
+        if (!"false".equals(fork)) {
             if (compiler != null) {
                 if (isJdkCompiler(compiler)) {
                     log("Since fork is true, ignoring build.compiler setting.",
@@ -611,4 +633,24 @@ public class Javac extends MatchingTask {
             "javac1.4".equals(compiler);
     }
 
+    protected String getSystemJavac() {
+	// This is the most common extension case - exe for windows and OS/2, 
+        // nothing for *nix.
+	String extension =  Os.isFamily("dos") ? ".exe" : "";
+
+	// Look for java in the java.home/../bin directory.  Unfortunately
+	// on Windows java.home doesn't always refer to the correct location, 
+	// so we need to fall back to assuming java is somewhere on the
+	// PATH.
+	java.io.File jExecutable = 
+            new java.io.File(System.getProperty("java.home") +
+                             "/../bin/javac" + extension );
+
+	if (jExecutable.exists() && !Os.isFamily("netware")) {
+	    return jExecutable.getAbsolutePath();
+	} else {
+	    return "javac";
+	}
+    }
+    
 }

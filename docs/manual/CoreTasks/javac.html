@@ -191,8 +191,11 @@ files/directories from the CLASSPATH it passes to the compiler.</p>
   </tr>
   <tr>
     <td valign="top">fork</td> 
-    <td valign="top">whether to execute Javac using the JDK compiler externally;
-    defaults to <code>no</code>.</td>
+    <td valign="top">whether to execute Javac using the JDK compiler
+      externally; defaults to <code>no</code>.  You can also give a
+      complete path to the javac executable to use instead of
+      <code>yes</code>, which would run the compiler of the Java
+      vesrion that is currently running Ant.</td>
     <td align="center" valign="top">No</td>
   </tr>  
   <tr>
@@ -251,6 +254,26 @@ href="../using.html#path">path-like structures</a> and can also be set via neste
 directory, and stores
 the <code>.class</code> files in the <code>${build}</code> directory.
 The classpath used contains <code>xyz.jar</code>, and debug information is on.</p>
+
+<pre>  &lt;javac srcdir=&quot;${src}&quot;
+         destdir=&quot;${build}&quot;
+         fork=&quot;true&quot;
+  /&gt;</pre>
+<p>compiles all <code>.java</code> files under the <code>${src}</code>
+directory, and stores the <code>.class</code> files in the
+<code>${build}</code> directory.  This will fork off the javac
+compiler using the default javac executable.</p>
+
+<pre>  &lt;javac srcdir=&quot;${src}&quot;
+         destdir=&quot;${build}&quot;
+         fork=&quot;java$$javac.exe&quot;
+  /&gt;</pre>
+<p>compiles all <code>.java</code> files under the <code>${src}</code>
+directory, and stores the <code>.class</code> files in the
+<code>${build}</code> directory.  This will fork off the javac
+compiler using the executable named <code>java$javac.exe</code>.  Note
+that the <code>$</code> sign needs to be escaped by a second one.</p>
+
 <pre>  &lt;javac srcdir=&quot;${src}&quot;
          destdir=&quot;${build}&quot;
          includes=&quot;mypackage/p1/**,mypackage/p2/**&quot;
