@@ -75,6 +75,7 @@ import org.apache.tools.ant.Project;
  * A filter set may have begintoken and endtokens defined.
  *
  * @author     <A href="mailto:gholam@xtra.co.nz">  Michael McCallum  </A>
+ * @author     <A href="mailto:martin@mvdb.net">  Martin van den Bemt </A>
  */
 public class FilterSet extends DataType implements Cloneable {
     
@@ -354,6 +355,10 @@ public class FilterSet extends DataType implements Cloneable {
                     b.append(line.substring(i, index));
                     if (tokens.containsKey(token)) {
                         value = (String) tokens.get(token);
+                        if (!value.equals(token)) {
+                            // we have another token, let's parse it.
+                            value = replaceTokens(value, token);
+                        }
                         log("Replacing: " + beginToken + token + endToken 
                             + " -> " + value, Project.MSG_VERBOSE);
                         b.append(value);
@@ -374,6 +379,54 @@ public class FilterSet extends DataType implements Cloneable {
         } else {
            return line;
         }
+    }
+    
+    /** Contains a list of parsed tokens */
+    private Vector passedTokens;
+    /** if a ducplicate token is found, this is set to true */
+    private boolean duplicateToken = false;
+    
+    /**
+     * This parses tokens which point to tokens.
+     * It also maintains a list of currently used tokens, so we cannot
+     * get into an infinite loop
+     * @param value the value / token to parse
+     * @param parent the parant token (= the token it was parsed from)
+     */
+    private String replaceTokens(String line, String parent)
+    throws BuildException
+    {
+        if (passedTokens == null) {
+            passedTokens = new Vector();
+        }
+        if (passedTokens.contains(parent) && !duplicateToken) {
+            duplicateToken = true;
+            StringBuffer sb = new StringBuffer();
+            sb.append("Inifinite loop in tokens. Currently known tokens : ");
+            sb.append(passedTokens);
+            sb.append("\nProblem token : "+getBeginToken()+parent+getEndToken());
+            sb.append(" called from "+getBeginToken()+passedTokens.lastElement());
+            sb.append(getEndToken());
+            System.out.println(sb.toString());
+            return parent;
+        }
+        passedTokens.addElement(parent);
+        String value = this.replaceTokens(line);
+        if (value.indexOf(getBeginToken()) == -1 && !duplicateToken) {
+            duplicateToken = false;
+            passedTokens = null;
+        } else if(duplicateToken) {
+            // should always be the case...
+            if (passedTokens.size() > 0) {
+                value = (String) passedTokens.lastElement();
+                passedTokens.removeElementAt(passedTokens.size()-1);
+                if (passedTokens.size() == 0) {
+                    value = getBeginToken()+value+getEndToken();
+                    duplicateToken = false;
+                }
+            }
+        }
+        return value;
     }
     
     /**

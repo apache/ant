@@ -19,6 +19,7 @@ children of
 <code>endtoken</code> attributes to define what to match.</p>
 <p>Filtersets are used for doing 
 replacements in tasks such as <code>&lt;copy&gt;</code>, etc.</p>
+<p>Nested filters are possible and a message will be given in case a value in a filter chain is called for a second time and thus causing an infinite loop. The originating token will be passed back when an infinite loop occurs.
 
 <H2>Filterset</H2>
 

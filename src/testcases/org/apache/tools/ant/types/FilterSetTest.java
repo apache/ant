@@ -67,6 +67,7 @@ import java.io.*;
  * FilterSet testing
  *
  * @author Conor MacNeill
+ * @author <a href="mailto:martin@mvdb.net">Martin van den Bemt</a>
  */
 public class FilterSetTest extends BuildFileTest {
 
@@ -100,6 +101,42 @@ public class FilterSetTest extends BuildFileTest {
         executeTarget("test3");
         assertTrue("Filterset 3 failed", compareFiles("src/etc/testcases/types/gold/filterset3.txt",
                                                       "src/etc/testcases/types/dest3.txt"));
+    }
+
+    /**
+     * This will test the recursive FilterSet.  Which means that if
+     * the filter value @test@ contains another filter value, it will
+     * actually resolve.  
+     */
+    public void testRecursive() {
+        System.out.println("testRecursive");
+        String result = "it works line";
+        String line="@test@ line";
+        FilterSet fs = new FilterSet();
+        fs.addFilter("test", "@test1@");
+        fs.addFilter("test1","@test2@");
+        fs.addFilter("test2", "it works");
+        fs.setBeginToken("@");
+        fs.setEndToken("@");
+        assertEquals(result, fs.replaceTokens(line));
+    }
+
+    /**
+     * Test to see what happens when the resolving occurs in an
+     * infinite loop.
+     */
+    public void testInfinite() {
+        System.out.println("testInfinite");
+        String result = "@test@ line testvalue";
+        String line = "@test@ line @test3@";
+        FilterSet fs = new FilterSet();
+        fs.addFilter("test", "@test1@");
+        fs.addFilter("test1","@test2@");
+        fs.addFilter("test2", "@test@");
+        fs.addFilter("test3", "testvalue");
+        fs.setBeginToken("@");
+        fs.setEndToken("@");
+        assertEquals(result, fs.replaceTokens(line));
     }
 
     private boolean compareFiles(String name1, String name2) {
