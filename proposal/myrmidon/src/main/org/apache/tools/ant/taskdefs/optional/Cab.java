@@ -313,10 +313,7 @@ public class Cab extends MatchingTask
     protected ExecTask createExec()
         throws TaskException
     {
-        ExecTask exec = (ExecTask)project.createTask( "exec" );
-        exec.setDescription( getDescription() );
-
-        return exec;
+        return (ExecTask)project.createTask( "exec" );
     }
 
     /**
