@@ -56,34 +56,41 @@ package org.apache.tools.ant.taskdefs.optional.depend.constantpool;
 import java.io.DataInputStream;
 import java.io.IOException;
 
-
 /**
  * A InterfaceMethodRef CP Info
- *
  *
  * @author Conor MacNeill
  */
 public class InterfaceMethodRefCPInfo extends ConstantPoolEntry {
+    /** the class name of the class defining the interafce method */
     private String interfaceMethodClassName;
+    /** the name of the interface nmethod */
     private String interfaceMethodName;
+    /** the method signature of the interface method */
     private String interfaceMethodType;
+    /**
+     * the index into the constant pool of the class entry for the interface
+     * class
+     */
     private int classIndex;
+    /**
+     * the index into the constant pool of the name and type entry
+     * describing the method
+     */
     private int nameAndTypeIndex;
 
-    /**
-     * Constructor.
-     *
-     */
+    /** Constructor. */
     public InterfaceMethodRefCPInfo() {
-        super(CONSTANT_InterfaceMethodRef, 1);
+        super(CONSTANT_INTERFACEMETHODREF, 1);
     }
 
     /**
      * read a constant pool entry from a class stream.
      *
-     * @param cpStream the DataInputStream which contains the constant pool entry to be read.
-     *
-     * @throws IOException if there is a problem reading the entry from the stream.
+     * @param cpStream the DataInputStream which contains the constant pool
+     *      entry to be read.
+     * @exception IOException if there is a problem reading the entry from
+     *      the stream.
      */
     public void read(DataInputStream cpStream) throws IOException {
         classIndex = cpStream.readUnsignedShort();
@@ -95,16 +102,18 @@ public class InterfaceMethodRefCPInfo extends ConstantPoolEntry {
      * the constant pool.
      *
      * @param constantPool the constant pool of which this entry is a member
-     * and against which this entry is to be resolved.
+     *      and against which this entry is to be resolved.
      */
     public void resolve(ConstantPool constantPool) {
-        ClassCPInfo interfaceMethodClass = (ClassCPInfo) constantPool.getEntry(classIndex);
+        ClassCPInfo interfaceMethodClass
+             = (ClassCPInfo)constantPool.getEntry(classIndex);
 
         interfaceMethodClass.resolve(constantPool);
 
         interfaceMethodClassName = interfaceMethodClass.getClassName();
 
-        NameAndTypeCPInfo nt = (NameAndTypeCPInfo) constantPool.getEntry(nameAndTypeIndex);
+        NameAndTypeCPInfo nt
+             = (NameAndTypeCPInfo)constantPool.getEntry(nameAndTypeIndex);
 
         nt.resolve(constantPool);
 
@@ -123,23 +132,40 @@ public class InterfaceMethodRefCPInfo extends ConstantPoolEntry {
         String value;
 
         if (isResolved()) {
-            value = "InterfaceMethod : Class = " + interfaceMethodClassName + ", name = " + interfaceMethodName + ", type = "
-                    + interfaceMethodType;
+            value = "InterfaceMethod : Class = " + interfaceMethodClassName
+                 + ", name = " + interfaceMethodName + ", type = "
+                 + interfaceMethodType;
         } else {
-            value = "InterfaceMethod : Class index = " + classIndex + ", name and type index = " + nameAndTypeIndex;
+            value = "InterfaceMethod : Class index = " + classIndex
+                 + ", name and type index = " + nameAndTypeIndex;
         }
 
         return value;
     }
 
+    /**
+     * Gets the name of the class defining the interface method
+     *
+     * @return the name of the class defining the interface method
+     */
     public String getInterfaceMethodClassName() {
         return interfaceMethodClassName;
     }
 
+    /**
+     * Get the name of the interface method
+     *
+     * @return the name of the interface method
+     */
     public String getInterfaceMethodName() {
         return interfaceMethodName;
     }
 
+    /**
+     * Gets the type of the interface method
+     *
+     * @return the interface method's type signature
+     */
     public String getInterfaceMethodType() {
         return interfaceMethodType;
     }

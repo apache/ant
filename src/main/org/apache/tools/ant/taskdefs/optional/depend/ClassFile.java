@@ -63,52 +63,41 @@ import org.apache.tools.ant.taskdefs.optional.depend.constantpool.ConstantPool;
 import org.apache.tools.ant.taskdefs.optional.depend.constantpool.ConstantPoolEntry;
 
 /**
- * A ClassFile object stores information about a Java class.
- *
- * The class may be read from a DataInputStream.and written
- * to a DataOutputStream. These are usually streams from a Java
- * class file or a class file component of a Jar file.
+ * A ClassFile object stores information about a Java class. The class may
+ * be read from a DataInputStream.and written to a DataOutputStream. These
+ * are usually streams from a Java class file or a class file component of a
+ * Jar file.
  *
  * @author Conor MacNeill
  */
 public class ClassFile {
 
-    /**
-     * The Magic Value that marks the start of a Java class file
-     */
+    /** The Magic Value that marks the start of a Java class file  */
     private final static int CLASS_MAGIC = 0xCAFEBABE;
 
-
-    /**
-     * This class' constant pool.
-     */
+    /** This class' constant pool.  */
     private ConstantPool constantPool;
 
-
-    /**
-     * The class name for this class.
-     */
+    /** The class name for this class.  */
     private String className;
 
     /**
-     * Read the class from a data stream.
+     * Read the class from a data stream. This method takes an InputStream
+     * as input and parses the class from the stream. <p>
      *
-     * This method takes an InputStream as input and
-     * parses the class from the stream.
-     * <p>
+     *
      *
      * @param stream an InputStream from which the class will be read
-     *
-     * @throws IOException if there is a problem reading from the given stream.
-     * @throws ClassFormatError if the class cannot be parsed correctly
-     *
+     * @exception IOException if there is a problem reading from the given
+     *      stream.
+     * @exception ClassFormatError if the class cannot be parsed correctly
      */
     public void read(InputStream stream) throws IOException, ClassFormatError {
         DataInputStream classStream = new DataInputStream(stream);
 
-
         if (classStream.readInt() != CLASS_MAGIC) {
-            throw new ClassFormatError("No Magic Code Found - probably not a Java class file.");
+            throw new ClassFormatError("No Magic Code Found " 
+                + "- probably not a Java class file.");
         }
 
         // right we have a good looking class file.
@@ -124,12 +113,16 @@ public class ClassFile {
         int accessFlags = classStream.readUnsignedShort();
         int thisClassIndex = classStream.readUnsignedShort();
         int superClassIndex = classStream.readUnsignedShort();
-        className = ((ClassCPInfo) constantPool.getEntry(thisClassIndex)).getClassName();
+        ClassCPInfo classInfo 
+            = (ClassCPInfo)constantPool.getEntry(thisClassIndex);
+        className  = classInfo.getClassName();
     }
 
 
     /**
      * Get the classes which this class references.
+     *
+     * @return a vector of class names which this class references
      */
     public Vector getClassRefs() {
 
@@ -138,8 +131,9 @@ public class ClassFile {
         for (int i = 0; i < constantPool.size(); ++i) {
             ConstantPoolEntry entry = constantPool.getEntry(i);
 
-            if (entry != null && entry.getTag() == ConstantPoolEntry.CONSTANT_Class) {
-                ClassCPInfo classEntry = (ClassCPInfo) entry;
+            if (entry != null 
+                && entry.getTag() == ConstantPoolEntry.CONSTANT_CLASS) {
+                ClassCPInfo classEntry = (ClassCPInfo)entry;
 
                 if (!classEntry.getClassName().equals(className)) {
                     classRefs.addElement(ClassFileUtils.convertSlashName(classEntry.getClassName()));

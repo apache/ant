@@ -56,33 +56,35 @@ package org.apache.tools.ant.taskdefs.optional.depend.constantpool;
 import java.io.DataInputStream;
 import java.io.IOException;
 
-
 /**
  * A FieldRef CP Info
  *
  * @author Conor MacNeill
  */
 public class FieldRefCPInfo extends ConstantPoolEntry {
+    /** Name of the field's class */
     private String fieldClassName;
+    /** name of the field in that class */
     private String fieldName;
+    /** The type of the field */
     private String fieldType;
+    /** Index into the constant pool for the class */
     private int classIndex;
+    /** Index into the constant pool for the name and type entry */
     private int nameAndTypeIndex;
 
-    /**
-     * Constructor.
-     *
-     */
+    /** Constructor.  */
     public FieldRefCPInfo() {
-        super(CONSTANT_FieldRef, 1);
+        super(CONSTANT_FIELDREF, 1);
     }
 
     /**
      * read a constant pool entry from a class stream.
      *
-     * @param cpStream the DataInputStream which contains the constant pool entry to be read.
-     *
-     * @throws IOException if there is a problem reading the entry from the stream.
+     * @param cpStream the DataInputStream which contains the constant pool
+     *      entry to be read.
+     * @exception IOException if there is a problem reading the entry from
+     *      the stream.
      */
     public void read(DataInputStream cpStream) throws IOException {
         classIndex = cpStream.readUnsignedShort();
@@ -94,16 +96,17 @@ public class FieldRefCPInfo extends ConstantPoolEntry {
      * the constant pool.
      *
      * @param constantPool the constant pool of which this entry is a member
-     * and against which this entry is to be resolved.
+     *      and against which this entry is to be resolved.
      */
     public void resolve(ConstantPool constantPool) {
-        ClassCPInfo fieldClass = (ClassCPInfo) constantPool.getEntry(classIndex);
+        ClassCPInfo fieldClass = (ClassCPInfo)constantPool.getEntry(classIndex);
 
         fieldClass.resolve(constantPool);
 
         fieldClassName = fieldClass.getClassName();
 
-        NameAndTypeCPInfo nt = (NameAndTypeCPInfo) constantPool.getEntry(nameAndTypeIndex);
+        NameAndTypeCPInfo nt 
+            = (NameAndTypeCPInfo)constantPool.getEntry(nameAndTypeIndex);
 
         nt.resolve(constantPool);
 
@@ -122,22 +125,39 @@ public class FieldRefCPInfo extends ConstantPoolEntry {
         String value;
 
         if (isResolved()) {
-            value = "Field : Class = " + fieldClassName + ", name = " + fieldName + ", type = " + fieldType;
+            value = "Field : Class = " + fieldClassName + ", name = " 
+                + fieldName + ", type = " + fieldType;
         } else {
-            value = "Field : Class index = " + classIndex + ", name and type index = " + nameAndTypeIndex;
+            value = "Field : Class index = " + classIndex 
+                + ", name and type index = " + nameAndTypeIndex;
         }
 
         return value;
     }
 
+    /**
+     * Gets the name of the class definint the field
+     *
+     * @return the name of the class definint the field
+     */
     public String getFieldClassName() {
         return fieldClassName;
     }
 
+    /**
+     * Get the name of the field
+     *
+     * @return the field's name
+     */
     public String getFieldName() {
         return fieldName;
     }
 
+    /**
+     * Get the type of the field
+     *
+     * @return the field's type in string format
+     */
     public String getFieldType() {
         return fieldType;
     }

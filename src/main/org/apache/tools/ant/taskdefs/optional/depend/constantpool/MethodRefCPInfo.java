@@ -56,33 +56,38 @@ package org.apache.tools.ant.taskdefs.optional.depend.constantpool;
 import java.io.DataInputStream;
 import java.io.IOException;
 
-
 /**
  * A MethodRef CP Info
  *
  * @author Conor MacNeill
  */
 public class MethodRefCPInfo extends ConstantPoolEntry {
+    /** the name of the class defining this method */
     private String methodClassName;
+    /** the name of the method */
     private String methodName;
+    /** the method's type descriptor */
     private String methodType;
+    /** The index into the constant pool which defines the class of this method. */
     private int classIndex;
+    /**
+     * the index into the constant pool which defined the name and type
+     * signature of the method
+     */
     private int nameAndTypeIndex;
 
-    /**
-     * Constructor.
-     *
-     */
+    /** Constructor. */
     public MethodRefCPInfo() {
-        super(CONSTANT_MethodRef, 1);
+        super(CONSTANT_METHODREF, 1);
     }
 
     /**
      * read a constant pool entry from a class stream.
      *
-     * @param cpStream the DataInputStream which contains the constant pool entry to be read.
-     *
-     * @throws IOException if there is a problem reading the entry from the stream.
+     * @param cpStream the DataInputStream which contains the constant pool
+     *      entry to be read.
+     * @exception IOException if there is a problem reading the entry from
+     *      the stream.
      */
     public void read(DataInputStream cpStream) throws IOException {
         classIndex = cpStream.readUnsignedShort();
@@ -98,9 +103,11 @@ public class MethodRefCPInfo extends ConstantPoolEntry {
         String value;
 
         if (isResolved()) {
-            value = "Method : Class = " + methodClassName + ", name = " + methodName + ", type = " + methodType;
+            value = "Method : Class = " + methodClassName + ", name = "
+                 + methodName + ", type = " + methodType;
         } else {
-            value = "Method : Class index = " + classIndex + ", name and type index = " + nameAndTypeIndex;
+            value = "Method : Class index = " + classIndex
+                 + ", name and type index = " + nameAndTypeIndex;
         }
 
         return value;
@@ -111,16 +118,18 @@ public class MethodRefCPInfo extends ConstantPoolEntry {
      * the constant pool.
      *
      * @param constantPool the constant pool of which this entry is a member
-     * and against which this entry is to be resolved.
+     *      and against which this entry is to be resolved.
      */
     public void resolve(ConstantPool constantPool) {
-        ClassCPInfo methodClass = (ClassCPInfo) constantPool.getEntry(classIndex);
+        ClassCPInfo methodClass
+             = (ClassCPInfo)constantPool.getEntry(classIndex);
 
         methodClass.resolve(constantPool);
 
         methodClassName = methodClass.getClassName();
 
-        NameAndTypeCPInfo nt = (NameAndTypeCPInfo) constantPool.getEntry(nameAndTypeIndex);
+        NameAndTypeCPInfo nt
+             = (NameAndTypeCPInfo)constantPool.getEntry(nameAndTypeIndex);
 
         nt.resolve(constantPool);
 
@@ -130,14 +139,29 @@ public class MethodRefCPInfo extends ConstantPoolEntry {
         super.resolve(constantPool);
     }
 
+    /**
+     * Get the name of the class defining the method
+     *
+     * @return the name of the class defining this method
+     */
     public String getMethodClassName() {
         return methodClassName;
     }
 
+    /**
+     * Get the name of the method.
+     *
+     * @return the name of the method.
+     */
     public String getMethodName() {
         return methodName;
     }
 
+    /**
+     * Get the type signature of the method.
+     *
+     * @return the type signature of the method.
+     */
     public String getMethodType() {
         return methodType;
     }

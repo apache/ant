@@ -63,20 +63,18 @@ import java.io.IOException;
  */
 public class FloatCPInfo extends ConstantCPInfo {
 
-    /**
-     * Constructor.
-     *
-     */
+    /** Constructor.  */
     public FloatCPInfo() {
-        super(CONSTANT_Float, 1);
+        super(CONSTANT_FLOAT, 1);
     }
 
     /**
      * read a constant pool entry from a class stream.
      *
-     * @param cpStream the DataInputStream which contains the constant pool entry to be read.
-     *
-     * @throws IOException if there is a problem reading the entry from the stream.
+     * @param cpStream the DataInputStream which contains the constant pool
+     *      entry to be read.
+     * @exception IOException if there is a problem reading the entry from
+     *      the stream.
      */
     public void read(DataInputStream cpStream) throws IOException {
         setValue(new Float(cpStream.readFloat()));

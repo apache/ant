@@ -56,7 +56,6 @@ package org.apache.tools.ant.taskdefs.optional.depend.constantpool;
 import java.io.DataInputStream;
 import java.io.IOException;
 
-
 /**
  * A NameAndType CP Info
  *
@@ -64,20 +63,18 @@ import java.io.IOException;
  */
 public class NameAndTypeCPInfo extends ConstantPoolEntry {
 
-    /**
-     * Constructor.
-     *
-     */
+    /** Constructor. */
     public NameAndTypeCPInfo() {
-        super(CONSTANT_NameAndType, 1);
+        super(CONSTANT_NAMEANDTYPE, 1);
     }
 
     /**
      * read a constant pool entry from a class stream.
      *
-     * @param cpStream the DataInputStream which contains the constant pool entry to be read.
-     *
-     * @throws IOException if there is a problem reading the entry from the stream.
+     * @param cpStream the DataInputStream which contains the constant pool
+     *      entry to be read.
+     * @exception IOException if there is a problem reading the entry from
+     *      the stream.
      */
     public void read(DataInputStream cpStream) throws IOException {
         nameIndex = cpStream.readUnsignedShort();
@@ -95,7 +92,8 @@ public class NameAndTypeCPInfo extends ConstantPoolEntry {
         if (isResolved()) {
             value = "Name = " + name + ", type = " + type;
         } else {
-            value = "Name index = " + nameIndex + ", descriptor index = " + descriptorIndex;
+            value = "Name index = " + nameIndex
+                 + ", descriptor index = " + descriptorIndex;
         }
 
         return value;
@@ -106,26 +104,46 @@ public class NameAndTypeCPInfo extends ConstantPoolEntry {
      * the constant pool.
      *
      * @param constantPool the constant pool of which this entry is a member
-     * and against which this entry is to be resolved.
+     *      and against which this entry is to be resolved.
      */
     public void resolve(ConstantPool constantPool) {
-        name = ((Utf8CPInfo) constantPool.getEntry(nameIndex)).getValue();
-        type = ((Utf8CPInfo) constantPool.getEntry(descriptorIndex)).getValue();
+        name = ((Utf8CPInfo)constantPool.getEntry(nameIndex)).getValue();
+        type = ((Utf8CPInfo)constantPool.getEntry(descriptorIndex)).getValue();
 
         super.resolve(constantPool);
     }
 
+    /**
+     * Get the name component of this entry
+     *
+     * @return the name of this name and type entry
+     */
     public String getName() {
         return name;
     }
 
+    /**
+     * Get the type signature of this entry
+     *
+     * @return the type signature of this entry
+     */
     public String getType() {
         return type;
     }
 
+    /** the name component of this entry */
     private String name;
+    /** the type component of this entry */
     private String type;
+    /**
+     * the index into the constant pool at which the name component's string
+     * value is stored
+     */
     private int nameIndex;
+    /**
+     * the index into the constant pool where the type descriptor string is
+     * stored.
+     */
     private int descriptorIndex;
 }
 

@@ -56,75 +56,52 @@ package org.apache.tools.ant.taskdefs.optional.depend.constantpool;
 import java.io.DataInputStream;
 import java.io.IOException;
 
-
 /**
- * An entry in the constant pool.
- *
- * This class contains a represenation of the constant pool entries. It is
- * an abstract base class for all the different forms of constant pool entry.
+ * An entry in the constant pool. This class contains a represenation of the
+ * constant pool entries. It is an abstract base class for all the different
+ * forms of constant pool entry.
  *
  * @author Conor MacNeill
  * @see ConstantPool
  */
 public abstract class ConstantPoolEntry {
 
-    /**
-     * Tag value for UTF8 entries.
-     */
-    public final static int CONSTANT_Utf8 = 1;
+    /** Tag value for UTF8 entries. */
+    public final static int CONSTANT_UTF8 = 1;
+
+    /** Tag value for Integer entries. */
+    public final static int CONSTANT_INTEGER = 3;
+
+    /** Tag value for Float entries. */
+    public final static int CONSTANT_FLOAT = 4;
+
+    /** Tag value for Long entries. */
+    public final static int CONSTANT_LONG = 5;
+
+    /** Tag value for Double entries. */
+    public final static int CONSTANT_DOUBLE = 6;
+
+    /** Tag value for Class entries. */
+    public final static int CONSTANT_CLASS = 7;
+
+    /** Tag value for String entries. */
+    public final static int CONSTANT_STRING = 8;
+
+    /** Tag value for Field Reference entries. */
+    public final static int CONSTANT_FIELDREF = 9;
+
+    /** Tag value for Method Reference entries. */
+    public final static int CONSTANT_METHODREF = 10;
+
+    /** Tag value for Interface Method Reference entries. */
+    public final static int CONSTANT_INTERFACEMETHODREF = 11;
+
+    /** Tag value for Name and Type entries. */
+    public final static int CONSTANT_NAMEANDTYPE = 12;
 
     /**
-     * Tag value for Integer entries.
-     */
-    public final static int CONSTANT_Integer = 3;
-
-    /**
-     * Tag value for Float entries.
-     */
-    public final static int CONSTANT_Float = 4;
-
-    /**
-     * Tag value for Long entries.
-     */
-    public final static int CONSTANT_Long = 5;
-
-    /**
-     * Tag value for Double entries.
-     */
-    public final static int CONSTANT_Double = 6;
-
-    /**
-     * Tag value for Class entries.
-     */
-    public final static int CONSTANT_Class = 7;
-
-    /**
-     * Tag value for String entries.
-     */
-    public final static int CONSTANT_String = 8;
-
-    /**
-     * Tag value for Field Reference entries.
-     */
-    public final static int CONSTANT_FieldRef = 9;
-
-    /**
-     * Tag value for Method Reference entries.
-     */
-    public final static int CONSTANT_MethodRef = 10;
-
-    /**
-     * Tag value for Interface Method Reference entries.
-     */
-    public final static int CONSTANT_InterfaceMethodRef = 11;
-
-    /**
-     * Tag value for Name and Type entries.
-     */
-    public final static int CONSTANT_NameAndType = 12;
-
-    /**
-     * This entry's tag which identifies the type of this constant pool entry.
+     * This entry's tag which identifies the type of this constant pool
+     * entry.
      */
     private int tag;
 
@@ -141,8 +118,10 @@ public abstract class ConstantPoolEntry {
     /**
      * Initialse the constant pool entry.
      *
-     * @param tagValue the tag value which identifies which type of constant pool entry this is.
-     * @param entries the number of constant pool entry slots this entry occupies.
+     * @param tagValue the tag value which identifies which type of constant
+     *      pool entry this is.
+     * @param entries the number of constant pool entry slots this entry
+     *      occupies.
      */
     public ConstantPoolEntry(int tagValue, int entries) {
         tag = tagValue;
@@ -151,82 +130,71 @@ public abstract class ConstantPoolEntry {
     }
 
     /**
-     * Read a constant pool entry from a stream.
+     * Read a constant pool entry from a stream. This is a factory method
+     * which reads a constant pool entry form a stream and returns the
+     * appropriate subclass for the entry.
      *
-     * This is a factory method which reads a constant pool entry
-     * form a stream and returns the appropriate subclass for the
-     * entry.
-     *
-     * @param cpStream the stream from which the constant pool entry is to be read.
-     *
-     * @returns the appropriate ConstantPoolEntry subclass representing the
-     * constant pool entry from the stream.
-     *
-     * @throws IOExcception if there is a problem reading the entry from the stream.
+     * @param cpStream the stream from which the constant pool entry is to
+     *      be read.
+     * @return the appropriate ConstantPoolEntry subclass representing the
+     *      constant pool entry from the stream.
+     * @exception IOException if the constant pool entry cannot be read 
+     *      from the stream
      */
-    public static ConstantPoolEntry readEntry(DataInputStream cpStream) throws IOException {
+    public static ConstantPoolEntry readEntry(DataInputStream cpStream)
+         throws IOException {
         ConstantPoolEntry cpInfo = null;
         int cpTag = cpStream.readUnsignedByte();
 
         switch (cpTag) {
 
-            case CONSTANT_Utf8:
+            case CONSTANT_UTF8:
                 cpInfo = new Utf8CPInfo();
 
                 break;
-
-            case CONSTANT_Integer:
+            case CONSTANT_INTEGER:
                 cpInfo = new IntegerCPInfo();
 
                 break;
-
-            case CONSTANT_Float:
+            case CONSTANT_FLOAT:
                 cpInfo = new FloatCPInfo();
 
                 break;
-
-            case CONSTANT_Long:
+            case CONSTANT_LONG:
                 cpInfo = new LongCPInfo();
 
                 break;
-
-            case CONSTANT_Double:
+            case CONSTANT_DOUBLE:
                 cpInfo = new DoubleCPInfo();
 
                 break;
-
-            case CONSTANT_Class:
+            case CONSTANT_CLASS:
                 cpInfo = new ClassCPInfo();
 
                 break;
-
-            case CONSTANT_String:
+            case CONSTANT_STRING:
                 cpInfo = new StringCPInfo();
 
                 break;
-
-            case CONSTANT_FieldRef:
+            case CONSTANT_FIELDREF:
                 cpInfo = new FieldRefCPInfo();
 
                 break;
-
-            case CONSTANT_MethodRef:
+            case CONSTANT_METHODREF:
                 cpInfo = new MethodRefCPInfo();
 
                 break;
-
-            case CONSTANT_InterfaceMethodRef:
+            case CONSTANT_INTERFACEMETHODREF:
                 cpInfo = new InterfaceMethodRefCPInfo();
 
                 break;
-
-            case CONSTANT_NameAndType:
+            case CONSTANT_NAMEANDTYPE:
                 cpInfo = new NameAndTypeCPInfo();
 
                 break;
-
             default:
-                throw new ClassFormatError("Invalid Constant Pool entry Type " + cpTag);
+                throw new ClassFormatError("Invalid Constant Pool entry Type "
+                     + cpTag);
         }
 
         cpInfo.read(cpStream);
@@ -235,11 +203,10 @@ public abstract class ConstantPoolEntry {
     }
 
     /**
-     * Indicates whether this entry has been resolved.
-     *
-     * In general a constant pool entry can reference another constant
-     * pool entry by its index value. Resolution involves replacing this
-     * index value with the constant pool entry at that index.
+     * Indicates whether this entry has been resolved. In general a constant
+     * pool entry can reference another constant pool entry by its index
+     * value. Resolution involves replacing this index value with the
+     * constant pool entry at that index.
      *
      * @return true if this entry has been resolved.
      */
@@ -252,7 +219,7 @@ public abstract class ConstantPoolEntry {
      * the constant pool.
      *
      * @param constantPool the constant pool of which this entry is a member
-     * and against which this entry is to be resolved.
+     *      and against which this entry is to be resolved.
      */
     public void resolve(ConstantPool constantPool) {
         resolved = true;
@@ -261,9 +228,10 @@ public abstract class ConstantPoolEntry {
     /**
      * read a constant pool entry from a class stream.
      *
-     * @param cpStream the DataInputStream which contains the constant pool entry to be read.
-     *
-     * @throws IOException if there is a problem reading the entry from the stream.
+     * @param cpStream the DataInputStream which contains the constant pool
+     *      entry to be read.
+     * @exception IOException if there is a problem reading the entry from
+     *      the stream.
      */
     public abstract void read(DataInputStream cpStream) throws IOException;
 
@@ -277,10 +245,10 @@ public abstract class ConstantPoolEntry {
     }
 
     /**
-     * Get the number of Constant Pool Entry slots within the constant pool occupied by this entry.
+     * Get the number of Constant Pool Entry slots within the constant pool
+     * occupied by this entry.
      *
      * @return the number of slots used.
-     *
      */
     public final int getNumEntries() {
         return numEntries;

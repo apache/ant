@@ -53,20 +53,17 @@
  */
 package org.apache.tools.ant.taskdefs.optional.depend.constantpool;
 
-
 /**
  * A Constant Pool entry which represents a constant value.
- *
  *
  * @author Conor MacNeill
  */
 public abstract class ConstantCPInfo extends ConstantPoolEntry {
 
     /**
-     * The entry's untyped value.
-     *
-     * Each subclass interprets the constant value based on the subclass's type.
-     * The value here must be compatible.
+     * The entry's untyped value. Each subclass interprets the constant
+     * value based on the subclass's type. The value here must be
+     * compatible.
      */
     private Object value;
 
@@ -74,7 +71,8 @@ public abstract class ConstantCPInfo extends ConstantPoolEntry {
      * Initialise the constant entry.
      *
      * @param tagValue the constant pool entry type to be used.
-     * @param entries the number of constant pool entry slots occupied by this entry.
+     * @param entries the number of constant pool entry slots occupied by
+     *      this entry.
      */
     protected ConstantCPInfo(int tagValue, int entries) {
         super(tagValue, entries);
