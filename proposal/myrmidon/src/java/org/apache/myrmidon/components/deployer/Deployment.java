@@ -124,6 +124,7 @@ class Deployment
             {
                 // Ignore - this happens when jarUrl != null and the Jar does
                 // not contain a type descriptor
+                continue;
             }
 
             descriptors.add( handler.getConfiguration() );
