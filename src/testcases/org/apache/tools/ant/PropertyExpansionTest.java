@@ -84,9 +84,9 @@ public class PropertyExpansionTest extends BuildFileTest {
         project.setProperty("expanded","EXPANDED");
         assertExpandsTo("a${expanded}b","aEXPANDEDb");
         assertExpandsTo("${expanded}${expanded}","EXPANDEDEXPANDED");
-        assertExpandsTo("a$b","ab");
-        assertExpandsTo("$}}","}}");
-        assertExpandsTo("$$$-","$-");
+        assertExpandsTo("a$b","a$b");
+        assertExpandsTo("$}}","$}}");
+        assertExpandsTo("$$$-","$$-");
         assertExpandsTo("$$$","$$");
         assertExpandsTo("$$$$-","$$-");
         assertExpandsTo("","");
