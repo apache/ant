@@ -222,10 +222,12 @@
 #macro (makeProject $menus)
 
   <div class="menucontainer">
+  <div align="center">
   <a href="http://apachecon.com/2003/US/index.html">
     <img width="150" height="86"
          border="0" src="http://jakarta.apache.org/images/logos/ac2003-150.gif"/>
   </a>
+  </div>
     <div class="menu">
       <ul>
       #foreach ( $menu in $menus )
@@ -249,7 +251,7 @@
     </div>
     <img style="float: left" height="10" width="10" border="0" alt="" src="$relativePath/images/menu-left.gif">
     <img style="float: right" height="10" width="10" border="0" alt="" src="$relativePath/images/menu-right.gif">
-  </div>  
+  </div>
 #end
 
 #macro (header)

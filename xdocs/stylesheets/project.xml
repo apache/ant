@@ -54,6 +54,7 @@
             </menu>
             <menu name="Antidote">
                 <item name="About Antidote"        href="/projects/antidote/index.html"/>
+                <item name="News"         href="/projects/antidote/news.html"/>
                 <item name="Design Overview"       href="/projects/antidote/design.html"/>
                 <item name="Module HOW-TO"         href="/projects/antidote/module.html"/>
             </menu>

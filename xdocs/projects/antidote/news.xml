@@ -1,0 +1,25 @@
+<?xml version="1.0"?>
+<document>
+
+  <properties>
+    <index value="1"/>
+    <author email="christoph.wilhelms@gmx.de">Christoph Wilhelms</author>
+    <title>News</title>
+  </properties>
+
+<body>
+   <section name="German i18n">
+    <h3>October 12, 2003 - Antidote German internationalization implemented</h3>
+    <p>After English and Japanese, German is the third language Antidote has been
+    localized to! Many others may follow!?!</p>
+   </section>
+
+   <section name="Antidote News Page">
+    <h3>October 12, 2003 - News Page</h3>
+    <p>To show, that we are really continue the work on Antidote, I set up this
+    news page to inform you all about the progress. Additonally I'd like to encourage
+    you to use and test Antidote, or - of course - take part in the development!</p>
+   </section>
+</body>
+</document>
+
