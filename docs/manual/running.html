@@ -212,12 +212,185 @@ set):</p>
 </ul>
 
 <h3><a name="sysprops">Java System Properties</a></h3>
-<p>Some of Ants core classes can be configured via system properties:</p>
-<ul>
-  <li><code>org.apache.tools.ant.ProjectHelper</code> - specifies the
-  classname to use as ProjectHelper. The class must extend org.apache.tools.ant.ProjectHelper.
-  If not set org.apache.tools.ant.ProjectHelper is used as ProjectHelper.</li>
-</ul>
+<p>Some of Ants core classes ant tasks can be configured via system properties.</p>
+<p>So here the result of a search through the codebase. Because system properties are
+available via Project instance, I searched for them with a
+<pre>
+    grep -r -n "getPropert" * > ..\grep.txt
+</pre>
+command. After that I filtered out the often-used but not-so-important values (most of them
+read-only values): <i>path.separator, ant.home, basedir, user.dir, os.name, ant.file,
+line.separator, java.home, java.version, java.version, user.home, java.class.path</i><br>
+And I filtered out the <i>getPropertyHelper</i> access.</p>
+<table border="1">
+<tr>
+  <th>property name</th>
+  <th>valid values /default value</th>
+  <th>description</th>
+</tr>
+<tr>
+  <td><code>ant.input.properties</code></td>
+  <td>filename (required)</td>
+  <td>Name of the file holding the values for the
+      <a href="inputhandler.html">PropertyFileInputHandler</a>.
+  </td>
+</tr>
+<tr>
+  <td><code>ant.logger.defaults</code></td>
+  <!-- add the blank after the slash, so the browser can do a line break -->
+  <td>filename (optional, default '/org/ apache/ tools/ ant/ listener/ defaults.properties')</td>
+  <td>Name of the file holding the color mappings for the
+      <a href="listeners.html#AnsiColorLogger">AnsiColorLogger</a>.
+  </td>
+</tr>
+<tr>
+  <td><code>ant.netrexxc.*</code></td>
+  <td>several formats</td>
+  <td>Use specified values as defaults for <a href="OptionalTasks/netrexxc.html">netrexxc</a>.
+  </td>
+</tr>
+<tr>
+  <td><code>ant.PropertyHelper</code></td>
+  <td>ant-reference-name (optional)</td>
+  <td>Specify the PropertyHelper to use. The object must be of the type
+      org.apache.tools.ant.PropertyHelper. If not defined an object of
+      org.apache.tools.ant.PropertyHelper will be used as PropertyHelper.
+  </td>
+</tr>
+<tr>
+  <td><code>ant.regexp.regexpimpl</code></td>
+  <td>classname</td>
+  <td>classname for a RegExp implementation; if not set Ant tries to
+      find another (Jdk14, Oro...);
+      <a href="CoreTypes/mapper.html#regexp-mapper">RegExp-Mapper</a>
+      "Choice of regular expression implementation"
+  </td>
+</tr>
+<tr>
+  <td><code>ant.reuse.loader</code></td>
+  <td>boolean</td>
+  <td>allow to reuse classloaders
+      used in org.apache.tools.ant.util.ClasspathUtil
+  </td>
+</tr>
+<tr>
+  <td><code>ant.XmlLogger.stylesheet.uri</code></td>
+  <td>filename (default 'log.xsl')</td>
+  <td>Name for the stylesheet to include in the logfile by
+      <a href="listeners.html#XmlLogger">XmlLogger</a>.
+  </td>
+</tr>
+<tr>
+  <td><code>build.compiler</code></td>
+  <td>name</td>
+  <td>Specify the default compiler to use.
+      see <a href="CoreTasks/javac.html">javac</a>,
+      <a href="OptionalTasks/ejb.html#ejbjar_weblogic">EJB Tasks</a>
+      (compiler attribute),
+      <a href="OptionalTasks/icontract.html">IContract</a>,
+      <a href="OptionalTasks/javah.html">javah</a>
+  </td>
+</tr>
+<tr>
+  <td><code>build.compiler.emacs</code></td>
+  <td>boolean (default false)</td>
+  <td>Enable emacs-compatible error messages.
+      see <a href="CoreTasks/javac.html">javac</a> "Jikes Notes"
+  </td>
+</tr>
+<tr>
+  <td><code>build.compiler.fulldepend</code></td>
+  <td>boolean (default false)</td>
+  <td>Enable full dependency checking
+      see <a href="CoreTasks/javac.html">javac</a> "Jikes Notes"
+  </td>
+</tr>
+<tr>
+  <td><code>build.compiler.jvc.extensions</code></td>
+  <td>boolean (default true)</td>
+  <td>enable Microsoft extensions of their java compiler
+      see <a href="CoreTasks/javac.html">javac</a> "Jvc Notes"
+  </td>
+</tr>
+<tr>
+  <td><code>build.compiler.pedantic</code></td>
+  <td>boolean (default false)</td>
+  <td>Enable pedantic warnings.
+      see <a href="CoreTasks/javac.html">javac</a> "Jikes Notes"
+  </td>
+</tr>
+<tr>
+  <td><code>build.compiler.warnings</code></td>
+  <td>Deprecated flag</td>
+  <td> see <a href="CoreTasks/javac.html">javac</a> "Jikes Notes" </td>
+</tr>
+<tr>
+  <td><code>build.rmic</code></td>
+  <td>name</td>
+  <td>control the <a href="CoreTasks/rmic.html">rmic</a> compiler </td>
+</tr>
+<tr>
+  <td><code>build.sysclasspath</code></td>
+  <td>"only", something else</td>
+  <td>only: current threads get the actual class loader
+      (AntClassLoader.setThreadContextLoader()).
+      else: use core loader as default (ComponentHelper.initTasks()). Disable
+      changing the classloader (oata.taskdefs.Classloader.execute() experimental
+      task).
+      <!-- somewhere documented in the manual?? -->
+  </td>
+</tr>
+<tr>
+  <td><code>file.encoding</code></td>
+  <td>name of a supported character set (e.g. UTF-8, ISO-8859-1, US-ASCII)</td>
+  <td>use as default character set of email messages; use as default for source-, dest- and bundleencoding
+      in <a href="OptionalTasks/translate.html">translate</a> <br>
+      see JavaDoc of <a target="_blank" href="http://java.sun.com/j2se/1.4.2/docs/api/java/nio/charset/Charset.html">java.nio.charset.Charset</a>
+      for more information about character sets (not used in Ant, but has nice docs).
+  </td>
+</tr>
+<tr>
+  <td><code>jikes.class.path</code></td>
+  <td>path</td>
+  <td>The specified path is added to the classpath if jikes is used as compiler.</td>
+</tr>
+<tr>
+  <td><code>MailLogger.properties.file, MailLogger.*</code></td>
+  <td>filename (optional, defaults derived from Project instance)</td>
+  <td>Name of the file holding properties for sending emails by the
+      <a href="listeners.html#MailLogger">MailLogger</a>. Override properties set
+      inside the buildfile or via command line.
+  </td>
+</tr>
+<tr>
+  <td><code>org.apache.tools.ant.ProjectHelper</code></td>
+  <!-- add the blank after the slash, so the browser can do a line break -->
+  <td>classname (optional, default 'org. apache. tools. ant. ProjectHelper')</td>
+  <td>specifies the classname to use as ProjectHelper. The class must extend
+      org.apache.tools.ant.ProjectHelper.
+  </td>
+</tr>
+<tr>
+  <td><code>p4.port, p4.client, p4.user</code></td>
+  <td>several formats</td>
+  <td>Specify defaults for port-, client- and user-setting of the
+      <a href="OptionalTasks/perforce.html">perforce</a> tasks.
+  </td>
+</tr>
+<tr>
+  <td><code>websphere.home
+  <td>path</td>
+  <td>Points to home directory of websphere.
+      see <a href="OptionalTasks/ejb.html#ejbjar_websphere">EJB Tasks</a>
+  </td>
+</tr>
+<tr>
+  <td><code>XmlLogger.file
+  <td>filename (default 'log.xml')</td>
+  <td>Name for the logfile for <a href="listeners.html#MailLogger">MailLogger</a>.
+  </td>
+</tr>
+</table>
 
 <h2><a name="cygwin">Cygwin Users</a></h2>
 <p>The Unix launch script that come with Ant works correctly with Cygwin. You
