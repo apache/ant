@@ -10,9 +10,11 @@ package org.apache.antlib.core;
 import java.util.HashMap;
 import java.util.Set;
 import org.apache.avalon.framework.Enum;
+import org.apache.avalon.framework.logger.Logger;
 
 /**
- * Type safe Enum for Log Levels.
+ * Type safe Enum for Log Levels and utility method
+ * for using enum to write to logger.
  *
  * @author <a href="mailto:peter@apache.org">Peter Donald</a>
  */
@@ -49,6 +51,65 @@ public final class LogLevel
     {
         final Set keys = c_levels.keySet();
         return (String[])keys.toArray( new String[ keys.size() ] );
+    }
+
+    /**
+     * Log a message to the Logger at the specified level.
+     */
+    public static void log( final Logger logger,
+                            final String message,
+                            final LogLevel level )
+    {
+        if( LogLevel.FATAL_ERROR == level )
+        {
+            logger.fatalError( message );
+        }
+        else if( LogLevel.ERROR == level )
+        {
+            logger.error( message );
+        }
+        else if( LogLevel.WARN == level )
+        {
+            logger.warn( message );
+        }
+        else if( LogLevel.INFO == level )
+        {
+            logger.info( message );
+        }
+        else
+        {
+            logger.debug( message );
+        }
+    }
+
+    /**
+     * Log a message to the Logger at the specified level.
+     */
+    public static void log( final Logger logger,
+                            final String message,
+                            final Throwable throwable,
+                            final LogLevel level )
+    {
+        if( LogLevel.FATAL_ERROR == level )
+        {
+            logger.fatalError( message, throwable );
+        }
+        else if( LogLevel.ERROR == level )
+        {
+            logger.error( message, throwable );
+        }
+        else if( LogLevel.WARN == level )
+        {
+            logger.warn( message, throwable );
+        }
+        else if( LogLevel.INFO == level )
+        {
+            logger.info( message, throwable );
+        }
+        else
+        {
+            logger.debug( message, throwable );
+        }
     }
 
     /**

@@ -63,26 +63,7 @@ public class Log
     public void execute()
         throws TaskException
     {
-        if( LogLevel.FATAL_ERROR == m_level )
-        {
-            getLogger().fatalError( m_message );
-        }
-        else if( LogLevel.ERROR == m_level )
-        {
-            getLogger().error( m_message );
-        }
-        else if( LogLevel.WARN == m_level )
-        {
-            getLogger().warn( m_message );
-        }
-        else if( LogLevel.INFO == m_level )
-        {
-            getLogger().info( m_message );
-        }
-        else
-        {
-            getLogger().debug( m_message );
-        }
+        LogLevel.log( getLogger(), m_message, m_level );
     }
 
     /**
