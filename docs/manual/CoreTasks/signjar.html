@@ -14,7 +14,7 @@ tool detailed dependency checking: files are only signed if they
 are not signed. The <tt>signjar</tt> attribute can point to the file to
 generate; if this file exists then
 its modification date is used as a cue as to whether to resign any JAR file.
-<br>  
+<br>
 <strong>Note:</strong> Requires Java 1.2 or later. </p>
 
 <h3>Parameters</h3>
@@ -83,9 +83,15 @@ block</td>
   <tr>
     <td valign="top">lazy</td>
     <td valign="top">flag to control whether the presence of a signature
-	file means a JAR is signed</td>
+  file means a JAR is signed</td>
     <td valign="top" align="center">No; default false</td>
-  </tr>  
+  </tr>
+  <tr>
+    <td valign="top">maxmemory</td>
+    <td valign="top">Specifies the maximum memory the jarsigner VM will use. Specified in the
+                     style of standard java memory specs (e.g. 128m = 128 MBytes)</td>
+    <td valign="top" align="center">No</td>
+  </tr>
 </table>
 <h3>Parameters as nested elements</h3>
 <table border="1" cellpadding="2" cellspacing="0">
@@ -99,7 +105,7 @@ block</td>
     <td valign="top">fileset of JAR files to sign</td>
     <td valign="top" align="center">No</td>
   </tr>
-</table>  
+</table>
 <h3>Examples</h3>
 <blockquote>
   <p><code>&lt;signjar jar=&quot;${dist}/lib/ant.jar&quot;

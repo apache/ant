@@ -1,0 +1,32 @@
+<project name="signjartest" default="help">
+  <property name="classes.dir" value="../../../../build/classes"/>
+
+  <target name="basic">
+    <jar jarfile="signtest.jar" basedir="${classes.dir}" includes="**/Task.class"/>
+    <signjar jar="signtest.jar" alias="testonly" keystore="../testkeystore"
+             storepass="apacheant"/>
+  </target>
+
+  <target name="sigfile">
+    <jar jarfile="signtest.jar" basedir="${classes.dir}" includes="**/Task.class"/>
+    <signjar jar="signtest.jar" alias="testonly" keystore="../testkeystore"
+             storepass="apacheant" sigfile="TEST"/>
+  </target>
+
+  <target name="maxmemory">
+    <jar jarfile="signtest.jar" basedir="${classes.dir}" includes="**/Task.class"/>
+    <signjar jar="signtest.jar" alias="testonly" keystore="../testkeystore"
+             storepass="apacheant" maxmemory="128m"/>
+  </target>
+
+
+  <target name="clean">
+    <delete file="signtest.jar"/>
+  </target>
+
+  <target name="help">
+    <echo>This build is for use with Ant's test cases</echo>
+  </target>
+
+</project>
+

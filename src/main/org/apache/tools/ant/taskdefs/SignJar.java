@@ -71,13 +71,13 @@ import org.apache.tools.ant.util.JavaEnvUtils;
  * are not signed. The <tt>signjar</tt> attribute can point to the file to
  * generate; if this file exists then
  * its modification date is used as a cue as to whether to resign any JAR file.
- * <br>  
+ * <br>
  * <strong>Note:</strong> Requires Java 1.2 or later. </p>
 
- * 
- * @author Peter Donald 
+ *
+ * @author Peter Donald
  *         <a href="mailto:donaldp@apache.org">donaldp@apache.org</a>
- * @author Nick Fortescue 
+ * @author Nick Fortescue
  *         <a href="mailto:nick@ox.compsoc.net">nick@ox.compsoc.net</a>
  * @since Ant 1.1
  * @ant.task category="java"
@@ -102,11 +102,14 @@ public class SignJar extends Task {
     protected String storepass;
     protected String storetype;
     protected String keypass;
-    protected File sigfile;
+    protected String sigfile;
     protected File signedjar;
     protected boolean verbose;
     protected boolean internalsf;
     protected boolean sectionsonly;
+
+    /** The maximum amount of memory to use for Jar signer */
+    private String maxMemory;
 
     /**
      * the filesets of the jars to sign
@@ -117,6 +120,17 @@ public class SignJar extends Task {
      * signed.
      */
     protected boolean lazy;
+
+
+    /**
+     * Set the maximum memory to be used by the jarsigner process
+     *
+     * @param max a string indicating the maximum memory according to the
+     *        JVM conventions (e.g. 128m is 128 Megabytes)
+     */
+    public void setMaxmemory(String max) {
+        maxMemory = max;
+    }
 
     /**
      * the jar file to sign; required
@@ -163,7 +177,7 @@ public class SignJar extends Task {
     /**
      * name of .SF/.DSA file; optional
      */
-    public void setSigfile(final File sigfile) {
+    public void setSigfile(final String sigfile) {
         this.sigfile = sigfile;
     }
 
@@ -216,7 +230,7 @@ public class SignJar extends Task {
     }
 
 
-    /** 
+    /**
      * sign the jar(s)
      */
     public void execute() throws BuildException {
@@ -245,7 +259,7 @@ public class SignJar extends Task {
     /**
      * sign one jar
      */
-    private void doOneJar(File jarSource, File jarTarget) 
+    private void doOneJar(File jarSource, File jarTarget)
         throws BuildException {
         if (JavaEnvUtils.isJavaVersion(JavaEnvUtils.JAVA_1_1)) {
             throw new BuildException("The signjar task is only available on "
@@ -266,6 +280,10 @@ public class SignJar extends Task {
 
         final ExecTask cmd = (ExecTask) getProject().createTask("exec");
         cmd.setExecutable("jarsigner");
+
+        if (maxMemory != null) {
+            cmd.createArg().setValue("-J-Xmx" + maxMemory);
+        }
 
         if (null != keystore) {
             cmd.createArg().setValue("-keystore");
@@ -289,7 +307,7 @@ public class SignJar extends Task {
 
         if (null != sigfile) {
             cmd.createArg().setValue("-sigfile");
-            cmd.createArg().setValue(sigfile.toString());
+            cmd.createArg().setValue(sigfile);
         }
 
         if (null != jarTarget) {
