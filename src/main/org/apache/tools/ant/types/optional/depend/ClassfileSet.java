@@ -156,7 +156,7 @@ public class ClassfileSet extends FileSet {
      * @param root the configured class root.
      */
     public void addConfiguredRoot(ClassRoot root) {
-        rootClasses.add(root.getClassname());    
+        rootClasses.addElement(root.getClassname());    
     }
 
     /**
