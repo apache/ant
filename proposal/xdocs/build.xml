@@ -55,17 +55,26 @@
               classpathref="xdoclet.classpath">
       <fileset dir="${src.dir}">
         <include name="**/*.java" unless="class.name"/>
-        <include name="${class.name}.java" if="class.name"/>
+        <include name="**/${class.name}.java" if="class.name"/>
       </fileset>
       <template subTaskClassName="org.apache.tools.ant.xdoclet.AntSubTask"
                 templateFile="${defaults.properties.template}"
                 destinationfile="defaults.properties"/>
-<!--       <template templateFile="${xdoc.template}"
-                destinationfile="{0}.xml" extent="concrete-type"/> -->
       <template subTaskClassName="org.apache.tools.ant.xdoclet.AntSubTask"
                 templateFile="${xdoc.template}"
                 destinationfile="{0}.xml" extent="concrete-type"/>
     </document>
+
+    <!-- currently not working - bug in XDoclet?
+    <document sourcepath="src"
+              destdir="${gen.dir}"
+              classpathref="xdoclet.classpath">
+      <fileset dir="src">
+        <include name="**/*.java"/>
+      </fileset>
+      <documenttags/>
+    </document> -->
+
   </target>
 </project>
 
