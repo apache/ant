@@ -138,7 +138,7 @@ public class JakartaOroMatcher implements RegexpMatcher
         }
         catch( Exception e )
         {
-            throw new BuildException( e );
+            throw new BuildException( "Error", e );
         }
     }
 

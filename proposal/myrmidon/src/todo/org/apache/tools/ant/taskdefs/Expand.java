@@ -98,11 +98,6 @@ public class Expand extends MatchingTask
     public void execute()
         throws BuildException
     {
-        if( "expand".equals( taskType ) )
-        {
-            log( "!! expand is deprecated. Use unzip instead. !!" );
-        }
-
         if( source == null && filesets.size() == 0 )
         {
             throw new BuildException( "src attribute and/or filesets must be specified" );
@@ -116,7 +111,7 @@ public class Expand extends MatchingTask
 
         if( dest.exists() && !dest.isDirectory() )
         {
-            throw new BuildException( "Dest must be a directory.", location );
+            throw new BuildException( "Dest must be a directory." );
         }
 
         FileUtils fileUtils = FileUtils.newFileUtils();
@@ -126,7 +121,7 @@ public class Expand extends MatchingTask
             if( source.isDirectory() )
             {
                 throw new BuildException( "Src must not be a directory." +
-                    " Use nested filesets instead.", location );
+                    " Use nested filesets instead." );
             }
             else
             {

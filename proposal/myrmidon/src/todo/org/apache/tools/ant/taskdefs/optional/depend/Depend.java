@@ -201,7 +201,7 @@ public class Depend extends MatchingTask
             String[] srcPathList = srcPath.list();
             if( srcPathList.length == 0 )
             {
-                throw new BuildException( "srcdir attribute must be set!", location );
+                throw new BuildException( "srcdir attribute must be set!" );
             }
 
             if( destPath == null )
@@ -261,7 +261,7 @@ public class Depend extends MatchingTask
             outOfDateClasses = new Hashtable();
             for( int i = 0; i < srcPathList.length; i++ )
             {
-                File srcDir = ( File )project.resolveFile( srcPathList[i] );
+                File srcDir = ( File )resolveFile( srcPathList[i] );
                 if( srcDir.exists() )
                 {
                     DirectoryScanner ds = this.getDirectoryScanner( srcDir );
@@ -310,7 +310,7 @@ public class Depend extends MatchingTask
         }
         catch( Exception e )
         {
-            throw new BuildException( e );
+            throw new BuildException( "Error", e );
         }
     }
 

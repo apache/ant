@@ -20,6 +20,7 @@ import org.apache.tools.ant.types.Path;
 import org.apache.tools.ant.types.Reference;
 import org.apache.tools.ant.util.FileNameMapper;
 import org.apache.tools.ant.util.SourceFileScanner;
+import org.apache.tools.ant.util.FileUtils;
 
 /**
  * Task to compile RMI stubs and skeletons. This task can take the following
@@ -518,11 +519,11 @@ public class Rmic extends MatchingTask
     {
         if( baseDir == null )
         {
-            throw new BuildException( "base attribute must be set!", location );
+            throw new BuildException( "base attribute must be set!" );
         }
         if( !baseDir.exists() )
         {
-            throw new BuildException( "base does not exist!", location );
+            throw new BuildException( "base does not exist!" );
         }
 
         if( verify )
@@ -565,7 +566,7 @@ public class Rmic extends MatchingTask
             // finally, lets execute the compiler!!
             if( !adapter.execute() )
             {
-                throw new BuildException( FAIL_MSG, location );
+                throw new BuildException( FAIL_MSG );
             }
         }
 
@@ -672,14 +673,14 @@ public class Rmic extends MatchingTask
             File newFile = new File( sourceBaseFile, sourceFileName );
             try
             {
-                project.copyFile( oldFile, newFile, filtering );
+                FileUtils.newFileUtils().copyFile( oldFile, newFile, filtering );
                 oldFile.delete();
             }
             catch( IOException ioe )
             {
                 String msg = "Failed to copy " + oldFile + " to " +
                     newFile + " due to " + ioe.getMessage();
-                throw new BuildException( msg, ioe, location );
+                throw new BuildException( msg, ioe );
             }
         }
     }

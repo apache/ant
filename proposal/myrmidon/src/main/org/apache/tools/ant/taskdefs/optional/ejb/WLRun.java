@@ -304,7 +304,7 @@ public class WLRun extends Task
         if( !propertiesFile.exists() )
         {
             // OK, properties file may be absolute
-            propertiesFile = project.resolveFile( weblogicPropertiesFile );
+            propertiesFile = resolveFile( weblogicPropertiesFile );
             if( !propertiesFile.exists() )
             {
                 throw new BuildException( "Properties file " + weblogicPropertiesFile +
@@ -411,7 +411,7 @@ public class WLRun extends Task
         // absolute path.  Use the project to resolve it.
         if( this.securityPolicy != null && !securityPolicyFile.exists() )
         {
-            securityPolicyFile = project.resolveFile( securityPolicy );
+            securityPolicyFile = resolveFile( securityPolicy );
         }
         // If we still can't find it, complain
         if( !securityPolicyFile.exists() )

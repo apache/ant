@@ -400,7 +400,7 @@ public class SQLExec extends Task
         {
             if( transactions.size() == 0 )
             {
-                throw new BuildException( "Source file or fileset, transactions or sql statement must be set!", location );
+                throw new BuildException( "Source file or fileset, transactions or sql statement must be set!" );
             }
         }
         else
@@ -430,23 +430,23 @@ public class SQLExec extends Task
 
         if( driver == null )
         {
-            throw new BuildException( "Driver attribute must be set!", location );
+            throw new BuildException( "Driver attribute must be set!" );
         }
         if( userId == null )
         {
-            throw new BuildException( "User Id attribute must be set!", location );
+            throw new BuildException( "User Id attribute must be set!" );
         }
         if( password == null )
         {
-            throw new BuildException( "Password attribute must be set!", location );
+            throw new BuildException( "Password attribute must be set!" );
         }
         if( url == null )
         {
-            throw new BuildException( "Url attribute must be set!", location );
+            throw new BuildException( "Url attribute must be set!" );
         }
         if( srcFile != null && !srcFile.exists() )
         {
-            throw new BuildException( "Source file does not exist!", location );
+            throw new BuildException( "Source file does not exist!" );
         }
         Driver driverInstance = null;
         // Load the driver using the
@@ -470,15 +470,15 @@ public class SQLExec extends Task
         }
         catch( ClassNotFoundException e )
         {
-            throw new BuildException( "Class Not Found: JDBC driver " + driver + " could not be loaded", location );
+            throw new BuildException( "Class Not Found: JDBC driver " + driver + " could not be loaded" );
         }
         catch( IllegalAccessException e )
         {
-            throw new BuildException( "Illegal Access: JDBC driver " + driver + " could not be loaded", location );
+            throw new BuildException( "Illegal Access: JDBC driver " + driver + " could not be loaded" );
         }
         catch( InstantiationException e )
         {
-            throw new BuildException( "Instantiation Exception: JDBC driver " + driver + " could not be loaded", location );
+            throw new BuildException( "Instantiation Exception: JDBC driver " + driver + " could not be loaded" );
         }
 
         try
@@ -543,7 +543,7 @@ public class SQLExec extends Task
                 catch( SQLException ex )
                 {}
             }
-            throw new BuildException( e );
+            throw new BuildException( "Error", e );
         }
         catch( SQLException e )
         {
@@ -556,7 +556,7 @@ public class SQLExec extends Task
                 catch( SQLException ex )
                 {}
             }
-            throw new BuildException( e );
+            throw new BuildException( "Error", e );
         }
         finally
         {

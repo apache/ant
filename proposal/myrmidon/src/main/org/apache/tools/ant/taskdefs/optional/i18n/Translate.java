@@ -6,12 +6,24 @@
  * the LICENSE file.
  */
 package org.apache.tools.ant.taskdefs.optional.i18n;
-import java.io.*;
-import java.util.*;
-import org.apache.tools.ant.*;
+
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
+import java.util.Hashtable;
+import java.util.Locale;
+import java.util.Vector;
+import org.apache.tools.ant.BuildException;
+import org.apache.tools.ant.DirectoryScanner;
+import org.apache.tools.ant.Project;
 import org.apache.tools.ant.taskdefs.MatchingTask;
-import org.apache.tools.ant.types.*;
-import org.apache.tools.ant.util.*;
+import org.apache.tools.ant.types.FileSet;
+import org.apache.tools.ant.util.FileUtils;
 
 /**
  * Translates text embedded in files using Resource Bundle files.
@@ -35,7 +47,7 @@ public class Translate extends MatchingTask
     /**
      * Last Modified Timestamp of resource bundle file being used.
      */
-    private long[] bundleLastModified = new long[7];
+    private long[] bundleLastModified = new long[ 7 ];
     /**
      * Has at least one file from the bundle been loaded?
      */
@@ -229,34 +241,29 @@ public class Translate extends MatchingTask
     {
         if( bundle == null )
         {
-            throw new BuildException( "The bundle attribute must be set.",
-                location );
+            throw new BuildException( "The bundle attribute must be set." );
         }
 
         if( startToken == null )
         {
-            throw new BuildException( "The starttoken attribute must be set.",
-                location );
+            throw new BuildException( "The starttoken attribute must be set." );
         }
 
         if( startToken.length() != 1 )
         {
             throw new BuildException(
-                "The starttoken attribute must be a single character.",
-                location );
+                "The starttoken attribute must be a single character." );
         }
 
         if( endToken == null )
         {
-            throw new BuildException( "The endtoken attribute must be set.",
-                location );
+            throw new BuildException( "The endtoken attribute must be set." );
         }
 
         if( endToken.length() != 1 )
         {
             throw new BuildException(
-                "The endtoken attribute must be a single character.",
-                location );
+                "The endtoken attribute must be a single character." );
         }
 
         if( bundleLanguage == null )
@@ -280,8 +287,7 @@ public class Translate extends MatchingTask
 
         if( toDir == null )
         {
-            throw new BuildException( "The todir attribute must be set.",
-                location );
+            throw new BuildException( "The todir attribute must be set." );
         }
 
         if( !toDir.exists() )
@@ -391,7 +397,7 @@ public class Translate extends MatchingTask
         }
         catch( IOException ioe )
         {
-            throw new BuildException( ioe.getMessage(), location );
+            throw new BuildException( ioe.getMessage() );
         }
     }
 
@@ -415,8 +421,8 @@ public class Translate extends MatchingTask
         throws BuildException
     {
         Locale locale = new Locale( bundleLanguage,
-            bundleCountry,
-            bundleVariant );
+                                    bundleCountry,
+                                    bundleVariant );
         String language = locale.getLanguage().length() > 0 ?
             "_" + locale.getLanguage() :
             "";
@@ -481,7 +487,7 @@ public class Translate extends MatchingTask
         {
             ins = new FileInputStream( bundleFile );
             loaded = true;
-            bundleLastModified[i] = new File( bundleFile ).lastModified();
+            bundleLastModified[ i ] = new File( bundleFile ).lastModified();
             log( "Using " + bundleFile, Project.MSG_DEBUG );
             loadResourceMap( ins );
         }
@@ -493,7 +499,7 @@ public class Translate extends MatchingTask
             //find a single resrouce file, throw exception
             if( !loaded && checkLoaded )
             {
-                throw new BuildException( ioe.getMessage(), location );
+                throw new BuildException( ioe.getMessage() );
             }
         }
     }
@@ -515,14 +521,14 @@ public class Translate extends MatchingTask
     {
         for( int i = 0; i < filesets.size(); i++ )
         {
-            FileSet fs = ( FileSet )filesets.elementAt( i );
+            FileSet fs = (FileSet)filesets.elementAt( i );
             DirectoryScanner ds = fs.getDirectoryScanner( project );
             String[] srcFiles = ds.getIncludedFiles();
             for( int j = 0; j < srcFiles.length; j++ )
             {
                 try
                 {
-                    File dest = fileUtils.resolveFile( toDir, srcFiles[j] );
+                    File dest = fileUtils.resolveFile( toDir, srcFiles[ j ] );
                     //Make sure parent dirs exist, else, create them.
                     try
                     {
@@ -536,31 +542,31 @@ public class Translate extends MatchingTask
                     {
                         log( "Exception occured while trying to check/create "
                              + " parent directory.  " + e.getMessage(),
-                            Project.MSG_DEBUG );
+                             Project.MSG_DEBUG );
                     }
                     destLastModified = dest.lastModified();
-                    srcLastModified = new File( srcFiles[i] ).lastModified();
+                    srcLastModified = new File( srcFiles[ i ] ).lastModified();
                     //Check to see if dest file has to be recreated
                     if( forceOverwrite
-                         || destLastModified < srcLastModified
-                         || destLastModified < bundleLastModified[0]
-                         || destLastModified < bundleLastModified[1]
-                         || destLastModified < bundleLastModified[2]
-                         || destLastModified < bundleLastModified[3]
-                         || destLastModified < bundleLastModified[4]
-                         || destLastModified < bundleLastModified[5]
-                         || destLastModified < bundleLastModified[6] )
+                        || destLastModified < srcLastModified
+                        || destLastModified < bundleLastModified[ 0 ]
+                        || destLastModified < bundleLastModified[ 1 ]
+                        || destLastModified < bundleLastModified[ 2 ]
+                        || destLastModified < bundleLastModified[ 3 ]
+                        || destLastModified < bundleLastModified[ 4 ]
+                        || destLastModified < bundleLastModified[ 5 ]
+                        || destLastModified < bundleLastModified[ 6 ] )
                     {
-                        log( "Processing " + srcFiles[j],
-                            Project.MSG_DEBUG );
+                        log( "Processing " + srcFiles[ j ],
+                             Project.MSG_DEBUG );
                         FileOutputStream fos = new FileOutputStream( dest );
                         BufferedWriter out = new BufferedWriter(
                             new OutputStreamWriter( fos,
-                            destEncoding ) );
-                        FileInputStream fis = new FileInputStream( srcFiles[j] );
+                                                    destEncoding ) );
+                        FileInputStream fis = new FileInputStream( srcFiles[ j ] );
                         BufferedReader in = new BufferedReader(
                             new InputStreamReader( fis,
-                            srcEncoding ) );
+                                                   srcEncoding ) );
                         String line;
                         while( ( line = in.readLine() ) != null )
                         {
@@ -582,7 +588,7 @@ public class Translate extends MatchingTask
                                     break;
                                 }
                                 String matches = line.substring( startIndex + 1,
-                                    endIndex );
+                                                                 endIndex );
                                 //If there is a white space or = or :, then
                                 //it isn't to be treated as a valid key.
                                 for( int k = 0; k < matches.length(); k++ )
@@ -597,19 +603,19 @@ public class Translate extends MatchingTask
                                     }
                                 }
                                 String replace = null;
-                                replace = ( String )resourceMap.get( matches );
+                                replace = (String)resourceMap.get( matches );
                                 //If the key hasn't been loaded into resourceMap,
                                 //use the key itself as the value also.
                                 if( replace == null )
                                 {
                                     log( "Warning: The key: " + matches
                                          + " hasn't been defined.",
-                                        Project.MSG_DEBUG );
+                                         Project.MSG_DEBUG );
                                     replace = matches;
                                 }
                                 line = line.substring( 0, startIndex )
-                                     + replace
-                                     + line.substring( endIndex + 1 );
+                                    + replace
+                                    + line.substring( endIndex + 1 );
                                 endIndex = startIndex + replace.length() + 1;
                                 if( endIndex + 1 >= line.length() )
                                 {
@@ -630,14 +636,14 @@ public class Translate extends MatchingTask
                     }
                     else
                     {
-                        log( "Skipping " + srcFiles[j] +
-                            " as destination file is up to date",
-                            Project.MSG_VERBOSE );
+                        log( "Skipping " + srcFiles[ j ] +
+                             " as destination file is up to date",
+                             Project.MSG_VERBOSE );
                     }
                 }
                 catch( IOException ioe )
                 {
-                    throw new BuildException( ioe.getMessage(), location );
+                    throw new BuildException( ioe.getMessage() );
                 }
             }
         }

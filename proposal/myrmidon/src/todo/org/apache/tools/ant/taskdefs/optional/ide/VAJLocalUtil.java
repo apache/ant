@@ -392,7 +392,7 @@ abstract class VAJLocalUtil implements VAJUtil
             }
             catch( Exception e )
             {
-                throw new BuildException( e );
+                throw new BuildException( "Error", e );
             }
             if( files.size() > 0 )
             {

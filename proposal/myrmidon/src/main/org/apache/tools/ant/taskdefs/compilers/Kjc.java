@@ -42,7 +42,7 @@ public class Kjc extends DefaultCompilerAdapter
         {
             throw new BuildException( "Cannot use kjc compiler, as it is not available" +
                 " A common solution is to set the environment variable" +
-                " CLASSPATH to your kjc archive (kjc.jar).", location );
+                " CLASSPATH to your kjc archive (kjc.jar)." );
         }
         catch( Exception ex )
         {
@@ -52,7 +52,7 @@ public class Kjc extends DefaultCompilerAdapter
             }
             else
             {
-                throw new BuildException( "Error starting kjc compiler: ", ex, location );
+                throw new BuildException( "Error starting kjc compiler: ", ex );
             }
         }
     }

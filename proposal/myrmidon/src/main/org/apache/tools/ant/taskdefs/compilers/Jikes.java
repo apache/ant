@@ -131,23 +131,6 @@ public class Jikes extends DefaultCompilerAdapter
             cmd.createArgument().setValue( "+E" );
         }
 
-        /**
-         * Jikes issues more warnings that javac, for example, when you have
-         * files in your classpath that don't exist. As this is often the case,
-         * these warning can be pretty annoying.
-         */
-        String warningsProperty = project.getProperty( "build.compiler.warnings" );
-        if( warningsProperty != null )
-        {
-            attributes.log( "!! the build.compiler.warnings property is deprecated. !!",
-                Project.MSG_WARN );
-            attributes.log( "!! Use the nowarn attribute instead. !!",
-                Project.MSG_WARN );
-            if( !Project.toBoolean( warningsProperty ) )
-            {
-                cmd.createArgument().setValue( "-nowarn" );
-            }
-        }
         if( attributes.getNowarn() )
         {
             /*

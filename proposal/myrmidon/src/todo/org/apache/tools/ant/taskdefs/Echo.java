@@ -132,7 +132,7 @@ public class Echo extends Task
             }
             catch( IOException ioe )
             {
-                throw new BuildException( ioe);
+                throw new BuildException( "Error", ioe);
             }
             finally
             {

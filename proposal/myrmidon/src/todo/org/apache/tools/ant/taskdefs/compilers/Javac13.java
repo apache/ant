@@ -55,7 +55,7 @@ public class Javac13 extends DefaultCompilerAdapter
             }
             else
             {
-                throw new BuildException( "Error starting modern compiler", ex, location );
+                throw new BuildException( "Error starting modern compiler", ex );
             }
         }
     }

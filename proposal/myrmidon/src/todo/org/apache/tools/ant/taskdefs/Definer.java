@@ -72,12 +72,6 @@ public abstract class Definer extends Task
         this.resource = res;
     }
 
-    public void setReverseLoader( boolean reverseLoader )
-    {
-        this.reverseLoader = reverseLoader;
-        log( "The reverseloader attribute is DEPRECATED. It will be removed", Project.MSG_WARN );
-    }
-
     public String getClassname()
     {
         return value;
@@ -120,13 +114,13 @@ public abstract class Definer extends Task
                 {
                     String msg = "You must not specify name or value "
                          + "together with file or resource.";
-                    throw new BuildException( msg, location );
+                    throw new BuildException( msg );
                 }
 
                 if( file != null && resource != null )
                 {
                     String msg = "You must not specify both, file and resource.";
-                    throw new BuildException( msg, location );
+                    throw new BuildException( msg );
                 }
 
                 Properties props = new Properties();
@@ -169,7 +163,7 @@ public abstract class Definer extends Task
             }
             catch( IOException ex )
             {
-                throw new BuildException( ex);
+                throw new BuildException( "Error", ex);
             }
         }
     }
@@ -189,13 +183,13 @@ public abstract class Definer extends Task
         {
             String msg = getTaskName() + " class " + value +
                 " cannot be found";
-            throw new BuildException( msg, cnfe, location );
+            throw new BuildException( msg, cnfe );
         }
         catch( NoClassDefFoundError ncdfe )
         {
             String msg = getTaskName() + " class " + value +
                 " cannot be found";
-            throw new BuildException( msg, ncdfe, location );
+            throw new BuildException( msg, ncdfe );
         }
     }
 

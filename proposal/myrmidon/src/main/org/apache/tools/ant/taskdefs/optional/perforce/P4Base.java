@@ -170,7 +170,7 @@ public abstract class P4Base extends org.apache.tools.ant.Task
             }
             catch( IOException e )
             {
-                throw new BuildException( e );
+                throw new BuildException( "Error", e );
             }
             finally
             {

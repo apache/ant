@@ -6,6 +6,7 @@
  * the LICENSE file.
  */
 package org.apache.tools.ant;
+
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -15,6 +16,7 @@ import java.util.Hashtable;
 import java.util.Properties;
 import java.util.Stack;
 import java.util.Vector;
+import org.apache.myrmidon.api.TaskException;
 import org.apache.tools.ant.types.FilterSet;
 import org.apache.tools.ant.types.FilterSetCollection;
 import org.apache.tools.ant.util.FileUtils;
@@ -30,10 +32,8 @@ import org.apache.tools.ant.util.FileUtils;
  *
  * @author duncan@x180.com
  */
-
 public class Project
 {
-
     public final static int MSG_ERR = 0;
     public final static int MSG_WARN = 1;
     public final static int MSG_INFO = 2;
@@ -71,7 +71,7 @@ public class Project
     /**
      * The Ant core classloader - may be null if using system loader
      */
-    private ClassLoader coreLoader = null;
+    private ClassLoader coreLoader;
 
     /**
      * Records the latest task on a thread
@@ -80,8 +80,6 @@ public class Project
     private File baseDir;
     private String defaultTarget;
     private String description;
-
-    private FileUtils fileUtils;
 
     private String name;
 
@@ -111,14 +109,6 @@ public class Project
             // swallow as we've hit the max class version that
             // we have
         }
-    }
-
-    /**
-     * create a new ant project
-     */
-    public Project()
-    {
-        fileUtils = FileUtils.newFileUtils();
     }
 
     /**
@@ -181,18 +171,18 @@ public class Project
         return path.toString();
     }
 
-    private static BuildException makeCircularException( String end, Stack stk )
+    private static TaskException makeCircularException( String end, Stack stk )
     {
         StringBuffer sb = new StringBuffer( "Circular dependency: " );
         sb.append( end );
         String c;
         do
         {
-            c = ( String )stk.pop();
+            c = (String)stk.pop();
             sb.append( " <- " );
             sb.append( c );
-        }while ( !c.equals( end ) );
-        return new BuildException( new String( sb ) );
+        } while( !c.equals( end ) );
+        return new TaskException( new String( sb ) );
     }
 
     /**
@@ -200,16 +190,16 @@ public class Project
      * and being a directory type
      *
      * @param baseDir project base directory.
-     * @throws BuildException if the directory was invalid
+     * @throws TaskException if the directory was invalid
      */
     public void setBaseDir( File baseDir )
-        throws BuildException
+        throws TaskException
     {
-        baseDir = fileUtils.normalize( baseDir.getAbsolutePath() );
+        baseDir = FileUtils.newFileUtils().normalize( baseDir.getAbsolutePath() );
         if( !baseDir.exists() )
-            throw new BuildException( "Basedir " + baseDir.getAbsolutePath() + " does not exist" );
+            throw new TaskException( "Basedir " + baseDir.getAbsolutePath() + " does not exist" );
         if( !baseDir.isDirectory() )
-            throw new BuildException( "Basedir " + baseDir.getAbsolutePath() + " is not a directory" );
+            throw new TaskException( "Basedir " + baseDir.getAbsolutePath() + " is not a directory" );
         this.baseDir = baseDir;
         setPropertyInternal( "basedir", this.baseDir.getPath() );
         String msg = "Project base dir set to: " + this.baseDir;
@@ -220,10 +210,10 @@ public class Project
      * match basedir attribute in xml
      *
      * @param baseD project base directory.
-     * @throws BuildException if the directory was invalid
+     * @throws TaskException if the directory was invalid
      */
     public void setBasedir( String baseD )
-        throws BuildException
+        throws TaskException
     {
         setBaseDir( new File( baseD ) );
     }
@@ -233,25 +223,12 @@ public class Project
         this.coreLoader = coreLoader;
     }
 
-
     /**
      * set the default target of the project XML attribute name.
      *
      * @param defaultTarget The new Default value
      */
     public void setDefault( String defaultTarget )
-    {
-        this.defaultTarget = defaultTarget;
-    }
-
-    /**
-     * set the default target of the project
-     *
-     * @param defaultTarget The new DefaultTarget value
-     * @see #setDefault(String)
-     * @deprecated, use setDefault
-     */
-    public void setDefaultTarget( String defaultTarget )
     {
         this.defaultTarget = defaultTarget;
     }
@@ -267,41 +244,20 @@ public class Project
     }
 
     /**
-     * Calls File.setLastModified(long time) in a Java 1.1 compatible way.
-     *
-     * @param file The new FileLastModified value
-     * @param time The new FileLastModified value
-     * @exception BuildException Description of Exception
-     * @deprecated
-     */
-    public void setFileLastModified( File file, long time )
-        throws BuildException
-    {
-        if( getJavaVersion() == JAVA_1_1 )
-        {
-            log( "Cannot change the modification time of " + file
-                 + " in JDK 1.1", Project.MSG_WARN );
-            return;
-        }
-        fileUtils.setFileLastModified( file, time );
-        log( "Setting modification time for " + file, MSG_VERBOSE );
-    }
-
-    /**
      * set the ant.java.version property, also tests for unsupported JVM
      * versions, prints the verbose log messages
      *
-     * @throws BuildException if this Java version is not supported
+     * @throws TaskException if this Java version is not supported
      */
     public void setJavaVersionProperty()
-        throws BuildException
+        throws TaskException
     {
         setPropertyInternal( "ant.java.version", javaVersion );
 
         // sanity check
         if( javaVersion == JAVA_1_0 )
         {
-            throw new BuildException( "Ant cannot work on Java 1.0" );
+            throw new TaskException( "Ant cannot work on Java 1.0" );
         }
 
         log( "Detected Java version: " + javaVersion + " in: " + System.getProperty( "java.home" ), MSG_VERBOSE );
@@ -337,7 +293,7 @@ public class Project
             return;
         }
         log( "Setting project property: " + name + " -> " +
-            value, MSG_DEBUG );
+             value, MSG_DEBUG );
         properties.put( name, value );
     }
 
@@ -360,11 +316,11 @@ public class Project
         if( null != properties.get( name ) )
         {
             log( "Overriding previous definition of property " + name,
-                MSG_VERBOSE );
+                 MSG_VERBOSE );
         }
 
         log( "Setting project property: " + name + " -> " +
-            value, MSG_DEBUG );
+             value, MSG_DEBUG );
         properties.put( name, value );
     }
 
@@ -395,7 +351,7 @@ public class Project
     public void setUserProperty( String name, String value )
     {
         log( "Setting ro project property: " + name + " -> " +
-            value, MSG_DEBUG );
+             value, MSG_DEBUG );
         userProperties.put( name, value );
         properties.put( name, value );
     }
@@ -414,7 +370,7 @@ public class Project
             {
                 setBasedir( "." );
             }
-            catch( BuildException ex )
+            catch( TaskException ex )
             {
                 ex.printStackTrace();
             }
@@ -462,17 +418,6 @@ public class Project
         return description;
     }
 
-    /**
-     * @return The Filters value
-     * @deprecated
-     */
-    public Hashtable getFilters()
-    {
-        // we need to build the hashtable dynamically
-        return globalFilterSet.getFilterHash();
-    }
-
-
     public FilterSet getGlobalFilterSet()
     {
         return globalFilterSet;
@@ -518,7 +463,7 @@ public class Project
     {
         if( name == null )
             return null;
-        String property = ( String )properties.get( name );
+        String property = (String)properties.get( name );
         return property;
     }
 
@@ -586,7 +531,7 @@ public class Project
     {
         if( name == null )
             return null;
-        String property = ( String )userProperties.get( name );
+        String property = (String)userProperties.get( name );
         return property;
     }
 
@@ -599,11 +544,11 @@ public class Project
      * @param targets is a Hashtable representing a "name to Target" mapping
      * @return a Vector of Strings with the names of the targets in sorted
      *      order.
-     * @exception BuildException if there is a cyclic dependency among the
+     * @exception TaskException if there is a cyclic dependency among the
      *      Targets, or if a Target does not exist.
      */
     public final Vector topoSort( String root, Hashtable targets )
-        throws BuildException
+        throws TaskException
     {
         Vector ret = new Vector();
         Hashtable state = new Hashtable();
@@ -619,10 +564,10 @@ public class Project
 
         tsort( root, targets, state, visiting, ret );
         log( "Build sequence for target `" + root + "' is " + ret, MSG_VERBOSE );
-        for( Enumeration en = targets.keys(); en.hasMoreElements();  )
+        for( Enumeration en = targets.keys(); en.hasMoreElements(); )
         {
-            String curTarget = ( String )( en.nextElement() );
-            String st = ( String )state.get( curTarget );
+            String curTarget = (String)( en.nextElement() );
+            String st = (String)state.get( curTarget );
             if( st == null )
             {
                 tsort( curTarget, targets, state, visiting, ret );
@@ -652,27 +597,12 @@ public class Project
         if( null != dataClassDefinitions.get( typeName ) )
         {
             log( "Trying to override old definition of datatype " + typeName,
-                MSG_WARN );
+                 MSG_WARN );
         }
 
         String msg = " +User datatype: " + typeName + "     " + typeClass.getName();
         log( msg, MSG_DEBUG );
         dataClassDefinitions.put( typeName, typeClass );
-    }
-
-    /**
-     * @param token The feature to be added to the Filter attribute
-     * @param value The feature to be added to the Filter attribute
-     * @deprecated
-     */
-    public void addFilter( String token, String value )
-    {
-        if( token == null )
-        {
-            return;
-        }
-
-        globalFilterSet.addFilter( new FilterSet.Filter( token, value ) );
     }
 
     /**
@@ -701,7 +631,7 @@ public class Project
         if( null != references.get( name ) )
         {
             log( "Overriding previous definition of reference to " + name,
-                MSG_WARN );
+                 MSG_WARN );
         }
         log( "Adding reference: " + name + " -> " + value, MSG_DEBUG );
         references.put( name, value );
@@ -714,11 +644,12 @@ public class Project
      * @see Project#addOrReplaceTarget to replace existing Targets.
      */
     public void addTarget( Target target )
+        throws TaskException
     {
         String name = target.getName();
         if( targets.get( name ) != null )
         {
-            throw new BuildException( "Duplicate target: `" + name + "'" );
+            throw new TaskException( "Duplicate target: `" + name + "'" );
         }
         addOrReplaceTarget( name, target );
     }
@@ -728,15 +659,15 @@ public class Project
      *
      * @param target is the Target to be added to the current Project.
      * @param targetName is the name to use for the Target
-     * @exception BuildException if the Target already exists in the project.
+     * @exception TaskException if the Target already exists in the project.
      * @see Project#addOrReplaceTarget to replace existing Targets.
      */
     public void addTarget( String targetName, Target target )
-        throws BuildException
+        throws TaskException
     {
         if( targets.get( targetName ) != null )
         {
-            throw new BuildException( "Duplicate target: `" + targetName + "'" );
+            throw new TaskException( "Duplicate target: `" + targetName + "'" );
         }
         addOrReplaceTarget( targetName, target );
     }
@@ -746,26 +677,26 @@ public class Project
      *
      * @param taskName name of the task
      * @param taskClass full task classname
-     * @throws BuildException and logs as Project.MSG_ERR for conditions, that
+     * @throws TaskException and logs as Project.MSG_ERR for conditions, that
      *      will cause the task execution to fail.
      */
     public void addTaskDefinition( String taskName, Class taskClass )
-        throws BuildException
+        throws TaskException
     {
-        Class old = ( Class )taskClassDefinitions.get( taskName );
+        Class old = (Class)taskClassDefinitions.get( taskName );
         if( null != old )
         {
             if( old.equals( taskClass ) )
             {
                 log( "Ignoring override for task " + taskName
                      + ", it is already defined by the same class.",
-                    MSG_VERBOSE );
+                     MSG_VERBOSE );
                 return;
             }
             else
             {
                 log( "Trying to override old definition of task " + taskName,
-                    MSG_WARN );
+                     MSG_WARN );
                 invalidateCreatedTasks( taskName );
             }
         }
@@ -780,23 +711,23 @@ public class Project
      * Checks a class, whether it is suitable for serving as ant task.
      *
      * @param taskClass Description of Parameter
-     * @throws BuildException and logs as Project.MSG_ERR for conditions, that
+     * @throws TaskException and logs as Project.MSG_ERR for conditions, that
      *      will cause the task execution to fail.
      */
     public void checkTaskClass( final Class taskClass )
-        throws BuildException
+        throws TaskException
     {
         if( !Modifier.isPublic( taskClass.getModifiers() ) )
         {
             final String message = taskClass + " is not public";
             log( message, Project.MSG_ERR );
-            throw new BuildException( message );
+            throw new TaskException( message );
         }
         if( Modifier.isAbstract( taskClass.getModifiers() ) )
         {
             final String message = taskClass + " is abstract";
             log( message, Project.MSG_ERR );
-            throw new BuildException( message );
+            throw new TaskException( message );
         }
         try
         {
@@ -808,156 +739,10 @@ public class Project
         {
             final String message = "No public default constructor in " + taskClass;
             log( message, Project.MSG_ERR );
-            throw new BuildException( message );
+            throw new TaskException( message );
         }
         if( !Task.class.isAssignableFrom( taskClass ) )
             TaskAdapter.checkTaskClass( taskClass, this );
-    }
-
-    /**
-     * Convienence method to copy a file from a source to a destination. No
-     * filtering is performed.
-     *
-     * @param sourceFile Description of Parameter
-     * @param destFile Description of Parameter
-     * @throws IOException
-     * @deprecated
-     */
-    public void copyFile( String sourceFile, String destFile )
-        throws IOException
-    {
-        fileUtils.copyFile( sourceFile, destFile );
-    }
-
-    /**
-     * Convienence method to copy a file from a source to a destination
-     * specifying if token filtering must be used.
-     *
-     * @param sourceFile Description of Parameter
-     * @param destFile Description of Parameter
-     * @param filtering Description of Parameter
-     * @throws IOException
-     * @deprecated
-     */
-    public void copyFile( String sourceFile, String destFile, boolean filtering )
-        throws IOException
-    {
-        fileUtils.copyFile( sourceFile, destFile, filtering ? globalFilters : null );
-    }
-
-    /**
-     * Convienence method to copy a file from a source to a destination
-     * specifying if token filtering must be used and if source files may
-     * overwrite newer destination files.
-     *
-     * @param sourceFile Description of Parameter
-     * @param destFile Description of Parameter
-     * @param filtering Description of Parameter
-     * @param overwrite Description of Parameter
-     * @throws IOException
-     * @deprecated
-     */
-    public void copyFile( String sourceFile, String destFile, boolean filtering,
-                          boolean overwrite )
-        throws IOException
-    {
-        fileUtils.copyFile( sourceFile, destFile, filtering ? globalFilters : null, overwrite );
-    }
-
-    /**
-     * Convienence method to copy a file from a source to a destination
-     * specifying if token filtering must be used, if source files may overwrite
-     * newer destination files and the last modified time of <code>destFile</code>
-     * file should be made equal to the last modified time of <code>sourceFile</code>
-     * .
-     *
-     * @param sourceFile Description of Parameter
-     * @param destFile Description of Parameter
-     * @param filtering Description of Parameter
-     * @param overwrite Description of Parameter
-     * @param preserveLastModified Description of Parameter
-     * @throws IOException
-     * @deprecated
-     */
-    public void copyFile( String sourceFile, String destFile, boolean filtering,
-                          boolean overwrite, boolean preserveLastModified )
-        throws IOException
-    {
-        fileUtils.copyFile( sourceFile, destFile, filtering ? globalFilters : null,
-            overwrite, preserveLastModified );
-    }
-
-    /**
-     * Convienence method to copy a file from a source to a destination. No
-     * filtering is performed.
-     *
-     * @param sourceFile Description of Parameter
-     * @param destFile Description of Parameter
-     * @throws IOException
-     * @deprecated
-     */
-    public void copyFile( File sourceFile, File destFile )
-        throws IOException
-    {
-        fileUtils.copyFile( sourceFile, destFile );
-    }
-
-    /**
-     * Convienence method to copy a file from a source to a destination
-     * specifying if token filtering must be used.
-     *
-     * @param sourceFile Description of Parameter
-     * @param destFile Description of Parameter
-     * @param filtering Description of Parameter
-     * @throws IOException
-     * @deprecated
-     */
-    public void copyFile( File sourceFile, File destFile, boolean filtering )
-        throws IOException
-    {
-        fileUtils.copyFile( sourceFile, destFile, filtering ? globalFilters : null );
-    }
-
-    /**
-     * Convienence method to copy a file from a source to a destination
-     * specifying if token filtering must be used and if source files may
-     * overwrite newer destination files.
-     *
-     * @param sourceFile Description of Parameter
-     * @param destFile Description of Parameter
-     * @param filtering Description of Parameter
-     * @param overwrite Description of Parameter
-     * @throws IOException
-     * @deprecated
-     */
-    public void copyFile( File sourceFile, File destFile, boolean filtering,
-                          boolean overwrite )
-        throws IOException
-    {
-        fileUtils.copyFile( sourceFile, destFile, filtering ? globalFilters : null, overwrite );
-    }
-
-    /**
-     * Convienence method to copy a file from a source to a destination
-     * specifying if token filtering must be used, if source files may overwrite
-     * newer destination files and the last modified time of <code>destFile</code>
-     * file should be made equal to the last modified time of <code>sourceFile</code>
-     * .
-     *
-     * @param sourceFile Description of Parameter
-     * @param destFile Description of Parameter
-     * @param filtering Description of Parameter
-     * @param overwrite Description of Parameter
-     * @param preserveLastModified Description of Parameter
-     * @throws IOException
-     * @deprecated
-     */
-    public void copyFile( File sourceFile, File destFile, boolean filtering,
-                          boolean overwrite, boolean preserveLastModified )
-        throws IOException
-    {
-        fileUtils.copyFile( sourceFile, destFile, filtering ? globalFilters : null,
-            overwrite, preserveLastModified );
     }
 
     /**
@@ -965,12 +750,12 @@ public class Project
      *
      * @param typeName name of the datatype
      * @return null if the datatype name is unknown
-     * @throws BuildException when datatype creation goes bad
+     * @throws TaskException when datatype creation goes bad
      */
     public Object createDataType( String typeName )
-        throws BuildException
+        throws TaskException
     {
-        Class c = ( Class )dataClassDefinitions.get( typeName );
+        Class c = (Class)dataClassDefinitions.get( typeName );
 
         if( c == null )
             return null;
@@ -983,7 +768,7 @@ public class Project
             // Project argument.
             try
             {
-                ctor = c.getConstructor( new Class[0] );
+                ctor = c.getConstructor( new Class[ 0 ] );
                 noArg = true;
             }
             catch( NoSuchMethodException nse )
@@ -995,7 +780,7 @@ public class Project
             Object o = null;
             if( noArg )
             {
-                o = ctor.newInstance( new Object[0] );
+                o = ctor.newInstance( new Object[ 0 ] );
             }
             else
             {
@@ -1003,7 +788,7 @@ public class Project
             }
             if( o instanceof ProjectComponent )
             {
-                ( ( ProjectComponent )o ).setProject( this );
+                ( (ProjectComponent)o ).setProject( this );
             }
             String msg = "   +DataType: " + typeName;
             log( msg, MSG_DEBUG );
@@ -1013,14 +798,14 @@ public class Project
         {
             Throwable t = ite.getTargetException();
             String msg = "Could not create datatype of type: "
-                 + typeName + " due to " + t;
-            throw new BuildException( msg, t );
+                + typeName + " due to " + t;
+            throw new TaskException( msg, t );
         }
         catch( Throwable t )
         {
             String msg = "Could not create datatype of type: "
-                 + typeName + " due to " + t;
-            throw new BuildException( msg, t );
+                + typeName + " due to " + t;
+            throw new TaskException( msg, t );
         }
     }
 
@@ -1029,12 +814,12 @@ public class Project
      *
      * @param taskType name of the task
      * @return null if the task name is unknown
-     * @throws BuildException when task creation goes bad
+     * @throws TaskException when task creation goes bad
      */
     public Task createTask( String taskType )
-        throws BuildException
+        throws TaskException
     {
-        Class c = ( Class )taskClassDefinitions.get( taskType );
+        Class c = (Class)taskClassDefinitions.get( taskType );
 
         if( c == null )
             return null;
@@ -1044,7 +829,7 @@ public class Project
             Task task = null;
             if( o instanceof Task )
             {
-                task = ( Task )o;
+                task = (Task)o;
             }
             else
             {
@@ -1068,14 +853,14 @@ public class Project
         catch( Throwable t )
         {
             String msg = "Could not create task of type: "
-                 + taskType + " due to " + t;
-            throw new BuildException( msg, t );
+                + taskType + " due to " + t;
+            throw new TaskException( msg, t );
         }
     }
 
     public void demuxOutput( String line, boolean isError )
     {
-        Task task = ( Task )threadTasks.get( Thread.currentThread() );
+        Task task = (Task)threadTasks.get( Thread.currentThread() );
         if( task == null )
         {
             fireMessageLogged( this, line, isError ? MSG_ERR : MSG_INFO );
@@ -1097,10 +882,10 @@ public class Project
      * execute the targets and any targets it depends on
      *
      * @param targetName the target to execute
-     * @throws BuildException if the build failed
+     * @throws TaskException if the build failed
      */
     public void executeTarget( String targetName )
-        throws BuildException
+        throws TaskException
     {
 
         // sanity check ourselves, if we've been asked to build nothing
@@ -1109,7 +894,7 @@ public class Project
         if( targetName == null )
         {
             String msg = "No target specified";
-            throw new BuildException( msg );
+            throw new TaskException( msg );
         }
 
         // Sort the dependency tree, and run everything from the
@@ -1124,25 +909,25 @@ public class Project
 
         do
         {
-            curtarget = ( Target )sortedTargets.elementAt( curidx++ );
+            curtarget = (Target)sortedTargets.elementAt( curidx++ );
             curtarget.performTasks();
-        }while ( !curtarget.getName().equals( targetName ) );
+        } while( !curtarget.getName().equals( targetName ) );
     }
 
     /**
      * execute the sequence of targets, and the targets they depend on
      *
      * @param targetNames Description of Parameter
-     * @throws BuildException if the build failed
+     * @throws TaskException if the build failed
      */
     public void executeTargets( Vector targetNames )
-        throws BuildException
+        throws TaskException
     {
         Throwable error = null;
 
         for( int i = 0; i < targetNames.size(); i++ )
         {
-            executeTarget( ( String )targetNames.elementAt( i ) );
+            executeTarget( (String)targetNames.elementAt( i ) );
         }
     }
 
@@ -1150,10 +935,10 @@ public class Project
      * Initialise the project. This involves setting the default task
      * definitions and loading the system properties.
      *
-     * @exception BuildException Description of Exception
+     * @exception TaskException Description of Exception
      */
     public void init()
-        throws BuildException
+        throws TaskException
     {
         setJavaVersionProperty();
 
@@ -1165,7 +950,7 @@ public class Project
             InputStream in = this.getClass().getResourceAsStream( defs );
             if( in == null )
             {
-                throw new BuildException( "Can't load default task list" );
+                throw new TaskException( "Can't load default task list" );
             }
             props.load( in );
             in.close();
@@ -1173,7 +958,7 @@ public class Project
             Enumeration enum = props.propertyNames();
             while( enum.hasMoreElements() )
             {
-                String key = ( String )enum.nextElement();
+                String key = (String)enum.nextElement();
                 String value = props.getProperty( key );
                 try
                 {
@@ -1192,7 +977,7 @@ public class Project
         }
         catch( IOException ioe )
         {
-            throw new BuildException( "Can't load default task list" );
+            throw new TaskException( "Can't load default task list" );
         }
 
         String dataDefs = "/org/apache/tools/ant/types/defaults.properties";
@@ -1203,7 +988,7 @@ public class Project
             InputStream in = this.getClass().getResourceAsStream( dataDefs );
             if( in == null )
             {
-                throw new BuildException( "Can't load default datatype list" );
+                throw new TaskException( "Can't load default datatype list" );
             }
             props.load( in );
             in.close();
@@ -1211,7 +996,7 @@ public class Project
             Enumeration enum = props.propertyNames();
             while( enum.hasMoreElements() )
             {
-                String key = ( String )enum.nextElement();
+                String key = (String)enum.nextElement();
                 String value = props.getProperty( key );
                 try
                 {
@@ -1230,7 +1015,7 @@ public class Project
         }
         catch( IOException ioe )
         {
-            throw new BuildException( "Can't load default datatype list" );
+            throw new TaskException( "Can't load default datatype list" );
         }
 
         setSystemProperties();
@@ -1296,32 +1081,12 @@ public class Project
      *
      * @param value the string to be scanned for property references.
      * @return Description of the Returned Value
-     * @exception BuildException Description of Exception
+     * @exception TaskException Description of Exception
      */
     public String replaceProperties( String value )
-        throws BuildException
+        throws TaskException
     {
         return ProjectHelper.replaceProperties( this, value );
-    }
-
-    /**
-     * Return the canonical form of fileName as an absolute path. <p>
-     *
-     * If fileName is a relative file name, resolve it relative to rootDir.</p>
-     *
-     * @param fileName Description of Parameter
-     * @param rootDir Description of Parameter
-     * @return Description of the Returned Value
-     * @deprecated
-     */
-    public File resolveFile( String fileName, File rootDir )
-    {
-        return fileUtils.resolveFile( rootDir, fileName );
-    }
-
-    public File resolveFile( String fileName )
-    {
-        return fileUtils.resolveFile( baseDir, fileName );
     }
 
     /**
@@ -1335,7 +1100,7 @@ public class Project
         event.setException( exception );
         for( int i = 0; i < listeners.size(); i++ )
         {
-            BuildListener listener = ( BuildListener )listeners.elementAt( i );
+            BuildListener listener = (BuildListener)listeners.elementAt( i );
             listener.buildFinished( event );
         }
     }
@@ -1348,7 +1113,7 @@ public class Project
         BuildEvent event = new BuildEvent( this );
         for( int i = 0; i < listeners.size(); i++ )
         {
-            BuildListener listener = ( BuildListener )listeners.elementAt( i );
+            BuildListener listener = (BuildListener)listeners.elementAt( i );
             listener.buildStarted( event );
         }
     }
@@ -1383,11 +1148,10 @@ public class Project
         event.setException( exception );
         for( int i = 0; i < listeners.size(); i++ )
         {
-            BuildListener listener = ( BuildListener )listeners.elementAt( i );
+            BuildListener listener = (BuildListener)listeners.elementAt( i );
             listener.targetFinished( event );
         }
     }
-
 
     /**
      * send target started event to the listeners
@@ -1399,7 +1163,7 @@ public class Project
         BuildEvent event = new BuildEvent( target );
         for( int i = 0; i < listeners.size(); i++ )
         {
-            BuildListener listener = ( BuildListener )listeners.elementAt( i );
+            BuildListener listener = (BuildListener)listeners.elementAt( i );
             listener.targetStarted( event );
         }
     }
@@ -1413,7 +1177,7 @@ public class Project
         event.setException( exception );
         for( int i = 0; i < listeners.size(); i++ )
         {
-            BuildListener listener = ( BuildListener )listeners.elementAt( i );
+            BuildListener listener = (BuildListener)listeners.elementAt( i );
             listener.taskFinished( event );
         }
     }
@@ -1425,7 +1189,7 @@ public class Project
         BuildEvent event = new BuildEvent( task );
         for( int i = 0; i < listeners.size(); i++ )
         {
-            BuildListener listener = ( BuildListener )listeners.elementAt( i );
+            BuildListener listener = (BuildListener)listeners.elementAt( i );
             listener.taskStarted( event );
         }
     }
@@ -1455,7 +1219,7 @@ public class Project
     // exactly the target names in "state" that are in the VISITING state.)
     // 1. Set the current target to the VISITING state, and push it onto
     // the "visiting" stack.
-    // 2. Throw a BuildException if any child of the current node is
+    // 2. Throw a TaskException if any child of the current node is
     // in the VISITING state (implies there is a cycle.) It uses the
     // "visiting" Stack to construct the cycle.
     // 3. If any children have not been VISITED, tsort() the child.
@@ -1467,12 +1231,12 @@ public class Project
     private final void tsort( String root, Hashtable targets,
                               Hashtable state, Stack visiting,
                               Vector ret )
-        throws BuildException
+        throws TaskException
     {
         state.put( root, VISITING );
         visiting.push( root );
 
-        Target target = ( Target )( targets.get( root ) );
+        Target target = (Target)( targets.get( root ) );
 
         // Make sure we exist
         if( target == null )
@@ -1483,19 +1247,19 @@ public class Project
             visiting.pop();
             if( !visiting.empty() )
             {
-                String parent = ( String )visiting.peek();
+                String parent = (String)visiting.peek();
                 sb.append( "It is used from target `" );
                 sb.append( parent );
                 sb.append( "'." );
             }
 
-            throw new BuildException( new String( sb ) );
+            throw new TaskException( new String( sb ) );
         }
 
-        for( Enumeration en = target.getDependencies(); en.hasMoreElements();  )
+        for( Enumeration en = target.getDependencies(); en.hasMoreElements(); )
         {
-            String cur = ( String )en.nextElement();
-            String m = ( String )state.get( cur );
+            String cur = (String)en.nextElement();
+            String m = (String)state.get( cur );
             if( m == null )
             {
                 // Not been visited
@@ -1508,7 +1272,7 @@ public class Project
             }
         }
 
-        String p = ( String )visiting.pop();
+        String p = (String)visiting.pop();
         if( root != p )
         {
             throw new RuntimeException( "Unexpected internal error: expected to pop " + root + " but got " + p );
@@ -1528,7 +1292,7 @@ public class Project
     {
         synchronized( createdTasks )
         {
-            Vector v = ( Vector )createdTasks.get( type );
+            Vector v = (Vector)createdTasks.get( type );
             if( v == null )
             {
                 v = new Vector();
@@ -1543,7 +1307,7 @@ public class Project
         event.setMessage( message, priority );
         for( int i = 0; i < listeners.size(); i++ )
         {
-            BuildListener listener = ( BuildListener )listeners.elementAt( i );
+            BuildListener listener = (BuildListener)listeners.elementAt( i );
             listener.messageLogged( event );
         }
     }
@@ -1558,13 +1322,13 @@ public class Project
     {
         synchronized( createdTasks )
         {
-            Vector v = ( Vector )createdTasks.get( type );
+            Vector v = (Vector)createdTasks.get( type );
             if( v != null )
             {
                 Enumeration enum = v.elements();
                 while( enum.hasMoreElements() )
                 {
-                    Task t = ( Task )enum.nextElement();
+                    Task t = (Task)enum.nextElement();
                     t.markInvalid();
                 }
                 v.removeAllElements();

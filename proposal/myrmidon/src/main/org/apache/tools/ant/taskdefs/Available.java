@@ -16,6 +16,7 @@ import org.apache.tools.ant.types.EnumeratedAttribute;
 import org.apache.tools.ant.types.Path;
 import org.apache.tools.ant.types.Reference;
 import org.apache.tools.ant.util.FileUtils;
+import org.apache.myrmidon.api.TaskException;
 
 /**
  * Will set the given property if the requested resource is available at
@@ -26,7 +27,9 @@ import org.apache.tools.ant.util.FileUtils;
  * @author <a href="mailto:umagesh@apache.org">Magesh Umasankar</a>
  */
 
-public class Available extends Task implements Condition
+public class Available
+    extends Task
+    implements Condition
 {
     private String value = "true";
     private String classname;
@@ -77,22 +80,8 @@ public class Available extends Task implements Condition
         this.resource = resource;
     }
 
-    /**
-     * @param type The new Type value
-     * @deprecated setType(String) is deprecated and is replaced with
-     *      setType(Available.FileDir) to make Ant's Introspection mechanism do
-     *      the work and also to encapsulate operations on the type in its own
-     *      class.
-     */
-    public void setType( String type )
-    {
-        log( "DEPRECATED - The setType(String) method has been deprecated."
-             + " Use setType(Available.FileDir) instead." );
-        this.type = new FileDir();
-        this.type.setValue( type );
-    }
 
-    public void setType( FileDir type )
+   public void setType( FileDir type )
     {
         this.type = type;
     }
@@ -121,18 +110,18 @@ public class Available extends Task implements Condition
     }
 
     public boolean eval()
-        throws BuildException
+        throws TaskException
     {
         if( classname == null && file == null && resource == null )
         {
-            throw new BuildException( "At least one of (classname|file|resource) is required", location );
+            throw new BuildException( "At least one of (classname|file|resource) is required" );
         }
 
         if( type != null )
         {
             if( file == null )
             {
-                throw new BuildException( "The type attribute is only valid when specifying the file attribute." );
+                throw new TaskException( "The type attribute is only valid when specifying the file attribute." );
             }
         }
 
@@ -176,24 +165,21 @@ public class Available extends Task implements Condition
     }
 
     public void execute()
-        throws BuildException
+        throws TaskException
     {
         if( property == null )
         {
-            throw new BuildException( "property attribute is required", location );
+            throw new BuildException( "property attribute is required");
         }
 
         if( eval() )
         {
             String lSep = System.getProperty( "line.separator" );
-            if( null != project.getProperty( property ) )
+            if( null == project.getProperty( property ) )
             {
-                log( "DEPRECATED - <available> used to overide an existing property. "
-                     + lSep
-                     + " Build writer should not reuse the same property name for "
-                     + lSep + "different values." );
+                this.project.setProperty( property, value );
             }
-            this.project.setProperty( property, value );
+            //else ignore
         }
     }
 
@@ -235,7 +221,7 @@ public class Available extends Task implements Condition
     {
         if( filepath == null )
         {
-            return checkFile( project.resolveFile( file ), file );
+            return checkFile( resolveFile( file ), file );
         }
         else
         {

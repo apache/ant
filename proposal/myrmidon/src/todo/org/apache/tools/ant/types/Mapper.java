@@ -201,7 +201,7 @@ public class Mapper extends DataType implements Cloneable
         }
         catch( Throwable t )
         {
-            throw new BuildException( t );
+            throw new BuildException( "Error", t );
         }
         finally
         {

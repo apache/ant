@@ -89,59 +89,6 @@ public abstract class MatchingTask extends Task
     }
 
     /**
-     * List of filenames and directory names to not include. They should be
-     * either , or " " (space) separated. The ignored files will be logged.
-     *
-     * @param ignoreString the string containing the files to ignore.
-     */
-    public void XsetIgnore( String ignoreString )
-    {
-        log( "The ignore attribute is deprecated." +
-            "Please use the excludes attribute.",
-            Project.MSG_WARN );
-        if( ignoreString != null && ignoreString.length() > 0 )
-        {
-            Vector tmpExcludes = new Vector();
-            StringTokenizer tok = new StringTokenizer( ignoreString, ", ", false );
-            while( tok.hasMoreTokens() )
-            {
-                createExclude().setName( "**/" + tok.nextToken().trim() + "/**" );
-            }
-        }
-    }
-
-    /**
-     * Set this to be the items in the base directory that you want to be
-     * included. You can also specify "*" for the items (ie: items="*") and it
-     * will include all the items in the base directory.
-     *
-     * @param itemString the string containing the files to include.
-     */
-    public void XsetItems( String itemString )
-    {
-        log( "The items attribute is deprecated. " +
-            "Please use the includes attribute.",
-            Project.MSG_WARN );
-        if( itemString == null || itemString.equals( "*" )
-             || itemString.equals( "." ) )
-        {
-            createInclude().setName( "**" );
-        }
-        else
-        {
-            StringTokenizer tok = new StringTokenizer( itemString, ", " );
-            while( tok.hasMoreTokens() )
-            {
-                String pattern = tok.nextToken().trim();
-                if( pattern.length() > 0 )
-                {
-                    createInclude().setName( pattern + "/**" );
-                }
-            }
-        }
-    }
-
-    /**
      * add a name entry on the exclude list
      *
      * @return Description of the Returned Value

@@ -11,6 +11,7 @@ import java.util.Locale;
 import java.util.Vector;
 import org.xml.sax.AttributeList;
 import org.xml.sax.helpers.AttributeListImpl;
+import org.apache.myrmidon.api.TaskException;
 
 /**
  * Wrapper class that holds the attributes of a Task (or elements nested below
@@ -102,7 +103,7 @@ public class RuntimeConfigurable
      * @exception BuildException Description of Exception
      */
     public void maybeConfigure( Project p )
-        throws BuildException
+        throws TaskException
     {
         String id = null;
 

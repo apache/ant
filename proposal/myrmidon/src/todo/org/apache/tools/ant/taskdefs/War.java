@@ -32,12 +32,6 @@ public class War extends Jar
         emptyBehavior = "create";
     }
 
-    public void setWarfile( File warFile )
-    {
-        log( "DEPRECATED - The warfile attribute is deprecated. Use file attribute instead." );
-        setFile( warFile );
-    }
-
     public void setWebxml( File descr )
     {
         deploymentDescriptor = descr;
@@ -89,7 +83,7 @@ public class War extends Jar
         // If no webxml file is specified, it's an error.
         if( deploymentDescriptor == null && !isInUpdateMode() )
         {
-            throw new BuildException( "webxml attribute is required", location );
+            throw new BuildException( "webxml attribute is required" );
         }
 
         super.initZipOutputStream( zOut );

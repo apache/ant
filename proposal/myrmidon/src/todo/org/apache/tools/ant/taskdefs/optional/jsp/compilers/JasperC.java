@@ -53,7 +53,7 @@ public class JasperC extends DefaultCompilerAdapter
             else
             {
                 throw new BuildException( "Error running jsp compiler: ",
-                    ex, getJspc().getLocation() );
+                    ex );
             }
         }
     }

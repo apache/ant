@@ -310,7 +310,7 @@ public class Ilasm
         throws BuildException
     {
         if( _srcDir == null )
-            _srcDir = project.resolveFile( "." );
+            _srcDir = resolveFile( "." );
 
         //get dependencies list.
         DirectoryScanner scanner = super.getDirectoryScanner( _srcDir );

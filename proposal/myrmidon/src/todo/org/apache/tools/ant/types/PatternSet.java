@@ -367,7 +367,7 @@ public class PatternSet extends DataType
                 String fileName = ne.evalName( p );
                 if( fileName != null )
                 {
-                    File inclFile = p.resolveFile( fileName );
+                    File inclFile = resolveFile( fileName );
                     if( !inclFile.exists() )
                         throw new BuildException( "Includesfile "
                              + inclFile.getAbsolutePath()
@@ -387,7 +387,7 @@ public class PatternSet extends DataType
                 String fileName = ne.evalName( p );
                 if( fileName != null )
                 {
-                    File exclFile = p.resolveFile( fileName );
+                    File exclFile = resolveFile( fileName );
                     if( !exclFile.exists() )
                         throw new BuildException( "Excludesfile "
                              + exclFile.getAbsolutePath()

@@ -45,43 +45,6 @@ public class BuildException
     }
 
     /**
-     * Constructs an exception with the given message and exception as a root
-     * cause and a location in a file.
-     *
-     * @param msg Description of or information about the exception.
-     * @param cause Exception that might have cause this one.
-     * @param location Location in the project file where the error occured.
-     */
-    public BuildException( String msg, Throwable cause, Location location )
-    {
-        this( msg, cause );
-        this.location = location;
-    }
-
-    /**
-     * Constructs an exception with the given exception as a root cause.
-     *
-     * @param cause Exception that might have caused this one.
-     */
-    public BuildException( Throwable cause )
-    {
-        super( cause.toString(), cause );
-    }
-
-    /**
-     * Constructs an exception with the given descriptive message and a location
-     * in a file.
-     *
-     * @param msg Description of or information about the exception.
-     * @param location Location in the project file where the error occured.
-     */
-    public BuildException( String msg, Location location )
-    {
-        super( msg );
-        this.location = location;
-    }
-
-    /**
      * Sets the file location where the error occured.
      *
      * @param location The new Location value

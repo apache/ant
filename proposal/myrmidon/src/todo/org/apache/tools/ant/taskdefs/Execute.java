@@ -259,12 +259,12 @@ public class Execute
             int retval = exe.execute();
             if( retval != 0 )
             {
-                throw new BuildException( cmdline[ 0 ] + " failed with return code " + retval, task.getLocation() );
+                throw new BuildException( cmdline[ 0 ] + " failed with return code " + retval );
             }
         }
         catch( java.io.IOException exc )
         {
-            throw new BuildException( "Could not launch " + cmdline[ 0 ] + ": " + exc, task.getLocation() );
+            throw new BuildException( "Could not launch " + cmdline[ 0 ] + ": " + exc );
         }
     }
 
@@ -806,7 +806,7 @@ public class Execute
             {
                 throw new IOException( "Cannot locate antRun script: Property 'ant.home' not found" );
             }
-            String antRun = project.resolveFile( antHome + File.separator + _script ).toString();
+            String antRun = resolveFile( antHome + File.separator + _script ).toString();
 
             // Build the command
             File commandDir = workingDir;
@@ -871,7 +871,7 @@ public class Execute
             {
                 throw new IOException( "Cannot locate antRun script: Property 'ant.home' not found" );
             }
-            String antRun = project.resolveFile( antHome + File.separator + _script ).toString();
+            String antRun = resolveFile( antHome + File.separator + _script ).toString();
 
             // Build the command
             File commandDir = workingDir;

@@ -238,23 +238,23 @@ public class Javah extends Task
 
         if( ( cls == null ) && ( classes.size() == 0 ) )
         {
-            throw new BuildException( "class attribute must be set!", location );
+            throw new BuildException( "class attribute must be set!" );
         }
 
         if( ( cls != null ) && ( classes.size() > 0 ) )
         {
-            throw new BuildException( "set class attribute or class element, not both.", location );
+            throw new BuildException( "set class attribute or class element, not both." );
         }
 
         if( destDir != null )
         {
             if( !destDir.isDirectory() )
             {
-                throw new BuildException( "destination directory \"" + destDir + "\" does not exist or is not a directory", location );
+                throw new BuildException( "destination directory \"" + destDir + "\" does not exist or is not a directory" );
             }
             if( outputFile != null )
             {
-                throw new BuildException( "destdir and outputFile are mutually exclusive", location );
+                throw new BuildException( "destdir and outputFile are mutually exclusive");
             }
         }
 
@@ -381,7 +381,7 @@ public class Javah extends Task
         {
             if( !old )
             {
-                throw new BuildException( "stubs only available in old mode.", location );
+                throw new BuildException( "stubs only available in old mode." );
             }
             cmd.createArgument().setValue( "-stubs" );
         }
@@ -442,7 +442,7 @@ public class Javah extends Task
             }
             else
             {
-                throw new BuildException( "Error starting javah: ", ex, location );
+                throw new BuildException( "Error starting javah: ", ex );
             }
         }
     }

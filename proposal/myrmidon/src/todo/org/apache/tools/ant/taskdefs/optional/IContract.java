@@ -897,27 +897,27 @@ public class IContract extends MatchingTask
     {
         if( srcDir == null )
         {
-            throw new BuildException( "srcdir attribute must be set!", location );
+            throw new BuildException( "srcdir attribute must be set!" );
         }
         if( !srcDir.exists() )
         {
-            throw new BuildException( "srcdir \"" + srcDir.getPath() + "\" does not exist!", location );
+            throw new BuildException( "srcdir \"" + srcDir.getPath() + "\" does not exist!");
         }
         if( instrumentDir == null )
         {
-            throw new BuildException( "instrumentdir attribute must be set!", location );
+            throw new BuildException( "instrumentdir attribute must be set!");
         }
         if( repositoryDir == null )
         {
-            throw new BuildException( "repositorydir attribute must be set!", location );
+            throw new BuildException( "repositorydir attribute must be set!" );
         }
         if( updateIcontrol == true && classDir == null )
         {
-            throw new BuildException( "classdir attribute must be specified when updateicontrol=true!", location );
+            throw new BuildException( "classdir attribute must be specified when updateicontrol=true!" );
         }
         if( updateIcontrol == true && controlFile == null )
         {
-            throw new BuildException( "controlfile attribute must be specified when updateicontrol=true!", location );
+            throw new BuildException( "controlfile attribute must be specified when updateicontrol=true!" );
         }
     }
 

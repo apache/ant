@@ -148,35 +148,6 @@ public class FixCRLF extends MatchingTask
     }
 
     /**
-     * Specify how carriage return (CR) characters are to be handled
-     *
-     * @param attr The new Cr value
-     * @deprecated use {@link #setEol setEol} instead.
-     */
-    public void setCr( AddAsisRemove attr )
-    {
-        log( "DEPRECATED: The cr attribute has been deprecated,",
-            Project.MSG_WARN );
-        log( "Please us the eol attribute instead", Project.MSG_WARN );
-        String option = attr.getValue();
-        CrLf c = new CrLf();
-        if( option.equals( "remove" ) )
-        {
-            c.setValue( "lf" );
-        }
-        else if( option.equals( "asis" ) )
-        {
-            c.setValue( "asis" );
-        }
-        else
-        {
-            // must be "add"
-            c.setValue( "crlf" );
-        }
-        setEol( c );
-    }
-
-    /**
      * Set the destination where the fixed files should be placed. Default is to
      * replace the original file.
      *
@@ -306,8 +277,7 @@ public class FixCRLF extends MatchingTask
     {
         if( tlength < 2 || tlength > 80 )
         {
-            throw new BuildException( "tablength must be between 2 and 80",
-                location );
+            throw new BuildException( "tablength must be between 2 and 80" );
         }
         tablength = tlength;
         StringBuffer sp = new StringBuffer();
@@ -522,7 +492,7 @@ public class FixCRLF extends MatchingTask
             }
             catch( IOException e )
             {
-                throw new BuildException( e );
+                throw new BuildException( "Error", e );
             }// end of try-catch
         }
         else
@@ -581,7 +551,7 @@ public class FixCRLF extends MatchingTask
             }
             catch( IOException e )
             {
-                throw new BuildException( e );
+                throw new BuildException( "Error", e );
             }// end of try-catch
 
         }// end of else tabs == ADD
@@ -617,7 +587,7 @@ public class FixCRLF extends MatchingTask
             }
             catch( IOException e )
             {
-                throw new BuildException( e );
+                throw new BuildException( "Error", e );
             }
 
             while( lines.hasMoreElements() )
@@ -631,7 +601,7 @@ public class FixCRLF extends MatchingTask
                 }
                 catch( NoSuchElementException e )
                 {
-                    throw new BuildException( e );
+                    throw new BuildException( "Error", e );
                 }
 
                 String lineString = line.getLineString();
@@ -649,7 +619,7 @@ public class FixCRLF extends MatchingTask
                     }
                     catch( IOException e )
                     {
-                        throw new BuildException( e );
+                        throw new BuildException( "Error", e );
                     }// end of try-catch
 
                 }
@@ -721,7 +691,7 @@ public class FixCRLF extends MatchingTask
                             }
                             catch( IOException e )
                             {
-                                throw new BuildException( e );
+                                throw new BuildException( "Error", e );
                             }
 
                             lines.setState( LOOKING );
@@ -744,7 +714,7 @@ public class FixCRLF extends MatchingTask
                 }
                 catch( IOException e )
                 {
-                    throw new BuildException( e );
+                    throw new BuildException( "Error", e );
                 }// end of try-catch
 
             }// end of while (lines.hasNext())
@@ -763,7 +733,7 @@ public class FixCRLF extends MatchingTask
             }
             catch( IOException e )
             {
-                throw new BuildException( e );
+                throw new BuildException( "Error", e );
             }
             finally
             {
@@ -773,7 +743,7 @@ public class FixCRLF extends MatchingTask
                 }
                 catch( IOException e )
                 {
-                    throw new BuildException( e );
+                    throw new BuildException( "Error", e );
                 }
             }
 
@@ -841,7 +811,7 @@ public class FixCRLF extends MatchingTask
         }
         catch( IOException e )
         {
-            throw new BuildException( e );
+            throw new BuildException( "Error", e );
         }
         finally
         {
@@ -914,7 +884,7 @@ public class FixCRLF extends MatchingTask
             }
             catch( IOException e )
             {
-                throw new BuildException( e );
+                throw new BuildException( "Error", e );
             }
         }
 
@@ -1043,7 +1013,7 @@ public class FixCRLF extends MatchingTask
             }
             catch( IOException e )
             {
-                throw new BuildException( e );
+                throw new BuildException( "Error", e );
             }
         }
 

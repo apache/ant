@@ -121,7 +121,7 @@ public class Touch extends Task
             }
             catch( ParseException pe )
             {
-                throw new BuildException( pe.getMessage(), pe, location );
+                throw new BuildException( pe.getMessage(), pe );
             }
         }
 
@@ -149,8 +149,7 @@ public class Touch extends Task
                 }
                 catch( IOException ioe )
                 {
-                    throw new BuildException( "Could not create " + file, ioe,
-                        location );
+                    throw new BuildException( "Could not create " + file, ioe );
                 }
             }
         }

@@ -24,6 +24,7 @@ import org.apache.tools.ant.Task;
 import org.apache.tools.ant.types.FileSet;
 import org.apache.tools.ant.util.DOMElementWriter;
 import org.apache.tools.ant.util.StringUtils;
+import org.apache.tools.ant.util.FileUtils;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.xml.sax.SAXException;
@@ -185,7 +186,7 @@ public class XMLResultAggregator extends Task implements XMLConstants
         }
         if( toDir == null )
         {
-            toDir = project.resolveFile( DEFAULT_DIR );
+            toDir = FileUtils.newFileUtils().resolveFile( project.getBaseDir(), DEFAULT_DIR );
         }
         return new File( toDir, toFile );
     }
@@ -211,7 +212,8 @@ public class XMLResultAggregator extends Task implements XMLConstants
                 if( pathname.endsWith( ".xml" ) )
                 {
                     File file = new File( ds.getBasedir(), pathname );
-                    file = project.resolveFile( file.getPath() );
+                    file = FileUtils.newFileUtils().
+                        resolveFile( project.getBaseDir(), file.getPath() );
                     v.addElement( file );
                 }
             }

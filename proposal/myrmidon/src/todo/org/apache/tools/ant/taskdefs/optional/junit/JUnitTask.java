@@ -443,7 +443,7 @@ public class JUnitTask extends Task
             String filename = test.getOutfile() + fe.getExtension();
             File destFile = new File( test.getTodir(), filename );
             String absFilename = destFile.getAbsolutePath();
-            return project.resolveFile( absFilename );
+            return resolveFile( absFilename );
         }
         return null;
     }
@@ -525,7 +525,7 @@ public class JUnitTask extends Task
         //@todo should be moved to the test class instead.
         if( test.getTodir() == null )
         {
-            test.setTodir( project.resolveFile( "." ) );
+            test.setTodir( resolveFile( "." ) );
         }
 
         if( test.getOutfile() == null )
@@ -561,8 +561,7 @@ public class JUnitTask extends Task
                  || failureOccurredHere && test.getHaltonfailure() )
             {
                 throw new BuildException( "Test " + test.getName() + " failed"
-                     + ( wasKilled ? " (timeout)" : "" ),
-                    location );
+                     + ( wasKilled ? " (timeout)" : "" )  );
             }
             else
             {
@@ -672,7 +671,7 @@ public class JUnitTask extends Task
         }
         catch( java.io.IOException e )
         {
-            throw new BuildException( "Error creating temporary properties file.", e, location );
+            throw new BuildException( "Error creating temporary properties file.", e );
         }
 
         Execute execute = new Execute( new LogStreamHandler( this, Project.MSG_INFO, Project.MSG_WARN ), watchdog );
@@ -691,7 +690,7 @@ public class JUnitTask extends Task
         }
         catch( IOException e )
         {
-            throw new BuildException( "Process fork failed.", e, location );
+            throw new BuildException( "Process fork failed.", e );
         }
         finally
         {

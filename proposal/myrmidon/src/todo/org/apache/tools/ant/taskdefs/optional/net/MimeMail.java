@@ -296,7 +296,7 @@ public class MimeMail extends Task
             }
             catch( IOException e )
             {
-                throw new BuildException( e );
+                throw new BuildException( "Error", e );
             }
         }
 
@@ -361,7 +361,7 @@ public class MimeMail extends Task
         {
             if( failOnError )
             {
-                throw new BuildException( e );
+                throw new BuildException( "Error", e );
             }
             else
             {

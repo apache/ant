@@ -6,13 +6,14 @@
  * the LICENSE file.
  */
 package org.apache.tools.ant.types;// java io classes
+
 // java util classes
+
 import java.util.Enumeration;
 import java.util.Vector;
+import org.apache.myrmidon.api.TaskException;
 
 // ant classes
-
-
 
 /**
  * A FilterSetCollection is a collection of filtersets each of which may have a
@@ -25,13 +26,14 @@ public class FilterSetCollection
 
     private Vector filterSets = new Vector();
 
-    public FilterSetCollection() { }
+    public FilterSetCollection()
+    {
+    }
 
     public FilterSetCollection( FilterSet filterSet )
     {
         addFilterSet( filterSet );
     }
-
 
     public void addFilterSet( FilterSet filterSet )
     {
@@ -44,10 +46,11 @@ public class FilterSetCollection
      * @return Return true if there are filter in this set otherwise false.
      */
     public boolean hasFilters()
+        throws TaskException
     {
-        for( Enumeration e = filterSets.elements(); e.hasMoreElements();  )
+        for( Enumeration e = filterSets.elements(); e.hasMoreElements(); )
         {
-            FilterSet filterSet = ( FilterSet )e.nextElement();
+            FilterSet filterSet = (FilterSet)e.nextElement();
             if( filterSet.hasFilters() )
             {
                 return true;
@@ -64,11 +67,12 @@ public class FilterSetCollection
      * @return The string with the tokens replaced.
      */
     public String replaceTokens( String line )
+        throws TaskException
     {
         String replacedLine = line;
-        for( Enumeration e = filterSets.elements(); e.hasMoreElements();  )
+        for( Enumeration e = filterSets.elements(); e.hasMoreElements(); )
         {
-            FilterSet filterSet = ( FilterSet )e.nextElement();
+            FilterSet filterSet = (FilterSet)e.nextElement();
             replacedLine = filterSet.replaceTokens( replacedLine );
         }
         return replacedLine;

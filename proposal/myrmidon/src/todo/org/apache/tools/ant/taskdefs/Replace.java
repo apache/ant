@@ -245,23 +245,23 @@ public class Replace extends MatchingTask
         if( src == null && dir == null )
         {
             String message = "Either the file or the dir attribute " + "must be specified";
-            throw new BuildException( message, location );
+            throw new BuildException( message );
         }
         if( propertyFile != null && !propertyFile.exists() )
         {
             String message = "Property file " + propertyFile.getPath() + " does not exist.";
-            throw new BuildException( message, location );
+            throw new BuildException( message );
         }
         if( token == null && replacefilters.size() == 0 )
         {
             String message = "Either token or a nested replacefilter "
                  + "must be specified";
-            throw new BuildException( message, location );
+            throw new BuildException( message);
         }
         if( token != null && "".equals( token.getText() ) )
         {
             String message = "The token attribute must not be an empty string.";
-            throw new BuildException( message, location );
+            throw new BuildException( message );
         }
     }
 
@@ -293,7 +293,7 @@ public class Replace extends MatchingTask
     {
         if( !src.exists() )
         {
-            throw new BuildException( "Replace: source file " + src.getPath() + " doesn't exist", location );
+            throw new BuildException( "Replace: source file " + src.getPath() + " doesn't exist" );
         }
 
         File temp = fileUtils.createTempFile( "rep", ".tmp",
@@ -382,7 +382,7 @@ public class Replace extends MatchingTask
         catch( IOException ioe )
         {
             throw new BuildException( "IOException in " + src + " - " +
-                ioe.getClass().getName() + ":" + ioe.getMessage(), ioe, location );
+                ioe.getClass().getName() + ":" + ioe.getMessage(), ioe );
         }
         finally
         {

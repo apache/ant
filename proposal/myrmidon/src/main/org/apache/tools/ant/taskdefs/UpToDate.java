@@ -94,8 +94,7 @@ public class UpToDate extends MatchingTask implements Condition
     {
         if( mapperElement != null )
         {
-            throw new BuildException( "Cannot define more than one mapper",
-                location );
+            throw new BuildException( "Cannot define more than one mapper"  );
         }
         mapperElement = new Mapper( project );
         return mapperElement;

@@ -6,9 +6,11 @@
  * the LICENSE file.
  */
 package org.apache.tools.ant;
+
 import java.util.Enumeration;
 import java.util.StringTokenizer;
 import java.util.Vector;
+import org.apache.myrmidon.api.TaskException;
 
 /**
  * This class implements a target object with required parameters.
@@ -28,6 +30,7 @@ public class Target implements TaskContainer
     private Project project;
 
     public void setDepends( String depS )
+        throws TaskException
     {
         if( depS.length() > 0 )
         {
@@ -40,9 +43,9 @@ public class Target implements TaskContainer
                 //Make sure the dependency is not empty string
                 if( token.equals( "" ) || token.equals( "," ) )
                 {
-                    throw new BuildException( "Syntax Error: Depend attribute " +
-                        "for target \"" + getName() +
-                        "\" has an empty string for dependency." );
+                    throw new TaskException( "Syntax Error: Depend attribute " +
+                                              "for target \"" + getName() +
+                                              "\" has an empty string for dependency." );
                 }
 
                 addDependency( token );
@@ -54,9 +57,9 @@ public class Target implements TaskContainer
                     token = tok.nextToken();
                     if( !tok.hasMoreTokens() || !token.equals( "," ) )
                     {
-                        throw new BuildException( "Syntax Error: Depend attribute " +
-                            "for target \"" + getName() +
-                            "\" ends with a , character" );
+                        throw new TaskException( "Syntax Error: Depend attribute " +
+                                                  "for target \"" + getName() +
+                                                  "\" ends with a , character" );
                     }
                 }
             }
@@ -126,7 +129,7 @@ public class Target implements TaskContainer
             }
         }
 
-        Task[] retval = new Task[tasks.size()];
+        Task[] retval = new Task[ tasks.size() ];
         tasks.copyInto( retval );
         return retval;
     }
@@ -138,6 +141,10 @@ public class Target implements TaskContainer
             project.fireTargetStarted( this );
             execute();
             project.fireTargetFinished( this, null );
+        }
+        catch( final TaskException te )
+        {
+            project.fireTargetFinished( this, te );
         }
         catch( RuntimeException exc )
         {
@@ -162,7 +169,7 @@ public class Target implements TaskContainer
     }
 
     public void execute()
-        throws BuildException
+        throws TaskException
     {
         if( testIfCondition() && testUnlessCondition() )
         {
@@ -172,12 +179,12 @@ public class Target implements TaskContainer
                 Object o = enum.nextElement();
                 if( o instanceof Task )
                 {
-                    Task task = ( Task )o;
+                    Task task = (Task)o;
                     task.perform();
                 }
                 else
                 {
-                    RuntimeConfigurable r = ( RuntimeConfigurable )o;
+                    RuntimeConfigurable r = (RuntimeConfigurable)o;
                     r.maybeConfigure( project );
                 }
             }
@@ -185,12 +192,12 @@ public class Target implements TaskContainer
         else if( !testIfCondition() )
         {
             project.log( this, "Skipped because property '" + this.ifCondition + "' not set.",
-                Project.MSG_VERBOSE );
+                         Project.MSG_VERBOSE );
         }
         else
         {
             project.log( this, "Skipped because property '" + this.unlessCondition + "' set.",
-                Project.MSG_VERBOSE );
+                         Project.MSG_VERBOSE );
         }
     }
 
@@ -209,6 +216,7 @@ public class Target implements TaskContainer
     }
 
     private boolean testIfCondition()
+        throws TaskException
     {
         if( "".equals( ifCondition ) )
         {
@@ -220,6 +228,7 @@ public class Target implements TaskContainer
     }
 
     private boolean testUnlessCondition()
+    throws TaskException
     {
         if( "".equals( unlessCondition ) )
         {

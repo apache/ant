@@ -242,8 +242,7 @@ public class Delete extends MatchingTask
 
         if( quiet && failonerror )
         {
-            throw new BuildException( "quiet and failonerror cannot both be set to true",
-                location );
+            throw new BuildException( "quiet and failonerror cannot both be set to true" );
         }
 
         // delete the single file

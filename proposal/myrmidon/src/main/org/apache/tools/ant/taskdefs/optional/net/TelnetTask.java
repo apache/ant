@@ -249,7 +249,7 @@ public class TelnetTask extends Task
             }
             catch( Exception e )
             {
-                throw new BuildException( e );
+                throw new BuildException( "Error", e );
             }
         }
 
@@ -299,7 +299,7 @@ public class TelnetTask extends Task
                             Thread.sleep( 250 );
                         }
                         if( is.available() == 0 )
-                            throw new BuildException( "Response Timed-Out", getLocation() );
+                            throw new BuildException( "Response Timed-Out" );
                         sb.append( ( char )is.read() );
                     }
                 }
@@ -311,7 +311,7 @@ public class TelnetTask extends Task
             }
             catch( Exception e )
             {
-                throw new BuildException( e );
+                throw new BuildException( "Error", e );
             }
         }
     }

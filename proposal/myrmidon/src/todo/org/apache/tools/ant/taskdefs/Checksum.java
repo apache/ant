@@ -25,6 +25,7 @@ import org.apache.tools.ant.Project;
 import org.apache.tools.ant.taskdefs.MatchingTask;
 import org.apache.tools.ant.taskdefs.condition.Condition;
 import org.apache.tools.ant.types.FileSet;
+import org.apache.myrmidon.api.TaskException;
 
 /**
  * This task can be used to create checksums for files. It can also be used to
@@ -231,7 +232,7 @@ public class Checksum extends MatchingTask implements Condition
                      + file.getAbsolutePath()
                      + " to generate checksum for.";
                 log( message );
-                throw new BuildException( message, location );
+                throw new BuildException( message );
             }
         }
     }
@@ -328,7 +329,7 @@ public class Checksum extends MatchingTask implements Condition
         }
         catch( Exception e )
         {
-            throw new BuildException( e );
+            throw new BuildException( "Error", e );
         }
         finally
         {
@@ -366,19 +367,19 @@ public class Checksum extends MatchingTask implements Condition
 
         if( file == null && filesets.size() == 0 )
         {
-            throw new BuildException(
+            throw new TaskException(
                 "Specify at least one source - a file or a fileset." );
         }
 
         if( file != null && file.exists() && file.isDirectory() )
         {
-            throw new BuildException(
+            throw new TaskException(
                 "Checksum cannot be generated for directories" );
         }
 
         if( property != null && fileext != null )
         {
-            throw new BuildException(
+            throw new TaskException(
                 "Property and FileExt cannot co-exist." );
         }
 
@@ -386,7 +387,7 @@ public class Checksum extends MatchingTask implements Condition
         {
             if( forceOverwrite )
             {
-                throw new BuildException(
+                throw new TaskException(
                     "ForceOverwrite cannot be used when Property is specified" );
             }
 
@@ -394,7 +395,7 @@ public class Checksum extends MatchingTask implements Condition
             {
                 if( filesets.size() > 0 )
                 {
-                    throw new BuildException(
+                    throw new TaskException(
                         "Multiple files cannot be used when Property is specified" );
                 }
             }
@@ -402,7 +403,7 @@ public class Checksum extends MatchingTask implements Condition
             {
                 if( filesets.size() > 1 )
                 {
-                    throw new BuildException(
+                    throw new TaskException(
                         "Multiple files cannot be used when Property is specified" );
                 }
             }
@@ -415,13 +416,13 @@ public class Checksum extends MatchingTask implements Condition
 
         if( verifyProperty != null && forceOverwrite )
         {
-            throw new BuildException(
+            throw new TaskException(
                 "VerifyProperty and ForceOverwrite cannot co-exist." );
         }
 
         if( isCondition && forceOverwrite )
         {
-            throw new BuildException(
+            throw new TaskException(
                 "ForceOverwrite cannot be used when conditions are being used." );
         }
 
@@ -431,7 +432,7 @@ public class Checksum extends MatchingTask implements Condition
         }
         else if( fileext.trim().length() == 0 )
         {
-            throw new BuildException(
+            throw new TaskException(
                 "File extension when specified must not be an empty string" );
         }
 
@@ -444,11 +445,11 @@ public class Checksum extends MatchingTask implements Condition
             }
             catch( NoSuchAlgorithmException noalgo )
             {
-                throw new BuildException( noalgo );
+                throw new TaskException( noalgo.toString(), noalgo );
             }
             catch( NoSuchProviderException noprovider )
             {
-                throw new BuildException( noprovider );
+                throw new TaskException( noprovider.toString(), noprovider );
             }
         }
         else
@@ -459,14 +460,13 @@ public class Checksum extends MatchingTask implements Condition
             }
             catch( NoSuchAlgorithmException noalgo )
             {
-                throw new BuildException( noalgo );
+                throw new TaskException( noalgo.toString(), noalgo );
             }
         }
 
         if( messageDigest == null )
         {
-            throw new BuildException( "Unable to create Message Digest",
-                location );
+            throw new BuildException( "Unable to create Message Digest" );
         }
 
         addToIncludeFileMap( file );

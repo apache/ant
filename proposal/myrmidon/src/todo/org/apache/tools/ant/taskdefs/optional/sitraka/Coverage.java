@@ -331,7 +331,7 @@ public class Coverage extends Task
         }
         if( javaExe != null )
         {
-            params.addElement( "-jp_java_exe=" + project.resolveFile( javaExe.getPath() ) );
+            params.addElement( "-jp_java_exe=" + resolveFile( javaExe.getPath() ) );
         }
         params.addElement( "-jp_working_dir=" + workingDir.getPath() );
         params.addElement( "-jp_snapshot_dir=" + snapshotDir.getPath() );
@@ -408,7 +408,7 @@ public class Coverage extends Task
         {
             snapshotDir = new File( "." );
         }
-        snapshotDir = project.resolveFile( snapshotDir.getPath() );
+        snapshotDir = resolveFile( snapshotDir.getPath() );
         if( !snapshotDir.isDirectory() || !snapshotDir.exists() )
         {
             throw new BuildException( "Snapshot directory does not exists :" + snapshotDir );
@@ -417,7 +417,7 @@ public class Coverage extends Task
         {
             workingDir = new File( "." );
         }
-        workingDir = project.resolveFile( workingDir.getPath() );
+        workingDir = resolveFile( workingDir.getPath() );
 
         // check for info, do your best to select the java executable.
         // JProbe 3.0 fails if there is no javaexe option. So

@@ -58,7 +58,7 @@ public class AntStructure extends Task
 
         if( output == null )
         {
-            throw new BuildException( "output attribute is required", location );
+            throw new BuildException( "output attribute is required" );
         }
 
         PrintWriter out = null;
@@ -106,7 +106,7 @@ public class AntStructure extends Task
         catch( IOException ioe )
         {
             throw new BuildException( "Error writing " + output.getAbsolutePath(),
-                ioe, location );
+                ioe );
         }
         finally
         {

@@ -19,6 +19,7 @@ import netrexx.lang.Rexx;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.DirectoryScanner;
 import org.apache.tools.ant.Project;
+import org.apache.tools.ant.util.FileUtils;
 import org.apache.tools.ant.taskdefs.MatchingTask;
 
 /**
@@ -586,7 +587,7 @@ public class NetRexxC extends MatchingTask
             System.getProperty( "path.separator" ), false );
         while( tok.hasMoreTokens() )
         {
-            File f = project.resolveFile( tok.nextToken() );
+            File f = resolveFile( tok.nextToken() );
 
             if( f.exists() )
             {
@@ -619,7 +620,7 @@ public class NetRexxC extends MatchingTask
                 String toFile = ( String )filecopyList.get( fromFile );
                 try
                 {
-                    project.copyFile( fromFile, toFile );
+                    FileUtils.newFileUtils().copyFile( fromFile, toFile );
                 }
                 catch( IOException ioe )
                 {

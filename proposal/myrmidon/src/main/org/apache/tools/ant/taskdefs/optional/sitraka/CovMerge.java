@@ -155,7 +155,7 @@ public class CovMerge extends Task
             {
                 String pathname = f[j];
                 File file = new File( ds.getBasedir(), pathname );
-                file = project.resolveFile( file.getPath() );
+                file = resolveFile( file.getPath() );
                 v.addElement( file );
             }
         }
@@ -214,7 +214,7 @@ public class CovMerge extends Task
                 pw.println( snapshots[i].getAbsolutePath() );
             }
             // last file is the output snapshot
-            pw.println( project.resolveFile( tofile.getPath() ) );
+            pw.println( resolveFile( tofile.getPath() ) );
             pw.flush();
         }
         catch( IOException e )

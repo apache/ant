@@ -6,7 +6,9 @@
  * the LICENSE file.
  */
 package org.apache.tools.ant.types;
+
 import java.util.Stack;
+import org.apache.myrmidon.api.TaskException;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.ProjectComponent;
@@ -22,16 +24,19 @@ import org.apache.tools.ant.ProjectComponent;
  *
  * @author <a href="mailto:stefan.bodewig@epost.de">Stefan Bodewig</a>
  */
-public abstract class DataType extends ProjectComponent
+public abstract class DataType
+    extends ProjectComponent
 {
     /**
      * The descriptin the user has set.
      */
-    protected String description = null;
+    protected String description;
+
     /**
      * Value to the refid attribute.
      */
-    protected Reference ref = null;
+    protected Reference ref;
+
     /**
      * Are we sure we don't hold circular references? <p>
      *
@@ -62,6 +67,7 @@ public abstract class DataType extends ProjectComponent
      * @param ref The new Refid value
      */
     public void setRefid( Reference ref )
+        throws TaskException
     {
         this.ref = ref;
         checked = false;
@@ -87,6 +93,12 @@ public abstract class DataType extends ProjectComponent
         return ref != null;
     }
 
+    public void execute()
+        throws TaskException
+    {
+        //HACK: NOOP execute - should be deleted in the future!
+    }
+
     /**
      * Performs the check for circular references and returns the referenced
      * object.
@@ -96,6 +108,7 @@ public abstract class DataType extends ProjectComponent
      * @return The CheckedRef value
      */
     protected Object getCheckedRef( Class requiredClass, String dataTypeName )
+        throws TaskException
     {
         if( !checked )
         {
@@ -108,7 +121,7 @@ public abstract class DataType extends ProjectComponent
         if( !( requiredClass.isAssignableFrom( o.getClass() ) ) )
         {
             String msg = ref.getRefId() + " doesn\'t denote a " + dataTypeName;
-            throw new BuildException( msg );
+            throw new TaskException( msg );
         }
         else
         {
@@ -165,7 +178,7 @@ public abstract class DataType extends ProjectComponent
             else
             {
                 stk.push( o );
-                ( ( DataType )o ).dieOnCircularReference( stk, p );
+                ( (DataType)o ).dieOnCircularReference( stk, p );
                 stk.pop();
             }
         }
@@ -192,6 +205,6 @@ public abstract class DataType extends ProjectComponent
     protected BuildException tooManyAttributes()
     {
         return new BuildException( "You must not specify more than one attribute" +
-            " when using refid" );
+                                   " when using refid" );
     }
 }

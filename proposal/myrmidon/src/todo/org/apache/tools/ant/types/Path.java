@@ -6,16 +6,18 @@
  * the LICENSE file.
  */
 package org.apache.tools.ant.types;
+
 import java.io.File;
 import java.util.Enumeration;
 import java.util.Locale;
 import java.util.Stack;
 import java.util.Vector;
+import org.apache.myrmidon.api.TaskException;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.DirectoryScanner;
 import org.apache.tools.ant.PathTokenizer;
 import org.apache.tools.ant.Project;
-
+import org.apache.tools.ant.util.FileUtils;
 
 /**
  * This object represents a path as used by CLASSPATH or PATH environment
@@ -49,13 +51,25 @@ import org.apache.tools.ant.Project;
  * @author <a href="mailto:stefan.bodewig@epost.de">Stefan Bodewig</a>
  */
 
-public class Path extends DataType implements Cloneable
+public class Path
+    extends DataType
+    implements Cloneable
 {
-
-    public static Path systemClasspath =
-        new Path( null, System.getProperty( "java.class.path" ) );
+    public final static Path systemClasspath = createSystemClasspath();
 
     private Vector elements;
+
+    private static Path createSystemClasspath()
+    {
+        try
+        {
+            return new Path( null, System.getProperty( "java.class.path" ) );
+        }
+        catch( final TaskException te )
+        {
+            throw new Error( te.toString() );
+        }
+    }
 
     /**
      * Invoked by IntrospectionHelper for <code>setXXX(Path p)</code> attribute
@@ -65,6 +79,7 @@ public class Path extends DataType implements Cloneable
      * @param path Description of Parameter
      */
     public Path( Project p, String path )
+        throws TaskException
     {
         this( p );
         createPathElement().setPath( path );
@@ -108,7 +123,7 @@ public class Path extends DataType implements Cloneable
     {
         final Vector result = new Vector();
         if( source == null )
-            return new String[0];
+            return new String[ 0 ];
 
         PathTokenizer tok = new PathTokenizer( source );
         StringBuffer element = new StringBuffer();
@@ -120,10 +135,10 @@ public class Path extends DataType implements Cloneable
             {
                 element.append( resolveFile( project, pathElement ) );
             }
-            catch( BuildException e )
+            catch( TaskException e )
             {
                 project.log( "Dropping path element " + pathElement + " as it is not valid relative to the project",
-                    Project.MSG_VERBOSE );
+                             Project.MSG_VERBOSE );
             }
             for( int i = 0; i < element.length(); i++ )
             {
@@ -131,7 +146,7 @@ public class Path extends DataType implements Cloneable
             }
             result.addElement( element.toString() );
         }
-        String[] res = new String[result.size()];
+        String[] res = new String[ result.size() ];
         result.copyInto( res );
         return res;
     }
@@ -181,7 +196,8 @@ public class Path extends DataType implements Cloneable
     {
         if( project != null )
         {
-            File f = project.resolveFile( relativeName );
+            File f = FileUtils.newFileUtils().
+                resolveFile( project.getBaseDir(), relativeName );
             return f.getAbsolutePath();
         }
         return relativeName;
@@ -203,7 +219,6 @@ public class Path extends DataType implements Cloneable
         }
         createPathElement().setLocation( location );
     }
-
 
     /**
      * Parses a path definition and creates single PathElements.
@@ -231,7 +246,7 @@ public class Path extends DataType implements Cloneable
      * @exception BuildException Description of Exception
      */
     public void setRefid( Reference r )
-        throws BuildException
+        throws TaskException
     {
         if( !elements.isEmpty() )
         {
@@ -248,6 +263,7 @@ public class Path extends DataType implements Cloneable
      * @param source - source path whose components are examined for existence
      */
     public void addExisting( Path source )
+        throws TaskException
     {
         String[] list = source.list();
         for( int i = 0; i < list.length; i++ )
@@ -255,11 +271,11 @@ public class Path extends DataType implements Cloneable
             File f = null;
             if( getProject() != null )
             {
-                f = getProject().resolveFile( list[i] );
+                f = resolveFile( list[ i ] );
             }
             else
             {
-                f = new File( list[i] );
+                f = new File( list[ i ] );
             }
 
             if( f.exists() )
@@ -277,6 +293,7 @@ public class Path extends DataType implements Cloneable
      * @param extdirs The feature to be added to the Extdirs attribute
      */
     public void addExtdirs( Path extdirs )
+        throws TaskException
     {
         if( extdirs == null )
         {
@@ -294,7 +311,7 @@ public class Path extends DataType implements Cloneable
         String[] dirs = extdirs.list();
         for( int i = 0; i < dirs.length; i++ )
         {
-            File dir = getProject().resolveFile( dirs[i] );
+            File dir = resolveFile( dirs[ i ] );
             if( dir.exists() && dir.isDirectory() )
             {
                 FileSet fs = new FileSet();
@@ -312,7 +329,7 @@ public class Path extends DataType implements Cloneable
      * @exception BuildException Description of Exception
      */
     public void addFileset( FileSet fs )
-        throws BuildException
+        throws TaskException
     {
         if( isReference() )
         {
@@ -326,6 +343,7 @@ public class Path extends DataType implements Cloneable
      * Add the Java Runtime classes to this Path instance.
      */
     public void addJavaRuntime()
+        throws TaskException
     {
         if( System.getProperty( "java.vendor" ).toLowerCase( Locale.US ).indexOf( "microsoft" ) >= 0 )
         {
@@ -339,8 +357,8 @@ public class Path extends DataType implements Cloneable
         {
             FileSet kaffeJarFiles = new FileSet();
             kaffeJarFiles.setDir( new File( System.getProperty( "java.home" )
-                 + File.separator + "share"
-                 + File.separator + "kaffe" ) );
+                                            + File.separator + "share"
+                                            + File.separator + "kaffe" ) );
 
             kaffeJarFiles.setIncludes( "*.jar" );
             addFileset( kaffeJarFiles );
@@ -348,37 +366,37 @@ public class Path extends DataType implements Cloneable
         else if( Project.getJavaVersion() == Project.JAVA_1_1 )
         {
             addExisting( new Path( null,
-                System.getProperty( "java.home" )
-                 + File.separator + "lib"
-                 + File.separator
-                 + "classes.zip" ) );
+                                   System.getProperty( "java.home" )
+                                   + File.separator + "lib"
+                                   + File.separator
+                                   + "classes.zip" ) );
         }
         else
         {
             // JDK > 1.1 seems to set java.home to the JRE directory.
             addExisting( new Path( null,
-                System.getProperty( "java.home" )
-                 + File.separator + "lib"
-                 + File.separator + "rt.jar" ) );
+                                   System.getProperty( "java.home" )
+                                   + File.separator + "lib"
+                                   + File.separator + "rt.jar" ) );
             // Just keep the old version as well and let addExisting
             // sort it out.
             addExisting( new Path( null,
-                System.getProperty( "java.home" )
-                 + File.separator + "jre"
-                 + File.separator + "lib"
-                 + File.separator + "rt.jar" ) );
+                                   System.getProperty( "java.home" )
+                                   + File.separator + "jre"
+                                   + File.separator + "lib"
+                                   + File.separator + "rt.jar" ) );
 
             // Added for MacOS X
             addExisting( new Path( null,
-                System.getProperty( "java.home" )
-                 + File.separator + ".."
-                 + File.separator + "Classes"
-                 + File.separator + "classes.jar" ) );
+                                   System.getProperty( "java.home" )
+                                   + File.separator + ".."
+                                   + File.separator + "Classes"
+                                   + File.separator + "classes.jar" ) );
             addExisting( new Path( null,
-                System.getProperty( "java.home" )
-                 + File.separator + ".."
-                 + File.separator + "Classes"
-                 + File.separator + "ui.jar" ) );
+                                   System.getProperty( "java.home" )
+                                   + File.separator + ".."
+                                   + File.separator + "Classes"
+                                   + File.separator + "ui.jar" ) );
         }
     }
 
@@ -388,15 +406,16 @@ public class Path extends DataType implements Cloneable
      * @param other Description of Parameter
      */
     public void append( Path other )
+        throws TaskException
     {
         if( other == null )
             return;
         String[] l = other.list();
         for( int i = 0; i < l.length; i++ )
         {
-            if( elements.indexOf( l[i] ) == -1 )
+            if( elements.indexOf( l[ i ] ) == -1 )
             {
-                elements.addElement( l[i] );
+                elements.addElement( l[ i ] );
             }
         }
     }
@@ -433,8 +452,8 @@ public class Path extends DataType implements Cloneable
      * @return Description of the Returned Value
      */
     public Path concatSystemClasspath( String defValue )
+        throws TaskException
     {
-
         Path result = new Path( getProject() );
 
         String order = defValue;
@@ -472,7 +491,7 @@ public class Path extends DataType implements Cloneable
             if( !order.equals( "last" ) )
             {
                 log( "invalid value for build.sysclasspath: " + order,
-                    Project.MSG_WARN );
+                     Project.MSG_WARN );
             }
 
             result.addExisting( this );
@@ -525,6 +544,7 @@ public class Path extends DataType implements Cloneable
      * @return list of path elements.
      */
     public String[] list()
+        throws TaskException
     {
         if( !checked )
         {
@@ -540,36 +560,36 @@ public class Path extends DataType implements Cloneable
             Object o = elements.elementAt( i );
             if( o instanceof Reference )
             {
-                Reference r = ( Reference )o;
+                Reference r = (Reference)o;
                 o = r.getReferencedObject( getProject() );
                 // we only support references to paths right now
                 if( !( o instanceof Path ) )
                 {
                     String msg = r.getRefId() + " doesn\'t denote a path";
-                    throw new BuildException( msg );
+                    throw new TaskException( msg );
                 }
             }
 
             if( o instanceof String )
             {
                 // obtained via append
-                addUnlessPresent( result, ( String )o );
+                addUnlessPresent( result, (String)o );
             }
             else if( o instanceof PathElement )
             {
-                String[] parts = ( ( PathElement )o ).getParts();
+                String[] parts = ( (PathElement)o ).getParts();
                 if( parts == null )
                 {
-                    throw new BuildException( "You must either set location or path on <pathelement>" );
+                    throw new TaskException( "You must either set location or path on <pathelement>" );
                 }
                 for( int j = 0; j < parts.length; j++ )
                 {
-                    addUnlessPresent( result, parts[j] );
+                    addUnlessPresent( result, parts[ j ] );
                 }
             }
             else if( o instanceof Path )
             {
-                Path p = ( Path )o;
+                Path p = (Path)o;
                 if( p.getProject() == null )
                 {
                     p.setProject( getProject() );
@@ -577,24 +597,24 @@ public class Path extends DataType implements Cloneable
                 String[] parts = p.list();
                 for( int j = 0; j < parts.length; j++ )
                 {
-                    addUnlessPresent( result, parts[j] );
+                    addUnlessPresent( result, parts[ j ] );
                 }
             }
             else if( o instanceof FileSet )
             {
-                FileSet fs = ( FileSet )o;
+                FileSet fs = (FileSet)o;
                 DirectoryScanner ds = fs.getDirectoryScanner( getProject() );
                 String[] s = ds.getIncludedFiles();
                 File dir = fs.getDir( getProject() );
                 for( int j = 0; j < s.length; j++ )
                 {
-                    File f = new File( dir, s[j] );
+                    File f = new File( dir, s[ j ] );
                     String absolutePath = f.getAbsolutePath();
                     addUnlessPresent( result, translateFile( absolutePath ) );
                 }
             }
         }
-        String[] res = new String[result.size()];
+        String[] res = new String[ result.size() ];
         result.copyInto( res );
         return res;
     }
@@ -605,10 +625,10 @@ public class Path extends DataType implements Cloneable
      * @return Description of the Returned Value
      */
     public int size()
+        throws TaskException
     {
         return list().length;
     }
-
 
     /**
      * Returns a textual representation of the path, which can be used as
@@ -618,21 +638,28 @@ public class Path extends DataType implements Cloneable
      */
     public String toString()
     {
-        final String[] list = list();
-
-        // empty path return empty string
-        if( list.length == 0 )
-            return "";
-
-        // path containing one or more elements
-        final StringBuffer result = new StringBuffer( list[0].toString() );
-        for( int i = 1; i < list.length; i++ )
+        try
         {
-            result.append( File.pathSeparatorChar );
-            result.append( list[i] );
-        }
+            final String[] list = list();
 
-        return result.toString();
+            // empty path return empty string
+            if( list.length == 0 )
+                return "";
+
+            // path containing one or more elements
+            final StringBuffer result = new StringBuffer( list[ 0 ].toString() );
+            for( int i = 1; i < list.length; i++ )
+            {
+                result.append( File.pathSeparatorChar );
+                result.append( list[ i ] );
+            }
+
+            return result.toString();
+        }
+        catch( final TaskException te )
+        {
+            throw new Error( te.toString() );
+        }
     }
 
     /**
@@ -658,7 +685,7 @@ public class Path extends DataType implements Cloneable
             Object o = enum.nextElement();
             if( o instanceof Reference )
             {
-                o = ( ( Reference )o ).getReferencedObject( p );
+                o = ( (Reference)o ).getReferencedObject( p );
             }
 
             if( o instanceof DataType )
@@ -670,14 +697,13 @@ public class Path extends DataType implements Cloneable
                 else
                 {
                     stk.push( o );
-                    ( ( DataType )o ).dieOnCircularReference( stk, p );
+                    ( (DataType)o ).dieOnCircularReference( stk, p );
                     stk.pop();
                 }
             }
         }
         checked = true;
     }
-
 
     /**
      * Helper class, holds the nested <code>&lt;pathelement&gt;</code> values.

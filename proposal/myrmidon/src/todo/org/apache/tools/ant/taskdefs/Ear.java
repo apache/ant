@@ -47,13 +47,6 @@ public class Ear extends Jar
         super.addFileset( fs );
     }
 
-    public void setEarfile( File earFile )
-    {
-        log( "DEPRECATED - The earfile attribute is deprecated. Use file attribute instead." );
-        setFile( earFile );
-    }
-
-
     public void addArchives( ZipFileSet fs )
     {
         // We just set the prefix for this fileset, and pass it up.
@@ -80,7 +73,7 @@ public class Ear extends Jar
         // If no webxml file is specified, it's an error.
         if( deploymentDescriptor == null && !isInUpdateMode() )
         {
-            throw new BuildException( "appxml attribute is required", location );
+            throw new BuildException( "appxml attribute is required" );
         }
 
         super.initZipOutputStream( zOut );

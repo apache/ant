@@ -6,12 +6,14 @@
  * the LICENSE file.
  */
 package org.apache.tools.ant.taskdefs;
+
 import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.PrintStream;
+import org.apache.myrmidon.api.TaskException;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.Task;
@@ -120,7 +122,6 @@ public class Cvs extends Task
         this.cvsRsh = rsh;
     }
 
-
     public void setDate( String p )
     {
         if( p != null && p.trim().length() > 0 )
@@ -185,9 +186,8 @@ public class Cvs extends Task
         }
     }
 
-
     public void execute()
-        throws BuildException
+        throws TaskException
     {
 
         // XXX: we should use JCVS (www.ice.com/JCVS) instead of command line
@@ -252,7 +252,7 @@ public class Cvs extends Task
         if( error == null && output == null )
         {
             streamhandler = new LogStreamHandler( this, Project.MSG_INFO,
-                Project.MSG_WARN );
+                                                  Project.MSG_WARN );
         }
         else
         {
@@ -264,7 +264,7 @@ public class Cvs extends Task
                 }
                 catch( IOException e )
                 {
-                    throw new BuildException( e );
+                    throw new TaskException( e.toString(), e );
                 }
             }
             else
@@ -279,7 +279,7 @@ public class Cvs extends Task
                 }
                 catch( IOException e )
                 {
-                    throw new BuildException( e );
+                    throw new TaskException( e.toString(), e );
                 }
             }
             else
@@ -290,7 +290,7 @@ public class Cvs extends Task
         }
 
         Execute exe = new Execute( streamhandler,
-            null );
+                                   null );
 
         exe.setAntRun( project );
         if( dest == null )
@@ -306,11 +306,11 @@ public class Cvs extends Task
              * Throw an exception if cvs exited with error. (Iulian)
              */
             if( failOnError && retCode != 0 )
-                throw new BuildException( "cvs exited with error code " + retCode );
+                throw new TaskException( "cvs exited with error code " + retCode );
         }
         catch( IOException e )
         {
-            throw new BuildException( e );
+            throw new TaskException( e.toString(), e );
         }
         finally
         {
@@ -321,7 +321,8 @@ public class Cvs extends Task
                     outputstream.close();
                 }
                 catch( IOException e )
-                {}
+                {
+                }
             }
             if( error != null )
             {
@@ -330,7 +331,8 @@ public class Cvs extends Task
                     errorstream.close();
                 }
                 catch( IOException e )
-                {}
+                {
+                }
             }
         }
     }

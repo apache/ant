@@ -120,7 +120,7 @@ public abstract class Continuus extends Task
         }
         catch( java.io.IOException e )
         {
-            throw new BuildException( e );
+            throw new BuildException( "Error", e );
         }
     }
 

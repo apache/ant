@@ -70,8 +70,7 @@ public class Patch extends Task
     {
         if( !file.exists() )
         {
-            throw new BuildException( "patchfile " + file + " doesn\'t exist",
-                location );
+            throw new BuildException( "patchfile " + file + " doesn\'t exist" );
         }
         cmd.createArgument().setValue( "-i" );
         cmd.createArgument().setFile( file );
@@ -118,7 +117,7 @@ public class Patch extends Task
     {
         if( num < 0 )
         {
-            throw new BuildException( "strip has to be >= 0", location );
+            throw new BuildException( "strip has to be >= 0" );
         }
         cmd.createArgument().setValue( "-p" + num );
     }
@@ -128,8 +127,7 @@ public class Patch extends Task
     {
         if( !havePatchfile )
         {
-            throw new BuildException( "patchfile argument is required",
-                location );
+            throw new BuildException( "patchfile argument is required" );
         }
 
         Commandline toExecute = ( Commandline )cmd.clone();
@@ -150,7 +148,7 @@ public class Patch extends Task
         }
         catch( IOException e )
         {
-            throw new BuildException( e );
+            throw new BuildException( "Error", e );
         }
     }
 

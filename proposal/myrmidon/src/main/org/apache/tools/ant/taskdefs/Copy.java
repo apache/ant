@@ -6,11 +6,13 @@
  * the LICENSE file.
  */
 package org.apache.tools.ant.taskdefs;
+
 import java.io.File;
 import java.io.IOException;
 import java.util.Enumeration;
 import java.util.Hashtable;
 import java.util.Vector;
+import org.apache.myrmidon.api.TaskException;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.DirectoryScanner;
 import org.apache.tools.ant.Project;
@@ -124,19 +126,6 @@ public class Copy extends Task
      * Give the copied files the same last modified time as the original files.
      *
      * @param preserve The new PreserveLastModified value
-     * @deprecated setPreserveLastModified(String) has been deprecated and
-     *      replaced with setPreserveLastModified(boolean) to consistently let
-     *      the Introspection mechanism work.
-     */
-    public void setPreserveLastModified( String preserve )
-    {
-        setPreserveLastModified( Project.toBoolean( preserve ) );
-    }
-
-    /**
-     * Give the copied files the same last modified time as the original files.
-     *
-     * @param preserve The new PreserveLastModified value
      */
     public void setPreserveLastModified( boolean preserve )
     {
@@ -213,8 +202,7 @@ public class Copy extends Task
     {
         if( mapperElement != null )
         {
-            throw new BuildException( "Cannot define more than one mapper",
-                location );
+            throw new BuildException( "Cannot define more than one mapper" );
         }
         mapperElement = new Mapper( project );
         return mapperElement;
@@ -226,7 +214,7 @@ public class Copy extends Task
      * @exception BuildException Description of Exception
      */
     public void execute()
-        throws BuildException
+        throws TaskException
     {
         // make sure we don't have an illegal set of options
         validateAttributes();
@@ -249,22 +237,22 @@ public class Copy extends Task
                 else
                 {
                     log( file + " omitted as " + destFile + " is up to date.",
-                        Project.MSG_VERBOSE );
+                         Project.MSG_VERBOSE );
                 }
             }
             else
             {
                 String message = "Could not find file "
-                     + file.getAbsolutePath() + " to copy.";
+                    + file.getAbsolutePath() + " to copy.";
                 log( message );
-                throw new BuildException( message );
+                throw new TaskException( message );
             }
         }
 
         // deal with the filesets
         for( int i = 0; i < filesets.size(); i++ )
         {
-            FileSet fs = ( FileSet )filesets.elementAt( i );
+            FileSet fs = (FileSet)filesets.elementAt( i );
             DirectoryScanner ds = fs.getDirectoryScanner( project );
             File fromDir = fs.getDir( project );
 
@@ -272,7 +260,7 @@ public class Copy extends Task
             String[] srcDirs = ds.getIncludedDirectories();
             boolean isEverythingIncluded = ds.isEverythingIncluded();
             if( isEverythingIncluded
-                 && !flatten && mapperElement == null )
+                && !flatten && mapperElement == null )
             {
                 completeDirMap.put( fromDir, destDir );
             }
@@ -315,12 +303,12 @@ public class Copy extends Task
             Vector v = new Vector();
             for( int i = 0; i < names.length; i++ )
             {
-                if( mapper.mapFileName( names[i] ) != null )
+                if( mapper.mapFileName( names[ i ] ) != null )
                 {
-                    v.addElement( names[i] );
+                    v.addElement( names[ i ] );
                 }
             }
-            toCopy = new String[v.size()];
+            toCopy = new String[ v.size() ];
             v.copyInto( toCopy );
         }
         else
@@ -331,8 +319,8 @@ public class Copy extends Task
 
         for( int i = 0; i < toCopy.length; i++ )
         {
-            File src = new File( fromDir, toCopy[i] );
-            File dest = new File( toDir, mapper.mapFileName( toCopy[i] )[0] );
+            File src = new File( fromDir, toCopy[ i ] );
+            File dest = new File( toDir, mapper.mapFileName( toCopy[ i ] )[ 0 ] );
             map.put( src.getAbsolutePath(), dest.getAbsolutePath() );
         }
     }
@@ -346,14 +334,14 @@ public class Copy extends Task
         if( fileCopyMap.size() > 0 )
         {
             log( "Copying " + fileCopyMap.size() +
-                " file" + ( fileCopyMap.size() == 1 ? "" : "s" ) +
-                " to " + destDir.getAbsolutePath() );
+                 " file" + ( fileCopyMap.size() == 1 ? "" : "s" ) +
+                 " to " + destDir.getAbsolutePath() );
 
             Enumeration e = fileCopyMap.keys();
             while( e.hasMoreElements() )
             {
-                String fromFile = ( String )e.nextElement();
-                String toFile = ( String )fileCopyMap.get( fromFile );
+                String fromFile = (String)e.nextElement();
+                String toFile = (String)fileCopyMap.get( fromFile );
 
                 if( fromFile.equals( toFile ) )
                 {
@@ -370,18 +358,18 @@ public class Copy extends Task
                     {
                         executionFilters.addFilterSet( project.getGlobalFilterSet() );
                     }
-                    for( Enumeration filterEnum = filterSets.elements(); filterEnum.hasMoreElements();  )
+                    for( Enumeration filterEnum = filterSets.elements(); filterEnum.hasMoreElements(); )
                     {
-                        executionFilters.addFilterSet( ( FilterSet )filterEnum.nextElement() );
+                        executionFilters.addFilterSet( (FilterSet)filterEnum.nextElement() );
                     }
                     fileUtils.copyFile( fromFile, toFile, executionFilters,
-                        forceOverwrite, preserveLastModified );
+                                        forceOverwrite, preserveLastModified );
                 }
                 catch( IOException ioe )
                 {
                     String msg = "Failed to copy " + fromFile + " to " + toFile
-                         + " due to " + ioe.getMessage();
-                    throw new BuildException( msg, ioe, location );
+                        + " due to " + ioe.getMessage();
+                    throw new BuildException( msg, ioe );
                 }
             }
         }
@@ -392,7 +380,7 @@ public class Copy extends Task
             int count = 0;
             while( e.hasMoreElements() )
             {
-                File d = new File( ( String )e.nextElement() );
+                File d = new File( (String)e.nextElement() );
                 if( !d.exists() )
                 {
                     if( !d.mkdirs() )
@@ -409,9 +397,9 @@ public class Copy extends Task
             if( count > 0 )
             {
                 log( "Copied " + count +
-                    " empty director" +
-                    ( count == 1 ? "y" : "ies" ) +
-                    " to " + destDir.getAbsolutePath() );
+                     " empty director" +
+                     ( count == 1 ? "y" : "ies" ) +
+                     " to " + destDir.getAbsolutePath() );
             }
         }
     }
@@ -449,9 +437,9 @@ public class Copy extends Task
         }
     }
 
-//************************************************************************
-//  protected and private methods
-//************************************************************************
+    //************************************************************************
+    //  protected and private methods
+    //************************************************************************
 
     /**
      * Ensure we have a consistent and legal set of attributes, and set any
@@ -460,38 +448,38 @@ public class Copy extends Task
      * @exception BuildException Description of Exception
      */
     protected void validateAttributes()
-        throws BuildException
+        throws TaskException
     {
         if( file == null && filesets.size() == 0 )
         {
-            throw new BuildException( "Specify at least one source - a file or a fileset." );
+            throw new TaskException( "Specify at least one source - a file or a fileset." );
         }
 
         if( destFile != null && destDir != null )
         {
-            throw new BuildException( "Only one of tofile and todir may be set." );
+            throw new TaskException( "Only one of tofile and todir may be set." );
         }
 
         if( destFile == null && destDir == null )
         {
-            throw new BuildException( "One of tofile or todir must be set." );
+            throw new TaskException( "One of tofile or todir must be set." );
         }
 
         if( file != null && file.exists() && file.isDirectory() )
         {
-            throw new BuildException( "Use a fileset to copy directories." );
+            throw new TaskException( "Use a fileset to copy directories." );
         }
 
         if( destFile != null && filesets.size() > 0 )
         {
             if( filesets.size() > 1 )
             {
-                throw new BuildException(
+                throw new TaskException(
                     "Cannot concatenate multiple files into a single file." );
             }
             else
             {
-                FileSet fs = ( FileSet )filesets.elementAt( 0 );
+                FileSet fs = (FileSet)filesets.elementAt( 0 );
                 DirectoryScanner ds = fs.getDirectoryScanner( project );
                 String[] srcFiles = ds.getIncludedFiles();
 
@@ -499,18 +487,18 @@ public class Copy extends Task
                 {
                     if( file == null )
                     {
-                        file = new File( srcFiles[0] );
+                        file = new File( srcFiles[ 0 ] );
                         filesets.removeElementAt( 0 );
                     }
                     else
                     {
-                        throw new BuildException(
+                        throw new TaskException(
                             "Cannot concatenate multiple files into a single file." );
                     }
                 }
                 else
                 {
-                    throw new BuildException(
+                    throw new TaskException(
                         "Cannot perform operation from directory to file." );
                 }
             }
@@ -520,7 +508,5 @@ public class Copy extends Task
         {
             destDir = new File( destFile.getParent() );// be 1.1 friendly
         }
-
     }
-
 }

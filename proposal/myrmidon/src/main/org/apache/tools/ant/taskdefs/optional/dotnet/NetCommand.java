@@ -158,7 +158,7 @@ public class NetCommand
             {
                 if( _failOnError )
                 {
-                    throw new BuildException( _title + " returned: " + err, _owner.getLocation() );
+                    throw new BuildException( _title + " returned: " + err );
                 }
                 else
                 {
@@ -168,7 +168,7 @@ public class NetCommand
         }
         catch( IOException e )
         {
-            throw new BuildException( _title + " failed: " + e, e, _owner.getLocation() );
+            throw new BuildException( _title + " failed: " + e, e );
         }
     }
 

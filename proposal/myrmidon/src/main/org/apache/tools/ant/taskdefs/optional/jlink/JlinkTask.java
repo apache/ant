@@ -173,7 +173,7 @@ public class JlinkTask extends MatchingTask
         }
         catch( Exception ex )
         {
-            throw new BuildException( ex);
+            throw new BuildException( "Error", ex);
         }
     }
 

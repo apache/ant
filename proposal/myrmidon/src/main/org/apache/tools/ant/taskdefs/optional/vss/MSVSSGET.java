@@ -377,7 +377,7 @@ public class MSVSSGET extends MSVSS
         else
         {
             // make sure m_LocalDir exists, create it if it doesn't
-            File dir = project.resolveFile( m_LocalPath );
+            File dir = resolveFile( m_LocalPath );
             if( !dir.exists() )
             {
                 boolean done = dir.mkdirs();
@@ -385,7 +385,7 @@ public class MSVSSGET extends MSVSS
                 {
                     String msg = "Directory " + m_LocalPath + " creation was not " +
                         "successful for an unknown reason";
-                    throw new BuildException( msg, location );
+                    throw new BuildException( msg );
                 }
                 project.log( "Created dir: " + dir.getAbsolutePath() );
             }
@@ -473,7 +473,7 @@ public class MSVSSGET extends MSVSS
         if( getVsspath() == null )
         {
             String msg = "vsspath attribute must be set!";
-            throw new BuildException( msg, location );
+            throw new BuildException( msg );
         }
 
         // now look for illegal combinations of things ...
@@ -505,7 +505,7 @@ public class MSVSSGET extends MSVSS
         if( result != 0 )
         {
             String msg = "Failed executing: " + commandLine.toString();
-            throw new BuildException( msg, location );
+            throw new BuildException( msg );
         }
     }
 

@@ -6,6 +6,7 @@
  * the LICENSE file.
  */
 package org.apache.tools.ant.taskdefs;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -34,33 +35,6 @@ import org.apache.tools.tar.TarOutputStream;
 
 public class Tar extends MatchingTask
 {
-
-    /**
-     * @deprecated Tar.WARN is deprecated and is replaced with
-     *      Tar.TarLongFileMode.WARN
-     */
-    public final static String WARN = "warn";
-    /**
-     * @deprecated Tar.FAIL is deprecated and is replaced with
-     *      Tar.TarLongFileMode.FAIL
-     */
-    public final static String FAIL = "fail";
-    /**
-     * @deprecated Tar.TRUNCATE is deprecated and is replaced with
-     *      Tar.TarLongFileMode.TRUNCATE
-     */
-    public final static String TRUNCATE = "truncate";
-    /**
-     * @deprecated Tar.GNU is deprecated and is replaced with
-     *      Tar.TarLongFileMode.GNU
-     */
-    public final static String GNU = "gnu";
-    /**
-     * @deprecated Tar.OMIT is deprecated and is replaced with
-     *      Tar.TarLongFileMode.OMIT
-     */
-    public final static String OMIT = "omit";
-
     private TarLongFileMode longFileMode = new TarLongFileMode();
 
     Vector filesets = new Vector();
@@ -93,34 +67,11 @@ public class Tar extends MatchingTask
      * omitted from the archive
      *
      * @param mode The new Longfile value
-     * @deprecated setLongFile(String) is deprecated and is replaced with
-     *      setLongFile(Tar.TarLongFileMode) to make Ant's Introspection
-     *      mechanism do the work and also to encapsulate operations on the mode
-     *      in its own class.
-     */
-    public void setLongfile( String mode )
-    {
-        log( "DEPRECATED - The setLongfile(String) method has been deprecated."
-             + " Use setLongfile(Tar.TarLongFileMode) instead." );
-        this.longFileMode = new TarLongFileMode();
-        longFileMode.setValue( mode );
-    }
-
-    /**
-     * Set how to handle long files. Allowable values are truncate - paths are
-     * truncated to the maximum length fail - paths greater than the maximim
-     * cause a build exception warn - paths greater than the maximum cause a
-     * warning and GNU is used gnu - GNU extensions are used for any paths
-     * greater than the maximum. omit - paths greater than the maximum are
-     * omitted from the archive
-     *
-     * @param mode The new Longfile value
      */
     public void setLongfile( TarLongFileMode mode )
     {
         this.longFileMode = mode;
     }
-
 
     /**
      * This is the name/location of where to create the tar file.
@@ -144,27 +95,24 @@ public class Tar extends MatchingTask
     {
         if( tarFile == null )
         {
-            throw new BuildException( "tarfile attribute must be set!",
-                location );
+            throw new BuildException( "tarfile attribute must be set!" );
         }
 
         if( tarFile.exists() && tarFile.isDirectory() )
         {
-            throw new BuildException( "tarfile is a directory!",
-                location );
+            throw new BuildException( "tarfile is a directory!" );
         }
 
         if( tarFile.exists() && !tarFile.canWrite() )
         {
-            throw new BuildException( "Can not write to the specified tarfile!",
-                location );
+            throw new BuildException( "Can not write to the specified tarfile!" );
         }
 
         if( baseDir != null )
         {
             if( !baseDir.exists() )
             {
-                throw new BuildException( "basedir does not exist!", location );
+                throw new BuildException( "basedir does not exist!" );
             }
 
             // add the main fileset to the list of filesets to process.
@@ -175,16 +123,15 @@ public class Tar extends MatchingTask
 
         if( filesets.size() == 0 )
         {
-            throw new BuildException( "You must supply either a basdir attribute or some nested filesets.",
-                location );
+            throw new BuildException( "You must supply either a basdir attribute or some nested filesets." );
         }
 
         // check if tr is out of date with respect to each
         // fileset
         boolean upToDate = true;
-        for( Enumeration e = filesets.elements(); e.hasMoreElements();  )
+        for( Enumeration e = filesets.elements(); e.hasMoreElements(); )
         {
-            TarFileSet fs = ( TarFileSet )e.nextElement();
+            TarFileSet fs = (TarFileSet)e.nextElement();
             String[] files = fs.getFiles( project );
 
             if( !archiveIsUpToDate( files ) )
@@ -194,9 +141,9 @@ public class Tar extends MatchingTask
 
             for( int i = 0; i < files.length; ++i )
             {
-                if( tarFile.equals( new File( fs.getDir( project ), files[i] ) ) )
+                if( tarFile.equals( new File( fs.getDir( project ), files[ i ] ) ) )
                 {
-                    throw new BuildException( "A tar file cannot include itself", location );
+                    throw new BuildException( "A tar file cannot include itself" );
                 }
             }
         }
@@ -204,7 +151,7 @@ public class Tar extends MatchingTask
         if( upToDate )
         {
             log( "Nothing to do: " + tarFile.getAbsolutePath() + " is up to date.",
-                Project.MSG_INFO );
+                 Project.MSG_INFO );
             return;
         }
 
@@ -231,14 +178,14 @@ public class Tar extends MatchingTask
             }
 
             longWarningGiven = false;
-            for( Enumeration e = filesets.elements(); e.hasMoreElements();  )
+            for( Enumeration e = filesets.elements(); e.hasMoreElements(); )
             {
-                TarFileSet fs = ( TarFileSet )e.nextElement();
+                TarFileSet fs = (TarFileSet)e.nextElement();
                 String[] files = fs.getFiles( project );
                 for( int i = 0; i < files.length; i++ )
                 {
-                    File f = new File( fs.getDir( project ), files[i] );
-                    String name = files[i].replace( File.separatorChar, '/' );
+                    File f = new File( fs.getDir( project ), files[ i ] );
+                    String name = files[ i ].replace( File.separatorChar, '/' );
                     tarFile( f, tOut, name, fs );
                 }
             }
@@ -246,7 +193,7 @@ public class Tar extends MatchingTask
         catch( IOException ioe )
         {
             String msg = "Problem creating TAR: " + ioe.getMessage();
-            throw new BuildException( msg, ioe, location );
+            throw new BuildException( msg, ioe );
         }
         finally
         {
@@ -258,7 +205,8 @@ public class Tar extends MatchingTask
                     tOut.close();
                 }
                 catch( IOException e )
-                {}
+                {
+                }
             }
         }
     }
@@ -300,7 +248,7 @@ public class Tar extends MatchingTask
                 else if( longFileMode.isWarnMode() )
                 {
                     log( "Entry: " + vPath + " longer than " +
-                        TarConstants.NAMELEN + " characters.", Project.MSG_WARN );
+                         TarConstants.NAMELEN + " characters.", Project.MSG_WARN );
                     if( !longWarningGiven )
                     {
                         log( "Resulting tar file can only be processed successfully"
@@ -312,7 +260,7 @@ public class Tar extends MatchingTask
                 {
                     throw new BuildException(
                         "Entry: " + vPath + " longer than " +
-                        TarConstants.NAMELEN + "characters.", location );
+                        TarConstants.NAMELEN + "characters." );
                 }
             }
 
@@ -332,13 +280,13 @@ public class Tar extends MatchingTask
             {
                 fIn = new FileInputStream( file );
 
-                byte[] buffer = new byte[8 * 1024];
+                byte[] buffer = new byte[ 8 * 1024 ];
                 int count = 0;
                 do
                 {
                     tOut.write( buffer, 0, count );
                     count = fIn.read( buffer, 0, buffer.length );
-                }while ( count != -1 );
+                } while( count != -1 );
             }
 
             tOut.closeEntry();
@@ -358,7 +306,6 @@ public class Tar extends MatchingTask
 
         private String userName = "";
         private String groupName = "";
-
 
         public TarFileSet( FileSet fileset )
         {
@@ -399,10 +346,10 @@ public class Tar extends MatchingTask
                 DirectoryScanner ds = getDirectoryScanner( p );
                 String[] directories = ds.getIncludedDirectories();
                 String[] filesPerSe = ds.getIncludedFiles();
-                files = new String[directories.length + filesPerSe.length];
+                files = new String[ directories.length + filesPerSe.length ];
                 System.arraycopy( directories, 0, files, 0, directories.length );
                 System.arraycopy( filesPerSe, 0, files, directories.length,
-                    filesPerSe.length );
+                                  filesPerSe.length );
             }
 
             return files;

@@ -22,6 +22,7 @@ import org.apache.tools.ant.ProjectComponent;
 import org.apache.tools.ant.ProjectHelper;
 import org.apache.tools.ant.Task;
 import org.apache.tools.ant.util.FileUtils;
+import org.apache.myrmidon.api.TaskException;
 
 /**
  * Call Ant in a sub-project <pre>
@@ -178,10 +179,10 @@ public class Ant extends Task
     /**
      * Do the execution.
      *
-     * @exception BuildException Description of Exception
+     * @exception TaskException Description of Exception
      */
     public void execute()
-        throws BuildException
+        throws TaskException
     {
         try
         {
@@ -234,7 +235,7 @@ public class Ant extends Task
                 target.equals( this.getOwningTarget().getName() ) )
             {
 
-                throw new BuildException( "ant task calling its own parent target" );
+                throw new TaskException( "ant task calling its own parent target" );
             }
 
             newProject.executeTarget( target );
@@ -283,10 +284,10 @@ public class Ant extends Task
      * project. Also copy over all references that don't override existing
      * references in the new project if inheritall has been requested.
      *
-     * @exception BuildException Description of Exception
+     * @exception TaskException Description of Exception
      */
     private void addReferences()
-        throws BuildException
+        throws TaskException
     {
         Hashtable thisReferences = ( Hashtable )project.getReferences().clone();
         Hashtable newReferences = newProject.getReferences();
@@ -299,7 +300,7 @@ public class Ant extends Task
                 String refid = ref.getRefId();
                 if( refid == null )
                 {
-                    throw new BuildException( "the refid attribute is required for reference elements" );
+                    throw new TaskException( "the refid attribute is required for reference elements" );
                 }
                 if( !thisReferences.containsKey( refid ) )
                 {
@@ -387,7 +388,7 @@ public class Ant extends Task
             {
                 String msg = "Error setting new project instance for reference with id "
                      + oldKey;
-                throw new BuildException( msg, e2, location );
+                throw new TaskException( msg, e2, location );
             }
         }
         newProject.addReference( newKey, copy );
@@ -482,10 +483,10 @@ public class Ant extends Task
      * Override the properties in the new project with the one explicitly
      * defined as nested elements here.
      *
-     * @exception BuildException Description of Exception
+     * @exception TaskException Description of Exception
      */
     private void overrideProperties()
-        throws BuildException
+        throws TaskException
     {
         Enumeration e = properties.elements();
         while( e.hasMoreElements() )

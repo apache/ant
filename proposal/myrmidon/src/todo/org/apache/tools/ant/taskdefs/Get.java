@@ -132,29 +132,26 @@ public class Get extends Task
     {
         if( source == null )
         {
-            throw new BuildException( "src attribute is required", location );
+            throw new BuildException( "src attribute is required" );
         }
 
         if( dest == null )
         {
-            throw new BuildException( "dest attribute is required", location );
+            throw new BuildException( "dest attribute is required" );
         }
 
         if( dest.exists() && dest.isDirectory() )
         {
-            throw new BuildException( "The specified destination is a directory",
-                location );
+            throw new BuildException( "The specified destination is a directory" );
         }
 
         if( dest.exists() && !dest.canWrite() )
         {
-            throw new BuildException( "Can't write to " + dest.getAbsolutePath(),
-                location );
+            throw new BuildException( "Can't write to " + dest.getAbsolutePath() );
         }
 
         try
         {
-
             log( "Getting: " + source );
 
             //set the timestamp to the file date.
@@ -249,8 +246,7 @@ public class Get extends Task
                 log( "Can't get " + source + " to " + dest );
                 if( ignoreErrors )
                     return;
-                throw new BuildException( "Can't get " + source + " to " + dest,
-                    location );
+                throw new BuildException( "Can't get " + source + " to " + dest );
             }
 
             byte[] buffer = new byte[100 * 1024];
@@ -287,7 +283,7 @@ public class Get extends Task
             log( "Error getting " + source + " to " + dest );
             if( ignoreErrors )
                 return;
-            throw new BuildException( ioe);
+            throw new BuildException( "Error", ioe);
         }
     }
 

@@ -42,7 +42,7 @@ public class LogStreamHandler extends PumpStreamHandler
         catch( IOException e )
         {
             // plain impossible
-            throw new BuildException( e );
+            throw new BuildException( "Error", e );
         }
     }
 }

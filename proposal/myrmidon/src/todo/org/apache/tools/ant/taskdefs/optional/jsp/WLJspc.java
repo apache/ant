@@ -149,7 +149,7 @@ public class WLJspc extends MatchingTask
 
         if( destinationPackage == null )
         {
-            throw new BuildException( "package attribute must be present.", location );
+            throw new BuildException( "package attribute must be present." );
         }
 
         String systemClassPath = System.getProperty( "java.class.path" );

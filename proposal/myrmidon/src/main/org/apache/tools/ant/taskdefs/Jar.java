@@ -63,22 +63,11 @@ public class Jar extends Zip
         index = flag;
     }
 
-    /**
-     * @param jarFile The new Jarfile value
-     * @deprecated use setFile(File) instead.
-     */
-    public void setJarfile( File jarFile )
-    {
-        log( "DEPRECATED - The jarfile attribute is deprecated. Use file attribute instead." );
-        setFile( jarFile );
-    }
-
     public void setManifest( File manifestFile )
     {
         if( !manifestFile.exists() )
         {
-            throw new BuildException( "Manifest file: " + manifestFile + " does not exist.",
-                getLocation() );
+            throw new BuildException( "Manifest file: " + manifestFile + " does not exist." );
         }
 
         this.manifestFile = manifestFile;
@@ -97,7 +86,7 @@ public class Jar extends Zip
         catch( ManifestException e )
         {
             log( "Manifest is invalid: " + e.getMessage(), Project.MSG_ERR );
-            throw new BuildException( "Invalid Manifest: " + manifestFile, e, getLocation() );
+            throw new BuildException( "Invalid Manifest: " + manifestFile, e );
         }
         catch( IOException e )
         {
@@ -262,7 +251,7 @@ public class Jar extends Zip
         catch( ManifestException e )
         {
             log( "Manifest is invalid: " + e.getMessage(), Project.MSG_ERR );
-            throw new BuildException( "Invalid Manifest", e, getLocation() );
+            throw new BuildException( "Invalid Manifest", e );
         }
     }
 
@@ -391,7 +380,7 @@ public class Jar extends Zip
         catch( ManifestException e )
         {
             log( "Manifest is invalid: " + e.getMessage(), Project.MSG_ERR );
-            throw new BuildException( "Invalid Manifest", e, getLocation() );
+            throw new BuildException( "Invalid Manifest", e );
         }
     }
 }

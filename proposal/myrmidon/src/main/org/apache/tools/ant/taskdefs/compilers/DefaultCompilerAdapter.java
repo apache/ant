@@ -414,7 +414,7 @@ public abstract class DefaultCompilerAdapter implements CompilerAdapter
                 }
                 catch( IOException e )
                 {
-                    throw new BuildException( "Error creating temporary file", e, location );
+                    throw new BuildException( "Error creating temporary file", e );
                 }
                 finally
                 {
@@ -448,7 +448,7 @@ public abstract class DefaultCompilerAdapter implements CompilerAdapter
             catch( IOException e )
             {
                 throw new BuildException( "Error running " + args[0]
-                     + " compiler", e, location );
+                     + " compiler", e );
             }
         }
         finally

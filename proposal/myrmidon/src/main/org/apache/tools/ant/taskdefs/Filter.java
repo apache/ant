@@ -51,7 +51,7 @@ public class Filter extends Task
 
         if( !isFiltersFromFile && !isSingleFilter )
         {
-            throw new BuildException( "both token and value parameters, or only a filtersFile parameter is required", location );
+            throw new BuildException( "both token and value parameters, or only a filtersFile parameter is required" );
         }
 
         if( isSingleFilter )

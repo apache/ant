@@ -307,7 +307,7 @@ public class GenericDeploymentTool implements EJBDeploymentTool
         {
             String msg = "A valid destination directory must be specified "
                  + "using the \"destdir\" attribute.";
-            throw new BuildException( msg, getLocation() );
+            throw new BuildException( msg );
         }
     }
 
@@ -859,8 +859,7 @@ public class GenericDeploymentTool implements EJBDeploymentTool
                     in = new FileInputStream( config.manifest );
                     if( in == null )
                     {
-                        throw new BuildException( "Could not find manifest file: " + config.manifest,
-                            getLocation() );
+                        throw new BuildException( "Could not find manifest file: " + config.manifest );
                     }
                 }
                 else
@@ -869,8 +868,7 @@ public class GenericDeploymentTool implements EJBDeploymentTool
                     in = this.getClass().getResourceAsStream( defaultManifest );
                     if( in == null )
                     {
-                        throw new BuildException( "Could not find default manifest: " + defaultManifest,
-                            getLocation() );
+                        throw new BuildException( "Could not find default manifest: " + defaultManifest );
                     }
                 }
 
@@ -878,7 +876,7 @@ public class GenericDeploymentTool implements EJBDeploymentTool
             }
             catch( IOException e )
             {
-                throw new BuildException( "Unable to read manifest", e, getLocation() );
+                throw new BuildException( "Unable to read manifest", e );
             }
             finally
             {

@@ -14,6 +14,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Task;
+import org.apache.myrmidon.api.TaskException;
 
 /**
  * CVSLogin Adds an new entry to a CVS password file
@@ -105,9 +106,9 @@ public class CVSPass extends Task
         throws BuildException
     {
         if( cvsRoot == null )
-            throw new BuildException( "cvsroot is required" );
+            throw new TaskException( "cvsroot is required" );
         if( password == null )
-            throw new BuildException( "password is required" );
+            throw new TaskException( "password is required" );
 
         log( "cvsRoot: " + cvsRoot, project.MSG_DEBUG );
         log( "password: " + password, project.MSG_DEBUG );
@@ -147,7 +148,7 @@ public class CVSPass extends Task
         }
         catch( IOException e )
         {
-            throw new BuildException( e );
+            throw new BuildException( "Error", e );
         }
 
     }

@@ -6,9 +6,11 @@
  * the LICENSE file.
  */
 package org.apache.tools.ant.types;
+
 import java.io.File;
 import java.util.Stack;
 import java.util.Vector;
+import org.apache.myrmidon.api.TaskException;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.DirectoryScanner;
 import org.apache.tools.ant.FileScanner;
@@ -69,6 +71,7 @@ public class FileSet extends DataType implements Cloneable
      *      should be used, "false"|"off"|"no" when they shouldn't be used.
      */
     public void setDefaultexcludes( boolean useDefaultExcludes )
+        throws TaskException
     {
         if( isReference() )
         {
@@ -96,6 +99,7 @@ public class FileSet extends DataType implements Cloneable
      * @param excludes the string containing the exclude patterns
      */
     public void setExcludes( String excludes )
+        throws TaskException
     {
         if( isReference() )
         {
@@ -129,6 +133,7 @@ public class FileSet extends DataType implements Cloneable
      * @param includes the string containing the include patterns
      */
     public void setIncludes( String includes )
+        throws TaskException
     {
         if( isReference() )
         {
@@ -155,7 +160,6 @@ public class FileSet extends DataType implements Cloneable
         defaultPatterns.setIncludesfile( incl );
     }
 
-
     /**
      * Makes this instance in effect a reference to another PatternSet instance.
      * <p>
@@ -167,7 +171,7 @@ public class FileSet extends DataType implements Cloneable
      * @exception BuildException Description of Exception
      */
     public void setRefid( Reference r )
-        throws BuildException
+        throws TaskException
     {
         if( dir != null || defaultPatterns.hasPatterns() )
         {
@@ -192,11 +196,11 @@ public class FileSet extends DataType implements Cloneable
         for( int i = 0; i < additionalPatterns.size(); i++ )
         {
             Object o = additionalPatterns.elementAt( i );
-            defaultPatterns.append( ( PatternSet )o, p );
+            defaultPatterns.append( (PatternSet)o, p );
         }
 
         p.log( "FileSet: Setup file scanner in dir " + dir +
-            " with " + defaultPatterns, p.MSG_DEBUG );
+               " with " + defaultPatterns, p.MSG_DEBUG );
 
         ds.setIncludes( defaultPatterns.getIncludePatterns( p ) );
         ds.setExcludes( defaultPatterns.getExcludePatterns( p ) );
@@ -206,6 +210,7 @@ public class FileSet extends DataType implements Cloneable
     }
 
     public File getDir( Project p )
+        throws TaskException
     {
         if( isReference() )
         {
@@ -221,6 +226,7 @@ public class FileSet extends DataType implements Cloneable
      * @return The DirectoryScanner value
      */
     public DirectoryScanner getDirectoryScanner( Project p )
+        throws TaskException
     {
         if( isReference() )
         {
@@ -229,16 +235,16 @@ public class FileSet extends DataType implements Cloneable
 
         if( dir == null )
         {
-            throw new BuildException( "No directory specified for fileset." );
+            throw new TaskException( "No directory specified for fileset." );
         }
 
         if( !dir.exists() )
         {
-            throw new BuildException( dir.getAbsolutePath() + " not found." );
+            throw new TaskException( dir.getAbsolutePath() + " not found." );
         }
         if( !dir.isDirectory() )
         {
-            throw new BuildException( dir.getAbsolutePath() + " is not a directory." );
+            throw new TaskException( dir.getAbsolutePath() + " is not a directory." );
         }
 
         DirectoryScanner ds = new DirectoryScanner();
@@ -255,13 +261,19 @@ public class FileSet extends DataType implements Cloneable
      */
     public Object clone()
     {
-        if( isReference() )
+        try
         {
-            return new FileSet( getRef( getProject() ) );
+            if( isReference() )
+            {
+                return new FileSet( getRef( getProject() ) );
+            }
+            else
+            {
+                return new FileSet( this );
+            }
         }
-        else
+        catch( TaskException e )
         {
-            return new FileSet( this );
         }
     }
 
@@ -271,6 +283,7 @@ public class FileSet extends DataType implements Cloneable
      * @return Description of the Returned Value
      */
     public PatternSet.NameEntry createExclude()
+        throws TaskException
     {
         if( isReference() )
         {
@@ -285,6 +298,7 @@ public class FileSet extends DataType implements Cloneable
      * @return Description of the Returned Value
      */
     public PatternSet.NameEntry createExcludesFile()
+        throws TaskException
     {
         if( isReference() )
         {
@@ -299,6 +313,7 @@ public class FileSet extends DataType implements Cloneable
      * @return Description of the Returned Value
      */
     public PatternSet.NameEntry createInclude()
+        throws TaskException
     {
         if( isReference() )
         {
@@ -313,6 +328,7 @@ public class FileSet extends DataType implements Cloneable
      * @return Description of the Returned Value
      */
     public PatternSet.NameEntry createIncludesFile()
+        throws TaskException
     {
         if( isReference() )
         {
@@ -322,6 +338,7 @@ public class FileSet extends DataType implements Cloneable
     }
 
     public PatternSet createPatternSet()
+        throws TaskException
     {
         if( isReference() )
         {
@@ -340,6 +357,7 @@ public class FileSet extends DataType implements Cloneable
      * @return The Ref value
      */
     protected FileSet getRef( Project p )
+        throws TaskException
     {
         if( !checked )
         {
@@ -352,11 +370,11 @@ public class FileSet extends DataType implements Cloneable
         if( !( o instanceof FileSet ) )
         {
             String msg = ref.getRefId() + " doesn\'t denote a fileset";
-            throw new BuildException( msg );
+            throw new TaskException( msg );
         }
         else
         {
-            return ( FileSet )o;
+            return (FileSet)o;
         }
     }
 

@@ -59,7 +59,7 @@ public class Script extends Task
         }
         catch( IOException e )
         {
-            throw new BuildException( e );
+            throw new BuildException( "Error", e );
         }
 
         script += new String( data );
@@ -121,7 +121,7 @@ public class Script extends Task
                     t = te;
                 }
             }
-            throw new BuildException( t );
+            throw new BuildException( "Error", t );
         }
     }
 

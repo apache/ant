@@ -53,19 +53,6 @@ public class ExecTask extends Task
     private String resultProperty;
 
     /**
-     * The full commandline to execute, executable + arguments.
-     *
-     * @param cmdl The new Command value
-     */
-    public void setCommand( Commandline cmdl )
-    {
-        log( "The command attribute is deprecated. " +
-            "Please use the executable attribute and nested arg elements.",
-            Project.MSG_WARN );
-        this.cmdl = cmdl;
-    }
-
-    /**
      * The working directory of the process
      *
      * @param d The new Dir value
@@ -256,7 +243,7 @@ public class ExecTask extends Task
         {
             if( failOnError )
             {
-                throw new BuildException( taskType + " returned: " + err, location );
+                throw new BuildException( taskType + " returned: " + err );
             }
             else
             {
@@ -291,7 +278,7 @@ public class ExecTask extends Task
     {
         if( cmdl.getExecutable() == null )
         {
-            throw new BuildException( "no executable specified", location );
+            throw new BuildException( "no executable specified" );
         }
         if( dir != null && !dir.exists() )
         {
@@ -322,11 +309,11 @@ public class ExecTask extends Task
             }
             catch( FileNotFoundException fne )
             {
-                throw new BuildException( "Cannot write to " + out, fne, location );
+                throw new BuildException( "Cannot write to " + out, fne );
             }
             catch( IOException ioe )
             {
-                throw new BuildException( "Cannot write to " + out, ioe, location );
+                throw new BuildException( "Cannot write to " + out, ioe );
             }
         }
         else if( outputprop != null )
@@ -439,7 +426,7 @@ public class ExecTask extends Task
         {
             if( failIfExecFails )
             {
-                throw new BuildException( "Execute failed: " + e.toString(), e, location );
+                throw new BuildException( "Execute failed: " + e.toString(), e );
             }
             else
             {

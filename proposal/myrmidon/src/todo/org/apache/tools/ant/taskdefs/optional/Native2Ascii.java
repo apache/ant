@@ -100,8 +100,7 @@ public class Native2Ascii extends MatchingTask
     {
         if( mapper != null )
         {
-            throw new BuildException( "Cannot define more than one mapper",
-                location );
+            throw new BuildException( "Cannot define more than one mapper" );
         }
         mapper = new Mapper( project );
         return mapper;
@@ -118,7 +117,7 @@ public class Native2Ascii extends MatchingTask
         // default srcDir to basedir
         if( srcDir == null )
         {
-            srcDir = project.resolveFile( "." );
+            srcDir = resolveFile( "." );
         }
 
         // Require destDir

@@ -102,7 +102,7 @@ public class Rpm extends Task
     {
         if( ( sf == null ) || ( sf.trim().equals( "" ) ) )
         {
-            throw new BuildException( "You must specify a spec file", location );
+            throw new BuildException( "You must specify a spec file" );
         }
         this.specFile = sf;
     }
@@ -160,7 +160,7 @@ public class Rpm extends Task
                 }
                 catch( IOException e )
                 {
-                    throw new BuildException( e );
+                    throw new BuildException( "Error", e );
                 }
             }
             else
@@ -175,7 +175,7 @@ public class Rpm extends Task
                 }
                 catch( IOException e )
                 {
-                    throw new BuildException( e );
+                    throw new BuildException( "Error", e );
                 }
             }
             else
@@ -200,7 +200,7 @@ public class Rpm extends Task
         }
         catch( IOException e )
         {
-            throw new BuildException( e );
+            throw new BuildException( "Error", e );
         }
         finally
         {

@@ -17,6 +17,7 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.Task;
+import org.apache.tools.ant.util.FileUtils;
 import org.apache.tools.ant.types.EnumeratedAttribute;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -216,11 +217,12 @@ public class AggregateTransformer
         // set the destination directory relative from the project if needed.
         if( toDir == null )
         {
-            toDir = task.getProject().resolveFile( "." );
+            toDir = FileUtils.newFileUtils().resolveFile( task.getProject().getBaseDir(), "." );
         }
         else if( !toDir.isAbsolute() )
         {
-            toDir = task.getProject().resolveFile( toDir.getPath() );
+            toDir = FileUtils.newFileUtils().
+                resolveFile( task.getProject().getBaseDir(), toDir.getPath() );
         }
     }
 

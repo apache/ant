@@ -8,6 +8,7 @@
 package org.apache.tools.ant;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
+import org.apache.myrmidon.api.TaskException;
 
 
 /**
@@ -33,6 +34,7 @@ public class TaskAdapter extends Task
      * @param project Description of Parameter
      */
     public static void checkTaskClass( final Class taskClass, final Project project )
+    throws TaskException
     {
         // don't have to check for interface, since then
         // taskClass would be abstract too.
@@ -53,7 +55,7 @@ public class TaskAdapter extends Task
         {
             final String message = "No public execute() in " + taskClass;
             project.log( message, Project.MSG_ERR );
-            throw new BuildException( message );
+            throw new TaskException( message );
         }
     }
 
@@ -100,7 +102,7 @@ public class TaskAdapter extends Task
         {
             log( "Error setting project in " + proxy.getClass(),
                 Project.MSG_ERR );
-            throw new BuildException( ex );
+            throw new BuildException( "Error", ex );
         }
 
         Method executeM = null;
@@ -111,7 +113,7 @@ public class TaskAdapter extends Task
             if( executeM == null )
             {
                 log( "No public execute() in " + proxy.getClass(), Project.MSG_ERR );
-                throw new BuildException( "No public execute() in " + proxy.getClass() );
+                throw new TaskException( "No public execute() in " + proxy.getClass() );
             }
             executeM.invoke( proxy, null );
             return;
@@ -119,7 +121,7 @@ public class TaskAdapter extends Task
         catch( Exception ex )
         {
             log( "Error in " + proxy.getClass(), Project.MSG_ERR );
-            throw new BuildException( ex );
+            throw new BuildException( "Error", ex );
         }
 
     }

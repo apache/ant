@@ -161,7 +161,7 @@ public class ManifestFile extends Task
     {
         if( !checkParam( manifestFile ) )
         {
-            throw new BuildException( "file token must not be null.", location );
+            throw new BuildException( "file token must not be null." );
         }
     }
 

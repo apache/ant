@@ -185,18 +185,6 @@ public class Zip extends MatchingTask
     }
 
     /**
-     * This is the name/location of where to create the .zip file.
-     *
-     * @param zipFile The new Zipfile value
-     * @deprecated Use setFile() instead
-     */
-    public void setZipfile( File zipFile )
-    {
-        log( "DEPRECATED - The zipfile attribute is deprecated. Use file attribute instead." );
-        setFile( zipFile );
-    }
-
-    /**
      * Are we updating an existing archive?
      *
      * @return The InUpdateMode value
@@ -383,7 +371,7 @@ public class Zip extends MatchingTask
                 }
             }
 
-            throw new BuildException( msg, ioe, location );
+            throw new BuildException( msg, ioe );
         }
         finally
         {
@@ -439,7 +427,7 @@ public class Zip extends MatchingTask
             else if( emptyBehavior.equals( "fail" ) )
             {
                 throw new BuildException( "Cannot create " + archiveType + " archive " + zipFile +
-                    ": no files were included.", location );
+                    ": no files were included." );
             }
             else
             {
@@ -453,7 +441,7 @@ public class Zip extends MatchingTask
             {
                 if( files[i].equals( zipFile ) )
                 {
-                    throw new BuildException( "A zip file cannot include itself", location );
+                    throw new BuildException( "A zip file cannot include itself" );
                 }
             }
 
@@ -741,7 +729,7 @@ public class Zip extends MatchingTask
         }
         catch( IOException ioe )
         {
-            throw new BuildException( "Could not create empty ZIP archive", ioe, location );
+            throw new BuildException( "Could not create empty ZIP archive", ioe );
         }
         return true;
     }
@@ -858,7 +846,7 @@ public class Zip extends MatchingTask
     {
         if( file.equals( zipFile ) )
         {
-            throw new BuildException( "A zip file cannot include itself", location );
+            throw new BuildException( "A zip file cannot include itself" );
         }
 
         FileInputStream fIn = new FileInputStream( file );

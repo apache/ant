@@ -6,6 +6,7 @@
  * the LICENSE file.
  */
 package org.apache.tools.ant.taskdefs;
+
 import java.io.File;
 import java.util.Enumeration;
 import java.util.Vector;
@@ -16,7 +17,6 @@ import org.apache.tools.ant.Project;
 import org.apache.tools.ant.types.Path;
 import org.apache.tools.ant.types.Reference;
 import org.apache.tools.ant.util.FileUtils;
-
 
 /**
  * A Task to process via XSLT a set of XML documents. This is useful for
@@ -169,7 +169,6 @@ public class XSLTProcess extends MatchingTask implements XSLTLogger
         this.outputtype = type;
     }
 
-
     public void setProcessor( String processor )
     {
         this.processor = processor;
@@ -222,12 +221,12 @@ public class XSLTProcess extends MatchingTask implements XSLTLogger
 
         if( xslFile == null )
         {
-            throw new BuildException( "no stylesheet specified", location );
+            throw new BuildException( "no stylesheet specified" );
         }
 
         if( baseDir == null )
         {
-            baseDir = project.resolveFile( "." );
+            baseDir = resolveFile( "." );
         }
 
         liaison = getLiaison();
@@ -235,25 +234,12 @@ public class XSLTProcess extends MatchingTask implements XSLTLogger
         // check if liaison wants to log errors using us as logger
         if( liaison instanceof XSLTLoggerAware )
         {
-            ( ( XSLTLoggerAware )liaison ).setLogger( this );
+            ( (XSLTLoggerAware)liaison ).setLogger( this );
         }
 
         log( "Using " + liaison.getClass().toString(), Project.MSG_VERBOSE );
 
-        File stylesheet = project.resolveFile( xslFile );
-        if( !stylesheet.exists() )
-        {
-            stylesheet = fileUtils.resolveFile( baseDir, xslFile );
-            /*
-             * shouldn't throw out deprecation warnings before we know,
-             * the wrong version has been used.
-             */
-            if( stylesheet.exists() )
-            {
-                log( "DEPRECATED - the style attribute should be relative to the project\'s" );
-                log( "             basedir, not the tasks\'s basedir." );
-            }
-        }
+        File stylesheet = resolveFile( xslFile );
 
         // if we have an in file and out then process them
         if( inFile != null && outFile != null )
@@ -279,16 +265,16 @@ public class XSLTProcess extends MatchingTask implements XSLTLogger
         list = scanner.getIncludedFiles();
         for( int i = 0; i < list.length; ++i )
         {
-            process( baseDir, list[i], destDir, stylesheet );
+            process( baseDir, list[ i ], destDir, stylesheet );
         }
 
         // Process all the directoried marked for styling
         dirs = scanner.getIncludedDirectories();
         for( int j = 0; j < dirs.length; ++j )
         {
-            list = new File( baseDir, dirs[j] ).list();
+            list = new File( baseDir, dirs[ j ] ).list();
             for( int i = 0; i < list.length; ++i )
-                process( baseDir, list[i], destDir, stylesheet );
+                process( baseDir, list[ i ], destDir, stylesheet );
         }
     }
 
@@ -306,7 +292,7 @@ public class XSLTProcess extends MatchingTask implements XSLTLogger
                 }
                 catch( Exception e )
                 {
-                    throw new BuildException( e );
+                    throw new BuildException( "Error", e );
                 }
             }
             else
@@ -338,7 +324,7 @@ public class XSLTProcess extends MatchingTask implements XSLTLogger
                                 e4.printStackTrace();
                                 e3.printStackTrace();
                                 e2.printStackTrace();
-                                throw new BuildException( e1 );
+                                throw new BuildException( "Error", e1 );
                             }
                         }
                     }
@@ -367,16 +353,16 @@ public class XSLTProcess extends MatchingTask implements XSLTLogger
         {
             log( "Loading stylesheet " + stylesheet, Project.MSG_INFO );
             liaison.setStylesheet( stylesheet );
-            for( Enumeration e = params.elements(); e.hasMoreElements();  )
+            for( Enumeration e = params.elements(); e.hasMoreElements(); )
             {
-                Param p = ( Param )e.nextElement();
+                Param p = (Param)e.nextElement();
                 liaison.addParam( p.getName(), p.getExpression() );
             }
         }
         catch( Exception ex )
         {
             log( "Failed to read stylesheet " + stylesheet, Project.MSG_INFO );
-            throw new BuildException( ex );
+            throw new BuildException( "Error", ex );
         }
     }
 
@@ -389,7 +375,7 @@ public class XSLTProcess extends MatchingTask implements XSLTLogger
             if( !directory.mkdirs() )
             {
                 throw new BuildException( "Unable to create directory: "
-                     + directory.getAbsolutePath() );
+                                          + directory.getAbsolutePath() );
             }
         }
     }
@@ -471,7 +457,7 @@ public class XSLTProcess extends MatchingTask implements XSLTLogger
                 outFile.delete();
             }
 
-            throw new BuildException( ex );
+            throw new BuildException( "Error", ex );
         }
 
     }//-- processXML
@@ -500,7 +486,7 @@ public class XSLTProcess extends MatchingTask implements XSLTLogger
             log( "Failed to process " + inFile, Project.MSG_INFO );
             if( outFile != null )
                 outFile.delete();
-            throw new BuildException( ex );
+            throw new BuildException( "Error", ex );
         }
     }
 
@@ -518,31 +504,17 @@ public class XSLTProcess extends MatchingTask implements XSLTLogger
         {
             final Class clazz =
                 loadClass( "org.apache.tools.ant.taskdefs.optional.TraXLiaison" );
-            liaison = ( XSLTLiaison )clazz.newInstance();
-        }
-        else if( proc.equals( "xslp" ) )
-        {
-            log( "DEPRECATED - xslp processor is deprecated. Use trax or xalan instead." );
-            final Class clazz =
-                loadClass( "org.apache.tools.ant.taskdefs.optional.XslpLiaison" );
-            liaison = ( XSLTLiaison )clazz.newInstance();
+            liaison = (XSLTLiaison)clazz.newInstance();
         }
         else if( proc.equals( "xalan" ) )
         {
             final Class clazz =
                 loadClass( "org.apache.tools.ant.taskdefs.optional.XalanLiaison" );
-            liaison = ( XSLTLiaison )clazz.newInstance();
-        }
-        else if( proc.equals( "adaptx" ) )
-        {
-            log( "DEPRECATED - adaptx processor is deprecated. Use trax or xalan instead." );
-            final Class clazz =
-                loadClass( "org.apache.tools.ant.taskdefs.optional.AdaptxLiaison" );
-            liaison = ( XSLTLiaison )clazz.newInstance();
+            liaison = (XSLTLiaison)clazz.newInstance();
         }
         else
         {
-            liaison = ( XSLTLiaison )loadClass( proc ).newInstance();
+            liaison = (XSLTLiaison)loadClass( proc ).newInstance();
         }
     }
 

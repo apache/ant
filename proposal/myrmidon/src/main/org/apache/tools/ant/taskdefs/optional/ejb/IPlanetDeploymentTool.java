@@ -218,7 +218,7 @@ public class IPlanetDeploymentTool extends GenericDeploymentTool
                  + " descriptor should be prepended with the JAR "
                  + "name or it should be specified using the "
                  + "attribute \"basejarname\" in the \"ejbjar\" task.";
-            throw new BuildException( msg, getLocation() );
+            throw new BuildException( msg );
         }
 
         File iasDescriptor = new File( getConfig().descriptorDir,
@@ -227,14 +227,14 @@ public class IPlanetDeploymentTool extends GenericDeploymentTool
         {
             String msg = "The iAS-specific EJB descriptor ("
                  + iasDescriptor + ") was not found.";
-            throw new BuildException( msg, getLocation() );
+            throw new BuildException( msg );
         }
 
         if( ( iashome != null ) && ( !iashome.isDirectory() ) )
         {
             String msg = "If \"iashome\" is specified, it must be a valid "
                  + "directory (it was set to " + iashome + ").";
-            throw new BuildException( msg, getLocation() );
+            throw new BuildException( msg );
         }
     }
 
@@ -287,7 +287,7 @@ public class IPlanetDeploymentTool extends GenericDeploymentTool
         catch( IPlanetEjbc.EjbcException e )
         {
             throw new BuildException( "An error has occurred while trying to "
-                 + "execute the iAS ejbc utility", e, getLocation() );
+                 + "execute the iAS ejbc utility", e );
         }
 
         displayName = ejbc.getDisplayName();
@@ -313,7 +313,7 @@ public class IPlanetDeploymentTool extends GenericDeploymentTool
                 if( !cmpFile.exists() )
                 {
                     throw new BuildException( "The CMP descriptor file ("
-                         + cmpFile + ") could not be found.", getLocation() );
+                         + cmpFile + ") could not be found." );
                 }
                 files.put( cmpDescriptors[i], cmpFile );
             }

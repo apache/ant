@@ -42,7 +42,7 @@ public class KaffeRmic extends DefaultRmicAdapter
         {
             throw new BuildException( "Cannot use Kaffe rmic, as it is not available" +
                 " A common solution is to set the environment variable" +
-                " JAVA_HOME or CLASSPATH.", getRmic().getLocation() );
+                " JAVA_HOME or CLASSPATH." );
         }
         catch( Exception ex )
         {
@@ -52,7 +52,7 @@ public class KaffeRmic extends DefaultRmicAdapter
             }
             else
             {
-                throw new BuildException( "Error starting Kaffe rmic: ", ex, getRmic().getLocation() );
+                throw new BuildException( "Error starting Kaffe rmic: ", ex );
             }
         }
     }

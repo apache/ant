@@ -6,13 +6,13 @@
  * the LICENSE file.
  */
 package org.apache.tools.ant;
+
 import java.io.File;
+import org.apache.myrmidon.api.TaskException;
 
 /**
  * An interface used to describe the actions required by any type of directory
  * scanner.
- *
- * @author RT
  */
 public interface FileScanner
 {
@@ -36,7 +36,7 @@ public interface FileScanner
      *
      * @return the names of the directories
      */
-    String[] getExcludedDirectories();
+    String[] getExcludedDirectories() throws TaskException;
 
     /**
      * Get the names of the files that matched at least one of the include
@@ -45,7 +45,7 @@ public interface FileScanner
      *
      * @return the names of the files
      */
-    String[] getExcludedFiles();
+    String[] getExcludedFiles() throws TaskException;
 
     /**
      * Get the names of the directories that matched at least one of the include
@@ -63,7 +63,7 @@ public interface FileScanner
      *
      * @return the names of the files
      */
-    String[] getIncludedFiles();
+    String[] getIncludedFiles() throws TaskException;
 
     /**
      * Get the names of the directories that matched at none of the include
@@ -71,7 +71,7 @@ public interface FileScanner
      *
      * @return the names of the directories
      */
-    String[] getNotIncludedDirectories();
+    String[] getNotIncludedDirectories() throws TaskException;
 
     /**
      * Get the names of the files that matched at none of the include patterns.
@@ -79,14 +79,15 @@ public interface FileScanner
      *
      * @return the names of the files
      */
-    String[] getNotIncludedFiles();
+    String[] getNotIncludedFiles() throws TaskException;
 
     /**
      * Scans the base directory for files that match at least one include
      * pattern, and don't match any exclude patterns.
      *
      */
-    void scan();
+    void scan()
+        throws TaskException;
 
     /**
      * Sets the basedir for scanning. This is the directory that is scanned

@@ -117,12 +117,12 @@ public class Parallel extends Task
             }
             else
             {
-                throw new BuildException( firstException );
+                throw new BuildException( "Error", firstException );
             }
         }
         else if( numExceptions > 1 )
         {
-            throw new BuildException( exceptionMessage.toString(), firstLocation );
+            throw new BuildException( exceptionMessage.toString() );
         }
     }
 

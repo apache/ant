@@ -96,7 +96,7 @@ public class Move extends Copy
                     String msg = "Failed to rename dir " + fromDir
                          + " to " + toDir
                          + " due to " + ioe.getMessage();
-                    throw new BuildException( msg, ioe, location );
+                    throw new BuildException( msg, ioe );
                 }
             }
         }
@@ -135,7 +135,7 @@ public class Move extends Copy
                         String msg = "Failed to rename " + fromFile
                              + " to " + toFile
                              + " due to " + ioe.getMessage();
-                        throw new BuildException( msg, ioe, location );
+                        throw new BuildException( msg, ioe );
                     }
 
                     if( !moved )
@@ -168,7 +168,7 @@ public class Move extends Copy
                             String msg = "Failed to copy " + fromFile + " to "
                                  + toFile
                                  + " due to " + ioe.getMessage();
-                            throw new BuildException( msg, ioe, location );
+                            throw new BuildException( msg, ioe );
                         }
                     }
                 }

@@ -40,7 +40,7 @@ public class Chmod extends ExecuteOn
 
     public void setCommand( String e )
     {
-        throw new BuildException( taskType + " doesn\'t support the command attribute", location );
+        throw new BuildException( taskType + " doesn\'t support the command attribute" );
     }
 
     /**
@@ -75,7 +75,7 @@ public class Chmod extends ExecuteOn
 
     public void setExecutable( String e )
     {
-        throw new BuildException( taskType + " doesn\'t support the executable attribute", location );
+        throw new BuildException( taskType + " doesn\'t support the executable attribute" );
     }
 
     public void setFile( File src )
@@ -106,7 +106,7 @@ public class Chmod extends ExecuteOn
 
     public void setSkipEmptyFilesets( boolean skip )
     {
-        throw new BuildException( taskType + " doesn\'t support the skipemptyfileset attribute", location );
+        throw new BuildException( taskType + " doesn\'t support the skipemptyfileset attribute" );
     }
 
     /**
@@ -161,7 +161,7 @@ public class Chmod extends ExecuteOn
             }
             catch( IOException e )
             {
-                throw new BuildException( "Execute failed: " + e, e, location );
+                throw new BuildException( "Execute failed: " + e, e );
             }
             finally
             {
@@ -180,8 +180,7 @@ public class Chmod extends ExecuteOn
     {
         if( !havePerm )
         {
-            throw new BuildException( "Required attribute perm not set in chmod",
-                location );
+            throw new BuildException( "Required attribute perm not set in chmod" );
         }
 
         if( defaultSetDefined && defaultSet.getDir( project ) != null )

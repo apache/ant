@@ -6,6 +6,7 @@
  * the LICENSE file.
  */
 package org.apache.tools.ant;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -17,6 +18,8 @@ import java.util.Vector;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
+import org.apache.myrmidon.api.TaskException;
+import org.apache.tools.ant.util.FileUtils;
 import org.xml.sax.AttributeList;
 import org.xml.sax.DocumentHandler;
 import org.xml.sax.HandlerBase;
@@ -64,10 +67,10 @@ public class ProjectHelper
      * @param buf The feature to be added to the Text attribute
      * @param start The feature to be added to the Text attribute
      * @param end The feature to be added to the Text attribute
-     * @exception BuildException Description of Exception
+     * @exception TaskException Description of Exception
      */
     public static void addText( Project project, Object target, char[] buf, int start, int end )
-        throws BuildException
+        throws TaskException
     {
         addText( project, target, new String( buf, start, end ) );
     }
@@ -78,10 +81,10 @@ public class ProjectHelper
      * @param project The feature to be added to the Text attribute
      * @param target The feature to be added to the Text attribute
      * @param text The feature to be added to the Text attribute
-     * @exception BuildException Description of Exception
+     * @exception TaskException Description of Exception
      */
     public static void addText( Project project, Object target, String text )
-        throws BuildException
+        throws TaskException
     {
 
         if( text == null || text.trim().length() == 0 )
@@ -90,17 +93,17 @@ public class ProjectHelper
         }
 
         if( target instanceof TaskAdapter )
-            target = ( ( TaskAdapter )target ).getProxy();
+            target = ( (TaskAdapter)target ).getProxy();
 
         IntrospectionHelper.getHelper( target.getClass() ).addText( project, target, text );
     }
 
     public static void configure( Object target, AttributeList attrs,
                                   Project project )
-        throws BuildException
+        throws TaskException
     {
         if( target instanceof TaskAdapter )
-            target = ( ( TaskAdapter )target ).getProxy();
+            target = ( (TaskAdapter)target ).getProxy();
 
         IntrospectionHelper ih =
             IntrospectionHelper.getHelper( target.getClass() );
@@ -111,14 +114,14 @@ public class ProjectHelper
         {
             // reflect these into the target
             String value = replaceProperties( project, attrs.getValue( i ),
-                project.getProperties() );
+                                              project.getProperties() );
             try
             {
                 ih.setAttribute( project, target,
-                    attrs.getName( i ).toLowerCase( Locale.US ), value );
+                                 attrs.getName( i ).toLowerCase( Locale.US ), value );
 
             }
-            catch( BuildException be )
+            catch( TaskException be )
             {
                 // id attribute must be set externally
                 if( !attrs.getName( i ).equals( "id" ) )
@@ -134,10 +137,10 @@ public class ProjectHelper
      *
      * @param project Description of Parameter
      * @param buildFile Description of Parameter
-     * @exception BuildException Description of Exception
+     * @exception TaskException Description of Exception
      */
     public static void configureProject( Project project, File buildFile )
-        throws BuildException
+        throws TaskException
     {
         new ProjectHelper( project, buildFile ).parse();
     }
@@ -151,10 +154,10 @@ public class ProjectHelper
      * @param value Description of Parameter
      * @param fragments Description of Parameter
      * @param propertyRefs Description of Parameter
-     * @exception BuildException Description of Exception
+     * @exception TaskException Description of Exception
      */
     public static void parsePropertyString( String value, Vector fragments, Vector propertyRefs )
-        throws BuildException
+        throws TaskException
     {
         int prev = 0;
         int pos;
@@ -180,8 +183,8 @@ public class ProjectHelper
                 int endName = value.indexOf( '}', pos );
                 if( endName < 0 )
                 {
-                    throw new BuildException( "Syntax error in property: "
-                         + value );
+                    throw new TaskException( "Syntax error in property: "
+                                              + value );
                 }
                 String propertyName = value.substring( pos + 2, endName );
                 fragments.addElement( null );
@@ -203,11 +206,11 @@ public class ProjectHelper
      * @param value the string to be scanned for property references.
      * @param project Description of Parameter
      * @return Description of the Returned Value
-     * @exception BuildException Description of Exception
+     * @exception TaskException Description of Exception
      * @since 1.5
      */
     public static String replaceProperties( Project project, String value )
-        throws BuildException
+        throws TaskException
     {
         return replaceProperties( project, value, project.getProperties() );
     }
@@ -220,10 +223,10 @@ public class ProjectHelper
      * @param project Description of Parameter
      * @param keys Description of Parameter
      * @return Description of the Returned Value
-     * @exception BuildException Description of Exception
+     * @exception TaskException Description of Exception
      */
     public static String replaceProperties( Project project, String value, Hashtable keys )
-        throws BuildException
+        throws TaskException
     {
         if( value == null )
         {
@@ -239,16 +242,16 @@ public class ProjectHelper
         Enumeration j = propertyRefs.elements();
         while( i.hasMoreElements() )
         {
-            String fragment = ( String )i.nextElement();
+            String fragment = (String)i.nextElement();
             if( fragment == null )
             {
-                String propertyName = ( String )j.nextElement();
+                String propertyName = (String)j.nextElement();
                 if( !keys.containsKey( propertyName ) )
                 {
                     project.log( "Property ${" + propertyName + "} has not been set", Project.MSG_VERBOSE );
                 }
-                fragment = ( keys.containsKey( propertyName ) ) ? ( String )keys.get( propertyName )
-                     : "${" + propertyName + "}";
+                fragment = ( keys.containsKey( propertyName ) ) ? (String)keys.get( propertyName )
+                    : "${" + propertyName + "}";
             }
             sb.append( fragment );
         }
@@ -265,6 +268,7 @@ public class ProjectHelper
      * @param tag Description of Parameter
      */
     public static void storeChild( Project project, Object parent, Object child, String tag )
+        throws TaskException
     {
         IntrospectionHelper ih = IntrospectionHelper.getHelper( parent.getClass() );
         ih.storeElement( project, parent, child, tag );
@@ -302,10 +306,10 @@ public class ProjectHelper
     /**
      * Parses the project file.
      *
-     * @exception BuildException Description of Exception
+     * @exception TaskException Description of Exception
      */
     private void parse()
-        throws BuildException
+        throws TaskException
     {
         FileInputStream inputStream = null;
         InputSource inputSource = null;
@@ -329,7 +333,7 @@ public class ProjectHelper
         }
         catch( ParserConfigurationException exc )
         {
-            throw new BuildException( "Parser has not been configured correctly", exc );
+            throw new TaskException( "Parser has not been configured correctly", exc );
         }
         catch( SAXParseException exc )
         {
@@ -339,7 +343,7 @@ public class ProjectHelper
             Throwable t = exc.getException();
             if( t instanceof BuildException )
             {
-                BuildException be = ( BuildException )t;
+                BuildException be = (BuildException)t;
                 if( be.getLocation() == Location.UNKNOWN_LOCATION )
                 {
                     be.setLocation( location );
@@ -347,24 +351,24 @@ public class ProjectHelper
                 throw be;
             }
 
-            throw new BuildException( exc.getMessage(), t, location );
+            throw new BuildException( exc.getMessage(), t );
         }
         catch( SAXException exc )
         {
             Throwable t = exc.getException();
-            if( t instanceof BuildException )
+            if( t instanceof TaskException )
             {
-                throw ( BuildException )t;
+                throw (TaskException)t;
             }
-            throw new BuildException( exc.getMessage(), t );
+            throw new TaskException( exc.getMessage(), t );
         }
         catch( FileNotFoundException exc )
         {
-            throw new BuildException( exc );
+            throw new TaskException( "Error", exc );
         }
         catch( IOException exc )
         {
-            throw new BuildException( "Error reading project file", exc );
+            throw new TaskException( "Error reading project file", exc );
         }
         finally
         {
@@ -434,7 +438,9 @@ public class ProjectHelper
          * Called when this element and all elements nested into it have been
          * handled.
          */
-        protected void finished() { }
+        protected void finished()
+        {
+        }
     }
 
     /**
@@ -466,21 +472,21 @@ public class ProjectHelper
             {
                 addText( project, element, buf, start, end );
             }
-            catch( BuildException exc )
+            catch( TaskException exc )
             {
                 throw new SAXParseException( exc.getMessage(), locator, exc );
             }
         }
 
         public void init( String propType, AttributeList attrs )
-            throws SAXParseException
+            throws SAXParseException, TaskException
         {
             try
             {
                 element = project.createDataType( propType );
                 if( element == null )
                 {
-                    throw new BuildException( "Unknown data type " + propType );
+                    throw new TaskException( "Unknown data type " + propType );
                 }
 
                 if( target != null )
@@ -495,7 +501,7 @@ public class ProjectHelper
                     configureId( element, attrs );
                 }
             }
-            catch( BuildException exc )
+            catch( TaskException exc )
             {
                 throw new SAXParseException( exc.getMessage(), locator, exc );
             }
@@ -530,7 +536,7 @@ public class ProjectHelper
 
             if( parent instanceof TaskAdapter )
             {
-                this.parent = ( ( TaskAdapter )parent ).getProxy();
+                this.parent = ( (TaskAdapter)parent ).getProxy();
             }
             else
             {
@@ -549,7 +555,7 @@ public class ProjectHelper
                 {
                     addText( project, child, buf, start, end );
                 }
-                catch( BuildException exc )
+                catch( TaskException exc )
                 {
                     throw new SAXParseException( exc.getMessage(), locator, exc );
                 }
@@ -574,7 +580,7 @@ public class ProjectHelper
                 {
                     UnknownElement uc = new UnknownElement( elementName );
                     uc.setProject( project );
-                    ( ( UnknownElement )parent ).addChild( uc );
+                    ( (UnknownElement)parent ).addChild( uc );
                     child = uc;
                 }
                 else
@@ -596,7 +602,7 @@ public class ProjectHelper
                     ih.storeElement( project, parent, child, elementName );
                 }
             }
-            catch( BuildException exc )
+            catch( TaskException exc )
             {
                 throw new SAXParseException( exc.getMessage(), locator, exc );
             }
@@ -609,7 +615,7 @@ public class ProjectHelper
             {
                 // taskcontainer nested element can contain other tasks - no other
                 // nested elements possible
-                new TaskHandler( this, ( TaskContainer )child, childWrapper, target ).init( name, attrs );
+                new TaskHandler( this, (TaskContainer)child, childWrapper, target ).init( name, attrs );
             }
             else
             {
@@ -631,7 +637,7 @@ public class ProjectHelper
         }
 
         public void init( String tag, AttributeList attrs )
-            throws SAXParseException
+            throws SAXParseException, TaskException
         {
             String def = null;
             String name = null;
@@ -668,10 +674,10 @@ public class ProjectHelper
             if( def == null )
             {
                 throw new SAXParseException( "The default attribute of project is required",
-                    locator );
+                                             locator );
             }
 
-            project.setDefaultTarget( def );
+            project.setDefault( def );
 
             if( name != null )
             {
@@ -701,7 +707,7 @@ public class ProjectHelper
                     }
                     else
                     {
-                        project.setBaseDir( project.resolveFile( baseDir, buildFileParent ) );
+                        project.setBaseDir( FileUtils.newFileUtils().resolveFile( buildFileParent, baseDir ) );
                     }
                 }
             }
@@ -833,7 +839,7 @@ public class ProjectHelper
                 catch( FileNotFoundException fne )
                 {
                     project.log( file.getAbsolutePath() + " could not be found",
-                        Project.MSG_WARN );
+                                 Project.MSG_WARN );
                 }
             }
             // use default if not file or file not found
@@ -980,7 +986,7 @@ public class ProjectHelper
                 {
                     addText( project, task, buf, start, end );
                 }
-                catch( BuildException exc )
+                catch( TaskException exc )
                 {
                     throw new SAXParseException( exc.getMessage(), locator, exc );
                 }
@@ -998,7 +1004,7 @@ public class ProjectHelper
             {
                 task = project.createTask( tag );
             }
-            catch( BuildException e )
+            catch( TaskException e )
             {
                 // swallow here, will be thrown again in
                 // UnknownElement.maybeConfigure if the problem persists.
@@ -1041,7 +1047,7 @@ public class ProjectHelper
             if( task instanceof TaskContainer )
             {
                 // task can contain other tasks - no other nested elements possible
-                new TaskHandler( this, ( TaskContainer )task, wrapper, target ).init( name, attrs );
+                new TaskHandler( this, (TaskContainer)task, wrapper, target ).init( name, attrs );
             }
             else
             {

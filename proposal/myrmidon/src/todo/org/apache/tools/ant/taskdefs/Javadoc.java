@@ -318,7 +318,7 @@ public class Javadoc extends Task
             {
                 throw new BuildException( linkOfflineError );
             }
-            le.setPackagelistLoc( project.resolveFile( tok.nextToken() ) );
+            le.setPackagelistLoc( resolveFile( tok.nextToken() ) );
         }
     }
 
@@ -436,7 +436,7 @@ public class Javadoc extends Task
         {
             String f = tok.nextToken();
             SourceFile sf = new SourceFile();
-            sf.setFile( project.resolveFile( f ) );
+            sf.setFile( resolveFile( f ) );
             addSource( sf );
         }
     }
@@ -608,11 +608,6 @@ public class Javadoc extends Task
     public void execute()
         throws BuildException
     {
-        if( "javadoc2".equals( taskType ) )
-        {
-            log( "!! javadoc2 is deprecated. Use javadoc instead. !!" );
-        }
-
         if( sourcePath == null )
         {
             String msg = "sourcePath attribute must be set!";
@@ -689,7 +684,7 @@ public class Javadoc extends Task
             {
                 if( doclet.getName() == null )
                 {
-                    throw new BuildException( "The doclet name must be specified.", location );
+                    throw new BuildException( "The doclet name must be specified." );
                 }
                 else
                 {
@@ -885,8 +880,7 @@ public class Javadoc extends Task
             }
             catch( IOException e )
             {
-                throw new BuildException( "Error creating temporary file",
-                    e, location );
+                throw new BuildException( "Error creating temporary file", e );
             }
             finally
             {
@@ -923,12 +917,12 @@ public class Javadoc extends Task
             int ret = exe.execute();
             if( ret != 0 && failOnError )
             {
-                throw new BuildException( "Javadoc returned " + ret, location );
+                throw new BuildException( "Javadoc returned " + ret );
             }
         }
         catch( IOException e )
         {
-            throw new BuildException( "Javadoc failed: " + e, e, location );
+            throw new BuildException( "Javadoc failed: " + e, e );
         }
         finally
         {
@@ -1117,7 +1111,7 @@ public class Javadoc extends Task
 
             for( int j = 0; j < list.length; j++ )
             {
-                File source = project.resolveFile( list[j] );
+                File source = resolveFile( list[j] );
                 fs.setDir( source );
 
                 DirectoryScanner ds = fs.getDirectoryScanner( project );
@@ -1160,8 +1154,7 @@ public class Javadoc extends Task
         }
         catch( IOException ioex )
         {
-            throw new BuildException( "Error creating temporary file",
-                ioex, location );
+            throw new BuildException( "Error creating temporary file", ioex );
         }
         finally
         {

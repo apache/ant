@@ -6,13 +6,13 @@
  * the LICENSE file.
  */
 package org.apache.tools.ant.taskdefs;
+
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.PrintStream;
 import java.util.Vector;
 import org.apache.tools.ant.BuildException;
-import org.apache.tools.ant.ExitException;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.Task;
 import org.apache.tools.ant.types.Commandline;
@@ -38,19 +38,6 @@ public class Java extends Task
     private PrintStream outStream = null;
     private boolean failOnError = false;
     private File out;
-
-    /**
-     * Set the command line arguments for the class.
-     *
-     * @param s The new Args value
-     */
-    public void setArgs( String s )
-    {
-        log( "The args attribute is deprecated. " +
-            "Please use nested arg elements.",
-            Project.MSG_WARN );
-        cmdl.createArgument().setLine( s );
-    }
 
     /**
      * Set the class name.
@@ -150,19 +137,6 @@ public class Java extends Task
     }
 
     /**
-     * Set the command line arguments for the JVM.
-     *
-     * @param s The new Jvmargs value
-     */
-    public void setJvmargs( String s )
-    {
-        log( "The jvmargs attribute is deprecated. " +
-            "Please use nested jvmarg elements.",
-            Project.MSG_WARN );
-        cmdl.createVmArgument().setLine( s );
-    }
-
-    /**
      * -mx or -Xmx depending on VM version
      *
      * @param max The new Maxmemory value
@@ -243,7 +217,7 @@ public class Java extends Task
         {
             if( failOnError )
             {
-                throw new BuildException( "Java returned: " + err, location );
+                throw new BuildException( "Java returned: " + err );
             }
             else
             {
@@ -290,16 +264,9 @@ public class Java extends Task
             }
 
             log( "Running in same VM " + cmdl.getJavaCommand().toString(),
-                Project.MSG_VERBOSE );
-            try
-            {
-                run( cmdl );
-                return 0;
-            }
-            catch( ExitException ex )
-            {
-                return ex.getStatus();
-            }
+                 Project.MSG_VERBOSE );
+            run( cmdl );
+            return 0;
         }
     }
 
@@ -342,7 +309,7 @@ public class Java extends Task
         cmdj.setClassname( classname );
         for( int i = 0; i < args.size(); i++ )
         {
-            cmdj.createArgument().setValue( ( String )args.elementAt( i ) );
+            cmdj.createArgument().setValue( (String)args.elementAt( i ) );
         }
         run( cmdj );
     }
@@ -370,7 +337,7 @@ public class Java extends Task
             }
             catch( IOException io )
             {
-                throw new BuildException( io );
+                throw new BuildException( "Error", io );
             }
             finally
             {
@@ -403,8 +370,8 @@ public class Java extends Task
             if( out == null )
             {
                 exe = new Execute( new LogStreamHandler( this, Project.MSG_INFO,
-                    Project.MSG_WARN ),
-                    null );
+                                                         Project.MSG_WARN ),
+                                   null );
             }
             else
             {
@@ -420,8 +387,7 @@ public class Java extends Task
             }
             else if( !dir.exists() || !dir.isDirectory() )
             {
-                throw new BuildException( dir.getAbsolutePath() + " is not a valid directory",
-                    location );
+                throw new BuildException( dir.getAbsolutePath() + " is not a valid directory");
             }
 
             exe.setWorkingDirectory( dir );
@@ -433,12 +399,12 @@ public class Java extends Task
             }
             catch( IOException e )
             {
-                throw new BuildException( e );
+                throw new BuildException( "Error", e );
             }
         }
         catch( IOException io )
         {
-            throw new BuildException( io );
+            throw new BuildException( "Error", io );
         }
         finally
         {
@@ -449,7 +415,8 @@ public class Java extends Task
                     fos.close();
                 }
                 catch( IOException io )
-                {}
+                {
+                }
             }
         }
     }

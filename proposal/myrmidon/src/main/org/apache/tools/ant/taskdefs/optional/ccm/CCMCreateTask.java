@@ -280,7 +280,7 @@ public class CCMCreateTask extends Continuus implements ExecuteStreamHandler
         if( result != 0 )
         {
             String msg = "Failed executing: " + commandLine.toString();
-            throw new BuildException( msg, location );
+            throw new BuildException( msg );
         }
 
         //create task ok, set this task as the default one
@@ -295,7 +295,7 @@ public class CCMCreateTask extends Continuus implements ExecuteStreamHandler
         if( result != 0 )
         {
             String msg = "Failed executing: " + commandLine2.toString();
-            throw new BuildException( msg, location );
+            throw new BuildException( msg);
         }
 
     }

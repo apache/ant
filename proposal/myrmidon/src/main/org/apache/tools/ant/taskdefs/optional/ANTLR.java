@@ -6,13 +6,13 @@
  * the LICENSE file.
  */
 package org.apache.tools.ant.taskdefs.optional;
+
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.net.URL;
 import org.apache.tools.ant.BuildException;
-import org.apache.tools.ant.ExitException;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.Task;
 import org.apache.tools.ant.taskdefs.Execute;
@@ -20,7 +20,6 @@ import org.apache.tools.ant.taskdefs.ExecuteJava;
 import org.apache.tools.ant.taskdefs.LogStreamHandler;
 import org.apache.tools.ant.types.Commandline;
 import org.apache.tools.ant.types.CommandlineJava;
-import org.apache.tools.ant.types.Environment;
 import org.apache.tools.ant.types.Path;
 
 /**
@@ -128,7 +127,7 @@ public class ANTLR extends Task
                 int err = run( commandline.getCommandline() );
                 if( err == 1 )
                 {
-                    throw new BuildException( "ANTLR returned: " + err, location );
+                    throw new BuildException( "ANTLR returned: " + err );
                 }
             }
             else
@@ -136,17 +135,7 @@ public class ANTLR extends Task
                 ExecuteJava exe = new ExecuteJava();
                 exe.setJavaCommand( commandline.getJavaCommand() );
                 exe.setClasspath( commandline.getClasspath() );
-                try
-                {
-                    exe.execute( project );
-                }
-                catch( ExitException e )
-                {
-                    if( e.getStatus() != 0 )
-                    {
-                        throw new BuildException( "ANTLR returned: " + e.getStatus(), location );
-                    }
-                }
+                exe.execute( project );
             }
         }
     }
@@ -183,7 +172,7 @@ public class ANTLR extends Task
                 int pling = u.indexOf( "!" );
                 String jarName = u.substring( 9, pling );
                 log( "Implicitly adding " + jarName + " to classpath",
-                    Project.MSG_DEBUG );
+                     Project.MSG_DEBUG );
                 createClasspath().setLocation( new File( ( new File( jarName ) ).getAbsolutePath() ) );
             }
             else if( u.startsWith( "file:" ) )
@@ -191,13 +180,13 @@ public class ANTLR extends Task
                 int tail = u.indexOf( resource );
                 String dirName = u.substring( 5, tail );
                 log( "Implicitly adding " + dirName + " to classpath",
-                    Project.MSG_DEBUG );
+                     Project.MSG_DEBUG );
                 createClasspath().setLocation( new File( ( new File( dirName ) ).getAbsolutePath() ) );
             }
             else
             {
                 log( "Don\'t know how to handle resource URL " + u,
-                    Project.MSG_DEBUG );
+                     Project.MSG_DEBUG );
             }
         }
         else
@@ -247,7 +236,7 @@ public class ANTLR extends Task
         throws BuildException
     {
         Execute exe = new Execute( new LogStreamHandler( this, Project.MSG_INFO,
-            Project.MSG_WARN ), null );
+                                                         Project.MSG_WARN ), null );
         exe.setAntRun( project );
         if( workingdir != null )
         {
@@ -260,7 +249,7 @@ public class ANTLR extends Task
         }
         catch( IOException e )
         {
-            throw new BuildException( e );
+            throw new BuildException( "Error", e );
         }
     }
 

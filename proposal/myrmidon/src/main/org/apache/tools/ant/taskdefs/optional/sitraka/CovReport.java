@@ -285,13 +285,13 @@ public class CovReport extends Task
         {
             v.addElement( "-filters=" + filters );
         }
-        v.addElement( "-output=" + project.resolveFile( tofile.getPath() ) );
-        v.addElement( "-snapshot=" + project.resolveFile( snapshot.getPath() ) );
+        v.addElement( "-output=" + resolveFile( tofile.getPath() ) );
+        v.addElement( "-snapshot=" + resolveFile( snapshot.getPath() ) );
         // as a default -sourcepath use . in JProbe, so use project .
         if( sourcePath == null )
         {
             sourcePath = new Path( project );
-            sourcePath.createPath().setLocation( project.resolveFile( "." ) );
+            sourcePath.createPath().setLocation( resolveFile( "." ) );
         }
         v.addElement( "-sourcepath=" + sourcePath );
 

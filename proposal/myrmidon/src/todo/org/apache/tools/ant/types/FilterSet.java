@@ -6,16 +6,17 @@
  * the LICENSE file.
  */
 package org.apache.tools.ant.types;// java io classes
+
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.IOException;// java util classes
+import java.io.IOException;
 import java.util.Enumeration;
 import java.util.Hashtable;
 import java.util.Properties;
-import java.util.Vector;// ant classes
+import java.util.Vector;
+import org.apache.myrmidon.api.TaskException;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
-
 
 /**
  * A set of filters to be applied to something. A filter set may have begintoken
@@ -45,7 +46,9 @@ public class FilterSet extends DataType implements Cloneable
      */
     private Vector filters = new Vector();
 
-    public FilterSet() { }
+    public FilterSet()
+    {
+    }
 
     /**
      * Create a Filterset from another filterset
@@ -53,9 +56,10 @@ public class FilterSet extends DataType implements Cloneable
      * @param filterset the filterset upon which this filterset will be based.
      */
     protected FilterSet( FilterSet filterset )
+        throws TaskException
     {
         super();
-        this.filters = ( Vector )filterset.getFilters().clone();
+        this.filters = (Vector)filterset.getFilters().clone();
     }
 
     /**
@@ -64,6 +68,7 @@ public class FilterSet extends DataType implements Cloneable
      * @param startOfToken The new Begintoken value
      */
     public void setBeginToken( String startOfToken )
+        throws TaskException
     {
         if( isReference() )
         {
@@ -71,11 +76,10 @@ public class FilterSet extends DataType implements Cloneable
         }
         if( startOfToken == null || "".equals( startOfToken ) )
         {
-            throw new BuildException( "beginToken must not be empty" );
+            throw new TaskException( "beginToken must not be empty" );
         }
         this.startOfToken = startOfToken;
     }
-
 
     /**
      * The string used to id the end of a token.
@@ -83,6 +87,7 @@ public class FilterSet extends DataType implements Cloneable
      * @param endOfToken The new Endtoken value
      */
     public void setEndToken( String endOfToken )
+        throws TaskException
     {
         if( isReference() )
         {
@@ -90,7 +95,7 @@ public class FilterSet extends DataType implements Cloneable
         }
         if( endOfToken == null || "".equals( endOfToken ) )
         {
-            throw new BuildException( "endToken must not be empty" );
+            throw new TaskException( "endToken must not be empty" );
         }
         this.endOfToken = endOfToken;
     }
@@ -113,6 +118,7 @@ public class FilterSet extends DataType implements Cloneable
     }
 
     public String getBeginToken()
+        throws TaskException
     {
         if( isReference() )
         {
@@ -122,6 +128,7 @@ public class FilterSet extends DataType implements Cloneable
     }
 
     public String getEndToken()
+        throws TaskException
     {
         if( isReference() )
         {
@@ -136,12 +143,13 @@ public class FilterSet extends DataType implements Cloneable
      * @return The hash of the tokens and values for quick lookup.
      */
     public Hashtable getFilterHash()
+        throws TaskException
     {
         int filterSize = getFilters().size();
         Hashtable filterHash = new Hashtable( filterSize );
-        for( Enumeration e = getFilters().elements(); e.hasMoreElements();  )
+        for( Enumeration e = getFilters().elements(); e.hasMoreElements(); )
         {
-            Filter filter = ( Filter )e.nextElement();
+            Filter filter = (Filter)e.nextElement();
             filterHash.put( filter.getToken(), filter.getValue() );
         }
         return filterHash;
@@ -153,6 +161,7 @@ public class FilterSet extends DataType implements Cloneable
      * @param filter The feature to be added to the Filter attribute
      */
     public void addFilter( Filter filter )
+        throws TaskException
     {
         if( isReference() )
         {
@@ -168,6 +177,7 @@ public class FilterSet extends DataType implements Cloneable
      * @param value The value for the new filter.
      */
     public void addFilter( String token, String value )
+        throws TaskException
     {
         if( isReference() )
         {
@@ -182,27 +192,34 @@ public class FilterSet extends DataType implements Cloneable
      * @param filterSet the filterset to be added to this filterset
      */
     public void addFilterSet( FilterSet filterSet )
+        throws TaskException
     {
         if( isReference() )
         {
             throw noChildrenAllowed();
         }
-        for( Enumeration e = filterSet.getFilters().elements(); e.hasMoreElements();  )
+        for( Enumeration e = filterSet.getFilters().elements(); e.hasMoreElements(); )
         {
-            filters.addElement( ( Filter )e.nextElement() );
+            filters.addElement( (Filter)e.nextElement() );
         }
     }
 
     public Object clone()
-        throws BuildException
     {
-        if( isReference() )
+        try
         {
-            return new FilterSet( getRef() );
+            if( isReference() )
+            {
+                return new FilterSet( getRef() );
+            }
+            else
+            {
+                return new FilterSet( this );
+            }
         }
-        else
+        catch( final TaskException te )
         {
-            return new FilterSet( this );
+            throw new RuntimeException( te.toString() );
         }
     }
 
@@ -212,6 +229,7 @@ public class FilterSet extends DataType implements Cloneable
      * @return The filter that was created.
      */
     public FiltersFile createFiltersfile()
+        throws TaskException
     {
         if( isReference() )
         {
@@ -226,10 +244,10 @@ public class FilterSet extends DataType implements Cloneable
      * @return Return true if there are filter in this set otherwise false.
      */
     public boolean hasFilters()
+        throws TaskException
     {
         return getFilters().size() > 0;
     }
-
 
     /**
      * Read the filters from the given file.
@@ -260,7 +278,7 @@ public class FilterSet extends DataType implements Cloneable
                 Vector filters = getFilters();
                 while( enum.hasMoreElements() )
                 {
-                    String strPropName = ( String )enum.nextElement();
+                    String strPropName = (String)enum.nextElement();
                     String strValue = props.getProperty( strPropName );
                     filters.addElement( new Filter( strPropName, strValue ) );
                 }
@@ -297,6 +315,7 @@ public class FilterSet extends DataType implements Cloneable
      * @return The string with the tokens replaced.
      */
     public String replaceTokens( String line )
+        throws TaskException
     {
         String beginToken = getBeginToken();
         String endToken = getEndToken();
@@ -323,7 +342,7 @@ public class FilterSet extends DataType implements Cloneable
                     b.append( line.substring( i, index ) );
                     if( tokens.containsKey( token ) )
                     {
-                        value = ( String )tokens.get( token );
+                        value = (String)tokens.get( token );
                         log( "Replacing: " + beginToken + token + endToken + " -> " + value, Project.MSG_VERBOSE );
                         b.append( value );
                         i = index + beginToken.length() + token.length() + endToken.length();
@@ -334,7 +353,7 @@ public class FilterSet extends DataType implements Cloneable
                         b.append( beginToken );
                         i = index + beginToken.length();
                     }
-                }while ( ( index = line.indexOf( beginToken, i ) ) > -1 );
+                } while( ( index = line.indexOf( beginToken, i ) ) > -1 );
 
                 b.append( line.substring( i ) );
                 return b.toString();
@@ -351,6 +370,7 @@ public class FilterSet extends DataType implements Cloneable
     }
 
     protected Vector getFilters()
+        throws TaskException
     {
         if( isReference() )
         {
@@ -360,8 +380,9 @@ public class FilterSet extends DataType implements Cloneable
     }
 
     protected FilterSet getRef()
+        throws TaskException
     {
-        return ( FilterSet )getCheckedRef( FilterSet.class, "filterset" );
+        return (FilterSet)getCheckedRef( FilterSet.class, "filterset" );
     }
 
     /**
@@ -397,7 +418,9 @@ public class FilterSet extends DataType implements Cloneable
         /**
          * No argument conmstructor
          */
-        public Filter() { }
+        public Filter()
+        {
+        }
 
         /**
          * Sets the Token attribute of the Filter object
@@ -452,7 +475,9 @@ public class FilterSet extends DataType implements Cloneable
         /**
          * Constructor for the Filter object
          */
-        public FiltersFile() { }
+        public FiltersFile()
+        {
+        }
 
         /**
          * Sets the file from which filters will be read.
@@ -460,6 +485,7 @@ public class FilterSet extends DataType implements Cloneable
          * @param file the file from which filters will be read.
          */
         public void setFile( File file )
+            throws TaskException
         {
             readFiltersFromFile( file );
         }

@@ -81,7 +81,7 @@ public abstract class P4HandlerAdapter implements P4Handler
         }
         catch( Exception e )
         {
-            throw new BuildException( e );
+            throw new BuildException( "Error", e );
         }
     }
 

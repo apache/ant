@@ -116,7 +116,7 @@ public abstract class ClearCase extends Task
         }
         catch( java.io.IOException e )
         {
-            throw new BuildException( e );
+            throw new BuildException( "Error", e );
         }
     }
 

@@ -34,7 +34,7 @@ public class GZip extends Pack
         catch( IOException ioe )
         {
             String msg = "Problem creating gzip " + ioe.getMessage();
-            throw new BuildException( msg, ioe, location );
+            throw new BuildException( msg, ioe );
         }
         finally
         {

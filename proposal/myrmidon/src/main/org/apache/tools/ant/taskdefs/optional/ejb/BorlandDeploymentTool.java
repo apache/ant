@@ -396,13 +396,13 @@ public class BorlandDeploymentTool extends GenericDeploymentTool implements Exec
             if( result != 0 )
             {
                 String msg = "Failed executing java2iiop (ret code is " + result + ")";
-                throw new BuildException( msg, getTask().getLocation() );
+                throw new BuildException( msg );
             }
         }
         catch( java.io.IOException e )
         {
             log( "java2iiop exception :" + e.getMessage(), Project.MSG_ERR );
-            throw new BuildException( e );
+            throw new BuildException( "Error", e );
         }
     }
 

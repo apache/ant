@@ -320,12 +320,12 @@ public class Manifest extends Task
             catch( ManifestException m )
             {
                 throw new BuildException( "Existing manifest " + manifestFile
-                     + " is invalid", m, location );
+                     + " is invalid", m );
             }
             catch( IOException e )
             {
-                throw new BuildException( "Failed to read " + manifestFile,
-                    e, location );
+                throw new
+                    BuildException( "Failed to read " + manifestFile, e );
             }
             finally
             {
@@ -347,7 +347,7 @@ public class Manifest extends Task
         }
         catch( ManifestException m )
         {
-            throw new BuildException( "Manifest is invalid", m, location );
+            throw new BuildException( "Manifest is invalid", m );
         }
 
         PrintWriter w = null;
@@ -358,8 +358,7 @@ public class Manifest extends Task
         }
         catch( IOException e )
         {
-            throw new BuildException( "Failed to write " + manifestFile,
-                e, location );
+            throw new BuildException( "Failed to write " + manifestFile e );
         }
         finally
         {

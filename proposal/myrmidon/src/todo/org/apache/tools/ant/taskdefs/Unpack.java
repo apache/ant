@@ -24,12 +24,12 @@ public abstract class Unpack extends Task
 
     public void setDest( String dest )
     {
-        this.dest = project.resolveFile( dest );
+        this.dest = resolveFile( dest );
     }
 
     public void setSrc( String src )
     {
-        source = project.resolveFile( src );
+        source = resolveFile( src );
     }
 
     public void execute()
@@ -65,17 +65,17 @@ public abstract class Unpack extends Task
     {
         if( source == null )
         {
-            throw new BuildException( "No Src for gunzip specified", location );
+            throw new BuildException( "No Src for gunzip specified" );
         }
 
         if( !source.exists() )
         {
-            throw new BuildException( "Src doesn't exist", location );
+            throw new BuildException( "Src doesn't exist" );
         }
 
         if( source.isDirectory() )
         {
-            throw new BuildException( "Cannot expand a directory", location );
+            throw new BuildException( "Cannot expand a directory" );
         }
 
         if( dest == null )

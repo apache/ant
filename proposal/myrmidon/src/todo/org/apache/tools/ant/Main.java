@@ -14,6 +14,7 @@ import java.io.PrintStream;
 import java.util.Enumeration;
 import java.util.Properties;
 import java.util.Vector;
+import org.apache.myrmidon.api.TaskException;
 
 /**
  * Command line entry point into Ant. This class is entered via the cannonical
@@ -97,7 +98,7 @@ public class Main
     private File buildFile;
 
     protected Main( String[] args )
-        throws BuildException
+        throws TaskException
     {
 
         String searchForThis = null;
@@ -289,7 +290,7 @@ public class Main
         if( !buildFile.exists() )
         {
             System.out.println( "Buildfile: " + buildFile + " does not exist!" );
-            throw new BuildException( "Build failed" );
+            throw new TaskException( "Build failed" );
         }
 
         // make sure it's not a directory (this falls into the ultra
@@ -298,14 +299,14 @@ public class Main
         if( buildFile.isDirectory() )
         {
             System.out.println( "What? Buildfile: " + buildFile + " is a dir!" );
-            throw new BuildException( "Build failed" );
+            throw new TaskException( "Build failed" );
         }
 
         readyToRun = true;
     }
 
     public static synchronized String getAntVersion()
-        throws BuildException
+        throws TaskException
     {
         if( antVersion == null )
         {
@@ -327,12 +328,12 @@ public class Main
             }
             catch( IOException ioe )
             {
-                throw new BuildException( "Could not load the version information:"
+                throw new TaskException( "Could not load the version information:"
                      + ioe.getMessage() );
             }
             catch( NullPointerException npe )
             {
-                throw new BuildException( "Could not load the version information." );
+                throw new TaskException( "Could not load the version information." );
             }
         }
         return antVersion;
@@ -388,7 +389,7 @@ public class Main
             m.runBuild( coreLoader );
             System.exit( 0 );
         }
-        catch( BuildException be )
+        catch( TaskException be )
         {
             if( m.err != System.err )
             {
@@ -569,7 +570,7 @@ public class Main
     }
 
     private static void printVersion()
-        throws BuildException
+        throws TaskException
     {
         System.out.println( getAntVersion() );
     }
@@ -591,7 +592,7 @@ public class Main
             }
             catch( Throwable exc )
             {
-                throw new BuildException( "Unable to instantiate listener " + className, exc );
+                throw new TaskException( "Unable to instantiate listener " + className, exc );
             }
         }
     }
@@ -668,10 +669,10 @@ public class Main
      * @param suffix Suffix filename to look for in parents.
      * @param start Description of Parameter
      * @return A handle to the build file
-     * @exception BuildException Failed to locate a build file
+     * @exception TaskException Failed to locate a build file
      */
     private File findBuildFile( String start, String suffix )
-        throws BuildException
+        throws TaskException
     {
         if( msgOutputLevel >= Project.MSG_INFO )
         {
@@ -691,7 +692,7 @@ public class Main
             // complain that we can't find the build file.
             if( parent == null )
             {
-                throw new BuildException( "Could not locate a build file!" );
+                throw new TaskException( "Could not locate a build file!" );
             }
 
             // refresh our file handle
@@ -705,10 +706,10 @@ public class Main
      * Executes the build.
      *
      * @param coreLoader Description of Parameter
-     * @exception BuildException Description of Exception
+     * @exception TaskException Description of Exception
      */
     private void runBuild( ClassLoader coreLoader )
-        throws BuildException
+        throws TaskException
     {
 
         if( !readyToRun )
@@ -782,15 +783,15 @@ public class Main
                 }
                 catch( NoClassDefFoundError ncdfe )
                 {
-                    throw new BuildException( noParserMessage, ncdfe );
+                    throw new TaskException( noParserMessage, ncdfe );
                 }
                 catch( ClassNotFoundException cnfe )
                 {
-                    throw new BuildException( noParserMessage, cnfe );
+                    throw new TaskException( noParserMessage, cnfe );
                 }
                 catch( NullPointerException npe )
                 {
-                    throw new BuildException( noParserMessage, npe );
+                    throw new TaskException( noParserMessage, npe );
                 }
 
                 if( projectHelp )

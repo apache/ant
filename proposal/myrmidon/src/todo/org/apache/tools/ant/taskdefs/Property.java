@@ -99,17 +99,6 @@ public class Property extends Task
         this.resource = resource;
     }
 
-    /**
-     * @param userProperty The new UserProperty value
-     * @deprecated This was never a supported feature and has been deprecated
-     *      without replacement
-     */
-    public void setUserProperty( boolean userProperty )
-    {
-        log( "DEPRECATED: Ignoring request to set user property in Property task.",
-            Project.MSG_WARN );
-    }
-
     public void setValue( String value )
     {
         this.value = value;
@@ -161,16 +150,14 @@ public class Property extends Task
         {
             if( value == null && ref == null )
             {
-                throw new BuildException( "You must specify value, location or refid with the name attribute",
-                    location );
+                throw new BuildException( "You must specify value, location or refid with the name attribute" );
             }
         }
         else
         {
             if( file == null && resource == null && env == null )
             {
-                throw new BuildException( "You must specify file, resource or environment when not using the name attribute",
-                    location );
+                throw new BuildException( "You must specify file, resource or environment when not using the name attribute" );
             }
         }
 
@@ -291,7 +278,7 @@ public class Property extends Task
         }
         catch( IOException ex )
         {
-            throw new BuildException( ex );
+            throw new BuildException( "Error", ex );
         }
     }
 
@@ -334,7 +321,7 @@ public class Property extends Task
         }
         catch( IOException ex )
         {
-            throw new BuildException( ex );
+            throw new BuildException( "Error", ex );
         }
     }
 

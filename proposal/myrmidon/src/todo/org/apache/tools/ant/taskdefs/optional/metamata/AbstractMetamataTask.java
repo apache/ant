@@ -276,7 +276,7 @@ public abstract class AbstractMetamataTask extends Task
         {
             throw new BuildException( "'metamatahome' must point to Metamata home directory." );
         }
-        metamataHome = project.resolveFile( metamataHome.getPath() );
+        metamataHome = resolveFile( metamataHome.getPath() );
         File jar = getMetamataJar( metamataHome );
         if( !jar.exists() )
         {

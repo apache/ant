@@ -122,7 +122,7 @@ public class Jdk14RegexpMatcher implements RegexpMatcher
         }
         catch( Exception e )
         {
-            throw new BuildException( e );
+            throw new BuildException( "Error", e );
         }
     }
 

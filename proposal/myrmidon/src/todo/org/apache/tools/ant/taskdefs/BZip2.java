@@ -37,7 +37,7 @@ public class BZip2 extends Pack
         catch( IOException ioe )
         {
             String msg = "Problem creating bzip2 " + ioe.getMessage();
-            throw new BuildException( msg, ioe, location );
+            throw new BuildException( msg, ioe );
         }
         finally
         {

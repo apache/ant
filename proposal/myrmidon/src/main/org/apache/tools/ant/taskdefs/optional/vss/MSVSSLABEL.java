@@ -328,12 +328,12 @@ public class MSVSSLABEL extends MSVSS
         if( getVsspath() == null )
         {
             String msg = "vsspath attribute must be set!";
-            throw new BuildException( msg, location );
+            throw new BuildException( msg );
         }
         if( getLabel() == null )
         {
             String msg = "label attribute must be set!";
-            throw new BuildException( msg, location );
+            throw new BuildException( msg );
         }
 
         // now look for illegal combinations of things ...
@@ -368,7 +368,7 @@ public class MSVSSLABEL extends MSVSS
         if( result != 0 )
         {
             String msg = "Failed executing: " + commandLine.toString();
-            throw new BuildException( msg, location );
+            throw new BuildException( msg );
         }
 
     }

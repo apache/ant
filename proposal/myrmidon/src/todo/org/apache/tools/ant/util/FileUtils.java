@@ -6,6 +6,7 @@
  * the LICENSE file.
  */
 package org.apache.tools.ant.util;
+
 import java.io.BufferedInputStream;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -16,13 +17,12 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStream;
 import java.lang.reflect.Method;
 import java.text.DecimalFormat;
 import java.util.Random;
 import java.util.Stack;
 import java.util.StringTokenizer;
-import org.apache.tools.ant.BuildException;
+import org.apache.myrmidon.api.TaskException;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.types.FilterSetCollection;
 
@@ -46,7 +46,9 @@ public class FileUtils
     /**
      * Empty constructor.
      */
-    protected FileUtils() { }
+    protected FileUtils()
+    {
+    }
 
     /**
      * Factory method.
@@ -66,20 +68,20 @@ public class FileUtils
      * @exception BuildException Description of Exception
      */
     public void setFileLastModified( File file, long time )
-        throws BuildException
+        throws TaskException
     {
         if( Project.getJavaVersion() == Project.JAVA_1_1 )
         {
             return;
         }
-        Long[] times = new Long[1];
+        Long[] times = new Long[ 1 ];
         if( time < 0 )
         {
-            times[0] = new Long( System.currentTimeMillis() );
+            times[ 0 ] = new Long( System.currentTimeMillis() );
         }
         else
         {
-            times[0] = new Long( time );
+            times[ 0 ] = new Long( time );
         }
 
         try
@@ -89,13 +91,13 @@ public class FileUtils
         catch( java.lang.reflect.InvocationTargetException ite )
         {
             Throwable nested = ite.getTargetException();
-            throw new BuildException( "Exception setting the modification time "
-                 + "of " + file, nested );
+            throw new TaskException( "Exception setting the modification time "
+                                     + "of " + file, nested );
         }
         catch( Throwable other )
         {
-            throw new BuildException( "Exception setting the modification time "
-                 + "of " + file, other );
+            throw new TaskException( "Exception setting the modification time "
+                                     + "of " + file, other );
         }
     }
 
@@ -179,7 +181,8 @@ public class FileUtils
                     in1.close();
                 }
                 catch( IOException e )
-                {}
+                {
+                }
             }
             if( in2 != null )
             {
@@ -188,7 +191,8 @@ public class FileUtils
                     in2.close();
                 }
                 catch( IOException e )
-                {}
+                {
+                }
             }
         }
     }
@@ -202,7 +206,7 @@ public class FileUtils
      * @throws IOException
      */
     public void copyFile( String sourceFile, String destFile )
-        throws IOException
+        throws IOException, TaskException
     {
         copyFile( new File( sourceFile ), new File( destFile ), null, false, false );
     }
@@ -217,7 +221,7 @@ public class FileUtils
      * @throws IOException
      */
     public void copyFile( String sourceFile, String destFile, FilterSetCollection filters )
-        throws IOException
+        throws IOException, TaskException
     {
         copyFile( new File( sourceFile ), new File( destFile ), filters, false, false );
     }
@@ -235,10 +239,10 @@ public class FileUtils
      */
     public void copyFile( String sourceFile, String destFile, FilterSetCollection filters,
                           boolean overwrite )
-        throws IOException
+        throws IOException, TaskException
     {
         copyFile( new File( sourceFile ), new File( destFile ), filters,
-            overwrite, false );
+                  overwrite, false );
     }
 
     /**
@@ -257,10 +261,10 @@ public class FileUtils
      */
     public void copyFile( String sourceFile, String destFile, FilterSetCollection filters,
                           boolean overwrite, boolean preserveLastModified )
-        throws IOException
+        throws IOException, TaskException
     {
         copyFile( new File( sourceFile ), new File( destFile ), filters,
-            overwrite, preserveLastModified );
+                  overwrite, preserveLastModified );
     }
 
     /**
@@ -272,7 +276,7 @@ public class FileUtils
      * @throws IOException
      */
     public void copyFile( File sourceFile, File destFile )
-        throws IOException
+        throws IOException, TaskException
     {
         copyFile( sourceFile, destFile, null, false, false );
     }
@@ -287,7 +291,7 @@ public class FileUtils
      * @throws IOException
      */
     public void copyFile( File sourceFile, File destFile, FilterSetCollection filters )
-        throws IOException
+        throws IOException, TaskException
     {
         copyFile( sourceFile, destFile, filters, false, false );
     }
@@ -305,7 +309,7 @@ public class FileUtils
      */
     public void copyFile( File sourceFile, File destFile, FilterSetCollection filters,
                           boolean overwrite )
-        throws IOException
+        throws IOException, TaskException
     {
         copyFile( sourceFile, destFile, filters, overwrite, false );
     }
@@ -326,7 +330,7 @@ public class FileUtils
      */
     public void copyFile( File sourceFile, File destFile, FilterSetCollection filters,
                           boolean overwrite, boolean preserveLastModified )
-        throws IOException
+        throws IOException, TaskException
     {
 
         if( overwrite || !destFile.exists() ||
@@ -377,13 +381,13 @@ public class FileUtils
                 FileInputStream in = new FileInputStream( sourceFile );
                 FileOutputStream out = new FileOutputStream( destFile );
 
-                byte[] buffer = new byte[8 * 1024];
+                byte[] buffer = new byte[ 8 * 1024 ];
                 int count = 0;
                 do
                 {
                     out.write( buffer, 0, count );
                     count = in.read( buffer, 0, buffer.length );
-                }while ( count != -1 );
+                } while( count != -1 );
 
                 in.close();
                 out.close();
@@ -429,9 +433,9 @@ public class FileUtils
             do
             {
                 result = new File( parent,
-                    prefix + fmt.format( rand.nextInt() )
-                     + suffix );
-            }while ( result.exists() );
+                                   prefix + fmt.format( rand.nextInt() )
+                                   + suffix );
+            } while( result.exists() );
         }
         return result;
     }
@@ -454,6 +458,7 @@ public class FileUtils
      * @throws java.lang.NullPointerException if the file path is equal to null.
      */
     public File normalize( String path )
+        throws TaskException
     {
         String orig = path;
 
@@ -465,10 +470,10 @@ public class FileUtils
             !( path.length() >= 2 &&
             Character.isLetter( path.charAt( 0 ) ) &&
             path.charAt( 1 ) == ':' )
-             )
+        )
         {
             String msg = path + " is not an absolute path";
-            throw new BuildException( msg );
+            throw new TaskException( msg );
         }
 
         boolean dosWithDrive = false;
@@ -483,15 +488,15 @@ public class FileUtils
 
             char[] ca = path.replace( '/', '\\' ).toCharArray();
             StringBuffer sb = new StringBuffer();
-            sb.append( Character.toUpperCase( ca[0] ) ).append( ':' );
+            sb.append( Character.toUpperCase( ca[ 0 ] ) ).append( ':' );
 
             for( int i = 2; i < ca.length; i++ )
             {
-                if( ( ca[i] != '\\' ) ||
-                    ( ca[i] == '\\' && ca[i - 1] != '\\' )
-                     )
+                if( ( ca[ i ] != '\\' ) ||
+                    ( ca[ i ] == '\\' && ca[ i - 1 ] != '\\' )
+                )
                 {
-                    sb.append( ca[i] );
+                    sb.append( ca[ i ] );
                 }
             }
 
@@ -542,7 +547,7 @@ public class FileUtils
             {
                 if( s.size() < 2 )
                 {
-                    throw new BuildException( "Cannot resolve path " + orig );
+                    throw new TaskException( "Cannot resolve path " + orig );
                 }
                 else
                 {
@@ -589,6 +594,7 @@ public class FileUtils
      *      current platform.
      */
     public File resolveFile( File file, String filename )
+        throws TaskException
     {
         filename = filename.replace( '/', File.separatorChar )
             .replace( '\\', File.separatorChar );
@@ -598,7 +604,7 @@ public class FileUtils
             ( filename.length() >= 2 &&
             Character.isLetter( filename.charAt( 0 ) ) &&
             filename.charAt( 1 ) == ':' )
-             )
+        )
         {
             return normalize( filename );
         }
@@ -619,9 +625,9 @@ public class FileUtils
                 if( helpFile == null )
                 {
                     String msg = "The file or path you specified ("
-                         + filename + ") is invalid relative to "
-                         + file.getPath();
-                    throw new BuildException( msg );
+                        + filename + ") is invalid relative to "
+                        + file.getPath();
+                    throw new TaskException( msg );
                 }
             }
             else if( part.equals( "." ) )
@@ -643,6 +649,7 @@ public class FileUtils
      * @return The SetLastModified value
      */
     protected final Method getSetLastModified()
+        throws TaskException
     {
         if( Project.getJavaVersion() == Project.JAVA_1_1 )
         {
@@ -658,12 +665,12 @@ public class FileUtils
                     {
                         setLastModified =
                             java.io.File.class.getMethod( "setLastModified",
-                            new Class[]{Long.TYPE} );
+                                                          new Class[]{Long.TYPE} );
                     }
                     catch( NoSuchMethodException nse )
                     {
-                        throw new BuildException( "File.setlastModified not in JDK > 1.1?",
-                            nse );
+                        throw new TaskException( "File.setlastModified not in JDK > 1.1?",
+                                                 nse );
                     }
                 }
             }

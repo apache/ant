@@ -97,7 +97,7 @@ public class RegexpMatcherFactory
         }
         catch( Throwable t )
         {
-            throw new BuildException( t );
+            throw new BuildException( "Error", t );
         }
     }
 }

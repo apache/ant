@@ -69,7 +69,7 @@ class VAJRemoteUtil implements VAJUtil
         }
         catch( Exception ex )
         {
-            throw new BuildException( ex );
+            throw new BuildException( "Error", ex );
         }
     }
 
@@ -104,7 +104,7 @@ class VAJRemoteUtil implements VAJUtil
         }
         catch( Exception ex )
         {
-            throw new BuildException( ex );
+            throw new BuildException( "Error", ex );
         }
 
     }
@@ -135,7 +135,7 @@ class VAJRemoteUtil implements VAJUtil
         }
         catch( Exception ex )
         {
-            throw new BuildException( ex );
+            throw new BuildException( "Error", ex );
         }
     }
 

@@ -204,7 +204,7 @@ public class PropertyFile extends Task
     {
         if( !checkParam( m_propertyfile ) )
         {
-            throw new BuildException( "file token must not be null.", location );
+            throw new BuildException( "file token must not be null." );
         }
     }
 
@@ -293,16 +293,16 @@ public class PropertyFile extends Task
         catch( InvocationTargetException ite )
         {
             Throwable t = ite.getTargetException();
-            throw new BuildException( t );
+            throw new BuildException( "Error", t );
         }
         catch( IllegalAccessException iae )
         {
             // impossible
-            throw new BuildException( iae );
+            throw new BuildException( "Error", iae );
         }
         catch( IOException ioe )
         {
-            throw new BuildException( ioe );
+            throw new BuildException( "Error", ioe );
         }
         finally
         {

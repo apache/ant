@@ -79,7 +79,7 @@ public class Tstamp extends Task
         }
         catch( Exception e )
         {
-            throw new BuildException( e );
+            throw new BuildException( "Error", e );
         }
     }
 
@@ -165,7 +165,7 @@ public class Tstamp extends Task
                         country = st.nextToken();
                         if( st.hasMoreElements() )
                         {
-                            throw new BuildException( "bad locale format", getLocation() );
+                            throw new BuildException( "bad locale format" );
                         }
                     }
                 }
@@ -176,7 +176,7 @@ public class Tstamp extends Task
             }
             catch( NoSuchElementException e )
             {
-                throw new BuildException( "bad locale format", e, getLocation() );
+                throw new BuildException( "bad locale format", e );
             }
         }
 
@@ -200,22 +200,6 @@ public class Tstamp extends Task
             timeZone = TimeZone.getTimeZone( id );
         }
 
-        /**
-         * @param unit The new Unit value
-         * @deprecated setUnit(String) is deprecated and is replaced with
-         *      setUnit(Tstamp.Unit) to make Ant's Introspection mechanism do
-         *      the work and also to encapsulate operations on the unit in its
-         *      own class.
-         */
-        public void setUnit( String unit )
-        {
-            log( "DEPRECATED - The setUnit(String) method has been deprecated."
-                 + " Use setUnit(Tstamp.Unit) instead." );
-            Unit u = new Unit();
-            u.setValue( unit );
-            field = u.getCalendarField();
-        }
-
         public void setUnit( Unit unit )
         {
             field = unit.getCalendarField();
@@ -225,12 +209,12 @@ public class Tstamp extends Task
         {
             if( propertyName == null )
             {
-                throw new BuildException( "property attribute must be provided", location );
+                throw new BuildException( "property attribute must be provided" );
             }
 
             if( pattern == null )
             {
-                throw new BuildException( "pattern attribute must be provided", location );
+                throw new BuildException( "pattern attribute must be provided" );
             }
 
             SimpleDateFormat sdf;

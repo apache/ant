@@ -50,7 +50,7 @@ public class SunRmic extends DefaultRmicAdapter
         {
             throw new BuildException( "Cannot use SUN rmic, as it is not available" +
                 " A common solution is to set the environment variable" +
-                " JAVA_HOME or CLASSPATH.", getRmic().getLocation() );
+                " JAVA_HOME or CLASSPATH." );
         }
         catch( Exception ex )
         {
@@ -60,7 +60,7 @@ public class SunRmic extends DefaultRmicAdapter
             }
             else
             {
-                throw new BuildException( "Error starting SUN rmic: ", ex, getRmic().getLocation() );
+                throw new BuildException( "Error starting SUN rmic: ", ex );
             }
         }
         finally
@@ -71,7 +71,7 @@ public class SunRmic extends DefaultRmicAdapter
             }
             catch( IOException e )
             {
-                throw new BuildException( e );
+                throw new BuildException( "Error", e );
             }
         }
     }

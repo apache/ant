@@ -238,7 +238,7 @@ public class MAudit extends AbstractMetamataTask
             }
             catch( IOException e )
             {
-                throw new BuildException( e );
+                throw new BuildException( "Error", e );
             }
         }
         return handler;

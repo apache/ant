@@ -52,7 +52,7 @@ public class Javac12 extends DefaultCompilerAdapter
         {
             throw new BuildException( "Cannot use classic compiler, as it is not available" +
                 " A common solution is to set the environment variable" +
-                " JAVA_HOME to your jdk directory.", location );
+                " JAVA_HOME to your jdk directory." );
         }
         catch( Exception ex )
         {
@@ -62,7 +62,7 @@ public class Javac12 extends DefaultCompilerAdapter
             }
             else
             {
-                throw new BuildException( "Error starting classic compiler: ", ex, location );
+                throw new BuildException( "Error starting classic compiler: ", ex );
             }
         }
         finally
@@ -74,7 +74,7 @@ public class Javac12 extends DefaultCompilerAdapter
             catch( IOException e )
             {
                 // plain impossible
-                throw new BuildException( e );
+                throw new BuildException( "Error", e );
             }
         }
     }

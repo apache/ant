@@ -77,8 +77,7 @@ public class CallTarget extends Task
 
         if( subTarget == null )
         {
-            throw new BuildException( "Attribute target is required.",
-                location );
+            throw new BuildException( "Attribute target is required." );
         }
 
         callee.setDir( project.getBaseDir() );

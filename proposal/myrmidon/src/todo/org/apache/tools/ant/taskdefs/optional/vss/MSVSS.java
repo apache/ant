@@ -232,7 +232,7 @@ public abstract class MSVSS extends Task
         }
         catch( IOException e )
         {
-            throw new BuildException( e );
+            throw new BuildException( "Error", e );
         }
     }
 }

@@ -6,15 +6,16 @@
  * the LICENSE file.
  */
 package org.apache.tools.ant.taskdefs;
+
 import java.io.File;
 import java.util.Enumeration;
 import java.util.Vector;
+import org.apache.myrmidon.framework.Os;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.DirectoryScanner;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.taskdefs.compilers.CompilerAdapter;
 import org.apache.tools.ant.taskdefs.compilers.CompilerAdapterFactory;
-import org.apache.myrmidon.framework.Os;
 import org.apache.tools.ant.types.Commandline;
 import org.apache.tools.ant.types.Path;
 import org.apache.tools.ant.types.Reference;
@@ -57,9 +58,8 @@ import org.apache.tools.ant.util.SourceFileScanner;
 
 public class Javac extends MatchingTask
 {
-
     private final static String FAIL_MSG
-         = "Compile failed, messages should have been provided.";
+        = "Compile failed, messages should have been provided.";
     private boolean debug = false;
     private boolean optimize = false;
     private boolean deprecation = false;
@@ -73,7 +73,7 @@ public class Javac extends MatchingTask
     private Vector implementationSpecificArgs = new Vector();
 
     protected boolean failOnError = true;
-    protected File[] compileList = new File[0];
+    protected File[] compileList = new File[ 0 ];
     private Path bootclasspath;
     private Path compileClasspath;
     private String debugLevel;
@@ -238,15 +238,15 @@ public class Javac extends MatchingTask
     public void setFork( String f )
     {
         if( f.equalsIgnoreCase( "on" )
-             || f.equalsIgnoreCase( "true" )
-             || f.equalsIgnoreCase( "yes" ) )
+            || f.equalsIgnoreCase( "true" )
+            || f.equalsIgnoreCase( "yes" ) )
         {
             fork = "true";
             forkedExecutable = getSystemJavac();
         }
         else if( f.equalsIgnoreCase( "off" )
-             || f.equalsIgnoreCase( "false" )
-             || f.equalsIgnoreCase( "no" ) )
+            || f.equalsIgnoreCase( "false" )
+            || f.equalsIgnoreCase( "no" ) )
         {
             fork = "false";
             forkedExecutable = null;
@@ -406,17 +406,17 @@ public class Javac extends MatchingTask
     {
         Vector args = new Vector();
         for( Enumeration enum = implementationSpecificArgs.elements();
-            enum.hasMoreElements();
-             )
+             enum.hasMoreElements();
+            )
         {
             String[] curr =
-                ( ( ImplementationSpecificArgument )enum.nextElement() ).getParts();
+                ( (ImplementationSpecificArgument)enum.nextElement() ).getParts();
             for( int i = 0; i < curr.length; i++ )
             {
-                args.addElement( curr[i] );
+                args.addElement( curr[ i ] );
             }
         }
-        String[] res = new String[args.size()];
+        String[] res = new String[ args.size() ];
         args.copyInto( res );
         return res;
     }
@@ -724,17 +724,17 @@ public class Javac extends MatchingTask
 
         if( src == null )
         {
-            throw new BuildException( "srcdir attribute must be set!", location );
+            throw new BuildException( "srcdir attribute must be set!" );
         }
         String[] list = src.list();
         if( list.length == 0 )
         {
-            throw new BuildException( "srcdir attribute must be set!", location );
+            throw new BuildException( "srcdir attribute must be set!" );
         }
 
         if( destDir != null && !destDir.isDirectory() )
         {
-            throw new BuildException( "destination directory \"" + destDir + "\" does not exist or is not a directory", location );
+            throw new BuildException( "destination directory \"" + destDir + "\" does not exist or is not a directory" );
         }
 
         // scan source directories and dest directory to build up
@@ -742,10 +742,10 @@ public class Javac extends MatchingTask
         resetFileLists();
         for( int i = 0; i < list.length; i++ )
         {
-            File srcDir = ( File )project.resolveFile( list[i] );
+            File srcDir = (File)resolveFile( list[ i ] );
             if( !srcDir.exists() )
             {
-                throw new BuildException( "srcdir \"" + srcDir.getPath() + "\" does not exist!", location );
+                throw new BuildException( "srcdir \"" + srcDir.getPath() + "\" does not exist!" );
             }
 
             DirectoryScanner ds = this.getDirectoryScanner( srcDir );
@@ -765,7 +765,7 @@ public class Javac extends MatchingTask
             CompilerAdapter adapter = CompilerAdapterFactory.getCompiler(
                 compiler, this );
             log( "Compiling " + compileList.length +
-                " source file"
+                 " source file"
                  + ( compileList.length == 1 ? "" : "s" )
                  + ( destDir != null ? " to " + destDir : "" ) );
 
@@ -777,7 +777,7 @@ public class Javac extends MatchingTask
             {
                 if( failOnError )
                 {
-                    throw new BuildException( FAIL_MSG, location );
+                    throw new BuildException( FAIL_MSG );
                 }
                 else
                 {
@@ -799,7 +799,7 @@ public class Javac extends MatchingTask
         // PATH.
         java.io.File jExecutable =
             new java.io.File( System.getProperty( "java.home" ) +
-            "/../bin/javac" + extension );
+                              "/../bin/javac" + extension );
 
         if( jExecutable.exists() && !Os.isFamily( "netware" ) )
         {
@@ -837,7 +837,7 @@ public class Javac extends MatchingTask
      */
     protected void resetFileLists()
     {
-        compileList = new File[0];
+        compileList = new File[ 0 ];
     }
 
     /**
@@ -858,12 +858,12 @@ public class Javac extends MatchingTask
 
         if( newFiles.length > 0 )
         {
-            File[] newCompileList = new File[compileList.length +
-                newFiles.length];
+            File[] newCompileList = new File[ compileList.length +
+                newFiles.length ];
             System.arraycopy( compileList, 0, newCompileList, 0,
-                compileList.length );
+                              compileList.length );
             System.arraycopy( newFiles, 0, newCompileList,
-                compileList.length, newFiles.length );
+                              compileList.length, newFiles.length );
             compileList = newCompileList;
         }
     }
@@ -879,7 +879,7 @@ public class Javac extends MatchingTask
                 if( isJdkCompiler( compiler ) )
                 {
                     log( "Since fork is true, ignoring build.compiler setting.",
-                        Project.MSG_WARN );
+                         Project.MSG_WARN );
                     compiler = "extJavac";
                 }
                 else
@@ -915,7 +915,7 @@ public class Javac extends MatchingTask
      * @author RT
      */
     public class ImplementationSpecificArgument
-         extends Commandline.Argument
+        extends Commandline.Argument
     {
 
         private String impl;
@@ -933,7 +933,7 @@ public class Javac extends MatchingTask
             }
             else
             {
-                return new String[0];
+                return new String[ 0 ];
             }
         }
     }

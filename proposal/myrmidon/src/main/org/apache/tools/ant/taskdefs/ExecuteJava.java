@@ -37,15 +37,6 @@ public class ExecuteJava
         this.javaCommand = javaCommand;
     }
 
-    /**
-     * All output (System.out as well as System.err) will be written to this
-     * Stream.
-     *
-     * @param out The new Output value
-     * @deprecated manage output at the task level
-     */
-    public void setOutput( PrintStream out ) { }
-
     public void setSystemProperties( CommandlineJava.SysProperties s )
     {
         sysProperties = s;
@@ -95,7 +86,7 @@ public class ExecuteJava
             Throwable t = e.getTargetException();
             if( !( t instanceof SecurityException ) )
             {
-                throw new BuildException( t );
+                throw new BuildException( "Error", t );
             }
             else
             {
@@ -104,7 +95,7 @@ public class ExecuteJava
         }
         catch( Exception e )
         {
-            throw new BuildException( e );
+            throw new BuildException( "Error", e );
         }
         finally
         {

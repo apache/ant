@@ -185,7 +185,7 @@ public class FormatterElement
         }
         catch( ClassNotFoundException e )
         {
-            throw new BuildException( e );
+            throw new BuildException( "Error", e );
         }
 
         Object o = null;
@@ -195,11 +195,11 @@ public class FormatterElement
         }
         catch( InstantiationException e )
         {
-            throw new BuildException( e );
+            throw new BuildException( "Error", e );
         }
         catch( IllegalAccessException e )
         {
-            throw new BuildException( e );
+            throw new BuildException( "Error", e );
         }
 
         if( !( o instanceof JUnitResultFormatter ) )
@@ -217,7 +217,7 @@ public class FormatterElement
             }
             catch( java.io.IOException e )
             {
-                throw new BuildException( e );
+                throw new BuildException( "Error", e );
             }
         }
         r.setOutput( out );

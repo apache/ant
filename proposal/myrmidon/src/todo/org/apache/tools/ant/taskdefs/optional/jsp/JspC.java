@@ -323,22 +323,19 @@ public class JspC extends MatchingTask
         // first off, make sure that we've got a srcdir
         if( src == null )
         {
-            throw new BuildException( "srcdir attribute must be set!",
-                location );
+            throw new BuildException( "srcdir attribute must be set!" );
         }
         String[] list = src.list();
         if( list.length == 0 )
         {
-            throw new BuildException( "srcdir attribute must be set!",
-                location );
+            throw new BuildException( "srcdir attribute must be set!" );
         }
 
         if( destDir != null && !destDir.isDirectory() )
         {
             throw new
                 BuildException( "destination directory \"" + destDir +
-                "\" does not exist or is not a directory",
-                location );
+                "\" does not exist or is not a directory" );
         }
 
         // calculate where the files will end up:
@@ -358,11 +355,11 @@ public class JspC extends MatchingTask
         int filecount = 0;
         for( int i = 0; i < list.length; i++ )
         {
-            File srcDir = ( File )project.resolveFile( list[i] );
+            File srcDir = ( File )resolveFile( list[i] );
             if( !srcDir.exists() )
             {
                 throw new BuildException( "srcdir \"" + srcDir.getPath() +
-                    "\" does not exist!", location );
+                    "\" does not exist!" );
             }
 
             DirectoryScanner ds = this.getDirectoryScanner( srcDir );
@@ -399,7 +396,7 @@ public class JspC extends MatchingTask
             {
                 if( failOnError )
                 {
-                    throw new BuildException( FAIL_MSG, location );
+                    throw new BuildException( FAIL_MSG );
                 }
                 else
                 {

@@ -101,27 +101,6 @@ public class FTP
      *
      * @param action The new Action value
      * @exception BuildException Description of Exception
-     * @deprecated setAction(String) is deprecated and is replaced with
-     *      setAction(FTP.Action) to make Ant's Introspection mechanism do the
-     *      work and also to encapsulate operations on the type in its own
-     *      class.
-     */
-    public void setAction( String action )
-        throws BuildException
-    {
-        log( "DEPRECATED - The setAction(String) method has been deprecated."
-             + " Use setAction(FTP.Action) instead." );
-        Action a = new Action();
-        a.setValue( action );
-        this.action = a.getAction();
-    }
-
-    /**
-     * Sets the FTP action to be taken. Currently accepts "put", "get", "del",
-     * "mkdir" and "list".
-     *
-     * @param action The new Action value
-     * @exception BuildException Description of Exception
      */
     public void setAction( Action action )
         throws BuildException
@@ -419,7 +398,7 @@ public class FTP
         OutputStream outstream = null;
         try
         {
-            File file = project.resolveFile( new File( dir, filename ).getPath() );
+            File file = resolveFile( new File( dir, filename ).getPath() );
 
             if( newerOnly && isUpToDate( ftp, file, resolveFile( filename ) ) )
                 return;
@@ -747,7 +726,7 @@ public class FTP
         InputStream instream = null;
         try
         {
-            File file = project.resolveFile( new File( dir, filename ).getPath() );
+            File file = resolveFile( new File( dir, filename ).getPath() );
 
             if( newerOnly && isUpToDate( ftp, file, resolveFile( filename ) ) )
                 return;

@@ -141,7 +141,7 @@ public class Sleep extends Task
         {
             if( failOnError )
             {
-                throw new BuildException( e );
+                throw new BuildException( "Error", e );
             }
             else
             {

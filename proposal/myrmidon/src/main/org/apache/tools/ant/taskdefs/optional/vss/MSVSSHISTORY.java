@@ -226,7 +226,7 @@ public class MSVSSHISTORY extends MSVSS
         if( getVsspath() == null )
         {
             String msg = "vsspath attribute must be set!";
-            throw new BuildException( msg, location );
+            throw new BuildException( msg );
         }
 
         // now look for illegal combinations of things ...
@@ -272,7 +272,7 @@ public class MSVSSHISTORY extends MSVSS
         if( result != 0 )
         {
             String msg = "Failed executing: " + commandLine.toString();
-            throw new BuildException( msg, location );
+            throw new BuildException( msg );
         }
 
     }
@@ -346,7 +346,7 @@ public class MSVSSHISTORY extends MSVSS
             catch( ParseException ex )
             {
                 String msg = "Error parsing date: " + m_ToDate;
-                throw new BuildException( msg, location );
+                throw new BuildException( msg );
             }
             cmd.createArgument().setValue( FLAG_VERSION_DATE + m_ToDate + VALUE_FROMDATE + startDate );
         }
@@ -360,7 +360,7 @@ public class MSVSSHISTORY extends MSVSS
             catch( ParseException ex )
             {
                 String msg = "Error parsing date: " + m_FromDate;
-                throw new BuildException( msg, location );
+                throw new BuildException( msg );
             }
             cmd.createArgument().setValue( FLAG_VERSION_DATE + endDate + VALUE_FROMDATE + m_FromDate );
         }

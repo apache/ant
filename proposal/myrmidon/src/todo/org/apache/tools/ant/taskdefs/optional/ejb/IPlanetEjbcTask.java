@@ -229,12 +229,12 @@ public class IPlanetEjbcTask extends Task
         catch( SAXException e )
         {
             String msg = "Unable to create a SAXParser: " + e.getMessage();
-            throw new BuildException( msg, e, location );
+            throw new BuildException( msg, e );
         }
         catch( ParserConfigurationException e )
         {
             String msg = "Unable to create a SAXParser: " + e.getMessage();
-            throw new BuildException( msg, e, location );
+            throw new BuildException( msg, e );
         }
 
         return saxParser;
@@ -253,46 +253,46 @@ public class IPlanetEjbcTask extends Task
         {
             String msg = "The standard EJB descriptor must be specified using "
                  + "the \"ejbdescriptor\" attribute.";
-            throw new BuildException( msg, location );
+            throw new BuildException( msg );
         }
         if( ( !ejbdescriptor.exists() ) || ( !ejbdescriptor.isFile() ) )
         {
             String msg = "The standard EJB descriptor (" + ejbdescriptor
                  + ") was not found or isn't a file.";
-            throw new BuildException( msg, location );
+            throw new BuildException( msg );
         }
 
         if( iasdescriptor == null )
         {
             String msg = "The iAS-speific XML descriptor must be specified using"
                  + " the \"iasdescriptor\" attribute.";
-            throw new BuildException( msg, location );
+            throw new BuildException( msg );
         }
         if( ( !iasdescriptor.exists() ) || ( !iasdescriptor.isFile() ) )
         {
             String msg = "The iAS-specific XML descriptor (" + iasdescriptor
                  + ") was not found or isn't a file.";
-            throw new BuildException( msg, location );
+            throw new BuildException( msg );
         }
 
         if( dest == null )
         {
             String msg = "The destination directory must be specified using "
                  + "the \"dest\" attribute.";
-            throw new BuildException( msg, location );
+            throw new BuildException( msg );
         }
         if( ( !dest.exists() ) || ( !dest.isDirectory() ) )
         {
             String msg = "The destination directory (" + dest + ") was not "
                  + "found or isn't a directory.";
-            throw new BuildException( msg, location );
+            throw new BuildException( msg );
         }
 
         if( ( iashome != null ) && ( !iashome.isDirectory() ) )
         {
             String msg = "If \"iashome\" is specified, it must be a valid "
                  + "directory (it was set to " + iashome + ").";
-            throw new BuildException( msg, getLocation() );
+            throw new BuildException( msg );
         }
     }
 
@@ -327,19 +327,19 @@ public class IPlanetEjbcTask extends Task
         {
             String msg = "An IOException occurred while trying to read the XML "
                  + "descriptor file: " + e.getMessage();
-            throw new BuildException( msg, e, location );
+            throw new BuildException( msg, e );
         }
         catch( SAXException e )
         {
             String msg = "A SAXException occurred while trying to read the XML "
                  + "descriptor file: " + e.getMessage();
-            throw new BuildException( msg, e, location );
+            throw new BuildException( msg, e );
         }
         catch( IPlanetEjbc.EjbcException e )
         {
             String msg = "An exception occurred while trying to run the ejbc "
                  + "utility: " + e.getMessage();
-            throw new BuildException( msg, e, location );
+            throw new BuildException( msg, e );
         }
     }
 }

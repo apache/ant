@@ -201,7 +201,7 @@ public class SendEmail extends Task
 
         while( t.hasMoreTokens() )
         {
-            files.addElement( project.resolveFile( t.nextToken() ) );
+            files.addElement( resolveFile( t.nextToken() ) );
         }
     }
 
@@ -394,7 +394,7 @@ public class SendEmail extends Task
             String err = "IO error sending mail " + ioe.toString();
             if( failOnError )
             {
-                throw new BuildException( err, ioe, location );
+                throw new BuildException( err, ioe );
             }
             else
             {

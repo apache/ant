@@ -336,7 +336,7 @@ public class MParse extends Task
         {
             throw new BuildException( "'metamatahome' must point to Metamata home directory." );
         }
-        metahome = project.resolveFile( metahome.getPath() );
+        metahome = resolveFile( metahome.getPath() );
 
         // check that the needed jar exists.
         File[] jars = getMetamataLibs();
@@ -353,7 +353,7 @@ public class MParse extends Task
         {
             throw new BuildException( "Invalid target: " + target );
         }
-        target = project.resolveFile( target.getPath() );
+        target = resolveFile( target.getPath() );
     }
 
     /**

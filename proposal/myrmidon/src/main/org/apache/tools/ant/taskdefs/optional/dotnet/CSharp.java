@@ -649,7 +649,7 @@ public class CSharp
         throws BuildException
     {
         if( _srcDir == null )
-            _srcDir = project.resolveFile( "." );
+            _srcDir = resolveFile( "." );
 
         NetCommand command = new NetCommand( this, "CSC", csc_exe_name );
         command.setFailOnError( getFailFailOnError() );

@@ -6,7 +6,9 @@
  * the LICENSE file.
  */
 package org.apache.tools.ant;
+
 import java.util.Vector;
+import org.apache.myrmidon.api.TaskException;
 
 /**
  * Wrapper class that holds all information necessary to create a task or data
@@ -57,7 +59,7 @@ public class UnknownElement extends Task
     {
         if( realThing != null && realThing instanceof Task )
         {
-            return ( Task )realThing;
+            return (Task)realThing;
         }
         return null;
     }
@@ -70,7 +72,7 @@ public class UnknownElement extends Task
     public String getTaskName()
     {
         return realThing == null || !( realThing instanceof Task ) ?
-            super.getTaskName() : ( ( Task )realThing ).getTaskName();
+            super.getTaskName() : ( (Task)realThing ).getTaskName();
     }
 
     /**
@@ -87,18 +89,19 @@ public class UnknownElement extends Task
      * Called when the real task has been configured for the first time.
      */
     public void execute()
+        throws TaskException
     {
         if( realThing == null )
         {
             // plain impossible to get here, maybeConfigure should
             // have thrown an exception.
-            throw new BuildException( "Could not create task of type: "
-                 + elementName, location );
+            throw new TaskException( "Could not create task of type: "
+                                     + elementName );
         }
 
         if( realThing instanceof Task )
         {
-            ( ( Task )realThing ).perform();
+            ( (Task)realThing ).perform();
         }
     }
 
@@ -109,14 +112,14 @@ public class UnknownElement extends Task
      * @exception BuildException Description of Exception
      */
     public void maybeConfigure()
-        throws BuildException
+        throws TaskException
     {
         realThing = makeObject( this, wrapper );
 
         wrapper.setProxy( realThing );
         if( realThing instanceof Task )
         {
-            ( ( Task )realThing ).setRuntimeConfigurableWrapper( wrapper );
+            ( (Task)realThing ).setRuntimeConfigurableWrapper( wrapper );
         }
 
         handleChildren( realThing, wrapper );
@@ -137,19 +140,19 @@ public class UnknownElement extends Task
     {
         String lSep = System.getProperty( "line.separator" );
         String msg = "Could not create " + what + " of type: " + elementName
-             + "." + lSep
-             + "Ant could not find the task or a class this" + lSep
-             + "task relies upon." + lSep
-             + "Common solutions are to use taskdef to declare" + lSep
-             + "your task, or, if this is an optional task," + lSep
-             + "to put the optional.jar and all required libraries of" + lSep
-             + "this task in the lib directory of" + lSep
-             + "your ant installation (ANT_HOME)." + lSep
-             + "There is also the possibility that your build file " + lSep
-             + "is written to work with a more recent version of ant " + lSep
-             + "than the one you are using, in which case you have to " + lSep
-             + "upgrade.";
-        return new BuildException( msg, location );
+            + "." + lSep
+            + "Ant could not find the task or a class this" + lSep
+            + "task relies upon." + lSep
+            + "Common solutions are to use taskdef to declare" + lSep
+            + "your task, or, if this is an optional task," + lSep
+            + "to put the optional.jar and all required libraries of" + lSep
+            + "this task in the lib directory of" + lSep
+            + "your ant installation (ANT_HOME)." + lSep
+            + "There is also the possibility that your build file " + lSep
+            + "is written to work with a more recent version of ant " + lSep
+            + "than the one you are using, in which case you have to " + lSep
+            + "upgrade.";
+        return new BuildException( msg );
     }
 
     /**
@@ -162,12 +165,12 @@ public class UnknownElement extends Task
      */
     protected void handleChildren( Object parent,
                                    RuntimeConfigurable parentWrapper )
-        throws BuildException
+        throws TaskException
     {
 
         if( parent instanceof TaskAdapter )
         {
-            parent = ( ( TaskAdapter )parent ).getProxy();
+            parent = ( (TaskAdapter)parent ).getProxy();
         }
 
         Class parentClass = parent.getClass();
@@ -176,13 +179,13 @@ public class UnknownElement extends Task
         for( int i = 0; i < children.size(); i++ )
         {
             RuntimeConfigurable childWrapper = parentWrapper.getChild( i );
-            UnknownElement child = ( UnknownElement )children.elementAt( i );
+            UnknownElement child = (UnknownElement)children.elementAt( i );
             Object realChild = null;
 
             if( parent instanceof TaskContainer )
             {
                 realChild = makeTask( child, childWrapper, false );
-                ( ( TaskContainer )parent ).addTask( ( Task )realChild );
+                ( (TaskContainer)parent ).addTask( (Task)realChild );
             }
             else
             {
@@ -192,14 +195,14 @@ public class UnknownElement extends Task
             childWrapper.setProxy( realChild );
             if( parent instanceof TaskContainer )
             {
-                ( ( Task )realChild ).setRuntimeConfigurableWrapper( childWrapper );
+                ( (Task)realChild ).setRuntimeConfigurableWrapper( childWrapper );
             }
 
             child.handleChildren( realChild, childWrapper );
 
             if( parent instanceof TaskContainer )
             {
-                ( ( Task )realChild ).maybeConfigure();
+                ( (Task)realChild ).maybeConfigure();
             }
         }
     }
@@ -213,6 +216,7 @@ public class UnknownElement extends Task
      * @return Description of the Returned Value
      */
     protected Object makeObject( UnknownElement ue, RuntimeConfigurable w )
+        throws TaskException
     {
         Object o = makeTask( ue, w, true );
         if( o == null )
@@ -236,6 +240,7 @@ public class UnknownElement extends Task
      */
     protected Task makeTask( UnknownElement ue, RuntimeConfigurable w,
                              boolean onTopLevel )
+        throws TaskException
     {
         Task task = project.createTask( ue.getTag() );
         if( task == null && !onTopLevel )

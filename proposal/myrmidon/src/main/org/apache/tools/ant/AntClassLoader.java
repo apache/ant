@@ -6,6 +6,7 @@
  * the LICENSE file.
  */
 package org.apache.tools.ant;
+
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
@@ -20,7 +21,9 @@ import java.util.Hashtable;
 import java.util.Vector;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
+import org.apache.myrmidon.api.TaskException;
 import org.apache.tools.ant.types.Path;
+import org.apache.tools.ant.util.FileUtils;
 
 /**
  * Used to load classes within ant with a different claspath from that used to
@@ -97,23 +100,24 @@ public class AntClassLoader extends ClassLoader implements BuildListener
      * The project to which this class loader belongs.
      */
     private Project project;
+
     static
     {
         try
         {
-            getProtectionDomain = Class.class.getMethod( "getProtectionDomain", new Class[0] );
+            getProtectionDomain = Class.class.getMethod( "getProtectionDomain", new Class[ 0 ] );
             Class protectionDomain = Class.forName( "java.security.ProtectionDomain" );
             Class[] args = new Class[]{String.class, byte[].class, Integer.TYPE, Integer.TYPE, protectionDomain};
             defineClassProtectionDomain = ClassLoader.class.getDeclaredMethod( "defineClass", args );
 
-            getContextClassLoader = Thread.class.getMethod( "getContextClassLoader", new Class[0] );
+            getContextClassLoader = Thread.class.getMethod( "getContextClassLoader", new Class[ 0 ] );
             args = new Class[]{ClassLoader.class};
             setContextClassLoader = Thread.class.getMethod( "setContextClassLoader", args );
         }
         catch( Exception e )
-        {}
+        {
+        }
     }
-
 
     /**
      * Create a classloader for the given project using the classpath given.
@@ -136,7 +140,7 @@ public class AntClassLoader extends ClassLoader implements BuildListener
             {
                 try
                 {
-                    addPathElement( ( String )pathElements[i] );
+                    addPathElement( (String)pathElements[ i ] );
                 }
                 catch( BuildException e )
                 {
@@ -168,7 +172,6 @@ public class AntClassLoader extends ClassLoader implements BuildListener
         addSystemPackageRoot( "java" );
         addSystemPackageRoot( "javax" );
     }
-
 
     /**
      * Create a classloader for the given project using the classpath given.
@@ -243,17 +246,18 @@ public class AntClassLoader extends ClassLoader implements BuildListener
      * current loader value for later resetting
      */
     public void setThreadContextLoader()
+        throws TaskException
     {
         if( isContextLoaderSaved )
         {
-            throw new BuildException( "Context loader has not been reset" );
+            throw new TaskException( "Context loader has not been reset" );
         }
         if( getContextClassLoader != null && setContextClassLoader != null )
         {
             try
             {
                 savedContextLoader
-                     = ( ClassLoader )getContextClassLoader.invoke( Thread.currentThread(), new Object[0] );
+                    = (ClassLoader)getContextClassLoader.invoke( Thread.currentThread(), new Object[ 0 ] );
                 Object[] args = new Object[]{this};
                 setContextClassLoader.invoke( Thread.currentThread(), args );
                 isContextLoaderSaved = true;
@@ -261,11 +265,11 @@ public class AntClassLoader extends ClassLoader implements BuildListener
             catch( InvocationTargetException ite )
             {
                 Throwable t = ite.getTargetException();
-                throw new BuildException( t.toString() );
+                throw new TaskException( t.toString() );
             }
             catch( Exception e )
             {
-                throw new BuildException( e.toString() );
+                throw new TaskException( e.toString() );
             }
         }
     }
@@ -293,22 +297,22 @@ public class AntClassLoader extends ClassLoader implements BuildListener
         if( url != null )
         {
             log( "Resource " + name + " loaded from parent loader",
-                Project.MSG_DEBUG );
+                 Project.MSG_DEBUG );
 
         }
         else
         {
             // try and load from this loader if the parent either didn't find
             // it or wasn't consulted.
-            for( Enumeration e = pathComponents.elements(); e.hasMoreElements() && url == null;  )
+            for( Enumeration e = pathComponents.elements(); e.hasMoreElements() && url == null; )
             {
-                File pathComponent = ( File )e.nextElement();
+                File pathComponent = (File)e.nextElement();
                 url = getResourceURL( pathComponent, name );
                 if( url != null )
                 {
                     log( "Resource " + name
                          + " loaded from ant loader",
-                        Project.MSG_DEBUG );
+                         Project.MSG_DEBUG );
                 }
             }
         }
@@ -321,7 +325,7 @@ public class AntClassLoader extends ClassLoader implements BuildListener
             if( url != null )
             {
                 log( "Resource " + name + " loaded from parent loader",
-                    Project.MSG_DEBUG );
+                     Project.MSG_DEBUG );
             }
         }
 
@@ -386,7 +390,7 @@ public class AntClassLoader extends ClassLoader implements BuildListener
         if( resourceStream == null )
         {
             log( "Couldn't load ResourceStream for " + name,
-                Project.MSG_DEBUG );
+                 Project.MSG_DEBUG );
         }
 
         return resourceStream;
@@ -403,7 +407,6 @@ public class AntClassLoader extends ClassLoader implements BuildListener
         loaderPackages.addElement( packageRoot + "." );
     }
 
-
     /**
      * Add an element to the classpath to be searched
      *
@@ -414,8 +417,8 @@ public class AntClassLoader extends ClassLoader implements BuildListener
         throws BuildException
     {
         File pathComponent
-             = project != null ? project.resolveFile( pathElement )
-             : new File( pathElement );
+            = project != null ? FileUtils.newFileUtils().resolveFile( project.getBaseDir(), pathElement )
+            : new File( pathElement );
         pathComponents.addElement( pathComponent );
     }
 
@@ -435,15 +438,17 @@ public class AntClassLoader extends ClassLoader implements BuildListener
         cleanup();
     }
 
-    public void buildStarted( BuildEvent event ) { }
+    public void buildStarted( BuildEvent event )
+    {
+    }
 
     public void cleanup()
     {
         pathComponents = null;
         project = null;
-        for( Enumeration e = zipFiles.elements(); e.hasMoreElements();  )
+        for( Enumeration e = zipFiles.elements(); e.hasMoreElements(); )
         {
-            ZipFile zipFile = ( ZipFile )e.nextElement();
+            ZipFile zipFile = (ZipFile)e.nextElement();
             try
             {
                 zipFile.close();
@@ -471,7 +476,6 @@ public class AntClassLoader extends ClassLoader implements BuildListener
 
         return findClassInComponents( name );
     }
-
 
     /**
      * Load a class through this class loader even if that class is available on
@@ -524,12 +528,15 @@ public class AntClassLoader extends ClassLoader implements BuildListener
         return theClass;
     }
 
-    public void messageLogged( BuildEvent event ) { }
+    public void messageLogged( BuildEvent event )
+    {
+    }
 
     /**
      * Reset the current thread's context loader to its original value
      */
     public void resetThreadContextLoader()
+    throws TaskException
     {
         if( isContextLoaderSaved &&
             getContextClassLoader != null && setContextClassLoader != null )
@@ -544,22 +551,30 @@ public class AntClassLoader extends ClassLoader implements BuildListener
             catch( InvocationTargetException ite )
             {
                 Throwable t = ite.getTargetException();
-                throw new BuildException( t.toString() );
+                throw new TaskException( t.toString() );
             }
             catch( Exception e )
             {
-                throw new BuildException( e.toString() );
+                throw new TaskException( e.toString() );
             }
         }
     }
 
-    public void targetFinished( BuildEvent event ) { }
+    public void targetFinished( BuildEvent event )
+    {
+    }
 
-    public void targetStarted( BuildEvent event ) { }
+    public void targetStarted( BuildEvent event )
+    {
+    }
 
-    public void taskFinished( BuildEvent event ) { }
+    public void taskFinished( BuildEvent event )
+    {
+    }
 
-    public void taskStarted( BuildEvent event ) { }
+    public void taskStarted( BuildEvent event )
+    {
+    }
 
     /**
      * Returns an enumeration of URLs representing all the resources with the
@@ -574,7 +589,6 @@ public class AntClassLoader extends ClassLoader implements BuildListener
     {
         return new ResourceEnumeration( name );
     }
-
 
     /**
      * Load a class with this class loader. This method will load a class. This
@@ -649,9 +663,9 @@ public class AntClassLoader extends ClassLoader implements BuildListener
         {
             project.log( message, priority );
         }
-//         else {
-//             System.out.println(message);
-//         }
+        //         else {
+        //             System.out.println(message);
+        //         }
     }
 
     /**
@@ -680,7 +694,7 @@ public class AntClassLoader extends ClassLoader implements BuildListener
     {
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         int bytesRead = -1;
-        byte[] buffer = new byte[BUFFER_SIZE];
+        byte[] buffer = new byte[ BUFFER_SIZE ];
 
         while( ( bytesRead = stream.read( buffer, 0, BUFFER_SIZE ) ) != -1 )
         {
@@ -696,20 +710,20 @@ public class AntClassLoader extends ClassLoader implements BuildListener
         {
             try
             {
-                Object domain = getProtectionDomain.invoke( Project.class, new Object[0] );
+                Object domain = getProtectionDomain.invoke( Project.class, new Object[ 0 ] );
                 Object[] args = new Object[]{classname, classData, new Integer( 0 ), new Integer( classData.length ), domain};
-                return ( Class )defineClassProtectionDomain.invoke( this, args );
+                return (Class)defineClassProtectionDomain.invoke( this, args );
             }
             catch( InvocationTargetException ite )
             {
                 Throwable t = ite.getTargetException();
                 if( t instanceof ClassFormatError )
                 {
-                    throw ( ClassFormatError )t;
+                    throw (ClassFormatError)t;
                 }
                 else if( t instanceof NoClassDefFoundError )
                 {
-                    throw ( NoClassDefFoundError )t;
+                    throw (NoClassDefFoundError)t;
                 }
                 else
                 {
@@ -759,7 +773,7 @@ public class AntClassLoader extends ClassLoader implements BuildListener
             else
             {
                 // is the zip file in the cache
-                ZipFile zipFile = ( ZipFile )zipFiles.get( file );
+                ZipFile zipFile = (ZipFile)zipFiles.get( file );
                 if( zipFile == null )
                 {
                     zipFile = new ZipFile( file );
@@ -775,7 +789,7 @@ public class AntClassLoader extends ClassLoader implements BuildListener
         catch( Exception e )
         {
             log( "Ignoring Exception " + e.getClass().getName() + ": " + e.getMessage() +
-                " reading resource " + resourceName + " from " + file, Project.MSG_VERBOSE );
+                 " reading resource " + resourceName + " from " + file, Project.MSG_VERBOSE );
         }
 
         return null;
@@ -819,7 +833,7 @@ public class AntClassLoader extends ClassLoader implements BuildListener
             }
             else
             {
-                ZipFile zipFile = ( ZipFile )zipFiles.get( file );
+                ZipFile zipFile = (ZipFile)zipFiles.get( file );
                 if( zipFile == null )
                 {
                     zipFile = new ZipFile( file );
@@ -855,9 +869,9 @@ public class AntClassLoader extends ClassLoader implements BuildListener
         // designated to use a specific loader first (this one or the parent one)
         boolean useParentFirst = parentFirst;
 
-        for( Enumeration e = systemPackages.elements(); e.hasMoreElements();  )
+        for( Enumeration e = systemPackages.elements(); e.hasMoreElements(); )
         {
-            String packageName = ( String )e.nextElement();
+            String packageName = (String)e.nextElement();
             if( resourceName.startsWith( packageName ) )
             {
                 useParentFirst = true;
@@ -865,9 +879,9 @@ public class AntClassLoader extends ClassLoader implements BuildListener
             }
         }
 
-        for( Enumeration e = loaderPackages.elements(); e.hasMoreElements();  )
+        for( Enumeration e = loaderPackages.elements(); e.hasMoreElements(); )
         {
-            String packageName = ( String )e.nextElement();
+            String packageName = (String)e.nextElement();
             if( resourceName.startsWith( packageName ) )
             {
                 useParentFirst = false;
@@ -899,7 +913,6 @@ public class AntClassLoader extends ClassLoader implements BuildListener
         }
     }
 
-
     /**
      * Find a class on the given classpath.
      *
@@ -916,9 +929,9 @@ public class AntClassLoader extends ClassLoader implements BuildListener
         String classFilename = getClassFilename( name );
         try
         {
-            for( Enumeration e = pathComponents.elements(); e.hasMoreElements();  )
+            for( Enumeration e = pathComponents.elements(); e.hasMoreElements(); )
             {
-                File pathComponent = ( File )e.nextElement();
+                File pathComponent = (File)e.nextElement();
                 try
                 {
                     stream = getResourceStream( pathComponent, classFilename );
@@ -946,7 +959,8 @@ public class AntClassLoader extends ClassLoader implements BuildListener
                 }
             }
             catch( IOException e )
-            {}
+            {
+            }
         }
     }
 
@@ -969,7 +983,6 @@ public class AntClassLoader extends ClassLoader implements BuildListener
         }
     }
 
-
     /**
      * Get a stream to read the requested resource name from this loader.
      *
@@ -983,9 +996,9 @@ public class AntClassLoader extends ClassLoader implements BuildListener
         // class we want.
         InputStream stream = null;
 
-        for( Enumeration e = pathComponents.elements(); e.hasMoreElements() && stream == null;  )
+        for( Enumeration e = pathComponents.elements(); e.hasMoreElements() && stream == null; )
         {
-            File pathComponent = ( File )e.nextElement();
+            File pathComponent = (File)e.nextElement();
             stream = getResourceStream( pathComponent, name );
         }
         return stream;
@@ -1073,11 +1086,11 @@ public class AntClassLoader extends ClassLoader implements BuildListener
                 try
                 {
                     File pathComponent
-                         = ( File )pathComponents.elementAt( pathElementsIndex );
+                        = (File)pathComponents.elementAt( pathElementsIndex );
                     url = getResourceURL( pathComponent, this.resourceName );
                     pathElementsIndex++;
                 }
-                catch( BuildException e )
+                catch( TaskException e )
                 {
                     // ignore path elements which are not valid relative to the project
                 }
