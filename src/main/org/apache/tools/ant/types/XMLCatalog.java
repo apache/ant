@@ -660,7 +660,8 @@ public class XMLCatalog extends DataType
         try {
             url = new URL(baseURL, uri);
         } catch (MalformedURLException ex) {
-            // this processing is useful under Windows when the location of the DTD has been given as an absolute path
+            // this processing is useful under Windows when the location of the DTD
+            // has been given as an absolute path
             // see Bugzilla Report 23913
             File testFile = new File(uri);
             if (testFile.exists() && testFile.canRead()) {
@@ -669,7 +670,8 @@ public class XMLCatalog extends DataType
                 try {
                     url = FILE_UTILS.getFileURL(testFile);
                 } catch (MalformedURLException ex1) {
-                    throw new BuildException("could not find an URL for :" + testFile.getAbsolutePath());
+                    throw new BuildException(
+                        "could not find an URL for :" + testFile.getAbsolutePath());
                 }
             } else {
                 log("uri : '"
