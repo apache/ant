@@ -593,7 +593,8 @@ public class Javadoc extends Task {
 
         log("Generating Javadoc", Project.MSG_INFO);
 
-        cmd.setExecutable("javadoc");
+        Commandline toExecute = (Commandline)cmd.clone();
+        toExecute.setExecutable("javadoc");
 
 // ------------------------------------------------ general javadoc arguments
         if (classpath == null)
@@ -603,20 +604,20 @@ public class Javadoc extends Task {
         addReferencesToPath(sourcepathReferences, sourcePath);
 
         if (!javadoc1) {
-            cmd.createArgument().setValue("-classpath");
-            cmd.createArgument().setPath(classpath);
-            cmd.createArgument().setValue("-sourcepath");
-            cmd.createArgument().setPath(sourcePath);
+            toExecute.createArgument().setValue("-classpath");
+            toExecute.createArgument().setPath(classpath);
+            toExecute.createArgument().setValue("-sourcepath");
+            toExecute.createArgument().setPath(sourcePath);
         } else {
-            cmd.createArgument().setValue("-classpath");
-            cmd.createArgument().setValue(sourcePath.toString() +
+            toExecute.createArgument().setValue("-classpath");
+            toExecute.createArgument().setValue(sourcePath.toString() +
                 System.getProperty("path.separator") + classpath.toString());
         }
 
         if (version && doclet == null)
-            cmd.createArgument().setValue("-version");
+            toExecute.createArgument().setValue("-version");
         if (author && doclet == null)
-            cmd.createArgument().setValue("-author");
+            toExecute.createArgument().setValue("-author");
 
 // --------------------------------- javadoc2 arguments for default doclet
 
@@ -628,11 +629,11 @@ public class Javadoc extends Task {
                     throw new BuildException("The doclet name must be specified.", location);
                 }
                 else {                
-                    cmd.createArgument().setValue("-doclet");
-                    cmd.createArgument().setValue(doclet.getName());
+                    toExecute.createArgument().setValue("-doclet");
+                    toExecute.createArgument().setValue(doclet.getName());
                     if (doclet.getPath() != null) {
-                        cmd.createArgument().setValue("-docletpath");
-                        cmd.createArgument().setPath(doclet.getPath());
+                        toExecute.createArgument().setValue("-docletpath");
+                        toExecute.createArgument().setPath(doclet.getPath());
                     }
                     for (Enumeration e = doclet.getParams(); e.hasMoreElements();) {
                         DocletParam param = (DocletParam)e.nextElement();
@@ -640,9 +641,9 @@ public class Javadoc extends Task {
                             throw new BuildException("Doclet parameters must have a name");
                         }
                         
-                        cmd.createArgument().setValue(param.getName());
+                        toExecute.createArgument().setValue(param.getName());
                         if (param.getValue() != null) {
-                            cmd.createArgument().setValue(param.getValue());
+                            toExecute.createArgument().setValue(param.getValue());
                         }
                     }                        
                 }
@@ -650,8 +651,8 @@ public class Javadoc extends Task {
             if (bootclasspath != null || bootClasspathReferences.size() > 0) {
                 addReferencesToPath(bootClasspathReferences, 
                                     createBootclasspath());
-                cmd.createArgument().setValue("-bootclasspath");
-                cmd.createArgument().setPath(bootclasspath);
+                toExecute.createArgument().setValue("-bootclasspath");
+                toExecute.createArgument().setPath(bootclasspath);
             }
             
             // add the links arguments
@@ -669,13 +670,13 @@ public class Javadoc extends Task {
                             throw new BuildException("The package list location for link " + la.getHref() +
                                                      " must be provided because the link is offline");
                         }
-                        cmd.createArgument().setValue("-linkoffline");
-                        cmd.createArgument().setValue(la.getHref());
-                        cmd.createArgument().setValue(packageListLocation);
+                        toExecute.createArgument().setValue("-linkoffline");
+                        toExecute.createArgument().setValue(la.getHref());
+                        toExecute.createArgument().setValue(packageListLocation);
                     }
                     else {
-                        cmd.createArgument().setValue("-link");
-                        cmd.createArgument().setValue(la.getHref());
+                        toExecute.createArgument().setValue("-link");
+                        toExecute.createArgument().setValue(la.getHref());
                     }
                 }
             }                                   
@@ -699,9 +700,9 @@ public class Javadoc extends Task {
                   if (space > 0){
                     String name = grp.substring(0, space);
                     String pkgList = grp.substring(space + 1);
-                    cmd.createArgument().setValue("-group");
-                    cmd.createArgument().setValue(name);
-                    cmd.createArgument().setValue(pkgList);
+                    toExecute.createArgument().setValue("-group");
+                    toExecute.createArgument().setValue(name);
+                    toExecute.createArgument().setValue(pkgList);
                   }
                 }
             }
@@ -715,9 +716,9 @@ public class Javadoc extends Task {
                     if (title == null || packages == null) {
                         throw new BuildException("The title and packages must be specified for group elements.");
                     }
-                    cmd.createArgument().setValue("-group");
-                    cmd.createArgument().setValue(title);
-                    cmd.createArgument().setValue(packages);
+                    toExecute.createArgument().setValue("-group");
+                    toExecute.createArgument().setValue(title);
+                    toExecute.createArgument().setValue(packages);
                 }
             }
 
@@ -731,25 +732,25 @@ public class Javadoc extends Task {
                 if (name.endsWith(".*")) {
                     packages.addElement(name);
                 } else {
-                    cmd.createArgument().setValue(name);
+                    toExecute.createArgument().setValue(name);
                 }
             }
             if (packages.size() > 0) {
-                evaluatePackages(sourcePath, packages);
+                evaluatePackages(toExecute, sourcePath, packages);
             }
         }
 
         if ((sourceFiles != null) && (sourceFiles.length() > 0)) {
             StringTokenizer tok = new StringTokenizer(sourceFiles, ",", false);
             while (tok.hasMoreTokens()) {
-                cmd.createArgument().setValue(tok.nextToken().trim());
+                toExecute.createArgument().setValue(tok.nextToken().trim());
             }
         }
 
          if (packageList != null) {
-            cmd.createArgument().setValue("@" + packageList);
+            toExecute.createArgument().setValue("@" + packageList);
         }
-        log("Javadoc args: " + cmd, Project.MSG_VERBOSE);
+        log("Javadoc args: " + toExecute, Project.MSG_VERBOSE);
 
         log("Javadoc execution", Project.MSG_INFO);
 
@@ -759,7 +760,7 @@ public class Javadoc extends Task {
         exe.setAntRun(project);
         exe.setWorkingDirectory(project.getBaseDir());
         try {
-            exe.setCommandline(cmd.getCommandline());
+            exe.setCommandline(toExecute.getCommandline());
             exe.execute();
         } catch (IOException e) {
             throw new BuildException("Javadoc failed: " + e, e, location);
@@ -797,7 +798,8 @@ public class Javadoc extends Task {
      * with the packages found in that path subdirs matching one of the given
      * patterns.
      */
-    private void evaluatePackages(Path sourcePath, Vector packages) {
+    private void evaluatePackages(Commandline toExecute, Path sourcePath, 
+                                  Vector packages) {
         log("Source path = " + sourcePath.toString(), Project.MSG_VERBOSE);
         log("Packages = " + packages, Project.MSG_VERBOSE);
 
@@ -813,7 +815,7 @@ public class Javadoc extends Task {
                 for (int i = 0; i < packages.size(); i++) {
                     if (matches(pack, (String) packages.elementAt(i))) {
                         if (!addedPackages.contains(pack)) {
-                            cmd.createArgument().setValue(pack);
+                            toExecute.createArgument().setValue(pack);
                             addedPackages.addElement(pack);
                         }
                         break;

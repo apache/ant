@@ -327,4 +327,12 @@ public class Commandline implements Cloneable {
         return c;
     }
 
+    /**
+     * Clear out the whole command line.
+     */
+    public void clear() {
+        executable = null;
+        arguments.removeAllElements();
+    }
+
 }

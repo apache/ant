@@ -145,16 +145,17 @@ public class Patch extends Task {
                                      location);
         } 
         
-        cmd.setExecutable("patch");
+        Commandline toExecute = (Commandline)cmd.clone();
+        toExecute.setExecutable("patch");
 
         if (originalFile != null) {
-            cmd.createArgument().setFile(originalFile);
+            toExecute.createArgument().setFile(originalFile);
         }
 
         Execute exe = new Execute(new LogStreamHandler(this, Project.MSG_INFO,
                                                        Project.MSG_WARN), 
                                   null);
-        exe.setCommandline(cmd.getCommandline());
+        exe.setCommandline(toExecute.getCommandline());
         try {
             exe.execute();
         } catch (IOException e) {
