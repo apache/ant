@@ -55,12 +55,6 @@ public class Property
         }
     }
 
-    public void setClasspathRef( Reference r )
-        throws TaskException
-    {
-        createClasspath().setRefid( r );
-    }
-
     public void setEnvironment( String env )
     {
         m_env = env;

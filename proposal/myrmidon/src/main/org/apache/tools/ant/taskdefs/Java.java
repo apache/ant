@@ -20,7 +20,6 @@ import org.apache.tools.ant.types.Argument;
 import org.apache.tools.ant.types.CommandlineJava;
 import org.apache.tools.ant.types.EnvironmentVariable;
 import org.apache.tools.ant.types.Path;
-import org.apache.tools.ant.types.Reference;
 
 /**
  * This task acts as a loader for java applications but allows to use the same
@@ -65,17 +64,6 @@ public class Java extends Task
         throws TaskException
     {
         createClasspath().append( s );
-    }
-
-    /**
-     * Adds a reference to a CLASSPATH defined elsewhere.
-     *
-     * @param r The new ClasspathRef value
-     */
-    public void setClasspathRef( Reference r )
-        throws TaskException
-    {
-        createClasspath().setRefid( r );
     }
 
     /**

@@ -18,7 +18,6 @@ import org.apache.tools.ant.taskdefs.compilers.CompilerAdapter;
 import org.apache.tools.ant.taskdefs.compilers.CompilerAdapterFactory;
 import org.apache.tools.ant.types.Argument;
 import org.apache.tools.ant.types.Path;
-import org.apache.tools.ant.types.Reference;
 import org.apache.tools.ant.util.GlobPatternMapper;
 import org.apache.tools.ant.util.SourceFileScanner;
 
@@ -89,17 +88,6 @@ public class Javac extends MatchingTask
     private String target;
 
     /**
-     * Adds a reference to a CLASSPATH defined elsewhere.
-     *
-     * @param r The new BootClasspathRef value
-     */
-    public void setBootClasspathRef( Reference r )
-        throws TaskException
-    {
-        createBootclasspath().setRefid( r );
-    }
-
-    /**
      * Sets the bootclasspath that will be used to compile the classes against.
      *
      * @param bootclasspath The new Bootclasspath value
@@ -133,17 +121,6 @@ public class Javac extends MatchingTask
         {
             compileClasspath.append( classpath );
         }
-    }
-
-    /**
-     * Adds a reference to a CLASSPATH defined elsewhere.
-     *
-     * @param r The new ClasspathRef value
-     */
-    public void setClasspathRef( Reference r )
-        throws TaskException
-    {
-        createClasspath().setRefid( r );
     }
 
     /**

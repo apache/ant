@@ -11,7 +11,6 @@ import java.io.File;
 import java.util.ArrayList;
 import org.apache.myrmidon.api.TaskException;
 import org.apache.tools.ant.Task;
-import org.apache.tools.ant.types.FileSet;
 import org.apache.tools.ant.types.Path;
 import org.apache.tools.ant.types.Reference;
 
@@ -160,27 +159,6 @@ public class PathConvert extends Task
         throws TaskException
     {
         // If we are a reference, the create a Path from the reference
-        if( isReference() )
-        {
-            path = new Path().createPath();
-
-            Object obj = refid.getReferencedObject( getProject() );
-
-            if( obj instanceof Path )
-            {
-                path.setRefid( refid );
-            }
-            else if( obj instanceof FileSet )
-            {
-                FileSet fs = (FileSet)obj;
-                path.addFileset( fs );
-            }
-            else
-            {
-                throw new TaskException( "'refid' does not refer to a path or fileset" );
-            }
-        }
-
         validateSetup();// validate our setup
 
         // Currently, we deal with only two path formats: Unix and Windows

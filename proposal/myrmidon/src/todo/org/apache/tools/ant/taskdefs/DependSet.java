@@ -179,12 +179,12 @@ public class DependSet extends MatchingTask
         {
 
             FileList targetFL = (FileList)enumTargetLists.next();
-            String[] targetFiles = targetFL.getFiles( getProject() );
+            String[] targetFiles = targetFL.getFiles();
 
             for( int i = 0; i < targetFiles.length; i++ )
             {
 
-                File dest = new File( targetFL.getDir( getProject() ), targetFiles[ i ] );
+                File dest = new File( targetFL.getDir(), targetFiles[ i ] );
                 if( !dest.exists() )
                 {
                     getLogger().debug( targetFiles[ i ] + " does not exist." );
@@ -250,12 +250,12 @@ public class DependSet extends MatchingTask
             {
 
                 FileList sourceFL = (FileList)enumSourceLists.next();
-                String[] sourceFiles = sourceFL.getFiles( getProject() );
+                String[] sourceFiles = sourceFL.getFiles();
 
                 int i = 0;
                 do
                 {
-                    File src = new File( sourceFL.getDir( getProject() ), sourceFiles[ i ] );
+                    File src = new File( sourceFL.getDir(), sourceFiles[ i ] );
 
                     if( src.lastModified() > now )
                     {

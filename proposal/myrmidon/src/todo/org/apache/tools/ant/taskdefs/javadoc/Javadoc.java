@@ -23,7 +23,6 @@ import org.apache.tools.ant.taskdefs.exec.Execute;
 import org.apache.tools.ant.types.Commandline;
 import org.apache.tools.ant.types.FileSet;
 import org.apache.tools.ant.types.Path;
-import org.apache.tools.ant.types.Reference;
 
 /**
  * This task makes it easy to generate Javadoc documentation for a collection of
@@ -102,17 +101,6 @@ public class Javadoc
         m_author = src;
     }
 
-    /**
-     * Adds a reference to a CLASSPATH defined elsewhere.
-     *
-     * @param r The new BootClasspathRef value
-     */
-    public void setBootClasspathRef( Reference r )
-        throws TaskException
-    {
-        createBootclasspath().setRefid( r );
-    }
-
     public void setBootclasspath( Path src )
         throws TaskException
     {
@@ -149,17 +137,6 @@ public class Javadoc
         {
             m_classpath.append( src );
         }
-    }
-
-    /**
-     * Adds a reference to a CLASSPATH defined elsewhere.
-     *
-     * @param r The new ClasspathRef value
-     */
-    public void setClasspathRef( Reference r )
-        throws TaskException
-    {
-        createClasspath().setRefid( r );
     }
 
     /**
@@ -203,16 +180,6 @@ public class Javadoc
             m_doclet = new DocletInfo();
         }
         m_doclet.setPath( src );
-    }
-
-    public void setDocletPathRef( Reference r )
-        throws TaskException
-    {
-        if( m_doclet == null )
-        {
-            m_doclet = new DocletInfo();
-        }
-        m_doclet.createPath().setRefid( r );
     }
 
     public void setDoctitle( String src )
@@ -415,17 +382,6 @@ public class Javadoc
         {
             m_sourcePath.append( src );
         }
-    }
-
-    /**
-     * Adds a reference to a CLASSPATH defined elsewhere.
-     *
-     * @param r The new SourcepathRef value
-     */
-    public void setSourcepathRef( Reference r )
-        throws TaskException
-    {
-        createSourcepath().setRefid( r );
     }
 
     public void setSplitindex( boolean b )

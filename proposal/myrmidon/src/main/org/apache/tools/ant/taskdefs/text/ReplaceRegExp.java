@@ -240,11 +240,11 @@ public class ReplaceRegExp extends Task
         throws TaskException
     {
         String res = input;
-        Regexp regexp = r.getRegexp( getProject() );
+        Regexp regexp = r.getRegexp();
 
         if( regexp.matches( input, options ) )
         {
-            res = regexp.substitute( input, s.getExpression( getProject() ), options );
+            res = regexp.substitute( input, s.getExpression(), options );
         }
 
         return res;
@@ -277,8 +277,8 @@ public class ReplaceRegExp extends Task
 
             boolean changes = false;
 
-            final String message = "Replacing pattern '" + regex.getPattern( getProject() ) +
-                "' with '" + subs.getExpression( getProject() ) +
+            final String message = "Replacing pattern '" + regex.getPattern() +
+                "' with '" + subs.getExpression() +
                 "' in '" + f.getPath() + "'" +
                 ( byline ? " by line" : "" ) +
                 ( flags.length() > 0 ? " with flags: '" + flags + "'" : "" ) +

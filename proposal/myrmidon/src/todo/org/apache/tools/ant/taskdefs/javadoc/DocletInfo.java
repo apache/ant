@@ -11,7 +11,6 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import org.apache.myrmidon.api.TaskException;
 import org.apache.tools.ant.types.Path;
-import org.apache.tools.ant.types.Reference;
 
 public class DocletInfo
 {
@@ -35,17 +34,6 @@ public class DocletInfo
         {
             m_path.append( path );
         }
-    }
-
-    /**
-     * Adds a reference to a CLASSPATH defined elsewhere.
-     *
-     * @param r The new PathRef value
-     */
-    public void setPathRef( final Reference reference )
-        throws TaskException
-    {
-        createPath().setRefid( reference );
     }
 
     public String getName()

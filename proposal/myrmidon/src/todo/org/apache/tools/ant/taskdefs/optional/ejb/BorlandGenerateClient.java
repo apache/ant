@@ -13,7 +13,6 @@ import org.apache.tools.ant.Task;
 import org.apache.tools.ant.taskdefs.Java;
 import org.apache.tools.ant.taskdefs.exec.ExecTask;
 import org.apache.tools.ant.types.Path;
-import org.apache.tools.ant.types.Reference;
 
 /**
  * BorlandGenerateClient is dedicated to the Borland Application Server 4.5 This
@@ -64,12 +63,6 @@ public class BorlandGenerateClient extends Task
         {
             this.classpath.append( classpath );
         }
-    }
-
-    public void setClasspathRef( Reference r )
-        throws TaskException
-    {
-        createClasspath().setRefid( r );
     }
 
     public void setClientjar( File clientjar )

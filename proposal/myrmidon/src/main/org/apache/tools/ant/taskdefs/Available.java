@@ -15,7 +15,6 @@ import org.apache.tools.ant.Task;
 import org.apache.tools.ant.taskdefs.condition.Condition;
 import org.apache.tools.ant.types.EnumeratedAttribute;
 import org.apache.tools.ant.types.Path;
-import org.apache.tools.ant.types.Reference;
 
 /**
  * Will set the given property if the requested resource is available at
@@ -53,12 +52,6 @@ public class Available
         throws TaskException
     {
         createClasspath().append( classpath );
-    }
-
-    public void setClasspathRef( Reference r )
-        throws TaskException
-    {
-        createClasspath().setRefid( r );
     }
 
     public void setFile( String file )

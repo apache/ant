@@ -7,10 +7,7 @@
  */
 package org.apache.tools.ant.taskdefs.text;
 
-import java.util.Stack;
-import org.apache.myrmidon.api.TaskException;
-import org.apache.tools.ant.Project;
-import org.apache.tools.ant.types.DataType;
+import org.apache.tools.ant.ProjectComponent;
 
 /**
  * A regular expression substitution datatype. It is an expression that is meant
@@ -24,65 +21,20 @@ import org.apache.tools.ant.types.DataType;
  * @see org.apache.oro.text.regex.Perl5Substitition
  */
 public class Substitution
-    extends DataType
+    extends ProjectComponent
 {
-    public final static String DATA_TYPE_NAME = "substitition";
+    private String m_expression;
 
-    private String expression;
-
-    public Substitution()
+    public void setExpression( final String expression )
     {
-        this.expression = null;
-    }
-
-    public void setExpression( String expression )
-    {
-        this.expression = expression;
+        m_expression = expression;
     }
 
     /**
      * Gets the pattern string for this RegularExpression in the given project.
-     *
-     * @param p Description of Parameter
-     * @return The Expression value
      */
-    public String getExpression( Project p )
-        throws TaskException
+    public String getExpression()
     {
-        if( isReference() )
-        {
-            return getRef( p ).getExpression( p );
-        }
-
-        return expression;
-    }
-
-    /**
-     * Get the RegularExpression this reference refers to in the given project.
-     * Check for circular references too
-     *
-     * @param p Description of Parameter
-     * @return The Ref value
-     */
-    public Substitution getRef( Project p )
-        throws TaskException
-    {
-        if( !checked )
-        {
-            Stack stk = new Stack();
-            stk.push( this );
-            dieOnCircularReference( stk, p );
-        }
-
-        Object o = ref.getReferencedObject( p );
-        if( !( o instanceof Substitution ) )
-        {
-            String msg = ref.getRefId() + " doesn\'t denote a substitution";
-            throw new TaskException( msg );
-        }
-        else
-        {
-            return (Substitution)o;
-        }
+        return m_expression;
     }
 }

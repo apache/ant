@@ -16,7 +16,6 @@ import org.apache.tools.ant.taskdefs.MatchingTask;
 import org.apache.tools.ant.taskdefs.optional.jsp.compilers.CompilerAdapter;
 import org.apache.tools.ant.taskdefs.optional.jsp.compilers.CompilerAdapterFactory;
 import org.apache.tools.ant.types.Path;
-import org.apache.tools.ant.types.Reference;
 
 /**
  * Ant task to run the jsp compiler. <p>
@@ -108,20 +107,6 @@ public class JspC extends MatchingTask
             classpath.append( cp );
     }
 
-    /**
-     * Adds a reference to a CLASSPATH defined elsewhere
-     *
-     * @param r The new ClasspathRef value
-     */
-    public void setClasspathRef( Reference r )
-        throws TaskException
-    {
-        createClasspath().setRefid( r );
-    }
-
-    /*
-     * ------------------------------------------------------------
-     */
     /**
      * Set the destination directory into which the JSP source files should be
      * compiled.

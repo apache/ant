@@ -37,7 +37,6 @@ import org.apache.tools.ant.Task;
 import org.apache.tools.ant.types.EnumeratedAttribute;
 import org.apache.tools.ant.types.FileSet;
 import org.apache.tools.ant.types.Path;
-import org.apache.tools.ant.types.Reference;
 
 /**
  * Reads in a text file containing SQL statements seperated with semicolons and
@@ -178,17 +177,6 @@ public class SQLExec
         {
             this.classpath.append( classpath );
         }
-    }
-
-    /**
-     * Set the classpath for loading the driver using the classpath reference.
-     *
-     * @param r The new ClasspathRef value
-     */
-    public void setClasspathRef( Reference r )
-        throws TaskException
-    {
-        createClasspath().setRefid( r );
     }
 
     /**
