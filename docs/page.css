@@ -33,6 +33,14 @@ a:hover { color: #000066; }
 .menu ul ul li .sel { list-style-image: url('images/current.gif'); font-weight : normal; }
 .menu ul ul li  { list-style-image: url('images/page.gif'); font-weight : normal; }
 
+.menuheader {
+    color: #CFDCED;
+}
+
+.sel {
+    color: #ffcc00;
+}
+
 .tab { font-size : 85%; border: 0 }
 .tab a:link {   text-decoration : none;  }
 .tab a:visited { text-decoration : none; color: #2A4A6D }

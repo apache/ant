@@ -220,14 +220,14 @@
     <div class="menu">
       <ul>
       #foreach ( $menu in $menus )
-        <li><font color="$blue1">$menu.getAttributeValue("name")</font>
+        <li class="menuheader">$menu.getAttributeValue("name")
           <ul>
             #foreach ( $item in $menu.getChildren() )
               #set ($name = $item.getAttributeValue("name"))
               #set ($current = $root.getChild("properties").getChild("title").getText() )
                 <li>
               #if ( $current.trim().equals( $name ) )
-                <span class="sel"><font color="$active">$name</font></span>
+                <span class="sel">$name</span>
               #else
                 #projectanchor($name $item.getAttributeValue("href"))
               #end
