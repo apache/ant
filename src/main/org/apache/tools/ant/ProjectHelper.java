@@ -480,7 +480,8 @@ public class ProjectHelper {
                                              value );
                 }
                 String n=value.substring( pos+2, endName );
-                String v=(String) keys.get( n );
+                String v= (keys.containsKey(n)) ? (String) keys.get( n ) 
+                    : "${"+n+"}";
                 //System.out.println("N: " + n + " " + " V:" + v);
                 sb.append( v );
                 prev=endName+1;

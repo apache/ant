@@ -64,6 +64,7 @@ import java.util.*;
  *
  * @author costin@dnt.ro
  * @author Sam Ruby <rubys@us.ibm.com>
+ * @author Glenn McAllister <glennm@ca.ibm.com>
  */
 public class Property extends Task {
 
@@ -101,20 +102,7 @@ public class Property extends Task {
     public void init() throws BuildException {
         try {
             if ((name != null) && (value != null)) {
-		if( userProperty )
-                    if (project.getUserProperty(name) == null) {
-		        project.setUserProperty(name, value);
-                    } else {
-                        log("Override ignored for " + name, 
-                            Project.MSG_VERBOSE);
-                    }
-		else
-                    if (project.getProperty(name) == null) {
-		        project.setProperty(name, value);
-                    } else {
-                        log("Override ignored for " + name, 
-                            Project.MSG_VERBOSE);
-                    }
+                addProperty(name, value);
             }
 
             if (file != null) loadFile(file);
@@ -126,16 +114,18 @@ public class Property extends Task {
         }
     }
 
-    private void loadFile (String name) {
+    private void loadFile (String name) throws BuildException {
         Properties props = new Properties();
         log("Loading " + name, Project.MSG_VERBOSE);
         try {
             if (new File(name).exists()) {
                 props.load(new FileInputStream(name));
                 addProperties(props);
+            } else {
+                log("Unable to find " + name, Project.MSG_VERBOSE);
             }
         } catch(Exception ex) {
-            ex.printStackTrace();
+            throw new BuildException(ex.getMessage(), ex, location);
         }
     }
 
@@ -154,29 +144,99 @@ public class Property extends Task {
     }
 
     private void addProperties(Properties props) {
+        resolveAllProperties(props);
         Enumeration e = props.keys();
         while (e.hasMoreElements()) {
             String name = (String) e.nextElement();
             String value = (String) props.getProperty(name);
             String v = ProjectHelper.replaceProperties(value, project.getProperties());
-            if( userProperty )
-                if (project.getUserProperty(name) == null) {
-		    project.setUserProperty(name, v);
-                } else {
-                    log("Override ignored for " + name, 
-                        Project.MSG_VERBOSE);
-                }
-            else
-                if (project.getProperty(name) == null) {
-		    project.setProperty(name, v);
-                } else {
-                    log("Override ignored for " + name, 
-                        Project.MSG_VERBOSE);
-                }
+            addProperty(name, value);
         }
     }
 
     public void setUserProperty( boolean userP ) {
 	userProperty=userP;
     }
+
+    private void addProperty(String n, String v) {
+        if( userProperty ) {
+            if (project.getUserProperty(n) == null) {
+                project.setUserProperty(n, v);
+            } else {
+                log("Override ignored for " + name, Project.MSG_VERBOSE);
+            } 
+        } else {
+            if (project.getProperty(n) == null) {
+                project.setProperty(n, v);
+            } else {
+                log("Override ignored for " + name, Project.MSG_VERBOSE);
+            }
+        }
+    }
+
+    private void resolveAllProperties(Hashtable props) {
+        Hashtable toResolve = new Hashtable();
+        Enumeration e = props.keys();
+        boolean more = true;
+        
+        while (more) {
+            while (e.hasMoreElements()) {
+                Vector propsInValue = new Vector();
+                String name = (String) e.nextElement();
+                String value = (String) props.get(name);
+
+                if (extractProperties(value, propsInValue)) {
+                    for (int i=0; i < propsInValue.size(); i++) {
+                        String elem = (String) propsInValue.elementAt(i);
+                        if (project.getProperties().containsKey(elem) ||
+                            props.containsKey(elem)) {
+                            toResolve.put(name, value);
+                            break;
+                        }
+                    }
+                }
+
+                if (toResolve.size() > 0) {
+                    Enumeration tre = toResolve.keys();
+                    while (tre.hasMoreElements()) {
+                        String name2 = (String) tre.nextElement();
+                        String value2 = (String) toResolve.get(name2);
+                        String v = ProjectHelper.replaceProperties(value2,
+                                                                   project.getProperties());
+                        v = ProjectHelper.replaceProperties(v, props);
+                        props.put(name, v);
+                    }
+
+                    toResolve.clear();
+                    e = props.keys();
+                } else {
+                    more = false;
+                }
+            }
+        }
+    }
+
+    private boolean extractProperties(String source, Vector properties) {
+        // This is an abreviated version of 
+        // ProjectHelper.replaceProperties method
+        int i=0;
+        int prev=0;
+        int pos;
+
+        while( (pos=source.indexOf( "$", prev )) >= 0 ) {
+            if( pos == (source.length() - 1)) {
+                prev = pos + 1;
+            } else if (source.charAt( pos + 1 ) != '{' ) {
+                prev=pos+2;
+            } else {
+                int endName=source.indexOf( '}', pos );
+                String n=source.substring( pos+2, endName );
+                properties.addElement(n);
+                prev=endName+1;
+            }
+        }
+        
+        return (properties.size() > 0);
+    }
+    
 }
