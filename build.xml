@@ -371,8 +371,16 @@
     <copy todir="${dist.lib}" file="${lib.dir}/optional/README"/>
     
     <copy todir="${dist.docs}">
-      <fileset dir="${docs.dir}"/>
+      <fileset dir="${docs.dir}">
+        <exclude name="**/images/**"/>
+      </fileset>
       <filterset refid="ant.filters"/>
+    </copy>
+
+    <copy todir="${dist.docs}" filtering="false">
+      <fileset dir="${docs.dir}">
+        <include name="**/images/**"/>
+      </fileset>
     </copy>
 
     <copy todir="${dist.dir}">
