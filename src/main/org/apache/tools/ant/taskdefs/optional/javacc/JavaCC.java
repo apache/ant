@@ -114,7 +114,9 @@ public class JavaCC extends Task {
 
     protected static final String[] ARCHIVE_LOCATIONS = 
         new String[] {"JavaCC.zip", "bin/lib/JavaCC.zip", 
-                      "bin/lib/javacc.jar"};
+                      "bin/lib/javacc.jar",
+                      "javacc.jar", // used by jpackage for JavaCC 3.x
+        };
 
     protected static final String COM_PACKAGE = "COM.sun.labs.";
     protected static final String COM_JAVACC_CLASS = "javacc.Main";
@@ -395,6 +397,7 @@ public class JavaCC extends Task {
             break;
 
         case 3:
+        case 4:
             /* 
              * This is where the fun starts, JavaCC 3.0 uses
              * org.netbeans.javacc, 3.1 uses org.javacc - I wonder
@@ -448,10 +451,20 @@ public class JavaCC extends Task {
 
     /**
      * Helper method to determine the major version number of JavaCC.
+     *
+     * <p>Don't assume any relation between the number returned by
+     * this method and the &quot;major version number&quot; of JavaCC
+     * installed.  Both 3 and 4 map to JavaCC 3.x (with no difference
+     * between 3.0 and 3.1).</p>
+     *
+     * <p>This method is only useful within this class itself, use
+     * {@link #getArchiveFile getArchiveFile} and {@link #getMainClass
+     * getMainClass} for more widely useful results.</p>
+     *
      * @param home the javacc home path directory.
      * @throws BuildException thrown if the home directory is invalid
      * or if the archive could not be found despite attempts to do so.
-     * @return the file object pointing to the JavaCC archive.
+     * @return a number that is useless outside the scope of this class
      */
     protected static int getMajorVersionNumber(File home) 
         throws BuildException {
