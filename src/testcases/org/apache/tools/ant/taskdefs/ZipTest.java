@@ -21,6 +21,7 @@ import org.apache.tools.ant.BuildFileTest;
 import java.io.File;
 import java.io.IOException;
 import java.util.zip.ZipEntry;
+import java.util.zip.ZipException;
 import java.util.zip.ZipFile;
 import java.util.Enumeration;
 
@@ -49,9 +50,9 @@ public class ZipTest extends BuildFileTest {
         expectBuildException("test3", "zip cannot include itself");
     }
 
-//    public void test4() {
-//        expectBuildException("test4", "zip cannot include itself");
-//    }
+    //    public void test4() {
+    //        expectBuildException("test4", "zip cannot include itself");
+    //    }
 
     public void tearDown() {
         try {
@@ -147,5 +148,21 @@ public class ZipTest extends BuildFileTest {
     // Bugzilla Report 25513
     public void testCompressionLevel() {
         executeTarget("testCompressionLevel");
+    }
+
+    // Bugzilla Report 33412
+    public void testDefaultExcludesAndUpdate() 
+        throws ZipException, IOException {
+        executeTarget("testDefaultExcludesAndUpdate");
+        ZipFile f = null;
+        try {
+            f = new ZipFile(getProject().resolveFile("test3.zip"));
+            assertNotNull("ziptest~ should be included",
+                          f.getEntry("ziptest~"));
+        } finally {
+            if (f != null) {
+                f.close();
+            }
+        }
     }
 }

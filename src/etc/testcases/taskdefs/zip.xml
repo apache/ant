@@ -156,6 +156,17 @@
     </fail>
   </target>
 
+  <!-- Bugzilla Report 33412 -->
+  <target name="testDefaultExcludesAndUpdate">
+    <mkdir dir="ziptest"/>
+    <touch file="ziptest/ziptest~"/>
+    <zip destfile="test3.zip" basedir="ziptest" defaultexcludes="false"/>
+    <touch file="ziptest/ziptest2"/>
+    <zip destfile="test3.zip" basedir="ziptest"
+      defaultexcludes="false"
+      update="true"/>
+  </target>
+
   <target name="cleanup">
     <delete file="test3.zip"/>
     <delete file="test4.zip"/>
