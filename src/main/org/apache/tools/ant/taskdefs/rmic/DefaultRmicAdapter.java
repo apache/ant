@@ -201,7 +201,7 @@ public abstract class DefaultRmicAdapter implements RmicAdapter {
 
     /**
      * Logs the compilation parameters, adds the files to compile and logs the
-     * &qout;niceSourceList&quot;
+     * &quot;niceSourceList&quot;
      */
     protected void logAndAddFilesToCompile(Commandline cmd) {
         Vector compileList = attributes.getCompileList();
