@@ -174,7 +174,7 @@ public class BuildNumber
         {
             final String message = 
                 m_file + " contains a non integer build number: " + buildNumber;
-            throw new BuildException( message );
+            throw new BuildException( message , nfe );
         }
     }
 
@@ -197,7 +197,7 @@ public class BuildNumber
         }
         catch( final IOException ioe )
         {
-            throw new BuildException( ioe.getMessage() );
+            throw new BuildException( ioe );
         }
         finally
         {
