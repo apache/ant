@@ -3,7 +3,7 @@
  *
  * This software is published under the terms of the Apache Software License
  * version 1.1, a copy of which has been included with this distribution in
- * the LICENSE file.
+ * the LICENSE.txt file.
  */
 package org.apache.tools.ant.taskdefs.exec;
 
@@ -12,14 +12,17 @@ import java.util.ArrayList;
 import java.util.Iterator;
 
 /**
- * Destroys all registered <code>Process</code>es when the VM exits.
+ * Destroys all registered <code>Process</code>es when
+ * the VM exits (if in JDK1.3) or when requested.
  *
  * @author <a href="mailto:mnewcomb@tacintel.com">Michael Newcomb</a>
+ * @author <a href="mailto:peter@apache.org">Peter Donald</a>
+ * @version $Revision$ $Date$
  */
 public class ProcessDestroyer
     extends Thread
 {
-    private ArrayList processes = new ArrayList();
+    private ArrayList m_processes = new ArrayList();
 
     /**
      * Constructs a <code>ProcessDestroyer</code> and registers it as a shutdown
@@ -31,46 +34,41 @@ public class ProcessDestroyer
         {
             // check to see if the method exists (support pre-JDK 1.3 VMs)
             //
-            Class[] paramTypes = {Thread.class};
-            Method addShutdownHook =
+            final Class[] paramTypes = {Thread.class};
+            final Method addShutdownHook =
                 Runtime.class.getMethod( "addShutdownHook", paramTypes );
 
             // add the hook
-            //
             Object[] args = {this};
             addShutdownHook.invoke( Runtime.getRuntime(), args );
         }
-        catch( Exception e )
+        catch( final Exception e )
         {
             // it just won't be added as a shutdown hook... :(
         }
     }
 
     /**
-     * Returns <code>true</code> if the specified <code>Process</code> was
-     * successfully added to the list of processes to destroy upon VM exit.
+     * Add process to list of processes to be shutdown.
      *
      * @param process the process to add
-     * @return <code>true</code> if the specified <code>Process</code> was
-     *      successfully added
      */
-    public boolean add( Process process )
+    public synchronized void add( final Process process )
     {
-        processes.add( process );
-        return processes.contains( process );
+        if( !m_processes.contains( process ) )
+        {
+            m_processes.add( process );
+        }
     }
 
     /**
-     * Returns <code>true</code> if the specified <code>Process</code> was
-     * successfully removed from the list of processes to destroy upon VM exit.
+     * Remove process from list of processes to be shutdown.
      *
      * @param process the process to remove
-     * @return <code>true</code> if the specified <code>Process</code> was
-     *      successfully removed
      */
-    public boolean remove( Process process )
+    public synchronized void remove( final Process process )
     {
-        return processes.remove( process );
+        m_processes.remove( process );
     }
 
     /**
@@ -78,13 +76,16 @@ public class ProcessDestroyer
      */
     public void run()
     {
-        synchronized( processes )
+        destroyProcesses();
+    }
+
+    protected synchronized void destroyProcesses()
+    {
+        final Iterator processes = m_processes.iterator();
+        while( processes.hasNext() )
         {
-            Iterator e = processes.iterator();
-            while( e.hasNext() )
-            {
-                ( (Process)e.next() ).destroy();
-            }
+            ( (Process)processes.next() ).destroy();
+            processes.remove();
         }
     }
 }
