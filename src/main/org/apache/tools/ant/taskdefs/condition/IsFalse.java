@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2002 The Apache Software Foundation.  All rights
+ * Copyright (c) 2002-2003 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -71,13 +71,14 @@ public class IsFalse extends ProjectComponent implements Condition {
 
     /**
      * set the value to be tested; let ant eval it to true/false
+     * @param value the value to test
      */
     public void setValue(boolean value) {
-        this.value = new Boolean(value);
+        this.value = value ? Boolean.TRUE : Boolean.FALSE;
     }
 
     /**
-     * return the inverted value;
+     * @return the inverted value;
      * @throws BuildException if someone forgot to spec a value
      */
     public boolean eval() throws BuildException {

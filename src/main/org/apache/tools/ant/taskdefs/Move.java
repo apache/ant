@@ -90,15 +90,25 @@ import org.apache.tools.ant.types.FilterSetCollection;
  */
 public class Move extends Copy {
 
+    /**
+     * Constructor of object.
+     * This sets the forceOverwrite attribute of the Copy parent class
+     * to true.
+     *
+     */
     public Move() {
         super();
-        forceOverwrite = true;
+        setOverwrite(true);
     }
 
 //************************************************************************
 //  protected and private methods
 //************************************************************************
 
+    /**
+     * Override copy's doFileOperations to move the
+     * files instead of copying them.
+     */
     protected void doFileOperations() {
         //Attempt complete directory renames, if any, first.
         if (completeDirMap.size() > 0) {
@@ -190,7 +200,7 @@ public class Move extends Copy {
             if (createCount > 0) {
                 log("Moved " + dirCopyMap.size()
                     + " empty director"
-                    + (dirCopyMap.size()== 1 ? "y" : "ies")
+                    + (dirCopyMap.size() == 1 ? "y" : "ies")
                     + " to " + createCount
                     + " empty director"
                     + (createCount == 1 ? "y" : "ies") + " under "
@@ -274,6 +284,7 @@ public class Move extends Copy {
     /**
      * Its only ok to delete a directory tree if there are
      * no files in it.
+     * @param d the directory to check
      * @return true if a deletion can go ahead
      */
     protected boolean okToDelete(File d) {
@@ -299,6 +310,7 @@ public class Move extends Copy {
 
     /**
      * Go and delete the directory tree.
+     * @param d the directory to delete
      */
     protected void deleteDir(File d) {
         String[] list = d.list();
@@ -332,7 +344,15 @@ public class Move extends Copy {
      * Method then checks if token filtering is used.  If it is, this method
      * returns false assuming it is the responsibility to the copyFile method.
      *
-     * @throws IOException
+     * @param sourceFile the file to rename
+     * @param destFile   the destination file
+     * @param filtering  if true, filtering is in operation, file will
+     *                   be copied/deleted instead of renamed
+     * @param overwrite  if true force overwrite even if destination file
+     *                   is newer than source file
+     * @return true if the file was renamed
+     * @exception IOException if an error occurs
+     * @exception BuildException if an error occurs
      */
     protected boolean renameFile(File sourceFile, File destFile,
                                  boolean filtering, boolean overwrite)

@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2001-2002 The Apache Software Foundation.  All rights
+ * Copyright (c) 2001-2003 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -69,18 +69,28 @@ public class Equals implements Condition {
     private boolean trim = false;
     private boolean caseSensitive = true;
 
+    /**
+     * Set the first string
+     *
+     * @param a1 the first string
+     */
     public void setArg1(String a1) {
         arg1 = a1;
     }
 
+    /**
+     * Set the second string
+     *
+     * @param a2 the second string
+     */
     public void setArg2(String a2) {
         arg2 = a2;
     }
 
     /**
      * Should we want to trim the arguments before comparing them?
-     *
-     * @since Revision: 1.3, Ant 1.5
+     * @param b if true trim the arguments
+     * @since Ant 1.5
      */
     public void setTrim(boolean b) {
         trim = b;
@@ -88,13 +98,18 @@ public class Equals implements Condition {
 
     /**
      * Should the comparison be case sensitive?
-     *
-     * @since Revision: 1.3, Ant 1.5
+     * @param b if true use a case sensitive comparision (this is the
+     *          default)
+     * @since Ant 1.5
      */
     public void setCasesensitive(boolean b) {
         caseSensitive = b;
     }
 
+    /**
+     * @return true if the two strings are equal
+     * @exception BuildException if the attributes are not set correctly
+     */
     public boolean eval() throws BuildException {
         if (arg1 == null || arg2 == null) {
             throw new BuildException("both arg1 and arg2 are required in "

@@ -76,6 +76,7 @@ public abstract class ConditionBase extends ProjectComponent {
     /**
      * Count the conditions.
      *
+     * @return the number of conditions in the container
      * @since 1.1
      */
     protected int countConditions() {
@@ -85,6 +86,7 @@ public abstract class ConditionBase extends ProjectComponent {
     /**
      * Iterate through all conditions.
      *
+     * @return an enumeration to use for iteration
      * @since 1.1
      */
     protected final Enumeration getConditions() {
@@ -93,7 +95,7 @@ public abstract class ConditionBase extends ProjectComponent {
 
     /**
      * Add an &lt;available&gt; condition.
-     *
+     * @param a an available condition
      * @since 1.1
      */
     public void addAvailable(Available a) {
@@ -103,6 +105,7 @@ public abstract class ConditionBase extends ProjectComponent {
     /**
      * Add an &lt;checksum&gt; condition.
      *
+     * @param c a Checksum condition
      * @since 1.4, Ant 1.5
      */
     public void addChecksum(Checksum c) {
@@ -112,6 +115,7 @@ public abstract class ConditionBase extends ProjectComponent {
     /**
      * Add an &lt;uptodate&gt; condition.
      *
+     * @param u an UpToDate condition
      * @since 1.1
      */
     public void addUptodate(UpToDate u) {
@@ -121,6 +125,7 @@ public abstract class ConditionBase extends ProjectComponent {
     /**
      * Add an &lt;not&gt; condition "container".
      *
+     * @param n a Not condition
      * @since 1.1
      */
     public void addNot(Not n) {
@@ -130,6 +135,7 @@ public abstract class ConditionBase extends ProjectComponent {
     /**
      * Add an &lt;and&gt; condition "container".
      *
+     * @param a an And condition
      * @since 1.1
      */
     public void addAnd(And a) {
@@ -139,6 +145,7 @@ public abstract class ConditionBase extends ProjectComponent {
     /**
      * Add an &lt;or&gt; condition "container".
      *
+     * @param o an Or condition
      * @since 1.1
      */
     public void addOr(Or o) {
@@ -148,6 +155,7 @@ public abstract class ConditionBase extends ProjectComponent {
     /**
      * Add an &lt;equals&gt; condition.
      *
+     * @param e an Equals condition
      * @since 1.1
      */
     public void addEquals(Equals e) {
@@ -157,6 +165,7 @@ public abstract class ConditionBase extends ProjectComponent {
     /**
      * Add an &lt;os&gt; condition.
      *
+     * @param o an Os condition
      * @since 1.1
      */
     public void addOs(Os o) {
@@ -166,6 +175,7 @@ public abstract class ConditionBase extends ProjectComponent {
     /**
      * Add an &lt;isset&gt; condition.
      *
+     * @param i an IsSet condition
      * @since Ant 1.5
      */
     public void addIsSet(IsSet i) {
@@ -175,6 +185,7 @@ public abstract class ConditionBase extends ProjectComponent {
     /**
      * Add an &lt;http&gt; condition.
      *
+     * @param h an Http condition
      * @since Ant 1.5
      */
     public void addHttp(Http h) {
@@ -184,6 +195,7 @@ public abstract class ConditionBase extends ProjectComponent {
     /**
      * Add a &lt;socket&gt; condition.
      *
+     * @param s a Socket condition
      * @since Ant 1.5
      */
     public void addSocket(Socket s) {
@@ -193,6 +205,7 @@ public abstract class ConditionBase extends ProjectComponent {
     /**
      * Add a &lt;filesmatch&gt; condition.
      *
+     * @param test a FilesMatch condition
      * @since Ant 1.5
      */
     public void addFilesMatch(FilesMatch test) {
@@ -202,6 +215,7 @@ public abstract class ConditionBase extends ProjectComponent {
     /**
      * Add a &lt;contains&gt; condition.
      *
+     * @param test a Contains condition
      * @since Ant 1.5
      */
     public void addContains(Contains test) {
@@ -211,6 +225,7 @@ public abstract class ConditionBase extends ProjectComponent {
     /**
      * Add a &lt;istrue&gt; condition.
      *
+     * @param test an IsTrue condition
      * @since Ant 1.5
      */
     public void addIsTrue(IsTrue test) {
@@ -220,6 +235,7 @@ public abstract class ConditionBase extends ProjectComponent {
     /**
      * Add a &lt;isfalse&gt; condition.
      *
+     * @param test an IsFalse condition
      * @since Ant 1.5
      */
     public void addIsFalse(IsFalse test) {
@@ -229,6 +245,7 @@ public abstract class ConditionBase extends ProjectComponent {
     /**
      * Add an &lt;isreference&gt; condition.
      *
+     * @param i an IsReference condition
      * @since Ant 1.6
      */
     public void addIsReference(IsReference i) {
@@ -237,6 +254,7 @@ public abstract class ConditionBase extends ProjectComponent {
 
     /**
      * Add an arbitary condition
+     * @param c a  condition
      * @since Ant 1.6
      */
     public void add(Condition c) {

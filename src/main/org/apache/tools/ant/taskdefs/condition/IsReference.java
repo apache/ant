@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2002 The Apache Software Foundation.  All rights
+ * Copyright (c) 2002-2003 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -71,14 +71,29 @@ public class IsReference extends ProjectComponent implements Condition {
     private Reference ref;
     private String type;
 
+    /**
+     * Set the refid attribute.
+     *
+     * @param r a Reference value
+     */
     public void setRefid(Reference r) {
         ref = r;
     }
 
+    /**
+     * Set the type attribute. This is optional attribute.
+     *
+     * @param type an ant component type name
+     */
     public void setType(String type) {
         this.type = type;
     }
 
+    /**
+     * @return true if the reference exists and if type is set, if
+     *              the reference is the same type
+     * @exception BuildException if an error occurs
+     */
     public boolean eval() throws BuildException {
         if (ref == null) {
             throw new BuildException("No reference specified for isreference "

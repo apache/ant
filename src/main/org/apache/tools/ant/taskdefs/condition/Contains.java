@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2002 The Apache Software Foundation.  All rights
+ * Copyright (c) 2002-2003 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -71,33 +71,35 @@ public class Contains implements Condition {
 
     /**
      * The string to search in.
-     *
-     * @since 1.1, Ant 1.5
+     * @param string the string to search in
+     * @since Ant 1.5
      */
-    public void setString(String a1) {
-        string = a1;
+    public void setString(String string) {
+        this.string = string;
     }
 
     /**
      * The string to search for.
-     *
-     * @since 1.1, Ant 1.5
+     * @param subString the string to search for
+     * @since Ant 1.5
      */
-    public void setSubstring(String a2) {
-        subString = a2;
+    public void setSubstring(String subString) {
+        this.subString = subString;
     }
 
     /**
      * Whether to search ignoring case or not.
-     *
-     * @since 1.1, Ant 1.5
+     * @param b if true, ignore case
+     * @since Ant 1.5
      */
     public void setCasesensitive(boolean b) {
         caseSensitive = b;
     }
 
     /**
-     * @since 1.1, Ant 1.5
+     * @since Ant 1.5
+     * @return true if the substring is within the string
+     * @exception BuildException if the attributes are not set correctly
      */
     public boolean eval() throws BuildException {
         if (string == null || subString == null) {

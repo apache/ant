@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2001-2002 The Apache Software Foundation.  All rights
+ * Copyright (c) 2001-2003 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -69,6 +69,10 @@ import org.apache.tools.ant.BuildException;
  */
 public class Or extends ConditionBase implements Condition {
 
+    /**
+     * @return true if any of the contained conditions evaluate to true
+     * @exception BuildException if an error occurs
+     */
     public boolean eval() throws BuildException {
         Enumeration enum = getConditions();
         while (enum.hasMoreElements()) {

@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2001-2002 The Apache Software Foundation.  All rights
+ * Copyright (c) 2001-2003 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -72,16 +72,31 @@ import org.apache.tools.ant.ProjectComponent;
 public class Http extends ProjectComponent implements Condition {
     private String spec = null;
 
+    /**
+     * Set the url attribute
+     *
+     * @param url the url of the request
+     */
     public void setUrl(String url) {
         spec = url;
     }
 
     private int errorsBeginAt = 400;
 
+    /**
+     * Set the errorsBeginAt attribute
+     *
+     * @param errorsBeginAt number at which errors begin at, default is
+     *                      400
+     */
     public void setErrorsBeginAt(int errorsBeginAt) {
         this.errorsBeginAt = errorsBeginAt;
     }
 
+    /**
+     * @return true if the HTTP request succeeds
+     * @exception BuildException if an error occurs
+     */
     public boolean eval() throws BuildException {
         if (spec == null) {
             throw new BuildException("No url specified in http condition");

@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2001-2002 The Apache Software Foundation.  All rights
+ * Copyright (c) 2001-2003 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -67,10 +67,19 @@ import org.apache.tools.ant.ProjectComponent;
 public class IsSet extends ProjectComponent implements Condition {
     private String property;
 
+    /**
+     * Set the property attribute
+     *
+     * @param p the property name
+     */
     public void setProperty(String p) {
         property = p;
     }
 
+    /**
+     * @return true if the property exists
+     * @exception BuildException if the property attribute is not set
+     */
     public boolean eval() throws BuildException {
         if (property == null) {
             throw new BuildException("No property specified for isset "

@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2001-2002 The Apache Software Foundation.  All rights
+ * Copyright (c) 2001-2003 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -60,7 +60,7 @@ import org.apache.tools.ant.Project;
 import org.apache.tools.ant.ProjectComponent;
 
 /**
- * Condition to wait for a TCP/IP socket to have a listener. Its attribute(s) are:
+ * Condition to wait for a TCP/IP socket to have a listener. Its attributes are:
  *   server - the name of the server.
  *   port - the port number of the socket.
  *
@@ -71,14 +71,28 @@ public class Socket extends ProjectComponent implements Condition {
     private String server = null;
     private int port = 0;
 
+    /**
+     * Set the server attribute
+     *
+     * @param server the server name
+     */
     public void setServer(String server) {
         this.server = server;
     }
 
+    /**
+     * Set the port attribute
+     *
+     * @param port the port number of the socket
+     */
     public void setPort(int port) {
         this.port = port;
     }
 
+    /**
+     * @return true if a socket can be created
+     * @exception BuildException if the attributes are not set
+     */
     public boolean eval() throws BuildException {
         if (server == null) {
             throw new BuildException("No server specified in socket "
