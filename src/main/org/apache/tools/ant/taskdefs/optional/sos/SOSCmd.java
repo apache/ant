@@ -1,5 +1,5 @@
 /*
- * Copyright  2002-2004 The Apache Software Foundation
+ * Copyright  2002-2005 The Apache Software Foundation
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -22,31 +22,58 @@ package org.apache.tools.ant.taskdefs.optional.sos;
  */
 public interface SOSCmd {
     // soscmd Command options
+    /** The sos executable */
     String COMMAND_SOS_EXE = "soscmd";
+    /** The get file command */
     String COMMAND_GET_FILE = "GetFile";
+    /** The get project command */
     String COMMAND_GET_PROJECT = "GetProject";
+    /** The checkout file command */
     String COMMAND_CHECKOUT_FILE = "CheckOutFile";
+    /** The checkout project command */
     String COMMAND_CHECKOUT_PROJECT = "CheckOutProject";
+    /** The checkin file command */
     String COMMAND_CHECKIN_FILE = "CheckInFile";
+    /** The checkin project command */
     String COMMAND_CHECKIN_PROJECT = "CheckInProject";
+    /** The get history command */
     String COMMAND_HISTORY = "GetFileHistory";
+    /** The add label command */
     String COMMAND_LABEL = "AddLabel";
+    /** The project prefix */
     String PROJECT_PREFIX = "$";
+
     // soscmd Option flags
+    /** The command option */
     String FLAG_COMMAND = "-command";
+    /** The database (vss server) option */
     String FLAG_VSS_SERVER = "-database";
+    /** The username option */
     String FLAG_USERNAME = "-name";
+    /** The password option */
     String FLAG_PASSWORD = "-password";
+    /** The log option */
     String FLAG_COMMENT = "-log";
+    /** The workdir option */
     String FLAG_WORKING_DIR = "-workdir";
+    /** The recursive option */
     String FLAG_RECURSION = "-recursive";
+    /** The revision option */
     String FLAG_VERSION = "-revision";
+    /** The label option */
     String FLAG_LABEL = "-label";
+    /** The no compression option */
     String FLAG_NO_COMPRESSION = "-nocompress";
+    /** The no cache option */
     String FLAG_NO_CACHE = "-nocache";
+    /** The server option */
     String FLAG_SOS_SERVER = "-server";
+    /** The sos home option */
     String FLAG_SOS_HOME = "-soshome";
+    /** The project option */
     String FLAG_PROJECT = "-project";
+    /** The file option */
     String FLAG_FILE = "-file";
+    /** The verbose option */
     String FLAG_VERBOSE = "-verbose";
 }
