@@ -37,6 +37,10 @@ Changes that could break older environments:
 * The import task used the canonical version of a file path. This
   has been changed to use the absolute path. Bugzilla 28505.
 
+* ant-xalan2.jar has been removed since the only class contained in it
+  didn't depend on Xalan-J 2 at all.  Its sole dependency has always
+  been TraX and so it has been merged into ant-trax.jar.
+
 Fixed bugs:
 -----------
 
