@@ -26,12 +26,12 @@
     
   <target name="build" depends="main" />
 
-  <target name="main" depends="init" >
-   <echo>Embed is no longer supported with ant1.6. It is only used with ant1.5 ! The dynamic properties work with both, use embed-optional target</echo>
+  <target name="main" depends="init,main-ant15" >
   </target>
 
   <target name="main-ant15" depends="init" 
           description="Build hacks into ant1.5 to support some 1.6 features" >
+   <echo>Embed is no longer supported with ant1.6. It is only used with ant1.5 ! The dynamic properties work with both, use embed-optional target</echo>
     <javac srcdir="src/java"  
            debug="${debug}"
            destdir="${embed.build}/classes" >

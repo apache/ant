@@ -288,14 +288,15 @@ public class RuntimeConfigurable2 extends RuntimeConfigurable {
 
         if (attributes != null) {
             IntrospectionHelper ih =
-                    IntrospectionHelper.getHelper(p, target.getClass());
+                    IntrospectionHelper.getHelper(target.getClass());
+            p.addBuildListener( ih );
 
             for (int i = 0; i < attributes.getLength(); i++) {
                 String name= attributes.getQName(i);
                 String value= attributes.getValue(i);
 
                 // reflect these into the target
-                value = ph.replaceProperties(null, value, null);
+                value = ph.replaceProperties(null, value, p.getProperties());
                 try {
                     ih.setAttribute(p, target,
                             name.toLowerCase(Locale.US), value);
