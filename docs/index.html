@@ -7,8 +7,10 @@
 
 <body>
 
+<center>
 <h1>Ant User Manual</h1>
 <p>by</p>
+</center>
 <!-- Names are in alphabetical order, on last name -->
 <ul>
   <li>Jacques Bergeron (<a href="mailto:jacques.bergeron@dogico.com">jacques.bergeron@dogico.com</a>)</li>
@@ -28,8 +30,10 @@
   <li>Dave Walend (<a href="mailto:dwalend@cs.tufts.edu">dwalend@cs.tufts.edu</a>)</li>
 </ul>
 
-<p>Version: @VERSION@</p>
-<p>$Id$</p>
+<center>
+<p>Version: @VERSION@<br>
+$Id$</p>
+</center>
 
 <hr>
 <h2>Table of Contents</h2>
@@ -40,45 +44,55 @@
   <li><a href="#installing">Installing Ant</a></li>
   <li><a href="#buildingant">Building Ant</a></li>
   <li><a href="#running">Running Ant</a></li>
-  <li><a href="#buildfile">Writing a simple buildfile</a>
-  <li><a href="#directorybasedtasks">Directory based tasks</a></li>
-  <li><a href="#tasks">Built in Tasks</a>
+  <li><a href="#buildfile">Writing a Simple Buildfile</a>
+  <li><a href="#directorybasedtasks">Directory-based Tasks</a></li>
+  <li><a href="#bitasks">Built-in Tasks</a>
   <li><a href="#optionaltasks">Optional Tasks</a>
   <li><a href="#buildevents">Build Events</a>
-  <li><a href="#writingowntask">Writing your own task</a></li>
-  <li><a href="#faq">FAQ, DTD, external resources</a>
+  <li><a href="#writingowntask">Writing Your Own Task</a></li>
+  <li><a href="#faq">FAQ, DTD, External Resources</a>
   <li><a href="../LICENSE">License</a></li>
   <li><a href="#feedback">Feedback</a></li>
 </ul>
 
 <hr>
 <h2><a name="introduction">Introduction</a></h2>
-<p>Ant is a Java based build tool. In theory it is kind of like make without
-make's wrinkles.</p>
+<p>Ant is a Java-based build tool. In theory, it is kind of like
+<i>make</i>, without <i>make</i>'s wrinkles.</p>
 <h3>Why?</h3>
-<p>Why another build tool when there is already make, gnumake, nmake, jam, and
-others? Because all of those tools have limitations that its original author
-couldn't live with when developing software across multiple platforms. Make like
-tools are inherently shell based. They evaluate a set of dependencies and then
-execute commands not unlike what you would issue on a shell. This means that you
+<p>Why another build tool when there is already
+<i>make</i>,
+<i>gnumake</i>,
+<i>nmake</i>,
+<i>jam</i>,
+and
+others? Because all those tools have limitations that Ant's original author
+couldn't live with when developing software across multiple platforms.
+Make-like
+tools are inherently shell-based: they evaluate a set of dependencies,
+then execute commands not unlike what you would issue on a shell.
+This means that you
 can easily extend these tools by using or writing any program for the OS that
-you are working on. However, this also means that you limit yourself to the OS,
-or at least the OS type such as Unix, that you are working on.</p>
+you are working on; however, this also means that you limit yourself to the OS,
+or at least the OS type, such as Unix, that you are working on.</p>
 <p>Makefiles are inherently evil as well. Anybody who has worked on them for any
 time has run into the dreaded tab problem. &quot;Is my command not executing
-because I have a space in front of my tab!!!&quot; said the original author of
+because I have a space in front of my tab?!!&quot; said the original author of
 Ant way too many times. Tools like Jam took care of this to a great degree, but
-still use yet another format to use and remember.</p>
-<p>Ant is different. Instead a model where it is extended with shell based
-commands, it is extended using Java classes. Instead of writing shell commands,
-the configuration files are XML based calling out a target tree where various
-tasks get executed. Each task is run by an object which implements a particular
+still have yet another format to use and remember.</p>
+<p>Ant is different. Instead of a model where it is extended with shell-based
+commands, Ant is extended using Java classes. Instead of writing shell commands,
+the configuration files are XML-based, calling out a target tree where various
+tasks get executed. Each task is run by an object that implements a particular
 Task interface.</p>
-<p>Granted, this removes some of the expressive power that is inherent by being
-able to construct a shell command such as `find . -name foo -exec rm {}` but it
-gives you the ability to be cross platform. To work anywhere and everywhere. And
-hey, if you really need to execute a shell command, Ant has an exec rule that
-allows different commands to be executed based on the OS that it is executing
+<p>Granted, this removes some of the expressive power that is inherent in being
+able to construct a shell command such as
+<nobr><code>`find . -name foo -exec rm {}`</code></nobr>, but it
+gives you the ability to be cross-platform &#150; to work anywhere and
+everywhere. And
+hey, if you really need to execute a shell command, Ant has an
+&lt;exec&gt; task that
+allows different commands to be executed based on the OS it is executing
 on.</p>
 
 <hr>
@@ -89,7 +103,7 @@ href="http://jakarta.apache.org/builds/ant/release/v1.2/bin/">
 http://jakarta.apache.org/builds/ant/release/v1.2/bin/</a>.
 If you like living on the edge, you can download the latest version from <a
 href="http://jakarta.apache.org/builds/ant/nightly/">http://jakarta.apache.org/builds/ant/nightly/</a>.</p>
-<h3>Source edition</h3>
+<h3>Source Edition</h3>
 <p>If you prefer the source edition, you can download Ant from <a
 href="http://jakarta.apache.org/builds/ant/release/v1.2/src/">
 http://jakarta.apache.org/builds/ant/release/v1.2/src/</a>
@@ -101,30 +115,38 @@ build Ant from the source code.</p>
 <hr>
 <h2><a name="sysrequirements">System Requirements</a></h2>
 <p>
-  To build and use Ant you must have a JAXP compliant XML parser installed and available on your classpath.
-  <p>
-  Both the binary and source distributions of Ant include the reference implementation of JAXP 1.0.
-  Please see <a href="http://java.sun.com/xml/">http://java.sun.com/xml/</a> for more information. 
-  If you wish to use a different, JAXP-compliant parser, you should remove jaxp.jar and parser.jar 
-  from Ant's lib/core directory. You can then either put the jars from your preferred parser into Ant's 
-  lib/core directory or put the jars on the system classpath.
-  <p>
-  For the current version of Ant, you will also need the JDK installed on your system, version 1.1 
-  or later. A future version of Ant will require JDK 1.2 or later.
-  </p>
+To build and use Ant, you must have a JAXP-compliant XML parser installed and available on your classpath.
+<p>
+Both the binary and source distributions of Ant include the reference implementation of JAXP 1.0.
+Please see <a href="http://java.sun.com/xml/">http://java.sun.com/xml/</a> for more information. 
+If you wish to use a different JAXP-compliant parser, you should remove
+<code>jaxp.jar</code> and <code>parser.jar</code>
+from Ant's <code>lib/core</code> directory.
+You can then either put the jars from your preferred parser into Ant's 
+<code>lib/core</code> directory or put the jars on the system classpath.
+<p>
+For the current version of Ant, you will also need a JDK installed on
+your system, version 1.1 or later. A future version of Ant will require
+JDK 1.2 or later.
+</p>
   
 <hr>
 <h2><a name="installing">Installing Ant</a></h2>
-<p>The binary distribution of Ant consists of four directories: <code>bin</code>,
-<code>docs</code>, <code>lib</code> and <code>src</code>. Only the <code>bin</code> 
-and <code>lib</code> directory are required for running Ant. To run Ant, the 
+<p>The binary distribution of Ant consists of four directories:
+<code>bin</code>,
+<code>docs</code>,
+<code>lib</code> and
+<code>src</code>. Only the <code>bin</code> 
+and <code>lib</code> directories are required for running Ant. To run Ant, the 
 following must be done:</p>
 <ul>
-  <li>Add the <code>bin</code> directory to your path.</li>
-  <li>Set the ANT_HOME environment variable. This should be set to the directory
-    which contains the <code>bin</code> and <code>lib</code> directory.</li>
-  <li>Set the JAVA_HOME environment variable. This should be set to the
-    directory where the JDK is installed.</li>
+<li>Add the <code>bin</code> directory to your path.</li>
+<li>Set the <code>ANT_HOME</code> environment variable.
+This should be set to the directory
+that contains the <code>bin</code> and <code>lib</code> directories.</li>
+<li>(Optionally) Set the <code>JAVA_HOME</code> environment variable.
+(See the <a href="#advanced">Advanced</a> section below.)
+This should be set to the directory where the JDK is installed.</li>
 </ul>
 <h3>Windows</h3>
 <p>Assume Ant is installed in <code>c:\ant\</code>. The following sets up the
@@ -138,92 +160,112 @@ the environment:</p>
 <pre>export ANT_HOME=/usr/local/ant
 export JAVA_HOME=/usr/local/jdk-1.2.2
 export PATH=${PATH}:${ANT_HOME}/bin</pre>
+<a name="advanced">
 <h3>Advanced</h3>
+</a>
 <p>There are lots of variants that can be used to run Ant. What you need is at
 least the following:</p>
-<p>The classpath for Ant must contain <code>ant.jar</code> and any jars/classes 
-needed for your chosen JAXP compliant XML parser.</p>
-<p>When you need JDK functionality (like a <a href="#javac">javac</a> task, or a
+<blockquote>
+The classpath for Ant must contain <code>ant.jar</code> and any jars/classes 
+needed for your chosen JAXP-compliant XML parser.</p>
+<p>When you need JDK functionality
+(such as for the <a href="#javac">javac</a> task or the
 <a href="#rmic">rmic</a> task), then for JDK 1.1, the <code>classes.zip</code>
 file of the JDK must be added to the classpath; for JDK 1.2 or JDK 1.3, <code>tools.jar</code>
-must be added. The scripts supplied with ant, in the bin directory, will add 
-<code>tools.jar</code> automatically if the JAVA_HOME environment variable is set.</p>
-<p>When you are executing platform specific applications (like the <a
-href="#exec">exec</a> task, or the <a href="#cvs">cvs</a> task), the property <code>ant.home</code>
-must be set to the directory containing a bin directory, which contains the <code>antRun</code> 
-shell script necessary to run execs on Unix.</p>
-
+must be added. The scripts supplied with Ant,
+in the <code>bin</code> directory, will add 
+the required JDK classes automatically, if the <code>JAVA_HOME</code>
+environment variable is set.</p>
+<p>When you are executing platform-specific applications (such as the <a
+href="#exec">exec</a> task or the <a href="#cvs">cvs</a> task), the property <code>ant.home</code>
+must be set to the directory containing
+the <code>antRun</code> shell script necessary to run exec's on Unix.</p>
+</blockquote>
 <hr>  
 <h2><a name="buildingant">Building Ant</a></h2>
-<p>To build ant you should install the Ant source distribution. Whilst the binary distribution 
-includes the Ant source code, it is intended for reference purposes only. The boostrap and 
-build scripts used to build ant itself are not included in the binary distribution
+<p>To build Ant, you should install the Ant source distribution.
+While the binary distribution 
+includes the Ant source code, it is intended for reference purposes only.
+The bootstrap and build scripts used to build Ant itself are not included
+in the binary distribution.
 <p>
 <p>Once you have installed the source distribution, go to the 
-directory <code>jakarta-ant</code>.</p>
-<p>Set the JAVA_HOME environment variable. This should be set to the
-directory where the JDK is installed. See <a href="#installing">Installing Ant</a>
+<code>jakarta-ant</code> directory.</p>
+<p>Set the <code>JAVA_HOME</code> environment variable
+to the directory where the JDK is installed.
+See <a href="#installing">Installing Ant</a>
 for examples on how to do this for your operating system. </p>
-<p>Make sure you have downloaded any auxilliary jars required to build tasks you are 
-interested in. These should either be available on the classpath or added to Ant's lib
-directory. The list of auxilliary tasks and requirements is in lib/README </p>
+<p>Make sure you have downloaded any auxilliary jars required to
+build tasks you are interested in. These should either be available
+on the classpath or added to Ant's <code>lib</code>
+directory. The list of auxilliary tasks and requirements is in
+<code>lib/README</code>.</p>
 
 <p>Run <code>bootstrap.bat</code> (Windows) or <code>bootstrap.sh</code> (UNIX)
 to build a bootstrap version of Ant.</p>
-<p>When finished, use</p>
+<p>When finished, use:</p>
 <blockquote>
-  <p><code>build -Dant.dist.dir=&lt;directory to contain Ant distribution&gt; dist</code></p>
+  <p><code>build -Dant.dist.dir=&lt;<i>directory_to_contain_Ant_distribution</i>&gt; dist</code>&nbsp;&nbsp;&nbsp;&nbsp;(<i>Windows</i>)</p>
+  <p><code>build.sh -Dant.dist.dir=&lt;<i>directory_to_contain_Ant_distribution</i>&gt; dist</code>&nbsp;&nbsp;&nbsp;&nbsp;(<i>Unix</i>)</p>
 </blockquote>
-<p>for Windows, and</p>
-<blockquote>
-  <p><code>build.sh -Dant.dist.dir=&lt;directory to Ant distribution&gt; dist</code></p>
-</blockquote>
-<p>for UNIX, to create a binary distribution of Ant. This distribution can be
+<p>to create a binary distribution of Ant. This distribution can be
 found in the directory you specified.</p>
 
-If you wish to install the build into the current ANT_HOME directory, you can use
+If you wish to install the build into the current <code>ANT_HOME</code>
+directory, you can use:
 <blockquote>
-  <p><code>build install</code>&nbsp;&nbsp;&nbsp;&nbsp;<i>(Windows)</i></p>
-  <p><code>build.sh install</code>&nbsp;&nbsp;&nbsp;&nbsp;<i>(Unix)</i></p>
+  <p><code>build install</code>&nbsp;&nbsp;&nbsp;&nbsp;(<i>Windows</i>)</p>
+  <p><code>build.sh install</code>&nbsp;&nbsp;&nbsp;&nbsp;(<i>Unix</i>)</p>
 </blockquote>
 
-You can avoid the length Javadoc step, if desired, with
+You can avoid the lengthy Javadoc step, if desired, with:
 <blockquote>
-  <p><code>build mininstall</code>&nbsp;&nbsp;&nbsp;&nbsp;<i>(Windows)</i></p>
-  <p><code>build.sh mininstall</code>&nbsp;&nbsp;&nbsp;&nbsp;<i>(Unix)</i></p>
+  <p><code>build mininstall</code>&nbsp;&nbsp;&nbsp;&nbsp;(<i>Windows</i>)</p>
+  <p><code>build.sh mininstall</code>&nbsp;&nbsp;&nbsp;&nbsp;(<i>Unix</i>)</p>
 </blockquote>
-This will only install the bin and lib directories. 
+This will only install the <code>bin</code> and <code>lib</code> directories. 
 <p>Both the <code>install</code> and 
 <code>mininstall</code> targets will overwrite 
-the current ant version in ANT_HOME.
+the current Ant version in <code>ANT_HOME</code>.
 
 <hr>
 <h2><a name="running">Running Ant</a></h2>
 <p>Running Ant is simple, when you installed it as described in the previous
 section. Just type <code>ant</code>.</p>
 <p>When nothing is specified, Ant looks for a <code>build.xml</code>
-file in the current directory. When found, it uses that file as a
-buildfile. If you use the <i>-find</i> option, Ant will search for a build file in 
-the parent directory and so on until the root of the filesystem 
+file in the current directory. If found, it uses that file as the
+buildfile. If you use the <nobr><code>-find</code></nobr> option,
+Ant will search for a buildfile in 
+the parent directory, and so on, until the root of the filesystem 
 has been reached. To make Ant use
-another buildfile, use the commandline option <i>-buildfile
-&lt;file&gt;</i>, where <i>&lt;file&gt;</i> is the buildfile you want
-to use.</p>
-<p>You can also set properties which override properties specified in the
-buildfile (see the <a href="#property">property task</a>). 
-This can be done with the <i>-D&lt;property&gt;=&lt;value&gt;</i>
-option, where <i>&lt;property&gt;</i> is the name of the property and <i>&lt;value&gt;</i>
-the value. This can also be used (and is the only way since Java can not access them) 
-to have access to your environment variables, just pass -DMYVAR=%MYVAR% (Windows) or
--DMYVAR=$MYVAR (Unix) to Ant, you can then access these variables inside your build-file
-as ${MYVAR}.</p>
-<p>Two more options are <i>-quiet</i> which instructs Ant to print less
-information on the console when running. The option <i>-verbose</i> on the other
-hand makes Ant print more information on the console.</p>
-<p>It is also possible to specify one or more targets that should be executed. When omitted the target that is mentioned in the <i>default</i> attribute of the project is
+another buildfile, use the command-line
+option <code>-buildfile <i>file</i></code>,
+where <i>file</i> is the buildfile you want to use.</p>
+<p>You can also set properties that override properties specified in the
+buildfile (see the <a href="#property">property</a> task). 
+This can be done with
+the <nobr><code>-D<i>property</i>=<i>value</i></code></nobr> option,
+where <i>property</i> is the name of the property,
+and <i>value</i> is the value for that property.
+This can also be used to have access to your environment variables
+(and is the only way, since Java cannot access them).
+Just pass <nobr><code>-DMYVAR=%MYVAR%</code></nobr> (Windows) or
+<nobr><code>-DMYVAR=$MYVAR</code></nobr> (Unix)
+to Ant &#150; you can then access
+these variables inside your buildfile as <code>${MYVAR}</code>.</p>
+<p>Two more options are: <nobr><code>-quiet</code></nobr>,
+which instructs Ant to print less
+information on the console when running, and
+<nobr><code>-verbose</code></nobr>, which causes Ant to print
+additional information to the console.</p>
+<p>It is also possible to specify one or more targets that should be executed.
+When omitted, the target that is specified in the
+<code>default</code> attribute of the <code>&lt;project&gt;</code> tag is
 used.</p>
-<p>The <i>-projecthelp</i> option gives a list of this projects targets. First those with a description and then those without one.</p>
-<p>Commandline option summary:</p>
+<p>The <nobr><code>-projecthelp</code></nobr>
+option gives a list of this project's
+targets. First those with a description, then those without one.</p>
+<p>Command-line option summary:</p>
 <pre>ant [options] [target [target2 [target3] ...]]
 Options:
 -help                  print this message
@@ -233,12 +275,13 @@ Options:
 -verbose               be extra verbose
 -debug                 print debugging information
 -emacs                 produce logging information without adornments
--logfile &lt;file&gt;        use given file for log
--logger &lt;classname&gt;    the class which is to perform logging
--listener &lt;classname&gt;  add an instance of class as a project listener
--buildfile &lt;file&gt;      use given buildfile
--find &lt;file&gt;           search for buildfile towards the root of the filesystem and use it
--D&lt;property&gt;=&lt;value&gt;   use value for given property</pre>
+-logfile <i>file</i>          use given file for log output
+-logger <i>classname</i>      the class that is to perform logging
+-listener <i>classname</i>    add an instance of class as a project listener
+-buildfile <i>file</i>        use specified buildfile
+-find <i>file</i>             search for buildfile towards the root of the filesystem and use the first one found
+-D<i>property</i>=<i>value</i>       set <i>property</i> to <i>value</i>
+</pre>
 <h3>Examples</h3>
 <blockquote>
   <pre>ant</pre>
@@ -259,10 +302,11 @@ target called <code>dist</code>.</p>
   <pre>ant -buildfile test.xml -Dbuild=build/classes dist</pre>
 </blockquote>
 <p>runs Ant using the <code>test.xml</code> file in the current directory, on a
-target called <code>dist</code>. It also sets the <i>build</i> property to the
-value <i>build/classes</i>.</p>
-<h3>Running Ant by hand</h3>
-<p>When you have installed Ant in the do-it-yourself way, Ant can be started
+target called <code>dist</code>, setting the <code>build</code> property to the
+value <code>build/classes</code>.</p>
+
+<h3>Running Ant by Hand</h3>
+<p>If you have installed Ant in the do-it-yourself way, Ant can be started
 with:</p>
 <blockquote>
   <pre>java -Dant.home=c:\ant org.apache.tools.ant.Main [options] [target]</pre>
@@ -270,20 +314,21 @@ with:</p>
 
 <p>These instructions actually do exactly the same as the <code>ant</code>
 command. The options and target are the same as when running Ant with the <code>ant</code>
-command. This example assumes you have set up your classpath to include
+command. This example assumes you have set your classpath to include:
 <ul>
-<li>ant.jar
+<li><code>ant.jar</code>
 <li>jars/classes for your XML parser
-<li>the JDK's tools.jar
+<li>the JDK's required jar/zip files
 </ul>
 <hr>
-<h2><a name="buildfile">Writing a simple buildfile</a></h2>
-<p>The buildfile is written in XML. Each buildfile contains one project.</p>
-<p>Each element of the buildfile can have an <code>id</code> attribute and
+<h2><a name="buildfile">Writing a Simple Buildfile</a></h2>
+<p>Ant's buildfiles are written in XML. Each buildfile contains one project.</p>
+<p>Each task element of the buildfile can have an <code>id</code> attribute and
 can later be referred to by the value supplied to this. The value has
-to be unique.</p>
+to be unique. (For additional information, see the
+<a href="#tasks"> Tasks</a> section below.)</p>
 <h3>Projects</h3>
-<p>A project has three attributes:</p>
+<p>A <i>project</i> has three attributes:</p>
 <table border="1" cellpadding="2" cellspacing="0">
   <tr>
     <td valign="top"><b>Attribute</b></td>
@@ -303,22 +348,32 @@ to be unique.</p>
   <tr>
     <td valign="top">basedir</td>
     <td valign="top">the base directory from which all path calculations are
-      done. This attribute might be overridden by setting the &quot;basedir&quot;
-      property on forehand. When this is done, it must be omitted in the
-      project tag. If neither the attribute not the property have
-      been set, the parent directory of the build file will be used.</td>
+      done. This attribute might be overridden by setting
+      the &quot;basedir&quot;
+      property beforehand. When this is done, it must be omitted in the
+      project tag. If neither the attribute nor the property have
+      been set, the parent directory of the buildfile will be used.</td>
     <td align="center" valign="top">No</td>
   </tr>
 </table>
-<p>Each project defines one or more targets. A target is a set of tasks you want
-to be executed. When starting Ant, you can select which target you want to have
-executed. When no target is given, the project's default is used.</p>
+<p>Each project defines one or more <i>targets</i>.
+A target is a set of <i>tasks</i> you want
+to be executed. When starting Ant, you can select which target(s) you
+want to have executed. When no target is given,
+the project's default is used.</p>
+
 <h3>Targets</h3>
 <p>A target can depend on other targets. You might have a target for compiling,
-for instance, and a target for creating a distributable. You can only build a
-distributable when you have compiled first, so the distribute target depends on
-the compile target. Ant resolves all these dependencies.</p>
-<p>Ant tries to execute the targets in the <i>depends</i> attribute in the order
+for example, and a target for creating a distributable. You can only build a
+distributable when you have compiled first, so the distribute target
+<i>depends on</i> the compile target. Ant resolves these dependencies.</p>
+<p>It should be noted, however, that Ant's <code>depends</code> attribute
+only specifies the <i>order</i> in which targets should be executed &#150; it
+does not affect whether the target that specifies the dependency(s) gets
+executed if the dependent target(s) did not (need to) run.
+</p>
+<p>Ant tries to execute the targets in the <code>depends</code>
+attribute in the order
 they appear (from left to right). Keep in mind that it is possible that a target
 can get executed earlier when an earlier target depends on it:</p>
 <blockquote>
@@ -327,30 +382,33 @@ can get executed earlier when an earlier target depends on it:</p>
 &lt;target name=&quot;C&quot; depends=&quot;B&quot;/&gt;
 &lt;target name=&quot;D&quot; depends=&quot;C,B,A&quot;/&gt;</pre>
 </blockquote>
-<p>Suppose we want to execute target D. From its <i>depends</i> attribute, you
-might think that first target C, then B and then A is executed. Wrong! C depends
-on B, and B depends on A, so first A is executed, then B, then C, and finally D.</p>
-<p>A target gets executed only once. Even when more targets depend on it (see
-the previous example).</p>
-<p>A target has also the ability to perform its execution if (or
+<p>Suppose we want to execute target D. From its
+<code>depends</code> attribute, you
+might think that first target C, then B and then A is executed.
+Wrong! C depends on B, and B depends on A, so first A is executed, then B, then C, and finally D.</p>
+<p>A target gets executed only once, even when more than one target
+depends on it (see the previous example).</p>
+<p>A target also has the ability to perform its execution if (or
 unless) a property has been set. This allows, for example, better
 control on the building process depending on the state of the system
-(java version, OS, command line properties, etc...).  To make target
-<i>sense</i> this property you should add the <i>if</i> (or
-<i>unless</i>) attribute with the name of the property that the target
-should react to, for example</p>
+(java version, OS, command-line property defines, etc.).  To make a target
+<i>sense</i> this property, you should add the <code>if</code> (or
+<code>unless</code>) attribute with the name of the property that the target
+should react to. For example:</p>
 <blockquote>
   <pre>&lt;target name=&quot;build-module-A&quot; if=&quot;module-A-present&quot;/&gt;</pre>
   <pre>&lt;target name=&quot;build-own-fake-module-A&quot; unless=&quot;module-A-present&quot;/&gt;</pre>
 </blockquote>
-<p>If no <i>if</i> and no <i>unless</i> attribute is present, the target will 
-always be executed.</p>
+<p>If no <code>if</code> and no <code>unless</code> attribute is present,
+the target will always be executed.</p>
+<p>The optional <code>description</code> attribute can be used to provide a one-line description of this target, which is printed by the
+<nobr><code>-projecthelp</code></nobr> command-line option.</p>
 <p>It is a good practice to place your <a
-href="#tstamp">tstamp</a> tasks in a so called initialization target, on which
+href="#tstamp">tstamp</a> tasks in a so-called
+<i>initialization</i> target, on which
 all other targets depend. Make sure that target is always the first one in
 the depends list of the other targets. In this manual, most initialization targets
 have the name &quot;init&quot;.</p>
-<p>The optional <i>description</i> attribute can be used to provide a one line description of this target that is printed by the <i>-projecthelp</i> commandline option.</p>
 <p>A target has the following attributes:</p>
 <table border="1" cellpadding="2" cellspacing="0">
   <tr>
@@ -365,7 +423,7 @@ have the name &quot;init&quot;.</p>
   </tr>
   <tr>
     <td valign="top">depends</td>
-    <td valign="top">a comma separated list of names of targets on which this
+    <td valign="top">a comma-separated list of names of targets on which this
       target depends.</td>
     <td align="center" valign="top">No</td>
   </tr>
@@ -383,178 +441,223 @@ have the name &quot;init&quot;.</p>
   </tr>
   <tr>
     <td valign="top">description</td>
-    <td valign="top">a short description of this targets function.</td>
+    <td valign="top">a short description of this target's function.</td>
     <td align="center" valign="top">No</td>
   </tr>
 </table>
+
+<a name="tasks">
 <h3>Tasks</h3>
+</a>
 <p>A task is a piece of code that can be executed.</p>
-<p>A task can have multiple attributes (or arguments if you prefer). The value
+<p>A task can have multiple attributes (or arguments, if you prefer). The value
 of an attribute might contain references to a property. These references will be
 resolved before the task is executed.</p>
 <p>Tasks have a common structure:</p>
 <blockquote>
-  <pre>&lt;name attribute1=&quot;value1&quot; attribute2=&quot;value2&quot; ... /&gt;</pre>
+  <pre>&lt;<i>name</i> <i>attribute1</i>=&quot;<i>value1</i>&quot; <i>attribute2</i>=&quot;<i>value2</i>&quot; ... /&gt;</pre>
 </blockquote>
-<p>where name is the name of the task, attribute-x the attribute name, and
-value-x the value of this attribute.</p>
-<p>There is a set of <a href="#tasks">built in tasks</a>, but it is also very
+<p>where <i>name</i> is the name of the task,
+<i>attributeN</i> is the attribute name, and
+<i>valueN</i> is the value for this attribute.</p>
+<p>There is a set of <a href="#bitasks">built-in tasks</a>, along with a 
+number of
+<a href="#optionaltasks"> optional tasks</a>, but it is also very
 easy to <a href="#writingowntask">write your own</a>.</p>
-<p>All tasks share a <code>taskname</code> attribute. The value of
+<p>All tasks share a task name attribute. The value of
 this attribute will be used in the logging messages generated by
 Ant.</p>
+Tasks can be assigned an <code>id</code> attribute:
+<blockquote>
+<pre>&lt;<i>taskname</i> id="<i>taskID</i>" ... /&gt;</pre>
+</blockquote>
+where <i>taskname</i> is the name of the task, and <i>taskID</i> is
+a unique name for this task.
+You can refer to the
+corresponding task object in scripts or other tasks via this name.
+For example, in scripts you could do:
+<blockquote>
+<pre>
+&lt;script ... &gt;
+  task1.setFoo("bar");
+&lt;/script&gt;
+</pre>
+</blockquote>
+to set the <code>foo</code> attribute of this particular task instance.
+In another task (written in Java), you can access the instance via
+<code>project.getReference("task1")</code>.
+<p>
+Note<sup>1</sup>: If "task1" has not been run yet, then
+it has not been configured (ie., no attributes have been set), and if it is
+going to be configured later, anything you've done to the instance may
+be overwritten.
+</p>
+<p>
+Note<sup>2</sup>: Future versions of Ant will most likely <i>not</i>
+be backward-compatible with this behaviour, since there will likely be no
+task instances at all, only proxies.
+</p>
+
 <h3>Properties</h3>
 <p>A project can have a set of properties. These might be set in the buildfile
 by the <a href="#property">property task</a>, or might be set outside Ant. A
-property has a name and a value. Properties might be used in in the value of
+property has a name and a value. Properties may be used in the value of
 task attributes. This is done by placing the property name between
-&quot;${&quot; and &quot;}&quot; in the attribute value.</p>
-<p>If there is a property called &quot;builddir&quot; with the value
-&quot;build&quot;, then this could be used in an attribute like this: &quot;${builddir}/classes&quot;.
-This is resolved as &quot;build/classes&quot;.</p>
-<h3>Built in Properties</h3>
+&quot;<code>${</code>&quot; and &quot;<code>}</code>&quot; in the
+attribute value. For example,
+if there is a &quot;builddir&quot; property with the value
+&quot;build&quot;, then this could be used in an attribute like this:
+<code>${builddir}/classes</code>.
+This is resolved as <code>build/classes</code>.</p>
+
+<h3>Built-in Properties</h3>
 <p>Ant provides access to all system properties as if they had been
-defined using a property task, for example ${os.name} expands to the
+defined using a <code>&lt;property&gt;</code> task.
+For example, <code>${os.name}</code> expands to the
 name of the operating system.</p>
-<p>In addition Ant knows some built in properties:</p>
-<ul>
-  <li>basedir - the absolute path of the project's basedir (as set
-    with the basedir attribute of &lt;project&gt;).</li>
-  <li>ant.file - the absolute path of the build file.</li>
-  <li>ant.project.name - the name of the project that is currently executing. It is 
-      set by the name attribute in project tag of build file.</li>
-  <li>ant.java.version - the JVM version Ant detected. Currently it
-    can hold the values &quot;1.1&quot;, &quot;1.2&quot; and
-    &quot;1.3&quot;.</li>
-</ul>
+<p>In addition, Ant has some built-in properties:</p>
+<pre>
+basedir             the absolute path of the project's basedir (as set
+                    with the basedir attribute of &lt;project&gt;).
+ant.file            the absolute path of the buildfile.
+ant.project.name    the name of the project that is currently executing;
+                    it is set in the name attribute of &lt;project&gt;.
+ant.java.version    the JVM version Ant detected; currently it can hold
+                    the values &quot;1.1&quot;, &quot;1.2&quot; and &quot;1.3&quot;.
+</pre>
+
 <h3>Example</h3>
-<blockquote>
-  <pre>
+<pre>
 &lt;project name=&quot;MyProject&quot; default=&quot;dist&quot; basedir=&quot;.&quot;&gt;
 
   &lt;!-- set global properties for this build --&gt;
-  &lt;property name=&quot;src&quot; value=&quot;.&quot; /&gt;
-  &lt;property name=&quot;build&quot; value=&quot;build&quot; /&gt;
-  &lt;property name=&quot;dist&quot;  value=&quot;dist&quot; /&gt;
+  &lt;property name=&quot;src&quot; value=&quot;.&quot;/&gt;
+  &lt;property name=&quot;build&quot; value=&quot;build&quot;/&gt;
+  &lt;property name=&quot;dist&quot;  value=&quot;dist&quot;/&gt;
 
-  &lt;target name=&quot;prepare&quot;&gt;
+  &lt;target name=&quot;init&quot;&gt;
     &lt;!-- Create the time stamp --&gt;
     &lt;tstamp/&gt;
     &lt;!-- Create the build directory structure used by compile --&gt;
-    &lt;mkdir dir=&quot;${build}&quot; /&gt;
+    &lt;mkdir dir=&quot;${build}&quot;/&gt;
   &lt;/target&gt;
 
-  &lt;target name=&quot;compile&quot; depends=&quot;prepare&quot;&gt;
+  &lt;target name=&quot;compile&quot; depends=&quot;init&quot;&gt;
     &lt;!-- Compile the java code from ${src} into ${build} --&gt;
-    &lt;javac srcdir=&quot;${src}&quot; destdir=&quot;${build}&quot; /&gt;
+    &lt;javac srcdir=&quot;${src}&quot; destdir=&quot;${build}&quot;/&gt;
   &lt;/target&gt;
 
   &lt;target name=&quot;dist&quot; depends=&quot;compile&quot;&gt;
-    &lt;!-- Create the ${dist}/lib directory --&gt;
-    &lt;mkdir dir=&quot;${dist}/lib&quot; /&gt;
+    &lt;!-- Create the distribution directory --&gt;
+    &lt;mkdir dir=&quot;${dist}/lib&quot;/&gt;
 
     &lt;!-- Put everything in ${build} into the MyProject-${DSTAMP}.jar file --&gt;
-    &lt;jar jarfile=&quot;${dist}/lib/MyProject-${DSTAMP}.jar&quot; basedir=&quot;${build}&quot; /&gt;
+    &lt;jar jarfile=&quot;${dist}/lib/MyProject-${DSTAMP}.jar&quot; basedir=&quot;${build}&quot;/&gt;
   &lt;/target&gt;
 
   &lt;target name=&quot;clean&quot;&gt;
     &lt;!-- Delete the ${build} and ${dist} directory trees --&gt;
-    &lt;delete dir=&quot;${build}&quot; /&gt;
-    &lt;delete dir=&quot;${dist}&quot; /&gt;
+    &lt;delete dir=&quot;${build}&quot;/&gt;
+    &lt;delete dir=&quot;${dist}&quot;/&gt;
   &lt;/target&gt;
 &lt;/project&gt;
-  </pre>
-</blockquote>
+</pre>
 
 <h3>Token Filters</h3>
 <p>A project can have a set of tokens that might be automatically expanded if
 found when a file is copied, when the filtering-copy behavior is selected in the
 tasks that support this. These might be set in the buildfile
 by the <a href="#filter">filter task</a>.&nbsp;</p>
-<p>Since this can be a very harmful behavior, the tokens in the files <b>must</b>
-be of the form<i> @token@</i> where <i>token</i> is the token name that is set
+<p>Since this can potentially be a very harmful behavior,
+the tokens in the files <b>must</b>
+be of the form <code>@</code><i>token</i><code>@</code>, where
+<i>token</i> is the token name that is set
 in the filter task. This token syntax matches the syntax of other build systems
 that perform such filtering and remains sufficiently orthogonal to most
-programming and scripting languages, as well with documentation systems.</p>
-<p>Note: in case a token with the format @token@ is found in a file but no
-filter is associated with that token, no changes take place. So, no escaping
-method is present, but as long as you choose appropriate names for your tokens,
-this should not cause problems.</p>
+programming and scripting languages, as well as with documentation systems.</p>
+<p>Note: If a token with the format <code>@</code><i>token</i><code>@</code>
+is found in a file, but no
+filter is associated with that token, no changes take place;
+therefore, no escaping
+method is available &#150; but as long as you choose appropriate names for your
+tokens, this should not cause problems.</p>
 
-<h3><a name="path">PATH like structures</a></h3>
-<p>You can specify PATH and CLASSPATH variables using both
-&quot;:&quot; and &quot;;&quot; as separator characters, Ant will
-convert it to the correct character of the current operating
+<h3><a name="path">Path-like Structures</a></h3>
+<p>You can specify <code>PATH</code>- and <code>CLASSPATH</code>-type
+references using both
+&quot;<code>:</code>&quot; and &quot;<code>;</code>&quot; as separator
+characters. Ant will
+convert the separator to the correct character of the current operating
 system.</p>
-<p>Wherever PATH like values need to be specified a nested element can
-be used. This takes the general form of</p>
+<p>Wherever path-like values need to be specified, a nested element can
+be used. This takes the general form of:</p>
 <pre>
     &lt;classpath&gt;
-      &lt;pathelement path=&quot;${classpath}&quot; /&gt;
-      &lt;pathelement location=&quot;lib/helper.jar&quot; /&gt;
+      &lt;pathelement path=&quot;${classpath}&quot;/&gt;
+      &lt;pathelement location=&quot;lib/helper.jar&quot;/&gt;
     &lt;/classpath&gt;
 </pre>
 <p>The <code>location</code> attribute specifies a single file or
 directory relative to the project's base directory (or an absolute
-filename), while the <code>path</code> attribute accepts &quot;:&quot;
-or &quot;;&quot; separated lists of locations. The <code>path</code>
-attribute is intended to be used with predefined paths - in any other
-case multiple elements with <code>location</code> attributes should be
+filename), while the <code>path</code> attribute accepts colon-
+or semicolon-separated lists of locations. The <code>path</code>
+attribute is intended to be used with predefined paths &#150; in any other
+case, multiple elements with <code>location</code> attributes should be
 preferred.</p>
-<p>As a shortcut the surrounding PATH element supports path and
-location attributes of its own, so</p>
+<p>As a shortcut, the <code>&lt;classpath&gt;</code> tag
+supports <code>path</code> and
+<code>location</code> attributes of its own, so:</p>
 <pre>
     &lt;classpath&gt;
-      &lt;pathelement path=&quot;${classpath}&quot; /&gt;
+      &lt;pathelement path=&quot;${classpath}&quot;/&gt;
     &lt;/classpath&gt;
 </pre>
-<p>can be abreviated to</p>
+<p>can be abreviated to:</p>
 <pre>
-    &lt;classpath path=&quot;${classpath}&quot; /&gt;
+    &lt;classpath path=&quot;${classpath}&quot;/&gt;
 </pre>
 <p>In addition, <a href="#fileset">FileSet</a>s can be specified via
 nested <code>&lt;fileset&gt;</code> elements. The order in which the files
-building up FileSet are added to the PATH like structure is not
+building up a fileset are added to the path-like structure is not
 defined.</p>
 <pre>
     &lt;classpath&gt;
-      &lt;pathelement path=&quot;${classpath}&quot; /&gt;
+      &lt;pathelement path=&quot;${classpath}&quot;/&gt;
       &lt;fileset dir=&quot;lib&quot;&gt;
-        &lt;include name=&quot;**/*.jar&quot; /&gt;
+        &lt;include name=&quot;**/*.jar&quot;/&gt;
       &lt;/fileset&gt;
-      &lt;pathelement location=&quot;classes&quot; /&gt;
+      &lt;pathelement location=&quot;classes&quot;/&gt;
     &lt;/classpath&gt;
 </pre>
-<p>Builds a PATH which holds the value of <code>${classpath}</code>
-followed by all JAR files in the <code>lib</code> directory, followed
+<p>Builds a path that holds the value of <code>${classpath}</code>,
+followed by all jar files in the <code>lib</code> directory, followed
 by the <code>classes</code> directory.</p>
-<p>If you want to use the same PATH like structure for several tasks,
+<p>If you want to use the same path-like structure for several tasks,
 you can define them with a <code>&lt;path&gt;</code> element at the
-same level as <em>target</em>s and reference them via their
-<em>id</em> attribute - see <a href="#references">References</a> for an
+same level as <i>target</i>s, and reference them via their
+<i>id</i> attribute &#150; see <a href="#references">References</a> for an
 example.</p>
-<p>A PATH like structure can include a reference to another PATH like
-structure via a nested <code>&lt;path&gt;</code> elements.</p>
+<p>A path-like structure can include a reference to another path-like
+structure via nested <code>&lt;path&gt;</code> elements:</p>
 <pre>
     &lt;path id=&quot;base.path&quot;&gt;
-      &lt;pathelement path=&quot;${classpath}&quot; /&gt;
+      &lt;pathelement path=&quot;${classpath}&quot;/&gt;
       &lt;fileset dir=&quot;lib&quot;&gt;
-        &lt;include name=&quot;**/*.jar&quot; /&gt;
+        &lt;include name=&quot;**/*.jar&quot;/&gt;
       &lt;/fileset&gt;
-      &lt;pathelement location=&quot;classes&quot; /&gt;
+      &lt;pathelement location=&quot;classes&quot;/&gt;
     &lt;/path&gt;
 
     &lt;path id=&quot;tests.path&quot;&gt;
-      &lt;path refid=&quot;base.path&quot; /&gt;
-      &lt;pathelement location=&quot;testclasses&quot; /&gt;
+      &lt;path refid=&quot;base.path&quot;/&gt;
+      &lt;pathelement location=&quot;testclasses&quot;/&gt;
     &lt;/path&gt;
 </pre>
 
-<h3><a name="arg">Command line arguments</a></h3>
-
-<p>Several tasks take arguments that shall be passed to another
+<h3><a name="arg">Command-line Arguments</a></h3>
+<p>Several tasks take arguments that will be passed to another
 process on the command line. To make it easier to specify arguments
-that contain space characters, nested elements can be used.</p>
+that contain space characters, nested <code>arg</code> elements can be used.</p>
 <table border="1" cellpadding="2" cellspacing="0">
 <tr>
   <td width="12%" valign="top"><b>Attribute</b></td>
@@ -563,58 +666,59 @@ that contain space characters, nested elements can be used.</p>
 </tr>
   <tr>
     <td valign="top">value</td> 
-    <td valign="top">a single command line argument, can contain space
+    <td valign="top">a single command-line argument; can contain space
       characters.</td>
     <td align="center" rowspan="4">Exactly one of these.</td>
   </tr>
   <tr>
     <td valign="top">line</td> 
-    <td valign="top">a space delimited list of command line arguments.</td>
+    <td valign="top">a space-delimited list of command-line arguments.</td>
   </tr>
   <tr>
     <td valign="top">file</td> 
-    <td valign="top">The name of a file as a single command line
-      argument. Will be replaced with the absolute filename of the file
-      by Ant.</td>
+    <td valign="top">The name of a file as a single command-line
+      argument; will be replaced with the absolute filename of the file.</td>
   </tr>
   <tr>
     <td valign="top">path</td> 
-    <td valign="top">A string that shall be treated as a PATH like
-      string as a single command line argument. You can use ; or : as
+    <td valign="top">A string that will be treated as a path-like
+      string as a single command-line argument; you can use <code>;</code>
+      or <code>:</code> as
       path separators and Ant will convert it to the platform's local
       conventions.</td>
   </tr>
 </table>
 <h4>Examples</h4>
 <blockquote><pre>
-  &lt;arg value=&quot;-l -a&quot; /&gt;
+  &lt;arg value=&quot;-l -a&quot;/&gt;
 </pre></blockquote>
-<p>is a single command line argument containing a space character.</p>
+<p>is a single command-line argument containing a space character.</p>
 <blockquote><pre>
-  &lt;arg line=&quot;-l -a&quot; /&gt;
+  &lt;arg line=&quot;-l -a&quot;/&gt;
 </pre></blockquote>
-<p>stands for two separate command line arguments.</p>
+<p>represents two separate command-line arguments.</p>
 <blockquote><pre>
-  &lt;arg path=&quot;/dir;/dir2:\dir3&quot; /&gt;
+  &lt;arg path=&quot;/dir;/dir2:\dir3&quot;/&gt;
 </pre></blockquote>
-<p>is a single command line argument with value
-<code>\dir;\dir2;\dir3</code> on DOS based systems and
-<code>/dir:/dir2:/dir3</code> on Unix like systems.</p>
+<p>is a single command-line argument with the value
+<code>\dir;\dir2;\dir3</code> on DOS-based systems and
+<code>/dir:/dir2:/dir3</code> on Unix-like systems.</p>
+
 <h3><a name="references">References</a></h3>
 <p>The <code>id</code> attribute of the buildfile's elements can be
 used to refer to them. This can useful if you are going to replicate
-the same snippet of XML over and over again - using a
+the same snippet of XML over and over again &#150; using a
 <code>&lt;classpath&gt;</code> structure more than once for
 example.</p>
-<p>The following example</p>
+<p>The following example:</p>
 <blockquote><pre>
 &lt;project ... &gt;
   &lt;target ... &gt;
     &lt;rmic ...&gt;
       &lt;classpath&gt;
-        &lt;pathelement location=&quot;lib/&quot; /&gt;
-        &lt;pathelement path=&quot;${java.class.path}/&quot; /&gt;
-        &lt;pathelement path=&quot;${additional.path}&quot; /&gt;
+        &lt;pathelement location=&quot;lib/&quot;/&gt;
+        &lt;pathelement path=&quot;${java.class.path}/&quot;/&gt;
+        &lt;pathelement path=&quot;${additional.path}&quot;/&gt;
       &lt;/classpath&gt;
     &lt;/rmic&gt;
   &lt;/target&gt;
@@ -622,165 +726,202 @@ example.</p>
   &lt;target ... &gt;
     &lt;javac ...&gt;
       &lt;classpath&gt;
-        &lt;pathelement location=&quot;lib/&quot; /&gt;
-        &lt;pathelement path=&quot;${java.class.path}/&quot; /&gt;
-        &lt;pathelement path=&quot;${additional.path}&quot; /&gt;
+        &lt;pathelement location=&quot;lib/&quot;/&gt;
+        &lt;pathelement path=&quot;${java.class.path}/&quot;/&gt;
+        &lt;pathelement path=&quot;${additional.path}&quot;/&gt;
       &lt;/classpath&gt;
     &lt;/javac&gt;
   &lt;/target&gt;
 &lt;/project&gt;
 </pre></blockquote>
-<p>could be rewritten as</p>
+<p>could be rewritten as:</p>
 <blockquote><pre>
 &lt;project ... &gt;
   &lt;path id=&quot;project.class.path&quot;&gt;
-    &lt;pathelement location=&quot;lib/&quot; /&gt;
-    &lt;pathelement path=&quot;${java.class.path}/&quot; /&gt;
-    &lt;pathelement path=&quot;${additional.path}&quot; /&gt;
+    &lt;pathelement location=&quot;lib/&quot;/&gt;
+    &lt;pathelement path=&quot;${java.class.path}/&quot;/&gt;
+    &lt;pathelement path=&quot;${additional.path}&quot;/&gt;
   &lt;/path&gt;
 
   &lt;target ... &gt;
     &lt;rmic ...&gt;
-      &lt;classpath refid=&quot;project.class.path&quot; /&gt;
+      &lt;classpath refid=&quot;project.class.path&quot;/&gt;
     &lt;/rmic&gt;
   &lt;/target&gt;
 
   &lt;target ... &gt;
     &lt;javac ...&gt;
-      &lt;classpath refid=&quot;project.class.path&quot; /&gt;
+      &lt;classpath refid=&quot;project.class.path&quot;/&gt;
     &lt;/javac&gt;
   &lt;/target&gt;
 &lt;/project&gt;
 </pre></blockquote>
 <p>All tasks that use nested elements for <a
 href="#patternset">PatternSet</a>s, <a href="#fileset">FileSet</a>s or
-<a href="#path">PATH like structures</a> accept references to these
+<a href="#path">path-like structures</a> accept references to these
 structures as well.</p>
+
 <hr>
-<h2><a name="directorybasedtasks">Directory based tasks</a></h2>
-<p>Some tasks use directory trees for the task they perform. For instance, the <a
-href="#javac">Javac task</a> which works upon a directory tree with .java files.
+<h2><a name="directorybasedtasks">Directory-based Tasks</a></h2>
+<p>Some tasks use directory trees for the task they perform.
+For example, the <a
+href="#javac">javac</a> task, which works upon a directory tree
+with <code>.java</code> files.
 Sometimes it can be very useful to work on a subset of that directory tree. This
 section describes how you can select a subset of such a directory tree.</p>
 <p>Ant gives you two ways to create a subset, both of which can be used at the same
 time:</p>
 <ul>
   <li>Only include files/directories that match at least one pattern of a set of
-    patterns</li>
+    patterns.</li>
   <li>Exclude files/directories that match at least one pattern a set of
-    patterns</li>
+    patterns.</li>
 </ul>
 <p>When both inclusion and exclusion are used, only files/directories that match
-the include patterns, and don't match the exclude patterns are used.</p>
+the include patterns, and don't match the exclude patterns, are used.</p>
 <p>Patterns can be specified inside the buildfile via task attributes or
 nested elements and via external files. Each line of the external file
-is taken as pattern that is added to the list of include or exclude 
+is taken as a pattern that is added to the list of include or exclude 
 patterns.</p>
 <h3>Patterns</h3>
 <p>As described earlier, patterns are used for the inclusion and exclusion.
 These patterns look very much like the patterns used in DOS and UNIX:</p>
 <p>'*' matches zero or more characters, '?' matches one character.</p>
-<p>Examples:</p>
-<p>'*.java' matches '.java', 'x.java' and 'FooBar.java', but not 'FooBar.xml'
-(does not end with '.java').</p>
-<p>'?.java' matches 'x.java', 'A.java', but not '.java' or 'xyz.java' (both
-don't have one character before '.java').</p>
-<p>Combinations of '*'s and '?'s are allowed.</p>
+<p><b>Examples:</b></p>
+<p>
+<code>*.java</code>&nbsp;&nbsp;matches&nbsp;&nbsp;<code>.java</code>,
+<code>x.java</code> and <code>FooBar.java</code>, but
+not <code>FooBar.xml</code> (does not end with <code>.java</code>).</p>
+<p>
+<code>?.java</code>&nbsp;&nbsp;matches&nbsp;&nbsp;<code>x.java</code>,
+<code>A.java</code>, but not <code>.java</code> or <code>xyz.java</code>
+(both don't have one character before <code>.java</code>).</p>
+<p>
+Combinations of <code>*</code>'s and <code>?</code>'s are allowed.</p>
 <p>Matching is done per-directory. This means that first the first directory in
 the pattern is matched against the first directory in the path to match. Then
-the second directories are matched, and so on. E.g. when we have the pattern '/?abc/*/*.java'
-and the path '/xabc/foobar/test.java', then first '?abc' is matched with 'xabc',
-then '*' is matched with 'foobar' and finally '*.java' is matched with 'test.java'.
-They all match so the path matches the pattern.</p>
-<p>Too make things a bit more flexible, we add one extra feature, which makes it
+the second directory is matched, and so on. For example, when we have the pattern <code>/?abc/*/*.java</code>
+and the path <code>/xabc/foobar/test.java</code>,
+the first <code>?abc</code> is matched with <code>xabc</code>,
+then <code>*</code> is matched with <code>foobar</code>,
+and finally <code>*.java</code> is matched with <code>test.java</code>.
+They all match, so the path matches the pattern.</p>
+<p>To make things a bit more flexible, we add one extra feature, which makes it
 possible to match multiple directory levels. This can be used to match a
-complete directory tree, or a file anywhere in the directory tree. To do this, '**'
-must be used as the name of a directory. When '**' is used as the name of a
-directory in the pattern, it matches zero or more directories. For instance:
-'/test/**' matches all files/directories under '/test/', such as '/test/x.java',
-or '/test/foo/bar/xyz.html', but not '/xyz.xml'.</p>
-<p>There is one &quot;shorthand&quot;, if a pattern ends with '/' or '\', then '**'
-is appended. E.g. &quot;mypackage/test/&quot; is interpreted as were it &quot;mypackage/test/**&quot;.</p>
-<p>Examples:</p>
+complete directory tree, or a file anywhere in the directory tree.
+To do this, <code>**</code>
+must be used as the name of a directory.
+When <code>**</code> is used as the name of a
+directory in the pattern, it matches zero or more directories.
+For example:
+<code>/test/**</code> matches all files/directories under <code>/test/</code>,
+such as <code>/test/x.java</code>,
+or <code>/test/foo/bar/xyz.html</code>, but not <code>/xyz.xml</code>.</p>
+<p>There is one &quot;shorthand&quot; &#150; if a pattern ends
+with <code>/</code>
+or <code>\</code>, then <code>**</code>
+is appended.
+For example, <code>mypackage/test/</code> is interpreted as if it were
+<code>mypackage/test/**</code>.</p>
+<p><b>Example patterns:</b></p>
 <table border="1" cellpadding="2" cellspacing="0">
   <tr>
-    <td valign="top">**/CVS/*</td>
-    <td valign="top">Matches all files in CVS directories, that can be located
-      anywhere in the directory tree.
-      <p>Matches:</p>
-      <p>CVS/Repository<br>
-      org/apache/CVS/Entries<br>
-      org/apache/jakarta/tools/ant/CVS/Entries</p>
-      <p>But not:</p>
-      <p>org/apache/CVS/foo/bar/Entries ('foo/bar/' part does not match)</td>
+    <td valign="top"><code>**/CVS/*</code></td>
+    <td valign="top">Matches all files in <code>CVS</code> directories that can be located
+      anywhere in the directory tree.<br>
+      Matches:
+      <pre>
+      CVS/Repository
+      org/apache/CVS/Entries
+      org/apache/jakarta/tools/ant/CVS/Entries
+      </pre>
+      But not:
+      <pre>
+      org/apache/CVS/foo/bar/Entries (<code>foo/bar/</code> part does not match)</td>
+      </pre>
   </tr>
   <tr>
-    <td valign="top">org/apache/jakarta/**</td>
-    <td valign="top">Matches all files in the org/apache/jakarta directory tree.
-      <p>Matches:</p>
-      <p>org/apache/jakarta/tools/ant/docs/index.html<br>
-      org/apache/jakarta/test.xml</p>
-      <p>But not:</p>
-      <p>org/apache/xyz.java ('jakarta'/' part is missing)</td>
+    <td valign="top"><code>org/apache/jakarta/**</code></td>
+    <td valign="top">Matches all files in the <code>org/apache/jakarta</code> directory tree.<br>
+      Matches:
+      <pre>
+      org/apache/jakarta/tools/ant/docs/index.html
+      org/apache/jakarta/test.xml
+      </pre>
+      But not:
+      <pre>
+      org/apache/xyz.java
+      </pre>
+      (<code>jakarta/</code> part is missing).</td>
   </tr>
   <tr>
-    <td valign="top">org/apache/**/CVS/*</td>
-    <td valign="top">Matches all files in CVS directories, that are located
-      anywhere in the directory tree under org/apache.
-      <p>Matches:</p>
-      <p>org/apache/CVS/Entries<br>
-      org/apache/jakarta/tools/ant/CVS/Entries</p>
-      <p>But not:</p>
-      <p>org/apache/CVS/foo/bar/Entries ('foo/bar/' part does not match)</td>
+    <td valign="top"><code>org/apache/**/CVS/*</code></td>
+    <td valign="top">Matches all files in <code>CVS</code> directories
+      that are located anywhere in the directory tree under
+      <code>org/apache</code>.<br>
+      Matches:
+      <pre>
+      org/apache/CVS/Entries
+      org/apache/jakarta/tools/ant/CVS/Entries
+      </pre>
+      But not:
+      <pre>
+      org/apache/CVS/foo/bar/Entries
+      </pre>
+      (<code>foo/bar/</code> part does not match)</td>
   </tr>
   <tr>
-    <td valign="top">**/test/**</td>
-    <td valign="top">Matches all files which have a directory 'test' in their
-      path, including 'test' as a filename.</td>
+    <td valign="top"><code>**/test/**</code></td>
+    <td valign="top">Matches all files that have a <code>test</code>
+        element in their path, including <code>test</code> as a filename.</td>
   </tr>
 </table>
 <p>When these patterns are used in inclusion and exclusion, you have a powerful
 way to select just the files you want.</p>
+
 <h3>Examples</h3>
 <pre>  
-&lt;copy todir=&quot;${dist}&quot; >
+&lt;copy todir=&quot;${dist}&quot;>
   &lt;fileset dir=&quot;${src}&quot; 
            includes=&quot;**/images/*&quot; 
            excludes=&quot;**/*.gif&quot; 
   /&gt;
 &lt;/copy&gt;</pre>
-<p>This copies all files in directories called &quot;images&quot;, that are
-located in the directory tree &quot;${src}&quot; to the destination &quot;${dist}&quot;,
-but excludes all &quot;*.gif&quot; files from the copy.</p>
-<p> This example can also be expressed using nested elements as
+<p>This copies all files in directories called <code>images</code> that are
+located in the directory tree defined by <code>${src}</code> to the
+destination directory defined by <code>${dist}</code>,
+but excludes all <code>*.gif</code> files from the copy.</p>
+<p> This example can also be expressed using nested elements:
 <pre>
-&lt;copy todir=&quot;${dist}&quot; >
-  &lt;fileset dir=&quot;${src}&quot; /&gt;
+&lt;copy todir=&quot;${dist}&quot;>
+  &lt;fileset dir=&quot;${src}&quot;/&gt;
     &lt;include name=&quot;**/images/*&quot;/&gt;
-    &lt;exclude name=&quot;**/*.gif&quot; /&gt;
+    &lt;exclude name=&quot;**/*.gif&quot;/&gt;
   &lt;/fileset&gt;
 &lt;/copy&gt;
 </pre>
 
 <h3>Default Excludes</h3>
-<p>There are a set of definitions which are excluded by default from all directory based tasks.
+<p>There are a set of definitions that are excluded by default from all directory-based tasks.
 They are:
-<pre>        &quot;**/*~&quot;,
-        &quot;**/#*#&quot;,
-        &quot;**/%*%&quot;,
-        &quot;**/CVS&quot;,
-        &quot;**/CVS/**&quot;,
-        &quot;**/.cvsignore&quot;
+<pre>
+     **/*~
+     **/#*#
+     **/%*%
+     **/CVS
+     **/CVS/**
+     **/.cvsignore
 </pre>
 If you do not want these default excludes applied, you may disable them with the 
 <code>defaultexcludes=&quot;no&quot;</code> attribute.
 <h3><a name="patternset">PatternSets</a></h3>
-<p>Patterns can be grouped to sets and later be referenced by their id
-attribute. They are defined via a <code>patternset</code> element -
+<p>Patterns can be grouped to sets and later be referenced by their
+<code>id</code>
+attribute. They are defined via a <code>patternset</code> element,
 which can appear nested into a <a href="#fileset">FileSet</a> or a
-directory based task that constitutes an implicit FileSet. In addition
+directory-based task that constitutes an implicit FileSet. In addition,
 <code>patternset</code>s can be defined at the same level as
-<code>target</code> - i.e. as children of <code>project</code></p>
+<code>target</code> &#151; i.e., as children of <code>project</code>.</p>
 <p>Patterns can be specified by nested <code>&lt;include&gt;</code> or
 <code>&lt;exclude&gt;</code> elements or the following attributes.</p>
 <table border="1" cellpadding="2" cellspacing="0">
@@ -790,53 +931,56 @@ directory based task that constitutes an implicit FileSet. In addition
   </tr>
   <tr>
     <td valign="top">includes</td>
-    <td valign="top">comma separated list of patterns of files that must be
+    <td valign="top">comma-separated list of patterns of files that must be
       included. All files are included when omitted.</td>
   </tr>
   <tr>
     <td valign="top">includesfile</td>
-    <td valign="top">the name of a file. Each line of this file is
-      taken to be an include pattern</td>
+    <td valign="top">the name of a file; each line of this file is
+      taken to be an include pattern.</td>
   </tr>
   <tr>
     <td valign="top">excludes</td>
-    <td valign="top">comma separated list of patterns of files that must be
-      excluded. No files (except default excludes) are excluded when omitted.</td>
+    <td valign="top">comma-separated list of patterns of files that must be
+      excluded; no files (except default excludes) are excluded when omitted.</td>
   </tr>
   <tr>
     <td valign="top">excludesfile</td>
-    <td valign="top">the name of a file. Each line of this file is
-      taken to be an exclude pattern</td>
+    <td valign="top">the name of a file; each line of this file is
+      taken to be an exclude pattern.</td>
   </tr>
 </table>
+
 <h4>Examples</h4>
 <blockquote><pre>
 &lt;patternset id=&quot;non.test.sources&quot; &gt;
-  &lt;include name=&quot;**/*.java&quot; /&gt;
-  &lt;exclude name=&quot;**/*Test*&quot; /&gt;
+  &lt;include name=&quot;**/*.java&quot;/&gt;
+  &lt;exclude name=&quot;**/*Test*&quot;/&gt;
 &lt;/patternset&gt;
 </pre></blockquote>
-<p>Builds a set of patterns, that matches all <code>.java</code> files
+<p>Builds a set of patterns that matches all <code>.java</code> files
 that do not contain the text <code>Test</code> in their name. This set
 can be <a href="#references">referred</a> to via
-<code>&lt;patternset refid=&quot;non.test.sources&quot;
-/&gt;</code> by tasks that support this feature or by FileSets.</p>
-<p>Note that while the includes and excludes attributes accept
+<code>&lt;patternset refid=&quot;non.test.sources&quot;/&gt;</code>,
+by tasks that support this feature, or by FileSets.</p>
+<p>Note that while the <code>includes</code> and
+<code>excludes</code> attributes accept
 multiple elements separated by commas or spaces, the nested
 &lt;include&gt; and &lt;exclude&gt; elements expect their name
 attribute to hold a single pattern.</p>
+
 <h3><a name="fileset">FileSets</a></h3>
 <p>FileSets are groups of files. These files can be found in a
 directory tree starting in a base directory and are matched by
 patterns taken from a number of <a
-href="#patternset">PatternSets</a>. FileSets can appear inside task
+href="#patternset">PatternSets</a>. FileSets can appear inside tasks
 that support this feature or at the same level as <code>target</code>
-- i.e. as children of <code>project</code>.</p>
+&#150; i.e., as children of <code>project</code>.</p>
 <p>PatternSets can be specified as nested
 <code>&lt;patternset&gt;</code> 
-elements. In addition FileSet holds an implicit PatternSet and
+elements. In addition, FileSet holds an implicit PatternSet and
 supports the nested <code>&lt;include&gt;</code> and
-<code>&lt;exclude&gt;</code> elements of PatternSet directly as well
+<code>&lt;exclude&gt;</code> elements of PatternSet directly, as well
 as PatternSet's attributes.</p>
 <table border="1" cellpadding="2" cellspacing="0">
   <tr>
@@ -846,46 +990,47 @@ as PatternSet's attributes.</p>
   </tr>
   <tr>
     <td valign="top">dir</td>
-    <td valign="top">The root of the directory tree of this FileSet.</td>
+    <td valign="top">the root of the directory tree of this FileSet.</td>
     <td valign="top" align="center">Yes</td>
   </tr>
   <tr>
     <td valign="top">defaultexcludes</td>
     <td valign="top">indicates whether default excludes should be used or not
-      (&quot;yes&quot;/&quot;no&quot;). Default excludes are used when omitted.</td>
+      (<code>yes | no</code>); default excludes are used when omitted.</td>
     <td valign="top" align="center">No</td>
   </tr>
   <tr>
     <td valign="top">includes</td>
-    <td valign="top">comma separated list of patterns of files that must be
-      included. All files are included when omitted.</td>
+    <td valign="top">comma-separated list of patterns of files that must be
+      included; all files are included when omitted.</td>
     <td valign="top" align="center">No</td>
   </tr>
   <tr>
     <td valign="top">includesfile</td>
-    <td valign="top">the name of a file. Each line of this file is
-      taken to be an include pattern</td>
+    <td valign="top">the name of a file; each line of this file is
+      taken to be an include pattern.</td>
     <td valign="top" align="center">No</td>
   </tr>
   <tr>
     <td valign="top">excludes</td>
-    <td valign="top">comma separated list of patterns of files that must be
-      excluded. No files (except default excludes) are excluded when omitted.</td>
+    <td valign="top">comma-separated list of patterns of files that must be
+      excluded; no files (except default excludes) are excluded when omitted.</td>
     <td valign="top" align="center">No</td>
   </tr>
   <tr>
     <td valign="top">excludesfile</td>
-    <td valign="top">the name of a file. Each line of this file is
-      taken to be an exclude pattern</td>
+    <td valign="top">the name of a file; each line of this file is
+      taken to be an exclude pattern.</td>
     <td valign="top" align="center">No</td>
   </tr>
 </table>
+
 <h4>Examples</h4>
 <blockquote><pre>
 &lt;fileset dir=&quot;${server.src}&quot; &gt;
   &lt;patternset id=&quot;non.test.sources&quot; &gt;
-    &lt;include name=&quot;**/*.java&quot; /&gt;
-    &lt;exclude name=&quot;**/*Test*&quot; /&gt;
+    &lt;include name=&quot;**/*.java&quot;/&gt;
+    &lt;exclude name=&quot;**/*Test*&quot;/&gt;
   &lt;/patternset&gt;
 &lt;/fileset&gt;
 </pre></blockquote>
@@ -894,26 +1039,26 @@ source files and don't have the text <code>Test</code> in their
 name.</p>
 <blockquote><pre>
 &lt;fileset dir=&quot;${client.src}&quot; &gt;
-  &lt;patternset refid=&quot;non.test.sources&quot; /&gt;
+  &lt;patternset refid=&quot;non.test.sources&quot;/&gt;
 &lt;/fileset&gt;
 </pre></blockquote>
-<p>Groups all files in directory <code>${client.src}</code> using the
-same patterns as the example before.</p>
-<h3><a name="mapper">Mapping file names</a></h3>
+<p>Groups all files in directory <code>${client.src}</code>, using the
+same patterns as the example above.</p>
+
+<h3><a name="mapper">Mapping File Names</a></h3>
 <p>Some tasks take source files and create target files. Depending on
-the task it may be quite obvious which name a target file will have
+the task, it may be quite obvious which name a target file will have
 (using <a href="#javac">javac</a>, you know there will be
-<code>.class</code> files for your <code>.java</code> files) - in
-other cases you may want to specify the target files either to help
+<code>.class</code> files for your <code>.java</code> files) &#150; in
+other cases you may want to specify the target files, either to help
 Ant or to get an extra bit of functionality.</p>
 <p>While source files are usually specified as <a
-href="#fileset">fileset</a>s, you don't specify target files directly,
-but tell Ant how to find the target file(s) for one source file. An
+href="#fileset">fileset</a>s, you don't specify target files directly &#150;
+instead, you tell Ant how to find the target file(s) for one source file. An
 instance of <code>org.apache.tools.ant.util.FileNameMapper</code> is
 responsible for this. It constructs target file names based on rules
 that can be parameterized with <code>from</code> and <code>to</code>
-attributes - the exact meaning of which is implementation
-dependent.</p>
+attributes &#150; the exact meaning of which is implementation-dependent.</p>
 <p>These instances are defined in <code>&lt;mapper&gt;</code> elements
 with the following attributes:</p>
 <table border="1" cellpadding="2" cellspacing="0">
@@ -924,12 +1069,12 @@ with the following attributes:</p>
   </tr>
   <tr>
     <td valign="top">type</td>
-    <td valign="top">Specify one of the built in implementations</td>
+    <td valign="top">specifies one of the built-in implementations.</td>
     <td align="center" valign="center" rowspan="2">Exactly one of both</td>
   </tr>
   <tr>
     <td valign="top">classname</td>
-    <td valign="top">Specify the implementation by class name</td>
+    <td valign="top">specifies the implementation by class name.</td>
   </tr>
   <tr>
     <td valign="top">classpath</td> 
@@ -940,32 +1085,32 @@ with the following attributes:</p>
   <tr>
     <td valign="top">classpathref</td>
     <td valign="top">the classpath to use, given as <a
-      href="#references">reference</a> to a PATH defined elsewhere.</td>
+      href="#references">reference</a> to a path defined elsewhere.</td>
     <td align="center" valign="top">No</td>
   </tr>
   <tr>
     <td valign="top">from</td> 
-    <td valign="top">The &quot;from&quot; attribute for the given
-      implementation</td>
+    <td valign="top">the <code>from</code> attribute for the given
+      implementation.</td>
     <td align="center" valign="top">Depends on implementation.</td>
   </tr>
   <tr>
     <td valign="top">to</td> 
-    <td valign="top">The &quot;to&quot; attribute for the given
-      implementation</td>
+    <td valign="top">the <code>to</code> attribute for the given
+      implementation.</td>
     <td align="center" valign="top">Depends on implementation.</td>
   </tr>
 </table>
-<p>The classpath can as well be specified via a nested
-<code>&lt;classpath&gt;</code>, that is a <a href="#path">PATH</a>
-like structure.</p>
-<p>The built in mapper types are:</p>
+<p>The classpath can be specified via a nested
+<code>&lt;classpath&gt;</code>, as well &#150; that is,
+a <a href="#path">path</a>-like structure.</p>
+<p>The built-in mapper types are:</p>
 <h4><a name="identity-mapper">identity</a></h4>
 <p>The target file name is identical to the source file name. Both
 <code>to</code> and <code>from</code> will be ignored.</p>
-<h5>Examples:</h5>
+<b>Examples:</b>
 <blockquote><pre>
-&lt;mapper type=&quot;identity&quot; /&gt;
+&lt;mapper type=&quot;identity&quot;/&gt;
 </pre></blockquote>
 <table border="1" cellpadding="2" cellspacing="0">
   <tr>
@@ -990,12 +1135,12 @@ like structure.</p>
   </tr>
 </table>
 <h4><a name="flatten-mapper">flatten</a></h4>
-<p>The target file name is identical to the source file name with all
-leading directory information stripped of. Both <code>to</code> and
+<p>The target file name is identical to the source file name, with all
+leading directory information stripped off. Both <code>to</code> and
 <code>from</code> will be ignored.</p>
-<h5>Examples:</h5>
+<b>Examples:</b>
 <blockquote><pre>
-&lt;mapper type=&quot;flatten&quot; /&gt;
+&lt;mapper type=&quot;flatten&quot;/&gt;
 </pre></blockquote>
 <table border="1" cellpadding="2" cellspacing="0">
   <tr>
@@ -1020,11 +1165,11 @@ leading directory information stripped of. Both <code>to</code> and
   </tr>
 </table>
 <h4><a name="merge-mapper">merge</a></h4>
-<p>The target file name will always be the same - as defined by
-<code>to</code>, <code>from</code> will be ignored.</p>
+<p>The target file name will always be the same, as defined by
+<code>to</code> &#150; <code>from</code> will be ignored.</p>
 <h5>Examples:</h5>
 <blockquote><pre>
-&lt;mapper type=&quot;merge&quot; to=&quot;archive.tar&quot; /&gt;
+&lt;mapper type=&quot;merge&quot; to=&quot;archive.tar&quot;/&gt;
 </pre></blockquote>
 <table border="1" cellpadding="2" cellspacing="0">
   <tr>
@@ -1051,14 +1196,14 @@ leading directory information stripped of. Both <code>to</code> and
 <h4><a name="glob-mapper">glob</a></h4>
 <p>Both <code>to</code> and <code>from</code> define patterns that may
 contain at most one <code>*</code>. For each source file that matches
-the <code>from</code> pattern a target file name will be constructed
+the <code>from</code> pattern, a target file name will be constructed
 from the <code>to</code> pattern by substituting the <code>*</code> in
-the <code>to</code> pattern by the text that matches the
+the <code>to</code> pattern with the text that matches the
 <code>*</code> in the <code>from</code> pattern. Source file names
 that don't match the <code>from</code> pattern will be ignored.</p>
-<h5>Examples:</h5>
+<b>Examples:</b>
 <blockquote><pre>
-&lt;mapper type=&quot;glob&quot; from=&quot;*.java&quot; to=&quot;*.java.bak&quot; /&gt;
+&lt;mapper type=&quot;glob&quot; from=&quot;*.java&quot; to=&quot;*.java.bak&quot;/&gt;
 </pre></blockquote>
 <table border="1" cellpadding="2" cellspacing="0">
   <tr>
@@ -1083,7 +1228,7 @@ that don't match the <code>from</code> pattern will be ignored.</p>
   </tr>
 </table>
 <blockquote><pre>
-&lt;mapper type=&quot;glob&quot; from=&quot;C*ies&quot; to=&quot;Q*y&quot; /&gt;
+&lt;mapper type=&quot;glob&quot; from=&quot;C*ies&quot; to=&quot;Q*y&quot;/&gt;
 </pre></blockquote>
 <table border="1" cellpadding="2" cellspacing="0">
   <tr>
@@ -1110,33 +1255,41 @@ that don't match the <code>from</code> pattern will be ignored.</p>
 <h4><a name="regexp-mapper">regexp</a></h4>
 <p>Both <code>to</code> and <code>from</code> define regular
 expressions. If the source file name matches the <code>from</code>
-pattern, the target file name will constructed from the
-<code>to</code> pattern using \0 to \9 as back references for the full
-match (\0) or the matches of the subexpressions in parens. Source
+pattern, the target file name will be constructed from the
+<code>to</code> pattern, using <code>\0</code> to <code>\9</code> as
+back-references for the full
+match (<code>\0</code>) or the matches of the subexpressions in
+parentheses.
+Source
 files not matching the <code>from</code> pattern will be ignored.</p>
-<p><b>Note that you need to escape a $-sign with another $-sign in
-Ant.</b></p>
+<p>Note that you need to escape a dollar-sign (<code>$</code>) with
+another dollar-sign in Ant.</p>
 <p>The regexp mapper needs a supporting library and an implementation
 of <code>org.apache.tools.ant.util.regexp.RegexpMatcher</code> that
 hides the specifics of the library. Ant comes with implementations for
 <a href="http://jakarta.apache.org/regexp/">jakarta-regexp</a> and <a
-href="http://jakarta.apache.org/oro/">jakarta-ORO</a> - if you compile
+href="http://jakarta.apache.org/oro/">jakarta-ORO</a>. If you compile
 from sources and plan to use one of them, make sure the libraries are
-in your CLASSPATH.</a> For information about using <a
+in your <code>CLASSPATH</code>.</a> For information about using <a
 href="http://www.cacas.org/~wes/java/">gnu.regexp</a> or <a
 href="http://www.crocodile.org/~sts/Rex/">gnu.rex</a> with Ant, see <a
 href="http://marc.theaimsgroup.com/?l=ant-dev&m=97550753813481&w=2">this</a>
 article.</p>
-<p>Ant will choose the regular expression library based on the
-following algorithm: if the system property
+<p>Ant will choose the regular-expression library based on the
+following algorithm:
+<ul>
+<li>If the system property
 <code>ant.regexp.matcherimpl</code> has been set, it is taken as the
 name of the class implementing
 <code>org.apache.tools.ant.util.regexp.RegexpMatcher</code> that
-should be used. If it has not been set, first try jakarta-ORO, if that
-cannot be found, try jakarta-regexp.</p>
-<h5>Examples:</h5>
+should be used.</li>
+<li>If it has not been set, first try jakarta-ORO; if that
+cannot be found, try jakarta-regexp.</li>
+</ul>
+</p>
+<b>Examples:</b>
 <blockquote><pre>
-&lt;mapper type=&quot;regexp&quot; from=&quot;^(.*)\.java$$&quot; to=&quot;\1.java.bak&quot; /&gt;
+&lt;mapper type=&quot;regexp&quot; from=&quot;^(.*)\.java$$&quot; to=&quot;\1.java.bak&quot;/&gt;
 </pre></blockquote>
 <table border="1" cellpadding="2" cellspacing="0">
   <tr>
@@ -1161,7 +1314,7 @@ cannot be found, try jakarta-regexp.</p>
   </tr>
 </table>
 <blockquote><pre>
-&lt;mapper type=&quot;regexp&quot; from=&quot;^(.*)/([^/]+)/([^/]*)$$&quot; to=&quot;\1/\2/\2-\3&quot; /&gt;
+&lt;mapper type=&quot;regexp&quot; from=&quot;^(.*)/([^/]+)/([^/]*)$$&quot; to=&quot;\1/\2/\2-\3&quot;/&gt;
 </pre></blockquote>
 <table border="1" cellpadding="2" cellspacing="0">
   <tr>
@@ -1186,7 +1339,7 @@ cannot be found, try jakarta-regexp.</p>
   </tr>
 </table>
 <blockquote><pre>
-&lt;mapper type=&quot;regexp&quot; from=&quot;^(.*)\.(.*)$$&quot; to=&quot;\2.\1&quot; /&gt;
+&lt;mapper type=&quot;regexp&quot; from=&quot;^(.*)\.(.*)$$&quot; to=&quot;\2.\1&quot;/&gt;
 </pre></blockquote>
 <table border="1" cellpadding="2" cellspacing="0">
   <tr>
@@ -1212,7 +1365,7 @@ cannot be found, try jakarta-regexp.</p>
 </table>
 
 <hr>
-<h2><a name="tasks">Built in tasks</a></h2>
+<h2><a name="bitasks">Built-in Tasks</a></h2>
 <ul>
   <li><a href="#ant">Ant</a></li>
   <li><a href="#antcall">AntCall</a></li>
@@ -1308,13 +1461,13 @@ allows you to parameterize your subprojects.</p>
 </table>
 <h3>Examples</h3>
 <pre>
-  &lt;ant antfile=&quot;subproject/subbuild.xml&quot; dir=&quot;subproject&quot; target=&quot;compile&quot; /&gt;
+  &lt;ant antfile=&quot;subproject/subbuild.xml&quot; dir=&quot;subproject&quot; target=&quot;compile&quot;/&gt;
 
-  &lt;ant dir=&quot;subproject&quot; /&gt;
+  &lt;ant dir=&quot;subproject&quot;/&gt;
 
   &lt;ant antfile=&quot;subproject/property_based_subbuild.xml&quot;&gt;
-    &lt;property name=&quot;param1&quot; value=&quot;version 1.x&quot; /&gt;
-    &lt;property file=&quot;config/subproject/default.properties&quot; /&gt;
+    &lt;property name=&quot;param1&quot; value=&quot;version 1.x&quot;/&gt;
+    &lt;property file=&quot;config/subproject/default.properties&quot;/&gt;
   &lt;/ant&gt;
 </pre>
 <hr>
@@ -1355,7 +1508,7 @@ href="#property">property</a> for usage guidelines.</p>
 <hr>
 <h2><a name="antstructure">AntStructure</a></h2>
 <h3>Description</h3> 
-<p>Generates a DTD for Ant build files which contains information
+<p>Generates a DTD for Ant buildfiles which contains information
 about all tasks currently known to Ant.</p> 
 <p>Note that the DTD generated by this task is incomplete, you can
 always add XML entities using <a
@@ -1379,7 +1532,7 @@ listed as <code>#IMPLIED</code>.</p>
 </table>
 <h3>Examples</h3>
 <blockquote><pre>
-&lt;antstructure output=&quot;project.dtd&quot; /&gt;
+&lt;antstructure output=&quot;project.dtd&quot;/&gt;
 </pre></blockquote>
 <hr>
 <h2><a name="available">Available</a></h2>
@@ -1429,11 +1582,11 @@ execution depending on system parameters.</p>
 </table>
 <h3>Parameters specified as nested elements</h3>
 <h4>classpath</h4>
-<p><code>Available</code>'s <em>classpath</em> attribute is a <a
-href="#path">PATH like structure</a> and can also be set via a nested
-<em>classpath</em> element.</p>
+<p><code>Available</code>'s <i>classpath</i> attribute is a <a
+href="#path">path-like structure</a> and can also be set via a nested
+<i>classpath</i> element.</p>
 <h3>Examples</h3>
-<pre>  &lt;available classname=&quot;org.whatever.Myclass&quot; property=&quot;Myclass.present&quot; /&gt;</pre>
+<pre>  &lt;available classname=&quot;org.whatever.Myclass&quot; property=&quot;Myclass.present&quot;/&gt;</pre>
 <p>sets the property <code><i>Myclass.present</i></code> to the value &quot;true&quot;
 if the <i>org.whatever.Myclass</i> is found in Ant's classpath.</p>
 <hr>
@@ -1509,11 +1662,11 @@ directly. More FileSets can be specified using nested
   </tr>
   <tr>
     <td valign="top">type</td>
-    <td valign="top">One of <em>file</em>, <em>dir</em> or
-      <em>both</em>. If set to <em>file</em>, only the permissions of
-      plain files are going to be changed. If set to <em>dir</em>, only
+    <td valign="top">One of <i>file</i>, <i>dir</i> or
+      <i>both</i>. If set to <i>file</i>, only the permissions of
+      plain files are going to be changed. If set to <i>dir</i>, only
       the directories are considered.</td>
-    <td align="center" valign="top">No, default is <em>file</em></td>
+    <td align="center" valign="top">No, default is <i>file</i></td>
   </tr>
 </table>
 <h3>Examples</h3>
@@ -1525,18 +1678,18 @@ directly. More FileSets can be specified using nested
 UNIX system.</p>
 <blockquote>
 <pre>
-    &lt;chmod dir=&quot;${dist}/bin&quot; perm=&quot;ugo+rx&quot; includes=&quot;**/*.sh&quot; /&gt;
+    &lt;chmod dir=&quot;${dist}/bin&quot; perm=&quot;ugo+rx&quot; includes=&quot;**/*.sh&quot;/&gt;
 </pre>
 </blockquote>
 <p>makes all &quot;.sh&quot; files below <code>${dist}/bin</code>
 readable and executable for anyone on a UNIX system.</p>
 <blockquote>
 <pre>
-&lt;chmod perm=&quot;g+w&quot; /&gt;
+&lt;chmod perm=&quot;g+w&quot;/&gt;
   &lt;fileset dir=&quot;shared/sources1&quot; &gt;
-    &lt;exclude name=&quot;**/trial/**&quot; /&gt;
+    &lt;exclude name=&quot;**/trial/**&quot;/&gt;
   &lt;/fileset&gt;
-  &lt;fileset refid=&quot;other.shared.sources&quot; /&gt;
+  &lt;fileset refid=&quot;other.shared.sources&quot;/&gt;
 &lt;/chmod&gt;
 </pre>
 </blockquote>
@@ -1620,11 +1773,11 @@ href="#identity-mapper">identity</a>.</p>
 <h3>Examples</h3>
 <p><b>Copy a single file</b></p>
 <pre>
-  &lt;copy file=&quot;myfile.txt&quot; tofile=&quot;mycopy.txt&quot; /&gt;
+  &lt;copy file=&quot;myfile.txt&quot; tofile=&quot;mycopy.txt&quot;/&gt;
 </pre>
 <p><b>Copy a file to a directory</b></p>
 <pre>
-  &lt;copy file=&quot;myfile.txt&quot; todir=&quot;../some/dir/tree&quot; /&gt;
+  &lt;copy file=&quot;myfile.txt&quot; todir=&quot;../some/dir/tree&quot;/&gt;
 </pre>
 <p><b>Copy a directory to another directory</b></p>
 <pre>
@@ -1636,12 +1789,12 @@ href="#identity-mapper">identity</a>.</p>
 <pre>
   &lt;copy todir=&quot;../dest/dir&quot; &gt;
     &lt;fileset dir=&quot;src_dir&quot &gt;
-      &lt;exclude name=&quot;**/*.java&quot; /&gt;
+      &lt;exclude name=&quot;**/*.java&quot;/&gt;
     &lt;/fileset&gt;
   &lt;/copy&gt;
 
   &lt;copy todir=&quot;../dest/dir&quot; &gt;
-    &lt;fileset dir=&quot;src_dir&quot excludes=&quot;**/*.java&quot; /&gt;
+    &lt;fileset dir=&quot;src_dir&quot excludes=&quot;**/*.java&quot;/&gt;
   &lt;/copy&gt;
 </pre>
 <p><b>Copy a set of files to a directory appending
@@ -1649,7 +1802,7 @@ href="#identity-mapper">identity</a>.</p>
 <pre>
   &lt;copy todir=&quot;../backup/dir&quot; &gt;
     &lt;fileset dir=&quot;src_dir&quot /&gt;
-    &lt;mapper type=&quot;glob&quot; from=&quot;*&quot; to=&quot;*.bak&quot; /&gt;
+    &lt;mapper type=&quot;glob&quot; from=&quot;*&quot; to=&quot;*.bak&quot;/&gt;
   &lt;/copy&gt;
 </pre>
 <hr>
@@ -1728,8 +1881,8 @@ supports all attributes of <code>&lt;fileset&gt;</code>
   <tr>
     <td valign="top">flatten</td>
     <td valign="top">ignore directory structure of source directory,
-      copy all files into a single directory - specified by the dest
-      attribute (default is false).</td>
+      copy all files into a single directory, specified by the <code>dest</code>
+      attribute (default is <code>false</code>).</td>
     <td valign="top" align="center">No</td>
   </tr>
   <tr>
@@ -1754,7 +1907,7 @@ recursively. All java files are copied, except for files with the name <code>Tes
 <pre>  &lt;copydir src=&quot;${src}/resources&quot;
            dest=&quot;${dist}&quot;
            includes=&quot;**/*.java&quot;
-           excludes=&quot;mypackage/test/**&quot; /&gt;</pre>
+           excludes=&quot;mypackage/test/**&quot;/&gt;</pre>
 <p>copies the directory <code>${src}/resources</code> to <code>${dist}</code>
 recursively. All java files are copied, except for the files under the <code>mypackage/test</code>
 directory.</p>
@@ -1875,7 +2028,7 @@ preferred over the <i>checkout</i> command, because of speed.</p>
   /&gt;</pre>
 <p>checks out the package/module &quot;jakarta-tools&quot; from the CVS
 repository pointed to by the cvsRoot attribute, and stores the files in &quot;${ws.dir}&quot;.</p>
-<pre>  &lt;cvs dest=&quot;${ws.dir}&quot; command=&quot;update&quot; /&gt;</pre>
+<pre>  &lt;cvs dest=&quot;${ws.dir}&quot; command=&quot;update&quot;/&gt;</pre>
 <p>updates the package/module that has previously been checked out into
 &quot;${ws.dir}&quot;.</p>
 <pre>  &lt;cvs command=&quot;-q diff -u -N&quot; output="patch.txt"/&gt;</pre>
@@ -1888,7 +2041,7 @@ repository pointed to by the cvsRoot attribute, and stores the files in &quot;${
 <h3>Description</h3>
 <p>Deletes either a single file, all files in a specified directory and its 
 sub-directories, or a set of files specified by one or more <a href="#fileset">FileSet</a>s.
-When specifying a set of files, empty directories are <em>not</em> removed.</p>
+When specifying a set of files, empty directories are <i>not</i> removed.</p>
 <h3>Parameters</h3>
 <table border="1" cellpadding="2" cellspacing="0">
   <tr>
@@ -1955,12 +2108,12 @@ When specifying a set of files, empty directories are <em>not</em> removed.</p>
   </tr>
 </table>
 <h3>Examples</h3>
-<pre>  &lt;delete file=&quot;/lib/ant.jar&quot; /&gt;</pre>
+<pre>  &lt;delete file=&quot;/lib/ant.jar&quot;/&gt;</pre>
 <p>deletes the file <code>/lib/ant.jar</code>.</p>
-<pre>  &lt;delete dir=&quot;lib&quot; /&gt;</pre>
+<pre>  &lt;delete dir=&quot;lib&quot;/&gt;</pre>
 <p>deletes all files in the <code>/lib</code> directory.</p>
 <pre>  &lt;delete&gt;
-    &lt;fileset dir=&quot;.&quot; includes=&quot;**/*.bak&quot; /&gt;
+    &lt;fileset dir=&quot;.&quot; includes=&quot;**/*.bak&quot;/&gt;
   &lt;/delete&gt;
 </pre>
 <p>deletes all files with the extension &quot;<code>.bak</code>&quot from the current directory 
@@ -1985,10 +2138,10 @@ and any sub-directories.</p>
   </tr>
 </table>
 <h3>Examples</h3>
-<pre>  &lt;deltree dir=&quot;dist&quot; /&gt;</pre>
+<pre>  &lt;deltree dir=&quot;dist&quot;/&gt;</pre>
 <p>deletes the directory <code>dist</code>, including its files and
 subdirectories.</p>
-<pre>  &lt;deltree dir=&quot;${dist}&quot; /&gt;</pre>
+<pre>  &lt;deltree dir=&quot;${dist}&quot;/&gt;</pre>
 <p>deletes the directory <code>${dist}</code>, including its files and
 subdirectories.</p>
 <hr>
@@ -2016,11 +2169,11 @@ subdirectories.</p>
   <tr>
     <td valign="top">append</td>
     <td valign="top">Append to an existing file?</td>
-    <td valign="top" align="center">No - default is false.</td>
+    <td valign="top" align="center">No &#150; default is false.</td>
   </tr>
 </table>
 <h3>Examples</h3>
-<pre>  &lt;echo message=&quot;Hello world&quot; /&gt;</pre>
+<pre>  &lt;echo message=&quot;Hello world&quot;/&gt;</pre>
 <pre>  
 &lt;echo&gt;
 This is a longer message stretching over
@@ -2085,13 +2238,13 @@ systems.</p>
     <td valign="top">newenvironment</td>
     <td valign="top">Do not propagate old environment when new environment
       variables are specified.</td>
-    <td align="center" valign="top">No, default is <em>false</em></td>
+    <td align="center" valign="top">No, default is <i>false</i></td>
   </tr>
 </table>
 <h3>Examples</h3>
 <blockquote>
   <p><code>&lt;exec dir=&quot;${src}&quot; executable=&quot;dir&quot; os=&quot;windows&quot;
-  output=&quot;dir.txt&quot; /&gt;</code></p>
+  output=&quot;dir.txt&quot;/&gt;</code></p>
 </blockquote>
 <h3>Parameters specified as nested elements</h3>
 <h4>arg</h4>
@@ -2135,13 +2288,13 @@ system command via nested <code>&lt;env&gt;</code> elements.</p>
 <h5>Examples</h5>
 <blockquote><pre>
 &lt;exec executable=&quot;emacs&quot; &gt;
-  &lt;env key=&quot;DISPLAY&quot; value=&quot;:1.0&quot; /&gt;
+  &lt;env key=&quot;DISPLAY&quot; value=&quot;:1.0&quot;/&gt;
 &lt;/exec&gt;
 </pre></blockquote>
 <p>starts <code>emacs</code> on display 1 of the X Window System.</p>
 <blockquote><pre>
 &lt;exec ... &gt;
-  &lt;env key=&quot;PATH&quot; path=&quot;${java.library.path}:${basedir}/bin&quot; /&gt;
+  &lt;env key=&quot;PATH&quot; path=&quot;${java.library.path}:${basedir}/bin&quot;/&gt;
 &lt;/exec&gt;
 </pre></blockquote>
 <p>adds <code>${basedir}/bin</code> to the <code>PATH</code> of the
@@ -2209,7 +2362,7 @@ command. At least one nested <code>&lt;fileset&gt;</code> is required.</p>
     <td valign="top">newenvironment</td>
     <td valign="top">Do not propagate old environment when new environment
       variables are specified.</td>
-    <td align="center" valign="top">No, default is <em>false</em></td>
+    <td align="center" valign="top">No, default is <i>false</i></td>
   </tr>
   <tr>
     <td valign="top">parallel</td>
@@ -2220,11 +2373,11 @@ command. At least one nested <code>&lt;fileset&gt;</code> is required.</p>
   </tr>
   <tr>
     <td valign="top">type</td>
-    <td valign="top">One of <em>file</em>, <em>dir</em> or
-      <em>both</em>. If set to <em>file</em>, only the names of plain
-      files will be sent to the command. If set to <em>dir</em>, only
+    <td valign="top">One of <i>file</i>, <i>dir</i> or
+      <i>both</i>. If set to <i>file</i>, only the names of plain
+      files will be sent to the command. If set to <i>dir</i>, only
       the names of directories are considered.</td>
-    <td align="center" valign="top">No, default is <em>file</em></td>
+    <td align="center" valign="top">No, default is <i>file</i></td>
   </tr>
 </table>
 <h3>Parameters specified as nested elements</h3>
@@ -2251,13 +2404,13 @@ description in the section about <a href="#env">exec</a></p>
 <h3>Examples</h3>
 <blockquote><pre>
 &lt;execon executable=&quot;ls&quot; &gt;
-  &lt;arg value=&quot;-l&quot; /&gt;
+  &lt;arg value=&quot;-l&quot;/&gt;
   &lt;fileset dir=&quot;/tmp&quot;&gt;
     &lt;patternset&gt;
-      &lt;exclude name=&quot;**/*.txt&quot; /&gt;
+      &lt;exclude name=&quot;**/*.txt&quot;/&gt;
     &lt;/patternset&gt;
   &lt;/fileset&gt;
-  &lt;fileset refid=&quot;other.files&quot; /&gt;
+  &lt;fileset refid=&quot;other.files&quot;/&gt;
 &lt;/execon&gt;
 </pre></blockquote>
 <p>invokes <code>ls -l</code>, adding the absolute filenames of all
@@ -2266,10 +2419,10 @@ files of the FileSet with <code>id</code> <code>other.files</code> to
 the command line.</p>
 <blockquote><pre>
 &lt;execon executable=&quot;somecommand&quot; parallel=&quot;false&quot; &gt;
-  &lt;arg value=&quot;arg1&quot; /&gt;
+  &lt;arg value=&quot;arg1&quot;/&gt;
   &lt;srfile/&gt;
-  &lt;arg value=&quot;arg2&quot; /&gt;
-  &lt;fileset dir=&quot;/tmp&quot; /&gt;
+  &lt;arg value=&quot;arg2&quot;/&gt;
+  &lt;fileset dir=&quot;/tmp&quot;/&gt;
 &lt;/execon&gt;
 </pre></blockquote>
 <p>invokes <code>somecommand arg1 SOURCEFILENAME arg2</code> for each
@@ -2349,14 +2502,14 @@ filterfile attribute.</p>
 </table>
 <p>* see notes 1 and 2 above parameters table.</p>
 <h3>Examples</h3>
-<pre>  &lt;filter token=&quot;year&quot; value=&quot;2000&quot; /&gt;
+<pre>  &lt;filter token=&quot;year&quot; value=&quot;2000&quot;/&gt;
   &lt;copy todir=&quot;${dest.dir}&quot;&gt;
-    &lt;fileset dir=&quot;${src.dir}&quot; /&gt;
+    &lt;fileset dir=&quot;${src.dir}&quot;/&gt;
   &lt;/copy&gt;</pre> 
 <p>will copy recursively all the files from the <i>src.dir</i> directory into
 the <i>dest.dir</i> directory replacing all the occurencies of the string <i>@year@</i>
 with <i>2000.</i></p>
-<pre>  &lt;filter filterfile=&quot;deploy_env.properties&quot; /&gt;</pre>
+<pre>  &lt;filter filterfile=&quot;deploy_env.properties&quot;/&gt;</pre>
 will read all property entries from the <i>deploy_env.properties</i> file
 and set these as filters.
 
@@ -2588,7 +2741,7 @@ You never know what editor a user will use to browse README's.</p>
 <h3>Examples</h3>
 <blockquote>
   <p><code>&lt;genkey alias=&quot;apache-group&quot; storepass=&quot;secret&quot; 
-  dname=&quot;CN=Ant Group, OU=Jakarta Division, O=Apache.org, C=US&quot; /&gt;</code></p>
+  dname=&quot;CN=Ant Group, OU=Jakarta Division, O=Apache.org, C=US&quot;/&gt;</code></p>
 </blockquote>
 
 <blockquote>
@@ -2650,7 +2803,7 @@ NB: This timestamp facility only works on downloads using the HTTP protocol.
   </tr>
 </table>
 <h3>Examples</h3>
-<pre>  &lt;get src=&quot;http://jakarta.apache.org/&quot; dest=&quot;help/index.html&quot; /&gt;</pre>
+<pre>  &lt;get src=&quot;http://jakarta.apache.org/&quot; dest=&quot;help/index.html&quot;/&gt;</pre>
 <p>Gets the index page of http://jakarta.apache.org/, and stores it in the file <code>help/index.html</code>.</p>
 
 <pre>  &lt;get src=&quot;http://jakarta.apache.org/builds/tomcat/nightly/ant.zip&quot; 
@@ -2833,7 +2986,7 @@ include an empty one for you.)</p>
   </tr>
 </table>
 <h3>Examples</h3>
-<pre>  &lt;jar jarfile=&quot;${dist}/lib/app.jar&quot; basedir=&quot;${build}/classes&quot; /&gt;</pre>
+<pre>  &lt;jar jarfile=&quot;${dist}/lib/app.jar&quot; basedir=&quot;${build}/classes&quot;/&gt;</pre>
 <p>jars all files in the <code>${build}/classes</code> directory into a file
 called <code>app.jar</code> in the <code>${dist}/lib</code> directory.</p>
 <pre>  &lt;jar jarfile=&quot;${dist}/lib/app.jar&quot;
@@ -2964,26 +3117,26 @@ of the class (either ANT's VM or the forked VM). The attributes
 for this element are the same as for <a href="index.html#env">environment
 variables</a>.</p>
 <h4>classpath</h4>
-<p><code>Java</code>'s <em>classpath</em> attribute is a <a
+<p><code>Java</code>'s <i>classpath</i> attribute is a <a
 href="#path">PATH like structure</a> and can also be set via a nested
-<em>classpath</em> element.</p>
+<i>classpath</i> element.</p>
 <h5>Example</h5>
 <pre>  
        &lt;java classname=&quot;test.Main&quot; &gt;
-         &lt;arg value=&quot;-h&quot; /&gt; 
+         &lt;arg value=&quot;-h&quot;/&gt; 
          &lt;classpath&gt;
-           &lt;pathelement location=&quot;\test.jar&quot; /&gt;
-           &lt;pathelement path=&quot;${java.class.path}&quot; /&gt;
+           &lt;pathelement location=&quot;\test.jar&quot;/&gt;
+           &lt;pathelement path=&quot;${java.class.path}&quot;/&gt;
          &lt;/classpath&gt;
        &lt;/java&gt;
 </pre>
 <h3>Examples</h3>
-<pre>  &lt;java classname=&quot;test.Main&quot; /&gt;</pre>
+<pre>  &lt;java classname=&quot;test.Main&quot;/&gt;</pre>
 <pre>  &lt;java classname=&quot;test.Main&quot;
         fork=&quot;yes&quot; &gt;
-    &lt;sysproperty key=&quot;DEBUG&quot; value=&quot;true&quot; /&gt; 
-    &lt;arg value=&quot;-h&quot; /&gt; 
-    &lt;jvmarg value=&quot;-Xrunhprof:cpu=samples,file=log.txt,depth=3&quot; /&gt; 
+    &lt;sysproperty key=&quot;DEBUG&quot; value=&quot;true&quot;/&gt; 
+    &lt;arg value=&quot;-h&quot;/&gt; 
+    &lt;jvmarg value=&quot;-Xrunhprof:cpu=samples,file=log.txt,depth=3&quot;/&gt; 
   &lt;/java&gt;
 </pre>
 
@@ -3146,11 +3299,11 @@ supports all attributes of <code>&lt;fileset&gt;</code>
 <code>&lt;include&gt;</code>, <code>&lt;exclude&gt;</code> and
 <code>&lt;patternset&gt;</code> elements.</p>
 <h4>src, classpath, bootclasspath and extdirs</h4>
-<p><code>Javac</code>'s <em>srcdir</em>, <em>classpath</em>,
-<em>bootclasspath</em> and <em>extdirs</em> attributes are <a
+<p><code>Javac</code>'s <i>srcdir</i>, <i>classpath</i>,
+<i>bootclasspath</i> and <i>extdirs</i> attributes are <a
 href="#path">PATH like structure</a> and can also be set via nested
-<em>src</em>, <em>classpath</em>, <em>bootclasspath</em> and
-<em>extdirs</em> elements respectively.</p>
+<i>src</i>, <i>classpath</i>, <i>bootclasspath</i> and
+<i>extdirs</i> elements respectively.</p>
 
 <h3>Examples</h3>
 <pre>  &lt;javac srcdir=&quot;${src}&quot;
@@ -3189,11 +3342,11 @@ the propery <code>src2</code>. This can also be represented using nested element
 <pre>  &lt;javac destdir=&quot;${build}&quot;
          classpath=&quot;xyz.jar&quot;
          debug=&quot;on&quot;&gt;
-    &lt;src path=&quot;${src}&quot; /&gt;
-    &lt;src path=&quot;${src2}&quot; /&gt;
-    &lt;include name=&quot;mypackage/p1/**&quot; /&gt;
-    &lt;include name=&quot;mypackage/p2/**&quot; /&gt;
-    &lt;exclude name=&quot;mypackage/p1/testpackage/**&quot; /&gt;
+    &lt;src path=&quot;${src}&quot;/&gt;
+    &lt;src path=&quot;${src2}&quot;/&gt;
+    &lt;include name=&quot;mypackage/p1/**&quot;/&gt;
+    &lt;include name=&quot;mypackage/p2/**&quot;/&gt;
+    &lt;exclude name=&quot;mypackage/p1/testpackage/**&quot;/&gt;
   &lt;/javac&gt;</pre>
 
 <p><b>Note:</b> If you are using Ant on Windows and a new DOS-Window pops up
@@ -3626,10 +3779,10 @@ of the doclet element is shown below:
 </pre>
 
 <h4>sourcepath, classpath and bootclasspath</h4>
-<p><code>Javadoc</code>'s <em>sourcepath</em>, <em>classpath</em> and
-<em>bootclasspath</em> attributes are <a href="#path">PATH like
-structure</a> and can also be set via nested <em>sourcepath</em>,
-<em>classpath</em> and <em>bootclasspath</em> elements
+<p><code>Javadoc</code>'s <i>sourcepath</i>, <i>classpath</i> and
+<i>bootclasspath</i> attributes are <a href="#path">PATH like
+structure</a> and can also be set via nested <i>sourcepath</i>,
+<i>classpath</i> and <i>bootclasspath</i> elements
 respectively.</p>
 
 <h3>Example</h3>
@@ -3717,9 +3870,9 @@ necessary.</p>
   </tr>
 </table>
 <h3>Examples</h3>
-<pre>&lt;mkdir dir=&quot;${dist}&quot; /&gt;</pre>
+<pre>&lt;mkdir dir=&quot;${dist}&quot;/&gt;</pre>
 <p>creates a directory <code>${dist}</code>.</p>
-<pre>&lt;mkdir dir=&quot;${dist}/lib&quot; /&gt;</pre>
+<pre>&lt;mkdir dir=&quot;${dist}/lib&quot;/&gt;</pre>
 <p>creates a directory <code>${dist}/lib</code>.</p>
 <hr>
 <h2><a name="move">Move</a></h2>
@@ -3792,11 +3945,11 @@ href="#identity-mapper">identity</a>.</p>
 <h3>Examples</h3>
 <p><b>Move a single file (rename a file)</b></p>
 <pre>
-  &lt;move file=&quot;file.orig&quot; tofile=&quot;file.moved&quot; /&gt;
+  &lt;move file=&quot;file.orig&quot; tofile=&quot;file.moved&quot;/&gt;
 </pre>
 <p><b>Move a single file to a directory</b></p>
 <pre>
-  &lt;move file=&quot;file.orig&quot; todir=&quot;dir/to/move/to&quot; /&gt;
+  &lt;move file=&quot;file.orig&quot; todir=&quot;dir/to/move/to&quot;/&gt;
 </pre>
 <p><b>Move a directory to a new directory</b></p>
 <pre>
@@ -3808,8 +3961,8 @@ href="#identity-mapper">identity</a>.</p>
 <pre>
   &lt;move todir=&quot;some/new/dir&quot; &gt;
     &lt;fileset dir=&quot;my/src/dir&quot; &gt;
-      &lt;include name=&quot;**/*.jar&quot; /&gt;
-      &lt;exclude name=&quot;**/ant.jar&quot; /&gt;
+      &lt;include name=&quot;**/*.jar&quot;/&gt;
+      &lt;exclude name=&quot;**/ant.jar&quot;/&gt;
     &lt;/fileset&gt;
   &lt;/move&gt;
 </pre>
@@ -3818,9 +3971,9 @@ in a directory.</b></p>
 <pre>
   &lt;move todir=&quot;my/src/dir&quot; &gt;
     &lt;fileset dir=&quot;my/src/dir&quot; &gt;
-      &lt;exclude name=&quot;**/*.bak&quot; /&gt;
+      &lt;exclude name=&quot;**/*.bak&quot;/&gt;
     &lt;/fileset&gt;
-    &lt;mapper type=&quot;glob&quot; from=&quot;*&quot; to=&quot;*.bak&quot; /&gt;
+    &lt;mapper type=&quot;glob&quot; from=&quot;*&quot; to=&quot;*.bak&quot;/&gt;
   &lt;/move&gt;
 </pre>
 <hr>
@@ -3874,10 +4027,10 @@ in a directory.</b></p>
   </tr>
 </table>
 <h3>Examples</h3>
-<pre>  &lt;patch patchfile=&quot;module.1.0-1.1.patch&quot; /&gt;</pre>
+<pre>  &lt;patch patchfile=&quot;module.1.0-1.1.patch&quot;/&gt;</pre>
 <p>applies the diff included in <i>module.1.0-1.1.patch</i> to the
 files in base directory guessing the filename(s) from the diff output.
-<pre>  &lt;patch patchfile=&quot;module.1.0-1.1.patch&quot; strip=&quot;1&quot; /&gt;</pre>
+<pre>  &lt;patch patchfile=&quot;module.1.0-1.1.patch&quot; strip=&quot;1&quot;/&gt;</pre>
 <p>like above but one leading directory part will be removed. i.e. if
 the diff output looked like
 <pre>
@@ -3969,19 +4122,19 @@ This also holds for properties loaded from a property file.</p>
 </table>
 <h3>Parameters specified as nested elements</h3>
 <h4>classpath</h4>
-<p><code>Property</code>'s <em>classpath</em> attribute is a <a
+<p><code>Property</code>'s <i>classpath</i> attribute is a <a
 href="#path">PATH like structure</a> and can also be set via a nested
-<em>classpath</em> element.</p>
+<i>classpath</i> element.</p>
 <h3>Examples</h3>
-<pre>  &lt;property name=&quot;foo.dist&quot; value=&quot;dist&quot; /&gt;</pre>
+<pre>  &lt;property name=&quot;foo.dist&quot; value=&quot;dist&quot;/&gt;</pre>
 <p>sets the property <code>foo.dist</code> to the value &quot;dist&quot;.</p>
-<pre>  &lt;property file=&quot;foo.properties&quot; /&gt;</pre>
+<pre>  &lt;property file=&quot;foo.properties&quot;/&gt;</pre>
 <p>reads a set of properties from a file called &quot;foo.properties&quot;.</p>
-<pre>  &lt;property resource=&quot;foo.properties&quot; /&gt;</pre>
+<pre>  &lt;property resource=&quot;foo.properties&quot;/&gt;</pre>
 <p>reads a set of properties from a resource called &quot;foo.properties&quot;.</p>
 <p>Note that you can reference a global properties file for all of your Ant
 builds using the following:
-<pre>  &lt;property file=&quot;${user.home}/.ant-global.properties&quot; /&gt;</pre>
+<pre>  &lt;property file=&quot;${user.home}/.ant-global.properties&quot;/&gt;</pre>
 <p>since the &quot;user.home&quot; property is defined by the Java virtual machine
 to be your home directory.  This technique is more appropriate for Unix than 
 Windows since the notion of a home directory doesn't exist on Windows.  On the
@@ -4017,7 +4170,7 @@ implementations may use other values for the home directory on Windows.</p>
   </tr>
 </table>
 <h3>Examples</h3>
-<pre>  &lt;rename src=&quot;foo.jar&quot; dest=&quot;${name}-${version}.jar&quot; /&gt;</pre> 
+<pre>  &lt;rename src=&quot;foo.jar&quot; dest=&quot;${name}-${version}.jar&quot;/&gt;</pre> 
 <p>Renames the file <code>foo.jar</code> to <code>${name}-${version}.jar</code> (assuming <code>name</code>
  and <code>version</code> being predefined properties). If a file named <code>${name}-${version}.jar</code>
  already exists, it will be removed prior to renaming <code>foo.jar</code>.</p>
@@ -4089,7 +4242,7 @@ must use a nested <code>&lt;replacetoken&gt;</code> element.</p>
   </tr>
 </table>
 <h3>Examples</h3>
-<pre>  &lt;replace file=&quot;${src}/index.html&quot; token=&quot;@@@&quot; value=&quot;wombat&quot; /&gt;</pre>
+<pre>  &lt;replace file=&quot;${src}/index.html&quot; token=&quot;@@@&quot; value=&quot;wombat&quot;/&gt;</pre>
 <p>replaces occurrences of the string &quot;@@@&quot; with the string
 &quot;wombat&quot;, in the file <code>${src}/index.html</code>.</p>
 <h3>Parameters specified as nested elements</h3>
@@ -4103,14 +4256,14 @@ them.</p>
 <h3>Examples</h3>
 <blockquote><pre>  
 &lt;replace dir=&quot;${src}&quot; value=&quot;wombat&quot;&gt;
-  &lt;include name=&quot;**/*.html&quot; /&gt;
+  &lt;include name=&quot;**/*.html&quot;/&gt;
   &lt;replacetoken&gt;&lt;![CDATA[multi line
 token]]>&lt;/replacetoken&gt;
 &lt;/replace&gt;
 </pre></blockquote>
 <p>replaces occurrences of the string &quot;multi
-line<em>\n</em>token&quot; with the string &quot;wombat&quot;, in all
-HTML files in the directory <code>${src}</code>.Where <em>\n</em> is
+line<i>\n</i>token&quot; with the string &quot;wombat&quot;, in all
+HTML files in the directory <code>${src}</code>.Where <i>\n</i> is
 the platform specific line separator.</p>
 <blockquote><pre>  
 &lt;replace file=&quot;${src}/index.html&quot;&gt;
@@ -4245,14 +4398,14 @@ supports all attributes of <code>&lt;fileset&gt;</code>
 </table>
 <h3>Parameters specified as nested elements</h3>
 <h4>classpath</h4>
-<p><code>Rmic</code>'s <em>classpath</em> attribute is a <a
+<p><code>Rmic</code>'s <i>classpath</i> attribute is a <a
 href="#path">PATH like structure</a> and can also be set via a nested
-<em>classpath</em> elements.</p>
+<i>classpath</i> elements.</p>
 <h3>Examples</h3>
-<pre>  &lt;rmic classname=&quot;com.xyz.FooBar&quot; base=&quot;${build}/classes&quot; /&gt;</pre>
+<pre>  &lt;rmic classname=&quot;com.xyz.FooBar&quot; base=&quot;${build}/classes&quot;/&gt;</pre>
 <p>runs the rmic compiler for the class <code>com.xyz.FooBar</code>. The
 compiled files will be stored in the directory <code>${build}/classes</code>.</p>
-<pre>  &lt;rmic base=&quot;${build}/classes&quot; includes=&quot;**/Remote*.class&quot; /&gt;</pre>
+<pre>  &lt;rmic base=&quot;${build}/classes&quot; includes=&quot;**/Remote*.class&quot;/&gt;</pre>
 <p>runs the rmic compiler for all classes with <code>.class</code>
 files below <code>${build}/classes</code> whose classname starts with
 <i>Remote</i>. The compiled files will be stored in the directory
@@ -4330,7 +4483,7 @@ block</td>
 <h3>Examples</h3>
 <blockquote>
   <p><code>&lt;signjar jar=&quot;${dist}/lib/ant.jar&quot;
-alias=&quot;apache-group&quot; storepass=&quot;secret&quot; /&gt;</code></p>
+alias=&quot;apache-group&quot; storepass=&quot;secret&quot;/&gt;</code></p>
 </blockquote>
 <p>signs the ant.jar with alias &quot;apache-group&quot; accessing the
 keystore and private key via &quot;secret&quot; password.</p>
@@ -4544,8 +4697,8 @@ task to come up with a .tar.gz package.</p>
   </tr>
 </table>
 <h3>Examples</h3>
-<pre>  &lt;tar tarfile=&quot;${dist}/manual.tar&quot; basedir=&quot;htdocs/manual&quot; /&gt;
-  &lt;gzip zipfile=&quot;${dist}/manual.tar.gz&quot; src=&quot;${dist}/manual.tar&quot; /&gt;</pre>
+<pre>  &lt;tar tarfile=&quot;${dist}/manual.tar&quot; basedir=&quot;htdocs/manual&quot;/&gt;
+  &lt;gzip zipfile=&quot;${dist}/manual.tar.gz&quot; src=&quot;${dist}/manual.tar&quot;/&gt;</pre>
 <p>tars all files in the <code>htdocs/manual</code> directory into a file called <code>manual.tar</code>
 in the <code>${dist}</code>  directory, then applies the gzip task to compress
 it.</p>
@@ -4590,11 +4743,11 @@ href="#writingowntask">Writing your own task</a>&quot;.</p>
 </table>
 <h3>Parameters specified as nested elements</h3>
 <h4>classpath</h4>
-<p><code>Taskdef</code>'s <em>classpath</em> attribute is a <a
+<p><code>Taskdef</code>'s <i>classpath</i> attribute is a <a
 href="#path">PATH like structure</a> and can also be set via a nested
-<em>classpath</em> element.</p>
+<i>classpath</i> element.</p>
 <h3>Examples</h3>
-<pre>  &lt;taskdef name=&quot;myjavadoc&quot; classname=&quot;com.mydomain.JavadocTask&quot; /&gt;</pre>
+<pre>  &lt;taskdef name=&quot;myjavadoc&quot; classname=&quot;com.mydomain.JavadocTask&quot;/&gt;</pre>
 <p>makes a task called <code>myjavadoc</code> available to Ant. The class <code>com.mydomain.JavadocTask</code>
 implements the task.</p>
 <hr>
@@ -4632,10 +4785,10 @@ of now works, all other cases will emit a warning.</p>
 <p>If both <code>millis</code> and <code>datetime</code> are omitted
 the current time is assumed.</p>
 <h3>Examples</h3>
-<pre>  &lt;touch file=&quot;myfile&quot; /&gt;</pre>
+<pre>  &lt;touch file=&quot;myfile&quot;/&gt;</pre>
 <p>creates <code>myfile</code> if it doesn't exist and changes the
 modification time to the current time.</p>
-<pre>  &lt;touch file=&quot;myfile&quot; datetime=&quot;06/28/2000 2:02 pm&quot; /&gt;</pre>
+<pre>  &lt;touch file=&quot;myfile&quot; datetime=&quot;06/28/2000 2:02 pm&quot;/&gt;</pre>
 <p>creates <code>myfile</code> if it doesn't exist and changes the
 modification time to Jun, 28 2000 2:02 pm (14:02 for those used to 24
 hour times).</p>
@@ -4707,11 +4860,11 @@ one mapper element are required.</p>
   </tr>
   <tr>
     <td valign="top">type</td>
-    <td valign="top">One of <em>file</em>, <em>dir</em> or
-      <em>both</em>. If set to <em>file</em>, only the names of plain
-      files will be sent to the command. If set to <em>dir</em>, only
+    <td valign="top">One of <i>file</i>, <i>dir</i> or
+      <i>both</i>. If set to <i>file</i>, only the names of plain
+      files will be sent to the command. If set to <i>dir</i>, only
       the names of directories are considered.</td>
-    <td align="center" valign="top">No, default is <em>file</em></td>
+    <td align="center" valign="top">No, default is <i>file</i></td>
   </tr>
 </table>
 <h3>Parameters specified as nested elements</h3>
@@ -4743,12 +4896,12 @@ description in the section about <a href="#env">exec</a></p>
 <h3>Examples</h3>
 <blockquote><pre>
 &lt;transform executable=&quot;cc&quot; dest=&quot;src/C&quot; parallel=&quot;false&quot;&gt;
-  &lt;arg value=&quot;-c&quot; /&gt;
-  &lt;arg value=&quot;-o&quot; /&gt;
+  &lt;arg value=&quot;-c&quot;/&gt;
+  &lt;arg value=&quot;-o&quot;/&gt;
   &lt;targetfile/&gt;
   &lt;srcfile/&gt;
-  &lt;fileset dir=&quot;src/C&quot; includes=&quot;*.c&quot; /&gt;
-  &lt;mapper type=&quot;glob&quot; from=&quot;*.c&quot; to=&quot;*.o&quot; /&gt;
+  &lt;fileset dir=&quot;src/C&quot; includes=&quot;*.c&quot;/&gt;
+  &lt;mapper type=&quot;glob&quot; from=&quot;*.c&quot; to=&quot;*.o&quot;/&gt;
 &lt;/transform&gt;
 </pre></blockquote>
 <p>invokes <code>cc -c -o TARGETFILE SOURCEFILE</code> for each
@@ -4853,14 +5006,14 @@ execution depending on the relative age of the specified files.</p>
 </table>
 <h3>Examples</h3>
 <pre>  &lt;uptodate property=&quot;xmlBuild.notRequired&quot; targetfile=&quot;${deploy}\xmlClasses.jar&quot; &gt;
-    &lt;srcfiles dir= &quot;${src}/xml&quot; includes=&quot;**/*.dtd&quot; /&gt;
+    &lt;srcfiles dir= &quot;${src}/xml&quot; includes=&quot;**/*.dtd&quot;/&gt;
   &lt;/uptodate&gt;</pre>
 <p>sets the property <code><i>xmlBuild.notRequired</i></code> to the value &quot;true&quot;
 if the <i>${deploy}/xmlClasses.jar</i> is more up to date than any of the DTD files in the <i>${src}/xml</i> directory.</p>
 <p>This can be written as
 <pre>  &lt;uptodate property=&quot;xmlBuild.notRequired&quot;  &gt;
-    &lt;srcfiles dir= &quot;${src}/xml&quot; includes=&quot;**/*.dtd&quot; /&gt;
-    &lt;mapper type=&quot;merge&quot; to=&quot;${deploy}\xmlClasses.jar&quot; /&gt;
+    &lt;srcfiles dir= &quot;${src}/xml&quot; includes=&quot;**/*.dtd&quot;/&gt;
+    &lt;mapper type=&quot;merge&quot; to=&quot;${deploy}\xmlClasses.jar&quot;/&gt;
   &lt;/uptodate&gt;</pre>
 <p>as well.</p>
 <hr>
@@ -5033,12 +5186,12 @@ src/graphics/images/gifs/large/logo.gif
 then the war file <code>myapp.war</code> created with
 <pre>
 &lt;war warfile=&quot;myapp.war&quot; webxml=&quot;src/metadata/myapp.xml&quot;&gt;
-  &lt;fileset dir=&quot;src/html/myapp&quot; /&gt;
-  &lt;fileset dir=&quot;src/jsp/myapp&quot; /&gt;
+  &lt;fileset dir=&quot;src/html/myapp&quot;/&gt;
+  &lt;fileset dir=&quot;src/jsp/myapp&quot;/&gt;
   &lt;lib dir=&quot;thirdparty/libs&quot;&gt;
-    &lt;exclude name=&quot;jdbc1.jar&quot; /&gt;
+    &lt;exclude name=&quot;jdbc1.jar&quot;/&gt;
   &lt;/lib&gt;
-  &lt;classes dir=&quot;build/main&quot; /&gt;
+  &lt;classes dir=&quot;build/main&quot;/&gt;
   &lt;prefixedfileset dir=&quot;src/graphics/images/gifs&quot; 
                    prefix="images"/&gt;
 &lt;/war&gt;
@@ -5078,12 +5231,12 @@ supports all attributes of <code>&lt;fileset&gt;</code>
 <code>&lt;include&gt;</code>, <code>&lt;exclude&gt;</code> and
 <code>&lt;patternset&gt;</code> elements.</p>
 <p>Or, you may place within it nested file sets, or references to file sets.
-In this case <code>basedir</code> is optional; the implicit file set is <em>only used</em>
+In this case <code>basedir</code> is optional; the implicit file set is <i>only used</i>
 if <code>basedir</code> is set. You may use any mixture of the implicit file set
 (with <code>basedir</code> set, and optional attributes like <code>includes</code>
 and optional subelements like <code>&lt;include&gt;</code>); explicit nested
 <code>&lt;fileset&gt;</code> elements so long as at least one fileset total is specified. The ZIP file will
-only reflect the relative paths of files <em>within</em> each fileset.</p>
+only reflect the relative paths of files <i>within</i> each fileset.</p>
 <p><code>&lt;zip&gt;</code> elements may contain both regular <code>&lt;fileset&gt;</code> elements
 and also <code>&lt;prefixedfileset&gt;</code> elements.  A <code>&lt;prefixedfileset&gt;</code> is an extended form of a fileset,
 which may include one of two special attributes: 
@@ -5208,6 +5361,7 @@ current directory as <code>docs/ChangeLog.txt</code>. For example, the archive m
   <li><a href="propertyfile.html">PropertyFile</a></li>
   <li><a href="#renameexts">RenameExtensions</a></li>
   <li><a href="#script">Script</a></li>
+  <li><a href="#sound">Sound</a></li>
   <li><a href="#telnet">Telnet</a></li>
   <li><a href="#vssget">VssGet</a></li>
 </ul>
@@ -5429,7 +5583,7 @@ write patterns.</p>
   &lt;ftp server=&quot;ftp.apache.org&quot;
        userid=&quot;anonymous&quot;
        password=&quot;me@myorg.com&quot;&gt;
-    &lt;fileset dir=&quot;htdocs/manual&quot; /&gt;
+    &lt;fileset dir=&quot;htdocs/manual&quot;/&gt;
   &lt;/ftp&gt;
 </pre>
 <p>Logs in to <code>ftp.apache.org</code> as <code>anonymous</code> and 
@@ -5441,7 +5595,7 @@ to the default directory for that user.</p>
        password=&quot;me@myorg.com&quot;
        depends=&quot;yes&quot;
   &gt;
-    &lt;fileset dir=&quot;htdocs/manual&quot; /&gt;
+    &lt;fileset dir=&quot;htdocs/manual&quot;/&gt;
   &lt;/ftp&gt;</pre>
 <p>Logs in to <code>ftp.apache.org</code> as <code>anonymous</code> and 
 uploads all new or changed files in the <code>htdocs/manual</code> directory 
@@ -5456,7 +5610,7 @@ for <code>anonymous</code>.</p>
        binary=&quot;no&quot;
   &gt;
     &lt;fileset dir=&quot;htdocs/manual&quot;&gt;
-      &lt;include name=&quot;**/*.html&quot; /&gt;
+      &lt;include name=&quot;**/*.html&quot;/&gt;
     &lt;/fileset&gt;
   &lt;/ftp&gt;</pre>
 <p>Logs in to <code>ftp.apache.org</code> at port <code>2121</code> as 
@@ -5472,7 +5626,7 @@ changed HTML files in the <code>htdocs/manual</code> directory to the
 <PRE>
   &gt;
     &lt;fileset dir=&quot;htdocs/manual&quot;&gt;
-      &lt;include name=&quot;**/*.html&quot; /&gt;
+      &lt;include name=&quot;**/*.html&quot;/&gt;
     &lt;/fileset&gt;
   &lt;/ftp&gt;</PRE><p>Logs in to the Windows-based <code>ftp.nt.org</code> as 
 <code>coder</code> with password <code>java1</code> and uploads all 
@@ -5491,7 +5645,7 @@ into.  The file structure from the FTP site is preserved on the local machine.</
        userid=&quot;anonymous&quot;
        password=&quot;me@myorg.com&quot;&gt;
     &lt;fileset dir=&quot;htdocs/manual&quot; &gt;
-      &lt;include name=&quot;**/*.html&quot; /&gt;
+      &lt;include name=&quot;**/*.html&quot;/&gt;
     &lt;/fileset&gt;
   &lt;/ftp&gt;
 </pre>
@@ -5509,7 +5663,7 @@ fact, the dir attribute of the fileset is ignored completely.
        userid=&quot;anonymous&quot;
        password=&quot;me@myorg.com&quot; &gt;
     &lt;fileset&gt;
-      &lt;include name=&quot;**/*.tmp&quot; /&gt;
+      &lt;include name=&quot;**/*.tmp&quot;/&gt;
     &lt;/fileset&gt;
   &lt;/ftp&gt;
 </pre>
@@ -5524,7 +5678,7 @@ If you don't have permission to delete a file, a BuildException is thrown.</p>
        password=&quot;me@myorg.com&quot; 
        listing=&quot;data/ftp.listing&quot; &gt;
     &lt;fileset&gt;
-      &lt;include name=&quot;**&quot; /&gt;
+      &lt;include name=&quot;**&quot;/&gt;
     &lt;/fileset&gt;
   &lt;/ftp&gt;
 </pre>
@@ -5790,7 +5944,7 @@ supports all attributes of <code>&lt;fileset&gt;</code>
            classpath=&quot;/source/project2/proj.jar&quot;
            comments=&quot;true&quot;
            crossref=&quot;false&quot; replace=&quot;true&quot;
-           keep=&quot;true&quot; /&gt;</code>
+           keep=&quot;true&quot;/&gt;</code>
   </p>
 </blockquote>
 <hr>
@@ -5881,7 +6035,7 @@ supports all attributes of <code>&lt;fileset&gt;</code>
               excludes=&quot;**/samples/*&quot;
               fromExtension=&quot;.java.keep&quot;
               toExtension=&quot;.java&quot;
-              replace=&quot;true&quot; /&gt;
+              replace=&quot;true&quot;/&gt;
 </code>
   </p>
 </blockquote>
@@ -5932,7 +6086,7 @@ accessible from the script, using either their <code>name</code> or
 
   &lt;/target&gt;
 
-  &lt;target name=&quot;main&quot; depends=&quot;setup&quot; /&gt;
+  &lt;target name=&quot;main&quot; depends=&quot;setup&quot;/&gt;
 
 &lt;/project&gt;
 </pre></blockquote>
@@ -5959,7 +6113,7 @@ and two different scripting languages:</p>
 <blockquote><pre>
 &lt;project name=&quot;testscript&quot; default=&quot;main&quot;&gt;
   &lt;target name=&quot;sub&quot;&gt;
-    &lt;echo id=&quot;theEcho&quot; /&gt;
+    &lt;echo id=&quot;theEcho&quot;/&gt;
   &lt;/target&gt;
 
   &lt;target name=&quot;sub1&quot;&gt;
@@ -5976,7 +6130,7 @@ and two different scripting languages:</p>
     ]]&gt;&lt;/script&gt;
   &lt;/target&gt;
 
-  &lt;target name=&quot;main&quot; depends=&quot;sub1,sub2&quot; /&gt;
+  &lt;target name=&quot;main&quot; depends=&quot;sub1,sub2&quot;/&gt;
 &lt;/project&gt;
 </pre></blockquote>
 <p>generates</p>
@@ -5991,6 +6145,87 @@ main:
 
 BUILD SUCCESSFUL
 </pre></blockquote>
+
+<hr>
+<h2><a name="sound">Sound</a></h2>
+<h3>Description</h3>
+<p>Plays a sound-file at the end of the build, according to whether
+the build failed or succeeded. You can specify either a specific
+sound-file to play, or, if a directory is specified, the
+<code>&lt;sound&gt;</code> task will randomly select a file to play.
+Note: At this point, the random selection is based on all the files
+in the directory, not just those ending in appropriate suffixes
+for sound-files, so be sure you only have sound-files in the 
+directory you specify.
+
+<h3>Parameters</h3>
+<table border="1" cellpadding="2" cellspacing="0">
+  <tr>
+    <td valign="top"><b>Attribute</b></td>
+    <td valign="top"><b>Description</b></td>
+    <td align="center" valign="top"><b>Required</b></td>
+  </tr>
+  <tr>
+    <td valign="top">loops</td>
+    <td valign="top">the number of extra times to play the sound-file;
+      default is <code>0</code>.
+    </td>
+    <td valign="top" align="center">No</td>
+  </tr>
+  <tr>
+    <td valign="top">duration</td>
+    <td valign="top">the amount of time (in milliseconds) to play
+      the sound-file.
+    </td>
+    <td valign="top" align="center">No</td>
+  </tr>
+</table>
+<p>
+To specify the sound-files or the sound-file directories, use the
+nested <code>&lt;success&gt;</code> and <code>&lt;fail&gt;</code> 
+elements:
+<blockquote>
+<pre>
+&lt;success&gt;     the path to a sound-file directory, or the name of a
+              specific sound-file, to be played if the build succeeded.
+&lt;fail&gt;        the path to a sound-file directory, or the name of a
+              specific sound-file, to be played if the build succeeded.
+</pre>
+</blockquote>
+
+<h3>Examples</h3>
+<blockquote>
+<pre>
+&lt;target name="fun" if="fun" unless="fun.done"&gt;
+  &lt;sound loops="2"&gt;
+    &lt;success source="${user.home}/sounds/bell.wav"/&gt;
+    &lt;fail source="${user.home}/sounds/ohno.wav"/&gt;
+  &lt;/sound&gt;
+  &lt;property name="fun.done" value="true"/&gt;
+&lt;/target&gt;
+</pre>
+</blockquote>
+plays the <code>bell.wav</code> sound-file if the build succeeded, or
+the <code>ohno.wav</code> sound-file if the build failed, three times,
+if the <code>fun</code> property is set to <code>true</code>.
+If the target
+is a dependency of an &quot;initialization&quot; target that other
+targets depend on, the
+<code>fun.done</code> property prevents the target from being executed
+more than once.
+<blockquote>
+<pre>
+&lt;target name="fun" if="fun" unless="fun.done"&gt;
+  &lt;sound>
+    &lt;success source="//intranet/sounds/success"/&gt;
+    &lt;fail source="//intranet/sounds/failure"/&gt;
+  &lt;/sound&gt;
+  &lt;property name="fun.done" value="true"/&gt;
+&lt;/target&gt;
+</pre>
+</blockquote>
+randomly selects a sound-file to play when the build succeeds or fails.
+
 <hr>
 <h2><a name="telnet">Telnet</a></h2>
 <h3>Description</h3>
@@ -6156,7 +6391,7 @@ which are labeled <i>Release1</i> and write them to the local directory
 
 <h2><a name="buildevents">Build Events</a></h2>
 Ant is capable of generating build events as it performs the tasks necessary to build a project. 
-Listeners can be attached to ant to receive these events. This capability could be used, for example,
+Listeners can be attached to Ant to receive these events. This capability could be used, for example,
 to connect Ant to a GUI or to integrate Ant with an IDE. 
 
 <p>To use build events you need to create an ant <code>Project</code> object. You can then call the 
@@ -6173,61 +6408,84 @@ for the following events
 <li>Message logged
 </ul>
 
-If you wish to attach a listener from the command line you may use the -listener option. For example
+If you wish to attach a listener from the command line you may use the
+<code>-listener</code> option. For example:
 <blockquote>
   <pre>ant -listener org.apache.tools.ant.XmlLogger</pre>
 </blockquote>
-will run ant with a listener which generates an XML representation of the build progress. This 
-listener is included with ant as is the default listener which generates the logging to standard
-output.
-
+will run Ant with a listener that generates an XML representation of the build progress. This 
+listener is included with Ant, as is the default listener, which generates the logging to standard output.
 
 <hr>
-<h2><a name="writingowntask">Writing your own task</a></h2>
+<h2><a name="writingowntask">Writing Your Own Task</a></h2>
 <p>It is very easy to write your own task:</p>
 <ol>
   <li>Create a Java class that extends <code>org.apache.tools.ant.Task</code>.</li>
-  <li>For each attribute, write a setter method. The setter method must be a 
+  <li>For each attribute, write a <i>setter</i> method. The setter method must be a 
     <code>public void</code> method that takes a single argument. The
-    name of the method must begin with &quot;set&quot;, followed by the
-    attribute name, with the first character in uppercase, and the rest in
-    lowercase. The type of the attribute can be <code>String</code>, any 
-    primitive type (they are converted for you from their String-representation
-	in the build-file. If you specify a boolean your method will be passed the value 
-	<i>true</i> if the value specified in the build-file is one of &quot;true&quot;,
-	&quot;yes&quot; or &quot;on&quot;), <code>Class</code>, <code>File</code>
-	(in which case the value of the attribute is interpreted relative to the 
-	project's basedir) or any other type that has a constructor with a single 
-	<code>String</code> argument</li>
-  <li>If your task has enumerated attributes, you should consider using
-    a subclass of org.apache.tools.ant.types.EnumeratedAttribute as argument
-    to your setter method. See org.apache.tools.ant.taskdefs.FixCRLF for
-    an example.</li>
-  <li>If the task should support character data, write a <code>public void 
-    addText(String)</code> method.</li>
-  <li>For each nested element, write a create or add method. A create method 
-    must be a <code>public</code> method that takes no arguments and returns 
-    an Object type. The name of the create method must begin with 
-    &quot;create&quot;, followed by the element name. An add method must be 
-    a <code>public void</code> method that takes a single argument of an 
-    Object type with a no argument constructor. The name of the add method 
-    must begin with &quot;add&quot;, followed by the element name.
-  <li>Write a <code>public void execute</code> method, with no arguments, that
-    throws a <code>BuildException</code>. This method implements the task
-    itself.</li>
+    name of the method must begin with <code>set</code>, followed by the
+    attribute name, with the first character of the name in uppercase, and the rest in
+    lowercase. The type of the attribute can be:
+<ul>
+<li>
+<code>String</code>
+</li>
+<li>
+any primitive type (they are converted for you from their String-representation
+in the buildfile)
+</li>
+<li>
+boolean &#150; your method will be passed the value 
+<i>true</i> if the value specified in the buildfile is one of <code>true</code>,
+<code>yes</code>, or <code>on</code>)
+</li>
+<li>
+<code>Class</code>
+<li>
+<code>File</code>
+(in which case the value of the attribute is interpreted relative to the 
+project's basedir)
+</li>
+<li>
+any other type that has a constructor with a single 
+<code>String</code> argument
+</li>
+</ul>
+<li>If your task has enumerated attributes, you should consider using
+a subclass of <code>org.apache.tools.ant.types.EnumeratedAttribute</code>
+as an argument
+to your setter method. See
+<code>org/apache/tools/ant/taskdefs/FixCRLF.java</code> for
+an example.</li>
+<li>If the task should support character data, write a <code>public void 
+addText(String)</code> method.</li>
+<li>For each nested element, write a <i>create</i> or <i>add</i> method.
+A create method 
+must be a <code>public</code> method that takes no arguments and returns 
+an <code>Object</code> type. The name of the create method must begin with 
+<code>create</code>, followed by the element name. An add method must be 
+a <code>public void</code> method that takes a single argument of an 
+<code>Object</code> type with a no-argument constructor.
+The name of the add method 
+must begin with <code>add</code>, followed by the element name.
+<li>Write a <code>public void execute</code> method, with no arguments, that
+throws a <code>BuildException</code>. This method implements the task
+itself.</li>
 </ol>
-<h3>The life cycle of a task</h3>
+
+<h3>The Life-cycle of a Task</h3>
 <ol>
-  <li>The task gets instantiated using a no-arg constructor at parser
+  <li>The task gets instantiated using a no-argument constructor, at parser
     time. This means even tasks that are never executed get
     instantiated.</li>
 
-  <li>The tasks gets references to its project and location inside the
-    build file via their inherited <code>project</code> and
+  <li>The task gets references to its project and location inside the
+    buildfile via its inherited <code>project</code> and
     <code>location</code> variables.</li>
 
-  <li>If the user specified an id attribute to this task, the project
-    registers a reference to this newly created task - at parser
+  <li>If the user specified an <code>id</code> attribute to this task,
+    the project
+    registers a reference to this newly created task, at parser
     time.</li>
 
   <li>The task gets a reference to the target it belongs to via its
@@ -6238,30 +6496,35 @@ output.
   <li>All child elements of the XML element corresponding to this task
     are created via this task's <code>createXXX()</code> methods or
     instantiated and added to this task via its <code>addXXX()</code>
-    methods - at parser time.</li>
+    methods, at parser time.</li>
 
   <li>All attributes of this task get set via their corresponding
-    <code>setXXX</code> methods - at runtime.</li>
+    <code>setXXX</code> methods, at runtime.</li>
 
   <li>The content character data sections inside the XML element
     corresponding to this task is added to the task via its
-    <code>addText</code> method - at runtime.</li>
+    <code>addText</code> method, at runtime.</li>
 
   <li>All attributes of all child elements get set via their corresponding
-    <code>setXXX</code> methods - at runtime.</li>
+    <code>setXXX</code> methods, at runtime.</li>
 
   <li><code>execute()</code> is called at runtime. While the above initialization 
     steps only occur once, the execute() method may be 
     called more than once, if the task is invoked more than once. For example, 
-    if target1 and target2 both depend on target3, then running 
-    "ant target1 target2" will run all tasks in target3 twice.</li>
-
+    if <code>target1</code> and <code>target2</code> both depend
+    on <code>target3</code>, then running 
+    <code>'ant target1 target2'</code> will run all tasks in
+    <code>target3</code> twice.</li>
 </ol>
+
 <h3>Example</h3>
-<p>Let's write our own task, that prints a message on the System.out stream. The
-task has one attribute called &quot;message&quot;.</p>
+<p>Let's write our own task, which prints a message on the
+<code>System.out</code> stream.
+The
+task has one attribute, called <code>message</code>.</p>
 <blockquote>
-  <pre>package com.mydomain;
+<pre>
+package com.mydomain;
 
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Task;
@@ -6278,41 +6541,47 @@ public class MyVeryOwnTask extends Task {
   public void setMessage(String msg) {
     this.msg = msg;
   }
-}</pre>
+}
+</pre>
 </blockquote>
-<p>It's really this simple;-)</p>
+<p>It's really this simple ;-)</p>
 <p>Adding your task to the system is rather simple too:</p>
 <ol>
   <li>Make sure the class that implements your task is in the classpath when
     starting Ant.</li>
-  <li>Add a <i>taskdef</i> element to your project. This actually adds
-    your task to the system.</li>
+  <li>Add a <code>&lt;taskdef&gt;</code> element to your project.
+    This actually adds your task to the system.</li>
   <li>Use your task in the rest of the buildfile.</li>
 </ol>
+
 <h3>Example</h3>
 <blockquote>
-  <pre>&lt;?xml version=&quot;1.0&quot;?&gt;
+<pre>
+&lt;?xml version=&quot;1.0&quot;?&gt;
 
 &lt;project name=&quot;OwnTaskExample&quot; default=&quot;main&quot; basedir=&quot;.&quot;&gt;
   &lt;taskdef name=&quot;mytask&quot; classname=&quot;com.mydomain.MyVeryOwnTask&quot;/&gt;
 
   &lt;target name=&quot;main&quot;&gt;
-    &lt;mytask message=&quot;Hello World! MyVeryOwnTask works!&quot; /&gt;
+    &lt;mytask message=&quot;Hello World! MyVeryOwnTask works!&quot;/&gt;
   &lt;/target&gt;
 &lt;/project&gt;
 </pre>
 </blockquote>
 <p>Another way to add a task (more permanently), is to add the task name and
-implementing class name to the <code>default.properties</code> file in the <code>org.apache.tools.ant.taskdefs</code>
-package. Then you can use it as if it were a built in task.</p>
+implementing class name to the <code>default.properties</code> file in the
+<code>org.apache.tools.ant.taskdefs</code>
+package. Then you can use it as if it were a built-in task.</p>
+
 <hr>
-<h2><a name="faq">FAQ, DTD, external resources</a></h2>
-<p>There is an online FAQ for Ant at <a
+<h2><a name="faq">FAQ, DTD, External Resources</a></h2>
+<p>There is an on-line FAQ for Ant at <a
 href="http://jakarta.apache.org/jyve-faq/Turbine/screen/DisplayTopics/action/SetAll/project_id/2/faq_id/16">jakarta.apache.org</a>. This
 FAQ is interactive, which means you can ask and answer questions
-online.</p>
-<p>One of the questions poping up quite often is &quot;Is there a DTD for
-buildfiles?&quot;. Please refer to the FAQ for an answer.</p>
+on line.</p>
+<p>One of the questions popping up quite often is &quot;Is there a DTD for
+buildfiles?&quot; Please refer to the FAQ for an answer.</p>
+
 <hr>
 <h2><a name="feedback">Feedback</a></h2>
 <p>To provide feedback on this software, please subscribe to the Ant User
@@ -6322,15 +6591,14 @@ development, join the Ant Development Mail List (<a
 href="mailto:ant-dev-subscribe@jakarta.apache.org">ant-dev-subscribe@jakarta.apache.org</a>)</p>
 <p>Archives of both lists can be found at <a
 href="http://archive.covalent.net/">http://archive.covalent.net/</a>. Many
-thanks to Covalent Technologies. Another archive can be found at <a
+thanks to Covalent Technologies. A searchable archive can be found at <a
 href="http://marc.theaimsgroup.com">http://marc.theaimsgroup.com</a>. If
-you know of any additional archive sites, please report to the
+you know of any additional archive sites, please report them to the
 lists.</p>
 <hr>
-<p align="center">Copyright &copy; 2000 Apache Software Foundation. All rights
+<p align="center">Copyright &copy; 2000,2001 Apache Software Foundation. All rights
 Reserved.</p>
 
 </body>
-
 </html>
 
