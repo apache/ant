@@ -5,7 +5,7 @@
  * version 1.1, a copy of which has been included with this distribution in
  * the LICENSE file.
  */
-package org.apache.ant.modules.basic;
+package org.apache.myrmidon.framework;
 
 import org.apache.myrmidon.api.DataType;
 import org.apache.myrmidon.api.TaskException;
@@ -77,6 +77,11 @@ public class Pattern
     {
         verifyConditionNull();
         m_condition = new Condition( false, condition );
+    }
+
+    public String toString()
+    {
+        return "Pattern['" + m_name + "'," + m_condition + "]" ;
     }
 
     /**
