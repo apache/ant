@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2001 The Apache Software Foundation.  All rights
+ * Copyright (c) 2001-2002 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -83,4 +83,13 @@ public class BZip2Test extends BuildFileTest {
         assertTrue(fileUtils.contentEquals(project.resolveFile("expected/asf-logo-huge.tar.bz2"),
                                            project.resolveFile("asf-logo-huge.tar.bz2")));
     }
+
+    public void testDateCheck(){
+        executeTarget("testDateCheck");
+        String log = getLog();
+        assertTrue(
+            "Expecting message ending with 'asf-logo.gif.bz2 is up to date.' but got '" + log + "'",
+            log.endsWith("asf-logo.gif.bz2 is up to date."));
+    }
+
 }
