@@ -40,16 +40,7 @@ public class ClassicConfigurer
         ResourceManager.getPackageResources( DefaultConfigurer.class );
 
     ///Compile time constant to turn on extreme debugging
-    private final static boolean DEBUG = false;
-
-    /*
-     * TODO: Should reserved names be "configurable" ?
-     */
-    ///Element names that are reserved
-    private final static String[] RESERVED_ELEMENTS = new String[]
-    {
-        "content"
-    };
+    private static final boolean DEBUG = false;
 
     ///Converter to use for converting between values
     private MasterConverter m_converter;
@@ -81,7 +72,7 @@ public class ClassicConfigurer
         if( DEBUG )
         {
             final String message = REZ.getString( "configuring-object.notice", object );
-            getLogger().debug( "Configuring " + object );
+            getLogger().debug( message );
         }
 
         if( object instanceof Configurable )
@@ -89,7 +80,7 @@ public class ClassicConfigurer
             if( DEBUG )
             {
                 final String message = REZ.getString( "configurable.notice" );
-                getLogger().debug( "Configuring object via Configurable interface" );
+                getLogger().debug( message );
             }
 
             ( (Configurable)object ).configure( configuration );
@@ -221,7 +212,7 @@ public class ClassicConfigurer
     private void setValue( final Object object,
                            final String value,
                            final Context context,
-                           final Method methods[] )
+                           final Method[] methods )
         throws ConfigurationException
     {
         try
@@ -241,7 +232,7 @@ public class ClassicConfigurer
 
     private void setValue( final Object object,
                            Object value,
-                           final Method methods[],
+                           final Method[] methods,
                            final Context context )
         throws ConfigurationException
     {
@@ -250,7 +241,7 @@ public class ClassicConfigurer
 
         for( int i = 0; i < methods.length; i++ )
         {
-            if( setValue( object, value, methods[ i ], sourceClass, source, context ) )
+            if( setValue( object, value, methods[ i ], context ) )
             {
                 return;
             }
@@ -262,10 +253,8 @@ public class ClassicConfigurer
     }
 
     private boolean setValue( final Object object,
-                              Object value,
+                              final Object originalValue,
                               final Method method,
-                              final Class sourceClass,
-                              final String source,
                               final Context context )
         throws ConfigurationException
     {
@@ -275,6 +264,7 @@ public class ClassicConfigurer
             parameterType = getComplexTypeFor( parameterType );
         }
 
+        Object value = originalValue;
         try
         {
             value = m_converter.convert( parameterType, value, context );
@@ -323,21 +313,37 @@ public class ClassicConfigurer
     private Class getComplexTypeFor( final Class clazz )
     {
         if( String.class == clazz )
+        {
             return String.class;
+        }
         else if( Integer.TYPE.equals( clazz ) )
+        {
             return Integer.class;
+        }
         else if( Long.TYPE.equals( clazz ) )
+        {
             return Long.class;
+        }
         else if( Short.TYPE.equals( clazz ) )
+        {
             return Short.class;
+        }
         else if( Byte.TYPE.equals( clazz ) )
+        {
             return Byte.class;
+        }
         else if( Boolean.TYPE.equals( clazz ) )
+        {
             return Boolean.class;
+        }
         else if( Float.TYPE.equals( clazz ) )
+        {
             return Float.class;
+        }
         else if( Double.TYPE.equals( clazz ) )
+        {
             return Double.class;
+        }
         else
         {
             final String message = REZ.getString( "no-complex-type.error", clazz.getName() );
@@ -347,7 +353,7 @@ public class ClassicConfigurer
 
     private Method[] getMethodsFor( final Class clazz, final String methodName )
     {
-        final Method methods[] = clazz.getMethods();
+        final Method[] methods = clazz.getMethods();
         final ArrayList matches = new ArrayList();
 
         for( int i = 0; i < methods.length; i++ )
@@ -358,7 +364,7 @@ public class ClassicConfigurer
             {
                 if( method.getReturnType().equals( Void.TYPE ) )
                 {
-                    final Class parameters[] = method.getParameterTypes();
+                    final Class[] parameters = method.getParameterTypes();
                     if( 1 == parameters.length )
                     {
                         matches.add( method );
@@ -372,7 +378,7 @@ public class ClassicConfigurer
 
     private Method[] getCreateMethodsFor( final Class clazz, final String methodName )
     {
-        final Method methods[] = clazz.getMethods();
+        final Method[] methods = clazz.getMethods();
         final ArrayList matches = new ArrayList();
 
         for( int i = 0; i < methods.length; i++ )
@@ -385,7 +391,7 @@ public class ClassicConfigurer
                 if( !returnType.equals( Void.TYPE ) &&
                     !returnType.isPrimitive() )
                 {
-                    final Class parameters[] = method.getParameterTypes();
+                    final Class[] parameters = method.getParameterTypes();
                     if( 0 == parameters.length )
                     {
                         matches.add( method );
@@ -437,7 +443,7 @@ public class ClassicConfigurer
         // OMFG the rest of this is soooooooooooooooooooooooooooooooo
         // slow. Need to cache results per class etc.
         final Class clazz = object.getClass();
-        Method methods[] = getMethodsFor( clazz, "add" + javaName );
+        Method[] methods = getMethodsFor( clazz, "add" + javaName );
 
         if( 0 != methods.length )
         {
