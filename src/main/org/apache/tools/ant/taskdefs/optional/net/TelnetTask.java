@@ -95,24 +95,24 @@ public class TelnetTask extends Task {
        AntTelnetClient telnet = null;
        try {
            telnet = new AntTelnetClient();
-       try {
-           telnet.connect(server, port);
-       } catch (IOException e) {
-           throw new BuildException("Can't connect to " + server);
-       }
-       /**  Login if userid and password were specified */
-       if (userid != null && password != null) {
-          login(telnet);
-       }
-       /**  Process each sub command */
-       Enumeration tasksToRun = telnetTasks.elements();
-       while (tasksToRun != null && tasksToRun.hasMoreElements()) {
-           TelnetSubTask task = (TelnetSubTask) tasksToRun.nextElement();
-           if (task instanceof TelnetRead && defaultTimeout != null) {
-               ((TelnetRead) task).setDefaultTimeout(defaultTimeout);
+           try {
+               telnet.connect(server, port);
+           } catch (IOException e) {
+               throw new BuildException("Can't connect to " + server);
            }
-           task.execute(telnet);
-       }
+           /**  Login if userid and password were specified */
+           if (userid != null && password != null) {
+               login(telnet);
+           }
+           /**  Process each sub command */
+           Enumeration tasksToRun = telnetTasks.elements();
+           while (tasksToRun != null && tasksToRun.hasMoreElements()) {
+               TelnetSubTask task = (TelnetSubTask) tasksToRun.nextElement();
+               if (task instanceof TelnetRead && defaultTimeout != null) {
+                   ((TelnetRead) task).setDefaultTimeout(defaultTimeout);
+               }
+               task.execute(telnet);
+           }
        } finally {
            if (telnet != null) {
                try {
