@@ -1,71 +1,65 @@
-@ECHO OFF
-echo BOOTSTRAPPING ANT DISTRIBUTION
+@echo off
 
-set C=%CLASSPATH%;lib/xml.jar
-set SRCDIR=src\main\org\apache\tools
-set TMPDIR=tmp
+REM You will need to specify JAVA_HOME if compiling with 1.2 or later.
 
-if "%OS%" == "Windows_NT" goto nt
-goto windows
+set JAVA_HOME=
+set JAVA=
+set JAVAC=
 
-:doneOs
+if exist ..\antrc.bat call ..\antrc.bat
 
-rem Delete temp directory if it exists
-if exist %TMPDIR%\nul %RMDIRCMD% %TMPDIR% nul
+if "" == "%JAVA%"  if "" == "%JAVA_HOME%" set JAVA=java
+if "" == "%JAVA%"                         set JAVA=%JAVA_HOME%\bin\java
 
-rem make the temp directory
-mkdir %TMPDIR%
+if "" == "%JAVAC%" if "" == "%JAVA_HOME%" set JAVAC=javac
+if "" == "%JAVAC%"                        set JAVAC=%JAVA_HOME%\bin\javac
 
-echo ** COMPILING ANT CLASSES
+echo.
+echo ... Bootstrapping Ant Distribution
 
-rem Reset classpath to include base ant class files
-set C=%TMPDIR%;%C%
+set CLASSPATH=src\main;classes;lib\xml.jar
+if exist %JAVA_HOME%\lib\tools.jar set CLASSPATH=%CLASSPATH%;%JAVA_HOME%\lib\tools.jar
 
-rem Compile sub classes into the temp directory
-javac -classpath "%C%" -d %TMPDIR% %SRCDIR%\tar\*.java
+echo JAVA_HOME=%JAVA_HOME%
+echo JAVA=%JAVA%
+echo JAVAC=%JAVAC%
+echo CLASSPATH=%CLASSPATH%
 
-rem Compile the classes into the temp directory
-javac -classpath "%C%" -d %TMPDIR% %SRCDIR%\ant\*.java
+if     "%OS%" == "Windows_NT" if exist classes\nul rmdir/s/q classes
+if not "%OS%" == "Windows_NT" if exist classes\nul deltree/y classes
+mkdir classes
 
-rem Compile sub classes into the temp directory
-javac -classpath "%C%" -d %TMPDIR% %SRCDIR%\ant\taskdefs\*.java
+set TOOLS=src\main\org\apache\tools
 
+echo.
+echo ... Compiling Ant Classes
 
-echo ** COPYING REQUIRED FILES
+%JAVAC% -d classes %TOOLS%\tar\*.java %TOOLS%\ant\*.java %TOOLS%\ant\taskdefs\*.java
 
-rem Copy all the property/manifest files into the temp directory
+echo.
+echo ... Copying Required Files
 
-%COPYCMD% src\main\org\apache\tools\ant\taskdefs\defaults.properties %TMPDIR%\org\apache\tools\ant\taskdefs
-%COPYCMD% src\main\org\apache\tools\ant\parser.properties %TMPDIR%\org\apache\tools\ant
+copy %TOOLS%\ant\taskdefs\*.properties classes\org\apache\tools\ant\taskdefs
+copy %TOOLS%\ant\*.properties          classes\org\apache\tools\ant
 
-echo ** BUILDING ANT DISTRIBUTION
+echo.
+echo ... Building Ant Distribution
 
-rem Build the distribution using the newly compiled classes in the temp directory
-java -classpath "%C%" org.apache.tools.ant.Main main %1 %2 %3 %4 %5
+%JAVA% org.apache.tools.ant.Main main %1 %2 %3 %4 %5
 
-echo ** CLEANING UP BUILD DIRECTORIES
+echo.
+echo ... Cleaning Up Build Directories
 
-java -classpath "%C%" org.apache.tools.ant.Main clean %1 %2 %3 %4 %5
+%JAVA% org.apache.tools.ant.Main clean %1 %2 %3 %4 %5
 
-rem remove the temp directory
-%RMDIRCMD% %TMPDIR%
+if     "%OS%" == "Windows_NT" if exist classes\nul rmdir/s/q classes
+if not "%OS%" == "Windows_NT" if exist classes\nul deltree/y classes
 
-goto end
+echo.
+echo ... Done Bootstrapping Ant Distribution
 
-rem Set system dependent commands below
-:windows
-echo ** CONFIGURING COMMANDS FOR WINDOWS 9x SYSTEM
-set RMDIRCMD=deltree /Y
-set COPYCMD=copy
-goto doneOs
-
-:nt
-echo ** CONFIGURING COMMANDS FOR NT SYSTEM
-set RMDIRCMD=rmdir /s /q
-set COPYCMD=copy
-goto doneOs
-
-:end
-
-echo ** DONE BOOTSTRAPPING ANT DISTRIBUTION
-
+set JAVA_HOME=
+set JAVA=
+set JAVAC=
+set CLASSPATH=
+set TOOLS=
