@@ -9,7 +9,6 @@ package org.apache.antlib.vfile;
 
 import org.apache.aut.converter.AbstractConverter;
 import org.apache.aut.converter.ConverterException;
-import org.apache.myrmidon.api.TaskContext;
 
 /**
  * A converter from {@link FileSet} to {@link FileList}.
@@ -34,9 +33,7 @@ public class FileSetToFileListConverter
     protected Object convert( final Object original, final Object context )
         throws ConverterException
     {
-        final TaskContext taskContext = (TaskContext)context;
         final FileSet src = (FileSet)original;
-
         return new FileSetAdaptor( src );
     }
 }
