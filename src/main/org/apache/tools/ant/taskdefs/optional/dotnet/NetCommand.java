@@ -1,5 +1,5 @@
 /*
- * Copyright  2000-2004 The Apache Software Foundation
+ * Copyright  2000-2005 The Apache Software Foundation
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -198,6 +198,20 @@ public class NetCommand {
     public void addArgument(String argument) {
         if (argument != null && argument.length() != 0) {
             commandLine.createArgument().setValue(argument);
+        }
+    }
+
+    /**
+     *  add an argument to a command line; do nothing if the arg is null or
+     *  empty string
+     *
+     *@param  argument  The feature to be added to the Argument attribute
+     */
+    public void addArguments(String[] arguments) {
+        if (arguments != null && arguments.length != 0) {
+            for (int i = 0; i < arguments.length; i++) {
+                addArgument(arguments[i]);
+            }
         }
     }
 

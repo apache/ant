@@ -283,6 +283,9 @@ Changes that could break older environments:
   attribute to point to.  This is the last version of the XSLT
   stylesheet that is expected to be compatible with Xalan-J 1.
 
+* <csc>'s extraoptions can now contain multiple arguments.
+  Bugzilla Report 23599.
+
 Fixed bugs:
 -----------
 

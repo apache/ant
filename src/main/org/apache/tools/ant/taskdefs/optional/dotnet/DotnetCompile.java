@@ -1,5 +1,5 @@
 /*
- * Copyright  2001-2004 The Apache Software Foundation
+ * Copyright  2001-2005 The Apache Software Foundation
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -35,6 +35,7 @@ import java.util.Hashtable;
 
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
+import org.apache.tools.ant.types.Commandline;
 import org.apache.tools.ant.types.Path;
 import org.apache.tools.ant.types.FileSet;
 import org.apache.tools.ant.types.EnumeratedAttribute;
@@ -469,6 +470,16 @@ public abstract class DotnetCompile
         }
     }
 
+    /**
+     *  get any extra options or null for no argument needed, split
+     *  them if they represent multiple options.
+     *
+     * @return    The ExtraOptions Parameter to CSC
+     */
+    protected String[] getExtraOptionsParameters() {
+        String extra = getExtraOptionsParameter();
+        return extra == null ? null : Commandline.translateCommandline(extra);
+    }
 
     /**
      * Set the destination directory of files to be compiled.
@@ -831,7 +842,7 @@ public abstract class DotnetCompile
         command.addArgument(getAdditionalModulesParameter());
         command.addArgument(getDebugParameter());
         command.addArgument(getDefinitionsParameter());
-        command.addArgument(getExtraOptionsParameter());
+        command.addArguments(getExtraOptionsParameters());
         command.addArgument(getMainClassParameter());
         command.addArgument(getOptimizeParameter());
         command.addArgument(getDestFileParameter());
