@@ -19,6 +19,8 @@ import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.io.Reader;
 import java.io.Writer;
+import java.io.InputStream;
+import java.io.BufferedInputStream;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 import org.apache.myrmidon.api.TaskException;
@@ -757,7 +759,7 @@ public class FixCRLF extends MatchingTask
             {
                 // Compare the destination with the temp file
                 getLogger().debug( "destFile exists" );
-                if( !FileUtils.contentEquals( destFile, tmpFile ) )
+                if( !contentEquals( destFile, tmpFile ) )
                 {
                     getLogger().debug( destFile + " is being written" );
                     if( !destFile.delete() )
@@ -825,6 +827,73 @@ public class FixCRLF extends MatchingTask
                 tmpFile.delete();
             }
         }// end of finally
+    }
+
+    private boolean contentEquals( File f1, File f2 )
+        throws IOException
+    {
+        if( f1.exists() != f2.exists() )
+        {
+            return false;
+        }
+
+        if( !f1.exists() )
+        {
+            // two not existing files are equal
+            return true;
+        }
+
+        if( f1.isDirectory() || f2.isDirectory() )
+        {
+            // don't want to compare directory contents for now
+            return false;
+        }
+
+        InputStream in1 = null;
+        InputStream in2 = null;
+        try
+        {
+            in1 = new BufferedInputStream( new FileInputStream( f1 ) );
+            in2 = new BufferedInputStream( new FileInputStream( f2 ) );
+
+            int expectedByte = in1.read();
+            while( expectedByte != -1 )
+            {
+                if( expectedByte != in2.read() )
+                {
+                    return false;
+                }
+                expectedByte = in1.read();
+            }
+            if( in2.read() != -1 )
+            {
+                return false;
+            }
+            return true;
+        }
+        finally
+        {
+            if( in1 != null )
+            {
+                try
+                {
+                    in1.close();
+                }
+                catch( IOException e )
+                {
+                }
+            }
+            if( in2 != null )
+            {
+                try
+                {
+                    in2.close();
+                }
+                catch( IOException e )
+                {
+                }
+            }
+        }
     }
 
     /**

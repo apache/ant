@@ -36,98 +36,15 @@ import org.apache.tools.ant.types.FilterSetCollection;
 public class FileUtils
 {
     /**
-     * Compares the contents of two files.
-     *
-     * @param f1 Description of Parameter
-     * @param f2 Description of Parameter
-     * @return Description of the Returned Value
-     * @exception IOException Description of Exception
-     * @since 1.9
-     */
-    public static boolean contentEquals( File f1, File f2 )
-        throws IOException
-    {
-        if( f1.exists() != f2.exists() )
-        {
-            return false;
-        }
-
-        if( !f1.exists() )
-        {
-            // two not existing files are equal
-            return true;
-        }
-
-        if( f1.isDirectory() || f2.isDirectory() )
-        {
-            // don't want to compare directory contents for now
-            return false;
-        }
-
-        InputStream in1 = null;
-        InputStream in2 = null;
-        try
-        {
-            in1 = new BufferedInputStream( new FileInputStream( f1 ) );
-            in2 = new BufferedInputStream( new FileInputStream( f2 ) );
-
-            int expectedByte = in1.read();
-            while( expectedByte != -1 )
-            {
-                if( expectedByte != in2.read() )
-                {
-                    return false;
-                }
-                expectedByte = in1.read();
-            }
-            if( in2.read() != -1 )
-            {
-                return false;
-            }
-            return true;
-        }
-        finally
-        {
-            if( in1 != null )
-            {
-                try
-                {
-                    in1.close();
-                }
-                catch( IOException e )
-                {
-                }
-            }
-            if( in2 != null )
-            {
-                try
-                {
-                    in2.close();
-                }
-                catch( IOException e )
-                {
-                }
-            }
-        }
-    }
-
-    /**
      * Convienence method to copy a file from a source to a destination
      * specifying if token filtering must be used, if source files may overwrite
      * newer destination files and the last modified time of <code>destFile</code>
      * file should be made equal to the last modified time of <code>sourceFile</code>
      * .
-     *
-     * @param sourceFile Description of Parameter
-     * @param destFile Description of Parameter
-     * @param filters Description of Parameter
-     * @param overwrite Description of Parameter
-     * @param preserveLastModified Description of Parameter
-     * @throws IOException
      */
-    public static void copyFile( File sourceFile,
-                                 File destFile,
-                                 FilterSetCollection filters )
+    public static void copyFile( final File sourceFile,
+                                 final File destFile,
+                                 final FilterSetCollection filters )
         throws IOException, TaskException
     {
         if( !destFile.exists() ||
