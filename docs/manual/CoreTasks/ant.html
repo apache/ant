@@ -172,10 +172,10 @@ details:</p>
 <pre>
   &lt;path id="path1"&gt;
     ...
-  &lt;/&gt;
+  &lt;/path&gt;
   &lt;path id="path2"&gt;
     ...
-  &lt;/&gt;
+  &lt;/path&gt;
 </pre>
 
 <p>and the called build file (<code>subbuild.xml</code>) also defines
@@ -183,7 +183,7 @@ a <code>&lt;path&gt;</code> with the id <code>path1</code>, but
 <code>path2</code> is not defined:</p>
 
 <pre>
-  &lt;ant antfile=&quot;subbuild.xml&quot; inheritrefs=&quot;true&quot; /&gt;
+  &lt;ant antfile=&quot;subbuild.xml&quot; inheritrefs=&quot;true&quot;/&gt;
 </pre>
 
 <p>will not override <code>subbuild</code>'s definition of
@@ -191,21 +191,21 @@ a <code>&lt;path&gt;</code> with the id <code>path1</code>, but
 <code>path2</code> available in the subbuild.</p>
 
 <pre>
-  &lt;ant antfile=&quot;subbuild.xml&quot; /&gt;
+  &lt;ant antfile=&quot;subbuild.xml&quot;/&gt;
 </pre>
 
 <p>as well as</p>
 
 <pre>
-  &lt;ant antfile=&quot;subbuild.xml&quot; inheritrefs=&quot;false&quot; /&gt;
+  &lt;ant antfile=&quot;subbuild.xml&quot; inheritrefs=&quot;false&quot;/&gt;
 </pre>
 
 <p>will neither override <code>path1</code> nor copy
 <code>path2</code>.</p>
 
 <pre>
-  &lt;ant antfile=&quot;subbuild.xml&quot; inheritrefs=&quot;false&quot; &gt;
-    &lt;reference refid=&quot;path1&quot; /&gt;
+  &lt;ant antfile=&quot;subbuild.xml&quot; inheritrefs=&quot;false&quot;&gt;
+    &lt;reference refid=&quot;path1&quot;/&gt;
   &lt;/ant&gt;
 </pre>
 
@@ -213,8 +213,8 @@ a <code>&lt;path&gt;</code> with the id <code>path1</code>, but
 <code>path1</code>.</p>
 
 <pre>
-  &lt;ant antfile=&quot;subbuild.xml&quot; inheritrefs=&quot;false&quot; &gt;
-    &lt;reference refid=&quot;path1&quot; torefid=&quot;path2&quot; /&gt;
+  &lt;ant antfile=&quot;subbuild.xml&quot; inheritrefs=&quot;false&quot;&gt;
+    &lt;reference refid=&quot;path1&quot; torefid=&quot;path2&quot;/&gt;
   &lt;/ant&gt;
 </pre>
 

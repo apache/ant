@@ -579,7 +579,7 @@ therefore, if they can be interpreted by the doclet in use.</p>
 element. These paramaters are restricted to simple strings. An example usage
 of the doclet element is shown below:</p>
 
-<pre>  &lt;javadoc ...&gt;
+<pre>  &lt;javadoc ... &gt;
      &lt;doclet name=&quot;theDoclet&quot;
              path=&quot;path/to/theDoclet&quot;&gt;
         &lt;param name=&quot;-foo&quot; value=&quot;foovalue&quot;/&gt;
@@ -688,7 +688,7 @@ respectively.</p>
 
     &lt;packageset dir=&quot;src&quot; defaultexcludes=&quot;yes&quot;&gt;
       &lt;include name=&quot;com/dummy/test/**&quot; /&gt;
-      &lt;exclude name=&quot;com/dummy/test/doc-files/**&quot; /&gt;
+      &lt;exclude name=&quot;com/dummy/test/doc-files/**&quot;/&gt;
     &lt;/packageset&gt;
 
     &lt;doctitle&gt;&lt;![CDATA[&lt;h1&gt;Test&lt;/h1&gt;]]&gt;&lt;/doctitle&gt;
@@ -711,7 +711,7 @@ respectively.</p>
 
     &lt;fileset dir=&quot;src&quot; defaultexcludes=&quot;yes&quot;&gt;
       &lt;include name=&quot;com/dummy/test/**&quot; /&gt;
-      &lt;exclude name=&quot;com/dummy/test/doc-files/**&quot; /&gt;
+      &lt;exclude name=&quot;com/dummy/test/doc-files/**&quot;/&gt;
     &lt;/fileset&gt;
 
     &lt;doctitle&gt;&lt;![CDATA[&lt;h1&gt;Test&lt;/h1&gt;]]&gt;&lt;/doctitle&gt;

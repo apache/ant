@@ -90,9 +90,10 @@ that represent <a href="../using.html#path">PATH like structures</a>.</p>
 <pre>
 &lt;jdepend classpathref="base.path"&gt;
 &nbsp;&nbsp;&nbsp; &lt;sourcespath&gt;
-&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &lt;pathelement location="src" /&gt;
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &lt;pathelement location="src"/&gt;
 &nbsp;&nbsp;&nbsp; &lt;/sourcespath&gt;
 &lt;/jdepend&gt;
+
 </pre>
 </blockquote>
 
@@ -103,13 +104,14 @@ The classpath is defined using a classpath reference.
 <pre>
 &lt;jdepend outputfile="docs/jdepend.xml" fork="yes" format="xml"&gt;
 &nbsp;&nbsp;&nbsp; &lt;sourcespath&gt;
-&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &lt;pathelement location="src" /&gt;
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &lt;pathelement location="src"/&gt;
 &nbsp;&nbsp;&nbsp; &lt;/sourcespath&gt;
 &nbsp;&nbsp;&nbsp; &lt;classpath&gt;
-&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &lt;pathelement location="classes" /&gt;
-&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &lt;pathelement location="lib/jdepend.jar" /&gt;
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &lt;pathelement location="classes"/&gt;
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &lt;pathelement location="lib/jdepend.jar"/&gt;
 &nbsp;&nbsp;&nbsp; &lt;/classpath&gt;
 &lt;/jdepend&gt;
+
 </pre>
 </blockquote>
 
@@ -121,6 +123,5 @@ The classpath is defined using nested elements.
 Reserved.</p>
 </body>
 </html>
-
 
 

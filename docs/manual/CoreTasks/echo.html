@@ -66,16 +66,16 @@ three lines; the first line is a blank
 As XML parsers are wont to do, the first newline in the text element
 has been included in the text. 
 
-<pre>&lt;echo message=&quot;Deleting drive C:&quot; level=&quot;debug&quot; /&gt;</pre>
+<pre>&lt;echo message=&quot;Deleting drive C:&quot; level=&quot;debug&quot;/&gt;</pre>
 A message which only appears in <tt>-debug</tt> mode.
-<pre>&lt;echo level=&quot;error&quot; &gt;
+<pre>&lt;echo level=&quot;error&quot;&gt;
 Imminent failure in the antimatter containment facility.
 Please withdraw to safe location at least 50km away.  
 &lt;/echo&gt;
 </pre>
 A message which appears even in <tt>-quiet</tt> mode.
 
-<pre>&lt;echo file="runner.csh" append="false" &gt;#\!/bin/tcsh
+<pre>&lt;echo file="runner.csh" append="false"&gt;#\!/bin/tcsh
 java-1.3.1 -mx1024m ${project.entrypoint} $$*
 </echo></pre>
 Generate a shell script by echoing to a file.
@@ -83,7 +83,7 @@ Note the use of a double $ symbol to stop Ant
 filtering out the single $ during variable expansion   
 <hr>
 
-<p align="center">Copyright &copy; 2000-2001 Apache Software Foundation. All rights
+<p align="center">Copyright &copy; 2000-2002 Apache Software Foundation. All rights
 Reserved.</p>
 
 </body>

@@ -175,16 +175,16 @@ available from the <a href="http://www.perforce.com/" target="_top">Perforce web
 <h3>Taskdefs</h3>
 <p>Standard taskdefs (for you to copy'n'paste) -- normally this is done automatically if you install this optional task.</p>
 <pre>
-    &lt;taskdef name=&quot;p4sync&quot; classname=&quot;org.apache.tools.ant.taskdefs.optional.perforce.P4Sync&quot; /&gt;
-    &lt;taskdef name=&quot;p4change&quot; classname=&quot;org.apache.tools.ant.taskdefs.optional.perforce.P4Change&quot; /&gt;
-    &lt;taskdef name=&quot;p4edit&quot; classname=&quot;org.apache.tools.ant.taskdefs.optional.perforce.P4Edit&quot; /&gt;
-    &lt;taskdef name=&quot;p4submit&quot; classname=&quot;org.apache.tools.ant.taskdefs.optional.perforce.P4Submit&quot; /&gt;
-    &lt;taskdef name=&quot;p4have&quot; classname=&quot;org.apache.tools.ant.taskdefs.optional.perforce.P4Have&quot; /&gt;
-    &lt;taskdef name=&quot;p4label&quot; classname=&quot;org.apache.tools.ant.taskdefs.optional.perforce.P4Label&quot; /&gt;
-    &lt;taskdef name=&quot;p4counter&quot; classname=&quot;org.apache.tools.ant.taskdefs.optional.perforce.P4Counter&quot; /&gt;
-    &lt;taskdef name=&quot;p4reopen&quot; classname=&quot;org.apache.tools.ant.taskdefs.optional.perforce.P4Reopen&quot; /&gt;
-    &lt;taskdef name=&quot;p4revert&quot; classname=&quot;org.apache.tools.ant.taskdefs.optional.perforce.P4Revert&quot; /&gt;
-    &lt;taskdef name=&quot;p4add&quot; classname=&quot;org.apache.tools.ant.taskdefs.optional.perforce.P4Add&quot; /&gt;
+    &lt;taskdef name=&quot;p4sync&quot; classname=&quot;org.apache.tools.ant.taskdefs.optional.perforce.P4Sync&quot;/&gt;
+    &lt;taskdef name=&quot;p4change&quot; classname=&quot;org.apache.tools.ant.taskdefs.optional.perforce.P4Change&quot;/&gt;
+    &lt;taskdef name=&quot;p4edit&quot; classname=&quot;org.apache.tools.ant.taskdefs.optional.perforce.P4Edit&quot;/&gt;
+    &lt;taskdef name=&quot;p4submit&quot; classname=&quot;org.apache.tools.ant.taskdefs.optional.perforce.P4Submit&quot;/&gt;
+    &lt;taskdef name=&quot;p4have&quot; classname=&quot;org.apache.tools.ant.taskdefs.optional.perforce.P4Have&quot;/&gt;
+    &lt;taskdef name=&quot;p4label&quot; classname=&quot;org.apache.tools.ant.taskdefs.optional.perforce.P4Label&quot;/&gt;
+    &lt;taskdef name=&quot;p4counter&quot; classname=&quot;org.apache.tools.ant.taskdefs.optional.perforce.P4Counter&quot;/&gt;
+    &lt;taskdef name=&quot;p4reopen&quot; classname=&quot;org.apache.tools.ant.taskdefs.optional.perforce.P4Reopen&quot;/&gt;
+    &lt;taskdef name=&quot;p4revert&quot; classname=&quot;org.apache.tools.ant.taskdefs.optional.perforce.P4Revert&quot;/&gt;
+    &lt;taskdef name=&quot;p4add&quot; classname=&quot;org.apache.tools.ant.taskdefs.optional.perforce.P4Add&quot;/&gt;
 </pre>
 
 <hr>
@@ -215,8 +215,8 @@ available from the <a href="http://www.perforce.com/" target="_top">Perforce web
 </table>
 
 <h3>Examples</h3>
-<pre>&lt;p4sync label=&quot;nightlybuild-0.0123&quot; force=&quot;foo&quot; /&gt;
-&lt;p4sync view=&quot;//depot/projects/projectfoo/main/src/...&quot; /&gt;
+<pre>&lt;p4sync label=&quot;nightlybuild-0.0123&quot; force=&quot;foo&quot;/&gt;
+&lt;p4sync view=&quot;//depot/projects/projectfoo/main/src/...&quot;/&gt;
 </pre>
 <hr>
 
@@ -280,7 +280,7 @@ although P4Edit can open files to the default change,  P4Submit cannot yet submi
 <pre>
 &lt;p4edit
     view=&quot;//depot/projects/projectfoo/main/src/Blah.java...&quot;
-    change=&quot;${p4.change}&quot; /&gt;
+    change=&quot;${p4.change}&quot;/&gt;
 </pre>
 <hr>
 
@@ -306,7 +306,7 @@ although P4Edit can open files to the default change,  P4Submit cannot yet submi
 </table>
 
 <h3>Examples</h3>
-<pre>&lt;p4submit change=&quot;${p4.change}&quot; /&gt;
+<pre>&lt;p4submit change=&quot;${p4.change}&quot;/&gt;
 </pre>
 <hr>
 
@@ -332,7 +332,7 @@ although P4Edit can open files to the default change,  P4Submit cannot yet submi
 </table>
 
 <h3>Examples</h3>
-<pre>&lt;p4have /&gt;
+<pre>&lt;p4have/&gt;
 </pre>
 <hr>
 
@@ -426,16 +426,16 @@ as defined by Perforce protections in order for this task to succeed.
 <h3>Examples</h3>
 Print the value of the counter named &quot;last-clean-build&quot; to the output stream:
 <pre>
-&lt;p4counter name=&quot;last-clean-build&quot; /&gt;
+&lt;p4counter name=&quot;last-clean-build&quot;/&gt;
 </PRE>
 Set the value of the counter based on the value of the &quot;TSTAMP&quot; property:
 <PRE>
-&lt;p4counter name=&quot;last-clean-build&quot; value=&quot;${TSTAMP}&quot; /&gt;
+&lt;p4counter name=&quot;last-clean-build&quot; value=&quot;${TSTAMP}&quot;/&gt;
 </PRE>
 Set the value of the &quot;p4.last.clean.build&quot; property to the current
 value of the &quot;last-clean-build&quot; counter:
 <PRE>
-&lt;p4counter name=&quot;last-clean-build&quot; property=&quot;${p4.last.clean.build}&quot; /&gt;
+&lt;p4counter name=&quot;last-clean-build&quot; property=&quot;${p4.last.clean.build}&quot;/&gt;
 </pre>
 <hr>
 
@@ -464,12 +464,12 @@ Move (or reopen in Perforce speak) checkout files between changelists.
 <h3>Examples</h3>
 Move all open files to the default changelist
 <pre>
-&lt;p4reopen view=&quot;//...&quot; tochange=&quot;default&quot; /&gt;
+&lt;p4reopen view=&quot;//...&quot; tochange=&quot;default&quot;/&gt;
 </PRE>
 Create a new changelist then reopen into it, any files from the view //projects/foo/main/...
 <PRE>
-&lt;p4change description="Move files out of the way" /&gt;
-&lt;p4reopen view=&quot;//projects/foo/main/...&quot; tochange=&quot;${p4.change}&quot; /&gt;
+&lt;p4change description="Move files out of the way"/&gt;
+&lt;p4reopen view=&quot;//projects/foo/main/...&quot; tochange=&quot;${p4.change}&quot;/&gt;
 </pre>
 <hr>
 
@@ -503,11 +503,11 @@ Reverts files.
 <h3>Examples</h3>
 Revert everything!
 <pre>
-&lt;p4revert view=&quot;//...&quot; /&gt;
+&lt;p4revert view=&quot;//...&quot;/&gt;
 </PRE>
 Revert any unchanged files in the default change
 <PRE>
-&lt;p4revert change="default" revertonlyunchanged=&quot;true&quot; /&gt;
+&lt;p4revert change="default" revertonlyunchanged=&quot;true&quot;/&gt;
 </pre>
 <hr>
 

@@ -80,7 +80,7 @@ continue...&quot; and pause the build run until return key is pressed
     addproperty=&quot;do.delete&quot;
   /&gt;
   &lt;condition property=&quot;do.abort&quot;&gt;
-    &lt;equals arg1=&quot;n&quot; arg2=&quot;${do.delete}&quot; /&gt;
+    &lt;equals arg1=&quot;n&quot; arg2=&quot;${do.delete}&quot;/&gt;
   &lt;/condition&gt;
   &lt;fail if=&quot;do.abort&quot;&gt;Build aborted by user.&lt;/fail&gt;
 </pre>

@@ -157,7 +157,7 @@ system command via nested <code>&lt;env&gt;</code> elements. See the
 description in the section about <a href="exec.html#env">exec</a></p>
 <h3>Examples</h3>
 <blockquote><pre>
-&lt;apply executable=&quot;ls&quot; &gt;
+&lt;apply executable=&quot;ls&quot;&gt;
   &lt;arg value=&quot;-l&quot;/&gt;
   &lt;fileset dir=&quot;/tmp&quot;&gt;
     &lt;patternset&gt;
@@ -172,7 +172,7 @@ files below <code>/tmp</code> not ending in <code>.txt</code> and all
 files of the FileSet with <code>id</code> <code>other.files</code> to
 the command line.</p>
 <blockquote><pre>
-&lt;apply executable=&quot;somecommand&quot; parallel=&quot;false&quot; &gt;
+&lt;apply executable=&quot;somecommand&quot; parallel=&quot;false&quot;&gt;
   &lt;arg value=&quot;arg1&quot;/&gt;
   &lt;srcfile/&gt;
   &lt;arg value=&quot;arg2&quot;/&gt;

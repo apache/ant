@@ -111,7 +111,7 @@ is based on the standard Ant include and exclude selection mechanisms.
 <pre>&lt;ddcreator descriptors=&quot;${dd.dir}&quot;
            dest=&quot;${gen.classes}&quot;
            classpath=&quot;${descriptorbuild.classpath}&quot;&gt;
-  &lt;include name=&quot;*.txt&quot; /&gt;
+  &lt;include name=&quot;*.txt&quot;/&gt;
 &lt;/ddcreator&gt;
 </pre>
 
@@ -183,7 +183,7 @@ or are out of date, the ejbc tool is run to generate new versions.</p>
            dest=&quot;${gen.classes}&quot;
            manifest=&quot;${build.manifest}&quot;
            classpath=&quot;${descriptorbuild.classpath}&quot;&gt;
-  &lt;include name=&quot;*.ser&quot; /&gt;
+  &lt;include name=&quot;*.ser&quot;/&gt;
 &lt;/ejbc&gt;
 </pre>
 
@@ -295,19 +295,21 @@ Examples</h3>
 <pre>&lt;iplanet-ejbc ejbdescriptor="ejb-jar.xml"
               iasdescriptor="ias-ejb-jar.xml"
               dest="${build.classesdir}"
-              classpath="${ias.ejbc.cpath}" /&gt;
+              classpath="${ias.ejbc.cpath}"/&gt;
+
 
 &lt;iplanet-ejbc ejbdescriptor="ejb-jar.xml"
               iasdescriptor="ias-ejb-jar.xml"
               dest="${build.classesdir}"
               keepgenerated="yes"
               debug="yes"
-              iashome="${ias.home}" &gt;
+              iashome="${ias.home}"&gt;
               &lt;classpath&gt;
-                  &lt;pathelement path="." /&gt;
-                  &lt;pathelement path="${build.classpath}" /&gt;
+                  &lt;pathelement path="."/&gt;
+                  &lt;pathelement path="${build.classpath}"/&gt;
               &lt;/classpath&gt;
 &lt;/iplanet-ejbc&gt;
+
 
 </pre>
 
@@ -1347,7 +1349,7 @@ in the descriptor dir:</p>
       &lt;websphere dbvendor="DB2UDBOS390_V6"
                  ejbdeploy="true"
                  oldCMP="false"
-         tempdir="/tmp"
+                 tempdir="/tmp"
                  destdir="${dist.server}"&gt;
         &lt;wasclasspath&gt;
           &lt;pathelement location="${was4.home}/deploytool/itp/plugins/org.eclipse.core.boot/boot.jar"/&gt;
@@ -1368,7 +1370,8 @@ in the descriptor dir:</p>
 
 <h3><a name="ejbjar_iplanet">iPlanet Application Server (iAS) element</a></h3>
 
-The &lt;iplanet&gt; nested element is used to build iAS-specific stubs and
+The &lt;iplanet&lt; nested element is used to build iAS-specific stubs and
+
 skeletons and construct a JAR file which may be deployed to the iPlanet
 Application Server 6.0.  The build process will always determine if
 the EJB stubs/skeletons and the EJB-JAR file are up to date, and it will
@@ -1471,35 +1474,40 @@ It will name each EJB-JAR using the "basename" prepended to each standard
 EJB descriptor.  For example, if the descriptor named "Account-ejb-jar.xml"
 is processed, the EJB-JAR will be named "Account.jar"
 <pre>    &lt;ejbjar srcdir="${build.classesdir}"
-            descriptordir="${src}" &gt;
+            descriptordir="${src}"&gt;
+
             &lt;iplanet destdir="${assemble.ejbjar}"
-                     classpath="${ias.ejbc.cpath}" /&gt;
+                     classpath="${ias.ejbc.cpath}"/&gt;
             &lt;include name="**/*-ejb-jar.xml"/&gt;
             &lt;exclude name="**/*ias-*.xml"/&gt;
     &lt;/ejbjar&gt;</pre>
+
 This example demonstrates the use of a nested classpath element as well
 as some of the other optional attributes.
 <pre>    &lt;ejbjar srcdir="${build.classesdir}"
-            descriptordir="${src}" &gt;
+            descriptordir="${src}"&gt;
+
             &lt;iplanet destdir="${assemble.ejbjar}"
                      iashome="${ias.home}"
                      debug="yes"
-                     keepgenerated="yes" &gt;
+                     keepgenerated="yes"&gt;
                      &lt;classpath&gt;
-                         &lt;pathelement path="." /&gt;
-                         &lt;pathelement path="${build.classpath}" /&gt;
+                         &lt;pathelement path="."/&gt;
+                         &lt;pathelement path="${build.classpath}"/&gt;
                      &lt;/classpath&gt;
             &lt;/iplanet&gt;
             &lt;include name="**/*-ejb-jar.xml"/&gt;
             &lt;exclude name="**/*ias-*.xml"/&gt;
     &lt;/ejbjar&gt;</pre>
+
 This example demonstrates the use of basejarname attribute.  In this
 case, the completed EJB-JAR will be named "HelloWorld.jar"  If multiple
 EJB descriptors might be found, care must be taken to ensure that the completed
 JAR files don't overwrite each other.
 <pre>    &lt;ejbjar srcdir="${build.classesdir}"
             descriptordir="${src}"
-            basejarname="HelloWorld" &gt;
+            basejarname="HelloWorld"&gt;
+
             &lt;iplanet destdir="${assemble.ejbjar}"
                      classpath="${ias.ejbc.cpath}"/&gt;
             &lt;include name="**/*-ejb-jar.xml"/&gt;
@@ -1513,9 +1521,10 @@ local DTDs are found in the [iAS-install-directory]/dtd directory.
 <pre>    &lt;ejbjar srcdir="${build.classesdir}"
             descriptordir="${src}"&gt;
             &lt;iplanet destdir="${assemble.ejbjar}"&gt;
-                     classpath="${ias.ejbc.cpath}" /&gt;
+                     classpath="${ias.ejbc.cpath}"/&gt;
             &lt;include name="**/*-ejb-jar.xml"/&gt;
             &lt;exclude name="**/*ias-*.xml"/&gt;
+
             &lt;dtd publicId="-//Sun Microsystems, Inc.//DTD Enterprise JavaBeans 1.1//EN"
                  location="${ias.home}/APPS/ejb-jar_1_1.dtd"/&gt;
             &lt;dtd publicId="-//Sun Microsystems, Inc.//DTD iAS Enterprise JavaBeans 1.0//EN"
@@ -1686,7 +1695,7 @@ directory.&nbsp;</p>
               descriptordir="${descriptor.dir}"&gt;
         &lt;jonas destdir="${deploymentjars.dir}"
              jonasroot="${jonas.root}"
-             orb="RMI" /&gt;
+             orb="RMI"/&gt;
         &lt;include name="**/*.xml"/&gt;
         &lt;exclude name="**/jonas-*.xml"/&gt;
         &lt;support dir="${build.classes}"&gt;
@@ -1707,7 +1716,7 @@ descriptors to use the naming standard. This will create only one ejb jar file -
         &lt;jonas destdir="${deploymentjars.dir}"
                   jonasroot="${jonas.root}"
                   suffix=".jar"
-                  classpath="${descriptorbuild.classpath}" /&gt;
+                  classpath="${descriptorbuild.classpath}"/&gt;
         &lt;include name="**/ejb-jar.xml"/&gt;
         &lt;exclude name="**/jonas-ejb-jar.xml"/&gt;
       &lt;/ejbjar&gt;
@@ -1721,4 +1730,3 @@ Reserved.</p>
 </body>
 
 </html>
-

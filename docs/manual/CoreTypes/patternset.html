@@ -111,7 +111,7 @@ you can use to test the existance of a property.</p>
 patterns to the parent patternset.</p>
 <h3>Examples</h3>
 <blockquote><pre>
-&lt;patternset id=&quot;non.test.sources&quot; &gt;
+&lt;patternset id=&quot;non.test.sources&quot;&gt;
   &lt;include name=&quot;**/*.java&quot;/&gt;
   &lt;exclude name=&quot;**/*Test*&quot;/&gt;
 &lt;/patternset&gt;
@@ -131,7 +131,7 @@ specify that the element should only be used if a property is set, or
 that it should be used only if a property is not set.</p>
 <p>For example</p>
 <blockquote><pre>
-&lt;patternset id=&quot;sources&quot; &gt;
+&lt;patternset id=&quot;sources&quot;&gt;
   &lt;include name=&quot;std/**/*.java&quot;/&gt;
   &lt;include name=&quot;prof/**/*.java&quot; if=&quot;professional&quot;/&gt;
   &lt;exclude name=&quot;**/*Test*&quot;/&gt;
@@ -141,19 +141,19 @@ that it should be used only if a property is not set.</p>
 <em>professional</em> is set to some value.</p>
 <p>The two sets</p>
 <blockquote><pre>
-&lt;patternset includesfile=&quot;some-file&quot; /&gt;
+&lt;patternset includesfile=&quot;some-file&quot;/&gt;
 </pre></blockquote>
 <p>and</p>
 <blockquote><pre>
 &lt;patternset&gt;
-  &lt;includesfile name=&quot;some-file&quot; /&gt; 
+  &lt;includesfile name=&quot;some-file&quot;/&gt; 
 &lt;patternset/&gt;
 </pre></blockquote>
 <p>are identical.  The include patterns will be read from the file
 <code>some-file</code>, one pattern per line.</p>
 <blockquote><pre>
 &lt;patternset&gt;
-  &lt;includesfile name=&quot;some-file&quot; /&gt; 
+  &lt;includesfile name=&quot;some-file&quot;/&gt; 
   &lt;includesfile name=&quot;${some-other-file}&quot; 
                 if=&quot;some-other-file&quot;
   /&gt; 

@@ -94,9 +94,9 @@
 <h3>Examples</h3>
 <p>The following build.xml snippet is an example of how to use Borland element
   into the ejbjar task</p>
-<pre>    &lt;ejbjar srcdir=&quot;${build.classes}&quot;  basejarname=&quot;vsmp&quot;  descriptordir=&quot;${rsc.dir}/hrmanager&quot;&gt;
+<pre>    &lt;ejbjar srcdir=&quot;${build.classes}&quot; basejarname=&quot;vsmp&quot; descriptordir=&quot;${rsc.dir}/hrmanager&quot;&gt;
         &lt;borland destdir=&quot;lib&quot; verify=&quot;on&quot; generateclient=&quot;on&quot; version=&quot;5&quot;&gt;
-          &lt;classpath refid=&quot;classpath&quot; /&gt;
+          &lt;classpath refid=&quot;classpath&quot;/&gt;
         &lt;/borland&gt;
         &lt;include name=&quot;**\ejb-jar.xml&quot;/&gt;
         &lt;support dir=&quot;${build.classes}&quot;&gt;
