@@ -135,6 +135,10 @@ public class Zip extends MatchingTask {
         if (baseDir == null && filesets.size() == 0 && "zip".equals(archiveType))
             throw new BuildException("basedir attribute must be set, or at least one fileset must be given!");
 
+        if (zipFile == null) {
+            throw new BuildException("You must specify the " + archiveType + "file to create!");
+        }
+
         Vector dss = new Vector ();
         if (baseDir != null)
             dss.addElement(getDirectoryScanner(baseDir));
