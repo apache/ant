@@ -58,7 +58,6 @@ import java.lang.reflect.Method;
 
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.MalformedURLException;
@@ -711,8 +710,6 @@ public class XMLCatalog extends DataType
                         source.setSystemId(sysid);
                         log("catalog entry matched a readable file: '"
                             + sysid + "'", Project.MSG_DEBUG);
-                    } catch (FileNotFoundException ex) {
-                        // ignore
                     } catch (IOException ex) {
                         // ignore
                     }

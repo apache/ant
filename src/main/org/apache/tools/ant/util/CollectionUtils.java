@@ -63,15 +63,17 @@ import java.util.Vector;
  *
  * @author Stefan Bodewig
  * @author <a href="mailto:stein@xtramind.com">Ingmar Stein</a>
+ * @author  <a href="mailto:martijn@kruithof.xs4all.nl">Martijn Kruithof</a>
  *
  * @since Ant 1.5
  */
 public class CollectionUtils {
 
     /**
-     * Vector.equals() doesn't do any good in 1.1
+     * Please use Vector.equals() or List.equals() 
      *
      * @since Ant 1.5
+     * @deprecated
      */
     public static boolean equals(Vector v1, Vector v2) {
         if (v1 == v2) {
@@ -82,30 +84,17 @@ public class CollectionUtils {
             return false;
         }
 
-        if (v1.size() != v2.size()) {
-            return false;
-        }
-
-        Enumeration e1 = v1.elements();
-        Enumeration e2 = v2.elements();
-        while (e1.hasMoreElements()) {
-            if (!e1.nextElement().equals(e2.nextElement())) {
-                return false;
-            }
-        }
-
-        // don't need to check e2.hasMoreElements as the Vectors have
-        // same size.
-
-        return true;
+        return v1.equals(v2);
     }
 
     /**
-     * Hashtable.equals() doesn't do any good in 1.1.
+     * Dictionary does not have an equals.
+     * Please use  Map.equals()
      *
      * <p>Follows the equals contract of Java 2's Map.</p>
      *
      * @since Ant 1.5
+     * @deprecated
      */
     public static boolean equals(Dictionary d1, Dictionary d2) {
         if (d1 == d2) {
@@ -137,9 +126,10 @@ public class CollectionUtils {
     }
 
     /**
-     * JDK 1.1 does not know the putAll method for hash tables.
+     * Dictionary does not know the putAll method. Please use Map.putAll().
      *
      * @since Ant 1.6
+     * @deprecated
      */
     public static void putAll(Dictionary m1, Dictionary m2) {
         for (Enumeration it = m2.keys(); it.hasMoreElements();) {
