@@ -12,6 +12,12 @@ Changes that could break older environments:
 
 * several Zip methods have changed their signature as we now use a Zip
   package of our own that handles Unix permissions for directories.
+  Furthermore <zip> will now use the platform's default character
+  encoding for filenames - this is consistent with the command line
+  ZIP tools, but causes problems if you try to open them from within
+  Java and your filenames contain non US-ASCII characters. Use the new
+  encoding attribute of the task and set it to UTF8 to get the old
+  behavior.
 
 * The <pvcs> task has been move to a package of its own.
 

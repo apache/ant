@@ -86,6 +86,12 @@ public class Zip extends MatchingTask {
     private Hashtable addedDirs = new Hashtable();
 
     /**
+     * Encoding to use for filenames, defaults to the platform's
+     * default encoding.
+     */
+    private String encoding = null;
+
+    /**
      * This is the name/location of where to 
      * create the .zip file.
      */
@@ -144,6 +150,17 @@ public class Zip extends MatchingTask {
         emptyBehavior = we.getValue();
     }
 
+    /**
+     * Encoding to use for filenames, defaults to the platform's
+     * default encoding.
+     *
+     * <p>For a list of possible values see <a
+     * href="http://java.sun.com/products/jdk/1.2/docs/guide/internat/encoding.doc.html">http://java.sun.com/products/jdk/1.2/docs/guide/internat/encoding.doc.html</a>.</p>
+     */
+    public void setEncoding(String encoding) {
+        this.encoding = encoding;
+    }
+
     public void execute() throws BuildException {
         if (baseDir == null && filesets.size() == 0 && "zip".equals(archiveType)) {
             throw new BuildException( "basedir attribute must be set, or at least " + 
@@ -176,6 +193,7 @@ public class Zip extends MatchingTask {
             boolean success = false;
             ZipOutputStream zOut = 
               new ZipOutputStream(new FileOutputStream(zipFile));
+            zOut.setEncoding(encoding);
             try {
                 if (doCompress) {
                     zOut.setMethod(ZipOutputStream.DEFLATED);

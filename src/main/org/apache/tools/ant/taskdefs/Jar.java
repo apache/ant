@@ -75,6 +75,7 @@ public class Jar extends Zip {
         super();
         archiveType = "jar";
         emptyBehavior = "create";
+        setEncoding("UTF8");
     }
 
     public void setJarfile(File jarFile) {

@@ -38,6 +38,12 @@ If <code>skip</code> (the default), the ZIP is not created and a warning is issu
 If <code>fail</code>, the ZIP is not created and the build is halted with an error.
 If <code>create</code>, an empty ZIP file (explicitly zero entries) is created,
 which should be recognized as such by compliant ZIP manipulation tools.</p>
+<p>This task will now use the platform's default character encoding
+for filenames - this is consistent with the command line ZIP tools,
+but causes problems if you try to open them from within Java and your
+filenames contain non US-ASCII characters. Use the encoding attribute
+and set it to UTF8 to create zip files that can savely be read by
+Java.</p>
 <h3>Parameters</h3>
 <table border="1" cellpadding="2" cellspacing="0">
   <tr>
@@ -58,6 +64,14 @@ which should be recognized as such by compliant ZIP manipulation tools.</p>
   <tr>
     <td valign="top">compress</td>
     <td valign="top">Not only store data but also compress them, defaults to true</td>
+    <td align="center" valign="top">No</td>
+  </tr>
+  <tr>
+    <td valign="top">encoding</td>
+    <td valign="top">The character encoding to use for filenames
+    inside the zip file.  For a list of possible values see <a
+    href="http://java.sun.com/products/jdk/1.2/docs/guide/internat/encoding.doc.html">http://java.sun.com/products/jdk/1.2/docs/guide/internat/encoding.doc.html</a>.
+    Defaults to the platform's default character encoding.</td>
     <td align="center" valign="top">No</td>
   </tr>
   <tr>

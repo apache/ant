@@ -174,6 +174,17 @@ public class ZipOutputStream extends DeflaterOutputStream {
     private Hashtable offsets = new Hashtable();
 
     /**
+     * The encoding to use for filenames and the file comment.
+     *
+     * <p>For a list of possible values see <a
+     * href="http://java.sun.com/products/jdk/1.2/docs/guide/internat/encoding.doc.html">http://java.sun.com/products/jdk/1.2/docs/guide/internat/encoding.doc.html</a>.
+     * Defaults to the platform's default character encoding.</p>
+     *
+     * @since 1.3
+     */
+    private String encoding = null;
+
+    /**
      * Compression method for deflated entries.
      *
      * @since 1.1
@@ -196,10 +207,32 @@ public class ZipOutputStream extends DeflaterOutputStream {
         super(out, new Deflater(Deflater.DEFAULT_COMPRESSION, true));
     }
 
+    /**
+     * The encoding to use for filenames and the file comment.
+     *
+     * <p>For a list of possible values see <a
+     * href="http://java.sun.com/products/jdk/1.2/docs/guide/internat/encoding.doc.html">http://java.sun.com/products/jdk/1.2/docs/guide/internat/encoding.doc.html</a>.
+     * Defaults to the platform's default character encoding.</p>
+     *
+     * @since 1.3
+     */
+    public void setEncoding(String encoding) {
+        this.encoding = encoding;
+    }
+
+    /**
+     * The encoding to use for filenames and the file comment.
+     *
+     * @return null if using the platform's default character encoding.
+     * 
+     * @since 1.3
+     */
+    public String getEncoding() {return encoding;}
+
     /*
      * Found out by experiment, that DeflaterOutputStream.close()
      * will call finish() - so we don't need to override close
-     * ourselves.</p>
+     * ourselves.
      */
 
     /**
@@ -426,7 +459,7 @@ public class ZipOutputStream extends DeflaterOutputStream {
         written += 12;
         
         // file name length
-        byte[] name = ze.getName().getBytes();
+        byte[] name = getBytes(ze.getName());
         out.write((new ZipShort(name.length)).getBytes());
         written += 2;
         
@@ -507,7 +540,7 @@ public class ZipOutputStream extends DeflaterOutputStream {
         written += 12;
         
         // file name length
-        byte[] name = ze.getName().getBytes();
+        byte[] name = getBytes(ze.getName());
         out.write((new ZipShort(name.length)).getBytes());
         written += 2;
         
@@ -521,7 +554,7 @@ public class ZipOutputStream extends DeflaterOutputStream {
         if (comm == null) {
             comm = "";
         }
-        byte[] comment = comm.getBytes();
+        byte[] comment = getBytes(comm);
         out.write((new ZipShort(comment.length)).getBytes());
         written += 2;
         
@@ -576,7 +609,7 @@ public class ZipOutputStream extends DeflaterOutputStream {
         out.write(cdOffset.getBytes());
 
         // ZIP file comment
-        byte[] data = comment.getBytes();
+        byte[] data = getBytes(comment);
         out.write((new ZipShort(data.length)).getBytes());
         out.write(data);
     }
@@ -614,6 +647,24 @@ public class ZipOutputStream extends DeflaterOutputStream {
         result[2] = (byte) ((value & 0xFF0000) >> 16);
         result[3] = (byte) ((value & 0xFF000000l) >> 24);
         return new ZipLong(result);
+    }
+
+    /**
+     * Retrieve the bytes for the given String in the encoding set for
+     * this Stream.
+     *
+     * @since 1.3
+     */
+    protected byte[] getBytes(String name) throws ZipException {
+        if (encoding == null) {
+            return name.getBytes();
+        } else {
+            try {
+                return name.getBytes(encoding);
+            } catch (UnsupportedEncodingException uee) {
+                throw new ZipException(uee.getMessage());
+            }
+        }
     }
 
 }
