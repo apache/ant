@@ -222,6 +222,7 @@ public class Os implements Condition {
                     isFamily = osName.indexOf("nonstop_kernel") > -1;
                 } else if (family.equals("unix")) {
                     isFamily = pathSep.equals(":")
+                        && !isFamily("openvms")
                         && (!isFamily("mac") || osName.endsWith("x"));
                 } else if (family.equals("win9x")) {
                     isFamily = isFamily("windows")
