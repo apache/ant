@@ -48,6 +48,9 @@ Changes that could break older environments:
 Fixed bugs:
 -----------
 
+* Memory leak from IntrospectionHelper.getHelper(Class) in embedded
+  environments. Bugzilla Report 30162.
+
 * Translate task does not remove tokens when a key is not found.
   It logs a verbose message.  Bugzilla Report 13936.
 
@@ -78,6 +81,8 @@ Fixed bugs:
 
 Other changes:
 --------------
+
+* Log fine-grained events at verbose level from JUnit. Bugzilla report 31885.
 
 * <javadoc> can now take an attribute 'executable'. Bugzilla report 30606.
 
@@ -321,6 +326,9 @@ Other changes:
 
 Fixed bugs:
 -----------
+
+* Do not pass on ThreadDeath when halting <java fork="false">. Bugzilla
+  32941.
 
 * Killing a thread running <java fork="true"> (e.g. from an IDE) would
   not stop the forked process. Bugzilla 31928.
