@@ -3,9 +3,21 @@
   <head>
     <meta http-equiv="Content-Language" content="en-us">
     <title>Ant2 feature list</title>
+
+      <style type="text/css">
+        .comment {
+          COLOR: #900000;
+	  BACKGROUND: #ffa;
+        }
+      </style>
+
   </head>
 
-  <body>
+  <body bgcolor="#FFFFFF">
+
+    <p class="comment">If something looks like this, this is either a
+    request for input or a &quot;REVISIT&quot; marker or similar.</p>
+
     <h1>Ant2 Goals</h1>
 
     <p>Even though Ant2 is expected to be incompatible with the
@@ -35,7 +47,9 @@
       hidden behind facade tasks.</li>
 
       <li>properties and data types will be unified so that they share
-      the same namespace and inheritance rules.</li>
+      the same namespace and inheritance rules. <i
+      class="comment">Need to talk about how ${} expansion works for
+      filesets and so on.</i></li>
 
     </ul>
 
@@ -50,9 +64,18 @@
 
       <li>add scoping rules for properties so that not all of them
       will be inherited by sub-builds, only those that have been
-      specified explicitly.</li>
+      specified explicitly. <i class="comment">Fill in details once
+      they&apos;ve been sorted out.</i></li>
 
     </ul>
+
+    <p>The front-ends for Ant2 shall be smart enough to automatically
+    detect the required libraries (like <code>tools.jar</code>), the
+    use of native scripts shall be kept to a minimum.</p>
+
+    <p>Build file writers can attach a message to targets that will be
+    presented to the user if that target is going to be skipped (based
+    on the if/unless attribute of the target).</p>
 
     <h2>Extensibility</h2>
 
@@ -68,16 +91,40 @@
     Ant. Ant will automatically know all tasks contained in task
     libraries that have been placed into a special directory - in
     addition task libraries can be referenced and used in a build file
-    explicitly.</p>
+    explicitly. <i class="comment">Fill in details once they&apos;ve been
+    sorted out.</i></p>
+
+    <p>It has become apparent, that several &quot;aspects&quot; of
+    tasks are so common that task writers find themselves duplicating
+    code all over again - things like classpath handling or &quot;do
+    we stop the build if this task fails?&quot; functionality for
+    example. Ant2 will provide a way to let the user attach an
+    &quot;aspect handler&quot; to a project - all attributes that live
+    in a certain namespace are going to be passed to this handler. <i
+    class="comment">Need to talk about TaskContext here.</i></p>
+
+    <p>Ant2 will farm out common functionality from tasks into utility
+    classes so that task writers can benefit from a tested and stable
+    framework - they shouldn&apos;t need to deal with existing tasks
+    directly (like some tasks &quot;abuse&quot; the
+    <code>&lt;touch&gt;</code> task in Ant1).</p>
 
     <h1>New/Modified Features</h1>
+
+    <p>Ant2 will run the build process fully dynamically, which means
+    that task won&apos;t be instantiated before they are actually being run
+    and <code>${}</code> expansion will see the very latest value of a
+    property. It will be possible to reassign values of properties via
+    a built-in task.</p>
+
+    <h2>Compatibility with Ant1</h2>
 
     <p>Ant2 is going to break Ant1 in several ways:</p>
 
     <ul>
 
-      <li>Tasks written for Ant1 won't work in Ant2 as the API of
-      Ant's core and the names of utility classes are going to
+      <li>Tasks written for Ant1 won&apos;t work in Ant2 as the API of
+      Ant&apos;s core and the names of utility classes are going to
       change. There will probably be adaptors and utility classes to
       ease the transition for task writers.</li>
 
@@ -95,7 +142,72 @@
 
     </ul>
 
+    <h2>Support Integration of Ant Into Other Tools</h2>
+
+    <p>Ant2 will have a clear separation between the front-end that is
+    responsible for user interactions, the object model that
+    represents the project to build and the part of Ant that runs the
+    build process itself <i class="comment">Name that TaskEngine,
+    ProjectEngine, ExecutionEngine or what?</i>. This separation is
+    expected to ease the integration of Ant (or parts of it) into
+    other products.</p>
+
+    <p>Ant2 itself will include a command line front-end and Antidote
+    will become the GUI front-end to it. Other front-ends like a
+    servlet front-end are expected <i class="comment">outside of
+    Ant&apos;s core</i> as well.</p>
+
+    <p>In addition to this separation, the following features should
+    help people who want to integrate Ant into their products:</p>
+
+    <ul>
+
+      <li>It will be possible to cancel a running build process.</li>
+
+    </ul>
+
+    <h2>More Control for Users and Build File Writers</h2>
+
+    <p>Ant2 will use a <code>BuildListener</code> concept similar to
+    the one of Ant1 but may provide a richer set of events. It will be
+    possible to attach and detach listeners to a build process from
+    within the build file and to modify the behavior of attached
+    listeners.</p>
+
+
+    <h2>Documentation System</h2>
+
+    <p>All tasks will be documented in XML files using a common DTD <i
+    class="comment">Still need to define it</i> - task libraries are
+    expected to include the documentation using this DTD inside the
+    library itself.</p>
+
+    <h2>Better Subbuild Handling</h2>
+
+    <p class="comment">Is there something beyond &quot;should become
+    better&quot; right now?</p>
+
     <h1>Rejected Features</h1>
+
+    <p>This is list is not complete, it just highlights some of the
+    rejected features and tries to explain why they&apos;ve been
+    rejected.</p>
+
+    <p>For a complete listing of all requested features, see <a
+    href="requested-features.html">requested-features.html</a>. The
+    discussion on all topics can be followed in the <a
+    href="http://marc.theaimsgroup.com/?l=ant-dev&r=1&w=2">archives
+    for ant-dev</a> in threads starting from 2001-03-21 - the subject
+    lines contained either <code>[VOTE]</code> or
+    <code>[DISC]</code>.</p>
+
+    <h1>Ideas for New Tasks and Tools</h1>
+
+    <p>Please refer to <a
+    href="requested-features.html">requested-features.html</a> in the
+    section &quot;I. Things that don&apos;t affect the core but are
+    requests for new tasks or enhancements to existing tasks.&quot;
+    for this.</p>
 
     <hr>
       <p align="center">$Id$</p>
