@@ -137,6 +137,11 @@ public final class LoadProperties extends Task {
             throw new BuildException("Source file is not a file.");
         }
 
+        // Check if the source file is empty
+        if (srcFile.length() == 0) {
+            return;
+        }
+        
         FileInputStream fis = null;
         BufferedInputStream bis = null;
         Reader instream = null;
