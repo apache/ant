@@ -55,9 +55,8 @@ Note: This document was created in the context of releasing Ant 1.5.
          gpg -a -b --force-v3-sigs $i
     done
 
-    Try to do this on Linux since the gpg signatures generated on Windows may 
-    cause some PGP users problems verifying signatures even though they seem 
-    OK.
+    The --force-v3-sigs will improve the interoperability with PGP 5.x,
+    see <http://www.gnupg.org/(en)/documentation/faqs.html#q5.5>.
 
     Before you do that, ensure that the key you use is inside the KEYS
     file in Ant's CVS repository - and that you perform a cvs update on
