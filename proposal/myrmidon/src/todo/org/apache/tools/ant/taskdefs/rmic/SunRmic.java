@@ -12,6 +12,7 @@ import java.io.OutputStream;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
 import org.apache.myrmidon.api.TaskException;
+import org.apache.myrmidon.api.TaskContext;
 import org.apache.tools.ant.types.Commandline;
 
 /**
@@ -25,7 +26,7 @@ public class SunRmic extends DefaultRmicAdapter
     public boolean execute()
         throws TaskException
     {
-        getLogger().debug( "Using SUN rmic compiler" );
+        getTaskContext().debug( "Using SUN rmic compiler" );
         Commandline cmd = setupRmicCommand();
 
         // Create an instance of the rmic, redirecting output to

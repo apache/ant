@@ -8,6 +8,7 @@
 package org.apache.tools.ant.taskdefs.rmic;
 
 import org.apache.myrmidon.api.TaskException;
+import org.apache.myrmidon.api.TaskContext;
 import org.apache.myrmidon.framework.FileNameMapper;
 import org.apache.tools.ant.types.Path;
 
@@ -23,9 +24,9 @@ import org.apache.tools.ant.types.Path;
  * @author <a href="mailto:tokamoto@rd.nttdata.co.jp">Takashi Okamoto</a>
  * @author <a href="mailto:stefan.bodewig@epost.de">Stefan Bodewig</a>
  */
-
 public interface RmicAdapter
 {
+    void setTaskContext( TaskContext context );
 
     /**
      * Sets the rmic attributes, which are stored in the Rmic task.

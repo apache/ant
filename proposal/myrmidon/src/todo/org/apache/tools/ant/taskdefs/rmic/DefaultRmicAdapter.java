@@ -10,7 +10,6 @@ package org.apache.tools.ant.taskdefs.rmic;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Random;
-import org.apache.avalon.framework.logger.AbstractLogEnabled;
 import org.apache.myrmidon.api.TaskContext;
 import org.apache.myrmidon.api.TaskException;
 import org.apache.myrmidon.framework.FileNameMapper;
@@ -30,7 +29,6 @@ import org.apache.tools.ant.util.FileUtils;
  * @author Takashi Okamoto <tokamoto@rd.nttdata.co.jp>
  */
 public abstract class DefaultRmicAdapter
-    extends AbstractLogEnabled
     implements RmicAdapter
 {
 
@@ -39,8 +37,16 @@ public abstract class DefaultRmicAdapter
     private Rmic attributes;
     private FileNameMapper mapper;
 
-    public DefaultRmicAdapter()
+    private TaskContext m_taskContext;
+
+    public void setTaskContext( final TaskContext context )
     {
+        m_taskContext = context;
+    }
+
+    protected final TaskContext getTaskContext()
+    {
+        return m_taskContext;
     }
 
     public void setRmic( Rmic attributes )
@@ -144,11 +150,11 @@ public abstract class DefaultRmicAdapter
 
         if( attributes.getIiop() )
         {
-            getLogger().info( "IIOP has been turned on." );
+            getTaskContext().info( "IIOP has been turned on." );
             cmd.addArgument( "-iiop" );
             if( attributes.getIiopopts() != null )
             {
-                getLogger().info( "IIOP Options: " + attributes.getIiopopts() );
+                getTaskContext().info( "IIOP Options: " + attributes.getIiopopts() );
                 cmd.addArgument( attributes.getIiopopts() );
             }
         }
@@ -156,11 +162,11 @@ public abstract class DefaultRmicAdapter
         if( attributes.getIdl() )
         {
             cmd.addArgument( "-idl" );
-            getLogger().info( "IDL has been turned on." );
+            getTaskContext().info( "IDL has been turned on." );
             if( attributes.getIdlopts() != null )
             {
                 cmd.addArgument( attributes.getIdlopts() );
-                getLogger().info( "IDL Options: " + attributes.getIdlopts() );
+                getTaskContext().info( "IDL Options: " + attributes.getIdlopts() );
             }
         }
 
@@ -220,7 +226,7 @@ public abstract class DefaultRmicAdapter
     {
         ArrayList compileList = attributes.getCompileList();
 
-        getLogger().debug( "Compilation args: " + cmd.toString() );
+        getTaskContext().debug( "Compilation args: " + cmd.toString() );
 
         StringBuffer niceSourceList = new StringBuffer( "File" );
         if( compileList.size() != 1 )
@@ -236,7 +242,7 @@ public abstract class DefaultRmicAdapter
             niceSourceList.append( "    " + arg );
         }
 
-        getLogger().debug( niceSourceList.toString() );
+        getTaskContext().debug( niceSourceList.toString() );
     }
 
     /**
@@ -385,20 +391,20 @@ public abstract class DefaultRmicAdapter
                 {
                     final String message = "Unable to verify class " + classname
                         + ". It could not be found.";
-                    getLogger().warn( message );
+                    getTaskContext().warn( message );
                 }
                 catch( NoClassDefFoundError e )
                 {
                     final String message = "Unable to verify class " + classname
                         + ". It is not defined.";
-                    getLogger().warn( message );
+                    getTaskContext().warn( message );
                 }
                 catch( Throwable t )
                 {
                     final String message = "Unable to verify class " + classname
                         + ". Loading caused Exception: "
                         + t.getMessage();
-                    getLogger().warn( message );
+                    getTaskContext().warn( message );
                 }
             }
             return target;

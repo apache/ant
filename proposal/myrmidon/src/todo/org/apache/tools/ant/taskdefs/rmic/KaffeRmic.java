@@ -10,6 +10,7 @@ package org.apache.tools.ant.taskdefs.rmic;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
 import org.apache.myrmidon.api.TaskException;
+import org.apache.myrmidon.api.TaskContext;
 import org.apache.tools.ant.types.Commandline;
 
 /**
@@ -23,7 +24,7 @@ public class KaffeRmic extends DefaultRmicAdapter
     public boolean execute()
         throws TaskException
     {
-        getLogger().debug( "Using Kaffe rmic" );
+        getTaskContext().debug( "Using Kaffe rmic" );
         Commandline cmd = setupRmicCommand();
 
         try
