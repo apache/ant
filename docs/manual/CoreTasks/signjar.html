@@ -16,13 +16,6 @@ generate; if this file exists then
 its modification date is used as a cue as to whether to resign any JAR file.
 </p>
 
-<p>
-<b>Security warning</b>. This task forks the <tt>jarsigner</tt> executable
-(which must of course be on the path). The store password is passed in on
-the command line, so visible in Unix to anyone running <tt>ps -ef</tt>
-on the same host, while signing takes place. Only sign on a secured system.
-</p>
-
 <h3>Parameters</h3>
 <table border="1" cellpadding="2" cellspacing="0">
   <tr>

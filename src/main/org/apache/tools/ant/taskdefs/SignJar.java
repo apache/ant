@@ -25,6 +25,7 @@ import org.apache.tools.ant.Project;
 import org.apache.tools.ant.Task;
 import org.apache.tools.ant.taskdefs.condition.IsSigned;
 import org.apache.tools.ant.types.FileSet;
+import org.apache.tools.ant.types.RedirectorElement;
 import org.apache.tools.ant.util.JavaEnvUtils;
 import org.apache.tools.ant.util.FileUtils;
 
@@ -66,6 +67,7 @@ public class SignJar extends Task {
     protected boolean internalsf;
     protected boolean sectionsonly;
     private   boolean preserveLastModified;
+    private RedirectorElement redirector;
 
     /** The maximum amount of memory to use for Jar signer */
     private String maxMemory;
@@ -212,6 +214,7 @@ public class SignJar extends Task {
             throw new BuildException("jar must be set through jar attribute "
                                      + "or nested filesets");
         }
+        redirector = createRedirector();
         if (null != jar) {
             if (filesets.size() != 0) {
                 log("nested filesets will be ignored if the jar attribute has"
@@ -234,6 +237,27 @@ public class SignJar extends Task {
     }
 
     /**
+     * Create the redirector to use, if any.
+     * @return a configured RedirectorElement.
+     */
+    private RedirectorElement createRedirector() {
+        if (storepass == null && keypass == null) {
+            return null;
+        }
+        RedirectorElement result = new RedirectorElement();
+        StringBuffer input = new StringBuffer();
+        if (storepass != null) {
+            input.append(storepass).append('\n');
+        }
+        if (keypass != null) {
+            input.append(keypass).append('\n');
+        }
+        result.setInputString(input.toString());
+        result.setLogInputString(false);
+        return result;
+    }
+
+    /**
      * sign one jar
      */
     private void doOneJar(File jarSource, File jarTarget)
@@ -252,7 +276,8 @@ public class SignJar extends Task {
         }
 
         long lastModified = jarSource.lastModified();
-        final ExecTask cmd = (ExecTask) getProject().createTask("exec");
+        final ExecTask cmd = new ExecTask();
+        cmd.setProject(getProject());
         cmd.setExecutable(JavaEnvUtils.getJdkExecutable("jarsigner"));
 
         if (maxMemory != null) {
@@ -271,22 +296,10 @@ public class SignJar extends Task {
                 cmd.createArg().setValue(keystore);
             }
         }
-
-        if (null != storepass) {
-            cmd.createArg().setValue("-storepass");
-            cmd.createArg().setValue(storepass);
-        }
-
         if (null != storetype) {
             cmd.createArg().setValue("-storetype");
             cmd.createArg().setValue(storetype);
         }
-
-        if (null != keypass) {
-            cmd.createArg().setValue("-keypass");
-            cmd.createArg().setValue(keypass);
-        }
-
         if (null != sigfile) {
             cmd.createArg().setValue("-sigfile");
             cmd.createArg().setValue(sigfile);
@@ -316,6 +329,9 @@ public class SignJar extends Task {
         log("Signing JAR: " + jarSource.getAbsolutePath());
         cmd.setFailonerror(true);
         cmd.setTaskName(getTaskName());
+        if (redirector != null) {
+            cmd.addConfiguredRedirector(redirector);
+        }
         cmd.execute();
 
         // restore the lastModified attribute

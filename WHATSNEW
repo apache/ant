@@ -44,6 +44,9 @@ Fixed bugs:
 * Commandline.describeCommand() methods would attempt to describe
   arguments even when none, other than the executable name, were present.
 
+* Create signjar's helper ExecTask instance directly rather than by
+  typedef discovery mechanisms. Bugzilla report 33433.
+
 Other changes:
 --------------
 
@@ -109,6 +112,9 @@ Other changes:
   Bugzilla report 25513.
 
 * Added loginputstring attribute to the redirector type.
+
+* Tighten security by sending storepass and keypass to signjar
+  via the input stream of the forked process.
 
 Changes from Ant 1.6.2 to current Ant 1.6 CVS version
 =====================================================
