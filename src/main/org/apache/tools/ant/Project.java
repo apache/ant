@@ -559,6 +559,19 @@ public class Project {
     }
 
     /**
+     * Convienence method to copy a file from a source to a
+     * destination specifying if token filtering must be used and if
+     * source files may overwrite newer destination files.
+     *
+     * @throws IOException 
+     */
+    public void copyFile(String sourceFile, String destFile, boolean filtering,
+                         boolean overwrite) throws IOException {
+        copyFile(new File(sourceFile), new File(destFile), filtering, 
+                 overwrite);
+    }
+
+    /**
      * Convienence method to copy a file from a source to a destination.
      * No filtering is performed.
      *
@@ -577,8 +590,21 @@ public class Project {
     public void copyFile(File sourceFile, File destFile, boolean filtering)
         throws IOException
     {
+        copyFile(sourceFile, destFile, filtering, false);
+    }
 
-        if (destFile.lastModified() < sourceFile.lastModified()) {
+    /**
+     * Convienence method to copy a file from a source to a
+     * destination specifying if token filtering must be used and if
+     * source files may overwrite newer destination files.
+     *
+     * @throws IOException 
+     */
+    public void copyFile(File sourceFile, File destFile, boolean filtering,
+                         boolean overwrite) throws IOException {
+
+        if (overwrite ||
+            destFile.lastModified() < sourceFile.lastModified()) {
             log("Copy: " + sourceFile.getAbsolutePath() + " > "
                     + destFile.getAbsolutePath(), MSG_VERBOSE);
 

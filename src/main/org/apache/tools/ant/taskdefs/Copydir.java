@@ -112,7 +112,8 @@ public class Copydir extends MatchingTask {
                 String fromFile = (String) enum.nextElement();
                 String toFile = (String) filecopyList.get(fromFile);
                 try {
-                    project.copyFile(fromFile, toFile, filtering);
+                    project.copyFile(fromFile, toFile, filtering, 
+                                     forceOverwrite);
                 } catch (IOException ioe) {
                     String msg = "Failed to copy " + fromFile + " to " + toFile
                         + " due to " + ioe.getMessage();
@@ -130,7 +131,7 @@ public class Copydir extends MatchingTask {
             if (forceOverwrite ||
                 (srcFile.lastModified() > destFile.lastModified())) {
                 filecopyList.put(srcFile.getAbsolutePath(),
-                    destFile.getAbsolutePath());
+                                 destFile.getAbsolutePath());
             }
         }
     }
