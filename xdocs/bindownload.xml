@@ -23,9 +23,8 @@ than 100 characters and have been created using GNU tar extensions.
 Thus they must be untarred with a GNU compatible version of
 <code>tar</code>.</p>
 
-<p>In addition we provide RPMs created and maintained by the <a
-href="http://www.jpackage.org">JPackage team</a>, see the <a
-href="[preferred]/ant/binaries/rpms/">distribution directory</a>.</p>
+<p>In addition the <a href="http://www.jpackage.org">JPackage
+project</a> provides RPMs at their own distribution site.</p>
 
 <p>If you do not see the file you need in the links below, please see
 the <a href="http://www.apache.org/dist/ant/">master distribution
