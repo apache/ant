@@ -21,14 +21,22 @@ import junit.framework.TestCase;
 /**
  * @version $Revision$
  */
-public class VmCrash extends TestCase {
+public class Printer extends TestCase {
 
-    public VmCrash(String name) {
+    public Printer(String name) {
         super(name);
+        System.err.println("constructor print to System.err");
+        System.out.println("constructor print to System.out");
     }
 
-    public void testCrash() {
-        System.exit(0);
+    static {
+        System.err.println("static print to System.err");
+        System.out.println("static print to System.out");
+    }
+
+    public void testNoCrash() {
+        System.err.println("method print to System.err");
+        System.out.println("method print to System.out");
     }
 
 }

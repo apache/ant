@@ -16,9 +16,7 @@
  */
 package org.apache.tools.ant.taskdefs.optional.junit;
 
-import junit.framework.Test;
 import junit.framework.TestCase;
-import junit.framework.TestResult;
 
 /**
  * @version $Revision$

@@ -805,9 +805,14 @@ public class JUnitTask extends Task {
 
         if (summary) {
             log("Running " + test.getName(), Project.MSG_INFO);
+            String prefix = "";
+            if ("withoutanderr".equalsIgnoreCase(summaryValue)) {
+                prefix = "OutErr";
+            }
             cmd.createArgument()
                 .setValue("formatter"
-                + "=org.apache.tools.ant.taskdefs.optional.junit.SummaryJUnitResultFormatter");
+                          + "=org.apache.tools.ant.taskdefs.optional.junit."
+                          + prefix + "SummaryJUnitResultFormatter");
         }
 
         cmd.createArgument().setValue("showoutput="

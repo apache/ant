@@ -1,5 +1,5 @@
 /*
- * Copyright  2002,2004 The Apache Software Foundation
+ * Copyright  2004 The Apache Software Foundation
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -16,17 +16,15 @@
  */
 package org.apache.tools.ant.taskdefs.optional.junit;
 
-import org.apache.tools.ant.Project;
-import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.BuildFileTest;
-import java.lang.reflect.InvocationTargetException;
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
 
 public class JUnitTaskTest extends BuildFileTest {
 
     /**
      * Constructor for the JUnitTaskTest object
-     *
-     * @param name we dont know
      */
     public JUnitTaskTest(String name) {
         super(name);
@@ -45,7 +43,7 @@ public class JUnitTaskTest extends BuildFileTest {
      * The teardown method for JUnit
      */
     public void tearDown() {
-        //executeTarget("cleanup");
+        executeTarget("cleanup");
     }
 
     public void testCrash() {
@@ -62,6 +60,70 @@ public class JUnitTaskTest extends BuildFileTest {
 
     public void testNoTimeout() {
        expectPropertyUnset("notimeout", "timeout");
+    }
+
+    public void testNonForkedCapture() throws IOException {
+        executeTarget("capture");
+        assertNoPrint(getLog(), "log");
+        assertNoPrint(getFullLog(), "debug log");
+    }
+
+    public void testForkedCapture() throws IOException {
+        getProject().setProperty("fork", "true");
+        testNonForkedCapture();
+        // those would fail because of the way BuildFileTest captures output
+        assertNoPrint(getOutput(), "output");
+        assertNoPrint(getError(), "error output");
+        assertOutput();
+    }
+
+    private void assertNoPrint(String result, String where) {
+        assertTrue(where + " '" + result + "' must not contain print statement",
+                   result.indexOf("print to System.") == -1);
+    }
+
+    private void assertOutput() throws IOException {
+        FileReader inner = new FileReader(getProject()
+                                          .resolveFile("testlog.txt"));
+        BufferedReader reader = new BufferedReader(inner);
+        try {
+            String line = reader.readLine();
+            assertEquals("Testsuite: org.apache.tools.ant.taskdefs.optional.junit.Printer",
+                         line);
+            line = reader.readLine();
+            assertNotNull(line);
+            assertTrue(line.startsWith("Tests run: 1, Failures: 0, Errors: 0, Time elapsed:"));
+            line = reader.readLine();
+            assertEquals("------------- Standard Output ---------------",
+                         line);
+            assertPrint(reader.readLine(), "static", "out");
+            assertPrint(reader.readLine(), "constructor", "out");
+            assertPrint(reader.readLine(), "method", "out");
+            line = reader.readLine();
+            assertEquals("------------- ---------------- ---------------",
+                         line);
+            line = reader.readLine();
+            assertEquals("------------- Standard Error -----------------",
+                         line);
+            assertPrint(reader.readLine(), "static", "err");
+            assertPrint(reader.readLine(), "constructor", "err");
+            assertPrint(reader.readLine(), "method", "err");
+            line = reader.readLine();
+            assertEquals("------------- ---------------- ---------------",
+                         line);
+            line = reader.readLine();
+            assertEquals("", line);
+            line = reader.readLine();
+            assertNotNull(line);
+            assertTrue(line.startsWith("Testcase: testNoCrash took "));
+        } finally {
+            inner.close();
+        }
+    }
+
+    private void assertPrint(String line, String from, String to) {
+        String search = from + " print to System." + to;
+        assertEquals(search, line);
     }
 
 }
