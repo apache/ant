@@ -68,15 +68,12 @@ import org.apache.tools.ant.BuildListener;
  */
 public class AntTest extends TaskdefsTest { 
     
-    private static final String TESTCASES_DIR = "src/etc/testcases";
-    private static final String TASKDEFS_DIR = TESTCASES_DIR + "/taskdefs";
-
     public AntTest(String name) { 
         super(name);
     }    
     
     public void setUp() { 
-        configureProject(TASKDEFS_DIR + "/ant.xml");
+        configureProject("src/etc/testcases/taskdefs/ant.xml");
     }
     
     public void test1() { 
@@ -107,7 +104,7 @@ public class AntTest extends TaskdefsTest {
 
     public void testExplicitBasedir1() {
         File dir1 = getProjectDir();
-        File dir2 = new File(TESTCASES_DIR);
+        File dir2 = project.resolveFile("..");
         testBaseDirs("explicitBasedir1", 
                      new String[] {dir1.getAbsolutePath(), 
                                    dir2.getAbsolutePath()
@@ -116,7 +113,7 @@ public class AntTest extends TaskdefsTest {
 
     public void testExplicitBasedir2() {
         File dir1 = getProjectDir();
-        File dir2 = new File(TESTCASES_DIR);
+        File dir2 = project.resolveFile("..");
         testBaseDirs("explicitBasedir2",
                      new String[] {dir1.getAbsolutePath(), 
                                    dir2.getAbsolutePath()
@@ -130,7 +127,7 @@ public class AntTest extends TaskdefsTest {
 
     public void testDoNotInheritBasedir() {
         File dir1 = getProjectDir();
-        File dir2 = new File(TASKDEFS_DIR+"/ant");
+        File dir2 = project.resolveFile("ant");
         String basedir = getProjectDir().getAbsolutePath();
         testBaseDirs("doNotInheritBasedir",
                      new String[] {dir1.getAbsolutePath(), 
@@ -140,7 +137,7 @@ public class AntTest extends TaskdefsTest {
 
     public void testBasedirTripleCall() {
         File dir1 = getProjectDir();
-        File dir2 = new File(TASKDEFS_DIR+"/ant");
+        File dir2 = project.resolveFile("ant");
         testBaseDirs("tripleCall", 
                      new String[] {dir1.getAbsolutePath(), 
                                    dir2.getAbsolutePath(),

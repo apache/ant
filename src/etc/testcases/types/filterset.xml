@@ -14,7 +14,6 @@
     <copy file="filterseta.txt" tofile="dest1.txt">
         <filterset refid="testset.one"/> 
     </copy>
-    <fixcrlf eol="lf" srcdir="." includes="dest1.txt"/>
   </target>
 
   <target name="test2">
@@ -22,7 +21,6 @@
     <copy file="filtersetb.txt" tofile="dest2.txt">
         <filterset refid="testset.two"/> 
     </copy>
-    <fixcrlf eol="lf" srcdir="." includes="dest2.txt"/>
   </target>
 
   <target name="test3">
@@ -31,7 +29,6 @@
         <filterset refid="testset.one"/> 
         <filterset refid="testset.two"/> 
     </copy>
-    <fixcrlf eol="lf" srcdir="." includes="dest3.txt"/>
   </target>
   
   <target name="cleanup">
