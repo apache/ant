@@ -1,5 +1,5 @@
 /*
- * Copyright  2002-2004 The Apache Software Foundation
+ * Copyright  2002-2005 The Apache Software Foundation
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -24,10 +24,12 @@ import org.apache.tools.ant.taskdefs.condition.Os;
  * A set of helper methods related to locating executables or checking
  * conditons of a given Java installation.
  *
- *
  * @since Ant 1.5
  */
-public class JavaEnvUtils {
+public final class JavaEnvUtils {
+
+    private JavaEnvUtils() {
+    }
 
     /** Are we on a DOS-based system */
     private static final boolean isDos = Os.isFamily("dos");
@@ -60,6 +62,9 @@ public class JavaEnvUtils {
     public static final String JAVA_1_4 = "1.4";
     /** Version constant for Java 1.5 */
     public static final String JAVA_1_5 = "1.5";
+
+    /** Whether this is the Kaffe VM */
+    private static boolean kaffeDetected;
 
     /** array of packages in the runtime */
     private static Vector jrePackages;
@@ -97,6 +102,13 @@ public class JavaEnvUtils {
             // swallow as we've hit the max class version that
             // we have
         }
+        kaffeDetected = false;
+        try {
+            Class.forName("kaffe.util.NotImplemented");
+            kaffeDetected = true;
+        } catch (Throwable t) {
+            // swallow as this simply doesn't seem to be Kaffe
+        }
     }
 
     /**
@@ -111,12 +123,22 @@ public class JavaEnvUtils {
      * Compares the current Java version to the passed in String -
      * assumes the argument is one of the constants defined in this
      * class.
-     * @return true if the version of Java is the same as the given
-     * version.
+     * @param version the version to check against the current version.
+     * @return true if the version of Java is the same as the given version.
      * @since Ant 1.5
      */
     public static boolean isJavaVersion(String version) {
-        return javaVersion == version;
+        return javaVersion.equals(version);
+    }
+
+    /**
+     * Checks whether the current Java VM is Kaffe.
+     * @return true if the current Java VM is Kaffe.
+     * @since Ant 1.6.3
+     * @see http://www.kaffe.org/
+     */
+    public static boolean isKaffe() {
+        return kaffeDetected;
     }
 
     /**
@@ -133,7 +155,8 @@ public class JavaEnvUtils {
      * <code>JAVA_HOME</code> points to your JDK installation.  JDK
      * &lt; 1.2 has them in the same directory as the JDK
      * executables.</p>
-     *
+     * @param command the java executable to find.
+     * @return the path to the command.
      * @since Ant 1.5
      */
     public static String getJreExecutable(String command) {
@@ -173,7 +196,8 @@ public class JavaEnvUtils {
      *
      * <p>You typically find them in <code>JAVA_HOME/bin</code> if
      * <code>JAVA_HOME</code> points to your JDK installation.</p>
-     *
+     * @param command the java executable to find.
+     * @return the path to the command.
      * @since Ant 1.5
      */
     public static String getJdkExecutable(String command) {
@@ -237,7 +261,7 @@ public class JavaEnvUtils {
 
     /**
      * demand creation of the package list.
-     * When you add a new package, add a new test below
+     * When you add a new package, add a new test below.
      */
 
     private static void buildJrePackages() {
@@ -281,6 +305,7 @@ public class JavaEnvUtils {
 
     /**
      * Testing helper method; kept here for unification of changes.
+     * @return a list of test classes depending on the java version.
      */
     public static Vector getJrePackageTestCases() {
         Vector tests = new Vector();
@@ -325,7 +350,7 @@ public class JavaEnvUtils {
     /**
      * get a vector of strings of packages built into
      * that platforms runtime jar(s)
-     * @return list of packages
+     * @return list of packages.
      */
     public static Vector getJrePackages() {
         if (jrePackages == null) {

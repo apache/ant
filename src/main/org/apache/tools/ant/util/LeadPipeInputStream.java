@@ -1,5 +1,5 @@
 /*
- * Copyright 2004 The Apache Software Foundation
+ * Copyright 2004-2005 The Apache Software Foundation
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -21,6 +21,7 @@ import java.io.IOException;
 import java.io.PipedInputStream;
 import java.io.PipedOutputStream;
 
+import org.apache.tools.ant.ProjectComponent;
 import org.apache.tools.ant.Task;
 import org.apache.tools.ant.Project;
 
@@ -30,7 +31,7 @@ import org.apache.tools.ant.Project;
  * @since Ant 1.6.2
  */
 public class LeadPipeInputStream extends PipedInputStream {
-    private Task managingTask;
+    private ProjectComponent managingPc;
 
     /**
      * Construct a new <CODE>LeadPipeInputStream</CODE>.
@@ -52,7 +53,8 @@ public class LeadPipeInputStream extends PipedInputStream {
     /**
      * Construct a new <CODE>LeadPipeInputStream</CODE> to pull
      * from the specified <CODE>PipedOutputStream</CODE>.
-     * @param src    the <CODE>PipedOutputStream</CODE> source.
+     * @param src   the <CODE>PipedOutputStream</CODE> source.
+     * @throws IOException if unable to construct the stream.
      */
     public LeadPipeInputStream(PipedOutputStream src) throws IOException {
         super(src);
@@ -77,8 +79,9 @@ public class LeadPipeInputStream extends PipedInputStream {
             result = super.read();
         } catch (IOException eyeOhEx) {
             if ("write end dead".equalsIgnoreCase(eyeOhEx.getMessage())) {
-                if (in > 0 && out < buffer.length && out > in) {
-                    result = buffer[out++] & 0xFF;
+                if (super.in > 0 && super.out < super.buffer.length
+                    && super.out > super.in) {
+                    result = super.buffer[super.out++] & 0xFF;
                 }
             } else {
                 log("error at LeadPipeInputStream.read():  "
@@ -116,7 +119,16 @@ public class LeadPipeInputStream extends PipedInputStream {
      * @param task   the managing <CODE>Task</CODE>.
      */
     public void setManagingTask(Task task) {
-        this.managingTask = task;
+        setManagingComponent(task);
+    }
+
+    /**
+     * Set a managing <CODE>ProjectComponent</CODE> for
+     * this <CODE>LeadPipeInputStream</CODE>.
+     * @param pc   the managing <CODE>ProjectComponent</CODE>.
+     */
+    public void setManagingComponent(ProjectComponent pc) {
+        this.managingPc = pc;
     }
 
     /**
@@ -125,8 +137,8 @@ public class LeadPipeInputStream extends PipedInputStream {
      * @param loglevel   the <CODE>int</CODE> logging level.
      */
     public void log(String message, int loglevel) {
-        if (managingTask != null) {
-            managingTask.log(message, loglevel);
+        if (managingPc != null) {
+            managingPc.log(message, loglevel);
         } else {
             if (loglevel > Project.MSG_WARN) {
                 System.out.println(message);

@@ -1,5 +1,5 @@
 /*
- * Copyright  2000-2004 The Apache Software Foundation
+ * Copyright  2000-2005 The Apache Software Foundation
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -21,6 +21,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import org.apache.tools.ant.Project;
+import org.apache.tools.ant.ProjectComponent;
 import org.apache.tools.ant.Task;
 
 
@@ -48,7 +49,7 @@ public class LogOutputStream extends OutputStream {
         = new ByteArrayOutputStream(INTIAL_SIZE);
     private boolean skip = false;
 
-    private Task task;
+    private ProjectComponent pc;
     private int level = Project.MSG_INFO;
 
     /**
@@ -58,7 +59,18 @@ public class LogOutputStream extends OutputStream {
      * @param level loglevel used to log data written to this stream.
      */
     public LogOutputStream(Task task, int level) {
-        this.task = task;
+        this((ProjectComponent) task, level);
+    }
+
+    /**
+     * Creates a new instance of this class.
+     *
+     * @param task the task for whom to log
+     * @param level loglevel used to log data written to this stream.
+     * @since Ant 1.6.3
+     */
+    public LogOutputStream(ProjectComponent pc, int level) {
+        this.pc = pc;
         this.level = level;
     }
 
@@ -114,7 +126,7 @@ public class LogOutputStream extends OutputStream {
      * @param line the line to log.
      */
     protected void processLine(String line, int level) {
-        task.log(line, level);
+        pc.log(line, level);
     }
 
 

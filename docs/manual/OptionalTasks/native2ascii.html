@@ -41,6 +41,15 @@
       and <code>&lt;patternset&gt;</code> elements.
     </p>
 
+    <p>It is possible to use different converters. This can be selected
+      with the <code>implementation</code> attribute.
+      <a name="implementationvalues">Here are the choices</a>:</p>
+    <ul>
+      <li>default - the default converter (kaffe or sun) for the platform.</li>
+      <li>sun (the standard converter of the JDK)</li>
+      <li>kaffe (the standard converter of <a href="http://www.kaffe.org" target="_top">Kaffe</a>)</li>
+    </ul>
+
     <table border="1" cellpadding="2" cellspacing="0">
       <tr>
         <td><b>Attribute</b></td>
@@ -50,7 +59,8 @@
       <tr>
         <td>reverse</td>
         <td>Reverse the sense of the conversion,
-          i.e. convert from ASCII to native</td>
+          i.e. convert from ASCII to native <b>only supported by the
+            sun converter</b></td>
         <td align="center">No</td>
       </tr>
       <tr>
@@ -106,7 +116,56 @@
           taken to be an exclude pattern</td>
         <td align="center">No</td>
       </tr>
+      <tr>
+        <td valign="top">implementation</td>
+        <td valign="top">The converter implementation to use.
+          If this attribute is not set, the default converter for the
+          current VM will be used.  (See the above <a
+          href="#implementationvalues">list</a> of valid converters.)</td>
+        <td align="center" valign="top">No</td>
+      </tr>
     </table>
+
+<h3>Parameters specified as nested elements</h3>
+
+<h4>arg</h4>
+
+<p>You can specify additional command line arguments for the converter
+with nested <code>&lt;arg&gt;</code> elements.  These elements are
+specified like <a href="../using.html#arg">Command-line Arguments</a>
+but have an additional attribute that can be used to enable arguments
+only if a given converter implementation will be used.</p>
+
+<table border="1" cellpadding="2" cellspacing="0">
+<tr>
+  <td width="12%" valign="top"><b>Attribute</b></td>
+  <td width="78%" valign="top"><b>Description</b></td>
+  <td width="10%" valign="top"><b>Required</b></td>
+</tr>
+  <tr>
+    <td valign="top">value</td>
+    <td align="center" rowspan="4">See
+    <a href="../using.html#arg">Command-line Arguments</a>.</td>
+    <td align="center" rowspan="4">Exactly one of these.</td>
+  </tr>
+  <tr>
+    <td valign="top">line</td>
+  </tr>
+  <tr>
+    <td valign="top">file</td>
+  </tr>
+  <tr>
+    <td valign="top">path</td>
+  </tr>
+  <tr>
+    <td valign="top">implementation</td>
+    <td>Only pass the specified argument if the chosen converter
+    implementation matches the value of this attribute.  Legal values
+    are the same as those in the above <a
+    href="#implementationvalues">list</a> of valid compilers.)</td>
+    <td align="center">No</td>
+  </tr>
+</table>
 
     <h3>Examples</h3>
 
@@ -134,6 +193,6 @@
     </p>
   </body>
 <hr>
-<p align="center">Copyright &copy; 2000-2002,2004 The Apache Software Foundation. All rights
+<p align="center">Copyright &copy; 2000-2002,2004-2005 The Apache Software Foundation. All rights
 Reserved.</p>
 </html>

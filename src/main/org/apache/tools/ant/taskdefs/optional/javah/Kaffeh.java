@@ -68,7 +68,6 @@ public class Kaffeh implements JavahAdapter {
         if (javah.getBootclasspath() != null) {
             cp.append(javah.getBootclasspath());
         }
-        cp = cp.concatSystemBootClasspath("ignore");
         if (javah.getClasspath() != null) {
             cp.append(javah.getClasspath());
         }

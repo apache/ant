@@ -105,7 +105,6 @@ public class SunJavah implements JavahAdapter {
         if (javah.getBootclasspath() != null) {
             bcp.append(javah.getBootclasspath());
         }
-        bcp = bcp.concatSystemBootClasspath("ignore");
         if (bcp.size() > 0) {
             cmd.createArgument().setValue("-bootclasspath");
             cmd.createArgument().setPath(bcp);

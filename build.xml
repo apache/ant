@@ -4,12 +4,12 @@
   =======================================================================
     Apache Ant own build file
 
-   Copyright (c) 2000-2004 The Apache Software Foundation.  All rights
+   Copyright (c) 2000-2005 The Apache Software Foundation.  All rights
    reserved.
 
   =======================================================================
 -->
-<project default="main" basedir=".">
+<project name="apache-ant" default="main" basedir=".">
 
   <!-- Give user a chance to override without editing this file
        (and without typing -D each time it compiles it) -->
@@ -152,15 +152,6 @@
     </or>
   </selector>
 
-  <!-- classes that should be present in Sun based JVMs, but not in
-       Kaffe for example -->
-  <selector id="needs.sun.tools">
-    <or>
-      <filename name="${optional.package}/Native2Ascii*"/>
-      <filename name="${optional.package}/Javah*"/>
-    </or>
-  </selector>
-
   <selector id="needs.sun.uue">
     <filename name="${ant.package}/taskdefs/email/UUMailer*"/>
   </selector>
@@ -168,6 +159,7 @@
   <selector id="needs.sun.b64">
     <or>
       <filename name="${optional.package}/splash/SplashTask*"/>
+      <filename name="${optional.package}/splash/SplashScreenTest.java"/>
     </or>
   </selector>
 
@@ -448,7 +440,7 @@
                classname="jdepend.framework.JDepend"
                classpathref="classpath"/>
     <available property="log4j.present"
-               classname="org.apache.log4j.Category"
+               classname="org.apache.log4j.Logger"
                classpathref="classpath"/>
     <available property="commons.logging.present"
                classname="org.apache.commons.logging.LogFactory"
@@ -615,7 +607,6 @@
           <or>
             <selector refid="needs.jdk1.3+" unless="jdk1.3+"/>
             <selector refid="needs.jdk1.4+" unless="jdk1.4+"/>
-            <selector refid="needs.sun.tools" unless="sun.tools.present"/>
             <selector refid="needs.sun.uue" unless="sunuue.present"/>
             <selector refid="needs.sun.b64" unless="base64.present"/>
 

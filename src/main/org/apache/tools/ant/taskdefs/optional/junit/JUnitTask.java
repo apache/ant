@@ -1,5 +1,5 @@
 /*
- * Copyright  2000-2004 The Apache Software Foundation
+ * Copyright  2000-2005 The Apache Software Foundation
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -771,7 +771,12 @@ public class JUnitTask extends Task {
                 Project.MSG_WARN);
         }
 
-        CommandlineJava cmd = (CommandlineJava) getCommandline().clone();
+        CommandlineJava cmd = null;
+        try {
+            cmd = (CommandlineJava) getCommandline().clone();
+        } catch (CloneNotSupportedException e) {
+            throw new BuildException(e);
+        }
 
         cmd.setClassname("org.apache.tools.ant.taskdefs.optional.junit.JUnitTestRunner");
         if (casesFile == null) {
@@ -807,7 +812,7 @@ public class JUnitTask extends Task {
             log("Running " + test.getName(), Project.MSG_INFO);
             cmd.createArgument()
                 .setValue("formatter"
-                + "=org.apache.tools.ant.taskdefs.optional.junit.SummaryJUnitResultFormatter");
+                          + "=org.apache.tools.ant.taskdefs.optional.junit.SummaryJUnitResultFormatter");
         }
 
         cmd.createArgument().setValue("showoutput="
@@ -901,7 +906,7 @@ public class JUnitTask extends Task {
     private File createTempPropertiesFile(String prefix) {
         File propsFile =
             FileUtils.newFileUtils().createTempFile(prefix, ".properties",
-                tmpDir != null ? tmpDir : getProject().getBaseDir());
+                                                    tmpDir != null ? tmpDir : getProject().getBaseDir());
         propsFile.deleteOnExit();
         return propsFile;
     }
@@ -1023,7 +1028,7 @@ public class JUnitTask extends Task {
         }
 
         CommandlineJava.SysProperties sysProperties =
-                getCommandline().getSystemProperties();
+            getCommandline().getSystemProperties();
         if (sysProperties != null) {
             sysProperties.setSystem();
         }
@@ -1245,11 +1250,11 @@ public class JUnitTask extends Task {
         //create a special test class that asserts a timout occurred,
         //and tell the formatter that it raised.  
         Test t = new Test() {
-            public int countTestCases() { return 1; }
-            public void run(TestResult r) {
-                throw new AssertionFailedError("Timeout occurred");
-            }
-        };
+                public int countTestCases() { return 1; }
+                public void run(TestResult r) {
+                    throw new AssertionFailedError("Timeout occurred");
+                }
+            };
         formatter.startTest(t);
         formatter.addError(t, new AssertionFailedError("Timeout occurred"));
         formatter.endTestSuite(test);
@@ -1333,10 +1338,10 @@ public class JUnitTask extends Task {
          */
         ForkedTestConfiguration(JUnitTest test) {
             this(test.getFiltertrace(),
-                    test.getHaltonerror(),
-                    test.getHaltonfailure(),
-                    test.getErrorProperty(),
-                    test.getFailureProperty());
+                 test.getHaltonerror(),
+                 test.getHaltonfailure(),
+                 test.getErrorProperty(),
+                 test.getFailureProperty());
         }
 
         /**
@@ -1458,7 +1463,7 @@ public class JUnitTask extends Task {
             if ((errorOccurredHere && test.getHaltonerror())
                 || (failureOccurredHere && test.getHaltonfailure())) {
                 throw new BuildException(name + " failed"
-                    + (wasKilled ? " (timeout)" : ""), getLocation());
+                                         + (wasKilled ? " (timeout)" : ""), getLocation());
             } else {
                 log(name + " FAILED"
                     + (wasKilled ? " (timeout)" : ""), Project.MSG_ERR);
