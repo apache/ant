@@ -218,7 +218,7 @@
     <wsdltodotnet destFile="${out.csc}"
       srcFile="${local.wsdl}"
       >
-      <schema file="wsdlToDotnet.xml"
+      <schema file="WsdlToDotnet.xml"
         url="http://ant.apache.org/xml/AntSchema.xsd"/>
     </wsdltodotnet>
   </target>
