@@ -14,6 +14,7 @@
             <item name="Build file" href="/buildfile.html"/>
             <item name="Virtual File System" href="/vfs.html"/>
             <item name="Ant1 Compatibility Layer" href="/ant1compat.html"/>
+            <item name="Differences to Ant1" href="/differences.html"/>
         </menu>
 
         <menu name="Extending Ant">
