@@ -41,6 +41,34 @@
     <section name="Books">
       <p>Listed by descending publication date.</p>
       <!-- TODO: reorganize as a table? -->
+      <subsection name="Extreme Programming with Ant">
+         <p> This book shows how to implement an XP project using Ant 1.5.3, and many other 3rd party tools.  Covers:</p> 
+            <ul>
+               <li>The fundamentals of Ant: concepts, core and optional tasks</li>
+               <li>How to write custom Ant components, including custom Tasks, Loggers, Listeners, Input Handlers, Selectors, Filters, Mappers and Data Types</li>
+               <li>Mitigating risks by creating spike tests with Ant buildfiles</li>
+               <li>Add CVS version control and testing with JUnit</li>
+               <li>Automate nightly builds and reporting</li>
+               <li>Deploy applications dynamically using XDoclet</li>
+               <li>Enforcing Code Standards with Jalopy, PMD, CheckStyle, iContract, JDepend</li>
+               <li>Using Remote Ant (Rant) and CruiseControl</li>
+               <li>Generating project documentation</li>
+               <li>Adapting an XP process for use by other teams or across an enterprise</li>
+               <li>Custom Task examples to generating UML diagrams, creating reports and metrics on-the-fly</li>
+               <li>Follows a case-study of a team that implements an XP Project</li>
+            </ul>
+         <table>
+          <tr>
+            <th>Authors:</th> 
+            <td>Glenn Niemeyer and Jeremy Poteet</td> 
+          </tr>
+          <tr>
+            <th>URL:</th>
+            <td><a href="http://www.sams.com/catalog/product.asp?product_id=%7BFB825A48-BC04-4C55-BD8C-DF93C6BBF920%7D">http://www.sams.com/catalog/product.asp?product_id=%7BFB825A48-BC04-4C55-BD8C-DF93C6BBF920%7D</a></td>
+          </tr>
+        </table>
+      </subsection>
+
       <subsection name="Ant. Das Java-Build-Tool in der Praxis">
         <p>A German language book on Ant that covers Ant 1.5.
         This is the original description:</p>
