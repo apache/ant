@@ -201,11 +201,11 @@
     <filename name="${optional.package}/junit/**"/>
   </selector>
 
-  <selector id="needs.jakarta-regexp">
+  <selector id="needs.apache-regexp">
     <filename name="${regexp.package}/JakartaRegexp*"/>
   </selector>
 
-  <selector id="needs.jakarta-oro">
+  <selector id="needs.apache-oro">
     <or>
       <filename name="${regexp.package}/JakartaOro*"/>
       <filename name="${optional.package}/perforce/*"/>
@@ -213,7 +213,7 @@
     </or>
   </selector>
 
-  <selector id="needs.jakarta-bcel">
+  <selector id="needs.apache-bcel">
     <or>
       <filename name="${ant.package}/filters/util/JavaClassHelper*"/>
       <filename name="${util.package}/depend/bcel/*"/>
@@ -221,7 +221,7 @@
     </or>
   </selector>
 
-  <selector id="needs.jakarta-log4j">
+  <selector id="needs.apache-log4j">
     <filename name="${ant.package}/listener/Log4jListener*"/>
   </selector>
 
@@ -427,10 +427,10 @@
     <available property="stylebook.present"
                classname="org.apache.stylebook.Engine"
                classpathref="classpath"/>
-    <available property="jakarta.regexp.present"
+    <available property="apache.regexp.present"
                classname="org.apache.regexp.RE"
                classpathref="classpath"/>
-    <available property="jakarta.oro.present"
+    <available property="apache.oro.present"
                classname="org.apache.oro.text.regex.Perl5Matcher"
                classpathref="classpath"/>
     <available property="jmf.present"
@@ -480,8 +480,8 @@
     <condition property="some.regexp.support">
       <or>
         <isset property="jdk1.4+"/>
-        <isset property="jakarta.regexp.present"/>
-        <isset property="jakarta.oro.present"/>
+        <isset property="apache.regexp.present"/>
+        <isset property="apache.oro.present"/>
       </or>
     </condition>
 
@@ -621,11 +621,11 @@
             <selector refid="needs.xslp" unless="xslp.present"/>
             <selector refid="needs.apache-resolver" unless="apache.resolver.present"/>
             <selector refid="needs.junit" unless="junit.present"/>
-            <selector refid="needs.jakarta-regexp"
-                      unless="jakarta.regexp.present"/>
-            <selector refid="needs.jakarta-oro" unless="jakarta.oro.present"/>
-            <selector refid="needs.jakarta-bcel" unless="bcel.present"/>
-            <selector refid="needs.jakarta-log4j" unless="log4j.present"/>
+            <selector refid="needs.apache-regexp"
+                      unless="apache.regexp.present"/>
+            <selector refid="needs.apache-oro" unless="apache.oro.present"/>
+            <selector refid="needs.apache-bcel" unless="bcel.present"/>
+            <selector refid="needs.apache-log4j" unless="log4j.present"/>
             <selector refid="needs.commons-logging"
                       unless="commons.logging.present"/>
             <selector refid="needs.apache-bsf" unless="bsf.present"/>
@@ -733,10 +733,10 @@
             <filename name="${optional.type.package}/**"/>
             <filename name="${util.package}/depend/**"/>
             <filename name="${util.package}/optional/**"/>
-            <selector refid="needs.jakarta-log4j"/>
+            <selector refid="needs.apache-log4j"/>
             <selector refid="needs.commons-logging"/>
-            <selector refid="needs.jakarta-regexp"/>
-            <selector refid="needs.jakarta-oro"/>
+            <selector refid="needs.apache-regexp"/>
+            <selector refid="needs.apache-oro"/>
             <selector refid="needs.jdk1.4+"/>
             <selector refid="needs.javamail"/>
             <selector refid="ant.launcher"/>
@@ -799,10 +799,10 @@
             <selector refid="needs.xslp"/>
             <selector refid="needs.apache-resolver"/>
             <selector refid="needs.junit"/>
-            <selector refid="needs.jakarta-regexp"/>
-            <selector refid="needs.jakarta-oro"/>
-            <selector refid="needs.jakarta-bcel"/>
-            <selector refid="needs.jakarta-log4j"/>
+            <selector refid="needs.apache-regexp"/>
+            <selector refid="needs.apache-oro"/>
+            <selector refid="needs.apache-bcel"/>
+            <selector refid="needs.apache-log4j"/>
             <selector refid="needs.commons-logging"/>
             <selector refid="needs.apache-bsf"/>
             <selector refid="needs.stylebook"/>
@@ -847,10 +847,10 @@
     <optional-jar dep="xslp"/>
     <optional-jar dep="apache-resolver"/>
     <optional-jar dep="junit"/>
-    <optional-jar dep="jakarta-regexp"/>
-    <optional-jar dep="jakarta-oro"/>
-    <optional-jar dep="jakarta-bcel"/>
-    <optional-jar dep="jakarta-log4j"/>
+    <optional-jar dep="apache-regexp"/>
+    <optional-jar dep="apache-oro"/>
+    <optional-jar dep="apache-bcel"/>
+    <optional-jar dep="apache-log4j"/>
     <optional-jar dep="commons-logging"/>
     <optional-jar dep="apache-bsf"/>
     <optional-jar dep="stylebook"/>
