@@ -130,6 +130,18 @@
         </td>
       </tr>
       <tr>
+        <td valign="top">granularity</td>
+        <td valign="top">The number of milliseconds leeway to give before
+          deciding whether a files modification time matches a date. This is
+          needed because not every file system supports tracking the last
+          modified time to the millisecond level. The file will be selected
+          provided the condition could be true were the granularity added or
+          subtracted from the actual time. Default is 0 milliseconds except
+          on Windows systems, where it is 2000 milliseconds (2 seconds).
+        </td>
+        <td valign="top" align="center">No</td>
+      </tr>
+      <tr>
         <td valign="top">when</td>
         <td valign="top">Indicates how to interpret the date, whether
           the files to be selected are those whose last modified times should
@@ -189,7 +201,8 @@
         <td valign="top">The number of milliseconds leeway to give before
           deciding a file is out of date. This is needed because not every
           file system supports tracking the last modified time to the
-          millisecond level. Default is 0 milliseconds.
+          millisecond level. Default is 0 milliseconds except on Windows
+          systems, where it is 2000 milliseconds (2 seconds).
         </td>
         <td valign="top" align="center">No</td>
       </tr>
@@ -203,7 +216,7 @@
 &lt;/fileset&gt;
 </pre></blockquote>
 
-    <p>Selects all the Java source files which were modified in the 
+    <p>Selects all the Java source files which were modified in the
       1.5 release.
     </p>
 

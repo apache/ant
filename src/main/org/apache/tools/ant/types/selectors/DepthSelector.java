@@ -150,7 +150,7 @@ public class DepthSelector extends BaseExtendSelector {
             setError("You must set at least one of the min or the " +
                     "max levels.");
         }
-        if (max < min) {
+        if (max < min && max > -1) {
             setError("The maximum depth is lower than the minimum.");
         }
     }

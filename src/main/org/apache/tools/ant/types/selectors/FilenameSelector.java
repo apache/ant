@@ -187,8 +187,8 @@ public class FilenameSelector extends BaseExtendSelector {
     public boolean isSelected(File basedir, String filename, File file) {
         validate();
 
-        return SelectorUtils.matchPath(pattern,filename,
-                casesensitive);
+        return (SelectorUtils.matchPath(pattern,filename,
+                casesensitive) == !(negated));
     }
 
 }

@@ -1235,6 +1235,7 @@
           <exclude name="${regexp.package}/RegexpTest.java" />
           <exclude name="${optional.package}/AbstractXSLTLiaisonTest.java" />
           <exclude name="${ant.package}/types/AbstractFileSetTest.java" />
+          <exclude name="${ant.package}/types/selectors/BaseSelectorTest.java" />
 
           <!-- helper classes, not testcases -->
           <exclude name="org/example/**" />
