@@ -160,4 +160,14 @@ Legal:
     <log message="cvs done!"/>
   </target>
 
+  <target name="ref-test">
+    <property name="refme1" value="These are not the droids you are looking for." />
+    <property name="refme2" value="Move along." />
+
+    <log message="Following should be a deomnstration of the -ref attribute extension:"/>
+    <log message-ref="refme1"/>
+    <log message-ref="refme2"/>
+  </target>
+
+
 </project>
