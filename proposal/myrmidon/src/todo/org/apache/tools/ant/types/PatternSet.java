@@ -11,10 +11,10 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
-import java.util.Enumeration;
+import java.util.Iterator;
 import java.util.Stack;
 import java.util.StringTokenizer;
-import java.util.Vector;
+import java.util.ArrayList;
 import org.apache.myrmidon.api.TaskException;
 import org.apache.tools.ant.Project;
 
@@ -33,10 +33,10 @@ import org.apache.tools.ant.Project;
  */
 public class PatternSet extends DataType
 {
-    private Vector includeList = new Vector();
-    private Vector excludeList = new Vector();
-    private Vector includesFileList = new Vector();
-    private Vector excludesFileList = new Vector();
+    private ArrayList includeList = new ArrayList();
+    private ArrayList excludeList = new ArrayList();
+    private ArrayList includesFileList = new ArrayList();
+    private ArrayList excludesFileList = new ArrayList();
 
     public PatternSet()
     {
@@ -326,10 +326,10 @@ public class PatternSet extends DataType
      * @param list The feature to be added to the PatternToList attribute
      * @return Description of the Returned Value
      */
-    private NameEntry addPatternToList( Vector list )
+    private NameEntry addPatternToList( ArrayList list )
     {
         NameEntry result = new NameEntry();
-        list.addElement( result );
+        list.add( result );
         return result;
     }
 
@@ -340,25 +340,24 @@ public class PatternSet extends DataType
      * @param p Description of Parameter
      * @return Description of the Returned Value
      */
-    private String[] makeArray( Vector list, Project p )
+    private String[] makeArray( ArrayList list, Project p )
     {
         if( list.size() == 0 )
             return null;
 
-        Vector tmpNames = new Vector();
-        for( Enumeration e = list.elements(); e.hasMoreElements(); )
+        ArrayList tmpNames = new ArrayList();
+        for( Iterator e = list.iterator(); e.hasNext(); )
         {
-            NameEntry ne = (NameEntry)e.nextElement();
+            NameEntry ne = (NameEntry)e.next();
             String pattern = ne.evalName( p );
             if( pattern != null && pattern.length() > 0 )
             {
-                tmpNames.addElement( pattern );
+                tmpNames.add( pattern );
             }
         }
 
-        String result[] = new String[ tmpNames.size() ];
-        tmpNames.copyInto( result );
-        return result;
+        final String[] result = new String[ tmpNames.size() ];
+        return (String[]) tmpNames.toArray( result );
     }
 
     /**
@@ -371,10 +370,10 @@ public class PatternSet extends DataType
     {
         if( includesFileList.size() > 0 )
         {
-            Enumeration e = includesFileList.elements();
-            while( e.hasMoreElements() )
+            Iterator e = includesFileList.iterator();
+            while( e.hasNext() )
             {
-                NameEntry ne = (NameEntry)e.nextElement();
+                NameEntry ne = (NameEntry)e.next();
                 String fileName = ne.evalName( p );
                 if( fileName != null )
                 {
@@ -386,15 +385,15 @@ public class PatternSet extends DataType
                     readPatterns( inclFile, includeList, p );
                 }
             }
-            includesFileList.removeAllElements();
+            includesFileList.clear();
         }
 
         if( excludesFileList.size() > 0 )
         {
-            Enumeration e = excludesFileList.elements();
-            while( e.hasMoreElements() )
+            Iterator e = excludesFileList.iterator();
+            while( e.hasNext() )
             {
-                NameEntry ne = (NameEntry)e.nextElement();
+                NameEntry ne = (NameEntry)e.next();
                 String fileName = ne.evalName( p );
                 if( fileName != null )
                 {
@@ -406,7 +405,7 @@ public class PatternSet extends DataType
                     readPatterns( exclFile, excludeList, p );
                 }
             }
-            excludesFileList.removeAllElements();
+            excludesFileList.clear();
         }
     }
 
@@ -419,7 +418,7 @@ public class PatternSet extends DataType
      * @param p Description of Parameter
      * @exception TaskException Description of Exception
      */
-    private void readPatterns( File patternfile, Vector patternlist, Project p )
+    private void readPatterns( File patternfile, ArrayList patternlist, Project p )
         throws TaskException
     {
 

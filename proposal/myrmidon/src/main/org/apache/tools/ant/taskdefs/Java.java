@@ -11,7 +11,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.PrintStream;
-import java.util.Vector;
+import java.util.ArrayList;
 import org.apache.myrmidon.api.TaskException;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.Task;
@@ -308,14 +308,14 @@ public class Java extends Task
      * @param args Description of Parameter
      * @exception TaskException Description of Exception
      */
-    protected void run( String classname, Vector args )
+    protected void run( String classname, ArrayList args )
         throws TaskException
     {
         CommandlineJava cmdj = new CommandlineJava();
         cmdj.setClassname( classname );
         for( int i = 0; i < args.size(); i++ )
         {
-            cmdj.createArgument().setValue( (String)args.elementAt( i ) );
+            cmdj.createArgument().setValue( (String)args.get( i ) );
         }
         run( cmdj );
     }

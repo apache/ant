@@ -8,8 +8,8 @@
 package org.apache.tools.ant.taskdefs.optional.junit;
 
 import java.io.File;
-import java.util.Enumeration;
-import java.util.Vector;
+import java.util.Iterator;
+import java.util.ArrayList;
 import org.apache.tools.ant.DirectoryScanner;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.types.FileSet;
@@ -36,7 +36,7 @@ public final class BatchTest extends BaseTest
     /**
      * the list of filesets containing the testcase filename rules
      */
-    private Vector filesets = new Vector();
+    private ArrayList filesets = new ArrayList();
 
     /**
      * the reference to the project
@@ -73,10 +73,10 @@ public final class BatchTest extends BaseTest
      * @return an enumeration of all elements of this batchtest that are a <tt>
      *      JUnitTest</tt> instance.
      */
-    public final Enumeration elements()
+    public final Iterator iterator()
     {
         JUnitTest[] tests = createAllJUnitTest();
-        return Enumerations.fromArray( tests );
+        return Iterators.fromArray( tests );
     }
 
     /**
@@ -88,23 +88,23 @@ public final class BatchTest extends BaseTest
      */
     public void addFileSet( FileSet fs )
     {
-        filesets.addElement( fs );
+        filesets.add( fs );
     }
 
     /**
      * Convenient method to merge the <tt>JUnitTest</tt> s of this batchtest to
-     * a <tt>Vector</tt> .
+     * a <tt>ArrayList</tt> .
      *
      * @param v the vector to which should be added all individual tests of this
      *      batch test.
      */
-    final void addTestsTo( Vector v )
+    final void addTestsTo( ArrayList v )
     {
         JUnitTest[] tests = createAllJUnitTest();
         v.ensureCapacity( v.size() + tests.length );
         for( int i = 0; i < tests.length; i++ )
         {
-            v.addElement( tests[ i ] );
+            v.add( tests[ i ] );
         }
     }
 
@@ -122,11 +122,11 @@ public final class BatchTest extends BaseTest
      */
     private String[] getFilenames()
     {
-        Vector v = new Vector();
+        ArrayList v = new ArrayList();
         final int size = this.filesets.size();
         for( int j = 0; j < size; j++ )
         {
-            FileSet fs = (FileSet)filesets.elementAt( j );
+            FileSet fs = (FileSet)filesets.get( j );
             DirectoryScanner ds = fs.getDirectoryScanner( project );
             ds.scan();
             String[] f = ds.getIncludedFiles();
@@ -135,11 +135,11 @@ public final class BatchTest extends BaseTest
                 String pathname = f[ k ];
                 if( pathname.endsWith( ".java" ) )
                 {
-                    v.addElement( pathname.substring( 0, pathname.length() - ".java".length() ) );
+                    v.add( pathname.substring( 0, pathname.length() - ".java".length() ) );
                 }
                 else if( pathname.endsWith( ".class" ) )
                 {
-                    v.addElement( pathname.substring( 0, pathname.length() - ".class".length() ) );
+                    v.add( pathname.substring( 0, pathname.length() - ".class".length() ) );
                 }
             }
         }
@@ -188,10 +188,10 @@ public final class BatchTest extends BaseTest
         test.setTodir( this.destDir );
         test.setFailureProperty( failureProperty );
         test.setErrorProperty( errorProperty );
-        Enumeration list = this.formatters.elements();
-        while( list.hasMoreElements() )
+        Iterator list = this.formatters.iterator();
+        while( list.hasNext() )
         {
-            test.addFormatter( (FormatterElement)list.nextElement() );
+            test.addFormatter( (FormatterElement)list.next() );
         }
         return test;
     }

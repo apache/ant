@@ -9,7 +9,7 @@ package org.apache.tools.ant;
 
 import java.io.File;
 import java.util.StringTokenizer;
-import java.util.Vector;
+import java.util.ArrayList;
 import org.apache.myrmidon.api.TaskException;
 
 /**
@@ -110,7 +110,7 @@ public class DirectoryScanner implements FileScanner
     };
 
     /**
-     * Have the Vectors holding our results been built by a slow scan?
+     * Have the ArrayLists holding our results been built by a slow scan?
      */
     protected boolean haveSlowResults = false;
 
@@ -133,18 +133,18 @@ public class DirectoryScanner implements FileScanner
      * The files that where found and matched at least one includes, and also
      * matched at least one excludes.
      */
-    protected Vector dirsExcluded;
+    protected ArrayList dirsExcluded;
 
     /**
      * The directories that where found and matched at least one includes, and
      * matched no excludes.
      */
-    protected Vector dirsIncluded;
+    protected ArrayList dirsIncluded;
 
     /**
      * The directories that where found and did not match any includes.
      */
-    protected Vector dirsNotIncluded;
+    protected ArrayList dirsNotIncluded;
 
     /**
      * The patterns for the files that should be excluded.
@@ -155,18 +155,18 @@ public class DirectoryScanner implements FileScanner
      * The files that where found and matched at least one includes, and also
      * matched at least one excludes.
      */
-    protected Vector filesExcluded;
+    protected ArrayList filesExcluded;
 
     /**
      * The files that where found and matched at least one includes, and matched
      * no excludes.
      */
-    protected Vector filesIncluded;
+    protected ArrayList filesIncluded;
 
     /**
      * The files that where found and did not match any includes.
      */
-    protected Vector filesNotIncluded;
+    protected ArrayList filesNotIncluded;
 
     /**
      * The patterns for the files that should be included.
@@ -424,18 +424,18 @@ public class DirectoryScanner implements FileScanner
             return false;
         }
 
-        Vector patDirs = new Vector();
+        ArrayList patDirs = new ArrayList();
         StringTokenizer st = new StringTokenizer( pattern, File.separator );
         while( st.hasMoreTokens() )
         {
-            patDirs.addElement( st.nextToken() );
+            patDirs.add( st.nextToken() );
         }
 
-        Vector strDirs = new Vector();
+        ArrayList strDirs = new ArrayList();
         st = new StringTokenizer( str, File.separator );
         while( st.hasMoreTokens() )
         {
-            strDirs.addElement( st.nextToken() );
+            strDirs.add( st.nextToken() );
         }
 
         int patIdxStart = 0;
@@ -446,12 +446,12 @@ public class DirectoryScanner implements FileScanner
         // up to first '**'
         while( patIdxStart <= patIdxEnd && strIdxStart <= strIdxEnd )
         {
-            String patDir = (String)patDirs.elementAt( patIdxStart );
+            String patDir = (String)patDirs.get( patIdxStart );
             if( patDir.equals( "**" ) )
             {
                 break;
             }
-            if( !match( patDir, (String)strDirs.elementAt( strIdxStart ), isCaseSensitive ) )
+            if( !match( patDir, (String)strDirs.get( strIdxStart ), isCaseSensitive ) )
             {
                 return false;
             }
@@ -463,7 +463,7 @@ public class DirectoryScanner implements FileScanner
             // String is exhausted
             for( int i = patIdxStart; i <= patIdxEnd; i++ )
             {
-                if( !patDirs.elementAt( i ).equals( "**" ) )
+                if( !patDirs.get( i ).equals( "**" ) )
                 {
                     return false;
                 }
@@ -482,12 +482,12 @@ public class DirectoryScanner implements FileScanner
         // up to last '**'
         while( patIdxStart <= patIdxEnd && strIdxStart <= strIdxEnd )
         {
-            String patDir = (String)patDirs.elementAt( patIdxEnd );
+            String patDir = (String)patDirs.get( patIdxEnd );
             if( patDir.equals( "**" ) )
             {
                 break;
             }
-            if( !match( patDir, (String)strDirs.elementAt( strIdxEnd ), isCaseSensitive ) )
+            if( !match( patDir, (String)strDirs.get( strIdxEnd ), isCaseSensitive ) )
             {
                 return false;
             }
@@ -499,7 +499,7 @@ public class DirectoryScanner implements FileScanner
             // String is exhausted
             for( int i = patIdxStart; i <= patIdxEnd; i++ )
             {
-                if( !patDirs.elementAt( i ).equals( "**" ) )
+                if( !patDirs.get( i ).equals( "**" ) )
                 {
                     return false;
                 }
@@ -512,7 +512,7 @@ public class DirectoryScanner implements FileScanner
             int patIdxTmp = -1;
             for( int i = patIdxStart + 1; i <= patIdxEnd; i++ )
             {
-                if( patDirs.elementAt( i ).equals( "**" ) )
+                if( patDirs.get( i ).equals( "**" ) )
                 {
                     patIdxTmp = i;
                     break;
@@ -534,8 +534,8 @@ public class DirectoryScanner implements FileScanner
             {
                 for( int j = 0; j < patLength; j++ )
                 {
-                    String subPat = (String)patDirs.elementAt( patIdxStart + j + 1 );
-                    String subStr = (String)strDirs.elementAt( strIdxStart + i + j );
+                    String subPat = (String)patDirs.get( patIdxStart + j + 1 );
+                    String subStr = (String)strDirs.get( strIdxStart + i + j );
                     if( !match( subPat, subStr, isCaseSensitive ) )
                     {
                         continue strLoop;
@@ -557,7 +557,7 @@ public class DirectoryScanner implements FileScanner
 
         for( int i = patIdxStart; i <= patIdxEnd; i++ )
         {
-            if( !patDirs.elementAt( i ).equals( "**" ) )
+            if( !patDirs.get( i ).equals( "**" ) )
             {
                 return false;
             }
@@ -609,18 +609,18 @@ public class DirectoryScanner implements FileScanner
             return false;
         }
 
-        Vector patDirs = new Vector();
+        ArrayList patDirs = new ArrayList();
         StringTokenizer st = new StringTokenizer( pattern, File.separator );
         while( st.hasMoreTokens() )
         {
-            patDirs.addElement( st.nextToken() );
+            patDirs.add( st.nextToken() );
         }
 
-        Vector strDirs = new Vector();
+        ArrayList strDirs = new ArrayList();
         st = new StringTokenizer( str, File.separator );
         while( st.hasMoreTokens() )
         {
-            strDirs.addElement( st.nextToken() );
+            strDirs.add( st.nextToken() );
         }
 
         int patIdxStart = 0;
@@ -631,12 +631,12 @@ public class DirectoryScanner implements FileScanner
         // up to first '**'
         while( patIdxStart <= patIdxEnd && strIdxStart <= strIdxEnd )
         {
-            String patDir = (String)patDirs.elementAt( patIdxStart );
+            String patDir = (String)patDirs.get( patIdxStart );
             if( patDir.equals( "**" ) )
             {
                 break;
             }
-            if( !match( patDir, (String)strDirs.elementAt( strIdxStart ), isCaseSensitive ) )
+            if( !match( patDir, (String)strDirs.get( strIdxStart ), isCaseSensitive ) )
             {
                 return false;
             }
@@ -783,7 +783,7 @@ public class DirectoryScanner implements FileScanner
         String[] directories = new String[ count ];
         for( int i = 0; i < count; i++ )
         {
-            directories[ i ] = (String)dirsExcluded.elementAt( i );
+            directories[ i ] = (String)dirsExcluded.get( i );
         }
         return directories;
     }
@@ -803,7 +803,7 @@ public class DirectoryScanner implements FileScanner
         String[] files = new String[ count ];
         for( int i = 0; i < count; i++ )
         {
-            files[ i ] = (String)filesExcluded.elementAt( i );
+            files[ i ] = (String)filesExcluded.get( i );
         }
         return files;
     }
@@ -821,7 +821,7 @@ public class DirectoryScanner implements FileScanner
         String[] directories = new String[ count ];
         for( int i = 0; i < count; i++ )
         {
-            directories[ i ] = (String)dirsIncluded.elementAt( i );
+            directories[ i ] = (String)dirsIncluded.get( i );
         }
         return directories;
     }
@@ -839,7 +839,7 @@ public class DirectoryScanner implements FileScanner
         String[] files = new String[ count ];
         for( int i = 0; i < count; i++ )
         {
-            files[ i ] = (String)filesIncluded.elementAt( i );
+            files[ i ] = (String)filesIncluded.get( i );
         }
         return files;
     }
@@ -858,7 +858,7 @@ public class DirectoryScanner implements FileScanner
         String[] directories = new String[ count ];
         for( int i = 0; i < count; i++ )
         {
-            directories[ i ] = (String)dirsNotIncluded.elementAt( i );
+            directories[ i ] = (String)dirsNotIncluded.get( i );
         }
         return directories;
     }
@@ -877,7 +877,7 @@ public class DirectoryScanner implements FileScanner
         String[] files = new String[ count ];
         for( int i = 0; i < count; i++ )
         {
-            files[ i ] = (String)filesNotIncluded.elementAt( i );
+            files[ i ] = (String)filesNotIncluded.get( i );
         }
         return files;
     }
@@ -947,27 +947,27 @@ public class DirectoryScanner implements FileScanner
             excludes = new String[ 0 ];
         }
 
-        filesIncluded = new Vector();
-        filesNotIncluded = new Vector();
-        filesExcluded = new Vector();
-        dirsIncluded = new Vector();
-        dirsNotIncluded = new Vector();
-        dirsExcluded = new Vector();
+        filesIncluded = new ArrayList();
+        filesNotIncluded = new ArrayList();
+        filesExcluded = new ArrayList();
+        dirsIncluded = new ArrayList();
+        dirsNotIncluded = new ArrayList();
+        dirsExcluded = new ArrayList();
 
         if( isIncluded( "" ) )
         {
             if( !isExcluded( "" ) )
             {
-                dirsIncluded.addElement( "" );
+                dirsIncluded.add( "" );
             }
             else
             {
-                dirsExcluded.addElement( "" );
+                dirsExcluded.add( "" );
             }
         }
         else
         {
-            dirsNotIncluded.addElement( "" );
+            dirsNotIncluded.add( "" );
         }
         scandir( basedir, "", true );
     }
@@ -1074,7 +1074,7 @@ public class DirectoryScanner implements FileScanner
                 {
                     if( !isExcluded( name ) )
                     {
-                        dirsIncluded.addElement( name );
+                        dirsIncluded.add( name );
                         if( fast )
                         {
                             scandir( file, name + File.separator, fast );
@@ -1083,7 +1083,7 @@ public class DirectoryScanner implements FileScanner
                     else
                     {
                         everythingIncluded = false;
-                        dirsExcluded.addElement( name );
+                        dirsExcluded.add( name );
                         if( fast && couldHoldIncluded( name ) )
                         {
                             scandir( file, name + File.separator, fast );
@@ -1093,7 +1093,7 @@ public class DirectoryScanner implements FileScanner
                 else
                 {
                     everythingIncluded = false;
-                    dirsNotIncluded.addElement( name );
+                    dirsNotIncluded.add( name );
                     if( fast && couldHoldIncluded( name ) )
                     {
                         scandir( file, name + File.separator, fast );
@@ -1110,18 +1110,18 @@ public class DirectoryScanner implements FileScanner
                 {
                     if( !isExcluded( name ) )
                     {
-                        filesIncluded.addElement( name );
+                        filesIncluded.add( name );
                     }
                     else
                     {
                         everythingIncluded = false;
-                        filesExcluded.addElement( name );
+                        filesExcluded.add( name );
                     }
                 }
                 else
                 {
                     everythingIncluded = false;
-                    filesNotIncluded.addElement( name );
+                    filesNotIncluded.add( name );
                 }
             }
         }
@@ -1141,10 +1141,10 @@ public class DirectoryScanner implements FileScanner
         }
 
         String[] excl = new String[ dirsExcluded.size() ];
-        dirsExcluded.copyInto( excl );
+        excl = (String[])dirsExcluded.toArray( excl );
 
         String[] notIncl = new String[ dirsNotIncluded.size() ];
-        dirsNotIncluded.copyInto( notIncl );
+        notIncl = (String[])dirsNotIncluded.toArray( notIncl );
 
         for( int i = 0; i < excl.length; i++ )
         {

@@ -10,9 +10,9 @@ package org.apache.tools.ant.taskdefs.optional.depend;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
-import java.util.Enumeration;
+import java.util.Iterator;
 import java.util.Stack;
-import java.util.Vector;
+import java.util.ArrayList;
 
 /**
  * An iterator which iterates through the contents of a java directory. The
@@ -36,7 +36,7 @@ public class DirectoryIterator implements ClassFileIterator
      * new iterator over the sub directory becomes the current directory. This
      * implements a depth first traversal of the directory namespace.
      */
-    private Enumeration currentEnum;
+    private Iterator currentEnum;
 
     /**
      * This is a stack of current iterators supporting the depth first traversal
@@ -74,9 +74,9 @@ public class DirectoryIterator implements ClassFileIterator
             rootLength = 0;
         }
 
-        Vector filesInRoot = getDirectoryEntries( rootDirectory );
+        ArrayList filesInRoot = getDirectoryEntries( rootDirectory );
 
-        currentEnum = filesInRoot.elements();
+        currentEnum = filesInRoot.iterator();
     }
 
     /**
@@ -94,15 +94,15 @@ public class DirectoryIterator implements ClassFileIterator
      */
     public ClassFile getNextClassFile()
     {
-        ClassFile nextElement = null;
+        ClassFile next = null;
 
         try
         {
-            while( nextElement == null )
+            while( next == null )
             {
-                if( currentEnum.hasMoreElements() )
+                if( currentEnum.hasNext() )
                 {
-                    File element = (File)currentEnum.nextElement();
+                    File element = (File)currentEnum.next();
 
                     if( element.isDirectory() )
                     {
@@ -111,9 +111,9 @@ public class DirectoryIterator implements ClassFileIterator
                         // iterate through this directory.
                         enumStack.push( currentEnum );
 
-                        Vector files = getDirectoryEntries( element );
+                        ArrayList files = getDirectoryEntries( element );
 
-                        currentEnum = files.elements();
+                        currentEnum = files.iterator();
                     }
                     else
                     {
@@ -129,7 +129,7 @@ public class DirectoryIterator implements ClassFileIterator
 
                             javaClass.read( inFileStream );
 
-                            nextElement = javaClass;
+                            next = javaClass;
                         }
                     }
                 }
@@ -142,17 +142,17 @@ public class DirectoryIterator implements ClassFileIterator
                     }
                     else
                     {
-                        currentEnum = (Enumeration)enumStack.pop();
+                        currentEnum = (Iterator)enumStack.pop();
                     }
                 }
             }
         }
         catch( IOException e )
         {
-            nextElement = null;
+            next = null;
         }
 
-        return nextElement;
+        return next;
     }
 
     /**
@@ -162,9 +162,9 @@ public class DirectoryIterator implements ClassFileIterator
      * @param directory the directory to be scanned.
      * @return a vector containing File objects for each entry in the directory.
      */
-    private Vector getDirectoryEntries( File directory )
+    private ArrayList getDirectoryEntries( File directory )
     {
-        Vector files = new Vector();
+        ArrayList files = new ArrayList();
 
         // File[] filesInDir = directory.listFiles();
         String[] filesInDir = directory.list();
@@ -175,7 +175,7 @@ public class DirectoryIterator implements ClassFileIterator
 
             for( int i = 0; i < length; ++i )
             {
-                files.addElement( new File( directory, filesInDir[ i ] ) );
+                files.add( new File( directory, filesInDir[ i ] ) );
             }
         }
 

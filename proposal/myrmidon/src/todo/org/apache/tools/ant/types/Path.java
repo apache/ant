@@ -8,10 +8,10 @@
 package org.apache.tools.ant.types;
 
 import java.io.File;
-import java.util.Enumeration;
+import java.util.Iterator;
 import java.util.Locale;
 import java.util.Stack;
-import java.util.Vector;
+import java.util.ArrayList;
 import org.apache.avalon.excalibur.io.FileUtil;
 import org.apache.myrmidon.api.TaskException;
 import org.apache.tools.ant.DirectoryScanner;
@@ -56,7 +56,7 @@ public class Path
 {
     public final static Path systemClasspath = createSystemClasspath();
 
-    private Vector elements;
+    private ArrayList elements;
 
     private static Path createSystemClasspath()
     {
@@ -87,7 +87,7 @@ public class Path
     public Path( Project project )
     {
         setProject( project );
-        elements = new Vector();
+        elements = new ArrayList();
     }
 
     /**
@@ -120,7 +120,7 @@ public class Path
      */
     public static String[] translatePath( Project project, String source )
     {
-        final Vector result = new Vector();
+        final ArrayList result = new ArrayList();
         if( source == null )
             return new String[ 0 ];
 
@@ -143,11 +143,11 @@ public class Path
             {
                 translateFileSep( element, i );
             }
-            result.addElement( element.toString() );
+            result.add( element.toString() );
         }
-        String[] res = new String[ result.size() ];
-        result.copyInto( res );
-        return res;
+
+        final String[] res = new String[ result.size() ];
+        return (String[])result.toArray( res );
     }
 
     /**
@@ -169,16 +169,16 @@ public class Path
     }
 
     /**
-     * Adds a String to the Vector if it isn't already included.
+     * Adds a String to the ArrayList if it isn't already included.
      *
      * @param v The feature to be added to the UnlessPresent attribute
      * @param s The feature to be added to the UnlessPresent attribute
      */
-    private static void addUnlessPresent( Vector v, String s )
+    private static void addUnlessPresent( ArrayList v, String s )
     {
         if( v.indexOf( s ) == -1 )
         {
-            v.addElement( s );
+            v.add( s );
         }
     }
 
@@ -251,7 +251,7 @@ public class Path
         {
             throw tooManyAttributes();
         }
-        elements.addElement( r );
+        elements.add( r );
         super.setRefid( r );
     }
 
@@ -334,7 +334,7 @@ public class Path
         {
             throw noChildrenAllowed();
         }
-        elements.addElement( fs );
+        elements.add( fs );
         checked = false;
     }
 
@@ -414,7 +414,7 @@ public class Path
         {
             if( elements.indexOf( l[ i ] ) == -1 )
             {
-                elements.addElement( l[ i ] );
+                elements.add( l[ i ] );
             }
         }
     }
@@ -523,7 +523,7 @@ public class Path
             throw noChildrenAllowed();
         }
         Path p = new Path( getProject() );
-        elements.addElement( p );
+        elements.add( p );
         checked = false;
         return p;
     }
@@ -542,7 +542,7 @@ public class Path
             throw noChildrenAllowed();
         }
         PathElement pe = new PathElement();
-        elements.addElement( pe );
+        elements.add( pe );
         return pe;
     }
 
@@ -562,10 +562,10 @@ public class Path
             dieOnCircularReference( stk, getProject() );
         }
 
-        Vector result = new Vector( 2 * elements.size() );
+        ArrayList result = new ArrayList( 2 * elements.size() );
         for( int i = 0; i < elements.size(); i++ )
         {
-            Object o = elements.elementAt( i );
+            Object o = elements.get( i );
             if( o instanceof Reference )
             {
                 Reference r = (Reference)o;
@@ -623,8 +623,7 @@ public class Path
             }
         }
         String[] res = new String[ result.size() ];
-        result.copyInto( res );
-        return res;
+        return (String[])result.toArray( res );
     }
 
     /**
@@ -687,10 +686,10 @@ public class Path
             return;
         }
 
-        Enumeration enum = elements.elements();
-        while( enum.hasMoreElements() )
+        Iterator enum = elements.iterator();
+        while( enum.hasNext() )
         {
-            Object o = enum.nextElement();
+            Object o = enum.next();
             if( o instanceof Reference )
             {
                 o = ( (Reference)o ).getReferencedObject( p );

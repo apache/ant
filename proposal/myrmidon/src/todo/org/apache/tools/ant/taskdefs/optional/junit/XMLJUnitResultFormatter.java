@@ -11,7 +11,7 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.Writer;
-import java.util.Enumeration;
+import java.util.Iterator;
 import java.util.Hashtable;
 import java.util.Properties;
 import javax.xml.parsers.DocumentBuilder;
@@ -224,10 +224,10 @@ public class XMLJUnitResultFormatter implements JUnitResultFormatter, XMLConstan
         Properties props = suite.getProperties();
         if( props != null )
         {
-            Enumeration e = props.propertyNames();
-            while( e.hasMoreElements() )
+            Iterator e = props.propertyNames();
+            while( e.hasNext() )
             {
-                String name = (String)e.nextElement();
+                String name = (String)e.next();
                 Element propElement = doc.createElement( PROPERTY );
                 propElement.setAttribute( ATTR_NAME, name );
                 propElement.setAttribute( ATTR_VALUE, props.getProperty( name ) );

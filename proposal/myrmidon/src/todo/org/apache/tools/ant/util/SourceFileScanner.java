@@ -8,7 +8,7 @@
 package org.apache.tools.ant.util;
 
 import java.io.File;
-import java.util.Vector;
+import java.util.ArrayList;
 import org.apache.myrmidon.api.TaskException;
 import org.apache.myrmidon.framework.Os;
 import org.apache.tools.ant.Project;
@@ -70,7 +70,7 @@ public class SourceFileScanner
             now += 2000;
         }
 
-        Vector v = new Vector();
+        ArrayList v = new ArrayList();
         for( int i = 0; i < files.length; i++ )
         {
 
@@ -100,14 +100,14 @@ public class SourceFileScanner
                 {
                     m_task.log( files[ i ] + " added as " + dest.getAbsolutePath() + " doesn\'t exist.",
                               Project.MSG_VERBOSE );
-                    v.addElement( files[ i ] );
+                    v.add( files[ i ] );
                     added = true;
                 }
                 else if( src.lastModified() > dest.lastModified() )
                 {
                     m_task.log( files[ i ] + " added as " + dest.getAbsolutePath() + " is outdated.",
                               Project.MSG_VERBOSE );
-                    v.addElement( files[ i ] );
+                    v.add( files[ i ] );
                     added = true;
                 }
                 else
@@ -128,9 +128,8 @@ public class SourceFileScanner
             }
 
         }
-        String[] result = new String[ v.size() ];
-        v.copyInto( result );
-        return result;
+        final String[] result = new String[ v.size() ];
+        return (String[])v.toArray( result );
     }
 
     /**

@@ -9,8 +9,9 @@ package org.apache.tools.ant.taskdefs;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Iterator;
+import java.util.ArrayList;
 import java.util.Enumeration;
-import java.util.Vector;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 import org.apache.myrmidon.api.TaskException;
@@ -34,7 +35,7 @@ public class SignJar extends Task
     /**
      * the filesets of the jars to sign
      */
-    protected Vector filesets = new Vector();
+    protected ArrayList filesets = new ArrayList();
 
     /**
      * The alias of signer.
@@ -132,7 +133,7 @@ public class SignJar extends Task
      */
     public void addFileset( final FileSet set )
     {
-        filesets.addElement( set );
+        filesets.add( set );
     }
 
     public void execute()
@@ -154,7 +155,7 @@ public class SignJar extends Task
             // deal with the filesets
             for( int i = 0; i < filesets.size(); i++ )
             {
-                FileSet fs = (FileSet)filesets.elementAt( i );
+                FileSet fs = (FileSet)filesets.get( i );
                 DirectoryScanner ds = fs.getDirectoryScanner( getProject() );
                 String[] jarFiles = ds.getIncludedFiles();
                 for( int j = 0; j < jarFiles.length; j++ )

@@ -12,7 +12,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.Random;
-import java.util.Vector;
+import java.util.ArrayList;
 import org.apache.myrmidon.api.TaskException;
 import org.apache.tools.ant.DirectoryScanner;
 import org.apache.tools.ant.Project;
@@ -43,7 +43,7 @@ public class CovMerge extends Task
     /**
      * the filesets that will get all snapshots to merge
      */
-    private Vector filesets = new Vector();
+    private ArrayList filesets = new ArrayList();
 
     private boolean verbose;
 
@@ -91,7 +91,7 @@ public class CovMerge extends Task
      */
     public void addFileset( FileSet fs )
     {
-        filesets.addElement( fs );
+        filesets.add( fs );
     }
 
     /**
@@ -147,11 +147,11 @@ public class CovMerge extends Task
     protected File[] getSnapshots()
         throws TaskException
     {
-        Vector v = new Vector();
+        ArrayList v = new ArrayList();
         final int size = filesets.size();
         for( int i = 0; i < size; i++ )
         {
-            FileSet fs = (FileSet)filesets.elementAt( i );
+            FileSet fs = (FileSet)filesets.get( i );
             DirectoryScanner ds = fs.getDirectoryScanner( getProject() );
             ds.scan();
             String[] f = ds.getIncludedFiles();
@@ -160,7 +160,7 @@ public class CovMerge extends Task
                 String pathname = f[ j ];
                 File file = new File( ds.getBasedir(), pathname );
                 file = resolveFile( file.getPath() );
-                v.addElement( file );
+                v.add( file );
             }
         }
 

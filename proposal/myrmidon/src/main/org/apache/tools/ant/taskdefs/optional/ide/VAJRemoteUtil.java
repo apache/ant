@@ -14,8 +14,8 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.util.Enumeration;
-import java.util.Vector;
+import java.util.Iterator;
+import java.util.ArrayList;
 import org.apache.myrmidon.api.TaskException;
 import org.apache.tools.ant.Task;
 
@@ -115,15 +115,15 @@ class VAJRemoteUtil implements VAJUtil
      *
      * @param projectDescriptions Description of Parameter
      */
-    public void loadProjects( Vector projectDescriptions )
+    public void loadProjects( ArrayList projectDescriptions )
     {
         try
         {
             String request = "http://" + remoteServer + "/servlet/vajload?";
             String delimiter = "";
-            for( Enumeration e = projectDescriptions.elements(); e.hasMoreElements(); )
+            for( Iterator e = projectDescriptions.iterator(); e.hasNext(); )
             {
-                VAJProjectDescription pd = (VAJProjectDescription)e.nextElement();
+                VAJProjectDescription pd = (VAJProjectDescription)e.next();
                 request = request
                     + delimiter + VAJLoadServlet.PROJECT_NAME_PARAM
                     + "=" + pd.getName().replace( ' ', '+' )

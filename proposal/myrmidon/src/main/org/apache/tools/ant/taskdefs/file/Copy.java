@@ -10,9 +10,10 @@ package org.apache.tools.ant.taskdefs.file;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Enumeration;
+import java.util.Iterator;
 import java.util.Hashtable;
-import java.util.Vector;
+import java.util.ArrayList;
+import java.util.Enumeration;
 import org.apache.avalon.excalibur.io.FileUtil;
 import org.apache.myrmidon.api.TaskException;
 import org.apache.tools.ant.DirectoryScanner;
@@ -49,7 +50,7 @@ public class Copy
     private File m_file;// the source file
     private File m_destFile;// the destination file
     private File m_destDir;// the destination directory
-    private Vector m_filesets = new Vector();
+    private ArrayList m_filesets = new ArrayList();
 
     private boolean m_filtering;
     private boolean m_preserveLastModified;
@@ -63,7 +64,7 @@ public class Copy
     private Hashtable m_completeDirMap = new Hashtable();
 
     private Mapper m_mapperElement;
-    private Vector m_filterSets = new Vector();
+    private ArrayList m_filterSets = new ArrayList();
 
     /**
      * Sets a single source file to copy.
@@ -172,7 +173,7 @@ public class Copy
      */
     public void addFileset( final FileSet set )
     {
-        m_filesets.addElement( set );
+        m_filesets.add( set );
     }
 
     /**
@@ -183,7 +184,7 @@ public class Copy
     public FilterSet createFilterSet()
     {
         final FilterSet filterSet = new FilterSet();
-        m_filterSets.addElement( filterSet );
+        m_filterSets.add( filterSet );
         return filterSet;
     }
 
@@ -248,7 +249,7 @@ public class Copy
         // deal with the filesets
         for( int i = 0; i < m_filesets.size(); i++ )
         {
-            final FileSet fileSet = (FileSet)m_filesets.elementAt( i );
+            final FileSet fileSet = (FileSet)m_filesets.get( i );
             final DirectoryScanner scanner = fileSet.getDirectoryScanner( getProject() );
             final File fromDir = fileSet.getDir( getProject() );
 
@@ -280,7 +281,7 @@ public class Copy
      *
      * @return a vector of FilterSet objects
      */
-    protected Vector getFilterSets()
+    protected ArrayList getFilterSets()
     {
         return m_filterSets;
     }
@@ -422,9 +423,9 @@ public class Copy
             executionFilters.addFilterSet( getProject().getGlobalFilterSet() );
         }
 
-        for( final Enumeration filterEnum = m_filterSets.elements(); filterEnum.hasMoreElements(); )
+        for( final Iterator filterEnum = m_filterSets.iterator(); filterEnum.hasNext(); )
         {
-            executionFilters.addFilterSet( (FilterSet)filterEnum.nextElement() );
+            executionFilters.addFilterSet( (FilterSet)filterEnum.next() );
         }
         return executionFilters;
     }
@@ -505,7 +506,7 @@ public class Copy
             }
             else
             {
-                FileSet fs = (FileSet)m_filesets.elementAt( 0 );
+                FileSet fs = (FileSet)m_filesets.get( 0 );
                 DirectoryScanner ds = fs.getDirectoryScanner( getProject() );
                 String[] srcFiles = ds.getIncludedFiles();
 
@@ -514,7 +515,7 @@ public class Copy
                     if( m_file == null )
                     {
                         m_file = new File( srcFiles[ 0 ] );
-                        m_filesets.removeElementAt( 0 );
+                        m_filesets.remove( 0 );
                     }
                     else
                     {
@@ -536,7 +537,7 @@ public class Copy
         }
     }
 
-    protected Vector getFilesets()
+    protected ArrayList getFilesets()
     {
         return m_filesets;
     }

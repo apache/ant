@@ -12,7 +12,7 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.Enumeration;
+import java.util.Iterator;
 import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.jar.JarEntry;
@@ -423,23 +423,23 @@ public class WeblogicDeploymentTool extends GenericDeploymentTool
                 Hashtable replaceEntries = new Hashtable();
 
                 //get the list of generic jar entries
-                for( Enumeration e = genericJar.entries(); e.hasMoreElements(); )
+                for( Iterator e = genericJar.entries(); e.hasNext(); )
                 {
-                    JarEntry je = (JarEntry)e.nextElement();
+                    JarEntry je = (JarEntry)e.next();
                     genericEntries.put( je.getName().replace( '\\', '/' ), je );
                 }
                 //get the list of weblogic jar entries
-                for( Enumeration e = wlJar.entries(); e.hasMoreElements(); )
+                for( Iterator e = wlJar.entries(); e.hasNext(); )
                 {
-                    JarEntry je = (JarEntry)e.nextElement();
+                    JarEntry je = (JarEntry)e.next();
                     wlEntries.put( je.getName(), je );
                 }
 
                 //Cycle Through generic and make sure its in weblogic
                 ClassLoader genericLoader = getClassLoaderFromJar( genericJarFile );
-                for( Enumeration e = genericEntries.keys(); e.hasMoreElements(); )
+                for( Iterator e = genericEntries.keys(); e.hasNext(); )
                 {
-                    String filepath = (String)e.nextElement();
+                    String filepath = (String)e.next();
                     if( wlEntries.containsKey( filepath ) )
                     {// File name/path match
 
@@ -504,12 +504,12 @@ public class WeblogicDeploymentTool extends GenericDeploymentTool
                     newJarStream.setLevel( 0 );
 
                     //Copy files from old weblogic jar
-                    for( Enumeration e = wlEntries.elements(); e.hasMoreElements(); )
+                    for( Iterator e = wlEntries.iterator(); e.hasNext(); )
                     {
                         byte[] buffer = new byte[ 1024 ];
                         int bytesRead;
                         InputStream is;
-                        JarEntry je = (JarEntry)e.nextElement();
+                        JarEntry je = (JarEntry)e.next();
                         if( je.getCompressedSize() == -1 ||
                             je.getCompressedSize() == je.getSize() )
                         {
@@ -668,10 +668,10 @@ public class WeblogicDeploymentTool extends GenericDeploymentTool
                                  handler );
 
                 Hashtable ht = handler.getFiles();
-                Enumeration e = ht.keys();
-                while( e.hasMoreElements() )
+                Iterator e = ht.keys();
+                while( e.hasNext() )
                 {
-                    String key = (String)e.nextElement();
+                    String key = (String)e.next();
                     ejbFiles.put( key, ht.get( key ) );
                 }
             }

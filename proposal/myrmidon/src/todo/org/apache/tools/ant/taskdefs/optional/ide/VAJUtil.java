@@ -8,7 +8,7 @@
 package org.apache.tools.ant.taskdefs.optional.ide;
 
 import java.io.File;
-import java.util.Vector;
+import java.util.ArrayList;
 
 /**
  * Helper interface for VAJ tasks. Encapsulates the interface to the VAJ tool
@@ -68,7 +68,7 @@ interface VAJUtil
      *
      * @param projectDescriptions Description of Parameter
      */
-    void loadProjects( Vector projectDescriptions );
+    void loadProjects( ArrayList projectDescriptions );
 
     /**
      * Logs a message with the specified log level.

@@ -15,9 +15,9 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.ArrayList;
 import java.util.Hashtable;
 import java.util.Stack;
-import java.util.Vector;
 import java.util.zip.CRC32;
 import java.util.zip.ZipInputStream;
 import org.apache.myrmidon.api.TaskException;
@@ -50,9 +50,9 @@ public class Zip extends MatchingTask
     private boolean doFilesonly = false;
     protected String archiveType = "zip";
     protected String emptyBehavior = "skip";
-    private Vector filesets = new Vector();
+    private ArrayList filesets = new ArrayList();
     protected Hashtable addedDirs = new Hashtable();
-    private Vector addedFiles = new Vector();
+    private ArrayList addedFiles = new ArrayList();
 
     protected File zipFile;
 
@@ -87,16 +87,15 @@ public class Zip extends MatchingTask
     protected static File[] grabFiles( FileScanner[] scanners,
                                        String[][] fileNames )
     {
-        Vector files = new Vector();
+        ArrayList files = new ArrayList();
         for( int i = 0; i < fileNames.length; i++ )
         {
             File thisBaseDir = scanners[ i ].getBasedir();
             for( int j = 0; j < fileNames[ i ].length; j++ )
-                files.addElement( new File( thisBaseDir, fileNames[ i ][ j ] ) );
+                files.add( new File( thisBaseDir, fileNames[ i ][ j ] ) );
         }
-        File[] toret = new File[ files.size() ];
-        files.copyInto( toret );
-        return toret;
+        final File[] toret = new File[ files.size() ];
+        return (File[])files.toArray( toret );
     }
 
     /**
@@ -197,7 +196,7 @@ public class Zip extends MatchingTask
      */
     public void addFileset( FileSet set )
     {
-        filesets.addElement( set );
+        filesets.add( set );
     }
 
     /**
@@ -208,7 +207,7 @@ public class Zip extends MatchingTask
      */
     public void addZipfileset( ZipFileSet set )
     {
-        filesets.addElement( set );
+        filesets.add( set );
     }
 
     public void execute()
@@ -258,19 +257,19 @@ public class Zip extends MatchingTask
         }
 
         // Create the scanners to pass to isUpToDate().
-        Vector dss = new Vector();
+        ArrayList dss = new ArrayList();
         if( baseDir != null )
         {
-            dss.addElement( getDirectoryScanner( baseDir ) );
+            dss.add( getDirectoryScanner( baseDir ) );
         }
         for( int i = 0; i < filesets.size(); i++ )
         {
-            FileSet fs = (FileSet)filesets.elementAt( i );
-            dss.addElement( fs.getDirectoryScanner( getProject() ) );
+            FileSet fs = (FileSet)filesets.get( i );
+            dss.add( fs.getDirectoryScanner( getProject() ) );
         }
         int dssSize = dss.size();
         FileScanner[] scanners = new FileScanner[ dssSize ];
-        dss.copyInto( scanners );
+        scanners = (FileScanner[])dss.toArray( scanners );
 
         // quick exit if the target is up to date
         // can also handle empty archives
@@ -321,11 +320,11 @@ public class Zip extends MatchingTask
                         {
                             exclusionPattern.append( "," );
                         }
-                        exclusionPattern.append( (String)addedFiles.elementAt( i ) );
+                        exclusionPattern.append( (String)addedFiles.get( i ) );
                     }
                     oldFiles.setExcludes( exclusionPattern.toString() );
-                    Vector tmp = new Vector();
-                    tmp.addElement( oldFiles );
+                    ArrayList tmp = new ArrayList();
+                    tmp.add( oldFiles );
                     addFiles( tmp, zOut );
                 }
                 finalizeZipOutputStream( zOut );
@@ -527,20 +526,20 @@ public class Zip extends MatchingTask
     }
 
     /**
-     * Iterate over the given Vector of (zip)filesets and add all files to the
+     * Iterate over the given ArrayList of (zip)filesets and add all files to the
      * ZipOutputStream using the given prefix or fullpath.
      *
      * @param filesets The feature to be added to the Files attribute
      * @param zOut The feature to be added to the Files attribute
      * @exception IOException Description of Exception
      */
-    protected void addFiles( Vector filesets, ZipOutputStream zOut )
+    protected void addFiles( ArrayList filesets, ZipOutputStream zOut )
         throws IOException, TaskException
     {
-        // Add each fileset in the Vector.
+        // Add each fileset in the ArrayList.
         for( int i = 0; i < filesets.size(); i++ )
         {
-            FileSet fs = (FileSet)filesets.elementAt( i );
+            FileSet fs = (FileSet)filesets.get( i );
             DirectoryScanner ds = fs.getDirectoryScanner( getProject() );
 
             String prefix = "";
@@ -686,8 +685,8 @@ public class Zip extends MatchingTask
     protected void cleanUp()
     {
         addedDirs = new Hashtable();
-        addedFiles = new Vector();
-        filesets = new Vector();
+        addedFiles = new ArrayList();
+        filesets = new ArrayList();
         zipFile = null;
         baseDir = null;
         doCompress = true;
@@ -844,7 +843,7 @@ public class Zip extends MatchingTask
             }
             count = in.read( buffer, 0, buffer.length );
         } while( count != -1 );
-        addedFiles.addElement( vPath );
+        addedFiles.add( vPath );
     }
 
     protected void zipFile( File file, ZipOutputStream zOut, String vPath )

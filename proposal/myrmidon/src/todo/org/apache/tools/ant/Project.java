@@ -8,9 +8,10 @@
 package org.apache.tools.ant;
 
 import java.io.File;
-import java.util.Enumeration;
+import java.util.Iterator;
 import java.util.Hashtable;
-import java.util.Vector;
+import java.util.ArrayList;
+import java.util.Enumeration;
 import org.apache.myrmidon.api.TaskException;
 import org.apache.tools.ant.types.FilterSet;
 import org.apache.tools.ant.types.FilterSetCollection;
@@ -60,7 +61,7 @@ public class Project
     private FilterSet globalFilterSet = new FilterSet();
     private FilterSetCollection globalFilters = new FilterSetCollection( globalFilterSet );
 
-    private Vector listeners = new Vector();
+    private ArrayList listeners = new ArrayList();
 
     /**
      * The Ant core classloader - may be null if using system loader
@@ -278,7 +279,7 @@ public class Project
 
     public void addBuildListener( BuildListener listener )
     {
-        listeners.addElement( listener );
+        listeners.add( listener );
     }
 
     /**
@@ -357,19 +358,19 @@ public class Project
             return null;
         }
 
-        Vector fragments = new Vector();
-        Vector propertyRefs = new Vector();
+        ArrayList fragments = new ArrayList();
+        ArrayList propertyRefs = new ArrayList();
         parsePropertyString( value, fragments, propertyRefs );
 
         StringBuffer sb = new StringBuffer();
-        Enumeration i = fragments.elements();
-        Enumeration j = propertyRefs.elements();
-        while( i.hasMoreElements() )
+        Iterator i = fragments.iterator();
+        Iterator j = propertyRefs.iterator();
+        while( i.hasNext() )
         {
-            String fragment = (String)i.nextElement();
+            String fragment = (String)i.next();
             if( fragment == null )
             {
-                String propertyName = (String)j.nextElement();
+                String propertyName = (String)j.next();
                 if( !keys.containsKey( propertyName ) )
                 {
                     project.log( "Property ${" + propertyName + "} has not been set", Project.MSG_VERBOSE );
@@ -394,7 +395,7 @@ public class Project
      * @param propertyRefs Description of Parameter
      * @exception TaskException Description of Exception
      */
-    private void parsePropertyString( String value, Vector fragments, Vector propertyRefs )
+    private void parsePropertyString( String value, ArrayList fragments, ArrayList propertyRefs )
         throws TaskException
     {
         int prev = 0;
@@ -403,17 +404,17 @@ public class Project
         {
             if( pos > 0 )
             {
-                fragments.addElement( value.substring( prev, pos ) );
+                fragments.add( value.substring( prev, pos ) );
             }
 
             if( pos == ( value.length() - 1 ) )
             {
-                fragments.addElement( "$" );
+                fragments.add( "$" );
                 prev = pos + 1;
             }
             else if( value.charAt( pos + 1 ) != '{' )
             {
-                fragments.addElement( value.substring( pos + 1, pos + 2 ) );
+                fragments.add( value.substring( pos + 1, pos + 2 ) );
                 prev = pos + 2;
             }
             else
@@ -425,15 +426,15 @@ public class Project
                                              + value );
                 }
                 String propertyName = value.substring( pos + 2, endName );
-                fragments.addElement( null );
-                propertyRefs.addElement( propertyName );
+                fragments.add( null );
+                propertyRefs.add( propertyName );
                 prev = endName + 1;
             }
         }
 
         if( prev < value.length() )
         {
-            fragments.addElement( value.substring( prev ) );
+            fragments.add( value.substring( prev ) );
         }
     }
 

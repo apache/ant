@@ -11,7 +11,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.Enumeration;
+import java.util.Iterator;
 import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.jar.JarEntry;
@@ -564,27 +564,27 @@ public class WebsphereDeploymentTool extends GenericDeploymentTool
 
                 //get the list of generic jar entries
 
-                for( Enumeration e = genericJar.entries(); e.hasMoreElements(); )
+                for( Iterator e = genericJar.entries(); e.hasNext(); )
                 {
-                    JarEntry je = (JarEntry)e.nextElement();
+                    JarEntry je = (JarEntry)e.next();
                     genericEntries.put( je.getName().replace( '\\', '/' ), je );
                 }
 
                 //get the list of websphere jar entries
 
 
-                for( Enumeration e = wasJar.entries(); e.hasMoreElements(); )
+                for( Iterator e = wasJar.entries(); e.hasNext(); )
                 {
-                    JarEntry je = (JarEntry)e.nextElement();
+                    JarEntry je = (JarEntry)e.next();
                     wasEntries.put( je.getName(), je );
                 }
 
                 //Cycle Through generic and make sure its in websphere
 
                 ClassLoader genericLoader = getClassLoaderFromJar( genericJarFile );
-                for( Enumeration e = genericEntries.keys(); e.hasMoreElements(); )
+                for( Iterator e = genericEntries.keys(); e.hasNext(); )
                 {
-                    String filepath = (String)e.nextElement();
+                    String filepath = (String)e.next();
                     if( wasEntries.containsKey( filepath ) )
                     {// File name/path match
                         // Check files see if same
@@ -653,12 +653,12 @@ public class WebsphereDeploymentTool extends GenericDeploymentTool
 
                     //Copy files from old websphere jar
 
-                    for( Enumeration e = wasEntries.elements(); e.hasMoreElements(); )
+                    for( Iterator e = wasEntries.iterator(); e.hasNext(); )
                     {
                         byte[] buffer = new byte[ 1024 ];
                         int bytesRead;
                         InputStream is;
-                        JarEntry je = (JarEntry)e.nextElement();
+                        JarEntry je = (JarEntry)e.next();
                         if( je.getCompressedSize() == -1 ||
                             je.getCompressedSize() == je.getSize() )
                         {

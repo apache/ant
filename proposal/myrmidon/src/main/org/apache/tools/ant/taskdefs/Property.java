@@ -11,9 +11,10 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.Enumeration;
+import java.util.Iterator;
 import java.util.Properties;
-import java.util.Vector;
+import java.util.ArrayList;
+import java.util.Enumeration;
 import org.apache.myrmidon.api.TaskException;
 import org.apache.tools.ant.AntClassLoader;
 import org.apache.tools.ant.Project;
@@ -213,10 +214,10 @@ public class Property extends Task
         if( !prefix.endsWith( "." ) )
             prefix += ".";
         log( "Loading Environment " + prefix, Project.MSG_VERBOSE );
-        Vector osEnv = Execute.getProcEnvironment();
-        for( Enumeration e = osEnv.elements(); e.hasMoreElements(); )
+        ArrayList osEnv = Execute.getProcEnvironment();
+        for( Iterator e = osEnv.iterator(); e.hasNext(); )
         {
-            String entry = (String)e.nextElement();
+            String entry = (String)e.next();
             int pos = entry.indexOf( '=' );
             if( pos == -1 )
             {

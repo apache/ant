@@ -7,7 +7,7 @@
  */
 package org.apache.tools.ant.taskdefs.optional.junit;
 
-import java.util.Vector;
+import java.util.ArrayList;
 import org.w3c.dom.Attr;
 import org.w3c.dom.CDATASection;
 import org.w3c.dom.Comment;
@@ -192,7 +192,7 @@ public final class DOMUtil
                 Node child = children.item( i );
                 if( filter.accept( child ) )
                 {
-                    matches.addElement( child );
+                    matches.add( child );
                 }
                 if( recurse )
                 {
@@ -200,7 +200,7 @@ public final class DOMUtil
                     final int reclength = matches.getLength();
                     for( int j = 0; j < reclength; j++ )
                     {
-                        matches.addElement( recmatches.item( i ) );
+                        matches.add( recmatches.item( i ) );
                     }
                 }
             }
@@ -229,7 +229,7 @@ public final class DOMUtil
      *
      * @author RT
      */
-    public static class NodeListImpl extends Vector implements NodeList
+    public static class NodeListImpl extends ArrayList implements NodeList
     {
         public int getLength()
         {
@@ -240,7 +240,7 @@ public final class DOMUtil
         {
             try
             {
-                return (Node)elementAt( i );
+                return (Node)get( i );
             }
             catch( ArrayIndexOutOfBoundsException e )
             {

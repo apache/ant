@@ -7,9 +7,9 @@
  */
 package org.apache.tools.ant;
 
-import java.util.Enumeration;
+import java.util.Iterator;
 import java.util.StringTokenizer;
-import java.util.Vector;
+import java.util.ArrayList;
 import org.apache.myrmidon.api.TaskException;
 
 /**
@@ -19,8 +19,8 @@ import org.apache.myrmidon.api.TaskException;
  */
 public class Target
 {
-    private Vector dependencies = new Vector( 2 );
-    private Vector children = new Vector( 5 );
+    private ArrayList dependencies = new ArrayList( 2 );
+    private ArrayList children = new ArrayList( 5 );
     private String description = null;
 
     private String name;
@@ -78,9 +78,9 @@ public class Target
         this.project = project;
     }
 
-    public Enumeration getDependencies()
+    public Iterator getDependencies()
     {
-        return dependencies.elements();
+        return dependencies.iterator();
     }
 
     public String getDescription()
@@ -105,30 +105,29 @@ public class Target
      */
     public Task[] getTasks()
     {
-        Vector tasks = new Vector( children.size() );
-        Enumeration enum = children.elements();
-        while( enum.hasMoreElements() )
+        ArrayList tasks = new ArrayList( children.size() );
+        Iterator enum = children.iterator();
+        while( enum.hasNext() )
         {
-            Object o = enum.nextElement();
+            Object o = enum.next();
             if( o instanceof Task )
             {
-                tasks.addElement( o );
+                tasks.add( o );
             }
         }
 
-        Task[] retval = new Task[ tasks.size() ];
-        tasks.copyInto( retval );
-        return retval;
+        final Task[] retval = new Task[ tasks.size() ];
+        return (Task[])tasks.toArray( retval );
     }
 
     public void addDependency( String dependency )
     {
-        dependencies.addElement( dependency );
+        dependencies.add( dependency );
     }
 
     public void addTask( Task task )
     {
-        children.addElement( task );
+        children.add( task );
     }
 
     void replaceChild( Task el, Object o )
@@ -136,7 +135,7 @@ public class Target
         int index = -1;
         while( ( index = children.indexOf( el ) ) >= 0 )
         {
-            children.setElementAt( o, index );
+            children.set( index, o );
         }
     }
 }

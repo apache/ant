@@ -10,7 +10,7 @@ package org.apache.tools.ant.taskdefs.optional.jsp;//java imports
 import java.io.File;
 import java.util.Date;
 import java.util.StringTokenizer;
-import java.util.Vector;
+import java.util.ArrayList;
 import org.apache.myrmidon.api.TaskException;
 import org.apache.tools.ant.DirectoryScanner;
 import org.apache.tools.ant.Project;
@@ -58,7 +58,7 @@ public class WLJspc extends MatchingTask
     //private String compilerPath; //fully qualified name for the compiler executable
 
     private String pathToPackage = "";
-    private Vector filesToDo = new Vector();//package under which resultant classes will reside
+    private ArrayList filesToDo = new ArrayList();//package under which resultant classes will reside
     private Path compileClasspath;
     //TODO Test on other versions of weblogic
     //TODO add more attributes to the task, to take care of all jspc options
@@ -205,7 +205,7 @@ public class WLJspc extends MatchingTask
             // All this to get package according to weblogic standards
             // Can be written better... this is too hacky!
             // Careful.. similar code in scanDir , but slightly different!!
-            jspFile = new File( (String)filesToDo.elementAt( i ) );
+            jspFile = new File( (String)filesToDo.get( i ) );
             args[ j ] = "-package";
             parents = jspFile.getParent();
             if( ( parents != null ) && ( !( "" ).equals( parents ) ) )
@@ -218,7 +218,7 @@ public class WLJspc extends MatchingTask
                 args[ j + 1 ] = destinationPackage;
             }
 
-            args[ j + 2 ] = sourceDirectory + File.separator + (String)filesToDo.elementAt( i );
+            args[ j + 2 ] = sourceDirectory + File.separator + (String)filesToDo.get( i );
             arg = "";
 
             for( int x = 0; x < 12; x++ )
@@ -301,7 +301,7 @@ public class WLJspc extends MatchingTask
             if( srcFile.lastModified() > classFile.lastModified() )
             {
                 //log("Files are" + srcFile.getAbsolutePath()+" " +classFile.getAbsolutePath());
-                filesToDo.addElement( files[ i ] );
+                filesToDo.add( files[ i ] );
                 log( "Recompiling File " + files[ i ], Project.MSG_VERBOSE );
             }
         }

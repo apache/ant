@@ -10,7 +10,7 @@ package org.apache.tools.ant.taskdefs;
 import java.io.File;
 import java.io.IOException;
 import java.rmi.Remote;
-import java.util.Vector;
+import java.util.ArrayList;
 import org.apache.avalon.excalibur.io.FileUtil;
 import org.apache.myrmidon.api.TaskException;
 import org.apache.tools.ant.AntClassLoader;
@@ -73,7 +73,7 @@ public class Rmic extends MatchingTask
     private boolean includeAntRuntime = true;
     private boolean includeJavaRuntime = false;
 
-    private Vector compileList = new Vector();
+    private ArrayList compileList = new ArrayList();
 
     private ClassLoader loader = null;
 
@@ -293,7 +293,7 @@ public class Rmic extends MatchingTask
         return compileClasspath;
     }
 
-    public Vector getCompileList()
+    public ArrayList getCompileList()
     {
         return compileList;
     }
@@ -323,7 +323,7 @@ public class Rmic extends MatchingTask
      *
      * @return The FileList value
      */
-    public Vector getFileList()
+    public ArrayList getFileList()
     {
         return compileList;
     }
@@ -596,12 +596,12 @@ public class Rmic extends MatchingTask
                 for( int j = 0; j < fileCount; j++ )
                 {
                     moveGeneratedFile( baseDir, sourceBase,
-                                       (String)compileList.elementAt( j ),
+                                       (String)compileList.get( j ),
                                        adapter );
                 }
             }
         }
-        compileList.removeAllElements();
+        compileList.clear();
     }
 
     /**
@@ -639,7 +639,7 @@ public class Rmic extends MatchingTask
         {
             String classname = newFiles[ i ].replace( File.separatorChar, '.' );
             classname = classname.substring( 0, classname.lastIndexOf( ".class" ) );
-            compileList.addElement( classname );
+            compileList.add( classname );
         }
     }
 

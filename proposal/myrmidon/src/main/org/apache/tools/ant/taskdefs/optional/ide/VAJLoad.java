@@ -7,7 +7,7 @@
  */
 package org.apache.tools.ant.taskdefs.optional.ide;
 
-import java.util.Vector;
+import java.util.ArrayList;
 
 /**
  * Load specific project versions into the Visual Age for Java workspace. Each
@@ -21,7 +21,7 @@ import java.util.Vector;
 
 public class VAJLoad extends VAJTask
 {
-    Vector projectDescriptions = new Vector();
+    ArrayList projectDescriptions = new ArrayList();
 
     /**
      * Add a project description entry on the project list.
@@ -31,7 +31,7 @@ public class VAJLoad extends VAJTask
     public VAJProjectDescription createVAJProject()
     {
         VAJProjectDescription d = new VAJProjectDescription();
-        projectDescriptions.addElement( d );
+        projectDescriptions.add( d );
         return d;
     }
 

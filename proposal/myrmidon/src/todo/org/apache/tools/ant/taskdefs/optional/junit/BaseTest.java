@@ -8,7 +8,7 @@
 package org.apache.tools.ant.taskdefs.optional.junit;
 
 import java.io.File;
-import java.util.Vector;
+import java.util.ArrayList;
 
 /**
  * Baseclass for BatchTest and JUnitTest.
@@ -24,7 +24,7 @@ public abstract class BaseTest
     protected boolean fork = false;
     protected String ifProperty = null;
     protected String unlessProperty = null;
-    protected Vector formatters = new Vector();
+    protected ArrayList formatters = new ArrayList();
     /**
      * destination directory
      */
@@ -128,6 +128,6 @@ public abstract class BaseTest
 
     public void addFormatter( FormatterElement elem )
     {
-        formatters.addElement( elem );
+        formatters.add( elem );
     }
 }

@@ -10,7 +10,7 @@ package org.apache.tools.ant.types;
 import java.io.File;
 import java.util.Stack;
 import java.util.StringTokenizer;
-import java.util.Vector;
+import java.util.ArrayList;
 import org.apache.myrmidon.api.TaskException;
 import org.apache.tools.ant.Project;
 
@@ -26,7 +26,7 @@ import org.apache.tools.ant.Project;
 public class FileList extends DataType
 {
 
-    private Vector filenames = new Vector();
+    private ArrayList filenames = new ArrayList();
     private File dir;
 
     public FileList()
@@ -63,7 +63,7 @@ public class FileList extends DataType
             StringTokenizer tok = new StringTokenizer( filenames, ", \t\n\r\f", false );
             while( tok.hasMoreTokens() )
             {
-                this.filenames.addElement( tok.nextToken() );
+                this.filenames.add( tok.nextToken() );
             }
         }
     }
@@ -122,9 +122,8 @@ public class FileList extends DataType
             throw new TaskException( "No files specified for filelist." );
         }
 
-        String result[] = new String[ filenames.size() ];
-        filenames.copyInto( result );
-        return result;
+        final String result[] = new String[ filenames.size() ];
+        return (String[])filenames.toArray( result );
     }
 
     /**

@@ -9,8 +9,8 @@ package org.apache.tools.ant.types;// java io classes
 
 // java util classes
 
-import java.util.Enumeration;
-import java.util.Vector;
+import java.util.Iterator;
+import java.util.ArrayList;
 import org.apache.myrmidon.api.TaskException;
 
 // ant classes
@@ -24,7 +24,7 @@ import org.apache.myrmidon.api.TaskException;
 public class FilterSetCollection
 {
 
-    private Vector filterSets = new Vector();
+    private ArrayList filterSets = new ArrayList();
 
     public FilterSetCollection()
     {
@@ -37,7 +37,7 @@ public class FilterSetCollection
 
     public void addFilterSet( FilterSet filterSet )
     {
-        filterSets.addElement( filterSet );
+        filterSets.add( filterSet );
     }
 
     /**
@@ -48,9 +48,9 @@ public class FilterSetCollection
     public boolean hasFilters()
         throws TaskException
     {
-        for( Enumeration e = filterSets.elements(); e.hasMoreElements(); )
+        for( Iterator e = filterSets.iterator(); e.hasNext(); )
         {
-            FilterSet filterSet = (FilterSet)e.nextElement();
+            FilterSet filterSet = (FilterSet)e.next();
             if( filterSet.hasFilters() )
             {
                 return true;
@@ -70,9 +70,9 @@ public class FilterSetCollection
         throws TaskException
     {
         String replacedLine = line;
-        for( Enumeration e = filterSets.elements(); e.hasMoreElements(); )
+        for( Iterator e = filterSets.iterator(); e.hasNext(); )
         {
-            FilterSet filterSet = (FilterSet)e.nextElement();
+            FilterSet filterSet = (FilterSet)e.next();
             replacedLine = filterSet.replaceTokens( replacedLine );
         }
         return replacedLine;

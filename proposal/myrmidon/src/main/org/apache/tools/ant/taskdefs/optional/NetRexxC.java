@@ -11,11 +11,11 @@ import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.StringWriter;
-import java.util.Enumeration;
+import java.util.Iterator;
 import java.util.Hashtable;
 import java.util.Properties;
 import java.util.StringTokenizer;
-import java.util.Vector;
+import java.util.ArrayList;
 import netrexx.lang.Rexx;
 import org.apache.avalon.excalibur.io.FileUtil;
 import org.apache.myrmidon.api.TaskException;
@@ -84,7 +84,7 @@ public class NetRexxC extends MatchingTask
     private String verbose = "verbose3";
 
     // other implementation variables
-    private Vector compileList = new Vector();
+    private ArrayList compileList = new ArrayList();
     private Hashtable filecopyList = new Hashtable();
     private String oldClasspath = System.getProperty( "java.class.path" );
 
@@ -539,33 +539,33 @@ public class NetRexxC extends MatchingTask
      */
     private String[] getCompileOptionsAsArray()
     {
-        Vector options = new Vector();
-        options.addElement( binary ? "-binary" : "-nobinary" );
-        options.addElement( comments ? "-comments" : "-nocomments" );
-        options.addElement( compile ? "-compile" : "-nocompile" );
-        options.addElement( compact ? "-compact" : "-nocompact" );
-        options.addElement( console ? "-console" : "-noconsole" );
-        options.addElement( crossref ? "-crossref" : "-nocrossref" );
-        options.addElement( decimal ? "-decimal" : "-nodecimal" );
-        options.addElement( diag ? "-diag" : "-nodiag" );
-        options.addElement( explicit ? "-explicit" : "-noexplicit" );
-        options.addElement( format ? "-format" : "-noformat" );
-        options.addElement( keep ? "-keep" : "-nokeep" );
-        options.addElement( logo ? "-logo" : "-nologo" );
-        options.addElement( replace ? "-replace" : "-noreplace" );
-        options.addElement( savelog ? "-savelog" : "-nosavelog" );
-        options.addElement( sourcedir ? "-sourcedir" : "-nosourcedir" );
-        options.addElement( strictargs ? "-strictargs" : "-nostrictargs" );
-        options.addElement( strictassign ? "-strictassign" : "-nostrictassign" );
-        options.addElement( strictcase ? "-strictcase" : "-nostrictcase" );
-        options.addElement( strictimport ? "-strictimport" : "-nostrictimport" );
-        options.addElement( strictprops ? "-strictprops" : "-nostrictprops" );
-        options.addElement( strictsignal ? "-strictsignal" : "-nostrictsignal" );
-        options.addElement( symbols ? "-symbols" : "-nosymbols" );
-        options.addElement( time ? "-time" : "-notime" );
-        options.addElement( "-" + trace );
-        options.addElement( utf8 ? "-utf8" : "-noutf8" );
-        options.addElement( "-" + verbose );
+        ArrayList options = new ArrayList();
+        options.add( binary ? "-binary" : "-nobinary" );
+        options.add( comments ? "-comments" : "-nocomments" );
+        options.add( compile ? "-compile" : "-nocompile" );
+        options.add( compact ? "-compact" : "-nocompact" );
+        options.add( console ? "-console" : "-noconsole" );
+        options.add( crossref ? "-crossref" : "-nocrossref" );
+        options.add( decimal ? "-decimal" : "-nodecimal" );
+        options.add( diag ? "-diag" : "-nodiag" );
+        options.add( explicit ? "-explicit" : "-noexplicit" );
+        options.add( format ? "-format" : "-noformat" );
+        options.add( keep ? "-keep" : "-nokeep" );
+        options.add( logo ? "-logo" : "-nologo" );
+        options.add( replace ? "-replace" : "-noreplace" );
+        options.add( savelog ? "-savelog" : "-nosavelog" );
+        options.add( sourcedir ? "-sourcedir" : "-nosourcedir" );
+        options.add( strictargs ? "-strictargs" : "-nostrictargs" );
+        options.add( strictassign ? "-strictassign" : "-nostrictassign" );
+        options.add( strictcase ? "-strictcase" : "-nostrictcase" );
+        options.add( strictimport ? "-strictimport" : "-nostrictimport" );
+        options.add( strictprops ? "-strictprops" : "-nostrictprops" );
+        options.add( strictsignal ? "-strictsignal" : "-nostrictsignal" );
+        options.add( symbols ? "-symbols" : "-nosymbols" );
+        options.add( time ? "-time" : "-notime" );
+        options.add( "-" + trace );
+        options.add( utf8 ? "-utf8" : "-noutf8" );
+        options.add( "-" + verbose );
         String[] results = new String[ options.size() ];
         options.copyInto( results );
         return results;
@@ -613,10 +613,10 @@ public class NetRexxC extends MatchingTask
             getLogger().info( "Copying " + filecopyList.size() + " file"
                               + ( filecopyList.size() == 1 ? "" : "s" )
                               + " to " + destDir.getAbsolutePath() );
-            Enumeration enum = filecopyList.keys();
-            while( enum.hasMoreElements() )
+            Iterator enum = filecopyList.keys();
+            while( enum.hasNext() )
             {
-                String fromFile = (String)enum.nextElement();
+                String fromFile = (String)enum.next();
                 String toFile = (String)filecopyList.get( fromFile );
                 try
                 {
@@ -649,11 +649,11 @@ public class NetRexxC extends MatchingTask
         // comes from the compile options, the other from the compileList
         String[] compileOptionsArray = getCompileOptionsAsArray();
         String[] fileListArray = new String[ compileList.size() ];
-        Enumeration e = compileList.elements();
+        Iterator e = compileList.iterator();
         int j = 0;
-        while( e.hasMoreElements() )
+        while( e.hasNext() )
         {
-            fileListArray[ j ] = (String)e.nextElement();
+            fileListArray[ j ] = (String)e.next();
             j++;
         }
         // create a single array of arguments for the compiler
@@ -682,7 +682,7 @@ public class NetRexxC extends MatchingTask
         for( int i = 0; i < compileList.size(); i++ )
         {
             niceSourceList.append( "    " );
-            niceSourceList.append( compileList.elementAt( i ).toString() );
+            niceSourceList.append( compileList.get( i ).toString() );
             niceSourceList.append( eol );
         }
 
@@ -752,7 +752,7 @@ public class NetRexxC extends MatchingTask
                 if( !compile || srcFile.lastModified() > classFile.lastModified() )
                 {
                     filecopyList.put( srcFile.getAbsolutePath(), destFile.getAbsolutePath() );
-                    compileList.addElement( destFile.getAbsolutePath() );
+                    compileList.add( destFile.getAbsolutePath() );
                 }
             }
             else

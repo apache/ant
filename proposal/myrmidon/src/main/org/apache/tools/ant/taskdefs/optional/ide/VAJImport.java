@@ -8,8 +8,8 @@
 package org.apache.tools.ant.taskdefs.optional.ide;
 
 import java.lang.reflect.Field;
-import java.util.Enumeration;
-import java.util.Vector;
+import java.util.Iterator;
+import java.util.ArrayList;
 import org.apache.myrmidon.api.TaskException;
 import org.apache.tools.ant.DirectoryScanner;
 import org.apache.tools.ant.types.FileSet;
@@ -125,7 +125,7 @@ import org.apache.tools.ant.types.FileSet;
  */
 public class VAJImport extends VAJTask
 {
-    protected Vector filesets = new Vector();
+    protected ArrayList filesets = new ArrayList();
     protected boolean importSources = true;
     protected boolean importResources = true;
     protected boolean importClasses = false;
@@ -190,7 +190,7 @@ public class VAJImport extends VAJTask
      */
     public void addFileset( FileSet set )
     {
-        filesets.addElement( set );
+        filesets.add( set );
     }
 
     /**
@@ -211,9 +211,9 @@ public class VAJImport extends VAJTask
             throw new TaskException( "The VisualAge for Java Project name is required!" );
         }
 
-        for( Enumeration e = filesets.elements(); e.hasMoreElements(); )
+        for( Iterator e = filesets.iterator(); e.hasNext(); )
         {
-            importFileset( (FileSet)e.nextElement() );
+            importFileset( (FileSet)e.next() );
         }
     }
 

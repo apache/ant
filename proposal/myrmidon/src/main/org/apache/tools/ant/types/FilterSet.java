@@ -10,10 +10,11 @@ package org.apache.tools.ant.types;// java io classes
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
-import java.util.Enumeration;
+import java.util.Iterator;
 import java.util.Hashtable;
 import java.util.Properties;
-import java.util.Vector;
+import java.util.ArrayList;
+import java.util.Enumeration;
 import org.apache.myrmidon.api.TaskException;
 import org.apache.tools.ant.Project;
 
@@ -43,7 +44,7 @@ public class FilterSet extends DataType implements Cloneable
     /**
      * List of ordered filters and filter files.
      */
-    private Vector filters = new Vector();
+    private ArrayList filters = new ArrayList();
 
     public FilterSet()
     {
@@ -58,7 +59,7 @@ public class FilterSet extends DataType implements Cloneable
         throws TaskException
     {
         super();
-        this.filters = (Vector)filterset.getFilters().clone();
+        this.filters = (ArrayList)filterset.getFilters().clone();
     }
 
     /**
@@ -146,9 +147,9 @@ public class FilterSet extends DataType implements Cloneable
     {
         int filterSize = getFilters().size();
         Hashtable filterHash = new Hashtable( filterSize );
-        for( Enumeration e = getFilters().elements(); e.hasMoreElements(); )
+        for( Iterator e = getFilters().iterator(); e.hasNext(); )
         {
-            Filter filter = (Filter)e.nextElement();
+            Filter filter = (Filter)e.next();
             filterHash.put( filter.getToken(), filter.getValue() );
         }
         return filterHash;
@@ -166,7 +167,7 @@ public class FilterSet extends DataType implements Cloneable
         {
             throw noChildrenAllowed();
         }
-        filters.addElement( filter );
+        filters.add( filter );
     }
 
     /**
@@ -182,7 +183,7 @@ public class FilterSet extends DataType implements Cloneable
         {
             throw noChildrenAllowed();
         }
-        filters.addElement( new Filter( token, value ) );
+        filters.add( new Filter( token, value ) );
     }
 
     /**
@@ -197,9 +198,9 @@ public class FilterSet extends DataType implements Cloneable
         {
             throw noChildrenAllowed();
         }
-        for( Enumeration e = filterSet.getFilters().elements(); e.hasMoreElements(); )
+        for( Iterator e = filterSet.getFilters().iterator(); e.hasNext(); )
         {
-            filters.addElement( (Filter)e.nextElement() );
+            filters.add( (Filter)e.next() );
         }
     }
 
@@ -274,12 +275,12 @@ public class FilterSet extends DataType implements Cloneable
                 props.load( in );
 
                 Enumeration enum = props.propertyNames();
-                Vector filters = getFilters();
+                ArrayList filters = getFilters();
                 while( enum.hasMoreElements() )
                 {
                     String strPropName = (String)enum.nextElement();
                     String strValue = props.getProperty( strPropName );
-                    filters.addElement( new Filter( strPropName, strValue ) );
+                    filters.add( new Filter( strPropName, strValue ) );
                 }
             }
             catch( Exception e )
@@ -368,7 +369,7 @@ public class FilterSet extends DataType implements Cloneable
         }
     }
 
-    protected Vector getFilters()
+    protected ArrayList getFilters()
         throws TaskException
     {
         if( isReference() )

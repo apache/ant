@@ -19,7 +19,7 @@ import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.io.Reader;
 import java.io.Writer;
-import java.util.Enumeration;
+import java.util.Iterator;
 import java.util.NoSuchElementException;
 import org.apache.myrmidon.api.TaskException;
 import org.apache.tools.ant.DirectoryScanner;
@@ -586,14 +586,14 @@ public class FixCRLF extends MatchingTask
                 throw new TaskException( "Error", e );
             }
 
-            while( lines.hasMoreElements() )
+            while( lines.hasNext() )
             {
                 // In-line states
                 int endComment;
 
                 try
                 {
-                    line = (OneLiner.BufferLine)lines.nextElement();
+                    line = (OneLiner.BufferLine)lines.next();
                 }
                 catch( NoSuchElementException e )
                 {
@@ -856,7 +856,8 @@ public class FixCRLF extends MatchingTask
         }
     }
 
-    class OneLiner implements Enumeration
+    class OneLiner
+        implements Iterator
     {
 
         private int state = javafiles ? LOOKING : NOTJAVA;
@@ -883,6 +884,11 @@ public class FixCRLF extends MatchingTask
             }
         }
 
+        public void remove()
+        {
+            throw new UnsupportedOperationException();
+        }
+
         public void setState( int state )
         {
             this.state = state;
@@ -907,15 +913,15 @@ public class FixCRLF extends MatchingTask
             }
         }
 
-        public boolean hasMoreElements()
+        public boolean hasNext()
         {
             return !reachedEof;
         }
 
-        public Object nextElement()
+        public Object next()
             throws NoSuchElementException
         {
-            if( !hasMoreElements() )
+            if( !hasNext() )
             {
                 throw new NoSuchElementException( "OneLiner" );
             }

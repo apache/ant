@@ -17,9 +17,9 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.text.MessageFormat;
 import java.text.ParseException;
-import java.util.Enumeration;
+import java.util.Iterator;
 import java.util.Random;
-import java.util.Vector;
+import java.util.ArrayList;
 import org.apache.myrmidon.api.TaskException;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.taskdefs.exec.Execute;
@@ -69,7 +69,7 @@ public class Pvcs extends org.apache.tools.ant.Task
     private String lineStart;
     private String promotiongroup;
     private String pvcsProject;
-    private Vector pvcsProjects;
+    private ArrayList pvcsProjects;
     private String pvcsbin;
     private String repository;
     private boolean updateOnly;
@@ -82,7 +82,7 @@ public class Pvcs extends org.apache.tools.ant.Task
     {
         super();
         pvcsProject = null;
-        pvcsProjects = new Vector();
+        pvcsProjects = new ArrayList();
         workspace = null;
         repository = null;
         pvcsbin = null;
@@ -272,9 +272,9 @@ public class Pvcs extends org.apache.tools.ant.Task
     /**
      * Get name of the project in the PVCS repository
      *
-     * @return Vector
+     * @return ArrayList
      */
-    public Vector getPvcsprojects()
+    public ArrayList getPvcsprojects()
     {
         return pvcsProjects;
     }
@@ -311,7 +311,7 @@ public class Pvcs extends org.apache.tools.ant.Task
      */
     public void addPvcsproject( PvcsProject p )
     {
-        pvcsProjects.addElement( p );
+        pvcsProjects.add( p );
     }
 
     /**
@@ -349,10 +349,10 @@ public class Pvcs extends org.apache.tools.ant.Task
             commandLine.createArgument().setValue( getPvcsproject() );
         if( !getPvcsprojects().isEmpty() )
         {
-            Enumeration e = getPvcsprojects().elements();
-            while( e.hasMoreElements() )
+            Iterator e = getPvcsprojects().iterator();
+            while( e.hasNext() )
             {
-                String projectName = ( (PvcsProject)e.nextElement() ).getName();
+                String projectName = ( (PvcsProject)e.next() ).getName();
                 if( projectName == null || ( projectName.trim() ).equals( "" ) )
                     throw new TaskException( "name is a required attribute of pvcsproject" );
                 commandLine.createArgument().setValue( projectName );

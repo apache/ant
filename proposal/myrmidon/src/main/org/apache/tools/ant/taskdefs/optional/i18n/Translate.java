@@ -17,7 +17,7 @@ import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.util.Hashtable;
 import java.util.Locale;
-import java.util.Vector;
+import java.util.ArrayList;
 import org.apache.avalon.excalibur.io.FileUtil;
 import org.apache.myrmidon.api.TaskException;
 import org.apache.tools.ant.DirectoryScanner;
@@ -33,9 +33,9 @@ import org.apache.tools.ant.types.FileSet;
 public class Translate extends MatchingTask
 {
     /**
-     * Vector to hold source file sets.
+     * ArrayList to hold source file sets.
      */
-    private Vector filesets = new Vector();
+    private ArrayList filesets = new ArrayList();
     /**
      * Holds key value pairs loaded from resource bundle file
      */
@@ -224,7 +224,7 @@ public class Translate extends MatchingTask
      */
     public void addFileset( FileSet set )
     {
-        filesets.addElement( set );
+        filesets.add( set );
     }
 
     /**
@@ -517,7 +517,7 @@ public class Translate extends MatchingTask
     {
         for( int i = 0; i < filesets.size(); i++ )
         {
-            FileSet fs = (FileSet)filesets.elementAt( i );
+            FileSet fs = (FileSet)filesets.get( i );
             DirectoryScanner ds = fs.getDirectoryScanner( getProject() );
             String[] srcFiles = ds.getIncludedFiles();
             for( int j = 0; j < srcFiles.length; j++ )

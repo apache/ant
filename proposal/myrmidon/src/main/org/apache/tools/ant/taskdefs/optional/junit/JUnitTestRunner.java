@@ -17,10 +17,10 @@ import java.io.PrintWriter;
 import java.io.StringReader;
 import java.io.StringWriter;
 import java.lang.reflect.Method;
-import java.util.Enumeration;
+import java.util.Iterator;
 import java.util.Hashtable;
 import java.util.Properties;
-import java.util.Vector;
+import java.util.ArrayList;
 import junit.framework.AssertionFailedError;
 import junit.framework.Test;
 import junit.framework.TestListener;
@@ -85,12 +85,12 @@ public class JUnitTestRunner implements TestListener
         "org.apache.tools.ant."
     };
 
-    private static Vector fromCmdLine = new Vector();
+    private static ArrayList fromCmdLine = new ArrayList();
 
     /**
      * Holds the registered formatters.
      */
-    private Vector formatters = new Vector();
+    private ArrayList formatters = new ArrayList();
 
     /**
      * Do we stop on errors.
@@ -395,9 +395,9 @@ public class JUnitTestRunner implements TestListener
 
         // Add/overlay system properties on the properties from the Ant project
         Hashtable p = System.getProperties();
-        for( Enumeration enum = p.keys(); enum.hasMoreElements(); )
+        for( Iterator enum = p.keys(); enum.hasNext(); )
         {
-            Object key = enum.nextElement();
+            Object key = enum.next();
             props.put( key, p.get( key ) );
         }
         t.setProperties( props );
@@ -430,7 +430,7 @@ public class JUnitTestRunner implements TestListener
             fe.setClassname( line.substring( 0, pos ) );
             fe.setOutfile( new File( line.substring( pos + 1 ) ) );
         }
-        fromCmdLine.addElement( fe.createFormatter() );
+        fromCmdLine.add( fe.createFormatter() );
     }
 
     private static boolean filterLine( String line )
@@ -449,7 +449,7 @@ public class JUnitTestRunner implements TestListener
     {
         for( int i = 0; i < fromCmdLine.size(); i++ )
         {
-            runner.addFormatter( (JUnitResultFormatter)fromCmdLine.elementAt( i ) );
+            runner.addFormatter( (JUnitResultFormatter)fromCmdLine.get( i ) );
         }
     }
 
@@ -510,7 +510,7 @@ public class JUnitTestRunner implements TestListener
 
     public void addFormatter( JUnitResultFormatter f )
     {
-        formatters.addElement( f );
+        formatters.add( f );
     }
 
     /**
@@ -530,7 +530,7 @@ public class JUnitTestRunner implements TestListener
         res.addListener( this );
         for( int i = 0; i < formatters.size(); i++ )
         {
-            res.addListener( (TestListener)formatters.elementAt( i ) );
+            res.addListener( (TestListener)formatters.get( i ) );
         }
 
         long start = System.currentTimeMillis();
@@ -540,7 +540,7 @@ public class JUnitTestRunner implements TestListener
         {// had an exception in the constructor
             for( int i = 0; i < formatters.size(); i++ )
             {
-                ( (TestListener)formatters.elementAt( i ) ).addError( null,
+                ( (TestListener)formatters.get( i ) ).addError( null,
                                                                       exception );
             }
             junitTest.setCounts( 1, 0, 1 );
@@ -616,7 +616,7 @@ public class JUnitTestRunner implements TestListener
     {
         for( int i = 0; i < formatters.size(); i++ )
         {
-            ( (JUnitResultFormatter)formatters.elementAt( i ) ).endTestSuite( junitTest );
+            ( (JUnitResultFormatter)formatters.get( i ) ).endTestSuite( junitTest );
         }
     }
 
@@ -624,7 +624,7 @@ public class JUnitTestRunner implements TestListener
     {
         for( int i = 0; i < formatters.size(); i++ )
         {
-            ( (JUnitResultFormatter)formatters.elementAt( i ) ).startTestSuite( junitTest );
+            ( (JUnitResultFormatter)formatters.get( i ) ).startTestSuite( junitTest );
         }
     }
 
@@ -633,7 +633,7 @@ public class JUnitTestRunner implements TestListener
         for( int i = 0; i < formatters.size(); i++ )
         {
             JUnitResultFormatter formatter =
-                ( (JUnitResultFormatter)formatters.elementAt( i ) );
+                ( (JUnitResultFormatter)formatters.get( i ) );
 
             formatter.setSystemOutput( out );
             formatter.setSystemError( err );

@@ -15,7 +15,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.LineNumberReader;
 import java.io.PrintWriter;
-import java.util.Vector;
+import java.util.ArrayList;
 import org.apache.myrmidon.api.TaskException;
 import org.apache.tools.ant.DirectoryScanner;
 import org.apache.tools.ant.Project;
@@ -75,7 +75,7 @@ public class ReplaceRegExp extends Task
     private boolean byline;
 
     private File file;
-    private Vector filesets;
+    private ArrayList filesets;
     private String flags;// Keep jdk 1.1 compliant so others can use this
     private RegularExpression regex;
     private Substitution subs;
@@ -87,7 +87,7 @@ public class ReplaceRegExp extends Task
     {
         super();
         this.file = null;
-        this.filesets = new Vector();
+        this.filesets = new ArrayList();
         this.flags = "";
         this.byline = false;
 
@@ -135,7 +135,7 @@ public class ReplaceRegExp extends Task
 
     public void addFileset( FileSet set )
     {
-        filesets.addElement( set );
+        filesets.add( set );
     }
 
     public RegularExpression createRegularExpression()
@@ -204,7 +204,7 @@ public class ReplaceRegExp extends Task
         int sz = filesets.size();
         for( int i = 0; i < sz; i++ )
         {
-            FileSet fs = (FileSet)( filesets.elementAt( i ) );
+            FileSet fs = (FileSet)( filesets.get( i ) );
             DirectoryScanner ds = fs.getDirectoryScanner( getProject() );
 
             String files[] = ds.getIncludedFiles();

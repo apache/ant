@@ -13,7 +13,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.PrintWriter;
-import java.util.Vector;
+import java.util.ArrayList;
 import javax.ejb.deployment.DeploymentDescriptor;
 import javax.ejb.deployment.EntityDescriptor;
 
@@ -100,18 +100,18 @@ public class EjbcHelper
 
     private String[] getCommandLine( boolean debug, File descriptorFile )
     {
-        Vector v = new Vector();
+        ArrayList v = new ArrayList();
         if( !debug )
         {
-            v.addElement( "-noexit" );
+            v.add( "-noexit" );
         }
         if( keepGenerated )
         {
-            v.addElement( "-keepgenerated" );
+            v.add( "-keepgenerated" );
         }
-        v.addElement( "-d" );
-        v.addElement( generatedFilesDirectory.getPath() );
-        v.addElement( descriptorFile.getPath() );
+        v.add( "-d" );
+        v.add( generatedFilesDirectory.getPath() );
+        v.add( descriptorFile.getPath() );
 
         String[] args = new String[ v.size() ];
         v.copyInto( args );

@@ -7,7 +7,7 @@
  */
 package org.apache.tools.ant.util.regexp;
 
-import java.util.Vector;
+import java.util.ArrayList;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.regex.PatternSyntaxException;
@@ -40,7 +40,7 @@ public class Jdk14RegexpMatcher implements RegexpMatcher
     }
 
     /**
-     * Returns a Vector of matched groups found in the argument. <p>
+     * Returns a ArrayList of matched groups found in the argument. <p>
      *
      * Group 0 will be the full match, the rest are the parenthesized
      * subexpressions</p> .
@@ -49,14 +49,14 @@ public class Jdk14RegexpMatcher implements RegexpMatcher
      * @return The Groups value
      * @exception TaskException Description of Exception
      */
-    public Vector getGroups( String argument )
+    public ArrayList getGroups( String argument )
         throws TaskException
     {
         return getGroups( argument, MATCH_DEFAULT );
     }
 
     /**
-     * Returns a Vector of matched groups found in the argument. <p>
+     * Returns a ArrayList of matched groups found in the argument. <p>
      *
      * Group 0 will be the full match, the rest are the parenthesized
      * subexpressions</p> .
@@ -66,7 +66,7 @@ public class Jdk14RegexpMatcher implements RegexpMatcher
      * @return The Groups value
      * @exception TaskException Description of Exception
      */
-    public Vector getGroups( String input, int options )
+    public ArrayList getGroups( String input, int options )
         throws TaskException
     {
         Pattern p = getCompiledPattern( options );
@@ -75,11 +75,11 @@ public class Jdk14RegexpMatcher implements RegexpMatcher
         {
             return null;
         }
-        Vector v = new Vector();
+        ArrayList v = new ArrayList();
         int cnt = matcher.groupCount();
         for( int i = 0; i <= cnt; i++ )
         {
-            v.addElement( matcher.group( i ) );
+            v.add( matcher.group( i ) );
         }
         return v;
     }

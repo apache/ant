@@ -12,9 +12,9 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.PrintStream;
-import java.util.Enumeration;
+import java.util.Iterator;
 import java.util.StringTokenizer;
-import java.util.Vector;
+import java.util.ArrayList;
 import org.apache.myrmidon.api.TaskException;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.Task;
@@ -163,7 +163,7 @@ public class SendEmail extends Task
 {
     private String mailhost = "localhost";
     private int mailport = MailMessage.DEFAULT_PORT;
-    private Vector files = new Vector();
+    private ArrayList files = new ArrayList();
     /**
      * failure flag
      */
@@ -204,7 +204,7 @@ public class SendEmail extends Task
 
         while( t.hasMoreTokens() )
         {
-            files.addElement( resolveFile( t.nextToken() ) );
+            files.add( resolveFile( t.nextToken() ) );
         }
     }
 
@@ -324,9 +324,9 @@ public class SendEmail extends Task
             {
                 PrintStream out = mailMessage.getPrintStream();
 
-                for( Enumeration e = files.elements(); e.hasMoreElements(); )
+                for( Iterator e = files.iterator(); e.hasNext(); )
                 {
-                    File file = (File)e.nextElement();
+                    File file = (File)e.next();
 
                     if( file.exists() && file.canRead() )
                     {

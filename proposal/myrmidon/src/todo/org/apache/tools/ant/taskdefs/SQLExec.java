@@ -26,10 +26,10 @@ import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.sql.SQLWarning;
 import java.sql.Statement;
-import java.util.Enumeration;
+import java.util.Iterator;
 import java.util.Properties;
 import java.util.StringTokenizer;
-import java.util.Vector;
+import java.util.ArrayList;
 import org.apache.myrmidon.api.TaskException;
 import org.apache.tools.ant.AntClassLoader;
 import org.apache.tools.ant.DirectoryScanner;
@@ -53,7 +53,7 @@ public class SQLExec extends Task
 
     private int goodSql = 0, totalSql = 0;
 
-    private Vector filesets = new Vector();
+    private ArrayList filesets = new ArrayList();
 
     /**
      * Database connection
@@ -103,7 +103,7 @@ public class SQLExec extends Task
     /**
      * SQL transactions to perform
      */
-    private Vector transactions = new Vector();
+    private ArrayList transactions = new ArrayList();
 
     /**
      * SQL Statement delimiter
@@ -347,7 +347,7 @@ public class SQLExec extends Task
      */
     public void addFileset( FileSet set )
     {
-        filesets.addElement( set );
+        filesets.add( set );
     }
 
     /**
@@ -383,7 +383,7 @@ public class SQLExec extends Task
     public Transaction createTransaction()
     {
         Transaction t = new Transaction();
-        transactions.addElement( t );
+        transactions.add( t );
         return t;
     }
 
@@ -409,7 +409,7 @@ public class SQLExec extends Task
             // deal with the filesets
             for( int i = 0; i < filesets.size(); i++ )
             {
-                FileSet fs = (FileSet)filesets.elementAt( i );
+                FileSet fs = (FileSet)filesets.get( i );
                 DirectoryScanner ds = fs.getDirectoryScanner( getProject() );
                 File srcDir = fs.getDir( getProject() );
 
@@ -513,11 +513,11 @@ public class SQLExec extends Task
                 }
 
                 // Process all transactions
-                for( Enumeration e = transactions.elements();
-                     e.hasMoreElements(); )
+                for( Iterator e = transactions.iterator();
+                     e.hasNext(); )
                 {
 
-                    ( (Transaction)e.nextElement() ).runTransaction( out );
+                    ( (Transaction)e.next() ).runTransaction( out );
                     if( !autocommit )
                     {
                         log( "Commiting transaction", Project.MSG_VERBOSE );

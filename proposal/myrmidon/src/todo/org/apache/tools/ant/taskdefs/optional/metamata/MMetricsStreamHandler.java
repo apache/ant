@@ -17,9 +17,9 @@ import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.text.ParseException;
 import java.util.EmptyStackException;
-import java.util.Enumeration;
+import java.util.Iterator;
 import java.util.Stack;
-import java.util.Vector;
+import java.util.ArrayList;
 import javax.xml.transform.OutputKeys;
 import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerFactory;
@@ -270,10 +270,10 @@ public class MMetricsStreamHandler implements ExecuteStreamHandler
         int i = 0;
         String name = ATTRIBUTES[ i++ ];
         impl.addAttribute( "", name, name, "CDATA", elem.getName() );
-        Enumeration metrics = elem.getMetrics();
-        for( ; metrics.hasMoreElements(); i++ )
+        Iterator metrics = elem.getMetrics();
+        for( ; metrics.hasNext(); i++ )
         {
-            String value = (String)metrics.nextElement();
+            String value = (String)metrics.next();
             if( value.length() > 0 )
             {
                 name = ATTRIBUTES[ i ];
@@ -408,7 +408,7 @@ class MetricsElement
 
     private int indent;
 
-    private Vector metrics;
+    private ArrayList metrics;
 
     static
     {
@@ -422,7 +422,7 @@ class MetricsElement
         NEUTRAL_NF.setMaximumFractionDigits( 1 );
     }
 
-    MetricsElement( int indent, String construct, Vector metrics )
+    MetricsElement( int indent, String construct, ArrayList metrics )
     {
         this.indent = indent;
         this.construct = construct;
@@ -432,7 +432,7 @@ class MetricsElement
     public static MetricsElement parse( String line )
         throws ParseException
     {
-        final Vector metrics = new Vector();
+        final ArrayList metrics = new ArrayList();
         int pos;
 
         // i'm using indexOf since I need to know if there are empty strings
@@ -447,10 +447,10 @@ class MetricsElement
              * token = NEUTRAL_NF.format(num.doubleValue()); // and format with a neutral NF
              * }
              */
-            metrics.addElement( token );
+            metrics.add( token );
             line = line.substring( pos + 1 );
         }
-        metrics.addElement( line );
+        metrics.add( line );
 
         // there should be exactly 14 tokens (1 name + 13 metrics), if not, there is a problem !
         if( metrics.size() != 14 )
@@ -462,8 +462,8 @@ class MetricsElement
         // construct name, we'll need all this to figure out what type of
         // construct it is since we lost all semantics :(
         // (#indent[/]*)(#construct.*)
-        String name = (String)metrics.elementAt( 0 );
-        metrics.removeElementAt( 0 );
+        String name = (String)metrics.get( 0 );
+        metrics.remove( 0 );
         int indent = 0;
         pos = name.lastIndexOf( '/' );
         if( pos != -1 )
@@ -479,9 +479,9 @@ class MetricsElement
         return indent;
     }
 
-    public Enumeration getMetrics()
+    public Iterator getMetrics()
     {
-        return metrics.elements();
+        return metrics.iterator();
     }
 
     public String getName()

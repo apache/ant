@@ -12,9 +12,10 @@ import java.io.OutputStream;
 import java.io.PrintStream;
 import java.net.InetAddress;
 import java.net.Socket;
-import java.util.Enumeration;
+import java.util.Iterator;
 import java.util.Hashtable;
-import java.util.Vector;
+import java.util.ArrayList;
+import java.util.Enumeration;
 
 /**
  * A class to help send SMTP email. This class is an improvement on the
@@ -41,9 +42,9 @@ import java.util.Vector;
  * msg.setSubject("Test subject");
  * PrintStream out = msg.getPrintStream();
  * &nbsp;
- * Enumeration enum = req.getParameterNames();
- * while (enum.hasMoreElements()) {
- *   String name = (String)enum.nextElement();
+ * Iterator enum = req.getParameterNames();
+ * while (enum.hasNext()) {
+ *   String name = (String)enum.next();
  *   String value = req.getParameter(name);
  *   out.println(name + " = " + value);
  * }
@@ -87,7 +88,7 @@ public class MailMessage
     /**
      * list of email addresses to cc to
      */
-    private Vector cc;
+    private ArrayList cc;
 
     /**
      * sender email address
@@ -113,7 +114,7 @@ public class MailMessage
     /**
      * list of email addresses to send to
      */
-    private Vector to;
+    private ArrayList to;
 
     /**
      * Constructs a new MailMessage to send an email. Use localhost as the mail
@@ -138,8 +139,8 @@ public class MailMessage
         throws IOException
     {
         this.host = host;
-        to = new Vector();
-        cc = new Vector();
+        to = new ArrayList();
+        cc = new ArrayList();
         headers = new Hashtable();
         setHeader( "X-Mailer", "org.apache.tools.mail.MailMessage (jakarta.apache.org)" );
         connect();
@@ -270,7 +271,7 @@ public class MailMessage
         throws IOException
     {
         sendRcpt( cc );
-        this.cc.addElement( cc );
+        this.cc.add( cc );
     }
 
     /**
@@ -312,7 +313,7 @@ public class MailMessage
         throws IOException
     {
         sendRcpt( to );
-        this.to.addElement( to );
+        this.to.add( to );
     }
 
     void setCcHeader()
@@ -451,14 +452,14 @@ public class MailMessage
         send( "RCPT TO: " + "<" + sanitizeAddress( rcpt ) + ">", ok );
     }
 
-    String vectorToList( Vector v )
+    String vectorToList( ArrayList v )
     {
         StringBuffer buf = new StringBuffer();
-        Enumeration e = v.elements();
-        while( e.hasMoreElements() )
+        Iterator e = v.iterator();
+        while( e.hasNext() )
         {
-            buf.append( e.nextElement() );
-            if( e.hasMoreElements() )
+            buf.append( e.next() );
+            if( e.hasNext() )
             {
                 buf.append( ", " );
             }

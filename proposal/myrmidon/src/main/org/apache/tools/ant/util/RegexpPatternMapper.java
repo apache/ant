@@ -7,7 +7,7 @@
  */
 package org.apache.tools.ant.util;
 
-import java.util.Vector;
+import java.util.ArrayList;
 import org.apache.myrmidon.api.TaskException;
 import org.apache.tools.ant.util.regexp.RegexpMatcher;
 import org.apache.tools.ant.util.regexp.RegexpMatcherFactory;
@@ -88,7 +88,7 @@ public class RegexpPatternMapper implements FileNameMapper
     protected String replaceReferences( String source )
         throws TaskException
     {
-        Vector v = reg.getGroups( source );
+        ArrayList v = reg.getGroups( source );
 
         result.setLength( 0 );
         for( int i = 0; i < to.length; i++ )
@@ -100,7 +100,7 @@ public class RegexpPatternMapper implements FileNameMapper
                     int value = Character.digit( to[ i ], 10 );
                     if( value > -1 )
                     {
-                        result.append( (String)v.elementAt( value ) );
+                        result.append( (String)v.get( value ) );
                     }
                     else
                     {

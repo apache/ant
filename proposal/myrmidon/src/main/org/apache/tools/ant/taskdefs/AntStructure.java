@@ -14,8 +14,9 @@ import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
-import java.util.Enumeration;
+import java.util.Iterator;
 import java.util.Hashtable;
+import java.util.Enumeration;
 import org.apache.myrmidon.api.TaskException;
 import org.apache.tools.ant.Task;
 
@@ -193,21 +194,21 @@ public class AntStructure extends Task
             return;
         }
 
-        Vector v = new Vector();
+        ArrayList v = new ArrayList();
         if( ih.supportsCharacters() )
         {
-            v.addElement( "#PCDATA" );
+            v.add( "#PCDATA" );
         }
 
         if( TaskContainer.class.isAssignableFrom( element ) )
         {
-            v.addElement( TASKS );
+            v.add( TASKS );
         }
 
-        Enumeration enum = ih.getNestedElements();
-        while( enum.hasMoreElements() )
+        Iterator enum = ih.getNestedElements();
+        while( enum.hasNext() )
         {
-            v.addElement( (String)enum.nextElement() );
+            v.add( (String)enum.next() );
         }
 
         if( v.isEmpty() )
@@ -223,10 +224,10 @@ public class AntStructure extends Task
                 {
                     sb.append( " | " );
                 }
-                sb.append( v.elementAt( i ) );
+                sb.append( v.get( i ) );
             }
             sb.append( ")" );
-            if( v.size() > 1 || !v.elementAt( 0 ).equals( "#PCDATA" ) )
+            if( v.size() > 1 || !v.get( 0 ).equals( "#PCDATA" ) )
             {
                 sb.append( "*" );
             }
@@ -239,9 +240,9 @@ public class AntStructure extends Task
         sb.append( lSep ).append( "          id ID #IMPLIED" );
 
         enum = ih.getAttributes();
-        while( enum.hasMoreElements() )
+        while( enum.hasNext() )
         {
-            String attrName = (String)enum.nextElement();
+            String attrName = (String)enum.next();
             if( "id".equals( attrName ) )
                 continue;
 
@@ -303,7 +304,7 @@ public class AntStructure extends Task
 
         for( int i = 0; i < v.size(); i++ )
         {
-            String nestedName = (String)v.elementAt( i );
+            String nestedName = (String)v.get( i );
             if( !"#PCDATA".equals( nestedName ) &&
                 !TASKS.equals( nestedName ) &&
                 !TYPES.equals( nestedName )

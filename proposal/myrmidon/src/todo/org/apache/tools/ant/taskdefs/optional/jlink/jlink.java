@@ -13,8 +13,9 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Iterator;
+import java.util.ArrayList;
 import java.util.Enumeration;
-import java.util.Vector;
 import java.util.zip.CRC32;
 import java.util.zip.Deflater;
 import java.util.zip.ZipEntry;
@@ -27,9 +28,9 @@ public class jlink extends Object
 
     private String outfile = null;
 
-    private Vector mergefiles = new Vector( 10 );
+    private ArrayList mergefiles = new ArrayList( 10 );
 
-    private Vector addfiles = new Vector( 10 );
+    private ArrayList addfiles = new ArrayList( 10 );
 
     private boolean compression = false;
 
@@ -95,7 +96,7 @@ public class jlink extends Object
         {
             return;
         }
-        addfiles.addElement( addfile );
+        addfiles.add( addfile );
     }
 
     /**
@@ -126,7 +127,7 @@ public class jlink extends Object
         {
             return;
         }
-        mergefiles.addElement( mergefile );
+        mergefiles.add( mergefile );
     }
 
     /**
@@ -172,10 +173,10 @@ public class jlink extends Object
         {
             output.setMethod( ZipOutputStream.STORED );
         }
-        Enumeration merges = mergefiles.elements();
-        while( merges.hasMoreElements() )
+        Iterator merges = mergefiles.iterator();
+        while( merges.hasNext() )
         {
-            String path = (String)merges.nextElement();
+            String path = (String)merges.next();
             File f = new File( path );
             if( f.getName().endsWith( ".jar" ) || f.getName().endsWith( ".zip" ) )
             {
@@ -184,15 +185,15 @@ public class jlink extends Object
             }
             else
             {
-                //Add this file to the addfiles Vector and add it
+                //Add this file to the addfiles ArrayList and add it
                 //later at the top level of the output file.
                 addAddFile( path );
             }
         }
-        Enumeration adds = addfiles.elements();
-        while( adds.hasMoreElements() )
+        Iterator adds = addfiles.iterator();
+        while( adds.hasNext() )
         {
-            String name = (String)adds.nextElement();
+            String name = (String)adds.next();
             File f = new File( name );
             if( f.isDirectory() )
             {

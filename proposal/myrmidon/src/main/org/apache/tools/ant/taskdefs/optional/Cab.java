@@ -12,8 +12,8 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.PrintWriter;
-import java.util.Enumeration;
-import java.util.Vector;
+import java.util.Iterator;
+import java.util.ArrayList;
 import org.apache.myrmidon.api.TaskException;
 import org.apache.myrmidon.framework.Os;
 import org.apache.tools.ant.DirectoryScanner;
@@ -31,7 +31,7 @@ import org.apache.tools.ant.types.FileSet;
 
 public class Cab extends MatchingTask
 {
-    private Vector filesets = new Vector();
+    private ArrayList filesets = new ArrayList();
     private boolean doCompress = true;
     private boolean doVerbose = false;
 
@@ -99,7 +99,7 @@ public class Cab extends MatchingTask
      */
     public void addFileset( FileSet set )
     {
-        filesets.addElement( set );
+        filesets.add( set );
     }
 
     public void execute()
@@ -108,7 +108,7 @@ public class Cab extends MatchingTask
 
         checkConfiguration();
 
-        Vector files = getFileList();
+        ArrayList files = getFileList();
 
         // quick exit if the target is up to date
         if( isUpToDate( files ) )
@@ -122,11 +122,11 @@ public class Cab extends MatchingTask
 
             StringBuffer sb = new StringBuffer();
 
-            Enumeration fileEnum = files.elements();
+            Iterator fileEnum = files.iterator();
 
-            while( fileEnum.hasMoreElements() )
+            while( fileEnum.hasNext() )
             {
-                sb.append( fileEnum.nextElement() ).append( "\n" );
+                sb.append( fileEnum.next() ).append( "\n" );
             }
             sb.append( "\n" ).append( cabFile.getAbsolutePath() ).append( "\n" );
 
@@ -188,10 +188,10 @@ public class Cab extends MatchingTask
      * @return The FileList value
      * @exception TaskException Description of Exception
      */
-    protected Vector getFileList()
+    protected ArrayList getFileList()
         throws TaskException
     {
-        Vector files = new Vector();
+        ArrayList files = new ArrayList();
 
         if( filesets.size() == 0 )
         {
@@ -203,7 +203,7 @@ public class Cab extends MatchingTask
             // get files from filesets
             for( int i = 0; i < filesets.size(); i++ )
             {
-                FileSet fs = (FileSet)filesets.elementAt( i );
+                FileSet fs = (FileSet)filesets.get( i );
                 if( fs != null )
                 {
                     appendFiles( files, fs.getDirectoryScanner( getProject() ) );
@@ -220,12 +220,12 @@ public class Cab extends MatchingTask
      * @param files Description of Parameter
      * @return true if the cab file is newer than its dependents.
      */
-    protected boolean isUpToDate( Vector files )
+    protected boolean isUpToDate( ArrayList files )
     {
         boolean upToDate = true;
         for( int i = 0; i < files.size() && upToDate; i++ )
         {
-            String file = files.elementAt( i ).toString();
+            String file = files.get( i ).toString();
             if( new File( baseDir, file ).lastModified() >
                 cabFile.lastModified() )
                 upToDate = false;
@@ -239,13 +239,13 @@ public class Cab extends MatchingTask
      * @param files Description of Parameter
      * @param ds Description of Parameter
      */
-    protected void appendFiles( Vector files, DirectoryScanner ds )
+    protected void appendFiles( ArrayList files, DirectoryScanner ds )
     {
         String[] dsfiles = ds.getIncludedFiles();
 
         for( int i = 0; i < dsfiles.length; i++ )
         {
-            files.addElement( dsfiles[ i ] );
+            files.add( dsfiles[ i ] );
         }
     }
 
@@ -321,7 +321,7 @@ public class Cab extends MatchingTask
      * @return Description of the Returned Value
      * @exception IOException Description of Exception
      */
-    protected File createListFile( Vector files )
+    protected File createListFile( ArrayList files )
         throws IOException
     {
         File listFile = File.createTempFile( "ant", "", getBaseDirectory() );
@@ -330,7 +330,7 @@ public class Cab extends MatchingTask
 
         for( int i = 0; i < files.size(); i++ )
         {
-            writer.println( files.elementAt( i ).toString() );
+            writer.println( files.get( i ).toString() );
         }
         writer.close();
 

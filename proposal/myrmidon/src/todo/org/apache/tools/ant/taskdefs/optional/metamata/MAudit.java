@@ -11,7 +11,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
-import java.util.Vector;
+import java.util.ArrayList;
 import org.apache.myrmidon.api.TaskException;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.taskdefs.exec.ExecuteStreamHandler;
@@ -140,9 +140,9 @@ public class MAudit extends AbstractMetamataTask
         return searchPath;
     }
 
-    protected Vector getOptions()
+    protected ArrayList getOptions()
     {
-        Vector options = new Vector( 512 );
+        ArrayList options = new ArrayList( 512 );
         // there is a bug in Metamata 2.0 build 37. The sourcepath argument does
         // not work. So we will use the sourcepath prepended to classpath. (order
         // is important since Metamata looks at .class and .java)
@@ -156,37 +156,37 @@ public class MAudit extends AbstractMetamataTask
         // don't forget to modify the pattern if you change the options reporting
         if( classPath != null )
         {
-            options.addElement( "-classpath" );
-            options.addElement( classPath.toString() );
+            options.add( "-classpath" );
+            options.add( classPath.toString() );
         }
         // suppress copyright msg when running, we will let it so that this
         // will be the only output to the console if in xml mode
-        //      options.addElement("-quiet");
+        //      options.add("-quiet");
         if( fix )
         {
-            options.addElement( "-fix" );
+            options.add( "-fix" );
         }
-        options.addElement( "-fullpath" );
+        options.add( "-fullpath" );
 
         // generate .maudit files much more detailed than the report
         // I don't like it very much, I think it could be interesting
         // to get all .maudit files and include them in the XML.
         if( list )
         {
-            options.addElement( "-list" );
+            options.add( "-list" );
         }
         if( sourcePath != null )
         {
-            options.addElement( "-sourcepath" );
-            options.addElement( sourcePath.toString() );
+            options.add( "-sourcepath" );
+            options.add( sourcePath.toString() );
         }
 
         if( unused )
         {
-            options.addElement( "-unused" );
-            options.addElement( searchPath.toString() );
+            options.add( "-unused" );
+            options.add( searchPath.toString() );
         }
-        addAllVector( options, includedFiles.keys() );
+        addAllArrayList( options, includedFiles.keys() );
         return options;
     }
 

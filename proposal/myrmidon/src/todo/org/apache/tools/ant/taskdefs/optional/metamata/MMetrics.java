@@ -11,7 +11,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.util.Vector;
+import java.util.ArrayList;
 import org.apache.myrmidon.api.TaskException;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.taskdefs.exec.ExecuteStreamHandler;
@@ -118,9 +118,9 @@ public class MMetrics extends AbstractMetamataTask
         return path;
     }
 
-    protected Vector getOptions()
+    protected ArrayList getOptions()
     {
-        Vector options = new Vector( 512 );
+        ArrayList options = new ArrayList( 512 );
         // there is a bug in Metamata 2.0 build 37. The sourcepath argument does
         // not work. So we will use the sourcepath prepended to classpath. (order
         // is important since Metamata looks at .class and .java)
@@ -134,34 +134,34 @@ public class MMetrics extends AbstractMetamataTask
         // don't forget to modify the pattern if you change the options reporting
         if( classPath != null )
         {
-            options.addElement( "-classpath" );
-            options.addElement( classPath );
+            options.add( "-classpath" );
+            options.add( classPath );
         }
-        options.addElement( "-output" );
-        options.addElement( tmpFile.toString() );
+        options.add( "-output" );
+        options.add( tmpFile.toString() );
 
-        options.addElement( "-" + granularity );
+        options.add( "-" + granularity );
 
         // display the metamata copyright
-        // options.addElement( "-quiet");
-        options.addElement( "-format" );
+        // options.add( "-quiet");
+        options.add( "-format" );
 
         // need this because that's what the handler is using, it's
         // way easier to process than any other separator
-        options.addElement( "tab" );
+        options.add( "tab" );
 
         // specify a / as the indent character, used by the handler.
-        options.addElement( "-i" );
-        options.addElement( "/" );
+        options.add( "-i" );
+        options.add( "/" );
 
         // directories
         String[] dirs = path.list();
         for( int i = 0; i < dirs.length; i++ )
         {
-            options.addElement( dirs[ i ] );
+            options.add( dirs[ i ] );
         }
         // files next.
-        addAllVector( options, includedFiles.keys() );
+        addAllArrayList( options, includedFiles.keys() );
         return options;
     }
 

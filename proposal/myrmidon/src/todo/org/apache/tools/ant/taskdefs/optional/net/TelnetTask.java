@@ -12,8 +12,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.Calendar;
-import java.util.Enumeration;
-import java.util.Vector;
+import java.util.Iterator;
+import java.util.ArrayList;
 import org.apache.myrmidon.api.TaskException;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.Task;
@@ -55,7 +55,7 @@ public class TelnetTask extends Task
     /**
      * The list of read/write commands for this session
      */
-    private Vector telnetTasks = new Vector();
+    private ArrayList telnetTasks = new ArrayList();
 
     /**
      * If true, adds a CR to beginning of login script
@@ -138,7 +138,7 @@ public class TelnetTask extends Task
     public TelnetSubTask createRead()
     {
         TelnetSubTask task = (TelnetSubTask)new TelnetRead();
-        telnetTasks.addElement( task );
+        telnetTasks.add( task );
         return task;
     }
 
@@ -151,7 +151,7 @@ public class TelnetTask extends Task
     public TelnetSubTask createWrite()
     {
         TelnetSubTask task = (TelnetSubTask)new TelnetWrite();
-        telnetTasks.addElement( task );
+        telnetTasks.add( task );
         return task;
     }
 
@@ -198,10 +198,10 @@ public class TelnetTask extends Task
         /**
          * Process each sub command
          */
-        Enumeration tasksToRun = telnetTasks.elements();
-        while( tasksToRun != null && tasksToRun.hasMoreElements() )
+        Iterator tasksToRun = telnetTasks.iterator();
+        while( tasksToRun != null && tasksToRun.hasNext() )
         {
-            TelnetSubTask task = (TelnetSubTask)tasksToRun.nextElement();
+            TelnetSubTask task = (TelnetSubTask)tasksToRun.next();
             if( task instanceof TelnetRead && defaultTimeout != null )
                 ( (TelnetRead)task ).setDefaultTimeout( defaultTimeout );
             task.execute( telnet );

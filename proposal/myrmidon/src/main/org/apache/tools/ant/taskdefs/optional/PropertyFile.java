@@ -22,10 +22,10 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.Enumeration;
+import java.util.Iterator;
 import java.util.GregorianCalendar;
 import java.util.Properties;
-import java.util.Vector;
+import java.util.ArrayList;
 import org.apache.myrmidon.api.TaskException;
 import org.apache.tools.ant.Task;
 import org.apache.tools.ant.types.EnumeratedAttribute;
@@ -138,7 +138,7 @@ public class PropertyFile extends Task
      */
     private final static String NEWLINE = System.getProperty( "line.separator" );
 
-    private Vector entries = new Vector();
+    private ArrayList entries = new ArrayList();
 
     /*
      * ========================================================================
@@ -164,7 +164,7 @@ public class PropertyFile extends Task
     public Entry createEntry()
     {
         Entry e = new Entry();
-        entries.addElement( e );
+        entries.add( e );
         return e;
     }
 
@@ -212,9 +212,9 @@ public class PropertyFile extends Task
     private void executeOperation()
         throws TaskException
     {
-        for( Enumeration e = entries.elements(); e.hasMoreElements(); )
+        for( Iterator e = entries.iterator(); e.hasNext(); )
         {
-            Entry entry = (Entry)e.nextElement();
+            Entry entry = (Entry)e.next();
             entry.executeOn( m_properties );
         }
     }

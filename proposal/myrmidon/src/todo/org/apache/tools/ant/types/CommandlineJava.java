@@ -7,9 +7,9 @@
  */
 package org.apache.tools.ant.types;
 
-import java.util.Enumeration;
+import java.util.Iterator;
 import java.util.Properties;
-import java.util.Vector;
+import java.util.ArrayList;
 import org.apache.myrmidon.api.TaskException;
 import org.apache.myrmidon.framework.Os;
 import org.apache.tools.ant.Project;
@@ -338,9 +338,9 @@ public class CommandlineJava implements Cloneable
             {
                 Properties p = new Properties( sys = System.getProperties() );
 
-                for( Enumeration e = variables.elements(); e.hasMoreElements(); )
+                for( Iterator e = variables.iterator(); e.hasNext(); )
                 {
-                    Environment.Variable v = (Environment.Variable)e.nextElement();
+                    Environment.Variable v = (Environment.Variable)e.next();
                     p.put( v.getKey(), v.getValue() );
                 }
                 System.setProperties( p );
@@ -371,7 +371,7 @@ public class CommandlineJava implements Cloneable
             try
             {
                 SysProperties c = (SysProperties)super.clone();
-                c.variables = (Vector)variables.clone();
+                c.variables = (ArrayList)variables.clone();
                 return c;
             }
             catch( CloneNotSupportedException e )

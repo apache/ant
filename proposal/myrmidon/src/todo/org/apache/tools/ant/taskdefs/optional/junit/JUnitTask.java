@@ -12,11 +12,11 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.net.URL;
-import java.util.Enumeration;
+import java.util.Iterator;
 import java.util.Hashtable;
 import java.util.Properties;
 import java.util.Random;
-import java.util.Vector;
+import java.util.ArrayList;
 import org.apache.myrmidon.api.TaskException;
 import org.apache.tools.ant.AntClassLoader;
 import org.apache.tools.ant.Project;
@@ -104,9 +104,9 @@ public class JUnitTask extends Task
 {
 
     private CommandlineJava commandline = new CommandlineJava();
-    private Vector tests = new Vector();
-    private Vector batchTests = new Vector();
-    private Vector formatters = new Vector();
+    private ArrayList tests = new ArrayList();
+    private ArrayList batchTests = new ArrayList();
+    private ArrayList formatters = new ArrayList();
     private File dir = null;
 
     private Integer timeout = null;
@@ -147,10 +147,10 @@ public class JUnitTask extends Task
      */
     public void setErrorProperty( String propertyName )
     {
-        Enumeration enum = allTests();
-        while( enum.hasMoreElements() )
+        Iterator enum = allTests();
+        while( enum.hasNext() )
         {
-            BaseTest test = (BaseTest)enum.nextElement();
+            BaseTest test = (BaseTest)enum.next();
             test.setErrorProperty( propertyName );
         }
     }
@@ -165,10 +165,10 @@ public class JUnitTask extends Task
      */
     public void setFailureProperty( String propertyName )
     {
-        Enumeration enum = allTests();
-        while( enum.hasMoreElements() )
+        Iterator enum = allTests();
+        while( enum.hasNext() )
         {
-            BaseTest test = (BaseTest)enum.nextElement();
+            BaseTest test = (BaseTest)enum.next();
             test.setFailureProperty( propertyName );
         }
     }
@@ -184,10 +184,10 @@ public class JUnitTask extends Task
      */
     public void setFiltertrace( boolean value )
     {
-        Enumeration enum = allTests();
-        while( enum.hasMoreElements() )
+        Iterator enum = allTests();
+        while( enum.hasNext() )
         {
-            BaseTest test = (BaseTest)enum.nextElement();
+            BaseTest test = (BaseTest)enum.next();
             test.setFiltertrace( value );
         }
     }
@@ -204,10 +204,10 @@ public class JUnitTask extends Task
      */
     public void setFork( boolean value )
     {
-        Enumeration enum = allTests();
-        while( enum.hasMoreElements() )
+        Iterator enum = allTests();
+        while( enum.hasNext() )
         {
-            BaseTest test = (BaseTest)enum.nextElement();
+            BaseTest test = (BaseTest)enum.next();
             test.setFork( value );
         }
     }
@@ -221,10 +221,10 @@ public class JUnitTask extends Task
      */
     public void setHaltonerror( boolean value )
     {
-        Enumeration enum = allTests();
-        while( enum.hasMoreElements() )
+        Iterator enum = allTests();
+        while( enum.hasNext() )
         {
-            BaseTest test = (BaseTest)enum.nextElement();
+            BaseTest test = (BaseTest)enum.next();
             test.setHaltonerror( value );
         }
     }
@@ -238,10 +238,10 @@ public class JUnitTask extends Task
      */
     public void setHaltonfailure( boolean value )
     {
-        Enumeration enum = allTests();
-        while( enum.hasMoreElements() )
+        Iterator enum = allTests();
+        while( enum.hasNext() )
         {
-            BaseTest test = (BaseTest)enum.nextElement();
+            BaseTest test = (BaseTest)enum.next();
             test.setHaltonfailure( value );
         }
     }
@@ -310,7 +310,7 @@ public class JUnitTask extends Task
      */
     public void addFormatter( FormatterElement fe )
     {
-        formatters.addElement( fe );
+        formatters.add( fe );
     }
 
     /**
@@ -332,7 +332,7 @@ public class JUnitTask extends Task
      */
     public void addTest( JUnitTest test )
     {
-        tests.addElement( test );
+        tests.add( test );
     }
 
     /**
@@ -345,7 +345,7 @@ public class JUnitTask extends Task
     public BatchTest createBatchTest()
     {
         BatchTest test = new BatchTest( getProject() );
-        batchTests.addElement( test );
+        batchTests.add( test );
         return test;
     }
 
@@ -388,10 +388,10 @@ public class JUnitTask extends Task
         addClasspathEntry( "/org/apache/tools/ant/Task.class" );
         addClasspathEntry( "/org/apache/tools/ant/taskdefs/optional/junit/JUnitTestRunner.class" );
 
-        Enumeration list = getIndividualTests();
-        while( list.hasMoreElements() )
+        Iterator list = getIndividualTests();
+        while( list.hasNext() )
         {
-            JUnitTest test = (JUnitTest)list.nextElement();
+            JUnitTest test = (JUnitTest)list.next();
             if( test.shouldRun( getProject() ) )
             {
                 execute( test );
@@ -415,16 +415,16 @@ public class JUnitTask extends Task
      *
      * @return The IndividualTests value
      */
-    protected Enumeration getIndividualTests()
+    protected Iterator getIndividualTests()
     {
-        Enumeration[] enums = new Enumeration[ batchTests.size() + 1 ];
+        Iterator[] enums = new Iterator[ batchTests.size() + 1 ];
         for( int i = 0; i < batchTests.size(); i++ )
         {
-            BatchTest batchtest = (BatchTest)batchTests.elementAt( i );
-            enums[ i ] = batchtest.elements();
+            BatchTest batchtest = (BatchTest)batchTests.get( i );
+            enums[ i ] = batchtest.iterator();
         }
-        enums[ enums.length - 1 ] = tests.elements();
-        return Enumerations.fromCompound( enums );
+        enums[ enums.length - 1 ] = tests.iterator();
+        return Iterators.fromCompound( enums );
     }
 
     /**
@@ -490,10 +490,10 @@ public class JUnitTask extends Task
         }
     }
 
-    protected Enumeration allTests()
+    protected Iterator allTests()
     {
-        Enumeration[] enums = {tests.elements(), batchTests.elements()};
-        return Enumerations.fromCompound( enums );
+        Iterator[] enums = {tests.iterator(), batchTests.iterator()};
+        return Iterators.fromCompound( enums );
     }
 
     /**
@@ -657,9 +657,9 @@ public class JUnitTask extends Task
         cmd.createArgument().setValue( "propsfile=" + propsFile.getAbsolutePath() );
         Hashtable p = getProject().getProperties();
         Properties props = new Properties();
-        for( Enumeration enum = p.keys(); enum.hasMoreElements(); )
+        for( Iterator enum = p.keys(); enum.hasNext(); )
         {
-            Object key = enum.nextElement();
+            Object key = enum.next();
             props.put( key, p.get( key ) );
         }
         try
@@ -778,10 +778,10 @@ public class JUnitTask extends Task
 
     private FormatterElement[] mergeFormatters( JUnitTest test )
     {
-        Vector feVector = (Vector)formatters.clone();
-        test.addFormattersTo( feVector );
-        FormatterElement[] feArray = new FormatterElement[ feVector.size() ];
-        feVector.copyInto( feArray );
+        ArrayList feArrayList = (ArrayList)formatters.clone();
+        test.addFormattersTo( feArrayList );
+        FormatterElement[] feArray = new FormatterElement[ feArrayList.size() ];
+        feArrayList.copyInto( feArray );
         return feArray;
     }
 

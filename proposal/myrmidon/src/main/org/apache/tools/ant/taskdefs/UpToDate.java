@@ -8,8 +8,8 @@
 package org.apache.tools.ant.taskdefs;
 
 import java.io.File;
-import java.util.Enumeration;
-import java.util.Vector;
+import java.util.Iterator;
+import java.util.ArrayList;
 import org.apache.myrmidon.api.TaskException;
 import org.apache.tools.ant.DirectoryScanner;
 import org.apache.tools.ant.Project;
@@ -33,7 +33,7 @@ import org.apache.tools.ant.util.SourceFileScanner;
 
 public class UpToDate extends MatchingTask implements Condition
 {
-    private Vector sourceFileSets = new Vector();
+    private ArrayList sourceFileSets = new ArrayList();
 
     protected Mapper mapperElement = null;
 
@@ -81,7 +81,7 @@ public class UpToDate extends MatchingTask implements Condition
      */
     public void addSrcfiles( FileSet fs )
     {
-        sourceFileSets.addElement( fs );
+        sourceFileSets.add( fs );
     }
 
     /**
@@ -123,11 +123,11 @@ public class UpToDate extends MatchingTask implements Condition
         if( _targetFile != null && !_targetFile.exists() )
             return false;
 
-        Enumeration enum = sourceFileSets.elements();
+        Iterator enum = sourceFileSets.iterator();
         boolean upToDate = true;
-        while( upToDate && enum.hasMoreElements() )
+        while( upToDate && enum.hasNext() )
         {
-            FileSet fs = (FileSet)enum.nextElement();
+            FileSet fs = (FileSet)enum.next();
             DirectoryScanner ds = fs.getDirectoryScanner( getProject() );
             upToDate = upToDate && scanDir( fs.getDir( getProject() ),
                                             ds.getIncludedFiles() );

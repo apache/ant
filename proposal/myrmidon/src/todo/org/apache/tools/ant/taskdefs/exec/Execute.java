@@ -13,17 +13,16 @@ import java.io.File;
 import java.io.IOException;
 import java.io.StringReader;
 import java.util.Locale;
-import java.util.Vector;
+import java.util.ArrayList;
 import org.apache.myrmidon.api.TaskException;
 import org.apache.myrmidon.framework.Os;
 import org.apache.myrmidon.framework.exec.CommandLauncher;
+import org.apache.myrmidon.framework.exec.ExecMetaData;
 import org.apache.myrmidon.framework.exec.launchers.DefaultCommandLauncher;
 import org.apache.myrmidon.framework.exec.launchers.MacCommandLauncher;
-import org.apache.myrmidon.framework.exec.launchers.WinNTCommandLauncher;
-import org.apache.myrmidon.framework.exec.launchers.ScriptCommandLauncher;
 import org.apache.myrmidon.framework.exec.launchers.PerlCommandLauncher;
-import org.apache.myrmidon.framework.exec.ExecMetaData;
-import org.apache.myrmidon.framework.exec.launchers.ExecUtil;
+import org.apache.myrmidon.framework.exec.launchers.ScriptCommandLauncher;
+import org.apache.myrmidon.framework.exec.launchers.WinNTCommandLauncher;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.Task;
 import org.apache.tools.ant.types.Commandline;
@@ -43,7 +42,7 @@ public class Execute
     protected static String c_antWorkingDirectory = System.getProperty( "user.dir" );
     private static CommandLauncher c_launcher;
     private static CommandLauncher c_shellLauncher;
-    private static Vector c_procEnvironment;
+    private static ArrayList c_procEnvironment;
 
     /**
      * Used to destroy processes when the VM exits.
@@ -103,7 +102,7 @@ public class Execute
                     c_shellLauncher = new ScriptCommandLauncher( "bin/antRun.bat" );
                 }
             }
-            else if( (new Os( "netware" )).eval() )
+            else if( ( new Os( "netware" ) ).eval() )
             {
                 // NetWare.  Need to determine which JDK we're running in
                 c_shellLauncher = new PerlCommandLauncher( "bin/antRun.pl" );
@@ -159,13 +158,13 @@ public class Execute
      *
      * @return The ProcEnvironment value
      */
-    public static synchronized Vector getProcEnvironment()
+    public static synchronized ArrayList getProcEnvironment()
         throws TaskException
     {
         if( c_procEnvironment != null )
             return c_procEnvironment;
 
-        c_procEnvironment = new Vector();
+        c_procEnvironment = new ArrayList();
         try
         {
             ByteArrayOutputStream out = new ByteArrayOutputStream();
@@ -184,7 +183,7 @@ public class Execute
             String var = null;
             String line;
             String lineSep = System.getProperty( "line.separator" );
-            while( (line = in.readLine()) != null )
+            while( ( line = in.readLine() ) != null )
             {
                 if( line.indexOf( '=' ) == -1 )
                 {
@@ -204,13 +203,13 @@ public class Execute
                     // New env var...append the previous one if we have it.
                     if( var != null )
                     {
-                        c_procEnvironment.addElement( var );
+                        c_procEnvironment.add( var );
                     }
                     var = line;
                 }
             }
             // Since we "look ahead" before adding, there's one last env var.
-            c_procEnvironment.addElement( var );
+            c_procEnvironment.add( var );
         }
         catch( IOException exc )
         {
@@ -494,7 +493,7 @@ public class Execute
     private String[] patchEnvironment()
         throws TaskException
     {
-        Vector osEnv = (Vector)getProcEnvironment().clone();
+        ArrayList osEnv = (ArrayList)getProcEnvironment().clone();
         for( int i = 0; i < m_environment.length; i++ )
         {
             int pos = m_environment[ i ].indexOf( '=' );
@@ -503,17 +502,16 @@ public class Execute
             int size = osEnv.size();
             for( int j = 0; j < size; j++ )
             {
-                if( ((String)osEnv.elementAt( j )).startsWith( key ) )
+                if( ( (String)osEnv.get( j ) ).startsWith( key ) )
                 {
-                    osEnv.removeElementAt( j );
+                    osEnv.remove( j );
                     break;
                 }
             }
-            osEnv.addElement( m_environment[ i ] );
+            osEnv.add( m_environment[ i ] );
         }
-        String[] result = new String[ osEnv.size() ];
-        osEnv.copyInto( result );
-        return result;
-    }
 
+        final String[] result = new String[ osEnv.size() ];
+        return (String[])osEnv.toArray( result );
+    }
 }

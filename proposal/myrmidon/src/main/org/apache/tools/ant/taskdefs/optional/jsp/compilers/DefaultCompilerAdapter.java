@@ -7,8 +7,8 @@
  */
 package org.apache.tools.ant.taskdefs.optional.jsp.compilers;
 
-import java.util.Enumeration;
-import java.util.Vector;
+import java.util.Iterator;
+import java.util.ArrayList;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.taskdefs.optional.jsp.JspC;
 import org.apache.tools.ant.types.Commandline;
@@ -53,7 +53,7 @@ public abstract class DefaultCompilerAdapter
      * @param cmd Description of Parameter
      */
     protected void logAndAddFilesToCompile( JspC jspc,
-                                            Vector compileList,
+                                            ArrayList compileList,
                                             Commandline cmd )
     {
         jspc.log( "Compilation args: " + cmd.toString(), Project.MSG_VERBOSE );
@@ -67,10 +67,10 @@ public abstract class DefaultCompilerAdapter
 
         niceSourceList.append( lSep );
 
-        Enumeration enum = compileList.elements();
-        while( enum.hasMoreElements() )
+        Iterator enum = compileList.iterator();
+        while( enum.hasNext() )
         {
-            String arg = (String)enum.nextElement();
+            String arg = (String)enum.next();
             cmd.createArgument().setValue( arg );
             niceSourceList.append( "    " + arg + lSep );
         }

@@ -8,7 +8,7 @@
 package org.apache.tools.ant.taskdefs.optional.perforce;
 
 import java.io.File;
-import java.util.Vector;
+import java.util.ArrayList;
 import org.apache.myrmidon.api.TaskException;
 import org.apache.tools.ant.DirectoryScanner;
 import org.apache.tools.ant.Project;
@@ -81,7 +81,7 @@ import org.apache.tools.ant.types.FileSet;
 public class P4Add extends P4Base
 {
     private String addCmd = "";
-    private Vector filesets = new Vector();
+    private ArrayList filesets = new ArrayList();
     private int m_cmdLength = 450;
 
     private int m_changelist;
@@ -105,7 +105,7 @@ public class P4Add extends P4Base
 
     public void addFileset( FileSet set )
     {
-        filesets.addElement( set );
+        filesets.add( set );
     }
 
     public void execute()
@@ -123,7 +123,7 @@ public class P4Add extends P4Base
 
         for( int i = 0; i < filesets.size(); i++ )
         {
-            FileSet fs = (FileSet)filesets.elementAt( i );
+            FileSet fs = (FileSet)filesets.get( i );
             DirectoryScanner ds = fs.getDirectoryScanner( getProject() );
             //File fromDir = fs.getDir(project);
 

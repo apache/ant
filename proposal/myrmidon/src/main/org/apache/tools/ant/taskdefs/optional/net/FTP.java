@@ -21,7 +21,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.Locale;
-import java.util.Vector;
+import java.util.ArrayList;
 import org.apache.myrmidon.api.TaskException;
 import org.apache.tools.ant.DirectoryScanner;
 import org.apache.tools.ant.FileScanner;
@@ -81,8 +81,8 @@ public class FTP
     private boolean verbose = false;
     private boolean newerOnly = false;
     private int action = SEND_FILES;
-    private Vector filesets = new Vector();
-    private Vector dirCache = new Vector();
+    private ArrayList filesets = new ArrayList();
+    private ArrayList dirCache = new ArrayList();
     private int transferred = 0;
     private String remoteFileSep = "/";
     private int port = 21;
@@ -270,7 +270,7 @@ public class FTP
      */
     public void addFileset( FileSet set )
     {
-        filesets.addElement( set );
+        filesets.add( set );
     }
 
     /**
@@ -547,19 +547,19 @@ public class FTP
     protected void createParents( FTPClient ftp, String filename )
         throws IOException, TaskException
     {
-        Vector parents = new Vector();
+        ArrayList parents = new ArrayList();
         File dir = new File( filename );
         String dirname;
 
         while( ( dirname = dir.getParent() ) != null )
         {
             dir = new File( dirname );
-            parents.addElement( dir );
+            parents.add( dir );
         }
 
         for( int i = parents.size() - 1; i >= 0; i-- )
         {
-            dir = (File)parents.elementAt( i );
+            dir = (File)parents.get( i );
             if( !dirCache.contains( dir ) )
             {
                 log( "creating remote directory " + resolveFile( dir.getPath() ),
@@ -577,7 +577,7 @@ public class FTP
                         "could not create directory: " +
                         ftp.getReplyString() );
                 }
-                dirCache.addElement( dir );
+                dirCache.add( dir );
             }
         }
     }
@@ -899,7 +899,7 @@ public class FTP
             // get files from filesets
             for( int i = 0; i < filesets.size(); i++ )
             {
-                FileSet fs = (FileSet)filesets.elementAt( i );
+                FileSet fs = (FileSet)filesets.get( i );
                 if( fs != null )
                 {
                     transferFiles( ftp, fs );
@@ -979,12 +979,12 @@ public class FTP
                 excludes = new String[ 0 ];
             }
 
-            filesIncluded = new Vector();
-            filesNotIncluded = new Vector();
-            filesExcluded = new Vector();
-            dirsIncluded = new Vector();
-            dirsNotIncluded = new Vector();
-            dirsExcluded = new Vector();
+            filesIncluded = new ArrayList();
+            filesNotIncluded = new ArrayList();
+            filesExcluded = new ArrayList();
+            dirsIncluded = new ArrayList();
+            dirsNotIncluded = new ArrayList();
+            dirsExcluded = new ArrayList();
 
             try
             {
@@ -1026,7 +1026,7 @@ public class FTP
                             {
                                 if( !isExcluded( name ) )
                                 {
-                                    dirsIncluded.addElement( name );
+                                    dirsIncluded.add( name );
                                     if( fast )
                                     {
                                         scandir( name, vpath + name + File.separator, fast );
@@ -1034,12 +1034,12 @@ public class FTP
                                 }
                                 else
                                 {
-                                    dirsExcluded.addElement( name );
+                                    dirsExcluded.add( name );
                                 }
                             }
                             else
                             {
-                                dirsNotIncluded.addElement( name );
+                                dirsNotIncluded.add( name );
                                 if( fast && couldHoldIncluded( name ) )
                                 {
                                     scandir( name, vpath + name + File.separator, fast );
@@ -1059,16 +1059,16 @@ public class FTP
                                 {
                                     if( !isExcluded( name ) )
                                     {
-                                        filesIncluded.addElement( name );
+                                        filesIncluded.add( name );
                                     }
                                     else
                                     {
-                                        filesExcluded.addElement( name );
+                                        filesExcluded.add( name );
                                     }
                                 }
                                 else
                                 {
-                                    filesNotIncluded.addElement( name );
+                                    filesNotIncluded.add( name );
                                 }
                             }
                         }

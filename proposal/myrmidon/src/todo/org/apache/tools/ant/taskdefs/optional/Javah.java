@@ -8,9 +8,9 @@
 package org.apache.tools.ant.taskdefs.optional;
 
 import java.io.File;
-import java.util.Enumeration;
+import java.util.Iterator;
 import java.util.StringTokenizer;
-import java.util.Vector;
+import java.util.ArrayList;
 import org.apache.myrmidon.api.TaskException;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.Task;
@@ -59,7 +59,7 @@ public class Javah extends Task
     //private Path extdirs;
     private static String lSep = System.getProperty( "line.separator" );
 
-    private Vector classes = new Vector( 2 );
+    private ArrayList classes = new ArrayList( 2 );
     private Path classpath = null;
     private File outputFile = null;
     private boolean verbose = false;
@@ -214,7 +214,7 @@ public class Javah extends Task
     public ClassArgument createClass()
     {
         ClassArgument ga = new ClassArgument();
-        classes.addElement( ga );
+        classes.add( ga );
         return ga;
     }
 
@@ -306,10 +306,10 @@ public class Javah extends Task
             }
         }
 
-        Enumeration enum = classes.elements();
-        while( enum.hasMoreElements() )
+        Iterator enum = classes.iterator();
+        while( enum.hasNext() )
         {
-            ClassArgument arg = (ClassArgument)enum.nextElement();
+            ClassArgument arg = (ClassArgument)enum.next();
             String aClass = arg.getName();
             cmd.createArgument().setValue( aClass );
             niceClassList.append( "    " + aClass + lSep );

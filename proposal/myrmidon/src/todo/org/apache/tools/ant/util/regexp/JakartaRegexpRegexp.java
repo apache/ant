@@ -7,7 +7,7 @@
  */
 package org.apache.tools.ant.util.regexp;
 
-import java.util.Vector;
+import java.util.ArrayList;
 import org.apache.myrmidon.api.TaskException;
 import org.apache.regexp.RE;
 
@@ -28,7 +28,7 @@ public class JakartaRegexpRegexp extends JakartaRegexpMatcher implements Regexp
     public String substitute( String input, String argument, int options )
         throws TaskException
     {
-        Vector v = getGroups( input, options );
+        ArrayList v = getGroups( input, options );
 
         // replace \1 with the corresponding group
         StringBuffer result = new StringBuffer();
@@ -43,7 +43,7 @@ public class JakartaRegexpRegexp extends JakartaRegexpMatcher implements Regexp
                     int value = Character.digit( c, 10 );
                     if( value > -1 )
                     {
-                        result.append( (String)v.elementAt( value ) );
+                        result.append( (String)v.get( value ) );
                     }
                     else
                     {

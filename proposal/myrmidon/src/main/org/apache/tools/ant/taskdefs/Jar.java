@@ -17,6 +17,7 @@ import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.io.Reader;
+import java.util.Iterator;
 import java.util.Enumeration;
 import org.apache.myrmidon.api.TaskException;
 import org.apache.tools.ant.FileScanner;
@@ -242,9 +243,9 @@ public class Jar extends Zip
             {
                 execManifest.merge( manifest );
             }
-            for( Enumeration e = execManifest.getWarnings(); e.hasMoreElements(); )
+            for( Iterator e = execManifest.getWarnings(); e.hasNext(); )
             {
-                log( "Manifest warning: " + (String)e.nextElement(), Project.MSG_WARN );
+                log( "Manifest warning: " + (String)e.next(), Project.MSG_WARN );
             }
 
             zipDir( null, zOut, "META-INF/" );

@@ -21,7 +21,7 @@ import java.io.OutputStreamWriter;
 import java.io.Reader;
 import java.io.Writer;
 import java.util.Properties;
-import java.util.Vector;
+import java.util.ArrayList;
 import org.apache.myrmidon.api.TaskException;
 import org.apache.tools.ant.DirectoryScanner;
 import org.apache.tools.ant.Project;
@@ -45,7 +45,7 @@ public class Replace extends MatchingTask
 
     private File propertyFile = null;
     private Properties properties = null;
-    private Vector replacefilters = new Vector();
+    private ArrayList replacefilters = new ArrayList();
 
     private File dir = null;
     private boolean summary = false;
@@ -184,7 +184,7 @@ public class Replace extends MatchingTask
     public Replacefilter createReplacefilter()
     {
         Replacefilter filter = new Replacefilter();
-        replacefilters.addElement( filter );
+        replacefilters.add( filter );
         return filter;
     }
 
@@ -273,7 +273,7 @@ public class Replace extends MatchingTask
     {
         for( int i = 0; i < replacefilters.size(); i++ )
         {
-            Replacefilter element = (Replacefilter)replacefilters.elementAt( i );
+            Replacefilter element = (Replacefilter)replacefilters.get( i );
             element.validate();
         }
     }
@@ -424,7 +424,7 @@ public class Replace extends MatchingTask
 
         for( int i = 0; i < replacefilters.size(); i++ )
         {
-            Replacefilter filter = (Replacefilter)replacefilters.elementAt( i );
+            Replacefilter filter = (Replacefilter)replacefilters.get( i );
 
             //for each found token, replace with value
             log( "Replacing in " + filename + ": " + filter.getToken() + " --> " + filter.getReplaceValue(), Project.MSG_VERBOSE );

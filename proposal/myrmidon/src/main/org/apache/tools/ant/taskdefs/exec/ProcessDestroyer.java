@@ -8,8 +8,8 @@
 package org.apache.tools.ant.taskdefs.exec;
 
 import java.lang.reflect.Method;
-import java.util.Enumeration;
-import java.util.Vector;
+import java.util.Iterator;
+import java.util.ArrayList;
 
 /**
  * Destroys all registered <code>Process</code>es when the VM exits.
@@ -20,7 +20,7 @@ class ProcessDestroyer
     extends Thread
 {
 
-    private Vector processes = new Vector();
+    private ArrayList processes = new ArrayList();
 
     /**
      * Constructs a <code>ProcessDestroyer</code> and registers it as a shutdown
@@ -57,7 +57,7 @@ class ProcessDestroyer
      */
     public boolean add( Process process )
     {
-        processes.addElement( process );
+        processes.add( process );
         return processes.contains( process );
     }
 
@@ -71,7 +71,7 @@ class ProcessDestroyer
      */
     public boolean remove( Process process )
     {
-        return processes.removeElement( process );
+        return processes.remove( process );
     }
 
     /**
@@ -81,10 +81,10 @@ class ProcessDestroyer
     {
         synchronized( processes )
         {
-            Enumeration e = processes.elements();
-            while( e.hasMoreElements() )
+            Iterator e = processes.iterator();
+            while( e.hasNext() )
             {
-                ( (Process)e.nextElement() ).destroy();
+                ( (Process)e.next() ).destroy();
             }
         }
     }

@@ -7,8 +7,8 @@
  */
 package org.apache.tools.ant.taskdefs;
 
-import java.util.Enumeration;
-import java.util.Vector;
+import java.util.Iterator;
+import java.util.ArrayList;
 import org.apache.myrmidon.api.TaskException;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.Task;
@@ -246,19 +246,19 @@ public class GenerateKey
     public static class DistinguishedName
     {
 
-        private Vector params = new Vector();
+        private ArrayList params = new ArrayList();
         private String name;
         private String path;
 
-        public Enumeration getParams()
+        public Iterator getParams()
         {
-            return params.elements();
+            return params.iterator();
         }
 
         public Object createParam()
         {
             DnameParam param = new DnameParam();
-            params.addElement( param );
+            params.add( param );
 
             return param;
         }
@@ -301,7 +301,7 @@ public class GenerateKey
                 }
                 firstPass = false;
 
-                final DnameParam param = (DnameParam)params.elementAt( i );
+                final DnameParam param = (DnameParam)params.get( i );
                 sb.append( encode( param.getName() ) );
                 sb.append( '=' );
                 sb.append( encode( param.getValue() ) );

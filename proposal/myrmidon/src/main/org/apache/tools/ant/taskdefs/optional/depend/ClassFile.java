@@ -10,7 +10,7 @@ package org.apache.tools.ant.taskdefs.optional.depend;
 import java.io.DataInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.Vector;
+import java.util.ArrayList;
 import org.apache.tools.ant.taskdefs.optional.depend.constantpool.ClassCPInfo;
 import org.apache.tools.ant.taskdefs.optional.depend.constantpool.ConstantPool;
 import org.apache.tools.ant.taskdefs.optional.depend.constantpool.ConstantPoolEntry;
@@ -46,10 +46,10 @@ public class ClassFile
      *
      * @return The ClassRefs value
      */
-    public Vector getClassRefs()
+    public ArrayList getClassRefs()
     {
 
-        Vector classRefs = new Vector();
+        ArrayList classRefs = new ArrayList();
 
         for( int i = 0; i < constantPool.size(); ++i )
         {
@@ -61,7 +61,7 @@ public class ClassFile
 
                 if( !classEntry.getClassName().equals( className ) )
                 {
-                    classRefs.addElement( ClassFileUtils.convertSlashName( classEntry.getClassName() ) );
+                    classRefs.add( ClassFileUtils.convertSlashName( classEntry.getClassName() ) );
                 }
             }
         }

@@ -9,7 +9,7 @@ package org.apache.tools.ant.types;
 
 import java.io.File;
 import java.util.StringTokenizer;
-import java.util.Vector;
+import java.util.ArrayList;
 import org.apache.myrmidon.api.TaskException;
 
 /**
@@ -32,11 +32,11 @@ import org.apache.myrmidon.api.TaskException;
  * @author thomas.haas@softwired-inc.com
  * @author <a href="mailto:stefan.bodewig@epost.de">Stefan Bodewig</a>
  */
-public class Commandline implements Cloneable
+public class Commandline
+    implements Cloneable
 {
-
-    private Vector arguments = new Vector();
-    private String executable = null;
+    private ArrayList m_arguments = new ArrayList();
+    private String m_executable;
 
     public Commandline( String to_process )
         throws TaskException
@@ -134,7 +134,7 @@ public class Commandline implements Cloneable
         final int inDoubleQuote = 2;
         int state = normal;
         StringTokenizer tok = new StringTokenizer( to_process, "\"\' ", true );
-        Vector v = new Vector();
+        ArrayList v = new ArrayList();
         StringBuffer current = new StringBuffer();
 
         while( tok.hasMoreTokens() )
@@ -175,7 +175,7 @@ public class Commandline implements Cloneable
                     {
                         if( current.length() != 0 )
                         {
-                            v.addElement( current.toString() );
+                            v.add( current.toString() );
                             current.setLength( 0 );
                         }
                     }
@@ -189,7 +189,7 @@ public class Commandline implements Cloneable
 
         if( current.length() != 0 )
         {
-            v.addElement( current.toString() );
+            v.add( current.toString() );
         }
 
         if( state == inQuote || state == inDoubleQuote )
@@ -197,9 +197,8 @@ public class Commandline implements Cloneable
             throw new TaskException( "unbalanced quotes in " + to_process );
         }
 
-        String[] args = new String[ v.size() ];
-        v.copyInto( args );
-        return args;
+        final String[] args = new String[ v.size() ];
+        return (String[])v.toArray( args );
     }
 
     /**
@@ -211,7 +210,7 @@ public class Commandline implements Cloneable
     {
         if( executable == null || executable.length() == 0 )
             return;
-        this.executable = executable.replace( '/', File.separatorChar )
+        this.m_executable = executable.replace( '/', File.separatorChar )
             .replace( '\\', File.separatorChar );
     }
 
@@ -223,20 +222,19 @@ public class Commandline implements Cloneable
      */
     public String[] getArguments()
     {
-        Vector result = new Vector( arguments.size() * 2 );
-        for( int i = 0; i < arguments.size(); i++ )
+        ArrayList result = new ArrayList( m_arguments.size() * 2 );
+        for( int i = 0; i < m_arguments.size(); i++ )
         {
-            Argument arg = (Argument)arguments.elementAt( i );
+            Argument arg = (Argument)m_arguments.get( i );
             String[] s = arg.getParts();
             for( int j = 0; j < s.length; j++ )
             {
-                result.addElement( s[ j ] );
+                result.add( s[ j ] );
             }
         }
 
-        String[] res = new String[ result.size() ];
-        result.copyInto( res );
-        return res;
+        final String[] res = new String[ result.size() ];
+        return (String[])result.toArray( res );
     }
 
     /**
@@ -247,17 +245,17 @@ public class Commandline implements Cloneable
     public String[] getCommandline()
     {
         final String[] args = getArguments();
-        if( executable == null )
+        if( m_executable == null )
             return args;
         final String[] result = new String[ args.length + 1 ];
-        result[ 0 ] = executable;
+        result[ 0 ] = m_executable;
         System.arraycopy( args, 0, result, 1, args.length );
         return result;
     }
 
     public String getExecutable()
     {
-        return executable;
+        return m_executable;
     }
 
     public void addArguments( String[] line )
@@ -273,8 +271,8 @@ public class Commandline implements Cloneable
      */
     public void clear()
     {
-        executable = null;
-        arguments.removeAllElements();
+        m_executable = null;
+        m_arguments.clear();
     }
 
     /**
@@ -283,15 +281,15 @@ public class Commandline implements Cloneable
      */
     public void clearArgs()
     {
-        arguments.removeAllElements();
+        m_arguments.clear();
     }
 
     public Object clone()
     {
-        Commandline c = new Commandline();
-        c.setExecutable( executable );
-        c.addArguments( getArguments() );
-        return c;
+        final Commandline commandline = new Commandline();
+        commandline.setExecutable( m_executable );
+        commandline.addArguments( getArguments() );
+        return commandline;
     }
 
     /**
@@ -302,8 +300,8 @@ public class Commandline implements Cloneable
      */
     public Argument createArgument()
     {
-        Argument argument = new Argument();
-        arguments.addElement( argument );
+        final Argument argument = new Argument();
+        m_arguments.add( argument );
         return argument;
     }
 
@@ -317,7 +315,7 @@ public class Commandline implements Cloneable
      */
     public Marker createMarker()
     {
-        return new Marker( arguments.size() );
+        return new Marker( m_arguments.size() );
     }
 
     public int size()
@@ -425,10 +423,10 @@ public class Commandline implements Cloneable
         {
             if( realPos == -1 )
             {
-                realPos = ( executable == null ? 0 : 1 );
+                realPos = ( m_executable == null ? 0 : 1 );
                 for( int i = 0; i < position; i++ )
                 {
-                    Argument arg = (Argument)arguments.elementAt( i );
+                    Argument arg = (Argument)m_arguments.get( i );
                     realPos += arg.getParts().length;
                 }
             }

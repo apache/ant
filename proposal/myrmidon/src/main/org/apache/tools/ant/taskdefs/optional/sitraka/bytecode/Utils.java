@@ -7,7 +7,7 @@
  */
 package org.apache.tools.ant.taskdefs.optional.sitraka.bytecode;
 
-import java.util.Vector;
+import java.util.ArrayList;
 import org.apache.tools.ant.taskdefs.optional.depend.constantpool.ConstantPool;
 import org.apache.tools.ant.taskdefs.optional.depend.constantpool.Utf8CPInfo;
 
@@ -221,7 +221,7 @@ public class Utils
         {
             throw new IllegalArgumentException( "Method descriptor should start with a '('" );
         }
-        Vector params = new Vector();
+        ArrayList params = new ArrayList();
         StringBuffer param = new StringBuffer();
         i++;
         while( ( i = descriptor2java( descriptor, i, param ) ) < descriptor.length() )

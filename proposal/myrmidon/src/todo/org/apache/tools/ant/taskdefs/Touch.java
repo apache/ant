@@ -13,7 +13,7 @@ import java.io.IOException;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.util.Locale;
-import java.util.Vector;
+import java.util.ArrayList;
 import org.apache.myrmidon.api.TaskException;
 import org.apache.tools.ant.DirectoryScanner;
 import org.apache.tools.ant.Project;
@@ -34,7 +34,7 @@ import org.apache.tools.ant.types.FileSet;
 public class Touch extends Task
 {// required
     private long millis = -1;
-    private Vector filesets = new Vector();
+    private ArrayList filesets = new ArrayList();
     private String dateTime;
 
     private File file;
@@ -77,7 +77,7 @@ public class Touch extends Task
      */
     public void addFileset( FileSet set )
     {
-        filesets.addElement( set );
+        filesets.add( set );
     }
 
     /**
@@ -170,7 +170,7 @@ public class Touch extends Task
         // deal with the filesets
         for( int i = 0; i < filesets.size(); i++ )
         {
-            FileSet fs = (FileSet)filesets.elementAt( i );
+            FileSet fs = (FileSet)filesets.get( i );
             DirectoryScanner ds = fs.getDirectoryScanner( getProject() );
             File fromDir = fs.getDir( getProject() );
 

@@ -33,13 +33,13 @@ public class JarFileIterator implements ClassFileIterator
     public ClassFile getNextClassFile()
     {
         ZipEntry jarEntry;
-        ClassFile nextElement = null;
+        ClassFile next = null;
 
         try
         {
             jarEntry = jarStream.getNextEntry();
 
-            while( nextElement == null && jarEntry != null )
+            while( next == null && jarEntry != null )
             {
                 String entryName = jarEntry.getName();
 
@@ -51,7 +51,7 @@ public class JarFileIterator implements ClassFileIterator
 
                     javaClass.read( jarStream );
 
-                    nextElement = javaClass;
+                    next = javaClass;
                 }
                 else
                 {
@@ -73,7 +73,7 @@ public class JarFileIterator implements ClassFileIterator
             throw new RuntimeException( "Problem reading JAR file: " + text );
         }
 
-        return nextElement;
+        return next;
     }
 
     private byte[] getEntryBytes( InputStream stream )

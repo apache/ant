@@ -7,7 +7,7 @@
  */
 package org.apache.tools.ant.util.regexp;
 
-import java.util.Vector;
+import java.util.ArrayList;
 import org.apache.myrmidon.api.TaskException;
 import org.apache.regexp.RE;
 import org.apache.regexp.RESyntaxException;
@@ -35,7 +35,7 @@ public class JakartaRegexpMatcher implements RegexpMatcher
     }
 
     /**
-     * Returns a Vector of matched groups found in the argument. <p>
+     * Returns a ArrayList of matched groups found in the argument. <p>
      *
      * Group 0 will be the full match, the rest are the parenthesized
      * subexpressions</p> .
@@ -44,13 +44,13 @@ public class JakartaRegexpMatcher implements RegexpMatcher
      * @return The Groups value
      * @exception TaskException Description of Exception
      */
-    public Vector getGroups( String argument )
+    public ArrayList getGroups( String argument )
         throws TaskException
     {
         return getGroups( argument, MATCH_DEFAULT );
     }
 
-    public Vector getGroups( String input, int options )
+    public ArrayList getGroups( String input, int options )
         throws TaskException
     {
         RE reg = getCompiledPattern( options );
@@ -58,11 +58,11 @@ public class JakartaRegexpMatcher implements RegexpMatcher
         {
             return null;
         }
-        Vector v = new Vector();
+        ArrayList v = new ArrayList();
         int cnt = reg.getParenCount();
         for( int i = 0; i < cnt; i++ )
         {
-            v.addElement( reg.getParen( i ) );
+            v.add( reg.getParen( i ) );
         }
         return v;
     }

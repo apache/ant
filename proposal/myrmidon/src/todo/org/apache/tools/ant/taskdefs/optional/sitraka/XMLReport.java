@@ -9,10 +9,10 @@ package org.apache.tools.ant.taskdefs.optional.sitraka;
 
 import java.io.File;
 import java.io.FileInputStream;
-import java.util.Enumeration;
+import java.util.Iterator;
 import java.util.Hashtable;
 import java.util.NoSuchElementException;
-import java.util.Vector;
+import java.util.ArrayList;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import org.apache.tools.ant.Project;
@@ -148,10 +148,10 @@ public class XMLReport
         // Iterate over the classpath to identify reference classes
         classFiles = new Hashtable();
         ClassPathLoader cpl = new ClassPathLoader( classPath );
-        Enumeration enum = cpl.loaders();
-        while( enum.hasMoreElements() )
+        Iterator enum = cpl.loaders();
+        while( enum.hasNext() )
         {
-            ClassPathLoader.FileLoader fl = (ClassPathLoader.FileLoader)enum.nextElement();
+            ClassPathLoader.FileLoader fl = (ClassPathLoader.FileLoader)enum.next();
             ClassFile[] classes = fl.getClasses();
             log( "Processing " + classes.length + " classes in " + fl.getFile() );
             // process all classes
@@ -176,10 +176,10 @@ public class XMLReport
         createNodeMaps();
 
         // Make sure each class from the reference path ends up in the report
-        Enumeration classes = classFiles.elements();
-        while( classes.hasMoreElements() )
+        Iterator classes = classFiles.iterator();
+        while( classes.hasNext() )
         {
-            ClassFile cf = (ClassFile)classes.nextElement();
+            ClassFile cf = (ClassFile)classes.next();
             serializeClass( cf );
         }
         // update the document with the stats
@@ -201,7 +201,7 @@ public class XMLReport
 
     protected Element[] getClasses( Element pkg )
     {
-        Vector v = new Vector();
+        ArrayList v = new ArrayList();
         NodeList children = pkg.getChildNodes();
         int len = children.getLength();
         for( int i = 0; i < len; i++ )
@@ -212,7 +212,7 @@ public class XMLReport
                 Element elem = (Element)child;
                 if( "class".equals( elem.getNodeName() ) )
                 {
-                    v.addElement( elem );
+                    v.add( elem );
                 }
             }
         }
@@ -240,17 +240,17 @@ public class XMLReport
         throw new NoSuchElementException( "Could not find 'cov.data' element in parent '" + parent.getNodeName() + "'" );
     }
 
-    protected Vector getFilteredMethods( ClassFile classFile )
+    protected ArrayList getFilteredMethods( ClassFile classFile )
     {
         MethodInfo[] methodlist = classFile.getMethods();
-        Vector methods = new Vector( methodlist.length );
+        ArrayList methods = new ArrayList( methodlist.length );
         for( int i = 0; i < methodlist.length; i++ )
         {
             MethodInfo method = methodlist[ i ];
             String signature = getMethodSignature( classFile, method );
             if( filters.accept( signature ) )
             {
-                methods.addElement( method );
+                methods.add( method );
                 log( "keeping " + signature );
             }
             else
@@ -335,7 +335,7 @@ public class XMLReport
 
     protected Element[] getPackages( Element snapshot )
     {
-        Vector v = new Vector();
+        ArrayList v = new ArrayList();
         NodeList children = snapshot.getChildNodes();
         int len = children.getLength();
         for( int i = 0; i < len; i++ )
@@ -346,7 +346,7 @@ public class XMLReport
                 Element elem = (Element)child;
                 if( "package".equals( elem.getNodeName() ) )
                 {
-                    v.addElement( elem );
+                    v.add( elem );
                 }
             }
         }
@@ -555,7 +555,7 @@ public class XMLReport
             return;
         }
 
-        Vector methods = getFilteredMethods( classFile );
+        ArrayList methods = getFilteredMethods( classFile );
         // no need to process, there are no methods to add for this class.
         if( methods.size() == 0 )
         {
@@ -582,7 +582,7 @@ public class XMLReport
         for( int i = 0; i < methods.size(); i++ )
         {
             // create the method element
-            MethodInfo method = (MethodInfo)methods.elementAt( i );
+            MethodInfo method = (MethodInfo)methods.get( i );
             if( Utils.isAbstract( method.getAccessFlags() ) )
             {
                 continue;// no need to report abstract methods
@@ -615,10 +615,10 @@ public class XMLReport
         int total_lines = 0;
 
         // use the map for access, all nodes should be there
-        Enumeration enum = pkgMap.elements();
-        while( enum.hasMoreElements() )
+        Iterator enum = pkgMap.iterator();
+        while( enum.hasNext() )
         {
-            Element pkgElem = (Element)enum.nextElement();
+            Element pkgElem = (Element)enum.next();
             String pkgname = pkgElem.getAttribute( "name" );
             Element[] classes = getClasses( pkgElem );
             int pkg_calls = 0;

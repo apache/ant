@@ -11,7 +11,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.Properties;
-import java.util.Vector;
+import java.util.ArrayList;
 import javax.activation.DataHandler;
 import javax.activation.FileDataSource;
 import javax.mail.Message;
@@ -91,7 +91,7 @@ public class MimeMail extends Task
     /**
      * file list
      */
-    private Vector filesets = new Vector();
+    private ArrayList filesets = new ArrayList();
 
     /**
      * type of the text message, plaintext by default but text/html or text/xml
@@ -235,7 +235,7 @@ public class MimeMail extends Task
      */
     public void addFileset( FileSet set )
     {
-        filesets.addElement( set );
+        filesets.add( set );
     }
 
     /**
@@ -305,7 +305,7 @@ public class MimeMail extends Task
 
         for( int i = 0; i < filesets.size(); i++ )
         {
-            FileSet fs = (FileSet)filesets.elementAt( i );
+            FileSet fs = (FileSet)filesets.get( i );
             if( fs != null )
             {
                 DirectoryScanner ds = fs.getDirectoryScanner( getProject() );

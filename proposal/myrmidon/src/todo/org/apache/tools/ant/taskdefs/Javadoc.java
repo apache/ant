@@ -12,9 +12,9 @@ import java.io.FileWriter;
 import java.io.FilenameFilter;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.util.Enumeration;
+import java.util.Iterator;
 import java.util.StringTokenizer;
-import java.util.Vector;
+import java.util.ArrayList;
 import org.apache.myrmidon.api.TaskException;
 import org.apache.myrmidon.framework.Os;
 import org.apache.tools.ant.DirectoryScanner;
@@ -74,19 +74,19 @@ public class Javadoc extends Task
     private boolean failOnError = false;
     private Path sourcePath = null;
     private File destDir = null;
-    private Vector sourceFiles = new Vector();
-    private Vector packageNames = new Vector( 5 );
-    private Vector excludePackageNames = new Vector( 1 );
+    private ArrayList sourceFiles = new ArrayList();
+    private ArrayList packageNames = new ArrayList( 5 );
+    private ArrayList excludePackageNames = new ArrayList( 1 );
     private boolean author = true;
     private boolean version = true;
     private DocletInfo doclet = null;
     private Path classpath = null;
     private Path bootclasspath = null;
     private String group = null;
-    private Vector compileList = new Vector( 10 );
+    private ArrayList compileList = new ArrayList( 10 );
     private String packageList = null;
-    private Vector links = new Vector( 2 );
-    private Vector groups = new Vector( 2 );
+    private ArrayList links = new ArrayList( 2 );
+    private ArrayList groups = new ArrayList( 2 );
     private boolean useDefaultExcludes = true;
     private Html doctitle = null;
     private Html header = null;
@@ -541,7 +541,7 @@ public class Javadoc extends Task
 
     public void addExcludePackage( PackageName pn )
     {
-        excludePackageNames.addElement( pn );
+        excludePackageNames.add( pn );
     }
 
     public void addFooter( Html text )
@@ -562,13 +562,13 @@ public class Javadoc extends Task
 
     public void addPackage( PackageName pn )
     {
-        packageNames.addElement( pn );
+        packageNames.add( pn );
     }
 
     public void addSource( SourceFile sf )
         throws TaskException
     {
-        sourceFiles.addElement( sf );
+        sourceFiles.add( sf );
     }
 
     public Path createBootclasspath()
@@ -600,14 +600,14 @@ public class Javadoc extends Task
     public GroupArgument createGroup()
     {
         GroupArgument ga = new GroupArgument();
-        groups.addElement( ga );
+        groups.add( ga );
         return ga;
     }
 
     public LinkArgument createLink()
     {
         LinkArgument la = new LinkArgument();
-        links.addElement( la );
+        links.add( la );
         return la;
     }
 
@@ -711,9 +711,9 @@ public class Javadoc extends Task
                         toExecute.createArgument().setValue( "-docletpath" );
                         toExecute.createArgument().setPath( doclet.getPath() );
                     }
-                    for( Enumeration e = doclet.getParams(); e.hasMoreElements(); )
+                    for( Iterator e = doclet.getParams(); e.hasNext(); )
                     {
-                        DocletParam param = (DocletParam)e.nextElement();
+                        DocletParam param = (DocletParam)e.next();
                         if( param.getName() == null )
                         {
                             throw new TaskException( "Doclet parameters must have a name" );
@@ -736,9 +736,9 @@ public class Javadoc extends Task
             // add the links arguments
             if( links.size() != 0 )
             {
-                for( Enumeration e = links.elements(); e.hasMoreElements(); )
+                for( Iterator e = links.iterator(); e.hasNext(); )
                 {
-                    LinkArgument la = (LinkArgument)e.nextElement();
+                    LinkArgument la = (LinkArgument)e.next();
 
                     if( la.getHref() == null )
                     {
@@ -806,9 +806,9 @@ public class Javadoc extends Task
             // add the group arguments
             if( groups.size() != 0 )
             {
-                for( Enumeration e = groups.elements(); e.hasMoreElements(); )
+                for( Iterator e = groups.iterator(); e.hasNext(); )
                 {
-                    GroupArgument ga = (GroupArgument)e.nextElement();
+                    GroupArgument ga = (GroupArgument)e.next();
                     String title = ga.getTitle();
                     String packages = ga.getPackages();
                     if( title == null || packages == null )
@@ -826,15 +826,15 @@ public class Javadoc extends Task
         tmpList = null;
         if( packageNames.size() > 0 )
         {
-            Vector packages = new Vector();
-            Enumeration enum = packageNames.elements();
-            while( enum.hasMoreElements() )
+            ArrayList packages = new ArrayList();
+            Iterator enum = packageNames.iterator();
+            while( enum.hasNext() )
             {
-                PackageName pn = (PackageName)enum.nextElement();
+                PackageName pn = (PackageName)enum.next();
                 String name = pn.getName().trim();
                 if( name.endsWith( ".*" ) )
                 {
-                    packages.addElement( name );
+                    packages.add( name );
                 }
                 else
                 {
@@ -842,14 +842,14 @@ public class Javadoc extends Task
                 }
             }
 
-            Vector excludePackages = new Vector();
+            ArrayList excludePackages = new ArrayList();
             if( excludePackageNames.size() > 0 )
             {
-                enum = excludePackageNames.elements();
-                while( enum.hasMoreElements() )
+                enum = excludePackageNames.iterator();
+                while( enum.hasNext() )
                 {
-                    PackageName pn = (PackageName)enum.nextElement();
-                    excludePackages.addElement( pn.getName().trim() );
+                    PackageName pn = (PackageName)enum.next();
+                    excludePackages.add( pn.getName().trim() );
                 }
             }
             if( packages.size() > 0 )
@@ -878,10 +878,10 @@ public class Javadoc extends Task
                                                                      true ) );
                 }
 
-                Enumeration enum = sourceFiles.elements();
-                while( enum.hasMoreElements() )
+                Iterator enum = sourceFiles.iterator();
+                while( enum.hasNext() )
                 {
-                    SourceFile sf = (SourceFile)enum.nextElement();
+                    SourceFile sf = (SourceFile)enum.next();
                     String sourceFileName = sf.getFile().getAbsolutePath();
                     if( useExternalFile )
                     {
@@ -1053,7 +1053,7 @@ public class Javadoc extends Task
      * @param excludePackages Description of Parameter
      */
     private void evaluatePackages( Commandline toExecute, Path sourcePath,
-                                   Vector packages, Vector excludePackages )
+                                   ArrayList packages, ArrayList excludePackages )
         throws TaskException
     {
         log( "Source path = " + sourcePath.toString(), Project.MSG_VERBOSE );
@@ -1064,7 +1064,7 @@ public class Javadoc extends Task
             {
                 msg.append( "," );
             }
-            msg.append( packages.elementAt( i ) );
+            msg.append( packages.get( i ) );
         }
         log( msg.toString(), Project.MSG_VERBOSE );
 
@@ -1076,11 +1076,11 @@ public class Javadoc extends Task
             {
                 msg.append( "," );
             }
-            msg.append( excludePackages.elementAt( i ) );
+            msg.append( excludePackages.get( i ) );
         }
         log( msg.toString(), Project.MSG_VERBOSE );
 
-        Vector addedPackages = new Vector();
+        ArrayList addedPackages = new ArrayList();
 
         String[] list = sourcePath.list();
         if( list == null )
@@ -1089,10 +1089,10 @@ public class Javadoc extends Task
         FileSet fs = new FileSet();
         fs.setDefaultexcludes( useDefaultExcludes );
 
-        Enumeration e = packages.elements();
-        while( e.hasMoreElements() )
+        Iterator e = packages.iterator();
+        while( e.hasNext() )
         {
-            String pkg = (String)e.nextElement();
+            String pkg = (String)e.next();
             pkg = pkg.replace( '.', '/' );
             if( pkg.endsWith( "*" ) )
             {
@@ -1102,10 +1102,10 @@ public class Javadoc extends Task
             fs.createInclude().setName( pkg );
         }// while
 
-        e = excludePackages.elements();
-        while( e.hasMoreElements() )
+        e = excludePackages.iterator();
+        while( e.hasNext() )
         {
-            String pkg = (String)e.nextElement();
+            String pkg = (String)e.next();
             pkg = pkg.replace( '.', '/' );
             if( pkg.endsWith( "*" ) )
             {
@@ -1162,7 +1162,7 @@ public class Javadoc extends Task
                             {
                                 toExecute.createArgument().setValue( pkgDir );
                             }
-                            addedPackages.addElement( pkgDir );
+                            addedPackages.add( pkgDir );
                         }
                     }
                 }
@@ -1244,7 +1244,7 @@ public class Javadoc extends Task
     public class DocletInfo
     {
 
-        private Vector params = new Vector();
+        private ArrayList params = new ArrayList();
         private String name;
         private Path path;
 
@@ -1282,9 +1282,9 @@ public class Javadoc extends Task
             return name;
         }
 
-        public Enumeration getParams()
+        public Iterator getParams()
         {
-            return params.elements();
+            return params.iterator();
         }
 
         public Path getPath()
@@ -1295,7 +1295,7 @@ public class Javadoc extends Task
         public DocletParam createParam()
         {
             DocletParam param = new DocletParam();
-            params.addElement( param );
+            params.add( param );
 
             return param;
         }
@@ -1339,7 +1339,7 @@ public class Javadoc extends Task
 
     public class GroupArgument
     {
-        private Vector packages = new Vector( 3 );
+        private ArrayList packages = new ArrayList( 3 );
         private Html title;
 
         public GroupArgument()
@@ -1374,7 +1374,7 @@ public class Javadoc extends Task
                 {
                     p.append( ":" );
                 }
-                p.append( packages.elementAt( i ).toString() );
+                p.append( packages.get( i ).toString() );
             }
             return p.toString();
         }
@@ -1386,7 +1386,7 @@ public class Javadoc extends Task
 
         public void addPackage( PackageName pn )
         {
-            packages.addElement( pn );
+            packages.add( pn );
         }
 
         public void addTitle( Html text )

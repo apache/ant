@@ -9,7 +9,7 @@ package org.apache.tools.ant.taskdefs.optional.sitraka;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.Vector;
+import java.util.ArrayList;
 import javax.xml.transform.OutputKeys;
 import javax.xml.transform.Result;
 import javax.xml.transform.Source;
@@ -268,36 +268,36 @@ public class CovReport extends Task
     protected String[] getParameters()
         throws TaskException
     {
-        Vector v = new Vector();
+        ArrayList v = new ArrayList();
         if( format != null )
         {
-            v.addElement( "-format=" + format );
+            v.add( "-format=" + format );
         }
         if( type != null )
         {
-            v.addElement( "-type=" + type );
+            v.add( "-type=" + type );
         }
         if( percent != null )
         {
-            v.addElement( "-percent=" + percent );
+            v.add( "-percent=" + percent );
         }
         if( filters != null )
         {
-            v.addElement( "-filters=" + filters );
+            v.add( "-filters=" + filters );
         }
-        v.addElement( "-output=" + resolveFile( tofile.getPath() ) );
-        v.addElement( "-snapshot=" + resolveFile( snapshot.getPath() ) );
+        v.add( "-output=" + resolveFile( tofile.getPath() ) );
+        v.add( "-snapshot=" + resolveFile( snapshot.getPath() ) );
         // as a default -sourcepath use . in JProbe, so use project .
         if( sourcePath == null )
         {
             sourcePath = new Path( getProject() );
             sourcePath.createPath().setLocation( getBaseDirectory() );
         }
-        v.addElement( "-sourcepath=" + sourcePath );
+        v.add( "-sourcepath=" + sourcePath );
 
         if( "verydetailed".equalsIgnoreCase( format ) && "xml".equalsIgnoreCase( type ) )
         {
-            v.addElement( "-inc_src_text=" + ( includeSource ? "on" : "off" ) );
+            v.add( "-inc_src_text=" + ( includeSource ? "on" : "off" ) );
         }
 
         String[] params = new String[ v.size() ];

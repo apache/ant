@@ -17,9 +17,10 @@ import java.security.DigestInputStream;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.security.NoSuchProviderException;
-import java.util.Enumeration;
+import java.util.Iterator;
 import java.util.Hashtable;
-import java.util.Vector;
+import java.util.ArrayList;
+import java.util.Enumeration;
 import org.apache.myrmidon.api.TaskException;
 import org.apache.tools.ant.DirectoryScanner;
 import org.apache.tools.ant.Project;
@@ -47,9 +48,9 @@ public class Checksum extends MatchingTask implements Condition
      */
     private String provider = null;
     /**
-     * Vector to hold source file sets.
+     * ArrayList to hold source file sets.
      */
-    private Vector filesets = new Vector();
+    private ArrayList filesets = new ArrayList();
     /**
      * Stores SourceFile, DestFile pairs and SourceFile, Property String pairs.
      */
@@ -160,7 +161,7 @@ public class Checksum extends MatchingTask implements Condition
      */
     public void addFileset( FileSet set )
     {
-        filesets.addElement( set );
+        filesets.add( set );
     }
 
     /**
@@ -474,7 +475,7 @@ public class Checksum extends MatchingTask implements Condition
         int sizeofFileSet = filesets.size();
         for( int i = 0; i < sizeofFileSet; i++ )
         {
-            FileSet fs = (FileSet)filesets.elementAt( i );
+            FileSet fs = (FileSet)filesets.get( i );
             DirectoryScanner ds = fs.getDirectoryScanner( getProject() );
             String[] srcFiles = ds.getIncludedFiles();
             for( int j = 0; j < srcFiles.length; j++ )

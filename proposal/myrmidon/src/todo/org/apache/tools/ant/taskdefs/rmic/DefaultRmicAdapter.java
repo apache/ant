@@ -9,7 +9,7 @@ package org.apache.tools.ant.taskdefs.rmic;
 
 import java.io.File;
 import java.util.Random;
-import java.util.Vector;
+import java.util.ArrayList;
 import org.apache.myrmidon.api.TaskException;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.taskdefs.Rmic;
@@ -241,7 +241,7 @@ public abstract class DefaultRmicAdapter implements RmicAdapter
      */
     protected void logAndAddFilesToCompile( Commandline cmd )
     {
-        Vector compileList = attributes.getCompileList();
+        ArrayList compileList = attributes.getCompileList();
 
         attributes.log( "Compilation args: " + cmd.toString(),
                         Project.MSG_VERBOSE );
@@ -255,7 +255,7 @@ public abstract class DefaultRmicAdapter implements RmicAdapter
 
         for( int i = 0; i < compileList.size(); i++ )
         {
-            String arg = (String)compileList.elementAt( i );
+            String arg = (String)compileList.get( i );
             cmd.createArgument().setValue( arg );
             niceSourceList.append( "    " + arg );
         }

@@ -8,7 +8,7 @@
 package org.apache.tools.zip;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.util.Vector;
+import java.util.ArrayList;
 import java.util.zip.ZipException;
 
 /**
@@ -42,7 +42,7 @@ public class ZipEntry extends java.util.zip.ZipEntry
 
     private int internalAttributes = 0;
     private long externalAttributes = 0;
-    private Vector extraFields = new Vector();
+    private ArrayList extraFields = new ArrayList();
 
     /**
      * Helper for JDK 1.1 <-> 1.2 incompatibility.
@@ -252,10 +252,10 @@ public class ZipEntry extends java.util.zip.ZipEntry
      */
     public void setExtraFields( ZipExtraField[] fields )
     {
-        extraFields.removeAllElements();
+        extraFields.clear();
         for( int i = 0; i < fields.length; i++ )
         {
-            extraFields.addElement( fields[i] );
+            extraFields.add( fields[i] );
         }
         setExtra();
     }
@@ -317,9 +317,8 @@ public class ZipEntry extends java.util.zip.ZipEntry
      */
     public ZipExtraField[] getExtraFields()
     {
-        ZipExtraField[] result = new ZipExtraField[extraFields.size()];
-        extraFields.copyInto( result );
-        return result;
+        final ZipExtraField[] result = new ZipExtraField[ extraFields.size() ];
+        return (ZipExtraField[])extraFields.toArray( result );
     }
 
     /**
@@ -358,15 +357,15 @@ public class ZipEntry extends java.util.zip.ZipEntry
         boolean done = false;
         for( int i = 0; !done && i < extraFields.size(); i++ )
         {
-            if( ( ( ZipExtraField )extraFields.elementAt( i ) ).getHeaderId().equals( type ) )
+            if( ( ( ZipExtraField )extraFields.get( i ) ).getHeaderId().equals( type ) )
             {
-                extraFields.setElementAt( ze, i );
+                extraFields.set( i, ze );
                 done = true;
             }
         }
         if( !done )
         {
-            extraFields.addElement( ze );
+            extraFields.add( ze );
         }
         setExtra();
     }
@@ -406,9 +405,9 @@ public class ZipEntry extends java.util.zip.ZipEntry
         boolean done = false;
         for( int i = 0; !done && i < extraFields.size(); i++ )
         {
-            if( ( ( ZipExtraField )extraFields.elementAt( i ) ).getHeaderId().equals( type ) )
+            if( ( ( ZipExtraField )extraFields.get( i ) ).getHeaderId().equals( type ) )
             {
-                extraFields.removeElementAt( i );
+                extraFields.remove( i );
                 done = true;
             }
         }

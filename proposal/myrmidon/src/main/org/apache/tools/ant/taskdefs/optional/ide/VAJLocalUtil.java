@@ -17,8 +17,8 @@ import com.ibm.ivj.util.base.ToolEnv;
 import com.ibm.ivj.util.base.Type;
 import com.ibm.ivj.util.base.Workspace;
 import java.io.File;
-import java.util.Enumeration;
-import java.util.Vector;
+import java.util.Iterator;
+import java.util.ArrayList;
 import org.apache.myrmidon.api.TaskException;
 import org.apache.tools.ant.DirectoryScanner;
 
@@ -230,9 +230,9 @@ abstract class VAJLocalUtil implements VAJUtil
         }
         ds.scan();
 
-        Vector classes = new Vector();
-        Vector sources = new Vector();
-        Vector resources = new Vector();
+        ArrayList classes = new ArrayList();
+        ArrayList sources = new ArrayList();
+        ArrayList resources = new ArrayList();
 
         scanForImport( srcDir, ds.getIncludedFiles(), classes, sources, resources );
 
@@ -284,14 +284,14 @@ abstract class VAJLocalUtil implements VAJUtil
      *
      * @param projectDescriptions Description of Parameter
      */
-    public void loadProjects( Vector projectDescriptions )
+    public void loadProjects( ArrayList projectDescriptions )
     {
-        Vector expandedDescs = getExpandedDescriptions( projectDescriptions );
+        ArrayList expandedDescs = getExpandedDescriptions( projectDescriptions );
 
         // output warnings for projects not found
-        for( Enumeration e = projectDescriptions.elements(); e.hasMoreElements(); )
+        for( Iterator e = projectDescriptions.iterator(); e.hasNext(); )
         {
-            VAJProjectDescription d = (VAJProjectDescription)e.nextElement();
+            VAJProjectDescription d = (VAJProjectDescription)e.next();
             if( !d.projectFound() )
             {
                 log( "No Projects match the name " + d.getName(), MSG_WARN );
@@ -301,10 +301,10 @@ abstract class VAJLocalUtil implements VAJUtil
         log( "Loading " + expandedDescs.size()
              + " project(s) into workspace", MSG_INFO );
 
-        for( Enumeration e = expandedDescs.elements();
-             e.hasMoreElements(); )
+        for( Iterator e = expandedDescs.iterator();
+             e.hasNext(); )
         {
-            VAJProjectDescription d = (VAJProjectDescription)e.nextElement();
+            VAJProjectDescription d = (VAJProjectDescription)e.next();
 
             ProjectEdition pe = findProjectEdition( d.getName(), d.getVersion() );
             try
@@ -328,24 +328,24 @@ abstract class VAJLocalUtil implements VAJUtil
      * @param projectDescs Description of Parameter
      * @return The ExpandedDescriptions value
      */
-    private Vector getExpandedDescriptions( Vector projectDescs )
+    private ArrayList getExpandedDescriptions( ArrayList projectDescs )
     {
-        Vector expandedDescs = new Vector( projectDescs.size() );
+        ArrayList expandedDescs = new ArrayList( projectDescs.size() );
         try
         {
             String[] projectNames =
                 getWorkspace().getRepository().getProjectNames();
             for( int i = 0; i < projectNames.length; i++ )
             {
-                for( Enumeration e = projectDescs.elements();
-                     e.hasMoreElements(); )
+                for( Iterator e = projectDescs.iterator();
+                     e.hasNext(); )
                 {
-                    VAJProjectDescription d = (VAJProjectDescription)e.nextElement();
+                    VAJProjectDescription d = (VAJProjectDescription)e.next();
                     String pattern = d.getName();
                     if( VAJWorkspaceScanner.match( pattern, projectNames[ i ] ) )
                     {
                         d.setProjectFound();
-                        expandedDescs.addElement( new VAJProjectDescription(
+                        expandedDescs.add( new VAJProjectDescription(
                             projectNames[ i ], d.getVersion() ) );
                         break;
                     }
@@ -371,7 +371,7 @@ abstract class VAJLocalUtil implements VAJUtil
      */
     private void addFilesToImport(
         ImportCodeSpec spec, boolean doImport,
-        Vector files, String fileType,
+        ArrayList files, String fileType,
         StringBuffer summaryLog )
     {
 
@@ -409,7 +409,7 @@ abstract class VAJLocalUtil implements VAJUtil
      * @param pattern Description of Parameter
      * @return Description of the Returned Value
      */
-    private Vector findMatchingProjects( String pattern )
+    private ArrayList findMatchingProjects( String pattern )
     {
         String[] projectNames;
         try
@@ -421,12 +421,12 @@ abstract class VAJLocalUtil implements VAJUtil
             throw createTaskException( "VA Exception occured: ", e );
         }
 
-        Vector matchingProjects = new Vector();
+        ArrayList matchingProjects = new ArrayList();
         for( int i = 0; i < projectNames.length; i++ )
         {
             if( VAJWorkspaceScanner.match( pattern, projectNames[ i ] ) )
             {
-                matchingProjects.addElement( projectNames[ i ] );
+                matchingProjects.add( projectNames[ i ] );
             }
         }
 
@@ -478,15 +478,15 @@ abstract class VAJLocalUtil implements VAJUtil
     /**
      * Logs a list of file names to the message log
      *
-     * @param fileNames java.util.Vector file names to be logged
+     * @param fileNames java.util.ArrayList file names to be logged
      * @param fileType Description of Parameter
      */
-    private void logFiles( Vector fileNames, String fileType )
+    private void logFiles( ArrayList fileNames, String fileType )
     {
         log( fileType + " files found for import:", MSG_VERBOSE );
-        for( Enumeration e = fileNames.elements(); e.hasMoreElements(); )
+        for( Iterator e = fileNames.iterator(); e.hasNext(); )
         {
-            log( "    " + e.nextElement(), MSG_VERBOSE );
+            log( "    " + e.next(), MSG_VERBOSE );
         }
     }
 
@@ -502,25 +502,25 @@ abstract class VAJLocalUtil implements VAJUtil
     private void scanForImport(
         File dir,
         String[] files,
-        Vector classes,
-        Vector sources,
-        Vector resources )
+        ArrayList classes,
+        ArrayList sources,
+        ArrayList resources )
     {
         for( int i = 0; i < files.length; i++ )
         {
             String file = ( new File( dir, files[ i ] ) ).getAbsolutePath();
             if( file.endsWith( ".java" ) || file.endsWith( ".JAVA" ) )
             {
-                sources.addElement( file );
+                sources.add( file );
             }
             else if( file.endsWith( ".class" ) || file.endsWith( ".CLASS" ) )
             {
-                classes.addElement( file );
+                classes.add( file );
             }
             else
             {
                 // for resources VA expects the path relative to the resource path
-                resources.addElement( files[ i ] );
+                resources.add( files[ i ] );
             }
         }
     }

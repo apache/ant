@@ -7,7 +7,7 @@
  */
 package org.apache.tools.ant.types;
 
-import java.util.Vector;
+import java.util.ArrayList;
 import org.apache.myrmidon.api.TaskException;
 
 /**
@@ -17,11 +17,11 @@ import org.apache.myrmidon.api.TaskException;
  */
 public class Environment
 {
-    protected Vector variables;
+    protected ArrayList variables;
 
     public Environment()
     {
-        variables = new Vector();
+        variables = new ArrayList();
     }
 
     public String[] getVariables()
@@ -34,14 +34,14 @@ public class Environment
         String[] result = new String[ variables.size() ];
         for( int i = 0; i < result.length; i++ )
         {
-            result[ i ] = ( (Variable)variables.elementAt( i ) ).getContent();
+            result[ i ] = ( (Variable)variables.get( i ) ).getContent();
         }
         return result;
     }
 
     public void addVariable( Variable var )
     {
-        variables.addElement( var );
+        variables.add( var );
     }
 
     public static class Variable

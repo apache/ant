@@ -18,9 +18,10 @@ import java.io.PrintWriter;
 import java.io.Reader;
 import java.io.StringWriter;
 import java.io.UnsupportedEncodingException;
-import java.util.Enumeration;
+import java.util.Iterator;
 import java.util.Hashtable;
-import java.util.Vector;
+import java.util.ArrayList;
+import java.util.Enumeration;
 import org.apache.myrmidon.api.TaskException;
 import org.apache.tools.ant.Task;
 import org.apache.tools.ant.types.EnumeratedAttribute;
@@ -216,26 +217,26 @@ public class Manifest extends Task
      *
      * @return an enumeration of warning strings
      */
-    public Enumeration getWarnings()
+    public Iterator getWarnings()
     {
-        Vector warnings = new Vector();
+        ArrayList warnings = new ArrayList();
 
-        for( Enumeration e2 = mainSection.getWarnings(); e2.hasMoreElements(); )
+        for( Iterator e2 = mainSection.getWarnings(); e2.hasNext(); )
         {
-            warnings.addElement( e2.nextElement() );
+            warnings.add( e2.next() );
         }
 
         // create a vector and add in the warnings for all the sections
         for( Enumeration e = sections.elements(); e.hasMoreElements(); )
         {
             Section section = (Section)e.nextElement();
-            for( Enumeration e2 = section.getWarnings(); e2.hasMoreElements(); )
+            for( Iterator e2 = section.getWarnings(); e2.hasNext(); )
             {
-                warnings.addElement( e2.nextElement() );
+                warnings.add( e2.next() );
             }
         }
 
-        return warnings.elements();
+        return warnings.iterator();
     }
 
     public void addConfiguredAttribute( Attribute attribute )
@@ -648,7 +649,7 @@ public class Manifest extends Task
      */
     public static class Section
     {
-        private Vector warnings = new Vector();
+        private ArrayList warnings = new ArrayList();
 
         /**
          * The section's name if any. The main section in a manifest is unnamed.
@@ -691,9 +692,9 @@ public class Manifest extends Task
             else
             {
                 String value = "";
-                for( Enumeration e = ( (Vector)attribute ).elements(); e.hasMoreElements(); )
+                for( Iterator e = ( (ArrayList)attribute ).iterator(); e.hasNext(); )
                 {
-                    Attribute classpathAttribute = (Attribute)e.nextElement();
+                    Attribute classpathAttribute = (Attribute)e.next();
                     value += classpathAttribute.getValue() + " ";
                 }
                 return value.trim();
@@ -710,9 +711,9 @@ public class Manifest extends Task
             return name;
         }
 
-        public Enumeration getWarnings()
+        public Iterator getWarnings()
         {
-            return warnings.elements();
+            return warnings.iterator();
         }
 
         /**
@@ -733,7 +734,7 @@ public class Manifest extends Task
             }
             if( attribute.getName().equalsIgnoreCase( ATTRIBUTE_NAME ) )
             {
-                warnings.addElement( "\"" + ATTRIBUTE_NAME + "\" attributes should not occur in the " +
+                warnings.add( "\"" + ATTRIBUTE_NAME + "\" attributes should not occur in the " +
                                      "main section and must be the first element in all " +
                                      "other sections: \"" + attribute.getName() + ": " + attribute.getValue() + "\"" );
                 return attribute.getValue();
@@ -741,7 +742,7 @@ public class Manifest extends Task
 
             if( attribute.getName().toLowerCase().startsWith( ATTRIBUTE_FROM.toLowerCase() ) )
             {
-                warnings.addElement( "Manifest attributes should not start with \"" +
+                warnings.add( "Manifest attributes should not start with \"" +
                                      ATTRIBUTE_FROM + "\" in \"" + attribute.getName() + ": " + attribute.getValue() + "\"" );
             }
             else
@@ -750,13 +751,13 @@ public class Manifest extends Task
                 String attributeName = attribute.getName().toLowerCase();
                 if( attributeName.equals( ATTRIBUTE_CLASSPATH ) )
                 {
-                    Vector classpathAttrs = (Vector)attributes.get( attributeName );
+                    ArrayList classpathAttrs = (ArrayList)attributes.get( attributeName );
                     if( classpathAttrs == null )
                     {
-                        classpathAttrs = new Vector();
+                        classpathAttrs = new ArrayList();
                         attributes.put( attributeName, classpathAttrs );
                     }
-                    classpathAttrs.addElement( attribute );
+                    classpathAttrs.add( attribute );
                 }
                 else if( attributes.containsKey( attributeName ) )
                 {
@@ -830,11 +831,11 @@ public class Manifest extends Task
                     attributes.containsKey( attributeName ) )
                 {
                     // classpath entries are vetors which are merged
-                    Vector classpathAttrs = (Vector)section.attributes.get( attributeName );
-                    Vector ourClasspathAttrs = (Vector)attributes.get( attributeName );
-                    for( Enumeration e2 = classpathAttrs.elements(); e2.hasMoreElements(); )
+                    ArrayList classpathAttrs = (ArrayList)section.attributes.get( attributeName );
+                    ArrayList ourClasspathAttrs = (ArrayList)attributes.get( attributeName );
+                    for( Iterator e2 = classpathAttrs.iterator(); e2.hasNext(); )
                     {
-                        ourClasspathAttrs.addElement( e2.nextElement() );
+                        ourClasspathAttrs.add( e2.next() );
                     }
                 }
                 else
@@ -845,9 +846,9 @@ public class Manifest extends Task
             }
 
             // add in the warnings
-            for( Enumeration e = section.warnings.elements(); e.hasMoreElements(); )
+            for( Iterator e = section.warnings.iterator(); e.hasNext(); )
             {
-                warnings.addElement( e.nextElement() );
+                warnings.add( e.next() );
             }
         }
 
@@ -939,10 +940,10 @@ public class Manifest extends Task
                 }
                 else
                 {
-                    Vector attrList = (Vector)object;
-                    for( Enumeration e2 = attrList.elements(); e2.hasMoreElements(); )
+                    ArrayList attrList = (ArrayList)object;
+                    for( Iterator e2 = attrList.iterator(); e2.hasNext(); )
                     {
-                        Attribute attribute = (Attribute)e2.nextElement();
+                        Attribute attribute = (Attribute)e2.next();
                         attribute.write( writer );
                     }
                 }

@@ -10,9 +10,9 @@ package org.apache.tools.ant.taskdefs.optional.ide;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 import java.io.File;
-import java.util.Enumeration;
+import java.util.Iterator;
 import java.util.StringTokenizer;
-import java.util.Vector;
+import java.util.ArrayList;
 import org.apache.myrmidon.api.TaskException;
 import org.apache.tools.ant.BuildEvent;
 import org.apache.tools.ant.BuildListener;
@@ -40,7 +40,7 @@ class VAJBuildInfo implements Runnable
     private String buildFileName = "";
 
     // main targets found in the build file
-    private Vector projectTargets = new Vector();
+    private ArrayList projectTargets = new ArrayList();
 
     // target selected for execution
     private java.lang.String target = "";
@@ -82,7 +82,7 @@ class VAJBuildInfo implements Runnable
             result.setTarget( tok.nextToken() );
             while( tok.hasMoreTokens() )
             {
-                result.projectTargets.addElement( tok.nextToken() );
+                result.projectTargets.add( tok.nextToken() );
             }
         }
         catch( Throwable t )
@@ -101,12 +101,12 @@ class VAJBuildInfo implements Runnable
      * @param name Description of Parameter
      * @return Description of the Returned Value
      */
-    private static int findTargetPosition( Vector names, String name )
+    private static int findTargetPosition( ArrayList names, String name )
     {
         int res = names.size();
         for( int i = 0; i < names.size() && res == names.size(); i++ )
         {
-            if( name.compareTo( (String)names.elementAt( i ) ) < 0 )
+            if( name.compareTo( (String)names.get( i ) ) < 0 )
             {
                 res = i;
             }
@@ -190,7 +190,7 @@ class VAJBuildInfo implements Runnable
      *
      * @return The ProjectTargets value
      */
-    public Vector getProjectTargets()
+    public ArrayList getProjectTargets()
     {
         return projectTargets;
     }
@@ -247,10 +247,10 @@ class VAJBuildInfo implements Runnable
     {
         String result = getOutputMessageLevel() + "|" + getBuildFileName()
             + "|" + getTarget();
-        for( Enumeration e = getProjectTargets().elements();
-             e.hasMoreElements(); )
+        for( Iterator e = getProjectTargets().iterator();
+             e.hasNext(); )
         {
-            result = result + "|" + e.nextElement();
+            result = result + "|" + e.next();
         }
 
         return result;
@@ -362,11 +362,11 @@ class VAJBuildInfo implements Runnable
     {
         project = new Project();
         initProject();
-        projectTargets.removeAllElements();
-        Enumeration ptargets = project.getTargets().elements();
-        while( ptargets.hasMoreElements() )
+        projectTargets.clear();
+        Iterator ptargets = project.getTargets().iterator();
+        while( ptargets.hasNext() )
         {
-            Target currentTarget = (Target)ptargets.nextElement();
+            Target currentTarget = (Target)ptargets.next();
             if( currentTarget.getDescription() != null )
             {
                 String targetName = currentTarget.getName();

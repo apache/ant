@@ -320,7 +320,7 @@ public class FileUtils
                 // already contains one
                 sb.append( File.separatorChar );
             }
-            sb.append( s.elementAt( i ) );
+            sb.append( s.get( i ) );
         }
 
         path = sb.toString();

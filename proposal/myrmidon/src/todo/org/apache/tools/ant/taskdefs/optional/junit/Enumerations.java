@@ -7,7 +7,7 @@
  */
 package org.apache.tools.ant.taskdefs.optional.junit;
 
-import java.util.Enumeration;
+import java.util.Iterator;
 import java.util.NoSuchElementException;
 
 /**
@@ -16,10 +16,10 @@ import java.util.NoSuchElementException;
  *
  * @author <a href="mailto:sbailliez@imediation.com">Stephane Bailliez</a>
  */
-public final class Enumerations
+public final class Iterators
 {
 
-    private Enumerations()
+    private Iterators()
     {
     }
 
@@ -29,9 +29,9 @@ public final class Enumerations
      * @param array the array of object to enumerate.
      * @return the enumeration over the array of objects.
      */
-    public static Enumeration fromArray( Object[] array )
+    public static Iterator fromArray( Object[] array )
     {
-        return new ArrayEnumeration( array );
+        return new ArrayIterator( array );
     }
 
     /**
@@ -42,9 +42,9 @@ public final class Enumerations
      * @param enums the array of enumerations.
      * @return the enumeration over the array of enumerations.
      */
-    public static Enumeration fromCompound( Enumeration[] enums )
+    public static Iterator fromCompound( Iterator[] enums )
     {
-        return new CompoundEnumeration( enums );
+        return new CompoundIterator( enums );
     }
 
 }
@@ -54,7 +54,7 @@ public final class Enumerations
  *
  * @author <a href="mailto:sbailliez@imediation.com">Stephane Bailliez</a>
  */
-class ArrayEnumeration implements Enumeration
+class ArrayIterator implements Iterator
 {
 
     /**
@@ -72,7 +72,7 @@ class ArrayEnumeration implements Enumeration
      *
      * @param array the array of object to enumerate.
      */
-    public ArrayEnumeration( Object[] array )
+    public ArrayIterator( Object[] array )
     {
         this.array = array;
         this.pos = 0;
@@ -84,7 +84,7 @@ class ArrayEnumeration implements Enumeration
      * @return <code>true</code> if and only if this enumeration object contains
      *      at least one more element to provide; <code>false</code> otherwise.
      */
-    public boolean hasMoreElements()
+    public boolean hasNext()
     {
         return ( pos < array.length );
     }
@@ -96,10 +96,10 @@ class ArrayEnumeration implements Enumeration
      * @return the next element of this enumeration.
      * @throws NoSuchElementException if no more elements exist.
      */
-    public Object nextElement()
+    public Object next()
         throws NoSuchElementException
     {
-        if( hasMoreElements() )
+        if( hasNext() )
         {
             Object o = array[ pos ];
             pos++;
@@ -111,32 +111,32 @@ class ArrayEnumeration implements Enumeration
 
 /**
  * Convenient enumeration over an array of enumeration. For example: <pre>
- * Enumeration e1 = v1.elements();
- * while (e1.hasMoreElements()){
+ * Iterator e1 = v1.iterator();
+ * while (e1.hasNext()){
  *    // do something
  * }
- * Enumeration e2 = v2.elements();
- * while (e2.hasMoreElements()){
+ * Iterator e2 = v2.iterator();
+ * while (e2.hasNext()){
  *    // do the same thing
  * }
  * </pre> can be written as: <pre>
- * Enumeration[] enums = { v1.elements(), v2.elements() };
- * Enumeration e = Enumerations.fromCompound(enums);
- * while (e.hasMoreElements()){
+ * Iterator[] enums = { v1.iterator(), v2.iterator() };
+ * Iterator e = Iterators.fromCompound(enums);
+ * while (e.hasNext()){
  *    // do something
  * }
  * </pre> Note that the enumeration will skip null elements in the array. The
  * following is thus possible: <pre>
- * Enumeration[] enums = { v1.elements(), null, v2.elements() }; // a null enumeration in the array
- * Enumeration e = Enumerations.fromCompound(enums);
- * while (e.hasMoreElements()){
+ * Iterator[] enums = { v1.iterator(), null, v2.iterator() }; // a null enumeration in the array
+ * Iterator e = Iterators.fromCompound(enums);
+ * while (e.hasNext()){
  *    // do something
  * }
  * </pre>
  *
  * @author <a href="mailto:sbailliez@imediation.com">Stephane Bailliez</a>
  */
-class CompoundEnumeration implements Enumeration
+class CompoundIterator implements Iterator
 {
 
     /**
@@ -147,9 +147,9 @@ class CompoundEnumeration implements Enumeration
     /**
      * enumeration array
      */
-    private Enumeration[] enumArray;
+    private Iterator[] enumArray;
 
-    public CompoundEnumeration( Enumeration[] enumarray )
+    public CompoundIterator( Iterator[] enumarray )
     {
         this.enumArray = enumarray;
     }
@@ -160,11 +160,11 @@ class CompoundEnumeration implements Enumeration
      * @return <code>true</code> if and only if this enumeration object contains
      *      at least one more element to provide; <code>false</code> otherwise.
      */
-    public boolean hasMoreElements()
+    public boolean hasNext()
     {
         while( index < enumArray.length )
         {
-            if( enumArray[ index ] != null && enumArray[ index ].hasMoreElements() )
+            if( enumArray[ index ] != null && enumArray[ index ].hasNext() )
             {
                 return true;
             }
@@ -180,12 +180,12 @@ class CompoundEnumeration implements Enumeration
      * @return the next element of this enumeration.
      * @throws NoSuchElementException if no more elements exist.
      */
-    public Object nextElement()
+    public Object next()
         throws NoSuchElementException
     {
-        if( hasMoreElements() )
+        if( hasNext() )
         {
-            return enumArray[ index ].nextElement();
+            return enumArray[ index ].next();
         }
         throw new NoSuchElementException();
     }

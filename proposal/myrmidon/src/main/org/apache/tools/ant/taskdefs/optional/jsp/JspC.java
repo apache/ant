@@ -9,7 +9,7 @@ package org.apache.tools.ant.taskdefs.optional.jsp;
 
 import java.io.File;
 import java.util.Date;
-import java.util.Vector;
+import java.util.ArrayList;
 import org.apache.myrmidon.api.TaskException;
 import org.apache.tools.ant.DirectoryScanner;
 import org.apache.tools.ant.Project;
@@ -66,7 +66,7 @@ public class JspC extends MatchingTask
     private final static String FAIL_MSG
         = "Compile failed, messages should have been provided.";
     private int verbose = 0;
-    protected Vector compileList = new Vector();
+    protected ArrayList compileList = new ArrayList();
     protected boolean failOnError = true;
     /*
      * ------------------------------------------------------------
@@ -245,7 +245,7 @@ public class JspC extends MatchingTask
     /*
      * ------------------------------------------------------------
      */
-    public Vector getCompileList()
+    public ArrayList getCompileList()
     {
         return compileList;
     }
@@ -430,7 +430,7 @@ public class JspC extends MatchingTask
      */
     protected void resetFileLists()
     {
-        compileList.removeAllElements();
+        compileList.clear();
     }
 
     /*
@@ -482,7 +482,7 @@ public class JspC extends MatchingTask
                              " because it is out of date with respect to "
                              + javaFile.getPath(), Project.MSG_DEBUG );
                     }
-                    compileList.addElement( srcFile.getAbsolutePath() );
+                    compileList.add( srcFile.getAbsolutePath() );
                 }
             }
         }

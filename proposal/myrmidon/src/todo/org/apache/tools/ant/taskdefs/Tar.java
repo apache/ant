@@ -11,8 +11,8 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.util.Enumeration;
-import java.util.Vector;
+import java.util.Iterator;
+import java.util.ArrayList;
 import org.apache.myrmidon.api.TaskException;
 import org.apache.tools.ant.DirectoryScanner;
 import org.apache.tools.ant.Project;
@@ -50,8 +50,8 @@ public class Tar
         }
     }
 
-    Vector filesets = new Vector();
-    Vector fileSetFiles = new Vector();
+    ArrayList filesets = new ArrayList();
+    ArrayList fileSetFiles = new ArrayList();
 
     /**
      * Indicates whether the user has been warned about long files already.
@@ -99,7 +99,7 @@ public class Tar
     public TarFileSet createTarFileSet()
     {
         TarFileSet fileset = new TarFileSet();
-        filesets.addElement( fileset );
+        filesets.add( fileset );
         return fileset;
     }
 
@@ -131,7 +131,7 @@ public class Tar
             // add the main fileset to the list of filesets to process.
             TarFileSet mainFileSet = new TarFileSet( fileset );
             mainFileSet.setDir( baseDir );
-            filesets.addElement( mainFileSet );
+            filesets.add( mainFileSet );
         }
 
         if( filesets.size() == 0 )
@@ -142,9 +142,9 @@ public class Tar
         // check if tr is out of date with respect to each
         // fileset
         boolean upToDate = true;
-        for( Enumeration e = filesets.elements(); e.hasMoreElements(); )
+        for( Iterator e = filesets.iterator(); e.hasNext(); )
         {
-            TarFileSet fs = (TarFileSet)e.nextElement();
+            TarFileSet fs = (TarFileSet)e.next();
             String[] files = fs.getFiles( getProject() );
 
             if( !archiveIsUpToDate( files ) )
@@ -191,9 +191,9 @@ public class Tar
             }
 
             longWarningGiven = false;
-            for( Enumeration e = filesets.elements(); e.hasMoreElements(); )
+            for( Iterator e = filesets.iterator(); e.hasNext(); )
             {
-                TarFileSet fs = (TarFileSet)e.nextElement();
+                TarFileSet fs = (TarFileSet)e.next();
                 String[] files = fs.getFiles( getProject() );
                 for( int i = 0; i < files.length; i++ )
                 {

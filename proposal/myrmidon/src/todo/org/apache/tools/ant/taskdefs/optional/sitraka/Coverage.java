@@ -14,7 +14,7 @@ import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.util.Random;
-import java.util.Vector;
+import java.util.ArrayList;
 import org.apache.myrmidon.api.TaskException;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.Task;
@@ -63,7 +63,7 @@ public class Coverage extends Task
 
     protected int warnLevel = 0;
 
-    protected Vector filesets = new Vector();
+    protected ArrayList filesets = new ArrayList();
 
     protected File home;
 
@@ -209,7 +209,7 @@ public class Coverage extends Task
      */
     public void addFileset( FileSet fs )
     {
-        filesets.addElement( fs );
+        filesets.add( fs );
     }
 
     /**
@@ -327,59 +327,59 @@ public class Coverage extends Task
     protected String[] getParameters()
         throws TaskException
     {
-        Vector params = new Vector();
-        params.addElement( "-jp_function=" + function );
+        ArrayList params = new ArrayList();
+        params.add( "-jp_function=" + function );
         if( vm != null )
         {
-            params.addElement( "-jp_vm=" + vm );
+            params.add( "-jp_vm=" + vm );
         }
         if( javaExe != null )
         {
-            params.addElement( "-jp_java_exe=" + resolveFile( javaExe.getPath() ) );
+            params.add( "-jp_java_exe=" + resolveFile( javaExe.getPath() ) );
         }
-        params.addElement( "-jp_working_dir=" + workingDir.getPath() );
-        params.addElement( "-jp_snapshot_dir=" + snapshotDir.getPath() );
-        params.addElement( "-jp_record_from_start=" + recordFromStart );
-        params.addElement( "-jp_warn=" + warnLevel );
+        params.add( "-jp_working_dir=" + workingDir.getPath() );
+        params.add( "-jp_snapshot_dir=" + snapshotDir.getPath() );
+        params.add( "-jp_record_from_start=" + recordFromStart );
+        params.add( "-jp_warn=" + warnLevel );
         if( seedName != null )
         {
-            params.addElement( "-jp_output_file=" + seedName );
+            params.add( "-jp_output_file=" + seedName );
         }
-        params.addElement( "-jp_filter=" + filters.toString() );
+        params.add( "-jp_filter=" + filters.toString() );
         if( triggers != null )
         {
-            params.addElement( "-jp_trigger=" + triggers.toString() );
+            params.add( "-jp_trigger=" + triggers.toString() );
         }
         if( finalSnapshot != null )
         {
-            params.addElement( "-jp_final_snapshot=" + finalSnapshot );
+            params.add( "-jp_final_snapshot=" + finalSnapshot );
         }
-        params.addElement( "-jp_exit_prompt=" + exitPrompt );
-        //params.addElement("-jp_append=" + append);
-        params.addElement( "-jp_track_natives=" + trackNatives );
+        params.add( "-jp_exit_prompt=" + exitPrompt );
+        //params.add("-jp_append=" + append);
+        params.add( "-jp_track_natives=" + trackNatives );
         //.... now the jvm
         // arguments
         String[] vmargs = cmdlJava.getVmCommand().getArguments();
         for( int i = 0; i < vmargs.length; i++ )
         {
-            params.addElement( vmargs[ i ] );
+            params.add( vmargs[ i ] );
         }
         // classpath
         Path classpath = cmdlJava.getClasspath();
         if( classpath != null && classpath.size() > 0 )
         {
-            params.addElement( "-classpath " + classpath.toString() );
+            params.add( "-classpath " + classpath.toString() );
         }
         // classname (runner or standalone)
         if( cmdlJava.getClassname() != null )
         {
-            params.addElement( cmdlJava.getClassname() );
+            params.add( cmdlJava.getClassname() );
         }
         // arguments for classname
         String[] args = cmdlJava.getJavaCommand().getArguments();
         for( int i = 0; i < args.length; i++ )
         {
-            params.addElement( args[ i ] );
+            params.add( args[ i ] );
         }
 
         String[] array = new String[ params.size() ];

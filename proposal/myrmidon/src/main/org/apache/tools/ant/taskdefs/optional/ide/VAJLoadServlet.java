@@ -7,7 +7,7 @@
  */
 package org.apache.tools.ant.taskdefs.optional.ide;
 
-import java.util.Vector;
+import java.util.ArrayList;
 
 /**
  * A Remote Access to Tools Servlet to load a Project from the Repository into
@@ -70,13 +70,13 @@ public class VAJLoadServlet extends VAJToolsServlet
         String[] projectNames = getParamValues( PROJECT_NAME_PARAM );
         String[] versionNames = getParamValues( VERSION_PARAM );
 
-        Vector projectDescriptions = new Vector( projectNames.length );
+        ArrayList projectDescriptions = new ArrayList( projectNames.length );
         for( int i = 0; i < projectNames.length && i < versionNames.length; i++ )
         {
             VAJProjectDescription desc = new VAJProjectDescription();
             desc.setName( projectNames[ i ] );
             desc.setVersion( versionNames[ i ] );
-            projectDescriptions.addElement( desc );
+            projectDescriptions.add( desc );
         }
 
         util.loadProjects( projectDescriptions );

@@ -8,7 +8,7 @@
 package org.apache.tools.ant.taskdefs.file;
 
 import java.io.File;
-import java.util.Vector;
+import java.util.ArrayList;
 import org.apache.myrmidon.api.TaskException;
 import org.apache.tools.ant.DirectoryScanner;
 import org.apache.tools.ant.Project;
@@ -38,7 +38,7 @@ public class Delete
 {
     protected File file = null;
     protected File dir = null;
-    protected Vector filesets = new Vector();
+    protected ArrayList filesets = new ArrayList();
     protected boolean usedMatchingTask = false;
     protected boolean includeEmpty = false;// by default, remove matching empty dirs
 
@@ -192,7 +192,7 @@ public class Delete
      */
     public void addFileset( FileSet set )
     {
-        filesets.addElement( set );
+        filesets.add( set );
     }
 
     /**
@@ -304,7 +304,7 @@ public class Delete
         // delete the files in the filesets
         for( int i = 0; i < filesets.size(); i++ )
         {
-            FileSet fs = (FileSet)filesets.elementAt( i );
+            FileSet fs = (FileSet)filesets.get( i );
             try
             {
                 DirectoryScanner ds = fs.getDirectoryScanner( getProject() );

@@ -9,8 +9,8 @@ package org.apache.tools.ant.taskdefs;
 
 import java.io.File;
 import java.util.Date;
-import java.util.Enumeration;
-import java.util.Vector;
+import java.util.Iterator;
+import java.util.ArrayList;
 import org.apache.myrmidon.api.TaskException;
 import org.apache.myrmidon.framework.Os;
 import org.apache.tools.ant.DirectoryScanner;
@@ -65,10 +65,10 @@ import org.apache.tools.ant.types.FileSet;
 public class DependSet extends MatchingTask
 {
 
-    private Vector sourceFileSets = new Vector();
-    private Vector sourceFileLists = new Vector();
-    private Vector targetFileSets = new Vector();
-    private Vector targetFileLists = new Vector();
+    private ArrayList sourceFileSets = new ArrayList();
+    private ArrayList sourceFileLists = new ArrayList();
+    private ArrayList targetFileSets = new ArrayList();
+    private ArrayList targetFileLists = new ArrayList();
 
     /**
      * Creates a new DependSet Task.
@@ -84,7 +84,7 @@ public class DependSet extends MatchingTask
      */
     public void addSrcfilelist( FileList fl )
     {
-        sourceFileLists.addElement( fl );
+        sourceFileLists.add( fl );
     }//-- DependSet
 
     /**
@@ -94,7 +94,7 @@ public class DependSet extends MatchingTask
      */
     public void addSrcfileset( FileSet fs )
     {
-        sourceFileSets.addElement( fs );
+        sourceFileSets.add( fs );
     }
 
     /**
@@ -104,7 +104,7 @@ public class DependSet extends MatchingTask
      */
     public void addTargetfilelist( FileList fl )
     {
-        targetFileLists.addElement( fl );
+        targetFileLists.add( fl );
     }
 
     /**
@@ -114,7 +114,7 @@ public class DependSet extends MatchingTask
      */
     public void addTargetfileset( FileSet fs )
     {
-        targetFileSets.addElement( fs );
+        targetFileSets.add( fs );
     }
 
     /**
@@ -149,12 +149,12 @@ public class DependSet extends MatchingTask
         //
         // Grab all the target files specified via filesets
         //
-        Vector allTargets = new Vector();
-        Enumeration enumTargetSets = targetFileSets.elements();
-        while( enumTargetSets.hasMoreElements() )
+        ArrayList allTargets = new ArrayList();
+        Iterator enumTargetSets = targetFileSets.iterator();
+        while( enumTargetSets.hasNext() )
         {
 
-            FileSet targetFS = (FileSet)enumTargetSets.nextElement();
+            FileSet targetFS = (FileSet)enumTargetSets.next();
             DirectoryScanner targetDS = targetFS.getDirectoryScanner( getProject() );
             String[] targetFiles = targetDS.getIncludedFiles();
 
@@ -162,7 +162,7 @@ public class DependSet extends MatchingTask
             {
 
                 File dest = new File( targetFS.getDir( getProject() ), targetFiles[ i ] );
-                allTargets.addElement( dest );
+                allTargets.add( dest );
 
                 if( dest.lastModified() > now )
                 {
@@ -176,11 +176,11 @@ public class DependSet extends MatchingTask
         // Grab all the target files specified via filelists
         //
         boolean upToDate = true;
-        Enumeration enumTargetLists = targetFileLists.elements();
-        while( enumTargetLists.hasMoreElements() )
+        Iterator enumTargetLists = targetFileLists.iterator();
+        while( enumTargetLists.hasNext() )
         {
 
-            FileList targetFL = (FileList)enumTargetLists.nextElement();
+            FileList targetFL = (FileList)enumTargetLists.next();
             String[] targetFiles = targetFL.getFiles( getProject() );
 
             for( int i = 0; i < targetFiles.length; i++ )
@@ -195,7 +195,7 @@ public class DependSet extends MatchingTask
                 }
                 else
                 {
-                    allTargets.addElement( dest );
+                    allTargets.add( dest );
                 }
                 if( dest.lastModified() > now )
                 {
@@ -210,11 +210,11 @@ public class DependSet extends MatchingTask
         //
         if( upToDate )
         {
-            Enumeration enumSourceSets = sourceFileSets.elements();
-            while( upToDate && enumSourceSets.hasMoreElements() )
+            Iterator enumSourceSets = sourceFileSets.iterator();
+            while( upToDate && enumSourceSets.hasNext() )
             {
 
-                FileSet sourceFS = (FileSet)enumSourceSets.nextElement();
+                FileSet sourceFS = (FileSet)enumSourceSets.next();
                 DirectoryScanner sourceDS = sourceFS.getDirectoryScanner( getProject() );
                 String[] sourceFiles = sourceDS.getIncludedFiles();
 
@@ -228,11 +228,11 @@ public class DependSet extends MatchingTask
                              Project.MSG_WARN );
                     }
 
-                    Enumeration enumTargets = allTargets.elements();
-                    while( upToDate && enumTargets.hasMoreElements() )
+                    Iterator enumTargets = allTargets.iterator();
+                    while( upToDate && enumTargets.hasNext() )
                     {
 
-                        File dest = (File)enumTargets.nextElement();
+                        File dest = (File)enumTargets.next();
                         if( src.lastModified() > dest.lastModified() )
                         {
                             log( dest.getPath() + " is out of date with respect to " +
@@ -250,11 +250,11 @@ public class DependSet extends MatchingTask
         //
         if( upToDate )
         {
-            Enumeration enumSourceLists = sourceFileLists.elements();
-            while( upToDate && enumSourceLists.hasMoreElements() )
+            Iterator enumSourceLists = sourceFileLists.iterator();
+            while( upToDate && enumSourceLists.hasNext() )
             {
 
-                FileList sourceFL = (FileList)enumSourceLists.nextElement();
+                FileList sourceFL = (FileList)enumSourceLists.next();
                 String[] sourceFiles = sourceFL.getFiles( getProject() );
 
                 int i = 0;
@@ -275,11 +275,11 @@ public class DependSet extends MatchingTask
                         break;
                     }
 
-                    Enumeration enumTargets = allTargets.elements();
-                    while( upToDate && enumTargets.hasMoreElements() )
+                    Iterator enumTargets = allTargets.iterator();
+                    while( upToDate && enumTargets.hasNext() )
                     {
 
-                        File dest = (File)enumTargets.nextElement();
+                        File dest = (File)enumTargets.next();
 
                         if( src.lastModified() > dest.lastModified() )
                         {
@@ -296,9 +296,9 @@ public class DependSet extends MatchingTask
         if( !upToDate )
         {
             log( "Deleting all target files. ", Project.MSG_VERBOSE );
-            for( Enumeration e = allTargets.elements(); e.hasMoreElements(); )
+            for( Iterator e = allTargets.iterator(); e.hasNext(); )
             {
-                File fileToRemove = (File)e.nextElement();
+                File fileToRemove = (File)e.next();
                 log( "Deleting file " + fileToRemove.getAbsolutePath(), Project.MSG_VERBOSE );
                 fileToRemove.delete();
             }

@@ -10,7 +10,7 @@ package org.apache.tools.ant.taskdefs;
 import java.io.File;
 import java.io.IOException;
 import java.util.Hashtable;
-import java.util.Vector;
+import java.util.ArrayList;
 import org.apache.myrmidon.api.TaskException;
 import org.apache.tools.ant.DirectoryScanner;
 import org.apache.tools.ant.Project;
@@ -32,7 +32,7 @@ import org.apache.tools.ant.util.SourceFileScanner;
 public class ExecuteOn extends ExecTask
 {
 
-    protected Vector filesets = new Vector();
+    protected ArrayList filesets = new ArrayList();
     private boolean relative = false;
     private boolean parallel = false;
     protected String type = "file";
@@ -106,7 +106,7 @@ public class ExecuteOn extends ExecTask
      */
     public void addFileset( FileSet set )
     {
-        filesets.addElement( set );
+        filesets.add( set );
     }
 
     /**
@@ -171,7 +171,7 @@ public class ExecuteOn extends ExecTask
     protected String[] getCommandline( String[] srcFiles, File[] baseDirs )
         throws TaskException
     {
-        Vector targets = new Vector();
+        ArrayList targets = new ArrayList();
         if( targetFilePos != null )
         {
             Hashtable addedFiles = new Hashtable();
@@ -194,7 +194,7 @@ public class ExecuteOn extends ExecTask
                         }
                         if( !addedFiles.contains( name ) )
                         {
-                            targets.addElement( name );
+                            targets.add( name );
                             addedFiles.put( name, name );
                         }
                     }
@@ -202,7 +202,7 @@ public class ExecuteOn extends ExecTask
             }
         }
         String[] targetFiles = new String[ targets.size() ];
-        targets.copyInto( targetFiles );
+        targetFiles = (String[])targets.toArray( targetFiles );
 
         String[] orig = cmdl.getCommandline();
         String[] result = new String[ orig.length + srcFiles.length + targetFiles.length ];
@@ -380,11 +380,11 @@ public class ExecuteOn extends ExecTask
         try
         {
 
-            Vector fileNames = new Vector();
-            Vector baseDirs = new Vector();
+            ArrayList fileNames = new ArrayList();
+            ArrayList baseDirs = new ArrayList();
             for( int i = 0; i < filesets.size(); i++ )
             {
-                FileSet fs = (FileSet)filesets.elementAt( i );
+                FileSet fs = (FileSet)filesets.get( i );
                 File base = fs.getDir( getProject() );
                 DirectoryScanner ds = fs.getDirectoryScanner( getProject() );
 
@@ -393,8 +393,8 @@ public class ExecuteOn extends ExecTask
                     String[] s = getFiles( base, ds );
                     for( int j = 0; j < s.length; j++ )
                     {
-                        fileNames.addElement( s[ j ] );
-                        baseDirs.addElement( base );
+                        fileNames.add( s[ j ] );
+                        baseDirs.add( base );
                     }
                 }
 
@@ -404,8 +404,8 @@ public class ExecuteOn extends ExecTask
                     ;
                     for( int j = 0; j < s.length; j++ )
                     {
-                        fileNames.addElement( s[ j ] );
-                        baseDirs.addElement( base );
+                        fileNames.add( s[ j ] );
+                        baseDirs.add( base );
                     }
                 }
 
@@ -419,7 +419,7 @@ public class ExecuteOn extends ExecTask
                 if( !parallel )
                 {
                     String[] s = new String[ fileNames.size() ];
-                    fileNames.copyInto( s );
+                    s = (String[])fileNames.toArray( s );
                     for( int j = 0; j < s.length; j++ )
                     {
                         String[] command = getCommandline( s[ j ], base );
@@ -428,17 +428,17 @@ public class ExecuteOn extends ExecTask
                         exe.setCommandline( command );
                         runExecute( exe );
                     }
-                    fileNames.removeAllElements();
-                    baseDirs.removeAllElements();
+                    fileNames.clear();
+                    baseDirs.clear();
                 }
             }
 
             if( parallel && ( fileNames.size() > 0 || !skipEmpty ) )
             {
                 String[] s = new String[ fileNames.size() ];
-                fileNames.copyInto( s );
+                s = (String[])fileNames.toArray( s );
                 File[] b = new File[ baseDirs.size() ];
-                baseDirs.copyInto( b );
+                b = (File[])baseDirs.toArray( b );
                 String[] command = getCommandline( s, b );
                 log( "Executing " + Commandline.toString( command ),
                      Project.MSG_VERBOSE );

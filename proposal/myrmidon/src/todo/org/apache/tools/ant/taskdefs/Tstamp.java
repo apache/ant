@@ -10,13 +10,13 @@ package org.apache.tools.ant.taskdefs;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.Enumeration;
+import java.util.Iterator;
 import java.util.Hashtable;
 import java.util.Locale;
 import java.util.NoSuchElementException;
 import java.util.StringTokenizer;
 import java.util.TimeZone;
-import java.util.Vector;
+import java.util.ArrayList;
 import org.apache.myrmidon.api.TaskException;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.Task;
@@ -34,7 +34,7 @@ import org.apache.tools.ant.types.EnumeratedAttribute;
 public class Tstamp extends Task
 {
 
-    private Vector customFormats = new Vector();
+    private ArrayList customFormats = new ArrayList();
     private String prefix = "";
 
     public void setPrefix( String prefix )
@@ -49,7 +49,7 @@ public class Tstamp extends Task
     public CustomFormat createFormat()
     {
         CustomFormat cts = new CustomFormat( prefix );
-        customFormats.addElement( cts );
+        customFormats.add( cts );
         return cts;
     }
 
@@ -69,10 +69,10 @@ public class Tstamp extends Task
             SimpleDateFormat today = new SimpleDateFormat( "MMMM d yyyy", Locale.US );
             setProperty( prefix + "TODAY", today.format( d ) );
 
-            Enumeration i = customFormats.elements();
-            while( i.hasMoreElements() )
+            Iterator i = customFormats.iterator();
+            while( i.hasNext() )
             {
-                CustomFormat cts = (CustomFormat)i.nextElement();
+                CustomFormat cts = (CustomFormat)i.next();
                 cts.execute( getProject(), d );
             }
 

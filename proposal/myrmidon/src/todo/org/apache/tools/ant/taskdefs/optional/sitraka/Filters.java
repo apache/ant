@@ -7,7 +7,7 @@
  */
 package org.apache.tools.ant.taskdefs.optional.sitraka;
 
-import java.util.Vector;
+import java.util.ArrayList;
 
 /**
  * Filters information from coverage, somewhat similar to a <tt>FileSet</tt> .
@@ -30,7 +30,7 @@ public class Filters
     /**
      * user defined filters
      */
-    protected Vector filters = new Vector();
+    protected ArrayList filters = new ArrayList();
 
     public Filters()
     {
@@ -43,12 +43,12 @@ public class Filters
 
     public void addExclude( Exclude excl )
     {
-        filters.addElement( excl );
+        filters.add( excl );
     }
 
     public void addInclude( Include incl )
     {
-        filters.addElement( incl );
+        filters.add( incl );
     }
 
     public String toString()
@@ -65,7 +65,7 @@ public class Filters
         }
         for( int i = 0; i < size; i++ )
         {
-            buf.append( filters.elementAt( i ).toString() );
+            buf.append( filters.get( i ).toString() );
             if( i < size - 1 )
             {
                 buf.append( ',' );

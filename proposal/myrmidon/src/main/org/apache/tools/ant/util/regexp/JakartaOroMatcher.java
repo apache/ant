@@ -7,7 +7,7 @@
  */
 package org.apache.tools.ant.util.regexp;
 
-import java.util.Vector;
+import java.util.ArrayList;
 import org.apache.myrmidon.api.TaskException;
 import org.apache.oro.text.regex.MatchResult;
 import org.apache.oro.text.regex.Pattern;
@@ -42,7 +42,7 @@ public class JakartaOroMatcher implements RegexpMatcher
     }
 
     /**
-     * Returns a Vector of matched groups found in the argument. <p>
+     * Returns a ArrayList of matched groups found in the argument. <p>
      *
      * Group 0 will be the full match, the rest are the parenthesized
      * subexpressions</p> .
@@ -51,14 +51,14 @@ public class JakartaOroMatcher implements RegexpMatcher
      * @return The Groups value
      * @exception TaskException Description of Exception
      */
-    public Vector getGroups( String argument )
+    public ArrayList getGroups( String argument )
         throws TaskException
     {
         return getGroups( argument, MATCH_DEFAULT );
     }
 
     /**
-     * Returns a Vector of matched groups found in the argument. <p>
+     * Returns a ArrayList of matched groups found in the argument. <p>
      *
      * Group 0 will be the full match, the rest are the parenthesized
      * subexpressions</p> .
@@ -68,19 +68,19 @@ public class JakartaOroMatcher implements RegexpMatcher
      * @return The Groups value
      * @exception TaskException Description of Exception
      */
-    public Vector getGroups( String input, int options )
+    public ArrayList getGroups( String input, int options )
         throws TaskException
     {
         if( !matches( input, options ) )
         {
             return null;
         }
-        Vector v = new Vector();
+        ArrayList v = new ArrayList();
         MatchResult mr = matcher.getMatch();
         int cnt = mr.groups();
         for( int i = 0; i < cnt; i++ )
         {
-            v.addElement( mr.group( i ) );
+            v.add( mr.group( i ) );
         }
         return v;
     }

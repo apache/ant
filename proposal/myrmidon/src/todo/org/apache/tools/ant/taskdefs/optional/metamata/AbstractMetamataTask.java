@@ -11,10 +11,10 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.util.Enumeration;
+import java.util.Iterator;
 import java.util.Hashtable;
 import java.util.Random;
-import java.util.Vector;
+import java.util.ArrayList;
 import org.apache.myrmidon.api.TaskException;
 import org.apache.tools.ant.DirectoryScanner;
 import org.apache.tools.ant.Project;
@@ -65,7 +65,7 @@ public abstract class AbstractMetamataTask extends Task
     /**
      * the set of files to be audited
      */
-    protected Vector fileSets = new Vector();
+    protected ArrayList fileSets = new ArrayList();
 
     /**
      * the options file where are stored the command line options
@@ -94,14 +94,14 @@ public abstract class AbstractMetamataTask extends Task
     /**
      * convenient method for JDK 1.1. Will copy all elements from src to dest
      *
-     * @param dest The feature to be added to the AllVector attribute
-     * @param files The feature to be added to the AllVector attribute
+     * @param dest The feature to be added to the AllArrayList attribute
+     * @param files The feature to be added to the AllArrayList attribute
      */
-    protected final static void addAllVector( Vector dest, Enumeration files )
+    protected final static void addAllArrayList( ArrayList dest, Iterator files )
     {
-        while( files.hasMoreElements() )
+        while( files.hasNext() )
         {
-            dest.addElement( files.nextElement() );
+            dest.add( files.next() );
         }
     }
 
@@ -147,7 +147,7 @@ public abstract class AbstractMetamataTask extends Task
      */
     public void addFileSet( FileSet fs )
     {
-        fileSets.addElement( fs );
+        fileSets.add( fs );
     }
 
     /**
@@ -234,7 +234,7 @@ public abstract class AbstractMetamataTask extends Task
         log( includedFiles.size() + " files added for audit", Project.MSG_VERBOSE );
 
         // write all the options to a temp file and use it ro run the process
-        Vector options = getOptions();
+        ArrayList options = getOptions();
         optionsFile = createTmpFile();
         generateOptionsFile( optionsFile, options );
         Commandline.Argument args = cmdl.createArgument();
@@ -262,7 +262,7 @@ public abstract class AbstractMetamataTask extends Task
      *
      * @return The Options value
      */
-    protected abstract Vector getOptions();
+    protected abstract ArrayList getOptions();
 
     /**
      * validate options set
@@ -330,7 +330,7 @@ public abstract class AbstractMetamataTask extends Task
         }
     }
 
-    protected void generateOptionsFile( File tofile, Vector options )
+    protected void generateOptionsFile( File tofile, ArrayList options )
         throws TaskException
     {
         FileWriter fw = null;
@@ -341,7 +341,7 @@ public abstract class AbstractMetamataTask extends Task
             final int size = options.size();
             for( int i = 0; i < size; i++ )
             {
-                pw.println( options.elementAt( i ) );
+                pw.println( options.get( i ) );
             }
             pw.flush();
         }
@@ -373,7 +373,7 @@ public abstract class AbstractMetamataTask extends Task
         Hashtable files = new Hashtable();
         for( int i = 0; i < fileSets.size(); i++ )
         {
-            FileSet fs = (FileSet)fileSets.elementAt( i );
+            FileSet fs = (FileSet)fileSets.get( i );
             DirectoryScanner ds = fs.getDirectoryScanner( getProject() );
             ds.scan();
             String[] f = ds.getIncludedFiles();

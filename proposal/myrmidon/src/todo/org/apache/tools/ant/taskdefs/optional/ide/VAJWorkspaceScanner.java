@@ -11,9 +11,9 @@ import com.ibm.ivj.util.base.IvjException;
 import com.ibm.ivj.util.base.Package;
 import com.ibm.ivj.util.base.Project;
 import java.io.File;
-import java.util.Enumeration;
+import java.util.Iterator;
 import java.util.StringTokenizer;
-import java.util.Vector;
+import java.util.ArrayList;
 import org.apache.tools.ant.DirectoryScanner;
 
 /**
@@ -55,7 +55,7 @@ class VAJWorkspaceScanner extends DirectoryScanner
 
     // The packages that where found and matched at least
     // one includes, and matched no excludes.
-    private Vector packagesIncluded = new Vector();
+    private ArrayList packagesIncluded = new ArrayList();
 
     /**
      * Matches a string against a pattern. The pattern contains two special
@@ -84,7 +84,7 @@ class VAJWorkspaceScanner extends DirectoryScanner
         Package[] packages = new Package[ count ];
         for( int i = 0; i < count; i++ )
         {
-            packages[ i ] = (Package)packagesIncluded.elementAt( i );
+            packages[ i ] = (Package)packagesIncluded.get( i );
         }
         return packages;
     }
@@ -115,11 +115,11 @@ class VAJWorkspaceScanner extends DirectoryScanner
      *
      * @return the projects
      */
-    public Vector findMatchingProjects()
+    public ArrayList findMatchingProjects()
     {
         Project[] projects = VAJLocalUtil.getWorkspace().getProjects();
 
-        Vector matchingProjects = new Vector();
+        ArrayList matchingProjects = new ArrayList();
 
         boolean allProjectsMatch = false;
         for( int i = 0; i < projects.length; i++ )
@@ -138,7 +138,7 @@ class VAJWorkspaceScanner extends DirectoryScanner
                 }
                 else if( match( projectNamePattern, project.getName() ) )
                 {
-                    matchingProjects.addElement( project );
+                    matchingProjects.add( project );
                     break;
                 }
             }
@@ -146,10 +146,10 @@ class VAJWorkspaceScanner extends DirectoryScanner
 
         if( allProjectsMatch )
         {
-            matchingProjects = new Vector();
+            matchingProjects = new ArrayList();
             for( int i = 0; i < projects.length; i++ )
             {
-                matchingProjects.addElement( projects[ i ] );
+                matchingProjects.add( projects[ i ] );
             }
         }
 
@@ -174,10 +174,10 @@ class VAJWorkspaceScanner extends DirectoryScanner
         }
 
         // only scan projects which are included in at least one include pattern
-        Vector matchingProjects = findMatchingProjects();
-        for( Enumeration e = matchingProjects.elements(); e.hasMoreElements(); )
+        ArrayList matchingProjects = findMatchingProjects();
+        for( Iterator e = matchingProjects.iterator(); e.hasNext(); )
         {
-            Project project = (Project)e.nextElement();
+            Project project = (Project)e.next();
             scanProject( project );
         }
     }
@@ -207,7 +207,7 @@ class VAJWorkspaceScanner extends DirectoryScanner
                         + item.getName().replace( '.', File.separatorChar );
                     if( isIncluded( name ) && !isExcluded( name ) )
                     {
-                        packagesIncluded.addElement( item );
+                        packagesIncluded.add( item );
                     }
                 }
             }

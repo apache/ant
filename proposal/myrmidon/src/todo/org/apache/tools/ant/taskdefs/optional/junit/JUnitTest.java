@@ -7,10 +7,10 @@
  */
 package org.apache.tools.ant.taskdefs.optional.junit;
 
-import java.util.Enumeration;
+import java.util.Iterator;
 import java.util.Hashtable;
 import java.util.Properties;
-import java.util.Vector;
+import java.util.ArrayList;
 import org.apache.tools.ant.Project;
 
 /**
@@ -96,9 +96,9 @@ public class JUnitTest extends BaseTest
     public void setProperties( Hashtable p )
     {
         props = new Properties();
-        for( Enumeration enum = p.keys(); enum.hasMoreElements(); )
+        for( Iterator enum = p.keys(); enum.hasNext(); )
         {
-            Object key = enum.nextElement();
+            Object key = enum.next();
             props.put( key, p.get( key ) );
         }
     }
@@ -180,12 +180,12 @@ public class JUnitTest extends BaseTest
      *
      * @param v The feature to be added to the FormattersTo attribute
      */
-    void addFormattersTo( Vector v )
+    void addFormattersTo( ArrayList v )
     {
         final int count = formatters.size();
         for( int i = 0; i < count; i++ )
         {
-            v.addElement( formatters.elementAt( i ) );
+            v.add( formatters.get( i ) );
         }
     }
 }

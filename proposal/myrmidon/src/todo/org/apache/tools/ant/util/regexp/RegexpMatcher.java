@@ -7,7 +7,7 @@
  */
 package org.apache.tools.ant.util.regexp;
 
-import java.util.Vector;
+import java.util.ArrayList;
 import org.apache.myrmidon.api.TaskException;
 
 /**
@@ -69,7 +69,7 @@ public interface RegexpMatcher
         throws TaskException;
 
     /**
-     * Returns a Vector of matched groups found in the argument. <p>
+     * Returns a ArrayList of matched groups found in the argument. <p>
      *
      * Group 0 will be the full match, the rest are the parenthesized
      * subexpressions</p> .
@@ -78,7 +78,7 @@ public interface RegexpMatcher
      * @return The Groups value
      * @exception TaskException Description of Exception
      */
-    Vector getGroups( String argument )
+    ArrayList getGroups( String argument )
         throws TaskException;
 
     /**
@@ -103,7 +103,7 @@ public interface RegexpMatcher
      * @return The Groups value
      * @exception TaskException Description of Exception
      */
-    Vector getGroups( String input, int options )
+    ArrayList getGroups( String input, int options )
         throws TaskException;
 
 }

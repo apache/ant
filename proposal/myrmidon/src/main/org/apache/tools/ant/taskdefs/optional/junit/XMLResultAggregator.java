@@ -13,8 +13,8 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
-import java.util.Enumeration;
-import java.util.Vector;
+import java.util.Iterator;
+import java.util.ArrayList;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import org.apache.avalon.excalibur.io.FileUtil;
@@ -62,9 +62,9 @@ public class XMLResultAggregator extends Task implements XMLConstants
     /**
      * the list of all filesets, that should contains the xml to aggregate
      */
-    protected Vector filesets = new Vector();
+    protected ArrayList filesets = new ArrayList();
 
-    protected Vector transformers = new Vector();
+    protected ArrayList transformers = new ArrayList();
 
     /**
      * the directory to write the file to
@@ -129,13 +129,13 @@ public class XMLResultAggregator extends Task implements XMLConstants
      */
     public void addFileSet( FileSet fs )
     {
-        filesets.addElement( fs );
+        filesets.add( fs );
     }
 
     public AggregateTransformer createReport()
     {
         AggregateTransformer transformer = new AggregateTransformer( this );
-        transformers.addElement( transformer );
+        transformers.add( transformer );
         return transformer;
     }
 
@@ -161,11 +161,11 @@ public class XMLResultAggregator extends Task implements XMLConstants
             throw new TaskException( "Unable to write test aggregate to '" + destFile + "'", e );
         }
         // apply transformation
-        Enumeration enum = transformers.elements();
-        while( enum.hasMoreElements() )
+        Iterator enum = transformers.iterator();
+        while( enum.hasNext() )
         {
             AggregateTransformer transformer =
-                (AggregateTransformer)enum.nextElement();
+                (AggregateTransformer)enum.next();
             transformer.setXmlDocument( rootElement.getOwnerDocument() );
             transformer.transform();
         }
@@ -197,11 +197,11 @@ public class XMLResultAggregator extends Task implements XMLConstants
      */
     protected File[] getFiles()
     {
-        Vector v = new Vector();
+        ArrayList v = new ArrayList();
         final int size = filesets.size();
         for( int i = 0; i < size; i++ )
         {
-            FileSet fs = (FileSet)filesets.elementAt( i );
+            FileSet fs = (FileSet)filesets.get( i );
             DirectoryScanner ds = fs.getDirectoryScanner( getProject() );
             ds.scan();
             String[] f = ds.getIncludedFiles();
@@ -213,7 +213,7 @@ public class XMLResultAggregator extends Task implements XMLConstants
                     File file = new File( ds.getBasedir(), pathname );
                     file = FileUtil.
                         resolveFile( getProject().getBaseDir(), file.getPath() );
-                    v.addElement( file );
+                    v.add( file );
                 }
             }
         }

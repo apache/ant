@@ -7,7 +7,7 @@
  */
 package org.apache.tools.ant.taskdefs.optional.sitraka;
 
-import java.util.Vector;
+import java.util.ArrayList;
 import org.apache.tools.ant.util.regexp.RegexpMatcher;
 import org.apache.tools.ant.util.regexp.RegexpMatcherFactory;
 
@@ -22,12 +22,12 @@ public class ReportFilters
     /**
      * user defined filters
      */
-    protected Vector filters = new Vector();
+    protected ArrayList filters = new ArrayList();
 
     /**
      * cached matcher for each filter
      */
-    protected Vector matchers = null;
+    protected ArrayList matchers = null;
 
     public ReportFilters()
     {
@@ -54,8 +54,8 @@ public class ReportFilters
         final int size = filters.size();
         for( int i = 0; i < size; i++ )
         {
-            FilterElement filter = (FilterElement)filters.elementAt( i );
-            RegexpMatcher matcher = (RegexpMatcher)matchers.elementAt( i );
+            FilterElement filter = (FilterElement)filters.get( i );
+            RegexpMatcher matcher = (RegexpMatcher)matchers.get( i );
             if( filter instanceof Include )
             {
                 result = result || matcher.matches( methodname );
@@ -75,12 +75,12 @@ public class ReportFilters
 
     public void addExclude( Exclude excl )
     {
-        filters.addElement( excl );
+        filters.add( excl );
     }
 
     public void addInclude( Include incl )
     {
-        filters.addElement( incl );
+        filters.add( incl );
     }
 
     public int size()
@@ -95,14 +95,14 @@ public class ReportFilters
     {
         RegexpMatcherFactory factory = new RegexpMatcherFactory();
         final int size = filters.size();
-        matchers = new Vector();
+        matchers = new ArrayList();
         for( int i = 0; i < size; i++ )
         {
-            FilterElement filter = (FilterElement)filters.elementAt( i );
+            FilterElement filter = (FilterElement)filters.get( i );
             RegexpMatcher matcher = factory.newRegexpMatcher();
             String pattern = filter.getAsPattern();
             matcher.setPattern( pattern );
-            matchers.addElement( matcher );
+            matchers.add( matcher );
         }
     }
 

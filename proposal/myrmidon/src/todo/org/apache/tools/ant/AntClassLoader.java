@@ -16,9 +16,10 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.Enumeration;
+import java.util.Iterator;
 import java.util.Hashtable;
-import java.util.Vector;
+import java.util.ArrayList;
+import java.util.Enumeration;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 import org.apache.avalon.excalibur.io.FileUtil;
@@ -52,7 +53,7 @@ public class AntClassLoader
     /**
      * The components of the classpath that the classloader searches for classes
      */
-    Vector pathComponents = new Vector();
+    ArrayList pathComponents = new ArrayList();
 
     /**
      * Indicates whether the parent class loader should be consulted before
@@ -65,14 +66,14 @@ public class AntClassLoader
      * loader regardless of whether the parent class loader is being searched
      * first or not.
      */
-    private Vector systemPackages = new Vector();
+    private ArrayList systemPackages = new ArrayList();
 
     /**
      * These are the package roots that are to be loaded by this class loader
      * regardless of whether the parent class loader is being searched first or
      * not.
      */
-    private Vector loaderPackages = new Vector();
+    private ArrayList loaderPackages = new ArrayList();
 
     /**
      * This flag indicates that the classloader will ignore the base classloader
@@ -308,9 +309,9 @@ public class AntClassLoader
         {
             // try and load from this loader if the parent either didn't find
             // it or wasn't consulted.
-            for( Enumeration e = pathComponents.elements(); e.hasMoreElements() && url == null; )
+            for( Iterator e = pathComponents.iterator(); e.hasNext() && url == null; )
             {
-                File pathComponent = (File)e.nextElement();
+                File pathComponent = (File)e.next();
                 url = getResourceURL( pathComponent, name );
                 if( url != null )
                 {
@@ -408,7 +409,7 @@ public class AntClassLoader
      */
     public void addLoaderPackageRoot( String packageRoot )
     {
-        loaderPackages.addElement( packageRoot + "." );
+        loaderPackages.add( packageRoot + "." );
     }
 
     /**
@@ -423,7 +424,7 @@ public class AntClassLoader
         File pathComponent
             = project != null ? FileUtil.resolveFile( project.getBaseDir(), pathElement )
             : new File( pathElement );
-        pathComponents.addElement( pathComponent );
+        pathComponents.add( pathComponent );
     }
 
     /**
@@ -434,7 +435,7 @@ public class AntClassLoader
      */
     public void addSystemPackageRoot( String packageRoot )
     {
-        systemPackages.addElement( packageRoot + "." );
+        systemPackages.add( packageRoot + "." );
     }
 
     public void buildFinished( BuildEvent event )
@@ -873,9 +874,9 @@ public class AntClassLoader
         // designated to use a specific loader first (this one or the parent one)
         boolean useParentFirst = parentFirst;
 
-        for( Enumeration e = systemPackages.elements(); e.hasMoreElements(); )
+        for( Iterator e = systemPackages.iterator(); e.hasNext(); )
         {
-            String packageName = (String)e.nextElement();
+            String packageName = (String)e.next();
             if( resourceName.startsWith( packageName ) )
             {
                 useParentFirst = true;
@@ -883,9 +884,9 @@ public class AntClassLoader
             }
         }
 
-        for( Enumeration e = loaderPackages.elements(); e.hasMoreElements(); )
+        for( Iterator e = loaderPackages.iterator(); e.hasNext(); )
         {
-            String packageName = (String)e.nextElement();
+            String packageName = (String)e.next();
             if( resourceName.startsWith( packageName ) )
             {
                 useParentFirst = false;
@@ -933,9 +934,9 @@ public class AntClassLoader
         String classFilename = getClassFilename( name );
         try
         {
-            for( Enumeration e = pathComponents.elements(); e.hasMoreElements(); )
+            for( Iterator e = pathComponents.iterator(); e.hasNext(); )
             {
-                File pathComponent = (File)e.nextElement();
+                File pathComponent = (File)e.next();
                 try
                 {
                     stream = getResourceStream( pathComponent, classFilename );
@@ -1000,9 +1001,9 @@ public class AntClassLoader
         // class we want.
         InputStream stream = null;
 
-        for( Enumeration e = pathComponents.elements(); e.hasMoreElements() && stream == null; )
+        for( Iterator e = pathComponents.iterator(); e.hasNext() && stream == null; )
         {
-            File pathComponent = (File)e.nextElement();
+            File pathComponent = (File)e.next();
             stream = getResourceStream( pathComponent, name );
         }
         return stream;
@@ -1018,7 +1019,8 @@ public class AntClassLoader
      * @see AntClassLoader#findResources(String)
      * @see java.lang.ClassLoader#getResources(String)
      */
-    private class ResourceEnumeration implements Enumeration
+    private class ResourceEnumeration
+        implements Enumeration
     {
 
         /**
@@ -1088,7 +1090,7 @@ public class AntClassLoader
                 ( url == null ) )
             {
                 File pathComponent
-                    = (File)pathComponents.elementAt( pathElementsIndex );
+                    = (File)pathComponents.get( pathElementsIndex );
                 url = getResourceURL( pathComponent, this.resourceName );
                 pathElementsIndex++;
             }

@@ -15,11 +15,11 @@ import java.io.FileInputStream;
 import java.io.FilenameFilter;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.Enumeration;
+import java.util.Iterator;
 import java.util.Hashtable;
 import java.util.NoSuchElementException;
 import java.util.StringTokenizer;
-import java.util.Vector;
+import java.util.ArrayList;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 
@@ -47,11 +47,11 @@ public class ClassPathLoader
     public ClassPathLoader( String classPath )
     {
         StringTokenizer st = new StringTokenizer( classPath, File.pathSeparator );
-        Vector entries = new Vector();
+        ArrayList entries = new ArrayList();
         while( st.hasMoreTokens() )
         {
             File file = new File( st.nextToken() );
-            entries.addElement( file );
+            entries.add( file );
         }
         files = new File[ entries.size() ];
         entries.copyInto( files );
@@ -122,10 +122,10 @@ public class ClassPathLoader
         throws IOException
     {
         Hashtable map = new Hashtable();
-        Enumeration enum = loaders();
-        while( enum.hasMoreElements() )
+        Iterator enum = loaders();
+        while( enum.hasNext() )
         {
-            FileLoader loader = (FileLoader)enum.nextElement();
+            FileLoader loader = (FileLoader)enum.next();
             System.out.println( "Processing " + loader.getFile() );
             long t0 = System.currentTimeMillis();
             ClassFile[] classes = loader.getClasses();
@@ -149,9 +149,9 @@ public class ClassPathLoader
      * @return the set of <tt>FileLoader</tt> loaders matching the given
      *      classpath.
      */
-    public Enumeration loaders()
+    public Iterator loaders()
     {
-        return new LoaderEnumeration();
+        return new LoaderIterator();
     }
 
     /**
@@ -183,16 +183,16 @@ public class ClassPathLoader
      *
      * @author RT
      */
-    protected class LoaderEnumeration implements Enumeration
+    protected class LoaderIterator implements Iterator
     {
         protected int index = 0;
 
-        public boolean hasMoreElements()
+        public boolean hasNext()
         {
             return index < files.length;
         }
 
-        public Object nextElement()
+        public Object next()
         {
             if( index >= files.length )
             {
@@ -270,17 +270,17 @@ class JarLoader implements ClassPathLoader.FileLoader
         throws IOException
     {
         ZipFile zipFile = new ZipFile( file );
-        Vector v = new Vector();
-        Enumeration entries = zipFile.entries();
-        while( entries.hasMoreElements() )
+        ArrayList v = new ArrayList();
+        Iterator entries = zipFile.entries();
+        while( entries.hasNext() )
         {
-            ZipEntry entry = (ZipEntry)entries.nextElement();
+            ZipEntry entry = (ZipEntry)entries.next();
             if( entry.getName().endsWith( ".class" ) )
             {
                 InputStream is = ClassPathLoader.getCachedStream( zipFile.getInputStream( entry ) );
                 ClassFile classFile = new ClassFile( is );
                 is.close();
-                v.addElement( classFile );
+                v.add( classFile );
             }
         }
         ClassFile[] classes = new ClassFile[ v.size() ];
@@ -321,13 +321,13 @@ class DirectoryLoader implements ClassPathLoader.FileLoader
      * @return the list of <tt>File</tt> objects that applies to the given
      *      filter.
      */
-    public static Vector listFiles( File directory, FilenameFilter filter, boolean recurse )
+    public static ArrayList listFiles( File directory, FilenameFilter filter, boolean recurse )
     {
         if( !directory.isDirectory() )
         {
             throw new IllegalArgumentException( directory + " is not a directory" );
         }
-        Vector list = new Vector();
+        ArrayList list = new ArrayList();
         listFilesTo( list, directory, filter, recurse );
         return list;
     }
@@ -342,12 +342,12 @@ class DirectoryLoader implements ClassPathLoader.FileLoader
      * @param recurse tells whether or not the listing is recursive.
      * @return the list instance that was passed as the <tt>list</tt> argument.
      */
-    private static Vector listFilesTo( Vector list, File directory, FilenameFilter filter, boolean recurse )
+    private static ArrayList listFilesTo( ArrayList list, File directory, FilenameFilter filter, boolean recurse )
     {
         String[] files = directory.list( filter );
         for( int i = 0; i < files.length; i++ )
         {
-            list.addElement( new File( directory, files[ i ] ) );
+            list.add( new File( directory, files[ i ] ) );
         }
         files = null;// we don't need it anymore
         if( recurse )
@@ -364,11 +364,11 @@ class DirectoryLoader implements ClassPathLoader.FileLoader
     public ClassFile[] getClasses()
         throws IOException
     {
-        Vector v = new Vector();
-        Vector files = listFiles( directory, new ClassFilter(), true );
+        ArrayList v = new ArrayList();
+        ArrayList files = listFiles( directory, new ClassFilter(), true );
         for( int i = 0; i < files.size(); i++ )
         {
-            File file = (File)files.elementAt( i );
+            File file = (File)files.get( i );
             InputStream is = null;
             try
             {
@@ -376,7 +376,7 @@ class DirectoryLoader implements ClassPathLoader.FileLoader
                 ClassFile classFile = new ClassFile( is );
                 is.close();
                 is = null;
-                v.addElement( classFile );
+                v.add( classFile );
             }
             finally
             {

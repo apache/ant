@@ -14,7 +14,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Date;
-import java.util.Vector;
+import java.util.ArrayList;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 import org.apache.avalon.excalibur.io.FileUtil;
@@ -34,8 +34,8 @@ import org.apache.tools.ant.types.PatternSet;
 public class Expand extends MatchingTask
 {// req
     private boolean overwrite = true;
-    private Vector patternsets = new Vector();
-    private Vector filesets = new Vector();
+    private ArrayList patternsets = new ArrayList();
+    private ArrayList filesets = new ArrayList();
     private File dest;//req
     private File source;
 
@@ -78,7 +78,7 @@ public class Expand extends MatchingTask
      */
     public void addFileset( FileSet set )
     {
-        filesets.addElement( set );
+        filesets.add( set );
     }
 
     /**
@@ -88,7 +88,7 @@ public class Expand extends MatchingTask
      */
     public void addPatternset( PatternSet set )
     {
-        patternsets.addElement( set );
+        patternsets.add( set );
     }
 
     /**
@@ -131,7 +131,7 @@ public class Expand extends MatchingTask
         {
             for( int j = 0; j < filesets.size(); j++ )
             {
-                FileSet fs = (FileSet)filesets.elementAt( j );
+                FileSet fs = (FileSet)filesets.get( j );
                 DirectoryScanner ds = fs.getDirectoryScanner( getProject() );
                 File fromDir = fs.getDir( getProject() );
 
@@ -200,7 +200,7 @@ public class Expand extends MatchingTask
             boolean included = false;
             for( int v = 0; v < patternsets.size(); v++ )
             {
-                PatternSet p = (PatternSet)patternsets.elementAt( v );
+                PatternSet p = (PatternSet)patternsets.get( v );
                 String[] incls = p.getIncludePatterns( getProject() );
                 if( incls != null )
                 {

@@ -8,8 +8,8 @@
 package org.apache.tools.ant.taskdefs;
 
 import java.io.File;
-import java.util.Enumeration;
-import java.util.Vector;
+import java.util.Iterator;
+import java.util.ArrayList;
 import org.apache.myrmidon.api.TaskException;
 import org.apache.myrmidon.framework.Os;
 import org.apache.tools.ant.DirectoryScanner;
@@ -70,7 +70,7 @@ public class Javac extends MatchingTask
     private String fork = "false";
     private String forkedExecutable = null;
     private boolean nowarn = false;
-    private Vector implementationSpecificArgs = new Vector();
+    private ArrayList implementationSpecificArgs = new ArrayList();
 
     protected boolean failOnError = true;
     protected File[] compileList = new File[ 0 ];
@@ -410,21 +410,20 @@ public class Javac extends MatchingTask
      */
     public String[] getCurrentCompilerArgs()
     {
-        Vector args = new Vector();
-        for( Enumeration enum = implementationSpecificArgs.elements();
-             enum.hasMoreElements();
+        ArrayList args = new ArrayList();
+        for( Iterator enum = implementationSpecificArgs.iterator();
+             enum.hasNext();
             )
         {
             String[] curr =
-                ( (ImplementationSpecificArgument)enum.nextElement() ).getParts();
+                ( (ImplementationSpecificArgument)enum.next() ).getParts();
             for( int i = 0; i < curr.length; i++ )
             {
-                args.addElement( curr[ i ] );
+                args.add( curr[ i ] );
             }
         }
-        String[] res = new String[ args.size() ];
-        args.copyInto( res );
-        return res;
+        final String[] res = new String[ args.size() ];
+        return (String[])args.toArray( res );
     }
 
     /**
@@ -688,7 +687,7 @@ public class Javac extends MatchingTask
     {
         ImplementationSpecificArgument arg =
             new ImplementationSpecificArgument();
-        implementationSpecificArgs.addElement( arg );
+        implementationSpecificArgs.add( arg );
         return arg;
     }
 

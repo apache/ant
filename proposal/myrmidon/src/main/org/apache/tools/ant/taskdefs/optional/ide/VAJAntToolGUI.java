@@ -37,7 +37,7 @@ import java.awt.event.TextListener;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 import java.beans.PropertyChangeListener;
-import java.util.Vector;
+import java.util.ArrayList;
 import org.apache.myrmidon.api.TaskException;
 import org.apache.tools.ant.BuildEvent;
 import org.apache.tools.ant.BuildListener;
@@ -1384,10 +1384,10 @@ public class VAJAntToolGUI extends Frame
     private void fillList()
     {
         getTargetList().removeAll();
-        Vector targets = getBuildInfo().getProjectTargets();
+        ArrayList targets = getBuildInfo().getProjectTargets();
         for( int i = 0; i < targets.size(); i++ )
         {
-            getTargetList().add( targets.elementAt( i ).toString() );
+            getTargetList().add( targets.get( i ).toString() );
         }
         getTargetList().select( iBuildInfo.getProjectTargets().indexOf( iBuildInfo.getTarget() ) );
         if( getTargetList().getSelectedIndex() >= 0 )

@@ -12,7 +12,7 @@ import com.ibm.bsf.BSFManager;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
-import java.util.Enumeration;
+import java.util.Iterator;
 import java.util.Hashtable;
 import org.apache.myrmidon.api.TaskException;
 import org.apache.tools.ant.Task;
@@ -95,9 +95,9 @@ public class Script extends Task
 
             BSFManager manager = new BSFManager();
 
-            for( Enumeration e = beans.keys(); e.hasMoreElements(); )
+            for( Iterator e = beans.keys(); e.hasNext(); )
             {
-                String key = (String)e.nextElement();
+                String key = (String)e.next();
                 Object value = beans.get( key );
                 manager.declareBean( key, value, value.getClass() );
             }
@@ -131,9 +131,9 @@ public class Script extends Task
      */
     private void addBeans( Hashtable dictionary )
     {
-        for( Enumeration e = dictionary.keys(); e.hasMoreElements(); )
+        for( Iterator e = dictionary.keys(); e.hasNext(); )
         {
-            String key = (String)e.nextElement();
+            String key = (String)e.next();
 
             boolean isValid = key.length() > 0 &&
                 Character.isJavaIdentifierStart( key.charAt( 0 ) );

@@ -8,7 +8,7 @@
 package org.apache.tools.ant.taskdefs;
 
 import java.io.File;
-import java.util.Vector;
+import java.util.ArrayList;
 import org.apache.myrmidon.api.TaskException;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.Task;
@@ -36,7 +36,7 @@ public class PathConvert extends Task
     private boolean targetWindows = false;// Set when targetOS is set
     private boolean onWindows = false;// Set if we're running on windows
     private String property = null;// The property to receive the results
-    private Vector prefixMap = new Vector();// Path prefix map
+    private ArrayList prefixMap = new ArrayList();// Path prefix map
     private String pathSep = null;// User override on path sep char
     private String dirSep = null;
 
@@ -130,7 +130,7 @@ public class PathConvert extends Task
     {
 
         MapEntry entry = new MapEntry();
-        prefixMap.addElement( entry );
+        prefixMap.add( entry );
         return entry;
     }
 
@@ -250,7 +250,7 @@ public class PathConvert extends Task
 
             for( int i = 0; i < size; i++ )
             {
-                MapEntry entry = (MapEntry)prefixMap.elementAt( i );
+                MapEntry entry = (MapEntry)prefixMap.get( i );
                 String newElem = entry.apply( elem );
 
                 // Note I'm using "!=" to see if we got a new object back from

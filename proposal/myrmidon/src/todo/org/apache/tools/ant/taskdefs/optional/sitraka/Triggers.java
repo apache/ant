@@ -8,7 +8,7 @@
 package org.apache.tools.ant.taskdefs.optional.sitraka;
 
 import java.util.Hashtable;
-import java.util.Vector;
+import java.util.ArrayList;
 import org.apache.myrmidon.api.TaskException;
 
 /**
@@ -30,7 +30,7 @@ public class Triggers
      */
     private final static Hashtable eventMap = new Hashtable( 3 );
 
-    protected Vector triggers = new Vector();
+    protected ArrayList triggers = new ArrayList();
 
     static
     {
@@ -51,7 +51,7 @@ public class Triggers
 
     public void addMethod( Method method )
     {
-        triggers.addElement( method );
+        triggers.add( method );
     }
 
     // -jp_trigger=ClassName.*():E:S,ClassName.MethodName():X:X
@@ -61,7 +61,7 @@ public class Triggers
         final int size = triggers.size();
         for( int i = 0; i < size; i++ )
         {
-            buf.append( triggers.elementAt( i ).toString() );
+            buf.append( triggers.get( i ).toString() );
             if( i < size - 1 )
             {
                 buf.append( ',' );

@@ -14,10 +14,10 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Comparator;
-import java.util.Enumeration;
+import java.util.Iterator;
 import java.util.ListIterator;
 import java.util.StringTokenizer;
-import java.util.Vector;
+import java.util.ArrayList;
 import org.apache.myrmidon.api.TaskException;
 import org.apache.tools.ant.Task;
 
@@ -41,13 +41,13 @@ public class ManifestFile extends Task
     private final static String REPLACEALL_ = "replaceAll";
     private EntryContainer container;
     private String currentMethod;
-    private Vector entries;
+    private ArrayList entries;
 
     private File manifestFile;
 
     public ManifestFile()
     {
-        entries = new Vector();
+        entries = new ArrayList();
         container = new EntryContainer();
     }
 
@@ -79,7 +79,7 @@ public class ManifestFile extends Task
     public Entry createEntry()
     {
         Entry entry = new Entry();
-        entries.addElement( entry );
+        entries.add( entry );
         return entry;
     }
 
@@ -128,7 +128,7 @@ public class ManifestFile extends Task
     {
         StringBuffer buffer = new StringBuffer();
 
-        ListIterator iterator = container.elements();
+        ListIterator iterator = container.iterator();
 
         while( iterator.hasNext() )
         {
@@ -171,11 +171,11 @@ public class ManifestFile extends Task
     private void executeOperation()
         throws TaskException
     {
-        Enumeration enum = entries.elements();
+        Iterator enum = entries.iterator();
 
-        while( enum.hasMoreElements() )
+        while( enum.hasNext() )
         {
-            Entry entry = (Entry)enum.nextElement();
+            Entry entry = (Entry)enum.next();
             entry.addTo( container );
         }
     }
@@ -209,9 +209,9 @@ public class ManifestFile extends Task
                     }
                     fis.close();
                     StringTokenizer lineTokens = getLineTokens( buffer );
-                    while( lineTokens.hasMoreElements() )
+                    while( lineTokens.hasNext() )
                     {
-                        String currentLine = (String)lineTokens.nextElement();
+                        String currentLine = (String)lineTokens.next();
                         addLine( currentLine );
                     }
                 }
@@ -352,8 +352,8 @@ public class ManifestFile extends Task
         private void split()
         {
             StringTokenizer st = new StringTokenizer( value, ManifestFile.keyValueSeparator );
-            key = (String)st.nextElement();
-            val = (String)st.nextElement();
+            key = (String)st.next();
+            val = (String)st.next();
         }
 
     }
@@ -384,7 +384,7 @@ public class ManifestFile extends Task
             }
         }
 
-        public ListIterator elements()
+        public ListIterator iterator()
         {
             ListIterator iterator = list.listIterator();
             return iterator;

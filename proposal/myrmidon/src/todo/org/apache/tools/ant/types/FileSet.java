@@ -9,7 +9,7 @@ package org.apache.tools.ant.types;
 
 import java.io.File;
 import java.util.Stack;
-import java.util.Vector;
+import java.util.ArrayList;
 import org.apache.myrmidon.api.TaskException;
 import org.apache.tools.ant.DirectoryScanner;
 import org.apache.tools.ant.FileScanner;
@@ -31,7 +31,7 @@ public class FileSet extends DataType implements Cloneable
 {
 
     private PatternSet defaultPatterns = new PatternSet();
-    private Vector additionalPatterns = new Vector();
+    private ArrayList additionalPatterns = new ArrayList();
     private boolean useDefaultExcludes = true;
     private boolean isCaseSensitive = true;
 
@@ -195,7 +195,7 @@ public class FileSet extends DataType implements Cloneable
 
         for( int i = 0; i < additionalPatterns.size(); i++ )
         {
-            Object o = additionalPatterns.elementAt( i );
+            Object o = additionalPatterns.get( i );
             defaultPatterns.append( (PatternSet)o, p );
         }
 
@@ -346,7 +346,7 @@ public class FileSet extends DataType implements Cloneable
             throw noChildrenAllowed();
         }
         PatternSet patterns = new PatternSet();
-        additionalPatterns.addElement( patterns );
+        additionalPatterns.add( patterns );
         return patterns;
     }
 

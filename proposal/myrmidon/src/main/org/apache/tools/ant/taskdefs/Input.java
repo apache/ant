@@ -11,7 +11,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.StringTokenizer;
-import java.util.Vector;
+import java.util.ArrayList;
 import org.apache.myrmidon.api.TaskException;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.Task;
@@ -100,14 +100,14 @@ public class Input extends Task
     public void execute()
         throws TaskException
     {
-        Vector accept = null;
+        ArrayList accept = null;
         if( validargs != null )
         {
-            accept = new Vector();
+            accept = new ArrayList();
             StringTokenizer stok = new StringTokenizer( validargs, ",", false );
             while( stok.hasMoreTokens() )
             {
-                accept.addElement( stok.nextToken() );
+                accept.add( stok.nextToken() );
             }
         }
         log( message, Project.MSG_WARN );

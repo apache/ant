@@ -12,7 +12,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.Random;
-import java.util.Vector;
+import java.util.ArrayList;
 import org.apache.myrmidon.api.TaskException;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.Task;
@@ -238,9 +238,9 @@ public class MParse extends Task
      */
     protected File[] getMetamataLibs()
     {
-        Vector files = new Vector();
-        files.addElement( new File( metahome, "lib/metamata.jar" ) );
-        files.addElement( new File( metahome, "bin/lib/JavaCC.zip" ) );
+        ArrayList files = new ArrayList();
+        files.add( new File( metahome, "lib/metamata.jar" ) );
+        files.add( new File( metahome, "bin/lib/JavaCC.zip" ) );
 
         File[] array = new File[ files.size() ];
         files.copyInto( array );
@@ -254,30 +254,30 @@ public class MParse extends Task
      */
     protected String[] getOptions()
     {
-        Vector options = new Vector();
+        ArrayList options = new ArrayList();
         if( verbose )
         {
-            options.addElement( "-verbose" );
+            options.add( "-verbose" );
         }
         if( debugscanner )
         {
-            options.addElement( "-ds" );
+            options.add( "-ds" );
         }
         if( debugparser )
         {
-            options.addElement( "-dp" );
+            options.add( "-dp" );
         }
         if( classpath != null )
         {
-            options.addElement( "-classpath" );
-            options.addElement( classpath.toString() );
+            options.add( "-classpath" );
+            options.add( classpath.toString() );
         }
         if( sourcepath != null )
         {
-            options.addElement( "-sourcepath" );
-            options.addElement( sourcepath.toString() );
+            options.add( "-sourcepath" );
+            options.add( sourcepath.toString() );
         }
-        options.addElement( target.getAbsolutePath() );
+        options.add( target.getAbsolutePath() );
 
         String[] array = new String[ options.size() ];
         options.copyInto( array );

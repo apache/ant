@@ -9,7 +9,7 @@ package org.apache.tools.ant.taskdefs.optional.sound;
 
 import java.io.File;
 import java.util.Random;
-import java.util.Vector;
+import java.util.ArrayList;
 import org.apache.myrmidon.api.TaskException;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.Task;
@@ -154,13 +154,13 @@ public class SoundTask extends Task
                 {
                     // get the list of files in the dir
                     String[] entries = source.list();
-                    Vector files = new Vector();
+                    ArrayList files = new ArrayList();
                     for( int i = 0; i < entries.length; i++ )
                     {
                         File f = new File( source, entries[ i ] );
                         if( f.isFile() )
                         {
-                            files.addElement( f );
+                            files.add( f );
                         }
                     }
                     if( files.size() < 1 )
@@ -172,7 +172,7 @@ public class SoundTask extends Task
                     Random rn = new Random();
                     int x = rn.nextInt( numfiles );
                     // set the source to the file at that location
-                    this.source = (File)files.elementAt( x );
+                    this.source = (File)files.get( x );
                 }
             }
             else

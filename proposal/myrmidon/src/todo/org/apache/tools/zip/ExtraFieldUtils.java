@@ -6,8 +6,9 @@
  * the LICENSE file.
  */
 package org.apache.tools.zip;
+
+import java.util.ArrayList;
 import java.util.Hashtable;
-import java.util.Vector;
 import java.util.zip.ZipException;
 
 /**
@@ -45,10 +46,10 @@ public class ExtraFieldUtils
     public static ZipExtraField createExtraField( ZipShort headerId )
         throws InstantiationException, IllegalAccessException
     {
-        Class c = ( Class )implementations.get( headerId );
+        Class c = (Class)implementations.get( headerId );
         if( c != null )
         {
-            return ( ZipExtraField )c.newInstance();
+            return (ZipExtraField)c.newInstance();
         }
         UnrecognizedExtraField u = new UnrecognizedExtraField();
         u.setHeaderId( headerId );
@@ -67,17 +68,17 @@ public class ExtraFieldUtils
         int sum = 4 * data.length;
         for( int i = 0; i < data.length; i++ )
         {
-            sum += data[i].getCentralDirectoryLength().getValue();
+            sum += data[ i ].getCentralDirectoryLength().getValue();
         }
-        byte[] result = new byte[sum];
+        byte[] result = new byte[ sum ];
         int start = 0;
         for( int i = 0; i < data.length; i++ )
         {
-            System.arraycopy( data[i].getHeaderId().getBytes(),
-                0, result, start, 2 );
-            System.arraycopy( data[i].getCentralDirectoryLength().getBytes(),
-                0, result, start + 2, 2 );
-            byte[] local = data[i].getCentralDirectoryData();
+            System.arraycopy( data[ i ].getHeaderId().getBytes(),
+                              0, result, start, 2 );
+            System.arraycopy( data[ i ].getCentralDirectoryLength().getBytes(),
+                              0, result, start + 2, 2 );
+            byte[] local = data[ i ].getCentralDirectoryData();
             System.arraycopy( local, 0, result, start + 4, local.length );
             start += ( local.length + 4 );
         }
@@ -96,17 +97,17 @@ public class ExtraFieldUtils
         int sum = 4 * data.length;
         for( int i = 0; i < data.length; i++ )
         {
-            sum += data[i].getLocalFileDataLength().getValue();
+            sum += data[ i ].getLocalFileDataLength().getValue();
         }
-        byte[] result = new byte[sum];
+        byte[] result = new byte[ sum ];
         int start = 0;
         for( int i = 0; i < data.length; i++ )
         {
-            System.arraycopy( data[i].getHeaderId().getBytes(),
-                0, result, start, 2 );
-            System.arraycopy( data[i].getLocalFileDataLength().getBytes(),
-                0, result, start + 2, 2 );
-            byte[] local = data[i].getLocalFileDataData();
+            System.arraycopy( data[ i ].getHeaderId().getBytes(),
+                              0, result, start, 2 );
+            System.arraycopy( data[ i ].getLocalFileDataLength().getBytes(),
+                              0, result, start + 2, 2 );
+            byte[] local = data[ i ].getLocalFileDataData();
             System.arraycopy( local, 0, result, start + 4, local.length );
             start += ( local.length + 4 );
         }
@@ -124,7 +125,7 @@ public class ExtraFieldUtils
     public static ZipExtraField[] parse( byte[] data )
         throws ZipException
     {
-        Vector v = new Vector();
+        ArrayList v = new ArrayList();
         int start = 0;
         while( start <= data.length - 4 )
         {
@@ -138,7 +139,7 @@ public class ExtraFieldUtils
             {
                 ZipExtraField ze = createExtraField( headerId );
                 ze.parseFromLocalFileData( data, start + 4, length );
-                v.addElement( ze );
+                v.add( ze );
             }
             catch( InstantiationException ie )
             {
@@ -155,9 +156,8 @@ public class ExtraFieldUtils
             throw new ZipException( "data starting at " + start + " is in unknown format" );
         }
 
-        ZipExtraField[] result = new ZipExtraField[v.size()];
-        v.copyInto( result );
-        return result;
+        final ZipExtraField[] result = new ZipExtraField[ v.size() ];
+        return (ZipExtraField[])v.toArray( result );
     }
 
     /**
@@ -173,13 +173,13 @@ public class ExtraFieldUtils
     {
         try
         {
-            ZipExtraField ze = ( ZipExtraField )c.newInstance();
+            ZipExtraField ze = (ZipExtraField)c.newInstance();
             implementations.put( ze.getHeaderId(), c );
         }
         catch( ClassCastException cc )
         {
             throw new RuntimeException( c +
-                " doesn\'t implement ZipExtraField" );
+                                        " doesn\'t implement ZipExtraField" );
         }
         catch( InstantiationException ie )
         {
@@ -188,7 +188,7 @@ public class ExtraFieldUtils
         catch( IllegalAccessException ie )
         {
             throw new RuntimeException( c +
-                "\'s no-arg constructor is not public" );
+                                        "\'s no-arg constructor is not public" );
         }
     }
 }

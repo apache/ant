@@ -9,6 +9,8 @@ package org.apache.tools.ant.taskdefs.file;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Iterator;
+import java.util.Iterator;
 import java.util.Enumeration;
 import org.apache.avalon.excalibur.io.FileUtil;
 import org.apache.myrmidon.api.TaskException;
@@ -153,9 +155,9 @@ public class Move extends Copy
                             {
                                 executionFilters.addFilterSet( getProject().getGlobalFilterSet() );
                             }
-                            for( Enumeration filterEnum = getFilterSets().elements(); filterEnum.hasMoreElements(); )
+                            for( Iterator filterEnum = getFilterSets().iterator(); filterEnum.hasNext(); )
                             {
-                                executionFilters.addFilterSet( (FilterSet)filterEnum.nextElement() );
+                                executionFilters.addFilterSet( (FilterSet)filterEnum.next() );
                             }
 
                             if( isForceOverwrite() )
@@ -211,10 +213,10 @@ public class Move extends Copy
 
         if( getFilesets().size() > 0 )
         {
-            Enumeration e = getFilesets().elements();
-            while( e.hasMoreElements() )
+            Iterator e = getFilesets().iterator();
+            while( e.hasNext() )
             {
-                FileSet fs = (FileSet)e.nextElement();
+                FileSet fs = (FileSet)e.next();
                 File dir = fs.getDir( getProject() );
 
                 if( okToDelete( dir ) )

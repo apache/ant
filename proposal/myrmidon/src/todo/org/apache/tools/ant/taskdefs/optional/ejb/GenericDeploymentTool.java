@@ -819,7 +819,7 @@ public class GenericDeploymentTool implements EJBDeploymentTool
         JarOutputStream jarStream = null;
         try
         {
-            // clean the addedfiles Vector
+            // clean the addedfiles ArrayList
             addedfiles = new ArrayList();
 
             /*

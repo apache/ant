@@ -11,7 +11,6 @@ import java.io.PrintStream;
 import org.apache.tools.ant.BuildEvent;
 import org.apache.tools.ant.BuildLogger;
 import org.apache.tools.ant.Project;
-import org.apache.tools.ant.util.StringUtils;
 
 /**
  * This is a class that represents a recorder. This is the listener to the build

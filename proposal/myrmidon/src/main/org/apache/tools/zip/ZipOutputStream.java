@@ -11,7 +11,7 @@ import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
 import java.util.Date;
 import java.util.Hashtable;
-import java.util.Vector;
+import java.util.ArrayList;
 import java.util.zip.CRC32;
 import java.util.zip.Deflater;
 import java.util.zip.DeflaterOutputStream;
@@ -124,7 +124,7 @@ public class ZipOutputStream extends DeflaterOutputStream
      *
      * @since 1.1
      */
-    private Vector entries = new Vector();
+    private ArrayList entries = new ArrayList();
 
     /**
      * CRC instance to avoid parsing DEFLATED data twice.
@@ -372,12 +372,12 @@ public class ZipOutputStream extends DeflaterOutputStream
         cdOffset = new ZipLong( written );
         for( int i = 0; i < entries.size(); i++ )
         {
-            writeCentralFileHeader( ( ZipEntry )entries.elementAt( i ) );
+            writeCentralFileHeader( ( ZipEntry )entries.get( i ) );
         }
         cdLength = new ZipLong( written - cdOffset.getValue() );
         writeCentralDirectoryEnd();
         offsets.clear();
-        entries.removeAllElements();
+        entries.clear();
     }
 
     /**
@@ -393,7 +393,7 @@ public class ZipOutputStream extends DeflaterOutputStream
         closeEntry();
 
         entry = ze;
-        entries.addElement( entry );
+        entries.add( entry );
 
         if( entry.getMethod() == -1 )
         {// not specified

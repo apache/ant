@@ -14,9 +14,9 @@ import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.Writer;
-import java.util.Enumeration;
+import java.util.Iterator;
 import java.util.Hashtable;
-import java.util.Vector;
+import java.util.ArrayList;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import org.apache.tools.ant.Project;
@@ -145,15 +145,15 @@ class MAuditStreamHandler implements ExecuteStreamHandler
         // this is the only code that could be needed to be overrided
         Document doc = getDocumentBuilder().newDocument();
         Element rootElement = doc.createElement( "classes" );
-        Enumeration keys = auditedFiles.keys();
+        Iterator keys = auditedFiles.keys();
         Hashtable filemapping = task.getFileMapping();
         rootElement.setAttribute( "audited", String.valueOf( filemapping.size() ) );
         rootElement.setAttribute( "reported", String.valueOf( auditedFiles.size() ) );
         int errors = 0;
-        while( keys.hasMoreElements() )
+        while( keys.hasNext() )
         {
-            String filepath = (String)keys.nextElement();
-            Vector v = (Vector)auditedFiles.get( filepath );
+            String filepath = (String)keys.next();
+            ArrayList v = (ArrayList)auditedFiles.get( filepath );
             String fullclassname = (String)filemapping.get( filepath );
             if( fullclassname == null )
             {
@@ -170,7 +170,7 @@ class MAuditStreamHandler implements ExecuteStreamHandler
             errors += v.size();
             for( int i = 0; i < v.size(); i++ )
             {
-                MAudit.Violation violation = (MAudit.Violation)v.elementAt( i );
+                MAudit.Violation violation = (MAudit.Violation)v.get( i );
                 Element error = doc.createElement( "violation" );
                 error.setAttribute( "line", String.valueOf( violation.line ) );
                 error.setAttribute( "message", violation.error );
@@ -223,11 +223,11 @@ class MAuditStreamHandler implements ExecuteStreamHandler
      */
     protected void addViolationEntry( String file, MAudit.Violation entry )
     {
-        Vector violations = (Vector)auditedFiles.get( file );
+        ArrayList violations = (ArrayList)auditedFiles.get( file );
         // if there is no decl for this file yet, create it.
         if( violations == null )
         {
-            violations = new Vector();
+            violations = new ArrayList();
             auditedFiles.put( file, violations );
         }
         violations.add( entry );
@@ -253,12 +253,12 @@ class MAuditStreamHandler implements ExecuteStreamHandler
     // There will obviouslly be a problem if the message is on several lines...
     protected void processLine( String line )
     {
-        Vector matches = matcher.getGroups( line );
+        ArrayList matches = matcher.getGroups( line );
         if( matches != null )
         {
-            String file = (String)matches.elementAt( 1 );
-            int lineNum = Integer.parseInt( (String)matches.elementAt( 2 ) );
-            String msg = (String)matches.elementAt( 3 );
+            String file = (String)matches.get( 1 );
+            int lineNum = Integer.parseInt( (String)matches.get( 2 ) );
+            String msg = (String)matches.get( 3 );
             addViolationEntry( file, MAudit.createViolation( lineNum, msg ) );
         }
         else

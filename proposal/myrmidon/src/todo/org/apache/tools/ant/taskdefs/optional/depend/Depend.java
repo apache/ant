@@ -15,9 +15,10 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.Hashtable;
-import java.util.Vector;
+import java.util.Iterator;
 import org.apache.myrmidon.api.TaskException;
 import org.apache.tools.ant.AntClassLoader;
 import org.apache.tools.ant.DirectoryScanner;
@@ -361,13 +362,13 @@ public class Depend extends MatchingTask
      *      where classes can be found.
      * @return a vector containing the classes to analyse.
      */
-    private Vector getClassFiles( Path classLocations )
+    private ArrayList getClassFiles( Path classLocations )
         throws TaskException
     {
         // break the classLocations into its components.
         String[] classLocationsList = classLocations.list();
 
-        Vector classFileList = new Vector();
+        ArrayList classFileList = new ArrayList();
 
         for( int i = 0; i < classLocationsList.length; ++i )
         {
@@ -389,7 +390,7 @@ public class Depend extends MatchingTask
      * @param dir The feature to be added to the ClassFiles attribute
      * @param root The feature to be added to the ClassFiles attribute
      */
-    private void addClassFiles( Vector classFileList, File dir, File root )
+    private void addClassFiles( ArrayList classFileList, File dir, File root )
     {
         String[] filesInDir = dir.list();
 
@@ -411,7 +412,7 @@ public class Depend extends MatchingTask
                     info.relativeName = file.getPath().substring( root.getPath().length() + 1,
                                                                   file.getPath().length() - 6 );
                     info.className = ClassFileUtils.convertSlashName( info.relativeName );
-                    classFileList.addElement( info );
+                    classFileList.add( info );
                 }
             }
         }
@@ -515,13 +516,13 @@ public class Depend extends MatchingTask
             depCacheFileExists = depCacheFile.exists();
             depCacheFileLastModified = depCacheFile.lastModified();
         }
-        for( Enumeration e = getClassFiles( destPath ).elements(); e.hasMoreElements(); )
+        for( Iterator e = getClassFiles( destPath ).iterator(); e.hasNext(); )
         {
-            ClassFileInfo info = (ClassFileInfo)e.nextElement();
+            ClassFileInfo info = (ClassFileInfo)e.next();
             log( "Adding class info for " + info.className, Project.MSG_DEBUG );
             classFileInfoMap.put( info.className, info );
 
-            Vector dependencyList = null;
+            ArrayList dependencyList = null;
 
             if( cache != null )
             {
@@ -530,7 +531,7 @@ public class Depend extends MatchingTask
                 {
                     // depFile exists and is newer than the class file
                     // need to get dependency list from the map.
-                    dependencyList = (Vector)dependencyMap.get( info.className );
+                    dependencyList = (ArrayList)dependencyMap.get( info.className );
                 }
             }
 
@@ -563,9 +564,9 @@ public class Depend extends MatchingTask
 
             // This class depends on each class in the dependency list. For each
             // one of those, add this class into their affected classes list
-            for( Enumeration depEnum = dependencyList.elements(); depEnum.hasMoreElements(); )
+            for( Iterator depEnum = dependencyList.iterator(); depEnum.hasNext(); )
             {
-                String dependentClass = (String)depEnum.nextElement();
+                String dependentClass = (String)depEnum.next();
 
                 Hashtable affectedClasses = (Hashtable)affectedClassMap.get( dependentClass );
                 if( affectedClasses == null )
@@ -590,12 +591,12 @@ public class Depend extends MatchingTask
             for( Enumeration e = dependencyMap.keys(); e.hasMoreElements(); )
             {
                 String className = (String)e.nextElement();
-                Vector dependencyList = (Vector)dependencyMap.get( className );
+                ArrayList dependencyList = (ArrayList)dependencyMap.get( className );
                 Hashtable dependencies = new Hashtable();
                 classpathDependencies.put( className, dependencies );
-                for( Enumeration e2 = dependencyList.elements(); e2.hasMoreElements(); )
+                for( Iterator e2 = dependencyList.iterator(); e2.hasNext(); )
                 {
-                    String dependency = (String)e2.nextElement();
+                    String dependency = (String)e2.next();
                     Object classpathFileObject = classpathFileCache.get( dependency );
                     if( classpathFileObject == null )
                     {
@@ -666,20 +667,20 @@ public class Depend extends MatchingTask
                 {
                     in = new BufferedReader( new FileReader( depFile ) );
                     String line = null;
-                    Vector dependencyList = null;
+                    ArrayList dependencyList = null;
                     String className = null;
                     int prependLength = CLASSNAME_PREPEND.length();
                     while( ( line = in.readLine() ) != null )
                     {
                         if( line.startsWith( CLASSNAME_PREPEND ) )
                         {
-                            dependencyList = new Vector();
+                            dependencyList = new ArrayList();
                             className = line.substring( prependLength );
                             dependencyMap.put( className, dependencyList );
                         }
                         else
                         {
-                            dependencyList.addElement( line );
+                            dependencyList.add( line );
                         }
                     }
                 }
@@ -720,11 +721,11 @@ public class Depend extends MatchingTask
 
                     pw.println( CLASSNAME_PREPEND + className );
 
-                    Vector dependencyList = (Vector)dependencyMap.get( className );
+                    ArrayList dependencyList = (ArrayList)dependencyMap.get( className );
                     int size = dependencyList.size();
                     for( int x = 0; x < size; x++ )
                     {
-                        pw.println( dependencyList.elementAt( x ) );
+                        pw.println( dependencyList.get( x ) );
                     }
                 }
             }
