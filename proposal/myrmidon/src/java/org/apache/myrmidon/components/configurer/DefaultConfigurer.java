@@ -11,7 +11,6 @@ import java.util.HashMap;
 import java.util.Map;
 import org.apache.avalon.excalibur.i18n.ResourceManager;
 import org.apache.avalon.excalibur.i18n.Resources;
-import org.apache.avalon.excalibur.property.PropertyUtil;
 import org.apache.avalon.framework.CascadingException;
 import org.apache.avalon.framework.component.ComponentException;
 import org.apache.avalon.framework.component.ComponentManager;
@@ -130,7 +129,7 @@ public class DefaultConfigurer
                 {
                     throw ce;
                 }
-                catch( final CascadingException ce )
+                catch( final Exception ce )
                 {
                     final String message =
                         REZ.getString( "bad-set-attribute.error", elemName, name );
@@ -158,7 +157,7 @@ public class DefaultConfigurer
                 {
                     throw ce;
                 }
-                catch( final CascadingException ce )
+                catch( final Exception ce )
                 {
                     final String message =
                         REZ.getString( "bad-set-content.error", elemName );
@@ -186,7 +185,7 @@ public class DefaultConfigurer
                 {
                     throw ce;
                 }
-                catch( final CascadingException ce )
+                catch( final Exception ce )
                 {
                     final String message =
                         REZ.getString( "bad-set-element.error", elemName, name );
@@ -227,7 +226,7 @@ public class DefaultConfigurer
         {
             setAttribute( state, name, value, context );
         }
-        catch( final CascadingException ce )
+        catch( final Exception ce )
         {
             final String message =
                 REZ.getString( "bad-set-class-attribute.error",
@@ -246,7 +245,7 @@ public class DefaultConfigurer
     private void configureElement( final ConfigurationState state,
                                    final Configuration element,
                                    final Context context )
-        throws CascadingException
+        throws Exception
     {
         final String elementName = element.getName();
         if( elementName.toLowerCase().endsWith( "-ref" ) )
@@ -267,7 +266,7 @@ public class DefaultConfigurer
     private void configureInline( final ConfigurationState state,
                                   final Configuration element,
                                   final Context context )
-        throws CascadingException
+        throws Exception
     {
         final String name = element.getName();
 
@@ -289,7 +288,7 @@ public class DefaultConfigurer
     private void configureReference( final ConfigurationState state,
                                      final Configuration element,
                                      final Context context )
-        throws CascadingException
+        throws Exception
     {
 
         // Extract the id
@@ -313,7 +312,7 @@ public class DefaultConfigurer
                                final String refName,
                                final String unresolvedId,
                                final Context context )
-        throws CascadingException
+        throws Exception
     {
         // Adjust the name
         final String name = refName.substring( 0, refName.length() - 4 );
@@ -323,7 +322,7 @@ public class DefaultConfigurer
             = getConfigurerFromName( state.getConfigurer(), name, false );
 
         // Resolve any props in the id
-        Object id = PropertyUtil.resolveProperty( unresolvedId, context, false );
+        Object id = resolveProperty( unresolvedId, context );
 
         // Locate the referenced object
         Object ref = null;
@@ -349,6 +348,13 @@ public class DefaultConfigurer
         childConfigurer.addValue( state, ref );
     }
 
+    private Object resolveProperty( final String unresolvedId,
+                                    final Context context )
+        throws Exception
+    {
+        return PropertyUtil.resolveProperty( unresolvedId, context, false );
+    }
+
     /**
      * Sets an attribute value.
      */
@@ -356,7 +362,7 @@ public class DefaultConfigurer
                                final String name,
                                final String value,
                                final Context context )
-        throws CascadingException
+        throws Exception
     {
         if( name.toLowerCase().endsWith( "-ref" ) )
         {
@@ -379,7 +385,7 @@ public class DefaultConfigurer
                            final ConfigurationState state,
                            final String value,
                            final Context context )
-        throws CascadingException
+        throws Exception
     {
         // Resolve property references in the attribute value
         Object objValue = PropertyUtil.resolveProperty( value, context, false );
