@@ -53,6 +53,9 @@
  */
 package org.apache.tools.ant;
 
+
+import javax.xml.parsers.SAXParserFactory;
+import javax.xml.parsers.SAXParser;
 import java.io.File;
 import java.io.FilenameFilter;
 import java.io.PrintStream;
@@ -175,6 +178,79 @@ public final class Diagnostics {
     }
 
     /**
+     * what parser are we using.
+     * @return the classname of the parser
+     */
+    private static String getXmlParserName() {
+        SAXParser saxParser= getSAXParser();
+        if (saxParser == null) {
+            return "Could not create an XML Parser";
+        }
+
+        // check to what is in the classname
+        String saxParserName = saxParser.getClass().getName();
+        return saxParserName;
+    }
+
+    /**
+     * Create a JAXP SAXParser
+     * @return parser or null for trouble
+     */
+    private static SAXParser getSAXParser() {
+        SAXParserFactory saxParserFactory = SAXParserFactory.newInstance();
+        if (saxParserFactory == null) {
+            return null;
+        }
+        SAXParser saxParser=null;
+        try {
+            saxParser = saxParserFactory.newSAXParser();
+        } catch (Exception e) {
+        }
+        return saxParser;
+    }
+
+    /**
+     * get the location of the parser
+     * @return path or null for trouble in tracking it down
+     */
+
+    private static String getXMLParserLocation() {
+        SAXParser saxParser = getSAXParser();
+        if (saxParser == null) {
+            return null;
+        }
+        String location=getClassLocation(saxParser.getClass());
+        return location;
+    }
+
+    /**
+     * get the location of a class. Stolen from axis/webapps/happyaxis.jsp
+     * @param clazz
+     * @return the jar file or path where a class was found, or null
+     */
+
+    private static String getClassLocation( Class clazz) {
+        try {
+            java.net.URL url = clazz.getProtectionDomain().getCodeSource().getLocation();
+            String location = url.toString();
+            if (location.startsWith("jar")) {
+                url = ((java.net.JarURLConnection) url.openConnection()).getJarFileURL();
+                location = url.toString();
+            }
+
+            if (location.startsWith("file")) {
+                java.io.File file = new java.io.File(url.getFile());
+                return file.getAbsolutePath();
+            } else {
+                return url.toString();
+            }
+        } catch (Throwable t) {
+        }
+        return null;
+    }
+
+
+    /**
      * Print a report to the given stream.
      * @param out the stream to print the report to.
      */
@@ -213,6 +289,13 @@ public final class Diagnostics {
         out.println(" org.apache.env.Which diagnostics");
         out.println("-------------------------------------------");
         doReportWhich(out);
+
+
+        out.println();
+        out.println("-------------------------------------------");
+        out.println(" XML Parser information");
+        out.println("-------------------------------------------");
+        doReportParserInfo(out);
 
         out.println();
         out.println("-------------------------------------------");
@@ -320,4 +403,20 @@ public final class Diagnostics {
         }
     }
 
+    /**
+     * tell the user about the XML parser
+     * @param out
+     */
+    private static void doReportParserInfo(PrintStream out) {
+        String parserName=getXmlParserName();
+        String parserLocation=getXMLParserLocation();
+        if(parserName==null) {
+            parserName="unknown";
+        }
+        if(parserLocation==null) {
+            parserLocation="unknown";
+        }
+        out.println("XML Parser : " + parserName);
+        out.println("XML Parser Location: " + parserLocation);
+    }
 }
