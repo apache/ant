@@ -406,7 +406,8 @@ class MetricsElement {
         // construct name, we'll need all this to figure out what type of
         // construct it is since we lost all semantics :(
         // (#indent[/]*)(#construct.*)
-        String name = (String)metrics.remove(0);
+        String name = (String)metrics.elementAt(0);
+        metrics.removeElementAt(0);
         int indent = 0;
         pos = name.lastIndexOf('/');
         if (pos != -1){

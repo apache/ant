@@ -225,7 +225,7 @@ public abstract class AbstractMetamataTask extends Task{
 
     /** return the location of the jar file used to run */
     protected final File getMetamataJar(File home){
-        return new File(home.getAbsoluteFile(), "lib/metamata.jar");
+        return new File(new File(home.getAbsolutePath()), "lib/metamata.jar");
     }
 
     /** validate options set */
