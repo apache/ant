@@ -37,6 +37,9 @@ Other changes:
   which will allow nonexistent files specified via <filelist>s to
   be passed to the executable.  Bugzilla Report 29585.
 
+* <fail> has a status attribute that can be used to pass an exit
+  status back to the command line.
+
 Changes from Ant 1.6.1 to current Ant 1.6 CVS version
 =====================================================
 

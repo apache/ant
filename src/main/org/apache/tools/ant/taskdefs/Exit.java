@@ -19,6 +19,7 @@ package org.apache.tools.ant.taskdefs;
 
 import org.apache.tools.ant.Task;
 import org.apache.tools.ant.BuildException;
+import org.apache.tools.ant.ExitStatusException;
 import org.apache.tools.ant.taskdefs.condition.Condition;
 import org.apache.tools.ant.taskdefs.condition.ConditionBase;
 
@@ -58,6 +59,7 @@ public class Exit extends Task {
     private String message;
     private String ifCondition, unlessCondition;
     private NestedCondition nestedCondition;
+    private Integer status;
 
     /**
      * A message giving further information on why the build exited.
@@ -83,6 +85,14 @@ public class Exit extends Task {
      */
     public void setUnless(String c) {
         unlessCondition = c;
+    }
+
+    /**
+     * Set the status code to associate with the thrown Exception.
+     * @param i   the <CODE>int</CODE> status
+     */
+    public void setStatus(int i) {
+        status = new Integer(i);
     }
 
     /**
@@ -126,7 +136,8 @@ public class Exit extends Task {
                     }
                 }
             }
-            throw new BuildException(text);
+            throw ((status == null) ? new BuildException(text)
+             : new ExitStatusException(text, status.intValue()));
         }
     }
 

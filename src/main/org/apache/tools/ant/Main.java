@@ -184,8 +184,15 @@ public class Main implements AntMain {
         // expect the worst
         int exitCode = 1;
         try {
-            runBuild(coreLoader);
-            exitCode = 0;
+            try {
+                runBuild(coreLoader);
+                exitCode = 0;
+            } catch (ExitStatusException ese) {
+                exitCode = ese.getStatus();
+                if (exitCode > 0) {
+                    throw ese;
+                }
+            }
         } catch (BuildException be) {
             if (err != System.err) {
                 printMessage(be);
