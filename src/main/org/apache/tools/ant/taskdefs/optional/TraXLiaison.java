@@ -104,7 +104,7 @@ public class TraXLiaison implements XSLTLiaison {
 
     protected String normalize(String fileName) {
         if(fileName != null && !fileName.startsWith(FILEURL)) {
-            return FILEURL + fileName;
+            return FILEURL + "///" + fileName;
         }
         return fileName;
     }
