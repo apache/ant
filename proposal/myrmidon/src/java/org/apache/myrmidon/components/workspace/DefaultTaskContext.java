@@ -14,13 +14,13 @@ import org.apache.avalon.excalibur.i18n.ResourceManager;
 import org.apache.avalon.excalibur.i18n.Resources;
 import org.apache.avalon.excalibur.io.FileUtil;
 import org.apache.avalon.framework.context.ContextException;
+import org.apache.avalon.framework.service.ServiceException;
+import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.myrmidon.api.TaskContext;
 import org.apache.myrmidon.api.TaskException;
-import org.apache.myrmidon.components.configurer.PropertyUtil;
 import org.apache.myrmidon.components.configurer.PropertyException;
+import org.apache.myrmidon.components.configurer.PropertyUtil;
 import org.apache.myrmidon.interfaces.configurer.TaskContextAdapter;
-import org.apache.myrmidon.interfaces.service.AntServiceException;
-import org.apache.myrmidon.interfaces.service.AntServiceManager;
 
 /**
  * Default implementation of TaskContext.
@@ -36,7 +36,7 @@ public class DefaultTaskContext
 
     private final Map m_contextData = new Hashtable();
     private final TaskContext m_parent;
-    private AntServiceManager m_serviceManager;
+    private ServiceManager m_serviceManager;
 
     /**
      * Constructor for Context with no parent contexts.
@@ -57,7 +57,7 @@ public class DefaultTaskContext
     /**
      * Constructor that specifies the service directory for context.
      */
-    public DefaultTaskContext( final AntServiceManager serviceManager )
+    public DefaultTaskContext( final ServiceManager serviceManager )
     {
         this( null, serviceManager );
     }
@@ -66,7 +66,7 @@ public class DefaultTaskContext
      * Constructor that takes both parent context and a service directory.
      */
     public DefaultTaskContext( final TaskContext parent,
-                               final AntServiceManager serviceManager )
+                               final ServiceManager serviceManager )
     {
         m_parent = parent;
         m_serviceManager = serviceManager;
@@ -153,13 +153,13 @@ public class DefaultTaskContext
     {
         // Try this context first
         final String name = serviceClass.getName();
-        if( m_serviceManager != null && m_serviceManager.hasService( serviceClass ) )
+        if( m_serviceManager != null && m_serviceManager.hasService( name ) )
         {
             try
             {
-                return m_serviceManager.getService( serviceClass );
+                return m_serviceManager.lookup( name );
             }
-            catch( final AntServiceException se )
+            catch( final ServiceException se )
             {
                 throw new TaskException( se.getMessage(), se );
             }

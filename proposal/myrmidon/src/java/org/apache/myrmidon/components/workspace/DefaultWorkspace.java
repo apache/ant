@@ -21,10 +21,10 @@ import org.apache.avalon.framework.logger.Logger;
 import org.apache.avalon.framework.parameters.ParameterException;
 import org.apache.avalon.framework.parameters.Parameterizable;
 import org.apache.avalon.framework.parameters.Parameters;
+import org.apache.avalon.framework.service.DefaultServiceManager;
+import org.apache.avalon.framework.service.ServiceException;
 import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.avalon.framework.service.Serviceable;
-import org.apache.avalon.framework.service.ServiceException;
-import org.apache.avalon.framework.service.DefaultServiceManager;
 import org.apache.log.Hierarchy;
 import org.apache.myrmidon.api.TaskContext;
 import org.apache.myrmidon.api.TaskException;
@@ -37,8 +37,6 @@ import org.apache.myrmidon.interfaces.executor.Executor;
 import org.apache.myrmidon.interfaces.model.Project;
 import org.apache.myrmidon.interfaces.model.Target;
 import org.apache.myrmidon.interfaces.model.TypeLib;
-import org.apache.myrmidon.interfaces.service.MultiSourceServiceManager;
-import org.apache.myrmidon.interfaces.service.AntServiceManager;
 import org.apache.myrmidon.interfaces.type.TypeManager;
 import org.apache.myrmidon.interfaces.workspace.Workspace;
 import org.apache.myrmidon.listeners.ProjectListener;
@@ -258,15 +256,9 @@ public class DefaultWorkspace
             serviceManager.put( Project.ROLE + "/" + name, other );
         }
 
-        // Create a service manager that aggregates the contents of the context's
-        // component manager, and service manager
-        final MultiSourceServiceManager msServiceManager = new MultiSourceServiceManager();
-        msServiceManager.add( (AntServiceManager)serviceManager.lookup( AntServiceManager.ROLE ) );
-        msServiceManager.add( new ServiceManagerAdaptor( serviceManager ) );
-
         // Create and configure the context
         final DefaultTaskContext context =
-            new DefaultTaskContext( m_baseContext, msServiceManager );
+            new DefaultTaskContext( m_baseContext, serviceManager );
         context.setProperty( TaskContext.BASE_DIRECTORY, project.getBaseDirectory() );
 
         // Create a logger

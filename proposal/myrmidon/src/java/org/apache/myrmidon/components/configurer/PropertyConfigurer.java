@@ -11,7 +11,7 @@ import org.apache.avalon.framework.configuration.ConfigurationException;
 
 /**
  * Configures a property of an object.
- * TODO - axe useCreator() and createValue().
+ * TODO - axe createValue().
  *
  * @author <a href="mailto:adammurdoch_ml@yahoo.com">Adam Murdoch</a>
  * @version $Revision$ $Date$
@@ -25,8 +25,7 @@ interface PropertyConfigurer
 
     /**
      * Creates a default value for this property.  This value must be configured,
-     * and then attached to the object using {@link #setValue}.  This
-     * method must be called if {@link #useCreator} returns true.
+     * and then attached to the object using {@link #addValue}.
      *
      * @param state The state object, representing the object being configured.
      * @return An object which is assignable to the type returned by

@@ -353,53 +353,24 @@ class DefaultObjectConfigurer
      * Returns a configurer for an element of this class.
      */
     public PropertyConfigurer getProperty( final String name )
-        throws NoSuchPropertyException
     {
-        PropertyConfigurer configurer = (PropertyConfigurer)m_props.get( name );
-        if( null != configurer )
-        {
-            return configurer;
-        }
-
-        // Unknown property
-        final String message = REZ.getString( "unknown-property.error", m_class.getName(), name );
-        throw new NoSuchPropertyException( message );
+        return (PropertyConfigurer)m_props.get( name );
     }
 
     /**
      * Returns a configurer for the typed property of this class.
      */
     public PropertyConfigurer getTypedProperty()
-        throws NoSuchPropertyException
     {
-        if( null != m_typedPropConfigurer )
-        {
-            return m_typedPropConfigurer;
-        }
-        else
-        {
-            // No typed property
-            final String message = REZ.getString( "no-typed-property.error", m_class.getName() );
-            throw new NoSuchPropertyException( message );
-        }
+        return m_typedPropConfigurer;
     }
 
     /**
      * Returns a configurer for the content of this class.
      */
     public PropertyConfigurer getContentConfigurer()
-        throws NoSuchPropertyException
     {
-        if( null != m_contentConfigurer )
-        {
-            return m_contentConfigurer;
-        }
-        else
-        {
-            // Does not handle content
-            final String message = REZ.getString( "content-unsupported.error", m_class.getName() );
-            throw new NoSuchPropertyException( message );
-        }
+        return m_contentConfigurer;
     }
 
     /**

@@ -5,17 +5,18 @@
  * version 1.1, a copy of which has been included  with this distribution in
  * the LICENSE.txt file.
  */
-package org.apache.myrmidon.components.configurer;
-
-
+package org.apache.myrmidon.components.service;
 
 /**
- * A marker exception that is thrown when an unknown property is encountered.
+ * A test service implementation.
  *
- * @author Adam Murdoch
+ * @author <a href="mailto:adammurdoch@apache.org">Adam Murdoch</a>
  * @version $Revision$ $Date$
  */
-class NoSuchPropertyException
-    extends Exception
+public class TestServiceImpl1
+    implements TestService
 {
+    public void doWork()
+    {
+    }
 }

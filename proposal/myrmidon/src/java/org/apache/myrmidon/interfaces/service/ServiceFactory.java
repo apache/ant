@@ -20,7 +20,7 @@ public interface ServiceFactory
     String ROLE = ServiceFactory.class.getName();
 
     /**
-     * Create a service that coresponds to this factory.
+     * Create a service that corresponds to this factory.
      * This method is usually called after the factory has been
      * prepared and configured as appropriate.
      */

@@ -10,16 +10,18 @@ package org.apache.myrmidon.interfaces.service;
 import java.util.ArrayList;
 import org.apache.avalon.excalibur.i18n.ResourceManager;
 import org.apache.avalon.excalibur.i18n.Resources;
+import org.apache.avalon.framework.service.ServiceException;
+import org.apache.avalon.framework.service.ServiceManager;
 
 /**
  * A service manager that aggregates services from several
- * {@link AntServiceManager} objects.
+ * {@link ServiceManager} objects.
  *
  * @author <a href="mailto:adammurdoch@apache.org">Adam Murdoch</a>
  * @version $Revision$ $Date$
  */
 public class MultiSourceServiceManager
-    implements AntServiceManager
+    implements ServiceManager
 {
     private final static Resources REZ
         = ResourceManager.getPackageResources( MultiSourceServiceManager.class );
@@ -30,23 +32,21 @@ public class MultiSourceServiceManager
     /**
      * Adds a service manager to the end of the source list.
      */
-    public void add( final AntServiceManager mgr )
+    public void add( final ServiceManager mgr )
     {
         m_sources.add( mgr );
     }
 
     /**
      * Determines if this service manager contains a particular service.
-     *
-     * @param serviceType The service interface.
      */
-    public boolean hasService( final Class serviceType )
+    public boolean hasService( final String serviceRole )
     {
         final int size = m_sources.size();
         for( int i = 0; i < size; i++ )
         {
-            final AntServiceManager serviceManager = (AntServiceManager)m_sources.get( i );
-            if( serviceManager.hasService( serviceType ) )
+            final ServiceManager serviceManager = (ServiceManager)m_sources.get( i );
+            if( serviceManager.hasService( serviceRole ) )
             {
                 return true;
             }
@@ -57,25 +57,32 @@ public class MultiSourceServiceManager
     /**
      * Locates a service instance.
      *
-     * @param serviceType The service interface.
+     * @param serviceRole The service interface.
      * @return The service instance.  The returned object is guaranteed to
      *         implement the service interface.
-     * @throws AntServiceException If the service does not exist.
+     * @throws ServiceException If the service does not exist.
      */
-    public Object getService( final Class serviceType )
-        throws AntServiceException
+    public Object lookup( final String serviceRole )
+        throws ServiceException
     {
         final int size = m_sources.size();
         for( int i = 0; i < size; i++ )
         {
-            final AntServiceManager serviceManager = (AntServiceManager)m_sources.get( i );
-            if( serviceManager.hasService( serviceType ) )
+            final ServiceManager serviceManager = (ServiceManager)m_sources.get( i );
+            if( serviceManager.hasService( serviceRole ) )
             {
-                return serviceManager.getService( serviceType );
+                return serviceManager.lookup( serviceRole );
             }
         }
 
-        final String message = REZ.getString( "unknown-service.error", serviceType.getName() );
-        throw new AntServiceException( message );
+        final String message = REZ.getString( "unknown-service.error", serviceRole );
+        throw new ServiceException( message );
+    }
+
+    /**
+     * Releases a service.
+     */
+    public void release( final Object service )
+    {
     }
 }

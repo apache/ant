@@ -26,7 +26,6 @@ import org.apache.myrmidon.interfaces.deployer.TypeDefinition;
 import org.apache.myrmidon.interfaces.deployer.TypeDeployer;
 import org.apache.myrmidon.interfaces.role.RoleInfo;
 import org.apache.myrmidon.interfaces.role.RoleManager;
-import org.apache.myrmidon.interfaces.service.AntServiceManager;
 import org.apache.myrmidon.interfaces.service.ServiceFactory;
 import org.apache.myrmidon.interfaces.type.DefaultTypeFactory;
 import org.apache.myrmidon.interfaces.type.TypeManager;
@@ -53,7 +52,6 @@ public class DefaultDeployer
 
     /** Map from ClassLoader to the deployer for that class loader. */
     private final Map m_classLoaderDeployers = new HashMap();
-    private AntServiceManager m_serviceManager;
 
     /**
      * Retrieve relevent services needed to deploy.
@@ -68,7 +66,6 @@ public class DefaultDeployer
         m_typeManager = (TypeManager)serviceManager.lookup( TypeManager.ROLE );
         m_roleManager = (RoleManager)serviceManager.lookup( RoleManager.ROLE );
         m_classLoaderManager = (ClassLoaderManager)serviceManager.lookup( ClassLoaderManager.ROLE );
-        m_serviceManager = (AntServiceManager)serviceManager.lookup( AntServiceManager.ROLE );
     }
 
     /**
@@ -148,9 +145,9 @@ public class DefaultDeployer
         throws Exception
     {
         final String roleShorthand = definition.getRoleShorthand();
-        final Class serviceType = getRoleType( roleShorthand );
+        final String roleName  = getRole( roleShorthand ).getName();
         final String factoryClassName = definition.getFactoryClass();
-        handleType( deployment, ServiceFactory.class, serviceType.getName(), factoryClassName );
+        handleType( deployment, ServiceFactory.class, roleName, factoryClassName );
     }
 
     /**
@@ -205,7 +202,7 @@ public class DefaultDeployer
             }
 
             // Deploy general-purpose type
-            final Class roleType = getRoleType( roleShorthand );
+            final Class roleType = getRole( roleShorthand ).getType();
             handleType( deployment, roleType, typeName, className );
 
             if( getLogger().isDebugEnabled() )
@@ -275,9 +272,9 @@ public class DefaultDeployer
     }
 
     /**
-     * Determines the type for a role, from its shorthand.
+     * Locates a role, from its shorthand.
      */
-    private Class getRoleType( final String roleShorthand )
+    private RoleInfo getRole( final String roleShorthand )
         throws DeploymentException
     {
         final RoleInfo roleInfo =  m_roleManager.getRoleByShorthandName( roleShorthand );
@@ -286,6 +283,6 @@ public class DefaultDeployer
             final String message = REZ.getString( "unknown-role4name.error", roleShorthand );
             throw new DeploymentException( message );
         }
-        return roleInfo.getType();
+        return roleInfo;
     }
 }

@@ -20,8 +20,8 @@ import org.apache.myrmidon.components.workspace.DefaultTaskContext;
 import org.apache.myrmidon.framework.DataType;
 import org.apache.myrmidon.interfaces.configurer.Configurer;
 import org.apache.myrmidon.interfaces.configurer.TaskContextAdapter;
-import org.apache.myrmidon.interfaces.role.RoleManager;
 import org.apache.myrmidon.interfaces.role.RoleInfo;
+import org.apache.myrmidon.interfaces.role.RoleManager;
 import org.apache.myrmidon.interfaces.type.DefaultTypeFactory;
 
 /**
@@ -339,8 +339,11 @@ public class DefaultConfigurerTest
         }
         catch( ConfigurationException e )
         {
-            final String message = REZ.getString( "extra-config-for-ref.error" );
-            assertSameMessage( message, e );
+            final String[] messages = {
+                REZ.getString( "bad-configure-element.error", "some-prop-ref" ),
+                REZ.getString( "extra-config-for-ref.error" )
+            };
+            assertSameMessage( messages, e );
         }
     }
 
@@ -364,10 +367,13 @@ public class DefaultConfigurerTest
         }
         catch( final ConfigurationException ce )
         {
-            final String message = REZ.getString( "typed-adder-non-interface.error",
-                                                  ConfigTest4.class.getName(),
-                                                  Integer.class.getName() );
-            assertSameMessage( message, ce );
+            final String[] messages = {
+                REZ.getString( "bad-configure-element.error", "test" ),
+                REZ.getString( "typed-adder-non-interface.error",
+                               ConfigTest4.class.getName(),
+                               Integer.class.getName() )
+            };
+            assertSameMessage( messages, ce );
         }
     }
 
@@ -390,10 +396,13 @@ public class DefaultConfigurerTest
         }
         catch( final ConfigurationException ce )
         {
-            final String message = REZ.getString( "multiple-adder-methods-for-element.error",
-                                                  ConfigTest5.class.getName(),
-                                                  "");
-            assertSameMessage( message, ce );
+            final String[] messages = {
+                REZ.getString( "bad-configure-element.error", "test" ),
+                REZ.getString( "multiple-adder-methods-for-element.error",
+                               ConfigTest5.class.getName(),
+                               "")
+            };
+            assertSameMessage( messages, ce );
         }
     }
 
@@ -566,9 +575,11 @@ public class DefaultConfigurerTest
         }
         catch( ConfigurationException e )
         {
-            final String message = REZ.getString( "get-ref.error",
-                                                  "unknown-prop" );
-            assertSameMessage( message, e );
+            final String[] messages = {
+                REZ.getString( "bad-set-attribute.error", "test", "some-prop-ref" ),
+                REZ.getString( "unknown-reference.error", "unknown-prop" )
+            };
+            assertSameMessage( messages, e );
         }
     }
 
@@ -594,11 +605,14 @@ public class DefaultConfigurerTest
         }
         catch( ConfigurationException e )
         {
-            final String message = REZ.getString( "mismatch-ref-types.error",
-                                                  "prop-a",
-                                                  String.class.getName(),
-                                                  ConfigTest2.class.getName() );
-            assertSameMessage( message, e );
+            final String[] messages = {
+                REZ.getString( "bad-set-attribute.error", "test", "some-prop-ref" ),
+                REZ.getString( "mismatch-ref-types.error",
+                               "prop-a",
+                               String.class.getName(),
+                               ConfigTest2.class.getName() )
+            };
+            assertSameMessage( messages, e );
         }
     }
 

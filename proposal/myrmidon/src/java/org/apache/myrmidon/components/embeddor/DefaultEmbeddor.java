@@ -22,6 +22,7 @@ import org.apache.avalon.framework.logger.AbstractLogEnabled;
 import org.apache.avalon.framework.parameters.Parameterizable;
 import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.avalon.framework.service.DefaultServiceManager;
+import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.avalon.framework.service.Serviceable;
 import org.apache.myrmidon.components.deployer.ClassLoaderManager;
 import org.apache.myrmidon.interfaces.aspect.AspectManager;
@@ -37,7 +38,7 @@ import org.apache.myrmidon.interfaces.executor.Executor;
 import org.apache.myrmidon.interfaces.extensions.ExtensionManager;
 import org.apache.myrmidon.interfaces.model.Project;
 import org.apache.myrmidon.interfaces.role.RoleManager;
-import org.apache.myrmidon.interfaces.service.AntServiceManager;
+import org.apache.myrmidon.interfaces.service.MultiSourceServiceManager;
 import org.apache.myrmidon.interfaces.type.TypeFactory;
 import org.apache.myrmidon.interfaces.type.TypeManager;
 import org.apache.myrmidon.interfaces.workspace.Workspace;
@@ -62,6 +63,7 @@ public class DefaultEmbeddor
 
     private Deployer m_deployer;
     private TypeManager m_typeManager;
+    private MultiSourceServiceManager m_workspaceServiceManager;
 
     private List m_components = new ArrayList();
     private DefaultServiceManager m_serviceManager = new DefaultServiceManager();
@@ -110,7 +112,7 @@ public class DefaultEmbeddor
 
         final TypeFactory factory = m_typeManager.getFactory( ProjectBuilder.class );
         final ProjectBuilder builder = (ProjectBuilder)factory.create( type );
-        setupObject( builder, parameters );
+        setupObject( builder, m_workspaceServiceManager, parameters );
         return builder;
     }
 
@@ -120,10 +122,9 @@ public class DefaultEmbeddor
     public Workspace createWorkspace( final Parameters parameters )
         throws Exception
     {
-        final String component = getParameter( Workspace.ROLE );
         final Workspace workspace =
-            (Workspace)createService( component, Workspace.class );
-        setupObject( workspace, parameters );
+            (Workspace)createService( Workspace.class, PREFIX + "workspace.DefaultWorkspace" );
+        setupObject( workspace, m_workspaceServiceManager, parameters );
         return workspace;
     }
 
@@ -148,18 +149,27 @@ public class DefaultEmbeddor
     public void initialize()
         throws Exception
     {
-        //setup default properties
+        // setup default properties
         m_defaults = createDefaultParameters();
 
-        //create all the components
-        createComponents();
-
-        //setup the components
+        // setup the root components
         setupComponents();
 
+        // locate the components we need
         m_deployer = (Deployer)m_serviceManager.lookup( Deployer.ROLE );
         m_typeManager = (TypeManager)m_serviceManager.lookup( TypeManager.ROLE );
 
+        // setup a service manager that creates the project services
+        final ServiceManager projServiceManager
+            = (ServiceManager)createService( ServiceManager.class, PREFIX + "service.InstantiatingServiceManager" );
+        setupObject( projServiceManager, m_serviceManager, m_parameters );
+
+        // setup a service manager to be used by workspaces
+        m_workspaceServiceManager = new MultiSourceServiceManager();
+        m_workspaceServiceManager.add( projServiceManager );
+        m_workspaceServiceManager.add( m_serviceManager );
+
+        // setup
         setupFiles();
     }
 
@@ -224,18 +234,16 @@ public class DefaultEmbeddor
         defaults.setParameter( "myrmidon.bin.path", "bin" );
         defaults.setParameter( "myrmidon.lib.path", "lib" );
 
-        // Default workspace implementation
-        defaults.setParameter( Workspace.ROLE, PREFIX + "workspace.DefaultWorkspace" );
-
         return defaults;
     }
 
     /**
      * Create all required components.
      */
-    private void createComponents()
+    private void setupComponents()
         throws Exception
     {
+        // Create the components
         createComponent( ConverterRegistry.class, PREFIX + "converter.DefaultConverterRegistry" );
         createComponent( ExtensionManager.class, PREFIX + "extensions.DefaultExtensionManager" );
         createComponent( MasterConverter.class, PREFIX + "converter.DefaultMasterConverter" );
@@ -246,7 +254,13 @@ public class DefaultEmbeddor
         createComponent( Deployer.class, PREFIX + "deployer.DefaultDeployer" );
         createComponent( ClassLoaderManager.class, PREFIX + "deployer.DefaultClassLoaderManager" );
         createComponent( Executor.class, PREFIX + "executor.AspectAwareExecutor" );
-        createComponent( AntServiceManager.class, PREFIX + "service.DefaultAntServiceManager" );
+
+        // Setup the components
+        for( Iterator iterator = m_components.iterator(); iterator.hasNext(); )
+        {
+            final Object component = iterator.next();
+            setupObject( component, m_serviceManager, m_parameters );
+        }
     }
 
     /**
@@ -255,26 +269,9 @@ public class DefaultEmbeddor
     private void createComponent( Class roleType, String defaultImpl )
         throws Exception
     {
-        final String role = roleType.getName();
-        final String className = m_parameters.getParameter( role, defaultImpl );
-        final Object component = createService( className, roleType );
-        m_serviceManager.put( role, component );
+        final Object component = createService( roleType, defaultImpl );
+        m_serviceManager.put( roleType.getName(), component );
         m_components.add( component );
-    }
-
-    /**
-     * Setup all the components. (ir run all required lifecycle methods).
-     *
-     * @exception Exception if an error occurs
-     */
-    private void setupComponents()
-        throws Exception
-    {
-        for( Iterator iterator = m_components.iterator(); iterator.hasNext(); )
-        {
-            final Object component = iterator.next();
-            setupObject( component, m_parameters );
-        }
     }
 
     /**
@@ -354,21 +351,24 @@ public class DefaultEmbeddor
     /**
      * Create a component that implements an interface.
      *
-     * @param component the name of the component
-     * @param clazz the name of interface/type
+     * @param roleType the name of interface/type
+     * @param defaultImpl the classname of the default implementation
      * @return the created object
      * @exception Exception if an error occurs
      */
-    private Object createService( final String component, final Class clazz )
+    private Object createService( final Class roleType, final String defaultImpl )
         throws Exception
     {
+        final String role = roleType.getName();
+        final String className = m_parameters.getParameter( role, defaultImpl );
+
         try
         {
-            final Object object = Class.forName( component ).newInstance();
+            final Object object = Class.forName( className ).newInstance();
 
-            if( !clazz.isInstance( object ) )
+            if( !roleType.isInstance( object ) )
             {
-                final String message = REZ.getString( "bad-type.error", component, clazz.getName() );
+                final String message = REZ.getString( "bad-type.error", className, roleType.getName() );
                 throw new Exception( message );
             }
 
@@ -376,19 +376,19 @@ public class DefaultEmbeddor
         }
         catch( final IllegalAccessException iae )
         {
-            final String message = REZ.getString( "bad-ctor.error", clazz.getName(), component );
+            final String message = REZ.getString( "bad-ctor.error", roleType.getName(), className );
             throw new Exception( message );
         }
         catch( final InstantiationException ie )
         {
             final String message =
-                REZ.getString( "no-instantiate.error", clazz.getName(), component );
+                REZ.getString( "no-instantiate.error", roleType.getName(), className );
             throw new Exception( message );
         }
         catch( final ClassNotFoundException cnfe )
         {
             final String message =
-                REZ.getString( "no-class.error", clazz.getName(), component );
+                REZ.getString( "no-class.error", roleType.getName(), className );
             throw new Exception( message );
         }
     }
@@ -398,6 +398,7 @@ public class DefaultEmbeddor
      * parameterise and initialise lifecycle stages.
      */
     private void setupObject( final Object object,
+                              final ServiceManager serviceManager,
                               final Parameters parameters )
         throws Exception
     {
@@ -405,7 +406,7 @@ public class DefaultEmbeddor
 
         if( object instanceof Serviceable )
         {
-            ( (Serviceable)object ).service( m_serviceManager );
+            ( (Serviceable)object ).service( serviceManager );
         }
 
         if( object instanceof Parameterizable )

@@ -43,29 +43,24 @@ interface ObjectConfigurer
      * Returns a configurer for a property of this class.
      *
      * @param name The element name.  Property names are case-insensitive.
-     * @return A configurer for the property.
-     * @throws NoSuchPropertyException If the property is not valid for this
-     *         class
+     * @return A configurer for the property, or null if the property is not
+     *         valid for this class.
      */
-    PropertyConfigurer getProperty( String name )
-        throws NoSuchPropertyException;
+    PropertyConfigurer getProperty( String name );
 
     /**
-     * Returns a configurer for the content of this class.
+     * Returns a configurer for the text content of this class.
      *
-     * @return A configurer for the content.
-     * @throws NoSuchPropertyException If the class does not handle content.
+     * @return A configurer for the text content, or null if the class does not
+     *         support text content.
      */
-    PropertyConfigurer getContentConfigurer()
-        throws NoSuchPropertyException;
+    PropertyConfigurer getContentConfigurer();
 
     /**
      * Returns a configurer for the typed property of this class.
      *
-     * @return A configurer for the typed property.
-     * @throws NoSuchPropertyException If the class does not have a typed
-     *         property.
+     * @return A configurer for the typed property, or null if the class
+     *         does not have a typed property.
      */
-    PropertyConfigurer getTypedProperty()
-        throws NoSuchPropertyException;
+    PropertyConfigurer getTypedProperty();
 }

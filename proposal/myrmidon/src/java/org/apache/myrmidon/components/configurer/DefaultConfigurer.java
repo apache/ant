@@ -27,7 +27,6 @@ import org.apache.myrmidon.interfaces.configurer.Configurer;
 import org.apache.myrmidon.interfaces.converter.MasterConverter;
 import org.apache.myrmidon.interfaces.role.RoleInfo;
 import org.apache.myrmidon.interfaces.role.RoleManager;
-import org.apache.myrmidon.interfaces.type.TypeException;
 import org.apache.myrmidon.interfaces.type.TypeFactory;
 import org.apache.myrmidon.interfaces.type.TypeManager;
 
@@ -83,16 +82,36 @@ public class DefaultConfigurer
                            final Context context )
         throws ConfigurationException
     {
-        configureObject( object, configuration, context );
+        try
+        {
+            // Configure the object
+            configureObject( object, configuration, context );
+        }
+        catch( final ReportableConfigurationException e )
+        {
+            // Already have a reasonable error message - so rethrow
+            throw e.getCause();
+        }
+        catch( final Exception e )
+        {
+            // Wrap all other errors with general purpose error message
+            final String message = REZ.getString( "bad-configure-element.error", configuration.getName() );
+            throw new ConfigurationException( message, e );
+        }
     }
 
     /**
      * Does the work of configuring an object.
+     *
+     * @throws ReportableConfigurationException On error.  This exception
+     *         indicates that the error has been wrapped with an appropriate
+     *         error message.
+     * @throws Exception On error
      */
     private void configureObject( final Object object,
                                   final Configuration configuration,
                                   final Context context )
-        throws ConfigurationException
+        throws Exception
     {
         if( object instanceof Configurable )
         {
@@ -101,12 +120,9 @@ public class DefaultConfigurer
         }
         else
         {
+            // Start configuration of the object
             final String elemName = configuration.getName();
-
-            // Locate the configurer for this object
             final ObjectConfigurer configurer = getConfigurer( object.getClass() );
-
-            // Start configuring this object
             final ConfigurationState state = configurer.startConfiguration( object );
 
             // Set each of the attributes
@@ -124,17 +140,13 @@ public class DefaultConfigurer
                 {
                     final String message =
                         REZ.getString( "no-such-attribute.error", elemName, name );
-                    throw new ConfigurationException( message, nspe );
-                }
-                catch( final ConfigurationException ce )
-                {
-                    throw ce;
+                    throw new ReportableConfigurationException( message, nspe );
                 }
                 catch( final Exception ce )
                 {
                     final String message =
                         REZ.getString( "bad-set-attribute.error", elemName, name );
-                    throw new ConfigurationException( message, ce );
+                    throw new ReportableConfigurationException( message, ce );
                 }
             }
 
@@ -145,24 +157,19 @@ public class DefaultConfigurer
                 try
                 {
                     // Set the content
-                    final PropertyConfigurer contentConfigurer = state.getConfigurer().getContentConfigurer();
-                    setValue( contentConfigurer, state, content, context );
+                    setContent( state, content, context );
                 }
                 catch( final NoSuchPropertyException nspe )
                 {
                     final String message =
                         REZ.getString( "no-content.error", elemName );
-                    throw new ConfigurationException( message, nspe );
-                }
-                catch( final ConfigurationException ce )
-                {
-                    throw ce;
+                    throw new ReportableConfigurationException( message );
                 }
                 catch( final Exception ce )
                 {
                     final String message =
                         REZ.getString( "bad-set-content.error", elemName );
-                    throw new ConfigurationException( message, ce );
+                    throw new ReportableConfigurationException( message, ce );
                 }
             }
 
@@ -180,17 +187,17 @@ public class DefaultConfigurer
                 {
                     final String message =
                         REZ.getString( "no-such-element.error", elemName, name );
-                    throw new ConfigurationException( message, nspe );
+                    throw new ReportableConfigurationException( message, nspe );
                 }
-                catch( final ConfigurationException ce )
+                catch( final ReportableConfigurationException ce )
                 {
                     throw ce;
                 }
                 catch( final Exception ce )
                 {
                     final String message =
-                        REZ.getString( "bad-set-element.error", elemName, name );
-                    throw new ConfigurationException( message, ce );
+                        REZ.getString( "bad-configure-element.error", name );
+                    throw new ReportableConfigurationException( message, ce );
                 }
             }
 
@@ -238,6 +245,25 @@ public class DefaultConfigurer
 
         // Finish up
         configurer.finishConfiguration( state );
+    }
+
+    /**
+     * Sets the text content for the element.
+     */
+    private void setContent( final ConfigurationState state,
+                             final String content,
+                             final Context context )
+        throws Exception
+    {
+        // Locate the content configurer
+        final PropertyConfigurer contentConfigurer = state.getConfigurer().getContentConfigurer();
+        if( contentConfigurer == null )
+        {
+            throw new NoSuchPropertyException();
+        }
+
+        // Set the content
+        setValue( contentConfigurer, state, content, context );
     }
 
     /**
@@ -323,7 +349,7 @@ public class DefaultConfigurer
             = getConfigurerFromName( state.getConfigurer(), name, false );
 
         // Resolve any props in the id
-        Object id = resolveProperty( unresolvedId, context );
+        Object id = PropertyUtil.resolveProperty( unresolvedId, context, false );
 
         // Locate the referenced object
         Object ref = null;
@@ -331,10 +357,10 @@ public class DefaultConfigurer
         {
             ref = context.get( id );
         }
-        catch( final ContextException exc )
+        catch( final ContextException e )
         {
             final String message = REZ.getString( "get-ref.error", id );
-            throw new ConfigurationException( message, exc );
+            throw new ConfigurationException( message, e );
         }
 
         // Check the types
@@ -347,13 +373,6 @@ public class DefaultConfigurer
 
         // Set the child element
         childConfigurer.addValue( state, ref );
-    }
-
-    private Object resolveProperty( final String unresolvedId,
-                                    final Context context )
-        throws Exception
-    {
-        return PropertyUtil.resolveProperty( unresolvedId, context, false );
     }
 
     /**
@@ -428,7 +447,7 @@ public class DefaultConfigurer
                                final Configuration element,
                                final Context context,
                                final PropertyConfigurer childConfigurer )
-        throws ConfigurationException
+        throws Exception
     {
         final String name = element.getName();
         final Class type = childConfigurer.getType();
@@ -472,30 +491,33 @@ public class DefaultConfigurer
         throws Exception
     {
         // Try a named property
-        final NoSuchPropertyException exc;
-        try
+        PropertyConfigurer propertyConfigurer = configurer.getProperty( name );
+        if( propertyConfigurer != null )
         {
-            return configurer.getProperty( name );
-        }
-        catch( NoSuchPropertyException e )
-        {
-            // Keep for later
-            exc = e;
+            return propertyConfigurer;
         }
 
         // Try a typed property
-        final PropertyConfigurer propertyConfigurer = configurer.getTypedProperty();
-        if( !ignoreRoleName )
+        propertyConfigurer = configurer.getTypedProperty();
+        if( propertyConfigurer != null )
         {
-            final RoleInfo roleInfo = m_roleManager.getRoleByType( propertyConfigurer.getType() );
-            if( roleInfo == null || !name.equalsIgnoreCase( roleInfo.getShorthand() ) )
+            if( ignoreRoleName )
             {
-                // Rethrow the original exception
-                throw exc;
+                return propertyConfigurer;
+            }
+            else
+            {
+                // Check the role name
+                final RoleInfo roleInfo = m_roleManager.getRoleByType( propertyConfigurer.getType() );
+                if( roleInfo != null && name.equalsIgnoreCase( roleInfo.getShorthand() ) )
+                {
+                    return propertyConfigurer;
+                }
             }
         }
 
-        return propertyConfigurer;
+        // Unknown prop
+        throw new NoSuchPropertyException();
     }
 
     /**
@@ -504,13 +526,13 @@ public class DefaultConfigurer
      */
     private Object createdTypedObject( final String name,
                                        final Class type )
-        throws ConfigurationException
+        throws Exception
     {
         // Attempt to create the object
         final Object obj;
         try
         {
-            final TypeFactory factory = getTypeFactory( DataType.class );
+            final TypeFactory factory = m_typeManager.getFactory( DataType.class );
             obj = factory.create( name );
         }
         catch( final Exception e )
@@ -537,7 +559,7 @@ public class DefaultConfigurer
      * Utility method to instantiate an instance of the specified class.
      */
     private Object createObject( final Class type )
-        throws ConfigurationException
+        throws Exception
     {
         try
         {
@@ -549,23 +571,6 @@ public class DefaultConfigurer
                 REZ.getString( "create-object.error",
                                type.getName() );
             throw new ConfigurationException( message, e );
-        }
-    }
-
-    /**
-     * Locates a type factory.
-     */
-    protected final TypeFactory getTypeFactory( final Class role )
-        throws ConfigurationException
-    {
-        try
-        {
-            return m_typeManager.getFactory( role );
-        }
-        catch( final TypeException te )
-        {
-            final String message = REZ.getString( "no-factory-for-role.error", role.getName() );
-            throw new ConfigurationException( message, te );
         }
     }
 }

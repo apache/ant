@@ -10,6 +10,7 @@ package org.apache.myrmidon;
 import java.io.File;
 import java.io.IOException;
 import junit.framework.TestCase;
+import org.apache.avalon.framework.CascadingThrowable;
 import org.apache.avalon.framework.logger.LogKitLogger;
 import org.apache.avalon.framework.logger.Logger;
 import org.apache.log.Hierarchy;
@@ -97,10 +98,30 @@ public abstract class AbstractMyrmidonTest
     }
 
     /**
+     * Asserts that an exception chain contains the expected messages.
+     */
+    protected void assertSameMessage( final String[] messages, final Throwable throwable )
+    {
+        Throwable current = throwable;
+        for( int i = 0; i < messages.length; i++ )
+        {
+            String message = messages[ i ];
+            assertNotNull( current );
+            assertEquals( message, current.getMessage() );
+
+            if( current instanceof CascadingThrowable )
+            {
+                current = ( (CascadingThrowable)current ).getCause();
+            }
+            else
+            {
+                current = null;
+            }
+        }
+    }
+
+    /**
      * Asserts that an exception contains the expected message.
-     *
-     * TODO - should take the expected exception, rather than the message,
-     * to check the entire cause chain.
      */
     protected void assertSameMessage( final String message, final Throwable throwable )
     {
