@@ -2676,6 +2676,33 @@
         </table>
       </subsection>
 
+      <subsection name="XMLReleaseNotes (XRN)">
+
+        <p>This framework is a release notes framework that enables to
+        generate textual release notes from an XML file. This is an
+        open framework that enables to integrate the information
+        coming from VSC and bug tracking solutions, for instance.</p>
+
+        <table class="externals">
+          <tr>
+            <th>Compatibility:</th>
+            <td>Ant 1.5 and later</td>
+          </tr>
+          <tr>
+            <th>URL:</th>
+            <td><a href="http://xmlreleasenotes.free.fr/">http://xmlreleasenotes.free.fr/</a></td>
+          </tr>
+          <tr>
+            <th>Contact:</th>
+            <td>Edouard Mercier</td>
+          </tr>
+          <tr>
+            <th>License:</th>
+            <td>Apache Software License</td>
+          </tr>
+        </table>
+      </subsection>
+
       <subsection name="XmlTask">
 
         <p>XmlTask provides a simple means to modify XML documents
@@ -3143,7 +3170,7 @@
 
     <section name="Source Control Systems">
       <p>There are several integration with SCM systems. Some are
-      <a href="manual/tasksoverview.html#scm">build in</a>. But some are available as
+      <a href="manual/tasksoverview.html#scm">built in</a>. But some are available as
       external libraries. Here a list of task libraries we are aware of:</p>
 
       <subsection name="Surround SCM">
