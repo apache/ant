@@ -88,7 +88,7 @@ import org.apache.tools.ant.util.FileUtils;
  * </pre>
  *
  *
- * @author costin@dnt.ro
+ * @author Costin Manolache
  *
  * @since Ant 1.1
  *
@@ -467,6 +467,11 @@ public class Ant extends Task {
      */
     private void copyReference(String oldKey, String newKey) {
         Object orig = getProject().getReference(oldKey);
+        if( orig==null ) {
+            log( "No object referenced by " + oldKey + ". Can't copy to " + newKey,
+                    Project.MSG_WARN);
+            return;
+        }
         Class c = orig.getClass();
         Object copy = orig;
         try {
