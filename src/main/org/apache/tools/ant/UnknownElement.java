@@ -127,7 +127,7 @@ public class UnknownElement extends Task {
                 realChild = makeTask(child, childWrapper);
                 ((TaskContainer) parent).addTask((Task) realChild);
             } else {
-                ih.createElement(project, parent, child.getTag());
+                realChild = ih.createElement(project, parent, child.getTag());
             }
 
             childWrapper.setProxy(realChild);
