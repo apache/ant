@@ -87,7 +87,6 @@ public class MacroInstance extends Task implements DynamicConfigurator {
     private Map      nsElements = null;
     private Map      presentElements = new HashMap();
     private Hashtable localProperties = new Hashtable();
-    
 
     /**
      * Called from MacroDef.MyAntTypeDefinition#create()
@@ -142,7 +141,7 @@ public class MacroInstance extends Task implements DynamicConfigurator {
         }
         return nsElements;
     }
-    
+
     /**
      * Embedded element in macro instance
      */
@@ -166,11 +165,15 @@ public class MacroInstance extends Task implements DynamicConfigurator {
         }
     }
 
-    private static final int STATE_NORMAL = 0;
+    private static final int STATE_NORMAL         = 0;
     private static final int STATE_EXPECT_BRACKET = 1;
-    private static final int STATE_EXPECT_NAME = 2;
-    
+    private static final int STATE_EXPECT_NAME    = 2;
+    private static final int STATE_EXPECT_EXCAPE  = 3;
+
     private String macroSubs(String s, Map macroMapping) {
+        if (s == null) {
+            return null;
+        }
         StringBuffer ret = new StringBuffer();
         StringBuffer macroName = null;
         boolean inMacro = false;
@@ -179,47 +182,66 @@ public class MacroInstance extends Task implements DynamicConfigurator {
             char ch = s.charAt(i);
             switch (state) {
                 case STATE_NORMAL:
-                    if (ch == '$') {
-                        state = 1;
+                    if (ch == '@') {
+                        state = STATE_EXPECT_BRACKET;
                     } else {
                         ret.append(ch);
-                    }                    
+                    }
                     break;
                 case STATE_EXPECT_BRACKET:
                     if (ch == '{') {
-                        state = 2;
+                        state = STATE_EXPECT_NAME;
                         macroName = new StringBuffer();
+                    } else if (ch == '@') {
+                        state = STATE_EXPECT_EXCAPE;
                     } else {
-                        state = 0;
-                        ret.append('$');
+                        state = STATE_NORMAL;
+                        ret.append('@');
                         ret.append(ch);
                     }
                     break;
                 case STATE_EXPECT_NAME:
                     if (ch == '}') {
-                        state = 0;
+                        state = STATE_NORMAL;
                         String name = macroName.toString();
                         String value = (String) macroMapping.get(name);
                         if (value == null) {
-                            ret.append("${" + name + "}");
+                            ret.append("@{" + name + "}");
                         } else {
                             ret.append(value);
                         }
                         macroName = null;
                     } else {
-                        macroName.append(s.charAt(i));
+                        macroName.append(ch);
                     }
+                    break;
+                case STATE_EXPECT_EXCAPE:
+                    state = STATE_NORMAL;
+                    if (ch == '{') {
+                        ret.append("@");
+                    } else {
+                        ret.append("@@");
+                    }
+                    ret.append(ch);
+                    break;
+                default:
+                    break;
             }
         }
         switch (state) {
             case STATE_NORMAL:
                 break;
             case STATE_EXPECT_BRACKET:
-                ret.append('$');
+                ret.append('@');
                 break;
             case STATE_EXPECT_NAME:
-                ret.append("${");
+                ret.append("@{");
                 ret.append(macroName.toString());
+                break;
+            case STATE_EXPECT_EXCAPE:
+                ret.append("@@");
+                break;
+            default:
                 break;
         }
 
@@ -294,12 +316,12 @@ public class MacroInstance extends Task implements DynamicConfigurator {
     public void execute() {
         localProperties = new Hashtable();
         Set copyKeys = new HashSet(map.keySet());
-        for (Iterator i = macroDef.getAttributes().values().iterator();
-             i.hasNext();) {
+        for (Iterator i = macroDef.getAttributes().iterator(); i.hasNext();) {
             MacroDef.Attribute attribute = (MacroDef.Attribute) i.next();
             String value = (String) map.get(attribute.getName());
             if (value == null) {
                 value = attribute.getDefault();
+                value = macroSubs(value, localProperties);
             }
             if (value == null) {
                 throw new BuildException(

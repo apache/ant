@@ -4,6 +4,11 @@
     <meta http-equiv="Content-Language" content="en-us"></meta>
     <title>MacroDef Task</title>
 <link rel="stylesheet" type="text/css" href="../stylesheets/antmanual.css">
+    <style type="text/css">
+      <!--
+           .code { background: #EFEFEF; margin-top: }
+           -->
+    </style>
   </head>
     
   <body>
@@ -50,8 +55,12 @@
     </p>
     <p>
       This attribute is placed in the body of the templated
-      task using the ant property notation - ${attribute name}.
-      Note that is not an actual ant property.
+      task using a notation similar to the ant property notation
+      - @{attribute name}. (May be remembered as "put the substitution
+      AT this location").
+      The escape sequence @@{x} is used to allow @{x} to be
+      placed in the text without substitution of x.
+      This corresponds to the $${x} escape sequence for properties
     </p>
     <h3>Parameters</h3>
     <table border="1" cellpadding="2" cellspacing="0">
@@ -108,12 +117,12 @@
       runs it.
     </p>
     <blockquote>
-      <pre>
+<pre class=code>
 &lt;macrodef name="testing"&gt;
    &lt;attribute name="v" default="NOT SET"/&gt;
    &lt;element name="some-tasks" optional="yes"/&gt;
    &lt;sequential&gt;
-      &lt;echo&gt;v is ${v}&lt;/echo&gt;
+      &lt;echo&gt;v is @{v}&lt;/echo&gt;
       &lt;some-tasks/&gt;
    &lt;/sequential&gt;
 &lt;/macrodef&gt;
@@ -123,7 +132,7 @@
       &lt;echo&gt;this is a test&lt;/echo&gt;
    &lt;/some-tasks&gt;
 &lt;/testing&gt;
-      </pre>
+</pre>
     </blockquote>
     <p>
       The following fragment defines a task called &lt;call-cc&gt; which
@@ -133,29 +142,29 @@
       <a href="http://ant-contrib.sourceforge.net/">ant-contrib</a> project.
     </p>
     <blockquote>
-      <pre>
+<pre class="code">
 &lt;macrodef name="call-cc"&gt;
    &lt;attribute name="target"/&gt;
    &lt;attribute name="link"/&gt;
    &lt;attribute name="target.dir"/&gt;
    &lt;element name="cc-elements"/&gt;
    &lt;sequential&gt;
-      &lt;mkdir dir="${obj.dir}/${target}"/&gt;
-      &lt;mkdir dir="${target.dir}"/&gt;
-         &lt;cc link="${link}" objdir="${obj.dir}/${target}"
-             outfile="${target.dir}/${target}"&gt;
+      &lt;mkdir dir="${obj.dir}/@{target}"/&gt;
+      &lt;mkdir dir="@{target.dir}"/&gt;
+         &lt;cc link="@{link}" objdir="${obj.dir}/@{target}"
+             outfile="@{target.dir}/@{target}"&gt;
             &lt;compiler refid="compiler.options"/&gt;
             &lt;cc-elements/&gt;
          &lt;/cc&gt;
       &lt;/sequential&gt;
 &lt;/macrodef&gt;
-      </pre>
+</pre>
     </blockquote>
     <p>
       This then can be used as follows:
     </p>
     <blockquote>
-      <pre>
+<pre class="code">
 &lt;call-cc target="unittests" link="executable"
          target.dir="${build.bin.dir}"&gt;
    &lt;cc-elements&gt;
@@ -166,7 +175,7 @@
       &lt;linker refid="linker-libs"/&gt;
    &lt;/cc-elements&gt;
 &lt;/call-cc&gt;
-      </pre>
+</pre>
     </blockquote>
 <hr>
 <p align="center">Copyright &copy; 2003 Apache Software

@@ -90,7 +90,7 @@
       &lt;attribute name="dir"/&gt;
       &lt;sequential&gt;
          &lt;antcontrib:shellscript shell="bash"&gt;  &lt;!-- HERE --&gt;
-            ls -Rl ${dir}
+            ls -Rl @{dir}
          &lt;/antcontrib:shellscript&gt;
       &lt;/sequential&gt;
    &lt;/macrodef&gt;
@@ -133,7 +133,7 @@
       &lt;element name="do"/&gt;
       &lt;sequential&gt;
          &lt;current:if&gt;
-            &lt;current:isallowed test="${action}"/&gt;
+            &lt;current:isallowed test="@{action}"/&gt;
             &lt;current:then&gt;
                &lt;current:do/&gt;
             &lt;/current:then&gt;
