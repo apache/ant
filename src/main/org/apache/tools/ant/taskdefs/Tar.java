@@ -70,13 +70,16 @@ import org.apache.tools.ant.types.*;
 
 public class Tar extends MatchingTask {
 
+    // permissable values for longfile attribute
+    static public final String WARN = "warn";
+    static public final String FAIL = "fail";
     static public final String TRUNCATE = "truncate";
     static public final String GNU = "gnu";
 
     File tarFile;
     File baseDir;
     
-    String longFileMode = null;
+    String longFileMode = WARN;
     
     Vector filesets = new Vector();
     Vector fileSetFiles = new Vector();
@@ -107,10 +110,12 @@ public class Tar extends MatchingTask {
      *
      * Allowable values are
      *   truncate
+     *   fail
+     *   warn
      *   gnu
      */
-    public void setLongfile(String method) {
-        this.longFileMode = method;
+    public void setLongfile(String mode) {
+        this.longFileMode = mode;
     }
 
     public void execute() throws BuildException {
@@ -156,15 +161,7 @@ public class Tar extends MatchingTask {
         try {
             tOut = new TarOutputStream(new FileOutputStream(tarFile));
             tOut.setDebug(true);
-            if (longFileMode == null) {
-                tOut.setLongFileMode(TarOutputStream.LONGFILE_ERROR);
-            }
-            else if (longFileMode.equalsIgnoreCase(TRUNCATE)) {
-                tOut.setLongFileMode(TarOutputStream.LONGFILE_TRUNCATE);
-            }
-            else if (longFileMode.equalsIgnoreCase(GNU)) {
-                tOut.setLongFileMode(TarOutputStream.LONGFILE_GNU);
-            }
+            tOut.setLongFileMode(TarOutputStream.LONGFILE_GNU);
         
             for (Enumeration e = filesets.elements(); e.hasMoreElements();) {
                 TarFileSet fs = (TarFileSet)e.nextElement();
@@ -196,6 +193,22 @@ public class Tar extends MatchingTask {
         FileInputStream fIn = new FileInputStream(file);
 
         try {
+            if (vPath.length() >= TarConstants.NAMELEN) {
+                if (longFileMode.equalsIgnoreCase(TRUNCATE)) {
+                    log("Skipping: "+ vPath, Project.MSG_INFO);
+                    return;
+                } else if (longFileMode.equalsIgnoreCase(WARN)) {
+                    log("Entry: "+ vPath + " longer than " + 
+                        TarConstants.NAMELEN + " characters.", Project.MSG_WARN);
+                    log("Resulting tar file can only be processed successfully"
+                        + " by GNU compatible tar commands", Project.MSG_WARN);
+                } else if (longFileMode.equalsIgnoreCase(FAIL)) {
+                    throw new BuildException(
+                        "Entry: "+ vPath + " longer than " + 
+                        TarConstants.NAMELEN + "characters.", location);
+                }
+            }
+
             TarEntry te = new TarEntry(vPath);
             te.setSize(file.length());
             te.setModTime(file.lastModified());

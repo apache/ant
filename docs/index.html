@@ -4954,6 +4954,14 @@ task to come up with a .tar.gz package.</p>
       (&quot;yes&quot;/&quot;no&quot;). Default excludes are used when omitted.</td>
     <td valign="top" align="center">No</td>
   </tr>
+  <tr>
+    <td valign="top">longfile</td>
+    <td valign="top">One of <i>truncate</i>, <i>fail</i>, <i>warn</i>,
+      <i>gnu</i>.  Determines how long files (&gt;100 chars) are to be handled.
+      Early versions did not support such names, and modern versions do so in
+      incompatible ways.  Default is <i>warn</i>.
+    <td valign="top" align="center">No</td>
+  </tr>
 </table>
 <h3>Examples</h3>
 <pre>  &lt;tar tarfile=&quot;${dist}/manual.tar&quot; basedir=&quot;htdocs/manual&quot;/&gt;
