@@ -1,0 +1,57 @@
+<!-- Ant own build file -->
+
+<project name="Ant" default="main" basedir=".">
+
+  <property name="src.dir" value="src/main"/>
+  <property name="build.dir" value="build"/>
+  <property name="dist.dir" value="${user.home}/opt"/>
+
+  <property name="classpath" value="lib/projectx-tr2.jar"/>
+  <property name="manifest" value="src/etc/manifest"/>
+  
+  <property name="build.compiler" value="classic"/>
+
+  <target name="main">
+    <mkdir dir="${build.dir}"/>
+    <javac srcdir="${src.dir}" destdir="${build.dir}" classpath="${classpath}"
+           debug="on" deprecation="on"/>
+  </target>
+
+  <target name="jar" depends="main">
+     <jar jarfile="../ant.jar" basedir="${build.dir}" items="org" manifest="${manifest}"/>
+  </target>
+
+  <target name="dist" depends="main">
+     <mkdir dir="${dist.dir}/ant"/>
+     <mkdir dir="${dist.dir}/ant/lib"/>
+     <mkdir dir="${dist.dir}/ant/bin"/>
+     <mkdir dir="${dist.dir}/ant/docs"/>
+     <jar jarfile="${dist.dir}/ant/lib/ant.jar" basedir="${build.dir}" items="org" manifest="${manifest}"/>
+     <copyfile src="../projectx-tr2.jar" dest="${dist.dir}/ant/lib/xml.jar"/>
+     <copyfile src="../moo.jar" dest="${dist.dir}/ant/lib/moo.jar"/>
+     <copyfile src="build.xml" dest="${dist.dir}/ant/lib/build.xml"/>
+     <copydir src="src/bin" dest="${dist.dir}/ant/bin"/>
+     <copydir src="docs" dest="${dist.dir}/ant/docs"/>
+     <chmod perm="+x" src="${dist.dir}/ant/bin/ant"/>
+     <chmod perm="+x" src="${dist.dir}/ant/bin/antRun"/>
+  </target>
+
+  <target name="clean">
+    <deltree dir="${build.dir}"/>
+  </target>
+
+  <!-- in progress !  -->
+
+  <target name="get.snapshot">
+    <get src="http://jakarta.apache.org/build/tmp/ant/ant.src.zip" dest="ant-src.zip" />
+    <expand src="ant-src.zip" dest="." />
+  </target>
+  <target name="make.snapshot">
+    <cvs cvsRoot=":pserver:anoncvs@jakarta.apache.org:/home/cvspublic"
+         package="jakarta-tools"
+         dest="."  />
+    <zip zipfile="/www/jakarta.apache.org/builds/tmp/ant/ant.src.zip" basedir="." items="jakarta-tools"/>
+  </target>
+  
+</project>
+
