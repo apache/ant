@@ -1,19 +1,19 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
 
-<HTML>
-<HEAD>
-  <TITLE>FilterSet Type</TITLE>
-</HEAD>
+<html>
+<head>
+  <title>FilterSet Type</title>
+</head>
 
-<BODY>
-<H2><A name="filterset">FilterSet</A></H2>
+<body>
+<h2><a name="filterset">FilterSet</a></h2>
 
-<P>FilterSets are groups of filters. Filters can be defined as token-value
+<p>FilterSets are groups of filters. Filters can be defined as token-value
 pairs 
 or be read in from a file. FilterSets can appear inside tasks that support this 
-feature or at the same level as <CODE>&lt;target&gt;</CODE> - i.e., as
+feature or at the same level as <code>&lt;target&gt;</code> - i.e., as
 children of 
-<CODE>&lt;project&gt;</CODE>.</P>
+<code>&lt;project&gt;</code>.</p>
 
 <p>FilterSets support the <code>id</code> and <code>refid</code>
 attributes.  You can define a FilterSet with an <code>id</code>
@@ -35,92 +35,99 @@ the copy operations will typically corrupt binary files. When applying filters
 you should ensure that the set of files being filtered are all text files.
 </p>
 
-<H2>Filterset</H2>
+<h2>Filterset</h2>
 
-<TABLE cellSpacing=0 cellPadding=2 border=1>
-  <TR>
-    <TD vAlign=top><B>Attribute</B></TD>
-    <TD vAlign=top><B>Description</B></TD>
-    <TD vAlign=top><B>Default</B></TD>
-    <TD vAlign=top align="center"><B>Required</B></TD>
-  </TR>
-  <TR>
-    <TD vAlign=top>begintoken</TD>
-    <TD vAlign=top>The string marking the beginning of a token (eg.,
-      <code>&#64;DATE&#64;</code>).</TD>
-    <TD vAlign=top>@</TD>
-    <TD vAlign=top align="center">No</TD>
-  </TR>
-  <TR>
-    <TD vAlign=top>endtoken</TD>
-    <TD vAlign=top>The string marking the end of a token (eg.,
-      <code>&#64;DATE&#64;</code>).</TD>
-    <TD vAlign=top>@</TD>
-    <TD vAlign=top align="center">No</TD>
-  </TR>
-</TABLE>
+<table cellSpacing=0 cellPadding=2 border=1>
+  <tr>
+    <td vAlign=top><b>Attribute</b></td>
+    <td vAlign=top><b>Description</b></td>
+    <td vAlign=top><b>Default</b></td>
+    <td vAlign=top align="center"><b>Required</b></td>
+  </tr>
+  <tr>
+    <td vAlign=top>begintoken</td>
+    <td vAlign=top>The string marking the beginning of a token (eg.,
+      <code>&#64;DATE&#64;</code>).</td>
+    <td vAlign=top>@</td>
+    <td vAlign=top align="center">No</td>
+  </tr>
+  <tr>
+    <td vAlign=top>endtoken</td>
+    <td vAlign=top>The string marking the end of a token (eg.,
+      <code>&#64;DATE&#64;</code>).</td>
+    <td vAlign=top>@</td>
+    <td vAlign=top align="center">No</td>
+  </tr>
+  <tr>
+    <td vAlign=top>recurse</td>
+    <td vAlign=top>Indicates whether the replacement text of tokens
+      should be searched for more tokens. <b>Since Ant 1.6.3</b></td>
+    <td vAlign=top><i>true</i></td>
+    <td vAlign=top align="center">No</td>
+  </tr>
+</table>
 
-<H2>Filter</H2>
-<TABLE cellSpacing=0 cellPadding=2 border=1>
-  <TR>
-    <TD vAlign=top><B>Attribute</B></TD>
-    <TD vAlign=top><B>Description</B></TD>
-    <TD vAlign=top align="center"><B>Required</B></TD>
-  </TR>
-  <TR>
-    <TD vAlign=top>token</TD>
-    <TD vAlign=top>The token to replace (eg., <code>&#64;DATE&#64;</code>)</TD>
-    <TD vAlign=top align="center">Yes</TD>
-  </TR>
-  <TR>
-    <TD vAlign=top>value</TD>
-    <TD vAlign=top>The value to replace it with
-     (eg., <code>Thursday, April 26, 2001</code>).</TD>
-    <TD vAlign=top align="center">Yes</TD>
-  </TR>
-</TABLE>
+<h2>Filter</h2>
+<table cellSpacing=0 cellPadding=2 border=1>
+  <tr>
+    <td vAlign=top><b>Attribute</b></td>
+    <td vAlign=top><b>Description</b></td>
+    <td vAlign=top align="center"><b>Required</b></td>
+  </tr>
+  <tr>
+    <td vAlign=top>token</td>
+    <td vAlign=top>The token to replace (eg., <code>&#64;DATE&#64;</code>)</td>
+    <td vAlign=top align="center">Yes</td>
+  </tr>
+  <tr>
+    <td vAlign=top>value</td>
+    <td vAlign=top>The value to replace it with
+     (eg., <code>Thursday, April 26, 2001</code>).</td>
+    <td vAlign=top align="center">Yes</td>
+  </tr>
+</table>
 
-<H2>Filtersfile</H2>
-<TABLE cellSpacing=0 cellPadding=2 border=1>
-  <TR>
-    <TD vAlign=top><B>Attribute</B></TD>
-    <TD vAlign=top><B>Description</B></TD>
-    <TD vAlign=top align="center"><B>Required</B></TD>
-  </TR>
-  <TR>
-    <TD vAlign=top>file</TD>
-    <TD vAlign=top>A properties file of 
-      name-value pairs from which to load the tokens.</TD>
-    <TD vAlign=top align="center">Yes</TD>
-  </TR>
-</TABLE>
+<h2>Filtersfile</h2>
+<table cellSpacing=0 cellPadding=2 border=1>
+  <tr>
+    <td vAlign=top><b>Attribute</b></td>
+    <td vAlign=top><b>Description</b></td>
+    <td vAlign=top align="center"><b>Required</b></td>
+  </tr>
+  <tr>
+    <td vAlign=top>file</td>
+    <td vAlign=top>A properties file of 
+      name-value pairs from which to load the tokens.</td>
+    <td vAlign=top align="center">Yes</td>
+  </tr>
+</table>
 
-<H4>Examples</H4>
+<h4>Examples</h4>
 
 <p>You are copying the <code>version.txt</code> file to the <code>dist</code>
 directory from the <code>build</code> directory 
 but wish to replace the token <code>&#64;DATE&#64;</code> with today's date.</p>
-<BLOCKQUOTE><PRE>
+<blockquote><pre>
 &lt;copy file=&quot;${build.dir}/version.txt&quot; toFile=&quot;${dist.dir}/version.txt&quot;&gt;
   &lt;filterset&gt;
     &lt;filter token=&quot;DATE&quot; value=&quot;${TODAY}&quot;/&gt;
   &lt;/filterset&gt;
 &lt;/copy&gt;
-</PRE></BLOCKQUOTE>
+</pre></blockquote>
 
 <p>You are copying the <code>version.txt</code> file to the <code>dist</code>
 directory from the build directory 
 but wish to replace the token <code>%DATE*</code> with today's date.</p>
-<BLOCKQUOTE><PRE>
+<blockquote><pre>
 &lt;copy file=&quot;${build.dir}/version.txt&quot; toFile=&quot;${dist.dir}/version.txt&quot;&gt;
   &lt;filterset begintoken=&quot;%&quot; endtoken=&quot;*&quot;&gt;
     &lt;filter token=&quot;DATE&quot; value=&quot;${TODAY}&quot;/&gt;
   &lt;/filterset&gt;
 &lt;/copy&gt;
-</PRE></BLOCKQUOTE>
+</pre></blockquote>
 
 <p>Copy all the docs but change all dates and appropriate notices as stored in a file.</p>
-<BLOCKQUOTE><PRE>
+<blockquote><pre>
 &lt;copy toDir=&quot;${dist.dir}/docs&quot;&gt;
   &lt;fileset dir=&quot;${build.dir}/docs&quot;&gt;
     &lt;include name=&quot;**/*.html&quot;&gt;
@@ -129,10 +136,10 @@ but wish to replace the token <code>%DATE*</code> with today's date.</p>
     &lt;filtersfile file=&quot;${user.dir}/dist.properties&quot;/&gt;
   &lt;/filterset&gt;
 &lt;/copy&gt;
-</PRE></BLOCKQUOTE>
+</pre></blockquote>
 
 <p>Define a FilterSet and reference it later.</p>
-<BLOCKQUOTE><PRE>
+<blockquote><pre>
 &lt;filterset id=&quot;myFilterSet&quot; begintoken=&quot;%&quot; endtoken=&quot;*&quot;&gt;
   &lt;filter token=&quot;DATE&quot; value=&quot;${TODAY}&quot;/&gt;
 &lt;/filterset&gt;
@@ -140,8 +147,8 @@ but wish to replace the token <code>%DATE*</code> with today's date.</p>
 &lt;copy file=&quot;${build.dir}/version.txt&quot; toFile=&quot;${dist.dir}/version.txt&quot;&gt;
   &lt;filterset refid=&quot;myFilterSet&quot;/&gt;
 &lt;/copy&gt;
-</PRE></BLOCKQUOTE>
-<HR>
+</pre></blockquote>
+<hr>
 
-<P align=center>Copyright &copy; 2001-2004 The Apache Software Foundation.
-All rights Reserved.</P></BODY></HTML>
+<p align=center>Copyright &copy; 2001-2005 The Apache Software Foundation.
+All rights Reserved.</p></body></html>

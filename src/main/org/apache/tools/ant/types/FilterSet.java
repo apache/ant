@@ -1,5 +1,5 @@
 /*
- * Copyright  2001-2004 The Apache Software Foundation
+ * Copyright  2001-2005 The Apache Software Foundation
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -16,7 +16,6 @@
  */
 package org.apache.tools.ant.types;
 
-// java io classes
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -24,9 +23,9 @@ import java.util.Enumeration;
 import java.util.Hashtable;
 import java.util.Properties;
 import java.util.Vector;
+
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
-
 
 /**
  * A set of filters to be applied to something.
@@ -37,64 +36,64 @@ import org.apache.tools.ant.Project;
 public class FilterSet extends DataType implements Cloneable {
 
     /**
-     * Individual filter component of filterset
+     * Individual filter component of filterset.
      *
      */
     public static class Filter {
-        /** Token which will be replaced in the filter operation */
+        /** Token which will be replaced in the filter operation. */
         String token;
 
-        /** The value which will replace the token in the filtering operation */
+        /** The value which will replace the token in the filtering operation. */
         String value;
 
         /**
-         * Constructor for the Filter object
+         * Constructor for the Filter object.
          *
-         * @param token  The token which will be replaced when filtering
-         * @param value  The value which will replace the token when filtering
+         * @param token  The token which will be replaced when filtering.
+         * @param value  The value which will replace the token when filtering.
          */
         public Filter(String token, String value) {
-           this.token = token;
-           this.value = value;
+           setToken(token);
+           setValue(value);
         }
 
         /**
-         * No argument conmstructor
+         * No-argument conmstructor.
          */
         public Filter() {
         }
 
         /**
-         * Sets the Token attribute of the Filter object
+         * Sets the Token attribute of the Filter object.
          *
-         * @param token  The new Token value
+         * @param token  The new Token value.
          */
         public void setToken(String token) {
            this.token = token;
         }
 
         /**
-         * Sets the Value attribute of the Filter object
+         * Sets the Value attribute of the Filter object.
          *
-         * @param value  The new Value value
+         * @param value  The new Value value.
          */
         public void setValue(String value) {
            this.value = value;
         }
 
         /**
-         * Gets the Token attribute of the Filter object
+         * Gets the Token attribute of the Filter object.
          *
-         * @return   The Token value
+         * @return   The Token value.
          */
         public String getToken() {
            return token;
         }
 
         /**
-         * Gets the Value attribute of the Filter object
+         * Gets the Value attribute of the Filter object.
          *
-         * @return   The Value value
+         * @return   The Value value.
          */
         public String getValue() {
            return value;
@@ -108,7 +107,7 @@ public class FilterSet extends DataType implements Cloneable {
     public class FiltersFile {
 
         /**
-         * Constructor for the Filter object
+         * Constructor for the FiltersFile object.
          */
         public FiltersFile() {
         }
@@ -132,19 +131,27 @@ public class FilterSet extends DataType implements Cloneable {
     private String startOfToken = DEFAULT_TOKEN_START;
     private String endOfToken = DEFAULT_TOKEN_END;
 
+    /** Contains a list of parsed tokens */
+    private Vector passedTokens;
+    /** if a duplicate token is found, this is set to true */
+    private boolean duplicateToken = false;
+
+    private boolean recurse = true;
+    private Hashtable filterHash = null;
+
     /**
      * List of ordered filters and filter files.
      */
     private Vector filters = new Vector();
 
     /**
-     * Default constructor
+     * Default constructor.
      */
     public FilterSet() {
     }
 
     /**
-     * Create a Filterset from another filterset
+     * Create a Filterset from another filterset.
      *
      * @param filterset the filterset upon which this filterset will be based.
      */
@@ -154,11 +161,11 @@ public class FilterSet extends DataType implements Cloneable {
     }
 
     /**
-     * Get the filters in the filter set
+     * Get the filters in the filter set.
      *
-     * @return a Vector of Filter instances
+     * @return a Vector of Filter instances.
      */
-    protected Vector getFilters() {
+    protected synchronized Vector getFilters() {
         if (isReference()) {
             return getRef().getFilters();
         }
@@ -166,7 +173,7 @@ public class FilterSet extends DataType implements Cloneable {
     }
 
     /**
-     * Get the referred filter set
+     * Get the referenced filter set.
      *
      * @return the filterset from the reference.
      */
@@ -179,21 +186,23 @@ public class FilterSet extends DataType implements Cloneable {
      *
      * @return   The hash of the tokens and values for quick lookup.
      */
-    public Hashtable getFilterHash() {
-        int filterSize = getFilters().size();
-        Hashtable filterHash = new Hashtable(filterSize + 1);
-        for (Enumeration e = getFilters().elements(); e.hasMoreElements();) {
-           Filter filter = (Filter) e.nextElement();
-           filterHash.put(filter.getToken(), filter.getValue());
+    public synchronized Hashtable getFilterHash() {
+        if (filterHash == null) {
+            filterHash = new Hashtable(getFilters().size());
+            for (Enumeration e = getFilters().elements(); e.hasMoreElements();) {
+               Filter filter = (Filter) e.nextElement();
+               filterHash.put(filter.getToken(), filter.getValue());
+            }
         }
         return filterHash;
     }
 
     /**
-     * set the file containing the filters for this filterset.
+     * Set the file containing the filters for this filterset.
      *
-     * @param filtersFile sets the filter fil to read filters for this filter set from.
-     * @exception BuildException if there is a problem reading the filters
+     * @param filtersFile sets the filter file from which to read filters
+     *        for this filter set.
+     * @exception BuildException if there is a problem reading the filters.
      */
     public void setFiltersfile(File filtersFile) throws BuildException {
         if (isReference()) {
@@ -203,9 +212,9 @@ public class FilterSet extends DataType implements Cloneable {
     }
 
     /**
-     * The string used to id the beginning of a token.
+     * Set the string used to id the beginning of a token.
      *
-     * @param startOfToken  The new Begintoken value
+     * @param startOfToken  The new Begintoken value.
      */
     public void setBeginToken(String startOfToken) {
         if (isReference()) {
@@ -218,9 +227,9 @@ public class FilterSet extends DataType implements Cloneable {
     }
 
     /**
-     * Get the begin token for this filterset
+     * Get the begin token for this filterset.
      *
-     * @return the filter set's begin token for filtering
+     * @return the filter set's begin token for filtering.
      */
     public String getBeginToken() {
         if (isReference()) {
@@ -229,11 +238,10 @@ public class FilterSet extends DataType implements Cloneable {
         return startOfToken;
     }
 
-
     /**
-     * The string used to id the end of a token.
+     * Set the string used to id the end of a token.
      *
-     * @param endOfToken  The new Endtoken value
+     * @param endOfToken  The new Endtoken value.
      */
     public void setEndToken(String endOfToken) {
         if (isReference()) {
@@ -246,9 +254,9 @@ public class FilterSet extends DataType implements Cloneable {
     }
 
     /**
-     * Get the end token for this filterset
+     * Get the end token for this filterset.
      *
-     * @return the filter set's end token for replacement delimiting
+     * @return the filter set's end token for replacement delimiting.
      */
     public String getEndToken() {
         if (isReference()) {
@@ -257,24 +265,36 @@ public class FilterSet extends DataType implements Cloneable {
         return endOfToken;
     }
 
+    /**
+     * Set whether recursive token expansion is enabled.
+     * @param recurse <code>boolean</code> whether to recurse.
+     */
+    public void setRecurse(boolean recurse) {
+        this.recurse = recurse;
+    }
+
+    /**
+     * Get whether recursive token expansion is enabled.
+     * @return <code>boolean</code> whether enabled.
+     */
+    public boolean isRecurse() {
+        return recurse;
+    }
 
     /**
      * Read the filters from the given file.
      *
-     * @param filtersFile         the file from which filters are read
-     * @exception BuildException  Throw a build exception when unable to read the
-     * file.
+     * @param filtersFile        the file from which filters are read.
+     * @exception BuildException when the file cannot be read.
      */
-    public void readFiltersFromFile(File filtersFile) throws BuildException {
+    public synchronized void readFiltersFromFile(File filtersFile) throws BuildException {
         if (isReference()) {
             throw tooManyAttributes();
         }
-
         if (!filtersFile.exists()) {
             throw new BuildException("Could not read filters from file "
                                      + filtersFile + " as it doesn't exist.");
         }
-
         if (filtersFile.isFile()) {
            log("Reading filters from " + filtersFile, Project.MSG_VERBOSE);
            FileInputStream in = null;
@@ -315,10 +335,10 @@ public class FilterSet extends DataType implements Cloneable {
      * This resets the passedTokens and calls iReplaceTokens to
      * do the actual replacements.
      *
-     * @param line  The line to process the tokens in.
-     * @return      The string with the tokens replaced.
+     * @param line  The line in which to process embedded tokens.
+     * @return      The input string after token replacement.
      */
-    public String replaceTokens(String line) {
+    public synchronized String replaceTokens(String line) {
         passedTokens = null; // reset for new line
         return iReplaceTokens(line);
     }
@@ -331,7 +351,7 @@ public class FilterSet extends DataType implements Cloneable {
      * @param line  The line to process the tokens in.
      * @return      The string with the tokens replaced.
      */
-    private String iReplaceTokens(String line) {
+    private synchronized String iReplaceTokens(String line) {
         String beginToken = getBeginToken();
         String endToken = getEndToken();
         int index = line.indexOf(beginToken);
@@ -345,6 +365,7 @@ public class FilterSet extends DataType implements Cloneable {
                 String value = null;
 
                 do {
+                    //can't have zero-length token
                     int endIndex = line.indexOf(endToken,
                         index + beginToken.length() + 1);
                     if (endIndex == -1) {
@@ -355,7 +376,7 @@ public class FilterSet extends DataType implements Cloneable {
                     b.append(line.substring(i, index));
                     if (tokens.containsKey(token)) {
                         value = (String) tokens.get(token);
-                        if (!value.equals(token)) {
+                        if (recurse && !value.equals(token)) {
                             // we have another token, let's parse it.
                             value = replaceTokens(value, token);
                         }
@@ -381,48 +402,40 @@ public class FilterSet extends DataType implements Cloneable {
         }
     }
 
-    /** Contains a list of parsed tokens */
-    private Vector passedTokens;
-    /** if a ducplicate token is found, this is set to true */
-    private boolean duplicateToken = false;
-
     /**
      * This parses tokens which point to tokens.
      * It also maintains a list of currently used tokens, so we cannot
-     * get into an infinite loop
-     * @param line the value / token to parse
-     * @param parent the parant token (= the token it was parsed from)
+     * get into an infinite loop.
+     * @param line the value / token to parse.
+     * @param parent the parent token (= the token it was parsed from).
      */
-    private String replaceTokens(String line, String parent)
+    private synchronized String replaceTokens(String line, String parent)
         throws BuildException {
+        String beginToken = getBeginToken();
+        String endToken = getEndToken();
         if (passedTokens == null) {
             passedTokens = new Vector();
         }
         if (passedTokens.contains(parent) && !duplicateToken) {
             duplicateToken = true;
-            StringBuffer sb = new StringBuffer();
-            sb.append("Infinite loop in tokens. Currently known tokens : ");
-            sb.append(passedTokens);
-            sb.append("\nProblem token : " + getBeginToken() + parent
-                + getEndToken());
-            sb.append(" called from " + getBeginToken()
-                + passedTokens.lastElement());
-            sb.append(getEndToken());
-            System.out.println(sb.toString());
+            System.out.println(
+                "Infinite loop in tokens. Currently known tokens : "
+                + passedTokens.toString() + "\nProblem token : " + beginToken
+                + parent + endToken + " called from " + beginToken
+                + passedTokens.lastElement().toString() + endToken);
             return parent;
         }
         passedTokens.addElement(parent);
         String value = iReplaceTokens(line);
-        if (value.indexOf(getBeginToken()) == -1 && !duplicateToken) {
+        if (value.indexOf(beginToken) == -1 && !duplicateToken) {
             duplicateToken = false;
             passedTokens = null;
         } else if (duplicateToken) {
             // should always be the case...
             if (passedTokens.size() > 0) {
-                value = (String) passedTokens.lastElement();
-                passedTokens.removeElementAt(passedTokens.size() - 1);
+                value = (String) passedTokens.remove(passedTokens.size() - 1);
                 if (passedTokens.size() == 0) {
-                    value = getBeginToken() + value + getEndToken();
+                    value = beginToken + value + endToken;
                     duplicateToken = false;
                 }
             }
@@ -431,21 +444,22 @@ public class FilterSet extends DataType implements Cloneable {
     }
 
     /**
-     * Create a new filter
+     * Add a new filter.
      *
-     * @param filter the filter to be added
+     * @param filter the filter to be added.
      */
-    public void addFilter(Filter filter) {
+    public synchronized void addFilter(Filter filter) {
         if (isReference()) {
             throw noChildrenAllowed();
         }
         filters.addElement(filter);
+        filterHash = null;
     }
 
     /**
-     * Create a new FiltersFile
+     * Create a new FiltersFile.
      *
-     * @return   The filter that was created.
+     * @return The filtersfile that was created.
      */
     public FiltersFile createFiltersfile() {
         if (isReference()) {
@@ -455,49 +469,49 @@ public class FilterSet extends DataType implements Cloneable {
     }
 
     /**
-    * Add a new filter made from the given token and value.
-    *
-    * @param token  The token for the new filter.
-    * @param value  The value for the new filter.
-    */
-    public void addFilter(String token, String value) {
+     * Add a new filter made from the given token and value.
+     *
+     * @param token The token for the new filter.
+     * @param value The value for the new filter.
+     */
+    public synchronized void addFilter(String token, String value) {
         if (isReference()) {
             throw noChildrenAllowed();
         }
-        filters.addElement(new Filter(token, value));
+        addFilter(new Filter(token, value));
     }
 
     /**
-    * Add a Filterset to this filter set
-    *
-    * @param filterSet the filterset to be added to this filterset
-    */
-    public void addConfiguredFilterSet(FilterSet filterSet) {
+     * Add a Filterset to this filter set.
+     *
+     * @param filterSet the filterset to be added to this filterset
+     */
+    public synchronized void addConfiguredFilterSet(FilterSet filterSet) {
         if (isReference()) {
             throw noChildrenAllowed();
         }
         for (Enumeration e = filterSet.getFilters().elements(); e.hasMoreElements();) {
-            filters.addElement(e.nextElement());
+            addFilter((Filter) e.nextElement());
         }
     }
 
     /**
-    * Test to see if this filter set it empty.
+    * Test to see if this filter set has filters.
     *
-    * @return   Return true if there are filter in this set otherwise false.
+    * @return Return true if there are filters in this set.
     */
-    public boolean hasFilters() {
+    public synchronized boolean hasFilters() {
         return getFilters().size() > 0;
     }
 
     /**
-     * clone the filterset
+     * Clone the filterset.
      *
-     * @return a deep clone of this filterset
+     * @return a deep clone of this filterset.
      *
      * @throws BuildException if the clone cannot be performed.
      */
-    public Object clone() throws BuildException {
+    public synchronized Object clone() throws BuildException {
         if (isReference()) {
             return ((FilterSet) getRef()).clone();
         } else {
@@ -511,8 +525,5 @@ public class FilterSet extends DataType implements Cloneable {
             }
         }
     }
-
 }
-
-
 

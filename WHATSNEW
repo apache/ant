@@ -205,6 +205,9 @@ Other changes:
 
 * <native2ascii> now also supports Kaffe's version.
 
+* Recursive token expansion in a filterset can now be disabled by
+  setting its recurse attribute to false.
+
 Fixed bugs:
 -----------
 

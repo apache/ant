@@ -1,5 +1,5 @@
 /*
- * Copyright  2001-2002,2004 The Apache Software Foundation
+ * Copyright  2001-2002, 2004-2005 The Apache Software Foundation
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -96,6 +96,23 @@ public class FilterSetTest extends BuildFileTest {
         fs.addFilter("test3", "testvalue");
         fs.setBeginToken("@");
         fs.setEndToken("@");
+        assertEquals(result, fs.replaceTokens(line));
+    }
+
+    /**
+     * Test to see what happens when the resolving occurs in
+     * what would be an infinite loop, but with recursion disabled.
+     */
+    public void testRecursionDisabled() {
+        String result = "@test1@ line testvalue";
+        String line = "@test@ line @test2@";
+        FilterSet fs = new FilterSet();
+        fs.addFilter("test", "@test1@");
+        fs.addFilter("test1","@test@");
+        fs.addFilter("test2", "testvalue");
+        fs.setBeginToken("@");
+        fs.setEndToken("@");
+        fs.setRecurse(false);
         assertEquals(result, fs.replaceTokens(line));
     }
 
