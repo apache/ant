@@ -82,6 +82,10 @@ public class FilterSetTest extends TaskdefsTest {
         configureProject("src/etc/testcases/types/filterset.xml");
     }
 
+    public void tearDown() {
+        executeTarget("cleanup");
+    }
+
     public void test1() { 
         executeTarget("test1");
         assertTrue("Filterset 1 failed", compareFiles("src/etc/testcases/types/gold/filterset1.txt",
