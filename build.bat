@@ -4,7 +4,7 @@ REM   Copyright (c) 2000-2003 The Apache Software Foundation.  All rights
 REM   reserved.
 
 set REAL_ANT_HOME=%ANT_HOME%
-set ANT_HOME=bootstrap
+set ANT_HOME=%~dp0\bootstrap
 if exist bootstrap\lib\ant.jar if exist bootstrap\bin\ant.bat if exist bootstrap\bin\lcp.bat if exist bootstrap\bin\antRun.bat goto runAnt
 call bootstrap.bat
 if exist bootstrap\lib\ant.jar if exist bootstrap\bin\ant.bat if exist bootstrap\bin\lcp.bat if exist bootstrap\bin\antRun.bat goto runAnt
