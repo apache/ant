@@ -1087,8 +1087,9 @@ public class Project {
     }
 
     /**
-     * Creates a new instance of a task.
-     *
+     * Creates a new instance of a task, adding it to a list of
+     * created tasks for later invalidation. This causes all tasks
+     * to be remembered until the containing project is removed
      * @param taskType The name of the task to create an instance of.
      *                 Must not be <code>null</code>.
      *
@@ -1099,6 +1100,27 @@ public class Project {
      *                           creation fails.
      */
     public Task createTask(String taskType) throws BuildException {
+        Task task=createNewTask(taskType);
+        if(task!=null) {
+            addCreatedTask(taskType, task);
+        }
+        return task;
+    }
+
+    /**
+     * Creates a new instance of a task. This task is not
+     * cached in the createdTasks list.
+     * @since ant1.6
+     * @param taskType The name of the task to create an instance of.
+     *                 Must not be <code>null</code>.
+     *
+     * @return an instance of the specified task, or <code>null</code> if
+     *         the task name is not recognised.
+     *
+     * @exception BuildException if the task name is recognised but task
+     *                           creation fails.
+     */
+    private Task createNewTask(String taskType) throws BuildException {
         Class c = (Class) taskClassDefinitions.get(taskType);
 
         if (c == null) {
@@ -1125,7 +1147,6 @@ public class Project {
 
             String msg = "   +Task: " + taskType;
             log (msg, MSG_DEBUG);
-            addCreatedTask(taskType, task);
             return task;
         } catch (Throwable t) {
             String msg = "Could not create task of type: "
