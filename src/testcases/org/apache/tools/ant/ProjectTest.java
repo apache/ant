@@ -206,8 +206,15 @@ public class ProjectTest extends TestCase {
 
     public void testDuplicateTargets() {
         // fail, because buildfile contains two targets with the same name
-        BFT bft = new BFT("", "core/duplicate-target.xml");
-        bft.expectBuildException("twice", "Duplicate target");
+        try {
+            BFT bft = new BFT("", "core/duplicate-target.xml");
+        } catch (BuildException ex) {
+            assertEquals("specific message",
+                         "Duplicate target 'twice'",
+                         ex.getMessage());
+            return;
+        }
+        fail("Should throw BuildException about duplicate target");
     }
 
     public void testDuplicateTargetsImport() {

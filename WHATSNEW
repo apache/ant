@@ -53,7 +53,11 @@ Fixed bugs:
 
 * MacroDef did not allow attributes named 'description'. Bugzilla Report 27175.
 
-* Throw build exception if name attribute missing from patternset. Bugzilla Report 25982.
+* Throw build exception if name attribute missing from patternset#NameEntry.
+  Bugzilla Report 25982.
+
+* Throw build exception if target repeated in build file, but allow targets
+  to be repeated in imported files. 
 
 Other changes:
 --------------
