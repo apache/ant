@@ -237,7 +237,7 @@ public class ExecuteOn extends ExecTask {
                 }
             }
 
-            if (parallel) {
+            if (parallel && (fileNames.size() > 0 || !skipEmpty)) {
                 String[] s = new String[fileNames.size()];
                 fileNames.copyInto(s);
                 File[] b = new File[baseDirs.size()];
