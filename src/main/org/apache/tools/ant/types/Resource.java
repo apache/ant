@@ -63,7 +63,7 @@ package org.apache.tools.ant.types;
  * @author <a href="mailto:levylambert@tiscali-dsl.de">Antoine Levy-Lambert</a>
  * @since Ant 1.5.2
  */
-public class Resource implements Cloneable {
+public class Resource implements Cloneable, Comparable {
     private String name = null;
     private boolean exists = true;
     private long lastmodified = 0;
@@ -179,4 +179,17 @@ public class Resource implements Cloneable {
         }
     }
 
+    /**
+     * delegates to a comparison of names.
+     *
+     * @since Ant 1.6
+     */
+    public int compareTo(Object other) {
+        if (!(other instanceof Resource)) {
+            throw new IllegalArgumentException("Can only be compared with "
+                                               + "Resources");
+        }
+        Resource r = (Resource) other;
+        return getName().compareTo(r.getName());
+    }
 }

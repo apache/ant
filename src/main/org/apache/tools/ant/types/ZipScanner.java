@@ -56,6 +56,7 @@ package org.apache.tools.ant.types;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.Vector;
 import java.util.Hashtable;
 import java.util.Enumeration;
@@ -138,6 +139,7 @@ public class ZipScanner extends DirectoryScanner {
             }
             String[] files = new String[myvector.size()];
             myvector.copyInto(files);
+            Arrays.sort(files);
             return files;
         } else {
             return super.getIncludedFiles();
@@ -165,6 +167,7 @@ public class ZipScanner extends DirectoryScanner {
             }
             String[] files = new String[myvector.size()];
             myvector.copyInto(files);
+            Arrays.sort(files);
             return files;
         } else {
             return super.getIncludedDirectories();

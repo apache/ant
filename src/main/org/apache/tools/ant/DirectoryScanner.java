@@ -56,6 +56,7 @@ package org.apache.tools.ant;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -1032,6 +1033,7 @@ public class DirectoryScanner
     public String[] getIncludedFiles() {
         String[] files = new String[filesIncluded.size()];
         filesIncluded.copyInto(files);
+        Arrays.sort(files);
         return files;
     }
 
@@ -1099,6 +1101,7 @@ public class DirectoryScanner
     public String[] getIncludedDirectories() {
         String[] directories = new String[dirsIncluded.size()];
         dirsIncluded.copyInto(directories);
+        Arrays.sort(directories);
         return directories;
     }
 
