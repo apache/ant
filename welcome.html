@@ -42,7 +42,7 @@ build process. Ant is one of the best ways to do it in Java, and,
 over the past four years, it has moved from a tool used simply to
 build Tomcat cross-platform, to a tool used across many open source
 projects, and now to a tool used by almost all Java projects. Indeed,
-pretty much competitor in the Java space is a sibling project under
+pretty much the only competitor in the Java space is a sibling project under
 the Apache banner, <A HREF="http://maven.apache.org/" TARGET="other">Maven</A>.
 One of the obvious signs of Ant's success is that all the popular
 IDEs, from the Open Source -Emacs JDE, Eclipse, NetBeans and jEdit -
@@ -124,7 +124,7 @@ But the underlying parts of Ant are now set up for the next stage in
 development. 
 </P>
 <P>Whether we call the next version of Ant 1.7 or 2.0 is something we
-have yet to decide. Maybe should call it 3.0 just to surprise people.</P>
+have yet to decide. Maybe we should call it 3.0 just to surprise people.</P>
 <H2>What has changed</H2>
 <P>Look at the <A HREF="WHATSNEW" TARGET="other">WHATSNEW</A>
 document to get a full list of changes. Here are some of the core
@@ -132,7 +132,7 @@ conceptual differences.</P>
 <H3>No more Java1.1</H3>
 <P>We got fed up of jumping through reflection hoops to do everything
 from weak references to setting file timestamps. After consultation
-with the Ant user mail list, Ant1.6 only runs on Ant1.2 or later. It
+with the Ant user mail list, Ant1.6 only runs on Java1.2 or later. It
 can still cross compile to Java1.1 if that is what you have to do. We
 haven't completely purged all 1.1 references in the docs, or 1.1
 support from the source, but that will come over time.</P>
@@ -197,7 +197,7 @@ task you choose to derive. </I>We are experimenting with scripting
 and some kind of task predefinition declarations in antlibs. With the
 latter, you will be able to write a predefined task -such as a
 &lt;javac&gt; derivative with the compiler options set, and then use
-it any of your build files. This is all to experimental to get into
+it any of your build files. This is all too experimental to get into
 Ant1.6 -expect it in the successor. For now, start using antlibs and
 use the &lt;taskdef&gt; task to load them into your projects.</P>
 <H3>XML Namespace aware</H3>
@@ -261,7 +261,7 @@ please don't hesitate to file a new bug report, preferably one with a
 replicable test and a patch to fix the problem. Please, please,
 please, do a search on bugzilla first. You do not want to be the
 seventy-third person to complain that Ant1.6 doesn't do something
-that 
+that it should.
 </P>
 <P>Thanks, 
 </P>
