@@ -147,7 +147,7 @@ public class UpToDate extends MatchingTask implements Condition
         boolean upToDate = eval();
         if( upToDate )
         {
-            this.project.setProperty( _property, this.getValue() );
+            setProperty( _property, this.getValue() );
             if( mapperElement == null )
             {
                 log( "File \"" + _targetFile.getAbsolutePath() + "\" is up to date.",

@@ -39,17 +39,11 @@ public class Property extends Task
     protected Reference ref;
     protected String resource;
 
-    protected boolean userProperty;
     protected String value;// set read-only properties
 
     public Property()
     {
         super();
-    }
-
-    protected Property( boolean userProperty )
-    {
-        this.userProperty = userProperty;
     }
 
     public void setClasspath( Path classpath )
@@ -207,21 +201,7 @@ public class Property extends Task
 
     protected void addProperty( String n, String v )
     {
-        if( userProperty )
-        {
-            if( project.getUserProperty( n ) == null )
-            {
-                project.setUserProperty( n, v );
-            }
-            else
-            {
-                log( "Override ignored for " + n, Project.MSG_VERBOSE );
-            }
-        }
-        else
-        {
             project.setNewProperty( n, v );
-        }
     }
 
     protected void loadEnvironment( String prefix )

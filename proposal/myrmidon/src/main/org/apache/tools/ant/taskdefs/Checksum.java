@@ -288,7 +288,7 @@ public class Checksum extends MatchingTask implements Condition
                     }
                     else
                     {
-                        project.setProperty( prop, checksum );
+                        setProperty( prop, checksum );
                     }
                 }
                 else if( destination instanceof java.io.File )

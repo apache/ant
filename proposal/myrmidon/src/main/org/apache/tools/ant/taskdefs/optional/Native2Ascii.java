@@ -117,7 +117,7 @@ public class Native2Ascii extends MatchingTask
         // default srcDir to basedir
         if( srcDir == null )
         {
-            srcDir = resolveFile( "." );
+            srcDir = getBaseDirectory();
         }
 
         // Require destDir

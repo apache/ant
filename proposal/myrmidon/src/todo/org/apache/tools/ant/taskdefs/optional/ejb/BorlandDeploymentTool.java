@@ -416,8 +416,9 @@ public class BorlandDeploymentTool extends GenericDeploymentTool implements Exec
      */
     private void generateClient( File sourceJar )
     {
-        getTask().getProject().addTaskDefinition( "internal_bas_generateclient",
-                                                  org.apache.tools.ant.taskdefs.optional.ejb.BorlandGenerateClient.class );
+        //UGLY HACK!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+        //getTask().getProject().addTaskDefinition( "internal_bas_generateclient",
+       //org.apache.tools.ant.taskdefs.optional.ejb.BorlandGenerateClient.class );
 
         org.apache.tools.ant.taskdefs.optional.ejb.BorlandGenerateClient gentask = null;
         log( "generate client for " + sourceJar, Project.MSG_INFO );

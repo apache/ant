@@ -87,7 +87,7 @@ public class P4Counter extends P4Base
                         try
                         {
                             value = Integer.parseInt( line );
-                            myProj.setProperty( property, "" + value );
+                            setProperty( property, "" + value );
                         }
                         catch( NumberFormatException nfe )
                         {

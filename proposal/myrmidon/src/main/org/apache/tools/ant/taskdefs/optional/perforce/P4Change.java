@@ -96,7 +96,7 @@ public class P4Change extends P4Base
 
                         int changenumber = Integer.parseInt( line );
                         log( "Change Number is " + changenumber, Project.MSG_INFO );
-                        myProj.setProperty( "p4.change", "" + changenumber );
+                        setProperty( "p4.change", "" + changenumber );
 
                     }
                     else if( util.match( "/error/", line ) )

@@ -181,7 +181,7 @@ public class Available
             String lSep = System.getProperty( "line.separator" );
             if( null == project.getProperty( property ) )
             {
-                this.project.setProperty( property, value );
+                setProperty( property, value );
             }
             //else ignore
         }

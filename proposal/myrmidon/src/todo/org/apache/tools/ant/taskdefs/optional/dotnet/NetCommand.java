@@ -200,7 +200,7 @@ public class NetCommand
         throws TaskException
     {
         // default directory to the project's base directory
-        File dir = _owner.getProject().getBaseDir();
+        File dir = _owner.getBaseDirectory();
         ExecuteStreamHandler handler = new LogStreamHandler( _owner,
                                                              Project.MSG_INFO, Project.MSG_WARN );
         _exe = new Execute( handler, null );

@@ -113,7 +113,7 @@ public abstract class Continuus extends Task
         {
             Execute exe = new Execute( handler );
             exe.setAntRun( getProject() );
-            exe.setWorkingDirectory( getProject().getBaseDir() );
+            exe.setWorkingDirectory( getBaseDirectory() );
             exe.setCommandline( cmd.getCommandline() );
             return exe.execute();
         }

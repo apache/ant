@@ -453,7 +453,7 @@ public class Pvcs extends org.apache.tools.ant.Task
             Project aProj = getProject();
             Execute exe = new Execute( out );
             exe.setAntRun( aProj );
-            exe.setWorkingDirectory( aProj.getBaseDir() );
+            exe.setWorkingDirectory( getBaseDirectory() );
             exe.setCommandline( cmd.getCommandline() );
             return exe.execute();
         }

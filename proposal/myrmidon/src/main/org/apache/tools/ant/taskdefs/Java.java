@@ -386,7 +386,7 @@ public class Java extends Task
 
             if( dir == null )
             {
-                dir = project.getBaseDir();
+                dir = getBaseDirectory();
             }
             else if( !dir.exists() || !dir.isDirectory() )
             {

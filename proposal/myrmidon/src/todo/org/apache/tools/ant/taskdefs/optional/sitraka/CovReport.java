@@ -291,7 +291,7 @@ public class CovReport extends Task
         if( sourcePath == null )
         {
             sourcePath = new Path( project );
-            sourcePath.createPath().setLocation( resolveFile( "." ) );
+            sourcePath.createPath().setLocation( getBaseDirectory() );
         }
         v.addElement( "-sourcepath=" + sourcePath );
 

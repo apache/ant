@@ -649,8 +649,7 @@ public class CSharp
     public void execute()
         throws TaskException
     {
-        if( _srcDir == null )
-            _srcDir = resolveFile( "." );
+        if( _srcDir == null ) _srcDir = getBaseDirectory();
 
         NetCommand command = new NetCommand( this, "CSC", csc_exe_name );
         command.setFailOnError( getFailFailOnError() );

@@ -306,8 +306,7 @@ public class Ilasm
     public void execute()
         throws TaskException
     {
-        if( _srcDir == null )
-            _srcDir = resolveFile( "." );
+        if( _srcDir == null ) _srcDir = getBaseDirectory();
 
         //get dependencies list.
         DirectoryScanner scanner = super.getDirectoryScanner( _srcDir );

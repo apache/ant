@@ -331,7 +331,7 @@ public class CCCheckin extends ClearCase
         // Default the viewpath to basedir if it is not specified
         if( getViewPath() == null )
         {
-            setViewPath( aProj.getBaseDir().getPath() );
+            setViewPath( getBaseDirectory().getPath() );
         }
 
         // build the command line from what we got. the format is

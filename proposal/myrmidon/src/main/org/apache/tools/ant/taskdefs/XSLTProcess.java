@@ -39,8 +39,9 @@ import org.apache.tools.ant.util.FileUtils;
  * @author <a href="mailto:russgold@acm.org">Russell Gold</a>
  * @author <a href="stefan.bodewig@epost.de">Stefan Bodewig</a>
  */
-
-public class XSLTProcess extends MatchingTask implements XSLTLogger
+public class XSLTProcess
+    extends MatchingTask
+    implements XSLTLogger
 {
 
     private File destDir = null;
@@ -66,6 +67,11 @@ public class XSLTProcess extends MatchingTask implements XSLTLogger
     private XSLTLiaison liaison;
 
     private String processor;
+
+    public void log( String msg )
+    {
+        getLogger().info( msg );
+    }
 
     /**
      * Creates a new XSLTProcess Task.
@@ -229,7 +235,7 @@ public class XSLTProcess extends MatchingTask implements XSLTLogger
 
         if( baseDir == null )
         {
-            baseDir = resolveFile( "." );
+            baseDir = getBaseDirectory();
         }
 
         liaison = getLiaison();

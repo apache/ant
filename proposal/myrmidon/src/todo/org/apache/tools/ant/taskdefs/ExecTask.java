@@ -388,8 +388,7 @@ public class ExecTask extends Task
         throws TaskException
     {
         // default directory to the project's base directory
-        if( dir == null )
-            dir = project.getBaseDir();
+        if( dir == null ) dir = getBaseDirectory();
         // show the command
         log( cmdl.toString(), Project.MSG_VERBOSE );
 

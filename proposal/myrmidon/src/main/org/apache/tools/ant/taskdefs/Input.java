@@ -145,7 +145,7 @@ public class Input extends Task
         {
             if( project.getProperty( addproperty ) == null )
             {
-                project.setProperty( addproperty, input );
+                setProperty( addproperty, input );
             }
             else
             {

@@ -228,7 +228,7 @@ public abstract class MSVSS extends Task
             }
 
             exe.setAntRun( project );
-            exe.setWorkingDirectory( project.getBaseDir() );
+            exe.setWorkingDirectory( getBaseDirectory() );
             exe.setCommandline( cmd.getCommandline() );
             return exe.execute();
         }

@@ -524,7 +524,7 @@ public class JUnitTask extends Task
         //@todo should be moved to the test class instead.
         if( test.getTodir() == null )
         {
-            test.setTodir( resolveFile( "." ) );
+            test.setTodir( getBaseDirectory() );
         }
 
         if( test.getOutfile() == null )
@@ -568,11 +568,11 @@ public class JUnitTask extends Task
                      + ( wasKilled ? " (timeout)" : "" ), Project.MSG_ERR );
                 if( errorOccurredHere && test.getErrorProperty() != null )
                 {
-                    project.setProperty( test.getErrorProperty(), "true" );
+                    setProperty( test.getErrorProperty(), "true" );
                 }
                 if( failureOccurredHere && test.getFailureProperty() != null )
                 {
-                    project.setProperty( test.getFailureProperty(), "true" );
+                    setProperty( test.getFailureProperty(), "true" );
                 }
             }
         }

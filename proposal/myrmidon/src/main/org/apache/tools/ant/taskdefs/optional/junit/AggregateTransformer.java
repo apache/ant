@@ -215,12 +215,12 @@ public class AggregateTransformer
         // set the destination directory relative from the project if needed.
         if( toDir == null )
         {
-            toDir = FileUtils.newFileUtils().resolveFile( task.getProject().getBaseDir(), "." );
+            toDir = FileUtils.newFileUtils().resolveFile( task.getBaseDirectory(), "." );
         }
         else if( !toDir.isAbsolute() )
         {
             toDir = FileUtils.newFileUtils().
-                resolveFile( task.getProject().getBaseDir(), toDir.getPath() );
+                resolveFile( task.getBaseDirectory(), toDir.getPath() );
         }
     }
 

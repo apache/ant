@@ -291,8 +291,7 @@ public class Cvs extends Task
                                    null );
 
         exe.setAntRun( project );
-        if( dest == null )
-            dest = project.getBaseDir();
+        if( dest == null ) dest = getBaseDirectory();
         exe.setWorkingDirectory( dest );
 
         exe.setCommandline( toExecute.getCommandline() );
