@@ -84,7 +84,7 @@ if not "%CLASSPATH%"=="" goto runAntWithClasspath
 goto end
 
 :runAntWithClasspath
-"%_JAVACMD%" %ANT_OPTS% -classpath "%ANT_HOME%\lib\ant-launcher.jar" "-Dant.home=%ANT_HOME%" org.apache.tools.ant.launch.Launcher %ANT_ARGS% -lib "%CLASSPATH%" %ANT_CMD_LINE_ARGS%
+"%_JAVACMD%" %ANT_OPTS% -classpath "%ANT_HOME%\lib\ant-launcher.jar" "-Dant.home=%ANT_HOME%" org.apache.tools.ant.launch.Launcher %ANT_ARGS% -cp "%CLASSPATH%" %ANT_CMD_LINE_ARGS%
 goto end
 
 :runAntWithJikes
@@ -93,7 +93,7 @@ if not "%CLASSPATH%"=="" goto runAntWithJikesAndClasspath
 goto end
 
 :runAntWithJikesAndClasspath
-"%_JAVACMD%" %ANT_OPTS% -classpath "%ANT_HOME%\lib\ant-launcher.jar" "-Dant.home=%ANT_HOME%" "-Djikes.class.path=%JIKESPATH%" org.apache.tools.ant.launch.Launcher %ANT_ARGS%  -lib "%CLASSPATH%" %ANT_CMD_LINE_ARGS%
+"%_JAVACMD%" %ANT_OPTS% -classpath "%ANT_HOME%\lib\ant-launcher.jar" "-Dant.home=%ANT_HOME%" "-Djikes.class.path=%JIKESPATH%" org.apache.tools.ant.launch.Launcher %ANT_ARGS%  -cp "%CLASSPATH%" %ANT_CMD_LINE_ARGS%
 goto end
 
 :end
