@@ -361,7 +361,11 @@ Patches to existing files should be generated with
 <code>cvs diff -u filename</code>
  and save the output to a file. If you want to get
 the changes made to multiple files in a directory , just use <code>cvs
-diff -u</code>. The patches should be sent as an attachment to a message titled [PATCH]
+diff -u</code>.  Then, Tar and GZip the patch file as well as any new files
+that you have added.
+</ul>
+<p>
+The patches should be sent as an attachment to a message titled [PATCH]
 and distinctive one-line summary in the subject of the patch. The
 filename/task and the change usually suffices. It's important to include
 the changes as an attachment, as too many mailers reformat the text

@@ -68,15 +68,10 @@
 ## This is where the common page macro's live
 
 #macro ( subsection $subsection)
-      <br/>
+      <h4 class="subsection">
       <a name="$escape.getText($subsection.getAttributeValue("name"))"></a>
-      <table border="0" cellspacing="0" cellpadding="2" width="100%">
-        <tr><td bgcolor="$blue2">
-          <font color="$lightfg" face="arial,helvetica,sanserif">
-            <strong>$subsection.getAttributeValue("name")</strong>
-          </font>
-        </td></tr>
-      </table>
+        $subsection.getAttributeValue("name")
+      </h4>
       #foreach ( $items in $subsection.getChildren() )
         #if ($items.getName().equals("img"))
           #image ($items)
@@ -91,10 +86,10 @@
 #end
 
 #macro ( section $section)
-  <br/>
-  <table class="nowrap" border="0" cellspacing="0" cellpadding="2" width="100%">
-    <tr><td bgcolor="$blue3"><font color="$lightfg"><a name="$escape.getText($section.getAttributeValue("name"))"><strong>$section.getAttributeValue("name")</strong></a></font></td></tr>
-  </table>
+    <h3 class="section">
+      <a name="$escape.getText($section.getAttributeValue("name"))"></a>
+      $section.getAttributeValue("name")
+    </h3>
       #foreach ( $items in $section.getChildren() )
         #if ($items.getName().equals("img"))
           #image ($items)
@@ -113,14 +108,7 @@
 ## This is where the FAQ specific macro's live
 
 #macro (toc $section)
-      <br/>
-      <table border="0" cellspacing="0" cellpadding="2" width="100%">
-        <tr><td bgcolor="$blue2">
-          <font color="$lightfg" face="arial,helvetica,sanserif">
-            <strong>$section.getAttributeValue("title")</strong>
-          </font>
-        </td></tr>
-      </table>
+      <h4 class="toc">$section.getAttributeValue("title")</h4>
         <ul>
     #foreach ($faq in $section.getChildren("faq") )
       #subtoc ($faq)
@@ -143,17 +131,10 @@
 
 #macro (faq $faq)
   #set ($id = $faq.getAttributeValue("id"))
-    <br/>
+    <p class="faq">
       <a name="$id"></a>
-      <table border="0" cellspacing="0" cellpadding="2" width="100%">
-        <tr><td bgcolor="$blue2">
-          <font color="$lightfg" face="arial,helvetica,sanserif">
-            <strong>
               $xmlout.outputString($faq.getChild("question"), true)
-            </strong>
-          </font>
-        </td></tr>
-      </table>
+    </p>
     #foreach ($item in $faq.getChild("answer").getChildren())
       #if ($item.getName().equals("img"))
         #image ($item)
@@ -169,13 +150,9 @@
 
 #macro (document)
   #header()
-      <table class="title">
-        <tr>
-          <td valign="middle">
-            <h1>$root.getChild("properties").getChild("title").getText()</h1>
-          </td>
-        </tr>
-      </table>
+  <div class="main">
+  <div class="content">
+    <h1 class="title">$root.getChild("properties").getChild("title").getText()</h1>
   #set ($allSections = $root.getChild("body").getChildren("section"))
   #foreach ( $section in $allSections )
     #section ($section)
@@ -183,28 +160,18 @@
 
   #if ($root.getChildren("faqsection").size() > 0)
     #set ($allFaqSections = $root.getChildren("faqsection"))
-      <table border="0" cellspacing="0" cellpadding="2" width="100%">
-        <tr><td bgcolor="$blue3">
-          <font color="$lightfg" face="arial,helvetica,sanserif">
-            <strong>Questions</strong>
-          </font>
-        </td></tr>
-      </table>
+      <h3 class="section">Questions</h3>
     #foreach ( $faqSection in $allFaqSections )
       #toc ($faqSection)
     #end
 
-      <table border="0" cellspacing="0" cellpadding="2" width="100%">
-        <tr><td bgcolor="$blue3">
-          <font color="$lightfg" face="arial,helvetica,sanserif">
-            <strong>Answers</strong>
-          </font>
-        </td></tr>
-      </table>
+      <h3 class="section">Answers</h3>
     #foreach ( $faqSection in $allFaqSections )
       #answers ($faqSection)
     #end
   #end
+  </div>
+  </div>
 
   #footer()
 #end

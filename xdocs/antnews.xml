@@ -9,6 +9,71 @@
   </properties>
 
 <body>
+  <section name="Java Pro 2003 Readers Choice Award">
+    <a href="http://www.ftponline.com/javapro/">
+      <img style="padding: 5px" src="images/jp_rcwinner_2003.gif" alt="" border="0" height="80" width="139" align="right"/></a>
+    <h3>June 11th, 2003: Ant wins a Java Pro readers' choice award</h3>
+    <p>
+      Ant has won the Java Pro 2003 Readers' Choice Award for 
+    </p>
+    <p>
+      <strong>Most Valuable Java Deployment Technology</strong>.
+    </p>
+    
+    <p>
+      Thanks to Java Pro and all its readers. You can read about
+      these 
+      <a href="http://www.ftponline.com/reports/javaone/2003/awards/">awards</a>
+      at the Java Pro website.
+    </p>
+  </section>
+
+  <section name="Ant keeps on winning!">
+    <a href="http://www.javaworld.com"><img src="images/jw_ec_logo_winner2003.gif" alt="" border="0" height="108" width="252" align="right"/></a>
+    <h3>June 9th, 2003: Ant wins the JavaWorld Editors&apos; Choice Award</h3>
+
+    <p>
+    Ant has won the JavaWorld Editors&apos; Choice Award for
+    </p>
+    <p>
+    <strong>Most Useful Java Community-Developed Technology</strong>
+    </p>
+    
+    <p>
+    for the second time in a row! Read the
+    <a href="http://www.javaworld.com/javaworld/jw-06-2003/jw-0609-eca.html"> full article</a> -- or jump directly to the bit about
+    <a href="http://www.javaworld.com/javaworld/jw-06-2003/jw-0609-eca-p4.html"> our award</a> <code>:)</code></p>
+  </section>
+  
+  <section name="Ant 1.5.3">
+    <h3>April 9, 2003 - Ant 1.5.3 Available</h3>
+    <p>Apache Ant 1.5.3 is now available for 
+     <a href="http://ant.apache.org/bindownload.cgi">download</a>. 
+    </p>
+    
+    <div class="warning">
+    <div class="label">Note</div>
+    <div class="content">Ant 1.5.3 will be the last release that supports
+      JDK 1.1. The next major release of Ant, Ant 1.6, will require JDK 1.2 or
+      later
+    </div>
+    </div>
+    
+  </section>
+
+
+  <section name="Ant 1.5.3 Beta 1">
+    <h3>March 25, 2003 - Ant 1.5.3 Beta 1 Available</h3>
+    <p>Apache Ant 1.5.3 Beta 1 is now available for 
+     <a href="http://ant.apache.org/beta/">download</a>. 
+     Please download it and try it out. If you have any issues
+     please raise a bug on 
+     <a href="http://issues.apache.org/bugzilla/enter_bug.cgi?product=Ant">BugZilla</a>
+     or send an email to the Ant dev mailing list
+     </p>
+  </section>
+
+
   <section name="Ant 1.5.2">
     <h3>March 3, 2003 - Ant 1.5.2 Available!</h3>
     <p>The final version of Ant 1.5.2 is now available for 
@@ -96,10 +161,10 @@
   </section>
 
   <section name="Ant wins again!">
+    <a href="http://www.sdmagazine.com"><img src="images/sdm_productivity_award.gif" alt="" border="0" height="108" width="181" align="right"/></a>
     <h3>Apr 29, 2002: Ant wins <em>Software Development</em> magazine&apos;s
     2002 Productivity Award.</h3>
     <p>
-    <a href="http://www.sdmagazine.com"><img src="images/sdm_productivity_award.gif" alt="" border="0" height="75" width="135" align="right"/></a>
     Ant has been awarded a <strong>2002 Productivity Award</strong> by
     <a href="http://www.sdmagazine.com/"><em>Software Development</em></a>
     magazine.  Read the
@@ -109,11 +174,11 @@
   </section>
 
   <section name="Ant has won!">
+    <a href="http://www.javaworld.com"><img src="images/jw_ec_logo_winner2002.gif" alt="" border="0" height="108" width="252" align="right"/></a>
     <h3>Mar 26, 2002: Ant wins the JavaWorld Editors&apos; Choice
     Award</h3>
 
     <p>
-    <a href="http://www.javaworld.com"><img src="images/jw_ec_logo_winner2002.gif" alt="" border="0" height="85" width="230" align="right"/></a>
     Ant has won the JavaWorld Editors&apos; Choice Award for
     <strong>Most Useful Java Community-Developed Technology</strong>.
     Read the

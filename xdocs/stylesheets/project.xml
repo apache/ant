@@ -32,17 +32,18 @@
                 <item name="Source Distributions" href="http://ant.apache.org/srcdownload.cgi"/>
             </menu>
 
-            <menu name="Get Involved">
+            <menu name="Contributing">
                 <item name="Mailing Lists"         href="/mail.html"/>
                 <item name="CVS Repositories"      href="/cvs.html"/>
                 <item name="Bug Database"          href="http://issues.apache.org/bugzilla/enter_bug.cgi?product=Ant"/>
                 <item name="Enhancement Requests"  href="http://issues.apache.org/bugzilla/enter_bug.cgi?product=Ant&amp;amp;bug_severity=Enhancement"/>
+                <item name="Donations"             href="http://www.apache.org/foundation/contributing.html"/>
             </menu>
 
             <menu name="Project Management">
                 <item name="Contributors"          href="/contributors.html"/>
                 <item name="Apache Ant Mission"    href="/mission.html"/>
-                <item name="Project Guidelines"    href="/guidelines.html"/>
+                <item name="Project Bylaws"        href="/bylaws.html"/>
                 <item name="Legal"                 href="/legal.html"/>
             </menu>
         </menusection>

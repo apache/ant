@@ -91,11 +91,9 @@ solutions.
             <p>
                 <b>Christoph Wilhelms</b> (christoph.wilhelms at t-online.de)
 <br/>
-Christoph is teamleader and a lead software engineer at
-<a href="http://www.impress.com/english/index.html">IMPRESS SOFTWARE</a>. He is resposible for
-the development of administration tools and development environment for
-the IMPRESS Engine, a Java-based intergration software. At the Ant-Project
-he takes care of Antidote - the Ant GUI.
+Christoph works as software engineer at the world's biggest travel company
+<a href="http://www.tui.com">TUI</a>. His passion are all UI related things so 
+at the Ant-Project he takes care of Antidote - the Ant GUI.
             </p>
 
       </subsection>
@@ -181,6 +179,16 @@ platform (J2EE, XML, ...).
 </p>
 
             <p>
+                <b>Antoine Levy-Lambert</b> (levylambert at tiscali-dsl.de)
+<br/>
+Antoine is an IT consultant specialized in financial IT and 
+in application management/configuration management. He has experience with
+conceiving, building and managing distributed applications. His consultancy
+is called <a href="http://www.antbuild.com">antbuild</a>.
+
+            </p>
+            
+            <p>
                 <b>Adam Murdoch</b>
 <br/>
 </p>
@@ -194,6 +202,10 @@ for implementing security in the J2EE Reference Implementation
 implementations from Tomcat into the J2EE RI. These days, he hacks PHP
 code during the day.
 </p>
+
+            <p>
+                <b>Peter Reilly</b><br/>
+            </p>
 
             <p>
                 <b>Nico Seessle</b><br/>
@@ -221,6 +233,10 @@ well as the web application framework, <a href="http://java.apache.org/turbine/"
 </p>
 
             <p>
+                <b>Jesse Stockall</b><br/>
+            </p>
+
+            <p>
                 <b>James Todd</b> (jwtodd at pacbell.net)
 <br/>
 James has developed real time customer oriented apps for roughly 10
@@ -238,6 +254,7 @@ implementing the CORBA IDL to C++ 2.0 mapping, skydiving, IDL to Java
 compilers, Object Databases (SIGSEV, you da man!) for C++, Java ORB
 and EJB runtime environments -- in that order.
 </p>
+
 
       </subsection>
       <subsection name="Emeritus Committers">

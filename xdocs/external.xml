@@ -11,7 +11,7 @@
     <section name="External Tools and Tasks">
 
       <p>This page lists external resources for Apache Ant: <a
-      href="#Tasks">tasks</a>, <a
+      href="#Tasks">Tasks</a>, <a
       href="#Compiler%20Implementations">Compiler Implementations</a>,
       <a href="#IDE%20and%20Editor%20Integration">IDE integration
       tools</a>, loggers, you name it. If you've written
@@ -32,7 +32,7 @@
           aspect-oriented extension to Java.  This task compiles a
           source tree using the AspectJ compiler -- AJC.</p>
 
-        <table>
+        <table class="externals">
           <tr>
             <th>Compatibility:</th>
             <td>Ant 1.3</td>
@@ -57,7 +57,7 @@
         <p>Actually, Anakia is more than just an Ant task, it is a an
         XML transformation tool based on JDOM, Velocity and Ant.</p>
 
-        <table>
+        <table class="externals">
           <tr>
             <th>Compatibility:</th>
             <td>Ant 1.2 and later</td>
@@ -86,7 +86,7 @@
           (based on junitreport) and a hierarchical grouping system for quickly
           configuring large test scripts.
         </p>
-        <table>
+        <table class="externals">
           <tr>
             <th>Compatibility:</th>
             <td>Ant 1.5 and later</td>
@@ -117,7 +117,7 @@
         <p>Checkstyle can be run via an Ant task or a command line
         utility.</p>
 
-        <table>
+        <table class="externals">
           <tr>
             <th>Compatibility:</th>
             <td>Ant 1.4.1 and later</td>
@@ -144,7 +144,7 @@
         <p>ChownTask is an Ant task to change ownership of files on
         Unix.</p>
 
-        <table>
+        <table class="externals">
           <tr>
             <th>Compatibility:</th>
             <td>Ant 1.3 and up</td>
@@ -170,7 +170,7 @@
       <subsection name="CleanImports">
         <p>Removes unneeded imports. Formats your import
         sections. Flags ambiguous imports.</p>
-        <table>
+        <table class="externals">
           <tr>
             <th>Compatibility:</th>
             <td>Ant 1.3</td>
@@ -197,7 +197,7 @@
         statement, and branch coverage analysis, and has rich
         reporting in XML, HTML or via a Swing GUI.</p>
 
-        <table>
+        <table class="externals">
           <tr>
             <th>Compatibility:</th>
             <td>Ant 1.4.1 or greater</td>
@@ -218,6 +218,32 @@
         </table>
       </subsection>
 
+      <subsection name="CMSDeploy">
+
+        <p><a href="http://cmsdeploy.sourceforge.net">CMSDeploy</a> is
+        an Apache Ant Task to submit files and templates to Vignette
+        CMS.</p>
+
+        <table class="externals">
+          <tr>
+            <th>Compatibility:</th>
+            <td>Ant 1.5.1 and later</td>
+          </tr>
+          <tr>
+            <th>URL:</th>
+            <td><a href="http://cmsdeploy.sourceforge.net">http://cmsdeploy.sourceforge.net</a></td>
+          </tr>
+          <tr>
+            <th>Contact:</th>
+            <td><a href="masogato@users.sourceforge.net">masogato@users.sourceforge.net</a></td>
+          </tr>
+          <tr>
+            <th>License:</th>
+            <td>GNU Lesser General Public License</td>
+          </tr>
+        </table>
+      </subsection>
+
       <subsection name="Configure">
 
         <p>Recursive build support (call ant on every package level,
@@ -229,7 +255,7 @@
         the top and call target &apos;setup&apos; or
         &apos;rescan&apos;.</p>
 
-        <table>
+        <table class="externals">
           <tr>
             <th>Compatibility:</th>
             <td>Ant 1.2 and 1.3</td>
@@ -259,7 +285,7 @@
 
         <p>It works from the command line or as an Ant task.</p>
 
-        <table>
+        <table class="externals">
           <tr>
             <th>Compatibility:</th>
             <td>Ant 1.3 or higher</td>
@@ -284,7 +310,7 @@
         <p>There are two Ant tasks for running the Doxygen
         documentation system.</p>
 
-        <table>
+        <table class="externals">
           <tr>
             <th>Compatibility:</th>
             <td>Ant 1.1 and later</td>
@@ -305,7 +331,7 @@
 
         <p>and</p>
 
-        <table>
+        <table class="externals">
           <tr>
             <th>Compatibility:</th>
             <td>Ant 1.5 and later</td>
@@ -325,10 +351,37 @@
         </table>
       </subsection>
 
+      <subsection name="FMPP">
+        <p>FMPP is a general-purpose text file preprocessor tool that
+        uses FreeMarker templates. It is particularly designed for
+        HTML preprocessor, for the generation of complete (static)
+        homepages: directory structure that contains HTML-s, image
+        files, etc. But of course it can be used to generate source
+        code or whatever text files. FMPP is extendable with Java
+        classes to pull data from any data sources (XML file,
+        database, etc.) and embed the data into the generated
+        files.</p>
+
+        <table class="externals">
+          <tr>
+            <th>Compatibility:</th>
+            <td>Ant 1.5.1</td>
+          </tr>
+          <tr>
+            <th>URL:</th>
+            <td><a href="http://fmpp.sourceforge.net/">http://fmpp.sourceforge.net/</a></td>
+          </tr>
+          <tr>
+            <th>License:</th>
+            <td>BSD License</td>
+          </tr>
+        </table>
+      </subsection>
+
       <subsection name="GenJar">
         <p>Builds a JAR file based on class dependencies rather than simply the contents of a directory</p>
 
-        <table>
+        <table class="externals">
           <tr>
             <th>Compatibility:</th>
             <td>Ant 1.4 alpha (built after 2001/08/04) and later</td>
@@ -358,7 +411,7 @@
         maven-like dependency file, or directly from the build.xml
         file.</p>
 
-        <table>
+        <table class="externals">
           <tr>
             <th>Compatibility:</th>
             <td>Ant 1.5</td>
@@ -378,10 +431,76 @@
         </table>
       </subsection>
 
+      <subsection name="GroboUtils CodeCoverage">
+
+        <p>The CodeCoverage sub-project of GroboUtils provides a 100%
+        pure Java code coverage tool.  It uses pre-execution class file
+        recompilation, and generates XML files containing the coverage
+        statistics.  It does not require any advanced VM setup to generate
+        coverage numbers.
+        </p>
+
+        <table class="externals">
+          <tr>
+            <th>Compatibility:</th>
+            <td>Ant 1.5.1</td>
+          </tr>
+          <tr>
+            <th>URL:</th>
+            <td><a href="http://groboutils.sourceforge.net/codecoverage/">http://groboutils.sourceforge.net/codecoverage/</a></td>
+          </tr>
+          <tr>
+            <th>Contact:</th>
+            <td><a href="http://sourceforge.net/mail/?group_id=22594">project mailing lists</a></td>
+          </tr>
+          <tr>
+            <th>License:</th>
+            <td>MIT License</td>
+          </tr>
+        </table>
+      </subsection>
+
+      <subsection name="IDLDepend">
+        <p>idldepend is a task that (re)generates Java sources to be
+        created from CORBA/IDL files.</p>
+
+        <p>It parses the IDL file and determines the Java files that
+        must be generated, taking in account the modifications that
+        can happen due to command line parameters.  If any of the Java
+        files are missing or older than the source IDL specification,
+        it launches the specified compiler.  The compilers of Orbacus,
+        Jacorb, OpenORB, Orbix2k and Sun'JDK distributions are
+        supported.</p>
+
+        <p>To speed up the process and avoid unnecesary re-parsing, it
+        keeps the dependencies in intermediate files.  This task does
+        not launch the javac compiler as well, that is, its output are
+        Java files and not the final bytecode.</p>
+
+        <table class="externals">
+          <tr>
+            <th>Compatibility:</th>
+            <td>Ant 1.4 or later</td>
+          </tr>
+          <tr>
+            <th>URL:</th>
+            <td><a href="http://grasia.fdi.ucm.es/~luismi/idldepend/">http://grasia.fdi.ucm.es/~luismi/idldepend/</a></td>
+          </tr>
+          <tr>
+            <th>Contact:</th>
+            <td><a href="mailto:luismpena@gmx.net">luismpena@gmx.net</a></td>
+          </tr>
+          <tr>
+            <th>License:</th>
+            <td>free source, no license restrictions</td>
+          </tr>
+        </table>
+      </subsection>
+
       <subsection name="Importscrubber">
         <p>Removes unnecessary import statements from a Java source code file.</p>
 
-        <table>
+        <table class="externals">
           <tr>
             <th>Compatibility:</th>
             <td>Ant 1.3</td>
@@ -407,7 +526,7 @@
         some properties.  This way you can fill a property with the
         input of a user.</p>
 
-        <table>
+        <table class="externals">
           <tr>
             <th>Compatibility:</th>
             <td>Ant 1.5.1</td>
@@ -433,7 +552,7 @@
         certain rules that are defined via nested elements of the
         task.</p>
 
-        <table>
+        <table class="externals">
           <tr>
             <th>Compatibility:</th>
             <td>Ant 1.4</td>
@@ -461,7 +580,7 @@
         
         <p>This set supports CLDC and the K Virtual Machine (KVM):</p>
 
-        <table>
+        <table class="externals">
           <tr>
             <th>Compatibility:</th>
             <td>Ant 1.3</td>
@@ -483,7 +602,7 @@
         <p>And this set works with the J2ME Wireless Toolkit and MIDP
         for PalmOS:</p>
 
-        <table>
+        <table class="externals">
           <tr>
             <th>Compatibility:</th>
             <td>Ant 1.3</td>
@@ -502,14 +621,19 @@
           </tr>
         </table>
 
-        <p>With Antenna, you can compile, preverify, package, and
-        obfuscate your MIDP applications, as well as convert them to
-        PRC files designed to run on MIDP for PalmOS. The tasks are
-        mostly built around the Wireless Toolkit and the free
-        RetroGuard obfuscator, with some additional gimmicks like
-        automatic version numbering.</p>
+        <p>Antenna provides a set of Ant tasks suitable for developing
+        wireless Java applications targeted at the Mobile Information
+        Device Profile (MIDP). With Antenna, you can compile,
+        preverify, package, obfuscate, and run your MIDP applications
+        (aka MIDlets), manipulate Java Application Descriptor (JAD)
+        files, as well as convert JAR files to PRC files designed to
+        run on MIDP for Palm OS. Deployment is supported via a
+        deployment task and a corresponding HTTP servlet for
+        Over-the-Air (OTA) provisioning. A small preprocessor allows
+        to generate different variants of a MIDlet from a single
+        source.</p>
 
-        <table>
+        <table class="externals">
           <tr>
             <th>Compatibility:</th>
             <td>Ant 1.4.1 or later</td>
@@ -536,7 +660,7 @@
         Sun's Wireless Toolkit and also the Nokia SDK and
         emulators.</p>
 
-        <table>
+        <table class="externals">
           <tr>
             <th>Compatibility:</th>
             <td>Ant 1.5</td>
@@ -564,7 +688,7 @@
         itself) to create filters for text (line based) files without
         programming.</p>
 
-        <table>
+        <table class="externals">
           <tr>
             <th>Compatibility:</th>
             <td>Jacson has been used and tested with 1.5.1, should
@@ -590,7 +714,7 @@
         <p>An Ant Plug-in for the Java Source Code Formatter
         Jalopy.</p>
 
-        <table>
+        <table class="externals">
           <tr>
             <th>Compatibility:</th>
             <td>Ant 1.4 (or higher)</td>
@@ -641,7 +765,7 @@
           syntax. Digraph characters are user-selectable.</li>
         </ul>
 
-        <table>
+        <table class="externals">
           <tr>
             <th>Compatibility:</th>
             <td>Ant 1.5.1</td>
@@ -663,11 +787,16 @@
 
       <subsection name="Java2Html">
 
-        <p>Uses the Java2Html library for converting java source files
+        <p>There are two different tools both named Java2HTML that
+        process Java source code and generate syntax higlighted
+        documentation from it.  Both include Ant tasks to run
+        them.</p>
+
+        <p>Java2Html library for converting java source files
         or snipplets to syntax highlighted html, rtf, tex and
         others.</p>
 
-        <table>
+        <table class="externals">
           <tr>
             <th>Compatibility:</th>
             <td>Ant 1.5 and later</td>
@@ -685,6 +814,30 @@
             <td>GNU General Public License</td>
           </tr>
         </table>
+
+        <p>Java2HTML is a simple-to-use tool which converts a bunch of
+        Java Source Code into a colourized and browsable HTML
+        representation.</p>
+
+        <table class="externals">
+          <tr>
+            <th>Compatibility:</th>
+            <td>1.5.1 onwards</td>
+          </tr>
+          <tr>
+            <th>URL:</th>
+            <td><a href="http://www.java2html.com/java2html_ant_task.html">http://www.java2html.com/java2html_ant_task.html</a></td>
+          </tr>
+          <tr>
+            <th>Contact:</th>
+            <td><a href="mailto:support@java2html.com">support@java2html.com</a></td>
+          </tr>
+          <tr>
+            <th>License:</th>
+            <td>FreeWare</td>
+          </tr>
+        </table>
+
       </subsection>
 
       <subsection name="Javamake">
@@ -694,7 +847,7 @@
         Javac and Depend tasks combined, with improved dependency
         checking.</p>
 
-        <table>
+        <table class="externals">
           <tr>
             <th>Compatibility:</th>
             <td>Ant 1.4.1</td>
@@ -719,7 +872,7 @@
         <p>Ant tasks that generate record classes for VisualAge for
         Java from Cobol copy books.</p>
 
-        <table>
+        <table class="externals">
           <tr>
             <th>Compatibility:</th>
             <td>Ant 1.4</td>
@@ -746,7 +899,7 @@
         with an Ant task to scan whole package trees. The result can
         viewed in an JavaDoc style web page.</p>
 
-        <table>
+        <table class="externals">
           <tr>
             <th>Compatibility:</th>
             <td>Ant &gt;= 1.5</td>  
@@ -771,7 +924,7 @@
         <p>JFlex is a lexical analyzer generator (also known as
         scanner generator) for Java, written in Java.</p>
 
-        <table>
+        <table class="externals">
           <tr>
             <th>Compatibility:</th>
             <td>Ant 1.5</td>
@@ -798,7 +951,7 @@
         multiple files against multiple RELAX NG patterns and integrate 
         RELAX NG validation with other XML processing.</p>
 
-        <table>
+        <table class="externals">
           <tr>
             <th>Compatibility:</th>
             <td>Ant 1.4 and later</td>  
@@ -826,7 +979,7 @@
         <p>It works from the command line or using several provided
         Ant tasks.</p>
 
-        <table>
+        <table class="externals">
           <tr>
             <th>Compatibility:</th>
             <td>Ant 1.4 and higher</td>
@@ -859,7 +1012,7 @@
         Extensions). It provides tasks for getting and setting attributes
         of MBeans, invoking their methods and much more.</p>
 
-        <table>
+        <table class="externals">
           <tr>
             <th>Compatibility:</th>
             <td>Ant 1.4 and higher</td>
@@ -903,7 +1056,7 @@
           GUI. Includes a comprehensive printable PDF User
           Guide and plenty of examples.</p>
 
-        <table>
+        <table class="externals">
           <tr>
             <th>Compatibility:</th>
             <td>Ant 1.4</td>
@@ -933,7 +1086,7 @@
         <p>Note that the service pack must be installed on top of an
         existing JRun 4 installation.</p>
 
-        <table>
+        <table class="externals">
           <tr>
             <th>Compatibility:</th>
             <td>Ant 1.4 or higher</td>
@@ -953,6 +1106,32 @@
         </table>
       </subsection>
       
+      <subsection name="Just4log Ant Task">
+
+        <p>Just4log is a ant task to optimize JVM bytecode with regards 
+        for Logs ( be it, Log4j, Apache Commons or JDK 1.4 )
+        It depends on apache BCEL for Bytecode engineering.</p> 
+
+        <table class="externals">
+          <tr>
+            <th>Compatibility:</th>
+            <td>Ant 1.5.2 or higher</td>
+          </tr>
+          <tr>
+            <th>URL:</th>
+            <td><a href="http://just4log.sourceforge.net">http://just4log.sourceforge.net</a></td>
+          </tr>
+          <tr>
+            <th>Contact:</th>
+            <td><a href="mailto:lbruand@wanadoo.fr">Lucas Bruand</a></td>
+          </tr>
+          <tr>
+            <th>License:</th>
+            <td>Apache License 1.1.</td>
+          </tr>
+        </table>
+      </subsection>
+      
      <subsection name="Macker">
 
         <p>A build-time architectural testing tool, designed
@@ -964,7 +1143,7 @@
         anything about your architecture -- you write the
         rules, and Macker keeps you honest about them.</p>
 
-        <table>
+        <table class="externals">
           <tr>
             <th>Compatibility:</th>
             <td>Ant 1.5 and higher (1.4 untested but may work)</td>
@@ -989,7 +1168,7 @@
         <p>pack is a task to build the smallest possible JAR to link
         and run one or more classes.</p>
 
-        <table>
+        <table class="externals">
           <tr>
             <th>Compatibility:</th>
             <td>Ant 1.5</td>
@@ -1014,7 +1193,7 @@
         <p>PMD checks Java source code for unused variables,
         unnecessary object creation, etc</p>
 
-        <table>
+        <table class="externals">
           <tr>
             <th>Compatibility:</th>
             <td>Ant 1.4 and higher</td>
@@ -1040,7 +1219,7 @@
         For example: if you have generated files (logs, .ear, .war, .jar 
         etc) accumulating in a directory, the purge task will allow you
         to delete the older files, keeping just the most recent ones.</p>
-        <table>
+        <table class="externals">
           <tr>
             <th>Compatibility:</th>
             <td>Ant 1.4 or above</td>
@@ -1067,7 +1246,7 @@
         insert and to modify the serialVersionUID in the source code
         of a serializable class.</p>
 
-        <table>
+        <table class="externals">
           <tr>
             <th>Compatibility:</th>
             <td>Ant 1.5.1 and later</td>
@@ -1093,7 +1272,7 @@
         Only affected classes will be recompiled and it can be used
         with any bytecode compiler.</p>
 
-        <table>
+        <table class="externals">
           <tr>
             <th>Compatibility:</th>
             <td>Apache Ant version 1.5.1</td>
@@ -1113,6 +1292,35 @@
         </table>
       </subsection>
 
+      <subsection name="Speech4J">
+
+        <p>A text-to-speech task and build listener, which produce
+        voice output either to speakers or .wav file (the task
+        only).</p>
+
+        <table class="externals">
+          <tr>
+            <th>Compatibility:</th>
+            <td>Tested with Ant 1.5.2. Works only on Windows platform
+            because the task uses Microsoft Speech API through
+            JNI.</td>
+          </tr>
+          <tr>
+            <th>URL:</th>
+            <td><a href="http://www.speech4j.com/">http://www.speech4j.com/</a></td>
+          </tr>
+          <tr>
+            <th>Contact:</th>
+            <td><a href="mailto:support@speech4j.com">support@speech4j.com</a></td>
+          </tr>
+          <tr>
+            <th>License:</th>
+            <td>Lite edition of Speech4j which includes both the task
+            and the listener is free.</td>
+          </tr>
+        </table>
+      </subsection>
+
       <subsection name="Styler">
 
         <p>The styler task makes useful combinations of XSLT transformations
@@ -1128,7 +1336,7 @@
           <li>use any custom XMLReader or XMLFilter class to handle new file
           formats and transformation techniques.</li>
         </ul>
-        <table>
+        <table class="externals">
           <tr>
             <th>Compatibility:</th>
             <td>Ant 1.4</td>
@@ -1157,7 +1365,7 @@
         output can be templated for easy integration with a site's
         look and feel.</p>
 
-        <table>
+        <table class="externals">
           <tr>
             <th>Compatibility:</th>
             <td>Ant 1.5</td>
@@ -1185,7 +1393,7 @@
         expanding or collapsing imports and even organising them into
         pre-determined groups.</p>
         
-        <table>
+        <table class="externals">
           <tr>
             <th>Compatibility:</th>
             <td>Ant 1.3 and later</td>
@@ -1210,7 +1418,7 @@
         <p>TiniAnt is an Ant task to support building applications for
         the <a href="http://www.ibutton.com/TINI/">TINI</a>.</p>
         
-        <table>
+        <table class="externals">
           <tr>
             <th>Compatibility:</th>
             <td>Ant 1.2 to 1.4.1</td>
@@ -1239,7 +1447,7 @@
         Java Archive installers that serve up their content through a
         built-in, multi-threaded, ultra light-weight web server.</p>
 
-        <table>
+        <table class="externals">
           <tr>
             <th>Compatibility:</th>
             <td>Ant 1.2 and 1.3</td>
@@ -1261,7 +1469,7 @@
       
       <subsection name="Version_Tool">
         <p>A versioning tool for Ant.</p>
-        <table>
+        <table class="externals">
           <tr>
             <th>Compatibility:</th>
             <td>Ant 1.5.1</td>
@@ -1289,7 +1497,7 @@
         chains.  Also included are replacement tasks for &lt;copy&gt; and
         &lt;javac&gt; that integrate support for preprocessing.</p>
 
-        <table>
+        <table class="externals">
           <tr>
             <th>Compatibility:</th>
             <td>1.5.1 and above</td>
@@ -1319,7 +1527,7 @@
         traditional Makefile-based approach.
         </p>
         
-        <table>
+        <table class="externals">
           <tr>
             <th>Compatibility:</th>
             <td>Ant 1.4</td>
@@ -1348,7 +1556,7 @@
            EJB and web application deployment descriptors.
            </p>
         
-        <table>
+        <table class="externals">
           <tr>
             <th>Compatibility:</th>
             <td>Ant 1.4</td>
@@ -1370,7 +1578,7 @@
           documents in other XML documents. This task perfomes the inclusion
           using an existing XInclude implementation</p>
 
-        <table>
+        <table class="externals">
           <tr>
             <th>Compatibility:</th>
             <td>Ant 1.5.2</td>
@@ -1401,7 +1609,7 @@
         changes. The emphasis is on providing the simplest means to
         perform common XML replacements</p>
 
-        <table>
+        <table class="externals">
           <tr>
             <th>Compatibility:</th>
             <td>Ant 1.4 and later</td>  
@@ -1416,7 +1624,7 @@
           </tr>
           <tr>
             <th>License:</th>
-            <td>GNU General Public License</td>
+            <td>Apache Software License</td>
           </tr>
         </table>
       </subsection>
@@ -1432,7 +1640,7 @@
         produce patches for obfuscated applications that have already
         been deployed.</p>
 
-        <table>
+        <table class="externals">
           <tr>
             <th>Compatibility:</th>
             <td>Ant 1.5 and later</td>  
@@ -1463,7 +1671,7 @@
         compiler to compile Generics-enabled Java code.  (This is only
         necessary until JDK1.5 is released.)</p>
 
-        <table>
+        <table class="externals">
           <tr>
             <th>Compatibility:</th>
             <td>Ant 1.5 and later</td>
@@ -1490,7 +1698,7 @@
         is suitable especially for applets. Ant 1.4+
         <code>&lt;rmic&gt;</code> adapter included.</p>
 
-        <table>
+        <table class="externals">
           <tr>
             <th>Compatibility:</th>
             <td>Ant 1.4 and later</td>
@@ -1518,7 +1726,7 @@
 
         <p>A plugin that integrates Ant into the jEdit editor.</p>
 
-        <table>
+        <table class="externals">
           <tr>
             <th>Compatibility:</th>
             <td>bundles Ant 1.5</td>
@@ -1542,7 +1750,7 @@
 
         <p>An AddIn that integrates Ant with the JDeveloper IDE</p>
 
-        <table>
+        <table class="externals">
           <tr>
             <th>Compatibility:</th>
             <td>Ant 1.4.1</td>
@@ -1566,7 +1774,7 @@
 
         <p>An OpenTool that integrates Ant into the JBuilder IDE.</p>
 
-        <table>
+        <table class="externals">
           <tr>
             <th>Compatibility:</th>
             <td>Ant 1.2 and 1.3</td>
@@ -1590,7 +1798,7 @@
 
         <p>A plugin that integrates Ant into the Jext editor.</p>
 
-        <table>
+        <table class="externals">
           <tr>
             <th>Compatibility:</th>
             <td>Ant 1.2 and 1.3</td>
@@ -1614,7 +1822,7 @@
 
         <p>Eclipse is a universal tool platform with Ant integration.</p>
 
-        <table>
+        <table class="externals">
           <tr>
             <th>Compatibility:</th>
             <td>Ant 1.3 - 1.4.1</td>
@@ -1639,7 +1847,7 @@
         <p>Java IDE with support for Ant.  Gel is a native Microsoft
         Windows software.</p>
 
-        <table>
+        <table class="externals">
           <tr>
             <th>Compatibility:</th>
             <td>Ant 1.4 and above</td>
@@ -1670,7 +1878,7 @@
         execution. 
         </p>
 
-        <table>
+        <table class="externals">
           <tr>
             <th>Compatibility:</th>
             <td>bundles Ant 1.3 and docs; adds a jar of extra tasks
@@ -1691,7 +1899,7 @@
 
         <p>Java IDE with refactoring support and Ant integration.</p>
 
-        <table>
+        <table class="externals">
           <tr>
             <th>Compatibility:</th>
             <td>bundles Ant 1.3</td>
@@ -1718,7 +1926,7 @@
         don't support Ant directly, but <a href="#AntRunner">an
         OpenTool</a> is available for them.</p>
 
-        <table>
+        <table class="externals">
           <tr>
             <th>Compatibility:</th>
             <td>Bundles Ant 1.5.1</td>
@@ -1744,7 +1952,7 @@
         Apache Ant as one of three built-in ways to build your
         applications.</p>
 
-        <table>
+        <table class="externals">
           <tr>
             <th>Compatibility:</th>
             <td>Ant 1.2 and later</td>
@@ -1768,7 +1976,7 @@
 
         <p>A module that integrates Ant into the NetBeans or Sun ONE Studio (formerly Forte for Java) IDEs.</p>
 
-        <table>
+        <table class="externals">
           <tr>
             <th>Compatibility:</th>
             <td>bundles Ant 1.5.1</td>
@@ -1792,7 +2000,7 @@
 
         <p>Java IDE with support for Ant.</p>
 
-        <table>
+        <table class="externals">
           <tr>
             <th>Compatibility:</th>
             <td>Ant 1.5.1</td>
@@ -1816,7 +2024,7 @@
 
         <p>WSAD features Ant integrate by virtue of being built on the Eclipse tools platform.</p>
 
-        <table>
+        <table class="externals">
           <tr>
             <th>Compatibility:</th>
             <td>bundles Ant 1.4.1</td>
