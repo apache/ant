@@ -26,7 +26,7 @@ time:</p>
 the include patterns, and don't match the exclude patterns, are used.</p>
 <p>Patterns can be specified inside the buildfile via task attributes or
 nested elements and via external files. Each line of the external file
-is taken as a pattern that is added to the list of include or exclude 
+is taken as a pattern that is added to the list of include or exclude
 patterns.</p>
 <h3><a name="patterns">Patterns</a></h3>
 <p>As described earlier, patterns are used for the inclusion and exclusion.
@@ -125,11 +125,11 @@ For example, <code>mypackage/test/</code> is interpreted as if it were
 way to select just the files you want.</p>
 
 <h3>Examples</h3>
-<pre>  
+<pre>
 &lt;copy todir=&quot;${dist}&quot;&gt;
-  &lt;fileset dir=&quot;${src}&quot; 
-           includes=&quot;**/images/*&quot; 
-           excludes=&quot;**/*.gif&quot; 
+  &lt;fileset dir=&quot;${src}&quot;
+           includes=&quot;**/images/*&quot;
+           excludes=&quot;**/*.gif&quot;
   /&gt;
 &lt;/copy&gt;</pre>
 <p>This copies all files in directories called <code>images</code> that are
@@ -154,6 +154,7 @@ They are:</p>
      **/#*#
      **/.#*
      **/%*%
+     **/._*
      **/CVS
      **/CVS/**
      **/.cvsignore
@@ -161,10 +162,10 @@ They are:</p>
      **/SCCS/**
      **/vssver.scc
 </pre>
-<p>If you do not want these default excludes applied, you may disable them with the 
+<p>If you do not want these default excludes applied, you may disable them with the
 <code>defaultexcludes=&quot;no&quot;</code> attribute.</p>
 <hr>
-<p align="center">Copyright &copy; 2001 Apache Software Foundation. All rights
+<p align="center">Copyright &copy; 2001-2002 Apache Software Foundation. All rights
 Reserved.</p>
 
 </body>
