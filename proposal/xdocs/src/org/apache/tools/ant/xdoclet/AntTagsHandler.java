@@ -211,13 +211,13 @@ public class AntTagsHandler extends XDocletTagSupport {
     }
 
     /**
-     * Provides the Ant category name as the Value of the category attribute, 
-     * <code>@ant:task&nbsp;category="..."</code>.  This attribute is mandatory.
+     * Provides the Ant category name as the Value of the category attribute,
+     * <code>@ant:task&nbsp;category="..."</code>.
      */
     public static final String getCategoryName(ClassDoc clazz) throws XDocletException {
         String tagValue = getTagValue(clazz, "ant:task", "category", -1,
                 null, null, null, null,
-                null, false, XDocletTagSupport.FOR_CLASS, true);
+                null, false, XDocletTagSupport.FOR_CLASS, false);
         if (tagValue != null) {
             tagValue = tagValue.toLowerCase();
         }
