@@ -88,17 +88,19 @@ public class DescriptorHandler extends org.xml.sax.HandlerBase {
      * Bunch of constants used for storing entries in a hashtable, and for
      * constructing the filenames of various parts of the ejb jar.
      */
-    private static final String EJB_REF   = "ejb-ref";
-    private static final String HOME_INTERFACE   = "home";
-    private static final String REMOTE_INTERFACE = "remote";
-    private static final String BEAN_CLASS       = "ejb-class";
-    private static final String PK_CLASS         = "prim-key-class";
-    private static final String EJB_NAME         = "ejb-name";
-    private static final String EJB_JAR          = "ejb-jar";
-    private static final String ENTERPRISE_BEANS = "enterprise-beans";
-    private static final String ENTITY_BEAN      = "entity";
-    private static final String SESSION_BEAN     = "session";
-    private static final String MESSAGE_BEAN     = "message-driven";
+    private static final String EJB_REF               = "ejb-ref";
+    private static final String HOME_INTERFACE        = "home";
+    private static final String REMOTE_INTERFACE      = "remote";
+    private static final String LOCAL_HOME_INTERFACE  = "local-home";
+    private static final String LOCAL_INTERFACE       = "local";
+    private static final String BEAN_CLASS            = "ejb-class";
+    private static final String PK_CLASS              = "prim-key-class";
+    private static final String EJB_NAME              = "ejb-name";
+    private static final String EJB_JAR               = "ejb-jar";
+    private static final String ENTERPRISE_BEANS      = "enterprise-beans";
+    private static final String ENTITY_BEAN           = "entity";
+    private static final String SESSION_BEAN          = "session";
+    private static final String MESSAGE_BEAN          = "message-driven";
 
     /**
      * The state of the parsing
@@ -348,6 +350,8 @@ public class DescriptorHandler extends org.xml.sax.HandlerBase {
 
         if (currentElement.equals(HOME_INTERFACE)   ||
             currentElement.equals(REMOTE_INTERFACE) ||
+            currentElement.equals(LOCAL_INTERFACE) ||
+            currentElement.equals(LOCAL_HOME_INTERFACE) ||
             currentElement.equals(BEAN_CLASS)       ||
             currentElement.equals(PK_CLASS)) {
 
@@ -368,7 +372,7 @@ public class DescriptorHandler extends org.xml.sax.HandlerBase {
             }
         }
 
-	// Get the value of the <ejb-name> tag.  Only the first occurence.
+    // Get the value of the <ejb-name> tag.  Only the first occurence.
         if (currentElement.equals(EJB_NAME)) {
             if ( ejbName == null ) {
                 ejbName = currentText.trim();
