@@ -11,6 +11,9 @@
 
   <converters>
 
+    <converter classname="org.apache.antlib.core.StringToEnumConverter"
+               source="java.lang.String"
+               destination="org.apache.avalon.framework.Enum" />
     <converter classname="org.apache.antlib.core.StringToFileConverter"
                source="java.lang.String"
                destination="java.io.File" />
