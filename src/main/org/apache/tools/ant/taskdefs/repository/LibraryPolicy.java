@@ -27,14 +27,16 @@ import java.util.ListIterator;
  * Here is the use
  * <ol>
  * <li>Policies are executed in order of declaration.
- * <li>The {@link #beforeConnect(org.apache.tools.ant.taskdefs.repository.Libraries, java.util.ListIterator)} call,
+ * <li>The {@link #beforeConnect(org.apache.tools.ant.taskdefs.repository.Libraries,
+ * java.util.ListIterator)} call,
  * is called before any connection has been initiated; policies can manipulate
  * the library list, set/reset their toFetch list, rename destination files, etc.
  * <li>If any policy returns false from the method, the connection does not proceed.
  * This is not an error, provided the files are actually present.
  * <li>After running through the fetch of all files marked for download,
  * every policy implementation will again be called in order of declaration.
- * <li>The {@link #afterFetched(org.apache.tools.ant.taskdefs.repository.Libraries, java.util.ListIterator)} method
+ * <li>The {@link #afterFetched(org.apache.tools.ant.taskdefs.repository.Libraries,
+ * java.util.ListIterator)} method
  * does not return anything.
  * <li>Either method can throw a BuildException to indicate some kind of error.
  * </ol>
@@ -55,7 +57,7 @@ public interface LibraryPolicy extends EnabledLibraryElement {
      * @throws org.apache.tools.ant.BuildException
      *          if needed
      */
-    public boolean beforeConnect(Libraries owner, ListIterator libraries);
+    boolean beforeConnect(Libraries owner, ListIterator libraries);
 
     /**
      * method called after a successful connection process.
@@ -63,7 +65,7 @@ public interface LibraryPolicy extends EnabledLibraryElement {
      * @param libraries
      * @throws org.apache.tools.ant.BuildException
      */
-    public void afterFetched(Libraries owner, ListIterator libraries);
+    void afterFetched(Libraries owner, ListIterator libraries);
 
 
 }
