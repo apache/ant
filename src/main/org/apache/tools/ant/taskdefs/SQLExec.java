@@ -610,7 +610,9 @@ public class SQLExec extends Task {
             if (tSrcFile != null) {
                 log("Executing file: " + tSrcFile.getAbsolutePath(), 
                     Project.MSG_INFO);
-                runStatements(new FileReader(tSrcFile), out);
+                FileReader reader = new FileReader(tSrcFile);
+                runStatements(reader, out);
+                reader.close();
             }
         }
     }
