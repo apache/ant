@@ -161,10 +161,8 @@ filesizes of all files a &lt;fileset/&gt; caught.</p>
       <font color=blue>fs.setIncludes(includes)</font>;
       fs.setExcludes(excludes);
 
-      // Get the files of that fileset
+      // Get the files (array) of that fileset
       ds = fs.getDirectoryScanner(project);
-
-      // Get the source files (array)
       srcFiles = ds.getIncludedFiles();
 
       // iterate over that array
@@ -186,7 +184,7 @@ filesizes of all files a &lt;fileset/&gt; caught.</p>
 &lt;/project&gt;
 </pre></blockquote>
 <p>We want to use the Java API. Because we don´t want always typing the package signature
-we do an import. Rhino knows to different methods for import statements: one for packages
+we do an import. Rhino knows two different methods for import statements: one for packages
 and one for a single class. By default only the <i>java</i> packages are available, so
 <i>java.lang.System</i> can be directly imported with <code>importClass/importPackage</code>.
 For other packages you have to prefix the full classified name with <i>Package</i>.
