@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2000-2001 The Apache Software Foundation.  All rights
+ * Copyright (c) 2000-2002 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -130,7 +130,7 @@ public abstract class BaseTest {
 
     /**
      * @return the destination directory as an absolute path if it exists
-     *			otherwise return <tt>null</tt>
+     *         otherwise return <tt>null</tt>
      */
     public String getTodir(){
         if (destDir != null){
