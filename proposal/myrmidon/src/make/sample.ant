@@ -51,10 +51,10 @@ Legal:
   </target>
 
   <target name="converterdef-test">
-    <converterdef classname="org.apache.myrmidon.libs.core.StringToClassConverter"
-                  source-type="java.lang.String"
-                  destination-type="java.lang.Class"
-                  lib="../../dist/lib/core.atl" />
+    <converter-def classname="org.apache.myrmidon.libs.core.StringToClassConverter"
+                   source-type="java.lang.String"
+                   destination-type="java.lang.Class"
+                   lib="../../dist/lib/core.atl" />
   </target>
 
   <target name="ant-call-test">
