@@ -48,6 +48,7 @@
   <!-- =================================================================== -->
   <target name="prepare">
     <mkdir dir="${build.dir}"/>
+    <tstamp />
   </target>
 
   <!-- =================================================================== -->
@@ -66,11 +67,19 @@
       <exclude name="**/NetRexxC.java" unless="netrexx.present" />
       <exclude name="**/XslpLiaison.java" unless="xslp.present" />
       <exclude name="**/XalanLiaison.java" unless="xalan.present" />
+      <exclude name="**/version.txt" />
     </javac>
  
     <copydir src="${src.dir}" dest="${build.classes}">
       <include name="**/defaultManifest.mf" />
       <include name="**/*.properties" />
+    </copydir>
+
+    <filter token="VERSION" value="${version}" />
+    <filter token="DATE" value="${TODAY}" />
+    <filter token="TIME" value="${TSTAMP}" />
+    <copydir src="${src.dir}" dest="${build.classes}" filtering="on">
+      <include name="**/version.txt" />
     </copydir>
   </target>
 

@@ -116,6 +116,9 @@ public class Main {
             if (arg.equals("-help") || arg.equals("help")) {
                 printUsage();
                 return;
+            } else if (arg.equals("-version")) {
+                printVersion();
+                return;
             } else if (arg.equals("-quiet") || arg.equals("-q") || arg.equals("q")) {
                 msgOutputLevel = Project.MSG_WARN;
             } else if (arg.equals("-verbose") || arg.equals("-v") || arg.equals("v")) {
@@ -328,6 +331,7 @@ public class Main {
         msg.append("ant [options] [target]" + lSep);
         msg.append("Options: " + lSep);
         msg.append("  -help                  print this message" + lSep);
+        msg.append("  -version               print the version information and exit" + lSep);
         msg.append("  -quiet                 be extra quiet" + lSep);
         msg.append("  -verbose               be extra verbose" + lSep);
         msg.append("  -logfile <file>        use given file for log" + lSep);
@@ -335,5 +339,29 @@ public class Main {
         msg.append("  -buildfile <file>      use given buildfile" + lSep);
         msg.append("  -D<property>=<value>   use value for given property" + lSep);
         System.out.println(msg.toString());
+    }
+
+    private static void printVersion() {
+        try {
+            Properties props = new Properties();
+            InputStream in = 
+                Main.class.getResourceAsStream("/org/apache/tools/ant/version.txt");
+            props.load(in);
+            in.close();
+            
+            String lSep = System.getProperty("line.separator");
+            StringBuffer msg = new StringBuffer();
+            msg.append("Ant version ");
+            msg.append(props.getProperty("VERSION"));
+            msg.append(" compiled on ");
+            msg.append(props.getProperty("DATE"));
+            msg.append(lSep);
+            System.out.println(msg.toString());
+        } catch (IOException ioe) {
+            System.err.println("Could not load the version information.");
+            System.err.println(ioe.getMessage());
+        } catch (NullPointerException npe) {
+            System.err.println("Could not load the version information.");
+        }
     }
 }
