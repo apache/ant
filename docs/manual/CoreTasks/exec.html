@@ -18,6 +18,18 @@ to send input to it is via the input and inputstring attributes. Also note that
 in Ant 1.6, any attempt to read input in the forked program will receive an
 EOF (-1). This is a change from Ant 1.5, where such an attempt would block.</p>
 
+
+
+<h4>Windows Users</h4>
+<p>The &lt;exec&gt; task delegates to <code>Runtime.exec</code> which in turn
+apparently calls <a href="http://msdn.microsoft.com/library/default.asp?url=/library/en-us/dllproc/base/createprocess.asp">
+<code>::CreateProcess</code></a>. It is the latter Win32 function that defines
+the exact semantics of the call. In particular, if you do not put a file extension
+on the executable, only ".EXE" files are looked for, not ".COM", ".CMD" or other file
+types listed in the environment variable PATHEXT. That is only used by the shell.
+
+</p>
+
 <h4>Cygwin Users</h4>
 <p>In general the &lt;exec&gt; task will not understand paths such as /bin/sh for
 the executable parameter. This is because the Java VM in which Ant is running is a
