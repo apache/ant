@@ -140,7 +140,7 @@ public class ProjectHelper {
         // configure taskdefs
         NodeList list = root.getElementsByTagName("taskdef");
         for (int i = 0; i < list.getLength(); i++) {
-            Taskdef taskdef = new Taskdef();
+            Task taskdef = new Taskdef();
             configure(project, taskdef, (Element)list.item(i));
             taskdef.setProject(project);
             taskdef.init();
@@ -149,7 +149,7 @@ public class ProjectHelper {
         // configure properties
         list = root.getElementsByTagName("property");
         for (int i = 0; i < list.getLength(); i++) {
-            Property property = new Property();
+            Task property = new Property();
             configure(project, property, (Element)list.item(i));
             property.setProject(project);
             property.init();
