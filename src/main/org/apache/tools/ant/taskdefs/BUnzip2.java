@@ -84,7 +84,7 @@ public class BUnzip2 extends Unpack {
 
     protected void extract() {
         if (source.lastModified() > dest.lastModified()) {
-            log("Expanding "+ source.getAbsolutePath() + " to "
+            log("Expanding " + source.getAbsolutePath() + " to "
                 + dest.getAbsolutePath());
 
             FileOutputStream out = null;
@@ -96,11 +96,11 @@ public class BUnzip2 extends Unpack {
                 fis = new FileInputStream(source);
                 bis = new BufferedInputStream(fis);
                 int b = bis.read();
-                if(b != 'B') {
+                if (b != 'B') {
                     throw new BuildException("Invalid bz2 file.", location);
                 }
                 b = bis.read();
-                if(b != 'Z') {
+                if (b != 'Z') {
                     throw new BuildException("Invalid bz2 file.", location);
                 }
                 zIn = new CBZip2InputStream(bis);

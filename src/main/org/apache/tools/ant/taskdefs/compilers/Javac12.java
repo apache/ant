@@ -97,7 +97,7 @@ public class Javac12 extends DefaultCompilerAdapter {
             Method compile = c.getMethod("compile", 
                                          new Class [] { String[].class });
             Boolean ok = 
-                (Boolean)compile.invoke(compiler, 
+                (Boolean) compile.invoke(compiler, 
                                         new Object[] {cmd.getArguments()});
             return ok.booleanValue();
         }

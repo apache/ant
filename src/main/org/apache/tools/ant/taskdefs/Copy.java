@@ -124,7 +124,9 @@ public class Copy extends Task {
         fileUtils = FileUtils.newFileUtils();
     }
 
-    protected FileUtils getFileUtils() {return fileUtils;}
+    protected FileUtils getFileUtils() {
+        return fileUtils;
+    }
 
     /**
      * Sets a single source file to copy.
@@ -258,7 +260,7 @@ public class Copy extends Task {
      * @param failonerror true or false
      */
      public void setFailOnError(boolean failonerror) {
-         this.failonerror=failonerror;
+         this.failonerror = failonerror;
      }
 
     /**
@@ -334,7 +336,7 @@ public class Copy extends Task {
                 } else {
                     String message = "Warning: Could not find file "
                         + file.getAbsolutePath() + " to copy.";
-                    if(!failonerror) {
+                    if (!failonerror) {
                         log(message);
                     } else {
                         throw new BuildException(message);
@@ -343,7 +345,7 @@ public class Copy extends Task {
             }
 
             // deal with the filesets
-            for (int i=0; i<filesets.size(); i++) {
+            for (int i = 0; i < filesets.size(); i++) {
                 FileSet fs = (FileSet) filesets.elementAt(i);
                 DirectoryScanner ds = fs.getDirectoryScanner(project);
                 File fromDir = fs.getDir(project);
@@ -465,7 +467,7 @@ public class Copy extends Task {
         String[] toCopy = null;
         if (forceOverwrite) {
             Vector v = new Vector();
-            for (int i=0; i<names.length; i++) {
+            for (int i = 0; i < names.length; i++) {
                 if (mapper.mapFileName(names[i]) != null) {
                     v.addElement(names[i]);
                 }
@@ -480,7 +482,7 @@ public class Copy extends Task {
         for (int i = 0; i < toCopy.length; i++) {
             File src = new File(fromDir, toCopy[i]);
             File dest = new File(toDir, mapper.mapFileName(toCopy[i])[0]);
-            map.put( src.getAbsolutePath(), dest.getAbsolutePath() );
+            map.put(src.getAbsolutePath(), dest.getAbsolutePath());
         }
     }
 
@@ -490,16 +492,16 @@ public class Copy extends Task {
      */
     protected void doFileOperations() {
         if (fileCopyMap.size() > 0) {
-            log("Copying " + fileCopyMap.size() +
-                " file" + (fileCopyMap.size() == 1 ? "" : "s") +
-                " to " + destDir.getAbsolutePath() );
+            log("Copying " + fileCopyMap.size() 
+                + " file" + (fileCopyMap.size() == 1 ? "" : "s") 
+                + " to " + destDir.getAbsolutePath());
 
             Enumeration e = fileCopyMap.keys();
             while (e.hasMoreElements()) {
                 String fromFile = (String) e.nextElement();
                 String toFile = (String) fileCopyMap.get(fromFile);
 
-                if( fromFile.equals( toFile ) ) {
+                if (fromFile.equals(toFile)) {
                     log("Skipping self-copy of " + fromFile, verbosity);
                     continue;
                 }
@@ -516,7 +518,7 @@ public class Copy extends Task {
                     for (Enumeration filterEnum = filterSets.elements(); 
                          filterEnum.hasMoreElements();) {
                         executionFilters
-                            .addFilterSet((FilterSet)filterEnum.nextElement());
+                            .addFilterSet((FilterSet) filterEnum.nextElement());
                     }
                     fileUtils.copyFile(fromFile, toFile, executionFilters, 
                                        filterChains, forceOverwrite, 
@@ -534,7 +536,7 @@ public class Copy extends Task {
             Enumeration e = dirCopyMap.elements();
             int count = 0;
             while (e.hasMoreElements()) {
-                File d = new File((String)e.nextElement());
+                File d = new File((String) e.nextElement());
                 if (!d.exists()) {
                     if (!d.mkdirs()) {
                         log("Unable to create directory " 
@@ -548,7 +550,7 @@ public class Copy extends Task {
             if (count > 0) {
                 log("Copied " + count +
                     " empty director" +
-                    (count==1?"y":"ies") +
+                    (count == 1 ? "y" : "ies") +
                     " to " + destDir.getAbsolutePath());
             }
         }

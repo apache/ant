@@ -92,23 +92,23 @@ public class CompilerAdapterFactory {
      * @throws BuildException if the compiler type could not be resolved into
      * a compiler adapter.
      */
-    public static CompilerAdapter getCompiler( String compilerType, Task task ) 
+    public static CompilerAdapter getCompiler(String compilerType, Task task) 
         throws BuildException {
             /* If I've done things right, this should be the extent of the
              * conditional statements required.
              */
-            if ( compilerType.equalsIgnoreCase("jikes") ) {
+            if (compilerType.equalsIgnoreCase("jikes")) {
                 return new Jikes();
             }
-            if ( compilerType.equalsIgnoreCase("extJavac") ) {
+            if (compilerType.equalsIgnoreCase("extJavac")) {
                 return new JavacExternal();
             }       
-            if ( compilerType.equalsIgnoreCase("classic") ||
+            if (compilerType.equalsIgnoreCase("classic") ||
                     compilerType.equalsIgnoreCase("javac1.1") ||
                     compilerType.equalsIgnoreCase("javac1.2")) {
                 return new Javac12();
             }
-            if ( compilerType.equalsIgnoreCase("modern") ||
+            if (compilerType.equalsIgnoreCase("modern") ||
                     compilerType.equalsIgnoreCase("javac1.3") ||
                     compilerType.equalsIgnoreCase("javac1.4")) {
                 // does the modern compiler exist?
@@ -121,21 +121,21 @@ public class CompilerAdapterFactory {
                 }
                 return new Javac13();
             }
-            if ( compilerType.equalsIgnoreCase("jvc") ||
+            if (compilerType.equalsIgnoreCase("jvc") ||
                     compilerType.equalsIgnoreCase("microsoft")) {
                 return new Jvc();
             }
-            if ( compilerType.equalsIgnoreCase("kjc") ) {
+            if (compilerType.equalsIgnoreCase("kjc")) {
                 return new Kjc();
             }
-            if ( compilerType.equalsIgnoreCase("gcj") ) {
+            if (compilerType.equalsIgnoreCase("gcj")) {
                 return new Gcj();
             }
             if (compilerType.equalsIgnoreCase("sj") ||
                     compilerType.equalsIgnoreCase("symantec")) {
                 return new Sj();
             }
-            return resolveClassName( compilerType );
+            return resolveClassName(compilerType);
         }
 
     /**
@@ -146,18 +146,18 @@ public class CompilerAdapterFactory {
      * @throws BuildException This is the fit that is thrown if className
      * isn't an instance of CompilerAdapter.
      */
-    private static CompilerAdapter resolveClassName( String className )
+    private static CompilerAdapter resolveClassName(String className)
         throws BuildException {
         try {
-            Class c = Class.forName( className );
+            Class c = Class.forName(className);
             Object o = c.newInstance();
             return (CompilerAdapter) o;
-        } catch ( ClassNotFoundException cnfe ) {
-            throw new BuildException( className + " can\'t be found.", cnfe );
-        } catch ( ClassCastException cce ) {
+        } catch (ClassNotFoundException cnfe) {
+            throw new BuildException(className + " can\'t be found.", cnfe);
+        } catch (ClassCastException cce) {
             throw new BuildException(className + " isn\'t the classname of "
                     + "a compiler adapter.", cce);
-        } catch ( Throwable t ) {
+        } catch (Throwable t) {
             // for all other possibilities
             throw new BuildException(className + " caused an interesting "
                     + "exception.", t);

@@ -87,7 +87,7 @@ public class Jvc extends DefaultCompilerAdapter {
         // so we'll emulate it for compatibility and convenience.
         classpath.addExtdirs(extdirs);
 
-        if ( (bootclasspath == null) || (bootclasspath.size() == 0) ) {
+        if (bootclasspath == null || bootclasspath.size() == 0) {
             // no bootclasspath, therefore, get one from the java runtime
             includeJavaRuntime = true;
         } else {

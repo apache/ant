@@ -76,7 +76,7 @@ public interface CompilerAdapter {
     /**
      * Sets the compiler attributes, which are stored in the Javac task.
      */
-    void setJavac( Javac attributes );
+    void setJavac(Javac attributes);
 
     /**
      * Executes the task.

@@ -110,8 +110,8 @@ public class Copydir extends MatchingTask {
         }
 
         if (!srcDir.exists()) {
-            throw new BuildException("srcdir "+srcDir.toString()
-                                     +" does not exist!", location);
+            throw new BuildException("srcdir " + srcDir.toString()
+                                     + " does not exist!", location);
         }
 
         if (destDir == null) {

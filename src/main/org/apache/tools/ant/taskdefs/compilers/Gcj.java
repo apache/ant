@@ -98,7 +98,7 @@ public class Gcj extends DefaultCompilerAdapter {
         // so we'll emulate it for compatibility and convenience.
         classpath.addExtdirs(extdirs);
 
-        if ( (bootclasspath == null) || (bootclasspath.size() == 0) ) {
+        if (bootclasspath == null || bootclasspath.size() == 0) {
             // no bootclasspath, therefore, get one from the java runtime
             includeJavaRuntime = true;
         }
@@ -114,7 +114,7 @@ public class Gcj extends DefaultCompilerAdapter {
             cmd.createArgument().setValue("-d");
             cmd.createArgument().setFile(destDir);
             
-            if(destDir.mkdirs()){
+            if (destDir.mkdirs()) {
                 throw new BuildException("Can't make output directories. "
                                          + "Maybe permission is wrong. ");
             };

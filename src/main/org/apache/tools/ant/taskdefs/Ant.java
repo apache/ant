@@ -199,7 +199,7 @@ public class Ant extends Task {
         Vector listeners = project.getBuildListeners();
         final int count = listeners.size();
         for (int i = 0; i < count; i++) {
-            newProject.addBuildListener((BuildListener)listeners.elementAt(i));
+            newProject.addBuildListener((BuildListener) listeners.elementAt(i));
         }
 
         if (output != null) {
@@ -217,8 +217,8 @@ public class Ant extends Task {
                 logger.setErrorPrintStream(out);
                 newProject.addBuildListener(logger);
             }
-            catch( IOException ex ) {
-                log( "Ant: Can't set output to " + output );
+            catch (IOException ex) {
+                log("Ant: Can't set output to " + output);
             }
         }
 
@@ -309,7 +309,7 @@ public class Ant extends Task {
                 reinit();
             }
 
-            if ( (dir == null) && (inheritAll) ) {
+            if ((dir == null) && (inheritAll)) {
                 dir = project.getBaseDir();
             }
 
@@ -331,10 +331,10 @@ public class Ant extends Task {
             File file = FileUtils.newFileUtils().resolveFile(dir, antFile);
             antFile = file.getAbsolutePath();
 
-            log("calling target "+(target!=null?target:"[default]")
-                    + " in build file "+  antFile.toString(),
+            log("calling target " + (target != null ? target : "[default]")
+                    + " in build file " +  antFile.toString(),
                     Project.MSG_VERBOSE);
-            newProject.setUserProperty( "ant.file" , antFile );
+            newProject.setUserProperty("ant.file" , antFile);
             ProjectHelper.configureProject(newProject, new File(antFile));
 
             if (target == null) {
@@ -393,8 +393,8 @@ public class Ant extends Task {
         Hashtable newReferences = newProject.getReferences();
         Enumeration e;
         if (references.size() > 0) {
-            for(e = references.elements(); e.hasMoreElements();) {
-                Reference ref = (Reference)e.nextElement();
+            for (e = references.elements(); e.hasMoreElements();) {
+                Reference ref = (Reference) e.nextElement();
                 String refid = ref.getRefId();
                 if (refid == null) {
                     throw new BuildException("the refid attribute is required"
@@ -419,8 +419,8 @@ public class Ant extends Task {
         // Now add all references that are not defined in the
         // subproject, if inheritRefs is true
         if (inheritRefs) {
-            for(e = thisReferences.keys(); e.hasMoreElements();) {
-                String key = (String)e.nextElement();
+            for (e = thisReferences.keys(); e.hasMoreElements();) {
+                String key = (String) e.nextElement();
                 if (newReferences.containsKey(key)) {
                     continue;
                 }
@@ -456,14 +456,14 @@ public class Ant extends Task {
         } else {
             try {
                 Method setProjectM =
-                    c.getMethod( "setProject", new Class[] {Project.class});
-                if(setProjectM != null) {
+                    c.getMethod("setProject", new Class[] {Project.class});
+                if (setProjectM != null) {
                     setProjectM.invoke(copy, new Object[] {newProject});
                 }
             } catch (NoSuchMethodException e) {
                 // ignore this if the class being referenced does not have
                 // a set project method.
-            } catch(Exception e2) {
+            } catch (Exception e2) {
                 String msg = "Error setting new project instance for "
                     + "reference with id " + oldKey;
                 throw new BuildException(msg, e2, location);
@@ -516,7 +516,7 @@ public class Ant extends Task {
         Property p = new Property(true);
         p.setProject(newProject);
         p.setTaskName("property");
-        properties.addElement( p );
+        properties.addElement(p);
         return p;
     }
 
@@ -537,8 +537,14 @@ public class Ant extends Task {
 
         public Reference() {super();}
 
-        private String targetid=null;
-        public void setToRefid(String targetid) { this.targetid=targetid; }
-        public String getToRefid() { return targetid; }
+        private String targetid = null;
+
+        public void setToRefid(String targetid) {
+            this.targetid = targetid; 
+        }
+
+        public String getToRefid() { 
+            return targetid; 
+        }
     }
 }

@@ -111,22 +111,22 @@ public abstract class Definer extends Task {
     }
 
     public void execute() throws BuildException {
-        AntClassLoader al=createLoader();
+        AntClassLoader al = createLoader();
 
-        if (file==null && resource==null ) {
+        if (file == null && resource == null) {
 
             // simple case - one definition
-            if ( name==null || value==null  ) {
+            if (name == null || value == null) {
                 String msg = "name or classname attributes of "
                     + getTaskName() + " element "
                     + "are undefined";
                 throw new BuildException(msg);
             }
-            addDefinition( al, name, value );
+            addDefinition(al, name, value);
 
         } else {
 
-            InputStream is=null;
+            InputStream is = null;
             try {
                 if (name != null || value != null) {
                     String msg = "You must not specify name or value "
@@ -141,20 +141,20 @@ public abstract class Definer extends Task {
                 }
             
 
-                Properties props=new Properties();
-                if( file != null ) {
+                Properties props = new Properties();
+                if (file != null) {
                     log("Loading definitions from file " + file, 
                         Project.MSG_VERBOSE);
-                    is=new FileInputStream( file );
+                    is = new FileInputStream(file);
                     if (is == null) {
                         log("Could not load definitions from file " + file
                             + ". It doesn\'t exist.", Project.MSG_WARN);
                     }
                 }    
-                if( resource!=null ) {
+                if (resource != null) {
                     log("Loading definitions from resource " + resource, 
                         Project.MSG_VERBOSE);
-                    is=al.getResourceAsStream( resource );
+                    is = al.getResourceAsStream(resource);
                     if (is == null) {
                         log("Could not load definitions from resource " 
                             + resource + ". It could not be found.", 
@@ -162,16 +162,16 @@ public abstract class Definer extends Task {
                     }
                 }
 
-                if( is!=null ) {
-                    props.load( is );
-                    Enumeration keys=props.keys();
-                    while( keys.hasMoreElements() ) {
-                        String n=(String)keys.nextElement();
-                        String v=props.getProperty( n );
-                        addDefinition( al, n, v );
+                if (is != null) {
+                    props.load(is);
+                    Enumeration keys = props.keys();
+                    while (keys.hasMoreElements()) {
+                        String n = (String) keys.nextElement();
+                        String v = props.getProperty(n);
+                        addDefinition(al, n, v);
                     }
                 }
-            } catch( IOException ex ) {
+            } catch (IOException ex) {
                 throw new BuildException(ex, location);
             } finally {
                 if (is != null) {
@@ -183,19 +183,19 @@ public abstract class Definer extends Task {
         }
     }
     
-    private void addDefinition( ClassLoader al, String name, String value )
+    private void addDefinition(ClassLoader al, String name, String value)
         throws BuildException {
         try {
             Class c = al.loadClass(value);
             AntClassLoader.initializeClass(c);
             addDefinition(name, c);
         } catch (ClassNotFoundException cnfe) {
-            String msg = getTaskName()+" class " + value +
-                " cannot be found";
+            String msg = getTaskName() + " class " + value 
+                + " cannot be found";
             throw new BuildException(msg, cnfe, location);
         } catch (NoClassDefFoundError ncdfe) {
-            String msg = getTaskName()+" class " + value +
-                " cannot be found";
+            String msg = getTaskName() + " class " + value 
+                + " cannot be found";
             throw new BuildException(msg, ncdfe, location);
         }
     }
@@ -216,15 +216,15 @@ public abstract class Definer extends Task {
         return al;
     }
 
-    public void setFile( File file ) {
-        this.file=file;
+    public void setFile(File file) {
+        this.file = file;
     }
 
-    public void setResource( String res ) {
-        this.resource=res;
+    public void setResource(String res) {
+        this.resource = res;
     }
 
-    public void setName( String name) {
+    public void setName(String name) {
         this.name = name;
     }
 

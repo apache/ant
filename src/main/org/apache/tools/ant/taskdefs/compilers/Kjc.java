@@ -85,7 +85,7 @@ public class Kjc extends DefaultCompilerAdapter {
             Method compile = c.getMethod("compile",
                                          new Class [] { String [].class });
             Boolean ok = 
-                (Boolean)compile.invoke(null, 
+                (Boolean) compile.invoke(null, 
                                         new Object[] {cmd.getArguments()});
             return ok.booleanValue();
         }

@@ -212,14 +212,7 @@ public class IntrospectionHelper implements BuildListener {
 
             // not really user settable properties on tasks
             if (org.apache.tools.ant.Task.class.isAssignableFrom(bean)
-                && args.length == 1 &&
-                (
-                 (
-                  "setLocation".equals(name) && org.apache.tools.ant.Location.class.equals(args[0])
-                  ) || (
-                   "setTaskType".equals(name) && java.lang.String.class.equals(args[0])
-                  )
-                 )) {
+                 && args.length == 1 && isHiddenSetMethod(name, args[0])) {
                 continue;
             }
 
@@ -353,6 +346,28 @@ public class IntrospectionHelper implements BuildListener {
         }
     }
 
+    /** 
+     * Certain set methods are part of the Ant core interface to tasks and 
+     * therefore not to be considered for introspection
+     *
+     * @param name the name of the set method
+     * @param type the type of the set method's parameter 
+     * @return true if the given set method is to be hidden.
+     */
+    private boolean isHiddenSetMethod(String name, Class type) {
+        if ("setLocation".equals(name) 
+             && org.apache.tools.ant.Location.class.equals(type)) {
+            return true;
+        }
+        
+        if  ("setTaskType".equals(name) 
+             && java.lang.String.class.equals(type)) {
+            return true;
+        }
+        
+        return false;
+    }
+    
     /**
      * Returns a helper for the given class, either from the cache
      * or by creating a new instance.

@@ -145,8 +145,8 @@ public class AntStructure extends Task {
             printTail(out);
 
         } catch (IOException ioe) {
-            throw new BuildException("Error writing "+output.getAbsolutePath(),
-                                     ioe, location);
+            throw new BuildException("Error writing " 
+                + output.getAbsolutePath(), ioe, location);
         } finally {
             if (out != null) {
                 out.close();
@@ -314,7 +314,7 @@ public class AntStructure extends Task {
             } else if (org.apache.tools.ant.types.EnumeratedAttribute.class.isAssignableFrom(type)) {
                 try {
                     EnumeratedAttribute ea =
-                        (EnumeratedAttribute)type.newInstance();
+                        (EnumeratedAttribute) type.newInstance();
                     String[] values = ea.getValues();
                     if (values == null
                         || values.length == 0
@@ -322,7 +322,7 @@ public class AntStructure extends Task {
                         sb.append("CDATA ");
                     } else {
                         sb.append("(");
-                        for (int i=0; i < values.length; i++) {
+                        for (int i = 0; i < values.length; i++) {
                             if (i != 0) {
                                 sb.append(" | ");
                             }
@@ -346,10 +346,9 @@ public class AntStructure extends Task {
         final int count = v.size();
         for (int i = 0; i < count; i++) {
             String nestedName = (String) v.elementAt(i);
-            if (!"#PCDATA".equals(nestedName) &&
-                !TASKS.equals(nestedName) &&
-                !TYPES.equals(nestedName)
-                ) {
+            if (!"#PCDATA".equals(nestedName) 
+                 && !TASKS.equals(nestedName) 
+                 && !TYPES.equals(nestedName)) {
                 printElementDecl(out, nestedName, ih.getElementType(nestedName));
             }
         }

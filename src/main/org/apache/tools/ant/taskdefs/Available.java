@@ -264,7 +264,7 @@ public class Available extends Task implements Condition {
             return checkFile(project.resolveFile(file), file);
         } else {
             String[] paths = filepath.list();
-            for(int i = 0; i < paths.length; ++i) {
+            for (int i = 0; i < paths.length; ++i) {
                 log("Searching " + paths[i], Project.MSG_DEBUG);
                 File path = new File(paths[i]);
 
@@ -340,12 +340,12 @@ public class Available extends Task implements Condition {
     private boolean checkFile(File f, String text) {
         if (type != null) {
             if (type.isDir()) {
-                if( f.isDirectory()) {
+                if (f.isDirectory()) {
                     log("Found directory: " + text, Project.MSG_VERBOSE);
                 }
                 return f.isDirectory();
             } else if (type.isFile()) {
-                if( f.isFile()) {
+                if (f.isFile()) {
                     log("Found file: " + text, Project.MSG_VERBOSE);
                 }
                 return f.isFile();
@@ -380,12 +380,13 @@ public class Available extends Task implements Condition {
     private boolean checkClass(String classname) {
         try {
             Class requiredClass = null;
-            if( ignoreSystemclasses ) {
-                loader = new AntClassLoader(null,getProject(),classpath,false);
+            if (ignoreSystemclasses) {
+                loader = new AntClassLoader(null, getProject(), 
+                    classpath, false);
                 if (loader != null) {
                     try {
                         loader.findClass(classname);
-                    } catch( SecurityException se ) {
+                    } catch (SecurityException se) {
                         // class found but restricted name; this is actually
                         // the case we're looking for, so catch the exception
                         // and return

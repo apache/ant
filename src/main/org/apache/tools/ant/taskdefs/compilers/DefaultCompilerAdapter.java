@@ -113,7 +113,7 @@ public abstract class DefaultCompilerAdapter implements CompilerAdapter {
 
     private FileUtils fileUtils = FileUtils.newFileUtils();
 
-    public void setJavac( Javac attributes ) {
+    public void setJavac(Javac attributes) {
         this.attributes = attributes;
         src = attributes.getSrcdir();
         destDir = attributes.getDestdir();
@@ -159,11 +159,11 @@ public abstract class DefaultCompilerAdapter implements CompilerAdapter {
         // order determined by the value of build.classpath
 
         if (compileClasspath == null) {
-            if ( includeAntRuntime ) {
+            if (includeAntRuntime) {
                 classpath.addExisting(Path.systemClasspath);
             }
         } else {
-            if ( includeAntRuntime ) {
+            if (includeAntRuntime) {
                 classpath.addExisting(compileClasspath
                                       .concatSystemClasspath("last"));
             } else {
@@ -381,7 +381,7 @@ public abstract class DefaultCompilerAdapter implements CompilerAdapter {
 
         niceSourceList.append(lSep);
 
-        for (int i=0; i < compileList.length; i++) {
+        for (int i = 0; i < compileList.length; i++) {
             String arg = compileList[i].getAbsolutePath();
             cmd.createArgument().setValue(arg);
             niceSourceList.append("    " + arg + lSep);
@@ -418,7 +418,7 @@ public abstract class DefaultCompilerAdapter implements CompilerAdapter {
                         out.println(args[i]);
                     }
                     out.flush();
-                    commandArray = new String[firstFileName+1];
+                    commandArray = new String[firstFileName + 1];
                     System.arraycopy(args, 0, commandArray, 0, firstFileName);
                     commandArray[firstFileName] = "@" + tmpFile;
                 } catch (IOException e) {

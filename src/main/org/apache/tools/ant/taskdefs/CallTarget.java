@@ -106,7 +106,7 @@ public class CallTarget extends Task {
      * @param inheritRefs new value
      */
     public void setInheritRefs(boolean inheritRefs) {
-        this.inheritRefs=inheritRefs;
+        this.inheritRefs = inheritRefs;
     }
 
     /**
