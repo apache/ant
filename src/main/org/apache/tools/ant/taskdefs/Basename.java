@@ -84,6 +84,8 @@ import org.apache.tools.ant.Task;
  *
  * @version $Revision$
  *
+ * @since Ant 1.5
+ *
  * @ant.task category="property"
  */
 
@@ -122,7 +124,7 @@ public class Basename extends Task {
             int pos = value.indexOf('.');
             value = value.substring(0, pos);
         }
-        this.project.setProperty(property, value);
+        getProject().setNewProperty(property, value);
       }
   }
 }

@@ -77,6 +77,8 @@ import org.apache.tools.ant.Task;
  *
  * @version $Revision$
  *
+ * @since Ant 1.5
+ *
  * @ant.task category="property"
  */
 
@@ -104,7 +106,7 @@ public class Dirname extends Task {
           throw new BuildException("file attribute required", location);
       } else {
         String value = file.getParent();
-        this.project.setProperty(property, value);
+        getProject().setNewProperty(property, value);
       }
   }
 }

@@ -55,7 +55,8 @@ a relative-path filename (eg., <code>lib/myjar.jar</code>),
 or a simple filename (eg., <code>myjar.jar</code>).
 <pre>  &lt;basename property=&quot;cmdname&quot; file=&quot;D:/usr/local/foo.exe&quot; suffix=&quot;.exe&quot;/&gt;</pre>
 will set <code>cmdname</code> to <code>foo</code>.
-<pre>  &lt;basename property=&quot;temp.dirname&quot; file=&quot;${env.TEMP}&quot;/&gt;</pre>
+<pre>  &lt;property environment=&quot;env&quot;/&gt;
+  &lt;basename property=&quot;temp.dirname&quot; file=&quot;${env.TEMP}&quot;/&gt;</pre>
 
 will set <code>temp.dirname</code> to the last directory element of
 the path defined for the <code>TEMP</code> environment variable.</p>
