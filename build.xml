@@ -301,7 +301,7 @@
   </patternset>
   <patternset id="needs.jai">
     <exclude name="${optional.package}/image/*.java" unless="jai.present"/>
-    <exclude name="${optional.package}/image/types/*.java" unless="jai.present"/>
+    <exclude name="${ant.package}/types/optional/image/*.java" unless="jai.present"/>
   </patternset>
   <patternset id="needs.jdepend">
     <exclude name="${optional.package}/jdepend/*" unless="jdepend.present" />
