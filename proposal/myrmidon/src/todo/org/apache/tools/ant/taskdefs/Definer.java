@@ -6,14 +6,15 @@
  * the LICENSE file.
  */
 package org.apache.tools.ant.taskdefs;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Enumeration;
 import java.util.Properties;
+import org.apache.myrmidon.api.TaskException;
 import org.apache.tools.ant.AntClassLoader;
-import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.Task;
 import org.apache.tools.ant.types.Path;
@@ -87,7 +88,7 @@ public abstract class Definer extends Task
     }
 
     public void execute()
-        throws BuildException
+        throws TaskException
     {
         AntClassLoader al = createLoader();
 
@@ -98,9 +99,9 @@ public abstract class Definer extends Task
             if( name == null || value == null )
             {
                 String msg = "name or classname attributes of "
-                     + getTaskName() + " element "
-                     + "are undefined";
-                throw new BuildException( msg );
+                    + getTaskName() + " element "
+                    + "are undefined";
+                throw new TaskException( msg );
             }
             addDefinition( al, name, value );
 
@@ -113,14 +114,14 @@ public abstract class Definer extends Task
                 if( name != null || value != null )
                 {
                     String msg = "You must not specify name or value "
-                         + "together with file or resource.";
-                    throw new BuildException( msg );
+                        + "together with file or resource.";
+                    throw new TaskException( msg );
                 }
 
                 if( file != null && resource != null )
                 {
                     String msg = "You must not specify both, file and resource.";
-                    throw new BuildException( msg );
+                    throw new TaskException( msg );
                 }
 
                 Properties props = new Properties();
@@ -128,7 +129,7 @@ public abstract class Definer extends Task
                 if( file != null )
                 {
                     log( "Loading definitions from file " + file,
-                        Project.MSG_VERBOSE );
+                         Project.MSG_VERBOSE );
                     is = new FileInputStream( file );
                     if( is == null )
                     {
@@ -139,13 +140,13 @@ public abstract class Definer extends Task
                 if( resource != null )
                 {
                     log( "Loading definitions from resource " + resource,
-                        Project.MSG_VERBOSE );
+                         Project.MSG_VERBOSE );
                     is = al.getResourceAsStream( resource );
                     if( is == null )
                     {
                         log( "Could not load definitions from resource "
                              + resource + ". It could not be found.",
-                            Project.MSG_WARN );
+                             Project.MSG_WARN );
                     }
                 }
 
@@ -155,7 +156,7 @@ public abstract class Definer extends Task
                     Enumeration keys = props.keys();
                     while( keys.hasMoreElements() )
                     {
-                        String n = ( String )keys.nextElement();
+                        String n = (String)keys.nextElement();
                         String v = props.getProperty( n );
                         addDefinition( al, n, v );
                     }
@@ -163,7 +164,7 @@ public abstract class Definer extends Task
             }
             catch( IOException ex )
             {
-                throw new BuildException( "Error", ex);
+                throw new TaskException( "Error", ex );
             }
         }
     }
@@ -171,7 +172,7 @@ public abstract class Definer extends Task
     protected abstract void addDefinition( String name, Class c );
 
     private void addDefinition( ClassLoader al, String name, String value )
-        throws BuildException
+        throws TaskException
     {
         try
         {
@@ -183,18 +184,18 @@ public abstract class Definer extends Task
         {
             String msg = getTaskName() + " class " + value +
                 " cannot be found";
-            throw new BuildException( msg, cnfe );
+            throw new TaskException( msg, cnfe );
         }
         catch( NoClassDefFoundError ncdfe )
         {
             String msg = getTaskName() + " class " + value +
                 " cannot be found";
-            throw new BuildException( msg, ncdfe );
+            throw new TaskException( msg, ncdfe );
         }
     }
 
-
     private AntClassLoader createLoader()
+        throws TaskException
     {
         AntClassLoader al = null;
         if( classpath != null )

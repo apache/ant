@@ -6,6 +6,7 @@
  * the LICENSE file.
  */
 package org.apache.tools.ant;
+
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -107,7 +108,7 @@ public class Main
 
         for( int i = 0; i < args.length; i++ )
         {
-            String arg = args[i];
+            String arg = args[ i ];
 
             if( arg.equals( "-help" ) )
             {
@@ -137,7 +138,7 @@ public class Main
             {
                 try
                 {
-                    File logFile = new File( args[i + 1] );
+                    File logFile = new File( args[ i + 1 ] );
                     i++;
                     out = new PrintStream( new FileOutputStream( logFile ) );
                     err = out;
@@ -163,7 +164,7 @@ public class Main
             {
                 try
                 {
-                    buildFile = new File( args[i + 1] );
+                    buildFile = new File( args[ i + 1 ] );
                     i++;
                 }
                 catch( ArrayIndexOutOfBoundsException aioobe )
@@ -178,7 +179,7 @@ public class Main
             {
                 try
                 {
-                    listeners.addElement( args[i + 1] );
+                    listeners.addElement( args[ i + 1 ] );
                     i++;
                 }
                 catch( ArrayIndexOutOfBoundsException aioobe )
@@ -212,7 +213,7 @@ public class Main
                     name = name.substring( 0, posEq );
                 }
                 else if( i < args.length - 1 )
-                    value = args[++i];
+                    value = args[ ++i ];
 
                 definedProps.put( name, value );
             }
@@ -225,12 +226,12 @@ public class Main
                 }
                 try
                 {
-                    loggerClassname = args[++i];
+                    loggerClassname = args[ ++i ];
                 }
                 catch( ArrayIndexOutOfBoundsException aioobe )
                 {
                     System.out.println( "You must specify a classname when " +
-                        "using the -logger argument" );
+                                        "using the -logger argument" );
                     return;
                 }
             }
@@ -248,7 +249,7 @@ public class Main
                 // eat up next arg if present, default to build.xml
                 if( i < args.length - 1 )
                 {
-                    searchForThis = args[++i];
+                    searchForThis = args[ ++i ];
                 }
                 else
                 {
@@ -278,7 +279,7 @@ public class Main
             if( searchForThis != null )
             {
                 buildFile = findBuildFile( System.getProperty( "user.dir" ),
-                    searchForThis );
+                                           searchForThis );
             }
             else
             {
@@ -329,7 +330,7 @@ public class Main
             catch( IOException ioe )
             {
                 throw new TaskException( "Could not load the version information:"
-                     + ioe.getMessage() );
+                                         + ioe.getMessage() );
             }
             catch( NullPointerException npe )
             {
@@ -338,7 +339,6 @@ public class Main
         }
         return antVersion;
     }
-
 
     /**
      * Command line entry point. This method kicks off the building of a project
@@ -376,9 +376,9 @@ public class Main
 
         if( additionalUserProperties != null )
         {
-            for( Enumeration e = additionalUserProperties.keys(); e.hasMoreElements();  )
+            for( Enumeration e = additionalUserProperties.keys(); e.hasMoreElements(); )
             {
-                String key = ( String )e.nextElement();
+                String key = (String)e.nextElement();
                 String property = additionalUserProperties.getProperty( key );
                 m.definedProps.put( key, property );
             }
@@ -417,7 +417,7 @@ public class Main
         int res = names.size();
         for( int i = 0; i < names.size() && res == names.size(); i++ )
         {
-            if( name.compareTo( ( String )names.elementAt( i ) ) < 0 )
+            if( name.compareTo( (String)names.elementAt( i ) ) < 0 )
             {
                 res = i;
             }
@@ -474,7 +474,7 @@ public class Main
 
         while( ptargets.hasMoreElements() )
         {
-            currentTarget = ( Target )ptargets.nextElement();
+            currentTarget = (Target)ptargets.nextElement();
             targetName = currentTarget.getName();
             targetDescription = currentTarget.getDescription();
             // maintain a sorted list of targets
@@ -535,7 +535,7 @@ public class Main
             msg.append( names.elementAt( i ) );
             if( descriptions != null )
             {
-                msg.append( spaces.substring( 0, maxlen - ( ( String )names.elementAt( i ) ).length() + 2 ) );
+                msg.append( spaces.substring( 0, maxlen - ( (String)names.elementAt( i ) ).length() + 2 ) );
                 msg.append( descriptions.elementAt( i ) );
             }
             msg.append( lSep );
@@ -576,18 +576,18 @@ public class Main
     }
 
     protected void addBuildListeners( Project project )
+        throws TaskException
     {
-
         // Add the default listener
         project.addBuildListener( createLogger() );
 
         for( int i = 0; i < listeners.size(); i++ )
         {
-            String className = ( String )listeners.elementAt( i );
+            String className = (String)listeners.elementAt( i );
             try
             {
                 BuildListener listener =
-                    ( BuildListener )Class.forName( className ).newInstance();
+                    (BuildListener)Class.forName( className ).newInstance();
                 project.addBuildListener( listener );
             }
             catch( Throwable exc )
@@ -631,18 +631,18 @@ public class Main
         {
             try
             {
-                logger = ( BuildLogger )( Class.forName( loggerClassname ).newInstance() );
+                logger = (BuildLogger)( Class.forName( loggerClassname ).newInstance() );
             }
             catch( ClassCastException e )
             {
                 System.err.println( "The specified logger class " + loggerClassname +
-                    " does not implement the BuildLogger interface" );
+                                    " does not implement the BuildLogger interface" );
                 throw new RuntimeException();
             }
             catch( Exception e )
             {
                 System.err.println( "Unable to instantiate specified logger class " +
-                    loggerClassname + " : " + e.getClass().getName() );
+                                    loggerClassname + " : " + e.getClass().getName() );
                 throw new RuntimeException();
             }
         }
@@ -765,8 +765,8 @@ public class Main
                 Enumeration e = definedProps.keys();
                 while( e.hasMoreElements() )
                 {
-                    String arg = ( String )e.nextElement();
-                    String value = ( String )definedProps.get( arg );
+                    String arg = (String)e.nextElement();
+                    String value = (String)definedProps.get( arg );
                     project.setUserProperty( arg, value );
                 }
 

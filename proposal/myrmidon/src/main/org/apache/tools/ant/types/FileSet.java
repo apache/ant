@@ -82,7 +82,7 @@ public class FileSet extends DataType implements Cloneable
     }
 
     public void setDir( File dir )
-        throws BuildException
+        throws TaskException
     {
         if( isReference() )
         {
@@ -113,10 +113,10 @@ public class FileSet extends DataType implements Cloneable
      * Sets the name of the file containing the includes patterns.
      *
      * @param excl The file to fetch the exclude patterns from.
-     * @exception BuildException Description of Exception
+     * @exception TaskException Description of Exception
      */
     public void setExcludesfile( File excl )
-        throws BuildException
+        throws TaskException
     {
         if( isReference() )
         {
@@ -147,10 +147,10 @@ public class FileSet extends DataType implements Cloneable
      * Sets the name of the file containing the includes patterns.
      *
      * @param incl The file to fetch the include patterns from.
-     * @exception BuildException Description of Exception
+     * @exception TaskException Description of Exception
      */
     public void setIncludesfile( File incl )
-        throws BuildException
+        throws TaskException
     {
         if( isReference() )
         {
@@ -168,7 +168,7 @@ public class FileSet extends DataType implements Cloneable
      * if you make it a reference.</p>
      *
      * @param r The new Refid value
-     * @exception BuildException Description of Exception
+     * @exception TaskException Description of Exception
      */
     public void setRefid( Reference r )
         throws TaskException

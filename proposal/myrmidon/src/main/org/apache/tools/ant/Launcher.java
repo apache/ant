@@ -6,6 +6,7 @@
  * the LICENSE file.
  */
 package org.apache.tools.ant;
+
 import java.io.File;
 import java.io.FilenameFilter;
 import java.lang.reflect.Method;
@@ -13,6 +14,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Properties;
 import java.util.StringTokenizer;
+import org.apache.myrmidon.api.TaskException;
 
 /**
  * This is the Ant command line front end to end. This front end works out where
@@ -24,6 +26,7 @@ public class Launcher
 {
 
     public static void main( String[] args )
+        throws TaskException
     {
         File antHome = null;
         ClassLoader systemClassLoader = Launcher.class.getClassLoader();
@@ -65,7 +68,7 @@ public class Launcher
             antLoader.initializeClass( mainClass );
 
             final Class[] param = {Class.forName( "[Ljava.lang.String;" ),
-                Properties.class, ClassLoader.class};
+                                   Properties.class, ClassLoader.class};
             final Method startMethod = mainClass.getMethod( "start", param );
             final Object[] argument = {args, launchProperties, systemClassLoader};
             startMethod.invoke( null, argument );
@@ -78,6 +81,7 @@ public class Launcher
     }
 
     private static void addDirJars( AntClassLoader classLoader, File jarDir )
+        throws TaskException
     {
         String[] fileList = jarDir.list(
             new FilenameFilter()
@@ -92,7 +96,7 @@ public class Launcher
         {
             for( int i = 0; i < fileList.length; ++i )
             {
-                File jarFile = new File( jarDir, fileList[i] );
+                File jarFile = new File( jarDir, fileList[ i ] );
                 classLoader.addPathElement( jarFile.getAbsolutePath() );
             }
         }

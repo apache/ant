@@ -6,11 +6,12 @@
  * the LICENSE file.
  */
 package org.apache.tools.ant.types;
+
 import java.io.File;
 import java.util.StringTokenizer;
 import java.util.Vector;
+import org.apache.myrmidon.api.TaskException;
 import org.apache.tools.ant.BuildException;
-
 
 /**
  * Commandline objects help handling command lines specifying processes to
@@ -44,10 +45,10 @@ public class Commandline implements Cloneable
         String[] tmp = translateCommandline( to_process );
         if( tmp != null && tmp.length > 0 )
         {
-            setExecutable( tmp[0] );
+            setExecutable( tmp[ 0 ] );
             for( int i = 1; i < tmp.length; i++ )
             {
-                createArgument().setValue( tmp[i] );
+                createArgument().setValue( tmp[ i ] );
             }
         }
     }
@@ -68,6 +69,7 @@ public class Commandline implements Cloneable
      * @return Description of the Returned Value
      */
     public static String quoteArgument( String argument )
+        throws TaskException
     {
         if( argument.indexOf( "\"" ) > -1 )
         {
@@ -104,7 +106,15 @@ public class Commandline implements Cloneable
             {
                 result.append( ' ' );
             }
-            result.append( quoteArgument( line[i] ) );
+
+            try
+            {
+                result.append( quoteArgument( line[ i ] ) );
+            }
+            catch( TaskException e )
+            {
+            }
+
         }
         return result.toString();
     }
@@ -113,7 +123,7 @@ public class Commandline implements Cloneable
     {
         if( to_process == null || to_process.length() == 0 )
         {
-            return new String[0];
+            return new String[ 0 ];
         }
 
         // parse with a simple finite state machine
@@ -129,50 +139,50 @@ public class Commandline implements Cloneable
         while( tok.hasMoreTokens() )
         {
             String nextTok = tok.nextToken();
-            switch ( state )
+            switch( state )
             {
-            case inQuote:
-                if( "\'".equals( nextTok ) )
-                {
-                    state = normal;
-                }
-                else
-                {
-                    current.append( nextTok );
-                }
-                break;
-            case inDoubleQuote:
-                if( "\"".equals( nextTok ) )
-                {
-                    state = normal;
-                }
-                else
-                {
-                    current.append( nextTok );
-                }
-                break;
-            default:
-                if( "\'".equals( nextTok ) )
-                {
-                    state = inQuote;
-                }
-                else if( "\"".equals( nextTok ) )
-                {
-                    state = inDoubleQuote;
-                }
-                else if( " ".equals( nextTok ) )
-                {
-                    if( current.length() != 0 )
+                case inQuote:
+                    if( "\'".equals( nextTok ) )
                     {
-                        v.addElement( current.toString() );
-                        current.setLength( 0 );
+                        state = normal;
                     }
-                }
-                else
-                {
-                    current.append( nextTok );
-                }
-                break;
+                    else
+                    {
+                        current.append( nextTok );
+                    }
+                    break;
+                case inDoubleQuote:
+                    if( "\"".equals( nextTok ) )
+                    {
+                        state = normal;
+                    }
+                    else
+                    {
+                        current.append( nextTok );
+                    }
+                    break;
+                default:
+                    if( "\'".equals( nextTok ) )
+                    {
+                        state = inQuote;
+                    }
+                    else if( "\"".equals( nextTok ) )
+                    {
+                        state = inDoubleQuote;
+                    }
+                    else if( " ".equals( nextTok ) )
+                    {
+                        if( current.length() != 0 )
+                        {
+                            v.addElement( current.toString() );
+                            current.setLength( 0 );
+                        }
+                    }
+                    else
+                    {
+                        current.append( nextTok );
+                    }
+                    break;
             }
         }
 
@@ -186,11 +196,10 @@ public class Commandline implements Cloneable
             throw new BuildException( "unbalanced quotes in " + to_process );
         }
 
-        String[] args = new String[v.size()];
+        String[] args = new String[ v.size() ];
         v.copyInto( args );
         return args;
     }
-
 
     /**
      * Sets the executable to run.
@@ -205,7 +214,6 @@ public class Commandline implements Cloneable
             .replace( '\\', File.separatorChar );
     }
 
-
     /**
      * Returns all arguments defined by <code>addLine</code>, <code>addValue</code>
      * or the argument object.
@@ -217,15 +225,15 @@ public class Commandline implements Cloneable
         Vector result = new Vector( arguments.size() * 2 );
         for( int i = 0; i < arguments.size(); i++ )
         {
-            Argument arg = ( Argument )arguments.elementAt( i );
+            Argument arg = (Argument)arguments.elementAt( i );
             String[] s = arg.getParts();
             for( int j = 0; j < s.length; j++ )
             {
-                result.addElement( s[j] );
+                result.addElement( s[ j ] );
             }
         }
 
-        String[] res = new String[result.size()];
+        String[] res = new String[ result.size() ];
         result.copyInto( res );
         return res;
     }
@@ -240,24 +248,22 @@ public class Commandline implements Cloneable
         final String[] args = getArguments();
         if( executable == null )
             return args;
-        final String[] result = new String[args.length + 1];
-        result[0] = executable;
+        final String[] result = new String[ args.length + 1 ];
+        result[ 0 ] = executable;
         System.arraycopy( args, 0, result, 1, args.length );
         return result;
     }
-
 
     public String getExecutable()
     {
         return executable;
     }
 
-
     public void addArguments( String[] line )
     {
         for( int i = 0; i < line.length; i++ )
         {
-            createArgument().setValue( line[i] );
+            createArgument().setValue( line[ i ] );
         }
     }
 
@@ -317,7 +323,6 @@ public class Commandline implements Cloneable
     {
         return getCommandline().length;
     }
-
 
     public String toString()
     {
@@ -421,7 +426,7 @@ public class Commandline implements Cloneable
                 realPos = ( executable == null ? 0 : 1 );
                 for( int i = 0; i < position; i++ )
                 {
-                    Argument arg = ( Argument )arguments.elementAt( i );
+                    Argument arg = (Argument)arguments.elementAt( i );
                     realPos += arg.getParts().length;
                 }
             }

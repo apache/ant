@@ -16,10 +16,12 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Locale;
 import java.util.Vector;
+import org.apache.myrmidon.api.TaskException;
+import org.apache.myrmidon.framework.Os;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.Task;
-import org.apache.myrmidon.framework.Os;
+import org.apache.tools.ant.util.FileUtils;
 import org.apache.tools.ant.types.Commandline;
 
 /**
@@ -428,7 +430,7 @@ public class Execute
      * @exception IOException Description of Exception
      */
     public int execute()
-        throws IOException
+        throws IOException, TaskException
     {
         CommandLauncher launcher = vmLauncher != null ? vmLauncher : shellLauncher;
         if( !useVMLauncher )
@@ -547,7 +549,7 @@ public class Execute
          * @exception IOException Description of Exception
          */
         public Process exec( Project project, String[] cmd, String[] env )
-            throws IOException
+            throws IOException, TaskException
         {
             if( project != null )
             {
@@ -571,7 +573,7 @@ public class Execute
          * @exception IOException Description of Exception
          */
         public Process exec( Project project, String[] cmd, String[] env, File workingDir )
-            throws IOException
+            throws IOException, TaskException
         {
             if( workingDir == null )
             {
@@ -608,7 +610,7 @@ public class Execute
          * @exception IOException Description of Exception
          */
         public Process exec( Project project, String[] cmd, String[] env )
-            throws IOException
+            throws IOException, TaskException
         {
             return _launcher.exec( project, cmd, env );
         }
@@ -633,7 +635,7 @@ public class Execute
          * @exception IOException Description of Exception
          */
         public Process exec( Project project, String[] cmd, String[] env )
-            throws IOException
+            throws IOException, TaskException
         {
             // Need to quote arguments with spaces, and to escape quote characters
             String[] newcmd = new String[ cmd.length ];
@@ -741,7 +743,7 @@ public class Execute
          * @exception IOException Description of Exception
          */
         public Process exec( Project project, String[] cmd, String[] env, File workingDir )
-            throws IOException
+            throws IOException, TaskException
         {
             if( workingDir == null )
             {
@@ -768,7 +770,6 @@ public class Execute
      */
     private static class PerlScriptCommandLauncher extends CommandLauncherProxy
     {
-
         private String _script;
 
         PerlScriptCommandLauncher( String script, CommandLauncher launcher )
@@ -789,7 +790,7 @@ public class Execute
          * @exception IOException Description of Exception
          */
         public Process exec( Project project, String[] cmd, String[] env, File workingDir )
-            throws IOException
+            throws IOException, TaskException
         {
             if( project == null )
             {
@@ -806,7 +807,8 @@ public class Execute
             {
                 throw new IOException( "Cannot locate antRun script: Property 'ant.home' not found" );
             }
-            String antRun = resolveFile( antHome + File.separator + _script ).toString();
+            String antRun = FileUtils.newFileUtils().
+                resolveFile( project.getBaseDir(), antHome + File.separator + _script ).toString();
 
             // Build the command
             File commandDir = workingDir;
@@ -854,7 +856,7 @@ public class Execute
          * @exception IOException Description of Exception
          */
         public Process exec( Project project, String[] cmd, String[] env, File workingDir )
-            throws IOException
+            throws IOException, TaskException
         {
             if( project == null )
             {
@@ -871,7 +873,8 @@ public class Execute
             {
                 throw new IOException( "Cannot locate antRun script: Property 'ant.home' not found" );
             }
-            String antRun = resolveFile( antHome + File.separator + _script ).toString();
+            String antRun = FileUtils.newFileUtils().
+                resolveFile( project.getBaseDir(), antHome + File.separator + _script ).toString();
 
             // Build the command
             File commandDir = workingDir;
@@ -914,7 +917,7 @@ public class Execute
          * @exception IOException Description of Exception
          */
         public Process exec( Project project, String[] cmd, String[] env, File workingDir )
-            throws IOException
+            throws IOException, TaskException
         {
             File commandDir = workingDir;
             if( workingDir == null )

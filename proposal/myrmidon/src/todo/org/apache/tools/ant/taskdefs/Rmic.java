@@ -6,12 +6,13 @@
  * the LICENSE file.
  */
 package org.apache.tools.ant.taskdefs;
+
 import java.io.File;
 import java.io.IOException;
 import java.rmi.Remote;
 import java.util.Vector;
+import org.apache.myrmidon.api.TaskException;
 import org.apache.tools.ant.AntClassLoader;
-import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.DirectoryScanner;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.taskdefs.rmic.RmicAdapter;
@@ -19,8 +20,8 @@ import org.apache.tools.ant.taskdefs.rmic.RmicAdapterFactory;
 import org.apache.tools.ant.types.Path;
 import org.apache.tools.ant.types.Reference;
 import org.apache.tools.ant.util.FileNameMapper;
-import org.apache.tools.ant.util.SourceFileScanner;
 import org.apache.tools.ant.util.FileUtils;
+import org.apache.tools.ant.util.SourceFileScanner;
 
 /**
  * Task to compile RMI stubs and skeletons. This task can take the following
@@ -60,7 +61,7 @@ public class Rmic extends MatchingTask
 {
 
     private final static String FAIL_MSG
-         = "Rmic failed, messages should have been provided.";
+        = "Rmic failed, messages should have been provided.";
     private boolean verify = false;
     private boolean filtering = false;
 
@@ -413,9 +414,9 @@ public class Rmic extends MatchingTask
             {
                 for( int i = 0; i < interfaces.length; i++ )
                 {
-                    if( Remote.class.isAssignableFrom( interfaces[i] ) )
+                    if( Remote.class.isAssignableFrom( interfaces[ i ] ) )
                     {
-                        return interfaces[i];
+                        return interfaces[ i ];
                     }
                 }
             }
@@ -469,18 +470,18 @@ public class Rmic extends MatchingTask
         catch( ClassNotFoundException e )
         {
             log( "Unable to verify class " + classname +
-                ". It could not be found.", Project.MSG_WARN );
+                 ". It could not be found.", Project.MSG_WARN );
         }
         catch( NoClassDefFoundError e )
         {
             log( "Unable to verify class " + classname +
-                ". It is not defined.", Project.MSG_WARN );
+                 ". It is not defined.", Project.MSG_WARN );
         }
         catch( Throwable t )
         {
             log( "Unable to verify class " + classname +
-                ". Loading caused Exception: " +
-                t.getMessage(), Project.MSG_WARN );
+                 ". Loading caused Exception: " +
+                 t.getMessage(), Project.MSG_WARN );
         }
         // we only get here if an exception has been thrown
         return false;
@@ -515,15 +516,15 @@ public class Rmic extends MatchingTask
     }
 
     public void execute()
-        throws BuildException
+        throws TaskException
     {
         if( baseDir == null )
         {
-            throw new BuildException( "base attribute must be set!" );
+            throw new TaskException( "base attribute must be set!" );
         }
         if( !baseDir.exists() )
         {
-            throw new BuildException( "base does not exist!" );
+            throw new TaskException( "base does not exist!" );
         }
 
         if( verify )
@@ -552,21 +553,21 @@ public class Rmic extends MatchingTask
         {
             // otherwise perform a timestamp comparison - at least
             scanDir( baseDir,
-                new String[]{classname.replace( '.', File.separatorChar ) + ".class"},
-                adapter.getMapper() );
+                     new String[]{classname.replace( '.', File.separatorChar ) + ".class"},
+                     adapter.getMapper() );
         }
 
         int fileCount = compileList.size();
         if( fileCount > 0 )
         {
             log( "RMI Compiling " + fileCount +
-                " class" + ( fileCount > 1 ? "es" : "" ) + " to " + baseDir,
-                Project.MSG_INFO );
+                 " class" + ( fileCount > 1 ? "es" : "" ) + " to " + baseDir,
+                 Project.MSG_INFO );
 
             // finally, lets execute the compiler!!
             if( !adapter.execute() )
             {
-                throw new BuildException( FAIL_MSG );
+                throw new TaskException( FAIL_MSG );
             }
         }
 
@@ -580,7 +581,7 @@ public class Rmic extends MatchingTask
             if( idl )
             {
                 log( "Cannot determine sourcefiles in idl mode, ",
-                    Project.MSG_WARN );
+                     Project.MSG_WARN );
                 log( "sourcebase attribute will be ignored.", Project.MSG_WARN );
             }
             else
@@ -588,8 +589,8 @@ public class Rmic extends MatchingTask
                 for( int j = 0; j < fileCount; j++ )
                 {
                     moveGeneratedFile( baseDir, sourceBase,
-                        ( String )compileList.elementAt( j ),
-                        adapter );
+                                       (String)compileList.elementAt( j ),
+                                       adapter );
                 }
             }
         }
@@ -612,13 +613,13 @@ public class Rmic extends MatchingTask
         if( idl )
         {
             log( "will leave uptodate test to rmic implementation in idl mode.",
-                Project.MSG_VERBOSE );
+                 Project.MSG_VERBOSE );
         }
         else if( iiop
-             && iiopopts != null && iiopopts.indexOf( "-always" ) > -1 )
+            && iiopopts != null && iiopopts.indexOf( "-always" ) > -1 )
         {
             log( "no uptodate test as -always option has been specified",
-                Project.MSG_VERBOSE );
+                 Project.MSG_VERBOSE );
         }
         else
         {
@@ -628,7 +629,7 @@ public class Rmic extends MatchingTask
 
         for( int i = 0; i < newFiles.length; i++ )
         {
-            String classname = newFiles[i].replace( File.separatorChar, '.' );
+            String classname = newFiles[ i ].replace( File.separatorChar, '.' );
             classname = classname.substring( 0, classname.lastIndexOf( ".class" ) );
             compileList.addElement( classname );
         }
@@ -652,12 +653,12 @@ public class Rmic extends MatchingTask
      * @param sourceBaseFile Description of Parameter
      * @param classname Description of Parameter
      * @param adapter Description of Parameter
-     * @exception BuildException Description of Exception
+     * @exception TaskException Description of Exception
      */
     private void moveGeneratedFile( File baseDir, File sourceBaseFile,
                                     String classname,
                                     RmicAdapter adapter )
-        throws BuildException
+        throws TaskException
     {
 
         String classFileName =
@@ -680,7 +681,8 @@ public class Rmic extends MatchingTask
             {
                 String msg = "Failed to copy " + oldFile + " to " +
                     newFile + " due to " + ioe.getMessage();
-                throw new BuildException( msg, ioe );
+                    newFile + " due to " + ioe.getMessage();
+                throw new TaskException( msg, ioe );
             }
         }
     }

@@ -6,12 +6,13 @@
  * the LICENSE file.
  */
 package org.apache.tools.ant.types;
+
 import java.util.Properties;
 import java.util.Stack;
 import org.apache.tools.ant.AntClassLoader;
-import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.util.FileNameMapper;
+import org.apache.myrmidon.api.TaskException;
 
 /**
  * Element to define a FileNameMapper.
@@ -106,10 +107,10 @@ public class Mapper extends DataType implements Cloneable
      * You must not set any other attribute if you make it a reference.</p>
      *
      * @param r The new Refid value
-     * @exception BuildException Description of Exception
+     * @exception TaskException Description of Exception
      */
     public void setRefid( Reference r )
-        throws BuildException
+        throws TaskException
     {
         if( type != null || from != null || to != null )
         {
@@ -150,10 +151,10 @@ public class Mapper extends DataType implements Cloneable
      * Returns a fully configured FileNameMapper implementation.
      *
      * @return The Implementation value
-     * @exception BuildException Description of Exception
+     * @exception TaskException Description of Exception
      */
     public FileNameMapper getImplementation()
-        throws BuildException
+        throws TaskException
     {
         if( isReference() )
         {
@@ -162,12 +163,12 @@ public class Mapper extends DataType implements Cloneable
 
         if( type == null && classname == null )
         {
-            throw new BuildException( "one of the attributes type or classname is required" );
+            throw new TaskException( "one of the attributes type or classname is required" );
         }
 
         if( type != null && classname != null )
         {
-            throw new BuildException( "must not specify both type and classname attribute" );
+            throw new TaskException( "must not specify both type and classname attribute" );
         }
 
         try
@@ -185,23 +186,23 @@ public class Mapper extends DataType implements Cloneable
             else
             {
                 AntClassLoader al = new AntClassLoader( getProject(),
-                    classpath );
+                                                        classpath );
                 c = al.loadClass( classname );
                 AntClassLoader.initializeClass( c );
             }
 
-            FileNameMapper m = ( FileNameMapper )c.newInstance();
+            FileNameMapper m = (FileNameMapper)c.newInstance();
             m.setFrom( from );
             m.setTo( to );
             return m;
         }
-        catch( BuildException be )
+        catch( TaskException be )
         {
             throw be;
         }
         catch( Throwable t )
         {
-            throw new BuildException( "Error", t );
+            throw new TaskException( "Error", t );
         }
         finally
         {
@@ -249,11 +250,11 @@ public class Mapper extends DataType implements Cloneable
         if( !( o instanceof Mapper ) )
         {
             String msg = ref.getRefId() + " doesn\'t denote a mapper";
-            throw new BuildException( msg );
+            throw new TaskException( msg );
         }
         else
         {
-            return ( Mapper )o;
+            return (Mapper)o;
         }
     }
 
@@ -270,15 +271,15 @@ public class Mapper extends DataType implements Cloneable
         {
             implementations = new Properties();
             implementations.put( "identity",
-                "org.apache.tools.ant.util.IdentityMapper" );
+                                 "org.apache.tools.ant.util.IdentityMapper" );
             implementations.put( "flatten",
-                "org.apache.tools.ant.util.FlatFileNameMapper" );
+                                 "org.apache.tools.ant.util.FlatFileNameMapper" );
             implementations.put( "glob",
-                "org.apache.tools.ant.util.GlobPatternMapper" );
+                                 "org.apache.tools.ant.util.GlobPatternMapper" );
             implementations.put( "merge",
-                "org.apache.tools.ant.util.MergingMapper" );
+                                 "org.apache.tools.ant.util.MergingMapper" );
             implementations.put( "regexp",
-                "org.apache.tools.ant.util.RegexpPatternMapper" );
+                                 "org.apache.tools.ant.util.RegexpPatternMapper" );
         }
 
         public String getImplementation()

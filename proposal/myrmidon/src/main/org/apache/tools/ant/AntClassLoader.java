@@ -128,6 +128,7 @@ public class AntClassLoader extends ClassLoader implements BuildListener
      *      value of ${build.sysclasspath}
      */
     public AntClassLoader( Project project, Path classpath )
+    throws TaskException
     {
         parent = AntClassLoader.class.getClassLoader();
         this.project = project;
@@ -142,7 +143,7 @@ public class AntClassLoader extends ClassLoader implements BuildListener
                 {
                     addPathElement( (String)pathElements[ i ] );
                 }
-                catch( BuildException e )
+                catch( TaskException e )
                 {
                     // ignore path elements which are invalid relative to the project
                 }
@@ -162,6 +163,7 @@ public class AntClassLoader extends ClassLoader implements BuildListener
      */
     public AntClassLoader( ClassLoader parent, Project project, Path classpath,
                            boolean parentFirst )
+    throws TaskException
     {
         this( project, classpath );
         if( parent != null )
@@ -182,6 +184,7 @@ public class AntClassLoader extends ClassLoader implements BuildListener
      *      be consulted before trying to load the a class through this loader.
      */
     public AntClassLoader( Project project, Path classpath, boolean parentFirst )
+    throws TaskException
     {
         this( null, project, classpath, parentFirst );
     }
@@ -411,10 +414,10 @@ public class AntClassLoader extends ClassLoader implements BuildListener
      * Add an element to the classpath to be searched
      *
      * @param pathElement The feature to be added to the PathElement attribute
-     * @exception BuildException Description of Exception
+     * @exception TaskException Description of Exception
      */
     public void addPathElement( String pathElement )
-        throws BuildException
+        throws TaskException
     {
         File pathComponent
             = project != null ? FileUtils.newFileUtils().resolveFile( project.getBaseDir(), pathElement )

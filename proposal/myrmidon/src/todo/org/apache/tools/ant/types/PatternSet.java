@@ -6,6 +6,7 @@
  * the LICENSE file.
  */
 package org.apache.tools.ant.types;
+
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
@@ -14,9 +15,8 @@ import java.util.Enumeration;
 import java.util.Stack;
 import java.util.StringTokenizer;
 import java.util.Vector;
-import org.apache.tools.ant.BuildException;
+import org.apache.myrmidon.api.TaskException;
 import org.apache.tools.ant.Project;
-import org.apache.tools.ant.ProjectHelper;
 
 /**
  * Named collection of include/exclude tags. <p>
@@ -50,6 +50,7 @@ public class PatternSet extends DataType
      * @param excludes the string containing the exclude patterns
      */
     public void setExcludes( String excludes )
+        throws TaskException
     {
         if( isReference() )
         {
@@ -69,10 +70,10 @@ public class PatternSet extends DataType
      * Sets the name of the file containing the excludes patterns.
      *
      * @param excludesFile The file to fetch the exclude patterns from.
-     * @exception BuildException Description of Exception
+     * @exception TaskException Description of Exception
      */
     public void setExcludesfile( File excludesFile )
-        throws BuildException
+        throws TaskException
     {
         if( isReference() )
         {
@@ -88,6 +89,7 @@ public class PatternSet extends DataType
      * @param includes the string containing the include patterns
      */
     public void setIncludes( String includes )
+        throws TaskException
     {
         if( isReference() )
         {
@@ -107,10 +109,10 @@ public class PatternSet extends DataType
      * Sets the name of the file containing the includes patterns.
      *
      * @param includesFile The file to fetch the include patterns from.
-     * @exception BuildException Description of Exception
+     * @exception TaskException Description of Exception
      */
     public void setIncludesfile( File includesFile )
-        throws BuildException
+        throws TaskException
     {
         if( isReference() )
         {
@@ -127,10 +129,10 @@ public class PatternSet extends DataType
      * if you make it a reference.</p>
      *
      * @param r The new Refid value
-     * @exception BuildException Description of Exception
+     * @exception TaskException Description of Exception
      */
     public void setRefid( Reference r )
-        throws BuildException
+        throws TaskException
     {
         if( !includeList.isEmpty() || !excludeList.isEmpty() )
         {
@@ -146,6 +148,7 @@ public class PatternSet extends DataType
      * @return The ExcludePatterns value
      */
     public String[] getExcludePatterns( Project p )
+        throws TaskException
     {
         if( isReference() )
         {
@@ -165,6 +168,7 @@ public class PatternSet extends DataType
      * @return The IncludePatterns value
      */
     public String[] getIncludePatterns( Project p )
+        throws TaskException
     {
         if( isReference() )
         {
@@ -184,10 +188,11 @@ public class PatternSet extends DataType
      * @param p Description of Parameter
      */
     public void append( PatternSet other, Project p )
+        throws TaskException
     {
         if( isReference() )
         {
-            throw new BuildException( "Cannot append to a reference" );
+            throw new TaskException( "Cannot append to a reference" );
         }
 
         String[] incl = other.getIncludePatterns( p );
@@ -195,7 +200,7 @@ public class PatternSet extends DataType
         {
             for( int i = 0; i < incl.length; i++ )
             {
-                createInclude().setName( incl[i] );
+                createInclude().setName( incl[ i ] );
             }
         }
 
@@ -204,7 +209,7 @@ public class PatternSet extends DataType
         {
             for( int i = 0; i < excl.length; i++ )
             {
-                createExclude().setName( excl[i] );
+                createExclude().setName( excl[ i ] );
             }
         }
     }
@@ -215,6 +220,7 @@ public class PatternSet extends DataType
      * @return Description of the Returned Value
      */
     public NameEntry createExclude()
+        throws TaskException
     {
         if( isReference() )
         {
@@ -229,6 +235,7 @@ public class PatternSet extends DataType
      * @return Description of the Returned Value
      */
     public NameEntry createExcludesFile()
+        throws TaskException
     {
         if( isReference() )
         {
@@ -243,6 +250,7 @@ public class PatternSet extends DataType
      * @return Description of the Returned Value
      */
     public NameEntry createInclude()
+        throws TaskException
     {
         if( isReference() )
         {
@@ -257,6 +265,7 @@ public class PatternSet extends DataType
      * @return Description of the Returned Value
      */
     public NameEntry createIncludesFile()
+        throws TaskException
     {
         if( isReference() )
         {
@@ -279,7 +288,7 @@ public class PatternSet extends DataType
     boolean hasPatterns()
     {
         return includesFileList.size() > 0 || excludesFileList.size() > 0
-             || includeList.size() > 0 || excludeList.size() > 0;
+            || includeList.size() > 0 || excludeList.size() > 0;
     }
 
     /**
@@ -290,6 +299,7 @@ public class PatternSet extends DataType
      * @return The Ref value
      */
     private PatternSet getRef( Project p )
+        throws TaskException
     {
         if( !checked )
         {
@@ -302,11 +312,11 @@ public class PatternSet extends DataType
         if( !( o instanceof PatternSet ) )
         {
             String msg = ref.getRefId() + " doesn\'t denote a patternset";
-            throw new BuildException( msg );
+            throw new TaskException( msg );
         }
         else
         {
-            return ( PatternSet )o;
+            return (PatternSet)o;
         }
     }
 
@@ -336,9 +346,9 @@ public class PatternSet extends DataType
             return null;
 
         Vector tmpNames = new Vector();
-        for( Enumeration e = list.elements(); e.hasMoreElements();  )
+        for( Enumeration e = list.elements(); e.hasMoreElements(); )
         {
-            NameEntry ne = ( NameEntry )e.nextElement();
+            NameEntry ne = (NameEntry)e.nextElement();
             String pattern = ne.evalName( p );
             if( pattern != null && pattern.length() > 0 )
             {
@@ -346,7 +356,7 @@ public class PatternSet extends DataType
             }
         }
 
-        String result[] = new String[tmpNames.size()];
+        String result[] = new String[ tmpNames.size() ];
         tmpNames.copyInto( result );
         return result;
     }
@@ -357,21 +367,22 @@ public class PatternSet extends DataType
      * @param p Description of Parameter
      */
     private void readFiles( Project p )
+        throws TaskException
     {
         if( includesFileList.size() > 0 )
         {
             Enumeration e = includesFileList.elements();
             while( e.hasMoreElements() )
             {
-                NameEntry ne = ( NameEntry )e.nextElement();
+                NameEntry ne = (NameEntry)e.nextElement();
                 String fileName = ne.evalName( p );
                 if( fileName != null )
                 {
                     File inclFile = resolveFile( fileName );
                     if( !inclFile.exists() )
-                        throw new BuildException( "Includesfile "
-                             + inclFile.getAbsolutePath()
-                             + " not found." );
+                        throw new TaskException( "Includesfile "
+                                                 + inclFile.getAbsolutePath()
+                                                 + " not found." );
                     readPatterns( inclFile, includeList, p );
                 }
             }
@@ -383,15 +394,15 @@ public class PatternSet extends DataType
             Enumeration e = excludesFileList.elements();
             while( e.hasMoreElements() )
             {
-                NameEntry ne = ( NameEntry )e.nextElement();
+                NameEntry ne = (NameEntry)e.nextElement();
                 String fileName = ne.evalName( p );
                 if( fileName != null )
                 {
                     File exclFile = resolveFile( fileName );
                     if( !exclFile.exists() )
-                        throw new BuildException( "Excludesfile "
-                             + exclFile.getAbsolutePath()
-                             + " not found." );
+                        throw new TaskException( "Excludesfile "
+                                                 + exclFile.getAbsolutePath()
+                                                 + " not found." );
                     readPatterns( exclFile, excludeList, p );
                 }
             }
@@ -406,10 +417,10 @@ public class PatternSet extends DataType
      * @param patternfile Description of Parameter
      * @param patternlist Description of Parameter
      * @param p Description of Parameter
-     * @exception BuildException Description of Exception
+     * @exception TaskException Description of Exception
      */
     private void readPatterns( File patternfile, Vector patternlist, Project p )
-        throws BuildException
+        throws TaskException
     {
 
         BufferedReader patternReader = null;
@@ -435,8 +446,8 @@ public class PatternSet extends DataType
         catch( IOException ioe )
         {
             String msg = "An error occured while reading from pattern file: "
-                 + patternfile;
-            throw new BuildException( msg, ioe );
+                + patternfile;
+            throw new TaskException( msg, ioe );
         }
         finally
         {

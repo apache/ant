@@ -6,6 +6,7 @@
  * the LICENSE file.
  */
 package org.apache.tools.ant.taskdefs;
+
 import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
 import java.io.File;
@@ -30,15 +31,14 @@ import java.util.Properties;
 import java.util.StringTokenizer;
 import java.util.Vector;
 import org.apache.tools.ant.AntClassLoader;
-import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.DirectoryScanner;
 import org.apache.tools.ant.Project;
-import org.apache.tools.ant.ProjectHelper;
 import org.apache.tools.ant.Task;
 import org.apache.tools.ant.types.EnumeratedAttribute;
 import org.apache.tools.ant.types.FileSet;
 import org.apache.tools.ant.types.Path;
 import org.apache.tools.ant.types.Reference;
+import org.apache.myrmidon.api.TaskException;
 
 /**
  * Reads in a text file containing SQL statements seperated with semicolons and
@@ -258,7 +258,6 @@ public class SQLExec extends Task
         this.output = output;
     }
 
-
     /**
      * Set the password for the DB connection.
      *
@@ -373,7 +372,6 @@ public class SQLExec extends Task
         return this.classpath.createPath();
     }
 
-
     /**
      * Set the sql command to execute
      *
@@ -389,10 +387,10 @@ public class SQLExec extends Task
     /**
      * Load the sql file and then execute it
      *
-     * @exception BuildException Description of Exception
+     * @exception TaskException Description of Exception
      */
     public void execute()
-        throws BuildException
+        throws TaskException
     {
         sqlCommand = sqlCommand.trim();
 
@@ -400,7 +398,7 @@ public class SQLExec extends Task
         {
             if( transactions.size() == 0 )
             {
-                throw new BuildException( "Source file or fileset, transactions or sql statement must be set!" );
+                throw new TaskException( "Source file or fileset, transactions or sql statement must be set!" );
             }
         }
         else
@@ -408,7 +406,7 @@ public class SQLExec extends Task
             // deal with the filesets
             for( int i = 0; i < filesets.size(); i++ )
             {
-                FileSet fs = ( FileSet )filesets.elementAt( i );
+                FileSet fs = (FileSet)filesets.elementAt( i );
                 DirectoryScanner ds = fs.getDirectoryScanner( project );
                 File srcDir = fs.getDir( project );
 
@@ -418,7 +416,7 @@ public class SQLExec extends Task
                 for( int j = 0; j < srcFiles.length; j++ )
                 {
                     Transaction t = createTransaction();
-                    t.setSrc( new File( srcDir, srcFiles[j] ) );
+                    t.setSrc( new File( srcDir, srcFiles[ j ] ) );
                 }
             }
 
@@ -430,23 +428,23 @@ public class SQLExec extends Task
 
         if( driver == null )
         {
-            throw new BuildException( "Driver attribute must be set!" );
+            throw new TaskException( "Driver attribute must be set!" );
         }
         if( userId == null )
         {
-            throw new BuildException( "User Id attribute must be set!" );
+            throw new TaskException( "User Id attribute must be set!" );
         }
         if( password == null )
         {
-            throw new BuildException( "Password attribute must be set!" );
+            throw new TaskException( "Password attribute must be set!" );
         }
         if( url == null )
         {
-            throw new BuildException( "Url attribute must be set!" );
+            throw new TaskException( "Url attribute must be set!" );
         }
         if( srcFile != null && !srcFile.exists() )
         {
-            throw new BuildException( "Source file does not exist!" );
+            throw new TaskException( "Source file does not exist!" );
         }
         Driver driverInstance = null;
         // Load the driver using the
@@ -456,7 +454,7 @@ public class SQLExec extends Task
             if( classpath != null )
             {
                 log( "Loading " + driver + " using AntClassLoader with classpath " + classpath,
-                    Project.MSG_VERBOSE );
+                     Project.MSG_VERBOSE );
 
                 loader = new AntClassLoader( project, classpath );
                 dc = loader.loadClass( driver );
@@ -466,19 +464,19 @@ public class SQLExec extends Task
                 log( "Loading " + driver + " using system loader.", Project.MSG_VERBOSE );
                 dc = Class.forName( driver );
             }
-            driverInstance = ( Driver )dc.newInstance();
+            driverInstance = (Driver)dc.newInstance();
         }
         catch( ClassNotFoundException e )
         {
-            throw new BuildException( "Class Not Found: JDBC driver " + driver + " could not be loaded" );
+            throw new TaskException( "Class Not Found: JDBC driver " + driver + " could not be loaded" );
         }
         catch( IllegalAccessException e )
         {
-            throw new BuildException( "Illegal Access: JDBC driver " + driver + " could not be loaded" );
+            throw new TaskException( "Illegal Access: JDBC driver " + driver + " could not be loaded" );
         }
         catch( InstantiationException e )
         {
-            throw new BuildException( "Instantiation Exception: JDBC driver " + driver + " could not be loaded" );
+            throw new TaskException( "Instantiation Exception: JDBC driver " + driver + " could not be loaded" );
         }
 
         try
@@ -513,10 +511,10 @@ public class SQLExec extends Task
 
                 // Process all transactions
                 for( Enumeration e = transactions.elements();
-                    e.hasMoreElements();  )
+                     e.hasMoreElements(); )
                 {
 
-                    ( ( Transaction )e.nextElement() ).runTransaction( out );
+                    ( (Transaction)e.nextElement() ).runTransaction( out );
                     if( !autocommit )
                     {
                         log( "Commiting transaction", Project.MSG_VERBOSE );
@@ -541,9 +539,10 @@ public class SQLExec extends Task
                     conn.rollback();
                 }
                 catch( SQLException ex )
-                {}
+                {
+                }
             }
-            throw new BuildException( "Error", e );
+            throw new TaskException( "Error", e );
         }
         catch( SQLException e )
         {
@@ -554,9 +553,10 @@ public class SQLExec extends Task
                     conn.rollback();
                 }
                 catch( SQLException ex )
-                {}
+                {
+                }
             }
-            throw new BuildException( "Error", e );
+            throw new TaskException( "Error", e );
         }
         finally
         {
@@ -572,11 +572,12 @@ public class SQLExec extends Task
                 }
             }
             catch( SQLException e )
-            {}
+            {
+            }
         }
 
         log( goodSql + " of " + totalSql +
-            " SQL statements executed successfully" );
+             " SQL statements executed successfully" );
     }
 
     /**
@@ -650,7 +651,7 @@ public class SQLExec extends Task
             if( !statement.execute( sql ) )
             {
                 log( statement.getUpdateCount() + " rows affected",
-                    Project.MSG_VERBOSE );
+                     Project.MSG_VERBOSE );
             }
             else
             {
@@ -733,7 +734,7 @@ public class SQLExec extends Task
                     line.setLength( 0 );
                 }
             }
-        }while ( statement.getMoreResults() );
+        } while( statement.getMoreResults() );
         out.println();
     }
 
@@ -855,9 +856,9 @@ public class SQLExec extends Task
             if( tSrcFile != null )
             {
                 log( "Executing file: " + tSrcFile.getAbsolutePath(),
-                    Project.MSG_INFO );
+                     Project.MSG_INFO );
                 Reader reader = ( encoding == null ) ? new FileReader( tSrcFile )
-                     : new InputStreamReader( new FileInputStream( tSrcFile ), encoding );
+                    : new InputStreamReader( new FileInputStream( tSrcFile ), encoding );
                 runStatements( reader, out );
                 reader.close();
             }

@@ -6,6 +6,7 @@
  * the LICENSE file.
  */
 package org.apache.tools.ant.taskdefs;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -13,6 +14,7 @@ import java.io.InputStream;
 import java.util.Enumeration;
 import java.util.Properties;
 import java.util.Vector;
+import org.apache.myrmidon.api.TaskException;
 import org.apache.tools.ant.AntClassLoader;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
@@ -144,20 +146,20 @@ public class Property extends Task
     }
 
     public void execute()
-        throws BuildException
+        throws TaskException
     {
         if( name != null )
         {
             if( value == null && ref == null )
             {
-                throw new BuildException( "You must specify value, location or refid with the name attribute" );
+                throw new TaskException( "You must specify value, location or refid with the name attribute" );
             }
         }
         else
         {
             if( file == null && resource == null && env == null )
             {
-                throw new BuildException( "You must specify file, resource or environment when not using the name attribute" );
+                throw new TaskException( "You must specify file, resource or environment when not using the name attribute" );
             }
         }
 
@@ -196,8 +198,8 @@ public class Property extends Task
         Enumeration e = props.keys();
         while( e.hasMoreElements() )
         {
-            String name = ( String )e.nextElement();
-            String value = ( String )props.getProperty( name );
+            String name = (String)e.nextElement();
+            String value = (String)props.getProperty( name );
 
             String v = project.replaceProperties( value );
             addProperty( name, v );
@@ -230,9 +232,9 @@ public class Property extends Task
             prefix += ".";
         log( "Loading Environment " + prefix, Project.MSG_VERBOSE );
         Vector osEnv = Execute.getProcEnvironment();
-        for( Enumeration e = osEnv.elements(); e.hasMoreElements();  )
+        for( Enumeration e = osEnv.elements(); e.hasMoreElements(); )
         {
-            String entry = ( String )e.nextElement();
+            String entry = (String)e.nextElement();
             int pos = entry.indexOf( '=' );
             if( pos == -1 )
             {
@@ -241,14 +243,14 @@ public class Property extends Task
             else
             {
                 props.put( prefix + entry.substring( 0, pos ),
-                    entry.substring( pos + 1 ) );
+                           entry.substring( pos + 1 ) );
             }
         }
         addProperties( props );
     }
 
     protected void loadFile( File file )
-        throws BuildException
+        throws TaskException
     {
         Properties props = new Properties();
         log( "Loading " + file.getAbsolutePath(), Project.MSG_VERBOSE );
@@ -273,16 +275,17 @@ public class Property extends Task
             else
             {
                 log( "Unable to find property file: " + file.getAbsolutePath(),
-                    Project.MSG_VERBOSE );
+                     Project.MSG_VERBOSE );
             }
         }
         catch( IOException ex )
         {
-            throw new BuildException( "Error", ex );
+            throw new TaskException( "Error", ex );
         }
     }
 
     protected void loadResource( String name )
+        throws TaskException
     {
         Properties props = new Properties();
         log( "Resource Loading " + name, Project.MSG_VERBOSE );
@@ -321,16 +324,16 @@ public class Property extends Task
         }
         catch( IOException ex )
         {
-            throw new BuildException( "Error", ex );
+            throw new TaskException( "Error", ex );
         }
     }
 
     private void resolveAllProperties( Properties props )
-        throws BuildException
+        throws TaskException
     {
-        for( Enumeration e = props.keys(); e.hasMoreElements();  )
+        for( Enumeration e = props.keys(); e.hasMoreElements(); )
         {
-            String name = ( String )e.nextElement();
+            String name = (String)e.nextElement();
             String value = props.getProperty( name );
 
             boolean resolved = false;
@@ -348,13 +351,13 @@ public class Property extends Task
                     Enumeration j = propertyRefs.elements();
                     while( i.hasMoreElements() )
                     {
-                        String fragment = ( String )i.nextElement();
+                        String fragment = (String)i.nextElement();
                         if( fragment == null )
                         {
-                            String propertyName = ( String )j.nextElement();
+                            String propertyName = (String)j.nextElement();
                             if( propertyName.equals( name ) )
                             {
-                                throw new BuildException( "Property " + name + " was circularly defined." );
+                                throw new TaskException( "Property " + name + " was circularly defined." );
                             }
                             fragment = getProject().getProperty( propertyName );
                             if( fragment == null )
