@@ -3,5 +3,4 @@ DATE=@DATE@
 CONTRIBUTORS=\
     Simeon H.K. Fitch, \
     Erik Meade, \
-    Ant Development Team, \
-    Icons Copyright &copy; 1998 Dean S. Jones
+    Ant Development Team
