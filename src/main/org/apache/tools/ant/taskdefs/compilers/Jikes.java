@@ -186,7 +186,14 @@ public class Jikes extends DefaultCompilerAdapter {
 
         if (attributes.getSource() != null) {
             cmd.createArgument().setValue("-source");
-            cmd.createArgument().setValue(attributes.getSource());
+            String source = attributes.getSource();
+            if (source.equals("1.1") || source.equals("1.2")) {
+                // support for -source 1.1 and -source 1.2 has been
+                // added with JDK 1.4.2, Jikes doesn't like it
+                cmd.createArgument().setValue("1.3");
+            } else {
+                cmd.createArgument().setValue(source);
+            }
         }
 
         addCurrentCompilerArgs(cmd);
