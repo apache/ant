@@ -22,9 +22,30 @@
     </move>
   </target>
 
+  <!-- Bugzilla Report 11732 -->
+  <target name="testDirectoryRemoval">
+    <mkdir dir="A/B"/>
+    <mkdir dir="A/C"/>
+    <mkdir dir="A/D"/>
+    <touch file="A/B/1"/>
+    <touch file="A/C/2"/>
+    <touch file="A/D/3"/>
+    <mkdir dir="E"/>
+    <move todir="E" includeemptydirs="true">
+      <fileset dir="A">
+        <include name="C"/>
+        <include name="D"/>
+        <include name="C/**"/>
+        <include name="D/**"/>
+      </fileset>
+    </move>
+  </target>
+
   <target name="cleanup"> 
     <delete file="move.filterset.tmp"/>
     <delete file="move.filterchain.tmp"/>
+    <delete dir="A"/>
+    <delete dir="E"/>
   </target>
 
 </project>

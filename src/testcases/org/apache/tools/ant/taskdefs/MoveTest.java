@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2000-2002 The Apache Software Foundation.  All rights
+ * Copyright (c) 2000-2003 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -95,5 +95,18 @@ public class MoveTest extends BuildFileTest {
         File check  = new File(getProjectDir(), "expected/copy.filterset.filtered");
         assertTrue(tmp.exists());
         assertTrue(fileUtils.contentEquals(tmp, check));
+    }
+
+    /** Bugzilla Report 11732 */
+    public void testDirectoryRemoval() throws IOException {
+        executeTarget("testDirectoryRemoval");
+        assertTrue(!getProject().resolveFile("E/B/1").exists());
+        assertTrue(getProject().resolveFile("E/C/2").exists());
+        assertTrue(getProject().resolveFile("E/D/3").exists());
+        assertTrue(getProject().resolveFile("A/B/1").exists());
+        assertTrue(!getProject().resolveFile("A/C/2").exists());
+        assertTrue(!getProject().resolveFile("A/D/3").exists());
+        assertTrue(!getProject().resolveFile("A/C").exists());
+        assertTrue(!getProject().resolveFile("A/D").exists());
     }
 }
