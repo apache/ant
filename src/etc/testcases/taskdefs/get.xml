@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 
-<project name="xxx-test" basedir=".">
+<project name="xxx-test" basedir="." default="test1">
 
   <target name="test1">
     <get/>

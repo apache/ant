@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 
-<project name="antstructure-test" basedir=".">
+<project name="antstructure-test" basedir="." default="test1">
 
   <target name="test1">
     <antstructure/>

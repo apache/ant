@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 
-<project name="delete-test" basedir=".">
+<project name="delete-test" basedir="." default="test1">
 
   <target name="test1">
     <delete/>

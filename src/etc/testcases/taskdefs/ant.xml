@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 
-<project name="ant-test" basedir=".">
+<project name="ant-test" basedir="." default="test1">
 
   <target name="all" depends="test1,test2,test3,test4"/>
 

@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 
-<project name="copyfile-test" basedir=".">
+<project name="copyfile-test" basedir="." default="test1">
 
   <target name="test1">
     <copyfile/>

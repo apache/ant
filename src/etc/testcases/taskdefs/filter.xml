@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 
-<project name="filter-test" basedir=".">
+<project name="filter-test" basedir="." default="test1">
 
   <target name="test1">
     <filter/>

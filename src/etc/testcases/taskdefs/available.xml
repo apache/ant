@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 
-<project name="available-test" basedir=".">
+<project name="available-test" basedir="." default="test1">
 
   <target name="test1">
     <available/>
