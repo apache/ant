@@ -130,7 +130,7 @@ public class Path implements Cloneable {
         createPathElement().setPath(path);
     }
 
-    public Path(Project p) {
+    public Path(Project project) {
         this.project = project;
         elements = new Vector();
     }
@@ -187,6 +187,29 @@ public class Path implements Cloneable {
             if (elements.indexOf(l[i]) == -1) {
                 elements.addElement(l[i]);
             }
+        }
+    }
+
+     /**
+     * Adds the components on the given path which exist to this
+     * Path. Components that don't exist, aren't added.
+     *
+     * @param source - source path whose components are examined for existence
+     */
+    public void addExisting(Path source) {
+        String[] list = source.list();
+        for (int i=0; i<list.length; i++) {
+            File f = null;
+            if (project != null) {
+                f = project.resolveFile(list[i]);
+            }
+            else {
+                f = new File(list[i]);
+            }
+
+            if (f.exists()) {
+                setLocation(f);
+            } 
         }
     }
 

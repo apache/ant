@@ -387,32 +387,29 @@ public class Javac extends MatchingTask {
         // add our classpath to the mix
 
         if (compileClasspath != null) {
-            addExistingToClasspath(classpath,compileClasspath);
+            classpath.addExisting(compileClasspath);
         }
         addReferencesToPath(classpathReferences, classpath);
 
         // add the system classpath
 
-        addExistingToClasspath(classpath, Path.systemClasspath);
+        classpath.addExisting(Path.systemClasspath);
         if (addRuntime) {
             if (Project.getJavaVersion() == Project.JAVA_1_1) {
-                addExistingToClasspath(classpath,
-                                       new Path(null,
+                classpath.addExisting(new Path(null,
                                                 System.getProperty("java.home")
                                                 + File.separator + "lib"
                                                 + File.separator 
                                                 + "classes.zip"));
             } else {
                 // JDK > 1.1 seems to set java.home to the JRE directory.
-                addExistingToClasspath(classpath,
-                                       new Path(null,
+                classpath.addExisting(new Path(null,
                                                 System.getProperty("java.home")
                                                 + File.separator + "lib"
                                                 + File.separator + "rt.jar"));
                 // Just keep the old version as well and let addExistingToPath
                 // sort it out.
-                addExistingToClasspath(classpath,
-                                       new Path(null,
+                classpath.addExisting(new Path(null,
                                                 System.getProperty("java.home")
                                                 + File.separator +"jre"
                                                 + File.separator + "lib"
@@ -421,32 +418,6 @@ public class Javac extends MatchingTask {
         }
             
         return classpath;
-    }
-
-
-     /**
-     * Takes a Path, and adds each element of
-     * another Path to a new classpath, if the components exist.
-     * Components that don't exist, aren't added.
-     * We do this, because jikes issues warnings for non-existant
-     * files/dirs in his classpath, and these warnings are pretty
-     * annoying.
-     * @param target - target classpath
-     * @param source - source classpath
-     * to get file objects.
-     */
-    private void addExistingToClasspath(Path target, Path source) {
-        String[] list = source.list();
-        for (int i=0; i<list.length; i++) {
-            File f = project.resolveFile(list[i]);
-
-            if (f.exists()) {
-                target.setLocation(f);
-           } else {
-               log("Dropping from classpath: "+
-                   f.getAbsolutePath(), Project.MSG_VERBOSE);
-           }
-        }
     }
 
     /**
