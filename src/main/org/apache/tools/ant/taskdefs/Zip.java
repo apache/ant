@@ -109,15 +109,14 @@ public class Zip extends MatchingTask {
     /**
      * Adds a set of files (nested fileset attribute).
      */
-    public void addFileset(ZipFileSet set) {
+    public void addFileset(FileSet set) {
         filesets.addElement(set);
     }
 
     /**
      * @deprecated addPrefixedfileset is deprecated; replaced by ZipFileSet
      */
-    public void addPrefixedfileset(ZipFileSet set) {
-        log("WARNING: PrefixedFileSets are deprecated; use the fileset tag instead.");
+    public void addZipfileset(ZipFileSet set) {
         filesets.addElement(set);
     }
 
@@ -498,22 +497,30 @@ public class Zip extends MatchingTask {
     }
 
     /**
-     * Iterate over the given Vector of zipfilesets and add
+     * Iterate over the given Vector of (zip)filesets and add
      * all files to the ZipOutputStream using the given prefix.
      */
     protected void addFiles(Vector filesets, ZipOutputStream zOut)
         throws IOException {
         // Add each fileset in the Vector.
         for (int i = 0; i<filesets.size(); i++) {
-            ZipFileSet fs = (ZipFileSet) filesets.elementAt(i);
+            FileSet fs = (FileSet) filesets.elementAt(i);
             DirectoryScanner ds = fs.getDirectoryScanner(project);
-            String prefix = fs.getPrefix();
+
+            String prefix = "";
+            String fullpath = "";
+            if (fs instanceof ZipFileSet) {
+                ZipFileSet zfs = (ZipFileSet) fs;
+                prefix = zfs.getPrefix();
+                fullpath = zfs.getFullpath();
+            }
+            
             if (prefix.length() > 0 
                 && !prefix.endsWith("/")
                 && !prefix.endsWith("\\")) {
                 prefix += "/";
             }
-            String fullpath = fs.getFullpath();
+
             // Need to manually add either fullpath's parent directory, or 
             // the prefix directory, to the archive. 
             if (prefix.length() > 0) {
@@ -523,12 +530,13 @@ public class Zip extends MatchingTask {
                 addParentDirs(null, fullpath, zOut, "");
             }
 
-            if (fs.getSrc() != null) {
-              addZipEntries(fs, ds, zOut, prefix);
-             } else {
-               // Add the fileset.
-                 addFiles(ds, zOut, prefix, fullpath);
-             }
+            if (fs instanceof ZipFileSet
+                && ((ZipFileSet) fs).getSrc() != null) {
+                addZipEntries((ZipFileSet) fs, ds, zOut, prefix);
+            } else {
+                // Add the fileset.
+                addFiles(ds, zOut, prefix, fullpath);
+            }
         }
     }
 

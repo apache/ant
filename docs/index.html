@@ -2970,7 +2970,7 @@ If <code>skip</code>, the JAR is not created and a warning is issued.
 If <code>fail</code>, the JAR is not created and the build is halted with an error.
 <p>(The Jar task is a shortcut for specifying the manifest file of a JAR file. 
 The same thing can be accomplished by using the <i>fullpath</i>
-attribute of a fileset in a Zip task. The one difference is that if the
+attribute of a zipfileset in a Zip task. The one difference is that if the
 <i>manifest</i> attribute is not specified, the Jar task will 
 include an empty one for you.)</p>
 </p>
@@ -5211,8 +5211,8 @@ treatment for files that should end up in the
 <code>WEB-INF</code> directories of the Web Application Archive.
 <p>(The War task is a shortcut for specifying the particular layout of a WAR file. 
 The same thing can be accomplished by using the <i>prefix</i> and <i>fullpath</i>
-attributes of filesets in a Zip or Jar task.)</p>
-<p>The extended fileset attributes from the zip task (<i>prefix</i>, <i>fullpath</i>, and <i>src</i>) are available for all filesets used in the War task.</p>
+attributes of zipfilesets in a Zip or Jar task.)</p>
+<p>The extended zipfileset element from the zip task (with attributes <i>prefix</i>, <i>fullpath</i>, and <i>src</i>) is available in the War task.</p>
 
 <h3>Parameters</h3>
 <table border="1" cellpadding="2" cellspacing="0">
@@ -5318,8 +5318,8 @@ then the war file <code>myapp.war</code> created with
     &lt;exclude name=&quot;jdbc1.jar&quot;/&gt;
   &lt;/lib&gt;
   &lt;classes dir=&quot;build/main&quot;/&gt;
-  &lt;fileset dir=&quot;src/graphics/images/gifs&quot; 
-           prefix="images"/&gt;
+  &lt;zipfileset dir=&quot;src/graphics/images/gifs&quot; 
+              prefix="images"/&gt;
 &lt;/war&gt;
 </pre>
 will consist of
@@ -5362,7 +5362,7 @@ if <code>basedir</code> is set. You may use any mixture of the implicit file set
 (with <code>basedir</code> set, and optional attributes like <code>includes</code>
 and optional subelements like <code>&lt;include&gt;</code>); explicit nested
 <code>&lt;fileset&gt;</code> elements so long as at least one fileset total is specified. The ZIP file will
-only reflect the relative paths of files <i>within</i> each fileset.  A fileset has additional attributes that are available in the context of the Zip task and its derivatives (described below). </p>
+only reflect the relative paths of files <i>within</i> each fileset. The Zip task and its derivatives know a special form of a fileset named zipfileset that has additional attributes (described below). </p>
 <p>The <code>whenempty</code> parameter controls what happens when no files match.
 If <code>skip</code> (the default), the ZIP is not created and a warning is issued.
 If <code>fail</code>, the ZIP is not created and the build is halted with an error.
@@ -5428,8 +5428,11 @@ which should be recognized as such by compliant ZIP manipulation tools.</p>
 </table>
 <h3>Parameters specified as nested elements</h3>
 <h4>fileset</h4>
-The zip task supports any number of nested <a href="#fileset"><code>&lt;fileset&gt;</code></a> elements to specify the files to be included in the archive.  A <code>&lt;fileset&gt;</code> has three additional attributes when
-used in the context of the <code>&lt;zip&gt;</code> task: <i>prefix</i>, <i>fullpath</i>, and <i>src</i>.  The 
+<p>The zip task supports any number of nested <a
+href="#fileset"><code>&lt;fileset&gt;</code></a> elements to specify
+the files to be included in the archive.</p>
+<h4>zipfileset</h4>
+<p>A <code>&lt;zipfileset&gt;</code> has three additional attributes: <i>prefix</i>, <i>fullpath</i>, and <i>src</i>.  The 
 <i>prefix</i> and <i>fullpath</i> attributes modify the location of the files when they are placed 
 inside the archive. If the <i>prefix</i> attribute is set, all files in the fileset are prefixed
 with that path in the archive. If the <i>fullpath</i> attribute is set, the file described by the fileset is placed at that 
@@ -5465,9 +5468,9 @@ are zipped, and files with the name <code>todo.html</code> are excluded.</p>
 current directory. <code>ChangeLog.txt</code> will be added to the top of the ZIP file, just as if
 it had been located at <code>htdocs/manual/ChangeLog.txt</code>.</p>
 <pre>  &lt;zip zipfile=&quot;${dist}/manual.zip&quot;&gt;
-    &lt;fileset dir=&quot;htdocs/manual&quot; prefix=&quot;docs/user-guide&quot;/&gt;
-    &lt;fileset dir=&quot;.&quot; includes=&quot;ChangeLog27.txt&quot; fullpath=&quot;docs/ChangeLog.txt&quot;/&gt;
-    &lt;fileset src=&quot;examples.zip&quot; includes=&quot;**/*.html&quot; prefix=&quot;docs/examples&quot;/&gt;
+    &lt;zipfileset dir=&quot;htdocs/manual&quot; prefix=&quot;docs/user-guide&quot;/&gt;
+    &lt;zipfileset dir=&quot;.&quot; includes=&quot;ChangeLog27.txt&quot; fullpath=&quot;docs/ChangeLog.txt&quot;/&gt;
+    &lt;zipfileset src=&quot;examples.zip&quot; includes=&quot;**/*.html&quot; prefix=&quot;docs/examples&quot;/&gt;
   &lt;/zip&gt;</pre>
 <p>zips all files in the <code>htdocs/manual</code> directory into the <code>docs/user-guide</code> directory
 in the archive, adds the file <code>ChangeLog27.txt</code> in the

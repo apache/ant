@@ -23,7 +23,7 @@ Other changes:
 
 * Added output attribute to <java>.
 
-* Added nested prefixedfileset element to <war>
+* Added nested zipfileset element to <zip>
 
 * Changed <sql> so that printing is at the task level rather than 
   the statement level.
@@ -100,6 +100,8 @@ Fixed bugs:
   name foo.
   
 * Handle build files in directories whose name contained a "#" character
+
+* <junit> can now log to files whose name contains a comma as well. 
 
 Changes from Ant 1.1 to Ant 1.2
 ===============================
