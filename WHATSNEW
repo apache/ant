@@ -42,6 +42,9 @@ Fixed bugs:
 * <replace> would count some internal character replacements when
   reporting the number of replaced tokens.
 
+* <concat> would cause an exception if a <filelist> pointed to files
+  that do not exist.
+
 Other changes:
 --------------
 

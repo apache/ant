@@ -161,4 +161,9 @@ public class ConcatTest
         expectLog("test5", "Hello, World!");
     }
 
+    public void test6() {
+        expectLogContaining("test6", 
+                            "src/etc/testcases/taskdefs/thisfiledoesnotexist does not exist.");
+    }
+
 }

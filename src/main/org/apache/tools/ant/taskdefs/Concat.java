@@ -298,9 +298,8 @@ public class Concat extends Task {
     private void catFiles(File base, String[] files) {
 
         // First, create a list of absolute paths for the input files.
-        final int len = files.length;
-        String[] input = new String[len];
-        for (int i = 0; i < len; i++) {
+        Vector inputFileNames = new Vector();
+        for (int i = 0; i < files.length; i++) {
 
             File current = new File(base, files[i]);
 
@@ -314,8 +313,12 @@ public class Concat extends Task {
                 continue;
             }
 
-            input[i] = current.getAbsolutePath();
+            inputFileNames.addElement(current.getAbsolutePath());
         }
+
+        final int len = inputFileNames.size();
+        String[] input = new String[len];
+        inputFileNames.copyInto(input);
 
         // Next, perform the concatenation.
         if (encoding == null) {

@@ -31,4 +31,10 @@
     <concat>Hello, ${world}!</concat>
   </target>
 
+  <target name="test6">
+    <concat destfile="TESTDEST" append="true">
+      <filelist dir="${basedir}" files="thisfiledoesnotexist"/>
+    </concat>
+  </target>
+
 </project>
