@@ -69,7 +69,7 @@ public class CoreFileService implements FileService {
     private Frame frame;
 
     /** General file utilities */
-    private FileUtils fileUtils = new FileUtils();
+    private FileUtils fileUtils = FileUtils.newFileUtils();
 
     /**
      * Constructor

@@ -155,7 +155,7 @@
     <javac destdir="${bin.dir}/antlibs/${libset}" srcdir="${java.dir}/antlibs/${libset}" debug="${debug}">
       <classpath refid="classpath.antlibs"/>
     </javac>
-    <jar basedir="${bin.dir}/antlibs/${libset}" jarfile="${distlib.dir}/antlibs/${libset}.tsk">
+    <jar basedir="${bin.dir}/antlibs/${libset}" jarfile="${distlib.dir}/antlibs/${libset}.jar">
       <metainf dir="${java.dir}/antlibs/${libset}" 
                 includes="antlib.xml"/>
     </jar>

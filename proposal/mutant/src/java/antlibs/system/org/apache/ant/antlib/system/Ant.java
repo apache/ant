@@ -56,6 +56,7 @@ import java.io.File;
 import org.apache.ant.common.service.ExecService;
 import org.apache.ant.common.util.ExecutionException;
 import org.apache.ant.common.service.MagicProperties;
+import org.apache.ant.common.util.FileUtils;
 
 /**
  * The Ant task - used to execute a different build file
@@ -65,7 +66,7 @@ import org.apache.ant.common.service.MagicProperties;
  */
 public class Ant extends AntBase {
     /** The ant file to be run */
-    private File antFile;
+    private String antFileName;
     /** the base directory to use for the run */
     private File baseDir;
     /** File to capture any output */
@@ -74,10 +75,10 @@ public class Ant extends AntBase {
     /**
      * sets the file containing the XML representation model to build
      *
-     * @param antFile the file to build
+     * @param antFileName the file to build
      */
-    public void setAntFile(File antFile) {
-        this.antFile = antFile;
+    public void setAntFile(String antFileName) {
+        this.antFileName = antFileName;
     }
 
     /**
@@ -107,12 +108,18 @@ public class Ant extends AntBase {
         if (baseDir == null) {
             baseDir = getAntContext().getBaseDir();
         }
-        if (antFile == null) {
+        
+        File antFile = null;
+        if (antFileName == null) {
             antFile = new File(baseDir, "build.ant");
             if (!antFile.exists()) {
                 antFile = new File(baseDir, "build.xml");
             }
+        } else {
+            antFile 
+                = FileUtils.newFileUtils().resolveFile(baseDir, antFileName);
         }
+        
         setProperty(MagicProperties.BASEDIR, baseDir.getAbsolutePath());
         
         ExecService execService

@@ -68,6 +68,21 @@ import java.util.StringTokenizer;
  * @created 21 January 2002
  */
 public class FileUtils {
+
+    /** Empty constructor. */
+    protected FileUtils() {
+    }
+
+    /**
+     * Factory method.
+     *
+     * @return The FileUtils instance to actually use. May be a subclass of
+     *      this class.
+     */
+    public static FileUtils newFileUtils() {
+        return new FileUtils();
+    }
+
     /**
      * Interpret the filename as a file relative to the given file - unless
      * the filename already represents an absolute filename.
@@ -76,8 +91,7 @@ public class FileUtils {
      *      must be an absolute file and must not contain &quot;./&quot; or
      *      &quot;../&quot; sequences (same for \ instead of /). If it is
      *      null, this call is equivalent to 
-     *      <code>new java.io.File(filename)</code>
-     *      .
+     *      <code>new java.io.File(filename)</code>.
      * @param filename the filename to be resolved
      * @return an absolute file that doesn't contain &quot;./&quot; or
      *      &quot;../&quot; sequences and uses the correct separator for the
@@ -102,8 +116,8 @@ public class FileUtils {
         }
 
         File helpFile = new File(file.getAbsolutePath());
-        StringTokenizer tok 
-            = new StringTokenizer(platformFilename, File.separator);
+        StringTokenizer tok
+             = new StringTokenizer(platformFilename, File.separator);
         while (tok.hasMoreTokens()) {
             String part = tok.nextToken();
             if (part.equals("..")) {

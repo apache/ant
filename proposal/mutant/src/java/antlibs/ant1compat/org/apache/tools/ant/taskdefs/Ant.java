@@ -52,6 +52,17 @@
  * <http://www.apache.org/>.
  */
 package org.apache.tools.ant.taskdefs;
+import java.io.File;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+import org.apache.ant.antlib.system.AntBase;
+import org.apache.ant.common.antlib.AntContext;
+import org.apache.ant.common.antlib.AntLibFactory;
+import org.apache.ant.common.service.ComponentService;
+import org.apache.ant.common.util.ExecutionException;
+import org.apache.tools.ant.BuildException;
+import org.apache.tools.ant.Task;
 
 /**
  * Ant facade over system version of Ant
@@ -59,6 +70,146 @@ package org.apache.tools.ant.taskdefs;
  * @author <a href="mailto:conor@apache.org">Conor MacNeill</a>
  * @created 31 January 2002
  */
-public class Ant extends org.apache.ant.antlib.system.Ant {
+public class Ant extends Task {
+    /** The core Ant implementation to actually use */
+    private org.apache.ant.antlib.system.Ant realAnt = null;
+
+    /** The properties created by this task */
+    private List properties = new ArrayList();
+
+    /**
+     * If true, inherit all properties from parent Project If false, inherit
+     * only userProperties and those defined inside the ant call itself
+     *
+     * @param value true if the sub-build should receive all properties from
+     *      this build
+     */
+    public void setInheritAll(boolean value) {
+        realAnt.setInheritAll(value);
+    }
+
+    /**
+     * If true, inherit all references from parent Project If false, inherit
+     * only those defined inside the ant call itself
+     *
+     * @param value true if the subbuild should receive all references from
+     *      the current build.
+     */
+    public void setInheritRefs(boolean value) {
+        realAnt.setInheritRefs(value);
+    }
+
+    /**
+     * The directory which will be the base directory for the build
+     *
+     * @param d the base directory for the new build
+     */
+    public void setDir(File d) {
+        realAnt.setDir(d);
+    }
+
+    /**
+     * set the build file, it can be either absolute or relative. If it is
+     * absolute, <tt>dir</tt> will be ignored, if it is relative it will be
+     * resolved relative to <tt>dir</tt> .
+     *
+     * @param s the name of the ant file either absolute or relative to the
+     *      sub-build's basedir
+     */
+    public void setAntfile(String s) {
+        realAnt.setAntFile(s);
+    }
+
+    /**
+     * set the target to execute. If none is defined it will execute the
+     * default target of the build file
+     *
+     * @param s the target to eb executed in the sub-build
+     */
+    public void setTarget(String s) {
+        realAnt.setTarget(s);
+    }
+
+    /**
+     * XXX Sets the output of the Ant
+     *
+     * @param s name of the file to store output.
+     */
+    public void setOutput(String s) {
+        // realAnt.setOutput(s);
+    }
+
+    /** Initialize the task */
+    public void init() {
+        AntContext context = getAntContext();
+        try {
+            ComponentService componentService = getComponentService();
+            AntLibFactory factory = getProject().getFactory();
+            realAnt = (org.apache.ant.antlib.system.Ant)
+                componentService.createComponent(factory,
+                context.getClassLoader(),
+                org.apache.ant.antlib.system.Ant.class, false, "antcall");
+        } catch (ExecutionException e) {
+            throw new BuildException(e);
+        }
+    }
+
+
+    /**
+     * Do the execution.
+     *
+     * @exception BuildException XXX Description of Exception
+     */
+    public void execute() throws BuildException {
+        for (Iterator i = properties.iterator(); i.hasNext(); ) {
+            Property property = (Property)i.next();
+            AntBase.Property newProperty = new AntBase.Property();
+            newProperty.setName(property.getName());
+            newProperty.setValue(property.getValue());
+            realAnt.addProperty(newProperty);
+        }
+        try {
+            realAnt.execute();
+        } catch (ExecutionException e) {
+            throw new BuildException(e);
+        }
+    }
+
+    /**
+     * Create a nested property element.
+     *
+     * @return the Property object to be configured.
+     */
+    public Property createProperty() {
+        Property property = new Property();
+        properties.add(property);
+        return property;
+    }
+
+    /**
+     * create a reference element that identifies a data type that should be
+     * carried over to the new project.
+     *
+     * @param r the reference to be added to the call
+     */
+    public void addReference(AntBase.Reference r) {
+        try {
+            realAnt.addReference(r);
+        } catch (ExecutionException e) {
+            throw new BuildException(e);
+        }
+    }
+
+    /**
+     * Gets the componentService
+     *
+     * @return the componentService instance provided by the core
+     * @exception ExecutionException if the service is not available.
+     */
+    private ComponentService getComponentService() throws ExecutionException {
+        AntContext context = getAntContext();
+        return (ComponentService)context.getCoreService(ComponentService.class);
+    }
+
 }
 

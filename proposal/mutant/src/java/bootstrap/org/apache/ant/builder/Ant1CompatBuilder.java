@@ -21,7 +21,7 @@ public class Ant1CompatBuilder {
                         "${lib.dir}/ant1compat", "*.jar");
         helper.addPathElementToPath("classpath", "${distlib.dir}/init.jar");
         helper.addPathElementToPath("classpath", "${distlib.dir}/common/common.jar");
-        helper.addPathElementToPath("classpath", "${distlib.dir}/antlibs/system.tsk");
+        helper.addPathElementToPath("classpath", "${distlib.dir}/antlibs/system.jar");
     }
     protected void check_for_optional_packages(BuildHelper helper) {
     }

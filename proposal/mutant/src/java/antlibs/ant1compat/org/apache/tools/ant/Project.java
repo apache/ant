@@ -64,11 +64,11 @@ import java.util.Stack;
 import java.util.Vector;
 import org.apache.ant.common.antlib.AntContext;
 import org.apache.ant.common.antlib.AntLibFactory;
+import org.apache.ant.common.event.MessageLevel;
 import org.apache.ant.common.service.ComponentService;
 import org.apache.ant.common.service.DataService;
 import org.apache.ant.common.service.FileService;
 import org.apache.ant.common.util.ExecutionException;
-import org.apache.ant.common.event.MessageLevel;
 import org.apache.ant.common.util.PropertyUtils;
 import org.apache.tools.ant.types.FilterSet;
 import org.apache.tools.ant.types.FilterSetCollection;
@@ -83,42 +83,44 @@ import org.apache.tools.ant.util.FileUtils;
 public class Project implements org.apache.ant.common.event.BuildListener {
 
     /** String which indicates Java version 1.0 */
-    public static final String JAVA_1_0 = "1.0";
+    public final static String JAVA_1_0 = "1.0";
     /** String which indicates Java version 1.1 */
-    public static final String JAVA_1_1 = "1.1";
+    public final static String JAVA_1_1 = "1.1";
     /** String which indicates Java version 1.2 */
-    public static final String JAVA_1_2 = "1.2";
+    public final static String JAVA_1_2 = "1.2";
     /** String which indicates Java version 1.3 */
-    public static final String JAVA_1_3 = "1.3";
+    public final static String JAVA_1_3 = "1.3";
     /** String which indicates Java version 1.4 */
-    public static final String JAVA_1_4 = "1.4";
+    public final static String JAVA_1_4 = "1.4";
 
     /**
      * @see MessageLevel.MSG_ERR
      */
-    public static final int MSG_ERR = MessageLevel.MSG_ERR;
+    public final static int MSG_ERR = MessageLevel.MSG_ERR;
     /**
      * @see MessageLevel.MSG_WARN
      */
-    public static final int MSG_WARN = MessageLevel.MSG_WARN;
+    public final static int MSG_WARN = MessageLevel.MSG_WARN;
     /**
      * @see MessageLevel.MSG_INFO
      */
-    public static final int MSG_INFO = MessageLevel.MSG_INFO;
+    public final static int MSG_INFO = MessageLevel.MSG_INFO;
     /**
      * @see MessageLevel.MSG_VERBOSE
      */
-    public static final int MSG_VERBOSE = MessageLevel.MSG_VERBOSE;
+    public final static int MSG_VERBOSE = MessageLevel.MSG_VERBOSE;
     /**
      * @see MessageLevel.MSG_DEBUG
      */
-    public static final int MSG_DEBUG = MessageLevel.MSG_DEBUG;
+    public final static int MSG_DEBUG = MessageLevel.MSG_DEBUG;
 
     /** The java version detected that Ant is running on */
     private static String javaVersion;
 
-    /** the factory which created this project instance. This is used to
-        define new types and tasks */
+    /**
+     * the factory which created this project instance. This is used to
+     * define new types and tasks
+     */
     private AntLibFactory factory;
 
     /** Collection of Ant1 type definitions */
@@ -197,14 +199,6 @@ public class Project implements org.apache.ant.common.event.BuildListener {
      */
     public static String getJavaVersion() {
         return javaVersion;
-    }
-
-    /**
-     * get the target hashtable
-     * @return hashtable, the contents of which can be cast to Target
-     */
-    public Hashtable getTargets() {
-        return new Hashtable(); // XXX can't get targets
     }
 
     /**
@@ -300,6 +294,24 @@ public class Project implements org.apache.ant.common.event.BuildListener {
         } catch (ExecutionException e) {
             throw new BuildException(e);
         }
+    }
+
+    /**
+     * Gets the Antlib factory of the Project
+     *
+     * @return The project's associated factory object
+     */
+    public AntLibFactory getFactory() {
+        return factory;
+    }
+
+    /**
+     * get the target hashtable
+     *
+     * @return hashtable, the contents of which can be cast to Target
+     */
+    public Hashtable getTargets() {
+        return new Hashtable();// XXX can't get targets
     }
 
     /**
@@ -878,7 +890,7 @@ public class Project implements org.apache.ant.common.event.BuildListener {
         }
 
         try {
-            Object taskObject = componentService.createComponent(factory, 
+            Object taskObject = componentService.createComponent(factory,
                 context.getClassLoader(), taskClass, false, taskType);
             if (taskObject instanceof Task) {
                 task = (Task)taskObject;
@@ -897,15 +909,13 @@ public class Project implements org.apache.ant.common.event.BuildListener {
 
     /**
      * Creates a new instance of a data type.
-     * 
+     *
      * @param typeName The name of the data type to create an instance of.
-     *                 Must not be <code>null</code>.
-     * 
-     * @return an instance of the specified data type, or <code>null</code> if
-     *         the data type name is not recognised.
-     * 
-     * @exception BuildException if the data type name is recognised but 
-     *                           instance creation fails.
+     *      Must not be <code>null</code>.
+     * @return an instance of the specified data type, or <code>null</code>
+     *      if the data type name is not recognised.
+     * @exception BuildException if the data type name is recognised but
+     *      instance creation fails.
      */
     public Object createDataType(String typeName) throws BuildException {
         Class typeClass = (Class)dataClassDefinitions.get(typeName);
@@ -915,14 +925,14 @@ public class Project implements org.apache.ant.common.event.BuildListener {
         }
 
         try {
-            Object dataInstance = componentService.createComponent(factory, 
+            Object dataInstance = componentService.createComponent(factory,
                 context.getClassLoader(), typeClass, false, typeName);
             return dataInstance;
         } catch (Throwable e) {
             throw new BuildException(e);
         }
     }
-    
+
     /** send build started event to the listeners */
     protected void fireBuildStarted() {
         BuildEvent event = new BuildEvent(this);

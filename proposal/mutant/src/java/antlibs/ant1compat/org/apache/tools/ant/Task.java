@@ -170,6 +170,7 @@ public abstract class Task extends ProjectComponent
 
         taskType = componentType;
         taskName = componentType;
+        init();
     }
 
 

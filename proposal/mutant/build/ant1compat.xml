@@ -66,7 +66,7 @@
     <fileset dir="${lib.dir}/parser" includes="*.jar"/>
     <fileset dir="${lib.dir}/ant1compat" includes="*.jar"/>
     <pathelement location="${distlib.dir}/common/common.jar"/>
-    <pathelement location="${distlib.dir}/antlibs/system.tsk"/>
+    <pathelement location="${distlib.dir}/antlibs/system.jar"/>
   </path>
 
   <target name="check_for_optional_packages">

@@ -83,7 +83,7 @@ public class MutantBuilder {
         helper.addPathElementToPath("classpath.antlibs", "${distlib.dir}/common/common.jar");
         helper.addPathToPath("classpath.antlibs", "classpath.common");
         helper.javac("${java.dir}/antlibs/${libset}", "${bin.dir}/antlibs/${libset}", "classpath.antlibs");
-        helper.jar("${bin.dir}/antlibs/${libset}", "${distlib.dir}/antlibs/${libset}.tsk",
+        helper.jar("${bin.dir}/antlibs/${libset}", "${distlib.dir}/antlibs/${libset}.jar",
                    "${java.dir}/antlibs/${libset}", "antlib.xml");
     }
     protected void main(BuildHelper helper) {

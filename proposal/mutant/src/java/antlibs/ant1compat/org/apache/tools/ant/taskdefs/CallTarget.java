@@ -52,8 +52,17 @@
  * <http://www.apache.org/>.
  */
 package org.apache.tools.ant.taskdefs;
-
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+import org.apache.ant.antlib.system.AntBase;
 import org.apache.ant.antlib.system.AntCall;
+import org.apache.ant.common.antlib.AntContext;
+import org.apache.ant.common.antlib.AntLibFactory;
+import org.apache.ant.common.service.ComponentService;
+import org.apache.ant.common.util.ExecutionException;
+import org.apache.tools.ant.BuildException;
+import org.apache.tools.ant.Task;
 
 /**
  * CallTarget facade over AntCall
@@ -61,6 +70,95 @@ import org.apache.ant.antlib.system.AntCall;
  * @author <a href="mailto:conor@apache.org">Conor MacNeill</a>
  * @created 31 January 2002
  */
-public class CallTarget extends AntCall {
+public class CallTarget extends Task {
+    /** The core AntCall implementation to actually use */
+    private AntCall antCall = null;
+
+    /** The properties created by this task */
+    private List properties = new ArrayList();
+
+    /**
+     * If true, inherit all properties from parent Project If false, inherit
+     * only userProperties and those defined inside the antcall call itself
+     *
+     * @param inherit the new inheritAll value
+     */
+    public void setInheritAll(boolean inherit) {
+        antCall.setInheritAll(inherit);
+    }
+
+    /**
+     * Sets the target of the CallTarget
+     *
+     * @param target the new target value
+     */
+    public void setTarget(String target) {
+        antCall.setTarget(target);
+    }
+
+    /** Initialize the task */
+    public void init() {
+        AntContext context = getAntContext();
+        try {
+            ComponentService componentService = getComponentService();
+            AntLibFactory factory = getProject().getFactory();
+            antCall = (AntCall)componentService.createComponent(factory,
+                context.getClassLoader(), AntCall.class, false, "antcall");
+        } catch (ExecutionException e) {
+            throw new BuildException(e);
+        }
+    }
+
+    /** execute the call */
+    public void execute() {
+        for (Iterator i = properties.iterator(); i.hasNext(); ) {
+            Property property = (Property)i.next();
+            AntBase.Property newProperty = new AntBase.Property();
+            newProperty.setName(property.getName());
+            newProperty.setValue(property.getValue());
+            antCall.addProperty(newProperty);
+        }
+        try {
+            antCall.execute();
+        } catch (ExecutionException e) {
+            throw new BuildException(e);
+        }
+    }
+
+    /**
+     * Create a nested param element.
+     *
+     * @return the Property object to be configured.
+     */
+    public Property createParam() {
+        Property property = new Property();
+        properties.add(property);
+        return property;
+    }
+
+    /**
+     * create a reference element that identifies a data type that should be
+     * carried over to the new project.
+     *
+     * @param r the reference to be added to the call
+     */
+    public void addReference(AntBase.Reference r) {
+        try {
+            antCall.addReference(r);
+        } catch (ExecutionException e) {
+            throw new BuildException(e);
+        }
+    }
+
+    /**
+     * Gets the componentService
+     *
+     * @return the componentService instance provided by the core
+     * @exception ExecutionException if the service is not available.
+     */
+    private ComponentService getComponentService() throws ExecutionException {
+        AntContext context = getAntContext();
+        return (ComponentService)context.getCoreService(ComponentService.class);
+    }
 }
 

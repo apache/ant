@@ -744,7 +744,7 @@ public class Frame implements DemuxOutputReceiver {
                 if (base == null) {
                     baseDir = projectFileParent;
                 } else {
-                    FileUtils fileUtils = new FileUtils();
+                    FileUtils fileUtils = FileUtils.newFileUtils();
                     baseDir = fileUtils.resolveFile(projectFileParent, base);
                 }
             } else {
