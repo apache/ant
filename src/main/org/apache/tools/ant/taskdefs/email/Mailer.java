@@ -64,7 +64,7 @@ import org.apache.tools.ant.util.DateUtils;
  * @author roxspring@yahoo.com Rob Oxspring
  * @since Ant 1.5
  */
-abstract class Mailer {
+public abstract class Mailer {
     protected String host = null;
     protected int port = -1;
     protected String user = null;

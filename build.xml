@@ -214,7 +214,6 @@
   <selector id="needs.javamail">
     <or>
       <filename name="${ant.package}/taskdefs/email/MimeMailer*"/>
-      <filename name="${ant.package}/listener/MailLogger*"/>
     </or>
   </selector>
   <selector id="needs.icontract">
@@ -1568,7 +1567,7 @@
           <exclude name="${optional.package}/sos/SOSTest.java"
                    unless="tests.and.ant.share.classloader"/>
           <exclude name="${optional.package}/vss/MSVSSTest.java"
-                   unless="tests.and.ant.share.classloader"/>         
+                   unless="tests.and.ant.share.classloader"/>
           <exclude name="${optional.package}/TraXLiaisonTest.java"
                    unless="tests.and.ant.share.classloader"/>
           <exclude name="${optional.package}/metamata/MAuditParserTest.java"

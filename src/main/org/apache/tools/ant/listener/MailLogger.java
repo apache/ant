@@ -62,9 +62,9 @@ import java.util.*;
 import org.apache.tools.ant.BuildEvent;
 import org.apache.tools.ant.DefaultLogger;
 import org.apache.tools.ant.Project;
-import org.apache.tools.ant.taskdefs.email.MimeMailer;
 import org.apache.tools.ant.taskdefs.email.EmailAddress;
 import org.apache.tools.ant.taskdefs.email.Message;
+import org.apache.tools.ant.taskdefs.email.Mailer;
 import org.apache.tools.ant.util.DateUtils;
 import org.apache.tools.ant.util.StringUtils;
 import org.apache.tools.mail.MailMessage;
@@ -155,14 +155,14 @@ public class MailLogger extends DefaultLogger {
 
             String mailhost = getValue(properties, "mailhost", "localhost");
             int port = Integer.parseInt(getValue(properties,"port",String.valueOf(MailMessage.DEFAULT_PORT)));
-            String user = getValue(properties, "user", null);
-            String password = getValue(properties, "password", null);
+            String user = getValue(properties, "user", "");
+            String password = getValue(properties, "password", "");
             String from = getValue(properties, "from", null);
             String replytoList = getValue(properties,"replyto","");
             String toList = getValue(properties, prefix + ".to", null);
             String subject = getValue(properties, prefix + ".subject",
                     (success) ? "Build Success" : "Build Failure");
-            if (user==null && password==null) {
+            if (user.equals("") && password.equals("")) {
                 sendMail(mailhost, port,  from, replytoList, toList, subject, buffer.substring(0));
             }
             else {
@@ -266,8 +266,16 @@ public class MailLogger extends DefaultLogger {
     private void sendMimeMail(Project project, String host, int port, String user, String password, String from, String replyToString, String toString,
                           String subject, String message) throws IOException {
         // convert the replyTo string into a vector of emailaddresses
+        Mailer mailer = null;
+            try {
+                mailer =
+                    (Mailer) Class.forName("org.apache.tools.ant.taskdefs.email.MimeMailer")
+                    .newInstance();
+            } catch (Throwable e) {
+                log("Failed to initialise MIME mail: "+e.getMessage());
+                return;
+            }
         Vector replyToList = vectorizeEmailAddresses(replyToString);
-        MimeMailer mailer=new MimeMailer();
         mailer.setHost(host);
         mailer.setPort(port);
         mailer.setUser(user);
