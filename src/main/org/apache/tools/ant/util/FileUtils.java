@@ -420,7 +420,7 @@ public class FileUtils {
      * see whether we have a setLastModified method in File and return it.
      */
     protected final Method getSetLastModified() {
-        if (Project.getJavaVersion() == Project.JAVA_1_1) {
+        if (JavaEnvUtils.isJavaVersion(JavaEnvUtils.JAVA_1_1)) {
             return null;
         }
         if (setLastModified == null) {
@@ -444,7 +444,7 @@ public class FileUtils {
      * Calls File.setLastModified(long time) in a Java 1.1 compatible way.
      */
     public void setFileLastModified(File file, long time) throws BuildException {
-        if (Project.getJavaVersion() == Project.JAVA_1_1) {
+        if (JavaEnvUtils.isJavaVersion(JavaEnvUtils.JAVA_1_1)) {
             return;
         }
         Long[] times = new Long[1];

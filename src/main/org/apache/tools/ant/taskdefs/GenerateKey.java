@@ -58,6 +58,7 @@ import java.util.Vector;
 import org.apache.tools.ant.Task;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
+import org.apache.tools.ant.util.JavaEnvUtils;
 import org.apache.tools.ant.types.Commandline;
 
 /**
@@ -243,7 +244,7 @@ public class GenerateKey extends Task {
     } 
 
     public void execute() throws BuildException {
-        if (Project.getJavaVersion().equals(Project.JAVA_1_1)) {
+        if (JavaEnvUtils.isJavaVersion(JavaEnvUtils.JAVA_1_1)) {
             throw new BuildException("The genkey task is only available on JDK"
                                      + " versions 1.2 or greater");
         }

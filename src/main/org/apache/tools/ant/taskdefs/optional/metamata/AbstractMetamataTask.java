@@ -155,11 +155,7 @@ public abstract class AbstractMetamataTask extends Task {
 
     /**  -mx or -Xmx depending on VM version */
     public void setMaxmemory(String max) {
-        if (Project.getJavaVersion().startsWith("1.1")) {
-            createJvmarg().setValue("-mx" + max);
-        } else {
-            createJvmarg().setValue("-Xmx" + max);
-        }
+        cmdl.setMaxmemory(max);
     }
 
 

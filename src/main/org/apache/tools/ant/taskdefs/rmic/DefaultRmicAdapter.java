@@ -60,6 +60,7 @@ import org.apache.tools.ant.types.Commandline;
 import org.apache.tools.ant.types.Path;
 
 import org.apache.tools.ant.util.FileNameMapper;
+import org.apache.tools.ant.util.JavaEnvUtils;
 
 import java.io.File;
 import java.util.Random;
@@ -193,7 +194,7 @@ public abstract class DefaultRmicAdapter implements RmicAdapter {
         cmd.createArgument().setFile(attributes.getBase());
 
         if (attributes.getExtdirs() != null) {
-            if (Project.getJavaVersion().startsWith("1.1")) {
+            if (JavaEnvUtils.isJavaVersion(JavaEnvUtils.JAVA_1_1)) {
                 /*
                  * XXX - This doesn't mix very well with build.systemclasspath,
                  */

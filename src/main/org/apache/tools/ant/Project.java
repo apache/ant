@@ -64,7 +64,6 @@ import java.util.Enumeration;
 import java.util.Stack;
 import java.lang.reflect.Modifier;
 
-
 import org.apache.tools.ant.types.FilterSet; 
 import org.apache.tools.ant.types.FilterSetCollection; 
 import org.apache.tools.ant.util.FileUtils; 
@@ -111,15 +110,35 @@ public class Project {
      */
     private static final String VISITED = "VISITED";
 
-    /** Version constant for Java 1.0 */
+    /** 
+     * Version constant for Java 1.0 
+     *
+     * @deprecated use org.apache.tools.ant.util.JavaEnvUtils instead
+     */
     public static final String JAVA_1_0 = JavaEnvUtils.JAVA_1_0;
-    /** Version constant for Java 1.1 */
+    /** 
+     * Version constant for Java 1.1 
+     *
+     * @deprecated use org.apache.tools.ant.util.JavaEnvUtils instead
+     */
     public static final String JAVA_1_1 = JavaEnvUtils.JAVA_1_1;
-    /** Version constant for Java 1.2 */
+    /**
+     * Version constant for Java 1.2 
+     *
+     * @deprecated use org.apache.tools.ant.util.JavaEnvUtils instead
+     */
     public static final String JAVA_1_2 = JavaEnvUtils.JAVA_1_2;
-    /** Version constant for Java 1.3 */
+    /** 
+     * Version constant for Java 1.3 
+     *
+     * @deprecated use org.apache.tools.ant.util.JavaEnvUtils instead
+     */
     public static final String JAVA_1_3 = JavaEnvUtils.JAVA_1_3;
-    /** Version constant for Java 1.4 */
+    /** 
+     * Version constant for Java 1.4 
+     *
+     * @deprecated use org.apache.tools.ant.util.JavaEnvUtils instead
+     */
     public static final String JAVA_1_4 = JavaEnvUtils.JAVA_1_4;
 
     /** Default filter start token. */
@@ -724,6 +743,7 @@ public class Project {
      * Returns the version of Java this class is running under.
      * @return the version of Java as a String, e.g. "1.1"
      * @see org.apache.tools.ant.util.JavaEnvUtils#getJavaVersion
+     * @deprecated use org.apache.tools.ant.util.JavaEnvUtils instead
      */
     public static String getJavaVersion() {
         return JavaEnvUtils.getJavaVersion();
@@ -744,7 +764,7 @@ public class Project {
         setPropertyInternal("ant.java.version", javaVersion);
 
         // sanity check
-        if (javaVersion == JavaEnvUtils.JAVA_1_0) {
+        if (JavaEnvUtils.isJavaVersion(JavaEnvUtils.JAVA_1_0)) {
             throw new BuildException("Ant cannot work on Java 1.0");
         }
 

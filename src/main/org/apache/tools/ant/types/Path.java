@@ -58,6 +58,7 @@ import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.DirectoryScanner;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.PathTokenizer;
+import org.apache.tools.ant.util.JavaEnvUtils;
 
 import java.io.File;
 
@@ -584,7 +585,7 @@ public class Path extends DataType implements Cloneable {
             
             kaffeJarFiles.setIncludes("*.jar");
             addFileset(kaffeJarFiles);
-        } else if (Project.getJavaVersion() == Project.JAVA_1_1) {
+        } else if (JavaEnvUtils.isJavaVersion(JavaEnvUtils.JAVA_1_1)) {
             addExisting(new Path(null,
                                  System.getProperty("java.home")
                                  + File.separator + "lib"

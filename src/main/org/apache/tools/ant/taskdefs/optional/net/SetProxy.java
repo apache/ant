@@ -59,6 +59,7 @@ import java.net.*;
 import java.util.*;
 import java.lang.reflect.*;
 import org.apache.tools.ant.*;
+import org.apache.tools.ant.util.JavaEnvUtils;
 
 /**
  * proxy definition task. This allows all tasks in the build file
@@ -198,7 +199,8 @@ public class SetProxy extends Task {
         
 
         //for Java1.1 we need to tell the system that the settings are new
-        if (settingsChanged && project.getJavaVersion() == Project.JAVA_1_1) {
+        if (settingsChanged &&
+            JavaEnvUtils.isJavaVersion(JavaEnvUtils.JAVA_1_1)) {
             legacyResetProxySettingsCall(enablingProxy);
         }
     }

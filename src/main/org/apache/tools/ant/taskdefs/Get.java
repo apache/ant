@@ -66,6 +66,7 @@ import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.Task;
 import org.apache.tools.ant.util.FileUtils;
+import org.apache.tools.ant.util.JavaEnvUtils;
 
 /**
  * Get a particular file from a URL source.
@@ -303,7 +304,7 @@ public class Get extends Task {
      * @param v "true" to enable file time fetching
      */
     public void setUseTimestamp(boolean v) {
-        if (Project.getJavaVersion() != Project.JAVA_1_1) {
+        if (JavaEnvUtils.isJavaVersion(JavaEnvUtils.JAVA_1_1)) {
             useTimestamp = v;
         }
     }

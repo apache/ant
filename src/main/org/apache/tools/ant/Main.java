@@ -56,6 +56,7 @@ package org.apache.tools.ant;
 
 import org.apache.tools.ant.input.DefaultInputHandler;
 import org.apache.tools.ant.input.InputHandler;
+import org.apache.tools.ant.util.JavaEnvUtils;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -558,8 +559,8 @@ public class Main {
             // use a system manager that prevents from System.exit()
             // only in JDK > 1.1
             SecurityManager oldsm = null;
-            if (!Project.JAVA_1_0.equals(Project.getJavaVersion()) &&
-                !Project.JAVA_1_1.equals(Project.getJavaVersion())){
+            if (!JavaEnvUtils.isJavaVersion(JavaEnvUtils.JAVA_1_0) &&
+                !JavaEnvUtils.isJavaVersion(JavaEnvUtils.JAVA_1_1)){
                 oldsm = System.getSecurityManager();
 
                 //SecurityManager can not be installed here for backwards

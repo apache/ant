@@ -60,15 +60,12 @@ import org.apache.tools.ant.Project;
 import org.apache.tools.ant.DirectoryScanner;
 import org.apache.tools.ant.types.FileSet;
 import org.apache.tools.ant.util.FileUtils;
+import org.apache.tools.ant.util.JavaEnvUtils;
 
 import java.io.File;
 import java.io.IOException;
-
-
 import java.text.DateFormat;
 import java.text.ParseException;
-
-
 import java.util.Locale;
 import java.util.Vector;
 
@@ -189,7 +186,8 @@ public class Touch extends Task {
             }
         }
 
-        if (millis >= 0 && Project.getJavaVersion() == Project.JAVA_1_1) {
+        if (millis >= 0 && 
+            !JavaEnvUtils.isJavaVersion(JavaEnvUtils.JAVA_1_1)) {
             log("modification time of files cannot be set in JDK 1.1",
                 Project.MSG_WARN);
             return;
@@ -234,7 +232,7 @@ public class Touch extends Task {
                                      + "read-only file " + file);
         }
 
-        if (Project.getJavaVersion() == Project.JAVA_1_1) {
+        if (JavaEnvUtils.isJavaVersion(JavaEnvUtils.JAVA_1_1)) {
             return;
         }
 

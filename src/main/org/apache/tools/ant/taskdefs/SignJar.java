@@ -65,6 +65,7 @@ import org.apache.tools.ant.DirectoryScanner;
 import org.apache.tools.ant.Project;
 
 import org.apache.tools.ant.types.FileSet;
+import org.apache.tools.ant.util.JavaEnvUtils;
 
 /**
  * Sign a archive.
@@ -194,7 +195,7 @@ public class SignJar extends Task {
 
     private void doOneJar(File jarSource, File jarTarget) 
         throws BuildException {
-        if (Project.getJavaVersion().equals(Project.JAVA_1_1)) {
+        if (JavaEnvUtils.isJavaVersion(JavaEnvUtils.JAVA_1_1)) {
             throw new BuildException("The signjar task is only available on "
                                      + "JDK versions 1.2 or greater");
         }

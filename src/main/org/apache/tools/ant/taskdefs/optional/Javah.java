@@ -63,7 +63,7 @@ import org.apache.tools.ant.types.Path;
 import org.apache.tools.ant.types.Reference;
 import org.apache.tools.ant.types.Commandline;
 
-
+import org.apache.tools.ant.util.JavaEnvUtils;
 
 import java.io.File;
 import java.util.Vector;
@@ -280,8 +280,8 @@ public class Javah extends Task {
 
         String compiler = project.getProperty("build.compiler");
         if (compiler == null) {
-            if (Project.getJavaVersion() != Project.JAVA_1_1 &&
-                Project.getJavaVersion() != Project.JAVA_1_2) {
+            if (!JavaEnvUtils.isJavaVersion(JavaEnvUtils.JAVA_1_1) &&
+                !JavaEnvUtils.isJavaVersion(JavaEnvUtils.JAVA_1_2)) {
                 compiler = "modern";
             } else {
                 compiler = "classic";
@@ -353,7 +353,7 @@ public class Javah extends Task {
         }
 
         // JDK1.1 is rather simpler than JDK1.2
-        if (Project.getJavaVersion().startsWith("1.1")) {
+        if (JavaEnvUtils.isJavaVersion(JavaEnvUtils.JAVA_1_1)) {
             if (verbose) {
                 cmd.createArgument().setValue("-v");
             }
