@@ -95,6 +95,12 @@ public class WLStop extends Task {
     private int delay = 0;
     
     /**
+     * The location of the BEA Home under which this server is run.
+     * WL6 only
+     */
+    private File beaHome = null;
+
+    /**
      * Do the work.
      *
      * The work is actually done by creating a separate JVM to run the weblogic admin task
@@ -116,7 +122,17 @@ public class WLStop extends Task {
         Java weblogicAdmin = (Java)project.createTask("java");
         weblogicAdmin.setFork(true);
         weblogicAdmin.setClassname("weblogic.Admin");
-        String args = serverURL + " SHUTDOWN " + username + " " + password + " " + delay;
+        String args;
+        
+        if (beaHome == null) {
+            args = serverURL + " SHUTDOWN " + username + " " + password + " " + delay;
+        }
+        else {
+            args = " -url " + serverURL + 
+                   " -username " + username +
+                   " -password " + password +
+                   " SHUTDOWN " + " " + delay;
+        }            
 
         weblogicAdmin.setArgs(args);
         weblogicAdmin.setClasspath(new Path(project, execClassPath));                         
@@ -168,4 +184,15 @@ public class WLStop extends Task {
     public void setDelay(String s) {
         delay = Integer.parseInt(s);
     }
+
+    /**
+     * The location of the BEA Home.
+     *
+     * @param beaHome the BEA Home directory.
+     *
+     */
+    public void setBEAHome(File beaHome) {
+        this.beaHome = beaHome;
+    }
+    
 }
