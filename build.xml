@@ -226,6 +226,7 @@
       <exclude name="${optional.package}/junit/AggregateTransformer.java"
                unless="xalan.present" />
       <exclude name="${optional.package}/jdepend/*" unless="jdepend.present" />
+      <exclude name="${optional.packahe}/sitraka/*" unless="jakarta.oro.present"/>
     </javac>
     
     <copy todir="${build.classes}">
@@ -614,6 +615,8 @@
                unless="jakarta.oro.present" />
       <exclude name="org/apache/tools/ant/util/regexp/Jdk14RegexpMatcherTest.java" 
                unless="jdk1.4+" />
+      <exclude name="org/apache/tools/ant/taskdefs/optional/sitraka/*.java"
+      				 unless="jakarta.oro.present" />
     </javac>
   </target>
 
@@ -674,6 +677,7 @@
           <exclude name="org/apache/tools/ant/util/regexp/Jdk14RegexpMatcherTest.java" 
                    unless="jdk1.4+" />
           <exclude name="${optional.package}/ide/VAJExportTest.java" unless="vaj.present" />
+          <exclude name="${optional.package}/sitraka/*.java" unless="jakarta.oro.present" />
                    
            <!-- run when you have the environment setup to support them -->
           <exclude name="org/apache/tools/ant/taskdefs/optional/net/FtpTest.java" />
