@@ -1,5 +1,5 @@
 /*
- * Copyright  2001-2004 The Apache Software Foundation
+ * Copyright  2001-2005 The Apache Software Foundation
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -71,7 +71,7 @@ public class PathConvert extends Task {
     /**
      * The property to receive the conversion
      */
-    private String property = null;//
+    private String property = null;
     /**
      * Path prefix map
      */
@@ -111,7 +111,7 @@ public class PathConvert extends Task {
          * Note that this value is case-insensitive when the build is
          * running on a Windows platform and case-sensitive when running on
          * a Unix platform.
-         * @param from
+         * @param from the prefix string to search for
          */
         public void setFrom(String from) {
             this.from = from;
@@ -169,13 +169,19 @@ public class PathConvert extends Task {
      * windows", "unix", "netware", and "os/2".
      */
     public static class TargetOs extends EnumeratedAttribute {
+        /**
+         * @return the list of values for this enumerated attribute
+         */
         public String[] getValues() {
             return new String[]{"windows", "unix", "netware", "os/2", "tandem"};
         }
     }
 
 
-    /** Create a nested PATH element  */
+    /**
+     * Create a nested PATH element
+     * @return a Path to be used by ant reflection
+     */
     public Path createPath() {
 
         if (isReference()) {
@@ -223,6 +229,7 @@ public class PathConvert extends Task {
      * Set targetos to a platform to one of
      * "windows", "unix", "netware", or "os/2"; required unless
      * unless pathsep and/or dirsep are specified.
+     * @param target the target os
      *
      * @since Ant 1.5
      */
@@ -254,6 +261,7 @@ public class PathConvert extends Task {
 
     /**
      * The property into which the converted path will be placed.
+     * @param p the property name
      */
     public void setProperty(String p) {
         property = p;
@@ -263,6 +271,7 @@ public class PathConvert extends Task {
     /**
      * Adds a reference to a Path, FileSet, DirSet, or FileList defined
      * elsewhere.
+     * @param r the reference to a path, fileset, dirset or filelist
      */
     public void setRefid(Reference r) {
         if (path != null) {
@@ -352,7 +361,7 @@ public class PathConvert extends Task {
             // case-insensitive.
             String fromDirSep = onWindows ? "\\" : "/";
 
-            StringBuffer rslt = new StringBuffer(100);
+            StringBuffer rslt = new StringBuffer();
 
             // Get the list of path components in canonical form
             String[] elems = path.list();
@@ -464,6 +473,18 @@ public class PathConvert extends Task {
         }
         this.mapper = mapper;
     }
+
+    /**
+     * A nested filenamemapper
+     * @param fileNameMapper the mapper to add
+     * @since Ant 1.6.3
+     */
+    public void add(FileNameMapper fileNameMapper) {
+        Mapper m = new Mapper(getProject());
+        m.add(fileNameMapper);
+        addMapper(m);
+    }
+
 
     /**
      * Validate that all our parameters have been properly initialized.
