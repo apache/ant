@@ -81,6 +81,11 @@ systems.</p>
     <td align="center" valign="top">No</td>
   </tr>
   <tr>
+    <td valign="top">failifexecutionfails</td>
+    <td valign="top">Stop the build if we can't start the program.
+      Defaults to true. </td>
+    <td align="center" valign="top">No</td>
+  </tr>  <tr>
     <td valign="top">newenvironment</td>
     <td valign="top">Do not propagate old environment when new environment
       variables are specified.</td>
@@ -141,7 +146,26 @@ system command via nested <code>&lt;env&gt;</code> elements.</p>
       replaced by the absolute filename of the file by Ant.</td>
   </tr>
 </table>
-<h5>Examples</h5>
+
+<h3>Errors and return codes</h3>
+By default the return code of a &lt;exec&gt; is ignored; when you set 
+<code>failonerror="true"</code> then any non zero response is treated as an
+error. Alternatively, you can set <code>resultproperty</code> to the name
+of a property and have it assigned to the result code (barring immutability,
+of course).
+<p>
+If the attempt to start the program fails with an OS dependent error code,
+then &lt;exec&gt; halts the build unless <code>failifexecutionfails</code>
+is set. You can use that to run a program if it exists, but otherwise 
+do nothing.
+<p>
+What do those error codes mean? Well, they are OS dependent. On Windows
+boxes you have to look in include\error.h in your windows compiler or wine files;
+error code 2 means 'no such program', which usually means it is not on the path.
+Any time you see such an error from any ant task, it is usually not an ant bug,
+but some configuration problem on your machine.  
+
+<h3>Examples</h3>
 <blockquote><pre>
 &lt;exec executable=&quot;emacs&quot; &gt;
   &lt;env key=&quot;DISPLAY&quot; value=&quot;:1.0&quot;/&gt;
