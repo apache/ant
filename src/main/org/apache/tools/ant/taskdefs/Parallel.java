@@ -150,13 +150,12 @@ public class Parallel extends Task
     public void execute() throws BuildException {
         updateThreadCounts();
         if (numThreads == 0) {
-            spinAllThreads();
-        } else {
-            spinNumThreads();
+            numThreads = nestedTasks.size();
         }
+        spinThreads();
     }
     
-    public void updateThreadCounts() {
+    private void updateThreadCounts() {
         if (numThreadsPerProcessor != 0) {
             int numProcessors = getNumProcessors();
             if (numProcessors != 0) {
@@ -168,18 +167,19 @@ public class Parallel extends Task
     /**
      * Spin up threadCount threads.
      */
-    public void spinNumThreads() throws BuildException {
-        final int maxThreads = nestedTasks.size();
-        Thread[] threads = new Thread[maxThreads];
-        TaskThread[] taskThreads = new TaskThread[maxThreads];
+    private void spinThreads() throws BuildException {
+        final int numTasks = nestedTasks.size();
+        Thread[] threads = new Thread[numTasks];
+        TaskRunnable[] runnables = new TaskRunnable[numTasks];
         int threadNumber = 0;
         for (Enumeration e = nestedTasks.elements(); e.hasMoreElements(); 
              threadNumber++) {
             Task nestedTask = (Task) e.nextElement();
             ThreadGroup group = new ThreadGroup("parallel");
-            TaskThread taskThread = new TaskThread(threadNumber, nestedTask);
-            taskThreads[threadNumber] = taskThread;
-            threads[threadNumber] = new Thread(group, taskThread);
+            TaskRunnable taskRunnable 
+                = new TaskRunnable(threadNumber, nestedTask);
+            runnables[threadNumber] = taskRunnable;
+            threads[threadNumber] = new Thread(group, taskRunnable);
         }
 
         final int maxRunning = numThreads;
@@ -188,7 +188,7 @@ public class Parallel extends Task
         
         // now run them in limited numbers...
         outer:
-        while (threadNumber < maxThreads) {
+        while (threadNumber < numTasks) {
             synchronized(semaphore) {
                 for (int i = 0; i < maxRunning; i++) {
                     if (running[i] == null || !running[i].isAlive()) {
@@ -225,8 +225,8 @@ public class Parallel extends Task
         int numExceptions = 0;
         Throwable firstException = null;
         Location firstLocation = Location.UNKNOWN_LOCATION;;
-        for (int i = 0; i < maxThreads; ++i) {
-            Throwable t = taskThreads[i].getException();
+        for (int i = 0; i < numTasks; ++i) {
+            Throwable t = runnables[i].getException();
             if (t != null) {
                 numExceptions++;
                 if (firstException == null) {
@@ -253,71 +253,7 @@ public class Parallel extends Task
         }
     }
         
-    /**
-     * Spin up one thread per task.
-     */
-    public void spinAllThreads() throws BuildException {
-        int numTasks = nestedTasks.size();
-        Thread[] threads = new Thread[numTasks];
-        TaskThread[] taskThreads = new TaskThread[numTasks];
-        int threadNumber = 0;
-        for (Enumeration e = nestedTasks.elements(); e.hasMoreElements(); 
-             threadNumber++) {
-            Task nestedTask = (Task) e.nextElement();
-            ThreadGroup group = new ThreadGroup("parallel");
-            TaskThread taskThread = new TaskThread(threadNumber, nestedTask);
-            taskThreads[threadNumber] = taskThread;
-            threads[threadNumber] = new Thread(group, taskThread);
-        }
-
-        // now start all threads        
-        for (int i = 0; i < threads.length; ++i) {
-            threads[i].start();
-        }
-
-        // now join to all the threads 
-        for (int i = 0; i < threads.length; ++i) {
-            try {
-                threads[i].join();
-            } catch (InterruptedException ie) {
-                // who would interrupt me at a time like this?
-            }
-        }
-        
-        // now did any of the threads throw an exception
-        StringBuffer exceptionMessage = new StringBuffer();
-        int numExceptions = 0;
-        Throwable firstException = null;
-        Location firstLocation = Location.UNKNOWN_LOCATION;;
-        for (int i = 0; i < threads.length; ++i) {
-            Throwable t = taskThreads[i].getException();
-            if (t != null) {
-                numExceptions++;
-                if (firstException == null) {
-                    firstException = t;
-                }
-                if (t instanceof BuildException && 
-                        firstLocation == Location.UNKNOWN_LOCATION) {
-                    firstLocation = ((BuildException) t).getLocation();
-                }
-                exceptionMessage.append(StringUtils.LINE_SEP);
-                exceptionMessage.append(t.getMessage());
-            }
-        }
-        
-        if (numExceptions == 1) {
-            if (firstException instanceof BuildException) {
-                throw (BuildException) firstException;
-            } else {
-                throw new BuildException(firstException);
-            }
-        } else if (numExceptions > 1) {
-            throw new BuildException(exceptionMessage.toString(), 
-                                     firstLocation);
-        }
-    }
-
-    public int getNumProcessors() {
+    private int getNumProcessors() {
         try {
             Class[] paramTypes = {};
             Method availableProcessors =
@@ -335,17 +271,17 @@ public class Parallel extends Task
     /**
      * thread that execs a task
      */
-    private class TaskThread implements Runnable {
+    private class TaskRunnable implements Runnable {
         private Throwable exception;
         private Task task;
         private int taskNumber;
 
         /**
-         * Construct a new TaskThread.<p>
+         * Construct a new TaskRunnable.<p>
          *
          * @param task the Task to be executed in a seperate thread
          */
-        TaskThread(int taskNumber, Task task) {
+        TaskRunnable(int taskNumber, Task task) {
             this.task = task;
             this.taskNumber = taskNumber;
         }
@@ -374,4 +310,5 @@ public class Parallel extends Task
             return exception;
         }
     }
+    
 }
