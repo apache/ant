@@ -2063,8 +2063,9 @@ public class Project {
             Object o = super.get(key);
             if (o instanceof UnknownElement) {
                 // Make sure that
-                ((UnknownElement) o).maybeConfigure();
-                o = ((UnknownElement) o).getTask();
+                UnknownElement ue = (UnknownElement) o;
+                ue.maybeConfigure();
+                o = ue.getRealThing();
             }
             return o;
         }

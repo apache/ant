@@ -458,6 +458,16 @@ public class UnknownElement extends Task {
     }
 
     /**
+     * Return the configured object
+     *
+     * @return the real thing whatever it is
+     *
+     * @since ant 1.6
+     */
+    public Object getRealThing() {
+        return realThing;
+    }
+    /**
      * Try to create a nested element of <code>parent</code> for the
      * given tag.
      *

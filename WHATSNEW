@@ -210,6 +210,8 @@ Fixed bugs:
 * Prevent sysproperties with no key or no value from being added in <junit>.
   Bugzilla Report 21684.
 
+* Allow references to be properly inherited via antcall
+  Bugzilla Report 21724.
 
 Other changes:
 --------------
