@@ -35,19 +35,19 @@ class DefaultObjectConfigurer
     private final Class m_class;
 
     /**
-     * Map from lowercase property name -> PropertyConfigurer.
+     * All property configurers. (For XML elements)
      */
-    private final Map m_props = new HashMap();
+    private final HashMap m_adders = new HashMap();
 
     /**
-     * All property configurers.
+     * Setter property configurers. (For XML attributes)
      */
-    private final List m_allProps = new ArrayList();
+    private final HashMap m_setters = new HashMap();
 
     /**
      * The typed property configurer.
      */
-    private PropertyConfigurer m_typedPropConfigurer;
+    private PropertyConfigurer m_typedPropertyConfigurer;
 
     /**
      * Content configurer.
@@ -80,19 +80,20 @@ class DefaultObjectConfigurer
     private void enableProperties()
         throws ConfigurationException
     {
-        final Map adders = findAdders();
+        final Map configurers = findPropertyConfigurers();
 
         // Add the elements
 
-        final Iterator iterator = adders.keySet().iterator();
+        final Iterator iterator = configurers.keySet().iterator();
         while( iterator.hasNext() )
         {
-            final String propName = (String)iterator.next();
-            final Method addMethod = (Method)adders.get( propName );
+            final String name = (String)iterator.next();
+            final Method method = (Method)configurers.get( name );
+            final boolean isSetter = method.getName().startsWith( "set" );
 
             // Determine and check the return type
-            final Class type = addMethod.getParameterTypes()[ 0 ];
-            final boolean isTypedProp = ( propName.length() == 0 );
+            final Class type = method.getParameterTypes()[ 0 ];
+            final boolean isTypedProp = ( name.length() == 0 );
             if( isTypedProp && !type.isInterface() )
             {
                 final String message =
@@ -101,27 +102,48 @@ class DefaultObjectConfigurer
                                    type.getName() );
                 throw new ConfigurationException( message );
             }
-
-            // Determine the max count for the property
-            int maxCount = Integer.MAX_VALUE;
-            if( addMethod != null && addMethod.getName().startsWith( "set" ) )
+            else if( isTypedProp && isSetter )
             {
-                maxCount = 1;
+                final String message =
+                    REZ.getString( "typed-setter-not-allowed.error",
+                                   m_class.getName(),
+                                   type.getName() );
+                throw new ConfigurationException( message );
+            }
+            else if( isTypedProp && null != m_typedPropertyConfigurer )
+            {
+                final String message =
+                    REZ.getString( "typed-adder-duplicates.error",
+                                   m_class.getName(),
+                                   type.getName() );
+                throw new ConfigurationException( message );
             }
 
-            final DefaultPropertyConfigurer configurer =
-                new DefaultPropertyConfigurer( m_allProps.size(),
-                                               type,
-                                               addMethod,
-                                               maxCount );
-            m_allProps.add( configurer );
-            if( isTypedProp )
+            // Determine the max count for the property
+            if( isSetter )
             {
-                m_typedPropConfigurer = configurer;
+                final DefaultPropertyConfigurer setter =
+                    new DefaultPropertyConfigurer( getPropertyCount(),
+                                                   type,
+                                                   method,
+                                                   1 );
+                m_setters.put( name, setter );
             }
             else
             {
-                m_props.put( propName, configurer );
+                final DefaultPropertyConfigurer configurer =
+                    new DefaultPropertyConfigurer( getPropertyCount(),
+                                                   type,
+                                                   method,
+                                                   Integer.MAX_VALUE );
+                if( isTypedProp )
+                {
+                    m_typedPropertyConfigurer = configurer;
+                }
+                else
+                {
+                    m_adders.put( name, configurer );
+                }
             }
         }
     }
@@ -130,7 +152,7 @@ class DefaultObjectConfigurer
      * Locate all 'add' and 'set' methods which return void, and take a
      * single parameter.
      */
-    private Map findAdders()
+    private Map findPropertyConfigurers()
         throws ConfigurationException
     {
         final Map adders = new HashMap();
@@ -163,6 +185,12 @@ class DefaultObjectConfigurer
             if( adders.containsKey( propName ) )
             {
                 final Method candidate = (Method)adders.get( propName );
+                final String operation = methodName.substring( 0, 3 );
+                if( !candidate.getName().startsWith( operation ) )
+                {
+                    continue;
+                }
+
                 final Class currentType = candidate.getParameterTypes()[ 0 ];
 
                 // Ditch the string version, if any
@@ -226,12 +254,18 @@ class DefaultObjectConfigurer
 
             final Class type = method.getParameterTypes()[ 0 ];
             m_contentConfigurer =
-                new DefaultPropertyConfigurer( m_allProps.size(),
+                new DefaultPropertyConfigurer( getPropertyCount(),
                                                type,
                                                method,
                                                1 );
-            m_allProps.add( m_contentConfigurer );
         }
+    }
+
+    private int getPropertyCount()
+    {
+        final int typedSize = ( null != m_typedPropertyConfigurer ) ? 1 : 0;
+        final int contentSize = ( null != m_contentConfigurer ) ? 1 : 0;
+        return m_adders.size() + m_setters.size() + contentSize + typedSize;
     }
 
     /**
@@ -251,7 +285,7 @@ class DefaultObjectConfigurer
     public ConfigurationState startConfiguration( Object object )
         throws ConfigurationException
     {
-        return new ConfigurationState( this, object, m_allProps.size() );
+        return new ConfigurationState( this, object, getPropertyCount() );
     }
 
     /**
@@ -269,9 +303,17 @@ class DefaultObjectConfigurer
     /**
      * Returns a configurer for an element of this class.
      */
-    public PropertyConfigurer getProperty( final String name )
+    public PropertyConfigurer getAdder( final String name )
     {
-        return (PropertyConfigurer)m_props.get( name );
+        return (PropertyConfigurer)m_adders.get( name );
+    }
+
+    /**
+     * Returns a configurer for an element of this class.
+     */
+    public PropertyConfigurer getSetter( final String name )
+    {
+        return (PropertyConfigurer)m_setters.get( name );
     }
 
     /**
@@ -279,7 +321,7 @@ class DefaultObjectConfigurer
      */
     public PropertyConfigurer getTypedProperty()
     {
-        return m_typedPropConfigurer;
+        return m_typedPropertyConfigurer;
     }
 
     /**

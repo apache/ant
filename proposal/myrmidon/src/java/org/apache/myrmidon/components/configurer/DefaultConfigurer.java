@@ -140,7 +140,7 @@ public class DefaultConfigurer
                 {
                     final String message =
                         REZ.getString( "no-such-attribute.error", elemName, name );
-                    throw new ReportableConfigurationException( message );
+                    throw new ReportableConfigurationException( message  );
                 }
                 catch( final Exception ce )
                 {
@@ -299,7 +299,7 @@ public class DefaultConfigurer
 
         // Locate the configurer for the child element
         final PropertyConfigurer childConfigurer =
-            getConfigurerFromName( state.getConfigurer(), name, true );
+            getConfigurerFromName( state.getConfigurer(), name, true, true );
 
         // Create & configure the child element
         final Object child =
@@ -317,7 +317,6 @@ public class DefaultConfigurer
                                      final TaskContext context )
         throws Exception
     {
-
         // Extract the id
         final String id = element.getAttribute( "id" );
         if( 1 != element.getAttributeNames().length ||
@@ -329,7 +328,7 @@ public class DefaultConfigurer
 
         // Set the property
         final String name = element.getName();
-        setReference( state, name, id, context );
+        setReference( state, name, id, context, true );
     }
 
     /**
@@ -338,29 +337,30 @@ public class DefaultConfigurer
     private void setReference( final ConfigurationState state,
                                final String refName,
                                final String unresolvedId,
-                               final TaskContext context )
+                               final TaskContext context,
+                               final boolean isAdder )
         throws Exception
     {
         // Adjust the name
         final String name = refName.substring( 0, refName.length() - 4 );
 
         // Locate the configurer for the property
-        final PropertyConfigurer childConfigurer
-            = getConfigurerFromName( state.getConfigurer(), name, false );
+        final PropertyConfigurer configurer =
+            getConfigurerFromName( state.getConfigurer(), name, false, isAdder );
 
         // Resolve any props in the id
         String id = context.resolveValue( unresolvedId ).toString();
 
         // Locate the referenced object
         Object ref = context.getProperty( id );
-        if( ref == null )
+        if( null == ref )
         {
             final String message = REZ.getString( "unknown-reference.error", id );
             throw new ConfigurationException( message );
         }
 
         // Convert the object, if necessary
-        final Class type = childConfigurer.getType();
+        final Class type = configurer.getType();
         if( !type.isInstance( ref ) )
         {
             try
@@ -375,7 +375,7 @@ public class DefaultConfigurer
         }
 
         // Set the child element
-        childConfigurer.addValue( state, ref );
+        configurer.addValue( state, ref );
     }
 
     /**
@@ -390,13 +390,12 @@ public class DefaultConfigurer
         if( name.toLowerCase().endsWith( "-ref" ) )
         {
             // A reference
-            setReference( state, name, value, context );
+            setReference( state, name, value, context, false );
         }
         else
         {
             // Set the value
-            PropertyConfigurer propConfigurer
-                = getConfigurerFromName( state.getConfigurer(), name, false );
+            PropertyConfigurer propConfigurer = getConfigurerFromName( state.getConfigurer(), name, false, false );
             setValue( propConfigurer, state, value, context );
         }
     }
@@ -495,35 +494,46 @@ public class DefaultConfigurer
      */
     private PropertyConfigurer getConfigurerFromName( final ObjectConfigurer configurer,
                                                       final String name,
-                                                      boolean ignoreRoleName )
+                                                      boolean ignoreRoleName,
+                                                      final boolean isAdder )
         throws Exception
     {
         // Try a named property
-        PropertyConfigurer propertyConfigurer = configurer.getProperty( name );
-        if( propertyConfigurer != null )
+        if( !isAdder )
         {
-            return propertyConfigurer;
-        }
-
-        // Try a typed property
-        propertyConfigurer = configurer.getTypedProperty();
-        if( propertyConfigurer != null )
-        {
-            if( ignoreRoleName )
+            PropertyConfigurer propertyConfigurer = configurer.getSetter( name );
+            if( propertyConfigurer != null )
             {
                 return propertyConfigurer;
             }
-            else
+        }
+        else
+        {
+            PropertyConfigurer propertyConfigurer = configurer.getAdder( name );
+            if( propertyConfigurer != null )
             {
-                // Check the role name
-                final RoleInfo roleInfo = m_roleManager.getRoleByType( propertyConfigurer.getType() );
-                if( roleInfo != null && name.equalsIgnoreCase( roleInfo.getShorthand() ) )
+                return propertyConfigurer;
+            }
+
+            // Try a typed property
+            propertyConfigurer = configurer.getTypedProperty();
+            if( propertyConfigurer != null )
+            {
+                if( ignoreRoleName )
                 {
                     return propertyConfigurer;
                 }
+                else
+                {
+                    // Check the role name
+                    final RoleInfo roleInfo = m_roleManager.getRoleByType( propertyConfigurer.getType() );
+                    if( roleInfo != null && name.equalsIgnoreCase( roleInfo.getShorthand() ) )
+                    {
+                        return propertyConfigurer;
+                    }
+                }
             }
         }
-
         // Unknown prop
         throw new NoSuchPropertyException();
     }

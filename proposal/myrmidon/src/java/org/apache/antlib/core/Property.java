@@ -39,7 +39,7 @@ public class Property
     /**
      * Sets the property value from a nested element.
      */
-    public void set( final DataType value )
+    public void add( final DataType value )
         throws TaskException
     {
         setValue( value );

@@ -21,8 +21,8 @@ class ConfigurationState
     private final Object m_object;
 
     public ConfigurationState( final ObjectConfigurer configurer,
-                                      final Object object,
-                                      final int propertyCount )
+                               final Object object,
+                               final int propertyCount )
     {
         m_configurer = configurer;
         m_object = object;

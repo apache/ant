@@ -40,13 +40,22 @@ interface ObjectConfigurer
         throws ConfigurationException;
 
     /**
-     * Returns a configurer for a property of this class.
+     * Returns a configurer for a atribute property of this class.
      *
-     * @param name The element name.  Property names are case-insensitive.
+     * @param name The attribute name.
      * @return A configurer for the property, or null if the property is not
      *         valid for this class.
      */
-    PropertyConfigurer getProperty( String name );
+    PropertyConfigurer getSetter( String name );
+
+    /**
+     * Returns a configurer for a element property of this class.
+     *
+     * @param name The element name.
+     * @return A configurer for the property, or null if the property is not
+     *         valid for this class.
+     */
+    PropertyConfigurer getAdder( String name );
 
     /**
      * Returns a configurer for the text content of this class.

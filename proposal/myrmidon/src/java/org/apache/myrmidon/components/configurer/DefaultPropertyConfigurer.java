@@ -26,17 +26,17 @@ class DefaultPropertyConfigurer
     private final static Resources REZ =
         ResourceManager.getPackageResources( DefaultPropertyConfigurer.class );
 
-    private final int m_propIndex;
+    private final int m_propertyIndex;
     private final Class m_type;
-    private final Method m_addMethod;
+    private final Method m_method;
     private final int m_maxCount;
 
     public DefaultPropertyConfigurer( final int propIndex,
                                       final Class type,
-                                      final Method addMethod,
+                                      final Method method,
                                       final int maxCount )
     {
-        m_propIndex = propIndex;
+        m_propertyIndex = propIndex;
         if( type.isPrimitive() )
         {
             m_type = getComplexTypeFor( type );
@@ -45,8 +45,13 @@ class DefaultPropertyConfigurer
         {
             m_type = type;
         }
-        m_addMethod = addMethod;
+        m_method = method;
         m_maxCount = maxCount;
+
+        if( null == m_method )
+        {
+            throw new NullPointerException( "method" );
+        }
     }
 
     /**
@@ -64,22 +69,18 @@ class DefaultPropertyConfigurer
         throws ConfigurationException
     {
         final ConfigurationState defState = (ConfigurationState)state;
-
         // Check the property count
-        if( defState.getPropertyCount( m_propIndex ) >= m_maxCount )
+        if( defState.getPropertyCount( m_propertyIndex ) >= m_maxCount )
         {
             final String message = REZ.getString( "too-many-values.error" );
             throw new ConfigurationException( message );
         }
-        defState.incPropertyCount( m_propIndex );
+        defState.incPropertyCount( m_propertyIndex );
 
         try
         {
             // Add the value
-            if( null != m_addMethod )
-            {
-                m_addMethod.invoke( defState.getObject(), new Object[]{value} );
-            }
+            m_method.invoke( defState.getObject(), new Object[]{value} );
         }
         catch( final InvocationTargetException ite )
         {
