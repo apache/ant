@@ -75,6 +75,7 @@ import org.apache.tools.ant.util.FileUtils;
  * Translates text embedded in files using Resource Bundle files.
  *
  * @author Magesh Umasankar, Don Brown
+ * @author <a href="mailto:tom@tbee.org">Tom Eugelink</a>
  */
 public class Translate extends MatchingTask {
 
@@ -507,52 +508,66 @@ public class Translate extends MatchingTask {
                         BufferedReader in
                             = new BufferedReader(new InputStreamReader(fis, srcEncoding));
                         String line;
-                        int stLength = startToken.length();
-                        int etLength = endToken.length();
                         while ((line = in.readLine()) != null) {
-                            int startIndex = -1;
-                            int endIndex = -1;
-outer:                      while (true) {
-                                startIndex = line.indexOf(startToken, endIndex + etLength);
-                                if (startIndex < 0 ||
-                                    startIndex + stLength >= line.length()) {
-                                    break;
-                                }
-                                endIndex = line.indexOf(endToken, startIndex + stLength);
-                                if (endIndex < 0) {
-                                    break;
-                                }
-                                String matches = line.substring(startIndex + stLength,
-                                                                endIndex);
-                                //If there is a white space or = or :, then
-                                //it isn't to be treated as a valid key.
-                                for (int k = 0; k < matches.length(); k++) {
-                                    char c = matches.charAt(k);
-                                    if (c == ':' ||
-                                        c == '=' ||
-                                        Character.isSpaceChar(c)) {
-                                        endIndex = endIndex - 1;
-                                        continue outer;
-                                    }
-                                }
-                                String replace = null;
-                                replace = (String) resourceMap.get(matches);
-                                    //If the key hasn't been loaded into resourceMap,
-                                    //use the key itself as the value also.
-                                if (replace == null) {
-                                    log("Warning: The key: " + matches
-                                        + " hasn't been defined.",
-                                        Project.MSG_DEBUG);
-                                    replace = matches;
-                                }
-                                line = line.substring(0, startIndex)
-                                    + replace
-                                    + line.substring(endIndex + etLength);
-                                endIndex = startIndex + replace.length() + etLength;
-                                if (endIndex + etLength >= line.length()) {
-                                    break;
-                                }
-                            }
+						// 2003-02-21 new replace algorithm by tbee (tbee@tbee.org)
+						// because it wasn't able to replace something like "@aaa;@bbb;"
+
+						// is there a startToken
+						// and there is still stuff following the startToken
+						int startIndex = line.indexOf(startToken);
+						while ( startIndex >= 0 && (startIndex+startToken.length()) <= line.length() )
+						{
+							// the new value, this needs to be here
+							// because it is required to calculate the next position to search from
+							// at the end of the loop
+				            String replace = null;
+
+							// we found a starttoken, is there an endtoken following?
+							// start at token+tokenlength because start and end token may be indentical
+							int endIndex = line.indexOf(endToken, startIndex + startToken.length());
+							if (endIndex < 0) startIndex += 1;
+							else
+							{
+								// grab the token
+								String token = line.substring(startIndex + startToken.length(), endIndex);
+
+				                // If there is a white space or = or :, then
+				                // it isn't to be treated as a valid key.
+				                boolean validToken = true;
+				                for (int k = 0; k < token.length() && validToken; k++)
+				                {
+				                    char c = token.charAt(k);
+				                    if ( c == ':'
+				                      || c == '='
+				                      || Character.isSpaceChar(c)
+				                       )
+				                    {
+				                    	validToken = false;
+				                    }
+				                }
+				                if (!validToken) startIndex += 1;
+				                else
+				                {
+				                	// find the replace string
+				                	if (resourceMap.containsKey(token)) replace = (String)resourceMap.get(token);
+				                	else                                replace = token;
+
+
+				                    // generate the new line
+				                    line = line.substring(0, startIndex)
+				                         + replace
+				                         + line.substring(endIndex + endToken.length());
+
+									// set start position for next search
+									startIndex += replace.length();
+				                }
+							}
+
+							// find next starttoken
+							startIndex = line.indexOf(startToken, startIndex);
+						}
+
+
                             out.write(line);
                             out.newLine();
                         }

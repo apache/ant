@@ -176,6 +176,9 @@ Fixed bugs:
 
 * <xmlproperty> now handles CDATA sections. BugZilla Report 17195  
   
+* <translate> now translate tokens that are placed close together.
+  Bugzilla Report 17297
+
 Other changes:
 --------------
 * Six new Clearcase tasks added.
