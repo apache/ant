@@ -360,14 +360,15 @@ public class Checksum extends MatchingTask implements Condition {
                 fis.close();
                 fis = null;
                 byte[] fileDigest = messageDigest.digest ();
-                StringBuffer checksum = new StringBuffer();
+                StringBuffer checksumSb = new StringBuffer();
                 for (int i = 0; i < fileDigest.length; i++) {
                     String hexStr = Integer.toHexString(0x00ff & fileDigest[i]);
                     if (hexStr.length() < 2) {
-                        checksum.append("0");
+                        checksumSb.append("0");
                     }
-                    checksum.append(hexStr);
+                    checksumSb.append(hexStr);
                 }
+                String checksum = checksumSb.toString();
                 //can either be a property name string or a file
                 Object destination = includeFileMap.get(src);
                 if (destination instanceof java.lang.String) {
@@ -375,7 +376,7 @@ public class Checksum extends MatchingTask implements Condition {
                     if (isCondition) {
                         checksumMatches = checksum.equals(property);
                     } else {
-                        project.setProperty(prop, checksum.toString());
+                        project.setProperty(prop, checksum);
                     }
                 } else if (destination instanceof java.io.File) {
                     if (isCondition) {
@@ -398,7 +399,7 @@ public class Checksum extends MatchingTask implements Condition {
                     } else {
                         File dest = (File) destination;
                         fos = new FileOutputStream(dest);
-                        fos.write(checksum.toString().getBytes());
+                        fos.write(checksum.getBytes());
                         fos.close();
                         fos = null;
                     }
