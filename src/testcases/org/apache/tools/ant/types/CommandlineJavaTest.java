@@ -134,4 +134,26 @@ public class CommandlineJavaTest extends TestCase {
         assertEquals("arg1", s[5]);
     }
 
+    public void testSysproperties() {
+        String currentClasspath = System.getProperty("java.class.path");
+        assertNotNull(currentClasspath);
+        assertNull(System.getProperty("key"));
+        CommandlineJava c = new CommandlineJava();
+        Environment.Variable v = new Environment.Variable();
+        v.setKey("key");
+        v.setValue("value");
+        c.addSysproperty(v);
+        try {
+            c.setSystemProperties();
+            String newClasspath = System.getProperty("java.class.path");
+            assertNotNull(newClasspath);
+            assertEquals(currentClasspath, newClasspath);
+            assertNotNull(System.getProperty("key"));
+            assertEquals("value", System.getProperty("key"));
+        } finally {
+            c.restoreSystemProperties();
+        }
+        assertNull(System.getProperty("key"));
+    }
+
 }
