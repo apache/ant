@@ -119,7 +119,7 @@ public class IntrospectionHelper  {
             // not really user settable properties
             if ("setLocation".equals(name) || 
                 "setDescription".equals(name) ||
-                "setTaskName".equals(name)) {
+                "setTaskType".equals(name)) {
                 continue;
             }
             

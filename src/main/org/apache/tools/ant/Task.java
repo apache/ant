@@ -67,6 +67,7 @@ public abstract class Task {
     protected String description=null;
     protected Location location = Location.UNKNOWN_LOCATION;
     protected String taskName = null;
+    protected String taskType = null;
 
     /**
      * Sets the project object of this task. This method is used by
@@ -108,21 +109,30 @@ public abstract class Task {
     }
     
     /**
-     * Set the name with which the task has been invoked.
+     * Set the name to use in logging messages.
      *
-     * @param name the name the task has been invoked as.
+     * @param name the name to use in logging messages.
      */
     public void setTaskName(String name) {
         this.taskName = name;
     }
 
     /**
-     * Get the name with which the task has been invoked.
+     * Get the name to use in logging messages.
      *
-     * @return the name the task has been invoked as.
+     * @return the name to use in logging messages.
      */
     public String getTaskName() {
         return taskName;
+    }
+
+    /**
+     * Set the name with which the task has been invoked.
+     *
+     * @param type the name the task has been invoked as.
+     */
+    void setTaskType(String type) {
+        this.taskType = type;
     }
 
     /**

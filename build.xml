@@ -133,8 +133,8 @@
              version="true"
              windowtitle="${Name} API"
              doctitle="${Name}"
-             bottom="Copyright &#169; 2000 Apache Software Foundation. All Rights Reserved."
-    />
+             bottom="Copyright &#169; 2000 Apache Software Foundation. All Rights Reserved.">
+    </javadoc>
   </target>
 
   <!-- =================================================================== -->
