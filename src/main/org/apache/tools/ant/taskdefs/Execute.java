@@ -431,7 +431,7 @@ public class Execute {
         }
 
         if (dir != null && !dir.exists()) {
-            throw new BuildException(dir + " doesn't exists.");
+            throw new BuildException(dir + " doesn't exist.");
         }
         return launcher.exec(project, command, env, dir);
     }
