@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2000,2002 The Apache Software Foundation.  All rights
+ * Copyright (c) 2000,2002-2003 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -69,7 +69,6 @@ public class StreamPumper implements Runnable {
     // TODO: make SIZE and SLEEP instance variables.
     // TODO: add a status flag to note if an error occured in run.
 
-    private static final int SLEEP = 5;
     private static final int SIZE = 128;
     private InputStream is;
     private OutputStream os;
@@ -104,11 +103,9 @@ public class StreamPumper implements Runnable {
         try {
             while ((length = is.read(buf)) > 0) {
                 os.write(buf, 0, length);
-                try {
-                    Thread.sleep(SLEEP);
-                } catch (InterruptedException e) {}
             }
         } catch (IOException e) {
+            // ignore errors
         } finally {
             synchronized (this) {
                 finished = true;
