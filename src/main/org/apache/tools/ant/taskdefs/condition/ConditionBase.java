@@ -103,7 +103,7 @@ public abstract class ConditionBase extends ProjectComponent {
      *
      * @since 1.4
      */
-    public void addAvailable(Checksum c) {conditions.addElement(c);}
+    public void addChecksum(Checksum c) {conditions.addElement(c);}
 
     /**
      * Add an &lt;uptodate&gt; condition.
