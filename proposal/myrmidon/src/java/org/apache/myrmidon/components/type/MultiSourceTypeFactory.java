@@ -60,10 +60,13 @@ public class MultiSourceTypeFactory
 
         if( null == factory && null != m_parent ) 
         {
-            m_parent.getTypeFactory( name );
+            factory = m_parent.getTypeFactory( name );
         }
 
-        if( null == factory ) return null;
+        if( null == factory ) 
+        {
+            throw new TypeException( "Failed to locate factory for '" + name + "'" );
+        }
         else
         {
             final Object object = factory.create( name );
