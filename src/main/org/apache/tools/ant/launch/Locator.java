@@ -68,12 +68,19 @@ import java.text.StringCharacterIterator;
  * @author Conor MacNeill
  * @since Ant 1.6
  */
-public class Locator {
+public final class Locator {
+    /**
+     * Not instantiable
+     */
+    private Locator() {
+    }
 
     /**
      * Find the directory or jar file the class has been loaded from.
      *
-     * @return null if we cannot determine the location.
+     * @param c the class whose location is required.
+     * @return the file or jar with the class or null if we cannot
+     *         determine the location.
      *
      * @since Ant 1.6
      */
@@ -83,9 +90,13 @@ public class Locator {
     }
 
     /**
-     * Find the directory or a give resource has been loaded from.
+     * Find the directory or jar a give resource has been loaded from.
      *
-     * @return null if we cannot determine the location.
+     * @param c the classloader to be consulted for the source
+     * @param resource the resource whose location is required.
+     *
+     * @return the file with the resource source or null if
+     *         we cannot determine the location.
      *
      * @since Ant 1.6
      */

@@ -102,6 +102,11 @@ public class ScriptDefBase extends Task implements DynamicConfigurator {
         return definition;
     }
 
+    /**
+     * Create a nested element
+     *
+     * @param name the nested element name
+     */
     public Object createDynamicElement(String name)  {
         List nestedElementList = (List) nestedElementMap.get(name);
         if (nestedElementList == null) {
@@ -113,6 +118,12 @@ public class ScriptDefBase extends Task implements DynamicConfigurator {
         return element;
     }
 
+    /**
+     * Set a task attribute
+     *
+     * @param name the attribute name.
+     * @param value the attribute's string value
+     */
     public void setDynamicAttribute(String name, String value) {
         ScriptDef definition = getScript();
         if (!definition.isAttributeSupported(name)) {
