@@ -48,6 +48,8 @@ on log output.
 
 * <chmod> works on all files in parallel and supports multiple filesets.
 
+* <replace> can now use tokens and/or values that cross line boundaries.
+
 Fixed bugs:
 -----------
 

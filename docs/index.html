@@ -2616,6 +2616,8 @@ implementations may use other values for the home directory on Windows.
 <h3>Description</h3>
 <p>Replace is a directory based task for replacing the occurrence of a given string with another string 
 in selected file.</p>
+<p>If you want to replace a text that crosses line boundaries, you
+must use a nested <code>&lt;replacetoken&gt;</code> element.</p>
 <h3>Parameters</h3>
 <table border="1" cellpadding="2" cellspacing="0">
   <tr>
@@ -2638,7 +2640,8 @@ in selected file.</p>
   <tr>
     <td valign="top">token</td>
     <td valign="top">the token which must be replaced.</td>
-    <td valign="top" align="center">Yes</td>
+    <td valign="top" align="center">Yes, unless a nested <code>replacetoken</code>
+      element is used.</td>
   </tr>
   <tr>
     <td valign="top">value</td>
@@ -2681,6 +2684,30 @@ in selected file.</p>
 <pre>  &lt;replace file=&quot;${src}/index.html&quot; token=&quot;@@@&quot; value=&quot;wombat&quot; /&gt;</pre>
 <p>replaces occurrences of the string &quot;@@@&quot; with the string
 &quot;wombat&quot;, in the file <code>${src}/index.html</code>.</p>
+<h3>Parameters specified as nested elements</h3>
+<p>If either the text you want to replace or the replacement text
+cross line boundaries, you can use nested elements to specify
+them.</p>
+<h3>Examples</h3>
+<blockquote><pre>  
+&lt;replace dir=&quot;${src}&quot; value=&quot;wombat&quot;&gt;
+  &lt;include name=&quot;**/*.html&quot; /&gt;
+  &lt;replacetoken&gt;&lt;[CDATA[multi line
+token]]>&lt;/replacetoken&gt;
+&lt;/replace&gt;
+</pre></blockquote>
+<p>replaces occurrences of the string &quot;multi
+line<em>\n</em>token&quot; with the string &quot;wombat&quot;, in all
+HTML files in the directory <code>${src}</code>.Where <em>\n</em> is
+the platform specific line separator.</p>
+<blockquote><pre>  
+&lt;replace file=&quot;${src}/index.html&quot;&gt;
+  &lt;replacetoken&gt;&lt;[CDATA[two line
+token]]>&lt;/replacetoken&gt;
+  &lt;replacevalue&gt;&lt;[CDATA[two line
+token]]>&lt;/replacevalue&gt;
+&lt;/replace&gt;
+</pre></blockquote>
 <hr>
 <h2><a name="rmic">Rmic</a></h2>
 <h3>Description</h3>
