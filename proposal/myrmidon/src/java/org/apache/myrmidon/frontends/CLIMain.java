@@ -84,8 +84,6 @@ public class CLIMain
         QUIET_OPT, VERBOSE_OPT, LOG_LEVEL_OPT
     };
 
-    private ProjectListener m_listener;
-
     ///Parameters for run of myrmidon
     private Parameters m_parameters = new Parameters();
 
@@ -492,25 +490,6 @@ public class CLIMain
                                listener,
                                ExceptionUtil.printStackTrace( t, 5, true ) );
             throw new Exception( message );
-        }
-    }
-
-    /**
-     * Helper method to add values to a context
-     *
-     * @param context the context
-     * @param map the map of names->values
-     */
-    private void addToContext( final TaskContext context, final Map map )
-        throws Exception
-    {
-        final Iterator keys = map.keySet().iterator();
-
-        while( keys.hasNext() )
-        {
-            final String key = (String)keys.next();
-            final Object value = map.get( key );
-            context.setProperty( key, value );
         }
     }
 }
