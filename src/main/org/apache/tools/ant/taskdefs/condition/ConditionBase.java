@@ -59,7 +59,7 @@ import java.util.NoSuchElementException;
 import java.util.Vector;
 
 import org.apache.tools.ant.Project;
-import org.apache.tools.ant.Task;
+import org.apache.tools.ant.ProjectComponent;
 import org.apache.tools.ant.taskdefs.Available;
 import org.apache.tools.ant.taskdefs.UpToDate;
 
@@ -71,14 +71,8 @@ import org.apache.tools.ant.taskdefs.UpToDate;
  * @author <a href="mailto:stefan.bodewig@epost.de>Stefan Bodewig</a>
  * @version $Revision$
  */
-public abstract class ConditionBase {
+public abstract class ConditionBase extends ProjectComponent {
     private Vector conditions = new Vector();
-    private Project project;
-
-    public void setProject(Project p) {
-        this.project = p;
-    }
-    protected Project getProject() {return project;}
 
     /**
      * Count the conditions.
@@ -146,6 +140,13 @@ public abstract class ConditionBase {
     public void addOs(Os o) {conditions.addElement(o);}
 
     /**
+     * Add an &lt;isset&gt; condition.
+     *
+     * @since 1.1
+     */
+    public void addIsSet(IsSet i) {conditions.addElement(i);}
+
+    /**
      * Inner class that configures those conditions with a project
      * instance that need it.
      *
@@ -166,10 +167,8 @@ public abstract class ConditionBase {
                 throw new NoSuchElementException();
             }
             
-            if (o instanceof Task) {
-                ((Task) o).setProject(getProject());
-            } else if (o instanceof ConditionBase) {
-                ((ConditionBase) o).setProject(getProject());
+            if (o instanceof ProjectComponent) {
+                ((ProjectComponent) o).setProject(getProject());
             }
             return o;
         }
