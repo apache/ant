@@ -16,7 +16,7 @@ import java.net.URL;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import org.apache.avalon.excalibur.io.FileUtil;
-import org.apache.myrmidon.api.AbstractTask;
+import org.apache.myrmidon.api.TaskContext;
 import org.apache.myrmidon.api.TaskException;
 import org.apache.tools.todo.types.EnumeratedAttribute;
 import org.w3c.dom.Document;
@@ -57,7 +57,7 @@ public class AggregateTransformer
      */
     private File m_styleDir;
 
-    private AbstractTask m_task;
+    private TaskContext m_context;
 
     /**
      * the destination directory, this is the root from where html should be
@@ -65,9 +65,9 @@ public class AggregateTransformer
      */
     private File m_toDir;
 
-    public AggregateTransformer( AbstractTask task )
+    public AggregateTransformer( TaskContext context )
     {
-        m_task = task;
+        m_context = context;
     }
 
     public void setFormat( Format format )
@@ -196,11 +196,11 @@ public class AggregateTransformer
         // set the destination directory relative from the project if needed.
         if( m_toDir == null )
         {
-            m_toDir = FileUtil.resolveFile( m_task.getBaseDirectory(), "." );
+            m_toDir = FileUtil.resolveFile( m_context.getBaseDirectory(), "." );
         }
         else if( !m_toDir.isAbsolute() )
         {
-            m_toDir = FileUtil.resolveFile( m_task.getBaseDirectory(), m_toDir.getPath() );
+            m_toDir = FileUtil.resolveFile( m_context.getBaseDirectory(), m_toDir.getPath() );
         }
     }
 

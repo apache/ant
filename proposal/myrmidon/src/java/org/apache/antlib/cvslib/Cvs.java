@@ -147,15 +147,10 @@ public class Cvs
         final Properties env = buildEnvironment();
 
         final Execute exe = new Execute();
-        if( m_dest == null )
-        {
-            m_dest = getBaseDirectory();
-        }
         exe.setWorkingDirectory( m_dest );
 
         exe.setCommandline( command );
         exe.setEnvironment( env );
-        exe.setReturnCode( 0 );
         exe.execute( getContext() );
     }
 

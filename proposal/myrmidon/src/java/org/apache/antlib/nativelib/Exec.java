@@ -105,15 +105,8 @@ public class Exec
             return;
         }
 
-        // default directory to the project's base directory
-        if( m_dir == null )
-        {
-            m_dir = getBaseDirectory();
-        }
-
         // execute the command
         final Execute exe = createExecute();
-        exe.setReturnCode( 0 );
         exe.execute( getContext() );
     }
 

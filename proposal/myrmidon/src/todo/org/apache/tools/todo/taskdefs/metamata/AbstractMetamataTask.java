@@ -281,7 +281,6 @@ public abstract class AbstractMetamataTask
         getContext().debug( m_cmdl.toString() );
         final String[] commandline = m_cmdl.getCommandline();
         exe.setCommandline( new Commandline( commandline ) );
-        exe.setReturnCode( 0 );
         exe.execute( getContext() );
     }
 

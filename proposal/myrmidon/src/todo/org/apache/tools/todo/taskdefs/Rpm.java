@@ -91,14 +91,8 @@ public class Rpm
     {
         final Commandline cmd = createCommand();
         final Execute exe = new Execute();
-
-        if( m_topDir == null )
-        {
-            m_topDir = getBaseDirectory();
-        }
         exe.setWorkingDirectory( m_topDir );
         exe.setCommandline( cmd );
-        exe.setReturnCode( 0 );
 
         final String message = "Building the RPM based on the " + m_specFile + " file";
         getContext().info( message );

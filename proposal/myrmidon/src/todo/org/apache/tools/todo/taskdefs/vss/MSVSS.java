@@ -213,9 +213,7 @@ public abstract class MSVSS
             exe.setEnvironment( env );
         }
 
-        exe.setWorkingDirectory( getBaseDirectory() );
         exe.setCommandline( cmd );
-        exe.setReturnCode( 0 );
         exe.execute( getContext() );
     }
 }

@@ -120,7 +120,6 @@ public class GenerateKey
 
         final Commandline cmd = createCommand();
         final Execute exe = new Execute();
-        exe.setWorkingDirectory( getBaseDirectory() );
         exe.setCommandline( cmd );
         exe.execute( getContext() );
     }

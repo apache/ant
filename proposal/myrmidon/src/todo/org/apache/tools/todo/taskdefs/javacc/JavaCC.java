@@ -244,7 +244,6 @@ public class JavaCC
         final Execute exe = new Execute();
         final String[] commandline = cmdline.getCommandline();
         exe.setCommandline( new Commandline( commandline ) );
-        exe.setReturnCode( 0 );
         exe.execute( getContext() );
     }
 

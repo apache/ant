@@ -231,10 +231,7 @@ public class WLJspc extends MatchingTask
             //helperTask.clearArgs();
             helperTask.addArg( new Argument( arg ) );
             helperTask.addClasspath( compileClasspath );
-            if( helperTask.executeJava() != 0 )
-            {
-                getContext().warn( files[ i ] + " failed to compile" );
-            }
+            helperTask.executeJava();
         }
     }
 

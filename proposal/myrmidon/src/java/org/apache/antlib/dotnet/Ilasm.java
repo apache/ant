@@ -248,8 +248,6 @@ public class Ilasm
         throws TaskException
     {
         final Execute exe = new Execute();
-        exe.setReturnCode( 0 );
-
         final Commandline cmd = exe.getCommandline();
         cmd.setExecutable( EXE_NAME );
         addArgument( cmd, getDebugParameter() );

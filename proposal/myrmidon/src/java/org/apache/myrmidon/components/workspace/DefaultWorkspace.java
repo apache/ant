@@ -247,14 +247,15 @@ public class DefaultWorkspace
 
         // Create a logger
         final Logger logger =
-            new RoutingLogger( RoutingLogger.LEVEL_DEBUG, m_listenerSupport );
+            new RoutingLogger( getLogger(), m_listenerSupport );
 
         // Create and configure the context
         final DefaultTaskContext context =
             new DefaultTaskContext( m_baseContext, serviceManager, logger );
         context.setProperty( TaskContext.BASE_DIRECTORY, project.getBaseDirectory() );
 
-        final DefaultExecutionFrame frame = new DefaultExecutionFrame( logger, context, typeManager );
+        final DefaultExecutionFrame frame =
+            new DefaultExecutionFrame( logger, context, typeManager );
 
         /**
          *  @todo Should no occur but done for the time being to simplify evolution.

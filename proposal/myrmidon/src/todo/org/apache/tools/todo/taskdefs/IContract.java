@@ -784,18 +784,7 @@ public class IContract extends MatchingTask
             }
 
             // do it!
-            int result = iContract.executeJava();
-            if( result != 0 )
-            {
-                if( iContractMissing )
-                {
-                    getContext().info( "iContract can't be found on your classpath. Your classpath is:" );
-                    getContext().info( classpath.toString() );
-                    getContext().info( "If you don't have the iContract jar, go get it at http://www.reliable-systems.com/tools/" );
-                }
-                throw new TaskException( "iContract instrumentation failed. Code=" + result );
-            }
-
+            iContract.executeJava();
         }
         else
         {// not dirty

@@ -823,15 +823,7 @@ public class Javadoc
         final Execute exe = new Execute();
         exe.setExecOutputHandler( this );
 
-        /*
-         * No reason to change the working directory as all filenames and
-         * path components have been resolved already.
-         *
-         * Avoid problems with command line length in some environments.
-         */
-        exe.setWorkingDirectory( null );
         exe.setCommandline( cmd );
-        exe.setReturnCode( 0 );
         try
         {
             exe.execute( getContext() );

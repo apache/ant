@@ -633,13 +633,10 @@ public class JUnitTask extends AbstractTask
         }
 
         final Execute exe = new Execute();
+        exe.setIgnoreReturnCode( true );
         exe.setCommandline( new Commandline( cmd.getCommandline() ) );
-        if( dir != null )
-        {
-            exe.setWorkingDirectory( dir );
-        }
+        exe.setWorkingDirectory( dir );
 
-        getContext().debug( "Executing: " + cmd.toString() );
         try
         {
             return exe.execute( getContext() );

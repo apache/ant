@@ -10,14 +10,10 @@ package org.apache.tools.todo.taskdefs;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
-import java.io.IOException;
 import java.net.URL;
-import org.apache.aut.nativelib.ExecManager;
 import org.apache.myrmidon.api.AbstractTask;
 import org.apache.myrmidon.api.TaskException;
-import org.apache.myrmidon.api.TaskContext;
 import org.apache.myrmidon.framework.Execute;
-import org.apache.tools.todo.taskdefs.ExecuteJava;
 import org.apache.tools.todo.types.Argument;
 import org.apache.tools.todo.types.Commandline;
 import org.apache.tools.todo.types.CommandlineJava;
@@ -131,12 +127,7 @@ public class ANTLR extends AbstractTask
 
             if( fork )
             {
-                getContext().debug( "Forking " + commandline.toString() );
-                int err = run( commandline );
-                if( err == 1 )
-                {
-                    throw new TaskException( "ANTLR returned: " + err );
-                }
+                run( commandline );
             }
             else
             {
@@ -222,26 +213,15 @@ public class ANTLR extends AbstractTask
      * execute in a forked VM
      *
      * @param command Description of Parameter
-     * @return Description of the Returned Value
      * @exception org.apache.myrmidon.api.TaskException Description of Exception
      */
-    private int run( final Commandline command )
+    private void run( final Commandline command )
         throws TaskException
     {
         final Execute exe = new Execute();
-        if( workingdir != null )
-        {
-            exe.setWorkingDirectory( workingdir );
-        }
+        exe.setWorkingDirectory( workingdir );
         exe.setCommandline( command );
-        try
-        {
-            return exe.execute( getContext() );
-        }
-        catch( IOException e )
-        {
-            throw new TaskException( "Error", e );
-        }
+        exe.execute( getContext() );
     }
 
     private void validateAttributes()

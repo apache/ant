@@ -504,8 +504,6 @@ public class CSharp
         }
 
         final Execute exe = new Execute();
-        exe.setReturnCode( 0 );
-
         final Commandline cmd = exe.getCommandline();
         cmd.setExecutable( EXE_NAME );
 

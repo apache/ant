@@ -52,14 +52,22 @@ public abstract class AbstractTask
         return m_context;
     }
 
-    //Needs to be made protected
-    public final File getBaseDirectory()
+    /**
+     * Convenience method that returns the project's base directory.
+     */
+    protected final File getBaseDirectory()
     {
         return getContext().getBaseDirectory();
     }
 
-    ///HACK: Make this protected
-    public final Object getService( final Class serviceClass )
+    /**
+     * Convenience method that locates a service for this task to use.
+     *
+     * @param serviceClass the service to locate.
+     * @return the service, never returns null.
+     * @throws TaskException if the service cannot be located.
+     */
+    protected final Object getService( final Class serviceClass )
         throws TaskException
     {
         return getContext().getService( serviceClass );

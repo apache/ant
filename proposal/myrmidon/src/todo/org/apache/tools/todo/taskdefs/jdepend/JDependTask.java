@@ -11,10 +11,8 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
-import org.apache.aut.nativelib.ExecManager;
 import org.apache.myrmidon.api.AbstractTask;
 import org.apache.myrmidon.api.TaskException;
-import org.apache.myrmidon.api.TaskContext;
 import org.apache.myrmidon.framework.Execute;
 import org.apache.tools.todo.types.Commandline;
 import org.apache.tools.todo.types.CommandlineJava;
@@ -36,16 +34,6 @@ import org.apache.tools.todo.util.FileUtils;
 public class JDependTask
     extends AbstractTask
 {
-    /**
-     * No problems with this test.
-     */
-    private final static int SUCCESS = 0;
-
-    /**
-     * An error occured.
-     */
-    private final static int ERRORS = 1;
-
     private boolean m_fork;
     private String m_jvm;
     private String m_format = "text";
@@ -84,7 +72,7 @@ public class JDependTask
     /**
      * Tells whether a JVM should be forked for the task. Default: false.
      *
-     * @param value <tt>true</tt> if a JVM should be forked, otherwise <tt>false
+     * @param fork <tt>true</tt> if a JVM should be forked, otherwise <tt>false
      *      <tt>
      */
     public void setFork( final boolean fork )
@@ -101,7 +89,7 @@ public class JDependTask
      * Set a new VM to execute the task. Default is <tt>java</tt> . Ignored if
      * no JVM is forked.
      *
-     * @param value the new VM to use instead of <tt>java</tt>
+     * @param jvm the new VM to use instead of <tt>java</tt>
      * @see #setFork(boolean)
      */
     public void setJvm( final String jvm )
@@ -179,22 +167,13 @@ public class JDependTask
         }
 
         // execute the test and get the return code
-        int exitValue = JDependTask.ERRORS;
         if( !m_fork )
         {
-            exitValue = executeInVM( commandline );
+            executeInVM( commandline );
         }
         else
         {
-            exitValue = executeAsForked( commandline );
-        }
-
-        // if there is an error/failure and that it should halt, stop everything otherwise
-        // just log a statement
-        final boolean errorOccurred = exitValue == JDependTask.ERRORS;
-        if( errorOccurred )
-        {
-            throw new TaskException( "JDepend failed" );
+            executeAsForked( commandline );
         }
     }
 
@@ -205,7 +184,7 @@ public class JDependTask
      * killedProcess()</tt> method of the watchdog class.
      */
     // JL: comment extracted from JUnitTask (and slightly modified)
-    private int executeAsForked( final CommandlineJava commandline )
+    private void executeAsForked( final CommandlineJava commandline )
         throws TaskException
     {
         // if not set, auto-create the ClassPath from the project
@@ -245,17 +224,13 @@ public class JDependTask
 
         final String[] commandline1 = commandline.getCommandline();
         exe.setCommandline( new Commandline( commandline1 ) );
-        if( m_dir != null )
-        {
-            exe.setWorkingDirectory( m_dir );
-        }
+        exe.setWorkingDirectory( m_dir );
 
         if( m_outputFile != null )
         {
             getContext().info( "Output to be stored in " + m_outputFile.getPath() );
         }
-        getContext().debug( "Executing: " + commandline.toString() );
-        return exe.execute( getContext() );
+        exe.execute( getContext() );
     }
 
 
@@ -268,10 +243,9 @@ public class JDependTask
      * Execute inside VM.
      *
      * @param commandline Description of Parameter
-     * @return Description of the Returned Value
      * @exception TaskException Description of Exception
      */
-    public int executeInVM( final CommandlineJava commandline )
+    private void executeInVM( final CommandlineJava commandline )
         throws TaskException
     {
         jdepend.textui.JDepend jdepend;
@@ -326,6 +300,5 @@ public class JDependTask
             }
         }
         jdepend.analyze();
-        return SUCCESS;
     }
 }

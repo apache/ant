@@ -106,9 +106,7 @@ public abstract class ClearCase extends AbstractTask
         throws TaskException
     {
         final Execute exe = new Execute();
-        exe.setWorkingDirectory( getBaseDirectory() );
         exe.setCommandline( cmd );
-        exe.setReturnCode( 0 );
         exe.execute( getContext() );
     }
 

@@ -252,7 +252,6 @@ public class Coverage
             // use the custom handler for stdin issues
             final Execute exe = new Execute();
             exe.setCommandline( cmdl );
-            exe.setReturnCode( 0 );
             exe.execute( getContext() );
         }
         finally

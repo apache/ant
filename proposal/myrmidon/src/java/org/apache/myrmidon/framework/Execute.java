@@ -24,6 +24,9 @@ import org.apache.tools.todo.util.FileUtils;
  * This is a utility class designed to make executing native
  * processes easier in the context of ant.
  *
+ * <p>To execute a native process, configure an instance of this class,
+ * and then call its {@link #execute} method.
+ *
  * @author <a href="mailto:peter@apache.org">Peter Donald</a>
  * @author <a href="mailto:thomas.haas@softwired-inc.com">Thomas Haas</a>
  * @version $Revision$ $Date$
@@ -35,32 +38,50 @@ public class Execute
 
     private Commandline m_command;
     private Properties m_environment = new Properties();
-    private File m_workingDirectory = new File( "." );
+    private File m_workingDirectory;
     private boolean m_newEnvironment;
     private ExecOutputHandler m_handler;
     private long m_timeout;
-    private Integer m_returnCode;
+    private int m_returnCode;
+    private boolean m_ignoreReturnCode;
 
+    /**
+     * Sets the timeout, in milliseconds, for the process.  The process is
+     * forcibly shutdown after this time.  Use 0 to allow the process to
+     * run forever.  Default is 0.
+     *
+     * @param timeout the timeout, in milliseconds.
+     */
     public void setTimeout( final long timeout )
     {
         m_timeout = timeout;
     }
 
+    /**
+     * Sets the handler for the process' output and error streams.  If not
+     * provided, the process' output and error are written to the log using
+     * the TaskContext's logging methods.
+     *
+     * @param handler the handler.
+     */
     public void setExecOutputHandler( final ExecOutputHandler handler )
     {
         m_handler = handler;
     }
 
     /**
-     * Sets the commandline of the subprocess to launch.
+     * Sets the commandline of the process to launch.
      *
-     * @param command the commandline of the subprocess to launch
+     * @param command the commandline of the process to launch
      */
     public void setCommandline( final Commandline command )
     {
         m_command = command;
     }
 
+    /**
+     * Returns the commandline of the process to launch.
+     */
     public Commandline getCommandline()
     {
         if( null == m_command )
@@ -70,6 +91,11 @@ public class Execute
         return m_command;
     }
 
+    /**
+     * Sets the environment to use for the process.
+     *
+     * @param environment a map from environment variable name to value.
+     */
     public void setEnvironment( final Properties environment )
     {
         if( null == environment )
@@ -83,7 +109,7 @@ public class Execute
      * If this variable is false then then the environment specified is
      * added to the environment variables for current process. If this
      * value is true then the specified environment replaces the environment
-     * for the command.
+     * for the command.  Default is false.
      */
     public void setNewenvironment( final boolean newEnvironment )
     {
@@ -91,18 +117,36 @@ public class Execute
     }
 
     /**
-     * Sets the working directory of the process to execute. <p>
+     * Sets the working directory of the process to execute.  Default is the
+     * project's base directory.
      *
-     * @param workingDirectory the working directory of the process.
+     * @param workingDirectory the working directory of the process.  Use
+     *        null for the project's base directory.
      */
     public void setWorkingDirectory( final File workingDirectory )
     {
         m_workingDirectory = workingDirectory;
     }
 
+    /**
+     * Sets the expected return code of the process.  If the process does not
+     * exit with this return code, and exception is thrown by {@link #execute}.
+     * Default is 0.
+     *
+     * @param returnCode the expected return code.
+     */
     public void setReturnCode( final int returnCode )
     {
-        m_returnCode = new Integer( returnCode );
+        m_returnCode = returnCode;
+    }
+
+    /**
+     * If set to true, the return code of the process is ignore.  If false,
+     * it is compared against the expected return code.  Default is false.
+     */
+    public void setIgnoreReturnCode( final boolean ignore )
+    {
+        m_ignoreReturnCode = ignore;
     }
 
     /**
@@ -122,11 +166,11 @@ public class Execute
 
             // Build the command meta-info
             final ExecManager execManager = (ExecManager)context.getService( ExecManager.class );
-            final ExecMetaData metaData = buildExecMetaData( execManager );
+            final ExecMetaData metaData = buildExecMetaData( context, execManager );
 
             logExecDetails( metaData, context );
 
-            // Execute the command and check return code
+            // Execute the process and check return code
             final int returnCode = execManager.execute( metaData, handler, m_timeout );
             checkReturnCode( returnCode );
             return returnCode;
@@ -167,20 +211,23 @@ public class Execute
             final String message = REZ.getString( "execute.no-executable.error" );
             throw new TaskException( message );
         }
-        if( !m_workingDirectory.exists() )
+        if( m_workingDirectory != null )
         {
-            final String message = REZ.getString( "execute.dir-noexist.error", m_workingDirectory );
-            throw new TaskException( message );
-        }
-        else if( !m_workingDirectory.isDirectory() )
-        {
-            final String message = REZ.getString( "execute.dir-notdir.error", m_workingDirectory );
-            throw new TaskException( message );
+            if( !m_workingDirectory.exists() )
+            {
+                final String message = REZ.getString( "execute.dir-noexist.error", m_workingDirectory );
+                throw new TaskException( message );
+            }
+            else if( !m_workingDirectory.isDirectory() )
+            {
+                final String message = REZ.getString( "execute.dir-notdir.error", m_workingDirectory );
+                throw new TaskException( message );
+            }
         }
     }
 
     /**
-     * Creates an output handler to use when executing the commmand.
+     * Creates an output handler to use for the process' stdout and stderr.
      */
     private ExecOutputHandler buildOutputHandler( final TaskContext context )
     {
@@ -199,8 +246,7 @@ public class Execute
     private void checkReturnCode( final int returnCode )
         throws TaskException
     {
-        if( null != m_returnCode &&
-            returnCode != m_returnCode.intValue() )
+        if( ! m_ignoreReturnCode && returnCode != m_returnCode )
         {
             final String message = REZ.getString( "execute.bad-resultcode.error",
                                                   m_command.getExecutable(),
@@ -213,11 +259,14 @@ public class Execute
      * Utility method to create an ExecMetaData object
      * to pass to the ExecManager service.
      */
-    private ExecMetaData buildExecMetaData( final ExecManager execManager )
+    private ExecMetaData buildExecMetaData( final TaskContext context,
+                                            final ExecManager execManager )
         throws ExecException
     {
+        // Build the command line
         final String[] command = m_command.getCommandline();
 
+        // Build the environment
         final Properties newEnvironment = new Properties();
         if( !m_newEnvironment )
         {
@@ -225,8 +274,15 @@ public class Execute
         }
         newEnvironment.putAll( m_environment );
 
+        // Determine the working directory
+        File workingDir = m_workingDirectory;
+        if( workingDir == null )
+        {
+            workingDir = context.getBaseDirectory();
+        }
+
         return new ExecMetaData( command,
                                  newEnvironment,
-                                 m_workingDirectory );
+                                 workingDir );
     }
 }

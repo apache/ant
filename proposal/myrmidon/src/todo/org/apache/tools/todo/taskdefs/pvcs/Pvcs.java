@@ -19,12 +19,10 @@ import java.text.MessageFormat;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Iterator;
-import org.apache.aut.nativelib.ExecManager;
 import org.apache.aut.nativelib.ExecOutputHandler;
 import org.apache.avalon.excalibur.io.IOUtil;
 import org.apache.myrmidon.api.AbstractTask;
 import org.apache.myrmidon.api.TaskException;
-import org.apache.myrmidon.api.TaskContext;
 import org.apache.myrmidon.framework.Execute;
 import org.apache.tools.todo.types.Commandline;
 
@@ -181,8 +179,6 @@ public class Pvcs
     public void execute()
         throws TaskException
     {
-        int result = 0;
-
         validate();
 
         final File filelist = getFileList();
@@ -192,10 +188,9 @@ public class Pvcs
         try
         {
             final Execute exe = new Execute();
-            exe.setWorkingDirectory( getBaseDirectory() );
+            exe.setIgnoreReturnCode( m_ignoreReturnCode );
             exe.setCommandline( cmd );
-            result = exe.execute( getContext() );
-            checkResultCode( result, cmd );
+            exe.execute( getContext() );
         }
         finally
         {
@@ -238,17 +233,6 @@ public class Pvcs
         return cmd;
     }
 
-    private void checkResultCode( final int result, final Commandline cmd )
-        throws TaskException
-    {
-        if( result != 0 && !m_ignoreReturnCode )
-        {
-            final String message = "Failed executing: " + cmd.toString() +
-                ". Return code was " + result;
-            throw new TaskException( message );
-        }
-    }
-
     private File getFileList()
         throws TaskException
     {
@@ -267,12 +251,11 @@ public class Pvcs
             final File fileList = File.createTempFile( "pvcs_ant_", ".log" );
 
             final Execute exe = new Execute();
+            exe.setIgnoreReturnCode( m_ignoreReturnCode );
             exe.setExecOutputHandler( this );
             m_output = new FileOutputStream( tmp );
-            exe.setWorkingDirectory( getBaseDirectory() );
             exe.setCommandline( cmd );
-            final int result = exe.execute( getContext() );
-            checkResultCode( result, cmd );
+            exe.execute( getContext() );
 
             if( !tmp.exists() )
             {

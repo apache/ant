@@ -120,21 +120,15 @@ public class Java
     public void execute()
         throws TaskException
     {
-        final int err = executeJava();
-        if( 0 != err )
-        {
-            throw new TaskException( "Java returned: " + err );
-        }
+        executeJava();
     }
 
     /**
-     * Do the execution and return a return code.
+     * Do the execution.
      *
-     * @return the return code from the execute java class if it was executed in
-     *      a separate VM (fork = "yes").
      * @exception org.apache.myrmidon.api.TaskException Description of Exception
      */
-    public int executeJava()
+    public void executeJava()
         throws TaskException
     {
         final String classname = m_cmdl.getClassname();
@@ -156,8 +150,7 @@ public class Java
         if( m_fork )
         {
             getContext().debug( "Forking " + m_cmdl.toString() );
-
-            return run( new Commandline( m_cmdl.getCommandline() ) );
+            run( new Commandline( m_cmdl.getCommandline() ) );
         }
         else
         {
@@ -172,7 +165,6 @@ public class Java
 
             getContext().debug( "Running in same VM " + m_cmdl.getJavaCommand().toString() );
             run( m_cmdl );
-            return 0;
         }
     }
 
@@ -212,23 +204,12 @@ public class Java
     /**
      * Executes the given classname with the given arguments in a separate VM.
      */
-    private int run( final Commandline command )
+    private void run( final Commandline command )
         throws TaskException
     {
         final Execute exe = new Execute();
-
-        if( m_dir == null )
-        {
-            m_dir = getBaseDirectory();
-        }
-        else if( !m_dir.exists() || !m_dir.isDirectory() )
-        {
-            final String message = m_dir.getAbsolutePath() + " is not a valid directory";
-            throw new TaskException( message );
-        }
-
         exe.setWorkingDirectory( m_dir );
         exe.setCommandline( command );
-        return exe.execute( getContext() );
+        exe.execute( getContext() );
     }
 }

@@ -133,7 +133,7 @@ public class XMLResultAggregator
 
     public AggregateTransformer createReport()
     {
-        AggregateTransformer transformer = new AggregateTransformer( this );
+        AggregateTransformer transformer = new AggregateTransformer( getContext() );
         transformers.add( transformer );
         return transformer;
     }

@@ -118,7 +118,6 @@ public class CovMerge
 
             final Execute exe = new Execute();
             exe.setCommandline( cmdl );
-            exe.setReturnCode( 0 );
 
             // JProbe process always return 0 so  we will not be
             // able to check for failure ! :-(

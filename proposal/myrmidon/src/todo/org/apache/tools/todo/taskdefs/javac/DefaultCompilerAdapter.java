@@ -11,7 +11,6 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
-import org.apache.aut.nativelib.ExecManager;
 import org.apache.avalon.excalibur.io.IOUtil;
 import org.apache.avalon.excalibur.util.StringUtil;
 import org.apache.myrmidon.api.TaskContext;
@@ -54,7 +53,6 @@ public abstract class DefaultCompilerAdapter
     protected boolean m_includeJavaRuntime;
     protected String m_memoryInitialSize;
     protected String m_memoryMaximumSize;
-    protected File m_baseDir;
 
     /*
      * jdg - TODO - all these attributes are currently protected, but they
@@ -91,7 +89,6 @@ public abstract class DefaultCompilerAdapter
         m_extdirs = attributes.getExtdirs();
         m_compileList = attributes.getFileList();
         m_compileClasspath = attributes.getClasspath();
-        m_baseDir = attributes.getBaseDirectory();
         m_memoryInitialSize = attributes.getMemoryInitialSize();
         m_memoryMaximumSize = attributes.getMemoryMaximumSize();
     }
@@ -371,7 +368,7 @@ public abstract class DefaultCompilerAdapter
             }
 
             final Execute exe = new Execute();
-            exe.setWorkingDirectory( m_baseDir );
+            exe.setIgnoreReturnCode( true );
             final String[] commandline = commandArray;
             exe.setCommandline( new Commandline( commandline ) );
             return exe.execute( getTaskContext() );

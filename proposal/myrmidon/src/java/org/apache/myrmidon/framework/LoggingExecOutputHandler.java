@@ -33,7 +33,9 @@ public class LoggingExecOutputHandler
      */
     public void stdout( final String line )
     {
-        m_context.info( line );
+        // TODO - should be using info(), but currently that is only used
+        // when ant is run in verbose mode
+        m_context.warn( line );
     }
 
     /**

@@ -272,8 +272,11 @@ class Deployment
 
         try
         {
-            final String message = REZ.getString( "url-deploy-roles.notice", descriptor.getUrl() );
-            getLogger().info( message );
+            if( getLogger().isDebugEnabled() )
+            {
+                final String message = REZ.getString( "url-deploy-roles.notice", descriptor.getUrl() );
+                getLogger().debug( message );
+            }
 
             final RoleDefinition[] definitions = descriptor.getDefinitions();
             for( int i = 0; i < definitions.length; i++ )
@@ -297,8 +300,11 @@ class Deployment
     {
         try
         {
-            final String message = REZ.getString( "url-deploy-types.notice", descriptor.getUrl() );
-            getLogger().info( message );
+            if( getLogger().isDebugEnabled() )
+            {
+                final String message = REZ.getString( "url-deploy-types.notice", descriptor.getUrl() );
+                getLogger().debug( message );
+            }
 
             // Deploy all the types
             final TypeDefinition[] definitions = descriptor.getDefinitions();
@@ -324,8 +330,11 @@ class Deployment
 
         try
         {
-            final String message = REZ.getString( "url-deploy-services.notice", descriptor.getUrl() );
-            getLogger().info( message );
+            if( getLogger().isDebugEnabled() )
+            {
+                final String message = REZ.getString( "url-deploy-services.notice", descriptor.getUrl() );
+                getLogger().debug( message );
+            }
 
             // Deploy the services
             final ServiceDefinition[] definitions = descriptor.getDefinitions();

@@ -184,7 +184,6 @@ public class JJTree
         final Execute exe = new Execute();
         getContext().debug( cmdl.toString() );
         exe.setCommandline( new Commandline( cmdl.getCommandline() ) );
-        exe.setReturnCode( 0 );
         exe.execute( getContext() );
     }
 }

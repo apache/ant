@@ -17,14 +17,9 @@ import org.apache.avalon.framework.logger.Logger;
  * @version $Revision$ $Date$
  */
 public class BasicLogger
+    extends AbstractLogger
     implements Logger
 {
-    public final static int LEVEL_DEBUG = 0;
-    public final static int LEVEL_INFO = 1;
-    public final static int LEVEL_WARN = 2;
-    public final static int LEVEL_ERROR = 3;
-    public final static int LEVEL_FATAL = 4;
-
     /**
      * The string prefixed to all log messages.
      */
@@ -46,33 +41,6 @@ public class BasicLogger
     }
 
     /**
-     * Log a debug message.
-     *
-     * @param message the message
-     */
-    public void debug( final String message )
-    {
-        if( isDebugEnabled() )
-        {
-            output( message, null );
-        }
-    }
-
-    /**
-     * Log a debug message.
-     *
-     * @param message the message
-     * @param throwable the throwable
-     */
-    public void debug( final String message, final Throwable throwable )
-    {
-        if( isDebugEnabled() )
-        {
-            output( message, throwable );
-        }
-    }
-
-    /**
      * Determine if messages of priority "debug" will be logged.
      *
      * @return true if "debug" messages will be logged
@@ -80,33 +48,6 @@ public class BasicLogger
     public boolean isDebugEnabled()
     {
         return m_logLevel <= LEVEL_DEBUG;
-    }
-
-    /**
-     * Log a info message.
-     *
-     * @param message the message
-     */
-    public void info( final String message )
-    {
-        if( isInfoEnabled() )
-        {
-            output( message, null );
-        }
-    }
-
-    /**
-     * Log a info message.
-     *
-     * @param message the message
-     * @param throwable the throwable
-     */
-    public void info( final String message, final Throwable throwable )
-    {
-        if( isInfoEnabled() )
-        {
-            output( message, throwable );
-        }
     }
 
     /**
@@ -120,33 +61,6 @@ public class BasicLogger
     }
 
     /**
-     * Log a warn message.
-     *
-     * @param message the message
-     */
-    public void warn( final String message )
-    {
-        if( isWarnEnabled() )
-        {
-            output( message, null );
-        }
-    }
-
-    /**
-     * Log a warn message.
-     *
-     * @param message the message
-     * @param throwable the throwable
-     */
-    public void warn( final String message, final Throwable throwable )
-    {
-        if( isWarnEnabled() )
-        {
-            output( message, throwable );
-        }
-    }
-
-    /**
      * Determine if messages of priority "warn" will be logged.
      *
      * @return true if "warn" messages will be logged
@@ -157,33 +71,6 @@ public class BasicLogger
     }
 
     /**
-     * Log a error message.
-     *
-     * @param message the message
-     */
-    public void error( final String message )
-    {
-        if( isErrorEnabled() )
-        {
-            output( message, null );
-        }
-    }
-
-    /**
-     * Log a error message.
-     *
-     * @param message the message
-     * @param throwable the throwable
-     */
-    public void error( final String message, final Throwable throwable )
-    {
-        if( isErrorEnabled() )
-        {
-            output( message, throwable );
-        }
-    }
-
-    /**
      * Determine if messages of priority "error" will be logged.
      *
      * @return true if "error" messages will be logged
@@ -191,33 +78,6 @@ public class BasicLogger
     public boolean isErrorEnabled()
     {
         return m_logLevel <= LEVEL_ERROR;
-    }
-
-    /**
-     * Log a fatalError message.
-     *
-     * @param message the message
-     */
-    public void fatalError( final String message )
-    {
-        if( isFatalErrorEnabled() )
-        {
-            output( message, null );
-        }
-    }
-
-    /**
-     * Log a fatalError message.
-     *
-     * @param message the message
-     * @param throwable the throwable
-     */
-    public void fatalError( final String message, final Throwable throwable )
-    {
-        if( isFatalErrorEnabled() )
-        {
-            output( message, throwable );
-        }
     }
 
     /**

@@ -251,7 +251,6 @@ public class CovReport
             // use the custom handler for stdin issues
             final Execute exe = new Execute();
             exe.setCommandline( cmdl );
-            exe.setReturnCode( 0 );
             exe.execute( getContext() );
             getContext().debug( "coveragePath: " + coveragePath );
             getContext().debug( "format: " + format );
