@@ -326,8 +326,11 @@
   </patternset>
 
   <patternset id="teststhatfail">
-    <exclude name="${optional.package}/BeanShellScriptTest.java"/>
-    <exclude name="${optional.package}/jdepend/JDependTest.java"/>
+    <!-- Property 'run.failing.tests' should force Ant to run these tests. -->
+    <!-- Because the whole patternset can´t be excluded, you have to add   -->
+    <!-- an unless-attribute on each exclude-element.                      -->
+    <exclude unless="run.failing.tests" name="${optional.package}/BeanShellScriptTest.java"/>
+    <exclude unless="run.failing.tests" name="${optional.package}/jdepend/JDependTest.java"/>
   </patternset>
 
   <!--
@@ -1354,7 +1357,7 @@
 
       <selector refid="conditional-patterns"/>
     </javac>
-    
+
     <!-- Used by AntlibTest.testAntlibResource: -->
     <jar jarfile="${build.tests}/org/apache/tools/ant/taskdefs/test2-antlib.jar">
         <zipfileset dir="${tests.etc.dir}" fullpath="taskdefs/test.antlib.xml">
