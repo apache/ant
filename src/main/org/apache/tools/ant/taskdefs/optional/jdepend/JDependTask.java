@@ -61,6 +61,7 @@ import java.io.PrintWriter;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
 import java.util.Vector;
+import java.util.Enumeration;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.Task;
@@ -73,6 +74,7 @@ import org.apache.tools.ant.types.EnumeratedAttribute;
 import org.apache.tools.ant.types.Path;
 import org.apache.tools.ant.types.PatternSet;
 import org.apache.tools.ant.types.Reference;
+import org.apache.tools.ant.util.LoaderUtils;
 
 /**
  * Runs JDepend tests.
@@ -99,7 +101,7 @@ public class JDependTask extends Task {
     private Path compileClasspath;
     private boolean haltonerror = false;
     private boolean fork = false;
-    //private Integer _timeout = null;
+    private Long timeout = null;
 
     private String jvm = null;
     private String format = "text";
@@ -107,6 +109,9 @@ public class JDependTask extends Task {
 
     private static Constructor packageFilterC;
     private static Method setFilter;
+
+    private boolean includeRuntime = false;
+    private Path runtimeClasses = null;
 
     static {
         try {
@@ -124,15 +129,36 @@ public class JDependTask extends Task {
         }
     }
 
-    /*
-      public void setTimeout(Integer value) {
-      _timeout = value;
-      }
+    /**
+     * If true,
+     *  include jdepend.jar in the forked VM.
+     *
+     * @param b include ant run time yes or no
+     * @since Ant 1.6
+     */
+    public void setIncluderuntime(boolean b) {
+        includeRuntime = b;
+    }
 
-      public Integer getTimeout() {
-      return _timeout;
-      }
-    */
+    /**
+     * Set the timeout value (in milliseconds).
+     *
+     * <p>If the operation is running for more than this value, the jdepend
+     * will be canceled. (works only when in 'fork' mode).</p>
+     * @param value the maximum time (in milliseconds) allowed before
+     * declaring the test as 'timed-out'
+     * @see #setFork(boolean)
+     */
+    public void setTimeout(Long value) {
+        timeout = value;
+    }
+
+    /**
+     * @return the timeout value
+     */
+    public Long getTimeout() {
+        return timeout;
+    }
 
     /**
      * The output file name.
@@ -351,6 +377,43 @@ public class JDependTask extends Task {
     private static final int ERRORS = 1;
 
     /**
+     * Search for the given resource and add the directory or archive
+     * that contains it to the classpath.
+     *
+     * <p>Doesn't work for archives in JDK 1.1 as the URL returned by
+     * getResource doesn't contain the name of the archive.</p>
+     *
+     * @param resource resource that one wants to lookup
+     * @since Ant 1.6
+     */
+    private void addClasspathEntry(String resource) {
+        /*
+         * pre Ant 1.6 this method used to call getClass().getResource
+         * while Ant 1.6 will call ClassLoader.getResource().
+         *
+         * The difference is that Class.getResource expects a leading
+         * slash for "absolute" resources and will strip it before
+         * delegating to ClassLoader.getResource - so we now have to
+         * emulate Class's behavior.
+         */
+        if (resource.startsWith("/")) {
+            resource = resource.substring(1);
+        } else {
+            resource = "org/apache/tools/ant/taskdefs/optional/jdepend/"
+                + resource;
+        }
+
+        File f = LoaderUtils.getResourceSource(getClass().getClassLoader(),
+                                               resource);
+        if (f != null) {
+            log("Found " + f.getAbsolutePath(), Project.MSG_DEBUG);
+            runtimeClasses.createPath().setLocation(f);
+        } else {
+            log("Couldn\'t find " + resource, Project.MSG_DEBUG);
+        }
+    }
+
+    /**
      * execute the task
      *
      * @exception BuildException if an error occurs
@@ -380,7 +443,7 @@ public class JDependTask extends Task {
 
         // execute the test and get the return code
         int exitValue = JDependTask.ERRORS;
-        //boolean wasKilled = false;
+        boolean wasKilled = false;
         if (!getFork()) {
             exitValue = executeInVM(commandline);
         } else {
@@ -388,21 +451,22 @@ public class JDependTask extends Task {
             exitValue = executeAsForked(commandline, watchdog);
             // null watchdog means no timeout, you'd better not check with null
             if (watchdog != null) {
-                //info will be used in later version do nothing for now
-                //wasKilled = watchdog.killedProcess();
+                wasKilled = watchdog.killedProcess();
             }
         }
 
         // if there is an error/failure and that it should halt, stop
         // everything otherwise just log a statement
-        boolean errorOccurred = exitValue == JDependTask.ERRORS;
+        boolean errorOccurred = exitValue == JDependTask.ERRORS || wasKilled;
 
         if (errorOccurred) {
+            String errorMessage = "JDepend FAILED"
+                + (wasKilled ? " - Timed out" : "");
+
             if  (getHaltonerror()) {
-                throw new BuildException("JDepend failed",
-                                         getLocation());
+                throw new BuildException(errorMessage, getLocation());
             } else {
-                log("JDepend FAILED", Project.MSG_ERR);
+                log(errorMessage, Project.MSG_ERR);
             }
         }
     }
@@ -540,6 +604,9 @@ public class JDependTask extends Task {
     // JL: comment extracted from JUnitTask (and slightly modified)
     public int executeAsForked(CommandlineJava commandline,
                                ExecuteWatchdog watchdog) throws BuildException {
+        runtimeClasses = new Path(getProject());
+        addClasspathEntry("/jdepend/textui/JDepend.class");
+
         // if not set, auto-create the ClassPath from the project
         createClasspath();
 
@@ -548,6 +615,24 @@ public class JDependTask extends Task {
         if (getClasspath().toString().length() > 0) {
             createJvmarg(commandline).setValue("-classpath");
             createJvmarg(commandline).setValue(getClasspath().toString());
+        }
+
+        if (includeRuntime) {
+            Vector v = Execute.getProcEnvironment();
+            Enumeration e = v.elements();
+            while (e.hasMoreElements()) {
+                String s = (String) e.nextElement();
+                if (s.startsWith("CLASSPATH=")) {
+                    commandline.createClasspath(getProject()).createPath()
+                        .append(new Path(getProject(),
+                                         s.substring("CLASSPATH=".length()
+                                                     )));
+                }
+            }
+            log("Implicitly adding " + runtimeClasses + " to CLASSPATH",
+                Project.MSG_VERBOSE);
+            commandline.createClasspath(getProject()).createPath()
+                .append(runtimeClasses);
         }
 
         if (getOutputFile() != null) {
@@ -620,13 +705,9 @@ public class JDependTask extends Task {
      * @throws BuildException in case of error
      */
     protected ExecuteWatchdog createWatchdog() throws BuildException {
-
-        return null;
-        /*
-          if (getTimeout() == null) {
-          return null;
-          }
-          return new ExecuteWatchdog(getTimeout().intValue());
-        */
+        if (getTimeout() == null) {
+            return null;
+        }
+        return new ExecuteWatchdog(getTimeout().longValue());
     }
 }
