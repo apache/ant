@@ -76,8 +76,7 @@ import javax.xml.transform.TransformerException;
 /**
  * JUnit testcases for org.apache.tools.ant.types.XMLCatalog
  *
- * @author <a href="mailto:cstrong@arielpartners.com">Craeg Strong</a> 
- * @version $Id$
+ * @author <a href="mailto:cstrong@arielpartners.com">Craeg Strong</a>
  */
 public class XMLCatalogTest extends TestCase {
 
@@ -110,7 +109,7 @@ public class XMLCatalogTest extends TestCase {
         // logger.setOutputPrintStream(System.out);
         // logger.setErrorPrintStream(System.err);
         // project.addBuildListener(logger);
-        
+
         catalog = newCatalog();
     }
 
@@ -118,10 +117,10 @@ public class XMLCatalogTest extends TestCase {
       project = null;
       catalog = null;
    }
-   
+
    public void testEmptyCatalog() {
        try {
-           InputSource result = catalog.resolveEntity("PUBLIC ID ONE", 
+           InputSource result = catalog.resolveEntity("PUBLIC ID ONE",
                                                       "i/dont/exist.dtd");
            assertNull("Empty catalog should return null", result);
        } catch (Exception e) {
@@ -136,9 +135,9 @@ public class XMLCatalogTest extends TestCase {
            // These shenanigans are necessary b/c Norm Walsh's resolver
            // has a different idea of how file URLs are created on windoze
            // ie file://c:/foo instead of file:///c:/foo
-           // 
+           //
            String resultStr = new URL(((SAXSource)result).getInputSource().getSystemId()).getFile();
-           assertTrue("Empty catalog should return input", 
+           assertTrue("Empty catalog should return input",
                       expected.endsWith(resultStr));
        } catch (Exception e) {
            fail("resolve() failed!" + e.toString());
@@ -152,7 +151,7 @@ public class XMLCatalogTest extends TestCase {
         dtd.setLocation("i/dont/exist.dtd");
 
         try {
-            InputSource result = catalog.resolveEntity("PUBLIC ID ONE", 
+            InputSource result = catalog.resolveEntity("PUBLIC ID ONE",
                                                        "i/dont/exist.dtd");
             assertNull("Nonexistent Catalog entry should not be returned", result);
         } catch (Exception e) {
@@ -177,15 +176,15 @@ public class XMLCatalogTest extends TestCase {
         dtd.setLocation("i/dont/exist.dtd");
         catalog.addDTD(dtd);
         project.addReference("catalog", catalog);
-        
+
         try {
             catalog.setRefid(new Reference("dummyref"));
             fail("Can add reference to nonexistent XMLCatalog");
         } catch (BuildException be) {
-            assertEquals("You must not specify more than one " 
+            assertEquals("You must not specify more than one "
                          + "attribute when using refid", be.getMessage());
         }
-        
+
         XMLCatalog catalog2 = newCatalog();
         catalog2.setRefid(new Reference("catalog"));
 
@@ -205,7 +204,7 @@ public class XMLCatalogTest extends TestCase {
         catalog.setRefid(new Reference("catalog"));
 
         try {
-            InputSource result = catalog.resolveEntity("PUBLIC ID ONE", 
+            InputSource result = catalog.resolveEntity("PUBLIC ID ONE",
                                                        "i/dont/exist.dtd");
             fail("Can make XMLCatalog a Reference to itself.");
         } catch (BuildException be) {
@@ -228,7 +227,7 @@ public class XMLCatalogTest extends TestCase {
         catalog1.setRefid(new Reference("catalog2"));
 
         try {
-            InputSource result = catalog1.resolveEntity("PUBLIC ID ONE", 
+            InputSource result = catalog1.resolveEntity("PUBLIC ID ONE",
                                                         "i/dont/exist.dtd");
             fail("Can make circular reference");
         } catch (BuildException be) {
@@ -270,7 +269,7 @@ public class XMLCatalogTest extends TestCase {
         dtd.setLocation(sysid);
         catalog.addDTD(dtd);
         File dtdFile = project.resolveFile(sysid);
-        
+
         try {
             InputSource result = catalog.resolveEntity("-//stevo//DTD doc 1.0//EN",
                                                        "nap:chemical+brothers");
