@@ -8,6 +8,8 @@ Changes that could break older environments:
 that one $ sign will be stripped if your mail message contains the text
 $$.
 
+* org.apache.tools.ant.taskdefs.Expand no longer extends MatchingTask.
+
 Fixed bugs:
 -----------
 
