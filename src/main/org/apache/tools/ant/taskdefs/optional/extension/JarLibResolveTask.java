@@ -164,18 +164,14 @@ public class JarLibResolveTask
 
         if( null != candidate )
         {
-            final File file =
-                getProject().resolveFile( candidate );
-            getProject().log( "Property Already set to: " + file,
-                              Project.MSG_VERBOSE );
-            try
+            final String message = "Property Already set to: " + candidate;
+            if( m_failOnError )
             {
-                checkExtension( file );
-                return;
+                throw new BuildException( message );
             }
-            catch( final BuildException e )
+            else
             {
-                missingExtension();
+                getProject().log( message, Project.MSG_ERR );
                 return;
             }
         }
