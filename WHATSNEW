@@ -50,6 +50,9 @@ Other changes:
 * It is now possible to specify the pattern created/parsed by <checksum>.
   Bugzilla Report 16539.
 
+* Added searchpath attribute to <exec> for searching path variable(s)
+  when resolveexecutable = true.
+
 Changes from Ant 1.6.2 to current Ant 1.6 CVS version
 =====================================================
 

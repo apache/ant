@@ -212,13 +212,21 @@ or the task will fail as follows:
     <td align="center" valign="top">No, default is <i>true</i></td>
   </tr>
   <tr>
-    <td valign="top">resolveExecutable</td>
+    <td valign="top">resolveexecutable</td>
     <td valign="top">When this attribute is true, the name of the executable
-                     if resolved firstly against the project basedir and
+                     is resolved firstly against the project basedir and
                      if that does not exist, against the execution
                      directory if specified. On Unix systems, if you only
                      want to allow execution of commands in the user's path,
                      set this to false.  <em>since Ant 1.6</em></td>
+    <td align="center" valign="top">No, default is <i>false</i></td>
+  </tr>
+  <tr>
+    <td valign="top">searchpath</td>
+    <td valign="top">When this attribute is true nested, then
+                     system path environment variables will
+                     be searched when resolving the location
+                     of the executable. <em>since Ant 1.6.3</em></td>
     <td align="center" valign="top">No, default is <i>false</i></td>
   </tr>
 </table>

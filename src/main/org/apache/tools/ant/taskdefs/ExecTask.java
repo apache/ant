@@ -51,6 +51,7 @@ public class ExecTask extends Task {
     private boolean failIfExecFails = true;
     private String executable;
     private boolean resolveExecutable = false;
+    private boolean searchPath = false;
     private boolean spawn = false;
     private boolean incompatibleWithSpawn = false;
 
@@ -261,6 +262,16 @@ public class ExecTask extends Task {
     }
 
     /**
+     * Sets a flag indicating whether to search nested, then
+     * system PATH environment variables for the executable.
+     *
+     * @param searchPath if true, search PATHs
+     */
+    public void setSearchPath(boolean searchPath) {
+        this.searchPath = searchPath;
+    }
+
+    /**
      * Indicates whether to attempt to resolve the executable to a
      * file
      *
@@ -345,6 +356,7 @@ public class ExecTask extends Task {
      * Add a <CODE>RedirectorElement</CODE> to this task.
      *
      * @param redirectorElement   <CODE>RedirectorElement</CODE>.
+     * @since Ant 1.6.2
      */
     public void addConfiguredRedirector(RedirectorElement redirectorElement) {
         if (this.redirectorElement != null) {
@@ -444,7 +456,7 @@ public class ExecTask extends Task {
      */
     public void execute() throws BuildException {
         File savedDir = dir; // possibly altered in prepareExec
-        cmdl.setExecutable(resolveExecutable(executable, false));
+        cmdl.setExecutable(resolveExecutable(executable, searchPath));
         checkConfiguration();
         if (isValidOs()) {
             try {
