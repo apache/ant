@@ -1,0 +1,54 @@
+<?xml version="1.0"?>
+
+<project name="jspc-test" default="main" basedir=".">
+
+   <target name="main" depends="simple,missing_tld">
+
+   </target>
+
+	<target name="init">
+		<property name="jsp.dir" location="jsp"/>
+		<property name="jsp.output.dir" location="${jsp.dir}/java"/>
+		<property name="jsp.verbosity" value="3"/>
+		
+		<mkdir dir="${jsp.output.dir}"/>
+	</target>
+	
+	<target name="cleanup">
+		<delete dir="${jsp.output.dir}"/>   
+	</target>
+   
+   <!-- this should fail -->
+   <target name="missing_tld" depends="init">
+		<jspc
+		   destdir="${jsp.output.dir}"
+		   srcdir="${jsp.dir}"
+		   verbose="${jsp.verbosity}">
+			<include
+               name="missing_tld.jsp"/>
+		</jspc>
+   </target>
+
+   <!-- this should compile to simple.java -->
+   <target name="simple" depends="init">
+		<jspc
+		   destdir="${jsp.output.dir}"
+		   srcdir="${jsp.dir}"
+		   verbose="${jsp.verbosity}">
+			<include
+               name="simple.jsp"/>
+		</jspc>
+   </target>   
+
+   <!-- this should also compile to simple.java -->
+   <target name="uriroot" depends="init">
+		<jspc
+		   destdir="${jsp.output.dir}"
+		   uriroot="${jsp.dir}"
+		   srcdir="${jsp.dir}"
+		   verbose="${jsp.verbosity}">
+			<include
+               name="uriroot.jsp"/>
+		</jspc>
+   </target>   
+</project>
