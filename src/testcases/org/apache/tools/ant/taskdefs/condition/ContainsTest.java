@@ -72,7 +72,6 @@ public class ContainsTest extends TestCase {
         Contains con = new Contains();
         con.setString("abc");
         con.setSubstring("A");
-        con.eval();
         assertTrue(!con.eval());
 
         con.setCasesensitive(false);
