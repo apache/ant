@@ -614,8 +614,15 @@ public class Zip extends MatchingTask {
         File[] files = grabFiles(scanners, fileNames);
         if (files.length == 0) {
             if (emptyBehavior.equals("skip")) {
-                log("Warning: skipping " + archiveType + " archive " + zipFile +
-                    " because no files were included.", Project.MSG_WARN);
+                if (doUpdate) {
+                    log(archiveType + " archive " + zipFile 
+                        + " not updated because no new files were included.", 
+                        Project.MSG_VERBOSE);
+                } else {
+                    log("Warning: skipping " + archiveType + " archive " 
+                        + zipFile + " because no files were included.", 
+                        Project.MSG_WARN);
+                }
                 return true;
             } else if (emptyBehavior.equals("fail")) {
                 throw new BuildException("Cannot create " + archiveType
