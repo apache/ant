@@ -209,7 +209,11 @@ public class SSHExec extends SSHBase {
             if (thread.isAlive()) {
                 // ran out of time
                 thread = null;
-                log(TIMEOUT_MESSAGE, Project.MSG_ERR);
+                if (getFailonerror()) {
+                    throw new BuildException(TIMEOUT_MESSAGE);
+                } else {
+                    log(TIMEOUT_MESSAGE, Project.MSG_ERR);
+                }
             } else {
                 // completed successfully
                 if (outputProperty != null) {
@@ -235,7 +239,11 @@ public class SSHExec extends SSHBase {
             throw e;
         } catch (JSchException e) {
             if (e.getMessage().indexOf("session is down") >= 0) {
-                log(TIMEOUT_MESSAGE, Project.MSG_ERR);
+                if (getFailonerror()) {
+                    throw new BuildException(TIMEOUT_MESSAGE, e);
+                } else {
+                    log(TIMEOUT_MESSAGE, Project.MSG_ERR);
+                }
             } else {
                 if (getFailonerror()) {
                     throw new BuildException(e);
