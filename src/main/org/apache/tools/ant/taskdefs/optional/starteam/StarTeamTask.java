@@ -117,7 +117,7 @@ public abstract class StarTeamTask extends Task {
 
     private void logStarteamVersion() {
         log("StarTeam version: "
-            + BuildNumber.getDisplayString(), Project.MSG_DEBUG);
+            + BuildNumber.getDisplayString(), Project.MSG_VERBOSE);
     }
 
 
@@ -318,6 +318,18 @@ public abstract class StarTeamTask extends Task {
     }
 
     /**
+     * disconnects from the StarTeam server.  Should be called from the 
+     * finally clause of every StarTeamTask-based execute method.
+     */
+    protected final void disconnectFromServer() {
+        if (null != this.server) {
+            this.server.disconnect();
+            log("successful disconnect from StarTeam Server " + servername,
+                Project.MSG_VERBOSE);
+        }
+    }
+
+    /**
      * returns a list of TypeNames known to the server.
      *
      * @return a reference to the server's TypeNames
@@ -362,6 +374,8 @@ public abstract class StarTeamTask extends Task {
         }
 
         View snapshot = createSnapshotView(view);
+        log("Connected to StarTeam view " + getURL(),
+            Project.MSG_VERBOSE);
         this.server = snapshot.getServer();
         return snapshot;
     }
