@@ -8,10 +8,7 @@
 package org.apache.myrmidon.framework;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.StringTokenizer;
-import org.apache.myrmidon.api.TaskContext;
-import org.apache.myrmidon.api.TaskException;
 
 /**
  * Named collection of include/exclude tags. <p>
@@ -25,8 +22,8 @@ import org.apache.myrmidon.api.TaskException;
  */
 public class PatternSet
 {
-    private ArrayList m_includeList = new ArrayList();
-    private ArrayList m_excludeList = new ArrayList();
+    private ArrayList m_includes = new ArrayList();
+    private ArrayList m_excludes = new ArrayList();
 
     /**
      * Sets the set of exclude patterns. Patterns may be separated by a comma or
@@ -63,7 +60,7 @@ public class PatternSet
      */
     public void addExclude( final Pattern pattern )
     {
-        m_excludeList.add( pattern );
+        m_excludes.add( pattern );
     }
 
     /**
@@ -71,22 +68,17 @@ public class PatternSet
      */
     public void addInclude( final Pattern pattern )
     {
-        m_includeList.add( pattern );
+        m_includes.add( pattern );
     }
 
-    public String[] getExcludePatterns( final TaskContext context )
-        throws TaskException
+    public final ArrayList getIncludes()
     {
-        return toArray( m_excludeList, context );
+        return m_includes;
     }
 
-    /**
-     * Returns the filtered include patterns.
-     */
-    public String[] getIncludePatterns( final TaskContext context )
-        throws TaskException
+    public final ArrayList getExcludes()
     {
-        return toArray( m_includeList, context );
+        return m_excludes;
     }
 
     /**
@@ -94,14 +86,14 @@ public class PatternSet
      */
     public void append( final PatternSet other )
     {
-        m_includeList.addAll( other.m_includeList );
-        m_excludeList.addAll( other.m_excludeList );
+        m_includes.addAll( other.m_includes );
+        m_excludes.addAll( other.m_excludes );
     }
 
     public String toString()
     {
-        return "PatternSet [ includes: " + m_includeList +
-            " excludes: " + m_excludeList + " ]";
+        return "PatternSet [ includes: " + m_includes +
+            " excludes: " + m_excludes + " ]";
     }
 
     private Pattern[] parsePatterns( final String patternString )
@@ -118,30 +110,5 @@ public class PatternSet
         }
 
         return (Pattern[])patterns.toArray( new Pattern[ patterns.size() ] );
-    }
-
-    /**
-     * Convert a vector of Pattern elements into an array of Strings.
-     */
-    private String[] toArray( final ArrayList list, final TaskContext context )
-    {
-        if( list.size() == 0 )
-        {
-            return null;
-        }
-
-        final ArrayList names = new ArrayList();
-        final Iterator e = list.iterator();
-        while( e.hasNext() )
-        {
-            final Pattern pattern = (Pattern)e.next();
-            final String result = pattern.evaluateName( context );
-            if( null != result && result.length() > 0 )
-            {
-                names.add( result );
-            }
-        }
-
-        return (String[])names.toArray( new String[ names.size() ] );
     }
 }
