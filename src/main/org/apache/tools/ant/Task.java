@@ -62,7 +62,8 @@ public abstract class Task {
 
     protected Project project = null;
     protected Target target = null;
-
+    protected String description=null;
+    
     /**
      * Sets the project object of this task. This method is used by
      * project when a task is added to it so that the task has
@@ -84,6 +85,17 @@ public abstract class Task {
         this.target = target;
     }
 
+    /** Sets a description of the current action. It will be usefull in commenting
+     *  what we are doing.
+     */ 
+    public void setDescription( String desc ) {
+	description=desc;
+    }
+
+    public String getDescription() {
+	return description;
+    }
+    
     /**
      * Called by the project to let the task initialize properly. Normally it does nothing.
      *
