@@ -1,5 +1,5 @@
 <ant-lib version="1.0">
     <types>
-        <data-type name="property-test-type" classname="org.apache.antlib.core.PropertyTestType"/>
+        <data-type name="property-test-type" classname="org.apache.antlib.core.test.PropertyTestType"/>
     </types>
 </ant-lib>
