@@ -191,18 +191,18 @@ public class Main {
             }
         }
 
+        // expect the worst
+        int exitCode = 1;
         try {
             m.runBuild(coreLoader);
-            System.exit(0);
+            exitCode = 0;
         } catch (BuildException be) {
             if (m.err != System.err) {
                 printMessage(be);
             }
-            System.exit(1);
         } catch (Throwable exc) {
             exc.printStackTrace();
             printMessage(exc);
-            System.exit(1);
         } finally {
             if (isLogFileUsed) {
                 if (out != null) {
@@ -221,6 +221,7 @@ public class Main {
                 }
             }
         }
+        System.exit(exitCode);
     }
 
     /**
