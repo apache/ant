@@ -308,6 +308,7 @@ public class TestRunner implements TestListener {
             if (suites[i] instanceof TestCase) {
                 suites[i] = new TestSuite(suites[i].getClass().getName());
             }
+            log("running suite: " + suites[i]);
             suites[i].run(testResult);
         }
 
@@ -382,10 +383,12 @@ public class TestRunner implements TestListener {
 
     public void startTest(Test test) {
         String testName = test.toString();
+        log("starting test: " + test);
         writer.notifyTestStarted(testName);
     }
 
     public void addError(Test test, Throwable t) {
+        log("Adding error for test: " + test);
         String testName = test.toString();
         String trace = StringUtils.getStackTrace(t);
         writer.notifyTestFailed(TestRunListener.STATUS_ERROR, testName, trace);
@@ -404,12 +407,14 @@ public class TestRunner implements TestListener {
      * @see addFailure(Test, AssertionFailedError)
      */
     public void addFailure(Test test, Throwable t) {
+        log("Adding failure for test: " + test);
         String testName = test.toString();
         String trace = StringUtils.getStackTrace(t);
         writer.notifyTestFailed(TestRunListener.STATUS_FAILURE, testName, trace);
     }
 
     public void endTest(Test test) {
+        log("Ending test: " + test);
         String testName = test.toString();
         writer.notifyTestEnded(testName);
     }
