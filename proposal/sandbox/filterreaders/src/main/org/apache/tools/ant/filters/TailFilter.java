@@ -151,7 +151,8 @@ public final class TailFilter
 
                     if (linesRead == lines) {
                         int i = 0;
-                        for (i = returnedCharPos + 1; buffer[i] != '\n'; i++) {
+                        for (i = returnedCharPos + 1;
+                                buffer[i] != 0 && buffer[i] != '\n'; i++) {
                         }
                         returnedCharPos = i;
                         --linesRead;
