@@ -1,0 +1,74 @@
+<?xml version="1.0"?>
+<document>
+
+  <properties>
+    <author email="bodewig@apache.org">Stefan Bodewig</author>
+    <title>Frequently Asked Questions</title>
+  </properties>
+
+  <faqsection title="Installation">
+    <faq id="no-gnu-tar">
+      <question>I get checksum errors when I try to extract the
+      <code>tar.gz</code> distribution file. Why?</question>
+      <answer>
+        <p>Ant&apos;distibution contains file names which are longer
+        than 100 characters, which is not supported by the standard
+        tar file format.  Several different implementations of tar use
+        different and incompatible ways to work around this
+        restriction.</p>
+
+        <p>Ant&apos; &lt;tar&gt; task can create tar archives that use
+        the GNU tar extension, and this has been used when putting
+        together the distribution.  If you are using a different
+        version of tar (for example the one shipping with Solaris),
+        you cannot use it to extract the archive.</p>
+
+        <p>The solution is to either install GNU tar, which can be
+        found <a href="http://www.gnu.org/software/tar/tar.html">here</a> 
+        or use the zip archive instead (you can extract it using
+        <code>jar cf</code>).</p>
+      </answer>
+    </faq>
+  </faqsection>
+
+  <faqsection title="Advanced issues">
+    <faq id="xml-entity-include">
+      <question>How do I include an XML snippet in my build file?</question>
+      <answer>
+        <p>You can use XML's way of including external files and let
+        the parser do the job for Ant:</p>
+
+        <source><![CDATA[
+<?xml version="1.0"?>
+
+<!DOCTYPE project [
+    <!ENTITY common SYSTEM "file:./common.xml">
+]>
+
+<project name="test" default="test" basedir=".">
+
+  <target name="setup">
+    ...
+  </target>
+
+  &common;
+
+  ...
+
+</project>
+]]></source>
+
+        <p>will literally include the contents of common.xml where
+        you've placed the &amp;common; entity.</p>
+
+        <p>In combination with a DTD this would look like this:</p>
+
+        <source><![CDATA[
+<!DOCTYPE project PUBLIC "-//ANT//DTD project//EN" "file:./ant.dtd" [
+   <!ENTITY include SYSTEM "file:./header.xml">
+]>
+]]></source>
+      </answer>
+    </faq>
+  </faqsection>
+</document>

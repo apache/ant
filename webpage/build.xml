@@ -33,8 +33,16 @@
         <anakia basedir="${docs.src}" destdir="${docs.dest}/"
              extension=".html" style="./site.vsl"
              projectFile="stylesheets/project.xml"
-             excludes="**/stylesheets/** empty.xml"
+             excludes="**/stylesheets/** faq.xml"
              includes="**/*.xml"
+             lastModifiedCheck="true"
+             templatePath="./xdocs/stylesheets">
+        </anakia>
+
+        <anakia basedir="${docs.src}" destdir="${docs.dest}/"
+             extension=".html" style="./faq.vsl"
+             projectFile="stylesheets/project.xml"
+             includes="faq.xml"
              lastModifiedCheck="true"
              templatePath="./xdocs/stylesheets">
         </anakia>
