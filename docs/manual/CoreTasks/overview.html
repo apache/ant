@@ -1,0 +1,341 @@
+<html>
+<head>
+  <meta http-equiv="Content-Language" content="en-us">
+  <title>Overview of Ant core tasks</title>
+  <base target="mainFrame">
+</head>
+
+<body>
+<h2>Overview of Ant core tasks</h2>
+<p>Given the large number of tasks available to a build designer, it may be 
+difficult to get an overall view of what each task can do.  The following 
+table provides a short description of each task and a link to the complete
+documentation.</p>
+
+<table border="1" cellpadding="4" cellspacing="0">
+  <tr valign="top">
+    <th>Task Name</th>
+    <th>Description</th>
+  </tr>
+
+  <tr valign="top">
+    <td><a href="ant.html">Ant</a></td>
+    <td><p>Runs Ant on a supplied buildfile. This can be used to build subprojects.</p></td>
+  </tr>
+
+  <tr valign="top">
+    <td><a href="antcall.html">AntCall</a></td>
+    <td><p>Call another target within the same build-file optionally specifying some
+properties.</p></td>
+  </tr>
+  
+  <tr valign="top">
+    <td><a href="antstructure.html">AntStructure</a></td>
+    <td><p>Generates a DTD for Ant buildfiles which contains information
+about all tasks currently known to Ant.</p></td>
+  </tr>
+  
+  <tr valign="top">
+    <td><a href="apply.html">Apply</a></td>
+    <td><p>Executes a system command. When the <i>os</i> attribute is specified, then
+the command is only executed when Ant is run on one of the specified operating
+systems.</p></td>
+  </tr>
+  
+  <tr valign="top">
+    <td><a href="available.html">Available</a></td>
+    <td><p>Sets a property if a resource is available at runtime. This resource can be a
+file, a directory, a class in the classpath, or a JVM system resource.</p></td>
+  </tr>
+  
+  <tr valign="top">
+    <td><a href="chmod.html">Chmod</a></td>
+    <td><p>Changes the permissions of a file or all files inside specified directories. 
+    Right now it has effect only under Unix. The permissions are also UNIX style, like 
+    the argument for the chmod command.</p></td>
+  </tr>
+
+  <tr valign="top">
+    <td><a href="copy.html">Copy</a></td>
+    <td><p>Copies a file or Fileset to a new file or directory.</p></td>
+  </tr>
+
+  <tr valign="top">
+    <td><a href="copydir.html"><i>Copydir</i></a></td>
+    <td><p><i>This task has been deprecated.  Use the Copy task instead.</i></p></td>
+  </tr>
+
+  <tr valign="top">
+    <td><a href="copyfile.html"><i>Copyfile</i></a></td>
+    <td><p><i>This task has been deprecated.  Use the Copy task instead.</i></p></td>
+  </tr>
+
+  <tr valign="top">
+    <td><a href="cvs.html">Cvs</a></td>
+    <td><p>Handles packages/modules retrieved from a 
+<a href="http://www.cvshome.org/" target="_top">CVS</a> repository.</p></td>
+  </tr>
+
+  <tr valign="top">
+    <td><a href="cvspass.html">CVSPass</a></td>
+    <td><p>Adds entries to a .cvspass file. Adding entries to this file has the same 
+    affect as a cvs login command.</p></td>
+  </tr>
+
+  <tr valign="top">
+    <td><a href="delete.html">Delete</a></td>
+    <td><p>Deletes either a single file, all files in a specified directory 
+    and its sub-directories, or a set of files specified by one or more 
+    <a href="../CoreTypes/fileset.html">FileSet</a>s.</td>
+  </tr>
+
+  <tr valign="top">
+    <td><a href="deltree.html"><i>Deltree</i></a></td>
+    <td><p><i>This task has been deprecated.  Use the Delete task instead.</i></p></td>
+  </tr>
+
+  <tr valign="top">
+    <td><a href="ear.html">Ear</a></td>
+    <td><p>An extension of the <a href="jar.html">Jar</a> task with special
+    treatment for files that should end up in an Enterprise Application archive.</p></td>
+  </tr>
+
+  <tr valign="top">
+    <td><a href="echo.html">Echo</a></td>
+    <td><p>Echoes a message to System.out or a file.</p></td>
+  </tr>
+
+  <tr valign="top">
+    <td><a href="exec.html">Exec</a></td>
+    <td><p>Executes a system command. When the <i>os</i> attribute is specified, then
+the command is only executed when Ant is run on one of the specified operating
+systems.</p></td>
+  </tr>
+
+  <tr valign="top">
+    <td><a href="execon.html">ExecOn</a></td>
+    <td><p>Executes a system command. When the <i>os</i> attribute is specified, then
+the command is only executed when Ant is run on one of the specified operating
+systems.</p>
+<p>The files and/or directories of a number of <a
+href="../CoreTypes/fileset.html">FileSet</a>s are passed as arguments to the system
+command. At least one nested <code>&lt;fileset&gt;</code> is required.</p></td>
+  </tr>
+
+  <tr valign="top">
+    <td><a href="fail.html">Fail</a></td>
+    <td><p>Exits the current build (just throwing a BuildException), optionally printing additional information.</p></td>
+  </tr>
+
+  <tr valign="top">
+    <td><a href="filter.html">Filter</a></td>
+    <td><p>Sets a token filter for this project or read multiple token filter from
+an input file and sets these as filters.
+Token filters are used by all tasks that perform file copying operations
+through the Project commodity methods.</p></td>
+  </tr>
+
+  <tr valign="top">
+    <td><a href="fixcrlf.html">FixCRLF</a></td>
+    <td><p>Modifies a file to add or remove tabs, carriage returns, linefeeds, and
+    EOF characters.</p></td>
+  </tr>
+
+  <tr valign="top">
+    <td><a href="genkey.html">GenKey</a></td>
+    <td><p>Generates a key in keystore.</p></td>
+  </tr>
+
+  <tr valign="top">
+    <td><a href="get.html">Get</a></td>
+    <td><p>Gets a file from a URL.</p></td>
+  </tr>
+
+  <tr valign="top">
+    <td><a href="gunzip.html">GUnzip</a></td>
+    <td><p>Expands a GZip file.</p></td>
+  </tr>
+
+  <tr valign="top">
+    <td><a href="gzip.html">GZip</a></td>
+    <td><p>GZips a file.</p></td>
+  </tr>
+
+  <tr valign="top">
+    <td><a href="jar.html">Jar</a></td>
+    <td><p>Jars a set of files.</p></td>
+  </tr>
+
+  <tr valign="top">
+    <td><a href="java.html">Java</a></td>
+    <td><p>Executes a Java class within the running (Ant) VM or forks another VM if
+specified.</p></td>
+  </tr>
+
+  <tr valign="top">
+    <td><a href="javac.html">Javac</a></td>
+    <td><p>Compiles a source tree within the running (Ant) VM.</p></td>
+  </tr>
+
+  <tr valign="top">
+    <td><a href="javadoc.html">Javadoc/<i>Javadoc2</i></a></td>
+    <td><p>Generates code documentation using the javadoc tool.</p>
+    <p><i>The Javadoc2 task is deprecated.  Use the Javadoc task 
+    instead.</i></p></td>
+  </tr>
+
+  <tr valign="top">
+    <td><a href="mail.html">Mail</a></td>
+    <td><p>A task to send SMTP email.</p></td>
+  </tr>
+
+  <tr valign="top">
+    <td><a href="mkdir.html">Mkdir</a></td>
+    <td><p>Creates a directory. Also non-existent parent directories are created, when
+necessary.</p></td>
+  </tr>
+
+  <tr valign="top">
+    <td><a href="move.html">Move</a></td>
+    <td><p>Moves a file to a new file or directory, or sets of files to
+a new directory.</p></td>
+  </tr>
+
+  <tr valign="top">
+    <td><a href="patch.html">Patch</a></td>
+    <td><p>Applies a diff file to originals.</p></td>
+  </tr>
+
+  <tr valign="top">
+    <td><a href="pathconvert.html">PathConvert</a></td>
+    <td><p>Converts a nested path, path reference, or fileset reference to the form usable on a
+    specified platform and stores the result in a given property.</p></td>
+  </tr>
+
+  <tr valign="top">
+    <td><a href="property.html">Property</a></td>
+    <td><p>Sets a property (by name and value), or set of properties (from file or
+resource) in the project.</p></td>
+  </tr>
+
+  <tr valign="top">
+    <td><a href="recorder.html">Record</a></td>
+    <td><p>A recorder is a listener to the current build process that records the
+output to a file.</p></td>
+  </tr>
+
+  <tr valign="top">
+    <td><a href="rename.html"><i>Rename</i></a></td>
+    <td><p><i>This task has been deprecated.  Use the Move task instead.</i></p></td>
+  </tr>
+
+  <tr valign="top">
+    <td><a href="replace.html">Replace</a></td>
+    <td><p>Replace is a directory based task for replacing the occurrence of a given string with another string 
+in selected file.</p></td>
+  </tr>
+
+  <tr valign="top">
+    <td><a href="rmic.html">Rmic</a></td>
+    <td><p>Runs the rmic compiler for a certain class.</p></td>
+  </tr>
+
+  <tr valign="top">
+    <td><a href="signjar.html">SignJar</a></td>
+    <td><p>Signs a jar or zip file with the javasign command line tool.</p></td>
+  </tr>
+
+  <tr valign="top">
+    <td><a href="sleep.html">Sleep</a></td>
+    <td><p> A task for sleeping a short period of time, useful when a build or 
+    deployment process requires an interval between tasks.</p></td>
+  </tr>
+
+  <tr valign="top">
+    <td><a href="sql.html">Sql</a></td>
+    <td><p>Executes a series of SQL statements via JDBC to a database. Statements 
+    can either be read in from a text file using the <i>src</i> attribute or from 
+    between the enclosing SQL tags.</p></td>
+  </tr>
+
+  <tr valign="top">
+    <td><a href="style.html">Style</a></td>
+    <td><p>Process a set of documents via XSLT.</p></td>
+  </tr>
+
+  <tr valign="top">
+    <td><a href="tar.html">Tar</a></td>
+    <td><p>Creates a tar archive.</p></td>
+  </tr>
+
+  <tr valign="top">
+    <td><a href="taskdef.html">Taskdef</a></td>
+    <td><p>Adds a task definition to the current project, such that this new task can be
+used in the current project.</p></td>
+  </tr>
+
+  <tr valign="top">
+    <td><a href="touch.html">Touch</a></td>
+    <td><p>Changes the modification time of a file and possibly creates it at
+the same time.</p></td>
+  </tr>
+
+  <tr valign="top">
+    <td><a href="tstamp.html">TStamp</a></td>
+    <td><p>Sets the <code>DSTAMP</code>, <code>TSTAMP</code>, and 
+    <code>TODAY</code> properties in the current project based on 
+    the current date and time.</p></td>
+  </tr>
+
+  <tr valign="top">
+    <td><a href="typedef.html">Typedef</a></td>
+    <td><p>Adds a data type definition to the current project, such that this
+new type can be used in the current project.</p></td>
+  </tr>
+
+  <tr valign="top">
+    <td><a href="unzip.html">Unjar</a></td>
+    <td><p>Unzips a jarfile.</p></td>
+  </tr>
+
+  <tr valign="top">
+    <td><a href="untar.html">Untar</a></td>
+    <td><p>Untars a tarfile.</p></td>
+  </tr>
+
+  <tr valign="top">
+    <td><a href="unzip.html">Unwar</a></td>
+    <td><p>Unzips a warfile.</p></td>
+  </tr>
+
+  <tr valign="top">
+    <td><a href="unzip.html">Unzip</a></td>
+    <td><p>Unzips a zipfile.</p></td>
+  </tr>
+
+  <tr valign="top">
+    <td><a href="uptodate.html">Uptodate</a></td>
+    <td><p>Sets a property if a target files are more up to date than a set of
+Source files.</p></td>
+  </tr>
+
+  <tr valign="top">
+    <td><a href="war.html">War</a></td>
+    <td><p>An extension of the <a href="jar.html">Jar</a> task with special
+    treatment for files that should end up in the <code>WEB-INF/lib</code>, 
+    <code>WEB-INF/classes</code> or <code>WEB-INF</code> directories of the 
+    Web Application Archive.</p></td>
+  </tr>
+
+  <tr valign="top">
+    <td><a href="zip.html">Zip</a></td>
+    <td><p>Creates a zipfile.</p></td>
+  </tr>
+</table>
+
+<hr>
+<p align="center">Copyright &copy; 2000,2001 Apache Software Foundation. All rights
+Reserved.</p>
+
+</body>
+</html>
