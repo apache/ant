@@ -318,7 +318,7 @@ public class EjbcHelper implements Ejbc.Helper {
         String compiler = project.getProperty("build.compiler");
         String[] args = null;
         
-        if (compiler.equalsIgnoreCase("jikes")) {
+        if (compiler != null && compiler.equalsIgnoreCase("jikes")) {
             Path execClassPath = new Path(project);
             if (Project.getJavaVersion() == Project.JAVA_1_1) {
                 execClassPath.addExisting(new Path(project, System.getProperty("java.home")
