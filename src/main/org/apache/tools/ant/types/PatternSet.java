@@ -56,22 +56,55 @@ public class PatternSet extends DataType implements Cloneable {
         private String ifCond;
         private String unlessCond;
 
+        /**
+         * Sets the name pattern.
+         *
+         * @param name The pattern string.
+         */
         public void setName(String name) {
             this.name = name;
         }
 
+        /**
+         * Sets the if attribute. This attribute and the "unless"
+         * attribute are used to validate the name, based in the
+         * existence of the property.
+         *
+         * @param cond A property name. If this property is not
+         *             present, the name is invalid.
+         */
         public void setIf(String cond) {
             ifCond = cond;
         }
 
+        /**
+         * Sets the unless attribute. This attribute and the "if"
+         * attribute are used to validate the name, based in the
+         * existence of the property.
+         *
+         * @param cond A property name. If this property is
+         *             present, the name is invalid.
+         */
         public void setUnless(String cond) {
             unlessCond = cond;
         }
 
+        /**
+         * @return the name attribute.
+         */
         public String getName() {
             return name;
         }
 
+        /**
+         * This validates the name - checks the if and unless
+         * properties.
+         *
+         * @param p the current project, used to check the presence or
+         *          absence of a property.
+         * @return  the name attribute or null if the "if" or "unless"
+         *          properties are not/are set.
+         */
         public String evalName(Project p) {
             return valid(p) ? name : null;
         }
@@ -85,6 +118,9 @@ public class PatternSet extends DataType implements Cloneable {
             return true;
         }
 
+        /**
+         * @return a printable form of this object.
+         */
         public String toString() {
             StringBuffer buf = new StringBuffer(name != null ? name : "");
             if ((ifCond != null) || (unlessCond != null)) {
@@ -107,6 +143,9 @@ public class PatternSet extends DataType implements Cloneable {
         }
     }
 
+    /**
+     * Creates a new <code>PatternSet</code> instance.
+     */
     public PatternSet() {
         super();
     }
@@ -117,6 +156,8 @@ public class PatternSet extends DataType implements Cloneable {
      *
      * <p>You must not set another attribute or nest elements inside
      * this element if you make it a reference.</p>
+     * @param r the reference to another patternset.
+     * @throws BuildException on error.
      */
     public void setRefid(Reference r) throws BuildException {
         if (!includeList.isEmpty() || !excludeList.isEmpty()) {
@@ -125,6 +166,11 @@ public class PatternSet extends DataType implements Cloneable {
         super.setRefid(r);
     }
 
+    /**
+     * This is a patternset nested element.
+     *
+     * @param p a configured patternset nested element.
+     */
     public void addConfiguredPatternset(PatternSet p) {
         if (isReference()) {
             throw noChildrenAllowed();
@@ -148,6 +194,7 @@ public class PatternSet extends DataType implements Cloneable {
 
     /**
      * add a name entry on the include list
+     * @return a nested include element to be configured.
      */
     public NameEntry createInclude() {
         if (isReference()) {
@@ -158,6 +205,7 @@ public class PatternSet extends DataType implements Cloneable {
 
     /**
      * add a name entry on the include files list
+     * @return a nested includesfile element to be configured.
      */
     public NameEntry createIncludesFile() {
         if (isReference()) {
@@ -168,6 +216,7 @@ public class PatternSet extends DataType implements Cloneable {
 
     /**
      * add a name entry on the exclude list
+     * @return a nested exclude element to be configured.
      */
     public NameEntry createExclude() {
         if (isReference()) {
@@ -178,6 +227,7 @@ public class PatternSet extends DataType implements Cloneable {
 
     /**
      * add a name entry on the exclude files list
+     * @return a nested excludesfile element to be configured.
      */
     public NameEntry createExcludesFile() {
         if (isReference()) {
@@ -235,6 +285,7 @@ public class PatternSet extends DataType implements Cloneable {
      * Sets the name of the file containing the includes patterns.
      *
      * @param includesFile The file to fetch the include patterns from.
+     * @throws BuildException on error.
      */
      public void setIncludesfile(File includesFile) throws BuildException {
          if (isReference()) {
@@ -247,6 +298,7 @@ public class PatternSet extends DataType implements Cloneable {
      * Sets the name of the file containing the excludes patterns.
      *
      * @param excludesFile The file to fetch the exclude patterns from.
+     * @throws BuildException on error.
      */
      public void setExcludesfile(File excludesFile) throws BuildException {
          if (isReference()) {
@@ -295,6 +347,8 @@ public class PatternSet extends DataType implements Cloneable {
 
     /**
      * Adds the patterns of the other instance to this set.
+     * @param other the other PatternSet instance.
+     * @param p the current project.
      */
     public void append(PatternSet other, Project p) {
         if (isReference()) {
@@ -318,6 +372,8 @@ public class PatternSet extends DataType implements Cloneable {
 
     /**
      * Returns the filtered include patterns.
+     * @param p the current project.
+     * @return the filtered included patterns.
      */
     public String[] getIncludePatterns(Project p) {
         if (isReference()) {
@@ -330,6 +386,8 @@ public class PatternSet extends DataType implements Cloneable {
 
     /**
      * Returns the filtered include patterns.
+     * @param p the current project.
+     * @return the filtered excluded patterns.
      */
     public String[] getExcludePatterns(Project p) {
         if (isReference()) {
@@ -435,6 +493,9 @@ public class PatternSet extends DataType implements Cloneable {
         }
     }
 
+    /**
+     * @return a printable form of this object.
+     */
     public String toString() {
         return "patternSet{ includes: " + includeList
                 + " excludes: " + excludeList + " }";
@@ -442,6 +503,7 @@ public class PatternSet extends DataType implements Cloneable {
 
     /**
      * @since Ant 1.6
+     * @return a clone of this patternset.
      */
     public Object clone() {
         if (isReference()) {
