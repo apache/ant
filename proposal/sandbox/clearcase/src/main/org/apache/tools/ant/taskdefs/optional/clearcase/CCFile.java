@@ -65,13 +65,13 @@ import org.apache.tools.ant.BuildException;
 public class CCFile extends File {
 
     /** is it checkedout */
-    private boolean checkedout;
+    private boolean checkedout = false;
 
     /** is it under source control ? */
-    private boolean versioned;
+    private boolean versioned = false;
 
     /** was this file already described once ? */
-    private boolean described;
+    private boolean described = false;
 
     public CCFile(String parent, String child) {
         super(parent, child);
@@ -131,5 +131,6 @@ public class CCFile extends File {
         String stdout = res.getStdout();
         versioned = (stdout.indexOf("view private object") == -1);
         checkedout = (stdout.indexOf("checkout") != -1);
+        described = true;
     }
 }
