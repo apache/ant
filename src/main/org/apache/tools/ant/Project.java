@@ -198,6 +198,12 @@ public class Project {
         return property;
     }
 
+    public String getUserProperty(String name) {
+        if (name == null) return null;
+        String property = (String) userProperties.get(name);
+        return property;
+    }
+
     public Hashtable getProperties() {
         return properties;
     }

@@ -60,8 +60,10 @@ import java.util.*;
 
 /**
  * Will set a Project property. Used to be a hack in ProjectHelper
+ * Will not override values set by the command line or parent projects.
  *
  * @author costin@dnt.ro
+ * @author Sam Ruby <rubys@us.ibm.com>
  */
 public class Property extends Task {
 
@@ -101,9 +103,19 @@ public class Property extends Task {
             if ((name != null) && (value != null)) {
                 String v = ProjectHelper.replaceProperties(value, project.getProperties());
 		if( userProperty )
-		    project.setUserProperty(name, v);
+                    if (project.getUserProperty(name) == null) {
+		        project.setUserProperty(name, v);
+                    } else {
+                        project.log("Override ignored for " + name, 
+                                    project.MSG_VERBOSE);
+                    }
 		else
-		    project.setProperty(name, v);
+                    if (project.getProperty(name) == null) {
+		        project.setProperty(name, v);
+                    } else {
+                        project.log("Override ignored for " + name, 
+                                    project.MSG_VERBOSE);
+                    }
             }
 
             if (file != null) loadFile(file);
@@ -149,9 +161,19 @@ public class Property extends Task {
             String value = (String) props.getProperty(name);
             String v = ProjectHelper.replaceProperties(value, project.getProperties());
             if( userProperty )
-		project.setUserProperty(name, v);
-	    else
-		project.setProperty(name, v);
+                if (project.getUserProperty(name) == null) {
+		    project.setUserProperty(name, v);
+                } else {
+                    project.log("Override ignored for " + name, 
+                                project.MSG_VERBOSE);
+                }
+            else
+                if (project.getProperty(name) == null) {
+		    project.setProperty(name, v);
+                } else {
+                    project.log("Override ignored for " + name, 
+                                project.MSG_VERBOSE);
+                }
         }
     }
 
