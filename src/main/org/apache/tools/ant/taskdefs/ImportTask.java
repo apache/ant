@@ -29,27 +29,26 @@ import java.io.IOException;
 import java.util.Vector;
 
 /**
- * <p>
  * Task to import another build file into the current project.
  * <p>
  * It must be 'top level'. On execution it will read another Ant file
  * into the same Project.
+ * </p>
  * <p>
  * <b>Important</b>: we have not finalized how relative file references
- * will be resolved in deep/complex build hierarchies -such as what happens
+ * will be resolved in deep/complex build hierarchies - such as what happens
  * when an imported file imports another file. Use absolute references for
  * enhanced build file stability, especially in the imported files.
- *
- * Examples
+ * </p>
+ * <p>Examples:</p>
  * <pre>
- * &lt;import file="../common-targets.xml" /&gt;
+ * &lt;import file="../common-targets.xml"/&gt;
  * </pre>
- * Import targets from a file in a parent directory.
- *<p>
+ * <p>Import targets from a file in a parent directory.</p>
  * <pre>
- * &lt;import file="${deploy-platform}.xml" /&gt;
+ * &lt;import file="${deploy-platform}.xml"/&gt;
  * </pre>
- * Import the project defined by the property deploy-platform
+ * <p>Import the project defined by the property <code>deploy-platform</code>.</p>
  *
  * @since Ant1.6
  * @ant.task category="control"
