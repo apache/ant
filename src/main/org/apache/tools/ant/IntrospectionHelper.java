@@ -407,7 +407,8 @@ public class IntrospectionHelper implements BuildListener {
      */
     public void setAttribute(Project p, Object element, String attributeName,
                              String value) throws BuildException {
-        AttributeSetter as = (AttributeSetter) attributeSetters.get(attributeName);
+        AttributeSetter as
+            = (AttributeSetter) attributeSetters.get(attributeName);
         if (as == null) {
             if (element instanceof DynamicConfigurator) {
                 DynamicConfigurator dc = (DynamicConfigurator) element;
@@ -416,7 +417,8 @@ public class IntrospectionHelper implements BuildListener {
             }
             else {
                 String msg = getElementName(p, element) +
-                    " doesn't support the \"" + attributeName + "\" attribute.";
+                    " doesn't support the \"" + attributeName +
+                    "\" attribute.";
                 throw new BuildException(msg);
             }
         }
