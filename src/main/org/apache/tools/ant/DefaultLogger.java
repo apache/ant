@@ -99,7 +99,7 @@ public class DefaultLogger implements BuildLogger {
      * @param output the output stream for the logger.
      */
     public void setOutputPrintStream(PrintStream output) {
-        this.out = output;
+        this.out = new PrintStream(output, true);
     }
 
     /**
@@ -108,7 +108,7 @@ public class DefaultLogger implements BuildLogger {
      * @param err the error stream for the logger.
      */
     public void setErrorPrintStream(PrintStream err) {
-        this.err = err;
+        this.err = new PrintStream(err, true);
     }
 
     /**
@@ -160,14 +160,18 @@ public class DefaultLogger implements BuildLogger {
                        + formatTime(System.currentTimeMillis() - startTime));
 
         String msg = message.toString();
-        printlnAndFlush(error == null ? out : err, msg);
+        if (error == null) {
+            out.println(msg);
+        } else {
+            err.println(msg);
+        }
         log(msg);
     }
 
     public void targetStarted(BuildEvent event) {
         if (Project.MSG_INFO <= msgOutputLevel) {
             String msg = lSep + event.getTarget().getName() + ":";
-            printlnAndFlush(out, msg);
+            out.println(msg);
             log(msg);
         }
     }
@@ -198,8 +202,11 @@ public class DefaultLogger implements BuildLogger {
 
             message.append(event.getMessage());
             String msg = message.toString();
-            printlnAndFlush(event.getPriority() != Project.MSG_ERR ? out : err,
-                            msg);
+            if (event.getPriority() != Project.MSG_ERR) {
+                out.println(msg);
+            } else {
+                err.println(msg);
+            }
             log(msg);
         }
     }
@@ -227,13 +234,5 @@ public class DefaultLogger implements BuildLogger {
      * same output that is generated here.
      */
     protected void log(String message) {}
-
-    /**
-     * Print a line to the given stream and flush the stream right after that.
-     */
-    protected void printlnAndFlush(PrintStream p, String line) {
-        p.println(line);
-        p.flush();
-    }
 
 }
