@@ -35,8 +35,10 @@ public class DefaultMasterConverter
 
     private TypeManager m_typeManager;
 
-    /** Map from converter name to Converter. */
-    private Map m_converters = new HashMap();
+    /**
+     * Map from converter classname to instance of converter.
+     */
+    private final Map m_converters = new HashMap();
 
     /**
      * This holds the mapping between source/destination
