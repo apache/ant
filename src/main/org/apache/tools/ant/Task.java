@@ -78,7 +78,7 @@ public abstract class Task {
      *
      * @param project Project in whose scope this task belongs.
      */
-    void setProject(Project project) {
+    public void setProject(Project project) {
         this.project = project;
     }
 
