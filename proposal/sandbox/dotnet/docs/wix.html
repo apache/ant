@@ -1,0 +1,177 @@
+<html>
+  <head>
+    <meta http-equiv="Content-Language" content="en-us"></meta>
+    <title>Wix Task</title>
+  </head>
+
+  <body>
+    <h2>Wix</h2>
+
+    <h3>Description</h3>
+
+    <p>Runs the candle, light or both from the <a
+    href="http://sourceforge.net/projects/wix">Wix</a> toolset.</p>
+
+    <h3>Parameters</h3>
+    <table border="1" cellpadding="2" cellspacing="0">
+      <tr>
+        <td valign="top"><b>Attribute</b></td>
+        <td valign="top"><b>Description</b></td>
+        <td align="center" valign="top"><b>Required</b></td>
+      </tr>
+      <tr>
+        <td valign="top">source</td>
+        <td valign="top">The single source file to process.</td>
+        <td align="center">Either this or at least one nested
+        &lt;sources&gt; set.</td>
+      </tr>
+      <tr>
+        <td valign="top">target</td>
+        <td valign="top">The expected target file.</td>
+        <td align="center">Yes, unless you run candle without light.</td>
+      </tr>
+      <tr>
+        <td valign="top">mode</td>
+        <td valign="top">Which part of the toolset to run, one of
+        &quot;candle&quot;, &quot;light&quot; or
+        &quot;both&quot;.</td>
+        <td align="center">No, default is &quot;both&quot;.</td>
+      </tr>
+      <tr>
+        <td valign="top">vm</td>
+        <td valign="top">Same as <a
+            href="dotnetexec.html">dotnetexec</a>'s vm attribute.
+          Specify the framework to use.</td>
+        <td align="center">No.</td>
+      </tr>
+    </table>
+
+    <h3>Parameters specified as nested elements</h3>
+
+    <h4>sources</h4>
+
+    <p>Specify source files that shall be passed on the command line.
+    This is a <a
+    href="http://ant.apache.org/manual/CoreTypes/fileset.html">fileset</a>.</p>
+
+    <h4>moresources</h4>
+
+    <p>Specify source files that shall not be passed on the command
+    line.  This is a <a
+    href="http://ant.apache.org/manual/CoreTypes/fileset.html">fileset</a>.</p>
+
+    <p>Typically this would list include files when running candle or
+    the files that vecome part of the MSI file when running light.
+    The files in this set are only used for timestamp comparisons.  If
+    neither these files nor the given &quot;normal&quot; sources are
+    newer than the expected target, the task won't do anything.</p>
+
+
+    <h3>Examples</h3>
+
+    <p>Create <code>product.wixobj</code> from <code>product.wxs</code>:</p>
+
+    <pre>
+      &lt;wix mode="candle" source="product.wxs"/&gt;
+    </pre>
+
+    <p>The same but using a nested sources element:</p>
+
+    <pre>
+      &lt;wix mode="candle"&gt;
+        &lt;sources dir="."&gt;
+          &lt;include name="product.wxs"/&gt;
+        &lt;/sources&gt;
+      &lt;/wix&gt;
+    </pre>
+
+    <p>Create <code>product.msi</code> from <code>product.wixobj</code>:</p>
+
+    <pre>
+      &lt;wix mode="light" source="product.wixobj" target="product.msi"/&gt;
+    </pre>
+
+    <p>Combine the examples into a single step:</p>
+
+    <pre>
+      &lt;wix source="product.wxs" target="product.msi"/&gt;
+    </pre>
+
+    <p>Note that the task wouldn't do anything if
+    <code>product.wxs</code> was older than
+    <code>product.wixobj</code> and <code>product.wixobj</code> was
+    older than <code>product.msi</code>.</p>
+
+    <p>Compile multiple <code>.wxs</code> files at once:</p>
+
+    <pre>
+      &lt;wix mode="candle"&gt;
+        &lt;sources dir="."&gt;
+          &lt;include name="*.wxs"/&gt;
+        &lt;/sources&gt;
+      &lt;/wix&gt;
+    </pre>
+
+    <p>Compile multiple <code>.wxs</code> files at once, specify some
+    include files in addition to that:</p>
+
+    <pre>
+      &lt;wix mode="candle"&gt;
+        &lt;sources dir="."&gt;
+          &lt;include name="*.wxs"/&gt;
+        &lt;/sources&gt;
+        &lt;moresources dir="."&gt;
+          &lt;include name="*.wxi"/&gt;
+        &lt;/moresources&gt;
+      &lt;/wix&gt;
+    </pre>
+
+    <p>Link multiple <code>.wixobj</code> files at once:</p>
+
+    <pre>
+      &lt;wix mode="light" target="product.msi"&gt;
+        &lt;sources dir="."&gt;
+          &lt;include name="*.wixobj"/&gt;
+        &lt;/sources&gt;
+      &lt;/wix&gt;
+    </pre>
+
+    <p>Link multiple <code>.wixobj</code> files at once and specify
+    that the files in directory &quot;source&quot; will become part of
+    the package:</p>
+
+    <pre>
+      &lt;wix mode="light" target="product.msi"&gt;
+        &lt;sources dir="."&gt;
+          &lt;include name="*.wixobj"/&gt;
+        &lt;/sources&gt;
+        &lt;moresources dir="source"/&gt;
+      &lt;/wix&gt;
+    </pre>
+
+    <pre>Combine multiple <code>.wxs</code> files and include files
+    into a single package and specify that the package will contain
+    files from the source directory:</pre>
+
+    <pre>
+      &lt;wix target="product.msi"&gt;
+        &lt;sources dir="."&gt;
+          &lt;include name="*.wxs"/&gt;
+        &lt;/sources&gt;
+        &lt;moresources dir="."&gt;
+          &lt;include name="*.wxi"/&gt;
+        &lt;/moresources&gt;
+        &lt;moresources dir="source"/&gt;
+      &lt;/wix&gt;
+    </pre>
+
+    <p>Again, if the intermediate <code>.wixobj</code> files are newer
+    that the corresponding <code>.wxs</code> files (and all include
+    files) the candle step will be skipped.  If
+    <code>product.msi</code> is newer than all files, the task won't
+    do anything.</p>
+
+    <hr/>
+      <p align="center">Copyright &copy; 2004 The Apache Software Foundation. All rights Reserved.</p>
+  </body>
+</html>

@@ -1,0 +1,4 @@
+<project name="p1" default="run">
+    <import file="../d2/p2.xml"/>
+    <import file="../d3b/p3.xml"/>
+</project>
