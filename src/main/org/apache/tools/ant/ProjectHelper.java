@@ -80,7 +80,6 @@ public class ProjectHelper {
      * @param buildFile An XML file giving the project's configuration.
      *                  Must not be <code>null</code>.
      *
-     * @deprecated Use the non-static parse method
      * @exception BuildException if the configuration is invalid or cannot
      *                           be read
      */
