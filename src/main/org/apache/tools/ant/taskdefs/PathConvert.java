@@ -145,16 +145,8 @@ public class PathConvert extends Task {
             // If the element starts with the configured prefix, then
             // convert the prefix to the configured 'to' value.
 
-            if (cmpElem.startsWith(cmpFrom)) {
-                int len = from.length();
-
-                if (len >= elem.length()) {
-                    elem = to;
-                } else {
-                    elem = to + elem.substring(len);
-                }
-            }
-            return elem;
+            return cmpElem.startsWith(cmpFrom)
+                ? to + elem.substring(from.length()) : elem;
         }
     }
 
