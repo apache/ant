@@ -26,7 +26,7 @@ double "$$" got mapped to "$" for backwards compatibility.
 
 <h2>Use built in helper classes</h2>
 
-Ant includes helper tasks to simplify mauch of your work. Be warned that
+Ant includes helper tasks to simplify much of your work. Be warned that
 these helper classes will look very different in ant2.0 from these 1.x
 versions. However it is still better to use them than roll your own, for
 development, maintenance and code size reasons.
@@ -82,6 +82,10 @@ not eight, four. Even if your editor is configured to have a tab of four
 spaces, lots of others aren't -spaces have more consistency across
 editors and platforms. Some IDEs (JEdit) can highlight tabs, to stop you
 accidentally inserting them
+<p>
+There is an ant build file check.xml in the main ant directory with runs 
+  <a href="http://checkstyle.sourceforge.net">checkstyle</a> over
+  ant's source code.
 
 <h2>Attributes and elements</h2>
 Use the Ant introspection based mapping of attributes into Java datatypes,
@@ -176,33 +180,38 @@ Tasks which don't do any dependency checking do not help users as much as
 they can, because their needless work can trickle through the entire build, test
 and deploy process.
 
-<h2>Support Java 1.1 through Java 1.4</h2>
+<h2>Support Java 1.2 through Java 1.4</h2>
 
-Ant is designed to support Java1.1: to build on it, to run on it. Sometimes
-functionality of tasks have to degrade in that environment -&lt;touch&gt;
-is a case in point- this is usually due to library limitations;
+Ant1.5 and lower was designed to support Java1.1. Ant1.6 and higher
+is designed to support Java1.2: to build on it, to run on it. Sometimes
+functionality of tasks have to degrade in that environment
+- this is usually due to library limitations;
 such behaviour change must always be noted in the documentation.
 <p>
-What is problematic is code which is dependent on Java1.2 features
--Collections, Reader and Writer classes, extra methods in older classes.
+What is problematic is code which is dependent on Java1.3 features
+-java.lang.reflect.Proxy, or Java1.4 features - java.io.nio for example.
+Be also aware of extra
+methods in older classes - like StringBuffer#append(StringBuffer).
 These can not be used directly by any code and still be able to compile
-and run on a Java 1.1 system. So please stick to the older collection
-classes, and the older IO classes. If a new method in an existing class
+and run on a Java 1.2 system.
+If a new method in an existing class
 is to be used, it must be used via reflection and the
 <tt>NoSuchMethodException</tt> handled somehow.
 <p>
-What if code simply does not work on Java1.1? It can happen. It will
+What if code simply does not work on Java1.2? It can happen. It will
 probably be OK to have the task as an optional task, with compilation
-restricted to Java1.2 or later through build.xml modifications.
+restricted to Java1.3 or later through build.xml modifications.
 Better still, use reflection to link to the classes at run time.
 <p>
 Java 1.4 adds a new optional change to the language itself, the
 <tt>assert</tt> keyword, which is only enabled if the compiler is told
-to compile 1.4 version source. Clearly with the 1.1 compatibility requirement,
+to compile 1.4 version source. Clearly with the 1.2 compatibility requirement,
 Ant tasks can not use this keyword. They also need to move away from
 using the JUnit <tt>assert()</tt> method and call <tt>assertTrue()</tt>
 instead.
-
+<p>
+Java 1.5 will (perhaps) add a new keyword - enum, one should avoid
+this for future compatibility.
 
 
 <h2>Refactor</h2>
@@ -256,8 +265,8 @@ utterly essential to many users.
 
 <p>
 
-Remember also that Ant 1.x is designed to compile and run on Java1.1, so
-you should test on Java 1.1 as well as any later version which you use.
+Remember also that Ant 1.x is designed to compile and run on Java1.2, so
+you should test on Java 1.2 as well as any later version which you use.
 You can download an old SDK from Sun for this purpose.
 <p>
 Finally, run a full <code>build test</code> before and after you start
@@ -427,7 +436,7 @@ cases, while documentation helps sell the reason for a task.
 <h3>Checklist before submitting a patch</h3>
 <ul>
 <li>Added code complies with style guidelines
-<li>Code compiles and runs on Java1.1
+<li>Code compiles and runs on Java1.2
 <li>New member variables are private, and provide public accessor methods
 	if access is actually needed.
 <li>Existing test cases succeed.
@@ -446,7 +455,7 @@ subject.
 <li>Java file begins with Apache copyright and license statement.
 <li>Task does not depend on GPL or LGPL code.
 <li>Source code complies with style guidelines
-<li>Code compiles and runs on Java1.1
+<li>Code compiles and runs on Java1.2
 <li>Member variables are private, and provide public accessor methods
 	if access is actually needed.
 <li><i>Maybe</i> Task has failonerror attribute to control failure behaviour
