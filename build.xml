@@ -772,7 +772,7 @@
       <group title="Core Tasks" packages="org.apache.tools.ant.taskdefs*" />
       <group title="Optional Tasks" packages="org.apache.tools.ant.taskdefs.optional*" />
 
-      <bottom>Copyright &#169; 1999-${year} Apache Software Foundation. All Rights Reserved.</bottom>
+      <bottom>Copyright &#169; 2000-${year} Apache Software Foundation. All Rights Reserved.</bottom>
     </javadoc>
   </target>
 
