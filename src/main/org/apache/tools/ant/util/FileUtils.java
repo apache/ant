@@ -1008,7 +1008,7 @@ public class FileUtils {
      * the absolute paths and &quot;normalize&quot; the filenames
      * before comparing them.</p>
      *
-     * @since Ant 1.5.2
+     * @since Ant 1.5.3
      */
     public boolean fileNameEquals(File f1, File f2) {
         return normalize(f1.getAbsolutePath())
