@@ -44,16 +44,16 @@
 
       <subsection name="AntDoc">
 
-	<p>AntDoc is a tool that generates HTML documentation from Ant
-	buildfiles; the generated HTML is inspired from what javadoc
-	yields. It also offers a simple Ant target launcher named
-	AntDoc GUI. Ant targets may be launched from the generated
-	AntDoc HTML pages.</p>
+        <p>AntDoc is a tool that generates HTML documentation from Ant
+        buildfiles; the generated HTML is inspired from what javadoc
+        yields. It also offers a simple Ant target launcher named
+        AntDoc GUI. Ant targets may be launched from the generated
+        AntDoc HTML pages.</p>
 
-	<p>AntDoc can be run via an Ant task, AntDoc GUI can be run
-	via an Ant task, or via a JVM launch.</p>
+        <p>AntDoc can be run via an Ant task, AntDoc GUI can be run
+        via an Ant task, or via a JVM launch.</p>
 
-	<table>
+        <table>
           <tr>
             <th>Compatibility:</th>
             <td>Ant 1.4.1 and higher</td>
@@ -70,7 +70,7 @@
             <th>License:</th>
             <td>At the moment, no license is being attached to the tool.</td>
           </tr>
-	</table>
+        </table>
       </subsection>
 
       <subsection name="AntHill">
