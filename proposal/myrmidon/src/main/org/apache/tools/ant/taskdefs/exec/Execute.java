@@ -9,7 +9,6 @@ package org.apache.tools.ant.taskdefs.exec;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Locale;
 import java.util.Properties;
 import org.apache.avalon.excalibur.io.FileUtil;
@@ -165,7 +164,8 @@ public class Execute
      * @param watchdog a watchdog for the subprocess or <code>null</code> to to
      *      disable a timeout for the subprocess.
      */
-    public Execute( ExecuteStreamHandler streamHandler, ExecuteWatchdog watchdog )
+    public Execute( final ExecuteStreamHandler streamHandler,
+                    final ExecuteWatchdog watchdog )
     {
         m_streamHandler = streamHandler;
         m_watchdog = watchdog;
@@ -179,15 +179,16 @@ public class Execute
      * @param cmdline The command to execute.
      * @throws TaskException if the command does not return 0.
      */
-    public static void runCommand( Task task, String[] cmdline )
+    public static void runCommand( final Task task, final String[] cmdline )
         throws TaskException
     {
         try
         {
             task.log( Commandline.toString( cmdline ), Project.MSG_VERBOSE );
-            Execute exe = new Execute( new LogStreamHandler( task,
-                                                             Project.MSG_INFO,
-                                                             Project.MSG_ERR ) );
+            final Execute exe =
+                new Execute( new LogStreamHandler( task,
+                                                   Project.MSG_INFO,
+                                                   Project.MSG_ERR ) );
             exe.setCommandline( cmdline );
             int retval = exe.execute();
             if( retval != 0 )
@@ -195,9 +196,9 @@ public class Execute
                 throw new TaskException( cmdline[ 0 ] + " failed with return code " + retval );
             }
         }
-        catch( IOException exc )
+        catch( final IOException ioe )
         {
-            throw new TaskException( "Could not launch " + cmdline[ 0 ] + ": " + exc );
+            throw new TaskException( "Could not launch " + cmdline[ 0 ] + ": " + ioe );
         }
     }
 
@@ -254,10 +255,10 @@ public class Execute
      *
      * @return the environment used to create a subprocess
      */
-    public String[] getEnvironment()
+    private String[] getEnvironment()
         throws TaskException
     {
-        if( m_environment == null || m_newEnvironment )
+        if( m_newEnvironment )
         {
             return Environment.toNativeFormat( m_environment );
         }
@@ -284,27 +285,26 @@ public class Execute
     public int execute()
         throws IOException, TaskException
     {
-        CommandLauncher launcher = c_launcher != null ? c_launcher : c_shellLauncher;
-        if( !m_useVMLauncher )
-        {
-            launcher = c_shellLauncher;
-        }
 
         final ExecMetaData metaData =
             new ExecMetaData( m_command, getEnvironment(),
                               m_workingDirectory, false );
+
+        final CommandLauncher launcher = getLauncher();
         final Process process = launcher.exec( metaData );
+
         try
         {
             m_streamHandler.setProcessInputStream( process.getOutputStream() );
             m_streamHandler.setProcessOutputStream( process.getInputStream() );
             m_streamHandler.setProcessErrorStream( process.getErrorStream() );
         }
-        catch( IOException e )
+        catch( final IOException ioe )
         {
             process.destroy();
-            throw e;
+            throw ioe;
         }
+
         m_streamHandler.start();
 
         // add the process to the list of those to destroy if the VM exits
@@ -312,19 +312,42 @@ public class Execute
         c_processDestroyer.add( process );
 
         if( m_watchdog != null )
+        {
             m_watchdog.start( process );
-        waitFor( process );
+        }
+        try
+        {
+            process.waitFor();
+        }
+        catch( final InterruptedException ie )
+        {
+            //shu\ould never happen
+        }
 
         // remove the process to the list of those to destroy if the VM exits
         //
         c_processDestroyer.remove( process );
 
         if( m_watchdog != null )
+        {
             m_watchdog.stop();
+        }
         m_streamHandler.stop();
         if( m_watchdog != null )
+        {
             m_watchdog.checkException();
-        return m_exitValue;
+        }
+        return process.exitValue();;
+    }
+
+    private CommandLauncher getLauncher()
+    {
+        CommandLauncher launcher = c_launcher;
+        if( !m_useVMLauncher )
+        {
+            launcher = c_shellLauncher;
+        }
+        return launcher;
     }
 
     /**
@@ -336,22 +359,5 @@ public class Execute
     public boolean killedProcess()
     {
         return m_watchdog != null && m_watchdog.killedProcess();
-    }
-
-    private void setExitValue( final int value )
-    {
-        m_exitValue = value;
-    }
-
-    protected void waitFor( Process process )
-    {
-        try
-        {
-            process.waitFor();
-            setExitValue( process.exitValue() );
-        }
-        catch( InterruptedException e )
-        {
-        }
     }
 }
