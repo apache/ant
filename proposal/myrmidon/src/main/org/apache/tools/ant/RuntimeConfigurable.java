@@ -6,12 +6,13 @@
  * the LICENSE file.
  */
 package org.apache.tools.ant;
+
 import java.util.Enumeration;
 import java.util.Locale;
 import java.util.Vector;
+import org.apache.myrmidon.api.TaskException;
 import org.xml.sax.AttributeList;
 import org.xml.sax.helpers.AttributeListImpl;
-import org.apache.myrmidon.api.TaskException;
 
 /**
  * Wrapper class that holds the attributes of a Task (or elements nested below
@@ -95,7 +96,6 @@ public class RuntimeConfigurable
         addText( new String( buf, start, end ) );
     }
 
-
     /**
      * Configure the wrapped element and all children.
      *
@@ -121,10 +121,10 @@ public class RuntimeConfigurable
         Enumeration enum = children.elements();
         while( enum.hasMoreElements() )
         {
-            RuntimeConfigurable child = ( RuntimeConfigurable )enum.nextElement();
+            RuntimeConfigurable child = (RuntimeConfigurable)enum.nextElement();
             if( child.wrappedObject instanceof Task )
             {
-                Task childTask = ( Task )child.wrappedObject;
+                Task childTask = (Task)child.wrappedObject;
                 childTask.setRuntimeConfigurableWrapper( child );
                 childTask.maybeConfigure();
             }
@@ -154,7 +154,7 @@ public class RuntimeConfigurable
      */
     RuntimeConfigurable getChild( int index )
     {
-        return ( RuntimeConfigurable )children.elementAt( index );
+        return (RuntimeConfigurable)children.elementAt( index );
     }
 
 }

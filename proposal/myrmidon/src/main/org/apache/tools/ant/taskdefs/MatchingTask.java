@@ -50,6 +50,7 @@ public abstract class MatchingTask extends Task
      * @param excludes the string containing the exclude patterns
      */
     public void setExcludes( String excludes )
+        throws TaskException
     {
         fileset.setExcludes( excludes );
     }
@@ -61,6 +62,7 @@ public abstract class MatchingTask extends Task
      *      patterns from.
      */
     public void setExcludesfile( File excludesfile )
+        throws TaskException
     {
         fileset.setExcludesfile( excludesfile );
     }
@@ -72,6 +74,7 @@ public abstract class MatchingTask extends Task
      * @param includes the string containing the include patterns
      */
     public void setIncludes( String includes )
+        throws TaskException
     {
         fileset.setIncludes( includes );
     }
@@ -83,6 +86,7 @@ public abstract class MatchingTask extends Task
      *      patterns from.
      */
     public void setIncludesfile( File includesfile )
+        throws TaskException
     {
         fileset.setIncludesfile( includesfile );
     }
@@ -93,6 +97,7 @@ public abstract class MatchingTask extends Task
      * @return Description of the Returned Value
      */
     public PatternSet.NameEntry createExclude()
+        throws TaskException
     {
         return fileset.createExclude();
     }
@@ -103,6 +108,7 @@ public abstract class MatchingTask extends Task
      * @return Description of the Returned Value
      */
     public PatternSet.NameEntry createExcludesFile()
+        throws TaskException
     {
         return fileset.createExcludesFile();
     }
@@ -113,6 +119,7 @@ public abstract class MatchingTask extends Task
      * @return Description of the Returned Value
      */
     public PatternSet.NameEntry createInclude()
+        throws TaskException
     {
         return fileset.createInclude();
     }
@@ -123,6 +130,7 @@ public abstract class MatchingTask extends Task
      * @return Description of the Returned Value
      */
     public PatternSet.NameEntry createIncludesFile()
+        throws TaskException
     {
         return fileset.createIncludesFile();
     }

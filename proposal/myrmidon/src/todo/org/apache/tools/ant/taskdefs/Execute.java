@@ -179,6 +179,7 @@ public class Execute
      * @return The ProcEnvironment value
      */
     public static synchronized Vector getProcEnvironment()
+        throws TaskException
     {
         if( procEnvironment != null )
             return procEnvironment;
@@ -405,6 +406,7 @@ public class Execute
      * @return the environment used to create a subprocess
      */
     public String[] getEnvironment()
+        throws TaskException
     {
         if( env == null || newEnvironment )
             return env;
@@ -505,6 +507,7 @@ public class Execute
      * @return the patched environment
      */
     private String[] patchEnvironment()
+        throws TaskException
     {
         Vector osEnv = (Vector)getProcEnvironment().clone();
         for( int i = 0; i < env.length; i++ )
@@ -681,7 +684,7 @@ public class Execute
          * @exception IOException Description of Exception
          */
         public Process exec( Project project, String[] cmd, String[] env, File workingDir )
-            throws IOException
+            throws IOException, TaskException
         {
             try
             {

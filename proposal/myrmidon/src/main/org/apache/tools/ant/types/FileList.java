@@ -52,6 +52,7 @@ public class FileList extends DataType
     }
 
     public void setFiles( String filenames )
+        throws TaskException
     {
         if( isReference() )
         {
@@ -88,6 +89,7 @@ public class FileList extends DataType
     }
 
     public File getDir( Project p )
+        throws TaskException
     {
         if( isReference() )
         {
@@ -103,6 +105,7 @@ public class FileList extends DataType
      * @return The Files value
      */
     public String[] getFiles( Project p )
+        throws TaskException
     {
         if( isReference() )
         {
@@ -132,6 +135,7 @@ public class FileList extends DataType
      * @return The Ref value
      */
     protected FileList getRef( Project p )
+        throws TaskException
     {
         if( !checked )
         {

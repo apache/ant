@@ -73,6 +73,7 @@ public class Delete extends MatchingTask
      * @param excludes the string containing the exclude patterns
      */
     public void setExcludes( String excludes )
+        throws TaskException
     {
         usedMatchingTask = true;
         super.setExcludes( excludes );
@@ -85,6 +86,7 @@ public class Delete extends MatchingTask
      *      patterns from.
      */
     public void setExcludesfile( File excludesfile )
+        throws TaskException
     {
         usedMatchingTask = true;
         super.setExcludesfile( excludesfile );
@@ -127,6 +129,7 @@ public class Delete extends MatchingTask
      * @param includes the string containing the include patterns
      */
     public void setIncludes( String includes )
+        throws TaskException
     {
         usedMatchingTask = true;
         super.setIncludes( includes );
@@ -139,6 +142,7 @@ public class Delete extends MatchingTask
      *      patterns from.
      */
     public void setIncludesfile( File includesfile )
+        throws TaskException
     {
         usedMatchingTask = true;
         super.setIncludesfile( includesfile );
@@ -195,6 +199,7 @@ public class Delete extends MatchingTask
      * @return Description of the Returned Value
      */
     public PatternSet.NameEntry createExclude()
+        throws TaskException
     {
         usedMatchingTask = true;
         return super.createExclude();
@@ -206,6 +211,7 @@ public class Delete extends MatchingTask
      * @return Description of the Returned Value
      */
     public PatternSet.NameEntry createInclude()
+        throws TaskException
     {
         usedMatchingTask = true;
         return super.createInclude();

@@ -765,7 +765,7 @@ public class IntrospectionHelper implements BuildListener
                     {
                         final File file =
                             FileUtils.newFileUtils().resolveFile( p.getBaseDir(), value );
-                        m.invoke( parent, new File[]{ file } );
+                        m.invoke( parent, new File[]{file} );
                     }
 
                 };

@@ -305,6 +305,7 @@ public class ExecuteOn extends ExecTask
      * @return The Dirs value
      */
     protected String[] getDirs( File baseDir, DirectoryScanner ds )
+        throws TaskException
     {
         if( mapper != null )
         {
@@ -327,6 +328,7 @@ public class ExecuteOn extends ExecTask
      * @return The Files value
      */
     protected String[] getFiles( File baseDir, DirectoryScanner ds )
+        throws TaskException
     {
         if( mapper != null )
         {

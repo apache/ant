@@ -10,6 +10,7 @@ package org.apache.tools.ant.taskdefs;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import org.apache.myrmidon.api.TaskException;
 
 /**
  * Copies standard output and error of subprocesses to standard output and error
@@ -63,6 +64,7 @@ public class PumpStreamHandler implements ExecuteStreamHandler
     }
 
     public void stop()
+        throws TaskException
     {
         try
         {

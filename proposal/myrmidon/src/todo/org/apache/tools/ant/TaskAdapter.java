@@ -6,10 +6,9 @@
  * the LICENSE file.
  */
 package org.apache.tools.ant;
-import java.lang.reflect.Method;
-import java.lang.reflect.Modifier;
-import org.apache.myrmidon.api.TaskException;
 
+import java.lang.reflect.Method;
+import org.apache.myrmidon.api.TaskException;
 
 /**
  * Use introspection to "adapt" an arbitrary Bean ( not extending Task, but with
@@ -34,7 +33,7 @@ public class TaskAdapter extends Task
      * @param project Description of Parameter
      */
     public static void checkTaskClass( final Class taskClass, final Project project )
-    throws TaskException
+        throws TaskException
     {
         // don't have to check for interface, since then
         // taskClass would be abstract too.
@@ -101,7 +100,7 @@ public class TaskAdapter extends Task
         catch( Exception ex )
         {
             log( "Error setting project in " + proxy.getClass(),
-                Project.MSG_ERR );
+                 Project.MSG_ERR );
             throw new BuildException( "Error", ex );
         }
 
@@ -109,7 +108,7 @@ public class TaskAdapter extends Task
         try
         {
             Class c = proxy.getClass();
-            executeM = c.getMethod( "execute", new Class[0] );
+            executeM = c.getMethod( "execute", new Class[ 0 ] );
             if( executeM == null )
             {
                 log( "No public execute() in " + proxy.getClass(), Project.MSG_ERR );

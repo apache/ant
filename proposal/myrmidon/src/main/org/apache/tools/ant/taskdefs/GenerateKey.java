@@ -49,6 +49,7 @@ public class GenerateKey extends Task
     }
 
     public void setDname( final String dname )
+        throws TaskException
     {
         if( null != expandedDname )
         {

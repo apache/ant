@@ -184,7 +184,7 @@ public class ProjectHelper
                 if( endName < 0 )
                 {
                     throw new TaskException( "Syntax error in property: "
-                                              + value );
+                                             + value );
                 }
                 String propertyName = value.substring( pos + 2, endName );
                 fragments.addElement( null );

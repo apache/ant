@@ -607,6 +607,7 @@ public class Rmic extends MatchingTask
      */
     protected void scanDir( File baseDir, String files[],
                             FileNameMapper mapper )
+        throws TaskException
     {
 
         String[] newFiles = files;

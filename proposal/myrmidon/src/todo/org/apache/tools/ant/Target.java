@@ -44,8 +44,8 @@ public class Target implements TaskContainer
                 if( token.equals( "" ) || token.equals( "," ) )
                 {
                     throw new TaskException( "Syntax Error: Depend attribute " +
-                                              "for target \"" + getName() +
-                                              "\" has an empty string for dependency." );
+                                             "for target \"" + getName() +
+                                             "\" has an empty string for dependency." );
                 }
 
                 addDependency( token );
@@ -58,8 +58,8 @@ public class Target implements TaskContainer
                     if( !tok.hasMoreTokens() || !token.equals( "," ) )
                     {
                         throw new TaskException( "Syntax Error: Depend attribute " +
-                                                  "for target \"" + getName() +
-                                                  "\" ends with a , character" );
+                                                 "for target \"" + getName() +
+                                                 "\" ends with a , character" );
                     }
                 }
             }
@@ -228,7 +228,7 @@ public class Target implements TaskContainer
     }
 
     private boolean testUnlessCondition()
-    throws TaskException
+        throws TaskException
     {
         if( "".equals( unlessCondition ) )
         {

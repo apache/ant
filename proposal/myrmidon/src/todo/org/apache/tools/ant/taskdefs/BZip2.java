@@ -20,9 +20,11 @@ import org.apache.tools.bzip2.CBZip2OutputStream;
  * @author <a href="mailto:umagesh@rediffmail.com">Magesh Umasankar</a>
  */
 
-public class BZip2 extends Pack
+public class BZip2
+    extends Pack
 {
     protected void pack()
+        throws TaskException
     {
         CBZip2OutputStream zOut = null;
         try

@@ -62,6 +62,7 @@ public abstract class Pack extends Task
     }
 
     private void validate()
+        throws TaskException
     {
         if( zipFile == null )
         {

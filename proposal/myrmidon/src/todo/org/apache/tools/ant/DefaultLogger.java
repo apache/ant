@@ -6,9 +6,8 @@
  * the LICENSE file.
  */
 package org.apache.tools.ant;
+
 import java.io.PrintStream;
-import java.io.PrintWriter;
-import java.io.StringWriter;
 import org.apache.tools.ant.util.StringUtils;
 
 /**
@@ -36,14 +35,14 @@ public class DefaultLogger implements BuildLogger
         if( minutes > 0 )
         {
             return Long.toString( minutes ) + " minute"
-                 + ( minutes == 1 ? " " : "s " )
-                 + Long.toString( seconds % 60 ) + " second"
-                 + ( seconds % 60 == 1 ? "" : "s" );
+                + ( minutes == 1 ? " " : "s " )
+                + Long.toString( seconds % 60 ) + " second"
+                + ( seconds % 60 == 1 ? "" : "s" );
         }
         else
         {
             return Long.toString( seconds ) + " second"
-                 + ( seconds % 60 == 1 ? "" : "s" );
+                + ( seconds % 60 == 1 ? "" : "s" );
         }
 
     }
@@ -137,7 +136,7 @@ public class DefaultLogger implements BuildLogger
         }
         message.append( StringUtils.LINE_SEP );
         message.append( "Total time: "
-             + formatTime( System.currentTimeMillis() - startTime ) );
+                        + formatTime( System.currentTimeMillis() - startTime ) );
 
         String msg = message.toString();
         if( error == null )
@@ -193,7 +192,9 @@ public class DefaultLogger implements BuildLogger
         }
     }
 
-    public void targetFinished( BuildEvent event ) { }
+    public void targetFinished( BuildEvent event )
+    {
+    }
 
     public void targetStarted( BuildEvent event )
     {
@@ -205,9 +206,13 @@ public class DefaultLogger implements BuildLogger
         }
     }
 
-    public void taskFinished( BuildEvent event ) { }
+    public void taskFinished( BuildEvent event )
+    {
+    }
 
-    public void taskStarted( BuildEvent event ) { }
+    public void taskStarted( BuildEvent event )
+    {
+    }
 
     /**
      * Empty implementation which allows subclasses to receive the same output
@@ -215,6 +220,8 @@ public class DefaultLogger implements BuildLogger
      *
      * @param message Description of Parameter
      */
-    protected void log( String message ) { }
+    protected void log( String message )
+    {
+    }
 
 }

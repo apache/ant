@@ -51,11 +51,13 @@ public class Available
     }
 
     public void setClasspath( Path classpath )
+        throws TaskException
     {
         createClasspath().append( classpath );
     }
 
     public void setClasspathRef( Reference r )
+        throws TaskException
     {
         createClasspath().setRefid( r );
     }
@@ -66,6 +68,7 @@ public class Available
     }
 
     public void setFilepath( Path filepath )
+        throws TaskException
     {
         createFilepath().append( filepath );
     }
@@ -91,6 +94,7 @@ public class Available
     }
 
     public Path createClasspath()
+        throws TaskException
     {
         if( this.classpath == null )
         {
@@ -100,6 +104,7 @@ public class Available
     }
 
     public Path createFilepath()
+        throws TaskException
     {
         if( this.filepath == null )
         {

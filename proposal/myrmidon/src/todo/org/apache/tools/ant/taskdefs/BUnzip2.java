@@ -32,6 +32,7 @@ public class BUnzip2 extends Unpack
     }
 
     protected void extract()
+        throws TaskException
     {
         if( source.lastModified() > dest.lastModified() )
         {

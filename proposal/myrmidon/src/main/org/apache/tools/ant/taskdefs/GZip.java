@@ -20,10 +20,11 @@ import org.apache.myrmidon.api.TaskException;
  * @author Jon S. Stevens <a href="mailto:jon@clearink.com">jon@clearink.com</a>
  * @author <a href="mailto:umagesh@rediffmail.com">Magesh Umasankar</a>
  */
-
-public class GZip extends Pack
+public class GZip
+    extends Pack
 {
     protected void pack()
+        throws TaskException
     {
         GZIPOutputStream zOut = null;
         try

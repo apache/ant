@@ -6,6 +6,7 @@
  * the LICENSE file.
  */
 package org.apache.tools.ant;
+
 import java.io.File;
 import java.util.NoSuchElementException;
 import java.util.StringTokenizer;
@@ -66,8 +67,8 @@ public class PathTokenizer
         }
 
         if( token.length() == 1 && Character.isLetter( token.charAt( 0 ) )
-             && dosStyleFilesystem
-             && tokenizer.hasMoreTokens() )
+            && dosStyleFilesystem
+            && tokenizer.hasMoreTokens() )
         {
             // we are on a dos style system so this path could be a drive
             // spec. We look at the next token

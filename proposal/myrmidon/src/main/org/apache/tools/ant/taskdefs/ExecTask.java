@@ -229,7 +229,7 @@ public class ExecTask extends Task
      * @exception IOException Description of Exception
      */
     protected final void runExecute( Execute exe )
-        throws IOException
+        throws IOException, TaskException
     {
         int err = -1;// assume the worst
 

@@ -6,11 +6,11 @@
  * the LICENSE file.
  */
 package org.apache.tools.ant;
+
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.util.Hashtable;
-
 
 /**
  * Logs content written by a thread and forwards the buffers onto the project
@@ -24,7 +24,7 @@ public class DemuxOutputStream extends OutputStream
     private final static int MAX_SIZE = 1024;
 
     private Hashtable buffers = new Hashtable();
-//    private ByteArrayOutputStream buffer = new ByteArrayOutputStream();
+    //    private ByteArrayOutputStream buffer = new ByteArrayOutputStream();
     private boolean skip = false;
     private boolean isErrorStream;
     private Project project;
@@ -76,7 +76,7 @@ public class DemuxOutputStream extends OutputStream
     public void write( int cc )
         throws IOException
     {
-        final byte c = ( byte )cc;
+        final byte c = (byte)cc;
         if( ( c == '\n' ) || ( c == '\r' ) )
         {
             if( !skip )
@@ -96,7 +96,6 @@ public class DemuxOutputStream extends OutputStream
         skip = ( c == '\r' );
     }
 
-
     /**
      * Converts the buffer to a string and sends it to <code>processLine</code>
      */
@@ -110,7 +109,7 @@ public class DemuxOutputStream extends OutputStream
     private ByteArrayOutputStream getBuffer()
     {
         Thread current = Thread.currentThread();
-        ByteArrayOutputStream buffer = ( ByteArrayOutputStream )buffers.get( current );
+        ByteArrayOutputStream buffer = (ByteArrayOutputStream)buffers.get( current );
         if( buffer == null )
         {
             buffer = new ByteArrayOutputStream();

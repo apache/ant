@@ -361,6 +361,7 @@ public class Manifest extends Task
         catch( IOException e )
         {
             throw new TaskException( "Failed to write " + manifestFile
+
             e );
         }
         finally

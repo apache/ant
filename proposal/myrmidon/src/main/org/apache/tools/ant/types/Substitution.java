@@ -22,7 +22,8 @@ import org.apache.tools.ant.Project;
  *      mattinger@mindless.com</a>
  * @see org.apache.oro.text.regex.Perl5Substitition
  */
-public class Substitution extends DataType
+public class Substitution
+    extends DataType
 {
     public final static String DATA_TYPE_NAME = "substitition";
 
@@ -45,9 +46,12 @@ public class Substitution extends DataType
      * @return The Expression value
      */
     public String getExpression( Project p )
+        throws TaskException
     {
         if( isReference() )
+        {
             return getRef( p ).getExpression( p );
+        }
 
         return expression;
     }
@@ -60,6 +64,7 @@ public class Substitution extends DataType
      * @return The Ref value
      */
     public Substitution getRef( Project p )
+        throws TaskException
     {
         if( !checked )
         {
@@ -79,5 +84,4 @@ public class Substitution extends DataType
             return (Substitution)o;
         }
     }
-
 }

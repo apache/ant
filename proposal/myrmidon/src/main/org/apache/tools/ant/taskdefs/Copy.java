@@ -294,6 +294,7 @@ public class Copy extends Task
 
     protected void buildMap( File fromDir, File toDir, String[] names,
                              FileNameMapper mapper, Hashtable map )
+        throws TaskException
     {
 
         String[] toCopy = null;
@@ -413,6 +414,7 @@ public class Copy extends Task
      * @param dirs Description of Parameter
      */
     protected void scan( File fromDir, File toDir, String[] files, String[] dirs )
+        throws TaskException
     {
         FileNameMapper mapper = null;
         if( mapperElement != null )

@@ -849,6 +849,7 @@ public class Javac extends MatchingTask
      * @param files Description of Parameter
      */
     protected void scanDir( File srcDir, File destDir, String files[] )
+        throws TaskException
     {
         GlobPatternMapper m = new GlobPatternMapper();
         m.setFrom( "*.java" );

@@ -27,9 +27,9 @@ import org.apache.tools.ant.Project;
  *
  * @author Don Ferguson <a href="mailto:don@bea.com">don@bea.com</a>
  */
-public class ZipFileSet extends FileSet
+public class ZipFileSet
+    extends FileSet
 {
-
     private File srcFile = null;
     private String prefix = "";
     private String fullpath = "";
@@ -84,6 +84,7 @@ public class ZipFileSet extends FileSet
      * @param srcFile The zip file from which to extract entries.
      */
     public void setSrc( File srcFile )
+        throws TaskException
     {
         if( hasDir )
         {
@@ -153,5 +154,4 @@ public class ZipFileSet extends FileSet
     {
         return srcFile;
     }
-
 }

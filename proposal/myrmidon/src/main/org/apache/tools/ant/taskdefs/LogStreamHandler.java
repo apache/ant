@@ -16,9 +16,9 @@ import org.apache.tools.ant.Task;
  *
  * @author thomas.haas@softwired-inc.com
  */
-public class LogStreamHandler extends PumpStreamHandler
+public class LogStreamHandler
+    extends PumpStreamHandler
 {
-
     /**
      * Creates a new instance of this class.
      *
@@ -33,6 +33,7 @@ public class LogStreamHandler extends PumpStreamHandler
     }
 
     public void stop()
+        throws TaskException
     {
         super.stop();
         try

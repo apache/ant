@@ -32,6 +32,7 @@ public class GUnzip extends Unpack
     }
 
     protected void extract()
+        throws TaskException
     {
         if( source.lastModified() > dest.lastModified() )
         {

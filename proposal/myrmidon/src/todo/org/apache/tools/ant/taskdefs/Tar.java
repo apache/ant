@@ -212,6 +212,7 @@ public class Tar extends MatchingTask
     }
 
     protected boolean archiveIsUpToDate( String[] files )
+        throws TaskException
     {
         SourceFileScanner sfs = new SourceFileScanner( this );
         MergingMapper mm = new MergingMapper();

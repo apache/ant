@@ -225,6 +225,7 @@ public class Property extends Task
     }
 
     protected void loadEnvironment( String prefix )
+        throws TaskException
     {
         Properties props = new Properties();
         if( !prefix.endsWith( "." ) )

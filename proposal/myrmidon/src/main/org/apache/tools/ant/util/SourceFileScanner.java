@@ -9,6 +9,7 @@ package org.apache.tools.ant.util;
 
 import java.io.File;
 import java.util.Vector;
+import org.apache.myrmidon.api.TaskException;
 import org.apache.myrmidon.framework.Os;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.Task;
@@ -53,6 +54,7 @@ public class SourceFileScanner
      */
     public String[] restrict( String[] files, File srcDir, File destDir,
                               FileNameMapper mapper )
+        throws TaskException
     {
 
         long now = ( new java.util.Date() ).getTime();
@@ -146,6 +148,7 @@ public class SourceFileScanner
      */
     public File[] restrictAsFiles( String[] files, File srcDir, File destDir,
                                    FileNameMapper mapper )
+        throws TaskException
     {
         String[] res = restrict( files, srcDir, destDir, mapper );
         File[] result = new File[ res.length ];
