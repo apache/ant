@@ -314,6 +314,13 @@ Legal:
             start="20 Feb 2002" end="20 Mar 2002">
             <user displayname="Peter Donald" userid="donaldp"/>
         </changelog>
+
+        <!-- start in future will test that catch case where certain
+        files will have 0 changes-->
+        <changelog basedir="." destfile="../../changelog2.txt"
+            start="20 Feb 2004">
+            <user displayname="Peter Donald" userid="donaldp"/>
+        </changelog>
     </target>
 
 </project>
