@@ -28,10 +28,12 @@ have been removed.
 it changed to and invoke this instead of command if present. This
 behavior has been dropped.
 
+* <ejbjar> task syntax has been changed significantly
+
 Other changes:
 --------------
 
-* New tasks: antstructure, cab, execon, ftp, genkey, junit, sql.
+* New tasks: antstructure, cab, execon, ftp, genkey, junit, sql, javacc, jjtree, starteam.
 
 * New tasks mparse pending documentation.
 
@@ -57,6 +59,10 @@ on log output.
 * <chmod> works on all files in parallel and supports multiple filesets.
 
 * <replace> can now use tokens and/or values that cross line boundaries.
+
+* <ejbc> optional task no longer uses a separate VM to invoke the ejbc tool.
+
+* project specific help can now be obtained with the -projecthelp option.
 
 Fixed bugs:
 -----------

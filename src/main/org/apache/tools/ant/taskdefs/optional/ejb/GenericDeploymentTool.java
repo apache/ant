@@ -191,7 +191,8 @@ public class GenericDeploymentTool implements EJBDeploymentTool {
         return new DescriptorHandler(srcDir);
     }
     
-    public void processDescriptor(File srcDir, String descriptorFilename, SAXParser saxParser) {
+    public void processDescriptor(File srcDir, File descriptorDir,
+                                  String descriptorFilename, SAXParser saxParser) {
         try {
             DescriptorHandler handler = getDescriptorHandler(srcDir);
             
@@ -201,7 +202,7 @@ public class GenericDeploymentTool implements EJBDeploymentTool {
              */
             saxParser.parse(new InputSource
                             (new FileInputStream
-                             (new File(srcDir, descriptorFilename))),
+                             (new File(descriptorDir, descriptorFilename))),
                             handler);
                             
             Hashtable ejbFiles = handler.getFiles();
@@ -225,9 +226,9 @@ public class GenericDeploymentTool implements EJBDeploymentTool {
 
             // First the regular deployment descriptor
             ejbFiles.put(META_DIR + EJB_DD,
-                         new File(srcDir, descriptorFilename));
+                         new File(descriptorDir, descriptorFilename));
                          
-            addVendorFiles(ejbFiles, srcDir, baseName);
+            addVendorFiles(ejbFiles, srcDir, descriptorDir, baseName);
 
             // Lastly create File object for the Jar files. If we are using
             // a flat destination dir, then we need to redefine baseName!
@@ -290,7 +291,7 @@ public class GenericDeploymentTool implements EJBDeploymentTool {
             String msg = "IOException while parsing'"
                 + descriptorFilename.toString()
                 + "'.  This probably indicates that the descriptor"
-                + " doesn't exist. Details:"
+                + " doesn't exist. Details: "
                 + ioe.getMessage();
             throw new BuildException(msg, ioe);
         }
@@ -300,7 +301,7 @@ public class GenericDeploymentTool implements EJBDeploymentTool {
      * Add any vendor specific files which should be included in the 
      * EJB Jar.
      */
-    protected void addVendorFiles(Hashtable ejbFiles, File srcDir, String baseName) {
+    protected void addVendorFiles(Hashtable ejbFiles, File srcDir, File descriptorDir, String baseName) {
     }
 
 

@@ -102,8 +102,11 @@ import org.apache.tools.ant.taskdefs.MatchingTask;
  */
 public class EjbJar extends MatchingTask {
 
-    /** Stores a handle to the directory under which to search for files */
+    /** Stores a handle to the directory under which to search for class files */
     private File srcdir = null;
+
+    /** Stores a handle to the directory under which to search for deployment descriptors */
+    private File descriptordir = null;
 
     /** Stores a handle to the directory to put the Jar files in */
     private File destdir = null;
@@ -138,6 +141,14 @@ public class EjbJar extends MatchingTask {
      */
     public void setSrcdir(File inDir) {
         this.srcdir = inDir;
+    }
+
+    /**
+     * Setter used to store the value of descriptordir prior to execute() being called.
+     * @param inDir the directory containing the deployment descriptors.
+     */
+    public void setDescriptordir(File inDir) {
+        this.descriptordir = inDir;
     }
 
     /**
@@ -188,6 +199,9 @@ public class EjbJar extends MatchingTask {
         if (srcdir == null) {
             throw new BuildException("The srcdir attribute must be specified");
         }
+        if (descriptordir == null) {
+            throw new BuildException("The descriptordir attribute must be specified");
+        }
         
         if (deploymentTools.size() == 0) {
             GenericDeploymentTool genericTool = new GenericDeploymentTool();
@@ -210,7 +224,7 @@ public class EjbJar extends MatchingTask {
             saxParserFactory.setValidating(true);
             SAXParser saxParser = saxParserFactory.newSAXParser();
     
-            DirectoryScanner ds = getDirectoryScanner(srcdir);
+            DirectoryScanner ds = getDirectoryScanner(descriptordir);
             ds.scan();
             String[] files = ds.getIncludedFiles();
     
@@ -245,7 +259,7 @@ public class EjbJar extends MatchingTask {
     private void processDescriptor(String descriptorFilename, SAXParser saxParser,
                                    EJBDeploymentTool tool) {
 
-        tool.processDescriptor(srcdir, descriptorFilename, saxParser);
+        tool.processDescriptor(srcdir, descriptordir, descriptorFilename, saxParser);
     }
 }
 

@@ -69,7 +69,7 @@ public interface EJBDeploymentTool {
      * @param descriptorFilename the name of the deployment descriptor
      * @param saxParser a SAX parser which can be used to parse the deployment descriptor. 
      */
-    public void processDescriptor(File srcDir, String descriptorFilename, SAXParser saxParser) 
+    public void processDescriptor(File srcDir, File descriptorDir, String descriptorFilename, SAXParser saxParser) 
         throws BuildException;
     
     /**

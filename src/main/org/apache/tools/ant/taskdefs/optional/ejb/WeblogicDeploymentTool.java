@@ -61,6 +61,7 @@ import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.Task;
 import org.apache.tools.ant.types.Path;
+import org.apache.tools.ant.types.Commandline;
 import org.apache.tools.ant.taskdefs.Java;
 
 public class WeblogicDeploymentTool extends GenericDeploymentTool {
@@ -68,12 +69,12 @@ public class WeblogicDeploymentTool extends GenericDeploymentTool {
     protected static final String WL_CMP_DD = "weblogic-cmp-rdbms-jar.xml";
 
     /** Instance variable that stores the suffix for the weblogic jarfile. */
-    private String jarSuffix = "-wl.jar";
+    private String jarSuffix = ".jar";
 
     private Path classpath;
 
     /** Instance variable that determines whether generic ejb jars are kept. */
-    private boolean keepgeneric = true;
+    private boolean keepgeneric = false;
     
     /**
      * Set the classpath to be used for this compilation.
@@ -109,9 +110,9 @@ public class WeblogicDeploymentTool extends GenericDeploymentTool {
      * Add any vendor specific files which should be included in the 
      * EJB Jar.
      */
-    protected void addVendorFiles(Hashtable ejbFiles, File srcdir, String baseName) {
+    protected void addVendorFiles(Hashtable ejbFiles, File srcdir, File descriptorDir, String baseName) {
         // Then the weblogic deployment descriptor
-        File weblogicDD = new File(srcdir,
+        File weblogicDD = new File(descriptorDir,
                               baseName + getBasenameTerminator() + WL_DD);
 
         if (weblogicDD.exists()) {
@@ -120,7 +121,7 @@ public class WeblogicDeploymentTool extends GenericDeploymentTool {
         }
 
         // The the weblogic cmp deployment descriptor
-        File weblogicCMPDD = new File(srcdir,
+        File weblogicCMPDD = new File(descriptorDir,
                               baseName + getBasenameTerminator() + WL_CMP_DD);
 
         if (weblogicCMPDD.exists()) {
@@ -153,7 +154,8 @@ public class WeblogicDeploymentTool extends GenericDeploymentTool {
             
             javaTask = (Java) getTask().getProject().createTask("java");
             javaTask.setClassname("weblogic.ejbc");
-            javaTask.setArgs(args);
+            Commandline.Argument arguments = javaTask.createArg();
+            arguments.setLine(args);
             if (classpath != null) {
                 javaTask.setClasspath(classpath);
                 javaTask.setFork(true);
