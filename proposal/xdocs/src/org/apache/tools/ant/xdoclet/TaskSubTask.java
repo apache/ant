@@ -69,6 +69,7 @@ import java.io.File;
 public class TaskSubTask extends TemplateSubTask {
     public final static String SUBTASK_NAME = "tasks";
 
+
     public String getSubTaskName() {
         return SUBTASK_NAME;
     }
@@ -104,15 +105,14 @@ public class TaskSubTask extends TemplateSubTask {
             return false;
         }
 
-        /* Leave deprecated tasks in for now
+/*
         Tag[] tags = clazz.tags();
         for (int i = 0; i < tags.length; i++) {
             if ("@deprecated".equals(tags[i].name())) {
                 return false;
             }
         }
-        */
-
+*/
         if (hasExecuteMethod(clazz)) {
             return true;
         }

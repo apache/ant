@@ -87,10 +87,6 @@ import org.apache.tools.ant.types.Reference;
  * attribute classpath, if the jsp compiler is not already in the ant
  * classpath.
  *
- * <p><h4>Notes</h4>
- * <p> At present, this task only supports the jasper compiler. In future,
- other compilers will be supported by setting the jsp.compiler property.
- *
  * <p><h4>Usage</h4>
  * <pre>
  * &lt;jspc srcdir="${basedir}/src/war"
@@ -120,7 +116,7 @@ public class JspC extends MatchingTask {
     private String compilerName = "jasper";
 
     /**
-     *  -ieplugin <clsid>Java Plugin classid for Internet Explorer
+     *  -ieplugin &lt;clsid&gt; Java Plugin classid for Internet Explorer
      */
     private String iepluginid ;
     private boolean mapped ;
@@ -134,25 +130,25 @@ public class JspC extends MatchingTask {
     protected boolean failOnError = true;
         
     /**
-     *  -uribase <dir>The uri directory compilations should be relative to
+     *  -uribase &lt;dir&gt; The uri directory compilations should be relative to
      *  (Default is "/")
      */
 
     private File uribase;
 
     /**
-     *  -uriroot <dir>The root directory that uri files should be resolved
+     *  -uriroot &lt;dir&gt; The root directory that uri files should be resolved
      *  against, 
      */
     private File uriroot;
 
     /**
-     *  -webinc <file>Creates partial servlet mappings for the -webapp option
+     *  -webinc &lt;file&gt; Creates partial servlet mappings for the -webapp option
      */
     private File webinc;
 
     /**
-     *  -webxml <file>Creates a complete web.xml when using the -webapp option.
+     *  -webxml &lt;file&gt; Creates a complete web.xml when using the -webapp option.
      */
 
     private File webxml;
@@ -201,6 +197,7 @@ public class JspC extends MatchingTask {
     public String getPackage(){
         return packageName;
     }
+    
     /* ------------------------------------------------------------ */
     /**
      * Set the verbose level of the compiler
@@ -211,9 +208,10 @@ public class JspC extends MatchingTask {
     public int getVerbose(){
         return verbose;
     }
+    
     /* ------------------------------------------------------------ */
     /**
-     * Throw a BuildException if compilation fails
+     * should the build halt if compilation fails? default=true
      */
     public void setFailonerror(boolean fail) {
         failOnError = fail;
@@ -298,7 +296,7 @@ public class JspC extends MatchingTask {
     }
 
     /**
-     *  -webxml <file>Creates a complete web.xml when using the -webapp option.
+     *  -webxml &lt;file&gt; Creates a complete web.xml when using the -webapp option.
      *
      * @param  webxml  The new Webxml value
      */

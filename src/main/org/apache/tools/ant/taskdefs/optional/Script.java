@@ -73,7 +73,17 @@ public class Script extends Task {
     private String language;
     private String script = "";
     private Hashtable beans = new Hashtable();
-    
+
+    // Register BeanShell ourselves, since BSF does not
+    // natively support it (yet).
+    // This "hack" can be removed once BSF has been
+    // modified to support BeanShell or more dynamic
+    // registration.
+    static {
+        BSFManager.registerScriptingEngine( "beanshell",
+            "bsh.util.BeanShellBSFEngine", new String [] { "bsh" } );
+    }
+
     /**
      * Add a list of named objects to the list to be exported to the script
      */

@@ -166,7 +166,7 @@ public class Ejbc extends MatchingTask {
     }
 
     /**
-     * Set the directory from where the serialised deployment descriptors are
+     * Set the directory from where the serialized deployment descriptors are
      * to be read.
      *
      * @param dirName the name of the directory containing the serialised deployment descriptors.
@@ -176,7 +176,7 @@ public class Ejbc extends MatchingTask {
     }
 
     /**
-     * Set the directory into which the support classes, RMI stubs, etc are to be written
+     * Set the directory into which the support classes, RMI stubs, etc are to be written.
      *
      * @param dirName the name of the directory into which code is generated
      */
@@ -190,7 +190,7 @@ public class Ejbc extends MatchingTask {
     }
 
     /**
-     * Set the generated manifest file.
+     * Set the name of the generated manifest file.
      *
      * For each EJB that is processed an entry is created in this file. This can then be used
      * to create a jar file for dploying the beans.

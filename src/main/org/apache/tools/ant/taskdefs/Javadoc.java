@@ -58,6 +58,8 @@ import java.io.PrintWriter;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.FilenameFilter;
+import java.net.URL;
+import java.net.MalformedURLException;
 import java.util.Locale;
 import java.util.Vector;
 import java.util.Enumeration;
@@ -78,7 +80,7 @@ import org.apache.tools.ant.util.FileUtils;
 import org.apache.tools.ant.util.JavaEnvUtils;
 
 /**
- * This task makes it easy to generate Javadoc documentation for a collection
+ * Generates Javadoc documentation for a collection
  * of source code.
  *
  * <P>Current known limitations are:
@@ -368,7 +370,7 @@ public class Javadoc extends Task {
      */
     public static class AccessType extends EnumeratedAttribute {
         /**
-         * @see EnumeratedAttributes#getValues().
+         * @see EnumeratedAttribute#getValues().
          */
         public String[] getValues() {
             // Protected first so if any GUI tool offers a default
@@ -638,7 +640,7 @@ public class Javadoc extends Task {
     }
 
     /**
-     * Specify the fiel containing the overview to be included in the generated
+     * Specify the file containing the overview to be included in the generated
      * documentation.
      *
      * @param f the file containing the overview.
@@ -710,6 +712,7 @@ public class Javadoc extends Task {
     public void setDoclet(String docletName) {
         if (doclet == null) {
             doclet = new DocletInfo();
+            doclet.setProject(getProject());
         }
         doclet.setName(docletName);
     }
@@ -722,6 +725,7 @@ public class Javadoc extends Task {
     public void setDocletPath(Path docletPath) {
         if (doclet == null) {
             doclet = new DocletInfo();
+            doclet.setProject(getProject());
         }
         doclet.setPath(docletPath);
     }
@@ -735,6 +739,7 @@ public class Javadoc extends Task {
     public void setDocletPathRef(Reference r) {
         if (doclet == null) {
             doclet = new DocletInfo();
+            doclet.setProject(getProject());
         }
         doclet.createPath().setRefid(r);
     }
@@ -1042,6 +1047,10 @@ public class Javadoc extends Task {
         }
     }
 
+    /**
+     * Link to docs at "url" using package list at "url2"
+     * - separate the URLs by using a space character.
+     */
     public void setLinkoffline(String src) {
         if (!javadoc1) {
             LinkArgument le = createLink();
@@ -1061,57 +1070,112 @@ public class Javadoc extends Task {
             le.setPackagelistLoc(project.resolveFile(tok.nextToken()));
         }
     }
+
+    /**
+     * Group specified packages together in overview page.
+     */
     public void setGroup(String src) {
         group = src;
     }
+
+    /**
+     * Create links to javadoc output at the given URL.
+     */
     public void setLink(String src) {
         if (!javadoc1) {
             createLink().setHref(src);
         }
     }
+
+    /**
+     * If true, do not include @deprecated information.
+     */
     public void setNodeprecated(boolean b) {
         addArgIf(b, "-nodeprecated");
     }
+
+    /**
+     * If true, do not generate deprecated list.
+     */
     public void setNodeprecatedlist(boolean b) {
         add12ArgIf(b, "-nodeprecatedlist");
     }
+
+    /**
+     * If true, do not generate class hierarchy.
+     */
     public void setNotree(boolean b) {
         addArgIf(b, "-notree");
     }
+
+    /**
+     * If true, do not generate index.
+     */
     public void setNoindex(boolean b) {
         addArgIf(b, "-noindex");
     }
+
+    /**
+     * If true, do not generate help link
+     */
     public void setNohelp(boolean b) {
         add12ArgIf(b, "-nohelp");
     }
+
+    /**
+     * If true, do not generate navigation bar.
+     */
     public void setNonavbar(boolean b) {
         add12ArgIf(b, "-nonavbar");
     }
+
+    /**
+     * If true, generate warning about @serial tag.
+     */
     public void setSerialwarn(boolean b) {
         add12ArgIf(b, "-serialwarn");
     }
+
+    /**
+     * Specifies the CSS stylesheet file to use.
+     */
     public void setStylesheetfile(File f) {
         if (!javadoc1) {
             cmd.createArgument().setValue("-stylesheetfile");
             cmd.createArgument().setFile(f);
         }
     }
+
+    /**
+     * Specifies the HTML help file to use.
+     */
     public void setHelpfile(File f) {
         if (!javadoc1) {
             cmd.createArgument().setValue("-helpfile");
             cmd.createArgument().setFile(f);
         }
     }
+
+    /**
+     * Output file encoding name.
+     */
     public void setDocencoding(String enc) {
         cmd.createArgument().setValue("-docencoding");
         cmd.createArgument().setValue(enc);
     }
+
+    /**
+     * The name of a file containing the packages to process.
+     */
     public void setPackageList(String src) {
         if (!javadoc1) {
             packageList = src;
         }
     }
 
+    /**
+     * Create link to javadoc output at the given URL.
+     */
     public LinkArgument createLink() {
         LinkArgument la = new LinkArgument();
         links.addElement(la);
@@ -1324,6 +1388,10 @@ public class Javadoc extends Task {
         }
     }
 
+    /**
+     * Separates packages on the overview page into whatever
+     * groups you specify, one group per table.
+     */
     public GroupArgument createGroup() {
         GroupArgument ga = new GroupArgument();
         groups.addElement(ga);
@@ -1375,6 +1443,9 @@ public class Javadoc extends Task {
         }
     }
 
+    /**
+     * Charset for cross-platform viewing of generated documentation.
+     */
     public void setCharset(String src) {
         this.add12ArgIfNotEmpty("-charset", src);
     }
@@ -1423,7 +1494,6 @@ public class Javadoc extends Task {
      * @since 1.5
      */
     public void addFileset(FileSet fs) {
-        fs.createInclude().setName("**/*.java");
         fileSets.addElement(fs);
     }
 
@@ -1434,6 +1504,17 @@ public class Javadoc extends Task {
 
         Vector packagesToDoc = new Vector();
         Path sourceDirs = new Path(getProject());
+
+        if (packageList != null && sourcePath == null) {
+            String msg = "sourcePath attribute must be set when "
+                + "specifying packagelist.";
+            throw new BuildException(msg);
+        }
+
+        if (sourcePath != null) {
+            sourceDirs.addExisting(sourcePath);
+        }
+        
         parsePackages(packagesToDoc, sourceDirs);
 
         if (packagesToDoc.size() != 0 && sourceDirs.size() == 0) {
@@ -1445,7 +1526,8 @@ public class Javadoc extends Task {
         Vector sourceFilesToDoc = (Vector) sourceFiles.clone();
         addFileSets(sourceFilesToDoc);
 
-        if (packagesToDoc.size() == 0 && sourceFilesToDoc.size() == 0) {
+        if (packageList == null && packagesToDoc.size() == 0 
+            && sourceFilesToDoc.size() == 0) {
             throw new BuildException("No source files and no packages have "
                                      + "been specified.");
         }
@@ -1480,16 +1562,20 @@ public class Javadoc extends Task {
         }
 
         if (!javadoc1) {
-            toExecute.createArgument().setValue("-classpath");
-            toExecute.createArgument().setPath(classpath);
+            if (classpath.size() > 0) {
+                toExecute.createArgument().setValue("-classpath");
+                toExecute.createArgument().setPath(classpath);
+            }
             if (sourceDirs.size() > 0) {
                 toExecute.createArgument().setValue("-sourcepath");
                 toExecute.createArgument().setPath(sourceDirs);
             }
         } else {
             sourceDirs.append(classpath);
-            toExecute.createArgument().setValue("-classpath");
-            toExecute.createArgument().setPath(sourceDirs);
+            if (sourceDirs.size() > 0) {
+                toExecute.createArgument().setValue("-classpath");
+                toExecute.createArgument().setPath(sourceDirs);
+            }
         }
 
         if (version && doclet == null) {
@@ -1540,7 +1626,7 @@ public class Javadoc extends Task {
                     }
                 }
             }
-            if (bootclasspath != null) {
+            if (bootclasspath != null && bootclasspath.size() > 0) {
                 toExecute.createArgument().setValue("-bootclasspath");
                 toExecute.createArgument().setPath(bootclasspath);
             }
@@ -1550,25 +1636,36 @@ public class Javadoc extends Task {
                 for (Enumeration e = links.elements(); e.hasMoreElements();) {
                     LinkArgument la = (LinkArgument) e.nextElement();
 
-                    if (la.getHref() == null) {
-                        throw new BuildException("Links must provide the URL "
-                                                 + "to the external class "
-                                                 + "documentation.");
-                    }
+                    if (la.getHref() == null || la.getHref().length() == 0) {
+                        log("No href was given for the link - skipping", 
+                            Project.MSG_VERBOSE);
+                        continue;
+                    } else {
+                        // is the href a valid URL
+                        try {
+                            URL base = new URL("file://.");
+                            URL testHref = new URL(base, la.getHref());
+                        } catch (MalformedURLException mue) {
+                            // ok - just skip
+                            log("Link href \"" + la.getHref() 
+                                + "\" is not a valid url - skipping link", 
+                                Project.MSG_WARN);
+                            continue;
+                        }
+                    }                                
+                        
 
                     if (la.isLinkOffline()) {
                         File packageListLocation = la.getPackagelistLoc();
                         if (packageListLocation == null) {
                             throw new BuildException("The package list "
-                                                     + " location for link " 
-                                                     + la.getHref()
-                                                     + " must be provided "
-                                                     + "because the link is "
-                                                     + "offline");
+                                + " location for link " + la.getHref()
+                                + " must be provided because the link is "
+                                + "offline");
                         }
-                        File packageList = 
+                        File packageListFile = 
                             new File(packageListLocation, "package-list");
-                        if (packageList.exists()) {
+                        if (packageListFile.exists()) {
                             toExecute.createArgument().setValue("-linkoffline");
                             toExecute.createArgument().setValue(la.getHref());
                             toExecute.createArgument()
@@ -1769,6 +1866,10 @@ public class Javadoc extends Task {
         Enumeration enum = fileSets.elements();
         while (enum.hasMoreElements()) {
             FileSet fs = (FileSet) enum.nextElement();
+            if (!fs.hasPatterns() && !fs.hasSelectors()) {
+                fs = (FileSet) fs.clone();
+                fs.createInclude().setName("**/*.java");
+            }
             File baseDir = fs.getDir(getProject());
             DirectoryScanner ds = fs.getDirectoryScanner(getProject());
             String[] files = ds.getIncludedFiles();
@@ -1858,6 +1959,8 @@ public class Javadoc extends Task {
                 }
             }
             if (containsPackages) {
+                // We don't need to care for duplicates here,
+                // Path.list does it for us.
                 sp.createPathElement().setLocation(baseDir);
             } else {
                 log(baseDir + " doesn\'t contain any packages, dropping it.",

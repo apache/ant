@@ -184,6 +184,11 @@ public class PresentSelector extends BaseSelector {
 
         // Determine file whose existence is to be checked
         String[] destfiles = map.mapFileName(filename);
+        // If filename does not match the To attribute of the mapper
+        // then filter it out of the files we are considering
+        if (destfiles == null) {
+            return false;
+        }
         // Sanity check
         if (destfiles.length != 1 || destfiles[0] == null) {
             throw new BuildException("Invalid destination file results for "

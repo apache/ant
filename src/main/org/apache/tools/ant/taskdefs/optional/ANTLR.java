@@ -74,6 +74,7 @@ import org.apache.tools.ant.types.Path;
  *
  * @author <a href="mailto:emeade@geekfarm.org">Erik Meade</a>
  * @author <a href="mailto:sbailliez@apache.org">Stephane Bailliez</a>
+ * @author <a href="mailto:aphid@browsecode.org">Stephen Chin</a>
  */
 public class ANTLR extends Task {
 
@@ -84,6 +85,30 @@ public class ANTLR extends Task {
 
     /** where to output the result */
     private File outputDirectory;
+
+    /** an optional super grammar file */
+    private String superGrammar;
+
+    /** optional flag to enable parseView debugging */
+    private boolean debug;
+
+    /** optional flag to enable html output */
+    private boolean html;
+
+    /** optional flag to print out a diagnostic file */
+    private boolean diagnostic;
+
+    /** optional flag to add trace methods */
+    private boolean trace;
+
+    /** optional flag to add trace methods to the parser only */
+    private boolean traceParser;
+
+    /** optional flag to add trace methods to the lexer only */
+    private boolean traceLexer;
+
+    /** optional flag to add trace methods to the tree walker only */
+    private boolean traceTreeWalker;
 
     /** should fork ? */
     private final boolean fork = true;
@@ -106,15 +131,70 @@ public class ANTLR extends Task {
         this.outputDirectory = outputDirectory;
     }
 
+    /**
+     * Sets an optional super grammar file
+     */
+    public void setGlib(String superGrammar) {
+        this.superGrammar = superGrammar;
+    }
+    
+    /**
+     * Sets a flag to enable ParseView debugging
+     */
+    public void setDebug(boolean enable) {
+        debug = enable;
+    }
+    
+    /**
+     * Sets a flag to emit html
+     */
+    public void setHtml(boolean enable) {
+        html = enable;
+    }
+
+    /**
+     * Sets a flag to emit diagnostic text
+     */
+    public void setDiagnostic(boolean enable) {
+        diagnostic = enable;
+    }
+    
+    /**
+     * Sets a flag to enable all tracing
+     */
+    public void setTrace(boolean enable) {
+        trace = enable;
+    }
+    
+    /**
+     * Sets a flag to enable parser tracing
+     */
+    public void setTraceParser(boolean enable) {
+        traceParser = enable;
+    }
+    
+    /**
+     * Sets a flag to allow the user to enable lexer tracing
+     */
+    public void setTraceLexer(boolean enable) {
+        traceLexer = enable;
+    }
+    
+    /**
+     * Sets a flag to allow the user to enable tree walker tracing
+     */
+    public void setTraceTreeWalker(boolean enable) {
+        traceTreeWalker = enable;
+    }
+    
     // we are forced to fork ANTLR since there is a call
     // to System.exit() and there is nothing we can do
     // right now to avoid this. :-( (SBa)
     // I'm not removing this method to keep backward compatibility
-    // and
     public void setFork(boolean s) {
         //this.fork = s;
     }
-
+    
     /**
      * The working directory of the process
      */
@@ -184,10 +264,9 @@ public class ANTLR extends Task {
         validateAttributes();
         //TODO: use ANTLR to parse the grammer file to do this.
         if (target.lastModified() > getGeneratedFile().lastModified()) {
-            commandline.createArgument().setValue("-o");
-            commandline.createArgument().setValue(outputDirectory.toString());
+            populateAttributes();
             commandline.createArgument().setValue(target.toString());
-
+            
             log(commandline.describeCommand(), Project.MSG_VERBOSE);
             int err = run(commandline.getCommandline());
             if (err == 1) {
@@ -198,11 +277,47 @@ public class ANTLR extends Task {
         }
     }
 
+    /**
+     * A refactored method for populating all the command line arguments based
+     * on the user-specified attributes.
+     */
+    private void populateAttributes() {
+        commandline.createArgument().setValue("-o");
+        commandline.createArgument().setValue(outputDirectory.toString());
+        if (superGrammar != null) {
+            commandline.createArgument().setValue("-glib");
+            commandline.createArgument().setValue(superGrammar);
+        }
+        if (html) {
+            commandline.createArgument().setValue("-html");
+        }
+        if (diagnostic) {
+            commandline.createArgument().setValue("-diagnostic");
+        }
+        if (trace) {
+            commandline.createArgument().setValue("-trace");
+        }
+        if (traceParser) {
+            commandline.createArgument().setValue("-traceParser");
+        }
+        if (traceLexer) {
+            commandline.createArgument().setValue("-traceLexer");
+        }
+        if (traceTreeWalker) {
+            commandline.createArgument().setValue("-traceTreeWalker");
+        }
+    }
+
     private void validateAttributes() throws BuildException {
         if (target == null || !target.isFile()) {
             throw new BuildException("Invalid target: " + target);
         }
-
+        
+        // validate the superGrammar file
+        if (superGrammar != null && !new File(superGrammar).isFile()) {
+            throw new BuildException("Invalid super grammar file: " + superGrammar);
+        }
+        
         // if no output directory is specified, used the target's directory
         if (outputDirectory == null) {
             String fileName = target.toString();

@@ -68,6 +68,7 @@ import org.apache.tools.ant.BuildFileTest;
  * system classpath. (see ANTLR install.html)
  *
  * @author Erik Meade <emeade@geekfarm.org>
+ * @author Stephen Chin <aphid@browsecode.org>
  */
 public class ANTLRTest extends BuildFileTest {
 
@@ -117,10 +118,67 @@ public class ANTLRTest extends BuildFileTest {
     public void test7() {
         expectBuildException("test7", "Unable to determine generated class");
     }
+
+    /**
+     * This is a negative test for the super grammar (glib) option.
+     */
+    public void test8() {
+        expectBuildException("test8", "Invalid super grammar file");
+    }
+
+    /**
+     * This is a positive test for the super grammar (glib) option.  ANTLR
+     * will throw an error if everything is not correct.
+     */
+    public void test9() {
+        executeTarget("test9");
+    }
+
+    /**
+     * This test creates an html-ized version of the calculator grammar.
+     * The sanity check is simply whether or not an html file was generated.
+     */
+    public void test10() {
+        executeTarget("test10");
+        File outputDirectory = new File(TASKDEFS_DIR + "antlr.tmp");
+        String[] calcFiles = outputDirectory.list(new HTMLFilter());
+        assertEquals(1, calcFiles.length);
+    }
+
+    /**
+     * This is just a quick sanity check to run the diagnostic option and
+     * make sure that it doesn't throw any funny exceptions.
+     */
+    public void test11() {
+        executeTarget("test11");
+    }
+
+    /**
+     * This is just a quick sanity check to run the trace option and
+     * make sure that it doesn't throw any funny exceptions.
+     */
+    public void test12() {
+        executeTarget("test12");
+    }
+
+    /**
+     * This is just a quick sanity check to run all the rest of the
+     * trace options (traceLexer, traceParser, and traceTreeWalker) to
+     * make sure that they don't throw any funny exceptions.
+     */
+    public void test13() {
+        executeTarget("test13");
+    }
 }
 
 class CalcFileFilter implements FilenameFilter {
     public boolean accept(File dir, String name) {
         return name.startsWith("Calc");
+    }
+}
+
+class HTMLFilter implements FilenameFilter {
+    public boolean accept(File dir, String name) {
+        return name.endsWith("html");
     }
 }

@@ -54,6 +54,71 @@
     </td>
     <td valign="top" align="center">No</td>
   </tr>
+  <tr>
+    <td valign="top">glib</td>
+    <td valign="top">
+      An optional super grammar file that the target grammar overrides.  This
+      feature is only needed for advanced vocabularies.
+    </td>
+    <td valign="top" align="center">No</td>
+  </tr>
+  <tr>
+    <td valign="top">debug</td>
+    <td valign="top">
+      When set to "yes", this flag adds code to the generated parser that will
+      launch the ParseView debugger upon invocation.  The default is "no".
+      <br>
+      Note: ParseView is a separate component that needs to be installed or your
+      grammar will have compilation errors.
+    </td>
+    <td valign="top" align="center">No</td>
+  </tr>
+  <tr>
+    <td valign="top">html</td>
+    <td valign="top">
+      Emit an html version of the grammar with hyperlinked actions.
+    </td>
+    <td valign="top" align="center">No</td>
+  </tr>
+  <tr>
+    <td valign="top">diagnostic</td>
+    <td valign="top">
+      Generates a text file with debugging infomation based on the target grammar.
+    </td>
+    <td valign="top" align="center">No</td>
+  </tr>
+  <tr>
+    <td valign="top">trace</td>
+    <td valign="top">
+      Forces <b>all</b> rules to call traceIn/traceOut if set to "yes". 
+      The default is "no".
+    </td>
+    <td valign="top" align="center">No</td>
+  </tr>
+  <tr>
+    <td valign="top">traceParser</td>
+    <td valign="top">
+      Only forces parser rules to call traceIn/traceOut if set to "yes". 
+      The default is "no".
+    </td>
+    <td valign="top" align="center">No</td>
+  </tr>
+  <tr>
+    <td valign="top">traceLexer</td>
+    <td valign="top">
+      Only forces lexer rules to call traceIn/traceOut if set to "yes". 
+      The default is "no".
+    </td>
+    <td valign="top" align="center">No</td>
+  </tr>
+  <tr>
+    <td valign="top">traceTreeWalker</td>
+    <td valign="top">
+      Only forces tree walker rules to call traceIn/traceOut if set to
+      "yes".  The default is "no".
+    </td>
+    <td valign="top" align="center">No</td>
+  </tr>
   <!--tr>
     <td valign="top">fork</td>
     <td valign="top">Run ANTLR in a separate VM.</td>
@@ -105,7 +170,7 @@ href="../using.html#arg">Command line arguments</a>.</p>
 </p>
 <hr>
 
-<p align="center">Copyright &copy; 2001 Apache Software Foundation. All rights
+<p align="center">Copyright &copy; 2000-2002 Apache Software Foundation. All rights
 Reserved.</p>
 
 </body>

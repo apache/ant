@@ -63,8 +63,19 @@ import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.util.FileUtils;
 
 /**
- *  This task fills a proprerty with a temporary file
- *
+ *  This task sets a property to  the name of a temporary file. 
+ *  Unlike the Java1.2 method to create a temporary file, this task
+ *  does work on Java1.1. Also, it does not actually create the
+ *  temporary file, but it does guarantee that the file did not
+ *  exist when the task was executed. 
+ * <p>  
+ * Examples
+ * <pre>&lt;tempfile property="temp.file" /&gt;</pre>
+ * create a temporary file
+ * <pre>&lt;tempfile property="temp.file" suffix=".xml" /&gt;</pre>
+ * create a temporary file with the .xml suffix.
+ * <pre>&lt;tempfile property="temp.file" destDir="build"/&gt;</pre>
+ * create a temp file in the build subdir
  *@author      steve loughran
  *@since       Ant 1.5
  *@ant.task
@@ -94,7 +105,7 @@ public class TempFile extends Task {
 
 
     /**
-     *  Sets the property attribute of the TempFile object
+     *  The property you wish to assign the temporary file to
      *
      *@param  property  The property to set
      */

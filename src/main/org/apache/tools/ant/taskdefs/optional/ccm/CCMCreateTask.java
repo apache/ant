@@ -68,7 +68,8 @@ import org.apache.tools.ant.types.Commandline;
 
 
 /**
- * Task allows to create new ccm task and set it as the default
+ * Creates new Continuus ccm task and sets it as the default.
+ *
  * @author Benoit Moussaud benoit.moussaud@criltelecom.com
  *
  * @ant.task name="ccmcreatetask" category="scm"
@@ -97,7 +98,6 @@ public class CCMCreateTask extends Continuus implements ExecuteStreamHandler {
      */
     public void execute() throws BuildException {
         Commandline commandLine = new Commandline();
-        Project aProj = getProject();
         int result = 0;
 
         // build the command line from what we got the format
@@ -170,7 +170,8 @@ public class CCMCreateTask extends Continuus implements ExecuteStreamHandler {
     }
 
     /**
-     * Set the value of comment.
+     * Specifies a comment.
+     *
      * @param v  Value to assign to comment.
      */
     public void setComment(String v) {
@@ -187,7 +188,8 @@ public class CCMCreateTask extends Continuus implements ExecuteStreamHandler {
     }
 
     /**
-     * Set the value of platform.
+     * Specifies the target platform.
+     *
      * @param v  Value to assign to platform.
      */
     public void setPlatform(String v) {
@@ -204,7 +206,8 @@ public class CCMCreateTask extends Continuus implements ExecuteStreamHandler {
     }
 
     /**
-     * Set the value of resolver.
+     * Specifies the resolver.
+     *
      * @param v  Value to assign to resolver.
      */
     public void setResolver(String v) {
@@ -221,7 +224,8 @@ public class CCMCreateTask extends Continuus implements ExecuteStreamHandler {
     }
 
     /**
-     * Set the value of release.
+     * Specify the CCM release.
+     *
      * @param v  Value to assign to release.
      */
     public void setRelease(String v) {
@@ -237,7 +241,8 @@ public class CCMCreateTask extends Continuus implements ExecuteStreamHandler {
     }
 
     /**
-     * Set the value of subSystem.
+     * Specifies the subsystem.
+     *
      * @param v  Value to assign to subSystem.
      */
     public void setSubSystem(String v) {
@@ -254,7 +259,9 @@ public class CCMCreateTask extends Continuus implements ExecuteStreamHandler {
     }
 
     /**
-     * Set the value of task.
+     * Specifies the task number used to checkin
+     * the file (may use 'default').
+     *
      * @param v  Value to assign to task.
      */
     public void setTask(String v) {
@@ -317,7 +324,7 @@ public class CCMCreateTask extends Continuus implements ExecuteStreamHandler {
 
     /**
      *
-     * @param param1
+     * @param is
      * @exception java.io.IOException
      */
     public void setProcessErrorStream(InputStream is) throws IOException {

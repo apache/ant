@@ -120,7 +120,7 @@ public final class LoadFile extends Task {
 
 
     /**
-     * Sets the Property attribute of the LoadFile object
+     * Property name to save to.
      *
      * @param property The new Property value
      */
@@ -130,7 +130,7 @@ public final class LoadFile extends Task {
 
 
     /**
-     * Sets the srcfile attribute.
+     * Sets the file to load.
      *
      * @param srcFile The new SrcFile value
      */
@@ -140,7 +140,7 @@ public final class LoadFile extends Task {
 
 
     /**
-     * Sets the Failonerror attribute of the LoadFile object
+     * If true, fail on load error.
      *
      * @param fail The new Failonerror value
      */
@@ -182,20 +182,25 @@ public final class LoadFile extends Task {
                 instream = new InputStreamReader(bis, encoding);
             }
 
-            ChainReaderHelper crh = new ChainReaderHelper();
-            crh.setBufferSize(size);
-            crh.setPrimaryReader(instream);
-            crh.setFilterChains(filterChains);
-            crh.setProject(project);
-            instream = crh.getAssembledReader();
-
-            String text = crh.readFully(instream);
+            String text = "";
+            if (size != 0) {
+                ChainReaderHelper crh = new ChainReaderHelper();
+                crh.setBufferSize(size);
+                crh.setPrimaryReader(instream);
+                crh.setFilterChains(filterChains);
+                crh.setProject(project);
+                instream = crh.getAssembledReader();
+    
+                text = crh.readFully(instream);
+            }
 
             if (text != null) {
-                project.setNewProperty(property, text);
-                log("loaded " + text.length() + " characters",
-                    Project.MSG_VERBOSE);
-                log(property + " := " + text, Project.MSG_DEBUG);
+                if (text.length() > 0) {
+                    project.setNewProperty(property, text);
+                    log("loaded " + text.length() + " characters",
+                        Project.MSG_VERBOSE);
+                    log(property + " := " + text, Project.MSG_DEBUG);
+                }
             }
 
         } catch (final IOException ioe) {

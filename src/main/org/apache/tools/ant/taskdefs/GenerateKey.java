@@ -62,7 +62,7 @@ import org.apache.tools.ant.util.JavaEnvUtils;
 import org.apache.tools.ant.types.Commandline;
 
 /**
- * Generates a key.
+ * Generates a key in a keystore.
  * 
  * @author <a href="mailto:donaldp@apache.org">Peter Donald</a>
  *
@@ -172,6 +172,13 @@ public class GenerateKey extends Task {
     protected int validity;
     protected boolean verbose;
 
+    /**
+     * Distinguished name list.
+     *
+     * @return Distinguished name container.
+     * @throws BuildException If specified more than once or dname
+     *                        attribute is used.
+     */
     public DistinguishedName createDname() throws BuildException {
         if (null != expandedDname) {
             throw new BuildException("DName sub-element can only be "
@@ -185,7 +192,12 @@ public class GenerateKey extends Task {
         expandedDname = new DistinguishedName();
         return expandedDname;
     }
-  
+
+    /**
+     * The distinguished name for entity.
+     *
+     * @param dname distinguished name
+     */
     public void setDname(final String dname) {
         if (null != expandedDname) {
             throw new BuildException("It is not possible to specify dname " +
@@ -195,50 +207,101 @@ public class GenerateKey extends Task {
         this.dname = dname;
     }
 
+    /**
+     * The alias to add under.
+     *
+     * @param alias alias to add under
+     */
     public void setAlias(final String alias) {
         this.alias = alias;
-    } 
+    }
 
+    /**
+     * Keystore location.
+     *
+     * @param keystore location
+     */
     public void setKeystore(final String keystore) {
         this.keystore = keystore;
-    } 
+    }
 
+    /**
+     * Password for keystore integrity.
+     * Must be at least 6 characters long.
+     * @param storepass password
+     */
     public void setStorepass(final String storepass) {
         this.storepass = storepass;
-    } 
+    }
 
+    /**
+     * Keystore type.
+     *
+     * @param storetype type
+     */
     public void setStoretype(final String storetype) {
         this.storetype = storetype;
-    } 
+    }
 
+    /**
+     * Password for private key (if different).
+     *
+     * @param keypass password
+     */
     public void setKeypass(final String keypass) {
         this.keypass = keypass;
-    } 
+    }
 
+    /**
+     * The algorithm to use in signing.
+     *
+     * @param sigalg algorithm
+     */
     public void setSigalg(final String sigalg) {
         this.sigalg = sigalg;
-    } 
+    }
 
+    /**
+     * The method to use when generating name-value pair.
+     * @param keyalg algorithm
+     */
     public void setKeyalg(final String keyalg) {
         this.keyalg = keyalg;
-    } 
+    }
 
+    /**
+     * Indicates the size of key generated.
+     *
+     * @param keysize size of key
+     * @throws BuildException If not an Integer
+     * @todo Could convert this to a plain Integer setter.
+     */
     public void setKeysize(final String keysize) throws BuildException {
         try { 
             this.keysize = Integer.parseInt(keysize); 
         } catch (final NumberFormatException nfe) {
             throw new BuildException("KeySize attribute should be a integer");
         }
-    } 
+    }
 
+    /**
+     * Indicates how many days certificate is valid.
+     *
+     * @param validity days valid
+     * @throws BuildException If not an Integer
+     */
     public void setValidity(final String validity) throws BuildException {
         try { 
             this.validity = Integer.parseInt(validity); 
         } catch (final NumberFormatException nfe) {
             throw new BuildException("Validity attribute should be a integer");
         }
-    } 
+    }
 
+    /**
+     * If true, verbose output when signing.
+     * @param verbose verbose or not
+     */
     public void setVerbose(final boolean verbose) {
         this.verbose = verbose;
     } 

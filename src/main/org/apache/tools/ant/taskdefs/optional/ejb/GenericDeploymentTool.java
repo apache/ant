@@ -97,6 +97,9 @@ public class GenericDeploymentTool implements EJBDeploymentTool {
     /** The standard META-INF directory in jar files */
     protected static final String META_DIR  = "META-INF/";
 
+    /** The standard MANIFEST file */
+    protected static final String MANIFEST  = META_DIR + "MANIFEST.MF";
+
     /** Name for EJB Deployment descriptor within EJB jars */
     protected static final String EJB_DD    = "ejb-jar.xml";
 
@@ -110,10 +113,10 @@ public class GenericDeploymentTool implements EJBDeploymentTool {
     /** The default analyzer */
     public static final String DEFAULT_ANALYZER = ANALYZER_SUPER;
 
-    /** The analyzer class for the super analyzer */    
+    /** The analyzer class for the super analyzer */
     public static final String ANALYZER_CLASS_SUPER
         = "org.apache.tools.ant.util.depend.bcel.AncestorAnalyzer";
-    /** The analyzer class for the super analyzer */    
+    /** The analyzer class for the super analyzer */
     public static final String ANALYZER_CLASS_FULL
         = "org.apache.tools.ant.util.depend.bcel.FullAnalyzer";
 
@@ -293,11 +296,11 @@ public class GenericDeploymentTool implements EJBDeploymentTool {
         if (analyzer == null) {
             analyzer = DEFAULT_ANALYZER;
         }
-        
+
         if (analyzer.equals(ANALYZER_NONE)) {
             return;
         }
-        
+
         String analyzerClassName = null;
         if (analyzer.equals(ANALYZER_SUPER)) {
             analyzerClassName = ANALYZER_CLASS_SUPER;
@@ -306,10 +309,10 @@ public class GenericDeploymentTool implements EJBDeploymentTool {
         } else {
             analyzerClassName = analyzer;
         }
-        
+
         try {
             Class analyzerClass = Class.forName(analyzerClassName);
-            dependencyAnalyzer 
+            dependencyAnalyzer
                 = (DependencyAnalyzer) analyzerClass.newInstance();
             dependencyAnalyzer.addClassPath(new Path(task.getProject(),
                 config.srcDir.getPath()));
@@ -324,8 +327,8 @@ public class GenericDeploymentTool implements EJBDeploymentTool {
                 Project.MSG_WARN);
         }
     }
-    
-    
+
+
     /**
      * Configure this tool for use in the ejbjar task.
      *
@@ -428,6 +431,13 @@ public class GenericDeploymentTool implements EJBDeploymentTool {
             String baseName = getJarBaseName(descriptorFileName);
 
             String ddPrefix = getVendorDDPrefix(baseName, descriptorFileName);
+
+            File manifestFile = getManifestFile(ddPrefix);
+            if (manifestFile != null) {
+                ejbFiles.put(MANIFEST, manifestFile);
+            }
+
+
 
             // First the regular deployment descriptor
             ejbFiles.put(META_DIR + EJB_DD,
@@ -613,13 +623,13 @@ public class GenericDeploymentTool implements EJBDeploymentTool {
             if (endBaseName != -1) {
                 baseName = descriptorFileName.substring(0, endBaseName);
             } else {
-                throw new BuildException("Unable to determine jar name " 
+                throw new BuildException("Unable to determine jar name "
                     + "from descriptor \"" + descriptorFileName + "\"");
             }
         } else if (config.namingScheme.getValue().equals(EjbJar.NamingScheme.DIRECTORY)) {
             File descriptorFile = new File(config.descriptorDir, descriptorFileName);
             String path = descriptorFile.getAbsolutePath();
-            int lastSeparatorIndex 
+            int lastSeparatorIndex
                 = path.lastIndexOf(File.separator);
             if (lastSeparatorIndex == -1) {
                 throw new BuildException("Unable to determine directory name holding descriptor");
@@ -698,14 +708,6 @@ public class GenericDeploymentTool implements EJBDeploymentTool {
         if (jarFile.exists()) {
             long lastBuild = jarFile.lastModified();
 
-            if (config.manifest != null && config.manifest.exists() &&
-                config.manifest.lastModified() > lastBuild) {
-                log("Build needed because manifest " + config.manifest + " is out of date",
-                    Project.MSG_VERBOSE);
-                return true;
-            }
-
-
             Iterator fileIter = ejbFiles.values().iterator();
 
             // Loop through the files seeing if any has been touched
@@ -736,6 +738,30 @@ public class GenericDeploymentTool implements EJBDeploymentTool {
     }
 
     /**
+     * Get the manifets file to use for building the generic jar.
+     *
+     * If the file does not exist the global manifest from the config is used
+     * otherwise the default Ant manifest will be used.
+     *
+     * @param prefix the prefix where to llook for the manifest file based on
+     *        the naming convention.
+     *
+     * @return the manifest file or null if the manifest file does not exist
+     */
+    protected File getManifestFile(String prefix) {
+        File manifestFile
+            = new File(getConfig().descriptorDir, prefix + "manifest.mf");
+        if (manifestFile.exists()) {
+            return manifestFile;
+        }
+
+        if (config.manifest != null) {
+            return config.manifest;
+        }
+        return null;
+    }
+
+    /**
      * Method used to encapsulate the writing of the JAR file. Iterates over the
      * filenames/java.io.Files in the Hashtable stored on the instance variable
      * ejbFiles.
@@ -762,15 +788,9 @@ public class GenericDeploymentTool implements EJBDeploymentTool {
             InputStream in = null;
             Manifest manifest = null;
             try {
-                File manifestFile = new File(getConfig().descriptorDir, baseName + "-manifest.mf");
-                if (manifestFile.exists()) {
+                File manifestFile = (File) files.get(MANIFEST);
+                if (manifestFile != null && manifestFile.exists()) {
                     in = new FileInputStream(manifestFile);
-                } else if (config.manifest != null) {
-                    in = new FileInputStream(config.manifest);
-                    if (in == null) {
-                        throw new BuildException("Could not find manifest file: " + config.manifest,
-                                                  getLocation());
-                    }
                 } else {
                     String defaultManifest = "/org/apache/tools/ant/defaultManifest.mf";
                     in = this.getClass().getResourceAsStream(defaultManifest);
@@ -797,6 +817,10 @@ public class GenericDeploymentTool implements EJBDeploymentTool {
             // Loop through all the class files found and add them to the jar
             for (Iterator entryIterator = files.keySet().iterator(); entryIterator.hasNext();) {
                 String entryName = (String) entryIterator.next();
+                if (entryName.equals(MANIFEST)) {
+                    continue;
+                }
+
                 File entryFile = (File) files.get(entryName);
 
                 log("adding file '" + entryName + "'",
@@ -855,7 +879,7 @@ public class GenericDeploymentTool implements EJBDeploymentTool {
         if (dependencyAnalyzer == null) {
             return;
         }
-        
+
         dependencyAnalyzer.reset();
 
         Iterator i = checkEntries.keySet().iterator();

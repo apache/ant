@@ -130,18 +130,16 @@ public class Ant extends Task {
     private PrintStream out = null;
 
     /**
-     * If true, inherit all properties from parent Project
-     * If false, inherit only userProperties and those defined
-     * inside the ant call itself
+     * If true, pass all properties to the new Ant project.
+     * Defaults to true.
      */
     public void setInheritAll(boolean value) {
         inheritAll = value;
     }
 
     /**
-     * If true, inherit all references from parent Project
-     * If false, inherit only those defined
-     * inside the ant call itself
+     * If true, pass all references to the new Ant project.
+     * Defaults to false.
      */
     public void setInheritRefs(boolean value) {
         inheritRefs = value;
@@ -183,6 +181,18 @@ public class Ant extends Task {
             }
             if (p.getResource() != null) {
                 newP.setResource(p.getResource());
+            }
+            if (p.getPrefix() != null) {
+                newP.setPrefix(p.getPrefix());
+            }
+            if (p.getRefid() != null) {
+                newP.setRefid(p.getRefid());
+            }
+            if (p.getEnvironment() != null) {
+                newP.setEnvironment(p.getEnvironment());
+            }
+            if (p.getClasspath() != null) {
+                newP.setClasspath(p.getClasspath());
             }
             properties.setElementAt(newP, i);
         }
@@ -243,31 +253,32 @@ public class Ant extends Task {
             newProject.addDataTypeDefinition(typeName, typeClass);
         }
 
-        // set user-defined or all properties from calling project
-        Hashtable prop1;
-        if (inheritAll) {
-           prop1 = project.getProperties();
-        } else {
-           prop1 = project.getUserProperties();
+        // set user-defined properties
+        getProject().copyUserProperties(newProject);
 
+        if (!inheritAll) {
            // set Java built-in properties separately,
            // b/c we won't inherit them.
            newProject.setSystemProperties();
-        }
 
-        e = prop1.keys();
-        while (e.hasMoreElements()) {
-            String arg = (String) e.nextElement();
-            if ("basedir".equals(arg) || "ant.file".equals(arg)) {
-                // basedir and ant.file get special treatment in execute()
-                continue;
-            }
+        } else {
+            // set all properties from calling project
 
-            String value = (String) prop1.get(arg);
-            if (inheritAll){
-               newProject.setProperty(arg, value);
-            } else {
-               newProject.setUserProperty(arg, value);
+            Hashtable props = getProject().getProperties();
+            e = props.keys();
+            while (e.hasMoreElements()) {
+                String arg = e.nextElement().toString();
+                if ("basedir".equals(arg) || "ant.file".equals(arg)) {
+                    // basedir and ant.file get special treatment in execute()
+                    continue;
+                }
+
+                String value = props.get(arg).toString();
+                // don't re-set user properties, avoid the warning message
+                if (newProject.getProperty(arg) == null){
+                    // no user property
+                    newProject.setNewProperty(arg, value);
+                }
             }
         }
     }
@@ -382,6 +393,7 @@ public class Ant extends Task {
             p.setProject(newProject);
             p.execute();
         }
+        getProject().copyInheritedProperties(newProject);
     }
 
     /**
@@ -475,16 +487,19 @@ public class Ant extends Task {
     }
 
     /**
-     * Set the dir attribute.
+     * The directory to use as a basedir for the new Ant project.
+     * Defaults to the current project's basedir, unless inheritall
+     * has been set to false, in which case it doesn't have a default
+     * value. This will override the basedir setting of the called project.
      */
     public void setDir(File d) {
         this.dir = d;
     }
 
     /**
-     * set the build file, it can be either absolute or relative.
-     * If it is absolute, <tt>dir</tt> will be ignored, if it is
-     * relative it will be resolved relative to <tt>dir</tt>.
+     * The build file to use.
+     * Defaults to "build.xml". This file is expected to be a filename relative
+     * to the dir attribute given.
      */
     public void setAntfile(String s) {
         // @note: it is a string and not a file to handle relative/absolute
@@ -494,28 +509,32 @@ public class Ant extends Task {
     }
 
     /**
-     * set the target to execute. If none is defined it will
-     * execute the default target of the build file
+     * The target of the new Ant project to execute.
+     * Defaults to the new project's default target.
      */
     public void setTarget(String s) {
         this.target = s;
     }
 
     /**
-     * Set the name of a log file.  This will be resolved relative to
-     * the dir attribute if specified, relative to the current
-     * project's basedir otherwise.
+     * Filename to write the output to.
+     * This is relative to the value of the dir attribute
+     * if it has been set or to the base directory of the
+     * current project otherwise.
      */
     public void setOutput(String s) {
         this.output = s;
     }
 
-    /** create a property to pass to the new project as a 'user property' */
+    /**
+     * Property to pass to the new project.
+     * The property is passed as a 'user property'
+     */
     public Property createProperty() {
         if (newProject == null) {
             reinit();
         }
-        Property p = new Property(true);
+        Property p = new Property(true, getProject());
         p.setProject(newProject);
         p.setTaskName("property");
         properties.addElement(p);
@@ -523,8 +542,8 @@ public class Ant extends Task {
     }
 
     /**
-     * create a reference element that identifies a data type that
-     * should be carried over to the new project.
+     * Reference element identifying a data type to carry
+     * over to the new project.
      */
     public void addReference(Reference r) {
         references.addElement(r);

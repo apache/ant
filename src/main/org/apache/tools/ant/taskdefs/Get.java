@@ -64,6 +64,7 @@ import java.net.HttpURLConnection;
 import java.util.Date;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Task;
+import org.apache.tools.ant.Project;
 import org.apache.tools.ant.util.FileUtils;
 import org.apache.tools.ant.util.JavaEnvUtils;
 
@@ -176,8 +177,13 @@ public class Get extends Task {
                 // test for 401 result (HTTP only)
                 if (httpConnection.getResponseCode()
                     == HttpURLConnection.HTTP_UNAUTHORIZED)  {
-                    log("Not authorized - check " + dest + " for details");
-                    return;
+                    String message="HTTP Authorization failure";
+                    if(ignoreErrors) {
+                        log(message,Project.MSG_WARN);
+                        return;
+                    } else {
+                        throw new BuildException(message);
+                    }
                 }
 
             }
@@ -262,7 +268,7 @@ public class Get extends Task {
     }
 
     /**
-     * Set the URL.
+     * Set the URL to get.
      *
      * @param u URL for the file.
      */
@@ -280,7 +286,7 @@ public class Get extends Task {
     }
 
     /**
-     * Be verbose, if set to "<CODE>true</CODE>".
+     * If true, show verbose progress information.
      *
      * @param v if "true" then be verbose
      */
@@ -289,7 +295,7 @@ public class Get extends Task {
     }
 
     /**
-     * Don't stop if get fails if set to "<CODE>true</CODE>".
+     * If true, log errors but do not treat as fatal.
      *
      * @param v if "true" then don't report download errors up to ant
      */
@@ -298,7 +304,8 @@ public class Get extends Task {
     }
 
     /**
-     * Use timestamps, if set to "<CODE>true</CODE>".
+     * If true, conditionally download a file based on the timestamp
+     * of the local copy.
      *
      * <p>In this situation, the if-modified-since header is set so
      * that the file is only fetched if it is newer than the local
@@ -331,7 +338,7 @@ public class Get extends Task {
     }
 
     /**
-     * password for the basic auth.
+     * password for the basic authentication.
      *
      * @param p password for authentication
      */

@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2001 The Apache Software Foundation.  All rights
+ * Copyright (c) 2001-2002 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -57,7 +57,8 @@ package org.apache.tools.ant.taskdefs.optional.ccm;
 import java.util.Date;
 
 /**
- * Task to perform Checkin command to Continuus
+ * Performs Continuus checkin command.
+ *
  * @author Benoit Moussaud benoit.moussaud@criltelecom.com
  */
 public class CCMCheckin extends CCMCheck {

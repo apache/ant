@@ -382,9 +382,13 @@ public class PatternSet extends DataType {
     /**
      * helper for FileSet.
      */
-    boolean hasPatterns() {
-        return includesFileList.size() > 0 || excludesFileList.size() > 0 
-            || includeList.size() > 0 || excludeList.size() > 0;
+    boolean hasPatterns(Project p) {
+        if (isReference()) {
+            return getRef(p).hasPatterns(p);
+        } else {
+            return includesFileList.size() > 0 || excludesFileList.size() > 0 
+                || includeList.size() > 0 || excludeList.size() > 0;
+        }
     }
 
     /**

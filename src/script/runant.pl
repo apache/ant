@@ -1,6 +1,6 @@
 #!/usr/bin/perl
 #
-#   Copyright (c) 2001 The Apache Software Foundation.  All rights
+#   Copyright (c) 2001-2002 The Apache Software Foundation.  All rights
 #   reserved.
 #
 #######################################################################
@@ -55,11 +55,18 @@ if ($HOME eq "")
 my $JAVACMD = $ENV{JAVACMD};
 $JAVACMD = "java" if $JAVACMD eq "";
 
+my $onnetware = 0;
+if ($^O eq "NetWare")
+{
+  $onnetware = 1;
+}
+
 #ISSUE: what java wants to split up classpath varies from platform to platform 
 #and perl is not too hot at hinting which box it is on.
-#here I assume ":" 'cept on win32 and dos. Add extra tests here as needed.
+#here I assume ":" 'cept on win32, dos, and netware. Add extra tests here as needed.
 my $s=":";
-if(($^O eq "MSWin32") || ($^O eq "dos") || ($^O eq "cygwin"))
+if(($^O eq "MSWin32") || ($^O eq "dos") || ($^O eq "cygwin") ||
+   ($onnetware == 1))
         {
         $s=";";
         }
@@ -71,6 +78,13 @@ if ($localpath eq "")
         print "warning: no initial classpath\n" if ($debug);
         $localpath="";
         }
+if ($onnetware == 1)
+{
+# avoid building a command line bigger than 512 characters - make localpath
+# only include the "extra" stuff, and add in the system classpath as an expanded
+# variable. 
+  $localpath="";
+} 
 
 #add jar files. I am sure there is a perl one liner to do this.
 my $jarpattern="$HOME/lib/*.jar";
@@ -117,7 +131,18 @@ if($ENV{JIKESPATH} ne "")
 
 #construct arguments to java
 my @ARGS;
-push @ARGS, "-classpath", "$localpath", "-Dant.home=$HOME";
+if ($onnetware == 1)
+{
+# make classpath literally $CLASSPATH; and then the contents of $localpath
+# this is to avoid pushing us over the 512 character limit
+# even skip the ; - that is already in $localpath
+  push @ARGS, "-classpath", "\$CLASSPATH$localpath";
+}
+else
+{
+  push @ARGS, "-classpath", "$localpath";
+}
+push @ARGS, "-Dant.home=$HOME";
 push @ARGS, @ANT_OPTS;
 push @ARGS, "org.apache.tools.ant.Main", @ANT_ARGS;
 push @ARGS, @ARGV;

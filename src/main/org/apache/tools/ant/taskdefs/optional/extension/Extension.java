@@ -87,7 +87,8 @@ public final class Extension
      * Manifest Attribute Name object for EXTENSION_LIST.
      * @see Attributes.Name#EXTENSION_LIST
      */
-    public static final Attributes.Name EXTENSION_LIST = Attributes.Name.EXTENSION_LIST;
+    public static final Attributes.Name EXTENSION_LIST = 
+        new Attributes.Name( "Extension-List" );//Attributes.Name.EXTENSION_LIST;
 
     /**
      * <code>Name</code> object for <code>Optional-Extension-List</code>
@@ -99,14 +100,15 @@ public final class Extension
      * @see <a href="http://java.sun.com/j2se/1.3/docs/guide/extensions/spec.html#dependnecy">
      *      Installed extension dependency</a>
      */
-    public static final Attributes.Name OPTIONAL_EXTENSION_LIST = new Attributes.Name( "Optional-Extension-List" );
+    public static final Attributes.Name OPTIONAL_EXTENSION_LIST = 
+        new Attributes.Name( "Optional-Extension-List" );
 
     /**
      * Manifest Attribute Name object for EXTENSION_NAME.
      * @see Attributes.Name#EXTENSION_NAME
      */
-    public static final Attributes.Name EXTENSION_NAME = Attributes.Name.EXTENSION_NAME;
-
+    public static final Attributes.Name EXTENSION_NAME = 
+        new Attributes.Name( "Extension-Name" );//Attributes.Name.EXTENSION_NAME;
     /**
      * Manifest Attribute Name object for SPECIFICATION_VERSION.
      * @see Attributes.Name#SPECIFICATION_VERSION
@@ -135,40 +137,42 @@ public final class Extension
      * Manifest Attribute Name object for IMPLEMENTATION_URL.
      * @see Attributes.Name#IMPLEMENTATION_URL
      */
-    public static final Attributes.Name IMPLEMENTATION_URL = Attributes.Name.IMPLEMENTATION_URL;
+    public static final Attributes.Name IMPLEMENTATION_URL =
+        new Attributes.Name( "Implementation-URL" );//Attributes.Name.IMPLEMENTATION_URL;
 
     /**
      * Manifest Attribute Name object for IMPLEMENTATION_VENDOR_ID.
      * @see Attributes.Name#IMPLEMENTATION_VENDOR_ID
      */
-    public static final Attributes.Name IMPLEMENTATION_VENDOR_ID = Attributes.Name.IMPLEMENTATION_VENDOR_ID;
+    public static final Attributes.Name IMPLEMENTATION_VENDOR_ID =
+        new Attributes.Name( "Implementation-Vendor-Id" );//Attributes.Name.IMPLEMENTATION_VENDOR_ID;
 
     /**
      * Enum indicating that extension is compatible with other extension.
      */
-    public static final Compatability COMPATIBLE =
-        new Compatability( "COMPATIBLE" );
+    public static final Compatibility COMPATIBLE =
+        new Compatibility( "COMPATIBLE" );
 
     /**
      * Enum indicating that extension requires an upgrade
      * of specification to be compatible with other extension.
      */
-    public static final Compatability REQUIRE_SPECIFICATION_UPGRADE =
-        new Compatability( "REQUIRE_SPECIFICATION_UPGRADE" );
+    public static final Compatibility REQUIRE_SPECIFICATION_UPGRADE =
+        new Compatibility( "REQUIRE_SPECIFICATION_UPGRADE" );
 
     /**
      * Enum indicating that extension requires a vendor
      * switch to be compatible with other extension.
      */
-    public static final Compatability REQUIRE_VENDOR_SWITCH =
-        new Compatability( "REQUIRE_VENDOR_SWITCH" );
+    public static final Compatibility REQUIRE_VENDOR_SWITCH =
+        new Compatibility( "REQUIRE_VENDOR_SWITCH" );
 
     /**
      * Enum indicating that extension requires an upgrade
      * of implementation to be compatible with other extension.
      */
-    public static final Compatability REQUIRE_IMPLEMENTATION_UPGRADE =
-        new Compatability( "REQUIRE_IMPLEMENTATION_UPGRADE" );
+    public static final Compatibility REQUIRE_IMPLEMENTATION_UPGRADE =
+        new Compatibility( "REQUIRE_IMPLEMENTATION_UPGRADE" );
 
     /**
      * Enum indicating that extension is incompatible with
@@ -176,8 +180,8 @@ public final class Extension
      * indicate). ie For example the other extension may have
      * a different ID.
      */
-    public static final Compatability INCOMPATIBLE =
-        new Compatability( "INCOMPATIBLE" );
+    public static final Compatibility INCOMPATIBLE =
+        new Compatibility( "INCOMPATIBLE" );
 
     /**
      * The name of the optional package being made available, or required.
@@ -499,10 +503,10 @@ public final class Extension
      * <code>Extension</code> with the specified <code>Extension</code>.
      *
      * @param required Description of the required optional package
-     * @return the enum indicating the compatability (or lack thereof)
+     * @return the enum indicating the compatibility (or lack thereof)
      *         of specifed extension
      */
-    public Compatability getCompatibilityWith( final Extension required )
+    public Compatibility getCompatibilityWith( final Extension required )
     {
         // Extension Name must match
         if( !m_extensionName.equals( required.getExtensionName() ) )

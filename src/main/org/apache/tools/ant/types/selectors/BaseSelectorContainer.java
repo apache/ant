@@ -98,13 +98,9 @@ public abstract class BaseSelectorContainer extends BaseSelector
      * Returns the set of selectors as an array.
      */
     public FileSelector[] getSelectors(Project p) {
-        if (isReference()) {
-            return getRef(p).getSelectors(p);
-        } else {
-            FileSelector[] result = new FileSelector[selectorsList.size()];
-            selectorsList.copyInto(result);
-            return result;
-        }
+        FileSelector[] result = new FileSelector[selectorsList.size()];
+        selectorsList.copyInto(result);
+        return result;
     }
 
     /**
@@ -112,26 +108,6 @@ public abstract class BaseSelectorContainer extends BaseSelector
      */
     public Enumeration selectorElements() {
         return selectorsList.elements();
-    }
-
-    /**
-     * Performs the check for circular references and returns the
-     * referenced SelectorContainer.
-     */
-    private SelectorContainer getRef(Project p) {
-        if (!checked) {
-            Stack stk = new Stack();
-            stk.push(this);
-            dieOnCircularReference(stk, p);
-        }
-
-        Object o = ref.getReferencedObject(p);
-        if (!(o instanceof SelectorContainer)) {
-            throw new BuildException(ref.getRefId() +
-                " doesn\'t denote a selector type");
-        } else {
-            return (SelectorContainer) o;
-        }
     }
 
     /**
@@ -163,9 +139,6 @@ public abstract class BaseSelectorContainer extends BaseSelector
      * @return the selector that was added
      */
     public void appendSelector(FileSelector selector) {
-        if (isReference()) {
-            throw noChildrenAllowed();
-        }
         selectorsList.addElement(selector);
     }
 
@@ -215,7 +188,14 @@ public abstract class BaseSelectorContainer extends BaseSelector
                                        File file);
 
 
-    /* Methods below all implement the static selectors */
+    /* Methods below all add specific selectors */
+
+    /**
+     * add a "Select" selector entry on the selector list
+     */
+    public void addSelector(SelectSelector selector) {
+        appendSelector(selector);
+    }
 
     /**
      * add an "And" selector entry on the selector list
@@ -255,56 +235,56 @@ public abstract class BaseSelectorContainer extends BaseSelector
     /**
      * add a selector date entry on the selector list
      */
-    public void addDateselect(DateSelector selector) {
+    public void addDate(DateSelector selector) {
         appendSelector(selector);
     }
 
     /**
      * add a selector size entry on the selector list
      */
-    public void addSizeselect(SizeSelector selector) {
+    public void addSize(SizeSelector selector) {
         appendSelector(selector);
     }
 
     /**
      * add a selector filename entry on the selector list
      */
-    public void addFilenameselect(FilenameSelector selector) {
+    public void addFilename(FilenameSelector selector) {
         appendSelector(selector);
     }
 
     /**
      * add an extended selector entry on the selector list
      */
-    public void addExtendSelect(ExtendSelector selector) {
+    public void addCustom(ExtendSelector selector) {
         appendSelector(selector);
     }
 
     /**
      * add a contains selector entry on the selector list
      */
-    public void addContainsSelect(ContainsSelector selector) {
+    public void addContains(ContainsSelector selector) {
         appendSelector(selector);
     }
 
     /**
      * add a present selector entry on the selector list
      */
-    public void addPresentSelect(PresentSelector selector) {
+    public void addPresent(PresentSelector selector) {
         appendSelector(selector);
     }
 
     /**
      * add a depth selector entry on the selector list
      */
-    public void addDepthSelect(DepthSelector selector) {
+    public void addDepth(DepthSelector selector) {
         appendSelector(selector);
     }
 
     /**
      * add a depends selector entry on the selector list
      */
-    public void addDependSelect(DependSelector selector) {
+    public void addDepend(DependSelector selector) {
         appendSelector(selector);
     }
 

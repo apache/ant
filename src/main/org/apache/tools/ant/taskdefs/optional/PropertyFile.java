@@ -437,14 +437,16 @@ public class PropertyFile extends Task {
                 newValue = currentValue;
             } else {
                 int operationValue = 1;
-                try {
-                    operationValue = fmt.parse(value).intValue();
-                } catch (NumberFormatException nfe) { 
-                    // swallow
-                } catch (ParseException pe)  { 
-                    // swallow
+                if (value != null) {
+                    try {
+                        operationValue = fmt.parse(value).intValue();
+                    } catch (NumberFormatException nfe) {
+                        // swallow
+                    } catch (ParseException pe)  {
+                        // swallow
+                    }
                 }
-                
+
                 if (operation == Operation.INCREMENT_OPER) {
                     newValue = currentValue + operationValue;
                 } else if (operation == Operation.DECREMENT_OPER) {

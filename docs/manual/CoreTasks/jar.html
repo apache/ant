@@ -39,15 +39,15 @@ JAR file already exists. When set to <code>yes</code>, the JAR file is
 updated with the files specified. When set to <code>no</code> (the
 default) the JAR file is overwritten. An example use of this is
 provided in the <a href="zip.html">Zip task documentation</a>.</p>
-<p>(The Jar task is a shortcut for specifying the manifest file of a JAR file. 
+<p>(The Jar task is a shortcut for specifying the manifest file of a JAR file.
 The same thing can be accomplished by using the <i>fullpath</i>
 attribute of a zipfileset in a Zip task. The one difference is that if the
-<i>manifest</i> attribute is not specified, the Jar task will 
+<i>manifest</i> attribute is not specified, the Jar task will
 include an empty one for you.)</p>
 
-<p>Manifests are processed by the Jar task according to the 
+<p>Manifests are processed by the Jar task according to the
 <a href="http://java.sun.com/j2se/1.3/docs/guide/jar/jar.html">Jar file specification.</a>
-Note in particular that this may result in manifest lines greater than 72 bytes 
+Note in particular that this may result in manifest lines greater than 72 bytes
 being wrapped and continued on the next line.
 </p>
 
@@ -88,7 +88,7 @@ being wrapped and continued on the next line.
   </tr>
   <tr>
     <td valign="top">includes</td>
-    <td valign="top">comma separated list of patterns of files that must be
+    <td valign="top">comma- or space-separated list of patterns of files that must be
       included. All files are included when omitted.</td>
     <td valign="top" align="center">No</td>
   </tr>
@@ -100,7 +100,7 @@ being wrapped and continued on the next line.
   </tr>
   <tr>
     <td valign="top">excludes</td>
-    <td valign="top">comma separated list of patterns of files that must be
+    <td valign="top">comma- or space-separated list of patterns of files that must be
       excluded. No files (except default excludes) are excluded when omitted.</td>
     <td valign="top" align="center">No</td>
   </tr>
@@ -123,7 +123,14 @@ being wrapped and continued on the next line.
   </tr>
   <tr>
     <td valign="top">filesetmanifest</td>
-    <td valign="top">behavior when a Manifest is found in a zipfileset or zipgroupfileset file is found.  Valid values are &quot;skip&quot;, &quot;merge&quot;, and &quot;mergewithoutmain&quot;.  &quot;merge&quot; will merge all of manifests together, and merge this into any other specified manifests.  &quot;mergewithoutmain&quot; merges everything but the Main section of the manifests.  Default value is &quot;skip&quot;.
+    <td valign="top">behavior when a Manifest is found in a zipfileset or
+    zipgroupfileset file is found.  Valid values are &quot;skip&quot;,
+    &quot;merge&quot;, and &quot;mergewithoutmain&quot;.  &quot;merge&quot;
+    will merge all of manifests together, and merge this into any other
+    specified manifests.  &quot;mergewithoutmain&quot; merges everything
+    but the Main section of the manifests.  Default value is &quot;skip&quot;.
+    <b>Note:</b> if this attribute's value is not &quot;skip&quot;, the
+    created jar will not be readable by using java.util.jar.JarInputStream
     </td>
     <td valign="top" align="center">No</td>
   </tr>
@@ -158,25 +165,25 @@ end up in the <code>META-INF</code> directory of the jar file. If this
 fileset includes a file named <code>MANIFEST.MF</code>, the file is
 ignored and you will get a warning.</p>
 
-<h4>Manifest</h4>
+<h4>manifest</h4>
 <p>The manifest nested element allows the manifest for the Jar file to
 be provided inline in the build file rather than in an external
-file. This element is identical to the 
+file. This element is identical to the
 <a href="manifest.html">manifest</a> task, but its file and mode
 attributes will be ignored.</p>
 <p>
 If both an inline manifest and an external file are both specified, the
-manifests are merged. 
+manifests are merged.
 </p>
 
 <p>When using inline manifests, the Jar task will check whether the build
 file is more recent that the Jar file when deciding whether to rebuild the
-Jar. This will not take into account property file changes which may affect 
+Jar. This will not take into account property file changes which may affect
 the resulting Jar.
 </p>
 
 <h3>Examples</h3>
-<pre>  &lt;jar file=&quot;${dist}/lib/app.jar&quot; basedir=&quot;${build}/classes&quot;/&gt;</pre>
+<pre>  &lt;jar destfile=&quot;${dist}/lib/app.jar&quot; basedir=&quot;${build}/classes&quot;/&gt;</pre>
 <p>jars all files in the <code>${build}/classes</code> directory into a file
 called <code>app.jar</code> in the <code>${dist}/lib</code> directory.</p>
 <pre>  &lt;jar destfile=&quot;${dist}/lib/app.jar&quot;
@@ -221,7 +228,7 @@ by Java).</p>
   &lt;/jar&gt;</pre>
 <p>
 This is an example of an inline manifest specification. Note that the Built-By
-attribute will take the value of the Ant property ${user.name}. The manifest 
+attribute will take the value of the Ant property ${user.name}. The manifest
 produced by the above would look like this:
 </p>
 <pre><code>Manifest-Version: 1.0
@@ -232,7 +239,7 @@ Name: common/class1.class
 Sealed: false</code></pre>
 
 <hr>
-<p align="center">Copyright &copy; 2001-2002 Apache Software Foundation. All rights
+<p align="center">Copyright &copy; 2000-2002 Apache Software Foundation. All rights
 Reserved.</p>
 
 </body>

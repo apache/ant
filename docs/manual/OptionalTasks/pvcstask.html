@@ -137,6 +137,24 @@ tag expects the executables to be found using the PATH environment variable.</td
         newer than existing local files.</td>
       <td VALIGN=TOP WIDTH="10%">No</td>
     </tr>
+    <tr> 
+      <td valign="TOP">filenameformat</td>
+      <td valign="TOP">The format of your folder names in a
+          format suitable for <code>java.text.MessageFormat</code>.
+          Index 1 of the format will be used as the file name.
+          Defaults to <code>{0}-arc({1})</code>.</td>
+      <td valign="TOP">No</td>
+    </tr>
+    <tr> 
+      <td valign="TOP">linestart</td>
+      <td valign="TOP">What a valid return value from PVCS looks like
+        when it describes a file.  Defaults to <code>&quot;P:</code>.
+        If you are not using an UNC name for your repository and the
+        drive letter <code>P</code> is incorrect for your setup, you may
+        need to change this value, UNC names will always be
+        accepted.</td>
+      <td valign="TOP">No</td>
+    </tr>
 </table>
 <h3><a name="nested">Nested Elements</a></h3>
 
@@ -230,6 +248,8 @@ repository from two projects using nested &lt;pvcsproject&gt; elements.
   Total time: 22 seconds</pre>
 
 <hr WIDTH="100%">
-PVCS is a registered trademark of MERANT.
+<p align="center">Copyright &copy; 2001-2002 Apache Software
+Foundation. All rights Reserved.</p>
+<p>PVCS is a registered trademark of MERANT.</p>
 </body>
 </html>

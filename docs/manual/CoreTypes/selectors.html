@@ -1,0 +1,777 @@
+<html>
+  <head>
+    <meta http-equiv="Content-Language" content="en-us">
+    <title>Selectors in Ant</title>
+  </head>
+
+  <body>
+    <h2>Selectors</h2>
+
+    <p>Selectors are a mechanism whereby the files that make up a fileset
+    can be selected based on criteria other than filename as provided
+    by the <code>&lt;include&gt;</code> and <code>&lt;exclude&gt;</code>
+    tags.</p>
+
+    <h3>How to use a Selector</h3>
+
+    <p>A selector is an element of FileSet, and appears within it. It can 
+    also be defined outside of any target by using the &lt;selector&gt; tag
+    and then using it as a reference.
+    </p>
+
+    <p>Different selectors have different attributes. Some selectors can
+    contain other selectors, and these are called 
+    <a href="#selectcontainers"><code>Selector Containers</code></a>. 
+    There is also a category of selectors that allow
+    user-defined extensions, called 
+    <a href="#customselect"><code>Custom Selectors</code></a>.
+    The ones built in to Ant are called 
+    <a href="#coreselect"><code>Core Selectors</code></a>.
+    </p>
+    
+    <a name="coreselect"></a>
+    <h3>Core Selectors</h3>
+
+    <p>Core selectors are the ones that come standard
+    with Ant. They can be used within a fileset and can be contained
+    within Selector Containers.</p>
+    
+    <p>The core selectors are:</p>
+    
+    <ul>
+      <li><a href="#containsselect">&lt;contains&gt;</a> - Select
+        files that contain a particular text string
+      <li><a href="#dateselect">&lt;date&gt;</a> - Select files
+        that have been modified either before or after a particular date
+        and time
+      <li><a href="#dependselect">&lt;depend&gt;</a> - Select files
+        that have been modified more recently than equivalent files
+        elsewhere
+      <li><a href="#depthselect">&lt;depth&gt;</a> - Select files
+        that appear so many directories down in a directory tree
+      <li><a href="#filenameselect">&lt;filename&gt;</a> - Select
+        files whose name matches a particular pattern. Equivalent to
+        the include and exclude elements of a patternset.
+      <li><a href="#presentselect">&lt;present&gt;</a> - Select
+        files that either do or do not exist in some other location
+      <li><a href="#sizeselect">&lt;size&gt;</a> - Select files
+        that are larger or smaller than a particular number of bytes.
+    </ul>
+
+
+    <a name="containsselect"></a>
+    <h4>Contains Selector</h4>
+
+    <p>The <code>&lt;contains&gt;</code> tag in a FileSet limits
+    the files defined by that fileset to only those which contain the
+    string specified by the <code>text</code> attribute.
+    .</p>
+
+    <table border="1" cellpadding="2" cellspacing="0">
+      <tr>
+        <td valign="top"><b>Attribute</b></td>
+        <td valign="top"><b>Description</b></td>
+        <td align="center" valign="top"><b>Required</b></td>
+      </tr>
+      <tr>
+        <td valign="top">text</td>
+        <td valign="top">Specifies the text that every file must contain
+        </td>
+        <td valign="top" align="center">Yes</td>
+      </tr>
+      <tr>
+        <td valign="top">casesensitive</td>
+        <td valign="top">Whether to pay attention to case when looking
+          for the string in the <code>text</code> attribute. Default is
+          true.
+        </td>
+        <td valign="top" align="center">No</td>
+      </tr>
+    </table>
+
+    <p>Here is an example of how to use the Contains Selector:</p>
+
+    <blockquote><pre>
+&lt;fileset dir=&quot;${doc.path}&quot; includes=&quot;**/*.html&quot;&gt;
+    &lt;contains text=&quot;script&quot; casesensitive=&quot;no&quot;/&gt;
+&lt;/fileset&gt;
+</pre></blockquote>
+
+    <p>Selects all the HTML files that contain the string
+    <code>script</code>.</p>
+
+
+    <a name="dateselect"></a>
+    <h4>Date Selector</h4>
+
+    <p>The <code>&lt;date&gt;</code> tag in a FileSet will put
+    a limit on the files specified by the include tag, so that tags
+    whose last modified date does not meet the date limits specified
+    by the selector will not end up being selected.</p>
+
+    <table border="1" cellpadding="2" cellspacing="0">
+      <tr>
+        <td valign="top"><b>Attribute</b></td>
+        <td valign="top"><b>Description</b></td>
+        <td align="center" valign="top"><b>Required</b></td>
+      </tr>
+      <tr>
+        <td valign="top">datetime</td>
+        <td valign="top">Specifies the date and time to test for using
+          a string of the format MM/DD/YYYY HH:MM AM_or_PM.
+        </td>
+        <td valign="top" align="center" rowspan="2">At least one of the two.</td>
+      </tr>
+      <tr>
+        <td valign="top">millis</td>
+        <td valign="top">The number of milliseconds since 1970 that should
+          be tested for. It is usually much easier to use the datetime
+          attribute.
+        </td>
+      </tr>
+      <tr>
+        <td valign="top">granularity</td>
+        <td valign="top">The number of milliseconds leeway to give before
+          deciding whether a files modification time matches a date. This is
+          needed because not every file system supports tracking the last
+          modified time to the millisecond level. The file will be selected
+          provided the condition could be true were the granularity added or
+          subtracted from the actual time. Default is 0 milliseconds except
+          on Windows systems, where it is 2000 milliseconds (2 seconds).
+        </td>
+        <td valign="top" align="center">No</td>
+      </tr>
+      <tr>
+        <td valign="top">when</td>
+        <td valign="top">Indicates how to interpret the date, whether
+          the files to be selected are those whose last modified times should
+          be before, after, or equal to the specified value. Acceptable
+          values for this attribute are:
+          <ul>
+            <li>before - select files whose last modified date is before the indicated date
+            <li>after - select files whose last modified date is after the indicated date
+            <li>equal - select files  whose last modified date is this exact date
+          </ul>
+          The default is equal.
+        <td valign="top" align="center">No</td>
+      </tr>
+    </table>
+
+    <p>Here is an example of how to use the Date Selector:</p>
+
+    <blockquote><pre>
+&lt;fileset dir=&quot;${jar.path}&quot; includes=&quot;**/*.jar&quot;&gt;
+    &lt;date datetime=&quot;01/01/2001 12:00 AM&quot; when=&quot;before&quot;/&gt;
+&lt;/fileset&gt;
+</pre></blockquote>
+
+    <p>Selects all JAR files which were last modified before midnight
+    January 1, 2001.</p>
+
+
+    <a name="dependselect"></a>
+    <h4>Depend Selector</h4>
+
+    <p>The <code>&lt;depend&gt;</code> tag selects files
+    whose last modified date is later than another, equivalent file in 
+    another location.</p>
+    
+    <p>The <code>&lt;depend&gt;</code> tag supports the use of a
+    contained <a href="mapper.html"><code>&lt;mapper&gt;</code></a> element 
+    to define the location of the file to be compared against. If no 
+    <code>&lt;mapper&gt;</code> element is specified, the 
+    <code>identity</code> type mapper is used.</p>
+
+    <table border="1" cellpadding="2" cellspacing="0">
+      <tr>
+        <td valign="top"><b>Attribute</b></td>
+        <td valign="top"><b>Description</b></td>
+        <td align="center" valign="top"><b>Required</b></td>
+      </tr>
+      <tr>
+        <td valign="top">targetdir</td>
+        <td valign="top">The base directory to look for the files to compare
+          against. The precise location depends on a combination of this
+          attribute and the <code>&lt;mapper&gt;</code> element, if any.
+        </td>
+        <td valign="top" align="center">Yes</td>
+      </tr>
+      <tr>
+        <td valign="top">granularity</td>
+        <td valign="top">The number of milliseconds leeway to give before
+          deciding a file is out of date. This is needed because not every
+          file system supports tracking the last modified time to the
+          millisecond level. Default is 0 milliseconds except on Windows
+          systems, where it is 2000 milliseconds (2 seconds).
+        </td>
+        <td valign="top" align="center">No</td>
+      </tr>
+    </table>
+
+    <p>Here is an example of how to use the Depend Selector:</p>
+
+    <blockquote><pre>
+&lt;fileset dir=&quot;${ant.1.5}/src/main&quot; includes=&quot;**/*.java&quot;&gt;
+    &lt;depend targetdir=&quot;${ant.1.4.1}/src/main&quot;/&gt;
+&lt;/fileset&gt;
+</pre></blockquote>
+
+    <p>Selects all the Java source files which were modified in the
+      1.5 release.
+    </p>
+
+
+    <a name="depthselect"></a>
+    <h4>Depth Selector</h4>
+
+    <p>The <code>&lt;depth&gt;</code> tag selects files based on
+    how many directy levels deep they are in relation to the base
+    directory of the fileset.
+    </p>
+
+    <table border="1" cellpadding="2" cellspacing="0">
+      <tr>
+        <td valign="top"><b>Attribute</b></td>
+        <td valign="top"><b>Description</b></td>
+        <td align="center" valign="top"><b>Required</b></td>
+      </tr>
+      <tr>
+        <td valign="top">min</td>
+        <td valign="top">The minimum number of directory levels below
+          the base directory that a file must be in order to be selected.
+          Default is no limit.
+        </td>
+        <td valign="top" align="center" rowspan="2">At least one of the two.</td>
+      </tr>
+      <tr>
+        <td valign="top">max</td>
+        <td valign="top">The maximum number of directory levels below
+          the base directory that a file can be and still be selected.
+          Default is no limit.
+        </td>
+      </tr>
+    </table>
+
+    <p>Here is an example of how to use the Depth Selector:</p>
+
+    <blockquote><pre>
+&lt;fileset dir=&quot;${doc.path}&quot; includes=&quot;**/*&quot;&gt;
+    &lt;depth max=&quot;1&quot;/&gt;
+&lt;/fileset&gt;
+</pre></blockquote>
+
+    <p>Selects all files in the base directory and one directory below
+    that.</p>
+
+
+    <a name="filenameselect"></a>
+    <h4>Filename Selector</h4>
+
+    <p>The <code>&lt;filename&gt;</code> tag acts like the
+    <code>&lt;include&gt;</code> and <code>&lt;exclude&gt;</code>
+    tags within a fileset. By using a selector instead, however,
+    one can combine it with all the other selectors using whatever
+    <a href="#selectcontainers">selector container</a> is desired.
+    </p>
+
+    <table border="1" cellpadding="2" cellspacing="0">
+      <tr>
+        <td valign="top"><b>Attribute</b></td>
+        <td valign="top"><b>Description</b></td>
+        <td align="center" valign="top"><b>Required</b></td>
+      </tr>
+      <tr>
+        <td valign="top">name</td>
+        <td valign="top">The name of files to select. The name parameter
+          can contain the standard Ant wildcard characters.
+        </td>
+        <td valign="top" align="center">Yes</td>
+      </tr>
+      <tr>
+        <td valign="top">casesensitive</td>
+        <td valign="top">Whether to pay attention to case when looking
+          at file names. Default is "true".
+        </td>
+        <td valign="top" align="center">No</td>
+      </tr>
+      <tr>
+        <td valign="top">negate</td>
+        <td valign="top">Whether to reverse the effects of this filename
+          selection, therefore emulating an exclude rather than include
+          tag. Default is "false".
+        </td>
+        <td valign="top" align="center">No</td>
+      </tr>
+    </table>
+
+    <p>Here is an example of how to use the Filename Selector:</p>
+
+    <blockquote><pre>
+&lt;fileset dir=&quot;${doc.path}&quot; includes=&quot;**/*&quot;&gt;
+    &lt;filename name=&quot;**/*.css&quot;/&gt;
+&lt;/fileset&gt;
+</pre></blockquote>
+
+    <p>Selects all the cascading style sheet files.</p>
+
+
+    <a name="presentselect"></a>
+    <h4>Present Selector</h4>
+
+    <p>The <code>&lt;present&gt;</code> tag selects files
+    that have an equivalent file in another directory tree.</p>
+    
+    <p>The <code>&lt;present&gt;</code> tag supports the use of a
+    contained <a href="mapper.html"><code>&lt;mapper&gt;</code></a> element 
+    to define the location of the file to be tested against. If no 
+    <code>&lt;mapper&gt;</code> element is specified, the 
+    <code>identity</code> type mapper is used.</p>
+
+    <table border="1" cellpadding="2" cellspacing="0">
+      <tr>
+        <td valign="top"><b>Attribute</b></td>
+        <td valign="top"><b>Description</b></td>
+        <td align="center" valign="top"><b>Required</b></td>
+      </tr>
+      <tr>
+        <td valign="top">targetdir</td>
+        <td valign="top">The base directory to look for the files to compare
+          against. The precise location depends on a combination of this
+          attribute and the <code>&lt;mapper&gt;</code> element, if any.
+        </td>
+        <td valign="top" align="center">Yes</td>
+      </tr>
+      <tr>
+        <td valign="top">present</td>
+        <td valign="top">Whether we are requiring that a file is present in 
+          the src directory tree only, or in both the src and the target
+          directory tree. Valid values are:
+          <ul>
+            <li>srconly - select files only if they are in the src 
+              directory tree but not in the target directory tree
+            <li>both - select files only if they are present both in the
+              src and target directory trees
+          </ul>
+          Default is both.
+        </td>
+        <td valign="top" align="center">No</td>
+      </tr>
+    </table>
+
+    <p>Here is an example of how to use the Present Selector:</p>
+
+    <blockquote><pre>
+&lt;fileset dir=&quot;${ant.1.5}/src/main&quot; includes=&quot;**/*.java&quot;&gt;
+    &lt;present targetdir=&quot;${ant.1.4.1}/src/main&quot;/&gt;
+&lt;/fileset&gt;
+</pre></blockquote>
+
+    <p>Selects all the Java source files which are new in the 
+      1.5 release.
+    </p>
+
+
+    <a name="sizeselect"></a>
+    <h4>Size Selector</h4>
+
+    <p>The <code>&lt;size&gt;</code> tag in a FileSet will put
+    a limit on the files specified by the include tag, so that tags
+    which do not meet the size limits specified by the selector will not
+    end up being selected.</p>
+
+    <table border="1" cellpadding="2" cellspacing="0">
+      <tr>
+        <td valign="top"><b>Attribute</b></td>
+        <td valign="top"><b>Description</b></td>
+        <td align="center" valign="top"><b>Required</b></td>
+      </tr>
+      <tr>
+        <td valign="top">value</td>
+        <td valign="top">The size of the file which should be tested for.
+        </td>
+        <td valign="top" align="center">Yes</td>
+      </tr>
+      <tr>
+        <td valign="top">units</td>
+        <td valign="top">The units that the <code>value</code> attribute
+          is expressed in. When using the standard single letter SI
+          designations, such as &quot;k&quot;,&quot;M&quot;, or
+          &quot;G&quot;, multiples of 1000 are used. If you want to use
+          power of 2 units, use the IEC standard: &quot;Ki&quot; for 1024,
+          &quot;Mi&quot; for 1048576, and so on. The default is no units,
+          which means the <code>value</code> attribute expresses the exact
+          number of bytes.
+        </td>
+        <td valign="top" align="center">No</td>
+      </tr>
+      <tr>
+        <td valign="top">when</td>
+        <td valign="top">Indicates how to interpret the size, whether
+          the files to be selected should be larger, smaller, or equal to
+          that value. Acceptable values for this attribute are:
+          <ul>
+            <li>less - select files less than the indicated size
+            <li>more - select files greater than the indicated size
+            <li>equal - select files this exact size
+          </ul>
+          The default is equal.
+        <td valign="top" align="center">No</td>
+      </tr>
+    </table>
+
+    <p>Here is an example of how to use the Size Selector:</p>
+
+    <blockquote><pre>
+&lt;fileset dir=&quot;${jar.path}&quot;&gt;
+  &lt;patternset&gt;
+    &lt;include name=&quot;**/*.jar&quot;/&gt;
+  &lt;/patternset&gt;
+  &lt;size value=&quot;4&quot; units=&quot;Ki&quot; when=&quot;more&quot;/&gt;
+&lt;/fileset&gt;
+</pre></blockquote>
+
+    <p>Selects all JAR files that are larger than 4096 bytes.</p>
+
+
+    <a name="selectcontainers"></a>
+    <h3>Selector Containers</h3>
+
+    <p>To create more complex selections, a variety of selectors that
+    contain other selectors are available for your use. They combine the
+    selections of their child selectors in various ways.</p>
+
+    <p>The selector containers are:</p>
+
+    <ul>
+      <li><a href="#andselect">&lt;and&gt;</a> - select a file only if all
+        the contained selectors select it.
+      <li><a href="#majorityselect">&lt;majority&gt;</a> - select a file
+        if a majority of its selectors select it.
+      <li><a href="#noneselect">&lt;none&gt;</a> - select a file only if
+        none of the contained selectors select it.
+      <li><a href="#notselect">&lt;not&gt;</a> - can contain only one
+        selector, and reverses what it selects and doesn't select.
+      <li><a href="#orselect">&lt;or&gt;</a> - selects a file if any one
+        of the contained selectors selects it.
+      <li><a href="#selectorselect">&lt;selector&gt;</a> - contains only one
+        selector and forwards all requests to it without alteration. This
+        is the selector to use if you want to define a reference. It is
+        usable as an element of <code>&lt;project&gt;</code>.
+    </ul>
+
+    <p>All selector containers can contain any other selector, including
+    other containers, as an element. Using containers, the selector tags
+    can be arbitrarily deep. Here is a complete list of allowable
+    selector elements within a container:</P>
+
+    <ul>
+      <li>&lt;and&gt;
+      <li>&lt;contains&gt;
+      <li>&lt;custom&gt;
+      <li>&lt;date&gt;
+      <li>&lt;depend&gt;
+      <li>&lt;depth&gt;
+      <li>&lt;filename&gt;
+      <li>&lt;majority&gt;
+      <li>&lt;none&gt;
+      <li>&lt;not&gt;
+      <li>&lt;or&gt;
+      <li>&lt;present&gt;
+      <li>&lt;selector&gt;
+      <li>&lt;size&gt;
+    </ul>
+
+    <a name="andselect"></a>
+    <h4>And Selector</h4>
+
+    <p>The <code>&lt;and&gt;</code> tag selects files that are
+    selected by all of the elements it contains. It returns as
+    soon as it finds a selector that does not select the file,
+    so it is not guaranteed to check every selector.
+    </p>
+    
+    <p>Here is an example of how to use the And Selector:</p>
+
+    <blockquote><pre>
+&lt;fileset dir=&quot;${dist}&quot; includes=&quot;**/*.jar&quot;&gt;
+    &lt;and&gt;
+        &lt;size value=&quot;4&quot; units=&quot;Ki&quot; when=&quot;more&quot;/&gt;
+        &lt;date datetime=&quot;01/01/2001 12:00 AM&quot; when=&quot;before&quot;/&gt;
+    &lt;/and&gt;
+&lt;/fileset&gt;
+</pre></blockquote>
+
+    <p>Selects all the JAR file larger than 4096 bytes which haven't been update
+      since the last millenium.
+    </p>
+
+
+    <a name="majorityselect"></a>
+    <h4>Majority Selector</h4>
+
+    <p>The <code>&lt;majority&gt;</code> tag selects files provided
+    that a majority of the contained elements also select it. Ties are
+    dealt with as specified by the <code>allowtie</code> attribute.
+    </p>
+
+    <table border="1" cellpadding="2" cellspacing="0">
+      <tr>
+        <td valign="top"><b>Attribute</b></td>
+        <td valign="top"><b>Description</b></td>
+        <td align="center" valign="top"><b>Required</b></td>
+      </tr>
+      <tr>
+        <td valign="top">allowtie</td>
+        <td valign="top">Whether files should be selected if there
+          are an even number of selectors selecting them as are
+          not selecting them. Default is true.
+        </td>
+        <td valign="top" align="center">No</td>
+      </tr>
+    </table>
+
+
+    <p>Here is an example of how to use the Majority Selector:</p>
+
+    <blockquote><pre>
+&lt;fileset dir=&quot;${docs}&quot; includes=&quot;**/*.html&quot;&gt;
+    &lt;majority&gt;
+        &lt;contains text=&quot;project&quot; casesensitive="false"/&gt;
+        &lt;contains text=&quot;taskdef&quot; casesensitive="false"/&gt;
+        &lt;contains text=&quot;IntrospectionHelper&quot; casesensitive="true"/&gt;
+    &lt;/majority&gt;
+&lt;/fileset&gt;
+</pre></blockquote>
+
+    <p>Selects all the HTML files which contain at least two of the three 
+    phrases "project", "taskdef", and "IntrospectionHelper" (this last phrase must 
+    match case exactly).
+    </p>
+
+
+    <a name="noneselect"></a>
+    <h4>None Selector</h4>
+
+    <p>The <code>&lt;none&gt;</code> tag selects files that are
+    not selected by any of the elements it contains. It returns as
+    soon as it finds a selector that selects the file,
+    so it is not guaranteed to check every selector.
+    </p>
+    
+    <p>Here is an example of how to use the None Selector:</p>
+
+    <blockquote><pre>
+&lt;fileset dir=&quot;${src}&quot; includes=&quot;**/*.java&quot;&gt;
+    &lt;none&gt;
+        &lt;present targetdir=&quot;${dest}&quot;/&gt;
+        &lt;present targetdir=&quot;${dest}&quot;&gt;
+            &lt;mapper type=&quot;glob&quot; from=&quot;*.java&quot; to=&quot;*.class&quot;/&gt;
+        &lt;/present&gt;
+    &lt;/none&gt;
+&lt;/fileset&gt;
+</pre></blockquote>
+
+    <p>Selects only Java files which do not have equivalent java or 
+    class files in the dest directory.
+    </p>
+
+
+    <a name="notselect"></a>
+    <h4>Not Selector</h4>
+
+    <p>The <code>&lt;not&gt;</code> tag reverses the meaning of the
+    single selector it contains.
+    </p>
+    
+    <p>Here is an example of how to use the Not Selector:</p>
+
+    <blockquote><pre>
+&lt;fileset dir=&quot;${src}&quot; includes=&quot;**/*.java&quot;&gt;
+    &lt;not&gt;
+        &lt;contains text=&quot;test&quot;/&gt;
+    &lt;/not&gt;
+&lt;/fileset&gt;
+</pre></blockquote>
+
+    <p>Selects all the files in the src directory that do not contain the
+    string "test".
+    </p>
+
+
+    <a name="orselect"></a>
+    <h4>Or Selector</h4>
+
+    <p>The <code>&lt;or&gt;</code> tag selects files that are
+    selected by any one of the elements it contains. It returns as
+    soon as it finds a selector that selects the file,
+    so it is not guaranteed to check every selector.
+    </p>
+    
+    <p>Here is an example of how to use the Or Selector:</p>
+
+    <blockquote><pre>
+&lt;fileset dir=&quot;${basedir}&quot;&gt;
+    &lt;or&gt;
+        &lt;depth max=&quot;0&quot;/&gt;
+        &lt;filename name="*.png"/&gt;
+        &lt;filename name="*.gif"/&gt;
+        &lt;filename name="*.jpg"/&gt;
+    &lt;/or&gt;
+&lt;/fileset&gt;
+</pre></blockquote>
+
+    <p>Selects all the files in the top directory along with all the
+    image files below it.
+    </p>
+
+
+    <a name="selectorselect"></a>
+    <h4>Selector Reference</h4>
+
+    <p>The <code>&lt;selector&gt;</code> tag is used to create selectors
+    that can be reused through references. It should be used outside of
+    any target, as an element of the <code>&lt;project&gt;</code> tag. It
+    can contain only one other selector, but of course that selector can
+    be a container.
+    </p>
+
+    <p>Here is an example of how to use the Selector Reference:</p>
+
+    <blockquote><pre>
+&lt;project default=&quot;all&quot; basedir=&quot;./jakarta-ant&quot;&gt;
+
+    &lt;selector id=&quot;completed&quot;&gt;
+        &lt;none&gt;
+            &lt;depend targetdir=&quot;build/classes&quot;&gt;
+                &lt;mapper type=&quot;glob&quot; from=&quot;*.java&quot; to=&quot;*.class&quot;/&gt;
+            &lt;/depend&gt;
+            &lt;depend targetdir=&quot;docs/manual/api&quot;&gt;
+                &lt;mapper type=&quot;glob&quot; from=&quot;*.java&quot; to=&quot;*.html&quot;/&gt;
+            &lt;/depend&gt;
+        &lt;/none&gt;
+    &lt;/selector&gt;
+
+    &lt;target&gt;
+        &lt;zip&gt;
+            &lt;fileset dir=&quot;src/main&quot; includes=&quot;**/*.java&quot;&gt;
+                &lt;selector refid=&quot;completed&quot;/&gt;
+            &lt;/fileset&gt;
+        &lt;/zip&gt;
+    &lt;/target&gt;
+
+&lt;/project&gt;
+</pre></blockquote>
+
+    <p>Zips up all the Java files which have an up-to-date equivalent
+    class file and javadoc file associated with them.
+    </p>
+
+
+
+    <a name="customselect"></a>
+    <h3>Custom Selectors</h3>
+
+    <p>You can write your own selectors and use them within the selector
+    containers by specifying them within the &lt;custom&gt; tag.</p>
+
+    <p>First, you have to write your selector class in Java. The only
+    requirement it must meet in order to be a selector is that it implements
+    the <code>org.apache.tools.ant.types.selectors.FileSelector</code>
+    interface, which contains a single method. See
+    <a href="selectors-program.html">Programming Selectors in Ant</a> for
+    more information.</p>
+
+    <p>Once that is written, you include it in your build file by using
+    the <code>&lt;custom&gt;</code> tag.
+    </p>
+
+    <table border="1" cellpadding="2" cellspacing="0">
+      <tr>
+        <td valign="top"><b>Attribute</b></td>
+        <td valign="top"><b>Description</b></td>
+        <td align="center" valign="top"><b>Required</b></td>
+      </tr>
+      <tr>
+        <td valign="top">classname</td>
+        <td valign="top">The name of your class that implements
+          <code>org.apache.tools.ant.types.selectors.FileSelector</code>.
+        </td>
+        <td valign="top" align="center">Yes</td>
+      </tr>
+      <tr>
+        <td valign="top">classpath</td>
+        <td valign="top">The classpath to use in order to load the
+          custom selector class. If neither this classpath nor the
+          classpathref are specified, the class will be
+          loaded from the classpath that Ant uses.
+        </td>
+        <td valign="top" align="center">No</td>
+      </tr>
+      <tr>
+        <td valign="top">classpathref</td>
+        <td valign="top">A reference to a classpath previously
+          defined. If neither this reference nor the
+          classpath above are specified, the class will be
+          loaded from the classpath that Ant uses.
+        </td>
+        <td valign="top" align="center">No</td>
+      </tr>
+    </table>
+
+    <p>Here is how you use <code>&lt;custom&gt;</code> to
+    use your class as a selector:
+    </p>
+
+    <blockquote><pre>
+&lt;fileset dir=&quot;${mydir}&quot; includes=&quot;**/*&quot;&gt;
+    &lt;custom classname=&quot;com.mydomain.MySelector&quot;&gt;
+        &lt;param name=&quot;myattribute&quot; value=&quot;myvalue&quot;/&gt;
+    &lt;/custom&gt;
+&lt;/fileset&gt;
+</pre></blockquote>
+
+    <p>A number of core selectors can also be used as custom selectors
+    by specifying their attributes using &lt;param&gt; elements. These
+    are</p>
+
+    <ul>
+      <li><a href="#containsselect">Contains Selector</a> with
+        classname <code>org.apache.tools.ant.types.selectors.ContainsSelector</code>
+      <li><a href="#dateselect">Date Selector</a> with
+        classname <code>org.apache.tools.ant.types.selectors.DateSelector</code>
+      <li><a href="#depthselect">Depth Selector</a> with
+        classname <code>org.apache.tools.ant.types.selectors.DepthSelector</code>
+      <li><a href="#filenameselect">Filename Selector</a> with
+        classname <code>org.apache.tools.ant.types.selectors.FilenameSelector</code>
+      <li><a href="#sizeselect">Size Selector</a> with
+        classname <code>org.apache.tools.ant.types.selectors.SizeSelector</code>
+    </ul>
+
+    <p>Here is the example from the Depth Selector section rewritten
+    to use the selector through <code>&lt;custom&gt;</code>.</p>
+
+    <blockquote><pre>
+&lt;fileset dir=&quot;${doc.path}&quot; includes=&quot;**/*&quot;&gt;
+    &lt;custom classname=&quot;org.apache.tools.ant.types.selectors.DepthSelector&quot;&gt;
+        &lt;param name=&quot;max&quot; value=&quot;1&quot;/&gt;
+    &lt;/custom&gt;
+&lt;/fileset&gt;
+</pre></blockquote>
+
+    <p>Selects all files in the base directory and one directory below
+    that.</p>
+
+    <p>For more details concerning writing your own selectors, consult
+    <a href="selectors-program.html">Programming Selectors in Ant</a>.</p>
+
+<hr>
+<p align="center">Copyright &copy; 2002 Apache Software
+Foundation. All rights Reserved.</p>
+
+  </body>
+
+</html>
+
+
+
+

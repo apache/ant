@@ -226,13 +226,17 @@ public abstract class Task extends ProjectComponent {
 
     /**
      * Sets the wrapper to be used for runtime configuration.
+     *
+     * This method should be used only by the ProjectHelper and ant internals.
+     * It is public to allow helper plugins to operate on tasks, normal tasks
+     * should never use it.
      * 
      * @param wrapper The wrapper to be used for runtime configuration.
      *                May be <code>null</code>, in which case the next call
      *                to getRuntimeConfigurableWrapper will generate a new
      *                wrapper.
      */
-    protected void setRuntimeConfigurableWrapper(RuntimeConfigurable wrapper) {
+    public void setRuntimeConfigurableWrapper(RuntimeConfigurable wrapper) {
         this.wrapper = wrapper;
     }
 
@@ -335,6 +339,15 @@ public abstract class Task extends ProjectComponent {
      */
     final void markInvalid() {
         invalid = true;
+    }
+
+    /**
+     * Has this task been marked invalid?
+     *
+     * @since Ant 1.5
+     */
+    protected final boolean isInvalid() {
+        return invalid;
     }
 
     /**

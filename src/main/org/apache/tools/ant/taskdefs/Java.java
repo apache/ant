@@ -193,21 +193,21 @@ public class Java extends Task {
     }
     
     /**
-     * Creates a nested classpath element
+     * Adds a path to the classpath.
      */
     public Path createClasspath() {
         return cmdl.createClasspath(project).createPath();
     }
 
     /**
-     * Adds a reference to a CLASSPATH defined elsewhere.
+     * Classpath to use, by reference.
      */
     public void setClasspathRef(Reference r) {
         createClasspath().setRefid(r);
     }
 
     /**
-     * set the jar name...
+     * The location of the JAR file to execute.
      */
     public void setJar(File jarfile) throws BuildException {
         if (cmdl.getClassname() != null){
@@ -218,7 +218,7 @@ public class Java extends Task {
     }
 
     /**
-     * Set the class name.
+     * Sets the Java class to execute.
      */
     public void setClassname(String s) throws BuildException {
         if (cmdl.getJar() != null){
@@ -229,6 +229,7 @@ public class Java extends Task {
     }
 
     /**
+     * Deprecated: use nested arg instead.
      * Set the command line arguments for the class.
      */
     public void setArgs(String s) {
@@ -239,14 +240,14 @@ public class Java extends Task {
     }
 
     /**
-     * Creates a nested arg element.
+     * Adds a command-line argument.
      */
     public Commandline.Argument createArg() {
         return cmdl.createArgument();
     }
 
     /**
-     * Set the forking flag.
+     * If true, execute in a new VM.
      */
     public void setFork(boolean s) {
         this.fork = s;
@@ -263,28 +264,29 @@ public class Java extends Task {
     }
         
     /**
-     * Creates a nested jvmarg element.
+     * Adds a JVM argument.
      */
     public Commandline.Argument createJvmarg() {
         return cmdl.createVmArgument();
     }
 
     /**
-     * Set the command used to start the VM (only if fork==false).
+     * Set the command used to start the VM (only if not forking).
      */
     public void setJvm(String s) {
         cmdl.setVm(s);
     }
         
     /**
-     * Add a nested sysproperty element.
+     * Adds a system property.
      */
     public void addSysproperty(Environment.Variable sysp) {
         cmdl.addSysproperty(sysp);
     }
 
     /**
-     * Throw a BuildException if process returns non 0.
+     * If true, then fail if the command exits with a
+     * returncode other than 0
      */
     public void setFailonerror(boolean fail) {
         failOnError = fail;
@@ -305,18 +307,22 @@ public class Java extends Task {
     }
 
     /**
-     * -mx or -Xmx depending on VM version
+     * Corresponds to -mx or -Xmx depending on VM version.
      */
     public void setMaxmemory(String max){
         cmdl.setMaxmemory(max);
     }
 
+    /**
+     * Sets the JVM version.
+     * @param value JVM version
+     */
     public void setJVMVersion(String value) {
         cmdl.setVmversion(value);
     }
     
     /**
-     * Add a nested env element - an environment variable.
+     * Adds an environment variable.
      *
      * <p>Will be ignored if we are not forking a new VM.
      *
@@ -327,7 +333,7 @@ public class Java extends Task {
     }
 
     /**
-     * Use a completely new environment.
+     * If true, use a completely new environment.
      *
      * <p>Will be ignored if we are not forking a new VM.
      *
@@ -338,7 +344,7 @@ public class Java extends Task {
     }
 
     /**
-     * Shall we append to an existing file?
+     * If true, append output to existing file.
      *
      * @since Ant 1.5
      */

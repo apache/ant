@@ -74,7 +74,7 @@ import org.apache.tools.ant.taskdefs.MatchingTask;
 /**
  * Translates text embedded in files using Resource Bundle files.
  *
- * @author <a href="mailto:umagesh@rediffmail.com">Magesh Umasankar</a>
+ * @author Magesh Umasankar
  */
 public class Translate extends MatchingTask {
 
@@ -228,8 +228,8 @@ public class Translate extends MatchingTask {
     }
 
     /**
-     * Whether or not to overwrite existing file irrespective of 
-     * whether it is newer than the source file as well as the 
+     * Whether or not to overwrite existing file irrespective of
+     * whether it is newer than the source file as well as the
      * resource bundle file.
      * Defaults to false.
      */
@@ -503,7 +503,8 @@ public class Translate extends MatchingTask {
                             Project.MSG_DEBUG);
                     }
                     destLastModified = dest.lastModified();
-                    srcLastModified = new File(srcFiles[i]).lastModified();
+                    File src = fileUtils.resolveFile(ds.getBasedir(), srcFiles[j]);
+                    srcLastModified = src.lastModified();
                     //Check to see if dest file has to be recreated
                     if (forceOverwrite
                         || destLastModified < srcLastModified
@@ -517,10 +518,10 @@ public class Translate extends MatchingTask {
                         log("Processing " + srcFiles[j],
                             Project.MSG_DEBUG);
                         FileOutputStream fos = new FileOutputStream(dest);
-                        BufferedWriter out 
+                        BufferedWriter out
                             = new BufferedWriter(new OutputStreamWriter(fos, destEncoding));
-                        FileInputStream fis = new FileInputStream(srcFiles[j]);
-                        BufferedReader in 
+                        FileInputStream fis = new FileInputStream(src);
+                        BufferedReader in
                             = new BufferedReader(new InputStreamReader(fis, srcEncoding));
                         String line;
                         while ((line = in.readLine()) != null) {

@@ -89,7 +89,7 @@ public class BuildNumber
 
 
     /**
-     * Specify the file in which the build numberis stored. Defaults to
+     * The file in which the build number is stored. Defaults to
      * "build.number" if not specified.
      *
      * @param file the file in which build number is stored.

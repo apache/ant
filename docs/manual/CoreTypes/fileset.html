@@ -40,7 +40,7 @@ attributes.</p>
   </tr>
   <tr>
     <td valign="top">includes</td>
-    <td valign="top">comma-separated list of patterns of files that must be
+    <td valign="top">comma- or space-separated list of patterns of files that must be
       included; all files are included when omitted.</td>
     <td valign="top" align="center">No</td>
   </tr>
@@ -52,7 +52,7 @@ attributes.</p>
   </tr>
   <tr>
     <td valign="top">excludes</td>
-    <td valign="top">comma-separated list of patterns of files that must be
+    <td valign="top">comma- or space-separated list of patterns of files that must be
       excluded; no files (except default excludes) are excluded when omitted.</td>
     <td valign="top" align="center">No</td>
   </tr>
@@ -68,7 +68,19 @@ attributes.</p>
         Defaults to true.</td>
     <td valign="top" align="center">No</td>
   </tr>
+  <tr>
+    <td valign="top">followsymlinks</td>
+    <td valign="top">Shall symbolic links be followed? Defaults to
+      true. See <a href="symlink">below</a>.</td>
+    <td valign="top" align="center">No</td>
+  </tr>
 </table>
+
+<p><a name="symlink"><b>Note</b></a>: All files/directories for which
+the canonical path is different from its path are considered symbolic
+links.  On Unix systems this usually means the file really is a
+symbolic links but it may lead to false results on other
+platforms.</p>
 
 <h4>Examples</h4>
 <blockquote><pre>
@@ -100,7 +112,7 @@ a PatternSet that can be referenced in other
 same patterns as the above example.</p>
 
 <hr>
-<p align="center">Copyright &copy; 2001-2002 Apache Software Foundation.
+<p align="center">Copyright &copy; 2000-2002 Apache Software Foundation.
 All rights Reserved.</p>
 
 </body>

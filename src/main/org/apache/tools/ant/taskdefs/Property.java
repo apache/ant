@@ -70,8 +70,31 @@ import java.util.Vector;
 import java.util.Enumeration;
 
 /**
- * Will set a Project property. Used to be a hack in ProjectHelper
- * Will not override values set by the command line or parent projects.
+ * Sets a property by name, or set of properties (from file or
+ * resource) in the project.  </p>
+ * Properties are immutable: whoever sets a property first freezes it for the
+ * rest of the build; they are most definately not variable. 
+ * <p>There are five ways to set properties:</p>
+ * <ul>
+ *   <li>By supplying both the <i>name</i> and <i>value</i> attribute.</li>
+ *   <li>By supplying both the <i>name</i> and <i>refid</i> attribute.</li>
+ *   <li>By setting the <i>file</i> attribute with the filename of the property
+ *     file to load. This property file has the format as defined by the file used
+ *     in the class java.util.Properties.</li>
+ *   <li>By setting the <i>resource</i> attribute with the resource name of the
+ *     property file to load. This property file has the format as defined by the
+ *     file used in the class java.util.Properties.</li>
+ *   <li>By setting the <i>environment</i> attribute with a prefix to use.
+ *     Properties will be defined for every environment variable by
+ *     prefixing the supplied name and a period to the name of the variable.</li>
+ * </ul>
+ * <p>Although combinations of these ways are possible, only one should be used
+ * at a time. Problems might occur with the order in which properties are set, for
+ * instance.</p>
+ * <p>The value part of the properties being set, might contain references to other
+ * properties. These references are resolved at the time these properties are set.
+ * This also holds for properties loaded from a property file.</p>
+ * Properties are case sensitive.
  *
  * @author costin@dnt.ro
  * @author <a href="mailto:rubys@us.ibm.com">Sam Ruby</a>
@@ -88,20 +111,33 @@ public class Property extends Task {
     protected String env;
     protected Reference ref;
     protected String prefix;
+    private Project fallback;
 
     protected boolean userProperty; // set read-only properties
 
     public Property() {
-        super();
+        this(false);
     }
 
     /**
      * @since Ant 1.5
      */
     protected Property(boolean userProperty) {
-        this.userProperty = userProperty;
+        this(userProperty, null);
     }
 
+    /**
+     * @since Ant 1.5
+     */
+    protected Property(boolean userProperty, Project fallback) {
+        this.userProperty = userProperty;
+        this.fallback = fallback;
+    }
+
+    /**
+     * sets the name of the property to set.
+     * @param name property name
+     */
     public void setName(String name) {
         this.name = name;
     }
@@ -110,18 +146,36 @@ public class Property extends Task {
         return name;
     }
 
+    /**
+     * Sets the property to the absolute filename of the
+     * given file. If the value of this attribute is an absolute path, it
+     * is left unchanged (with / and \ characters converted to the
+     * current platforms conventions). Otherwise it is taken as a path
+     * relative to the project's basedir and expanded.
+     * @param location path to set
+     */
     public void setLocation(File location) {
         setValue(location.getAbsolutePath());
     }
 
+    /**
+     * Sets the value of the property.
+     * @param value value to assign
+     */
+    
     public void setValue(String value) {
         this.value = value;
     }
 
+    
     public String getValue() {
         return value;
     }
 
+    /**
+     * the filename of a property file to load.
+     *@param file filename
+     */
     public void setFile(File file) {
         this.file = file;
     }
@@ -130,6 +184,13 @@ public class Property extends Task {
         return file;
     }
     
+    /**
+     * Prefix to apply to properties loaded using <code>file</code>
+     * or <code>resource</code>. 
+     * A "." is appended to the prefix if not specified.
+     * @param prefix prefix string
+     * @since Ant 1.5
+     */
     public void setPrefix(String prefix) {
         this.prefix = prefix;
         if (!prefix.endsWith(".")) {
@@ -137,6 +198,20 @@ public class Property extends Task {
         }
     }
 
+    /**
+     * @since Ant 1.5
+     */
+    public String getPrefix() {
+        return prefix;
+    }
+
+    /**
+     * Sets a reference to an Ant datatype
+     * declared elsewhere. 
+     * Only yields reasonable results for references
+     * PATH like structures or properties.
+     * @param ref reference 
+     */
     public void setRefid(Reference ref) {
         this.ref = ref;
     }
@@ -145,6 +220,10 @@ public class Property extends Task {
         return ref;
     }
 
+    /**
+     * the resource name of a property file to load
+     * @param resource resource on classpath
+     */
     public void setResource(String resource) {
         this.resource = resource;
     }
@@ -153,14 +232,42 @@ public class Property extends Task {
         return resource;
     }
 
+    /**
+    * the prefix to use when retrieving environment variables. 
+    * Thus if you specify environment=&quot;myenv&quot; 
+    * you will be able to access OS-specific 
+    * environment variables via property names &quot;myenv.PATH&quot; or 
+    * &quot;myenv.TERM&quot;. 
+    * <p>
+    * Note that if you supply a property name with a final 
+    * &quot;.&quot; it will not be doubled. ie environment=&quot;myenv.&quot; will still 
+    * allow access of environment variables through &quot;myenv.PATH&quot; and 
+    * &quot;myenv.TERM&quot;. This functionality is currently only implemented 
+    * on select platforms. Feel free to send patches to increase the number of platforms
+    * this functionality is supported on ;).<br>
+    * Note also that properties are case sensitive, even if the
+    * environment variables on your operating system are not, e.g. it
+    * will be ${env.Path} not ${env.PATH} on Windows 2000.
+    * @param env prefix
+    */
+
     public void setEnvironment(String env) {
         this.env = env;
     }
 
+    /**
+     * @since Ant 1.5
+     */
     public String getEnvironment() {
         return env;
     }
 
+
+    /**
+     * The classpath to use when looking up a resource.
+     * @param classpath to add to any existing classpath 
+     */
+                        
     public void setClasspath(Path classpath) {
         if (this.classpath == null) {
             this.classpath = classpath;
@@ -169,6 +276,9 @@ public class Property extends Task {
         }
     }
 
+    /**
+     * The classpath to use when looking up a resource.
+     */
     public Path createClasspath() {
         if (this.classpath == null) {
             this.classpath = new Path(project);
@@ -176,23 +286,43 @@ public class Property extends Task {
         return this.classpath.createPath();
     }
 
+    /**
+     * the classpath to use when lookingup a resource,
+     * given as reference to a &lt;path&gt; defined elsewhere
     public void setClasspathRef(Reference r) {
         createClasspath().setRefid(r);
     }
 
     /**
+     * @since Ant 1.5
+     */
+    public Path getClasspath() {
+        return classpath;
+    }
+
+    /**
      * @deprecated This was never a supported feature and has been
      * deprecated without replacement
+     * @ant.setter skip="true" 
      */
     public void setUserProperty(boolean userProperty) {
         log("DEPRECATED: Ignoring request to set user property in Property"
             + " task.", Project.MSG_WARN);
     }
 
+    /**
+     * get the value of this property
+     * @return the current value or the empty string
+     */
     public String toString() {
         return value == null ? "" : value;
     }
 
+    /**
+     * set the property in the project to the value. 
+     * if the task was give a file, resource or env attribute
+     * here is where it is loaded
+     */
     public void execute() throws BuildException {
         if (name != null) {
             if (value == null && ref == null) {
@@ -230,13 +360,24 @@ public class Property extends Task {
         }
 
         if ((name != null) && (ref != null)) {
-            Object obj = ref.getReferencedObject(getProject());
-            if (obj != null) {
-                addProperty(name, obj.toString());
-            }
+            try {
+                addProperty(name, 
+                            ref.getReferencedObject(getProject()).toString());
+            } catch (BuildException be) {
+                if (fallback != null) {
+                    addProperty(name, 
+                                ref.getReferencedObject(fallback).toString());
+                } else {
+                    throw be;
+                }
+            }                
         }
     }
 
+    /**
+     * load properties from a file
+     * @param file file to load
+     */
     protected void loadFile(File file) throws BuildException {
         Properties props = new Properties();
         log("Loading " + file.getAbsolutePath(), Project.MSG_VERBOSE);
@@ -260,6 +401,10 @@ public class Property extends Task {
         }
     }
 
+    /**
+     * load properties from a resource in the current classpath
+     * @param name name of resource to load
+     */
     protected void loadResource(String name) {
         Properties props = new Properties();
         log("Resource Loading " + name, Project.MSG_VERBOSE);
@@ -297,6 +442,10 @@ public class Property extends Task {
         
     }
 
+    /**
+     * load the environment values
+     * @param prefix prefix to place before them
+     */
     protected void loadEnvironment(String prefix) {
         Properties props = new Properties();
         if (!prefix.endsWith(".")) {
@@ -317,6 +466,10 @@ public class Property extends Task {
         addProperties(props);
     }
 
+    /**
+     * iterate through a set of properties,
+     * resolve them then assign them
+     */
     protected void addProperties(Properties props) {
         resolveAllProperties(props);
         Enumeration e = props.keys();
@@ -334,10 +487,15 @@ public class Property extends Task {
         }
     }
 
+    /**
+     * add a name value pair to the project property set
+     * @param n name of property
+     * @param v value to set
+     */
     protected void addProperty(String n, String v) {
         if (userProperty) {
             if (project.getUserProperty(n) == null) {
-                project.setUserProperty(n, v);
+                project.setInheritedProperty(n, v);
             } else {
                 log("Override ignored for " + n, Project.MSG_VERBOSE);
             }
@@ -346,6 +504,10 @@ public class Property extends Task {
         }
     }
 
+    /**
+     * resolve properties inside a properties hashtable
+     * @param props properties object to resolve
+     */
     private void resolveAllProperties(Properties props) throws BuildException {
         for (Enumeration e = props.keys(); e.hasMoreElements();) {
             String name = (String) e.nextElement();

@@ -62,7 +62,8 @@ import org.apache.tools.ant.types.Commandline;
 
 
 /**
- * Task to perform Checkin command to ClearCase.
+ * Performs ClearCase checkin.
+ *
  * <p>
  * The following attributes are interpreted:
  * <table border="1">
@@ -192,7 +193,7 @@ public class CCCheckin extends ClearCase {
 
 
     /**
-     * Set comment string
+     * Sets the comment string.
      *
      * @param comment the comment string
      */
@@ -210,7 +211,7 @@ public class CCCheckin extends ClearCase {
     }
 
     /**
-     * Set comment file
+     * Specifies a file containing a comment.
      *
      * @param cfile the path to the comment file
      */
@@ -228,7 +229,7 @@ public class CCCheckin extends ClearCase {
     }
 
     /**
-     * Set the nowarn flag
+     * If true, suppress warning messages.
      *
      * @param nwarn the status to set the flag to
      */
@@ -246,7 +247,7 @@ public class CCCheckin extends ClearCase {
     }
 
     /**
-     * Set preservetime flag
+     * If true, preserve the modification time.
      *
      * @param ptime the status to set the flag to
      */
@@ -264,7 +265,7 @@ public class CCCheckin extends ClearCase {
     }
 
     /**
-     * Set the keepcopy flag
+     * If true, keeps a copy of the file with a .keep extension.
      *
      * @param keep the status to set the flag to
      */
@@ -282,7 +283,8 @@ public class CCCheckin extends ClearCase {
     }
 
     /**
-     * Set the identical flag
+     * If true, allows the file to be checked in even
+     * if it is identical to the original.
      *
      * @param identical the status to set the flag to
      */
@@ -303,9 +305,7 @@ public class CCCheckin extends ClearCase {
     /**
      * Get the 'comment' command
      *
-     * @return the 'comment' command if the attribute was specified, otherwise an empty string
-     *
-     * @param CommandLine containing the command line string with or without the comment flag and string appended
+     * @param cmd containing the command line string with or without the comment flag and string appended
      */
     private void getCommentCommand(Commandline cmd) {
         if (getComment() != null) {
@@ -322,9 +322,7 @@ public class CCCheckin extends ClearCase {
     /**
      * Get the 'commentfile' command
      *
-     * @return the 'commentfile' command if the attribute was specified, otherwise an empty string
-     *
-     * @param CommandLine containing the command line string with or without the commentfile flag and file appended
+     * @param cmd containing the command line string with or without the commentfile flag and file appended
      */
     private void getCommentFileCommand(Commandline cmd) {
         if (getCommentFile() != null) {
