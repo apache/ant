@@ -59,6 +59,9 @@ import java.util.Properties;
 import org.apache.tools.ant.util.StringUtils;
 
 /**
+ * Provide the basic events to be used during the tests.
+ * This is not very extensible but since the events should be somewhat
+ * limited, for now this is better to do it like this.
  *
  * @author <a href="mailto:sbailliez@apache.org">Stephane Bailliez</a>
  */
@@ -81,7 +84,7 @@ public class TestRunEvent extends EventObject {
     /** the type of event */
     private int type = -1;
 
-    /** timestamp for all tests */
+    /** timestamp for all events */
     private long timestamp = System.currentTimeMillis();
 
     /** name of testcase(method name) or testsuite (classname) */
@@ -93,9 +96,17 @@ public class TestRunEvent extends EventObject {
     /** properties for end of testrun */
     private Properties props;
 
+    /** handy result for each end of sequence */
+    private TestSummary result;
+
     public TestRunEvent(Integer id, int type){
         super(id);
         this.type = type;
+    }
+
+    public TestRunEvent(Integer id, int type, String name, TestSummary result){
+        this(id, type, name);
+        this.result = result;
     }
 
     public TestRunEvent(Integer id, int type, String name){
@@ -103,9 +114,10 @@ public class TestRunEvent extends EventObject {
         this.name = name;
     }
 
-    public TestRunEvent(Integer id, int type, Properties props){
+    public TestRunEvent(Integer id, int type, Properties props, TestSummary result){
         this(id, type);
         this.props = props;
+        this.result = result;
     }
 
     public TestRunEvent(Integer id, int type, String name, Throwable t){
@@ -145,6 +157,10 @@ public class TestRunEvent extends EventObject {
         return name;
     }
 
+    public TestSummary getSummary(){
+        return result;
+    }
+
     public String getStackTrace(){
         return stacktrace;
     }
@@ -160,7 +176,8 @@ public class TestRunEvent extends EventObject {
                     (timestamp == other.timestamp) &&
                     ( name == null ? other.name == null :  name.equals(other.name) ) &&
                     ( stacktrace == null ? other.stacktrace == null : stacktrace.equals(other.stacktrace) ) &&
-                    ( props == null ? other.props == null : props.equals(other.props) ) ) ;
+                    ( props == null ? other.props == null : props.equals(other.props) ) &&
+                    ( result == null ? other.result == null : result.equals(other.result) ) );
         }
         return false;
     }

@@ -62,6 +62,11 @@ import java.util.Properties;
 import java.util.StringTokenizer;
 import java.util.Vector;
 import java.util.Random;
+import java.util.Map;
+import java.util.HashMap;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Iterator;
 
 import junit.framework.AssertionFailedError;
 import junit.framework.Test;
@@ -71,6 +76,8 @@ import junit.framework.TestResult;
 import junit.framework.TestSuite;
 
 import org.apache.tools.ant.taskdefs.optional.rjunit.JUnitHelper;
+import org.apache.tools.ant.taskdefs.optional.rjunit.formatter.Formatter;
+import org.apache.tools.ant.taskdefs.optional.rjunit.formatter.PlainFormatter;
 import org.apache.tools.ant.util.StringUtils;
 
 /**
@@ -95,10 +102,11 @@ public class TestRunner implements TestListener {
     /** port to connect to */
     private int port = -1;
 
+    /** handy debug flag */
     private boolean debug = false;
 
     /** the list of test class names to run */
-    private Vector testClassNames = new Vector();
+    private final ArrayList testClassNames = new ArrayList();
 
     /** result of the current test */
     private TestResult testResult;
@@ -109,8 +117,14 @@ public class TestRunner implements TestListener {
     /** writer to send message to the server */
     private Messenger messenger;
 
+    /** helpful formatter to debug events directly here */
+    private final Formatter debugFormatter = new PlainFormatter();
+
     /** bean constructor */
     public TestRunner() {
+        Properties props = new Properties();
+        props.setProperty("file", "rjunit-client-debug.log");
+        debugFormatter.init(props);
     }
 
     /**
@@ -142,7 +156,7 @@ public class TestRunner implements TestListener {
      * @param classname the class name of the test to run.
      */
     public void addTestClassName(String classname) {
-        testClassNames.addElement(classname);
+        testClassNames.add(classname);
     }
 
     /**
@@ -265,16 +279,16 @@ public class TestRunner implements TestListener {
      * @throws Exception a generic exception that can be thrown while
      * instantiating a test case.
      */
-    protected Test[] getSuites() throws Exception {
+    protected Map getSuites() throws Exception {
         final int count = testClassNames.size();
         log("Extracting testcases from " + count + " classnames...");
-        final Vector suites = new Vector(count);
+        final Map suites = new HashMap();
         for (int i = 0; i < count; i++) {
-            String classname = (String) testClassNames.elementAt(i);
+            String classname = (String) testClassNames.get(i);
             try {
                 Test test = JUnitHelper.getTest(null, classname);
                 if (test != null) {
-                    suites.addElement(test);
+                    suites.put(classname, test);
                 }
             } catch (Exception e) {
                 // notify log error instead ?
@@ -283,9 +297,7 @@ public class TestRunner implements TestListener {
             }
         }
         log("Extracted " + suites.size() + " testcases.");
-        Test[] array = new Test[suites.size()];
-        suites.copyInto(array);
-        return array;
+        return suites;
     }
 
     /**
@@ -293,41 +305,75 @@ public class TestRunner implements TestListener {
      */
     private void runTests() throws Exception {
 
-        Test[] suites = getSuites();
+        Map suites = getSuites();
 
         // count all testMethods and inform TestRunListeners
-        int count = countTests(suites);
+        int count = countTests(suites.values());
         log("Total tests to run: " + count);
-        fireEvent(new TestRunEvent(id, TestRunEvent.RUN_STARTED));
-
-        long startTime = System.currentTimeMillis();
-        for (int i = 0; i < suites.length; i++) {
-            String name = suites[i].getClass().getName();
-            if (suites[i] instanceof TestCase) {
-                suites[i] = new TestSuite(name);
-            }
-            log("running suite: " + suites[i]);
-            fireEvent(new TestRunEvent(id, TestRunEvent.SUITE_STARTED, name));
-            suites[i].run(testResult);
-            fireEvent(new TestRunEvent(id, TestRunEvent.SUITE_ENDED, name));
+        TestRunEvent evt = new TestRunEvent(id, TestRunEvent.RUN_STARTED);
+        if (debug){
+            debugFormatter.onRunStarted(evt);
         }
+        fireEvent(evt);
+
+        TestSummary runSummary = new TestSummary();
+        runSummary.start(testResult);
+        for (Iterator it = suites.entrySet().iterator(); it.hasNext(); ) {
+            Map.Entry entry = (Map.Entry)it.next();
+            String name = (String)entry.getKey();
+            Test test = (Test)entry.getValue();
+            if (test instanceof TestCase) {
+                test = new TestSuite(name);
+            }
+            runTest(test, name);
+        }
+        runSummary.stop(testResult);
 
         // inform TestRunListeners of test end
-        long elapsedTime = System.currentTimeMillis() - startTime;
-        if (testResult == null || testResult.shouldStop()) {
-            fireEvent(new TestRunEvent(id, TestRunEvent.RUN_STOPPED, System.getProperties()));
-        } else {
-            fireEvent(new TestRunEvent(id, TestRunEvent.RUN_ENDED, System.getProperties()));
+        int type = (testResult == null || testResult.shouldStop()) ?
+            TestRunEvent.RUN_STOPPED : TestRunEvent.RUN_ENDED;
+        evt = new TestRunEvent(id, type, System.getProperties(), runSummary);
+        if (debug){
+            debugFormatter.onRunEnded(evt);
         }
-        log("Finished after " + elapsedTime + "ms");
+        fireEvent(evt);
+        log("Finished after " + runSummary.elapsedTime() + "ms");
         shutDown();
     }
 
-    /** count the number of test methods in all tests */
-    private final int countTests(Test[] tests) {
+    /**
+     * run a single suite and dispatch its results.
+     * @param test the instance of the testsuite to run.
+     * @param name the name of the testsuite (classname)
+     */
+    private void runTest(Test test, String name){
+        TestRunEvent evt = new TestRunEvent(id, TestRunEvent.SUITE_STARTED, name);
+        if (debug){
+            debugFormatter.onSuiteStarted(evt);
+        }
+        fireEvent(evt);
+        TestSummary suiteSummary = new TestSummary();
+        suiteSummary.start(testResult);
+        try {
+            test.run(testResult);
+        } finally {
+            suiteSummary.stop(testResult);
+            evt = new TestRunEvent(id, TestRunEvent.SUITE_ENDED, name, suiteSummary);
+            if (debug){
+                debugFormatter.onSuiteEnded(evt);
+            }
+            fireEvent(evt);
+        }
+    }
+
+    /**
+     * count the number of test methods in all tests
+     */
+    private final int countTests(Collection tests) {
         int count = 0;
-        for (int i = 0; i < tests.length; i++) {
-            count = count + tests[i].countTestCases();
+        for (Iterator it = tests.iterator(); it.hasNext(); ) {
+            Test test = (Test)it.next();
+            count = count + test.countTestCases();
         }
         return count;
     }
@@ -383,14 +429,20 @@ public class TestRunner implements TestListener {
 
     public void startTest(Test test) {
         String testName = test.toString();
-        log("starting test: " + test);
-        fireEvent(new TestRunEvent(id, TestRunEvent.TEST_STARTED, testName));
+        TestRunEvent evt = new TestRunEvent(id, TestRunEvent.TEST_STARTED, testName);
+        if (debug){
+            debugFormatter.onTestStarted(evt);
+        }
+        fireEvent(evt);
     }
 
     public void addError(Test test, Throwable t) {
-        log("Adding error for test: " + test);
         String testName = test.toString();
-        fireEvent(new TestRunEvent(id, TestRunEvent.TEST_ERROR, testName, t));
+        TestRunEvent evt = new TestRunEvent(id, TestRunEvent.TEST_ERROR, testName, t);
+        if (debug){
+            debugFormatter.onTestError(evt);
+        }
+        fireEvent(evt);
     }
 
     /**
@@ -406,15 +458,21 @@ public class TestRunner implements TestListener {
      * @see addFailure(Test, AssertionFailedError)
      */
     public void addFailure(Test test, Throwable t) {
-        log("Adding failure for test: " + test);
         String testName = test.toString();
-        fireEvent(new TestRunEvent(id, TestRunEvent.TEST_FAILURE, testName, t));
+        TestRunEvent evt = new TestRunEvent(id, TestRunEvent.TEST_FAILURE, testName, t);
+        if (debug){
+            debugFormatter.onTestFailure(evt);
+        }
+        fireEvent(evt);
     }
 
     public void endTest(Test test) {
-        log("Ending test: " + test);
         String testName = test.toString();
-        fireEvent(new TestRunEvent(id, TestRunEvent.TEST_ENDED, testName));
+        TestRunEvent evt = new TestRunEvent(id, TestRunEvent.TEST_ENDED, testName);
+        if (debug){
+            debugFormatter.onTestEnded(evt);
+        }
+        fireEvent(evt);
     }
 
     public void log(String msg) {

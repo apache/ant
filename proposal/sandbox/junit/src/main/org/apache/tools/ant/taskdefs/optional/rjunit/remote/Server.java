@@ -116,19 +116,24 @@ public class Server {
     }
 
     /** start a server to the specified port */
-    public void start() {
-        try {
-            start(false);
-        } catch (InterruptedException e){
-        }
-    }
-
-    /** start a server to the specified port and wait for end */
-    public void start(boolean flag) throws InterruptedException {
-        Worker worker = new Worker();
-        worker.start();
-        if (flag){
-            worker.join();
+    public void start(boolean loop) throws IOException {
+        server = new ServerSocket(port);
+        while (server != null) {
+            client = server.accept();
+            messenger = new Messenger(client.getInputStream(), client.getOutputStream());
+            TestRunEvent evt = null;
+            try {
+                while ( (evt = messenger.read()) != null ) {
+                    dispatcher.dispatchEvent(evt);
+                }
+            } catch (Exception e){
+                e.printStackTrace();
+                //@fixme this stacktrace might be normal when closing
+                // the socket. So decompose the above in distinct steps
+            }
+            if (!loop){
+                break;
+            }
         }
     }
 
@@ -167,28 +172,6 @@ public class Server {
                 server = null;
             }
         } catch (IOException e) {
-        }
-    }
-
-//-----
-
-    private class Worker extends Thread {
-        public void run() {
-            try {
-                server = new ServerSocket(port);
-                client = server.accept();
-                messenger = new Messenger(client.getInputStream(), client.getOutputStream());
-                TestRunEvent evt = null;
-                while ( (evt = messenger.read()) != null ) {
-                    dispatcher.dispatchEvent(evt);
-                }
-            } catch (Exception e) {
-                //@fixme this stacktrace might be normal when closing
-                // the socket. So decompose the above in distinct steps
-            } finally {
-                cancel();
-                shutdown();
-            }
         }
     }
 }
