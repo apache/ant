@@ -453,8 +453,8 @@ public class JDependTask extends Task {
             jdepend = new jdepend.textui.JDepend();
         }
 
+        FileWriter fw = null;
         if (getOutputFile() != null) {
-            FileWriter fw;
             try {
                 fw = new FileWriter(getOutputFile().getPath());
             } catch (IOException e) {
@@ -467,87 +467,98 @@ public class JDependTask extends Task {
             log("Output to be stored in " + getOutputFile().getPath());
         }
 
-        if (getClassespath() != null) {
-            // This is the new, better way - use classespath instead
-            // of sourcespath.  The code is currently the same - you
-            // need class files in a directory to use this - jar files
-            // coming soon....
-            String[] classesPath = getClassespath().list();
-            for (int i = 0; i < classesPath.length; i++) {
-                File f = new File(classesPath[i]);
-                // not necessary as JDepend would fail, but why loose
-                // some time?
-                if (!f.exists() || !f.isDirectory()) {
-                    String msg = "\""
-                        + f.getPath()
-                        + "\" does not represent a valid"
-                        + " directory. JDepend would fail.";
-                    log(msg);
-                    throw new BuildException(msg);
+
+        try {
+            if (getClassespath() != null) {
+                // This is the new, better way - use classespath instead
+                // of sourcespath.  The code is currently the same - you
+                // need class files in a directory to use this - jar files
+                // coming soon....
+                String[] classesPath = getClassespath().list();
+                for (int i = 0; i < classesPath.length; i++) {
+                    File f = new File(classesPath[i]);
+                    // not necessary as JDepend would fail, but why loose
+                    // some time?
+                    if (!f.exists() || !f.isDirectory()) {
+                        String msg = "\""
+                            + f.getPath()
+                            + "\" does not represent a valid"
+                            + " directory. JDepend would fail.";
+                        log(msg);
+                        throw new BuildException(msg);
+                    }
+                    try {
+                        jdepend.addDirectory(f.getPath());
+                    } catch (IOException e) {
+                        String msg =
+                            "JDepend Failed when adding a class directory: "
+                            + e.getMessage();
+                        log(msg);
+                        throw new BuildException(msg);
+                    }
                 }
-                try {
-                    jdepend.addDirectory(f.getPath());
-                } catch (IOException e) {
-                    String msg =
-                        "JDepend Failed when adding a class directory: "
-                        + e.getMessage();
-                    log(msg);
-                    throw new BuildException(msg);
+
+            } else if (getSourcespath() != null) {
+
+                // This is the old way and is deprecated - classespath is
+                // the right way to do this and is above
+                String[] sourcesPath = getSourcespath().list();
+                for (int i = 0; i < sourcesPath.length; i++) {
+                    File f = new File(sourcesPath[i]);
+
+                    // not necessary as JDepend would fail, but why loose
+                    // some time?
+                    if (!f.exists() || !f.isDirectory()) {
+                        String msg = "\""
+                            + f.getPath()
+                            + "\" does not represent a valid"
+                            + " directory. JDepend would fail.";
+                        log(msg);
+                        throw new BuildException(msg);
+                    }
+                    try {
+                        jdepend.addDirectory(f.getPath());
+                    } catch (IOException e) {
+                        String msg =
+                            "JDepend Failed when adding a source directory: "
+                            + e.getMessage();
+                        log(msg);
+                        throw new BuildException(msg);
+                    }
                 }
             }
 
-        } else if (getSourcespath() != null) {
-
-            // This is the old way and is deprecated - classespath is
-            // the right way to do this and is above
-            String[] sourcesPath = getSourcespath().list();
-            for (int i = 0; i < sourcesPath.length; i++) {
-                File f = new File(sourcesPath[i]);
-
-                // not necessary as JDepend would fail, but why loose
-                // some time?
-                if (!f.exists() || !f.isDirectory()) {
-                    String msg = "\""
-                        + f.getPath()
-                        + "\" does not represent a valid"
-                        + " directory. JDepend would fail.";
-                    log(msg);
-                    throw new BuildException(msg);
+            // This bit turns <exclude> child tags into patters to ignore
+            String[] patterns = defaultPatterns.getExcludePatterns(getProject());
+            if (patterns != null && patterns.length > 0) {
+                if (setFilter != null) {
+                    Vector v = new Vector();
+                    for (int i = 0; i < patterns.length; i++) {
+                        v.addElement(patterns[i]);
+                    }
+                    try {
+                        Object o = packageFilterC.newInstance(new Object[] {v});
+                        setFilter.invoke(jdepend, new Object[] {o});
+                    } catch (Throwable e) {
+                        log("excludes will be ignored as JDepend doesn't like me: "
+                            + e.getMessage(), Project.MSG_WARN);
+                    }
+                } else {
+                    log("Sorry, your version of JDepend doesn't support excludes",
+                        Project.MSG_WARN);
                 }
+            }
+
+            jdepend.analyze();
+        } finally {
+            if (fw != null) {
                 try {
-                    jdepend.addDirectory(f.getPath());
-                } catch (IOException e) {
-                    String msg =
-                        "JDepend Failed when adding a source directory: "
-                        + e.getMessage();
-                    log(msg);
-                    throw new BuildException(msg);
+                    fw.close();
+                } catch (Throwable t) {
+                    // Ignore
                 }
             }
         }
-
-        // This bit turns <exclude> child tags into patters to ignore
-        String[] patterns = defaultPatterns.getExcludePatterns(getProject());
-        if (patterns != null && patterns.length > 0) {
-            if (setFilter != null) {
-                Vector v = new Vector();
-                for (int i = 0; i < patterns.length; i++) {
-                    v.addElement(patterns[i]);
-                }
-                try {
-                    Object o = packageFilterC.newInstance(new Object[] {v});
-                    setFilter.invoke(jdepend, new Object[] {o});
-                } catch (Throwable e) {
-                    log("excludes will be ignored as JDepend doesn't like me: "
-                        + e.getMessage(), Project.MSG_WARN);
-                }
-            } else {
-                log("Sorry, your version of JDepend doesn't support excludes",
-                    Project.MSG_WARN);
-            }
-        }
-
-        jdepend.analyze();
         return SUCCESS;
     }
 

@@ -164,6 +164,8 @@ Fixed bugs:
 
 * failOnAny attribute for <parallel> was broken. Bugzilla Report 28122.
 
+* JDependTask did not close an output file. Bugzilla Report 28557.
+
 Other changes:
 --------------
 
