@@ -844,7 +844,7 @@ strLoop:
 
     /**
      * Get the names of the files that matched at least one of the include
-     * patterns, an matched none of the exclude patterns.
+     * patterns, and matched none of the exclude patterns.
      * The names are relative to the basedir.
      *
      * @return the names of the files
