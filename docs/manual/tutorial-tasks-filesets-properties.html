@@ -1,7 +1,7 @@
 <html>
 <head>
   <title>Tutorial: Tasks using Properties, Filesets & Paths</title>
-  <meta name="author" content="Jan Matèrne">
+  <meta name="author" content="Jan Mat&egrave;rne">
   <style type="text/css">
   <!--
   .code { background: #EFEFEF; margin-top: }
@@ -830,14 +830,14 @@ is the same as directly after the cvs update (without our modifications).</p>
 
 <h3>Apache copyright and license statement</h3>
 <p>Simply copy the license text from one the other source from the Ant source tree. But
-ensure that the current year is used in the<tt> * Copyright (c) 2000-2003 The Apache Software
+ensure that the current year is used in the<tt> * Copyright (c) 2000-2005 The Apache Software
 Foundation.  All rights reserved.</tt> lines. Don´t forget to add a license statement at the end
 of the find.html. (Can be copied from other manual files.)</p>
 
 
 <h3>Test on JDK 1.2</h3>
 <p>Until version 1.5 Ant must be able to run on a JDK 1.1. With version 1.6 this is not a
-requisite any more. But JDK 1.2 is a must be able. So we have to test that. You can download older
+requisite any more. But JDK 1.2 is a must-to-work-with. So we have to test that. You can download older
 JDKs from <a href="http://java.sun.com/products/archive/index.html">Sun [9]</a>.</p>
 
 <p>Clean the ANT_HOME variable, delete the <i>build, bootstrap</i> and <i>dist</i> directory
@@ -878,12 +878,15 @@ do a second checkstyle run. Now our task isn´t listed. That´s fine :-)</p>
 
 
 
-
+<!--
+  Couldnt create the diff that way for myself, but that should be documented.
+  But on the other hand this tutorial should not be forgotten any longer so I
+  comment that out.  JHM
 <h3>Creating the diff</h3>
 <p>Creating a diff for Ant is very easy: just start <tt>ant -f patch.xml</tt> and all is done
 automatically. This step requires a cvs executable in your path and internet access (more precise:
 cvs access). As a result we get a file <i> XXX </i>.</p>
-
+-->
 
 
 <h3>Publish the task</h3>
@@ -906,7 +909,7 @@ entry. For both we need some information:</p>
 <tr>
   <th>attachements</th>
   <td><i>all files needed to apply the path</td>
-  <td>Archive containing the path produced with path.xml</td>
+  <td>Archive containing a patch with the new and modified resources</td>
 </tr>
 </table>
 
@@ -934,19 +937,17 @@ and the steps described there if you haven´t one.</p>
 <li>Summary: add the <i>subject</i> from the table</li>
 <li>Description: add the <i>body</i> from the table</li>
 <li>Then press "Commit"</li>
-
-<!-- XXX MAT: Attachement eintragen, wenn ich das online auch mache - dazu brauche ich vorher
-     das CVS Patch -->
-
+<li>After redirecting to the new created bug entry click "Create a New Attachment"</li>
+<li>Enter the path to your local path file into "File" or choose it via the "File"'s
+    button.</li>
+<li>Enter a short description into "Description", so that you could guess, what the
+    path file includes. Here we could add "Initial Patch".</li>
+<li>The "Content Type" is "auto-detect". You could use the "patch" type, if you only
+    provide a single path file, but we want do upload more that one, included in our
+    patch.zip.</li>
+<li>Then press "Commit"</li>
 </ol>
-
-
-
-<br><br><br><br><br><br><br><br>
-- patch erstellen --&gt; zu hause wg. cvs zugang <br>
-- bugzilla einstellen --&gt; zu hause wg. abhängigkeit zu patch-file
-
-
+Now the new task is uploaded into the bug database.
 
 
 <a name="resources"/>
@@ -966,24 +967,16 @@ and the steps described there if you haven´t one.</p>
 &nbsp;&nbsp;[13] <a href="http://issues.apache.org/bugzilla/createaccount.cgi">http://issues.apache.org/bugzilla/createaccount.cgi</a><br/>
 &nbsp;&nbsp;[14] <a href="http://issues.apache.org/bugzilla/enter_bug.cgi">http://issues.apache.org/bugzilla/enter_bug.cgi</a><br/>
 
-<br><br><br>
 
 <!--
-&nbsp;&nbsp;[15] <a href=" "> </a><br/>
-&nbsp;&nbsp;[16] <a href=" "> </a><br/>
-&nbsp;&nbsp;[17] <a href=" "> </a><br/>
-&nbsp;&nbsp;[18] <a href=" "> </a><br/>
-&nbsp;&nbsp;[19] <a href=" "> </a><br/>
-&nbsp;&nbsp;[20] <a href=" "> </a><br/>
-&nbsp;&nbsp;[21] <a href=" "> </a><br/>
-&nbsp;&nbsp;[22] <a href=" "> </a><br/>
-&nbsp;&nbsp;[23] <a href=" "> </a><br/>
-&nbsp;&nbsp;[24] <a href=" "> </a><br/>
-&nbsp;&nbsp;[25] <a href=" "> </a><br/>
+  TODO:
+  - how to create a path (path.xml / command line)
 -->
 
+
+
 <hr>
-<p align="center">Copyright &copy; 2003-2004 The Apache Software Foundation. All rights
+<p align="center">Copyright &copy; 2003-2005 The Apache Software Foundation. All rights
 Reserved.</p>
 
 </body>
