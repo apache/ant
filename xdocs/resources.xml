@@ -253,8 +253,26 @@
 
     <section name="Articles">
 
-      <subsection name="Ant in Anger: Using Ant in a Production Development
-      System">
+      <subsection name="Programmieren für Ant">
+        <p>This article describes the main topics of programming your own tasks.
+        Description is done on five examples.</p>
+        <p>This article is written in German and published in
+        <a href="http://www.sigs-datacom.de/sd/publications/js/index.htm">Java-Spektrum</a>
+        5/2004.</p>
+
+        <table class="externals">
+          <tr>
+            <th>Author:</th>
+            <td>Bernd Matzke</td>
+          </tr>
+          <tr>
+            <th>URL:</th>
+            <td><a href="http://www.sigs-datacom.de/sd/news/document?PID=216">http://www.sigs-datacom.de/sd/news/document?PID=216</a></td>
+          </tr>
+        </table>
+      </subsection>
+
+      <subsection name="Ant in Anger: Using Ant in a Production Development System">
         <p>This document describes strategies and some basic examples of how to
         use Ant in larger team development projects.</p>
 
