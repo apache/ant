@@ -567,7 +567,7 @@ public class Javac extends MatchingTask {
     /**
      * Sets the target VM that the classes will be compiled for. Valid
      * values depend on the compiler, for jdk 1.4 the valid values are
-     * "1.1", "1.2", "1.3" and "1.4".
+     * "1.1", "1.2", "1.3", "1.4" and "1.5".
      * @param target the target VM
      */
     public void setTarget(String target) {
