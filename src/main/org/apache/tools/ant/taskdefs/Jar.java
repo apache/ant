@@ -287,7 +287,7 @@ public class Jar extends Zip {
      * This is a JDK 1.3+ specific feature and is enabled by default. See
      * <a href="http://java.sun.com/j2se/1.3/docs/guide/jar/jar.html#JAR+Index">the
      * JAR index specification</a> for more details.
-     * 
+     *
      * @param zOut the zip stream representing the jar being built.
      * @throws IOException thrown if there is an error while creating the
      * index and adding it to the zip stream.
@@ -340,7 +340,7 @@ public class Jar extends Zip {
     protected void zipFile(File file, ZipOutputStream zOut, String vPath)
         throws IOException
     {
-        if (vPath.equalsIgnoreCase("META-INF/MANIFEST.MF"))  {
+        if ("META-INF/MANIFEST.MF".equalsIgnoreCase(vPath))  {
             filesetManifest(file, null);
         } else {
             super.zipFile(file, zOut, vPath);
@@ -353,7 +353,7 @@ public class Jar extends Zip {
     protected void zipFile(InputStream is, ZipOutputStream zOut, String vPath, long lastModified, File file)
         throws IOException
     {
-        if (vPath.equalsIgnoreCase("META-INF/MANIFEST.MF"))  {
+        if ("META-INF/MANIFEST.MF".equalsIgnoreCase(vPath))  {
             filesetManifest(file, is);
         } else {
             super.zipFile(is, zOut, vPath, lastModified, null);
@@ -361,7 +361,7 @@ public class Jar extends Zip {
     }
 
     private void filesetManifest(File file, InputStream is) {
-        if (manifestFile.equals(file)) {
+        if (manifestFile != null && manifestFile.equals(file)) {
             // If this is the same name specified in 'manifest', this is the manifest to use
             log("Found manifest " + file, Project.MSG_VERBOSE);
             if (is != null) {
