@@ -1,0 +1,161 @@
+<html>
+
+<head>
+<meta http-equiv="Content-Language" content="en-us">
+<title>Ant User Manual</title>
+</head>
+
+<body>
+
+<h2><a name="zip">Zip</a></h2>
+<h3>Description</h3>
+<p>Creates a zipfile.</p>
+<p>The <i>basedir</i> attribute is the reference directory from where to zip.</p>
+<p>Note that file permissions will not be stored in the resulting zipfile.</p>
+<p>It is possible to refine the set of files that are being zipped. This can be
+done with the <i>includes</i>, <i>includesfile</i>, <i>excludes</i>, <i>excludesfile</i> and <i>defaultexcludes</i>
+attributes. With the <i>includes</i> or <i>includesfile</i> attribute you specify the files you want to
+have included by using patterns. The <i>exclude</i> or <i>excludesfile</i> attribute is used to specify
+the files you want to have excluded. This is also done with patterns. And
+finally with the <i>defaultexcludes</i> attribute, you can specify whether you
+want to use default exclusions or not. See the section on <a
+href="../dirtasks.html#directorybasedtasks">directory based tasks</a>, on how the
+inclusion/exclusion of files works, and how to write patterns. </p>
+<p>This task forms an implicit <a href="../CoreTypes/fileset.html">FileSet</a> and
+supports all attributes of <code>&lt;fileset&gt;</code>
+(<code>dir</code> becomes <code>basedir</code>) as well as the nested
+<code>&lt;include&gt;</code>, <code>&lt;exclude&gt;</code> and
+<code>&lt;patternset&gt;</code> elements.</p>
+<p>Or, you may place within it nested file sets, or references to file sets.
+In this case <code>basedir</code> is optional; the implicit file set is <i>only used</i>
+if <code>basedir</code> is set. You may use any mixture of the implicit file set
+(with <code>basedir</code> set, and optional attributes like <code>includes</code>
+and optional subelements like <code>&lt;include&gt;</code>); explicit nested
+<code>&lt;fileset&gt;</code> elements so long as at least one fileset total is specified. The ZIP file will
+only reflect the relative paths of files <i>within</i> each fileset. The Zip task and its derivatives know a special form of a fileset named zipfileset that has additional attributes (described below). </p>
+<p>The <code>whenempty</code> parameter controls what happens when no files match.
+If <code>skip</code> (the default), the ZIP is not created and a warning is issued.
+If <code>fail</code>, the ZIP is not created and the build is halted with an error.
+If <code>create</code>, an empty ZIP file (explicitly zero entries) is created,
+which should be recognized as such by compliant ZIP manipulation tools.</p>
+<h3>Parameters</h3>
+<table border="1" cellpadding="2" cellspacing="0">
+  <tr>
+    <td valign="top"><b>Attribute</b></td>
+    <td valign="top"><b>Description</b></td>
+    <td valign="top" align="center"><b>Required</b></td>
+  </tr>
+  <tr>
+    <td valign="top">zipfile</td>
+    <td valign="top">the zip-file to create.</td>
+    <td align="center" valign="top">Yes</td>
+  </tr>
+  <tr>
+    <td valign="top">basedir</td>
+    <td valign="top">the directory from which to zip the files.</td>
+    <td align="center" valign="top">No</td>
+  </tr>
+  <tr>
+    <td valign="top">compress</td>
+    <td valign="top">Not only store data but also compress them, defaults to true</td>
+    <td align="center" valign="top">No</td>
+  </tr>
+  <tr>
+    <td valign="top">includes</td>
+    <td valign="top">comma separated list of patterns of files that must be
+      included. All files are included when omitted.</td>
+    <td valign="top" align="center">No</td>
+  </tr>
+  <tr>
+    <td valign="top">includesfile</td>
+    <td valign="top">the name of a file. Each line of this file is
+      taken to be an include pattern</td>
+    <td valign="top" align="center">No</td>
+  </tr>
+  <tr>
+    <td valign="top">excludes</td>
+    <td valign="top">comma separated list of patterns of files that must be
+      excluded. No files (except default excludes) are excluded when omitted.</td>
+    <td valign="top" align="center">No</td>
+  </tr>
+  <tr>
+    <td valign="top">excludesfile</td>
+    <td valign="top">the name of a file. Each line of this file is
+      taken to be an exclude pattern</td>
+    <td valign="top" align="center">No</td>
+  </tr>
+  <tr>
+    <td valign="top">defaultexcludes</td>
+    <td valign="top">indicates whether default excludes should be used or not
+      (&quot;yes&quot;/&quot;no&quot;). Default excludes are used when omitted.</td>
+    <td valign="top" align="center">No</td>
+  </tr>
+  <tr>
+    <td valign="top">whenempty</td>
+    <td valign="top">Behavior when no files match.</td>
+    <td valign="top" align="center">No</td>
+  </tr>
+</table>
+<h3>Parameters specified as nested elements</h3>
+<h4>fileset</h4>
+<p>The zip task supports any number of nested <a
+href="../CoreTypes/fileset.html"><code>&lt;fileset&gt;</code></a> elements to specify
+the files to be included in the archive.</p>
+<h4>zipfileset</h4>
+<p>A <code>&lt;zipfileset&gt;</code> has three additional attributes: <i>prefix</i>, <i>fullpath</i>, and <i>src</i>.  The 
+<i>prefix</i> and <i>fullpath</i> attributes modify the location of the files when they are placed 
+inside the archive. If the <i>prefix</i> attribute is set, all files in the fileset are prefixed
+with that path in the archive. If the <i>fullpath</i> attribute is set, the file described by the fileset is placed at that 
+exact location in the archive. (The <i>fullpath</i> attribute can only be set for filesets that represent a single file. The <i>prefix</i> and <i>fullpath</i> attributes cannot both be set on the same fileset.)  The <i>src</i> attribute
+may be used in place of the <i>dir</i> attribute to specify a zip file whose
+contents will be extracted and included in the archive.  As with directories, include and exclude patterns may be used to specify a subset of the zip file
+for inclusion in the archive.</p>
+
+<h3>Examples</h3>
+<pre>  &lt;zip zipfile=&quot;${dist}/manual.zip&quot;
+       basedir=&quot;htdocs/manual&quot;
+  /&gt;</pre>
+<p>zips all files in the <code>htdocs/manual</code> directory into a file called <code>manual.zip</code>
+in the <code>${dist}</code> directory.</p>
+<pre>  &lt;zip zipfile=&quot;${dist}/manual.zip&quot;
+       basedir=&quot;htdocs/manual&quot;
+       excludes=&quot;mydocs/**, **/todo.html&quot;
+  /&gt;</pre>
+<p>zips all files in the <code>htdocs/manual</code> directory. Files in the directory <code>mydocs</code>,
+or files with the name <code>todo.html</code> are excluded.</p>
+<pre>  &lt;zip zipfile=&quot;${dist}/manual.zip&quot;
+       basedir=&quot;htdocs/manual&quot;
+       includes=&quot;api/**/*.html&quot;
+       excludes=&quot;**/todo.html&quot;
+  /&gt;</pre>
+<p>zips all files in the <code>htdocs/manual</code> directory. Only html files under the directory <code>api</code>
+are zipped, and files with the name <code>todo.html</code> are excluded.</p>
+<pre>  &lt;zip zipfile=&quot;${dist}/manual.zip&quot;&gt;
+    &lt;fileset dir=&quot;htdocs/manual&quot;/&gt;
+    &lt;fileset dir=&quot;.&quot; includes=&quot;ChangeLog.txt&quot;/&gt;
+  &lt;/zip&gt;</pre>
+<p>zips all files in the <code>htdocs/manual</code> directory, and also adds the file <code>ChangeLog.txt</code> in the
+current directory. <code>ChangeLog.txt</code> will be added to the top of the ZIP file, just as if
+it had been located at <code>htdocs/manual/ChangeLog.txt</code>.</p>
+<pre>  &lt;zip zipfile=&quot;${dist}/manual.zip&quot;&gt;
+    &lt;zipfileset dir=&quot;htdocs/manual&quot; prefix=&quot;docs/user-guide&quot;/&gt;
+    &lt;zipfileset dir=&quot;.&quot; includes=&quot;ChangeLog27.txt&quot; fullpath=&quot;docs/ChangeLog.txt&quot;/&gt;
+    &lt;zipfileset src=&quot;examples.zip&quot; includes=&quot;**/*.html&quot; prefix=&quot;docs/examples&quot;/&gt;
+  &lt;/zip&gt;</pre>
+<p>zips all files in the <code>htdocs/manual</code> directory into the <code>docs/user-guide</code> directory
+in the archive, adds the file <code>ChangeLog27.txt</code> in the
+current directory as <code>docs/ChangeLog.txt</code>, and includes all the html files in <code>examples.zip</code> 
+under <code>docs/examples</code>.  The archive might end up containing the files:</p>
+<pre><code>    docs/user-guide/html/index.html
+    docs/ChangeLog.txt
+    docs/examples/index.html
+</code></pre>
+
+
+<hr>
+<p align="center">Copyright &copy; 2000,2001 Apache Software Foundation. All rights
+Reserved.</p>
+
+</body>
+</html>
+

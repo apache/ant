@@ -1,4 +1,4 @@
-Changes from Ant 1.2 to the current sources
+Changes from Ant 1.2 to Ant 1.3 Beta 1
 ===========================================
 
 Changes that could break older environments:
@@ -19,10 +19,12 @@ Changes that could break older environments:
 Other changes:
 --------------
 
-* A GUI Frontend: Antidote. This is currently in development.
+* A GUI Frontend: Antidote. This is currently in development. At this
+  time, this is not part of the Ant release, although the source is
+  included if you are interested.
 
 * New tasks: stylebook, propertyfile, depend, antlr, telnet, csc,
-  ilasm, apply, javah, several clearcase tasks, junitreport
+  ilasm, apply, javah, several clearcase tasks, junitreport, sound
 
 * Added output attribute to <java>.
 
@@ -51,10 +53,6 @@ Other changes:
 * Style tasks will now support TraX compliant XSL processors if one is present
   in your classpath.  
 
-* Ant now prints a warning when an attempt is made to use a property which has
-  not been set. Any build files which rely on non-set properties being passed
-  through untranslated will now break.
-  
 * Added a failonerror to the javac task. If set to false, the build will 
   continue even if there are compilation errors.
   
@@ -66,6 +64,14 @@ Other changes:
 
 * ${} property expansion will now be performed on the patterns read
   from files specified as includesfile or excludesfile attributes.
+  
+* The <tar> and <untar> tasks now support GNU format for handling paths
+  which are greater than 100 characters in length. In addition the <tar>
+  task now supports nested filesets through which the file permissions
+  may be controlled.
+
+* wlrun, wlstop and ejbjar now support Weblogic 6.0
+
 
 Fixed bugs:
 -----------
@@ -82,9 +88,12 @@ Fixed bugs:
 * ejbjar now correctly ignores <ejb-ref> elements in the deployment descriptor.
   CMP files are included by parsing the weblogic deployment descriptor rather 
   than relying on the naming convention used in ant 1.2
-  Include super classes and super interfaces into the generated ejb jar files
-  <support> nested element allows support classes to be included in the EJB jar
-
+  
+* ejbjar includes super classes and super interfaces into the generated ejb 
+  jar files. The <support> nested element allows support classes to be 
+  included in the EJB jar. The toplink element should now correctly locate
+  the toplink descriptor.
+  
 * <vssget> now correctly deals with spaces in arguments
 
 * <jar> fails early if a given manifest file doesn't exist
@@ -108,6 +117,10 @@ Fixed bugs:
 * Handle build files in directories whose name contained a "#" character
 
 * <junit> can now log to files whose name contains a comma as well. 
+
+* The AntClassLoader now refers to the loader which loaded it, any 
+  requests it does not handle itself. Previously these went to the 
+  primordial loader.
 
 Changes from Ant 1.1 to Ant 1.2
 ===============================

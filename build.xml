@@ -15,7 +15,6 @@
   <property name="Name" value="Ant"/>
   <property name="name" value="ant"/>
   <property name="version" value="1.4alpha"/>
-  <property name="version" value="1.3beta1"/>
 
   <property name="debug" value="false" />
   <property name="deprecation" value="false" />
@@ -196,9 +195,9 @@
       <exclude name="${optional.package}/perforce/*.java" unless="jakarta.oro.present" />
       <exclude name="${optional.package}/sound/*.java" unless="jmf.present" />
       <exclude name="${optional.package}/junit/XMLResultAggregator.java"
-               unless="trax.present" />
+               unless="xalan.present" />
       <exclude name="${optional.package}/junit/AggregateTransformer.java"
-               unless="trax.present" />
+               unless="xalan.present" />
     </javac>
     
     <copy todir="${build.classes}">
@@ -294,11 +293,11 @@
       <fileset dir="${lib.dir}">
         <include name="*.jar" />
         <include name="*.zip" />
-        <exclude name="ant.jar"/>
-        <exclude name="optional.jar"/>
       </fileset>
     </copy>
 
+    <copy todir="${dist.lib}" file="${lib.dir}/optional/README"/>
+    
     <copy todir="${dist.docs}">
       <fileset dir="${docs.dir}"/>
     </copy>
@@ -346,6 +345,7 @@
       <fileset dir="${lib.dir}">
         <include name="*.jar" />
         <include name="*.zip" />
+        <include name="optional/README"/>
       </fileset>
     </copy>
 
@@ -400,16 +400,16 @@
          excludes="${dist.name}/lib/optional.jar"/>
     <tar longfile="gnu"
          tarfile="${dist.base}/${dist.name}-bin.tar">
-      <fileset dir="${dist.name}/.." mode="755" username="ant" group="ant">
+      <tarfileset dir="${dist.name}/.." mode="755" username="ant" group="ant">
         <include name="${dist.name}/bin/ant"/>
         <include name="${dist.name}/bin/antRun"/>
-      </fileset> 
-      <fileset dir="${dist.name}/.." username="ant" group="ant"> 
+      </tarfileset> 
+      <tarfileset dir="${dist.name}/.." username="ant" group="ant"> 
         <include name="${dist.name}/**"/>
         <exclude name="${dist.name}/bin/ant"/>
         <exclude name="${dist.name}/bin/antRun"/>
         <exclude name="${dist.name}/lib/optional.jar"/>
-      </fileset> 
+      </tarfileset> 
     </tar>
     <gzip zipfile="${dist.base}/${dist.name}-bin.tar.gz" 
           src="${dist.base}/${dist.name}-bin.tar"/>
@@ -426,15 +426,15 @@
          includes="${dist.name}/**"/>
     <tar longfile="gnu"
          tarfile="${dist.base}/${dist.name}-src.tar" >
-      <fileset dir="${dist.name}/.." mode="755" username="ant" group="ant">
+      <tarfileset dir="${dist.name}/.." mode="755" username="ant" group="ant">
         <include name="${dist.name}/bootstrap.sh"/>
         <include name="${dist.name}/build.sh"/>
-      </fileset> 
-      <fileset dir="${dist.name}/.." username="ant" group="ant"> 
+      </tarfileset> 
+      <tarfileset dir="${dist.name}/.." username="ant" group="ant"> 
         <include name="${dist.name}/**"/>
         <exclude name="${dist.name}/bootstrap.sh"/>
         <exclude name="${dist.name}/build.sh"/>
-      </fileset>
+      </tarfileset>
     </tar> 
     <gzip zipfile="${dist.base}/${dist.name}-src.tar.gz" 
           src="${dist.base}/${dist.name}-src.tar"/>

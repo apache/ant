@@ -84,7 +84,7 @@ public class Tar extends MatchingTask {
     Vector filesets = new Vector();
     Vector fileSetFiles = new Vector();
 
-    public TarFileSet createFileSet() {
+    public TarFileSet createTarFileSet() {
         TarFileSet fileset = new TarFileSet();
         filesets.addElement(fileset);
         return fileset;
@@ -121,6 +121,16 @@ public class Tar extends MatchingTask {
     public void execute() throws BuildException {
         if (tarFile == null) {
             throw new BuildException("tarfile attribute must be set!", 
+                                     location);
+        }
+
+        if (tarFile.exists() && tarFile.isDirectory()) {
+            throw new BuildException("tarfile is a directory!", 
+                                     location);
+        }
+
+        if (tarFile.exists() && !tarFile.canWrite()) {
+            throw new BuildException("Can not write to the specified tarfile!", 
                                      location);
         }
 

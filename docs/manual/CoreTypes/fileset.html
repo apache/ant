@@ -1,0 +1,92 @@
+<html>
+
+<head>
+<meta http-equiv="Content-Language" content="en-us">
+<title>Ant User Manual</title>
+</head>
+
+<body>
+
+<h2><a name="fileset">FileSet</a></h2>
+<p>FileSets are groups of files. These files can be found in a
+directory tree starting in a base directory and are matched by
+patterns taken from a number of <a
+href="patternset.html">PatternSets</a>. FileSets can appear inside tasks
+that support this feature or at the same level as <code>target</code>
+&#150; i.e., as children of <code>project</code>.</p>
+<p>PatternSets can be specified as nested
+<code>&lt;patternset&gt;</code> 
+elements. In addition, FileSet holds an implicit PatternSet and
+supports the nested <code>&lt;include&gt;</code> and
+<code>&lt;exclude&gt;</code> elements of PatternSet directly, as well
+as PatternSet's attributes.</p>
+<table border="1" cellpadding="2" cellspacing="0">
+  <tr>
+    <td valign="top"><b>Attribute</b></td>
+    <td valign="top"><b>Description</b></td>
+    <td align="center" valign="top"><b>Required</b></td>
+  </tr>
+  <tr>
+    <td valign="top">dir</td>
+    <td valign="top">the root of the directory tree of this FileSet.</td>
+    <td valign="top" align="center">Yes</td>
+  </tr>
+  <tr>
+    <td valign="top">defaultexcludes</td>
+    <td valign="top">indicates whether default excludes should be used or not
+      (<code>yes | no</code>); default excludes are used when omitted.</td>
+    <td valign="top" align="center">No</td>
+  </tr>
+  <tr>
+    <td valign="top">includes</td>
+    <td valign="top">comma-separated list of patterns of files that must be
+      included; all files are included when omitted.</td>
+    <td valign="top" align="center">No</td>
+  </tr>
+  <tr>
+    <td valign="top">includesfile</td>
+    <td valign="top">the name of a file; each line of this file is
+      taken to be an include pattern.</td>
+    <td valign="top" align="center">No</td>
+  </tr>
+  <tr>
+    <td valign="top">excludes</td>
+    <td valign="top">comma-separated list of patterns of files that must be
+      excluded; no files (except default excludes) are excluded when omitted.</td>
+    <td valign="top" align="center">No</td>
+  </tr>
+  <tr>
+    <td valign="top">excludesfile</td>
+    <td valign="top">the name of a file; each line of this file is
+      taken to be an exclude pattern.</td>
+    <td valign="top" align="center">No</td>
+  </tr>
+</table>
+
+<h4>Examples</h4>
+<blockquote><pre>
+&lt;fileset dir=&quot;${server.src}&quot; &gt;
+  &lt;patternset id=&quot;non.test.sources&quot; &gt;
+    &lt;include name=&quot;**/*.java&quot;/&gt;
+    &lt;exclude name=&quot;**/*Test*&quot;/&gt;
+  &lt;/patternset&gt;
+&lt;/fileset&gt;
+</pre></blockquote>
+<p>Groups all files in directory <code>${server.src}</code> that are Java
+source files and don't have the text <code>Test</code> in their
+name.</p>
+<blockquote><pre>
+&lt;fileset dir=&quot;${client.src}&quot; &gt;
+  &lt;patternset refid=&quot;non.test.sources&quot;/&gt;
+&lt;/fileset&gt;
+</pre></blockquote>
+<p>Groups all files in directory <code>${client.src}</code>, using the
+same patterns as the example above.</p>
+
+<hr>
+<p align="center">Copyright &copy; 2000,2001 Apache Software Foundation. All rights
+Reserved.</p>
+
+</body>
+</html>
+

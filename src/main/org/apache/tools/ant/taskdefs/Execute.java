@@ -428,6 +428,8 @@ public class Execute {
          */
         public Process exec(Project project, String[] cmd, String[] env) throws IOException
         {
+            project.log("Execute:CommandLauncher: " +
+                        Commandline.toString(cmd), Project.MSG_DEBUG);
             return Runtime.getRuntime().exec(cmd, env);
         }
 
@@ -469,6 +471,8 @@ public class Execute {
             for ( int i = 0; i < cmd.length; i++ ) {
                 newcmd[i] = Commandline.quoteArgument(cmd[i]);
             }
+            project.log("Execute:Java11CommandLauncher: " +
+                        Commandline.toString(newcmd), Project.MSG_DEBUG);
             return Runtime.getRuntime().exec(newcmd, env);
         }
     }
@@ -493,6 +497,8 @@ public class Execute {
             throws IOException
         {
             try {
+                project.log("Execute:Java13CommandLauncher: " +
+                            Commandline.toString(cmd), Project.MSG_DEBUG);
                 Object[] arguments = { cmd, env, workingDir };
                 return (Process)_execWithCWD.invoke(Runtime.getRuntime(), arguments);
             } 

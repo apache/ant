@@ -193,6 +193,7 @@ public class Javadoc extends Task {
     private File destDir = null;
     private String sourceFiles = null;
     private String packageNames = null;
+	private String excludePackageNames = null;
     private boolean author = true;
     private boolean version = true;
     private DocletInfo doclet = null;
@@ -260,6 +261,11 @@ public class Javadoc extends Task {
     public void setPackagenames(String src) {
         packageNames = src;
     }
+
+	public void setExcludePackageNames(String src) {
+		excludePackageNames = src;
+	}
+
     public void setOverview(File f) {
         if (!javadoc1) {
             cmd.createArgument().setValue("-overview");
@@ -722,8 +728,16 @@ public class Javadoc extends Task {
                     toExecute.createArgument().setValue(name);
                 }
             }
+
+			Vector excludePackages = new Vector();
+			if ((excludePackageNames != null) && (excludePackageNames.length() > 0)) {
+				StringTokenizer exTok = new StringTokenizer(excludePackageNames, ",", false);
+				while (exTok.hasMoreTokens()) {
+					excludePackages.addElement(exTok.nextToken().trim());
+				}
+			}
             if (packages.size() > 0) {
-                evaluatePackages(toExecute, sourcePath, packages);
+                evaluatePackages(toExecute, sourcePath, packages, excludePackages);
             }
         }
 
@@ -770,9 +784,10 @@ public class Javadoc extends Task {
      * patterns.
      */
     private void evaluatePackages(Commandline toExecute, Path sourcePath, 
-                                  Vector packages) {
+                                  Vector packages, Vector excludePackages) {
         log("Source path = " + sourcePath.toString(), Project.MSG_VERBOSE);
         log("Packages = " + packages, Project.MSG_VERBOSE);
+		log("Exclude Packages = " + excludePackages, Project.MSG_VERBOSE);
 
         Vector addedPackages = new Vector();
 
@@ -792,6 +807,17 @@ public class Javadoc extends Task {
 
             fs.createInclude().setName(pkg);
         } // while
+
+		e = excludePackages.elements();
+		while (e.hasMoreElements()) {
+			String pkg = (String)e.nextElement();
+			pkg = pkg.replace('.','/');
+			if (pkg.endsWith("*")) {
+				pkg += "*";
+			}
+
+			fs.createExclude().setName(pkg);
+		}
 
         for (int j=0; j<list.length; j++) {
             File source = project.resolveFile(list[j]);

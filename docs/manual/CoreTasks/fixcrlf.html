@@ -1,0 +1,168 @@
+<html>
+
+<head>
+<meta http-equiv="Content-Language" content="en-us">
+<title>Ant User Manual</title>
+</head>
+
+<body>
+
+<h2><a name="fixcrlf">FixCRLF</a></h2>
+<h3>Description</h3>
+<p>Adjusts a text file to local.</p>
+<p>It is possible to refine the set of files that are being adjusted. This can be
+done with the <i>includes</i>, <i>includesfile</i>, <i>excludes</i>, <i>excludesfile</i> and <i>defaultexcludes</i>
+attributes. With the <i>includes</i> or <i>includesfile</i> attribute you specify the files you want to
+have included by using patterns. The <i>exclude</i> or <i>excludesfile</i> attribute is used to specify
+the files you want to have excluded. This is also done with patterns. And
+finally with the <i>defaultexcludes</i> attribute, you can specify whether you
+want to use default exclusions or not. See the section on <a
+href="../dirtasks.html#directorybasedtasks">directory based tasks</a>, on how the
+inclusion/exclusion of files works, and how to write patterns.</p>
+<p>This task forms an implicit <a href="../CoreTypes/fileset.html">FileSet</a> and
+supports all attributes of <code>&lt;fileset&gt;</code>
+(<code>dir</code> becomes <code>srcdir</code>) as well as the nested
+<code>&lt;include&gt;</code>, <code>&lt;exclude&gt;</code> and
+<code>&lt;patternset&gt;</code> elements.</p>
+<h3>Parameters</h3>
+<table border="1" cellpadding="2" cellspacing="0">
+  <tr>
+    <td valign="top"><b>Attribute</b></td>
+    <td valign="top"><b>Description</b></td>
+    <td align="center" valign="top"><b>Required</b></td>
+  </tr>
+  <tr>
+    <td valign="top">srcDir</td>
+    <td valign="top">Where to find the files to be fixed up.</td>
+    <td valign="top" align="center">Yes</td>
+  </tr>
+  <tr>
+    <td valign="top">destDir</td>
+    <td valign="top">Where to place the corrected files.  Defaults to
+      srcDir (replacing the original file)</td>
+    <td valign="top" align="center">No</td>
+  </tr>
+  <tr>
+    <td valign="top">includes</td>
+    <td valign="top">comma separated list of patterns of files that must be
+      included. All files are included when omitted.</td>
+    <td valign="top" align="center">No</td>
+  </tr>
+  <tr>
+    <td valign="top">includesfile</td>
+    <td valign="top">the name of a file. Each line of this file is
+      taken to be an include pattern</td>
+    <td valign="top" align="center">No</td>
+  </tr>
+  <tr>
+    <td valign="top">excludes</td>
+    <td valign="top">comma separated list of patterns of files that must be
+      excluded. No files (except default excludes) are excluded when omitted.</td>
+    <td valign="top" align="center">No</td>
+  </tr>
+  <tr>
+    <td valign="top">excludesfile</td>
+    <td valign="top">the name of a file. Each line of this file is
+      taken to be an exclude pattern</td>
+    <td valign="top" align="center">No</td>
+  </tr>
+  <tr>
+    <td valign="top">defaultexcludes</td>
+    <td valign="top">indicates whether default excludes should be used or not
+      (&quot;yes&quot;/&quot;no&quot;). Default excludes are used when omitted.</td>
+    <td valign="top" align="center">No</td>
+  </tr>
+  <tr>
+    <td valign="top">cr</td>
+    <td valign="top">Specifies how carriage return (CR) characters are to
+      be handled.  Valid values for this property are:
+      <ul>
+      <li>add: ensure that there is a CR before every LF</li>
+      <li>asis: leave CR characters alone</li>
+      <li>remove: remove all CR characters</li>
+      </ul>
+      Default is based on the platform on which you are running this task.
+      For Unix platforms, the default is remove.  For DOS based systems
+      (including Windows), the default is add.
+      <p>
+      Note: Unless this property is specified as &quot;asis&quot;, extra CR characters
+      which do not precede a LF will be removed.</p>
+      </td>
+    <td valign="top" align="center">No</td>
+  </tr>
+  <tr>
+    <td valign="top">tab</td>
+    <td valign="top">Specifies how tab characters are to be handled.  Valid
+      values for this property are:
+      <ul>
+      <li>add: convert sequences of spaces which span a tab stop to tabs</li>
+      <li>asis: leave tab and space characters alone</li>
+      <li>remove: convert tabs to spaces</li>
+      </ul>
+      Default for this parameter is &quot;asis&quot;.
+      <p>
+      Note: Unless this property is specified as &quot;asis&quot;, extra spaces and
+      tabs after the last non-whitespace character on the line will be removed.</p>
+      </td>
+    <td valign="top" align="center">No</td>
+  </tr>
+  <tr>
+    <td valign="top">tablength</td>
+    <td valign="top">The number of characters a TAB stop corresponds to. 
+      Must be a positive power of 2, default for this parameter is 8.</td>
+    <td valign="top" align="center">No</td>
+  </tr>
+  <tr>
+    <td valign="top">eof</td>
+    <td valign="top">Specifies how DOS end of file (control-Z) characters are
+      to be handled.  Valid values for this property are:
+      <ul>
+      <li>add: ensure that there is an EOF character at the end of the file</li>
+      <li>asis: leave EOF characters alone</li>
+      <li>remove: remove any EOF character found at the end</li>
+      </ul>
+      Default is based on the platform on which you are running this task.
+      For Unix platforms, the default is remove.  For DOS based systems
+      (including Windows), the default is asis.
+      </td>
+    <td valign="top" align="center">No</td>
+  </tr>
+</table>
+<h3>Examples</h3>
+<pre>  &lt;fixcrlf srcdir=&quot;${src}&quot;
+       cr=&quot;remove&quot; eof=&quot;remove&quot;
+       includes=&quot;**/*.sh&quot;
+  /&gt;</pre>
+<p>Removes carriage return and eof characters from the shell scripts.  Tabs and
+spaces are left as is.</p>
+<pre>  &lt;fixcrlf srcdir=&quot;${src}&quot;
+       cr=&quot;add&quot;
+       includes=&quot;**/*.bat&quot;
+  /&gt;</pre>
+<p>Ensures that there are carriage return characters prior to evey line feed.
+Tabs and spaces are left as is.
+EOF characters are left alone if run on
+DOS systems, and are removed if run on Unix systems.</p>
+<pre>  &lt;fixcrlf srcdir=&quot;${src}&quot;
+       tabs=&quot;add&quot;
+       includes=&quot;**/Makefile&quot;
+  /&gt;</pre>
+<p>Adds or removes CR characters to match local OS conventions, and
+converts spaces to tabs when appropriate.  EOF characters are left alone if
+run on DOS systems, and are removed if run on Unix systems.
+Many versions of make require tabs prior to commands.</p>
+<pre>  &lt;fixcrlf srcdir=&quot;${src}&quot;
+       tabs=&quot;remove&quot;
+       includes=&quot;**/README*&quot;
+  /&gt;</pre>
+<p>Adds or removes CR characters to match local OS conventions, and
+converts all tabs to spaces.  EOF characters are left alone if run on
+DOS systems, and are removed if run on Unix systems.
+You never know what editor a user will use to browse README's.</p>
+<hr>
+<p align="center">Copyright &copy; 2000,2001 Apache Software Foundation. All rights
+Reserved.</p>
+
+</body>
+</html>
+

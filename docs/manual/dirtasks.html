@@ -1,0 +1,168 @@
+<html>
+
+<head>
+<meta http-equiv="Content-Language" content="en-us">
+<title>Ant User Manual</title>
+</head>
+
+<body>
+
+<h2><a name="directorybasedtasks">Directory-based Tasks</a></h2>
+<p>Some tasks use directory trees for the task they perform.
+For example, the <a
+href="CoreTasks/javac.html">javac</a> task, which works upon a directory tree
+with <code>.java</code> files.
+Sometimes it can be very useful to work on a subset of that directory tree. This
+section describes how you can select a subset of such a directory tree.</p>
+<p>Ant gives you two ways to create a subset, both of which can be used at the same
+time:</p>
+<ul>
+  <li>Only include files/directories that match at least one pattern of a set of
+    patterns.</li>
+  <li>Exclude files/directories that match at least one pattern a set of
+    patterns.</li>
+</ul>
+<p>When both inclusion and exclusion are used, only files/directories that match
+the include patterns, and don't match the exclude patterns, are used.</p>
+<p>Patterns can be specified inside the buildfile via task attributes or
+nested elements and via external files. Each line of the external file
+is taken as a pattern that is added to the list of include or exclude 
+patterns.</p>
+<h3>Patterns</h3>
+<p>As described earlier, patterns are used for the inclusion and exclusion.
+These patterns look very much like the patterns used in DOS and UNIX:</p>
+<p>'*' matches zero or more characters, '?' matches one character.</p>
+<p><b>Examples:</b></p>
+<p>
+<code>*.java</code>&nbsp;&nbsp;matches&nbsp;&nbsp;<code>.java</code>,
+<code>x.java</code> and <code>FooBar.java</code>, but
+not <code>FooBar.xml</code> (does not end with <code>.java</code>).</p>
+<p>
+<code>?.java</code>&nbsp;&nbsp;matches&nbsp;&nbsp;<code>x.java</code>,
+<code>A.java</code>, but not <code>.java</code> or <code>xyz.java</code>
+(both don't have one character before <code>.java</code>).</p>
+<p>
+Combinations of <code>*</code>'s and <code>?</code>'s are allowed.</p>
+<p>Matching is done per-directory. This means that first the first directory in
+the pattern is matched against the first directory in the path to match. Then
+the second directory is matched, and so on. For example, when we have the pattern <code>/?abc/*/*.java</code>
+and the path <code>/xabc/foobar/test.java</code>,
+the first <code>?abc</code> is matched with <code>xabc</code>,
+then <code>*</code> is matched with <code>foobar</code>,
+and finally <code>*.java</code> is matched with <code>test.java</code>.
+They all match, so the path matches the pattern.</p>
+<p>To make things a bit more flexible, we add one extra feature, which makes it
+possible to match multiple directory levels. This can be used to match a
+complete directory tree, or a file anywhere in the directory tree.
+To do this, <code>**</code>
+must be used as the name of a directory.
+When <code>**</code> is used as the name of a
+directory in the pattern, it matches zero or more directories.
+For example:
+<code>/test/**</code> matches all files/directories under <code>/test/</code>,
+such as <code>/test/x.java</code>,
+or <code>/test/foo/bar/xyz.html</code>, but not <code>/xyz.xml</code>.</p>
+<p>There is one &quot;shorthand&quot; &#150; if a pattern ends
+with <code>/</code>
+or <code>\</code>, then <code>**</code>
+is appended.
+For example, <code>mypackage/test/</code> is interpreted as if it were
+<code>mypackage/test/**</code>.</p>
+<p><b>Example patterns:</b></p>
+<table border="1" cellpadding="2" cellspacing="0">
+  <tr>
+    <td valign="top"><code>**/CVS/*</code></td>
+    <td valign="top">Matches all files in <code>CVS</code> directories that can be located
+      anywhere in the directory tree.<br>
+      Matches:
+      <pre>
+      CVS/Repository
+      org/apache/CVS/Entries
+      org/apache/jakarta/tools/ant/CVS/Entries
+      </pre>
+      But not:
+      <pre>
+      org/apache/CVS/foo/bar/Entries (<code>foo/bar/</code> part does not match)</td>
+      </pre>
+  </tr>
+  <tr>
+    <td valign="top"><code>org/apache/jakarta/**</code></td>
+    <td valign="top">Matches all files in the <code>org/apache/jakarta</code> directory tree.<br>
+      Matches:
+      <pre>
+      org/apache/jakarta/tools/ant/docs/index.html
+      org/apache/jakarta/test.xml
+      </pre>
+      But not:
+      <pre>
+      org/apache/xyz.java
+      </pre>
+      (<code>jakarta/</code> part is missing).</td>
+  </tr>
+  <tr>
+    <td valign="top"><code>org/apache/**/CVS/*</code></td>
+    <td valign="top">Matches all files in <code>CVS</code> directories
+      that are located anywhere in the directory tree under
+      <code>org/apache</code>.<br>
+      Matches:
+      <pre>
+      org/apache/CVS/Entries
+      org/apache/jakarta/tools/ant/CVS/Entries
+      </pre>
+      But not:
+      <pre>
+      org/apache/CVS/foo/bar/Entries
+      </pre>
+      (<code>foo/bar/</code> part does not match)</td>
+  </tr>
+  <tr>
+    <td valign="top"><code>**/test/**</code></td>
+    <td valign="top">Matches all files that have a <code>test</code>
+        element in their path, including <code>test</code> as a filename.</td>
+  </tr>
+</table>
+<p>When these patterns are used in inclusion and exclusion, you have a powerful
+way to select just the files you want.</p>
+
+<h3>Examples</h3>
+<pre>  
+&lt;copy todir=&quot;${dist}&quot;>
+  &lt;fileset dir=&quot;${src}&quot; 
+           includes=&quot;**/images/*&quot; 
+           excludes=&quot;**/*.gif&quot; 
+  /&gt;
+&lt;/copy&gt;</pre>
+<p>This copies all files in directories called <code>images</code> that are
+located in the directory tree defined by <code>${src}</code> to the
+destination directory defined by <code>${dist}</code>,
+but excludes all <code>*.gif</code> files from the copy.</p>
+<p> This example can also be expressed using nested elements:</p>
+<pre>
+&lt;copy todir=&quot;${dist}&quot;>
+  &lt;fileset dir=&quot;${src}&quot;/&gt;
+    &lt;include name=&quot;**/images/*&quot;/&gt;
+    &lt;exclude name=&quot;**/*.gif&quot;/&gt;
+  &lt;/fileset&gt;
+&lt;/copy&gt;
+</pre>
+
+<h3>Default Excludes</h3>
+<p>There are a set of definitions that are excluded by default from all directory-based tasks.
+They are:</p>
+<pre>
+     **/*~
+     **/#*#
+     **/%*%
+     **/CVS
+     **/CVS/**
+     **/.cvsignore
+</pre>
+<p>If you do not want these default excludes applied, you may disable them with the 
+<code>defaultexcludes=&quot;no&quot;</code> attribute.</p>
+<hr>
+<p align="center">Copyright &copy; 2000,2001 Apache Software Foundation. All rights
+Reserved.</p>
+
+</body>
+</html>
+

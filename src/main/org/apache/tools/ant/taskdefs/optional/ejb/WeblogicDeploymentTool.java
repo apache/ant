@@ -112,10 +112,10 @@ public class WeblogicDeploymentTool extends GenericDeploymentTool {
     /**
      * Indicates if the old CMP location convention is to be used.
      */
-    private boolean oldCMP = true;
+    private boolean newCMP = false;
 
     /** The classpath to the weblogic classes. */
-    private Path wlClasspath;
+    private Path wlClasspath = null;
 
     /**
      * Get the classpath to the weblogic classpaths
@@ -125,6 +125,10 @@ public class WeblogicDeploymentTool extends GenericDeploymentTool {
             wlClasspath = new Path(getTask().getProject());
         }
         return wlClasspath.createPath();
+    }
+    
+    public void setWLClasspath(Path wlClasspath) {
+        this.wlClasspath = wlClasspath;
     }
 
     /**
@@ -204,7 +208,15 @@ public class WeblogicDeploymentTool extends GenericDeploymentTool {
     }
 
     /**
-     * Set the value of the oldCMP scheme. The oldCMP scheme locates the 
+     * Set the value of the oldCMP scheme. This is an antonym for
+     * newCMP
+     */
+    public void setOldCMP(boolean oldCMP) {
+        this.newCMP = !oldCMP;
+    }
+    
+    /**
+     * Set the value of the newCMP scheme. The old CMP scheme locates the 
      * weblogic CMP descriptor based on the naming convention where the 
      * weblogic CMP file is expected to be named with the bean name as the prefix.
      * 
@@ -212,10 +224,9 @@ public class WeblogicDeploymentTool extends GenericDeploymentTool {
      * actually used in the main weblogic EJB descriptor. Also, descriptors which 
      * contain multiple CMP references could not be used.
      *
-     * The old scheme is currently the default, but is also deprecated.
      */
-    public void setOldCMP(boolean oldCMP) {
-        this.oldCMP = oldCMP;
+    public void setNewCMP(boolean newCMP) {
+        this.newCMP = newCMP;
     }
     
 
@@ -237,7 +248,7 @@ public class WeblogicDeploymentTool extends GenericDeploymentTool {
         return handler;                                    
     }
 
-    protected DescriptorHandler getWeblogicDescriptorHandler(File srcDir) {
+    protected DescriptorHandler getWeblogicDescriptorHandler(final File srcDir) {
         DescriptorHandler handler = 
             new DescriptorHandler(srcDir) {        
                 protected void processElement() {
@@ -247,7 +258,8 @@ public class WeblogicDeploymentTool extends GenericDeploymentTool {
                         //trim the META_INF\ off of the file name
                         String fileName = fileNameWithMETA.substring(META_DIR.length(), 
                                                                      fileNameWithMETA.length() );
-                        File descriptorFile = new File(getConfig().descriptorDir, fileName);
+                        File descriptorFile = new File(srcDir, fileName);
+                        
                         ejbFiles.put(fileNameWithMETA, descriptorFile);
                     }
                 }
@@ -255,6 +267,11 @@ public class WeblogicDeploymentTool extends GenericDeploymentTool {
 
         handler.registerDTD(PUBLICID_WEBLOGIC_EJB, 
                             weblogicDTD == null ? DEFAULT_WL_DTD_LOCATION : weblogicDTD);
+                            
+        for (Iterator i = getConfig().dtdLocations.iterator(); i.hasNext();) {
+            EjbJar.DTDLocation dtdLocation = (EjbJar.DTDLocation)i.next();
+            handler.registerDTD(dtdLocation.getPublicId(), dtdLocation.getLocation());
+        }
         return handler;                                    
     }
 
@@ -277,9 +294,9 @@ public class WeblogicDeploymentTool extends GenericDeploymentTool {
             return;
         }
 
-        if (oldCMP) {
+        if (!newCMP) {
             log("The old method for locating CMP files has been DEPRECATED.", Project.MSG_VERBOSE);
-            log("Please adjust your weblogic descriptor and set oldCMP=\"false\" " +
+            log("Please adjust your weblogic descriptor and set newCMP=\"true\" " +
                 "to use the new CMP descriptor inclusion mechanism. ", Project.MSG_VERBOSE);
             // The the weblogic cmp deployment descriptor
             File weblogicCMPDD = new File(getConfig().descriptorDir, ddPrefix + WL_CMP_DD);

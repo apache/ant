@@ -130,7 +130,7 @@ public class VAJLoadProjects extends Task {
     /**
      * Add a project description entry on the project list.
      */
-    public VAJProjectDescription createProject() {
+    public VAJProjectDescription createVAJProject() {
         VAJProjectDescription d = new VAJProjectDescription();
         projectDescriptions.addElement(d);
         return d;
