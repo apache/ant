@@ -6,8 +6,15 @@ fi
 
 # Cygwin support.
 if [ "$OSTYPE" == "cygwin32" ] || [ "$OSTYPE" = "cygwin" ]; then
-  ANT_HOME=`cygpath --path --unix $ANT_HOME`
-  JAVA_HOME=`cygpath --path --unix $JAVA_HOME`
+
+  if [ ! "$ANT_HOME" = "" ]; then
+    ANT_HOME=`cygpath --path --unix $ANT_HOME`
+  fi
+
+  if [ ! "$JAVA_HOME" = "" ]; then
+    JAVA_HOME=`cygpath --path --unix $JAVA_HOME`
+  fi
+
 fi
 
 if [ "$ANT_HOME" = "" ] ; then
