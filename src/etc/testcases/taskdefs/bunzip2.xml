@@ -1,0 +1,13 @@
+<?xml version="1.0"?>
+
+<project basedir="." default="cleanup">
+
+  <target name="realTest">
+    <bunzip2 src="expected/asf-logo.gif.bz2" dest="asf-logo.gif" />
+  </target>
+
+  <target name="cleanup">
+    <delete file="asf-logo.gif" />
+  </target>
+
+</project>

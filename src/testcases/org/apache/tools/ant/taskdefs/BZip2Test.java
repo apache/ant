@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2000 The Apache Software Foundation.  All rights
+ * Copyright (c) 2001 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -54,36 +54,33 @@
 
 package org.apache.tools.ant.taskdefs;
 
-import java.io.File;
 import org.apache.tools.ant.BuildFileTest;
- 
+import org.apache.tools.ant.util.FileUtils;
+
+import java.io.IOException;
+
 /**
- * @author Nico Seessle <nico@seessle.de> 
+ * @author <a href="mailto:stefan.bodewig@epost.de">Stefan Bodewig</a>
+ * @version $Revision$
  */
-public class GzipTest extends BuildFileTest { 
-    
-    public GzipTest(String name) { 
+public class BZip2Test extends BuildFileTest {
+
+    public BZip2Test(String name) {
         super(name);
-    }    
-    
+    }
+
     public void setUp() { 
-        configureProject("src/etc/testcases/taskdefs/gzip.xml");
+        configureProject("src/etc/testcases/taskdefs/bzip2.xml");
     }
 
-    public void test1() { 
-        expectBuildException("test1", "required argument missing");
+    public void tearDown() {
+        executeTarget("cleanup");
     }
 
-    public void test2() { 
-        expectBuildException("test2", "required argument missing");
+    public void testRealTest() throws java.io.IOException {
+        FileUtils fileUtils = FileUtils.newFileUtils();
+        executeTarget("realTest");
+        assertTrue(fileUtils.contentEquals(project.resolveFile("expected/asf-logo.gif.bz2"),
+                                           project.resolveFile("asf-logo.gif.bz2")));
     }
-
-    public void test3() { 
-        expectBuildException("test3", "required argument missing");
-    }
-
-    public void test4() { 
-        expectBuildException("test4", "attribute zipfile invalid");
-    }
-
 }

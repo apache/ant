@@ -18,8 +18,12 @@
     <gzip src="gzip.xml" zipfile=""/>
   </target>
 
-  <target name="test5">
-    <gzip src="gzip.xml" zipfile="gzip.tmp"/>
+  <target name="realTest">
+    <gzip src="../asf-logo.gif" zipfile="asf-logo.gif.gz" />
+  </target>
+
+  <target name="cleanup">
+    <delete file="asf-logo.gif.gz" />
   </target>
 
 </project>

@@ -826,10 +826,6 @@
           <!-- these tests need to be localised before being ran???? -->
           <exclude name="org/apache/tools/ant/taskdefs/optional/PvcsTest.java" />
 
-          <!-- these depend on order -->
-          <exclude name="org/apache/tools/ant/taskdefs/GUnzipTest.java" />
-          <exclude name="org/apache/tools/ant/taskdefs/GzipTest.java" />
-
           <!-- only run these tests if their required libraries are installed -->
           <exclude name="org/apache/tools/ant/taskdefs/optional/ANTLRTest.java" 
                    unless="antlr.present" />
@@ -875,8 +871,6 @@
         </fileset>
       </batchtest>
 
-      <test name="org.apache.tools.ant.taskdefs.GzipTest" />
-      <test name="org.apache.tools.ant.taskdefs.GUnzipTest" />
     </junit>
 
     <!-- clean up again -->

@@ -55,9 +55,12 @@ package org.apache.tools.ant.taskdefs;
  
 import java.io.File;
 import org.apache.tools.ant.BuildFileTest;
+import org.apache.tools.ant.util.FileUtils;
 
 /**
  * @author Nico Seessle <nico@seessle.de> 
+ * @author <a href="mailto:stefan.bodewig@epost.de">Stefan Bodewig</a>
+ * @version $Revision$
  */
 public class GUnzipTest extends BuildFileTest { 
     
@@ -69,6 +72,10 @@ public class GUnzipTest extends BuildFileTest {
         configureProject("src/etc/testcases/taskdefs/gunzip.xml");
     }
 
+    public void tearDown() {
+        executeTarget("cleanup");
+    }
+
     public void test1() { 
         expectBuildException("test1", "required argument missing");
     }
@@ -77,16 +84,18 @@ public class GUnzipTest extends BuildFileTest {
         expectBuildException("test2", "attribute src invalid");
     }
 
-    public void test3() { 
-        executeTarget("test3");
-        java.io.File f = new File(getProjectDir(), "gzip.tmp2");
-        if (!f.exists()) { 
-            fail("gzip failed");
-        } else {
-            f.delete();
-            f = new File(getProjectDir(), "gzip.tmp");
-            if (f.exists()) f.delete();
-        }
+    public void testRealTest() throws java.io.IOException {
+        FileUtils fileUtils = FileUtils.newFileUtils();
+        executeTarget("realTest");
+        assertTrue(fileUtils.contentEquals(project.resolveFile("../asf-logo.gif"),
+                                           project.resolveFile("asf-logo.gif")));
+    }
+    
+    public void testTestGzipTask() throws java.io.IOException {
+        FileUtils fileUtils = FileUtils.newFileUtils();
+        executeTarget("testGzipTask");
+        assertTrue(fileUtils.contentEquals(project.resolveFile("../asf-logo.gif"),
+                                           project.resolveFile("asf-logo.gif")));
     }
     
 }

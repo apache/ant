@@ -10,9 +10,18 @@
     <gunzip src=""/>
   </target>
 
-  <target name="test3">
-    <gunzip src="gzip.tmp"
-            dest="gzip.tmp2"/>
+  <target name="cleanup">
+    <delete file="asf-logo.gif" />
+  </target>
+
+  <target name="testGzipTask">
+    <ant antfile="gzip.xml" target="realTest" />
+    <gunzip src="asf-logo.gif.gz" dest="asf-logo.gif" />
+    <ant antfile="gzip.xml" target="cleanup" />
+  </target>
+
+  <target name="realTest">
+    <gunzip src="expected/asf-logo.gif.gz" dest="asf-logo.gif" />
   </target>
 
 </project>
