@@ -757,6 +757,7 @@ public class ProjectHelper2 extends ProjectHelper {
             Project project = context.getProject();
             Target target = new Target();
             target.setProject(project);
+            target.setLocation(new Location(context.getLocator()));
             context.addTarget(target);
 
             for (int i = 0; i < attrs.getLength(); i++) {
@@ -805,10 +806,7 @@ public class ProjectHelper2 extends ProjectHelper {
                 if (!context.isIgnoringProjectTag()) {
                     // not in an import'ed file
                     throw new BuildException(
-                        "Duplicate target '" + name + "'",
-                        new Location(context.getLocator().getSystemId(),
-                                     context.getLocator().getLineNumber(),
-                                     context.getLocator().getColumnNumber()));
+                        "Duplicate target '" + name + "'", target.getLocation());
                 }
                 // Alter the name.
                 if (context.getCurrentProjectName() != null) {

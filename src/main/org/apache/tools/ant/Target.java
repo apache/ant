@@ -42,6 +42,8 @@ public class Target implements TaskContainer {
     private List dependencies = null;
     /** Children of this target (tasks and data types). */
     private List children = new ArrayList();
+    /** Since Ant 1.6.2 */
+    private Location location = Location.UNKNOWN_LOCATION;
 
     /** Project this target belongs to. */
     private Project project;
@@ -71,6 +73,24 @@ public class Target implements TaskContainer {
      */
     public Project getProject() {
         return project;
+    }
+
+    /**
+     * Sets the location of this target's definition.
+     *
+     * @param location   <CODE>Location</CODE>
+     */
+    public void setLocation(Location location) {
+        this.location = location;
+    }
+
+    /**
+     * Get the location of this target's definition.
+     *
+     * @return <CODE>Location</CODE>
+     */
+    public Location getLocation() {
+        return location;
     }
 
     /**

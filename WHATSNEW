@@ -157,6 +157,8 @@ Other changes:
 
 * New attribute "negate" on <propertyset> to invert selection criteria.
 
+* Target now supports a Location member.  Bugzilla Report 28599.
+
 Changes from Ant 1.6.0 to Ant 1.6.1
 =============================================
 

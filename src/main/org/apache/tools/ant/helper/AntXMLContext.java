@@ -29,6 +29,7 @@ import org.xml.sax.Attributes;
 
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.Target;
+import org.apache.tools.ant.Location;
 import org.apache.tools.ant.RuntimeConfigurable;
 
 
@@ -109,6 +110,7 @@ public class AntXMLContext {
     public void setBuildFile(File buildFile) {
         this.buildFile = buildFile;
         this.buildFileParent = new File(buildFile.getParent());
+        implicitTarget.setLocation(new Location(buildFile.getAbsolutePath()));
     }
 
     /**
