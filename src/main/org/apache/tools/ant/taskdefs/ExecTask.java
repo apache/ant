@@ -92,6 +92,7 @@ public class ExecTask extends Task {
     private String executable;
     private boolean resolveExecutable = false;
     private boolean spawn = false;
+    private boolean incompatibleWithSpawn = false;
 
     private Redirector redirector = new Redirector(this);
 
@@ -120,6 +121,7 @@ public class ExecTask extends Task {
      */
     public void setTimeout(Long value) {
         timeout = value;
+        incompatibleWithSpawn = true;
     }
 
     /**
@@ -133,6 +135,7 @@ public class ExecTask extends Task {
         } else {
             setTimeout(new Long(value.intValue()));
         }
+        incompatibleWithSpawn = true;
     }
 
     /**
@@ -180,6 +183,7 @@ public class ExecTask extends Task {
      */
     public void setOutput(File out) {
         redirector.setOutput(out);
+        incompatibleWithSpawn = true;
     }
 
     /**
@@ -189,6 +193,7 @@ public class ExecTask extends Task {
      */
     public void setInput(File input) {
         redirector.setInput(input);
+        incompatibleWithSpawn = true;
     }
 
     /**
@@ -198,6 +203,7 @@ public class ExecTask extends Task {
      */
     public void setInputString(String inputString) {
         redirector.setInputString(inputString);
+        incompatibleWithSpawn = true;
     }
 
     /**
@@ -209,6 +215,7 @@ public class ExecTask extends Task {
      */
     public void setLogError(boolean logError) {
         redirector.setLogError(logError);
+        incompatibleWithSpawn = true;
     }
 
     /**
@@ -220,6 +227,7 @@ public class ExecTask extends Task {
      */
     public void setError(File error) {
         redirector.setError(error);
+        incompatibleWithSpawn = true;
     }
 
     /**
@@ -230,6 +238,7 @@ public class ExecTask extends Task {
      */
     public void setOutputproperty(String outputProp) {
         redirector.setOutputProperty(outputProp);
+        incompatibleWithSpawn = true;
     }
 
     /**
@@ -242,6 +251,7 @@ public class ExecTask extends Task {
      */
     public void setErrorProperty(String errorProperty) {
         redirector.setErrorProperty(errorProperty);
+        incompatibleWithSpawn = true;
     }
 
     /**
@@ -251,6 +261,7 @@ public class ExecTask extends Task {
      */
     public void setFailonerror(boolean fail) {
         failOnError = fail;
+        incompatibleWithSpawn = true;
     }
 
     /**
@@ -302,6 +313,7 @@ public class ExecTask extends Task {
      */
     public void setResultProperty(String resultProperty) {
         this.resultProperty = resultProperty;
+        incompatibleWithSpawn = true;
     }
 
     /**
@@ -327,6 +339,7 @@ public class ExecTask extends Task {
      */
     public void setFailIfExecutionFails(boolean flag) {
         failIfExecFails = flag;
+        incompatibleWithSpawn = true;
     }
 
     /**
@@ -339,6 +352,7 @@ public class ExecTask extends Task {
      */
     public void setAppend(boolean append) {
         redirector.setAppend(append);
+        incompatibleWithSpawn = true;
     }
 
 
@@ -412,6 +426,13 @@ public class ExecTask extends Task {
         if (dir != null && !dir.isDirectory()) {
             throw new BuildException("The directory you specified is not a "
                                      + "directory");
+        }
+        if (spawn && incompatibleWithSpawn) {
+            getProject().log("spawn does not allow attributes related to input, "
+            + "output, error, result", Project.MSG_ERR);
+            getProject().log("spawn does not also not allow timeout", Project.MSG_ERR);
+            throw new BuildException("You have used an attribute which is "
+            + "not compatible with spawn");
         }
     }
 
