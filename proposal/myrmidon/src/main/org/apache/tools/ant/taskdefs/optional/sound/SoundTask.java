@@ -45,11 +45,13 @@ public class SoundTask
     }
 
     public void execute()
+        throws TaskException
     {
         final AntSoundPlayer soundPlayer = new AntSoundPlayer();
         if( null == m_success )
         {
-            getLogger().warn( "No nested success element found." );
+            final String message = "No nested success element found.";
+            getLogger().warn( message );
         }
         else
         {
@@ -59,7 +61,8 @@ public class SoundTask
 
         if( null == m_fail )
         {
-            getLogger().warn( "No nested failure element found." );
+            final String message = "No nested failure element found.";
+            getLogger().warn( message );
         }
         else
         {
@@ -72,10 +75,9 @@ public class SoundTask
 
     /**
      * Gets the location of the file to get the audio.
-     *
-     * @return The Source value
      */
     private File getRandomSource( final BuildAlert alert )
+        throws TaskException
     {
         final File source = alert.getSource();
         // Check if source is a directory
@@ -96,22 +98,25 @@ public class SoundTask
                 }
                 if( files.size() < 1 )
                 {
-                    throw new TaskException( "No files found in directory " + source );
+                    final String message = "No files found in directory " + source;
+                    throw new TaskException( message );
                 }
                 final int numfiles = files.size();
                 // get a random number between 0 and the number of files
                 final Random random = new Random();
                 final int x = random.nextInt( numfiles );
                 // set the source to the file at that location
-                source = (File)files.get( x );
+                return (File)files.get( x );
+            }
+            else
+            {
+                return null;
             }
         }
         else
         {
             getLogger().warn( source + ": invalid path." );
-            source = null;
+            return null;
         }
-        return source;
     }
 }
-
