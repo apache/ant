@@ -17,8 +17,6 @@ import org.apache.avalon.framework.ExceptionUtil;
 public final class ClassicProjectListener
     extends AbstractProjectListener
 {
-    private String m_prefix;
-
     /**
      * Notify listener of targetStarted event.
      *

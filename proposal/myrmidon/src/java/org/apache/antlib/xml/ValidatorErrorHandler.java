@@ -26,7 +26,6 @@ final class ValidatorErrorHandler
     implements ErrorHandler
 {
     private File m_file;
-    private String m_lastErrorMessage;
     private boolean m_failed;
     private final boolean m_warn;
 

@@ -56,17 +56,19 @@ public class AspectAwareExecutor
         }
         catch( final TaskException te )
         {
-            if( false == getAspectManager().error( te ) )
+            final boolean isError = getAspectManager().error( te );
+            if( !isError )
             {
                 throw te;
             }
         }
     }
 
-    private void executeTask( Configuration taskModel, final ExecutionFrame frame )
+    private void executeTask( final Configuration model,
+                              final ExecutionFrame frame )
         throws TaskException
     {
-        taskModel = getAspectManager().preCreate( taskModel );
+        Configuration taskModel = getAspectManager().preCreate( model );
         taskModel = prepareAspects( taskModel );
 
         debug( "creating.notice" );
@@ -245,7 +247,6 @@ public class AspectAwareExecutor
             else
             {
                 final String namespace = name.substring( 0, index );
-                final String localName = name.substring( index + 1 );
                 final ArrayList elementSet = getElements( namespace, map );
                 elementSet.add( elements[ i ] );
             }

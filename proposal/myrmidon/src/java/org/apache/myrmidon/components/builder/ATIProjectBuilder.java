@@ -37,7 +37,6 @@ public class ATIProjectBuilder
         ResourceManager.getPackageResources( ATIProjectBuilder.class );
 
     private Parameters m_parameters;
-    private URL m_systemID;
 
     public void parameterize( final Parameters parameters )
     {
