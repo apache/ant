@@ -63,7 +63,7 @@ import java.net.*;
  * @author costin@dnt.ro
  */
 public class Echo extends Task {
-    private String message; // required
+    private String message = ""; // required
     
     /**
      * Does the work.
@@ -81,5 +81,12 @@ public class Echo extends Task {
      */
     public void setMessage(String msg) {
 	this.message = msg;
+    }
+
+    /**
+     * Set a multiline message.
+     */
+    public void addText(String msg) {
+        message += msg;
     }
 }
