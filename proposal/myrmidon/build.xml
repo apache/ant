@@ -235,9 +235,7 @@ Legal:
       <exclude name="${optional.package}/ejb/IPlanet*.java" unless="ejbjar.support" />
       <exclude name="${optional.package}/Javah.java" unless="jdk1.2+" />
       <exclude name="${optional.package}/junit/*" unless="junit.present" />
-      <exclude name="${optional.package}/net/MimeMail.java" unless="javamail.complete" />
-      <exclude name="${optional.package}/net/FTP.java" unless="netcomp.present" />
-      <exclude name="${optional.package}/net/TelnetTask.java" unless="netcomp.present" />
+      <exclude name="${optional.package}/net/**.java" unless="netcomp.present" />
       <exclude name="${optional.package}/scm/AntStarTeam*.java" unless="starteam.present" />
       <exclude name="${optional.package}/ANTLR.java" unless="antlr.present" />
       <exclude name="${optional.package}/ide/VAJ*.java" unless="vaj.present" />
@@ -477,5 +475,5 @@ Legal:
                 destinationfile="builtin-ant-roles.xml"/>
     </xdoclet>
   </target>
-  
+
 </project>
