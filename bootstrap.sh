@@ -109,7 +109,7 @@ mkdir -p bin
 
 echo ... Compiling Ant Classes
 
-"${JAVAC}" -d ${CLASSDIR} ${TOOLS}/bzip2/*.java ${TOOLS}/tar/*.java ${TOOLS}/zip/*.java \
+"${JAVAC}" $BOOTJAVAC_OPTS -d ${CLASSDIR} ${TOOLS}/bzip2/*.java ${TOOLS}/tar/*.java ${TOOLS}/zip/*.java \
     ${TOOLS}/ant/util/regexp/RegexpMatcher.java \
     ${TOOLS}/ant/util/regexp/RegexpMatcherFactory.java \
     ${TOOLS}/ant/util/*.java ${TOOLS}/ant/types/*.java \
@@ -133,7 +133,7 @@ chmod +x bin/antRun
 
 echo ... Building Ant Distribution
 
-"${JAVACMD}" -classpath "${CLASSPATH}" -Dant.home=. org.apache.tools.ant.Main -emacs "$@" bootstrap
+"${JAVACMD}" -classpath "${CLASSPATH}" -Dant.home=. $ANT_OPTS org.apache.tools.ant.Main -emacs "$@" bootstrap
 ret=$?
 if [ $ret != 0 ]; then  
   echo ... Failed Building Ant Distribution !
