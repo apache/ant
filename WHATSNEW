@@ -27,10 +27,6 @@ Fixed bugs:
 * Translate task does not remove tokens when a key is not found.
   It logs a verbose message.  Bugzilla Report 13936.
 
-* Wrapper scripts did not detect WINNT value of dynamic OS environment
-  variable when logged into workstations using Novell authentication.
-  Bugzilla Report 30366.
-
 * DependScanner.getResource() always returned nonexistent resources,
   even when the resource actually existed.  Bugzilla Report 30558.
 
@@ -271,6 +267,10 @@ Fixed bugs:
 
 * oata.types.Description.getDescription(Project) would throw a
   NullPointerException when the "ant.targets" reference was unset.
+
+* Wrapper scripts did not detect WINNT value of dynamic OS environment
+  variable when logged into workstations using Novell authentication.
+  Bugzilla Report 30366.
 
 Changes from Ant 1.6.1 to Ant 1.6.2
 ===================================
