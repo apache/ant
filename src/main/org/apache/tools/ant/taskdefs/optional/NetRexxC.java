@@ -518,9 +518,8 @@ public class NetRexxC extends MatchingTask {
 
 
     /**
-     * Whether the task should suppress the "FooException is in SIGNALS list
-     * but is not signalled within the method", which is sometimes rather
-     * useless. The warning is logged as verbose message, though.
+     * Tells whether we should filter out any deprecation-messages
+     * of the compiler out.
      */
     public void setSuppressDeprecation(boolean suppressDeprecation) {
         this.suppressDeprecation = suppressDeprecation;
