@@ -1,0 +1,107 @@
+<html>
+
+<head>
+<meta http-equiv="Content-Language" content="en-us">
+<title>Changelog Task</title>
+</head>
+
+<body>
+
+<h2><a name="changelog">Changelog</a></h2>
+<h3>Description</h3>
+<p>Generates an XML report of the changes recorded in a
+<a href="http://www.cvshome.org/" target="_top">CVS</a> repository. </p>
+<h3>Parameters</h3>
+<table border="1" cellpadding="2" cellspacing="0">
+  <tr>
+    <td valign="top"><b>Attribute</b></td>
+    <td valign="top"><b>Description</b></td>
+    <td align="center" valign="top"><b>Required</b></td>
+  </tr>
+  <tr>
+    <td valign="top">basedir</td>
+    <td valign="top">the directory from which to run &quot;cvs log&quot;.</td>
+    <td align="center" valign="top">Yes</td>
+  </tr>
+  <tr>
+    <td valign="top">destfile</td>
+    <td valign="top">the file in which to write the changelog.</td>
+    <td align="center" valign="top">Yes</td>
+  </tr>
+  <tr>
+    <td valign="top">start</td>
+    <td valign="top">the earliest date of changes that are to be included in report.</td>
+    <td align="center" valign="top">No</td>
+  </tr>
+  <tr>
+    <td valign="top">end</td>
+    <td valign="top">the latest date of changes that are to be included in report.</td>
+    <td align="center" valign="top">No</td>
+  </tr>
+</table>
+
+<h4><a name="user">user</a></h4>
+<p>The changelog task all allows a user element. It maps between a usernid
+as it appears on the cvs server and a display name. Any time the userid
+has made a change in the repository, the author tag in report will use
+the supplied displayname rather than the userid..</p>
+
+<table border="1" cellpadding="2" cellspacing="0">
+  <tr>
+    <td valign="top"><b>Attribute</b></td>
+    <td valign="top"><b>Description</b></td>
+    <td align="center" valign="top"><b>Required</b></td>
+  </tr>
+  <tr>
+    <td valign="top">displayname</td>
+    <td valign="top">The name to be displayed in CVS changelog.</td>
+    <td valign="top" align="center">Yes</td>
+  </tr>
+  <tr>
+    <td valign="top">userid</td>
+    <td valign="top">The userid of person as they exist on the CVS server.</td>
+    <td valign="top" align="center">Yes</td>
+  </tr>
+</table>
+
+
+<h3>Examples</h3>
+<pre>  &lt;changelog basedir=&quot;dve/network&quot;
+             destfile=&quot;changelog.xml&quot;
+  /&gt;</pre>
+
+<p>Generates a changelog for the dve/network directory including all changes that
+ever occured on repository. It writes these changes into the file &quot;changelog.xml&quot;.</p>
+
+<pre>  &lt;changelog basedir=&quot;dve/network&quot;
+             destfile=&quot;changelog.xml&quot;
+             start=&quot;20 Feb 2002&quot;
+             end=&quot;20 Mar 2002&quot;
+  /&gt;</pre>
+
+<p>Generates a changelog for the dve/network directory for all the changes that occured
+between the dates 20th of Feb 2002 and 20th of Mar 2002. It writes these changes into the file &quot;changelog.xml&quot;.</p>
+
+<pre>  &lt;changelog basedir=&quot;dve/network&quot;
+             destfile=&quot;changelog.xml&quot;
+             start=&quot;20 Feb 2002&quot;
+  /&gt;</pre>
+
+<p>Generates a changelog for the dve/network directory for all the changes that occured
+after the 20th of Feb 2002. It writes these changes into the file &quot;changelog.xml&quot;.</p>
+
+<pre>  &lt;changelog basedir=&quot;dve/network&quot;
+             destfile=&quot;changelog.xml&quot;
+       &lt;user displayname=&quot;Peter Donald&quot; userid=&quot;donaldp&quot;/&gt;
+  /&gt;</pre>
+
+<p>Generates a changelog for the dve/network directory for all the changes that
+ever occured. It will also specify the author name as &quot;Peter Donald&quot;
+any time it encounters the username &quot;donaldp&quot; in the changes.</p>
+
+<hr><p align="center">Copyright &copy; 2001 Apache Software Foundation. All rights
+Reserved.</p>
+
+</body>
+</html>
+
