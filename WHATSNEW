@@ -78,7 +78,7 @@ Other changes:
 
 * Shipped XML parser is now Xerces-J 2.6.2.
 
-* Added nested file element to fileset.
+* Added nested file element to filelist.
 
 Changes from Ant 1.6.0 to Ant 1.6.1
 =============================================
