@@ -70,9 +70,14 @@ public class Copyfile extends Task {
     private File srcFile;
     private File destFile;
     private boolean filtering = false;
-
+    private boolean forceOverwrite = false;
+ 
     public void setSrc(String src) {
         srcFile = project.resolveFile(src);
+    }
+
+    public void setForceoverwrite(String force) {
+        forceOverwrite = Project.toBoolean(force);
     }
 
     public void setDest(String dest) {
@@ -84,9 +89,9 @@ public class Copyfile extends Task {
     }
 
     public void execute() throws BuildException {
-        if (srcFile.lastModified() > destFile.lastModified()) {
+        if (forceOverwrite || srcFile.lastModified() > destFile.lastModified()) {
             try {
-                project.copyFile(srcFile, destFile, filtering);
+                project.copyFile(srcFile, destFile, filtering, forceOverwrite);
             } catch (IOException ioe) {
                 String msg = "Error copying file: " + srcFile.getAbsolutePath()
                     + " due to " + ioe.getMessage();
