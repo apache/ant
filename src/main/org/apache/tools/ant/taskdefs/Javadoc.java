@@ -79,9 +79,6 @@ import java.util.*;
 
 public class Javadoc extends Exec {
 
-    private static final String JAVADOC1 = "sun.tools.javadoc.Main";
-    private static final String JAVADOC2 = "com.sun.tools.javadoc.Main";
-    
     private String sourcePath = null;
     private File destDir = null;
     private File overviewFile = null;
@@ -261,9 +258,9 @@ public class Javadoc extends Exec {
                 argList.addElement("-sourcepath");
                 argList.addElement(sourcePath);
             }
-        } else { 
+        } else {
             argList.addElement("-classpath");
-            argList.addElement(sourcePath + 
+            argList.addElement(sourcePath +
                 System.getProperty("path.separator") + classpath);
         }
 
@@ -411,14 +408,8 @@ public class Javadoc extends Exec {
         project.log("Javadoc execution", project.MSG_INFO);
 
         StringBuffer b = new StringBuffer();
-        b.append("java ");
-        if (javadoc1) {
-            b.append(JAVADOC1);
-        } else {
-            b.append(JAVADOC2);
-        }
-        b.append(" ");
-        
+        b.append("javadoc ");
+
         Enumeration e = argList.elements();
         while (e.hasMoreElements()) {
             String arg = (String) e.nextElement();
@@ -431,7 +422,7 @@ public class Javadoc extends Exec {
             }
             if (e.hasMoreElements()) b.append(" ");
         }
-        
+
         run(b.toString());
     }
 
@@ -554,10 +545,10 @@ public class Javadoc extends Exec {
     }
 
     /**
-     * This is a java comment and string stripper reader that filters 
+     * This is a java comment and string stripper reader that filters
      * these lexical tokens out for purposes of simple Java parsing.
      * (if you have more complex Java parsing needs, use a real lexer).
-     * Since this class heavily relies on the single char read function, 
+     * Since this class heavily relies on the single char read function,
      * you are reccomended to make it work on top of a buffered reader.
      */
     class JavaReader extends FilterReader {
