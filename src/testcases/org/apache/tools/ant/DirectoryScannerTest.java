@@ -227,7 +227,7 @@ public class DirectoryScannerTest extends BuildFileTest {
         DirectoryScanner ds = new DirectoryScanner();
         ds.setBasedir(new File(getProject().getBaseDir(), "tmp"));
         ds.setIncludes(new String[] {
-            "alpha/beta/gamma/gamma.XML",
+            "alpha/beta/gamma/gamma.xml",
             "alpha/beta/gamma/GAMMA.XML"
         });
         ds.setCaseSensitive(false);
