@@ -380,6 +380,11 @@ public class Javac extends MatchingTask
         return compileClasspath;
     }
 
+    protected File getBaseDir()
+    {
+        return getBaseDirectory();
+    }
+
     /**
      * Get the additional implementation specific command line arguments.
      *
@@ -622,7 +627,7 @@ public class Javac extends MatchingTask
     public boolean isForkedJavac()
     {
         return !"false".equals( fork ) ||
-            "extJavac".equals( getProject().getProperty( "build.compiler" ) );
+            "extJavac".equals( getProperty( "build.compiler" ) );
     }
 
     /**
@@ -846,13 +851,13 @@ public class Javac extends MatchingTask
 
     private String determineCompiler()
     {
-        String compiler = getProject().getProperty( "build.compiler" );
+        Object compiler = getProperty( "build.compiler" );
 
         if( !"false".equals( fork ) )
         {
             if( compiler != null )
             {
-                if( isJdkCompiler( compiler ) )
+                if( isJdkCompiler( compiler.toString() ) )
                 {
                     final String message = "Since fork is true, ignoring build.compiler setting.";
                     getLogger().warn( message );
@@ -880,7 +885,7 @@ public class Javac extends MatchingTask
                 compiler = "classic";
             }
         }
-        return compiler;
+        return compiler.toString();
     }
 
     /**
