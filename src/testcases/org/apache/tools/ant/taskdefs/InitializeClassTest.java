@@ -89,7 +89,7 @@ public class InitializeClassTest extends BuildFileTest {
         System.setOut(ps);
         newps.close();
         FileUtils fu = FileUtils.newFileUtils();
-        assertTrue(fu.contentEquals(f1, f2));
+        assertTrue("Forked - non-forked mismatch", fu.contentEquals(f1, f2));
     }
 
     public void tearDown() {

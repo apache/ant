@@ -80,8 +80,9 @@ public class BZip2Test extends BuildFileTest {
     public void testRealTest() throws java.io.IOException {
         FileUtils fileUtils = FileUtils.newFileUtils();
         executeTarget("realTest");
-        assertTrue(fileUtils.contentEquals(project.resolveFile("expected/asf-logo-huge.tar.bz2"),
-                                           project.resolveFile("asf-logo-huge.tar.bz2")));
+        assertTrue("File content mismatch",
+            fileUtils.contentEquals(project.resolveFile("expected/asf-logo-huge.tar.bz2"),
+                                    project.resolveFile("asf-logo-huge.tar.bz2")));
     }
 
     public void testDateCheck(){
