@@ -5,78 +5,77 @@
 <xsl:template match="testsuites">
 	<HTML>
 		<HEAD>
-		<style type="text/css">
-		BODY {
-			font:normal 68% verdana,arial,helvetica;
-			color:#000000;
-		}
-		TABLE TR TD, TABLE TR TH {
-		    font-size: 68%;
-		}
-		TABLE.details TR TH{
-			font-weight: bold;
-			text-align:left;
-			background:#A6CAF0;
-		}
-		TABLE.details TR TD{
-			background:#EEEEE0;
-		}
-
-    TABLE.properties {
-    	border-collapse:collapse;
-    	border-left:solid 1 #CCCCCC; border-top:solid 1 #CCCCCC;
-    	padding:5px;
-    }
-    
-    TABLE.properties TH {
-      text-align:left;
-    	border-right:solid 1 #CCCCCC; border-bottom:solid 1 #CCCCCC;
-    	background-color:#EEEEEE;
-    }
-    
-    TABLE.properties TD {
-    	font:normal;
-    	text-align:left;
-    	border-right:solid 1 #CCCCCC; border-bottom:solid 1 #CCCCCC;
-    	background-color:#FFFFFFF;
-    }
-		
-		P {
-			line-height:1.5em;
-			margin-top:0.5em; margin-bottom:1.0em;
-		}
-		H1 {
-			MARGIN: 0px 0px 5px; FONT: 165% verdana,arial,helvetica
-		}
-		H2 {
-			MARGIN-TOP: 1em; MARGIN-BOTTOM: 0.5em; FONT: bold 125% verdana,arial,helvetica
-		}
-		H3 {
-			MARGIN-BOTTOM: 0.5em; FONT: bold 115% verdana,arial,helvetica
-		}
-		H4 {
-			MARGIN-BOTTOM: 0.5em; FONT: bold 100% verdana,arial,helvetica
-		}
-		H5 {
-			MARGIN-BOTTOM: 0.5em; FONT: bold 100% verdana,arial,helvetica
-		}
-		H6 {
-			MARGIN-BOTTOM: 0.5em; FONT: bold 100% verdana,arial,helvetica
-		}
-		.Error {
-			font-weight:bold; color:red;
-		}
-		.Failure {
-			font-weight:bold; color:purple;
-		}
-		</style>
+    <style type="text/css">
+      body {
+      	font:normal 68% verdana,arial,helvetica;
+      	color:#000000;
+      }
+      table tr td, table tr th {
+          font-size: 68%;
+      }
+      table.details tr th{
+      	font-weight: bold;
+      	text-align:left;
+      	background:#a6caf0;
+      }
+      table.details tr td{
+      	background:#eeeee0;
+      }
+      
+      table.properties {
+      	border-collapse:collapse;
+      	border-left:solid 1 #cccccc; border-top:solid 1 #cccccc;
+      	padding:5px;
+      }
+      
+      table.properties th {
+        text-align:left;
+      	border-right:solid 1 #cccccc; border-bottom:solid 1 #cccccc;
+      	background-color:#eeeeee;
+      }
+      
+      table.properties td {
+      	font:normal;
+      	text-align:left;
+      	border-right:solid 1 #cccccc; border-bottom:solid 1 #cccccc;
+      	background-color:#fffffff;
+      }
+      
+      p {
+      	line-height:1.5em;
+      	margin-top:0.5em; margin-bottom:1.0em;
+      }
+      h1 {
+      	margin: 0px 0px 5px; font: 165% verdana,arial,helvetica
+      }
+      h2 {
+      	margin-top: 1em; margin-bottom: 0.5em; font: bold 125% verdana,arial,helvetica
+      }
+      h3 {
+      	margin-bottom: 0.5em; font: bold 115% verdana,arial,helvetica
+      }
+      h4 {
+      	margin-bottom: 0.5em; font: bold 100% verdana,arial,helvetica
+      }
+      h5 {
+      	margin-bottom: 0.5em; font: bold 100% verdana,arial,helvetica
+      }
+      h6 {
+      	margin-bottom: 0.5em; font: bold 100% verdana,arial,helvetica
+      }
+      .Error {
+      	font-weight:bold; color:red;
+      }
+      .Failure {
+      	font-weight:bold; color:purple;
+      }
+      </style>
       <script language="JavaScript"><![CDATA[   
         function toggle (field)
         {
           field.style.display = (field.style.display == "block") ? "none" : "block";
         }  ]]> 
       </script>
-
 		</HEAD>
 		<body>
 			<a name="#top"></a>
@@ -177,11 +176,17 @@
 			<h3>TestCase <xsl:value-of select="@name"/></h3>
 			
 			<table class="details" border="0" cellpadding="5" cellspacing="2" width="95%">
-				<!-- Header -->
-				<xsl:call-template name="testcase.test.header"/>
-
-				<!-- match the testcases of this package -->
-				<xsl:apply-templates select="testcase" mode="print.test"/>
+			  <xsl:call-template name="testcase.test.header"/>
+			  <!--
+			  test can even not be started at all (failure to load the class)
+			  so report the error directly
+			  -->
+				<xsl:if test="./error">
+					<tr class="Error">
+						<td colspan="4"><xsl:apply-templates select="./error"/></td>
+					</tr>
+				</xsl:if>
+				<xsl:apply-templates select="./testcase" mode="print.test"/>
 			</table>
 			<p/>
 			<xsl:apply-templates select="properties"/>
@@ -237,31 +242,27 @@
 		</table>
 	</xsl:template>
 	
-	<!--
-	 Simple way to display properties, it is not very nice but it does
-	 the job. Properties are sorted so that they can be found easily.
-	 This is based on the original idea by Erik Hatcher (erik@hatcher.net)
-	 -->
-	<xsl:template match="properties">
-	  <xsl:variable name="id" select="concat(translate(../@package,'.','_'),'_', ../@name)"/>
-	  <i><a href="javascript:toggle({$id});">Show/Hide System Properties &gt;&gt;</a></i>
-	  <div id="{$id}" style="display:none">
-		  <table class="properties" border="0" cellpadding="5" cellspacing="2" width="95%">
-		    <xsl:for-each select="property[position() mod 2 = 1]">
-	      <xsl:sort select="@name"/>
-		    <xsl:variable name="nextProperty" select="following-sibling::property[1]" />
-			  <tr valign="top">
-				  <th><xsl:value-of select="@name"/></th>
-				  <td><xsl:value-of select="@value"/></td>
-				  <td/>
-				  <th><xsl:value-of select="$nextProperty/@name"/></th>
-				  <td><xsl:value-of select="$nextProperty/@value"/></td>
-			  </tr>			  
-		    </xsl:for-each>
-		  </table>
-	  </div>
-	  <p/>
-	</xsl:template>
+  <!--
+   Simple way to display properties, it is not very nice but it does
+   the job. Properties are sorted so that they can be found easily.
+   This is based on the original idea by Erik Hatcher (erik@hatcher.net)
+   -->
+  <xsl:template match="properties">
+    <xsl:variable name="id" select="concat(translate(../@package,'.','_'),'_', ../@name)"/>
+    <i><a href="javascript:toggle({$id});">Show/Hide System Properties &gt;&gt;</a></i>
+    <div id="{$id}" style="display:none">
+  	  <table class="properties" border="0" cellpadding="5" cellspacing="2" width="95%">
+  	    <xsl:for-each select="property">
+        <xsl:sort select="@name"/>
+  		  <tr valign="top">
+  			  <th><xsl:value-of select="@name"/></th>
+  			  <td><xsl:value-of select="@value"/></td>
+  		  </tr>			  
+  	    </xsl:for-each>
+  	  </table>
+    </div>
+    <p/>
+  </xsl:template>
 	
 <!-- Page HEADER -->
 <xsl:template name="pageHeader">
