@@ -10,12 +10,10 @@ package org.apache.tools.ant.taskdefs.exec;
 import java.io.File;
 import java.io.IOException;
 import java.util.Properties;
-import org.apache.aut.nativelib.DefaultExecOutputHandler;
 import org.apache.aut.nativelib.ExecException;
 import org.apache.aut.nativelib.ExecManager;
 import org.apache.aut.nativelib.ExecMetaData;
 import org.apache.aut.nativelib.ExecOutputHandler;
-import org.apache.avalon.framework.logger.AbstractLogEnabled;
 import org.apache.myrmidon.api.TaskException;
 import org.apache.tools.ant.types.Commandline;
 
@@ -25,7 +23,6 @@ import org.apache.tools.ant.types.Commandline;
  * @author thomas.haas@softwired-inc.com
  */
 public class Execute2
-    extends AbstractLogEnabled
 {
     private Commandline m_command;
     private Properties m_environment = new Properties();
@@ -53,11 +50,20 @@ public class Execute2
     /**
      * Sets the commandline of the subprocess to launch.
      *
-     * @param commandline the commandline of the subprocess to launch
+     * @param command the commandline of the subprocess to launch
      */
     public void setCommandline( final Commandline command )
     {
         m_command = command;
+    }
+
+    public Commandline getCommandline()
+    {
+        if( null == m_command )
+        {
+            m_command = new Commandline();
+        }
+        return m_command;
     }
 
     public void setEnvironment( final Properties environment )
@@ -72,7 +78,7 @@ public class Execute2
     /**
      * Set whether to propagate the default environment or not.
      *
-     * @param newenv whether to propagate the process environment.
+     * @param newEnvironment whether to propagate the process environment.
      */
     public void setNewenvironment( boolean newEnvironment )
     {
@@ -93,30 +99,40 @@ public class Execute2
      * Runs a process defined by the command line and returns its exit status.
      *
      * @return the exit status of the subprocess or <code>INVALID</code>
-     * @exception IOException Description of Exception
      */
     public int execute()
         throws IOException, TaskException
     {
-        if( null == m_handler )
-        {
-            m_handler = new DefaultExecOutputHandler();
-            setupLogger( m_handler );
-        }
-
         try
         {
-            final String[] command = m_command.getCommandline();
+            final ExecMetaData metaData = buildExecMetaData();
 
-            final ExecMetaData metaData =
-                new ExecMetaData( command, m_environment,
-                                  m_workingDirectory, m_newEnvironment );
-
-            return m_execManager.execute( metaData, m_handler, m_timeout );
+            if( null != m_handler )
+            {
+                return m_execManager.execute( metaData, m_handler, m_timeout );
+            }
+            else
+            {
+                return m_execManager.execute( metaData,
+                                              null,
+                                              System.out,
+                                              System.err,
+                                              m_timeout );
+            }
         }
         catch( final ExecException ee )
         {
             throw new TaskException( ee.getMessage(), ee );
         }
+    }
+
+    private ExecMetaData buildExecMetaData()
+    {
+        final String[] command = m_command.getCommandline();
+
+        final ExecMetaData metaData =
+            new ExecMetaData( command, m_environment,
+                              m_workingDirectory, m_newEnvironment );
+        return metaData;
     }
 }
