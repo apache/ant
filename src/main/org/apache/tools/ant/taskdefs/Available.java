@@ -144,7 +144,13 @@ public class Available extends Task {
         if (loader != null) {
             return (loader.getResourceAsStream(resource) != null);
         } else {
-            return (this.getClass().getResourceAsStream(resource) != null);
+            ClassLoader cL = this.getClass().getClassLoader();
+            if (cL != null) {
+                return (cL.getResourceAsStream(resource) != null);
+            } else {
+                return 
+                    (ClassLoader.getSystemResourceAsStream(resource) != null);
+            }
         }
     }
 

@@ -90,6 +90,10 @@ Fixed bugs:
 * nested <classpath> elements of <taskdef> now work for <taskdef>s not
   nested into <target> as well.
 
+* <property> and <available> will search for the resource /foo instead
+  of /org/apache/tools/ant/taskdefs/foo when given a relative resource
+  name foo.
+
 Changes from Ant 1.1 to Ant 1.2
 ===============================
 
