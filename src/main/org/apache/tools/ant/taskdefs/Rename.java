@@ -102,6 +102,8 @@ public class Rename extends Task {
      * thrown, if the rename operation fails.
      */
     public void execute() throws BuildException {
+        log("DEPRECATED - The rename task is deprecated.  Use move instead.");
+
         if (dest == null) {
             throw new BuildException("dest attribute is required", location);
         }

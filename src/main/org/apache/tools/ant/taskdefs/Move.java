@@ -55,81 +55,68 @@
 package org.apache.tools.ant.taskdefs;
 
 import org.apache.tools.ant.*;
+import org.apache.tools.ant.types.*;
 
 import java.io.*;
 import java.util.*;
 
 /**
- * Copies a directory.
+ * Moves a file or directory to a new file or directory.  By default,
+ * the destination is overwriten when existing.  When overwrite is
+ * turned off, then files are only moved if the source file is 
+ * newer than the destination file, or when the destination file does
+ * not exist.</p>
  *
- * @author James Davidson <a href="mailto:duncan@x180.com">duncan@x180.com</a>
+ * <p>Source files and directories are only deleted when the file or 
+ * directory has been copied to the destination successfully.  Filtering
+ * also works.</p>
+ *
+ * <p>This implementation is based on Arnout Kuiper's initial design
+ * document, the following mailing list discussions, and the 
+ * copyfile/copydir tasks.</p>
+ *
+ * @author Glenn McAllister <a href="mailto:glennm@ca.ibm.com">glennm@ca.ibm.com</a>
  */
+public class Move extends Copy {
 
-public class Copydir extends MatchingTask {
-
-    private File srcDir;
-    private File destDir;
-    private boolean filtering = false;
-    private boolean flatten = false;
-    private boolean forceOverwrite = false;
-    private Hashtable filecopyList = new Hashtable();
-
-    public void setSrc(File src) {
-        srcDir = src;
-    }
-
-    public void setDest(File dest) {
-        destDir = dest;
-    }
-
-    public void setFiltering(String filter) {
-        filtering = Project.toBoolean(filter);
-    }
-
-    public void setFlatten(boolean flatten) {
-        this.flatten = flatten;
-    }
-
-    public void setForceoverwrite(String force) {
-        forceOverwrite = Project.toBoolean(force);
+    public Move() {
+        super();
+        forceOverwrite = true;
     }
 
     public void execute() throws BuildException {
-        log("DEPRECATED - The copydir task is deprecated.  Use copy instead.");
+        super.execute();
 
-        if (srcDir == null) {
-            throw new BuildException("src attribute must be set!", 
-                                     location);
+        // take care of the source directory
+        if (dir != null && dir.exists()) {
+            deleteDir(dir);
         }
+    }
 
-        if (!srcDir.exists()) {
-            throw new BuildException("srcdir "+srcDir.toString()
-                                     +" does not exist!", location);
-        }
+//************************************************************************
+//  protected and private methods
+//************************************************************************
 
-        if (destDir == null) {
-            throw new BuildException("The dest attribute must be set.", location);
-        }
+    protected void doFileOperations() {
+        if (fileCopyMap.size() > 0) {
+            log("Moving " + fileCopyMap.size() + " files to " + 
+                destDir.getAbsolutePath() );
 
-        if (srcDir.equals(destDir)) {
-            log("Warning: src == dest");
-        }
+            Enumeration e = fileCopyMap.keys();
+            while (e.hasMoreElements()) {
+                String fromFile = (String) e.nextElement();
+                String toFile = (String) fileCopyMap.get(fromFile);
 
-        DirectoryScanner ds = super.getDirectoryScanner(srcDir);
-
-        String[] files = ds.getIncludedFiles();
-        scanDir(srcDir, destDir, files);
-        if (filecopyList.size() > 0) {
-            log("Copying " + filecopyList.size() + " file"
-                + (filecopyList.size() == 1 ? "" : "s")
-                + " to " + destDir.getAbsolutePath());
-            Enumeration enum = filecopyList.keys();
-            while (enum.hasMoreElements()) {
-                String fromFile = (String) enum.nextElement();
-                String toFile = (String) filecopyList.get(fromFile);
                 try {
-                    project.copyFile(fromFile, toFile, filtering, 
+                    log("Moving " + fromFile + " to " + toFile, verbosity);
+                    project.copyFile(fromFile, 
+                                     toFile, 
+                                     filtering, 
                                      forceOverwrite);
+                    File f = new File(fromFile);
+                    if (!f.delete()) {
+                        throw new BuildException("Unable to delete file " + f.getAbsolutePath());
+                    }
                 } catch (IOException ioe) {
                     String msg = "Failed to copy " + fromFile + " to " + toFile
                         + " due to " + ioe.getMessage();
@@ -139,21 +126,21 @@ public class Copydir extends MatchingTask {
         }
     }
 
-    private void scanDir(File from, File to, String[] files) {
-        for (int i = 0; i < files.length; i++) {
-            String filename = files[i];
-            File srcFile = new File(from, filename);
-            File destFile;
-            if (flatten) {
-                destFile = new File(to, new File(filename).getName());
+    protected void deleteDir(File d) {
+    	String[] list = d.list();
+        for (int i = 0; i < list.length; i++) {
+            String s = list[i];
+            File f = new File(d, s);
+            if (f.isDirectory()) {
+                deleteDir(f);
             } else {
-                destFile = new File(to, filename);
-            }
-            if (forceOverwrite ||
-                (srcFile.lastModified() > destFile.lastModified())) {
-                filecopyList.put(srcFile.getAbsolutePath(),
-                                 destFile.getAbsolutePath());
+                throw new BuildException("UNEXPECTED ERROR - The file " + f.getAbsolutePath() + " should not exist!");
             }
         }
+        log("Deleting directory " + d.getAbsolutePath(), verbosity);
+        if (!d.delete()) {
+	       throw new BuildException("Unable to delete directory " + dir.getAbsolutePath());
+	   }
     }
+
 }

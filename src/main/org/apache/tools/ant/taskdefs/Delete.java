@@ -54,26 +54,39 @@
 package org.apache.tools.ant.taskdefs;
 
 import org.apache.tools.ant.*;
+import org.apache.tools.ant.types.*;
 import java.io.*;
+import java.util.*;
 
 /**
- * Deletes a single file or a set of files defined by a pattern.
+ * Deletes a file or directory, or set of files defined by a fileset.
+ * The original delete task would delete a file, or a set of files 
+ * using the include/exclude syntax.  The deltree task would delete a 
+ * directory tree.  This task combines the functionality of these two
+ * originally distinct tasks.
+ * <p>Currently Delete extends MatchingTask.  This is intend <i>only</i>
+ * to provide backwards compatibility for a release.  The future position
+ * is to use nested filesets exclusively.</p>
  * 
  * @author stefano@apache.org
  * @author Tom Dimock <a href="mailto:tad1@cornell.edu">tad1@cornell.edu</a>
+ * @author Glenn McAllister <a href="mailto:glennm@ca.ibm.com">glennm@ca.ibm.com</a>
  */
 public class Delete extends MatchingTask {
-    private File delDir = null;
+    protected File file = null;
+    protected File dir = null;
+    protected Vector filesets = new Vector();
+    protected boolean usedMatchingTask = false;
+
     private int verbosity = Project.MSG_VERBOSE;
-    private File f = null;
 
     /**
      * Set the name of a single file to be removed.
      * 
      * @param file the file to be deleted
      */
-    public void setFile(String file) {
-        f = project.resolveFile(file);
+    public void setFile(File file) {
+        this.file = file;
     } 
 
     /**
@@ -81,8 +94,8 @@ public class Delete extends MatchingTask {
      * 
      * @param dir the directory path.
      */
-    public void setDir(String dir) {
-        delDir = project.resolveFile(dir);
+    public void setDir(File dir) {
+        this.dir = dir;
     } 
 
     /**
@@ -90,8 +103,8 @@ public class Delete extends MatchingTask {
      * 
      * @param verbose "true" or "on"
      */
-    public void setVerbose(String verbose) {
-        if ("true".equalsIgnoreCase(verbose.trim()) || "on".equalsIgnoreCase(verbose.trim())) {
+    public void setVerbose(boolean verbose) {
+        if (verbose) {
             this.verbosity = Project.MSG_INFO;
         } else {
             this.verbosity = Project.MSG_VERBOSE;
@@ -99,60 +112,178 @@ public class Delete extends MatchingTask {
     } 
 
     /**
-     * Make it so.  Delete the file(s).
-     * 
-     * @throws BuildException
+     * Adds a set of files (nested fileset attribute).
+     */
+    public void addFileset(FileSet set) {
+        filesets.addElement(set);
+    }
+ 
+    /**
+     * add a name entry on the include list
+     */
+    public PatternSet.NameEntry createInclude() {
+        usedMatchingTask = true;
+        return super.createInclude();
+    }
+    
+    /**
+     * add a name entry on the exclude list
+     */
+    public PatternSet.NameEntry createExclude() {
+        usedMatchingTask = true;
+        return super.createExclude();
+    }
+
+    /**
+     * add a set of patterns
+     */
+    public PatternSet createPatternSet() {
+        usedMatchingTask = true;
+        return super.createPatternSet();
+    }
+
+    /**
+     * Sets the set of include patterns. Patterns may be separated by a comma
+     * or a space.
+     *
+     * @param includes the string containing the include patterns
+     */
+    public void setIncludes(String includes) {
+        usedMatchingTask = true;
+        super.setIncludes(includes);
+    }
+
+    /**
+     * Sets the set of exclude patterns. Patterns may be separated by a comma
+     * or a space.
+     *
+     * @param excludes the string containing the exclude patterns
+     */
+    public void setExcludes(String excludes) {
+        usedMatchingTask = true;
+        super.setExcludes(excludes);
+    }
+
+    /**
+     * Sets whether default exclusions should be used or not.
+     *
+     * @param useDefaultExcludes "true"|"on"|"yes" when default exclusions 
+     *                           should be used, "false"|"off"|"no" when they
+     *                           shouldn't be used.
+     */
+    public void setDefaultexcludes(boolean useDefaultExcludes) {
+        usedMatchingTask = true;
+        super.setDefaultexcludes(useDefaultExcludes);
+    }
+
+    /**
+     * Sets the name of the file containing the includes patterns.
+     *
+     * @param includesfile A string containing the filename to fetch
+     * the include patterns from.  
+     */
+    public void setIncludesfile(File includesfile) {
+        usedMatchingTask = true;
+        super.setIncludesfile(includesfile);
+    }
+
+    /**
+     * Sets the name of the file containing the includes patterns.
+     *
+     * @param excludesfile A string containing the filename to fetch
+     * the include patterns from.  
+     */
+    public void setExcludesfile(File excludesfile) {
+        usedMatchingTask = true;
+        super.setExcludesfile(excludesfile);
+    }
+
+    /**
+     * Delete the file(s).
      */
     public void execute() throws BuildException {
-        if (f == null && delDir == null) {
-            throw new BuildException("<file> or <dir> attribute must be set!");
+        if (usedMatchingTask) {
+            log("DEPRECATED - Use of the implicit FileSet is deprecated.  Use a nested fileset element instead.");
+        }
+
+        if (file == null && dir == null && filesets.size() == 0) {
+            throw new BuildException("At least one of the file or dir attributes, or a fileset element, must be set.");
         } 
 
-        // old <delete> functionality must still work
-        if (f != null) {
-            if (f.exists()) {
-                if (f.isDirectory()) {
-                    log("Directory: " + f.getAbsolutePath() + " cannot be removed with delete.  Use Deltree instead.");
+        // delete the single file
+        if (file != null) {
+            if (file.exists()) {
+                if (file.isDirectory()) {
+                    log("Directory " + file.getAbsolutePath() + " cannot be removed using the file attribute.  Use dir instead.");
                 } else {
-                    log("Deleting: " + f.getAbsolutePath());
-
-                    if (!f.delete()) {
-                        throw new BuildException("Unable to delete file " + f.getAbsolutePath());
+                    log("Deleting: " + file.getAbsolutePath());
+  
+                    if (!file.delete()) {
+                        throw new BuildException("Unable to delete file " + file.getAbsolutePath());
                     } 
                 } 
-            } 
-        } 
+            } else {
+                log("Could not find file " + file.getAbsolutePath() + " to delete.");
+            }
+        }
 
-        // now we'll do the fancy pattern-driven deletes
-        if (delDir == null) {
-            return;
-        } 
+        // delete the directory
+        if (dir != null && !usedMatchingTask) {
+            log("Deleting directory " + dir.getAbsolutePath());
+            removeDir(dir);
+        }
 
-        if (!delDir.exists()) {
-            throw new BuildException("dir does not exist!");
-        } 
+        // delete the files in the filesets
+        for (int i=0; i<filesets.size(); i++) {
+            FileSet fs = (FileSet) filesets.elementAt(i);
+            DirectoryScanner ds = fs.getDirectoryScanner(project);
+            String[] files = ds.getIncludedFiles();
+            removeFiles(fs.getDir(project), files);
+        }
 
-        DirectoryScanner ds = super.getDirectoryScanner(delDir);
-        String[] files = ds.getIncludedFiles();
-
-        if (files.length > 0) {
-            log("Deleting " + files.length + " file"
-                + (files.length == 1 ? "" : "s")
-                + " from " + delDir.getAbsolutePath());
-
-            for (int i = 0; i < files.length; i++) {
-                File f = new File(delDir, files[i]);
-
-                if (f.exists()) {
-                    log("Deleting: " + f.getAbsolutePath(), verbosity);
-
-                    if (!f.delete()) {
-                        throw new BuildException("Unable to delete " + f.getAbsolutePath());
-                    } 
-                } 
-            } 
-        } 
+        // delete the files from the default fileset
+        if (usedMatchingTask && dir != null) {
+            DirectoryScanner ds = super.getDirectoryScanner(dir);
+            String [] files = ds.getIncludedFiles();
+            removeFiles(dir, files);
+        }
     } 
 
+//************************************************************************
+//  protected and private methods
+//************************************************************************
+
+    protected void removeDir(File d) {
+        String[] list = d.list();
+        for (int i = 0; i < list.length; i++) {
+            String s = list[i];
+            File f = new File(d, s);
+            if (f.isDirectory()) {
+                removeDir(f);
+            } else {
+                log("Deleting " + f.getAbsolutePath(), verbosity);
+                if (!f.delete()) {
+                    throw new BuildException("Unable to delete file " + f.getAbsolutePath());
+                }
+            }
+        }
+        log("Deleting directory " + d.getAbsolutePath(), verbosity);
+        if (!d.delete()) {
+            throw new BuildException("Unable to delete directory " + dir.getAbsolutePath());
+        }
+    }
+
+    protected void removeFiles(File d, String[] files) {
+        if (files.length > 0) {
+            log("Deleting " + files.length + " files from " + d.getAbsolutePath());
+            for (int j=0; j<files.length; j++) {
+                File f = new File(d, files[j]);
+                log("Deleting " + f.getAbsolutePath(), verbosity);
+                if (!f.delete()) {
+                    throw new BuildException("Unable to delete file " + f.getAbsolutePath());
+                }
+            }
+        }
+    }
 }
 

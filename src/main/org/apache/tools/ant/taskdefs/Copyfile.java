@@ -89,6 +89,8 @@ public class Copyfile extends Task {
     }
 
     public void execute() throws BuildException {
+        log("DEPRECATED - The copyfile task is deprecated.  Use copy instead.");
+
         if (srcFile == null) {
             throw new BuildException("The src attribute must be present.", location);
         }

@@ -72,6 +72,8 @@ public class Deltree extends Task {
     }
     
     public void execute() throws BuildException {
+        log("DEPRECATED - The deltree task is deprecated.  Use delete instead.");
+
         if (dir == null) {
             throw new BuildException("dir attribute must be set!", location);
         } 
