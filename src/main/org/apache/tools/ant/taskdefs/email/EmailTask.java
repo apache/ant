@@ -186,6 +186,7 @@ public class EmailTask
         }
 
         this.message = new Message(message);
+        this.message.setProject(getProject());
     }
 
 
@@ -201,6 +202,7 @@ public class EmailTask
         }
 
         this.message = new Message(file);
+        this.message.setProject(getProject());
     }
 
 
