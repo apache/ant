@@ -109,8 +109,12 @@ public class RuntimeConfigurable2 extends RuntimeConfigurable {
      * 
      * @param proxy The element to configure. Must not be <code>null</code>.
      */
-    void setProxy(Object proxy) {
+    public void setProxy(Object proxy) {
         wrappedObject = proxy;
+    }
+
+    public Object getProxy() {
+        return wrappedObject;
     }
 
     /**
