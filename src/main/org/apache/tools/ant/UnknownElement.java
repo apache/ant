@@ -80,12 +80,17 @@ public class UnknownElement extends Task {
      */
     private Vector children = new Vector();
 
+    /**
+     * Create an UnknownElement for the given element name.
+     *
+     * @param elementName the name of the unknown element.
+     */
     public UnknownElement (String elementName) {
         this.elementName = elementName;
     }
 
     /**
-     * return the corresponding XML element name.
+     * @return the corresponding XML element name.
      */
     public String getTag() {
         return elementName;
@@ -94,6 +99,8 @@ public class UnknownElement extends Task {
     /**
      * creates the real object instance, creates child elements, configures
      * the attributes of the real object.
+     *
+     * @exception BuildException if the configuration fails
      */
     public void maybeConfigure() throws BuildException {
         realThing = makeObject(this, wrapper);
@@ -114,6 +121,32 @@ public class UnknownElement extends Task {
     }
 
     /**
+     * Handle output sent to System.out by this task or its real task.
+     *
+     * @param line the output string
+     */
+    protected void handleOutput(String line) {
+        if (realThing instanceof Task) {
+            ((Task)realThing).handleOutput(line);
+        } else {
+            super.handleOutput(line);
+        }
+    }
+    
+    /**
+     * Handle error output sent to System.err by this task or its real task.
+     *
+     * @param line the error string
+     */
+    protected void handleErrorOutput(String line) {
+        if (realThing instanceof Task) {
+            ((Task)realThing).handleErrorOutput(line);
+        } else {
+            super.handleErrorOutput(line);
+        }
+    }
+    
+    /**
      * Called when the real task has been configured for the first time.
      */
     public void execute() {
@@ -131,6 +164,8 @@ public class UnknownElement extends Task {
 
     /**
      * Adds a child element to this element.
+     *
+     * @param child the child element
      */
     public void addChild(UnknownElement child) {
         children.addElement(child);
@@ -139,6 +174,9 @@ public class UnknownElement extends Task {
     /**
      * Creates child elements, creates children of the children, sets
      * attributes of the child elements.
+     *
+     * @param parent the configured object for the parent
+     * @exception BuildException if the children cannot be configured.
      */
     protected void handleChildren(Object parent,
                                   RuntimeConfigurable parentWrapper)
@@ -151,7 +189,7 @@ public class UnknownElement extends Task {
         Class parentClass = parent.getClass();
         IntrospectionHelper ih = IntrospectionHelper.getHelper(parentClass);
 
-        for (int i=0; i<children.size(); i++) {
+        for (int i = 0;  i < children.size(); i++) {
             RuntimeConfigurable childWrapper = parentWrapper.getChild(i);
             UnknownElement child = (UnknownElement) children.elementAt(i);
             Object realChild = null;
@@ -177,7 +215,8 @@ public class UnknownElement extends Task {
     }
 
     /**
-     * Creates a named task or data type - if it is a task, configure it up to the init() stage.
+     * Creates a named task or data type - if it is a task, 
+     * configure it up to the init() stage.
      */
     protected Object makeObject(UnknownElement ue, RuntimeConfigurable w) {
         Object o = makeTask(ue, w, true);
@@ -213,35 +252,35 @@ public class UnknownElement extends Task {
                                                   String elementName) {
         String lSep = System.getProperty("line.separator");
         String msg = "Could not create " + what + " of type: " + elementName
-            + "." + lSep+ lSep
+            + "." + lSep + lSep
             + "Ant could not find the task or a class this "
-            + "task relies upon." + lSep +lSep
+            + "task relies upon." + lSep + lSep
             + "This is common and has a number of causes; the usual " + lSep
             + "solutions are to read the manual pages then download and" + lSep
-            + "install needed JAR files, or fix the build file: "+ lSep
+            + "install needed JAR files, or fix the build file: " + lSep
             + " - You have misspelt '" + elementName + "'." + lSep
-            + "   Fix: check your spelling." +lSep
-            + " - The task needs an external JAR file to execute" +lSep
-            + "   and this is not found at the right place in the classpath." +lSep
-            + "   Fix: check the documentation for dependencies." +lSep
-            + "   Fix: declare the task." +lSep
-            + " - The task is an Ant optional task and optional.jar is absent"+lSep
-            + "   Fix: look for optional.jar in ANT_HOME/lib, download if needed" +lSep
-            + " - The task was not built into optional.jar as dependent"  +lSep
+            + "   Fix: check your spelling." + lSep
+            + " - The task needs an external JAR file to execute" + lSep
+            + "   and this is not found at the right place in the classpath." + lSep
+            + "   Fix: check the documentation for dependencies." + lSep
+            + "   Fix: declare the task." + lSep
+            + " - The task is an Ant optional task and optional.jar is absent" + lSep
+            + "   Fix: look for optional.jar in ANT_HOME/lib, download if needed" + lSep
+            + " - The task was not built into optional.jar as dependent"  + lSep
             + "   libraries were not found at build time." + lSep
-            + "   Fix: look in the JAR to verify, then rebuild with the needed" +lSep
-            + "   libraries, or download a release version from apache.org" +lSep
-            + " - The build file was written for a later version of Ant" +lSep
-            + "   Fix: upgrade to at least the latest release version of Ant" +lSep
-            + " - The task is not an Ant core or optional task " +lSep
-            + "   and needs to be declared using <taskdef>." +lSep
+            + "   Fix: look in the JAR to verify, then rebuild with the needed" + lSep
+            + "   libraries, or download a release version from apache.org" + lSep
+            + " - The build file was written for a later version of Ant" + lSep
+            + "   Fix: upgrade to at least the latest release version of Ant" + lSep
+            + " - The task is not an Ant core or optional task " + lSep
+            + "   and needs to be declared using <taskdef>." + lSep
+            + lSep 
+            + "Remember that for JAR files to be visible to An t tasks implemented" + lSep
+            + "in ANT_HOME/lib, the files must be in the same directory or on the" + lSep
+            + "classpath" + lSep
             + lSep
-            + "Remember that for JAR files to be visible to Ant tasks implemented" +lSep
-            + "in ANT_HOME/lib, the files must be in the same directory or on the" +lSep
-            + "classpath"+ lSep
-            + lSep
-            + "Please neither file bug reports on this problem, nor email the" +lSep
-            + "Ant mailing lists, until all of these causes have been explored," +lSep
+            + "Please neither file bug reports on this problem, nor email the" + lSep
+            + "Ant mailing lists, until all of these causes have been explored," + lSep
             + "as this is not an Ant bug.";
 
 
@@ -259,7 +298,9 @@ public class UnknownElement extends Task {
     }
 
     /**
-     * Return the task instance after it has been created (and if it is a task.
+     * Return the task instance after it has been created and if it is a task.
+     *
+     * @return a task instance or null if the real object is not a task
      */
     public Task getTask() {
         if (realThing != null && realThing instanceof Task) {

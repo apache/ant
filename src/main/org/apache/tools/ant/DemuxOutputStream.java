@@ -64,25 +64,39 @@ import java.util.Hashtable;
  * project object which will forward the content to the appropriate
  * task.
  *
+ * @since 1.4
  * @author Conor MacNeill
  */
 public class DemuxOutputStream extends OutputStream {
 
+    /**
+     * A data class to store information about a buffer. Such informatio
+     * is stored on a per-thread basis.
+     */
+    private static class BufferInfo {
+        /**
+         * The per-thread output stream
+         */
+        private ByteArrayOutputStream buffer;
+        
+        /** 
+         * Whether the next line-terminator should be skipped in terms
+         * of processing the buffer or not. Used to avoid \r\n invoking
+         * processBuffer twice.
+         */
+         private boolean skip = false;
+    }
+    
     /** Maximum buffer size */
     private final static int MAX_SIZE = 1024;
-    /** Mapping from thread to buffer (Thread to ByteOutputStream) */
+    /** Mapping from thread to buffer (Thread to BufferInfo) */
     private Hashtable buffers = new Hashtable();
-//    private ByteArrayOutputStream buffer = new ByteArrayOutputStream();
-    /** 
-     * Whether the next line-terminator should be skipped in terms
-     * of processing the buffer or not. Used to avoid \r\n invoking
-     * processBuffer twice.
-     */
-    private boolean skip = false;
+
     /**
      * The project to send output to
      */
     private Project project;
+
     /**
      * Whether or not this stream represents an error stream
      */
@@ -91,8 +105,11 @@ public class DemuxOutputStream extends OutputStream {
     /**
      * Creates a new instance of this class.
      *
-     * @param task the task for whom to log
-     * @param level loglevel used to log data written to this stream.
+     * @param project the project instance for which output is being 
+     * demultiplexed.
+     * @param isErrorStream true if this is the error string, otherwise 
+     * a normal output stream. This is passed to the project so it knows
+     * which stream it is receiving.
      */
     public DemuxOutputStream(Project project, boolean isErrorStream) {
         this.project = project;
@@ -104,20 +121,22 @@ public class DemuxOutputStream extends OutputStream {
      * 
      * @return a ByteArrayOutputStream for the current thread to write data to
      */
-    private ByteArrayOutputStream getBuffer() {
+    private BufferInfo getBufferInfo() {
         Thread current = Thread.currentThread();
-        ByteArrayOutputStream buffer = (ByteArrayOutputStream)buffers.get(current);
-        if (buffer == null) {
-            buffer = new ByteArrayOutputStream();
-            buffers.put(current, buffer);
+        BufferInfo bufferInfo = (BufferInfo)buffers.get(current);
+        if (bufferInfo == null) {
+            bufferInfo = new BufferInfo();
+            bufferInfo.buffer = new ByteArrayOutputStream();
+            bufferInfo.skip = false;
+            buffers.put(current, bufferInfo);
         }
-        return buffer;
+        return bufferInfo;
     }
 
     /**
      * Resets the buffer for the current thread.
      */
-    private void resetBuffer() {    
+    private void resetBufferInfo() {    
         Thread current = Thread.currentThread();
         buffers.remove(current);
     }
@@ -127,44 +146,43 @@ public class DemuxOutputStream extends OutputStream {
      * separator is detected or if the buffer has reached its maximum size.
      *
      * @param cc data to log (byte).
+     * @exception IOException if the data cannot be written to the stream
      */
     public void write(int cc) throws IOException {
         final byte c = (byte)cc;
+
+        BufferInfo bufferInfo = getBufferInfo();
         if ((c == '\n') || (c == '\r')) {
-            if (!skip) {
-                processBuffer();
+            if (!bufferInfo.skip) {
+                processBuffer(bufferInfo.buffer);
             }
         } else {
-            ByteArrayOutputStream buffer = getBuffer();
-            buffer.write(cc);
-            if (buffer.size() > MAX_SIZE) {
-                processBuffer();
+            bufferInfo.buffer.write(cc);
+            if (bufferInfo.buffer.size() > MAX_SIZE) {
+                processBuffer(bufferInfo.buffer);
             }
         }
-       // XXX: This isn't threadsafe. Consider two threads logging
-       // Hello\r\n
-       // and
-       // There\r\n
-       // at the same time, with the two '\r's both being sent before
-       // either '\n', and the '\n's coming in the opposite order (thread-wise)
-       // to the '\r's - one buffer will be processed twice, and the other won't
-       // be processed at all.
-       skip = (c == '\r');
+        bufferInfo.skip = (c == '\r');
     }
 
 
     /**
      * Converts the buffer to a string and sends it to 
      * {@link Project#demuxOutput(String,boolean) Project.demuxOutput}.
+     *
+     * @param buffer the ByteArrayOutputStream used to collect the output
+     * until a line separator is seen.
      */
-    protected void processBuffer() {
-        String output = getBuffer().toString();
+    protected void processBuffer(ByteArrayOutputStream buffer) {
+        String output = buffer.toString();
         project.demuxOutput(output, isErrorStream);
-        resetBuffer();
+        resetBufferInfo();
     }
 
     /**
      * Equivalent to calling {@link #flush flush} on the stream.
+     *
+     * @exception IOException if there is a problem closing the stream.
      */
     public void close() throws IOException {
         flush();
@@ -173,10 +191,13 @@ public class DemuxOutputStream extends OutputStream {
     /**
      * Writes all remaining data in the buffer associated
      * with the current thread to the project.
+     *
+     * @exception IOException if there is a problem flushing the stream.
      */
     public void flush() throws IOException {
-        if (getBuffer().size() > 0) {
-            processBuffer();
+        BufferInfo bufferInfo = getBufferInfo();
+        if (bufferInfo.buffer.size() > 0) {
+            processBuffer(bufferInfo.buffer);
         }
     }
 }
