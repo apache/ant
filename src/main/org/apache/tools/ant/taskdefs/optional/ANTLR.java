@@ -235,7 +235,7 @@ public class ANTLR extends Task {
      * specify it directly.
      */
     public void init() throws BuildException {
-        addClasspathEntry("/antlr/Tool.class");
+        addClasspathEntry("/antlr/ANTLRGrammarParseBehavior.class");
     }
 
     /**
@@ -268,7 +268,7 @@ public class ANTLR extends Task {
             log("Found " + f.getAbsolutePath(), Project.MSG_DEBUG);
             createClasspath().setLocation(f);
         } else {
-            log("Couldn\'t find " + resource, Project.MSG_DEBUG);
+            log("Couldn\'t find " + resource, Project.MSG_VERBOSE);
         }
     }
 
