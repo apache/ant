@@ -139,7 +139,7 @@ public class DOMElementWriter {
         // to indent
         if (hasChildren) {
             for (int i = 0; i < indent; i++) {
-                out.write(" ");
+                out.write(indentWith);
             }
         }
 
