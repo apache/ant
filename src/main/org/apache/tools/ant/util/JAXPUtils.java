@@ -102,7 +102,7 @@ public class JAXPUtils {
     /**
      * Parser factory to use to create document builders.
      *
-     * @since Ant 1.7
+     * @since Ant 1.6
      */
     private static DocumentBuilderFactory builderFactory = null;
 
@@ -220,8 +220,8 @@ public class JAXPUtils {
     /**
      * Returns a newly created DocumentBuilder.
      *
-     * @return a DocumentVuilder
-     * @since Ant 1.7
+     * @return a DocumentBuilder
+     * @since Ant 1.6
      */
     public static DocumentBuilder getDocumentBuilder() throws BuildException {
         try {
@@ -266,7 +266,7 @@ public class JAXPUtils {
     /**
      * Obtains the default builder factory if not already.
      *
-     * @since Ant 1.7
+     * @since Ant 1.6
      */
     private static synchronized 
         DocumentBuilderFactory getDocumentBuilderFactory() 
