@@ -123,7 +123,7 @@ public class Native2Ascii extends MatchingTask {
 
     /**
      * Choose the implementation for this particular task.
-     * @param compiler the name of the compiler
+     * @param impl the name of the implemenation
      * @since Ant 1.6.3
      */
     public void setImplementation(String impl) {

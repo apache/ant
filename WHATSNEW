@@ -144,7 +144,7 @@ Other changes:
 * Added <target> nested elements to <ant> and <antcall> to allow
   specification of multiple sub-build targets, which are executed
   with a single dependency analysis.
-  
+
 * Refactored Target invocation into org.apache.tools.ant.Executor
   implementations.  Bugzilla Reports 21421, 29248.
 
@@ -203,7 +203,7 @@ Other changes:
 
 * Added length task to get strings' and files' lengths.
 
-* <native2ascii> now also supports Kaffe's version.
+* <native2ascii> and <javah> now also support Kaffe's versions.
 
 * Recursive token expansion in a filterset can now be disabled by
   setting its recurse attribute to false.
@@ -1289,6 +1289,18 @@ Other changes:
 
 * Ant libraries that can make use of namespaces to avoid name
   clashes of custom tasks
+
+
+* <java> and <junit> now support <assertions>, which let you enable
+  and disable Java1.4 assertions on a package or class basis. These
+  only work when fork=true, currently.
+
+* .NET tasks expanded with VB support <vbc> and J#, via <jsharp>,
+  <importtypelib> and <ilasm>. <csc> supports nested <src> types,
+  <defines> for (potentially conditional) definitions, <reference>
+  filesets for references. The executable attribute lets you switch to
+  mono or other implementations -<csc> has been tested with Mono on
+  Linux and OSX.
 
 
 Changes from Ant 1.5.3 to Ant 1.5.4
