@@ -70,6 +70,11 @@ public abstract class AbstractSvnTask extends Task {
     private boolean quiet = false;
 
     /**
+     * be verbose
+     */
+    private boolean verbose = false;
+
+    /**
      * report only, don't change any files.
      */
     private boolean dryrun = false;
@@ -467,6 +472,14 @@ public abstract class AbstractSvnTask extends Task {
     }
 
     /**
+     * If true, be verbose.
+     * @param q  if true, be verbose.
+     */
+    public void setVerbose(boolean v) {
+        verbose = v;
+    }
+
+    /**
      * If true, report only and don't change any files.
      *
      * @param ne if true, report only and do not change any files.
@@ -523,7 +536,7 @@ public abstract class AbstractSvnTask extends Task {
      * <li>
      * quiet
      * </li>
-     * <li>svnroot</li>
+     * <li>verbose</li>
      * <li>dryrun</li>
      * </ul>
      */
@@ -534,6 +547,9 @@ public abstract class AbstractSvnTask extends Task {
         c.setExecutable("svn");
         if (quiet) {
             c.createArgument(true).setValue("--quiet");
+        }
+        if (verbose) {
+            c.createArgument(true).setValue("--verbose");
         }
         if (dryrun) {
             c.createArgument(true).setValue("--dry-run");

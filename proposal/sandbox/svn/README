@@ -18,9 +18,3 @@ SVN, matching what the traditional Ant task(s) vor CVS could do.
 If you need more than what this libary provides, we encourage you to
 check out the existing alternatives.
 
-===============
-
-The first cut will mimic the implementation of the <cvs> task, it will
-even be split into an abstract task and a very thin real task - it may
-be possible to base tasks similar to the optional CVS tasks on the
-abstract task as well.

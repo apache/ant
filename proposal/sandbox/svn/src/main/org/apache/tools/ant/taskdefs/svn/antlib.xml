@@ -19,4 +19,8 @@
     name="svn"
     classname="org.apache.tools.ant.taskdefs.svn.Svn"
     />
+  <taskdef
+    name="changelog"
+    classname="org.apache.tools.ant.taskdefs.svn.SvnChangeLogTask"
+    />
 </antlib>
