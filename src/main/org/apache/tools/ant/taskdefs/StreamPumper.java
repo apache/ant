@@ -119,12 +119,12 @@ public class StreamPumper implements Runnable {
             while ((length = is.read(buf)) > 0) {
                 os.write(buf, 0, length);
             }
-            if (closeWhenExhausted) {
-                os.close();
-            }
         } catch (Exception e) {
             // ignore errors
         } finally {
+            if (closeWhenExhausted) {
+                os.close();
+            }
             synchronized (this) {
                 finished = true;
                 notify();
