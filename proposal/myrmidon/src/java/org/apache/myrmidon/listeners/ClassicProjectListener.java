@@ -10,11 +10,11 @@ package org.apache.myrmidon.listeners;
 import org.apache.avalon.framework.ExceptionUtil;
 
 /**
- * Default listener that emulates the old ant listener notifications.
+ * Classic listener that emulates the default ant1.x listener notifications.
  *
  * @author <a href="mailto:peter@apache.org">Peter Donald</a>
  */
-public class ClassicProjectListener
+public final class ClassicProjectListener
     extends AbstractProjectListener
 {
     private String m_prefix;
@@ -22,29 +22,11 @@ public class ClassicProjectListener
     /**
      * Notify listener of targetStarted event.
      *
-     * @param targetName the name of target
+     * @param target the name of target
      */
-    public void targetStarted( final String targetName )
+    public void targetStarted( final String target )
     {
-        output( targetName + ":\n" );
-    }
-
-    /**
-     * Notify listener of taskStarted event.
-     *
-     * @param taskName the name of task
-     */
-    public void taskStarted( final String taskName )
-    {
-        setPrefix( taskName );
-    }
-
-    /**
-     * Notify listener of taskFinished event.
-     */
-    public void taskFinished()
-    {
-        setPrefix( null );
+        output( target + ":\n" );
     }
 
     /**
@@ -74,21 +56,16 @@ public class ClassicProjectListener
      *
      * @param data the data
      */
-    protected void output( final String data )
+    private void output( final String data )
     {
-        if( null != getPrefix() )
-            System.out.println( "\t[" + getPrefix() + "] " + data );
+        final String task = getTask();
+        if( null != task )
+        {
+            System.out.println( "\t[" + task + "] " + data );
+        }
         else
+        {
             System.out.println( data );
-    }
-
-    protected final String getPrefix()
-    {
-        return m_prefix;
-    }
-
-    protected final void setPrefix( final String prefix )
-    {
-        m_prefix = prefix;
+        }
     }
 }

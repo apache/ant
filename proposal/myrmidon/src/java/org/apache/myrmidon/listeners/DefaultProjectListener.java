@@ -14,38 +14,20 @@ import org.apache.avalon.framework.ExceptionUtil;
  *
  * @author <a href="mailto:peter@apache.org">Peter Donald</a>
  */
-public class DefaultProjectListener
+public final class DefaultProjectListener
     extends AbstractProjectListener
 {
-    private String m_prefix;
-    private String m_targetName;
+    private boolean m_targetOutput;
 
     /**
      * Notify listener of targetStarted event.
      *
-     * @param targetName the name of target
+     * @param target the name of target
      */
-    public void targetStarted( final String targetName )
+    public void targetStarted( final String target )
     {
-        m_targetName = targetName;
-    }
-
-    /**
-     * Notify listener of taskStarted event.
-     *
-     * @param taskName the name of task
-     */
-    public void taskStarted( final String taskName )
-    {
-        setPrefix( taskName );
-    }
-
-    /**
-     * Notify listener of taskFinished event.
-     */
-    public void taskFinished()
-    {
-        setPrefix( null );
+        super.targetStarted( target );
+        m_targetOutput = false;
     }
 
     /**
@@ -53,7 +35,7 @@ public class DefaultProjectListener
      *
      * @param message the message
      */
-    public void log( String message )
+    public void log( final String message )
     {
         output( message );
     }
@@ -64,7 +46,7 @@ public class DefaultProjectListener
      * @param message the message
      * @param throwable the throwable
      */
-    public void log( String message, Throwable throwable )
+    public void log( final String message, final Throwable throwable )
     {
         output( message + "\n" + ExceptionUtil.printStackTrace( throwable, 5, true ) );
     }
@@ -75,27 +57,22 @@ public class DefaultProjectListener
      *
      * @param data the data
      */
-    protected void output( final String data )
+    private void output( final String data )
     {
-        if( null != m_targetName )
+        if( !m_targetOutput )
         {
-            System.out.println( m_targetName + ":\n" );
-            m_targetName = null;
+            System.out.println( getTarget() + ":\n" );
+            m_targetOutput = true;
         }
 
-        if( null != getPrefix() )
-            System.out.println( "\t[" + getPrefix() + "] " + data );
+        final String task = getTask();
+        if( null != task )
+        {
+            System.out.println( "\t[" + task + "] " + data );
+        }
         else
+        {
             System.out.println( data );
-    }
-
-    protected final String getPrefix()
-    {
-        return m_prefix;
-    }
-
-    protected final void setPrefix( final String prefix )
-    {
-        m_prefix = prefix;
+        }
     }
 }
