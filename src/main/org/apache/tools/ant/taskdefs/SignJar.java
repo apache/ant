@@ -66,7 +66,7 @@ public class SignJar extends Task {
     protected boolean verbose;
     protected boolean internalsf;
     protected boolean sectionsonly;
-    protected boolean preserveLastModified;
+    private   boolean preserveLastModified;
 
     /** The maximum amount of memory to use for Jar signer */
     private String maxMemory;
