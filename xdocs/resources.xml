@@ -61,6 +61,21 @@
           </tr>
         </table>
       </subsection>
+
+      <subsection name="Ant: The Definitive Guide">
+          <!-- a soon as somebody submits a description, let's add it -->
+        <p>Covers Ant release 1.4.1.</p>
+        <table>
+          <tr>
+            <th>Authors:</th>
+            <td>Jesse E. Tilly and Eric M. Burke</td>
+          </tr>
+          <tr>
+            <th>URL:</th>
+            <td><a href="http://www.oreilly.com/catalog/anttdg/">http://www.oreilly.com/catalog/anttdg/</a></td>
+          </tr>
+        </table>
+      </subsection>
     </section>
 
     <section name="Articles and Presentations">
