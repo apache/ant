@@ -70,17 +70,10 @@ import org.apache.tools.ant.util.IdentityMapper;
  * @author <a href="mailto:bruce@callenish.com">Bruce Atherton</a>
  * @since 1.5
  */
-public class DependSelector extends BaseSelector {
-
-    private File targetdir = null;
-    private Mapper mapperElement = null;
-    private FileNameMapper map = null;
-    private int granularity = 0;
+public class DependSelector extends MappingSelector {
 
     public DependSelector() {
-        if (Os.isFamily("dos")) {
-            granularity = 2000;
-        }
+
     }
 
     public String toString() {
@@ -105,85 +98,16 @@ public class DependSelector extends BaseSelector {
         return buf.toString();
     }
 
-    /**
-     * The name of the file or directory which is checked for out-of-date
-     * files.
-     *
-     * @param targetdir the directory to scan looking for files.
-     */
-    public void setTargetdir(File targetdir) {
-        this.targetdir = targetdir;
-    }
 
     /**
-     * Sets the number of milliseconds leeway we will give before we consider
-     * a file out of date.
+     * this test is our selection test that compared the file with the destfile
+     * @param srcfile
+     * @param destfile
+     * @return
      */
-    public void setGranularity(int granularity) {
-        this.granularity = granularity;
-    }
-
-    /**
-     * Defines the FileNameMapper to use (nested mapper element).
-     */
-    public Mapper createMapper() throws BuildException {
-        if (mapperElement != null) {
-            throw new BuildException("Cannot define more than one mapper");
-        }
-        mapperElement = new Mapper(getProject());
-        return mapperElement;
-    }
-
-
-    /**
-     * Checks to make sure all settings are kosher. In this case, it
-     * means that the dest attribute has been set and we have a mapper.
-     */
-    public void verifySettings() {
-        if (targetdir == null) {
-            setError("The targetdir attribute is required.");
-        }
-        if (mapperElement == null) {
-            map = new IdentityMapper();
-        }
-        else {
-            map = mapperElement.getImplementation();
-        }
-        if (map == null) {
-            setError("Could not set <mapper> element.");
-        }
-    }
-
-    /**
-     * The heart of the matter. This is where the selector gets to decide
-     * on the inclusion of a file in a particular fileset.
-     *
-     * @param basedir the base directory the scan is being done from
-     * @param filename is the name of the file to check
-     * @param file is a java.io.File object the selector can use
-     * @return whether the file should be selected or not
-     */
-    public boolean isSelected(File basedir, String filename, File file) {
-
-        // throw BuildException on error
-        validate();
-
-        // Determine file whose out-of-dateness is to be checked
-        String[] destfiles = map.mapFileName(filename);
-        // If filename does not match the To attribute of the mapper
-        // then filter it out of the files we are considering
-        if (destfiles == null) {
-            return false;
-        }
-        // Sanity check
-        if (destfiles.length != 1 || destfiles[0] == null) {
-            throw new BuildException("Invalid destination file results for "
-                + targetdir.getName() + " with filename " + filename);
-        }
-        String destname = destfiles[0];
-        File destfile = new File(targetdir,destname);
-
-        return SelectorUtils.isOutOfDate(file, destfile, granularity);
+    public boolean selectionTest(File srcfile, File destfile) {
+        boolean selected=SelectorUtils.isOutOfDate(srcfile, destfile, granularity);
+        return selected;
     }
 
 }

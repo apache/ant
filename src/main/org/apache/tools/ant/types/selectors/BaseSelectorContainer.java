@@ -284,5 +284,12 @@ public abstract class BaseSelectorContainer extends BaseSelector
         appendSelector(selector);
     }
 
+    /**
+     * adds a different selector to the selector list
+     */
+    public void addDifferent(DifferentSelector selector) {
+        appendSelector(selector);
+    }
+
 }
 
