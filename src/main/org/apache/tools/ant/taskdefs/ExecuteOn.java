@@ -335,7 +335,7 @@ public class ExecuteOn extends ExecTask {
             System.arraycopy(orig, 0, result, 0, srcIndex);
             // srcIndex --> end
             System.arraycopy(orig, srcIndex, result, 
-                             srcIndex + srcFiles.length + targetFiles.length,
+                             srcIndex + srcFiles.length,
                              orig.length - srcIndex);
 
         }
