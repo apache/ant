@@ -10,8 +10,11 @@
     
     <section name="External Tools and Tasks">
 
-      <p>This page lists external resources for Apache Ant: tasks, IDE
-      integration tools, loggers, you name it. If you've written
+      <p>This page lists external resources for Apache Ant: <a
+      href="#Tasks">tasks</a>, <a
+      href="#Compiler%20Implementations">Compiler Implementations</a>,
+      <a href="#IDE%20and%20Editor%20Integration">IDE integration
+      tools</a>, loggers, you name it. If you've written
       something that should be included, please post all relevant
       information to one of the mailing lists.  For details, see the
       <a href="faq.html#adding-external-tasks">FAQ</a>.</p>
