@@ -16,7 +16,7 @@ import org.apache.avalon.framework.configuration.ConfigurationException;
  * @author <a href="mailto:adammurdoch_ml@yahoo.com">Adam Murdoch</a>
  * @version $Revision$ $Date$
  */
-public interface PropertyConfigurer
+interface PropertyConfigurer
 {
     /**
      * Returns the type of this property.

@@ -15,7 +15,7 @@ import org.apache.avalon.framework.configuration.ConfigurationException;
  * @author <a href="mailto:adammurdoch_ml@yahoo.com">Adam Murdoch</a>
  * @version $Revision$ $Date$
  */
-public interface ObjectConfigurer
+interface ObjectConfigurer
 {
     /**
      * Starts the configuration of an object.

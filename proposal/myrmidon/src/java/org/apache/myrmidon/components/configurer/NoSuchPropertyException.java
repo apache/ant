@@ -17,7 +17,8 @@ import org.apache.avalon.framework.CascadingException;
  *
  * @author Adam Murdoch
  */
-public class NoSuchPropertyException extends CascadingException
+class NoSuchPropertyException
+    extends CascadingException
 {
     public NoSuchPropertyException( String message )
     {

@@ -15,7 +15,7 @@ package org.apache.myrmidon.components.configurer;
  *
  * @author Adam Murdoch
  */
-public class DefaultConfigurationState
+class DefaultConfigurationState
     implements ConfigurationState
 {
     private final int[] m_propCount;

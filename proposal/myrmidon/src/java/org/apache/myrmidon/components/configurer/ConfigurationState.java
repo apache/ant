@@ -13,7 +13,7 @@ package org.apache.myrmidon.components.configurer;
  *
  * @author Adam Murdoch
  */
-public interface ConfigurationState
+interface ConfigurationState
 {
     /**
      * Returns the configurer being used to configure the object.
