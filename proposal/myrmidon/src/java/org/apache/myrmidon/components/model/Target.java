@@ -7,7 +7,6 @@
  */
 package org.apache.myrmidon.components.model;
 
-import org.apache.ant.util.Condition;
 import org.apache.avalon.framework.component.Component;
 import org.apache.avalon.framework.configuration.Configuration;
 

@@ -5,14 +5,14 @@
  * version 1.1, a copy of which has been included with this distribution in
  * the LICENSE file.
  */
-package org.apache.ant.util;
+package org.apache.myrmidon.components.model;
 
-import org.apache.myrmidon.api.TaskException;
+import org.apache.avalon.excalibur.property.PropertyException;
+import org.apache.avalon.excalibur.property.PropertyUtil;
 import org.apache.avalon.framework.component.Component;
 import org.apache.avalon.framework.context.Context;
 import org.apache.avalon.framework.context.ContextException;
-import org.apache.avalon.excalibur.property.PropertyException;
-import org.apache.avalon.excalibur.property.PropertyUtil;
+import org.apache.myrmidon.api.TaskException;
 
 /**
  * Class representing a condition.
@@ -40,7 +40,7 @@ public class Condition
     {
         return m_isIfCondition;
     }
-    
+
     public boolean evaluate( final Context context )
         throws TaskException
     {
@@ -48,14 +48,14 @@ public class Condition
 
         try
         {
-            final Object resolved = 
-                PropertyUtil.resolveProperty( getCondition(), context, false ); 
+            final Object resolved =
+                PropertyUtil.resolveProperty( getCondition(), context, false );
 
-            if( null != resolved ) 
+            if( null != resolved )
             {
                 final Object object = context.get( resolved );
                 //TODO: Do more than just check for presence????????????
-                
+
                 //true as object present
                 result = true;
             }

@@ -8,7 +8,6 @@
 package org.apache.myrmidon.components.manager;
 
 import java.util.ArrayList;
-import org.apache.ant.util.Condition;
 import org.apache.avalon.framework.activity.Disposable;
 import org.apache.avalon.framework.activity.Initializable;
 import org.apache.avalon.framework.component.ComponentException;
@@ -23,6 +22,7 @@ import org.apache.myrmidon.api.DefaultTaskContext;
 import org.apache.myrmidon.api.TaskContext;
 import org.apache.myrmidon.api.TaskException;
 import org.apache.myrmidon.components.executor.Executor;
+import org.apache.myrmidon.components.model.Condition;
 import org.apache.myrmidon.components.model.Project;
 import org.apache.myrmidon.components.model.Target;
 import org.apache.myrmidon.listeners.ProjectListener;

@@ -7,20 +7,20 @@
  */
 package org.apache.ant.modules.basic;
 
-import org.apache.myrmidon.api.TaskException;
 import org.apache.ant.tasklet.DataType;
-import org.apache.ant.util.Condition;
+import org.apache.myrmidon.api.TaskException;
+import org.apache.myrmidon.components.model.Condition;
 
 /**
  * Basic data type for holding patterns.
- * 
+ *
  * @author <a href="mailto:donaldp@apache.org">Peter Donald</a>
  */
 public class Pattern
     implements DataType
 {
-    protected String         m_name;
-    protected Condition      m_condition;
+    private String         m_name;
+    private Condition      m_condition;
 
     /**
      * Retrieve name (aka value) of pattern.
@@ -31,7 +31,7 @@ public class Pattern
     {
         return m_name;
     }
-    
+
     /**
      * Get condition associated with pattern if any.
      *
@@ -41,7 +41,7 @@ public class Pattern
     {
         return m_condition;
     }
-    
+
     /**
      * Setter method for name/value of pattern.
      * Conforms to ant setter patterns
@@ -85,7 +85,7 @@ public class Pattern
      *
      * @exception TaskException if an error occurs
      */
-    protected void verifyConditionNull()
+    private void verifyConditionNull()
         throws TaskException
     {
         if( null != m_condition )

@@ -8,7 +8,6 @@
 package org.apache.myrmidon.components.model;
 
 import java.util.ArrayList;
-import org.apache.ant.util.Condition;
 import org.apache.avalon.framework.configuration.Configuration;
 
 /**
