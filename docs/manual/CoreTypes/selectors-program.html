@@ -15,11 +15,9 @@
     are three types, and a recipe for each one follows. Chances are
     you'll want to work with the first one, Custom Selectors.</p>
 
-    <ol>
-      <li>Custom Selectors
+    <h4>Custom Selectors</h4>
 
-        <p>This is the category that Ant provides specifically for you
-to
+        <p>This is the category that Ant provides specifically for youto
         define your own Selectors. Anywhere you want to use your selector
         you use the <code>&lt;custom&gt;</code> element and specify
         the class name of your selector within it. See the
@@ -45,7 +43,24 @@ to
         core selectors demonstrate how to do that because they can
         also be used as custom selectors.</p>
 
-      <li>Core Selectors
+        <p><i>Note: If you don't need to set variables on your selector
+        with the the embedded <code>&lt;param&gt;</code>
+        elements, your custom selector could just implement the
+        <code>org.apache.tools.ant.types.selectors.FileSelector</code>
+        interface rather than the full
+        <code>org.apache.tools.ant.types.selectors.ExtendFileSelector</code>
+        interface. Using the latter will give you the most flexibility,
+        though.</i></p>
+
+        <p><i>Note: If you inherit from
+        <code>org.apache.tools.ant.types.selectors.BaseExtendSelector</code>
+        or
+        <code>org.apache.tools.ant.types.selectors.BaseSelector</code>,
+        any selector container will perform a validation pass before calling
+        the <code>isSelected()</code> method. Make sure that all
+        initialization is performed before the validation is done.</i></p>
+
+      <h4>Core Selectors</h4>
 
         <p>These are the selectors used by Ant itself. To implement one of
         these, you will have to alter some of the classes contained within
@@ -93,7 +108,7 @@ to
             selectors are appropriate.</p>
         </ul>
 
-      <li>Selector Containers
+      <h4>Selector Containers</h4>
         <p>Got an idea for a new Selector Container? Creating a new one is
         no problem:</p>
         <ul>
@@ -117,7 +132,10 @@ to
             <code>org.apache.tools.ant.types.selectors.BaseSelectorContainer</code>.
             </p>
         </ul>
-    </ol>
+
+<hr>
+<p align="center">Copyright &copy; 2002 Apache Software
+Foundation. All rights Reserved.</p>
 
   </body>
 

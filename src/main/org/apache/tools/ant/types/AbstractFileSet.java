@@ -118,6 +118,9 @@ public abstract class AbstractFileSet extends DataType implements Cloneable,
         if (!additionalPatterns.isEmpty()) {
             throw noChildrenAllowed();
         }
+        if (!selectors.isEmpty()) {
+            throw noChildrenAllowed();
+        }
         super.setRefid(r);
     }
 
@@ -418,7 +421,7 @@ public abstract class AbstractFileSet extends DataType implements Cloneable,
                 return true;
             }
         }
-        
+
         return false;
     }
 
