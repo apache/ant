@@ -216,23 +216,25 @@ public class JavaCC extends Task {
             cmdl.createArgument().setValue("-"+name+":"+value.toString());
         }
 
-        // load command line with required attributes
-        if (outputDirectory != null) {
-            if (!outputDirectory.isDirectory()) {
-                throw new BuildException("Outputdir not a directory.");
-            }
-            cmdl.createArgument().setValue(
-                "-OUTPUT_DIRECTORY:"+outputDirectory.getAbsolutePath());
-        }
-
+        // check the target is a file
         if (target == null || !target.isFile()) {
             throw new BuildException("Invalid target: " + target);
         }
 
+        // use the directory containing the target as the output directory
+        if (outputDirectory == null) {
+            outputDirectory = new File(target.getParent());
+        }
+        else if (!outputDirectory.isDirectory()) {
+            throw new BuildException("Outputdir not a directory.");
+        }
+        cmdl.createArgument().setValue(
+            "-OUTPUT_DIRECTORY:"+outputDirectory.getAbsolutePath());
+
         // determine if the generated java file is up-to-date
         final File javaFile = getOutputJavaFile(outputDirectory, target);
         if (javaFile.exists() && target.lastModified() < javaFile.lastModified()) {
-            project.log("Target is already built - skipping (" + target + ")");
+            log("Target is already built - skipping (" + target + ")", Project.MSG_VERBOSE);
             return;
         }
         cmdl.createArgument().setValue(target.getAbsolutePath());
@@ -248,22 +250,7 @@ public class JavaCC extends Task {
         arg.setValue("-mx140M");
         arg.setValue("-Dinstall.root="+javaccHome.getAbsolutePath());
 
-        final Execute process =
-            new Execute(new LogStreamHandler(this,
-                                             Project.MSG_INFO,
-                                             Project.MSG_INFO),
-                        null);
-        log(cmdl.toString(), Project.MSG_VERBOSE);
-        process.setCommandline(cmdl.getCommandline());
-
-        try {
-            if (process.execute() != 0) {
-                throw new BuildException("JavaCC failed.");
-            }
-        }
-        catch (IOException e) {
-            throw new BuildException("Failed to launch JavaCC: " + e);
-        }
+        Execute.runCommand(this, cmdl.getCommandline());
     }
 
     /**
