@@ -115,7 +115,7 @@ public class Ear extends Jar {
     /**
      * Adds zipfileset.
      *
-     * @param fs
+     * @param fs zipfileset to add
      */
     public void addArchives(ZipFileSet fs) {
         // We just set the prefix for this fileset, and pass it up.
