@@ -8,15 +8,17 @@
 package org.apache.myrmidon.components.workspace;
 
 import java.io.File;
+import java.util.Hashtable;
+import java.util.Map;
 import org.apache.avalon.excalibur.i18n.ResourceManager;
 import org.apache.avalon.excalibur.i18n.Resources;
 import org.apache.avalon.excalibur.io.FileUtil;
-import org.apache.avalon.excalibur.property.PropertyException;
-import org.apache.avalon.excalibur.property.PropertyUtil;
 import org.apache.avalon.framework.context.ContextException;
-import org.apache.avalon.framework.context.DefaultContext;
 import org.apache.myrmidon.api.TaskContext;
 import org.apache.myrmidon.api.TaskException;
+import org.apache.myrmidon.components.configurer.PropertyUtil;
+import org.apache.myrmidon.components.configurer.PropertyException;
+import org.apache.myrmidon.interfaces.configurer.TaskContextAdapter;
 import org.apache.myrmidon.interfaces.service.ServiceException;
 import org.apache.myrmidon.interfaces.service.ServiceManager;
 
@@ -27,12 +29,13 @@ import org.apache.myrmidon.interfaces.service.ServiceManager;
  * @version $Revision$ $Date$
  */
 public class DefaultTaskContext
-    extends DefaultContext
     implements TaskContext
 {
     private final static Resources REZ =
         ResourceManager.getPackageResources( DefaultTaskContext.class );
 
+    private final Map m_contextData = new Hashtable();
+    private final TaskContext m_parent;
     private ServiceManager m_serviceManager;
 
     /**
@@ -65,8 +68,38 @@ public class DefaultTaskContext
     public DefaultTaskContext( final TaskContext parent,
                                final ServiceManager serviceManager )
     {
-        super( parent );
+        m_parent = parent;
         m_serviceManager = serviceManager;
+    }
+
+    /**
+     * Retrieve an item from the Context.
+     *
+     * @param key the key of item
+     * @return the item stored in context
+     * @exception ContextException if item not present
+     */
+    public Object get( final Object key )
+        throws ContextException
+    {
+        final Object data = m_contextData.get( key );
+        if( null != data )
+        {
+            //            if( data instanceof Resolvable )
+            //            {
+            //                return ( (Resolvable)data ).resolve( this );
+            //            }
+            return data;
+        }
+
+        // If data was null, check the parent
+        if( null == m_parent )
+        {
+            // There was no parent, and no data
+            throw new ContextException( "Unable to locate " + key );
+        }
+
+        return m_parent.getProperty( key.toString() );
     }
 
     /**
@@ -133,10 +166,9 @@ public class DefaultTaskContext
         }
 
         // Try parent
-        final TaskContext parent = (TaskContext)getParent();
-        if( null != parent )
+        if( null != m_parent )
         {
-            return parent.getService( serviceClass );
+            return m_parent.getService( serviceClass );
         }
 
         // Not found
@@ -173,8 +205,10 @@ public class DefaultTaskContext
     {
         try
         {
+            final TaskContextAdapter context = new TaskContextAdapter( this );
+
             final Object object =
-                PropertyUtil.resolveProperty( value, this, false );
+                PropertyUtil.resolveProperty( value, context, false );
 
             if( null == object )
             {
@@ -210,6 +244,16 @@ public class DefaultTaskContext
     }
 
     /**
+     * Retrieve a copy of all the properties accessible via context.
+     *
+     * @return the map of all property names to values
+     */
+    public Map getPropertys()
+    {
+        return null;
+    }
+
+    /**
      * Set property value in current context.
      *
      * @param name the name of property
@@ -231,30 +275,30 @@ public class DefaultTaskContext
 
         if( CURRENT == scope )
         {
-            put( name, value );
+            m_contextData.put( name, value );
         }
         else if( PARENT == scope )
         {
-            if( null == getParent() )
+            if( null == m_parent )
             {
                 final String message = REZ.getString( "no-parent.error" );
                 throw new TaskException( message );
             }
             else
             {
-                ( (TaskContext)getParent() ).setProperty( name, value );
+                m_parent.setProperty( name, value );
             }
         }
         else if( TOP_LEVEL == scope )
         {
             DefaultTaskContext context = this;
 
-            while( null != context.getParent() )
+            while( null != context.m_parent )
             {
-                context = (DefaultTaskContext)context.getParent();
+                context = (DefaultTaskContext)context.m_parent;
             }
 
-            context.put( name, value );
+            context.m_contextData.put( name, value );
         }
         else
         {
