@@ -533,6 +533,74 @@ Check for XML Schema support.
 
 Check for Xerces-specific definition of the location of the no namespace schema.
 
+<h4>isreachable</h4>
+
+<p>Uses Java1.5+ networking APIs to probe for a (remote) system being
+reachable. Exactly what probe mechanisms are used is an implementation
+feature of the JVM. They may include ICMP "ping" packets
+
+</p>
+<p>
+This condition turns unknown host exceptions into false conditions. This is
+because on a laptop, DNS is one of the first services when the network goes; you
+are implicitly offline.
+</p>
+<p>
+ If a URL is supplied instead of a host, the hostname is extracted
+ and used in the test - all other parts of the URL are discarded.
+</p>
+<p>
+The test may not work through firewalls, that is, something may be reachable
+using a protocol such as HTTP, while the lower level ICMP packets get dropped
+on the floor. Similarly, a host may detected as reachable with ICMP, but
+not reachable on other ports (i.e. port 80), because of firewalls.
+</p>
+<p>
+
+This condition was added in Apache Ant 1.7.</p>
+
+<table border="1" cellpadding="2" cellspacing="0">
+  <tr>
+    <td valign="top"><b>Attribute</b></td>
+    <td valign="top"><b>Description</b></td>
+    <td align="center" valign="top"><b>Required</b></td>
+  </tr>
+  <tr>
+    <td valign="top">host</td>
+    <td valign="top">host to check for</td>
+    <td valign="top" align="center">one of url or host</td>
+  </tr>
+  <tr>
+    <td valign="top">url</td>
+    <td valign="top">URL containing hostname</td>
+    <td valign="top" align="center">one of url or host</td>
+  </tr>
+  <tr>
+    <td valign="top">timeout</td>
+    <td valign="top">timeout in seconds</td>
+    <td valign="top" align="center">no, default is 30s</td>
+  </tr>
+</table>
+
+<pre>
+&lt;condition property="offline"&gt;
+  &lt;isreachable url="http://ibiblio.org/maven/" /&gt;
+&lt;/condition&gt;
+</pre>
+
+<p>
+Probe for the maven repository being reachable.
+</p>
+
+<pre>
+&lt;condition property="offline"&gt;
+  &lt;isreachable host="ibiblio.org" timeout="10" /&gt;
+&lt;/condition&gt;
+</pre>
+
+<p>
+Probe for the maven repository being reachable using the hostname, ten second timeout..
+</p>
 <hr>
 <p align="center">Copyright &copy; 2001-2005 Apache Software
 Foundation. All rights Reserved.</p>
