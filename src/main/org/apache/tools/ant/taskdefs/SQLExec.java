@@ -71,7 +71,8 @@ import java.sql.*;
  * Comments may be created with REM -- or //.
  * 
  * @author <a href="mailto:jeff@custommonkey.org">Jeff Martin</a>
- * @author <A href="gholam@xtra.co.nz">Michael McCallum</A>
+ * @author <A href="mailto:gholam@xtra.co.nz">Michael McCallum</A>
+ * @author <A href="mailto:tim.stephenson@sybase.com">Tim Stephenson</A>
  */
 public class SQLExec extends Task {
 
@@ -89,6 +90,8 @@ public class SQLExec extends Task {
     private Path classpath;
 
     private AntClassLoader loader;
+
+    private Vector filesets = new Vector();
 
     /**
      * Database connection
@@ -224,12 +227,20 @@ public class SQLExec extends Task {
     }
     
     /**
+     * Adds a set of files (nested fileset attribute).
+     */
+    public void addFileset(FileSet set) {
+        filesets.addElement(set);
+    }
+
+
+    /**
      * Set the sql command to execute
      */
     public Transaction createTransaction() {
-      Transaction t = new Transaction();
-      transactions.addElement(t);
-      return t;
+        Transaction t = new Transaction();
+        transactions.addElement(t);
+        return t;
     }
     
     /**
@@ -269,6 +280,9 @@ public class SQLExec extends Task {
 
     /**
      * Set the statement delimiter.
+     *
+     * <p>For example, set this to "go" and delimitertype to "ROW" for
+     * Sybase ASE or MS SQL Server.</p>
      */
     public void setDelimiter(String delimiter) {
         this.delimiter = delimiter;
@@ -332,11 +346,26 @@ public class SQLExec extends Task {
     public void execute() throws BuildException {
         sqlCommand = sqlCommand.trim();
 
-        if (srcFile == null && sqlCommand.length() == 0) { 
+        if (srcFile == null && sqlCommand.length()==0 && filesets.isEmpty()) { 
             if (transactions.size() == 0) {
-                throw new BuildException("Source file, transactions or sql statement must be set!", location);
+                throw new BuildException("Source file or fileset, transactions or sql statement must be set!", location);
             }
-        } else {
+        } else { 
+            // deal with the filesets
+            for (int i=0; i<filesets.size(); i++) {
+                FileSet fs = (FileSet) filesets.elementAt(i);
+                DirectoryScanner ds = fs.getDirectoryScanner(project);
+                File srcDir = fs.getDir(project);
+
+                String[] srcFiles = ds.getIncludedFiles();
+
+                // Make a transaction for each file
+                for ( int j=0 ; j<srcFiles.length ; j++ ) {
+                    Transaction t = createTransaction();
+                    t.setSrc(new File(srcDir, srcFiles[j]));
+                }
+            }
+
             // Make a transaction group for the outer command
             Transaction t = createTransaction();
             t.setSrc(srcFile);
