@@ -54,7 +54,6 @@
 
 package org.apache.tools.ant.taskdefs;
 
-import java.lang.reflect.Method;
 import java.io.File;
 import java.util.Enumeration;
 import java.util.Vector;
@@ -62,12 +61,12 @@ import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.DirectoryScanner;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.AntClassLoader;
+import org.apache.tools.ant.DynamicConfigurator;
 import org.apache.tools.ant.taskdefs.optional.TraXLiaison;
 import org.apache.tools.ant.types.Path;
 import org.apache.tools.ant.types.Reference;
 import org.apache.tools.ant.util.FileUtils;
 import org.apache.tools.ant.types.XMLCatalog;
-import org.xml.sax.EntityResolver;
 
 /**
  * Processes a set of XML documents via XSLT. This is
@@ -79,6 +78,7 @@ import org.xml.sax.EntityResolver;
  * @author <a href="mailto:rubys@us.ibm.com">Sam Ruby</a>
  * @author <a href="mailto:russgold@acm.org">Russell Gold</a>
  * @author <a href="mailto:stefan.bodewig@epost.de">Stefan Bodewig</a>
+  @author <a href="mailto:sbailliez@apache.org">Stephane Bailliez</a>
  *
  * @since Ant 1.1
  *
@@ -113,8 +113,7 @@ public class XSLTProcess extends MatchingTask implements XSLTLogger {
     /** Classpath to use when trying to load the XSL processor */
     private Path classpath = null;
 
-    /** The Liason implementation to use to communicate with the XSL
-     *  processor */
+    /** implementation to use to communicate with the XSL processor */
     private XSLTLiaison liaison;
 
     /** Flag which indicates if the stylesheet has been loaded into
@@ -127,21 +126,21 @@ public class XSLTProcess extends MatchingTask implements XSLTLogger {
     /** Utilities used for file operations */
     private FileUtils fileUtils;
 
-    /** XSL output method to be used */
+    /** XSL output properties to be used */
     private Vector outputProperties = new Vector();
 
     /** for resolving entities such as dtds */
     private XMLCatalog xmlCatalog = new XMLCatalog();
 
-    /** Name of the TRAX Liason class */
+    /** Name of the TRAX Liaison class */
     private static final String TRAX_LIAISON_CLASS =
                         "org.apache.tools.ant.taskdefs.optional.TraXLiaison";
 
-    /** Name of the now-deprecated XSLP Liason class */
+    /** Name of the now-deprecated XSLP Liaison class */
     private static final String XSLP_LIAISON_CLASS =
                         "org.apache.tools.ant.taskdefs.optional.XslpLiaison";
 
-    /** Name of the Xalan liason class */
+    /** Name of the Xalan liaison class */
     private static final String XALAN_LIAISON_CLASS =
                         "org.apache.tools.ant.taskdefs.optional.XalanLiaison";
 
@@ -151,6 +150,18 @@ public class XSLTProcess extends MatchingTask implements XSLTLogger {
      * @since Ant 1.5
      */
     private boolean performDirectoryScan = true;
+
+    /**
+     * the factory class name to use for TraXLiaison
+     * @since Ant 1.6
+     */
+    private String factory = null;
+
+    /**
+     * the list of factory attributes to use for TraXLiaison
+     * @since Ant 1.6
+     */
+    private Vector attributes = new Vector();
 
     /**
      * Creates a new XSLTProcess Task.
@@ -168,6 +179,14 @@ public class XSLTProcess extends MatchingTask implements XSLTLogger {
      */
     public void setScanIncludedDirectories(boolean b) {
         performDirectoryScan = b;
+    }
+
+    /**
+     * Set the factory to use for the TraXLiaison.
+     * @param value the name of the  factory
+     */
+    public void setFactory(String value){
+        factory = value;
     }
 
     /**
@@ -299,6 +318,8 @@ public class XSLTProcess extends MatchingTask implements XSLTLogger {
     /**
      * Name of the stylesheet to use - given either relative
      * to the project's basedir or as an absolute path; required.
+     *
+     * @param xslFile the stylesheet to use
      */
     public void setStyle(String xslFile) {
         this.xslFile = xslFile;
@@ -579,7 +600,7 @@ public class XSLTProcess extends MatchingTask implements XSLTLogger {
     /**
      * The Param inner class used to store XSL parameters
      */
-    public class Param {
+    public static class Param {
         /** The parameter name */
         private String name = null;
 
@@ -690,6 +711,77 @@ public class XSLTProcess extends MatchingTask implements XSLTLogger {
         }
     }
 
+
+    /**
+     * Create an instance of a factory attribute.
+     * @return the newly created factory attribute
+     * @since Ant 1.6
+     */
+    public Attribute createAttribute() {
+        Attribute attr = new Attribute();
+        attributes.addElement(attr);
+        return attr;
+    }
+
+    /**
+     * A JAXP factory attribute. This is mostly processor specific, for
+     * example for Xalan 2.3+, the following attributes could be set:
+     * <ul>
+     *  <li>http://xml.apache.org/xalan/features/optimize (true|false) </li>
+     *  <li>http://xml.apache.org/xalan/features/incremental (true|false) </li>
+     * </ul>
+     * @since Ant 1.6
+     */
+    public static class Attribute implements DynamicConfigurator {
+
+        /** attribute name, mostly processor specific */
+        private String name;
+
+        /** attribute value, often a boolean string */
+        private Object value;
+
+        /**
+         * @return the attribute name.
+         */
+        public String getName() {
+            return name;
+        }
+
+        /**
+         * @return the output property value.
+         */
+        public Object getValue() {
+            return value;
+        }
+
+        public Object createDynamicElement(String name) throws BuildException {
+            return null;
+        }
+
+        public void setDynamicAttribute(String name, String value)
+                throws BuildException {
+            // only 'name' and 'value' exist.
+            if ("name".equalsIgnoreCase(name)) {
+                this.name = value;
+            } else if ("value".equalsIgnoreCase(name)) {
+                // a value must be of a given type
+                // say boolean|integer|string that are mostly used.
+                if ("true".equalsIgnoreCase(value)
+                        || "false".equalsIgnoreCase(value) ){
+                    this.value = new Boolean(value);
+                } else {
+                    try {
+                        this.value = new Integer(value);
+                    } catch (NumberFormatException e) {
+                        this.value = value;
+                    }
+                }
+            } else {
+                throw new BuildException("Unsupported attribute: " + name);
+            }
+        }
+    }
+
     /**
      * Initialize internal instance of XMLCatalog
      */
@@ -733,10 +825,21 @@ public class XSLTProcess extends MatchingTask implements XSLTLogger {
      * @param liaison the TRaXLiaison to configure.
      */
     protected void configureTraXLiaison(TraXLiaison liaison){
+        if (factory != null) {
+            liaison.setFactory(factory);
+        }
+
         // use XMLCatalog as the entity resolver and URI resolver
         if (xmlCatalog != null) {
             liaison.setEntityResolver(xmlCatalog);
             liaison.setURIResolver(xmlCatalog);
+        }
+
+        // configure factory attributes
+        for (Enumeration attrs = attributes.elements();
+                attrs.hasMoreElements();) {
+            Attribute attr = (Attribute)attrs.nextElement();
+            liaison.setAttribute(attr.getName(), attr.getValue());
         }
 
         // configure output properties

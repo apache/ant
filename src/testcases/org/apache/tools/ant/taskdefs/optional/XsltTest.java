@@ -53,9 +53,6 @@
  */
 package org.apache.tools.ant.taskdefs.optional;
 
-import java.io.*;
-import java.util.Properties;
-
 import org.apache.tools.ant.BuildFileTest;
 
 /**
@@ -114,9 +111,17 @@ public class XsltTest extends BuildFileTest {
     public void testCatalog() throws Exception {
          executeTarget("testCatalog");
     }
-    
+
     public void testOutputProperty() throws Exception {
       executeTarget("testOutputProperty");
+    }
+
+    public void testFactory() throws Exception {
+        executeTarget("testFactory");
+    }
+
+    public void testAttribute() throws Exception {
+        executeTarget("testAttribute");
     }
 }
 

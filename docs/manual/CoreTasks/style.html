@@ -103,6 +103,18 @@ element which is used to perform Entity and URI resolution</p>
     <td align="center" valign="top">No</td>
   </tr>
   <tr>
+    <td valign="top">factory</td>
+
+    <td valign="top">fully qualified class name of the transformer
+      factory to use. For example
+      <tt>org.apache.xalan.processor.TransformerFactoryImpl</tt>
+       or <tt>org.apache.xalan.xsltc.trax.TransformerFactoryImpl</tt>
+       or <tt>net.sf.saxon.TransformerFactoryImpl</tt>...
+      </td>
+    <td align="center" valign="top">No. Works only with 'trax'/default processor
+    and defaults to JAXP lookup mechanism.</td>
+  </tr>  
+  <tr>
     <td valign="top">includes</td>
     <td valign="top">comma- or space-separated list of patterns of files that must be included.
       All files are included when omitted.</td>
@@ -206,6 +218,46 @@ XSLT specifications</a>.
     <td align="center" valign="top">Yes</td>
   </tr>
 </table>
+
+<h4>attribute ('trax' processors only)</h4>
+<p>Used to specify settings of the processor.
+The attribute names and values are entirely processor specific
+so you must be aware of the implementation to figure them out.
+Read the documentation of your processor.
+For example, in Xalan 2.x:
+<ul>
+<li>http://xml.apache.org/xalan/features/optimize (boolean)</li>
+<li>http://xml.apache.org/xalan/features/incremental (boolean)</li>
+<li>...</li>
+</ul>
+And in Saxon 7.x:
+<ul>
+<li>http://saxon.sf.net/feature/allow-external-functions (boolean)</li>
+<li>http://saxon.sf.net/feature/timing (boolean)</li>
+<li>http://saxon.sf.net/feature/traceListener (string)</li>
+<li>http://saxon.sf.net/feature/treeModel (integer)</li>
+<li>http://saxon.sf.net/feature/linenumbering (integer)</li>
+<li>...</li>
+</ul>
+<h4>Parameters</h4>
+<table width="60%" border="1" cellpadding="2" cellspacing="0">
+  <tr>
+    <td valign="top"><b>Attribute</b></td>
+    <td valign="top"><b>Description</b></td>
+    <td align="center" valign="top"><b>Required</b></td>
+  </tr>
+  <tr>
+    <td valign="top">name</td>
+    <td valign="top">Name of the attribute</td>
+    <td align="center" valign="top">Yes</td>
+  </tr>
+  <tr>
+    <td valign="top">value</td>
+    <td valign="top">value of the attribute.</td>
+    <td align="center" valign="top">Yes</td>
+  </tr>
+</table>
+
 
 <h3>Examples</h3>
 <blockquote>

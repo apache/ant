@@ -31,7 +31,6 @@
      </style>
   </target>
 
-
   <target name="testOutputProperty" depends="init">
     <style in="xml/test.xml"
            out="xml/out/test-out.xml"
@@ -42,5 +41,23 @@
       <outputproperty name="indent" value="yes"/>
     </style>
   </target>
+  
+  
+  <target name="testFactory" depends="init">
+    <style in="xml/test.xml"
+           out="xml/out/test-out.xml"
+           style="xml/test.xsl"
+           factory="org.apache.xalan.processor.TransformerFactoryImpl"/>
+  </target>
+
+  <target name="testAttribute" depends="init">
+    <style in="xml/test.xml"
+           out="xml/out/test-out.xml"
+           style="xml/test.xsl"
+           factory="org.apache.xalan.processor.TransformerFactoryImpl">
+       <attribute name="http://xml.apache.org/xalan/features/optimize" value="true"/>
+    </style>
+  </target>
+
   
 </project>
