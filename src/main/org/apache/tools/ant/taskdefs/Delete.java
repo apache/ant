@@ -79,32 +79,33 @@ public class Delete extends MatchingTask {
     protected File dir = null;
     protected Vector filesets = new Vector();
     protected boolean usedMatchingTask = false;
-    protected boolean includeEmpty = false;	// by default, remove matching empty dirs
+    protected boolean includeEmpty = false;     // by default, remove matching empty dirs
 
     private int verbosity = Project.MSG_VERBOSE;
     private boolean quiet = false;
+    private boolean failonerror = true;
 
     /**
      * Set the name of a single file to be removed.
-     * 
+     *
      * @param file the file to be deleted
      */
     public void setFile(File file) {
         this.file = file;
-    } 
+    }
 
     /**
      * Set the directory from which files are to be deleted
-     * 
+     *
      * @param dir the directory path.
      */
     public void setDir(File dir) {
         this.dir = dir;
-    } 
+    }
 
     /**
      * Used to force listing of all names of deleted files.
-     * 
+     *
      * @param verbose "true" or "on"
      */
     public void setVerbose(boolean verbose) {
@@ -112,21 +113,33 @@ public class Delete extends MatchingTask {
             this.verbosity = Project.MSG_INFO;
         } else {
             this.verbosity = Project.MSG_VERBOSE;
-        } 
-    } 
+        }
+    }
 
     /**
-     * If the file does not exist, do not display a diagnostic 
+     * If the file does not exist, do not display a diagnostic
      * message or modify the exit status to reflect an error.
      * This means that if a file or directory cannot be deleted,
-     * then no error is reported. This setting emulates the 
+     * then no error is reported. This setting emulates the
      * -f option to the Unix &quot;rm&quot; command.
      * Default is false meaning things are &quot;noisy&quot;
      * @param quiet "true" or "on"
      */
     public void setQuiet(boolean quiet) {
         this.quiet = quiet;
-    } 
+        if (quiet) {
+            this.failonerror = false;
+        }
+    }
+
+    /**
+     * this flag means 'note errors to the output, but keep going'
+     * @param failonerror true or false
+     */
+     public void setFailOnError(boolean failonerror) {
+         this.failonerror=failonerror;
+     }
+
 
     /**
      * Used to delete empty directories.
@@ -141,7 +154,7 @@ public class Delete extends MatchingTask {
     public void addFileset(FileSet set) {
         filesets.addElement(set);
     }
- 
+
     /**
      * add a name entry on the include list
      */
@@ -149,7 +162,7 @@ public class Delete extends MatchingTask {
         usedMatchingTask = true;
         return super.createInclude();
     }
-    
+
     /**
      * add a name entry on the exclude list
      */
@@ -191,7 +204,7 @@ public class Delete extends MatchingTask {
     /**
      * Sets whether default exclusions should be used or not.
      *
-     * @param useDefaultExcludes "true"|"on"|"yes" when default exclusions 
+     * @param useDefaultExcludes "true"|"on"|"yes" when default exclusions
      *                           should be used, "false"|"off"|"no" when they
      *                           shouldn't be used.
      */
@@ -204,7 +217,7 @@ public class Delete extends MatchingTask {
      * Sets the name of the file containing the includes patterns.
      *
      * @param includesfile A string containing the filename to fetch
-     * the include patterns from.  
+     * the include patterns from.
      */
     public void setIncludesfile(File includesfile) {
         usedMatchingTask = true;
@@ -215,7 +228,7 @@ public class Delete extends MatchingTask {
      * Sets the name of the file containing the includes patterns.
      *
      * @param excludesfile A string containing the filename to fetch
-     * the include patterns from.  
+     * the include patterns from.
      */
     public void setExcludesfile(File excludesfile) {
         usedMatchingTask = true;
@@ -232,7 +245,13 @@ public class Delete extends MatchingTask {
 
         if (file == null && dir == null && filesets.size() == 0) {
             throw new BuildException("At least one of the file or dir attributes, or a fileset element, must be set.");
-        } 
+        }
+
+        if (quiet && failonerror) {
+            throw new BuildException("quiet and failonerror cannot both be set to true",
+                                     location);
+        }
+        
 
         // delete the single file
         if (file != null) {
@@ -241,13 +260,19 @@ public class Delete extends MatchingTask {
                     log("Directory " + file.getAbsolutePath() + " cannot be removed using the file attribute.  Use dir instead.");
                 } else {
                     log("Deleting: " + file.getAbsolutePath());
-  
-                    if (!file.delete() && !quiet) {
-                        throw new BuildException("Unable to delete file " + file.getAbsolutePath());
-                    } 
-                } 
+
+                    if (!file.delete()) {
+                        String message="Unable to delete file " + file.getAbsolutePath();
+                        if(failonerror)
+                            throw new BuildException(message);
+                        else 
+                            log(message, 
+                                quiet ? Project.MSG_VERBOSE : Project.MSG_WARN);
+                    }
+                }
             } else {
-                log("Could not find file " + file.getAbsolutePath() + " to delete.", Project.MSG_VERBOSE);
+                log("Could not find file " + file.getAbsolutePath() + " to delete.", 
+                    Project.MSG_VERBOSE);
             }
         }
 
@@ -255,8 +280,8 @@ public class Delete extends MatchingTask {
         if (dir != null && dir.exists() && dir.isDirectory() && !usedMatchingTask) {
             /*
                If verbosity is MSG_VERBOSE, that mean we are doing regular logging
-               (backwards as that sounds).  In that case, we want to print one 
-               message about deleting the top of the directory tree.  Otherwise, 
+               (backwards as that sounds).  In that case, we want to print one
+               message about deleting the top of the directory tree.  Otherwise,
                the removeDir method will handle messages for _all_ directories.
              */
             if (verbosity == Project.MSG_VERBOSE) {
@@ -275,10 +300,11 @@ public class Delete extends MatchingTask {
                 removeFiles(fs.getDir(project), files, dirs);
             } catch (BuildException be) {
                 // directory doesn't exist or is not readable
-                if (!quiet) {
+                if (failonerror) {
                     throw be;
                 } else {
-                    log(be.getMessage(), Project.MSG_VERBOSE);
+                    log(be.getMessage(), 
+                        quiet ? Project.MSG_VERBOSE : Project.MSG_WARN);
                 }
             }
         }
@@ -292,14 +318,15 @@ public class Delete extends MatchingTask {
                 removeFiles(dir, files, dirs);
             } catch (BuildException be) {
                 // directory doesn't exist or is not readable
-                if (!quiet) {
+                if (failonerror) {
                     throw be;
                 } else {
-                    log(be.getMessage(), Project.MSG_VERBOSE);
+                    log(be.getMessage(), 
+                        quiet ? Project.MSG_VERBOSE : Project.MSG_WARN);
                 }
             }
         }
-    } 
+    }
 
 //************************************************************************
 //  protected and private methods
@@ -315,25 +342,47 @@ public class Delete extends MatchingTask {
                 removeDir(f);
             } else {
                 log("Deleting " + f.getAbsolutePath(), verbosity);
-                if (!f.delete() && !quiet) {
-                    throw new BuildException("Unable to delete file " + f.getAbsolutePath());
+                if (!f.delete()) {
+                    String message="Unable to delete file " + f.getAbsolutePath();
+                    if(failonerror)
+                        throw new BuildException(message);
+                    else
+                        log(message,
+                            quiet ? Project.MSG_VERBOSE : Project.MSG_WARN);
                 }
             }
         }
         log("Deleting directory " + d.getAbsolutePath(), verbosity);
-        if (!d.delete() && !quiet) {
-            throw new BuildException("Unable to delete directory " + dir.getAbsolutePath());
+        if (!d.delete()) {
+            String message="Unable to delete directory " + dir.getAbsolutePath();
+            if(failonerror)
+                throw new BuildException(message);
+            else
+                log(message,
+                    quiet ? Project.MSG_VERBOSE : Project.MSG_WARN);
         }
     }
 
+    /**
+     * remove an array of files in a directory, and a list of subdirectories
+     * which will only be deleted if 'includeEmpty' is true
+     * @param d directory to work from
+     * @param files array of files to delete; can be of zero length
+     * @param dirs array of directories to delete; can of zero length
+     */
     protected void removeFiles(File d, String[] files, String[] dirs) {
         if (files.length > 0) {
             log("Deleting " + files.length + " files from " + d.getAbsolutePath());
             for (int j=0; j<files.length; j++) {
                 File f = new File(d, files[j]);
                 log("Deleting " + f.getAbsolutePath(), verbosity);
-                if (!f.delete() && !quiet) {
-                    throw new BuildException("Unable to delete file " + f.getAbsolutePath());
+                if (!f.delete()) {
+                    String message="Unable to delete file " + f.getAbsolutePath();
+                    if(failonerror)
+                        throw new BuildException(message);
+                    else
+                        log(message,
+                            quiet ? Project.MSG_VERBOSE : Project.MSG_WARN);
                 }
             }
         }
@@ -345,8 +394,14 @@ public class Delete extends MatchingTask {
                 String[] dirFiles = dir.list();
                 if (dirFiles == null || dirFiles.length == 0) {
                     log("Deleting " + dir.getAbsolutePath(), verbosity);
-                    if (!dir.delete() && !quiet) {
-                        throw new BuildException("Unable to delete directory " + dir.getAbsolutePath());
+                    if (!dir.delete()) {
+                        String message="Unable to delete directory "
+                                + dir.getAbsolutePath();
+                        if(failonerror)
+                            throw new BuildException(message);
+                        else
+                            log(message,
+                                quiet ? Project.MSG_VERBOSE : Project.MSG_WARN);
                     } else {
                         dirCount++;
                     }
@@ -354,8 +409,8 @@ public class Delete extends MatchingTask {
             }
 
             if (dirCount > 0) {
-                log("Deleted " + dirCount + " director" + 
-                    (dirCount==1 ? "y" : "ies") + 
+                log("Deleted " + dirCount + " director" +
+                    (dirCount==1 ? "y" : "ies") +
                     " from " + d.getAbsolutePath());
             }
         }

@@ -43,10 +43,21 @@ To remove empty directories, use the <em>includeEmptyDirs</em> atribute.</p>
      This means that if a file or directory cannot be deleted,
      then no error is reported. This setting emulates the 
      -f option to the Unix &quot;rm&quot; command.
-    (&quot;true&quot;/&quot;false&quot;).
-	 Default is &quot;false&quot; meaning things are &quot;noisy&quot;.</td>
+     (&quot;true&quot;/&quot;false&quot;).
+     Default is &quot;false&quot; meaning things are &quot;noisy&quot;.</td>
+     Setting this to true, implies setting failonerror to false.
     <td align="center" valign="top">No</td>
   </tr>
+  <tr>
+    <td valign="top">failonerror</td>
+    <td valign="top">
+    This flag (which is only of relevance if 'quiet' is false),
+    controls whether an error -such as a failure to delete a file-
+    stops the build task, or is merely reported to the screen.
+    The default is &quot;true&quot;
+    </td>
+    <td align="center" valign="top">No</td>
+  </tr>  
   <tr>
     <td valign="top">includeEmptyDirs</td>
     <td valign="top">Set to &quot;true&quot; to delete empty directories when
