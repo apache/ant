@@ -531,6 +531,32 @@ public class ScannerUtil
         }
     }
 
+    public static void setupDirectoryScanner( final org.apache.myrmidon.framework.FileSet set,
+                                              final FileScanner scanner,
+                                              final TaskContext context )
+        throws TaskException
+    {
+        if( null == scanner )
+        {
+            final String message = "ds cannot be null";
+            throw new IllegalArgumentException( message );
+        }
+
+        scanner.setBasedir( set.getDir() );
+
+        /*final String message = "FileSet: Setup file scanner in dir " +
+            set.getDir() + " with " + set;
+        getLogger().debug( message );*/
+
+        scanner.setIncludes( PatternUtil.getIncludePatterns( set, context ) );
+        scanner.setExcludes( PatternUtil.getExcludePatterns( set, context ) );
+        if( set.includeDefaultExcludes() )
+        {
+            scanner.addDefaultExcludes();
+        }
+        scanner.setCaseSensitive( true );
+    }
+
     public static void setupDirectoryScanner( final FileSet set,
                                               final FileScanner scanner,
                                               final TaskContext context )
@@ -544,9 +570,9 @@ public class ScannerUtil
 
         scanner.setBasedir( set.getDir() );
 
-        final String message = "FileSet: Setup file scanner in dir " +
+        /*final String message = "FileSet: Setup file scanner in dir " +
             set.getDir() + " with " + set;
-        //getLogger().debug( message );
+        getLogger().debug( message );*/
 
         scanner.setIncludes( PatternUtil.getIncludePatterns( set, context ) );
         scanner.setExcludes( PatternUtil.getExcludePatterns( set, context ) );
@@ -558,6 +584,33 @@ public class ScannerUtil
     }
 
     public static DirectoryScanner getDirectoryScanner( final FileSet set )
+        throws TaskException
+    {
+        final File dir = set.getDir();
+        if( null == dir )
+        {
+            final String message = "No directory specified for fileset.";
+            throw new TaskException( message );
+        }
+
+        if( !dir.exists() )
+        {
+            final String message = dir.getAbsolutePath() + " not found.";
+            throw new TaskException( message );
+        }
+        if( !dir.isDirectory() )
+        {
+            final String message = dir.getAbsolutePath() + " is not a directory.";
+            throw new TaskException( message );
+        }
+
+        final DirectoryScanner scanner = new DirectoryScanner();
+        setupDirectoryScanner( set, scanner, null );
+        scanner.scan();
+        return scanner;
+    }
+
+    public static DirectoryScanner getDirectoryScanner( final org.apache.myrmidon.framework.FileSet set )
         throws TaskException
     {
         final File dir = set.getDir();
