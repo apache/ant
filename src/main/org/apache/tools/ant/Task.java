@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 1999 The Apache Software Foundation.  All rights 
+ * Copyright (c) 1999 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -9,7 +9,7 @@
  * are met:
  *
  * 1. Redistributions of source code must retain the above copyright
- *    notice, this list of conditions and the following disclaimer. 
+ *    notice, this list of conditions and the following disclaimer.
  *
  * 2. Redistributions in binary form must reproduce the above copyright
  *    notice, this list of conditions and the following disclaimer in
@@ -17,15 +17,15 @@
  *    distribution.
  *
  * 3. The end-user documentation included with the redistribution, if
- *    any, must include the following acknowlegement:  
- *       "This product includes software developed by the 
+ *    any, must include the following acknowlegement:
+ *       "This product includes software developed by the
  *        Apache Software Foundation (http://www.apache.org/)."
  *    Alternately, this acknowlegement may appear in the software itself,
  *    if and wherever such third-party acknowlegements normally appear.
  *
  * 4. The names "The Jakarta Project", "Tomcat", and "Apache Software
  *    Foundation" must not be used to endorse or promote products derived
- *    from this software without prior written permission. For written 
+ *    from this software without prior written permission. For written
  *    permission, please contact apache@apache.org.
  *
  * 5. Products derived from this software may not be called "Apache"
@@ -54,24 +54,18 @@
 
 package org.apache.tools.ant;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.PrintStream;
-import java.util.StringTokenizer;
-import java.util.Vector;
+import java.io.*;
+import java.util.*;
 
 /**
- * Base class for all tasks in the 
+ * Base class for all tasks.
  *
  * @author duncan@x180.com
  */
-
 public abstract class Task {
 
     protected Project project = null;
-    Target target;
+    protected Target target = null;
 
     /**
      * Sets the project object of this task. This method is used by
@@ -81,75 +75,80 @@ public abstract class Task {
      *
      * @param project Project in whose scope this task belongs.
      */
-
     void setProject(Project project) {
-	this.project = project;
+        this.project = project;
     }
 
-    public void setAttribute( String name, Object v) {
-	if("target".equals( name ) ) {
-	    Target t=(Target)v;
-	    target=t;
-	    project=t.getProject();
-	    return;
-	}
-	// 	System.out.println("Set Att " +name + " = " + v );
-	// 	if( v!=null) System.out.println(v.getClass());
-    }
-    
     /**
-     * Called by the project to let the task do it's work.
+     * Sets a task attribute.
+     *
+     * @param name the attribute name
+     * @param value the attribute value
+     */
+    public void setAttribute(String name, Object value) {
+        if (name.equals("target")) {
+            this.target = (Target) value;
+            this.project = this.target.getProject();
+        }
+    }
+
+    /**
+     * Called by the project to let the task initialize properly. Normally it does nothing.
      *
      * @throws BuildException if someting goes wrong with the build
      */
-    
-    public abstract void execute() throws BuildException;
+    public void init() throws BuildException {}
+
+    /**
+     * Called by the project to let the task do it's work. Normally it does nothing.
+     *
+     * @throws BuildException if someting goes wrong with the build
+     */
+    public void execute() throws BuildException {};
 
     /**
      * Convienence method to copy a file from a source to a destination
      *
      * @throws IOException
      */
-
     protected void copyFile(String sourceFile, String destFile)
-	throws IOException
+        throws IOException
     {
-	copyFile(new File(sourceFile), new File(destFile));
+        copyFile(new File(sourceFile), new File(destFile));
     }
-    
+
     /**
      * Convienence method to copy a file from a source to a destination.
      *
      * @throws IOException
      */
+    protected void copyFile(File sourceFile, File destFile) throws IOException {
 
-    protected void copyFile(File sourceFile,File destFile) throws IOException {
+        if (destFile.lastModified() < sourceFile.lastModified()) {
+            project.log("Copy: " + sourceFile.getAbsolutePath() + " > "
+                    + destFile.getAbsolutePath(), project.MSG_VERBOSE);
 
-	if (destFile.lastModified() < sourceFile.lastModified()) {
-	    project.log("Copy: " + sourceFile.getAbsolutePath() + " > "
-		    + destFile.getAbsolutePath(), project.MSG_VERBOSE);
+            // ensure that parent dir of dest file exists!
+            // not using getParentFile method to stay 1.1 compat
+            File parent = new File(destFile.getParent());
+            if (!parent.exists()) {
+                parent.mkdirs();
+            }
 
-	    // ensure that parent dir of dest file exists!
-	    // not using getParentFile method to stay 1.1 compat
+            // open up streams and copy using a decent buffer
+            FileInputStream in = new FileInputStream(sourceFile);
+            FileOutputStream out = new FileOutputStream(destFile);
 
-	    File parent = new File(destFile.getParent());
-	    if (!parent.exists()) {
-		parent.mkdirs();
-	    }
+            byte[] buffer = new byte[8 * 1024];
+            int count = 0;
+            do {
+                out.write(buffer, 0, count);
+                count = in.read(buffer, 0, buffer.length);
+            } while (count != -1);
 
-	    // open up streams and copy using a decent buffer
-
-	    FileInputStream in = new FileInputStream(sourceFile);
-	    FileOutputStream out = new FileOutputStream(destFile);
-	    byte[] buffer = new byte[8 * 1024];
-	    int count = 0;
-	    do {
-		out.write(buffer, 0, count);
-		count = in.read(buffer, 0, buffer.length);
-	    } while (count != -1);
-	    in.close();
-	    out.close();
-	}
+            in.close();
+            out.close();
+        }
     }
 }
 

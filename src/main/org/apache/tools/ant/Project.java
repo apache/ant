@@ -176,10 +176,11 @@ public class Project {
         log("Setting project property: " + name + " to " +
             value, MSG_VERBOSE);
         userProperties.put(name, value);
-        properties.put( name,value);
+        properties.put(name, value);
     }
 
     public String getProperty(String name) {
+        if (name == null) return null;
         String property = (String) properties.get(name);
         return property;
     }
