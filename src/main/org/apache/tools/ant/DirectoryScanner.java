@@ -682,81 +682,85 @@ public class DirectoryScanner
         } else {
             // only scan directories that can include matched files or
             // directories
-        Enumeration enum2 = newroots.keys();
+            Enumeration enum2 = newroots.keys();
 
-        File canonBase = null;
-        try {
-            canonBase = basedir.getCanonicalFile();
-        } catch (IOException ex) {
-            throw new BuildException(ex);
-        }
-
-        while (enum2.hasMoreElements()) {
-            String currentelement = (String) enum2.nextElement();
-            String originalpattern = (String) newroots.get(currentelement);
-            File myfile = new File(basedir, currentelement);
-
-            if (myfile.exists()) {
-                // may be on a case insensitive file system.  We want
-                // the results to show what's really on the disk, so
-                // we need to double check.
-                try {
-                    File canonFile = myfile.getCanonicalFile();
-                    String path = fileUtils.removeLeadingPath(canonBase,
-                                                              canonFile);
-                    if (!path.equals(currentelement)) {
-                        myfile = findFile(basedir, currentelement);
-                        if (myfile != null) {
-                            currentelement = 
-                                fileUtils.removeLeadingPath(basedir, myfile);
-                        }
-                    }
-                } catch (IOException ex) {
-                    throw new BuildException(ex);
-                }
-            }
-            
-            if ((myfile == null || !myfile.exists()) && !isCaseSensitive) {
-                File f = findFileCaseInsensitive(basedir, currentelement);
-                if (f.exists()) {
-                    // adapt currentelement to the case we've actually found
-                    currentelement = fileUtils.removeLeadingPath(basedir,
-                                                                 f);
-                    myfile = f;
-                }
+            File canonBase = null;
+            try {
+                canonBase = basedir.getCanonicalFile();
+            } catch (IOException ex) {
+                throw new BuildException(ex);
             }
 
-            if (myfile != null && myfile.exists()) {
-                if (!followSymlinks && isSymlink(basedir, currentelement)) {
-                    continue;
-                }
+            while (enum2.hasMoreElements()) {
+                String currentelement = (String) enum2.nextElement();
+                String originalpattern = (String) newroots.get(currentelement);
+                File myfile = new File(basedir, currentelement);
 
-                if (myfile.isDirectory()) {
-                    if (isIncluded(currentelement)
-                        && currentelement.length() > 0) {
-                        accountForIncludedDir(currentelement, myfile, true);
-                    }  else {
-                        if (currentelement.length() > 0) {
-                            if (currentelement.charAt(currentelement.length()
-                                                      - 1)
-                                != File.separatorChar) {
-                                currentelement =
-                                    currentelement + File.separatorChar;
+                if (myfile.exists()) {
+                    // may be on a case insensitive file system.  We want
+                    // the results to show what's really on the disk, so
+                    // we need to double check.
+                    try {
+                        File canonFile = myfile.getCanonicalFile();
+                        String path = fileUtils.removeLeadingPath(canonBase,
+                                                                  canonFile);
+                        if (!path.equals(currentelement)) {
+                            myfile = findFile(basedir, currentelement);
+                            if (myfile != null) {
+                                currentelement = 
+                                    fileUtils.removeLeadingPath(basedir,
+                                                                myfile);
                             }
                         }
-                        scandir(myfile, currentelement, true);
+                    } catch (IOException ex) {
+                        throw new BuildException(ex);
                     }
-                } else {
-                    if (isCaseSensitive
-                        && originalpattern.equals(currentelement)) {
-                        accountForIncludedFile(currentelement, myfile);
-                    } else if (!isCaseSensitive
-                        && originalpattern.equalsIgnoreCase(currentelement)) {
-                        accountForIncludedFile(currentelement, myfile);
+                }
+            
+                if ((myfile == null || !myfile.exists()) && !isCaseSensitive) {
+                    File f = findFileCaseInsensitive(basedir, currentelement);
+                    if (f.exists()) {
+                        // adapt currentelement to the case we've
+                        // actually found
+                        currentelement = fileUtils.removeLeadingPath(basedir,
+                                                                     f);
+                        myfile = f;
+                    }
+                }
+
+                if (myfile != null && myfile.exists()) {
+                    if (!followSymlinks 
+                        && isSymlink(basedir, currentelement)) {
+                        continue;
+                    }
+
+                    if (myfile.isDirectory()) {
+                        if (isIncluded(currentelement)
+                            && currentelement.length() > 0) {
+                            accountForIncludedDir(currentelement, myfile, true);
+                        }  else {
+                            if (currentelement.length() > 0) {
+                                if (currentelement.charAt(currentelement
+                                                          .length() - 1)
+                                    != File.separatorChar) {
+                                    currentelement =
+                                        currentelement + File.separatorChar;
+                                }
+                            }
+                            scandir(myfile, currentelement, true);
+                        }
+                    } else {
+                        if (isCaseSensitive
+                            && originalpattern.equals(currentelement)) {
+                            accountForIncludedFile(currentelement, myfile);
+                        } else if (!isCaseSensitive
+                                   && originalpattern
+                                   .equalsIgnoreCase(currentelement)) {
+                            accountForIncludedFile(currentelement, myfile);
+                        }
                     }
                 }
             }
-        }
         }
     }
 
