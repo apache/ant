@@ -79,10 +79,6 @@ public class XMLProjectParser {
          throws XMLParseException {
         try {
             ParseContext context = new ParseContext();
-            context.declareNamespace(Namespace.ANT_META_PREFIX,
-                Namespace.ANT_META_URI);
-            context.declareNamespace(Namespace.XSI_PREFIX,
-                Namespace.XSI_URI);
 
             ProjectHandler projectHandler = new ProjectHandler();
 

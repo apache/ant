@@ -136,7 +136,7 @@ public class Ant extends AntBase {
 
         ExecService execService = getExecService();
         Project model = execService.parseXMLBuildFile(antFile);
-        Object key = execService.setupBuild(model, getProperties(), true);
+        Object key = execService.setupBuild(model, getDataValues(), true);
 
         setSubBuildKey(key);
 
@@ -154,13 +154,13 @@ public class Ant extends AntBase {
                 PrintStream out
                     = new PrintStream(new FileOutputStream(outfile));
                 DefaultLogger logger = new DefaultLogger();
-                logger.setMessageOutputLevel(MessageLevel.MSG_INFO);
+                logger.setMessageOutputLevel(MessageLevel.INFO);
                 logger.setOutputPrintStream(out);
                 logger.setErrorPrintStream(out);
                 execService.addBuildListener(key, logger);
             } catch (IOException ex) {
                 log("Ant: Can't set output to " + output,
-                    MessageLevel.MSG_INFO);
+                    MessageLevel.INFO);
             }
         }
 

@@ -51,24 +51,79 @@
  * information on the Apache Software Foundation, please see
  * <http://www.apache.org/>.
  */
-package org.apache.ant.common.event;
+package org.apache.ant.antcore.frontend;
+
+import org.apache.ant.common.util.AntException;
+import org.apache.ant.common.util.Location;
 
 /**
- * The levels at which a log message may be sent.
+ * An exception in the frontend set up of an Ant run
  *
  * @author Conor MacNeill
- * @created 16 January 2002
  */
-public class MessageLevel {
-    /** Error message level */
-    public static final int ERROR = 0;
-    /** Warnign message level */
-    public static final int WARNING = 1;
-    /** Informational message level */
-    public static final int INFO = 2;
-    /** Verbose message level */
-    public static final int VERBOSE = 3;
-    /** Debug Message level */
-    public static final int DEBUG = 4;
+public class FrontendException extends AntException {
+    /**
+     * Constructs an exception with the given descriptive message.
+     *
+     * @param msg Description of or information about the exception.
+     */
+    public FrontendException(String msg) {
+        super(msg);
+    }
+
+    /**
+     * Constructs an exception with the given descriptive message and a
+     * location in a file.
+     *
+     * @param msg Description of or information about the exception.
+     * @param location Location in the project file where the error occured.
+     */
+    public FrontendException(String msg, Location location) {
+        super(msg, location);
+    }
+
+    /**
+     * Constructs an exception with the given message and exception as a
+     * root cause.
+     *
+     * @param msg Description of or information about the exception.
+     * @param cause Throwable that might have cause this one.
+     */
+    public FrontendException(String msg, Throwable cause) {
+        super(msg, cause);
+    }
+
+    /**
+     * Constructs an exception with the given message and exception as a
+     * root cause and a location in a file.
+     *
+     * @param msg Description of or information about the exception.
+     * @param cause Exception that might have cause this one.
+     * @param location Location in the project file where the error occured.
+     */
+    public FrontendException(String msg, Throwable cause,
+                          Location location) {
+        super(msg, cause, location);
+    }
+
+    /**
+     * Constructs an exception with the given exception as a root cause.
+     *
+     * @param cause Exception that might have caused this one.
+     */
+    public FrontendException(Throwable cause) {
+        super(cause);
+    }
+
+    /**
+     * Constructs an exception with the given exception as a root cause and
+     * a location in a file.
+     *
+     * @param cause Exception that might have cause this one.
+     * @param location Location in the project file where the error occured.
+     */
+    public FrontendException(Throwable cause, Location location) {
+        super(cause, location);
+    }
 }
 

@@ -61,6 +61,7 @@ import org.apache.ant.common.antlib.ValidationException;
 import org.apache.ant.common.service.DataService;
 import org.apache.ant.common.service.ExecService;
 import org.apache.ant.common.util.AntException;
+import org.apache.ant.common.util.DataValue;
 
 /**
  * Common Base class all tasks that can pass references and property overrides
@@ -217,8 +218,8 @@ public abstract class SubBuild extends AbstractTask {
     /** The core's ExecutionService for running builds and external programs */
     private ExecService execService;
 
-    /** The properties which will be passed to the sub-build */
-    private Map properties = new HashMap();
+    /** The data values which will be passed to the sub-build */
+    private Map dataValues = new HashMap();
 
 
     /**
@@ -227,7 +228,9 @@ public abstract class SubBuild extends AbstractTask {
      * @param property descriptor for the property to be passed
      */
     public void addProperty(Property property) {
-        properties.put(property.getName(), property.getValue());
+        DataValue value
+             = new DataValue(property.getValue(), DataValue.PRIORITY_INHERIT);
+        dataValues.put(property.getName(), value);
     }
 
 
@@ -235,8 +238,8 @@ public abstract class SubBuild extends AbstractTask {
      * Add a reference to be passed
      *
      * @param reference the descriptor of the reference to be passed
-     * @exception AntException if the reference does not reference a
-     *      valid object
+     * @exception AntException if the reference does not reference a valid
+     *      object
      */
     public void addReference(Reference reference) throws AntException {
         String refId = reference.getRefId();
@@ -251,7 +254,7 @@ public abstract class SubBuild extends AbstractTask {
             toId = refId;
         }
 
-        properties.put(toId, value);
+        dataValues.put(toId, new DataValue(value, DataValue.PRIORITY_INHERIT));
     }
 
 
@@ -278,10 +281,11 @@ public abstract class SubBuild extends AbstractTask {
     /**
      * Get the properties to be used with the sub-build
      *
-     * @return the properties the sub-build will start with
+     * @return the data values the sub-build will start with
+     * @exception AntException if the datavalues cannot be retrieved.
      */
-    protected Map getProperties() {
-        return properties;
+    protected Map getDataValues() throws AntException {
+        return dataValues;
     }
 
 
@@ -308,7 +312,9 @@ public abstract class SubBuild extends AbstractTask {
      * @param propertyValue the value of the property
      */
     protected void setProperty(String propertyName, Object propertyValue) {
-        properties.put(propertyName, propertyValue);
+        DataValue value
+             = new DataValue(propertyValue, DataValue.PRIORITY_INHERIT);
+        dataValues.put(propertyName, value);
     }
 }
 

@@ -275,20 +275,20 @@ public class CoreExecService implements ExecService {
      * Setup a sub-build.
      *
      * @param model the project model to be used for the build
-     * @param properties the initiali properties to be used in the build
+     * @param dataValues the initial data values to be used in the build
      * @param addListeners true if the current frame's listeners should be
      *        added to the created Frame
      * @return Description of the Return Value
      * @exception AntException if the subbuild cannot be run
      */
-    public Object setupBuild(Project model, Map properties,
+    public Object setupBuild(Project model, Map dataValues,
                                boolean addListeners)
          throws AntException {
         Frame newFrame = frame.createFrame(model);
         if (addListeners) {
             frame.addListeners(newFrame);
         }
-        newFrame.initialize(properties);
+        newFrame.initialize(dataValues);
 
         return newFrame;
     }
@@ -297,15 +297,15 @@ public class CoreExecService implements ExecService {
     /**
      * Setup a sub-build using the current frame's project model
      *
-     * @param properties the initiali properties to be used in the build
+     * @param dataValues the initial properties to be used in the build
      * @param addListeners true if the current frame's listeners should be
      *        added to the created Frame
      * @return Description of the Return Value
      * @exception AntException if the subbuild cannot be run
      */
-    public Object setupBuild(Map properties, boolean addListeners)
+    public Object setupBuild(Map dataValues, boolean addListeners)
          throws AntException {
-        return setupBuild(frame.getProject(), properties, addListeners);
+        return setupBuild(frame.getProject(), dataValues, addListeners);
     }
 }
 

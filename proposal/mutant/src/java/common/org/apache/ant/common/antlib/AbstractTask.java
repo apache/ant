@@ -94,7 +94,7 @@ public abstract class AbstractTask extends AbstractComponent implements Task {
      */
     public void handleSystemOut(String line) throws AntException {
         // default behaviout is to log at INFO level
-        log(line, MessageLevel.MSG_INFO);
+        log(line, MessageLevel.INFO);
     }
 
     /**
@@ -108,7 +108,7 @@ public abstract class AbstractTask extends AbstractComponent implements Task {
      */
     public void handleSystemErr(String line) throws AntException {
         // default behaviout is to log at WARN level
-        log(line, MessageLevel.MSG_WARN);
+        log(line, MessageLevel.WARNING);
     }
 }
 

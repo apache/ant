@@ -64,6 +64,7 @@ import org.apache.ant.common.model.BuildElement;
 import org.apache.ant.common.model.NamespaceValueCollection;
 import org.apache.ant.common.util.AttributeCollection;
 import org.apache.ant.common.constants.Namespace;
+import org.apache.ant.common.util.DataValue;
 
 /**
  * The Ant aspect - handles all ant aspects
@@ -144,7 +145,8 @@ public class AntAspect extends AbstractAspect {
             = model.getNamespaceAttributeValue(Namespace.ANT_META_URI, "id");
 
         if (typeId != null) {
-            dataService.setMutableDataValue(typeId, component);
+            dataService.setDataValue(typeId,
+                new DataValue(component, DataValue.PRIORITY_BASE), true);
         }
 
         return super.postCreateComponent(component, model);

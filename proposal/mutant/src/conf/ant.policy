@@ -1,0 +1,49 @@
+// Mutant Policy File
+//
+//   Copyright (c) 2002 The Apache Software Foundation.
+//   All rights reserved.
+
+// Need to explicitly grant to java.home to pick up tools.jar classes
+grant codeBase "file:${java.home}/../lib/tools.jar" {
+    permission java.security.AllPermission;
+};
+
+// full access is granted to the core
+grant codeBase "file:${ant.home}/lib/core/-" {
+    permission java.security.AllPermission;
+};
+
+// grant full access to the command line front end.
+// All operations can be controlled by setting the appropriate
+// permissions on the front end. This will also affect core
+// functions
+grant codeBase "file:${ant.home}/lib/frontend/cli.jar" {
+    permission java.security.AllPermission;
+};
+
+// grant for the Ant1 compat jar. Other Ant libraries can be controlled
+// individually.
+grant codeBase "file:${ant.home}/lib/antlibs/ant1compat.jar" {
+    permission java.security.AllPermission;
+
+    // For backward compatibility the Ant1 compatabilioty is granted full
+    // permission. This can be reduced as desired to eliminate the ability to
+    // access the network.
+    //
+    // For example, the following permissions are required to build Mutant. Additional
+    // permissions are required depending on what tasks you want to enable.
+//    permission java.io.FilePermission "<<ALL FILES>>", "read, write, execute, delete";
+//    permission java.lang.RuntimePermission "accessDeclaredMembers";
+//    permission java.lang.RuntimePermission "createClassLoader";
+//    permission java.lang.RuntimePermission "getClassLoader";
+//    permission java.util.PropertyPermission "java.class.path", "read, write";
+//    permission java.util.PropertyPermission "java.home", "read";
+//    permission java.util.PropertyPermission "user.dir", "read";
+//    permission java.util.PropertyPermission "user.name", "read";
+//    permission java.util.PropertyPermission "sun.*", "read";
+//    permission java.util.PropertyPermission "java.*", "read";
+//    permission java.util.PropertyPermission "javac.*", "read";
+//    permission java.util.PropertyPermission "line.separator", "write";
+//    permission java.lang.RuntimePermission "accessClassInPackage.sun.*";
+};
+

@@ -51,24 +51,77 @@
  * information on the Apache Software Foundation, please see
  * <http://www.apache.org/>.
  */
-package org.apache.ant.common.event;
+package org.apache.ant.common.util;
+import java.util.HashMap;
+import java.util.Iterator;
+
+import java.util.Map;
 
 /**
- * The levels at which a log message may be sent.
+ * A DataValue is an arbitrary value with an associated priority.
  *
  * @author Conor MacNeill
- * @created 16 January 2002
+ * @created 26 June 2002
  */
-public class MessageLevel {
-    /** Error message level */
-    public static final int ERROR = 0;
-    /** Warnign message level */
-    public static final int WARNING = 1;
-    /** Informational message level */
-    public static final int INFO = 2;
-    /** Verbose message level */
-    public static final int VERBOSE = 3;
-    /** Debug Message level */
-    public static final int DEBUG = 4;
+public class DataValue {
+    /** Base priority level */
+    public static final int PRIORITY_BASE = 0;
+    /** Prioirty of values inherited from a super build. */
+    public static final int PRIORITY_INHERIT = 10;
+    /** Priority of values specified by the user. */
+    public static final int PRIORITY_USER = 20;
+
+    /** The DataValue's priority */
+    private int priority;
+    /** The actual data. */
+    private Object value;
+
+    /**
+     * Create a DataValue with the given data and priority.
+     *
+     * @param value the actual value
+     * @param priority the priority associated with this value.
+     */
+    public DataValue(Object value, int priority) {
+        this.priority = priority;
+        this.value = value;
+    }
+
+    /**
+     * Convert plain named values into a collection of DataValues with the
+     * given priority
+     *
+     * @param values A collection of values named by String keys
+     * @param priority The required data value to be applied to the values.
+     * @return A collection of datavalues corresponding to the input collection
+     * and having the specified priority.
+     */
+    public static Map makeDataValues(Map values, int priority) {
+        Map dataValues = new HashMap();
+        for (Iterator i = values.keySet().iterator(); i.hasNext();) {
+            Object key = i.next();
+            Object value = values.get(key);
+            dataValues.put(key, new DataValue(value, priority));
+        }
+        return dataValues;
+    }
+
+    /**
+     * Gets the priority of the DataValue object
+     *
+     * @return the priority value
+     */
+    public int getPriority() {
+        return priority;
+    }
+
+    /**
+     * Gets the value of the DataValue object
+     *
+     * @return the value value
+     */
+    public Object getValue() {
+        return value;
+    }
 }
 

@@ -106,7 +106,7 @@ public class TaskAdapter extends AbstractTask {
         try {
             executeMethod.invoke(worker, null);
         } catch (InvocationTargetException e) {
-            log("Error in " + worker.getClass(), MessageLevel.MSG_ERR);
+            log("Error in " + worker.getClass(), MessageLevel.ERROR);
             Throwable t = e.getTargetException();
             if (t instanceof ExecutionException) {
                 throw (ExecutionException) t;
@@ -114,7 +114,7 @@ public class TaskAdapter extends AbstractTask {
                 throw new ExecutionException(t);
             }
         } catch (Throwable t) {
-            log("Error in " + worker.getClass(), MessageLevel.MSG_ERR);
+            log("Error in " + worker.getClass(), MessageLevel.ERROR);
             throw new ExecutionException(t);
         }
     }

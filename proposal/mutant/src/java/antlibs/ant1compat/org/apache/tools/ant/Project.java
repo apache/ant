@@ -57,11 +57,11 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Enumeration;
+import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.HashMap;
 import java.util.Properties;
 import java.util.Stack;
 import java.util.Vector;
@@ -74,6 +74,7 @@ import org.apache.ant.common.service.ExecService;
 import org.apache.ant.common.service.FileService;
 import org.apache.ant.common.service.InputService;
 import org.apache.ant.common.util.AntException;
+import org.apache.ant.common.util.DataValue;
 import org.apache.ant.common.util.PropertyUtils;
 import org.apache.tools.ant.input.InputHandler;
 import org.apache.tools.ant.types.FilterSet;
@@ -88,8 +89,8 @@ import org.apache.tools.ant.util.FileUtils;
  */
 public class Project implements org.apache.ant.common.event.BuildListener {
     /**
-     * A Property key which identifies the Project actiong as proxy for a
-     * a project.
+     * A Property key which identifies the Project actiong as proxy for a a
+     * project.
      */
     private static final String PROXY_KEY = "_ant.proxy";
 
@@ -105,28 +106,34 @@ public class Project implements org.apache.ant.common.event.BuildListener {
     public static final String JAVA_1_4 = "1.4";
 
     /**
-     * @see MessageLevel.MSG_ERR
+     * @see MessageLevel.ERR
      */
-    public static final int MSG_ERR = MessageLevel.MSG_ERR;
+    public static final int MSG_ERR = MessageLevel.ERROR;
     /**
-     * @see MessageLevel.MSG_WARN
+     * @see MessageLevel.WARN
      */
-    public static final int MSG_WARN = MessageLevel.MSG_WARN;
+    public static final int MSG_WARN = MessageLevel.WARNING;
     /**
-     * @see MessageLevel.MSG_INFO
+     * @see MessageLevel.INFO
      */
-    public static final int MSG_INFO = MessageLevel.MSG_INFO;
+    public static final int MSG_INFO = MessageLevel.INFO;
     /**
-     * @see MessageLevel.MSG_VERBOSE
+     * @see MessageLevel.VERBOSE
      */
-    public static final int MSG_VERBOSE = MessageLevel.MSG_VERBOSE;
+    public static final int MSG_VERBOSE = MessageLevel.VERBOSE;
     /**
-     * @see MessageLevel.MSG_DEBUG
+     * @see MessageLevel.DEBUG
      */
-    public static final int MSG_DEBUG = MessageLevel.MSG_DEBUG;
+    public static final int MSG_DEBUG = MessageLevel.DEBUG;
 
     /** The java version detected that Ant is running on */
     private static String javaVersion;
+
+    /**
+     * A static copy of a context used fro Projects which have been created on
+     * the fly. It is used to access the required core services
+     */
+    private static AntContext sharedContext = null;
 
     /** Called to handle any input requests. */
     private InputHandler inputHandler = null;
@@ -163,12 +170,6 @@ public class Project implements org.apache.ant.common.event.BuildListener {
     /** The core's Component Service instance */
     private ComponentService componentService;
 
-    /**
-     * A static copy of a context used fro Projects which have been created on
-     * the fly. It is used to access the required core services
-     */
-    private static AntContext sharedContext = null;
-
     /** Ant1 FileUtils instance for manipulating files */
     private FileUtils fileUtils;
     /** The collection of global filters */
@@ -182,30 +183,24 @@ public class Project implements org.apache.ant.common.event.BuildListener {
     private Stack targetStack = new Stack();
 
     /**
-     * Flag which indicates if this project object is proxing for a subordinate
-     * project which has not yet been created.
+     * Flag which indicates if this project object is proxing for a
+     * subordinate project which has not yet been created.
      */
     private boolean proxying;
 
     /**
-     * The properties which will be passed to the project instance for which we
-     * are proxing.
+     * The properties which will be passed to the project instance for which
+     * we are proxing.
      */
     private Map proxyProperties = new HashMap();
 
-    /**
-     * The build key used to control the proxied build.
-     */
+    /** The build key used to control the proxied build.  */
     private Object proxyBuildKey;
 
-    /**
-     * The subordinate project if proxying
-     */
+    /** The subordinate project if proxying  */
     private Project subordinate;
 
-    /**
-     * The requested base dir
-     */
+    /** The requested base dir  */
     private File baseDir = null;
 
     static {
@@ -251,31 +246,9 @@ public class Project implements org.apache.ant.common.event.BuildListener {
     public Project() {
         if (sharedContext == null) {
             throw new BuildException("Project object can no longer be "
-                + "constructed outside Ant execution");
+                 + "constructed outside Ant execution");
         }
         proxying = true;
-    }
-
-    /**
-     * Configure a new project
-     *
-     * @param buildFile the file containing the XML build definition.
-     */
-    protected void configure(File buildFile) {
-        try {
-            // we create an execution frame and link ourselves to the Project
-            // object created in that frame
-            ExecService sharedExec
-                = (ExecService) sharedContext.getCoreService(ExecService.class);
-            org.apache.ant.common.model.Project subProject
-                = sharedExec.parseXMLBuildFile(buildFile);
-            proxyProperties.put(PROXY_KEY, this);
-            proxyBuildKey
-                = sharedExec.setupBuild(subProject, proxyProperties, false);
-            sharedExec.initializeBuildLibrary(proxyBuildKey, "ant.ant1compat");
-        } catch (AntException e) {
-            throw new BuildException(e.getMessage(), e);
-        }
     }
 
     /**
@@ -328,6 +301,29 @@ public class Project implements org.apache.ant.common.event.BuildListener {
         }
 
         return path.toString();
+    }
+
+    /**
+     * Configure a new project
+     *
+     * @param buildFile the file containing the XML build definition.
+     */
+    protected void configure(File buildFile) {
+        try {
+            // we create an execution frame and link ourselves to the Project
+            // object created in that frame
+            ExecService sharedExec = (ExecService)
+                sharedContext.getCoreService(ExecService.class);
+            org.apache.ant.common.model.Project subProject
+                 = sharedExec.parseXMLBuildFile(buildFile);
+            proxyProperties.put(PROXY_KEY,
+                new DataValue(this, DataValue.PRIORITY_USER));
+            proxyBuildKey
+                 = sharedExec.setupBuild(subProject, proxyProperties, false);
+            sharedExec.initializeBuildLibrary(proxyBuildKey, "ant.ant1compat");
+        } catch (AntException e) {
+            throw new BuildException(e.getMessage(), e);
+        }
     }
 
     /**
@@ -418,8 +414,8 @@ public class Project implements org.apache.ant.common.event.BuildListener {
                 targets.add(i.next());
             }
 
-            ExecService execService
-                = (ExecService) sharedContext.getCoreService(ExecService.class);
+            ExecService sharedExec = (ExecService)
+                sharedContext.getCoreService(ExecService.class);
             execService.runBuild(proxyBuildKey, targets);
         } catch (AntException e) {
             throw new BuildException(e.getMessage(), e);
@@ -429,8 +425,8 @@ public class Project implements org.apache.ant.common.event.BuildListener {
     /**
      * Executes the specified target and any targets it depends on.
      *
-     * @param targetName The name of the target to execute.
-     *                   Must not be <code>null</code>.
+     * @param targetName The name of the target to execute. Must not be
+     *        <code>null</code>.
      *
      * @exception BuildException if the build failed
      */
@@ -452,8 +448,8 @@ public class Project implements org.apache.ant.common.event.BuildListener {
             List targets = new ArrayList();
             targets.add(targetName);
 
-            ExecService execService
-                = (ExecService) sharedContext.getCoreService(ExecService.class);
+            ExecService sharedExec = (ExecService)
+                sharedContext.getCoreService(ExecService.class);
             execService.runBuild(proxyBuildKey, targets);
         } catch (AntException e) {
             throw new BuildException(e.getMessage(), e);
@@ -469,6 +465,38 @@ public class Project implements org.apache.ant.common.event.BuildListener {
         this.description = description;
     }
 
+
+    /**
+     * Set a DataValue with the given name.
+     *
+     * @param name the name of the datavalue
+     * @param value the datavalue itself
+     * @param mutable true if a value at the same priority can be overwritten.
+     */
+    private synchronized void setDataValue(String name, DataValue value,
+                                           boolean mutable) {
+        if (dataService == null) {
+            if (proxyProperties.containsKey(name)) {
+                int priority = value.getPriority();
+                DataValue current = (DataValue) proxyProperties.get(name);
+                int currentPriority = current.getPriority();
+                if (currentPriority > priority
+                     || (currentPriority == priority && !mutable)) {
+                    log("Ignoring override for data value " + name,
+                        MessageLevel.VERBOSE);
+                    return;
+                }
+            }
+            proxyProperties.put(name, value);
+        } else {
+            try {
+                dataService.setDataValue(name, value, true);
+            } catch (AntException e) {
+                throw new BuildException(e.getMessage(), e);
+            }
+        }
+    }
+
     /**
      * Set a project property
      *
@@ -476,11 +504,8 @@ public class Project implements org.apache.ant.common.event.BuildListener {
      * @param value the property value
      */
     public void setProperty(String name, String value) {
-        try {
-            dataService.setMutableDataValue(name, value);
-        } catch (AntException e) {
-            throw new BuildException(e.getMessage(), e);
-        }
+        setDataValue(name, new DataValue(value, DataValue.PRIORITY_BASE),
+            true);
     }
 
     /**
@@ -489,51 +514,41 @@ public class Project implements org.apache.ant.common.event.BuildListener {
      * @param name the property name
      * @param value the property value
      */
-    public void setNewProperty(String name, String value) {
-        if (dataService == null) {
-            if (!proxyProperties.containsKey(name)) {
-                proxyProperties.put(name, value);
-            }
-            return;
-        }
-        try {
-            dataService.setDataValue(name, value);
-        } catch (AntException e) {
-            throw new BuildException(e.getMessage(), e);
-        }
+    public synchronized void setNewProperty(String name, String value) {
+        setDataValue(name, new DataValue(value, DataValue.PRIORITY_BASE),
+            false);
     }
 
     /**
-     * Sets a userProperty of the Project. Note under Ant2, there is no
-     * distinction between user and system properties
+     * Sets an inherited property of the Project.
      *
      * @param name the property name
      * @param value the property value
      */
-    public void setUserProperty(String name, String value) {
-        if (dataService == null) {
-            proxyProperties.put(name, value);
-            return;
-        }
-
-        try {
-            dataService.setMutableDataValue(name, value);
-        } catch (AntException e) {
-            throw new BuildException(e.getMessage(), e);
-        }
+    public synchronized void setInheritedProperty(String name, String value) {
+        setDataValue(name, new DataValue(value, DataValue.PRIORITY_INHERIT),
+            false);
     }
 
     /**
-     * Returns a description of the type of the given element, with
-     * special handling for instances of tasks and data types.
-     * <p>
+     * Sets a userProperty of the Project.
+     *
+     * @param name the property name
+     * @param value the property value
+     */
+    public synchronized void setUserProperty(String name, String value) {
+        setDataValue(name, new DataValue(value, DataValue.PRIORITY_USER),
+            false);
+    }
+
+    /**
+     * Returns a description of the type of the given element, with special
+     * handling for instances of tasks and data types. <p>
+     *
      * This is useful for logging purposes.
      *
-     * @param element The element to describe.
-     *                Must not be <code>null</code>.
-     *
+     * @param element The element to describe. Must not be <code>null</code>.
      * @return a description of the element type
-     *
      * @since 1.95, Ant 1.5
      */
     public String getElementName(Object element) {
@@ -608,7 +623,7 @@ public class Project implements org.apache.ant.common.event.BuildListener {
      * @return A Vector of BuildListener instances
      */
     public Vector getBuildListeners() {
-        return listeners;
+        return (Vector) listeners.clone();
     }
 
     /**
@@ -718,17 +733,21 @@ public class Project implements org.apache.ant.common.event.BuildListener {
      * @return the hashtable containing all properties, user included
      */
     public Hashtable getProperties() {
-        Map properties = dataService.getAllProperties();
-        Hashtable result = new Hashtable();
-        for (Iterator i = properties.keySet().iterator(); i.hasNext();) {
-            String name = (String) i.next();
-            Object value = properties.get(name);
-            if (value instanceof String) {
-                result.put(name, value);
+        try {
+            Map dataValues = dataService.getAllDataValues();
+            Hashtable result = new Hashtable();
+            for (Iterator i = dataValues.keySet().iterator(); i.hasNext();) {
+                String name = (String) i.next();
+                DataValue dataValue = (DataValue) dataValues.get(name);
+                if (dataValue.getValue() instanceof String) {
+                    result.put(name, dataValue.getValue());
+                }
             }
-        }
 
-        return result;
+            return result;
+        } catch (AntException e) {
+            throw new BuildException(e);
+        }
     }
 
     /**
@@ -746,17 +765,21 @@ public class Project implements org.apache.ant.common.event.BuildListener {
      * @return the hashtable containing all references
      */
     public Hashtable getReferences() {
-        Map properties = dataService.getAllProperties();
-        Hashtable result = new Hashtable();
-        for (Iterator i = properties.keySet().iterator(); i.hasNext();) {
-            String name = (String) i.next();
-            Object value = properties.get(name);
-            if (!(value instanceof String)) {
-                result.put(name, value);
+        try {
+            Map dataValues = dataService.getAllDataValues();
+            Hashtable result = new Hashtable();
+            for (Iterator i = dataValues.keySet().iterator(); i.hasNext();) {
+                String name = (String) i.next();
+                DataValue dataValue = (DataValue) dataValues.get(name);
+                if (!(dataValue.getValue() instanceof String)) {
+                    result.put(name, dataValue.getValue());
+                }
             }
-        }
 
-        return result;
+            return result;
+        } catch (AntException e) {
+            throw new BuildException(e);
+        }
     }
 
     /**
@@ -866,10 +889,10 @@ public class Project implements org.apache.ant.common.event.BuildListener {
         Object source = event.getSource();
         if (source instanceof Task) {
             fireMessageLogged((Task) source, event.getMessage(),
-                              event.getPriority());
+                event.getPriority());
         } else {
             fireMessageLogged(this, event.getMessage(),
-                              event.getPriority());
+                event.getPriority());
         }
     }
 
@@ -896,18 +919,15 @@ public class Project implements org.apache.ant.common.event.BuildListener {
     }
 
     /**
-     * Add a reference to an object. NOte that in Ant2 objects and properties
+     * Add a reference to an object. Note that in Ant2 objects and properties
      * occupy the same namespace.
      *
      * @param name the reference name
-     * @param value the object to be associated with the given name.
+     * @param reference the reference to be added.
      */
-    public void addReference(String name, Object value) {
-        try {
-            dataService.setDataValue(name, value);
-        } catch (AntException e) {
-            throw new BuildException(e.getMessage(), e);
-        }
+    public void addReference(String name, Object reference) {
+        DataValue value = new DataValue(reference, DataValue.PRIORITY_BASE);
+        setDataValue(name, value, false);
     }
 
 
@@ -962,8 +982,8 @@ public class Project implements org.apache.ant.common.event.BuildListener {
     /**
      * Convienence method to copy a file from a source to a destination
      * specifying if token filtering must be used, if source files may
-     * overwrite newer destination files and the last modified time
-     * of <code>destFile</code> file should be made equal to the last
+     * overwrite newer destination files and the last modified time of
+     * <code>destFile</code> file should be made equal to the last
      * modified time of <code>sourceFile</code>.
      *
      * @param sourceFile the source file to be copied
@@ -1034,8 +1054,8 @@ public class Project implements org.apache.ant.common.event.BuildListener {
      * Convienence method to copy a file from a source to a destination
      * specifying if token filtering must be used, if source files may
      * overwrite newer destination files and the last modified time of
-     * <code>destFile</code> file should be made equal to the last
-     * modified time of <code>sourceFile</code>.
+     * <code>destFile</code> file should be made equal to the last modified
+     * time of <code>sourceFile</code>.
      *
      * @param sourceFile the source file to be copied
      * @param destFile the destination to which the file is copied
@@ -1052,7 +1072,6 @@ public class Project implements org.apache.ant.common.event.BuildListener {
         fileUtils.copyFile(sourceFile, destFile,
             filtering ? globalFilters : null, overwrite, preserveLastModified);
     }
-
 
 
     /**
@@ -1072,16 +1091,14 @@ public class Project implements org.apache.ant.common.event.BuildListener {
     }
 
     /**
-     * Connect this project to its subordinate.
-     *
-     * When the subordinate project is created it will call this method to
-     * inform this project. The core services are then initialised using the
-     * context of the subordinate project
+     * Connect this project to its subordinate. When the subordinate project
+     * is created it will call this method to inform this project. The core
+     * services are then initialised using the context of the subordinate
+     * project
      *
      * @param subordinate the subordinate project
-     *
-     * @exception AntException if there is a problem configuring this project to
-     *            use the subordinate's context.
+     * @exception AntException if there is a problem configuring this project
+     *      to use the subordinate's context.
      */
     private void setSubordinate(Project subordinate) throws AntException {
         initContext(subordinate.getContext());
@@ -1097,12 +1114,11 @@ public class Project implements org.apache.ant.common.event.BuildListener {
     }
 
     /**
-     * Sets the base directory for the project, checking that
-     * the given filename exists and is a directory.
+     * Sets the base directory for the project, checking that the given
+     * filename exists and is a directory.
      *
-     * @param baseDir The project base directory.
-     *              Must not be <code>null</code>.
-     *
+     * @param baseDir The project base directory. Must not be <code>null</code>
+     *      .
      * @exception BuildException if the directory if invalid
      */
     public void setBasedir(String baseDir) throws BuildException {
@@ -1110,13 +1126,13 @@ public class Project implements org.apache.ant.common.event.BuildListener {
     }
 
     /**
-     * Sets the base directory for the project, checking that
-     * the given file exists and is a directory.
+     * Sets the base directory for the project, checking that the given file
+     * exists and is a directory.
      *
-     * @param baseDir The project base directory.
-     *                Must not be <code>null</code>.
-     * @exception BuildException if the specified file doesn't exist or
-     *                           isn't a directory
+     * @param baseDir The project base directory. Must not be <code>null</code>
+     *      .
+     * @exception BuildException if the specified file doesn't exist or isn't
+     *      a directory
      */
     public void setBaseDir(File baseDir) throws BuildException {
         try {
@@ -1214,20 +1230,17 @@ public class Project implements org.apache.ant.common.event.BuildListener {
 
 
     /**
-     * Returns the canonical form of a filename.
-     * <p>
-     * If the specified file name is relative it is resolved
-     * with respect to the given root directory.
+     * Returns the canonical form of a filename. <p>
      *
-     * @param fileName The name of the file to resolve.
-     *                 Must not be <code>null</code>.
+     * If the specified file name is relative it is resolved with respect to
+     * the given root directory.
      *
-     * @param rootDir  The directory to resolve relative file names with
-     *                 respect to. May be <code>null</code>, in which case
-     *                 the current directory is used.
-     *
+     * @param fileName The name of the file to resolve. Must not be
+     * <code>null</code>.
+     * @param rootDir The directory to resolve relative file names with
+     *      respect to. May be <code>null</code>, in which case the current
+     *      directory is used.
      * @return the resolved File.
-     *
      * @deprecated
      */
     public File resolveFile(String fileName, File rootDir) {
@@ -1356,6 +1369,7 @@ public class Project implements org.apache.ant.common.event.BuildListener {
     /** send build started event to the listeners */
     protected void fireBuildStarted() {
         BuildEvent event = new BuildEvent(this);
+        Vector listeners = getBuildListeners();
         for (int i = 0; i < listeners.size(); i++) {
             BuildListener listener = (BuildListener) listeners.elementAt(i);
             listener.buildStarted(event);
@@ -1370,6 +1384,7 @@ public class Project implements org.apache.ant.common.event.BuildListener {
     protected void fireBuildFinished(Throwable exception) {
         BuildEvent event = new BuildEvent(this);
         event.setException(exception);
+        Vector listeners = getBuildListeners();
         for (int i = 0; i < listeners.size(); i++) {
             BuildListener listener = (BuildListener) listeners.elementAt(i);
             listener.buildFinished(event);
@@ -1384,6 +1399,7 @@ public class Project implements org.apache.ant.common.event.BuildListener {
      */
     protected void fireTargetStarted(Target target) {
         BuildEvent event = new BuildEvent(target);
+        Vector listeners = getBuildListeners();
         for (int i = 0; i < listeners.size(); i++) {
             BuildListener listener = (BuildListener) listeners.elementAt(i);
             listener.targetStarted(event);
@@ -1399,6 +1415,7 @@ public class Project implements org.apache.ant.common.event.BuildListener {
     protected void fireTargetFinished(Target target, Throwable exception) {
         BuildEvent event = new BuildEvent(target);
         event.setException(exception);
+        Vector listeners = getBuildListeners();
         for (int i = 0; i < listeners.size(); i++) {
             BuildListener listener = (BuildListener) listeners.elementAt(i);
             listener.targetFinished(event);
@@ -1414,6 +1431,7 @@ public class Project implements org.apache.ant.common.event.BuildListener {
         // register this as the current task on the current thread.
         // threadTasks.put(Thread.currentThread(), task);
         BuildEvent event = new BuildEvent(task);
+        Vector listeners = getBuildListeners();
         for (int i = 0; i < listeners.size(); i++) {
             BuildListener listener = (BuildListener) listeners.elementAt(i);
             listener.taskStarted(event);
@@ -1432,6 +1450,7 @@ public class Project implements org.apache.ant.common.event.BuildListener {
         // System.err.flush();
         BuildEvent event = new BuildEvent(task);
         event.setException(exception);
+        Vector listeners = getBuildListeners();
         for (int i = 0; i < listeners.size(); i++) {
             BuildListener listener = (BuildListener) listeners.elementAt(i);
             listener.taskFinished(event);
@@ -1487,6 +1506,7 @@ public class Project implements org.apache.ant.common.event.BuildListener {
     private void fireMessageLoggedEvent(BuildEvent event, String message,
                                         int priority) {
         event.setMessage(message, priority);
+        Vector listeners = getBuildListeners();
         for (int i = 0; i < listeners.size(); i++) {
             BuildListener listener = (BuildListener) listeners.elementAt(i);
             listener.messageLogged(event);

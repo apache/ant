@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/sh 
 
 #   Copyright (c) 2000-2001 The Apache Software Foundation.  All rights
 #   reserved.
@@ -22,7 +22,7 @@ javac -classpath bin/init:bin/bootstrap -d bin/builder src/java/bootstrap/org/ap
 java -classpath bin/init:bin/bootstrap org.apache.ant.bootstrap.Bootstrap
 
 # run full build using bootstrapped version
-java -jar bootstrap/lib/start.jar $*
+java -jar bootstrap/lib/core/start/start.jar $*
 
 # Use the full build as the build used by the build script
 cp -r dist/lib bootstrap

@@ -51,7 +51,7 @@
  * information on the Apache Software Foundation, please see
  * <http://www.apache.org/>.
  */
-package org.apache.ant.frontend;
+package org.apache.ant.antcore.frontend;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -114,10 +114,6 @@ public class FrontendUtils {
             URL configFileURL = InitUtils.getFileURL(configFile);
 
             ParseContext context = new ParseContext();
-            context.declareNamespace(Namespace.ANT_META_PREFIX,
-                Namespace.ANT_META_URI);
-            context.declareNamespace(Namespace.XSI_PREFIX,
-                Namespace.XSI_URI);
 
             AntConfigHandler configHandler = new AntConfigHandler();
 

@@ -299,7 +299,7 @@ public class ComponentManager implements ComponentService {
         frame.log("Adding referenced component <" + definition.getLocalName()
              + "> as <" + label + "> from library \""
              + definition.getComponentLibrary().getLibraryId() + "\", class: "
-             + definition.getClassName(), MessageLevel.MSG_DEBUG);
+             + definition.getClassName(), MessageLevel.DEBUG);
         imports.put(label, definition);
     }
 
@@ -631,7 +631,7 @@ public class ComponentManager implements ComponentService {
         AntLibDefinition libDef = library.getDefinition(defName);
         frame.log("Adding component <" + defName + "> as <" + label
              + "> from library \"" + library.getLibraryId() + "\", class: "
-             + libDef.getClassName(), MessageLevel.MSG_DEBUG);
+             + libDef.getClassName(), MessageLevel.DEBUG);
         imports.put(label, new ImportInfo(library, libDef));
     }
 

@@ -87,7 +87,7 @@ public class MonitorAspect extends AbstractAspect {
                         = new PrintStream(new FileOutputStream("monitor.log"));
                     monitorLog.println("Logging started at " + new Date());
                 } catch (IOException e) {
-                    log("Unable to open monitor log", MessageLevel.MSG_WARN);
+                    log("Unable to open monitor log", MessageLevel.WARNING);
                 }
             }
         }

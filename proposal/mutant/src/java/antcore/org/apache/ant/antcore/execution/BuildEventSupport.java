@@ -251,7 +251,7 @@ public class BuildEventSupport implements DemuxOutputReceiver {
             }
         }
         fireMessageLogged(this, line,
-            isError ? MessageLevel.MSG_ERR : MessageLevel.MSG_INFO);
+            isError ? MessageLevel.ERROR : MessageLevel.INFO);
     }
 }
 

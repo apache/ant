@@ -62,16 +62,10 @@ package org.apache.ant.common.constants;
 public class Namespace {
     /** The Ant namespace used to identify Ant metadata */
     public static final String ANT_META_URI
-         = "http://jakarta.apache.org/ant/meta";
-
-    /** The namespace id that is predeclared for the Ant metadata namespace */
-    public static final String ANT_META_PREFIX = "ant";
+         = "http://jakarta.apache.org/ant";
 
     /** The XML Schema namespace */
     public static final String XSI_URI
          = "http://www.w3.org/2001/XMLSchema-instance";
-
-    /** The namespace id that is predeclared for the Ant metadata namespace */
-    public static final String XSI_PREFIX = "xsi";
 }
 

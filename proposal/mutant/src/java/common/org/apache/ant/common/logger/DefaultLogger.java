@@ -82,7 +82,7 @@ public class DefaultLogger extends BuildListenerAdapter implements BuildLogger {
     /** The stream to where errors should be written */
     private PrintStream err;
     /** The level of messages which should be let through */
-    private int messageOutputLevel = MessageLevel.MSG_ERR;
+    private int messageOutputLevel = MessageLevel.ERROR;
 
     /** Controls whether adornments are added */
     private boolean emacsMode = false;
@@ -171,7 +171,7 @@ public class DefaultLogger extends BuildListenerAdapter implements BuildLogger {
             }
             out.println(e.getMessage());
 
-            if (messageOutputLevel >= MessageLevel.MSG_VERBOSE) {
+            if (messageOutputLevel >= MessageLevel.VERBOSE) {
                 t.printStackTrace(out);
             }
 
@@ -218,7 +218,7 @@ public class DefaultLogger extends BuildListenerAdapter implements BuildLogger {
      * @param event Description of Parameter
      */
     public void targetStarted(BuildEvent event) {
-        if (MessageLevel.MSG_INFO <= messageOutputLevel) {
+        if (MessageLevel.INFO <= messageOutputLevel) {
             Target target = (Target) event.getSource();
             out.println(lSep + target.getName() + ":");
         }
@@ -255,7 +255,7 @@ public class DefaultLogger extends BuildListenerAdapter implements BuildLogger {
      */
     public void messageLogged(BuildEvent event) {
         PrintStream logTo
-             = event.getPriority() == MessageLevel.MSG_ERR ? err : out;
+             = event.getPriority() == MessageLevel.ERROR ? err : out;
 
         // Filter out messages based on priority
         if (event.getPriority() <= messageOutputLevel) {

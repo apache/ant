@@ -53,9 +53,12 @@
  */
 package org.apache.ant.antlib.system;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import org.apache.ant.common.service.DataService;
 import org.apache.ant.common.util.AntException;
+import org.apache.ant.common.util.DataValue;
 
 /**
  * Common Base class for the Ant and AntCall tasks
@@ -89,17 +92,18 @@ public abstract class AntBase extends SubBuild {
      * Get the properties to be used with the sub-build
      *
      * @return the properties the sub-build will start with
+     * @exception AntException if the data values cannot be combined with
+     *            existing values.
      */
-    protected Map getProperties() {
-        if (!inheritAll) {
-            return super.getProperties();
-        }
+    protected Map getDataValues() throws AntException {
+        DataService dataService = getDataService();
+        int priority = inheritAll ? DataValue.PRIORITY_BASE
+                                  : DataValue.PRIORITY_INHERIT;
 
-        // need to combine existing properties with new ones
-        Map subBuildProperties = getDataService().getAllProperties();
-
-        subBuildProperties.putAll(super.getProperties());
-        return subBuildProperties;
+        Map values = new HashMap(super.getDataValues());
+        dataService.mergeDataValues(values, dataService.getAllDataValues(),
+            priority);
+        return values;
     }
 
 

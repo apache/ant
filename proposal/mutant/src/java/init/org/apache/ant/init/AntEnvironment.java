@@ -59,13 +59,46 @@ import java.net.URL;
 import java.net.URLClassLoader;
 
 /**
- * AntEnvironment describes the environment in which Ant is operating.
- * It provides the locations of a number of key Ant components.
+ * AntEnvironment describes the environment in which Ant is operating. It
+ * provides the locations of a number of key Ant components.
  *
  * @author Conor MacNeill
  * @created 9 January 2002
  */
 public class AntEnvironment {
+
+    /**
+     * How to navigate from a URL retrieved from a core class to
+     * the Ant Home area
+     */
+    public static final String CORECLASS_TO_ANTHOME = "../../..";
+
+    /** The configuration directory */
+    public static final String SYSTEM_CONFDIR = "conf";
+
+    /** The User's configuration directory */
+    public static final String USER_CONFDIR = ".ant/conf";
+
+    /** The library diurectory */
+    public static final String LIB_DIR = "lib/";
+
+    /** Common libraries directory */
+    public static final String COMMON_DIR = "core/common/";
+
+    /** Parser library directory */
+    public static final String PARSER_DIR = "core/parser/";
+
+    /** Core libraries directory */
+    public static final String ANTCORE_DIR = "core/antcore/";
+
+    /** System Ant libraries directory */
+    public static final String SYSLIBS_DIR = "core/syslibs/";
+
+    /** Standard Ant Libraries directory */
+    public static final String ANTLIBS_DIR = "antlibs/";
+
+    /** The Ant Home property */
+    public static final String ANTHOME_PROPERTY = "ant.home";
 
     /** The default name of the jar containing the XML parser */
     public static final String DEFAULT_PARSER_JAR = "crimson.jar";
@@ -74,14 +107,14 @@ public class AntEnvironment {
     private ClassLoader systemLoader;
 
     /**
-     * The common class loader loads components which are common to tasks
-     * and the core
+     * The common class loader loads components which are common to tasks and
+     * the core
      */
     private ClassLoader commonLoader;
 
     /**
-     * The core loader is the loader which loads classes which are
-     * exclusively used by the Ant core
+     * The core loader is the loader which loads classes which are exclusively
+     * used by the Ant core
      */
     private ClassLoader coreLoader;
 
@@ -93,8 +126,8 @@ public class AntEnvironment {
 
     /**
      * The URLs to the Ant XML parser. These are available to allow tasks
-     * which require XML support to use the standard parser rather than
-     * having to supply their own
+     * which require XML support to use the standard parser rather than having
+     * to supply their own
      */
     private URL[] parserURLs;
 
@@ -123,22 +156,39 @@ public class AntEnvironment {
     /**
      * Create and automatically configure the Ant Environment
      *
-     * @param libraryClass - a class loaded from the Ant library area.
+     * @param coreClass - a core Ant class
      * @exception InitException if the configuration cannot be initialized
      */
-    public AntEnvironment(Class libraryClass) throws InitException {
+    public AntEnvironment(Class coreClass) throws InitException {
         try {
-            URL antLibURL = getAntLibURL(libraryClass);
-            setLibraryURL(antLibURL);
+            // is Ant Home set?
+            String antHomeProperty = System.getProperty(ANTHOME_PROPERTY);
+            if (antHomeProperty == null) {
+                URL classURL = getAntLibURL(coreClass);
+                antHome = new URL(classURL, CORECLASS_TO_ANTHOME);
+            } else {
+                try {
+                    antHome = new URL(antHomeProperty);
+                } catch (MalformedURLException e) {
+                    // try as a file
+                    File antHomeDir = new File(antHomeProperty);
+                    if (!antHomeDir.exists()) {
+                        throw new InitException("ant.home value \""
+                             + antHomeProperty + "\" is not valid.");
+                    }
+                    antHome = InitUtils.getFileURL(antHomeDir);
+                }
+            }
 
-            URL antHome = new URL(antLibURL, "..");
-            setAntHome(antHome);
+            setLibraryURL(new URL(antHome, LIB_DIR));
+
             if (antHome.getProtocol().equals("file")) {
-                File systemConfigArea = new File(antHome.getFile(), "conf");
+                File systemConfigArea
+                     = new File(antHome.getFile(), SYSTEM_CONFDIR);
                 setSystemConfigArea(systemConfigArea);
             }
             File userConfigArea
-                 = new File(System.getProperty("user.home"), ".ant/conf");
+                 = new File(System.getProperty("user.home"), USER_CONFDIR);
             setUserConfigArea(userConfigArea);
 
             // set up the class loaders that will be used when running Ant
@@ -147,21 +197,21 @@ public class AntEnvironment {
             URL toolsJarURL = ClassLocator.getToolsJarURL();
             setToolsJarURL(toolsJarURL);
 
-            URL commonJarLib = new URL(libraryURL, "common/");
+            URL commonJarLib = new URL(libraryURL, COMMON_DIR);
             ClassLoader commonLoader
                  = new URLClassLoader(LoaderUtils.getLocationURLs(commonJarLib,
                 "common.jar"), systemLoader);
             setCommonLoader(commonLoader);
 
             // core needs XML parser for parsing various XML components.
-            URL parserBase = new URL(libraryURL, "parser/");
+            URL parserBase = new URL(libraryURL, PARSER_DIR);
             URL[] parserURLs
                  = LoaderUtils.getLocationURLs(parserBase, DEFAULT_PARSER_JAR);
             setParserURLs(parserURLs);
 
+            URL antcoreBase = new URL(libraryURL, ANTCORE_DIR);
             URL[] coreURLs
-                 = LoaderUtils.getLocationURLs(new URL(libraryURL, "antcore/"),
-                "antcore.jar");
+                 = LoaderUtils.getLocationURLs(antcoreBase, "antcore.jar");
             URL[] combinedURLs = new URL[parserURLs.length + coreURLs.length];
             System.arraycopy(coreURLs, 0, combinedURLs, 0, coreURLs.length);
             System.arraycopy(parserURLs, 0, combinedURLs, coreURLs.length,
@@ -337,6 +387,26 @@ public class AntEnvironment {
     }
 
     /**
+     * Get the location of the antlibs directory
+     *
+     * @return a URL giving the location of the antlibs directory
+     * @exception MalformedURLException if the URL cannot be formed.
+     */
+    public URL getSyslibsURL() throws MalformedURLException {
+        return new URL(libraryURL, SYSLIBS_DIR);
+    }
+
+    /**
+     * Get the location of the syslibs directory
+     *
+     * @return a URL giving the location of the syslibs directory
+     * @exception MalformedURLException if the URL cannot be formed.
+     */
+    public URL getAntlibsURL() throws MalformedURLException {
+        return new URL(libraryURL, ANTLIBS_DIR);
+    }
+
+    /**
      * Get a URL to the Ant Library directory.
      *
      * @param libraryClass - a class loaded from the Ant library area.
@@ -353,7 +423,7 @@ public class AntEnvironment {
             initURLString = initURLString.substring(0, index + 1);
         }
 
-        return  new URL(initURLString);
+        return new URL(initURLString);
     }
 }
 

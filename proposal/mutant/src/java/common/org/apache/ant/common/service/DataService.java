@@ -55,6 +55,7 @@ package org.apache.ant.common.service;
 import java.util.Map;
 
 import org.apache.ant.common.util.AntException;
+import org.apache.ant.common.util.DataValue;
 
 /**
  * Service interface for Data value manipulation operations provided by the
@@ -64,12 +65,13 @@ import org.apache.ant.common.util.AntException;
  * @created 31 January 2002
  */
 public interface DataService {
+
     /**
      * Get a data value
      *
      * @param valueName the name of the data value
-     * @return the current object associated with the name or null if no
-     *      value is currently associated with the name
+     * @return the current object associated with the name or null if no value
+     *      is currently associated with the name
      * @exception AntException if the value cannot be retrieved.
      */
     Object getDataValue(String valueName) throws AntException;
@@ -80,29 +82,21 @@ public interface DataService {
      * @param name the name of the data value - may contain reference
      *      delimiters
      * @return true if the value exists
-     * @exception AntException if the containing frame for the value
-     *      does not exist
+     * @exception AntException if the containing frame for the value does not
+     *      exist
      */
     boolean isDataValueSet(String name) throws AntException;
 
     /**
-     * Set a data value. If an existing data value exists, associated with
-     * the given name, the value will not be changed
+     * Set a data value. If an existing data value exists, associated with the
+     * given name, the value will not be changed
      *
      * @param valueName the name of the data value
      * @param value the value to be associated with the name
+     * @param mutable if true, existing values can be changed
      * @exception AntException if the value cannot be set
      */
-    void setDataValue(String valueName, Object value) throws AntException;
-
-    /**
-     * Set a data value which can be overwritten
-     *
-     * @param valueName the name of the data value
-     * @param value the value to be associated with the name
-     * @exception AntException if the value cannot be set
-     */
-    void setMutableDataValue(String valueName, Object value)
+    void setDataValue(String valueName, DataValue value, boolean mutable)
          throws AntException;
 
     /**
@@ -133,9 +127,29 @@ public interface DataService {
      * is an expensive operation since it must clone all of the property
      * stores in all frames
      *
-     * @return a Map containing the frames properties indexed by their full
+     * @return a Map containing the frames data values indexed by their full
      *      name.
+     * @exception AntExceptionif the values cannot be retrieved.
      */
-    Map getAllProperties();
+    Map getAllDataValues() throws AntException;
+
+    /**
+     * Merge one set of values into another
+     *
+     * @param values the values to which the new values are added
+     * @param newValues the values to be added in.
+     */
+    void mergeDataValues(Map values, Map newValues);
+
+    /**
+     * Merge in values which are of a given priority or higher.
+     *
+     * @param values the values to which the new values are added
+     * @param newValues the values to be added in.
+     * @param threshold The require data value priority for a value to be
+     *        merged.
+     */
+    void mergeDataValues(Map values, Map newValues, int threshold);
+
 }
 

@@ -71,7 +71,7 @@ public class AntCall extends AntBase {
         setProperty(MagicProperties.BASEDIR,
             getExecService().getBaseDir().getAbsolutePath());
 
-        Object key = getExecService().setupBuild(getProperties(), true);
+        Object key = getExecService().setupBuild(getDataValues(), true);
         setSubBuildKey(key);
         getExecService().runBuild(key, getTargets());
         setSubBuildKey(null);

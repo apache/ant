@@ -53,9 +53,13 @@
  */
 package org.apache.ant.antlib.system;
 import java.io.File;
+import java.util.HashMap;
+import java.util.Map;
 import org.apache.ant.common.antlib.AntContext;
 import org.apache.ant.common.model.Project;
+import org.apache.ant.common.service.DataService;
 import org.apache.ant.common.util.AntException;
+import org.apache.ant.common.util.DataValue;
 
 /**
  * A Task to create a project reference.
@@ -107,6 +111,21 @@ public class Ref extends SubBuild {
 
 
     /**
+     * Get the properties to be used with the references
+     *
+     * @return the properties the sub-build will start with
+     * @exception AntException if the data values cannot be retrieved.
+     */
+    protected Map getDataValues() throws AntException {
+        DataService dataService = getDataService();
+
+        Map values = new HashMap(super.getDataValues());
+        dataService.mergeDataValues(values, dataService.getAllDataValues(),
+            DataValue.PRIORITY_USER);
+        return values;
+    }
+
+    /**
      * Create the project reference
      *
      * @exception AntException if the project cannot be referenced.
@@ -114,7 +133,7 @@ public class Ref extends SubBuild {
     public void execute() throws AntException {
         Project model = getExecService().parseXMLBuildFile(projectFile);
 
-        getExecService().createProjectReference(name, model, getProperties());
+        getExecService().createProjectReference(name, model, getDataValues());
     }
 }
 

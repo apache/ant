@@ -156,7 +156,7 @@ public class LibPath extends AbstractTask {
         ComponentService componentService = (ComponentService)
             context.getCoreService(ComponentService.class);
         log("Adding lib path " + url + " for " + libraryId,
-            MessageLevel.MSG_DEBUG);
+            MessageLevel.DEBUG);
         componentService.addLibPath(libraryId, url);
     }
 

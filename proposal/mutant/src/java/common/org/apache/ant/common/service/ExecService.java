@@ -95,26 +95,26 @@ public interface ExecService {
      * Setup a sub-build.
      *
      * @param model the project model to be used for the build
-     * @param properties the initiali properties to be used in the build
+     * @param dataValue the initial properties to be used in the build
      * @param addListeners true if the current frame's listeners should be
      *        added to the created Frame
      * @return a key to the build allowing it to be executed and managed
      * @exception AntException if the subbuild cannot be setup
      */
-    Object setupBuild(Project model, Map properties, boolean addListeners)
+    Object setupBuild(Project model, Map dataValue, boolean addListeners)
          throws AntException;
 
 
     /**
      * Setup a sub-build using the current frame's project model
      *
-     * @param properties the initiali properties to be used in the build
+     * @param dataValue the initial properties to be used in the build
      * @param addListeners true if the current frame's listeners should be
      *        added to the created Frame
      * @return a key to the build allowing it to be executed and managed
      * @exception AntException if the subbuild cannot be setup
      */
-    Object setupBuild(Map properties, boolean addListeners)
+    Object setupBuild(Map dataValue, boolean addListeners)
          throws AntException;
 
 

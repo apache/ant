@@ -56,22 +56,22 @@ import java.net.URL;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
+import org.apache.ant.common.util.AttributeCollection;
 
 import org.apache.ant.common.util.Location;
-import org.apache.ant.common.util.AttributeCollection;
+import org.apache.ant.common.util.PropertyUtils;
 import org.xml.sax.Attributes;
 import org.xml.sax.ContentHandler;
 import org.xml.sax.Locator;
 import org.xml.sax.SAXParseException;
 import org.xml.sax.XMLReader;
 import org.xml.sax.helpers.DefaultHandler;
-import org.apache.ant.common.util.PropertyUtils;
 
 /**
- * An Element Handler is a handler which handles a single element by
- * becoming the handler for the parser while processing the element. Any sub
- * elements must be delegated to separate handlers. When this element is
- * finished, control returns to the parent handler.
+ * An Element Handler is a handler which handles a single element by becoming
+ * the handler for the parser while processing the element. Any sub elements
+ * must be delegated to separate handlers. When this element is finished,
+ * control returns to the parent handler.
  *
  * @author Conor MacNeill
  * @created 9 January 2002
@@ -81,8 +81,8 @@ public abstract class ElementHandler extends DefaultHandler {
     private ParseContext context;
 
     /**
-     * Locator used to identify where in the build source particular
-     * elements occur.
+     * Locator used to identify where in the build source particular elements
+     * occur.
      */
     private Locator locator;
 
@@ -133,10 +133,9 @@ public abstract class ElementHandler extends DefaultHandler {
      * Get the collection of namespace attributes for a given namespace.
      *
      * @param uri the URI of the namespace from which the attribute collection
-     * is required.
-     *
+     *      is required.
      * @return an attribute collection if any attributes of the requested
-     *  namespace have beebn encountered - otherwise null.
+     *      namespace have beebn encountered - otherwise null.
      */
     public AttributeCollection getNamespaceAttributes(String uri) {
         return (AttributeCollection) namespaces.get(uri);
@@ -193,10 +192,8 @@ public abstract class ElementHandler extends DefaultHandler {
      * @param source the URL from which the XML source is being parsed.
      * @param xmlReader the parser being used
      * @param context the parser context for this element
-     * @param elementName the actual element Name for this element in the
-     *      XML
-     * @exception SAXParseException if there is a problem parsing the
-     *      element
+     * @param elementName the actual element Name for this element in the XML
+     * @exception SAXParseException if there is a problem parsing the element
      */
     public final void start(ParseContext context, XMLReader xmlReader,
                             ContentHandler parent, Locator locator,
@@ -216,8 +213,8 @@ public abstract class ElementHandler extends DefaultHandler {
 
 
     /**
-     * Process an element. This resolves any namespaces against
-     * prefixes declared in the ParseContext.
+     * Process an element. This resolves any namespaces against prefixes
+     * declared in the ParseContext.
      *
      * @param uri The Namespace URI.
      * @param localName The local name (without prefix).
@@ -225,7 +222,7 @@ public abstract class ElementHandler extends DefaultHandler {
      * @param attributes The attributes attached to the element.
      * @throws SAXParseException if there is a problem parsng the subelement
      */
-    final public void startElement(String uri, String localName,
+    public final void startElement(String uri, String localName,
                                    String qualifiedName, Attributes attributes)
          throws SAXParseException {
         addNestedElement(uri, localName, qualifiedName, attributes);
@@ -233,8 +230,8 @@ public abstract class ElementHandler extends DefaultHandler {
 
     /**
      * By default an element handler does not support nested elements. This
-     * method will always throw an exception. Subclasses should override
-     * this method to support their own nested elements
+     * method will always throw an exception. Subclasses should override this
+     * method to support their own nested elements
      *
      * @param uri The Namespace URI.
      * @param localName The local name (without prefix).
@@ -252,8 +249,8 @@ public abstract class ElementHandler extends DefaultHandler {
 
 
     /**
-     * Handle the end of this element by making the parent element handler
-     * the current content handler
+     * Handle the end of this element by making the parent element handler the
+     * current content handler
      *
      * @param localName The local name (without prefix).
      * @param namespaceURI The Namespace URI.
@@ -330,15 +327,14 @@ public abstract class ElementHandler extends DefaultHandler {
      * Process the element.
      *
      * @param elementName the name of the element
-     * @exception SAXParseException if there is a problem parsing the
-     *      element
+     * @exception SAXParseException if there is a problem parsing the element
      */
     protected abstract void processElement(String elementName)
          throws SAXParseException;
 
     /**
-     * Process all of the attributes of the element into maps, one for
-     * aspects and one for other attributes
+     * Process all of the attributes of the element into maps, one for aspects
+     * and one for other attributes
      *
      * @param attributes The SAX attributes collection for the element
      * @exception SAXParseException if there is a problem reading the
@@ -357,21 +353,10 @@ public abstract class ElementHandler extends DefaultHandler {
                 uri = null;
             }
 
-
-            if (uri == null) {
-                if (qName.indexOf(":") != -1) {
-                    // try to resolve through known namespaces
-                    uri = context.resolveNamespace(qName);
-                    localName = qName.substring(qName.indexOf(":") + 1);
-                } else {
-                    localName = qName;
-                }
-            }
-
             String attributeValue = attributes.getValue(i);
             if (uri != null) {
                 AttributeCollection namespaceAttributes
-                    = (AttributeCollection) namespaces.get(uri);
+                     = (AttributeCollection) namespaces.get(uri);
                 if (namespaceAttributes == null) {
                     namespaceAttributes = new AttributeCollection();
                     namespaces.put(uri, namespaceAttributes);
@@ -417,8 +402,8 @@ public abstract class ElementHandler extends DefaultHandler {
 
     /**
      * This method is called when this element is finished being processed.
-     * This is a template method allowing subclasses to complete any
-     * necessary processing.
+     * This is a template method allowing subclasses to complete any necessary
+     * processing.
      */
     protected void finish() {
     }

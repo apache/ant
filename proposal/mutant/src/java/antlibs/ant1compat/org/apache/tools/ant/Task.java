@@ -106,6 +106,33 @@ public abstract class Task extends ProjectComponent
         this.target = target;
     }
 
+
+    /**
+     * Has this task been marked invalid?
+     *
+     * @since Ant 1.5
+     */
+    protected final boolean isInvalid() {
+        return false;
+    }
+
+    public void maybeConfigure() throws BuildException {
+        // XXX
+        throw new BuildException("Not supported");
+    }
+
+    /**
+     * Returns the wrapper used for runtime configuration.
+     *
+     * @return the wrapper used for runtime configuration. This
+     *         method will generate a new wrapper (and cache it)
+     *         if one isn't set already.
+     */
+    public RuntimeConfigurable getRuntimeConfigurableWrapper() {
+        // XXX
+        throw new BuildException("Not supported");
+    }
+
     /**
      * Sets a description of the current action. It will be usefull in
      * commenting what we are doing.

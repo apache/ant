@@ -1,0 +1,172 @@
+#! /bin/sh
+#   Copyright (c) 2002 The Apache Software Foundation.  All rights
+#   reserved.
+
+# load system-wide ant configuration
+if [ -f "/etc/mutant.conf" ] ; then
+  . /etc/mutant.conf
+fi
+
+# provide default values for people who don't use RPMs
+if [ -z "$rpm_mode" ] ; then
+  rpm_mode=false;
+fi
+if [ -z "$usejikes" ] ; then
+  usejikes=false;
+fi
+
+# load user ant configuration
+if [ -f "$HOME/.antrc" ] ; then
+  . $HOME/.antrc
+fi
+
+# OS specific support.  $var _must_ be set to either true or false.
+cygwin=false;
+darwin=false;
+case "`uname`" in
+  CYGWIN*) cygwin=true ;;
+  Darwin*) darwin=true
+           if [ -z "$JAVA_HOME" ] ; then
+             JAVA_HOME=/System/Library/Frameworks/JavaVM.framework/Home
+           fi
+           ;;
+esac
+
+if [ -z "$MUTANT_HOME" ] ; then
+  # try to find MUTANT
+  if [ -d /opt/mutant ] ; then
+    MUTANT_HOME=/opt/mutant
+  fi
+
+  if [ -d ${HOME}/opt/mutant ] ; then
+    MUTANT_HOME=${HOME}/opt/mutant
+  fi
+
+  ## resolve links - $0 may be a link to ant's home
+  PRG=$0
+  progname=`basename $0`
+  saveddir=`pwd`
+
+  # need this for relative symlinks
+  cd `dirname $PRG`
+
+  while [ -h "$PRG" ] ; do
+    ls=`ls -ld "$PRG"`
+    link=`expr "$ls" : '.*-> \(.*\)$'`
+    if expr "$link" : '.*/.*' > /dev/null; then
+    PRG="$link"
+    else
+    PRG="`dirname $PRG`/$link"
+    fi
+  done
+
+  MUTANT_HOME=`dirname "$PRG"`/..
+
+  # make it fully qualified
+  MUTANT_HOME=`cd "$MUTANT_HOME" && pwd`
+
+  cd $saveddir
+fi
+
+# For Cygwin, ensure paths are in UNIX format before anything is touched
+if $cygwin ; then
+  [ -n "$MUTANT_HOME" ] &&
+    MUTANT_HOME=`cygpath --unix "$MUTANT_HOME"`
+  [ -n "$JAVA_HOME" ] &&
+    JAVA_HOME=`cygpath --unix "$JAVA_HOME"`
+  [ -n "$CLASSPATH" ] &&
+    CLASSPATH=`cygpath --path --unix "$CLASSPATH"`
+fi
+
+if [ -z "$JAVACMD" ] ; then
+  if [ -n "$JAVA_HOME"  ] ; then
+    if [ -x "$JAVA_HOME/jre/sh/java" ] ; then
+      # IBM's JDK on AIX uses strange locations for the executables
+      JAVACMD="$JAVA_HOME/jre/sh/java"
+    else
+      JAVACMD="$JAVA_HOME/bin/java"
+    fi
+  else
+    JAVACMD=java
+  fi
+fi
+
+if [ ! -x "$JAVACMD" ] ; then
+  echo "Error: JAVA_HOME is not defined correctly."
+  echo "  We cannot execute $JAVACMD"
+  exit 1
+fi
+
+# in rpm_mode get ant/optional/xml parser&api from JAVALIBDIR
+if $rpm_mode; then
+  JAVALIBDIR=/usr/share/java
+  # TODO - RPM structure for Mutant needs to be determined
+else
+  # add in the dependency .jar files in non-RPM mode (the default)
+  STARTJARPATH="${MUTANT_HOME}"/lib/core/start/start.jar
+fi
+
+if [ -n "$JAVA_HOME" ] ; then
+  if [ -f "$JAVA_HOME/lib/tools.jar" ] ; then
+    TOOLSJARPATH="$JAVA_HOME/lib/tools.jar"
+  fi
+
+  # OSX hack to make Ant work with jikes
+  if $darwin ; then
+    OSXHACK="/System/Library/Frameworks/JavaVM.framework/Versions/CurrentJDK/Classes"
+    if [ -d ${OSXHACK} ] ; then
+      for i in ${OSXHACK}/*.jar
+      do
+        JIKESPATH=$JIKESPATH:$i
+      done
+    fi
+  fi
+else
+  echo "Warning: JAVA_HOME environment variable is not set."
+  echo "  If build fails because sun.* classes could not be found"
+  echo "  you will need to set the JAVA_HOME environment variable"
+  echo "  to the installation directory of java."
+fi
+
+# supply JIKESPATH to Ant as jikes.class.path
+if [ -n "$JIKESPATH" ] ; then
+  if $cygwin ; then
+    JIKESPATH=`cygpath --path --windows "$JIKESPATH"`
+  fi
+  ANT_OPTS="$ANT_OPTS -Djikes.class.path=$JIKESPATH"
+fi
+
+# Allow Jikes support (off by default)
+if $usejikes; then
+  ANT_OPTS="$ANT_OPTS -Dbuild.compiler=jikes"
+fi
+
+LOCALCLASSPATH=$STARTJARPATH
+
+if [ -n "$CLASSPATH" ] ; then
+  LOCALCLASSPATH="$LOCALCLASSPATH:$CLASSPATH"
+fi
+
+#Setup policy file
+if [ -z $ANT_POLICY ] ; then
+  if [ -f $MUTANT_HOME/conf/ant.policy ] ; then
+    ANT_POLICY=file:$MUTANT_HOME/conf/ant.policy
+  fi
+fi
+
+if [ -n $ANT_POLICY ] ; then
+  ANT_OPTS="$ANT_OPTS -Djava.security.manager -Djava.security.policy=$ANT_POLICY"
+fi
+
+
+# For Cygwin, switch paths to Windows format before running java
+if $cygwin; then
+  MUTANT_HOME=`cygpath --path --windows "$MUTANT_HOME"`
+  JAVA_HOME=`cygpath --path --windows "$JAVA_HOME"`
+  STARTJARPATH=`cygpath --path --windows "$STARTJARPATH"`
+  TOOLSJARPATH=`cygpath --path --windows "$TOOLSJARPATH"`
+  LOCALCLASSPATH=`cygpath --path --windows "$LOCALCLASSPATH"`
+  ANT_OPTS="$ANT_OPTS -Dcygwin.user.home="`cygpath --path --windows "$HOME"`
+fi
+
+"$JAVACMD" -classpath "$LOCALCLASSPATH" $ANT_OPTS -Dant.home=$MUTANT_HOME org.apache.ant.start.Main $ANT_ARGS "$@"

@@ -60,9 +60,11 @@ import java.io.IOException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.StringTokenizer;
 import java.util.jar.Attributes;
 import java.util.jar.JarOutputStream;
@@ -102,6 +104,8 @@ public class BuildHelper {
     /** Filesets created in the build */
     private Map filesets = new HashMap();
 
+    /** The targets which have been run */
+    private Set runTargets = new HashSet();
 
     /**
      * Set a property for the build
@@ -114,6 +118,21 @@ public class BuildHelper {
             String value = resolve(propertyValue);
 
             properties.put(propertyName, value);
+        }
+    }
+
+    /**
+     * Set the parent helper when creating a new build context
+     *
+     * @param parentHelper the parent helper
+     */
+    protected void setParent(BuildHelper parentHelper) {
+        // grab the parent's properties
+        Map parentProperties = parentHelper.properties;
+        for (Iterator i = parentProperties.keySet().iterator(); i.hasNext();) {
+            String propertyName = (String) i.next();
+            String propertyValue = (String) parentProperties.get(propertyName);
+            setProperty(propertyName, propertyValue);
         }
     }
 
@@ -136,6 +155,8 @@ public class BuildHelper {
         try {
             File base = new File(resolve(basedir));
             File jar = new File(resolve(jarFile));
+            System.out.println("        [jar] Creating jar " + jar);
+
             Manifest manifest = new Manifest();
             Attributes attributes = manifest.getMainAttributes();
             attributes.putValue("Manifest-Version", "1.0");
@@ -205,6 +226,11 @@ public class BuildHelper {
         for (Iterator i = javaFiles.iterator(); i.hasNext();) {
             args[index++] = ((File) i.next()).getPath();
         }
+
+        // System.out.println("Javac Arguments");
+        // for (int i = 0; i < args.length; ++i) {
+        //     System.out.println("   " + args[i]);
+        // }
 
         try {
             Class c = Class.forName("com.sun.tools.javac.Main");
@@ -303,12 +329,14 @@ public class BuildHelper {
         File[] files = buildFileSet(filesetDir, filesetIncludes);
         String currentPath = (String) paths.get(pathName);
 
-        for (int i = 0; i < files.length; ++i) {
-            if (currentPath == null || currentPath.length() == 0) {
-                currentPath = files[i].getPath();
-            } else {
-                currentPath = currentPath + File.pathSeparator
-                     + files[i].getPath();
+        if (files != null) {
+            for (int i = 0; i < files.length; ++i) {
+                if (currentPath == null || currentPath.length() == 0) {
+                    currentPath = files[i].getPath();
+                } else {
+                    currentPath = currentPath + File.pathSeparator
+                         + files[i].getPath();
+                }
             }
         }
         paths.put(pathName, currentPath);
@@ -550,13 +578,54 @@ public class BuildHelper {
 
 
     /**
+     * Run a target in the build
+     *
+     * @param builder The builder object created from the original XML build
+     *                file.
+     * @param target The target to run.
+     */
+    private void runTarget(Object builder, String target) {
+        try {
+            // use reflection to get a method with the given name
+            Method targetMethod
+                 = builder.getClass().getDeclaredMethod(target,
+                new Class[]{BuildHelper.class});
+            targetMethod.invoke(builder, new Object[]{this});
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new RuntimeException("Unable to run target \""
+                 + target + "\"");
+        }
+    }
+
+    /**
+     * Run the dependencies of the given target.
+     *
+     * @param builder The builder object created from the original XML build
+     *                file.
+     * @param targetName the target whose dependencies should be run
+     * @param depends the comma separated list of dependencies.
+     */
+    public void runDepends(Object builder, String targetName, String depends) {
+        StringTokenizer tokenizer = new StringTokenizer(depends, ", ");
+        while (tokenizer.hasMoreTokens()) {
+            String target = tokenizer.nextToken();
+            // has this target been run
+            if (!runTargets.contains(target)) {
+                runTarget(builder, target);
+            }
+        }
+        runTargets.add(targetName);
+    }
+
+    /**
      * Resolve the property references in a string
      *
      * @param propertyValue the string to be resolved
      * @return the string with property references replaced by their current
      *      value.
      */
-    private String resolve(String propertyValue) {
+    protected String resolve(String propertyValue) {
         String newValue = propertyValue;
 
         while (newValue.indexOf("${") != -1) {

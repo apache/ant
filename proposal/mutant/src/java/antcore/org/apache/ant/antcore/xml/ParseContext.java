@@ -88,6 +88,12 @@ public class ParseContext {
     /** The factory used to create SAX parsers. */
     private SAXParserFactory parserFactory;
 
+    /**
+     * Initialize a parse context.
+     *
+     * This method creates the Parser Factory for which it sets the
+     * context classloader.
+     */
     public ParseContext() {
         Thread thread = Thread.currentThread();
         ClassLoader currentContextLoader = thread.getContextClassLoader();
@@ -172,30 +178,6 @@ public class ParseContext {
         } catch (CircularDependencyException e) {
             throw new XMLParseException(e);
         }
-    }
-
-    /**
-     * Given an XML qName, this method tries to resolve a name into a URI
-     * using the map of well known namespaces.
-     *
-     * @param qName the XML qName
-     * @return the namespace URI for the given name. If the namespace
-     *   prefix is unknown the prefix is returned.
-     */
-    public String resolveNamespace(String qName) {
-        String namespaceId = qName.substring(0, qName.indexOf(":"));
-        String namespaceURI = (String) knownNamespaces.get(namespaceId);
-        return namespaceURI == null ? namespaceId : namespaceURI;
-    }
-
-    /**
-     * Declare a namespace
-     *
-     * @param prefix the prefix that is used in the XML for the namespace.
-     * @param uri the namespace's unique URI.
-     */
-    public void declareNamespace(String prefix, String uri) {
-        knownNamespaces.put(prefix, uri);
     }
 }
 

@@ -51,79 +51,22 @@
  * information on the Apache Software Foundation, please see
  * <http://www.apache.org/>.
  */
-package org.apache.ant.frontend;
-
-import org.apache.ant.common.util.AntException;
-import org.apache.ant.common.util.Location;
+package org.apache.ant.init;
 
 /**
- * An exception in the frontend set up of an Ant run
+ * Interface which all front ends implement and is used to launch the front
+ * end.
  *
  * @author Conor MacNeill
+ * @created 26 June 2002
  */
-public class FrontendException extends AntException {
+public interface Frontend {
     /**
-     * Constructs an exception with the given descriptive message.
+     * Start a frontend.
      *
-     * @param msg Description of or information about the exception.
+     * @param args the command line arguments is any
+     * @param antEnv the AntEnvironment describing the operating environment.
      */
-    public FrontendException(String msg) {
-        super(msg);
-    }
-
-    /**
-     * Constructs an exception with the given descriptive message and a
-     * location in a file.
-     *
-     * @param msg Description of or information about the exception.
-     * @param location Location in the project file where the error occured.
-     */
-    public FrontendException(String msg, Location location) {
-        super(msg, location);
-    }
-
-    /**
-     * Constructs an exception with the given message and exception as a
-     * root cause.
-     *
-     * @param msg Description of or information about the exception.
-     * @param cause Throwable that might have cause this one.
-     */
-    public FrontendException(String msg, Throwable cause) {
-        super(msg, cause);
-    }
-
-    /**
-     * Constructs an exception with the given message and exception as a
-     * root cause and a location in a file.
-     *
-     * @param msg Description of or information about the exception.
-     * @param cause Exception that might have cause this one.
-     * @param location Location in the project file where the error occured.
-     */
-    public FrontendException(String msg, Throwable cause,
-                          Location location) {
-        super(msg, cause, location);
-    }
-
-    /**
-     * Constructs an exception with the given exception as a root cause.
-     *
-     * @param cause Exception that might have caused this one.
-     */
-    public FrontendException(Throwable cause) {
-        super(cause);
-    }
-
-    /**
-     * Constructs an exception with the given exception as a root cause and
-     * a location in a file.
-     *
-     * @param cause Exception that might have cause this one.
-     * @param location Location in the project file where the error occured.
-     */
-    public FrontendException(Throwable cause, Location location) {
-        super(cause, location);
-    }
+    void start(String[] args, AntEnvironment antEnv);
 }
 

@@ -90,7 +90,7 @@ public class Builder {
     private static final File INPUT_ROOT
          = new File(PACKAGE_ROOT, "input");
     /** the input root */
-         
+
     /** the root forthe depend task's support classes */
     private static final File DEPEND_ROOT
          = new File(TASKDEFS_ROOT, "optional/depend");
@@ -114,7 +114,7 @@ public class Builder {
      */
     private void addJavaFiles(List files, File dir, boolean recurse) {
         File[] javaFiles = dir.listFiles();
-        
+
         if (javaFiles != null) {
             for (int i = 0; i < javaFiles.length; ++i) {
                 if (javaFiles[i].isDirectory() && recurse) {
@@ -125,7 +125,7 @@ public class Builder {
             }
         }
     }
-    
+
     /**
      * Get the Ant1 files currently required to build a bootstrap build.
      *
@@ -157,7 +157,7 @@ public class Builder {
         files.add(new File(PACKAGE_ROOT, "TaskAdapter.java"));
         files.add(new File(PACKAGE_ROOT, "MatchingTask.java"));
         files.add(new File(PACKAGE_ROOT, "defaultManifest.mf"));
-        
+
         files.add(new File(TASKDEFS_ROOT, "defaults.properties"));
         files.add(new File(TYPES_ROOT, "defaults.properties"));
 
@@ -166,7 +166,7 @@ public class Builder {
         files.add(new File(UTIL_ROOT, "regexp/RegexpFactory.java"));
         files.add(new File(UTIL_ROOT, "regexp/RegexpMatcherFactory.java"));
         files.add(new File(FILTERS_ROOT, "util/ChainReaderHelper.java"));
-        
+
         // these should not be included
         files.remove(new File(TYPES_ROOT, "DataType.java"));
         files.remove(new File(TASKDEFS_ROOT, "Ant.java"));
@@ -177,7 +177,7 @@ public class Builder {
         files.remove(new File(TASKDEFS_ROOT, "SendEmail.java"));
         files.remove(new File(TASKDEFS_ROOT, "Do.java"));
         files.remove(new File(INPUT_ROOT, "InputRequest.java"));
-        
+
         // not needed for bootstrap
         files.remove(new File(TASKDEFS_ROOT, "Java.java"));
         files.remove(new File(TASKDEFS_ROOT, "Tar.java"));
@@ -186,8 +186,8 @@ public class Builder {
         files.remove(new File(TASKDEFS_ROOT, "BUnzip2.java"));
         files.remove(new File(TASKDEFS_ROOT, "Rmic.java"));
         files.remove(new File(TASKDEFS_ROOT, "SendEmail.java"));
-        
-        
+
+
         return (File[]) files.toArray(new File[0]);
     }
 
@@ -202,13 +202,7 @@ public class Builder {
         mainBuild.setProperty("dist.dir", "bootstrap");
         MutantBuilder mutantBuilder = new MutantBuilder();
         mutantBuilder._init(mainBuild);
-        mutantBuilder.buildsetup(mainBuild);
-        mutantBuilder.init(mainBuild);
-        mutantBuilder.common(mainBuild);
-        mutantBuilder.antcore(mainBuild);
-        mutantBuilder.start(mainBuild);
-        mutantBuilder.frontend(mainBuild);
-        mutantBuilder.systemlib(mainBuild);
+        mutantBuilder.dist_lite(mainBuild);
 
         Ant1CompatBuilder ant1Builder = new Ant1CompatBuilder();
         BuildHelper ant1Build = new BuildHelper();

@@ -1,9 +1,9 @@
 <project default="ant1compat" name="Ant1Compat" basedir="..">
 
   <property name="debug" value="true" />
-  <property name="chmod.fail" value="true" />
   <property name="deprecation" value="false" />
   <property name="optimize" value="true" />
+
   <property name="junit.fork" value="false" />
   <property name="junit.filtertrace" value="off"/>
   <property name="junit.summary" value="no"/>
@@ -16,14 +16,16 @@
 
   <property name="src.dir" value="src"/>
   <property name="java.dir" value="${src.dir}/java"/>
-  <property name="script.dir" value="${src.dir}/script"/>
   <property name="lib.dir" value="lib"/>
   <property name="tests.dir" value="${ant1src.dir}/testcases"/>
   <property name="tests.etc.dir" value="${src.dir}/etc/testcases"/>
 
   <property name="bin.dir" value="bin"/>
   <property name="dist.dir" value="dist"/>
-  <property name="distlib.dir" value="${dist.dir}/lib"/>
+  <property name="dist.lib.dir" value="${dist.dir}/lib"/>
+  <property name="dist.core.dir" value="${dist.lib.dir}/core"/>
+  <property name="dist.antlibs.dir" value="${dist.lib.dir}/antlibs"/>
+  <property name="dist.syslibs.dir" value="${dist.core.dir}/syslibs"/>
 
   <property name="ant.package" value="org/apache/tools/ant"/>
   <property name="optional.package" value="${ant.package}/taskdefs/optional"/>
@@ -40,11 +42,11 @@
 
 
   <path id="classpath">
-    <pathelement location="${distlib.dir}/init.jar"/>
-    <fileset dir="${lib.dir}/parser" includes="*.jar"/>
-    <fileset dir="${lib.dir}/ant1compat" includes="*.jar"/>
-    <pathelement location="${distlib.dir}/common/common.jar"/>
-    <pathelement location="${distlib.dir}/syslibs/system.jar"/>
+    <pathelement location="${dist.core.dir}/start/init.jar"/>
+    <fileset dir="${dist.core.dir}/parser" includes="*.jar"/>
+<!--    <fileset dir="${lib.dir}/ant1compat" includes="*.jar"/> -->
+    <pathelement location="${dist.core.dir}/common/common.jar"/>
+    <pathelement location="${dist.syslibs.dir}/system.jar"/>
   </path>
 
   <path id="tests-classpath">
@@ -561,8 +563,8 @@
        </fileset>
     </copy>
 
-    <mkdir dir="${distlib.dir}/antlibs/"/>
-    <jar basedir="${bin.dir}/ant1compat" jarfile="${distlib.dir}/antlibs/ant1compat.jar">
+    <mkdir dir="${dist.antlibs.dir}"/>
+    <jar basedir="${bin.dir}/ant1compat" jarfile="${dist.antlibs.dir}/ant1compat.jar">
       <metainf dir="${java.dir}/antlibs/ant1compat"
                 includes="antlib.xml"/>
     </jar>

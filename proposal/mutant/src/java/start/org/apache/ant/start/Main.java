@@ -54,7 +54,6 @@
 package org.apache.ant.start;
 
 import java.io.IOException;
-import java.lang.reflect.Method;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.util.jar.Attributes;
@@ -62,6 +61,7 @@ import java.util.jar.JarInputStream;
 import java.util.jar.Manifest;
 import org.apache.ant.init.AntEnvironment;
 import org.apache.ant.init.InitException;
+import org.apache.ant.init.Frontend;
 import java.io.File;
 
 /**
@@ -72,10 +72,6 @@ import java.io.File;
  * @created  9 January 2002
  */
 public class Main {
-    /**  The actual class that implements the command line front end. */
-    public static final String DEFAULT_COMMANDLINE_CLASS
-         = "org.apache.ant.cli.Commandline";
-
     /**  The default front end name */
     public static final String DEFAULT_FRONTEND = "cli";
 
@@ -98,6 +94,7 @@ public class Main {
             }
         }
 
+        String[] mainArgs = args;
         if (frontendIndex != -1) {
             try {
                 frontend = args[frontendIndex + 1];
@@ -106,42 +103,36 @@ public class Main {
                      + "-frontend argument");
             }
 
-            String[] newArgs = new String[args.length - 2];
+            mainArgs = new String[args.length - 2];
 
-            System.arraycopy(args, 0, newArgs, 0, frontendIndex);
+            System.arraycopy(args, 0, mainArgs, 0, frontendIndex);
             if (args.length > (frontendIndex + 2)) {
-                System.arraycopy(args, frontendIndex + 2, newArgs,
+                System.arraycopy(args, frontendIndex + 2, mainArgs,
                     frontendIndex, args.length - frontendIndex - 2);
             }
-            args = newArgs;
         }
 
-        String defaultClass = frontend.equals(DEFAULT_FRONTEND)
-             ? DEFAULT_COMMANDLINE_CLASS : null;
-
-        main.start(frontend, defaultClass, args);
+        main.start(frontend, mainArgs);
     }
 
 
     /**
      *  Internal start method used to initialise front end
      *
-     * @param  frontend the frontend jar to launch
+     * @param  frontendName the frontend jar to launch
      * @param  args commandline arguments
-     * @param  defaultClass the default class to use if it cannot be determined
-     *         from the jar itself
      * @exception  InitException if the front end cannot be started
      */
-    public void start(String frontend, String defaultClass, String[] args)
+    public void start(String frontendName, String[] args)
          throws InitException {
         try {
-            AntEnvironment config = new AntEnvironment(getClass());
+            AntEnvironment antEnv = new AntEnvironment(getClass());
 
-            URL frontendJar = new URL(config.getLibraryURL(),
-                "frontend/" + frontend + ".jar");
+            URL frontendJar = new URL(antEnv.getLibraryURL(),
+                "frontend/" + frontendName + ".jar");
             URL[] frontendJars = new URL[]{frontendJar};
             ClassLoader frontEndLoader
-                 = new URLClassLoader(frontendJars, config.getCoreLoader());
+                 = new URLClassLoader(frontendJars, antEnv.getCoreLoader());
 
             //System.out.println("Front End Loader config");
             //LoaderUtils.dumpLoader(System.out, frontEndLoader);
@@ -150,31 +141,22 @@ public class Main {
                 File jarFile = new File(frontendJar.getFile());
                 if (!jarFile.exists()) {
                     throw new InitException("Could not find jar for frontend \""
-                        + frontend + "\" - expected at " + frontendJar);
+                        + frontendName + "\" - expected at " + frontendJar);
                 }
             }
             String mainClass = getMainClass(frontendJar);
 
             if (mainClass == null) {
-                mainClass = defaultClass;
-            }
-
-            if (mainClass == null) {
                 throw new InitException("Unable to determine main class "
-                     + " for \"" + frontend + "\" frontend");
+                     + " for \"" + frontendName + "\" frontend");
             }
 
             // Now start the front end by reflection.
             Class frontendClass = Class.forName(mainClass, true,
                 frontEndLoader);
 
-            final Class[] param = {Class.forName("[Ljava.lang.String;"),
-                AntEnvironment.class};
-            final Method startMethod
-                 = frontendClass.getMethod("start", param);
-            final Object[] argument = {args, config};
-
-            startMethod.invoke(null, argument);
+            Frontend frontend = (Frontend) frontendClass.newInstance();
+            frontend.start(args, antEnv);
         } catch (Exception e) {
             throw new InitException(e);
         }

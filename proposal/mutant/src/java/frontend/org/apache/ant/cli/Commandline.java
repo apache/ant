@@ -55,8 +55,8 @@ package org.apache.ant.cli;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.PrintStream;
 import java.io.OutputStream;
+import java.io.PrintStream;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
@@ -66,19 +66,21 @@ import java.util.List;
 import java.util.Map;
 import org.apache.ant.antcore.config.AntConfig;
 import org.apache.ant.antcore.execution.Frame;
+import org.apache.ant.antcore.frontend.FrontendException;
+import org.apache.ant.antcore.frontend.FrontendUtils;
 import org.apache.ant.antcore.modelparser.XMLProjectParser;
 import org.apache.ant.antcore.xml.XMLParseException;
 import org.apache.ant.common.event.BuildEvent;
 import org.apache.ant.common.event.BuildListener;
 import org.apache.ant.common.event.MessageLevel;
-import org.apache.ant.common.model.Project;
-import org.apache.ant.common.util.DemuxOutputStream;
-import org.apache.ant.common.logger.DefaultLogger;
 import org.apache.ant.common.logger.BuildLogger;
+import org.apache.ant.common.logger.DefaultLogger;
+import org.apache.ant.common.model.Project;
+import org.apache.ant.common.util.DataValue;
+import org.apache.ant.common.util.DemuxOutputStream;
 import org.apache.ant.init.AntEnvironment;
+import org.apache.ant.init.Frontend;
 import org.apache.ant.init.InitUtils;
-import org.apache.ant.frontend.FrontendUtils;
-import org.apache.ant.frontend.FrontendException;
 
 /**
  * This is the command line front end. It drives the core.
@@ -86,7 +88,7 @@ import org.apache.ant.frontend.FrontendException;
  * @author Conor MacNeill
  * @created 9 January 2002
  */
-public class Commandline {
+public class Commandline implements Frontend {
     /** The initialisation configuration for Ant */
     private AntEnvironment antEnv;
 
@@ -103,16 +105,13 @@ public class Commandline {
     private List targets = new ArrayList(4);
 
     /** The command line properties */
-    private Map definedProperties = new HashMap();
+    private Map definedValues = new HashMap();
 
     /** The Config files to use in this run */
     private List configFiles = new ArrayList();
 
-    /**
-     * This is the build file to run. By default it is a file: type URL but
-     * other URL protocols can be used.
-     */
-    private URL buildFileURL;
+    /** This is the build to run.  */
+    private String buildSource;
 
     /**
      * The Ant logger class. There may be only one logger. It will have the
@@ -122,29 +121,17 @@ public class Commandline {
     private String loggerClassname = null;
 
     /** Our current message output status. Follows MessageLevel values */
-    private int messageOutputLevel = MessageLevel.MSG_INFO;
+    private int messageOutputLevel = MessageLevel.INFO;
 
     /** The logger that will be used for the build */
     private BuildLogger logger = null;
 
     /**
-     * Start the command line front end for mutant.
-     *
-     * @param args the commandline arguments
-     * @param config the initialisation configuration
-     */
-    public static void start(String[] args, AntEnvironment config) {
-        // create a command line and use it to run ant
-        Commandline commandline = new Commandline();
-        commandline.process(args, config);
-    }
-
-    /**
      * Adds a feature to the BuildListeners attribute of the Commandline
      * object
      *
-     * @param eventSource the build event source to which listeners
-     *        will be added.
+     * @param eventSource the build event source to which listeners will be
+     *      added.
      * @exception FrontendException if the necessary listener instances could
      *      not be created
      */
@@ -205,14 +192,15 @@ public class Commandline {
      * @param args the commandline arguments
      * @param antEnv Ant's initialization configuration
      */
-    private void process(String[] args, AntEnvironment antEnv) {
+    public void start(final String[] args, final AntEnvironment antEnv) {
         this.antEnv = antEnv;
+
         Frame mainFrame = null;
         Project project = null;
         try {
             parseArguments(args);
             createLogger();
-            determineBuildFile();
+            URL buildSourceURL = determineBuildFile();
 
             AntConfig config = new AntConfig();
             AntConfig userConfig =
@@ -230,27 +218,32 @@ public class Commandline {
             for (Iterator i = configFiles.iterator(); i.hasNext();) {
                 File configFile = (File) i.next();
                 AntConfig runConfig
-                    = FrontendUtils.getAntConfigFile(configFile);
+                     = FrontendUtils.getAntConfigFile(configFile);
                 config.merge(runConfig);
             }
 
-            if (!buildFileURL.getProtocol().equals("file")
-                 && !config.isRemoteProjectAllowed()) {
+            if (buildSourceURL.getProtocol().equals("file")) {
+                System.out.println("Buildfile: " + buildSource);
+            } else if (!config.isRemoteProjectAllowed()) {
                 throw new FrontendException("Remote Projects are not allowed: "
-                     + buildFileURL);
+                     + buildSourceURL);
+            } else {
+                System.out.println("Build: " + buildSourceURL);
             }
 
-            project = parseProject();
+            project = parseProject(buildSourceURL);
 
             // create the execution manager to execute the build
             mainFrame = new Frame(antEnv, config);
             OutputStream demuxOut
-                = new DemuxOutputStream(mainFrame, false);
+                 = new DemuxOutputStream(mainFrame, false);
             OutputStream demuxErr
-                = new DemuxOutputStream(mainFrame, true);
+                 = new DemuxOutputStream(mainFrame, true);
             System.setOut(new PrintStream(demuxOut));
             System.setErr(new PrintStream(demuxErr));
             addBuildListeners(mainFrame);
+            mainFrame.setProject(project);
+            mainFrame.initialize(definedValues);
         } catch (Throwable e) {
             if (logger != null) {
                 BuildEvent finishedEvent
@@ -263,9 +256,6 @@ public class Commandline {
         }
 
         try {
-            mainFrame.setProject(project);
-            mainFrame.initialize(definedProperties);
-
             mainFrame.startBuild(targets);
             System.exit(0);
         } catch (Throwable t) {
@@ -274,35 +264,26 @@ public class Commandline {
     }
 
     /**
-     * Use the XML parser to parse the build file into a project model
+     * Use the XML parser to parse the build into a project model
      *
+     * @param buildSourceURL the location of the build XML source.
      * @return a project model representation of the project file
      * @exception XMLParseException if the project cannot be parsed
      */
-    private Project parseProject()
+    private Project parseProject(URL buildSourceURL)
          throws XMLParseException {
         XMLProjectParser parser = new XMLProjectParser();
-        Project project = parser.parseBuildFile(buildFileURL);
+        Project project = parser.parseBuildFile(buildSourceURL);
         return project;
     }
 
     /**
-     * Handle build file argument
+     * Handle build argument
      *
-     * @param url the build file's URL
-     * @exception FrontendException if the build file location is not valid
+     * @param buildSource the build to process
      */
-    private void argBuildFile(String url) throws FrontendException {
-        try {
-            if (url.indexOf(":") == -1) {
-                // We convert any hash characters to their URL escape.
-                buildFileURL = InitUtils.getFileURL(new File(url));
-            } else {
-                buildFileURL = new URL(url);
-            }
-        } catch (MalformedURLException e) {
-            throw new FrontendException("Build file is not valid", e);
-        }
+    private void argBuild(String buildSource) {
+        this.buildSource = buildSource;
     }
 
     /**
@@ -339,26 +320,50 @@ public class Commandline {
 
 
     /**
-     * Determine the build file to use
+     * Determine the build to use
      *
-     * @exception FrontendException if the build file cannot be found
+     * @return the URL of the build source.
+     * @exception FrontendException if the build cannot be found
      */
-    private void determineBuildFile() throws FrontendException {
-        if (buildFileURL == null) {
-            File defaultBuildFile
-                = new File(FrontendUtils.DEFAULT_BUILD_FILENAME);
-            if (!defaultBuildFile.exists()) {
-                File ant1BuildFile
-                    = new File(FrontendUtils.DEFAULT_ANT1_FILENAME);
-                if (ant1BuildFile.exists()) {
-                    defaultBuildFile = ant1BuildFile;
+    private URL determineBuildFile() throws FrontendException {
+
+        URL buildSourceURL = null;
+        try {
+            if (buildSource == null) {
+                buildSource = FrontendUtils.DEFAULT_BUILD_FILENAME;
+                File defaultBuildFile = new File(buildSource);
+                if (!defaultBuildFile.exists()) {
+                    String ant1File = FrontendUtils.DEFAULT_ANT1_FILENAME;
+                    File ant1BuildFile = new File(ant1File);
+                    if (ant1BuildFile.exists()) {
+                        buildSource = ant1File;
+                        defaultBuildFile = ant1BuildFile;
+                    } else {
+                        throw new FrontendException("No build file "
+                             + FrontendUtils.DEFAULT_BUILD_FILENAME + " or "
+                             + FrontendUtils.DEFAULT_ANT1_FILENAME + " found.");
+                    }
+                }
+                buildSourceURL = InitUtils.getFileURL(defaultBuildFile);
+            } else {
+                // we have been given a file as a string - try to figure out if
+                // it is a URL or just a file
+                try {
+                    buildSourceURL = new URL(buildSource);
+                } catch (MalformedURLException e) {
+                    // must be a file
+                    File buildFile = new File(buildSource);
+                    if (!buildFile.exists()) {
+                        throw new FrontendException("Cannot find build: "
+                             + buildSource);
+                    }
+                    buildSourceURL = InitUtils.getFileURL(buildFile);
                 }
             }
-            try {
-                buildFileURL = InitUtils.getFileURL(defaultBuildFile);
-            } catch (MalformedURLException e) {
-                throw new FrontendException("Build file is not valid", e);
-            }
+            return buildSourceURL;
+        } catch (MalformedURLException e) {
+            throw new FrontendException("Build file " + buildSource
+                 + " is not valid", e);
         }
     }
 
@@ -378,17 +383,17 @@ public class Commandline {
 
             if (arg.equals("-buildfile") || arg.equals("-file")
                  || arg.equals("-f")) {
-                argBuildFile(getOption(args, i++, arg));
+                argBuild(getOption(args, i++, arg));
             } else if (arg.equals("-logfile") || arg.equals("-l")) {
                 argLogFile(getOption(args, i++, arg));
             } else if (arg.equals("-quiet") || arg.equals("-q")) {
-                messageOutputLevel = MessageLevel.MSG_WARN;
+                messageOutputLevel = MessageLevel.WARNING;
             } else if (arg.equals("-verbose") || arg.equals("-v")) {
                 // printVersion();
-                messageOutputLevel = MessageLevel.MSG_VERBOSE;
+                messageOutputLevel = MessageLevel.VERBOSE;
             } else if (arg.equals("-debug")) {
                 // printVersion();
-                messageOutputLevel = MessageLevel.MSG_DEBUG;
+                messageOutputLevel = MessageLevel.DEBUG;
             } else if (arg.equals("-config") || arg.equals("-c")) {
                 configFiles.add(new File(getOption(args, i++, arg)));
             } else if (arg.equals("-listener")) {
@@ -405,7 +410,8 @@ public class Commandline {
                 } else {
                     value = getOption(args, i++, arg);
                 }
-                definedProperties.put(name, value);
+                definedValues.put(name,
+                    new DataValue(value, DataValue.PRIORITY_USER));
             } else if (arg.startsWith("-")) {
                 // we don't have any more args to recognize!
                 System.out.println("Unknown option: " + arg);

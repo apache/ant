@@ -75,10 +75,7 @@ public class ProjectHandler extends ModelElementHandler {
     /** The default attribute name */
     public static final String DEFAULT_ATTR = "default";
 
-    /** The name of the element used to define references */
-    public static final String REF_ELEMENT = "ant:ref";
-
-    /** The name of the element used to define references */
+    /** The name of the element used to define includes */
     public static final String INCLUDE_ELEMENT = "ant:include";
 
     /** The name of the element used to define references */

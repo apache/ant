@@ -53,22 +53,26 @@
  */
 package org.apache.ant.antcore.execution;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import org.apache.ant.common.event.MessageLevel;
+import org.apache.ant.common.model.Project;
 import org.apache.ant.common.service.DataService;
-import org.apache.ant.common.util.PropertyUtils;
 import org.apache.ant.common.util.AntException;
+import org.apache.ant.common.util.DataValue;
+import org.apache.ant.common.util.PropertyUtils;
 
 /**
- * This is the core's implementation of the DataService service interface.
- * It gives Ant libraries access to property values maintained in the
- * Frame.
+ * This is the core's implementation of the DataService service interface. It
+ * gives Ant libraries access to property values maintained in the Frame.
  *
  * @author Conor MacNeill
  * @created 31 January 2002
  */
 public class CoreDataService implements DataService {
+
     /** The Frame this service instance is working for */
     private Frame frame;
 
@@ -76,53 +80,157 @@ public class CoreDataService implements DataService {
     private boolean allowUnsetProperties;
 
     /**
+     * The context of this execution. This contains all data object's created
+     * by tasks that have been executed
+     */
+    private Map dataValues = new HashMap();
+
+    /**
+     * The property overrides for the referenced frames. This map is indexed
+     * by the reference names of the frame. Each entry is another Map of
+     * property values indexed by their relative name.
+     */
+    private Map overrides = new HashMap();
+
+    /**
      * Constructor
      *
      * @param frame the frame containing this context
-     * @param allowUnsetProperties true if the reference to an unset
-     *      property should not throw an exception
+     * @param allowUnsetProperties true if the reference to an unset property
+     *      should not throw an exception
      */
     protected CoreDataService(Frame frame,
-                                boolean allowUnsetProperties) {
+                              boolean allowUnsetProperties) {
         this.frame = frame;
         this.allowUnsetProperties = allowUnsetProperties;
     }
 
     /**
-     * Set a data value. If an existing data value exists, associated with
-     * the given name, the value will not be changed
+     * Get the Data service of a frame
      *
-     * @param valueName the name of the data value
-     * @param value the value to be associated with the name
-     * @exception ExecutionException if the value cannot be set
+     * @param frame the frame whose data service is required.
+     * @return the frame's data service.
+     * @exception ExecutionException if the frame's data service cannot be
+     *            retrieved.
      */
-    public void setDataValue(String valueName, Object value)
+    private DataService getFrameDataService(Frame frame)
          throws ExecutionException {
-        frame.setDataValue(valueName, value, false);
+        return (DataService) frame.getCoreService(DataService.class);
     }
 
     /**
-     * Set a data value which can be overwritten
+     * Update a DataValue in a repository.
      *
-     * @param valueName the name of the data value
-     * @param value the value to be associated with the name
-     * @exception ExecutionException if the value cannot be set
+     * The value is only updated if it is a higher priority than any existing
+     * values or the same priority and the mutable flag is set.
+     *
+     * @param repository the repository containing the values.
+     * @param key the key under which the value is to be stored.
+     * @param value the data vale instance
+     * @param mutable true if a value of equal priority can be overwritten.
      */
-    public void setMutableDataValue(String valueName, Object value)
-         throws ExecutionException {
-        frame.setDataValue(valueName, value, true);
+    private void updateValue(Map repository, String key,
+                             DataValue value, boolean mutable) {
+        int priority = value.getPriority();
+        DataValue currentDataValue = (DataValue) repository.get(key);
+        if (currentDataValue != null) {
+            int currentPriority = currentDataValue.getPriority();
+            if (currentPriority > priority
+                 || (currentPriority == priority && !mutable)) {
+                frame.log("Ignoring override for data value " + key,
+                    MessageLevel.VERBOSE);
+                return;
+            }
+        }
+        repository.put(key, value);
     }
+
+    /**
+     * Set a value in this frame or any of its imported frames.
+     *
+     * @param name the name of the value
+     * @param value the actual value
+     * @param mutable if true, existing values can be changed
+     * @exception AntException if the value cannot be set.
+     */
+    public void setDataValue(String name, DataValue value, boolean mutable)
+         throws AntException {
+        Frame containingFrame = frame.getContainingFrame(name);
+
+        if (containingFrame == null) {
+            setOverrideProperty(name, value, mutable);
+            return;
+        }
+
+        String localName = frame.getNameInFrame(name);
+        if (containingFrame == frame) {
+            updateValue(dataValues, localName, value, mutable);
+        } else {
+            DataService actualDataService = getFrameDataService(containingFrame);
+            actualDataService.setDataValue(localName, value, mutable);
+        }
+    }
+
+    /**
+     * When a frame has not yet been referenced, this method is used to set
+     * the initial properties for the frame when it is introduced.
+     *
+     * @param name the name of the value
+     * @param value the actual value
+     * @param mutable if true, existing values can be changed
+     * @exception ExecutionException if attempting to override a property in
+     *      the current frame.
+     */
+    private void setOverrideProperty(String name, DataValue value,
+                                     boolean mutable)
+         throws ExecutionException {
+        int refIndex = name.indexOf(Project.REF_DELIMITER);
+        if (refIndex == -1) {
+            throw new ExecutionException("Property overrides can only be set"
+                 + " for properties in referenced projects - not "
+                 + name);
+        }
+
+        String firstFrameName = name.substring(0, refIndex);
+
+        String relativeName
+             = name.substring(refIndex + Project.REF_DELIMITER.length());
+
+        Map frameOverrides = (Map) overrides.get(firstFrameName);
+        if (frameOverrides == null) {
+            frameOverrides = new HashMap();
+            overrides.put(firstFrameName, frameOverrides);
+        }
+
+        updateValue(frameOverrides, relativeName, value, mutable);
+    }
+
 
     /**
      * Get a data value
      *
-     * @param valueName the name of the data value
-     * @return the current object associated with the name or null if no
-     *      value is currently associated with the name
-     * @exception ExecutionException if the value cannot be retrieved.
+     * @param name the name of the data value
+     * @return the current object associated with the name or null if no value
+     *      is currently associated with the name
+     * @exception AntException if the value cannot be retrieved.
      */
-    public Object getDataValue(String valueName) throws ExecutionException {
-        return frame.getDataValue(valueName);
+    public Object getDataValue(String name) throws AntException {
+        Frame containingFrame = frame.getContainingFrame(name);
+
+        if (containingFrame == null) {
+            return getOverrideProperty(name);
+        }
+        if (containingFrame == frame) {
+            DataValue dataValue = (DataValue) dataValues.get(name);
+            if (dataValue == null) {
+                return null;
+            }
+            return dataValue.getValue();
+        } else {
+            String localName = frame.getNameInFrame(name);
+            DataService actualDataService = getFrameDataService(containingFrame);
+            return actualDataService.getDataValue(localName);
+        }
     }
 
     /**
@@ -131,24 +239,68 @@ public class CoreDataService implements DataService {
      * @param name the name of the data value - may contain reference
      *      delimiters
      * @return true if the value exists
-     * @exception ExecutionException if the containing frame for the value
-     *      does not exist
+     * @exception AntException if the data value cannot be accessed.
      */
-    public boolean isDataValueSet(String name) throws ExecutionException {
-        return frame.isDataValueSet(name);
+    public boolean isDataValueSet(String name) throws AntException {
+        Frame containingFrame = frame.getContainingFrame(name);
+
+        if (containingFrame == null) {
+            return isOverrideSet(name);
+        }
+        if (containingFrame == frame) {
+            return dataValues.containsKey(name);
+        } else {
+            String localName = frame.getNameInFrame(name);
+            DataService actualDataService = getFrameDataService(containingFrame);
+            return actualDataService.isDataValueSet(localName);
+        }
     }
 
     /**
-     * Get all the properties from the frame and any references frames. This
+     * Get all the data values from the frame and any referenced frames. This
      * is an expensive operation since it must clone all of the property
      * stores in all frames
      *
-     * @return a Map containing the frames properties indexed by their full
+     * @return a Map containing the frames data values indexed by their full
      *      name.
+     * @exception AntException if the values cannot be retrieved.
      */
-    public Map getAllProperties() {
-        return frame.getAllProperties();
+    public Map getAllDataValues() throws AntException {
+        Map allValues = new HashMap();
+        mergeDataValues(allValues, dataValues);
+
+        // add in values from sub frames
+        for (Iterator i = frame.getRefNames(); i.hasNext();) {
+            String refName = (String) i.next();
+            Frame refFrame = frame.getReferencedFrame(refName);
+
+            DataService refDataService = getFrameDataService(refFrame);
+            Map refValues = refDataService.getAllDataValues();
+            Iterator j = refValues.keySet().iterator();
+
+            while (j.hasNext()) {
+                String name = (String) j.next();
+                DataValue value = (DataValue) refValues.get(name);
+                updateValue(allValues, refName + Project.REF_DELIMITER + name,
+                    value, false);
+            }
+        }
+
+        // add in values from overrides which have not yet been activated
+        for (Iterator i = overrides.keySet().iterator(); i.hasNext();) {
+            String refName = (String) i.next();
+            Map refOverrides = (Map) overrides.get(refName);
+            for (Iterator j = refOverrides.keySet().iterator(); j.hasNext();) {
+                String name = (String) j.next();
+                DataValue value = (DataValue) refOverrides.get(name);
+                updateValue(allValues, refName + Project.REF_DELIMITER + name,
+                    value, false);
+            }
+        }
+
+        return allValues;
     }
+
 
     /**
      * Replace ${} style constructions in the given value with the string
@@ -229,6 +381,145 @@ public class CoreDataService implements DataService {
         }
 
         return sb.toString();
+    }
+
+    /**
+     * Get the data value overrides associated with a given reference name.
+     *
+     * @param refName The name of the reference for which overriding datavalues
+     *                are required.
+     * @return The map of named DataValue instances.
+     */
+    protected Map getOverrides(String refName) {
+        return (Map) overrides.get(refName);
+    }
+
+    /**
+     * Remove the override values associated with a given reference name.
+     *
+     * @param refName The name of the reference for which overriding datavalues
+     *                are required.
+     */
+    protected void removeOverrides(String refName) {
+        overrides.remove(refName);
+    }
+
+    /**
+     * Get a value which exists in the frame property overrides awaiting the
+     * frame to be introduced.
+     *
+     * @param name the name of the value
+     * @return the value of the property or null if the property does not
+     *      exist.
+     * @exception ExecutionException if attempting to get an override in the
+     *      current frame.
+     */
+    private Object getOverrideProperty(String name) throws ExecutionException {
+        int refIndex = name.indexOf(Project.REF_DELIMITER);
+        if (refIndex == -1) {
+            throw new ExecutionException("Property overrides can only be"
+                 + " returned for properties in referenced projects - not "
+                 + name);
+        }
+
+        String firstFrameName = name.substring(0, refIndex);
+
+        String relativeName
+             = name.substring(refIndex + Project.REF_DELIMITER.length());
+
+        Map frameOverrides = (Map) overrides.get(firstFrameName);
+        if (frameOverrides == null) {
+            return null;
+        }
+
+        return frameOverrides.get(relativeName);
+    }
+
+    /**
+     * Get a value which exists in the frame property overrides awaiting the
+     * frame to be introduced.
+     *
+     * @param name the name of the value
+     * @return the value of the property or null if the property does not
+     *      exist.
+     * @exception ExecutionException if attempting to check an override in the
+     *      current frame.
+     */
+    private boolean isOverrideSet(String name) throws ExecutionException {
+        int refIndex = name.indexOf(Project.REF_DELIMITER);
+        if (refIndex == -1) {
+            throw new ExecutionException("Property overrides can only be"
+                 + " returned for properties in referenced projects - not "
+                 + name);
+        }
+
+        String firstFrameName = name.substring(0, refIndex);
+
+        String relativeName
+             = name.substring(refIndex + Project.REF_DELIMITER.length());
+
+        Map frameOverrides = (Map) overrides.get(firstFrameName);
+        if (frameOverrides == null) {
+            return false;
+        }
+
+        return frameOverrides.containsKey(relativeName);
+    }
+
+
+    /**
+     * Add a collection of properties to this frame with a given priority.
+     *
+     * @param properties the collection of property values, indexed by their
+     *      names
+     * @param priority the priority at which the values are added.
+     * @exception AntException if the values cannot be added.
+     */
+    protected void addProperties(Map properties, int priority)
+         throws AntException {
+        addDataValues(DataValue.makeDataValues(properties, priority));
+    }
+
+    /**
+     * Add a set of data values.
+     *
+     * @param dataValues a collection of DataValue instances named
+     * @exception AntException if the values cannot be added.
+     */
+    protected void addDataValues(Map values) throws AntException {
+        mergeDataValues(dataValues, values);
+    }
+
+    /**
+     * Merge one set of values into another
+     *
+     * @param values the values to which the new values are added
+     * @param newValues the values to be added in.
+     */
+    public void mergeDataValues(Map values, Map newValues) {
+        mergeDataValues(values, newValues, DataValue.PRIORITY_BASE);
+    }
+
+    /**
+     * Merge in values which are of a given priority or higher.
+     *
+     * @param values the values to which the new values are added
+     * @param newValues the values to be added in.
+     * @param threshold The require data value priority for a value to be
+     *        merged.
+     */
+    public void mergeDataValues(Map values, Map newValues, int threshold) {
+        if (newValues == null) {
+            return;
+        }
+
+        for (Iterator i = newValues.keySet().iterator(); i.hasNext();) {
+            String name = (String) i.next();
+            DataValue value = (DataValue) newValues.get(name);
+            if (value.getPriority() >= threshold) {
+                updateValue(values, name, value, false);
+            }
+        }
     }
 }
 

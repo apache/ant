@@ -14,7 +14,7 @@
     <xsl:apply-templates select="target"/>
     <xsl:text>}&#10;</xsl:text>
   </xsl:template>
-  
+
   <xsl:template match="property">
     <xsl:text>        helper.setProperty(&quot;</xsl:text>
     <xsl:value-of select="attribute::name"/>
@@ -23,15 +23,33 @@
     <xsl:text>&quot;);&#10;</xsl:text>
   </xsl:template>
 
+  <xsl:template match="antcall">
+    <xsl:text>        {&#10;</xsl:text>
+    <xsl:text>            BuildHelper subHelper = new BuildHelper();&#10;</xsl:text>
+    <xsl:for-each select="param">
+      <xsl:text>            subHelper.setProperty(&quot;</xsl:text>
+      <xsl:value-of select="attribute::name"/>
+      <xsl:text>&quot;, helper.resolve(&quot;</xsl:text>
+      <xsl:value-of select="attribute::value"/>
+      <xsl:text>&quot;));&#10;</xsl:text>
+    </xsl:for-each>
+    <xsl:text>            subHelper.setParent(helper);&#10;</xsl:text>
+    <xsl:text>            _init(subHelper);&#10;</xsl:text>
+    <xsl:text>            </xsl:text>
+    <xsl:value-of select="attribute::target"/>
+    <xsl:text>(subHelper);&#10;</xsl:text>
+    <xsl:text>        }&#10;</xsl:text>
+  </xsl:template>
+
   <xsl:template match="echo">
   </xsl:template>
-  
+
   <xsl:template match="path">
     <xsl:text>        helper.createPath(&quot;</xsl:text>
     <xsl:variable name="pathName" select="attribute::id"/>
     <xsl:value-of select="$pathName"/>
     <xsl:text>&quot;);&#10;</xsl:text>
-    
+
     <xsl:for-each select="fileset">
       <xsl:text>        </xsl:text>
       <xsl:text>helper.addFileSetToPath(&quot;</xsl:text>
@@ -52,7 +70,7 @@
       </xsl:choose>
       <xsl:text>);&#10;</xsl:text>
     </xsl:for-each>
-    
+
     <xsl:for-each select="pathelement">
       <xsl:text>        </xsl:text>
       <xsl:text>helper.addPathElementToPath(&quot;</xsl:text>
@@ -61,7 +79,7 @@
       <xsl:value-of select="attribute::location"/>
       <xsl:text>&quot;);&#10;</xsl:text>
     </xsl:for-each>
-    
+
     <xsl:for-each select="path">
       <xsl:text>        </xsl:text>
       <xsl:text>helper.addPathToPath(&quot;</xsl:text>
@@ -76,16 +94,24 @@
     <xsl:text>    protected void </xsl:text>
     <xsl:value-of select="translate(attribute::name, '-', '_')"/>
     <xsl:text>(BuildHelper helper) {&#10;</xsl:text>
+    <xsl:text>        helper.runDepends(this, &quot;</xsl:text>
+    <xsl:value-of select="translate(attribute::name, '-', '_')"/>
+    <xsl:text>&quot;, &quot;</xsl:text>
+    <xsl:value-of select="translate(attribute::depends, '-', '_')"/>
+    <xsl:text>&quot;);&#10;</xsl:text>
+    <xsl:text>        System.out.println(&quot;</xsl:text>
+    <xsl:value-of select="attribute::name"/>
+    <xsl:text>: &quot;);&#10;</xsl:text>
     <xsl:apply-templates/>
     <xsl:text>    }&#10;</xsl:text>
   </xsl:template>
-  
+
   <xsl:template match="mkdir">
     <xsl:text>        helper.mkdir(&quot;</xsl:text>
     <xsl:value-of select="attribute::dir"/>
     <xsl:text>&quot;);&#10;</xsl:text>
   </xsl:template>
-  
+
   <xsl:template match="javac">
     <xsl:text>        helper.javac(&quot;</xsl:text>
     <xsl:value-of select="attribute::srcdir"/>
@@ -150,7 +176,7 @@
     <xsl:text>);&#10;</xsl:text>
   </xsl:template>
 
-  
+
   <xsl:template match="copy/fileset">
     <xsl:choose>
       <xsl:when test="attribute::refid">

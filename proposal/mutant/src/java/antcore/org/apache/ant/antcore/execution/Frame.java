@@ -54,7 +54,6 @@
 package org.apache.ant.antcore.execution;
 import java.io.File;
 import java.net.URL;
-import java.net.MalformedURLException;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
@@ -81,6 +80,7 @@ import org.apache.ant.common.service.FileService;
 import org.apache.ant.common.service.InputService;
 import org.apache.ant.common.service.MagicProperties;
 import org.apache.ant.common.util.DemuxOutputReceiver;
+import org.apache.ant.common.util.DataValue;
 import org.apache.ant.common.util.FileUtils;
 import org.apache.ant.common.util.Location;
 import org.apache.ant.common.util.AntException;
@@ -111,19 +111,6 @@ public class Frame implements DemuxOutputReceiver {
      * particular task.
      */
     private Map aspectContextsMap = new HashMap();
-
-    /**
-     * The property overrides for the referenced frames. This map is indexed
-     * by the reference names of the frame. Each entry is another Map of
-     * property values indexed by their relative name.
-     */
-    private Map overrides = new HashMap();
-
-    /**
-     * The context of this execution. This contains all data object's created
-     * by tasks that have been executed
-     */
-    private Map dataValues = new HashMap();
 
     /**
      * Ant's initialization configuration with information on the location of
@@ -242,152 +229,21 @@ public class Frame implements DemuxOutputReceiver {
 
 
     /**
-     * Set a value in this frame or any of its imported frames.
+     * Initialize the frame.
      *
-     * @param name the name of the value
-     * @param value the actual value
-     * @param mutable if true, existing values can be changed
-     * @exception ExecutionException if the value name is invalid
+     * @param initialDataValues a Map of named DataValue instances.
+     * @exception AntException if the frame cannot be initialized.
      */
-    protected void setDataValue(String name, Object value, boolean mutable)
-         throws ExecutionException {
-        Frame frame = getContainingFrame(name);
-
-        if (frame == null) {
-            setOverrideProperty(name, value, mutable);
-            return;
-        }
-
-        if (frame == this) {
-            if (dataValues.containsKey(name) && !mutable) {
-                log("Ignoring override for data value " + name,
-                    MessageLevel.MSG_VERBOSE);
-            } else {
-                dataValues.put(name, value);
-            }
-        } else {
-            frame.setDataValue(getNameInFrame(name), value, mutable);
-        }
-    }
-
-    /**
-     * When a frame has not yet been referenced, this method is used
-     * to set the initial properties for the frame when it is introduced.
-     *
-     * @param name the name of the value
-     * @param value the actual value
-     * @param mutable if true, existing values can be changed
-     * @exception ExecutionException if attempting to override a property in
-     *                               the current frame.
-     */
-    private void setOverrideProperty(String name, Object value,
-                                     boolean mutable)
-         throws ExecutionException {
-        int refIndex = name.indexOf(Project.REF_DELIMITER);
-        if (refIndex == -1) {
-            throw new ExecutionException("Property overrides can only be set"
-                + " for properties in referenced projects - not "
-                + name);
-        }
-
-        String firstFrameName = name.substring(0, refIndex);
-
-        String relativeName
-            = name.substring(refIndex + Project.REF_DELIMITER.length());
-
-        Map frameOverrides = (Map) overrides.get(firstFrameName);
-        if (frameOverrides == null) {
-            frameOverrides = new HashMap();
-            overrides.put(firstFrameName, frameOverrides);
-        }
-
-        if (mutable || !frameOverrides.containsKey(relativeName)) {
-            frameOverrides.put(relativeName, value);
-        }
-    }
-
-    /**
-     * Get a value which exists in the frame property overrides awaiting
-     * the frame to be introduced.
-     *
-     * @param name the name of the value
-     * @return the value of the property or null if the property does not
-     * exist.
-     * @exception ExecutionException if attempting to get an override in
-     *                               the current frame.
-     */
-    private Object getOverrideProperty(String name) throws ExecutionException {
-        int refIndex = name.indexOf(Project.REF_DELIMITER);
-        if (refIndex == -1) {
-            throw new ExecutionException("Property overrides can only be"
-                + " returned for properties in referenced projects - not "
-                + name);
-        }
-
-        String firstFrameName = name.substring(0, refIndex);
-
-        String relativeName
-            = name.substring(refIndex + Project.REF_DELIMITER.length());
-
-        Map frameOverrides = (Map) overrides.get(firstFrameName);
-        if (frameOverrides == null) {
-            return null;
-        }
-
-        return frameOverrides.get(relativeName);
-    }
-
-    /**
-     * Get a value which exists in the frame property overrides awaiting
-     * the frame to be introduced.
-     *
-     * @param name the name of the value
-     * @return the value of the property or null if the property does not
-     * exist.
-     * @exception ExecutionException if attempting to check an override in
-     *                               the current frame.
-     */
-    private boolean isOverrideSet(String name) throws ExecutionException {
-        int refIndex = name.indexOf(Project.REF_DELIMITER);
-        if (refIndex == -1) {
-            throw new ExecutionException("Property overrides can only be"
-                + " returned for properties in referenced projects - not "
-                + name);
-        }
-
-        String firstFrameName = name.substring(0, refIndex);
-
-        String relativeName
-            = name.substring(refIndex + Project.REF_DELIMITER.length());
-
-        Map frameOverrides = (Map) overrides.get(firstFrameName);
-        if (frameOverrides == null) {
-            return false;
-        }
-
-        return frameOverrides.containsKey(relativeName);
-    }
-
-
-    /**
-     * Initialize the frame setting any initial properties.
-     *
-     * @param properties a Map of named properties which may in fact be any
-     *      object
-     * @exception AntException if the properties cannot be set
-     */
-    public void initialize(Map properties)
-         throws AntException {
+    public void initialize(Map initialDataValues) throws AntException {
         configureServices();
-        if (properties != null) {
-            addProperties(properties);
-        }
-
         // add in system properties
-        addProperties(System.getProperties());
+        dataService.addProperties(System.getProperties(),
+            DataValue.PRIORITY_BASE);
+        if (initialDataValues != null) {
+            dataService.addDataValues(initialDataValues);
+        }
         setMagicProperties();
     }
-
 
     /**
      * Set the values of various magic properties
@@ -406,14 +262,19 @@ public class Frame implements DemuxOutputReceiver {
         } else {
             antHomeString = antHomeURL.toString();
         }
-        setDataValue(MagicProperties.ANT_HOME, antHomeString, false);
+        DataValue antHomeValue
+            = new DataValue(antHomeString, DataValue.PRIORITY_USER);
+        dataService.setDataValue(MagicProperties.ANT_HOME, antHomeValue,
+            false);
 
         // ant.file
         URL projectSource = project.getSourceURL();
         if (projectSource != null
              && projectSource.getProtocol().equals("file")) {
-            setDataValue(MagicProperties.ANT_FILE, projectSource.getFile(),
-                true);
+            DataValue antFileValue = new DataValue(projectSource.getFile(),
+                DataValue.PRIORITY_USER);
+            dataService.setDataValue(MagicProperties.ANT_FILE,
+                antFileValue, true);
         }
 
         // basedir
@@ -422,7 +283,9 @@ public class Frame implements DemuxOutputReceiver {
         // ant.project.name
         String projectName = project.getName();
         if (projectName != null) {
-            setDataValue(MagicProperties.ANT_PROJECT_NAME, projectName, true);
+            dataService.setDataValue(MagicProperties.ANT_PROJECT_NAME,
+                new DataValue(projectName, DataValue.PRIORITY_USER),
+                true);
         }
 
     }
@@ -463,36 +326,6 @@ public class Frame implements DemuxOutputReceiver {
         return project;
     }
 
-
-    /**
-     * Get all the properties from the frame and any references frames. This
-     * is an expensive operation since it must clone all of the property
-     * stores in all frames
-     *
-     * @return a Map containing the frames properties indexed by their full
-     *      name.
-     */
-    protected Map getAllProperties() {
-        Map allProperties = new HashMap(dataValues);
-        Iterator i = referencedFrames.keySet().iterator();
-
-        while (i.hasNext()) {
-            String refName = (String) i.next();
-            Frame refFrame = getReferencedFrame(refName);
-            Map refProperties = refFrame.getAllProperties();
-            Iterator j = refProperties.keySet().iterator();
-
-            while (j.hasNext()) {
-                String name = (String) j.next();
-                Object value = refProperties.get(name);
-
-                allProperties.put(refName + Project.REF_DELIMITER + name,
-                    value);
-            }
-        }
-
-        return allProperties;
-    }
 
 
     /**
@@ -572,12 +405,20 @@ public class Frame implements DemuxOutputReceiver {
     /**
      * Get the frames representing referenced projects.
      *
-     * @return an iterator which returns the referenced ExeuctionFrames..
+     * @return an iterator which returns the referenced ExeuctionFrames.
      */
     protected Iterator getReferencedFrames() {
         return referencedFrames.values().iterator();
     }
 
+    /**
+     * Get the names used for referenced projects
+     *
+     * @return an iterator which returns the referenced frame names.
+     */
+    protected Iterator getRefNames() {
+        return referencedFrames.keySet().iterator();
+    }
 
     /**
      * Get the name of an object in its frame
@@ -592,51 +433,6 @@ public class Frame implements DemuxOutputReceiver {
             return fullname;
         }
         return fullname.substring(index + Project.REF_DELIMITER.length());
-    }
-
-
-    /**
-     * Get a value from this frame or any imported frame
-     *
-     * @param name the name of the data value - may contain reference
-     *      delimiters
-     * @return the data value fetched from the appropriate frame
-     * @exception ExecutionException if the value is not defined
-     */
-    protected Object getDataValue(String name) throws ExecutionException {
-        Frame frame = getContainingFrame(name);
-
-        if (frame == null) {
-            return getOverrideProperty(name);
-        }
-        if (frame == this) {
-            return dataValues.get(name);
-        } else {
-            return frame.getDataValue(getNameInFrame(name));
-        }
-    }
-
-
-    /**
-     * Indicate if a data value has been set
-     *
-     * @param name the name of the data value - may contain reference
-     *      delimiters
-     * @return true if the value exists
-     * @exception ExecutionException if the containing frame for the value
-     *      does not exist
-     */
-    protected boolean isDataValueSet(String name) throws ExecutionException {
-        Frame frame = getContainingFrame(name);
-
-        if (frame == null) {
-            return isOverrideSet(name);
-        }
-        if (frame == this) {
-            return dataValues.containsKey(name);
-        } else {
-            return frame.isDataValueSet(getNameInFrame(name));
-        }
     }
 
 
@@ -672,23 +468,6 @@ public class Frame implements DemuxOutputReceiver {
         return currentFrame;
     }
 
-
-    /**
-     * Add a collection of properties to this frame
-     *
-     * @param properties the collection of property values, indexed by their
-     *      names
-     * @exception ExecutionException if the frame cannot be created.
-     */
-    protected void addProperties(Map properties) throws ExecutionException {
-        for (Iterator i = properties.keySet().iterator(); i.hasNext();) {
-            String name = (String) i.next();
-            Object value = properties.get(name);
-
-            setDataValue(name, value, false);
-        }
-    }
-
     /**
      * Create a project reference.
      *
@@ -701,19 +480,20 @@ public class Frame implements DemuxOutputReceiver {
     protected void createProjectReference(String name, Project project,
                                           Map initialData)
         throws AntException {
-       Frame referencedFrame = createFrame(project);
-       addListeners(referencedFrame);
+        Frame referencedFrame = createFrame(project);
+        addListeners(referencedFrame);
 
-       referencedFrame.initialize(initialData);
 
-       // does the frame have any overrides?
-       Map initialProperties = (Map) overrides.get(name);
-       referencedFrame.initialize(initialProperties);
-       overrides.remove(name);
+        Map overrideProperties = dataService.getOverrides(name);
+        Map values = new HashMap();
+        dataService.mergeDataValues(values, initialData);
+        dataService.mergeDataValues(values, overrideProperties);
+        referencedFrame.initialize(values);
+        dataService.removeOverrides(name);
 
-       referencedFrames.put(name, referencedFrame);
-       referencedFrame.importStandardComponents();
-       referencedFrame.runGlobalTasks();
+        referencedFrames.put(name, referencedFrame);
+        referencedFrame.importStandardComponents();
+        referencedFrame.runGlobalTasks();
     }
 
     /**
@@ -807,6 +587,7 @@ public class Frame implements DemuxOutputReceiver {
      * @exception AntException if there is a problem in the build
      */
     protected void runBuild(List targets) throws AntException {
+        log("Running build.", MessageLevel.DEBUG);
         importStandardComponents();
         runGlobalTasks();
         if (targets.isEmpty()) {
@@ -815,14 +596,14 @@ public class Frame implements DemuxOutputReceiver {
 
             if (defaultTarget != null) {
                 log("Executing default target: " + defaultTarget,
-                    MessageLevel.MSG_DEBUG);
+                    MessageLevel.DEBUG);
                 executeTarget(defaultTarget);
             }
         } else {
             for (Iterator i = targets.iterator(); i.hasNext();) {
                 String targetName = (String) i.next();
 
-                log("Executing target: " + targetName, MessageLevel.MSG_DEBUG);
+                log("Executing target: " + targetName, MessageLevel.DEBUG);
                 executeTarget(targetName);
             }
         }
@@ -1108,7 +889,7 @@ public class Frame implements DemuxOutputReceiver {
 
         if (ifCondition != null) {
             ifCondition = dataService.replacePropertyRefs(ifCondition.trim());
-            if (!isDataValueSet(ifCondition)) {
+            if (!dataService.isDataValueSet(ifCondition)) {
                 return;
             }
         }
@@ -1116,7 +897,7 @@ public class Frame implements DemuxOutputReceiver {
         if (unlessCondition != null) {
             unlessCondition
                  = dataService.replacePropertyRefs(unlessCondition.trim());
-            if (isDataValueSet(unlessCondition)) {
+            if (dataService.isDataValueSet(unlessCondition)) {
                 return;
             }
         }
@@ -1161,29 +942,32 @@ public class Frame implements DemuxOutputReceiver {
         Throwable buildFailureCause = null;
         try {
             // load system ant lib
-            URL systemLibs
-                = new URL(antEnv.getLibraryURL(), "syslibs/");
-            componentManager.loadLib(systemLibs, false);
+            log("Loading system antlibs.", MessageLevel.DEBUG);
+            URL systemLibsURL = antEnv.getSyslibsURL();
+            componentManager.loadLib(systemLibsURL, false);
+            log("Importing standard components.", MessageLevel.DEBUG);
             importStandardComponents();
 
+            log("Executing global configuration tasks", MessageLevel.DEBUG);
             executeTasks(config.getGlobalTasks());
 
             // now load other system libraries
-            URL antLibs = new URL(antEnv.getLibraryURL(), "antlibs/");
-            componentManager.loadLib(antLibs, false);
+            log("Loading standard antlibs.", MessageLevel.DEBUG);
+            URL antLibsURL = antEnv.getAntlibsURL();
+            componentManager.loadLib(antLibsURL, false);
 
             runBuild(targets);
-        } catch (MalformedURLException e) {
-            ExecutionException ee =
-                new ExecutionException("Unable to initialize antlibs", e);
-            buildFailureCause = ee;
-            throw ee;
         } catch (RuntimeException e) {
             buildFailureCause = e;
             throw e;
         } catch (AntException e) {
             buildFailureCause = e;
             throw e;
+        } catch (Throwable e) {
+            ExecutionException ee =
+                new ExecutionException("Unable to initialize antlibs", e);
+            buildFailureCause = ee;
+            throw ee;
         } finally {
             eventSupport.fireBuildFinished(project, buildFailureCause);
         }
@@ -1220,9 +1004,11 @@ public class Frame implements DemuxOutputReceiver {
                 + " is not a directory");
         }
         this.baseDir = baseDir;
-        setDataValue(MagicProperties.BASEDIR, baseDir.getPath(), false);
+        dataService.setDataValue(MagicProperties.BASEDIR,
+            new DataValue(baseDir.getPath(), DataValue.PRIORITY_USER),
+            false);
         log("Project base dir set to: " + this.baseDir,
-            MessageLevel.MSG_VERBOSE);
+            MessageLevel.VERBOSE);
     }
 
 
@@ -1233,9 +1019,9 @@ public class Frame implements DemuxOutputReceiver {
      *      determined
      */
     private void determineBaseDir() throws AntException {
-        if (isDataValueSet(MagicProperties.BASEDIR)) {
+        if (dataService.isDataValueSet(MagicProperties.BASEDIR)) {
             String baseDirString
-                = getDataValue(MagicProperties.BASEDIR).toString();
+                = dataService.getDataValue(MagicProperties.BASEDIR).toString();
             setBaseDir(new File(baseDirString));
         } else {
             URL projectURL = project.getSourceURL();
