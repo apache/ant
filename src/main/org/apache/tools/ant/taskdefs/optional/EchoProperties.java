@@ -248,7 +248,7 @@ public class EchoProperties extends Task {
             if (inFile.exists() && inFile.isDirectory()) {
                 String message = "srcfile is a directory!";
                 if (failonerror) {
-                    throw new BuildException(message, location);
+                    throw new BuildException(message, getLocation());
                 } else {
                     log(message, Project.MSG_ERR);
                 }
@@ -258,7 +258,7 @@ public class EchoProperties extends Task {
             if (inFile.exists() && !inFile.canRead()) {
                 String message = "Can not read from the specified srcfile!";
                 if (failonerror) {
-                    throw new BuildException( message, location );
+                    throw new BuildException( message, getLocation() );
                 } else {
                     log( message, Project.MSG_ERR );
                 }
@@ -275,7 +275,7 @@ public class EchoProperties extends Task {
                 String message =
                     "Could not find file " + inFile.getAbsolutePath();
                 if (failonerror) {
-                    throw new BuildException(message, fnfe, location);
+                    throw new BuildException(message, fnfe, getLocation());
                 } else {
                     log( message, Project.MSG_WARN );
                 }
@@ -284,7 +284,7 @@ public class EchoProperties extends Task {
                 String message =
                     "Could not read file " + inFile.getAbsolutePath();
                 if (failonerror) {
-                    throw new BuildException(message, ioe, location);
+                    throw new BuildException(message, ioe, getLocation());
                 } else {
                     log( message, Project.MSG_WARN );
                 }
@@ -308,7 +308,7 @@ public class EchoProperties extends Task {
                 if (destfile.exists() && destfile.isDirectory()) {
                     String message = "destfile is a directory!";
                     if (failonerror) {
-                        throw new BuildException(message, location);
+                        throw new BuildException(message, getLocation());
                     } else {
                         log(message, Project.MSG_ERR);
                     }
@@ -319,7 +319,7 @@ public class EchoProperties extends Task {
                     String message =
                         "Can not write to the specified destfile!";
                     if (failonerror) {
-                        throw new BuildException(message, location);
+                        throw new BuildException(message, getLocation());
                     } else {
                         log(message, Project.MSG_ERR);
                     }
@@ -330,7 +330,7 @@ public class EchoProperties extends Task {
             }
         } catch (IOException ioe) {
             if (failonerror) {
-                throw new BuildException(ioe, location);
+                throw new BuildException(ioe, getLocation());
             } else {
                 log(ioe.getMessage(), Project.MSG_INFO);
             }

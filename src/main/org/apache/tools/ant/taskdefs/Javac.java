@@ -670,7 +670,7 @@ public class Javac extends MatchingTask {
             if (!srcDir.exists()) {
                 throw new BuildException("srcdir \""
                                          + srcDir.getPath()
-                                         + "\" does not exist!", location);
+                                         + "\" does not exist!", getLocation());
             }
 
             DirectoryScanner ds = this.getDirectoryScanner(srcDir);
@@ -794,18 +794,18 @@ public class Javac extends MatchingTask {
     protected void checkParameters() throws BuildException {
         if (src == null) {
             throw new BuildException("srcdir attribute must be set!",
-                                     location);
+                                     getLocation());
         }
         if (src.size() == 0) {
             throw new BuildException("srcdir attribute must be set!",
-                                     location);
+                                     getLocation());
         }
 
         if (destDir != null && !destDir.isDirectory()) {
             throw new BuildException("destination directory \""
                                      + destDir
                                      + "\" does not exist "
-                                     + "or is not a directory", location);
+                                     + "or is not a directory", getLocation());
         }
     }
 
@@ -839,7 +839,7 @@ public class Javac extends MatchingTask {
             // finally, lets execute the compiler!!
             if (!adapter.execute()) {
                 if (failOnError) {
-                    throw new BuildException(FAIL_MSG, location);
+                    throw new BuildException(FAIL_MSG, getLocation());
                 } else {
                     log(FAIL_MSG, Project.MSG_ERR);
                 }

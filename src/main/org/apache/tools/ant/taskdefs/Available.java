@@ -240,7 +240,7 @@ public class Available extends Task implements Condition {
     public void execute() throws BuildException {
         if (property == null) {
             throw new BuildException("property attribute is required", 
-                                     location);
+                                     getLocation());
         }
 
         isTask = true;
@@ -269,14 +269,14 @@ public class Available extends Task implements Condition {
     public boolean eval() throws BuildException {
         if (classname == null && file == null && resource == null) {
             throw new BuildException("At least one of (classname|file|"
-                                     + "resource) is required", location);
+                                     + "resource) is required", getLocation());
         }
 
         if (type != null) {
             if (file == null) {
                 throw new BuildException("The type attribute is only valid "
                                          + "when specifying the file "
-                                         + "attribute.", location);
+                                         + "attribute.", getLocation());
             }
         }
 

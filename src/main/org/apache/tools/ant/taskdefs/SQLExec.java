@@ -327,12 +327,12 @@ public class SQLExec extends JDBCTask {
                 if (transactions.size() == 0) {
                     throw new BuildException("Source file or fileset, "
                                              + "transactions or sql statement "
-                                             + "must be set!", location);
+                                             + "must be set!", getLocation());
                 }
             }
 
             if (srcFile != null && !srcFile.exists()) {
-                throw new BuildException("Source file does not exist!", location);
+                throw new BuildException("Source file does not exist!", getLocation());
             }
 
             // deal with the filesets
@@ -395,14 +395,14 @@ public class SQLExec extends JDBCTask {
                         conn.rollback();
                     } catch (SQLException ex) {}
                 }
-                throw new BuildException(e, location);
+                throw new BuildException(e, getLocation());
             } catch (SQLException e){
                 if (!isAutocommit() && conn != null && onError.equals("abort")) {
                     try {
                         conn.rollback();
                     } catch (SQLException ex) {}
                 }
-                throw new BuildException(e, location);
+                throw new BuildException(e, getLocation());
             } finally {
                 try {
                     if (statement != null) {

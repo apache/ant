@@ -323,19 +323,19 @@ public class Property extends Task {
             if (value == null && ref == null) {
                 throw new BuildException("You must specify value, location or "
                                          + "refid with the name attribute",
-                                         location);
+                                         getLocation());
             }
         } else {
             if (file == null && resource == null && env == null) {
                 throw new BuildException("You must specify file, resource or "
                                          + "environment when not using the "
-                                         + "name attribute", location);
+                                         + "name attribute", getLocation());
             }
         }
 
         if (file == null && resource == null && prefix != null) {
             throw new BuildException("Prefix is only valid when loading from "
-                                     + "a file or resource", location);
+                                     + "a file or resource", getLocation());
         }
 
         if ((name != null) && (value != null)) {
@@ -392,7 +392,7 @@ public class Property extends Task {
                     Project.MSG_VERBOSE);
             }
         } catch (IOException ex) {
-            throw new BuildException(ex, location);
+            throw new BuildException(ex, getLocation());
         }
     }
 
@@ -426,7 +426,7 @@ public class Property extends Task {
                 log("Unable to find resource " + name, Project.MSG_WARN);
             }
         } catch (IOException ex) {
-            throw new BuildException(ex, location);
+            throw new BuildException(ex, getLocation());
         } finally {
             if (is != null) {
                 try {

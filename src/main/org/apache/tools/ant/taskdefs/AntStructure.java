@@ -110,7 +110,7 @@ public class AntStructure extends Task {
     public void execute() throws BuildException {
 
         if (output == null) {
-            throw new BuildException("output attribute is required", location);
+            throw new BuildException("output attribute is required", getLocation());
         }
 
         PrintWriter out = null;
@@ -147,8 +147,8 @@ public class AntStructure extends Task {
             }
 
         } catch (IOException ioe) {
-            throw new BuildException("Error writing " 
-                + output.getAbsolutePath(), ioe, location);
+            throw new BuildException("Error writing "
+                + output.getAbsolutePath(), ioe, getLocation());
         } finally {
             if (out != null) {
                 out.close();
@@ -349,8 +349,8 @@ public class AntStructure extends Task {
         final int count = v.size();
         for (int i = 0; i < count; i++) {
             String nestedName = (String) v.elementAt(i);
-            if (!"#PCDATA".equals(nestedName) 
-                 && !TASKS.equals(nestedName) 
+            if (!"#PCDATA".equals(nestedName)
+                 && !TASKS.equals(nestedName)
                  && !TYPES.equals(nestedName)) {
                 printElementDecl(out, nestedName, ih.getElementType(nestedName));
             }

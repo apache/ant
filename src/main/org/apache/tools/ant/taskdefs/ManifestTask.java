@@ -176,10 +176,10 @@ public class ManifestTask extends Task {
                 current = new Manifest(f);
             } catch (ManifestException m) {
                 error = new BuildException("Existing manifest " + manifestFile
-                                           + " is invalid", m, location);
+                                           + " is invalid", m, getLocation());
             } catch (IOException e) {
                 error = new BuildException("Failed to read " + manifestFile,
-                                           e, location);
+                                           e, getLocation());
             } finally {
                 if (f != null) {
                     try {
@@ -200,7 +200,7 @@ public class ManifestTask extends Task {
 
             toWrite.merge(nestedManifest);
         } catch (ManifestException m) {
-            throw new BuildException("Manifest is invalid", m, location);
+            throw new BuildException("Manifest is invalid", m, getLocation());
         }
 
         if (toWrite.equals(current)) {
@@ -215,7 +215,7 @@ public class ManifestTask extends Task {
             toWrite.write(w);
         } catch (IOException e) {
             throw new BuildException("Failed to write " + manifestFile,
-                                     e, location);
+                                     e, getLocation());
         } finally {
             if (w != null) {
                 w.close();

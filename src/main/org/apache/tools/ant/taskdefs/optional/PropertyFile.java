@@ -235,7 +235,7 @@ public class PropertyFile extends Task {
 
     private void checkParameters() throws BuildException {
         if (!checkParam(propertyfile)) {
-            throw new BuildException("file token must not be null.", location);
+            throw new BuildException("file token must not be null.", getLocation());
         }
     }
 
@@ -270,12 +270,12 @@ public class PropertyFile extends Task {
             properties.save(bos, comment);
         } catch (InvocationTargetException ite) {
             Throwable t = ite.getTargetException();
-            throw new BuildException(t, location);
+            throw new BuildException(t, getLocation());
         } catch (IllegalAccessException iae) {
             // impossible
-            throw new BuildException(iae, location);
+            throw new BuildException(iae, getLocation());
         } catch (IOException ioe) {
-            throw new BuildException(ioe, location);
+            throw new BuildException(ioe, getLocation());
         } finally {
             if (bos != null) {
                 try {

@@ -135,7 +135,7 @@ public class SOSLabel extends SOS {
         if (result == 255) {
             // This is the exit status
             String msg = "Failed executing: " + commandLine.toString();
-            throw new BuildException(msg, location);
+            throw new BuildException(msg, getLocation());
         }
     }
 
@@ -156,13 +156,13 @@ public class SOSLabel extends SOS {
         commandLine.createArgument().setValue(SOSCmd.COMMAND_LABEL);
         // SOS server address is required
         if (getSosServerPath() == null) {
-            throw new BuildException("sosserverpath attribute must be set!", location);
+            throw new BuildException("sosserverpath attribute must be set!", getLocation());
         }
         commandLine.createArgument().setValue(SOSCmd.FLAG_SOS_SERVER);
         commandLine.createArgument().setValue(getSosServerPath());
         // Login info is required
         if (getUsername() == null) {
-            throw new BuildException("username attribute must be set!", location);
+            throw new BuildException("username attribute must be set!", getLocation());
         }
         commandLine.createArgument().setValue(SOSCmd.FLAG_USERNAME);
         commandLine.createArgument().setValue(getUsername());
@@ -172,19 +172,19 @@ public class SOSLabel extends SOS {
         commandLine.createArgument().setValue(getPassword());
         // VSS Info is required
         if (getVssServerPath() == null) {
-            throw new BuildException("vssserverpath attribute must be set!", location);
+            throw new BuildException("vssserverpath attribute must be set!", getLocation());
         }
         commandLine.createArgument().setValue(SOSCmd.FLAG_VSS_SERVER);
         commandLine.createArgument().setValue(getVssServerPath());
         // SS project path is required
         if (getProjectPath() == null) {
-            throw new BuildException("projectpath attribute must be set!", location);
+            throw new BuildException("projectpath attribute must be set!", getLocation());
         }
         commandLine.createArgument().setValue(SOSCmd.FLAG_PROJECT);
         commandLine.createArgument().setValue(getProjectPath());
         // a label is required
         if (getLabel() == null) {
-            throw new BuildException("label attribute must be set!", location);
+            throw new BuildException("label attribute must be set!", getLocation());
         }
         commandLine.createArgument().setValue(SOSCmd.FLAG_LABEL);
         commandLine.createArgument().setValue(getLabel());

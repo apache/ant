@@ -284,21 +284,21 @@ public class Checksum extends MatchingTask implements Condition {
             try {
                 messageDigest = MessageDigest.getInstance(algorithm, provider);
             } catch (NoSuchAlgorithmException noalgo) {
-                throw new BuildException(noalgo, location);
+                throw new BuildException(noalgo, getLocation());
             } catch (NoSuchProviderException noprovider) {
-                throw new BuildException(noprovider, location);
+                throw new BuildException(noprovider, getLocation());
             }
         } else {
             try {
                 messageDigest = MessageDigest.getInstance(algorithm);
             } catch (NoSuchAlgorithmException noalgo) {
-                throw new BuildException(noalgo, location);
+                throw new BuildException(noalgo, getLocation());
             }
         }
 
         if (messageDigest == null) {
             throw new BuildException("Unable to create Message Digest",
-                location);
+                                     getLocation());
         }
 
         if (fileext == null) {
@@ -354,7 +354,7 @@ public class Checksum extends MatchingTask implements Condition {
                                  + file.getAbsolutePath()
                                  + " to generate checksum for.";
                 log(message);
-                throw new BuildException(message, location);
+                throw new BuildException(message, getLocation());
             }
         }
     }
@@ -429,7 +429,7 @@ public class Checksum extends MatchingTask implements Condition {
                 }
             }
         } catch (Exception e) {
-            throw new BuildException(e, location);
+            throw new BuildException(e, getLocation());
         } finally {
             if (fis != null) {
                 try {

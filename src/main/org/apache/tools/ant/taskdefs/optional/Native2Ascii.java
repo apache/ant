@@ -140,7 +140,7 @@ public class Native2Ascii extends MatchingTask {
     public Mapper createMapper() throws BuildException {
         if (mapper != null) {
             throw new BuildException("Cannot define more than one mapper",
-                                     location);
+                                     getLocation());
         }
         mapper = new Mapper(getProject());
         return mapper;

@@ -318,21 +318,21 @@ public class Replace extends MatchingTask {
         if (src == null && dir == null) {
             String message = "Either the file or the dir attribute " 
                 + "must be specified";
-            throw new BuildException(message, location);
+            throw new BuildException(message, getLocation());
         }
         if (propertyFile != null && !propertyFile.exists()) {
             String message = "Property file " + propertyFile.getPath() 
                 + " does not exist.";
-            throw new BuildException(message, location);
+            throw new BuildException(message, getLocation());
         }
         if (token == null && replacefilters.size() == 0) {
             String message = "Either token or a nested replacefilter "
                 + "must be specified";
-            throw new BuildException(message, location);
+            throw new BuildException(message, getLocation());
         }
         if (token != null && "".equals(token.getText())) {
             String message = "The token attribute must not be an empty string.";
-            throw new BuildException(message, location);
+            throw new BuildException(message, getLocation());
         }
     }
 
@@ -387,7 +387,7 @@ public class Replace extends MatchingTask {
     private void processFile(File src) throws BuildException {
         if (!src.exists()) {
             throw new BuildException("Replace: source file " + src.getPath() 
-                                     + " doesn't exist", location);
+                                     + " doesn't exist", getLocation());
         }
 
         File temp = fileUtils.createTempFile("rep", ".tmp", 
@@ -474,7 +474,7 @@ public class Replace extends MatchingTask {
         } catch (IOException ioe) {
             throw new BuildException("IOException in " + src + " - " + 
                                      ioe.getClass().getName() + ":" 
-                                     + ioe.getMessage(), ioe, location);
+                                     + ioe.getMessage(), ioe, getLocation());
         } finally {
             if (reader != null) {
                 try {

@@ -152,7 +152,7 @@ public class RenameExtensions extends MatchingTask {
             Project.MSG_INFO);
 
         Move move = (Move) getProject().createTask("move");
-        move.setOwningTarget(target);
+        move.setOwningTarget(getOwningTarget());
         move.setTaskName(getTaskName());
         move.setLocation(getLocation());
         move.setTodir(srcDir);

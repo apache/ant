@@ -151,8 +151,8 @@ public class ExecuteOn extends ExecTask {
      */
     public Commandline.Marker createSrcfile() {
         if (srcFilePos != null) {
-            throw new BuildException(taskType + " doesn\'t support multiple "
-                                     + "srcfile elements.", location);
+            throw new BuildException(getTaskType() + " doesn\'t support multiple "
+                                     + "srcfile elements.", getLocation());
         }
         srcFilePos = cmdl.createMarker();
         return srcFilePos;
@@ -164,8 +164,8 @@ public class ExecuteOn extends ExecTask {
      */
     public Commandline.Marker createTargetfile() {
         if (targetFilePos != null) {
-            throw new BuildException(taskType + " doesn\'t support multiple "
-                                     + "targetfile elements.", location);
+            throw new BuildException(getTaskType() + " doesn\'t support multiple "
+                                     + "targetfile elements.", getLocation());
         }
         targetFilePos = cmdl.createMarker();
         srcIsFirst = (srcFilePos != null);
@@ -178,7 +178,7 @@ public class ExecuteOn extends ExecTask {
     public Mapper createMapper() throws BuildException {
         if (mapperElement != null) {
             throw new BuildException("Cannot define more than one mapper",
-                                     location);
+                                     getLocation());
         }
         mapperElement = new Mapper(getProject());
         return mapperElement;
@@ -189,24 +189,24 @@ public class ExecuteOn extends ExecTask {
      *       this should probably be modified to use the classname instead.
      */
     protected void checkConfiguration() {
-        if ("execon".equals(taskName)) {
+        if ("execon".equals(getTaskName())) {
             log("!! execon is deprecated. Use apply instead. !!");
         }
         
         super.checkConfiguration();
         if (filesets.size() == 0) {
-            throw new BuildException("no filesets specified", location);
+            throw new BuildException("no filesets specified", getLocation());
         }
 
         if (targetFilePos != null || mapperElement != null 
             || destDir != null) {
 
             if (mapperElement == null) {
-                throw new BuildException("no mapper specified", location);
+                throw new BuildException("no mapper specified", getLocation());
             }
             if (destDir == null) {
                 throw new BuildException("no dest attribute specified", 
-                                         location);
+                                         getLocation());
             }
             mapper = mapperElement.getImplementation();
         }
@@ -271,7 +271,7 @@ public class ExecuteOn extends ExecTask {
             }
 
         } catch (IOException e) {
-            throw new BuildException("Execute failed: " + e, e, location);
+            throw new BuildException("Execute failed: " + e, e, getLocation());
         } finally {
             // close the output file if required
             logFlush();

@@ -112,7 +112,7 @@ public class Tstamp extends Task {
             Enumeration i = customFormats.elements();
             while (i.hasMoreElements()) {
                 CustomFormat cts = (CustomFormat) i.nextElement();
-                cts.execute(getProject(), d, location);
+                cts.execute(getProject(), d, getLocation());
             }
 
             SimpleDateFormat dstamp = new SimpleDateFormat ("yyyyMMdd");

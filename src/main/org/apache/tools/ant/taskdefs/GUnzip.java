@@ -102,7 +102,7 @@ public class GUnzip extends Unpack {
                 } while (count != -1);
             } catch (IOException ioe) {
                 String msg = "Problem expanding gzip " + ioe.getMessage();
-                throw new BuildException(msg, ioe, location);
+                throw new BuildException(msg, ioe, getLocation());
             } finally {
                 if (fis != null) {
                     try {

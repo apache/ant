@@ -190,7 +190,7 @@ public class Chmod extends ExecuteOn {
     protected void checkConfiguration() {
         if (!havePerm) {
             throw new BuildException("Required attribute perm not set in chmod",
-                    location);
+                                     getLocation());
         }
 
         if (defaultSetDefined && defaultSet.getDir(getProject()) != null) {
@@ -224,7 +224,7 @@ public class Chmod extends ExecuteOn {
                 execute.setCommandline(cloned.getCommandline());
                 runExecute(execute);
             } catch (IOException e) {
-                throw new BuildException("Execute failed: " + e, e, location);
+                throw new BuildException("Execute failed: " + e, e, getLocation());
             } finally {
                 // close the output file if required
                 logFlush();
@@ -236,24 +236,24 @@ public class Chmod extends ExecuteOn {
      * @ant.attribute ignore="true"
      */
     public void setExecutable(String e) {
-        throw new BuildException(taskType
-            + " doesn\'t support the executable attribute", location);
+        throw new BuildException(getTaskType()
+            + " doesn\'t support the executable attribute", getLocation());
     }
 
     /**
      * @ant.attribute ignore="true"
      */
     public void setCommand(Commandline cmdl) {
-        throw new BuildException(taskType
-            + " doesn\'t support the command attribute", location);
+        throw new BuildException(getTaskType()
+            + " doesn\'t support the command attribute", getLocation());
     }
 
     /**
      * @ant.attribute ignore="true"
      */
     public void setSkipEmptyFilesets(boolean skip) {
-        throw new BuildException(taskType
-            + " doesn\'t support the skipemptyfileset attribute", location);
+        throw new BuildException(getTaskType()
+            + " doesn\'t support the skipemptyfileset attribute", getLocation());
     }
 
     protected boolean isValidOs() {

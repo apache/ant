@@ -97,11 +97,11 @@ public class BUnzip2 extends Unpack {
                 bis = new BufferedInputStream(fis);
                 int b = bis.read();
                 if (b != 'B') {
-                    throw new BuildException("Invalid bz2 file.", location);
+                    throw new BuildException("Invalid bz2 file.", getLocation());
                 }
                 b = bis.read();
                 if (b != 'Z') {
-                    throw new BuildException("Invalid bz2 file.", location);
+                    throw new BuildException("Invalid bz2 file.", getLocation());
                 }
                 zIn = new CBZip2InputStream(bis);
                 byte[] buffer = new byte[8 * 1024];
@@ -112,7 +112,7 @@ public class BUnzip2 extends Unpack {
                 } while (count != -1);
             } catch (IOException ioe) {
                 String msg = "Problem expanding bzip2 " + ioe.getMessage();
-                throw new BuildException(msg, ioe, location);
+                throw new BuildException(msg, ioe, getLocation());
             } finally {
                 if (bis != null) {
                     try {

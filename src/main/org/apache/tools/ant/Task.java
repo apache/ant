@@ -65,12 +65,26 @@ import java.util.Enumeration;
  * @see Project#createTask
  */
 public abstract class Task extends ProjectComponent {
-    /** Target this task belongs to, if any. */
+    /**
+     * Target this task belongs to, if any.
+     * @deprecated You should not be accessing this variable directly.
+     *   Please use the {@link #getOwningTarget()} method.
+     */
     protected Target target;
-    /** Description of this task, if any. */
+
+    /**
+     * Description of this task, if any.
+     * @deprecated You should not be accessing this variable directly.
+     */
     protected String description;
-    /** Location within the build file of this task definition. */
+
+    /**
+     * Location within the build file of this task definition.
+     * @deprecated You should not be accessing this variable directly.
+     *   Please use the {@link #getLocation()} method.
+     */
     protected Location location = Location.UNKNOWN_LOCATION;
+
     /**
      * Name of this task to be used for logging purposes.
      * This defaults to the same as the type, but may be
@@ -78,18 +92,33 @@ public abstract class Task extends ProjectComponent {
      * isn't terribly descriptive for a task used within
      * another task - the outer task code can probably
      * provide a better one.
+     * @deprecated You should not be accessing this variable directly.
+     *   Please use the {@link #getTaskName()} method.
      */
-    protected String taskName = null;
-    /** Type of this task. */
-    protected String taskType = null;
-    /** Wrapper for this object, used to configure it at runtime. */
+    protected String taskName;
+
+    /**
+     * Type of this task.
+     *
+     * @deprecated You should not be accessing this variable directly.
+     *   Please use the {@link #getTaskType()} method.
+     */
+    protected String taskType;
+
+    /**
+     * Wrapper for this object, used to configure it at runtime.
+     *
+     * @deprecated You should not be accessing this variable directly.
+     *   Please use the {@link #getWrapper()} method.
+     */
     protected RuntimeConfigurable wrapper;
+
     /**
      * Whether or not this task is invalid. A task becomes invalid
      * if a conflicting class is specified as the implementation for
      * its type.
      */
-    private boolean invalid = false;
+    private boolean invalid;
 
     /** Sole constructor. */
     public Task() {
@@ -400,5 +429,13 @@ public abstract class Task extends ProjectComponent {
             childWrapper.setProxy(childElement);
             replaceChildren(childWrapper, childElement);
         }
+    }
+
+    protected String getTaskType() {
+        return taskType;
+    }
+
+    protected RuntimeConfigurable getWrapper() {
+        return wrapper;
     }
 }

@@ -93,7 +93,7 @@ public class Echo extends Task {
                 out = new FileWriter(file.getAbsolutePath(), append);
                 out.write(message, 0, message.length());
             } catch (IOException ioe) {
-                throw new BuildException(ioe, location);
+                throw new BuildException(ioe, getLocation());
             } finally {
                 if (out != null) {
                     try {

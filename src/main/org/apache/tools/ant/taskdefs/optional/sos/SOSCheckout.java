@@ -157,7 +157,7 @@ public class SOSCheckout extends SOS {
         if (result == 255) {
             // This is the exit status
             String msg = "Failed executing: " + commandLine.toString();
-            throw new BuildException(msg, location);
+            throw new BuildException(msg, getLocation());
         }
     }
 
@@ -195,13 +195,13 @@ public class SOSCheckout extends SOS {
         }
         // SOS server address is required
         if (getSosServerPath() == null) {
-            throw new BuildException("sosserverpath attribute must be set!", location);
+            throw new BuildException("sosserverpath attribute must be set!", getLocation());
         }
         commandLine.createArgument().setValue(SOSCmd.FLAG_SOS_SERVER);
         commandLine.createArgument().setValue(getSosServerPath());
         // Login info is required
         if (getUsername() == null) {
-            throw new BuildException("username attribute must be set!", location);
+            throw new BuildException("username attribute must be set!", getLocation());
         }
         commandLine.createArgument().setValue(SOSCmd.FLAG_USERNAME);
         commandLine.createArgument().setValue(getUsername());
@@ -211,13 +211,13 @@ public class SOSCheckout extends SOS {
         commandLine.createArgument().setValue(getPassword());
         // VSS Info is required
         if (getVssServerPath() == null) {
-            throw new BuildException("vssserverpath attribute must be set!", location);
+            throw new BuildException("vssserverpath attribute must be set!", getLocation());
         }
         commandLine.createArgument().setValue(SOSCmd.FLAG_VSS_SERVER);
         commandLine.createArgument().setValue(getVssServerPath());
         // VSS project is required
         if (getProjectPath() == null) {
-            throw new BuildException("projectpath attribute must be set!", location);
+            throw new BuildException("projectpath attribute must be set!", getLocation());
         }
         commandLine.createArgument().setValue(SOSCmd.FLAG_PROJECT);
         commandLine.createArgument().setValue(getProjectPath());

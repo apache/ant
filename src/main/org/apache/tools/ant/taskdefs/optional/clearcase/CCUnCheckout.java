@@ -116,7 +116,7 @@ public class CCUnCheckout extends ClearCase {
         result = run(commandLine);
         if (result != 0) {
             String msg = "Failed executing: " + commandLine.toString();
-            throw new BuildException(msg, location);
+            throw new BuildException(msg, getLocation());
         }
     }
 

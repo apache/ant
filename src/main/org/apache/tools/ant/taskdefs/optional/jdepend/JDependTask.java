@@ -303,7 +303,7 @@ public class JDependTask extends Task {
         if (errorOccurred) {
             if  (getHaltonerror()) {
                 throw new BuildException("JDepend failed",
-                                         location);
+                                         getLocation());
             } else {
                 log("JDepend FAILED", Project.MSG_ERR);
             }
@@ -426,7 +426,7 @@ public class JDependTask extends Task {
         try {
             return execute.execute();
         } catch (IOException e) {
-            throw new BuildException("Process fork failed.", e, location);
+            throw new BuildException("Process fork failed.", e, getLocation());
         }
     }
 

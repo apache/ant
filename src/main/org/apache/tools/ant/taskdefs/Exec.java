@@ -125,7 +125,7 @@ public class Exec extends Task {
                     String ant = getProject().getProperty("ant.home");
                     if (ant == null) {
                         throw new BuildException("Property 'ant.home' not " 
-                            + "found", location);
+                            + "found", getLocation());
                     }
                 
                     String antRun = getProject().resolveFile(ant + "/bin/antRun.bat").toString();
@@ -135,8 +135,8 @@ public class Exec extends Task {
         } else {
             String ant = getProject().getProperty("ant.home");
             if (ant == null) {
-              throw new BuildException("Property 'ant.home' not found", 
-                location);
+              throw new BuildException("Property 'ant.home' not found",
+                                       getLocation());
             }
             String antRun = getProject().resolveFile(ant + "/bin/antRun").toString();
 
@@ -178,13 +178,13 @@ public class Exec extends Task {
             err = proc.exitValue();
             if (err != 0) {
                 if (failOnError) {
-                    throw new BuildException("Exec returned: " + err, location);
+                    throw new BuildException("Exec returned: " + err, getLocation());
                 } else {
                     log("Result: " + err, Project.MSG_ERR);
                 }
             }
         } catch (IOException ioe) {
-            throw new BuildException("Error exec: " + command, ioe, location);
+            throw new BuildException("Error exec: " + command, ioe, getLocation());
         } catch (InterruptedException ex) {}
 
         return err;

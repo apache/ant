@@ -477,10 +477,10 @@ public class Rmic extends MatchingTask {
      */
     public void execute() throws BuildException {
         if (baseDir == null) {
-            throw new BuildException("base attribute must be set!", location);
+            throw new BuildException("base attribute must be set!", getLocation());
         }
         if (!baseDir.exists()) {
-            throw new BuildException("base does not exist!", location);
+            throw new BuildException("base does not exist!", getLocation());
         }
 
         if (verify) {
@@ -519,7 +519,7 @@ public class Rmic extends MatchingTask {
                 
                 // finally, lets execute the compiler!!
                 if (!adapter.execute()) {
-                    throw new BuildException(FAIL_MSG, location);
+                    throw new BuildException(FAIL_MSG, getLocation());
                 }
             }
             
@@ -594,7 +594,7 @@ public class Rmic extends MatchingTask {
             } catch (IOException ioe) {
                 String msg = "Failed to copy " + oldFile + " to " +
                     newFile + " due to " + ioe.getMessage();
-                throw new BuildException(msg, ioe, location);
+                throw new BuildException(msg, ioe, getLocation());
             }
         }
     }

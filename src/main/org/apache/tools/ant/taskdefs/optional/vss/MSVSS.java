@@ -192,7 +192,7 @@ public abstract class MSVSS extends Task {
             exe.setCommandline(cmd.getCommandline());
             return exe.execute();
         } catch (java.io.IOException e) {
-            throw new BuildException(e, location);
+            throw new BuildException(e, getLocation());
         }
     }
 

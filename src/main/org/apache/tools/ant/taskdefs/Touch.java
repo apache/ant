@@ -164,7 +164,7 @@ public class Touch extends Task {
                                                  + "00:00:00 GMT).");
                     }
                 } catch (ParseException pe) {
-                    throw new BuildException(pe.getMessage(), pe, location);
+                    throw new BuildException(pe.getMessage(), pe, getLocation());
                 }
             }
 
@@ -185,7 +185,7 @@ public class Touch extends Task {
                     fileUtils.createNewFile(file);
                 } catch (IOException ioe) {
                     throw new BuildException("Could not create " + file, ioe, 
-                                             location);
+                                             getLocation());
                 }
             }
         }

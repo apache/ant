@@ -99,7 +99,7 @@ public class Expand extends Task {
      * @exception BuildException Thrown in unrecoverable error.
      */
     public void execute() throws BuildException {
-        if ("expand".equals(taskType)) {
+        if ("expand".equals(getTaskType())) {
             log("!! expand is deprecated. Use unzip instead. !!");
         }
 
@@ -114,7 +114,7 @@ public class Expand extends Task {
         }
 
         if (dest.exists() && !dest.isDirectory()) {
-            throw new BuildException("Dest must be a directory.", location);
+            throw new BuildException("Dest must be a directory.", getLocation());
         }
 
         FileUtils fileUtils = FileUtils.newFileUtils();
@@ -122,7 +122,7 @@ public class Expand extends Task {
         if (source != null) {
             if (source.isDirectory()) {
                 throw new BuildException("Src must not be a directory." +
-                    " Use nested filesets instead.", location);
+                    " Use nested filesets instead.", getLocation());
             } else {
                 expandFile(fileUtils, source, dest);
             }

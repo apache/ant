@@ -130,7 +130,7 @@ public class Untar extends Expand {
 
         } catch (IOException ioe) {
             throw new BuildException("Error while expanding " + srcF.getPath(),
-                                     ioe, location);
+                                     ioe, getLocation());
         } finally {
             if (tis != null) {
                 try {

@@ -144,7 +144,7 @@ public class Pvcs extends org.apache.tools.ant.Task {
         } catch (java.io.IOException e) {
             String msg = "Failed executing: " + cmd.toString() 
                 + ". Exception: " + e.getMessage();
-            throw new BuildException(msg, location);
+            throw new BuildException(msg, getLocation());
         }
     }
 
@@ -231,7 +231,7 @@ public class Pvcs extends org.apache.tools.ant.Task {
             
             if (result != 0 && !ignorerc) {
                 String msg = "Failed executing: " + commandLine.toString();
-                throw new BuildException(msg, location);
+                throw new BuildException(msg, getLocation());
             }
 
             if (!tmp.exists()) {
@@ -278,21 +278,21 @@ public class Pvcs extends org.apache.tools.ant.Task {
             if (result != 0 && !ignorerc) {
                 String msg = "Failed executing: " + commandLine.toString() 
                     + ". Return code was " + result;
-                throw new BuildException(msg, location);
+                throw new BuildException(msg, getLocation());
             }
 
         } catch (FileNotFoundException e) {
             String msg = "Failed executing: " + commandLine.toString() 
                 + ". Exception: " + e.getMessage();
-            throw new BuildException(msg, location);
+            throw new BuildException(msg, getLocation());
         } catch (IOException e) {
             String msg = "Failed executing: " + commandLine.toString() 
                 + ". Exception: " + e.getMessage();
-            throw new BuildException(msg, location);
+            throw new BuildException(msg, getLocation());
         } catch (ParseException e) {
             String msg = "Failed executing: " + commandLine.toString() 
                 + ". Exception: " + e.getMessage();
-            throw new BuildException(msg, location);
+            throw new BuildException(msg, getLocation());
         } finally {
             if (tmp != null) {
                 tmp.delete();

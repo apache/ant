@@ -248,29 +248,29 @@ public class Translate extends MatchingTask {
     public void execute() throws BuildException {
         if (bundle == null) {
             throw new BuildException("The bundle attribute must be set.",
-                                     location);
+                                     getLocation());
         }
 
         if (startToken == null) {
             throw new BuildException("The starttoken attribute must be set.",
-                                     location);
+                                     getLocation());
         }
 
         if (startToken.length() != 1) {
             throw new BuildException(
                 "The starttoken attribute must be a single character.",
-                                         location);
+                getLocation());
         }
 
         if (endToken == null) {
             throw new BuildException("The endtoken attribute must be set.",
-                                     location);
+                                     getLocation());
         }
 
         if (endToken.length() != 1) {
             throw new BuildException(
                 "The endtoken attribute must be a single character.",
-                                         location);
+                getLocation());
         }
 
         if (bundleLanguage == null) {
@@ -289,7 +289,7 @@ public class Translate extends MatchingTask {
 
         if (toDir == null) {
             throw new BuildException("The todir attribute must be set.",
-                                     location);
+                                     getLocation());
         }
 
         if (!toDir.exists()) {
@@ -405,7 +405,7 @@ public class Translate extends MatchingTask {
             //have been scanned for and still not able to
             //find a single resrouce file, throw exception
             if (!loaded && checkLoaded) {
-                throw new BuildException(ioe.getMessage(), location);
+                throw new BuildException(ioe.getMessage(), getLocation());
             }
         }
     }
@@ -463,7 +463,7 @@ public class Translate extends MatchingTask {
                 in.close();
             }
         } catch (IOException ioe) {
-            throw new BuildException(ioe.getMessage(), location);
+            throw new BuildException(ioe.getMessage(), getLocation());
         }
     }
 
@@ -579,7 +579,7 @@ outer:                      while (true) {
                             Project.MSG_VERBOSE);
                     }
                 } catch (IOException ioe) {
-                    throw new BuildException(ioe.getMessage(), location);
+                    throw new BuildException(ioe.getMessage(), getLocation());
                 }
             }
         }

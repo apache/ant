@@ -91,7 +91,7 @@ public class Patch extends Task {
     public void setPatchfile(File file) {
         if (!file.exists()) {
             throw new BuildException("patchfile " + file + " doesn\'t exist", 
-                                     location);
+                                     getLocation());
         }
         cmd.createArgument().setValue("-i");
         cmd.createArgument().setFile(file);
@@ -125,7 +125,7 @@ public class Patch extends Task {
      */
     public void setStrip(int num) throws BuildException {
         if (num < 0) {
-            throw new BuildException("strip has to be >= 0", location);
+            throw new BuildException("strip has to be >= 0", getLocation());
         }
         cmd.createArgument().setValue("-p" + num);
     }
@@ -166,7 +166,7 @@ public class Patch extends Task {
     public void execute() throws BuildException {
         if (!havePatchfile) {
             throw new BuildException("patchfile argument is required", 
-                                     location);
+                                     getLocation());
         } 
         Commandline toExecute = (Commandline) cmd.clone();
         toExecute.setExecutable("patch");
@@ -185,10 +185,10 @@ public class Patch extends Task {
                 exe.setWorkingDirectory(directory);
             } else if (!directory.isDirectory()) {
                 throw new BuildException(directory + " is not a directory.",
-                                         location);
+                                         getLocation());
             } else {
                 throw new BuildException("directory " + directory
-                                         + " doesn\'t exist", location);
+                                         + " doesn\'t exist", getLocation());
             }
         } else {
             exe.setWorkingDirectory(getProject().getBaseDir());
@@ -198,7 +198,7 @@ public class Patch extends Task {
         try {
             exe.execute();
         } catch (IOException e) {
-            throw new BuildException(e, location);
+            throw new BuildException(e, getLocation());
         }
     }
 

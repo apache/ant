@@ -214,7 +214,7 @@ public abstract class AbstractCvsTask extends Task {
                                                                  .getPath(), 
                                                                  append))));
                 } catch (IOException e) {
-                    throw new BuildException(e, location);
+                    throw new BuildException(e, getLocation());
                 }
             } else {
                 setOutputStream(new LogOutputStream(this, Project.MSG_INFO));
@@ -241,7 +241,7 @@ public abstract class AbstractCvsTask extends Task {
                                            new FileOutputStream(error.getPath(),
                                                                 append))));
                 } catch (IOException e) {
-                    throw new BuildException(e, location);
+                    throw new BuildException(e, getLocation());
                 }
             } else {
                 setErrorStream(new LogOutputStream(this, Project.MSG_WARN));
@@ -333,11 +333,11 @@ public abstract class AbstractCvsTask extends Task {
                                          + retCode 
                                          + StringUtils.LINE_SEP
                                          + "Command line was ["
-                                         + actualCommandLine + "]", location);
+                                         + actualCommandLine + "]", getLocation());
             }
         } catch (IOException e) {
             if (failOnError) {
-                throw new BuildException(e, location);
+                throw new BuildException(e, getLocation());
             } else {
                 log("Caught exception: " + e.getMessage(), Project.MSG_WARN);
             }
@@ -353,7 +353,7 @@ public abstract class AbstractCvsTask extends Task {
             }
         } catch (Exception e) {
             if (failOnError) {
-                throw new BuildException(e, location);
+                throw new BuildException(e, getLocation());
             } else {
                 log("Caught exception: " + e.getMessage(), Project.MSG_WARN);
             }

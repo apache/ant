@@ -638,14 +638,14 @@ public class Depend extends MatchingTask {
         try {
             long start = System.currentTimeMillis();
             if (srcPath == null) {
-                throw new BuildException("srcdir attribute must be set", 
-                    location);
+                throw new BuildException("srcdir attribute must be set",
+                                         getLocation());
             }
 
             srcPathList = srcPath.list();
             if (srcPathList.length == 0) {
-                throw new BuildException("srcdir attribute must be non-empty", 
-                    location);
+                throw new BuildException("srcdir attribute must be non-empty",
+                                         getLocation());
             }
 
             if (destPath == null) {

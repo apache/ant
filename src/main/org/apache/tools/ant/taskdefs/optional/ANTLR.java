@@ -273,7 +273,7 @@ public class ANTLR extends Task {
             log(commandline.describeCommand(), Project.MSG_VERBOSE);
             int err = run(commandline.getCommandline());
             if (err == 1) {
-                throw new BuildException("ANTLR returned: " + err, location);
+                throw new BuildException("ANTLR returned: " + err, getLocation());
             }
         } else {
             log("Skipped grammar file. Generated file is newer.", Project.MSG_VERBOSE);
@@ -364,7 +364,7 @@ public class ANTLR extends Task {
         try {
             return exe.execute();
         } catch (IOException e) {
-            throw new BuildException(e, location);
+            throw new BuildException(e, getLocation());
         }
     }
 }

@@ -94,7 +94,7 @@ public class Deltree extends Task {
             + "Use delete instead.");
 
         if (dir == null) {
-            throw new BuildException("dir attribute must be set!", location);
+            throw new BuildException("dir attribute must be set!", getLocation());
         }
 
         if (dir.exists()) {
@@ -102,7 +102,7 @@ public class Deltree extends Task {
                 if (!dir.delete()) {
                     throw new BuildException("Unable to delete directory "
                                              + dir.getAbsolutePath(),
-                                             location);
+                                             getLocation());
                 }
                 return;
             }
@@ -113,7 +113,7 @@ public class Deltree extends Task {
                 removeDir(dir);
             } catch (IOException ioe) {
                 String msg = "Unable to delete " + dir.getAbsolutePath();
-                throw new BuildException(msg, location);
+                throw new BuildException(msg, getLocation());
             }
         }
     }

@@ -280,7 +280,7 @@ public class Copy extends Task {
     public Mapper createMapper() throws BuildException {
         if (mapperElement != null) {
             throw new BuildException("Cannot define more than one mapper",
-                                     location);
+                                     getLocation());
         }
         mapperElement = new Mapper(getProject());
         return mapperElement;
@@ -531,7 +531,7 @@ public class Copy extends Task {
                 } catch (IOException ioe) {
                     String msg = "Failed to copy " + fromFile + " to " + toFile
                         + " due to " + ioe.getMessage();
-                    throw new BuildException(msg, ioe, location);
+                    throw new BuildException(msg, ioe, getLocation());
                 }
             }
         }

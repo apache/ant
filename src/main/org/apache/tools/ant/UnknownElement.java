@@ -112,16 +112,16 @@ public class UnknownElement extends Task {
      * @exception BuildException if the configuration fails
      */
     public void maybeConfigure() throws BuildException {
-        realThing = makeObject(this, wrapper);
+        realThing = makeObject(this, getWrapper());
 
-        wrapper.setProxy(realThing);
+        getWrapper().setProxy(realThing);
         if (realThing instanceof Task) {
-            ((Task) realThing).setRuntimeConfigurableWrapper(wrapper);
+            ((Task) realThing).setRuntimeConfigurableWrapper(getWrapper());
         }
 
-        handleChildren(realThing, wrapper);
+        handleChildren(realThing, getWrapper());
 
-        wrapper.maybeConfigure(getProject());
+        getWrapper().maybeConfigure(getProject());
     }
 
     /**
@@ -159,7 +159,7 @@ public class UnknownElement extends Task {
             // plain impossible to get here, maybeConfigure should
             // have thrown an exception.
             throw new BuildException("Could not create task of type: "
-                                     + elementName, location);
+                                     + elementName, getLocation());
         }
 
         if (realThing instanceof Task) {
@@ -271,7 +271,7 @@ public class UnknownElement extends Task {
         if (task != null) {
             task.setLocation(getLocation());
             // UnknownElement always has an associated target
-            task.setOwningTarget(target);
+            task.setOwningTarget(getOwningTarget());
             task.init();
         }
         return task;
@@ -325,7 +325,7 @@ public class UnknownElement extends Task {
             + "as this is not an Ant bug.";
 
 
-        return new BuildException(msg, location);
+        return new BuildException(msg, getLocation());
     }
 
     /**

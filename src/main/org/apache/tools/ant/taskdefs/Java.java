@@ -107,7 +107,7 @@ public class Java extends Task {
         try {
             if ((err = executeJava()) != 0) { 
                 if (failOnError) {
-                    throw new BuildException("Java returned: " + err, location);
+                    throw new BuildException("Java returned: " + err, getLocation());
                 } else {
                     log("Java Result: " + err, Project.MSG_ERR);
                 }
@@ -405,7 +405,7 @@ public class Java extends Task {
                                                          append));
                 exe.execute(getProject());
             } catch (IOException io) {
-                throw new BuildException(io, location);
+                throw new BuildException(io, getLocation());
             } finally {
                 if (outStream != null) {
                     outStream.close();
@@ -440,7 +440,7 @@ public class Java extends Task {
             } else if (!dir.exists() || !dir.isDirectory()) {
                 throw new BuildException(dir.getAbsolutePath()
                                          + " is not a valid directory",
-                                         location);
+                                         getLocation());
             }
             
             exe.setWorkingDirectory(dir);
@@ -463,10 +463,10 @@ public class Java extends Task {
                 }
                 return rc;
             } catch (IOException e) {
-                throw new BuildException(e, location);
+                throw new BuildException(e, getLocation());
             }
         } catch (IOException io) {
-            throw new BuildException(io, location);
+            throw new BuildException(io, getLocation());
         } finally {
             if (fos != null) {
                 try {fos.close();} catch (IOException io) {}

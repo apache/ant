@@ -227,17 +227,17 @@ public class Tar extends MatchingTask {
     public void execute() throws BuildException {
         if (tarFile == null) {
             throw new BuildException("tarfile attribute must be set!",
-                                     location);
+                                     getLocation());
         }
 
         if (tarFile.exists() && tarFile.isDirectory()) {
             throw new BuildException("tarfile is a directory!",
-                                     location);
+                                     getLocation());
         }
 
         if (tarFile.exists() && !tarFile.canWrite()) {
             throw new BuildException("Can not write to the specified tarfile!",
-                                     location);
+                                     getLocation());
         }
 
         Vector savedFileSets = (Vector) filesets.clone();
@@ -245,7 +245,7 @@ public class Tar extends MatchingTask {
             if (baseDir != null) {
                 if (!baseDir.exists()) {
                     throw new BuildException("basedir does not exist!",
-                                             location);
+                                             getLocation());
                 }
 
                 // add the main fileset to the list of filesets to process.
@@ -257,7 +257,7 @@ public class Tar extends MatchingTask {
             if (filesets.size() == 0) {
                 throw new BuildException("You must supply either a basedir "
                                          + "attribute or some nested filesets.",
-                                         location);
+                                         getLocation());
             }
 
             // check if tar is out of date with respect to each
@@ -275,7 +275,7 @@ public class Tar extends MatchingTask {
                     if (tarFile.equals(new File(fs.getDir(getProject()),
                                                 files[i]))) {
                         throw new BuildException("A tar file cannot include "
-                                                 + "itself", location);
+                                                 + "itself", getLocation());
                     }
                 }
             }
@@ -324,7 +324,7 @@ public class Tar extends MatchingTask {
                 }
             } catch (IOException ioe) {
                 String msg = "Problem creating TAR: " + ioe.getMessage();
-                throw new BuildException(msg, ioe, location);
+                throw new BuildException(msg, ioe, getLocation());
             } finally {
                 if (tOut != null) {
                     try {
@@ -394,7 +394,7 @@ public class Tar extends MatchingTask {
                 } else if (longFileMode.isFailMode()) {
                     throw new BuildException(
                         "Entry: " + vPath + " longer than " +
-                        TarConstants.NAMELEN + "characters.", location);
+                        TarConstants.NAMELEN + "characters.", getLocation());
                 }
             }
 

@@ -488,7 +488,7 @@ public class Ant extends Task {
             } catch (Exception e2) {
                 String msg = "Error setting new project instance for "
                     + "reference with id " + oldKey;
-                throw new BuildException(msg, e2, location);
+                throw new BuildException(msg, e2, getLocation());
             }
         }
         newProject.addReference(newKey, copy);

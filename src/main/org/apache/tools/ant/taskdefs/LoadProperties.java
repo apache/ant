@@ -190,7 +190,7 @@ public final class LoadProperties extends Task {
 
         } catch (final IOException ioe) {
             final String message = "Unable to load file: " + ioe.toString();
-            throw new BuildException(message, ioe, location);
+            throw new BuildException(message, ioe, getLocation());
         } catch (final BuildException be) {
             throw be;
         } finally {

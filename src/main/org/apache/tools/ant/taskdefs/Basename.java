@@ -119,10 +119,10 @@ public class Basename extends Task {
   // The method executing the task
   public void execute() throws BuildException {
       if (property == null) {
-          throw new BuildException("property attribute required", location);
+          throw new BuildException("property attribute required", getLocation());
       }
       if (file == null) {
-          throw new BuildException("file attribute required", location);
+          throw new BuildException("file attribute required", getLocation());
       }
       String value = file.getName();
       if (suffix != null && value.endsWith(suffix)) {

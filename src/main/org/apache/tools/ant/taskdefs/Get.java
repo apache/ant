@@ -98,21 +98,21 @@ public class Get extends Task {
      */
     public void execute() throws BuildException {
         if (source == null) {
-            throw new BuildException("src attribute is required", location);
+            throw new BuildException("src attribute is required", getLocation());
         }
 
         if (dest == null) {
-            throw new BuildException("dest attribute is required", location);
+            throw new BuildException("dest attribute is required", getLocation());
         }
 
         if (dest.exists() && dest.isDirectory()) {
             throw new BuildException("The specified destination is a directory",
-                                     location);
+                                     getLocation());
         }
 
         if (dest.exists() && !dest.canWrite()) {
             throw new BuildException("Can't write to " + dest.getAbsolutePath(),
-                                     location);
+                                     getLocation());
         }
 
         try {
@@ -209,7 +209,7 @@ public class Get extends Task {
                     return;
                 }
                 throw new BuildException("Can't get " + source + " to " + dest,
-                                          location);
+                                         getLocation());
             }
 
             FileOutputStream fos = new FileOutputStream(dest);
@@ -263,7 +263,7 @@ public class Get extends Task {
             if (ignoreErrors) {
                 return;
             }
-            throw new BuildException(ioe, location);
+            throw new BuildException(ioe, getLocation());
         }
     }
 

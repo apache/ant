@@ -188,7 +188,7 @@ public class XSLTProcess extends MatchingTask implements XSLTLogger {
         String[]         dirs;
 
         if (xslFile == null) {
-            throw new BuildException("no stylesheet specified", location);
+            throw new BuildException("no stylesheet specified", getLocation());
         }
 
         try {

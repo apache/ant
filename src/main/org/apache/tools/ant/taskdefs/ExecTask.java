@@ -259,7 +259,7 @@ public class ExecTask extends Task {
      */
     protected void checkConfiguration() throws BuildException {
         if (cmdl.getExecutable() == null) {
-            throw new BuildException("no executable specified", location);
+            throw new BuildException("no executable specified", getLocation());
         }
         if (dir != null && !dir.exists()) {
             throw new BuildException("The directory you specified does not "
@@ -334,8 +334,8 @@ public class ExecTask extends Task {
         maybeSetResultPropertyValue(err);
         if (err != 0) {
             if (failOnError) {
-                throw new BuildException(taskType + " returned: " + err,
-                                         location);
+                throw new BuildException(getTaskType() + " returned: " + err,
+                                         getLocation());
             } else {
                 log("Result: " + err, Project.MSG_ERR);
             }
@@ -369,7 +369,7 @@ public class ExecTask extends Task {
         } catch (IOException e) {
             if (failIfExecFails) {
                 throw new BuildException("Execute failed: " + e.toString(), e,
-                                         location);
+                                         getLocation());
             } else {
                 log("Execute failed: " + e.toString(), Project.MSG_ERR);
             }
@@ -390,10 +390,10 @@ public class ExecTask extends Task {
                 return new PumpStreamHandler(fos);
             } catch (FileNotFoundException fne) {
                 throw new BuildException("Cannot write to " + out, fne,
-                                         location);
+                                         getLocation());
             } catch (IOException ioe) {
                 throw new BuildException("Cannot write to " + out, ioe,
-                                         location);
+                                         getLocation());
             }
         } else if (outputprop != null) {
             baos = new ByteArrayOutputStream();

@@ -168,13 +168,13 @@ public abstract class Definer extends Task {
                 if (name != null || value != null) {
                     String msg = "You must not specify name or value "
                         + "together with file or resource.";
-                    throw new BuildException(msg, location);
+                    throw new BuildException(msg, getLocation());
                 }
 
                 if (file != null && resource != null) {
                     String msg = "You must not specify both, file and "
                         + "resource.";
-                    throw new BuildException(msg, location);
+                    throw new BuildException(msg, getLocation());
                 }
 
 
@@ -209,7 +209,7 @@ public abstract class Definer extends Task {
                     }
                 }
             } catch (IOException ex) {
-                throw new BuildException(ex, location);
+                throw new BuildException(ex, getLocation());
             } finally {
                 if (is != null) {
                     try {
@@ -233,11 +233,11 @@ public abstract class Definer extends Task {
         } catch (ClassNotFoundException cnfe) {
             String msg = getTaskName() + " class " + value
                 + " cannot be found";
-            throw new BuildException(msg, cnfe, location);
+            throw new BuildException(msg, cnfe, getLocation());
         } catch (NoClassDefFoundError ncdfe) {
             String msg = getTaskName() + " class " + value
                 + " cannot be found";
-            throw new BuildException(msg, ncdfe, location);
+            throw new BuildException(msg, ncdfe, getLocation());
         }
     }
 

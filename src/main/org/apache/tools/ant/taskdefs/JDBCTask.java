@@ -325,13 +325,13 @@ public abstract class JDBCTask extends Task {
      */
     protected Connection getConnection() throws BuildException {
         if (userId == null) {
-            throw new BuildException("User Id attribute must be set!", location);
+            throw new BuildException("User Id attribute must be set!", getLocation());
         }
         if (password == null) {
-            throw new BuildException("Password attribute must be set!", location);
+            throw new BuildException("Password attribute must be set!", getLocation());
         }
         if (url == null) {
-            throw new BuildException("Url attribute must be set!", location);
+            throw new BuildException("Url attribute must be set!", getLocation());
         }
         try {
 
@@ -349,7 +349,7 @@ public abstract class JDBCTask extends Task {
             conn.setAutoCommit(autocommit);
             return conn;
         } catch (SQLException e) {
-            throw new BuildException(e, location);
+            throw new BuildException(e, getLocation());
         }
 
     }
@@ -362,7 +362,7 @@ public abstract class JDBCTask extends Task {
      */
     private Driver getDriver() throws BuildException {
         if (driver == null) {
-            throw new BuildException("Driver attribute must be set!", location);
+            throw new BuildException("Driver attribute must be set!", getLocation());
         }
 
         Driver driverInstance = null;
@@ -402,15 +402,15 @@ public abstract class JDBCTask extends Task {
         } catch (ClassNotFoundException e) {
             throw new BuildException(
                     "Class Not Found: JDBC driver " + driver + " could not be loaded",
-                    location);
+                    getLocation());
         } catch (IllegalAccessException e) {
             throw new BuildException(
                     "Illegal Access: JDBC driver " + driver + " could not be loaded",
-                    location);
+                    getLocation());
         } catch (InstantiationException e) {
             throw new BuildException(
                     "Instantiation Exception: JDBC driver " + driver + " could not be loaded",
-                    location);
+                    getLocation());
         }
         return driverInstance;
     }

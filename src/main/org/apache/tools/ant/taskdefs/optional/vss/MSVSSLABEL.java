@@ -133,11 +133,11 @@ public class MSVSSLABEL extends MSVSS {
         // first off, make sure that we've got a command and a vssdir and a label ...
         if (getVsspath() == null) {
             String msg = "vsspath attribute must be set!";
-            throw new BuildException(msg, location);
+            throw new BuildException(msg, getLocation());
         }
         if (getLabel() == null) {
             String msg = "label attribute must be set!";
-            throw new BuildException(msg, location);
+            throw new BuildException(msg, getLocation());
         }
 
         // now look for illegal combinations of things ...
@@ -171,7 +171,7 @@ public class MSVSSLABEL extends MSVSS {
         result = run(commandLine);
         if (result != 0) {
             String msg = "Failed executing: " + commandLine.toString();
-            throw new BuildException(msg, location);
+            throw new BuildException(msg, getLocation());
         }
 
     }

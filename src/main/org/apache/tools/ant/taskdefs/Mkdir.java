@@ -82,7 +82,7 @@ public class Mkdir extends Task {
      */
     public void execute() throws BuildException {
         if (dir == null) {
-            throw new BuildException("dir attribute is required", location);
+            throw new BuildException("dir attribute is required", getLocation());
         }
 
         if (dir.isFile()) {
@@ -96,7 +96,7 @@ public class Mkdir extends Task {
             if (!result) {
                 String msg = "Directory " + dir.getAbsolutePath() 
                     + " creation was not successful for an unknown reason";
-                throw new BuildException(msg, location);
+                throw new BuildException(msg, getLocation());
             }
             log("Created dir: " + dir.getAbsolutePath());
         }

@@ -206,7 +206,7 @@ public final class LoadFile extends Task {
         } catch (final IOException ioe) {
             final String message = "Unable to load file: " + ioe.toString();
             if (failOnError) {
-                throw new BuildException(message, ioe, location);
+                throw new BuildException(message, ioe, getLocation());
             } else {
                 log(message, Project.MSG_ERR);
             }

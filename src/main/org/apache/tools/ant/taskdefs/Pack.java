@@ -99,21 +99,21 @@ public abstract class Pack extends Task {
      */
     private void validate() throws BuildException {
         if (zipFile == null) {
-            throw new BuildException("zipfile attribute is required", location);
+            throw new BuildException("zipfile attribute is required", getLocation());
         }
 
         if (zipFile.isDirectory()) {
             throw new BuildException("zipfile attribute must not " +
-                                     "represent a directory!", location);
+                                     "represent a directory!", getLocation());
         }
 
         if (source == null) {
-            throw new BuildException("src attribute is required", location);
+            throw new BuildException("src attribute is required", getLocation());
         }
 
         if (source.isDirectory()) {
             throw new BuildException("Src attribute must not " +
-                                     "represent a directory!", location);
+                                     "represent a directory!", getLocation());
         }
     }
 

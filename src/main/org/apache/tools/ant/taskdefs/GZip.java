@@ -81,7 +81,7 @@ public class GZip extends Pack {
             zipFile(source, zOut);
         } catch (IOException ioe) {
             String msg = "Problem creating gzip " + ioe.getMessage();
-            throw new BuildException(msg, ioe, location);
+            throw new BuildException(msg, ioe, getLocation());
         } finally {
             if (zOut != null) {
                 try {

@@ -116,15 +116,15 @@ public abstract class Unpack extends Task {
 
     private void validate() throws BuildException {
         if (source == null) {
-            throw new BuildException("No Src specified", location);
+            throw new BuildException("No Src specified", getLocation());
         }
 
         if (!source.exists()) {
-            throw new BuildException("Src doesn't exist", location);
+            throw new BuildException("Src doesn't exist", getLocation());
         }
 
         if (source.isDirectory()) {
-            throw new BuildException("Cannot expand a directory", location);
+            throw new BuildException("Cannot expand a directory", getLocation());
         }
 
         if (dest == null) {

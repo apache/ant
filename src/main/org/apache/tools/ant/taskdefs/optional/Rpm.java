@@ -150,7 +150,7 @@ public class Rpm extends Task {
                 try {
                     outputstream = new PrintStream(new BufferedOutputStream(new FileOutputStream(output)));
                 } catch (IOException e) {
-                    throw new BuildException(e, location);
+                    throw new BuildException(e, getLocation());
                 }
             } else {
                 outputstream = new LogOutputStream(this, Project.MSG_INFO);
@@ -159,7 +159,7 @@ public class Rpm extends Task {
                 try {
                     errorstream = new PrintStream(new BufferedOutputStream(new FileOutputStream(error)));
                 }  catch (IOException e) {
-                    throw new BuildException(e, location);
+                    throw new BuildException(e, getLocation());
                 }
             } else {
                 errorstream = new LogOutputStream(this, Project.MSG_WARN);
@@ -180,7 +180,7 @@ public class Rpm extends Task {
             exe.execute();
             log("Building the RPM based on the " + specFile + " file");
         } catch (IOException e) {
-            throw new BuildException(e, location);
+            throw new BuildException(e, getLocation());
         } finally {
             if (output != null) {
                 try {
@@ -218,7 +218,7 @@ public class Rpm extends Task {
      */
     public void setSpecFile(String sf) {
         if ((sf == null) || (sf.trim().equals(""))) {
-            throw new BuildException("You must specify a spec file", location);
+            throw new BuildException("You must specify a spec file", getLocation());
         }
         this.specFile = sf;
     }

@@ -86,7 +86,7 @@ public class MSVSSADD extends MSVSS {
          // first off, make sure that we've got a command and a localPath ...
         if (getLocalPath() == null) {
             String msg = "localPath attribute must be set!";
-            throw new BuildException(msg, location);
+            throw new BuildException(msg, getLocation());
         }
 
         // now look for illegal combinations of things ...
@@ -113,7 +113,7 @@ public class MSVSSADD extends MSVSS {
         result = run(commandLine);
         if (result != 0) {
             String msg = "Failed executing: " + commandLine.toString();
-            throw new BuildException(msg, location);
+            throw new BuildException(msg, getLocation());
         }
     }
 

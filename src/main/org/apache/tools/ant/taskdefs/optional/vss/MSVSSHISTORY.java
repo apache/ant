@@ -107,7 +107,7 @@ public class MSVSSHISTORY extends MSVSS {
         // first off, make sure that we've got a command and a vssdir and a label ...
         if (getVsspath() == null) {
             String msg = "vsspath attribute must be set!";
-            throw new BuildException(msg, location);
+            throw new BuildException(msg, getLocation());
         }
 
         // now look for illegal combinations of things ...
@@ -150,7 +150,7 @@ public class MSVSSHISTORY extends MSVSS {
         result = run(commandLine);
         if (result != 0) {
             String msg = "Failed executing: " + commandLine.toString();
-            throw new BuildException(msg, location);
+            throw new BuildException(msg, getLocation());
         }
 
     }
@@ -252,7 +252,7 @@ public class MSVSSHISTORY extends MSVSS {
                 startDate = calcDate(m_ToDate, m_NumDays);
             } catch (ParseException ex) {
                 String msg = "Error parsing date: " + m_ToDate;
-                throw new BuildException(msg, location);
+                throw new BuildException(msg, getLocation());
             }
             cmd.createArgument().setValue(FLAG_VERSION_DATE + m_ToDate + VALUE_FROMDATE + startDate);
         } else if (m_FromDate != null && m_NumDays != Integer.MIN_VALUE) {
@@ -261,7 +261,7 @@ public class MSVSSHISTORY extends MSVSS {
                 endDate = calcDate(m_FromDate, m_NumDays);
             } catch (ParseException ex) {
                 String msg = "Error parsing date: " + m_FromDate;
-                throw new BuildException(msg, location);
+                throw new BuildException(msg, getLocation());
             }
             cmd.createArgument().setValue(FLAG_VERSION_DATE + endDate + VALUE_FROMDATE + m_FromDate);
         } else {

@@ -433,7 +433,7 @@ public class Zip extends MatchingTask {
                 }
             }
 
-            throw new BuildException(msg, ioe, location);
+            throw new BuildException(msg, ioe, getLocation());
         } finally {
             cleanUp();
         }
@@ -586,7 +586,7 @@ public class Zip extends MatchingTask {
         } catch (IOException ioe) {
             throw new BuildException("Could not create empty ZIP archive "
                                      + "(" + ioe.getMessage() + ")", ioe,
-                                     location);
+                                     getLocation());
         } finally {
             if (os != null) {
                 try {
@@ -620,7 +620,7 @@ public class Zip extends MatchingTask {
             } else if (emptyBehavior.equals("fail")) {
                 throw new BuildException("Cannot create " + archiveType
                                          + " archive " + zipFile +
-                                         ": no files were included.", location);
+                                         ": no files were included.", getLocation());
             } else {
                 // Create.
                 return createEmptyZip(zipFile);
@@ -629,7 +629,7 @@ public class Zip extends MatchingTask {
             for (int i = 0; i < files.length; ++i) {
                 if (files[i].equals(zipFile)) {
                     throw new BuildException("A zip file cannot include "
-                        + "itself", location);
+                        + "itself", getLocation());
                 }
             }
 
@@ -793,7 +793,7 @@ public class Zip extends MatchingTask {
         throws IOException {
         if (file.equals(zipFile)) {
             throw new BuildException("A zip file cannot include itself",
-                                     location);
+                                     getLocation());
         }
 
         FileInputStream fIn = new FileInputStream(file);

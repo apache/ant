@@ -100,17 +100,17 @@ public class Copyfile extends Task {
 
         if (srcFile == null) {
             throw new BuildException("The src attribute must be present.", 
-                                     location);
+                                     getLocation());
         }
         
         if (!srcFile.exists()) {
             throw new BuildException("src " + srcFile.toString()
-                                     + " does not exist.", location);
+                                     + " does not exist.", getLocation());
         }
 
         if (destFile == null) {
             throw new BuildException("The dest attribute must be present.", 
-                                     location);
+                                     getLocation());
         }
 
         if (srcFile.equals(destFile)) {

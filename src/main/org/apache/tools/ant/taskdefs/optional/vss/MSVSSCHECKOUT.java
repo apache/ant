@@ -90,7 +90,7 @@ public class MSVSSCHECKOUT extends MSVSS {
         // first off, make sure that we've got a command and a vssdir ...
         if (getVsspath() == null) {
             String msg = "vsspath attribute must be set!";
-            throw new BuildException(msg, location);
+            throw new BuildException(msg, getLocation());
         }
 
         // now look for illegal combinations of things ...
@@ -117,7 +117,7 @@ public class MSVSSCHECKOUT extends MSVSS {
         result = run(commandLine);
         if (result != 0) {
             String msg = "Failed executing: " + commandLine.toString();
-            throw new BuildException(msg, location);
+            throw new BuildException(msg, getLocation());
         }
     }
 
@@ -144,7 +144,7 @@ public class MSVSSCHECKOUT extends MSVSS {
                 if (!done) {
                     String msg = "Directory " + m_LocalPath + " creation was not " +
                         "succesful for an unknown reason";
-                    throw new BuildException(msg, location);
+                    throw new BuildException(msg, getLocation());
                 }
                 getProject().log("Created dir: " + dir.getAbsolutePath());
             }

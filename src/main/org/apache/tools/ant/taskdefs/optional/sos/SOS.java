@@ -464,7 +464,7 @@ public abstract class SOS extends Task {
                 if (!done) {
                     String msg = "Directory " + localPath + " creation was not " +
                             "successful for an unknown reason";
-                    throw new BuildException(msg, location);
+                    throw new BuildException(msg, getLocation());
                 }
                 getProject().log("Created dir: " + dir.getAbsolutePath());
             }
@@ -491,7 +491,7 @@ public abstract class SOS extends Task {
             exe.setCommandline(cmd.getCommandline());
             return exe.execute();
         } catch (java.io.IOException e) {
-            throw new BuildException(e, location);
+            throw new BuildException(e, getLocation());
         }
     }
 }

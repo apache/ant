@@ -402,19 +402,19 @@ public class JspC extends MatchingTask {
         // first off, make sure that we've got a srcdir
         if (src == null) {
             throw new BuildException("srcdir attribute must be set!",
-                                     location);
+                                     getLocation());
         }
         String [] list = src.list();
         if (list.length == 0) {
             throw new BuildException("srcdir attribute must be set!",
-                                     location);
+                                     getLocation());
         }
 
         if (destDir != null && !destDir.isDirectory()) {
             throw new
                 BuildException("destination directory \"" + destDir +
                                "\" does not exist or is not a directory",
-                               location);
+                               getLocation());
         }
 
         File dest = getActualDestDir();
@@ -441,7 +441,7 @@ public class JspC extends MatchingTask {
             File srcDir = (File) getProject().resolveFile(list[i]);
             if (!srcDir.exists()) {
                 throw new BuildException("srcdir \"" + srcDir.getPath() +
-                                         "\" does not exist!", location);
+                                         "\" does not exist!", getLocation());
             }
             DirectoryScanner ds = this.getDirectoryScanner(srcDir);
             String[] files = ds.getIncludedFiles();
@@ -497,7 +497,7 @@ public class JspC extends MatchingTask {
         // finally, lets execute the compiler!!
         if (!compiler.execute()) {
             if (failOnError) {
-                throw new BuildException(FAIL_MSG, location);
+                throw new BuildException(FAIL_MSG, getLocation());
             } else {
                 log(FAIL_MSG, Project.MSG_ERR);
             }

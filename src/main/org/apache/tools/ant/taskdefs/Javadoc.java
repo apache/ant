@@ -1498,7 +1498,7 @@ public class Javadoc extends Task {
     }
 
     public void execute() throws BuildException {
-        if ("javadoc2".equals(taskType)) {
+        if ("javadoc2".equals(getTaskType())) {
             log("!! javadoc2 is deprecated. Use javadoc instead. !!");
         }
 
@@ -1598,7 +1598,7 @@ public class Javadoc extends Task {
             if (doclet != null) {
                 if (doclet.getName() == null) {
                     throw new BuildException("The doclet name must be "
-                                             + "specified.", location);
+                                             + "specified.", getLocation());
                 } else {
                     toExecute.createArgument().setValue("-doclet");
                     toExecute.createArgument().setValue(doclet.getName());
@@ -1806,7 +1806,7 @@ public class Javadoc extends Task {
         } catch (IOException e) {
             tmpList.delete();
             throw new BuildException("Error creating temporary file",
-                                     e, location);
+                                     e, getLocation());
         } finally {
             if (srcListWriter != null) {
                 srcListWriter.close();
@@ -1836,10 +1836,10 @@ public class Javadoc extends Task {
             exe.setCommandline(toExecute.getCommandline());
             int ret = exe.execute();
             if (ret != 0 && failOnError) {
-                throw new BuildException("Javadoc returned " + ret, location);
+                throw new BuildException("Javadoc returned " + ret, getLocation());
             }
         } catch (IOException e) {
-            throw new BuildException("Javadoc failed: " + e, e, location);
+            throw new BuildException("Javadoc failed: " + e, e, getLocation());
         } finally {
             if (tmpList != null) {
                 tmpList.delete();

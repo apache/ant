@@ -566,7 +566,7 @@ public class JUnitTask extends Task {
             if ((errorOccurredHere && test.getHaltonerror())
                 || (failureOccurredHere && test.getHaltonfailure())) {
                 throw new BuildException("Test " + test.getName() + " failed"
-                    + (wasKilled ? " (timeout)" : ""), location);
+                    + (wasKilled ? " (timeout)" : ""), getLocation());
             } else {
                 log("TEST " + test.getName() + " FAILED"
                     + (wasKilled ? " (timeout)" : ""), Project.MSG_ERR);
@@ -651,7 +651,7 @@ public class JUnitTask extends Task {
         } catch (java.io.IOException e) {
             propsFile.delete();
             throw new BuildException("Error creating temporary properties "
-                                     + "file.", e, location);
+                                     + "file.", e, getLocation());
         }
 
         Execute execute = new Execute(new LogStreamHandler(this, 
@@ -679,7 +679,7 @@ public class JUnitTask extends Task {
         try {
             retVal = execute.execute();
         } catch (IOException e) {
-            throw new BuildException("Process fork failed.", e, location);
+            throw new BuildException("Process fork failed.", e, getLocation());
         } finally {
             if (!propsFile.delete()) {
                 throw new BuildException("Could not delete temporary "

@@ -133,7 +133,7 @@ public class CallTarget extends Task {
         
         if (subTarget == null) {
             throw new BuildException("Attribute target is required.", 
-                                     location);
+                                     getLocation());
         }
         
         callee.setAntfile(getProject().getProperty("ant.file"));

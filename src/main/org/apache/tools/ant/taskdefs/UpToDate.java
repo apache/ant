@@ -154,7 +154,7 @@ public class UpToDate extends Task implements Condition {
     public Mapper createMapper() throws BuildException {
         if (mapperElement != null) {
             throw new BuildException("Cannot define more than one mapper",
-                                     location);
+                                     getLocation());
         }
         mapperElement = new Mapper(getProject());
         return mapperElement;
@@ -225,7 +225,7 @@ public class UpToDate extends Task implements Condition {
     public void execute() throws BuildException {
         if (_property == null) {
             throw new BuildException("property attribute is required.", 
-                                     location);
+                                     getLocation());
         }
         boolean upToDate = eval();
         if (upToDate) {
