@@ -154,7 +154,7 @@ public class Script extends Task {
     }
 
     /**
-     * Load the script from an external file 
+     * Load the script from an external file ; optional.
      *
      * @param msg Sets the value for the script variable.
      */
@@ -179,7 +179,7 @@ public class Script extends Task {
     }
 
     /**
-     * Defines the script.
+     * The script text.
      *
      * @param msg Sets the value for the script variable.
      */
