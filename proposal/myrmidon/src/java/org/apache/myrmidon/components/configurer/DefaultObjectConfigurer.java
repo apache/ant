@@ -124,7 +124,7 @@ class DefaultObjectConfigurer
                 type = addMethod.getParameterTypes()[ 0 ];
             }
 
-            final boolean isTypedProp = (propName.length() == 0);
+            final boolean isTypedProp = ( propName.length() == 0 );
             if( isTypedProp && !type.isInterface() )
             {
                 final String message =
@@ -190,7 +190,7 @@ class DefaultObjectConfigurer
 
             // Extract property name
             final String propName = extractName( 3, methodName );
-            final Class type = method.getParameterTypes()[0];
+            final Class type = method.getParameterTypes()[ 0 ];
 
             // Add to the adders map
             if( adders.containsKey( propName ) )

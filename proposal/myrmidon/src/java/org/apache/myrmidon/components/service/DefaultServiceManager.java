@@ -128,7 +128,7 @@ public class DefaultServiceManager
 
             // Create the service
             final Object service = factory.createService();
-            if( ! serviceType.isInstance( service ) )
+            if( !serviceType.isInstance( service ) )
             {
                 final String message = REZ.getString( "mismatched-service-type.error", serviceType.getName(), service.getClass().getName() );
                 throw new ServiceException( message );

@@ -39,7 +39,6 @@ public abstract class AbstractFileObject
     private AbstractFileSystem m_fs;
     private DefaultFileContent m_content;
 
-
     // Cached info
     private boolean m_attached;
     private AbstractFileObject m_parent;

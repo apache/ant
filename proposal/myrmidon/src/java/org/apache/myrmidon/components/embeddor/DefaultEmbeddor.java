@@ -369,7 +369,7 @@ public class DefaultEmbeddor
                 final String message = REZ.getString( "bad-type.error", component, clazz.getName() );
                 throw new Exception( message );
             }
-            if( !( object instanceof Component) )
+            if( !( object instanceof Component ) )
             {
                 final String message = REZ.getString( "bad-type.error", component, Component.class.getName() );
                 throw new Exception( message );

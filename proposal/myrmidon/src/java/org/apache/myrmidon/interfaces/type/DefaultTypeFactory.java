@@ -100,7 +100,7 @@ public class DefaultTypeFactory
 
     private String getClassName( final String name )
     {
-        return  (String)m_classNames.get( name );
+        return (String)m_classNames.get( name );
     }
 
     protected ClassLoader getClassLoader()

@@ -76,7 +76,7 @@ public class DefaultDeployer
     public Deployer createChildDeployer( ComponentManager componentManager )
         throws ComponentException
     {
-        final DefaultDeployer child = new DefaultDeployer( );
+        final DefaultDeployer child = new DefaultDeployer();
         setupLogger( child );
         child.compose( componentManager );
         return child;

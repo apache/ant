@@ -23,13 +23,13 @@ import org.apache.avalon.framework.context.Context;
 import org.apache.avalon.framework.context.ContextException;
 import org.apache.avalon.framework.logger.AbstractLogEnabled;
 import org.apache.avalon.framework.logger.LogEnabled;
+import org.apache.myrmidon.framework.DataType;
 import org.apache.myrmidon.interfaces.configurer.Configurer;
 import org.apache.myrmidon.interfaces.converter.MasterConverter;
+import org.apache.myrmidon.interfaces.role.RoleManager;
 import org.apache.myrmidon.interfaces.type.TypeException;
 import org.apache.myrmidon.interfaces.type.TypeFactory;
 import org.apache.myrmidon.interfaces.type.TypeManager;
-import org.apache.myrmidon.interfaces.role.RoleManager;
-import org.apache.myrmidon.framework.DataType;
 
 /**
  * Class used to configure tasks.
@@ -472,10 +472,10 @@ public class DefaultConfigurer
 
         // Try a typed property
         final PropertyConfigurer propertyConfigurer = configurer.getTypedProperty();
-        if( ! ignoreRoleName )
+        if( !ignoreRoleName )
         {
             final String roleShorthand = m_roleManager.getNameForRole( propertyConfigurer.getType().getName() );
-            if( ! name.equalsIgnoreCase(roleShorthand) )
+            if( !name.equalsIgnoreCase( roleShorthand ) )
             {
                 // Rethrow the original exception
                 throw exc;
@@ -510,7 +510,7 @@ public class DefaultConfigurer
         }
 
         // Check the types
-        if( ! type.isInstance( obj ) )
+        if( !type.isInstance( obj ) )
         {
             final String message =
                 REZ.getString( "mismatched-typed-object.error", name, type.getName() );

@@ -7,8 +7,8 @@
  */
 package org.apache.myrmidon.listeners;
 
-import org.apache.avalon.framework.ExceptionUtil;
 import java.io.PrintWriter;
+import org.apache.avalon.framework.ExceptionUtil;
 
 /**
  * Classic listener that emulates the default ant1.x listener.
@@ -45,7 +45,7 @@ public class ClassicProjectListener
     /**
      * Notify listener of log message event.
      */
-    public void log( final LogEvent event  )
+    public void log( final LogEvent event )
     {
         writeMessage( event );
         writeThrowable( event );

@@ -7,8 +7,6 @@
  */
 package org.apache.myrmidon.listeners;
 
-import org.apache.avalon.framework.ExceptionUtil;
-
 /**
  * Default listener that emulates the Ant 1.x no banner listener.
  *

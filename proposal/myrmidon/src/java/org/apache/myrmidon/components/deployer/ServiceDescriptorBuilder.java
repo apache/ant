@@ -39,7 +39,7 @@ class ServiceDescriptorBuilder
             // Check version
             final String versionString = config.getAttribute( "version" );
             final Version version = Version.getVersion( versionString );
-            if( ! SERVICE_DESCRIPTOR_VERSION.complies( version ) )
+            if( !SERVICE_DESCRIPTOR_VERSION.complies( version ) )
             {
                 final String message = REZ.getString( "service-descriptor-version.error", version, SERVICE_DESCRIPTOR_VERSION );
                 throw new DeploymentException( message );

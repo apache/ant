@@ -7,8 +7,6 @@
  */
 package org.apache.myrmidon.listeners;
 
-import org.apache.myrmidon.interfaces.model.Target;
-
 /**
  * A target level event.
  *

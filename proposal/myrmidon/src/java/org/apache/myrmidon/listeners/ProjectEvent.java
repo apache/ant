@@ -7,8 +7,6 @@
  */
 package org.apache.myrmidon.listeners;
 
-import org.apache.myrmidon.interfaces.model.Project;
-
 /**
  * A project level event.
  *

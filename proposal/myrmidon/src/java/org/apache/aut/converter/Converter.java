@@ -7,9 +7,6 @@
  */
 package org.apache.aut.converter;
 
-import org.apache.avalon.framework.context.Context;
-import java.util.Map;
-
 /**
  * Instances of this interface are used to convert between different types.
  *

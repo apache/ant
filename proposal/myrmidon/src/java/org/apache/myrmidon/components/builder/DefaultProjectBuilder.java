@@ -15,8 +15,8 @@ import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
 import org.apache.avalon.excalibur.i18n.ResourceManager;
 import org.apache.avalon.excalibur.i18n.Resources;
-import org.apache.avalon.excalibur.util.StringUtil;
 import org.apache.avalon.excalibur.io.FileUtil;
+import org.apache.avalon.excalibur.util.StringUtil;
 import org.apache.avalon.framework.CascadingException;
 import org.apache.avalon.framework.Version;
 import org.apache.avalon.framework.configuration.Configuration;
@@ -129,7 +129,7 @@ public class DefaultProjectBuilder
 
         //get project-level attributes
         final String projectName = configuration.getAttribute( "name",
-                                                               FileUtil.removeExtension(file.getName()) );
+                                                               FileUtil.removeExtension( file.getName() ) );
         final String baseDirectoryName = configuration.getAttribute( "basedir", null );
         final String defaultTarget = configuration.getAttribute( "default", "main" );
         final Version version = getVersion( configuration );

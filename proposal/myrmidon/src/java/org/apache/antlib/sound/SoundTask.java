@@ -10,11 +10,11 @@ package org.apache.antlib.sound;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Random;
+import org.apache.avalon.excalibur.i18n.ResourceManager;
+import org.apache.avalon.excalibur.i18n.Resources;
 import org.apache.myrmidon.api.AbstractTask;
 import org.apache.myrmidon.api.TaskException;
 import org.apache.myrmidon.interfaces.workspace.Workspace;
-import org.apache.avalon.excalibur.i18n.Resources;
-import org.apache.avalon.excalibur.i18n.ResourceManager;
 
 /**
  * This is an example of an AntTask that makes of use of the AntSoundPlayer.

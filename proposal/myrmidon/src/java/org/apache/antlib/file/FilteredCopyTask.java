@@ -23,8 +23,8 @@ import java.io.Writer;
 import java.util.ArrayList;
 import org.apache.avalon.excalibur.io.IOUtil;
 import org.apache.myrmidon.api.TaskException;
-import org.apache.tools.ant.types.FilterSet;
 import org.apache.myrmidon.framework.FilterSetCollection;
+import org.apache.tools.ant.types.FilterSet;
 
 /**
  * A task used to copy files and simultaneously apply a

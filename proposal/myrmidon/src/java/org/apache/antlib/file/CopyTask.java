@@ -423,7 +423,7 @@ public class CopyTask
      * to a destination.
      */
     protected void doOperation( final String sourceFilename,
-                              final String destinationFilename )
+                                final String destinationFilename )
         throws IOException
     {
         final File source = new File( sourceFilename );

@@ -7,9 +7,6 @@
  */
 package org.apache.myrmidon.listeners;
 
-import java.io.PrintStream;
-import java.io.PrintWriter;
-
 /**
  * A project listener that emulated the Ant 1.x -emacs mode.
  *

@@ -42,7 +42,7 @@ class TypeDescriptorBuilder
             // Check version
             final String versionString = config.getAttribute( "version" );
             final Version version = Version.getVersion( versionString );
-            if( ! TYPE_DESCRIPTOR_VERSION.complies( version ) )
+            if( !TYPE_DESCRIPTOR_VERSION.complies( version ) )
             {
                 final String message = REZ.getString( "type-descriptor-version.error", version, TYPE_DESCRIPTOR_VERSION );
                 throw new DeploymentException( message );

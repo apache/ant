@@ -36,7 +36,6 @@ class FtpFileObject
     private FTPFile m_fileInfo;
     private FTPFile[] m_children;
 
-
     public FtpFileObject( final FileName name, final FtpFileSystem fileSystem )
     {
         super( name, fileSystem );

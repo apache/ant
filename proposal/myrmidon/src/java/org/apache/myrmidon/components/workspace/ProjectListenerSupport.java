@@ -7,11 +7,8 @@
  */
 package org.apache.myrmidon.components.workspace;
 
-import org.apache.myrmidon.listeners.ProjectListener;
-import org.apache.myrmidon.listeners.ProjectEvent;
-import org.apache.myrmidon.listeners.TargetEvent;
-import org.apache.myrmidon.listeners.TaskEvent;
 import org.apache.myrmidon.listeners.LogEvent;
+import org.apache.myrmidon.listeners.ProjectListener;
 
 /**
  * Support for the project listener event dispatching.
@@ -112,7 +109,8 @@ public class ProjectListenerSupport
     public void targetStarted( final String projectName, final String targetName )
     {
         m_projectName = projectName;
-        m_targetName = targetName;;
+        m_targetName = targetName;
+        ;
         m_taskName = null;
 
         for( int i = 0; i < m_listeners.length; i++ )
