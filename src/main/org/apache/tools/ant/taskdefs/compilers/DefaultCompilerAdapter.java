@@ -472,6 +472,8 @@ public abstract class DefaultCompilerAdapter implements CompilerAdapter {
     protected boolean assumeJava11() {
         return "javac1.1".equals(attributes.getCompilerVersion()) ||
             ("classic".equals(attributes.getCompilerVersion()) 
+             && JavaEnvUtils.isJavaVersion(JavaEnvUtils.JAVA_1_1)) ||
+            ("extJavac".equals(attributes.getCompilerVersion()) 
              && JavaEnvUtils.isJavaVersion(JavaEnvUtils.JAVA_1_1));
     }
 
@@ -482,6 +484,8 @@ public abstract class DefaultCompilerAdapter implements CompilerAdapter {
     protected boolean assumeJava12() {
         return "javac1.2".equals(attributes.getCompilerVersion()) ||
             ("classic".equals(attributes.getCompilerVersion()) 
+             && JavaEnvUtils.isJavaVersion(JavaEnvUtils.JAVA_1_2)) ||
+            ("extJavac".equals(attributes.getCompilerVersion()) 
              && JavaEnvUtils.isJavaVersion(JavaEnvUtils.JAVA_1_2));
     }
 
