@@ -166,19 +166,19 @@ public class MyrmidonEmbeddor
         defaults.setParameter( "myrmidon.lib.path", "lib" );
 
         //create all the default properties for components
-        defaults.setParameter( "myrmidon.comp.converter",
+        defaults.setParameter( "org.apache.ant.convert.engine.ConverterEngine",
                                "org.apache.ant.convert.engine.DefaultConverterEngine" );
-        defaults.setParameter( "myrmidon.comp.datatype",
+        defaults.setParameter( "org.apache.ant.tasklet.engine.DataTypeEngine",
                                "org.apache.ant.tasklet.engine.DefaultDataTypeEngine" );
-        defaults.setParameter( "myrmidon.comp.task",
+        defaults.setParameter( Executor.ROLE,
                                "org.apache.myrmidon.components.executor.DefaultExecutor" );
-        defaults.setParameter( "myrmidon.comp.project",
+        defaults.setParameter( ProjectManager.ROLE,
                                "org.apache.myrmidon.components.manager.DefaultProjectManager" );
-        defaults.setParameter( "myrmidon.comp.builder",
+        defaults.setParameter( ProjectBuilder.ROLE,
                                "org.apache.myrmidon.components.builder.DefaultProjectBuilder" );
-        defaults.setParameter( "myrmidon.comp.deployer",
+        defaults.setParameter( TskDeployer.ROLE,
                                "org.apache.myrmidon.components.deployer.DefaultTskDeployer" );
-        defaults.setParameter( "myrmidon.comp.configurer",
+        defaults.setParameter( Configurer.ROLE,
                                "org.apache.myrmidon.components.configurer.DefaultConfigurer" );
 
         return defaults;
@@ -223,25 +223,25 @@ public class MyrmidonEmbeddor
     {
         String component = null;
 
-        component = getParameter( "myrmidon.comp.converter" );
+        component = getParameter( "org.apache.ant.convert.engine.ConverterEngine" );
         m_converterEngine = (ConverterEngine)createComponent( component, ConverterEngine.class );
 
-        component = getParameter( "myrmidon.comp.datatype" );
+        component = getParameter( "org.apache.ant.tasklet.engine.DataTypeEngine" );
         m_dataTypeEngine = (DataTypeEngine)createComponent( component, DataTypeEngine.class );
 
-        component = getParameter( "myrmidon.comp.task" );
+        component = getParameter( Executor.ROLE );
         m_executor = (Executor)createComponent( component, Executor.class );
 
-        component = getParameter( "myrmidon.comp.project" );
+        component = getParameter( ProjectManager.ROLE );
         m_projectManager = (ProjectManager)createComponent( component, ProjectManager.class );
 
-        component = getParameter( "myrmidon.comp.builder" );
+        component = getParameter( ProjectBuilder.ROLE );
         m_builder =(ProjectBuilder)createComponent( component, ProjectBuilder.class );
 
-        component = getParameter( "myrmidon.comp.deployer" );
+        component = getParameter( TskDeployer.ROLE );
         m_deployer = (TskDeployer)createComponent( component, TskDeployer.class );
 
-        component = getParameter( "myrmidon.comp.configurer" );
+        component = getParameter( Configurer.ROLE );
         m_configurer = (Configurer)createComponent( component, Configurer.class );
     }
 
