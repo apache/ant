@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2000-2001 The Apache Software Foundation.  All rights 
+ * Copyright (c) 2000-2002 The Apache Software Foundation.  All rights 
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -81,7 +81,9 @@ import java.util.Vector;
 public class Java extends Task {
 
     private CommandlineJava cmdl = new CommandlineJava();
+    private Environment env = new Environment();
     private boolean fork = false;
+    private boolean newEnvironment = false;
     private File dir = null;
     private File out;
     private PrintStream outStream = null;
@@ -126,6 +128,11 @@ public class Java extends Task {
             }
             if (dir != null) {
                 log("Working directory ignored when same JVM is used.", Project.MSG_WARN);
+            }
+
+            if (newEnvironment || null != env.getVariables()) {
+                log("Changes to environment variables are ignored when same JVM is used.", 
+                    Project.MSG_WARN);
             }
 
             log("Running in same VM " + cmdl.getJavaCommand().toString(), 
@@ -268,6 +275,28 @@ public class Java extends Task {
         cmdl.setVmversion(value);
     }
     
+    /**
+     * Add a nested env element - an environment variable.
+     *
+     * <p>Will be ignored if we are not forking a new VM.
+     *
+     * @since 1.32, Ant 1.5
+     */
+    public void addEnv(Environment.Variable var) {
+        env.addVariable(var);
+    }
+
+    /**
+     * Use a completely new environment
+     *
+     * <p>Will be ignored if we are not forking a new VM.
+     *
+     * @since 1.32, Ant 1.5
+     */
+    public void setNewenvironment(boolean newenv) {
+        newEnvironment = newenv;
+    }
+
     protected void handleOutput(String line) {
         if (outStream != null) {
             outStream.println(line);
@@ -340,6 +369,16 @@ public class Java extends Task {
             
             exe.setWorkingDirectory(dir);
             
+            String[] environment = env.getVariables();
+            if (environment != null) {
+                for (int i=0; i<environment.length; i++) {
+                    log("Setting environment variable: "+environment[i],
+                        Project.MSG_VERBOSE);
+                }
+            }
+            exe.setNewenvironment(newEnvironment);
+            exe.setEnvironment(environment);
+
             exe.setCommandline(command);
             try {
                 return exe.execute();
