@@ -8,6 +8,10 @@ Changes that could break older environments:
   rather than blocking. If you run such a process and rely on it blocking, as
   it would do in Ant 1.5, you may have problem.
 
+* <checksum> message "calculating checksum" downgraded to MSG_VERBOSE
+  to limit output in case of large filesets.
+  Bugzilla Report 25607.
+
 * Change logging level of captured standard error output from MSG_ERR to MSG_WARN.
   Previous some standard error was output as MSG_ERR and some as MSG_WARN (namely
   standard error from exec and forked jvms).
@@ -20,6 +24,10 @@ Fixed bugs:
 
 * <xmlcatalog> Wrong file location to URL conversion in XMLCatalog.
   Bugzilla Report 23913.
+
+* <checksum> was throwing a null pointer exception, when used with nested filesets
+  and totalproperty attribute not set.
+  Bugzilla Report 25606.
 
 Other changes:
 --------------
