@@ -5384,7 +5384,7 @@ Task to automate a remote telnet session. The task uses nested &lt;read&gt; to i
   </tr>
   <tr>
      <td>port</td>
-     <td>the port number of the remote telnet server. Defaults to port 21.</td>
+     <td>the port number of the remote telnet server. Defaults to port 23.</td>
      <td>No</td>
   </tr>
   <tr>
@@ -5432,7 +5432,7 @@ A timeout can be specified at the &lt;telnet&gt; level or at the &lt;read&gt; le
 
 The task can be used with other ports as well:
 <blockquote><pre>
-&lt;telnet userid=&quot;bob&quot; password=&quot;badpass&quot; server=&quot;localhost&quot; defaultTimeout=&quot;20&quot;&gt;
+&lt;telnet port=&quot;80&quot; server=&quot;localhost&quot; timeout=&quot;20&quot;&gt;
    &lt;read/&gt;
    &lt;write&gt;GET / http/0.9&lt;/write&gt;
    &lt;write/&gt;
