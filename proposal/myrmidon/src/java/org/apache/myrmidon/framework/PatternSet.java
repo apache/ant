@@ -19,6 +19,7 @@ import java.util.StringTokenizer;
  * @author <a href="mailto:jon@clearink.com">Jon S. Stevens</a>
  * @author <a href="mailto:stefan.bodewig@epost.de">Stefan Bodewig</a>
  * @author <a href="mailto:peter@apache.org">Peter Donald</a>
+ * @version $Revision$ $Date$
  */
 public class PatternSet
 {

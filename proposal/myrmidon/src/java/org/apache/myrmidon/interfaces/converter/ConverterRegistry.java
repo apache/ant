@@ -13,6 +13,7 @@ import org.apache.avalon.framework.component.Component;
  * Interface for registry for ConverterInfos.
  *
  * @author <a href="mailto:peter@apache.org">Peter Donald</a>
+ * @version $Revision$ $Date$
  */
 public interface ConverterRegistry
     extends Component

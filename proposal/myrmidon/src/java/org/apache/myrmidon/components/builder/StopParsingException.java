@@ -13,6 +13,7 @@ import org.xml.sax.SAXException;
  * Dummy exception to stop parsing "safely".
  *
  * @author <a href="mailto:peter@apache.org">Peter Donald</a>
+ * @version $Revision$ $Date$
  */
 class StopParsingException
     extends SAXException

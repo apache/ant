@@ -18,6 +18,7 @@ import org.apache.myrmidon.api.TaskException;
  *
  * @author <a href="mailto:conor@apache.org">Conor MacNeill</a>
  * @author <a href="mailto:peter@apache.org">Peter Donald</a>
+ * @version $Revision$ $Date$
  * @ant:role shorthand="aspect"
  */
 public interface AspectHandler

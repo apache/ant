@@ -42,6 +42,7 @@ import org.apache.myrmidon.listeners.ProjectListener;
  * to run project.
  *
  * @author <a href="mailto:peter@apache.org">Peter Donald</a>
+ * @version $Revision$ $Date$
  */
 public class CLIMain
     extends AbstractLogEnabled

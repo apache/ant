@@ -16,6 +16,7 @@ import org.apache.avalon.framework.component.ComponentManager;
  * This class deploys type libraries into a registry.
  *
  * @author <a href="mailto:peter@apache.org">Peter Donald</a>
+ * @version $Revision$ $Date$
  */
 public interface Deployer
     extends Component

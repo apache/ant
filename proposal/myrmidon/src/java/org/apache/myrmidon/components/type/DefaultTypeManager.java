@@ -16,6 +16,7 @@ import org.apache.myrmidon.interfaces.type.TypeManager;
  * The interface that is used to manage types.
  *
  * @author <a href="mailto:peter@apache.org">Peter Donald</a>
+ * @version $Revision$ $Date$
  */
 public class DefaultTypeManager
     implements TypeManager

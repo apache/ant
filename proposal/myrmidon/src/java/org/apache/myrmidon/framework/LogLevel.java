@@ -17,6 +17,7 @@ import org.apache.avalon.framework.logger.Logger;
  * for using enum to write to logger.
  *
  * @author <a href="mailto:peter@apache.org">Peter Donald</a>
+ * @version $Revision$ $Date$
  */
 public final class LogLevel
     extends Enum

@@ -13,6 +13,7 @@ import org.apache.avalon.framework.CascadingException;
  * Exception to indicate problem with type instantiating.
  *
  * @author <a href="mailto:peter@apache.org">Peter Donald</a>
+ * @version $Revision$ $Date$
  */
 public final class TypeException
     extends CascadingException

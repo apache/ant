@@ -12,6 +12,7 @@ package org.apache.myrmidon.interfaces.deployer;
  * library to be deployed.
  *
  * @author <a href="mailto:adammurdoch@apache.org">Adam Murdoch</a>
+ * @version $Revision$ $Date$
  */
 public interface TypeDeployer
 {

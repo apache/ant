@@ -14,6 +14,7 @@ package org.apache.myrmidon.components.configurer;
  * methods.
  *
  * @author Adam Murdoch
+ * @version $Revision$ $Date$
  */
 class DefaultConfigurationState
     implements ConfigurationState

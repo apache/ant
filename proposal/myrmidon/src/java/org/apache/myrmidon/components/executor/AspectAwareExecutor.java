@@ -23,6 +23,13 @@ import org.apache.myrmidon.api.TaskException;
 import org.apache.myrmidon.interfaces.aspect.AspectManager;
 import org.apache.myrmidon.interfaces.executor.ExecutionFrame;
 
+/**
+ * The AspectAwareExecutor executes the tasks but also calls
+ * the aspects helpers.
+ *
+ * @author <a href="mailto:peter@apache.org">Peter Donald</a>
+ * @version $Revision$ $Date$
+ */
 public class AspectAwareExecutor
     extends DefaultExecutor
 {

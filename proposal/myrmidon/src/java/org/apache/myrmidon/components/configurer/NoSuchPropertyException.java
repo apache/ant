@@ -16,6 +16,7 @@ import org.apache.avalon.framework.CascadingException;
  * ConfigurationException is final.
  *
  * @author Adam Murdoch
+ * @version $Revision$ $Date$
  */
 class NoSuchPropertyException
     extends CascadingException

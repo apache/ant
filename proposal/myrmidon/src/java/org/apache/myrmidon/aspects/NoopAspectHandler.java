@@ -11,6 +11,7 @@ package org.apache.myrmidon.aspects;
  * A Noop aspect handler that does nothing.
  *
  * @author <a href="mailto:peter@apache.org">Peter Donald</a>
+ * @version $Revision$ $Date$
  */
 public class NoopAspectHandler
     extends AbstractAspectHandler

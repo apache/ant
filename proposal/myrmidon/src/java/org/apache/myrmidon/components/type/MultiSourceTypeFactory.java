@@ -17,6 +17,7 @@ import org.apache.myrmidon.interfaces.type.TypeFactory;
  * This factory acts as a proxy to set of object factorys.
  *
  * @author <a href="mailto:peter@apache.org">Peter Donald</a>
+ * @version $Revision$ $Date$
  */
 public class MultiSourceTypeFactory
     implements TypeFactory

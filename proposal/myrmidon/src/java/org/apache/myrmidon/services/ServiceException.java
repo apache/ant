@@ -14,6 +14,7 @@ import org.apache.avalon.framework.CascadingException;
  * some reason.
  *
  * @author <a href="mailto:peter@apache.org">Peter Donald</a>
+ * @version $Revision$ $Date$
  */
 public class ServiceException
     extends CascadingException

@@ -14,6 +14,7 @@ import org.apache.myrmidon.converter.Converter;
  * Master Converter to handle converting between types.
  *
  * @author <a href="mailto:peter@apache.org">Peter Donald</a>
+ * @version $Revision$ $Date$
  */
 public interface MasterConverter
     extends Component, Converter

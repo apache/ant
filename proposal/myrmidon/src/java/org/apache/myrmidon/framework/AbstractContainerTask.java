@@ -27,6 +27,7 @@ import org.apache.myrmidon.interfaces.type.TypeManager;
  * This is the class that Task writers should extend to provide custom tasks.
  *
  * @author <a href="mailto:peter@apache.org">Peter Donald</a>
+ * @version $Revision$ $Date$
  */
 public abstract class AbstractContainerTask
     extends AbstractTask

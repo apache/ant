@@ -26,6 +26,7 @@ import org.apache.myrmidon.interfaces.type.TypeManager;
  * Converter engine to handle converting between types.
  *
  * @author <a href="mailto:peter@apache.org">Peter Donald</a>
+ * @version $Revision$ $Date$
  */
 public class DefaultMasterConverter
     extends AbstractLogEnabled

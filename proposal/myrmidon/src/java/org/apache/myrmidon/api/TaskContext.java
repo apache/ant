@@ -19,6 +19,7 @@ import org.apache.avalon.framework.context.Context;
  * as is access to Peer components (via Composable).
  *
  * @author <a href="mailto:peter@apache.org">Peter Donald</a>
+ * @version $Revision$ $Date$
  */
 public interface TaskContext
     extends Context

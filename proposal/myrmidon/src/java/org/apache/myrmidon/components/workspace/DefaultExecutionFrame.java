@@ -22,6 +22,7 @@ import org.apache.myrmidon.interfaces.type.TypeManager;
  * Frames in which tasks are executed.
  *
  * @author <a href="mailto:peter@apache.org">Peter Donald</a>
+ * @version $Revision$ $Date$
  */
 class DefaultExecutionFrame
     implements ExecutionFrame, Component, LogEnabled, Contextualizable

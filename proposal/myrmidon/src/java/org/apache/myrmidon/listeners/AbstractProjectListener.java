@@ -11,6 +11,7 @@ package org.apache.myrmidon.listeners;
  * Abstract listener from which to extend.
  *
  * @author <a href="mailto:peter@apache.org">Peter Donald</a>
+ * @version $Revision$ $Date$
  */
 public abstract class AbstractProjectListener
     implements ProjectListener

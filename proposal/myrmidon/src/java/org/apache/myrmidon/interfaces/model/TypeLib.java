@@ -11,6 +11,7 @@ package org.apache.myrmidon.interfaces.model;
  * Imports in a build file.
  *
  * @author <a href="mailto:peter@apache.org">Peter Donald</a>
+ * @version $Revision$ $Date$
  */
 public class TypeLib
 {

@@ -15,6 +15,7 @@ import org.apache.myrmidon.framework.Condition;
  * Targets in build file.
  *
  * @author <a href="mailto:peter@apache.org">Peter Donald</a>
+ * @version $Revision$ $Date$
  */
 public class Target
 {

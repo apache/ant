@@ -24,6 +24,7 @@ import org.apache.myrmidon.interfaces.aspect.AspectManager;
  * Manage and propogate Aspects.
  *
  * @author <a href="mailto:peter@apache.org">Peter Donald</a>
+ * @version $Revision$ $Date$
  */
 public class DefaultAspectManager
     implements AspectManager, Initializable

@@ -16,6 +16,7 @@ import org.apache.avalon.framework.context.Context;
  * Class used to configure tasks.
  *
  * @author <a href="mailto:peter@apache.org">Peter Donald</a>
+ * @version $Revision$ $Date$
  */
 public interface Configurer
     extends Component

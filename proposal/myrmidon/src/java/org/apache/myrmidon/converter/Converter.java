@@ -13,6 +13,7 @@ import org.apache.avalon.framework.context.Context;
  * Instances of this interface are used to convert between different types.
  *
  * @author <a href="mailto:peter@apache.org">Peter Donald</a>
+ * @version $Revision$ $Date$
  */
 public interface Converter
 {

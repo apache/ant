@@ -15,6 +15,7 @@ import org.apache.avalon.framework.CascadingException;
  * ie TaskException was caused by IOException etc.
  *
  * @author <a href="mailto:peter@apache.org">Peter Donald</a>
+ * @version $Revision$ $Date$
  */
 public class TaskException
     extends CascadingException

@@ -15,6 +15,7 @@ import org.apache.myrmidon.api.TaskException;
  * Engine inteface that should be implemented by all tasklet engines.
  *
  * @author <a href="mailto:peter@apache.org">Peter Donald</a>
+ * @version $Revision$ $Date$
  */
 public interface Executor
     extends Component

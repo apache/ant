@@ -20,6 +20,7 @@ import org.apache.myrmidon.interfaces.workspace.Workspace;
  * Interface through which you embed Myrmidon into applications.
  *
  * @author <a href="mailto:peter@apache.org">Peter Donald</a>
+ * @version $Revision$ $Date$
  */
 public interface Embeddor
     extends Component, Parameterizable, Initializable, Startable, Disposable

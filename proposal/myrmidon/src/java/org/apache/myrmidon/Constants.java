@@ -11,6 +11,7 @@ package org.apache.myrmidon;
  * Abstract interface to hold constants.
  *
  * @author <a href="mailto:peter@apache.org">Peter Donald</a>
+ * @version $Revision$ $Date$
  */
 public interface Constants
 {

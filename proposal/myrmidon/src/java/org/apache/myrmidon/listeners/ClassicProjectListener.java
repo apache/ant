@@ -13,6 +13,7 @@ import org.apache.avalon.framework.ExceptionUtil;
  * Classic listener that emulates the default ant1.x listener notifications.
  *
  * @author <a href="mailto:peter@apache.org">Peter Donald</a>
+ * @version $Revision$ $Date$
  */
 public final class ClassicProjectListener
     extends AbstractProjectListener

@@ -13,6 +13,7 @@ import org.apache.avalon.framework.ValuedEnum;
  * Type safe wrapper class for Java Version enums.
  *
  * @author <a href="mailto:peter@apache.org">Peter Donald</a>
+ * @version $Revision$ $Date$
  */
 public final class JavaVersion
     extends ValuedEnum

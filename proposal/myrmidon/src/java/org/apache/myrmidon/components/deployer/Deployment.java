@@ -40,6 +40,7 @@ import org.xml.sax.XMLReader;
  * This class deploys type libraries from a ClassLoader into a registry.
  *
  * @author <a href="mailto:peter@apache.org">Peter Donald</a>
+ * @version $Revision$ $Date$
  */
 class Deployment
     extends AbstractLogEnabled

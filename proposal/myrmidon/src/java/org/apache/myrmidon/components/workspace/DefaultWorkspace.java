@@ -45,6 +45,7 @@ import org.apache.myrmidon.listeners.ProjectListener;
  * This is the default implementation of Workspace.
  *
  * @author <a href="mailto:peter@apache.org">Peter Donald</a>
+ * @version $Revision$ $Date$
  */
 public class DefaultWorkspace
     extends AbstractLogEnabled

@@ -42,6 +42,7 @@ import org.apache.myrmidon.interfaces.workspace.Workspace;
  * Instantiate this to embed inside other applications.
  *
  * @author <a href="mailto:peter@apache.org">Peter Donald</a>
+ * @version $Revision$ $Date$
  */
 public class DefaultEmbeddor
     extends AbstractLogEnabled

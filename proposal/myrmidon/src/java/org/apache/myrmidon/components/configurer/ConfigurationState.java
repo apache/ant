@@ -12,6 +12,7 @@ package org.apache.myrmidon.components.configurer;
  * configured.
  *
  * @author Adam Murdoch
+ * @version $Revision$ $Date$
  */
 interface ConfigurationState
 {

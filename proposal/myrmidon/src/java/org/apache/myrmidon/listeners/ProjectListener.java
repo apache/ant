@@ -12,6 +12,7 @@ package org.apache.myrmidon.listeners;
  * notification of project status.
  *
  * @author <a href="mailto:peter@apache.org">Peter Donald</a>
+ * @version $Revision$ $Date$
  * @ant:role shorthand="listener"
  */
 public interface ProjectListener

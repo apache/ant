@@ -18,6 +18,7 @@ import org.apache.avalon.framework.component.Component;
  * Can be useful as project files embed own name (or should that be description).
  *
  * @author <a href="mailto:peter@apache.org">Peter Donald</a>
+ * @version $Revision$ $Date$
  */
 public interface Project
     extends Component

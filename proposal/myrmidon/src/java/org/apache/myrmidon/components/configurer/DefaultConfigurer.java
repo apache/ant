@@ -33,6 +33,7 @@ import org.apache.myrmidon.interfaces.type.TypeManager;
  * Class used to configure tasks.
  *
  * @author <a href="mailto:peter@apache.org">Peter Donald</a>
+ * @version $Revision$ $Date$
  */
 public class DefaultConfigurer
     extends AbstractLogEnabled

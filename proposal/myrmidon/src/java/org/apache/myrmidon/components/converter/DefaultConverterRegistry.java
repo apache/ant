@@ -14,6 +14,7 @@ import org.apache.myrmidon.interfaces.converter.ConverterRegistry;
  * Default implementation of Converter registry.
  *
  * @author <a href="mailto:peter@apache.org">Peter Donald</a>
+ * @version $Revision$ $Date$
  */
 public class DefaultConverterRegistry
     implements ConverterRegistry

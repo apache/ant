@@ -25,6 +25,12 @@ import org.apache.myrmidon.interfaces.executor.Executor;
 import org.apache.myrmidon.interfaces.type.TypeException;
 import org.apache.myrmidon.interfaces.type.TypeFactory;
 
+/**
+ * The basic executor that just executes the tasks.
+ *
+ * @author <a href="mailto:peter@apache.org">Peter Donald</a>
+ * @version $Revision$ $Date$
+ */
 public class DefaultExecutor
     extends AbstractLogEnabled
     implements Executor, Composable

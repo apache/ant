@@ -14,6 +14,7 @@ import org.apache.myrmidon.interfaces.model.Project;
  * Interface implemented by components that build projects from sources.
  *
  * @author <a href="mailto:peter@apache.org">Peter Donald</a>
+ * @version $Revision$ $Date$
  * @ant:role shorthand="project-builder"
  */
 public interface ProjectBuilder

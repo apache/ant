@@ -11,6 +11,7 @@ package org.apache.myrmidon.interfaces.deployer;
  * A general-purpose type definition.
  *
  * @author <a href="mailto:adammurdoch@apache.org">Adam Murdoch</a>
+ * @version $Revision$ $Date$
  */
 public class TypeDefinition
 {

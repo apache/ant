@@ -17,6 +17,7 @@ import org.apache.myrmidon.aspects.AspectHandler;
  * Manage and propogate Aspects.
  *
  * @author <a href="mailto:peter@apache.org">Peter Donald</a>
+ * @version $Revision$ $Date$
  */
 public interface AspectManager
     extends Component, AspectHandler

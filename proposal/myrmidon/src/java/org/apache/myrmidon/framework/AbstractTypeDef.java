@@ -22,6 +22,7 @@ import org.apache.myrmidon.interfaces.deployer.TypeDeployer;
  * TODO: Make this support classpath sub-element in future
  *
  * @author <a href="mailto:peter@apache.org">Peter Donald</a>
+ * @version $Revision$ $Date$
  */
 public abstract class AbstractTypeDef
     extends AbstractContainerTask

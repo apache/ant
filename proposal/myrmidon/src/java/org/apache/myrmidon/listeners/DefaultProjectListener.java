@@ -13,6 +13,7 @@ import org.apache.avalon.framework.ExceptionUtil;
  * Default listener that emulates the old ant listener notifications.
  *
  * @author <a href="mailto:peter@apache.org">Peter Donald</a>
+ * @version $Revision$ $Date$
  */
 public final class DefaultProjectListener
     extends AbstractProjectListener

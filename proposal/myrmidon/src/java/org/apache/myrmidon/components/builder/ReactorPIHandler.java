@@ -18,6 +18,7 @@ import org.xml.sax.helpers.DefaultHandler;
  * of redirecting content handlers at runtime while using transformers.
  *
  * @author <a href="mailto:peter@apache.org">Peter Donald</a>
+ * @version $Revision$ $Date$
  */
 public class ReactorPIHandler
     extends DefaultHandler

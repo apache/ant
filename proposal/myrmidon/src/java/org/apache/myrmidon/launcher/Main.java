@@ -19,6 +19,7 @@ import java.util.StringTokenizer;
  * Basic Loader that is responsible for all the hackery to get classloader to work.
  *
  * @author <a href="mailto:peter@apache.org">Peter Donald</a>
+ * @version $Revision$ $Date$
  */
 public final class Main
 {

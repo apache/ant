@@ -33,6 +33,7 @@ import org.xml.sax.XMLReader;
  * Default implementation to construct project from a build file.
  *
  * @author <a href="mailto:peter@apache.org">Peter Donald</a>
+ * @version $Revision$ $Date$
  */
 public class DefaultProjectBuilder
     extends AbstractLogEnabled

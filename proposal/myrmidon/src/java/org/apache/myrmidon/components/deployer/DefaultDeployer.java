@@ -35,6 +35,7 @@ import org.apache.myrmidon.interfaces.extensions.ExtensionManager;
  * This class deploys a .tsk file into a registry.
  *
  * @author <a href="mailto:peter@apache.org">Peter Donald</a>
+ * @version $Revision$ $Date$
  */
 public class DefaultDeployer
     extends AbstractLogEnabled

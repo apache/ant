@@ -21,6 +21,7 @@ import org.apache.myrmidon.interfaces.type.TypeFactory;
  * This is the property "task" to declare a binding of a datatype to a name.
  *
  * @author <a href="mailto:peter@apache.org">Peter Donald</a>
+ * @version $Revision$ $Date$
  */
 public class TypeInstanceTask
     extends AbstractContainerTask

@@ -11,6 +11,12 @@ import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.myrmidon.api.Task;
 import org.apache.myrmidon.api.TaskException;
 
+/**
+ * An executor that just displays the tasks rather than executing them.
+ *
+ * @author <a href="mailto:peter@apache.org">Peter Donald</a>
+ * @version $Revision$ $Date$
+ */
 public class PrintingExecutor
     extends AspectAwareExecutor
 {
