@@ -55,9 +55,7 @@ package org.apache.tools.ant.taskdefs.cvslib;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.Enumeration;
-import java.util.Hashtable;
+import java.util.*;
 
 /**
  * A class used to parse the output of the CVS log command.
@@ -75,7 +73,12 @@ class ChangeLogParser {
 
     /** input format for dates read in from cvs log */
     private static final SimpleDateFormat c_inputDate 
-        = new SimpleDateFormat("yyyy/MM/dd hh:mm:ss");
+        = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+
+    static {
+        TimeZone utc = TimeZone.getTimeZone("UTC");
+        c_inputDate.setTimeZone(utc);
+    }
 
     //The following is data used while processing stdout of CVS command
     private String m_file;

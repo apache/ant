@@ -56,6 +56,7 @@ package org.apache.tools.ant.taskdefs.cvslib;
 import java.io.PrintWriter;
 import java.text.SimpleDateFormat;
 import java.util.Enumeration;
+import java.util.TimeZone;
 
 /**
  * Class used to generate an XML changelog.
@@ -69,8 +70,13 @@ class ChangeLogWriter {
         = new SimpleDateFormat("yyyy-MM-dd");
     /** output format for times writtn to xml file */
     private static final SimpleDateFormat c_outputTime 
-        = new SimpleDateFormat("hh:mm");
+        = new SimpleDateFormat("HH:mm");
 
+    static {
+        TimeZone utc = TimeZone.getTimeZone("UTC");
+        c_outputDate.setTimeZone(utc);
+        c_outputTime.setTimeZone(utc);
+    }
 
     /**
      * Print out the specifed entrys.
