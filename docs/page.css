@@ -41,7 +41,7 @@ a:hover { color: #000066; }
     color: #ffcc00;
 }
 
-.tab { font-size : 85%; border: 0 }
+.tab { font-size : 85%; border: 0; background-color: #294563;}
 .tab a:link {   text-decoration : none;  }
 .tab a:visited { text-decoration : none; color: #2A4A6D }
 .tab a:hover { color: #000066; }
@@ -57,6 +57,7 @@ table .title { background-color: #FFFFFF; width:100%; border: 0px; }
     font : small Verdana, Helvetica, sans-serif;  
     font-size : 90%; 
     margin-left: 280px;
+    margin-right: 5px;
 }
 
 .content .ForrestTable { width: 100%; background-color: #7099C5; color: #ffffff; font-size : 90%;}
@@ -145,12 +146,33 @@ table .title { background-color: #FFFFFF; width:100%; border: 0px; }
 
 .bluebar {
     padding: 5px 5px 5px 10px; 
+    background-color: #4C6C8F;
+    margin: 0px;
+}
+
+.lightbluebar {
+    padding: 5px 5px 5px 10px; 
     background-color: #CFDCED;
     margin: 0px;
     border-top: 1px solid #294563; 
     border-bottom: 1px solid #294563;
 }
 
+.logobar {
+    background-color: #294563;
+    text-align: center;
+    padding-right: 10px;
+    margin: 0px;
+}
+
+.searchcaption {
+    color: #FFFFFF;
+    text-align: left;
+    font-family: arial,helvetica,sanserif;
+    font-size: 90%;
+    background-color: #4C6C8F;
+    margin: 0px;
+}
 
 @media print {
    .menu {
