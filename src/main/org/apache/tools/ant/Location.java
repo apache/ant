@@ -55,6 +55,7 @@
 package org.apache.tools.ant;
 
 import java.io.Serializable;
+import org.xml.sax.Locator;
 
 /**
  * Stores the location of a piece of text within a file (file name,
@@ -90,6 +91,18 @@ public class Location implements Serializable {
      */
     public Location(String fileName) {
         this(fileName, 0, 0);
+    }
+
+    /**
+     * Creates a location from the SAX locator using the system ID as
+     * the filename.
+     * 
+     * @param locator Must not be <code>null</code>.
+     *
+     * @since Ant 1.6
+     */
+    public Location(Locator loc) {
+        this(loc.getSystemId(), loc.getLineNumber(), loc.getColumnNumber());
     }
 
     /**

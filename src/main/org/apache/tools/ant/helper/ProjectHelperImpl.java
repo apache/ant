@@ -578,7 +578,8 @@ public class ProjectHelperImpl extends ProjectHelper {
                     name = value;
                     if (name.equals("")) {
                         throw new BuildException("name attribute must not"
-                                                 + " be empty");
+                                                 + " be empty",
+                                                 new Location(helperImpl.locator));
                     }
                 } else if (key.equals("depends")) {
                     depends = value;
@@ -783,8 +784,7 @@ public class ProjectHelperImpl extends ProjectHelper {
                 task.setTaskName(tag);
             }
 
-            task.setLocation(new Location(helperImpl.locator.getSystemId(), helperImpl.locator.getLineNumber(),
-                                          helperImpl.locator.getColumnNumber()));
+            task.setLocation(new Location(helperImpl.locator));
             helperImpl.configureId(task, attrs);
 
             task.setOwningTarget(target);
