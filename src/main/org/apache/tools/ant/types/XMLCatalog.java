@@ -156,7 +156,6 @@ import org.xml.sax.XMLReader;
  * @author Erik Hatcher
  * @author <a href="mailto:cstrong@arielpartners.com">Craeg Strong</a>
  * @author Jeff Turner
- * @version $Id$
  */
 public class XMLCatalog extends DataType
     implements Cloneable, EntityResolver, URIResolver {
@@ -678,6 +677,8 @@ public class XMLCatalog extends DataType
     private InputSource filesystemLookup(ResourceLocation matchingEntry) {
 
         String uri = matchingEntry.getLocation();
+        // the following line seems to be necessary on Windows under JDK 1.2
+        uri = uri.replace(File.separatorChar, '/');
         URL baseURL = null;
 
         //
@@ -697,11 +698,25 @@ public class XMLCatalog extends DataType
 
         InputSource source = null;
         URL url = null;
-
         try {
             url = new URL(baseURL, uri);
         } catch (MalformedURLException ex) {
-            // ignore
+            // this processing is useful under Windows when the location of the DTD has been given as an absolute path
+            // see Bugzilla Report 23913
+            File testFile = new File(uri);
+            if (testFile.exists() && testFile.canRead()) {
+                log("uri : '"
+                    + uri + "' matches a readable file", Project.MSG_DEBUG);
+                try {
+                    url = fileUtils.getFileURL(testFile);
+                } catch (MalformedURLException ex1) {
+                    throw new BuildException("could not find an URL for :" + testFile.getAbsolutePath());
+                }
+            } else {
+                log("uri : '"
+                    + uri + "' does not match a readable file", Project.MSG_DEBUG);
+
+            }
         }
 
         if (url != null) {

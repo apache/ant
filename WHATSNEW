@@ -1,12 +1,24 @@
-Changes from Ant 1.6.B3 to CVS
-=====================================
+Changes from Ant 1.6.B3 to Ant 1.6
+==================================
 
 Changes that could break older environments:
 --------------------------------------------
+
 * Attempts to read input in <java> and <exec> tasks will now receive an EOF
   rather than blocking. If you run such a process and rely on it blocking, as
   it would do in Ant 1.5, you may have problem.
 
+Fixed bugs:
+-----------
+
+* <xmlcatalog>s only worked when defined inside of tasks.  Bugzilla
+  Report 20965.
+
+* <xmlcatalog> Wrong file location to URL conversion in XMLCatalog.
+  Bugzilla Report 23913.
+
+Other changes:
+--------------
 
 Changes from Ant 1.6.B2 to Ant 1.6.B3
 =====================================
