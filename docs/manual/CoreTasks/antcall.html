@@ -40,9 +40,8 @@ Of course, any properties defined in the antcall task or inherited from the call
 will be fixed and not overridable in the init task -or indeed in the &quot;doSomethingElse&quot; task.  
 </p>
 
-<p>This task reparses the current build file, so if it has changed
-since you've started the project, <code>antcall</code> will use the
-latest version of the file.</p>
+<p>If the build file changes after you've started the build, the
+behavior of this task is undefined.</p>
 
 <h3>Parameters</h3>
 <table border="1" cellpadding="2" cellspacing="0">
