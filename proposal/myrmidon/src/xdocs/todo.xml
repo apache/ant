@@ -14,6 +14,16 @@
             sections describe some of the many things which still need to be done to
             achieve that goal.  This list is currently under construction.</p>
 
+            <subsection name="Rethink Notification/Event scheme">
+
+                <p>We need to rethink the whole notificaiton scheme. Should tasks be able to
+                raise events? Probably as long as we have <em>ContainerTasks</em>. Should tasks
+                be able to query state of run? ie Can a task request "are we paused?" or "are we
+                stopped?" ? Probably as that way long running tasks are given the opportunity
+                to be gracefully halted by the end users (primarily aimed at IDE vendors here).</p>
+
+            </subsection>
+
             <subsection name="XPath-like Locators for tasks">
 
                 <p>Most tasks are grouped into some sort of task container. The task containers
