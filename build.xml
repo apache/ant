@@ -122,8 +122,6 @@
              unless="jdk1.2+" />
     <exclude name="${optional.package}/metamata/*.java" 
              unless="jdk1.2+" />
-    <exclude name="${optional.type.package}/depend/*.java"
-             unless="jdk1.2+" />
     <exclude name="${util.package}/depend/*.java"
              unless="jdk1.2+" />
     <exclude name="${optional.package}/ejb/EjbJar.java"
@@ -206,6 +204,8 @@
     <exclude name="${ant.package}/filters/util/JavaClassHelper.java" 
              unless="bcel.present" />
     <exclude name="${util.package}/depend/bcel/*.java"
+             unless="bcel.present" />
+    <exclude name="${optional.type.package}/depend/*.java"
              unless="bcel.present" />
   </patternset>
   <patternset id="needs.jakarta.log4j">
@@ -911,7 +911,7 @@
                file="/bin/rpm"/>
   </target>
 
-  <target name="rpm" description="Build the RPM files for ant"
+  <target name="rpm" description="--> Build the RPM files for ant"
           depends="prepare, rpm_check"
           if="rpm.present">
     <tstamp>
@@ -961,7 +961,8 @@
     </copy>
   </target>
 
-  <target name="distribution" depends="main_distribution, rpm">
+  <target name="distribution" depends="main_distribution, rpm"
+          description="--> creates the full Apache Ant distribution">
   </target>
 
 
@@ -1076,6 +1077,7 @@
       <patternset refid="needs.trax" />
       <patternset refid="needs.xslp" />
       <patternset refid="needs.xalan1" />
+      <patternset refid="needs.jakarta.bcel" />
     </javac>
   </target>
 
@@ -1170,6 +1172,7 @@
           <patternset refid="needs.antlr" />
           <patternset refid="needs.xalan1" />
           <patternset refid="needs.xslp" />
+          <patternset refid="needs.jakarta.bcel" />
 
           <!-- tests excluded if the test is run in offline mode -->
           <patternset refid="onlinetests"/> 
