@@ -12,6 +12,7 @@ package org.apache.myrmidon.framework;
  * as stand alone data types.
  *
  * @author <a href="mailto:peter@apache.org">Peter Donald</a>
+ * @ant:role shorthand="data-type"
  */
 public interface DataType
 {
