@@ -448,7 +448,7 @@ public class Javadoc extends Exec {
     }
 
     public void execute() throws BuildException {
-        if (sourcePath == null && destDir == null ) {
+        if (sourcePath == null || destDir == null ) {
             String msg = "sourcePath and destDir attributes must be set!";
             throw new BuildException(msg);
         }
