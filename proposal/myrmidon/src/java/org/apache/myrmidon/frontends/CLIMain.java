@@ -112,8 +112,8 @@ public class CLIMain
      */
     public static void main( final String[] args )
     {
+        int exitCode = 0;
         final CLIMain main = new CLIMain();
-
         try
         {
             main.execute( args );
@@ -123,10 +123,12 @@ public class CLIMain
             final String message =
                 REZ.getString( "error-message", ExceptionUtil.printStackTrace( throwable ) );
             System.err.println( message );
-            System.exit( -1 );
+            exitCode = -1;
         }
-
-        System.exit( 0 );
+        finally
+        {
+            System.exit( exitCode );
+        }
     }
 
     /**
