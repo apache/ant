@@ -20,7 +20,7 @@
 
   <property name="Name" value="Apache Ant"/>
   <property name="name" value="ant"/>
-  <property name="version" value="1.5RC1"/>
+  <property name="version" value="1.5"/>
   <property name="manifest-version" value="1.5"/>
 
   <property name="debug" value="true" />
