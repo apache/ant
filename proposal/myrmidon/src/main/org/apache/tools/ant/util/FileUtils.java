@@ -21,7 +21,7 @@ import java.util.StringTokenizer;
 import org.apache.avalon.excalibur.io.FileUtil;
 import org.apache.avalon.excalibur.io.IOUtil;
 import org.apache.myrmidon.api.TaskException;
-import org.apache.tools.ant.types.FilterSetCollection;
+import org.apache.myrmidon.framework.FilterSetCollection;
 import org.apache.tools.ant.types.Path;
 
 /**
