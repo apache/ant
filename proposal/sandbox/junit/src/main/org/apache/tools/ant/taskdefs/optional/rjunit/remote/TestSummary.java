@@ -84,8 +84,6 @@ public final class TestSummary implements Serializable, TestListener {
     /** number of runs */
     private int runCount;
 
-    private transient String toString;
-
     /** bean constructor */
     public TestSummary() {
     }
@@ -130,7 +128,7 @@ public final class TestSummary implements Serializable, TestListener {
     /**
      * register to the <tt>TestResult</tt> and starts the time counter.
      * @param result the instance to register to.
-     * @see #stop()
+     * @see #stop(TestResult)
      */
     public void start(TestResult result){
         elapsedTime = System.currentTimeMillis();
@@ -140,7 +138,7 @@ public final class TestSummary implements Serializable, TestListener {
     /**
      * unregister from the <tt>TestResult</tt> and stops the time counter.
      * @param result the instance to unregister from.
-     * @see #start()
+     * @see #start(TestResult)
      */
     public void stop(TestResult result){
         elapsedTime = System.currentTimeMillis() - elapsedTime;
