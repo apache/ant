@@ -531,8 +531,10 @@ public class SQLExec extends JDBCTask {
                     }
                 }
                 ret = statement.getMoreResults();
-                updateCount = statement.getUpdateCount();
-                resultSet = statement.getResultSet();
+                if (ret) {
+                    updateCount = statement.getUpdateCount();
+                    resultSet = statement.getResultSet();
+                }
             } while (ret);
 
             log(updateCountTotal + " rows affected",
