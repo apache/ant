@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 1999 The Apache Software Foundation.  All rights 
+ * Copyright (c) 2000 The Apache Software Foundation.  All rights 
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -53,7 +53,6 @@
  */
 package org.apache.tools.ant.taskdefs.optional.ejb;
 
-
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.DirectoryScanner;
 import org.apache.tools.ant.Project;
@@ -98,6 +97,8 @@ public class Ejbc extends MatchingTask {
      * the generated deployment classes are out of date.
      */
     private File sourceDirectory;
+    
+    public boolean keepgenerated;
     
     /**
      * Do the work.
@@ -144,6 +145,8 @@ public class Ejbc extends MatchingTask {
         args += " " + generatedFilesDirectory;
         args += " " + sourceDirectory;
         args += " " + generatedManifestFile;
+        args += " " + keepgenerated;
+        
         for (int i = 0; i < files.length; ++i) {
             args += " " + files[i];
         }
@@ -154,7 +157,11 @@ public class Ejbc extends MatchingTask {
             throw new BuildException("Execution of ejbc helper failed");
         }
     }
-
+    
+    public boolean getKeepgenerated() {
+        return keepgenerated;
+    }
+    
     /**
      * Set the directory from where the serialised deployment descriptors are
      * to be read.
@@ -173,7 +180,12 @@ public class Ejbc extends MatchingTask {
     public void setDest(String dirName) {
         generatedFilesDirectory = new File(dirName);
     }
-
+    
+    public void setKeepgenerated(String newKeepgenerated) {
+        keepgenerated = Boolean.valueOf(newKeepgenerated.trim()).booleanValue();
+        
+    }
+    
     /**
      * Set the generated manifest file. 
      *
@@ -192,7 +204,7 @@ public class Ejbc extends MatchingTask {
     public void setClasspath(String s) {
         this.classpath = project.translatePath(s);
     }
-
+    
     /**
      * Set the directory containing the source code for the home interface, remote interface
      * and public key class definitions.
@@ -202,5 +214,4 @@ public class Ejbc extends MatchingTask {
     public void setSrc(String dirName) {
         sourceDirectory = new File(dirName);
     }
-                
 }
