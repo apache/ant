@@ -17,7 +17,7 @@ import org.apache.myrmidon.interfaces.model.Project;
  * @author <a href="mailto:peter@apache.org">Peter Donald</a>
  * @version $Revision$ $Date$
  */
-public final class ProjectEntry
+final class ProjectEntry
 {
     private final Project m_project;
     private final ExecutionFrame m_frame;
