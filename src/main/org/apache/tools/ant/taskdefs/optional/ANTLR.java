@@ -55,6 +55,7 @@
 package org.apache.tools.ant.taskdefs.optional;
 
 import java.io.BufferedReader;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
@@ -63,12 +64,14 @@ import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.Task;
 import org.apache.tools.ant.taskdefs.Execute;
-import org.apache.tools.ant.taskdefs.LogStreamHandler;
+import org.apache.tools.ant.taskdefs.LogOutputStream;
+import org.apache.tools.ant.taskdefs.PumpStreamHandler;
 import org.apache.tools.ant.types.Commandline;
 import org.apache.tools.ant.types.CommandlineJava;
 import org.apache.tools.ant.types.Path;
 import org.apache.tools.ant.util.JavaEnvUtils;
 import org.apache.tools.ant.util.LoaderUtils;
+import org.apache.tools.ant.util.TeeOutputStream;
 
 /**
  *  Invokes the ANTLR Translator generator on a grammar file.
@@ -110,6 +113,9 @@ public class ANTLR extends Task {
 
     /** working directory */
     private File workingdir = null;
+
+    /** captures ANTLR's output */
+    private ByteArrayOutputStream bos = new ByteArrayOutputStream();
 
     public ANTLR() {
         commandline.setVm(JavaEnvUtils.getJreExecutable("java"));
@@ -277,6 +283,12 @@ public class ANTLR extends Task {
             int err = run(commandline.getCommandline());
             if (err == 1) {
                 throw new BuildException("ANTLR returned: " + err, getLocation());
+            } else {
+                String output = bos.toString();
+                if (output.indexOf("error:") > -1) {
+                    throw new BuildException("ANTLR signaled an error: "
+                                             + output, getLocation());
+                }
             }
         } else {
             log("Skipped grammar file. Generated file is newer.", Project.MSG_VERBOSE);
@@ -352,8 +364,14 @@ public class ANTLR extends Task {
 
     /** execute in a forked VM */
     private int run(String[] command) throws BuildException {
-        Execute exe = new Execute(new LogStreamHandler(this, Project.MSG_INFO,
-                Project.MSG_WARN), null);
+        PumpStreamHandler psh = 
+            new PumpStreamHandler(new LogOutputStream(this, Project.MSG_INFO),
+                                  new TeeOutputStream(
+                                      new LogOutputStream(this, 
+                                                          Project.MSG_WARN),
+                                      bos)
+                                  );
+        Execute exe = new Execute(psh, null);
         exe.setAntRun(getProject());
         if (workingdir != null) {
             exe.setWorkingDirectory(workingdir);
@@ -363,6 +381,11 @@ public class ANTLR extends Task {
             return exe.execute();
         } catch (IOException e) {
             throw new BuildException(e, getLocation());
+        } finally {
+            try {
+                bos.close();
+            } catch (IOException e) {
+            }
         }
     }
 }
