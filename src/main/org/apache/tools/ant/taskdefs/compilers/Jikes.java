@@ -111,7 +111,11 @@ public class Jikes extends DefaultCompilerAdapter {
 
         // Jikes has no option for source-path so we
         // will add it to classpath.
-        classpath.append(src);
+        if (compileSourcepath != null) {
+            classpath.append(compileSourcepath);
+        } else {
+            classpath.append(src);
+        }
 
         // if the user has set JIKESPATH we should add the contents as well
         String jikesPath = System.getProperty("jikes.class.path");
