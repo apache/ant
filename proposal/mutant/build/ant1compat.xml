@@ -45,7 +45,6 @@
     <include name="org/apache/tools/ant/taskdefs/**/*.java"/>
     <include name="org/apache/tools/ant/types/**/*.java"/>
     <include name="org/apache/tools/ant/filters/**/*.java"/>
-    <exclude name="org/apache/tools/ant/types/DataType.java"/>
     <include name="org/apache/tools/ant/util/**/*.java"/>
     <include name="org/apache/tools/zip/**/*.java"/>
     <include name="org/apache/tools/bzip2/**/*.java"/>
@@ -64,6 +63,7 @@
     <include name="org/apache/tools/ant/BuildListener.java"/>
     <include name="org/apache/tools/ant/BuildLogger.java"/>
     <!-- <patternset refid="deprecated"/> -->
+    <exclude name="org/apache/tools/ant/types/DataType.java"/>
     <patternset refid="toohard"/>
     <patternset refid="converted"/>
   </fileset>

@@ -53,6 +53,7 @@
  */
 package org.apache.ant.builder;
 import java.io.File;
+import java.io.FilenameFilter;
 import java.util.ArrayList;
 
 import java.util.List;
@@ -73,6 +74,7 @@ public class Builder {
     /** The zip utilities root */
     private static final File ZIP_ROOT
          = new File(ANT1_SRC_ROOT, "org/apache/tools/zip");
+
     /** the taskdefs root */
     private static final File TASKDEFS_ROOT
          = new File(PACKAGE_ROOT, "taskdefs");
@@ -101,6 +103,20 @@ public class Builder {
         builder.runBuild(args);
     }
 
+    private void addJavaFiles(List files, File dir) {
+        File[] javaFiles = dir.listFiles(new FilenameFilter() {
+            public boolean accept(File dir, String name) {
+                return name.endsWith(".java");
+            }
+        });
+        
+        if (javaFiles != null) {
+            for (int i = 0; i < javaFiles.length; ++i) {
+                files.add(javaFiles[i]);
+            }
+        }
+    }
+    
     /**
      * Get the Ant1 files currently required to build a bootstrap build.
      *
@@ -109,33 +125,16 @@ public class Builder {
      */
     private File[] getAnt1Files() {
         List files = new ArrayList();
-        files.add(new File(TYPES_ROOT, "EnumeratedAttribute.java"));
-        files.add(new File(TYPES_ROOT, "Path.java"));
-        files.add(new File(TYPES_ROOT, "FileSet.java"));
-        files.add(new File(TYPES_ROOT, "PatternSet.java"));
-        files.add(new File(TYPES_ROOT, "Reference.java"));
-        files.add(new File(TYPES_ROOT, "FilterSet.java"));
-        files.add(new File(TYPES_ROOT, "FilterSetCollection.java"));
-        files.add(new File(TYPES_ROOT, "Mapper.java"));
-        files.add(new File(TYPES_ROOT, "ZipFileSet.java"));
-        files.add(new File(TYPES_ROOT, "ZipScanner.java"));
-        files.add(new File(TYPES_ROOT, "FilterChain.java"));
-        files.add(new File(TYPES_ROOT, "Parameter.java"));
-        files.add(new File(TYPES_ROOT, "Parameterizable.java"));
-        files.add(new File(TYPES_ROOT, "RegularExpression.java"));
-        files.add(new File(UTIL_ROOT, "FileNameMapper.java"));
-        files.add(new File(UTIL_ROOT, "FlatFileNameMapper.java"));
-        files.add(new File(UTIL_ROOT, "SourceFileScanner.java"));
-        files.add(new File(UTIL_ROOT, "IdentityMapper.java"));
-        files.add(new File(UTIL_ROOT, "MergingMapper.java"));
-        files.add(new File(UTIL_ROOT, "GlobPatternMapper.java"));
-        files.add(new File(UTIL_ROOT, "LoaderUtils.java"));
-        files.add(new File(UTIL_ROOT, "regexp/Regexp.java"));
-        files.add(new File(UTIL_ROOT, "regexp/RegexpMatcher.java"));
-        files.add(new File(UTIL_ROOT, "regexp/RegexpFactory.java"));
-        files.add(new File(UTIL_ROOT, "regexp/RegexpMatcherFactory.java"));
-        files.add(new File(TYPES_ROOT, "Commandline.java"));
-        files.add(new File(UTIL_ROOT, "JavaEnvUtils.java"));
+        addJavaFiles(files, TASKDEFS_ROOT);
+        addJavaFiles(files, new File(TASKDEFS_ROOT, "compilers"));
+        addJavaFiles(files, new File(TASKDEFS_ROOT, "condition"));
+        addJavaFiles(files, DEPEND_ROOT);
+        addJavaFiles(files, new File(DEPEND_ROOT, "constantpool"));
+        addJavaFiles(files, TYPES_ROOT);
+        addJavaFiles(files, FILTERS_ROOT);
+        addJavaFiles(files, UTIL_ROOT);
+        addJavaFiles(files, ZIP_ROOT);
+
         files.add(new File(PACKAGE_ROOT, "BuildException.java"));
         files.add(new File(PACKAGE_ROOT, "Location.java"));
         files.add(new File(PACKAGE_ROOT, "AntClassLoader.java"));
@@ -146,106 +145,35 @@ public class Builder {
         files.add(new File(PACKAGE_ROOT, "PathTokenizer.java"));
         files.add(new File(PACKAGE_ROOT, "TaskAdapter.java"));
         files.add(new File(PACKAGE_ROOT, "MatchingTask.java"));
-        files.add(new File(UTIL_ROOT, "FileUtils.java"));
         files.add(new File(PACKAGE_ROOT, "defaultManifest.mf"));
+        
         files.add(new File(TASKDEFS_ROOT, "defaults.properties"));
         files.add(new File(TYPES_ROOT, "defaults.properties"));
-        files.add(new File(TASKDEFS_ROOT, "Property.java"));
-        files.add(new File(TASKDEFS_ROOT, "Execute.java"));
-        files.add(new File(TASKDEFS_ROOT, "ExecuteStreamHandler.java"));
-        files.add(new File(TASKDEFS_ROOT, "ExecuteWatchdog.java"));
-        files.add(new File(TASKDEFS_ROOT, "ProcessDestroyer.java"));
-        files.add(new File(TASKDEFS_ROOT, "PumpStreamHandler.java"));
-        files.add(new File(TASKDEFS_ROOT, "StreamPumper.java"));
-        files.add(new File(TASKDEFS_ROOT, "LogStreamHandler.java"));
-        files.add(new File(TASKDEFS_ROOT, "LogOutputStream.java"));
-        files.add(new File(TASKDEFS_ROOT, "condition/Os.java"));
-        files.add(new File(TASKDEFS_ROOT, "condition/Contains.java"));
-        files.add(new File(TASKDEFS_ROOT, "condition/Condition.java"));
-        files.add(new File(TASKDEFS_ROOT, "Available.java"));
-        files.add(new File(TASKDEFS_ROOT, "Mkdir.java"));
-        files.add(new File(TASKDEFS_ROOT, "Copy.java"));
-        files.add(new File(TASKDEFS_ROOT, "Echo.java"));
-        files.add(new File(TASKDEFS_ROOT, "MatchingTask.java"));
-        files.add(new File(DEPEND_ROOT, "Depend.java"));
-        files.add(new File(DEPEND_ROOT, "ClassFile.java"));
-        files.add(new File(DEPEND_ROOT, "ClassFileUtils.java"));
-        files.add(new File(DEPEND_ROOT, "constantpool/ClassCPInfo.java"));
-        files.add(new File(DEPEND_ROOT, "constantpool/ConstantPool.java"));
-        files.add(new File(DEPEND_ROOT, "constantpool/ConstantPoolEntry.java"));
-        files.add(new File(DEPEND_ROOT, "constantpool/Utf8CPInfo.java"));
-        files.add(new File(DEPEND_ROOT, "constantpool/ConstantCPInfo.java"));
-        files.add(new File(DEPEND_ROOT, "constantpool/MethodRefCPInfo.java"));
-        files.add(new File(DEPEND_ROOT,
-            "constantpool/InterfaceMethodRefCPInfo.java"));
-        files.add(new File(DEPEND_ROOT, "constantpool/FieldRefCPInfo.java"));
-        files.add(new File(DEPEND_ROOT, "constantpool/NameAndTypeCPInfo.java"));
-        files.add(new File(DEPEND_ROOT, "constantpool/IntegerCPInfo.java"));
-        files.add(new File(DEPEND_ROOT, "constantpool/FloatCPInfo.java"));
-        files.add(new File(DEPEND_ROOT, "constantpool/LongCPInfo.java"));
-        files.add(new File(DEPEND_ROOT, "constantpool/StringCPInfo.java"));
-        files.add(new File(DEPEND_ROOT, "constantpool/DoubleCPInfo.java"));
-        files.add(new File(TASKDEFS_ROOT, "Javac.java"));
-        files.add(new File(TASKDEFS_ROOT, "compilers/CompilerAdapter.java"));
-        files.add(new File(TASKDEFS_ROOT,
-            "compilers/DefaultCompilerAdapter.java"));
-        files.add(new File(TASKDEFS_ROOT,
-            "compilers/CompilerAdapterFactory.java"));
-        files.add(new File(TASKDEFS_ROOT, "compilers/Jikes.java"));
-        files.add(new File(TASKDEFS_ROOT, "compilers/JavacExternal.java"));
-        files.add(new File(TASKDEFS_ROOT, "compilers/Javac12.java"));
-        files.add(new File(TASKDEFS_ROOT, "compilers/Javac13.java"));
-        files.add(new File(TASKDEFS_ROOT, "compilers/Kjc.java"));
-        files.add(new File(TASKDEFS_ROOT, "compilers/Gcj.java"));
-        files.add(new File(TASKDEFS_ROOT, "compilers/Jvc.java"));
-        files.add(new File(TASKDEFS_ROOT, "compilers/Sj.java"));
-        files.add(new File(TASKDEFS_ROOT, "Jar.java"));
-        files.add(new File(TASKDEFS_ROOT, "Zip.java"));
-        files.add(new File(TASKDEFS_ROOT, "Manifest.java"));
-        files.add(new File(TASKDEFS_ROOT, "ManifestException.java"));
-        files.add(new File(ZIP_ROOT, "ZipOutputStream.java"));
-        files.add(new File(ZIP_ROOT, "ZipOutputStream.java"));
-        files.add(new File(ZIP_ROOT, "ZipEntry.java"));
-        files.add(new File(ZIP_ROOT, "ZipLong.java"));
-        files.add(new File(ZIP_ROOT, "ZipShort.java"));
-        files.add(new File(ZIP_ROOT, "ZipExtraField.java"));
-        files.add(new File(ZIP_ROOT, "ExtraFieldUtils.java"));
-        files.add(new File(ZIP_ROOT, "AsiExtraField.java"));
-        files.add(new File(ZIP_ROOT, "UnrecognizedExtraField.java"));
-        files.add(new File(ZIP_ROOT, "UnixStat.java"));
-        files.add(new File(TASKDEFS_ROOT, "ConditionTask.java"));
-        files.add(new File(TASKDEFS_ROOT, "condition/ConditionBase.java"));
-        files.add(new File(TASKDEFS_ROOT, "Checksum.java"));
-        files.add(new File(TASKDEFS_ROOT, "UpToDate.java"));
-        files.add(new File(TASKDEFS_ROOT, "condition/Not.java"));
-        files.add(new File(TASKDEFS_ROOT, "condition/And.java"));
-        files.add(new File(TASKDEFS_ROOT, "condition/Equals.java"));
-        files.add(new File(TASKDEFS_ROOT, "condition/Or.java"));
-        files.add(new File(TASKDEFS_ROOT, "condition/IsSet.java"));
-        files.add(new File(TASKDEFS_ROOT, "condition/Http.java"));
-        files.add(new File(TASKDEFS_ROOT, "condition/Socket.java"));
-        files.add(new File(TASKDEFS_ROOT, "condition/FilesMatch.java"));
-        files.add(new File(TASKDEFS_ROOT, "Taskdef.java"));
-        files.add(new File(TASKDEFS_ROOT, "Definer.java"));
-        
+
+        files.add(new File(UTIL_ROOT, "regexp/Regexp.java"));
+        files.add(new File(UTIL_ROOT, "regexp/RegexpMatcher.java"));
+        files.add(new File(UTIL_ROOT, "regexp/RegexpFactory.java"));
+        files.add(new File(UTIL_ROOT, "regexp/RegexpMatcherFactory.java"));
         files.add(new File(FILTERS_ROOT, "util/ChainReaderHelper.java"));
-        files.add(new File(FILTERS_ROOT, "ClassConstants.java"));
-        files.add(new File(FILTERS_ROOT, "ExpandProperties.java"));
-        files.add(new File(FILTERS_ROOT, "HeadFilter.java"));
-        files.add(new File(FILTERS_ROOT, "LineContains.java"));
-        files.add(new File(FILTERS_ROOT, "LineContainsRegExp.java"));
-        files.add(new File(FILTERS_ROOT, "PrefixLines.java"));
-        files.add(new File(FILTERS_ROOT, "ReplaceTokens.java"));
-        files.add(new File(FILTERS_ROOT, "StripJavaComments.java"));
-        files.add(new File(FILTERS_ROOT, "StripLineBreaks.java"));
-        files.add(new File(FILTERS_ROOT, "StripLineComments.java"));
-        files.add(new File(FILTERS_ROOT, "TabsToSpaces.java"));
-        files.add(new File(FILTERS_ROOT, "TailFilter.java"));
-        files.add(new File(FILTERS_ROOT, "BaseFilterReader.java"));
-        files.add(new File(FILTERS_ROOT, "ChainableReader.java"));
-        files.add(new File(TYPES_ROOT, "AntFilterReader.java"));
-        files.add(new File(FILTERS_ROOT, "BaseParamFilterReader.java"));
-        files.add(new File(FILTERS_ROOT, ".java"));
+        
+        // these shouyld not be included
+        files.remove(new File(TYPES_ROOT, "DataType.java"));
+        files.remove(new File(TASKDEFS_ROOT, "Ant.java"));
+        files.remove(new File(TASKDEFS_ROOT, "CallTarget.java"));
+        files.remove(new File(TASKDEFS_ROOT, "AntStructure.java"));
+        files.remove(new File(TASKDEFS_ROOT, "Recorder.java"));
+        files.remove(new File(TASKDEFS_ROOT, "RecorderEntry.java"));
+        
+        // not needed for bootstrap
+        files.remove(new File(TASKDEFS_ROOT, "Java.java"));
+        files.remove(new File(TASKDEFS_ROOT, "Tar.java"));
+        files.remove(new File(TASKDEFS_ROOT, "Untar.java"));
+        files.remove(new File(TASKDEFS_ROOT, "BZip2.java"));
+        files.remove(new File(TASKDEFS_ROOT, "BUnzip2.java"));
+        files.remove(new File(TASKDEFS_ROOT, "Rmic.java"));
+        files.remove(new File(TASKDEFS_ROOT, "SendEmail.java"));
+        
+        
         return (File[])files.toArray(new File[0]);
     }
 
