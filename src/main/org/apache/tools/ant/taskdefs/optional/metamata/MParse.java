@@ -79,6 +79,7 @@ import java.util.Random;
  * <a href="http://www.metamata.com">http://www.metamata.com</a>
  *
  * @author <a href="mailto:sbailliez@imediation.com">Stephane Bailliez</a>
+ * @todo make a subclass of AbstractMetaMataTask
  */
 public class MParse extends Task {
 
@@ -93,12 +94,14 @@ public class MParse extends Task {
     private CommandlineJava cmdl = new CommandlineJava();
     private File optionsFile = null;
 
-    /** location of metamata dev environment */
+    /**
+     * The home directory containing the Metamata distribution; required
+     */
     public void setMetamatahome(File metamatahome) {
         this.metahome = metamatahome;
     }
 
-    /** the .jj file to process */
+    /** The .jj file to process; required. */
     public void setTarget(File target) {
         this.target = target;
     }
@@ -119,32 +122,39 @@ public class MParse extends Task {
         return sourcepath;
     }
 
-    /** set verbose mode */
+    /** set verbose mode; optional, default false */
     public void setVerbose(boolean flag){
         verbose = flag;
     }
 
-    /** set scanner debug mode */
+    /** set scanner debug mode; optional, default false */
     public void setDebugscanner(boolean flag){
         debugscanner = flag;
     }
 
-    /** set parser debug mode */
+    /** set parser debug mode; optional, default false */
     public void setDebugparser(boolean flag){
         debugparser = flag;
     }
 
-    /** set the hack to cleanup the temp file */
+    /** Remove the intermediate Sun JavaCC file 
+     * ; optional, default false.
+     */
     public void setCleanup(boolean value) {
         cleanup = value;
     }
 
-    /** Creates a nested jvmarg element. */
+    /**
+     * Additional optional parameters to pass to the JVM. 
+     */    
     public Commandline.Argument createJvmarg() {
         return cmdl.createVmArgument();
     }
 
-    /**  -mx or -Xmx depending on VM version */
+    /**
+     * Set the maximum memory for the JVM; optional.
+     * -mx or -Xmx depending on VM version 
+     */
     public void setMaxmemory(String max){
         cmdl.setMaxmemory(max);
     }
@@ -344,7 +354,10 @@ public class MParse extends Task {
         }
     }
     
-    /** create a temporary file in the current directory */
+    /**
+     * create a temporary file in the current directory
+     * @todo move to using the FileUtils implementation
+     */
     protected static final File createTmpFile(){
         // must be compatible with JDK 1.1 !!!!
         final long rand = (new Random(System.currentTimeMillis())).nextLong();
