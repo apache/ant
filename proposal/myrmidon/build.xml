@@ -480,7 +480,7 @@ Legal:
     </zip>
 
     <junit printsummary="on"
-           fork="false">
+           fork="true">
       <formatter type="brief" usefile="false"/>
       <classpath refid="project.class.path"/>
       <classpath location="${test.classes}"/>
@@ -492,7 +492,9 @@ Legal:
       <sysproperty key="test.ftp.uri" value="ftp://${vfs.user}:${vfs.password}@${vfs.host}/home/${vfs.user}/vfs"/>
 
       <batchtest>
-        <fileset dir="${test.classes}" includes="**/*Test.class">
+        <fileset dir="${test.classes}">
+          <include name="**/*Test.class" unless="single.test"/>
+          <include name="**/${single.test}Test.class" if="single.test"/>
           <exclude name="**/SmbFileSystemTest.class" unless="test.smb"/>
           <exclude name="**/FtpFileSystemTest.class" unless="test.ftp"/>
         </fileset>

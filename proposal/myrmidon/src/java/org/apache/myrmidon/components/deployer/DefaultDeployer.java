@@ -110,7 +110,7 @@ public class DefaultDeployer
         }
         catch( Exception e )
         {
-            final String message = REZ.getString( "deploy-from-classloader.error" );
+            final String message = REZ.getString( "deploy-from-classloader.error", loader );
             throw new DeploymentException( message, e );
         }
     }

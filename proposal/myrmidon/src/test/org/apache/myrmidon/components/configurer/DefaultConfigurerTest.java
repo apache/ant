@@ -8,36 +8,16 @@
 package org.apache.myrmidon.components.configurer;
 
 import java.io.File;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
 import junit.framework.AssertionFailedError;
-import junit.framework.TestCase;
 import org.apache.avalon.excalibur.i18n.ResourceManager;
 import org.apache.avalon.excalibur.i18n.Resources;
-import org.apache.avalon.framework.component.Component;
-import org.apache.avalon.framework.component.Composable;
-import org.apache.avalon.framework.component.DefaultComponentManager;
 import org.apache.avalon.framework.configuration.ConfigurationException;
 import org.apache.avalon.framework.configuration.DefaultConfiguration;
-import org.apache.avalon.framework.logger.LogEnabled;
-import org.apache.avalon.framework.logger.LogKitLogger;
-import org.apache.avalon.framework.logger.Logger;
-import org.apache.log.Hierarchy;
-import org.apache.log.LogTarget;
-import org.apache.log.Priority;
-import org.apache.log.format.PatternFormatter;
-import org.apache.log.output.io.StreamTarget;
 import org.apache.myrmidon.api.TaskContext;
-import org.apache.myrmidon.components.converter.DefaultConverterRegistry;
-import org.apache.myrmidon.components.converter.DefaultMasterConverter;
-import org.apache.myrmidon.components.type.DefaultTypeManager;
+import org.apache.myrmidon.components.ComponentTestBase;
 import org.apache.myrmidon.components.workspace.DefaultTaskContext;
 import org.apache.myrmidon.interfaces.configurer.Configurer;
-import org.apache.myrmidon.interfaces.converter.ConverterRegistry;
-import org.apache.myrmidon.interfaces.converter.MasterConverter;
 import org.apache.myrmidon.interfaces.type.DefaultTypeFactory;
-import org.apache.myrmidon.interfaces.type.TypeManager;
 
 /**
  * Test cases for the default configurer and related classes.
@@ -45,18 +25,13 @@ import org.apache.myrmidon.interfaces.type.TypeManager;
  * @author Adam Murdoch
  */
 public class DefaultConfigurerTest
-    extends TestCase
+    extends ComponentTestBase
 {
     private final static Resources REZ =
         ResourceManager.getPackageResources( DefaultConfigurerTest.class );
 
-    private DefaultComponentManager m_componentManager;
     private Configurer m_configurer;
-    private TypeManager m_typeManager;
-    private Logger m_logger;
     private DefaultTaskContext m_context;
-
-    private final static String PATTERN = "[%8.8{category}] %{message}\\n%{throwable}";
 
     public DefaultConfigurerTest( String name )
     {
@@ -66,78 +41,18 @@ public class DefaultConfigurerTest
     /**
      * Setup the test case - prepares a set of components, including the
      * configurer.
-     *
-     * TODO - refactor to a sub-class, so this setup can be reused.
      */
     protected void setUp() throws Exception
     {
-        final Priority priority = Priority.DEBUG;
-        final org.apache.log.Logger targetLogger = Hierarchy.getDefaultHierarchy().getLoggerFor( "myrmidon" );
-
-        final PatternFormatter formatter = new PatternFormatter( PATTERN );
-        final StreamTarget target = new StreamTarget( System.out, formatter );
-        targetLogger.setLogTargets( new LogTarget[]{target} );
-
-        targetLogger.setPriority( priority );
-
-        // Create the logger
-        m_logger = new LogKitLogger( targetLogger );
-
-        // Create the components
-        m_componentManager = new DefaultComponentManager();
-        List components = new ArrayList();
-
-        Component component = new DefaultMasterConverter();
-        m_componentManager.put( MasterConverter.ROLE, component );
-        components.add( component );
-
-        component = new DefaultConverterRegistry();
-        m_componentManager.put( ConverterRegistry.ROLE, component );
-        components.add( component );
-
-        component = new DefaultTypeManager();
-        m_componentManager.put( TypeManager.ROLE, component );
-        components.add( component );
-
-        component = new DefaultConfigurer();
-        m_componentManager.put( Configurer.ROLE, component );
-        components.add( component );
-
-        // Setup a context
-        m_context = new DefaultTaskContext();
-        components.add( m_context );
-
-        // Log enable the components
-        for( Iterator iterator = components.iterator(); iterator.hasNext(); )
-        {
-            Object obj = iterator.next();
-            if( obj instanceof LogEnabled )
-            {
-                final LogEnabled logEnabled = (LogEnabled)obj;
-                logEnabled.enableLogging( m_logger );
-            }
-        }
-
-        // Compose the components
-        for( Iterator iterator = components.iterator(); iterator.hasNext(); )
-        {
-            Object obj = iterator.next();
-            if( obj instanceof Composable )
-            {
-                final Composable composable = (Composable)obj;
-                composable.compose( m_componentManager );
-            }
-        }
-
-        // Configure the context
-        final File baseDir = new File( "." ).getAbsoluteFile();
-        m_context.setProperty( TaskContext.BASE_DIRECTORY, baseDir );
+        super.setUp();
 
         // Find the configurer
-        m_configurer = (Configurer)m_componentManager.lookup( Configurer.ROLE );
+        m_configurer = (Configurer)getComponentManager().lookup( Configurer.ROLE );
 
-        // Find the typeManager
-        m_typeManager = (TypeManager)m_componentManager.lookup( TypeManager.ROLE );
+        // Setup a context
+        m_context = new DefaultTaskContext( getComponentManager() );
+        final File baseDir = new File( "." ).getAbsoluteFile();
+        m_context.setProperty( TaskContext.BASE_DIRECTORY, baseDir );
     }
 
     /**
@@ -366,7 +281,8 @@ public class DefaultConfigurerTest
     }
 
     /**
-     * Tests reference resolution via a nested element.
+     * Tests whether an object with a non-iterface typed adder causes an
+     * exception.
      */
     public void testNonInterfaceTypedAdder()
         throws Exception
@@ -380,6 +296,7 @@ public class DefaultConfigurerTest
         {
             // Configure the object
             m_configurer.configure( test, config, m_context );
+            fail();
         }
         catch( final ConfigurationException ce )
         {
@@ -391,7 +308,7 @@ public class DefaultConfigurerTest
     }
 
     /**
-     * Tests whether a object with multiple typed adders causes an exception.
+     * Tests whether an object with multiple typed adders causes an exception.
      */
     public void testMultipleTypedAdder()
         throws Exception
@@ -405,6 +322,7 @@ public class DefaultConfigurerTest
         {
             // Configure the object
             m_configurer.configure( test, config, m_context );
+            fail();
         }
         catch( final ConfigurationException ce )
         {
@@ -415,7 +333,7 @@ public class DefaultConfigurerTest
     }
 
     /**
-     * Tests to see if typed adder works.
+     * Tests to see if typed adder works, with iterface types.
      */
     public void testTypedAdder()
         throws Exception
@@ -431,8 +349,8 @@ public class DefaultConfigurerTest
         final DefaultTypeFactory factory = new DefaultTypeFactory( loader );
         factory.addNameClassMapping( "my-type1", MyType1.class.getName() );
         factory.addNameClassMapping( "my-type2", MyType2.class.getName() );
-        m_typeManager.registerType( MyRole1.class, "my-type1", factory );
-        m_typeManager.registerType( MyRole1.class, "my-type2", factory );
+        getTypeManager().registerType( MyRole1.class, "my-type1", factory );
+        getTypeManager().registerType( MyRole1.class, "my-type2", factory );
 
         final ConfigTest6 test = new ConfigTest6();
 
@@ -446,7 +364,7 @@ public class DefaultConfigurerTest
     }
 
     /**
-     * Tests to see if typed adder works.
+     * Tests to see if typed adder works, with Configuration type.
      */
     public void testTypedConfigAdder()
         throws Exception
@@ -470,7 +388,7 @@ public class DefaultConfigurerTest
     }
 
     /**
-     * Tests to see if typed adder works.
+     * Tests to see if typed adder works, with Configuration objects.
      */
     public void testConfigAdder()
         throws Exception
@@ -494,7 +412,7 @@ public class DefaultConfigurerTest
     }
 
     /**
-     * Tests to see if typed adder works.
+     * Tests to check that Configurable is handled properly.
      */
     public void testConfigable()
         throws Exception
@@ -647,33 +565,5 @@ public class DefaultConfigurerTest
         expected.setProp2( new ConfigTest1() );
         expected.addProp3( new ConfigTest1() );
         assertEquals( expected, test );
-    }
-
-    /**
-     * Asserts that an exception contains the expected message.
-     *
-     * TODO - should take the expected exception, rather than the message,
-     * to check the entire cause chain.
-     */
-    protected void assertSameMessage( final String msg, final Throwable exc )
-    {
-        assertEquals( msg, exc.getMessage() );
-    }
-
-    /**
-     * Compares 2 objects for equality, nulls are equal.  Used by the test
-     * classes' equals() methods.
-     */
-    public static boolean equals( final Object o1, final Object o2 )
-    {
-        if( o1 == null && o2 == null )
-        {
-            return true;
-        }
-        if( o1 == null || o2 == null )
-        {
-            return false;
-        }
-        return o1.equals( o2 );
     }
 }

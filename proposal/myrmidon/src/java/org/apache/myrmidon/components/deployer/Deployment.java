@@ -27,7 +27,9 @@ import org.apache.avalon.framework.configuration.SAXConfigurationHandler;
 import org.apache.avalon.framework.logger.AbstractLogEnabled;
 import org.apache.myrmidon.converter.Converter;
 import org.apache.myrmidon.interfaces.converter.ConverterRegistry;
+import org.apache.myrmidon.interfaces.deployer.ConverterDefinition;
 import org.apache.myrmidon.interfaces.deployer.DeploymentException;
+import org.apache.myrmidon.interfaces.deployer.TypeDefinition;
 import org.apache.myrmidon.interfaces.deployer.TypeDeployer;
 import org.apache.myrmidon.interfaces.role.RoleManager;
 import org.apache.myrmidon.interfaces.type.DefaultTypeFactory;
@@ -178,44 +180,62 @@ class Deployment
     /**
      * Deploys a single type from the type library.
      */
-    public void deployType( String roleShorthand, String typeName, String className )
+    public void deployType( final TypeDefinition typeDef )
         throws DeploymentException
     {
+        final String typeName = typeDef.getName();
+        final String roleShorthand = typeDef.getRoleShorthand();
+
+        final String className = typeDef.getClassname();
+        if( null == className )
+        {
+            final String message = REZ.getString( "typedef.no-classname.error" );
+            throw new DeploymentException( message );
+        }
+
         try
         {
-            handleType( roleShorthand, typeName, className );
+            if( typeDef instanceof ConverterDefinition )
+            {
+                // Validate the definition
+                final ConverterDefinition converterDef = (ConverterDefinition)typeDef;
+                final String srcClass = converterDef.getSourceType();
+                final String destClass = converterDef.getDestinationType();
+                if( null == srcClass )
+                {
+                    final String message = REZ.getString( "converterdef.no-source.error" );
+                    throw new DeploymentException( message );
+                }
+                if( null == destClass )
+                {
+                    final String message = REZ.getString( "converterdef.no-destination.error" );
+                    throw new DeploymentException( message );
+                }
+
+                // Deploy the converter
+                handleConverter( className, srcClass, destClass );
+            }
+            else
+            {
+                // Validate the definition
+                if( null == roleShorthand )
+                {
+                    final String message = REZ.getString( "typedef.no-role.error" );
+                    throw new DeploymentException( message );
+                }
+                else if( null == typeName )
+                {
+                    final String message = REZ.getString( "typedef.no-name.error" );
+                    throw new DeploymentException( message );
+                }
+
+                // Deploy general-purpose type
+                handleType( roleShorthand, typeName, className );
+            }
         }
         catch( Exception e )
         {
             final String message = REZ.getString( "deploy-type.error", roleShorthand, typeName );
-            throw new DeploymentException( message, e );
-        }
-    }
-
-    /**
-     * Deploys a converter from the type library.  The converter definition
-     * is read from the type library descriptor.
-     */
-    public void deployConverter( String className )
-        throws DeploymentException
-    {
-        // TODO - implement this
-        throw new DeploymentException( "Not implemented." );
-    }
-
-    /**
-     * Deploys a converter from the type library.
-     */
-    public void deployConverter( String className, String srcClass, String destClass )
-        throws DeploymentException
-    {
-        try
-        {
-            handleConverter( className, srcClass, destClass );
-        }
-        catch( Exception e )
-        {
-            final String message = REZ.getString( "deploy-converter.error", srcClass, destClass );
             throw new DeploymentException( message, e );
         }
     }

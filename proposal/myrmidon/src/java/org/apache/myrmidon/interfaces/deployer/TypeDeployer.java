@@ -11,7 +11,7 @@ package org.apache.myrmidon.interfaces.deployer;
  * A deployer for a type library.  Allows individual elements from a type
  * library to be deployed.
  *
- * @author Adam Murdoch
+ * @author <a href="mailto:adammurdoch@apache.org">Adam Murdoch</a>
  */
 public interface TypeDeployer
 {
@@ -26,29 +26,23 @@ public interface TypeDeployer
      * read from the type library descriptor.
      *
      * @param roleShorthand
-     *          The <em>shorthand</em> for the role.
+     *      The shorthand name for the role.
+     *
      * @param typeName
-     *          The type name.
+     *      The type name.
+     *
+     * @throws DeploymentException
+     *      If the type cannot be deployed.
      */
     void deployType( String roleShorthand, String typeName )
         throws DeploymentException;
 
     /**
      * Deploys a single type from the type library.
+     *
+     * @param typeDef
+     *      The type definition.
      */
-    void deployType( String roleShorthand, String typeName, String className )
-        throws DeploymentException;
-
-    /**
-     * Deploys a converter from the type library.  The converter definition
-     * is read from the type library descriptor.
-     */
-    void deployConverter( String className )
-        throws DeploymentException;
-
-    /**
-     * Deploys a converter from the type library.
-     */
-    void deployConverter( String className, String srcClass, String destClass )
+    void deployType( TypeDefinition typeDef )
         throws DeploymentException;
 }

@@ -338,7 +338,7 @@ public class CLIMain
         if( getLogger().isInfoEnabled() )
         {
             final String message = REZ.getString( "buildfile.notice", buildFile );
-            getLogger().warn( message );
+            getLogger().info( message );
         }
 
         if( getLogger().isInfoEnabled() )

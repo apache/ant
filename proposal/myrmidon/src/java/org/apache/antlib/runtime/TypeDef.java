@@ -8,6 +8,8 @@
 package org.apache.antlib.runtime;
 
 import org.apache.myrmidon.framework.AbstractTypeDef;
+import org.apache.myrmidon.interfaces.deployer.GeneralTypeDefinition;
+import org.apache.myrmidon.interfaces.deployer.TypeDefinition;
 
 /**
  * Task to define a type.
@@ -17,15 +19,9 @@ import org.apache.myrmidon.framework.AbstractTypeDef;
 public class TypeDef
     extends AbstractTypeDef
 {
-    private String m_type;
 
-    public void setType( final String type )
+    protected TypeDefinition createTypeDefinition()
     {
-        m_type = type;
-    }
-
-    protected String getRoleShorthand()
-    {
-        return m_type;
+        return new GeneralTypeDefinition();
     }
 }
