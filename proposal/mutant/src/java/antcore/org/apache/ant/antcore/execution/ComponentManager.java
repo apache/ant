@@ -766,7 +766,7 @@ public class ComponentManager implements ComponentService {
                 Task nestedTask
                      = (Task)createComponent(nestedElementModel);
                 TaskContainer container = (TaskContainer)element;
-                container.addTask(nestedTask);
+                container.addNestedTask(nestedTask);
             } else {
                 if (setter.supportsNestedAdder(nestedElementName)) {
                     addNestedElement(factory, setter, element,

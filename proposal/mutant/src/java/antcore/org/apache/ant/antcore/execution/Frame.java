@@ -250,9 +250,15 @@ public class Frame implements DemuxOutputReceiver {
      * @exception ExecutionException if the properties cannot be set
      */
     protected void setMagicProperties() throws ExecutionException {
-        // set up various magic properties
-        setDataValue(MagicProperties.ANT_HOME,
-            initConfig.getAntHome().toString(), true);
+        URL antHomeURL = initConfig.getAntHome();
+        String antHomeString = null;
+        if (antHomeURL.getProtocol().equals("file")) {
+            File antHome = new File(antHomeURL.getFile());
+            antHomeString = antHome.getAbsolutePath();
+        } else {
+            antHomeString = antHomeURL.toString();
+        }
+        setDataValue(MagicProperties.ANT_HOME, antHomeString, true);
     }
 
     /**

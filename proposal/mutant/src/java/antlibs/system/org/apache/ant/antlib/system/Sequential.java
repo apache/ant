@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2002 The Apache Software Foundation.  All rights
+ * Copyright (c) 2001 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -51,22 +51,60 @@
  * information on the Apache Software Foundation, please see
  * <http://www.apache.org/>.
  */
-package org.apache.ant.common.antlib;
+package org.apache.ant.antlib.system;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+import org.apache.ant.common.antlib.AbstractTask;
+import org.apache.ant.common.antlib.AntContext;
+
+import org.apache.ant.common.antlib.Task;
+import org.apache.ant.common.antlib.TaskContainer;
+import org.apache.ant.common.service.ExecService;
 import org.apache.ant.common.util.ExecutionException;
 
 /**
- * A TaskContainer is an object which can contain and manage ExecutionTasks.
+ * Implements a single threaded task execution. <p>
  *
- * @author <a href="mailto:conor@apache.org">Conor MacNeill</a>
- * @created 19 January 2002
+ *
+ *
+ * @author Thomas Christen <a href="mailto:chr@active.ch">chr@active.ch</a>
+ * @created 27 February 2002
  */
-public interface TaskContainer {
+public class Sequential extends AbstractTask
+     implements TaskContainer {
+
+    /** Collection holding the nested tasks */
+    private List nestedTasks = new ArrayList();
+
+
     /**
-     * Add a task to the container.
+     * Add a nested task to Sequential. <p>
      *
-     * @param task the task tobe added
-     * @exception ExecutionException if the container cannot add the task
+     *
+     *
+     * @param nestedTask Nested task to execute Sequential <p>
+     *
+     *
      */
-    void addNestedTask(Task task) throws ExecutionException;
+    public void addNestedTask(Task nestedTask) {
+        nestedTasks.add(nestedTask);
+    }
+
+    /**
+     * Execute all nestedTasks.
+     *
+     * @exception ExecutionException if any of the nested tasks throws an
+     *      exception
+     */
+    public void execute() throws ExecutionException {
+        AntContext context = getAntContext();
+        ExecService execService
+             = (ExecService)context.getCoreService(ExecService.class);
+        for (Iterator i = nestedTasks.iterator(); i.hasNext(); ) {
+            Task nestedTask = (Task)i.next();
+            execService.executeTask(nestedTask);
+        }
+    }
 }
 

@@ -131,6 +131,32 @@ public abstract class Task extends ProjectComponent
         return description;
     }
 
+
+    /**
+     * XXX Adds a feature to the NestedTask attribute of the Task object
+     *
+     * @param task XXX The feature to be added to the NestedTask attribute
+     * @exception ExecutionException XXX Description of Exception
+     */
+    public void addNestedTask(org.apache.ant.common.antlib.Task task)
+         throws ExecutionException {
+
+        if (!(this instanceof TaskContainer)) {
+            throw new BuildException("Can't add tasks to this task");
+        }
+        // wrap the Ant2 task in a TaskAdapter
+        TaskContainer container = (TaskContainer)this;
+        if (task instanceof Task) {
+            container.addTask((Task)task);
+        } else {
+            TaskAdapter adapter = new TaskAdapter();
+            adapter.setProxy(task);
+            adapter.setProject(getProject());
+            adapter.init(task.getAntContext(), task.getComponentType());
+            container.addTask(adapter);
+        }
+    }
+
     /**
      * Initialise this component
      *

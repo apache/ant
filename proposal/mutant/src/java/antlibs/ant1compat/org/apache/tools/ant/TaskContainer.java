@@ -59,6 +59,13 @@ package org.apache.tools.ant;
  * @author <a href="mailto:conor@apache.org">Conor MacNeill</a>
  * @created 31 January 2002
  */
-public interface TaskContainer {
+public interface TaskContainer
+     extends org.apache.ant.common.antlib.TaskContainer {
+    /**
+     * Add a task to this container
+     *
+     * @param task the task to be added
+     */
+    void addTask(Task task);
 }
 
