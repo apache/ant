@@ -49,10 +49,10 @@ public class Deployment
     public URL getURL()
         throws DeploymentException
     {
-        try { return m_file.toURL(); }
-        catch( final MalformedURLException mue )
+        try { return m_file.getCanonicalFile().toURL(); }
+        catch( final IOException ioe )
         {
-            throw new DeploymentException( "Unable to form url", mue );
+            throw new DeploymentException( "Unable to form url", ioe );
         }
     }
 
