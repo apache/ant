@@ -46,7 +46,6 @@ if [ -z "$ANT_HOME" ] ; then
   ## resolve links - $0 may be a link to ant's home
   PRG="$0"
   progname=`basename "$0"`
-  saveddir=`pwd`
 
   # need this for relative symlinks
   while [ -h "$PRG" ] ; do
@@ -64,7 +63,6 @@ if [ -z "$ANT_HOME" ] ; then
   # make it fully qualified
   ANT_HOME=`cd "$ANT_HOME" && pwd`
 
-  cd "$saveddir"
 fi
 
 # For Cygwin, ensure paths are in UNIX format before anything is touched
@@ -160,13 +158,6 @@ else
   echo "  to the installation directory of java."
 fi
 
-# supply JIKESPATH to Ant as jikes.class.path
-if [ -n "$JIKESPATH" ] ; then
-  if $cygwin ; then
-    JIKESPATH=`cygpath --path --windows "$JIKESPATH"`
-  fi
-fi
-
 # Allow Jikes support (off by default)
 if $usejikes; then
   ANT_OPTS="$ANT_OPTS -Dbuild.compiler=jikes"
@@ -179,7 +170,19 @@ if $cygwin; then
   CLASSPATH=`cygpath --path --windows "$CLASSPATH"`
   LOCALCLASSPATH=`cygpath --path --windows "$LOCALCLASSPATH"`
   CYGHOME=`cygpath --path --windows "$HOME"`
-  exec "$JAVACMD" -classpath "$LOCALCLASSPATH" -Dant.home="${ANT_HOME}" -Djikes.class.path="$JIKESPATH" $ANT_OPTS -Dcygwin.user.home="$CYGHOME" org.apache.tools.ant.Main $ANT_ARGS "$@"
+fi
+
+if [ -n "$CYGHOME" ]; then
+  if [ -n "$JIKESPATH" ]; then
+    JIKESPATH=`cygpath --path --windows "$JIKESPATH"`
+    exec "$JAVACMD" -classpath "$LOCALCLASSPATH" -Dant.home="${ANT_HOME}" -Djikes.class.path="$JIKESPATH" -Dcygwin.user.home="$CYGHOME" $ANT_OPTS org.apache.tools.ant.Main $ANT_ARGS "$@"
+  else
+    exec "$JAVACMD" -classpath "$LOCALCLASSPATH" -Dant.home="${ANT_HOME}" -Dcygwin.user.home="$CYGHOME" $ANT_OPTS org.apache.tools.ant.Main $ANT_ARGS "$@"
+  fi
 else
-  exec "$JAVACMD" -classpath "$LOCALCLASSPATH" -Dant.home="${ANT_HOME}" -Djikes.class.path="$JIKESPATH" $ANT_OPTS org.apache.tools.ant.Main $ANT_ARGS "$@"
+  if [ -n "$JIKESPATH" ]; then
+    exec "$JAVACMD" -classpath "$LOCALCLASSPATH" -Dant.home="${ANT_HOME}" -Djikes.class.path="$JIKESPATH" $ANT_OPTS org.apache.tools.ant.Main $ANT_ARGS "$@"
+  else
+    exec "$JAVACMD" -classpath "$LOCALCLASSPATH" -Dant.home="${ANT_HOME}" $ANT_OPTS org.apache.tools.ant.Main $ANT_ARGS "$@"
+  fi
 fi
