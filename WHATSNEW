@@ -32,6 +32,9 @@ Changes that could break older environments:
 
 Fixed bugs:
 -----------
+* Filter readers were not handling line endings properly.  Bugzilla
+  Report 18476.
+
 * Expand tasks did not behave as expected with PatternSets.
 
 * <property environment=... /> now works on OS/400.

@@ -55,6 +55,7 @@ package org.apache.tools.ant.filters;
 
 import java.io.IOException;
 import java.io.Reader;
+import java.util.LinkedList;
 import org.apache.tools.ant.types.Parameter;
 
 /**
@@ -90,18 +91,22 @@ public final class TailFilter
     /** Number of lines to be skipped. */
     private long skip = 0;
 
-    /** Buffer to hold in characters read ahead. */
-    private char[] buffer = new char[4096];
-
-    /** The character position that has been returned from the buffer. */
-    private int returnedCharPos = -1;
-
     /** Whether or not read-ahead been completed. */
     private boolean completedReadAhead = false;
 
     /** Current index position on the buffer. */
     private int bufferPos = 0;
 
+    /** A line tokenizer */
+    private TokenFilter.LineTokenizer lineTokenizer = null;
+    
+    /** the current line from the input stream */
+    private String    line      = null;
+    /** the position in the current line */
+    private int       linePos   = 0;
+
+    private LinkedList lineList = new LinkedList();
+    
     /**
      * Constructor for "dummy" instances.
      *
@@ -119,6 +124,8 @@ public final class TailFilter
      */
     public TailFilter(final Reader in) {
         super(in);
+        lineTokenizer = new TokenFilter.LineTokenizer();
+        lineTokenizer.setIncludeDelims(true);
     }
 
     /**
@@ -140,74 +147,19 @@ public final class TailFilter
             setInitialized(true);
         }
 
-        if (!completedReadAhead) {
-            int ch = -1;
-            while ((ch = in.read()) != -1) {
-                if (buffer.length == bufferPos) {
-                    if (returnedCharPos != -1) {
-                        final char[] tmpBuffer = new char[buffer.length];
-                        System.arraycopy(buffer, returnedCharPos + 1, tmpBuffer,
-                                         0, buffer.length - (returnedCharPos + 1));
-                        buffer = tmpBuffer;
-                        bufferPos = bufferPos - (returnedCharPos + 1);
-                        returnedCharPos = -1;
-                    } else {
-                        final char[] tmpBuffer = new char[buffer.length * 2];
-                        System.arraycopy(buffer, 0, tmpBuffer, 0, bufferPos);
-                        buffer = tmpBuffer;
-                    }
-                }
-
-                if (lines > 0) {
-                    if (ch == '\n' || ch == -1) {
-                        ++linesRead;
-
-                        if ((linesRead == lines + skip)) {
-                            int i = 0;
-                            for (i = returnedCharPos + 1;
-                                buffer[i] != 0 && buffer[i] != '\n'; i++) {
-                            }
-                            returnedCharPos = i;
-                            --linesRead;
-                        }
-                    }
-                }
-                if (ch == -1) {
-                    break;
-                }
-
-                buffer[bufferPos] = (char) ch;
-                bufferPos++;
-            }
-            completedReadAhead = true;
+        while (line == null || line.length() == 0) {
+            line = lineTokenizer.getToken(in);
+            line = tailFilter(line);
+            if (line == null)
+                return -1;
+            linePos = 0;
         }
 
-        // Because the complete stream is read into the buffer I can delete
-        // the "skip lines" from back to the beginning.
-        if (skip > 0) {
-            // searching...
-            int i;
-            for (i = buffer.length - 1; skip > 0; i--) {
-                if (buffer[i]=='\n') {
-                    skip--;
-                }
-            }
-
-           // cut the buffer to the new length
-           char[] newBuffer = new char[i];
-           System.arraycopy(buffer, 0, newBuffer, 0, i);
-           buffer = newBuffer;
-
-           // don´t forget to set the "lastposition" new
-           bufferPos = i;
-        }
-
-        ++returnedCharPos;
-        if (returnedCharPos >= bufferPos) {
-            return -1;
-        } else {
-            return buffer[returnedCharPos];
-        }
+        int ch = line.charAt(linePos);
+        linePos++;
+        if (linePos == line.length())
+            line = null;
+        return ch;
     }
 
     /**
@@ -267,6 +219,7 @@ public final class TailFilter
     /**
      * Scans the parameters list for the "lines" parameter and uses
      * it to set the number of lines to be returned in the filtered stream.
+     * also scan for "skip" parameter.
      */
     private final void initialize() {
         Parameter[] params = getParameters();
@@ -274,13 +227,55 @@ public final class TailFilter
             for (int i = 0; i < params.length; i++) {
                 if (LINES_KEY.equals(params[i].getName())) {
                     setLines(new Long(params[i].getValue()).longValue());
-                    break;
+                    continue;
                 }
                 if (SKIP_KEY.equals(params[i].getName())) {
                     skip = new Long(params[i].getValue()).longValue();
-                    break;
+                    continue;
                 }
             }
         }
+    }
+
+    /**
+     * implement a tail filter on a stream of lines.
+     * line = null is the end of the stream.
+     * @return "" while reading in the lines,
+     *         line while outputing the lines
+     *         null at the end of outputting the lines
+     */
+    private String tailFilter(String line) {
+        if (! completedReadAhead) {
+            if (line != null) {
+                lineList.add(line);
+                if (lines == -1) {
+                    if (lineList.size() > skip) {
+                        return (String) lineList.removeFirst();
+                    }
+                }
+                else {
+                    long linesToKeep = lines + (skip > 0 ? skip : 0);
+                    if (linesToKeep < lineList.size()) {
+                        lineList.removeFirst();
+                    }
+                }
+                return "";
+            }
+            completedReadAhead = true;
+            if (skip > 0) {
+                for (int i = 0; i < skip; ++i) {
+                    lineList.removeLast();
+                }
+            }
+            if (lines > -1) {
+                while (lineList.size() > lines) {
+                    lineList.removeFirst();
+                }
+            }
+        }
+        if (lineList.size() > 0) {
+            return (String) lineList.removeFirst();
+        }
+        return null;
     }
 }

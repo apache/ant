@@ -389,9 +389,20 @@ public class TokenFilter
     public static class LineTokenizer
         implements Tokenizer
     {
-        String lineEnd = "";
-        int    pushed = -2;
+        private String  lineEnd = "";
+        private int     pushed = -2;
+        private boolean includeDelims = false;
 
+        /**
+         * attribute includedelims - whether to include
+         * the line ending with the line, or to return
+         * it in the posttoken
+         */
+        
+        public void setIncludeDelims(boolean includeDelims) {
+            this.includeDelims = true;
+        }
+        
         public String getToken(Reader in)
             throws IOException
         {
@@ -440,12 +451,19 @@ public class TokenFilter
                 lineEnd = "\r";
             }
 
+            if (includeDelims) {
+                line.append(lineEnd);
+            }
             return line.toString();
         }
 
         public String getPostToken() {
+            if (includeDelims) {
+                return "";
+            }
             return lineEnd;
         }
+
     }
 
     /**
@@ -464,16 +482,38 @@ public class TokenFilter
         private char[] delims = null;
         private boolean delimsAreTokens = false;
         private boolean suppressDelims = false;
+        private boolean includeDelims = false;
 
+        /**
+         * attribute delims - the delimeter characters
+         */
         public void setDelims(String delims) {
             this.delims = resolveBackSlash(delims).toCharArray();
         }
 
+        /**
+         * attribute delimsaretokens - treat delimiters as
+         * separate tokens.
+         */
+          
         public void setDelimsAreTokens(boolean delimsAreTokens) {
             this.delimsAreTokens = delimsAreTokens;
         }
+        /**
+         * attribute suppressdelims - suppress delimiters.
+         * default - false
+         */
         public void setSuppressDelims(boolean suppressDelims) {
             this.suppressDelims = suppressDelims;
+        }
+        
+        /**
+         * attribute includedelims - treat delimiters as part
+         * of the token.
+         * default - false
+         */
+        public void setIncludeDelims(boolean includeDelims) {
+            this.includeDelims = true;
         }
 
         public String getToken(Reader in)
@@ -525,11 +565,14 @@ public class TokenFilter
                 ch = in.read();
             }
             intraString = padding.toString();
+            if (includeDelims) {
+                word.append(intraString);
+            }
             return word.toString();
         }
 
         public String getPostToken() {
-            if (suppressDelims)
+            if (suppressDelims || includeDelims)
                 return "";
             return intraString;
         }

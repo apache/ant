@@ -66,28 +66,28 @@ import java.io.Reader;
 public final class StripJavaComments
     extends BaseFilterReader
     implements ChainableReader {
-        
-    /** 
+
+    /**
      * The read-ahead character, used for effectively pushing a single
-     * character back. A value of -1 indicates that no character is in the 
+     * character back. A value of -1 indicates that no character is in the
      * buffer.
      */
     private int readAheadCh = -1;
 
-    /** 
+    /**
      * Whether or not the parser is currently in the middle of a string
      * literal.
      */
     private boolean inString = false;
 
-    /** 
+    /**
      * Whether or not the last char has been a backslash.
      */
     private boolean quoted = false;
 
     /**
      * Constructor for "dummy" instances.
-     * 
+     *
      * @see BaseFilterReader#BaseFilterReader()
      */
     public StripJavaComments() {
@@ -107,12 +107,12 @@ public final class StripJavaComments
     /**
      * Returns the next character in the filtered stream, not including
      * Java comments.
-     * 
+     *
      * @return the next character in the resulting stream, or -1
      * if the end of the resulting stream has been reached
-     * 
+     *
      * @exception IOException if the underlying stream throws an IOException
-     * during reading     
+     * during reading
      */
     public final int read() throws IOException {
         int ch = -1;
@@ -132,8 +132,14 @@ public final class StripJavaComments
                     if (ch == '/') {
                         ch = in.read();
                         if (ch == '/') {
+                            int prevCh = -1;
                             while (ch != '\n' && ch != -1) {
+                                prevCh = ch;
                                 ch = in.read();
+                            }
+                            if ( ch == '\n' && prevCh == '\r' ) {
+                                readAheadCh = ch;
+                                ch = prevCh;
                             }
                         } else if (ch == '*') {
                             while (ch != -1) {
@@ -165,10 +171,10 @@ public final class StripJavaComments
     /**
      * Creates a new StripJavaComments using the passed in
      * Reader for instantiation.
-     * 
+     *
      * @param rdr A Reader object providing the underlying stream.
      *            Must not be <code>null</code>.
-     * 
+     *
      * @return a new filter based on this configuration, but filtering
      *         the specified reader
      */

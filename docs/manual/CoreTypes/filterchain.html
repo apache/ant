@@ -898,10 +898,24 @@ This tokenizer splits the input into lines.
 The tokenizer delimits lines
 by "\r", "\n" or "\r\n".
 This is the default tokenizer.
+<TABLE cellSpacing=0 cellPadding=2 border=1>
+  <TR>
+    <TD vAlign=top><B>Attribute</B></TD>
+    <TD vAlign=top><B>Description</B></TD>
+    <TD vAlign=top align="center"><B>Required</B></TD>
+  </TR>
+  <TR>
+    <TD vAlign=top>includeDelims</TD>
+    <TD vAlign=top>
+      Include the line endings in the token.
+      Default is false.
+    </TD>
+    <TD vAlign=top align="center">No</TD>
+  </TR>
+</TABLE>
 <H4>Examples:</H4>
 
 Convert input current line endings to unix style line endings.
-<em>This currently has no effect when used in the copy task.</em>
 <BLOCKQUOTE><PRE>
 &lt;tokenfilter delimoutput=&quot;\n&quot;/&gt;
 </PRE></BLOCKQUOTE>
@@ -955,13 +969,26 @@ attribute is used).
   <tr>
     <td valign="top">delimsaretokens</td>
     <td valign="top">If this is true,
-     each delimiter character is returned as a token</td>
+      each delimiter character is returned as a token.
+      Default is false.
+    </td>
     <td valign="top" align="center">No</td>
   </tr>
   <tr>
     <td valign="top">suppressdelims</td>
-    <td valign="top">If this is true, delimiters are not returned. </td>
+    <td valign="top">
+      If this is true, delimiters are not returned.
+      Default is false.
+    </td>
     <td valign="top" align="center">No</td>
+  </tr>
+  <tr>
+    <td vAlign=top>includeDelims</td>
+    <td vAlign=top>
+      Include the delimiters in the token.
+      Default is false.
+    </td>
+    <td vAlign=top align="center">No</td>
   </tr>
 </TABLE>
 

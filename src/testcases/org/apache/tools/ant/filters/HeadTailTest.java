@@ -112,6 +112,19 @@ public class HeadTailTest extends BuildFileTest {
         assertTrue("testHeadLinesSkip: Result not like expected", fu.contentEquals(expected, result));
     }
 
+/*
+    public void testFilterReaderHeadLinesSkip() throws IOException {
+        executeTarget("testFilterReaderHeadLinesSkip");
+        File expected = getProject().resolveFile(
+            "expected/head-tail.filterReaderHeadLinesSkip.test");
+        File result = getProject().resolveFile(
+            "result/head-tail.headLinesSkip.test");
+        FileUtils fu = FileUtils.newFileUtils();
+        assertTrue("testFilterReaderHeadLinesSkip: Result not like expected",
+                   fu.contentEquals(expected, result));
+    }
+
+*/
     public void testTail() throws IOException {
         executeTarget("testTail");
         File expected = getProject().resolveFile("expected/head-tail.tail.test");
@@ -144,10 +157,23 @@ public class HeadTailTest extends BuildFileTest {
         assertTrue("testTailLinesSkip: Result not like expected", fu.contentEquals(expected, result));
     }
 
+/*
+    public void testFilterReaderTailLinesSkip() throws IOException {
+        executeTarget("testFilterReaderTailLinesSkip");
+        File expected = getProject().resolveFile(
+            "expected/head-tail.filterReaderTailLinesSkip.test");
+        File result = getProject().resolveFile(
+            "result/head-tail.tailLinesSkip.test");
+        FileUtils fu = FileUtils.newFileUtils();
+        assertTrue("testFilterReaderTailLinesSkip: Result not like expected",
+                   fu.contentEquals(expected, result));
+    }
+*/
+
     public void testHeadTail() throws IOException {
         executeTarget("testHeadTail");
-        File expected = getProject().resolveFile("expected/head-tail.headTail.test");
-        File result = getProject().resolveFile("result/head-tail.headTail.test");
+        File expected = getProject().resolveFile("expected/head-tail.headtail.test");
+        File result = getProject().resolveFile("result/head-tail.headtail.test");
         FileUtils fu = FileUtils.newFileUtils();
         assertTrue("testHeadTail: Result not like expected", fu.contentEquals(expected, result));
     }

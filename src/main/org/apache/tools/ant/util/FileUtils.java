@@ -399,10 +399,7 @@ public class FileUtils {
             final boolean filterChainsAvailable = (filterChains != null
                                                    && filterChains.size() > 0);
 
-            if (filterSetsAvailable || filterChainsAvailable
-                || (inputEncoding != null 
-                    && !inputEncoding.equals(outputEncoding))
-                || (inputEncoding == null && outputEncoding != null)) {
+            if (filterSetsAvailable) {
                 BufferedReader in = null;
                 BufferedWriter out = null;
 
@@ -459,6 +456,59 @@ public class FileUtils {
                         in.close();
                     }
                 }
+            } else if (filterChainsAvailable
+                       || (inputEncoding != null 
+                           && !inputEncoding.equals(outputEncoding))
+                       || (inputEncoding == null && outputEncoding != null)) {
+                BufferedReader in = null;
+                BufferedWriter out = null;
+ 
+                 try {
+                     if (inputEncoding == null) {
+                         in = new BufferedReader(new FileReader(sourceFile));
+                     } else {
+                         in =
+                             new BufferedReader(
+                                 new InputStreamReader(
+                                     new FileInputStream(sourceFile),
+                                     inputEncoding));
+                     }
+ 
+                     if (outputEncoding == null) {
+                         out = new BufferedWriter(new FileWriter(destFile));
+                     } else {
+                         out =
+                             new BufferedWriter(
+                                 new OutputStreamWriter(
+                                     new FileOutputStream(destFile),
+                                     outputEncoding));
+                     }
+ 
+                     if (filterChainsAvailable) {
+                         ChainReaderHelper crh = new ChainReaderHelper();
+                         crh.setBufferSize(8192);
+                         crh.setPrimaryReader(in);
+                         crh.setFilterChains(filterChains);
+                         crh.setProject(project);
+                         Reader rdr = crh.getAssembledReader();
+                         in = new BufferedReader(rdr);
+                     }
+                     char buffer[] = new char[1024*8];
+                     while (true) {
+                         int nRead = in.read(buffer, 0, buffer.length);
+                         if (nRead == -1) {
+                             break;
+                         }
+                         out.write(buffer, 0, nRead);
+                      }
+                  } finally {
+                      if (out != null) {
+                         out.close();
+                     }
+                     if (in != null) {
+                         in.close();
+                     }
+                 }
             } else {
                 FileInputStream in = null;
                 FileOutputStream out = null;

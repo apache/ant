@@ -88,6 +88,14 @@ public final class HeadFilter
     /** Number of lines to be skipped. */
     private long skip = 0;
 
+    /** A line tokenizer */
+    private TokenFilter.LineTokenizer lineTokenizer = null;
+    
+    /** the current line from the input stream */
+    private String    line      = null;
+    /** the position in the current line */
+    private int       linePos   = 0;
+
     /**
      * Constructor for "dummy" instances.
      *
@@ -105,6 +113,8 @@ public final class HeadFilter
      */
     public HeadFilter(final Reader in) {
         super(in);
+        lineTokenizer = new TokenFilter.LineTokenizer();
+        lineTokenizer.setIncludeDelims(true);
     }
 
     /**
@@ -125,23 +135,18 @@ public final class HeadFilter
             setInitialized(true);
         }
 
-        int ch = -1;
-
-        // skip the lines (if set)
-        while (skip > 0) {
-            for (int tmp = in.read(); tmp != '\n'; tmp = in.read());
-            skip--;
+        while (line == null || line.length() == 0) {
+            line = lineTokenizer.getToken(in);
+            if (line == null)
+                return -1;
+            line = headFilter(line);
+            linePos = 0;
         }
 
-        if ( (linesRead < lines) || (lines < 0) ){
-
-            ch = in.read();
-
-            if (ch == '\n') {
-                linesRead++;
-            }
-        }
-
+        int ch = line.charAt(linePos);
+        linePos++;
+        if (linePos == line.length())
+            line = null;
         return ch;
     }
 
@@ -202,6 +207,7 @@ public final class HeadFilter
     /**
      * Scans the parameters list for the "lines" parameter and uses
      * it to set the number of lines to be returned in the filtered stream.
+     * also scan for skip parameter.
      */
     private final void initialize() {
         Parameter[] params = getParameters();
@@ -209,13 +215,32 @@ public final class HeadFilter
             for (int i = 0; i < params.length; i++) {
                 if (LINES_KEY.equals(params[i].getName())) {
                     lines = new Long(params[i].getValue()).longValue();
-                    break;
+                    continue;
                 }
                 if (SKIP_KEY.equals(params[i].getName())) {
                     skip = new Long(params[i].getValue()).longValue();
-                    break;
+                    continue;
                 }
             }
         }
+    }
+
+    /**
+     * implements a head filter on the input stream
+     */
+    private String headFilter(String line) {
+        linesRead++;
+        if (skip > 0) {
+            if ((linesRead - 1) < skip) {
+                return null;
+            }
+        }
+
+        if (lines > 0) {
+            if (linesRead > (lines + skip)) {
+                return null;
+            }
+        }
+        return line;
     }
 }

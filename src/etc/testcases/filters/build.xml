@@ -20,11 +20,11 @@
         </filterreader>
       </filterchain>
     </copy>
-    <!--fixcrlf srcdir="result" eol="lf">
+    <!--<fixcrlf srcdir="result" eol="lf">
       <include name="linecontains.test"/>
-    </fixcrlf-->
+    </fixcrlf>-->
   </target>
-
+  
   <target name="testEscapeUnicode" depends="init">
     <copy todir="result" encoding="UTF-8">
       <fileset dir="input">
@@ -57,6 +57,17 @@
         </replacetokens>
       </filterchain>
     </copy>
+  </target>
+
+  <target name="testNoAddNewLine" depends="init">
+    <concat destfile="result/nonl">This has no new lines</concat>
+    <copy file="result/nonl" tofile="result/nonl-copyfilter">
+      <filterchain><tokenfilter/></filterchain>
+    </copy>
+    <condition property="filterchain.files.are.same">
+      <filesmatch file1="result/nonl" file2="result/nonl-copyfilter"/>
+    </condition>
+    <fail unless="filterchain.files.are.same">File was modified</fail>
   </target>
 
 </project>
