@@ -614,9 +614,9 @@ public class FileUtils {
                          }
                          out.write(buffer, 0, nRead);
                       }
-                  } finally {
-                      close(out);
-                      close(in);
+                 } finally {
+                     close(out);
+                     close(in);
                  }
             } else {
                 FileInputStream in = null;
@@ -1012,20 +1012,8 @@ public class FileUtils {
             }
             return true;
         } finally {
-            if (in1 != null) {
-                try {
-                    in1.close();
-                } catch (IOException e) {
-                    // ignore
-                }
-            }
-            if (in2 != null) {
-                try {
-                    in2.close();
-                } catch (IOException e) {
-                    // ignore
-                }
-            }
+            close(in1);
+            close(in2);
         }
     }
 
