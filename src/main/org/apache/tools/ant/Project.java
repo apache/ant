@@ -353,13 +353,14 @@ public class Project {
     }
 
     public Task createTask(String taskType) throws BuildException {
-        Class c = (Class)taskClassDefinitions.get(taskType);
+        Class c = (Class) taskClassDefinitions.get(taskType);
 
-        // XXX
-        // check for nulls, other sanity
-
+	if (c == null)
+	    throw new BuildException("Could not create task of type: "+taskType+
+				     " because I can't find it in the list of task"+
+				     " class definitions");
         try {
-            Object o=c.newInstance();
+            Object o = c.newInstance();
             Task task = null;
             if( o instanceof Task ) {
                task=(Task)o;

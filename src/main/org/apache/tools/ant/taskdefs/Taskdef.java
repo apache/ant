@@ -64,8 +64,13 @@ import org.apache.tools.ant.*;
 public class Taskdef extends Task {
     private String name;
     private String value;
-    
-    public void execute() throws BuildException {
+
+    //
+    // REVISIT: Is this the right thing to do?
+    //          I moved the body of execute() into init().
+    //                               - akv
+    //
+    public void init() throws BuildException {
 	try {
 	    if (name==null || value==null ) {
 		String msg = "name or class attributes of taskdef element "
@@ -74,7 +79,7 @@ public class Taskdef extends Task {
 	    }
 	    try {
 		Class taskClass = Class.forName(value);
-		project.addTaskDefinition(name, taskClass);
+			project.addTaskDefinition(name, taskClass);
 	    } catch (ClassNotFoundException cnfe) {
 		String msg = "taskdef class " + value +
 		    " cannot be found";
@@ -84,7 +89,7 @@ public class Taskdef extends Task {
 	    ex.printStackTrace();
 	}
     }
-
+    
     public void setName( String name) {
 	this.name = name;
     }
