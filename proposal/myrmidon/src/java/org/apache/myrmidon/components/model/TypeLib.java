@@ -20,8 +20,8 @@ public class TypeLib
     //Do we need this??
     //private final String    m_namespace;
 
-    //The type to be imported from library
-    private final String    m_type;
+    //The role of object to be imported
+    private final String    m_role;
 
     //The name of type instance
     private final String    m_name;
@@ -31,31 +31,31 @@ public class TypeLib
         this( library, null, null );
     }
 
-    public TypeLib( final String library, final String type, final String name )
+    public TypeLib( final String library, final String role, final String name )
     {
         m_library = library;
-        m_type = type;
+        m_role = role;
         m_name = name;
        
         //If only one of name or type is null, throw an exception
-        if( null == m_type || null == m_name )
+        if( null == m_role || null == m_name )
         {
-            if( null != m_type || null != m_name )
+            if( null != m_role || null != m_name )
             {
                 throw new IllegalArgumentException( "Can not have an import that specifies " +
-                                                    "only one of name or type" );
+                                                    "only one of; name or role" );
             }
         }
     }
 
     /**
-     * Get type
+     * Get role
      *
-     * @return the type
+     * @return the role
      */
-    public final String getType()
+    public final String getRole()
     {
-        return m_type;
+        return m_role;
     }
 
     /**
