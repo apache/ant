@@ -57,10 +57,7 @@ package org.apache.tools.ant.taskdefs;
 import org.apache.tools.ant.*;
 
 import java.io.*;
-import java.util.Enumeration;
-import java.util.Hashtable;
-import java.util.StringTokenizer;
-import java.util.Vector;
+import java.util.*;
 
 /**
  * Task to compile Java source files. This task can take the following
@@ -84,10 +81,10 @@ import java.util.Vector;
  * sourcedir will be copied to the destdir allowing support files to be
  * located properly in the classpath.
  *
- * @author duncan@x180.com
+ * @author James Davidson <a href="mailto:duncan@x180.com">duncan@x180.com</a>
  */
 
-public class Javac extends Task {
+public class Javac extends MatchingTask {
 
     private File srcDir;
     private File destDir;
@@ -98,9 +95,6 @@ public class Javac extends Task {
     private String target;
     private String bootclasspath;
     private String extdirs;
-    private String[] includes;
-    private String[] excludes;
-    private boolean useDefaultExcludes = true;
 
     private Vector compileList = new Vector();
     private Hashtable filecopyList = new Hashtable();
@@ -108,7 +102,6 @@ public class Javac extends Task {
     /**
      * Set the source dir to find the source Java files.
      */
-
     public void setSrcdir(String srcDirName) {
         srcDir = project.resolveFile(srcDirName);
     }
@@ -117,7 +110,6 @@ public class Javac extends Task {
      * Set the destination directory into which the Java source
      * files should be compiled.
      */
-
     public void setDestdir(String destDirName) {
         destDir = project.resolveFile(destDirName);
     }
@@ -125,7 +117,6 @@ public class Javac extends Task {
     /**
      * Set the classpath to be used for this compilation.
      */
-
     public void setClasspath(String classpath) {
         compileClasspath = Project.translatePath(classpath);
     }
@@ -134,7 +125,6 @@ public class Javac extends Task {
      * Sets the bootclasspath that will be used to compile the classes
      * against.
      */
-
     public void setBootclasspath(String bootclasspath) {
         this.bootclasspath = Project.translatePath(bootclasspath);
     }
@@ -143,111 +133,37 @@ public class Javac extends Task {
      * Sets the extension directories that will be used during the
      * compilation.
      */
-
     public void setExtdirs(String extdirs) {
         this.extdirs = Project.translatePath(extdirs);
     }
 
-
     /**
-     * Set the deprecation flag. Valid strings are "on", "off", "true", and
-     * "false".
+     * Set the deprecation flag.
      */
-
-    public void setDeprecation(String deprecation) {
-        this.deprecation = Project.toBoolean(deprecation);
+    public void setDeprecation(String deprecationString) {
+        this.deprecation = Project.toBoolean(deprecationString);
     }
 
-
     /**
-     * Set the debug flag. Valid strings are "on", "off", "true", and "false".
+     * Set the debug flag.
      */
-
     public void setDebug(String debugString) {
-        if (debugString.equalsIgnoreCase("on") ||
-            debugString.equalsIgnoreCase("true")) {
-            debug = true;
-        } else {
-            debug = false;
-        }
+        this.debug = Project.toBoolean(debugString);
     }
 
     /**
-     * Set the optimize flag. Valid strings are "on", "off", "true", and
-     * "false".
+     * Set the optimize flag.
      */
-
      public void setOptimize(String optimizeString) {
-         if (optimizeString.equalsIgnoreCase("on") ||
-             optimizeString.equalsIgnoreCase("true")) {
-             optimize = true;
-         } else {
-             optimize = false;
-         }
+        this.optimize = Project.toBoolean(optimizeString);
      }
 
     /**
      * Sets the target VM that the classes will be compiled for. Valid
      * strings are "1.1", "1.2", and "1.3".
      */
-
     public void setTarget(String target) {
         this.target = target;
-    }
-
-    /**
-     * Sets the set of include patterns. Patterns may be separated by a comma
-     * or a space.
-     *
-     * @param includes the string containing the include patterns
-     */
-    public void setIncludes(String includes) {
-        if (includes != null && includes.length() > 0) {
-            Vector tmpIncludes = new Vector();
-            StringTokenizer tok = new StringTokenizer(includes, ", ", false);
-            while (tok.hasMoreTokens()) {
-                tmpIncludes.addElement(tok.nextToken().trim());
-            }
-            this.includes = new String[tmpIncludes.size()];
-            for (int i = 0; i < tmpIncludes.size(); i++) {
-                this.includes[i] = (String)tmpIncludes.elementAt(i);
-            }
-        } else {
-            this.includes = null;
-        }
-    }
-
-    /**
-     * Sets the set of exclude patterns. Patterns may be separated by a comma
-     * or a space.
-     *
-     * @param excludes the string containing the exclude patterns
-     */
-    public void setExcludes(String excludes) {
-        if (excludes != null && excludes.length() > 0) {
-            Vector tmpExcludes = new Vector();
-            StringTokenizer tok = new StringTokenizer(excludes, ", ", false);
-            while (tok.hasMoreTokens()) {
-                tmpExcludes.addElement(tok.nextToken().trim());
-            }
-            this.excludes = new String[tmpExcludes.size()];
-            for (int i = 0; i < tmpExcludes.size(); i++) {
-                this.excludes[i] = (String)tmpExcludes.elementAt(i);
-            }
-        } else {
-            this.excludes = null;
-        }
-    }
-
-    /**
-     * Sets whether default exclusions should be used or not.
-     *
-     * @param useDefaultExcludes "true" or "on" when default exclusions should
-     *                           be used, "false" or "off" when they
-     *                           shouldn't be used.
-     */
-    public void setDefaultexcludes(String useDefaultExcludes) {
-        this.useDefaultExcludes = Project.toBoolean(useDefaultExcludes);
     }
 
     /**
@@ -269,14 +185,7 @@ public class Javac extends Task {
         // scan source and dest dirs to build up both copy lists and
         // compile lists
 
-        DirectoryScanner ds = new DirectoryScanner();
-        ds.setBasedir(srcDir);
-        ds.setIncludes(includes);
-        ds.setExcludes(excludes);
-        if (useDefaultExcludes) {
-            ds.addDefaultExcludes();
-        }
-        ds.scan();
+        DirectoryScanner ds = super.getDirectoryScanner(srcDir);
 
         String[] files = ds.getIncludedFiles();
 
@@ -411,7 +320,6 @@ public class Javac extends Task {
        }
 
     }
-
 
     /**
      * Peforms a copmile using the classic compiler that shipped with

@@ -131,7 +131,7 @@ import java.util.*;
  * This will scan a directory called test for .class files, but excludes all
  * .class files in all directories under a directory called "modules"
  *
- * @author Arnout J. Kuiper <A HREF="mailto:ajkuiper@wxs.nl">ajkuiper@wxs.nl</A>
+ * @author Arnout J. Kuiper <a href="mailto:ajkuiper@wxs.nl">ajkuiper@wxs.nl</a>
  */
 public class DirectoryScanner {
 

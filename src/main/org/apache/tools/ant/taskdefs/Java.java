@@ -69,6 +69,7 @@ public class Java extends Exec {
     private String classname = null;
     private String args = null;
     private String jvmargs = null;
+    private String classpath = null;
     private boolean fork = false;
     
     /**
@@ -85,6 +86,11 @@ public class Java extends Exec {
         if (fork) {
             StringBuffer b = new StringBuffer();
             b.append("java ");
+            if (classpath != null) {
+                b.append("-cp ");
+                b.append(classpath);
+                b.append(" ");
+            }
             if (jvmargs != null) {
                 b.append(jvmargs);
                 b.append(" ");
@@ -98,10 +104,17 @@ public class Java extends Exec {
             run(b.toString());
         } else {
             Vector argList = tokenize(args);
-            if (jvmargs != null) project.log("JVM args ignored when same JVM is used.", "java", project.MSG_VERBOSE);
+            if (jvmargs != null) project.log("JVM args and classpath ignored when same JVM is used.", "java", project.MSG_VERBOSE);
             project.log("Java args: " + argList.toString(), "java", project.MSG_VERBOSE);
             run(classname, argList);
         }
+    }
+
+    /**
+     * Set the classpath to be used for this compilation.
+     */
+    public void setClasspath(String s) {
+        this.classpath = Project.translatePath(s);
     }
     
     /**

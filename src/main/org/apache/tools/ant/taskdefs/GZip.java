@@ -57,23 +57,20 @@ package org.apache.tools.ant.taskdefs;
 import org.apache.tools.ant.*;
 
 import java.io.*;
-import java.util.Enumeration;
-import java.util.StringTokenizer;
-import java.util.Vector;
 import java.util.zip.*;
 
 /**
- * Allows one to create a .gz file from another file such as a tar file.
+ * Compresses a file with the GZIP algorightm. Normally used to compress
+ * non-compressed archives such as TAR files.
  *
- * @author duncan@x180.com
+ * @author James Davidson <a href="mailto:duncan@x180.com">duncan@x180.com</a>
  * @author Jon S. Stevens <a href="mailto:jon@clearink.com">jon@clearink.com</a>
  */
+ 
 public class GZip extends Task {
 
     private File zipFile;
     private File source;
-    private Vector items = new Vector();
-    private Vector ignoreList = new Vector();
     
     public void setZipfile(String zipFilename) {
         zipFile = project.resolveFile(zipFilename);

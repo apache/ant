@@ -63,21 +63,16 @@ import java.util.Vector;
 import java.util.zip.*;
 
 /**
- * Same as the Jar task, but creates .zip files without the MANIFEST 
- * stuff that .jar files have.
+ * Create a ZIP archive.
  *
  * @author James Davidson <a href="mailto:duncan@x180.com">duncan@x180.com</a>
  * @author Jon S. Stevens <a href="mailto:jon@clearink.com">jon@clearink.com</a>
  */
 
-public class Zip extends Task {
+public class Zip extends MatchingTask {
 
     private File zipFile;
     private File baseDir;
-    private String[] includes;
-    private String[] excludes;
-    private boolean useDefaultExcludes = true;
-    private File manifest;    
     protected String archiveType = "zip";
     
     /**
@@ -95,136 +90,6 @@ public class Zip extends Task {
         baseDir = project.resolveFile(baseDirname);
     }
 
-    /**
-        Set this to be the items in the base directory 
-        that you want to include in the zip archive. 
-        (ie: items="foo, bar, ack.html, f.java").
-        You can also specify "*" for the items (ie: items="*") 
-        and it will include all the items in the base directory.
-        Do not try to have items="*, foo". Also note that 
-        you can specify items to ignore with setIgnore and they 
-        will still be ignored if you choose "*". Sometimes 
-        ignore lists are easier than include lists. ;-)
-    */
-    public void setItems(String itemString) {
-        project.log("The items attribute is deprecated. "+
-                    "Please use the includes attribute.",
-                    Project.MSG_WARN);
-        if (itemString == null || itemString.equals("*")) {
-            includes = new String[1];
-            includes[0] = "**";
-        } else {
-            Vector tmpIncludes = new Vector();
-            StringTokenizer tok = new StringTokenizer(itemString, ", ");
-            while (tok.hasMoreTokens()) {
-                String pattern = tok.nextToken().trim();
-                if (pattern.length() > 0) {
-                    tmpIncludes.addElement(pattern+"/**");
-                }
-            }
-            this.includes = new String[tmpIncludes.size()];
-            for (int i = 0; i < tmpIncludes.size(); i++) {
-                this.includes[i] = (String)tmpIncludes.elementAt(i);
-            }
-        }
-    }
-
-    /**
-        List of filenames and directory names to not 
-        include in the final .jar file. They should be either 
-        , or " " (space) separated.
-        <p>
-        For example:
-        <p>
-        ignore="package.html, foo.class"
-        <p>
-        The ignored files will be logged.
-        
-        @author Jon S. Stevens <a href="mailto:jon@clearink.com">jon@clearink.com</a>
-    */
-    public void setIgnore(String ignoreString) {
-        project.log("The ignore attribute is deprecated. "+
-                    "Please use the excludes attribute.",
-                    Project.MSG_WARN);
-        if (ignoreString == null) {
-            this.excludes = null;
-        } else {
-            Vector tmpExcludes = new Vector();
-            StringTokenizer tok = new StringTokenizer(ignoreString, ", ");
-            while (tok.hasMoreTokens()) {
-                String pattern = tok.nextToken().trim();
-                if (pattern.length() > 0) {
-                    tmpExcludes.addElement("**/"+pattern+"/**");
-                }
-            }
-            this.excludes = new String[tmpExcludes.size()];
-            for (int i = 0; i < tmpExcludes.size(); i++) {
-                this.excludes[i] = (String)tmpExcludes.elementAt(i);
-            }
-        }
-    }
-    
-    /**
-     * Sets the set of include patterns. Patterns may be separated by a comma
-     * or a space.
-     *
-     * @param includes the string containing the include patterns
-     */
-    public void setIncludes(String includes) {
-        if (includes == null) {
-            this.includes = null;
-        } else {
-            Vector tmpIncludes = new Vector();
-            StringTokenizer tok = new StringTokenizer(includes, ", ");
-            while (tok.hasMoreTokens()) {
-                String pattern = tok.nextToken().trim();
-                if (pattern.length() > 0) {
-                    tmpIncludes.addElement(pattern);
-                }
-            }
-            this.includes = new String[tmpIncludes.size()];
-            for (int i = 0; i < tmpIncludes.size(); i++) {
-                this.includes[i] = (String)tmpIncludes.elementAt(i);
-            }
-        }
-    }
-
-    /**
-     * Sets the set of exclude patterns. Patterns may be separated by a comma
-     * or a space.
-     *
-     * @param excludes the string containing the exclude patterns
-     */
-    public void setExcludes(String excludes) {
-        if (excludes == null) {
-            this.excludes = null;
-        } else {
-            Vector tmpExcludes = new Vector();
-            StringTokenizer tok = new StringTokenizer(excludes, ", ", false);
-            while (tok.hasMoreTokens()) {
-                String pattern = tok.nextToken().trim();
-                if (pattern.length() > 0) {
-                    tmpExcludes.addElement(pattern);
-                }
-            }
-            this.excludes = new String[tmpExcludes.size()];
-            for (int i = 0; i < tmpExcludes.size(); i++) {
-                this.excludes[i] = (String)tmpExcludes.elementAt(i);
-            }
-        }
-    }
-
-    /**
-     * Sets whether default exclusions should be used or not.
-     *
-     * @param useDefaultExcludes "true" or "on" when default exclusions should
-     *                           be used, "false" or "off" when they
-     *                           shouldn't be used.
-     */
-    public void setDefaultexcludes(String useDefaultExcludes) {
-        this.useDefaultExcludes = Project.toBoolean(useDefaultExcludes);
-    }
-
     public void execute() throws BuildException {
         project.log("Building "+ archiveType +": "+ zipFile.getAbsolutePath());
 
@@ -235,14 +100,7 @@ public class Zip extends Task {
             throw new BuildException("basedir does not exist!");
         }
 
-        DirectoryScanner ds = new DirectoryScanner();
-        ds.setBasedir(baseDir);
-        ds.setIncludes(includes);
-        ds.setExcludes(excludes);
-        if (useDefaultExcludes) {
-            ds.addDefaultExcludes();
-        }
-        ds.scan();
+        DirectoryScanner ds = super.getDirectoryScanner(baseDir);
 
         String[] files = ds.getIncludedFiles();
         String[] dirs  = ds.getIncludedDirectories();

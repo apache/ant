@@ -60,9 +60,9 @@ import java.io.*;
 import java.util.zip.*;
 
 /**
- *
- *
- * @author duncan@x180.com
+ * Creates a JAR archive.
+ * 
+ * @author James Davidson <a href="mailto:duncan@x180.com">duncan@x180.com</a>
  */
 
 public class Jar extends Zip {

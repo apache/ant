@@ -17,9 +17,9 @@ public class Jikes {
      * @param command - name of jikes executeable
      */
     protected Jikes(JikesOutputParser jop,String command) {
-	super();
-	this.jop = jop;
-	this.command = command;
+        super();
+        this.jop = jop;
+        this.command = command;
     }
 
     /**
@@ -27,21 +27,21 @@ public class Jikes {
      * @param args - arguments to pass to process on command line
      */
     protected void compile(String[] args) {
-	String[] commandArray = new String[args.length+1];
-	commandArray[0] = command;
-	System.arraycopy(args,0,commandArray,1,args.length);
-	
-	// We assume, that everything jikes writes goes to
-	// standard output, not to standard error. The option
-	// -Xstdout that is given to Jikes in Javac.doJikesCompile()
-	// should guarantee this. At least I hope so. :)
-	try {
-	    Process jikes = Runtime.getRuntime().exec(commandArray);
-	    BufferedReader reader = new BufferedReader(new InputStreamReader(jikes.getInputStream()));
-	    jop.parseOutput(reader);
-	} catch (IOException e) {
-	    // Where could we log this to? We don't have an instance
-	    // of project. Perhaps we should add one to our constructor?
-	}
+        String[] commandArray = new String[args.length+1];
+        commandArray[0] = command;
+        System.arraycopy(args,0,commandArray,1,args.length);
+        
+        // We assume, that everything jikes writes goes to
+        // standard output, not to standard error. The option
+        // -Xstdout that is given to Jikes in Javac.doJikesCompile()
+        // should guarantee this. At least I hope so. :)
+        try {
+            Process jikes = Runtime.getRuntime().exec(commandArray);
+            BufferedReader reader = new BufferedReader(new InputStreamReader(jikes.getInputStream()));
+            jop.parseOutput(reader);
+        } catch (IOException e) {
+            // Where could we log this to? We don't have an instance
+            // of project. Perhaps we should add one to our constructor?
+        }
     }
 }
