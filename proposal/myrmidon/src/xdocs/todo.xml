@@ -73,6 +73,79 @@ by Myrmidon.</p>
 
 </subsection>
 
+<subsection name="File Data-Types and Tasks">
+
+<p>The file data-types, such as <code>&lt;fileset&gt;</code> and
+<code>&lt;path&gt;</code>, are some of the most widely used parts of Ant 1.x.
+Unfortunately, they aren't particularly extensible.</p>
+
+<ul>
+    <li>Redesign the file data-types, replacing them with an interface-based
+    API, plus a set of implementations.  The API should use the VFS file
+    <code>FileObject</code>, rather than <code>java.io.File</code>.
+    This process has started, in the <code>antlib.vfile</code> package.
+    </li>
+    <li>File Selectors:
+    <ul>
+        <li>Change <code>AbstractNameFileSelector</code> to use Ant 1 style patterns
+        matches, rather than Globs patterns.</li>
+        <li>Add 'defaultexcludes' to <code>DefaultFileSet</code>.  Also add a
+        file selector implementation that matches everything except the default
+        excludes.</li>
+        <li>Add a condition -> file selector adaptor, so that arbitrary conditions
+        can be used to select files.</li>
+        <li>Add a name selector that loads patterns from a file.</li>
+        <li>Add more selector implementations: size and last-modified comparisons,
+        checksum comparison, byte-wise content comparison.</li>
+    </ul></li>
+    <li>File Name Mappers:
+    <ul>
+        <li>Add a file name mapper interface, and port the current Mapper
+        implementations to it.</li>
+    </ul></li>
+    <li>File Sets:
+    <ul>
+        <li>Add a file set implementation that uses a mapper to transform a nested
+        file set.</li>
+        <li>Add a file set implementation that provides the union of several
+        nested file sets (that is, a file set that merges several file sets
+        together).</li>
+        <li>Add a file set implementation that filters files that are up-to-date
+        WRT some other file.  Alternatively, this might be better done using a
+        file selector.</li>
+    </ul></li>
+    <li>Paths:
+    <ul>
+        <li>Add path implementations that evaluate to the system classpath,
+        and the ant runtime classpath.  Or, more generally, combine this with
+        <code>ClassLoaderManager</code> to evaluate to the classpath of any
+        'library' (e.g. system classpath, ant runtime, tools.jar,
+        an antlib, an installed extension, or the system classes of another JVM
+        for cross-compiling).</li>
+    </ul></li>
+    <li>File Filters:
+    <ul>
+        <li>Add a file filter interface, and use it in the copy task.</li>
+        <li>Add a filter implementation that applies the token replacement that
+        the old copy task provides.</li>
+        <li>Add a filter that does cr/lf translation.</li>
+        <li>Add a gzip/gunzip filter.</li>
+        <li>Add a filter that applies character set encode/decode.</li>
+    </ul></li>
+    <li>Copy task:
+    <ul>
+        <li>Implement 'preservelastmodified', 'overwrite', and 'includeemptydirs'.</li>
+        <li>Support a file name mapper.</li>
+        <li>Support file filters.</li>
+    </ul></li>
+    <li>Implement the <code>&lt;move&gt;</code>, <code>&lt;delete&gt;</code>,
+    <code>&lt;touch&gt;</code> and <code>&lt;mkdir&gt;</code> tasks on top
+    of the VFS and the new file data-types.  Might be some scope for generalising
+    'touch' and 'mkdir' into a single task.</li>
+</ul>
+
+</subsection>
+
 <subsection name="Command-line and Configuration Files">
 
 <p>One of the goals of Ant 2 is to allow the user to easily customise and
