@@ -28,9 +28,9 @@ public interface ProjectListener
     /**
      * Notify listener of targetStarted event.
      *
-     * @param targetName the name of target
+     * @param target the name of target
      */
-    void targetStarted( String targetName );
+    void targetStarted( String target );
 
     /**
      * Notify listener of targetFinished event.
@@ -40,9 +40,9 @@ public interface ProjectListener
     /**
      * Notify listener of taskStarted event.
      *
-     * @param taskName the name of task
+     * @param task the name of task
      */
-    void taskStarted( String taskName );
+    void taskStarted( String task );
 
     /**
      * Notify listener of taskFinished event.
