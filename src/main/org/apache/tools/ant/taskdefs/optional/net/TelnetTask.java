@@ -301,7 +301,7 @@ public class TelnetTask extends Task {
       /**
        * Read from the telnet session until the string we are 
        * waiting for is found 
-       * @parm s The string to wait on 
+       * @param s The string to wait on 
        */
       public void waitForString(String s)
       {
@@ -311,8 +311,8 @@ public class TelnetTask extends Task {
       /**
        * Read from the telnet session until the string we are 
        * waiting for is found or the timeout has been reached
-       * @parm s The string to wait on 
-       * @parm timeout The maximum number of seconds to wait
+       * @param s The string to wait on 
+       * @param timeout The maximum number of seconds to wait
        */
       public void waitForString(String s, Integer timeout)
       {
@@ -354,7 +354,7 @@ public class TelnetTask extends Task {
     
       /**
        * Write this string to the telnet session.
-       * @parm echoString  Logs string sent
+       * @param echoString  Logs string sent
        */
       public void sendString(String s, boolean echoString)
       {
