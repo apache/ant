@@ -668,6 +668,7 @@ public class JUnitTask extends Task {
             if (classLoader != null && reloading) {
                 classLoader.cleanup();
             }
+            classLoader = null;
         }
     }
 
