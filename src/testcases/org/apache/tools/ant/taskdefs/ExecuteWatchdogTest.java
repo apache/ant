@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2000-2002 The Apache Software Foundation.  All rights
+ * Copyright (c) 2000-2003 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -108,7 +108,7 @@ public class ExecuteWatchdogTest extends TestCase {
 
     private Process getProcess(int timetorun) throws Exception {
         String[] cmdArray = {
-            JavaEnvUtils.getJdkExecutable("java"), "-classpath", TEST_CLASSPATH,
+            JavaEnvUtils.getJreExecutable("java"), "-classpath", TEST_CLASSPATH,
             TimeProcess.class.getName(), String.valueOf(timetorun)
         };
         //System.out.println("Testing with classpath: " + System.getProperty("java.class.path"));
