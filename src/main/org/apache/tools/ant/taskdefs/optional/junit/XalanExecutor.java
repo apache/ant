@@ -110,7 +110,7 @@ abstract class XalanExecutor {
             try {
                 procVersion = Class.forName("org.apache.xalan.xslt.XSLProcessorVersion");
                 executor = (XalanExecutor) Class.forName(
-                    "org.apache.tools.ant.taskdefs.optional.junit.Xalan1Executor()").newInstance();
+                    "org.apache.tools.ant.taskdefs.optional.junit.Xalan1Executor").newInstance();
             } catch (Exception xalan1missing){
                 throw new BuildException("Could not find xalan2 nor xalan1 in the classpath. Check http://xml.apache.org/xalan-j");
             }
