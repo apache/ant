@@ -1,0 +1,514 @@
+    
+<html>
+<head>
+  <meta http-equiv="Content-Language" content="en-us">
+  <title>Csc
+ Task</title>
+</head>
+
+<body bgcolor="#ffffff" text="#000000" link="#525D76"
+      alink="#525D76" vlink="#525D76">
+
+<table border="0" width="100%" cellspacing="4">
+
+  <!-- PAGE HEADER -->
+  <tr>
+    <td>
+      <table border="0" width="100%"><tr>
+          <td valign="bottom">
+            <font size="+3" face="arial,helvetica,sanserif"><strong>Csc
+ Task</strong></font>
+            <br><font face="arial,helvetica,sanserif">Compiles C# source into executables or modules.</font>
+          </td>
+          <td>
+            <!-- PROJECT LOGO -->
+            <a href="http://ant.apache.org/">
+              <img src="../../images/ant_logo_large.gif" align="right" alt="Apache Ant" border="0"/>
+            </a>
+          </td>
+      </tr></table>
+    </td>
+  </tr>
+
+  <!-- START RIGHT SIDE MAIN BODY -->
+  <tr>
+    <td  valign="top" align="left">
+
+          <!-- Applying task/long-description -->
+    <!-- Start Description -->
+    <table border="0" cellspacing="0" cellpadding="2" width="100%">
+      <tr><td>&nbsp;</td></tr>
+
+      <tr><td bgcolor="#525D76">
+        <font color="#ffffff" face="arial,helvetica.sanserif">
+          <a name="description">
+          <strong>Description</strong></a></font>
+      </td></tr>
+
+      <tr><td><blockquote>
+        Compiles C# source into executables or modules. csc.exe must be on the execute path, unless another executable or the full path to that executable is specified in the <tt>executable</tt> parameter <p> All parameters are optional: &lt;csc/&gt; should suffice to produce a debug build of all *.cs files. However, naming an <tt>destFile</tt>stops the csc compiler from choosing an output name from random, and allows the dependency checker to determine if the file is out of date. <p> The task is a directory based task, so attributes like <b>includes="*.cs" </b> and <b>excludes="broken.cs"</b> can be used to control the files pulled in. By default, all *.cs files from the project folder down are included in the command. When this happens the output file -if not specified- is taken as the first file in the list, which may be somewhat hard to control. Specifying the output file with <tt>destFile</tt> seems prudent. <p> <p> For more complex source trees, nested <tt>src</tt> elemements can be supplied. When such an element is present, the implicit fileset is ignored. This makes sense, when you think about it :) <p> References to external files can be made through the references attribute, or (since Ant1.6), via nested &lt;reference&gt; filesets. With the latter, the timestamps of the references are also used in the dependency checking algorithm. <p> Example <pre>&lt;csc optimize=&quot;true&quot; debug=&quot;false&quot; docFile=&quot;documentation.xml&quot; warnLevel=&quot;4&quot; unsafe=&quot;false&quot; targetType=&quot;exe&quot; incremental=&quot;false&quot; mainClass = &quot;MainApp&quot; destFile=&quot;NetApp.exe&quot; &gt; &lt;src dir="src" includes="*.cs" /&gt; &lt;reference file="${testCSC.dll}" /&gt; &lt;define name="RELEASE" /&gt; &lt;define name="DEBUG" if="debug.property"/&gt; &lt;define name="def3" unless="def3.property"/&gt; &lt;/csc&gt; </pre>
+      </blockquote></td></tr>
+
+    </table>
+    <!-- End Description -->
+
+    <!-- Start Attributes -->
+    <table border="0" cellspacing="0" cellpadding="2" width="100%">
+      <tr><td>&nbsp;</td></tr>
+      <tr><td bgcolor="#525D76">
+        <font color="#ffffff" face="arial,helvetica.sanserif">
+          <a name="attributes">
+          <strong>Parameters</strong></a></font>
+      </td></tr>
+      <tr><td><blockquote>
+        <table>
+          <tr>
+        <td bgcolor="#cccccc" valign="top" align="left">
+          <font color="#000000" size="-1" face="arial,helvetica,sanserif"><b>Attribute</b></font>
+        </td>
+        <td bgcolor="#cccccc" valign="top" align="left">
+          <font color="#000000" size="-1" face="arial,helvetica,sanserif"><b>Description</b></font>
+        </td>
+        <td bgcolor="#cccccc" valign="top" align="left">
+          <font color="#000000" size="-1" face="arial,helvetica,sanserif"><b>Type</b></font>
+        </td>
+        <td bgcolor="#cccccc" valign="top" align="left">
+          <font color="#000000" size="-1" face="arial,helvetica,sanserif"><b>Requirement</b></font>
+        </td>
+          </tr>
+    <!-- Attribute Group -->    
+    
+    <!-- Attribute Group -->    
+        <!-- Attribute -->
+    <tr>
+        <td bgcolor="#eeeeee" valign="top" align="left">
+          <font color="#000000" size="-1" face="arial,helvetica,sanserif">additionalmodules</font>
+        </td>
+        <td bgcolor="#eeeeee" valign="top" align="left">
+          <font color="#000000" size="-1" face="arial,helvetica,sanserif">Semicolon separated list of modules to refer to.</font>
+        </td>
+        <td bgcolor="#eeeeee" valign="top" align="left">
+          <font color="#000000" size="-1" face="arial,helvetica,sanserif">String</font>
+        </td>
+        <td bgcolor="#eeeeee" valign="top" align="left" rowspan="26">
+          <font color="#000000" size="-1" face="arial,helvetica,sanserif">Optional</font>
+        </td>
+    </tr>
+    <!-- Attribute -->
+    <tr>
+        <td bgcolor="#eeeeee" valign="top" align="left">
+          <font color="#000000" size="-1" face="arial,helvetica,sanserif">debug</font>
+        </td>
+        <td bgcolor="#eeeeee" valign="top" align="left">
+          <font color="#000000" size="-1" face="arial,helvetica,sanserif">set the debug flag on or off.</font>
+        </td>
+        <td bgcolor="#eeeeee" valign="top" align="left">
+          <font color="#000000" size="-1" face="arial,helvetica,sanserif">boolean</font>
+        </td>
+    </tr>
+    <!-- Attribute -->
+    <tr>
+        <td bgcolor="#eeeeee" valign="top" align="left">
+          <font color="#000000" size="-1" face="arial,helvetica,sanserif">definitions</font>
+        </td>
+        <td bgcolor="#eeeeee" valign="top" align="left">
+          <font color="#000000" size="-1" face="arial,helvetica,sanserif">Semicolon separated list of defined constants.</font>
+        </td>
+        <td bgcolor="#eeeeee" valign="top" align="left">
+          <font color="#000000" size="-1" face="arial,helvetica,sanserif">String</font>
+        </td>
+    </tr>
+    <!-- Attribute -->
+    <tr>
+        <td bgcolor="#eeeeee" valign="top" align="left">
+          <font color="#000000" size="-1" face="arial,helvetica,sanserif">destdir</font>
+        </td>
+        <td bgcolor="#eeeeee" valign="top" align="left">
+          <font color="#000000" size="-1" face="arial,helvetica,sanserif">Set the destination directory of files to be compiled.</font>
+        </td>
+        <td bgcolor="#eeeeee" valign="top" align="left">
+          <font color="#000000" size="-1" face="arial,helvetica,sanserif">File</font>
+        </td>
+    </tr>
+    <!-- Attribute -->
+    <tr>
+        <td bgcolor="#eeeeee" valign="top" align="left">
+          <font color="#000000" size="-1" face="arial,helvetica,sanserif">destfile</font>
+        </td>
+        <td bgcolor="#eeeeee" valign="top" align="left">
+          <font color="#000000" size="-1" face="arial,helvetica,sanserif">Set the name of exe/library to create.</font>
+        </td>
+        <td bgcolor="#eeeeee" valign="top" align="left">
+          <font color="#000000" size="-1" face="arial,helvetica,sanserif">File</font>
+        </td>
+    </tr>
+    <!-- Attribute -->
+    <tr>
+        <td bgcolor="#eeeeee" valign="top" align="left">
+          <font color="#000000" size="-1" face="arial,helvetica,sanserif">docfile</font>
+        </td>
+        <td bgcolor="#eeeeee" valign="top" align="left">
+          <font color="#000000" size="-1" face="arial,helvetica,sanserif">file for generated XML documentation</font>
+        </td>
+        <td bgcolor="#eeeeee" valign="top" align="left">
+          <font color="#000000" size="-1" face="arial,helvetica,sanserif">File</font>
+        </td>
+    </tr>
+    <!-- Attribute -->
+    <tr>
+        <td bgcolor="#eeeeee" valign="top" align="left">
+          <font color="#000000" size="-1" face="arial,helvetica,sanserif">executable</font>
+        </td>
+        <td bgcolor="#eeeeee" valign="top" align="left">
+          <font color="#000000" size="-1" face="arial,helvetica,sanserif">set the name of the program, overriding the defaults. Can be used to set the full path to a program, or to switch to an alternate implementation of the command, such as the Mono or Rotor versions -provided they use the same command line arguments as the .NET framework edition</font>
+        </td>
+        <td bgcolor="#eeeeee" valign="top" align="left">
+          <font color="#000000" size="-1" face="arial,helvetica,sanserif">String</font>
+        </td>
+    </tr>
+    <!-- Attribute -->
+    <tr>
+        <td bgcolor="#eeeeee" valign="top" align="left">
+          <font color="#000000" size="-1" face="arial,helvetica,sanserif">extraoptions</font>
+        </td>
+        <td bgcolor="#eeeeee" valign="top" align="left">
+          <font color="#000000" size="-1" face="arial,helvetica,sanserif">Any extra options which are not explicitly supported by this task.</font>
+        </td>
+        <td bgcolor="#eeeeee" valign="top" align="left">
+          <font color="#000000" size="-1" face="arial,helvetica,sanserif">String</font>
+        </td>
+    </tr>
+    <!-- Attribute -->
+    <tr>
+        <td bgcolor="#eeeeee" valign="top" align="left">
+          <font color="#000000" size="-1" face="arial,helvetica,sanserif">failonerror</font>
+        </td>
+        <td bgcolor="#eeeeee" valign="top" align="left">
+          <font color="#000000" size="-1" face="arial,helvetica,sanserif">If true, fail on compilation errors.</font>
+        </td>
+        <td bgcolor="#eeeeee" valign="top" align="left">
+          <font color="#000000" size="-1" face="arial,helvetica,sanserif">boolean</font>
+        </td>
+    </tr>
+    <!-- Attribute -->
+    <tr>
+        <td bgcolor="#eeeeee" valign="top" align="left">
+          <font color="#000000" size="-1" face="arial,helvetica,sanserif">filealign</font>
+        </td>
+        <td bgcolor="#eeeeee" valign="top" align="left">
+          <font color="#000000" size="-1" face="arial,helvetica,sanserif">Set the file alignment. Valid values are 0,512, 1024, 2048, 4096, 8192, and 16384, 0 means 'leave to the compiler'</font>
+        </td>
+        <td bgcolor="#eeeeee" valign="top" align="left">
+          <font color="#000000" size="-1" face="arial,helvetica,sanserif">int</font>
+        </td>
+    </tr>
+    <!-- Attribute -->
+    <tr>
+        <td bgcolor="#eeeeee" valign="top" align="left">
+          <font color="#000000" size="-1" face="arial,helvetica,sanserif">fullpaths</font>
+        </td>
+        <td bgcolor="#eeeeee" valign="top" align="left">
+          <font color="#000000" size="-1" face="arial,helvetica,sanserif">If true, print the full path of files on errors.</font>
+        </td>
+        <td bgcolor="#eeeeee" valign="top" align="left">
+          <font color="#000000" size="-1" face="arial,helvetica,sanserif">boolean</font>
+        </td>
+    </tr>
+    <!-- Attribute -->
+    <tr>
+        <td bgcolor="#eeeeee" valign="top" align="left">
+          <font color="#000000" size="-1" face="arial,helvetica,sanserif">includedefaultreferences</font>
+        </td>
+        <td bgcolor="#eeeeee" valign="top" align="left">
+          <font color="#000000" size="-1" face="arial,helvetica,sanserif">If true, automatically includes the common assemblies in dotnet, and tells the compiler to link in mscore.dll. set the automatic reference inclusion flag on or off this flag controls the /nostdlib option in CSC</font>
+        </td>
+        <td bgcolor="#eeeeee" valign="top" align="left">
+          <font color="#000000" size="-1" face="arial,helvetica,sanserif">boolean</font>
+        </td>
+    </tr>
+    <!-- Attribute -->
+    <tr>
+        <td bgcolor="#eeeeee" valign="top" align="left">
+          <font color="#000000" size="-1" face="arial,helvetica,sanserif">incremental</font>
+        </td>
+        <td bgcolor="#eeeeee" valign="top" align="left">
+          <font color="#000000" size="-1" face="arial,helvetica,sanserif">set the incremental compilation flag on or off.</font>
+        </td>
+        <td bgcolor="#eeeeee" valign="top" align="left">
+          <font color="#000000" size="-1" face="arial,helvetica,sanserif">boolean</font>
+        </td>
+    </tr>
+    <!-- Attribute -->
+    <tr>
+        <td bgcolor="#eeeeee" valign="top" align="left">
+          <font color="#000000" size="-1" face="arial,helvetica,sanserif">mainclass</font>
+        </td>
+        <td bgcolor="#eeeeee" valign="top" align="left">
+          <font color="#000000" size="-1" face="arial,helvetica,sanserif">Sets the name of main class for executables.</font>
+        </td>
+        <td bgcolor="#eeeeee" valign="top" align="left">
+          <font color="#000000" size="-1" face="arial,helvetica,sanserif">String</font>
+        </td>
+    </tr>
+    <!-- Attribute -->
+    <tr>
+        <td bgcolor="#eeeeee" valign="top" align="left">
+          <font color="#000000" size="-1" face="arial,helvetica,sanserif">noconfig</font>
+        </td>
+        <td bgcolor="#eeeeee" valign="top" align="left">
+          <font color="#000000" size="-1" face="arial,helvetica,sanserif">A flag that tells the compiler not to read in the compiler settings files 'csc.rsp' in its bin directory and then the local directory</font>
+        </td>
+        <td bgcolor="#eeeeee" valign="top" align="left">
+          <font color="#000000" size="-1" face="arial,helvetica,sanserif">boolean</font>
+        </td>
+    </tr>
+    <!-- Attribute -->
+    <tr>
+        <td bgcolor="#eeeeee" valign="top" align="left">
+          <font color="#000000" size="-1" face="arial,helvetica,sanserif">optimize</font>
+        </td>
+        <td bgcolor="#eeeeee" valign="top" align="left">
+          <font color="#000000" size="-1" face="arial,helvetica,sanserif">If true, enables optimization flag.</font>
+        </td>
+        <td bgcolor="#eeeeee" valign="top" align="left">
+          <font color="#000000" size="-1" face="arial,helvetica,sanserif">boolean</font>
+        </td>
+    </tr>
+    <!-- Attribute -->
+    <tr>
+        <td bgcolor="#eeeeee" valign="top" align="left">
+          <font color="#000000" size="-1" face="arial,helvetica,sanserif">outputfile</font>
+        </td>
+        <td bgcolor="#eeeeee" valign="top" align="left">
+          <font color="#000000" size="-1" face="arial,helvetica,sanserif">The output file. This is identical to the destFile attribute.</font>
+        </td>
+        <td bgcolor="#eeeeee" valign="top" align="left">
+          <font color="#000000" size="-1" face="arial,helvetica,sanserif">File</font>
+        </td>
+    </tr>
+    <!-- Attribute -->
+    <tr>
+        <td bgcolor="#eeeeee" valign="top" align="left">
+          <font color="#000000" size="-1" face="arial,helvetica,sanserif">referencefiles</font>
+        </td>
+        <td bgcolor="#eeeeee" valign="top" align="left">
+          <font color="#000000" size="-1" face="arial,helvetica,sanserif">Path of references to include. Wildcards should work.</font>
+        </td>
+        <td bgcolor="#eeeeee" valign="top" align="left">
+          <font color="#000000" size="-1" face="arial,helvetica,sanserif">Path</font>
+        </td>
+    </tr>
+    <!-- Attribute -->
+    <tr>
+        <td bgcolor="#eeeeee" valign="top" align="left">
+          <font color="#000000" size="-1" face="arial,helvetica,sanserif">references</font>
+        </td>
+        <td bgcolor="#eeeeee" valign="top" align="left">
+          <font color="#000000" size="-1" face="arial,helvetica,sanserif">Semicolon separated list of DLLs to refer to.</font>
+        </td>
+        <td bgcolor="#eeeeee" valign="top" align="left">
+          <font color="#000000" size="-1" face="arial,helvetica,sanserif">String</font>
+        </td>
+    </tr>
+    <!-- Attribute -->
+    <tr>
+        <td bgcolor="#eeeeee" valign="top" align="left">
+          <font color="#000000" size="-1" face="arial,helvetica,sanserif">srcdir</font>
+        </td>
+        <td bgcolor="#eeeeee" valign="top" align="left">
+          <font color="#000000" size="-1" face="arial,helvetica,sanserif">Set the source directory of the files to be compiled.</font>
+        </td>
+        <td bgcolor="#eeeeee" valign="top" align="left">
+          <font color="#000000" size="-1" face="arial,helvetica,sanserif">File</font>
+        </td>
+    </tr>
+    <!-- Attribute -->
+    <tr>
+        <td bgcolor="#eeeeee" valign="top" align="left">
+          <font color="#000000" size="-1" face="arial,helvetica,sanserif">targettype</font>
+        </td>
+        <td bgcolor="#eeeeee" valign="top" align="left">
+          <font color="#000000" size="-1" face="arial,helvetica,sanserif">set the target type to one of exe|library|module|winexe</font>
+        </td>
+        <td bgcolor="#eeeeee" valign="top" align="left">
+          <font color="#000000" size="-1" face="arial,helvetica,sanserif">"exe", "library", "module", "winexe"</font>
+        </td>
+    </tr>
+    <!-- Attribute -->
+    <tr>
+        <td bgcolor="#eeeeee" valign="top" align="left">
+          <font color="#000000" size="-1" face="arial,helvetica,sanserif">unsafe</font>
+        </td>
+        <td bgcolor="#eeeeee" valign="top" align="left">
+          <font color="#000000" size="-1" face="arial,helvetica,sanserif">If true, enables the unsafe keyword.</font>
+        </td>
+        <td bgcolor="#eeeeee" valign="top" align="left">
+          <font color="#000000" size="-1" face="arial,helvetica,sanserif">boolean</font>
+        </td>
+    </tr>
+    <!-- Attribute -->
+    <tr>
+        <td bgcolor="#eeeeee" valign="top" align="left">
+          <font color="#000000" size="-1" face="arial,helvetica,sanserif">utf8output</font>
+        </td>
+        <td bgcolor="#eeeeee" valign="top" align="left">
+          <font color="#000000" size="-1" face="arial,helvetica,sanserif">If true, require all compiler output to be in UTF8 format.</font>
+        </td>
+        <td bgcolor="#eeeeee" valign="top" align="left">
+          <font color="#000000" size="-1" face="arial,helvetica,sanserif">boolean</font>
+        </td>
+    </tr>
+    <!-- Attribute -->
+    <tr>
+        <td bgcolor="#eeeeee" valign="top" align="left">
+          <font color="#000000" size="-1" face="arial,helvetica,sanserif">warnlevel</font>
+        </td>
+        <td bgcolor="#eeeeee" valign="top" align="left">
+          <font color="#000000" size="-1" face="arial,helvetica,sanserif">Level of warning currently between 1 and 4 with 4 being the strictest.</font>
+        </td>
+        <td bgcolor="#eeeeee" valign="top" align="left">
+          <font color="#000000" size="-1" face="arial,helvetica,sanserif">int</font>
+        </td>
+    </tr>
+    <!-- Attribute -->
+    <tr>
+        <td bgcolor="#eeeeee" valign="top" align="left">
+          <font color="#000000" size="-1" face="arial,helvetica,sanserif">win32icon</font>
+        </td>
+        <td bgcolor="#eeeeee" valign="top" align="left">
+          <font color="#000000" size="-1" face="arial,helvetica,sanserif">Set the filename of icon to include.</font>
+        </td>
+        <td bgcolor="#eeeeee" valign="top" align="left">
+          <font color="#000000" size="-1" face="arial,helvetica,sanserif">File</font>
+        </td>
+    </tr>
+    <!-- Attribute -->
+    <tr>
+        <td bgcolor="#eeeeee" valign="top" align="left">
+          <font color="#000000" size="-1" face="arial,helvetica,sanserif">win32res</font>
+        </td>
+        <td bgcolor="#eeeeee" valign="top" align="left">
+          <font color="#000000" size="-1" face="arial,helvetica,sanserif">Sets the filename of a win32 resource (.RES) file to include. This is not a .NET resource, but what Windows is used to.</font>
+        </td>
+        <td bgcolor="#eeeeee" valign="top" align="left">
+          <font color="#000000" size="-1" face="arial,helvetica,sanserif">File</font>
+        </td>
+    </tr>
+
+
+        </table>
+      </blockquote></td></tr>
+
+    </table>
+    <!-- End Attributes -->
+
+    <!-- Start Elements -->
+    <table border="0" cellspacing="0" cellpadding="2" width="100%">
+      <tr><td>&nbsp;</td></tr>
+
+      <tr><td bgcolor="#525D76">
+        <font color="#ffffff" face="arial,helvetica.sanserif">
+          <a name="elements">
+          <strong>Parameters as nested elements</strong></a></font>
+      </td></tr>
+
+      <tr><td><blockquote>
+    <!-- Start Element -->
+    <table border="0" cellspacing="0" cellpadding="2" width="100%">
+      <tr><td>&nbsp;</td></tr>
+      <tr><td bgcolor="#828DA6">
+        <font color="#ffffff" face="arial,helvetica.sanserif" size="-1">
+          <strong>define</strong> (org.apache.tools.ant.taskdefs.optional.dotnet.DotnetDefine)</font>
+      </td></tr>
+      <tr><td><blockquote>
+        add a define to the list of definitions
+<short-description><![CDATA[Add a define to the list of definitions.]]></short-description>
+<description>
+            <![CDATA[add a define to the list of definitions]]>
+          </description>
+
+      </blockquote></td></tr>
+    </table>
+    <!-- End Element -->
+    <!-- Start Element -->
+    <table border="0" cellspacing="0" cellpadding="2" width="100%">
+      <tr><td>&nbsp;</td></tr>
+      <tr><td bgcolor="#828DA6">
+        <font color="#ffffff" face="arial,helvetica.sanserif" size="-1">
+          <strong>reference</strong> (org.apache.tools.ant.types.FileSet)</font>
+      </td></tr>
+      <tr><td><blockquote>
+        add a new reference fileset to the compilation
+<short-description><![CDATA[Add a new reference fileset to the compilation.]]></short-description>
+<description>
+            <![CDATA[add a new reference fileset to the compilation]]>
+          </description>
+
+      </blockquote></td></tr>
+    </table>
+    <!-- End Element -->
+    <!-- Start Element -->
+    <table border="0" cellspacing="0" cellpadding="2" width="100%">
+      <tr><td>&nbsp;</td></tr>
+      <tr><td bgcolor="#828DA6">
+        <font color="#ffffff" face="arial,helvetica.sanserif" size="-1">
+          <strong>resource</strong> (org.apache.tools.ant.taskdefs.optional.dotnet.DotnetResource)</font>
+      </td></tr>
+      <tr><td><blockquote>
+        link or embed a resource
+<short-description><![CDATA[Link or embed a resource.]]></short-description>
+<description>
+            <![CDATA[link or embed a resource]]>
+          </description>
+
+      </blockquote></td></tr>
+    </table>
+    <!-- End Element -->
+    <!-- Start Element -->
+    <table border="0" cellspacing="0" cellpadding="2" width="100%">
+      <tr><td>&nbsp;</td></tr>
+      <tr><td bgcolor="#828DA6">
+        <font color="#ffffff" face="arial,helvetica.sanserif" size="-1">
+          <strong>src</strong> (org.apache.tools.ant.types.FileSet)</font>
+      </td></tr>
+      <tr><td><blockquote>
+        add a new source directory to the compile
+<short-description><![CDATA[Add a new source directory to the compile.]]></short-description>
+<description>
+            <![CDATA[add a new source directory to the compile]]>
+          </description>
+
+      </blockquote></td></tr>
+    </table>
+    <!-- End Element -->
+
+      </blockquote></td></tr>
+
+    </table>
+    <!-- End Elements -->
+
+
+    </td>
+  </tr>
+  <!-- END RIGHT SIDE MAIN BODY -->
+
+  <!-- FOOTER SEPARATOR -->
+  <tr>
+    <td>
+      <hr noshade="" size="1"/>
+    </td>
+  </tr>
+
+  <!-- PAGE FOOTER -->
+  <tr>
+    <td>
+      <div align="center"><font color="#525D76" size="-1"><em>
+        Copyright &#169; 2000-2003, Apache Software Foundation
+      </em></font></div>
+    </td>
+  </tr>
+
+</table>
+
+</body>
+</html>
