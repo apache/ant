@@ -92,6 +92,7 @@ public class ExecTask extends Task {
     private FileOutputStream fos = null;
     private ByteArrayOutputStream baos = null;
     private String outputprop;
+    private String resultProperty;
 
     /** Controls whether the VM (1.3 and above) is used to execute the command */
     private boolean vmLauncher = true;
@@ -178,6 +179,27 @@ public class ExecTask extends Task {
     }
 
     /**
+     * fill a property in with a result. 
+     * when no property is defined: failure to execute
+     * @since 1.5
+     */
+    public void setResultProperty(String resultProperty) {
+        this.resultProperty=resultProperty;
+    }
+    
+    /**
+     * helper method to set result property to the 
+     * passed in value if appropriate
+     */
+    protected void maybeSetResultPropertyValue(int result) {
+        String res=Integer.toString(result);
+        if(resultProperty!=null
+           && project.getProperty(resultProperty) == null) {
+                project.setProperty(resultProperty,res);
+        }
+    }
+    
+    /**
      * Do the work.
      */
     public void execute() throws BuildException {
@@ -257,6 +279,7 @@ public class ExecTask extends Task {
         int err = -1; // assume the worst
 
         err = exe.execute();
+        maybeSetResultPropertyValue(err);
         if (err != 0) {
             if (failOnError) {
                 throw new BuildException(taskType + " returned: "+err, location);
@@ -287,7 +310,11 @@ public class ExecTask extends Task {
         try {
             runExecute(exe);
         } catch (IOException e) {
-            throw new BuildException("Execute failed: " + e, e, location);
+            if (failOnError) {
+                throw new BuildException("Execute failed: ",e, location);
+            } else {
+                log("Execute failed: "+e.toString(), Project.MSG_ERR);
+            }
         } finally {
             // close the output file if required
             logFlush();
@@ -309,10 +336,9 @@ public class ExecTask extends Task {
                 throw new BuildException("Cannot write to "+out, ioe, location);
             }
         } else if (outputprop != null) {
-        //    try {
-        baos = new ByteArrayOutputStream();
-        log("Output redirected to ByteArray", Project.MSG_VERBOSE);
-        return new PumpStreamHandler(baos);
+            baos = new ByteArrayOutputStream();
+            log("Output redirected to ByteArray", Project.MSG_VERBOSE);
+            return new PumpStreamHandler(baos);
         } else {
             return new LogStreamHandler(this,
                                         Project.MSG_INFO, Project.MSG_WARN);
