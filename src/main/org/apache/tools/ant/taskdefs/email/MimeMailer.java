@@ -67,12 +67,17 @@ import java.util.Properties;
 import java.util.StringTokenizer;
 import java.util.Vector;
 import java.security.Security;
+import java.security.Provider;
 
 import javax.activation.DataHandler;
 import javax.activation.FileDataSource;
 
-import javax.mail.*;
+import javax.mail.Authenticator;
+import javax.mail.PasswordAuthentication;
+import javax.mail.Session;
 import javax.mail.Message;
+import javax.mail.Transport;
+import javax.mail.MessagingException;
 import javax.mail.internet.AddressException;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeBodyPart;
@@ -89,8 +94,9 @@ import org.apache.tools.ant.BuildException;
  * @since Ant 1.5
  */
 public class MimeMailer extends Mailer {
-    // Default character set
-    private static final String defaultCharset = System.getProperty("file.encoding");
+    /** Default character set */
+    private static final String DEFAULT_CHARSET
+        = System.getProperty("file.encoding");
 
     // To work poperly with national charsets we have to use
     // implementation of interface javax.activation.DataSource
@@ -98,40 +104,41 @@ public class MimeMailer extends Mailer {
      * @since Ant 1.6
      */
     class StringDataSource implements javax.activation.DataSource {
-      private String data=null;
-      private String type=null;
+      private String data = null;
+      private String type = null;
       private String charset = null;
       private ByteArrayOutputStream out;
 
       public InputStream getInputStream() throws IOException {
-        if(data == null && out == null)
+        if (data == null && out == null) {
           throw new IOException("No data");
-        else {
-          if(out!=null) {
-            data=(data!=null)?data.concat(out.toString(charset)):out.toString(charset);
-            out=null;
+        } else {
+          if (out != null) {
+            data = (data != null) ? data.concat(out.toString(charset)) : out.toString(charset);
+            out = null;
           }
           return new ByteArrayInputStream(data.getBytes(charset));
         }
       }
 
       public OutputStream getOutputStream() throws IOException {
-        if(out==null) {
-          out=new ByteArrayOutputStream();
+        if (out == null) {
+          out = new ByteArrayOutputStream();
         }
         return out;
       }
 
       public void setContentType(String type) {
-        this.type=type.toLowerCase();
+        this.type = type.toLowerCase();
       }
 
       public String getContentType() {
-        if(type !=null && type.indexOf("charset")>0 && type.startsWith("text/"))
+        if (type != null && type.indexOf("charset") > 0 && type.startsWith("text/")) {
           return type;
+        }
         // Must be like "text/plain; charset=windows-1251"
-        return type!=null?type.concat("; charset=".concat(charset)):
-                     "text/plain".concat("; charset=".concat(charset));
+        return type != null ? type.concat("; charset=".concat(charset))
+                            : "text/plain".concat("; charset=".concat(charset));
       }
 
       public String getName() {
@@ -160,24 +167,25 @@ public class MimeMailer extends Mailer {
             Authenticator auth;
             if (SSL) {
                 try {
-                    java.security.Provider p=(java.security.Provider)Class.forName( "com.sun.net.ssl.internal.ssl.Provider").newInstance();
+                    Provider p
+                        = (Provider) Class.forName("com.sun.net.ssl.internal.ssl.Provider").newInstance();
                     Security.addProvider(p);
-                }
-                catch (Exception e) {
-                    throw new BuildException("could not instantiate ssl security provider, check that you have JSSE in your classpath");
+                } catch (Exception e) {
+                    throw new BuildException("could not instantiate ssl "
+                        + "security provider, check that you have JSSE in "
+                        + "your classpath");
                 }
                 final String SSL_FACTORY = "javax.net.ssl.SSLSocketFactory";
                 // SMTP provider
-                props.put( "mail.smtp.socketFactory.class", SSL_FACTORY);
-                props.put( "mail.smtp.socketFactory.fallback", "false");
+                props.put("mail.smtp.socketFactory.class", SSL_FACTORY);
+                props.put("mail.smtp.socketFactory.fallback", "false");
             }
-            if (user==null && password == null) {
+            if (user == null && password == null) {
                 sesh = Session.getDefaultInstance(props, null);
-            }
-            else {
+            } else {
                 props.put("mail.smtp.auth", "true");
-                auth = new SimpleAuthenticator(user,password);
-                sesh = Session.getInstance(props,auth);
+                auth = new SimpleAuthenticator(user, password);
+                sesh = Session.getInstance(props, auth);
             }
             //create the message
             MimeMessage msg = new MimeMessage(sesh);
@@ -202,18 +210,17 @@ public class MimeMailer extends Mailer {
             // Choosing character set of the mail message
             // First: looking it from MimeType
             String charset = parseCharSetFromMimeType(message.getMimeType());
-            if(charset!=null) {
-              // Assign/reassign message charset from MimeType
+            if (charset != null) {
+                // Assign/reassign message charset from MimeType
                 message.setCharset(charset);
-            }
-            // Next: looking if charset having explict definition
-            else {
-              charset = message.getCharset();
-              if(charset==null) {
-                // Using default
-                charset=defaultCharset;
-                message.setCharset(charset);
-              }
+            } else {
+                // Next: looking if charset having explict definition
+                charset = message.getCharset();
+                if (charset == null) {
+                    // Using default
+                    charset = DEFAULT_CHARSET;
+                    message.setCharset(charset);
+                }
             }
 
             // Using javax.activation.DataSource paradigm
@@ -221,8 +228,9 @@ public class MimeMailer extends Mailer {
             sds.setContentType(message.getMimeType());
             sds.setCharset(charset);
 
-            if (subject != null)
-                msg.setSubject(subject,charset);
+            if (subject != null) {
+                msg.setSubject(subject, charset);
+            }
             msg.addHeader("Date", getDate());
 
             PrintStream out = new PrintStream(sds.getOutputStream());
@@ -283,27 +291,28 @@ public class MimeMailer extends Mailer {
 
     }
 
-    private String parseCharSetFromMimeType(String type){
-      int pos;
-      if(type==null || (pos=type.indexOf("charset"))<0)
-        return null;
-      // Assuming mime type in form "text/XXXX; charset=XXXXXX"
-      StringTokenizer token = new StringTokenizer(type.substring(pos),"=; ");
-      token.nextToken();// Skip 'charset='
-      return token.nextToken();
+    private String parseCharSetFromMimeType(String type) {
+        int pos;
+        if (type == null || (pos = type.indexOf("charset")) < 0) {
+          return null;
+        }
+        // Assuming mime type in form "text/XXXX; charset=XXXXXX"
+        StringTokenizer token = new StringTokenizer(type.substring(pos), "=; ");
+        token.nextToken(); // Skip 'charset='
+        return token.nextToken();
     }
-  static class SimpleAuthenticator extends Authenticator {
-        private String user=null;
-        private String password=null;
+
+    static class SimpleAuthenticator extends Authenticator {
+        private String user = null;
+        private String password = null;
         public SimpleAuthenticator(String user, String password) {
-            this.user=user;
-            this.password=password;
+            this.user = user;
+            this.password = password;
         }
         public PasswordAuthentication getPasswordAuthentication() {
 
             return new PasswordAuthentication(user, password);
-
         }
-
-    }}
+    }
+}
 
