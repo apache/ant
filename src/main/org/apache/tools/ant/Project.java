@@ -752,8 +752,13 @@ public class Project {
                          boolean overwrite, boolean preserveLastModified)
         throws IOException {
         
-        if (overwrite ||
+        if (overwrite || !destFile.exists() ||
             destFile.lastModified() < sourceFile.lastModified()) {
+
+            if (destFile.exists()) {
+                destFile.delete();
+            }
+
             log("Copy: " + sourceFile.getAbsolutePath() + " -> "
                     + destFile.getAbsolutePath(), MSG_VERBOSE);
 

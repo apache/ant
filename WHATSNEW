@@ -139,6 +139,9 @@ Fixed bugs:
 * <jjtree>'s uptodate test works even if outputdirectory is not the
   parent dir of target
 
+* <copy> will remove target file (if it exists) before writing to it -
+  this avoids problems with links on filesystems that support them.
+
 Changes from Ant 1.2 to Ant 1.3
 ===========================================
 
