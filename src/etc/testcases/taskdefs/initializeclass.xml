@@ -4,7 +4,7 @@
   <target name="all"/>
 
   <target name="forked">
-    <java fork="true" output="forkedout" 
+    <java fork="true" output="forkedout" failonerror="true"
           className="org.apache.tools.ant.taskdefs.dir1.B">
 
       <classpath>
