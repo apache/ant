@@ -68,57 +68,57 @@ package org.apache.tools.ant.taskdefs.optional.junit;
  */
 public interface XMLConstants {
     /** the testsuites element for the aggregate document */
-    public final static String TESTSUITES = "testsuites";
+    String TESTSUITES = "testsuites";
 
     /** the testsuite element */
-    public final static String TESTSUITE = "testsuite";
+    String TESTSUITE = "testsuite";
 
     /** the testcase element */
-    public final static String TESTCASE = "testcase";
+    String TESTCASE = "testcase";
 
     /** the error element */
-    public final static String ERROR = "error";
+    String ERROR = "error";
 
     /** the failure element */
-    public final static String FAILURE = "failure";
+    String FAILURE = "failure";
 
     /** the system-err element */
-    public final static String SYSTEM_ERR = "system-err";
+    String SYSTEM_ERR = "system-err";
 
     /** the system-out element */
-    public final static String SYSTEM_OUT = "system-out";
+    String SYSTEM_OUT = "system-out";
 
     /** package attribute for the aggregate document */
-    public final static String ATTR_PACKAGE = "package";
+    String ATTR_PACKAGE = "package";
 
     /** name attribute for property, testcase and testsuite elements */
-    public final static String ATTR_NAME = "name";
+    String ATTR_NAME = "name";
 
     /** time attribute for testcase and testsuite elements */
-    public final static String ATTR_TIME = "time";
+    String ATTR_TIME = "time";
 
     /** errors attribute for testsuite elements */
-    public final static String ATTR_ERRORS = "errors";
+    String ATTR_ERRORS = "errors";
 
     /** failures attribute for testsuite elements */
-    public final static String ATTR_FAILURES = "failures";
+    String ATTR_FAILURES = "failures";
 
     /** tests attribute for testsuite elements */
-    public final static String ATTR_TESTS = "tests";
+    String ATTR_TESTS = "tests";
 
     /** type attribute for failure and error elements */
-    public final static String ATTR_TYPE = "type";
+    String ATTR_TYPE = "type";
 
     /** message attribute for failure elements */
-    public final static String ATTR_MESSAGE = "message";
+    String ATTR_MESSAGE = "message";
 
     /** the properties element */
-    public final static String PROPERTIES = "properties";
+    String PROPERTIES = "properties";
 
     /** the property element */
-    public final static String PROPERTY = "property";
+    String PROPERTY = "property";
 
     /** value attribute for property elements */
-    public final static String ATTR_VALUE = "value";
+    String ATTR_VALUE = "value";
 
 }

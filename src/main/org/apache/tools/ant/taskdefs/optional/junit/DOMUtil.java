@@ -89,7 +89,7 @@ public final class DOMUtil {
          * @return      <tt>true</tt> if the node is accepted by this filter,
          *                      otherwise <tt>false</tt>
          */
-        public boolean accept(Node node);
+        boolean accept(Node node);
     }
 
     /**
