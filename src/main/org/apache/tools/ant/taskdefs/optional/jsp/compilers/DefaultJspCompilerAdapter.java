@@ -54,14 +54,12 @@
 
 package org.apache.tools.ant.taskdefs.optional.jsp.compilers;
 
+import java.io.File;
+import java.util.Enumeration;
+import java.util.Vector;
 import org.apache.tools.ant.Project;
-
 import org.apache.tools.ant.taskdefs.optional.jsp.JspC;
 import org.apache.tools.ant.types.CommandlineJava;
-
-import java.util.Vector;
-import java.util.Enumeration;
-import java.io.File;
 
 /**
  * This is the default implementation for the JspCompilerAdapter interface.
@@ -73,10 +71,8 @@ import java.io.File;
 public abstract class DefaultJspCompilerAdapter
     implements JspCompilerAdapter {
 
-    /* ------------------------------------------------------------ */
     private static String lSep = System.getProperty("line.separator");
 
-    /* ------------------------------------------------------------ */
     /**
      * Logs the compilation parameters, adds the files to compile and logs the 
      * &quot;niceSourceList&quot;

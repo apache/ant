@@ -54,17 +54,15 @@
 
 package org.apache.tools.ant.taskdefs.optional.jsp.compilers;
 
+import java.io.File;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
-import org.apache.tools.ant.types.CommandlineJava;
-import org.apache.tools.ant.types.Path;
+import org.apache.tools.ant.taskdefs.Java;
 import org.apache.tools.ant.taskdefs.optional.jsp.JspC;
 import org.apache.tools.ant.taskdefs.optional.jsp.JspMangler;
 import org.apache.tools.ant.taskdefs.optional.jsp.JspNameMangler;
-import org.apache.tools.ant.taskdefs.Java;
-import org.apache.tools.ant.taskdefs.ExecuteJava;
-
-import java.io.File;
+import org.apache.tools.ant.types.CommandlineJava;
+import org.apache.tools.ant.types.Path;
 
 /**
  * The implementation of the jasper compiler.
@@ -106,10 +104,13 @@ public class JasperC extends DefaultJspCompilerAdapter {
             // REVISIT. ugly. 
             Java java = (Java) (getProject().createTask("java"));
             if (getJspc().getClasspath() != null) {
+                getProject().log("using user supplied classpath: "+getJspc().getClasspath(),
+                    Project.MSG_DEBUG);
                 java.setClasspath(getJspc().getClasspath());
             } else {
                 Path classpath=new Path(getProject());
-                classpath.concatSystemClasspath();
+                classpath=classpath.concatSystemClasspath("only");
+                getProject().log("using system classpath: "+classpath, Project.MSG_DEBUG);
                 java.setClasspath(classpath);
             }
             java.setDir(getProject().getBaseDir());
@@ -123,6 +124,7 @@ public class JasperC extends DefaultJspCompilerAdapter {
             //we are forking here to be sure that if JspC calls
             //System.exit() it doesn't halt the build
             java.setFork(true);
+            java.setTaskName("jasperc");
             java.execute();
             return true;
         } catch (Exception ex) {

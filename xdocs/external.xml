@@ -443,6 +443,30 @@
         </table>
       </subsection>
 
+      <subsection name="Jing Task">
+
+        <p> Validates XML files against the RELAX NG alternative to XML Schema.
+        The Jing task for Ant allows you to efficiently validate 
+        multiple files against multiple RELAX NG patterns and integrate 
+        RELAX NG validation with other XML processing.</p>
+
+        <table>
+          <tr>
+            <th>Compatibility:</th>
+            <td>Ant 1.4 and later</td>  
+          </tr>
+          <tr>
+            <th>URL:</th>
+            <td><a href="http://www.thaiopensource.com/relaxng/jing-ant.html">
+            http://www.thaiopensource.com/relaxng/jing-ant.html</a></td>
+          </tr>
+          <tr>
+            <th>License:</th>
+            <td>BSD-like</td>
+          </tr>
+        </table>
+      </subsection>
+
       <subsection name="jMetra">
 
         <p>jMetra is a tool for collecting code metrics across a
@@ -480,6 +504,47 @@
           </tr>
         </table>
       </subsection>
+
+      <subsection name="JNI">
+
+        <p>
+        
+          JNI is a free toolkit that makes easy work of
+          integrating Java and C through the Java Native
+          Interface (JNI). It includes a code generator that
+          generates both Java "proxy" classes to access C
+          "peer" classes, and C "proxy" classes to access
+          Java "peer" classes or interfaces. It also
+          includes a core library with a simplified JVM
+          interface as well as "helper" classes to ease
+          working with the JNI data types. The code
+          generation is driven by an XML project file that
+          can be created with the assistance of the GUI
+          Project Manager. The code generation can be
+          invoked either from Ant or from the
+          GUI. Includes a comprehensive printable PDF User
+          Guide and plenty of examples.</p>
+
+        <table>
+          <tr>
+            <th>Compatibility:</th>
+            <td>Ant 1.4</td>
+          </tr>
+          <tr>
+            <th>URL:</th>
+            <td><a href="http://jnipp.sf.net/">http://jnipp.sf.net/</a></td>
+          </tr>
+          <tr>
+            <th>Contact:</th>
+            <td><a href="mailto:ptrewhella@users.sf.net">Phillip E. Trewhella</a></td>
+          </tr>
+          <tr>
+            <th>License:</th>
+            <td>GNU LGPL</td>
+          </tr>
+        </table>
+      </subsection>
+
 
       <subsection name="PMD">
 
@@ -707,29 +772,6 @@
         </table>
       </subsection>
 
-     <subsection name="Jing Task">
-
-        <p> Validates XML files against the RELAX NG alternative to XML Schema.
-        The Jing task for Ant allows you to efficiently validate 
-        multiple files against multiple RELAX NG patterns and integrate 
-        RELAX NG validation with other XML processing.</p>
-
-        <table>
-          <tr>
-            <th>Compatibility:</th>
-            <td>Ant 1.4 and later</td>  
-          </tr>
-          <tr>
-            <th>URL:</th>
-            <td><a href="http://www.thaiopensource.com/relaxng/jing-ant.html">
-            http://www.thaiopensource.com/relaxng/jing-ant.html</a></td>
-          </tr>
-          <tr>
-            <th>License:</th>
-            <td>BSD-like</td>
-          </tr>
-        </table>
-      </subsection>
       
     </section>
 
