@@ -33,7 +33,7 @@ public class WLRmic extends DefaultRmicAdapter {
     /**
      * the name of this adapter for users to select
      */
-    public static final String COMPILER_NAME = "wlrmic";
+    public static final String COMPILER_NAME = "weblogic";
 
     public static final String ERROR_NO_WLRMIC_ON_CLASSPATH = "Cannot use WebLogic rmic, as it is not "
                                          + "available.  A common solution is to "

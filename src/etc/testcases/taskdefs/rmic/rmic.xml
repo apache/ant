@@ -89,7 +89,7 @@
 
   <target name="testWlrmic" if="wlrmic.present" depends="init">
     <base-rmic
-      compiler="wlrmic"
+      compiler="weblogic"
       />
   </target>
 
