@@ -79,11 +79,17 @@ public class War extends Jar {
         emptyBehavior = "create";
     }
 
+    /**
+     * @deprecated Use setDestFile(File) instead
+     */    
     public void setWarfile(File warFile) {
-        log("DEPRECATED - The warfile attribute is deprecated. Use file attribute instead.");
-        setFile(warFile);
+        log("DEPRECATED - The warfile attribute is deprecated. Use destfile attribute instead.");
+        setDestFile(warFile);
     }
     
+    /**
+     * set the web app descriptor for this WAR file
+     */
     public void setWebxml(File descr) {
         deploymentDescriptor = descr; 
         if (!deploymentDescriptor.exists())

@@ -101,4 +101,8 @@ public class ZipTest extends BuildFileTest {
     public void test7() { 
         executeTarget("test7");
     }
+
+    public void test8() { 
+        executeTarget("test8");
+    }    
 }

@@ -79,11 +79,17 @@ public class Ear extends Jar {
         emptyBehavior = "create";
     }
 
+    /**
+     * @deprecated Use setDestFile(destfile) instead
+     */ 
     public void setEarfile(File earFile) {
-        log("DEPRECATED - The earfile attribute is deprecated. Use file attribute instead.");
-        setFile(earFile);
+        log("DEPRECATED - The earfile attribute is deprecated. Use destfile attribute instead.");
+        setDestFile(earFile);
     }
     
+    /**
+     * set the application XML file
+     */
     public void setAppxml(File descr) {
         deploymentDescriptor = descr; 
         if (!deploymentDescriptor.exists())
@@ -121,11 +127,11 @@ public class Ear extends Jar {
     protected void zipFile(File file, ZipOutputStream zOut, String vPath)
         throws IOException
     {
-        // If the file being added is WEB-INF/web.xml, we warn if it's not the
-        // one specified in the "webxml" attribute - or if it's being added twice, 
-        // meaning the same file is specified by the "webxml" attribute and in
+        // If the file being added is META-INF/application.xml, we warn if it's not the
+        // one specified in the "appxml" attribute - or if it's being added twice, 
+        // meaning the same file is specified by the "appxml" attribute and in
         // a <fileset> element.
-        if (vPath.equalsIgnoreCase("META-INF/aplication.xml"))  {
+        if (vPath.equalsIgnoreCase("META-INF/application.xml"))  {
             if (deploymentDescriptor == null || !deploymentDescriptor.equals(file) || descriptorAdded) {
                 log("Warning: selected "+archiveType+" files include a META-INF/application.xml which will be ignored " +
                     "(please use appxml attribute to "+archiveType+" task)", Project.MSG_WARN);
@@ -139,7 +145,7 @@ public class Ear extends Jar {
     }
 
     /**
-     * Make sure we don't think we already have a web.xml next time this task
+     * Make sure we don't think we already have a application.xml next time this task
      * gets executed.
      */
     protected void cleanUp() {

@@ -58,8 +58,8 @@ being wrapped and continued on the next line.
     <td align="center" valign="top"><b>Required</b></td>
   </tr>
   <tr>
-    <td valign="top">file</td>
-    <td valign="top">the jar-file to create.</td>
+    <td valign="top">destfile</td>
+    <td valign="top">the JAR file to create.</td>
     <td valign="top" align="center">Yes</td>
   </tr>
   <tr>
@@ -157,14 +157,14 @@ the resulting Jar.
 <pre>  &lt;jar file=&quot;${dist}/lib/app.jar&quot; basedir=&quot;${build}/classes&quot;/&gt;</pre>
 <p>jars all files in the <code>${build}/classes</code> directory into a file
 called <code>app.jar</code> in the <code>${dist}/lib</code> directory.</p>
-<pre>  &lt;jar file=&quot;${dist}/lib/app.jar&quot;
+<pre>  &lt;jar destfile=&quot;${dist}/lib/app.jar&quot;
        basedir=&quot;${build}/classes&quot;
        excludes=&quot;**/Test.class&quot;
   /&gt;</pre>
 <p>jars all files in the <code>${build}/classes</code> directory into a file
 called <code>app.jar</code> in the <code>${dist}/lib</code> directory. Files
 with the name <code>Test.class</code> are excluded.</p>
-<pre>  &lt;jar file=&quot;${dist}/lib/app.jar&quot;
+<pre>  &lt;jar destfile=&quot;${dist}/lib/app.jar&quot;
        basedir=&quot;${build}/classes&quot;
        includes=&quot;mypackage/test/**&quot;
        excludes=&quot;**/Test.class&quot;
@@ -173,7 +173,7 @@ with the name <code>Test.class</code> are excluded.</p>
 called <code>app.jar</code> in the <code>${dist}/lib</code> directory. Only
 files under the directory <code>mypackage/test</code> are used, and files with
 the name <code>Test.class</code> are excluded.</p>
-<pre>  &lt;jar file=&quot;${dist}/lib/app.jar&quot;&gt;
+<pre>  &lt;jar destfile=&quot;${dist}/lib/app.jar&quot;&gt;
     &lt;fileset dir=&quot;${build}/classes&quot;
              excludes=&quot;**/Test.class&quot;
     /&gt;
@@ -188,7 +188,7 @@ and <code>${src}/resources/mypackage/image.gif</code>, they will appear
 in the same directory in the JAR (and thus be considered in the same package
 by Java).</p>
 
-<pre>  &lt;jar jarfile=&quot;test.jar&quot; basedir=&quot;.&quot;&gt;
+<pre>  &lt;jar destfile=&quot;test.jar&quot; basedir=&quot;.&quot;&gt;
     &lt;include name=&quot;build&quot;/&gt;
     &lt;manifest&gt;
       &lt;attribute name=&quot;Built-By&quot; value=&quot;${user.name}&quot;/&gt;

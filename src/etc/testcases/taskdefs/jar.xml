@@ -15,7 +15,7 @@
 
   <target name="test3">
     <jar
-    	jarfile="jar.tmp"
+    	destfile="jar.tmp"
 	whenempty="format C: /y" 
     />
   </target>
@@ -24,7 +24,7 @@
    <!-- delete the tmp.jar or the next test will fail -->
    <delete file="tmp.jar"/>
    <jar
-    	jarfile="tmp.jar"
+    	destfile="tmp.jar"
 	basedir="."
 	includes="jar.xml"
     />
@@ -33,7 +33,7 @@
   <!-- This test is to make sure upToDate is working -->
   <target name="test5">
     <jar
-    	jarfile="tmp.jar"
+    	destfile="tmp.jar"
 	basedir="."
 	includes="jar.xml"
     />

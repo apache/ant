@@ -24,8 +24,8 @@ attributes of zipfilesets in a Zip or Jar task.)</p>
     <td align="center" valign="top"><b>Required</b></td>
   </tr>
   <tr>
-    <td valign="top">file</td>
-    <td valign="top">the ear-file to create.</td>
+    <td valign="top">destfile</td>
+    <td valign="top">the EAR file to create.</td>
     <td valign="top" align="center">Yes</td>
   </tr>
   <tr>
@@ -107,7 +107,7 @@ fileset includes a file named <code>MANIFEST.MF</code>, the file is
 ignored and you will get a warning.</p>
 <h2>Example</h2>
 <pre>
-    &lt;ear file=&quot;${build.dir}/myapp.ear&quot; appxml=&quot;${src.dir}/metadata/application.xml&quot;&gt;
+    &lt;ear destfile=&quot;${build.dir}/myapp.ear&quot; appxml=&quot;${src.dir}/metadata/application.xml&quot;&gt;
       &lt;fileset dir=&quot;${build.dir}&quot; includes=&quot;*.jar,*.war&quot;/&gt;
     &lt;/ear&gt;
 </pre>

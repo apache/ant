@@ -57,7 +57,7 @@ Java.</p>
     <td valign="top" align="center"><b>Required</b></td>
   </tr>
   <tr>
-    <td valign="top">file</td>
+    <td valign="top">destfile</td>
     <td valign="top">the zip-file to create.</td>
     <td align="center" valign="top">Yes</td>
   </tr>
@@ -142,12 +142,12 @@ contents will be extracted and included in the archive.  As with directories, in
 for inclusion in the archive.</p>
 
 <h3>Examples</h3>
-<pre>  &lt;zip file=&quot;${dist}/manual.zip&quot;
+<pre>  &lt;zip destfile=&quot;${dist}/manual.zip&quot;
        basedir=&quot;htdocs/manual&quot;
   /&gt;</pre>
 <p>zips all files in the <code>htdocs/manual</code> directory into a file called <code>manual.zip</code>
 in the <code>${dist}</code> directory.</p>
-<pre>  &lt;zip file=&quot;${dist}/manual.zip&quot;
+<pre>  &lt;zip destfile=&quot;${dist}/manual.zip&quot;
        basedir=&quot;htdocs/manual&quot;
        update=&quot;true&quot;
   /&gt;</pre>
@@ -155,27 +155,27 @@ in the <code>${dist}</code> directory.</p>
 in the <code>${dist}</code> directory. If <code>manual.zip</code>
 doesn't exist, it is created; otherwise it is updated with the
 new/changed files.</p>
-<pre>  &lt;zip file=&quot;${dist}/manual.zip&quot;
+<pre>  &lt;zip destfile=&quot;${dist}/manual.zip&quot;
        basedir=&quot;htdocs/manual&quot;
        excludes=&quot;mydocs/**, **/todo.html&quot;
   /&gt;</pre>
 <p>zips all files in the <code>htdocs/manual</code> directory. Files in the directory <code>mydocs</code>,
 or files with the name <code>todo.html</code> are excluded.</p>
-<pre>  &lt;zip file=&quot;${dist}/manual.zip&quot;
+<pre>  &lt;zip destfile=&quot;${dist}/manual.zip&quot;
        basedir=&quot;htdocs/manual&quot;
        includes=&quot;api/**/*.html&quot;
        excludes=&quot;**/todo.html&quot;
   /&gt;</pre>
 <p>zips all files in the <code>htdocs/manual</code> directory. Only html files under the directory <code>api</code>
 are zipped, and files with the name <code>todo.html</code> are excluded.</p>
-<pre>  &lt;zip file=&quot;${dist}/manual.zip&quot;&gt;
+<pre>  &lt;zip destfile=&quot;${dist}/manual.zip&quot;&gt;
     &lt;fileset dir=&quot;htdocs/manual&quot;/&gt;
     &lt;fileset dir=&quot;.&quot; includes=&quot;ChangeLog.txt&quot;/&gt;
   &lt;/zip&gt;</pre>
 <p>zips all files in the <code>htdocs/manual</code> directory, and also adds the file <code>ChangeLog.txt</code> in the
 current directory. <code>ChangeLog.txt</code> will be added to the top of the ZIP file, just as if
 it had been located at <code>htdocs/manual/ChangeLog.txt</code>.</p>
-<pre>  &lt;zip file=&quot;${dist}/manual.zip&quot;&gt;
+<pre>  &lt;zip destfile=&quot;${dist}/manual.zip&quot;&gt;
     &lt;zipfileset dir=&quot;htdocs/manual&quot; prefix=&quot;docs/user-guide&quot;/&gt;
     &lt;zipfileset dir=&quot;.&quot; includes=&quot;ChangeLog27.txt&quot; fullpath=&quot;docs/ChangeLog.txt&quot;/&gt;
     &lt;zipfileset src=&quot;examples.zip&quot; includes=&quot;**/*.html&quot; prefix=&quot;docs/examples&quot;/&gt;

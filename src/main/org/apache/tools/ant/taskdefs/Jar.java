@@ -97,11 +97,11 @@ public class Jar extends Zip {
     }
 
     /**
-     * @deprecated use setFile(File) instead.
+     * @deprecated Use setDestFile(File) instead
      */
     public void setJarfile(File jarFile) {
-        log("DEPRECATED - The jarfile attribute is deprecated. Use file attribute instead.");
-        setFile(jarFile);
+        log("DEPRECATED - The jarfile attribute is deprecated. Use destfile attribute instead.");
+        setDestFile(jarFile);
     }
 
     /**

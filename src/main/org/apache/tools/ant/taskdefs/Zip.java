@@ -120,22 +120,38 @@ public class Zip extends MatchingTask {
      * This is the name/location of where to
      * create the .zip file.
      *
-     * @deprecated Use setFile() instead
+     * @deprecated Use setDestFile(File) instead
      */
     public void setZipfile(File zipFile) {
-        log("DEPRECATED - The zipfile attribute is deprecated. Use file attribute instead.");
-        setFile( zipFile );
+        log("DEPRECATED - The zipfile attribute is deprecated. Use destfile attribute instead.");
+        setDestFile(zipFile);
     }
 
     /**
      * This is the name/location of where to
      * create the .zip file.
-     *
+     * @since 1.5alpha
+     * @todo pull this before shipping 1.5
+     * @deprecated Use setDestFile(File) instead
      */
     public void setFile(File file) {
-        this.zipFile = file;
+        log("DEPRECATED - The file attribute has been renamed destfile."
+            +" This attribute will be unsupported before Ant1.5 is released",
+            Project.MSG_ERR);
+        setDestFile(file);
     }
 
+
+    /**
+     * Sets the destfile attribute.
+     * @since 1.5
+     * @param destFile The new destination File
+     */
+    public void setDestFile(File destFile) {
+       this.zipFile = destFile;
+    }
+
+        
     /**
      * This is the base directory to look in for
      * things to zip.

@@ -7,21 +7,21 @@
   </target>
 
   <target name="test2">
-    <zip zipfile="zip.tmp"/>
+    <zip destFile="zip.tmp"/>
   </target>
 
   <!-- Test when the zip file includes itself
   when target file exists before the zip task is run -->
   <target name="test3">
     <touch file="test3.zip"/>
-    <zip zipfile="test3.zip"
+    <zip destFile="test3.zip"
          basedir="."/>
   </target>
 
   <!-- Test when the zip file includes itself
   when target file does not exist before the zip task is run -->
   <target name="test4">
-     <zip zipfile="test4.zip"
+     <zip destFile="test4.zip"
          basedir="."/>
   </target>
 
@@ -32,28 +32,35 @@
   </target>
 
   <target name="test6">
-    <zip zipfile="test6.zip" basedir=".">
+    <zip destFile="test6.zip" basedir=".">
       <include name="*.xml" />
       <exclude name="zip.*" />
     </zip>
   </target>
 
   <target name="test7">
-    <zip zipfile="inner7.zip" basedir="." >
+    <zip destFile="inner7.zip" basedir="." >
       <exclude name="inner7.zip" />
     </zip>
-    <zip zipfile="test7.zip" basedir=".">
+    <zip destFile="test7.zip" basedir=".">
       <exclude name="**/*.*" />
       <zipfileset src="inner7.zip" />
     </zip>
   </target>
 
   <target name="feather">
-    <zip zipfile="asf-logo.gif.zip" 
+    <zip destFile="asf-logo.gif.zip" 
          basedir=".."
          includes="asf-logo.gif" />
   </target>
 
+  <!-- legacy attribute support -->
+  <target name="test8">
+    <zip zipfile="test8.zip" basedir="." >
+      <exclude name="test8.zip" />
+    </zip>
+  </target>
+  
   <target name="cleanup">
     <delete file="test3.zip"/>
     <delete file="test4.zip"/>
