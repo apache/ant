@@ -86,11 +86,11 @@ build Ant from the source code.</p>
 to build a bootstrap version of Ant.</p>
 <p>When finished, use</p>
 <blockquote>
-  <p><code>build.bat -Ddist.dir=&lt;directory to install Ant&gt; dist</code></p>
+  <p><code>build.bat -Dant.dist.dir=&lt;directory to install Ant&gt; dist</code></p>
 </blockquote>
 <p>for Windows, and</p>
 <blockquote>
-  <p><code>build.sh -Ddist.dir=&lt;directory to install Ant&gt; dist</code></p>
+  <p><code>build.sh -Dant.dist.dir=&lt;directory to install Ant&gt; dist</code></p>
 </blockquote>
 <p>for UNIX, to create a binary distribution of Ant. This distribution can be
 found in the directory you specified.</p>
@@ -191,7 +191,7 @@ command. The options and target are the same as when running Ant with the <code>
 command.</p>
 <hr>
 <h2><a name="buildfile">Writing a simple buildfile</a></h2>
-<p>The buildfile is an written in XML. Each buildfile contains one project.</p>
+<p>The buildfile is written in XML. Each buildfile contains one project.</p>
 <h3>Projects</h3>
 <p>A project has three attributes:</p>
 <table border="1" cellpadding="2" cellspacing="0">
