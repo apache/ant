@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2001 The Apache Software Foundation.  All rights
+ * Copyright (c) 2002 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -54,56 +54,41 @@
 
 package org.apache.tools.ant.taskdefs.condition;
 
-import org.apache.tools.ant.BuildException;
+import junit.framework.TestCase;
 
 /**
- * Simple String comparison condition.
+ * Testcase for the &lt;equals&gt; condition.
  *
  * @author <a href="mailto:stefan.bodewig@epost.de">Stefan Bodewig</a>
  * @version $Revision$
  */
-public class Equals implements Condition {
+public class EqualsTest extends TestCase {
 
-    private String arg1, arg2;
-    private boolean trim = false;
-    private boolean caseSensitive = true;
-
-    public void setArg1(String a1) {
-        arg1 = a1;
+    public EqualsTest(String name) {
+        super(name);
     }
 
-    public void setArg2(String a2) {
-        arg2 = a2;
+    public void testTrim() {
+        Equals eq = new Equals();
+        eq.setArg1("a");
+        eq.setArg2(" a");
+        assertTrue(!eq.eval());
+
+        eq.setTrim(true);
+        assertTrue(eq.eval());
+
+        eq.setArg2("a\t");
+        assertTrue(eq.eval());
     }
 
-    /**
-     * Should we want to trim the arguments before comparing them?
-     *
-     * @since Revision: 1.3, Ant 1.5
-     */
-    public void setTrim(boolean b) {
-        trim = b;
+    public void testCaseSensitive() {
+        Equals eq = new Equals();
+        eq.setArg1("a");
+        eq.setArg2("A");
+        assertTrue(!eq.eval());
+
+        eq.setCasesensitive(false);
+        assertTrue(eq.eval());
     }
 
-    /**
-     * Should the comparison be case sensitive?
-     *
-     * @since Revision: 1.3, Ant 1.5
-     */
-    public void setCasesensitive(boolean b) {
-        caseSensitive = b;
-    }
-
-    public boolean eval() throws BuildException {
-        if (arg1 == null || arg2 == null) {
-            throw new BuildException("both arg1 and arg2 are required in equals");
-        }
-
-        if (trim) {
-            arg1 = arg1.trim();
-            arg2 = arg2.trim();
-        }
-        
-        return caseSensitive ? arg1.equals(arg2) : arg1.equalsIgnoreCase(arg2);
-    }
 }
