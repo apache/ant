@@ -67,4 +67,8 @@ public class LengthTest extends BuildFileTest {
             "should fail", "string length function only");
     }
 
+    public void testImmutable() {
+        executeTarget("testImmutable");
+    }
+
 }

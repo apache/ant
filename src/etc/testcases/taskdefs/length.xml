@@ -104,6 +104,18 @@
     <length string="foo" file="${ant.file}" />
   </target>
 
+  <target name="testImmutable">
+    <length string="foo" property="length.string" />
+    <length string="foobar" property="length.string" />
+    <fail>
+      <condition>
+        <not>
+          <equals arg1="3" arg2="${length.string}" />
+        </not>
+      </condition>
+    </fail>
+  </target>
+
   <target name="cleanup">
     <delete dir="${dir}" />
   </target>

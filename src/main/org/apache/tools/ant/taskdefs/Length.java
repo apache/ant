@@ -190,7 +190,8 @@ public class Length extends Task {
 
     private class PropertyOutputStream extends ByteArrayOutputStream {
         public void close() {
-            getProject().setProperty(property, new String(toByteArray()).trim());
+            getProject().setNewProperty(
+                property, new String(toByteArray()).trim());
         }
     }
 
