@@ -551,6 +551,39 @@
         </table>
       </subsection>
 
+      <subsection name="Image Tasks">
+
+        <p>Image task generates and transforms images. It exposes the
+        imaging capability available in Java2D, Java Advanced Imaging,
+        ImageIO, etc., as set of nested elements.</p>
+
+        <p>Image operations such as &quot;resize&quot; (scale),
+        &quot;overlay&quot; (one image on another), &quot;border&quot;
+        (add a border), &quot;text&quot; (text on image),
+        &quot;crop&quot; (a sub-image of a bigger image),
+        &quot;rotate&quot;, &quot;grayscale&quot; (change a color
+        image to shades of gray)</p>
+
+        <table class="externals">
+          <tr>
+            <th>Compatibility:</th>
+            <td>Ant 1.3</td>
+          </tr>
+          <tr>
+            <th>URL:</th>
+            <td><a href="http://www.mullassery.com/software/ANT">http://www.mullassery.com/software/ANT</a></td>
+          </tr>
+          <tr>
+            <th>Contact:</th>
+            <td><a href="http://www.mullassery.com/contact/feedback.jsp">Abey Mullassery</a></td>
+          </tr>
+          <tr>
+            <th>License:</th>
+            <td>Apache Software License</td>
+          </tr>
+        </table>
+      </subsection>
+
       <subsection name="Importscrubber">
         <p>Removes unnecessary import statements from a Java source code file.</p>
 
