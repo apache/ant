@@ -102,7 +102,7 @@ public class War extends Jar {
      * <i>Deprecated<i> name of the file to create 
      * -use <tt>destfile</tt> instead. 
      * @deprecated Use setDestFile(File) instead
-     * @ant.attribute ignored="true"
+     * @ant.attribute ignore="true"
      */
     public void setWarfile(File warFile) {
         setDestFile(warFile);

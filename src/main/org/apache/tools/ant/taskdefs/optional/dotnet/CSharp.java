@@ -209,7 +209,8 @@ public class CSharp
     private File win32res;
 
     /**
-     *  Description of the Field
+     * A flag that tells the compiler not to read in the compiler 
+     * settings files 'csc.rsp' in its bin directory and then the local directory
      */
     private boolean noconfig = false;
 
@@ -851,7 +852,8 @@ public class CSharp
 
 
     /**
-     *  Sets the noConfig attribute of the CSharp object
+     * A flag that tells the compiler not to read in the compiler 
+     * settings files 'csc.rsp' in its bin directory and then the local directory
      *
      *@param  enabled  The new noConfig value
      */

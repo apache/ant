@@ -72,7 +72,7 @@ import java.util.Hashtable;
 import java.util.Enumeration;
 
 /**
- * Call Ant in a sub-project.
+ * Build a sub-project.
  *
  *  <pre>
  *  &lt;target name=&quot;foo&quot; depends=&quot;init&quot;&gt;

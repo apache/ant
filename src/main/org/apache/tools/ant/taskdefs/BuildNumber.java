@@ -63,7 +63,8 @@ import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.util.FileUtils;
 
 /**
- * Used to track build numbers. It will first
+ * Read, increment, and write a build number in a file
+ * It will first
  * attempt to read a build number from a file, then set the property
  * "build.number" to the value that was read in (or 0 if no such value). Then
  * it will increment the build number by one and write it back out into the
