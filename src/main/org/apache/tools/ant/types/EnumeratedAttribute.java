@@ -23,7 +23,7 @@
  *    Alternately, this acknowlegement may appear in the software itself,
  *    if and wherever such third-party acknowlegements normally appear.
  *
- * 4. The names "The Jakarta Project", "Tomcat", and "Apache Software
+ * 4. The names "The Jakarta Project", "Ant", and "Apache Software
  *    Foundation" must not be used to endorse or promote products derived
  *    from this software without prior written permission. For written
  *    permission, please contact apache@apache.org.
@@ -63,7 +63,7 @@ import org.apache.tools.ant.BuildException;
  * <p>See {@link org.apache.tools.ant.taskdefs.FixCRLF FixCRLF} for an
  * example.
  *
- * @author Stefan Bodewig <a href="mailto:stefan.bodewig@megabit.net">stefan.bodewig@megabit.net</a> 
+ * @author <a href="mailto:stefan.bodewig@epost.de">Stefan Bodewig</a> 
  */
 public abstract class EnumeratedAttribute {
 
@@ -79,7 +79,7 @@ public abstract class EnumeratedAttribute {
     public EnumeratedAttribute() {}
 
     /**
-     * Invoked by {@link IntrospectionHelper IntrospectionHelper}.
+     * Invoked by {@link org.apache.tools.ant.IntrospectionHelper IntrospectionHelper}.
      */
     public final void setValue(String value) throws BuildException {
         if (!containsValue(value)) {
