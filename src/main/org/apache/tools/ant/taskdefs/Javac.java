@@ -783,7 +783,7 @@ public class Javac extends MatchingTask {
             File dir = project.resolveFile(dirs[i]);
             FileSet fs = new FileSet();
             fs.setDir(dir);
-            fs.setIncludes(dirs[i]+"*");
+            fs.setIncludes("*");
             classpath.addFileset(fs);
         }
     }
