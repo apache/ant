@@ -11,14 +11,13 @@ import java.io.BufferedReader;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.StringReader;
-import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.Locale;
 import java.util.Properties;
+import org.apache.avalon.excalibur.util.StringUtil;
 import org.apache.myrmidon.api.TaskException;
 import org.apache.myrmidon.framework.Os;
 import org.apache.tools.ant.taskdefs.exec.Execute;
-import org.apache.avalon.excalibur.util.StringUtil;
 
 /**
  * This is the class that can be used to retrieve the environment

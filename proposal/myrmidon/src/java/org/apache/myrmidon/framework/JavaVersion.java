@@ -64,7 +64,7 @@ public final class JavaVersion
             version = JAVA1_2;
             Class.forName( "java.lang.StrictMath" );
             version = JAVA1_3;
-            Class.forName("java.lang.CharSequence");
+            Class.forName( "java.lang.CharSequence" );
             version = JAVA1_4;
         }
         catch( final ClassNotFoundException cnfe )

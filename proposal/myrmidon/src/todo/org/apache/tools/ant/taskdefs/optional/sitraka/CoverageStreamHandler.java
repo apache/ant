@@ -7,9 +7,9 @@
  */
 package org.apache.tools.ant.taskdefs.optional.sitraka;
 
-import org.apache.tools.ant.taskdefs.exec.LogStreamHandler;
-import java.io.OutputStream;
 import java.io.IOException;
+import java.io.OutputStream;
+import org.apache.tools.ant.taskdefs.exec.LogStreamHandler;
 
 /**
  * specific pumper to avoid those nasty stdin issues

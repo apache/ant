@@ -45,7 +45,7 @@ public final class LogLevel
      *
      * @returns The names of all the LogLevels
      */
-    public static String[] getNames( )
+    public static String[] getNames()
     {
         final Set keys = c_levels.keySet();
         return (String[])keys.toArray( new String[ keys.size() ] );
