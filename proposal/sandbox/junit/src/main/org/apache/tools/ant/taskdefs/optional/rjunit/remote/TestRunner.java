@@ -233,7 +233,7 @@ public class TestRunner implements TestListener {
 
     /**
      * Initialize the TestRunner from properties.
-     * @param the properties containing configuration data.
+     * @param props the properties containing configuration data.
      * @see #init(String[])
      */
     protected void init(Properties props) {
@@ -300,9 +300,6 @@ public class TestRunner implements TestListener {
         return suites;
     }
 
-    /**
-     * @param testClassNames String array of full qualified class names of test classes
-     */
     private void runTests() throws Exception {
 
         Map suites = getSuites();
@@ -447,7 +444,7 @@ public class TestRunner implements TestListener {
 
     /**
      * this implementation is for JUnit &lt; 3.4
-     * @see addFailure(Test, Throwable)
+     * @see #addFailure(Test, Throwable)
      */
     public void addFailure(Test test, AssertionFailedError afe) {
         addFailure(test, (Throwable) afe);
@@ -455,7 +452,7 @@ public class TestRunner implements TestListener {
 
     /**
      * This implementation is for JUnit &lt;= 3.4
-     * @see addFailure(Test, AssertionFailedError)
+     * @see #addFailure(Test, AssertionFailedError)
      */
     public void addFailure(Test test, Throwable t) {
         String testName = test.toString();
