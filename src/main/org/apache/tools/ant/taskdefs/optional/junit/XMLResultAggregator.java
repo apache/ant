@@ -73,6 +73,9 @@ public class XMLResultAggregator extends Task implements XMLConstants {
     /** the default file name: <tt>TESTS-TestSuites.xml</tt> */
     public static final String DEFAULT_FILENAME = "TESTS-TestSuites.xml";
 
+    /** the current generated id */
+    protected int generatedId = 0;
+
     /**
      * Generate a report based on the document created by the merge.
      * @return the report
@@ -220,6 +223,8 @@ public class XMLResultAggregator extends Task implements XMLConstants {
         Element rootElement = doc.createElement(TESTSUITES);
         doc.appendChild(rootElement);
 
+        generatedId = 0;
+
         // get all files and add them to the document
         File[] files = getFiles();
         for (int i = 0; i < files.length; i++) {
@@ -234,6 +239,7 @@ public class XMLResultAggregator extends Task implements XMLConstants {
                 // make sure that this is REALLY a testsuite.
                 if (TESTSUITE.equals(elem.getNodeName())) {
                     addTestSuite(rootElement, elem);
+                    generatedId++;
                 } else {
                     // issue a warning.
                     log("the file " + files[i]
@@ -278,6 +284,7 @@ public class XMLResultAggregator extends Task implements XMLConstants {
         // modify the name attribute and set the package
         copy.setAttribute(ATTR_NAME, classname);
         copy.setAttribute(ATTR_PACKAGE, pkgName);
+        copy.setAttribute(ATTR_ID, Integer.toString(generatedId));
     }
 
     /**

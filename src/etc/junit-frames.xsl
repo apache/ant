@@ -6,7 +6,7 @@
 <xsl:output method="html" indent="yes" encoding="US-ASCII"/>
 <xsl:decimal-format decimal-separator="." grouping-separator=","/>
 <!--
-   Copyright 2001-2004 The Apache Software Foundation
+   Copyright 2001-2005 The Apache Software Foundation
 
    Licensed under the Apache License, Version 2.0 (the "License");
    you may not use this file except in compliance with the License.
@@ -91,16 +91,16 @@
     <!-- for each class, creates a @name.html -->
     <!-- @bug there will be a problem with inner classes having the same name, it will be overwritten -->
     <xsl:for-each select="/testsuites/testsuite[@package = $name]">
-        <redirect:write file="{$output.dir}/{$package.dir}/{@name}.html">
+        <redirect:write file="{$output.dir}/{$package.dir}/{@id}_{@name}.html">
             <xsl:apply-templates select="." mode="class.details"/>
         </redirect:write>
         <xsl:if test="string-length(./system-out)!=0">
-            <redirect:write file="{$output.dir}/{$package.dir}/{@name}-out.txt">
+            <redirect:write file="{$output.dir}/{$package.dir}/{@id}_{@name}-out.txt">
                 <xsl:value-of disable-output-escaping="yes" select="./system-out" />
             </redirect:write>
         </xsl:if>
         <xsl:if test="string-length(./system-err)!=0">
-            <redirect:write file="{$output.dir}/{$package.dir}/{@name}-err.txt">
+            <redirect:write file="{$output.dir}/{$package.dir}/{@id}_{@name}-err.txt">
                 <xsl:value-of disable-output-escaping="yes" select="./system-err" />
             </redirect:write>
         </xsl:if>
@@ -262,7 +262,7 @@ h6 {
             <xsl:if test="string-length(./system-out)!=0">
                 <div class="Properties">
                     <a>
-                        <xsl:attribute name="href">./<xsl:value-of select="@name"/>-out.txt</xsl:attribute>
+                        <xsl:attribute name="href">./<xsl:value-of select="@id"/>_<xsl:value-of select="@name"/>-out.txt</xsl:attribute>
                         System.out &#187;
                     </a>
                 </div>
@@ -270,7 +270,7 @@ h6 {
             <xsl:if test="string-length(./system-err)!=0">
                 <div class="Properties">
                     <a>
-                        <xsl:attribute name="href">./<xsl:value-of select="@name"/>-err.txt</xsl:attribute>
+                        <xsl:attribute name="href">./<xsl:value-of select="@id"/>_<xsl:value-of select="@name"/>-err.txt</xsl:attribute>
                         System.err &#187;
                     </a>
                 </div>
@@ -325,7 +325,7 @@ h6 {
                     <xsl:sort select="@name"/>
                     <tr>
                         <td nowrap="nowrap">
-                            <a href="{@name}.html" target="classFrame"><xsl:value-of select="@name"/></a>
+                            <a href="{@id}_{@name}.html" target="classFrame"><xsl:value-of select="@name"/></a>
                         </td>
                     </tr>
                 </xsl:for-each>
@@ -366,7 +366,7 @@ h6 {
                 <xsl:attribute name="href">
                     <xsl:if test="not($package.name='')">
                         <xsl:value-of select="translate($package.name,'.','/')"/><xsl:text>/</xsl:text>
-                    </xsl:if><xsl:value-of select="@name"/><xsl:text>.html</xsl:text>
+                    </xsl:if><xsl:value-of select="@id"/>_<xsl:value-of select="@name"/><xsl:text>.html</xsl:text>
                 </xsl:attribute>
                 <xsl:value-of select="@name"/>
             </a>
@@ -612,7 +612,7 @@ h6 {
                 <xsl:otherwise>Pass</xsl:otherwise>
             </xsl:choose>
         </xsl:attribute>
-        <td><a href="{@name}.html"><xsl:value-of select="@name"/></a></td>
+        <td><a href="{@id}_{@name}.html"><xsl:value-of select="@name"/></a></td>
         <td><xsl:apply-templates select="@tests"/></td>
         <td><xsl:apply-templates select="@errors"/></td>
         <td><xsl:apply-templates select="@failures"/></td>
