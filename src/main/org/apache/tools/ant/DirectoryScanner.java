@@ -658,34 +658,49 @@ public class DirectoryScanner
             String newpattern = 
                 SelectorUtils.rtrimWildcardTokens(includes[icounter]);
             // check whether the candidate new pattern has a parent
-            boolean hasParent=false;
+            boolean hasParent = false;
             Enumeration myenum = newroots.keys();
+            // logically, there should be at most one child pattern present
+            // let's use a vector though to be sure
+            Vector vdelete = new Vector();
             while (myenum.hasMoreElements()) {
-                String existingpattern= (String) myenum.nextElement();
+                String existingpattern = (String) myenum.nextElement();
+                // check whether the existing pattern is a child of the new pattern
+                if (existingpattern.length() >= newpattern.length()) {
+                    if (existingpattern.indexOf(newpattern) == 0) {
+                        vdelete.add(existingpattern);
+                    }
+                }
+                // check whether the new pattern is a child of the existing pattern
                 if (existingpattern.length() <= newpattern.length()) {
-                    if (newpattern.indexOf(existingpattern)==0) {
-                        hasParent=true;
+                    if (newpattern.indexOf(existingpattern) == 0) {
+                        hasParent = true;
+                        break;
                     }
                 }
             }
+            // add the new pattern if does not have parents
             if (!hasParent) {
-                newroots.put(newpattern,includes[icounter]);
+                newroots.put(newpattern, includes[icounter]);
+                // remove child patterns
+                for (int icounter2 = 0; icounter2 < vdelete.size(); icounter2++) {
+                    newroots.remove(vdelete.elementAt(icounter2));
+                }
             }
         }
 
         Enumeration enum2 = newroots.keys();
         while (enum2.hasMoreElements()) {
             String currentelement = (String) enum2.nextElement();
-            File myfile=new File(basedir, currentelement);
+            File myfile = new File(basedir, currentelement);
             if (myfile.exists()) {
                 if (myfile.isDirectory()) {
-                    if (isIncluded(currentelement) 
-                        && currentelement.length()>0) {
-                        accountForIncludedDir(currentelement,myfile,true);
+                    if (isIncluded(currentelement)
+                        && currentelement.length() > 0) {
+                        accountForIncludedDir(currentelement, myfile, true);
                     }  else {
                         if (currentelement.length() > 0) {
-                            if (currentelement.charAt(currentelement.length()
-                                                      -1 ) 
+                            if (currentelement.charAt(currentelement.length()-1)
                                 != File.separatorChar) {
                                 currentelement = 
                                     currentelement + File.separatorChar;
@@ -694,10 +709,10 @@ public class DirectoryScanner
                         scandir(myfile, currentelement, true);
                     }
                 } else {
-                    String originalpattern= 
+                    String originalpattern =
                         (String) newroots.get(currentelement);
                     if (originalpattern.equals(currentelement)) {
-                        accountForIncludedFile(currentelement,myfile);
+                        accountForIncludedFile(currentelement, myfile);
                     }
                 }
             }

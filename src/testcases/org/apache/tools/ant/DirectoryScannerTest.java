@@ -133,6 +133,22 @@ public class DirectoryScannerTest extends BuildFileTest {
         ds.scan();
         compareFiles(ds, new String[] {"alpha/beta/beta.xml", "alpha/beta/gamma/gamma.xml"} ,new String[] {"", "alpha", "alpha/beta", "alpha/beta/gamma"});
     }
+    // father and child pattern test
+    public void testOrderOfIncludePatternsIrrelevant() {
+        String [] expectedFiles = {"alpha/beta/beta.xml", "alpha/beta/gamma/gamma.xml"};
+        String [] expectedDirectories = {"alpha/beta", "alpha/beta/gamma" };
+        DirectoryScanner ds = new DirectoryScanner();
+        ds.setBasedir(new File(getProject().getBaseDir(), "tmp"));
+        ds.setIncludes(new String[] {"alpha/be?a/**", "alpha/beta/gamma/"});
+        ds.scan();
+        compareFiles(ds, expectedFiles, expectedDirectories);
+        // redo the test, but the 2 include patterns are inverted
+        ds = new DirectoryScanner();
+        ds.setBasedir(new File(getProject().getBaseDir(), "tmp"));
+        ds.setIncludes(new String[] {"alpha/beta/gamma/", "alpha/be?a/**"});
+        ds.scan();
+        compareFiles(ds, expectedFiles, expectedDirectories);
+    }
     public void tearDown() {
         getProject().executeTarget("cleanup");
     }
