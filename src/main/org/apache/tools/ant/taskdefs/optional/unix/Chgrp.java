@@ -70,7 +70,7 @@ import org.apache.tools.ant.BuildException;
 /**
  * Chgrp equivalent for unix-like environments.
  *
- * @author Patrick G. Heck 
+ * @author Patrick G. Heck
  *         <a href="mailto:gus.heck@olin.edu">gus.heck@olin.edu</a>
  *
  * @since Ant 1.6
@@ -98,20 +98,26 @@ public class Chgrp extends AbstractAccessTask {
         haveGroup = true;
     }
 
+    /**
+     * Ensure that all the required arguments and other conditions have
+     * been set.
+     */
     protected void checkConfiguration() {
         if (!haveGroup) {
-            throw new BuildException("Required attribute group not set in "+
-                                     "chgrp", getLocation());
+            throw new BuildException("Required attribute group not set in "
+                                     + "chgrp", getLocation());
         }
         super.checkConfiguration();
     }
 
     /**
      * We don't want to expose the executable atribute, so overide it.
+     *
+     * @param e User supplied executable that we won't accept.
      */
     public void setExecutable(String e) {
-        throw new BuildException(taskType + 
-                                 " doesn\'t support the executable attribute",
-                                 getLocation());
+        throw new BuildException(taskType 
+                                 + " doesn\'t support the executable"
+                                 + " attribute", getLocation());
     }
 }

@@ -73,12 +73,14 @@ import org.apache.tools.ant.types.Commandline;
 import org.apache.tools.ant.types.FileSet;
 
 /**
- * @author Patrick G. Heck <a href="mailto:gus.heck@olin.edu">gus.heck@olin.edu</a>
+ * @author Patrick G. Heck 
+ *         <a href="mailto:gus.heck@olin.edu">gus.heck@olin.edu</a>
  * @since Ant 1.6
  *
  * @ant.task category="filesystem"
  */
-public abstract class AbstractAccessTask 
+
+public abstract class AbstractAccessTask
     extends org.apache.tools.ant.taskdefs.ExecuteOn {
 
     /**
@@ -89,6 +91,9 @@ public abstract class AbstractAccessTask
         super.setSkipEmptyFilesets(true);
     }
 
+    /**
+     * Set the file which should have its access attributes modified.
+     */
     public void setFile(File src) {
         FileSet fs = new FileSet();
         fs.setFile(src);
@@ -96,16 +101,22 @@ public abstract class AbstractAccessTask
     }
 
     /**
+     * Prevent the user from specifying a different command.
+     *
      * @ant.attribute ignore="true"
+     * @param cmdl A user supplied command line that we won't accept.
      */
     public void setCommand(Commandline cmdl) {
-        throw new BuildException(taskType +
-                                 " doesn\'t support the command attribute",
+        throw new BuildException(taskType 
+                                 + " doesn\'t support the command attribute",
                                  getLocation());
     }
 
     /**
+     * Prevent the skipping of empty filesets
+     *
      * @ant.attribute ignore="true"
+     * @param skip A user supplied boolean we won't accept.
      */
     public void setSkipEmptyFilesets(boolean skip) {
         throw new BuildException(taskType + " doesn\'t support the "
@@ -114,13 +125,19 @@ public abstract class AbstractAccessTask
     }
 
     /**
+     * Prevent the use of the addsourcefile atribute.
+     *
      * @ant.attribute ignore="true"
+     * @param b A user supplied boolean we won't accept.
      */
     public void setAddsourcefile(boolean b) {
         throw new BuildException(getTaskType()
             + " doesn\'t support the addsourcefile attribute", getLocation());
     }
 
+    /**
+     * Automatically approve Unix OS's.
+     */
     protected boolean isValidOs() {
         return Os.isFamily("unix") && super.isValidOs();
     }
