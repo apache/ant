@@ -6,37 +6,8 @@
     <task name="facility" classname="org.apache.myrmidon.libs.runtime.Facility" />
     <task name="typedef" classname="org.apache.myrmidon.libs.runtime.TypeDef" />
     <task name="converterdef" classname="org.apache.myrmidon.libs.runtime.ConverterDef" />
+    <task name="import" classname="org.apache.myrmidon.libs.runtime.ImportTask" />
 
   </types>
-  
-  <converters>
-
-<!--
-    <converter classname="org.apache.ant.modules.basic.StringToLongConverter" 
-               source="java.lang.String" 
-               destination="java.lang.Long" />
-    <converter classname="org.apache.ant.modules.basic.StringToIntegerConverter" 
-               source="java.lang.String" 
-               destination="java.lang.Integer" />
-    <converter classname="org.apache.ant.modules.basic.StringToShortConverter" 
-               source="java.lang.String" 
-               destination="java.lang.Short" />
-    <converter classname="org.apache.ant.modules.basic.StringToByteConverter" 
-               source="java.lang.String" 
-               destination="java.lang.Byte" />
-    <converter classname="org.apache.ant.modules.basic.StringToDoubleConverter" 
-               source="java.lang.String" 
-               destination="java.lang.Double" />
-    <converter classname="org.apache.ant.modules.basic.StringToFloatConverter" 
-               source="java.lang.String" 
-               destination="java.lang.Float" />
-    <converter classname="org.apache.ant.modules.basic.StringToClassConverter" 
-               source="java.lang.String" 
-               destination="java.lang.Class" />
-    <converter classname="org.apache.ant.modules.basic.StringToURLConverter" 
-               source="java.lang.String" 
-               destination="java.net.URL" />
--->
-  </converters>
 
 </ant-lib>
