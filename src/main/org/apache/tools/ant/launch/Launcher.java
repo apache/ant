@@ -150,6 +150,10 @@ public class Launcher {
                 argList.add(args[i]);
             }
         }
+        
+        //decide whether to copy the existing arg set, or
+        //build a new one from the list of all args excluding the special
+        //operations that only we handle
 
         if (libPaths.size() == 0 && cpString == null) {
             newArgs = args;
