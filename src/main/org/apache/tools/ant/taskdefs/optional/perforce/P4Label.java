@@ -63,9 +63,9 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
+import org.apache.tools.ant.util.StringUtils;
 
-
-/** 
+/**
  *  Creates a new Perforce label and set contents to reflect current
  *  client file revisions.
  *
@@ -99,7 +99,7 @@ public class P4Label extends P4Base {
     }
 
     /**
-     * when set to "locked", Perforce will lock the label once created; optional. 
+     * when set to "locked", Perforce will lock the label once created; optional.
      */
     public void setLock(String lock) {
         this.lock = lock;
@@ -114,10 +114,14 @@ public class P4Label extends P4Base {
         if (P4View == null || P4View.length() < 1) {
             log("View not set, assuming //depot/...", Project.MSG_WARN);
             P4View = "//depot/...";
+        } else {
+            P4View = StringUtils.replace(P4View, ":", "\n\t");
+            P4View = StringUtils.replace(P4View, ";", "\n\t");
         }
 
         if (desc == null || desc.length() < 1) {
-            log("Label Description not set, assuming 'AntLabel'", Project.MSG_WARN);
+            log("Label Description not set, assuming 'AntLabel'", 
+                Project.MSG_WARN);
             desc = "AntLabel";
         }
 
@@ -126,7 +130,8 @@ public class P4Label extends P4Base {
         }
 
         if (name == null || name.length() < 1) {
-            SimpleDateFormat formatter = new SimpleDateFormat("yyyy.MM.dd-hh:mm");
+            SimpleDateFormat formatter 
+                = new SimpleDateFormat("yyyy.MM.dd-hh:mm");
             Date now = new Date();
             name = "AntLabel-" + formatter.format(now);
             log("name not set, assuming '" + name + "'", Project.MSG_WARN);
@@ -135,10 +140,10 @@ public class P4Label extends P4Base {
 
         //We have to create a unlocked label first
         String newLabel =
-                "Label: " + name + "\n" +
-                "Description: " + desc + "\n" +
-                "Options: unlocked\n" +
-                "View: " + P4View + "\n";
+                "Label: " + name +
+                "\nDescription: " + desc +
+                "\nOptions: unlocked" +
+                "\nView: \n\t" + P4View;
 
         P4Handler handler = new P4HandlerAdapter() {
             public void process(String line) {
@@ -157,7 +162,8 @@ public class P4Label extends P4Base {
         });
 
 
-        log("Created Label " + name + " (" + desc + ")", Project.MSG_INFO);
+        log("Created Label " + name + " (" + desc + ") with view:\n" + P4View, 
+            Project.MSG_INFO);
 
         //Now lock if required
         if (lock != null && lock.equalsIgnoreCase("locked")) {
@@ -196,8 +202,5 @@ public class P4Label extends P4Base {
             handler.setOutput(labelSpec.toString());
             execP4Command("label -i", handler);
         }
-
-
     }
-
 }
