@@ -148,8 +148,8 @@ public class Cvs
         final EnvironmentData env = buildEnvironment();
 
         final Execute exe = new Execute();
-        exe.setOutput( new LogOutputStream( null, Project.MSG_INFO ) );
-        exe.setError( new LogOutputStream( null, Project.MSG_WARN ) );
+        exe.setOutput( new LogOutputStream( getLogger(), false ) );
+        exe.setError( new LogOutputStream( getLogger(), true ) );
         if( m_dest == null ) m_dest = getBaseDirectory();
         exe.setWorkingDirectory( m_dest );
 
