@@ -1826,6 +1826,29 @@
         </table>
       </subsection>
 
+      <subsection name="Reflectant Task">
+
+        <p>This is a task for reflection invocation from within ant build file.</p>
+        <table class="externals">
+          <tr>
+            <th>Compatibility:</th>
+            <td>Ant 1.5 or above</td>
+          </tr>
+          <tr>
+            <th>URL:</th>
+            <td><a href="http://sourceforge.net/projects/reflectant/">http://sourceforge.net/projects/reflectant/</a></td>
+          </tr>
+          <tr>
+            <th>Contact:</th>
+            <td><a href="mailto:sv_ant@mail.bg">sv_ant@mail.bg</a></td>
+          </tr>
+          <tr>
+            <th>License:</th>
+            <td>The Apache Software License</td>
+          </tr>
+        </table>
+      </subsection>
+
       <subsection name="Roxes Ant Tasks">
 
         <p>The collections contain 3 Tasks for simplifying application
