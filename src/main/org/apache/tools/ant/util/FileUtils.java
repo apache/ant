@@ -136,6 +136,8 @@ public class FileUtils {
 
     /**
      * Factory method.
+     *
+     * @return a new instance of FileUtils.
      */
     public static FileUtils newFileUtils() {
         return new FileUtils();
@@ -144,7 +146,8 @@ public class FileUtils {
     /**
      * Empty constructor.
      */
-    protected FileUtils() {}
+    protected FileUtils() {
+    }
 
     /**
      * Get the URL for a file taking into account # characters
@@ -264,7 +267,7 @@ public class FileUtils {
     public void copyFile(String sourceFile, String destFile,
                          FilterSetCollection filters, Vector filterChains,
                          boolean overwrite, boolean preserveLastModified,
-                         String inputEncoding, String outputEncoding, 
+                         String inputEncoding, String outputEncoding,
                          Project project)
         throws IOException {
         copyFile(new File(sourceFile), new File(destFile), filters,
@@ -456,12 +459,12 @@ public class FileUtils {
                     }
                 }
             } else if (filterChainsAvailable
-                       || (inputEncoding != null 
+                       || (inputEncoding != null
                            && !inputEncoding.equals(outputEncoding))
                        || (inputEncoding == null && outputEncoding != null)) {
                 BufferedReader in = null;
                 BufferedWriter out = null;
- 
+
                  try {
                      if (inputEncoding == null) {
                          in = new BufferedReader(new FileReader(sourceFile));
@@ -472,7 +475,7 @@ public class FileUtils {
                                      new FileInputStream(sourceFile),
                                      inputEncoding));
                      }
- 
+
                      if (outputEncoding == null) {
                          out = new BufferedWriter(new FileWriter(destFile));
                      } else {
@@ -482,7 +485,7 @@ public class FileUtils {
                                      new FileOutputStream(destFile),
                                      outputEncoding));
                      }
- 
+
                      if (filterChainsAvailable) {
                          ChainReaderHelper crh = new ChainReaderHelper();
                          crh.setBufferSize(8192);
@@ -544,17 +547,15 @@ public class FileUtils {
         if (JavaEnvUtils.isJavaVersion(JavaEnvUtils.JAVA_1_1)) {
             return null;
         }
-        if (setLastModified == null) {
-            synchronized (lockReflection) {
-                if (setLastModified == null) {
-                    try {
-                        setLastModified =
-                            java.io.File.class.getMethod("setLastModified",
-                                                         new Class[] {Long.TYPE});
-                    } catch (NoSuchMethodException nse) {
-                        throw new BuildException("File.setlastModified not in JDK > 1.1?",
-                                                 nse);
-                    }
+        synchronized (lockReflection) {
+            if (setLastModified == null) {
+                try {
+                    setLastModified =
+                        java.io.File.class.getMethod("setLastModified",
+                                                     new Class[] {Long.TYPE});
+                } catch (NoSuchMethodException nse) {
+                    throw new BuildException("File.setlastModified not in JDK > 1.1?",
+                                             nse);
                 }
             }
         }
@@ -867,12 +868,16 @@ public class FileUtils {
             if (in1 != null) {
                 try {
                     in1.close();
-                } catch (IOException e) {}
+                } catch (IOException e) {
+                    // ignore
+                }
             }
             if (in2 != null) {
                 try {
                     in2.close();
-                } catch (IOException e) {}
+                } catch (IOException e) {
+                    // ignore
+                }
             }
         }
     }
@@ -1034,7 +1039,7 @@ public class FileUtils {
         }
 
         path = path.replace('\\', '/');
-        
+
         CharacterIterator iter = new StringCharacterIterator(path);
         for (char c = iter.first(); c != CharacterIterator.DONE;
              c = iter.next()) {
@@ -1140,10 +1145,10 @@ public class FileUtils {
      */
     public void rename(File from, File to) throws IOException {
         if (to.exists() && !to.delete()) {
-            throw new IOException("Failed to delete " + to 
+            throw new IOException("Failed to delete " + to
                                   + " while trying to rename " + from);
         }
-        
+
         File parent = getParentFile(to);
         if (!parent.exists() && !parent.mkdirs()) {
             throw new IOException("Failed to create directory " + parent
@@ -1153,7 +1158,7 @@ public class FileUtils {
         if (!from.renameTo(to)) {
             copyFile(from, to);
             if (!from.delete()) {
-                throw new IOException("Failed to delete " + from 
+                throw new IOException("Failed to delete " + from
                                       + " while trying to rename it.");
             }
         }
