@@ -58,6 +58,7 @@ import java.io.File;
 import java.util.StringTokenizer;
 import java.util.Vector;
 import org.apache.tools.ant.BuildException;
+import org.apache.tools.ant.ProjectComponent;
 import org.apache.tools.ant.util.StringUtils;
 
 
@@ -113,7 +114,7 @@ public class Commandline implements Cloneable {
     /**
      * Used for nested xml command line definitions.
      */
-    public static class Argument {
+    public static class Argument extends ProjectComponent {
 
         private String[] parts;
 
@@ -147,6 +148,19 @@ public class Commandline implements Cloneable {
          */
         public void setPath(Path value) {
             parts = new String[] {value.toString()};
+        }
+
+        /**
+         * Sets a single commandline argument from a reference to a
+         * path - ensures the right separator for the local platform
+         * is used.
+         *
+         * @param value a single commandline argument.
+         */
+        public void setPathref(Reference value) {
+            Path p = new Path(getProject());
+            p.setRefid(value);
+            parts = new String[] {p.toString()};
         }
 
         /**

@@ -49,6 +49,9 @@ Other changes:
 
 * OS/400 now gets detected by the os condition.
 
+* <arg> has a new attribute pathref that can be used to reference
+  previously defined paths.
+
 Changes from Ant 1.5.1Beta1 to 1.5.1
 ====================================
 

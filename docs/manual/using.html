@@ -429,7 +429,7 @@ that contain space characters, nested <code>arg</code> elements can be used.</p>
     <td valign="top">value</td>
     <td valign="top">a single command-line argument; can contain space
       characters.</td>
-    <td align="center" rowspan="4">Exactly one of these.</td>
+    <td align="center" rowspan="5">Exactly one of these.</td>
   </tr>
   <tr>
     <td valign="top">file</td>
@@ -442,6 +442,12 @@ that contain space characters, nested <code>arg</code> elements can be used.</p>
       string as a single command-line argument; you can use <code>;</code>
       or <code>:</code> as
       path separators and Ant will convert it to the platform's local
+      conventions.</td>
+  </tr>
+  <tr>
+    <td valign="top">pathref</td>
+    <td valign="top"><a href="#references">Reference</a> to a path
+      defined elsewhere.  Ant will convert it to the platform's local
       conventions.</td>
   </tr>
   <tr>
