@@ -66,7 +66,7 @@ import java.util.zip.ZipException;
  * @author Stefan Bodewig
  * @version $Revision$
  */
-public class ZipEntry extends java.util.zip.ZipEntry {
+public class ZipEntry extends java.util.zip.ZipEntry implements Cloneable {
 
     private static final int PLATFORM_UNIX = 3;
     private static final int PLATFORM_FAT  = 0;
@@ -75,6 +75,7 @@ public class ZipEntry extends java.util.zip.ZipEntry {
     private int platform = PLATFORM_FAT;
     private long externalAttributes = 0;
     private Vector extraFields = new Vector();
+    private String name = null;
 
     /**
      * Creates a new zip entry with the specified name.
@@ -136,22 +137,49 @@ public class ZipEntry extends java.util.zip.ZipEntry {
     }
 
     /**
+     * @since 1.9
+     */
+    protected ZipEntry() {
+        super("");
+    }
+
+    /**
      * Overwrite clone
      *
      * @since 1.1
      */
     public Object clone() {
-        ZipEntry e = null;
         try {
-            e = new ZipEntry((java.util.zip.ZipEntry) super.clone());
-        } catch (Exception ex) {
-            // impossible as extra data is in correct format
-            ex.printStackTrace();
+            ZipEntry e = (ZipEntry) super.clone();
+
+            e.setName(getName());
+            e.setComment(getComment());
+            e.setMethod(getMethod());
+            e.setTime(getTime());
+            long size = getSize();
+            if (size > 0) {
+                e.setSize(size);
+            }
+            long cSize = getCompressedSize();
+            if (cSize > 0) {
+                e.setComprSize(cSize);
+            }
+            long crc = getCrc();
+            if (crc > 0) {
+                e.setCrc(crc);
+            }
+            
+            e.extraFields = (Vector) extraFields.clone();
+            e.setInternalAttributes(getInternalAttributes());
+            e.setExternalAttributes(getExternalAttributes());
+            e.setExtraFields(getExtraFields());
+            return e;
+        } catch (Throwable t) {
+            // in JDK 1.1 ZipEntry is not Cloneable, so super.clone declares
+            // to throw CloneNotSupported - since JDK 1.2 it is overridden to
+            // not throw that exception
+            return null;
         }
-        e.setInternalAttributes(getInternalAttributes());
-        e.setExternalAttributes(getExternalAttributes());
-        e.setExtraFields(getExtraFields());
-        return e;
     }
 
     /**
@@ -216,6 +244,13 @@ public class ZipEntry extends java.util.zip.ZipEntry {
      */
     public int getPlatform() {
         return platform;
+    }
+
+    /**
+     * @since 1.9
+     */
+    protected void setPlatform(int platform) {
+        this.platform = platform;
     }
 
     /**
@@ -360,6 +395,17 @@ public class ZipEntry extends java.util.zip.ZipEntry {
             return compressedSize.longValue();
         }
         return super.getCompressedSize();
+    }
+
+    /**
+     * @since 1.9
+     */
+    public String getName() {
+        return name == null ? super.getName() : name;
+    }
+
+    protected void setName(String name) {
+        this.name = name;
     }
 
     /**
