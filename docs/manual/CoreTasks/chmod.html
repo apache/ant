@@ -99,14 +99,14 @@ href="../CoreTypes/filelist.html">filelist</a>s.</p>
   </tr>
 </table>
 <h3>Examples</h3>
-<blockquote>
-  <p><code>&lt;chmod file=&quot;${dist}/start.sh&quot; perm=&quot;ugo+rx&quot;/&gt;</code></p>
-</blockquote>
+  <blockquote><pre>
+&lt;chmod file=&quot;${dist}/start.sh&quot; perm=&quot;ugo+rx&quot;/&gt;
+</pre></blockquote>
 <p>makes the &quot;start.sh&quot; file readable and executable for anyone on a
 UNIX system.</p>
-<blockquote>
-  <p><code>&lt;chmod file=&quot;${dist}/start.sh&quot; perm=&quot;700&quot;/&gt;</code></p>
-</blockquote>
+<blockquote><pre>
+&lt;chmod file=&quot;${dist}/start.sh&quot; perm=&quot;700&quot;/&gt;
+</pre></blockquote>
 <p>makes the &quot;start.sh&quot; file readable, writable and executable only for the owner on a
 UNIX system.</p>
 <blockquote>
@@ -145,7 +145,7 @@ permissions.</p>
   &lt;/dirset&gt;
 &lt;/chmod&gt;
 </pre>
-</blockquote>blockquote>
+</blockquote>
 
 <p>keeps non-owners from touching cgi scripts, files with a <code>.old</code>
 extension or directories beginning with <code>private_</code>. A directory 
