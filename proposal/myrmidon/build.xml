@@ -156,11 +156,13 @@ Legal:
            optimize="${optimize}"
            deprecation="${deprecation}" />
 
+<!--
     <copy todir="${build.classes}">
       <fileset dir="${build.src}">
-        <exclude name="**/*.properties"/>
+        <include name="**/*.properties"/>
       </fileset>
     </copy>
+-->
 
     <mkdir dir="${build.classes}/TASK-LIB"/>
     <copy file="${build.src}/org/apache/ant/tasks/core/taskdefs.properties" 
@@ -175,8 +177,24 @@ Legal:
        ===================================================================
   -->
   <target name="jar-ant" depends="compile">
-    <jar jarfile="${build.lib}/ant.jar" basedir="${build.classes}">
+    <jar jarfile="${build.lib}/ant.jar" 
+         basedir="${build.classes}" 
+         manifest="${manifest.dir}/ant-manifest.mf">
+      <include name="org/apache/ant/launcher/*" />
+    </jar>
+  </target>
+
+  <!--
+       ===================================================================
+                          Creates the myrmidon.jar file
+       ===================================================================
+  -->
+  <target name="jar-myrmidon" depends="compile">
+    <jar jarfile="${build.lib}/myrmidon.jar" 
+         basedir="${build.classes}" 
+         manifest="${manifest.dir}/myrmidon-manifest.mf">
       <include name="org/apache/ant/**" />
+      <exclude name="org/apache/ant/launcher/*" />
       <exclude name="org/apache/ant/tasks/**" />
       <exclude name="org/apache/ant/convert/core/**" />
     </jar>
@@ -200,7 +218,7 @@ Legal:
                           Creates the distribution
        ===================================================================
   -->
-  <target name="dist" depends="jar-ant,jar-core">
+  <target name="dist" depends="jar-ant,jar-core,jar-myrmidon">
     <mkdir dir="${dist.dir}"/>
     <mkdir dir="${dist.bin}"/>
     <mkdir dir="${dist.lib}"/>

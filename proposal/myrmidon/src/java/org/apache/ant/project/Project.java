@@ -10,8 +10,10 @@ package org.apache.ant.project;
 import java.util.Iterator;
 import org.apache.ant.AntException;
 import org.apache.ant.tasklet.TaskletContext;
+import org.apache.avalon.Component;
 
 public interface Project
+    extends Component
 {
     // the name of currently executing project
     String PROJECT          = "ant.project.name"; 

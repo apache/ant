@@ -32,39 +32,52 @@ import org.apache.log.Logger;
 public class DefaultProjectEngine
     implements ProjectEngine, Initializable, Disposable
 {
-    protected Deployer              m_deployer;
-    protected TaskletRegistry       m_taskletRegistry;
-    protected ConverterRegistry     m_converterRegistry;
-    protected TaskletEngine         m_taskletEngine;
-    protected Logger                m_logger;
-
+    protected Deployer                 m_deployer;
+    protected TaskletRegistry          m_taskletRegistry;
+    protected ConverterRegistry        m_converterRegistry;
+    protected TaskletEngine            m_taskletEngine;
+    protected Logger                   m_logger;
+    protected ProjectListenerSupport   m_listenerSupport;
+    protected DefaultComponentManager  m_componentManager;
+    
     public void setLogger( final Logger logger )
     {
         m_logger = logger;
     }
 
+    public void addProjectListener( final ProjectListener listener )
+    {
+        m_listenerSupport.addProjectListener( listener );
+    }
+
+    public void removeProjectListener( final ProjectListener listener )
+    {
+        m_listenerSupport.removeProjectListener( listener );
+    }
+
     public void init()
         throws Exception
     {
+        m_listenerSupport = new ProjectListenerSupport();
+
         m_taskletEngine = createTaskletEngine();
+        m_taskletEngine.setLogger( m_logger );
 
         m_taskletRegistry = createTaskletRegistry();
         m_converterRegistry = createConverterRegistry();
         m_deployer = createDeployer();
 
-        //final DefaultTaskletContext context = new DefaultTaskletContext();
-        //m_taskletEngine.contextualize( context );
+        m_componentManager = new DefaultComponentManager();
+        m_componentManager.put( "org.apache.ant.project.ProjectEngine", this );
+        m_componentManager.put( "org.apache.ant.tasklet.engine.TaskletRegistry", 
+                                m_taskletRegistry );
 
-        final DefaultComponentManager componentManager = new DefaultComponentManager();
-        componentManager.put( "org.apache.ant.tasklet.engine.TaskletRegistry", 
-                              m_taskletRegistry );
+        m_componentManager.put( "org.apache.ant.convert.ConverterRegistry", 
+                                m_converterRegistry );
 
-        componentManager.put( "org.apache.ant.convert.ConverterRegistry", 
-                              m_converterRegistry );
-
-        componentManager.put( "org.apache.avalon.camelot.Deployer", m_deployer );
+        m_componentManager.put( "org.apache.avalon.camelot.Deployer", m_deployer );
        
-        m_taskletEngine.compose( componentManager );
+        m_taskletEngine.compose( m_componentManager );
         
         if( m_taskletEngine instanceof Initializable )
         {
@@ -112,15 +125,36 @@ public class DefaultProjectEngine
     public void execute( final Project project, final String target )
         throws AntException
     {
-        m_taskletEngine.contextualize( project.getContext() );
-        executeTarget( "<init>", project.getImplicitTarget() );
+        m_componentManager.put( "org.apache.ant.project.Project", project );
 
-        final ArrayList done = new ArrayList();
-        execute( project, target, done );
+        final TaskletContext context = project.getContext();
+
+        final String projectName = (String)context.getProperty( Project.PROJECT );
+
+        m_listenerSupport.projectStarted( projectName );
+
+        executeTargetWork( "<init>", project.getImplicitTarget(), context );
+
+        //context = new DefaultTaskletContext( context );
+        
+        //placing logger lower (at targetlevel or at task level)
+        //is possible if you want more fine grained control
+        context.setProperty( TaskletContext.LOGGER, m_logger );
+
+        execute( project, target, context );
+
+        m_listenerSupport.projectFinished();
+    }
+
+    public void execute( Project project, String target, TaskletContext context )
+        throws AntException
+    {
+        execute( project, target, context, new ArrayList() );
     }
 
     protected void execute( final Project project, 
                             final String targetName, 
+                            final TaskletContext context,
                             final ArrayList done )
         throws AntException
     {
@@ -139,45 +173,67 @@ public class DefaultProjectEngine
             final String dependency = (String)dependencies.next();
             if( !done.contains( dependency ) )
             {
-                execute( project, dependency, done );
+                execute( project, dependency, context, done );
             }
         }
 
-        final TaskletContext context = getContextFor( project, targetName );
-        m_taskletEngine.contextualize( context );
-        executeTarget( targetName, target );
+        executeTarget( targetName, target, context );
     }
 
-    protected TaskletContext getContextFor( final Project project, final String targetName )
-    {
-        final DefaultTaskletContext context = 
-            new DefaultTaskletContext( project.getContext() );
-
-        context.setProperty( Project.TARGET, targetName );
-        context.put( TaskletContext.LOGGER, m_logger );
-
-        return context;
-    }
-
-    protected void executeTarget( final String targetName, final Target target )
+    protected void executeTarget( final String targetName, 
+                                  final Target target, 
+                                  final TaskletContext context )
         throws AntException
     {
-        m_logger.debug( "Executing target " + targetName );
+        m_componentManager.put( "org.apache.ant.project.Target", target );
+
+        final TaskletContext targetContext = new DefaultTaskletContext( context );
+        targetContext.setProperty( Project.TARGET, targetName );
         
+        m_listenerSupport.targetStarted( targetName );
+
+        executeTargetWork( targetName, target, targetContext );
+        
+        m_listenerSupport.targetFinished();
+    }
+
+    protected void executeTargetWork( final String name, 
+                                      final Target target, 
+                                      final TaskletContext context )
+    {
+        m_logger.debug( "Executing target " + name );
+
         final Iterator tasks = target.getTasks();
         while( tasks.hasNext() )
         {
             final Configuration task = (Configuration)tasks.next();
-            executeTask( task );
+            executeTask( task, context );
         }
     }
 
-    protected void executeTask( final Configuration configuration )
+    protected void executeTask( final Configuration configuration, 
+                                final TaskletContext context )
         throws AntException
     {
         final String name = configuration.getName();
         m_logger.debug( "Executing task " + name );
 
+        //Set up context for task...
+        final TaskletContext taskletContext = context;
+
+        //is Only necessary if we are multi-threaded
+        //final TaskletContext targetContext = new DefaultTaskletContext( context );
+        taskletContext.setProperty( TaskletContext.NAME, name );
+
+        m_taskletEngine.contextualize( taskletContext );
+
+        //notify listeners
+        m_listenerSupport.taskletStarted( name );
+
+        //run task
         m_taskletEngine.execute( configuration );
+
+        //notify listeners task has ended
+        m_listenerSupport.taskletFinished();
     }
 }

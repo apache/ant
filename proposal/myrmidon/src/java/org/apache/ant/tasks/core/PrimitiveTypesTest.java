@@ -20,67 +20,67 @@ public class PrimitiveTypesTest
 {
     public void setInteger( final Integer value )
     {
-        getLogger().info( "setInteger( " + value + " );" );
+        getLogger().warn( "setInteger( " + value + " );" );
     }
     
     public void setInteger2( final int value )
     {
-        getLogger().info( "setInteger2( " + value + " );" );
+        getLogger().warn( "setInteger2( " + value + " );" );
     }
 
     public void setShort( final Short value )
     {
-        getLogger().info( "setShort( " + value + " );" );
+        getLogger().warn( "setShort( " + value + " );" );
     }
     
     public void setShort2( final short value )
     {
-        getLogger().info( "setShort2( " + value + " );" );
+        getLogger().warn( "setShort2( " + value + " );" );
     }
 
     public void setByte( final Byte value )
     {
-        getLogger().info( "setByte( " + value + " );" );
+        getLogger().warn( "setByte( " + value + " );" );
     }
     
     public void setByte2( final byte value )
     {
-        getLogger().info( "setByte2( " + value + " );" );
+        getLogger().warn( "setByte2( " + value + " );" );
     }
 
     public void setLong( final Long value )
     {
-        getLogger().info( "setLong( " + value + " );" );
+        getLogger().warn( "setLong( " + value + " );" );
     }
     
     public void setLong2( final long value )
     {
-        getLogger().info( "setLong2( " + value + " );" );
+        getLogger().warn( "setLong2( " + value + " );" );
     }
     
     public void setFloat( final Float value )
     {
-        getLogger().info( "setFloat( " + value + " );" );
+        getLogger().warn( "setFloat( " + value + " );" );
     }
     
     public void setFloat2( final float value )
     {
-        getLogger().info( "setFloat2( " + value + " );" );
+        getLogger().warn( "setFloat2( " + value + " );" );
     }
     
     public void setDouble( final Double value )
     {
-        getLogger().info( "setDouble( " + value + " );" );
+        getLogger().warn( "setDouble( " + value + " );" );
     }
     
     public void setDouble2( final double value )
     {
-        getLogger().info( "setDouble2( " + value + " );" );
+        getLogger().warn( "setDouble2( " + value + " );" );
     }
 
     public void setString( final String value )
     {
-        getLogger().info( "setString( " + value + " );" );
+        getLogger().warn( "setString( " + value + " );" );
     }
 
     public void run()

@@ -58,7 +58,17 @@ Legal:
     <property name="blah" value="fred" />
     <property name="${blah}" value="barney" />
 
+    <register-tasklet task-lib="../../dist/lib/core.tsk" 
+                      task-name="echo2" 
+                      classname="org.apache.ant.tasks.core.Echo" />
+
     <echo message="Doing the funky Echo with ${blah} ${fred} Year=${year}!"/>
+    <echo2 message="Luke to Echo base. Can you hear me?"/>
+
+    <ant-call target="property-test2">
+      <param name="blah" value="blah-value" />
+    </ant-call>
+
   </target>
 
   <target name="property-test2">

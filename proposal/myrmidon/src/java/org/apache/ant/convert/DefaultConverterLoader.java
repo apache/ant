@@ -22,13 +22,14 @@ public class DefaultConverterLoader
 {
     public DefaultConverterLoader()
     {
-        super( new URLClassLoader( new URL[0], 
+        super( new URLClassLoader( new URL[0],
                                    Thread.currentThread().getContextClassLoader() ) );
     }
     
     public DefaultConverterLoader( final URL location )
     {
-        super( new URLClassLoader( new URL[] { location } ) );
+        super( new URLClassLoader( new URL[] { location }, 
+                                   Thread.currentThread().getContextClassLoader() ) );
     }
     
     public Converter loadConverter( final String converter )

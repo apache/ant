@@ -40,10 +40,14 @@ public class DefaultTaskletEngine
     protected TaskletConfigurer    m_configurer;
     protected Logger               m_logger;
 
+    public void setLogger( final Logger logger )
+    {
+        m_logger = logger;
+    }
+
     public void contextualize( final Context context )
     {
         m_context = (TaskletContext)context;
-        m_logger = m_context.getLogger();
     }
 
     public void compose( final ComponentManager componentManager )

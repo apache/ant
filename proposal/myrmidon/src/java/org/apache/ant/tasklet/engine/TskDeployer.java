@@ -138,6 +138,9 @@ public class TskDeployer
                                                key + " due to " + re,
                                                re );
             }
+
+            m_logger.debug( "Registered converter " + key + " that converts from " + 
+                            source + " to " + destination );
         }
     }   
      
@@ -158,6 +161,8 @@ public class TskDeployer
                 throw new DeploymentException( "Error registering " + key + " due to " + re,
                                                re );
             }
+            
+            m_logger.debug( "Registered tasklet " + key + " as " + value );
         }
     }
 

@@ -28,6 +28,6 @@ public class Echo
     public void run()
         throws AntException
     {
-        getLogger().info( m_message );
+        getLogger().warn( m_message );
     }
 }

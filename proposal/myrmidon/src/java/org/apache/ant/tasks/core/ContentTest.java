@@ -20,7 +20,7 @@ public class ContentTest
 {
     public void addContent( final Integer value )
     {
-        getLogger().info( "Integer content: " + value );
+        getLogger().warn( "Integer content: " + value );
     }
 
     /*

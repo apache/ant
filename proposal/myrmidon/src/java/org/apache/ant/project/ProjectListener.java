@@ -7,10 +7,7 @@
  */
 package org.apache.ant.project;
 
-import org.apache.log.LogTarget;
-
 public interface ProjectListener
-    extends LogTarget
 {
     void projectStarted( String projectName );
     void projectFinished();
@@ -20,4 +17,7 @@ public interface ProjectListener
 
     void taskletStarted( String taskletName );
     void taskletFinished();
+
+    void log( String message );
+    void log( String message, Throwable throwable );
 }

@@ -11,10 +11,12 @@ import org.apache.ant.AntException;
 import org.apache.ant.configuration.Configuration;
 import org.apache.avalon.Composer;
 import org.apache.avalon.Contextualizable;
+import org.apache.log.Logger;
  
 public interface TaskletEngine
     extends Contextualizable, Composer
 {
+    void setLogger( Logger logger );
     void execute( final Configuration task )
         throws AntException;
 }

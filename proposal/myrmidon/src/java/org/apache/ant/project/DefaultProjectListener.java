@@ -7,24 +7,12 @@
  */
 package org.apache.ant.project;
 
-import org.apache.log.format.PatternFormatter;
-import org.apache.log.output.DefaultOutputLogTarget;
+import org.apache.avalon.util.StringUtil;
 
 public class DefaultProjectListener
-    extends DefaultOutputLogTarget
     implements ProjectListener
 {
     protected String        m_prefix;
-
-    /**
-     * Initialize the default pattern.
-     */
-    protected void initPattern()
-    {
-        final PatternFormatter formatrer = new PatternFormatter();
-        formatrer.setFormat( "%{message}\\n%{throwable}" );
-        m_formatter = formatrer;
-    }
 
     public void projectStarted( final String projectName )
     {
@@ -54,9 +42,19 @@ public class DefaultProjectListener
         m_prefix = null;
     }
 
+    public void log( String message )
+    {
+        output( message );
+    }
+
+    public void log( String message, Throwable throwable )
+    {
+        output( message + "\n" + StringUtil.printStackTrace( throwable, 5, true ) );
+    }
+
     protected void output( final String data )
     {
-        if( null != m_prefix ) super.output( "[" + m_prefix + "] " + data );
-        else super.output( data );
+        if( null != m_prefix ) System.out.println( "\t[" + m_prefix + "] " + data );
+        else System.out.println( data );
     }
 }

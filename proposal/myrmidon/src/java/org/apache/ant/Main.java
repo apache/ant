@@ -18,13 +18,15 @@ import java.net.URL;
 import java.net.URLClassLoader;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Iterator;
+import java.util.List;
+import org.apache.ant.launcher.AntLoader;
 import org.apache.ant.project.DefaultProjectEngine;
 import org.apache.ant.project.Project;
 import org.apache.ant.project.ProjectBuilder;
 import org.apache.ant.project.ProjectEngine;
 import org.apache.ant.project.ProjectListener;
+import org.apache.ant.project.ProjectToListenerAdapter;
 import org.apache.ant.tasklet.JavaVersion;
 import org.apache.ant.tasklet.TaskletContext;
 import org.apache.avalon.Disposable;
@@ -57,10 +59,14 @@ public class Main
     public final static String     VERSION                   = 
         "Ant " + BUILD_VERSION + " compiled on " + BUILD_DATE;
 
-    protected final static String  DEFAULT_LOGLEVEL          = "INFO";
-    protected final static String  DEFAULT_LIB_DIRECTORY     = ".." + File.separator + "lib";
+    protected final static String  DEFAULT_LOGLEVEL          = "WARN";
+    protected final static String  DEFAULT_LIB_DIRECTORY     = "lib";
     protected final static String  DEFAULT_TASKLIB_DIRECTORY = DEFAULT_LIB_DIRECTORY;
     protected final static String  DEFAULT_FILENAME          = "build.xmk";
+
+    protected final static String  DEFAULT_ENGINE            = 
+        "org.apache.ant.project.DefaultProjectEngine";
+
     protected final static String  DEFAULT_LISTENER          = 
         "org.apache.ant.project.DefaultProjectListener";
 
@@ -82,7 +88,7 @@ public class Main
     private static final int       HOME_DIR_OPT              = 7;
     
     //incompatable options for info options
-    private static final int       INFO_OPT_INCOMPAT[]       = new int[] 
+    private static final int[]     INFO_OPT_INCOMPAT         = new int[] 
     { 
         HELP_OPT, QUIET_OPT, VERBOSE_OPT, FILE_OPT, 
         LOG_LEVEL_OPT, VERSION_OPT, LISTENER_OPT,
@@ -91,13 +97,14 @@ public class Main
     };
     
     //incompatable options for other logging options
-    private static final int       LOG_OPT_INCOMPAT[]        = new int[] 
+    private static final int[]     LOG_OPT_INCOMPAT          = new int[] 
     {
         QUIET_OPT, VERBOSE_OPT, LOG_LEVEL_OPT
     };
 
     protected Logger               m_logger;
 
+    protected ProjectListener      m_listener;
     protected File                 m_binDir;
     protected File                 m_homeDir;
     protected File                 m_libDir;
@@ -105,7 +112,7 @@ public class Main
     protected File                 m_buildFile;
     protected File                 m_userDir;
 
-    public static void main( final String args[] )
+    public static void main( final String[] args )
     {
         final Main main = new Main();
 
@@ -128,7 +135,7 @@ public class Main
     protected CLOptionDescriptor[] createCLOptions()
     {
         //TODO: localise
-        final CLOptionDescriptor options[] = new CLOptionDescriptor[ 13 ];
+        final CLOptionDescriptor[] options = new CLOptionDescriptor[ 13 ];
 
         options[0] =
             new CLOptionDescriptor( "help",
@@ -291,9 +298,9 @@ public class Main
         m_taskLibDir = getTaskLibDir( m_homeDir, taskLibDir );
         m_buildFile = getFile( filename );
 
-        m_logger.info( "Ant Base Directory: " + m_homeDir );
+        m_logger.warn( "Ant Build File: " + m_buildFile );
+        m_logger.info( "Ant Home Directory: " + m_homeDir );
         m_logger.info( "Ant Bin Directory: " + m_binDir );
-        m_logger.info( "Ant Build File: " + m_buildFile );
         m_logger.debug( "Ant Lib Directory: " + m_libDir );
         m_logger.debug( "Ant Task Lib Directory: " + m_taskLibDir );
 
@@ -309,6 +316,8 @@ public class Main
         {
             ((Initializable)engine).init();
         }
+
+        engine.addProjectListener( m_listener );
 
         deployDefaultTaskLibs( engine, m_taskLibDir );
 
@@ -343,10 +352,9 @@ public class Main
                                           final File taskLibDirectory )
     
     {
-        final ExtensionFileFilter filter = 
-            new ExtensionFileFilter( new String[] { ".tsk" } );
+        final ExtensionFileFilter filter = new ExtensionFileFilter( ".tsk" );
 
-        final File files[] = taskLibDirectory.listFiles( filter );
+        final File[] files = taskLibDirectory.listFiles( filter );
         final Deployer deployer = engine.getDeployer();
 
         for( int i = 0; i < files.length; i++ )
@@ -401,36 +409,35 @@ public class Main
 
     protected void setupListener( final String listenerName )
     {
-        final ProjectListener listener = createListener( listenerName );
-        m_logger.addLogTarget( listener );
+        m_listener = createListener( listenerName );
+        m_logger.addLogTarget( new ProjectToListenerAdapter( m_listener ) );
     }
 
     protected void setupContextClassLoader( final File libDir )
     {
-        final ClassLoader classLoader = createClassLoader( libDir );
-        Thread.currentThread().setContextClassLoader( classLoader );
+        setupClassLoader( libDir );
+        Thread.currentThread().setContextClassLoader( AntLoader.getLoader() );
     }
 
-    protected ClassLoader createClassLoader( final File libDir )
+    protected void setupClassLoader( final File libDir )
     {
         final ExtensionFileFilter filter = 
             new ExtensionFileFilter( new String[] { ".jar", ".zip" } );
 
-        final ArrayList urlList = new ArrayList();
-        toURLS( urlList, libDir.listFiles( filter ) );
-        
-        final URL urls[] = (URL[])urlList.toArray( new URL[0] );
+        final File[] files = libDir.listFiles( filter );
 
-        return new URLClassLoader( urls, ClassLoader.getSystemClassLoader() );
-    }
+        final AntLoader classLoader = AntLoader.getLoader();
 
-    protected void toURLS( final ArrayList urls, final File files[] )
-    {
         for( int i = 0; i < files.length; i++ )
         {
-            try { urls.add( files[ i ].toURL() ); }
-            catch( final MalformedURLException mue ) {}
-        }
+            if( !files[ i ].getName().equals( "ant.jar" ) &&
+                !files[ i ].getName().equals( "myrmidon.jar" ) &&
+                !files[ i ].getName().equals( "avalonapi.jar" ) )
+            {                
+                try { classLoader.addURL( files[ i ].toURL() ); }
+                catch( final MalformedURLException mue ) {}
+            }
+        }        
     }
 
     protected Project getProject( final String builderName, final File file )
@@ -497,7 +504,7 @@ public class Main
 
     protected ProjectEngine createProjectEngine()
     {
-        return new DefaultProjectEngine();
+        return (ProjectEngine)createObject( DEFAULT_ENGINE, "project-engine" );
     }
 
     protected File getHomeDir( final String homeDir )
@@ -760,11 +767,11 @@ public class Main
     {
         try
         {
-            final Class clazz = Class.forName( objectName );
+            final Class clazz = Class.forName( objectName ); 
             return clazz.newInstance();
         }
         catch( final IllegalAccessException iae )
-        {
+        { 
             throw new AntException( "Non-public constructor for " + type + " " + objectName, 
                                     iae );
         }

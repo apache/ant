@@ -1,0 +1,4 @@
+Manifest-Version: 1.0
+Main-Class: org.apache.ant.Main
+Class-Path: avalonapi.jar 
+Created-By: Apache Ant Project

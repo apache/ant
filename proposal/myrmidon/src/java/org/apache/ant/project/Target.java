@@ -8,8 +8,10 @@
 package org.apache.ant.project;
 
 import java.util.Iterator;
+import org.apache.avalon.Component;
 
 public interface Target
+    extends Component
 {
     Iterator getDependencies();
     Iterator getTasks();
