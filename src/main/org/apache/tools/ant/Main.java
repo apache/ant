@@ -72,10 +72,8 @@ import java.util.*;
 
 public class Main {
 
-    public final static String VERSION             = "@VERSION@";
-    public final static String DATE                = "@DATE@";
     public final static String BANNER              = 
-        "Ant version " + VERSION + " compiled on " + DATE;
+        "Ant version " + Constants.VERSION + " compiled on " + Constants.DATE;
 
     /** The default build file name */
     public static final String DEFAULT_BUILD_FILENAME = "build.xml";
