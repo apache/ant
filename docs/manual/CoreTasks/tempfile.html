@@ -46,7 +46,26 @@
       </td></tr>
 
       <tr><td><blockquote>
-        This task sets a property to the name of a temporary file. Unlike the Java1.2 method to create a temporary file, this task does work on Java1.1. Also, it does not actually create the temporary file, but it does guarantee that the file did not exist when the task was executed. <p> Examples <pre>&lt;tempfile property="temp.file"/&gt;</pre> create a temporary file <pre>&lt;tempfile property="temp.file" suffix=".xml"/&gt;</pre> create a temporary file with the .xml suffix. <pre>&lt;tempfile property="temp.file" destDir="build"/&gt;</pre> create a temp file in the build subdir
+
+          This task sets a property to the name of a temporary file.
+          Unlike <code>java.io.File.createTempFile</code>,
+          this task does not actually create the temporary file, but it does guarantee that the
+          file did not exist when the task was executed.
+
+          <p>Examples:
+
+          <pre>&lt;tempfile property="temp.file"/&gt;</pre>
+
+          create a temporary file
+
+          <pre>&lt;tempfile property="temp.file" suffix=".xml"/&gt;</pre>
+
+          create a temporary file with the <code>.xml</code> suffix
+
+          <pre>&lt;tempfile property="temp.file" destDir="build"/&gt;</pre>
+
+          create a temporary file in the <code>build</code> subdirectory
+
       </blockquote></td></tr>
 
     </table>
