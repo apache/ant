@@ -1,5 +1,5 @@
 /*
- * Copyright  2001-2004 The Apache Software Foundation
+ * Copyright  2001-2005 The Apache Software Foundation
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -50,13 +50,13 @@ public class ClassFileSetTest extends BuildFileTest {
     }
 
     /**
-     * Test basic clasfileset
+     * Test basic classfileset
      */
     public void testBasicSet() {
-        Project project = getProject();
+        Project p = getProject();
         executeTarget("testbasicset");
-        FileSet resultFileSet = (FileSet)project.getReference(RESULT_FILESET);
-        DirectoryScanner scanner = resultFileSet.getDirectoryScanner(project);
+        FileSet resultFileSet = (FileSet)p.getReference(RESULT_FILESET);
+        DirectoryScanner scanner = resultFileSet.getDirectoryScanner(p);
         String[] scannedFiles = scanner.getIncludedFiles();
         Hashtable files = new Hashtable();
         for (int i = 0; i < scannedFiles.length; ++i) {
@@ -78,10 +78,10 @@ public class ClassFileSetTest extends BuildFileTest {
      * Test small classfileset
      */
     public void testSmallSet() {
-        Project project = getProject();
+        Project p = getProject();
         executeTarget("testsmallset");
-        FileSet resultFileSet = (FileSet)project.getReference(RESULT_FILESET);
-        DirectoryScanner scanner = resultFileSet.getDirectoryScanner(project);
+        FileSet resultFileSet = (FileSet)p.getReference(RESULT_FILESET);
+        DirectoryScanner scanner = resultFileSet.getDirectoryScanner(p);
         String[] scannedFiles = scanner.getIncludedFiles();
         Hashtable files = new Hashtable();
         for (int i = 0; i < scannedFiles.length; ++i) {
@@ -96,13 +96,13 @@ public class ClassFileSetTest extends BuildFileTest {
     }
 
     /**
-     * Test conbo classfileset
+     * Test combo classfileset
      */
     public void testComboSet() {
-        Project project = getProject();
+        Project p = getProject();
         executeTarget("testcomboset");
-        FileSet resultFileSet = (FileSet)project.getReference(RESULT_FILESET);
-        DirectoryScanner scanner = resultFileSet.getDirectoryScanner(project);
+        FileSet resultFileSet = (FileSet)p.getReference(RESULT_FILESET);
+        DirectoryScanner scanner = resultFileSet.getDirectoryScanner(p);
         String[] scannedFiles = scanner.getIncludedFiles();
         Hashtable files = new Hashtable();
         for (int i = 0; i < scannedFiles.length; ++i) {
@@ -125,10 +125,10 @@ public class ClassFileSetTest extends BuildFileTest {
      * Test that classes included in a method "System.out.println(MyClass.class)" are included.
      */
     public void testMethodParam() {
-        Project project = getProject();
+        Project p = getProject();
         executeTarget("testmethodparam");
-        FileSet resultFileSet = (FileSet)project.getReference(RESULT_FILESET);
-        DirectoryScanner scanner = resultFileSet.getDirectoryScanner(project);
+        FileSet resultFileSet = (FileSet)p.getReference(RESULT_FILESET);
+        DirectoryScanner scanner = resultFileSet.getDirectoryScanner(p);
         String[] scannedFiles = scanner.getIncludedFiles();
         Hashtable files = new Hashtable();
         for (int i = 0; i < scannedFiles.length; ++i) {
@@ -152,10 +152,10 @@ public class ClassFileSetTest extends BuildFileTest {
      * Test that classes included in a method "System.out.println(Outer.Inner.class)" are included.
      */
     public void testMethodParamInner() {
-        Project project = getProject();
+        Project p = getProject();
         executeTarget("testmethodparaminner");
-        FileSet resultFileSet = (FileSet)project.getReference(RESULT_FILESET);
-        DirectoryScanner scanner = resultFileSet.getDirectoryScanner(project);
+        FileSet resultFileSet = (FileSet)p.getReference(RESULT_FILESET);
+        DirectoryScanner scanner = resultFileSet.getDirectoryScanner(p);
         String[] scannedFiles = scanner.getIncludedFiles();
         Hashtable files = new Hashtable();
         for (int i = 0; i < scannedFiles.length; ++i) {

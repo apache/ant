@@ -1,5 +1,5 @@
 /*
- * Copyright  2001-2002,2004 The Apache Software Foundation
+ * Copyright  2001-2002, 2004-2005 The Apache Software Foundation
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -16,19 +16,18 @@
  */
 package org.apache.tools.ant.types.optional.depend;
 
-import java.util.Enumeration;
 import java.util.Vector;
-import org.apache.tools.ant.DirectoryScanner;
+import java.util.Enumeration;
 import org.apache.tools.ant.Project;
+import org.apache.tools.ant.DirectoryScanner;
 import org.apache.tools.ant.types.FileSet;
 
 /**
- * A ClassfileSet is a FileSet, that enlists all classes that depend on a
+ * A ClassfileSet is a FileSet that enlists all classes that depend on a
  * certain set of root classes.
  *
- * A ClassfileSet extends FileSets. The
- * nested FileSet attribute provides the domain, that is used for searching
- * for dependent classes
+ * ClassfileSet extends FileSet, its inherited properties
+ * defining the domain searched for dependent classes.
  *
  */
 public class ClassfileSet extends FileSet {
@@ -40,28 +39,28 @@ public class ClassfileSet extends FileSet {
     private Vector rootClasses = new Vector();
 
     /**
-     * The list of filesets which contain root classes
+     * The list of filesets which contain root classes.
      */
     private Vector rootFileSets = new Vector();
 
     /**
-     * Inner class used to contain info about root classes
+     * Inner class used to contain info about root classes.
      */
     public static class ClassRoot {
         /** The name of the root class */
         private String rootClass;
 
         /**
-         * Set the root class name
+         * Set the root class name.
          *
-         * @param name the name of the root class
+         * @param name the name of the root class.
          */
         public void setClassname(String name) {
             this.rootClass = name;
         }
 
         /**
-         * Get the name of the root class
+         * Get the name of the root class.
          *
          * @return the name of the root class.
          */
@@ -71,26 +70,26 @@ public class ClassfileSet extends FileSet {
     }
 
     /**
-     * Default constructor
+     * Default constructor.
      */
     public ClassfileSet() {
     }
 
     /**
      * Add a fileset to which contains a collection of root classes used to
-     * drive the search from classes
+     * drive the search from classes.
      *
      * @param rootFileSet a root file set to be used to search for dependent
-     * classes
+     * classes.
      */
     public void addRootFileset(FileSet rootFileSet) {
         rootFileSets.addElement(rootFileSet);
     }
 
     /**
-     * Create a ClassfileSet from another ClassfileSet
+     * Create a ClassfileSet from another ClassfileSet.
      *
-     * @param s the other classfileset
+     * @param s the other classfileset.
      */
     protected ClassfileSet(ClassfileSet s) {
         super(s);
@@ -98,7 +97,7 @@ public class ClassfileSet extends FileSet {
     }
 
     /**
-     * Set the root class attribute
+     * Set the root class attribute.
      *
      * @param rootClass the name of the root class.
      */
@@ -117,7 +116,6 @@ public class ClassfileSet extends FileSet {
         if (isReference()) {
             return getRef(p).getDirectoryScanner(p);
         }
-
         Vector allRootClasses = (Vector) rootClasses.clone();
         for (Enumeration e = rootFileSets.elements(); e.hasMoreElements();) {
             FileSet additionalRootSet = (FileSet) e.nextElement();
@@ -134,8 +132,6 @@ public class ClassfileSet extends FileSet {
                 }
             }
         }
-
-
         DirectoryScanner parentScanner = super.getDirectoryScanner(p);
         DependScanner scanner = new DependScanner(parentScanner);
         scanner.setBasedir(getDir(p));
@@ -145,7 +141,7 @@ public class ClassfileSet extends FileSet {
     }
 
     /**
-     * Add a nested root class definition to this class file set
+     * Add a nested root class definition to this class file set.
      *
      * @param root the configured class root.
      */
@@ -156,13 +152,11 @@ public class ClassfileSet extends FileSet {
     /**
      * Clone this data type.
      *
-     * @return a clone of the class file set
+     * @return a clone of the class file set.
      */
     public Object clone() {
-        if (isReference()) {
-            return new ClassfileSet((ClassfileSet) getRef(getProject()));
-        } else {
-            return new ClassfileSet(this);
-        }
+        return new ClassfileSet(isReference()
+            ? (ClassfileSet) (getRef(getProject())) : this);
     }
+
 }
