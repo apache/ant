@@ -109,10 +109,10 @@ public class EventDispatcher {
             case TestRunEvent.TEST_ENDED:
                 fireTestEnded(evt);
                 break;
-            case TestRunEvent.TESTSUITE_ENDED:
+            case TestRunEvent.SUITE_ENDED:
                 fireSuiteEnded(evt);
                 break;
-            case TestRunEvent.TESTSUITE_STARTED:
+            case TestRunEvent.SUITE_STARTED:
                 fireSuiteStarted(evt);
                 break;
             default:
