@@ -504,7 +504,7 @@ public class ZipOutputStream extends FilterOutputStream {
      * @since 1.14
      */
     public void flush() throws IOException {
-        if (out == null) {
+        if (out != null) {
             out.flush();
         }
     }
