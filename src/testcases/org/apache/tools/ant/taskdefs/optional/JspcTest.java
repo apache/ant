@@ -155,8 +155,8 @@ public class JspcTest extends BuildFileTest {
      */
     public void testNoTld() throws Exception {
         expectBuildExceptionContaining("testNoTld",
-                "exec failure",
-                "JasperException");
+                "Jasper found an error in a file",
+                "Java returned: 9");
     }
 
 
