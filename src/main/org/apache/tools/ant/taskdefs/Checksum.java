@@ -53,19 +53,25 @@
  */
 package org.apache.tools.ant.taskdefs;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStreamReader;
 import java.security.DigestInputStream;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.security.NoSuchProviderException;
-import java.util.Enumeration;
-import java.util.Hashtable;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.FileInputStream;
+import java.io.FileReader;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Vector;
+import java.util.Hashtable;
+import java.util.Enumeration;
+import java.util.Set;
+import java.util.Arrays;
+
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.DirectoryScanner;
 import org.apache.tools.ant.Project;
@@ -76,16 +82,26 @@ import org.apache.tools.ant.types.FileSet;
  * Used to create or verify file checksums.
  *
  * @author Magesh Umasankar
+ * @author Aslak Hellesoy
  *
  * @since Ant 1.5
  *
  * @ant.task category="control"
  */
 public class Checksum extends MatchingTask implements Condition {
+
     /**
      * File for which checksum is to be calculated.
      */
     private File file = null;
+
+    /**
+     * Root directory in which the checksu files will be written.
+     * If not specified, the checksum files will be written
+     * in the same directory as each file.
+     */
+    private File todir;
+
     /**
      * MessageDigest algorithm to be used.
      */
@@ -103,6 +119,23 @@ public class Checksum extends MatchingTask implements Condition {
      * Holds generated checksum and gets set as a Project Property.
      */
     private String property;
+    /**
+     * Holds checksums for all files (both calculated and cached on disk).
+     * Key:   java.util.File (source file)
+     * Value: java.lang.String (digest)
+     */
+    private Map allDigests = new HashMap();
+    /**
+     * Holds relative file names for all files (always with a forward slash).
+     * This is used to calculate the total hash.
+     * Key:   java.util.File (source file)
+     * Value: java.lang.String (relative file name)
+     */
+    private Map relativeFilePaths = new HashMap();
+    /**
+     * Property where totalChecksum gets set.
+     */
+    private String totalproperty;
     /**
      * Whether or not to create a new file.
      * Defaults to <code>false</code>.
@@ -141,6 +174,14 @@ public class Checksum extends MatchingTask implements Condition {
     }
 
     /**
+     * Sets the root directory where checksum files will be
+     * written/read
+     */
+    public void setTodir(File todir) {
+        this.todir = todir;
+    }
+
+    /**
      * Specifies the algorithm to be used to compute the checksum.
      * Defaults to "MD5". Other popular algorithms like "SHA" may be used as well.
      */
@@ -169,6 +210,14 @@ public class Checksum extends MatchingTask implements Condition {
      */
     public void setProperty(String property) {
         this.property = property;
+    }
+
+    /**
+     * Sets the property to hold the generated total checksum
+     * for all files.
+     */
+    public void setTotalproperty(String totalproperty) {
+        this.totalproperty = totalproperty;
     }
 
     /**
@@ -241,6 +290,11 @@ public class Checksum extends MatchingTask implements Condition {
                 "Checksum cannot be generated for directories");
         }
 
+        if (file != null && totalproperty != null) {
+            throw new BuildException(
+                "File and Totalproperty cannot co-exist.");
+        }
+
         if (property != null && fileext != null) {
             throw new BuildException(
                 "Property and FileExt cannot co-exist.");
@@ -309,8 +363,6 @@ public class Checksum extends MatchingTask implements Condition {
         }
 
         try {
-            addToIncludeFileMap(file);
-
             int sizeofFileSet = filesets.size();
             for (int i = 0; i < sizeofFileSet; i++) {
                 FileSet fs = (FileSet) filesets.elementAt(i);
@@ -318,9 +370,18 @@ public class Checksum extends MatchingTask implements Condition {
                 String[] srcFiles = ds.getIncludedFiles();
                 for (int j = 0; j < srcFiles.length; j++) {
                     File src = new File(fs.getDir(getProject()), srcFiles[j]);
+                    if (totalproperty != null) {
+                        // Use '/' to calculate digest based on file name.
+                        // This is required in order to get the same result
+                        // on different platforms.
+                        String relativePath = srcFiles[j].replace(File.separatorChar, '/');
+                        relativeFilePaths.put(src, relativePath);
+                    }
                     addToIncludeFileMap(src);
                 }
             }
+
+            addToIncludeFileMap(file);
 
             return generateChecksums();
         } finally {
@@ -337,14 +398,25 @@ public class Checksum extends MatchingTask implements Condition {
         if (file != null) {
             if (file.exists()) {
                 if (property == null) {
-                    File dest
-                        = new File(file.getParent(), file.getName() + fileext);
+                    File checksumFile = getChecksumFile(file);
                     if (forceOverwrite || isCondition ||
-                        (file.lastModified() > dest.lastModified())) {
-                        includeFileMap.put(file, dest);
+                        (file.lastModified() > checksumFile.lastModified())) {
+                        includeFileMap.put(file, checksumFile);
                     } else {
-                        log(file + " omitted as " + dest + " is up to date.",
+                        log(file + " omitted as " + checksumFile + " is up to date.",
                             Project.MSG_VERBOSE);
+                        if (totalproperty != null) {
+                            // Read the checksum from disk.
+                            String checksum = null;
+                            try {
+                                BufferedReader diskChecksumReader = new BufferedReader(new FileReader(checksumFile));
+                                checksum = diskChecksumReader.readLine();
+                            } catch (IOException e) {
+                                throw new BuildException("Couldn't read checksum file " + checksumFile, e);
+                            }
+                            byte[] digest = decodeHex(checksum.toCharArray());
+                            allDigests.put(file,digest );
+                        }
                     }
                 } else {
                     includeFileMap.put(file, property);
@@ -357,6 +429,23 @@ public class Checksum extends MatchingTask implements Condition {
                 throw new BuildException(message, getLocation());
             }
         }
+    }
+
+    private File getChecksumFile(File file) {
+        File directory;
+        if (todir != null) {
+            // A separate directory was explicitly declared
+            String path = (String) relativeFilePaths.get(file);
+            directory = new File(todir, path).getParentFile();
+            // Create the directory, as it might not exist.
+            directory.mkdirs();
+        } else {
+            // Just use the same directory as the file itself.
+            // This directory will exist
+            directory = file.getParentFile();
+        }
+        File checksumFile = new File(directory, file.getName() + fileext);
+        return checksumFile;
     }
 
     /**
@@ -384,15 +473,10 @@ public class Checksum extends MatchingTask implements Condition {
                 fis.close();
                 fis = null;
                 byte[] fileDigest = messageDigest.digest ();
-                StringBuffer checksumSb = new StringBuffer();
-                for (int i = 0; i < fileDigest.length; i++) {
-                    String hexStr = Integer.toHexString(0x00ff & fileDigest[i]);
-                    if (hexStr.length() < 2) {
-                        checksumSb.append("0");
-                    }
-                    checksumSb.append(hexStr);
+                if (totalproperty != null) {
+                    allDigests.put(src,fileDigest);
                 }
-                String checksum = checksumSb.toString();
+                String checksum = createDigestString(fileDigest);
                 //can either be a property name string or a file
                 Object destination = includeFileMap.get(src);
                 if (destination instanceof java.lang.String) {
@@ -429,6 +513,29 @@ public class Checksum extends MatchingTask implements Condition {
                     }
                 }
             }
+            if (totalproperty != null) {
+                // Calculate the total checksum
+                // Convert the keys (source files) into a sorted array.
+                Set keys = allDigests.keySet();
+                Object[] keyArray = keys.toArray();
+                // File is Comparable, so sorting is trivial
+                Arrays.sort(keyArray);
+                // Loop over the checksums and generate a total hash.
+                messageDigest.reset();
+                for (int i = 0; i < keyArray.length; i++) {
+                    File src = (File) keyArray[i];
+
+                    // Add the digest for the file content
+                    byte[] digest = (byte[]) allDigests.get(src);
+                    messageDigest.update(digest);
+
+                    // Add the file path
+                    String fileName = (String) relativeFilePaths.get(src);
+                    messageDigest.update(fileName.getBytes());
+                }
+                String totalChecksum = createDigestString(messageDigest.digest());
+                getProject().setNewProperty(totalproperty, totalChecksum);
+            }
         } catch (Exception e) {
             throw new BuildException(e, getLocation());
         } finally {
@@ -444,5 +551,45 @@ public class Checksum extends MatchingTask implements Condition {
             }
         }
         return checksumMatches;
+    }
+
+    private String createDigestString(byte[] fileDigest) {
+        StringBuffer checksumSb = new StringBuffer();
+        for (int i = 0; i < fileDigest.length; i++) {
+            String hexStr = Integer.toHexString(0x00ff & fileDigest[i]);
+            if (hexStr.length() < 2) {
+                checksumSb.append("0");
+            }
+            checksumSb.append(hexStr);
+        }
+        return checksumSb.toString();
+    }
+
+    /**
+     * Converts an array of characters representing hexidecimal values into an
+     * array of bytes of those same values. The returned array will be half the
+     * length of the passed array, as it takes two characters to represent any
+     * given byte. An exception is thrown if the passed char array has an odd
+     * number of elements.
+     *
+     * NOTE: This code is copied from jakarta-commons codec.
+     */
+    public static byte[] decodeHex(char[] data) throws BuildException {
+        int l = data.length;
+
+        if ((l & 0x01) != 0) {
+            throw new BuildException("odd number of characters.");
+        }
+
+        byte[] out = new byte[l >> 1];
+
+        // two characters form the hex value.
+        for (int i = 0, j = 0; j < l; i++) {
+            int f = Character.digit(data[j++], 16) << 4;
+            f = f | Character.digit(data[j++], 16);
+            out[i] = (byte) (f & 0xFF);
+        }
+
+        return out;
     }
 }

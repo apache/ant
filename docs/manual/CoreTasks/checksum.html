@@ -27,6 +27,13 @@ perform checksum verifications.
     at least one nested fileset element.</td>
   </tr>
   <tr>
+    <td valign="top">todir</td>
+    <td valign="top">The root directory where checksums should be written.</td>
+    <td valign="top" align="center">No. If not specified, checksum files
+      will be written to the same directory as the files themselves.
+    </td>
+  </tr>
+  <tr>
     <td valign="top">algorithm</td>
     <td valign="top">Specifies the algorithm to be used to
       compute the checksum. Defaults to &quot;MD5&quot;.
@@ -61,6 +68,17 @@ perform checksum verifications.
     This cannot be specified when fileext is being used or when the
     number of files for which checksums is to be generated is greater
     than 1.
+    </td>
+    <td valign="top" align="center">No</td>
+  </tr>
+  <tr>
+    <td valign="top">totalproperty</td>
+    <td valign="top">If specified, this attribute specifies the name of
+      the property that will hold a checksum of all the checksums and
+      file paths. The individual checksums and the relative paths to
+      the files within the filesets they are defined in will be used to
+      compute this checksum. (The file separators in the paths will be
+      converted to '/' before computation to ensure platform portability).
     </td>
     <td valign="top" align="center">No</td>
   </tr>

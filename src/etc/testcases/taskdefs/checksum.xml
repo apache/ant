@@ -2,38 +2,44 @@
 <project default="cleanup" basedir=".">
 
   <target name="cleanup">
-    <delete file="../asf-logo.gif.md5" />
+    <delete file="../asf-logo.gif.MD5" />
+    <delete>
+      <fileset dir="checksum">
+        <include name="**/*.MD5"/>
+      </fileset>
+    </delete>
+    <delete dir="checksum/checksums" />
   </target>
 
   <target name="createMd5">
-    <checksum file="../asf-logo.gif" fileext=".md5" />
+    <checksum file="../asf-logo.gif" fileext=".MD5" />
   </target>
 
   <target name="setProperty">
-    <checksum file="../asf-logo.gif" property="logo.md5" />
+    <checksum file="../asf-logo.gif" property="logo.MD5" />
   </target>
 
   <target name="verifyAsTask">
-    <copy file="expected/asf-logo.gif.md5" todir=".." />
-    <checksum file="../asf-logo.gif" fileext=".md5" 
-              verifyproperty="logo.md5" />
+    <copy file="expected/asf-logo.gif.MD5" todir=".." />
+    <checksum file="../asf-logo.gif" fileext=".MD5"
+              verifyproperty="logo.MD5" />
 
-    <copy file="checksum.xml" tofile="../asf-logo.gif.md5" 
+    <copy file="checksum.xml" tofile="../asf-logo.gif.MD5"
           overwrite="true" />
-    <checksum file="../asf-logo.gif" fileext=".md5" 
-              verifyproperty="no.logo.md5" />
+    <checksum file="../asf-logo.gif" fileext=".MD5"
+              verifyproperty="no.logo.MD5" />
   </target>
 
   <target name="verifyAsCondition">
-    <copy file="expected/asf-logo.gif.md5" todir=".." />
-    <condition property="logo.md5">
-      <checksum file="../asf-logo.gif" fileext=".md5" />
+    <copy file="expected/asf-logo.gif.MD5" todir=".." />
+    <condition property="logo.MD5">
+      <checksum file="../asf-logo.gif" fileext=".MD5" />
     </condition>
 
-    <copy file="checksum.xml" tofile="../asf-logo.gif.md5" 
+    <copy file="checksum.xml" tofile="../asf-logo.gif.MD5"
           overwrite="true" />
-    <condition property="no.logo.md5">
-      <checksum file="../asf-logo.gif" fileext=".md5" />
+    <condition property="no.logo.MD5">
+      <checksum file="../asf-logo.gif" fileext=".MD5" />
     </condition>
   </target>
 
@@ -41,5 +47,21 @@
     <checksum property="checksum" file="checksum.xml"/>
     <checksum property="${checksum}" file="checksum.xml"
               verifyproperty="verify"/>
+  </target>
+
+  <target name="verifyTotal">
+    <checksum totalproperty="total">
+      <fileset dir="${basedir}/checksum">
+        <exclude name="**/*.MD5"/>
+      </fileset>
+    </checksum>
+  </target>
+
+  <target name="verifyChecksumdir">
+    <checksum totalproperty="total" todir="${basedir}/checksum/checksums">
+      <fileset dir="${basedir}/checksum">
+        <exclude name="**/*.MD5"/>
+      </fileset>
+    </checksum>
   </target>
 </project>
