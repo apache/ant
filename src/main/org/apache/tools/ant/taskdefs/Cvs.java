@@ -135,7 +135,7 @@ public class Cvs extends Task {
         toExecute.addArguments(cmd.getCommandline());
 
         if (pack != null) {
-            toExecute.createArgument().setValue(pack);
+            toExecute.createArgument().setLine(pack);
         }
 
         ExecuteStreamHandler streamhandler = null;
