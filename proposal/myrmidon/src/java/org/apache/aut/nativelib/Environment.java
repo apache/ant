@@ -100,38 +100,32 @@ public final class Environment
 
         final Properties properties = new Properties();
         final BufferedReader in = new BufferedReader( new StringReader( data ) );
-        String var = null;
+        final StringBuffer var = new StringBuffer();
         String line;
-        while( ( line = in.readLine() ) != null )
+        while( null != ( line = in.readLine() ) )
         {
-            if( line.indexOf( '=' ) == -1 )
+            if( -1 == line.indexOf( '=' ) )
             {
                 // Chunk part of previous env var (UNIX env vars can
                 // contain embedded new lines).
-                if( var == null )
-                {
-                    var = StringUtil.LINE_SEPARATOR + line;
-                }
-                else
-                {
-                    var += StringUtil.LINE_SEPARATOR + line;
-                }
+                var.append( StringUtil.LINE_SEPARATOR );
             }
             else
             {
                 // New env var...append the previous one if we have it.
-                if( var != null )
+                if( 0 != var.length() )
                 {
-                    addProperty( properties, var );
+                    addProperty( properties, var.toString() );
+                    var.setLength( 0 );
                 }
-                var = line;
             }
+            var.append( line );
         }
 
         // Since we "look ahead" before adding, there's one last env var.
-        if( null != var )
+        if( 0 != var.length() )
         {
-            addProperty( properties, var );
+            addProperty( properties, var.toString() );
         }
         return properties;
     }
