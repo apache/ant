@@ -192,7 +192,9 @@ public class ComponentHelper  {
             antTypeTable.put(def.getName(), def);
         }
         // add the parsed namespaces of the parent project
-        checkedNamespaces.add(helper.checkedNamespaces);
+        for (Iterator i = helper.checkedNamespaces.iterator(); i.hasNext();) {
+            checkedNamespaces.add(i.next());
+        }
     }
 
     /** Factory method to create the components.
