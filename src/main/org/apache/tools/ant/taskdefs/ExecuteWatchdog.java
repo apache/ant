@@ -147,11 +147,21 @@ public class ExecuteWatchdog implements Runnable {
                     wait(until - now);
                 } catch (InterruptedException e) {}
             }
-            // if we are here, either someone stopped the watchdog or we are on timeout
-            // if watch is true, it means its a timeout
-            if (watch) {
-                killedProcess = true;
-                process.destroy();
+
+            // if we are here, either someone stopped the watchdog,
+            // we are on timeout and the process must be killed, or
+            // we are on timeout and the process has already stopped.
+            try {
+                // We must check if the process was not stopped
+                // before being here
+                process.exitValue();
+            } catch (IllegalThreadStateException e){
+                // the process is not terminated, if this is really
+                // a timeout and not a manual stop then kill it.
+                if (watch){
+                    killedProcess = true;
+                    process.destroy();
+                }
             }
         } catch(Exception e) {
             caught = e;
