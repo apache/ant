@@ -291,6 +291,9 @@ public class XmlLogger implements BuildLogger {
 
         Task task = event.getTask();
         String name = event.getTask().getTaskName();
+        if (name == null) {
+            name = "";
+        }
         taskElement.element.setAttribute(NAME_ATTR, name);
         taskElement.element.setAttribute(LOCATION_ATTR,
                 event.getTask().getLocation().toString());
