@@ -24,12 +24,12 @@ public class ExecMetaData
     /**
      * The working directory in which the applicaiton is launched.
      */
-    private File m_workingDirectory;
+    private final File m_workingDirectory;
 
     /**
      * The array of strings that make up the command line for the command.
      */
-    private String[] m_command;
+    private final String[] m_command;
 
     /**
      * The array of strings that make up the native environment for the
@@ -43,7 +43,7 @@ public class ExecMetaData
      * process if <code>isEnvironmentAdditive=true</code> else it specifies
      * full environment.</p>
      */
-    private Properties m_environment;
+    private final Properties m_environment;
 
     /**
      * Construct the meta data for executable as appropriate.
