@@ -152,6 +152,8 @@ public abstract class DataType extends ProjectComponent {
 
         Object o = ref.getReferencedObject(getProject());
         if (!(requiredClass.isAssignableFrom(o.getClass()))) {
+            log("Class "+o.getClass()+" is not a subclass of "+requiredClass,
+                    Project.MSG_VERBOSE);
             String msg = ref.getRefId() + " doesn\'t denote a " + dataTypeName;
             throw new BuildException(msg);
         } else {
