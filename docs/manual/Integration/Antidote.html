@@ -1,0 +1,253 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0//EN" "strict.dtd">
+<HTML> 
+  <HEAD> 
+     <TITLE>Antidote Design Overview</TITLE> 
+  </HEAD> 
+
+  <BODY> 
+
+    <H1>Antidote Design Overview</H1>
+
+    <P>Version 0.2 (2000/12/18)</P>
+
+    <P>Authors: 
+    <A HREF="mailto:simeon@fitch.net">Simeon H.K. Fitch</A>
+    </P>
+
+    <H2>Introduction</H2> 
+
+    <P>The purpose of this document is to communicate the overall
+    structure and design patters used in Antidote, the GUI for
+    Ant. This document is a work in progress, as well as a living
+    document, and it is most likely not be in full synchronization with
+    the source code. Therefore, if there is any doubt, view the source
+    ;-)</P>
+
+    <H2>Overview</H2>
+    
+    <P>The Antidote architecture design aims to provide a high level
+    of modularity and extensibility. Ideally the components of
+    Antidote will be able to be assembled in different configurations
+    to provide the type of application or plug-in desired.</P>
+
+    <P>To acheive this modularity, a high level of decoupling is
+    necessary. The standard UI design approach of providing separation
+    of view (presentation) from model (data) is applied, leveraging
+    the built-in Ant data model where possible, as well as the
+    predifined Swing model interfaces. Furthermore, the architecture
+    is highly event driven, whereby modules communicate via a shared
+    communications channel.</P>
+    
+    <P>To a large extent, the configuration of application modules is
+    driven by localized configuration files, allowing new modules or
+    data views to be added, as well as providing multi-language
+    support.</P>
+
+    <P>The diagram below conveys a high altitude view of the
+    application's structure. As the application grows, new components
+    will be plugged in to what will be described as the <TT>EventBus</TT>.
+
+    <TT><PRE>
+
+Antidote Component Architecture
+
+   +---------------+ +----------------+ +-------------+ +-------------+
+   |               | |                | |             | |             |  
+   | ActionManager | | EventResponder | |  AntModule  | |  AntModule  |
+   |               | |                | |(ProjectNav) | |(SourceEdit) |  
+   +---------------+ +----------------+ +-------------+ +-------------+
+           |                  ^               ^               ^
+           |                  |               |               |
+      ActionEvent         EventObject      AntEvent       AntEvent
+           |                  |               |               |
+           v                  v               v               v
+  /---------------------------------------------------------------------\
+ /                                                                       \
+<                                   EventBus                              >
+ \                                                                       /
+  \---------------------------------------------------------------------/
+           |                  ^               ^               ^
+           |                  |               |               |
+      EventObject         ChangeEvent      BuildEvent     EventObject
+           |                  |               |               |
+           v                  |               |               v
+   +---------------+ +----------------+ +-------------+ +--------------+
+   |               | |                | |             | |              |  
+   |   Console     | |  ProjectProxy  | |    Ant      | | (Your Module)|
+   |               | |                | |             | |              |  
+   +---------------+ +----------------+ +-------------+ +--------------+
+
+    </TT></PRE>
+
+    <H2>Event Bus</H2>
+
+    <P>The backbone of the application is the <TT>EventBus</TT>. Any
+    component of the application can post events to the
+    <TT>EventBus</TT>. Components that wish to receive events are
+    called <TT>BusMember</TT>s.</P>
+
+    <P>The <TT>EventBus</TT> will dispatch any object of type
+    <TT>java.util.Event</TT>, which means that Ant <TT>BuildEvent</TT>
+    objects, as well as <TT>AWTEvent</TT> objects can be posted (if desired). A
+    new class of events called <TT>AntEvent</TT> is defined for Antidote
+    specific events, which have the additional capability of being
+    cancelled mid-dispatch.</P>
+
+    <P>Each <TT>BusMember</TT> must provide a <TT>BusFilter</TT> instance,
+    which is the members' means of telling the bus which
+    events it is interested in. This allows a <TT>BusMember</TT> to,
+    say, only receive <TT>AntEvent</TT> objects.</P>
+
+    <P>When a <TT>BusMember</TT> registers itself with the
+    <TT>EventBus</TT>, it must provide a (so called) <I>interrupt
+    level</I> which is a integer value defining a relative ordering
+    for dispatching <TT>EventObject</TT>s to <TT>BusMember</TT>s. The
+    purpose of this is to allow certain <TT>BusMember</TT> instances
+    to see an event before others, and in the case of <TT>AntEvent</TT
+    objects, keep the event from propogating onward. The
+    <TT>EventBus</TT> class defines the interrupt level constants
+    <TT>VETOING=1</TT>, <TT>MONITORING=5</TT>, and <TT>RESPONDING=10</TT> to
+    help define categories of members. The implied purpose being that:
+    <UL>
+
+      <LI><TT>VETOING</TT>: Listens for certain types of events, and
+      may process them in a non-default manner to determine if the
+      event should be cancelled before being dispatched to the
+      <TT>RESPONDING</TT> group. 
+
+      <LI><TT>MONITORING</TT>: Just listens for events, like a logger
+      or status monitor.</LI>
+
+      <LI><TT>RESPONDING</TT>: Process events in a default manner,
+      knowing that the event has passed any <TT>VETOING</TT> members.</LI>
+
+    </UL>
+
+    Within a specific interrupt level, the order in which members will
+    receive events is undefied. A <TT>BusMember</TT> may be registered
+    at a level that is +/- of one of the defined levels, as long as it
+    follows the constraint <TT>MONITORING <= interruptLevel <=
+    MAX_INTERRUPT</TT>.</P>
+
+
+    <H2>Actions and ActionManager</H2>
+
+    <P>Extensive use of the <TT>javax.swing.Action</TT> interface is
+    made for defining the set of menu and tool bar options that are
+    available. The configuration file <TT>action.properties</TT>
+    exists to define what should appear in the menu and toolbar, how
+    it is displayed, and the <TT>Action</TT> command name that is
+    dispatched when the user invokes that action. A class called
+    <TT>ActionManager</TT> exists for not only processing the
+    configuration file, but also for dispatching invoked action events
+    to the <TT>EventBus</TT>, and for controlling the enabled state of
+    an <TT>Action</TT>. When a new menu item or toolbar button is
+    desired, first it is added to the <TT>action.properties</TT> file,
+    and then the code to respond to it is added to the
+    <TT>EventResponder</TT> (see below).
+
+
+    <H2>Commands and EventResponder</H2> 
+
+    <P>At some point in the stages of event processing, an event may
+    require the data model to be modified, or some other task be
+    performed. The <TT>Command</TT> interface is defined to classify
+    code which performs some task or operation. This is distinct from
+    an <TT>Action</TT>, which is a user request for an operation. A
+    <TT>Command</TT> class is the encapsulation of the operation
+    itself.</P>
+
+    <P>When an <TT>Action</TT> generates an <TT>ActionEvent</TT>, the
+    event is posted to the <TT>EventBus</TT> which delivers the event
+    to all interested <TT>BusMember</TT>s. It eventually makes it to
+    the <TT>EventResponder</TT> instance (registered at the
+    <TT>RESPONDING</TT> interrupt level), which is responsible for
+    translating specific events into <TT>Command</TT> objects, and
+    then executing the <TT>Command</TT> object. For example, when the
+    user selects the "Open..." menu option, an <TT>ActionEvent</TT> is
+    generated by the Swing <TT>MenuItem</TT> class, which is then
+    posted to the <TT>EventBus</TT> by the <TT>ActionManager</TT>. The
+    <TT>ActionEvent</TT> is delivered to the <TT>EventResponder</TT>,
+    which converts the <TT>ActionEvent</TT> into a <TT>Command</TT>
+    instance. The <TT>EventResponder</TT> then calls the method
+    <TT>Command.execute()</TT> to invoke the command (which displays a
+    dialog for selecting a file to open).</P>
+
+    <P>When adding new <TT>Action</TT>s or general tasks to the
+    application, a <TT>Command</TT> object should be created to
+    encapsulate the behavior. This includes most operations which
+    modify the state of the data model.</P>
+
+    <P>The purpose of this encapsulation is to allow the clean
+    separation of making a request, and servicing a request. Due to
+    various conditions in the application state, the actualy response
+    to a request may change, as well as who services it. This
+    design approach facilitates that.</P>
+
+    <H2>Data Model and Views</H2>
+
+    <P><I>NB: This part of the architecture is not fleshed out very well. There
+    needs to be a discussion of the degree to which the Antidote development
+    should be able to impose changes on the Ant data model, and to what level
+    that model should be mirrored in the Antidote code base. The coupling
+    between them should be kept low, and at the same time changes to one should
+    affect the other minimally. Still, features like property change events and
+    bean introspection (or BeanInfo) may be needed to be added to the Ant data
+    model. Right now the data model is encapsulated in the package
+    <TT>org.apache.tools.ant.gui.acs</TT> (where "<TT>acs</TT>" stands for "Ant
+    Construction Set").</I></P>
+
+    <H2>Application Context</H2>
+
+    <P>In order to keep the coupling amoung application modules to a
+    minimum, a single point of reference is needed for coordination
+    and data sharing. The class <TT>AppContext</TT> is the catch-all
+    class for containing the application state. Most modules and
+    <TT>Command</TT> classes require an instance of the
+    <TT>AppContext</TT> class. Because all state information in
+    contained in an <TT>AppContext</TT> instance, multiple instances
+    of Antidote can run inside the same JVM as long as each has it's
+    own <TT>AppContext</TT>. (Interestingly, two instances of the
+    Antidote could conceivably share an <TT>AppContext</TT> instance
+    through RMI, allowing remote interaction/collaboration.)</P>
+
+    <H2>Configuration and ResourceManager</H2>
+    
+    <P>Full "i18n" support should be assumed in modern applications,
+    and all user viewable strings should be defined in a configuration
+    file. For Antidote this configuraiton file is
+    <TT>antidote.properties</TT>, which is located (with other UI
+    resources) in the subpackage "resources".</P>
+
+    <P>To aid in the lookup of text properties, as well as other
+    resources like icons, a class called <TT>ResourceManager</TT> is
+    defined. There are various convenience methods attached to this
+    class, which will likely grow to make looking up configuration
+    values as easy as possible.</P>
+
+    <P>The organization of configuration properties is based on the
+    fully qualifed path of the class that requires the property. For
+    example, the "about" box contains a messages, so it looks for the
+    property "<TT>org.apache.tools.ant.gui.About.message</TT>" for the text
+    message it should display. Therefore, the <TT>ResourceManager</TT>
+    method <TT>getString()</TT> takes a <TT>Class</TT> instance as
+    well as a <TT>String</TT> key. Please see the
+    <TT>ResourceManager</TT> documentation for more information. Given
+    this support, no user visible strings should appear in the source
+    code itself.</P>
+
+    <H2>Other Resources</H2>
+    
+    <P>Other information about development on Antidote:</P>
+    <UL>
+      <LI><A HREF="uml/index.html">Antidote UML Static Class Diagrams</A></LI>
+      <LI><A HREF="gui-requirements.html">Antidote Feature Wishlist</A></LI>
+      <LI><A HREF="new-module-howto.html">Antidote Module HOWTO</A></LI>
+    </UL>
+
+    <HR>
+    <P ALIGN="center">Copyright &copy; 2000 Apache Software Foundation. All
+    rights Reserved.</P>
+
+  </BODY>
+</HTML>
