@@ -1838,13 +1838,16 @@ public class Project {
                     + (priority == MSG_ERR ? "System.err" : "System.out")
                     + " - infinite loop terminated");
             }
-            loggingMessage = true;
-            int size = listeners.size();
-            for (int i = 0; i < size; i++) {
-                BuildListener listener = (BuildListener) listeners.elementAt(i);
-                listener.messageLogged(event);
+            try {
+                loggingMessage = true;
+                int size = listeners.size();
+                for (int i = 0; i < size; i++) {
+                    BuildListener listener = (BuildListener) listeners.elementAt(i);
+                    listener.messageLogged(event);
+                }
+            } finally {
+                loggingMessage = false;
             }
-            loggingMessage = false;
         }
     }
 
