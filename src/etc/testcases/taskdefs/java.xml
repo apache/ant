@@ -89,5 +89,26 @@
     </java>
   </target>
   
+  <target name="testResultPropertyZero">
+    <java classname="${app}"
+        classpath="${tests-classpath.value}"
+        resultproperty="exitcode"
+        >
+    </java>
+    <echo message="exitcode = ${exitcode}"/>
+  </target>
+  
+  <target name="testResultPropertyNonZero">
+    <java classname="${app}"
+        classpath="${tests-classpath.value}"
+        resultproperty="exitcode"
+        failonerror="false"
+        fork="true"
+        >
+        <arg value="-1"/>
+    </java>
+    <echo message="exitcode = ${exitcode}"/>
+  </target>
+  
   <target name="foo" />
 </project>

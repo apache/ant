@@ -62,7 +62,8 @@ import org.apache.tools.ant.*;
  * stress out java task
  * @author steve loughran
  * @author <a href="mailto:sbailliez@apache.org">Stephane Bailliez</a> 
- */
+ * @author <a href="mailto:donal@savvion.com">Donal Quinlan</a>
+ * */
 public class JavaTest extends BuildFileTest {
     
     private boolean runFatalTests=false;
@@ -166,6 +167,15 @@ public class JavaTest extends BuildFileTest {
             "Java returned:");        
     }   
         
+    public void testResultPropertyZero() {
+        executeTarget("testResultPropertyZero");
+        assertEquals("0",project.getProperty("exitcode"));
+    }
+    
+    public void testResultPropertyNonZero() {
+        executeTarget("testResultPropertyNonZero");
+        assertEquals("-1",project.getProperty("exitcode"));
+    }
     
     /**
      * entry point class with no dependencies other

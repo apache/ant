@@ -75,6 +75,7 @@ import org.apache.tools.ant.types.Reference;
  * @author Stefano Mazzocchi 
  *         <a href="mailto:stefano@apache.org">stefano@apache.org</a>
  * @author Stefan Bodewig
+ * @author <a href="mailto:donal@savvion.com">Donal Quinlan</a>
  *
  * @since Ant 1.1
  *
@@ -91,6 +92,7 @@ public class Java extends Task {
     private boolean append = false;
     private Long timeout = null;
     private Redirector redirector = new Redirector(this);
+    private String resultProperty;
     /**
      * Do the execution.
      */
@@ -106,6 +108,7 @@ public class Java extends Task {
                     log("Java Result: " + err, Project.MSG_ERR);
                 }
             }
+            maybeSetResultPropertyValue(err);
         } finally {
             dir = savedDir;
         }
@@ -241,6 +244,27 @@ public class Java extends Task {
         return cmdl.createArgument();
     }
 
+    /**
+     * The name of a property in which the return code of the
+     * command should be stored. Only of interest if failonerror=false.
+     *
+     * @since Ant 1.6
+     */
+    public void setResultProperty(String resultProperty) {
+        this.resultProperty = resultProperty;
+    }
+    
+    /**
+     * helper method to set result property to the 
+     * passed in value if appropriate
+     */
+    protected void maybeSetResultPropertyValue(int result) {
+        String res = Integer.toString(result);
+        if (resultProperty != null) {
+            project.setNewProperty(resultProperty, res);
+        }
+    }
+    
     /**
      * If true, execute in a new VM.
      */
