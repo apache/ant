@@ -182,6 +182,10 @@ public class FileSet {
      * Returns the directory scanner needed to access the files to process.
      */
     public DirectoryScanner getDirectoryScanner(Project p) {
+        if (dir == null) {
+            throw new BuildException("No directory specified for fileset.");
+        }
+
         /*
          * XXX remove the check here and enable the one in setDir as soon
          *     as we configure tasks at execution time.

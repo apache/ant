@@ -115,9 +115,8 @@ public class CommandlineTest extends TestCase {
         // what the Unix sh does but causes a lot of problems on DOS
         // based platforms otherwise
         s = Commandline.translateCommandline("1 2\\ 3 4");
-        assertEquals("case with quotes whitespace", 4, s.length);
-        assertEquals("Single quotes stripped, double quote included", "2\\",
-                     s[1]);
+        assertEquals("case with quoted whitespace", 4, s.length);
+        assertEquals("backslash included", "2\\", s[1]);
 
 
         // now to the expected failures
