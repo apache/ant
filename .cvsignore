@@ -5,6 +5,7 @@ bootstrap
 distribution
 *.el
 *.ipr
+*.iws
 *.pif
 velocity.log
 
