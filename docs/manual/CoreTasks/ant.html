@@ -15,15 +15,19 @@ in the supplied directory (<i>dir</i> attribute) is used.</p>
 <p>If no target attribute is supplied, the default target of the new project is
 used.</p>
 <p>By default, all of the properties of the current project will be
-available in the new project.   Alternatively, you can
-set the <i>inheritAll</i> attribute to <code>false</code> and only
+available in the new project.  Alternatively, you can set the
+<i>inheritAll</i> attribute to <code>false</code> and only
 &quot;user&quot; properties (i.e., those passed on the command-line)
 will be passed to the new project.  In either case, the set of
-properties passed to the new project will override the properties that 
-are set in the new project (See also the <a href="property.html">property task</a>).</p>
-<p>You can also set properties in the new project from the old project by
-using nested property tags. These properties are always passed regardless of the
-setting of <i>inheritAll</i>.  This allows you to parameterize your subprojects.</p>
+properties passed to the new project will override the properties that
+are set in the new project (See also the <a
+href="property.html">property task</a>).</p>
+
+<p>You can also set properties in the new project from the old project
+by using nested property tags. These properties are always passed
+regardless of the setting of <i>inheritAll</i>.  This allows you to
+parameterize your subprojects.  Properties defined on the command line
+can not be overridden by nested &lt;property&gt; elements.</p>
 
 <p>References to data types can also be passed to the new project, but
 by default they are not.  If you set the inheritrefs attribute to
