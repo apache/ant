@@ -1,6 +1,7 @@
 package org.apache.tools.ant.taskdefs.optional;
 
 import org.apache.tools.ant.taskdefs.XSLTLiaison;
+import org.apache.tools.ant.BuildException;
 
 import java.io.File;
 
@@ -82,6 +83,24 @@ public class TraXLiaisonTest extends AbstractXSLTLiaisonTest {
             liaison.transform(in, out);
         } finally {
             out.delete();
+        }
+    }
+
+    public void testMultipleTransform() throws Exception {
+        File xsl = getFile("/taskdefs/optional/xsltliaison-in.xsl");
+        liaison.setStylesheet(xsl);
+        liaison.addParam("param", "value");
+        File in = getFile("/taskdefs/optional/xsltliaison-in.xml");
+        // test for 10 consecutives transform
+        for (int i = 0; i < 50; i++){
+            File out = new File("xsltliaison" + i + ".tmp");
+            try {
+                liaison.transform(in, out);
+            } catch (Exception e){
+                throw new BuildException("failed in transform " + i, e);
+            } finally {
+                out.delete();
+            }
         }
     }
 }
