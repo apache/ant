@@ -54,8 +54,10 @@
 
 package org.apache.tools.ant;
 
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
 import java.util.Locale;
-import java.util.Vector;
 import java.io.IOException;
 
 /**
@@ -87,7 +89,7 @@ public class UnknownElement extends Task {
     /**
      * List of child elements (UnknownElements).
      */
-    private Vector children = new Vector();
+    private List/*<UnknownElement>*/ children = null;
 
     /**
      * Creates an UnknownElement for the given element name.
@@ -281,7 +283,10 @@ public class UnknownElement extends Task {
      * @param child The child element to add. Must not be <code>null</code>.
      */
     public void addChild(UnknownElement child) {
-        children.addElement(child);
+        if (children == null) {
+            children = new ArrayList();
+        }
+        children.add(child);
     }
 
     /**
@@ -307,9 +312,11 @@ public class UnknownElement extends Task {
         Class parentClass = parent.getClass();
         IntrospectionHelper ih = IntrospectionHelper.getHelper(parentClass);
 
-        for (int i = 0;  i < children.size(); i++) {
+        if (children != null) {
+        Iterator it = children.iterator();
+        for (int i = 0; it.hasNext(); i++) {
             RuntimeConfigurable childWrapper = parentWrapper.getChild(i);
-            UnknownElement child = (UnknownElement) children.elementAt(i);
+            UnknownElement child = (UnknownElement) it.next();
             
             // backwards compatibility - element names of nested
             // elements have been all lower-case in Ant, except for
@@ -326,6 +333,7 @@ public class UnknownElement extends Task {
                     container.addTask(child);
                 }
             }
+        }
         }
     }
 

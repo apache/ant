@@ -54,11 +54,16 @@
 
 package org.apache.tools.ant;
 
-import java.util.Enumeration;
-import java.util.Locale;
-import java.util.Vector;
-import java.util.Hashtable;
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Enumeration;
+import java.util.HashMap;
+import java.util.Hashtable;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
+import java.util.NoSuchElementException;
 
 import org.xml.sax.AttributeList;
 import org.xml.sax.helpers.AttributeListImpl;
@@ -76,7 +81,7 @@ public class RuntimeConfigurable implements Serializable {
     private String elementTag = null;
     
     /** List of child element wrappers. */
-    private Vector children = new Vector();
+    private List/*<RuntimeConfigurable>*/ children = null;
     
     /** The element to configure. It is only used during
      * maybeConfigure.
@@ -94,14 +99,15 @@ public class RuntimeConfigurable implements Serializable {
      *  exact order. The following code is copied from AttributeImpl.
      *  We could also just use SAX2 Attributes and convert to SAX1 ( DOM
      *  attribute Nodes can also be stored in SAX2 Attributges )
+     *  XXX under JDK 1.4 you can just use a LinkedHashMap for this purpose -jglick
      */
-    private Vector attributeNames = new Vector();
+    private List/*<String>*/ attributeNames = null;
     
     /** Map of attribute names to values */
-    private Hashtable attributeMap = new Hashtable();
+    private Map/*<String,String>*/ attributeMap = null;
 
     /** Text appearing within the element. */
-    private StringBuffer characters = new StringBuffer();
+    private StringBuffer characters = null;
     
     /** Indicates if the wrapped object has been configured */
     private boolean proxyConfigured = false;
@@ -164,7 +170,11 @@ public class RuntimeConfigurable implements Serializable {
      * @param value the attribute's value.
      */
     public void setAttribute(String name, String value) {
-        attributeNames.addElement(name);
+        if (attributeNames == null) {
+            attributeNames = new ArrayList();
+            attributeMap = new HashMap();
+        }
+        attributeNames.add(name);
         attributeMap.put(name, value);
     }
 
@@ -173,7 +183,12 @@ public class RuntimeConfigurable implements Serializable {
      * @return Attribute name to attribute value map
      */
     public Hashtable getAttributeMap() {
-        return attributeMap;
+        // Nobody calls this method, maybe it could just be deleted?
+        if (attributeMap != null) {
+            return new Hashtable(attributeMap);
+        } else {
+            return new Hashtable(1);
+        }
     }
 
     /**
@@ -194,7 +209,10 @@ public class RuntimeConfigurable implements Serializable {
      *              Must not be <code>null</code>.
      */
     public void addChild(RuntimeConfigurable child) {
-        children.addElement(child);
+        if (children == null) {
+            children = new ArrayList();
+        }
+        children.add(child);
     }
 
     /**
@@ -206,7 +224,7 @@ public class RuntimeConfigurable implements Serializable {
      *         list.
      */
     RuntimeConfigurable getChild(int index) {
-        return (RuntimeConfigurable) children.elementAt(index);
+        return (RuntimeConfigurable) children.get(index);
     }
 
     /**
@@ -215,7 +233,21 @@ public class RuntimeConfigurable implements Serializable {
      * @since Ant 1.5.1
      */
     Enumeration getChildren() {
-        return children.elements();
+        if (children != null) {
+            return Collections.enumeration(children);
+        } else {
+            return new EmptyEnumeration();
+        }
+    }
+    
+    static final class EmptyEnumeration implements Enumeration {
+        public EmptyEnumeration() {}
+        public boolean hasMoreElements() {
+            return false;
+        }
+        public Object nextElement() throws NoSuchElementException {
+            throw new NoSuchElementException();
+        }
     }
 
     /**
@@ -225,7 +257,14 @@ public class RuntimeConfigurable implements Serializable {
      *        Should not be <code>null</code>.
      */
     public void addText(String data) {
-        characters.append(data);
+        if (data.length() == 0) {
+            return;
+        }
+        if (characters != null) {
+            characters.append(data);
+        } else {
+            characters = new StringBuffer(data);
+        }
     }
 
     /**
@@ -238,7 +277,13 @@ public class RuntimeConfigurable implements Serializable {
      *
      */
     public void addText(char[] buf, int start, int count) {
-        addText(new String(buf, start, count));
+        if (count == 0) {
+            return;
+        }
+        if (characters == null) {
+            characters = new StringBuffer(count);
+        }
+        characters.append(buf, start, count);
     }
 
     /** Get the text content of this element. Various text chunks are
@@ -248,7 +293,11 @@ public class RuntimeConfigurable implements Serializable {
      * @return the text content of this element.
      */
     public StringBuffer getText() {
-        return characters;
+        if (characters != null) {
+            return characters;
+        } else {
+            return new StringBuffer(0);
+        }
     }
 
     /**
@@ -317,8 +366,9 @@ public class RuntimeConfigurable implements Serializable {
         IntrospectionHelper ih =
             IntrospectionHelper.getHelper(p, target.getClass());
 
+        if (attributeNames != null) {
         for (int i = 0; i < attributeNames.size(); i++) {
-            String name = (String) attributeNames.elementAt(i);
+            String name = (String) attributeNames.get(i);
             String value = (String) attributeMap.get(name);
 
             // reflect these into the target
@@ -334,12 +384,13 @@ public class RuntimeConfigurable implements Serializable {
             }
         }
         id = (String) attributeMap.get("id");
+        }
 
-        if (characters.length() != 0) {
+        if (characters != null) {
             ProjectHelper.addText(p, wrappedObject, characters.substring(0));
         }
 
-        Enumeration enum = children.elements();
+        Enumeration enum = getChildren();
         while (enum.hasMoreElements()) {
             RuntimeConfigurable child
                     = (RuntimeConfigurable) enum.nextElement();

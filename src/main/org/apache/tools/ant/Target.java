@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2000-2002 The Apache Software Foundation.  All rights
+ * Copyright (c) 2000-2003 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -54,9 +54,12 @@
 
 package org.apache.tools.ant;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Enumeration;
+import java.util.Iterator;
+import java.util.List;
 import java.util.StringTokenizer;
-import java.util.Vector;
 
 /**
  * Class to implement a target object with required parameters.
@@ -72,9 +75,9 @@ public class Target implements TaskContainer {
     /** The "unless" condition to test on execution. */
     private String unlessCondition = "";
     /** List of targets this target is dependent on. */
-    private Vector dependencies = new Vector(2);
+    private List/*<String>*/ dependencies = null;
     /** Children of this target (tasks and data types). */
-    private Vector children = new Vector(5);
+    private List/*<Task|RuntimeConfigurable>*/ children = new ArrayList(5);
     /** Project this target belongs to. */
     private Project project;
     /** Description of this target, if any. */
@@ -166,7 +169,7 @@ public class Target implements TaskContainer {
      * @param task The task to be added. Must not be <code>null</code>.
      */
     public void addTask(Task task) {
-        children.addElement(task);
+        children.add(task);
     }
 
     /**
@@ -176,7 +179,7 @@ public class Target implements TaskContainer {
      *          Must not be <code>null</code>.
      */
     public void addDataType(RuntimeConfigurable r) {
-        children.addElement(r);
+        children.add(r);
     }
 
     /** 
@@ -185,18 +188,16 @@ public class Target implements TaskContainer {
      * @return an array of the tasks currently within this target
      */
     public Task[] getTasks() {
-        Vector tasks = new Vector(children.size());
-        Enumeration enum = children.elements();
-        while (enum.hasMoreElements()) {
-            Object o = enum.nextElement();
+        List tasks = new ArrayList(children.size());
+        Iterator it = children.iterator();
+        while (it.hasNext()) {
+            Object o = it.next();
             if (o instanceof Task) {
-                tasks.addElement(o);
+                tasks.add(o);
             }
         }
         
-        Task[] retval = new Task[tasks.size()];
-        tasks.copyInto(retval);
-        return retval;
+        return (Task[])tasks.toArray(new Task[tasks.size()]);
     }
 
     /**
@@ -206,7 +207,10 @@ public class Target implements TaskContainer {
      *                   Must not be <code>null</code>.
      */
     public void addDependency(String dependency) {
-        dependencies.addElement(dependency);
+        if (dependencies == null) {
+            dependencies = new ArrayList(2);
+        }
+        dependencies.add(dependency);
     }
 
     /**
@@ -215,7 +219,11 @@ public class Target implements TaskContainer {
      * @return an enumeration of the dependencies of this target
      */
     public Enumeration getDependencies() {
-        return dependencies.elements();
+        if (dependencies != null) {
+            return Collections.enumeration(dependencies);
+        } else {
+            return new RuntimeConfigurable.EmptyEnumeration();
+        }
     }
 
     /**
@@ -301,9 +309,9 @@ public class Target implements TaskContainer {
      */
     public void execute() throws BuildException {
         if (testIfCondition() && testUnlessCondition()) {
-            Enumeration enum = children.elements();
-            while (enum.hasMoreElements()) {
-                Object o = enum.nextElement();
+            Iterator it = children.iterator();
+            while (it.hasNext()) {
+                Object o = it.next();
                 if (o instanceof Task) {
                     Task task = (Task) o;
                     task.perform();
@@ -352,7 +360,7 @@ public class Target implements TaskContainer {
     void replaceChild(Task el, RuntimeConfigurable o) {
         int index;
         while ((index = children.indexOf(el)) >= 0) {
-            children.setElementAt(o, index);
+            children.set(index, o);
         }
     }
 
@@ -367,7 +375,7 @@ public class Target implements TaskContainer {
     void replaceChild(Task el, Task o) {
         int index;
         while ((index = children.indexOf(el)) >= 0) {
-            children.setElementAt(o, index);
+            children.set(index, o);
         }
     }
 
