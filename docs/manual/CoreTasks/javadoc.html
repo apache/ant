@@ -22,16 +22,16 @@ this task is used much less frequently.</p>
 1.2 and 1.4), with the obvious restriction that the 1.2 attributes
 will be ignored if run in a 1.1 VM.</p>
 <p>NOTE: since javadoc calls System.exit(), javadoc cannot be run inside the
-same VM as ant without breaking functionality. For this reason, this task 
+same VM as ant without breaking functionality. For this reason, this task
 always forks the VM. This overhead is not significant since javadoc is normally a heavy
 application and will be called infrequently.</p>
-<p>NOTE: the packagelist attribute allows you to specify the list of packages to 
-document outside of the Ant file. It's a much better practice to include everything 
-inside the build.xml file. This option was added in order to make it easier to 
-migrate from regular makefiles, where you would use this option of javadoc. 
-The packages listed in packagelist are not checked, so the task performs even 
-if some packages are missing or broken. Use this option if you wish to convert from 
-an existing makefile. Once things are running you should then switch to the regular 
+<p>NOTE: the packagelist attribute allows you to specify the list of packages to
+document outside of the Ant file. It's a much better practice to include everything
+inside the build.xml file. This option was added in order to make it easier to
+migrate from regular makefiles, where you would use this option of javadoc.
+The packages listed in packagelist are not checked, so the task performs even
+if some packages are missing or broken. Use this option if you wish to convert from
+an existing makefile. Once things are running you should then switch to the regular
 notation. </p>
 
 <p><i><b>DEPRECATION:</b> the javadoc2 task simply points to the javadoc task and it's
@@ -462,7 +462,7 @@ the nested <code>&lt;fileset&gt;</code> elements.</p>
     <td align="center" valign="top">Yes</td>
   </tr>
 </table>
-  
+
 <h4>excludepackage</h4>
 <p>Same as one entry in the list given by <code>excludepackagenames</code>.</p>
 
@@ -523,7 +523,7 @@ specify multiple occurrences of the arguments.</p>
   </tr>
   <tr>
     <td valign="top">offline</td>
-    <td valign="top">True if this link is not available online at the time of 
+    <td valign="top">True if this link is not available online at the time of
                      generating the documentation</td>
     <td align="center" valign="top">No</td>
   </tr>
@@ -534,8 +534,8 @@ specify multiple occurrences of the arguments.</p>
     <td align="center" valign="top">Only if the offline attribute is true</td>
   </tr>
 </table>
-  
-<h4><a name="groupelement">group</a></h4> 
+
+<h4><a name="groupelement">group</a></h4>
 <p>Separates packages on the overview page into whatever groups you
 specify, one group per table. This performs the same role as the group
 attribute. You can use either syntax (or both at once), but with the
@@ -566,15 +566,15 @@ with text contents, and the packages may be listed with nested
 <code>&lt;package&gt;</code> elements as for the main task.</p>
 
 <h4>doclet</h4>
-<p>The doclet nested element is used to specify the doclet that javadoc will 
+<p>The doclet nested element is used to specify the doclet that javadoc will
 use to process the input source files. A number of the standard javadoc arguments
 are actually arguments of the standard doclet. If these are specified in the javadoc
-task's attributes, they will be passed to the doclet specified in the 
-<code>&lt;doclet&gt;</code> nested element. Such attributes should only be specified, 
+task's attributes, they will be passed to the doclet specified in the
+<code>&lt;doclet&gt;</code> nested element. Such attributes should only be specified,
 therefore, if they can be interpreted by the doclet in use.</p>
 
 <p>If the doclet requires additional parameters, these can be specified with
-<code>&lt;param&gt;</code> elements within the <code>&lt;doclet&gt;</code> 
+<code>&lt;param&gt;</code> elements within the <code>&lt;doclet&gt;</code>
 element. These paramaters are restricted to simple strings. An example usage
 of the doclet element is shown below:</p>
 
@@ -587,7 +587,7 @@ of the doclet element is shown below:</p>
   &lt;/javadoc&gt;
 </pre>
 
-<h4><a name="tagelement">tag</a></h4> 
+<h4><a name="tagelement">tag</a></h4>
 
 <p>The tag nested element is used to specify custom tags. This option
 is only available with Java 1.4.</p>
@@ -602,12 +602,12 @@ is only available with Java 1.4.</p>
   <tr>
     <td valign="top">name</td>
     <td valign="top">Name of the tag (e.g. <code>todo</code>)</td>
-    <td align="center" valign="top">Yes</td>
+    <td align="center" valign="top">Yes, unless the <code>dir</code> attribute is specified.</td>
   </tr>
   <tr>
     <td valign="top">description</td>
     <td valign="top">Description for tag (e.g. <code>To do:</code>)</td>
-    <td align="center" valign="top">Yes</td>
+    <td align="center" valign="top">Yes, unless the <code>dir</code> attribute is specified.</td>
   </tr>
   <tr>
     <td valign="top">enabled</td>
@@ -617,15 +617,32 @@ is only available with Java 1.4.</p>
   <tr>
     <td valign="top">scope</td>
     <td valign="top">Scope for the tag - the elements in which it can be used. This
-    is a comma separated list of some of the elements: <code>overview</code>, 
-    <code>packages</code>, <code>types</code>, <code>constructors</code>, 
+    is a comma separated list of some of the elements: <code>overview</code>,
+    <code>packages</code>, <code>types</code>, <code>constructors</code>,
     <code>methods</code>, <code>fields</code> or the default, <code>all</code>.</td>
+    <td align="center" valign="top">No</td>
+  </tr>
+  <tr>
+    <td valign="top">dir</td>
+    <td valign="top">If this attribute is specified, this element will behave as an implicit
+    <a href="../CoreTypes/fileset.html">fileset</a>. The files included by this fileset should
+    contain each tag definition on a separate line, as described in the
+    <a href="http://java.sun.com/j2se/1.4.1/docs/tooldocs/windows/javadoc.html#tag">javadoc reference guide</a>:
+    <p/>
+    <code>
+    ejb.bean:t:"XDoclet EJB Tag"<br/>
+    todo:a:"To Do"<br/>
+    </code>
+    <p/>
+    Note: If this attribute is specified, all the other attributes in this
+    element will be ignored.
+    </td>
     <td align="center" valign="top">No</td>
   </tr>
 </table>
 
-<h4><a name="tagletelement">taglet</a></h4> 
-<p>The taglet nested element is used to specify custom taglets. This option is 
+<h4><a name="tagletelement">taglet</a></h4>
+<p>The taglet nested element is used to specify custom taglets. This option is
 only available with Java 1.4.</p>
 
 <h5>Parameters</h5>
@@ -637,7 +654,7 @@ only available with Java 1.4.</p>
   </tr>
   <tr>
     <td valign="top">name</td>
-    <td valign="top">The name of the taglet class 
+    <td valign="top">The name of the taglet class
               (e.g. <code>com.sun.tools.doclets.ToDoTaglet</code>)</td>
     <td align="center" valign="top">Yes</td>
   </tr>
@@ -675,10 +692,10 @@ respectively.</p>
     &lt;link offline=&quot;true&quot; href=&quot;http://java.sun.com/products/jdk/1.2/docs/api/&quot; packagelistLoc=&quot;C:\tmp&quot;/&gt;
     &lt;link href=&quot;http://developer.java.sun.com/developer/products/xml/docs/api/&quot;/&gt;
   &lt/javadoc&gt;</pre>
-  
+
 <p>is the same as</p>
 
-<pre>  &lt;javadoc 
+<pre>  &lt;javadoc
            destdir=&quot;docs/api&quot;
            author=&quot;true&quot;
            version=&quot;true&quot;
@@ -700,8 +717,8 @@ respectively.</p>
   &lt/javadoc&gt;</pre>
 
 <p>or</p>
-  
-<pre>  &lt;javadoc 
+
+<pre>  &lt;javadoc
            destdir=&quot;docs/api&quot;
            author=&quot;true&quot;
            version=&quot;true&quot;
@@ -723,7 +740,7 @@ respectively.</p>
   &lt/javadoc&gt;</pre>
 
 <hr>
-<p align="center">Copyright &copy; 2000-2002 Apache Software Foundation. All rights
+<p align="center">Copyright &copy; 2000-2003 Apache Software Foundation. All rights
 Reserved.</p>
 
 </body>

@@ -234,6 +234,9 @@ Other changes:
   possible to save the output into a property for use within the build
   file as was possible with <exec> in Ant 1.5
 
+* The <javadoc> task <tag> subelement has been enhanced to allow files
+  with tag mappings to be used.
+
 Changes from Ant 1.5.1Beta1 to 1.5.1
 ====================================
 

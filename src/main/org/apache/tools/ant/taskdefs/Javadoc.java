@@ -58,6 +58,8 @@ import java.io.FileWriter;
 import java.io.FilenameFilter;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.io.BufferedReader;
+import java.io.FileReader;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Enumeration;
@@ -1244,7 +1246,7 @@ public class Javadoc extends Task {
     /**
      * Class representing a -tag argument.
      */
-    public class TagArgument {
+    public class TagArgument extends FileSet {
         /** Name of the tag. */
         private String name = null;
         /** Description of the tag to place in the JavaDocs. */
@@ -1468,7 +1470,7 @@ public class Javadoc extends Task {
      */
     public void setSource(String source) {
         if (!javadoc4) {
-            log ("-source option not supported on JavaDoc < 1.4", 
+            log ("-source option not supported on JavaDoc < 1.4",
                  Project.MSG_VERBOSE);
         }
         this.source = source;
@@ -1744,8 +1746,32 @@ public class Javadoc extends Task {
                     Object element = e.nextElement();
                     if (element instanceof TagArgument) {
                         TagArgument ta = (TagArgument) element;
-                        toExecute.createArgument().setValue ("-tag");
-                        toExecute.createArgument().setValue (ta.getParameter());
+                        File tagDir = ta.getDir(getProject());
+                        if (tagDir == null ) {
+                            // The tag element is not used as a fileset,
+                            // but specifies the tag directly.
+                            toExecute.createArgument().setValue ("-tag");
+                            toExecute.createArgument().setValue (ta.getParameter());
+                        } else {
+                            // The tag element is used as a fileset. Parse all the files and
+                            // create -tag arguments.
+                            DirectoryScanner tagDefScanner = ta.getDirectoryScanner(getProject());
+                            String[] files = tagDefScanner.getIncludedFiles();
+                            for (int i = 0; i < files.length; i++) {
+                                File tagDefFile = new File( tagDir, files[i] );
+                                try {
+                                    BufferedReader in = new BufferedReader( new FileReader(tagDefFile) );
+                                    String line = null;
+                                    while( (line = in.readLine()) != null ) {
+                                        toExecute.createArgument().setValue ("-tag");
+                                        toExecute.createArgument().setValue (line);
+                                    }
+                                    in.close();
+                                } catch( IOException ioe ) {
+                                    throw new BuildException( "Couldn't read tag file from " + tagDefFile.getAbsolutePath(), ioe );
+                                }
+                            }
+                        }
                     } else {
                         ExtensionInfo tagletInfo = (ExtensionInfo) element;
                         toExecute.createArgument().setValue("-taglet");
