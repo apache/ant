@@ -227,7 +227,8 @@ public class Copy
         }
 
         // deal with the filesets
-        for( int i = 0; i < m_filesets.size(); i++ )
+        final int size = m_filesets.size();
+        for( int i = 0; i < size; i++ )
         {
             final FileSet fileSet = (FileSet)m_filesets.get( i );
             final DirectoryScanner scanner = ScannerUtil.getDirectoryScanner( fileSet );

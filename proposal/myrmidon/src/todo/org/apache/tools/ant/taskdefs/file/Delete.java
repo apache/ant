@@ -10,8 +10,8 @@ package org.apache.tools.ant.taskdefs.file;
 import java.io.File;
 import java.util.ArrayList;
 import org.apache.myrmidon.api.TaskException;
-import org.apache.tools.ant.types.DirectoryScanner;
 import org.apache.tools.ant.Task;
+import org.apache.tools.ant.types.DirectoryScanner;
 import org.apache.tools.ant.types.FileSet;
 import org.apache.tools.ant.types.ScannerUtil;
 
@@ -122,15 +122,17 @@ public class Delete
         }
 
         // delete the files in the filesets
-        for( int i = 0; i < filesets.size(); i++ )
+        final int size = filesets.size();
+        for( int i = 0; i < size; i++ )
         {
-            FileSet fs = (FileSet)filesets.get( i );
+            final FileSet fileSet = (FileSet)filesets.get( i );
             try
             {
-                DirectoryScanner ds = ScannerUtil.getDirectoryScanner( fs );
-                String[] files = ds.getIncludedFiles();
-                String[] dirs = ds.getIncludedDirectories();
-                removeFiles( fs.getDir(), files, dirs );
+                final DirectoryScanner scanner =
+                    ScannerUtil.getDirectoryScanner( fileSet );
+                String[] files = scanner.getIncludedFiles();
+                String[] dirs = scanner.getIncludedDirectories();
+                removeFiles( fileSet.getDir(), files, dirs );
             }
             catch( TaskException be )
             {
