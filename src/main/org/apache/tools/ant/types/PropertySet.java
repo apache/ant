@@ -174,6 +174,21 @@ public class PropertySet extends DataType {
     }
 
     /**
+     * Convert the system properties to a hashtable.
+     * Use propertynames to get the list of properties (including
+     * default ones).
+     */
+    private Hashtable getAllSystemProperties() {
+        Hashtable ret = new Hashtable();
+        for (Enumeration e = System.getProperties().propertyNames();
+             e.hasMoreElements();) {
+            String name = (String) e.nextElement();
+            ret.put(name, System.getProperties().getProperty(name));
+        }
+        return ret;
+    }
+
+    /**
      * this is the operation to get the existing or recalculated properties.
      * @return
      */
@@ -181,7 +196,7 @@ public class PropertySet extends DataType {
         Set names = null;
         Project prj = getProject();
         Hashtable props =
-            prj == null ? System.getProperties() : prj.getProperties();
+            prj == null ? getAllSystemProperties() : prj.getProperties();
 
         if (getDynamic() || cachedNames == null) {
             names = new HashSet();
