@@ -1,26 +1,13 @@
 <project name="ftp-test" basedir=".">
     <property file="../../../../../../ftp.properties"/>
     <property environment="env"/>
+    <property name="ftp.user" value="${user.name}"/>
     <property name="ftp.host" value="localhost"/>
     <property name="ftp.port" value="21" />
     <property name="ftp.password" value="sunshine" />
     <property name="tmp.dir" location="tmp"/>
     <property name="ftp.filesep" value="/"/>
-    <condition property="windows">
-        <os family="windows"/>
-    </condition>
-    <condition property="unix">
-        <os family="unix" />
-    </condition>
-    <target name="init.unix" if="unix">
-        <property name="ftp.user" value="${env.LOGNAME}"/>
-    </target>
-    <target name="init.windows" if="windows">
-        <property name="ftp.user" value="${env.USERNAME}"/>
-    </target>
-    <target name="init" depends="init.unix,init.windows">
-    </target>
-    <target name="setup" depends="init">
+    <target name="setup">
         <mkdir dir="${tmp.dir}/alpha/beta/gamma"/>
         <touch file="${tmp.dir}/alpha/beta/gamma/gamma.xml"/>
         <touch file="${tmp.dir}/alpha/beta/beta.xml"/>
@@ -32,11 +19,15 @@
     <target name="cleanup">
         <delete dir="${tmp.dir}" quiet="true"/>
     </target>
-
     <target name="symlink-setup" depends="setup">
         <mkdir dir="${tmp.dir}/epsilon/gamma"/>
         <delete dir="${tmp.dir}/alpha/beta"/>
         <symlink link="${tmp.dir}/alpha/beta" resource="${tmp.dir}/epsilon"/>
         <touch file="${tmp.dir}/alpha/beta/gamma/gamma.xml"/>
+    </target>
+    <target name="symlink-file-setup" depends="setup">
+        <delete file="${tmp.dir}/alpha/beta/gamma/gamma.xml"/>
+        <symlink link="${tmp.dir}/alpha/beta/gamma/gamma.xml"
+            resource="${tmp.dir}/alpha/beta/beta.xml"/>
     </target>
 </project>
