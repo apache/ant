@@ -9,10 +9,20 @@
             <item name="Get Involved" href="/todo.html"/>
             <item name="Todo List" href="/todo.html#Todo List"/>
         </menu>
+
         <menu name="Extending Ant">
-            <item name="ClassLoader Management" href="/classloader.html"/>
-            <item name="Librarys" href="/librarys.html"/>
+            <item name="Task Writers HOWTO" href="/task.html"/>
+            <item name="ClassLoader HOWTO" href="/classloader.html"/>
+            <item name="Library HOWTO" href="/librarys.html"/>
         </menu>
+
+        <menu name="Features">
+            <item name="Virtual File System" href="/vfs.html"/>
+        </menu>
+
+        <menu name="Container Design">
+        </menu>
+
     </body>
 
 </project>
