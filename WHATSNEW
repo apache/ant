@@ -7,8 +7,12 @@ Changes that could break older environments:
 Other changes:
 --------------
 
-* The attributes zipfile, jarfile, warfile and earfile (from the Zip, Gzip, Jar, 
-  War and Ear tasks) have been deprecated and supersceded by a new attribute "file".
+* The attributes zipfile, jarfile, warfile and earfile (from the Zip, 
+  Jar, War and Ear tasks) have been deprecated and supersceded by a 
+  new attribute "file".
+
+* The attribute zipfile in GZip has been deprecated and supersceded 
+  by "tofile" attribute.
 
 Fixed bugs:
 -----------

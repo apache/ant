@@ -72,13 +72,13 @@ public class GZip extends Task {
     private File zipFile;
     private File source;
     
-    public void setFile(File file) {
+    public void setTofile(File file) {
         zipFile = file;
     }
 
     public void setZipfile(File zipFile) {
-        log("DEPRECATED - The zipfile attribute is deprecated. Use file attribute instead.");
-        setFile( zipFile );
+        log("DEPRECATED - The zipfile attribute is deprecated. Use tofile attribute instead.");
+        setTofile( zipFile );
     }
 
     public void setSrc(File src) {
