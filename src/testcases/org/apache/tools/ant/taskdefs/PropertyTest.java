@@ -128,4 +128,8 @@ public class PropertyTest extends BuildFileTest {
         fail("Did not throw exception on circular exception");
     }
 
+    public void testThisIsNotACircularReference() {
+        expectLog("thisIsNotACircularReference", "b is A/A");
+    }
+
 }
