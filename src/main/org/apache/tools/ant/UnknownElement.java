@@ -213,18 +213,38 @@ public class UnknownElement extends Task {
                                                   String elementName) {
         String lSep = System.getProperty("line.separator");
         String msg = "Could not create " + what + " of type: " + elementName
-            + "." + lSep
-            + "Ant could not find the task or a class this" + lSep
-            + "task relies upon." + lSep
-            + "Common solutions are to use taskdef to declare" + lSep
-            + "your task, or, if this is an optional task," + lSep
-            + "to put the optional.jar and all required libraries of" +lSep
-            + "this task in the lib directory of" + lSep
-            + "your ant installation (ANT_HOME)." + lSep
-            + "There is also the possibility that your build file " + lSep
-            + "is written to work with a more recent version of ant " + lSep
-            + "than the one you are using, in which case you have to " + lSep
-            + "upgrade.";
+            + "." + lSep+ lSep
+            + "Ant could not find the task or a class this "
+            + "task relies upon." + lSep +lSep
+            + "This is common and has a number of causes; the usual " + lSep
+            + "solutions are to read the manual pages then download and" + lSep
+            + "install needed JAR files, or fix the build file: "+ lSep
+            + " - You have misspelt '" + elementName + "'." + lSep
+            + "   Fix: check your spelling." +lSep
+            + " - The task needs an external JAR file to execute" +lSep
+            + "   and this is not found at the right place in the classpath." +lSep
+            + "   Fix: check the documentation for dependencies." +lSep
+            + " - The task is not an Ant core or optional task " +lSep
+            + "   and needs to be declared using <taskdef>." +lSep
+            + "   Fix: declare the task." +lSep
+            + " - The task is an Ant optional task and optional.jar is absent"+lSep
+            + "   Fix: look for optional.jar in ANT_HOME/lib, download if needed" +lSep
+            + " - The task was not built into optional.jar as dependent"  +lSep
+            + "   libraries were not found at build time." + lSep
+            + "   Fix: look in the JAR to verify, then rebuild with the needed" +lSep
+            + "   libraries, or download a release version from apache.org" +lSep
+            + " - The build file was written for a later version of Ant" +lSep
+            + "   Fix: upgrade to at least the latest release version of Ant" +lSep
+            + lSep 
+            + "Remember that for JAR files to be visible to ant tasks implemented" +lSep
+            + "in ANT_HOME/lib, the files must be in the same directory or on the" +lSep 
+            + "classpath"+ lSep 
+            + lSep 
+            + "Please do not file bug reports on this problem, nor email the" +lSep
+            + "ant mailing lists, until all of these causes have been explored," +lSep
+            + "as this is not an Ant bug.";
+
+
         return new BuildException(msg, location);
     }
 
