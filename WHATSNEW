@@ -87,8 +87,6 @@ on log output.
 
 * <replace> can now use tokens and/or values that cross line boundaries.
 
-* <ejbc> optional task no longer uses a separate VM to invoke the ejbc tool.
-
 * build.compiler supports now jvc as well.
 
 * project specific help can now be obtained with the -projecthelp option.
