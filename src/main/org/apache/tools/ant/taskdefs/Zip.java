@@ -110,7 +110,7 @@ public class Zip extends MatchingTask {
      * Whether the file modification times will be rounded up to the
      * next even number of seconds.
      *
-     * @since Ant 1.7
+     * @since Ant 1.6.2
      */
     private boolean roundUp = true;
 
@@ -303,7 +303,7 @@ public class Zip extends MatchingTask {
      * JSPs inside a web archive that seem to be slightly more recent
      * than precompiled pages, rendering precompilation useless.</p>
      *
-     * @since Ant 1.7
+     * @since Ant 1.6.2
      */
     public void setRoundUp(boolean r) {
         roundUp = r;

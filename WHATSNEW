@@ -16,12 +16,6 @@ Other changes:
 * Enable to choose the regexp implementation without system property.
   Bugzilla Report 15390.
 
-* A new roundup attribute on <zip> and related task can be used to
-  control whether the file modification times inside the archive will
-  be rounded up or down (since zips only store modification times with
-  a granularity of two seconds).  The default remains to round up.
-  Bugzilla Report 17934.
-
 * Nested file mappers and a container mapper implementation have been
   introduced.  Additionally, the <mapper> element now accepts "defined"
   nested FileNameMapper implementations directly, allowing a usage
@@ -185,6 +179,11 @@ Other changes:
 
 * Ignore built distributions. Bugzilla Report 28997.
 
+* A new roundup attribute on <zip> and related task can be used to
+  control whether the file modification times inside the archive will
+  be rounded up or down (since zips only store modification times with
+  a granularity of two seconds).  The default remains to round up.
+  Bugzilla Report 17934.
 
 Changes from Ant 1.6.0 to Ant 1.6.1
 =============================================
