@@ -1,0 +1,112 @@
+<?xml version="1.0"?>
+<project name="getlibraries" basedir="." default="all">
+
+
+  <!-- use the normal one at ibiblio-->
+  <mavenrepository id="maven"/>
+
+  <target name="init">
+    <property name="lib.dir" value="getlib"/>
+    <mkdir dir="${lib.dir}"/>
+    <property name="commons.logging" value="commons-logging-1.0.1.jar"/>
+
+    <presetdef name="getlib">
+      <getlibraries destDir="${lib.dir}">
+        <library archive="commons-logging" project="commons-logging" version="1.0.1"/>
+      </getlibraries>
+    </presetdef>
+
+    <macrodef name="assert-downloaded">
+      <attribute name="library" default="${commons.logging}"/>
+      <sequential>
+        <available property="@{library}.exists"
+          file="${lib.dir}/@{library}"/>
+        <fail unless="@{library}.exists">
+        Not found: ${lib.dir}@{library}
+        </fail>
+      </sequential>
+    </macrodef>
+  </target>
+
+  <target name="cleanup">
+    <delete dir="${lib.dir}"/>
+  </target>
+
+  <target name="testEmpty" depends="init">
+    <getlibraries/>
+  </target>
+
+  <target name="testEmpty2" depends="init">
+    <getlibraries destDir="${lib.dir}">
+
+    </getlibraries>
+  </target>
+
+  <target name="testEmpty3" depends="init">
+    <getlibraries destDir="${lib.dir}">
+      <repository/>
+    </getlibraries>
+  </target>
+
+  <target name="testNoRepo" depends="init">
+    <getlib/>
+  </target>
+
+  <target name="testUnknownReference" depends="init">
+    <getlib>
+      <repository refid="unknown"/>
+    </getlib>
+  </target>
+
+
+  <target name="testFunctionalInline" depends="init">
+    <getlib repositoryref="maven">
+    </getlib>
+    <assert-downloaded/>
+  </target>
+
+  <target name="testMavenInline" depends="init">
+    <getlib>
+      <mavenrepository/>
+    </getlib>
+    <assert-downloaded/>
+  </target>
+
+  <target name="testTwoRepositories" depends="init">
+    <getlib>
+      <mavenrepository/>
+      <mavenrepository/>
+    </getlib>
+  </target>
+
+
+  <target name="testMavenInlineBadURL" depends="init">
+    <getlib>
+
+    </getlib>
+  </target>
+
+  <target name="testRenaming" depends="init">
+    <getlib>
+      <mavenrepository/>
+      <library archive="commons-logging" project="commons-logging" version="1.0.1"
+        destinationName="renamed.jar"
+        />
+    </getlib>
+    <assert-downloaded/>
+    <assert-downloaded library="renamed.jar"/>
+  </target>
+
+
+  <target name="testOverwrite" depends="init">
+    <getlib>
+      <mavenrepository/>
+    </getlib>
+    <assert-downloaded/>
+    <getlib>
+      <mavenrepository/>
+    </getlib>
+  </target>
+
+</project>
+

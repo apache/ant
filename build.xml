@@ -328,6 +328,11 @@
     <filename name="${ant.package}/launch/**/*"/>
   </selector>
 
+  <selector id="needs.commons.httpclient">
+    <filename name="${optional.package}/repository/**/*"/>
+  </selector>
+
+
   <patternset id="onlinetests">
     <exclude name="**/GetTest.java" if="offline"/>
     <exclude name="**/SignJarTest.java" if="offline"/>
@@ -561,6 +566,17 @@
                    classpathref="classpath"/>
       </or>
     </condition>
+
+    <!-- http client needs commons logging -->
+    <condition property="commons.httpclient.present">
+      <and>
+        <available
+          classname="org.apache.commons.httpclient.HttpClient"
+          classpathref="classpath"/>
+        <isset property="commons.logging.present"/>
+      </and>
+    </condition>
+
     <condition property="wsdl.found">
       <or>
         <available file="wsdl"     filepath="${env.PATH}"/>
@@ -679,6 +695,7 @@
             <selector refid="needs.jdepend" unless="jdepend.present"/>
             <selector refid="needs.swing"  unless="swing.present"/>
             <selector refid="needs.jsch" unless="jsch.present"/>
+            <selector refid="needs.commons.httpclient" unless="commons.httpclient.present"/>
           </or>
         </not>
       </selector>
@@ -853,6 +870,7 @@
             <selector refid="needs.jdepend"/>
             <selector refid="needs.swing"/>
             <selector refid="needs.jsch"/>
+            <selector refid="needs.commons.httpclient"/>
           </or>
         </not>
       </and>
@@ -897,6 +915,7 @@
     <optional-jar dep="swing"/>
     <optional-jar dep="jsch"/>
     <optional-jar dep="jdepend"/>
+    <optional-jar dep="commons.httpclient"/>
 
     <jar destfile="${build.lib}/${optional.jars.prefix}-weblogic.jar"
          basedir="${build.classes}"
@@ -1471,6 +1490,7 @@
 
       <sysproperty key="ant.home" value="${ant.home}"/>
       <sysproperty key="build.tests" file="${build.tests}"/>
+      <sysproperty key="offline" value="${offline}"/>
       <sysproperty key="build.tests.value" value="${build.tests.value}"/>
       <sysproperty key="tests-classpath.value"
                    value="${tests-classpath.value}"/>
@@ -1624,6 +1644,7 @@
       <sysproperty key="ant.home" value="${ant.home}"/>
       <sysproperty key="build.tests" file="${build.tests}"/>
       <sysproperty key="build.tests.value" value="${build.tests.value}"/>
+      <sysproperty key="offline" value="${offline}"/>      
       <sysproperty key="tests-classpath.value"
                    value="${tests-classpath.value}"/>
       <classpath refid="tests-classpath"/>
