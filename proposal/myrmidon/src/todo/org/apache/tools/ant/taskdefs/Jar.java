@@ -20,7 +20,7 @@ import java.io.Reader;
 import java.util.Enumeration;
 import java.util.Iterator;
 import org.apache.myrmidon.api.TaskException;
-import org.apache.tools.ant.FileScanner;
+import org.apache.tools.ant.types.FileScanner;
 import org.apache.tools.ant.types.ZipFileSet;
 import org.apache.tools.zip.ZipOutputStream;
 

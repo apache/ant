@@ -21,14 +21,14 @@ import java.util.Stack;
 import java.util.zip.CRC32;
 import java.util.zip.ZipInputStream;
 import org.apache.myrmidon.api.TaskException;
-import org.apache.tools.ant.DirectoryScanner;
-import org.apache.tools.ant.FileScanner;
+import org.apache.tools.ant.types.DirectoryScanner;
+import org.apache.tools.ant.types.FileScanner;
 import org.apache.tools.ant.types.EnumeratedAttribute;
 import org.apache.tools.ant.types.FileSet;
 import org.apache.tools.ant.types.ZipFileSet;
 import org.apache.tools.ant.types.ZipScanner;
 import org.apache.tools.ant.util.MergingMapper;
-import org.apache.tools.ant.util.SourceFileScanner;
+import org.apache.tools.ant.types.SourceFileScanner;
 import org.apache.tools.zip.ZipEntry;
 import org.apache.tools.zip.ZipOutputStream;
 

@@ -19,7 +19,7 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 import org.apache.avalon.excalibur.io.FileUtil;
 import org.apache.myrmidon.api.TaskException;
-import org.apache.tools.ant.DirectoryScanner;
+import org.apache.tools.ant.types.DirectoryScanner;
 import org.apache.tools.ant.types.FileSet;
 import org.apache.tools.ant.types.PatternSet;
 
@@ -200,7 +200,7 @@ public class Expand extends MatchingTask
             for( int v = 0; v < patternsets.size(); v++ )
             {
                 PatternSet p = (PatternSet)patternsets.get( v );
-                String[] incls = p.getIncludePatterns( getProject() );
+                String[] incls = p.getIncludePatterns( null );
                 if( incls != null )
                 {
                     for( int w = 0; w < incls.length; w++ )
@@ -213,7 +213,7 @@ public class Expand extends MatchingTask
                         }
                     }
                 }
-                String[] excls = p.getExcludePatterns( getProject() );
+                String[] excls = p.getExcludePatterns( null );
                 if( excls != null )
                 {
                     for( int w = 0; w < excls.length; w++ )

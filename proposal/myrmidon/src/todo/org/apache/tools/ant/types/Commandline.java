@@ -9,8 +9,7 @@ package org.apache.tools.ant.types;
 
 import java.io.File;
 import java.util.ArrayList;
-import java.util.StringTokenizer;
-import org.apache.myrmidon.api.TaskException;
+import org.apache.avalon.excalibur.util.StringUtil;
 
 /**
  * Commandline objects help handling command lines specifying processes to
@@ -33,153 +32,9 @@ import org.apache.myrmidon.api.TaskException;
  * @author <a href="mailto:stefan.bodewig@epost.de">Stefan Bodewig</a>
  */
 public class Commandline
-    implements Cloneable
 {
     protected final ArrayList m_arguments = new ArrayList();
     private String m_executable;
-
-    /**
-     * Put quotes around the given String if necessary. <p>
-     *
-     * If the argument doesn't include spaces or quotes, return it as is. If it
-     * contains double quotes, use single quotes - else surround the argument by
-     * double quotes.</p>
-     *
-     * @param argument Description of Parameter
-     * @return Description of the Returned Value
-     */
-    public static String quoteArgument( String argument )
-        throws TaskException
-    {
-        if( argument.indexOf( "\"" ) > -1 )
-        {
-            if( argument.indexOf( "\'" ) > -1 )
-            {
-                throw new TaskException( "Can\'t handle single and double quotes in same argument" );
-            }
-            else
-            {
-                return '\'' + argument + '\'';
-            }
-        }
-        else if( argument.indexOf( "\'" ) > -1 || argument.indexOf( " " ) > -1 )
-        {
-            return '\"' + argument + '\"';
-        }
-        else
-        {
-            return argument;
-        }
-    }
-
-    public static String toString( String[] line )
-    {
-        // empty path return empty string
-        if( line == null || line.length == 0 )
-            return "";
-
-        // path containing one or more elements
-        final StringBuffer result = new StringBuffer();
-        for( int i = 0; i < line.length; i++ )
-        {
-            if( i > 0 )
-            {
-                result.append( ' ' );
-            }
-
-            try
-            {
-                result.append( quoteArgument( line[ i ] ) );
-            }
-            catch( TaskException e )
-            {
-            }
-
-        }
-        return result.toString();
-    }
-
-    public static String[] translateCommandline( String to_process )
-        throws TaskException
-    {
-        if( to_process == null || to_process.length() == 0 )
-        {
-            return new String[ 0 ];
-        }
-
-        // parse with a simple finite state machine
-
-        final int normal = 0;
-        final int inQuote = 1;
-        final int inDoubleQuote = 2;
-        int state = normal;
-        StringTokenizer tok = new StringTokenizer( to_process, "\"\' ", true );
-        ArrayList v = new ArrayList();
-        StringBuffer current = new StringBuffer();
-
-        while( tok.hasMoreTokens() )
-        {
-            String nextTok = tok.nextToken();
-            switch( state )
-            {
-                case inQuote:
-                    if( "\'".equals( nextTok ) )
-                    {
-                        state = normal;
-                    }
-                    else
-                    {
-                        current.append( nextTok );
-                    }
-                    break;
-                case inDoubleQuote:
-                    if( "\"".equals( nextTok ) )
-                    {
-                        state = normal;
-                    }
-                    else
-                    {
-                        current.append( nextTok );
-                    }
-                    break;
-                default:
-                    if( "\'".equals( nextTok ) )
-                    {
-                        state = inQuote;
-                    }
-                    else if( "\"".equals( nextTok ) )
-                    {
-                        state = inDoubleQuote;
-                    }
-                    else if( " ".equals( nextTok ) )
-                    {
-                        if( current.length() != 0 )
-                        {
-                            v.add( current.toString() );
-                            current.setLength( 0 );
-                        }
-                    }
-                    else
-                    {
-                        current.append( nextTok );
-                    }
-                    break;
-            }
-        }
-
-        if( current.length() != 0 )
-        {
-            v.add( current.toString() );
-        }
-
-        if( state == inQuote || state == inDoubleQuote )
-        {
-            throw new TaskException( "unbalanced quotes in " + to_process );
-        }
-
-        final String[] args = new String[ v.size() ];
-        return (String[])v.toArray( args );
-    }
 
     /**
      * Sets the executable to run.
@@ -250,32 +105,6 @@ public class Commandline
     }
 
     /**
-     * Clear out the whole command line.
-     */
-    public void clear()
-    {
-        m_executable = null;
-        m_arguments.clear();
-    }
-
-    /**
-     * Clear out the arguments but leave the executable in place for another
-     * operation.
-     */
-    public void clearArgs()
-    {
-        m_arguments.clear();
-    }
-
-    public Object clone()
-    {
-        final Commandline commandline = new Commandline();
-        commandline.setExecutable( m_executable );
-        commandline.addArguments( getArguments() );
-        return commandline;
-    }
-
-    /**
      * Creates an argument object. Each commandline object has at most one
      * instance of the argument class.
      *
@@ -308,7 +137,6 @@ public class Commandline
 
     public String toString()
     {
-        return toString( getCommandline() );
+        return StringUtil.join( getCommandline(), " " );
     }
-
 }
