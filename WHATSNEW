@@ -60,6 +60,8 @@ Other changes:
 * Made the dest attribute of the apply task optional; mapped target
   filenames will be interpreted as absolute pathnames when dest is omitted.
 
+* Changed default tempdir for <javac> from user.dir to java.io.tmpdir.
+
 Fixed bugs:
 -----------
 
