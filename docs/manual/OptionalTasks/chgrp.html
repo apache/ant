@@ -13,7 +13,7 @@
 
 <p>Changes the group of a file or all files inside specified
 directories. Right now it has effect only under Unix.  The group
-atribute is equivalent to the coresponding argument for the chgrp
+attribute is equivalent to the corresponding argument for the chgrp
 command.</p>
 
 <p><a href="../CoreTypes/fileset.html">FileSet</a>s, 
@@ -33,8 +33,9 @@ nested <code>&lt;fileset&gt;</code>, <code>&lt;dirset&gt;</code> and
     <td valign="top">file</td>
     <td valign="top">the file or directory of which the group must be
     changed.</td>
-    <td valign="top" valign="middle">Yes or nested
-    <code>&lt;fileset/list&gt;</code> elements.</td>
+    <td valign="top" valign="middle">Yes, unless nested
+      <code>&lt;fileset|filelist|dirset&gt;</code>
+      elements are specified</td>
   </tr>
   <tr>
     <td valign="top">group</td>
