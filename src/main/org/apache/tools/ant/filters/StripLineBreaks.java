@@ -66,7 +66,8 @@ import org.apache.tools.ant.types.Parameter;
  *
  * Or:
  *
- * <pre>&lt;filterreader classname=&quot;org.apache.tools.ant.filters.StripLineBreaks&quot;/&gt;</pre>
+ * <pre>&lt;filterreader
+ *   classname=&quot;org.apache.tools.ant.filters.StripLineBreaks&quot;/&gt;</pre>
  *
  * @author Steve Loughran
  * @author Magesh Umasankar

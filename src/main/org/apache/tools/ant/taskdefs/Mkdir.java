@@ -104,7 +104,8 @@ public class Mkdir extends Task {
 
     /**
      * the directory to create; required.
-     * @param dir
+     *
+     * @param dir the directory to be made.
      */
     public void setDir(File dir) {
         this.dir = dir;

@@ -761,10 +761,10 @@ public class JUnitTask extends Task {
 
     /**
      * @see Task#handleInput(byte[], int, int)
-     * 
+     *
      * @since Ant 1.6
      */
-    protected int handleInput(byte[] buffer, int offset, int length) 
+    protected int handleInput(byte[] buffer, int offset, int length)
         throws IOException {
         if (runner != null) {
             return runner.handleInput(buffer, offset, length);
@@ -772,8 +772,8 @@ public class JUnitTask extends Task {
             return super.handleInput(buffer, offset, length);
         }
     }
-    
-    
+
+
     /**
      * Pass output sent to System.out to the TestRunner so it can
      * collect ot for the formatters.
@@ -847,7 +847,7 @@ public class JUnitTask extends Task {
         }
 
         if (commandline.getBootclasspath() != null) {
-            log("bootclasspath is ignored if running in the same VM.", 
+            log("bootclasspath is ignored if running in the same VM.",
                 Project.MSG_WARN);
         }
 
@@ -988,7 +988,7 @@ public class JUnitTask extends Task {
      * @since Ant 1.4
      */
     protected void addClasspathEntry(String resource) {
-        /* 
+        /*
          * pre Ant 1.6 this method used to call getClass().getResource
          * while Ant 1.6 will call ClassLoader.getResource().
          *
@@ -1003,7 +1003,7 @@ public class JUnitTask extends Task {
             resource = "org/apache/tools/ant/taskdefs/optional/junit/"
                 + resource;
         }
-        
+
         File f = LoaderUtils.getResourceSource(getClass().getClassLoader(),
                                                resource);
         if (f != null) {

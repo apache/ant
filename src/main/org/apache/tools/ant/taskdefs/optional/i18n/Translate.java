@@ -83,71 +83,88 @@ public class Translate extends MatchingTask {
      * Family name of resource bundle
      */
     private String bundle;
+
     /**
      * Locale specific language of the resource bundle
      */
     private String bundleLanguage;
+
     /**
      * Locale specific country of the resource bundle
      */
     private String bundleCountry;
+
     /**
      * Locale specific variant of the resource bundle
      */
     private String bundleVariant;
+
     /**
      * Destination directory
      */
     private File toDir;
+
     /**
      * Source file encoding scheme
      */
     private String srcEncoding;
+
     /**
      * Destination file encoding scheme
      */
     private String destEncoding;
+
     /**
      * Resource Bundle file encoding scheme, defaults to srcEncoding
      */
     private String bundleEncoding;
+
     /**
      * Starting token to identify keys
      */
     private String startToken;
+
     /**
      * Ending token to identify keys
      */
     private String endToken;
+
     /**
      * Whether or not to create a new destination file.
      * Defaults to <code>false</code>.
      */
     private boolean forceOverwrite;
+
     /**
      * Vector to hold source file sets.
      */
     private Vector filesets = new Vector();
+
     /**
      * Holds key value pairs loaded from resource bundle file
      */
     private Hashtable resourceMap = new Hashtable();
     /**
+
      * Used to resolve file names.
      */
     private FileUtils fileUtils = FileUtils.newFileUtils();
+
     /**
      * Last Modified Timestamp of resource bundle file being used.
      */
     private long[] bundleLastModified = new long[7];
+
     /**
      * Last Modified Timestamp of source file being used.
      */
     private long srcLastModified;
+
     /**
      * Last Modified Timestamp of destination file being used.
      */
     private long destLastModified;
+
     /**
      * Has at least one file from the bundle been loaded?
      */
@@ -283,10 +300,8 @@ public class Translate extends MatchingTask {
 
         if (!toDir.exists()) {
             toDir.mkdirs();
-        } else {
-            if (toDir.isFile()) {
-                throw new BuildException(toDir + " is not a directory");
-            }
+        } else if (toDir.isFile()) {
+            throw new BuildException(toDir + " is not a directory");
         }
 
         if (srcEncoding == null) {
@@ -509,63 +524,62 @@ public class Translate extends MatchingTask {
                             = new BufferedReader(new InputStreamReader(fis, srcEncoding));
                         String line;
                         while ((line = in.readLine()) != null) {
-						// 2003-02-21 new replace algorithm by tbee (tbee@tbee.org)
-						// because it wasn't able to replace something like "@aaa;@bbb;"
+                        // 2003-02-21 new replace algorithm by tbee (tbee@tbee.org)
+                        // because it wasn't able to replace something like "@aaa;@bbb;"
 
-						// is there a startToken
-						// and there is still stuff following the startToken
-						int startIndex = line.indexOf(startToken);
-						while ( startIndex >= 0 && (startIndex+startToken.length()) <= line.length() )
-						{
-							// the new value, this needs to be here
-							// because it is required to calculate the next position to search from
-							// at the end of the loop
-				            String replace = null;
+                        // is there a startToken
+                        // and there is still stuff following the startToken
+                        int startIndex = line.indexOf(startToken);
+                        while (startIndex >= 0 && (startIndex + startToken.length()) <= line.length()) {
+                            // the new value, this needs to be here
+                            // because it is required to calculate the next position to search from
+                            // at the end of the loop
+                            String replace = null;
 
-							// we found a starttoken, is there an endtoken following?
-							// start at token+tokenlength because start and end token may be indentical
-							int endIndex = line.indexOf(endToken, startIndex + startToken.length());
-							if (endIndex < 0) startIndex += 1;
-							else
-							{
-								// grab the token
-								String token = line.substring(startIndex + startToken.length(), endIndex);
+                            // we found a starttoken, is there an endtoken following?
+                            // start at token+tokenlength because start and end token may be indentical
+                            int endIndex = line.indexOf(endToken, startIndex + startToken.length());
+                            if (endIndex < 0) {
+                                startIndex += 1;
+                            } else {
+                                // grab the token
+                                String token = line.substring(startIndex + startToken.length(), endIndex);
 
-				                // If there is a white space or = or :, then
-				                // it isn't to be treated as a valid key.
-				                boolean validToken = true;
-				                for (int k = 0; k < token.length() && validToken; k++)
-				                {
-				                    char c = token.charAt(k);
-				                    if ( c == ':'
-				                      || c == '='
-				                      || Character.isSpaceChar(c)
-				                       )
-				                    {
-				                    	validToken = false;
-				                    }
-				                }
-				                if (!validToken) startIndex += 1;
-				                else
-				                {
-				                	// find the replace string
-				                	if (resourceMap.containsKey(token)) replace = (String)resourceMap.get(token);
-				                	else                                replace = token;
+                                // If there is a white space or = or :, then
+                                // it isn't to be treated as a valid key.
+                                boolean validToken = true;
+                                for (int k = 0; k < token.length() && validToken; k++)
+                                {
+                                    char c = token.charAt(k);
+                                    if (c == ':' || c == '='
+                                        || Character.isSpaceChar(c)) {
+                                        validToken = false;
+                                    }
+                                }
+                                if (!validToken) {
+                                    startIndex += 1;
+                                } else {
+                                    // find the replace string
+                                    if (resourceMap.containsKey(token)) {
+                                        replace = (String) resourceMap.get(token);
+                                    } else {
+                                        replace = token;
+                                    }
 
 
-				                    // generate the new line
-				                    line = line.substring(0, startIndex)
-				                         + replace
-				                         + line.substring(endIndex + endToken.length());
+                                    // generate the new line
+                                    line = line.substring(0, startIndex)
+                                         + replace
+                                         + line.substring(endIndex + endToken.length());
 
-									// set start position for next search
-									startIndex += replace.length();
-				                }
-							}
+                                    // set start position for next search
+                                    startIndex += replace.length();
+                                }
+                            }
 
-							// find next starttoken
-							startIndex = line.indexOf(startToken, startIndex);
-						}
+                            // find next starttoken
+                            startIndex = line.indexOf(startToken, startIndex);
+                        }
 
 
                             out.write(line);

@@ -55,7 +55,6 @@ package org.apache.tools.ant.filters;
 
 import java.io.IOException;
 import java.io.Reader;
-import org.apache.tools.ant.types.Parameter;
 
 /**
  * Converts non latin characters to unicode escapes

@@ -272,7 +272,7 @@ public class ANTLR extends Task {
      * getResource doesn't contain the name of the archive.</p>
      */
     protected void addClasspathEntry(String resource) {
-        /* 
+        /*
          * pre Ant 1.6 this method used to call getClass().getResource
          * while Ant 1.6 will call ClassLoader.getResource().
          *
@@ -287,7 +287,7 @@ public class ANTLR extends Task {
             resource = "org/apache/tools/ant/taskdefs/optional/"
                 + resource;
         }
-        
+
         File f = LoaderUtils.getResourceSource(getClass().getClassLoader(),
                                                resource);
         if (f != null) {
@@ -302,13 +302,13 @@ public class ANTLR extends Task {
         validateAttributes();
         //TODO: use ANTLR to parse the grammar file to do this.
         File generatedFile = getGeneratedFile();
-        boolean targetIsOutOfDate = 
+        boolean targetIsOutOfDate =
             target.lastModified() > generatedFile.lastModified();
         boolean superGrammarIsOutOfDate = superGrammar != null &&
             (superGrammar.lastModified() > generatedFile.lastModified());
         if (targetIsOutOfDate || superGrammarIsOutOfDate) {
             if (targetIsOutOfDate) {
-                log("Compiling " + target + " as it is newer than " 
+                log("Compiling " + target + " as it is newer than "
                     + generatedFile, Project.MSG_VERBOSE);
             } else if (superGrammarIsOutOfDate) {
                 log("Compiling " + target + " as " + superGrammar
@@ -329,7 +329,7 @@ public class ANTLR extends Task {
                 }
             }
         } else {
-            log("Skipped grammar file. Generated file " + generatedFile 
+            log("Skipped grammar file. Generated file " + generatedFile
                 + "is newer.", Project.MSG_VERBOSE);
         }
     }
@@ -410,10 +410,10 @@ public class ANTLR extends Task {
 
     /** execute in a forked VM */
     private int run(String[] command) throws BuildException {
-        PumpStreamHandler psh = 
+        PumpStreamHandler psh =
             new PumpStreamHandler(new LogOutputStream(this, Project.MSG_INFO),
                                   new TeeOutputStream(
-                                                      new LogOutputStream(this, 
+                                                      new LogOutputStream(this,
                                                                           Project.MSG_WARN),
                                                       bos)
                                   );

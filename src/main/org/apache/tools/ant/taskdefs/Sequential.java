@@ -94,6 +94,8 @@ public class Sequential extends Task
 
     /**
      * Execute all nestedTasks.
+     *
+     * @throws BuildException if one of the nested tasks fails.
      */
     public void execute() throws BuildException {
         for (Enumeration e = nestedTasks.elements(); e.hasMoreElements();) {
