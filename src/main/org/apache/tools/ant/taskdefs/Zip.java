@@ -553,7 +553,9 @@ public class Zip extends MatchingTask {
                     }
                     addResources(oldFiles, r, zOut);
                 }
-                zOut.setComment(comment);
+                if (zOut != null) {
+                    zOut.setComment(comment);
+                }
                 finalizeZipOutputStream(zOut);
 
                 // If we've been successful on an update, delete the
