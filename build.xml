@@ -158,6 +158,14 @@
     </or>
   </selector>
   
+  <!-- Kaffe has some JDK 1.5 features including java.lang.Readable,
+       but not all of them -->
+  <selector id="not.in.kaffe">
+    <or>
+      <filename name="${ant.package}/taskdefs/optional/condition/IsPingable*"/>
+    </or>
+  </selector>
+  
   <selector id="needs.sun.uue">
     <filename name="${ant.package}/taskdefs/email/UUMailer*"/>
   </selector>
@@ -639,6 +647,7 @@
             <selector refid="needs.jdk1.3+" unless="jdk1.3+"/>
             <selector refid="needs.jdk1.4+" unless="jdk1.4+"/>
             <selector refid="needs.jdk1.5+" unless="jdk1.5+"/>
+            <selector refid="not.in.kaffe" unless="kaffe"/>
             <selector refid="needs.sun.uue" unless="sunuue.present"/>
             <selector refid="needs.sun.b64" unless="base64.present"/>
 
