@@ -172,9 +172,10 @@ public class CommandlineJava implements Cloneable {
     }
 
     public String[] getCommandline() {
+        Path fullClasspath = classpath != null ? classpath.concatSystemClasspath("ignore") : null;
         int size = 
             vmCommand.size() + javaCommand.size() + sysProperties.size();
-        if (classpath != null && classpath.size() > 0) {
+        if (fullClasspath != null && fullClasspath.size() > 0) {
             size += 2;
         }
         
@@ -188,9 +189,9 @@ public class CommandlineJava implements Cloneable {
                              result, pos, sysProperties.size());
             pos += sysProperties.size();
         }
-        if (classpath != null && classpath.size() > 0) {
+        if (fullClasspath != null && fullClasspath.size() > 0) {
             result[pos++] = "-classpath";
-            result[pos++] = classpath.concatSystemClasspath("ignore").toString();
+            result[pos++] = fullClasspath.toString();
         }
         System.arraycopy(javaCommand.getCommandline(), 0, 
                          result, pos, javaCommand.size());
