@@ -1,0 +1,38 @@
+Changes from Ant 1.1 to the current sources
+
+Changes that could break older buildfiles:
+------------------------------------------
+
+* copying of support files in <javac> has been removed.
+
+Other changes:
+--------------
+
+* New tasks (sql, junit, javacc) all pending documentation, some of
+them pending review.
+
+* <java> uses ClassLoader of its own in no-fork mode if a classpath is
+specified.
+
+* <style> will create the necessary target directories and reprocess
+all files if the stylesheet changes.
+
+* Path and EnumeratedAttribute moved to a new package
+org.apache.tools.ant.types.
+
+* New data types fileset and patternset - expected to get a broader
+use, pending documentation.
+
+* You can specify environment variables to the exec task - pending
+documentation.
+
+Fixed bugs:
+-----------
+
+* <chmod> didn't work when used as a directory based task.
+
+* Path didn't resolve relative filenames with respect to the Project's
+basedir.
+
+* Project didn't interpret the basedir attribute correctly in all
+cases.
