@@ -16,14 +16,14 @@
 <P>Invokes the <a href="http://www.clarkware.com/software/JDepend.html">JDepend</a> parser.</P>
 
 <P>This parser &quot;traverses a set of Java source file directories and generates design quality metrics for each Java package&quot;.
-It allows to &quot;automatically measure the quality of a design in terms of its extensibility, reusability, and maintainability to 
+It allows to &quot;automatically measure the quality of a design in terms of its extensibility, reusability, and maintainability to
 effectively manage and control package dependencies.&quot;</P>
 
 <p>Source file directories are defined by nested <code>&lt;sourcespath&gt;</code>, see <a href="#nested">nested elements</a>.</p>
 
 <p>Optionally, you can also set the <code>outputfile</code> name where the output is stored. By default the task writes its report to the standard output.</P>
 
-<p> The task requires at least the JDepend 1.2 version. </p>	
+<p> The task requires at least the JDepend 1.2 version. </p>
 
 <P>Note: whereas the JDepend tool can be customized to exclude some packages, the current jdepend And Task does not have parameters to allow these exclusions. Read JDepend specific documentation for that purpose.</P>
 
@@ -38,6 +38,11 @@ effectively manage and control package dependencies.&quot;</P>
   <tr>
     <td VALIGN=TOP>outputfile</td>
     <td VALIGN=TOP>The output file name. If not set, the output is printed on the standard output.</td>
+    <td ALIGN=CENTER VALIGN=TOP>No</td>
+  </tr>
+  <tr>
+    <td VALIGN=TOP>format</td>
+    <td VALIGN=TOP>The fomat to write the output in. The default is "text", the alternative is "xml"</td>
     <td ALIGN=CENTER VALIGN=TOP>No</td>
   </tr>
   <tr>
@@ -74,8 +79,8 @@ effectively manage and control package dependencies.&quot;</P>
 
 <h3><a name="nested">Nested Elements</a></h3>
 
-<p><code>jdepend</code> supports two nested elements <code>&lt;classpath&gt;</code> and <code>&lt;sourcespath&gt;</code>, 
-that represent <a href="../using.html#path">PATH like structures</a>.</p> 
+<p><code>jdepend</code> supports two nested elements <code>&lt;classpath&gt;</code> and <code>&lt;sourcespath&gt;</code>,
+that represent <a href="../using.html#path">PATH like structures</a>.</p>
 
 <p><code>&lt;sourcespath&gt;</code> is used to define the paths of the source code to analyze.</p>
 
@@ -96,7 +101,7 @@ The classpath is defined using a classpath reference.
 
 <blockquote>
 <pre>
-&lt;jdepend outputfile="docs/jdepend.txt" fork="yes">
+&lt;jdepend outputfile="docs/jdepend.xml" fork="yes" format="xml">
 &nbsp;&nbsp;&nbsp; &lt;sourcespath>
 &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &lt;pathelement location="src" />
 &nbsp;&nbsp;&nbsp; &lt;/sourcespath>
@@ -106,10 +111,10 @@ The classpath is defined using a classpath reference.
 &nbsp;&nbsp;&nbsp; &lt;/classpath>
 &lt;/jdepend>
 </pre>
-</blockquote>  
+</blockquote>
 
-This invokes JDepend in a separate VM on the <code>src</code> and <code>testsrc</code> directories, writing the output in the <code>&lt;docs/jdepend.txt&gt;</code> file.
-The classpath is defined using nested elements. 
+This invokes JDepend in a separate VM on the <code>src</code> and <code>testsrc</code> directories, writing the output to the <code>&lt;docs/jdepend.xml&gt;</code> file in xml format.
+The classpath is defined using nested elements.
 
 <hr>
 </body>

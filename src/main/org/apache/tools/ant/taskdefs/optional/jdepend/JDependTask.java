@@ -71,6 +71,7 @@ import org.apache.tools.ant.types.Commandline;
 import org.apache.tools.ant.types.CommandlineJava;
 import org.apache.tools.ant.types.Path;
 import org.apache.tools.ant.types.Reference;
+import org.apache.tools.ant.types.EnumeratedAttribute;
 
 /**
  * Ant task to run JDepend tests.
@@ -82,10 +83,11 @@ import org.apache.tools.ant.types.Reference;
  * The current implementation spawn a new Java VM.
  *
  * @author <a href="mailto:Jerome@jeromelacoste.com">Jerome Lacoste</a>
+ * @author <a href="mailto:roxspring@yahoo.com">Rob Oxspring</a>
  */
 public class JDependTask extends Task {
-    private CommandlineJava commandline = new CommandlineJava();       
-        
+    //private CommandlineJava commandline = new CommandlineJava();
+
     // required attributes
     private Path _sourcesPath;
 
@@ -94,23 +96,26 @@ public class JDependTask extends Task {
     private File _dir;
     private Path _compileClasspath;
     private boolean _haltonerror = false;
-    private boolean _fork = false;    
+    private boolean _fork = false;
     //private Integer _timeout = null;
-    
+
+    private String _jvm = null;
+    private String format = "text";
+
     public JDependTask() {
-        commandline.setClassname("jdepend.textui.JDepend");
+
     }
 
 /*
     public void setTimeout(Integer value) {
         _timeout = value;
     }
-    
+
     public Integer getTimeout() {
         return _timeout;
     }
 */
-    
+
     public void setOutputFile(File outputFile) {
         _outputFile = outputFile;
     }
@@ -134,9 +139,9 @@ public class JDependTask extends Task {
      * Tells whether a JVM should be forked for the task. Default: false.
      * @param   value   <tt>true</tt> if a JVM should be forked, otherwise <tt>false<tt>
      */
-    public void setFork(boolean value) {    
-        _fork = value;            
-    }    
+    public void setFork(boolean value) {
+        _fork = value;
+    }
 
     public boolean getFork() {
         return _fork;
@@ -148,9 +153,10 @@ public class JDependTask extends Task {
      * @see #setFork(boolean)
      */
     public void setJvm(String value) {
-        commandline.setVm(value);
+		_jvm = value;
+
     }
-    
+
     /**
      * Maybe creates a nested classpath element.
      */
@@ -165,7 +171,7 @@ public class JDependTask extends Task {
     public Path getSourcespath() {
         return _sourcesPath;
     }
- 
+
     /**
      * The directory to invoke the VM in. Ignored if no JVM is forked.
      * @param   dir     the directory to invoke the JVM from.
@@ -210,7 +216,7 @@ public class JDependTask extends Task {
      * @return  create a new JVM argument so that any argument can be passed to the JVM.
      * @see #setFork(boolean)
      */
-    public Commandline.Argument createJvmarg() {
+    public Commandline.Argument createJvmarg(CommandlineJava commandline ) {
         return commandline.createVmArgument();
     }
 
@@ -221,27 +227,56 @@ public class JDependTask extends Task {
         createClasspath().setRefid(r);
     }
 
+
+    public void setFormat(FormatAttribute ea)
+    {
+		format = ea.getValue();
+	}
+
+	public static class FormatAttribute extends EnumeratedAttribute
+	{
+		private String [] formats = new String[]{"xml","text"};
+
+		public String[] getValues()
+		{
+			return formats;
+		}
+	}
+
+
     /**
      * No problems with this test.
      */
-    private static final int SUCCESS = 0;    
+    private static final int SUCCESS = 0;
     /**
      * An error occured.
-     */    
+     */
     private static final int ERRORS = 1;
-    
+
     public void execute() throws BuildException {
+
+		CommandlineJava commandline = new CommandlineJava();
+
+		if("text".equals(format))
+			commandline.setClassname("jdepend.textui.JDepend");
+		else
+		if("xml".equals(format))
+			commandline.setClassname("jdepend.xmlui.JDepend");
+
+		if(_jvm!=null)
+			commandline.setVm(_jvm);
+
         if (getSourcespath() == null)
             throw new BuildException("Missing Sourcepath required argument");
-            
+
         // execute the test and get the return code
         int exitValue = JDependTask.ERRORS;
         boolean wasKilled = false;
         if (! getFork()) {
-            exitValue = executeInVM();
+            exitValue = executeInVM(commandline);
         } else {
-            ExecuteWatchdog watchdog = createWatchdog();                
-            exitValue = executeAsForked(watchdog);
+            ExecuteWatchdog watchdog = createWatchdog();
+            exitValue = executeAsForked(commandline,watchdog);
             // null watchdog means no timeout, you'd better not check with null
             if (watchdog != null) {
                 //info will be used in later version do nothing for now
@@ -260,21 +295,26 @@ public class JDependTask extends Task {
             else
                 log("JDepend FAILED", Project.MSG_ERR);
         }
-    }        
+    }
 
 
-            
+
     // this comment extract from JUnit Task may also apply here
     // "in VM is not very nice since it could probably hang the
     // whole build. IMHO this method should be avoided and it would be best
-    // to remove it in future versions. TBD. (SBa)"    
-        
+    // to remove it in future versions. TBD. (SBa)"
+
     /**
      * Execute inside VM.
      */
-    public int executeInVM() throws BuildException {
-        jdepend.textui.JDepend jdepend = new jdepend.textui.JDepend();
-       
+    public int executeInVM(CommandlineJava commandline) throws BuildException {
+        jdepend.textui.JDepend jdepend;
+
+        if("xml".equals(format))
+        	jdepend = new jdepend.xmlui.JDepend();
+        else
+        	jdepend = new jdepend.textui.JDepend();
+
         if (getOutputFile() != null) {
             FileWriter fw;
             try {
@@ -286,21 +326,21 @@ public class JDependTask extends Task {
                 throw new BuildException(msg);
             }
             jdepend.setWriter(new PrintWriter(fw));
-            log("Ouptut to be stored in " + getOutputFile().getPath());
+            log("Output to be stored in " + getOutputFile().getPath());
         }
 
         PathTokenizer sourcesPath = new PathTokenizer(getSourcespath().toString());
         while (sourcesPath.hasMoreTokens()) {
             File f = new File(sourcesPath.nextToken());
-            
-            // not necessary as JDepend would fail, but why loose some time?                    
+
+            // not necessary as JDepend would fail, but why loose some time?
             if (! f.exists() || !f.isDirectory()) {
                 String msg = "\""+ f.getPath() + "\" does not represent a valid directory. JDepend would fail.";
                 log(msg);
                 throw new BuildException(msg);
             }
-            try {                  
-                jdepend.addDirectory(f.getPath());                  
+            try {
+                jdepend.addDirectory(f.getPath());
             }
             catch (IOException e) {
                 String msg = "JDepend Failed when adding a source directory: " + e.getMessage();
@@ -311,7 +351,7 @@ public class JDependTask extends Task {
         jdepend.analyze();
         return SUCCESS;
     }
-    
+
 
     /**
      * Execute the task by forking a new JVM. The command will block until
@@ -322,15 +362,15 @@ public class JDependTask extends Task {
      * the test could probably hang forever.
      */
     // JL: comment extracted from JUnitTask (and slightly modified)
-    public int executeAsForked(ExecuteWatchdog watchdog) throws BuildException {      
+    public int executeAsForked(CommandlineJava commandline,ExecuteWatchdog watchdog) throws BuildException {
         // if not set, auto-create the ClassPath from the project
         createClasspath();
 
         // not sure whether this test is needed but cost nothing to put.
         // hope it will be reviewed by anybody competent
         if (getClasspath().toString().length() > 0) {
-            createJvmarg().setValue("-classpath");
-            createJvmarg().setValue(getClasspath().toString());
+            createJvmarg(commandline).setValue("-classpath");
+            createJvmarg(commandline).setValue(getClasspath().toString());
         }
 
         if (getOutputFile() != null) {
@@ -344,22 +384,22 @@ public class JDependTask extends Task {
         PathTokenizer sourcesPath = new PathTokenizer(getSourcespath().toString());
         while (sourcesPath.hasMoreTokens()) {
             File f = new File(sourcesPath.nextToken());
-            
+
             // not necessary as JDepend would fail, but why loose some time?
             if (! f.exists() || !f.isDirectory())
                 throw new BuildException("\""+ f.getPath() + "\" does not represent a valid directory. JDepend would fail.");
             commandline.createArgument().setValue(f.getPath());
         }
-        
-        Execute execute = new Execute(new LogStreamHandler(this, Project.MSG_INFO, Project.MSG_WARN), watchdog);        
+
+        Execute execute = new Execute(new LogStreamHandler(this, Project.MSG_INFO, Project.MSG_WARN), watchdog);
         execute.setCommandline(commandline.getCommandline());
         if (getDir() != null) {
             execute.setWorkingDirectory(getDir());
             execute.setAntRun(project);
         }
 
-        if (getOutputFile() != null) 
-            log("Ouptut to be stored in " + getOutputFile().getPath());
+        if (getOutputFile() != null)
+            log("Output to be stored in " + getOutputFile().getPath());
         log("Executing: "+commandline.toString(), Project.MSG_VERBOSE);
         try {
             return execute.execute();
