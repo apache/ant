@@ -322,7 +322,7 @@ public class Delete extends MatchingTask {
 
         if (dirs.length > 0 && includeEmpty) {
             int dirCount = 0;
-            for (int j=0; j<dirs.length; j++) {
+            for (int j=dirs.length-1; j>=0; j--) {
                 File dir = new File(d, dirs[j]);
                 String[] dirFiles = dir.list();
                 if (dirFiles == null || dirFiles.length == 0) {
