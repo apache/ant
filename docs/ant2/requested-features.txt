@@ -126,6 +126,11 @@ decide between several possible options.
 * support more control over the properties that are going to be passed
   to subprojects (modules)
 
+* Ask for a new CVS module for Ant tasks.
+
+  We need to define rules for this to work - maybe the rules proposed
+  for the commons project could give us a start.
+
 V. Things we probably don't agree on. 
 ======================================================================
 
@@ -170,7 +175,12 @@ V. Things we probably don't agree on.
 
 * Simple flow control (if-then-else, for)
 
-  Either in core or - with the help of something like the Thomas
+  Either in core or - with the help of something like Thomas
   Christen's proposal
   <http://marc.theaimsgroup.com/?l=ant-dev&m=98130655812010&w=2> 
   as tasks.
+
+* Multithreaded execution of tasks within the same target.
+
+* Multithreaded execution of targets.
+
