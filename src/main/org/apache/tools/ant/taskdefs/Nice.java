@@ -25,15 +25,15 @@ import org.apache.tools.ant.Project;
  * A task to provide "nice-ness" to the current thread, and/or to
  * query the current value.
  * Examples:
- * <pre> &lt;Nice currentPriority="current.value" &gt;</pre><p>
+ * <pre> &lt;nice currentPriority="current.value" &gt;</pre><p>
  * Set <code>currentPriority</code> to the current priority
- * <pre> &lt;Nice newPriority="10" &gt;</pre><p>
+ * <pre> &lt;nice newPriority="10" &gt;</pre><p>
  * Raise the priority of the build process (But not forked programs)
- * <pre> &lt;Nice currentPriority="old" newPriority="3" &gt;</pre><p>
+ * <pre> &lt;nice currentPriority="old" newPriority="3" &gt;</pre><p>
  * Lower the priority of the build process (But not forked programs), and save
  * the old value to the property <code>old</code>.
  *
- * @ant.task name="Nice" category="optional"
+ * @ant.task name="nice" category="control"
  */
 public class Nice extends Task {
 
@@ -57,20 +57,20 @@ public class Nice extends Task {
 
         Thread self = Thread.currentThread();
         int priority = self.getPriority();
-        if(currentPriority!=null) {
-            String current=Integer.toString(priority);
-            getProject().setNewProperty(currentPriority,current);
+        if (currentPriority != null) {
+            String current = Integer.toString(priority);
+            getProject().setNewProperty(currentPriority, current);
         }
         //if there is a new priority, and it is different, change it
-        if(newPriority!=null && priority!=newPriority.intValue()) {
+        if (newPriority != null && priority != newPriority.intValue()) {
             try {
                 self.setPriority(newPriority.intValue());
             } catch (SecurityException e) {
                 //catch permissions denial and keep going
                 log("Unable to set new priority -a security manager is in the way",
                         Project.MSG_WARN);
-            } catch(IllegalArgumentException iae) {
-                throw new BuildException("Priority out of range",iae);
+            } catch (IllegalArgumentException iae) {
+                throw new BuildException("Priority out of range", iae);
             }
         }
     }
@@ -78,7 +78,7 @@ public class Nice extends Task {
     /**
      * The name of a property to set to the value of the current
      * thread priority. Optional
-     * @param currentPriority
+     * @param currentPriority the property name.
      */
     public void setCurrentPriority(String currentPriority) {
         this.currentPriority = currentPriority;
@@ -86,10 +86,10 @@ public class Nice extends Task {
 
     /**
      * the new priority, in the range 1-10.
-     * @param newPriority
+     * @param newPriority the new priority value.
      */
     public void setNewPriority(int newPriority) {
-        if(newPriority<Thread.MIN_PRIORITY || newPriority>Thread.MAX_PRIORITY) {
+        if (newPriority < Thread.MIN_PRIORITY || newPriority > Thread.MAX_PRIORITY) {
             throw new BuildException("The thread priority is out of the range 1-10");
         }
         this.newPriority = new Integer(newPriority);
