@@ -25,6 +25,7 @@
   </target>
 
   <target name="test5">
+    <mkdir dir="${tmp.dir}"/>
     <antlr target="java.tree.g" outputdirectory="${tmp.dir}" fork="yes"/>
   </target>
 
