@@ -118,6 +118,7 @@ public class FixCRLF extends MatchingTask {
     private int tabs;
     private boolean javafiles = false;
     private boolean fixlast = true;
+    private boolean preserveLastModified = false;
 
     private File srcDir;
     private File destDir = null;
@@ -319,6 +320,14 @@ public class FixCRLF extends MatchingTask {
     }
 
     /**
+     * Set to true if keeping the last modified time as the original files.
+     * @since Ant 1.6.3
+     */
+    public void setPreserveLastModified(boolean preserve) {
+        preserveLastModified = preserve;
+    }
+
+    /**
      * Executes the task.
      */
     public void execute() throws BuildException {
@@ -381,6 +390,7 @@ public class FixCRLF extends MatchingTask {
 
     private void processFile(String file) throws BuildException {
         File srcFile = new File(srcDir, file);
+        long lastModified = srcFile.lastModified();
         File destD = destDir == null ? srcDir : destDir;
         File tmpFile = null;
         BufferedWriter outWriter;
@@ -557,6 +567,10 @@ public class FixCRLF extends MatchingTask {
 
             if (destIsWrong) {
                 FILE_UTILS.rename(tmpFile, destFile);
+                if (preserveLastModified) {
+                    log("preserved lastModified", Project.MSG_DEBUG);
+                    FILE_UTILS.setFileLastModified(destFile, lastModified);
+                }
                 tmpFile = null;
             }
 

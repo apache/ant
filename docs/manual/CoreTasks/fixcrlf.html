@@ -231,6 +231,12 @@ supports all attributes of <code>&lt;fileset&gt;</code>
                      of a processed file. (Since ant 1.6.1)</td>
     <td align="center">No - default is <i>true</i></td>
   </tr>
+  <tr>
+    <td valign="top">preservelastmodified</td>
+    <td valign="top">Whether to preserve the last modified
+                     date of source files. <b>Since ant 1.6.3</b></td>
+    <td align="center">No; default is <i>false</i></td>
+  </tr>
 </table>
 <h3>Examples</h3>
 <pre>  &lt;fixcrlf srcdir=&quot;${src}&quot;
@@ -283,7 +289,7 @@ EOF characters are left alone if run on
 DOS systems, and are removed if run on Unix systems.
 You never know what editor a user will use to browse README's.</p>
 <hr>
-<p align="center">Copyright &copy; 2000-2004 The Apache Software Foundation. All rights
+<p align="center">Copyright &copy; 2000-2005 The Apache Software Foundation. All rights
 Reserved.</p>
 
 </body>

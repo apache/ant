@@ -170,4 +170,28 @@
     <fixcrlf file="input/longlines.crlf" srcdir="input" destdir="result"/>
   </target>
 
+  <target name="testPreserveLastModified" depends="init">
+    <fixcrlf file="input/longlines.crlf" destdir="result"
+             preservelastmodified="true" />
+    <fail>
+      <condition>
+        <not>
+          <uptodate srcfile="result/longlines.crlf"
+                    targetfile="input/longlines.crlf" />
+        </not>
+      </condition>
+    </fail>
+
+    <touch file="result/longlines.crlf" millis="0" />
+
+    <fixcrlf file="result/longlines.crlf" destdir="result" eol="lf"
+             preservelastmodified="true" />
+
+    <fileset id="fs" file="result/longlines.crlf">
+      <date when="equal" millis="0" />
+    </fileset>
+    <property name="fs" refid="fs" />
+    <fail unless="fs" />
+  </target>
+
 </project>
