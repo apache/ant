@@ -18,7 +18,13 @@ accessible from the script, using either their <code>name</code> or
 <code>id</code> attributes (as long as their names are considered
 valid Java identifiers, that is). 
 The name "project" is a pre-defined reference to the Project, which can be
-used instead of the project name.</p>
+used instead of the project name. The name "self" is a pre-defined reference to the actual
+&lt;script&gt;-Task instance.<br>From these objects you have access to the Ant Java API, see the
+<a href="../api/index.html">JavaDoc</a> (especially for
+<a href="../api/org/apache/tools/ant/Project.html">Project</a> and
+<a href="../api/org/apache/tools/ant/taskdefs/optional/Script.html">Script</a>) for more information.</p>
+<p>If you are using JavaScript a good resource is <a target="_blank" href="http://www.mozilla.org/rhino/doc.html">
+http://www.mozilla.org/rhino/doc.html</a> as we are using their JavaScript interpreter.</p>
 <p>Scripts can do almost anything a task written in Java could do.</p>
 <h3>Parameters</h3>
 <table border="1" cellpadding="2" cellspacing="0">
@@ -117,10 +123,80 @@ main:
 BUILD SUCCESSFUL
 </pre></blockquote>
 
+<p>Now a more complex example using the Java API and the Ant API. The goal is to list the
+filesizes of all files a &lt;fileset/&gt; caught.</p>
+<blockquote><pre>
+
+&lt;?xml version="1.0" encoding="ISO-8859-1"?&gt;
+&lt;project name="<font color=blue>MyProject</font>" basedir="." default="main"&gt;
+
+  &lt;property name="fs.dir" value="src"/&gt;
+  &lt;property name="fs.includes" value="**/*.txt"/&gt;
+  &lt;property name="fs.excludes" value="**/*.tmp"/&gt;
+
+  &lt;target name="main"&gt;
+    &lt;script language="javascript"&gt; &lt;![CDATA[
+
+      // import statements
+      <font color=blue>// importPackage(java.io)</font>;
+      <font color=blue>importClass(java.io.File)</font>;
+
+      // Access to Ant-Properties by their names
+      dir      = <font color=blue>project</font>.getProperty("fs.dir");
+      includes = <font color=blue>MyProject</font>.getProperty("fs.includes");
+      excludes = <font color=blue>self.getProject()</font>  .<font color=blue>getProperty("fs.excludes")</font>;
+
+      // Create a &lt;fileset dir="" includes="" /&gt;
+      fs = project.<font color=blue>createDataType("fileset")</font>;
+      fs.setDir( new File(dir) );
+      <font color=blue>fs.setIncludes(includes)</font>;
+      fs.setExcludes(excludes);
+
+      // Get the files of that fileset
+      ds = fs.getDirectoryScanner(project);
+
+      // Get the source files (array)
+      srcFiles = ds.getIncludedFiles();
+
+      // iterate over that array
+      for (i=0; i&lt;srcFiles.length; i++) {
+
+        // get the values via Java API
+        var basedir  = fs.getDir(project);
+        var filename = srcFiles[i];
+        var file = <font color=blue>new File(basedir, filename)</font>;
+        var size = file.length();
+
+        // create and use a Task via Ant API
+        echo = MyProject.<font color=blue>createTask("echo")</font>;
+        echo.setMessage(filename + ": " + size + " byte");
+        echo.<font color=blue>perform()</font>;
+      }
+    ]]&gt;&lt;/script&gt;
+  &lt;/target&gt;
+&lt;/project&gt;
+</pre></blockquote>
+<p>We want to use the Java API. Because we don´t want always typing the package signature
+we do an import. Rhino knows to different methods for import statements: one for packages
+and one for a single class. <br>
+The &lt;script&gt; task populates the Project instance under
+the name <i>project</i>, so we can use that reference. Another way is to use its given name
+or getting its reference from the task itself.<br>
+The Project provides methods for accessing and setting properties, creating DataTypes and
+Tasks and much more.<br>
+After creating a FileSet object we initialize that by calling its set-methods. Then we can
+use that object like a normal Ant task (&lt;copy&gt; for example).<br>
+For getting the size of a file we instantiate a <code>java.io.File</code>. So we are using
+normal Java API here.<br>
+Finally we use the &lt;echo&gt; task for producing the output. The task is not executed by
+its execute() method, because the perform() method (implemented in Task itself) does the
+apropriate logging before and after invoking execute().
+</p>
+
+
 <hr>
-<p align="center">Copyright &copy; 2000-2002 Apache Software Foundation. All rights
+<p align="center">Copyright &copy; 2000-2003 Apache Software Foundation. All rights
 Reserved.</p>
 
 </body>
 </html>
-
