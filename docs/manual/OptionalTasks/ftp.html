@@ -243,8 +243,11 @@ patterns of the <code>fileset <br>
 href="../CoreTypes/fileset.html"><code>&lt;fileset&gt;</code></a> elements to specify
 the files to be retrieved, or deleted, or listed, or whose mode you want to change.</p>
 <p>
-<code>followsymlinks</code> defaults to <code>false</code> for remote filesets.
-Remote filesets are used for all actions except put.
+The attribute <code>followsymlinks</code> of <code>fileset</code> is fully supported on
+local (put) as well as remote (get, chmod, delete) filesets.
+<em>Before ant 1.6 there was no support of symbolic links in remote filesets.
+In order to exclude symbolic links (preserve the behavior of ant 1.5.x and older),
+you need to explicitly set <code>followsymlinks</code> to <code>false</code>.</em>
 </p>
 <p>
 Remote filesets do not support selectors.<br/>
