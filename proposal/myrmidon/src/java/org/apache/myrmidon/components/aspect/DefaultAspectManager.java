@@ -8,6 +8,8 @@
 package org.apache.myrmidon.components.aspect;
 
 import java.util.HashMap;
+import org.apache.avalon.excalibur.i18n.ResourceManager;
+import org.apache.avalon.excalibur.i18n.Resources;
 import org.apache.avalon.framework.activity.Initializable;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.parameters.Parameters;
@@ -25,6 +27,9 @@ import org.apache.myrmidon.aspects.NoopAspectHandler;
 public class DefaultAspectManager
     implements AspectManager, Initializable
 {
+    private static final Resources REZ =
+        ResourceManager.getPackageResources( DefaultAspectManager.class );
+
     private HashMap          m_aspectMap  = new HashMap();
     private AspectHandler[]  m_aspects    = new AspectHandler[ 0 ];
     private String[]         m_names      = new String[ 0 ];
@@ -50,7 +55,8 @@ public class DefaultAspectManager
         final AspectHandler entry = (AspectHandler)m_aspectMap.remove( name );
         if( null == entry )
         {
-            throw new TaskException( "No such aspect with name '" + name + "'" );
+            final String message = REZ.getString( "no.aspect", name );
+            throw new TaskException( message );
         }
 
         rebuildArrays();
@@ -75,7 +81,8 @@ public class DefaultAspectManager
         final AspectHandler handler = (AspectHandler)m_aspectMap.get( name );
         if( null == handler )
         {
-            throw new TaskException( "No such aspect with name '" + name + "'" );
+            final String message = REZ.getString( "no.aspect", name );
+            throw new TaskException( message );
         }
 
         handler.aspectSettings( parameters, elements );
@@ -98,7 +105,8 @@ public class DefaultAspectManager
     public void aspectSettings( final Parameters parameters, final Configuration[] elements )
         throws TaskException
     {
-        throw new UnsupportedOperationException( "Can not provide Settings to AspectManager" );
+        final String message = REZ.getString( "no.settings" );
+        throw new UnsupportedOperationException( message );
     }
 
     public void postCreate( final Task task )

@@ -29,6 +29,8 @@ import org.apache.myrmidon.components.model.Project;
 import org.apache.myrmidon.components.model.Target;
 import org.xml.sax.SAXException;
 import org.xml.sax.XMLReader;
+import org.apache.avalon.excalibur.i18n.ResourceManager;
+import org.apache.avalon.excalibur.i18n.Resources;
 
 /**
  * Default implementation to construct project from a build file.
@@ -39,6 +41,9 @@ public class DefaultProjectBuilder
     extends AbstractLoggable
     implements ProjectBuilder
 {
+    private static final Resources REZ =
+        ResourceManager.getPackageResources( DefaultProjectBuilder.class );
+
     private final static int    PROJECT_REFERENCES  = 0;
     private final static int    LIBRARY_IMPORTS     = 1;
     private final static int    IMPLICIT_TASKS      = 2;
@@ -117,7 +122,8 @@ public class DefaultProjectBuilder
     {
         if( !configuration.getName().equals( "project" ) )
         {
-            throw new Exception( "Project file must be enclosed in project element" );
+            final String message = REZ.getString( "ant.no-project-element.error" );
+            throw new Exception( message );
         }
 
         //get project-level attributes
@@ -129,7 +135,11 @@ public class DefaultProjectBuilder
         final File baseDirectory =
             (new File( file.getParentFile(), baseDirectoryName )).getAbsoluteFile();
 
-        getLogger().debug( "Project " + file + " base directory: " + baseDirectory );
+        if( getLogger().isDebugEnabled() )
+        {
+            final String message = REZ.getString( "ant.project-banner.notice", file, baseDirectory );
+            getLogger().debug( message );
+        }
 
         //create project and ...
         final DefaultProject project = new DefaultProject();
@@ -205,9 +215,9 @@ public class DefaultProjectBuilder
             if( name.equals( "target" ) ) buildTarget( project, element );
             else
             {
-                throw new Exception( "Unknown top-level element " + name +
-                                     " at " + element.getLocation() +
-                                     ". Expecting target" );
+                final String message = 
+                    REZ.getString( "ant.unknown-toplevel-element.error", name, element.getLocation() );
+                throw new Exception( message );
             }
         }
 
@@ -228,20 +238,23 @@ public class DefaultProjectBuilder
 
         if( null == name )
         {
-            throw new Exception( "Malformed projectref without a name attribute at " +
-                                 element.getLocation() );
+            final String message = 
+                REZ.getString( "ant.projectref-no-name.error", element.getLocation() );
+            throw new Exception( message );
         }
 
         if( !validName( name ) )
         {
-            throw new Exception( "Projectref with an invalid name attribute at " +
-                                 element.getLocation() );
+            final String message = 
+                REZ.getString( "ant.projectref-bad-name.error", element.getLocation() );
+            throw new Exception( message );
         }
 
         if( null == location )
         {
-            throw new Exception( "Malformed projectref without a location attribute at " +
-                                 element.getLocation() );
+            final String message = 
+                REZ.getString( "ant.projectref-no-location.error", element.getLocation() );
+            throw new Exception( message );
         }
 
         final File baseDirectory = project.getBaseDirectory();
@@ -270,17 +283,18 @@ public class DefaultProjectBuilder
 
         if( null == library )
         {
-            throw new Exception( "Malformed import without a library attribute at " +
-                                 element.getLocation() );
+            final String message = 
+                REZ.getString( "ant.import-no-library.error", element.getLocation() );
+            throw new Exception( message );
         }
 
         if( null == name || null == type )
         {
             if( null != name || null != type )
             {
-                throw new Exception( "Malformed import at " + element.getLocation() +
-                                     ". If name or type attribute is specified, both " +
-                                     "attributes must be specified." );
+                final String message = 
+                    REZ.getString( "ant.import-malformed.error", element.getLocation() );
+                throw new Exception( message );
             }
         }
 
@@ -303,34 +317,49 @@ public class DefaultProjectBuilder
 
         if( null == name )
         {
-            throw new Exception( "Discovered un-named target at " +
-                                 target.getLocation() );
+            final String message = 
+                REZ.getString( "ant.target-noname.error", target.getLocation() );
+            throw new Exception( message );
         }
 
         if( !validName( name ) )
         {
-            throw new Exception( "Target with an invalid name at " +
-                                 target.getLocation() );
+            final String message = 
+                REZ.getString( "ant.target-bad-name.error", target.getLocation() );
+            throw new Exception( message );
         }
 
-        getLogger().debug( "Parsing target: " + name );
+        if( getLogger().isDebugEnabled() )
+        {
+            final String message = REZ.getString( "ant.target-parse.notice", name );
+            getLogger().debug( message );
+        }
 
         if( null != ifCondition && null != unlessCondition )
         {
-            throw new Exception( "Discovered invalid target that has both a if and " +
-                                    "unless condition at " + target.getLocation() );
+            final String message = 
+                REZ.getString( "ant.target-bad-logic.error", target.getLocation() );
+            throw new Exception( message );
         }
 
         Condition condition = null;
 
         if( null != ifCondition )
         {
-            getLogger().debug( "Target if condition: " + ifCondition );
+            if( getLogger().isDebugEnabled() )
+            {
+                final String message = REZ.getString( "ant.target-if.notice", ifCondition );
+                getLogger().debug( message );
+            }
             condition = new Condition( true, ifCondition );
         }
         else if( null != unlessCondition )
         {
-            getLogger().debug( "Target unless condition: " + unlessCondition );
+            if( getLogger().isDebugEnabled() )
+            {
+                final String message = REZ.getString( "ant.target-unless.notice", unlessCondition );
+                getLogger().debug( message );
+            }
             condition = new Condition( false, unlessCondition );
         }
 
@@ -348,11 +377,18 @@ public class DefaultProjectBuilder
 
                 if( 0 == dependency.length() )
                 {
-                    throw new Exception( "Discovered empty dependency in target " +
-                                         target.getName() + " at " + target.getLocation() );
+                    final String message = REZ.getString( "ant.target-bad-dependency.error", 
+                                                          target.getName(), 
+                                                          target.getLocation() );
+                    throw new Exception( message );
                 }
 
-                getLogger().debug( "Target dependency: " + dependency );
+                if( getLogger().isDebugEnabled() )
+                {
+                    final String message = REZ.getString( "ant.target-dependency.notice", dependency );
+                    getLogger().debug( message );
+                }   
+
                 dependsList.add( dependency );
             }
 
