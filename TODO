@@ -39,8 +39,5 @@ remove items from this list once they are complete.
 * telnet doesn't disconnect properly (PR 25935) [Stefan unless Peter
   is faster].
 
-* <zip whenEmpty="skip" basedir="some-empty-dir"/> creates empty
-  archive. [Stefan]
-
 * merge Target.getIf/Unless() from HEAD [Matt]
 
