@@ -26,9 +26,12 @@
       <pathelement location="${ant.home}/lib/xercesImpl.jar"/>
       <pathelement location="${ant.home}/lib/xml-apis.jar"/>
       <pathelement location="${ant.home}/lib/ant.jar"/>
+      <fileset dir="${ant.home}/lib" includes="optional-*.jar" />
     </path>
 
-    <systemPath pathRef="myJars"/>
+    <echo>Path: ${toString:myJars}</echo>
+
+    <classloader classpathRef="myJars"/>
   
   </target>
 
