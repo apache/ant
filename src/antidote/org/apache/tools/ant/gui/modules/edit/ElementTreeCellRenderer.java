@@ -82,7 +82,8 @@ public class ElementTreeCellRenderer extends DefaultTreeCellRenderer {
         try {
             BeanInfo info = Introspector.getBeanInfo(value.getClass());
             Image icon = info.getIcon(BeanInfo.ICON_COLOR_16x16);
-            setIcon(new ImageIcon(icon));
+            setIcon(icon == null ? null : new ImageIcon(icon));
+
             if(value instanceof ACSElement) {
                 setText(((ACSElement)value).getDisplayName());
             }

@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 1999, 2000 The Apache Software Foundation.  All rights
+ * Copyright (c) 2001 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -51,21 +51,45 @@
  * information on the Apache Software Foundation, please see
  * <http://www.apache.org/>.
  */
-package org.apache.tools.ant.gui.acs;
-
-
-import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
-import com.sun.xml.tree.ElementNode;
-import javax.swing.tree.TreeNode;
-import java.util.*;
+package org.apache.tools.ant.gui.command;
+import org.apache.tools.ant.gui.core.AppContext;
+import org.apache.tools.ant.gui.event.TargetSelectionEvent;
+import org.apache.tools.ant.gui.acs.*;
 
 /**
- * Abstract base class for all ACSElement classes that are also tree node.
+ * Command for creating a new target.
  * 
  * @version $Revision$ 
  * @author Simeon Fitch 
  */
-public abstract class ACSTreeNodeElement extends ACSElement {
+public class NewTargetCmd extends AbstractCommand {
+    /** New project count for this session. Used to create default names, 
+     *  numbered as a convenience. */
+    private static int _count = 1;
 
+	/** 
+	 * Standard ctor.
+	 * 
+	 * @param context Application context.
+	 */
+    public NewTargetCmd(AppContext context) {
+        super(context);
+    }
+
+    /** 
+     * Create a new target and make it active.
+     * 
+     */
+    public void run() {
+        ACSProjectElement project = getContext().getSelectionManager().
+            getSelectedProject();
+        ACSTargetElement retval = 
+            ACSFactory.getInstance().createTarget(project);
+        retval.setName(getContext().getResources().
+                        getString(getClass(), "defName") + " " + _count++);
+        getContext().getEventBus().postEvent(
+            new TargetSelectionEvent(
+                getContext(), new ACSElement[] { retval }));
+        
+    }
 }

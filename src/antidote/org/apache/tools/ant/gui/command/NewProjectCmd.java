@@ -76,12 +76,10 @@ public class NewProjectCmd extends AbstractCommand {
         super(context);
     }
 
-	/** 
-	 * Display a dialog asking the user to select a file to open.
-     * If one is selected then an event is posted requesting the open 
-     * operation be completed.
-	 * 
-	 */
+    /** 
+     * Create a new project and make it active.
+     * 
+     */
     public void run() {
         ACSProjectElement project = 
             getContext().getProjectManager().createNew();
