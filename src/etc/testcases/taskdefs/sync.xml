@@ -61,4 +61,18 @@
       <fileset dir="${src}" excludes="**/d"/>
     </sync>
   </target>
+
+  <target name="copynoremove" depends="setup">
+    <mkdir dir="${src}/a/b/c"/>
+    <touch file="${src}/a/b/c/d"/>
+    <mkdir dir="${dest}/e"/>
+    <touch file="${dest}/e/f"/>
+    <sync todir="${dest}">
+      <fileset dir="${src}"/>
+      <deletefromtarget>
+        <exclude name="e/f"/>
+      </deletefromtarget>
+    </sync>
+  </target>
+
 </project>

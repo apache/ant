@@ -32,6 +32,7 @@ import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.DirectoryScanner;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.Task;
+import org.apache.tools.ant.types.AbstractFileSet;
 import org.apache.tools.ant.types.FileSet;
 
 /**
@@ -54,6 +55,9 @@ public class Sync extends Task {
 
     // Same as regular <copy> task... see at end-of-file!
     private MyCopy myCopy;
+
+    // Similar to a fileset, but doesn't allow dir attribute to be set
+    private SyncTarget syncTarget;
 
     // Override Task#init
     /**
@@ -152,13 +156,21 @@ public class Sync extends Task {
      */
     private int[] removeOrphanFiles(Set nonOrphans, File toDir) {
         int[] removedCount = new int[] {0, 0};
-        DirectoryScanner ds = new DirectoryScanner();
-        ds.setBasedir(toDir);
         String[] excls =
             (String[]) nonOrphans.toArray(new String[nonOrphans.size() + 1]);
         // want to keep toDir itself
         excls[nonOrphans.size()] = "";
-        ds.setExcludes(excls);
+
+        DirectoryScanner ds = null;
+        if (syncTarget != null) {
+            syncTarget.setTargetDir(toDir);
+            ds = syncTarget.getDirectoryScanner(getProject());
+        } else {
+            ds = new DirectoryScanner();
+            ds.setBasedir(toDir);
+        }
+        ds.addExcludes(excls);
+
         ds.scan();
         String[] files = ds.getIncludedFiles();
         for (int i = 0; i < files.length; i++) {
@@ -289,6 +301,23 @@ public class Sync extends Task {
     }
 
     /**
+     * A container for patterns and selectors that can be used to
+     * specify files that should be kept in the target even if they
+     * are not present in any source directory.
+     *
+     * <p>You must not invoke this method more than once.</p>
+     *
+     * @since Ant 1.7
+     */
+    public void addDeleteFromTarget(SyncTarget s) {
+        if (syncTarget != null) {
+            throw new BuildException("you must not specify multiple "
+                                     + "deletefromtaget elements.");
+        }
+        syncTarget = s;
+    }
+
+    /**
      * Subclass Copy in order to access it's file/dir maps.
      */
     public static class MyCopy extends Copy {
@@ -332,6 +361,31 @@ public class Sync extends Task {
          */
         public boolean getIncludeEmptyDirs() {
             return includeEmpty;
+        }
+
+    }
+
+    /**
+     * Inner class used to hold exclude patterns and selectors to save
+     * stuff that happens to live in the target directory but should
+     * not get removed.
+     *
+     * @since Ant 1.7
+     */
+    public static class SyncTarget extends AbstractFileSet {
+
+        public SyncTarget() {
+            super();
+            setDefaultexcludes(false);
+        }
+
+        public void setDir(File dir) throws BuildException {
+            throw new BuildException("synctarget doesn't support the dir "
+                                     + "attribute");
+        }
+
+        private void setTargetDir(File dir) throws BuildException {
+            super.setDir(dir);
         }
 
     }

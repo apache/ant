@@ -1,5 +1,5 @@
 /*
- * Copyright  2004 The Apache Software Foundation
+ * Copyright 2004-2005 The Apache Software Foundation
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -81,6 +81,15 @@ public class SyncTest extends BuildFileTest {
         assertTrue(getFullLog().indexOf("Removing orphan directory:") > -1);
         assertDebuglogContaining("NO dangling file to remove from");
         assertDebuglogContaining("Removed 2 dangling directories from");
+    }
+
+    public void testCopyNoRemove() {
+        executeTarget("copynoremove");
+        String d = getProject().getProperty("dest") + "/a/b/c/d";
+        assertFileIsPresent(d);
+        String f = getProject().getProperty("dest") + "/e/f";
+        assertFileIsPresent(f);
+        assertTrue(getFullLog().indexOf("Removing orphan file:") == -1);
     }
 
     public void assertFileIsPresent(String f) {

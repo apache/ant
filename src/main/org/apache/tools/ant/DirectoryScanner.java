@@ -584,13 +584,7 @@ public class DirectoryScanner
         } else {
             this.includes = new String[includes.length];
             for (int i = 0; i < includes.length; i++) {
-                String pattern;
-                pattern = includes[i].replace('/', File.separatorChar).replace(
-                        '\\', File.separatorChar);
-                if (pattern.endsWith(File.separator)) {
-                    pattern += "**";
-                }
-                this.includes[i] = pattern;
+                this.includes[i] = normalizePattern(includes[i]);
             }
         }
     }
@@ -614,17 +608,60 @@ public class DirectoryScanner
         } else {
             this.excludes = new String[excludes.length];
             for (int i = 0; i < excludes.length; i++) {
-                String pattern;
-                pattern = excludes[i].replace('/', File.separatorChar).replace(
-                        '\\', File.separatorChar);
-                if (pattern.endsWith(File.separator)) {
-                    pattern += "**";
-                }
-                this.excludes[i] = pattern;
+                this.excludes[i] = normalizePattern(excludes[i]);
             }
         }
     }
 
+    /**
+     * Adds to the list of exclude patterns to use. All '/' and '\'
+     * characters are replaced by <code>File.separatorChar</code>, so
+     * the separator used need not match
+     * <code>File.separatorChar</code>.
+     * <p>
+     * When a pattern ends with a '/' or '\', "**" is appended.
+     *
+     * @param excludes A list of exclude patterns.
+     *                 May be <code>null</code>, in which case the
+     *                 exclude patterns don't get changed at all.
+     *
+     * @since Ant 1.7
+     */
+    public void addExcludes(String[] excludes) {
+        if (excludes != null) {
+            if (this.excludes != null) {
+                String[] tmp = new String[excludes.length 
+                                          + this.excludes.length];
+                System.arraycopy(this.excludes, 0, tmp, 0, 
+                                 this.excludes.length);
+                for (int i = 0; i < excludes.length; i++) {
+                    tmp[this.excludes.length + i] = 
+                        normalizePattern(excludes[i]);
+                }
+                this.excludes = tmp;
+            } else {
+                setExcludes(excludes);
+            }
+        }
+    }
+
+    /**
+     * All '/' and '\' characters are replaced by
+     * <code>File.separatorChar</code>, so the separator used need not
+     * match <code>File.separatorChar</code>.
+     *
+     * <p> When a pattern ends with a '/' or '\', "**" is appended.
+     *
+     * @since Ant 1.7
+     */
+    private static String normalizePattern(String p) {
+        String pattern = p.replace('/', File.separatorChar)
+            .replace('\\', File.separatorChar);
+        if (pattern.endsWith(File.separator)) {
+            pattern += "**";
+        }
+        return pattern;
+    }
 
     /**
      * Sets the selectors that will select the filelist.
