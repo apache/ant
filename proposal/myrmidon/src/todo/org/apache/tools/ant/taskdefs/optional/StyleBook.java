@@ -21,16 +21,15 @@ import org.apache.tools.ant.taskdefs.Java;
 public class StyleBook
     extends Java
 {
-    protected File m_book;
-    protected String m_loaderConfig;
-    protected File m_skinDirectory;
-    protected File m_targetDirectory;
+    private File m_book;
+    private String m_loaderConfig;
+    private File m_skinDirectory;
+    private File m_targetDirectory;
 
     public StyleBook()
     {
         setClassname( "org.apache.stylebook.StyleBook" );
         setFork( true );
-        setFailonerror( true );
     }
 
     public void setBook( final File book )
@@ -56,7 +55,21 @@ public class StyleBook
     public void execute()
         throws TaskException
     {
+        validate();
 
+        createArg().setValue( "targetDirectory=" + m_targetDirectory );
+        createArg().setValue( m_book.toString() );
+        createArg().setValue( m_skinDirectory.toString() );
+        if( null != m_loaderConfig )
+        {
+            createArg().setValue( "loaderConfig=" + m_loaderConfig );
+        }
+
+        super.execute();
+    }
+
+    private void validate() throws TaskException
+    {
         if( null == m_targetDirectory )
         {
             throw new TaskException( "TargetDirectory attribute not set." );
@@ -71,16 +84,6 @@ public class StyleBook
         {
             throw new TaskException( "book attribute not set." );
         }
-
-        createArg().setValue( "targetDirectory=" + m_targetDirectory );
-        createArg().setValue( m_book.toString() );
-        createArg().setValue( m_skinDirectory.toString() );
-        if( null != m_loaderConfig )
-        {
-            createArg().setValue( "loaderConfig=" + m_loaderConfig );
-        }
-
-        super.execute();
     }
 }
 
