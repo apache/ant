@@ -1147,34 +1147,18 @@ public class FileUtils {
     }
 
     /**
-     * Emulation of File.createNewFile for JDK 1.1.
+     * This was originally an emulation of File.createNewFile for JDK 1.1,
+     * but it is now implemented using that method (Ant1.7 onwards).
      *
-     * <p>This method does <strong>not</strong> guarantee that the
-     * operation is atomic.</p>
+     * <p>This method has not historically <strong>not</strong> guaranteed that the
+     * operation was atomic. In its current implementation it is.
      *
      * @param f the file to be created
      * @return true if the file did not exist already.
      * @since Ant 1.5
      */
     public boolean createNewFile(File f) throws IOException {
-        if (f != null) {
-            if (f.exists()) {
-                return false;
-            }
-
-            FileOutputStream fos = null;
-            try {
-                fos = new FileOutputStream(f);
-                fos.write(new byte[0]);
-            } finally {
-                if (fos != null) {
-                    fos.close();
-                }
-            }
-
-            return true;
-        }
-        return false;
+        return f.createNewFile();
     }
 
     /**
@@ -1358,6 +1342,14 @@ public class FileUtils {
         }
     }
 
+    /**
+     * get the granularity of file timestamps.
+     * The choice is made on OS, which is incorrect -it should really be
+     * by filesystem. We do not have an easy way to probe for file systems,
+     * however.
+     * @return the difference, in milliseconds, which two file timestamps must have
+     * in order for the two files to be given a creation order. 
+     */
     public long getFileTimestampGranularity() {
         if (Os.isFamily("dos")) {
             return FAT_FILE_TIMESTAMP_GRANULARITY;
