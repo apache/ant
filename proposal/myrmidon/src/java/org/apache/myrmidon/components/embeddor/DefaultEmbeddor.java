@@ -172,6 +172,7 @@ public class DefaultEmbeddor
             = (ServiceManager)createService( ServiceManager.class,
                                              PREFIX + "service.InstantiatingServiceManager" );
         setupObject( projServiceManager, m_serviceManager, m_parameters );
+        m_components.add( projServiceManager );
 
         // setup a service manager to be used by workspaces
         m_workspaceServiceManager = new MultiSourceServiceManager();
