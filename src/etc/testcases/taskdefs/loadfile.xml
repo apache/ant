@@ -87,6 +87,42 @@ Hello World!</echo>
       </loadfile>
   </target>
 
+  <target name="testStripJavaComments"
+    depends="init">
+      <echo file="loadfile1.tmp">
+/*
+Comment "1"
+*/
+public class test1 {
+    //Some comment
+    int x = 1/2;
+    private static final String GREETING="*/Hello/*";
+    private static final String GREETING1="/*Hello*/";
+
+    public static void main( String args[] ) {
+    }
+}</echo>
+      <echo file="nocomments.tmp">
+
+public class test1 {
+    
+    int x = 1/2;
+    private static final String GREETING="*/Hello/*";
+    private static final String GREETING1="/*Hello*/";
+
+    public static void main( String args[] ) {
+    }
+}</echo>
+      <loadfile srcFile="loadfile1.tmp" 
+        property="testStripJavaComments">
+        <filterchain>
+          <stripjavacomments/>
+        </filterchain>
+      </loadfile>
+      <loadfile srcFile="nocomments.tmp" 
+        property="expected"/>
+  </target>
+
   <target name="testOneLine"
     depends="init">
     <echo
@@ -105,6 +141,7 @@ Hello World!</echo>
 
   <target name="cleanup">
     <delete file="loadfile1.tmp"/>
+    <delete file="nocomments.tmp"/>
   </target>
 
   </project>

@@ -173,6 +173,17 @@ public class LoadFileTest extends BuildFileTest {
         }
     }
 
+    /**
+     * A unit test for JUnit
+     */
+    public void testStripJavaComments()
+            throws BuildException {
+        executeTarget("testStripJavaComments");
+        String expected = project.getProperty("expected");
+        if(!project.getProperty("testStripJavaComments").equals(expected)) {
+            fail("StripJavaComments broken");
+        }
+    }
 
     /**
      * A unit test for JUnit
