@@ -183,7 +183,6 @@ Legal:
     <replace file="${build.src}/${constants.file}" token="@@VERSION@@" value="${version}" />
     <replace file="${build.src}/${constants.file}" token="@@DATE@@" value="${TODAY}" />
 
-
     <property name="ant.package" value="org/apache/tools/ant"/>
     <property name="antlib.package" value="org/apache/antlib"/>
     <property name="optional.package" value="${ant.package}/taskdefs/optional"/>
@@ -307,6 +306,7 @@ Legal:
       <include name="org/apache/myrmidon/interfaces/**" />
       <include name="org/apache/myrmidon/listeners/*" />
       <include name="org/apache/myrmidon/framework/**" />
+      <include name="org/apache/tools/**" />
 <!--      <include name="org/apache/myrmidon/*" />
       <include name="org/apache/myrmidon/components/**"/>
       <include name="org/apache/myrmidon/frontends/*" /> -->
@@ -347,6 +347,13 @@ Legal:
       <include name="org/apache/antlib/core/**" />
       <zipfileset dir="${manifest.dir}" fullpath="META-INF/ant-descriptor.xml">
         <include name="core-ant-descriptor.xml"/>
+      </zipfileset>
+    </jar>
+
+    <jar jarfile="${build.lib}/nativelib.atl" basedir="${build.classes}">
+      <include name="org/apache/antlib/nativelib/**" />
+      <zipfileset dir="${manifest.dir}" fullpath="META-INF/ant-descriptor.xml">
+        <include name="nativelib-ant-descriptor.xml"/>
       </zipfileset>
     </jar>
 
@@ -431,7 +438,7 @@ Legal:
   <!-- Cleans up build and distribution directories -->
   <target name="clean">
     <delete dir="${build.dir}"/>
-    <delete dir="${dist.dir}"/>
+    <delete dir="${dist.dir}" failonerror="false"/>
     <delete>
       <fileset dir="." includes="**/*~" defaultexcludes="no"/>
     </delete>
