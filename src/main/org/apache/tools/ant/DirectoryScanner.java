@@ -203,11 +203,6 @@ public class DirectoryScanner implements ResourceScanner, SelectorScanner {
      */
     protected Vector filesIncluded;
 
-    /**
-     * the same as filesIncluded, but in terms of Resource
-     */
-    private Vector filesIncludedR;
-
     /** The files which did not match any includes or selectors. */
     protected Vector filesNotIncluded;
 
@@ -221,10 +216,6 @@ public class DirectoryScanner implements ResourceScanner, SelectorScanner {
      *  and were selected.
      */
     protected Vector dirsIncluded;
-    /** The directories which matched at least one include and no excludes
-     *  and were selected, as resources
-     */
-    private Vector dirsIncludedR;
 
     /** The directories which were found and did not match any includes. */
     protected Vector dirsNotIncluded;
@@ -556,12 +547,10 @@ public class DirectoryScanner implements ResourceScanner, SelectorScanner {
         }
 
         filesIncluded    = new Vector();
-        filesIncludedR   = new Vector();
         filesNotIncluded = new Vector();
         filesExcluded    = new Vector();
         filesDeselected  = new Vector();
         dirsIncluded     = new Vector();
-        dirsIncludedR    = new Vector();
         dirsNotIncluded  = new Vector();
         dirsExcluded     = new Vector();
         dirsDeselected   = new Vector();
@@ -570,10 +559,6 @@ public class DirectoryScanner implements ResourceScanner, SelectorScanner {
             if (!isExcluded("")) {
                 if (isSelected("",basedir)) {
                     dirsIncluded.addElement("");
-                    dirsIncludedR.addElement(new Resource("", true, 
-                                                          basedir
-                                                          .lastModified(),
-                                                          true));
                 } else {
                     dirsDeselected.addElement("");
                 }
@@ -692,11 +677,6 @@ public class DirectoryScanner implements ResourceScanner, SelectorScanner {
                     if (!isExcluded(name)) {
                         if (isSelected(name,file)) {
                             dirsIncluded.addElement(name);
-                            dirsIncludedR.addElement(new Resource(name,
-                                                                  true,
-                                                                  file
-                                                                  .lastModified(),
-                                                                  true));
                             if (fast) {
                                 scandir(file, name + File.separator, fast);
                             }
@@ -730,11 +710,6 @@ public class DirectoryScanner implements ResourceScanner, SelectorScanner {
                     if (!isExcluded(name)) {
                         if (isSelected(name,file)) {
                             filesIncluded.addElement(name);
-                            filesIncludedR.addElement(new Resource(name,
-                                                                   true,
-                                                                   file
-                                                                   .lastModified(),
-                                                                   false));
                         } else {
                             everythingIncluded = false;
                             filesDeselected.addElement(name);
@@ -830,13 +805,11 @@ public class DirectoryScanner implements ResourceScanner, SelectorScanner {
      *         include patterns and none of the exclude patterns.
      */
     public String[] getIncludedFiles() {
-        int count = filesIncluded.size();
-        String[] files = new String[count];
-        for (int i = 0; i < count; i++) {
-            files[i] = (String)filesIncluded.elementAt(i);
-        }
+        String[] files = new String[filesIncluded.size()];
+        filesIncluded.copyInto(files);
         return files;
     }
+
     /**
      * Returns the resources of the files which matched at least one
      * of the include patterns and none of the exclude patterns.  The
@@ -849,11 +822,11 @@ public class DirectoryScanner implements ResourceScanner, SelectorScanner {
      * @since Ant 1.5.2
      */
     public Resource[] getIncludedFileResources() {
-        int count = filesIncludedR.size();
+        String[] names = getIncludedFiles();
+        int count = names.length;
         Resource[] resources = new Resource[count];
         for (int i = 0; i < count; i++) {
-            resources[i] = 
-                (Resource) ((Resource) filesIncludedR.elementAt(i)).clone();
+            resources[i] = getResource(names[i]);
         }
         return resources;
     }
@@ -870,11 +843,8 @@ public class DirectoryScanner implements ResourceScanner, SelectorScanner {
      */
     public String[] getNotIncludedFiles() {
         slowScan();
-        int count = filesNotIncluded.size();
-        String[] files = new String[count];
-        for (int i = 0; i < count; i++) {
-            files[i] = (String)filesNotIncluded.elementAt(i);
-        }
+        String[] files = new String[filesNotIncluded.size()];
+        filesNotIncluded.copyInto(files);
         return files;
     }
 
@@ -891,11 +861,8 @@ public class DirectoryScanner implements ResourceScanner, SelectorScanner {
      */
     public String[] getExcludedFiles() {
         slowScan();
-        int count = filesExcluded.size();
-        String[] files = new String[count];
-        for (int i = 0; i < count; i++) {
-            files[i] = (String)filesExcluded.elementAt(i);
-        }
+        String[] files = new String[filesExcluded.size()];
+        filesExcluded.copyInto(files);
         return files;
     }
 
@@ -912,11 +879,8 @@ public class DirectoryScanner implements ResourceScanner, SelectorScanner {
      */
     public String[] getDeselectedFiles() {
         slowScan();
-        int count = filesDeselected.size();
-        String[] files = new String[count];
-        for (int i = 0; i < count; i++) {
-            files[i] = (String)filesDeselected.elementAt(i);
-        }
+        String[] files = new String[filesDeselected.size()];
+        filesDeselected.copyInto(files);
         return files;
     }
 
@@ -929,11 +893,8 @@ public class DirectoryScanner implements ResourceScanner, SelectorScanner {
      * include patterns and none of the exclude patterns.
      */
     public String[] getIncludedDirectories() {
-        int count = dirsIncluded.size();
-        String[] directories = new String[count];
-        for (int i = 0; i < count; i++) {
-            directories[i] = (String)dirsIncluded.elementAt(i);
-        }
+        String[] directories = new String[dirsIncluded.size()];
+        dirsIncluded.copyInto(directories);
         return directories;
     }
 
@@ -947,15 +908,16 @@ public class DirectoryScanner implements ResourceScanner, SelectorScanner {
      *
      * @since Ant 1.5.2
      */
-     public Resource[] getIncludedDirectoryResources() {
-         int count = dirsIncludedR.size();
-         Resource[] directories = new Resource[count];
-         for (int i = 0; i < count; i++) {
-             directories[i] = 
-                 (Resource) ((Resource) dirsIncludedR.elementAt(i)).clone();
-         }
-         return directories;
-     }
+    public Resource[] getIncludedDirectoryResources() {
+        String[] names = getIncludedDirectories();
+        int count = names.length;
+        Resource[] resources = new Resource[count];
+        for (int i = 0; i < count; i++) {
+            resources[i] = getResource(names[i]);
+        }
+        return resources;
+    }
+    
     /**
      * Returns the names of the directories which matched none of the include
      * patterns. The names are relative to the base directory. This involves
@@ -968,11 +930,8 @@ public class DirectoryScanner implements ResourceScanner, SelectorScanner {
      */
     public String[] getNotIncludedDirectories() {
         slowScan();
-        int count = dirsNotIncluded.size();
-        String[] directories = new String[count];
-        for (int i = 0; i < count; i++) {
-            directories[i] = (String)dirsNotIncluded.elementAt(i);
-        }
+        String[] directories = new String[dirsNotIncluded.size()];
+        dirsNotIncluded.copyInto(directories);
         return directories;
     }
 
@@ -989,11 +948,8 @@ public class DirectoryScanner implements ResourceScanner, SelectorScanner {
      */
     public String[] getExcludedDirectories() {
         slowScan();
-        int count = dirsExcluded.size();
-        String[] directories = new String[count];
-        for (int i = 0; i < count; i++) {
-            directories[i] = (String)dirsExcluded.elementAt(i);
-        }
+        String[] directories = new String[dirsExcluded.size()];
+        dirsExcluded.copyInto(directories);
         return directories;
     }
 
@@ -1010,11 +966,8 @@ public class DirectoryScanner implements ResourceScanner, SelectorScanner {
      */
     public String[] getDeselectedDirectories() {
         slowScan();
-        int count = dirsDeselected.size();
-        String[] directories = new String[count];
-        for (int i = 0; i < count; i++) {
-            directories[i] = (String)dirsDeselected.elementAt(i);
-        }
+        String[] directories = new String[dirsDeselected.size()];
+        dirsDeselected.copyInto(directories);
         return directories;
     }
 

@@ -25,6 +25,12 @@ Changes that could break older environments:
 * XML namespaces are now enabled in the XML parser, meaning XML namespace 
   declarations no longer cause errors. 
 
+* The <zip> task and friends have been heavily modified, almost every
+  method signature of the Zip class has changed.  If you have subclassed
+  Zip (or one of its subclasses), your class will most likely not
+  compile against the current code base.  If it still compiles, it will
+  probably not work as in Ant 1.5.1.
+
 Fixed bugs:
 -----------
 * <translate> was not ignoring comment lines.

@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2000-2002 The Apache Software Foundation.  All rights
+ * Copyright (c) 2000-2003 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -121,8 +121,7 @@ public class War extends Jar {
 
         // Create a ZipFileSet for this file, and pass it up.
         ZipFileSet fs = new ZipFileSet();
-        fs.setDir(new File(deploymentDescriptor.getParent()));
-        fs.setIncludes(deploymentDescriptor.getName());
+        fs.setFile(deploymentDescriptor);
         fs.setFullpath("WEB-INF/web.xml");
         super.addFileset(fs);
     }
@@ -170,9 +169,9 @@ public class War extends Jar {
     }
 
     /**
-     * add another file to the stream
+     * Overriden from Zip class to deal with web.xml
      */
-    protected void zipFile(File file, ZipOutputStream zOut, String vPath,
+    protected void zipFile(File file, ZipOutputStream zOut, String vPath, 
                            int mode)
         throws IOException {
         // If the file being added is WEB-INF/web.xml, we warn if it's

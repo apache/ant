@@ -72,6 +72,7 @@ import org.apache.tools.ant.Project;
 import org.apache.tools.ant.ResourceScanner;
 import org.apache.tools.ant.types.EnumeratedAttribute;
 import org.apache.tools.ant.types.FileSet;
+import org.apache.tools.ant.types.Resource;
 import org.apache.tools.ant.types.ZipFileSet;
 import org.apache.tools.zip.ZipOutputStream;
 
@@ -190,7 +191,6 @@ public class Jar extends Zip {
                     }
                 }
             }
-            
         }
     }
 
@@ -374,7 +374,7 @@ public class Jar extends Zip {
         ByteArrayInputStream bais =
             new ByteArrayInputStream(baos.toByteArray());
         super.zipFile(bais, zOut, "META-INF/MANIFEST.MF",
-                      System.currentTimeMillis(), null, 
+                      System.currentTimeMillis(), null,
                       ZipFileSet.DEFAULT_FILE_MODE);
         super.initZipOutputStream(zOut);
     }
@@ -445,30 +445,15 @@ public class Jar extends Zip {
     /**
      * Overriden from Zip class to deal with manifests
      */
-    protected void zipFile(File file, ZipOutputStream zOut, String vPath,
-                           int mode)
-        throws IOException {
-        if ("META-INF/MANIFEST.MF".equalsIgnoreCase(vPath))  {
-            if (! doubleFilePass || (doubleFilePass && skipWriting)) {
-                filesetManifest(file, null);
-            }
-        } else {
-            super.zipFile(file, zOut, vPath, mode);
-        }
-    }
-
-    /**
-     * Overriden from Zip class to deal with manifests
-     */
     protected void zipFile(InputStream is, ZipOutputStream zOut, String vPath,
-                           long lastModified, File file, int mode)
+                           long lastModified, File fromArchive, int mode)
         throws IOException {
         if ("META-INF/MANIFEST.MF".equalsIgnoreCase(vPath))  {
             if (! doubleFilePass || (doubleFilePass && skipWriting)) {
-                filesetManifest(file, is);
+                filesetManifest(fromArchive, is);
             }
         } else {
-            super.zipFile(is, zOut, vPath, lastModified, null, mode);
+            super.zipFile(is, zOut, vPath, lastModified, fromArchive, mode);
         }
     }
 
@@ -525,16 +510,31 @@ public class Jar extends Zip {
     }
 
     /**
-     * Check whether the archive is up-to-date;
-     * @param scanners list of prepared scanners containing files to archive
+     * Collect the resources that are newer than the corresponding
+     * entries (or missing) in the original archive.
+     *
+     * <p>If we are going to recreate the archive instead of updating
+     * it, all resources should be considered as new, if a single one
+     * is.  Because of this, subclasses overriding this method must
+     * call <code>super.getResourcesToAdd</code> and indicate with the
+     * third arg if they already know that the archive is
+     * out-of-date.</p>
+     *
+     * @param filesets The filesets to grab resources from
      * @param zipFile intended archive file (may or may not exist)
-     * @return true if nothing need be done (may have done something
-     *         already); false if archive creation should proceed
+     * @param needsUpdate whether we already know that the archive is
+     * out-of-date.  Subclasses overriding this method are supposed to
+     * set this value correctly in their call to
+     * super.getResourcesToAdd.
+     * @return an array of resources to add for each fileset passed in.
+     *
      * @exception BuildException if it likes
      */
-    protected boolean isUpToDate(ResourceScanner[] scanners, 
-                                 FileSet[] fss, File zipFile)
+    protected Resource[][] getResourcesToAdd(FileSet[] filesets,
+                                             File zipFile,
+                                             boolean needsUpdate)
         throws BuildException {
+
         // need to handle manifest as a special check
         if (configuredManifest != null || manifestFile == null) {
             java.util.zip.ZipFile theZipFile = null;
@@ -545,23 +545,24 @@ public class Jar extends Zip {
                 if (entry == null) {
                     log("Updating jar since the current jar has no manifest",
                         Project.MSG_VERBOSE);
-                    return false;
-                }
-                Manifest currentManifest =
-                    new Manifest(new InputStreamReader(theZipFile
-                                                       .getInputStream(entry)));
-                Manifest newManifest = createManifest();
-                if (!currentManifest.equals(newManifest)) {
-                    log("Updating jar since jar manifest has changed",
-                        Project.MSG_VERBOSE);
-                    return false;
+                    needsUpdate = true;
+                } else {
+                    Manifest currentManifest =
+                        new Manifest(new InputStreamReader(theZipFile
+                                                           .getInputStream(entry)));
+                    Manifest newManifest = createManifest();
+                    if (!currentManifest.equals(newManifest)) {
+                        log("Updating jar since jar manifest has changed",
+                            Project.MSG_VERBOSE);
+                        needsUpdate = true;
+                    }
                 }
             } catch (Exception e) {
                 // any problems and we will rebuild
                 log("Updating jar since cannot read current jar manifest: "
                     + e.getClass().getName() + " - " + e.getMessage(),
                     Project.MSG_VERBOSE);
-                return false;
+                needsUpdate = true;
             } finally {
                 if (theZipFile != null) {
                     try {
@@ -572,9 +573,33 @@ public class Jar extends Zip {
                 }
             }
         } else if (manifestFile.lastModified() > zipFile.lastModified()) {
-            return false;
+            log("Updating jar since manifestFile is newer than the archive",
+                Project.MSG_VERBOSE);
+            needsUpdate = true;
         }
-        return super.isUpToDate(scanners, fss, zipFile);
+        
+        Resource[][] fromZip = 
+            super.getResourcesToAdd(filesets, zipFile, needsUpdate);
+        if (needsUpdate && isEmpty(fromZip)) {
+            // archive doesn't have any content apart from the manifest
+
+            /*
+             * OK, this is a hack.
+             *
+             * Zip doesn't care if the array we return is longer than
+             * the array of filesets, so we can savely append an
+             * additional non-empty array.  This will make Zip think
+             * that there are resources out-of-date and at the same
+             * time add nothing.
+             *
+             * The whole manifest handling happens in initZipOutputStream.
+             */
+            Resource[][] tmp = new Resource[fromZip.length + 1][];
+            System.arraycopy(fromZip, 0, tmp, 0, fromZip.length);
+            tmp[fromZip.length] = new Resource[] {new Resource("")};
+            fromZip = tmp;
+        }
+        return fromZip;
     }
 
     protected boolean createEmptyZip(File zipFile) {

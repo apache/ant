@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2000-2002 The Apache Software Foundation.  All rights
+ * Copyright (c) 2000-2003 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -408,5 +408,14 @@ public abstract class MatchingTask extends Task implements SelectorContainer {
      */
     public void addDepend(DependSelector selector) {
         fileset.addDepend(selector);
+    }
+
+    /**
+     * Accessor for the implict fileset.
+     *
+     * @since Ant 1.5.2
+     */
+    protected final FileSet getImplicitFileSet() {
+        return fileset;
     }
 }

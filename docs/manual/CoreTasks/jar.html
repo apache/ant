@@ -32,11 +32,16 @@ The extended fileset and groupfileset attributes from the zip task are
 also available in the jar task.
 See the <a href="zip.html">Zip</a> task for more details and examples.</p>
 <p>If the manifest is omitted, a simple one will be supplied by Ant.</p>
-<p>The <code>update</code> parameter controls what happens if the
-JAR file already exists. When set to <code>yes</code>, the JAR file is
+
+<p>The <code>update</code> parameter controls what happens if the JAR
+file already exists. When set to <code>yes</code>, the JAR file is
 updated with the files specified. When set to <code>no</code> (the
 default) the JAR file is overwritten. An example use of this is
-provided in the <a href="zip.html">Zip task documentation</a>.</p>
+provided in the <a href="zip.html">Zip task documentation</a>.  Please
+note that ZIP files store file modification times with a granularity
+of two seconds.  If a file is less than two seconds newer than the
+entry in the archive, Ant will not consider it newer.</p>
+
 <p>(The Jar task is a shortcut for specifying the manifest file of a JAR file.
 The same thing can be accomplished by using the <i>fullpath</i>
 attribute of a zipfileset in a Zip task. The one difference is that if the

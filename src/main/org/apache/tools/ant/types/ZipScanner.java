@@ -127,18 +127,22 @@ public class ZipScanner extends DirectoryScanner {
      *         include patterns and none of the exclude patterns.
      */
     public String[] getIncludedFiles() {
-        Vector myvector = new Vector();
-        // first check if the archive needs to be scanned again
-        scanme();
-        for (Enumeration e = myentries.elements() ; e.hasMoreElements() ;) {
-            Resource myresource= (Resource) e.nextElement();
-            if (!myresource.isDirectory() && match(myresource.getName())) {
-                myvector.addElement(myresource.getName());
+        if (srcFile != null) {
+            Vector myvector = new Vector();
+            // first check if the archive needs to be scanned again
+            scanme();
+            for (Enumeration e = myentries.elements(); e.hasMoreElements() ;) {
+                Resource myresource= (Resource) e.nextElement();
+                if (!myresource.isDirectory() && match(myresource.getName())) {
+                    myvector.addElement(myresource.getName());
+                }
             }
+            String[] files = new String[myvector.size()];
+            myvector.copyInto(files);
+            return files;
+        } else {
+            return super.getIncludedFiles();
         }
-        String[] files = new String[myvector.size()];
-        myvector.copyInto(files);
-        return files;
     }
 
     /**
@@ -150,18 +154,22 @@ public class ZipScanner extends DirectoryScanner {
      * include patterns and none of the exclude patterns.
      */
     public String[] getIncludedDirectories() {
-        Vector myvector=new Vector();
-        // first check if the archive needs to be scanned again
-        scanme();
-        for (Enumeration e = myentries.elements() ; e.hasMoreElements() ;) {
-            Resource myresource= (Resource) e.nextElement();
-            if (myresource.isDirectory() && match(myresource.getName())) {
-                myvector.addElement(myresource.getName());
+        if (srcFile != null) {
+            Vector myvector=new Vector();
+            // first check if the archive needs to be scanned again
+            scanme();
+            for (Enumeration e = myentries.elements(); e.hasMoreElements() ;) {
+                Resource myresource= (Resource) e.nextElement();
+                if (myresource.isDirectory() && match(myresource.getName())) {
+                    myvector.addElement(myresource.getName());
+                }
             }
+            String[] files = new String[myvector.size()];
+            myvector.copyInto(files);
+            return files;
+        } else {
+            return super.getIncludedDirectories();
         }
-        String[] files = new String[myvector.size()];
-        myvector.copyInto(files);
-        return files;
     }
 
     /**
@@ -205,18 +213,22 @@ public class ZipScanner extends DirectoryScanner {
      * @since Ant 1.5.2
      */
     public Resource[] getIncludedFileResources() {
-        Vector myvector = new Vector();
-        // first check if the archive needs to be scanned again
-        scanme();
-        for (Enumeration e = myentries.elements() ; e.hasMoreElements() ;) {
-            Resource myresource= (Resource) e.nextElement();
-            if (!myresource.isDirectory() && match(myresource.getName())) {
-                myvector.addElement(myresource.clone());
+        if (srcFile != null) {
+            Vector myvector = new Vector();
+            // first check if the archive needs to be scanned again
+            scanme();
+            for (Enumeration e = myentries.elements(); e.hasMoreElements() ;) {
+                Resource myresource= (Resource) e.nextElement();
+                if (!myresource.isDirectory() && match(myresource.getName())) {
+                    myvector.addElement(myresource.clone());
+                }
             }
+            Resource[] resources = new Resource[myvector.size()];
+            myvector.copyInto(resources);
+            return resources;
+        } else {
+            return super.getIncludedFileResources();
         }
-        Resource[] resources = new Resource[myvector.size()];
-        myvector.copyInto(resources);
-        return resources;
     }
 
     /**
@@ -231,18 +243,22 @@ public class ZipScanner extends DirectoryScanner {
      * @since Ant 1.5.2
      */
     public Resource[] getIncludedDirectoryResources() {
-        Vector myvector = new Vector();
-        // first check if the archive needs to be scanned again
-        scanme();
-        for (Enumeration e = myentries.elements() ; e.hasMoreElements() ;) {
-            Resource myresource= (Resource) e.nextElement();
-            if (myresource.isDirectory() && match(myresource.getName())) {
-                myvector.addElement(myresource.clone());
+        if (srcFile != null) {
+            Vector myvector = new Vector();
+            // first check if the archive needs to be scanned again
+            scanme();
+            for (Enumeration e = myentries.elements(); e.hasMoreElements() ;) {
+                Resource myresource= (Resource) e.nextElement();
+                if (myresource.isDirectory() && match(myresource.getName())) {
+                    myvector.addElement(myresource.clone());
+                }
             }
+            Resource[] resources = new Resource[myvector.size()];
+            myvector.copyInto(resources);
+            return resources;
+        } else {
+            return super.getIncludedDirectoryResources();
         }
-        Resource[] resources = new Resource[myvector.size()];
-        myvector.copyInto(resources);
-        return resources;
     }
 
     /**
