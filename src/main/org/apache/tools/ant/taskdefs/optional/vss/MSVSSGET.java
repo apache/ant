@@ -200,8 +200,7 @@ public class MSVSSGET extends MSVSS {
                 project.log("Created dir: " + dir.getAbsolutePath());
             }
 
-            cmd.createArgument().setValue(FLAG_OVERRIDE_WORKING_DIR);
-            cmd.createArgument().setValue(m_LocalPath);
+            cmd.createArgument().setValue(FLAG_OVERRIDE_WORKING_DIR + m_LocalPath);
         }
     }
 
@@ -296,14 +295,11 @@ public class MSVSSGET extends MSVSS {
     public void getVersionCommand(Commandline cmd) {
 
         if ( m_Version != null) {
-            cmd.createArgument().setValue(FLAG_VERSION);
-            cmd.createArgument().setValue(m_Version);
+            cmd.createArgument().setValue(FLAG_VERSION + m_Version);
         } else if ( m_Date != null) {
-            cmd.createArgument().setValue(FLAG_VERSION_DATE);
-            cmd.createArgument().setValue(m_Date);
+            cmd.createArgument().setValue(FLAG_VERSION_DATE + m_Date);
         } else if (m_Label != null) {
-            cmd.createArgument().setValue(FLAG_VERSION_LABEL);
-            cmd.createArgument().setValue(m_Label);
+            cmd.createArgument().setValue(FLAG_VERSION_LABEL + m_Label);
         }
     }
 
