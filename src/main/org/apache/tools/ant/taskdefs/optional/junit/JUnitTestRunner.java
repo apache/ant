@@ -593,8 +593,8 @@ public class JUnitTestRunner implements TestListener {
                     new java.io.BufferedReader(new java.io.FileReader(args[0]));
                 String testCaseName;
                 int code = 0;
-                boolean errorOccured = false;
-                boolean failureOccured = false;
+                boolean errorOccurred = false;
+                boolean failureOccurred = false;
                 String line = null;
                 while ((line = reader.readLine()) != null) {
                     StringTokenizer st = new StringTokenizer(line, ",");
@@ -604,11 +604,11 @@ public class JUnitTestRunner implements TestListener {
                     t.setOutfile(st.nextToken());
                     code = launch(t, haltError, stackfilter, haltFail,
                                   showOut, logTestListenerEvents, props);
-                    errorOccured = (code == ERRORS);
-                    failureOccured = (code != SUCCESS);
-                    if (errorOccured || failureOccured) {
-                        if ((errorOccured && haltError)
-                            || (failureOccured && haltFail)) {
+                    errorOccurred = (code == ERRORS);
+                    failureOccurred = (code != SUCCESS);
+                    if (errorOccurred || failureOccurred) {
+                        if ((errorOccurred && haltError)
+                            || (failureOccurred && haltFail)) {
                             registerNonCrash(noCrashFile);
                             System.exit(code);
                         } else {

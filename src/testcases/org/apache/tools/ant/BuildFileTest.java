@@ -431,7 +431,7 @@ public abstract class BuildFileTest extends TestCase {
 
         /**
          *  Fired after the last target has finished. This event
-         *  will still be thrown if an error occured during the build.
+         *  will still be thrown if an error occurred during the build.
          *
          *  @see BuildEvent#getException()
          */
@@ -449,7 +449,7 @@ public abstract class BuildFileTest extends TestCase {
 
         /**
          *  Fired when a target has finished. This event will
-         *  still be thrown if an error occured during the build.
+         *  still be thrown if an error occurred during the build.
          *
          *  @see BuildEvent#getException()
          */
@@ -468,7 +468,7 @@ public abstract class BuildFileTest extends TestCase {
 
         /**
          *  Fired when a task has finished. This event will still
-         *  be throw if an error occured during the build.
+         *  be throw if an error occurred during the build.
          *
          *  @see BuildEvent#getException()
          */

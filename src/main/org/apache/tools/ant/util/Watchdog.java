@@ -62,7 +62,7 @@ public class Watchdog implements Runnable {
     }
 
     /**
-     * Inform the observers that a timeout has occured.
+     * Inform the observers that a timeout has occurred.
      */
     protected final void fireTimeoutOccured() {
         Enumeration e = observers.elements();
