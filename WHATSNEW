@@ -213,6 +213,9 @@ Fixed bugs:
 * Allow references to be properly inherited via antcall
   Bugzilla Report 21724.
 
+* ftp chmod failed when the remote system was UNIX and local system Windows
+  Bugzilla Report 21865.
+
 Other changes:
 --------------
 * Six new Clearcase tasks added.
