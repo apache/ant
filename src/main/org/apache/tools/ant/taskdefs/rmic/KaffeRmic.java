@@ -57,6 +57,9 @@ public class KaffeRmic extends DefaultRmicAdapter {
                                      getRmic().getLocation());
         }
 
+        if (c.getName().equals(RMIC_CLASSNAME)) {
+            cmd.createArgument().setValue("-verbose");
+        }
         getRmic().log("Using: " + c.getName());
         getRmic().log(Commandline.describeCommand(cmd));
 
