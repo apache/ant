@@ -467,7 +467,7 @@ public class Copy extends Task {
             throw new BuildException("One of tofile or todir must be set.");
         }
 
-        if (file != null && file.exists() && file.isDirectory()) {
+        if (file != null && file.isDirectory()) {
             throw new BuildException("Use a fileset to copy directories.");
         }
 
