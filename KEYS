@@ -1,0 +1,35 @@
+This file contains the PGP keys of various developers.
+Please don't use them for email unless you have to. Their main
+purpose is code signing.
+
+Users: pgp < KEYS
+Developers: 
+	pgp -kxa <your name> and append it to this file.
+	(pgpk -ll <your name> && pgpk -xa <your name>) >> this file.
+        (gpg --list-sigs <your name>
+             && gpg --armor --export <your name>) >> this file.
+
+Type Bits/KeyID    Date       User ID
+pub  1024/FEECAAED 1998/11/11 Stefan Bodewig <bodewig@bost.de>
+                              Stefan Bodewig <bodewig@apache.org>
+
+-----BEGIN PGP PUBLIC KEY BLOCK-----
+Version: 2.6.3i
+
+mQCNAzZJoiMAAAEEAMzhUxTOC20Nprp6K4nLTiARt+EXii/dovNWWcfzZcYXi/lX
+r3zpUTTZxlKQpd4RaHjFmGgoOraZE4jCRFARVcFJgYmGUKpcWJZO7YKL36WUizTM
++dyB2ycOtzlty1W5VmRL3FGqo67pKA9F/QHg3NSu9hY1W9xPPK7Kq3f+7KrtAAUR
+tCBTdGVmYW4gQm9kZXdpZyA8Ym9kZXdpZ0Bib3N0LmRlPokAlQIFEDZSrGXHcgyK
+jiW9zQEBshEEAMlG4qVjKp4/agdJG56M6izx9oaKecFLXHQJrFUy3w2PvZHFYtXc
+osXKorX6bPrE8uB57MxbY2WapKeVRodlG0+j39vAf501duK8q2rktfWt9Cl4JjJ4
+DbWhSWfV1ci62u2gCxwYQe22F9Wh+vhOR5NK9RTbSKhupdlFsnrk/i7xiQCVAwUQ
+NkmiI67Kq3f+7KrtAQGdxQQAlcFOzSv7G6M4uGbgvw7IGgrhx7rawtIyv9hLXgVC
+7ua9xaZV8G0Fl9gh8RnbdcZ4R/aT+KIiAFaslfZ3t6hlC4MTbnAJqvdS/NO98ZkJ
+YvnzZSKHflAbd5gyE7IVxBC9/xRlF/Wls5sYNwb6RjoRCaOjxN/y3WCLa3Va101v
+zNy0I1N0ZWZhbiBCb2Rld2lnIDxib2Rld2lnQGFwYWNoZS5vcmc+iQCVAwUQOxIo
+BK7Kq3f+7KrtAQGn6gP/SBACdHakA4H//otpyESSrk4PmyOaYF0Kyok43Gee2mT+
+m9+jZ3jLcC0oav6iH+otL/lhk9t/JDM8LjD2kAkdWWoIvvuPyCx97gOzojIo0Ve2
+1wuxJTF/VIjwyOtE8FzE7p4tkc6EubVpeZkV9Pq9HFRBCUcyKJDLnF4tbstScLU=
+=OBLe
+-----END PGP PUBLIC KEY BLOCK-----
+
