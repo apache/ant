@@ -67,6 +67,28 @@
           encoding="ISO8859_1" outputencoding="UTF8"/>
   </target>
 
+  <target name="testMissingFileIgnore">
+    <copy file="not-there" tofile="copytest1.tmp"
+          failonerror="false"/>
+  </target>
+
+  <target name="testMissingFileBail">
+    <copy file="not-there" tofile="copytest1.tmp"
+          failonerror="true"/>
+  </target>
+
+  <target name="testMissingDirIgnore">
+    <copy todir="copytest1dir" failonerror="false">
+      <fileset dir="not-there"/>
+    </copy>
+  </target>
+
+  <target name="testMissingDirBail">
+    <copy todir="copytest1dir" failonerror="false">
+      <fileset dir="not-there"/>
+    </copy>
+  </target>
+
   <target name="cleanup"> 
     <delete file="copytest1.tmp"/>
     <delete file="copytest3.tmp"/>

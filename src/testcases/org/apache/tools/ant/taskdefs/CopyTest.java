@@ -158,4 +158,24 @@ public class CopyTest extends BuildFileTest {
         File f2 = getProject().resolveFile("copytest1.tmp");
         assertTrue(fileUtils.contentEquals(f1, f2));
     }
+
+    public void testMissingFileIgnore() {
+        expectLogContaining("testMissingFileIgnore", 
+                            "Warning: Could not find file ");        
+    }
+
+    public void testMissingFileBail() {
+        expectBuildException("testMissingFileBail", "not-there doesn't exist");
+        assertTrue(getBuildException().getMessage()
+                   .startsWith("Warning: Could not find file "));
+    }
+
+    public void testMissingDirIgnore() {
+        expectLogContaining("testMissingDirIgnore", "Warning: ");        
+    }
+
+    public void testMissingDirBail() {
+        expectBuildException("testMissingDirBail", "not-there doesn't exist");
+        assertTrue(getBuildException().getMessage().endsWith(" not found."));
+    }
 }
