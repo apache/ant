@@ -470,6 +470,8 @@ Other changes:
 * <patch> has a new attribute destfile that can be used to create a new
   file instead of patching files in place.
 
+* OpenVMS is detected as a valid OS family.
+
 Changes from Ant 1.5.2 to Ant 1.5.3
 ===================================
 

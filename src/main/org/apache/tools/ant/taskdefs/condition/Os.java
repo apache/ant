@@ -231,6 +231,8 @@ public class Os implements Condition {
                         || osName.indexOf("os/390") > -1;
                 } else if (family.equals("os/400")) {
                     isFamily = osName.indexOf("os/400") > -1;
+                } else if (family.equals("openvms")) {
+                    isFamily = osName.indexOf("openvms") > -1;
                 } else {
                     throw new BuildException(
                         "Don\'t know how to detect os family \""
