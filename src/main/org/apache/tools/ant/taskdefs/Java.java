@@ -102,9 +102,11 @@ public class Java extends Task {
      */
     public int executeJava() throws BuildException {
         String classname = cmdl.getClassname();
-
-        if (classname == null) {
+        if (classname == null && cmdl.getJar() == null) {
             throw new BuildException("Classname must not be null.");
+        }
+        if (!fork && cmdl.getJar() != null){
+            throw new BuildException("Cannot execute a jar in non-forked mode. Please set fork='true'. ");
         }
 
         if (fork) {
@@ -153,9 +155,22 @@ public class Java extends Task {
     }
 
     /**
+     * set the jar name...
+     */
+    public void setJar(File jarfile) throws BuildException {
+        if ( cmdl.getClassname() != null ){
+            throw new BuildException("Cannot use 'jar' and 'classname' attributes in same command.");
+        }
+        cmdl.setJar(jarfile.getAbsolutePath());
+    }
+
+    /**
      * Set the class name.
      */
-    public void setClassname(String s) {
+    public void setClassname(String s) throws BuildException {
+        if ( cmdl.getJar() != null ){
+            throw new BuildException("Cannot use 'jar' and 'classname' attributes in same command");
+        }
         cmdl.setClassname(s);
     }
 
