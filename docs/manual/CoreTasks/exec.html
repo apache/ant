@@ -14,14 +14,16 @@ the command is only executed when Ant is run on one of the specified operating
 systems.</p>
 
 <p>Note that you cannot interact with the forked program, the only way
-to send input to it is via the input and inputstring attributes.</p>
+to send input to it is via the input and inputstring attributes. Also note that
+in Ant 1.6, any attempt to read input in the forked program will receive an
+EOF (-1). This is a change from Ant 1.5, where such an attempt would block.</p>
 
 <h4>Cygwin Users</h4>
-<p>In general the &lt;exec&gt; task will not understand paths such as /bin/sh for 
-the executable parameter. This is because the Java VM in which Ant is running is a 
+<p>In general the &lt;exec&gt; task will not understand paths such as /bin/sh for
+the executable parameter. This is because the Java VM in which Ant is running is a
 Windows executable and is not aware of Cygwin conventions.
 </p>
- 
+
 <h4>OpenVMS Users</h4>
 <p>The command specified using <code>executable</code> and
 <code>&lt;arg&gt;</code> elements is executed exactly as specified
@@ -90,7 +92,7 @@ interpretation of exit codes.</p>
   </tr>
   <tr>
     <td valign="top">output</td>
-    <td valign="top">Name of a file to which to write the output. If the error stream 
+    <td valign="top">Name of a file to which to write the output. If the error stream
       is not also redirected to a file or property, it will appear in this output.</td>
     <td align="center" valign="top">No</td>
   </tr>
@@ -103,8 +105,8 @@ interpretation of exit codes.</p>
   <tr>
     <td valign="top">logError</td>
     <td valign="top">This attribute is used when you wish to see error output in Ant's
-                     log and you are redirecting output to a file/property. The error 
-                     output will not be included in the output file/property. If you 
+                     log and you are redirecting output to a file/property. The error
+                     output will not be included in the output file/property. If you
                      redirect error with the &quot;error&quot; or &quot;errorProperty&quot;
                      attributes, this will have no effect.  <em>since Ant 1.6</em></td>
     <td align="center" valign="top">No</td>
@@ -117,14 +119,14 @@ interpretation of exit codes.</p>
   </tr>
   <tr>
     <td valign="top">outputproperty</td>
-    <td valign="top">The name of a property in which the output of the 
+    <td valign="top">The name of a property in which the output of the
       command should be stored. Unless the error stream is redirected to a separate
       file or stream, this property will include the error output.</td>
     <td align="center" valign="top">No</td>
   </tr>
   <tr>
     <td valign="top">errorproperty</td>
-    <td valign="top">The name of a property in which the standard error of the 
+    <td valign="top">The name of a property in which the standard error of the
       command should be stored.  <em>since Ant 1.6</em></td>
     <td align="center" valign="top">No</td>
   </tr>
@@ -137,14 +139,14 @@ interpretation of exit codes.</p>
   </tr>
   <tr>
     <td valign="top">inputstring</td>
-    <td valign="top">A string which serves as the input stream for the 
+    <td valign="top">A string which serves as the input stream for the
                      executed command. This attribute is mutually exclusive with the
                      input attribute.  <em>since Ant 1.6</em></td>
     <td align="center" valign="top">No</td>
   </tr>
   <tr>
     <td valign="top">resultproperty</td>
-    <td valign="top">the name of a property in which the return code of the 
+    <td valign="top">the name of a property in which the return code of the
       command should be stored. Only of interest if failonerror=false.</td>
     <td align="center" valign="top">No</td>
   </tr>
@@ -190,11 +192,11 @@ interpretation of exit codes.</p>
     <td valign="top">When this attribute is true, the name of the executable
                      if resolved firstly against the project basedir and
                      if that does not exist, against the execution
-                     directory if specified. On Unix systems, if you only 
-                     want to allow execution of commands in the user's path, 
+                     directory if specified. On Unix systems, if you only
+                     want to allow execution of commands in the user's path,
                      set this to false.  <em>since Ant 1.6</em></td>
     <td align="center" valign="top">No, default is <i>false</i></td>
-  </tr>                     
+  </tr>
 </table>
 <h3>Examples</h3>
 <blockquote>
@@ -241,7 +243,7 @@ system command via nested <code>&lt;env&gt;</code> elements.</p>
 </table>
 
 <h3>Errors and return codes</h3>
-By default the return code of a &lt;exec&gt; is ignored; when you set 
+By default the return code of a &lt;exec&gt; is ignored; when you set
 <code>failonerror="true"</code> then any return code signaling failure
 (OS specific) causes the build to fail. Alternatively, you can set
 <code>resultproperty</code> to the name of a property and have it assigned to
@@ -256,7 +258,7 @@ What do those error codes mean? Well, they are OS dependent. On Windows
 boxes you have to look in include\error.h in your windows compiler or wine files;
 error code 2 means 'no such program', which usually means it is not on the path.
 Any time you see such an error from any ant task, it is usually not an ant bug,
-but some configuration problem on your machine.  
+but some configuration problem on your machine.
 
 <h3>Examples</h3>
 <blockquote><pre>
@@ -286,16 +288,16 @@ system command.</p>
 ant process. The browser will let be open.</p>
 
 
-<p><b>Note:</b> Although it may work for you to specify arguments using 
+<p><b>Note:</b> Although it may work for you to specify arguments using
 a simple arg-element and separate them by spaces it may fail if you switch to
 a newer version of the JDK. JDK &lt; 1.2 will pass these as separate arguments
-to the program you are calling, JDK &gt;= 1.2 will pass them as a single 
+to the program you are calling, JDK &gt;= 1.2 will pass them as a single
 argument and cause most calls to fail.</p>
 <p><b>Note2:</b> If you are using Ant on Windows and a new DOS-Window pops up
 for every command which is executed this may be a problem of the JDK you are using.
 This problem may occur with all JDK's &lt; 1.2.</p>
 <p>
-<b>Timeouts: </b> If a timeout is specified, when it is reached the 
+<b>Timeouts: </b> If a timeout is specified, when it is reached the
 sub process is killed and a message printed to the log. The return
 value of the execution will be "-1", which will halt the build if
 <tt>failonerror=true</tt>, but be ignored otherwise.
