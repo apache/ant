@@ -184,6 +184,8 @@ public class WebsphereDeploymentTool extends GenericDeploymentTool {
     /** the scratchdir for the ejbdeploy operation */
     private String tempdir = "_ejbdeploy_temp";
 
+    /** the websphere home set in the property file */
+    private File websphereHome = null;
 
     /** Get the classpath to the websphere classpaths */
     public Path createWASClasspath() {
@@ -623,12 +625,13 @@ public class WebsphereDeploymentTool extends GenericDeploymentTool {
                 // Set the Environment variable
                 Environment.Variable var = new Environment.Variable();
 
+                File libDir = new File(websphereHome, "lib");
                 var.setKey("websphere.lib.dir");
-                var.setValue(getTask().getProject().getProperty("websphere.home") + "/lib");
+                var.setValue(libDir.getAbsolutePath());
                 javaTask.addSysproperty(var);
 
                 // Set the working directory
-                javaTask.setDir(new File(getTask().getProject().getProperty("websphere.home")));
+                javaTask.setDir(websphereHome);
 
                 // Set the Java class name
                 javaTask.setTaskName("ejbdeploy");
@@ -699,6 +702,11 @@ public class WebsphereDeploymentTool extends GenericDeploymentTool {
      */
     public void validateConfigured() throws BuildException {
         super.validateConfigured();
+        String home = getTask().getProject().getProperty("websphere.home");
+        if (home == null) {
+            throw new BuildException("Please set the property websphere.home in your project");
+        }
+        websphereHome = getTask().getProject().resolveFile(home);        
     }
 
 
