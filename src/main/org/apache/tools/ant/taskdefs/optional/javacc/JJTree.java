@@ -236,7 +236,8 @@ public class JJTree extends Task {
             targetName.substring(0, targetName.indexOf(".jjt")) + ".jj");
         if (javaFile.exists() 
              && target.lastModified() < javaFile.lastModified()) {
-            getProject().log("Target is already built - skipping (" + target + ")");
+            log("Target is already built - skipping (" + target + ")",
+                Project.MSG_VERBOSE);
             return;
         }
         cmdl.createArgument().setValue(target.getAbsolutePath());
