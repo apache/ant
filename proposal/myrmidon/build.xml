@@ -676,6 +676,29 @@ Legal:
 
     </target>
 
+    <target name="jdepend" description="Generate Dependency Analysis Report">
+
+        <path id="java.src">
+            <pathelement location="src/test"/>
+            <pathelement location="src/java"/>
+        </path>
+
+        <!-- this invocation of jdepend requires the CVS version of ant for the xml format -->
+        <jdepend outputfile="${build.dir}/jdepend-results.xml" format="xml" fork="yes">
+            <classpath refid="project.class.path"/>
+            <sourcespath>
+                <path refid="java.src" />
+            </sourcespath>
+        </jdepend>
+
+        <property name="build.reports" value="${build.dir}/reports"/>
+        <mkdir dir="${build.reports}/jdepend"/>
+        <style in="${build.dir}/jdepend-results.xml"
+            processor="trax"
+            out="${build.reports}/jdepend/delete-me.txt"
+            style="${ant.home}/etc/jdepend-frames.xsl"/>
+    </target>
+
     <!-- Creates the distribution -->
     <target name="dist-lite"
         depends="jars"
