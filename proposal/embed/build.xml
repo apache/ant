@@ -14,10 +14,9 @@
   <property name="jxpath.jar" location="${commons.src}/jxpath/dist/commons-jxpath.jar" /> 
   <property name="velocity.jar" location="${base.path}/velocity/velocity-20020220.jar" />
   <property name="velocity-dep.jar" location="${base.path}/velocity/velocity-dep-20020220.jar" />
-  <property name="discovery.jar" location="${commons.src}/discovery/dist/commons-discovery.jar" />
   <property name="jexl.jar" location="${sandbox.src}/jexl/dist/commons-jexl.jar" />
 
-  <property name="commons-discovery.jar" location="${commons.src}/discovery/commons-discovery.jar" />
+  <property name="commons-discovery.jar" location="${commons.src}/discovery/dist/commons-discovery.jar" />
 
     
   <target name="main">
@@ -31,7 +30,7 @@
         <pathelement location="${jxpath.jar}" />
         <pathelement location="${velocity.jar}" />
         <pathelement location="${jexl.jar}" />
-        <pathelement location="${discovery.jar}" />
+        <pathelement location="${commons-discovery.jar}" />
       </classpath>
     </javac>
 
