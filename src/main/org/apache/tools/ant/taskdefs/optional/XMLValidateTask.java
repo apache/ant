@@ -64,6 +64,10 @@ import java.net.URL;
 import java.util.Vector;
 import java.util.Hashtable;
 import java.util.Enumeration;
+import javax.xml.parsers.SAXParserFactory;
+import javax.xml.parsers.SAXParser;
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.parsers.FactoryConfigurationError;
 import org.apache.tools.ant.AntClassLoader;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.DirectoryScanner;
@@ -93,21 +97,20 @@ import org.xml.sax.helpers.ParserAdapter;
 public class XMLValidateTask extends Task {
 
     /**
-     * The default implementation parser classname used by the task to process
-     * validation.
+     * Parser factory to use to create parsers.
+     * @see #getParserFactory
      */
-    // The Xerces implementation ships with Ant.
-    public static String DEFAULT_XML_READER_CLASSNAME
-        = "org.apache.xerces.parsers.SAXParser";
+    private static SAXParserFactory parserFactory = null;
 
-    protected static String INIT_FAILED_MSG = "Could not start xml validation: ";
+    protected static String INIT_FAILED_MSG = 
+        "Could not start xml validation: ";
 
     // ant task properties
     // defaults
     protected boolean failOnError = true;
     protected boolean warn = true;
     protected boolean lenient = false;
-    protected String  readerClassName = DEFAULT_XML_READER_CLASSNAME;
+    protected String  readerClassName = null;
 
     protected File file = null; // file to be validated
     protected Vector filesets = new Vector(); // sets of file to be validated
@@ -289,44 +292,62 @@ public class XMLValidateTask extends Task {
      */
     private void initValidator() {
 
-        try {
-            // load the parser class
-            // with JAXP, we would use a SAXParser factory
-            Class readerClass = null;
-            //Class readerImpl = null;
-            //Class parserImpl = null;
-            if (classpath != null) {
-                AntClassLoader loader = new AntClassLoader(project, classpath);
-//                loader.addSystemPackageRoot("org.xml"); // needed to avoid conflict
-                readerClass = loader.loadClass(readerClassName);
-                AntClassLoader.initializeClass(readerClass);
-            } else {
-                readerClass = Class.forName(readerClassName);
-            }
-
-            // then check it implements XMLReader
-            if (XMLReader.class.isAssignableFrom(readerClass)) {
-
-                xmlReader = (XMLReader) readerClass.newInstance();
-                log("Using SAX2 reader " + readerClassName, Project.MSG_VERBOSE);
-            } else {
-
-                // see if it is a SAX1 Parser
-                if (Parser.class.isAssignableFrom(readerClass)) {
-                    Parser parser = (Parser) readerClass.newInstance();
-                    xmlReader = new ParserAdapter(parser);
-                    log("Using SAX1 parser " + readerClassName, Project.MSG_VERBOSE);
-                }  else {
-                    throw new BuildException(INIT_FAILED_MSG + readerClassName
-                        + " implements nor SAX1 Parser nor SAX2 XMLReader.");
+        Object reader = null;
+        if (readerClassName == null) {
+            // use JAXP
+            try {
+                SAXParser saxParser = getParserFactory().newSAXParser();
+                try {
+                    reader = saxParser.getXMLReader();
+                } catch (SAXException exc) {
+                    reader = saxParser.getParser();
                 }
+            } catch (ParserConfigurationException e) {
+                throw new BuildException(INIT_FAILED_MSG + e.getMessage(), 
+                                         e, getLocation());
+            } catch (SAXException e) {
+                throw new BuildException(INIT_FAILED_MSG + e.getMessage(), 
+                                         e, getLocation());
             }
-        } catch (ClassNotFoundException e) {
-            throw new BuildException(INIT_FAILED_MSG + readerClassName, e);
-        } catch (InstantiationException e) {
-            throw new BuildException(INIT_FAILED_MSG + readerClassName, e);
-        } catch (IllegalAccessException e) {
-            throw new BuildException(INIT_FAILED_MSG + readerClassName, e);
+        } else {
+        
+            Class readerClass = null;
+            try {
+                // load the parser class
+                if (classpath != null) {
+                    AntClassLoader loader = new AntClassLoader(project, classpath);
+                    readerClass = loader.loadClass(readerClassName);
+                    AntClassLoader.initializeClass(readerClass);
+                } else {
+                    readerClass = Class.forName(readerClassName);
+                }
+
+                reader = readerClass.newInstance();
+            } catch (ClassNotFoundException e) {
+                throw new BuildException(INIT_FAILED_MSG + readerClassName, e);
+            } catch (InstantiationException e) {
+                throw new BuildException(INIT_FAILED_MSG + readerClassName, e);
+            } catch (IllegalAccessException e) {
+                throw new BuildException(INIT_FAILED_MSG + readerClassName, e);
+            }
+        }
+
+        // then check it implements XMLReader
+        if (reader instanceof XMLReader) {
+            xmlReader = (XMLReader) reader; 
+            log("Using SAX2 reader " + reader.getClass().getName(), 
+                Project.MSG_VERBOSE);
+        } else {
+
+            // see if it is a SAX1 Parser
+            if (reader instanceof Parser) {
+                xmlReader = new ParserAdapter((Parser) reader);
+                log("Using SAX1 parser " + reader.getClass().getName(), 
+                    Project.MSG_VERBOSE);
+            }  else {
+                throw new BuildException(INIT_FAILED_MSG + readerClassName
+                                         + " implements nor SAX1 Parser nor SAX2 XMLReader.");
+            }
         }
 
         xmlReader.setEntityResolver(getEntityResolver());
@@ -349,6 +370,21 @@ public class XMLValidateTask extends Task {
                 setFeature(featureId, ((Boolean) features.get(featureId)).booleanValue(), true);
             }
         }
+    }
+
+    /**
+     * Returns the parser factory to use. Only one parser
+     * factory is ever created by this method (multi-threading
+     * issues aside) and is then cached for future use.
+     *
+     * @return a SAXParserFactory to use within this class
+     */
+    private static SAXParserFactory getParserFactory() {
+        if (parserFactory == null) {
+            parserFactory = SAXParserFactory.newInstance();
+        }
+
+        return parserFactory;
     }
 
     /*

@@ -8,9 +8,11 @@
 
 <h2><a name="xmlvalidate">XMLValidate</a></h2>
 <h3>Description</h3>
-<p>
-  This task checks xml files are valid (or only well formed). The task uses crimson SAX2 parser implementation by default, but one can specify any SAX1/2 parser if needed
-</p>
+
+<p>This task checks xml files are valid (or only well formed). The
+task uses the SAX2 parser implementation provided by JAXP by default
+(probably the one that is used by Ant itself), but one can specify any
+SAX1/2 parser if needed.</p>
 
 <h3>Parameters</h3>
 <table border="1" cellpadding="2" cellspacing="0">
@@ -34,7 +36,7 @@
   </tr>
   <tr>
     <td valign="top">classname</td>
-    <td valign="top">the parser to use. (default: crimson).</td>
+    <td valign="top">the parser to use.</td>
     <td align="center" valign="top">No</td>
   </tr>
   <tr>
