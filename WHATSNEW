@@ -105,6 +105,9 @@ Other changes:
 
 * <pathconvert> now accepts nested <mapper>s.  Bugzilla Report 26364.
 
+* <nice> task lets you set the priority of the current thread; non-forking
+  <java> code will inherit this priority in their main thread.
+
 Changes from Ant 1.6.0 to Ant 1.6.1
 ===================================
 
