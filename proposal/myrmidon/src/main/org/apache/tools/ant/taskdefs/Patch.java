@@ -67,7 +67,6 @@ public class Patch
      * @param file The new Patchfile value
      */
     public void setPatchfile( final File patchFile )
-        throws TaskException
     {
         m_patchFile = patchFile;
     }

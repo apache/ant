@@ -178,11 +178,6 @@ public class CommandlineJava
         m_sysProperties.addVariable( sysp );
     }
 
-    public Argument createArgument()
-    {
-        return m_javaCommand.createArgument();
-    }
-
     public void addArgument( final String argument )
     {
         m_javaCommand.addArgument( argument );

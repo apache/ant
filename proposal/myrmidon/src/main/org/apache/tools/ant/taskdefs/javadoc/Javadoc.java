@@ -96,7 +96,7 @@ public class Javadoc
     public void setAdditionalparam( String add )
         throws TaskException
     {
-        m_command.createArgument().setLine( add );
+        m_command.addLine( add );
     }
 
     public void setAuthor( boolean src )

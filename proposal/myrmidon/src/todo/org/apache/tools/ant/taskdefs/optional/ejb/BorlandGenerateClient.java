@@ -13,6 +13,7 @@ import org.apache.tools.ant.Task;
 import org.apache.tools.ant.taskdefs.exec.Execute2;
 import org.apache.tools.ant.types.Commandline;
 import org.apache.tools.ant.types.Path;
+import org.apache.tools.ant.types.Argument;
 
 /**
  * BorlandGenerateClient is dedicated to the Borland Application Server 4.5 This
@@ -219,31 +220,32 @@ public class BorlandGenerateClient extends Task
             //execTask.addClasspath( classpath.concatSystemClasspath( "last" ) );
 
             execTask.setFork( true );
-            execTask.createArg().setValue( "generateclient" );
+            execTask.addArg( new Argument( "generateclient" ) );
             if( debug )
             {
-                execTask.createArg().setValue( "-trace" );
+                execTask.addArg( new Argument( "-trace" ) );
             }// end of if ()
 
             //
-            execTask.createArg().setValue( "-short" );
-            execTask.createArg().setValue( "-jarfile" );
+            execTask.addArg( new Argument( "-short" ) );
+            execTask.addArg( new Argument( "-jarfile" ) );
             // ejb jar file
-            execTask.createArg().setValue( ejbjarfile.getAbsolutePath() );
+            execTask.addArg( new Argument( ejbjarfile.getAbsolutePath() ) );
             //client jar file
-            execTask.createArg().setValue( "-single" );
-            execTask.createArg().setValue( "-clientjarfile" );
-            execTask.createArg().setValue( clientjarfile.getAbsolutePath() );
+            execTask.addArg( new Argument( "-single" ) );
+            execTask.addArg( new Argument( "-clientjarfile" ) );
+            execTask.addArg( new Argument( clientjarfile.getAbsolutePath() ) );
 
             getLogger().debug( "Calling EJBUtilities" );
             execTask.execute();
 
         }
-        catch( Exception e )
+        catch( final Exception e )
         {
             // Have to catch this because of the semantics of calling main()
-            String msg = "Exception while calling generateclient Details: " + e.toString();
-            throw new TaskException( msg, e );
+            final String message =
+                "Exception while calling generateclient Details: " + e.toString();
+            throw new TaskException( message, e );
         }
     }
 }

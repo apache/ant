@@ -564,8 +564,9 @@ public class Rmic extends MatchingTask
         }
         else
         {
-            SourceFileScanner sfs = new SourceFileScanner( this );
-            newFiles = sfs.restrict( files, baseDir, baseDir, mapper );
+            final SourceFileScanner scanner = new SourceFileScanner();
+            setupLogger( scanner );
+            newFiles = scanner.restrict( files, baseDir, baseDir, mapper );
         }
 
         for( int i = 0; i < newFiles.length; i++ )

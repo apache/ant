@@ -210,8 +210,8 @@ public abstract class AbstractMetamataTask
         ArrayList options = getOptions();
         m_optionsFile = createTmpFile();
         generateOptionsFile( m_optionsFile, options );
-        Argument args = m_cmdl.createArgument();
-        args.setLine( "-arguments " + m_optionsFile.getAbsolutePath() );
+        m_cmdl.addArgument( "-arguments " );
+        m_cmdl.addArgument( m_optionsFile.getAbsolutePath() );
     }
 
     /**

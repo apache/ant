@@ -776,7 +776,8 @@ public class Javac extends MatchingTask
         GlobPatternMapper m = new GlobPatternMapper();
         m.setFrom( "*.java" );
         m.setTo( "*.class" );
-        SourceFileScanner sfs = new SourceFileScanner( this );
+        SourceFileScanner sfs = new SourceFileScanner();
+        setupLogger( sfs );
         File[] newFiles = sfs.restrictAsFiles( files, srcDir, destDir, m );
 
         if( newFiles.length > 0 )

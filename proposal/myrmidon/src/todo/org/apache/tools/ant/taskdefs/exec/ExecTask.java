@@ -176,7 +176,7 @@ public class ExecTask
     public void execute()
         throws TaskException
     {
-        checkConfiguration();
+        validate();
         if( isValidOs() )
         {
             runExec( prepareExec() );
@@ -250,7 +250,7 @@ public class ExecTask
      *
      * @exception TaskException Description of Exception
      */
-    protected void checkConfiguration()
+    protected void validate()
         throws TaskException
     {
         if( m_command.getExecutable() == null )

@@ -13,7 +13,6 @@ import org.apache.aut.nativelib.Os;
 import org.apache.avalon.excalibur.io.FileUtil;
 import org.apache.avalon.framework.logger.AbstractLogEnabled;
 import org.apache.myrmidon.api.TaskException;
-import org.apache.tools.ant.Task;
 import org.apache.tools.ant.util.mappers.FileNameMapper;
 
 /**
@@ -29,16 +28,6 @@ import org.apache.tools.ant.util.mappers.FileNameMapper;
 public class SourceFileScanner
     extends AbstractLogEnabled
 {
-    private Task m_task;
-
-    /**
-     * @param task The task we should log messages through
-     */
-    public SourceFileScanner( Task task )
-    {
-        this.m_task = task;
-    }
-
     /**
      * Restrict the given set of files to those that are newer than their
      * corresponding target files.

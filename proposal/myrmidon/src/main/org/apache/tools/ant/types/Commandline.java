@@ -10,6 +10,7 @@ package org.apache.tools.ant.types;
 import java.io.File;
 import java.util.ArrayList;
 import org.apache.avalon.excalibur.util.StringUtil;
+import org.apache.myrmidon.api.TaskException;
 
 /**
  * Commandline objects help handling command lines specifying processes to
@@ -130,6 +131,14 @@ public class Commandline
     public void addArgument( final Argument argument )
     {
         m_arguments.add( argument );
+    }
+
+    public void addLine( final String line )
+        throws TaskException
+    {
+        final Argument argument = new Argument();
+        argument.setLine( line );
+        addArgument( argument );
     }
 
     /**

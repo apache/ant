@@ -305,7 +305,8 @@ public class Copy
         }
         else
         {
-            final SourceFileScanner scanner = new SourceFileScanner( this );
+            final SourceFileScanner scanner = new SourceFileScanner();
+            setupLogger( scanner );
             return scanner.restrict( names, fromDir, toDir, mapper );
         }
     }

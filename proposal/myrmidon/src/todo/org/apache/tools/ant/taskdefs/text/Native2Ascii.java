@@ -113,7 +113,8 @@ public class Native2Ascii
         final DirectoryScanner scanner = getDirectoryScanner( m_srcDir );
         String[] files = scanner.getIncludedFiles();
 
-        final SourceFileScanner sfs = new SourceFileScanner( this );
+        final SourceFileScanner sfs = new SourceFileScanner();
+        setupLogger( sfs );
         final FileNameMapper mapper = buildMapper();
         files = sfs.restrict( files, m_srcDir, m_destDir, mapper );
         int count = files.length;

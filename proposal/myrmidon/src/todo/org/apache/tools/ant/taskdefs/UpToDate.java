@@ -161,7 +161,8 @@ public class UpToDate extends MatchingTask implements Condition
     protected boolean scanDir( File srcDir, String files[] )
         throws TaskException
     {
-        SourceFileScanner sfs = new SourceFileScanner( this );
+        SourceFileScanner scanner = new SourceFileScanner();
+        setupLogger( scanner );
         FileNameMapper mapper = null;
         File dir = srcDir;
         if( mapperElement == null )
@@ -175,7 +176,7 @@ public class UpToDate extends MatchingTask implements Condition
         {
             mapper = mapperElement.getImplementation();
         }
-        return sfs.restrict( files, srcDir, dir, mapper ).length == 0;
+        return scanner.restrict( files, srcDir, dir, mapper ).length == 0;
     }
 
     /**

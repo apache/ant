@@ -10,6 +10,7 @@ package org.apache.tools.ant.taskdefs.optional;
 import java.io.File;
 import org.apache.myrmidon.api.TaskException;
 import org.apache.tools.ant.taskdefs.Java;
+import org.apache.tools.ant.types.Argument;
 
 /**
  * Basic task for apache stylebook.
@@ -57,12 +58,12 @@ public class StyleBook
     {
         validate();
 
-        createArg().setValue( "targetDirectory=" + m_targetDirectory );
-        createArg().setValue( m_book.toString() );
-        createArg().setValue( m_skinDirectory.toString() );
+        addArg( new Argument( "targetDirectory=" + m_targetDirectory ) );
+        addArg( new Argument( m_book.toString() ) );
+        addArg( new Argument( m_skinDirectory.toString() ) );
         if( null != m_loaderConfig )
         {
-            createArg().setValue( "loaderConfig=" + m_loaderConfig );
+            addArg( new Argument( "loaderConfig=" + m_loaderConfig ) );
         }
 
         super.execute();

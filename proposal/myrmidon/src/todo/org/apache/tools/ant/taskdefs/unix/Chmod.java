@@ -9,13 +9,14 @@ package org.apache.tools.ant.taskdefs.unix;
 
 import java.io.File;
 import java.io.IOException;
-import org.apache.myrmidon.api.TaskException;
 import org.apache.aut.nativelib.Os;
-import org.apache.tools.ant.taskdefs.exec.ExecuteOn;
+import org.apache.myrmidon.api.TaskException;
 import org.apache.tools.ant.taskdefs.exec.Execute;
+import org.apache.tools.ant.taskdefs.exec.ExecuteOn;
+import org.apache.tools.ant.types.Argument;
 import org.apache.tools.ant.types.FileSet;
-import org.apache.tools.ant.types.PatternSet;
 import org.apache.tools.ant.types.NameEntry;
+import org.apache.tools.ant.types.PatternSet;
 
 /**
  * Chmod equivalent for unix-like environments.
@@ -26,13 +27,12 @@ import org.apache.tools.ant.types.NameEntry;
  *      mnowostawski@infoscience.otago.ac.nz</a>
  * @author <a href="mailto:stefan.bodewig@epost.de">Stefan Bodewig</a>
  */
-
-public class Chmod extends ExecuteOn
+public class Chmod
+    extends ExecuteOn
 {
-
-    private FileSet defaultSet = new FileSet();
-    private boolean defaultSetDefined = false;
-    private boolean havePerm = false;
+    private FileSet m_defaultSet = new FileSet();
+    private boolean m_defaultSetDefined;
+    private boolean m_havePerm;
 
     public Chmod()
         throws TaskException
@@ -51,14 +51,14 @@ public class Chmod extends ExecuteOn
     public void setDefaultexcludes( boolean useDefaultExcludes )
         throws TaskException
     {
-        defaultSetDefined = true;
-        defaultSet.setDefaultexcludes( useDefaultExcludes );
+        m_defaultSetDefined = true;
+        m_defaultSet.setDefaultexcludes( useDefaultExcludes );
     }
 
     public void setDir( File src )
         throws TaskException
     {
-        defaultSet.setDir( src );
+        m_defaultSet.setDir( src );
     }
 
     /**
@@ -70,8 +70,8 @@ public class Chmod extends ExecuteOn
     public void setExcludes( String excludes )
         throws TaskException
     {
-        defaultSetDefined = true;
-        defaultSet.setExcludes( excludes );
+        m_defaultSetDefined = true;
+        m_defaultSet.setExcludes( excludes );
     }
 
     public void setExecutable( String e )
@@ -98,14 +98,14 @@ public class Chmod extends ExecuteOn
     public void setIncludes( String includes )
         throws TaskException
     {
-        defaultSetDefined = true;
-        defaultSet.setIncludes( includes );
+        m_defaultSetDefined = true;
+        m_defaultSet.setIncludes( includes );
     }
 
     public void setPerm( String perm )
     {
-        createArg().setValue( perm );
-        havePerm = true;
+        addArg( new Argument( perm ) );
+        m_havePerm = true;
     }
 
     public void setSkipEmptyFilesets( final boolean skip )
@@ -122,8 +122,8 @@ public class Chmod extends ExecuteOn
     public NameEntry createExclude()
         throws TaskException
     {
-        defaultSetDefined = true;
-        return defaultSet.createExclude();
+        m_defaultSetDefined = true;
+        return m_defaultSet.createExclude();
     }
 
     /**
@@ -134,8 +134,8 @@ public class Chmod extends ExecuteOn
     public NameEntry createInclude()
         throws TaskException
     {
-        defaultSetDefined = true;
-        return defaultSet.createInclude();
+        m_defaultSetDefined = true;
+        return m_defaultSet.createInclude();
     }
 
     /**
@@ -146,31 +146,31 @@ public class Chmod extends ExecuteOn
     public PatternSet createPatternSet()
         throws TaskException
     {
-        defaultSetDefined = true;
-        return defaultSet.createPatternSet();
+        m_defaultSetDefined = true;
+        return m_defaultSet.createPatternSet();
     }
 
     public void execute()
         throws TaskException
     {
-        if( defaultSetDefined || defaultSet.getDir() == null )
+        if( m_defaultSetDefined || m_defaultSet.getDir() == null )
         {
             super.execute();
         }
         else if( isValidOs() )
         {
             // we are chmodding the given directory
-            createArg().setValue( defaultSet.getDir().getPath() );
+            addArg( new Argument( m_defaultSet.getDir().getPath() ) );
             Execute execute = prepareExec();
             try
             {
                 execute.setCommandline( getCommand().getCommandline() );
                 runExecute( execute );
             }
-            catch( IOException e )
+            catch( final IOException ioe )
             {
-                final String message = "Execute failed: " + e;
-                throw new TaskException( message, e );
+                final String message = "Execute failed: " + ioe;
+                throw new TaskException( message, ioe );
             }
             finally
             {
@@ -185,18 +185,18 @@ public class Chmod extends ExecuteOn
         return Os.isFamily( "unix" ) && super.isValidOs();
     }
 
-    protected void checkConfiguration()
+    protected void validate()
         throws TaskException
     {
-        if( !havePerm )
+        if( !m_havePerm )
         {
             throw new TaskException( "Required attribute perm not set in chmod" );
         }
 
-        if( defaultSetDefined && defaultSet.getDir() != null )
+        if( m_defaultSetDefined && m_defaultSet.getDir() != null )
         {
-            addFileset( defaultSet );
+            addFileset( m_defaultSet );
         }
-        super.checkConfiguration();
+        super.validate();
     }
 }

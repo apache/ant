@@ -11,6 +11,7 @@ import org.apache.myrmidon.api.TaskException;
 import org.apache.tools.ant.taskdefs.Java;
 import org.apache.tools.ant.taskdefs.optional.jsp.JspC;
 import org.apache.tools.ant.types.Commandline;
+import org.apache.tools.ant.types.Argument;
 
 /**
  * The implementation of the jasper compiler. This is a cut-and-paste of the
@@ -41,7 +42,7 @@ public class JasperC
             java.setClassname( "org.apache.jasper.JspC" );
             String args[] = cmd.getArguments();
             for( int i = 0; i < args.length; i++ )
-                java.createArg().setValue( args[ i ] );
+                java.addArg( new Argument( args[ i ] ) );
             java.execute();
             return true;
         }

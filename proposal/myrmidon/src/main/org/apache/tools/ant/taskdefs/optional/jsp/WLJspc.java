@@ -16,6 +16,7 @@ import org.apache.tools.ant.types.DirectoryScanner;
 import org.apache.tools.ant.taskdefs.Java;
 import org.apache.tools.ant.taskdefs.MatchingTask;
 import org.apache.tools.ant.types.Path;
+import org.apache.tools.ant.types.Argument;
 
 /**
  * Class to precompile JSP's using weblogic's jsp compiler (weblogic.jspc)
@@ -230,7 +231,7 @@ public class WLJspc extends MatchingTask
             System.out.println( "arg = " + arg );
 
             //helperTask.clearArgs();
-            helperTask.createArg().setValue( arg );
+            helperTask.addArg( new Argument( arg ) );
             helperTask.addClasspath( compileClasspath );
             if( helperTask.executeJava() != 0 )
             {

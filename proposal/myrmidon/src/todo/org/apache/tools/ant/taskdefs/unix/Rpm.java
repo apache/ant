@@ -124,7 +124,7 @@ public class Rpm
             cmd.addArgument( "_topdir" + m_topDir );
         }
 
-        cmd.createArgument().setLine( m_command );
+        cmd.addLine( m_command );
 
         if( m_cleanBuildDir )
         {

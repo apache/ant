@@ -458,12 +458,13 @@ public class Zip
             if( !zipFile.exists() )
                 return false;
 
-            SourceFileScanner sfs = new SourceFileScanner( this );
+            final SourceFileScanner scanner = new SourceFileScanner();
+            setupLogger( scanner );
             MergingMapper mm = new MergingMapper();
             mm.setTo( zipFile.getAbsolutePath() );
             for( int i = 0; i < scanners.length; i++ )
             {
-                if( sfs.restrict( fileNames[ i ], scanners[ i ].getBasedir(), null,
+                if( scanner.restrict( fileNames[ i ], scanners[ i ].getBasedir(), null,
                                   mm ).length > 0 )
                 {
                     return false;

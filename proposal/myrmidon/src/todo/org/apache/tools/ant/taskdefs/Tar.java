@@ -226,7 +226,8 @@ public class Tar
     private boolean archiveIsUpToDate( final String[] files )
         throws TaskException
     {
-        final SourceFileScanner scanner = new SourceFileScanner( this );
+        final SourceFileScanner scanner = new SourceFileScanner();
+        setupLogger( scanner );
         final MergingMapper mapper = new MergingMapper();
         mapper.setTo( tarFile.getAbsolutePath() );
         return scanner.restrict( files, baseDir, null, mapper ).length == 0;

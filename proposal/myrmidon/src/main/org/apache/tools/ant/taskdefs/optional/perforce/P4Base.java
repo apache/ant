@@ -150,7 +150,7 @@ public abstract class P4Base
             {
                 cmd.addArgument( m_p4Client );
             }
-            cmd.createArgument().setLine( command );
+            cmd.addLine( command );
 
             String[] cmdline = cmd.getCommandline();
             String cmdl = "";

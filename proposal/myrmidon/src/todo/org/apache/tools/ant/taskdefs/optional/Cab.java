@@ -258,7 +258,7 @@ public class Cab
 
         if( m_options != null )
         {
-            cmd.createArgument().setLine( m_options );
+            cmd.addLine( m_options );
         }
 
         cmd.addArgument( "n" );

@@ -313,8 +313,9 @@ public class ExecuteOn extends ExecTask
     {
         if( mapper != null )
         {
-            SourceFileScanner sfs = new SourceFileScanner( this );
-            return sfs.restrict( ds.getIncludedDirectories(), baseDir, destDir,
+            final SourceFileScanner scanner = new SourceFileScanner();
+            setupLogger( scanner );
+            return scanner.restrict( ds.getIncludedDirectories(), baseDir, destDir,
                                  mapper );
         }
         else
@@ -336,8 +337,9 @@ public class ExecuteOn extends ExecTask
     {
         if( mapper != null )
         {
-            SourceFileScanner sfs = new SourceFileScanner( this );
-            return sfs.restrict( ds.getIncludedFiles(), baseDir, destDir,
+            final SourceFileScanner scanner = new SourceFileScanner();
+            setupLogger( scanner );
+            return scanner.restrict( ds.getIncludedFiles(), baseDir, destDir,
                                  mapper );
         }
         else
@@ -346,10 +348,10 @@ public class ExecuteOn extends ExecTask
         }
     }
 
-    protected void checkConfiguration()
+    protected void validate()
         throws TaskException
     {
-        super.checkConfiguration();
+        super.validate();
         if( filesets.size() == 0 )
         {
             throw new TaskException( "no filesets specified" );
