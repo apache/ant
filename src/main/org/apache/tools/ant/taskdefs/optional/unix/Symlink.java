@@ -417,6 +417,7 @@ public class Symlink extends Task {
         File parentDir = new File(parentStr);
         FileUtils fu = FileUtils.newFileUtils();
         File temp = fu.createTempFile("symlink", ".tmp", parentDir);
+        temp.deleteOnExit();
         try {
             try {
                 fu.rename(canfil, temp);

@@ -275,9 +275,9 @@ public class WebsphereDeploymentTool extends GenericDeploymentTool {
     /**
      * Flag to disable informational messages; optional, default false.
      *
-     * @param noinfom
+     * @param noinform if true disables informational messages
      */
-    public void setNoinform(boolean noinfom) {
+    public void setNoinform(boolean noinform) {
         this.noinform = noinform;
     }
 

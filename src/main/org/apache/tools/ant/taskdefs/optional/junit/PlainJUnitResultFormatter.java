@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2000-2002 The Apache Software Foundation.  All rights
+ * Copyright (c) 2000-2003 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -198,12 +198,12 @@ public class PlainJUnitResultFormatter implements JUnitResultFormatter {
      * <p>A Test is finished.
      */
     public void endTest(Test test) {
+        if (Boolean.TRUE.equals(failed.get(test))) {
+            return;
+        }
         synchronized (wri) {
             wri.print("Testcase: "
                       + JUnitVersionHelper.getTestCaseName(test));
-            if (Boolean.TRUE.equals(failed.get(test))) {
-                return;
-            }
             Long l = (Long) testStarts.get(test);
             double seconds = 0;
             // can be null if an error occured in setUp

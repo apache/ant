@@ -416,6 +416,7 @@ public class Zip extends MatchingTask {
                 renamedFile =
                     fileUtils.createTempFile("zip", ".tmp",
                                              fileUtils.getParentFile(zipFile));
+                renamedFile.deleteOnExit();
 
                 try {
                     fileUtils.rename(zipFile, renamedFile);

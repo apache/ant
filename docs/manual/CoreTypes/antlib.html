@@ -3,25 +3,19 @@
   <head>
     <meta http-equiv="Content-Language" content="en-us"></meta>
     <title>AntLib</title>
+<link rel="stylesheet" type="text/css" href="../stylesheets/antmanual.css">
   </head>
 
   <body>
     <h2><a name="antlib">Antlib</a></h2>
-    <p>
-      <i>EXPERIMENTAL:</i> The antlib concept and implementation is experimental
-      and may be under continual change until Ant1.6 ships.
-      The contents of this page uses the experimental tasks
-      &lt;macrodef&gt; and &lt;presetdef&gt; which may not be in
-      Ant1.6.
-    </p>
     <h3>Description</h3>
     <p>
       An antlib file is an xml file with a root element of "antlib".
       Antlib's elements are ant definition tasks - like
       <a href="../CoreTasks/typedef.html">Typedef</a>
       and <a href="../CoreTasks/taskdef.html">Taskdef</a>,
-      or any ant task that implements
-      <code>org.apache.tools.ant.taskdefs.AntlibInterface</code>.
+      or any ant task that extends
+      <code>org.apache.tools.ant.taskdefs.AntlibDefinition</code>.
     </p>
     <p>
       A group of tasks and types may be defined together in an antlib
@@ -116,7 +110,7 @@
     </blockquote>
     <p>
       The requirement that the resource is in the default classpath
-      may be removed before Ant 1.6 is released.
+      may be removed in future versions of Ant.</p>
     </p>
     <h3><a name="currentnamespace">Current namespace</a></h3>
     <p>

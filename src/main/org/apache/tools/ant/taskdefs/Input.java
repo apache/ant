@@ -142,6 +142,7 @@ public class Input extends Task {
             && getProject().getProperty(addproperty) != null) {
             log("skipping " + getTaskName() + " as property " + addproperty
                 + " has already been set.");
+            return;
         }
 
         InputRequest request = null;

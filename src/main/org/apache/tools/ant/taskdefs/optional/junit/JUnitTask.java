@@ -568,7 +568,10 @@ public class JUnitTask extends Task {
      * @since Ant 1.6
      * @param asserts assertion set
      */
-    public void setAssertions(Assertions asserts) {
+    public void addAssertions(Assertions asserts) {
+        if (commandline.getAssertions() != null) {
+            throw new BuildException("Only one assertion declaration is allowed");
+        }
         commandline.setAssertions(asserts);
     }
 
@@ -766,6 +769,7 @@ public class JUnitTask extends Task {
         File propsFile =
             FileUtils.newFileUtils().createTempFile("junit", ".properties",
                 tmpDir != null ? tmpDir : getProject().getBaseDir());
+        propsFile.deleteOnExit();
         cmd.createArgument().setValue("propsfile="
                                       + propsFile.getAbsolutePath());
         Hashtable p = getProject().getProperties();
@@ -1153,9 +1157,9 @@ public class JUnitTask extends Task {
                             OutputStream out) {
         formatter.setOutput(out);
         formatter.startTestSuite(test);
-        test.setCounts(0, 0, 1);
+        test.setCounts(1, 0, 1);
         Test t = new Test() {
-            public int countTestCases() { return 0; }
+            public int countTestCases() { return 1; }
             public void run(TestResult r) {
                 throw new AssertionFailedError("Timeout occurred");
             }

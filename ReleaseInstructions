@@ -4,50 +4,62 @@ Authors: Conor MacNeill
          Stefan Bodewig
          Magesh Umasankar
 
-Note: This document was created in the context of releasing Ant 1.5.
+Note: This document was updated in the context of releasing Ant 1.6.
       Please interpret the branch names, tags, etc. according to
       your context.
 
 1.  Propose a release plan for vote.  This should set out the timetable for
-    the release under ideal circumstances.  The level of bugs reported 
-    can delay things. Generally, give a few weeks to "close" the source tree 
+    the release under ideal circumstances.  The level of bugs reported
+    can delay things. Generally, give a few weeks to "close" the source tree
     to further changes so people can finalise contributions, etc. At this time,
     the first beta will be cut and there will be then a period of beta testing,
     usually 1 month but this should be flexible.
 
 2.  Note that any mention of a deadline causes a flood of bug fixes, new tasks,
-    etc.  This needs to be managed as best it can. Some fixes will be applied, 
-    others held over. Make this clear in the release plan. The committers and 
-    particularly the release manager will need to make judgement calls here. 
+    etc.  This needs to be managed as best it can. Some fixes will be applied,
+    others held over. Make this clear in the release plan. The committers and
+    particularly the release manager will need to make judgement calls here.
     Anything too "big" is likely to be held over.
-    
-3.  Once the freeze date arrives, create a branch for the release builds. You 
-    will need to be comfortable in handling CVS branches with mutliple 
-    merge-backs to the main branch and even selected merges from the the main 
-    branch to the release branch.  
-    
+
+3.  Once the freeze date arrives, create a branch for the release builds. You
+    will need to be comfortable in handling CVS branches with mutliple
+    merge-backs to the main branch and even selected merges from the the main
+    branch to the release branch.
+
     For more information on performing branching and merging, please visit
     http://www.durak.org/cvswebsites/doc/cvs_54.php#SEC54
 
-    Label such branches ANT_15_BRANCH.
-    
-4.  Once the branch is setup, the version numbers in CVS are changed. On the 
-    branch, the build.xml version becomes 1.5Beta1 while the main branch is 
-    updated to 1.6alpha. 
-    
-    [[ TODO: Check if the documentation files also need to be updated to point 
+    Label such branches ANT_16_BRANCH.
+
+4.  Once the branch is setup, the version numbers in CVS are changed. On the
+    branch, the version property in build.xml becomes 1.6Beta,
+    while the main branch is updated to 1.7alpha.
+
+    [[ TODO: Check if the documentation files also need to be updated to point
     to the right areas of Ant's website. ]]
 
-5.  Ensure you have all the external libraries that Ant uses in your
+5.  Before a build :
+    Update the following files for version number, and commit your changes.
+
+    * docs/manual/cover.html
+    * docs/manual/credits.html
+    * build.xml (version property)
+
+    the first beta on the 1.6 branch should be called 1.6Beta1, ...
+
+    the version property in build.xml governs the output of ant -version and
+    the naming of the distribution files.
+
+6.  Ensure you have all the external libraries that Ant uses in your
     lib/optional directory.  To find out what libraries you need, execute
-    the build with -verbose option and scan for lines beginning with 
+    the build with -verbose option and scan for lines beginning with
     "Unable to load...".
 
-6.  Next bootstrap, build and run the tests.  Then build the distribution 
-    on the branch. It is important that this be a clean build. Label this with 
-    a tag ANT_15_B1.
-    
-7.  Sign the distribution files using the following simple script
+7.  Next bootstrap, build and run the tests.  Then build the distribution
+    on the branch. It is important that this be a clean build. Label this with
+    a tag ANT_16_B1.
+
+8.  Sign the distribution files using the following simple script
     #!/bin/sh
     for i in distribution/*
     do
@@ -61,46 +73,47 @@ Note: This document was created in the context of releasing Ant 1.5.
     Before you do that, ensure that the key you use is inside the KEYS
     file in Ant's CVS repository - and that you perform a cvs update on
     the KEYS file in /www/www.apache.org/dist/ant/
-    
-    Also make sure you have sent the key that you use to a public 
+
+    Also make sure you have sent the key that you use to a public
     keyserver.
 
-8.  The beta distribution is now ready to go. Bundle it up into a tar.gz file 
+9.  The beta distribution is now ready to go. Bundle it up into a tar.gz file
     and scp to your apache account.
-    
-9.  Meanwhile, convert the WHATSNEW file into HTML for the README file on the 
-    website. See the previous release directories for examples of these files. 
+
+10. Meanwhile, convert the part of the WHATSNEW file covering the changes
+    since the last release into HTML for the README file on the
+    website. See the previous release directories for examples of these files.
     Add instructions and warnings (GNU tar format issues, etc).
 
     You may choose to use the text2html convertor present at
     http://www.aigeek.com/txt2html/
-    
+
     Name the generated file RELEASE-NOTES-x.y.z.html.
 
     [[ TODO: This must perhaps be an Ant task. ]]
 
-10. Once this is uploaded, unpack things, create the release directory, 
-    something like v1.5Beta1, push the release and RELEASE-NOTES files
+11. Once this is uploaded, unpack things, create the release directory,
+    something like v1.6Beta1, push the release and RELEASE-NOTES files
     into this directory.  Create a symbolic link named README.html
     that points to the RELEASE-NOTES.
 
     The files should go to /www/cvs.apache.org/dist/ant/ on minotaur.
 
-11. Address the available release tags in BugZilla. Create a new tag 1.5Beta1 
-    and a 1.6alpha. Assign all existing 1.5 alpha bugs to one of these release 
+12. Address the available release tags in BugZilla. Create a new tag 1.6Beta1
+    and a 1.7Alpha. Assign all existing 1.6 alpha bugs to one of these release
     labels.
-    
-12. Once that is done, do a test download to make sure everything is OK. A 
+
+13. Once that is done, do a test download to make sure everything is OK. A
     common problem may be:
-    * the file's mime type is not recognized and is interpreted as 
+    * the file's mime type is not recognized and is interpreted as
       text/plain.  Fix it by using some .htaccess magic (AddEncoding stuff)
     * Your gz.asc files are not being displayed properly (RemoveEncoing stuff)
-    
+
     If it looks OK, announce it on dev@ant and user@ant. After a few
     days pass and there are no major problems, a wider announcement is
     made (ant website, main jakarta website, announcements@jakarta.apache.org,
     etc).
-    
+
     Also ensure you:
     * Update antnews.xml (Announcement)
     * Update faq.xml (Ant's history details - not for betas)
@@ -115,29 +128,29 @@ Note: This document was created in the context of releasing Ant 1.5.
     Announce beta releases at freshmeat.net (Stefan Bodewig is the
     owner of Ant's project entry - bug him ;-).
 
-13. As problems in the beta are discovered, there may be a need for
+14. As problems in the beta are discovered, there may be a need for
     one or more subsequent betas. The release manager makes this
     call. Each time, the versions are updated and the above process is
     repeated. Try not to have too many betas.
 
-14. Try to advertise the need for testing of the betas as much as possible.
+15. Try to advertise the need for testing of the betas as much as possible.
     This would eliminate the need to release minor patch versions like
-    we had to do when releasing Ant 1.4.  
-    
+    we had to do when releasing Ant 1.4.
+
     To monitor the number of downloads, look at the access_log
     file under /usr/local/apache2/logs
 
-15. When the final beta is considered OK, propose a vote on dev@ant to 
-    officially adopt the latest beta as the Ant 1.5 release. If it is passed, 
-    (it usually does,) this would be labelled ANT_15 and built in a similar 
+16. When the final beta is considered OK, propose a vote on dev@ant to
+    officially adopt the latest beta as the Ant 1.6 release. If it is passed,
+    (it usually does,) this would be labelled ANT_16 and built in a similar
     fashion to the above process.
 
-16. BUT
+17. BUT
 
     This time the directory you upload the files to is different and
     you'll have to do some house-keeping for the old release:
 
-    * upload the new release files to 
+    * upload the new release files to
       /www/www.apache.org/dist/ant/[source|binary].
 
     * remove the symbolic links from /www/www.apache.org/dist/ant.
@@ -147,14 +160,14 @@ Note: This document was created in the context of releasing Ant 1.5.
     * Make sure that the symbolic link README.html points to the new
       RELEASE-NOTES.
 
-17. Change the links in /xdocs/bindownload.xml and /xdocs/srcdownload.xml,
+18. Change the links in /xdocs/bindownload.xml and /xdocs/srcdownload.xml,
     regenerate the HTML files, commit and update the site.
 
     As the mirrors may need some days to pick up the new release, you
     may want to add a note to that effect to the pages and remove it a few
     days later.
 
-18. Clean up.
+19. Clean up.
 
     * remove the remaining files of the previous release from
       /www/www.apache.org/dist/ant/[source|binary].
@@ -163,10 +176,10 @@ Note: This document was created in the context of releasing Ant 1.5.
       /www/archive.apache.org/dist/ant/[source|binary] on minotaur,
       leave the *zip* files alone.
 
-19. Now and perhaps during previous betas any changes on the branch must 
+20. Now and perhaps during previous betas any changes on the branch must
     be merged back into the tree.
 
-20. At this point in time, the release is done and announcements are made. 
+21. At this point in time, the release is done and announcements are made.
     PGP-sign your announcement posts.
 
     [[TODO: Identify the mailing lists where announcements are to be made.
@@ -182,5 +195,5 @@ Note: This document was created in the context of releasing Ant 1.5.
     Announce release in the usenet groups comp.lang.java.softwaretools
     and comp.lang.java.announce.
 
-21. You can now reacquaint yourself with your family and friends.
+22. You can now reacquaint yourself with your family and friends.
 

@@ -445,6 +445,7 @@ public abstract class DefaultCompilerAdapter implements CompilerAdapter {
                         userDir = new File(userDirName);
                     }
                     tmpFile = fileUtils.createTempFile("files", "", userDir);
+                    tmpFile.deleteOnExit();
                     out = new PrintWriter(new FileWriter(tmpFile));
                     for (int i = firstFileName; i < args.length; i++) {
                         if (quoteFiles && args[i].indexOf(" ") > -1) {

@@ -3,6 +3,7 @@
 <head>
 <meta http-equiv="Content-Language" content="en-us">
 <title>SCP Task</title>
+<link rel="stylesheet" type="text/css" href="../stylesheets/antmanual.css">
 </head>
 
 <body>
@@ -20,7 +21,7 @@ remote machine.</p>
 in the Ant distribution.  See <a
 href="../install.html#librarydependencies">Library Dependencies</a>
 for more information.  This task has been tested with jsch-0.1.2 to
-jsch-0.1.7.</p>
+jsch-0.1.8.</p>
 
 <h3>Parameters</h3>
 <table border="1" cellpadding="2" cellspacing="0">
@@ -53,7 +54,10 @@ jsch-0.1.7.</p>
   </tr>
   <tr>
     <td valign="top">trust</td>
-    <td valign="top">This trusts all unknown hosts if set to yes/true.</td>
+    <td valign="top">This trusts all unknown hosts if set to yes/true.<br>
+      <strong>Note</strong> If you set this to false (the default), the
+      host you connect to must be listed in your knownhosts file, this
+      also implies that the file exists.</td>
     <td valian="top" align="center">No, defaults to No.</td>
   </tr>
   <tr>

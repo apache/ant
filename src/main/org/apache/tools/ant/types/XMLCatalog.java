@@ -208,7 +208,7 @@ public class XMLCatalog extends DataType
      * @return the elements of the catalog - ResourceLocation objects
      */
     private Vector getElements() {
-        return elements;
+        return getRef().elements;
     }
 
     /**
@@ -217,7 +217,7 @@ public class XMLCatalog extends DataType
      * @return the classpath
      */
     private Path getClasspath() {
-        return classpath;
+        return getRef().classpath;
     }
 
     /**
@@ -335,7 +335,7 @@ public class XMLCatalog extends DataType
      * @return the catalog path
      */
     public Path getCatalogPath() {
-        return this.catalogPath;
+        return getRef().catalogPath;
     }
 
 
@@ -421,17 +421,6 @@ public class XMLCatalog extends DataType
         if (!elements.isEmpty()) {
             throw tooManyAttributes();
         }
-        // change this to get the objects from the other reference
-        Object o = r.getReferencedObject(getProject());
-        // we only support references to other XMLCatalogs
-        if (o instanceof XMLCatalog) {
-            // set all elements from referenced catalog to this one
-            XMLCatalog catalog = (XMLCatalog) o;
-            setElements(catalog.getElements());
-        } else {
-            String msg = r.getRefId() + " does not refer to an XMLCatalog";
-            throw new BuildException(msg);
-        }
         super.setRefid(r);
     }
 
@@ -442,6 +431,10 @@ public class XMLCatalog extends DataType
      */
     public InputSource resolveEntity(String publicId, String systemId)
         throws SAXException, IOException {
+
+        if (isReference()) {
+            return getRef().resolveEntity(publicId, systemId);
+        }
 
         if (!isChecked()) {
             // make sure we don't have a circular reference here
@@ -471,6 +464,10 @@ public class XMLCatalog extends DataType
      */
     public Source resolve(String href, String base)
         throws TransformerException {
+
+        if (isReference()) {
+            return getRef().resolve(href, base);
+        }
 
         if (!isChecked()) {
             // make sure we don't have a circular reference here
@@ -513,6 +510,16 @@ public class XMLCatalog extends DataType
 
         setEntityResolver(source);
         return source;
+    }
+
+    /**
+     * @since Ant 1.6
+     */
+    private XMLCatalog getRef() {
+        if (!isReference()) {
+            return this;
+        }
+        return (XMLCatalog) getCheckedRef(XMLCatalog.class, "xmlcatalog");
     }
 
     /**
@@ -576,9 +583,8 @@ public class XMLCatalog extends DataType
                     && getCatalogPath().list().length != 0) {
                         log("Warning: catalogpath listing external catalogs"
                             + " will be ignored", Project.MSG_WARN);
-                        log("Failed to load Apache resolver: "
-                            + ex, Project.MSG_DEBUG);
                     }
+                log("Failed to load Apache resolver: " + ex, Project.MSG_DEBUG);
             }
         }
         return catalogResolver;

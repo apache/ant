@@ -3,6 +3,7 @@
 <head>
 <meta http-equiv="Content-Language" content="en-us">
 <title>AntCall Task</title>
+<link rel="stylesheet" type="text/css" href="../stylesheets/antmanual.css">
 </head>
 
 <body>
@@ -21,15 +22,18 @@ set the <i>inheritAll</i> attribute to <code>false</code> and only
 will be passed to the new project.  In either case, the set of
 properties passed to the new project will override the properties that 
 are set in the new project (See also the <a href="property.html">property task</a>).</p>
-<p>You can also set properties in the new project from the old project by
-using nested param tags. These properties are always passed regardless of the
-setting of <i>inheritAll</i>.  This allows you to parameterize your subprojects.</p>
+<p>You can also set properties in the new project from the old project
+by using nested param tags. These properties are always passed
+regardless of the setting of <i>inheritAll</i>.  This allows you to
+parameterize your subprojects.  Properties defined on the command line
+can not be overridden by nested &lt;param&gt; elements.</p>
 
 <p>Nested <a href="#reference"><i>&lt;reference&gt;</i></a> elements can
 be used to copy references from the calling project to the new
 project, optionally under a different id.  References taken from
-nested elements will override existing references in the new
-project.</p>
+nested elements will override existing references that have been
+defined outside of targets in the new project - but not those defined
+inside of targets.</p>
 
 <p>
 When a target is invoked by antcall, all of its dependent targets will

@@ -34,7 +34,7 @@ case "`uname`" in
            ;;
 esac
 
-if [ -z "$ANT_HOME" ] ; then
+if [ -z "$ANT_HOME" -o ! -d "$ANT_HOME" ] ; then
   # try to find ANT
   if [ -d /opt/ant ] ; then
     ANT_HOME=/opt/ant
@@ -71,8 +71,6 @@ if $cygwin ; then
     ANT_HOME=`cygpath --unix "$ANT_HOME"`
   [ -n "$JAVA_HOME" ] &&
     JAVA_HOME=`cygpath --unix "$JAVA_HOME"`
-  [ -n "$CLASSPATH" ] &&
-    CLASSPATH=`cygpath --path --unix "$CLASSPATH"`
 fi
 
 # set ANT_LIB location
@@ -98,10 +96,6 @@ if [ ! -x "$JAVACMD" ] ; then
   echo "Error: JAVA_HOME is not defined correctly."
   echo "  We cannot execute $JAVACMD"
   exit 1
-fi
-
-if [ -n "$CLASSPATH" ] ; then
-  LOCALCLASSPATH="$CLASSPATH"
 fi
 
 # in rpm_mode get ant/optional/xml parser&api from JAVALIBDIR
@@ -149,21 +143,20 @@ fi
 if $cygwin; then
   ANT_HOME=`cygpath --windows "$ANT_HOME"`
   JAVA_HOME=`cygpath --windows "$JAVA_HOME"`
-  CLASSPATH=`cygpath --path --windows "$CLASSPATH"`
   LOCALCLASSPATH=`cygpath --path --windows "$LOCALCLASSPATH"`
   CYGHOME=`cygpath --windows "$HOME"`
 fi
 
 if [ -n "$CYGHOME" ]; then
   if [ -n "$JIKESPATH" ]; then
-    exec "$JAVACMD" $ANT_OPTS -classpath "$LOCALCLASSPATH" -Dant.home="${ANT_HOME}" -Djikes.class.path="$JIKESPATH" -Dcygwin.user.home="$CYGHOME" org.apache.tools.ant.launch.Launcher $ANT_ARGS "$@"
+    exec "$JAVACMD" $ANT_OPTS -classpath "$LOCALCLASSPATH" -Dant.home="${ANT_HOME}" -Djikes.class.path="$JIKESPATH" -Dcygwin.user.home="$CYGHOME" org.apache.tools.ant.launch.Launcher $ANT_ARGS -lib "$CLASSPATH" "$@"
   else
-    exec "$JAVACMD" $ANT_OPTS -classpath "$LOCALCLASSPATH" -Dant.home="${ANT_HOME}" -Dcygwin.user.home="$CYGHOME" org.apache.tools.ant.launch.Launcher $ANT_ARGS "$@"
+    exec "$JAVACMD" $ANT_OPTS -classpath "$LOCALCLASSPATH" -Dant.home="${ANT_HOME}" -Dcygwin.user.home="$CYGHOME" org.apache.tools.ant.launch.Launcher $ANT_ARGS -lib "$CLASSPATH" "$@"
   fi
 else
   if [ -n "$JIKESPATH" ]; then
-    exec "$JAVACMD" $ANT_OPTS -classpath "$LOCALCLASSPATH" -Dant.home="${ANT_HOME}" -Djikes.class.path="$JIKESPATH" org.apache.tools.ant.launch.Launcher $ANT_ARGS "$@"
+    exec "$JAVACMD" $ANT_OPTS -classpath "$LOCALCLASSPATH" -Dant.home="${ANT_HOME}" -Djikes.class.path="$JIKESPATH" org.apache.tools.ant.launch.Launcher $ANT_ARGS -lib "$CLASSPATH" "$@"
   else
-    exec "$JAVACMD" $ANT_OPTS -classpath "$LOCALCLASSPATH" -Dant.home="${ANT_HOME}" org.apache.tools.ant.launch.Launcher $ANT_ARGS "$@"
+    exec "$JAVACMD" $ANT_OPTS -classpath "$LOCALCLASSPATH" -Dant.home="${ANT_HOME}" org.apache.tools.ant.launch.Launcher $ANT_ARGS -lib "$CLASSPATH" "$@"
   fi
 fi

@@ -1,0 +1,289 @@
+    
+<html>
+<head>
+  <meta http-equiv="Content-Language" content="en-us">
+  <title>Ilasm
+ Task</title>
+<link rel="stylesheet" type="text/css" href="../stylesheets/antmanual.css">
+</head>
+
+<body bgcolor="#ffffff" text="#000000" link="#525D76"
+      alink="#525D76" vlink="#525D76">
+
+<table border="0" width="100%" cellspacing="4">
+
+  <!-- PAGE HEADER -->
+  <tr>
+    <td>
+      <table border="0" width="100%"><tr>
+          <td valign="bottom">
+            <font size="+3" face="arial,helvetica,sanserif"><strong>Ilasm
+ Task</strong></font>
+            <br><font face="arial,helvetica,sanserif">Assembles .NET Intermediate Language files.</font>
+          </td>
+          <td>
+            <!-- PROJECT LOGO -->
+            <a href="http://ant.apache.org/">
+              <img src="../../images/ant_logo_large.gif" align="right" alt="Apache Ant" border="0"/>
+            </a>
+          </td>
+      </tr></table>
+    </td>
+  </tr>
+
+  <!-- START RIGHT SIDE MAIN BODY -->
+  <tr>
+    <td  valign="top" align="left">
+
+          <!-- Applying task/long-description -->
+    <!-- Start Description -->
+    <table border="0" cellspacing="0" cellpadding="2" width="100%">
+      <tr><td>&nbsp;</td></tr>
+
+      <tr><td bgcolor="#525D76">
+        <font color="#ffffff" face="arial,helvetica.sanserif">
+          <a name="description">
+          <strong>Description</strong></a></font>
+      </td></tr>
+
+      <tr><td><blockquote>
+        Assembles .NET Intermediate Language files. ilasm.exe must be on the execute path, unless another executable or the full path to that executable is specified in the <tt>executable</tt> parameter <p> <p> All parameters are optional: &lt;il/&gt; should suffice to produce a debug build of all *.il files. The option set is roughly compatible with the CSharp class; even though the command line options are only vaguely equivalent. [The low level commands take things like /OUT=file, csc wants /out:file ... /verbose is used some places; /quiet here in ildasm... etc.] It would be nice if someone made all the command line tools consistent (and not as brittle as the java cmdline tools) <p> <p> The task is a directory based task, so attributes like <b>includes="*.il" </b> and <b>excludes="broken.il"</b> can be used to control the files pulled in. You can also use nested &lt;src&gt filesets to refer to source. <p>
+      </blockquote></td></tr>
+
+    </table>
+    <!-- End Description -->
+
+    <!-- Start Attributes -->
+    <table border="0" cellspacing="0" cellpadding="2" width="100%">
+      <tr><td>&nbsp;</td></tr>
+      <tr><td bgcolor="#525D76">
+        <font color="#ffffff" face="arial,helvetica.sanserif">
+          <a name="attributes">
+          <strong>Parameters</strong></a></font>
+      </td></tr>
+      <tr><td><blockquote>
+        <table>
+          <tr>
+        <td bgcolor="#cccccc" valign="top" align="left">
+          <font color="#000000" size="-1" face="arial,helvetica,sanserif"><b>Attribute</b></font>
+        </td>
+        <td bgcolor="#cccccc" valign="top" align="left">
+          <font color="#000000" size="-1" face="arial,helvetica,sanserif"><b>Description</b></font>
+        </td>
+        <td bgcolor="#cccccc" valign="top" align="left">
+          <font color="#000000" size="-1" face="arial,helvetica,sanserif"><b>Type</b></font>
+        </td>
+        <td bgcolor="#cccccc" valign="top" align="left">
+          <font color="#000000" size="-1" face="arial,helvetica,sanserif"><b>Requirement</b></font>
+        </td>
+          </tr>
+    <!-- Attribute Group -->    
+    
+    <!-- Attribute Group -->    
+        <!-- Attribute -->
+    <tr>
+        <td bgcolor="#eeeeee" valign="top" align="left">
+          <font color="#000000" size="-1" face="arial,helvetica,sanserif">debug</font>
+        </td>
+        <td bgcolor="#eeeeee" valign="top" align="left">
+          <font color="#000000" size="-1" face="arial,helvetica,sanserif">set the debug flag on or off.</font>
+        </td>
+        <td bgcolor="#eeeeee" valign="top" align="left">
+          <font color="#000000" size="-1" face="arial,helvetica,sanserif">boolean</font>
+        </td>
+        <td bgcolor="#eeeeee" valign="top" align="left" rowspan="10">
+          <font color="#000000" size="-1" face="arial,helvetica,sanserif">Optional</font>
+        </td>
+    </tr>
+    <!-- Attribute -->
+    <tr>
+        <td bgcolor="#eeeeee" valign="top" align="left">
+          <font color="#000000" size="-1" face="arial,helvetica,sanserif">destfile</font>
+        </td>
+        <td bgcolor="#eeeeee" valign="top" align="left">
+          <font color="#000000" size="-1" face="arial,helvetica,sanserif">Set the name of exe/library to create.</font>
+        </td>
+        <td bgcolor="#eeeeee" valign="top" align="left">
+          <font color="#000000" size="-1" face="arial,helvetica,sanserif">File</font>
+        </td>
+    </tr>
+    <!-- Attribute -->
+    <tr>
+        <td bgcolor="#eeeeee" valign="top" align="left">
+          <font color="#000000" size="-1" face="arial,helvetica,sanserif">extraoptions</font>
+        </td>
+        <td bgcolor="#eeeeee" valign="top" align="left">
+          <font color="#000000" size="-1" face="arial,helvetica,sanserif">Any extra options which are not explicitly supported by this task.</font>
+        </td>
+        <td bgcolor="#eeeeee" valign="top" align="left">
+          <font color="#000000" size="-1" face="arial,helvetica,sanserif">String</font>
+        </td>
+    </tr>
+    <!-- Attribute -->
+    <tr>
+        <td bgcolor="#eeeeee" valign="top" align="left">
+          <font color="#000000" size="-1" face="arial,helvetica,sanserif">failonerror</font>
+        </td>
+        <td bgcolor="#eeeeee" valign="top" align="left">
+          <font color="#000000" size="-1" face="arial,helvetica,sanserif">If true, fails if ilasm tool fails.</font>
+        </td>
+        <td bgcolor="#eeeeee" valign="top" align="left">
+          <font color="#000000" size="-1" face="arial,helvetica,sanserif">boolean</font>
+        </td>
+    </tr>
+    <!-- Attribute -->
+    <tr>
+        <td bgcolor="#eeeeee" valign="top" align="left">
+          <font color="#000000" size="-1" face="arial,helvetica,sanserif">keyfile</font>
+        </td>
+        <td bgcolor="#eeeeee" valign="top" align="left">
+          <font color="#000000" size="-1" face="arial,helvetica,sanserif">the name of a file containing a private key.</font>
+        </td>
+        <td bgcolor="#eeeeee" valign="top" align="left">
+          <font color="#000000" size="-1" face="arial,helvetica,sanserif">File</font>
+        </td>
+    </tr>
+    <!-- Attribute -->
+    <tr>
+        <td bgcolor="#eeeeee" valign="top" align="left">
+          <font color="#000000" size="-1" face="arial,helvetica,sanserif">listing</font>
+        </td>
+        <td bgcolor="#eeeeee" valign="top" align="left">
+          <font color="#000000" size="-1" face="arial,helvetica,sanserif">If true, produce a listing (off by default).</font>
+        </td>
+        <td bgcolor="#eeeeee" valign="top" align="left">
+          <font color="#000000" size="-1" face="arial,helvetica,sanserif">boolean</font>
+        </td>
+    </tr>
+    <!-- Attribute -->
+    <tr>
+        <td bgcolor="#eeeeee" valign="top" align="left">
+          <font color="#000000" size="-1" face="arial,helvetica,sanserif">outputfile</font>
+        </td>
+        <td bgcolor="#eeeeee" valign="top" align="left">
+          <font color="#000000" size="-1" face="arial,helvetica,sanserif">Set the output file; identical to setDestFile</font>
+        </td>
+        <td bgcolor="#eeeeee" valign="top" align="left">
+          <font color="#000000" size="-1" face="arial,helvetica,sanserif">File</font>
+        </td>
+    </tr>
+    <!-- Attribute -->
+    <tr>
+        <td bgcolor="#eeeeee" valign="top" align="left">
+          <font color="#000000" size="-1" face="arial,helvetica,sanserif">resourcefile</font>
+        </td>
+        <td bgcolor="#eeeeee" valign="top" align="left">
+          <font color="#000000" size="-1" face="arial,helvetica,sanserif">name of resource file to include.</font>
+        </td>
+        <td bgcolor="#eeeeee" valign="top" align="left">
+          <font color="#000000" size="-1" face="arial,helvetica,sanserif">File</font>
+        </td>
+    </tr>
+    <!-- Attribute -->
+    <tr>
+        <td bgcolor="#eeeeee" valign="top" align="left">
+          <font color="#000000" size="-1" face="arial,helvetica,sanserif">srcdir</font>
+        </td>
+        <td bgcolor="#eeeeee" valign="top" align="left">
+          <font color="#000000" size="-1" face="arial,helvetica,sanserif">Set the source directory of the files to be compiled.</font>
+        </td>
+        <td bgcolor="#eeeeee" valign="top" align="left">
+          <font color="#000000" size="-1" face="arial,helvetica,sanserif">File</font>
+        </td>
+    </tr>
+    <!-- Attribute -->
+    <tr>
+        <td bgcolor="#eeeeee" valign="top" align="left">
+          <font color="#000000" size="-1" face="arial,helvetica,sanserif">verbose</font>
+        </td>
+        <td bgcolor="#eeeeee" valign="top" align="left">
+          <font color="#000000" size="-1" face="arial,helvetica,sanserif">If true, enable verbose ILASM output.</font>
+        </td>
+        <td bgcolor="#eeeeee" valign="top" align="left">
+          <font color="#000000" size="-1" face="arial,helvetica,sanserif">boolean</font>
+        </td>
+    </tr>
+
+
+        </table>
+      </blockquote></td></tr>
+
+    </table>
+    <!-- End Attributes -->
+
+    <!-- Start Elements -->
+    <table border="0" cellspacing="0" cellpadding="2" width="100%">
+      <tr><td>&nbsp;</td></tr>
+
+      <tr><td bgcolor="#525D76">
+        <font color="#ffffff" face="arial,helvetica.sanserif">
+          <a name="elements">
+          <strong>Parameters as nested elements</strong></a></font>
+      </td></tr>
+
+      <tr><td><blockquote>
+    <!-- Start Element -->
+    <table border="0" cellspacing="0" cellpadding="2" width="100%">
+      <tr><td>&nbsp;</td></tr>
+      <tr><td bgcolor="#828DA6">
+        <font color="#ffffff" face="arial,helvetica.sanserif" size="-1">
+          <strong>reference</strong> (org.apache.tools.ant.types.FileSet)</font>
+      </td></tr>
+      <tr><td><blockquote>
+        add a new reference fileset to the compilation
+<short-description><![CDATA[Add a new reference fileset to the compilation.]]></short-description>
+<description>
+            <![CDATA[add a new reference fileset to the compilation]]>
+          </description>
+
+      </blockquote></td></tr>
+    </table>
+    <!-- End Element -->
+    <!-- Start Element -->
+    <table border="0" cellspacing="0" cellpadding="2" width="100%">
+      <tr><td>&nbsp;</td></tr>
+      <tr><td bgcolor="#828DA6">
+        <font color="#ffffff" face="arial,helvetica.sanserif" size="-1">
+          <strong>src</strong> (org.apache.tools.ant.types.FileSet)</font>
+      </td></tr>
+      <tr><td><blockquote>
+        add a new source directory to the compile
+<short-description><![CDATA[Add a new source directory to the compile.]]></short-description>
+<description>
+            <![CDATA[add a new source directory to the compile]]>
+          </description>
+
+      </blockquote></td></tr>
+    </table>
+    <!-- End Element -->
+
+      </blockquote></td></tr>
+
+    </table>
+    <!-- End Elements -->
+
+
+    </td>
+  </tr>
+  <!-- END RIGHT SIDE MAIN BODY -->
+
+  <!-- FOOTER SEPARATOR -->
+  <tr>
+    <td>
+      <hr noshade="" size="1"/>
+    </td>
+  </tr>
+
+  <!-- PAGE FOOTER -->
+  <tr>
+    <td>
+      <div align="center"><font color="#525D76" size="-1"><em>
+        Copyright &#169; 2000-2003, Apache Software Foundation
+      </em></font></div>
+    </td>
+  </tr>
+
+</table>
+
+</body>
+</html>

@@ -3,6 +3,7 @@
   <head>
     <meta http-equiv="Content-Language" content="en-us"></meta>
     <title>MacroDef Task</title>
+<link rel="stylesheet" type="text/css" href="../stylesheets/antmanual.css">
   </head>
     
   <body>
@@ -17,7 +18,7 @@
       or &lt;parallel&gt; task when the new task is run.
     </p>
     <p>
-      Introduced in ant1.6 <font color="red">Experimental</font>.
+      <em>since Ant 1.6</em>
     </p>
     <h3>Parameters</h3>
     <table border="1" cellpadding="2" cellspacing="0">
@@ -38,17 +39,6 @@
         </td>
         <td valign="top" align="center">No</td>
       </tr>
-      <tr>
-        <td valign="top">attributestyle</td>
-        <td valign="top">
-          <em>Temporary</em>
-          this attribute specifies if the attribute is in ant style
-          (i.e. ${attributeName}) or xpath style (i.e @attributeName).
-          Valid values are "ant" and "xpath". The default value
-          is "ant".
-        </td>
-        <td valign="top" align="center">No</td>
-      </tr>
     </table>
       <h3>Parameters specified as nested elements</h3>
     <h4>attribute</h4>
@@ -62,11 +52,6 @@
       This attribute is placed in the body of the templated
       task using the ant property notation - ${attribute name}.
       Note that is not an actual ant property.
-    </p>
-    <p>
-      If the attribute style is set to "xpath", the attribute is
-      specified in the body of the template task by prefixing the
-      name with a "@".
     </p>
     <h3>Parameters</h3>
     <table border="1" cellpadding="2" cellspacing="0">
@@ -138,23 +123,6 @@
       &lt;echo&gt;this is a test&lt;/echo&gt;
    &lt;/some-tasks&gt;
 &lt;/testing&gt;
-      </pre>
-    </blockquote>
-    <p>
-      The following fragment sets the attribute style to "xpath"
-      for the macro definition &lt;testing&gt; and calls the
-      macro. The fragment should output "attribute is this is a test".
-    </p>
-    <blockquote>
-      <pre>
-&lt;macrodef name="testing" attributestyle="xpath"&gt;
-   &lt;attribute name="abc"/&gt;
-   &lt;sequential&gt;
-      &lt;echo&gt;attribute is @abc&lt;/echo&gt;
-   &lt;/sequential&gt;
-&lt;/macrodef&gt;
-
-&lt;testing abc="this is a test"/&gt;
       </pre>
     </blockquote>
     <p>

@@ -81,7 +81,6 @@ public class MacroDef extends AntlibDefinition implements TaskContainer {
     private String     name;
     private List       attributes = new ArrayList();
     private Map        elements = new HashMap();
-    private int        attributeStyle = AttributeStyle.ANT;
 
     /**
      * Name of the definition
@@ -89,55 +88,6 @@ public class MacroDef extends AntlibDefinition implements TaskContainer {
      */
      public void setName(String name) {
         this.name = name;
-    }
-
-    /**
-     * Enumerated type for attributeStyle attribute
-     *
-     * @see EnumeratedAttribute
-     */
-    public static class AttributeStyle extends EnumeratedAttribute {
-        /** Enumerated values */
-        public static final int ANT = 0, XPATH = 1;
-
-        /**
-         * get the values
-         * @return an array of the allowed values for this attribute.
-         */
-        public String[] getValues() {
-            return new String[] {"ant", "xpath"};
-        }
-    }
-
-    /**
-     * <em>Experimental</em>
-     * I am uncertain at the moment how to encode attributes
-     * using ant style ${attribute} or xpath style @attribute.
-     * The first may get mixed up with ant properties and
-     * the second may get mixed up with xpath.
-     * The default at the moment is ant s
-     *
-     * @param style an <code>AttributeStyle</code> value
-     */
-    public void setAttributeStyle(AttributeStyle style) {
-        attributeStyle = style.getIndex();
-    }
-
-    /**
-     * <em>Experimental</em>
-     * @return the attribute style
-     */
-    public int getAttributeStyle() {
-        return attributeStyle;
-    }
-
-    /**
-     * Set the class loader.
-     * Not used
-     * @param classLoader a <code>ClassLoader</code> value
-     */
-    public void setAntlibClassLoader(ClassLoader classLoader) {
-        // Ignore
     }
 
     /**
@@ -319,15 +269,17 @@ public class MacroDef extends AntlibDefinition implements TaskContainer {
             }
             Attribute other = (Attribute) obj;
             if (name == null) {
-                return other.name == null;
-            }
-            if (!name.equals(other.name)) {
+                if (other.name != null) {
+                    return false;
+                }
+            } else if (!name.equals(other.name)) {
                 return false;
             }
             if (defaultValue == null) {
-                return other.defaultValue == null;
-            }
-            if (!name.equals(other.defaultValue)) {
+                if (other.defaultValue != null) {
+                    return false;
+                }
+            } else if (!defaultValue.equals(other.defaultValue)) {
                 return false;
             }
             return true;
@@ -393,9 +345,10 @@ public class MacroDef extends AntlibDefinition implements TaskContainer {
             }
             TemplateElement other = (TemplateElement) obj;
             if (name == null) {
-                return other.name == null;
-            }
-            if (!name.equals(other.name)) {
+                if (other.name != null) {
+                    return false;
+                }
+            } else if (!name.equals(other.name)) {
                 return false;
             }
             return optional == other.optional;
@@ -435,9 +388,6 @@ public class MacroDef extends AntlibDefinition implements TaskContainer {
             }
         }
 
-        if (attributeStyle != other.attributeStyle) {
-            return false;
-        }
         if (!nestedTask.similar(other.nestedTask)) {
             return false;
         }

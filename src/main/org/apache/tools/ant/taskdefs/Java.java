@@ -156,6 +156,10 @@ public class Java extends Task {
             throw new BuildException("You have used an attribute which is "
             + "not compatible with spawn");
         }
+        if (cmdl.getAssertions() != null && !fork) {
+            log("Assertion statements are currently ignored in non-forked mode");
+        }
+
         if (fork) {
             if (perm != null) {
                 log("Permissions can not be set this way in forked mode.", Project.MSG_WARN);
@@ -591,7 +595,10 @@ public class Java extends Task {
      * @since Ant 1.6
      * @param asserts assertion set
      */
-    public void setAssertions(Assertions asserts) {
+    public void addAssertions(Assertions asserts) {
+        if(cmdl.getAssertions() != null) {
+            throw new BuildException("Only one assertion declaration is allowed");
+        }
         cmdl.setAssertions(asserts);
     }
 

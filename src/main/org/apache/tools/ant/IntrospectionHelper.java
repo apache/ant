@@ -594,7 +594,8 @@ public final class IntrospectionHelper implements BuildListener {
     private NestedCreator getNestedCreator(Project project, Object parent,
         String elementName) throws BuildException {
 
-        NestedCreator nc = (NestedCreator) nestedCreators.get(elementName);
+        NestedCreator nc = (NestedCreator) nestedCreators.get(
+            elementName.toLowerCase(Locale.US));
         if (nc == null) {
             nc = createAddTypeCreator(project, parent, elementName);
         }
@@ -696,7 +697,7 @@ public final class IntrospectionHelper implements BuildListener {
      * @return true if the given nested element is supported
      */
     public boolean supportsNestedElement(String elementName) {
-        return nestedCreators.containsKey(elementName)
+        return nestedCreators.containsKey(elementName.toLowerCase(Locale.US))
             || DynamicConfigurator.class.isAssignableFrom(bean)
             || addTypeMethods.size() != 0;
     }
@@ -726,7 +727,8 @@ public final class IntrospectionHelper implements BuildListener {
         if (elementName == null) {
             return;
         }
-        NestedCreator ns = (NestedCreator) nestedCreators.get(elementName);
+        NestedCreator ns = (NestedCreator) nestedCreators.get(
+            elementName.toLowerCase(Locale.US));
         if (ns == null) {
             return;
         }

@@ -130,8 +130,12 @@
   <target name="modifiedselectortest-scenario-prepare">
       <mkdir dir="${test.dir}/src"/>
       <copy todir="${test.dir}/src">
-          <fileset dir="${ant.home}/lib" includes="ant.jar"/>
-          <fileset dir="${ant.home}/bin"/>
+          <fileset dir="${ant.home}/lib" includes="ant.jar">
+              <type type="file"/>
+          </fileset>
+          <fileset dir="${ant.home}/bin">
+                <type type="file"/>
+          </fileset>
       </copy>
       <touch datetime="12/24/2002 4:00 pm">
           <fileset dir="${test.dir}"/>
