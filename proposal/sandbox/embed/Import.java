@@ -155,6 +155,9 @@ public class Import extends Task {
         if (context.importedFiles.containsKey(importedFilename)) {
             project.log("\nSkipped already imported file:\n   "+importedFilename+"\n",
                         Project.MSG_WARN);
+            context.importlevel--;
+            project.log("importlevel: "+context.importlevel+" <- "+
+                        (context.importlevel+1) ,Project.MSG_DEBUG);          
             return;
         } else {
             context.importedFiles.put(importedFilename, importedFile);

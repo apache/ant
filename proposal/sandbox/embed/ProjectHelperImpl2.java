@@ -692,14 +692,13 @@ public class ProjectHelperImpl2 extends ProjectHelper {
             int timesRedefined = 0;
                 
             Hashtable currentTargets = project.getTargets();
-            project.log("Defined targets: "+currentTargets ,Project.MSG_VERBOSE);
-                        
+
             //currently tracks only one level of super.
             if(currentTargets.containsKey(name)){
-              timesRedefined++;
-            }
-                
-            if(timesRedefined>0){
+                project.log("Defined targets: "+
+                            ProjectHelperImpl2.targetString( currentTargets ) ,Project.MSG_VERBOSE);
+                        
+                timesRedefined++;
                            
                 project.log("Redefining target named: \""+name+"\"" ,Project.MSG_VERBOSE);
                 
@@ -709,7 +708,7 @@ public class ProjectHelperImpl2 extends ProjectHelper {
                 
                 String superTargetName = "";
                 for(int i=0; i < timesRedefined; i++){
-                   superTargetName += "super."; 
+                    superTargetName += "super."; 
                 }
                 superTargetName = superTargetName + name; 
                 oldTarget.setName(superTargetName);
@@ -720,7 +719,9 @@ public class ProjectHelperImpl2 extends ProjectHelper {
             // if the target is redefined, it redefines it, otherwise just adds it             
             project.addOrReplaceTarget(name, target);
 
-            project.log("targets are now: "+currentTargets.toString() ,Project.MSG_VERBOSE);
+            project.log("Targets are now: "+
+                        ProjectHelperImpl2.targetString(currentTargets) ,
+                        Project.MSG_VERBOSE);
 
             // END IMPORT CHANGE
             // context.project.addTarget(name, target);
@@ -760,6 +761,23 @@ public class ProjectHelperImpl2 extends ProjectHelper {
         }
     }
 
+    private static String targetString(Hashtable currentTargets) {
+        Enumeration enum=currentTargets.keys();
+        StringBuffer sb=new StringBuffer();
+        while( enum.hasMoreElements() ) {
+            String tname=(String)enum.nextElement();
+            Target t=(Target)currentTargets.get( tname );
+            sb.append( "|" ).append(tname );
+            Enumeration enum2=t.getDependencies();
+            if( enum2.hasMoreElements() ) sb.append( "=" );
+            while(enum2.hasMoreElements() ) {
+                sb.append(enum2.nextElement());
+                if( enum2.hasMoreElements()) sb.append(",");
+            }
+        }
+        return sb.toString();
+    }
+    
     /**
      * Handler for all task elements.
      */
