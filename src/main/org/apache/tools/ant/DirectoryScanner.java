@@ -944,9 +944,9 @@ public class DirectoryScanner
         }
     }
     /**
-     * process included file
-     * @param name  path of the file relative to the directory of the fileset
-     * @param file  included file
+     * Process included file.
+     * @param name  path of the file relative to the directory of the FileSet.
+     * @param file  included File.
      */
     private void accountForIncludedFile(String name, File file) {
         if (!filesIncluded.contains(name)
@@ -968,11 +968,11 @@ public class DirectoryScanner
     }
 
     /**
-     *
+     * Process included directory.
      * @param name path of the directory relative to the directory of
-     * the fileset
-     * @param file directory as file
-     * @param fast
+     *             the FileSet.
+     * @param file directory as File.
+     * @param fast whether to perform fast scans.
      */
     private void accountForIncludedDir(String name, File file, boolean fast) {
         if (!dirsIncluded.contains(name)
@@ -1011,11 +1011,7 @@ public class DirectoryScanner
      *         include pattern, or <code>false</code> otherwise.
      */
     protected boolean isIncluded(String name) {
-        if (!areNonPatternSetsReady) {
-            includePatterns = fillNonPatternSet(includeNonPatterns, includes);
-            excludePatterns = fillNonPatternSet(excludeNonPatterns, excludes);
-            areNonPatternSetsReady = true;
-        }
+        ensureNonPatternSetsReady();
 
         if ((isCaseSensitive() && includeNonPatterns.contains(name))
             ||
@@ -1085,12 +1081,8 @@ public class DirectoryScanner
      *         exclude pattern, or <code>false</code> otherwise.
      */
     protected boolean isExcluded(String name) {
-        if (!areNonPatternSetsReady) {
-            includePatterns = fillNonPatternSet(includeNonPatterns, includes);
-            excludePatterns = fillNonPatternSet(excludeNonPatterns, excludes);
-            areNonPatternSetsReady = true;
-        }
-        
+        ensureNonPatternSetsReady();
+
         if ((isCaseSensitive() && excludeNonPatterns.contains(name))
             ||
             (!isCaseSensitive() 
@@ -1134,6 +1126,9 @@ public class DirectoryScanner
      *         include patterns and none of the exclude patterns.
      */
     public String[] getIncludedFiles() {
+        if (filesIncluded == null) {
+            throw new IllegalStateException();
+        }
         String[] files = new String[filesIncluded.size()];
         filesIncluded.copyInto(files);
         Arrays.sort(files);
@@ -1214,6 +1209,9 @@ public class DirectoryScanner
      * include patterns and none of the exclude patterns.
      */
     public String[] getIncludedDirectories() {
+        if (dirsIncluded == null) {
+            throw new IllegalStateException();
+        }
         String[] directories = new String[dirsIncluded.size()];
         dirsIncluded.copyInto(directories);
         Arrays.sort(directories);
@@ -1498,7 +1496,7 @@ public class DirectoryScanner
      *
      * @since Ant 1.6
      */
-    private void clearCaches() {
+    private synchronized void clearCaches() {
         fileListMap.clear();
         scannedDirs.clear();
         includeNonPatterns.clear();
@@ -1508,7 +1506,21 @@ public class DirectoryScanner
     }
 
     /**
-     * Adds all patterns that are no real patterns (doesn't contain
+     * Ensure that the in|exclude &quot;patterns&quot;
+     * have been properly divided up.
+     *
+     * @since Ant 1.7
+     */
+    private synchronized void ensureNonPatternSetsReady() {
+        if (!areNonPatternSetsReady) {
+            includePatterns = fillNonPatternSet(includeNonPatterns, includes);
+            excludePatterns = fillNonPatternSet(excludeNonPatterns, excludes);
+            areNonPatternSetsReady = true;
+        }
+    }
+
+    /**
+     * Adds all patterns that are not real patterns (do not contain
      * wildcards) to the set and returns the real patterns.
      *
      * @since Ant 1.7
@@ -1517,16 +1529,13 @@ public class DirectoryScanner
         ArrayList al = new ArrayList(patterns.length);
         for (int i = 0; i < patterns.length; i++) {
             if (!SelectorUtils.hasWildcards(patterns[i])) {
-                if (isCaseSensitive()) {
-                    set.add(patterns[i]);
-                } else {
-                    set.add(patterns[i].toUpperCase());
-                }
+                set.add(isCaseSensitive() ? patterns[i]
+                    : patterns[i].toUpperCase());
             } else {
                 al.add(patterns[i]);
             }
         }
-        return set.size() == 0 ? patterns 
+        return set.size() == 0 ? patterns
             : (String[]) al.toArray(new String[al.size()]);
     }
 
