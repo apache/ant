@@ -102,12 +102,12 @@
   </target>
 
   <target name="testGoodPattern">
-    <touch file="touchtest" datetime="06242003142012foo" pattern="MMddyyyyHHmmss'foo'" />
+    <touch file="touchtest" datetime="06242003142012GMTfoo" pattern="MMddyyyyHHmmssz'foo'" />
     <fail>
       <condition>
         <not>
           <isfileselected file="touchtest">
-            <date millis="1056482412000" />
+            <date millis="1056464412000" />
           </isfileselected>
         </not>
       </condition>
@@ -115,7 +115,7 @@
   </target>
 
   <target name="testBadPattern">
-    <touch file="touchtest" datetime="06242003142012foo" pattern="MMddyyyyHHmmss'bar'" />
+    <touch file="touchtest" datetime="06242003142012GMTfoo" pattern="MMddyyyyHHmmssz'bar'" />
   </target>
 
 </project>
