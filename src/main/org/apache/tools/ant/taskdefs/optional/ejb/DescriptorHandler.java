@@ -84,19 +84,19 @@ public class DescriptorHandler extends org.xml.sax.HandlerBase {
      * processed by the SAX parser.  Accessed by the SAX parser call-back methods
      * startElement() and endElement().
      */
-    private String currentElement = null;
+    protected String currentElement = null;
 
     /**
      * The text of the current element
      */
-    private String currentText = null;
+    protected String currentText = null;
 
     /**
      * Instance variable that stores the names of the files as they will be
      * put into the jar file, mapped to File objects  Accessed by the SAX
      * parser call-back method characters().
      */
-    private Hashtable ejbFiles = null;
+    protected Hashtable ejbFiles = null;
 
     private Hashtable fileDTDs = new Hashtable();
     
@@ -158,7 +158,7 @@ public class DescriptorHandler extends org.xml.sax.HandlerBase {
      * instance variables to ensure safe operation.
      */
     public void startDocument() throws SAXException {
-        this.ejbFiles         = new Hashtable(10, 1);
+        this.ejbFiles = new Hashtable(10, 1);
         this.currentElement = null;
     }
 
@@ -214,7 +214,7 @@ public class DescriptorHandler extends org.xml.sax.HandlerBase {
     }
     
     
-    private void processElement() {
+    protected void processElement() {
         if (currentElement.equals(HOME_INTERFACE)   ||
             currentElement.equals(REMOTE_INTERFACE) ||
             currentElement.equals(BEAN_CLASS)       ||

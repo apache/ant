@@ -504,7 +504,7 @@ public class Main {
         msg.append("  -listener <classname>  add an instance of class as a project listener" + lSep);
         msg.append("  -buildfile <file>      use given buildfile" + lSep);
         msg.append("  -D<property>=<value>   use value for given property" + lSep);
-        msg.append("  -find <file>           search for buildfile towards the root of the file" + lSep);
+        msg.append("  -find <file>           search for buildfile towards the root of the filesystem" + lSep);
         msg.append("                         system and use it" + lSep);
         System.out.println(msg.toString());
     }
@@ -561,10 +561,10 @@ public class Main {
                 int pos = findTargetPosition(topNames, targetName);
                 topNames.insertElementAt(targetName, pos);
                 topDescriptions.insertElementAt(targetDescription, pos);
-            if (targetName.length() > maxLength) {
-                maxLength = targetName.length();
+                if (targetName.length() > maxLength) {
+                    maxLength = targetName.length();
+                }
             }
-        }
         }
         printTargets(topNames, topDescriptions, "Main targets:", maxLength);
         printTargets(subNames, null, "Subtargets:", 0);

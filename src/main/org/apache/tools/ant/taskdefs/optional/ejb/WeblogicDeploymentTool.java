@@ -59,15 +59,26 @@ import java.util.jar.*;
 import java.util.*;
 import java.net.*;
 
+import javax.xml.parsers.*;
+import org.xml.sax.*;
+
 import org.apache.tools.ant.*;
 import org.apache.tools.ant.types.*;
 import org.apache.tools.ant.taskdefs.Java;
 
 public class WeblogicDeploymentTool extends GenericDeploymentTool {
-    protected static final String WL_DD     = "weblogic-ejb-jar.xml";
+    public static final String PUBLICID_EJB
+        = "-//Sun Microsystems, Inc.//DTD Enterprise JavaBeans 1.1//EN";
+    public static final String PUBLICID_WEBLOGIC
+        = "-//BEA Systems, Inc.//DTD WebLogic 5.1.0 EJB//EN";
+    
+    protected static final String WL_DD = "weblogic-ejb-jar.xml";
     protected static final String WL_CMP_DD = "weblogic-cmp-rdbms-jar.xml";
-    protected static final String WL_DTD     = "/weblogic/ejb/deployment/xml/ejb-jar.dtd";
-    protected static final String WL_HTTP_DTD     = "http://www.bea.com/servers/wls510/dtd/weblogic-ejb-jar.dtd";
+
+    protected static final String DEFAULT_EJB_DTD_LOCATION 
+        = "/weblogic/ejb/deployment/xml/ejb-jar.dtd";
+    protected static final String DEFAULT_WL_DTD_LOCATION 
+        = "/weblogic/ejb/deployment/xml/weblogic-ejb-jar.dtd";
 
     /** Instance variable that stores the suffix for the weblogic jarfile. */
     private String jarSuffix = ".jar";
@@ -75,6 +86,9 @@ public class WeblogicDeploymentTool extends GenericDeploymentTool {
     /** Instance variable that stores the location of the weblogic DTD file. */
     private String weblogicDTD;
 
+    /** Instance variable that stores the location of the generic EJB DTD file. */
+    private String ejbDTD;
+    
     /** Instance variable that determines whether generic ejb jars are kept. */
 
     private boolean keepgenerated = false;
@@ -86,6 +100,11 @@ public class WeblogicDeploymentTool extends GenericDeploymentTool {
     private String compiler = null;
 
     private boolean alwaysRebuild = true;
+
+    /**
+     * Indicates if the old CMP location convention is to be used.
+     */
+    private boolean oldCMP = true;
     
     /**
      * The compiler (switch <code>-compiler</code>) to use
@@ -124,16 +143,14 @@ public class WeblogicDeploymentTool extends GenericDeploymentTool {
      * the .java source files are kept).
      * @param inValue either 'true' or 'false'
      */
-    public void setKeepgenerated(String inValue) 
-    {
+    public void setKeepgenerated(String inValue) {
         this.keepgenerated = Boolean.valueOf(inValue).booleanValue();
     }
 
     /**
      * sets some additional args to send to ejbc.
      */
-    public void setArgs(String args) 
-    {
+    public void setArgs(String args) {
         this.additionalArgs = args;
     }
     
@@ -147,23 +164,70 @@ public class WeblogicDeploymentTool extends GenericDeploymentTool {
         this.weblogicDTD = inString;
     }
 
+    /**
+     * Setter used to store the location of the Sun's Generic EJB DTD. 
+     * This can be a file on the system or a resource on the classpath. 
+     * @param inString the string to use as the DTD location.
+     */
+    public void setEJBdtd(String inString) {
+        this.ejbDTD = inString;
+    }
+
+    /**
+     * Set the value of the oldCMP scheme. The oldCMP scheme locates the 
+     * weblogic CMP descriptor based on the naming convention where the 
+     * weblogic CMP file is expected to be named with the bean name as the prefix.
+     * 
+     * Under this scheme the name of the CMP descriptor does not match the name
+     * actually used in the main weblogic EJB descriptor. Also, descriptors which 
+     * contain multiple CMP references could not be used.
+     *
+     * The old scheme is currently the default, but is also deprecated.
+     */
+    public void setOldCMP(boolean oldCMP) {
+        this.oldCMP = oldCMP;
+    }
+    
+
+    /**
+     * Register the location of the local resource copy of a DTD in a given
+     * handler.
+     */
+    private void registerDTD(DescriptorHandler handler, 
+                             String publicId, String dtdLocation) {
+        File dtdFile = new File(dtdLocation);
+        if (dtdFile.exists()) {
+            handler.registerFileDTD(publicId, dtdFile);
+        } else {
+            handler.registerResourceDTD(publicId, dtdLocation);
+        }                                            
+    }
+    
     protected DescriptorHandler getDescriptorHandler(File srcDir) {
         DescriptorHandler handler = new DescriptorHandler(srcDir);
-        if (weblogicDTD != null) {
-            // is the DTD a local file?
-            File dtdFile = new File(weblogicDTD);
-            if (dtdFile.exists()) {
-                handler.registerFileDTD("-//Sun Microsystems, Inc.//DTD Enterprise JavaBeans 1.1//EN",
-                                        dtdFile);
-            } else {
-                handler.registerResourceDTD("-//Sun Microsystems, Inc.//DTD Enterprise JavaBeans 1.1//EN",
-                                            weblogicDTD);
-            }                                            
-        } else {
-            handler.registerResourceDTD("-//Sun Microsystems, Inc.//DTD Enterprise JavaBeans 1.1//EN",
-                                        WL_DTD);
-        }
-        
+        registerDTD(handler, PUBLICID_EJB, 
+                    ejbDTD == null ? DEFAULT_EJB_DTD_LOCATION : ejbDTD);
+        return handler;                                    
+    }
+
+    protected DescriptorHandler getWebglogicDescriptorHandler(File srcDir) {
+        DescriptorHandler handler = 
+            new DescriptorHandler(srcDir) {        
+                protected void processElement() {
+                    if (currentElement.equals("type-storage")) {
+                        // Get the filename of vendor specific descriptor
+                        String fileNameWithMETA = currentText;
+                        //trim the META_INF\ off of the file name
+                        String fileName = fileNameWithMETA.substring(META_DIR.length(), 
+                                                                     fileNameWithMETA.length() );
+                        File descriptorFile = new File(getDescriptorDir(), fileName);
+                        ejbFiles.put(fileNameWithMETA, descriptorFile);
+                    }
+                }
+            };
+
+        registerDTD(handler, PUBLICID_WEBLOGIC, 
+                    weblogicDTD == null ? DEFAULT_WL_DTD_LOCATION : weblogicDTD);
         return handler;                                    
     }
 
@@ -180,13 +244,51 @@ public class WeblogicDeploymentTool extends GenericDeploymentTool {
             ejbFiles.put(META_DIR + WL_DD,
                          weblogicDD);
         }
+        else {
+            return;
+        }
 
-        // The the weblogic cmp deployment descriptor
-        File weblogicCMPDD = new File(getDescriptorDir(), ddPrefix + WL_CMP_DD);
-
-        if (weblogicCMPDD.exists()) {
-            ejbFiles.put(META_DIR + WL_CMP_DD,
-                         weblogicCMPDD);
+        if (oldCMP) {
+            log("The old method for locating CMP files has been DEPRECATED.", Project.MSG_INFO);
+            log("Please adjust your weblogic descriptor and set oldCMP=\"false\" " +
+                "to use the new CMP descriptor inclusion mechanism. ", Project.MSG_INFO);
+            // The the weblogic cmp deployment descriptor
+            File weblogicCMPDD = new File(getDescriptorDir(), ddPrefix + WL_CMP_DD);
+                
+            if (weblogicCMPDD.exists()) {
+                ejbFiles.put(META_DIR + WL_CMP_DD,
+                             weblogicCMPDD);
+            }
+        }
+        else {
+            // now that we have the weblogic descriptor, we parse the file
+            // to find other descriptors needed to deploy the bean.
+            // this could be the weblogic-cmp-rdbms.xml or any other O/R
+            // mapping tool descriptors.
+            try
+            {
+                File ejbDescriptor = (File)ejbFiles.get(META_DIR + EJB_DD);
+                SAXParserFactory saxParserFactory = SAXParserFactory.newInstance();
+                saxParserFactory.setValidating(true);
+                SAXParser saxParser = saxParserFactory.newSAXParser();
+                DescriptorHandler handler = getWebglogicDescriptorHandler(ejbDescriptor.getParentFile());
+                saxParser.parse(new InputSource
+                                (new FileInputStream
+                                (weblogicDD)),
+                                handler);
+                                
+                Hashtable ht = handler.getFiles();
+                Enumeration e = ht.keys();
+                while(e.hasMoreElements()){
+                    String key = (String)e.nextElement();
+                    ejbFiles.put(key, ht.get(key));
+                }
+            }
+            catch(Exception e)
+            { 
+                String msg = "Exception while adding Vendor specific files: " + e.toString();
+                throw new BuildException(msg, e);
+            }
         }
     }
     
