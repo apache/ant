@@ -82,21 +82,4 @@ class ExecUtil
     {
         return c_cwd;
     }
-
-    /**
-     * Retrieve the directory in which Myrmidon is installed.
-     * This is used to determine the locaiton of scripts in various launchers.
-     */
-    protected static File getAntHomeDirectory()
-    {
-        final String antHome = System.getProperty( "ant.home" );
-        if( null == antHome )
-        {
-            final String message =
-                "Cannot locate antRun script: Property 'ant.home' not specified";
-            throw new IllegalStateException( message );
-        }
-
-        return new File( antHome );
-    }
 }
