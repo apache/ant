@@ -56,9 +56,11 @@ package org.apache.tools.ant;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.Vector;
-import java.util.Hashtable;
 import java.util.Enumeration;
+import java.util.HashMap;
+import java.util.Hashtable;
+import java.util.Map;
+import java.util.Vector;
 
 import org.apache.tools.ant.types.Resource;
 import org.apache.tools.ant.types.ResourceFactory;
@@ -701,27 +703,40 @@ public class DirectoryScanner
         }
 
         Enumeration enum2 = newroots.keys();
+
+        File canonBase = null;
+        try {
+            canonBase = basedir.getCanonicalFile();
+        } catch (IOException ex) {
+            throw new BuildException(ex);
+        }
+
         while (enum2.hasMoreElements()) {
             String currentelement = (String) enum2.nextElement();
             String originalpattern = (String) newroots.get(currentelement);
             File myfile = new File(basedir, currentelement);
-            // we need to call getCanonicalFile here for DOS systems
-            // the reason being that otherwise File will be influenced
-            // by the case of currentelement, which we want to avoid
-            if (Os.isFamily("dos") && myfile.exists()) {
+
+            if (myfile.exists()) {
+                // may be on a case insensitive file system.  We want
+                // the results to show what's really on the disk, so
+                // we need to double check.
                 try {
-                    // getAbsoluteFile() is not enough here unfortunately
-                    myfile = myfile.getCanonicalFile();
-                }
-                catch (Exception ex) {
+                    File canonFile = myfile.getCanonicalFile();
+                    String path = fileUtils.removeLeadingPath(canonBase,
+                                                              canonFile);
+                    if (!path.equals(currentelement)) {
+                        myfile = findFile(basedir, currentelement);
+                        if (myfile != null) {
+                            currentelement = 
+                                fileUtils.removeLeadingPath(basedir, myfile);
+                        }
+                    }
+                } catch (IOException ex) {
                     throw new BuildException(ex);
                 }
-                // the variable currentelement is actually telling what
-                // the scan results will contain
-                currentelement = fileUtils.removeLeadingPath(basedir,
-                                                             myfile);
             }
-            if (!myfile.exists() && !isCaseSensitive) {
+            
+            if ((myfile == null || !myfile.exists()) && !isCaseSensitive) {
                 File f = findFileCaseInsensitive(basedir, currentelement);
                 if (f.exists()) {
                     // adapt currentelement to the case we've actually found
@@ -731,7 +746,7 @@ public class DirectoryScanner
                 }
             }
 
-            if (myfile.exists()) {
+            if (myfile != null && myfile.exists()) {
                 if (!followSymlinks && isSymlink(basedir, currentelement)) {
                     continue;
                 }
@@ -762,6 +777,7 @@ public class DirectoryScanner
                 }
             }
         }
+        fileListMap.clear();
     }
 
     /**
@@ -1176,6 +1192,30 @@ public class DirectoryScanner
     }
 
     /**
+     * temporary table to speed up the various scanning methods below
+     *
+     * @since Ant 1.6
+     */
+    private Map fileListMap = new HashMap();
+
+    /**
+     * Returns a cached result of list performed on file, if
+     * available.  Invokes the method and caches the result otherwise.
+     *
+     * @since Ant 1.6
+     */
+    private String[] list(File file) {
+        String[] files = (String[]) fileListMap.get(file);
+        if (files == null) {
+            files = file.list();
+            if (files != null) {
+                fileListMap.put(file, files);
+            }
+        }
+        return files;
+    }
+
+    /**
      * From <code>base</code> traverse the filesystem in a case
      * insensitive manner in order to find a file that matches the
      * given name.
@@ -1208,16 +1248,65 @@ public class DirectoryScanner
             if (!base.isDirectory()) {
                 return null;
             }
-            String[] files = base.list();
+            String[] files = list(base);
             if (files == null) {
                 throw new BuildException("IO error scanning directory "
                                          + base.getAbsolutePath());
             }
             String current = (String) pathElements.remove(0);
             for (int i = 0; i < files.length; i++) {
+                if (files[i].equals(current)) {
+                    base = new File(base, files[i]);
+                    return findFileCaseInsensitive(base, pathElements);
+                }
+            }
+            for (int i = 0; i < files.length; i++) {
                 if (files[i].equalsIgnoreCase(current)) {
                     base = new File(base, files[i]);
                     return findFileCaseInsensitive(base, pathElements);
+                }
+            }
+        }
+        return null;
+    }
+
+    /**
+     * From <code>base</code> traverse the filesystem in order to find
+     * a file that matches the given name.
+     *
+     * @return File object that points to the file in question or null.
+     *
+     * @since Ant 1.6
+     */
+    private File findFile(File base, String path) {
+        return findFile(base, SelectorUtils.tokenizePath(path));
+    }
+
+    /**
+     * From <code>base</code> traverse the filesystem in order to find
+     * a file that matches the given stack of names.
+     *
+     * @return File object that points to the file in question or null.
+     *
+     * @since Ant 1.6
+     */
+    private File findFile(File base, Vector pathElements) {
+        if (pathElements.size() == 0) {
+            return base;
+        } else {
+            if (!base.isDirectory()) {
+                return null;
+            }
+            String[] files = list(base);
+            if (files == null) {
+                throw new BuildException("IO error scanning directory "
+                                         + base.getAbsolutePath());
+            }
+            String current = (String) pathElements.remove(0);
+            for (int i = 0; i < files.length; i++) {
+                if (files[i].equals(current)) {
+                    base = new File(base, files[i]);
+                    return findFile(base, pathElements);
                 }
             }
         }
