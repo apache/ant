@@ -49,7 +49,7 @@ if [ -z "$ANT_HOME" ] ; then
   saveddir=`pwd`
 
   # need this for relative symlinks
-  cd `dirname $PRG`
+  cd `dirname "$PRG"`
   
   while [ -h "$PRG" ] ; do
     ls=`ls -ld "$PRG"`
@@ -162,14 +162,6 @@ else
   echo "  to the installation directory of java."
 fi
 
-# supply JIKESPATH to Ant as jikes.class.path
-if [ -n "$JIKESPATH" ] ; then
-  if $cygwin ; then
-    JIKESPATH=`cygpath --path --windows "$JIKESPATH"`
-  fi
-  ANT_OPTS="$ANT_OPTS -Djikes.class.path=$JIKESPATH"
-fi
-
 # Allow Jikes support (off by default)
 if $usejikes; then
   ANT_OPTS="$ANT_OPTS -Dbuild.compiler=jikes"
@@ -182,8 +174,20 @@ if $cygwin; then
   CLASSPATH=`cygpath --path --windows "$CLASSPATH"`
   LOCALCLASSPATH=`cygpath --path --windows "$LOCALCLASSPATH"`
   CYGHOME=`cygpath --path --windows "$HOME"`
-  "$JAVACMD" -classpath "$LOCALCLASSPATH" -Dant.home="${ANT_HOME}" $ANT_OPTS -Dcygwin.user.home="$CYGHOME" org.apache.tools.ant.Main $ANT_ARGS "$@"
+fi
+
+if [ -n "$CYGHOME" ]; then
+  if [ -n "$JIKESPATH" ]; then
+    JIKESPATH=`cygpath --path --windows "$JIKESPATH"`
+    "$JAVACMD" -classpath "$LOCALCLASSPATH" -Dant.home="${ANT_HOME}" -Djikes.class.path="$JIKESPATH" -Dcygwin.user.home="$CYGHOME" $ANT_OPTS org.apache.tools.ant.Main $ANT_ARGS "$@"
+  else
+    "$JAVACMD" -classpath "$LOCALCLASSPATH" -Dant.home="${ANT_HOME}" -Dcygwin.user.home="$CYGHOME" $ANT_OPTS org.apache.tools.ant.Main $ANT_ARGS "$@"
+  fi
 else
-  "$JAVACMD" -classpath "$LOCALCLASSPATH" -Dant.home="${ANT_HOME}" $ANT_OPTS org.apache.tools.ant.Main $ANT_ARGS "$@"
+  if [ -n "$JIKESPATH" ]; then
+    "$JAVACMD" -classpath "$LOCALCLASSPATH" -Dant.home="${ANT_HOME}" -Djikes.class.path="$JIKESPATH" $ANT_OPTS org.apache.tools.ant.Main $ANT_ARGS "$@"
+  else
+    "$JAVACMD" -classpath "$LOCALCLASSPATH" -Dant.home="${ANT_HOME}" $ANT_OPTS org.apache.tools.ant.Main $ANT_ARGS "$@"
+  fi
 fi
 
