@@ -280,7 +280,7 @@ public class SignJar extends Task {
         }
 
         final ExecTask cmd = (ExecTask) getProject().createTask("exec");
-        cmd.setExecutable("jarsigner");
+        cmd.setExecutable(JavaEnvUtils.getJdkExecutable("jarsigner"));
 
         if (maxMemory != null) {
             cmd.createArg().setValue("-J-Xmx" + maxMemory);
