@@ -679,6 +679,8 @@
                unless="xalan.present"/>
       <exclude name="org/apache/tools/ant/taskdefs/optional/AdaptxLiaisonTest.java" 
                unless="adaptx.present"/>
+      <exclude name="${optional.package}/TraXLiaisonTest.java" 
+               unless="trax.present"/>
     </javac>
   </target>
 
