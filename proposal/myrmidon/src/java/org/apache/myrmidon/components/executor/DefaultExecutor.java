@@ -67,14 +67,8 @@ public class DefaultExecutor
         debug( "configuring.notice" );
         doConfigure( task, taskModel, frame.getContext() );
 
-        debug( "initializing.notice" );
-        doInitialize( task, taskModel );
-
         debug( "executing.notice" );
         task.execute();
-
-        debug( "disposing.notice" );
-        doDispose( task, taskModel );
     }
 
     protected final void debug( final String key )
@@ -167,27 +161,6 @@ public class DefaultExecutor
         }
     }
 
-    protected final void doDispose( final Task task, final Configuration taskModel )
-        throws TaskException
-    {
-        if( task instanceof Disposable )
-        {
-            try
-            {
-                ( (Disposable)task ).dispose();
-            }
-            catch( final Throwable throwable )
-            {
-                final String message =
-                    REZ.getString( "dispose.error",
-                                   taskModel.getName(),
-                                   taskModel.getLocation(),
-                                   throwable.getMessage() );
-                throw new TaskException( message, throwable );
-            }
-        }
-    }
-
     protected final void doLogEnabled( final Task task,
                                        final Configuration taskModel,
                                        final Logger logger )
@@ -203,27 +176,6 @@ public class DefaultExecutor
             {
                 final String message =
                     REZ.getString( "logger.error",
-                                   taskModel.getName(),
-                                   taskModel.getLocation(),
-                                   throwable.getMessage() );
-                throw new TaskException( message, throwable );
-            }
-        }
-    }
-
-    protected final void doInitialize( final Task task, final Configuration taskModel )
-        throws TaskException
-    {
-        if( task instanceof Initializable )
-        {
-            try
-            {
-                ( (Initializable)task ).initialize();
-            }
-            catch( final Throwable throwable )
-            {
-                final String message =
-                    REZ.getString( "init.error",
                                    taskModel.getName(),
                                    taskModel.getLocation(),
                                    throwable.getMessage() );

@@ -29,14 +29,7 @@ public class AspectAwareExecutor
     private static final Resources REZ =
         ResourceManager.getPackageResources( AspectAwareExecutor.class );
 
-    private final static Parameters EMPTY_PARAMETERS;
     private final static Configuration[] EMPTY_ELEMENTS = new Configuration[ 0 ];
-
-    static
-    {
-        EMPTY_PARAMETERS = new Parameters();
-        EMPTY_PARAMETERS.makeReadOnly();
-    }
 
     private AspectManager m_aspectManager;
 
@@ -95,16 +88,10 @@ public class AspectAwareExecutor
         getAspectManager().preConfigure( taskModel );
         doConfigure( task, taskModel, frame.getContext() );
 
-        debug( "initializing.notice" );
-        doInitialize( task, taskModel );
-
         debug( "executing.notice" );
         getAspectManager().preExecute();
         doExecute( taskModel, task );
-
-        debug( "disposing.notice" );
         getAspectManager().preDestroy();
-        doDispose( task, taskModel );
     }
 
     protected void doExecute( final Configuration taskModel, final Task task )
@@ -152,7 +139,7 @@ public class AspectAwareExecutor
             final ArrayList elementList = (ArrayList)elementMap.remove( names[ i ] );
 
             Parameters parameters = (Parameters)parameterMap.remove( names[ i ] );
-            if( null == parameters ) parameters = EMPTY_PARAMETERS;
+            if( null == parameters ) parameters = Parameters.EMPTY_PARAMETERS;
 
             Configuration[] elements = null;
             if( null == elementList )
@@ -206,7 +193,7 @@ public class AspectAwareExecutor
                 final Configuration[] elements =
                     (Configuration[])elementList.toArray( EMPTY_ELEMENTS );
 
-                unusedSetting( namespace, EMPTY_PARAMETERS, elements );
+                unusedSetting( namespace, Parameters.EMPTY_PARAMETERS, elements );
             }
         }
     }
