@@ -53,18 +53,6 @@ public abstract class MatchingTask
     }
 
     /**
-     * Sets the name of the file containing the includes patterns.
-     *
-     * @param excludesfile A string containing the filename to fetch the include
-     *      patterns from.
-     */
-    public void setExcludesfile( final File excludesfile )
-        throws TaskException
-    {
-        m_fileset.setExcludesfile( excludesfile );
-    }
-
-    /**
      * Sets the set of include patterns. Patterns may be separated by a comma or
      * a space.
      *
@@ -77,59 +65,20 @@ public abstract class MatchingTask
     }
 
     /**
-     * Sets the name of the file containing the includes patterns.
-     *
-     * @param includesfile A string containing the filename to fetch the include
-     *      patterns from.
-     */
-    public void setIncludesfile( final File includesfile )
-        throws TaskException
-    {
-        m_fileset.setIncludesfile( includesfile );
-    }
-
-    /**
      * add a name entry on the exclude list
-     *
-     * @return Description of the Returned Value
      */
-    public Pattern createExclude()
-        throws TaskException
+    public void addExclude( final Pattern pattern )
     {
-        return m_fileset.createExclude();
-    }
-
-    /**
-     * add a name entry on the include files list
-     *
-     * @return Description of the Returned Value
-     */
-    public Pattern createExcludesFile()
-        throws TaskException
-    {
-        return m_fileset.createExcludesFile();
+        m_fileset.addExclude( pattern );
     }
 
     /**
      * add a name entry on the include list
-     *
-     * @return Description of the Returned Value
      */
-    public Pattern createInclude()
+    public void addInclude( final Pattern pattern )
         throws TaskException
     {
-        return m_fileset.createInclude();
-    }
-
-    /**
-     * add a name entry on the include files list
-     *
-     * @return Description of the Returned Value
-     */
-    public Pattern createIncludesFile()
-        throws TaskException
-    {
-        return m_fileset.createIncludesFile();
+        m_fileset.addInclude( pattern );
     }
 
     /**

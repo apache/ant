@@ -83,10 +83,10 @@ public class Chmod
     public void setFile( File src )
         throws TaskException
     {
-        FileSet fs = new FileSet();
-        fs.setDir( new File( src.getParent() ) );
-        fs.createInclude().setName( src.getName() );
-        addFileset( fs );
+        final FileSet fileSet = new FileSet();
+        fileSet.setDir( new File( src.getParent() ) );
+        fileSet.addInclude( new Pattern( src.getName() ) );
+        addFileset( fileSet );
     }
 
     /**
@@ -116,32 +116,26 @@ public class Chmod
 
     /**
      * add a name entry on the exclude list
-     *
-     * @return Description of the Returned Value
      */
-    public Pattern createExclude()
-        throws TaskException
+    public void addExclude( final Pattern pattern )
     {
         m_defaultSetDefined = true;
-        return m_defaultSet.createExclude();
+        m_defaultSet.addExclude( pattern );
     }
 
     /**
      * add a name entry on the include list
-     *
-     * @return Description of the Returned Value
      */
-    public Pattern createInclude()
+    public void addInclude( final Pattern pattern )
         throws TaskException
     {
         m_defaultSetDefined = true;
-        return m_defaultSet.createInclude();
+        m_defaultSet.addInclude( pattern );
     }
 
     /**
      * add a set of patterns
      *
-     * @return Description of the Returned Value
      */
     public PatternSet createPatternSet()
         throws TaskException

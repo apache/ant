@@ -16,6 +16,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.StringTokenizer;
 import org.apache.myrmidon.api.TaskException;
+import org.apache.myrmidon.framework.Pattern;
 import org.apache.aut.nativelib.Os;
 import org.apache.aut.nativelib.ExecOutputHandler;
 import org.apache.tools.ant.types.DirectoryScanner;
@@ -951,7 +952,7 @@ public class Javadoc
                 pkg += "*";
             }
 
-            fs.createInclude().setName( pkg );
+            fs.addInclude( new Pattern( pkg ) );
         }// while
 
         e = excludePackages.iterator();
@@ -964,7 +965,8 @@ public class Javadoc
                 pkg += "*";
             }
 
-            fs.createExclude().setName( pkg );
+            final Pattern pattern = new Pattern( pkg );
+            fs.addExclude( pattern );
         }
 
         PrintWriter packageListWriter = null;

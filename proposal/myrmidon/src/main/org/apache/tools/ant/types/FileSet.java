@@ -69,16 +69,6 @@ public class FileSet
     }
 
     /**
-     * Sets the name of the file containing the includes patterns.
-     *
-     * @param excl The file to fetch the exclude patterns from.
-     */
-    public void setExcludesfile( final File excludesfile )
-    {
-        m_defaultPatterns.setExcludesfile( excludesfile );
-    }
-
-    /**
      * Sets the set of include patterns. Patterns may be separated by a comma or
      * a space.
      *
@@ -87,16 +77,6 @@ public class FileSet
     public void setIncludes( final String includes )
     {
         m_defaultPatterns.setIncludes( includes );
-    }
-
-    /**
-     * Sets the name of the file containing the includes patterns.
-     *
-     * @param incl The file to fetch the include patterns from.
-     */
-    public void setIncludesfile( final File includesfile )
-    {
-        m_defaultPatterns.setIncludesfile( includesfile );
     }
 
     public void setupDirectoryScanner( final FileScanner ds )
@@ -164,33 +144,17 @@ public class FileSet
     /**
      * add a name entry on the exclude list
      */
-    public Pattern createExclude()
+    public void addExclude( final Pattern pattern )
     {
-        return m_defaultPatterns.createExclude();
-    }
-
-    /**
-     * add a name entry on the include files list
-     */
-    public Pattern createExcludesFile()
-    {
-        return m_defaultPatterns.createExcludesFile();
+        m_defaultPatterns.addExclude( pattern );
     }
 
     /**
      * add a name entry on the include list
      */
-    public Pattern createInclude()
+    public void addInclude( final Pattern pattern )
     {
-        return m_defaultPatterns.createInclude();
-    }
-
-    /**
-     * add a name entry on the include files list
-     */
-    public Pattern createIncludesFile()
-    {
-        return m_defaultPatterns.createIncludesFile();
+        m_defaultPatterns.addInclude( pattern );
     }
 
     public PatternSet createPatternSet()

@@ -144,19 +144,17 @@ public class VAJExport extends VAJTask
      *
      * @return Description of the Returned Value
      */
-    public Pattern createExclude()
+    public void addExclude( final Pattern pattern )
     {
-        return patternSet.createExclude();
+        patternSet.addExclude( pattern );
     }
 
     /**
      * add a name entry on the include list
-     *
-     * @return Description of the Returned Value
      */
-    public Pattern createInclude()
+    public void addInclude( final Pattern pattern )
     {
-        return patternSet.createInclude();
+        patternSet.addInclude( pattern );
     }
 
     /**
