@@ -5,7 +5,7 @@
   </target>
 
   <target name="cleanup">
-
+    <delete dir="result" />
   </target>
 
   <target name="test1" depends="init">
