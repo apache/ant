@@ -1,6 +1,6 @@
 @echo off
 
-REM   Copyright (c) 2000-2002 The Apache Software Foundation.  All rights
+REM   Copyright (c) 2000-2003 The Apache Software Foundation.  All rights
 REM   reserved.
 
 set REAL_ANT_HOME=%ANT_HOME%
