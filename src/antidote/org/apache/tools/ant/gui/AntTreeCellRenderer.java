@@ -53,19 +53,31 @@
  */
 package org.apache.tools.ant.gui;
 
-
-import javax.swing.tree.DefaultTreeModel;
-import org.apache.tools.ant.gui.acs.ACSProjectElement;
-
+import org.apache.tools.ant.gui.acs.ACSElement;
+import javax.swing.tree.DefaultTreeCellRenderer;
+import javax.swing.JTree;
+import java.awt.Component;
 
 /**
- * Provides a tree model view of the Project class. XXX This
- * is a major hack right now that needs to be cleaned up.
- *
+ * Cell renderer for displaying the Ant XML file in a JTree.
+ * 
  * @version $Revision$ 
- * @author Simeon H.K. Fitch */
-public class ProjectTreeModel extends DefaultTreeModel {
-    public ProjectTreeModel(ACSProjectElement root) {
-        super(root);
+ * @author Simeon Fitch 
+ */
+public class AntTreeCellRenderer extends DefaultTreeCellRenderer {
+
+    public Component getTreeCellRendererComponent(JTree tree,
+                                                  Object value,
+                                                  boolean sel,
+                                                  boolean expanded,
+                                                  boolean leaf,
+                                                  int row,
+                                                  boolean hasFocus) {
+        super.getTreeCellRendererComponent(tree, value, sel, expanded,
+                                           leaf, row, hasFocus);
+        if(value instanceof ACSElement) {
+            setText(((ACSElement)value).getDisplayName());
+        }
+        return this;
     }
 }

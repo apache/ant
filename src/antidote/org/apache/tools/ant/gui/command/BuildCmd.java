@@ -54,6 +54,7 @@ q *
 package org.apache.tools.ant.gui.command;
 import org.apache.tools.ant.gui.AppContext;
 import org.apache.tools.ant.gui.ProjectProxy;
+import org.apache.tools.ant.gui.event.ErrorEvent;
 
 /**
  * Starts an Ant build.
@@ -84,7 +85,12 @@ public class BuildCmd implements Command {
     public void execute() {
         ProjectProxy project = _context.getProject();
         if(project != null) {
-            project.build();
+            try {
+                project.build();
+            }
+            catch(Throwable ex) {
+                _context.getEventBus().postEvent(new ErrorEvent(_context, ex));
+            }
         }
     }
 }

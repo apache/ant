@@ -15,11 +15,14 @@
   <property name="version" value="0.1"/>
 
   <property name="src.dir" value="."/>
+  <!-- XXX Yuck. Need to fix this with something better -->
   <property name="build.dir" value="../../../build/antidote"/>
   <property name="lib.dir" value="${build.dir}/lib"/>
   <property name="build.classes" value="${build.dir}/classes"/>
   <property name="build.javadocs" value="${build.dir}/javadocs"/>
   <property name="manifest" value="${src.dir}/etc/manifest"/>
+  <!-- XXX Yuck. Need to fix this with something better -->
+  <property name="ant.jar" value="${build.dir}/../ant/lib/ant.jar"/>
 
   <path id="classpath">
   </path>
@@ -114,7 +117,7 @@
       <jvmarg value="-Djava.compiler=NONE"/>
       <classpath>
         <pathelement location="${build.classes}"/>
-        <pathelement location="${ant.home}/lib/ant.jar"/>
+        <pathelement location="${ant.jar}"/>
       </classpath>
     </java>
   </target>

@@ -54,6 +54,7 @@
 package org.apache.tools.ant.gui;
 import org.apache.tools.ant.*;
 import org.apache.tools.ant.gui.event.*;
+import org.apache.tools.ant.gui.acs.*;
 import java.io.File;
 import java.io.IOException;
 import javax.swing.tree.TreeModel;
@@ -80,7 +81,7 @@ public class ProjectProxy {
     /** The file where the project was last saved. */
     private File _file = null;
     /** The real Ant Project instance. */
-    private Project _project = null;
+    private ACSProjectElement _project = null;
     /** The current thread executing a build. */
     private Thread _buildThread = null;
     /** The selection model for selected targets. */
@@ -102,23 +103,9 @@ public class ProjectProxy {
 	 * 
 	 */
     private void loadProject() throws IOException {
-        _project = new Project();
+        _project = ACSFactory.getInstance().load(_file);
         _selections = new TargetSelectionModel();
         _selections.addTreeSelectionListener(new SelectionForwarder());
-        synchronized(_project) {
-            _project.init();
-
-            // XXX there is a bunch of stuff in the class
-            // org.apache.tools.ant.Main that needs to be
-            // abstracted out so that it doesn't have to be
-            // replicated here.
-        
-            // XXX need to provide a way to pass in externally
-            // defined properties.  Perhaps define an external
-            // Antidote properties file.
-            _project.setUserProperty("ant.file" , _file.getAbsolutePath());
-            ProjectHelper.configureProject(_project, _file);
-        }
     }
 
 	/** 
@@ -137,9 +124,21 @@ public class ProjectProxy {
 	 * 
 	 */
     public void build() throws BuildException {
-        if(_project == null) return;
+        Project project = new Project();
+        project.init();
+        // XXX there is a bunch of stuff in the class
+        // org.apache.tools.ant.Main that needs to be
+        // abstracted out so that it doesn't have to be
+        // replicated here.
+        
+        // XXX need to provide a way to pass in externally
+        // defined properties.  Perhaps define an external
+        // Antidote properties file.
+        project.setUserProperty("ant.file" , _file.getAbsolutePath());
+        ProjectHelper.configureProject(project, _file);
 
-        _buildThread = new Thread(new BuildRunner());
+
+        _buildThread = new Thread(new BuildRunner(project));
         _buildThread.start();
     }
 
@@ -180,75 +179,75 @@ public class ProjectProxy {
 	 * @return Document view on project.
 	 */
     public Document getDocument() {
-        if(_project != null) {
-            // This is what the call should look like
-            //return new ProjectDocument(_project);
-
+        // This is what the call should look like
+        //return new ProjectDocument(_project);
+        if(_file != null) {
             return new ProjectDocument(_file);
         }
         return null;
     }
 
-	/** 
-	 * Convenience method for causeing the project to fire a build event.
-     * Implemented because the corresponding method in the Project class
-     * is not publically accessible.
-	 * 
-	 * @param event Event to fire.
-	 */
-    private void fireBuildEvent(BuildEvent event, BuildEventType type) {
-        synchronized(_project) {
+    /** Class for executing the build in a separate thread. */
+    private class BuildRunner implements Runnable {
+        private Project _project = null;
+        public BuildRunner(Project project) {
+            _project = project;
+        }
+
+        /** 
+         * Convenience method for causeing the project to fire a build event.
+         * Implemented because the corresponding method in the Project class
+         * is not publically accessible.
+         * 
+         * @param event Event to fire.
+         */
+        private void fireBuildEvent(BuildEvent event, BuildEventType type) {
             Enumeration enum = _project.getBuildListeners().elements();
             while(enum.hasMoreElements()) {
                 BuildListener l = (BuildListener) enum.nextElement();
                 type.fireEvent(event, l);
             }
         }
-    }
 
-    /** Class for executing the build in a separate thread. */
-    private class BuildRunner implements Runnable {
         public void run() {
-            synchronized(_project) {
-                // Add the build listener for
-                // dispatching BuildEvent objects to the
-                // EventBus.
-                BuildEventForwarder handler = 
-                    new BuildEventForwarder(_context);
-                _project.addBuildListener(handler);
-                try {
-                    fireBuildEvent(new BuildEvent(
-                        _project), BuildEventType.BUILD_STARTED);
-
-                    // Generate list of targets to execute.
-                    Target[] targets = _selections.getSelectedTargets();
-                    Vector targetNames = new Vector();
-                    if(targets.length == 0) {
-                        targetNames.add(_project.getDefaultTarget());
+            // Add the build listener for
+            // dispatching BuildEvent objects to the
+            // EventBus.
+            BuildEventForwarder handler = 
+                new BuildEventForwarder(_context);
+            _project.addBuildListener(handler);
+            try {
+                fireBuildEvent(new BuildEvent(
+                    _project), BuildEventType.BUILD_STARTED);
+                
+                // Generate list of targets to execute.
+                ACSTargetElement[] targets = _selections.getSelectedTargets();
+                Vector targetNames = new Vector();
+                if(targets.length == 0) {
+                    targetNames.add(_project.getDefaultTarget());
+                }
+                else {
+                    for(int i = 0; i < targets.length; i++) {
+                        targetNames.add(targets[i].getName());
                     }
-                    else {
-                        for(int i = 0; i < targets.length; i++) {
-                            targetNames.add(targets[i].getName());
-                        }
-                    }
-
-                    // Execute build on selected targets. XXX It would be 
-                    // nice if the Project API supported passing in target 
-                    // objects rather than String names.
-                    _project.executeTargets(targetNames);
                 }
-                catch(BuildException ex) {
-                    BuildEvent errorEvent = new BuildEvent(_project);
-                    errorEvent.setException(ex);
-                    errorEvent.setMessage(ex.getMessage(), Project.MSG_ERR);
-                    fireBuildEvent(errorEvent, BuildEventType.MESSAGE_LOGGED);
-                }
-                finally {
-                    fireBuildEvent(new BuildEvent(
-                        _project), BuildEventType.BUILD_FINISHED);
-                    _project.removeBuildListener(handler);
-                    _buildThread = null;
-                }
+                
+                // Execute build on selected targets. XXX It would be 
+                // nice if the Project API supported passing in target 
+                // objects rather than String names.
+                _project.executeTargets(targetNames);
+            }
+            catch(BuildException ex) {
+                BuildEvent errorEvent = new BuildEvent(_project);
+                errorEvent.setException(ex);
+                errorEvent.setMessage(ex.getMessage(), Project.MSG_ERR);
+                fireBuildEvent(errorEvent, BuildEventType.MESSAGE_LOGGED);
+            }
+            finally {
+                fireBuildEvent(new BuildEvent(
+                    _project), BuildEventType.BUILD_FINISHED);
+                _project.removeBuildListener(handler);
+                _buildThread = null;
             }
         }
     }

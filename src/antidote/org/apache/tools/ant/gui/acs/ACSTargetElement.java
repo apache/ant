@@ -51,21 +51,68 @@
  * information on the Apache Software Foundation, please see
  * <http://www.apache.org/>.
  */
-package org.apache.tools.ant.gui;
+package org.apache.tools.ant.gui.acs;
 
-
-import javax.swing.tree.DefaultTreeModel;
-import org.apache.tools.ant.gui.acs.ACSProjectElement;
-
+import com.sun.xml.tree.ElementNode;
+import java.util.StringTokenizer;
 
 /**
- * Provides a tree model view of the Project class. XXX This
- * is a major hack right now that needs to be cleaned up.
- *
+ * Class representing a build target.
+ * 
  * @version $Revision$ 
- * @author Simeon H.K. Fitch */
-public class ProjectTreeModel extends DefaultTreeModel {
-    public ProjectTreeModel(ACSProjectElement root) {
-        super(root);
+ * @author Simeon Fitch 
+ */
+public class ACSTargetElement extends ACSElement {
+	/** 
+	 * Default ctor.
+	 * 
+	 */
+    public ACSTargetElement() {
+
     }
+
+	/** 
+	 * Get the target name.
+	 * 
+	 * @return Target name.
+	 */
+    public String getName() {
+        return getAttribute("name");
+    }
+
+	/** 
+	 * Get the long description of the target.
+	 * 
+	 * @return Target description.
+	 */
+    public String getDescription() {
+        return getAttribute("description");
+    }
+
+	/** 
+	 * Set the set of dependency names. 
+	 * 
+	 * @return Dependency names.
+	 */
+    public String[] getDependencyNames() {
+        String depends = getAttribute("depends");
+        StringTokenizer tok = new StringTokenizer(depends,",");
+        String[] retval = new String[tok.countTokens()];
+        for(int i = 0; i < retval.length; i++) {
+            retval[i] = tok.nextToken();
+        }
+        
+        return retval;
+    }
+
+	/** 
+	 * Get the display name.
+	 * 
+	 * @return Display name.
+	 */
+    public String getDisplayName() {
+        return getTagName() + ": " + getName();
+    }
+
+
 }

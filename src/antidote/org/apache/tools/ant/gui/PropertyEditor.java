@@ -52,7 +52,7 @@
  * <http://www.apache.org/>.
  */
 package org.apache.tools.ant.gui;
-import org.apache.tools.ant.Target;
+import org.apache.tools.ant.gui.acs.ACSTargetElement;
 import org.apache.tools.ant.gui.event.*;
 import javax.swing.*;
 import java.util.*;
@@ -86,7 +86,9 @@ class PropertyEditor extends AntEditor {
         _text.setEditable(false);
         _text.setOpaque(false);
 
-        add(BorderLayout.CENTER, _text);
+        JScrollPane scroller = new JScrollPane(_text);
+
+        add(BorderLayout.CENTER, scroller);
 	}
 
 	/** 
@@ -94,7 +96,7 @@ class PropertyEditor extends AntEditor {
 	 * 
 	 * @param targets Targets to display info for.
 	 */
-    private void displayTargetInfo(Target[] targets) {
+    private void displayTargetInfo(ACSTargetElement[] targets) {
 
         // The text to display.
         String text = null;
@@ -130,16 +132,16 @@ class PropertyEditor extends AntEditor {
 	 * @param target Target to generate params for.
      * @return Argument list for the formatted message.
 	 */
-    private Object[] getTargetParams(Target target) {
+    private Object[] getTargetParams(ACSTargetElement target) {
         List args = new LinkedList();
         args.add(target.getName());
         args.add(target.getDescription() == null ? 
                  "" : target.getDescription());
         StringBuffer buf = new StringBuffer();
-        Enumeration enum = target.getDependencies();
-        while(enum.hasMoreElements()) {
-            buf.append(enum.nextElement());
-            if(enum.hasMoreElements()) {
+        String[] depends = target.getDependencyNames();
+        for(int i = 0; i < depends.length; i++) {
+            buf.append(depends[i]);
+            if(i < depends.length - 1) {
                 buf.append(", ");
             }
         }
@@ -155,7 +157,7 @@ class PropertyEditor extends AntEditor {
 	 * @param target Targets to generate params for.
      * @return Argument list for the formatted message.
 	 */
-    private Object[] getTargetParams(Target[] targets) {
+    private Object[] getTargetParams(ACSTargetElement[] targets) {
         List args = new LinkedList();
 
         StringBuffer buf = new StringBuffer();
@@ -166,9 +168,9 @@ class PropertyEditor extends AntEditor {
                 buf.append(", ");
             }
 
-            Enumeration enum = targets[i].getDependencies();
-            while(enum.hasMoreElements()) {
-                depends.add(enum.nextElement());
+            String[] dependNames = targets[i].getDependencyNames();
+            for(int j = 0; j < dependNames.length; j++) {
+                depends.add(dependNames[j]);
             }
         }
 
@@ -209,7 +211,7 @@ class PropertyEditor extends AntEditor {
          */
         public void eventPosted(EventObject event) {
             TargetSelectionEvent e = (TargetSelectionEvent) event;
-            Target[] targets = e.getSelectedTargets();
+            ACSTargetElement[] targets = e.getSelectedTargets();
             displayTargetInfo(targets);
         }
 

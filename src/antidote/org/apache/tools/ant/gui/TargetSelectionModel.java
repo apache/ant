@@ -52,7 +52,7 @@
  * <http://www.apache.org/>.
  */
 package org.apache.tools.ant.gui;
-import org.apache.tools.ant.Target;
+import org.apache.tools.ant.gui.acs.ACSTargetElement;
 
 import javax.swing.tree.DefaultTreeSelectionModel;
 import javax.swing.tree.TreePath;
@@ -79,17 +79,17 @@ class TargetSelectionModel extends DefaultTreeSelectionModel {
 	 * 
      * @return the currently selected targets.
 	 */
-    public Target[] getSelectedTargets() {
+    public ACSTargetElement[] getSelectedTargets() {
         TreePath[] path = getSelectionPaths();
         List values = new LinkedList();
         for(int i = 0; path != null && i < path.length; i++) {
             Object val = path[i].getLastPathComponent();
-            if(val instanceof Target) {
+            if(val instanceof ACSTargetElement) {
                 values.add(val);
             }
         }
 
-        Target[] retval = new Target[values.size()];
+        ACSTargetElement[] retval = new ACSTargetElement[values.size()];
         values.toArray(retval);
         return retval;
     }

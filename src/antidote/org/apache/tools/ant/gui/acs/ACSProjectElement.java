@@ -51,21 +51,36 @@
  * information on the Apache Software Foundation, please see
  * <http://www.apache.org/>.
  */
-package org.apache.tools.ant.gui;
+package org.apache.tools.ant.gui.acs;
 
-
-import javax.swing.tree.DefaultTreeModel;
-import org.apache.tools.ant.gui.acs.ACSProjectElement;
-
+import com.sun.xml.tree.ElementNode;
 
 /**
- * Provides a tree model view of the Project class. XXX This
- * is a major hack right now that needs to be cleaned up.
- *
+ * Class representing a project element in the build file.
+ * 
  * @version $Revision$ 
- * @author Simeon H.K. Fitch */
-public class ProjectTreeModel extends DefaultTreeModel {
-    public ProjectTreeModel(ACSProjectElement root) {
-        super(root);
+ * @author Simeon Fitch 
+ */
+public class ACSProjectElement extends ACSElement {
+    public ACSProjectElement() {
+
+    }
+
+	/** 
+	 * Get the project name.
+	 * 
+	 * @return Project name.
+	 */
+    public String getName() {
+        return getAttribute("name");
+    }
+
+	/** 
+	 * Get the display name.
+	 * 
+	 * @return Display name.
+	 */
+    public String getDisplayName() {
+        return getTagName() + ": " + getName();
     }
 }

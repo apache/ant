@@ -99,9 +99,17 @@ public class About extends JDialog {
 		// presented nicely in box.
 		contributors = props.getProperty("CONTRIBUTORS", "??");
 
+        StringBuffer buf = new StringBuffer();
+        StringTokenizer tok = new StringTokenizer(contributors, ",");
+        while(tok.hasMoreTokens()) {
+            String name = tok.nextToken();
+            buf.append(name);
+            buf.append("<BR>\n");
+        }
+
 		String message = context.getResources().getMessage(
 			getClass(), "message", 
-			new Object[] { version, date, contributors });
+			new Object[] { version, date, buf.toString() });
 
 		String title = context.getResources().getString(
 			getClass(), "title");
@@ -117,6 +125,9 @@ public class About extends JDialog {
 		JPanel p = new JPanel();
 		p.add(ok);
 		getContentPane().add(BorderLayout.SOUTH, p);
+
+        getRootPane().setDefaultButton(ok);
+
 
 		// Just go ahead and show it...
 		pack();

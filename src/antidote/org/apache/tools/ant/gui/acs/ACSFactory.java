@@ -51,91 +51,113 @@
  * information on the Apache Software Foundation, please see
  * <http://www.apache.org/>.
  */
-package org.apache.tools.ant.gui;
-import org.apache.tools.ant.gui.event.*;
-import javax.swing.*;
-import java.awt.GridLayout;
-import java.awt.Dimension;
-import java.util.EventObject;
+package org.apache.tools.ant.gui.acs;
+
+import javax.xml.parsers.*;
+import java.io.File;
+import java.io.IOException;
+import org.w3c.dom.*;
+import com.sun.xml.parser.Parser;
+import com.sun.xml.tree.SimpleElementFactory;
+import com.sun.xml.tree.XmlDocument;
+import com.sun.xml.tree.XmlDocumentBuilder;
+import java.util.Properties;
+import com.sun.xml.parser.Resolver;
 
 /**
- * AntEditor for displaying the project target in a 
+ * Factory for loading Ant Construction set elements.
  * 
  * @version $Revision$ 
  * @author Simeon Fitch 
  */
-class ProjectNavigator extends AntEditor {
+public class ACSFactory {
+    /** Singleton instance of the factory. */
+    private static ACSFactory _instance = null;
 
-    /** Navigation via a tree widget. */
-    private JTree _tree = null;
+    /** Element maping. */
+    private static final Properties _elementMap = new Properties();
 
-	/** 
-	 * Standard ctor.
-	 * 
-	 * @param context Application context.
-	 */
-	public ProjectNavigator(AppContext context) {
-        super(context);
-        context.getEventBus().addMember(EventBus.MONITORING, new Handler());
-
-        setLayout(new GridLayout(1,1));
-
-        _tree = new JTree();
-        _tree.setModel(null);
-        _tree.setCellRenderer(new AntTreeCellRenderer());
-        JScrollPane scroller = new JScrollPane(_tree);
-        add(scroller);
-
-        setPreferredSize(new Dimension(150, 100));
-
-	}
-
-    /** Class for handling project events. */
-    private class Handler implements BusMember {
-        private final Filter _filter = new Filter();
-
-        /** 
-         * Get the filter to that is used to determine if an event should
-         * to to the member.
-         * 
-         * @return Filter to use.
-         */
-        public BusFilter getBusFilter() {
-            return _filter;
+    static {
+        try {
+            _elementMap.load(ACSFactory.class.
+                             getResourceAsStream("acs-element.properties"));
         }
-        
-        /** 
-         * Called when an event is to be posed to the member.
-         * 
-         * @param event Event to post.
-         */
-        public void eventPosted(EventObject event) {
-            ProjectProxy project = getAppContext().getProject();
-
-            if(project == null) {
-                // The project has been closed.
-                // XXX this needs to be tested against 
-                // different version of Swing...
-                _tree.setModel(null);
-                _tree.setSelectionModel(null);
-            }
-            else {
-                _tree.setModel(project.getTreeModel());
-                _tree.setSelectionModel(project.getTreeSelectionModel());
-            }
+        catch(Throwable ex) {
+            ex.printStackTrace();
+            System.exit(1);
         }
     }
 
-    /** Class providing filtering for project events. */
-    private static class Filter implements BusFilter {
-        /** 
-         * Determines if the given event should be accepted.
-         * 
-         * @param event Event to test.
-         * @return True if event should be given to BusMember, false otherwise.
-         */
-        public boolean accept(EventObject event) {
-            return event instanceof NewProjectEvent;
+	/** 
+	 * Default ctor.
+	 * 
+	 */
+    private ACSFactory() {
+
+    }
+
+	/** 
+	 * Load a project from the given XML file.
+     * XXX fix me.
+	 * 
+	 * @param f File to load.
+	 * @return 
+	 */
+    public ACSProjectElement load(File f) throws IOException {
+        XmlDocument doc = null;
+
+        try {
+            SAXParser sax = SAXParserFactory.newInstance().newSAXParser();
+            Parser parser = (Parser) sax.getParser();
+            XmlDocumentBuilder builder = new XmlDocumentBuilder();
+            builder.setIgnoringLexicalInfo(false);
+            SimpleElementFactory fact = new SimpleElementFactory();
+            fact.addMapping(_elementMap, ACSFactory.class.getClassLoader());
+
+            builder.setElementFactory(fact);
+            
+            parser.setDocumentHandler(builder);
+            parser.setEntityResolver(new Resolver());
+            //parser.setErrorHandler();
+
+            sax.parse(f, null);
+
+            doc = builder.getDocument();
+        }
+        catch(Exception ex) {
+            ex.printStackTrace();
+            throw new IOException(ex.getMessage());
+        }
+
+        return (ACSProjectElement) doc.getDocumentElement();
+    }
+
+	/** 
+	 * Get an instance of the factory.
+	 * 
+	 * @return Factory instance.
+	 */
+    public static ACSFactory getInstance() {
+        if(_instance == null) {
+            _instance = new ACSFactory();
+        }
+        return _instance;
+    }
+
+
+	/** 
+	 * Test code
+	 * 
+	 * @param args  XML file to parse.
+	 */
+    public static void main(String[] args) {
+        try {
+            ACSFactory f = ACSFactory.getInstance();
+
+            System.out.println(f.load(new File(args[0])));
+        }
+        catch(Exception ex) {
+            ex.printStackTrace();
         }
     }
 

@@ -52,7 +52,7 @@
  * <http://www.apache.org/>.
  */
 package org.apache.tools.ant.gui.event;
-import org.apache.tools.ant.Target;
+import org.apache.tools.ant.gui.acs.ACSTargetElement;
 import org.apache.tools.ant.gui.command.Command;
 import org.apache.tools.ant.gui.command.NoOpCmd;
 import org.apache.tools.ant.gui.AppContext;
@@ -66,14 +66,15 @@ import org.apache.tools.ant.gui.AppContext;
 public class TargetSelectionEvent extends AntEvent {
 
     /** New set of selected targets. */
-    private Target[] _selectedTargets = null;
+    private ACSTargetElement[] _selectedTargets = null;
 
 	/** 
 	 * Standard ctor.
 	 * 
 	 * @param context application context.
 	 */
-    public TargetSelectionEvent(AppContext context, Target[] selectedTargets) {
+    public TargetSelectionEvent(AppContext context, 
+                                ACSTargetElement[] selectedTargets) {
         super(context);
         _selectedTargets = selectedTargets;
     }
@@ -83,7 +84,7 @@ public class TargetSelectionEvent extends AntEvent {
 	 * 
      * @return selected target set.
 	 */
-    public Target[] getSelectedTargets() {
+    public ACSTargetElement[] getSelectedTargets() {
         return _selectedTargets;
     }
 
