@@ -108,7 +108,8 @@ public class ProjectHelper {
      * @param project The project to configure. Must not be <code>null</code>.
      * @param buildFile An XML file giving the project's configuration.
      *                  Must not be <code>null</code>.
-     * 
+     *
+     * @deprecated Use the non-statuc parse method
      * @exception BuildException if the configuration is invalid or cannot 
      *                           be read
      */
@@ -208,7 +209,7 @@ public class ProjectHelper {
         // automatically if in CLASSPATH, with the right META-INF/services.
         if (helper == null) {
             try {
-                ClassLoader classLoader = getContextClassLoader();
+                ClassLoader classLoader = LoaderUtils.getContextClassLoader();
                 InputStream is = null;
                 if (classLoader != null) {
                     is = classLoader.getResourceAsStream(SERVICE_ID);
@@ -273,7 +274,7 @@ public class ProjectHelper {
      */
     private static ProjectHelper newHelper(String helperClass)
         throws BuildException {
-        ClassLoader classLoader = getContextClassLoader();
+        ClassLoader classLoader = LoaderUtils.getContextClassLoader();
         try {
             Class clazz = null;
             if (classLoader != null) {
@@ -295,7 +296,8 @@ public class ProjectHelper {
     /**
      * JDK1.1 compatible access to the context class loader.
      * Cut&paste from JAXP.
-     * 
+     *
+     * @deprecated Use LoaderUtils.getContextClassLoader()
      * @return the current context class loader, or <code>null</code>
      * if the context class loader is unavailable.
      */
@@ -319,7 +321,7 @@ public class ProjectHelper {
      * @param project The project containing the target. 
      *                Must not be <code>null</code>.
      *
-     * @deprecated
+     * @deprecated Use IntrospectionHelper for each property
      * @exception BuildException if any of the attributes can't be handled by
      *                           the target
      */
@@ -433,11 +435,13 @@ public class ProjectHelper {
      *                           <code>}</code>
      * @return the original string with the properties replaced, or
      *         <code>null</code> if the original string is <code>null</code>.
-     * 
+     *
+     * @deprecated Use project.replaceProperties()
      * @since 1.5
      */
      public static String replaceProperties(Project project, String value)
             throws BuildException {
+        // needed since project properties are not accessible
          return project.replaceProperties(value);
      }
 
@@ -458,36 +462,13 @@ public class ProjectHelper {
      *                           <code>}</code>
      * @return the original string with the properties replaced, or
      *         <code>null</code> if the original string is <code>null</code>.
+     * @deprecated Use PropertyHelper
      */
      public static String replaceProperties(Project project, String value, 
-         Hashtable keys) throws BuildException {
-        if (value == null) {
-            return null;
-        }
-
-        Vector fragments = new Vector();
-        Vector propertyRefs = new Vector();
-        parsePropertyString(value, fragments, propertyRefs);
-
-        StringBuffer sb = new StringBuffer();
-        Enumeration i = fragments.elements();
-        Enumeration j = propertyRefs.elements();
-        while (i.hasMoreElements()) {
-            String fragment = (String) i.nextElement();
-            if (fragment == null) {
-                String propertyName = (String) j.nextElement();
-                if (!keys.containsKey(propertyName)) {
-                    project.log("Property ${" + propertyName 
-                        + "} has not been set", Project.MSG_VERBOSE);
-                }
-                fragment = (keys.containsKey(propertyName)) 
-                    ? (String) keys.get(propertyName) 
-                    : "${" + propertyName + "}"; 
-            }
-            sb.append(fragment);
-        }                        
-        
-        return sb.toString();
+         Hashtable keys) throws BuildException
+    {
+        PropertyHelper ph=PropertyHelper.getPropertyHelper(project);
+        return ph.replaceProperties( null, value, keys);
     }
 
     /**
@@ -502,66 +483,18 @@ public class ProjectHelper {
      *                  Must not be <code>null</code>.
      * @param propertyRefs List to add property names to.
      *                     Must not be <code>null</code>.
-     * 
+     *
+     * @deprecated Use PropertyHelper
      * @exception BuildException if the string contains an opening 
      *                           <code>${</code> without a closing 
      *                           <code>}</code>
      */
     public static void parsePropertyString(String value, Vector fragments, 
                                            Vector propertyRefs)
-        throws BuildException {
-        int prev = 0;
-        int pos;
-        //search for the next instance of $ from the 'prev' position
-        while ((pos = value.indexOf("$", prev)) >= 0) {
-
-            //if there was any text before this, add it as a fragment
-            //TODO, this check could be modified to go if pos>prev;
-            //seems like this current version could stick empty strings
-            //into the list
-            if (pos > 0) {
-                fragments.addElement(value.substring(prev, pos));
-            }
-            //if we are at the end of the string, we tack on a $
-            //then move past it
-            if (pos == (value.length() - 1)) {
-                fragments.addElement("$");
-                prev = pos + 1;
-            } else if (value.charAt(pos + 1) != '{') {
-                //peek ahead to see if the next char is a property or not
-                //not a property: insert the char as a literal
-                /*
-                fragments.addElement(value.substring(pos + 1, pos + 2));
-                prev = pos + 2;
-                */
-                if (value.charAt(pos + 1) == '$') {
-                    //backwards compatibility two $ map to one mode
-                    fragments.addElement("$");
-                    prev = pos + 2;
-                } else {
-                    //new behaviour: $X maps to $X for all values of X!='$'
-                    fragments.addElement(value.substring(pos, pos + 2));
-                    prev = pos + 2;
-                }
-                
-            } else {
-                //property found, extract its name or bail on a typo
-                int endName = value.indexOf('}', pos);
-                if (endName < 0) {
-                    throw new BuildException("Syntax error in property: "
-                                                 + value);
-                }
-                String propertyName = value.substring(pos + 2, endName);
-                fragments.addElement(null);
-                propertyRefs.addElement(propertyName);
-                prev = endName + 1;
-            }
-        }
-        //no more $ signs found
-        //if there is any tail to the file, append it
-        if (prev < value.length()) {
-            fragments.addElement(value.substring(prev));
-        }
+        throws BuildException
+    {
+        PropertyHelper.parsePropertyStringDefault(value, fragments,
+                propertyRefs);
     }
 //end class
 }
