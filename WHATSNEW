@@ -32,9 +32,6 @@ Changes that could break older environments:
 
 Fixed bugs:
 -----------
-* A new attribute named skip is added to the TailFilter and
-  HeadFilter filter readers.
-  
 * Expand tasks did not behave as expected with PatternSets.
 
 * <property environment=... /> now works on OS/400.
@@ -102,6 +99,9 @@ Fixed bugs:
 
 Other changes:
 --------------
+* A new attribute named skip is added to the TailFilter and
+  HeadFilter filter readers.
+  
 * Shipped XML parser is now Xerces 2.4.0
 
 * The filesetmanifest attribute of <jar> has been reenabled.
