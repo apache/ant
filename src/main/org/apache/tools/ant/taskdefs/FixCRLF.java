@@ -580,6 +580,12 @@ public class FixCRLF extends MatchingTask {
                 }
             } else { // destFile does not exist - write the temp file
                 log("destFile does not exist", Project.MSG_DEBUG);
+
+                File parent = fileUtils.getParentFile(destFile);
+                if (!parent.exists()) {
+                    parent.mkdirs();
+                }
+
                 if (!tmpFile.renameTo(destFile)) {
                     throw new BuildException(
                             "Failed to transform " + srcFile

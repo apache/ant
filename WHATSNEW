@@ -109,8 +109,8 @@ Fixed bugs:
 * The <replacetokens> filter would throw an exception if the token's
   value was an empty string.  Bugzilla Report 18625.
 
-* Perforce tasks relying on output from the server such as <p4change> and <p4label>
-  were hanging. Bugzilla Reports 18129 and 18956.
+* Perforce tasks relying on output from the server such as <p4change>
+  and <p4label> were hanging. Bugzilla Reports 18129 and 18956.
 
 * build.sh install had a problem on cygwin (with REALANTHOME).
   Bugzilla Report 17257
@@ -121,7 +121,8 @@ Fixed bugs:
 * file names that include spaces need to be quoted inside the @argfile
   argument using forked <javac> and (all JDKS).  Bugzilla Report 10499.
   NB : a first correction was only introducing quotes for JDK 1.4
-  It has been changed to quote for all external compilers when paths contain spaces.
+  It has been changed to quote for all external compilers when paths
+  contain spaces.
   Also the backslashes need to be converted to forward slashes 
   Bugzilla Report 17683.
 
@@ -167,6 +168,9 @@ Fixed bugs:
 
 * <unzip>'s and <untar>'s nested patternsets didn't work as documented
   when the pattern ended in a slash or backslash.  Bugzilla Report 20969.
+
+* <fixcrlf> will now create the parent directories for the destination
+  files if necessary.  Bugzilla Report 20840.
 
 Other changes:
 --------------
@@ -424,7 +428,8 @@ Bugzilla Report 19180.
   if ejbjar has cmpversion="2.0" set
   Bugzilla Reports 14707 and 14709.
 
-* <pvcs> config attribute added to set the location of a specific PVCS .cfg file
+* <pvcs> config attribute added to set the location of a specific PVCS
+  .cfg file
   Bugzilla Report 9752
 
 * <mapper> has an "unpackage" mapper
