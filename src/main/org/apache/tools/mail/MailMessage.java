@@ -1,13 +1,8 @@
-// Copyright (c) 2000 Jason Hunter <jh@servlets.com> and
-// The Apache Software Foundation.  All rights reserved.
-//
-// NOTE:
-//   This code is mirrored from http://Servlets.com
-//   Updates should be done in conjunction with Servlets.com
-//   and the larger com.oreilly.servlet project
-
 /*
  * The Apache Software License, Version 1.1
+ *
+ * Copyright (c) 1999 The Apache Software Foundation.  All rights
+ * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
@@ -53,26 +48,27 @@
  *
  */
 
-package com.oreilly.servlet;
+/*
+ * The original version of this class was donated by Jason Hunter,
+ * who wrote the class as part of the com.oreilly.servlet
+ * package for his book "Java Servlet Programming" (O'Reilly).
+ * See http://www.servlets.com.
+ * 
+ */
+
+package org.apache.tools.mail;
 
 import java.io.*;
 import java.net.*;
 import java.util.*;
 
 /** 
- * A class to help send SMTP email.  It can be used by any Java program, not
- * just servlets.  Servlets are likely to use this class to:
- * <ul>
- * <li>Send submitted form data to interested parties
- * <li>Send an email page to an administrator in case of error
- * <li>Send the client an order confirmation
- * </ul>
- * <p>
+ * A class to help send SMTP email.
  * This class is an improvement on the sun.net.smtp.SmtpClient class 
  * found in the JDK.  This version has extra functionality, and can be used
  * with JVMs that did not extend from the JDK.  It's not as robust as
  * the JavaMail Standard Extension classes, but it's easier to use and 
- * easier to install, and has a more open license.
+ * easier to install, and has an Open Source license.
  * <p>
  * It can be used like this:
  * <blockquote><pre>
@@ -117,12 +113,10 @@ import java.util.*;
  * <ul>
  * <li>Figure out how to close the connection in case of error
  * </ul>
- * This class is part of a larger com.oreilly.servlet project from
- * <a href="http://Servlets.com">Servlets.com</a>.
  *
- * @author <b>Jason Hunter</b>, Copyright &#169; 1999-2000
+ * @author Jason Hunter
  * @version 1.1, 2000/03/19, added angle brackets to address, helps some servers
- * @version 1.0, 1999/12/29
+ * version 1.0, 1999/12/29
  */
 public class MailMessage {
 
