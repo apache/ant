@@ -608,10 +608,10 @@ public class JUnitTask extends Task {
      * @since Ant 1.6
      */
     public void setTempdir(File tmpDir) {
-        if(tmpDir!=null) {
-            if(!tmpDir.exists() || !tmpDir.isDirectory()) {
+        if (tmpDir!=null) {
+            if (!tmpDir.exists() || !tmpDir.isDirectory()) {
                 throw new BuildException(tmpDir.toString()
-                        +" is not a valid temp directory");
+                                         +" is not a valid temp directory");
             }
         }
         this.tmpDir = tmpDir;
@@ -1094,7 +1094,7 @@ public class JUnitTask extends Task {
         if (timeout == null) {
             return null;
         }
-        return new ExecuteWatchdog((long)timeout.intValue());
+        return new ExecuteWatchdog((long) timeout.intValue());
     }
 
     /**
@@ -1331,7 +1331,7 @@ public class JUnitTask extends Task {
          * configure from a test; sets member variables to attributes of the test
          * @param test
          */
-        public ForkedTestConfiguration(JUnitTest test) {
+        ForkedTestConfiguration(JUnitTest test) {
             this(test.getFiltertrace(),
                     test.getHaltonerror(),
                     test.getHaltonfailure(),
