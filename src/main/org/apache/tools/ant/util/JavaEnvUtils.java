@@ -123,6 +123,17 @@ public final class JavaEnvUtils {
         return javaVersion;
     }
 
+
+    /**
+     * Returns the version of Java this class is running under.
+     * This number can be used for comparisions; it will always be 
+     * @return the version of Java as a number 10x the major/minor,
+     * e.g Java1.5 has a value of 15
+     */
+    public static int getJavaVersionNumber() {
+        return javaVersionNumber;
+    }
+
     /**
      * Compares the current Java version to the passed in String -
      * assumes the argument is one of the constants defined in this
@@ -139,7 +150,7 @@ public final class JavaEnvUtils {
      * Checks whether the current Java VM is Kaffe.
      * @return true if the current Java VM is Kaffe.
      * @since Ant 1.6.3
-     * @see http://www.kaffe.org/
+     * @see <a href="http://www.kaffe.org/">http://www.kaffe.org/</a>
      */
     public static boolean isKaffe() {
         return kaffeDetected;

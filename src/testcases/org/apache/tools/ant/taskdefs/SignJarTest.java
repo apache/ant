@@ -25,6 +25,7 @@ import java.util.Vector;
 import java.util.Enumeration;
 import org.apache.tools.ant.BuildFileTest;
 import org.apache.tools.ant.Project;
+import org.apache.tools.ant.util.JavaEnvUtils;
 
 /**
  * Testcase for the Signjar task
@@ -148,8 +149,11 @@ public class SignJarTest extends BuildFileTest {
     }
 
     public void testTsaLocalhost() {
-        expectBuildException("testTsaLocalhost",
-            "no TSA at localhost:0");
-        assertLogContaining("java.net.ConnectException");
+        //only test on java1.5+
+        if(JavaEnvUtils.getJavaVersionNumber()>=15) {
+            expectBuildException("testTsaLocalhost",
+                "no TSA at localhost:0");
+            assertLogContaining("java.net.ConnectException");
+        }
     }
 }
