@@ -54,33 +54,26 @@
 
 package org.apache.tools.ant.taskdefs.optional.sitraka;
 
+import java.io.File;
+import java.io.IOException;
+import java.util.Vector;
+import javax.xml.transform.OutputKeys;
+import javax.xml.transform.Result;
+import javax.xml.transform.Source;
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.dom.DOMSource;
+import javax.xml.transform.stream.StreamResult;
+
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.Task;
-import org.apache.tools.ant.taskdefs.LogStreamHandler;
 import org.apache.tools.ant.taskdefs.Execute;
+import org.apache.tools.ant.taskdefs.LogStreamHandler;
 import org.apache.tools.ant.types.Commandline;
-
-import org.apache.tools.ant.types.Path;
 import org.apache.tools.ant.types.EnumeratedAttribute;
-
-
-import java.util.Vector;
-import java.io.File;
-
-import java.io.IOException;
-
-import javax.xml.transform.TransformerFactory;
-import javax.xml.transform.Transformer;
-import javax.xml.transform.OutputKeys;
-import javax.xml.transform.Source;
-import javax.xml.transform.Result;
-import javax.xml.transform.stream.StreamResult;
-import javax.xml.transform.dom.DOMSource;
+import org.apache.tools.ant.types.Path;
 import org.w3c.dom.Document;
-
-
-
 
 
 /**
@@ -138,7 +131,7 @@ public class CovReport extends Task {
       /*
 
       /** coverage home,  mandatory */
-    private File home = null;
+            private File home = null;
 
     /** format of generated report, optional */
     private String format = null;
@@ -179,48 +172,50 @@ public class CovReport extends Task {
     }
 
     public static class ReportFormat extends EnumeratedAttribute {
-        public String[] getValues(){
+        public String[] getValues() {
             return new String[]{"html", "text", "xml"};
         }
     }
+
     /** set the format of the report html|text|xml*/
-    public void setFormat(ReportFormat value){
+    public void setFormat(ReportFormat value) {
         this.format = value.getValue();
     }
 
     public static class ReportType extends EnumeratedAttribute {
-        public String[] getValues(){
+        public String[] getValues() {
             return new String[]{"executive", "summary", "detailed", "verydetailed"};
         }
     }
+
     /** sets the report type executive|summary|detailed|verydetailed */
-    public void setType(ReportType value){
-        this.type =  value.getValue();
+    public void setType(ReportType value) {
+        this.type = value.getValue();
     }
 
     /** include source code lines. XML report only */
-    public void setIncludesource(boolean value){
+    public void setIncludesource(boolean value) {
         this.includeSource = value;
     }
 
     /** sets the threshold printing method 0-100*/
-    public void setPercent(Integer value){
+    public void setPercent(Integer value) {
         this.percent = value;
     }
 
     /** set the filters */
-    public void setFilters(String values){
+    public void setFilters(String values) {
         this.filters = values;
     }
 
-    public Path createSourcepath(){
+    public Path createSourcepath() {
         if (sourcePath == null) {
             sourcePath = new Path(project);
         }
         return sourcePath.createPath();
     }
 
-    public void setSnapshot(File value){
+    public void setSnapshot(File value) {
         this.snapshot = value;
     }
 
@@ -232,15 +227,15 @@ public class CovReport extends Task {
     }
 
     //@todo to remove
-    public Path createCoveragepath(){
+            public Path createCoveragepath() {
         if (coveragePath == null) {
             coveragePath = new Path(project);
         }
         return coveragePath.createPath();
     }
 
-    public Reference createReference(){
-        if (reference == null){
+    public Reference createReference() {
+        if (reference == null) {
             reference = new Reference();
         }
         return reference;
@@ -261,12 +256,12 @@ public class CovReport extends Task {
         if (home == null) {
             throw new BuildException("'home' attribute must be set to JProbe home directory");
         }
-        home = new File(home,"Coverage");
+        home = new File(home, "Coverage");
         File jar = new File(home, "coverage.jar");
         if (!jar.exists()) {
             throw new BuildException("Cannot find Coverage directory: " + home);
         }
-        if (reference != null && !"xml".equals(format)){
+        if (reference != null && !"xml".equals(format)) {
             log("Ignored reference. It cannot be used in non XML report.");
             reference = null; // nullify it so that there is no ambiguity
         }
@@ -278,15 +273,15 @@ public class CovReport extends Task {
         try {
             Commandline cmdl = new Commandline();
             // we need to run Coverage from his directory due to dll/jar issues
-            cmdl.setExecutable( new File(home, "jpcovreport").getAbsolutePath() );
+            cmdl.setExecutable(new File(home, "jpcovreport").getAbsolutePath());
             String[] params = getParameters();
             for (int i = 0; i < params.length; i++) {
                 cmdl.createArgument().setValue(params[i]);
             }
 
             // use the custom handler for stdin issues
-            LogStreamHandler handler = new LogStreamHandler(this,Project.MSG_INFO,Project.MSG_WARN);
-            Execute exec = new Execute( handler );
+            LogStreamHandler handler = new LogStreamHandler(this, Project.MSG_INFO, Project.MSG_WARN);
+            Execute exec = new Execute(handler);
             log(cmdl.toString(), Project.MSG_VERBOSE);
             exec.setCommandline(cmdl.getCommandline());
             int exitValue = exec.execute();
@@ -295,17 +290,17 @@ public class CovReport extends Task {
             }
             log("coveragePath: " + coveragePath, Project.MSG_VERBOSE);
             log("format: " + format, Project.MSG_VERBOSE);
-            if (reference != null && "xml".equals(format)){
+            if (reference != null && "xml".equals(format)) {
                 reference.createEnhancedXMLReport();
             }
 
-        } catch (IOException e){
+        } catch (IOException e) {
             throw new BuildException("Failed to execute JProbe Coverage Report.", e);
         }
     }
 
 
-    protected String[] getParameters(){
+    protected String[] getParameters() {
         Vector v = new Vector();
         if (format != null) {
             v.addElement("-format=" + format);
@@ -341,49 +336,52 @@ public class CovReport extends Task {
     public class Reference {
         protected Path classPath;
         protected ReportFilters filters;
-        public Path createClasspath(){
+
+        public Path createClasspath() {
             if (classPath == null) {
                 classPath = new Path(CovReport.this.project);
             }
             return classPath.createPath();
         }
-        public ReportFilters createFilters(){
-            if (filters == null){
+
+        public ReportFilters createFilters() {
+            if (filters == null) {
                 filters = new ReportFilters();
             }
             return filters;
         }
+
         protected void createEnhancedXMLReport() throws BuildException {
             // we need a classpath element
-            if (classPath == null){
+            if (classPath == null) {
                 throw new BuildException("Need a 'classpath' element.");
             }
             // and a valid one...
             String[] paths = classPath.list();
-            if (paths.length == 0){
+            if (paths.length == 0) {
                 throw new BuildException("Coverage path is invalid. It does not contain any existing path.");
             }
             // and we need at least one filter include/exclude.
-            if (filters == null || filters.size() == 0){
+            if (filters == null || filters.size() == 0) {
                 createFilters();
                 log("Adding default include filter to *.*()", Project.MSG_VERBOSE);
                 ReportFilters.Include include = new ReportFilters.Include();
-                filters.addInclude( include );
+                filters.addInclude(include);
             }
             try {
                 log("Creating enhanced XML report", Project.MSG_VERBOSE);
                 XMLReport report = new XMLReport(CovReport.this, tofile);
                 report.setReportFilters(filters);
-                report.setJProbehome( new File(home.getParent()) );
+                report.setJProbehome(new File(home.getParent()));
                 Document doc = report.createDocument(paths);
                 TransformerFactory tfactory = TransformerFactory.newInstance();
                 Transformer transformer = tfactory.newTransformer();
                 transformer.setOutputProperty(OutputKeys.INDENT, "yes");
                 transformer.setOutputProperty(OutputKeys.METHOD, "xml");
                 Source src = new DOMSource(doc);
-                Result res = new StreamResult( "file:///" + tofile.toString() );
+                Result res = new StreamResult("file:///" + tofile.toString());
                 transformer.transform(src, res);
-            } catch (Exception e){
+            } catch (Exception e) {
                 throw new BuildException("Error while performing enhanced XML report from file " + tofile, e);
             }
         }

@@ -54,25 +54,25 @@
 
 package org.apache.tools.ant.taskdefs.optional.sitraka;
 
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.io.StringWriter;
-import java.io.FileWriter;
-import java.io.File;
-import java.io.OutputStream;
-import java.io.IOException;
-import java.util.Vector;
 import java.util.Random;
+import java.util.Vector;
 
+import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.Task;
-import org.apache.tools.ant.BuildException;
-import org.apache.tools.ant.types.CommandlineJava;
-import org.apache.tools.ant.types.Commandline;
-import org.apache.tools.ant.types.EnumeratedAttribute;
-import org.apache.tools.ant.types.Path;
-import org.apache.tools.ant.types.FileSet;
 import org.apache.tools.ant.taskdefs.Execute;
 import org.apache.tools.ant.taskdefs.LogStreamHandler;
+import org.apache.tools.ant.types.Commandline;
+import org.apache.tools.ant.types.CommandlineJava;
+import org.apache.tools.ant.types.EnumeratedAttribute;
+import org.apache.tools.ant.types.FileSet;
+import org.apache.tools.ant.types.Path;
 
 /**
  * Convenient task to run Sitraka JProbe Coverage from Ant.
@@ -86,376 +86,380 @@ import org.apache.tools.ant.taskdefs.LogStreamHandler;
  */
 public class Coverage extends Task {
 
-	protected File home;
+    protected File home;
 
-	protected Commandline cmdl = new Commandline();
+    protected Commandline cmdl = new Commandline();
 
-	protected CommandlineJava cmdlJava = new CommandlineJava();
+    protected CommandlineJava cmdlJava = new CommandlineJava();
 
-	protected String function = "coverage";
+    protected String function = "coverage";
 
-	protected String seedName;
+    protected String seedName;
 
-	protected File inputFile;
+    protected File inputFile;
 
-	protected File javaExe;
+    protected File javaExe;
 
-	protected String vm;
+    protected String vm;
 
-	protected boolean applet = false;
+    protected boolean applet = false;
 
-	/** this is a somewhat annoying thing, set it to never */
-	protected String exitPrompt = "never";
+    /** this is a somewhat annoying thing, set it to never */
+    protected String exitPrompt = "never";
 
-	protected Filters filters = new Filters();
+    protected Filters filters = new Filters();
 
-	protected Triggers triggers;
+    protected Triggers triggers;
 
-	protected String finalSnapshot = "coverage";
+    protected String finalSnapshot = "coverage";
 
-	protected String recordFromStart = "coverage";
+    protected String recordFromStart = "coverage";
 
-	protected File snapshotDir;
+    protected File snapshotDir;
 
-	protected File workingDir;
+    protected File workingDir;
 
-	protected boolean trackNatives = false;
+    protected boolean trackNatives = false;
 
-	protected Socket socket;
+    protected Socket socket;
 
-	protected int warnLevel = 0;
+    protected int warnLevel = 0;
 
-	protected Vector filesets = new Vector();
+    protected Vector filesets = new Vector();
 
-	//--------- setters used via reflection --
+    //--------- setters used via reflection --
 
-	/** set the coverage home directory where are libraries, jars and jplauncher */
-	public void setHome(File value){
-		home = value;
-	}
+    /** set the coverage home directory where are libraries, jars and jplauncher */
+    public void setHome(File value) {
+        home = value;
+    }
 
-	/** seed name for snapshot file. can be null, default to snap */
-	public void setSeedname(String value){
-		seedName = value;
-	}
+    /** seed name for snapshot file. can be null, default to snap */
+    public void setSeedname(String value) {
+        seedName = value;
+    }
 
-	public void setInputfile(File value){
-		inputFile = value;
-	}
+    public void setInputfile(File value) {
+        inputFile = value;
+    }
 
-	public void setJavaexe(File value){
-		javaExe = value;
-	}
+    public void setJavaexe(File value) {
+        javaExe = value;
+    }
 
-	public static class Javavm extends EnumeratedAttribute {
-		public String[] getValues(){
-			return new String[]{"java2", "jdk118", "jdk117"};
-		}
-	}
-	/** jdk117, jdk118 or java2, can be null, default to java2 */
-	public void setVm(Javavm value) {
-		vm = value.getValue();
-	}
+    public static class Javavm extends EnumeratedAttribute {
+        public String[] getValues() {
+            return new String[]{"java2", "jdk118", "jdk117"};
+        }
+    }
 
-	/** default to false unless file is htm or html */
-	public void setApplet(boolean value){
-		applet = value;
-	}
+    /** jdk117, jdk118 or java2, can be null, default to java2 */
+    public void setVm(Javavm value) {
+        vm = value.getValue();
+    }
 
-	/** always, error, never */
-	public void setExitprompt(String value){
-		exitPrompt = value;
-	}
+    /** default to false unless file is htm or html */
+    public void setApplet(boolean value) {
+        applet = value;
+    }
 
-	public Filters createFilters(){
-		return filters;
-	}
+    /** always, error, never */
+    public void setExitprompt(String value) {
+        exitPrompt = value;
+    }
 
-	public Triggers createTriggers(){
-		if (triggers == null) {
-			triggers = new Triggers();
-		}
-		return triggers;
-	}
+    public Filters createFilters() {
+        return filters;
+    }
 
-	public Socket createSocket(){
-		if (socket == null ) {
-			socket = new Socket();
-		}
-		return socket;
-	}
+    public Triggers createTriggers() {
+        if (triggers == null) {
+            triggers = new Triggers();
+        }
+        return triggers;
+    }
 
-	public static class Finalsnapshot extends EnumeratedAttribute {
-		public String[] getValues(){
-			return new String[]{"coverage", "none", "all"};
-		}
-	}
+    public Socket createSocket() {
+        if (socket == null) {
+            socket = new Socket();
+        }
+        return socket;
+    }
 
-	/** none, coverage, all. can be null, default to none */
-	public void setFinalsnapshot(String value){
-		finalSnapshot = value;
-	}
+    public static class Finalsnapshot extends EnumeratedAttribute {
+        public String[] getValues() {
+            return new String[]{"coverage", "none", "all"};
+        }
+    }
 
-	public static class Recordfromstart extends EnumeratedAttribute {
-		public String[] getValues(){
-			return new String[]{"coverage", "none", "all"};
-		}
-	}
-	/** all, coverage, none */
-	public void setRecordfromstart(Recordfromstart value) {
-		recordFromStart = value.getValue();
-	}
+    /** none, coverage, all. can be null, default to none */
+    public void setFinalsnapshot(String value) {
+        finalSnapshot = value;
+    }
 
-	public void setWarnlevel(Integer value){
-		warnLevel = value.intValue();
-	}
+    public static class Recordfromstart extends EnumeratedAttribute {
+        public String[] getValues() {
+            return new String[]{"coverage", "none", "all"};
+        }
+    }
 
-	public void setSnapshotdir(File value){
-		snapshotDir = value;
-	}
+    /** all, coverage, none */
+    public void setRecordfromstart(Recordfromstart value) {
+        recordFromStart = value.getValue();
+    }
 
-	public void setWorkingdir(File value){
-		workingDir = value;
-	}
+    public void setWarnlevel(Integer value) {
+        warnLevel = value.intValue();
+    }
 
-	public void setTracknatives(boolean value){
-		trackNatives = value;
-	}
+    public void setSnapshotdir(File value) {
+        snapshotDir = value;
+    }
 
-	//
+    public void setWorkingdir(File value) {
+        workingDir = value;
+    }
 
-	/** the jvm arguments */
+    public void setTracknatives(boolean value) {
+        trackNatives = value;
+    }
+
+    //
+
+    /** the jvm arguments */
     public Commandline.Argument createJvmarg() {
         return cmdlJava.createVmArgument();
     }
 
-	/** the command arguments */
+    /** the command arguments */
     public Commandline.Argument createArg() {
         return cmdlJava.createArgument();
     }
 
-	/** classpath to run the files */
+    /** classpath to run the files */
     public Path createClasspath() {
         return cmdlJava.createClasspath(project).createPath();
     }
 
-	/** classname to run as standalone or runner for filesets */
-	public void setClassname(String value){
-		cmdlJava.setClassname(value);
-	}
+    /** classname to run as standalone or runner for filesets */
+    public void setClassname(String value) {
+        cmdlJava.setClassname(value);
+    }
 
-	/** the classnames to execute */
-	public void addFileset(FileSet fs){
-		filesets.addElement(fs);
-	}
+    /** the classnames to execute */
+    public void addFileset(FileSet fs) {
+        filesets.addElement(fs);
+    }
 
 
-	//---------------- the tedious job begins here
+    //---------------- the tedious job begins here
 
-	public Coverage(){
-	}
+    public Coverage() {
+    }
 
-	/** execute the jplauncher by providing a parameter file */
-	public void execute() throws BuildException {
-		File paramfile = null;	
-		// if an input file is used, all other options are ignored...	
-		if (inputFile == null){
-			checkOptions();
-			paramfile = createParamFile();
-		} else {
-			paramfile = inputFile;
-		}
-		try {
-			// we need to run Coverage from his directory due to dll/jar issues
-			cmdl.setExecutable( new File(home, "jplauncher").getAbsolutePath() );
-			cmdl.createArgument().setValue("-jp_input=" + paramfile.getAbsolutePath());
-			
-			// use the custom handler for stdin issues
-			LogStreamHandler handler = new CoverageStreamHandler(this);
-			Execute exec = new Execute( handler );
-			log(cmdl.toString(), Project.MSG_VERBOSE);
-			exec.setCommandline(cmdl.getCommandline());
-			int exitValue = exec.execute();
-			if (exitValue != 0) {
-				throw new BuildException("JProbe Coverage failed (" + exitValue + ")");
-			}
-		} catch (IOException e){
-			throw new BuildException("Failed to execute JProbe Coverage.", e);
-		} finally {
-			//@todo should be removed once switched to JDK1.2
-			if (inputFile == null && paramfile != null){
-				paramfile.delete();
-			}
-		}
-	}
+    /** execute the jplauncher by providing a parameter file */
+    public void execute() throws BuildException {
+        File paramfile = null;
+        // if an input file is used, all other options are ignored...
+        if (inputFile == null) {
+            checkOptions();
+            paramfile = createParamFile();
+        } else {
+            paramfile = inputFile;
+        }
+        try {
+            // we need to run Coverage from his directory due to dll/jar issues
+            cmdl.setExecutable(new File(home, "jplauncher").getAbsolutePath());
+            cmdl.createArgument().setValue("-jp_input=" + paramfile.getAbsolutePath());
 
-	/** wheck what is necessary to check, Coverage will do the job for us */
-	protected void checkOptions() throws BuildException {
-		// check coverage home
-		if (home == null || !home.isDirectory() ) {
-			throw new BuildException("Invalid home directory. Must point to JProbe home directory");
-		}
-		home = new File(home,"Coverage");
-		File jar = new File(home, "coverage.jar");
-		if (!jar.exists()) {
-			throw new BuildException("Cannot find Coverage directory: " + home);
-		}
+            // use the custom handler for stdin issues
+            LogStreamHandler handler = new CoverageStreamHandler(this);
+            Execute exec = new Execute(handler);
+            log(cmdl.toString(), Project.MSG_VERBOSE);
+            exec.setCommandline(cmdl.getCommandline());
+            int exitValue = exec.execute();
+            if (exitValue != 0) {
+                throw new BuildException("JProbe Coverage failed (" + exitValue + ")");
+            }
+        } catch (IOException e) {
+            throw new BuildException("Failed to execute JProbe Coverage.", e);
+        } finally {
+            //@todo should be removed once switched to JDK1.2
+            if (inputFile == null && paramfile != null) {
+                paramfile.delete();
+            }
+        }
+    }
 
-		// make sure snapshot dir exists and is resolved
-		if (snapshotDir == null) {
-			snapshotDir = new File(".");
-		}
-		snapshotDir = project.resolveFile(snapshotDir.getPath());
-		if (!snapshotDir.isDirectory() || !snapshotDir.exists()) {
-			throw new BuildException("Snapshot directory does not exists :" + snapshotDir);
-		}
-		if (workingDir == null) {
-			workingDir = new File(".");
-		}
-		workingDir = project.resolveFile(workingDir.getPath());
+    /** wheck what is necessary to check, Coverage will do the job for us */
+    protected void checkOptions() throws BuildException {
+        // check coverage home
+        if (home == null || !home.isDirectory()) {
+            throw new BuildException("Invalid home directory. Must point to JProbe home directory");
+        }
+        home = new File(home, "Coverage");
+        File jar = new File(home, "coverage.jar");
+        if (!jar.exists()) {
+            throw new BuildException("Cannot find Coverage directory: " + home);
+        }
 
-		// check for info, do your best to select the java executable.
-		// JProbe 3.0 fails if there is no javaexe option. So
-		if (javaExe == null && ( vm == null || "java2".equals(vm) ) ) {
-			String version = System.getProperty("java.version");
-			// make we are using 1.2+, if it is, then do your best to
-			// get a javaexe
-			if ( !version.startsWith("1.1") ){
-				if (vm == null){
-					vm = "java2";
-				}
-				// if we are here obviously it is java2
-				String home = System.getProperty("java.home");
-				boolean isUnix = File.separatorChar == '/';
-				javaExe = isUnix ? new File(home, "bin/java") : new File(home,"/bin/java.exe");
-			}			
-		}		
-	}
+        // make sure snapshot dir exists and is resolved
+        if (snapshotDir == null) {
+            snapshotDir = new File(".");
+        }
+        snapshotDir = project.resolveFile(snapshotDir.getPath());
+        if (!snapshotDir.isDirectory() || !snapshotDir.exists()) {
+            throw new BuildException("Snapshot directory does not exists :" + snapshotDir);
+        }
+        if (workingDir == null) {
+            workingDir = new File(".");
+        }
+        workingDir = project.resolveFile(workingDir.getPath());
 
-	/**
-	 * return the command line parameters. Parameters can either be passed
-	 * to the command line and stored to a file (then use the -jp_input=<filename>)
-	 * if they are too numerous.
-	 */
-	protected String[] getParameters(){
-		Vector params = new Vector();
-		params.addElement("-jp_function=" + function);
-		if (vm != null) {
-			params.addElement("-jp_vm=" + vm);
-		}
-		if (javaExe != null) {
-			params.addElement("-jp_java_exe=" + project.resolveFile(javaExe.getPath()));
-		}
-		params.addElement("-jp_working_dir=" + workingDir.getPath() );
-		params.addElement("-jp_snapshot_dir=" + snapshotDir.getPath() );
-		params.addElement("-jp_record_from_start=" + recordFromStart);
-		params.addElement("-jp_warn=" + warnLevel);
-		if (seedName != null) {
-			params.addElement("-jp_output_file=" + seedName);
-		}
-		params.addElement("-jp_filter=" + filters.toString() );
-		if (triggers != null) {
-			params.addElement("-jp_trigger=" + triggers.toString() );
-		}
-		if (finalSnapshot != null) {
-			params.addElement("-jp_final_snapshot=" + finalSnapshot);
-		}
+        // check for info, do your best to select the java executable.
+        // JProbe 3.0 fails if there is no javaexe option. So
+        if (javaExe == null && (vm == null || "java2".equals(vm))) {
+            String version = System.getProperty("java.version");
+            // make we are using 1.2+, if it is, then do your best to
+            // get a javaexe
+            if (!version.startsWith("1.1")) {
+                if (vm == null) {
+                    vm = "java2";
+                }
+                // if we are here obviously it is java2
+                String home = System.getProperty("java.home");
+                boolean isUnix = File.separatorChar == '/';
+                javaExe = isUnix ? new File(home, "bin/java") : new File(home, "/bin/java.exe");
+            }
+        }
+    }
+
+    /**
+     * return the command line parameters. Parameters can either be passed
+     * to the command line and stored to a file (then use the -jp_input=<filename>)
+     * if they are too numerous.
+     */
+    protected String[] getParameters() {
+        Vector params = new Vector();
+        params.addElement("-jp_function=" + function);
+        if (vm != null) {
+            params.addElement("-jp_vm=" + vm);
+        }
+        if (javaExe != null) {
+            params.addElement("-jp_java_exe=" + project.resolveFile(javaExe.getPath()));
+        }
+        params.addElement("-jp_working_dir=" + workingDir.getPath());
+        params.addElement("-jp_snapshot_dir=" + snapshotDir.getPath());
+        params.addElement("-jp_record_from_start=" + recordFromStart);
+        params.addElement("-jp_warn=" + warnLevel);
+        if (seedName != null) {
+            params.addElement("-jp_output_file=" + seedName);
+        }
+        params.addElement("-jp_filter=" + filters.toString());
+        if (triggers != null) {
+            params.addElement("-jp_trigger=" + triggers.toString());
+        }
+        if (finalSnapshot != null) {
+            params.addElement("-jp_final_snapshot=" + finalSnapshot);
+        }
         params.addElement("-jp_exit_prompt=" + exitPrompt);
-		//params.addElement("-jp_append=" + append);
-		params.addElement("-jp_track_natives=" + trackNatives);
-		//.... now the jvm
-		// arguments
-		String[] vmargs = cmdlJava.getVmCommand().getArguments();
-		for (int i = 0; i < vmargs.length; i++) {
-			params.addElement(vmargs[i]);
-		}
-		// classpath
-		Path classpath = cmdlJava.getClasspath();
-		if (classpath != null && classpath.size() > 0) {
-			params.addElement("-classpath " + classpath.toString());
-		}
-		// classname (runner or standalone)
-		if (cmdlJava.getClassname() != null) {
-			params.addElement(cmdlJava.getClassname());
-		}
-		// arguments for classname
-		String[] args = cmdlJava.getJavaCommand().getArguments();
-		for (int i = 0; i < args.length; i++) {
-			params.addElement(args[i]);
-		}
-		
-		String[] array = new String[params.size()];
-		params.copyInto(array);
-		return array;
-	}
-	
-	
-	/**
-	 * create the parameter file from the given options. The file is
-	 * created with a random name in the current directory.
-	 * @return the file object where are written the configuration to run
-	 * JProbe Coverage
-	 * @throws BuildException thrown if something bad happens while writing
-	 * the arguments to the file.
-	 */
-	protected File createParamFile() throws BuildException {
-		//@todo change this when switching to JDK 1.2 and use File.createTmpFile()
-		File file = createTmpFile();
-		log("Creating parameter file: " + file, Project.MSG_VERBOSE);
-		
-		// options need to be one per line in the parameter file
-		// so write them all in a single string
-		StringWriter sw = new StringWriter();
-		PrintWriter pw = new PrintWriter(sw);
-		String[] params = getParameters();
-		for (int i = 0; i < params.length; i++){
-			pw.println(params[i]);
-		}
-		pw.flush();
-		log("JProbe Coverage parameters:\n" + sw.toString(), Project.MSG_VERBOSE);
-		
-		// now write them to the file
-		FileWriter fw = null;
-		try {
-			fw = new FileWriter(file);
-			fw.write(sw.toString());
-			fw.flush();
-		} catch (IOException e){
-			throw new BuildException("Could not write parameter file " + file, e);
-		} finally {
-			if (fw != null) {
-				try {
-					fw.close();
-				} catch (IOException ignored){}
-			}
-		}
-		return file;
-	}
+        //params.addElement("-jp_append=" + append);
+        params.addElement("-jp_track_natives=" + trackNatives);
+        //.... now the jvm
+        // arguments
+        String[] vmargs = cmdlJava.getVmCommand().getArguments();
+        for (int i = 0; i < vmargs.length; i++) {
+            params.addElement(vmargs[i]);
+        }
+        // classpath
+        Path classpath = cmdlJava.getClasspath();
+        if (classpath != null && classpath.size() > 0) {
+            params.addElement("-classpath " + classpath.toString());
+        }
+        // classname (runner or standalone)
+        if (cmdlJava.getClassname() != null) {
+            params.addElement(cmdlJava.getClassname());
+        }
+        // arguments for classname
+        String[] args = cmdlJava.getJavaCommand().getArguments();
+        for (int i = 0; i < args.length; i++) {
+            params.addElement(args[i]);
+        }
 
-	/** create a temporary file in the current dir (For JDK1.1 support) */
-	protected File createTmpFile(){
-		final long rand = (new Random(System.currentTimeMillis())).nextLong();
-		File file = new File("jpcoverage" + rand + ".tmp");
-		return file;
-	}
+        String[] array = new String[params.size()];
+        params.copyInto(array);
+        return array;
+    }
 
-	/** specific pumper to avoid those nasty stdin issues */
-	static class CoverageStreamHandler extends LogStreamHandler {
-		CoverageStreamHandler(Task task){
-			super(task, Project.MSG_INFO, Project.MSG_WARN);
-		}
-		/**
-		 * there are some issues concerning all JProbe executable
-		 * In our case a 'Press ENTER to close this window..." will
-		 * be displayed in the current window waiting for enter.
-		 * So I'm closing the stream right away to avoid problems.
-		 */
-	    public void setProcessInputStream(OutputStream os) {
-	    	try {
-	    		os.close();
-	    	} catch (IOException ignored){
-	    	}
-	    }
-	}
+
+    /**
+     * create the parameter file from the given options. The file is
+     * created with a random name in the current directory.
+     * @return the file object where are written the configuration to run
+     * JProbe Coverage
+     * @throws BuildException thrown if something bad happens while writing
+     * the arguments to the file.
+     */
+    protected File createParamFile() throws BuildException {
+        //@todo change this when switching to JDK 1.2 and use File.createTmpFile()
+        File file = createTmpFile();
+        log("Creating parameter file: " + file, Project.MSG_VERBOSE);
+
+        // options need to be one per line in the parameter file
+        // so write them all in a single string
+        StringWriter sw = new StringWriter();
+        PrintWriter pw = new PrintWriter(sw);
+        String[] params = getParameters();
+        for (int i = 0; i < params.length; i++) {
+            pw.println(params[i]);
+        }
+        pw.flush();
+        log("JProbe Coverage parameters:\n" + sw.toString(), Project.MSG_VERBOSE);
+
+        // now write them to the file
+        FileWriter fw = null;
+        try {
+            fw = new FileWriter(file);
+            fw.write(sw.toString());
+            fw.flush();
+        } catch (IOException e) {
+            throw new BuildException("Could not write parameter file " + file, e);
+        } finally {
+            if (fw != null) {
+                try {
+                    fw.close();
+                } catch (IOException ignored) {
+                }
+            }
+        }
+        return file;
+    }
+
+    /** create a temporary file in the current dir (For JDK1.1 support) */
+    protected File createTmpFile() {
+        final long rand = (new Random(System.currentTimeMillis())).nextLong();
+        File file = new File("jpcoverage" + rand + ".tmp");
+        return file;
+    }
+
+    /** specific pumper to avoid those nasty stdin issues */
+    static class CoverageStreamHandler extends LogStreamHandler {
+        CoverageStreamHandler(Task task) {
+            super(task, Project.MSG_INFO, Project.MSG_WARN);
+        }
+
+        /**
+         * there are some issues concerning all JProbe executable
+         * In our case a 'Press ENTER to close this window..." will
+         * be displayed in the current window waiting for enter.
+         * So I'm closing the stream right away to avoid problems.
+         */
+        public void setProcessInputStream(OutputStream os) {
+            try {
+                os.close();
+            } catch (IOException ignored) {
+            }
+        }
+    }
 
 }

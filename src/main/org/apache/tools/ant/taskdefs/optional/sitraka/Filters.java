@@ -72,22 +72,22 @@ public class Filters {
     /** user defined filters */
     protected Vector filters = new Vector();
 
-    public Filters(){
+    public Filters() {
     }
 
-    public void setDefaultExclude(boolean value){
+    public void setDefaultExclude(boolean value) {
         defaultExclude = value;
     }
 
-    public void addInclude(Include incl){
+    public void addInclude(Include incl) {
         filters.addElement(incl);
     }
 
-    public void addExclude(Exclude excl){
+    public void addExclude(Exclude excl) {
         filters.addElement(excl);
     }
 
-    public String toString(){
+    public String toString() {
         StringBuffer buf = new StringBuffer();
         final int size = filters.size();
         if (defaultExclude) {
@@ -98,7 +98,7 @@ public class Filters {
         }
         for (int i = 0; i < size; i++) {
             buf.append(filters.elementAt(i).toString());
-            if ( i < size - 1) {
+            if (i < size - 1) {
                 buf.append(',');
             }
         }
@@ -109,25 +109,30 @@ public class Filters {
         protected String clazz;
         protected String method = "*"; // default is all methods
         protected boolean enabled = true; // default is enable
-        public void setName(String value){ // this one is deprecated.
+
+        public void setName(String value) { // this one is deprecated.
             clazz = value;
         }
-        public void setClass(String value){
-            clazz  = value;
+
+        public void setClass(String value) {
+            clazz = value;
         }
-        public void setMethod(String value){
+
+        public void setMethod(String value) {
             method = value;
         }
-        public void setEnabled(boolean value){
+
+        public void setEnabled(boolean value) {
             enabled = value;
         }
-        public String toString(){
+
+        public String toString() {
             return clazz + "." + method + "()";
         }
     }
 
     public static class Include extends FilterElement {
-        public String toString(){
+        public String toString() {
             return super.toString() + ":I" + (enabled ? "" : "#");
         }
     }

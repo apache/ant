@@ -53,6 +53,15 @@
  */
 package org.apache.tools.ant.taskdefs.optional.sitraka;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.util.Enumeration;
+import java.util.Hashtable;
+import java.util.NoSuchElementException;
+import java.util.Vector;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.Task;
 import org.apache.tools.ant.taskdefs.optional.sitraka.bytecode.ClassFile;
@@ -64,21 +73,6 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
-
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.transform.OutputKeys;
-import javax.xml.transform.Transformer;
-import javax.xml.transform.TransformerFactory;
-import javax.xml.transform.dom.DOMSource;
-import javax.xml.transform.stream.StreamResult;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.util.Enumeration;
-import java.util.Hashtable;
-import java.util.NoSuchElementException;
-import java.util.Vector;
 
 /**
  * Little hack to process XML report from JProbe. It will fix

@@ -64,22 +64,22 @@ package org.apache.tools.ant.taskdefs.optional.sitraka;
  */
 public class Socket {
 
-	/** default to localhost */
-	private String host = "127.0.0.1";
+    /** default to localhost */
+    private String host = "127.0.0.1";
 
-	/** default to 4444 */
-	private int port = 4444;
+    /** default to 4444 */
+    private int port = 4444;
 
-	public void setHost(String value){
-		host = value;
-	}
+    public void setHost(String value) {
+        host = value;
+    }
 
-	public void setPort(Integer value){
-		port = value.intValue();
-	}
+    public void setPort(Integer value) {
+        port = value.intValue();
+    }
 
-	/** if no host is set, returning ':<port>', will take localhost */
-	public String toString(){
-		return host + ":" + port;
-	}
+    /** if no host is set, returning ':<port>', will take localhost */
+    public String toString() {
+        return host + ":" + port;
+    }
 }

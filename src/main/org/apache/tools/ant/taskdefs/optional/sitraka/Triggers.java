@@ -54,8 +54,9 @@
 
 package org.apache.tools.ant.taskdefs.optional.sitraka;
 
-import java.util.Vector;
 import java.util.Hashtable;
+import java.util.Vector;
+
 import org.apache.tools.ant.BuildException;
 
 /**
@@ -66,82 +67,86 @@ import org.apache.tools.ant.BuildException;
  */
 public class Triggers {
 
-	protected Vector triggers = new Vector();
-	
-	public Triggers(){
-	}
+    protected Vector triggers = new Vector();
 
-	public void addMethod(Method method){
-		triggers.addElement(method);
-	}
+    public Triggers() {
+    }
 
-	// -jp_trigger=ClassName.*():E:S,ClassName.MethodName():X:X 
-	public String toString(){
-		StringBuffer buf = new StringBuffer();
-		final int size = triggers.size();
-		for(int i = 0; i < size;  i++) {
-			buf.append( triggers.elementAt(i).toString() );
-			if (i < size - 1) {
-				buf.append(',');
-			}
-		}
-		return buf.toString();
-	}
+    public void addMethod(Method method) {
+        triggers.addElement(method);
+    }
 
-    
-	public static class Method {
-		protected String name;
-		protected String event;
-		protected String action;
-		protected String param;
-		public void setName(String value){
-			name = value;
-		}
-		public void setEvent(String value){
-			if (eventMap.get(value) == null) {
-				throw new BuildException("Invalid event, must be one of " + eventMap);
-			}
-			event = value;
-		}
-		public void setAction(String value) throws BuildException {
-			if (actionMap.get(value) == null) {
-				throw new BuildException("Invalid action, must be one of " + actionMap);
-			}
-			action = value;
-		}
-		public void setParam(String value){
-			param = value;
-		}
+    // -jp_trigger=ClassName.*():E:S,ClassName.MethodName():X:X
+            public String toString() {
+        StringBuffer buf = new StringBuffer();
+        final int size = triggers.size();
+        for (int i = 0; i < size; i++) {
+            buf.append(triggers.elementAt(i).toString());
+            if (i < size - 1) {
+                buf.append(',');
+            }
+        }
+        return buf.toString();
+    }
 
-		// return <name>:<event>:<action>[:param]
-		public String toString(){
-			StringBuffer buf = new StringBuffer();
-			buf.append(name).append(":"); //@todo name must not be null, check for it
-			buf.append(eventMap.get(event)).append(":");
-			buf.append(actionMap.get(action));
-			if (param != null) {
-				buf.append(":").append(param);
-			}
-			return buf.toString();
-		}
-	}
 
-	/** mapping of actions to cryptic command line mnemonics */
-	private final static Hashtable actionMap = new Hashtable(3);
-	
-	/** mapping of events to cryptic command line mnemonics */
-	private final static Hashtable eventMap = new Hashtable(3);
+    public static class Method {
+        protected String name;
+        protected String event;
+        protected String action;
+        protected String param;
 
-	static {
-		actionMap.put("enter", "E");
-		actionMap.put("exit", "X");
-		// clear|pause|resume|snapshot|suspend|exit
-		eventMap.put("clear", "C");
-		eventMap.put("pause", "P");
-		eventMap.put("resume", "R");
-		eventMap.put("snapshot", "S");
-		eventMap.put("suspend", "A");
-		eventMap.put("exit", "X");
-	}
+        public void setName(String value) {
+            name = value;
+        }
+
+        public void setEvent(String value) {
+            if (eventMap.get(value) == null) {
+                throw new BuildException("Invalid event, must be one of " + eventMap);
+            }
+            event = value;
+        }
+
+        public void setAction(String value) throws BuildException {
+            if (actionMap.get(value) == null) {
+                throw new BuildException("Invalid action, must be one of " + actionMap);
+            }
+            action = value;
+        }
+
+        public void setParam(String value) {
+            param = value;
+        }
+
+        // return <name>:<event>:<action>[:param]
+                public String toString() {
+            StringBuffer buf = new StringBuffer();
+            buf.append(name).append(":"); //@todo name must not be null, check for it
+            buf.append(eventMap.get(event)).append(":");
+            buf.append(actionMap.get(action));
+            if (param != null) {
+                buf.append(":").append(param);
+            }
+            return buf.toString();
+        }
+    }
+
+    /** mapping of actions to cryptic command line mnemonics */
+    private final static Hashtable actionMap = new Hashtable(3);
+
+    /** mapping of events to cryptic command line mnemonics */
+    private final static Hashtable eventMap = new Hashtable(3);
+
+    static {
+        actionMap.put("enter", "E");
+        actionMap.put("exit", "X");
+        // clear|pause|resume|snapshot|suspend|exit
+        eventMap.put("clear", "C");
+        eventMap.put("pause", "P");
+        eventMap.put("resume", "R");
+        eventMap.put("snapshot", "S");
+        eventMap.put("suspend", "A");
+        eventMap.put("exit", "X");
+    }
 
 }

@@ -66,101 +66,104 @@ import org.apache.tools.ant.util.regexp.RegexpMatcherFactory;
  */
 public class ReportFilters {
 
-	/** user defined filters */
-	protected Vector filters = new Vector();
+    /** user defined filters */
+    protected Vector filters = new Vector();
 
-	/** cached matcher for each filter */
-	protected Vector matchers = null;
+    /** cached matcher for each filter */
+    protected Vector matchers = null;
 
-	public ReportFilters(){
-	}
+    public ReportFilters() {
+    }
 
-	public void addInclude(Include incl){
-		filters.addElement(incl);
-	}
+    public void addInclude(Include incl) {
+        filters.addElement(incl);
+    }
 
-	public void addExclude(Exclude excl){
-		filters.addElement(excl);
-	}
+    public void addExclude(Exclude excl) {
+        filters.addElement(excl);
+    }
 
-	public int size(){
-		return filters.size();
-	}
+    public int size() {
+        return filters.size();
+    }
 
-	/**
-	 * Check whether a given &lt;classname&gt;&lt;method&gt;() is accepted by the list
-	 * of filters or not.
-	 * @param methodname the full method name in the format &lt;classname&gt;&lt;method&gt;()
-	 */
-	public boolean accept(String methodname){
-		// I'm deferring matcher instantiations at runtime to avoid computing
-		// the filters at parsing time
-		if (matchers == null){
-			createMatchers();
-		}
-		boolean result = false;
-		// assert filters.size() == matchers.size()
-		final int size = filters.size();
-		for (int i = 0; i < size; i++){
-			FilterElement filter = (FilterElement)filters.elementAt(i);
-			RegexpMatcher matcher = (RegexpMatcher)matchers.elementAt(i);
-			if (filter instanceof Include){
-				result = result || matcher.matches(methodname);
-			} else if (filter instanceof Exclude){
-				result = result && !matcher.matches(methodname);
-			} else{
-				//not possible
-				throw new IllegalArgumentException("Invalid filter element: " + filter.getClass().getName());
-			}
-		}
-		return result;
-	}
+    /**
+     * Check whether a given &lt;classname&gt;&lt;method&gt;() is accepted by the list
+     * of filters or not.
+     * @param methodname the full method name in the format &lt;classname&gt;&lt;method&gt;()
+     */
+    public boolean accept(String methodname) {
+        // I'm deferring matcher instantiations at runtime to avoid computing
+        // the filters at parsing time
+        if (matchers == null) {
+            createMatchers();
+        }
+        boolean result = false;
+        // assert filters.size() == matchers.size()
+        final int size = filters.size();
+        for (int i = 0; i < size; i++) {
+            FilterElement filter = (FilterElement) filters.elementAt(i);
+            RegexpMatcher matcher = (RegexpMatcher) matchers.elementAt(i);
+            if (filter instanceof Include) {
+                result = result || matcher.matches(methodname);
+            } else if (filter instanceof Exclude) {
+                result = result && !matcher.matches(methodname);
+            } else {
+                //not possible
+                throw new IllegalArgumentException("Invalid filter element: " + filter.getClass().getName());
+            }
+        }
+        return result;
+    }
 
-	/** should be called only once to cache matchers */
-	protected void createMatchers(){
-		RegexpMatcherFactory factory = new RegexpMatcherFactory();
-		final int size = filters.size();
-		matchers = new Vector();
-		for (int i = 0; i < size; i++){
-			FilterElement filter = (FilterElement)filters.elementAt(i);
-			RegexpMatcher matcher = factory.newRegexpMatcher();
-			String pattern = filter.getAsPattern();
-			matcher.setPattern(pattern);
-			matchers.addElement(matcher);
-		}
-	}
+    /** should be called only once to cache matchers */
+    protected void createMatchers() {
+        RegexpMatcherFactory factory = new RegexpMatcherFactory();
+        final int size = filters.size();
+        matchers = new Vector();
+        for (int i = 0; i < size; i++) {
+            FilterElement filter = (FilterElement) filters.elementAt(i);
+            RegexpMatcher matcher = factory.newRegexpMatcher();
+            String pattern = filter.getAsPattern();
+            matcher.setPattern(pattern);
+            matchers.addElement(matcher);
+        }
+    }
 
 
-	/** default abstract filter element class */
-	abstract public static class FilterElement {
-		protected String clazz = "*"; // default is all classes
-		protected String method = "*"; // default is all methods
+    /** default abstract filter element class */
+    abstract public static class FilterElement {
+        protected String clazz = "*"; // default is all classes
+        protected String method = "*"; // default is all methods
 
-		public void setClass(String value){
-			clazz  = value;
-		}
-		public void setMethod(String value){
-			method = value;
-		}
+        public void setClass(String value) {
+            clazz = value;
+        }
 
-		public String getAsPattern(){
-			StringBuffer buf = new StringBuffer(toString());
-			StringUtil.replace(buf, ".", "\\.");
-			StringUtil.replace(buf, "*", ".*");
-			StringUtil.replace(buf, "(", "\\(");
-			StringUtil.replace(buf, ")", "\\)");
-			return buf.toString();
-		}
+        public void setMethod(String value) {
+            method = value;
+        }
 
-		public String toString(){
-			return clazz + "." + method + "()";
-		}
-	}
+        public String getAsPattern() {
+            StringBuffer buf = new StringBuffer(toString());
+            StringUtil.replace(buf, ".", "\\.");
+            StringUtil.replace(buf, "*", ".*");
+            StringUtil.replace(buf, "(", "\\(");
+            StringUtil.replace(buf, ")", "\\)");
+            return buf.toString();
+        }
 
-	/** concrete include class */
-	public static class Include extends FilterElement {}
+        public String toString() {
+            return clazz + "." + method + "()";
+        }
+    }
 
-	/** concrete exclude class */
-	public static class Exclude extends FilterElement {}
+    /** concrete include class */
+    public static class Include extends FilterElement {
+    }
+
+    /** concrete exclude class */
+    public static class Exclude extends FilterElement {
+    }
 }
 
