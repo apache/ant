@@ -25,7 +25,7 @@
   <li>Dave Walend (<a href="mailto:dwalend@cs.tufts.edu">dwalend@cs.tufts.edu</a>)</li>
 </ul>
 
-<p>Version 1.2 - 2000/08/09</p>
+<p>Version 1.2 - 2000/08/10</p>
 
 <hr>
 <h2>Table of Contents</h2>
@@ -617,7 +617,6 @@ If you do not want these default excludes applied, you may disable them with the
   <li><a href="#deltree">Deltree</a></li>
   <li><a href="#echo">Echo</a></li>
   <li><a href="#exec">Exec</a></li>
-  <li><a href="#unzip">Expand</a></li>
   <li><a href="#filter">Filter</a></li>
   <li><a href="#fixcrlf">FixCRLF</a></li>
   <li><a href="#genkey">GenKey</a></li>
@@ -628,7 +627,6 @@ If you do not want these default excludes applied, you may disable them with the
   <li><a href="#java">Java</a></li>
   <li><a href="#javac">Javac</a></li>
   <li><a href="#javadoc">Javadoc/Javadoc2</a></li>
-  <li><a href="#keysubst">KeySubst</a></li>
   <li><a href="#mkdir">Mkdir</a></li>
   <li><a href="#patch">Patch</a></li>
   <li><a href="#property">Property</a></li>
@@ -1277,38 +1275,6 @@ system command via nested <code>&lt;env&gt;</code> elements.</p>
 </pre></blockquote>
 <p>adds <code>${basedir}/bin</code> to the <code>PATH</code> of the
 system command.</p>
-<hr>
-<h2><a name="unzip">Expand/Unzip/Unjar</a></h2>
-<h3>Description</h3>
-<p>Unzips a zip- or jarfile.</p>
-<p>For JDK 1.1 "last modified time" field is set to current time instead of being 
-carried from zipfile.</p>
-<p>File permissions will not be restored on extracted files.</a>
-<p>DEPRECATION: the expand task simply points to the unzip task and it's
-there for back compatibility reasons.</p>
-<h3>Parameters</h3>
-<table border="1" cellpadding="2" cellspacing="0">
-  <tr>
-    <td valign="top"><b>Attribute</b></td>
-    <td valign="top"><b>Description</b></td>
-    <td align="center" valign="top"><b>Required</b></td>
-  </tr>
-  <tr>
-    <td valign="top">src</td>
-    <td valign="top">zipfile to expand.</td>
-    <td align="center" valign="top">Yes</td>
-  </tr>
-  <tr>
-    <td valign="top">dest</td>
-    <td valign="top">directory where to store the expanded files.</td>
-    <td align="center" valign="top">Yes</td>
-  </tr>
-</table>
-<h3>Examples</h3>
-<blockquote>
-  <p><code>&lt;unzip src=&quot;${tomcat_src}/tools-src.zip&quot; dest=&quot;${tools.home}&quot;
-  /&gt;</code></p>
-</blockquote>
 <hr>
 <h2><a name="filter">Filter</a></h2>
 <h3>Description</h3>
@@ -2512,48 +2478,6 @@ respectively.</p>
   &lt/javadoc&gt;</pre>
   
 <hr>
-<h2><a name="keysubst">KeySubst</a></h2>
-<h3>Description</h3>
-<p>Performs keyword substitution in the source file, and writes the result to
-the destination file.</p>
-<p>Keys in the source file are of the form ${keyname}. The <i>keys</i> attribute
-contains key/value pairs. When a key is found in the <i>keys</i> attribute, then
-&quot;${keyname}&quot; is replaced by the corresponding value.</p>
-<p>The <i>keys</i> attribute is of the form
-&quot;name1=value1*name2=value2*name3=value3&quot;. The '*' is called the
-separator, which might we changed with the <i>sep</i> attribute.</p>
-<p>Note: the source file and destination file may not be the same.</p>
-<h3>Parameters</h3>
-<table border="1" cellpadding="2" cellspacing="0">
-  <tr>
-    <td valign="top"><b>Attribute</b></td>
-    <td valign="top"><b>Description</b></td>
-    <td align="center" valign="top"><b>Required</b></td>
-  </tr>
-  <tr>
-    <td valign="top">src</td>
-    <td valign="top">the source file.</td>
-    <td align="center" valign="top">Yes</td>
-  </tr>
-  <tr>
-    <td valign="top">dest</td>
-    <td valign="top">the destination file.</td>
-    <td align="center" valign="top">Yes</td>
-  </tr>
-  <tr>
-    <td valign="top">sep</td>
-    <td valign="top">the separator for the name/value pairs.</td>
-    <td align="center" valign="top">No</td>
-  </tr>
-  <tr>
-    <td valign="top">keys</td>
-    <td valign="top">name/value pairs for replacement.</td>
-    <td align="center" valign="top">Yes</td>
-  </tr>
-</table>
-<h3>Examples</h3>
-<pre>  &lt;keysubst src=&quot;abc.txt&quot; dest=&quot;def.txt&quot; keys=&quot;VERSION=1.0.3*DATE=2000-01-10&quot; /&gt;</pre>
-<hr>
 <h2><a name="mkdir">Mkdir</a></h2>
 <h3>Description</h3>
 <p>Creates a directory. Also non-existent parent directories are created, when
@@ -3289,6 +3213,36 @@ class path</td>
 &lt;style basedir=&quot;doc&quot; destdir=&quot;build/doc&quot;
        extension=&quot;html&quot; style=&quot;style/apache.xml&quot;/&gt;
 </pre></p>
+</blockquote>
+<hr>
+<h2><a name="unzip">Unjar/Unzip</a></h2>
+<h3>Description</h3>
+<p>Unzips a zip- or jarfile.</p>
+<p>For JDK 1.1 "last modified time" field is set to current time instead of being 
+carried from zipfile.</p>
+<p>File permissions will not be restored on extracted files.</a>
+<h3>Parameters</h3>
+<table border="1" cellpadding="2" cellspacing="0">
+  <tr>
+    <td valign="top"><b>Attribute</b></td>
+    <td valign="top"><b>Description</b></td>
+    <td align="center" valign="top"><b>Required</b></td>
+  </tr>
+  <tr>
+    <td valign="top">src</td>
+    <td valign="top">zipfile to expand.</td>
+    <td align="center" valign="top">Yes</td>
+  </tr>
+  <tr>
+    <td valign="top">dest</td>
+    <td valign="top">directory where to store the expanded files.</td>
+    <td align="center" valign="top">Yes</td>
+  </tr>
+</table>
+<h3>Examples</h3>
+<blockquote>
+  <p><code>&lt;unzip src=&quot;${tomcat_src}/tools-src.zip&quot; dest=&quot;${tools.home}&quot;
+  /&gt;</code></p>
 </blockquote>
 <hr>
 <h2><a name="untar">Untar</a></h2>
