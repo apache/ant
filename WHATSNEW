@@ -4,7 +4,10 @@ Changes from Ant 1.5beta1 to current CVS version
 Fixed bugs:
 -----------
 
-* runant.pl now supports Netware.
+* paths that have been separated by would be incorrectly parsed on
+NetWare.
+
+* runant.pl now supports NetWare.
 
 Changes from Ant 1.4.1 to 1.5beta1
 ==================================
