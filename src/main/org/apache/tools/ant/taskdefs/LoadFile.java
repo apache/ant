@@ -67,7 +67,7 @@ import java.util.Vector;
  *
  * @author Steve Loughran
  * @author <a href="mailto:umagesh@apache.org">Magesh Umasankar</a>
- * @created 10 December 2001
+ * @ant.task category="utility"
  */
 public final class LoadFile extends Task {
 

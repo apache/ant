@@ -84,7 +84,7 @@ import java.util.Vector;
  * @author <a href="mailto:umagesh@rediffmail.com">Magesh Umasankar</a>
  * @version $Revision$
  *
- * @ant:task category="filesystem"
+ * @ant.task category="filesystem"
  */
 public class Move extends Copy {
 

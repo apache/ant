@@ -69,7 +69,7 @@ import java.util.Vector;
  * Load a file's contents as Ant Properties.
  *
  * @author <a href="mailto:umagesh@apache.org">Magesh Umasankar</a>
- * @created 20 February 2002
+ * @ant.task category="utility"
  */
 public final class LoadProperties extends Task {
 
