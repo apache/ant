@@ -407,8 +407,8 @@ This is resolved as &quot;build/classes&quot;.</p>
 
   &lt;target name=&quot;clean&quot;&gt;
     &lt;!-- Delete the ${build} and ${dist} directory trees --&gt;
-    &lt;deltree dir=&quot;${build}&quot; /&gt;
-    &lt;deltree dir=&quot;${dist}&quot; /&gt;
+    &lt;delete dir=&quot;${build}&quot; /&gt;
+    &lt;delete dir=&quot;${dist}&quot; /&gt;
   &lt;/target&gt;
 &lt;/project&gt;
   </pre>
@@ -690,19 +690,24 @@ is appended. E.g. &quot;mypackage/test/&quot; is interpreted as were it &quot;my
 <p>When these patterns are used in inclusion and exclusion, you have a powerful
 way to select just the files you want.</p>
 <h3>Examples</h3>
-<pre>  &lt;copydir src=&quot;${src}&quot;
-           dest=&quot;${dist}&quot;
-           includes=&quot;**/images/*&quot;
-           excludes=&quot;**/*.gif&quot; /&gt;</pre>
+<pre>  
+&lt;copy todir=&quot;${dist}&quot; >
+  &lt;fileset dir=&quot;${src}&quot; 
+           includes=&quot;**/images/*&quot; 
+           excludes=&quot;**/*.gif&quot; 
+  /&gt;
+&lt;/copy&gt;</pre>
 <p>This copies all files in directories called &quot;images&quot;, that are
 located in the directory tree &quot;${src}&quot; to the destination &quot;${dist}&quot;,
 but excludes all &quot;*.gif&quot; files from the copy.</p>
 <p> This example can also be expressed using nested elements as
-<pre>  &lt;copydir src=&quot;${src}&quot;
-           dest=&quot;${dist}&quot;&gt;
+<pre>
+&lt;copy todir=&quot;${dist}&quot; >
+  &lt;fileset dir=&quot;${src}&quot; /&gt;
     &lt;include name=&quot;**/images/*&quot;/&gt;
     &lt;exclude name=&quot;**/*.gif&quot; /&gt;
-  &lt;/copydir&gt;
+  &lt;/fileset&gt;
+&lt;/copy&gt;
 </pre>
 
 <h3>Default Excludes</h3>
@@ -1898,7 +1903,9 @@ that perform file copying operations through the Project commodity methods.</p>
 </table>
 <h3>Examples</h3>
 <pre>  &lt;filter token=&quot;year&quot; value=&quot;2000&quot; /&gt;
-  &lt;copydir src=&quot;${src.dir}&quot; dest=&quot;${dest.dir}&quot;/&gt;</pre>
+  &lt;copy todir=&quot;${dest.dir}&quot;&gt;
+    &lt;fileset dir=&quot;${src.dir}&quot; /&gt;
+  &lt;/copy&gt;</pre> 
 <p>will copy recursively all the files from the <i>src.dir</i> directory into
 the <i>dest.dir</i> directory replacing all the occurencies of the string <i>@year@</i>
 with <i>2000.</i></p>
