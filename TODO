@@ -19,7 +19,7 @@ remove items from this list once they are complete.
 
 * merge "<apply> differentiates between empty & up-to-date" from HEAD [Matt]
 
-* Fix the Xml validation with schema
+* Fix the Xml validation with schema [Antoine]
 
 * Fix or at least document support for tomcat 5.0 jsp
 
