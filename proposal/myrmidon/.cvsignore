@@ -1,13 +1,11 @@
 design*
-.ant.properties
-prj.el
+ant.properties
+*.el
 test
-emacs-jprj.el
 dist
 build
-todo
+distributions
 *.ipr
-pretty.bat
 velocity.log
 project.properties
 ant_vfs_cache
