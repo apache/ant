@@ -11,7 +11,7 @@
 <h3>Description</h3>
 <p>
 Load a file's contents as Ant properties.  This is equivalent
-to &lt;property file=&quot;...&quot;/&gt; except that it
+to &lt;property file|resource=&quot;...&quot;/&gt; except that it
 supports nested &lt;filterchain&gt; elements.
 </p>
 
@@ -30,17 +30,34 @@ filter.</p>
   <tr>
     <td valign="top">srcFile</td>
     <td valign="top">source file</td>
-    <td valign="top" align="center">Yes</td>
+    <td valign="top" rowspan="2" align="center">One of these</td>
+  </tr>
+  <tr>
+    <td valign="top">resource</td>
+    <td valign="top">the resource name of the property file</td>
   </tr>
   <tr>
     <td valign="top">encoding</td>
     <td valign="top">encoding to use when loading the file</td>
     <td align="center" valign="top">No</td>
   </tr>
+  <tr>
+    <td valign="top">classpath</td>
+    <td valign="top">the classpath to use when looking up a resource.</td>
+    <td align="center" valign="top">No</td>
+  </tr>
+  <tr>
+    <td valign="top">classpathref</td>
+    <td valign="top">the classpath to use when looking up a resource,
+      given as <a href="../using.html#references">reference</a>
+      to a &lt;path&gt; defined elsewhere..</td>
+    <td align="center" valign="top">No</td>
+  </tr>
 </table>
 <p>
 The LoadProperties task supports nested <a href="../CoreTypes/filterchain.html">
-FilterChain</a>s.
+FilterChain</a>s, as well as a nested <code>&lt;classpath&gt;</code>
+element for use with the <i>resource</i> attribute.
 
 <h3>Examples</h3>
 <pre>    &lt;loadproperties srcFile="file.properties"/&gt;
