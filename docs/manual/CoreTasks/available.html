@@ -52,6 +52,11 @@ execution depending on system parameters.</p>
     <td align="center" valign="top">No</td>    
   </tr>
   <tr>
+    <td valign="top">filepath</td>
+    <td valign="top">The path to use when looking up <code>file</code>.</td>
+    <td align="center" valign="top">No</td>    
+  </tr>
+  <tr>
     <td valign="top">classpathref</td>
     <td valign="top">The classpath to use, given as a <a href="../using.html#references">reference</a> to a path defined elsewhere.</td>
     <td align="center" valign="top">No</td>    
@@ -68,6 +73,10 @@ execution depending on system parameters.</p>
 <p><code>Available</code>'s <code>classpath</code> attribute is a <a
 href="../using.html#path">path-like structure</a> and can also be set via a nested
 <code>&lt;classpath&gt;</code> element.</p>
+<h4>filepath</h4>
+<p><code>Available</code>'s <code>filepath</code> attribute is a <a
+href="../using.html#path">path-like structure</a> and can also be set via a nested
+<code>&lt;filepath&gt;</code> element.</p>
 <h3>Examples</h3>
 <pre>  &lt;available classname=&quot;org.whatever.Myclass&quot; property=&quot;Myclass.present&quot;/&gt;</pre>
 <p>sets the <code>Myclass.present</code> property to the value &quot;true&quot;
