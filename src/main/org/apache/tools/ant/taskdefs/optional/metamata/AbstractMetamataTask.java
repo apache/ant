@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2001-2002 The Apache Software Foundation.  All rights
+ * Copyright (c) 2001-2003 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -72,6 +72,7 @@ import org.apache.tools.ant.types.CommandlineJava;
 import org.apache.tools.ant.types.FileSet;
 import org.apache.tools.ant.types.Path;
 import org.apache.tools.ant.util.FileUtils;
+import org.apache.tools.ant.util.JavaEnvUtils;
 
 /**
  * Somewhat abstract framework to be used for other metama 2.0 tasks.
@@ -119,7 +120,7 @@ public abstract class AbstractMetamataTask extends Task {
 
     /** initialize the task with the classname of the task to run */
     protected AbstractMetamataTask(String className) {
-        cmdl.setVm("java");
+        cmdl.setVm(JavaEnvUtils.getJreExecutable("java"));
         cmdl.setClassname(className);
     }
 
