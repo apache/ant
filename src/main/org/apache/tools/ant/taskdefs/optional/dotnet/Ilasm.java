@@ -226,7 +226,7 @@ public class Ilasm
 
     public void setTargetType(String targetType)
              throws BuildException {
-        targetType = targetType.toLowerCase();
+        this.targetType = targetType.toLowerCase();
         if (targetType.equals("exe") || targetType.equals("library")) {
             targetType = targetType;
         } else {

@@ -69,9 +69,9 @@ package org.apache.tools.ant.taskdefs.optional.dotnet;
 // ====================================================================
 
 import java.io.File;
-
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.DirectoryScanner;
+import org.apache.tools.ant.Project;
 import org.apache.tools.ant.taskdefs.MatchingTask;
 import org.apache.tools.ant.types.Path;
 
@@ -746,9 +746,9 @@ public class CSharp
      *@exception  BuildException  if target is not one of
      *      exe|library|module|winexe
      */
-    public void setTargetType(String targetType)
+    public void setTargetType(String ttype)
              throws BuildException {
-        targetType = targetType.toLowerCase();
+        targetType = ttype.toLowerCase();
         if (targetType.equals("exe") || targetType.equals("library") ||
                 targetType.equals("module") || targetType.equals("winexe")) {
             targetType = targetType;
@@ -1006,7 +1006,7 @@ public class CSharp
      */
     protected String getFileAlignParameter() {
         if (fileAlign != 0) {
-            return "/filealing:" + fileAlign;
+            return "/filealign:" + fileAlign;
         } else {
             return null;
         }
@@ -1068,6 +1068,7 @@ public class CSharp
         if (srcDir == null) {
             srcDir = project.resolveFile(".");
         }
+        log("CSC working from source directory "+srcDir,Project.MSG_VERBOSE);
         validate();
 
         NetCommand command = new NetCommand(this, "CSC", csc_exe_name);
@@ -1114,11 +1115,17 @@ public class CSharp
         //add to the command
         for (int i = 0; i < dependencies.length; i++) {
             File targetFile = new File(base,dependencies[i]);
+            log(targetFile.toString(),Project.MSG_VERBOSE);
             command.addArgument(targetFile.toString());
             if(targetFile.lastModified()>outputTimestamp) {
                 filesOutOfDate++;
-                log("Source file "+targetFile.toString()+" is out of date");
+                log("Source file "+targetFile.toString()+" is out of date",
+                        Project.MSG_VERBOSE);
+            } else {
+                log("Source file "+targetFile.toString()+" is up to date",
+                        Project.MSG_VERBOSE);
             }
+            
         }
 
         //now run the command of exe + settings + files

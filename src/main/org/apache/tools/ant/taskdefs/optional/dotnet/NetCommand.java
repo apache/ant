@@ -132,9 +132,9 @@ public class NetCommand {
      */
 
     public NetCommand(Task owner, String title, String program) {
-        owner = owner;
-        title = title;
-        program = program;
+        this.owner = owner;
+        this.title = title;
+        this.program = program;
         commandLine = new Commandline();
         commandLine.setExecutable(program);
         prepareExecutor();
@@ -215,6 +215,12 @@ public class NetCommand {
      */
     protected void prepareExecutor() {
         // default directory to the project's base directory
+        if(owner==null) {
+            throw new RuntimeException("no owner"); 
+        }
+        if(owner.getProject()==null) {
+            throw new RuntimeException("Owner has no project"); 
+        }
         File dir = owner.getProject().getBaseDir();
         ExecuteStreamHandler handler = new LogStreamHandler(owner,
                 Project.MSG_INFO, Project.MSG_WARN);
