@@ -42,7 +42,11 @@ Other changes:
 * add description attributes to macrodef attributes and elements.
   Bugzilla Report 24711.
 
-* add textname attribute to macrodef.
+* added nested text support to <macrodef>
+  
+* added initial support for Java 1.5.  Java 1.5 is now correctly
+  detected by Ant and treated just like Java 1.4.  You can now specify
+  source="1.5" in the <javac> task.
 
 Changes from Ant 1.6.B3 to Ant 1.6.0
 ====================================
