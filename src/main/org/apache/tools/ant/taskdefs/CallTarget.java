@@ -97,7 +97,7 @@ public class CallTarget extends Task {
                                      location);
         }
         
-        delegate.setDir(".");
+        delegate.setDir(project.getBaseDir());
         delegate.setAntfile(project.getProperty("ant.file"));
         delegate.setTarget(subTarget);
         delegate.execute();

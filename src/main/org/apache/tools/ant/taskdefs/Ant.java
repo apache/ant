@@ -79,7 +79,7 @@ import java.util.*;
  */
 public class Ant extends Task {
 
-    private String dir = null;
+    private File dir = null;
     private String antFile = null;
     private String target = null;
     private String output = null;
@@ -154,12 +154,13 @@ public class Ant extends Task {
                 reinit();
             }
         
-            if( dir==null) dir=".";
+            if(dir == null) 
+                dir = project.getBaseDir();
 
             initializeProject();
 
-            p1.setBasedir(dir);
-            p1.setUserProperty("basedir" , dir);
+            p1.setBaseDir(dir);
+            p1.setUserProperty("basedir" , dir.getAbsolutePath());
             
             // Override with local-defined properties
             Enumeration e = properties.elements();
@@ -168,7 +169,10 @@ public class Ant extends Task {
                 p.init();
             }
             
-            if (antFile == null) antFile = dir + "/build.xml";
+            if (antFile == null) 
+                antFile = "build.xml";
+
+            antFile = (new File(dir, antFile)).getAbsolutePath();
 
             p1.setUserProperty( "ant.file" , antFile );
             ProjectHelper.configureProject(p1, new File(antFile));
@@ -184,7 +188,7 @@ public class Ant extends Task {
         }
     }
 
-    public void setDir(String d) {
+    public void setDir(File d) {
         this.dir = d;
     }
 
