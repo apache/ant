@@ -10,7 +10,7 @@
 
       for (i=1; i<=10; i++) {
         echo = testproject.createTask("echo");
-        setup1.addTask(echo);
+        example1.addTask(echo);
         echo.setMessage(i*i);
       }
 
