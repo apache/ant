@@ -24,8 +24,6 @@ Other changes:
 * New <redirector> type introduced to provide extreme I/O flexibility.
   Initial support for <exec>, <apply>, and <java> tasks.
 
-* <loadproperties> supports loading from a resource.
-
 * Changed default tempdir for <javac> from user.dir to java.io.tmpdir.
 
 * A new base class DispatchTask has been added to facilitate elegant 
@@ -237,6 +235,9 @@ Other changes:
   status back to the command line.
 
 * <fail> accepts a nested <condition>.
+
+* <loadproperties> supports loading from a resource.
+  Bugzilla Report 28340.
 
 Changes from Ant 1.6.0 to Ant 1.6.1
 =============================================
