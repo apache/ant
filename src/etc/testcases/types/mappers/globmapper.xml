@@ -1,9 +1,9 @@
 <project>
   <import file="define.mapperresult.xml"/>
 
-  <target name="handle.dirchar">
+  <target name="handle.dirsep">
     <mapperresult input="d\e/f/j.java" output="f/j.java">
-      <globmapper from="d/e\*" to="*" handledirchar="yes"/>
+      <globmapper from="d/e\*" to="*" handledirsep="yes"/>
     </mapperresult>
   </target>
   

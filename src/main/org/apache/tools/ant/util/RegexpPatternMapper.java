@@ -40,17 +40,17 @@ public class RegexpPatternMapper implements FileNameMapper {
         reg = (new RegexpMatcherFactory()).newRegexpMatcher();
     }
 
-    private boolean handleDirChar = false;
+    private boolean handleDirSep = false;
     private int     regexpOptions = 0;
 
     /**
      * Attribute specifing whether to ignore the difference
      * between / and \ (the two common directory characters).
-     * @param handleDirChar a boolean, default is false.
+     * @param handleDirSep a boolean, default is false.
      * @since Ant 1.6.3
      */
-    public void setHandleDirChar(boolean handleDirChar) {
-        this.handleDirChar = handleDirChar;
+    public void setHandleDirSep(boolean handleDirSep) {
+        this.handleDirSep = handleDirSep;
     }
 
     /**
@@ -102,7 +102,7 @@ public class RegexpPatternMapper implements FileNameMapper {
      *         null if the to pattern did not match
      */
     public String[] mapFileName(String sourceFileName) {
-        if (handleDirChar) {
+        if (handleDirSep) {
             if (sourceFileName.indexOf("\\") != -1) {
                 sourceFileName = sourceFileName.replace('\\', '/');
             }

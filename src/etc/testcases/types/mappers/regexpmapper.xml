@@ -7,9 +7,9 @@
     </mapperresult>
   </target>
 
-  <target name="handle.dirchar">
+  <target name="handle.dirsep">
     <mapperresult input="d\e/f\j.java" output="f/j.java">
-      <regexpmapper from="d/e/(.*)" to="\1" handledirchar="yes"/>
+      <regexpmapper from="d/e/(.*)" to="\1" handledirsep="yes"/>
     </mapperresult>
   </target>
 </project>

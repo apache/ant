@@ -62,17 +62,17 @@ public class GlobPatternMapper implements FileNameMapper {
      */
     protected String toPostfix = null;
 
-    private boolean handleDirChar = false;
+    private boolean handleDirSep = false;
     private boolean caseSensitive = true;
 
     /**
      * Attribute specifing whether to ignore the difference
      * between / and \ (the two common directory characters).
-     * @param handleDirChar a boolean, default is false.
+     * @param handleDirSep a boolean, default is false.
      * @since Ant 1.6.3
      */
-    public void setHandleDirChar(boolean handleDirChar) {
-        this.handleDirChar = handleDirChar;
+    public void setHandleDirSep(boolean handleDirSep) {
+        this.handleDirSep = handleDirSep;
     }
 
     /**
@@ -156,7 +156,7 @@ public class GlobPatternMapper implements FileNameMapper {
         if (!caseSensitive) {
             name = name.toLowerCase();
         }
-        if (handleDirChar) {
+        if (handleDirSep) {
             if (name.indexOf('\\') != -1) {
                 name = name.replace('\\', '/');
             }

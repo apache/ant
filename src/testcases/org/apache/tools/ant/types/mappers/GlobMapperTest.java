@@ -34,8 +34,8 @@ public class GlobMapperTest extends BuildFileTest {
     public void testIgnoreCase() {
         executeTarget("ignore.case");
     }
-    public void testHandleDirChar() {
-        executeTarget("handle.dirchar");
+    public void testHandleDirSep() {
+        executeTarget("handle.dirsep");
     }
 }
 
