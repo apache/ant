@@ -55,6 +55,7 @@
 package org.apache.tools.ant.taskdefs;
 
 import org.apache.tools.ant.*;
+import org.apache.tools.ant.types.EnumeratedAttribute;
 import java.io.*;
 /**
  * Echo
@@ -62,9 +63,12 @@ import java.io.*;
  * @author costin@dnt.ro
  */
 public class Echo extends Task {
-    private String message = ""; // required
-    private File file = null;
-    private boolean append = false;
+    protected String message = ""; // required
+    protected File file = null;
+    protected boolean append = false;
+    
+    // by default, messages are always displayed
+    protected int logLevel = Project.MSG_WARN;   
     
     /**
      * Does the work.
@@ -73,7 +77,7 @@ public class Echo extends Task {
      */
     public void execute() throws BuildException {
         if (file == null) {
-            System.out.println(message);
+            log(message, logLevel);
         } else {
             FileWriter out = null;
             try {
@@ -97,7 +101,7 @@ public class Echo extends Task {
      * @param msg Sets the value for the message variable.
      */
     public void setMessage(String msg) {
-	this.message = msg;
+        this.message = msg;
     }
 
     /**
@@ -120,5 +124,39 @@ public class Echo extends Task {
     public void addText(String msg) {
         message += 
             ProjectHelper.replaceProperties(msg, project.getProperties());
+    }
+
+    /**
+     * Set the logging level to one of
+     * <ul>
+     *  <li>error</li>
+     *  <li>warning</li>
+     *  <li>info</li>
+     *  <li>verbose</li>
+     *  <li>debug</li>
+     * <ul>
+     * <p>The default is &quot;warning&quot; to ensure that messages are
+     * displayed by default when using the -quiet command line option.</p>
+     */
+    public void setLevel(EchoLevel echoLevel) {
+        String option = echoLevel.getValue();
+        if (option.equals("error")) {
+            logLevel = Project.MSG_ERR;
+        } else if (option.equals("warning")) {
+            logLevel = Project.MSG_WARN;
+        } else if (option.equals("info")) {
+            logLevel = Project.MSG_INFO;
+        } else if (option.equals("verbose")) {
+            logLevel = Project.MSG_VERBOSE;
+        } else {
+            // must be "debug"
+            logLevel = Project.MSG_DEBUG;
+        }
+    }
+
+    public static class EchoLevel extends EnumeratedAttribute {
+        public String[] getValues() {
+            return new String[] {"error", "warning", "info", "verbose", "debug"};
+        }
     }
 }
