@@ -29,6 +29,9 @@ Other changes:
 * Refactored Target invocation into org.apache.tools.ant.Executor
   implementations.  Bugzilla Reports 21421, 29248.
 
+* <rmic> now also supports Kaffe's rmic version shipping with Kaffe
+  1.1.2 and above.
+
 Fixed bugs:
 -----------
 
