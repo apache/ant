@@ -156,37 +156,37 @@ public abstract class RegexpMatcherTest extends TestCase {
 
     protected void doStartTest1(String text) {
         reg.setPattern("^starttest");
-        assert("^starttest in default mode", !reg.matches(text));
-        assert("^starttest in single line mode", 
+        assertTrue("^starttest in default mode", !reg.matches(text));
+        assertTrue("^starttest in single line mode", 
                !reg.matches(text, RegexpMatcher.MATCH_SINGLELINE));
-        assert("^starttest in multi line mode", 
+        assertTrue("^starttest in multi line mode", 
                reg.matches(text, RegexpMatcher.MATCH_MULTILINE));
     }
 
     protected void doStartTest2(String text) {
         reg.setPattern("^Line1");
-        assert("^Line1 in default mode", reg.matches(text));
-        assert("^Line1 in single line mode", 
+        assertTrue("^Line1 in default mode", reg.matches(text));
+        assertTrue("^Line1 in single line mode", 
                reg.matches(text, RegexpMatcher.MATCH_SINGLELINE));
-        assert("^Line1 in multi line mode", 
+        assertTrue("^Line1 in multi line mode", 
                reg.matches(text, RegexpMatcher.MATCH_MULTILINE));
     }
 
     protected void doEndTest1(String text) {
         reg.setPattern("endtest$");
-        assert("endtest$ in default mode", !reg.matches(text));
-        assert("endtest$ in single line mode", 
+        assertTrue("endtest$ in default mode", !reg.matches(text));
+        assertTrue("endtest$ in single line mode", 
                !reg.matches(text, RegexpMatcher.MATCH_SINGLELINE));
-        assert("endtest$ in multi line mode", 
+        assertTrue("endtest$ in multi line mode", 
                reg.matches(text, RegexpMatcher.MATCH_MULTILINE));
     }
 
     protected void doEndTest2(String text) {
         reg.setPattern("Line4$");
-        assert("Line4$ in default mode", reg.matches(text));
-        assert("Line4$ in single line mode", 
+        assertTrue("Line4$ in default mode", reg.matches(text));
+        assertTrue("Line4$ in single line mode", 
                reg.matches(text, RegexpMatcher.MATCH_SINGLELINE));
-        assert("Line4$ in multi line mode", 
+        assertTrue("Line4$ in multi line mode", 
                reg.matches(text, RegexpMatcher.MATCH_MULTILINE));
     }
 

@@ -90,7 +90,7 @@ public class JUnitTestRunnerTest extends TestCase {
         runner.run();
         String error = runner.getFormatter().getError();
         assertEquals(error, JUnitTestRunner.ERRORS, runner.getRetCode());
-        assert(error, error.indexOf("thrown on purpose") != -1);
+        assertTrue(error, error.indexOf("thrown on purpose") != -1);
     }
 
     // check that something which is not a testcase generates no errors
@@ -108,7 +108,7 @@ public class JUnitTestRunnerTest extends TestCase {
         String error = runner.getFormatter().getError();
         assertEquals(error, JUnitTestRunner.FAILURES, runner.getRetCode());
         //@fixme as of now does not report the original stacktrace.
-        //assert(error, error.indexOf("thrown on purpose") != -1);
+        //assertTrue(error, error.indexOf("thrown on purpose") != -1);
     }
     
     protected TestRunner createRunner(Class clazz){
