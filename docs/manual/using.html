@@ -2,7 +2,7 @@
 
 <head>
 <meta http-equiv="Content-Language" content="en-us">
-<title>Apache Ant User Manual</title>
+<title>Writing a Simple Buildfile</title>
 </head>
 
 <body>
@@ -126,7 +126,7 @@ have the name &quot;init&quot;.</p>
   </tr>
   <tr>
     <td valign="top">unless</td>
-    <td valign="top">the name of the property that must not be set in order 
+    <td valign="top">the name of the property that must not be set in order
       for this target to execute.</td>
     <td align="center" valign="top">No</td>
   </tr>
@@ -150,7 +150,7 @@ resolved before the task is executed.</p>
 <p>where <i>name</i> is the name of the task,
 <i>attributeN</i> is the attribute name, and
 <i>valueN</i> is the value for this attribute.</p>
-<p>There is a set of <a href="coretasklist.html" target="navFrame">built-in tasks</a>, along with a 
+<p>There is a set of <a href="coretasklist.html" target="navFrame">built-in tasks</a>, along with a
 number of
 <a href="optionaltasklist.html" target="navFrame"> optional tasks</a>, but it is also very
 easy to <a href="develop.html#writingowntask">write your own</a>.</p>
@@ -205,7 +205,7 @@ This is resolved at run-time as <code>build/classes</code>.</p>
 defined using a <code>&lt;property&gt;</code> task.
 For example, <code>${os.name}</code> expands to the
 name of the operating system.</p>
-<p>For a list of system properties see 
+<p>For a list of system properties see
 <a href="http://java.sun.com/j2se/1.3/docs/api/java/lang/System.html#getProperties()">the Javadoc of System.getProperties</a>.
 </p>
 <p>In addition, Ant has some built-in properties:</p>
@@ -371,22 +371,22 @@ that contain space characters, nested <code>arg</code> elements can be used.</p>
   <td width="10%" valign="top"><b>Required</b></td>
 </tr>
   <tr>
-    <td valign="top">value</td> 
+    <td valign="top">value</td>
     <td valign="top">a single command-line argument; can contain space
       characters.</td>
     <td align="center" rowspan="4">Exactly one of these.</td>
   </tr>
   <tr>
-    <td valign="top">line</td> 
+    <td valign="top">line</td>
     <td valign="top">a space-delimited list of command-line arguments.</td>
   </tr>
   <tr>
-    <td valign="top">file</td> 
+    <td valign="top">file</td>
     <td valign="top">The name of a file as a single command-line
       argument; will be replaced with the absolute filename of the file.</td>
   </tr>
   <tr>
-    <td valign="top">path</td> 
+    <td valign="top">path</td>
     <td valign="top">A string that will be treated as a path-like
       string as a single command-line argument; you can use <code>;</code>
       or <code>:</code> as
@@ -468,7 +468,7 @@ href="CoreTypes/patternset.html">PatternSet</a>s, <a href="CoreTypes/fileset.htm
 structures as well.</p>
 
 <hr>
-<p align="center">Copyright &copy; 2001 Apache Software Foundation. All rights
+<p align="center">Copyright &copy; 2001-2002 Apache Software Foundation. All rights
 Reserved.</p>
 
 </body>

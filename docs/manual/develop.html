@@ -2,7 +2,7 @@
 
 <head>
 <meta http-equiv="Content-Language" content="en-us">
-<title>Apache Ant User Manual</title>
+<title>Writing Your Own Task</title>
 </head>
 
 <body>
@@ -12,7 +12,7 @@
 <p>It is very easy to write your own task:</p>
 <ol>
   <li>Create a Java class that extends <code>org.apache.tools.ant.Task</code>.</li>
-  <li>For each attribute, write a <i>setter</i> method. The setter method must be a 
+  <li>For each attribute, write a <i>setter</i> method. The setter method must be a
     <code>public void</code> method that takes a single argument. The
     name of the method must begin with <code>set</code>, followed by the
     attribute name, with the first character of the name in uppercase, and the rest in
@@ -26,7 +26,7 @@ any primitive type (they are converted for you from their String-representation
 in the buildfile)
 </li>
 <li>
-boolean - your method will be passed the value 
+boolean - your method will be passed the value
 <i>true</i> if the value specified in the buildfile is one of <code>true</code>,
 <code>yes</code>, or <code>on</code>)
 </li>
@@ -35,11 +35,11 @@ boolean - your method will be passed the value
 </li>
 <li>
 <code>File</code>
-(in which case the value of the attribute is interpreted relative to the 
+(in which case the value of the attribute is interpreted relative to the
 project's basedir)
 </li>
 <li>
-any other type that has a constructor with a single 
+any other type that has a constructor with a single
 <code>String</code> argument
 </li>
 </ul>
@@ -50,16 +50,16 @@ as an argument
 to your setter method. See
 <code>org/apache/tools/ant/taskdefs/FixCRLF.java</code> for
 an example.</li>
-<li>If the task should support character data, write a <code>public void 
+<li>If the task should support character data, write a <code>public void
 addText(String)</code> method.</li>
 <li>For each nested element, write a <i>create</i> or <i>add</i> method.
-A create method 
-must be a <code>public</code> method that takes no arguments and returns 
-an <code>Object</code> type. The name of the create method must begin with 
-<code>create</code>, followed by the element name. An add method must be 
-a <code>public void</code> method that takes a single argument of an 
+A create method
+must be a <code>public</code> method that takes no arguments and returns
+an <code>Object</code> type. The name of the create method must begin with
+<code>create</code>, followed by the element name. An add method must be
+a <code>public void</code> method that takes a single argument of an
 <code>Object</code> type with a no-argument constructor.
-The name of the add method 
+The name of the add method
 must begin with <code>add</code>, followed by the element name.</li>
 <li>Write a <code>public void execute</code> method, with no arguments, that
 throws a <code>BuildException</code>. This method implements the task
@@ -101,11 +101,11 @@ itself.</li>
   <li>All attributes of all child elements get set via their corresponding
     <code>setXXX</code> methods, at runtime.</li>
 
-  <li><code>execute()</code> is called at runtime. While the above initialization 
-    steps only occur once, the execute() method may be 
-    called more than once, if the task is invoked more than once. For example, 
+  <li><code>execute()</code> is called at runtime. While the above initialization
+    steps only occur once, the execute() method may be
+    called more than once, if the task is invoked more than once. For example,
     if <code>target1</code> and <code>target2</code> both depend
-    on <code>target3</code>, then running 
+    on <code>target3</code>, then running
     <code>'ant target1 target2'</code> will run all tasks in
     <code>target3</code> twice.</li>
 </ol>
@@ -163,8 +163,8 @@ public class MyVeryOwnTask extends Task {
 </pre>
 </blockquote>
 <h3>Example 2</h3>
-To use a task directly from the buildfile which created it, place the 
-<code>&lt;taskdef&gt;</code> declaration inside a target 
+To use a task directly from the buildfile which created it, place the
+<code>&lt;taskdef&gt;</code> declaration inside a target
 <i>after the compilation</i>. Use the <code>classpath</code> attribute of
 <code>&lt;taskdef&gt;</code> to point to where the code has just been
 compiled.
@@ -178,9 +178,9 @@ compiled.
     &lt;mkdir dir=&quot;build&quot;/&gt;
     &lt;javac srcdir=&quot;source&quot; destdir=&quot;build&quot;/&gt;
   &lt;/target&gt;
-  
+
   &lt;target name=&quot;declare&quot; depends=&quot;build&quot;&gt;
-    &lt;taskdef name=&quot;mytask&quot; 
+    &lt;taskdef name=&quot;mytask&quot;
         classname=&quot;com.mydomain.MyVeryOwnTask&quot;
         classpath=&quot;build&quot;/&gt;
   &lt;/target&gt;
@@ -200,13 +200,13 @@ package. Then you can use it as if it were a built-in task.</p>
 
 <hr>
 <h2><a name="buildevents">Build Events</a></h2>
-<P>Ant is capable of generating build events as it performs the tasks necessary to build a project. 
+<P>Ant is capable of generating build events as it performs the tasks necessary to build a project.
 Listeners can be attached to Ant to receive these events. This capability could be used, for example,
-to connect Ant to a GUI or to integrate Ant with an IDE. 
+to connect Ant to a GUI or to integrate Ant with an IDE.
 </P>
-<p>To use build events you need to create an ant <code>Project</code> object. You can then call the 
+<p>To use build events you need to create an ant <code>Project</code> object. You can then call the
 <code>addBuildListener</code> method to add your listener to the project. Your listener must implement
-the <code>org.apache.tools.antBuildListener</code> interface. The listener will receive BuildEvents 
+the <code>org.apache.tools.antBuildListener</code> interface. The listener will receive BuildEvents
 for the following events</P>
 <ul>
 <li>Build started</li>
@@ -224,30 +224,30 @@ If you wish to attach a listener from the command line you may use the
 <blockquote>
   <pre>ant -listener org.apache.tools.ant.XmlLogger</pre>
 </blockquote>
-<p>will run Ant with a listener that generates an XML representation of the build progress. This 
+<p>will run Ant with a listener that generates an XML representation of the build progress. This
 listener is included with Ant, as is the default listener, which generates the logging to standard output.</p>
 
 <hr>
 <h2><a name="integration">Source code integration</a></h2>
 
 
-The other way to extend Ant through Java is to make changes to existing tasks, which is positively encouraged. 
-Both changes to the existing source and new tasks can be incorporated back into the Ant codebase, which 
+The other way to extend Ant through Java is to make changes to existing tasks, which is positively encouraged.
+Both changes to the existing source and new tasks can be incorporated back into the Ant codebase, which
 benefits all users and spreads the maintenance load around.
 <p>
 
-Please consult the 
+Please consult the
 <a href="http://jakarta.apache.org/site/getinvolved.html">Getting Involved</a> pages on the Jakarta web site
-for details on how to fetch the latest source and how to submit changes for reincorporation into the 
-source tree. 
+for details on how to fetch the latest source and how to submit changes for reincorporation into the
+source tree.
 <p>
 Ant also has some
 <a href="http://jakarta.apache.org/ant/ant_task_guidelines.html">task guidelines</a>
 which provides some advice to people developing and testing tasks. Even if you intend to
-keep your tasks to yourself, you should still read this as it should be informative.  
+keep your tasks to yourself, you should still read this as it should be informative.
 
 <hr>
-<p align="center">Copyright &copy; 2001 Apache Software Foundation. All rights
+<p align="center">Copyright &copy; 2001-2002 Apache Software Foundation. All rights
 Reserved.</p>
 
 </body>
