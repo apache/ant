@@ -45,7 +45,8 @@ behavior has been dropped.
 Other changes:
 --------------
 
-* New tasks: antstructure, cab, execon, fail, ftp, genkey, jlink, junit, sql, javacc, jjtree, starteam.
+* New tasks: antstructure, cab, execon, fail, ftp, genkey, jlink,
+junit, sql, javacc, jjtree, starteam, war, unwar.
 
 * New tasks mparse pending documentation.
 
