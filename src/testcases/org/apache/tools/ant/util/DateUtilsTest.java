@@ -92,7 +92,7 @@ public class DateUtilsTest extends TestCase {
     public void testDateISO(){
         TimeZone timeZone = TimeZone.getTimeZone("GMT");
         Calendar cal = Calendar.getInstance(timeZone);
-        emailtaskcal.set(2002,1,23);
+        cal.set(2002,1,23);
         String text = DateUtils.format(cal.getTime(),
                 DateUtils.ISO8601_DATE_PATTERN);
         assertEquals("2002-02-23", text);
