@@ -554,6 +554,35 @@
         </table>
       </subsection>
       
+     <subsection name="XmlTask">
+
+        <p>XmlTask provides a simple means to modify XML documents
+        without having to learn XSLT. A simple path reference to an
+        XML node specifies the node you want to change, and how you
+        want to allow XML insertion and removal, or attribute
+        changes. The emphasis is on providing the simplest means to
+        perform common XML replacements</p>
+
+        <table>
+          <tr>
+            <th>Compatibility:</th>
+            <td>Ant 1.4 and later</td>  
+          </tr>
+          <tr>
+            <th>URL:</th>
+            <td><a href="http://www.oopsconsultancy.com/software/xmltask.html">http://www.oopsconsultancy.com/software/xmltask.html</a></td>
+          </tr>
+          <tr>
+            <th>Contact:</th>
+            <td><a href="mailto:xmltask@oopsconsultancy.com">xmltask@oopsconsultancy.com</a></td>
+          </tr>
+          <tr>
+            <th>License:</th>
+            <td>GNU General Public License</td>
+          </tr>
+        </table>
+      </subsection>
+
     </section>
 
     <section name="Compiler Implementations">
