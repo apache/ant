@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2000-2002 The Apache Software Foundation.  All rights 
+ * Copyright (c) 2000-2003 The Apache Software Foundation.  All rights 
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -100,14 +100,17 @@ public class RegexpMatcherFactory {
         }
 
         try {
+            testAvailability("java.util.regex.Matcher");
             return createInstance("org.apache.tools.ant.util.regexp.Jdk14RegexpMatcher");
         } catch (BuildException be) {}
         
         try {
+            testAvailability("org.apache.oro.text.regex.Pattern");
             return createInstance("org.apache.tools.ant.util.regexp.JakartaOroMatcher");
         } catch (BuildException be) {}
         
         try {
+            testAvailability("org.apache.regexp.RE");
             return createInstance("org.apache.tools.ant.util.regexp.JakartaRegexpMatcher");
         } catch (BuildException be) {}
 
@@ -119,6 +122,14 @@ public class RegexpMatcherFactory {
         try {
             Class implClass = Class.forName(className);
             return (RegexpMatcher) implClass.newInstance();
+        } catch (Throwable t) {
+            throw new BuildException(t);
+        }
+    }
+    
+    protected void testAvailability(String className) throws BuildException {
+        try {
+            Class implClass = Class.forName(className);
         } catch (Throwable t) {
             throw new BuildException(t);
         }

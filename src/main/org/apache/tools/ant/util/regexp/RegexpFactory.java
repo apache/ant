@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2001-2002 The Apache Software Foundation.  All rights 
+ * Copyright (c) 2001-2003 The Apache Software Foundation.  All rights 
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -95,14 +95,17 @@ public class RegexpFactory extends RegexpMatcherFactory {
         }
 
         try {
+            testAvailability("java.util.regex.Matcher");
             return createRegexpInstance("org.apache.tools.ant.util.regexp.Jdk14RegexpRegexp");
         } catch (BuildException be) {}
         
         try {
+            testAvailability("org.apache.oro.text.regex.Pattern");
             return createRegexpInstance("org.apache.tools.ant.util.regexp.JakartaOroRegexp");
         } catch (BuildException be) {}
         
         try {
+            testAvailability("org.apache.regexp.RE");
             return createRegexpInstance("org.apache.tools.ant.util.regexp.JakartaRegexpRegexp");
         } catch (BuildException be) {}
 
