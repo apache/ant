@@ -103,7 +103,11 @@ public class AntConfigHandler extends ElementHandler {
         config = new AntConfig();
         config.allowRemoteLibs(getBooleanAttribute(REMOTE_LIBRARY_ATTR));
         config.allowRemoteProjects(getBooleanAttribute(REMOTE_PROJECT_ATTR));
-        config.allowUnsetProperties(getBooleanAttribute(UNSET_PROPS_ATTR));
+        boolean allowUnsetProperties = true;
+        if (getAttribute(UNSET_PROPS_ATTR) != null) {
+            allowUnsetProperties = getBooleanAttribute(UNSET_PROPS_ATTR);
+        }
+        config.allowUnsetProperties(allowUnsetProperties);
     }        
         
     /**
