@@ -69,20 +69,20 @@ import java.util.*;
  */
 public class Property extends Task {
 
-    String name;
-    String value;
-    File file;
-    String resource;
-    private Reference ref = null;
+    protected String name;
+    protected String value;
+    protected File file;
+    protected String resource;
+    protected Reference ref = null;
 
-    boolean userProperty=false; // set read-only properties
+    protected boolean userProperty=false; // set read-only properties
 
     public void setName(String name) {
         this.name = name;
     }
 
     public String getName() {
-	return name;
+        return name;
     }
 
     public void setValue(String value) {
@@ -90,7 +90,7 @@ public class Property extends Task {
     }
 
     public String getValue() {
-	return value;
+        return value;
     }
 
     public void setFile(File file) {
@@ -115,6 +115,10 @@ public class Property extends Task {
 
     public String getResource() {
         return resource;
+    }
+
+    public void setUserProperty(boolean userProperty) {
+        this.userProperty = userProperty;
     }
 
     public String toString() {
@@ -143,12 +147,19 @@ public class Property extends Task {
         }
     }
 
-    private void loadFile (File file) throws BuildException {
+    protected void loadFile (File file) throws BuildException {
         Properties props = new Properties();
         log("Loading " + file.getAbsolutePath(), Project.MSG_VERBOSE);
         try {
-            if (file.exists()) {
-                props.load(new FileInputStream(file));
+            if (file.exists()) { 
+                FileInputStream fis = new FileInputStream(file);
+                try { 
+                    props.load(fis);
+                } finally {
+                    if (fis != null) { 
+                        fis.close();
+                    }
+                }
                 addProperties(props);
             } else {
                 log("Unable to find " + file.getAbsolutePath(), 
@@ -159,7 +170,7 @@ public class Property extends Task {
         }
     }
 
-    private void loadResource( String name ) {
+    protected void loadResource( String name ) {
         Properties props = new Properties();
         log("Resource Loading " + name, Project.MSG_VERBOSE);
         try {
@@ -173,7 +184,7 @@ public class Property extends Task {
         }
     }
 
-    private void addProperties(Properties props) {
+    protected void addProperties(Properties props) {
         resolveAllProperties(props);
         Enumeration e = props.keys();
         while (e.hasMoreElements()) {
@@ -184,11 +195,7 @@ public class Property extends Task {
         }
     }
 
-    public void setUserProperty( boolean userP ) {
-	userProperty=userP;
-    }
-
-    private void addProperty(String n, String v) {
+    protected void addProperty(String n, String v) {
         if( userProperty ) {
             if (project.getUserProperty(n) == null) {
                 project.setUserProperty(n, v);
