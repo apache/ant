@@ -32,6 +32,7 @@
   <property name="lib.dir" value="lib"/>
   <property name="docs.dir" value="docs"/>
   <property name="tests.dir" value="src/testcases"/>
+  <property name="tests.etc.dir" value="src/etc/testcases"/>
   
   <property name="ant.package" value="org/apache/tools/ant"/>
   <property name="optional.package" value="${ant.package}/taskdefs/optional"/>
@@ -549,10 +550,10 @@
     </junit>
 
     <!-- clean up again -->
-    <delete dir="${tests.dir}/taskdefs/optional/antlr/antlr.tmp" />
-    <delete dir="${tests.dir}/taskdefs/taskdefs.tmp" />
-    <delete dir="${tests.dir}/taskdefs.tmp" />
-    <delete file="${tests.dir}/taskdefs/tmp.jar" />
+    <delete dir="${tests.etc.dir}/taskdefs/optional/antlr/antlr.tmp" />
+    <delete dir="${tests.etc.dir}/taskdefs/taskdefs.tmp" />
+    <delete dir="${tests.etc.dir}/taskdefs.tmp" />
+    <delete file="${tests.etc.dir}/taskdefs/tmp.jar" />
   </target>
 
   <target name="run-single-test" if="testcase" depends="compile-tests">
