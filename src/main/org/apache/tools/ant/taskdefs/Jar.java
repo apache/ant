@@ -244,10 +244,12 @@ public class Jar extends Zip {
      *
      * @param config setting for found manifest behavior.
      */
+    /*
     public void setFilesetmanifest(FilesetManifestConfig config) {
         filesetManifestConfig = config;
         mergeManifestsMain = "merge".equals(config.getValue());
     }
+    */
 
     /**
      * Adds a zipfileset to include in the META-INF directory.
@@ -298,7 +300,7 @@ public class Jar extends Zip {
                 finalManifest.merge(configuredManifest);
                 finalManifest.merge(manifest, !mergeManifestsMain);
             }
-            
+
             return finalManifest;
 
         } catch (ManifestException e) {
@@ -307,7 +309,7 @@ public class Jar extends Zip {
         }
     }
 
-    private void writeManifest(ZipOutputStream zOut, Manifest manifest) 
+    private void writeManifest(ZipOutputStream zOut, Manifest manifest)
          throws IOException {
         for (Enumeration e = manifest.getWarnings();
              e.hasMoreElements();) {
@@ -328,7 +330,7 @@ public class Jar extends Zip {
                       System.currentTimeMillis(), null);
         super.initZipOutputStream(zOut);
     }
-    
+
     protected void finalizeZipOutputStream(ZipOutputStream zOut)
             throws IOException, BuildException {
         if (manifestOnFinalize) {
@@ -430,7 +432,7 @@ public class Jar extends Zip {
             } else {
                 manifest = getManifest(file);
             }
-        } else if (filesetManifestConfig != null && 
+        } else if (filesetManifestConfig != null &&
                    !filesetManifestConfig.getValue().equals("skip")) {
             // we add this to our group of fileset manifests
             log("Found manifest to merge in file " + file,
@@ -492,7 +494,7 @@ public class Jar extends Zip {
                 Manifest currentManifest =
                     new Manifest(new InputStreamReader(theZipFile
                                                        .getInputStream(entry)));
-                Manifest newManifest = createManifest();                                                       
+                Manifest newManifest = createManifest();
                 if (!currentManifest.equals(newManifest)) {
                     log("Updating jar since jar manifest has changed",
                         Project.MSG_VERBOSE);

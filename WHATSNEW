@@ -1,6 +1,14 @@
 Changes from Ant 1.5beta3 to current CVS version
 ==============================================
 
+Changes that could break older environments:
+--------------------------------------------
+
+* The filesetmanifest attribute added to <jar> after the 1.4.1 
+  release has been removed for now.  This change may affect only
+  the 1.5Beta/1.6Alpha users.  An attempt will be made to add this
+  feature back into Ant 1.6.
+
 Fixed bugs:
 -----------
 
