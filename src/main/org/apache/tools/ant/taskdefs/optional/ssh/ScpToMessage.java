@@ -30,7 +30,7 @@ import java.util.Iterator;
 
 public class ScpToMessage extends AbstractSshMessage {
 
-    private final int BUFFER_SIZE = 1024;
+    private static final int BUFFER_SIZE = 1024;
 
     private File localFile;
     private String remotePath;

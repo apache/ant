@@ -474,9 +474,9 @@ public class JDependTask extends Task {
                 // of sourcespath.  The code is currently the same - you
                 // need class files in a directory to use this - jar files
                 // coming soon....
-                String[] classesPath = getClassespath().list();
-                for (int i = 0; i < classesPath.length; i++) {
-                    File f = new File(classesPath[i]);
+                String[] cP = getClassespath().list();
+                for (int i = 0; i < cP.length; i++) {
+                    File f = new File(cP[i]);
                     // not necessary as JDepend would fail, but why loose
                     // some time?
                     if (!f.exists() || !f.isDirectory()) {
@@ -502,9 +502,9 @@ public class JDependTask extends Task {
 
                 // This is the old way and is deprecated - classespath is
                 // the right way to do this and is above
-                String[] sourcesPath = getSourcespath().list();
-                for (int i = 0; i < sourcesPath.length; i++) {
-                    File f = new File(sourcesPath[i]);
+                String[] sP = getSourcespath().list();
+                for (int i = 0; i < sP.length; i++) {
+                    File f = new File(sP[i]);
 
                     // not necessary as JDepend would fail, but why loose
                     // some time?
@@ -618,9 +618,9 @@ public class JDependTask extends Task {
 
         if (getSourcespath() != null) {
             // This is deprecated - use classespath in the future
-            String[] sourcesPath = getSourcespath().list();
-            for (int i = 0; i < sourcesPath.length; i++) {
-                File f = new File(sourcesPath[i]);
+            String[] sP = getSourcespath().list();
+            for (int i = 0; i < sP.length; i++) {
+                File f = new File(sP[i]);
 
                 // not necessary as JDepend would fail, but why loose
                 // some time?
@@ -637,9 +637,9 @@ public class JDependTask extends Task {
         if (getClassespath() != null) {
             // This is the new way - use classespath - code is the
             // same for now
-            String[] classesPath = getClassespath().list();
-            for (int i = 0; i < classesPath.length; i++) {
-                File f = new File(classesPath[i]);
+            String[] cP = getClassespath().list();
+            for (int i = 0; i < cP.length; i++) {
+                File f = new File(cP[i]);
                 // not necessary as JDepend would fail, but why loose
                 // some time?
                 if (!f.exists() || !f.isDirectory()) {

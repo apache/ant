@@ -223,13 +223,13 @@ public class ScriptDef extends DefBase {
 
         // find the script repository - it is stored in the project
         Map scriptRepository = null;
-        Project project = getProject();
-        synchronized (project) {
+        Project p = getProject();
+        synchronized (p) {
             scriptRepository =
-                (Map) project.getReference(MagicNames.SCRIPT_REPOSITORY);
+                (Map) p.getReference(MagicNames.SCRIPT_REPOSITORY);
             if (scriptRepository == null) {
                 scriptRepository = new HashMap();
-                project.addReference(MagicNames.SCRIPT_REPOSITORY,
+                p.addReference(MagicNames.SCRIPT_REPOSITORY,
                     scriptRepository);
             }
         }
