@@ -219,6 +219,10 @@
     <exclude name="${ant.package}/listener/Log4jListener.java"
              unless="log4j.present" />
   </patternset>
+  <patternset id="needs.commons.logging">
+    <exclude name="${ant.package}/listener/CommongsLoggingListener.java"
+             unless="commons.logging.present" />
+  </patternset>
   <patternset id="needs.bsf">
     <exclude name="${optional.package}/Script.java"
              unless="bsf.present" />
@@ -370,6 +374,9 @@
                classpathref="classpath"/>
     <available property="log4j.present"
                classname="org.apache.log4j.Category"
+               classpathref="classpath"/>
+    <available property="commons.logging.present"
+               classname="org.apache.commons.logging.LogFactory"
                classpathref="classpath"/>
     <!-- this is just a way to check for a TraX implementation -->
     <available property="trax.impl.present"
@@ -525,6 +532,7 @@
       <patternset refid="needs.jakarta.regexp" />
       <patternset refid="needs.jakarta.oro" />
       <patternset refid="needs.jakarta.log4j" />
+      <patternset refid="needs.commons.logging" />
       <patternset refid="needs.sun.uue" />
       <patternset refid="needs.javamail" />
       <patternset refid="needs.icontract" />
@@ -603,6 +611,7 @@
       <exclude name="${util.package}/optional/**" />
       <exclude name="${util.package}/regexp/**" />
       <exclude name="${ant.package}/listener/Log4jListener.class" />
+      <exclude name="${ant.package}/listener/CommonsLoggingListener.class" />
       <exclude name="${ant.package}/taskdefs/email/UUMailer.class" />
       <exclude name="${ant.package}/taskdefs/email/MimeMailer.class" />
       <exclude name="${ant.package}/taskdefs/Get.class" />
@@ -641,6 +650,7 @@
       <include name="${util.package}/optional/**" />
       <include name="${util.package}/regexp/**" />
       <include name="${ant.package}/listener/Log4jListener.class" />
+      <include name="${ant.package}/listener/CommonsLoggingListener.class" />
       <include name="${ant.package}/taskdefs/email/UUMailer.class" />
       <include name="${ant.package}/taskdefs/email/MimeMailer.class" />
       <include name="${ant.package}/taskdefs/Get.class" />
