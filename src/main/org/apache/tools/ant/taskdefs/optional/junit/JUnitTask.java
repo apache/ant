@@ -81,6 +81,10 @@ import java.util.Vector;
 
 import java.net.URL;
 
+import junit.framework.AssertionFailedError;
+import junit.framework.Test;
+import junit.framework.TestResult;
+
 /**
  * Runs JUnit tests.
  *
@@ -145,6 +149,7 @@ import java.net.URL;
  * @author <a href="mailto:sbailliez@imediation.com">Stephane Bailliez</a>
  * @author <a href="mailto:Gerrit.Riessen@web.de">Gerrit Riessen</a>
  * @author <a href="mailto:ehatcher@apache.org">Erik Hatcher</a>
+ * @author <a href="mailto:martijn@kruithof.xs4all.nl">Martijn Kruithof></a>
  *
  * @version $Revision$
  *
@@ -406,7 +411,7 @@ public class JUnitTask extends Task {
      * @since Ant 1.2
      */
     public Path createClasspath() {
-        return commandline.createClasspath(project).createPath();
+        return commandline.createClasspath(getProject()).createPath();
     }
 
     /**
@@ -451,7 +456,7 @@ public class JUnitTask extends Task {
      * @since Ant 1.2
      */
     public BatchTest createBatchTest() {
-        BatchTest test = new BatchTest(project);
+        BatchTest test = new BatchTest(getProject());
         batchTests.addElement(test);
         return test;
     }
@@ -523,7 +528,7 @@ public class JUnitTask extends Task {
         Enumeration list = getIndividualTests();
         while (list.hasMoreElements()) {
             JUnitTest test = (JUnitTest) list.nextElement();
-            if (test.shouldRun(project)) {
+            if (test.shouldRun(getProject())) {
                 execute(test);
             }
         }
@@ -537,7 +542,7 @@ public class JUnitTask extends Task {
         // set the default values if not specified
         //@todo should be moved to the test class instead.
         if (test.getTodir() == null) {
-            test.setTodir(project.resolveFile("."));
+            test.setTodir(getProject().resolveFile("."));
         }
 
         if (test.getOutfile() == null) {
@@ -566,15 +571,15 @@ public class JUnitTask extends Task {
             if ((errorOccurredHere && test.getHaltonerror())
                 || (failureOccurredHere && test.getHaltonfailure())) {
                 throw new BuildException("Test " + test.getName() + " failed"
-                    + (wasKilled ? " (timeout)" : ""), location);
+                    + (wasKilled ? " (timeout)" : ""), getLocation());
             } else {
                 log("TEST " + test.getName() + " FAILED"
                     + (wasKilled ? " (timeout)" : ""), Project.MSG_ERR);
                 if (errorOccurredHere && test.getErrorProperty() != null) {
-                    project.setNewProperty(test.getErrorProperty(), "true");
+                    getProject().setNewProperty(test.getErrorProperty(), "true");
                 }
                 if (failureOccurredHere && test.getFailureProperty() != null) {
-                    project.setNewProperty(test.getFailureProperty(), "true");
+                    getProject().setNewProperty(test.getFailureProperty(), "true");
                 }
             }
         }
@@ -635,10 +640,10 @@ public class JUnitTask extends Task {
         // forked test
         File propsFile = 
             FileUtils.newFileUtils().createTempFile("junit", ".properties",
-                                                    project.getBaseDir());
+                                                    getProject().getBaseDir());
         cmd.createArgument().setValue("propsfile=" 
                                       + propsFile.getAbsolutePath());
-        Hashtable p = project.getProperties();
+        Hashtable p = getProject().getProperties();
         Properties props = new Properties();
         for (Enumeration enum = p.keys(); enum.hasMoreElements();) {
             Object key = enum.nextElement();
@@ -651,7 +656,7 @@ public class JUnitTask extends Task {
         } catch (java.io.IOException e) {
             propsFile.delete();
             throw new BuildException("Error creating temporary properties "
-                                     + "file.", e, location);
+                                     + "file.", e, getLocation());
         }
 
         Execute execute = new Execute(new LogStreamHandler(this, 
@@ -659,7 +664,7 @@ public class JUnitTask extends Task {
                                                            Project.MSG_WARN),
                                       watchdog);
         execute.setCommandline(cmd.getCommandline());
-        execute.setAntRun(project);
+        execute.setAntRun(getProject());
         if (dir != null) {
             execute.setWorkingDirectory(dir);
         }
@@ -679,8 +684,12 @@ public class JUnitTask extends Task {
         try {
             retVal = execute.execute();
         } catch (IOException e) {
-            throw new BuildException("Process fork failed.", e, location);
+            throw new BuildException("Process fork failed.", e, getLocation());
         } finally {
+            if (watchdog.killedProcess()) {
+                logTimeout(feArray, test);
+            }
+
             if (!propsFile.delete()) {
                 throw new BuildException("Could not delete temporary "
                                          + "properties file.");
@@ -734,7 +743,7 @@ public class JUnitTask extends Task {
      */
     private int executeInVM(JUnitTest arg) throws BuildException {
         JUnitTest test = (JUnitTest) arg.clone();
-        test.setProperties(project.getProperties());
+        test.setProperties(getProject().getProperties());
         if (dir != null) {
             log("dir attribute ignored if running in the same VM", 
                 Project.MSG_WARN);
@@ -765,7 +774,7 @@ public class JUnitTask extends Task {
                     classpath.append(antRuntimeClasses);
                 }
 
-                cl = new AntClassLoader(null, project, classpath, false);
+                cl = new AntClassLoader(null, getProject(), classpath, false);
                 log("Using CLASSPATH " + cl.getClasspath(),
                     Project.MSG_VERBOSE);
 
@@ -882,7 +891,7 @@ public class JUnitTask extends Task {
             String filename = test.getOutfile() + fe.getExtension();
             File destFile = new File(test.getTodir(), filename);
             String absFilename = destFile.getAbsolutePath();
-            return project.resolveFile(absFilename);
+            return getProject().resolveFile(absFilename);
         }
         return null;
     }
@@ -920,6 +929,41 @@ public class JUnitTask extends Task {
             }
         } else {
             log("Couldn\'t find " + resource, Project.MSG_DEBUG);
+        }
+    }
+
+    /**
+     * Take care that some output is produced in report files if the 
+     * watchdog kills the test.
+     *
+     * @since Ant 1.5.2
+     */
+
+    private void logTimeout(FormatterElement[] feArray, JUnitTest test) {
+        for (int i = 0; i < feArray.length; i++) {
+            FormatterElement fe = feArray[i];
+            File outFile = getOutput(fe, test);
+            JUnitResultFormatter formatter = fe.createFormatter();
+            if (outFile != null && formatter != null) {
+                try {
+                    OutputStream out = new FileOutputStream(outFile);
+                    formatter.setOutput(out);
+                    formatter.startTestSuite(test);
+                    test.setCounts(0,0,1);
+                    Test t = new Test() {
+                        public int countTestCases() { return 0; }
+                        public void run(TestResult r) { 
+                            throw new AssertionFailedError("Timeout occured");
+                        }
+                    };
+                    formatter.startTest(t);
+                    formatter
+                        .addError(t, 
+                                  new AssertionFailedError("Timeout occured"));
+
+                    formatter.endTestSuite(test);
+                } catch (IOException e) {}
+            }
         }
     }
 
