@@ -570,7 +570,7 @@ public class Javadoc extends Task {
         while (tok.hasMoreTokens()) {
             String f = tok.nextToken();
             SourceFile sf = new SourceFile();
-            sf.setFile(getProject().resolveFile(f));
+            sf.setFile(getProject().resolveFile(f.trim()));
             addSource(sf);
         }
     }
