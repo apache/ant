@@ -258,6 +258,9 @@ public class ZipScanner extends DirectoryScanner {
             return new Resource("", true, Long.MAX_VALUE, true);
         }
 
+        // Zip-Entries always use forward slashes
+        name = name.replace(File.separatorChar, '/');
+
         // first check if the archive needs to be scanned again
         scanme();
         if (myentries.containsKey(name)) {

@@ -110,7 +110,6 @@ public class JarTest extends BuildFileTest {
         File jarFile = new File(getProjectDir(), tempJar);
         long jarModifiedDate = jarFile.lastModified();
         try {
-            // give Windows a chance
             Thread.currentThread().sleep(2500);
         } catch (InterruptedException e) {
         } // end of try-catch
@@ -140,7 +139,6 @@ public class JarTest extends BuildFileTest {
     private void testRecreate(String firstTarget, String secondTarget) {
         executeTarget(firstTarget);
         try {
-            // give Windows a chance
             Thread.currentThread().sleep(2500);
         } catch (InterruptedException e) {
         } // end of try-catch
