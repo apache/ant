@@ -1,5 +1,5 @@
 /*
- * Copyright  2000-2004 The Apache Software Foundation
+ * Copyright  2000-2005 The Apache Software Foundation
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -1197,6 +1197,7 @@ public class Javadoc extends Task {
         private String href;
         private boolean offline = false;
         private File packagelistLoc;
+        private boolean resolveLink = false;
 
         public LinkArgument() {
         }
@@ -1224,6 +1225,24 @@ public class Javadoc extends Task {
         public boolean isLinkOffline() {
             return offline;
         }
+
+        /**
+         * Sets whether Ant should resolve the link attribute relative
+         * to the current basedir.
+         * @param resolve a <code>boolean</code> value
+         */
+        public void setResolveLink(boolean resolve) {
+            this.resolveLink = resolve;
+        }
+
+        /**
+         * should Ant resolve the link attribute relative to the
+         * current basedir?
+         */
+        public boolean shouldResolveLink() {
+            return resolveLink;
+        }
+
     }
 
     /**
@@ -1696,11 +1715,28 @@ public class Javadoc extends Task {
                         log("No href was given for the link - skipping",
                             Project.MSG_VERBOSE);
                         continue;
-                    } else {
+                    }
+                    String link = null;
+                    if (la.shouldResolveLink()) {
+                        File hrefAsFile = 
+                            getProject().resolveFile(la.getHref());
+                        if (hrefAsFile.exists()) {
+                            try {
+                                link = FILE_UTILS.getFileURL(hrefAsFile)
+                                    .toExternalForm();
+                            } catch (MalformedURLException ex) {
+                                // should be impossible
+                                log("Warning: link location was invalid " 
+                                    + hrefAsFile, Project.MSG_WARN);
+                            }
+                        }
+                    }
+                    if (link == null) {
                         // is the href a valid URL
                         try {
                             URL base = new URL("file://.");
                             new URL(base, la.getHref());
+                            link = la.getHref();
                         } catch (MalformedURLException mue) {
                             // ok - just skip
                             log("Link href \"" + la.getHref()
@@ -1728,7 +1764,7 @@ public class Javadoc extends Task {
                                 toExecute.createArgument()
                                     .setValue("-linkoffline");
                                 toExecute.createArgument()
-                                    .setValue(la.getHref());
+                                    .setValue(link);
                                 toExecute.createArgument()
                                     .setValue(packageListURL);
                             } catch (MalformedURLException ex) {
@@ -1742,7 +1778,7 @@ public class Javadoc extends Task {
                         }
                     } else {
                         toExecute.createArgument().setValue("-link");
-                        toExecute.createArgument().setValue(la.getHref());
+                        toExecute.createArgument().setValue(link);
                     }
                 }
             }
