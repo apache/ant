@@ -7,13 +7,8 @@
  */
 package org.apache.tools.ant.taskdefs.optional.ccm;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.OutputStream;
 import org.apache.myrmidon.api.TaskException;
-import org.apache.tools.ant.taskdefs.exec.ExecuteStreamHandler;
+import org.apache.myrmidon.framework.exec.ExecOutputHandler;
 import org.apache.tools.ant.types.Commandline;
 
 /**
@@ -23,7 +18,7 @@ import org.apache.tools.ant.types.Commandline;
  */
 public class CCMCreateTask
     extends Continuus
-    implements ExecuteStreamHandler
+    implements ExecOutputHandler
 {
     /**
      * /comment -- comments associated to the task
@@ -138,6 +133,32 @@ public class CCMCreateTask
     public void execute()
         throws TaskException
     {
+        final Commandline commandLine = determineTask();
+        if( null == m_task )
+        {
+            final String message = "Error determining task";
+            throw new TaskException( message );
+        }
+
+        //create task ok, set this task as the default one
+        final Commandline cmd = new Commandline();
+        cmd.setExecutable( getCcmCommand() );
+        cmd.createArgument().setValue( COMMAND_DEFAULT_TASK );
+        cmd.createArgument().setValue( m_task );
+
+        getLogger().debug( commandLine.toString() );
+
+        final int result2 = run( cmd, null );
+        if( result2 != 0 )
+        {
+            final String message = "Failed executing: " + cmd.toString();
+            throw new TaskException( message );
+        }
+    }
+
+    private Commandline determineTask()
+        throws TaskException
+    {
         final Commandline commandLine = new Commandline();
 
         // build the command line from what we got the format
@@ -150,35 +171,10 @@ public class CCMCreateTask
         final int result = run( commandLine, this );
         if( result != 0 )
         {
-            String msg = "Failed executing: " + commandLine.toString();
-            throw new TaskException( msg );
+            final String message = "Failed executing: " + commandLine.toString();
+            throw new TaskException( message );
         }
-
-        //create task ok, set this task as the default one
-        final Commandline commandLine2 = new Commandline();
-        commandLine2.setExecutable( getCcmCommand() );
-        commandLine2.createArgument().setValue( COMMAND_DEFAULT_TASK );
-        commandLine2.createArgument().setValue( m_task );
-
-        getLogger().debug( commandLine.toString() );
-
-        final int result2 = run( commandLine2 );
-        if( result2 != 0 )
-        {
-            String msg = "Failed executing: " + commandLine2.toString();
-            throw new TaskException( msg );
-        }
-    }
-
-    // implementation of org.apache.tools.ant.taskdefs.ExecuteStreamHandler interface
-
-    public void start()
-        throws IOException
-    {
-    }
-
-    public void stop()
-    {
+        return commandLine;
     }
 
     /**
@@ -218,55 +214,41 @@ public class CCMCreateTask
     }
 
     /**
-     * @param is The new ProcessErrorStream value
-     * @exception IOException Description of Exception
+     * Receive notification about the process writing
+     * to standard output.
      */
-    public void setProcessErrorStream( final InputStream error )
-        throws IOException
+    public void stdout( final String line )
     {
-        final BufferedReader reader = new BufferedReader( new InputStreamReader( error ) );
-        final String errorLine = reader.readLine();
-        if( errorLine != null )
-        {
-            getLogger().debug( "err " + errorLine );
-        }
+        getLogger().debug( "buffer:" + line );
+        final String task = getTask( line );
+
+        setTask( task );
+        getLogger().debug( "task is " + m_task );
     }
 
-    public void setProcessInputStream( final OutputStream output )
-        throws IOException
-    {
-    }
-
-    /**
-     * read the output stream to retrieve the new task number.
-     */
-    public void setProcessOutputStream( final InputStream input )
-        throws TaskException, IOException
+    private String getTask( final String line )
     {
         try
         {
-            final BufferedReader reader =
-                new BufferedReader( new InputStreamReader( input ) );
-            final String buffer = reader.readLine();
-            if( buffer != null )
-            {
-                getLogger().debug( "buffer:" + buffer );
-                String taskstring = buffer.substring( buffer.indexOf( ' ' ) ).trim();
-                taskstring = taskstring.substring( 0, taskstring.lastIndexOf( ' ' ) ).trim();
-                setTask( taskstring );
-                getLogger().debug( "task is " + m_task );
-            }
-        }
-        catch( final NullPointerException npe )
-        {
-            getLogger().error( "error procession stream , null pointer exception", npe );
-            throw new TaskException( npe.getClass().getName(), npe );
+            final String task = line.substring( line.indexOf( ' ' ) ).trim();
+            return task.substring( 0, task.lastIndexOf( ' ' ) ).trim();
         }
         catch( final Exception e )
         {
-            getLogger().error( "error procession stream " + e.getMessage() );
-            throw new TaskException( e.getMessage(), e );
+            final String message = "error procession stream " + e.getMessage();
+            getLogger().error( message, e );
         }
+
+        return null;
+    }
+
+    /**
+     * Receive notification about the process writing
+     * to standard error.
+     */
+    public void stderr( final String line )
+    {
+        getLogger().debug( "err " + line );
     }
 }
 

@@ -9,12 +9,10 @@ package org.apache.tools.ant.taskdefs.optional.ccm;
 
 import java.io.File;
 import java.io.IOException;
+import org.apache.myrmidon.api.AbstractTask;
 import org.apache.myrmidon.api.TaskException;
-import org.apache.tools.ant.Task;
-import org.apache.tools.ant.taskdefs.exec.Execute;
-import org.apache.tools.ant.taskdefs.exec.ExecuteStreamHandler;
-import org.apache.tools.ant.taskdefs.exec.LogOutputStream;
-import org.apache.tools.ant.taskdefs.exec.LogStreamHandler;
+import org.apache.myrmidon.framework.exec.ExecOutputHandler;
+import org.apache.tools.ant.taskdefs.exec.Execute2;
 import org.apache.tools.ant.types.Commandline;
 
 /**
@@ -28,7 +26,7 @@ import org.apache.tools.ant.types.Commandline;
  * @author Benoit Moussaud benoit.moussaud@criltelecom.com
  */
 public abstract class Continuus
-    extends Task
+    extends AbstractTask
 {
     /**
      * Constant for the thing to execute
@@ -108,13 +106,17 @@ public abstract class Continuus
         return toReturn;
     }
 
-    protected int run( final Commandline cmd,
-                       final ExecuteStreamHandler handler )
+    protected int run( final Commandline cmd, final ExecOutputHandler handler )
         throws TaskException
     {
         try
         {
-            final Execute exe = new Execute( handler );
+            final Execute2 exe = new Execute2();
+            setupLogger( exe );
+            if( null != handler )
+            {
+                exe.setExecOutputHandler( handler );
+            }
             exe.setWorkingDirectory( getBaseDirectory() );
             exe.setCommandline( cmd.getCommandline() );
             return exe.execute();
@@ -123,14 +125,5 @@ public abstract class Continuus
         {
             throw new TaskException( "Error", ioe );
         }
-    }
-
-    protected int run( final Commandline cmd )
-        throws TaskException
-    {
-        final LogOutputStream output = new LogOutputStream( getLogger(), false );
-        final LogOutputStream error = new LogOutputStream( getLogger(), true );
-        final LogStreamHandler handler = new LogStreamHandler( output, error );
-        return run( cmd, handler );
     }
 }
