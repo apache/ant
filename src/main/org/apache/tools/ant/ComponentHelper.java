@@ -465,6 +465,10 @@ public class ComponentHelper  {
             String msg = "   +Task: " + taskType;
             project.log (msg, Project.MSG_DEBUG);
             return task;
+        } catch (NoClassDefFoundError ncdfe) {
+            String msg = "Task " + taskType + ": A class needed by class "
+                + c + " cannot be found: " + ncdfe.getMessage();
+            throw new BuildException(msg, ncdfe);
         } catch (Throwable t) {
             System.out.println("task CL=" + c.getClassLoader());
             String msg = "Could not create task of type: "
