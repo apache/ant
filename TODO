@@ -31,8 +31,6 @@ remove items from this list once they are complete.
 * telnet doesn't disconnect properly (PR 25935) [Stefan unless Peter
   is faster].
 
-* Xml NS on nested elements resolution [Start thread, Peter]
-
 * AntClassLoader parent loader [Start thread, Peter]
 
 * delete - do not follow symlinks [Peter, may be dropped for 1.6.2]
