@@ -1,6 +1,7 @@
 package org.apache.tools.ant.taskdefs;
 
 import java.io.*;
+import org.apache.tools.ant.*;
 
 /**
  * Encapsulates a Jikes compiler, by
@@ -40,8 +41,7 @@ public class Jikes {
             BufferedReader reader = new BufferedReader(new InputStreamReader(jikes.getInputStream()));
             jop.parseOutput(reader);
         } catch (IOException e) {
-            // Where could we log this to? We don't have an instance
-            // of project. Perhaps we should add one to our constructor?
+            throw new BuildException("Error running Jikes compiler", e);                
         }
     }
 }
