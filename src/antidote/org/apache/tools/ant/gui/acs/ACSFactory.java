@@ -244,8 +244,22 @@ public class ACSFactory {
             getOwnerDocument().createElement(name);
         // XXX fixme.
         indent(node, 1);
+        addRequiredAttributes(retval);
         node.appendChild(retval);
         return retval;
+    }
+    
+    /** 
+     * Add required attributes to the node.
+     * 
+     * @param node the Node to add the attrinutes to.
+     */
+    public void addRequiredAttributes(ACSElement node) {
+        if (node instanceof ACSDtdDefinedElement) {
+            ACSDtdDefinedElement dtdElement = 
+                (ACSDtdDefinedElement) node;
+            dtdElement.addRequiredAttributes();
+        }
     }
     
     /** 
