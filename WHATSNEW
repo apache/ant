@@ -50,6 +50,9 @@ Fixed bugs:
   <replace> can now handle files as long as there is enough disk space
   available.
 
+* <available> returned false positives when checking a file
+  passed in with the current basedir leading twice:
+  e.g. ${basedir}${file.separator}${basedir}${file.separator}foo .
 
 Other changes:
 --------------
