@@ -55,6 +55,7 @@ Fixed bugs:
 Other changes:
 --------------
 
+* Docs fixes for xmlvalidate.html. Bugzilla Report 27092.
 
 Changes from Ant 1.6.0 to Ant 1.6.1
 =============================================
