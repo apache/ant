@@ -1,0 +1,9 @@
+Manifest-Version: 1.0
+Extension-Name: cornerstone.test.extension
+Specification-Title: Avalon Cornerstone Test Extension
+Specification-Version: 1.1
+Specification-Vendor: Jakarta Apache
+Implementation-Vendor-Id: org.apache.avalon
+Implementation-Vendor: Apache Avalon Project
+Implementation-Version: 1.0.2
+

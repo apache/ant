@@ -9,28 +9,37 @@ package org.apache.myrmidon.components.deployer;
 
 import java.io.File;
 import java.net.URL;
+import java.net.MalformedURLException;
 import java.net.URLClassLoader;
+import java.net.JarURLConnection;
+import java.util.Arrays;
+import java.util.ArrayList;
 import java.util.Enumeration;
+import java.util.jar.Manifest;
 import java.util.HashMap;
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
+import org.apache.avalon.excalibur.extension.PackageManager;
+import org.apache.avalon.excalibur.extension.OptionalPackage;
+import org.apache.avalon.excalibur.extension.Extension;
 import org.apache.avalon.excalibur.i18n.ResourceManager;
 import org.apache.avalon.excalibur.i18n.Resources;
 import org.apache.avalon.framework.activity.Initializable;
 import org.apache.avalon.framework.component.ComponentException;
 import org.apache.avalon.framework.component.ComponentManager;
 import org.apache.avalon.framework.component.Composable;
+import org.apache.avalon.framework.configuration.ClassicSAXConfigurationHandler;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
-import org.apache.avalon.framework.configuration.SAXConfigurationHandler;
 import org.apache.avalon.framework.logger.AbstractLoggable;
 import org.apache.myrmidon.api.Task;
-import org.apache.myrmidon.interfaces.type.DefaultTypeFactory;
 import org.apache.myrmidon.converter.Converter;
 import org.apache.myrmidon.interfaces.converter.ConverterRegistry;
 import org.apache.myrmidon.interfaces.deployer.Deployer;
 import org.apache.myrmidon.interfaces.deployer.DeploymentException;
+import org.apache.myrmidon.interfaces.extensions.ExtensionManager;
 import org.apache.myrmidon.interfaces.role.RoleManager;
+import org.apache.myrmidon.interfaces.type.DefaultTypeFactory;
 import org.apache.myrmidon.interfaces.type.TypeManager;
 import org.xml.sax.SAXException;
 import org.xml.sax.XMLReader;
@@ -49,9 +58,10 @@ public class DefaultDeployer
 
     private final static String TYPE_DESCRIPTOR = "META-INF/ant-types.xml";
 
-    private ConverterRegistry            m_converterRegistry;
-    private TypeManager                  m_typeManager;
-    private RoleManager                  m_roleManager;
+    private ConverterRegistry    m_converterRegistry;
+    private TypeManager          m_typeManager;
+    private RoleManager          m_roleManager;
+    private PackageManager       m_packageManager;
 
     /**
      * Retrieve relevent services needed to deploy.
@@ -65,6 +75,10 @@ public class DefaultDeployer
         m_converterRegistry = (ConverterRegistry)componentManager.lookup( ConverterRegistry.ROLE );
         m_typeManager = (TypeManager)componentManager.lookup( TypeManager.ROLE );
         m_roleManager = (RoleManager)componentManager.lookup( RoleManager.ROLE );
+
+        final ExtensionManager extensionManager =
+            (ExtensionManager)componentManager.lookup( ExtensionManager.ROLE );
+        m_packageManager = new PackageManager( extensionManager );
     }
 
     public void initialize()
@@ -75,7 +89,7 @@ public class DefaultDeployer
         final XMLReader parser = saxParser.getXMLReader();
         //parser.setFeature( "http://xml.org/sax/features/namespace-prefixes", false );
 
-        final SAXConfigurationHandler handler = new SAXConfigurationHandler();
+        final ClassicSAXConfigurationHandler handler = new ClassicSAXConfigurationHandler();
         parser.setContentHandler( handler );
         parser.setErrorHandler( handler );
 
@@ -106,14 +120,16 @@ public class DefaultDeployer
 
         checkFile( file );
 
-        final Deployment deployment = new Deployment( file );
-        final Configuration descriptor = deployment.getDescriptor();
-        final URL[] urls = new URL[] { deployment.getURL() };
-        final URLClassLoader classLoader =
-            new URLClassLoader( urls, Thread.currentThread().getContextClassLoader() );
-
         try
         {
+            final File[] extensions = getOptionalPackagesFor( file );
+            final URL[] urls = buildClasspath( file, extensions );
+            final Deployment deployment = new Deployment( file );
+            final Configuration descriptor = deployment.getDescriptor();
+            
+            final URLClassLoader classLoader =
+                new URLClassLoader( urls, Thread.currentThread().getContextClassLoader() );
+
             deployFromDescriptor( descriptor, classLoader, deployment.getURL() );
         }
         catch( final DeploymentException de )
@@ -196,6 +212,85 @@ public class DefaultDeployer
             final String message = REZ.getString( "deploy-type.error", name );
             throw new DeploymentException( message, e );
         }
+    }
+
+    private URL[] buildClasspath( final File file, final File[] dependencies )
+        throws MalformedURLException
+    {
+        final URL[] urls = new URL[ dependencies.length + 1 ];
+        
+        for( int i = 0; i < dependencies.length; i++ )
+        {
+            urls[ i ] = dependencies[ i ].toURL();
+        }
+
+        urls[ dependencies.length ] = file.toURL();
+
+        return urls;
+    }
+
+    /**
+     * Retrieve the files for the optional packages required by
+     * the specified typeLibrary jar.
+     *
+     * @param typeLibrary the typeLibrary
+     * @return the files that need to be added to ClassLoader
+     */
+    private File[] getOptionalPackagesFor( final File typeLibrary )
+        throws Exception
+    {
+        final URL url = new URL( "jar:" + typeLibrary.getCanonicalFile().toURL() + "!/" );
+        final JarURLConnection connection = (JarURLConnection)url.openConnection();
+        final Manifest manifest = connection.getManifest();
+        final Extension[] available = Extension.getAvailable( manifest );
+        final Extension[] required = Extension.getRequired( manifest );
+
+        if( getLogger().isDebugEnabled() )
+        {
+            final String message1 = 
+                REZ.getString( "available-extensions", Arrays.asList( available ) );
+            getLogger().debug( message1 );
+            final String message2 = 
+                REZ.getString( "required-extensions", Arrays.asList( required ) );
+            getLogger().debug( message2 );
+        }
+
+        final ArrayList dependencies = new ArrayList();
+        final ArrayList unsatisfied = new ArrayList();
+
+        m_packageManager.scanDependencies( required,
+                                           available,
+                                           dependencies,
+                                           unsatisfied );
+
+        if( 0 != unsatisfied.size() )
+        {
+            final int size = unsatisfied.size();
+            for( int i = 0; i < size; i++ )
+            {
+                final Extension extension = (Extension)unsatisfied.get( i );
+                final Object[] params = new Object[]
+                {
+                    extension.getExtensionName(), 
+                    extension.getSpecificationVendor(), 
+                    extension.getSpecificationVersion(),
+                    extension.getImplementationVendor(), 
+                    extension.getImplementationVendorId(),
+                    extension.getImplementationVersion(), 
+                    extension.getImplementationURL()
+                };
+                final String message = REZ.format( "missing.extension", params );
+                getLogger().warn( message );
+            }
+
+            final String message =
+                REZ.getString( "unsatisfied.extensions", new Integer( size ) );
+            throw new Exception( message );
+        }
+
+        final OptionalPackage[] packages =
+            (OptionalPackage[])dependencies.toArray( new OptionalPackage[ 0 ] );
+        return OptionalPackage.toFiles( packages );
     }
 
     private void deployFromDescriptor( final Configuration descriptor,

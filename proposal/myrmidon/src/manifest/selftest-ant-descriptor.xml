@@ -6,5 +6,6 @@
     <task name="conf-test" classname="org.apache.myrmidon.libs.selftest.ConfigurationTest" />
     <task name="content-test" classname="org.apache.myrmidon.libs.selftest.ContentTest" />
     <task name="file-manip-test" classname="org.apache.myrmidon.libs.selftest.FileManipulationTest" />
+    <task name="extensions-test" classname="org.apache.myrmidon.libs.selftest.ExtensionsTest" />
   </types>
 </ant-lib>

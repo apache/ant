@@ -41,7 +41,7 @@ Legal:
     <echo message="No tests done here"/>
   </target>
 
-  <target name="test-target" depends="no-test-target" unless="no-do-tests">
+  <target name="test-target" depends="no-test-target,extensions-test" unless="no-do-tests">
 
     <echo message="Tests away"/>
 
@@ -70,6 +70,10 @@ Legal:
     
     <content-test>123</content-test>
     
+  </target>
+
+  <target name="extensions-test">
+    <extensions-test/>
   </target>
 
 </project>

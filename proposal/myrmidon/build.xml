@@ -164,11 +164,20 @@ Legal:
       </zipfileset>
     </jar>
 
-    <jar jarfile="${build.lib}/selftest.atl" basedir="${build.classes}">
+    <jar jarfile="${build.lib}/selftest.atl" 
+         basedir="${build.classes}"
+         manifest="${manifest.dir}/selftest.mf">
       <include name="org/apache/myrmidon/libs/selftest/**" />
+      <exclude name="org/apache/myrmidon/libs/selftest/extension1/**" />
       <zipfileset dir="${manifest.dir}" fullpath="META-INF/ant-descriptor.xml">
         <include name="selftest-ant-descriptor.xml"/>
       </zipfileset>
+    </jar>
+
+    <jar jarfile="${build.lib}/selftest-extension1.jar" 
+         basedir="${build.classes}"
+         manifest="${manifest.dir}/selftest-extension1.mf">
+      <include name="org/apache/myrmidon/libs/selftest/extension1/**" />
     </jar>
 
     <jar jarfile="${build.lib}/runtime.atl" basedir="${build.classes}">
@@ -209,6 +218,7 @@ Legal:
     <copy todir="${dist.ext}">
       <fileset dir="${build.lib}">
         <include name="selftest.atl"/>
+        <include name="selftest-extension1.jar"/>
       </fileset>
     </copy>
 
