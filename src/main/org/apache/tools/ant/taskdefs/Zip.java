@@ -143,7 +143,7 @@ public class Zip extends MatchingTask {
             Project.MSG_ERR);
 
         log("Be aware that the effect of using the file attribute depends on",
-            Project.MSG_ERR);
+            Project.MSG_WARN);
         log("the phase of the moon.", Project.MSG_WARN);
         int phase = DateUtils.getPhaseOfMoon(Calendar.getInstance());
         if (phase == 4) {
