@@ -32,7 +32,7 @@ public class Execute
      */
     public final static int INVALID = Integer.MAX_VALUE;
 
-    private static String c_antWorkingDirectory = System.getProperty( "user.dir" );
+    protected static String c_antWorkingDirectory = System.getProperty( "user.dir" );
     private static CommandLauncher c_vmLauncher;
     private static CommandLauncher c_shellLauncher;
     private static Vector c_procEnvironment;

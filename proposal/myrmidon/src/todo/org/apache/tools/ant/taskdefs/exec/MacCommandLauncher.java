@@ -50,7 +50,7 @@ class MacCommandLauncher
         }
         finally
         {
-            System.getProperties().put( "user.dir", Execute.antWorkingDirectory );
+            System.getProperties().put( "user.dir", Execute.c_antWorkingDirectory );
         }
     }
 }
