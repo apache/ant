@@ -159,7 +159,7 @@ class ChangeLogParser {
             saveEntry();
             m_status = GET_FILE;
         }
-        else if (line.startsWith("------")) {
+        else if( line.startsWith( "----------------------------" ) ) {
             final int end = m_comment.length() - lineSeparator.length(); //was -1
             m_comment = m_comment.substring(0, end);
             m_status = GET_PREVIOUS_REV;
