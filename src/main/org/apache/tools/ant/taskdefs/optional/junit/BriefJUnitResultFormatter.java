@@ -25,6 +25,8 @@ import java.text.NumberFormat;
 import junit.framework.AssertionFailedError;
 import junit.framework.Test;
 
+import org.apache.tools.ant.BuildException;
+
 /**
  * Prints plain text output of the test to a specified Writer.
  * Inspired by the PlainJUnitResultFormatter.
