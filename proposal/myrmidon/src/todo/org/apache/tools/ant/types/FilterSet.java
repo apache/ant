@@ -16,6 +16,7 @@ import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.Properties;
 import org.apache.myrmidon.api.TaskException;
+import org.apache.myrmidon.framework.Filter;
 import org.apache.tools.ant.ProjectComponent;
 
 /**
