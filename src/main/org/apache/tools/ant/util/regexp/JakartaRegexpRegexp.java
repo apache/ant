@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2000 The Apache Software Foundation.  All rights 
+ * Copyright (c) 2001 The Apache Software Foundation.  All rights 
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -51,111 +51,38 @@
  * information on the Apache Software Foundation, please see
  * <http://www.apache.org/>.
  */
-
 package org.apache.tools.ant.util.regexp;
 
-import org.apache.regexp.*;
 
 import org.apache.tools.ant.BuildException;
+import org.apache.regexp.*;
 import java.util.Vector;
 
-/**
- * Implementation of RegexpMatcher for Jakarta-Regexp.
- *
- * @author <a href="mailto:stefan.bodewig@epost.de">Stefan Bodewig</a> 
+/***
+ * Regular expression implementation using the Jakarta Regexp package
  * @author Matthew Inger <a href="mailto:mattinger@mindless.com">mattinger@mindless.com</a>
  */
-public class JakartaRegexpMatcher implements RegexpMatcher {
+public class JakartaRegexpRegexp extends JakartaRegexpMatcher implements Regexp
+{
 
-    private String pattern;
-
-    /**
-     * Set the regexp pattern from the String description.
-     */
-    public void setPattern(String pattern) {
-        this.pattern = pattern;
+    public JakartaRegexpRegexp()
+    {
+        super();
     }
 
-    /**
-     * Get a String representation of the regexp pattern
-     */
-    public String getPattern() {
-        return pattern;
+    protected int getSubsOptions(int options)
+    {
+        int subsOptions = RE.REPLACE_FIRSTONLY;
+        if (RegexpUtil.hasFlag(options, REPLACE_ALL))
+            subsOptions = RE.REPLACE_ALL;
+        return subsOptions;
     }
 
-    protected RE getCompiledPattern(int options)
+    public String substitute(String input, String argument, int options)
         throws BuildException
     {
-        int cOptions = getCompilerOptions(options);
-        try
-        {
-            RE reg = new RE(pattern);
-            reg.setMatchFlags(cOptions);
-            return reg;
-        }
-        catch (RESyntaxException e)
-        {
-            throw new BuildException(e);
-        }
-    }
-
-    /**
-     * Does the given argument match the pattern?
-     */
-    public boolean matches(String argument) throws BuildException {
-        return matches(argument, MATCH_DEFAULT);
-    }
-
-    /**
-     * Does the given argument match the pattern?
-     */
-    public boolean matches(String input, int options)
-        throws BuildException
-    {
-        return matches(input, getCompiledPattern(options));
-    }
-
-    private boolean matches(String input, RE reg) {
-        return reg.match(input);
-    }
-
-    /**
-     * Returns a Vector of matched groups found in the argument.
-     *
-     * <p>Group 0 will be the full match, the rest are the
-     * parenthesized subexpressions</p>.
-     */
-    public Vector getGroups(String argument) throws BuildException {
-        return getGroups(argument, MATCH_DEFAULT);
-    }
-
-    public Vector getGroups(String input, int options)
-        throws BuildException
-    {
+        int sOptions = getSubsOptions(options);
         RE reg = getCompiledPattern(options);
-        if (!matches(input, reg)) {
-            return null;
-        }
-        Vector v = new Vector();
-        int cnt = reg.getParenCount();
-        for (int i=0; i<cnt; i++) {
-            v.addElement(reg.getParen(i));
-        }
-        return v;
-    }
-
-    protected int getCompilerOptions(int options)
-    {
-        int cOptions = RE.MATCH_NORMAL;
-
-        if (RegexpUtil.hasFlag(options, MATCH_CASE_INSENSITIVE))
-            cOptions |= RE.MATCH_CASEINDEPENDENT;
-        if (RegexpUtil.hasFlag(options, MATCH_MULTILINE))
-            cOptions |= RE.MATCH_MULTILINE;
-        if (RegexpUtil.hasFlag(options, MATCH_SINGLELINE))
-            cOptions |= RE.MATCH_SINGLELINE;
-
-        return cOptions;
-    }
-
+        return reg.subst(input, argument, sOptions);
+    }    
 }

@@ -51,126 +51,56 @@
  * information on the Apache Software Foundation, please see
  * <http://www.apache.org/>.
  */
-
 package org.apache.tools.ant.util.regexp;
 
+
+import org.apache.tools.ant.BuildException;
 import java.util.Vector;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.regex.PatternSyntaxException;
 
-import org.apache.tools.ant.BuildException;
-
-/**
- * Implementation of RegexpMatcher for the built-in regexp matcher of
- * JDK 1.4.
- *
- * @author <a href="mailto:stefan.bodewig@epost.de">Stefan Bodewig</a> 
+/***
+ * Regular expression implementation using the JDK 1.4 regular expression package
  * @author Matthew Inger <a href="mailto:mattinger@mindless.com">mattinger@mindless.com</a>
  */
-public class Jdk14RegexpMatcher implements RegexpMatcher {
+public class Jdk14RegexpRegexp extends Jdk14RegexpMatcher implements Regexp
+{
 
-    private String pattern;
-
-    public Jdk14RegexpMatcher() {}
-
-    /**
-     * Set the regexp pattern from the String description.
-     */
-    public void setPattern(String pattern) {
-        this.pattern = pattern;
+    public Jdk14RegexpRegexp()
+    {
+        super();
     }
 
-    /**
-     * Get a String representation of the regexp pattern
-     */
-    public String getPattern() {
-        return pattern;
+    protected int getSubsOptions(int options)
+    {
+        int subsOptions = REPLACE_FIRST;
+        if (RegexpUtil.hasFlag(options, REPLACE_ALL))
+            subsOptions = REPLACE_ALL;
+        return subsOptions;
     }
 
-    protected Pattern getCompiledPattern(int options)
+    public String substitute(String input, String argument, int options)
         throws BuildException
     {
-        int cOptions = getCompilerOptions(options);
-        try
-        {
-            Pattern p = Pattern.compile(this.pattern, cOptions);
-            return p;
-        }
-        catch (PatternSyntaxException e)
-        {
-            throw new BuildException(e);
-        }
-    }
-
-    /**
-     * Does the given argument match the pattern?
-     */
-    public boolean matches(String argument) throws BuildException {
-        return matches(argument, MATCH_DEFAULT);
-    }
-
-    /**
-     * Does the given argument match the pattern?
-     */
-    public boolean matches(String input, int options)
-        throws BuildException
-    {
-        try
-        {
-            Pattern p = getCompiledPattern(options);
-            return p.matcher(input).find();
-        }
-        catch (Exception e)
-        {
-            throw new BuildException(e);
-        }
-    }
-
-    /**
-     * Returns a Vector of matched groups found in the argument.
-     *
-     * <p>Group 0 will be the full match, the rest are the
-     * parenthesized subexpressions</p>.
-     */
-    public Vector getGroups(String argument) throws BuildException {
-        return getGroups(argument, MATCH_DEFAULT);
-    }
-
-    /**
-     * Returns a Vector of matched groups found in the argument.
-     *
-     * <p>Group 0 will be the full match, the rest are the
-     * parenthesized subexpressions</p>.
-     */
-    public Vector getGroups(String input, int options)
-        throws BuildException
-    {
+        int sOptions = getSubsOptions(options);
         Pattern p = getCompiledPattern(options);
-        Matcher matcher = p.matcher(input);
-        if (!matcher.find()) {
-            return null;
+        StringBuffer sb = new StringBuffer();
+
+        Matcher m = p.matcher(input);
+        if (RegexpUtil.hasFlag(sOptions, REPLACE_ALL))
+        {
+            sb.append(m.replaceAll(argument));
         }
-        Vector v = new Vector();
-        int cnt = matcher.groupCount();
-        for (int i=0; i<=cnt; i++) {
-            v.addElement(matcher.group(i));
+        else
+        {
+            boolean res = m.find();
+            if (res)
+                m.appendReplacement(sb, argument);
+            else
+                sb.append(input);
         }
-        return v;
-    }
 
-    protected int getCompilerOptions(int options)
-    {
-        int cOptions = 0;
-
-        if (RegexpUtil.hasFlag(options, MATCH_CASE_INSENSITIVE))
-            cOptions |= Pattern.CASE_INSENSITIVE;
-        if (RegexpUtil.hasFlag(options, MATCH_MULTILINE))
-            cOptions |= Pattern.MULTILINE;
-        if (RegexpUtil.hasFlag(options, MATCH_SINGLELINE))
-            cOptions |= Pattern.DOTALL;
-
-        return cOptions;
-    }
-
+        return sb.toString();
+    }    
 }

@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2000 The Apache Software Foundation.  All rights 
+ * Copyright (c) 2001 The Apache Software Foundation.  All rights 
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -51,76 +51,22 @@
  * information on the Apache Software Foundation, please see
  * <http://www.apache.org/>.
  */
-
 package org.apache.tools.ant.util.regexp;
 
-import org.apache.tools.ant.BuildException;
-import org.apache.tools.ant.Project;
-
-/**
- * Simple Factory Class that produces an implementation of
- * RegexpMatcher based on the system property
- * <code>ant.regexp.matcherimpl</code> and the classes
- * available.
- * 
- * <p>In a more general framework this class would be abstract and
- * have a static newInstance method.</p>
+/***
+ * Regular expression utilities class which handles flag operations
  *
- * @author <a href="mailto:stefan.bodewig@epost.de">Stefan Bodewig</a> 
+ * @author <a href="mailto:mattinger@mindless.com">Matthew Inger</a>
  */
-public class RegexpMatcherFactory {
-
-    public RegexpMatcherFactory() {}
-
-    /***
-     * Create a new regular expression instance.
-     */
-    public RegexpMatcher newRegexpMatcher() throws BuildException {
-        return newRegexpMatcher(null);
+public class RegexpUtil extends Object
+{
+    public static final boolean hasFlag(int options, int flag)
+    {
+        return ((options & flag) > 0);
     }
 
-    /***
-     * Create a new regular expression instance.
-     *
-     * @param p Project whose ant.regexp.regexpimpl property will be used.
-     */
-    public RegexpMatcher newRegexpMatcher(Project p)
-        throws BuildException {
-        String systemDefault = null;
-        if (p == null) {
-            systemDefault = System.getProperty("ant.regexp.regexpimpl");
-        } else {
-            systemDefault = (String) p.getProperties().get("ant.regexp.regexpimpl");
-        }
-        
-        if (systemDefault != null) {
-            return createInstance(systemDefault);
-            // XXX     should we silently catch possible exceptions and try to 
-            //         load a different implementation?
-        }
-
-        try {
-            return createInstance("org.apache.tools.ant.util.regexp.Jdk14RegexpMatcher");
-        } catch (BuildException be) {}
-        
-        try {
-            return createInstance("org.apache.tools.ant.util.regexp.JakartaOroMatcher");
-        } catch (BuildException be) {}
-        
-        try {
-            return createInstance("org.apache.tools.ant.util.regexp.JakartaRegexpMatcher");
-        } catch (BuildException be) {}
-
-        throw new BuildException("No supported regular expression matcher found");
-   }
-
-    protected RegexpMatcher createInstance(String className) 
-        throws BuildException {
-        try {
-            Class implClass = Class.forName(className);
-            return (RegexpMatcher) implClass.newInstance();
-        } catch (Throwable t) {
-            throw new BuildException(t);
-        }
+    public static final int removeFlag(int options, int flag)
+    {
+        return (options & (0xFFFFFFFF - flag));
     }
 }

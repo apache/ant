@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2000 The Apache Software Foundation.  All rights 
+ * Copyright (c) 2001 The Apache Software Foundation.  All rights 
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -51,111 +51,79 @@
  * information on the Apache Software Foundation, please see
  * <http://www.apache.org/>.
  */
+package org.apache.tools.ant.types;
 
-package org.apache.tools.ant.util.regexp;
-
-import org.apache.regexp.*;
-
+import java.util.Hashtable;
+import java.util.Stack;
 import org.apache.tools.ant.BuildException;
-import java.util.Vector;
+import org.apache.tools.ant.Project;
+import org.apache.tools.ant.types.DataType;
 
-/**
- * Implementation of RegexpMatcher for Jakarta-Regexp.
+/***
+ * A regular expression substitution datatype.  It is an expression
+ * that is meant to replace a regular expression.  The syntax is the
+ * same as Perl5.
+ * @see org.apache.oro.text.regex.Perl5Substitition
  *
- * @author <a href="mailto:stefan.bodewig@epost.de">Stefan Bodewig</a> 
+ * <pre>
+ *   &lt;substitition [ [id="id"] expression="expression" | refid="id" ] 
+ *   /&gt;
+ * </pre>
+ *
  * @author Matthew Inger <a href="mailto:mattinger@mindless.com">mattinger@mindless.com</a>
  */
-public class JakartaRegexpMatcher implements RegexpMatcher {
+public class Substitution extends DataType
+{
+    public static final String DATA_TYPE_NAME = "substitition";
 
-    private String pattern;
+    private String expression;
 
-    /**
-     * Set the regexp pattern from the String description.
-     */
-    public void setPattern(String pattern) {
-        this.pattern = pattern;
-    }
-
-    /**
-     * Get a String representation of the regexp pattern
-     */
-    public String getPattern() {
-        return pattern;
-    }
-
-    protected RE getCompiledPattern(int options)
-        throws BuildException
+    public Substitution()
     {
-        int cOptions = getCompilerOptions(options);
-        try
+        this.expression = null;
+    }
+
+    public void setExpression(String expression)
+    {
+        this.expression = expression;
+    }
+
+    /***
+     * Gets the pattern string for this RegularExpression in the
+     * given project.
+     */
+    public String getExpression(Project p)
+    {
+        if (isReference())
+            return getRef(p).getExpression(p);
+
+        return expression;
+    }
+
+    /***
+     * Get the RegularExpression this reference refers to in
+     * the given project.  Check for circular references too
+     */
+    public Substitution getRef(Project p)
+    {
+        if (!checked)
         {
-            RE reg = new RE(pattern);
-            reg.setMatchFlags(cOptions);
-            return reg;
+            Stack stk = new Stack();
+            stk.push(this);
+            dieOnCircularReference(stk, p);
         }
-        catch (RESyntaxException e)
+
+        
+        Object o = ref.getReferencedObject(p);
+        if (!(o instanceof Substitution))
         {
-            throw new BuildException(e);
+            String msg = ref.getRefId() + " doesn\'t denote a substitution";
+            throw new BuildException(msg);
+        } 
+        else 
+        {
+            return (Substitution) o;
         }
-    }
-
-    /**
-     * Does the given argument match the pattern?
-     */
-    public boolean matches(String argument) throws BuildException {
-        return matches(argument, MATCH_DEFAULT);
-    }
-
-    /**
-     * Does the given argument match the pattern?
-     */
-    public boolean matches(String input, int options)
-        throws BuildException
-    {
-        return matches(input, getCompiledPattern(options));
-    }
-
-    private boolean matches(String input, RE reg) {
-        return reg.match(input);
-    }
-
-    /**
-     * Returns a Vector of matched groups found in the argument.
-     *
-     * <p>Group 0 will be the full match, the rest are the
-     * parenthesized subexpressions</p>.
-     */
-    public Vector getGroups(String argument) throws BuildException {
-        return getGroups(argument, MATCH_DEFAULT);
-    }
-
-    public Vector getGroups(String input, int options)
-        throws BuildException
-    {
-        RE reg = getCompiledPattern(options);
-        if (!matches(input, reg)) {
-            return null;
-        }
-        Vector v = new Vector();
-        int cnt = reg.getParenCount();
-        for (int i=0; i<cnt; i++) {
-            v.addElement(reg.getParen(i));
-        }
-        return v;
-    }
-
-    protected int getCompilerOptions(int options)
-    {
-        int cOptions = RE.MATCH_NORMAL;
-
-        if (RegexpUtil.hasFlag(options, MATCH_CASE_INSENSITIVE))
-            cOptions |= RE.MATCH_CASEINDEPENDENT;
-        if (RegexpUtil.hasFlag(options, MATCH_MULTILINE))
-            cOptions |= RE.MATCH_MULTILINE;
-        if (RegexpUtil.hasFlag(options, MATCH_SINGLELINE))
-            cOptions |= RE.MATCH_SINGLELINE;
-
-        return cOptions;
     }
 
 }
