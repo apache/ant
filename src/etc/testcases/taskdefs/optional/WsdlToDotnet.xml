@@ -1,0 +1,129 @@
+<?xml version="1.0"?>
+
+<project name="wsdl-to-java-jtest" basedir="." default="">
+
+
+  <property environment="env"/>
+  <property name="build.dir" location="wsdl/build"/>
+  <property name="cache.dir" location="${build.dir}/cache"/>
+  <property name="src.dir" location="${build.dir}/src"/>
+  <property name="classes.dir" location="${build.dir}/classes"/>
+  <property name="local.wsdl" 
+    location="wsdl/StockQuoteService.wsdl" />
+  <property name="out.csc" location="${src.dir}/out.cs"/>
+  <property name="out.app" location="${classes.dir}/out.dll"/>
+  <property name="out.type" value="module"/>
+  <property name="endpoint"
+    value="http://nagoya.apache.org:5049/Axis/StockQuoteService.jws" />
+  <property name="endpoint.wsdl" 
+    value="http://nagoya.apache.org:5049/Axis/StockQuoteService.jws?wsdl" />
+  
+  <target name="init" depends="validate">
+    <mkdir dir="${build.dir}"/>
+    <mkdir dir="${cache.dir}"/>
+    <mkdir dir="${src.dir}"/>
+    <mkdir dir="${classes.dir}"/>
+  </target>
+  
+  <target name="probe_for_apps" >
+   <condition property="wsdl.found">
+      <or>
+        <available file="wsdl"     filepath="${env.PATH}" />
+        <available file="wsdl.exe" filepath="${env.PATH}" />
+        <available file="wsdl.exe" filepath="${env.Path}" />
+      </or>
+    </condition>
+   <echo> wsdl.found=${wsdl.found}</echo>
+   <condition property="csc.found">
+      <or>
+        <available file="csc"     filepath="${env.PATH}" />
+        <available file="csc.exe" filepath="${env.PATH}" />
+        <available file="csc.exe" filepath="${env.Path}" />
+      </or>
+    </condition>
+   <echo> csc.found=${csc.found}</echo>
+   <condition property="dotnetapps.found">
+      <and>
+        <isset property="csc.found"/>
+        <isset property="wsdl.found"/>
+      </and>
+    </condition>
+   <echo> dotnetapps.found=${dotnetapps.found}</echo>
+  </target>
+  
+  <target name="teardown">
+    <delete dir="${build.dir}"/>
+  </target>  
+
+  <target name="validate" depends="probe_for_apps" >
+    <fail unless="dotnetapps.found">Needed .net apps are missing</fail>
+  </target>  
+  
+  
+  <target name="testNoParams">
+    <WsdlToDotnet/>
+  </target>
+
+  <target name="testNoSrc">
+    <WsdlToDotnet destFile="${out.csc}"/>
+  </target>
+
+  <target name="testDestIsDir" depends="init">
+    <WsdlToDotnet destFile="${build.dir}"
+      srcFile="${local.wsdl}"/>
+  </target>
+  
+  <target name="testBothSrc" depends="init">
+    <WsdlToDotnet destFile="${out.csc}"
+      srcFile="${local.wsdl}"
+      url="${endpoint.wsdl}"
+      />
+  </target>
+
+  <target name="testSrcIsDir" depends="init">
+    <WsdlToDotnet destFile="${out.csc}"
+      srcFile="${build.dir}"
+      />
+  </target>
+
+  <target name="testSrcIsMissing" depends="init">
+    <WsdlToDotnet destFile="${out.csc}"
+      srcFile="${build.dir}/invalidfile.wsdl"
+      />
+  </target>
+  
+  <target name="testLocalWsdl" depends="init">
+    <WsdlToDotnet destFile="${out.csc}"
+      srcFile="${local.wsdl}"
+      />
+    <csc 
+      srcDir="${src.dir}"
+      destFile="${out.app}"
+      targetType="${out.type}"
+      />
+    <available property="app.created" file="${out.app}"/>
+    <fail unless="app.created">No app created</fail>
+  </target>
+  
+  <target name="testLocalWsdlServer" depends="init">
+    <WsdlToDotnet destFile="${out.csc}"
+      srcFile="${local.wsdl}"
+      server="true"
+      />
+    <csc 
+      srcDir="${src.dir}"
+      destFile="${out.app}"
+      targetType="${out.type}" 
+      fileAlign="512"
+      />
+    <available property="app.created" file="${out.app}"/>
+    <fail unless="app.created">No app created</fail>
+  </target>
+  
+  <target name="testInvalidExtraOps" depends="init">
+    <WsdlToDotnet destFile="${out.csc}"
+      srcFile="${local.wsdl}"
+      extraOptions="/newOption:not-one-known-of"
+      />
+  </target>    
+</project>
