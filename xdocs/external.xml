@@ -1333,24 +1333,24 @@
 
         <table class="externals">
           <tr>
-            <th>Compatibility:</th> 
-            <td>Tested with 1.5. Should work with all versions.</td> 
+            <th>Compatibility:</th>
+            <td>Tested with 1.5. Should work with all versions.</td>
           </tr>
           <tr>
-            <th>URL:</th> 
+            <th>URL:</th>
             <td>
-              <a href="http://proguard.sourceforge.net/">http://proguard.sourceforge.net/</a> 
+              <a href="http://proguard.sourceforge.net/">http://proguard.sourceforge.net/</a>
             </td>
           </tr>
           <tr>
-            <th>Contact:</th> 
+            <th>Contact:</th>
             <td>
-              <a href="http://proguard.sourceforge.net/feedback.html">Feedback Page</a> 
+              <a href="http://proguard.sourceforge.net/feedback.html">Feedback Page</a>
             </td>
           </tr>
           <tr>
-            <th>License:</th> 
-            <td>GNU General Public License</td> 
+            <th>License:</th>
+            <td>GNU General Public License</td>
           </tr>
         </table>
       </subsection>
@@ -1430,6 +1430,34 @@
           <tr>
             <th>License:</th>
             <td>Apache Software License</td>
+          </tr>
+        </table>
+      </subsection>
+
+      <subsection name="Simian">
+
+        <p>Simian (Similarity Analyser) identifies duplication in Java,
+        C#, C, CPP, COBOL, JSP, HTML source code and even plain text files.</p>
+
+        <table class="externals">
+          <tr>
+            <th>Compatibility:</th>
+            <td>Ant 1.5.1 and later</td>
+          </tr>
+          <tr>
+            <th>URL:</th>
+            <td><a href="http://www.redhillconsulting.com.au/products/simian/">
+            http://www.redhillconsulting.com.au/products/simian/</a></td>
+          </tr>
+          <tr>
+            <th>Contact:</th>
+            <td><a href="mailto:simian-user-subscribe@redhillconsulting.com.au">
+            simian-user-subscribe@redhillconsulting.com.au (User Mailinglist)
+            </a></td>
+          </tr>
+          <tr>
+            <th>License:</th>
+            <td>Commercial, Free Licenses available for Non-Commercial Projects</td>
           </tr>
         </table>
       </subsection>
