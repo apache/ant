@@ -55,14 +55,15 @@
 package org.apache.tools.ant.types;
 
 import org.apache.tools.ant.BuildException;
+import org.apache.tools.ant.Project;
 
 import java.util.List;
 import java.util.ArrayList;
 import java.util.Iterator;
 
 /**
- * implement the assertion datatype. This type describes
- * assertion settings for the &lt;java&gt; task and derivatives.
+ * The assertion datatype. This type describes
+ * assertion settings for the &lt;java&gt; task and others.
  * One can set the system assertions, and enable/disable those in
  * packages & classes.
  * Assertions can only be enabled or disabled when forking Java.
@@ -127,7 +128,7 @@ public class Assertions extends DataType {
      * disable assertions
      * @param assertion
      */
-    public void addDisable(EnabledAssertion assertion) {
+    public void addDisable(DisabledAssertion assertion) {
         checkChildrenAllowed();
         assertionList.add(assertion);
     }
@@ -196,11 +197,14 @@ public class Assertions extends DataType {
      * @param commandList
      */
     public void applyAssertions(List commandList) {
+        getProject().log("Applying assertions",Project.MSG_DEBUG);
         Assertions clause = getFinalReference();
         //do the system assertions
         if (Boolean.TRUE.equals(clause.enableSystemAssertions)) {
+            getProject().log("Enabling system assertions", Project.MSG_DEBUG);
             commandList.add("-enablesystemassertions");
         } else if (Boolean.FALSE.equals(clause.enableSystemAssertions)) {
+            getProject().log("disabling system assertions", Project.MSG_DEBUG);
             commandList.add("-disablesystemassertions");
         }
 
@@ -209,6 +213,7 @@ public class Assertions extends DataType {
         while (it.hasNext()) {
             BaseAssertion assertion = (BaseAssertion) it.next();
             String arg = assertion.toCommand();
+            getProject().log("adding assertion "+arg, Project.MSG_DEBUG);
             commandList.add(arg);
         }
     }
