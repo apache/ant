@@ -7,9 +7,6 @@
  */
 package org.apache.myrmidon.libs.selftest.extension1;
 
-import org.apache.myrmidon.api.AbstractTask;
-import org.apache.myrmidon.api.TaskException;
-
 /**
  * This is to test whether extension is loaded.
  *
