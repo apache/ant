@@ -47,7 +47,6 @@ public class SymlinkTest extends BuildFileTest {
 
     private Project p;
     private boolean supportsSymlinks = Os.isFamily("unix");
-    private boolean testfail = false;
 
     public SymlinkTest(String name) {
         super(name);
@@ -62,7 +61,6 @@ public class SymlinkTest extends BuildFileTest {
 
 
     public void testSingle() {
-        testfail = true;
         if (supportsSymlinks) {
             executeTarget("test-single");
             p = getProject();
@@ -71,11 +69,9 @@ public class SymlinkTest extends BuildFileTest {
             assertNotNull("Failed to create link",
                           p.getProperty("test.single.link.created"));
         }
-        testfail = false;
     }
 
     public void testDelete() {
-        testfail = true;
         if (supportsSymlinks) {
             executeTarget("test-delete");
             p = getProject();
@@ -86,11 +82,9 @@ public class SymlinkTest extends BuildFileTest {
                 fail(linkDeleted);
             }
         }
-        testfail = false;
     }
 
     public void testRecord() {
-        testfail = true;
         if (supportsSymlinks) {
             executeTarget("test-record");
             p = getProject();
@@ -128,6 +122,9 @@ public class SymlinkTest extends BuildFileTest {
             assertNotNull("Failed to create dirlink",
                           p.getProperty("test.record.dirlink.created"));
 
+            assertNotNull("Failed to create dirlink2",
+                          p.getProperty("test.record.dirlink2.created"));
+
             assertNotNull("Couldn't record links in dir1",
                           p.getProperty("test.record.dir1.recorded"));
 
@@ -141,11 +138,9 @@ public class SymlinkTest extends BuildFileTest {
             }
 
         }
-        testfail = false;
     }
 
     public void testRecreate() {
-        testfail = true;
         if (supportsSymlinks) {
             executeTarget("test-recreate");
             p = getProject();
@@ -173,14 +168,21 @@ public class SymlinkTest extends BuildFileTest {
                           p.getProperty("test.recreate.link3.recreated"));
             assertNotNull("Failed to recreate dirlink",
                           p.getProperty("test.recreate.dirlink.recreated"));
+            
+            String doubleRecreate = p.getProperty("test.recreate.dirlink2.recreated.twice");
+
+            if (doubleRecreate != null) {
+                fail(doubleRecreate);
+            }
+
+            assertNotNull("Failed to alter dirlink3",
+                          p.getProperty("test.recreate.dirlink3.was.altered"));
+
         }
-        testfail = false;
     }
 
     public void tearDown() {
-        if (supportsSymlinks && !testfail) {
-            executeTarget("teardown");
-        }
+        executeTarget("teardown");
     }
 
 }
