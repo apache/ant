@@ -98,11 +98,13 @@ public class DDCreator extends MatchingTask {
      * @exception BuildException if someting goes wrong with the build
      */
     public void execute() throws BuildException {
-        if (!descriptorDirectory.isDirectory()) {
+        if (descriptorDirectory == null ||
+            !descriptorDirectory.isDirectory()) {
             throw new BuildException("descriptors directory " + descriptorDirectory.getPath() + 
                                      " is not valid");
         }
-        if (!generatedFilesDirectory.isDirectory()) {
+        if (generatedFilesDirectory == null ||
+            !generatedFilesDirectory.isDirectory()) {
             throw new BuildException("dest directory " + generatedFilesDirectory.getPath() + 
                                      " is not valid");
         }
