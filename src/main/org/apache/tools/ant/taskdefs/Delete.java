@@ -136,7 +136,9 @@ public class Delete extends MatchingTask {
         String[] files = ds.getIncludedFiles();
 
         if (files.length > 0) {
-            log("Deleting " + files.length + " files from " + delDir.getAbsolutePath());
+            log("Deleting " + files.length + " file"
+                + (files.length == 1 ? "" : "s")
+                + " from " + delDir.getAbsolutePath());
 
             for (int i = 0; i < files.length; i++) {
                 File f = new File(delDir, files[i]);

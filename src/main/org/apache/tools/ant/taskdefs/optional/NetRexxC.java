@@ -442,7 +442,9 @@ public class NetRexxC extends MatchingTask {
 
         // compile the source files
         if (compileList.size() > 0) {
-            log("Compiling " + compileList.size() + " source files to " + destDir);
+            log("Compiling " + compileList.size() + " source file"
+                + (compileList.size() == 1 ? "" : "s")
+                + " to " + destDir);
             doNetRexxCompile();
         }
     }
@@ -479,7 +481,9 @@ public class NetRexxC extends MatchingTask {
      */
     private void copyFilesToDestination() {
         if (filecopyList.size() > 0) {
-            log("Copying " + filecopyList.size() + " files to " + destDir.getAbsolutePath());
+            log("Copying " + filecopyList.size() + " file"
+                + (filecopyList.size() == 1 ? "" : "s")
+                + " to " + destDir.getAbsolutePath());
             Enumeration enum = filecopyList.keys();
             while (enum.hasMoreElements()) {
                 String fromFile = (String)enum.nextElement();

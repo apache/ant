@@ -118,7 +118,7 @@ public class XmlLogger implements BuildListener {
 
     public void buildFinished(BuildEvent event) {
         long totalTime = System.currentTimeMillis() - buildStartTime;
-        buildElement.setAttribute(TIME_ATTR, formatTime(totalTime));
+        buildElement.setAttribute(TIME_ATTR, DefaultLogger.formatTime(totalTime));
 
         if (event.getException() != null) {
             buildElement.setAttribute(ERROR_ATTR, event.getException().toString());
@@ -156,7 +156,7 @@ public class XmlLogger implements BuildListener {
 
     public void targetFinished(BuildEvent event) {
         long totalTime = System.currentTimeMillis() - targetStartTime;
-        targetElement.setAttribute(TIME_ATTR, formatTime(totalTime));
+        targetElement.setAttribute(TIME_ATTR, DefaultLogger.formatTime(totalTime));
         if (taskElement == null) {
             buildElement.appendChild(targetElement);
         } else {
@@ -192,7 +192,7 @@ public class XmlLogger implements BuildListener {
 
     public void taskFinished(BuildEvent event) {
         long totalTime = System.currentTimeMillis() - taskStartTime;
-        taskElement.setAttribute(TIME_ATTR, formatTime(totalTime));
+        taskElement.setAttribute(TIME_ATTR, DefaultLogger.formatTime(totalTime));
         targetElement.appendChild(taskElement);
 
         taskElement = null;
@@ -286,19 +286,5 @@ public class XmlLogger implements BuildListener {
         out.write("</");
         out.write(element.getTagName());
         out.write(">\n");
-    }
-
-    private static String formatTime(long millis) {
-        long seconds = millis / 1000;
-        long minutes = seconds / 60;
-
-
-        if (minutes > 0) {
-            return Long.toString(minutes) + " minutes " + Long.toString(seconds%60) + " seconds";
-        }
-        else {
-            return Long.toString(seconds) + " seconds";
-        }
-
     }
 }

@@ -84,9 +84,7 @@ import java.util.*;
  * <p>
  * When this task executes, it will recursively scan the sourcedir and
  * destdir looking for Java source files to compile. This task makes its
- * compile decision based on timestamp. Any other file in the
- * sourcedir will be copied to the destdir allowing support files to be
- * located properly in the classpath.
+ * compile decision based on timestamp. 
  *
  * @author James Davidson <a href="mailto:duncan@x180.com">duncan@x180.com</a>
  * @author Robin Green <a href="mailto:greenrd@hotmail.com">greenrd@hotmail.com</a>
@@ -325,7 +323,9 @@ public class Javac extends MatchingTask {
 
         if (compileList.size() > 0) {
             log("Compiling " + compileList.size() + 
-                " source files to " + destDir);
+                " source file"
+                + (compileList.size() == 1 ? "" : "s")
+                + " to " + destDir);
 
             if (compiler.equalsIgnoreCase("classic")) {
                 doClassicCompile();
@@ -372,11 +372,11 @@ public class Javac extends MatchingTask {
                 if (!classFile.exists() || srcFile.lastModified() > classFile.lastModified()) {
                     if (!classFile.exists()) {
                         log("Compiling " + srcFile.getPath() + " because class file " 
-                                + classFile.getPath() + " does not exist", Project.MSG_VERBOSE);
+                                + classFile.getPath() + " does not exist", Project.MSG_DEBUG);
                     }
                     else {
                         log("Compiling " + srcFile.getPath() + " because it is out of date with respect to " 
-                                + classFile.getPath(), Project.MSG_VERBOSE);
+                                + classFile.getPath(), Project.MSG_DEBUG);
                     }                                                        
                     compileList.addElement(srcFile.getAbsolutePath());
                 }
@@ -567,7 +567,12 @@ public class Javac extends MatchingTask {
         log("Compilation args: " + cmd.toString(),
             Project.MSG_VERBOSE);
 
-        StringBuffer niceSourceList = new StringBuffer("Files to be compiled:");
+        StringBuffer niceSourceList = new StringBuffer("File");
+        if (compileList.size() != 1) {
+            niceSourceList.append("s");
+        }
+        niceSourceList.append(" to be compiled:");
+
         niceSourceList.append(lSep);
 
         Enumeration enum = compileList.elements();

@@ -191,10 +191,14 @@ public class DefaultLogger implements BuildLogger {
 
 
         if (minutes > 0) {
-            return Long.toString(minutes) + " minutes " + Long.toString(seconds%60) + " seconds";
+            return Long.toString(minutes) + " minute"
+                + (minutes == 1 ? " " : "s ")
+                + Long.toString(seconds%60) + " second"
+                + (seconds%60 == 1 ? "" : "s");
         }
         else {
-            return Long.toString(seconds) + " seconds";
+            return Long.toString(seconds) + " second"
+                + (seconds%60 == 1 ? "" : "s");
         }
 
     }
