@@ -21,59 +21,59 @@ import java.io.OutputStream;
  * You should never have a need to access this class directly. TarBuffers are
  * created by Tar IO Streams.
  *
- * @author Timothy Gerard Endres <a href="mailto:time@ice.com">time@ice.com</a>
+ * @author <a href="mailto:time@ice.com">Timothy Gerard Endres</a>
+ * @author <a href="mailto:peter@apache.org">Peter Donald</a>
  */
-
-public class TarBuffer
+class TarBuffer
 {
-
     public final static int DEFAULT_RCDSIZE = ( 512 );
     public final static int DEFAULT_BLKSIZE = ( DEFAULT_RCDSIZE * 20 );
-    private byte[] blockBuffer;
-    private int blockSize;
-    private int currBlkIdx;
-    private int currRecIdx;
-    private boolean debug;
 
-    private InputStream inStream;
-    private OutputStream outStream;
-    private int recordSize;
-    private int recsPerBlock;
+    private byte[] m_blockBuffer;
+    private int m_blockSize;
+    private int m_currBlkIdx;
+    private int m_currRecIdx;
+    private boolean m_debug;
 
-    public TarBuffer( InputStream inStream )
+    private InputStream m_input;
+    private OutputStream m_output;
+    private int m_recordSize;
+    private int m_recsPerBlock;
+
+    public TarBuffer( final InputStream input )
     {
-        this( inStream, TarBuffer.DEFAULT_BLKSIZE );
+        this( input, TarBuffer.DEFAULT_BLKSIZE );
     }
 
-    public TarBuffer( InputStream inStream, int blockSize )
+    public TarBuffer( final InputStream input, final int blockSize )
     {
-        this( inStream, blockSize, TarBuffer.DEFAULT_RCDSIZE );
+        this( input, blockSize, TarBuffer.DEFAULT_RCDSIZE );
     }
 
-    public TarBuffer( InputStream inStream, int blockSize, int recordSize )
+    public TarBuffer( final InputStream input,
+                      final int blockSize,
+                      final int recordSize )
     {
-        this.inStream = inStream;
-        this.outStream = null;
-
-        this.initialize( blockSize, recordSize );
+        m_input = input;
+        initialize( blockSize, recordSize );
     }
 
-    public TarBuffer( OutputStream outStream )
+    public TarBuffer( final OutputStream output )
     {
-        this( outStream, TarBuffer.DEFAULT_BLKSIZE );
+        this( output, TarBuffer.DEFAULT_BLKSIZE );
     }
 
-    public TarBuffer( OutputStream outStream, int blockSize )
+    public TarBuffer( final OutputStream output, final int blockSize )
     {
-        this( outStream, blockSize, TarBuffer.DEFAULT_RCDSIZE );
+        this( output, blockSize, TarBuffer.DEFAULT_RCDSIZE );
     }
 
-    public TarBuffer( OutputStream outStream, int blockSize, int recordSize )
+    public TarBuffer( final OutputStream output,
+                      final int blockSize,
+                      final int recordSize )
     {
-        this.inStream = null;
-        this.outStream = outStream;
-
-        this.initialize( blockSize, recordSize );
+        m_output = output;
+        initialize( blockSize, recordSize );
     }
 
     /**
@@ -81,9 +81,9 @@ public class TarBuffer
      *
      * @param debug If true, print debugging output.
      */
-    public void setDebug( boolean debug )
+    public void setDebug( final boolean debug )
     {
-        this.debug = debug;
+        m_debug = debug;
     }
 
     /**
@@ -93,7 +93,7 @@ public class TarBuffer
      */
     public int getBlockSize()
     {
-        return this.blockSize;
+        return m_blockSize;
     }
 
     /**
@@ -103,7 +103,7 @@ public class TarBuffer
      */
     public int getCurrentBlockNum()
     {
-        return this.currBlkIdx;
+        return m_currBlkIdx;
     }
 
     /**
@@ -114,7 +114,7 @@ public class TarBuffer
      */
     public int getCurrentRecordNum()
     {
-        return this.currRecIdx - 1;
+        return m_currRecIdx - 1;
     }
 
     /**
@@ -124,7 +124,7 @@ public class TarBuffer
      */
     public int getRecordSize()
     {
-        return this.recordSize;
+        return m_recordSize;
     }
 
     /**
@@ -134,9 +134,10 @@ public class TarBuffer
      * @param record The record data to check.
      * @return The EOFRecord value
      */
-    public boolean isEOFRecord( byte[] record )
+    public boolean isEOFRecord( final byte[] record )
     {
-        for( int i = 0, sz = this.getRecordSize(); i < sz; ++i )
+        final int size = getRecordSize();
+        for( int i = 0; i < size; ++i )
         {
             if( record[ i ] != 0 )
             {
@@ -150,36 +151,31 @@ public class TarBuffer
     /**
      * Close the TarBuffer. If this is an output buffer, also flush the current
      * block before closing.
-     *
-     * @exception IOException Description of Exception
      */
     public void close()
         throws IOException
     {
-        if( this.debug )
+        if( m_debug )
         {
-            System.err.println( "TarBuffer.closeBuffer()." );
+            debug( "TarBuffer.closeBuffer()." );
         }
 
-        if( this.outStream != null )
+        if( null != m_output )
         {
-            this.flushBlock();
+            flushBlock();
 
-            if( this.outStream != System.out
-                && this.outStream != System.err )
+            if( m_output != System.out && m_output != System.err )
             {
-                this.outStream.close();
-
-                this.outStream = null;
+                m_output.close();
+                m_output = null;
             }
         }
-        else if( this.inStream != null )
+        else if( m_input != null )
         {
-            if( this.inStream != System.in )
+            if( m_input != System.in )
             {
-                this.inStream.close();
-
-                this.inStream = null;
+                m_input.close();
+                m_input = null;
             }
         }
     }
@@ -193,224 +189,230 @@ public class TarBuffer
     public byte[] readRecord()
         throws IOException
     {
-        if( this.debug )
+        if( m_debug )
         {
-            System.err.println( "ReadRecord: recIdx = " + this.currRecIdx
-                                + " blkIdx = " + this.currBlkIdx );
+            final String message = "ReadRecord: recIdx = " + m_currRecIdx +
+                " blkIdx = " + m_currBlkIdx;
+            debug( message );
         }
 
-        if( this.inStream == null )
+        if( null == m_input )
         {
-            throw new IOException( "reading from an output buffer" );
+            final String message = "reading from an output buffer";
+            throw new IOException( message );
         }
 
-        if( this.currRecIdx >= this.recsPerBlock )
+        if( m_currRecIdx >= m_recsPerBlock )
         {
-            if( !this.readBlock() )
+            if( !readBlock() )
             {
                 return null;
             }
         }
 
-        byte[] result = new byte[ this.recordSize ];
+        final byte[] result = new byte[ m_recordSize ];
+        System.arraycopy( m_blockBuffer,
+                          ( m_currRecIdx * m_recordSize ),
+                          result,
+                          0,
+                          m_recordSize );
 
-        System.arraycopy( this.blockBuffer,
-                          ( this.currRecIdx * this.recordSize ), result, 0,
-                          this.recordSize );
-
-        this.currRecIdx++;
+        m_currRecIdx++;
 
         return result;
     }
 
     /**
      * Skip over a record on the input stream.
-     *
-     * @exception IOException Description of Exception
      */
     public void skipRecord()
         throws IOException
     {
-        if( this.debug )
+        if( m_debug )
         {
-            System.err.println( "SkipRecord: recIdx = " + this.currRecIdx
-                                + " blkIdx = " + this.currBlkIdx );
+            final String message = "SkipRecord: recIdx = " + m_currRecIdx +
+                " blkIdx = " + m_currBlkIdx;
+            debug( message );
         }
 
-        if( this.inStream == null )
+        if( null == m_input )
         {
-            throw new IOException( "reading (via skip) from an output buffer" );
+            final String message = "reading (via skip) from an output buffer";
+            throw new IOException( message );
         }
 
-        if( this.currRecIdx >= this.recsPerBlock )
+        if( m_currRecIdx >= m_recsPerBlock )
         {
-            if( !this.readBlock() )
+            if( !readBlock() )
             {
                 return;// UNDONE
             }
         }
 
-        this.currRecIdx++;
+        m_currRecIdx++;
     }
 
     /**
      * Write an archive record to the archive.
      *
      * @param record The record data to write to the archive.
-     * @exception IOException Description of Exception
      */
-    public void writeRecord( byte[] record )
+    public void writeRecord( final byte[] record )
         throws IOException
     {
-        if( this.debug )
+        if( m_debug )
         {
-            System.err.println( "WriteRecord: recIdx = " + this.currRecIdx
-                                + " blkIdx = " + this.currBlkIdx );
+            final String message = "WriteRecord: recIdx = " + m_currRecIdx +
+                " blkIdx = " + m_currBlkIdx;
+            debug( message );
         }
 
-        if( this.outStream == null )
+        if( null == m_output )
         {
-            throw new IOException( "writing to an input buffer" );
+            final String message = "writing to an input buffer";
+            throw new IOException( message );
         }
 
-        if( record.length != this.recordSize )
+        if( record.length != m_recordSize )
         {
-            throw new IOException( "record to write has length '"
-                                   + record.length
-                                   + "' which is not the record size of '"
-                                   + this.recordSize + "'" );
+            final String message = "record to write has length '" +
+                record.length + "' which is not the record size of '" +
+                m_recordSize + "'";
+            throw new IOException( message );
         }
 
-        if( this.currRecIdx >= this.recsPerBlock )
+        if( m_currRecIdx >= m_recsPerBlock )
         {
-            this.writeBlock();
+            writeBlock();
         }
 
-        System.arraycopy( record, 0, this.blockBuffer,
-                          ( this.currRecIdx * this.recordSize ),
-                          this.recordSize );
+        System.arraycopy( record,
+                          0,
+                          m_blockBuffer,
+                          ( m_currRecIdx * m_recordSize ),
+                          m_recordSize );
 
-        this.currRecIdx++;
+        m_currRecIdx++;
     }
 
     /**
      * Write an archive record to the archive, where the record may be inside of
      * a larger array buffer. The buffer must be "offset plus record size" long.
      *
-     * @param buf The buffer containing the record data to write.
+     * @param buffer The buffer containing the record data to write.
      * @param offset The offset of the record data within buf.
-     * @exception IOException Description of Exception
      */
-    public void writeRecord( byte[] buf, int offset )
+    public void writeRecord( final byte[] buffer, final int offset )
         throws IOException
     {
-        if( this.debug )
+        if( m_debug )
         {
-            System.err.println( "WriteRecord: recIdx = " + this.currRecIdx
-                                + " blkIdx = " + this.currBlkIdx );
+            final String message = "WriteRecord: recIdx = " + m_currRecIdx +
+                " blkIdx = " + m_currBlkIdx;
+            debug( message );
         }
 
-        if( this.outStream == null )
+        if( null == m_output )
         {
-            throw new IOException( "writing to an input buffer" );
+            final String message = "writing to an input buffer";
+            throw new IOException( message );
         }
 
-        if( ( offset + this.recordSize ) > buf.length )
+        if( ( offset + m_recordSize ) > buffer.length )
         {
-            throw new IOException( "record has length '" + buf.length
-                                   + "' with offset '" + offset
-                                   + "' which is less than the record size of '"
-                                   + this.recordSize + "'" );
+            final String message = "record has length '" + buffer.length +
+                "' with offset '" + offset + "' which is less than the record size of '" +
+                m_recordSize + "'";
+            throw new IOException( message );
         }
 
-        if( this.currRecIdx >= this.recsPerBlock )
+        if( m_currRecIdx >= m_recsPerBlock )
         {
-            this.writeBlock();
+            writeBlock();
         }
 
-        System.arraycopy( buf, offset, this.blockBuffer,
-                          ( this.currRecIdx * this.recordSize ),
-                          this.recordSize );
+        System.arraycopy( buffer,
+                          offset,
+                          m_blockBuffer,
+                          ( m_currRecIdx * m_recordSize ),
+                          m_recordSize );
 
-        this.currRecIdx++;
+        m_currRecIdx++;
     }
 
     /**
      * Flush the current data block if it has any data in it.
-     *
-     * @exception IOException Description of Exception
      */
     private void flushBlock()
         throws IOException
     {
-        if( this.debug )
+        if( m_debug )
         {
-            System.err.println( "TarBuffer.flushBlock() called." );
+            final String message = "TarBuffer.flushBlock() called.";
+            debug( message );
         }
 
-        if( this.outStream == null )
+        if( m_output == null )
         {
-            throw new IOException( "writing to an input buffer" );
+            final String message = "writing to an input buffer";
+            throw new IOException( message );
         }
 
-        if( this.currRecIdx > 0 )
+        if( m_currRecIdx > 0 )
         {
-            this.writeBlock();
+            writeBlock();
         }
     }
 
     /**
      * Initialization common to all constructors.
-     *
-     * @param blockSize Description of Parameter
-     * @param recordSize Description of Parameter
      */
-    private void initialize( int blockSize, int recordSize )
+    private void initialize( final int blockSize, final int recordSize )
     {
-        this.debug = false;
-        this.blockSize = blockSize;
-        this.recordSize = recordSize;
-        this.recsPerBlock = ( this.blockSize / this.recordSize );
-        this.blockBuffer = new byte[ this.blockSize ];
+        m_debug = false;
+        m_blockSize = blockSize;
+        m_recordSize = recordSize;
+        m_recsPerBlock = ( m_blockSize / m_recordSize );
+        m_blockBuffer = new byte[ m_blockSize ];
 
-        if( this.inStream != null )
+        if( null != m_input )
         {
-            this.currBlkIdx = -1;
-            this.currRecIdx = this.recsPerBlock;
+            m_currBlkIdx = -1;
+            m_currRecIdx = m_recsPerBlock;
         }
         else
         {
-            this.currBlkIdx = 0;
-            this.currRecIdx = 0;
+            m_currBlkIdx = 0;
+            m_currRecIdx = 0;
         }
     }
 
     /**
      * @return false if End-Of-File, else true
-     * @exception IOException Description of Exception
      */
     private boolean readBlock()
         throws IOException
     {
-        if( this.debug )
+        if( m_debug )
         {
-            System.err.println( "ReadBlock: blkIdx = " + this.currBlkIdx );
+            final String message = "ReadBlock: blkIdx = " + m_currBlkIdx;
+            debug( message );
         }
 
-        if( this.inStream == null )
+        if( null == m_input )
         {
-            throw new IOException( "reading from an output buffer" );
+            final String message = "reading from an output buffer";
+            throw new IOException( message );
         }
 
-        this.currRecIdx = 0;
+        m_currRecIdx = 0;
 
         int offset = 0;
-        int bytesNeeded = this.blockSize;
+        int bytesNeeded = m_blockSize;
 
         while( bytesNeeded > 0 )
         {
-            long numBytes = this.inStream.read( this.blockBuffer, offset,
-                                                bytesNeeded );
+            final long numBytes = m_input.read( m_blockBuffer, offset, bytesNeeded );
 
             //
             // NOTE
@@ -433,18 +435,18 @@ public class TarBuffer
             offset += numBytes;
             bytesNeeded -= numBytes;
 
-            if( numBytes != this.blockSize )
+            if( numBytes != m_blockSize )
             {
-                if( this.debug )
+                if( m_debug )
                 {
                     System.err.println( "ReadBlock: INCOMPLETE READ "
-                                        + numBytes + " of " + this.blockSize
+                                        + numBytes + " of " + m_blockSize
                                         + " bytes read." );
                 }
             }
         }
 
-        this.currBlkIdx++;
+        m_currBlkIdx++;
 
         return true;
     }
@@ -457,20 +459,30 @@ public class TarBuffer
     private void writeBlock()
         throws IOException
     {
-        if( this.debug )
+        if( m_debug )
         {
-            System.err.println( "WriteBlock: blkIdx = " + this.currBlkIdx );
+            final String message = "WriteBlock: blkIdx = " + m_currBlkIdx;
+            debug( message );
         }
 
-        if( this.outStream == null )
+        if( null == m_output )
         {
-            throw new IOException( "writing to an input buffer" );
+            final String message = "writing to an input buffer";
+            throw new IOException( message );
         }
 
-        this.outStream.write( this.blockBuffer, 0, this.blockSize );
-        this.outStream.flush();
+        m_output.write( m_blockBuffer, 0, m_blockSize );
+        m_output.flush();
 
-        this.currRecIdx = 0;
-        this.currBlkIdx++;
+        m_currRecIdx = 0;
+        m_currBlkIdx++;
+    }
+
+    protected void debug( final String message )
+    {
+        if( m_debug )
+        {
+            System.err.println( message );
+        }
     }
 }
