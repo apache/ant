@@ -146,6 +146,16 @@ public class FileSet extends DataType {
     }
     
     /**
+     * add a name entry on the include files list
+     */
+    public PatternSet.NameEntry createIncludesFile() {
+        if (isReference()) {
+            throw noChildrenAllowed();
+        }
+        return defaultPatterns.createIncludesFile();
+    }
+    
+    /**
      * add a name entry on the exclude list
      */
     public PatternSet.NameEntry createExclude() {
@@ -155,6 +165,16 @@ public class FileSet extends DataType {
         return defaultPatterns.createExclude();
     }
 
+    /**
+     * add a name entry on the include files list
+     */
+    public PatternSet.NameEntry createExcludesFile() {
+        if (isReference()) {
+            throw noChildrenAllowed();
+        }
+        return defaultPatterns.createExcludesFile();
+    }
+    
     /**
      * Sets the set of include patterns. Patterns may be separated by a comma
      * or a space.

@@ -79,9 +79,8 @@ import java.util.Vector;
 public class PatternSet extends DataType {
     private Vector includeList = new Vector();
     private Vector excludeList = new Vector();
-    
-    private File incl = null;
-    private File excl = null;
+    private Vector includesFileList = new Vector();
+    private Vector excludesFileList = new Vector();
 
     /**
      * inner class to hold a name on list.  "If" and "Unless" attributes
@@ -122,23 +121,18 @@ public class PatternSet extends DataType {
             return true;
         }
 
-	public String toString()
-	{
-	    StringBuffer buf = new StringBuffer();
-	    buf.append( name );
-	    if ((ifCond != null) || (unlessCond != null))
-	    {
+	public String toString() {
+	    StringBuffer buf = new StringBuffer(name);
+	    if ((ifCond != null) || (unlessCond != null)) {
 		buf.append(":");
 		String connector = "";
 		
-		if (ifCond != null)
-		{
+		if (ifCond != null) {
 		    buf.append("if->");
 		    buf.append(ifCond);
 		    connector = ";";
 		}
-		if (unlessCond != null)
-		{
+		if (unlessCond != null) {
 		    buf.append(connector);
 		    buf.append("unless->");
 		    buf.append(unlessCond);
@@ -176,6 +170,16 @@ public class PatternSet extends DataType {
         }
         return addPatternToList(includeList);
     }
+
+    /**
+     * add a name entry on the include files list
+     */
+    public NameEntry createIncludesFile() {
+        if (isReference()) {
+            throw noChildrenAllowed();
+        }
+        return addPatternToList(includesFileList);
+    }
     
     /**
      * add a name entry on the exclude list
@@ -185,6 +189,16 @@ public class PatternSet extends DataType {
             throw noChildrenAllowed();
         }
         return addPatternToList(excludeList);
+    }
+    
+    /**
+     * add a name entry on the exclude files list
+     */
+    public NameEntry createExcludesFile() {
+        if (isReference()) {
+            throw noChildrenAllowed();
+        }
+        return addPatternToList(excludesFileList);
     }
 
     /**
@@ -235,33 +249,25 @@ public class PatternSet extends DataType {
     /**
      * Sets the name of the file containing the includes patterns.
      *
-     * @param incl The file to fetch the include patterns from.  
+     * @param includesFile The file to fetch the include patterns from.  
      */
-     public void setIncludesfile(File incl) throws BuildException {
+     public void setIncludesfile(File includesFile) throws BuildException {
          if (isReference()) {
              throw tooManyAttributes();
          }
-         if (!incl.exists()) {
-             throw new BuildException("Includesfile "+incl.getAbsolutePath()
-                                      +" not found.");
-         }
-         this.incl = incl;
+         createIncludesFile().setName(includesFile.getAbsolutePath());
      }
 
     /**
      * Sets the name of the file containing the excludes patterns.
      *
-     * @param excl The file to fetch the exclude patterns from.  
+     * @param excludesFile The file to fetch the exclude patterns from.  
      */
-     public void setExcludesfile(File excl) throws BuildException {
+     public void setExcludesfile(File excludesFile) throws BuildException {
          if (isReference()) {
              throw tooManyAttributes();
          }
-         if (!excl.exists()) {
-             throw new BuildException("Excludesfile "+excl.getAbsolutePath()
-                                      +" not found.");
-         }
-         this.excl = excl;
+         createExcludesFile().setName(excludesFile.getAbsolutePath());
      }
     
     /**
@@ -345,7 +351,7 @@ public class PatternSet extends DataType {
      * helper for FileSet.
      */
     boolean hasPatterns() {
-        return incl != null || excl != null
+        return includesFileList.size() > 0 || excludesFileList.size() > 0 
             || includeList.size() > 0 || excludeList.size() > 0;
     }
 
@@ -390,23 +396,42 @@ public class PatternSet extends DataType {
     }
         
     /**
-     * Read includefile ot excludefile if not already done so.
+     * Read includesfile ot excludesfile if not already done so.
      */
     private void readFiles(Project p) {
-        if (incl != null) {
-            readPatterns(incl, includeList, p);
-            incl = null;
+        if (includesFileList.size() > 0) {
+            Enumeration e = includesFileList.elements();
+            while (e.hasMoreElements()) {
+            	NameEntry ne = (NameEntry)e.nextElement();
+            	String fileName = ne.evalName(p);
+            	if (fileName != null) {
+                    File inclFile = p.resolveFile(fileName);
+                    if (!inclFile.exists())
+                        throw new BuildException("Includesfile "
+                                                 + inclFile.getAbsolutePath()
+                                                 + " not found.");
+                    readPatterns(inclFile, includeList, p);
+            	}
+            }
+            includesFileList.clear();
         }
-        if (excl != null) {
-            readPatterns(excl, excludeList, p);
-            excl = null;
-        }
-    }
 
-    public String toString()
-    {
-        return "patternSet{ includes: " + includeList + 
-            " excludes: " + excludeList + " }";
+        if (excludesFileList.size() > 0) {
+            Enumeration e = includesFileList.elements();
+            while (e.hasMoreElements()) {
+            	NameEntry ne = (NameEntry)e.nextElement();
+            	String fileName = ne.evalName(p);
+            	if (fileName != null) {
+                    File exclFile = p.resolveFile(fileName);
+                    if (!exclFile.exists())
+                        throw new BuildException("Excludesfile "
+                                                 + exclFile.getAbsolutePath()
+                                                 + " not found.");
+                    readPatterns(exclFile, excludeList, p);
+            	}
+            }
+            excludesFileList.clear();
+        }
     }
 
 }

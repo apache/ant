@@ -166,6 +166,20 @@ public class FileSetTest extends TestCase {
                          be.getMessage());
         }
         try {
+            f.createIncludesFile();
+            fail("Can add nested includesfile in FileSet that is a reference.");
+        } catch (BuildException be) {
+            assertEquals("You must not specify nested elements when using refid",
+                         be.getMessage());
+        }
+        try {
+            f.createExcludesFile();
+            fail("Can add nested excludesfile in FileSet that is a reference.");
+        } catch (BuildException be) {
+            assertEquals("You must not specify nested elements when using refid",
+                         be.getMessage());
+        }
+        try {
             f.createPatternSet();
             fail("Can add nested patternset in FileSet that is a reference.");
         } catch (BuildException be) {

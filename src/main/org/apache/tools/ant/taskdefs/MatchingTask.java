@@ -84,12 +84,26 @@ public abstract class MatchingTask extends Task {
     }
     
     /**
+     * add a name entry on the include files list
+     */
+    public PatternSet.NameEntry createIncludesFile() {
+        return fileset.createIncludesFile();
+    }
+    
+    /**
      * add a name entry on the exclude list
      */
     public PatternSet.NameEntry createExclude() {
         return fileset.createExclude();
     }
 
+    /**
+     * add a name entry on the include files list
+     */
+    public PatternSet.NameEntry createExcludesFile() {
+        return fileset.createExcludesFile();
+    }
+    
     /**
      * add a set of patterns
      */

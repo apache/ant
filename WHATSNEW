@@ -131,6 +131,10 @@ Other changes:
   defaults to true.  If set to false, files that are newer than the
   files in the archive will not be replaced.
 
+* <patternset> and <fileset> now support nested <in/excludesfile>
+  elements - using these you can have more than one in/excludes file
+  per <patternset>. 
+
 Fixed bugs:
 -----------
 

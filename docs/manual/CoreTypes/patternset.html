@@ -8,15 +8,17 @@
 <body>
 
 <h2><a name="patternset">PatternSet</a></h2>
-<p>Patterns can be grouped to sets and later be referenced by their
-<code>id</code>
-attribute. They are defined via a <code>patternset</code> element,
-which can appear nested into a <a href="fileset.html">FileSet</a> or a
-directory-based task that constitutes an implicit FileSet. In addition,
-<code>patternset</code>s can be defined at the same level as
-<code>target</code> &#151; i.e., as children of <code>project</code>.</p>
-<p>Patterns can be specified by nested <code>&lt;include&gt;</code> or
-<code>&lt;exclude&gt;</code> elements or the following attributes.</p>
+<p><a href="../dirtasks.html#patterns">Patterns</a> can be grouped to
+sets and later be referenced by their <code>id</code> attribute. They
+are defined via a <code>patternset</code> element, which can appear
+nested into a <a href="fileset.html">FileSet</a> or a directory-based
+task that constitutes an implicit FileSet. In addition,
+<code>patternset</code>s can be defined as a stand alone element at
+the same level as <code>target</code> &#151; i.e., as children of
+<code>project</code> as well as as children of
+<code>target</code>.</p> <p>Patterns can be specified by nested
+<code>&lt;include&gt;</code>, or <code>&lt;exclude&gt;</code> elements
+or the following attributes.</p>
 <table border="1" cellpadding="2" cellspacing="0">
   <tr>
     <td valign="top"><b>Attribute</b></td>
@@ -30,7 +32,8 @@ directory-based task that constitutes an implicit FileSet. In addition,
   <tr>
     <td valign="top">includesfile</td>
     <td valign="top">the name of a file; each line of this file is
-      taken to be an include pattern.</td>
+      taken to be an include pattern. You can specify more than one
+      include file by using a nested includesfile elements.</td>
   </tr>
   <tr>
     <td valign="top">excludes</td>
@@ -40,7 +43,8 @@ directory-based task that constitutes an implicit FileSet. In addition,
   <tr>
     <td valign="top">excludesfile</td>
     <td valign="top">the name of a file; each line of this file is
-      taken to be an exclude pattern.</td>
+      taken to be an exclude pattern. You can specify more than one
+      exclude file by using a nested excludesfile elements.</td>
   </tr>
 </table>
 
@@ -61,9 +65,9 @@ by tasks that support this feature, or by FileSets.</p>
 multiple elements separated by commas or spaces, the nested
 &lt;include&gt; and &lt;exclude&gt; elements expect their name
 attribute to hold a single pattern.</p>
-<p>The nested &lt;include&gt; and &lt;exclude&gt; elements allow you to use
-if and unless arguments to specify that the element should only be used if a 
-property is set, or that it should be used only if a property is not set.</p>
+<p>The nested elements allow you to use if and unless arguments to
+specify that the element should only be used if a property is set, or
+that it should be used only if a property is not set.</p>
 <p>For example</p>
 <blockquote><pre>
 &lt;patternset id=&quot;sources&quot; &gt;
@@ -74,7 +78,34 @@ property is set, or that it should be used only if a property is not set.</p>
 </pre></blockquote>
 <p>will only include the files in the sub-directory <em>prof</em> if the property
 <em>professional</em> is set to some value.</p>
-
+<p>If you want to list the files to include or exclude external to
+your build file, you should use the includesfile/excludesfile
+attributes or elements.  Using the attribute, you can only specify a
+single file of each type, while the nested elements can be specified
+more than once - the nested elements also support if/unless attributes
+you can use to test the existance of a property. For example:</p>
+<blockquote><pre>
+&lt;patternset includesfile=&quot;some-file&quot; /&gt;
+</pre></blockquote>
+<p>and</p>
+<blockquote><pre>
+&lt;patternset&gt;
+  &lt;includesfile name=&quot;some-file&quot; /&gt; 
+&lt;patternset/&gt;
+</pre></blockquote>
+<p>are identical.  The include patterns will be read from the file
+<code>some-file</code>, one pattern per line.</p>
+<blockquote><pre>
+&lt;patternset&gt;
+  &lt;includesfile name=&quot;some-file&quot; /&gt; 
+  &lt;includesfile name=&quot;${some-other-file}&quot; 
+                if=&quot;some-other-file&quot;
+  /&gt; 
+&lt;patternset/&gt;
+</pre></blockquote>
+<p>will also read include patterns from the file the property
+<code>some-other-file</code> points to, if a property of that name has
+been defined.</p>
 <hr>
 <p align="center">Copyright &copy; 2000,2001 Apache Software Foundation. All rights
 Reserved.</p>

@@ -141,6 +141,20 @@ public class PatternSetTest extends TestCase {
             assertEquals("You must not specify nested elements when using refid",
                          be.getMessage());
         }
+        try {
+            p.createIncludesFile();
+            fail("Can add nested includesfile in PatternSet that is a reference.");
+        } catch (BuildException be) {
+            assertEquals("You must not specify nested elements when using refid",
+                         be.getMessage());
+        }
+        try {
+            p.createExcludesFile();
+            fail("Can add nested excludesfile in PatternSet that is a reference.");
+        } catch (BuildException be) {
+            assertEquals("You must not specify nested elements when using refid",
+                         be.getMessage());
+        }
     }
 
     public void testCircularReferenceCheck() {
