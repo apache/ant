@@ -68,14 +68,14 @@ the build run until return key is pressed.</p>
     validargs=&quot;y,n&quot;
     addproperty=&quot;do.delete&quot;
   /&gt;
-  &lt;condition propert=&quot;do.abort&quot;&gt;
+  &lt;condition property=&quot;do.abort&quot;&gt;
     &lt;equals arg1=&quot;n&quot; arg2=&quot;${do.delete}&quot; /&gt;
   &lt;/condition&gt;
-  &lt;fail if=&quot;do.abort&quot;&gt;Build abborted by user.&lt;/fail&gt;
+  &lt;fail if=&quot;do.abort&quot;&gt;Build aborted by user.&lt;/fail&gt;
 </pre>
 <p>Will display the message &quot;All data is going to be deleted from DB continue
 (y/n)?&quot; and require 'y+retrun key' to continue build or 'n+return key'
-to exit build with following message &quot;Build abborted by user.&quot;.</p>
+to exit build with following message &quot;Build aborted by user.&quot;.</p>
 <pre>  &lt;input
     message=&quot;Please enter db-username:&quot;
     addproperty=&quot;db.user&quot;
