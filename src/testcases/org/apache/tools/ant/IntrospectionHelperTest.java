@@ -67,24 +67,31 @@ import java.util.*;
 
 public class IntrospectionHelperTest extends TestCase {
 
+    private Project p;
+
     public static boolean isUnixStyle = File.pathSeparatorChar == ':';
 
     public IntrospectionHelperTest(String name) {
         super(name);
     }
     
+    public void setUp() {
+        p = new Project();
+        p.setBasedir("/tmp");
+    }
+
     public void testAddText() throws BuildException {
         IntrospectionHelper ih = IntrospectionHelper.getHelper(java.lang.String.class);
         try {
-            ih.addText("", "test");
+            ih.addText(p, "", "test");
             fail("String doesn\'t support addText");
         } catch (BuildException be) {
         }
 
         ih = IntrospectionHelper.getHelper(getClass());
-        ih.addText(this, "test");
+        ih.addText(p, this, "test");
         try {
-            ih.addText(this, "test2");
+            ih.addText(p, this, "test2");
             fail("test2 shouldn\'t be equal to test");
         } catch (BuildException be) {
             assert(be.getException() instanceof AssertionFailedError);
@@ -131,7 +138,7 @@ public class IntrospectionHelperTest extends TestCase {
         } catch (BuildException be) {
         }
         assertEquals(java.lang.String.class, ih.getElementType("six"));
-        assertEquals("test", ih.createElement(this, "six"));
+        assertEquals("test", ih.createElement(p, this, "six"));
 
         try {
             ih.getElementType("seven");
@@ -164,17 +171,17 @@ public class IntrospectionHelperTest extends TestCase {
         } catch (BuildException be) {
         }
         assertEquals(java.lang.StringBuffer.class, ih.getElementType("thirteen"));
-        assertEquals("test", ih.createElement(this, "thirteen").toString());
+        assertEquals("test", ih.createElement(p, this, "thirteen").toString());
 
         try {
-            ih.createElement(this, "fourteen");
+            ih.createElement(p, this, "fourteen");
             fail("fourteen throws NullPointerException");
         } catch (BuildException be) {
             assert(be.getException() instanceof NullPointerException);
         }
 
         try {
-            ih.createElement(this, "fourteen");
+            ih.createElement(p, this, "fourteen");
             fail("fifteen throws NullPointerException");
         } catch (BuildException be) {
             assert(be.getException() instanceof NullPointerException);
@@ -245,8 +252,6 @@ public class IntrospectionHelperTest extends TestCase {
     }
 
     public void testAttributeSetters() throws BuildException {
-        Project p = new Project();
-        p.setBasedir("/tmp");
         IntrospectionHelper ih = IntrospectionHelper.getHelper(getClass());
         try {
             ih.setAttribute(p, this, "one", "test");
