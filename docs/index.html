@@ -525,7 +525,7 @@ execution depending on system parameters.</p>
     <td align="center" valign="top"><b>Required</b></td>
   </tr>
   <tr>
-    <td valign="top">name</td>
+    <td valign="top">property</td>
     <td valign="top">the name of the property to set.</td>
     <td valign="top" align="center">Yes</td>
   </tr>
@@ -544,7 +544,7 @@ execution depending on system parameters.</p>
   </tr>
 </table>
 <h3>Examples</h3>
-<pre>  &lt;available class=&quot;org.whatever.Myclass&quot; property=&quot;Myclass.present&quot; /&gt;</pre>
+<pre>  &lt;available classname=&quot;org.whatever.Myclass&quot; property=&quot;Myclass.present&quot; /&gt;</pre>
 <p>sets the property <code><i>Myclass.present</i></code> to the value &quot;true&quot;
 if the <i>org.whatever.Myclass</i> is found in Ant's classpath.</p>
 <hr>
@@ -1232,9 +1232,9 @@ the one that is currently running Ant.</p>
   </tr>
 </table>
 <h3>Examples</h3>
-<pre>  &lt;java class=&quot;test.Main&quot; /&gt;</pre>
-<pre>  &lt;java class=&quot;test.Main&quot; args=&quot;-h&quot; /&gt;</pre>
-<pre>  &lt;java class=&quot;test.Main&quot;
+<pre>  &lt;java classname=&quot;test.Main&quot; /&gt;</pre>
+<pre>  &lt;java classname=&quot;test.Main&quot; args=&quot;-h&quot; /&gt;</pre>
+<pre>  &lt;java classname=&quot;test.Main&quot;
         args=&quot;-h&quot;
         fork=&quot;yes&quot;
         jvmargs=&quot;-Xrunhprof:cpu=samples,file=log.txt,depth=3&quot;
@@ -1831,7 +1831,7 @@ This also holds for properties loaded from a property file.</p>
   </tr>
 </table>
 <h3>Examples</h3>
-<pre>  &lt;rmic class=&quot;com.xyz.FooBar&quot; base=&quot;${build}/classes&quot; /&gt;</pre>
+<pre>  &lt;rmic classname=&quot;com.xyz.FooBar&quot; base=&quot;${build}/classes&quot; /&gt;</pre>
 <p>runs the rmic compiler for the class <code>com.xyz.FooBar</code>. The
 compiled files will be stored in the directory <code>${build}/classes</code>.</p>
 <hr>
@@ -1933,13 +1933,13 @@ href="#writingowntask">Writing your own task</a>&quot;.</p>
     <td valign="top" align="center">Yes</td>
   </tr>
   <tr>
-    <td valign="top">class</td>
+    <td valign="top">classname</td>
     <td valign="top">the full class name implementing the task</td>
     <td valign="top" align="center">Yes</td>
   </tr>
 </table>
 <h3>Examples</h3>
-<pre>  &lt;taskdef name=&quot;myjavadoc&quot; value=&quot;com.mydomain.JavadocTask&quot; /&gt;</pre>
+<pre>  &lt;taskdef name=&quot;myjavadoc&quot; classname=&quot;com.mydomain.JavadocTask&quot; /&gt;</pre>
 <p>makes a task called <code>myjavadoc</code> available to Ant. The class <code>com.mydomain.JavadocTask</code>
 implements the task.</p>
 <hr>
@@ -2120,7 +2120,7 @@ task has one attribute called &quot;message&quot;.</p>
 <blockquote>
   <pre>&lt;project name=&quot;TaskTest&quot; default=&quot;test&quot; basedir=&quot;.&quot;&gt;
   &lt;target name=&quot;init&quot;&gt;
-    &lt;taskdef name=&quot;mytask&quot; class=&quot;com.mydomain.MyVeryOwnTask&quot;/&gt;
+    &lt;taskdef name=&quot;mytask&quot; classname=&quot;com.mydomain.MyVeryOwnTask&quot;/&gt;
   &lt;/target&gt;
 
   &lt;target name=&quot;test&quot;&gt;
