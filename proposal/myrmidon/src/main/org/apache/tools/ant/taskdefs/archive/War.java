@@ -5,82 +5,94 @@
  * version 1.1, a copy of which has been included with this distribution in
  * the LICENSE.txt file.
  */
-package org.apache.tools.ant.taskdefs;
+package org.apache.tools.ant.taskdefs.archive;
 
 import java.io.File;
 import java.io.IOException;
 import org.apache.myrmidon.api.TaskException;
-import org.apache.tools.ant.types.ZipFileSet;
 import org.apache.aut.zip.ZipOutputStream;
 
 /**
- * Creates a EAR archive. Based on WAR task
+ * Creates a WAR archive.
  *
  * @author <a href="mailto:stefan.bodewig@epost.de">Stefan Bodewig</a>
- * @author <a href="mailto:leslie.hughes@rubus.com">Les Hughes</a>
  */
-public class Ear extends Jar
+public class War
+    extends Jar
 {
-    private File m_appxml;
+    private File m_webxml;
     private boolean m_descriptorAdded;
 
-    public Ear()
+    public War()
     {
-        m_archiveType = "ear";
+        super();
+        m_archiveType = "war";
         m_emptyBehavior = "create";
     }
 
-    public void setAppxml( final File appxml )
+    public void setWebxml( final File descr )
         throws TaskException
     {
-        m_appxml = appxml;
-        if( !m_appxml.exists() )
+        m_webxml = descr;
+        if( !m_webxml.exists() )
         {
             final String message = "Deployment descriptor: " +
-                m_appxml + " does not exist.";
+                m_webxml + " does not exist.";
             throw new TaskException( message );
         }
 
-        addFileAs( m_appxml, "META-INF/application.xml" );
+        addFileAs(descr, "WEB-INF/web.xml" );
     }
 
-    public void addArchives( ZipFileSet fs )
+    public void addClasses( final ZipFileSet fs )
     {
         // We just set the prefix for this fileset, and pass it up.
-        // Do we need to do this? LH
-        getLogger().debug( "addArchives called" );
-        fs.setPrefix( "/" );
+        fs.setPrefix( "WEB-INF/classes/" );
+        super.addFileset( fs );
+    }
+
+    public void addLib( final ZipFileSet fs )
+    {
+        // We just set the prefix for this fileset, and pass it up.
+        fs.setPrefix( "WEB-INF/lib/" );
+        super.addFileset( fs );
+    }
+
+    public void addWebinf( final ZipFileSet fs )
+    {
+        // We just set the prefix for this fileset, and pass it up.
+        fs.setPrefix( "WEB-INF/" );
         super.addFileset( fs );
     }
 
     protected void initZipOutputStream( final ZipOutputStream zOut )
         throws IOException, TaskException
     {
-        if( m_appxml == null && !isInUpdateMode() )
+        // If no webxml file is specified, it's an error.
+        if( m_webxml == null && !isInUpdateMode() )
         {
-            final String message = "appxml attribute is required";
-            throw new TaskException( message );
+            throw new TaskException( "webxml attribute is required" );
         }
 
         super.initZipOutputStream( zOut );
     }
 
-    protected void zipFile( File file, ZipOutputStream zOut, String vPath )
+    protected void zipFile( final File file,
+                            final ZipOutputStream zOut,
+                            final String vPath )
         throws IOException, TaskException
     {
         // If the file being added is WEB-INF/web.xml, we warn if it's not the
         // one specified in the "webxml" attribute - or if it's being added twice,
         // meaning the same file is specified by the "webxml" attribute and in
         // a <fileset> element.
-        if( vPath.equalsIgnoreCase( "META-INF/aplication.xml" ) )
+        if( vPath.equalsIgnoreCase( "WEB-INF/web.xml" ) )
         {
-            if( m_appxml == null ||
-                !m_appxml.equals( file ) ||
-                m_descriptorAdded )
+            if( m_webxml == null || !m_webxml.equals( file ) || m_descriptorAdded )
             {
                 final String message = "Warning: selected " + m_archiveType +
-                    " files include a META-INF/application.xml which will be ignored " +
-                    "(please use appxml attribute to " + m_archiveType + " task)";
+                    " files include a WEB-INF/web.xml which will be ignored " +
+                    "(please use webxml attribute to " + m_archiveType + " task)";
                 getLogger().warn( message );
             }
             else

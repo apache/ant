@@ -5,7 +5,7 @@
  * version 1.1, a copy of which has been included  with this distribution in
  * the LICENSE.txt file.
  */
-package org.apache.tools.ant.taskdefs;
+package org.apache.tools.ant.taskdefs.archive;
 
 import org.apache.myrmidon.api.TaskException;
 import org.apache.tools.ant.types.EnumeratedAttribute;

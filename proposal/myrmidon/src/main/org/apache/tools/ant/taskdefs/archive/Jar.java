@@ -5,7 +5,7 @@
  * version 1.1, a copy of which has been included with this distribution in
  * the LICENSE.txt file.
  */
-package org.apache.tools.ant.taskdefs;
+package org.apache.tools.ant.taskdefs.archive;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -19,9 +19,11 @@ import java.io.PrintWriter;
 import java.io.Reader;
 import java.util.Enumeration;
 import java.util.Iterator;
+import java.util.zip.ZipFile;
 import org.apache.myrmidon.api.TaskException;
 import org.apache.tools.ant.types.FileScanner;
-import org.apache.tools.ant.types.ZipFileSet;
+import org.apache.tools.ant.taskdefs.Manifest;
+import org.apache.tools.ant.taskdefs.ManifestException;
 import org.apache.aut.zip.ZipOutputStream;
 
 /**
@@ -163,7 +165,7 @@ public class Jar
             java.util.zip.ZipFile theZipFile = null;
             try
             {
-                theZipFile = new java.util.zip.ZipFile( zipFile );
+                theZipFile = new ZipFile( zipFile );
                 java.util.zip.ZipEntry entry = theZipFile.getEntry( "META-INF/MANIFEST.MF" );
                 if( entry == null )
                 {

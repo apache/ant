@@ -5,9 +5,10 @@
  * version 1.1, a copy of which has been included with this distribution in
  * the LICENSE.txt file.
  */
-package org.apache.tools.ant.types;
+package org.apache.tools.ant.taskdefs.archive;
 
 import java.io.File;
+import org.apache.tools.ant.types.FileSet;
 
 /**
  * A ZipFileSet is a FileSet with extra attributes useful in the context of

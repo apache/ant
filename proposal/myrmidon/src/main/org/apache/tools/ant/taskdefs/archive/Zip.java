@@ -5,7 +5,7 @@
  * version 1.1, a copy of which has been included with this distribution in
  * the LICENSE.txt file.
  */
-package org.apache.tools.ant.taskdefs;
+package org.apache.tools.ant.taskdefs.archive;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -28,9 +28,8 @@ import org.apache.tools.ant.types.FileScanner;
 import org.apache.tools.ant.types.FileSet;
 import org.apache.tools.ant.types.ScannerUtil;
 import org.apache.tools.ant.types.SourceFileScanner;
-import org.apache.tools.ant.types.ZipFileSet;
-import org.apache.tools.ant.types.ZipScanner;
 import org.apache.tools.ant.util.mappers.MergingMapper;
+import org.apache.tools.ant.taskdefs.MatchingTask;
 
 /**
  * Create a ZIP archive.

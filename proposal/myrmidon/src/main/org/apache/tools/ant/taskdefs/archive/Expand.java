@@ -5,7 +5,7 @@
  * version 1.1, a copy of which has been included with this distribution in
  * the LICENSE.txt file.
  */
-package org.apache.tools.ant.taskdefs;
+package org.apache.tools.ant.taskdefs.archive;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -25,6 +25,7 @@ import org.apache.tools.ant.types.FileSet;
 import org.apache.myrmidon.framework.PatternSet;
 import org.apache.myrmidon.framework.PatternUtil;
 import org.apache.tools.ant.types.ScannerUtil;
+import org.apache.tools.ant.taskdefs.MatchingTask;
 
 /**
  * Unzip a file.
