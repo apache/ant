@@ -85,7 +85,7 @@ public class ExtraFieldUtils {
     /**
      * Split the array into ExtraFields and populate them with the
      * give data.
-     * @param byte an array of bytes
+     * @param data an array of bytes
      * @return an array of ExtraFields
      * @since 1.1
      * @throws ZipException on error
