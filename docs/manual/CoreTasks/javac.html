@@ -287,13 +287,13 @@ This problem may occur with all JDKs &lt; 1.2.</p>
 <p><b>Note:</b> If you wish to compile only source-files located in some packages below a
 common root you should not include these packages in the srcdir-attribute. Use include/exclude-attributes
 or elements to filter for these packages. If you include part of your package-structure inside the srcdir-attribute 
-(or nested src-elements) Ant will start to recompile your sources everytime you call it.</p>
+(or nested src-elements) Ant will start to recompile your sources every time you call it.</p>
 
 <h3>Jikes Notes</h3>
 
 If the environment variable <tt>JIKES_HOME</tt> is set to the location
 of the jikes compiler, then the standard Ant invocation scripts
-automatically set build.compiler to "jikes". This enables one to use
+automatically set build.compiler to &quot;jikes&quot;. This enables one to use
 jikes when available, without having to commit the build file to a
 single choice of compiler. 
 
@@ -302,9 +302,9 @@ single choice of compiler.
 Jikes also supports some extra options, which can be set be defining
 properties prior to invoking the task. The ant developers are aware that
 this is ugly and inflexible -expect a better solution in the future. All
-the options are boolean, and must be set to "true" or "yes" to be
+the options are boolean, and must be set to &quot;true&quot; or &quot;yes&quot; to be
 interpreted as anything other than false; by default
-build.compiler.warnings is "true" while all others are "false"
+build.compiler.warnings is &quot;true&quot; while all others are &quot;false&quot;
 
 <table border="1" cellpadding="2" cellspacing="0">
   <tr>
@@ -339,7 +339,7 @@ build.compiler.warnings is "true" while all others are "false"
 	</td> 
 	<td valign="top">
 	enable full dependency checking,<br> 
-	"+F" in the jikes manual.
+	&quot;+F&quot; in the jikes manual.
     </td>
   </tr>
 </table>
