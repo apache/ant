@@ -8,7 +8,7 @@
     the python os library)
     This script has been tested with Python2.0/Win2K
 
-        Copyright (c) 2001 The Apache Software Foundation.  All rights
+        Copyright (c) 2001,2003 The Apache Software Foundation.  All rights
         reserved.
 
  created:         2001-04-11
