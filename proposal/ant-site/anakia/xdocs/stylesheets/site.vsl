@@ -119,13 +119,11 @@
           </font>
         </td></tr>
       </table>
-      <p>
         <ul>
     #foreach ($faq in $section.getChildren("faq") )
       #subtoc ($faq)
     #end
         </ul>
-      </p>
 #end
 
 #macro (subtoc $faq)
