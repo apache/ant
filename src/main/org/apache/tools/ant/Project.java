@@ -67,6 +67,7 @@ import org.apache.tools.ant.input.DefaultInputHandler;
 import org.apache.tools.ant.input.InputHandler;
 import org.apache.tools.ant.types.FilterSet;
 import org.apache.tools.ant.types.FilterSetCollection;
+import org.apache.tools.ant.types.Description;
 import org.apache.tools.ant.util.FileUtils;
 import org.apache.tools.ant.util.JavaEnvUtils;
 import org.apache.tools.ant.util.WeakishReference;
@@ -694,6 +695,10 @@ public class Project {
      *         been set.
      */
     public String getDescription() {
+        if( description== null ) {
+            description=Description.getDescription(this);
+        }
+
         return description;
     }
 
