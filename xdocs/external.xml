@@ -3104,7 +3104,7 @@
         <table class="externals">
           <tr>
             <th>Compatibility:</th>
-            <td>bundles Ant 1.6.1 as of NetBeans 3.6</td>
+            <td>bundles Ant 1.6.2 as of NetBeans 4.0</td>
           </tr>
           <tr>
             <th>URL:</th>
