@@ -207,7 +207,6 @@ public class Checksum
             {
                 final String message = "Could not find file " + file.getAbsolutePath() +
                     " to generate checksum for.";
-                getContext().info( message );
                 throw new TaskException( message );
             }
         }
@@ -225,7 +224,7 @@ public class Checksum
         {
             final File src = (File)includes.nextElement();
             final String message = "Calculating " + m_algorithm + " checksum for " + src;
-            getContext().info( message );
+            getContext().verbose( message );
 
             checksumMatches = z( src, checksumMatches );
         }

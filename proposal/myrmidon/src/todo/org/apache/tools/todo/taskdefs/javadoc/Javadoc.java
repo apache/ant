@@ -810,8 +810,6 @@ public class Javadoc
         }
         getContext().debug( "Javadoc args: " + cmd );
 
-        getContext().info( "Javadoc execution" );
-
         final Execute exe = new Execute();
         exe.setExecOutputHandler( this );
 
@@ -1025,7 +1023,7 @@ public class Javadoc
     {
         if( line.startsWith( "Generating " ) || line.startsWith( "Building " ) )
         {
-            getContext().debug( line );
+            getContext().verbose( line );
         }
         else
         {

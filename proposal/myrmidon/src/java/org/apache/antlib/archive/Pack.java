@@ -43,7 +43,7 @@ public abstract class Pack
     {
         validate();
         final String message = "Building: " + m_zipFile.getAbsolutePath();
-        getContext().info( message );
+        getContext().verbose( message );
         pack();
     }
 

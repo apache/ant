@@ -475,7 +475,7 @@ public class Rmic extends MatchingTask
 
         if( verify )
         {
-            getContext().info( "Verify has been turned on." );
+            getContext().verbose( "Verify has been turned on." );
         }
 
         String compiler = getContext().getProperty( "build.rmic" ).toString();

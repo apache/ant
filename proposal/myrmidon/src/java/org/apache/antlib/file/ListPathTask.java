@@ -43,7 +43,7 @@ public class ListPathTask
         for( int i = 0; i < files.length; i++ )
         {
             final String file = files[ i ];
-            getContext().warn( file );
+            getContext().info( file );
         }
     }
 }

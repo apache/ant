@@ -266,7 +266,7 @@ public class MParse
         File javaFile = new File( pathname );
         if( javaFile.exists() && m_target.lastModified() < javaFile.lastModified() )
         {
-            getContext().info( "Target is already build - skipping (" + m_target + ")" );
+            getContext().verbose( "Target is already build - skipping (" + m_target + ")" );
             return;
         }
 
@@ -325,7 +325,7 @@ public class MParse
             final File sunjj = new File( m_target.getParent(), name );
             if( sunjj.exists() )
             {
-                getContext().info( "Removing stale file: " + sunjj.getName() );
+                getContext().debug( "Removing stale file: " + sunjj.getName() );
                 sunjj.delete();
             }
         }

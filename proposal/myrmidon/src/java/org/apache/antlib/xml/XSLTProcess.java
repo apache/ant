@@ -251,7 +251,6 @@ public class XSLTProcess
         catch( final Exception e )
         {
             final String message = "Failed to read stylesheet " + m_stylesheet;
-            getContext().info( message );
             throw new TaskException( e.getMessage(), e );
         }
     }

@@ -160,7 +160,7 @@ public class Get extends AbstractTask
                 if( verbose )
                 {
                     Date t = new Date( timestamp );
-                    getContext().info( "local file date : " + t.toString() );
+                    getContext().verbose( "local file date : " + t.toString() );
                 }
 
                 hasTimestamp = true;
@@ -206,7 +206,7 @@ public class Get extends AbstractTask
                     //not modified so no file download. just return instead
                     //and trace out something so the user doesn't think that the
                     //download happened when it didnt
-                    getContext().info( "Not modified - so not downloaded" );
+                    getContext().verbose( "Not modified - so not downloaded" );
                     return;
                 }
                 // test for 401 result (HTTP only)
@@ -273,8 +273,8 @@ public class Get extends AbstractTask
                 if( verbose )
                 {
                     Date t = new Date( remoteTimestamp );
-                    getContext().info( "last modified = " + t.toString()
-                                      + ( ( remoteTimestamp == 0 ) ? " - using current time instead" : "" ) );
+                    getContext().verbose( "last modified = " + t.toString()
+                                          + ( ( remoteTimestamp == 0 ) ? " - using current time instead" : "" ) );
                 }
 
                 if( remoteTimestamp != 0 )

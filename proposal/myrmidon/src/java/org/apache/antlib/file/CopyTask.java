@@ -328,7 +328,7 @@ public class CopyTask
             {
                 final String message =
                     REZ.getString( "copy.selfcopy-ignored.notice", source );
-                getContext().info( message );
+                getContext().verbose( message );
                 continue;
             }
 
@@ -336,7 +336,7 @@ public class CopyTask
             {
                 final String message =
                     REZ.getString( "copy.filecopy.notice", source, destination );
-                getContext().info( message );
+                getContext().verbose( message );
 
                 doOperation( source, destination );
             }

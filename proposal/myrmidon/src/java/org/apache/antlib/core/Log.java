@@ -28,7 +28,7 @@ public class Log
     /**
      * The level at which to print out messages.
      */
-    private LogLevel m_level = LogLevel.WARN;
+    private LogLevel m_level = LogLevel.INFO;
 
     /**
      * Set the level at which the message will be logged.

@@ -156,7 +156,7 @@ public class JJTree
                                         targetName.substring( 0, targetName.indexOf( ".jjt" ) ) + ".jj" );
         if( javaFile.exists() && target.lastModified() < javaFile.lastModified() )
         {
-            getContext().info( "Target is already built - skipping (" + target + ")" );
+            getContext().verbose( "Target is already built - skipping (" + target + ")" );
             return;
         }
         exe.getArguments().addArgument( target );

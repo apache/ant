@@ -21,67 +21,67 @@ public class PrimitiveTypesTest
 {
     public void setInteger( final Integer value )
     {
-        getContext().warn( "setInteger( " + value + " );" );
+        getContext().info( "setInteger( " + value + " );" );
     }
 
     public void setInteger2( final int value )
     {
-        getContext().warn( "setInteger2( " + value + " );" );
+        getContext().info( "setInteger2( " + value + " );" );
     }
 
     public void setShort( final Short value )
     {
-        getContext().warn( "setShort( " + value + " );" );
+        getContext().info( "setShort( " + value + " );" );
     }
 
     public void setShort2( final short value )
     {
-        getContext().warn( "setShort2( " + value + " );" );
+        getContext().info( "setShort2( " + value + " );" );
     }
 
     public void setByte( final Byte value )
     {
-        getContext().warn( "setByte( " + value + " );" );
+        getContext().info( "setByte( " + value + " );" );
     }
 
     public void setByte2( final byte value )
     {
-        getContext().warn( "setByte2( " + value + " );" );
+        getContext().info( "setByte2( " + value + " );" );
     }
 
     public void setLong( final Long value )
     {
-        getContext().warn( "setLong( " + value + " );" );
+        getContext().info( "setLong( " + value + " );" );
     }
 
     public void setLong2( final long value )
     {
-        getContext().warn( "setLong2( " + value + " );" );
+        getContext().info( "setLong2( " + value + " );" );
     }
 
     public void setFloat( final Float value )
     {
-        getContext().warn( "setFloat( " + value + " );" );
+        getContext().info( "setFloat( " + value + " );" );
     }
 
     public void setFloat2( final float value )
     {
-        getContext().warn( "setFloat2( " + value + " );" );
+        getContext().info( "setFloat2( " + value + " );" );
     }
 
     public void setDouble( final Double value )
     {
-        getContext().warn( "setDouble( " + value + " );" );
+        getContext().info( "setDouble( " + value + " );" );
     }
 
     public void setDouble2( final double value )
     {
-        getContext().warn( "setDouble2( " + value + " );" );
+        getContext().info( "setDouble2( " + value + " );" );
     }
 
     public void setString( final String value )
     {
-        getContext().warn( "setString( " + value + " );" );
+        getContext().info( "setString( " + value + " );" );
     }
 
     public void execute()

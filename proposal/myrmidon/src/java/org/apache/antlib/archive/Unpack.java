@@ -52,7 +52,7 @@ public abstract class Unpack
         {
             final String message = "Expanding " + src.getAbsolutePath() +
                 " to " + dest.getAbsolutePath();
-            getContext().info( message );
+            getContext().verbose( message );
 
             extract();
         }

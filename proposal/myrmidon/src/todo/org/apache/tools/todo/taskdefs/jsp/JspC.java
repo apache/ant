@@ -408,11 +408,11 @@ public class JspC extends MatchingTask
         {
             if( filecount == 0 )
             {
-                getContext().info( "there were no files to compile" );
+                getContext().verbose( "there were no files to compile" );
             }
             else
             {
-                getContext().debug( "all files are up to date" );
+                getContext().verbose( "all files are up to date" );
             }
         }
     }

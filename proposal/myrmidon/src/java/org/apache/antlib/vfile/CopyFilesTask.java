@@ -113,7 +113,7 @@ public class CopyFilesTask
                     m_destFile = m_destDir.resolveFile( m_srcFile.getName().getBaseName() );
                 }
 
-                getContext().info( "copy " + m_srcFile + " to " + m_destFile );
+                getContext().verbose( "copy " + m_srcFile + " to " + m_destFile );
                 m_destFile.copy( m_srcFile );
             }
 
@@ -141,7 +141,7 @@ public class CopyFilesTask
                     final FileObject destFile = m_destDir.resolveFile( path, NameScope.DESCENDENT );
 
                     // Copy the file across
-                    getContext().info( "copy " + srcFile + " to " + destFile );
+                    getContext().verbose( "copy " + srcFile + " to " + destFile );
                     destFile.copy( srcFile );
                 }
             }

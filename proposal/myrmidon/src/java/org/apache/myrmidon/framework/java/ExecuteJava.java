@@ -223,11 +223,14 @@ public class ExecuteJava
         final String[] args = m_args.getArguments();
 
         // Log message
-        final String debugMessage
-            = REZ.getString( "executejava.exec-in-jvm.notice",
-                             m_className,
-                             FileUtils.formatCommandLine( args ) );
-        context.info( debugMessage );
+        if( context.isVerboseEnabled() )
+        {
+            final String debugMessage
+                = REZ.getString( "executejava.exec-in-jvm.notice",
+                                 m_className,
+                                 FileUtils.formatCommandLine( args ) );
+            context.verbose( debugMessage );
+        }
 
         // Locate the class
         final Class target;

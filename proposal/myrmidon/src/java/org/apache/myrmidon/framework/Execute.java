@@ -189,11 +189,11 @@ public class Execute
                                  final TaskContext context )
         throws TaskException
     {
-        if( context.isInfoEnabled() )
+        if( context.isVerboseEnabled() )
         {
             final String cmdline = FileUtils.formatCommandLine( metaData.getCommand() );
             final String message = REZ.getString( "execute.command.notice", cmdline );
-            context.info( message );
+            context.verbose( message );
         }
         if( context.isDebugEnabled() )
         {

@@ -26,10 +26,10 @@ public final class LogLevel
     private final static HashMap c_levels = new HashMap();
 
     //standard enums for version of JVM
-    public final static LogLevel FATAL_ERROR = new LogLevel( "fatalError" );
     public final static LogLevel ERROR = new LogLevel( "error" );
     public final static LogLevel WARN = new LogLevel( "warn" );
     public final static LogLevel INFO = new LogLevel( "info" );
+    public final static LogLevel VERBOSE = new LogLevel( "verbose" );
     public final static LogLevel DEBUG = new LogLevel( "debug" );
 
     /**
@@ -64,17 +64,21 @@ public final class LogLevel
                             final LogLevel level,
                             final String message )
     {
-        if( LogLevel.ERROR == level )
+        if( ERROR == level )
         {
             context.error( message );
         }
-        else if( LogLevel.WARN == level )
+        else if( WARN == level )
         {
             context.warn( message );
         }
-        else if( LogLevel.INFO == level )
+        else if( INFO == level )
         {
             context.info( message );
+        }
+        else if( VERBOSE == level )
+        {
+            context.verbose( message );
         }
         else
         {
@@ -94,17 +98,21 @@ public final class LogLevel
                             final String message,
                             final Throwable throwable )
     {
-        if( LogLevel.ERROR == level )
+        if( ERROR == level )
         {
             context.error( message, throwable );
         }
-        else if( LogLevel.WARN == level )
+        else if( WARN == level )
         {
             context.warn( message, throwable );
         }
-        else if( LogLevel.INFO == level )
+        else if( INFO == level )
         {
             context.info( message, throwable );
+        }
+        else if( VERBOSE == level )
+        {
+            context.verbose( message, throwable );
         }
         else
         {

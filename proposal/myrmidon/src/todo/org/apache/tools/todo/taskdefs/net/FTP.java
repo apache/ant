@@ -411,7 +411,7 @@ public class FTP
 
             if( m_verbose )
             {
-                getContext().info( "transferring " + filename + " to " + file.getAbsolutePath() );
+                getContext().verbose( "transferring " + filename + " to " + file.getAbsolutePath() );
             }
 
             final File parent = file.getParentFile();
@@ -581,7 +581,7 @@ public class FTP
     {
         if( m_verbose )
         {
-            getContext().info( "deleting " + filename );
+            getContext().verbose( "deleting " + filename );
         }
 
         if( !ftp.deleteFile( remoteResolveFile( filename ) ) )
@@ -616,7 +616,7 @@ public class FTP
     {
         if( m_verbose )
         {
-            getContext().info( "listing " + filename );
+            getContext().verbose( "listing " + filename );
         }
 
         FTPFile ftpfile = ftp.listFiles( remoteResolveFile( filename ) )[ 0 ];
@@ -639,7 +639,7 @@ public class FTP
     {
         if( m_verbose )
         {
-            getContext().info( "creating directory: " + dir );
+            getContext().verbose( "creating directory: " + dir );
         }
 
         if( !ftp.makeDirectory( dir ) )
@@ -657,14 +657,14 @@ public class FTP
 
             if( m_verbose )
             {
-                getContext().info( "directory already exists" );
+                getContext().verbose( "directory already exists" );
             }
         }
         else
         {
             if( m_verbose )
             {
-                getContext().info( "directory created OK" );
+                getContext().verbose( "directory created OK" );
             }
         }
     }
@@ -715,7 +715,7 @@ public class FTP
 
             if( m_verbose )
             {
-                getContext().info( "transferring " + file.getAbsolutePath() );
+                getContext().verbose( "transferring " + file.getAbsolutePath() );
             }
 
             instream = new BufferedInputStream( new FileInputStream( file ) );

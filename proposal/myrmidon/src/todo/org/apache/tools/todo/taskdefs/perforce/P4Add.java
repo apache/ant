@@ -165,7 +165,7 @@ public class P4Add extends P4Base
         if( getContext().isInfoEnabled() )
         {
             final String message = "Execing add " + m_p4CmdOpts + " " + addCmd + list;
-            getContext().info( message );
+            getContext().verbose( message );
         }
 
         final String command = "-s add " + m_p4CmdOpts + " " + addCmd + list;

@@ -243,13 +243,44 @@ public class DefaultTaskContext
     }
 
     /**
+     * Log a verbose message.
+     *
+     * @param message the message
+     */
+    public void verbose( String message )
+    {
+        m_logger.info( message );
+    }
+
+    /**
+     * Log a verbose message.
+     *
+     * @param message the message
+     * @param throwable the throwable
+     */
+    public void verbose( String message, Throwable throwable )
+    {
+        m_logger.info( message, throwable );
+    }
+
+    /**
+     * Determine if messages of priority "verbose" will be logged.
+     *
+     * @return true if "verbose" messages will be logged
+     */
+    public boolean isVerboseEnabled()
+    {
+        return m_logger.isInfoEnabled();
+    }
+
+    /**
      * Log a info message.
      *
      * @param message the message
      */
     public void info( final String message )
     {
-        m_logger.info( message );
+        m_logger.warn( message );
     }
 
     /**
@@ -260,7 +291,7 @@ public class DefaultTaskContext
      */
     public void info( final String message, final Throwable throwable )
     {
-        m_logger.info( message, throwable );
+        m_logger.warn( message, throwable );
     }
 
     /**
@@ -270,7 +301,7 @@ public class DefaultTaskContext
      */
     public boolean isInfoEnabled()
     {
-        return m_logger.isInfoEnabled();
+        return m_logger.isWarnEnabled();
     }
 
     /**
@@ -280,7 +311,7 @@ public class DefaultTaskContext
      */
     public void warn( final String message )
     {
-        m_logger.warn( message );
+        m_logger.error( message );
     }
 
     /**
@@ -291,7 +322,7 @@ public class DefaultTaskContext
      */
     public void warn( final String message, final Throwable throwable )
     {
-        m_logger.warn( message, throwable );
+        m_logger.error( message, throwable );
     }
 
     /**
@@ -301,7 +332,7 @@ public class DefaultTaskContext
      */
     public boolean isWarnEnabled()
     {
-        return m_logger.isWarnEnabled();
+        return m_logger.isErrorEnabled();
     }
 
     /**
@@ -311,7 +342,7 @@ public class DefaultTaskContext
      */
     public void error( final String message )
     {
-        m_logger.error( message );
+        m_logger.fatalError( message );
     }
 
     /**
@@ -322,7 +353,7 @@ public class DefaultTaskContext
      */
     public void error( final String message, final Throwable throwable )
     {
-        m_logger.error( message, throwable );
+        m_logger.fatalError( message, throwable );
     }
 
     /**
@@ -332,7 +363,7 @@ public class DefaultTaskContext
      */
     public boolean isErrorEnabled()
     {
-        return m_logger.isErrorEnabled();
+        return m_logger.isFatalErrorEnabled();
     }
 
     /**

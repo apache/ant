@@ -150,11 +150,11 @@ public abstract class DefaultRmicAdapter
 
         if( attributes.getIiop() )
         {
-            getTaskContext().info( "IIOP has been turned on." );
+            getTaskContext().verbose( "IIOP has been turned on." );
             cmd.addArgument( "-iiop" );
             if( attributes.getIiopopts() != null )
             {
-                getTaskContext().info( "IIOP Options: " + attributes.getIiopopts() );
+                getTaskContext().verbose( "IIOP Options: " + attributes.getIiopopts() );
                 cmd.addArgument( attributes.getIiopopts() );
             }
         }
@@ -162,11 +162,11 @@ public abstract class DefaultRmicAdapter
         if( attributes.getIdl() )
         {
             cmd.addArgument( "-idl" );
-            getTaskContext().info( "IDL has been turned on." );
+            getTaskContext().verbose( "IDL has been turned on." );
             if( attributes.getIdlopts() != null )
             {
                 cmd.addArgument( attributes.getIdlopts() );
-                getTaskContext().info( "IDL Options: " + attributes.getIdlopts() );
+                getTaskContext().verbose( "IDL Options: " + attributes.getIdlopts() );
             }
         }
 

@@ -229,7 +229,6 @@ public class JDependTask
             catch( IOException e )
             {
                 String msg = "JDepend Failed when creating the output file: " + e.getMessage();
-                getContext().info( msg );
                 throw new TaskException( msg );
             }
             jdepend.setWriter( new PrintWriter( fw ) );
@@ -245,7 +244,6 @@ public class JDependTask
             if( !f.exists() || !f.isDirectory() )
             {
                 String msg = "\"" + f.getPath() + "\" does not represent a valid directory. JDepend would fail.";
-                getContext().info( msg );
                 throw new TaskException( msg );
             }
             try
@@ -255,7 +253,6 @@ public class JDependTask
             catch( IOException e )
             {
                 String msg = "JDepend Failed when adding a source directory: " + e.getMessage();
-                getContext().info( msg );
                 throw new TaskException( msg );
             }
         }

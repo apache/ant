@@ -310,7 +310,7 @@ public class ReplaceRegExp
                 ( byline ? " by line" : "" ) +
                 ( flags.length() > 0 ? " with flags: '" + flags + "'" : "" ) +
                 ".";
-            getContext().warn( message );
+            getContext().info( message );
 
             if( byline )
             {

@@ -127,6 +127,7 @@ public class Ant1CompatProject extends Project
                 m_context.info( msg );
                 break;
             case Ant1CompatProject.MSG_VERBOSE:
+                m_context.verbose( msg );
             case Ant1CompatProject.MSG_DEBUG:
                 m_context.debug( msg );
         }

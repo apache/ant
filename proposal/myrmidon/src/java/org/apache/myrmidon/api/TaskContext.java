@@ -123,6 +123,28 @@ public interface TaskContext
     boolean isDebugEnabled();
 
     /**
+     * Log a verbose message.
+     *
+     * @param message the message
+     */
+    void verbose( String message );
+
+    /**
+     * Log a verbose message.
+     *
+     * @param message the message
+     * @param throwable the throwable
+     */
+    void verbose( String message, Throwable throwable );
+
+    /**
+     * Determine if messages of priority "verbose" will be logged.
+     *
+     * @return true if "verbose" messages will be logged
+     */
+    boolean isVerboseEnabled();
+
+    /**
      * Log a info message.
      *
      * @param message the message

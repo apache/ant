@@ -35,7 +35,7 @@ public class PropertyDump
         {
             final String key = (String)iterator.next();
             final Object value = properties.get( key );
-            getContext().warn( key + "=" + value );
+            getContext().info( key + "=" + value );
         }
     }
 }
