@@ -129,7 +129,7 @@ public class XmlValidateTest extends BuildFileTest {
      * entity
      */
     public void testXmlCatalogFiles() {
-      executeTarget("xmlcatalogfiles");
+        executeTarget("xmlcatalogfiles");
     }
 
     /**
@@ -140,7 +140,7 @@ public class XmlValidateTest extends BuildFileTest {
      * dtd with the same entity
      */
     public void testXmlCatalogPath() {
-      executeTarget("xmlcatalogpath");
+        executeTarget("xmlcatalogpath");
     }
 
     /**

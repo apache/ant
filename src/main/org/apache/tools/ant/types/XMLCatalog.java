@@ -308,14 +308,14 @@ public class XMLCatalog extends DataType
      * if this is a reference and no nested elements are allowed.
      */
     public Path createCatalogPath() {
-      if (isReference()) {
-        throw noChildrenAllowed();
-      }
-      if (this.catalogPath == null) {
-        this.catalogPath = new Path(getProject());
-      }
-      setChecked( false );
-      return this.catalogPath.createPath();
+        if (isReference()) {
+            throw noChildrenAllowed();
+        }
+        if (this.catalogPath == null) {
+            this.catalogPath = new Path(getProject());
+        }
+        setChecked( false );
+        return this.catalogPath.createPath();
     }
 
     /**
@@ -837,7 +837,7 @@ public class XMLCatalog extends DataType
 
         public InternalResolver() {
             log("Apache resolver library not found, internal resolver will be used",
-                Project.MSG_INFO);
+                Project.MSG_VERBOSE);
         }
 
         public InputSource resolveEntity(String publicId,
@@ -979,7 +979,7 @@ public class XMLCatalog extends DataType
             }
 
             log("Apache resolver library found, xml-commons resolver will be used",
-                Project.MSG_INFO);
+                Project.MSG_VERBOSE);
         }
 
         public InputSource resolveEntity(String publicId,
