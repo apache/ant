@@ -54,7 +54,7 @@
 package org.apache.tools.ant.taskdefs.optional;
 
 import java.io.File;
-import java.io.FileReader;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -393,7 +393,7 @@ public class XMLValidateTask extends Task {
         try {
             log("Validating " + afile.getName() + "... ", Project.MSG_VERBOSE);
             errorHandler.init(afile);
-            InputSource is = new InputSource(new FileReader(afile));
+            InputSource is = new InputSource(new FileInputStream(afile));
             String uri = "file:" + afile.getAbsolutePath().replace('\\', '/');
             for (int index = uri.indexOf('#'); index != -1;
                  index = uri.indexOf('#')) {

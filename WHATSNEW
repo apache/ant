@@ -33,6 +33,9 @@ Fixed bugs:
 
 * <concat> could append newline characters between concatenated files.
 
+* <xmlvalidate> ignored the specified encoding of the files to
+  validate.
+
 Other changes:
 --------------
 
