@@ -149,6 +149,16 @@ public class WLStop extends Task {
     }
     
     /**
+     * Add the classpath for the user classes
+     */
+    public Path createClasspath() {
+        if (classpath == null) {
+            classpath = new Path(project);
+        }
+        return classpath.createPath();
+    }
+
+    /**
      * Set the username to use to request shutdown of the server.
      *
      * @param s the username.
