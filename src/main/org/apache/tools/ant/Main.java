@@ -255,7 +255,6 @@ public class Main {
      *                           or is a directory.
      */
     protected Main(String[] args) throws BuildException {
-
         String searchForThis = null;
         PrintStream logTo = null;
 
@@ -300,7 +299,7 @@ public class Main {
             } else if (arg.equals("-buildfile") || arg.equals("-file")
                        || arg.equals("-f")) {
                 try {
-                    buildFile = new File(args[i + 1]);
+                    buildFile = new File(args[i + 1].replace('/', File.separatorChar));
                     i++;
                 } catch (ArrayIndexOutOfBoundsException aioobe) {
                     String msg = "You must specify a buildfile when " +
