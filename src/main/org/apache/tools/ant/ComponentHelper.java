@@ -772,11 +772,10 @@ public class ComponentHelper  {
      * associated URI has been examined for antlibs.
      */
     private synchronized void checkNamespace(String componentName) {
-        if (componentName.indexOf(':') == -1) {
-            return; // not a namespaced name
-        }
-
         String uri = ProjectHelper.extractUriFromComponentName(componentName);
+        if ("".equals(uri)) {
+            uri = ProjectHelper.ANT_CORE_URI;
+        }
         if (!uri.startsWith(ProjectHelper.ANTLIB_URI)) {
             return; // namespace that does not contain antlib
         }
