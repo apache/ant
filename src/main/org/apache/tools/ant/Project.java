@@ -2114,7 +2114,16 @@ public class Project {
                 return null;
             }
             try {
-                Class taskClass = Class.forName(value);
+                Class taskClass=null;
+                if( project.getCoreLoader() != null &&
+                    !("only".equals(project.getProperty("build.sysclasspath")))) {
+                    try {
+                        taskClass=project.getCoreLoader().loadClass(value);
+                        if( taskClass != null ) return taskClass;
+                    } catch( Exception ex ) {
+                    }
+                }
+                taskClass = Class.forName(value);
                 return taskClass;
             } catch (NoClassDefFoundError ncdfe) {
                 project.log("Could not load a dependent class ("
