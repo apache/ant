@@ -99,6 +99,25 @@ taking up all available threads before the tasks that would unlock the waitfor
 would occur.  This is not a repalcement for Java Language level thread
 semantics and is best used for "embarassingly parallel" tasks.</p>
 
+
+<h3>Parameters specified as nested elements</h3>
+
+<h4>daemons</h4>
+<p>
+The parallel task supports a &lt;daemons&gt; nested element. This is a list of tasks
+which are to be run in parallel daemon threads. The parallel task will not wait for
+these tasks to complete. Being daemon threads, however, they will not prevent Ant from
+completing, whereupon the threads are terminated. Failures in daemon threads which
+occur before the parallel task itself finishes will be reported and can cause
+parallel to throw an exception. Failures which occur after parallel has completed are not
+reported.
+</p>
+
+<p>Daemon tasks can be used, for example, to start test servers which might not be easily
+terminated from Ant. By using &lt;daemons&gt; such servers do not halt the build.
+</p>
+
+
 <h3>Examples</h3>
 <pre>
 &lt;parallel&gt;

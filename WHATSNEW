@@ -499,7 +499,7 @@ Other changes:
 
 * OpenVMS is detected as a valid OS family.
 
-* DirectoryScanner has been optimized for cases where include patterns do not 
+* DirectoryScanner has been optimized for cases where include patterns do not
   start with wildcards.  Bugzilla Report 20103.
 
 * Added keep-going feature. Bugzilla Report 21144
@@ -514,7 +514,15 @@ Other changes:
   an enablemultiplemapping attribute. Bugzilla Report 21320.
 
 * <exec> will now work on OpenVMS (please read the notes in
-  <exec>'s manual page).  Bugzilla Report 21877.  
+  <exec>'s manual page).  Bugzilla Report 21877.
+
+* <parallel> now supports a timeout which can be used to recover
+  from deadlocks, etc in the parallel threads. <parallel> also
+  now supports a <daemons> nested element. This can be used to
+  run tasks in daemon threads which the parallel task will not
+  wait for before completing. A new attribute failonany will cause
+  <parallel> to throw an exception if any thread fails without
+  waiting for all other threads to complete.
 
 Changes from Ant 1.5.2 to Ant 1.5.3
 ===================================
