@@ -96,12 +96,11 @@ public class MacroDef extends AntlibDefinition implements TaskContainer {
      */
     public void addTask(Task nestedTask) {
         if (this.nestedTask != null) {
-            throw new BuildException("Only one sequential/Parallel allowed");
+            throw new BuildException("Only one sequential allowed");
         }
         UnknownElement ue = (UnknownElement) nestedTask;
         if (!ue.getNamespace().equals("")
-            || (!ue.getTag().equals("sequential")
-                && !ue.getTag().equals("parallel"))) {
+            || !ue.getTag().equals("sequential")) {
             throw new BuildException("Unsupported tag " + ue.getQName());
         }
         this.nestedTask = ue;
