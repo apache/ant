@@ -472,7 +472,7 @@ public class ProjectHelper {
         while ((pos = value.indexOf("$", prev)) >= 0) {
 
             //if there was any text before this, add it as a fragment
-            //TODO, this check could me modified to go if pos>prev;
+            //TODO, this check could be modified to go if pos>prev;
             //seems like this current version could stick empty strings
             //into the list
             if (pos > 0) {
@@ -486,8 +486,20 @@ public class ProjectHelper {
             } else if (value.charAt(pos + 1) != '{') {
                 //peek ahead to see if the next char is a property or not
                 //not a property: insert the char as a literal
+                /*
                 fragments.addElement(value.substring(pos + 1, pos + 2));
                 prev = pos + 2;
+                */
+                if(value.charAt(pos + 1) == '$') {
+                    //backwards compatibility two $ map to one mode
+                    fragments.addElement("$");
+                    prev = pos + 2;
+                } else {
+                    //new behaviour: $X maps to $X for all values of X!='$'
+                    fragments.addElement(value.substring(pos, pos + 2));
+                    prev = pos + 2;
+                }
+                
             } else {
                 //property found, extract its name or bail on a typo
                 int endName = value.indexOf('}', pos);
