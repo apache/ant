@@ -16,10 +16,10 @@
   <property name="src.dir" value="${basedir}/src/main"/>
   <property name="lib.dir" value="lib"/>
   <property name="docs.dir" value="docs"/>
-  <property name="build.dir" value="../build"/>
+  <property name="build.dir" value="../build/ant"/>
   <property name="build.classes" value="${build.dir}/classes"/>
   <property name="build.javadocs" value="${build.dir}/javadocs"/>
-  <property name="ant.dist.dir" value="../dist"/>
+  <property name="ant.dist.dir" value="../dist/ant"/>
 
   <property name="classpath" value=""/>
   <property name="packages" value="org.apache.tools.*"/>
