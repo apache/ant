@@ -81,7 +81,6 @@ public class MacroDef extends AntlibDefinition implements TaskContainer {
     private String     name;
     private List       attributes = new ArrayList();
     private Map        elements = new HashMap();
-    private int        attributeStyle = AttributeStyle.ANT;
 
     /**
      * Name of the definition
@@ -89,46 +88,6 @@ public class MacroDef extends AntlibDefinition implements TaskContainer {
      */
      public void setName(String name) {
         this.name = name;
-    }
-
-    /**
-     * Enumerated type for attributeStyle attribute
-     *
-     * @see EnumeratedAttribute
-     */
-    public static class AttributeStyle extends EnumeratedAttribute {
-        /** Enumerated values */
-        public static final int ANT = 0, XPATH = 1;
-
-        /**
-         * get the values
-         * @return an array of the allowed values for this attribute.
-         */
-        public String[] getValues() {
-            return new String[] {"ant", "xpath"};
-        }
-    }
-
-    /**
-     * <em>Experimental</em>
-     * I am uncertain at the moment how to encode attributes
-     * using ant style ${attribute} or xpath style @attribute.
-     * The first may get mixed up with ant properties and
-     * the second may get mixed up with xpath.
-     * The default at the moment is ant s
-     *
-     * @param style an <code>AttributeStyle</code> value
-     */
-    public void setAttributeStyle(AttributeStyle style) {
-        attributeStyle = style.getIndex();
-    }
-
-    /**
-     * <em>Experimental</em>
-     * @return the attribute style
-     */
-    public int getAttributeStyle() {
-        return attributeStyle;
     }
 
     /**
@@ -435,9 +394,6 @@ public class MacroDef extends AntlibDefinition implements TaskContainer {
             }
         }
 
-        if (attributeStyle != other.attributeStyle) {
-            return false;
-        }
         if (!nestedTask.similar(other.nestedTask)) {
             return false;
         }
