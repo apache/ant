@@ -20,9 +20,11 @@ package org.apache.tools.ant.taskdefs;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.Task;
+import org.apache.tools.ant.util.FileUtils;
 import org.apache.tools.ant.types.EnumeratedAttribute;
 /**
  * Writes a message to the Ant logging facilities.
@@ -55,13 +57,7 @@ public class Echo extends Task {
             } catch (IOException ioe) {
                 throw new BuildException(ioe, getLocation());
             } finally {
-                if (out != null) {
-                    try {
-                        out.close();
-                    } catch (IOException ioex) {
-                        //ignore
-                    }
-                }
+                FileUtils.close(out);
             }
         }
     }
@@ -115,19 +111,7 @@ public class Echo extends Task {
      * @param echoLevel the logging level
      */
     public void setLevel(EchoLevel echoLevel) {
-        String option = echoLevel.getValue();
-        if (option.equals("error")) {
-            logLevel = Project.MSG_ERR;
-        } else if (option.equals("warning")) {
-            logLevel = Project.MSG_WARN;
-        } else if (option.equals("info")) {
-            logLevel = Project.MSG_INFO;
-        } else if (option.equals("verbose")) {
-            logLevel = Project.MSG_VERBOSE;
-        } else {
-            // must be "debug"
-            logLevel = Project.MSG_DEBUG;
-        }
+        logLevel=echoLevel.getLevel();
     }
 
     /**
@@ -139,8 +123,31 @@ public class Echo extends Task {
          * @return the strings allowed for the level attribute
          */
         public String[] getValues() {
-            return new String[] {"error", "warning", "info",
-                                 "verbose", "debug"};
+            return new String[] {
+                "error",
+                "warning",
+                "info",
+                "verbose",
+                "debug"};
+        }
+
+        /**
+         * mapping of enumerated values to log levels
+         */
+        private static int levels[]={
+            Project.MSG_ERR,
+            Project.MSG_WARN,
+            Project.MSG_INFO,
+            Project.MSG_VERBOSE,
+            Project.MSG_DEBUG
+        };
+
+        /**
+         * get the level of the echo of the current value
+         * @return
+         */
+        public int getLevel() {
+            return levels[getIndex()];
         }
     }
 }
