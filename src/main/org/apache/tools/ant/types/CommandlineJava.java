@@ -293,12 +293,8 @@ public class CommandlineJava implements Cloneable {
         String[] result = new String[size()];
         int pos = 0;
         String[] vmArgs = getActualVMCommand().getCommandline();
-        // first argument is the java.exe path...
-        result[pos++] = vmArgs[0];
-        
-        // next follows the vm options
-        System.arraycopy(vmArgs, 1, result, pos, vmArgs.length - 1);
-        pos += vmArgs.length - 1;
+        System.arraycopy(vmArgs, 0, result, pos, vmArgs.length);
+        pos += vmArgs.length;
         // properties are part of the vm options...
         if (sysProperties.size() > 0) {
             System.arraycopy(sysProperties.getVariables(), 0,
