@@ -1,5 +1,5 @@
 /*
- * Copyright  2003-2004 The Apache Software Foundation
+ * Copyright  2003-2005 The Apache Software Foundation
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -103,18 +103,20 @@ public class LazyFileOutputStream extends OutputStream {
     }
 
     /**
-     * Delegates to the three arg version.
+     * Delegates to the three-arg version.
      */
     public void write(byte[] b) throws IOException {
         write(b, 0, b.length);
     }
 
+    //inherit doc
     public synchronized void write(byte[] b, int offset, int len)
         throws IOException {
         ensureOpened();
         fos.write(b, offset, len);
     }
 
+    //inherit doc
     public synchronized void write(int b) throws IOException {
         ensureOpened();
         fos.write(b);
