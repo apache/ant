@@ -95,6 +95,13 @@
          update="true" />
   </target>
 
+  <!-- Bugzilla Report 18403 -->
+  <target name="testPrefixAddsDir">
+    <zip destfile="test3.zip" filesonly="false">
+      <zipfileset dir="." prefix="test" includes="zip.xml"/>
+    </zip>
+  </target>
+
   <target name="cleanup">
     <delete file="test3.zip"/>
     <delete file="test4.zip"/>

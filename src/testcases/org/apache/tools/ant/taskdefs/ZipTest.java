@@ -57,6 +57,7 @@ import org.apache.tools.ant.BuildFileTest;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 import java.util.Enumeration;
 
@@ -133,5 +134,14 @@ public class ZipTest extends BuildFileTest {
 
     public void testUpdateIsNecessary() {
         expectLogContaining("testUpdateIsNecessary", "Updating");
+    }
+
+    // Bugzilla Report 18403
+    public void testPrefixAddsDir() throws IOException {
+        executeTarget("testPrefixAddsDir");
+        File archive = getProject().resolveFile("test3.zip");
+        ZipFile zf = new ZipFile(archive);
+        ZipEntry ze = zf.getEntry("test/");
+        assertNotNull("test/ has been added", ze);
     }
 }
