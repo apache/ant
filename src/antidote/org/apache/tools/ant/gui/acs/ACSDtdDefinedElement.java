@@ -75,6 +75,8 @@ implements ACSInfoProvider {
     static ACSDocumentType docType = new ACSDocumentType();
     /** Our menu string */
     public String[] menuString = null;
+    /** The DTD element we represent */
+    private ACSDocumentType.DtdElement _dtdElement = null;
     
 	/** 
 	 * Default ctor.
@@ -110,8 +112,9 @@ implements ACSInfoProvider {
 	 * 
 	 * @return Name-value mappings.
 	 */
-    public Properties getNamedValues() {
-        Properties retval = new Properties();
+    public ACSDtdDefinedAttributes getNamedValues() {
+        ACSDtdDefinedAttributes retval =
+            new ACSDtdDefinedAttributes(getDtdElement());
 
         NamedNodeMap attribs = getAttributes();
         for(int i = 0, len = attribs.getLength(); i < len; i++) {
@@ -128,34 +131,34 @@ implements ACSInfoProvider {
 	 * 
 	 * @param attributes New attribute set.
 	 */
-    public void setNamedValues(Properties props) {
-        // XXX this code really sucks. It is really annoying that the 
+    public void setNamedValues(ACSDtdDefinedAttributes attributes) {
+        // XXX this code really sucks. It is really annoying that the
         // DOM interfaces don't have a general "setAttributes()" or
-        // "removeAllAttributes()" method, but instead make you 
+        // "removeAllAttributes()" method, but instead make you
         // remove each attribute individually, or require you to figure
-        // out what the differences are between the two. 
+        // out what the differences are between the two.
 
         // Although this is very inefficient, I'm taking the conceptually
-        // simplistic approach to this and brute force removing the existing 
-        // set and replacing it with a brand new set. If this becomes a 
-        // performance concern (which I doubt it will) it can be optimized 
+        // simplistic approach to this and brute force removing the existing
+        // set and replacing it with a brand new set. If this becomes a
+        // performance concern (which I doubt it will) it can be optimized
         // later.
 
-        Properties old = getNamedValues();
+        ACSDtdDefinedAttributes old = (ACSDtdDefinedAttributes) getNamedValues();
 
         Enumeration enum = old.propertyNames();
         while(enum.hasMoreElements()) {
             String name = (String) enum.nextElement();
             removeAttribute(name);
         }
-        
-        enum = props.propertyNames();
+
+        enum = attributes.propertyNames();
         while(enum.hasMoreElements()) {
             String key = (String) enum.nextElement();
-            setAttribute(key, props.getProperty(key));
+            setAttribute(key, attributes.getProperty(key));
         }
 
-        firePropertyChange(NAMED_VALUES, old, props);
+        firePropertyChange(NAMED_VALUES, old, attributes);
     }
     
     /**
@@ -210,6 +213,39 @@ implements ACSInfoProvider {
             return e.getContentModel();
         }
         return null;
+    }
+    
+    /**
+     * Adds the attributes which are required by this node.
+     */
+    public void addRequiredAttributes() {
+        ACSDocumentType.DtdElement e = getDtdElement();
+        if (e == null) {
+            return;
+        }
+        String[] attributes = e.getAttributes().getRequiredAttributes();
+        if (attributes == null) {
+            return;
+        }
+        for(int i = 0; i < attributes.length; i++) {
+            if ( getAttributes().getNamedItem(attributes[i]) == null) {
+                // XXX should set to default?
+                setAttribute(attributes[i], "");
+            }
+        }
+    }
+    
+    /**
+     * Returns the DTD element we represent
+     */
+    private ACSDocumentType.DtdElement getDtdElement() {
+        if (_dtdElement != null) {
+            return _dtdElement;
+        }
+
+        String name = getNodeName();
+        _dtdElement = docType.findElement(name);
+        return _dtdElement;
     }
 }
 
