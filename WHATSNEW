@@ -89,7 +89,7 @@ Other changes:
 * <apply> has a new "force" attribute that, when true, disables
   checking of target files.
 
-* Added isSigned condition and task, and signedselector selector
+* Added isSigned condition and signedselector selector
   Bugzilla report 32126.
 
 * Added preserveLastModified attribute to signjar task.
