@@ -30,6 +30,10 @@ Other changes:
 
 * Docs fixes for xmlvalidate.html. Bugzilla Report 27092.
 
+* Shipped XML parser is now Xerces-J 2.6.2.
+
+* upgrade to xml-apis.jar from Xerces-J 2.6.2.
+
 Changes from Ant 1.6.0 to Ant 1.6.1
 ===================================
 
