@@ -56,6 +56,8 @@ package org.apache.tools.ant.taskdefs;
 
 import org.apache.tools.ant.Task;
 import org.apache.tools.ant.BuildException;
+import org.apache.tools.ant.Project;
+
 import java.io.File;
 import java.io.BufferedReader;
 import java.io.FileReader;
@@ -82,7 +84,7 @@ public class CVSPass extends Task {
     private final String EOL = System.getProperty("line.separator");
 
     /** Array contain char conversion data */
-   private final char shifts[] = {
+   private final char[] shifts = {
     0,  1,  2,  3,  4,  5,  6,  7,  8,  9, 10, 11, 12, 13, 14, 15,
    16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31,
   114,120, 53, 79, 96,109, 72,108, 70, 64, 76, 67,116, 74, 68, 87,
@@ -117,9 +119,9 @@ public class CVSPass extends Task {
          throw new BuildException("password is required");
         }
 
-        log("cvsRoot: " + cvsRoot, project.MSG_DEBUG);
-        log("password: " + password, project.MSG_DEBUG);
-        log("passFile: " + passFile, project.MSG_DEBUG);
+        log("cvsRoot: " + cvsRoot, Project.MSG_DEBUG);
+        log("password: " + password, Project.MSG_DEBUG);
+        log("passFile: " + passFile, Project.MSG_DEBUG);
 
         try{
             StringBuffer buf = new StringBuffer();
@@ -141,7 +143,7 @@ public class CVSPass extends Task {
 
             String pwdfile = buf.toString() + cvsRoot + " A" + mangle(password);
 
-            log("Writing -> " + pwdfile , project.MSG_DEBUG);
+            log("Writing -> " + pwdfile , Project.MSG_DEBUG);
 
             PrintWriter writer = new PrintWriter(new FileWriter(passFile));
 
