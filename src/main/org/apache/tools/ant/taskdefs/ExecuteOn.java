@@ -243,6 +243,7 @@ public class ExecuteOn extends ExecTask {
      * Create a nested Mapper element to use for mapping
      * source files to target files.
      * @return <code>Mapper</code>.
+     * @throws BuildException if more than one mapper is defined.
      */
     public Mapper createMapper() throws BuildException {
         if (mapperElement != null) {
@@ -294,6 +295,7 @@ public class ExecuteOn extends ExecTask {
      * Create the ExecuteStreamHandler instance that will be used
      * during execution.
      * @return <code>ExecuteStreamHandler</code>.
+     * @throws BuildException on error.
      */
     protected ExecuteStreamHandler createHandler() throws BuildException {
         //if we have a RedirectorElement, return a decoy
@@ -312,6 +314,7 @@ public class ExecuteOn extends ExecTask {
     /**
      * Run the specified Execute object.
      * @param exe the Execute instance representing the external process.
+     * @throws BuildException on error
      */
     protected void runExec(Execute exe) throws BuildException {
         int totalFiles = 0;
@@ -642,7 +645,8 @@ public class ExecuteOn extends ExecTask {
      * @param exe the Executable to use.
      * @param fileNames the Vector of filenames.
      * @param baseDirs the Vector of base directories corresponding to fileNames.
-     *
+     * @throws IOException  on I/O errors.
+     * @throws BuildException on other errors.
      * @since Ant 1.6
      */
     protected void runParallel(Execute exe, Vector fileNames,
