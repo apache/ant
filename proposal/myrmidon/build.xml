@@ -252,7 +252,7 @@ Legal:
             -->
 
             <patternset refid="myrmidon-launcher.include"/>
-            <patternset refid="myrmidon-api.include"/>
+            <patternset refid="myrmidon-framework.include"/>
             <patternset refid="myrmidon-container.include"/>
             <patternset refid="ant1.todo.include"/>
             <patternset refid="selftest.include"/>
@@ -273,11 +273,8 @@ Legal:
             <include name="org/apache/myrmidon/launcher/**" />
         </patternset>
 
-        <patternset id="myrmidon-api.include">
-            <include name="org/apache/myrmidon/api/**" />
-            <include name="org/apache/myrmidon/aspects/**" />
+        <patternset id="myrmidon-framework.include">
             <include name="org/apache/myrmidon/interfaces/**" />
-            <include name="org/apache/myrmidon/listeners/**" />
             <include name="org/apache/myrmidon/framework/**" />
         </patternset>
 
@@ -389,7 +386,7 @@ Legal:
             destdir="${gen.dir}"
             classpathref="project.class.path">
             <fileset dir="${java.dir}">
-                <patternset refid="myrmidon-api.include"/>
+                <patternset refid="myrmidon-framework.include"/>
             </fileset>
         </antlib-descriptor>
 
@@ -439,13 +436,13 @@ Legal:
             <patternset refid="myrmidon-container.include"/>
         </antlib-jar>
 
-        <antlib-jar jarfile="${build.lib}/myrmidon-api.jar"
+        <antlib-jar jarfile="${build.lib}/myrmidon-framework.jar"
             basedir="${build.classes}"
             manifest="${manifest.dir}/myrmidon-api.mf"
             rolesDescriptor="${gen.dir}/builtin-ant-roles.xml"
             descriptor="${gen.dir}/builtin-ant-descriptor.xml"
             servicesDescriptor="${manifest.dir}/core-services.xml" >
-            <patternset refid="myrmidon-api.include"/>
+            <patternset refid="myrmidon-framework.include"/>
         </antlib-jar>
 
         <antlib-jar jarfile="${build.lib}/ant1_todo.jar"
