@@ -10,19 +10,11 @@ package org.apache.aut.tar;
 /**
  * This interface contains all the definitions used in the package.
  *
- * @author Timothy Gerard Endres <a href="mailto:time@ice.com">time@ice.com</a>
- * @author Stefano Mazzocchi <a href="mailto:stefano@apache.org">
- *      stefano@apache.org</a>
+ * @author <a href="mailto:time@ice.com">Timothy Gerard Endres</a>
+ * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
  */
-
-public interface TarConstants
+interface TarConstants
 {
-
-    /**
-     * The length of the name field in a header buffer.
-     */
-    int NAMELEN = 100;
-
     /**
      * The length of the mode field in a header buffer.
      */
