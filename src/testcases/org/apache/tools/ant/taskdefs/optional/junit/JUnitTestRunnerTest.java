@@ -167,7 +167,7 @@ public class JUnitTestRunnerTest extends TestCase {
     
     public static class NoSuiteTestCase extends TestCase {
         public NoSuiteTestCase(String name){ super(name); }
-        public void testA(){};
+        public void testA(){}
     }
 
     public static class SuiteTestCase extends NoSuiteTestCase {

@@ -56,6 +56,6 @@ package org.apache.tools.ant;
 
 public interface DummyTaskInterface {
 
-    public void execute();
+    void execute();
 
 }
