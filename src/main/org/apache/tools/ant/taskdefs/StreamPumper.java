@@ -123,7 +123,11 @@ public class StreamPumper implements Runnable {
             // ignore errors
         } finally {
             if (closeWhenExhausted) {
-                os.close();
+                try {
+                    os.close();
+                } catch (IOException e) {
+                    // ignore
+                }
             }
             synchronized (this) {
                 finished = true;

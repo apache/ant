@@ -166,6 +166,11 @@ public class ExecTask extends Task {
         redirector.setInput(input);
     }
 
+    /**
+     * Set the string to use as input
+     *
+     * @param inputString the string which is used as the input source
+     */
     public void setInputString(String inputString) {
         redirector.setInputString(inputString);
     }
