@@ -213,7 +213,7 @@ public class VisualBasicCompile extends DotnetCompile {
 
     /**
      * Specifies the root namespace for all type declarations.
-     * @param  a root namespace.
+     * @param rootNamespace a root namespace.
      */
     public void setRootNamespace(String rootNamespace) {
         this.rootNamespace = rootNamespace;
@@ -364,7 +364,7 @@ public class VisualBasicCompile extends DotnetCompile {
     protected void validate()
             throws BuildException {
         super.validate();
-        if (getDestFile()==null) {
+        if (getDestFile() == null) {
             throw new BuildException("DestFile was not specified");
         }
     }

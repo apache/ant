@@ -146,7 +146,9 @@ public class Untar extends Expand {
             if (tis != null) {
                 try {
                     tis.close();
-                } catch (IOException e) {}
+                } catch (IOException e) {
+                    // ignore
+                }
             }
         }
     }
@@ -187,7 +189,7 @@ public class Untar extends Expand {
          * @return valid values
          */
         public String[] getValues() {
-            return new String[] { NONE, GZIP, BZIP2 };
+            return new String[] {NONE, GZIP, BZIP2};
         }
 
         /**

@@ -132,8 +132,9 @@ public class DotnetBaseMatchingTask extends MatchingTask {
      * @return number of files out of date
      */
     protected int buildFileList(NetCommand command, Hashtable filesToBuild, long outputTimestamp) {
-        int filesOutOfDate=0;
-        boolean scanImplicitFileset=getSrcDir()!=null || filesets.size()==0;
+        int filesOutOfDate = 0;
+        boolean scanImplicitFileset
+            = getSrcDir() != null || filesets.size() == 0;
         if (scanImplicitFileset) {
             //scan for an implicit fileset if there was a srcdir set
             //or there was no srcDir set but the @
@@ -151,7 +152,7 @@ public class DotnetBaseMatchingTask extends MatchingTask {
         //get any included source directories
         for (int i = 0; i < filesets.size(); i++) {
             FileSet fs = (FileSet) filesets.elementAt(i);
-            filesOutOfDate+= command.scanOneFileset(
+            filesOutOfDate += command.scanOneFileset(
                     fs.getDirectoryScanner(getProject()),
                     filesToBuild,
                     outputTimestamp);
@@ -166,9 +167,9 @@ public class DotnetBaseMatchingTask extends MatchingTask {
      * @param command the command to append to
      */
     protected void addFilesToCommand(Hashtable filesToBuild, NetCommand command) {
-        int count=filesToBuild.size();
-        log("compiling " + count + " file" + ((count== 1) ? "" : "s"));
-        Enumeration files=filesToBuild.elements();
+        int count = filesToBuild.size();
+        log("compiling " + count + " file" + ((count == 1) ? "" : "s"));
+        Enumeration files = filesToBuild.elements();
         while (files.hasMoreElements()) {
             File file = (File) files.nextElement();
             command.addArgument(file.toString());
@@ -195,8 +196,8 @@ public class DotnetBaseMatchingTask extends MatchingTask {
      */
     protected void addFilesAndExecute(NetCommand command, boolean ignoreTimestamps) {
         long outputTimestamp = getOutputFileTimestamp();
-        Hashtable filesToBuild =new Hashtable();
-        int filesOutOfDate = buildFileList(command,filesToBuild, outputTimestamp);
+        Hashtable filesToBuild = new Hashtable();
+        int filesOutOfDate = buildFileList(command, filesToBuild, outputTimestamp);
 
         //add the files to the command
         addFilesToCommand(filesToBuild, command);
@@ -206,7 +207,7 @@ public class DotnetBaseMatchingTask extends MatchingTask {
         if (filesOutOfDate > 0) {
             command.runCommand();
         } else {
-            log("output file is up to date",Project.MSG_VERBOSE);
+            log("output file is up to date", Project.MSG_VERBOSE);
         }
     }
 

@@ -106,7 +106,7 @@ public class DotnetDefine {
      * @throws BuildException
      */
     public String getValue(Task owner) throws BuildException {
-        if (name==null) {
+        if (name == null) {
             throw new BuildException("No name provided for the define element",
                 owner.getLocation());
         }
@@ -123,7 +123,7 @@ public class DotnetDefine {
      * @return true if the condition is valid
      */
     public boolean isSet(Task owner) {
-        Project p=owner.getProject();
+        Project p = owner.getProject();
         if (ifCond != null && p.getProperty(ifCond) == null) {
             return false;
         } else if (unlessCond != null && p.getProperty(unlessCond) != null) {

@@ -88,10 +88,11 @@ import org.apache.tools.ant.types.EnumeratedAttribute;
  */
 
 public class WaitFor extends ConditionBase {
-    private long maxWaitMillis = 1000l * 60l * 3l; // default max wait time
-    private long maxWaitMultiplier = 1l;
-    private long checkEveryMillis = 500l;
-    private long checkEveryMultiplier = 1l;
+    /** default max wait time */
+    private long maxWaitMillis = 1000L * 60L * 3L;
+    private long maxWaitMultiplier = 1L;
+    private long checkEveryMillis = 500L;
+    private long checkEveryMultiplier = 1L;
     private String timeoutProperty;
 
     /**
@@ -159,6 +160,7 @@ public class WaitFor extends ConditionBase {
                 try {
                     Thread.sleep(checkEveryMillis);
                 } catch (InterruptedException e) {
+                    // ignore
                 }
             }
 
@@ -192,12 +194,12 @@ public class WaitFor extends ConditionBase {
         private Hashtable timeTable = new Hashtable();
 
         public Unit() {
-            timeTable.put(MILLISECOND, new Long(1l));
-            timeTable.put(SECOND,      new Long(1000l));
-            timeTable.put(MINUTE,      new Long(1000l * 60l));
-            timeTable.put(HOUR,        new Long(1000l * 60l * 60l));
-            timeTable.put(DAY,         new Long(1000l * 60l * 60l * 24l));
-            timeTable.put(WEEK,        new Long(1000l * 60l * 60l * 24l * 7l));
+            timeTable.put(MILLISECOND, new Long(1L));
+            timeTable.put(SECOND,      new Long(1000L));
+            timeTable.put(MINUTE,      new Long(1000L * 60L));
+            timeTable.put(HOUR,        new Long(1000L * 60L * 60L));
+            timeTable.put(DAY,         new Long(1000L * 60L * 60L * 24L));
+            timeTable.put(WEEK,        new Long(1000L * 60L * 60L * 24L * 7L));
         }
 
         public long getMultiplier() {

@@ -89,17 +89,17 @@ public class ImportTypelib extends Task {
     /**
      * /sysarray
      */
-    private boolean useSysArray=false;
+    private boolean useSysArray = false;
 
     /**
      * /unsafe
      */
-    private boolean unsafe=false;
+    private boolean unsafe = false;
 
     /**
      * extra commands?
      */
-    private String extraOptions=null;
+    private String extraOptions = null;
 
     /**
      * name the output file. required
@@ -170,7 +170,7 @@ public class ImportTypelib extends Task {
             throw new BuildException(
                     "source file is a directory");
         }
-        if (namespace==null) {
+        if (namespace == null) {
             throw new BuildException("No namespace");
         }
     }
@@ -181,13 +181,13 @@ public class ImportTypelib extends Task {
      */
     public void execute() throws BuildException {
         validate();
-        log("Importing typelib "+srcFile
-            +" to assembly "+destFile
-            +" in namespace "+namespace, Project.MSG_VERBOSE);
+        log("Importing typelib " + srcFile
+            + " to assembly " + destFile
+            + " in namespace " + namespace, Project.MSG_VERBOSE);
         //rebuild unless the dest file is newer than the source file
-        if (srcFile.exists() && destFile.exists() &&
-                srcFile.lastModified() <= destFile.lastModified()) {
-            log("The typelib is up to date",Project.MSG_VERBOSE);
+        if (srcFile.exists() && destFile.exists()
+            && srcFile.lastModified() <= destFile.lastModified()) {
+            log("The typelib is up to date", Project.MSG_VERBOSE);
             return;
         }
 
@@ -205,7 +205,5 @@ public class ImportTypelib extends Task {
             command.addArgument("/unsafe");
         }
         command.addArgument(extraOptions);
-
-
     }
 }

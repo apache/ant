@@ -192,7 +192,7 @@ public abstract class DotnetCompile
             "System.Windows.Forms.dll",
             "System.XML.dll"};
 
-    protected static final String REFERENCE_OPTION= "/reference:";
+    protected static final String REFERENCE_OPTION = "/reference:";
 
     /**
      *  debug flag. Controls generation of debug information.
@@ -235,7 +235,7 @@ public abstract class DotnetCompile
     /**
      * filesets of references
      */
-    protected Vector referenceFilesets =new Vector();
+    protected Vector referenceFilesets = new Vector();
 
 
     /**
@@ -558,7 +558,7 @@ public abstract class DotnetCompile
      *@param  dirName  The new DestDir value
      */
     public void setDestDir(File dirName) {
-        log( "DestDir currently unused", Project.MSG_WARN );
+        log("DestDir currently unused", Project.MSG_WARN);
     }
 
 
@@ -567,7 +567,7 @@ public abstract class DotnetCompile
      * @param targetType
      */
     public void setTargetType(TargetTypes targetType) {
-        this.targetType=targetType.getValue();
+        this.targetType = targetType.getValue();
     }
     /**
      * Set the type of target.
@@ -579,12 +579,12 @@ public abstract class DotnetCompile
     public void setTargetType(String ttype)
              throws BuildException {
         ttype = ttype.toLowerCase();
-        if (ttype.equals("exe") || ttype.equals("library") ||
-                ttype.equals("module") || ttype.equals("winexe")) {
+        if (ttype.equals("exe") || ttype.equals("library")
+            || ttype.equals("module") || ttype.equals("winexe")) {
             targetType = ttype;
         } else {
             throw new BuildException("targetType " + ttype
-                    + " is not one of 'exe', 'module', 'winexe' or 'library'" );
+                    + " is not one of 'exe', 'module', 'winexe' or 'library'");
         }
     }
 
@@ -706,8 +706,8 @@ public abstract class DotnetCompile
      * @return a string beginning /D: or null for no definitions
      */
     protected String getDefinitionsParameter() throws BuildException {
-        StringBuffer defines=new StringBuffer();
-        Enumeration defEnum=definitionList.elements();
+        StringBuffer defines = new StringBuffer();
+        Enumeration defEnum = definitionList.elements();
         while (defEnum.hasMoreElements()) {
             //loop through all definitions
             DotnetDefine define = (DotnetDefine) defEnum.nextElement();
@@ -717,10 +717,10 @@ public abstract class DotnetCompile
                 defines.append(getDefinitionsDelimiter());
             }
         }
-        if (defines.length()==0) {
+        if (defines.length() == 0) {
             return null;
         } else {
-            return "/D:"+defines;
+            return "/D:" + defines;
         }
     }
 
@@ -847,10 +847,10 @@ public abstract class DotnetCompile
         fillInSharedParameters(command);
         addResources(command);
         addCompilerSpecificOptions(command);
-        int referencesOutOfDate=addReferenceFilesets(command,
-                getOutputFileTimestamp());
+        int referencesOutOfDate
+            = addReferenceFilesets(command, getOutputFileTimestamp());
         //if the refs are out of date, force a build.
-        boolean forceBuild= referencesOutOfDate > 0;
+        boolean forceBuild = referencesOutOfDate > 0;
         addFilesAndExecute(command, forceBuild);
 
     }
@@ -903,7 +903,7 @@ public abstract class DotnetCompile
      * resource setting
      */
     protected void addResources(NetCommand command) {
-        Enumeration e=resources.elements();
+        Enumeration e = resources.elements();
         while (e.hasMoreElements()) {
             DotnetResource resource = (DotnetResource) e.nextElement();
             command.addArgument(createResourceParameter(resource));
@@ -927,7 +927,7 @@ public abstract class DotnetCompile
 
     protected int addReferenceFilesets(NetCommand command, long outputTimestamp) {
         int filesOutOfDate = 0;
-        Hashtable filesToBuild=new Hashtable();
+        Hashtable filesToBuild = new Hashtable();
         for (int i = 0; i < referenceFilesets.size(); i++) {
             FileSet fs = (FileSet) referenceFilesets.elementAt(i);
             filesOutOfDate += command.scanOneFileset(
@@ -936,10 +936,10 @@ public abstract class DotnetCompile
                     outputTimestamp);
         }
         //bail out early if there were no files
-        if (filesToBuild.size()==0) {
+        if (filesToBuild.size() == 0) {
             return 0;
         }
-        StringBuffer referenceList= new StringBuffer(REFERENCE_OPTION);
+        StringBuffer referenceList = new StringBuffer(REFERENCE_OPTION);
         //now scan the hashtable and add the files
         Enumeration files = filesToBuild.elements();
         while (files.hasMoreElements()) {
@@ -948,7 +948,7 @@ public abstract class DotnetCompile
                 referenceList.append(file.toString());
                 referenceList.append(getReferenceDelimiter());
             } else {
-                log("ignoring "+file+" as it is not a managed executable",
+                log("ignoring " + file + " as it is not a managed executable",
                         Project.MSG_VERBOSE);
             }
 
@@ -989,7 +989,7 @@ public abstract class DotnetCompile
      * @todo look at the PE header of the exe and see if it is managed or not.
      */
     protected static boolean isFileManagedBinary(File file) {
-        String filename= file.toString().toLowerCase();
+        String filename = file.toString().toLowerCase();
         return filename.endsWith(".exe") || filename.endsWith(".dll")
                 || filename.endsWith(".netmodule");
     }

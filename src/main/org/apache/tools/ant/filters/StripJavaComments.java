@@ -62,6 +62,8 @@ import java.io.Reader;
  * (if you have more complex Java parsing needs, use a real lexer).
  * Since this class heavily relies on the single char read function,
  * you are reccomended to make it work on top of a buffered reader.
+ *
+ * @author Not Specified.
  */
 public final class StripJavaComments
     extends BaseFilterReader

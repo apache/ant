@@ -178,8 +178,8 @@ public final class ChainReaderHelper {
                             }
                             if (clazz != null) {
                                 if (!FilterReader.class.isAssignableFrom(clazz)) {
-                                    throw new BuildException(className +
-                                        " does not extend java.io.FilterReader");
+                                    throw new BuildException(className
+                                        + " does not extend java.io.FilterReader");
                                 }
                                 final Constructor[] constructors =
                                     clazz.getConstructors();
@@ -188,16 +188,17 @@ public final class ChainReaderHelper {
                                 for (; j < constructors.length; j++) {
                                     Class[] types = constructors[j]
                                                       .getParameterTypes();
-                                    if (types.length == 1 &&
-                                        types[0].isAssignableFrom(Reader.class)) {
+                                    if (types.length == 1
+                                        && types[0].isAssignableFrom(Reader.class)) {
                                         consPresent = true;
                                         break;
                                     }
                                 }
-                                if ( !consPresent) {
-                                    throw new BuildException( className +
-                                            " does not define a public constructor" +
-                                            " that takes in a Reader as its single argument.");
+                                if (!consPresent) {
+                                    throw new BuildException(className
+                                        + " does not define a public constructor"
+                                        + " that takes in a Reader as its "
+                                        + "single argument.");
                                 }
                                 final Reader[] rdr = {instream};
                                 instream =
@@ -235,13 +236,14 @@ public final class ChainReaderHelper {
      * classes, even if they have public methods.
      */
     private void setProjectOnObject(Object obj) {
-        if (project == null)
+        if (project == null) {
             return;
+        }
         if (obj instanceof BaseFilterReader) {
             ((BaseFilterReader) obj).setProject(project);
             return;
         }
-        project.setProjectReference( obj );
+        project.setProjectReference(obj);
     }
 
     /**

@@ -160,10 +160,11 @@ public class Ilasm
      *  any extra command options?
      */
     protected String extraOptions;
+
     /**
      * filesets of references
      */
-    protected Vector referenceFilesets =new Vector();
+    protected Vector referenceFilesets = new Vector();
 
 
     /**
@@ -245,7 +246,8 @@ public class Ilasm
      * @ant.attribute ignore="true"
      */
     public void setOwner(String s) {
-        log("This option is not supported by ILASM as of Beta-2, and will be ignored", Project.MSG_WARN);
+        log("This option is not supported by ILASM as of Beta-2, "
+            + "and will be ignored", Project.MSG_WARN);
     }
 
 
@@ -523,7 +525,7 @@ public class Ilasm
      * @todo look at the PE header of the exe and see if it is managed or not.
      */
     protected static boolean isFileManagedBinary(File file) {
-        String filename= file.toString().toLowerCase();
+        String filename = file.toString().toLowerCase();
         return filename.endsWith(".exe") || filename.endsWith(".dll")
                 || filename.endsWith(".netmodule");
     }

@@ -70,8 +70,7 @@ import org.apache.tools.ant.types.Parameter;
  *
  * @author Magesh Umasankar
  */
-public final class HeadFilter
-    extends BaseParamFilterReader
+public final class HeadFilter extends BaseParamFilterReader
     implements ChainableReader {
     /** Parameter name for the number of lines to be returned. */
     private static final String LINES_KEY = "lines";
@@ -83,7 +82,7 @@ public final class HeadFilter
     private long linesRead = 0;
 
     /** Default number of lines to show */
-    private static int DEFAULT_NUM_LINES = 10;
+    private static final int DEFAULT_NUM_LINES = 10;
 
     /** Number of lines to be returned in the filtered stream. */
     private long lines = DEFAULT_NUM_LINES;

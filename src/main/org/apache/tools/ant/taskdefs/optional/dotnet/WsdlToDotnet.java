@@ -239,17 +239,17 @@ public class WsdlToDotnet extends Task  {
 
         //set source and rebuild options
         boolean rebuild = true;
-        if (srcFile!=null) {
+        if (srcFile != null) {
             command.addArgument(srcFile.toString());
             //rebuild unless the dest file is newer than the source file
-            if (srcFile.exists() && destFile.exists() &&
-                srcFile.lastModified() <= destFile.lastModified()) {
+            if (srcFile.exists() && destFile.exists()
+                && srcFile.lastModified() <= destFile.lastModified()) {
                 rebuild = false;
             }
         } else {
             //no source file? must be a url, which has no dependency
             //handling
-            rebuild=true;
+            rebuild = true;
             command.addArgument(url);
         }
         if (rebuild) {

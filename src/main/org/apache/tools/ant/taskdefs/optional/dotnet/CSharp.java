@@ -390,12 +390,12 @@ public class CSharp extends DotnetCompile {
      *@return    The Definitions Parameter to CSC
      */
     protected String getDefinitionsParameter() {
-        String predecessors=super.getDefinitionsParameter();
+        String predecessors = super.getDefinitionsParameter();
         if (notEmpty(definitions)) {
-            if (predecessors==null) {
-                predecessors= "/define:";
+            if (predecessors == null) {
+                predecessors = "/define:";
             }
-            return  predecessors+ definitions;
+            return  predecessors + definitions;
         } else {
             return predecessors;
         }

@@ -71,7 +71,7 @@ import org.apache.tools.ant.Project;
  * <p>Moved out of MatchingTask to make it a standalone object that
  * could be referenced (by scripts for example).
  *
- * @author Arnout J. Kuiper <a href="mailto:ajkuiper@wxs.nl">ajkuiper@wxs.nl</a> 
+ * @author Arnout J. Kuiper <a href="mailto:ajkuiper@wxs.nl">ajkuiper@wxs.nl</a>
  * @author Stefano Mazzocchi <a href="mailto:stefano@apache.org">stefano@apache.org</a>
  * @author Sam Ruby <a href="mailto:rubys@us.ibm.com">rubys@us.ibm.com</a>
  * @author Jon S. Stevens <a href="mailto:jon@clearink.com">jon@clearink.com</a>
@@ -85,7 +85,7 @@ public class PatternSet extends DataType {
 
     /**
      * inner class to hold a name on list.  "If" and "Unless" attributes
-     * may be used to invalidate the entry based on the existence of a 
+     * may be used to invalidate the entry based on the existence of a
      * property (typically set thru the use of the Available task).
      */
     public class NameEntry {
@@ -93,8 +93,8 @@ public class PatternSet extends DataType {
         private String ifCond;
         private String unlessCond;
 
-        public void setName(String name) { 
-            this.name = name; 
+        public void setName(String name) {
+            this.name = name;
         }
 
         public void setIf(String cond) {
@@ -109,8 +109,8 @@ public class PatternSet extends DataType {
             return name;
         }
 
-        public String evalName(Project p) { 
-            return valid(p) ? name : null; 
+        public String evalName(Project p) {
+            return valid(p) ? name : null;
         }
 
         private boolean valid(Project p) {
@@ -127,7 +127,7 @@ public class PatternSet extends DataType {
             if ((ifCond != null) || (unlessCond != null)) {
                 buf.append(":");
                 String connector = "";
-                
+
                 if (ifCond != null) {
                     buf.append("if->");
                     buf.append(ifCond);
@@ -153,7 +153,7 @@ public class PatternSet extends DataType {
      * instance.
      *
      * <p>You must not set another attribute or nest elements inside
-     * this element if you make it a reference.</p> 
+     * this element if you make it a reference.</p>
      */
     public void setRefid(Reference r) throws BuildException {
         if (!includeList.isEmpty() || !excludeList.isEmpty()) {
@@ -202,7 +202,7 @@ public class PatternSet extends DataType {
         }
         return addPatternToList(includesFileList);
     }
-    
+
     /**
      * add a name entry on the exclude list
      */
@@ -212,7 +212,7 @@ public class PatternSet extends DataType {
         }
         return addPatternToList(excludeList);
     }
-    
+
     /**
      * add a name entry on the exclude files list
      */
@@ -224,7 +224,7 @@ public class PatternSet extends DataType {
     }
 
     /**
-     * Appends <code>includes</code> to the current list of include patterns. 
+     * Appends <code>includes</code> to the current list of include patterns.
      * Patterns may be separated by a comma or a space.
      *
      * @param includes the string containing the include patterns
@@ -242,7 +242,7 @@ public class PatternSet extends DataType {
     }
 
     /**
-     * Appends <code>excludes</code> to the current list of exclude patterns. 
+     * Appends <code>excludes</code> to the current list of exclude patterns.
      * Patterns may be separated by a comma or a space.
      *
      * @param excludes the string containing the exclude patterns
@@ -271,7 +271,7 @@ public class PatternSet extends DataType {
     /**
      * Sets the name of the file containing the includes patterns.
      *
-     * @param includesFile The file to fetch the include patterns from.  
+     * @param includesFile The file to fetch the include patterns from.
      */
      public void setIncludesfile(File includesFile) throws BuildException {
          if (isReference()) {
@@ -283,7 +283,7 @@ public class PatternSet extends DataType {
     /**
      * Sets the name of the file containing the excludes patterns.
      *
-     * @param excludesFile The file to fetch the exclude patterns from.  
+     * @param excludesFile The file to fetch the exclude patterns from.
      */
      public void setExcludesfile(File excludesFile) throws BuildException {
          if (isReference()) {
@@ -291,21 +291,21 @@ public class PatternSet extends DataType {
          }
          createExcludesFile().setName(excludesFile.getAbsolutePath());
      }
-    
+
     /**
      *  Reads path matching patterns from a file and adds them to the
-     *  includes or excludes list (as appropriate).  
+     *  includes or excludes list (as appropriate).
      */
     private void readPatterns(File patternfile, Vector patternlist, Project p)
         throws BuildException {
-        
+
         BufferedReader patternReader = null;
         try {
             // Get a FileReader
-            patternReader = 
-                new BufferedReader(new FileReader(patternfile)); 
-        
-            // Create one NameEntry in the appropriate pattern list for each 
+            patternReader =
+                new BufferedReader(new FileReader(patternfile));
+
+            // Create one NameEntry in the appropriate pattern list for each
             // line in the file.
             String line = patternReader.readLine();
             while (line != null) {
@@ -316,14 +316,14 @@ public class PatternSet extends DataType {
                 line = patternReader.readLine();
             }
         } catch (IOException ioe)  {
-            String msg = "An error occured while reading from pattern file: " 
+            String msg = "An error occured while reading from pattern file: "
                 + patternfile;
             throw new BuildException(msg, ioe);
         } finally {
             if (null != patternReader) {
                 try {
                     patternReader.close();
-                } catch (IOException ioe) { 
+                } catch (IOException ioe) {
                     //Ignore exception
                 }
             }
@@ -344,7 +344,7 @@ public class PatternSet extends DataType {
                 createInclude().setName(incl[i]);
             }
         }
-        
+
         String[] excl = other.getExcludePatterns(p);
         if (excl != null) {
             for (int i = 0; i < excl.length; i++) {
@@ -384,14 +384,14 @@ public class PatternSet extends DataType {
         if (isReference()) {
             return getRef(p).hasPatterns(p);
         } else {
-            return includesFileList.size() > 0 || excludesFileList.size() > 0 
+            return includesFileList.size() > 0 || excludesFileList.size() > 0
                 || includeList.size() > 0 || excludeList.size() > 0;
         }
     }
 
     /**
      * Performs the check for circular references and returns the
-     * referenced PatternSet.  
+     * referenced PatternSet.
      */
     private PatternSet getRef(Project p) {
         if (!isChecked()) {
@@ -399,7 +399,7 @@ public class PatternSet extends DataType {
             stk.push(this);
             dieOnCircularReference(stk, p);
         }
-        
+
         Object o = getRefid().getReferencedObject(p);
         if (!(o instanceof PatternSet)) {
             String msg = getRefid().getRefId() + " doesn\'t denote a patternset";
@@ -418,7 +418,7 @@ public class PatternSet extends DataType {
         }
 
         Vector tmpNames = new Vector();
-        for (Enumeration e = list.elements() ; e.hasMoreElements() ;) {
+        for (Enumeration e = list.elements(); e.hasMoreElements();) {
             NameEntry ne = (NameEntry) e.nextElement();
             String pattern = ne.evalName(p);
             if (pattern != null && pattern.length() > 0) {
@@ -430,7 +430,7 @@ public class PatternSet extends DataType {
         tmpNames.copyInto(result);
         return result;
     }
-        
+
     /**
      * Read includesfile ot excludesfile if not already done so.
      */
@@ -473,8 +473,8 @@ public class PatternSet extends DataType {
     }
 
     public String toString() {
-        return "patternSet{ includes: " + includeList + 
-            " excludes: " + excludeList + " }";
+        return "patternSet{ includes: " + includeList
+                + " excludes: " + excludeList + " }";
     }
 
 }

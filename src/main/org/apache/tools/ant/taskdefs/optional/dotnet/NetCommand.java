@@ -210,7 +210,7 @@ public class NetCommand {
         if (argument2 != null && argument2.length() != 0) {
             commandLine.createArgument().setValue(argument1 + argument2);
         }
-    }    
+    }
 
     /**
      *  set up the command sequence..
@@ -218,10 +218,10 @@ public class NetCommand {
     protected void prepareExecutor() {
         // default directory to the project's base directory
         if (owner == null) {
-            throw new RuntimeException("no owner"); 
+            throw new RuntimeException("no owner");
         }
         if (owner.getProject() == null) {
-            throw new RuntimeException("Owner has no project"); 
+            throw new RuntimeException("Owner has no project");
         }
         File dir = owner.getProject().getBaseDir();
         ExecuteStreamHandler handler = new LogStreamHandler(owner,

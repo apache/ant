@@ -65,8 +65,10 @@ import org.apache.tools.ant.util.FileUtils;
  *
  * @author Magesh Umasankar
  */
-public abstract class BaseFilterReader
-    extends FilterReader {
+public abstract class BaseFilterReader extends FilterReader {
+    /** Buffer size used when reading */
+    private static final int BUFFER_SIZE = 8192;
+
     /** Have the parameters passed been interpreted? */
     private boolean initialized = false;
 
@@ -116,7 +118,7 @@ public abstract class BaseFilterReader
      *
      * @exception  IOException  If an I/O error occurs
      */
-    public final int read(final char cbuf[], final int off,
+    public final int read(final char[] cbuf, final int off,
                           final int len) throws IOException {
         for (int i = 0; i < len; i++) {
             final int ch = read();
@@ -232,6 +234,6 @@ public abstract class BaseFilterReader
      *            reading
      */
     protected final String readFully() throws IOException {
-        return FileUtils.readFully(in, 8192);
+        return FileUtils.readFully(in, BUFFER_SIZE);
     }
 }
