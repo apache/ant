@@ -74,8 +74,6 @@ public class FilePropertyEditor extends AbstractPropertyEditor {
     private JTextField _widget = null;
     /** Container for the editor. */
     private JPanel _container = null;
-    /** Default path. */
-    private String _path = null;
     /** File filter to use. */
     private FileFilter _filter = null;
 
@@ -87,11 +85,7 @@ public class FilePropertyEditor extends AbstractPropertyEditor {
         _container = new JPanel(new BorderLayout());
         
 
-        _widget = new JTextField() {
-                public boolean isManagingFocus() {
-                    return false;
-                }
-            };
+        _widget = new JTextField();
 
         _widget.addFocusListener(new FocusHandler(this));
 
@@ -194,15 +188,6 @@ public class FilePropertyEditor extends AbstractPropertyEditor {
         return new File(_widget.getText()).getAbsolutePath();
     } 
 
-	/** 
-	 * Set the default path for the file chooser
-	 * 
-	 * @param path default path
-	 */
-	public void setDefaultPath(String path) {
-		_path = path;
-	}
-
     /** Handler for presses of the browse button. */
     private class ActionHandler implements ActionListener {
         public void actionPerformed(ActionEvent e) {
@@ -210,9 +195,6 @@ public class FilePropertyEditor extends AbstractPropertyEditor {
             if(_widget.getText().length() > 0) {
                 chooser = new JFileChooser(_widget.getText());
             }
-            else if(_path != null) {
-                chooser = new JFileChooser(_path);
-            }			
             else {
                 chooser = new JFileChooser();
             }
@@ -222,7 +204,11 @@ public class FilePropertyEditor extends AbstractPropertyEditor {
             chooser.setFileSelectionMode(JFileChooser.FILES_AND_DIRECTORIES);
             if(chooser.showDialog(getChild(), "Select") == 
                JFileChooser.APPROVE_OPTION) {
-                setValue(chooser.getSelectedFile());
+                Object oldValue = getValue();
+                Object newValue = chooser.getSelectedFile();
+
+                setValue(newValue);
+                firePropertyChange(oldValue, newValue);
             }
         }
     }
