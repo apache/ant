@@ -26,7 +26,7 @@
   <li>Dave Walend (<a href="mailto:dwalend@cs.tufts.edu">dwalend@cs.tufts.edu</a>)</li>
 </ul>
 
-<p>Version 1.2 - 2000/10/19</p>
+<p>Version 1.2 - 2000/10/24</p>
 
 <hr>
 <h2>Table of Contents</h2>
@@ -1892,9 +1892,14 @@ build.xml:4: Something wrong here.
 <hr>
 <h2><a name="filter">Filter</a></h2>
 <h3>Description</h3>
-<p>Sets a token filter for this project. Token filters are used by all tasks
-that perform file copying operations through the Project commodity methods.</p>
-<p>Note: the token string must not contain the separators chars (@).</p>
+<p>Sets a token filter for this project or read multiple token filter from
+an input file and sets these as filters.
+Token filters are used by all tasks that perform file copying operations
+through the Project commodity methods.</p>
+<p>Note 1: the token string must not contain the separators chars (@).<br>
+Note 2: Either token and value attributes must be provided, or only the
+filterfile attribute.</p>
+
 <h3>Parameters</h3>
 <table border="1" cellpadding="2" cellspacing="0">
   <tr>
@@ -1905,15 +1910,21 @@ that perform file copying operations through the Project commodity methods.</p>
   <tr>
     <td valign="top">token</td>
     <td valign="top">the token string without @</td>
-    <td align="center" valign="top">Yes</td>
+    <td align="center" valign="top">Yes*</td>
   </tr>
   <tr>
     <td valign="top">value</td>
-    <td valign="top">the string that should be put to replace the token when the
+    <td valign="top">the string that should be put to replace the token when the 
       file is copied</td>
-    <td align="center" valign="top">Yes</td>
+    <td align="center" valign="top">Yes*</td>
+  </tr>
+  <tr>
+    <td valign="top">filtersfile</td>
+    <td valign="top">The file from which the filters must be read. This file must be a formatted as a property file. </td>
+    <td align="center" valign="top">Yes*</td>
   </tr>
 </table>
+<p>* see notes 1 and 2 above parameters table.</p>
 <h3>Examples</h3>
 <pre>  &lt;filter token=&quot;year&quot; value=&quot;2000&quot; /&gt;
   &lt;copy todir=&quot;${dest.dir}&quot;&gt;
@@ -1922,6 +1933,10 @@ that perform file copying operations through the Project commodity methods.</p>
 <p>will copy recursively all the files from the <i>src.dir</i> directory into
 the <i>dest.dir</i> directory replacing all the occurencies of the string <i>@year@</i>
 with <i>2000.</i></p>
+<pre>  &lt;filter filterfile=&quot;deploy_env.properties&quot; /&gt;</pre>
+will read all property entries from the <i>deploy_env.properties</i> file
+and set these as filters.
+
 <hr>
 <h2><a name="fixcrlf">FixCRLF</a></h2>
 <h3>Description</h3>
