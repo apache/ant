@@ -71,12 +71,15 @@ public class XalanLiaison implements XSLTLiaison {
     XSLTProcessor processor;
     XSLTInputSource xslSheet;
 
+    public XalanLiaison() throws Exception {
+      processor = XSLTProcessorFactory.getProcessor();
+    }
+
     public void setStylesheet(String fileName) throws Exception {
       xslSheet = new XSLTInputSource (fileName);
     };
 
     public void transform(String infile, String outfile) throws Exception {
-      if (processor == null) processor = XSLTProcessorFactory.getProcessor();
       processor.process(new XSLTInputSource(infile), xslSheet,
                         new XSLTResultTarget(outfile));
     }

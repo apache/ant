@@ -127,10 +127,10 @@ public class XSLTProcess extends MatchingTask {
         if (liaison == null) {
            try {
                setProcessor("xslp");
-           } catch (Exception e1) {
+           } catch (Throwable e1) {
                try {
                    setProcessor("xalan");
-               } catch (Exception e2) {
+               } catch (Throwable e2) {
                    throw new BuildException(e2);
                }
            }

@@ -72,13 +72,16 @@ public class XslpLiaison implements XSLTLiaison {
     XSLProcessor processor;
     XSLStylesheet xslSheet;
 
+    public XslpLiaison() {
+      processor = new XSLProcessor();
+    }
+
     public void setStylesheet(String fileName) throws Exception {
       XSLReader xslReader = new XSLReader();
       xslSheet = xslReader.read( fileName );
     };
 
     public void transform(String infile, String outfile) throws Exception {
-      if (processor == null) processor = new XSLProcessor();
       processor.process(infile, xslSheet, new FileWriter(outfile));
     }
 
