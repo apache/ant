@@ -58,6 +58,7 @@ import java.io.PrintWriter;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.FilenameFilter;
+import java.util.Locale;
 import java.util.Vector;
 import java.util.Enumeration;
 import java.util.StringTokenizer;
@@ -222,6 +223,10 @@ public class Javadoc extends Task {
     private static boolean javadoc1 =
         (Project.getJavaVersion() == Project.JAVA_1_1);
 
+    private static boolean javadoc4 =
+        (Project.getJavaVersion() != Project.JAVA_1_1 &&
+         Project.getJavaVersion() != Project.JAVA_1_2 &&
+         Project.getJavaVersion() != Project.JAVA_1_3);
 
     private void addArgIf(boolean b, String arg) {
         if (b) {
@@ -263,6 +268,7 @@ public class Javadoc extends Task {
     private String packageList = null;
     private Vector links = new Vector(2);
     private Vector groups = new Vector(2);
+    private Vector tags = new Vector(1);
     private boolean useDefaultExcludes = true;
     private Html doctitle = null;
     private Html header = null;
@@ -270,7 +276,6 @@ public class Javadoc extends Task {
     private Html bottom = null;
     private boolean useExternalFile = false;
     private File tmpList = null;
-
     private FileUtils fileUtils = FileUtils.newFileUtils();
 
     /**
@@ -645,6 +650,187 @@ public class Javadoc extends Task {
         }
     }
 
+    /**
+     * Creates and adds a -tag argument. This is used to specify
+     * custom tags. This argument is only available for JavaDoc 1.4,
+     * and will generate a verbose message (and then be ignored)
+     * when run on Java versions below 1.4.
+     * 
+     * @todo Add -taglet as well - need to preserve the order
+     * of tag/taglet, so they need to be stored in the same list
+     */
+    public TagArgument createTag() {
+        if (!javadoc4) {
+            project.log ("-tag option not supported on JavaDoc < 1.4", 
+                         Project.MSG_VERBOSE);
+        }
+        TagArgument ta = new TagArgument();
+        tags.addElement (ta);
+        return ta;
+    }
+    
+    /**
+     * Scope element verbose names. (Defined here as fields
+     * cannot be static in inner classes.) The first letter
+     * from each element is used to build up the scope string.
+     */
+    static final String[] SCOPE_ELEMENTS = {
+        "overview", "packages", "types", "constructors",
+        "methods", "fields"};
+
+    /**
+     * Class representing a -tag argument.
+     */
+    public class TagArgument {
+        /** Name of the tag. */
+        private String name=null;
+        /** Description of the tag to place in the JavaDocs. */
+        private String description=null;
+        /** Whether or not the tag is enabled. */
+        private boolean enabled=true;
+        /** 
+         * Scope string of the tag. This will form the middle
+         * argument of the -tag parameter when the tag is enabled
+         * (with an X prepended for and is parsed from human-readable form.
+         */
+        private String scope="a";
+        
+        /** Sole constructor. */
+        public TagArgument () {
+        }
+        
+        /** 
+         * Sets the name of the tag.
+         * 
+         * @param name The name of the tag. 
+         *             Must not be <code>null</code> or empty.
+         */
+        public void setName (String name) {
+            this.name=name;
+        }
+        
+        /** 
+         * Sets the description of the tag. This is what appears in
+         * the JavaDoc.
+         * 
+         * @param description The description of the tag. 
+         *                    Must not be <code>null</code> or empty.
+         */
+        public void setDescription (String description) {
+            this.description=description;
+        }
+
+        /** 
+         * Sets the scope of the tag. This is in comma-separated
+         * form, with each element being one of "all" (the default),
+         * "overview", "packages", "types", "constructors", "methods",
+         * "fields". The elements are treated in a case-insensitive
+         * manner. Specifying "all" and other elements will result in
+         * a warning message being generated but the "all" taking
+         * precedence. Specifying an unrecognised element will result
+         * in a warning message and the element being ignored. If no
+         * recognised elements are specified, a warning will be issued
+         * and the default of "all" will be used. If an element is
+         * specified twice, a warning will be issued but there will
+         * be no real ill-effects.
+         * 
+         * @param verboseScope The scope of the tag.
+         *                     Must not be <code>null</code>, 
+         *                     should not be empty.
+         */
+        public void setScope (String verboseScope) {
+            verboseScope=verboseScope.toLowerCase (Locale.US);
+
+            boolean[] elements=new boolean[SCOPE_ELEMENTS.length];
+            
+            boolean gotAll=false;
+            boolean gotNotAll=false;
+            
+            // Go through the tokens one at a time, updating the
+            // elements array and issuing warnings where appropriate.
+            StringTokenizer tok = new StringTokenizer (verboseScope, ",");
+            while (tok.hasMoreTokens()) {
+                String next = tok.nextToken();
+                if (next.equals("all")) {
+                    if (gotAll) {
+                        project.log ("Repeated tag scope element: all", 
+                                     Project.MSG_WARN);
+                    }
+                    gotAll=true;
+                }
+                else {
+                    int i;
+                    for (i=0; i < SCOPE_ELEMENTS.length; i++) {
+                        if (next.equals (SCOPE_ELEMENTS[i]))
+                            break;
+                    }
+                    if (i==SCOPE_ELEMENTS.length) {
+                        project.log ("Ignoring unrecognised scope element: "+
+                                     next, Project.MSG_WARN);
+                    } 
+                    else {
+                        if (elements[i]) {
+                            project.log ("Repeated tag scope element: "+next, 
+                                         Project.MSG_WARN);
+                        }
+                        elements[i]=true;
+                        gotNotAll=true;
+                    }
+                }
+            }
+            
+            if (gotNotAll && gotAll) {
+                project.log ("Mixture of \"all\" and other scope elements "+
+                             "repeated in tag parameter: defaulting to "+
+                             "\"all\".", Project.MSG_WARN);
+            }
+            if (!gotNotAll && !gotAll) {
+                project.log ("No recognised scope elements specified: "+
+                             "defaulting to \"all\".", Project.MSG_WARN);
+                gotAll=true;
+            }
+            if (gotAll) {
+                this.scope="a";
+            }
+            else {
+                StringBuffer buff = new StringBuffer (elements.length);
+                for (int i=0; i < elements.length; i++) {
+                    if (elements[i]) {
+                        buff.append (SCOPE_ELEMENTS[i].charAt(0));
+                    }
+                }
+                this.scope=buff.toString();
+            }
+        }
+        
+        /**
+         * Sets whether or not the tag is enabled.
+         * 
+         * @param enabled Whether or not this tag is enabled.
+         */
+        public void setEnabled (boolean enabled) {
+            this.enabled=enabled;
+        }
+        
+        /**
+         * Returns the -tag parameter this argument represented.
+         * 
+         * @exception BuildException if either the name or description
+         *                           is <code>null</code> or empty.
+         */
+        public String getParameter () throws BuildException {
+            if (name==null || name.equals ("")) {
+                throw new BuildException ("No name specified for custom tag.");
+            }
+            if (description==null || description.equals ("")){
+                throw new BuildException 
+                    ("No description specified for custom tag "+name);
+            }
+            
+            return name+":"+(enabled ? "" : "X")+scope+":"+description;
+        }
+    }
+
     public GroupArgument createGroup() {
         GroupArgument ga = new GroupArgument();
         groups.addElement(ga);
@@ -880,6 +1066,15 @@ public class Javadoc extends Task {
                     toExecute.createArgument().setValue("-group");
                     toExecute.createArgument().setValue(expand(title));
                     toExecute.createArgument().setValue(packages);
+                }
+            }
+            
+            // JavaDoc 1.4 parameters
+            if (javadoc4) {
+                for (Enumeration e = tags.elements(); e.hasMoreElements(); ) {
+                    TagArgument ta = (TagArgument) e.nextElement();
+                    toExecute.createArgument().setValue ("-tag");
+                    toExecute.createArgument().setValue (ta.getParameter());
                 }
             }
 
