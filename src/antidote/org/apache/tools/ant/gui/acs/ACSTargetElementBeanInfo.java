@@ -103,7 +103,8 @@ public class ACSTargetElementBeanInfo extends BaseBeanInfo {
                 new PropertyDescriptor(ACSTargetElement.DESCRIPTION,
                                        ACSTargetElement.class),
                 new PropertyDescriptor(ACSTargetElement.DEPENDS,
-                                       ACSTargetElement.class),
+                                       ACSTargetElement.class,
+                                       "getClone", "copyDependsFromTarget"),
                 new PropertyDescriptor(ACSTargetElement.IF,
                                        ACSTargetElement.class),
                 new PropertyDescriptor(ACSTargetElement.UNLESS,
@@ -140,6 +141,11 @@ public class ACSTargetElementBeanInfo extends BaseBeanInfo {
 
     /** Customizer for this bean info. */
     public static class Customizer extends DynamicCustomizer {
+        static {
+            PropertyEditorManager.registerEditor(
+		org.apache.tools.ant.gui.acs.ACSTargetElement.class, org.apache.tools.ant.gui.modules.edit.DependentTargetPropertyEditor.class);
+        }
+        
         public Customizer() {
             super(ACSTargetElement.class);
         }

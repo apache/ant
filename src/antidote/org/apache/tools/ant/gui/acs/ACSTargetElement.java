@@ -62,7 +62,7 @@ import java.util.StringTokenizer;
  * @version $Revision$ 
  * @author Simeon Fitch 
  */
-public class ACSTargetElement extends ACSNamedElement {
+public class ACSTargetElement extends ACSNamedElement implements Cloneable{
 
     /** Dependency property name. */
     public static final String DEPENDS = "depends";
@@ -151,5 +151,32 @@ public class ACSTargetElement extends ACSNamedElement {
         String old = getUnless();
         setAttribute(UNLESS, val);
         firePropertyChange(UNLESS, old, val);
+    }
+    
+	/** 
+	 * Copys the depends of a given target to the current.
+	 * 
+	 * @param Source target for the copy operation.
+	 */
+    public void copyDependsFromTarget(ACSTargetElement newTarget) {
+        setDepends(newTarget.getDepends());
+    }
+    
+	/** 
+	 * Copys the depends of a given target to the current.
+         * I can't override clone, because I need an ACSTargetElement
+         * to be returned!
+	 * 
+	 * @return A clones target element
+	 */
+    public ACSTargetElement getClone() {
+        ACSTargetElement retVal = null;
+        try {
+            retVal = (ACSTargetElement)clone();
+            retVal.setDepends(getDepends());
+        } catch (java.lang.CloneNotSupportedException ex) {
+            // Cannot occur, for ACSTarget implements Clonable!
+        }
+        return retVal;
     }
 }
