@@ -127,7 +127,7 @@ public class CLIMain
      */
     private void usage( final CLOptionDescriptor[] options )
     {
-        System.out.println( "java " + getClass().getName() + " [options]" );
+        System.out.println( "ant [options] [targets]" );
         System.out.println( "\tAvailable options:" );
         System.out.println( CLUtil.describeOptions( options ) );
     }
@@ -191,7 +191,7 @@ public class CLIMain
                                     INCREMENTAL_OPT,
                                     REZ.getString( "incremental.opt" ) );
         options[ 9 ] =
-            new CLOptionDescriptor( "myrmidon-home",
+            new CLOptionDescriptor( "ant-home",
                                     CLOptionDescriptor.ARGUMENT_REQUIRED,
                                     HOME_DIR_OPT,
                                     REZ.getString( "home.opt" ) );
