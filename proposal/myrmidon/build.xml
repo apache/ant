@@ -437,6 +437,7 @@ Legal:
       <batchtest>
         <fileset dir="${test.classes}">
           <include name="**/*Test.class" unless="single.test"/>
+          <exclude name="**/Abstract*Test.class"/>
           <include name="**/${single.test}Test.class" if="single.test"/>
           <exclude name="**/BzipTest.class" unless="test.bzip"/>
           <exclude name="**/SmbFileSystemTest.class" unless="test.smb"/>
