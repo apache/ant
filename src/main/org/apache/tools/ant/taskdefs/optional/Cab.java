@@ -178,8 +178,9 @@ public class Cab extends MatchingTask {
         {
             String file = files.elementAt(i).toString();
             if (new File(baseDir,file).lastModified() > 
-                cabFile.lastModified())
+                cabFile.lastModified()) {
                 upToDate = false;
+            }
         }
         return upToDate;
     }
@@ -282,7 +283,9 @@ public class Cab extends MatchingTask {
         Vector files = getFileList();
     
         // quick exit if the target is up to date
-        if (isUpToDate(files)) return;
+        if (isUpToDate(files)) {
+          return;
+        }
 
         log("Building "+ archiveType +": "+ cabFile.getAbsolutePath());
 

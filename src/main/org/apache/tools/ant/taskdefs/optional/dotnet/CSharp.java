@@ -176,10 +176,11 @@ public class CSharp
      */
     protected String getReferencesParameter() {
         //bail on no references
-        if (notEmpty(_references)) 
+        if (notEmpty(_references)) { 
             return "/reference:"+_references;
-        else
+        } else {
             return null;
+        }
     }
                 
     /**
@@ -195,8 +196,9 @@ public class CSharp
      */
     public void setReferenceFiles(Path path) {
         //demand create pathlist
-        if(_referenceFiles==null)
+        if(_referenceFiles==null) {
                 _referenceFiles=new Path(this.project);
+        }
         _referenceFiles.append(path);
     }
     
@@ -206,16 +208,18 @@ public class CSharp
     */ 
     protected String getReferenceFilesParameter() {
         //bail on no references
-        if (_references==null)
+        if (_references==null) {
             return null;
+        }
         //iterate through the ref list & generate an entry for each
         //or just rely on the fact that the toString operator does this, but
         //noting that the separator is ';' on windows, ':' on unix
         String refpath=_references.toString();
     
         //bail on no references listed
-        if (refpath.length()==0)
+        if (refpath.length()==0) {
             return null;
+        }
         
         StringBuffer s=new StringBuffer("/reference:");
         s.append(refpath);
@@ -285,8 +289,9 @@ public class CSharp
             s.append(DEFAULT_REFERENCE_LIST);
             return new String(s);
         }
-        else
-            return null;            
+        else {
+            return null;
+        }            
     }
      
      /** flag to enable automatic reference inclusion
@@ -414,10 +419,11 @@ public class CSharp
      * @return    The DocFile Parameter to CSC 
      */
     protected String getDocFileParameter() {
-        if (_docFile!=null)
+        if (_docFile!=null) {
             return "/doc:"+_docFile.toString();
-        else
+        } else {
             return null;
+        }
     }   
         
     /** warning level: 0-4, with 4 being most verbose
@@ -498,10 +504,11 @@ public class CSharp
      * @return    The MainClass Parameter to CSC 
      */
     protected String getMainClassParameter(){
-        if (_mainClass!=null && _mainClass.length()!=0)
+        if (_mainClass!=null && _mainClass.length()!=0) {
             return "/main:"+_mainClass;
-        else
+        } else {
             return null;
+        }
     } 
     
     /** any extra command options?
@@ -532,11 +539,13 @@ public class CSharp
     protected String getExtraOptionsParameter() {
         if (_extraOptions!=null && _extraOptions.length()!=0)
             return _extraOptions;
-        else
+        else {
             return null;
+        }
     } 
     
-    /** source directory upon which the search pattern is applied
+    /** source directory upon which the search 
+               } pattern is applied
      */
     private File _srcDir;
     
@@ -544,7 +553,7 @@ public class CSharp
      * Set the source dir to find the files to be compiled
      * @param  srcDirName  The new SrcDir value 
      */
-    public void setSrcDir(File srcDirName){
+    public void setSrcDir(File srcDirName) {{
         _srcDir = srcDirName;
     }
     
@@ -578,8 +587,9 @@ public class CSharp
             targetType.equals("module") ||targetType.equals("winexe") ) {
             _targetType=targetType; 
         }
-        else 
+        else { 
             throw new BuildException("targetType " +targetType+" is not a valid type");
+        }
     }
     
     /**
@@ -597,10 +607,11 @@ public class CSharp
      * @return    The TargetType Parameter to CSC 
      */
     protected String getTargetTypeParameter() {
-        if (notEmpty(_targetType)) 
+        if (notEmpty(_targetType)) { 
             return "/target:"+_targetType;
-        else
+        } else {
             return null;
+        }
     }   
     
     /** icon for incorporation into apps
@@ -621,10 +632,11 @@ public class CSharp
      * @return    The Win32Icon Parameter to CSC 
      */
     protected String getWin32IconParameter() {
-        if (_win32icon!=null)
+        if (_win32icon!=null) {
             return "/win32icon:"+_win32icon.toString();
-        else
+        } else {
             return null;
+        }
     }
     /** icon for incorporation into apps
      */     
@@ -644,10 +656,11 @@ public class CSharp
      * @return    The Win32Icon Parameter to CSC 
      */
     protected String getWin32ResParameter() {
-        if (_win32res!=null)
+        if (_win32res!=null) {
             return "/win32res:"+_win32res.toString();
-        else
+        } else {
             return null;
+        }
     }    
     
     /** 
@@ -707,10 +720,11 @@ public class CSharp
     * @return    The Definitions Parameter to CSC 
     */
     protected String getDefinitionsParameter() {
-        if (notEmpty(_definitions))
+        if (notEmpty(_definitions)) {
             return "/define:" + _definitions;
-        else
+        } else {
             return null;
+        }
     }
     
     /** list of extra modules to refer to 
@@ -730,10 +744,11 @@ public class CSharp
     * @return    The AdditionalModules Parameter to CSC 
      */
     protected String getAdditionalModulesParameter() {
-        if (notEmpty(_additionalModules)) 
+        if (notEmpty(_additionalModules)) { 
             return "/addmodule:" + _additionalModules;
-        else 
+        } else { 
             return null;
+        }
     }
     
     /** output file. If not supplied this is derived from the
@@ -757,8 +772,9 @@ public class CSharp
             File f = _outputFile;
             return "/out:"+f.toString();
         }
-        else            
+        else {            
             return null;
+        }
     }
     
     /** flag to control action on execution trouble
@@ -816,8 +832,9 @@ public class CSharp
     */
     public void execute() 
         throws BuildException {
-        if (_srcDir == null)
+        if (_srcDir == null) {
             _srcDir=project.resolveFile(".");
+        }
     
         NetCommand command=new NetCommand(this,"CSC",csc_exe_name);
         command.setFailOnError(getFailFailOnError());

@@ -110,8 +110,12 @@ public class CVSPass extends Task {
      * @exception BuildException if someting goes wrong with the build
      */
     public final void execute() throws BuildException {
-        if(cvsRoot==null)throw new BuildException("cvsroot is required");
-        if(password==null)throw new BuildException("password is required");
+        if(cvsRoot==null) {
+         throw new BuildException("cvsroot is required");
+        }
+        if(password==null) {
+         throw new BuildException("password is required");
+        }
 
         log("cvsRoot: " + cvsRoot, project.MSG_DEBUG);
         log("password: " + password, project.MSG_DEBUG);

@@ -353,7 +353,9 @@ public class Checksum extends MatchingTask implements Condition {
                 fis = new FileInputStream(src);
                 DigestInputStream dis = new DigestInputStream(fis,
                                                               messageDigest);
-                while (dis.read() != -1);
+                while (dis.read() != -1) {
+                 ;
+                }
                 dis.close();
                 fis.close();
                 fis = null;
