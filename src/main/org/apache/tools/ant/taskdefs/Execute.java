@@ -229,19 +229,23 @@ public class Execute {
                 String[] cmd = {"command.com", "/c", "set" };
                 return cmd;
             }
-        } else if (Os.isFamily("z/os")) {
-            String[] cmd = {"/bin/env"};
-            return cmd;
-        } else if (Os.isFamily("tandem")) {
-//            String[] cmd = {"/bin/sh -c env"};
-            String[] cmd = {"/bin/env"};
-            return cmd;
-        } else if (Os.isFamily("unix")) {
-            // Generic UNIX
-            // Alternatively one could use: /bin/sh -c env
-            String[] cmd = {"/usr/bin/env"};
+        } else if (Os.isFamily("z/os") || Os.isFamily("tandem") 
+                   || Os.isFamily("unix")) {
+            // On most systems one could use: /bin/sh -c env
+
+            // Some systems have /bin/env, others /usr/bin/env, just try
+            String[] cmd = new String[1];
+            if (new File("/bin/env").canRead()) {
+                cmd[0] = "/bin/env";
+            } else if (new File("/usr/bin/env").canRead()) {
+                cmd[0] = "/usr/bin/env";
+            } else {
+                // rely on PATH
+                cmd[0] = "env";
+            }
             return cmd;
         } else if (Os.isFamily("netware") || Os.isFamily("os/400")) {
+            // rely on PATH
             String[] cmd = {"env"};
             return cmd;
         } else {
