@@ -83,11 +83,28 @@ public class Target implements TaskContainer {
     public void setDepends(String depS) {
         if (depS.length() > 0) {
             StringTokenizer tok =
-                new StringTokenizer(depS, ",", false);
+                new StringTokenizer(depS, ",", true);
             while (tok.hasMoreTokens()) {
                 String token = tok.nextToken().trim();
-                if (!token.equals("")) {
-                    addDependency(token);
+
+                //Make sure the dependency is not empty string
+                if (token.equals("") || token.equals(",")) {
+                    throw new BuildException( "Syntax Error: Depend attribute " +
+                                              "for target \"" + getName() + 
+                                              "\" has an empty string for dependency." );
+                }
+
+                addDependency(token);
+                
+                //Make sure that depends attribute does not
+                //end in a ,
+                if (tok.hasMoreTokens()) {
+                    token = tok.nextToken();
+                    if (!tok.hasMoreTokens() || !token.equals(",")) {
+                        throw new BuildException( "Syntax Error: Depend attribute " +
+                                                  "for target \"" + getName() + 
+                                                  "\" ends with a , character" );
+                    }
                 }
             }
         }
