@@ -1,51 +1,1555 @@
 <html>
+
 <head>
-<title>BuildTool Readme</title>
-<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<meta http-equiv="Content-Language" content="en-us">
+<meta name="GENERATOR" content="Microsoft FrontPage 4.0">
+<meta name="ProgId" content="FrontPage.Editor.Document">
+<title>Ant</title>
 </head>
 
-<body bgcolor="#FFFFFF">
-<h1>BuildTool</h1>
-<p>BuildTool is a Java based build tool. In theory it is kind of like make without 
-  makes wrinkles.</p>
-<h2>Why?</h2>
-<p>Why another build tool when there is already make, gnumake, nmake, jam, and 
-  others? Because all of those tools have limitations that its original author 
-  couldn't live with when developming software across multiple platforms. Make 
-  like tools are inherently shell based. They evaluate a set of dependencies and 
-  then execute commands not unlike what you would issue on a shell. This means 
-  that you can easily extend these tools by using or writing any program for the 
-  OS that you are working on. However, this also means that you limit yourself 
-  to the OS, or at least the OS type such as Unix, that you are working on.</p>
-<p>Makefiles are inherently evil as well. Anybody who has worked on them for any 
-  time has run into the dreaded tab problem. &quot;Is my command not executing 
-  because I have a space in front of my tab!!!&quot; said the original author 
-  of BuildTool way too many times. Tools like Jam took care of this to a great 
-  degree, but still use yet another format to use and remember.</p>
-<p>BuildTool is different. Instead a model where it is extended with shell based 
-  commands, it is extended using Java classes. Instead of writing shell commands, 
-  the configuration files are XML based calling out a target tree where various 
-  tasks get executed. Each task is run by an object which implments a particular 
-  Task interface. </p>
-<p>Granted, this removes some of the expressive power that is inherent by being 
-  able to construct a shell command such as `find . -name foo -exec rm {}` but 
-  it gives you the ability to be cross platform. To work anywhere and everywhere.And 
-  hey, if you really need to execute a shell command, BuildTool has an exec rule 
-  that allows different commands to be executed based on the OS that it is executing 
-  on. </p>
-<h2>How?</h2>
-<p>To get started using BuildTool check out the following topics:</p>
+<body>
+
+<h1>Ant User Manual</h1>
+<p>by&nbsp;</p>
 <ul>
-  <li>Installing BuildTool</li>
-  <li>Writing a simple BuildFile</li>
-  <li>Built in Tasks</li>
-  <li>Writing a new Task</li>
-  <li>API Documentation</li>
+  <li> Arnout J. Kuiper <a href="mailto:(ajkuiper@wxs.nl">(ajkuiper@wxs.nl</a>)</li>
+  <li>Stefano Mazzocchi <a href="mailto:(stefano@apache.org">(stefano@apache.org</a>)</li>
 </ul>
-<h2>License</h2>
-<h2>Feedback</h2>
-<p>To provide feedback on this software, please send mail to <a href="mailto:duncan@x180.com">duncan@x180.com</a>.</p>
+<p>Version 1.0.2 - 2000/01/26</p>
 <hr>
-<p>Java is a trademark of Sun Microsystems.</p>
+<h2>Table of Contents</h2>
+<ul>
+  <li><a href="#introduction">Introduction</a></li>
+  <li><a href="#getting">Getting Ant</a></li>
+  <li><a href="#buildingant">Building Ant</a></li>
+  <li><a href="#installing">Installing Ant</a></li>
+  <li><a href="#running">Running Ant</a></li>
+  <li><a href="#buildfile">Writing a simple buildfile</a>
+  <li><a href="#tasks">Built in Tasks</a>
+  <li><a href="#writingowntask">Writing your own task</a></li>
+  <li><a href="#license">License</a></li>
+  <li><a href="#feedback">Feedback</a></li>
+</ul>
+<hr>
+<h2><a name="introduction">Introduction</a></h2>
+<p>Ant is a Java based build tool. In theory it is kind of like make without
+makes wrinkles.</p>
+<h3>Why?</h3>
+<p>Why another build tool when there is already make, gnumake, nmake, jam, and
+others? Because all of those tools have limitations that its original author
+couldn't live with when developing software across multiple platforms. Make like
+tools are inherently shell based. They evaluate a set of dependencies and then
+execute commands not unlike what you would issue on a shell. This means that you
+can easily extend these tools by using or writing any program for the OS that
+you are working on. However, this also means that you limit yourself to the OS,
+or at least the OS type such as Unix, that you are working on.</p>
+<p>Makefiles are inherently evil as well. Anybody who has worked on them for any
+time has run into the dreaded tab problem. &quot;Is my command not executing
+because I have a space in front of my tab!!!&quot; said the original author of
+Ant way too many times. Tools like Jam took care of this to a great degree, but
+still use yet another format to use and remember.</p>
+<p>Ant is different. Instead a model where it is extended with shell based
+commands, it is extended using Java classes. Instead of writing shell commands,
+the configuration files are XML based calling out a target tree where various
+tasks get executed. Each task is run by an object which implements a particular
+Task interface.</p>
+<p>Granted, this removes some of the expressive power that is inherent by being
+able to construct a shell command such as `find . -name foo -exec rm {}` but it
+gives you the ability to be cross platform. To work anywhere and everywhere. And
+hey, if you really need to execute a shell command, Ant has an exec rule that
+allows different commands to be executed based on the OS that it is executing
+on.</p>
+<hr>
+<h2><a name="getting">Getting Ant</a></h2>
+<h3>Binary edition</h3>
+<p>The latest stable version of Ant can be downloaded from <a
+href="http://jakarta.apache.org/builds/tomcat/release/v3.0/ant.zip">http://jakarta.apache.org/builds/tomcat/release/v3.0/ant.zip</a>.
+If you like living on the edge, you can download the latest version from <a
+href="http://jakarta.apache.org/builds/tomcat/nightly/ant.zip">http://jakarta.apache.org/builds/tomcat/nightly/ant.zip</a>.</p>
+<h3>Source edition</h3>
+<p>If you prefer the source edition, you can download Ant from <a
+href="http://jakarta.apache.org/builds/tomcat/release/v3.0/src/jakarta-tools.src.zip">http://jakarta.apache.org/builds/tomcat/release/v3.0/src/jakarta-tools.src.zip</a>
+(latest stable) or from <a
+href="http://jakarta.apache.org/from-cvs/jakarta-tools/">http://jakarta.apache.org/from-cvs/jakarta-ant/</a>
+(current). See the section <a href="#buildingant">Building Ant</a> on how to
+build Ant from the source code.</p>
+<hr>
+<h2><a name="buildingant">Building Ant</a></h2>
+<p>Go to the directory <code>jakarta-ant</code>.</p>
+<p>Make sure the JDK is in you path.</p>
+<p>Run <code>bootstrap.bat</code> (Windows) or <code>bootstrap.sh</code> (UNIX)
+to build a bootstrap version of Ant.</p>
+<p>When finished, use</p>
+<blockquote>
+<p><code>build.bat -Ddist.dir=&lt;directory to install Ant&gt; dist</code></p>
+</blockquote>
+<p>for Windows, and</p>
+<blockquote>
+<p><code>build.sh -Ddist.dir=&lt;directory to install Ant&gt; dist</code></p>
+</blockquote>
+<p>for UNIX, to create a binary distribution of Ant. This distribution can be
+found in the directory you specified.</p>
+<hr>
+<h2><a name="installing">Installing Ant</a></h2>
+<p>The binary distribution of Ant consists of three directories: <code>bin</code>,
+<code>docs</code> and <code>lib</code>. Only the <code>bin</code> and <code>lib</code>
+directory are crucial for running Ant. To run Ant, the following must be done:</p>
+<ul>
+  <li>Add the <code>bin</code> directory to your path.</li>
+  <li>Set the ANT_HOME environment variable. This should be set to the directory
+    which contains the <code>bin</code> and <code>lib</code> directory.</li>
+  <li>Set the JAVA_HOME environment variable. This should be set to the
+    directory where the JDK is installed.</li>
+</ul>
+<h3>Windows</h3>
+<p>Assume Ant is installed in <code>c:\ant\</code>. The following sets up the
+environment:</p>
+<pre>set ANT_HOME=c:\ant
+set JAVA_HOME=c:\jdk1.2.2
+set PATH=%PATH%;%ANT_HOME%\bin</pre>
+<h3>Unix (bash)</h3>
+<p>Assume Ant is installed in <code>/usr/local/ant</code>. The following sets up
+the environment:</p>
+<pre>export ANT_HOME=/usr/local/ant
+export JAVA_HOME=/usr/local/jdk-1.2.2
+export PATH=${PATH}:${ANT_HOME}/bin</pre>
+<h3>Advanced</h3>
+<p>There are lots of variants that can be used to run Ant. What you need is at
+least the following:</p>
+<p>The classpath for Ant must contain <code>ant.jar</code> and <code>xml.jar</code>.</p>
+<p>When you need JDK functionality (like a <a href="#javac">javac</a> task, or a
+<a href="#rmic">rmic</a> task), then for JDK 1.1, the <code>classes.zip</code>
+file of the JDK must be added to the classpath; for JDK 1.2, <code>tools.jar</code>
+must be added.</p>
+<p>When you are executing platform specific applications (like the <a
+href="#exec">exec</a> task, or the <a href="#cvs">cvs</a> task), the property <code>ant.home</code>
+must be set to the directory containing a bin directory, which contains <code>antRun.bat</code>
+(Windows) or <code>antRun</code> (Unix).</p>
+<hr>
+<h2><a name="running">Running Ant</a></h2>
+<p>Running Ant is simple, when you installed it as described in the previous
+section. Just type <code>ant</code>.</p>
+<p>When nothing is specified, Ant looks for a <code>build.xml</code> file in the
+current directory. When found, it uses that file as a buildfile. To make Ant use
+another buildfile, use the commandline option <i>-buildfile &lt;file&gt;</i>,
+where <i>&lt;file&gt;</i> is the buildfile you want to use.</p>
+<p>You can also set properties which override properties specified in the
+buildfile. This can be done with the <i>-D&lt;property&gt;=&lt;value&gt;</i>
+option, where <i>&lt;property&gt;</i> is the name of the property and <i>&lt;value&gt;</i>
+the value.</p>
+<p>To more options are <i>-quiet</i> which instructs Ant to print less
+information on the console when running. The option <i>-verbose</i> on the other
+hand makes Ant print more information on the console.</p>
+<p>It is also possible to specify the target that should be executed. Default
+the target that is mentioned in the <i>default</i> attribute of the project is
+used. This can be overridden by adding the target name to the end of the
+commandline.</p>
+<p>Commandline option summary:</p>
+<pre>ant [options] [target]
+Options:
+-help                  print this message
+-quiet                 be extra quiet
+-verbose               be extra verbose
+-logfile &lt;file&gt;        use given file for log
+-buildfile &lt;file&gt;      use given buildfile
+-D&lt;property&gt;=&lt;value&gt;   use value for given property</pre>
+<h3>Examples</h3>
+<blockquote>
+<pre>ant</pre>
+</blockquote>
+<p>runs Ant using the <code>build.xml</code> file in the current directory, on
+the default target.</p>
+<blockquote>
+<pre>ant -buildfile test.xml</pre>
+</blockquote>
+<p>runs Ant using the <code>test.xml</code> file in the current directory, on
+the default target.</p>
+<blockquote>
+<pre>ant -buildfile test.xml dist</pre>
+</blockquote>
+<p>runs Ant using the <code>test.xml</code> file in the current directory, on a
+target called <code>dist</code>.</p>
+<blockquote>
+<pre>ant -buildfile test.xml -Dbuild=build/classes dist</pre>
+</blockquote>
+<p>runs Ant using the <code>test.xml</code> file in the current directory, on a
+target called <code>dist</code>. It also sets the <i>build</i> property to the
+value <i>build/classes</i>.</p>
+<h3>Running Ant by hand</h3>
+<p>When you have installed Ant in the do-it-yourself way, Ant can be started
+with:</p>
+<blockquote>
+<pre>set CLASSPATH=c:\ant\lib\ant.jar;c:\ant\lib\xml.jar;c:\jdk1.2.2\lib\tools.jar
+java -Dant.home=c:\ant org.apache.tools.ant.Main [options] [target]</pre>
+</blockquote>
+<p>These instructions actually do exactly the same as the <code>ant</code>
+command. The options and target are the same as when running Ant with the <code>ant</code>
+command.</p>
+<hr>
+<h2><a name="buildfile">Writing a simple buildfile</a></h2>
+<p>The buildfile is an written in XML. Each buildfile contains one project.</p>
+<h3>Projects</h3>
+<p>A project has three attributes:</p>
+<table border="1" cellpadding="2" cellspacing="0">
+  <tr>
+    <td valign="top"><b>Attribute</b></td>
+    <td valign="top"><b>Description</b></td>
+    <td align="center" valign="top"><b>Required</b></td>
+  </tr>
+  <tr>
+    <td valign="top">name</td>
+    <td valign="top">the name of the project.</td>
+    <td align="center" valign="top">Yes</td>
+  </tr>
+  <tr>
+    <td valign="top">default</td>
+    <td valign="top">the default target to use when no target is supplied.</td>
+    <td align="center" valign="top">Yes</td>
+  </tr>
+  <tr>
+    <td valign="top">basedir</td>
+    <td valign="top">the base directory from which all path calculations are
+      done. This attribute might be overridden by setting the &quot;basedir&quot;
+      property on forehand. When this is done, it might be ommitted in the
+      project tag.</td>
+    <td align="center" valign="top">Yes</td>
+  </tr>
+</table>
+<p>Each project defines one or more targets. A target is a set of tasks you want
+to be executed. When starting Ant, you can select which target you want to have
+executed. When no target is given, the project's default is used.</p>
+<h3>Targets</h3>
+<p>A target can depend on other targets. You might have a target for compiling,
+for instance, and a target for creating a distributable. You can only build a
+distributable when you have compiled first, so the distribute target depends on
+the compile target. Ant resolves all these dependencies.</p>
+<p>Ant tries to execute the targets in the <i>depends</i> attribute in the order
+they appear (from left to right). Keep in mind that it is possible that a target
+can get executed earlier when an earlier target depends on it:</p>
+<pre>&lt;target name=&quot;A&quot;/&gt;
+&lt;target name=&quot;B&quot; depends=&quot;A&quot;/&gt;
+&lt;target name=&quot;C&quot; depends=&quot;B&quot;/&gt;
+&lt;target name=&quot;D&quot; depends=&quot;C,B,A&quot;/&gt;</pre>
+<p>Suppose we want to execute target D. From its <i>depends</i> attribute, you
+might think that first target C, then B and then A is executed. Wrong! C depends
+on B, and B depends on A, so first A is executed, then B, then C, and finally D.</p>
+<p>In situations without such dependencies, you can rely on the order of the
+targets in the <i>depends</i> attributes.</p>
+<p>A target gets executed only once. Even when more targets depend on it (see
+the previous example).</p>
+<p>A target has the following attributes:</p>
+<table border="1" cellpadding="2" cellspacing="0">
+  <tr>
+    <td valign="top"><b>Attribute</b></td>
+    <td valign="top"><b>Description</b></td>
+    <td align="center" valign="top"><b>Required</b></td>
+  </tr>
+  <tr>
+    <td valign="top">name</td>
+    <td valign="top">the name of the project.</td>
+    <td align="center" valign="top">Yes</td>
+  </tr>
+  <tr>
+    <td valign="top">depends</td>
+    <td valign="top">a comma separated list of names of targets on which this
+      target depends.</td>
+    <td align="center" valign="top">No</td>
+  </tr>
+</table>
+<h3>Tasks</h3>
+<p>A task is a piece of code that can be executed.</p>
+<p>A task can have multiple attributes (or arguments if you prefer). The value
+of an attribute might contain references to a property. These references will be
+resolved before the task is executed.</p>
+<p>Tasks have a common structure:</p>
+<blockquote>
+<pre>&lt;name attribute1=&quot;value1&quot; attribute2=&quot;value2&quot; ... /&gt;</pre>
+</blockquote>
+<p>where name is the name of the task, attribute-x the attribute name, and
+value-x the value of this attribute.</p>
+<p>There is a set of <a href="#tasks">built in tasks</a>, but it is also very
+easy to <a href="#writingowntask">write your own</a>.</p>
+<h3>Properties</h3>
+<p>A project can have a set of properties. These might be set in the buildfile
+by the <a href="#property">property task</a>, or might be set outside Ant. A
+property has a name and a value. Properties might be used in in the value of
+task attributes. This is done by placing the property name between
+&quot;${&quot; and &quot;}&quot; in the attribute value.</p>
+<p>If there is a property called &quot;builddir&quot; with the value
+&quot;build&quot;, then this could be used in an attribute like this: &quot;${builddir}/classes&quot;.
+This is resolved as &quot;build/classes&quot;.</p>
+<h3>Examples</h3>
+<blockquote>
+<pre>&lt;project name=&quot;foo&quot; default=&quot;dist&quot; basedir=&quot;.&quot;&gt;
+  &lt;target name=&quot;init&quot;&gt;
+    &lt;tstamp/&gt;
+    &lt;property name=&quot;build&quot; value=&quot;build&quot; /&gt;
+    &lt;property name=&quot;dist&quot;  value=&quot;dist&quot; /&gt;
+  &lt;/target&gt;
+
+  &lt;target name=&quot;prepare&quot; depends=&quot;init&quot;&gt;
+    &lt;mkdir dir=&quot;${build}&quot; /&gt;
+  &lt;/target&gt;
+
+  &lt;target name=&quot;compile&quot; depends=&quot;prepare&quot;&gt;
+    &lt;javac srcdir=&quot;${src}&quot; destdir=&quot;${build}&quot; /&gt;
+  &lt;/target&gt;
+
+  &lt;target name=&quot;dist&quot; depends=&quot;compile&quot;&gt;
+    &lt;mkdir dir=&quot;${dist}/lib&quot; /&gt;
+    &lt;jar jarfile=&quot;${dist}/lib/foo${DSTAMP}.jar&quot;
+     basedir=&quot;${build}&quot; items=&quot;com&quot;/&gt;
+  &lt;/target&gt;
+
+  &lt;target name=&quot;clean&quot; depends=&quot;init&quot;&gt;
+    &lt;deltree dir=&quot;${build}&quot; /&gt;
+    &lt;deltree dir=&quot;${dist}&quot; /&gt;
+  &lt;/target&gt;
+&lt;/project&gt;
+</pre>
+</blockquote>
+<hr>
+<h2><a name="tasks">Built in tasks</a></h2>
+<ul>
+  <li><a href="#ant">Ant</a></li>
+  <li><a href="#chmod">Chmod</a></li>
+  <li><a href="#copydir">Copydir</a></li>
+  <li><a href="#copyfile">Copyfile</a></li>
+  <li><a href="#cvs">Cvs</a></li>
+  <li><a href="#delete">Delete</a></li>
+  <li><a href="#deltree">Deltree</a></li>
+  <li><a href="#echo">Echo</a></li>
+  <li><a href="#exec">Exec</a></li>
+  <li><a href="#expand">Expand</a></li>
+  <li><a href="#get">Get</a></li>
+  <li><a href="#gzip">GZip</a></li>
+  <li><a href="#jar">Jar</a></li>
+  <li><a href="#java">Java</a></li>
+  <li><a href="#javac">Javac</a></li>
+  <li><a href="#javadoc">Javadoc/Javadoc2</a></li>
+  <li><a href="#keysubst">KeySubst</a></li>
+  <li><a href="#mkdir">Mkdir</a></li>
+  <li><a href="#property">Property</a></li>
+  <li><a href="#replace">Replace</a></li>
+  <li><a href="#rmic">Rmic</a></li>
+  <li><a href="#taskdef">Taskdef</a></li>
+  <li><a href="#tstamp">Tstamp</a></li>
+  <li><a href="#zip">Zip</a></li>
+</ul>
+<hr>
+<h2><a name="ant">Ant</a></h2>
+<h3><b>Description:</b></h3>
+<p>Runs Ant on a supplied buildfile. This can be used to build subprojects.</p>
+<p>When the <i>antfile</i> attribute is omitted, the file &quot;build.xml&quot;
+in the supplied directory (<i>dir</i> attribute) is used.</p>
+<p>If no target attribute is supplied, the default target of the new project is
+used.</p>
+<p>The properties of the current project will be available in the new project.
+These properties will override the properties that are set in the new project.
+(See also the <a href="#property">properties task</a>).</p>
+<h3>Parameters:</h3>
+<table border="1" cellpadding="2" cellspacing="0">
+  <tr>
+    <td valign="top"><b>Attribute</b></td>
+    <td valign="top"><b>Description</b></td>
+    <td align="center" valign="top"><b>Required</b></td>
+  </tr>
+  <tr>
+    <td valign="top">antfile</td>
+    <td valign="top">the buildfile to use.</td>
+    <td valign="top" align="center">No</td>
+  </tr>
+  <tr>
+    <td valign="top">dir</td>
+    <td valign="top">the directory to use as a basedir for the new Ant project.</td>
+    <td valign="top" align="center">Yes</td>
+  </tr>
+  <tr>
+    <td valign="top">target</td>
+    <td valign="top">the target of the new Ant project that should be executed.</td>
+    <td valign="top" align="center">No</td>
+  </tr>
+</table>
+<h3>Examples</h3>
+<blockquote>
+<p><code>&lt;ant antfile=&quot;subproject/subbuild.xml&quot; dir=&quot;subproject&quot;
+target=&quot;compile&quot; /&gt;</code></p>
+<p><code>&lt;ant dir=&quot;subproject&quot; /&gt;</code></p>
+</blockquote>
+<hr>
+<h2><a name="chmod">Chmod</a></h2>
+<h3>Description</h3>
+<p>Changes the permissions of a file. Right now it has efect only under Unix.
+The permissions are also UNIX style, like the argument for the chmod command.</p>
+<h3>Parameters</h3>
+<table border="1" cellpadding="2" cellspacing="0">
+  <tr>
+    <td valign="top"><b>Attribute</b></td>
+    <td valign="top"><b>Description</b></td>
+    <td align="center" valign="top"><b>Required</b></td>
+  </tr>
+  <tr>
+    <td valign="top">src</td>
+    <td valign="top">the file of which the permissions must be changed.</td>
+    <td valign="top" align="center">Yes</td>
+  </tr>
+  <tr>
+    <td valign="top">perm</td>
+    <td valign="top">the new permissions.</td>
+    <td valign="top" align="center">Yes</td>
+  </tr>
+</table>
+<h3>Examples</h3>
+<blockquote>
+<p><code>&lt;chmod src=&quot;${dist}/start.sh&quot; perm=&quot;ugo+rx&quot;
+/&gt;</code></p>
+</blockquote>
+<p>makes the &quot;start.sh&quot; file readable and executable for anyone on a
+UNIX system.</p>
+<hr>
+<h2><a name="copydir">Copydir</a></h2>
+<h3>Description</h3>
+<p>Copies a directory tree from the source to the destination.</p>
+<p>It is possible to exclude a set of files from the files that are being
+copied. This can be done with the <i>ignore</i> attribute. This attribute
+contains the names of the files/directories that must be excluded from the copy.
+The names specified in the <i>ignore</i> attribute are just names, they do not
+contain any path information!</p>
+<h3>Parameters</h3>
+<table border="1" cellpadding="2" cellspacing="0">
+  <tr>
+    <td valign="top"><b>Attribute</b></td>
+    <td valign="top"><b>Description</b></td>
+    <td align="center" valign="top"><b>Required</b></td>
+  </tr>
+  <tr>
+    <td valign="top">src</td>
+    <td valign="top">the directory to copy.</td>
+    <td valign="top" align="center">Yes</td>
+  </tr>
+  <tr>
+    <td valign="top">dest</td>
+    <td valign="top">the directory to copy to.</td>
+    <td valign="top" align="center">Yes</td>
+  </tr>
+  <tr>
+    <td valign="top">ignore</td>
+    <td valign="top">comma separated list of filenames/directorynames to ignore.</td>
+    <td valign="top" align="center">No</td>
+  </tr>
+</table>
+<h3>Examples</h3>
+<blockquote>
+<p><code>&lt;copydir src=&quot;${src}/resources&quot; dest=&quot;${dist}&quot;
+/&gt;</code></p>
+</blockquote>
+<p>copies the directory <code>${src}/resources</code> to <code>${dist}</code>.</p>
+<blockquote>
+<p><code>&lt;copydir src=&quot;${src}/resources&quot; dest=&quot;${dist}&quot;
+ignore=&quot;old, Test.java&quot; /&gt;</code></p>
+</blockquote>
+<p>copies the directory <code>${src}/resources</code> to <code>${dist}</code>.
+All files/directories with the names <code>old</code> and <code>Test.java</code>
+are excluded from the copy. When <code>old</code> or <code>Test.java</code> is
+the name of a directory, then that whole directory is excluded from the copy.</p>
+<hr>
+<h2><a name="copyfile">Copyfile</a></h2>
+<h3>Description</h3>
+<p>Copies a file from the source to the destination. The file is only copied if
+the source file is newer than the destination file, or when the destination file
+does not exist.</p>
+<h3>Parameters</h3>
+<table border="1" cellpadding="2" cellspacing="0">
+  <tr>
+    <td valign="top"><b>Attribute</b></td>
+    <td valign="top"><b>Description</b></td>
+    <td align="center" valign="top"><b>Required</b></td>
+  </tr>
+  <tr>
+    <td valign="top">src</td>
+    <td valign="top">the filename of the file to copy.</td>
+    <td valign="top" align="center">Yes</td>
+  </tr>
+  <tr>
+    <td valign="top">dest</td>
+    <td valign="top">the filename of the file where to copy to.</td>
+    <td valign="top" align="center">Yes</td>
+  </tr>
+</table>
+<h3>Examples</h3>
+<blockquote>
+<p><code>&lt;copyfile src=&quot;test.java&quot; dest=&quot;subdir/test.java&quot;
+/&gt;</code></p>
+<p><code>&lt;copyfile src=&quot;${src}/index.html&quot; dest=&quot;${dist}/help/index.html&quot;
+/&gt;</code></p>
+</blockquote>
+<hr>
+<h2><a name="cvs">Cvs</a></h2>
+<h3>Description</h3>
+<p>Checks out a package/module from a <a href="http://www.cyclic.com/">CVS</a>
+repository.</p>
+<p>When doing automated builds, the <a href="#get">get task</a> should be
+preferred, because of speed.</p>
+<h3>Parameters</h3>
+<table border="1" cellpadding="2" cellspacing="0">
+  <tr>
+    <td valign="top"><b>Attribute</b></td>
+    <td valign="top"><b>Description</b></td>
+    <td align="center" valign="top"><b>Required</b></td>
+  </tr>
+  <tr>
+    <td valign="top">cvsRoot</td>
+    <td valign="top">the CVSROOT variable.</td>
+    <td align="center" valign="top">Yes</td>
+  </tr>
+  <tr>
+    <td valign="top">dest</td>
+    <td valign="top">the directory where the checked out files should be placed.</td>
+    <td align="center" valign="top">Yes</td>
+  </tr>
+  <tr>
+    <td valign="top">package</td>
+    <td valign="top">the package/module to check out.</td>
+    <td align="center" valign="top">Yes</td>
+  </tr>
+  <tr>
+    <td valign="top">tag</td>
+    <td valign="top">the tag of the package/module to check out.</td>
+    <td align="center" valign="top">No</td>
+  </tr>
+</table>
+<h3>Examples</h3>
+<blockquote>
+<p><code>&lt;cvs cvsRoot=&quot;:pserver:anoncvs@jakarta.apache.org:/home/cvspublic&quot;
+package=&quot;jakarta-tools&quot; dest=&quot;${ws.dir}&quot; /&gt;</code></p>
+</blockquote>
+<p>This checks out the package/module &quot;jakarta-tools&quot; from the CVS
+repository pointed to by the cvsRoot attribute, and stores the files in &quot;${ws.dir}&quot;.</p>
+<hr>
+<h2><a name="delete">Delete</a></h2>
+<h3>Description</h3>
+<p>Deletes a single file.</p>
+<h3>Parameters</h3>
+<table border="1" cellpadding="2" cellspacing="0">
+  <tr>
+    <td valign="top"><b>Attribute</b></td>
+    <td valign="top"><b>Description</b></td>
+    <td align="center" valign="top"><b>Required</b></td>
+  </tr>
+  <tr>
+    <td valign="top">file</td>
+    <td valign="top">the file to delete.</td>
+    <td valign="top" align="center">Yes</td>
+  </tr>
+</table>
+<h3>Examples</h3>
+<blockquote>
+<p><code>&lt;delete file=&quot;/lib/ant.jar&quot; /&gt;</code></p>
+<p><code>&lt;delete file=&quot;${ant}&quot; /&gt;</code></p>
+</blockquote>
+<hr>
+<h2><a name="deltree">Deltree</a></h2>
+<h3>Description</h3>
+<p>Deletes a directory with all its files and subdirectories.</p>
+<h3>Parameters</h3>
+<table border="1" cellpadding="2" cellspacing="0">
+  <tr>
+    <td valign="top"><b>Attribute</b></td>
+    <td valign="top"><b>Description</b></td>
+    <td align="center" valign="top"><b>Required</b></td>
+  </tr>
+  <tr>
+    <td valign="top">dir</td>
+    <td valign="top">the directory to delete.</td>
+    <td valign="top" align="center">Yes</td>
+  </tr>
+</table>
+<h3>Examples</h3>
+<blockquote>
+<p><code>&lt;deltree dir=&quot;dist&quot; /&gt;</code></p>
+<p><code>&lt;deltree dir=&quot;${dist}&quot; /&gt;</code></p>
+</blockquote>
+<hr>
+<h2><a name="echo">Echo</a></h2>
+<h3>Description</h3>
+<p>Echoes a message to System.out.</p>
+<h3>Parameters</h3>
+<table border="1" cellpadding="2" cellspacing="0">
+  <tr>
+    <td valign="top"><b>Attribute</b></td>
+    <td valign="top"><b>Description</b></td>
+    <td align="center" valign="top"><b>Required</b></td>
+  </tr>
+  <tr>
+    <td valign="top">message</td>
+    <td valign="top">the message to echo.</td>
+    <td valign="top" align="center">Yes</td>
+  </tr>
+</table>
+<h3>Examples</h3>
+<blockquote>
+<p><code>&lt;echo message=&quot;Hello world&quot; /&gt;</code></p>
+</blockquote>
+<hr>
+<h2><a name="exec">Exec</a></h2>
+<h3>Description</h3>
+<p>Executes a system command. When the <i>os</i> attribute is specified, then
+the command is only executed when Ant is run on one of the specified operating
+systems.</p>
+<h3>Parameters</h3>
+<table border="1" cellpadding="2" cellspacing="0">
+  <tr>
+    <td valign="top"><b>Attribute</b></td>
+    <td valign="top"><b>Description</b></td>
+    <td align="center" valign="top"><b>Required</b></td>
+  </tr>
+  <tr>
+    <td valign="top">command</td>
+    <td valign="top">the command to execute.</td>
+    <td align="center" valign="top">Yes</td>
+  </tr>
+  <tr>
+    <td valign="top">dir</td>
+    <td valign="top">the directory in which the command should be executed.</td>
+    <td align="center" valign="top">Yes</td>
+  </tr>
+  <tr>
+    <td valign="top">os</td>
+    <td valign="top">list of Operating Systems on which the command may be
+      executed.</td>
+    <td align="center" valign="top">No</td>
+  </tr>
+  <tr>
+    <td valign="top">output</td>
+    <td valign="top">the file to which the output of the command should be
+      redirected.</td>
+    <td align="center" valign="top">Yes</td>
+  </tr>
+</table>
+<h3>Examples</h3>
+<blockquote>
+<p><code>&lt;exec dir=&quot;${src}&quot; command=&quot;dir&quot; os=&quot;windows&quot;
+output=&quot;dir.txt&quot; /&gt;</code></p>
+</blockquote>
+<hr>
+<h2><a name="expand">Expand</a></h2>
+<h3>Description</h3>
+<p>Unzips a zipfile.</p>
+<h3>Parameters</h3>
+<table border="1" cellpadding="2" cellspacing="0">
+  <tr>
+    <td valign="top"><b>Attribute</b></td>
+    <td valign="top"><b>Description</b></td>
+    <td align="center" valign="top"><b>Required</b></td>
+  </tr>
+  <tr>
+    <td valign="top">src</td>
+    <td valign="top">zipfile to expand.</td>
+    <td align="center" valign="top">Yes</td>
+  </tr>
+  <tr>
+    <td valign="top">dest</td>
+    <td valign="top">directory where to store the expanded files.</td>
+    <td align="center" valign="top">Yes</td>
+  </tr>
+</table>
+<h3>Examples</h3>
+<blockquote>
+<p><code>&lt;expand src=&quot;${tomcat_src}/tools-src.zip&quot; dest=&quot;${tools.home}&quot;
+/&gt;</code></p>
+</blockquote>
+<hr>
+<h2><a name="get">Get</a></h2>
+<h3>Description</h3>
+<p>Gets a file from an URL. When the verbose option is &quot;on&quot;, this task
+displays a '.' for every 100 Kb retrieved.</p>
+<p>This task should be preferred above the <a href="#cvs">CVS task</a> when
+doing automated builds. CVS is significant slower than loading a compressed
+archive with http/ftp.</p>
+<h3>Parameters</h3>
+<table border="1" cellpadding="2" cellspacing="0">
+  <tr>
+    <td valign="top"><b>Attribute</b></td>
+    <td valign="top"><b>Description</b></td>
+    <td align="center" valign="top"><b>Required</b></td>
+  </tr>
+  <tr>
+    <td valign="top">src</td>
+    <td valign="top">the URL from which to retrieve a file.</td>
+    <td align="center" valign="top">Yes</td>
+  </tr>
+  <tr>
+    <td valign="top">dest</td>
+    <td valign="top">the file where to store the retrieved file.</td>
+    <td align="center" valign="top">Yes</td>
+  </tr>
+  <tr>
+    <td valign="top">verbose</td>
+    <td valign="top">show verbose information (&quot;on&quot;/&quot;off&quot;).</td>
+    <td align="center" valign="top">No</td>
+  </tr>
+</table>
+<h3>Examples</h3>
+<blockquote>
+<p><code>&lt;get src=&quot;http://jakarta.apache.org/&quot; dest=&quot;help/index.html&quot;
+/&gt;</code></p>
+</blockquote>
+<hr>
+<h2><a name="gzip">GZip</a></h2>
+<h3>Description</h3>
+<p>GZips a file.</p>
+<h3>Parameters</h3>
+<table border="1" cellpadding="2" cellspacing="0">
+  <tr>
+    <td valign="top"><b>Attribute</b></td>
+    <td valign="top"><b>Description</b></td>
+    <td align="center" valign="top"><b>Required</b></td>
+  </tr>
+  <tr>
+    <td valign="top">src</td>
+    <td valign="top">the file to gzip.</td>
+    <td align="center" valign="top">Yes</td>
+  </tr>
+  <tr>
+    <td valign="top">zipfile</td>
+    <td valign="top">the destination file.</td>
+    <td align="center" valign="top">Yes</td>
+  </tr>
+</table>
+<h3>Examples</h3>
+<blockquote>
+<p><code>&lt;gzip src=&quot;test.tar&quot; zipfile=&quot;test.tar.gz&quot; /&gt;</code></p>
+</blockquote>
+<hr>
+<h2><a name="jar">Jar</a></h2>
+<h3>Description</h3>
+<p>Jars a set of files.</p>
+<p>The <i>basedir</i> attribute is the reference directory from where to jar.</p>
+<p>When &quot;*&quot; is used for items, all files in the basedir, and its
+subdirectories, will be jarred. Otherwise all the files and directories
+mentioned in the items list will jarred. When a directory is specified, then all
+files within it are also jarred.</p>
+<p>With the <i>ignore</i> attribute, you can specify files or directories to
+ignore. These files will not be jarred. The items in the <i>ignore</i> attribute
+override the items in the <i>items</i> attribute. The names specified in the <i>ignore</i>
+attribute are just names, they do not contain any path information!</p>
+<h3>Parameters</h3>
+<table border="1" cellpadding="2" cellspacing="0">
+  <tr>
+    <td valign="top"><b>Attribute</b></td>
+    <td valign="top"><b>Description</b></td>
+    <td align="center" valign="top"><b>Required</b></td>
+  </tr>
+  <tr>
+    <td valign="top">jarfile</td>
+    <td valign="top">the jar-file to create.</td>
+    <td valign="top" align="center">Yes</td>
+  </tr>
+  <tr>
+    <td valign="top">basedir</td>
+    <td valign="top">the directory from which to jar the files.</td>
+    <td valign="top" align="center">Yes</td>
+  </tr>
+  <tr>
+    <td valign="top">items</td>
+    <td valign="top">a comma separated list of the files/directories to jar.</td>
+    <td valign="top" align="center">Yes</td>
+  </tr>
+  <tr>
+    <td valign="top">ignore</td>
+    <td valign="top">a comma separated list of the filenames/directorynames to
+      exclude from the jar.</td>
+    <td valign="top" align="center">No</td>
+  </tr>
+  <tr>
+    <td valign="top">manifest</td>
+    <td valign="top">the manifest file to use.</td>
+    <td valign="top" align="center">No</td>
+  </tr>
+</table>
+<h3>Examples</h3>
+<blockquote>
+<p><code>&lt;jar jarfile=&quot;${dist}/lib/app.jar&quot; basedir=&quot;${build}/classes&quot;
+items=&quot;*&quot; /&gt;</code></p>
+</blockquote>
+<p>jars all files in the <code>${build}/classes</code> directory in a file
+called <code>app.jar</code> in the <code>${dist}/lib</code> directory.</p>
+<blockquote>
+<p><code>&lt;jar jarfile=&quot;${dist}/lib/app.jar&quot; basedir=&quot;${build}/classes&quot;
+items=&quot;*&quot; ignore=&quot;Test.class&quot; /&gt;</code></p>
+</blockquote>
+<p>jars all files in the <code>${build}/classes</code> directory in a file
+called <code>app.jar</code> in the <code>${dist}/lib</code> directory.
+Files/directories with the name <code>Test.class</code> are excluded.</p>
+<hr>
+<h2><a name="java">Java</a></h2>
+<h3>Description</h3>
+<p>Executes a Java class within the running (Ant) VM or forks another VM if
+specified.</p>
+<p>Be careful that the executed class doesn't call System.exit(), because it
+will terminate the VM and thus Ant. In case this happens, it's highly suggested
+that you set the fork attribute so that System.exit() stops the other VM and not
+the one that is currently running Ant.</p>
+<h3>Parameters</h3>
+<table border="1" cellpadding="2" cellspacing="0">
+  <tr>
+    <td valign="top"><b>Attribute</b></td>
+    <td valign="top"><b>Description</b></td>
+    <td align="center" valign="top"><b>Required</b></td>
+  </tr>
+  <tr>
+    <td valign="top">class</td>
+    <td valign="top">the Java class to execute.</td>
+    <td align="center" valign="top">Yes</td>
+  </tr>
+  <tr>
+    <td valign="top">args</td>
+    <td valign="top">the arguments for the class that is executed.</td>
+    <td align="center" valign="top">No</td>
+  </tr>
+  <tr>
+    <td valign="top">fork</td>
+    <td valign="top">if enabled triggers the class execution in another VM
+      (disabled by default)</td>
+    <td align="center" valign="top">No</td>
+  </tr>
+  <tr>
+    <td valign="top">jvmargs</td>
+    <td valign="top">the arguments to pass to the forked VM (ignored if fork is
+      disabled)</td>
+    <td align="center" valign="top">No</td>
+  </tr>
+</table>
+<h3>Examples</h3>
+<blockquote>
+<p><code>&lt;java class=&quot;test.Main&quot; /&gt;</code></p>
+<p><code>&lt;java class=&quot;test.Main&quot; args=&quot;-h&quot; /&gt;</code></p>
+<p><code>&lt;java class=&quot;test.Main&quot; args=&quot;-h&quot;
+fork=&quot;yes&quot; jvmargs=&quot;-Xrunhprof:cpu=samples,file=log.txt,depth=3&quot;
+/&gt;</code></p>
+</blockquote>
+<hr>
+<h2><a name="javac">Javac</a></h2>
+<h3>Description</h3>
+<p>Compiles a source tree within the running (Ant) VM.</p>
+<p>The source and destination directory will be recursively scanned for Java
+source files to compile. Only Java files that have no corresponding class file
+or where the class file is older than the java file will be compiled.</p>
+<p>Files in the source tree, that are no java files, are copied to the
+destination directory, allowing support files to be located properly in the
+classpath.</p>
+<p>The directory structure of the source tree should follow the package
+hierarchy.</p>
+<p>It is possible to use different compilers. This can be selected with the
+&quot;build.compiler&quot; property. There are three choices:</p>
+<ul>
+  <li>classic (the standard compiler of JDK 1.1/1.2)</li>
+  <li>modern (the new compiler of JDK 1.3)</li>
+  <li>jikes (the <a
+    href="http://oss.software.ibm.com/developerworks/opensource/jikes/project">Jikes</a>
+    compiler)</li>
+</ul>
+<p>For JDK 1.1/1.2 is classic the default. For JDK 1.3 is modern the default.</p>
+<h3>Parameters</h3>
+<table border="1" cellpadding="2" cellspacing="0">
+  <tr>
+    <td valign="top"><b>Attribute</b></td>
+    <td valign="top"><b>Description</b></td>
+    <td align="center" valign="top"><b>Required</b></td>
+  </tr>
+  <tr>
+    <td valign="top">srcdir</td>
+    <td valign="top">location of the java files.</td>
+    <td align="center" valign="top">Yes</td>
+  </tr>
+  <tr>
+    <td valign="top">destdir</td>
+    <td valign="top">location where to store the class files.</td>
+    <td align="center" valign="top">Yes</td>
+  </tr>
+  <tr>
+    <td valign="top">classpath</td>
+    <td valign="top">the classpath to use.</td>
+    <td align="center" valign="top">No</td>
+  </tr>
+  <tr>
+    <td valign="top">bootclasspath</td>
+    <td valign="top">location of bootstrap class files.</td>
+    <td align="center" valign="top">No</td>
+  </tr>
+  <tr>
+    <td valign="top">extdirs</td>
+    <td valign="top">location of installed extensions.</td>
+    <td align="center" valign="top">No</td>
+  </tr>
+  <tr>
+    <td valign="top">debug</td>
+    <td valign="top">indicates whether there should be compiled with debug
+      information (&quot;on&quot;).</td>
+    <td align="center" valign="top">No</td>
+  </tr>
+  <tr>
+    <td valign="top">optimize</td>
+    <td valign="top">indicates whether there should be compiled with
+      optimization (&quot;on&quot;).</td>
+    <td align="center" valign="top">No</td>
+  </tr>
+  <tr>
+    <td valign="top">deprecation</td>
+    <td valign="top">indicates whether there should be compiled with deprecation
+      information (&quot;on&quot;).</td>
+    <td align="center" valign="top">No</td>
+  </tr>
+</table>
+<h3>Examples</h3>
+<blockquote>
+<p><code>&lt;javac srcdir=&quot;${src}&quot; destdir=&quot;${build}&quot; -classpath=&quot;xyz.jar&quot;
+-debug=&quot;on&quot; /&gt;</code></p>
+</blockquote>
+<hr>
+<h2><a name="javadoc">Javadoc/Javadoc2</a></h2>
+<h3>Description</h3>
+<p>Generates code documentation using the javadoc tool.</p>
+<p>The source directory will be recursively scanned for Java
+source files to but only those matching the inclusion rules will be passed to
+the javadoc tool. This allows wildcards to be used to choose between package
+names, reducing verbosity and management costs over time. This task, however,
+has no notion of &quot;changed&quot; files, unlike the <a href="#javac">javac</a>
+task, but it's not used so frequently.</p>
+<p>This task works seamlessly between different javadoc versions (1.1 and 1.2),
+with the obvious restriction that the 1.2 attributes will be ignored if run in a
+1.1 VM.</p>
+<p>NOTE: since javadoc calls System.exit(), we cannot run javadoc inside the
+same VM without breaking functionality. For this reason, this task always forks
+the VM. But this is not a performance penalty since javadoc is normally a heavy
+application and must be called just once.</p>
+<p>DEPRECATION: the javadoc2 task simply points to the javadoc task and it's
+there for back compatibility reasons. Since this task will be removed in future
+versions, you are strongly encouraged to use <a href="#javadoc">javadoc</a>
+instead.</p>
+<h3>Parameters</h3>
+<table border="1" cellpadding="2" cellspacing="0">
+  <tr>
+    <td valign="top"><b>Attribute</b></td>
+    <td valign="top"><b>Description</b></td>
+    <td align="center" valign="top"><b>Availability</b></td>
+    <td align="center" valign="top"><b>Required</b></td>
+  </tr>
+  <tr>
+    <td valign="top">sourcepath</td>
+    <td valign="top">Specify where to find source files</td>
+    <td align="center" valign="top">all</td>
+    <td align="center" valign="top">yes</td>
+  </tr>
+  <tr>
+    <td valign="top">destdir</td>
+    <td valign="top">Destination directory for output files</td>
+    <td align="center" valign="top">all</td>
+    <td align="center" valign="top">yes</td>
+  </tr>
+  <tr>
+    <td valign="top">sourcefiles</td>
+    <td valign="top">Space separated list of source files</td>
+    <td align="center" valign="top">all</td>
+    <td align="center" valign="middle" rowspan="2">at least one of the two</td>
+  </tr>
+  <tr>
+    <td valign="top">packagenames</td>
+    <td valign="top">Space separated list of package files (with terminating
+      wildcard)</td>
+    <td align="center" valign="top">all</td>
+  </tr>
+  <tr>
+    <td valign="top">Classpath</td>
+    <td valign="top">Specify where to find user class files</td>
+    <td align="center" valign="top">all</td>
+    <td align="center" valign="top">no</td>
+  </tr>
+  <tr>
+    <td valign="top">Bootclasspath</td>
+    <td valign="top">Override location of class files loaded by the bootstrap class loader</td>
+    <td align="center" valign="top">1.2</td>
+    <td align="center" valign="top">no</td>
+  </tr>
+  <tr>
+    <td valign="top">Extdirs</td>
+    <td valign="top">Override location of installed extensions</td>
+    <td align="center" valign="top">1.2</td>
+    <td align="center" valign="top">no</td>
+  </tr>
+  <tr>
+    <td valign="top">Overview</td>
+    <td valign="top">Read overview documentation from HTML file</td>
+    <td align="center" valign="top">1.2</td>
+    <td align="center" valign="top">no</td>
+  </tr>
+  <tr>
+    <td valign="top">Public</td>
+    <td valign="top">Show only public classes and members</td>
+    <td align="center" valign="top">all</td>
+    <td align="center" valign="top">no</td>
+  </tr>
+  <tr>
+    <td valign="top">Protected</td>
+    <td valign="top">Show protected/public classes and members (default)</td>
+    <td align="center" valign="top">all</td>
+    <td align="center" valign="top">no</td>
+  </tr>
+  <tr>
+    <td valign="top">Package</td>
+    <td valign="top">Show package/protected/public classes and members</td>
+    <td align="center" valign="top">all</td>
+    <td align="center" valign="top">no</td>
+  </tr>
+  <tr>
+    <td valign="top">Private</td>
+    <td valign="top">Show all classes and members</td>
+    <td align="center" valign="top">all</td>
+    <td align="center" valign="top">no</td>
+  </tr>
+  <tr>
+    <td valign="top">Old</td>
+    <td valign="top">Generate output using JDK 1.1 emulating doclet</td>
+    <td align="center" valign="top">1.2</td>
+    <td align="center" valign="top">no</td>
+  </tr>
+  <tr>
+    <td valign="top">Verbose</td>
+    <td valign="top">Output messages about what Javadoc is doing</td>
+    <td align="center" valign="top">1.2</td>
+    <td align="center" valign="top">no</td>
+  </tr>
+  <tr>
+    <td valign="top">Locale</td>
+    <td valign="top">Locale to be used, e.g. en_US or en_US_WIN</td>
+    <td align="center" valign="top">1.2</td>
+    <td align="center" valign="top">no</td>
+  </tr>
+  <tr>
+    <td valign="top">Encoding</td>
+    <td valign="top">Source file encoding name</td>
+    <td align="center" valign="top">all</td>
+    <td align="center" valign="top">no</td>
+  </tr>
+  <tr>
+    <td valign="top">Version</td>
+    <td valign="top">Include @version paragraphs</td>
+    <td align="center" valign="top">all</td>
+    <td align="center" valign="top">no</td>
+  </tr>
+  <tr>
+    <td valign="top">Use</td>
+    <td valign="top">Create class and package usage pages</td>
+    <td align="center" valign="top">1.2</td>
+    <td align="center" valign="top">no</td>
+  </tr>
+  <tr>
+    <td valign="top">Author</td>
+    <td valign="top">Include @author paragraphs</td>
+    <td align="center" valign="top">all</td>
+    <td align="center" valign="top">no</td>
+  </tr>
+  <tr>
+    <td valign="top">Splitindex</td>
+    <td valign="top"> Split index into one file per letter</td>
+    <td align="center" valign="top">1.2</td>
+    <td align="center" valign="top">no</td>
+  </tr>
+  <tr>
+    <td valign="top">Windowtitle</td>
+    <td valign="top">Browser window title for the documenation (text)</td>
+    <td align="center" valign="top">1.2</td>
+    <td align="center" valign="top">no</td>
+  </tr>
+  <tr>
+    <td valign="top">Doctitle</td>
+    <td valign="top">     Include title for the package index(first) page
+      (html-code)</td>
+    <td align="center" valign="top">1.2</td>
+    <td align="center" valign="top">no</td>
+  </tr>
+  <tr>
+    <td valign="top">Header</td>
+    <td valign="top">       Include header text for each page (html-code)</td>
+    <td align="center" valign="top">1.2</td>
+    <td align="center" valign="top">no</td>
+  </tr>
+  <tr>
+    <td valign="top">Footer</td>
+    <td valign="top">       Include footer text for each page (html-code)</td>
+    <td align="center" valign="top">1.2</td>
+    <td align="center" valign="top">no</td>
+  </tr>
+  <tr>
+    <td valign="top">bottom</td>
+    <td valign="top">       Include bottom text for each page (html-code)</td>
+    <td align="center" valign="top">1.2</td>
+    <td align="center" valign="top">no</td>
+  </tr>
+  <tr>
+    <td valign="top">link</td>
+    <td valign="top">               Create links to javadoc output at the given
+      URL</td>
+    <td align="center" valign="top">1.2</td>
+    <td align="center" valign="top">no</td>
+  </tr>
+  <tr>
+    <td valign="top">linkoffline</td>
+    <td valign="top"> Link to docs at &lt;url&gt; using package list at &lt;url2></td>
+    <td align="center" valign="top">1.2</td>
+    <td align="center" valign="top">no</td>
+  </tr>
+  <tr>
+    <td valign="top">group</td>
+    <td valign="top"> Group specified packages together in overview page</td>
+    <td align="center" valign="top">1.2</td>
+    <td align="center" valign="top">no</td>
+  </tr>
+  <tr>
+    <td valign="top">nodeprecated</td>
+    <td valign="top">             Do not include @deprecated information</td>
+    <td align="center" valign="top">all</td>
+    <td align="center" valign="top">no</td>
+  </tr>
+  <tr>
+    <td valign="top">nodeprecatedlist</td>
+    <td valign="top">         Do not generate deprecated list</td>
+    <td align="center" valign="top">1.2</td>
+    <td align="center" valign="top">no</td>
+  </tr>
+  <tr>
+    <td valign="top">notree</td>
+    <td valign="top">                   Do not generate class hierarchy</td>
+    <td align="center" valign="top">all</td>
+    <td align="center" valign="top">no</td>
+  </tr>
+  <tr>
+    <td valign="top">noindex</td>
+    <td valign="top">                  Do not generate index</td>
+    <td align="center" valign="top">all</td>
+    <td align="center" valign="top">no</td>
+  </tr>
+  <tr>
+    <td valign="top">nohelp</td>
+    <td valign="top">                   Do not generate help link</td>
+    <td align="center" valign="top">1.2</td>
+    <td align="center" valign="top">no</td>
+  </tr>
+  <tr>
+    <td valign="top">nonavbar</td>
+    <td valign="top">                 Do not generate navigation bar</td>
+    <td align="center" valign="top">1.2</td>
+    <td align="center" valign="top">no</td>
+  </tr>
+  <tr>
+    <td valign="top">serialwarn</td>
+    <td valign="top">               Generate warning about @serial tag</td>
+    <td align="center" valign="top">1.2</td>
+    <td align="center" valign="top">no</td>
+  </tr>
+  <tr>
+    <td valign="top">helpfile</td>
+    <td valign="top">Specifies the HTML help file to use</td>
+    <td align="center" valign="top">1.2</td>
+    <td align="center" valign="top">no</td>
+  </tr>
+  <tr>
+    <td valign="top">stylesheetfile</td>
+    <td valign="top">Specifies the CSS stylesheet to use</td>
+    <td align="center" valign="top">1.2</td>
+    <td align="center" valign="top">no</td>
+  </tr>
+  <tr>
+    <td valign="top">charset</td>
+    <td valign="top">        Charset for cross-platform viewing of generated documentation</td>
+    <td align="center" valign="top">1.2</td>
+    <td align="center" valign="top">no</td>
+  </tr>
+  <tr>
+    <td valign="top">docencoding</td>
+    <td valign="top">Output file encoding name</td>
+    <td align="center" valign="top">1.1</td>
+    <td align="center" valign="top">no</td>
+  </tr>
+</table>
+<h3>Examples</h3>
+<blockquote>
+<pre>&lt;javadoc packagenames=&quot;com.dummy.test.*&quot; 
+         sourcepath=&quot;src&quot; 
+         destdir=&quot;docs/api&quot;
+         author=&quot;true&quot;
+         version=&quot;true&quot;
+         use=&quot;true&quot;
+         windowtitle=&quot;Test API&quot;
+         doctitle=&quot;&lt;h1&gt;Test&lt;/h1&gt;&quot;
+         bottom=&quot;&lt;i&gt;Copyright &amp;#169; 2000 Dummy Corp. All Rights Reserved.&lt;/i&gt;&quot;
+/&gt;</pre>
+</blockquote>
+<hr>
+<h2><a name="keysubst">KeySubst</a></h2>
+<h3>Description</h3>
+<p>Performs keyword substitution in the source file, and writes the result to
+the destination file.</p>
+<p>Keys in the source file are of the form ${keyname}. The <i>keys</i> attribute
+contains key/value pairs. When a key is found in the <i>keys</i> attribute, then
+&quot;${keyname}&quot; is replaced by the corresponding value.</p>
+<p>The <i>keys</i> attribute is of the form
+&quot;name1=value1*name2=value2*name3=value3&quot;. The '*' is called the
+separator, which might we changed with the <i>sep</i> attribute.</p>
+<p>Note: the source file and destination file may not be the same.</p>
+<h3>Parameters</h3>
+<table border="1" cellpadding="2" cellspacing="0">
+  <tr>
+    <td valign="top"><b>Attribute</b></td>
+    <td valign="top"><b>Description</b></td>
+    <td align="center" valign="top"><b>Required</b></td>
+  </tr>
+  <tr>
+    <td valign="top">src</td>
+    <td valign="top">the source file.</td>
+    <td align="center" valign="top">Yes</td>
+  </tr>
+  <tr>
+    <td valign="top">dest</td>
+    <td valign="top">the destination file.</td>
+    <td align="center" valign="top">Yes</td>
+  </tr>
+  <tr>
+    <td valign="top">sep</td>
+    <td valign="top">the separator for the name/value pairs.</td>
+    <td align="center" valign="top">No</td>
+  </tr>
+  <tr>
+    <td valign="top">keys</td>
+    <td valign="top">name/value pairs for replacement.</td>
+    <td align="center" valign="top">Yes</td>
+  </tr>
+</table>
+<h3>Examples</h3>
+<blockquote>
+<p><code>&lt;keysubst src=&quot;abc.txt&quot; dest=&quot;def.txt&quot;
+keys=&quot;VERSION=1.0.3*DATE=2000-01-10&quot; /&gt;</code></p>
+</blockquote>
+<hr>
+<h2><a name="mkdir">Mkdir</a></h2>
+<h3>Description</h3>
+<p>Creates a directory. Also non-existent parent directories are created, when
+necessary.</p>
+<h3>Parameters</h3>
+<table border="1" cellpadding="2" cellspacing="0">
+  <tr>
+    <td valign="top"><b>Attribute</b></td>
+    <td valign="top"><b>Description</b></td>
+    <td align="center" valign="top"><b>Required</b></td>
+  </tr>
+  <tr>
+    <td valign="top">dir</td>
+    <td valign="top">the directory to create.</td>
+    <td align="center" valign="top">Yes</td>
+  </tr>
+</table>
+<h3>Examples</h3>
+<blockquote>
+<p><code>&lt;mkdir dir=&quot;${dist}&quot; /&gt;</code></p>
+<p><code>&lt;mkdir dir=&quot;${dist}/lib&quot; /&gt;</code></p>
+</blockquote>
+<hr>
+<h2><a name="property">Property</a></h2>
+<h3>Description</h3>
+<p>Sets a property (by name and value), or set of properties (from file or
+resource) in the project.</p>
+<p>When a property was set by the user, or was a property in a parent project
+(that started this project with the <a href="#ant">ant task</a>), then this
+property cannot be set, and will be ignored. This means that properties set
+outside the current project always override the properties of the current
+project.</p>
+<p>There are three ways to set properties:</p>
+<ul>
+  <li>By supplying both the <i>name</i> and <i>value</i> attribute.</li>
+  <li>By setting the <i>file</i> attribute with the filename of the property
+    file to load. This property file has the format as defined by the file used
+    in the class java.util.Properties.</li>
+  <li>By setting the <i>resource</i> attribute with the resource name of the
+    property file to load. This property file has the format as defined by the
+    file used in the class java.util.Properties.</li>
+</ul>
+<p>Although combinations of the three ways are possible, only one should be used
+at a time. Problems might occur with the order in which properties are set, for
+instance.</p>
+<p>The value part of the properties being set, might contain references to other
+properties. These references are resolved at the time these properties are set.
+This also holds for properties loaded from a property file.</p>
+<h3>Parameters</h3>
+<table border="1" cellpadding="2" cellspacing="0">
+  <tr>
+    <td valign="top"><b>Attribute</b></td>
+    <td valign="top"><b>Description</b></td>
+    <td align="center" valign="top"><b>Required</b></td>
+  </tr>
+  <tr>
+    <td valign="top">name</td>
+    <td valign="top">the name of the property to set.</td>
+    <td valign="top" align="center">No</td>
+  </tr>
+  <tr>
+    <td valign="top">value</td>
+    <td valign="top">the value of the property.</td>
+    <td valign="top" align="center">No</td>
+  </tr>
+  <tr>
+    <td valign="top">resource</td>
+    <td valign="top">the resource name of the property file.</td>
+    <td valign="top" align="center">No</td>
+  </tr>
+  <tr>
+    <td valign="top">file</td>
+    <td valign="top">the filename of the property file .</td>
+    <td valign="top" align="center">No</td>
+  </tr>
+</table>
+<h3>Examples</h3>
+<blockquote>
+<p><code>&lt;property name=&quot;foo.dist&quot; value=&quot;dist&quot;/&gt;</code></p>
+<p><code>&lt;property file=&quot;foo.properties&quot; /&gt;</code></p>
+<p><code>&lt;property resource=&quot;foo.properties&quot; /&gt;</code></p>
+</blockquote>
+<hr>
+<h2><a name="replace">Replace</a></h2>
+<h3>Description</h3>
+<p>Replaces the occurrence of a given string with another string in a file. When
+the <i>value</i> attribute is omitted, it defaults to &quot;&quot;.</p>
+<h3>Parameters</h3>
+<table border="1" cellpadding="2" cellspacing="0">
+  <tr>
+    <td valign="top"><b>Attribute</b></td>
+    <td valign="top"><b>Description</b></td>
+    <td align="center" valign="top"><b>Required</b></td>
+  </tr>
+  <tr>
+    <td valign="top">file</td>
+    <td valign="top">file for which the token should be replaced</td>
+    <td valign="top" align="center">Yes</td>
+  </tr>
+  <tr>
+    <td valign="top">token</td>
+    <td valign="top">the token which must be replaced</td>
+    <td valign="top" align="center">Yes</td>
+  </tr>
+  <tr>
+    <td valign="top">value</td>
+    <td valign="top">the new value for the token</td>
+    <td valign="top" align="center">No</td>
+  </tr>
+</table>
+<h3>Examples</h3>
+<blockquote>
+<p><code>&lt;replace file=&quot;${src}/index.html&quot; token=&quot;@@@&quot;
+value=&quot;wombat&quot; /&gt;</code></p>
+</blockquote>
+<hr>
+<h2><a name="rmic">Rmic</a></h2>
+<h3>Description</h3>
+<p>Runs the rmic compiler for a certain class.</p>
+<h3>Parameters</h3>
+<table border="1" cellpadding="2" cellspacing="0">
+  <tr>
+    <td valign="top"><b>Attribute</b></td>
+    <td valign="top"><b>Description</b></td>
+    <td align="center" valign="top"><b>Required</b></td>
+  </tr>
+  <tr>
+    <td valign="top">base</td>
+    <td valign="top">the location to store the compiled files.</td>
+    <td valign="top" align="center">Yes</td>
+  </tr>
+  <tr>
+    <td valign="top">class</td>
+    <td valign="top">the class for which to run <code>rmic</code>.</td>
+    <td valign="top" align="center">Yes</td>
+  </tr>
+</table>
+<h3>Examples</h3>
+<blockquote>
+<p><code>&lt;rmic class=&quot;com.xyz.FooBar&quot;
+base=&quot;${build}/classes&quot; /&gt;</code></p>
+</blockquote>
+<hr>
+<h2><a name="taskdef">Taskdef</a></h2>
+<h3>Description</h3>
+<p>Adds a task definition to the current project, such that this new task can be
+used in the current project. Two attributes are needed, the name that identifies
+this task uniquely, and the full name of the class (including the packages) that
+implements this task.</p>
+<p>Taskdef should be used to add your own tasks to the system. See also &quot;<a
+href="#writingowntask">Writing your own task</a>&quot;.</p>
+<h3>Parameters</h3>
+<table border="1" cellpadding="2" cellspacing="0">
+  <tr>
+    <td valign="top"><b>Attribute</b></td>
+    <td valign="top"><b>Description</b></td>
+    <td align="center" valign="top"><b>Required</b></td>
+  </tr>
+  <tr>
+    <td valign="top">name</td>
+    <td valign="top">the name of the task</td>
+    <td valign="top" align="center">Yes</td>
+  </tr>
+  <tr>
+    <td valign="top">class</td>
+    <td valign="top">the full class name implementing the task</td>
+    <td valign="top" align="center">Yes</td>
+  </tr>
+</table>
+<h3>Examples</h3>
+<blockquote>
+<p><code>&lt;taskdef name=&quot;myjavadoc&quot; value=&quot;com.mydomain.JavadocTask&quot;
+/&gt;</code></p>
+</blockquote>
+<hr>
+<h2><a name="tstamp">Tstamp</a></h2>
+<h3>Description</h3>
+<p>Sets the DSTAMP, TSTAMP and TODAY properties in the current project. The DSTAMP is
+in the &quot;yyyymmdd&quot; format, the TSTAMP is in the &quot;hhmm&quot; format
+and TODAY is &quot;month day year&quot;.</p>
+<p>These properties can be used in the buildfile, for instance, to create
+timestamped filenames or used to replace placeholder tags inside documents to
+indicate, for example, the release date. The best place for this task is in the <a
+href="#inittarget">init target</a>.</p>
+<h3>Parameters</h3>
+<table border="1" cellpadding="2" cellspacing="0">
+  <tr>
+    <td valign="top"><b>Attribute</b></td>
+    <td valign="top"><b>Description</b></td>
+    <td align="center" valign="top"><b>Required</b></td>
+  </tr>
+</table>
+<h3>Examples</h3>
+<blockquote>
+<p><code>&lt;tstamp/&gt;</code></p>
+</blockquote>
+<hr>
+<h2><a name="zip">Zip</a></h2>
+<h3>Description</h3>
+<p>Creates a zipfile.</p>
+<p>The <i>basedir</i> attribute is the reference directory from where to zip.</p>
+<p>When &quot;*&quot; is used for items, all files in the basedir, and its
+subdirectories, will be zipped. Otherwise all the files and directories
+mentioned in the items list will zipped. When a directory is specified, then all
+files within it are also zipped.</p>
+<p>With the <i>ignore</i> attribute, you can specify names of files or
+directories to ignore. These files will not be zipped. The items in the <i>ignore</i>
+attribute override the items in the <i>items</i> attribute. The names specified
+in the <i>ignore</i> attribute are just names, they do not contain any path
+information!</p>
+<h3>Parameters</h3>
+<table border="1" cellpadding="2" cellspacing="0">
+  <tr>
+    <td valign="top"><b>Attribute</b></td>
+    <td valign="top"><b>Description</b></td>
+    <td valign="top" align="center"><b>Required</b></td>
+  </tr>
+  <tr>
+    <td valign="top">zipfile</td>
+    <td valign="top">the zip-file to create.</td>
+    <td align="center" valign="top">Yes</td>
+  </tr>
+  <tr>
+    <td valign="top">basedir</td>
+    <td valign="top">the directory from which to zip the files.</td>
+    <td align="center" valign="top">Yes</td>
+  </tr>
+  <tr>
+    <td valign="top">items</td>
+    <td valign="top">a comma separated list of the files/directories to zip.</td>
+    <td align="center" valign="top">Yes</td>
+  </tr>
+  <tr>
+    <td valign="top">ignore</td>
+    <td valign="top">a comma separated list of the filenames/directorynames to
+      exclude from the zip.</td>
+    <td align="center" valign="top">No</td>
+  </tr>
+</table>
+<h3>Examples</h3>
+<blockquote>
+<p><code>&lt;zip zipfile=&quot;${dist}/manual.zip&quot; basedir=&quot;htdocs/manual&quot;
+items=&quot;*&quot; /&gt;</code></p>
+</blockquote>
+<p>zips all files in the <code>htdocs/manual</code> directory in a file called <code>manual.zip</code>
+in the <code>${dist}</code> directory.</p>
+<blockquote>
+<p><code>&lt;zip zipfile=&quot;${dist}/manual.zip&quot; basedir=&quot;htdocs/manual&quot;
+items=&quot;*&quot; ignore=&quot;mydocs, todo.html&quot;/&gt;</code></p>
+</blockquote>
+<p>zips all files in the <code>htdocs/manual</code> directory in a file called <code>manual.zip</code>
+in the <code>${dist}</code> directory. Files/directories with the names <code>mydocs</code>
+and <code>todo.html</code> are excluded.</p>
+<hr>
+<h2><a name="writingowntask">Writing your own task</a></h2>
+<p>It is very easy to write your own task:</p>
+<ol>
+  <li>Create a Java class that extends <code>org.apache.tools.ant.Task</code>.</li>
+  <li>For each attribute, write a setter method. The setter method must be a <code>public
+    void</code> method that takes one <code>String</code> as an argument. The
+    name of the method must begin with &quot;set&quot;, followed by the
+    attribute name, with the first character in uppercase, and the rest in
+    lowercase.</li>
+  <li>Write a <code>public void execute</code> method, with no arguments, that
+    throws a <code>BuildException</code>. This method implements the task
+    itself.</li>
+</ol>
+<p>It is important to know that Ant first calls the setters for the attributes
+it encounters for a specific task in the buildfile, before it executes is.</p>
+<p>Let's write our own task, that prints a message on the System.out stream. The
+task has one attribute called &quot;message&quot;.</p>
+<blockquote>
+<pre>public class MyVeryOwnTask extends Task {
+  private String msg;
+
+  // The method executing the task
+  public void execute() throws BuildException {
+    System.out.println(message);
+  }
+
+  // The setter for the &quot;message&quot; attribute
+  public void setMessage(String msg) {
+    this.msg = msg;
+  }
+}</pre>
+</blockquote>
+<p>It's really this simple;-)</p>
+<p>Adding your task to the system is rather simple too:</p>
+<ol>
+  <li>Make sure the class that implements your task is in the classpath when
+    starting Ant.</li>
+  <li>In the <i>init</i> target, add a <i>taskdef</i> task. This actually adds
+    your task to the system.</li>
+  <li>Use your task in the rest of the buildfile.</li>
+</ol>
+<h3>Example</h3>
+<blockquote>
+<pre>&lt;project name=&quot;TaskTest&quot; default=&quot;test&quot; basedir=&quot;.&quot;&gt;
+  &lt;target name=&quot;init&quot;&gt;
+    &lt;taskdef name=&quot;mytask&quot; class=&quot;com.mydomain.MyVeryOwnTask&quot;/&gt;
+  &lt;/target&gt;
+
+  &lt;target name=&quot;test&quot;&gt;
+    &lt;mytask myattr=&quot;wombat&quot; /&gt;
+  &lt;/target&gt;
+&lt;/project&gt;
+</pre>
+</blockquote>
+<p>Another way to add a task (more permanently), is to add the task name and
+implementing class name to the <code>default.properties</code> file in the <code>org.apache.tools.ant.taskdefs</code>
+package. Then you can use it as if it were a built in task.</p>
+<hr>
+<h2><a name="feedback">Feedback</a></h2>
+<p>To provide feedback on this software, please subscribe to the Ant Development
+Mail List <a href="mailto:(ant-dev-subscribe@jakarta.apache.org">(ant-dev-subscribe@jakarta.apache.org</a>)</p>
+<hr>
+<p align="center">Copyright &copy; 2000 Apache Software Foundation. All
+rights Reserved.</p>
+
 </body>
+
 </html>
