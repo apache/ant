@@ -335,9 +335,16 @@
                    classpathref="classpath"/>
       </and>
     </condition>
-    <available property="trax.present"
-               classname="javax.xml.transform.Transformer"
-               classpathref="classpath" />
+    <condition property="trax.present">
+      <or>
+        <and>
+          <isset property="javax.xml.transform.TransformerFactory"/>
+          <available classname="${javax.xml.transform.TransformerFactory}"
+                     classpathref="classpath" />
+        </and>
+        <available resource="META-INF/services/javax.xml.transform.TransformerFactory"/>
+      </or>
+    </condition>
     <available property="xslp.present"
                classname="com.kvisco.xsl.XSLProcessor"
                classpathref="classpath" />

@@ -26,7 +26,7 @@ if not "%OS%" == "Windows_NT" if exist bootstrap\nul deltree/y bootstrap
 if     "%OS%" == "Windows_NT" if exist build\nul rmdir/s/q build
 if not "%OS%" == "Windows_NT" if exist build\nul deltree/y build
 
-SET LOCALCLASSPATH=lib\xercesImpl.jar;lib\xmlParserAPIs.jar
+SET LOCALCLASSPATH=lib\xercesImpl.jar;lib\xml-apis.jar
 for %%i in (lib\optional\*.jar) do call src\script\lcp.bat %%i
 if exist "%JAVA_HOME%\lib\tools.jar" call src\script\lcp.bat %JAVA_HOME%\lib\tools.jar
 if exist "%JAVA_HOME%\lib\classes.zip" call src\script\lcp.bat %JAVA_HOME%\lib\classes.zip
