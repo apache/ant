@@ -303,7 +303,7 @@ public class Main implements AntMain {
         for (int i = 0; i < args.length; i++) {
             String arg = args[i];
 
-            if (arg.equals("-help")) {
+            if (arg.equals("-help") || arg.equals("-h")) {
                 printUsage();
                 return;
             } else if (arg.equals("-version")) {
@@ -317,7 +317,7 @@ public class Main implements AntMain {
             } else if (arg.equals("-verbose") || arg.equals("-v")) {
                 printVersion();
                 msgOutputLevel = Project.MSG_VERBOSE;
-            } else if (arg.equals("-debug")) {
+            } else if (arg.equals("-debug") || arg.equals("-d")) {
                 printVersion();
                 msgOutputLevel = Project.MSG_DEBUG;
             } else if (arg.equals("-noinput")) {
@@ -407,12 +407,12 @@ public class Main implements AntMain {
                                              + " using the -inputhandler"
                                              + " argument");
                 }
-            } else if (arg.equals("-emacs")) {
+            } else if (arg.equals("-emacs") || arg.equals("-e")) {
                 emacsMode = true;
-            } else if (arg.equals("-projecthelp")) {
+            } else if (arg.equals("-projecthelp") || arg.equals("-p")) {
                 // set the flag to display the targets and quit
                 projectHelp = true;
-            } else if (arg.equals("-find")) {
+            } else if (arg.equals("-find") || arg.equals("-s")) {
                 // eat up next arg if present, default to build.xml
                 if (i < args.length - 1) {
                     searchForThis = args[++i];
@@ -796,15 +796,15 @@ public class Main implements AntMain {
         StringBuffer msg = new StringBuffer();
         msg.append("ant [options] [target [target2 [target3] ...]]" + lSep);
         msg.append("Options: " + lSep);
-        msg.append("  -help                  print this message" + lSep);
-        msg.append("  -projecthelp           print project help information" + lSep);
+        msg.append("  -help, -h              print this message" + lSep);
+        msg.append("  -projecthelp, -p       print project help information" + lSep);
         msg.append("  -version               print the version information and exit" + lSep);
         msg.append("  -diagnostics           print information that might be helpful to" + lSep);
         msg.append("                         diagnose or report problems." + lSep);
         msg.append("  -quiet, -q             be extra quiet" + lSep);
         msg.append("  -verbose, -v           be extra verbose" + lSep);
-        msg.append("  -debug                 print debugging information" + lSep);
-        msg.append("  -emacs                 produce logging information without adornments" + lSep);
+        msg.append("  -debug, -d             print debugging information" + lSep);
+        msg.append("  -emacs, -e             produce logging information without adornments" + lSep);
         msg.append("  -logfile <file>        use given file for log" + lSep);
         msg.append("    -l     <file>                ''" + lSep);
         msg.append("  -logger <classname>    the class which is to perform logging" + lSep);
@@ -819,8 +819,8 @@ public class Main implements AntMain {
         msg.append("  -propertyfile <name>   load all properties from file with -D" + lSep);
         msg.append("                         properties taking precedence" + lSep);
         msg.append("  -inputhandler <class>  the class which will handle input requests" + lSep);
-        msg.append("  -find <file>           search for buildfile towards the root of the" + lSep);
-        msg.append("                         filesystem and use it" + lSep);
+        msg.append("  -find <file>           (s)earch for buildfile towards the root of" + lSep);
+        msg.append("    -s  <file>           the filesystem and use it" + lSep);
         System.out.println(msg.toString());
     }
 

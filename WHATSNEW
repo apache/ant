@@ -585,6 +585,9 @@ Other changes:
   this type can be nested in the <java> and <junit> tasks.
   Bugzilla Report 22533.
 
+* additional shortcuts for ant options (-d --> -debug, -e --> -emacs,
+  -h --> -help, -p --> -projecthelp, -s --> -find)
+
 Changes from Ant 1.5.3 to Ant 1.5.4
 ===================================
 
