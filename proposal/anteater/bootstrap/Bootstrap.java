@@ -17,293 +17,82 @@ import java.util.zip.*;
  * Ant should be done with itself whenever possible.
  *
  * @author James Duncan Davidson (duncan@apache.org)
+ * @author Conor MacNeill (conor@m64.com)
  */
 public class Bootstrap {
-   
-    private static String base = "../";
-    private static String crimsonSources = "../../../xml-crimson/src"; // relative to base
-    private static String[] modules = new String[]{"copy", "echo", "jar", "javac"};
-
+    
     /**
-     * Command line entry point.
+     * Command line entry point. This is the first part of the bootstrap
+     * where we go and set up the environment and generally do what is
+     * necessary to set up for Bootstrapping.
      */
-    public static void main(String[] args) {
-    
-        // check for secret sugar left by MRJ startup script...
-    
-        if (args.length > 0) {
-            if (args[0].equals("osx")) {
-                base = "";
-            }
-        }
-    
-        long startTime = System.currentTimeMillis();
-    
-        System.out.println("Starting Bootstrap....");
-
-        // ------------------------------------------------------------
-        // first create dirs that we need for strapping
-        // ------------------------------------------------------------
-
-        mkdir(base + "bootstrap/temp");
-        mkdir(base + "bootstrap/temp/crimson");
-        mkdir(base + "bootstrap/temp/main");
-        mkdir(base + "bootstrap/temp/tasks");
-        mkdir(base + "bootstrap/temp/taskjars");
-        
-        for (int i = 0; i < modules.length; i++) {
-            mkdir(base + "bootstrap/temp/tasks/" + modules[i]);
-        }
+    public static void main(String[] args) throws Exception {
       
-        // ------------------------------------------------------------
-        // build crimson
-        // ------------------------------------------------------------       
-        
-        System.out.println("CRIMSON: " + base + crimsonSources);
-        Vector v1 = getSources(base + crimsonSources);
-        doCompile(base + "bootstrap/temp/crimson", v1);
-        
-        // ------------------------------------------------------------
-        // build the main thing
-        // ------------------------------------------------------------        
-        
-        Vector v2 = getSources(base + "source/main");
-        doCompile(base + "bootstrap/temp/main", v2);
-        
-        // ------------------------------------------------------------
-        // now build each of the needed peices into their
-        // areas within the strapping area
-        // ------------------------------------------------------------
-
-        for (int i = 0; i < modules.length; i++) {
-            buildModule(modules[i]);
-        }
-
-        // ------------------------------------------------------------
-        // now, set classpaths and launch an Ant build to
-        // have Ant build itself nicely
-        // ------------------------------------------------------------
-
-        System.out.println();
-        System.out.println("-------------------------------------------");
-        System.out.println("STARTING REAL BUILD");
-        System.out.println("-------------------------------------------");
-        System.out.println();     
-        
-        String[] cmdarray = new String[9];
-        cmdarray[0] = "java";
-        cmdarray[1] = "-cp";
-        cmdarray[2] = base + "bootstrap/temp/main:" +
-                      base + "bootstrap/temp/crimson";
-        cmdarray[3] = "org.apache.ant.cli.Main";
-        cmdarray[4] = "-taskpath";
-        cmdarray[5] = base + "bootstrap/temp/taskjars";
-        cmdarray[6] = "-buildfile";
-        cmdarray[7] = base + "source/main.ant"; 
-        cmdarray[8] = "default";
-        
+        String[] command;
+        String classpath = null;
+      
+        // check to see if we have a compiler on the classpath. Right now
+        // we're just checking for the old compiler, but will want to check
+        // for the new compiler and use it if it exists. Later.
         try {
-            Runtime runtime = Runtime.getRuntime();
-            Process process = runtime.exec(cmdarray);
+            Class clazz = Class.forName("sun.tools.javac.Main");
+        } catch (ClassNotFoundException cnfe) { 
+            String javaHome = System.getProperty("java.home");
+            if (javaHome.endsWith("jre")) {
+                javaHome = javaHome.substring(0, javaHome.length() - 4);
+            }
+            // XXX should check if this exists and bail out if it doesn't
+            classpath = javaHome + "/lib/tools.jar" + File.pathSeparator + ".";
+        }
+        
+        // XXX really should check to see if compiling the bootstrap is necessary. :)
+        
+        System.out.println("Compiling Bootstrap2");
+        if (classpath == null) {
+            command = new String[] {"javac", "./Bootstrap2.java"};
+        } else {
+            command = new String[] {"javac", "-classpath", classpath, "./Bootstrap2.java"};
+        }
+        runCommand(command);
+        
+        System.out.println("Running Bootstrap2");
+        if (classpath == null) {
+            command = new String[] {"java", "Bootstrap2"};
+        } else {
+            command = new String[] {"java", "-cp", classpath, "Bootstrap2"};
+        }
+        runCommand(command);
+    }
+    
+    /** 
+     * Utility method for execing processes
+     */
+    static void runCommand(String[] command) throws IOException {
+        Runtime runtime = Runtime.getRuntime();
+        Process process = runtime.exec(command);
             
-            // echo output from process
+        // echo output from process
             
-            InputStream in = process.getInputStream();
-            byte[] buf = new byte[80];
-            int count = 0;
+        InputStream in = process.getInputStream();
+        byte[] buf = new byte[80];
+        int count = 0;
+        count = in.read(buf, 0, buf.length);
+        while (count != -1) {
+            System.out.write(buf, 0, count);
             count = in.read(buf, 0, buf.length);
+        }
+            
+        in = process.getErrorStream();
+        count = in.read(buf, 0, buf.length);          
+        if (count > 0) {
+            System.out.println();
+            System.out.println("Error Stream Output:");
+             
             while (count != -1) {
                 System.out.write(buf, 0, count);
                 count = in.read(buf, 0, buf.length);
             }
-            
-            in = process.getErrorStream();
-            count = in.read(buf, 0, buf.length);          
-            if (count > 0) {
-                System.out.println();
-                System.out.println("Error Stream Output:");
-             
-                while (count != -1) {
-                    System.out.write(buf, 0, count);
-                    count = in.read(buf, 0, buf.length);
-                }
-            }
-        } catch (Exception e) {
-            System.out.println("OUCHY: " + e);
-            return;
-        }
-        
-        System.out.println();
-        System.out.println("-------------------------------------------");
-        System.out.println("FINISHED WITH REAL BUILD");
-        System.out.println("-------------------------------------------");
-        System.out.println();
-        
-        // ------------------------------------------------------------
-        // Remove Temporary classes
-        // ------------------------------------------------------------
-
-        // delete(tempDirName);
-
-        // ------------------------------------------------------------
-        // Print Closer
-        // ------------------------------------------------------------
-
-        long endTime = System.currentTimeMillis();
-        long elapsd = endTime - startTime;
-        System.out.println("Bootstrap Time: " + (elapsd/1000) + "." + (elapsd%1000) + 
-                           " seconds");
-    }
-
-    private static void mkdir(String arg) {
-        File dir = new File(arg);
-        if (dir.exists() && !dir.isDirectory()) {
-            System.out.println("Oh, horrors! Dir " + arg + " " +
-                               "doesn't seem to be a dir... Stop!");
-            System.exit(1);
-        }
-        if (!dir.exists()) {
-            System.out.println("Making dir: " + arg);
-            dir.mkdir();
         }
     }
-
-    private static void buildModule(String arg) {
-        System.out.println("Building " + arg);
-     
-        // get all sources and hand them off to the compiler to
-        // build over into destination
-
-        Vector v = getSources(base + "source/coretasks/" + arg);
-        if (v.size() > 0) {
-            doCompile(base + "bootstrap/temp/tasks/" + arg, v);
-        }
-        
-
-        // move taskdef.properties for the module
-
-        copyfile(base + "source/coretasks/" + arg + "/taskdef.properties",
-                 base + "bootstrap/temp/tasks/" + arg + "/taskdef.properties");
-                 
-        // jar up tasks
-        try {
-            jarDir(new File(base + "bootstrap/temp/tasks/" + arg), 
-                new File(base + "bootstrap/temp/taskjars/" + arg + ".jar"));
-        } catch(IOException ioe) {
-            System.out.println("problem jar'ing: " + arg);
-        }
-    }
-
-    private static Vector getSources(String arg) {
-
-        File sourceDir = new File(arg);
-        
-        Vector v = new Vector();
-        scanDir(sourceDir, v, ".java");
-        return v;
-    }
-
-    private static void jarDir(File dir, File jarfile) throws IOException {
-        String[] files = dir.list();
-        if (files.length > 0) {
-            System.out.println("Jaring: " + jarfile);
-            FileOutputStream fos = new FileOutputStream(jarfile);
-            ZipOutputStream zos = new ZipOutputStream(fos);
-            jarDir(dir, "", zos);
-            zos.close();      
-        }
-    }
-    
-    private static void jarDir(File dir, String prefix, ZipOutputStream zos) throws 
-        IOException 
-    {
-        String[] files = dir.list();
-        for (int i = 0; i < files.length; i++) {
-            File f = new File(dir, files[i]);
-            if (f.isDirectory()) {
-                jarDir(f, prefix + "/" + files[i], zos);
-            } else {
-                ZipEntry ze = new ZipEntry(prefix + "/" + files[i]);
-                zos.putNextEntry(ze);
-                FileInputStream fis = new FileInputStream(f);
-                int count = 0;
-                byte[] buf = new byte[8 * 1024];
-                count = fis.read(buf, 0, buf.length);
-                while (count != -1) {
-                    zos.write(buf, 0, count);
-                    count = fis.read(buf, 0, buf.length);
-                }
-                fis.close();
-            }
-        }
-    }
-
-    private static void scanDir(File dir, Vector v, String endsWith) {
-        // System.out.println("user.dir=" + System.getProperty("user.dir"));
-        // System.out.println("Scanning: " + dir);
-        String[] files = dir.list();
-        // System.out.println("Files: " + files);
-        for (int i = 0; i < files.length; i++) {
-            File f = new File(dir, files[i]);
-            if (f.isDirectory()) {
-                scanDir(f, v, endsWith);
-            } else {
-                if (files[i].endsWith(endsWith)) {
-                    v.addElement(f);
-                }
-            }
-        }
-    }
-
-    private static void doCompile(String dest, Vector sources) {
-        System.out.println("   Compiling " + sources.size() + " files to " + dest);
-        
-        // XXX This should be more forgiving about compiling wherever
-        // under whatever compiler, but this works so...
-        
-        sun.tools.javac.Main compiler = new sun.tools.javac.Main(System.out, 
-                                                                 "javac");        
-        String[] args = new String[sources.size() + 4];
-        args[0] = "-classpath";
-        args[1] = base + "bootstrap/temp/main:" + 
-                  base + "bootstrap/temp/crimson";
-        args[2] = "-d";
-        args[3] = dest;
-        for (int i = 0; i < sources.size(); i++) {
-            args[4+i] = ((File)sources.elementAt(i)).toString();
-        }
-        
-        // System.out.print("javac ");
-        // for (int i = 0; i < args.length; i++) {
-        //     System.out.print(args[i] + " ");
-        // }
-        // System.out.println();
-        
-        compiler.compile(args);
-    }
-
-    private static void copyfile(String from, String dest) {
-        File fromF = new File(from);
-        File destF = new File(dest);
-        if (fromF.exists()) {
-            System.out.println("   Copying " + from);
-            try {
-                FileInputStream in = new FileInputStream(fromF);
-                FileOutputStream out = new FileOutputStream(destF);
-                byte[] buf = new byte[1024 * 16];
-                int count = 0;
-                count = in.read(buf, 0, buf.length);
-                if (count != -1) {
-                    out.write(buf, 0, count);
-                    count = in.read(buf, 0, buf.length);
-                }
-                
-                in.close();
-                out.close();
-            } catch (IOException ioe) {
-                System.out.println("OUCH: " + from);
-                System.out.println(ioe);
-            }
-        }
-    }
-}
+} 
+ 
