@@ -219,7 +219,8 @@ supports all attributes of <code>&lt;fileset&gt;</code>
 </table>
 <h3>Examples</h3>
 <pre>  &lt;fixcrlf srcdir=&quot;${src}&quot;
-       eol=&quot;lf&quot; eof=&quot;remove&quot;
+       eol=&quot;lf&quot; 
+       eof=&quot;remove&quot;
        includes=&quot;**/*.sh&quot;
   /&gt;</pre>
 <p>Replaces EOLs with LF characters and removes eof characters from
@@ -233,7 +234,7 @@ Tabs and spaces are left as is.
 EOF characters are left alone if run on
 DOS systems, and are removed if run on Unix systems.</p>
 <pre>  &lt;fixcrlf srcdir=&quot;${src}&quot;
-       tabs=&quot;add&quot;
+       tab=&quot;add&quot;
        includes=&quot;**/Makefile&quot;
   /&gt;</pre>
 <p>Sets EOLs according to local OS conventions, and
@@ -243,7 +244,7 @@ converts sequences of spaces and tabs to the minimal set of spaces and
 run on DOS systems, and are removed if run on Unix systems.
 Many versions of make require tabs prior to commands.</p>
       <pre>  &lt;fixcrlf srcdir=&quot;${src}&quot;
-       tabs=&quot;remove&quot;
+       tab=&quot;remove&quot;
        tablength=&quot;3&quot;
        eol=&quot;lf&quot;
        javafiles=&quot;yes&quot;
@@ -258,7 +259,7 @@ Many versions of make require tabs prior to commands.</p>
 	characters will be left untouched.
       </p>
 <pre>  &lt;fixcrlf srcdir=&quot;${src}&quot;
-       tabs=&quot;remove&quot;
+       tab=&quot;remove&quot;
        includes=&quot;**/README*&quot;
   /&gt;</pre>
 <p>Sets EOLs according to local OS conventions, and
