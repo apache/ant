@@ -324,6 +324,7 @@ public class AntClassLoader extends ClassLoader implements BuildListener {
         addSystemPackageRoot("java");
         addSystemPackageRoot("javax");
         addSystemPackageRoot("org.xml.sax");
+        addSystemPackageRoot("org.w3c.dom");
         addSystemPackageRoot("sun.reflect");
     }
 
