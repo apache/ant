@@ -150,29 +150,29 @@ public final class Extension
     /**
      * Enum indicating that extension is compatible with other extension.
      */
-    public static final Compatability COMPATIBLE =
-        new Compatability( "COMPATIBLE" );
+    public static final Compatibility COMPATIBLE =
+        new Compatibility( "COMPATIBLE" );
 
     /**
      * Enum indicating that extension requires an upgrade
      * of specification to be compatible with other extension.
      */
-    public static final Compatability REQUIRE_SPECIFICATION_UPGRADE =
-        new Compatability( "REQUIRE_SPECIFICATION_UPGRADE" );
+    public static final Compatibility REQUIRE_SPECIFICATION_UPGRADE =
+        new Compatibility( "REQUIRE_SPECIFICATION_UPGRADE" );
 
     /**
      * Enum indicating that extension requires a vendor
      * switch to be compatible with other extension.
      */
-    public static final Compatability REQUIRE_VENDOR_SWITCH =
-        new Compatability( "REQUIRE_VENDOR_SWITCH" );
+    public static final Compatibility REQUIRE_VENDOR_SWITCH =
+        new Compatibility( "REQUIRE_VENDOR_SWITCH" );
 
     /**
      * Enum indicating that extension requires an upgrade
      * of implementation to be compatible with other extension.
      */
-    public static final Compatability REQUIRE_IMPLEMENTATION_UPGRADE =
-        new Compatability( "REQUIRE_IMPLEMENTATION_UPGRADE" );
+    public static final Compatibility REQUIRE_IMPLEMENTATION_UPGRADE =
+        new Compatibility( "REQUIRE_IMPLEMENTATION_UPGRADE" );
 
     /**
      * Enum indicating that extension is incompatible with
@@ -180,8 +180,8 @@ public final class Extension
      * indicate). ie For example the other extension may have
      * a different ID.
      */
-    public static final Compatability INCOMPATIBLE =
-        new Compatability( "INCOMPATIBLE" );
+    public static final Compatibility INCOMPATIBLE =
+        new Compatibility( "INCOMPATIBLE" );
 
     /**
      * The name of the optional package being made available, or required.
@@ -503,10 +503,10 @@ public final class Extension
      * <code>Extension</code> with the specified <code>Extension</code>.
      *
      * @param required Description of the required optional package
-     * @return the enum indicating the compatability (or lack thereof)
+     * @return the enum indicating the compatibility (or lack thereof)
      *         of specifed extension
      */
-    public Compatability getCompatibilityWith( final Extension required )
+    public Compatibility getCompatibilityWith( final Extension required )
     {
         // Extension Name must match
         if( !m_extensionName.equals( required.getExtensionName() ) )
