@@ -225,6 +225,30 @@
         <code>jar xf</code>).</p>
       </answer>
     </faq>
+
+    <faq id="RedHat_ES_3">
+      <question>How do you get ant-1.6.x (or any version later than
+      1.5.2) to work on on RedHat ES 3?</question>
+      <answer>
+        <p>Redhat ES 3.0 comes installed with ant 1.5.2. Even if you
+        have your PATH and ANT_HOME variables set correctly to a later
+        version of ant, you will always be forced to use the
+        preinstalled version.</p>
+
+        <p>To use a later version of ant on this OS you could do the
+        following:</p>
+
+        <source><![CDATA[
+$ ant -version
+Apache Ant version 1.5.2-23 compiled on November 12 2003
+$ su -
+# rpm -e ant ant-libs
+# exit
+$ hash -r
+$ ant -version
+Apache Ant version 1.6.2 compiled on July 16 2004
+]]></source></answer>
+    </faq>
   </faqsection>
 
   <faqsection title="How do I ...">
