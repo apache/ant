@@ -43,7 +43,7 @@
 
   <target name="thisIsNotACircularReference">
     <property file="property5.properties"/>
-    <echo>b is ${a}</echo>
+    <echo>b is ${b}</echo>
   </target>
 
 </project>
