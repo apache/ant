@@ -5,21 +5,21 @@ Please go ahead and assign things that are not already assigned to
 anybody else (assignments look like [Stefan]) to yourself - and please
 remove items from this list once they are complete.
 
-* merge nested and container <mapper>s from HEAD
+* merge nested and container <mapper>s from HEAD [Matt]
 
-* merge <redirector>s from HEAD
+* merge <redirector>s from HEAD [Matt]
 
-* merge "<loadproperties> from resource" from HEAD
+* merge "<loadproperties> from resource" from HEAD [Matt]
 
-* merge "<fail> nested <condition> instead of if/unless" from HEAD
+* merge "<fail> nested <condition> instead of if/unless" from HEAD [Matt]
 
-* merge cygwin changes for ant script from HEAD
+* merge cygwin changes for ant script from HEAD [Matt]
 
-* merge Target.set/getLocation() from HEAD
+* merge Target.set/getLocation() from HEAD [Matt]
 
-* merge "<apply> differentiates between empty & up-to-date" from HEAD
+* merge "<apply> differentiates between empty & up-to-date" from HEAD [Matt]
 
-* Fix the Xml validation with scheam
+* Fix the Xml validation with schema
 
 * Fix or at least document support for tomcat 5.0 jsp
 
