@@ -784,7 +784,7 @@ public abstract class AbstractFileSet extends DataType
                     fs.additionalPatterns
                         .addElement(((PatternSet) e.nextElement()).clone());
                 }
-                fs.selectors = (Vector) fs.selectors.clone();
+                fs.selectors = new Vector(selectors);
                 return fs;
             } catch (CloneNotSupportedException e) {
                 throw new BuildException(e);
