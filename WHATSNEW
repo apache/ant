@@ -31,6 +31,8 @@ Fixed bugs:
 
 * <cvschangelog> could miss today's changes.
 
+* <concat> could append newline characters between concatenated files.
+
 Other changes:
 --------------
 
