@@ -1,5 +1,5 @@
 /*
- * Copyright  2001-2004 The Apache Software Foundation
+ * Copyright  2001-2005 The Apache Software Foundation
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -19,6 +19,7 @@ package org.apache.tools.ant;
 
 import org.apache.tools.ant.taskdefs.condition.Os;
 import org.apache.tools.ant.types.Resource;
+import org.apache.tools.ant.util.FileUtils;
 import org.apache.tools.ant.util.JavaEnvUtils;
 
 import junit.framework.TestCase;
@@ -225,9 +226,13 @@ public class DirectoryScannerTest extends BuildFileTest {
      * to Runtime.exec() must be made to create a link to test against.
      */
 
-    public void testSetFollowLinks() {
+    public void testSetFollowLinks() throws IOException {
         if (supportsSymlinks) {
             File linkFile = new File(System.getProperty("root"), "src/main/org/apache/tools/ThisIsALink");
+            if (JavaEnvUtils.isKaffe()) {
+                System.err.println("link exists pre-test? " + linkFile.exists());
+            }
+            
             try {
                 // add conditions and more commands as soon as the need arises
                 String[] command = new String[] {
@@ -245,6 +250,11 @@ public class DirectoryScannerTest extends BuildFileTest {
                 }
 
                 File dir = new File(System.getProperty("root"), "src/main/org/apache/tools");
+            if (JavaEnvUtils.isKaffe()) {
+                System.err.println("link exists after exec? " + linkFile.exists());
+                System.err.println("Ant knows it is a link? " + FileUtils.getFileUtils().isSymbolicLink(dir, "ThisIsALink"));
+            }
+
                 DirectoryScanner ds = new DirectoryScanner();
 
                 // followLinks should be true by default, but if this ever
@@ -301,9 +311,15 @@ public class DirectoryScannerTest extends BuildFileTest {
                            !haveTaskdefsPackage);
 
             } finally {
+            if (JavaEnvUtils.isKaffe()) {
+                System.err.println("link exists pre-delete? " + linkFile.exists());
+            }
                 if (!linkFile.delete()) {
                     throw new RuntimeException("Failed to delete " + linkFile);
                 }
+            if (JavaEnvUtils.isKaffe()) {
+                System.err.println("link exists post-delete? " + linkFile.exists());
+            }
             }
         }
     }
