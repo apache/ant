@@ -261,7 +261,7 @@ public class ChangeLogTask
         final RedirectingStreamHandler handler =
             new RedirectingStreamHandler( parser );
 
-        log( "ChangeLog command: [" + command.toString() + "]" );
+        log( "ChangeLog command: [" + command.toString() + "]", Project.MSG_VERBOSE );
 
         final Execute exe = new Execute( handler );
         exe.setWorkingDirectory( m_dir );
