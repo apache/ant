@@ -187,7 +187,7 @@ public class SignJar extends Task {
     }
 
     private void doOneJar(File jarSource, File jarTarget) throws BuildException {
-        if (project.getJavaVersion().equals(Project.JAVA_1_1)) {
+        if (Project.getJavaVersion().equals(Project.JAVA_1_1)) {
             throw new BuildException("The signjar task is only available on JDK versions 1.2 or greater");
         }
 
@@ -202,8 +202,6 @@ public class SignJar extends Task {
         if(isUpToDate(jarSource, jarTarget)) {
           return;
         }
-
-        final StringBuffer sb = new StringBuffer();
 
         final ExecTask cmd = (ExecTask) project.createTask("exec");
         cmd.setExecutable("jarsigner");
