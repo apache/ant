@@ -59,9 +59,10 @@ import java.io.File;
 import junit.framework.AssertionFailedError;
 
 import org.apache.tools.ant.BuildEvent;
-import org.apache.tools.ant.BuildListener;
-
 import org.apache.tools.ant.BuildFileTest;
+import org.apache.tools.ant.BuildListener;
+import org.apache.tools.ant.types.Path;
+
 /**
  * @author Nico Seessle <nico@seessle.de> 
  * @author <a href="mailto:stefan.bodewig@epost.de">Stefan Bodewig</a> 
@@ -156,6 +157,59 @@ public class AntTest extends BuildFileTest {
         }
     }
 
+    public void testReferenceInheritance() {
+        Path p = new Path(project);
+        project.addReference("path", p);
+        project.addReference("no-override", p);
+        testReference("testInherit", new String[] {"path", "path"},
+                      new boolean[] {true, true}, p);
+        testReference("testInherit", 
+                      new String[] {"no-override", "no-override"},
+                      new boolean[] {true, false}, p);
+        testReference("testInherit", 
+                      new String[] {"no-override", "no-override"},
+                      new boolean[] {false, false}, null);
+    }
+
+    public void testReferenceNoInheritance() {
+        Path p = new Path(project);
+        project.addReference("path", p);
+        project.addReference("no-override", p);
+        testReference("testNoInherit", new String[] {"path", "path"},
+                      new boolean[] {true, false}, p);
+        testReference("testNoInherit", new String[] {"path", "path"},
+                      new boolean[] {false, true}, null);
+        testReference("testInherit", 
+                      new String[] {"no-override", "no-override"},
+                      new boolean[] {true, false}, p);
+        testReference("testInherit", 
+                      new String[] {"no-override", "no-override"},
+                      new boolean[] {false, false}, null);
+    }
+
+    public void testReferenceRename() {
+        Path p = new Path(project);
+        project.addReference("path", p);
+        testReference("testRename", new String[] {"path", "path"},
+                      new boolean[] {true, false}, p);
+        testReference("testRename", new String[] {"path", "path"},
+                      new boolean[] {false, true}, null);
+        testReference("testRename", new String[] {"newpath", "newpath"},
+                      new boolean[] {false, true}, p);
+    }
+
+    protected void testReference(String target, String[] keys, 
+                                 boolean[] expect, Object value) {
+        ReferenceChecker rc = new ReferenceChecker(keys, expect, value);
+        project.addBuildListener(rc);
+        executeTarget(target);
+        AssertionFailedError ae = rc.getError();
+        if (ae != null) {
+            throw ae;
+        }
+        project.removeBuildListener(rc);
+    }
+
     private class BasedirChecker implements BuildListener {
         private String[] expectedBasedirs;
         private int calls = 0;
@@ -177,6 +231,44 @@ public class AntTest extends BuildFileTest {
                 try {
                     assertEquals(expectedBasedirs[calls++],
                                  event.getProject().getBaseDir().getAbsolutePath());
+                } catch (AssertionFailedError e) {
+                    error = e;
+                }
+            }
+        }
+
+        AssertionFailedError getError() {
+            return error;
+        }
+
+    }
+
+    private class ReferenceChecker implements BuildListener {
+        private String[] keys;
+        private boolean[] expectSame;
+        private Object value;
+        private int calls = 0;
+        private AssertionFailedError error;
+
+        ReferenceChecker(String[] keys, boolean[] expectSame, Object value) {
+            this.keys = keys;
+            this.expectSame = expectSame;
+            this.value = value;
+        }
+
+        public void buildStarted(BuildEvent event) {}
+        public void buildFinished(BuildEvent event) {}
+        public void targetFinished(BuildEvent event){}
+        public void taskStarted(BuildEvent event) {}
+        public void taskFinished(BuildEvent event) {}
+        public void messageLogged(BuildEvent event) {}
+
+        public void targetStarted(BuildEvent event) {
+            if (error == null) {
+                try {
+                    assertEquals("Call "+calls+" refid=\'"+keys[calls]+"\'", 
+                                 expectSame[calls],
+                                 event.getProject().getReferences().get(keys[calls++]) == value);
                 } catch (AssertionFailedError e) {
                     error = e;
                 }

@@ -117,6 +117,10 @@ Other changes:
 * <apply> has a new attribute relative that allows users to pass the
   filenames as relative instead of absolute paths on the command line.
 
+* References will now be copied into the child build by <ant> and
+  <antcall> unless a reference of the same name already exists in the
+  subbuild or inheritall has been set to false.
+
 Changes from Ant 1.4 to Ant 1.4.1
 ===========================================
 

@@ -1,0 +1,10 @@
+<project name="test" default="def" basedir=".">
+
+  <path id="no-override" />
+
+  <target name="def">
+    <fail>This build file should only be run from within the testcase</fail>
+  </target>
+
+  <target name="dummy" />
+</project>

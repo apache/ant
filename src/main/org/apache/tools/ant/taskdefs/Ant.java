@@ -108,6 +108,9 @@ public class Ant extends Task {
     /** the properties to pass to the new project */
     private Vector properties = new Vector();
     
+    /** the references to pass to the new project */
+    private Vector references = new Vector();
+
     /** the temporary project created to run the build file */
     private Project newProject;
 
@@ -256,14 +259,8 @@ public class Ant extends Task {
                 dir = project.getBaseDir();
             }
 
-            // Override with local-defined properties
-            Enumeration e = properties.elements();
-            while (e.hasMoreElements()) {
-                Property p=(Property) e.nextElement();
-                p.setProject(newProject);
-                p.execute();
-            }
-            
+            overrideProperties();
+
             if (antFile == null) {
                 antFile = "build.xml";
             }
@@ -278,6 +275,8 @@ public class Ant extends Task {
                 target = newProject.getDefaultTarget();
             }
 
+            addReferences();
+
             // Are we trying to call the target in which we are defined?
             if (newProject.getBaseDir().equals(project.getBaseDir()) &&
                 newProject.getProperty("ant.file").equals(project.getProperty("ant.file")) &&
@@ -291,6 +290,65 @@ public class Ant extends Task {
         } finally {
             // help the gc
             newProject = null;
+        }
+    }
+
+    /**
+     * Override the properties in the new project with the one
+     * explicitly defined as nested elements here.
+     */
+    private void overrideProperties() throws BuildException {
+        Enumeration e = properties.elements();
+        while (e.hasMoreElements()) {
+            Property p = (Property) e.nextElement();
+            p.setProject(newProject);
+            p.execute();
+        }
+    }
+
+    /**
+     * Add the references explicitly defined as nested elements to the
+     * new project.  Also copy over all references that don't override
+     * existing references in the new project if inheritall has been
+     * requested.
+     */
+    private void addReferences() throws BuildException {
+        Hashtable thisReferences = (Hashtable) project.getReferences().clone();
+        Hashtable newReferences = newProject.getReferences();
+        Enumeration e;
+        if (references.size() > 0) {
+            for(e = references.elements(); e.hasMoreElements();) {
+                Reference ref = (Reference)e.nextElement();
+                String refid = ref.getRefId();
+                if (refid == null) {
+                    throw new BuildException("the refid attribute is required for reference elements");
+                }
+                if (!thisReferences.containsKey(refid)) {
+                    log("Parent project doesn't contain any reference '"
+                        + refid + "'", 
+                        Project.MSG_WARN);
+                    continue;
+                }
+
+                Object o = thisReferences.remove(refid);
+                String toRefid = ref.getToRefid();
+                if (toRefid == null) {
+                    toRefid = refid;
+                }
+                newProject.addReference(toRefid, o);
+            }
+        }
+
+        // Now add all references that are not defined in the
+        // subproject, if inheritAll is true
+        if (inheritAll) {
+            for(e = thisReferences.keys(); e.hasMoreElements();) {
+                String key = (String)e.nextElement();
+                if (newReferences.containsKey(key)) {
+                    continue;
+                }
+                newProject.addReference(key, thisReferences.get(key));
+            }
         }
     }
 
@@ -335,5 +393,27 @@ public class Ant extends Task {
         p.setTaskName("property");
         properties.addElement( p );
         return p;
+    }
+
+    /** 
+     * create a reference element that identifies a data type that
+     * should be carried over to the new project.
+     */
+    public void addReference(Reference r) {
+        references.addElement(r);
+    }
+
+    /**
+     * Helper class that implements the nested &lt;reference&gt;
+     * element of &lt;ant&gt; and &lt;antcall&gt;.
+     */
+    public static class Reference 
+        extends org.apache.tools.ant.types.Reference {
+
+        public Reference() {super();}
+        
+        private String targetid=null;
+        public void setToRefid(String targetid) { this.targetid=targetid; }
+        public String getToRefid() { return targetid; }
     }
 }

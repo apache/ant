@@ -125,6 +125,14 @@ public class CallTarget extends Task {
         return callee.createProperty();
     }
 
+    /** 
+     * create a reference element that identifies a data type that
+     * should be carried over to the new project.
+     */
+    public void addReference(Ant.Reference r) {
+        callee.addReference(r);
+    }
+
     public void setTarget(String target) {
         subTarget = target;
     }
