@@ -5,7 +5,7 @@
  * version 1.1, a copy of which has been included with this distribution in
  * the LICENSE file.
  */
-package org.apache.ant.modules.basic;
+package org.apache.myrmidon.libs.runtime;
 
 import java.util.ArrayList;
 import org.apache.avalon.framework.component.ComponentException;
@@ -13,14 +13,14 @@ import org.apache.avalon.framework.component.ComponentManager;
 import org.apache.avalon.framework.component.Composable;
 import org.apache.avalon.framework.context.Context;
 import org.apache.myrmidon.api.AbstractTask;
-import org.apache.myrmidon.api.TaskException;
 import org.apache.myrmidon.api.DefaultTaskContext;
 import org.apache.myrmidon.api.TaskContext;
+import org.apache.myrmidon.api.TaskException;
 import org.apache.myrmidon.components.manager.ProjectManager;
 import org.apache.myrmidon.components.model.Project;
 
 /**
- * This is abstract base class for tasklets.
+ * TODO: Determine if low cost antcalls are needed.
  *
  * @author <a href="mailto:donaldp@apache.org">Peter Donald</a>
  */
@@ -53,7 +53,7 @@ public class AntCall
     {
         m_target = target;
     }
-
+/*
     public Property createParam()
         throws Exception
     {
@@ -64,7 +64,7 @@ public class AntCall
         m_properties.add( property );
         return property;
     }
-
+*/
     public void execute()
         throws TaskException
     {
@@ -73,19 +73,20 @@ public class AntCall
             throw new TaskException( "Target attribute must be specified" );
         }
 
+/*
         final int size = m_properties.size();
         for( int i = 0; i < size; i++ )
         {
             final Property property = (Property)m_properties.get( i );
             property.execute();
         }
-
+*/
         getLogger().info( "Calling target " + m_target );
 
         //This calls startProject() which is probably not wanted???
         //TODO: FIXME when scoping is decided
         //m_projectManager.executeProject( m_project, m_target );
-        getLogger().warn( "ANTCALL NOT IMPLEMENTED - waiting for " + 
+        getLogger().warn( "ANTCALL NOT IMPLEMENTED - waiting for " +
                           "scope rules to be decided" );
     }
 }

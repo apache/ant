@@ -4,8 +4,7 @@
 
     <!-- basic tasks/datatypes/coverters required in most environments -->
     <task name="echo" classname="org.apache.myrmidon.libs.core.Echo" />
-    <task name="property" classname="org.apache.ant.modules.basic.Property" />
-    <task name="ant-call" classname="org.apache.ant.modules.basic.AntCall" />
+    <task name="property" classname="org.apache.myrmidon.libs.core.Property" />
 
   </types>
   

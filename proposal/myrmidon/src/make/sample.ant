@@ -39,23 +39,26 @@ Legal:
   <target name="typedef-test">
     <typedef name="echo2" 
              type="task" 
-             classname="org.apache.ant.modules.basic.Echo" 
+             classname="org.apache.myrmidon.libs.core.Echo" 
              lib="../../dist/lib/core.atl" />
 
     <echo2 message="Luke to Echo base. Can you hear me?"/>
   </target>
 
   <target name="converterdef-test">
-    <converterdef classname="org.apache.ant.modules.basic.StringToClassConverter"
+    <converterdef classname="org.apache.myrmidon.libs.core.StringToClassConverter"
                   source-type="java.lang.String"
                   destination-type="java.lang.Class"
                   lib="../../dist/lib/core.atl" />
   </target> 
 
   <target name="ant-call-test">
+    <!-- test elided until we decide scope and necessity of ant-call -->
+<!--
     <ant-call target="ant-call-test-target">
       <param name="blah" value="blah-value" />
     </ant-call>
+-->
   </target>
 
   <target name="ant-call-test-target">

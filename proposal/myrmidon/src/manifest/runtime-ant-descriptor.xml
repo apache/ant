@@ -6,7 +6,8 @@
     <task name="facility" classname="org.apache.myrmidon.libs.runtime.Facility" />
     <task name="typedef" classname="org.apache.myrmidon.libs.runtime.TypeDef" />
     <task name="converterdef" classname="org.apache.myrmidon.libs.runtime.ConverterDef" />
-    <task name="import" classname="org.apache.myrmidon.libs.runtime.ImportTask" />
+    <task name="import" classname="org.apache.myrmidon.libs.runtime.Import" />
+    <task name="ant-call" classname="org.apache.myrmidon.libs.runtime.AntCall" />
 
   </types>
 

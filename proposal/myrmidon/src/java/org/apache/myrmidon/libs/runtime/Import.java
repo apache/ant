@@ -23,7 +23,7 @@ import org.apache.myrmidon.components.deployer.DeploymentException;
  *
  * @author <a href="mailto:donaldp@apache.org">Peter Donald</a>
  */
-public class ImportTask
+public class Import
     extends AbstractTask
     implements Composable
 {
