@@ -1569,16 +1569,15 @@ public class Project {
      * or <code>"yes"</code> is found, ignoring case.
      *
      * @param s The string to convert to a boolean value.
-     *          Must not be <code>null</code>.
      *
      * @return <code>true</code> if the given string is <code>"on"</code>,
      *         <code>"true"</code> or <code>"yes"</code>, or
      *         <code>false</code> otherwise.
      */
     public static boolean toBoolean(String s) {
-        return (s.equalsIgnoreCase("on")
-                || s.equalsIgnoreCase("true")
-                || s.equalsIgnoreCase("yes"));
+        return ("on".equalsIgnoreCase(s)
+                || "true".equalsIgnoreCase(s)
+                || "yes".equalsIgnoreCase(s));
     }
 
     /**
