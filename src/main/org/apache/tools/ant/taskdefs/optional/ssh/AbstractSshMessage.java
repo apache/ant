@@ -138,14 +138,26 @@ public abstract class AbstractSshMessage {
     protected final int trackProgress(int filesize, int totalLength, 
                                       int percentTransmitted) {
 
-        int percent = (int) Math.round(Math.floor((totalLength 
-                                                   / (double)filesize) 
-                                                  * 100));
+        int percent = (int) Math.round(Math.floor((totalLength /
+                                                   (double)filesize) * 100));
+
         if (percent > percentTransmitted) {
-            if (filesize < 1048576 && (percent % 10 != 0)) {
-                // do not track between tenths
+            if (filesize < 1048576) {
+                if (percent % 10 == 0) {
+                    if (percent == 100) {
+                        System.out.println(" 100%");
+                    } else {
+                        System.out.print("*");
+                    }
+                }
             } else {
-                log("" + percent + "%");
+                if (percent == 50) {
+                    System.out.println(" 50%");
+                } else if (percent == 100) {
+                    System.out.println(" 100%");
+                } else {
+                    System.out.print(".");
+                }
             }
         }
 
