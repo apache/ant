@@ -82,7 +82,7 @@ public class JavaEnvUtils {
 
     /** Version of currently running VM. */
     private static String javaVersion;
-    
+
     /** floating version of the JVM */
     private static int javaVersionNumber;
 
@@ -99,7 +99,7 @@ public class JavaEnvUtils {
 
     /** array of packages in the runtime */ 
     private static Vector jrePackages;
-    
+
 
     static {
 
@@ -266,12 +266,12 @@ public class JavaEnvUtils {
         }
         return executable;
     }
-        
+
     /**
      * demand creation of the package list.
      * When you add a new package, add a new test below
      */
-     
+
     private static void buildJrePackages() {
         jrePackages=new Vector();
         switch(javaVersionNumber) {
@@ -303,7 +303,7 @@ public class JavaEnvUtils {
             case 11:    
             default:
                 //things like sun.reflection, sun.misc, sun.net
-                jrePackages.addElement("sun.");
+                jrePackages.addElement("sun");
                 jrePackages.addElement("java");
                 jrePackages.addElement("javax");
                 break;

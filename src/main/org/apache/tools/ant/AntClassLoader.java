@@ -516,7 +516,8 @@ public class AntClassLoader extends ClassLoader implements BuildListener {
      *                    Should not be <code>null</code>.
      */
     public void addSystemPackageRoot(String packageRoot) {
-        systemPackages.addElement(packageRoot + ".");
+        systemPackages.addElement(packageRoot 
+                                  + (packageRoot.endsWith(".") ? "" : "."));
     }
 
     /**
@@ -529,7 +530,8 @@ public class AntClassLoader extends ClassLoader implements BuildListener {
      *                    Should not be <code>null</code>.
      */
     public void addLoaderPackageRoot(String packageRoot) {
-        loaderPackages.addElement(packageRoot + ".");
+        loaderPackages.addElement(packageRoot
+                                  + (packageRoot.endsWith(".") ? "" : "."));
     }
 
     /**
