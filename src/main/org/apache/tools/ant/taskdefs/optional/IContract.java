@@ -57,6 +57,7 @@ package org.apache.tools.ant.taskdefs.optional;
 
 
 
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -69,16 +70,24 @@ import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.BuildListener;
 import org.apache.tools.ant.DirectoryScanner;
 import org.apache.tools.ant.Project;
-import org.apache.tools.ant.Task;
 import org.apache.tools.ant.taskdefs.Java;
+import org.apache.tools.ant.taskdefs.Javac;
+import org.apache.tools.ant.taskdefs.MatchingTask;
 import org.apache.tools.ant.taskdefs.Mkdir;
+import org.apache.tools.ant.taskdefs.compilers.DefaultCompilerAdapter;
 import org.apache.tools.ant.types.FileSet;
 import org.apache.tools.ant.types.Path;
 import org.apache.tools.ant.types.Reference;
 
 /**
- * Instruments Java classes with <a href="http://www.reliable-systems.com/tools/">iContract<a>
+ * Instruments Java classes with <a href="http://www.reliable-systems.com/tools/">iContract</a>
  * DBC preprocessor.
+ * <br/>
+ * The task can generate a properties file for <a href="http://hjem.sol.no/hellesoy/icontrol.html">iControl</a>,
+ * a graphical user interface that lets you turn on/off assertions. iControl generates a control file that you can refer to
+ * from this task using the controlfile attribute.
+ * <p/>
+ * Thanks to Rainer Schmitz for enhancements and comments.
  *
  * @author <a href="mailto:aslak.hellesoy@bekk.no">Aslak Hellesøy</a>
  *
@@ -91,37 +100,54 @@ import org.apache.tools.ant.types.Reference;
  *   </tr>
  *   <tr>
  *     <td valign="top">srcdir</td>
- *     <td valign="top">Location of the java files</td>
+ *     <td valign="top">Location of the java files.</td>
  *     <td valign="top" align="center">Yes</td>
  *   </tr>
  *   <tr>
  *     <td valign="top">instrumentdir</td>
- *     <td valign="top">Indicates where the instrumented java and class files
- *       should go</td>
+ *     <td valign="top">Indicates where the instrumented source files should go.</td>
  *     <td valign="top" align="center">Yes</td>
  *   </tr>
  *   <tr>
  *     <td valign="top">repositorydir</td>
- *     <td valign="top">Indicates where the repository java and class files should
- *       go</td>
+ *     <td valign="top">Indicates where the repository source files should go.</td>
  *     <td valign="top" align="center">Yes</td>
+ *   </tr>
+ *   <tr>
+ *     <td valign="top">builddir</td>
+ *     <td valign="top">Indicates where the compiled instrumented classes should go.
+ *       Defaults to the value of instrumentdir.
+ *       </p>
+ *       <em>NOTE:</em> Don't use the same directory for compiled instrumented classes
+ *       and uninstrumented classes. It will break the dependency checking. (Classes will
+ *       not be reinstrumented if you change them).</td>
+ *     <td valign="top" align="center">No</td>
+ *   </tr>
+ *   <tr>
+ *     <td valign="top">repositorybuilddir</td>
+ *     <td valign="top">Indicates where the compiled repository classes should go.
+ *       Defaults to the value of repositorydir.</td>
+ *     <td valign="top" align="center">No</td>
  *   </tr>
  *   <tr>
  *     <td valign="top">pre</td>
  *     <td valign="top">Indicates whether or not to instrument for preconditions.
- *       Defaults to <code>true</code></td>
+ *       Defaults to <code>true</code> unless controlfile is specified, in which case it
+ *       defaults to <code>false</code>.</td>
  *     <td valign="top" align="center">No</td>
  *   </tr>
  *   <tr>
  *     <td valign="top">post</td>
  *     <td valign="top">Indicates whether or not to instrument for postconditions.
- *       Defaults to <code>true</code></td>
+ *       Defaults to <code>true</code> unless controlfile is specified, in which case it
+ *       defaults to <code>false</code>.</td>
  *     <td valign="top" align="center">No</td>
  *   </tr>
  *   <tr>
  *     <td valign="top">invariant</td>
  *     <td valign="top">Indicates whether or not to instrument for invariants.
- *       Defaults to <code>true</code></td>
+ *       Defaults to <code>true</code> unless controlfile is specified, in which case it
+ *       defaults to <code>false</code>.</td>
  *     <td valign="top" align="center">No</td>
  *   </tr>
  *   <tr>
@@ -131,55 +157,80 @@ import org.apache.tools.ant.types.Reference;
  *     <td valign="top" align="center">No</td>
  *   </tr>
  *   <tr>
- *     <td valign="top">controlfile</td>
- *     <td valign="top">The name of the control file to pass to iContract. Default
- *       is to not pass a file</td>
+ *     <td valign="top">verbosity</td>
+ *     <td valign="top">Indicates the verbosity level of iContract. Any combination
+ *       of <code>error*,warning*,note*,info*,progress*,debug*</code> (comma separated) can be
+ *       used. Defaults to <code>error*</code></td>
  *     <td valign="top" align="center">No</td>
  *   </tr>
  *   <tr>
- *     <td valign="top">verbosity</td>
- *     <td valign="top">Indicates the verbosity level of iContract. Any combination
- *       of error*,warning*,note*,info*,progress*,debug* (comma separated) can be
- *       used. Defaults to <code>error*</code></td>
+ *     <td valign="top">quiet</td>
+ *     <td valign="top">Indicates if iContract should be quiet. Turn it off if many your classes extend uninstrumented classes
+ *     and you don't want warnings about this. Defaults to <code>false</code></td>
  *     <td valign="top" align="center">No</td>
  *   </tr>
  *   <tr>
  *     <td valign="top">updateicontrol</td>
  *     <td valign="top">If set to true, it indicates that the properties file for
- *       icontrol in the current directory should be updated (or created if it doesn't exist)</td>
+ *       iControl in the current directory should be updated (or created if it doesn't exist).
+ *       Defaults to <code>false</code>.</td>
+ *     <td valign="top" align="center">No</td>
+ *   </tr>
+ *   <tr>
+ *     <td valign="top">controlfile</td>
+ *     <td valign="top">The name of the control file to pass to iContract. Consider using iControl to generate the file.
+ *       Default is not to pass a file. </td>
+ *     <td valign="top" align="center">Only if <code>updateicontrol=true</code></td>
+ *   </tr>
+ *   <tr>
+ *     <td valign="top">classdir</td>
+ *     <td valign="top">Indicates where compiled (unistrumented) classes are located.
+ *       This is required in order to properly update the icontrol.properties file, not
+ *       for instrumentation.</td>
+ *     <td valign="top" align="center">Only if <code>updateicontrol=true</code></td>
+ *   </tr>
+ *   <tr>
+ *     <td valign="top">targets</td>
+ *     <td valign="top">Name of the file that will be generated by this task, which lists all the
+ *        classes that iContract will instrument. If specified, the file will not be deleted after execution.
+ *        If not specified, a file will still be created, but it will be deleted after execution.</td>
  *     <td valign="top" align="center">No</td>
  *   </tr>
  * </table>
  *
  * <p/>
  * <b>Note:</b> iContract will use the java compiler indicated by the project's
- * <code>build.compiler</code> property. See documentation for the Javac task for
+ * <code>build.compiler</code> property. See documentation of the Javac task for
  * more information.
+ * <p/>
+ * Nested includes and excludes are also supported.
  *
  * <p><b>Example:</b></p>
- *
  * <pre>
- * &lt;!-- =================================================================== -->
- * &lt;!-- Instruments source codes with iContract                             -->
- * &lt;!-- =================================================================== -->
- * &lt;target name="instrument" depends="compile">
- *   &lt;icontract
- *     srcdir="${build.src}"
- *     instrumentdir="${instrumented.dir}"
- *     repositorydir="${repository.dir}"
- *     updateicontrol="true"
- *   >
- *     &lt;classpath>
- *       &lt;fileset dir="./lib">
- *         &lt;include name="*.jar"/>
- *       &lt;/fileset>
- *     &lt;/classpath>
- *   &lt;/icontract>
- * &lt;/target>
+ * &lt;icontract
+ *    srcdir="${build.src}"
+ *    instrumentdir="${build.instrument}"
+ *    repositorydir="${build.repository}"
+ *    builddir="${build.instrclasses}"
+ *    updateicontrol="true"
+ *    classdir="${build.classes}"
+ *    controlfile="control"
+ *    targets="targets"
+ *    verbosity="error*,warning*"
+ *    quiet="true"
+ * >
+ *    &lt;classpath refid="compile-classpath"/>
+ * &lt;/icontract>
  * </pre>
  *
  */
-public class IContract extends Task {
+public class IContract extends MatchingTask {
+
+    private static final String ICONTROL_PROPERTIES_HEADER =
+        " You might want to set classRoot to point to your normal compilation class root directory.";
+
+    private static final String ICONTROL_PROPERTIES_MESSAGE =
+        "You should probably modify icontrol.properties' classRoot to where comiled (uninstrumented) classes go.";
 
     /** \ on windows, / on linux/unix */
     private static final String ps = System.getProperty( "path.separator" );
@@ -199,11 +250,17 @@ public class IContract extends Task {
     /** source file root */
     private File srcDir = null;
 
-    /** instrumentation root */
+    /** instrumentation src root */
     private File instrumentDir = null;
 
-    /** repository root */
+    /** instrumentation build root */
+    private File buildDir = null;
+
+    /** repository src root */
     private File repositoryDir = null;
+
+    /** repository build root */
+    private File repBuildDir = null;
 
     /** classpath */
     private Path classpath = null;
@@ -214,6 +271,9 @@ public class IContract extends Task {
     /** The -v option */
     private String verbosity = "error*";
 
+    /** The -q option */
+    private boolean quiet = false;
+
     /** Indicates whether or not to use internal compilation */
     private boolean internalcompilation = false;
 
@@ -222,22 +282,30 @@ public class IContract extends Task {
 
     /** Indicates whether or not to instrument for preconditions */
     private boolean pre = true;
+    private boolean preModified = false;
 
     /** Indicates whether or not to instrument for postconditions */
     private boolean post = true;
+    private boolean postModified = false;
 
     /** Indicates whether or not to instrument for invariants */
     private boolean invariant = true;
+    private boolean invariantModified = false;
 
     /** Indicates whether or not to instrument all files regardless of timestamp */
     // can't be explicitly set, is set if control file exists and is newer than any source file
-    private boolean instrumentall = true;
+    private boolean instrumentall = false;
 
     /**
      * Indicates the name of a properties file (intentionally for iControl) where the classpath
      * property should be updated.
      */
     private boolean updateIcontrol = false;
+
+    /**
+     * Regular compilation class root
+     */
+    private File classDir = null;
 
     /**
      * Sets the source directory
@@ -249,21 +317,54 @@ public class IContract extends Task {
     }
 
     /**
+     * Sets the class directory (uninstrumented classes)
+     *
+     * @param srcDir the source directory
+     */
+    public void setClassdir( File classDir ) {
+        this.classDir = classDir;
+    }
+
+    /**
      * Sets the instrumentation directory
      *
      * @param instrumentDir the source directory
      */
     public void setInstrumentdir( File instrumentDir ) {
         this.instrumentDir = instrumentDir;
+        if ( this.buildDir == null ) {
+            setBuilddir( instrumentDir );
+        }
     }
 
     /**
-     * Sets the repository directory
+     * Sets the build directory for instrumented classes
+     *
+     * @param buildDir the build directory
+     */
+    public void setBuilddir( File buildDir ) {
+        this.buildDir = buildDir;
+    }
+
+    /**
+     * Sets the build directory for repository classes
      *
      * @param repositoryDir the source directory
      */
     public void setRepositorydir( File repositoryDir ) {
         this.repositoryDir = repositoryDir;
+        if( this.repBuildDir == null ) {
+            setRepbuilddir( repositoryDir );
+        }
+    }
+
+    /**
+     * Sets the build directory for instrumented classes
+     *
+     * @param buildDir the build directory
+     */
+    public void setRepbuilddir( File repBuildDir ) {
+        this.repBuildDir = repBuildDir;
     }
 
     /**
@@ -273,6 +374,7 @@ public class IContract extends Task {
      */
     public void setPre( boolean pre ) {
         this.pre = pre;
+        preModified = true;
     }
 
     /**
@@ -282,6 +384,7 @@ public class IContract extends Task {
      */
     public void setPost( boolean post ) {
         this.post = post;
+        postModified = true;
     }
 
     /**
@@ -291,15 +394,16 @@ public class IContract extends Task {
      */
     public void setInvariant( boolean invariant ) {
         this.invariant = invariant;
+        invariantModified = true;
     }
 
     /**
      * Sets the Throwable (Exception) to be thrown on assertion violation
      *
-     * @param clazz the Throwable class
+     * @param clazz the fully qualified Throwable class name
      */
-    public void setFailthrowable( Class clazz ) {
-        this.failThrowable = clazz.getName();
+    public void setFailthrowable( String clazz ) {
+        this.failThrowable = clazz;
     }
 
     /**
@@ -307,35 +411,40 @@ public class IContract extends Task {
      * error*,warning*,note*,info*,progress*,debug* (comma separated)
      * can be used. Defaults to error*,warning*
      *
-     * @param clazz the Throwable class
+     * @param verbosity verbosity level
      */
     public void setVerbosity( String verbosity ) {
         this.verbosity = verbosity;
     }
 
     /**
-     * Turns on/off internal compilation.
-     * <br/>
-     * If set to true, Sun's javac will be run within the same VM as Ant.
-     * <br/>
-     * If set to false, the compiler indicated by the project property
-     * <code>build.compiler</code> will be used, defaulting to javac,
-     * and run in a separate VM.
+     * Tells iContract to be quiet.
      *
-     * @param internalcompilation set to true for internal compilation
+     * @param quiet true if iContract should be quiet.
      */
-    /* FIXME: Doesn't work
-       public void setInternalcompilation( boolean internalcompilation ) {
-       this.internalcompilation = internalcompilation;
-       }
-    */
+    public void setQuiet( boolean quiet ) {
+        this.quiet = quiet;
+    }
+
+    /**
+     * Sets the name of the file where targets will be written.
+     * That is the file that tells iContract what files to process.
+     *
+     * @param targets the targets file name
+     */
+    public void setTargets( File targets ) {
+        this.targets = targets;
+    }
 
     /**
      * Sets the control file to pass to iContract.
      *
-     * @param clazz the Throwable class
+     * @param controlFile the control file
      */
     public void setControlfile( File controlFile ) {
+        if( !controlFile.exists() ) {
+            log( "WARNING: Control file " + controlFile.getAbsolutePath() + " doesn't exist. iContract will be run without control file." );
+        }
         this.controlFile = controlFile;
     }
 
@@ -387,6 +496,25 @@ public class IContract extends Task {
         preconditions();
         scan();
         if( dirty ) {
+
+            // turn off assertions if we're using controlfile, unless they are not explicitly set.
+            boolean useControlFile = (controlFile != null) && controlFile.exists();
+            if( useControlFile && !preModified ) {
+                pre = false;
+            }
+            if( useControlFile && !postModified ) {
+                post = false;
+            }
+            if( useControlFile && !invariantModified ) {
+                invariant = false;
+            }
+            // issue warning if pre,post or invariant is used together with controlfile
+            if( ( pre || post || invariant ) && controlFile != null ) {
+                log( "WARNING: specifying pre,post or invariant will override control file settings" );
+            }
+
+
+
             // We want to be notified if iContract jar is missing. This makes life easier for the user
             // who didn't understand that iContract is a separate library (duh!)
             getProject().addBuildListener( new IContractPresenceDetector() );
@@ -397,14 +525,18 @@ public class IContract extends Task {
             Mkdir mkdir = (Mkdir) project.createTask( "mkdir" );
             mkdir.setDir( instrumentDir );
             mkdir.execute();
+            mkdir.setDir( buildDir );
+            mkdir.execute();
             mkdir.setDir( repositoryDir );
             mkdir.execute();
 
-            // Set the compiler
-            setCompiler();
-
             // Set the classpath that is needed for regular Javac compilation
             Path baseClasspath = createClasspath();
+
+            // Might need to add the core classes if we're not using Sun's Javac (like Jikes)
+            String compiler = project.getProperty("build.compiler");
+            ClasspathHelper classpathHelper = new ClasspathHelper( compiler );
+            classpathHelper.modify( baseClasspath );
 
             // Create the classpath required to compile the sourcefiles BEFORE instrumentation
             Path beforeInstrumentationClasspath = ((Path) baseClasspath.clone());
@@ -415,12 +547,14 @@ public class IContract extends Task {
             afterInstrumentationClasspath.append( new Path( getProject(), instrumentDir.getAbsolutePath() ) );
             afterInstrumentationClasspath.append( new Path( getProject(), repositoryDir.getAbsolutePath() ) );
             afterInstrumentationClasspath.append( new Path( getProject(), srcDir.getAbsolutePath() ) );
+            afterInstrumentationClasspath.append( new Path( getProject(), buildDir.getAbsolutePath() ) );
 
             // Create the classpath required to automatically compile the repository files
             Path repositoryClasspath = ((Path) baseClasspath.clone());
             repositoryClasspath.append( new Path( getProject(), instrumentDir.getAbsolutePath() ) );
             repositoryClasspath.append( new Path( getProject(), srcDir.getAbsolutePath() ) );
             repositoryClasspath.append( new Path( getProject(), repositoryDir.getAbsolutePath() ) );
+            repositoryClasspath.append( new Path( getProject(), buildDir.getAbsolutePath() ) );
 
             // Create the classpath required for iContract itself
             Path iContractClasspath = ((Path) baseClasspath.clone());
@@ -428,6 +562,7 @@ public class IContract extends Task {
             iContractClasspath.append( new Path( getProject(), srcDir.getAbsolutePath() ) );
             iContractClasspath.append( new Path( getProject(), repositoryDir.getAbsolutePath() ) );
             iContractClasspath.append( new Path( getProject(), instrumentDir.getAbsolutePath() ) );
+            iContractClasspath.append( new Path( getProject(), buildDir.getAbsolutePath() ) );
 
             // Create a forked java process
             Java iContract = (Java) project.createTask( "java" );
@@ -440,17 +575,18 @@ public class IContract extends Task {
             StringBuffer args = new StringBuffer();
             args.append( directiveString() );
             args.append( "-v" ).append( verbosity ).append( " " );
-            args.append( "-b" ).append( icCompiler ).append( "\"" ).append( " -classpath " ).append( beforeInstrumentationClasspath ).append( "\" " );
-            args.append( "-c" ).append( icCompiler ).append( "\"" ).append( " -classpath " ).append( afterInstrumentationClasspath ).append( "\" " );
-            args.append( "-n" ).append( icCompiler ).append( "\"" ).append( " -classpath " ).append( repositoryClasspath ).append( "\" " );
+            args.append( "-b" ).append( "\"" ).append( icCompiler ).append( " -classpath " ).append( beforeInstrumentationClasspath ).append( "\" " );
+            args.append( "-c" ).append( "\"" ).append( icCompiler ).append( " -classpath " ).append( afterInstrumentationClasspath ).append( " -d " ).append( buildDir ).append( "\" " );
+            args.append( "-n" ).append( "\"" ).append( icCompiler ).append( " -classpath " ).append( repositoryClasspath ).append( "\" " );
             args.append( "-d" ).append( failThrowable ).append( " " );
             args.append( "-o" ).append( instrumentDir ).append( File.separator ).append( "@p" ).append( File.separator ).append( "@f.@e " );
             args.append( "-k" ).append( repositoryDir ).append( File.separator ).append( "@p " );
-            args.append( instrumentall ? "-a " : "" ); // reinstrument everything if controlFile exists and is newer than source
+            args.append( quiet ? "-q " : "" );
+            args.append( instrumentall ? "-a " : "" ); // reinstrument everything if controlFile exists and is newer than any class
             args.append( "@" ).append( targets.getAbsolutePath() );
             iContract.createArg().setLine( args.toString() );
 
-// System.out.println( "JAVA -classpath " + iContractClasspath + " com.reliablesystems.iContract.Tool " + args.toString() );
+//System.out.println( "JAVA -classpath " + iContractClasspath + " com.reliablesystems.iContract.Tool " + args.toString() );
 
             // update iControlProperties if it's set.
             if( updateIcontrol ) {
@@ -460,18 +596,21 @@ public class IContract extends Task {
                 } catch( IOException e ) {
                     log( "File icontrol.properties not found. That's ok. Writing a default one." );
                 }
-                iControlProps.setProperty( "classRoot", srcDir.getAbsolutePath() );
-                iControlProps.setProperty( "classpath", iContractClasspath.toString() );
-                iControlProps.setProperty( "controlFile", "control" );
+                iControlProps.setProperty( "sourceRoot", srcDir.getAbsolutePath() );
+                iControlProps.setProperty( "classRoot", classDir.getAbsolutePath() );
+                iControlProps.setProperty( "classpath", afterInstrumentationClasspath.toString() );
+                iControlProps.setProperty( "controlFile", controlFile.getAbsolutePath() );
+                iControlProps.setProperty( "targetsFile", targets.getAbsolutePath() );
 
                 try { // to read existing propertiesfile
-                    iControlProps.store( new FileOutputStream( "icontrol.properties" ), "Edit the classRoot and controlfile properties if you like" );
-                    log( "Updated file icontrol.properties." );
+                    iControlProps.store( new FileOutputStream( "icontrol.properties" ), ICONTROL_PROPERTIES_HEADER );
+                    log( "Updated icontrol.properties" );
                 } catch( IOException e ) {
                     log( "Couldn't write icontrol.properties." );
                 }
             }
 
+            // do it!
             int result = iContract.executeJava();
             if( result != 0 ) {
                 if( iContractMissing ) {
@@ -481,7 +620,8 @@ public class IContract extends Task {
                 }
                 throw new BuildException( "iContract instrumentation failed. Code=" + result );
             }
-        } else {
+
+        } else { // not dirty
             //log( "Nothing to do. Everything up to date." );
         }
     }
@@ -502,36 +642,54 @@ public class IContract extends Task {
         if (repositoryDir == null) {
             throw new BuildException( "repositorydir attribute must be set!", location );
         }
+        if (updateIcontrol == true && classDir == null) {
+            throw new BuildException( "classdir attribute must be specified when updateicontrol=true!", location );
+        }
+        if( updateIcontrol == true && controlFile == null ) {
+            throw new BuildException( "controlfile attribute must be specified when updateicontrol=true!", location );
+        }
     }
 
     /**
      * Verifies whether any of the source files have changed. Done by comparing date of source/class files.
-     * The whole lot is "dirty" if at least one source file is newer than the instrumented files. If not dirty,
-     * iContract will not be executed.
+     * The whole lot is "dirty" if at least one source file or the control file is newer than the instrumented
+     * files. If not dirty, iContract will not be executed.
      * <br/>
      * Also creates a temporary file with a list of the source files, that will be deleted upon exit.
      */
     private void scan() throws BuildException {
         long now = (new Date()).getTime();
 
-        FileSet fileset = new FileSet();
-        fileset.setDefaultexcludes( true );
-        fileset.setDir( srcDir );
-        DirectoryScanner ds = fileset.getDirectoryScanner( project );
+        DirectoryScanner ds = null;
 
+        ds = getDirectoryScanner( srcDir );
         String[] files = ds.getIncludedFiles();
 
+        FileOutputStream targetOutputStream = null;
+        PrintStream targetPrinter = null;
+        boolean writeTargets = false;
         try {
-            targets = File.createTempFile( "iContractTargets", "tmp", new File( System.getProperty( "user.dir" ) ) );
-            targets.deleteOnExit();
-            FileOutputStream fos = new FileOutputStream( targets );
-            PrintStream ps = new PrintStream( fos );
+            if( targets == null ) {
+                targets = new File( "targets" );
+                log( "Warning: targets file not specified. generating file: " + targets.getName() );
+                writeTargets = true;
+            } else if( !targets.exists() ) {
+                log( "Specified targets file doesn't exist. generating file: " + targets.getName() );
+                writeTargets = true;
+            }
+            if( writeTargets ) {
+                log( "You should consider using iControl to create a target file." );
+                targetOutputStream = new FileOutputStream( targets );
+                targetPrinter = new PrintStream( targetOutputStream );
+            }
             for (int i = 0; i < files.length; i++ ) {
                 File srcFile = new File(srcDir, files[i]);
                 if (files[i].endsWith(".java")) {
-                    ps.println( srcFile.getAbsolutePath() );
-
-                    File classFile = new File( instrumentDir, files[i].substring( 0, files[i].indexOf( ".java" ) ) + ".class" );
+                    // print the target, while we're at here. (Only if generatetarget=true).
+                    if( targetPrinter != null ) {
+                        targetPrinter.println( srcFile.getAbsolutePath() );
+                    }
+                    File classFile = new File( buildDir, files[i].substring( 0, files[i].indexOf( ".java" ) ) + ".class" );
 
                     if (srcFile.lastModified() > now) {
                         log("Warning: file modified in the future: " +
@@ -544,23 +702,24 @@ public class IContract extends Task {
                     }
                 }
             }
-            ps.flush();
-            ps.close();
+            if( targetPrinter != null ) {
+                targetPrinter.flush();
+                targetPrinter.close();
+            }
         } catch( IOException e ) {
-            throw new BuildException( "Could not create temporary file:" + e.getMessage() );
+            throw new BuildException( "Could not create target file:" + e.getMessage() );
         }
 
         // also, check controlFile timestamp
         long controlFileTime = -1;
         try {
             if( controlFile != null ) {
-                if( controlFile.exists() && instrumentDir.exists() ) {
+                if( controlFile.exists() && buildDir.exists() ) {
                     controlFileTime = controlFile.lastModified();
-                    fileset.setDir( instrumentDir );
-                    ds = fileset.getDirectoryScanner( project );
+                    ds = getDirectoryScanner( buildDir );
                     files = ds.getIncludedFiles();
                     for( int i = 0; i < files.length; i++ ) {
-                        File srcFile = new File(srcDir, files[i]);
+                        File srcFile = new File( srcDir, files[i] );
                         if( files[i].endsWith( ".class" ) ) {
                             if( controlFileTime > srcFile.lastModified() ) {
                                 if( !dirty ) {
@@ -574,8 +733,7 @@ public class IContract extends Task {
                 }
             }
         } catch( Throwable t ) {
-            System.out.println( "FATAL" );
-            t.printStackTrace();
+            throw new BuildException( "Got an interesting exception:" + t.getMessage() );
         }
     }
 
@@ -586,10 +744,12 @@ public class IContract extends Task {
     private final String directiveString() {
         StringBuffer sb = new StringBuffer();
         boolean comma = false;
-        if( (controlFile != null) || pre || post || invariant ) {
+
+        boolean useControlFile = (controlFile != null) && controlFile.exists();
+        if( useControlFile || pre || post || invariant ) {
             sb.append( "-m" );
         }
-        if(controlFile != null) {
+        if( useControlFile ) {
             sb.append( "@" ).append( controlFile );
             comma = true;
         }
@@ -612,47 +772,9 @@ public class IContract extends Task {
                 sb.append( "," );
             }
             sb.append( "inv" );
-            comma = true;
         }
         sb.append( " " );
         return sb.toString();
-    }
-
-    /**
-     * Sets the compiler as specified by the project's build.compiler property
-     * If the internalcompilation attribute is set to true, Sun's javac
-     * will be run from the same VM as Ant.
-     *
-     * NOTE: This has not been tested, as I only have JDK.
-     */
-    private void setCompiler() {
-        if( !internalcompilation ) {
-            String compiler = project.getProperty("build.compiler");
-            if (compiler == null) {
-                if (Project.getJavaVersion().startsWith("1.3")) {
-                    compiler = "modern";
-                } else {
-                    compiler = "classic";
-                }
-            }
-
-            if (compiler.equalsIgnoreCase("classic")) {
-                icCompiler = "javac";
-            } else if (compiler.equalsIgnoreCase("modern")) {
-                icCompiler = "javac";
-            } else if (compiler.equalsIgnoreCase("jikes")) {
-                icCompiler = "jikes";
-            } else if (compiler.equalsIgnoreCase("jvc")) {
-                icCompiler = "jvc";
-            } else {
-                String msg = "Don't know how to use compiler " + compiler;
-                throw new BuildException(msg, location);
-            }
-        } else {
-            // This is how we tell iContract to use internal compiler
-            // FIXME: Doesn't work
-//                        icCompiler = ":";
-        }
     }
 
     /**
@@ -673,5 +795,32 @@ public class IContract extends Task {
         public void targetStarted(BuildEvent event) {}
         public void taskFinished(BuildEvent event) {}
         public void taskStarted(BuildEvent event) {}
+    }
+
+    /**
+     * This class is a helper to set correct classpath for other compilers, like Jikes.
+     * It reuses the logic from DefaultCompilerAdapter, which is protected, so we have
+     * to subclass it.
+     */
+    private class ClasspathHelper extends DefaultCompilerAdapter {
+        private final String compiler;
+        public ClasspathHelper( String compiler ) {
+            super();
+            this.compiler = compiler;
+        }
+
+        // make it public
+        public void modify( Path path ) {
+            // depending on what compiler to use, set the includeJavaRuntime flag
+            if( "jikes".equals( compiler ) ) {
+                icCompiler = compiler;
+                includeJavaRuntime = true;
+                path.append( getCompileClasspath() );
+            }
+        }
+
+        // dummy implementation. Never called
+        public void setJavac( Javac javac ) {}
+        public boolean execute() { return true; }
     }
 }
