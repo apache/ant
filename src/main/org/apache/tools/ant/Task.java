@@ -357,11 +357,11 @@ public abstract class Task extends ProjectComponent {
      */
     public final void perform() {
         if (!invalid) {
+            getProject().fireTaskStarted(this);
+            Throwable reason = null;
             try {
-                getProject().fireTaskStarted(this);
                 maybeConfigure();
                 execute();
-                getProject().fireTaskFinished(this, null);
             } catch (RuntimeException exc) {
                 if (exc instanceof BuildException) {
                     BuildException be = (BuildException) exc;
@@ -369,8 +369,10 @@ public abstract class Task extends ProjectComponent {
                         be.setLocation(getLocation());
                     }
                 }
-                getProject().fireTaskFinished(this, exc);
+                reason = exc;
                 throw exc;
+            } finally {
+                getProject().fireTaskFinished(this, reason);
             }
         } else {
             UnknownElement ue = getReplacement();
