@@ -8,7 +8,6 @@
 package org.apache.myrmidon.framework.exec;
 
 import java.io.File;
-import org.apache.tools.ant.Project;
 
 /**
  * This class holds meta data that is used to launch a native executable.
