@@ -9,3 +9,5 @@ todo
 *.ipr
 pretty.bat
 velocity.log
+project.properties
+ant_vfs_cache
