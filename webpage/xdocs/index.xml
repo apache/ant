@@ -71,11 +71,11 @@ Comprehensive documentation is included in the source and binary distribtions.
     You can download the latest release:
     </p>
     <ul>
-        <li><a href="http://jakarta.apache.org/builds/jakarta-ant/release/v1.2/bin/">
+        <li><a href="http://jakarta.apache.org/builds/jakarta-ant/release/v1.3/bin/">
                 Download the binary release</a></li>
-        <li><a href="http://jakarta.apache.org/builds/jakarta-ant/release/v1.2/src/">
+        <li><a href="http://jakarta.apache.org/builds/jakarta-ant/release/v1.3/src/">
                 Download the source release</a></li>
-        <li><a href="http://jakarta.apache.org/builds/jakarta-ant/release/v1.2/rpms/">
+        <li><a href="http://jakarta.apache.org/builds/jakarta-ant/release/v1.3/rpms/">
                 Download source and binary RPMs</a></li>
     </ul>  
   </section>
