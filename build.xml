@@ -79,6 +79,7 @@
     <available property="stylebook.present" classname="org.apache.stylebook.Engine" />
     <available property="jakarta.regexp.present" classname="org.apache.regexp.RE" />
     <available property="jakarta.oro.present" classname="org.apache.oro.text.regex.Perl5Matcher" />
+    <available property="jmf.present" classname="javax.sound.sampled.Clip" />
   </target>
 
   <!-- =================================================================== -->
@@ -158,6 +159,8 @@
       <exclude name="**/ANTLR.java" unless="antlr.present" />
       <exclude name="**/ide/VAJ*.java" unless="vaj.present" />
       <exclude name="**/perforce/*.java" unless="jakarta.oro.present" />
+      <exclude name="org/apache/tools/ant/taskdefs/optional/sound/*.java" 
+               unless="jmf.present" />
     </javac>
   </target>
 
