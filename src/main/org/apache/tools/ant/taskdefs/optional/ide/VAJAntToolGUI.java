@@ -210,7 +210,7 @@ public class VAJAntToolGUI extends Frame {
                 logException(error);
             }
 
-            getMessageTextArea().append(lineSeparator + "Total time: " 
+            getMessageTextArea().append(lineSeparator + "Total time: "
                 + DateUtils.formatElapsedTime(System.currentTimeMillis() - startTime));
         }
 
@@ -428,12 +428,12 @@ public class VAJAntToolGUI extends Frame {
                 handleException(exc);
             }
         }
-        public void windowActivated(WindowEvent e) {};
-        public void windowClosed(WindowEvent e) {};
-        public void windowDeactivated(WindowEvent e) {};
-        public void windowDeiconified(WindowEvent e) {};
-        public void windowIconified(WindowEvent e) {};
-        public void windowOpened(WindowEvent e) {};
+        public void windowActivated(WindowEvent e) {}
+        public void windowClosed(WindowEvent e) {}
+        public void windowDeactivated(WindowEvent e) {}
+        public void windowDeiconified(WindowEvent e) {}
+        public void windowIconified(WindowEvent e) {}
+        public void windowOpened(WindowEvent e) {}
     }
 
     /**
