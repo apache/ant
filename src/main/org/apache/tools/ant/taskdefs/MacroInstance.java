@@ -261,6 +261,7 @@ public class MacroInstance extends Task implements DynamicConfigurator {
         ret.setNamespace(ue.getNamespace());
         ret.setProject(getProject());
         ret.setQName(ue.getQName());
+        ret.setTaskType(ue.getTaskType());
         ret.setTaskName(ue.getTaskName());
         ret.setLocation(ue.getLocation());
         if (getOwningTarget() == null) {
@@ -287,7 +288,10 @@ public class MacroInstance extends Task implements DynamicConfigurator {
         while (e.hasMoreElements()) {
             RuntimeConfigurable r = (RuntimeConfigurable) e.nextElement();
             UnknownElement unknownElement = (UnknownElement) r.getProxy();
-            String tag = unknownElement.getTaskType().toLowerCase(Locale.US);
+            String tag = unknownElement.getTaskType();
+            if (tag != null) {
+                tag = tag.toLowerCase(Locale.US);
+            }
             MacroDef.TemplateElement templateElement =
                 (MacroDef.TemplateElement) getNsElements().get(tag);
             if (templateElement == null) {
