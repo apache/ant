@@ -267,6 +267,9 @@ Other changes:
 * <csc>'s extraoptions can now contain multiple arguments.
   Bugzilla Report 23599.
 
+* The .NET compilation tasks failed if filenames given as references
+  contained spaces.  Bugzilla Report 27170.
+
 Fixed bugs:
 -----------
 

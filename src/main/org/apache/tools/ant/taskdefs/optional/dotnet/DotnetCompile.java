@@ -219,7 +219,7 @@ public abstract class DotnetCompile
     protected String getReferencesParameter() {
         //bail on no references
         if (notEmpty(references)) {
-            return REFERENCE_OPTION + references;
+            return REFERENCE_OPTION + '\"' + references + '\"';
         } else {
             return null;
         }
@@ -270,8 +270,8 @@ public abstract class DotnetCompile
         }
 
         StringBuffer s = new StringBuffer(REFERENCE_OPTION);
-        s.append(refpath);
-        return new String(s);
+        s.append('\"').append(refpath).append('\"');
+        return s.toString();
     }
 
 
@@ -903,6 +903,8 @@ public abstract class DotnetCompile
             if (isFileManagedBinary(file)) {
                 if (!firstEntry) {
                     referenceList.append(getReferenceDelimiter());
+                } else {
+                    referenceList.append('\"');
                 }
                 referenceList.append(file.toString());
                 firstEntry = false;
@@ -912,8 +914,13 @@ public abstract class DotnetCompile
             }
 
         }
-        //add it all to an argument
-        command.addArgument(referenceList.toString());
+        // hack: This means we've added at least one reference that's
+        // a managed binary
+        if (!firstEntry) {
+            //add it all to an argument
+            command.addArgument(referenceList.toString() + '\"');
+        }
+        
         return filesOutOfDate;
     }
 
