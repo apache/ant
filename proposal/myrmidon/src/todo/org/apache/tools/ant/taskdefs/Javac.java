@@ -19,6 +19,7 @@ import org.apache.tools.ant.taskdefs.compilers.CompilerAdapterFactory;
 import org.apache.tools.ant.types.Commandline;
 import org.apache.tools.ant.types.Path;
 import org.apache.tools.ant.types.Reference;
+import org.apache.tools.ant.types.Argument;
 import org.apache.tools.ant.util.GlobPatternMapper;
 import org.apache.tools.ant.util.SourceFileScanner;
 
@@ -914,7 +915,7 @@ public class Javac extends MatchingTask
      * @author RT
      */
     public class ImplementationSpecificArgument
-        extends Commandline.Argument
+        extends Argument
     {
 
         private String impl;

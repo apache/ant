@@ -14,6 +14,7 @@ import org.apache.tools.ant.taskdefs.Java;
 import org.apache.tools.ant.taskdefs.MatchingTask;
 import org.apache.tools.ant.types.Commandline;
 import org.apache.tools.ant.types.Path;
+import org.apache.tools.ant.types.Argument;
 
 /**
  * Build a serialised deployment descriptor given a text file description of the
@@ -122,7 +123,7 @@ public class DDCreator extends MatchingTask
         Java ddCreatorTask = (Java)getProject().createTask( "java" );
         ddCreatorTask.setFork( true );
         ddCreatorTask.setClassname( "org.apache.tools.ant.taskdefs.optional.ejb.DDCreatorHelper" );
-        Commandline.Argument arguments = ddCreatorTask.createArg();
+        Argument arguments = ddCreatorTask.createArg();
         arguments.setLine( args );
         ddCreatorTask.setClasspath( new Path( getProject(), execClassPath ) );
         if( ddCreatorTask.executeJava() != 0 )

@@ -23,6 +23,7 @@ import org.apache.tools.ant.taskdefs.exec.Execute;
 import org.apache.tools.ant.taskdefs.exec.ExecuteStreamHandler;
 import org.apache.tools.ant.types.Commandline;
 import org.apache.tools.ant.types.Path;
+import org.apache.tools.ant.types.Argument;
 
 /**
  * BorlandDeploymentTool is dedicated to the Borland Application Server 4.5 and
@@ -491,7 +492,7 @@ public class BorlandDeploymentTool extends GenericDeploymentTool implements Exec
 
             javaTask = (Java)getTask().getProject().createTask( "java" );
             javaTask.setClassname( VERIFY );
-            Commandline.Argument arguments = javaTask.createArg();
+            Argument arguments = javaTask.createArg();
             arguments.setLine( args );
             Path classpath = getCombinedClasspath();
             if( classpath != null )

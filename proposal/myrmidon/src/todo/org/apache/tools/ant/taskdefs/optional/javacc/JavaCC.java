@@ -17,6 +17,7 @@ import org.apache.tools.ant.taskdefs.exec.Execute;
 import org.apache.tools.ant.types.Commandline;
 import org.apache.tools.ant.types.CommandlineJava;
 import org.apache.tools.ant.types.Path;
+import org.apache.tools.ant.types.Argument;
 
 /**
  * Taskdef for the JavaCC compiler compiler.
@@ -230,7 +231,7 @@ public class JavaCC extends Task
                                                "/JavaCC.zip" );
         classpath.addJavaRuntime();
 
-        final Commandline.Argument arg = cmdl.createVmArgument();
+        final Argument arg = cmdl.createVmArgument();
         arg.setValue( "-mx140M" );
         arg.setValue( "-Dinstall.root=" + javaccHome.getAbsolutePath() );
 

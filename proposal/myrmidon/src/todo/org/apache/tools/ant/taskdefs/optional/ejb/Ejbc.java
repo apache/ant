@@ -14,6 +14,7 @@ import org.apache.tools.ant.taskdefs.Java;
 import org.apache.tools.ant.taskdefs.MatchingTask;
 import org.apache.tools.ant.types.Commandline;
 import org.apache.tools.ant.types.Path;
+import org.apache.tools.ant.types.Argument;
 
 /**
  * Build EJB support classes using Weblogic's ejbc tool from a directory
@@ -181,7 +182,7 @@ public class Ejbc extends MatchingTask
             args += " " + files[ i ];
         }
 
-        Commandline.Argument arguments = helperTask.createArg();
+        Argument arguments = helperTask.createArg();
         arguments.setLine( args );
         helperTask.setClasspath( new Path( getProject(), execClassPath ) );
         if( helperTask.executeJava() != 0 )

@@ -25,6 +25,7 @@ import org.apache.tools.ant.types.EnumeratedAttribute;
 import org.apache.tools.ant.types.EnvironmentData;
 import org.apache.tools.ant.types.Path;
 import org.apache.tools.ant.types.EnvironmentVariable;
+import org.apache.tools.ant.types.Argument;
 
 /**
  * Websphere deployment tool that augments the ejbjar task.
@@ -982,7 +983,7 @@ public class WebsphereDeploymentTool extends GenericDeploymentTool
 
                 // Set the Java class name
                 javaTask.setClassname( "com.ibm.etools.ejbdeploy.EJBDeploy" );
-                Commandline.Argument arguments = javaTask.createArg();
+                Argument arguments = javaTask.createArg();
                 arguments.setLine( args );
                 Path classpath = wasClasspath;
                 if( classpath == null )

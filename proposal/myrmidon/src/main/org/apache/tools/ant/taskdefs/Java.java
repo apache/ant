@@ -24,6 +24,7 @@ import org.apache.tools.ant.types.EnvironmentData;
 import org.apache.tools.ant.types.Path;
 import org.apache.tools.ant.types.Reference;
 import org.apache.tools.ant.types.EnvironmentVariable;
+import org.apache.tools.ant.types.Argument;
 
 /**
  * This task acts as a loader for java applications but allows to use the same
@@ -185,7 +186,7 @@ public class Java extends Task
      *
      * @return Description of the Returned Value
      */
-    public Commandline.Argument createArg()
+    public Argument createArg()
     {
         return cmdl.createArgument();
     }
@@ -206,7 +207,7 @@ public class Java extends Task
      *
      * @return Description of the Returned Value
      */
-    public Commandline.Argument createJvmarg()
+    public Argument createJvmarg()
     {
         return cmdl.createVmArgument();
     }

@@ -21,6 +21,7 @@ import org.apache.tools.ant.taskdefs.exec.LogStreamHandler;
 import org.apache.tools.ant.types.Commandline;
 import org.apache.tools.ant.types.CommandlineJava;
 import org.apache.tools.ant.types.Path;
+import org.apache.tools.ant.types.Argument;
 
 /**
  * ANTLR task.
@@ -104,7 +105,7 @@ public class ANTLR extends Task
      *      the JVM.
      * @see #setFork(boolean)
      */
-    public Commandline.Argument createJvmarg()
+    public Argument createJvmarg()
     {
         return commandline.createVmArgument();
     }

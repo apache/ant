@@ -38,5 +38,4 @@ public class EnvironmentData
     {
         m_variables.add( var );
     }
-
 }

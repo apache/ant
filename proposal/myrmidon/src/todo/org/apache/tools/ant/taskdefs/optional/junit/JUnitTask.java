@@ -31,6 +31,7 @@ import org.apache.tools.ant.types.EnumeratedAttribute;
 import org.apache.tools.ant.types.EnvironmentData;
 import org.apache.tools.ant.types.Path;
 import org.apache.tools.ant.types.EnvironmentVariable;
+import org.apache.tools.ant.types.Argument;
 
 /**
  * Ant task to run JUnit tests. <p>
@@ -367,7 +368,7 @@ public class JUnitTask extends Task
      *      the JVM.
      * @see #setFork(boolean)
      */
-    public Commandline.Argument createJvmarg()
+    public Argument createJvmarg()
     {
         return commandline.createVmArgument();
     }

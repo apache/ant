@@ -20,6 +20,7 @@ import org.apache.tools.ant.types.Commandline;
 import org.apache.tools.ant.types.EnumeratedAttribute;
 import org.apache.tools.ant.types.FileSet;
 import org.apache.tools.ant.types.Mapper;
+import org.apache.tools.ant.types.Marker;
 import org.apache.tools.ant.util.FileNameMapper;
 import org.apache.tools.ant.util.SourceFileScanner;
 
@@ -36,9 +37,9 @@ public class ExecuteOn extends ExecTask
     private boolean relative = false;
     private boolean parallel = false;
     protected String type = "file";
-    protected Commandline.Marker srcFilePos = null;
+    protected Marker srcFilePos = null;
     private boolean skipEmpty = false;
-    protected Commandline.Marker targetFilePos = null;
+    protected Marker targetFilePos = null;
     protected Mapper mapperElement = null;
     protected FileNameMapper mapper = null;
     protected File destDir = null;
@@ -132,7 +133,7 @@ public class ExecuteOn extends ExecTask
      *
      * @return Description of the Returned Value
      */
-    public Commandline.Marker createSrcfile()
+    public Marker createSrcfile()
         throws TaskException
     {
         if( srcFilePos != null )
@@ -149,7 +150,7 @@ public class ExecuteOn extends ExecTask
      *
      * @return Description of the Returned Value
      */
-    public Commandline.Marker createTargetfile()
+    public Marker createTargetfile()
         throws TaskException
     {
         if( targetFilePos != null )

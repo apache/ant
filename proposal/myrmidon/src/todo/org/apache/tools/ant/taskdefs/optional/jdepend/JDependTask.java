@@ -23,6 +23,7 @@ import org.apache.tools.ant.types.CommandlineJava;
 import org.apache.tools.ant.types.EnumeratedAttribute;
 import org.apache.tools.ant.types.Path;
 import org.apache.tools.ant.types.Reference;
+import org.apache.tools.ant.types.Argument;
 
 /**
  * Ant task to run JDepend tests. <p>
@@ -219,7 +220,7 @@ public class JDependTask extends Task
      *      the JVM.
      * @see #setFork(boolean)
      */
-    public Commandline.Argument createJvmarg( CommandlineJava commandline )
+    public Argument createJvmarg( CommandlineJava commandline )
     {
         return commandline.createVmArgument();
     }

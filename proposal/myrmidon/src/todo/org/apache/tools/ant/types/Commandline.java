@@ -35,13 +35,12 @@ import org.apache.myrmidon.api.TaskException;
 public class Commandline
     implements Cloneable
 {
-    private ArrayList m_arguments = new ArrayList();
+    protected final ArrayList m_arguments = new ArrayList();
     private String m_executable;
 
     public Commandline( String to_process )
         throws TaskException
     {
-        super();
         String[] tmp = translateCommandline( to_process );
         if( tmp != null && tmp.length > 0 )
         {
@@ -206,11 +205,11 @@ public class Commandline
      *
      * @param executable The new Executable value
      */
-    public void setExecutable( String executable )
+    public void setExecutable( final String executable )
     {
         if( executable == null || executable.length() == 0 )
             return;
-        this.m_executable = executable.replace( '/', File.separatorChar )
+        m_executable = executable.replace( '/', File.separatorChar )
             .replace( '\\', File.separatorChar );
     }
 
@@ -222,11 +221,12 @@ public class Commandline
      */
     public String[] getArguments()
     {
-        ArrayList result = new ArrayList( m_arguments.size() * 2 );
-        for( int i = 0; i < m_arguments.size(); i++ )
+        final int size = m_arguments.size();
+        final ArrayList result = new ArrayList( size * 2 );
+        for( int i = 0; i < size; i++ )
         {
-            Argument arg = (Argument)m_arguments.get( i );
-            String[] s = arg.getParts();
+            final Argument arg = (Argument)m_arguments.get( i );
+            final String[] s = arg.getParts();
             for( int j = 0; j < s.length; j++ )
             {
                 result.add( s[ j ] );
@@ -246,7 +246,9 @@ public class Commandline
     {
         final String[] args = getArguments();
         if( m_executable == null )
+        {
             return args;
+        }
         final String[] result = new String[ args.length + 1 ];
         result[ 0 ] = m_executable;
         System.arraycopy( args, 0, result, 1, args.length );
@@ -315,7 +317,7 @@ public class Commandline
      */
     public Marker createMarker()
     {
-        return new Marker( m_arguments.size() );
+        return new Marker( this, m_arguments.size() );
     }
 
     public int size()
@@ -328,109 +330,4 @@ public class Commandline
         return toString( getCommandline() );
     }
 
-    /**
-     * Used for nested xml command line definitions.
-     *
-     * @author RT
-     */
-    public static class Argument
-    {
-
-        private String[] parts;
-
-        /**
-         * Sets a single commandline argument to the absolute filename of the
-         * given file.
-         *
-         * @param value a single commandline argument.
-         */
-        public void setFile( File value )
-        {
-            parts = new String[]{value.getAbsolutePath()};
-        }
-
-        /**
-         * Line to split into several commandline arguments.
-         *
-         * @param line line to split into several commandline arguments
-         */
-        public void setLine( String line )
-            throws TaskException
-        {
-            parts = translateCommandline( line );
-        }
-
-        /**
-         * Sets a single commandline argument and treats it like a PATH -
-         * ensures the right separator for the local platform is used.
-         *
-         * @param value a single commandline argument.
-         */
-        public void setPath( Path value )
-        {
-            parts = new String[]{value.toString()};
-        }
-
-        /**
-         * Sets a single commandline argument.
-         *
-         * @param value a single commandline argument.
-         */
-        public void setValue( String value )
-        {
-            parts = new String[]{value};
-        }
-
-        /**
-         * Returns the parts this Argument consists of.
-         *
-         * @return The Parts value
-         */
-        public String[] getParts()
-        {
-            return parts;
-        }
-    }
-
-    /**
-     * Class to keep track of the position of an Argument.
-     *
-     * @author RT
-     */
-    // <p>This class is there to support the srcfile and targetfile
-    // elements of &lt;execon&gt; and &lt;transform&gt; - don't know
-    // whether there might be additional use cases.</p> --SB
-    public class Marker
-    {
-        private int realPos = -1;
-
-        private int position;
-
-        Marker( int position )
-        {
-            this.position = position;
-        }
-
-        /**
-         * Return the number of arguments that preceeded this marker. <p>
-         *
-         * The name of the executable - if set - is counted as the very first
-         * argument.</p>
-         *
-         * @return The Position value
-         */
-        public int getPosition()
-        {
-            if( realPos == -1 )
-            {
-                realPos = ( m_executable == null ? 0 : 1 );
-                for( int i = 0; i < position; i++ )
-                {
-                    Argument arg = (Argument)m_arguments.get( i );
-                    realPos += arg.getParts().length;
-                }
-            }
-            return realPos;
-        }
-    }
 }

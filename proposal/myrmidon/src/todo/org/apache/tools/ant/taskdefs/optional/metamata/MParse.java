@@ -22,6 +22,7 @@ import org.apache.tools.ant.taskdefs.exec.LogStreamHandler;
 import org.apache.tools.ant.types.Commandline;
 import org.apache.tools.ant.types.CommandlineJava;
 import org.apache.tools.ant.types.Path;
+import org.apache.tools.ant.types.Argument;
 
 /**
  * Simple Metamata MParse task based on the original written by <a
@@ -160,7 +161,7 @@ public class MParse extends Task
      *
      * @return Description of the Returned Value
      */
-    public Commandline.Argument createJvmarg()
+    public Argument createJvmarg()
     {
         return cmdl.createVmArgument();
     }
@@ -218,14 +219,14 @@ public class MParse extends Task
         }
 
         // set the metamata.home property
-        final Commandline.Argument vmArgs = cmdl.createVmArgument();
+        final Argument vmArgs = cmdl.createVmArgument();
         vmArgs.setValue( "-Dmetamata.home=" + metahome.getAbsolutePath() );
 
         // write all the options to a temp file and use it ro run the process
         String[] options = getOptions();
         optionsFile = createTmpFile();
         generateOptionsFile( optionsFile, options );
-        Commandline.Argument args = cmdl.createArgument();
+        Argument args = cmdl.createArgument();
         args.setLine( "-arguments " + optionsFile.getAbsolutePath() );
     }
 

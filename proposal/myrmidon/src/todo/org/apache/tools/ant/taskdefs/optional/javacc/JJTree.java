@@ -19,6 +19,7 @@ import org.apache.tools.ant.taskdefs.exec.LogStreamHandler;
 import org.apache.tools.ant.types.Commandline;
 import org.apache.tools.ant.types.CommandlineJava;
 import org.apache.tools.ant.types.Path;
+import org.apache.tools.ant.types.Argument;
 
 /**
  * Taskdef for the JJTree compiler compiler.
@@ -180,7 +181,7 @@ public class JJTree extends Task
                                                "/JavaCC.zip" );
         classpath.addJavaRuntime();
 
-        final Commandline.Argument arg = cmdl.createVmArgument();
+        final Argument arg = cmdl.createVmArgument();
         arg.setValue( "-mx140M" );
         arg.setValue( "-Dinstall.root=" + javaccHome.getAbsolutePath() );
 

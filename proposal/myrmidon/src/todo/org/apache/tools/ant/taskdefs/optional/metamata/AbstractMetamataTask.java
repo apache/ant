@@ -25,6 +25,7 @@ import org.apache.tools.ant.types.Commandline;
 import org.apache.tools.ant.types.CommandlineJava;
 import org.apache.tools.ant.types.FileSet;
 import org.apache.tools.ant.types.Path;
+import org.apache.tools.ant.types.Argument;
 
 /**
  * Somewhat abstract framework to be used for other metama 2.0 tasks. This
@@ -169,7 +170,7 @@ public abstract class AbstractMetamataTask extends Task
      *
      * @return Description of the Returned Value
      */
-    public Commandline.Argument createJvmarg()
+    public Argument createJvmarg()
     {
         return cmdl.createVmArgument();
     }
@@ -226,7 +227,7 @@ public abstract class AbstractMetamataTask extends Task
         classPath.createPathElement().setLocation( jar );
 
         // set the metamata.home property
-        final Commandline.Argument vmArgs = cmdl.createVmArgument();
+        final Argument vmArgs = cmdl.createVmArgument();
         vmArgs.setValue( "-Dmetamata.home=" + metamataHome.getAbsolutePath() );
 
         // retrieve all the files we want to scan
@@ -237,7 +238,7 @@ public abstract class AbstractMetamataTask extends Task
         ArrayList options = getOptions();
         optionsFile = createTmpFile();
         generateOptionsFile( optionsFile, options );
-        Commandline.Argument args = cmdl.createArgument();
+        Argument args = cmdl.createArgument();
         args.setLine( "-arguments " + optionsFile.getAbsolutePath() );
     }
 

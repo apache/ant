@@ -22,6 +22,7 @@ import org.apache.tools.ant.Task;
 import org.apache.tools.ant.types.Commandline;
 import org.apache.tools.ant.types.EnvironmentData;
 import org.apache.tools.ant.types.EnvironmentVariable;
+import org.apache.tools.ant.types.Argument;
 
 /**
  * Executes a given command if the os platform is appropriate.
@@ -186,7 +187,7 @@ public class ExecTask extends Task
      *
      * @return Description of the Returned Value
      */
-    public Commandline.Argument createArg()
+    public Argument createArg()
     {
         return cmdl.createArgument();
     }

@@ -25,6 +25,7 @@ import org.apache.tools.ant.types.CommandlineJava;
 import org.apache.tools.ant.types.EnumeratedAttribute;
 import org.apache.tools.ant.types.FileSet;
 import org.apache.tools.ant.types.Path;
+import org.apache.tools.ant.types.Argument;
 
 /**
  * Convenient task to run Sitraka JProbe Coverage from Ant. Options are pretty
@@ -217,7 +218,7 @@ public class Coverage extends Task
      *
      * @return Description of the Returned Value
      */
-    public Commandline.Argument createArg()
+    public Argument createArg()
     {
         return cmdlJava.createArgument();
     }
@@ -244,7 +245,7 @@ public class Coverage extends Task
      *
      * @return Description of the Returned Value
      */
-    public Commandline.Argument createJvmarg()
+    public Argument createJvmarg()
     {
         return cmdlJava.createVmArgument();
     }

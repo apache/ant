@@ -218,7 +218,7 @@ public class CommandlineJava implements Cloneable
         return c;
     }
 
-    public Commandline.Argument createArgument()
+    public Argument createArgument()
     {
         return javaCommand.createArgument();
     }
@@ -232,7 +232,7 @@ public class CommandlineJava implements Cloneable
         return classpath;
     }
 
-    public Commandline.Argument createVmArgument()
+    public Argument createVmArgument()
     {
         return vmCommand.createArgument();
     }
