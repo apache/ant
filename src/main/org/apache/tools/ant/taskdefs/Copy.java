@@ -360,7 +360,10 @@ public class Copy extends Task {
             }
 
             if (count > 0) {
-                log("Copied " + count + " empty directories to " + destDir.getAbsolutePath());
+                log("Copied " + count + 
+                    " empty director" + 
+                    (count==1?"y":"ies") + 
+                    " to " + destDir.getAbsolutePath());
             }
         }
     }
