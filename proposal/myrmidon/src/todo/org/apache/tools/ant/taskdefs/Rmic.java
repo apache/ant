@@ -685,7 +685,7 @@ public class Rmic extends MatchingTask
                 if( filtering )
                 {
                     final FilterSetCollection filters = new FilterSetCollection( project.getGlobalFilterSet() );
-                    FileUtils.newFileUtils().copyFile( oldFile, newFile, filters );
+                    FileUtils.copyFile( oldFile, newFile, filters );
                 }
                 else
                 {

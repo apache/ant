@@ -36,16 +36,6 @@ import org.apache.tools.ant.types.FilterSetCollection;
 public class FileUtils
 {
     /**
-     * Factory method.
-     *
-     * @return Description of the Returned Value
-     */
-    public static FileUtils newFileUtils()
-    {
-        return new FileUtils();
-    }
-
-    /**
      * Compares the contents of two files.
      *
      * @param f1 Description of Parameter
@@ -54,7 +44,7 @@ public class FileUtils
      * @exception IOException Description of Exception
      * @since 1.9
      */
-    public boolean contentEquals( File f1, File f2 )
+    public static boolean contentEquals( File f1, File f2 )
         throws IOException
     {
         if( f1.exists() != f2.exists() )
@@ -135,9 +125,9 @@ public class FileUtils
      * @param preserveLastModified Description of Parameter
      * @throws IOException
      */
-    public void copyFile( File sourceFile,
-                          File destFile,
-                          FilterSetCollection filters )
+    public static void copyFile( File sourceFile,
+                                 File destFile,
+                                 FilterSetCollection filters )
         throws IOException, TaskException
     {
         if( !destFile.exists() ||
@@ -218,7 +208,7 @@ public class FileUtils
      * @return Description of the Returned Value
      * @throws java.lang.NullPointerException if the file path is equal to null.
      */
-    public File normalize( String path )
+    public static File normalize( String path )
         throws TaskException
     {
         String orig = path;

@@ -162,7 +162,7 @@ public class Move extends Copy
                             {
                                 FileUtil.forceDelete( d );
                             }
-                            FileUtils.newFileUtils().copyFile( f, d, executionFilters );
+                            FileUtils.copyFile( f, d, executionFilters );
 
                             f = new File( fromFile );
                             if( !f.delete() )

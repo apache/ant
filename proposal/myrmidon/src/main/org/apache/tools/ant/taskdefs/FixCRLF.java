@@ -759,7 +759,7 @@ public class FixCRLF extends MatchingTask
             {
                 // Compare the destination with the temp file
                 log( "destFile exists", Project.MSG_DEBUG );
-                if( !FileUtils.newFileUtils().contentEquals( destFile, tmpFile ) )
+                if( !FileUtils.contentEquals( destFile, tmpFile ) )
                 {
                     log( destFile + " is being written", Project.MSG_DEBUG );
                     if( !destFile.delete() )

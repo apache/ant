@@ -368,7 +368,7 @@ public class Copy
                         FileUtil.forceDelete( dest );
                     }
 
-                    FileUtils.newFileUtils().copyFile( src, dest, executionFilters );
+                    FileUtils.copyFile( src, dest, executionFilters );
 
                     if( m_preserveLastModified )
                     {
