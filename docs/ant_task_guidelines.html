@@ -110,6 +110,21 @@ still be decoupled from the actual implementation.
 The other common re-use mechanism in ant is for one task to create and
 configure another. This is fairly simple. 
 
+<h2>Do your own Dependency Checking</h2>
+
+Make has the edge over Ant in its integrated dependency checking: the
+command line apps make invokes dont need to do their own work. Ant tasks
+do have to do their own dependency work, but if this can be done then 
+it can be done well. A good dependency aware task can work out the dependencies
+without explicit dependency information in the build file, and be smart 
+enough to work out the real dependencies, perhaps through a bit of file parsing.
+The <tt>depends</tt> task is the best example of this. Some of the zip/jar
+tasks are pretty good too, as they can update the archive when needed.
+Most tasks just compare source and destination timestamps and work from there.    
+Tasks which don't do any dependency checking do not help users as much as
+they can, because their needless work can trickle through the entire build, test
+and deploy process. 
+
 <h2>Support Java 1.1 through Java 1.4</h2>
 
 Ant is designed to support Java1.1: to build on it, to run on it. Sometimes
