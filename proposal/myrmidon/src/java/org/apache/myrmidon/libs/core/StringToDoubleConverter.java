@@ -5,34 +5,33 @@
  * version 1.1, a copy of which has been included with this distribution in
  * the LICENSE file.
  */
-package org.apache.ant.modules.basic;
+package org.apache.myrmidon.libs.core;
 
 import org.apache.avalon.framework.context.Context;
 import org.apache.myrmidon.converter.AbstractConverter;
 import org.apache.myrmidon.converter.ConverterException;
 
 /**
- * String to short converter
+ * String to double converter
  *
  * @author <a href="mailto:donaldp@apache.org">Peter Donald</a>
  */
-public class StringToShortConverter
+public class StringToDoubleConverter
     extends AbstractConverter
 {
-    public StringToShortConverter()
+    public StringToDoubleConverter()
     {
-        super( String.class, Short.class );
+        super( String.class, Double.class );
     }
 
     public Object convert( final Object original, final Context context )
         throws ConverterException
     {
-        try { return new Short( (String)original ); }
+        try { return new Double( (String)original ); }
         catch( final NumberFormatException nfe )
         {
             throw new ConverterException( "Error formatting object", nfe );
         }
-
     }
 }
 

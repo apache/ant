@@ -5,33 +5,34 @@
  * version 1.1, a copy of which has been included with this distribution in
  * the LICENSE file.
  */
-package org.apache.ant.modules.basic;
+package org.apache.myrmidon.libs.core;
 
+import org.apache.avalon.framework.context.Context;
 import org.apache.myrmidon.converter.AbstractConverter;
 import org.apache.myrmidon.converter.ConverterException;
-import org.apache.avalon.framework.context.Context;
 
 /**
- * String to float converter
+ * String to byte converter
  *
  * @author <a href="mailto:donaldp@apache.org">Peter Donald</a>
  */
-public class StringToFloatConverter
+public class StringToByteConverter
     extends AbstractConverter
 {
-    public StringToFloatConverter()
+    public StringToByteConverter()
     {
-        super( String.class, Float.class );
+        super( String.class, Byte.class );
     }
 
     public Object convert( final Object original, final Context context )
         throws ConverterException
     {
-        try { return new Float( (String)original ); }
+        try { return new Byte( (String)original ); }
         catch( final NumberFormatException nfe )
         {
             throw new ConverterException( "Error formatting object", nfe );
         }
+
     }
 }
 

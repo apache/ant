@@ -5,29 +5,29 @@
  * version 1.1, a copy of which has been included with this distribution in
  * the LICENSE file.
  */
-package org.apache.ant.modules.basic;
+package org.apache.myrmidon.libs.core;
 
 import org.apache.avalon.framework.context.Context;
 import org.apache.myrmidon.converter.AbstractConverter;
 import org.apache.myrmidon.converter.ConverterException;
 
 /**
- * String to long converter
+ * String to float converter
  *
  * @author <a href="mailto:donaldp@apache.org">Peter Donald</a>
  */
-public class StringToLongConverter
+public class StringToFloatConverter
     extends AbstractConverter
 {
-    public StringToLongConverter()
+    public StringToFloatConverter()
     {
-        super( String.class, Long.class );
+        super( String.class, Float.class );
     }
 
     public Object convert( final Object original, final Context context )
         throws ConverterException
     {
-        try { return new Long( (String)original ); }
+        try { return new Float( (String)original ); }
         catch( final NumberFormatException nfe )
         {
             throw new ConverterException( "Error formatting object", nfe );

@@ -5,34 +5,32 @@
  * version 1.1, a copy of which has been included with this distribution in
  * the LICENSE file.
  */
-package org.apache.ant.modules.basic;
+package org.apache.myrmidon.libs.core;
 
-import java.net.MalformedURLException;
-import java.net.URL;
 import org.apache.avalon.framework.context.Context;
 import org.apache.myrmidon.converter.AbstractConverter;
 import org.apache.myrmidon.converter.ConverterException;
 
 /**
- * String to url converter
+ * String to short converter
  *
  * @author <a href="mailto:donaldp@apache.org">Peter Donald</a>
  */
-public class StringToURLConverter
+public class StringToShortConverter
     extends AbstractConverter
 {
-    public StringToURLConverter()
+    public StringToShortConverter()
     {
-        super( String.class, URL.class );
+        super( String.class, Short.class );
     }
 
     public Object convert( final Object original, final Context context )
         throws ConverterException
     {
-        try { return new URL( (String)original ); }
-        catch( final MalformedURLException mue )
+        try { return new Short( (String)original ); }
+        catch( final NumberFormatException nfe )
         {
-            throw new ConverterException( "Error formatting object", mue );
+            throw new ConverterException( "Error formatting object", nfe );
         }
 
     }

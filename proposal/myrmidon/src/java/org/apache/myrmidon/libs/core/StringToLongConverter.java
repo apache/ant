@@ -5,33 +5,32 @@
  * version 1.1, a copy of which has been included with this distribution in
  * the LICENSE file.
  */
-package org.apache.ant.modules.basic;
+package org.apache.myrmidon.libs.core;
 
+import org.apache.avalon.framework.context.Context;
 import org.apache.myrmidon.converter.AbstractConverter;
 import org.apache.myrmidon.converter.ConverterException;
-import org.apache.avalon.framework.context.Context;
 
 /**
- * String to class converter
+ * String to long converter
  *
  * @author <a href="mailto:donaldp@apache.org">Peter Donald</a>
  */
-public class StringToClassConverter
+public class StringToLongConverter
     extends AbstractConverter
 {
-    public StringToClassConverter()
+    public StringToLongConverter()
     {
-        super( String.class, Class.class );
+        super( String.class, Long.class );
     }
 
     public Object convert( final Object original, final Context context )
         throws ConverterException
     {
-        //TODO: Should we use ContextClassLoader here???
-        try { return Class.forName( (String)original ); }
-        catch( final Exception e )
+        try { return new Long( (String)original ); }
+        catch( final NumberFormatException nfe )
         {
-            throw new ConverterException( "Error converting to class type", e );
+            throw new ConverterException( "Error formatting object", nfe );
         }
     }
 }

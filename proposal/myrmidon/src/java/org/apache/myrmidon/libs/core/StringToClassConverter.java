@@ -5,39 +5,33 @@
  * version 1.1, a copy of which has been included with this distribution in
  * the LICENSE file.
  */
-package org.apache.ant.modules.basic;
+package org.apache.myrmidon.libs.core;
 
-import java.io.File;
 import org.apache.avalon.framework.context.Context;
-import org.apache.myrmidon.api.TaskContext;
-import org.apache.myrmidon.api.TaskException;
 import org.apache.myrmidon.converter.AbstractConverter;
 import org.apache.myrmidon.converter.ConverterException;
 
 /**
- * String to file converter
+ * String to class converter
  *
  * @author <a href="mailto:donaldp@apache.org">Peter Donald</a>
  */
-public class StringToFileConverter
+public class StringToClassConverter
     extends AbstractConverter
 {
-    public StringToFileConverter()
+    public StringToClassConverter()
     {
-        super( String.class, File.class );
+        super( String.class, Class.class );
     }
 
     public Object convert( final Object original, final Context context )
         throws ConverterException
     {
-        try
+        //TODO: Should we use ContextClassLoader here???
+        try { return Class.forName( (String)original ); }
+        catch( final Exception e )
         {
-            final TaskContext taskContext = (TaskContext)context;
-            return taskContext.resolveFile( (String)original );
-        }
-        catch( final TaskException te )
-        {
-            throw new ConverterException( "Error resolving file during conversion", te );
+            throw new ConverterException( "Error converting to class type", e );
         }
     }
 }
