@@ -89,7 +89,6 @@ public class ExecuteWatchdogTest extends TestCase {
 			System.err.println("WARNING: 'build.tests' property is not available !");
 			classpath = System.getProperty("java.class.path");
 		}
-		System.out.println("Using classpath: " + classpath);		
 		return classpath;
 	}
 
