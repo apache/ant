@@ -534,12 +534,12 @@
          Create the binary distribution
        ===================================================================
   -->
-  <target name="distribution" 
-          description="--> creates a binary distribution">
+  <target name="main_distribution" 
+          description="--> creates the zip and tar distributions">
+    <delete dir="${dist.name}" />
     <mkdir dir="${dist.base}"/>
     <mkdir dir="${dist.base}/src"/>
     <mkdir dir="${dist.base}/bin"/>
-    <mkdir dir="${dist.base}/rpms"/>
 
     <antcall inheritAll="false" target="internal_dist">
       <param name="dist.dir" value="${dist.name}" />
@@ -587,9 +587,68 @@
     <gzip zipfile="${dist.base}/src/${dist.name}-src.tar.gz" 
           src="${dist.base}/src/${dist.name}-src.tar"/>
     <delete file="${dist.base}/src/${dist.name}-src.tar"/>
-    <delete dir="${dist.name}" />
+    <delete dir="${dist.name}" /> 
   </target>
 
+  <target name="rpm_check">
+    <available property="rpm.present" 
+               file="/bin/rpm"/>
+  </target>              
+  
+  <target name="rpm" description="Build the RPM files for ant" 
+          depends="prepare, rpm_check"
+          if="rpm.present">
+    <tstamp>
+      <format property="rpmyear" pattern="yyyyMMdd"/>
+      <format property="nightlybuild.dir" pattern="yyyy-MM-dd"/>
+    </tstamp>
+    <property name="rpm.release" value="cvs${rpmyear}"/>
+    <property name="rpm.source" value="nightly/${nightlybuild.dir}/"/>
+
+    <mkdir dir="build/rpm/SPECS"/>
+    <mkdir dir="build/rpm/SOURCES"/>
+    <mkdir dir="build/rpm/BUILD"/>
+    <mkdir dir="build/rpm/RPMS"/>
+    <mkdir dir="build/rpm/SRPMS"/>
+
+    <property name="disttar" location="${dist.base}/bin/${dist.name}-bin.tar.gz"/>
+    <copy file="src/etc/ant.spec" tofile="build/rpm/SPECS/ant.spec">
+      <filterset refid="ant.filters"/>
+      <filterset>
+        <filter token="RPM_RELEASE" value="${rpm.release}"/>
+        <filter token="RPM_SOURCE" value="${rpm.source}"/>
+        <filter token="DIST_TAR" value="${disttar}"/>
+      </filterset>
+    </copy>
+    <copy file="src/etc/antsrc.spec" tofile="build/rpm/SPECS/antsrc.spec">
+      <filterset refid="ant.filters"/>
+      <filterset>
+        <filter token="RPM_RELEASE" value="${rpm.release}"/>
+        <filter token="RPM_SOURCE" value="${rpm.source}"/>
+      </filterset>
+    </copy>
+    <rpm topDir="build/rpm" 
+         specfile="ant.spec"
+         command="-bb"/>
+
+    <copy file="distribution/src/${dist.name}-src.tar.gz" todir="build/rpm/SOURCES"/>
+    <rpm topDir="build/rpm" 
+         specfile="antsrc.spec"
+         command="-bs"/>
+
+    <mkdir dir="${dist.base}/rpms"/>
+    <copy todir="${dist.base}/rpms">
+      <fileset dir="build/rpm/RPMS/noarch"/>
+    </copy>         
+    <copy todir="${dist.base}/rpms">         
+      <fileset dir="build/rpm/SRPMS"/>
+    </copy>         
+  </target>
+
+  <target name="distribution" depends="main_distribution, rpm">
+  </target>
+
+  
   <!--
        ===================================================================
          Cleans up build and distribution directories
