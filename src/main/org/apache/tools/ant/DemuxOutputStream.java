@@ -92,6 +92,12 @@ public class DemuxOutputStream extends OutputStream {
     /** Initial buffer size. */
     private static final int INTIAL_SIZE = 132;
 
+    /** Carriage return */
+    private static final int CR = 0x0d;
+
+    /** Linefeed */
+    private static final int LF = 0x0a;
+
     /** Mapping from thread to buffer (Thread to BufferInfo). */
     private Hashtable buffers = new Hashtable();
 
@@ -243,14 +249,23 @@ public class DemuxOutputStream extends OutputStream {
         }
     }
 
-    public void write(byte b[], int off, int len) throws IOException {
+    /**
+     * Write a block of characters to the output stream
+     *
+     * @param b the array containg the data
+     * @param off the offset into the array where data starts
+     * @param len the length of block
+     *
+     * @throws IOException if the data cannot be written into the stream.
+     */
+    public void write(byte[] b, int off, int len) throws IOException {
         // find the line breaks and pass other chars through in blocks
         int offset = off;
         int blockStartOffset = offset;
         int remaining = len;
         BufferInfo bufferInfo = getBufferInfo();
         while (remaining > 0) {
-            while (remaining > 0 && b[offset] != 0x0a && b[offset] != 0x0d) {
+            while (remaining > 0 && b[offset] != LF && b[offset] != CR) {
                 offset++;
                 remaining--;
             }
@@ -259,7 +274,7 @@ public class DemuxOutputStream extends OutputStream {
             if (blockLength > 0) {
                 bufferInfo.buffer.write(b, blockStartOffset, blockLength);
             }
-            while (remaining > 0 && (b[offset] == 0x0a || b[offset] == 0x0d)) {
+            while (remaining > 0 && (b[offset] == LF || b[offset] == CR)) {
                 write(b[offset]);
                 offset++;
                 remaining--;

@@ -439,8 +439,9 @@ public class UnknownElement extends Task {
      */
     public String getTaskName() {
         //return elementName;
-        return realThing == null || !(realThing instanceof Task) ?
-            super.getTaskName() : ((Task) realThing).getTaskName();
+        return realThing == null
+            || !(realThing instanceof Task) ? super.getTaskName()
+                                            : ((Task) realThing).getTaskName();
     }
 
     /**
@@ -481,6 +482,4 @@ public class UnknownElement extends Task {
         }
         return false;
     }
-
-
-}// UnknownElement
+}

@@ -132,7 +132,7 @@ public class ProjectHelper {
     // Since the tree is composed of UE and RC - it can be reused !
     // protected Hashtable processedFiles=new Hashtable();
 
-    protected Vector importStack = new Vector();
+    private Vector importStack = new Vector();
 
     // Temporary - until we figure a better API
     /** EXPERIMENTAL WILL_CHANGE
@@ -146,6 +146,8 @@ public class ProjectHelper {
      *  Import stack.
      *  Used to keep track of imported files. Error reporting should
      *  display the import path.
+     *
+     * @return the stack of import source objects.
      */
     public Vector getImportStack() {
         return importStack;
@@ -229,8 +231,8 @@ public class ProjectHelper {
                     String helperClassName = rd.readLine();
                     rd.close();
 
-                    if (helperClassName != null &&
-                        !"".equals(helperClassName)) {
+                    if (helperClassName != null
+                        && !"".equals(helperClassName)) {
 
                         helper = newHelper(helperClassName);
                     }

@@ -349,8 +349,8 @@ public class RuntimeConfigurable implements Serializable {
         }
 
         // Configure the object
-        Object target = (wrappedObject instanceof TypeAdapter) ?
-                ((TypeAdapter) wrappedObject).getProxy() : wrappedObject;
+        Object target = (wrappedObject instanceof TypeAdapter)
+            ? ((TypeAdapter) wrappedObject).getProxy() : wrappedObject;
 
         //PropertyHelper ph=PropertyHelper.getPropertyHelper(p);
         IntrospectionHelper ih =

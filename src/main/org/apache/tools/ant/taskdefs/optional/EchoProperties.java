@@ -296,7 +296,9 @@ public class EchoProperties extends Task {
                     if (null != in) {
                         in.close();
                     }
-                } catch (IOException ioe) {}
+                } catch (IOException ioe) {
+                    //ignore
+                }
             }
         }
 
@@ -347,6 +349,7 @@ public class EchoProperties extends Task {
                 try {
                     os.close();
                 } catch (IOException e) {
+                    //ignore
                 }
             }
         }
@@ -390,7 +393,7 @@ public class EchoProperties extends Task {
         String name;
         Enumeration e = props.propertyNames();
         while (e.hasMoreElements()) {
-            name = (String)e.nextElement();
+            name = (String) e.nextElement();
             Element propElement = doc.createElement(PROPERTY);
             propElement.setAttribute(ATTR_NAME, name);
             propElement.setAttribute(ATTR_VALUE, props.getProperty(name));

@@ -92,7 +92,7 @@ public class XmlLogger implements BuildLogger {
     private PrintStream outStream;
 
     /** DocumentBuilder to use when creating the document to start with. */
-    private static final DocumentBuilder builder = getDocumentBuilder();
+    private static DocumentBuilder builder = getDocumentBuilder();
 
     /**
      * Returns a default DocumentBuilder instance or throws an
@@ -230,6 +230,7 @@ public class XmlLogger implements BuildLogger {
                 try {
                     out.close();
                 } catch (IOException e) {
+                    // ignore
                 }
             }
         }

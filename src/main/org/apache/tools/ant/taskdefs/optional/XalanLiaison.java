@@ -108,17 +108,23 @@ public class XalanLiaison implements XSLTLiaison {
                 if (xslStream != null) {
                     xslStream.close();
                 }
-            } catch (IOException ignored) {}
+            } catch (IOException ignored) {
+                //ignore
+            }
             try {
                 if (fis != null) {
                     fis.close();
                 }
-            } catch (IOException ignored) {}
+            } catch (IOException ignored) {
+                //ignore
+           }
             try {
                 if (fos != null) {
                     fos.close();
                 }
-            } catch (IOException ignored) {}
+            } catch (IOException ignored) {
+                //ignore
+            }
         }
     }
 

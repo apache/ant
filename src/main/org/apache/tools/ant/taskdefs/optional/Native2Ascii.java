@@ -135,6 +135,10 @@ public class Native2Ascii extends MatchingTask {
 
     /**
      * Defines the FileNameMapper to use (nested mapper element).
+     *
+     * @return the mapper to use for file name translations.
+     *
+     * @throws BuildException if more than one mapper is defined.
      */
     public Mapper createMapper() throws BuildException {
         if (mapper != null) {
@@ -145,6 +149,11 @@ public class Native2Ascii extends MatchingTask {
         return mapper;
     }
 
+    /**
+     * Execute the task
+     *
+     * @throws BuildException is there is a problem in the task execution.
+     */
     public void execute() throws BuildException {
 
         DirectoryScanner scanner = null; // Scanner to find our inputs
@@ -252,8 +261,10 @@ public class Native2Ascii extends MatchingTask {
 
     private class ExtMapper implements FileNameMapper {
 
-        public void setFrom(String s) {}
-        public void setTo(String s) {}
+        public void setFrom(String s) {
+        }
+        public void setTo(String s) {
+        }
 
         public String[] mapFileName(String fileName) {
             int lastDot = fileName.lastIndexOf('.');

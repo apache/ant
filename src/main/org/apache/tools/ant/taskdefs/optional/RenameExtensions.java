@@ -98,7 +98,9 @@ public class RenameExtensions extends MatchingTask {
 
     /**
      * The string that files must end in to be renamed
-     **/
+     *
+     * @param from the extension of files being renamed.
+     */
     public void setFromExtension(String from) {
         fromExtension = from;
     }
@@ -106,6 +108,8 @@ public class RenameExtensions extends MatchingTask {
     /**
      * The string that renamed files will end with on
      * completion
+     *
+     * @param to the extension of the renamed files.
      */
     public void setToExtension(String to) {
         toExtension = to;
@@ -114,6 +118,8 @@ public class RenameExtensions extends MatchingTask {
     /**
      * store replace attribute - this determines whether the target file
      * should be overwritten if present
+     *
+     * @param replace if true overwrite any target files that exist.
      */
     public void setReplace(boolean replace) {
         this.replace = replace;
@@ -121,6 +127,8 @@ public class RenameExtensions extends MatchingTask {
 
     /**
      * Set the source dir to find the files to be renamed.
+     *
+     * @param srcDir the source directory.
      */
     public void setSrcDir(File srcDir) {
         this.srcDir = srcDir;
@@ -128,6 +136,8 @@ public class RenameExtensions extends MatchingTask {
 
     /**
      * Executes the task.
+     *
+     * @throws BuildException is there is a problem in the task execution.
      */
     public void execute() throws BuildException {
 

@@ -77,12 +77,12 @@ public class Target implements TaskContainer {
     /** The "unless" condition to test on execution. */
     private String unlessCondition = "";
     /** List of targets this target is dependent on. */
-    private List/*<String>*/ dependencies = null;
+    private List dependencies = null;
     /** Children of this target (tasks and data types). */
-    private List/*<Task|RuntimeConfigurable>*/ children = new ArrayList(5);
+    private List children = new ArrayList();
     /** Position in task list */
     private int taskPosition = 0;
-    
+
     /** Project this target belongs to. */
     private Project project;
     /** Description of this target, if any. */
@@ -180,7 +180,7 @@ public class Target implements TaskContainer {
     public void startImportedTasks() {
         importedTasks = new ArrayList();
     }
-    
+
     /**
      * Adds a task to this target.
      *
@@ -228,7 +228,7 @@ public class Target implements TaskContainer {
             }
         }
 
-        return (Task[])tasks.toArray(new Task[tasks.size()]);
+        return (Task[]) tasks.toArray(new Task[tasks.size()]);
     }
 
     /**

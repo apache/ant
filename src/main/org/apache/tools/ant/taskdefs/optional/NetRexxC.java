@@ -163,10 +163,14 @@ public class NetRexxC extends MatchingTask {
     private boolean suppressDeprecation = false;
 
     // constants for the messages to suppress by flags and their corresponding properties
-    static final String MSG_METHOD_ARGUMENT_NOT_USED = "Warning: Method argument is not used";
-    static final String MSG_PRIVATE_PROPERTY_NOT_USED = "Warning: Private property is defined but not used";
-    static final String MSG_VARIABLE_NOT_USED = "Warning: Variable is set but not used";
-    static final String MSG_EXCEPTION_NOT_SIGNALLED = "is in SIGNALS list but is not signalled within the method";
+    static final String MSG_METHOD_ARGUMENT_NOT_USED
+        = "Warning: Method argument is not used";
+    static final String MSG_PRIVATE_PROPERTY_NOT_USED
+        = "Warning: Private property is defined but not used";
+    static final String MSG_VARIABLE_NOT_USED
+        = "Warning: Variable is set but not used";
+    static final String MSG_EXCEPTION_NOT_SIGNALLED
+        = "is in SIGNALS list but is not signalled within the method";
     static final String MSG_DEPRECATION = "has been deprecated";
 
     // other implementation variables
@@ -290,7 +294,7 @@ public class NetRexxC extends MatchingTask {
      * false.
      */
     public void setJava(boolean java) {
-        log( "The attribute java is currently unused.", Project.MSG_WARN );
+        log("The attribute java is currently unused.", Project.MSG_WARN);
     }
 
 
@@ -527,7 +531,6 @@ public class NetRexxC extends MatchingTask {
      * with arguments like -Dant.netrexxc.verbose=verbose5 one can easily take
      * control of all netrexxc-tasks.
      */
-    // Sorry for the formatting, but that way it's easier to keep in sync with the private properties (line by line).
     public void init() {
         String p;
 
@@ -736,7 +739,7 @@ public class NetRexxC extends MatchingTask {
             j++;
         }
         // create a single array of arguments for the compiler
-        String compileArgs[] = new String[compileOptionsArray.length + fileListArray.length];
+        String[] compileArgs = new String[compileOptionsArray.length + fileListArray.length];
 
         for (int i = 0; i < compileOptionsArray.length; i++) {
             compileArgs[i] = compileOptionsArray[i];
@@ -782,38 +785,48 @@ public class NetRexxC extends MatchingTask {
             String l;
             BufferedReader in = new BufferedReader(new StringReader(out.toString()));
 
-            log("replacing destdir '" + ddir + "' through sourcedir '" + sdir + "'", Project.MSG_VERBOSE);
+            log("replacing destdir '" + ddir + "' through sourcedir '"
+                + sdir + "'", Project.MSG_VERBOSE);
             while ((l = in.readLine()) != null) {
                 int idx;
 
-                while (doReplace && ((idx = l.indexOf(ddir)) != -1)) {// path is mentioned in the message
+                while (doReplace && ((idx = l.indexOf(ddir)) != -1)) {
+                    // path is mentioned in the message
                     l = (new StringBuffer(l)).replace(idx, idx + dlen, sdir).toString();
                 }
                 // verbose level logging for suppressed messages
-                if (suppressMethodArgumentNotUsed && l.indexOf(MSG_METHOD_ARGUMENT_NOT_USED) != -1) {
+                if (suppressMethodArgumentNotUsed
+                    && l.indexOf(MSG_METHOD_ARGUMENT_NOT_USED) != -1) {
                     log(l, Project.MSG_VERBOSE);
-                } else if (suppressPrivatePropertyNotUsed && l.indexOf(MSG_PRIVATE_PROPERTY_NOT_USED) != -1) {
+                } else if (suppressPrivatePropertyNotUsed
+                    && l.indexOf(MSG_PRIVATE_PROPERTY_NOT_USED) != -1) {
                     log(l, Project.MSG_VERBOSE);
-                } else if (suppressVariableNotUsed && l.indexOf(MSG_VARIABLE_NOT_USED) != -1) {
+                } else if (suppressVariableNotUsed
+                    && l.indexOf(MSG_VARIABLE_NOT_USED) != -1) {
                     log(l, Project.MSG_VERBOSE);
-                } else if (suppressExceptionNotSignalled && l.indexOf(MSG_EXCEPTION_NOT_SIGNALLED) != -1) {
+                } else if (suppressExceptionNotSignalled
+                    && l.indexOf(MSG_EXCEPTION_NOT_SIGNALLED) != -1) {
                     log(l, Project.MSG_VERBOSE);
-                } else if (suppressDeprecation && l.indexOf(MSG_DEPRECATION) != -1) {
+                } else if (suppressDeprecation
+                    && l.indexOf(MSG_DEPRECATION) != -1) {
                     log(l, Project.MSG_VERBOSE);
-                } else if (l.indexOf("Error:") != -1) {// error level logging for compiler errors
+                } else if (l.indexOf("Error:") != -1) {
+                    // error level logging for compiler errors
                     log(l, Project.MSG_ERR);
-                } else if (l.indexOf("Warning:") != -1) {// warning for all warning messages
+                } else if (l.indexOf("Warning:") != -1) {
+                    // warning for all warning messages
                     log(l, Project.MSG_WARN);
                 } else {
-                    log(l, Project.MSG_INFO);// info level for the rest.
+                    log(l, Project.MSG_INFO); // info level for the rest.
                 }
             }
             if (rc > 1) {
-                throw new BuildException("Compile failed, messages should have been provided.");
+                throw new BuildException("Compile failed, messages should "
+                    + "have been provided.");
             }
         } catch (IOException ioe) {
-            throw new BuildException("Unexpected IOException while playing with Strings",
-                ioe);
+            throw new BuildException("Unexpected IOException while "
+                + "playing with Strings", ioe);
         } finally {
             // need to reset java.class.path property
             // since the NetRexx compiler has no option for the classpath
@@ -902,8 +915,8 @@ public class NetRexxC extends MatchingTask {
                 target.append(File.pathSeparator);
                 target.append(f.getAbsolutePath());
             } else {
-                log("Dropping from classpath: " +
-                    f.getAbsolutePath(), Project.MSG_VERBOSE);
+                log("Dropping from classpath: "
+                    + f.getAbsolutePath(), Project.MSG_VERBOSE);
             }
         }
 

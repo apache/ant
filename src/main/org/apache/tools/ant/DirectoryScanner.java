@@ -655,7 +655,7 @@ public class DirectoryScanner
         // put in the newroots vector the include patterns without
         // wildcard tokens
         for (int icounter = 0; icounter < includes.length; icounter++) {
-            String newpattern = 
+            String newpattern =
                 SelectorUtils.rtrimWildcardTokens(includes[icounter]);
             // check whether the candidate new pattern has a parent
             boolean hasParent = false;
@@ -716,19 +716,19 @@ public class DirectoryScanner
                     }  else {
                         if (currentelement.length() > 0) {
                             if (currentelement.charAt(currentelement.length()
-                                                      - 1) 
+                                                      - 1)
                                 != File.separatorChar) {
-                                currentelement = 
+                                currentelement =
                                     currentelement + File.separatorChar;
                             }
                         }
                         scandir(myfile, currentelement, true);
                     }
                 } else {
-                    if (isCaseSensitive 
+                    if (isCaseSensitive
                         && originalpattern.equals(currentelement)) {
                         accountForIncludedFile(currentelement, myfile);
-                    } else if (!isCaseSensitive 
+                    } else if (!isCaseSensitive
                         && originalpattern.equalsIgnoreCase(currentelement)) {
                         accountForIncludedFile(currentelement, myfile);
                     }
@@ -1160,7 +1160,7 @@ public class DirectoryScanner
      * @since Ant 1.6
      */
     private File findFileCaseInsensitive(File base, String path) {
-        File f = findFileCaseInsensitive(base, 
+        File f = findFileCaseInsensitive(base,
                                          SelectorUtils.tokenizePath(path));
         return  f == null ? new File(base, path) : f;
     }
@@ -1211,7 +1211,7 @@ public class DirectoryScanner
      * basedir?
      * @since Ant 1.6
      */
-    private boolean isSymlink(File base, Vector pathElements) { 
+    private boolean isSymlink(File base, Vector pathElements) {
         if (pathElements.size() > 0) {
             String current = (String) pathElements.remove(0);
             try {

@@ -61,6 +61,8 @@ import java.lang.ref.WeakReference;
 /**
  * This is a reference that really is is Weak, as it uses the
  * appropriate java.lang.ref class.
+ *
+ * @author Not Specified.
  */
 public class WeakishReference12 extends WeakishReference  {
 
@@ -78,6 +80,8 @@ public class WeakishReference12 extends WeakishReference  {
 
     /**
      * Returns this reference object's referent.
+     *
+     * @return referent.
      */
     public Object get() {
         return weakref.get();

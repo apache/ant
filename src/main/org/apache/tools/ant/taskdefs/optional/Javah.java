@@ -275,25 +275,31 @@ public class Javah extends Task {
     }
 
     /**
-     * Executes the task.
+     * Execute the task
+     *
+     * @throws BuildException is there is a problem in the task execution.
      */
     public void execute() throws BuildException {
         // first off, make sure that we've got a srcdir
 
         if ((cls == null) && (classes.size() == 0)) {
-            throw new BuildException("class attribute must be set!", getLocation());
+            throw new BuildException("class attribute must be set!",
+                getLocation());
         }
 
         if ((cls != null) && (classes.size() > 0)) {
-            throw new BuildException("set class attribute or class element, not both.", getLocation());
+            throw new BuildException("set class attribute or class element, "
+                + "not both.", getLocation());
         }
 
         if (destDir != null) {
             if (!destDir.isDirectory()) {
-                throw new BuildException("destination directory \"" + destDir + "\" does not exist or is not a directory", getLocation());
+                throw new BuildException("destination directory \"" + destDir
+                    + "\" does not exist or is not a directory", getLocation());
             }
             if (outputFile != null) {
-                throw new BuildException("destdir and outputFile are mutually exclusive", getLocation());
+                throw new BuildException("destdir and outputFile are mutually "
+                    + "exclusive", getLocation());
             }
         }
 
@@ -305,8 +311,8 @@ public class Javah extends Task {
 
         String compiler = getProject().getProperty("build.compiler");
         if (compiler == null) {
-            if (!JavaEnvUtils.isJavaVersion(JavaEnvUtils.JAVA_1_1) &&
-                !JavaEnvUtils.isJavaVersion(JavaEnvUtils.JAVA_1_2)) {
+            if (!JavaEnvUtils.isJavaVersion(JavaEnvUtils.JAVA_1_1)
+                && !JavaEnvUtils.isJavaVersion(JavaEnvUtils.JAVA_1_2)) {
                 compiler = "modern";
             } else {
                 compiler = "classic";
@@ -357,9 +363,9 @@ public class Javah extends Task {
             Object javahMain = constructor.newInstance(new Object[] {cmd.getArguments()});
 
             // find the run method
-            Method runMethod = javahMainClass.getMethod("run",new Class[0]);
+            Method runMethod = javahMainClass.getMethod("run", new Class[0]);
 
-            runMethod.invoke(javahMain,new Object[0]);
+            runMethod.invoke(javahMain, new Object[0]);
         } catch (Exception ex) {
             if (ex instanceof BuildException) {
                 throw (BuildException) ex;

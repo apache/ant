@@ -99,16 +99,16 @@ public class Main implements AntMain {
     private static PrintStream err = System.err;
 
     /** The build targets. */
-    private Vector targets = new Vector(5);
+    private Vector targets = new Vector();
 
     /** Set of properties that can be used by tasks. */
     private Properties definedProps = new Properties();
 
     /** Names of classes to add as listeners to project. */
-    private Vector listeners = new Vector(5);
+    private Vector listeners = new Vector(1);
 
     /** File names of property files to load on startup. */
-    private Vector propertyFiles = new Vector(5);
+    private Vector propertyFiles = new Vector(1);
 
     /** Indicates whether this build is to support interactive input */
     private boolean allowInput = true;
@@ -334,8 +334,8 @@ public class Main implements AntMain {
                         + "permissions.";
                     throw new BuildException(msg);
                 } catch (ArrayIndexOutOfBoundsException aioobe) {
-                    String msg = "You must specify a log file when " +
-                        "using the -log argument";
+                    String msg = "You must specify a log file when "
+                        + "using the -log argument";
                     throw new BuildException(msg);
                 }
             } else if (arg.equals("-buildfile") || arg.equals("-file")
@@ -344,8 +344,8 @@ public class Main implements AntMain {
                     buildFile = new File(args[i + 1].replace('/', File.separatorChar));
                     i++;
                 } catch (ArrayIndexOutOfBoundsException aioobe) {
-                    String msg = "You must specify a buildfile when " +
-                        "using the -buildfile argument";
+                    String msg = "You must specify a buildfile when "
+                        + "using the -buildfile argument";
                     throw new BuildException(msg);
                 }
             } else if (arg.equals("-listener")) {
@@ -353,8 +353,8 @@ public class Main implements AntMain {
                     listeners.addElement(args[i + 1]);
                     i++;
                 } catch (ArrayIndexOutOfBoundsException aioobe) {
-                    String msg = "You must specify a classname when " +
-                        "using the -listener argument";
+                    String msg = "You must specify a classname when "
+                        + "using the -listener argument";
                     throw new BuildException(msg);
                 }
             } else if (arg.startsWith("-D")) {
@@ -421,8 +421,8 @@ public class Main implements AntMain {
                     propertyFiles.addElement(args[i + 1]);
                     i++;
                 } catch (ArrayIndexOutOfBoundsException aioobe) {
-                    String msg = "You must specify a property filename when " +
-                        "using the -propertyfile argument";
+                    String msg = "You must specify a property filename when "
+                        + "using the -propertyfile argument";
                     throw new BuildException(msg);
                 }
             } else if (arg.equals("-k") || arg.equals("-keep-going")) {
@@ -483,6 +483,7 @@ public class Main implements AntMain {
                     try {
                         fis.close();
                     } catch (IOException e) {
+                        // ignore
                     }
                 }
             }
@@ -502,7 +503,8 @@ public class Main implements AntMain {
         }
 
         if (logTo != null) {
-            out = err = logTo;
+            out = logTo;
+            err = logTo;
             System.setOut(out);
             System.setErr(out);
         }
@@ -605,8 +607,8 @@ public class Main implements AntMain {
             // use a system manager that prevents from System.exit()
             // only in JDK > 1.1
             SecurityManager oldsm = null;
-            if (!JavaEnvUtils.isJavaVersion(JavaEnvUtils.JAVA_1_0) &&
-                !JavaEnvUtils.isJavaVersion(JavaEnvUtils.JAVA_1_1)) {
+            if (!JavaEnvUtils.isJavaVersion(JavaEnvUtils.JAVA_1_0)
+                && !JavaEnvUtils.isJavaVersion(JavaEnvUtils.JAVA_1_1)) {
                 oldsm = System.getSecurityManager();
 
                 //SecurityManager can not be installed here for backwards

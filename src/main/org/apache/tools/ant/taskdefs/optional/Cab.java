@@ -177,8 +177,8 @@ public class Cab extends MatchingTask {
         boolean upToDate = true;
         for (int i = 0; i < files.size() && upToDate; i++) {
             String file = files.elementAt(i).toString();
-            if (fileUtils.resolveFile(baseDir, file).lastModified() >
-                cabFile.lastModified()) {
+            if (fileUtils.resolveFile(baseDir, file).lastModified()
+                    > cabFile.lastModified()) {
                 upToDate = false;
             }
         }

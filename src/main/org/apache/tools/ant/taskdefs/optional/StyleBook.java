@@ -70,8 +70,7 @@ import org.apache.tools.ant.taskdefs.Java;
  * @author <a href="mailto:marcus.boerger@post.rwth-aachen.de">Marcus
  *      B&ouml;rger</a>
  */
-public class StyleBook
-     extends Java {
+public class StyleBook extends Java {
     protected File m_targetDirectory;
     protected File m_skinDirectory;
     protected String m_loaderConfig;

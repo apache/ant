@@ -298,6 +298,7 @@ public class ANTLR extends Task {
 
     public void execute() throws BuildException {
         validateAttributes();
+
         //TODO: use ANTLR to parse the grammar file to do this.
         File generatedFile = getGeneratedFile();
         boolean targetIsOutOfDate =
@@ -437,6 +438,7 @@ public class ANTLR extends Task {
     /**
      * Whether the antlr version is 2.7.2 (or higher).
      *
+     * @return true if the version of Antlr present is 2.7.2 or later.
      * @since Ant 1.6
      */
     protected boolean is272() {

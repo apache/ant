@@ -502,8 +502,8 @@ public class IntrospectionHelper implements BuildListener {
                 return;
             } else {
                 // Not whitespace - fail
-                String msg = project.getElementName(element) +
-                    " doesn't support nested text data.";
+                String msg = project.getElementName(element)
+                    + " doesn't support nested text data.";
                 throw new BuildException(msg);
             }
         }
@@ -703,8 +703,8 @@ public class IntrospectionHelper implements BuildListener {
         throws BuildException {
         Class at = (Class) attributeTypes.get(attributeName);
         if (at == null) {
-            String msg = "Class " + bean.getName() +
-                " doesn't support the \"" + attributeName + "\" attribute.";
+            String msg = "Class " + bean.getName()
+                + " doesn't support the \"" + attributeName + "\" attribute.";
             throw new BuildException(msg);
         }
         return at;

@@ -72,6 +72,8 @@ import org.apache.tools.ant.BuildException;
  * to a script.
  * The script is meant to use get self.token and
  * set self.token in the reply.
+ *
+ * @author Not Specified.
  */
 public class ScriptFilter extends TokenFilter.ChainableReaderFilter {
     /** The language - attribute of element */
@@ -90,7 +92,7 @@ public class ScriptFilter extends TokenFilter.ChainableReaderFilter {
     /**
      * Defines the language (required).
      *
-     * @param msg Sets the value for the script variable.
+     * @param language the scripting language name for the script.
      */
     public void setLanguage(String language) {
         this.language = language;
@@ -105,8 +107,8 @@ public class ScriptFilter extends TokenFilter.ChainableReaderFilter {
         for (Enumeration e = dictionary.keys(); e.hasMoreElements();) {
             String key = (String) e.nextElement();
 
-            boolean isValid = key.length() > 0 &&
-                Character.isJavaIdentifierStart(key.charAt(0));
+            boolean isValid = key.length() > 0
+                && Character.isJavaIdentifierStart(key.charAt(0));
 
             for (int i = 1; isValid && i < key.length(); i++) {
                 isValid = Character.isJavaIdentifierPart(key.charAt(i));
@@ -116,8 +118,7 @@ public class ScriptFilter extends TokenFilter.ChainableReaderFilter {
                 if (isValid) {
                     beans.put(key, dictionary.get(key));
                 }
-            }
-            catch (Throwable t) {
+            } catch (Throwable t) {
                 throw new BuildException(t);
                 //System.err.println("What the helll");
             }
@@ -203,8 +204,7 @@ public class ScriptFilter extends TokenFilter.ChainableReaderFilter {
         try {
             manager.exec(language, "<ANT>", 0, 0, script);
             return getToken();
-        }
-        catch (BSFException be) {
+        } catch (BSFException be) {
             Throwable t = be;
             Throwable te = be.getTargetException();
             if (te != null) {
@@ -220,7 +220,7 @@ public class ScriptFilter extends TokenFilter.ChainableReaderFilter {
     /**
      * Load the script from an external file ; optional.
      *
-     * @param msg Sets the value for the script variable.
+     * @param fileName the name of the file containing the script source.
      */
     public void setSrc(String fileName) {
         File file = new File(fileName);
@@ -229,7 +229,7 @@ public class ScriptFilter extends TokenFilter.ChainableReaderFilter {
         }
 
         int count = (int) file.length();
-        byte data[] = new byte[count];
+        byte[] data = new byte[count];
 
         try {
             FileInputStream inStream = new FileInputStream(file);
@@ -245,7 +245,7 @@ public class ScriptFilter extends TokenFilter.ChainableReaderFilter {
     /**
      * The script text.
      *
-     * @param msg Sets the value for the script variable.
+     * @param text a component of the script text to be added.
      */
     public void addText(String text) {
         this.script += text;

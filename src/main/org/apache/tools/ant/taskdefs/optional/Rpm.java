@@ -126,6 +126,11 @@ public class Rpm extends Task {
      */
     private File error;
 
+    /**
+     * Execute the task
+     *
+     * @throws BuildException is there is a problem in the task execution.
+     */
     public void execute() throws BuildException {
 
         Commandline toExecute = new Commandline();
@@ -161,7 +166,9 @@ public class Rpm extends Task {
         } else {
             if (output != null) {
                 try {
-                    outputstream = new PrintStream(new BufferedOutputStream(new FileOutputStream(output)));
+                    BufferedOutputStream bos
+                        = new BufferedOutputStream(new FileOutputStream(output));
+                    outputstream = new PrintStream(bos);
                 } catch (IOException e) {
                     throw new BuildException(e, getLocation());
                 }
@@ -170,7 +177,9 @@ public class Rpm extends Task {
             }
             if (error != null) {
                 try {
-                    errorstream = new PrintStream(new BufferedOutputStream(new FileOutputStream(error)));
+                    BufferedOutputStream bos
+                        = new BufferedOutputStream(new FileOutputStream(error));
+                    errorstream = new PrintStream(bos);
                 }  catch (IOException e) {
                     throw new BuildException(e, getLocation());
                 }
@@ -198,12 +207,16 @@ public class Rpm extends Task {
             if (output != null) {
                 try {
                     outputstream.close();
-                } catch (IOException e) {}
+                } catch (IOException e) {
+                    // ignore any secondary error
+                }
             }
             if (error != null) {
                 try {
                     errorstream.close();
-                } catch (IOException e) {}
+                } catch (IOException e) {
+                    // ignore any secondary error
+                }
             }
         }
     }
@@ -213,6 +226,8 @@ public class Rpm extends Task {
      * subdirectories, SPECS, SOURCES, BUILD, SRPMS ; optional.
      * If this isn't specified,
      * the <tt>baseDir</tt> value is used
+     *
+     * @param td the directory containing the normal RPM directories.
      */
     public void setTopDir(File td) {
         this.topDir = td;

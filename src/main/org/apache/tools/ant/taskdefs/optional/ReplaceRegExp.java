@@ -220,9 +220,11 @@ public class ReplaceRegExp extends Task {
      *  <li>g : Global replacement.  Replace all occurences found
      *  <li>i : Case Insensitive.  Do not consider case in the match
      *  <li>m : Multiline.  Treat the string as multiple lines of input,
-     *         using "^" and "$" as the start or end of any line, respectively, rather than start or end of string.
+     *         using "^" and "$" as the start or end of any line, respectively,
+     *         rather than start or end of string.
      *  <li> s : Singleline.  Treat the string as a single line of input, using
-     *        "." to match any character, including a newline, which normally, it would not match.
+     *        "." to match any character, including a newline, which normally,
+     *        it would not match.
      *</ul>
      */
     public void setFlags(String flags) {
@@ -334,13 +336,11 @@ public class ReplaceRegExp extends Task {
 
             boolean changes = false;
 
-            log("Replacing pattern '" + regex.getPattern(getProject()) +
-                "' with '" + subs.getExpression(getProject()) +
-                "' in '" + f.getPath() + "'" +
-                (byline ? " by line" : "") +
-                (flags.length() > 0 ? " with flags: '" + flags + "'" : "") +
-                ".",
-                Project.MSG_VERBOSE);
+            log("Replacing pattern '" + regex.getPattern(getProject())
+                + "' with '" + subs.getExpression(getProject())
+                + "' in '" + f.getPath() + "'" + (byline ? " by line" : "")
+                + (flags.length() > 0 ? " with flags: '" + flags + "'" : "")
+                + ".", Project.MSG_VERBOSE);
 
             if (byline) {
                 StringBuffer linebuf = new StringBuffer();
@@ -450,6 +450,7 @@ public class ReplaceRegExp extends Task {
                     r.close();
                 }
             } catch (Exception e) {
+                // ignore any secondary exceptions
             }
 
             try {
@@ -457,6 +458,7 @@ public class ReplaceRegExp extends Task {
                     w.close();
                 }
             } catch (Exception e) {
+                // ignore any secondary exceptions
             }
             if (temp != null) {
                 temp.delete();
@@ -465,8 +467,12 @@ public class ReplaceRegExp extends Task {
     }
 
 
-    public void execute()
-         throws BuildException {
+    /**
+     * Execute the task
+     *
+     * @throws BuildException is there is a problem in the task execution.
+     */
+    public void execute() throws BuildException {
         if (regex == null) {
             throw new BuildException("No expression to match.");
         }
@@ -516,7 +522,7 @@ public class ReplaceRegExp extends Task {
             FileSet fs = (FileSet) (filesets.elementAt(i));
             DirectoryScanner ds = fs.getDirectoryScanner(getProject());
 
-            String files[] = ds.getIncludedFiles();
+            String[] files = ds.getIncludedFiles();
 
             for (int j = 0; j < files.length; j++) {
                 File f = new File(fs.getDir(getProject()), files[j]);

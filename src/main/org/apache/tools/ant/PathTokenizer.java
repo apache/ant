@@ -176,8 +176,8 @@ public class PathTokenizer {
                 // make sure we aren't going to get the path separator next
                 if (!nextToken.equals(File.pathSeparator)) {
                     if (nextToken.equals(":")) {
-                        if (!token.startsWith("/") && !token.startsWith("\\") 
-                            && !token.startsWith(".") 
+                        if (!token.startsWith("/") && !token.startsWith("\\")
+                            && !token.startsWith(".")
                             && !token.startsWith("..")) {
                             // it indeed is a drive spec, get the next bit
                             String oneMore = tokenizer.nextToken().trim();

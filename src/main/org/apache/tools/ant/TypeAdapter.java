@@ -60,17 +60,21 @@ package org.apache.tools.ant;
  * @author costin@dnt.ro
  * @author peter reilly
  */
-public interface TypeAdapter  {
+public interface TypeAdapter {
 
     /**
      * Sets the project
+     *
+     * @param p the project instance.
      */
-    public void setProject(Project p);
+    void setProject(Project p);
 
     /**
      * Gets the project
+     *
+     * @return the project instance.
      */
-    public Project getProject();
+    Project getProject();
 
     /**
      * Sets the proxy object, whose methods are going to be
@@ -81,17 +85,20 @@ public interface TypeAdapter  {
      *
      * @param o The target object. Must not be <code>null</code>.
      */
-    public void setProxy(Object o);
+    void setProxy(Object o);
 
     /**
      * Returns the proxy object.
      *
      * @return the target proxy object
      */
-    public Object getProxy();
+    Object getProxy();
 
     /**
-     * Check if the proxy class matchs the criteria
+     * Check if the proxy class is compatible with this adapter - i.e.
+     * the adapter will be able to adapt instances of the give class.
+     *
+     * @patam proxyClass the class to be checked.
      */
-    public void checkProxyClass(Class proxyClass);
+    void checkProxyClass(Class proxyClass);
 }

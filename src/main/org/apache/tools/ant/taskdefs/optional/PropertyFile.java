@@ -98,7 +98,8 @@ import org.apache.tools.ant.types.EnumeratedAttribute;
  *The &lt;propertyfile&gt; task must have:<br>
  *    <ul><li>file</li></ul>
  *Other parameters are:<br>
- *    <ul><li>comment, key, operation, type and value (the final four being eliminated shortly)</li></ul>
+ *    <ul><li>comment, key, operation, type and value (the final four being
+ *            eliminated shortly)</li></ul>
  *
  *The &lt;entry&gt; task must have:<br>
  *    <ul><li>key</li></ul>
@@ -253,7 +254,9 @@ public class PropertyFile extends Task {
             if (bos != null) {
                 try {
                     bos.close();
-                } catch (IOException ioex) {}
+                } catch (IOException ioex) {
+                    // ignore
+                }
             }
         }
     }
@@ -506,8 +509,8 @@ public class PropertyFile extends Task {
          *      fields
          */
         private void checkParameters() throws BuildException {
-            if (type == Type.STRING_TYPE &&
-                operation == Operation.DECREMENT_OPER) {
+            if (type == Type.STRING_TYPE
+                && operation == Operation.DECREMENT_OPER) {
                 throw new BuildException("- is not suported for string "
                     + "properties (key:" + key + ")");
             }
@@ -518,8 +521,7 @@ public class PropertyFile extends Task {
             if (key == null) {
                 throw new BuildException("key is mandatory");
             }
-            if (type == Type.STRING_TYPE &&
-                pattern != null) {
+            if (type == Type.STRING_TYPE && pattern != null) {
                 throw new BuildException("pattern is not suported for string "
                     + "properties (key:" + key + ")");
             }
@@ -631,16 +633,9 @@ public class PropertyFile extends Task {
         private static final String MONTH = "month";
         private static final String YEAR = "year";
 
-        private static final String[] units = {
-                                                MILLISECOND,
-                                                SECOND,
-                                                MINUTE,
-                                                HOUR,
-                                                DAY,
-                                                WEEK,
-                                                MONTH,
-                                                YEAR
-                                              };
+        private static final String[] UNITS
+            = {MILLISECOND, SECOND, MINUTE, HOUR,
+               DAY, WEEK, MONTH, YEAR };
 
         private Hashtable calendarFields = new Hashtable();
 
@@ -663,7 +658,7 @@ public class PropertyFile extends Task {
         }
 
         public String[] getValues() {
-            return units;
+            return UNITS;
         }
     }
 }

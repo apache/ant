@@ -87,8 +87,10 @@ import org.xml.sax.helpers.ParserAdapter;
  * Checks XML files are valid (or only well formed). The
  * task uses the SAX2 parser implementation provided by JAXP by default
  * (probably the one that is used by Ant itself), but one can specify any
- * SAX1/2 parser if needed
- * @author Raphael Pierquin <a href="mailto:raphael.pierquin@agisphere.com">raphael.pierquin@agisphere.com</a>
+ * SAX1/2 parser if needed.
+ *
+ * @author Raphael Pierquin <a href="mailto:raphael.pierquin@agisphere.com">
+ *                          raphael.pierquin@agisphere.com</a>
  * @author Nick Pellow <a href="mailto:nick@svana.org">nick@svana.org</a>
  */
 public class XMLValidateTask extends Task {
@@ -98,7 +100,7 @@ public class XMLValidateTask extends Task {
      */
     private static FileUtils fu = FileUtils.newFileUtils();
 
-    protected static String INIT_FAILED_MSG =
+    protected static final String INIT_FAILED_MSG =
         "Could not start xml validation: ";
 
     // ant task properties
@@ -108,8 +110,10 @@ public class XMLValidateTask extends Task {
     protected boolean lenient = false;
     protected String  readerClassName = null;
 
-    protected File file = null; // file to be validated
-    protected Vector filesets = new Vector(); // sets of file to be validated
+    /** file to be validated */
+    protected File file = null;
+    /** sets of file to be validated */
+    protected Vector filesets = new Vector();
     protected Path classpath;
 
 
@@ -137,7 +141,6 @@ public class XMLValidateTask extends Task {
      * parser yields an error.
      */
     public void setFailOnError(boolean fail) {
-
         failOnError = fail;
     }
 
@@ -147,35 +150,35 @@ public class XMLValidateTask extends Task {
      * If set to <code>true</true> (default), log a warn message for each SAX warn event.
      */
     public void setWarn(boolean bool) {
-
         warn = bool;
     }
 
     /**
-     * Specify whether the parser should be validating. Default is <code>true</code>.
+     * Specify whether the parser should be validating. Default
+     * is <code>true</code>.
      * <p>
-     * If set to false, the validation will fail only if the parsed document is not well formed XML.
+     * If set to false, the validation will fail only if the parsed document
+     * is not well formed XML.
      * <p>
-     * this option is ignored if the specified class with {@link #setClassName(String)} is not a SAX2
-     * XMLReader.
+     * this option is ignored if the specified class
+     * with {@link #setClassName(String)} is not a SAX2 XMLReader.
      */
     public void setLenient(boolean bool) {
-
         lenient = bool;
     }
 
     /**
      * Specify the class name of the SAX parser to be used. (optional)
-     * @param className should be an implementation of SAX2 <code>org.xml.sax.XMLReader</code>
-     * or SAX2 <code>org.xml.sax.Parser</code>.
-     * <p> if className is an implementation of <code>org.xml.sax.Parser</code>, {@link #setLenient(boolean)},
+     * @param className should be an implementation of SAX2
+     * <code>org.xml.sax.XMLReader</code> or SAX2 <code>org.xml.sax.Parser</code>.
+     * <p> if className is an implementation of
+     * <code>org.xml.sax.Parser</code>, {@link #setLenient(boolean)},
      * will be ignored.
      * <p> if not set, the default will be used.
      * @see org.xml.sax.XMLReader
      * @see org.xml.sax.Parser
      */
     public void setClassName(String className) {
-
         readerClassName = className;
     }
 
@@ -184,7 +187,6 @@ public class XMLValidateTask extends Task {
      * Specify the classpath to be searched to load the parser (optional)
      */
     public void setClasspath(Path classpath) {
-
         if (this.classpath == null) {
             this.classpath = classpath;
         } else {
@@ -268,7 +270,8 @@ public class XMLValidateTask extends Task {
 
         int fileProcessed = 0;
         if (file == null && (filesets.size() == 0)) {
-            throw new BuildException("Specify at least one source - a file or a fileset.");
+            throw new BuildException("Specify at least one source - "
+                + "a file or a fileset.");
         }
 
         initValidator();
@@ -293,7 +296,7 @@ public class XMLValidateTask extends Task {
             DirectoryScanner ds = fs.getDirectoryScanner(getProject());
             String[] files = ds.getIncludedFiles();
 
-            for (int j = 0; j < files.length ; j++)  {
+            for (int j = 0; j < files.length; j++)  {
                 File srcFile = new File(fs.getDir(getProject()), files[j]);
                 doValidate(srcFile);
                 fileProcessed++;
@@ -352,8 +355,8 @@ public class XMLValidateTask extends Task {
                     Project.MSG_VERBOSE);
             }  else {
                 throw new BuildException(INIT_FAILED_MSG
-                                         + reader.getClass().getName()
-                                         + " implements nor SAX1 Parser nor SAX2 XMLReader.");
+                    + reader.getClass().getName()
+                    + " implements nor SAX1 Parser nor SAX2 XMLReader.");
             }
         }
 
@@ -420,7 +423,8 @@ public class XMLValidateTask extends Task {
 
         if (errorHandler.getFailure()) {
             if (failOnError) {
-                throw new BuildException(afile + " is not a valid XML document.");
+                throw new BuildException(afile
+                    + " is not a valid XML document.");
             } else {
                 log(afile + " is not a valid XML document", Project.MSG_ERR);
             }
@@ -480,11 +484,12 @@ public class XMLValidateTask extends Task {
                 try {
                     int line = e.getLineNumber();
                     int col = e.getColumnNumber();
-                    return new URL(sysID).getFile() +
-                        (line == -1 ? "" : (":" + line +
-                                            (col == -1 ? "" : (":" + col)))) +
-                        ": " + e.getMessage();
+                    return new URL(sysID).getFile()
+                        + (line == -1 ? "" : (":" + line
+                                        + (col == -1 ? "" : (":" + col))))
+                        + ": " + e.getMessage();
                 } catch (MalformedURLException mfue) {
+                    // ignore and just return exception message
                 }
             }
             return e.getMessage();
@@ -499,7 +504,7 @@ public class XMLValidateTask extends Task {
     public class Attribute {
         /** The name of the attribute to set.
          *
-         * Valid attributes <a href=http://www.saxproject.org/apidoc/org/xml/sax/package-summary.html#package_description">include.</a>
+         * Valid attributes <a href="http://www.saxproject.org/apidoc/org/xml/sax/package-summary.html#package_description">include.</a>
          */
         private String attributeName = null;
 

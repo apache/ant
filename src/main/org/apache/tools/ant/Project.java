@@ -2029,7 +2029,8 @@ public class Project {
     // Should move to a separate public class - and have API to add
     // listeners, etc.
     private static class AntRefTable extends Hashtable {
-        Project project;
+        private Project project;
+
         public AntRefTable(Project project) {
             super();
             this.project = project;

@@ -204,7 +204,8 @@ public abstract class Task extends ProjectComponent {
      *
      * @exception BuildException if someting goes wrong with the build
      */
-    public void init() throws BuildException {}
+    public void init() throws BuildException {
+    }
 
     /**
      * Called by the project to let the task do its work. This method may be
@@ -215,7 +216,8 @@ public abstract class Task extends ProjectComponent {
      *
      * @exception BuildException if something goes wrong with the build
      */
-    public void execute() throws BuildException {}
+    public void execute() throws BuildException {
+    }
 
     /**
      * Returns the file/location where this task was defined.

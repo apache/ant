@@ -104,7 +104,7 @@ public class ProjectHelper2 extends ProjectHelper {
 
     public void parse(Project project, Object source)
             throws BuildException {
-        this.getImportStack().addElement(source);
+        getImportStack().addElement(source);
         //System.out.println("Adding " + source);
         AntXMLContext context = null;
         context = (AntXMLContext) project.getReference("ant.parsing.context");
@@ -116,7 +116,7 @@ public class ProjectHelper2 extends ProjectHelper {
             project.addReference("ant.targets", context.getTargets());
         }
 
-        if (this.getImportStack().size() > 1) {
+        if (getImportStack().size() > 1) {
             // we are in an imported file.
             context.setIgnoreProjectTag(true);
             context.getCurrentTarget().startImportedTasks();

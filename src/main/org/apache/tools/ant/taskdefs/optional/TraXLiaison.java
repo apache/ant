@@ -209,8 +209,8 @@ public class TraXLiaison implements XSLTLiaison, ErrorListener, XSLTLoggerAware 
                 reader.setEntityResolver(entityResolver);
                 src = new SAXSource(reader, new InputSource(is));
             } else {
-                throw new IllegalStateException("xcatalog specified, but " +
-                        "parser doesn't support SAX");
+                throw new IllegalStateException("xcatalog specified, but "
+                    + "parser doesn't support SAX");
             }
         } else {
             src = new StreamSource(is);
@@ -305,8 +305,8 @@ public class TraXLiaison implements XSLTLiaison, ErrorListener, XSLTLoggerAware 
 
         // specific attributes for the transformer
         for (int i = 0; i < attributes.size(); i++) {
-            final Object[] pair = (Object[])attributes.elementAt(i);
-            tfactory.setAttribute((String)pair[0], pair[1]);
+            final Object[] pair = (Object[]) attributes.elementAt(i);
+            tfactory.setAttribute((String) pair[0], pair[1]);
         }
 
         if (uriResolver != null) {
