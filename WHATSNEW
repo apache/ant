@@ -129,6 +129,10 @@ Other changes:
 
 * fixcrlf can be used in a filterchain.
 
+* <sync> has a new nested element <preserveInTarget> that can be used
+  to protect extra-content in the target directory.  Bugzilla Report
+  21832.
+
 Changes from Ant 1.6.2 to current Ant 1.6 CVS version
 =====================================================
 

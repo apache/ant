@@ -61,6 +61,7 @@ more filesets.</p>
     systems.  This can also be useful if source and target files live
     on separate machines with clocks being out of sync.  <em>since Ant
     1.6</em>.</td>
+     <td valign="top" align="center">No.</td>
   </tr>
 </table>
 
@@ -69,6 +70,41 @@ more filesets.</p>
 <h4>fileset</h4>
 <p><a href="../CoreTypes/fileset.html">FileSet</a>s are used to select
 sets of files and directories.</p>
+
+<h4>preserveInTarget</h4>
+
+<p>Specifies files or directories that should be kept in the target
+directory even if they are not present in one of the source
+directories.</p>
+
+<p>This nested element is like a <a
+href="../CoreTypes/fileset.html">FileSet</a> except that it doesn't
+support the dir attribute and the usedefaultexcludes attribute
+defaults to false.</p>
+
+<h3>Examples</h3>
+
+<blockquote><pre>
+&lt;sync todir=&quot;site&quot;&gt;
+  &lt;fileset dir=&quot;generated-site&quot;/&gt;
+&lt;/sync&gt;
+</pre></blockquote>
+<p>overwrites all files in <em>site</em> with newer files from
+<em>generated-site</em>, deletes files from <em>site</em> that are not
+present in <em>generated-site</em>.</p>
+
+<blockquote><pre>
+&lt;sync todir=&quot;site&quot;&gt;
+  &lt;fileset dir=&quot;generated-site&quot;/&gt;
+  &lt;preserveintarget&gt;
+    &lt;include name=&quot;**/CVS/**&quot;/&gt;
+  &lt;/preserveintarget&gt;
+&lt;/sync&gt;
+</pre></blockquote>
+<p>overwrites all files in <em>site</em> with newer files from
+<em>generated-site</em>, deletes files from <em>site</em> that are not
+present in <em>generated-site</em> but keeps all files in any
+<em>CVS</em> sub-directory.</p>
 
 <hr>
 <p align="center">Copyright &copy; 2003-2005 The Apache Software Foundation. All rights
