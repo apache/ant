@@ -370,7 +370,7 @@ public class Jar extends Zip {
         
     protected boolean createEmptyZip(File zipFile) {
         // Jar files always contain a manifest and can never be empty        
-        return false;
+        return true;
     }
     
     /**
