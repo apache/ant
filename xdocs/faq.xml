@@ -254,7 +254,7 @@ shell-prompt> cat < foo
     <faq id="integration">
       <question>Is Ant supported by my IDE/Editor?</question>
       <answer>
-        <p>See the <a href="external.html#IDE%47Editor+Integration">section 
+        <p>See the <a href="external.html#IDE and Editor Integration">section 
         on IDE integration</a> on our external tools page.</p>
       </answer>
     </faq>
