@@ -113,6 +113,18 @@ public class ServerDeploy extends Task
         vendorTools.addElement(tool);
     }
 
+    /**
+     *  Creates a JOnAS deployment tool, for deployment to JOnAS servers.
+     *  <p>Ant calls this method on creation to handle embedded "jonas" elements
+     *  in the ServerDeploy task.
+     *  @param tool An instance of JonasHotDeployment tool, passed in by Ant.
+     */
+    public void addJonas(JonasHotDeploymentTool tool) {
+        tool.setTask(this);
+        vendorTools.addElement(tool);
+    }
+
+
     ///////////////////////////////////////////////////////////////////////////
     //
     //	Execute method

@@ -251,6 +251,9 @@ Other changes:
 
 * Perforce tasks now support a "failonerror" attribute (defaults to "true").
 
+* Open Source application server JOnAS support :
+  EJB hot deploy and deploy with <serverdeploy> and <ejbjar>
+
 Changes from Ant 1.4 to Ant 1.4.1
 ===========================================
 

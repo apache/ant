@@ -160,4 +160,15 @@ public class GenericHotDeploymentTool extends AbstractHotDeploymentTool
     public void setClassName(String className) {
         this.className = className;
     }
+    
+    /**
+     *
+     */
+    public Java getJava() {
+        return java;
+    }
+    
+    public String getClassName() {
+        return className;
+    }
 }
