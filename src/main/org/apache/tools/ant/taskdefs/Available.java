@@ -1,5 +1,5 @@
 /*
- * Copyright  2000-2004 The Apache Software Foundation
+ * Copyright  2000-2005 The Apache Software Foundation
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -38,6 +38,7 @@ import org.apache.tools.ant.util.StringUtils;
  * @ant.task category="control"
  */
 public class Available extends Task implements Condition {
+    private static final FileUtils FILE_UTILS = FileUtils.getFileUtils();
 
     private String property;
     private String classname;
@@ -143,8 +144,7 @@ public class Available extends Task implements Condition {
      * @param file the name of the file which is required.
      */
     public void setFile(File file) {
-        this.file = FileUtils.newFileUtils()
-            .removeLeadingPath(getProject().getBaseDir(), file);
+        this.file = FILE_UTILS.removeLeadingPath(getProject().getBaseDir(), file);
     }
 
     /**

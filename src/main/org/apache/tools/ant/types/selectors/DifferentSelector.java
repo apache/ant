@@ -1,5 +1,5 @@
 /*
- * Copyright  2000-2004 The Apache Software Foundation
+ * Copyright  2000-2005 The Apache Software Foundation
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -48,7 +48,7 @@ import java.io.IOException;
  */
 public class DifferentSelector extends MappingSelector {
 
-    private FileUtils fileUtils = FileUtils.newFileUtils();
+    private static final FileUtils FILE_UTILS = FileUtils.getFileUtils();
 
     private boolean ignoreFileTimes = true;
     private boolean ignoreContents = false;
@@ -101,7 +101,7 @@ public class DifferentSelector extends MappingSelector {
         if (!ignoreContents) {
             //here do a bulk comparison
             try {
-                return !fileUtils.contentEquals(srcfile, destfile);
+                return !FILE_UTILS.contentEquals(srcfile, destfile);
             } catch (IOException e) {
                 throw new BuildException("while comparing " + srcfile + " and "
                         + destfile, e);

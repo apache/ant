@@ -1,5 +1,5 @@
 /*
- * Copyright  2000-2004 The Apache Software Foundation
+ * Copyright  2000-2005 The Apache Software Foundation
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -66,6 +66,8 @@ public class Ant extends Task {
 
     /** Target Executor */
     private static final Executor EXECUTOR = new SingleCheckExecutor();
+
+    private static final FileUtils FILE_UTILS = FileUtils.getFileUtils();
 
     /** the basedir where is executed the build file */
     private File dir = null;
@@ -164,7 +166,7 @@ public class Ant extends Task {
         if (output != null) {
             File outfile = null;
             if (dir != null) {
-                outfile = FileUtils.newFileUtils().resolveFile(dir, output);
+                outfile = FILE_UTILS.resolveFile(dir, output);
             } else {
                 outfile = getProject().resolveFile(output);
             }
@@ -305,7 +307,7 @@ public class Ant extends Task {
                 antFile = "build.xml";
             }
 
-            File file = FileUtils.newFileUtils().resolveFile(dir, antFile);
+            File file = FILE_UTILS.resolveFile(dir, antFile);
             antFile = file.getAbsolutePath();
 
             log("calling target(s) "

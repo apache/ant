@@ -1,5 +1,5 @@
 /*
- * Copyright  2000-2004 The Apache Software Foundation
+ * Copyright  2000-2005 The Apache Software Foundation
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -18,7 +18,6 @@
 package org.apache.tools.ant.taskdefs;
 
 import org.apache.tools.ant.BuildFileTest;
-import org.apache.tools.ant.Project;
 import org.apache.tools.ant.util.FileUtils;
 import java.io.File;
 import java.io.IOException;
@@ -28,6 +27,9 @@ import java.io.IOException;
  *
  */
 public class MoveTest extends BuildFileTest {
+
+    /** Utilities used for file operations */
+    private static final FileUtils FILE_UTILS = FileUtils.getFileUtils();
 
     public MoveTest(String name) {
         super(name);
@@ -43,20 +45,18 @@ public class MoveTest extends BuildFileTest {
 
     public void testFilterSet() throws IOException {
         executeTarget("testFilterSet");
-        FileUtils fileUtils = FileUtils.newFileUtils();
         File tmp  = new File(getProjectDir(), "move.filterset.tmp");
         File check  = new File(getProjectDir(), "expected/copy.filterset.filtered");
         assertTrue(tmp.exists());
-        assertTrue(fileUtils.contentEquals(tmp, check));
+        assertTrue(FILE_UTILS.contentEquals(tmp, check));
     }
 
     public void testFilterChain() throws IOException {
         executeTarget("testFilterChain");
-        FileUtils fileUtils = FileUtils.newFileUtils();
         File tmp  = new File(getProjectDir(), "move.filterchain.tmp");
         File check  = new File(getProjectDir(), "expected/copy.filterset.filtered");
         assertTrue(tmp.exists());
-        assertTrue(fileUtils.contentEquals(tmp, check));
+        assertTrue(FILE_UTILS.contentEquals(tmp, check));
     }
 
     /** Bugzilla Report 11732 */

@@ -1,5 +1,5 @@
 /*
- * Copyright  2002-2004 The Apache Software Foundation
+ * Copyright  2002-2005 The Apache Software Foundation
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -42,6 +42,9 @@ public class ConcatTest
      * The name of the temporary file.
      */
     private static final String tempFile2 = "concat.tmp.2";
+
+    /** Utilities used for file operations */
+    private static final FileUtils FILE_UTILS = FileUtils.getFileUtils();
 
     /**
      * Required constructor.
@@ -268,9 +271,8 @@ public class ConcatTest
 
     public void testTranscoding() throws IOException {
         executeTarget("testTranscoding");
-        FileUtils fileUtils = FileUtils.newFileUtils();
         File f1 = getProject().resolveFile("copy/expected/utf-8");
         File f2 = getProject().resolveFile("concat.utf8");
-        assertTrue(fileUtils.contentEquals(f1, f2));
+        assertTrue(FILE_UTILS.contentEquals(f1, f2));
     }
 }

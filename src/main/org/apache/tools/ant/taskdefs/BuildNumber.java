@@ -1,5 +1,5 @@
 /*
- * Copyright  2002-2004 The Apache Software Foundation
+ * Copyright  2002-2005 The Apache Software Foundation
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -47,6 +47,8 @@ public class BuildNumber
 
     /** The default filename to use if no file specified.  */
     private static final String DEFAULT_FILENAME = DEFAULT_PROPERTY_NAME;
+
+    private static final FileUtils FILE_UTILS = FileUtils.getFileUtils();
 
     /** The File in which the build number is stored.  */
     private File myFile;
@@ -177,7 +179,7 @@ public class BuildNumber
 
         if (!myFile.exists()) {
             try {
-                FileUtils.newFileUtils().createNewFile(myFile);
+                FILE_UTILS.createNewFile(myFile);
             } catch (final IOException ioe) {
                 final String message =
                     myFile + " doesn't exist and new file can't be created.";

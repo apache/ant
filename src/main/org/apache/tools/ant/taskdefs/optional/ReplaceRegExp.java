@@ -1,5 +1,5 @@
 /*
- * Copyright  2001-2004 The Apache Software Foundation
+ * Copyright  2001-2005 The Apache Software Foundation
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -120,7 +120,7 @@ public class ReplaceRegExp extends Task {
     private RegularExpression regex;
     private Substitution subs;
 
-    private FileUtils fileUtils = FileUtils.newFileUtils();
+    private static final FileUtils FILE_UTILS = FileUtils.getFileUtils();
 
     /**
      * Encoding to assume for the files
@@ -321,7 +321,7 @@ public class ReplaceRegExp extends Task {
      */
     protected void doReplace(File f, int options)
          throws IOException {
-        File temp = fileUtils.createTempFile("replace", ".txt", null);
+        File temp = FILE_UTILS.createTempFile("replace", ".txt", null);
         temp.deleteOnExit();
 
         Reader r = null;
@@ -445,7 +445,7 @@ public class ReplaceRegExp extends Task {
             if (changes) {
                 log("File has changed; saving the updated file", Project.MSG_VERBOSE);
                 try {
-                    fileUtils.rename(temp, f);
+                    FILE_UTILS.rename(temp, f);
                     temp = null;
                 } catch (IOException e) {
                     throw new BuildException("Couldn't rename temporary file "

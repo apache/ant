@@ -1,5 +1,5 @@
 /*
- * Copyright  2000-2004 The Apache Software Foundation
+ * Copyright  2000-2005 The Apache Software Foundation
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -48,6 +48,8 @@ public class Execute {
 
     /** Invalid exit code. **/
     public static final int INVALID = Integer.MAX_VALUE;
+
+    private static final FileUtils FILE_UTILS = FileUtils.getFileUtils();
 
     private String[] cmdl = null;
     private String[] env = null;
@@ -1152,7 +1154,7 @@ public class Execute {
          */
         private File createCommandFile(String[] cmd, String[] env)
             throws IOException {
-            File script = FileUtils.newFileUtils().createTempFile("ANT", ".COM", null);
+            File script = FILE_UTILS.createTempFile("ANT", ".COM", null);
             //TODO: bind the longevity of the file to the exe
             script.deleteOnExit();
             PrintWriter out = null;

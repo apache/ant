@@ -1,5 +1,5 @@
 /*
- * Copyright  2002-2004 The Apache Software Foundation
+ * Copyright  2002-2005 The Apache Software Foundation
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -65,6 +65,12 @@ import org.apache.tools.ant.util.FileUtils;
  * @ant.task name="cvstagdiff"
  */
 public class CvsTagDiff extends AbstractCvsTask {
+
+    /**
+     * Used to create the temp file for cvs log
+     */
+    private static final FileUtils FILE_UTILS = FileUtils.getFileUtils();
+
     /**
      * Token to identify the word file in the rdiff log
      */
@@ -121,11 +127,6 @@ public class CvsTagDiff extends AbstractCvsTask {
      * The file in which to write the diff report.
      */
     private File mydestfile;
-
-    /**
-     * Used to create the temp file for cvs log
-     */
-    private FileUtils myfileUtils = FileUtils.newFileUtils();
 
     /**
      * The package/module to analyze.
@@ -215,7 +216,7 @@ public class CvsTagDiff extends AbstractCvsTask {
         setCommand("");
         File tmpFile = null;
         try {
-            tmpFile = myfileUtils.createTempFile("cvstagdiff", ".log", null);
+            tmpFile = FILE_UTILS.createTempFile("cvstagdiff", ".log", null);
             tmpFile.deleteOnExit();
             setOutput(tmpFile);
 

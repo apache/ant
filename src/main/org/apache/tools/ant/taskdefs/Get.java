@@ -1,5 +1,5 @@
 /*
- * Copyright  2000-2004 The Apache Software Foundation
+ * Copyright  2000-2005 The Apache Software Foundation
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -43,6 +43,9 @@ import java.util.Date;
  * @ant.task category="network"
  */
 public class Get extends Task {
+
+    private static final FileUtils FILE_UTILS = FileUtils.getFileUtils();
+
     private URL source; // required
     private File dest; // required
     private boolean verbose = false;
@@ -243,8 +246,7 @@ public class Get extends Task {
                         : ""), logLevel);
             }
             if (remoteTimestamp != 0) {
-                FileUtils.newFileUtils()
-                        .setFileLastModified(dest, remoteTimestamp);
+                FILE_UTILS.setFileLastModified(dest, remoteTimestamp);
             }
         }
 

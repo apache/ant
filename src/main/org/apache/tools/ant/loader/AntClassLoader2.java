@@ -1,5 +1,5 @@
 /*
- * Copyright  2003-2004 The Apache Software Foundation
+ * Copyright  2003-2005 The Apache Software Foundation
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -44,7 +44,7 @@ import org.apache.tools.ant.util.FileUtils;
  */
 public class AntClassLoader2 extends AntClassLoader {
     /** Instance of a utility class to use for file operations. */
-    private FileUtils fileUtils;
+    private static final FileUtils FILE_UTILS = FileUtils.getFileUtils();
 
     /** Static map of jar file/time to manifiest class-path entries */
     private static Map pathMap = Collections.synchronizedMap(new HashMap());
@@ -53,7 +53,6 @@ public class AntClassLoader2 extends AntClassLoader {
      * Constructor
      */
     public AntClassLoader2() {
-        fileUtils = FileUtils.newFileUtils();
     }
 
     /**
@@ -279,7 +278,7 @@ public class AntClassLoader2 extends AntClassLoader {
         }
 
         if (!"".equals(classpath)) {
-            URL baseURL = fileUtils.getFileURL(pathComponent);
+            URL baseURL = FILE_UTILS.getFileURL(pathComponent);
             StringTokenizer st = new StringTokenizer(classpath);
             while (st.hasMoreTokens()) {
                 String classpathElement = st.nextToken();

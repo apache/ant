@@ -1,5 +1,5 @@
 /*
- * Copyright  2001,2004 The Apache Software Foundation
+ * Copyright  2001-2005 The Apache Software Foundation
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -35,6 +35,8 @@ import org.w3c.dom.Document;
  */
 public abstract class AbstractXSLTLiaisonTest extends TestCase {
 
+    private static final FileUtils FILE_UTILS = FileUtils.getFileUtils();
+    
     protected XSLTLiaison liaison;
 
     protected  AbstractXSLTLiaisonTest(String name){
@@ -54,7 +56,7 @@ public abstract class AbstractXSLTLiaisonTest extends TestCase {
         if (url == null){
           throw new FileNotFoundException("Unable to load '" + name + "' from classpath");
         }
-        return new File(FileUtils.newFileUtils().fromURI(url.toExternalForm()));
+        return new File(FILE_UTILS.fromURI(url.toExternalForm()));
     }
 
     /** keep it simple stupid */

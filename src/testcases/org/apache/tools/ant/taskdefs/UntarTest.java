@@ -1,5 +1,5 @@
 /*
- * Copyright  2001-2004 The Apache Software Foundation
+ * Copyright  2001-2005 The Apache Software Foundation
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -24,6 +24,9 @@ import org.apache.tools.ant.util.FileUtils;
  */
 public class UntarTest extends BuildFileTest {
 
+    /** Utilities used for file operations */
+    private static final FileUtils FILE_UTILS = FileUtils.getFileUtils();
+
     public UntarTest(String name) {
         super(name);
     }
@@ -37,44 +40,38 @@ public class UntarTest extends BuildFileTest {
     }
 
     public void testRealTest() throws java.io.IOException {
-        FileUtils fileUtils = FileUtils.newFileUtils();
         executeTarget("realTest");
-        assertTrue(fileUtils.contentEquals(project.resolveFile("../asf-logo.gif"),
+        assertTrue(FILE_UTILS.contentEquals(project.resolveFile("../asf-logo.gif"),
                                            project.resolveFile("asf-logo.gif")));
     }
 
     public void testRealGzipTest() throws java.io.IOException {
-        FileUtils fileUtils = FileUtils.newFileUtils();
         executeTarget("realGzipTest");
-        assertTrue(fileUtils.contentEquals(project.resolveFile("../asf-logo.gif"),
+        assertTrue(FILE_UTILS.contentEquals(project.resolveFile("../asf-logo.gif"),
                                            project.resolveFile("asf-logo.gif")));
     }
 
     public void testRealBzip2Test() throws java.io.IOException {
-        FileUtils fileUtils = FileUtils.newFileUtils();
         executeTarget("realBzip2Test");
-        assertTrue(fileUtils.contentEquals(project.resolveFile("../asf-logo.gif"),
+        assertTrue(FILE_UTILS.contentEquals(project.resolveFile("../asf-logo.gif"),
                                            project.resolveFile("asf-logo.gif")));
     }
 
     public void testTestTarTask() throws java.io.IOException {
-        FileUtils fileUtils = FileUtils.newFileUtils();
         executeTarget("testTarTask");
-        assertTrue(fileUtils.contentEquals(project.resolveFile("../asf-logo.gif"),
+        assertTrue(FILE_UTILS.contentEquals(project.resolveFile("../asf-logo.gif"),
                                            project.resolveFile("asf-logo.gif")));
     }
 
     public void testTestGzipTarTask() throws java.io.IOException {
-        FileUtils fileUtils = FileUtils.newFileUtils();
         executeTarget("testGzipTarTask");
-        assertTrue(fileUtils.contentEquals(project.resolveFile("../asf-logo.gif"),
+        assertTrue(FILE_UTILS.contentEquals(project.resolveFile("../asf-logo.gif"),
                                            project.resolveFile("asf-logo.gif")));
     }
 
     public void testTestBzip2TarTask() throws java.io.IOException {
-        FileUtils fileUtils = FileUtils.newFileUtils();
         executeTarget("testBzip2TarTask");
-        assertTrue(fileUtils.contentEquals(project.resolveFile("../asf-logo.gif"),
+        assertTrue(FILE_UTILS.contentEquals(project.resolveFile("../asf-logo.gif"),
                                            project.resolveFile("asf-logo.gif")));
     }
 

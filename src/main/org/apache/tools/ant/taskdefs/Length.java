@@ -21,7 +21,6 @@ import java.io.File;
 import java.io.PrintStream;
 import java.io.OutputStream;
 import java.io.ByteArrayOutputStream;
-import java.util.Arrays;
 import java.util.Vector;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -30,7 +29,6 @@ import org.apache.tools.ant.Task;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.DirectoryScanner;
-import org.apache.tools.ant.dispatch.Dispatchable;
 import org.apache.tools.ant.types.FileSet;
 import org.apache.tools.ant.types.EnumeratedAttribute;
 import org.apache.tools.ant.util.FileUtils;
@@ -45,6 +43,7 @@ public class Length extends Task {
     private static final String ALL = "all";
     private static final String EACH = "each";
     private static final String STRING = "string";
+
     private static final FileUtils FILE_UTILS = FileUtils.getFileUtils();
 
     private String property;

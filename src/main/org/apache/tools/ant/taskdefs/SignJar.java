@@ -1,5 +1,5 @@
 /*
- * Copyright  2000-2004 The Apache Software Foundation
+ * Copyright  2000-2005 The Apache Software Foundation
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -39,6 +39,8 @@ import org.apache.tools.ant.util.FileUtils;
  * @ant.task category="java"
  */
 public class SignJar extends Task {
+
+    private static final FileUtils FILE_UTILS = FileUtils.getFileUtils();
 
     /**
      * The name of the jar file.
@@ -351,7 +353,7 @@ public class SignJar extends Task {
             if (jarFile.equals(signedjarFile)) {
               return false;
             }
-            if (FileUtils.newFileUtils().isUpToDate(jarFile, signedjarFile)) {
+            if (FILE_UTILS.isUpToDate(jarFile, signedjarFile)) {
                 return true;
             }
         } else {

@@ -1,5 +1,5 @@
 /*
- * Copyright  2002-2004 The Apache Software Foundation
+ * Copyright  2002-2005 The Apache Software Foundation
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -32,14 +32,15 @@ import org.apache.tools.ant.util.FileUtils;
 public class FilesMatch implements Condition {
 
     /**
+     * Helper that provides the file comparison method.
+     */
+    private static final FileUtils FILE_UTILS = FileUtils.getFileUtils();
+
+    /**
      * files to compare
      */
     private File file1, file2;
 
-    /**
-     * Helper that provides the file comparison method.
-     */
-    private FileUtils fu = FileUtils.newFileUtils();
 
     /**
      * Sets the File1 attribute
@@ -78,7 +79,7 @@ public class FilesMatch implements Condition {
         //#now match the files
         boolean matches = false;
         try {
-            matches = fu.contentEquals(file1, file2);
+            matches = FILE_UTILS.contentEquals(file1, file2);
         } catch (IOException ioe) {
             throw new BuildException("when comparing files: "
                 + ioe.getMessage(), ioe);

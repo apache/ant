@@ -1,5 +1,5 @@
 /*
- * Copyright  2003-2004 The Apache Software Foundation
+ * Copyright  2003-2005 The Apache Software Foundation
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -26,6 +26,9 @@ import java.io.File;
 public class TouchTest extends BuildFileTest {
 
     private static String TOUCH_FILE = "src/etc/testcases/taskdefs/touchtest";
+
+    /** Utilities used for file operations */
+    private static final FileUtils FILE_UTILS = FileUtils.getFileUtils();
 
     public TouchTest(String name) {
         super(name);
@@ -155,7 +158,7 @@ public class TouchTest extends BuildFileTest {
      * @param time
      */
     public void assertTimesNearlyMatch(long timestamp,long time) {
-        long granularity= FileUtils.newFileUtils().getFileTimestampGranularity();
+        long granularity= FILE_UTILS.getFileTimestampGranularity();
         assertTimesNearlyMatch(timestamp, time, granularity);
     }
 

@@ -1,5 +1,5 @@
 /*
- * Copyright  2000-2004 The Apache Software Foundation
+ * Copyright  2000-2005 The Apache Software Foundation
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -86,6 +86,9 @@ public class WeblogicDeploymentTool extends GenericDeploymentTool {
     protected static final String COMPILER_EJB11 = "weblogic.ejbc";
     protected static final String COMPILER_EJB20 = "weblogic.ejbc20";
 
+    /** File utilities instance for copying jars */
+    private static final FileUtils FILE_UTILS = FileUtils.getFileUtils();
+
     /** Instance variable that stores the suffix for the weblogic jarfile. */
     private String jarSuffix = ".jar";
 
@@ -135,9 +138,6 @@ public class WeblogicDeploymentTool extends GenericDeploymentTool {
      * Remotes being in the classpath
      */
     private Integer jvmDebugLevel = null;
-
-    /** File utilities instance for copying jars */
-    private FileUtils fileUtils = FileUtils.newFileUtils();
 
     private File outputDir;
 
@@ -498,7 +498,7 @@ public class WeblogicDeploymentTool extends GenericDeploymentTool {
 
         if (noEJBC) {
             try {
-                fileUtils.copyFile(sourceJar, destJar);
+                FILE_UTILS.copyFile(sourceJar, destJar);
                 if (!keepgenerated) {
                     sourceJar.delete();
                 }
@@ -840,7 +840,7 @@ public class WeblogicDeploymentTool extends GenericDeploymentTool {
                 }
 
                 try {
-                    fileUtils.rename(newWLJarFile, weblogicJarFile);
+                    FILE_UTILS.rename(newWLJarFile, weblogicJarFile);
                 } catch (IOException renameException) {
                     log(renameException.getMessage(), Project.MSG_WARN);
                     rebuild = true;

@@ -1,5 +1,5 @@
 /*
- * Copyright  2000-2001,2003-2004 The Apache Software Foundation
+ * Copyright  2000-2005 The Apache Software Foundation
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -24,6 +24,9 @@ import java.io.IOException;
 /**
  */
 public class UnzipTest extends BuildFileTest {
+
+    /** Utilities used for file operations */
+    private static final FileUtils FILE_UTILS = FileUtils.getFileUtils();
 
     public UnzipTest(String name) {
         super(name);
@@ -60,8 +63,7 @@ public class UnzipTest extends BuildFileTest {
      * @throws IOException
      */
     private void assertLogoUncorrupted() throws IOException {
-        FileUtils fileUtils = FileUtils.newFileUtils();
-        assertTrue(fileUtils.contentEquals(project.resolveFile("../asf-logo.gif"),
+        assertTrue(FILE_UTILS.contentEquals(project.resolveFile("../asf-logo.gif"),
                                            project.resolveFile("asf-logo.gif")));
     }
 

@@ -1,5 +1,5 @@
 /*
- * Copyright  2000-2004 The Apache Software Foundation
+ * Copyright  2000-2005 The Apache Software Foundation
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -39,6 +39,8 @@ import org.apache.tools.ant.util.FileUtils;
  */
 
 public class TempFile extends Task {
+
+    private static final FileUtils FILE_UTILS = FileUtils.getFileUtils();
 
     /**
      * Name of property to set.
@@ -115,8 +117,7 @@ public class TempFile extends Task {
         if (destDir == null) {
             destDir = getProject().resolveFile(".");
         }
-        FileUtils utils = FileUtils.newFileUtils();
-        File tfile = utils.createTempFile(prefix, suffix, destDir);
+        File tfile = FILE_UTILS.createTempFile(prefix, suffix, destDir);
         getProject().setNewProperty(property, tfile.toString());
     }
 }

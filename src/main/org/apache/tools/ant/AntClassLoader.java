@@ -1,5 +1,5 @@
 /*
- * Copyright  2000-2004 The Apache Software Foundation
+ * Copyright  2000-2005 The Apache Software Foundation
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -47,7 +47,7 @@ import org.apache.tools.ant.util.LoaderUtils;
  */
 public class AntClassLoader extends ClassLoader implements SubBuildListener {
 
-    private static final FileUtils FILE_UTILS = FileUtils.newFileUtils();
+    private static final FileUtils FILE_UTILS = FileUtils.getFileUtils();
 
     /**
      * An enumeration of all resources of a given name found within the

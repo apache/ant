@@ -1,5 +1,5 @@
 /*
- * Copyright  2000-2004 The Apache Software Foundation
+ * Copyright  2000-2005 The Apache Software Foundation
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -57,7 +57,7 @@ public class XMLValidateTask extends Task {
     /**
      * helper for path -> URI and URI -> path conversions.
      */
-    private static final FileUtils FILE_UTILS = FileUtils.newFileUtils();
+    private static final FileUtils FILE_UTILS = FileUtils.getFileUtils();
 
     protected static final String INIT_FAILED_MSG =
         "Could not start xml validation: ";

@@ -1,5 +1,5 @@
 /*
- * Copyright  2000-2004 The Apache Software Foundation
+ * Copyright  2000-2005 The Apache Software Foundation
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -84,6 +84,8 @@ public class FTP
     /** Default port for FTP */
     public static final int DEFAULT_FTP_PORT = 21;
 
+    private static final FileUtils FILE_UTILS = FileUtils.getFileUtils();
+
     private String remotedir;
     private String server;
     private String userid;
@@ -107,7 +109,6 @@ public class FTP
     private boolean preserveLastModified = false;
     private String chmod = null;
     private String umask = null;
-    private FileUtils fileUtils = FileUtils.newFileUtils();
 
     protected static final String[] ACTION_STRS = {
         "sending",
@@ -1487,7 +1488,7 @@ public class FTP
         File tempFile = findFileName(ftp);
         try {
             // create a local temporary file
-            fileUtils.createNewFile(tempFile);
+            FILE_UTILS.createNewFile(tempFile);
             long localTimeStamp = tempFile.lastModified();
             BufferedInputStream instream = new BufferedInputStream(new FileInputStream(tempFile));
             ftp.storeFile(tempFile.getName(), instream);
@@ -1518,7 +1519,7 @@ public class FTP
         FTPFile [] theFiles = null;
         final int maxIterations = 1000;
         for (int counter = 1; counter < maxIterations; counter++) {
-            File localFile = fileUtils.createTempFile("ant" + Integer.toString(counter), ".tmp",
+            File localFile = FILE_UTILS.createTempFile("ant" + Integer.toString(counter), ".tmp",
                 null);
             String fileName = localFile.getName();
             boolean found = false;
@@ -1809,7 +1810,7 @@ public class FTP
                     outstream = null;
                     FTPFile[] remote = ftp.listFiles(resolveFile(filename));
                     if (remote.length > 0) {
-                        fileUtils.setFileLastModified(file,
+                        FILE_UTILS.setFileLastModified(file,
                                                       remote[0].getTimestamp()
                                                       .getTime().getTime());
                     }

@@ -1,5 +1,5 @@
 /*
- * Copyright  2003-2004 The Apache Software Foundation
+ * Copyright  2003-2005 The Apache Software Foundation
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -29,7 +29,7 @@ import org.apache.tools.ant.util.FileUtils;
  */
 public class ConcatFilterTest extends BuildFileTest {
 
-    private static FileUtils fu = FileUtils.newFileUtils();
+    private static final FileUtils FILE_UTILS = FileUtils.getFileUtils();
     private static final String lSep = 
         Os.isFamily("mac") ? "\r" : System.getProperty("line.separator");
 
@@ -82,7 +82,7 @@ public class ConcatFilterTest extends BuildFileTest {
         executeTarget("testFilterReaderNoArgs");
         File expected = getProject().resolveFile("input/concatfilter.test");
         File result = getProject().resolveFile("result/concat.FilterReaderNoArgs.test");
-        assertTrue("testFilterReaderNoArgs: Result not like expected", fu.contentEquals(expected, result));
+        assertTrue("testFilterReaderNoArgs: Result not like expected", FILE_UTILS.contentEquals(expected, result));
     }
 
     public void testFilterReaderBefore() {

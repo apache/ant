@@ -1,5 +1,5 @@
 /*
- * Copyright  2001-2004 The Apache Software Foundation
+ * Copyright  2001-2005 The Apache Software Foundation
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -17,9 +17,13 @@
 
 package org.apache.tools.ant.taskdefs;
 
-import junit.framework.*;
-import java.io.*;
-import org.apache.tools.ant.*;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.io.OutputStreamWriter;
+
+import org.apache.tools.ant.BuildFileTest;
 import org.apache.tools.ant.util.FileUtils;
 import org.apache.tools.ant.util.TeeOutputStream;
 
@@ -32,6 +36,9 @@ public class JavaTest extends BuildFileTest {
     // wait 1 second extra to allow for java to start ...
     // this time was OK on a Win NT machine and on nagoya
     private static final int SECURITY_MARGIN = 2000;
+
+    /** Utilities used for file operations */
+    private static final FileUtils FILE_UTILS = FileUtils.getFileUtils();
 
     private boolean runFatalTests=false;
 
@@ -167,8 +174,7 @@ public class JavaTest extends BuildFileTest {
     }
 
     public void testSpawn() {
-        FileUtils fileutils  = FileUtils.newFileUtils();
-        File logFile = fileutils.createTempFile("spawn","log", project.getBaseDir());
+        File logFile = FILE_UTILS.createTempFile("spawn","log", project.getBaseDir());
         // this is guaranteed by FileUtils#createTempFile
         assertTrue("log file not existing", !logFile.exists());
         project.setProperty("logFile", logFile.getAbsolutePath());

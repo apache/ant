@@ -1,5 +1,5 @@
 /*
- * Copyright  2001-2004 The Apache Software Foundation
+ * Copyright  2001-2005 The Apache Software Foundation
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -45,6 +45,8 @@ import org.apache.tools.ant.util.JavaEnvUtils;
  *
  */
 public abstract class AbstractMetamataTask extends Task {
+
+    private static final FileUtils FILE_UTILS = FileUtils.getFileUtils();
 
     /**
      * The user classpath to be provided. It matches the -classpath of the
@@ -282,7 +284,7 @@ public abstract class AbstractMetamataTask extends Task {
     }
 
     protected final File createTmpFile() {
-        File tmpFile = FileUtils.newFileUtils()
+        File tmpFile = FILE_UTILS
             .createTempFile("metamata", ".tmp", getProject().getBaseDir());
         tmpFile.deleteOnExit();
         return tmpFile;

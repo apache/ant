@@ -1,5 +1,5 @@
 /*
- * Copyright  2000-2004 The Apache Software Foundation
+ * Copyright  2000-2005 The Apache Software Foundation
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -38,6 +38,8 @@ import org.apache.tools.ant.util.FileUtils;
  * @ant.task category="control"
  */
 public class ExecTask extends Task {
+
+    private static final FileUtils FILE_UTILS = FileUtils.getFileUtils();
 
     private String os;
 
@@ -392,10 +394,9 @@ public class ExecTask extends Task {
             return executableFile.getAbsolutePath();
         }
 
-        FileUtils fileUtils = FileUtils.newFileUtils();
         // now try to resolve against the dir if given
         if (dir != null) {
-            executableFile = fileUtils.resolveFile(dir, exec);
+            executableFile = FILE_UTILS.resolveFile(dir, exec);
             if (executableFile.exists()) {
                 return executableFile.getAbsolutePath();
             }
@@ -430,7 +431,7 @@ public class ExecTask extends Task {
             if (p != null) {
                 String[] dirs = p.list();
                 for (int i = 0; i < dirs.length; i++) {
-                    executableFile = fileUtils.resolveFile(new File(dirs[i]),
+                    executableFile = FILE_UTILS.resolveFile(new File(dirs[i]),
                                                            exec);
                     if (executableFile.exists()) {
                         return executableFile.getAbsolutePath();

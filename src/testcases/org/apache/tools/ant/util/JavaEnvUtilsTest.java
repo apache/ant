@@ -1,5 +1,5 @@
 /*
- * Copyright  2002,2004 The Apache Software Foundation
+ * Copyright  2002-2005 The Apache Software Foundation
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -28,6 +28,9 @@ import org.apache.tools.ant.taskdefs.condition.Os;
  *
  */
 public class JavaEnvUtilsTest extends TestCase {
+
+    private static final FileUtils FILE_UTILS = FileUtils.getFileUtils();
+
     public JavaEnvUtilsTest(String s) {
         super(s);
     }
@@ -43,9 +46,8 @@ public class JavaEnvUtilsTest extends TestCase {
 
     public void testGetExecutableWindows() {
         if (Os.isFamily("windows")) {
-            FileUtils fileUtils = FileUtils.newFileUtils();
             String javaHome =
-                fileUtils.normalize(System.getProperty("java.home"))
+                FILE_UTILS.normalize(System.getProperty("java.home"))
                 .getAbsolutePath();
 
             String j = JavaEnvUtils.getJreExecutable("java");
@@ -64,7 +66,7 @@ public class JavaEnvUtilsTest extends TestCase {
             try {
                 assertTrue(j+" is absolute", (new File(j)).isAbsolute());
                 String javaHomeParent =
-                    fileUtils.normalize(javaHome+"/..").getAbsolutePath();
+                    FILE_UTILS.normalize(javaHome+"/..").getAbsolutePath();
                 assertTrue(j+" is normalized and in the JDK dir",
                            j.startsWith(javaHomeParent));
 
@@ -89,9 +91,8 @@ public class JavaEnvUtilsTest extends TestCase {
 
     public void testGetExecutableMostPlatforms() {
         if (!Os.isName("netware") && !Os.isFamily("windows")) {
-            FileUtils fileUtils = FileUtils.newFileUtils();
             String javaHome =
-                fileUtils.normalize(System.getProperty("java.home"))
+                FILE_UTILS.normalize(System.getProperty("java.home"))
                 .getAbsolutePath();
 
             // could still be OS/2
@@ -112,7 +113,7 @@ public class JavaEnvUtilsTest extends TestCase {
             assertTrue(j+" is absolute", (new File(j)).isAbsolute());
 
             String javaHomeParent =
-                fileUtils.normalize(javaHome+"/..").getAbsolutePath();
+                FILE_UTILS.normalize(javaHome+"/..").getAbsolutePath();
             assertTrue(j+" is normalized and in the JDK dir",
                        j.startsWith(javaHomeParent));
 

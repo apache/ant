@@ -1,5 +1,5 @@
 /*
- * Copyright  2000-2004 The Apache Software Foundation
+ * Copyright  2000-2005 The Apache Software Foundation
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -344,6 +344,8 @@ public class Javadoc extends Task {
         }
     }
 
+    private static final FileUtils FILE_UTILS = FileUtils.getFileUtils();
+
     /** The command line built to execute Javadoc. */
     private Commandline cmd = new Commandline();
 
@@ -427,7 +429,6 @@ public class Javadoc extends Task {
     private Html footer = null;
     private Html bottom = null;
     private boolean useExternalFile = false;
-    private FileUtils fileUtils = FileUtils.newFileUtils();
     private String source = null;
     private boolean linksource = false;
     private boolean breakiterator = false;
@@ -1709,7 +1710,7 @@ public class Javadoc extends Task {
                         if (packageListFile.exists()) {
                             try {
                                 String packageListURL =
-                                    fileUtils.getFileURL(packageListLocation)
+                                    FILE_UTILS.getFileURL(packageListLocation)
                                     .toExternalForm();
                                 toExecute.createArgument()
                                     .setValue("-linkoffline");
@@ -1858,7 +1859,7 @@ public class Javadoc extends Task {
              */
             if (useExternalFile) {
                 if (tmpList == null) {
-                    tmpList = fileUtils.createTempFile("javadoc", "", null);
+                    tmpList = FILE_UTILS.createTempFile("javadoc", "", null);
                     tmpList.deleteOnExit();
                     toExecute.createArgument()
                         .setValue("@" + tmpList.getAbsolutePath());

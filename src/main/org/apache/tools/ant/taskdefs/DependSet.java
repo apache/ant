@@ -24,7 +24,6 @@ import java.util.Vector;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.DirectoryScanner;
 import org.apache.tools.ant.Project;
-import org.apache.tools.ant.taskdefs.condition.Os;
 import org.apache.tools.ant.types.FileList;
 import org.apache.tools.ant.types.FileSet;
 import org.apache.tools.ant.util.FileUtils;
@@ -77,6 +76,8 @@ import org.apache.tools.ant.util.FileUtils;
  * @since Ant 1.4
  */
 public class DependSet extends MatchingTask {
+
+    private static final FileUtils     FILE_UTILS = FileUtils.getFileUtils();
 
     private Vector sourceFileSets  = new Vector();
     private Vector sourceFileLists = new Vector();
@@ -138,7 +139,7 @@ public class DependSet extends MatchingTask {
           We have to munge the time to allow for the filesystem time
           granularity.
         */
-        now += FileUtils.getFileUtils().getFileTimestampGranularity();
+        now += FILE_UTILS.getFileTimestampGranularity();
 
         //
         // Grab all the target files specified via filesets

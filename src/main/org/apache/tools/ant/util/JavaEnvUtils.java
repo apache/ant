@@ -1,5 +1,5 @@
 /*
- * Copyright  2002-2004 The Apache Software Foundation
+ * Copyright  2002-2005 The Apache Software Foundation
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -46,7 +46,7 @@ public class JavaEnvUtils {
     private static final String javaHome = System.getProperty("java.home");
 
     /** FileUtils instance for path normalization */
-    private static final FileUtils fileUtils = FileUtils.newFileUtils();
+    private static final FileUtils FILE_UTILS = FileUtils.getFileUtils();
 
     /** Version of currently running VM. */
     private static String javaVersion;
@@ -250,7 +250,7 @@ public class JavaEnvUtils {
      * @return null if the executable cannot be found.
      */
     private static File findInDir(String dirName, String commandName) {
-        File dir = fileUtils.normalize(dirName);
+        File dir = FILE_UTILS.normalize(dirName);
         File executable = null;
         if (dir.exists()) {
             executable = new File(dir, addExtension(commandName));
@@ -371,8 +371,7 @@ public class JavaEnvUtils {
      */
     public static File createVmsJavaOptionFile(String[] cmd)
             throws IOException {
-        File script = FileUtils.newFileUtils()
-                .createTempFile("ANT", ".JAVA_OPTS", null);
+        File script = FILE_UTILS.createTempFile("ANT", ".JAVA_OPTS", null);
         PrintWriter out = null;
         try {
             out = new PrintWriter(new BufferedWriter(new FileWriter(script)));

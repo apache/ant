@@ -1,5 +1,5 @@
 /*
- * Copyright  2000-2004 The Apache Software Foundation
+ * Copyright  2000-2005 The Apache Software Foundation
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -36,7 +36,7 @@ public class SourceFileScanner implements ResourceFactory {
 
     protected Task task;
 
-    private FileUtils fileUtils;
+    private static final FileUtils FILE_UTILS = FileUtils.getFileUtils();
     private File destDir;     // base directory of the fileset
 
     /**
@@ -44,7 +44,6 @@ public class SourceFileScanner implements ResourceFactory {
      */
     public SourceFileScanner(Task task) {
         this.task = task;
-        fileUtils = FileUtils.newFileUtils();
     }
 
     /**
@@ -61,7 +60,7 @@ public class SourceFileScanner implements ResourceFactory {
     public String[] restrict(String[] files, File srcDir, File destDir,
                              FileNameMapper mapper) {
         return restrict(files, srcDir, destDir, mapper,
-                        fileUtils.getFileTimestampGranularity());
+                        FILE_UTILS.getFileTimestampGranularity());
     }
 
     /**
@@ -85,7 +84,7 @@ public class SourceFileScanner implements ResourceFactory {
         this.destDir = destDir;
         Vector v = new Vector();
         for (int i = 0; i < files.length; i++) {
-            File src = fileUtils.resolveFile(srcDir, files[i]);
+            File src = FILE_UTILS.resolveFile(srcDir, files[i]);
             v.addElement(new Resource(files[i], src.exists(),
                                       src.lastModified(), src.isDirectory()));
         }
@@ -112,7 +111,7 @@ public class SourceFileScanner implements ResourceFactory {
     public File[] restrictAsFiles(String[] files, File srcDir, File destDir,
                                   FileNameMapper mapper) {
         return restrictAsFiles(files, srcDir, destDir, mapper,
-                               fileUtils.getFileTimestampGranularity());
+                               FILE_UTILS.getFileTimestampGranularity());
     }
 
     /**
@@ -140,7 +139,7 @@ public class SourceFileScanner implements ResourceFactory {
      * @since Ant 1.5.2
      */
     public Resource getResource(String name) {
-        File src = fileUtils.resolveFile(destDir, name);
+        File src = FILE_UTILS.resolveFile(destDir, name);
         return new Resource(name, src.exists(), src.lastModified(),
                             src.isDirectory());
     }

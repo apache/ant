@@ -1,5 +1,5 @@
 /*
- * Copyright  2004 The Apache Software Foundation
+ * Copyright  2004-2005 The Apache Software Foundation
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -29,6 +29,9 @@ public class RecorderTest extends BuildFileTest {
 
     private static final String REC_DIR = "recorder-out";
 
+    /** Utilities used for file operations */
+    private static final FileUtils FILE_UTILS = FileUtils.getFileUtils();
+
     public RecorderTest(String name) {
         super(name);
     }
@@ -43,9 +46,8 @@ public class RecorderTest extends BuildFileTest {
     }
 
     public void testNoAppend() throws IOException {
-        FileUtils fileUtils = FileUtils.newFileUtils();
         executeTarget("noappend");
-        assertTrue(fileUtils
+        assertTrue(FILE_UTILS
                    .contentEquals(project.resolveFile(REC_DIR 
                                                       + "rectest1.result"),
                                   project.resolveFile(REC_DIR 
@@ -53,9 +55,8 @@ public class RecorderTest extends BuildFileTest {
     }
 
     public void testAppend() throws IOException {
-        FileUtils fileUtils = FileUtils.newFileUtils();
         executeTarget("append");
-        assertTrue(fileUtils
+        assertTrue(FILE_UTILS
                    .contentEquals(project.resolveFile(REC_DIR 
                                                       + "rectest2.result"),
                                   project.resolveFile(REC_DIR 
@@ -63,9 +64,8 @@ public class RecorderTest extends BuildFileTest {
     }
 
     public void testRestart() throws IOException {
-        FileUtils fileUtils = FileUtils.newFileUtils();
         executeTarget("restart");
-        assertTrue(fileUtils
+        assertTrue(FILE_UTILS
                    .contentEquals(project.resolveFile(REC_DIR 
                                                       + "rectest3.result"),
                                   project.resolveFile(REC_DIR 
@@ -73,9 +73,8 @@ public class RecorderTest extends BuildFileTest {
     }
 
     public void testDeleteRestart() throws IOException {
-        FileUtils fileUtils = FileUtils.newFileUtils();
         executeTarget("deleterestart");
-        assertTrue(fileUtils
+        assertTrue(FILE_UTILS
                    .contentEquals(project.resolveFile(REC_DIR 
                                                       + "rectest4.result"),
                                   project.resolveFile(REC_DIR 

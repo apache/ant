@@ -1,5 +1,5 @@
 /*
- * Copyright  2002-2004 The Apache Software Foundation
+ * Copyright  2002-2005 The Apache Software Foundation
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -19,16 +19,9 @@ package org.apache.tools.ant.taskdefs.optional.image;
 
 import org.apache.tools.ant.BuildFileTest;
 import org.apache.tools.ant.util.FileUtils;
-import org.apache.tools.ant.taskdefs.condition.Os;
 
-import java.io.IOException;
 import java.io.File;
-import java.io.InputStream;
-import java.io.BufferedInputStream;
-import java.io.FileInputStream;
-import java.io.FileReader;
-import java.io.BufferedReader;
-import java.util.Properties;
+
 
 /**
  * Tests the Image task.
@@ -40,6 +33,8 @@ public class ImageTest extends BuildFileTest {
     private final static String TASKDEFS_DIR = 
         "src/etc/testcases/taskdefs/optional/image/";
     private final static String LARGEIMAGE = "largeimage.jpg";
+
+    private static final FileUtils FILE_UTILS = FileUtils.getFileUtils();
 
     public ImageTest(String name) {
         super(name);
@@ -73,7 +68,7 @@ public class ImageTest extends BuildFileTest {
         File f = createRelativeFile("/dest/" + LARGEIMAGE);
         long lastModified = f.lastModified();
         try {
-            Thread.sleep(FileUtils.newFileUtils()
+            Thread.sleep(FILE_UTILS
                          .getFileTimestampGranularity());
         }
         catch (InterruptedException e) {}

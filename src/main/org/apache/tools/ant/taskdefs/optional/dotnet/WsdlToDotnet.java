@@ -1,5 +1,5 @@
 /*
- * Copyright  2002-2004 The Apache Software Foundation
+ * Copyright  2002-2005 The Apache Software Foundation
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -19,7 +19,6 @@ package org.apache.tools.ant.taskdefs.optional.dotnet;
 import java.io.File;
 import java.util.Vector;
 import java.util.Iterator;
-import java.net.URL;
 import java.net.MalformedURLException;
 
 import org.apache.tools.ant.BuildException;
@@ -51,6 +50,11 @@ import org.apache.tools.ant.util.FileUtils;
  */
 
 public class WsdlToDotnet extends Task  {
+
+    /**
+     * used for timestamp checking
+     */
+    private static final FileUtils FILE_UTILS = FileUtils.getFileUtils();
 
     /**
      * name of output file (required)
@@ -123,11 +127,6 @@ public class WsdlToDotnet extends Task  {
      * error message: no dest file
      */
     public static final String ERROR_NO_DEST_FILE = "destination file must be specified";
-
-    /**
-     * used for timestamp checking
-     */
-    private FileUtils fileutils = FileUtils.newFileUtils();
 
     /**
      * Name of the file to generate. Required
@@ -346,7 +345,7 @@ public class WsdlToDotnet extends Task  {
         if (destLastModified == -1) {
             return true;
         }
-        return !fileutils.isUpToDate(schema.getTimestamp(), destLastModified);
+        return !FILE_UTILS.isUpToDate(schema.getTimestamp(), destLastModified);
     }
 
 

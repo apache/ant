@@ -68,6 +68,7 @@ public class Concat extends Task {
     // The size of buffers to be used
     private static final int BUFFER_SIZE = 8192;
 
+    private static final FileUtils     FILE_UTILS = FileUtils.getFileUtils();
     // Attributes.
 
     /**
@@ -124,9 +125,6 @@ public class Concat extends Task {
 
     /** internal variable - used to collect the source files from sources */
     private Vector        sourceFiles = new Vector();
-
-    /** 1.1 utilities and copy utilities */
-    private static FileUtils     fileUtils = FileUtils.newFileUtils();
 
     // Attribute setters.
 
@@ -465,7 +463,7 @@ public class Concat extends Task {
                 continue;
             }
             if (destinationFile != null
-                && fileUtils.fileNameEquals(destinationFile, file)) {
+                && FILE_UTILS.fileNameEquals(destinationFile, file)) {
                 throw new BuildException("Input file \""
                                          + file + "\" "
                                          + "is the same as the output file.");

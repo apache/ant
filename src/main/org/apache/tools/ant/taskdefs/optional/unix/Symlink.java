@@ -1,5 +1,5 @@
 /*
- * Copyright  2002-2004 The Apache Software Foundation
+ * Copyright  2002-2005 The Apache Software Foundation
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -118,6 +118,8 @@ public class Symlink extends Task {
     private boolean overwrite;
     private boolean failonerror;
 
+    private static final FileUtils FILE_UTILS = FileUtils.getFileUtils();
+    
     /** Initialize the task. */
 
     public void init() throws BuildException {
@@ -163,10 +165,9 @@ public class Symlink extends Task {
                     // handle the case where the link exists
                     // and points to a directory (bug 25181)
                     try {
-                        FileUtils fu = FileUtils.newFileUtils();
                         File test = new File(link);
                         File testRes = new File(resource);
-                        if (!fu.isSymbolicLink(test.getParentFile(),
+                        if (!FILE_UTILS.isSymbolicLink(test.getParentFile(),
                                                test.getName())) {
                             doLink(resource, link);
                         } else {
@@ -396,12 +397,12 @@ public class Symlink extends Task {
         // rename the resource, thus breaking the link
         String parentStr = canfil.getParent();
         File parentDir = new File(parentStr);
-        FileUtils fu = FileUtils.newFileUtils();
-        File temp = fu.createTempFile("symlink", ".tmp", parentDir);
+
+        File temp = FILE_UTILS.createTempFile("symlink", ".tmp", parentDir);
         temp.deleteOnExit();
         try {
             try {
-                fu.rename(canfil, temp);
+                FILE_UTILS.rename(canfil, temp);
             } catch (IOException e) {
                 throw new IOException("Couldn't rename resource when "
                                       + "attempting to delete " + linkfil);
@@ -416,7 +417,7 @@ public class Symlink extends Task {
         } finally {
             // return the resource to its original name.
             try {
-                fu.rename(temp, canfil);
+                FILE_UTILS.rename(temp, canfil);
             } catch (IOException e) {
                 throw new IOException("Couldn't return resource " + temp
                                       + " to its original name: " + canstr
@@ -626,7 +627,6 @@ public class Symlink extends Task {
 
             File parentNext, next;
             String nameParentNext;
-            FileUtils fu = FileUtils.newFileUtils();
             Vector removals = new Vector();
             while (enumLinks.hasMoreElements()) {
                 next = (File) enumLinks.nextElement();
@@ -634,7 +634,7 @@ public class Symlink extends Task {
 
                 parentNext = new File(nameParentNext);
                 try {
-                    if (!fu.isSymbolicLink(parentNext, next.getName())) {
+                    if (!FILE_UTILS.isSymbolicLink(parentNext, next.getName())) {
                         removals.addElement(next);
                     }
                 } catch (IOException ioe) {

@@ -1,5 +1,5 @@
 /*
- * Copyright  2002-2004 The Apache Software Foundation
+ * Copyright  2002-2005 The Apache Software Foundation
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -25,6 +25,10 @@ import org.apache.tools.ant.launch.Locator;
  *
  */
 public class LoaderUtils {
+
+    /** Utilities used for file operations */
+    private static final FileUtils FILE_UTILS = FileUtils.getFileUtils();
+
     /**
      * Set the context classloader
      *
@@ -67,9 +71,8 @@ public class LoaderUtils {
      */
     private static File normalizeSource(File source) {
         if (source != null) {
-            FileUtils fileUtils = FileUtils.newFileUtils();
             try {
-                source = fileUtils.normalize(source.getAbsolutePath());
+                source = FILE_UTILS.normalize(source.getAbsolutePath());
             } catch (BuildException e) {
                 // relative path
             }

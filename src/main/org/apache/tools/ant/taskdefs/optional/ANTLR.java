@@ -1,5 +1,5 @@
 /*
- * Copyright  2000-2004 The Apache Software Foundation
+ * Copyright  2000-2005 The Apache Software Foundation
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -84,12 +84,11 @@ public class ANTLR extends Task {
 
 
     /** Instance of a utility class to use for file operations. */
-    private FileUtils fileUtils;
+    private static final FileUtils FILE_UTILS = FileUtils.getFileUtils();
 
     public ANTLR() {
         commandline.setVm(JavaEnvUtils.getJreExecutable("java"));
         commandline.setClassname("antlr.Tool");
-        fileUtils = FileUtils.newFileUtils();
     }
 
     /**
@@ -120,7 +119,7 @@ public class ANTLR extends Task {
         } else {
             sg = superGrammar;
         }
-        setGlib(fileUtils.resolveFile(getProject().getBaseDir(), sg));
+        setGlib(FILE_UTILS.resolveFile(getProject().getBaseDir(), sg));
     }
     /**
      * Sets an optional super grammar file

@@ -1,5 +1,5 @@
 /*
- * Copyright  2003-2004 The Apache Software Foundation
+ * Copyright  2003-2005 The Apache Software Foundation
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -20,7 +20,6 @@ package org.apache.tools.ant.types.selectors;
 
 // Java
 import java.io.File;
-import java.io.FileWriter;
 import java.util.Comparator;
 import java.util.Iterator;
 import java.text.RuleBasedCollator;
@@ -38,6 +37,7 @@ import org.apache.tools.ant.BuildEvent;
 
 // The classes to test
 import org.apache.tools.ant.types.selectors.modifiedselector.*;
+import org.apache.tools.ant.util.FileUtils;
 
 
 /**
@@ -48,6 +48,8 @@ import org.apache.tools.ant.types.selectors.modifiedselector.*;
  */
 public class ModifiedSelectorTest extends BaseSelectorTest {
 
+    /** Utilities used for file operations */
+    private static final FileUtils FILE_UTILS = FileUtils.getFileUtils();
 
     //  =====================  attributes  =====================
 
@@ -388,8 +390,7 @@ public class ModifiedSelectorTest extends BaseSelectorTest {
      * configure() method of ModifiedSelector. This testcase tests that.
      */
     public void testCreatePropertiesCacheViaCustomSelector() {
-        File cachefile = org.apache.tools.ant.util.FileUtils.newFileUtils()
-                         .createTempFile("tmp-cache-", ".properties", null);
+        File cachefile = FILE_UTILS.createTempFile("tmp-cache-", ".properties", null);
         try {
             // initialize test environment (called "bed")
             makeBed();

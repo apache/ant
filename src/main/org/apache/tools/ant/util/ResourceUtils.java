@@ -1,5 +1,5 @@
 /*
- * Copyright  2003-2004 The Apache Software Foundation
+ * Copyright  2003-2005 The Apache Software Foundation
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -32,6 +32,9 @@ import java.util.Vector;
  */
 public class ResourceUtils {
 
+    /** Utilities used for file operations */
+    private static final FileUtils FILE_UTILS = FileUtils.getFileUtils();
+
     /**
      * tells which source files should be reprocessed based on the
      * last modification date of target files
@@ -51,8 +54,7 @@ public class ResourceUtils {
                                                     FileNameMapper mapper,
                                                     ResourceFactory targets) {
         return selectOutOfDateSources(logTo, source, mapper, targets,
-                                      FileUtils.newFileUtils()
-                                      .getFileTimestampGranularity());
+                                      FILE_UTILS.getFileTimestampGranularity());
     }
 
     /**

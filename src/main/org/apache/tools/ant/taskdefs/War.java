@@ -1,5 +1,5 @@
 /*
- * Copyright  2000-2004 The Apache Software Foundation
+ * Copyright  2000-2005 The Apache Software Foundation
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -55,7 +55,7 @@ public class War extends Jar {
      */
     private boolean descriptorAdded;
 
-    private static final FileUtils fu = FileUtils.newFileUtils();
+    private static final FileUtils FILE_UTILS = FileUtils.getFileUtils();
 
     public War() {
         super();
@@ -146,7 +146,7 @@ public class War extends Jar {
         // by the "webxml" attribute and in a <fileset> element.
         if (vPath.equalsIgnoreCase("WEB-INF/web.xml"))  {
             if (deploymentDescriptor == null
-                || !fu.fileNameEquals(deploymentDescriptor, file)
+                || !FILE_UTILS.fileNameEquals(deploymentDescriptor, file)
                 || descriptorAdded) {
                 log("Warning: selected " + archiveType
                     + " files include a WEB-INF/web.xml which will be ignored "

@@ -1,5 +1,5 @@
 /*
- * Copyright  2000-2004 The Apache Software Foundation
+ * Copyright  2000-2005 The Apache Software Foundation
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -104,8 +104,6 @@ public class Rmic extends MatchingTask {
 
     private ClassLoader loader = null;
 
-    private FileUtils fileUtils = FileUtils.newFileUtils();
-
     private FacadeTaskHelper facade;
     /** unable to verify message */
     public static final String ERROR_UNABLE_TO_VERIFY_CLASS = "Unable to verify class ";
@@ -121,6 +119,8 @@ public class Rmic extends MatchingTask {
     public static final String ERROR_NOT_A_DIR = "base is not a directory:";
     /** base attribute not set message */
     public static final String ERROR_BASE_NOT_SET = "base attribute must be set!";
+
+    private static final FileUtils FILE_UTILS = FileUtils.getFileUtils();
 
     /**
      * Constructor for Rmic.
@@ -607,11 +607,11 @@ public class Rmic extends MatchingTask {
             File newFile = new File(sourceBaseFile, sourceFileName);
             try {
                 if (filtering) {
-                    fileUtils.copyFile(oldFile, newFile,
+                    FILE_UTILS.copyFile(oldFile, newFile,
                         new FilterSetCollection(getProject()
                                                 .getGlobalFilterSet()));
                 } else {
-                    fileUtils.copyFile(oldFile, newFile);
+                    FILE_UTILS.copyFile(oldFile, newFile);
                 }
                 oldFile.delete();
             } catch (IOException ioe) {

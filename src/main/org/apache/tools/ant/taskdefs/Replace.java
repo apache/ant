@@ -52,6 +52,8 @@ import org.apache.tools.ant.util.StringUtils;
  */
 public class Replace extends MatchingTask {
 
+    private static final FileUtils FILE_UTILS = FileUtils.getFileUtils();
+
     private File src = null;
     private NestedString token = null;
     private NestedString value = new NestedString();
@@ -69,8 +71,6 @@ public class Replace extends MatchingTask {
 
     /** The encoding used to read and write files - if null, uses default */
     private String encoding = null;
-
-    private FileUtils fileUtils = FileUtils.newFileUtils();
 
     /**
      * An inline string to use as the replacement text.
@@ -587,7 +587,7 @@ public class Replace extends MatchingTask {
         try {
             in = new FileInput(src);
 
-            temp = fileUtils.createTempFile("rep", ".tmp",
+            temp = FILE_UTILS.createTempFile("rep", ".tmp",
                     src.getParentFile());
             out = new FileOutput(temp);
 
@@ -613,7 +613,7 @@ public class Replace extends MatchingTask {
 
             boolean changes = (replaceCount != repCountStart);
             if (changes) {
-                fileUtils.rename(temp, src);
+                FILE_UTILS.rename(temp, src);
                 temp = null;
             }
         } catch (IOException ioe) {

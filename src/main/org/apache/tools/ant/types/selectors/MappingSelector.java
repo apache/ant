@@ -30,6 +30,10 @@ import java.io.File;
  * selector
  */
 public abstract class MappingSelector extends BaseSelector {
+
+    /** Utilities used for file operations */
+    private static final FileUtils FILE_UTILS = FileUtils.getFileUtils();
+
     protected File targetdir = null;
     protected Mapper mapperElement = null;
     protected FileNameMapper map = null;
@@ -40,7 +44,7 @@ public abstract class MappingSelector extends BaseSelector {
      *
      */
     public MappingSelector() {
-        granularity = (int) FileUtils.getFileUtils().getFileTimestampGranularity();
+        granularity = (int) FILE_UTILS.getFileTimestampGranularity();
     }
 
 

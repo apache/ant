@@ -1,5 +1,5 @@
 /*
- * Copyright  2000,2002-2004 The Apache Software Foundation
+ * Copyright  2000-2005 The Apache Software Foundation
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -38,6 +38,8 @@ public class Location implements Serializable {
 
     /** Location to use when one is needed but no information is available */
     public static final Location UNKNOWN_LOCATION = new Location();
+
+    private static final FileUtils FILE_UTILS = FileUtils.getFileUtils();
 
     /**
      * Creates an "unknown" location.
@@ -84,7 +86,7 @@ public class Location implements Serializable {
      */
     public Location(String fileName, int lineNumber, int columnNumber) {
         if (fileName != null && fileName.startsWith("file:")) {
-            this.fileName = FileUtils.newFileUtils().fromURI(fileName);
+            this.fileName = FILE_UTILS.fromURI(fileName);
         } else {
             this.fileName = fileName;
         }

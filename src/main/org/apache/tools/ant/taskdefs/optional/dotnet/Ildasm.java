@@ -1,5 +1,5 @@
 /*
- * Copyright  2003-2004 The Apache Software Foundation
+ * Copyright  2003-2005 The Apache Software Foundation
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -58,6 +58,8 @@ import java.io.File;
  */
 public class Ildasm extends Task {
 
+    private static final FileUtils FILE_UTILS = FileUtils.getFileUtils();
+    
     /**
      * source file (mandatory)
      */
@@ -328,7 +330,7 @@ public class Ildasm extends Task {
         }
         long sourceTime = sourceFile.lastModified();
         long destTime = destFile.lastModified();
-        if (sourceTime > (destTime + FileUtils.newFileUtils().getFileTimestampGranularity())) {
+        if (sourceTime > (destTime + FILE_UTILS.getFileTimestampGranularity())) {
             log("Source file is newer than the dest file: a rebuild is required",
                     Project.MSG_VERBOSE);
             return true;

@@ -1,5 +1,5 @@
 /*
- * Copyright  2001-2004 The Apache Software Foundation
+ * Copyright  2001-2005 The Apache Software Foundation
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -41,6 +41,8 @@ import org.apache.tools.ant.taskdefs.condition.Os;
  */
 public abstract class DefaultCompilerAdapter implements CompilerAdapter {
 
+    private static final FileUtils FILE_UTILS = FileUtils.getFileUtils();
+    
     /* jdg - TODO - all these attributes are currently protected, but they
      * should probably be private in the near future.
      */
@@ -69,7 +71,6 @@ public abstract class DefaultCompilerAdapter implements CompilerAdapter {
     protected static final String lSep = System.getProperty("line.separator");
     protected Javac attributes;
 
-    private FileUtils fileUtils = FileUtils.newFileUtils();
 
     /**
      * Set the Javac instance which contains the configured compilation
@@ -408,7 +409,7 @@ public abstract class DefaultCompilerAdapter implements CompilerAdapter {
                 && firstFileName >= 0) {
                 PrintWriter out = null;
                 try {
-                    tmpFile = fileUtils.createTempFile(
+                    tmpFile = FILE_UTILS.createTempFile(
                         "files", "", getJavac().getTempdir());
                     tmpFile.deleteOnExit();
                     out = new PrintWriter(new FileWriter(tmpFile));

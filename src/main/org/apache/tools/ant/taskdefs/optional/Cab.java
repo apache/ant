@@ -1,5 +1,5 @@
 /*
- * Copyright  2000-2004 The Apache Software Foundation
+ * Copyright  2000-2005 The Apache Software Foundation
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -53,7 +53,7 @@ public class Cab extends MatchingTask {
 
     protected String archiveType = "cab";
 
-    private FileUtils fileUtils = FileUtils.newFileUtils();
+    private static final FileUtils FILE_UTILS = FileUtils.getFileUtils();
 
     /**
      * The name/location of where to create the .cab file.
@@ -138,7 +138,7 @@ public class Cab extends MatchingTask {
         boolean upToDate = true;
         for (int i = 0; i < files.size() && upToDate; i++) {
             String file = files.elementAt(i).toString();
-            if (fileUtils.resolveFile(baseDir, file).lastModified()
+            if (FILE_UTILS.resolveFile(baseDir, file).lastModified()
                     > cabFile.lastModified()) {
                 upToDate = false;
             }
@@ -152,7 +152,7 @@ public class Cab extends MatchingTask {
      */
     protected File createListFile(Vector files)
         throws IOException {
-        File listFile = fileUtils.createTempFile("ant", "", null);
+        File listFile = FILE_UTILS.createTempFile("ant", "", null);
         listFile.deleteOnExit();
 
         PrintWriter writer = new PrintWriter(new FileOutputStream(listFile));
@@ -283,7 +283,7 @@ public class Cab extends MatchingTask {
                 exec.setDir(baseDir);
 
                 if (!doVerbose) {
-                    outFile = fileUtils.createTempFile("ant", "", null);
+                    outFile = FILE_UTILS.createTempFile("ant", "", null);
                     outFile.deleteOnExit();
                     exec.setOutput(outFile);
                 }

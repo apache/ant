@@ -63,6 +63,8 @@ public class Expand extends Task {
     private String encoding = "UTF8";
     /** Error message when more that one mapper is defined */
     public static final String ERROR_MULTIPLE_MAPPERS = "Cannot define more than one mapper";
+    
+    private static final FileUtils FILE_UTILS = FileUtils.getFileUtils();
 
     /**
      * Do the work.
@@ -88,14 +90,12 @@ public class Expand extends Task {
             throw new BuildException("Dest must be a directory.", getLocation());
         }
 
-        FileUtils fileUtils = FileUtils.newFileUtils();
-
         if (source != null) {
             if (source.isDirectory()) {
                 throw new BuildException("Src must not be a directory."
                     + " Use nested filesets instead.", getLocation());
             } else {
-                expandFile(fileUtils, source, dest);
+                expandFile(FILE_UTILS, source, dest);
             }
         }
         if (filesets.size() > 0) {
@@ -107,7 +107,7 @@ public class Expand extends Task {
                 String[] files = ds.getIncludedFiles();
                 for (int i = 0; i < files.length; ++i) {
                     File file = new File(fromDir, files[i]);
-                    expandFile(fileUtils, file, dest);
+                    expandFile(FILE_UTILS, file, dest);
                 }
             }
         }

@@ -1,5 +1,5 @@
 /*
- * Copyright  2002-2004 The Apache Software Foundation
+ * Copyright  2002-2005 The Apache Software Foundation
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -179,7 +179,6 @@ public class XmlProperty extends org.apache.tools.ant.Task {
     private boolean semanticAttributes = false;
     private boolean includeSemanticAttribute = false;
     private File rootDirectory = null;
-    private FileUtils fileUtils = FileUtils.newFileUtils();
     private Hashtable addedAttributes = new Hashtable();
     private XMLCatalog xmlCatalog = new XMLCatalog();
 
@@ -192,6 +191,7 @@ public class XmlProperty extends org.apache.tools.ant.Task {
     private static final String[] ATTRIBUTES = new String[] {
         ID, REF_ID, LOCATION, VALUE, PATH, PATHID
     };
+    private static final FileUtils FILE_UTILS = FileUtils.getFileUtils();
 
     /**
      * Constructor.
@@ -686,7 +686,7 @@ public class XmlProperty extends org.apache.tools.ant.Task {
         if (rootDirectory == null) {
             return getProject().resolveFile(fileName);
         }
-        return fileUtils.resolveFile(rootDirectory, fileName);
+        return FILE_UTILS.resolveFile(rootDirectory, fileName);
     }
 
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright  2001-2004 The Apache Software Foundation
+ * Copyright  2001-2005 The Apache Software Foundation
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -17,9 +17,6 @@
 
 package org.apache.tools.ant.taskdefs;
 
-import java.net.URL;
-import java.io.File;
-
 import org.apache.tools.ant.BuildFileTest;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.util.FileUtils;
@@ -27,6 +24,9 @@ import org.apache.tools.ant.util.FileUtils;
 /**
  */
 public class PropertyTest extends BuildFileTest {
+
+    /** Utilities used for file operations */
+    private static final FileUtils FILE_UTILS = FileUtils.getFileUtils();
 
     public PropertyTest(String name) {
         super(name);
@@ -64,7 +64,7 @@ public class PropertyTest extends BuildFileTest {
     public void test5() {
         String baseDir = getProject().getProperty("basedir");
         try {
-            String uri = FileUtils.newFileUtils().toURI(
+            String uri = FILE_UTILS.toURI(
                 baseDir + "/property3.properties");
             getProject().setNewProperty(
                 "test5.url", uri);

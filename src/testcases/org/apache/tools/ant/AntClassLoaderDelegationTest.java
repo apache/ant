@@ -1,5 +1,5 @@
 /*
- * Copyright  2004 The Apache Software Foundation
+ * Copyright  2004-2005 The Apache Software Foundation
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -26,7 +26,6 @@ import java.util.Collections;
 import java.util.Enumeration;
 import java.util.List;
 import junit.framework.TestCase;
-import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.types.Path;
 import org.apache.tools.ant.util.FileUtils;
@@ -36,6 +35,9 @@ import org.apache.tools.ant.util.FileUtils;
  *
  */
 public class AntClassLoaderDelegationTest extends TestCase {
+
+    /** Instance of a utility class to use for file operations. */
+    private static final FileUtils FILE_UTILS = FileUtils.getFileUtils();
 
     private Project p;
 
@@ -64,7 +66,7 @@ public class AntClassLoaderDelegationTest extends TestCase {
         // An AntClassLoader which is supposed to delegate to the parent and then to the disk path:
         ClassLoader acl = new AntClassLoader(parent, p, path, true);
         // The intended result URLs:
-        URL urlFromPath = new URL(FileUtils.newFileUtils().toURI(buildTestcases) + TEST_RESOURCE);
+        URL urlFromPath = new URL(FILE_UTILS.toURI(buildTestcases) + TEST_RESOURCE);
         URL urlFromParent = new URL("http://ant.apache.org/" + TEST_RESOURCE);
         assertEquals("correct resources (regular delegation order)",
             Arrays.asList(new URL[] {urlFromParent, urlFromPath}),

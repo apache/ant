@@ -1,5 +1,5 @@
 /*
- * Copyright  2003-2004 The Apache Software Foundation.
+ * Copyright  2003-2005 The Apache Software Foundation.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -23,7 +23,6 @@ import org.apache.tools.ant.util.FileUtils;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
-import java.io.OutputStream;
 import java.util.GregorianCalendar;
 
 import junit.framework.ComparisonFailure;
@@ -39,6 +38,10 @@ public class ExecTaskTest extends BuildFileTest {
     private static final int MAX_BUILD_TIME = 4000;
     private static final int SECURITY_MARGIN = 2000; // wait 2 second extras
     // the test failed with 100 ms of margin on cvs.apache.org on August 1st, 2003
+
+    /** Utilities used for file operations */
+    private static final FileUtils FILE_UTILS = FileUtils.getFileUtils();
+
     private File logFile;
     private MonitoredBuild myBuild = null;
     volatile private boolean buildFinished = false;
@@ -316,7 +319,7 @@ public class ExecTaskTest extends BuildFileTest {
             return;
         }
         assertTrue("error with transcoding",
-            FileUtils.newFileUtils().contentEquals(
+            FILE_UTILS.contentEquals(
             getProject().resolveFile("expected/utf-8"),
             getProject().resolveFile("redirector.out")));
     }
@@ -343,8 +346,7 @@ public class ExecTaskTest extends BuildFileTest {
             return;
         }
         myBuild = new MonitoredBuild(new File(System.getProperty("root"), BUILD_FILE), "spawn");
-        FileUtils fileutils  = FileUtils.newFileUtils();
-        logFile = fileutils.createTempFile("spawn","log", project.getBaseDir());
+        logFile = FILE_UTILS.createTempFile("spawn","log", project.getBaseDir());
         // this is guaranteed by FileUtils#createTempFile
         assertTrue("log file not existing", !logFile.exists());
         // make the spawned process run 4 seconds

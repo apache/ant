@@ -1,5 +1,5 @@
 /*
- * Copyright  2002-2004 The Apache Software Foundation
+ * Copyright  2002-2005 The Apache Software Foundation
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -43,7 +43,7 @@ public class JAXPUtils {
      *
      * @since Ant 1.6
      */
-    private static final FileUtils fu = FileUtils.newFileUtils();
+    private static final FileUtils FILE_UTILS = FileUtils.getFileUtils();
 
     /**
      * Parser factory to use to create parsers.
@@ -175,7 +175,7 @@ public class JAXPUtils {
      * @since Ant 1.5.2
      */
     public static String getSystemId(File file) {
-        return fu.toURI(file.getAbsolutePath());
+        return FILE_UTILS.toURI(file.getAbsolutePath());
     }
 
     /**

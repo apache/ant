@@ -1,5 +1,5 @@
 /*
- * Copyright  2000-2004 The Apache Software Foundation
+ * Copyright  2000-2005 The Apache Software Foundation
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -31,7 +31,6 @@ import java.io.IOException;
 import java.io.FileOutputStream;
 import java.io.PrintWriter;
 import java.io.BufferedOutputStream;
-import java.io.FileNotFoundException;
 import java.util.Hashtable;
 
 import org.apache.tools.ant.BuildException;
@@ -55,6 +54,8 @@ import org.apache.tools.ant.types.Commandline;
  */
 
 public class NetCommand {
+
+    private static final FileUtils FILE_UTILS = FileUtils.getFileUtils();
 
     /**
      *  owner project
@@ -326,9 +327,8 @@ public class NetCommand {
             //and set @tmpfile as the command -then we remember to delete the tempfile
             //afterwards
             FileOutputStream fos = null;
-            FileUtils fileUtils = FileUtils.newFileUtils();
 
-            temporaryCommandFile = fileUtils.createTempFile("cmd", ".txt", null);
+            temporaryCommandFile = FILE_UTILS.createTempFile("cmd", ".txt", null);
             owner.log("Using response file" + temporaryCommandFile, Project.MSG_VERBOSE);
 
             try {

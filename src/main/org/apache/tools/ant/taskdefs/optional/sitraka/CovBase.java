@@ -1,5 +1,5 @@
 /*
- * Copyright  2003-2004 The Apache Software Foundation
+ * Copyright  2003-2005 The Apache Software Foundation
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -30,7 +30,7 @@ import org.apache.tools.ant.util.FileUtils;
  */
 public abstract class CovBase extends Task {
     private File home;
-    private static FileUtils fu = FileUtils.newFileUtils();
+    private static final FileUtils FILE_UTILS = FileUtils.getFileUtils();
     private boolean isJProbe4 = false;
     private static boolean isDos = Os.isFamily("dos");
 
@@ -48,11 +48,11 @@ public abstract class CovBase extends Task {
     protected File findCoverageJar() {
         File loc = null;
         if (isJProbe4) {
-            loc = fu.resolveFile(home, "lib/coverage.jar");
+            loc = FILE_UTILS.resolveFile(home, "lib/coverage.jar");
         } else {
-            loc = fu.resolveFile(home, "coverage/coverage.jar");
+            loc = FILE_UTILS.resolveFile(home, "coverage/coverage.jar");
             if (!loc.canRead()) {
-                File newLoc = fu.resolveFile(home, "lib/coverage.jar");
+                File newLoc = FILE_UTILS.resolveFile(home, "lib/coverage.jar");
                 if (newLoc.canRead()) {
                     isJProbe4 = true;
                     loc = newLoc;
@@ -70,11 +70,11 @@ public abstract class CovBase extends Task {
 
         File loc = null;
         if (isJProbe4) {
-            loc = fu.resolveFile(home, "bin/" + relativePath);
+            loc = FILE_UTILS.resolveFile(home, "bin/" + relativePath);
         } else {
-            loc = fu.resolveFile(home, relativePath);
+            loc = FILE_UTILS.resolveFile(home, relativePath);
             if (!loc.canRead()) {
-                File newLoc = fu.resolveFile(home, "bin/" + relativePath);
+                File newLoc = FILE_UTILS.resolveFile(home, "bin/" + relativePath);
                 if (newLoc.canRead()) {
                     isJProbe4 = true;
                     loc = newLoc;
@@ -85,7 +85,7 @@ public abstract class CovBase extends Task {
     }
 
     protected File createTempFile(String prefix) {
-        return fu.createTempFile(prefix, ".tmp", null);
+        return FILE_UTILS.createTempFile(prefix, ".tmp", null);
     }
 
     protected String getParamFileArgument() {

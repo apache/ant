@@ -58,14 +58,16 @@ import org.apache.tools.ant.launch.Locator;
  */
 
 public class FileUtils {
-    
+
     private static final FileUtils PRIMARY_INSTANCE = new FileUtils();
-    
+
     //get some non-crypto-grade randomness from various places.
     private static Random rand = new Random(System.currentTimeMillis()
             + Runtime.getRuntime().freeMemory());
 
     private static boolean onNetWare = Os.isFamily("netware");
+    
+    private static final int BUF_SIZE = 8192;
 
     // for toURI
     private static boolean[] isSpecial = new boolean[256];
@@ -119,6 +121,7 @@ public class FileUtils {
      * Method to retrieve The FileUtils, which is shared by all users of this
      * method.
      * @return an instance of FileUtils.
+     * @since Ant 1.7
      */
     public static FileUtils getFileUtils() {
         return PRIMARY_INSTANCE;
@@ -555,7 +558,7 @@ public class FileUtils {
 
                     if (filterChainsAvailable) {
                         ChainReaderHelper crh = new ChainReaderHelper();
-                        crh.setBufferSize(8192);
+                        crh.setBufferSize(BUF_SIZE);
                         crh.setPrimaryReader(in);
                         crh.setFilterChains(filterChains);
                         crh.setProject(project);
@@ -612,14 +615,14 @@ public class FileUtils {
 
                      if (filterChainsAvailable) {
                          ChainReaderHelper crh = new ChainReaderHelper();
-                         crh.setBufferSize(8192);
+                         crh.setBufferSize(BUF_SIZE);
                          crh.setPrimaryReader(in);
                          crh.setFilterChains(filterChains);
                          crh.setProject(project);
                          Reader rdr = crh.getAssembledReader();
                          in = new BufferedReader(rdr);
                      }
-                     char[] buffer = new char[1024 * 8];
+                     char[] buffer = new char[BUF_SIZE];
                      while (true) {
                          int nRead = in.read(buffer, 0, buffer.length);
                          if (nRead == -1) {
@@ -1052,7 +1055,7 @@ public class FileUtils {
      *         reader.
      */
     public static final String readFully(Reader rdr) throws IOException {
-        return readFully(rdr, 8192);
+        return readFully(rdr, BUF_SIZE);
     }
 
     /**

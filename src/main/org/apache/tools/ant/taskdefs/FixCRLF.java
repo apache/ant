@@ -1,5 +1,5 @@
 /*
- * Copyright  2000-2004 The Apache Software Foundation
+ * Copyright  2000-2005 The Apache Software Foundation
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -106,6 +106,8 @@ public class FixCRLF extends MatchingTask {
 
     private static final char CTRLZ = '\u001A';
 
+    private static final FileUtils FILE_UTILS = FileUtils.getFileUtils();
+
     private int tablength = 8;
     private String spaces = "        ";
     private StringBuffer linebuf = new StringBuffer(1024);
@@ -119,8 +121,6 @@ public class FixCRLF extends MatchingTask {
 
     private File srcDir;
     private File destDir = null;
-
-    private FileUtils fileUtils = FileUtils.newFileUtils();
 
     /**
      * Encoding to assume for the files
@@ -373,7 +373,7 @@ public class FixCRLF extends MatchingTask {
         try {
             // Set up the output Writer
             try {
-                tmpFile = fileUtils.createTempFile("fixcrlf", "", null);
+                tmpFile = FILE_UTILS.createTempFile("fixcrlf", "", null);
                 tmpFile.deleteOnExit();
                 Writer writer = (encoding == null) ? new FileWriter(tmpFile)
                     : new OutputStreamWriter(new FileOutputStream(tmpFile),
@@ -527,7 +527,7 @@ public class FixCRLF extends MatchingTask {
             if (destFile.exists()) {
                 // Compare the destination with the temp file
                 log("destFile exists", Project.MSG_DEBUG);
-                if (!fileUtils.contentEquals(destFile, tmpFile)) {
+                if (!FILE_UTILS.contentEquals(destFile, tmpFile)) {
                     log(destFile + " is being written", Project.MSG_DEBUG);
                 } else {
                     log(destFile + " is not written, as the contents "
@@ -537,7 +537,7 @@ public class FixCRLF extends MatchingTask {
             }
 
             if (destIsWrong) {
-                fileUtils.rename(tmpFile, destFile);
+                FILE_UTILS.rename(tmpFile, destFile);
                 tmpFile = null;
             }
 

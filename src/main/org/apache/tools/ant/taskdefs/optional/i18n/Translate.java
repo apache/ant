@@ -1,5 +1,5 @@
 /*
- * Copyright  2001-2004 The Apache Software Foundation
+ * Copyright  2001-2005 The Apache Software Foundation
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -145,7 +145,7 @@ public class Translate extends MatchingTask {
 
      * Used to resolve file names.
      */
-    private FileUtils fileUtils = FileUtils.newFileUtils();
+    private static final FileUtils FILE_UTILS = FileUtils.getFileUtils();
 
     /**
      * Last Modified Timestamp of resource bundle file being used.
@@ -499,7 +499,7 @@ public class Translate extends MatchingTask {
             String[] srcFiles = ds.getIncludedFiles();
             for (int j = 0; j < srcFiles.length; j++) {
                 try {
-                    File dest = fileUtils.resolveFile(toDir, srcFiles[j]);
+                    File dest = FILE_UTILS.resolveFile(toDir, srcFiles[j]);
                     //Make sure parent dirs exist, else, create them.
                     try {
                         File destDir = new File(dest.getParent());
@@ -512,7 +512,7 @@ public class Translate extends MatchingTask {
                             Project.MSG_DEBUG);
                     }
                     destLastModified = dest.lastModified();
-                    File src = fileUtils.resolveFile(ds.getBasedir(), srcFiles[j]);
+                    File src = FILE_UTILS.resolveFile(ds.getBasedir(), srcFiles[j]);
                     srcLastModified = src.lastModified();
                     //Check to see if dest file has to be recreated
                     boolean needsWork = forceOverwrite

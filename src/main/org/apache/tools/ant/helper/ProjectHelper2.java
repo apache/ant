@@ -1,5 +1,5 @@
 /*
- * Copyright  2000-2004 The Apache Software Foundation
+ * Copyright  2000-2005 The Apache Software Foundation
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -64,7 +64,7 @@ public class ProjectHelper2 extends ProjectHelper {
     /**
      * helper for path -> URI and URI -> path conversions.
      */
-    private static FileUtils fu = FileUtils.newFileUtils();
+    private static final FileUtils FILE_UTILS = FileUtils.getFileUtils();
 
     /**
      * Parse an unknown element from a url
@@ -157,7 +157,7 @@ public class ProjectHelper2 extends ProjectHelper {
 
         if (source instanceof File) {
             buildFile = (File) source;
-            buildFile = fu.normalize(buildFile.getAbsolutePath());
+            buildFile = FILE_UTILS.normalize(buildFile.getAbsolutePath());
             context.setBuildFile(buildFile);
             buildFileName = buildFile.toString();
 //         } else if (source instanceof InputStream ) {
@@ -188,7 +188,7 @@ public class ProjectHelper2 extends ProjectHelper {
 
             String uri = null;
             if (buildFile != null) {
-                uri = fu.toURI(buildFile.getAbsolutePath());
+                uri = FILE_UTILS.toURI(buildFile.getAbsolutePath());
                 inputStream = new FileInputStream(buildFile);
             } else {
                 inputStream = url.openStream();
@@ -415,16 +415,16 @@ public class ProjectHelper2 extends ProjectHelper {
                 + systemId, Project.MSG_VERBOSE);
 
             if (systemId.startsWith("file:")) {
-                String path = fu.fromURI(systemId);
+                String path = FILE_UTILS.fromURI(systemId);
 
                 File file = new File(path);
                 if (!file.isAbsolute()) {
-                    file = fu.resolveFile(context.getBuildFileParent(), path);
+                    file = FILE_UTILS.resolveFile(context.getBuildFileParent(), path);
                 }
                 try {
                     InputSource inputSource =
                             new InputSource(new FileInputStream(file));
-                    inputSource.setSystemId(fu.toURI(file.getAbsolutePath()));
+                    inputSource.setSystemId(FILE_UTILS.toURI(file.getAbsolutePath()));
                     return inputSource;
                 } catch (FileNotFoundException fne) {
                     context.getProject().log(file.getAbsolutePath()
@@ -695,7 +695,7 @@ public class ProjectHelper2 extends ProjectHelper {
                     if ((new File(baseDir)).isAbsolute()) {
                         project.setBasedir(baseDir);
                     } else {
-                        project.setBaseDir(fu.resolveFile(
+                        project.setBaseDir(FILE_UTILS.resolveFile(
                                                context.getBuildFileParent(), baseDir));
                     }
                 }

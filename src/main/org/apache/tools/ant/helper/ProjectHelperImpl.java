@@ -1,5 +1,5 @@
 /*
- * Copyright  2000-2004 The Apache Software Foundation
+ * Copyright  2000-2005 The Apache Software Foundation
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -52,6 +52,11 @@ import org.xml.sax.helpers.XMLReaderAdapter;
 public class ProjectHelperImpl extends ProjectHelper {
 
     /**
+     * helper for path -> URI and URI -> path conversions.
+     */
+    private static final FileUtils FILE_UTILS = FileUtils.getFileUtils();
+
+    /**
      * SAX 1 style parser used to parse the given file. This may
      * in fact be a SAX 2 XMLReader wrapped in an XMLReaderAdapter.
      */
@@ -78,10 +83,6 @@ public class ProjectHelperImpl extends ProjectHelper {
      * been placed outside of targets.</p>
      */
     private Target implicitTarget = new Target();
-    /**
-     * helper for path -> URI and URI -> path conversions.
-     */
-    private static FileUtils fu = FileUtils.newFileUtils();
 
     /**
      * default constructor
@@ -119,7 +120,7 @@ public class ProjectHelperImpl extends ProjectHelper {
             }
 
 
-            String uri = fu.toURI(bFile.getAbsolutePath());
+            String uri = FILE_UTILS.toURI(bFile.getAbsolutePath());
             inputStream = new FileInputStream(bFile);
             inputSource = new InputSource(inputStream);
             inputSource.setSystemId(uri);
@@ -296,15 +297,15 @@ public class ProjectHelperImpl extends ProjectHelper {
             helperImpl.project.log("resolving systemId: " + systemId, Project.MSG_VERBOSE);
 
             if (systemId.startsWith("file:")) {
-                String path = fu.fromURI(systemId);
+                String path = FILE_UTILS.fromURI(systemId);
 
                 File file = new File(path);
                 if (!file.isAbsolute()) {
-                    file = fu.resolveFile(helperImpl.buildFileParent, path);
+                    file = FILE_UTILS.resolveFile(helperImpl.buildFileParent, path);
                 }
                 try {
                     InputSource inputSource = new InputSource(new FileInputStream(file));
-                    inputSource.setSystemId(fu.toURI(file.getAbsolutePath()));
+                    inputSource.setSystemId(FILE_UTILS.toURI(file.getAbsolutePath()));
                     return inputSource;
                 } catch (FileNotFoundException fne) {
                     helperImpl.project.log(file.getAbsolutePath() + " could not be found",

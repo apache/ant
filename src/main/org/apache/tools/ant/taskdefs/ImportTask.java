@@ -54,7 +54,7 @@ import java.util.Vector;
 public class ImportTask extends Task {
     private String file;
     private boolean optional;
-    private static final FileUtils FILE_UTILS = FileUtils.newFileUtils();
+    private static final FileUtils FILE_UTILS = FileUtils.getFileUtils();
 
     /**
      * sets the optional attribute

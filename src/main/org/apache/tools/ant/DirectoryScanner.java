@@ -1,5 +1,5 @@
 /*
- * Copyright  2000-2004 The Apache Software Foundation
+ * Copyright  2000-2005 The Apache Software Foundation
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -165,6 +165,9 @@ public class DirectoryScanner
         "**/.DS_Store"
     };
 
+    /** Helper. */
+    private static final FileUtils FILE_UTILS = FileUtils.getFileUtils();
+
     /**
      * Patterns which should be excluded by default.
      *
@@ -240,9 +243,6 @@ public class DirectoryScanner
      * @since Ant 1.5
      */
     private boolean followSymlinks = true;
-
-    /** Helper. */
-    private static final FileUtils FILE_UTILS = FileUtils.newFileUtils();
 
     /** Whether or not everything tested so far has been included. */
     protected boolean everythingIncluded = true;

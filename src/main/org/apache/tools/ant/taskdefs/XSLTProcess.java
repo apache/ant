@@ -1,5 +1,5 @@
 /*
- * Copyright  2000-2004 The Apache Software Foundation
+ * Copyright  2000-2005 The Apache Software Foundation
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -82,9 +82,6 @@ public class XSLTProcess extends MatchingTask implements XSLTLogger {
     /** force output of target files even if they already exist */
     private boolean force = false;
 
-    /** Utilities used for file operations */
-    private FileUtils fileUtils;
-
     /** XSL output properties to be used */
     private Vector outputProperties = new Vector();
 
@@ -102,6 +99,9 @@ public class XSLTProcess extends MatchingTask implements XSLTLogger {
     /** Name of the now-deprecated Xalan liaison class */
     private static final String XALAN_LIAISON_CLASS =
                         "org.apache.tools.ant.taskdefs.optional.XalanLiaison";
+
+    /** Utilities used for file operations */
+    private static final FileUtils FILE_UTILS = FileUtils.getFileUtils();
 
     /**
      * Whether to style all files in the included directories as well.
@@ -145,7 +145,7 @@ public class XSLTProcess extends MatchingTask implements XSLTLogger {
      * Creates a new XSLTProcess Task.
      */
     public XSLTProcess() {
-        fileUtils = FileUtils.newFileUtils();
+        
     } //-- XSLTProcess
 
     /**
@@ -221,7 +221,7 @@ public class XSLTProcess extends MatchingTask implements XSLTLogger {
 
             File stylesheet = getProject().resolveFile(xslFile);
             if (!stylesheet.exists()) {
-                stylesheet = fileUtils.resolveFile(baseDir, xslFile);
+                stylesheet = FILE_UTILS.resolveFile(baseDir, xslFile);
                 /*
                  * shouldn't throw out deprecation warnings before we know,
                  * the wrong version has been used.

@@ -1,5 +1,5 @@
 /*
- * Copyright  2001-2004 The Apache Software Foundation
+ * Copyright  2001-2005 The Apache Software Foundation
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -32,10 +32,11 @@ import org.apache.tools.zip.ZipOutputStream;
  * @ant.task category="packaging"
  */
 public class Ear extends Jar {
+    private static final FileUtils FILE_UTILS = FileUtils.getFileUtils();
 
     private File deploymentDescriptor;
     private boolean descriptorAdded;
-    private static final FileUtils fu = FileUtils.newFileUtils();
+
 
     /**
      * Create an Ear task.
@@ -108,7 +109,7 @@ public class Ear extends Jar {
         // <fileset> element.
         if (vPath.equalsIgnoreCase("META-INF/application.xml"))  {
             if (deploymentDescriptor == null
-                || !fu.fileNameEquals(deploymentDescriptor, file)
+                || !FILE_UTILS.fileNameEquals(deploymentDescriptor, file)
                 || descriptorAdded) {
                 log("Warning: selected " + archiveType
                     + " files include a META-INF/application.xml which will"

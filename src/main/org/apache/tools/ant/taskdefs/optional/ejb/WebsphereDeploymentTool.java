@@ -1,5 +1,5 @@
 /*
- * Copyright  2001-2004 The Apache Software Foundation
+ * Copyright  2001-2005 The Apache Software Foundation
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -83,6 +83,8 @@ public class WebsphereDeploymentTool extends GenericDeploymentTool {
     protected static final String WAS_BND = "ibm-ejb-jar-bnd.xmi";
     protected static final String WAS_CMP_MAP = "Map.mapxmi";
     protected static final String WAS_CMP_SCHEMA = "Schema.dbxmi";
+
+    private static final FileUtils FILE_UTILS = FileUtils.getFileUtils();
 
     /** Instance variable that stores the suffix for the websphere jarfile. */
     private String jarSuffix = ".jar";
@@ -840,8 +842,7 @@ public class WebsphereDeploymentTool extends GenericDeploymentTool {
                 }
 
                 try {
-                    FileUtils.newFileUtils().rename(newwasJarFile,
-                                                    websphereJarFile);
+                    FILE_UTILS.rename(newwasJarFile, websphereJarFile);
                 } catch (IOException renameException) {
                     log(renameException.getMessage(), Project.MSG_WARN);
                     rebuild = true;

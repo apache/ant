@@ -1,5 +1,5 @@
 /*
- * Copyright  2000-2001,2004 The Apache Software Foundation
+ * Copyright  2000-2005 The Apache Software Foundation
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -16,7 +16,6 @@
  */
 package org.apache.tools.ant.taskdefs;
 
-import java.io.File;
 import org.apache.tools.ant.BuildFileTest;
 import org.apache.tools.ant.util.FileUtils;
 
@@ -24,6 +23,9 @@ import org.apache.tools.ant.util.FileUtils;
  * @version $Revision$
  */
 public class GUnzipTest extends BuildFileTest {
+
+    /** Utilities used for file operations */
+    private static final FileUtils FILE_UTILS = FileUtils.getFileUtils();
 
     public GUnzipTest(String name) {
         super(name);
@@ -46,16 +48,14 @@ public class GUnzipTest extends BuildFileTest {
     }
 
     public void testRealTest() throws java.io.IOException {
-        FileUtils fileUtils = FileUtils.newFileUtils();
         executeTarget("realTest");
-        assertTrue(fileUtils.contentEquals(project.resolveFile("../asf-logo.gif"),
+        assertTrue(FILE_UTILS.contentEquals(project.resolveFile("../asf-logo.gif"),
                                            project.resolveFile("asf-logo.gif")));
     }
 
     public void testTestGzipTask() throws java.io.IOException {
-        FileUtils fileUtils = FileUtils.newFileUtils();
         executeTarget("testGzipTask");
-        assertTrue(fileUtils.contentEquals(project.resolveFile("../asf-logo.gif"),
+        assertTrue(FILE_UTILS.contentEquals(project.resolveFile("../asf-logo.gif"),
                                            project.resolveFile("asf-logo.gif")));
     }
 

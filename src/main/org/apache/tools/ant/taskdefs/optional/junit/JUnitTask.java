@@ -1,5 +1,5 @@
 /*
- * Copyright  2000-2004 The Apache Software Foundation
+ * Copyright  2000-2005 The Apache Software Foundation
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -150,6 +150,8 @@ public class JUnitTask extends Task {
     private ForkMode forkMode = new ForkMode("perTest");
 
     private static final int STRING_BUFFER_SIZE = 128;
+
+    private static final FileUtils FILE_UTILS = FileUtils.getFileUtils();
 
     /**
      * If true, force ant to re-classload all classes for each JUnit TestCase
@@ -925,7 +927,7 @@ public class JUnitTask extends Task {
      */
     private File createTempPropertiesFile(String prefix) {
         File propsFile =
-            FileUtils.newFileUtils().createTempFile(prefix, ".properties",
+            FILE_UTILS.createTempFile(prefix, ".properties",
                 tmpDir != null ? tmpDir : getProject().getBaseDir());
         propsFile.deleteOnExit();
         return propsFile;

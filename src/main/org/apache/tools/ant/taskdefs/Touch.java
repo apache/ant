@@ -72,13 +72,13 @@ public class Touch extends Task {
                 DateFormat.MEDIUM, Locale.US);
         }
     };
+    private static final FileUtils FILE_UTILS = FileUtils.getFileUtils();
 
     private File file;
     private long millis = -1;
     private String dateTime;
     private Vector filesets = new Vector();
     private Vector filelists = new Vector();
-    private FileUtils fileUtils;
     private boolean dateTimeConfigured;
     private boolean mkdirs;
     private boolean verbose = true;
@@ -89,7 +89,6 @@ public class Touch extends Task {
      * Construct a new <code>Touch</code> task.
      */
     public Touch() {
-        fileUtils = FileUtils.newFileUtils();
     }
 
     /**
@@ -315,7 +314,7 @@ public class Touch extends Task {
     }
 
     private void touch(File fromDir, String filename, long defaultTimestamp) {
-        File f = fileUtils.resolveFile(fromDir, filename);
+        File f = FILE_UTILS.resolveFile(fromDir, filename);
         if (fileNameMapper == null) {
             touch(f, defaultTimestamp);
         } else {
@@ -334,7 +333,7 @@ public class Touch extends Task {
             log("Creating " + file,
                 ((verbose) ? Project.MSG_INFO : Project.MSG_VERBOSE));
             try {
-                fileUtils.createNewFile(file, mkdirs);
+                FILE_UTILS.createNewFile(file, mkdirs);
             } catch (IOException ioe) {
                 throw new BuildException("Could not create " + file, ioe,
                                          getLocation());
@@ -344,7 +343,7 @@ public class Touch extends Task {
             throw new BuildException("Can not change modification date of "
                                      + "read-only file " + file);
         }
-        fileUtils.setFileLastModified(file, modTime);
+        FILE_UTILS.setFileLastModified(file, modTime);
     }
 
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright  2002-2004 The Apache Software Foundation
+ * Copyright  2002-2005 The Apache Software Foundation
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -34,7 +34,7 @@ import org.apache.tools.ant.util.FileUtils;
 /**
  */
 public class XmlPropertyTest extends BuildFileTest {
-    private static FileUtils fileUtils = FileUtils.newFileUtils();
+    private static final FileUtils FILE_UTILS = FileUtils.getFileUtils();
 
     public XmlPropertyTest(String name) {
         super(name);
@@ -125,7 +125,7 @@ public class XmlPropertyTest extends BuildFileTest {
             if ( localRoot ) {
                 workingDir = inputFile.getParentFile();
             } else {
-                workingDir = fileUtils.resolveFile(new File("."), ".");
+                workingDir = FILE_UTILS.resolveFile(new File("."), ".");
             }
 
             try {

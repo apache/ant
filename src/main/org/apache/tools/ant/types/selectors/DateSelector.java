@@ -24,7 +24,6 @@ import java.text.ParseException;
 import java.util.Locale;
 
 import org.apache.tools.ant.Project;
-import org.apache.tools.ant.taskdefs.condition.Os;
 import org.apache.tools.ant.types.EnumeratedAttribute;
 import org.apache.tools.ant.types.Parameter;
 import org.apache.tools.ant.util.FileUtils;
@@ -35,6 +34,9 @@ import org.apache.tools.ant.util.FileUtils;
  * @since 1.5
  */
 public class DateSelector extends BaseExtendSelector {
+
+    /** Utilities used for file operations */
+    private static final FileUtils FILE_UTILS = FileUtils.getFileUtils();
 
     private long millis = -1;
     private String dateTime = null;
@@ -60,7 +62,7 @@ public class DateSelector extends BaseExtendSelector {
      *
      */
     public DateSelector() {
-        granularity = FileUtils.getFileUtils().getFileTimestampGranularity();
+        granularity = FILE_UTILS.getFileTimestampGranularity();
     }
 
     /**

@@ -1,5 +1,5 @@
 /*
- * Copyright  2001-2004 The Apache Software Foundation
+ * Copyright  2001-2005 The Apache Software Foundation
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -27,6 +27,9 @@ import java.io.IOException;
  */
 public class BUnzip2Test extends BuildFileTest {
 
+    /** Utilities used for file operations */
+    private static final FileUtils FILE_UTILS = FileUtils.getFileUtils();
+
     public BUnzip2Test(String name) {
         super(name);
     }
@@ -40,11 +43,10 @@ public class BUnzip2Test extends BuildFileTest {
         executeTarget("cleanup");
     }
 
-    public void testRealTest() throws java.io.IOException {
-        FileUtils fileUtils = FileUtils.newFileUtils();
+    public void testRealTest() throws IOException {
         executeTarget("realTest");
         assertTrue("File content mismatch after bunzip2",
-            fileUtils.contentEquals(project.resolveFile("expected/asf-logo-huge.tar"),
+            FILE_UTILS.contentEquals(project.resolveFile("expected/asf-logo-huge.tar"),
                                     project.resolveFile("asf-logo-huge.tar")));
     }
 }
