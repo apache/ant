@@ -217,7 +217,7 @@ public class ChangeLogTask extends AbstractCvsTask {
                 // We want something of the form: -d ">=YYYY-MM-dd"
                 final String dateRange = ">=" + outputDate.format(startDate);
 
-        // Supply '-d' as a separate argument - Bug# 14397
+                // Supply '-d' as a separate argument - Bug# 14397
                 addCommandArgument("-d");
                 addCommandArgument(dateRange);
             }
@@ -247,13 +247,13 @@ public class ChangeLogTask extends AbstractCvsTask {
             setDest(inputDir);
             setExecuteStreamHandler(handler);
             try {
-            super.execute();
+                super.execute();
             } finally {
-            final String errors = handler.getErrors();
+                final String errors = handler.getErrors();
 
-            if (null != errors) {
-                log(errors, Project.MSG_ERR);
-            }
+                if (null != errors) {
+                    log(errors, Project.MSG_ERR);
+                }
             }
             final CVSEntry[] entrySet = parser.getEntrySetAsArray();
             final CVSEntry[] filteredEntrySet = filterEntrySet(entrySet);
