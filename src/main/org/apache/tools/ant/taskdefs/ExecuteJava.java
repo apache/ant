@@ -237,7 +237,7 @@ public class ExecuteJava implements Runnable, TimeoutObserver {
     /**
      * @since 1.19, Ant 1.5
      */
-    public boolean killedProcess() {
+    public synchronized boolean killedProcess() {
         return timedOut;
     }
 }

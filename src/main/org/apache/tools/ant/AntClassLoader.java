@@ -526,7 +526,7 @@ public class AntClassLoader extends ClassLoader implements BuildListener {
      * @param isolated Whether or not this classloader should run in
      *                 isolated mode.
      */
-    public void setIsolated(boolean isolated) {
+    public synchronized void setIsolated(boolean isolated) {
         ignoreBase = isolated;
     }
 
