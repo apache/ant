@@ -61,11 +61,13 @@ package org.apache.tools.ant.taskdefs.optional.perforce;
 
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
+import org.apache.tools.ant.util.StringUtils;
 
 /**
  * simple implementation of P4HandlerAdapter used by tasks which are not
  * actually processing the output from Perforce
  * @author <A HREF="mailto:leslie.hughes@rubus.com">Les Hughes</A>
+ * @author <a href="mailto:matt@thebishops.org">Matt Bishop</a>
  */
 public class SimpleP4OutputHandler extends P4HandlerAdapter {
 
@@ -81,8 +83,10 @@ public class SimpleP4OutputHandler extends P4HandlerAdapter {
 
     /**
      * process one line of stderr/stdout
+     * if error conditions are detected, then setters are called on the
+     * parent
      * @param line line of output
-     * @throws BuildException if errror output is received
+     * @throws BuildException does not throw exceptions any more
      */
     public void process(String line) throws BuildException {
         if (parent.util.match("/^exit/", line)) {
@@ -90,25 +94,39 @@ public class SimpleP4OutputHandler extends P4HandlerAdapter {
         }
 
         //Throw exception on errors (except up-to-date)
-        //p4 -s is unpredicatable. For example a server down
-        //does not return error: markup
         //
+        //When a server is down, the code expects :
+        //Perforce client error:
+        //Connect to server failed; check $P4PORT.
+        //TCP connect to localhost:1666 failed.
+        //connect: localhost:1666: Connection refused
         //Some forms producing commands (p4 -s change -o) do tag the output
         //others don't.....
         //Others mark errors as info, for example edit a file
         //which is already open for edit.....
         //Just look for error: - catches most things....
-        //when running labelsync, if view elements are in sync, Perforce produces a line of output
-        //looking like this one :
-        //error: //depot/file2 - label in sync.
 
-        if (parent.util.match("/error:/", line) && !parent.util.match("/up-to-date/", line)
-            && !parent.util.match("/label in sync/", line)) {
-            throw new BuildException(line);
-
+        if (parent.util.match("/^error:/", line)
+            || parent.util.match("/^Perforce client error:/", line)) {
+            //when running labelsync, if view elements are in sync,
+            //Perforce produces a line of output
+            //looking like this one :
+            //error: //depot/file2 - label in sync.
+            if (!parent.util.match("/label in sync/", line)
+                && !parent.util.match("/up-to-date/", line)) {
+                parent.setInError(true);
+            } else {
+                //sync says "error:" when a file is up-to-date
+                line = parent.util.substitute("s/^[^:]*: //", line);
+            }
+        } else if (parent.util.match("/^info.*?:/", line)) {
+            //sometimes there's "info1:
+            line = parent.util.substitute("s/^[^:]*: //", line);
         }
+        parent.log(line, parent.getInError() ? Project.MSG_ERR : Project.MSG_INFO);
 
-        parent.log(parent.util.substitute("s/^[^:]*: //", line), Project.MSG_INFO);
-
+        if (parent.getInError()) {
+            parent.setErrorMessage(parent.getErrorMessage() + line + StringUtils.LINE_SEP);
+        }
     }
 }

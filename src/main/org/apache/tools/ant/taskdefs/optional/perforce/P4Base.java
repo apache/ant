@@ -77,6 +77,7 @@ import org.apache.tools.ant.types.Commandline;
  * @see P4Label
  * @see org.apache.tools.ant.taskdefs.Execute
  * @author <A HREF="mailto:leslie.hughes@rubus.com">Les Hughes</A>
+ * @author <a href="mailto:matt@thebishops.org">Matt Bishop</a>
  */
 public abstract class P4Base extends org.apache.tools.ant.Task {
 
@@ -107,6 +108,45 @@ public abstract class P4Base extends org.apache.tools.ant.Task {
      * Forms half of low level API */
     protected String P4CmdOpts = "";
 
+    /** Set by the task or a handler to indicate that the task has failed.  BuildExceptions
+     * can also be thrown to indicate failure. */
+    private boolean inError = false;
+
+    /** If inError is set, then errorMessage needs to contain the reason why. */
+    private String errorMessage = "";
+    /**
+     * gets whether or not the task has encountered an error
+     * @return error flag
+     * @since ant 1.6
+     */
+    public boolean getInError() {
+        return inError;
+    }
+
+    /**
+     * sets the error flag on the task
+     * @param inError if true an error has been encountered by the handler
+     * @since ant 1.6
+     */
+    public void setInError(boolean inError) {
+        this.inError = inError;
+    }
+
+    /**
+     * gets the error message recorded by the Perforce handler
+     * @return error message
+     */
+    public String getErrorMessage() {
+        return errorMessage;
+    }
+
+    /**
+     * sets the error message
+     * @param errorMessage line of error output
+     */
+    public void setErrorMessage(String errorMessage) {
+        this.errorMessage = errorMessage;
+    }
     //Setters called by Ant
 
     /**
@@ -234,7 +274,9 @@ public abstract class P4Base extends org.apache.tools.ant.Task {
      */
     protected void execP4Command(String command, P4Handler handler) throws BuildException {
         try {
-
+            // reset error flags before executing the command
+            inError = false;
+            errorMessage = "";
             Commandline commandline = new Commandline();
             commandline.setExecutable("p4");
 
@@ -267,6 +309,10 @@ public abstract class P4Base extends org.apache.tools.ant.Task {
 
             try {
                 exe.execute();
+
+                if (inError && failOnError) {
+                    throw new BuildException(errorMessage);
+                }
             } catch (IOException e) {
                 throw new BuildException(e);
             } finally {

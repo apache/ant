@@ -133,6 +133,9 @@ Fixed bugs:
 * Perforce tasks relying on output from the server such as <p4change>
   and <p4label> were hanging. Bugzilla Reports 18129 and 18956.
 
+* Improve exception and logging behavior of Perforce tasks.
+  Bugzilla report 18154.
+
 * build.sh install had a problem on cygwin (with REALANTHOME).
   Bugzilla Report 17257
 
