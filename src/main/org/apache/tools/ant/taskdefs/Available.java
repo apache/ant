@@ -55,11 +55,10 @@
 package org.apache.tools.ant.taskdefs;
 
 import java.io.File;
-
-import org.apache.tools.ant.Task;
 import org.apache.tools.ant.AntClassLoader;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
+import org.apache.tools.ant.Task;
 import org.apache.tools.ant.taskdefs.condition.Condition;
 import org.apache.tools.ant.types.EnumeratedAttribute;
 import org.apache.tools.ant.types.Path;
@@ -109,7 +108,7 @@ public class Available extends Task implements Condition {
      */
     public Path createClasspath() {
         if (this.classpath == null) {
-            this.classpath = new Path(project);
+            this.classpath = new Path(getProject());
         }
         return this.classpath.createPath();
     }
@@ -141,7 +140,7 @@ public class Available extends Task implements Condition {
      */
     public Path createFilepath() {
         if (this.filepath == null) {
-            this.filepath = new Path(project);
+            this.filepath = new Path(getProject());
         }
         return this.filepath.createPath();
     }
@@ -184,9 +183,9 @@ public class Available extends Task implements Condition {
      *
      * @param file the name of the file which is required.
      */
-    public void setFile(File f) {
+    public void setFile(File file) {
         this.file = FileUtils.newFileUtils()
-            .removeLeadingPath(getProject().getBaseDir(), f);
+            .removeLeadingPath(getProject().getBaseDir(), file);
     }
 
     /**
@@ -240,13 +239,13 @@ public class Available extends Task implements Condition {
     public void execute() throws BuildException {
         if (property == null) {
             throw new BuildException("property attribute is required", 
-                                     location);
+                                     getLocation());
         }
 
         isTask = true;
         try {
             if (eval()) {
-                oldvalue=getProject().getProperty(property);
+                String oldvalue = getProject().getProperty(property);
                 if (null != oldvalue && !oldvalue.equals(value)) {
                     log("DEPRECATED - <available> used to override an existing"
                         + " property."
@@ -265,25 +264,25 @@ public class Available extends Task implements Condition {
      * Evaluate the availability of a resource.
      *
      * @return boolean is the resource is available.
-     * @exception if the condition is not configured correctly
+     * @exception BuildException if the condition is not configured correctly
      */
     public boolean eval() throws BuildException {
         if (classname == null && file == null && resource == null) {
             throw new BuildException("At least one of (classname|file|"
-                                     + "resource) is required", location);
+                                     + "resource) is required", getLocation());
         }
 
         if (type != null) {
             if (file == null) {
                 throw new BuildException("The type attribute is only valid "
                                          + "when specifying the file "
-                                         + "attribute.", location);
+                                         + "attribute.", getLocation());
             }
         }
 
         if (classpath != null) {
-            classpath.setProject(project);
-            this.loader = new AntClassLoader(project, classpath);
+            classpath.setProject(getProject());
+            this.loader = new AntClassLoader(getProject(), classpath);
         }
 
         String appendix = "";
@@ -345,7 +344,7 @@ public class Available extends Task implements Condition {
      */
     private boolean checkFile() {
         if (filepath == null) {
-            return checkFile(project.resolveFile(file), file);
+            return checkFile(getProject().resolveFile(file), file);
         } else {
             String[] paths = filepath.list();
             for (int i = 0; i < paths.length; ++i) {

@@ -27,6 +27,9 @@ Other changes:
 * Appendix E of Java Development with Ant (Loughran/Hatcher) was
   contributed to the docs.
 
+* <available> will only print deprecration warnings if it is actually
+  used to change the value of a property.
+
 Changes from Ant 1.5beta3 to Ant 1.5
 ====================================
 
