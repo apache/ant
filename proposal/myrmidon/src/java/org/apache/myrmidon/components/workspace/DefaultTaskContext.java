@@ -12,6 +12,8 @@ import java.util.Map;
 import org.apache.avalon.excalibur.i18n.ResourceManager;
 import org.apache.avalon.excalibur.i18n.Resources;
 import org.apache.avalon.excalibur.io.FileUtil;
+import org.apache.avalon.excalibur.property.PropertyException;
+import org.apache.avalon.excalibur.property.PropertyUtil;
 import org.apache.avalon.framework.context.ContextException;
 import org.apache.avalon.framework.context.DefaultContext;
 import org.apache.myrmidon.api.TaskContext;
@@ -102,6 +104,38 @@ public class DefaultTaskContext
     public File resolveFile( final String filename )
     {
         return FileUtil.resolveFile( getBaseDirectory(), filename );
+    }
+
+    /**
+     * Resolve a value according to the context.
+     * This involves evaluating the string and thus removing
+     * ${} sequences according to the rules specified at
+     * ............
+     *
+     * @param value the value to resolve
+     * @return the resolved value
+     */
+    public Object resolveValue( final String value )
+        throws TaskException
+    {
+        try
+        {
+            final Object object =
+                PropertyUtil.resolveProperty( value, this, false );
+
+            if( null == object )
+            {
+                final String message = REZ.getString( "null-resolved-value.error", value );
+                throw new TaskException( message );
+            }
+
+            return object;
+        }
+        catch( final PropertyException pe )
+        {
+            final String message = REZ.getString( "bad-resolve.error", value );
+            throw new TaskException( message, pe );
+        }
     }
 
     /**
