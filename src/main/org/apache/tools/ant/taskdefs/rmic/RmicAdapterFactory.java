@@ -90,26 +90,6 @@ public class RmicAdapterFactory {
      */
     public static RmicAdapter getRmic(String rmicType, Task task) 
         throws BuildException {
-        if (rmicType == null) {
-            /* 
-             * When not specified rmicType, search SUN's rmic and
-             * Kaffe's rmic.
-             */
-            try {
-                Class.forName("sun.rmi.rmic.Main");
-                rmicType = "sun";
-            } catch (ClassNotFoundException cnfe) {
-                try {
-                    Class.forName("kaffe.rmi.rmic.RMIC");
-                    Class.forName("kaffe.tools.compiler.Compiler");
-                    rmicType = "kaffe";
-                } catch (ClassNotFoundException cnfk) {
-                    throw new BuildException("Couldn\'t guess rmic "
-                                             + "implementation");
-                }
-            }
-        }
-
         if (rmicType.equalsIgnoreCase("sun")) {
             return new SunRmic();
         } else if (rmicType.equalsIgnoreCase("kaffe")) {

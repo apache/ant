@@ -52,45 +52,90 @@
  * <http://www.apache.org/>.
  */
 
-package org.apache.tools.ant.util.facade;
+package org.apache.tools.ant.taskdefs;
+
+import org.apache.tools.ant.Project;
 
 import junit.framework.TestCase;
 
 /**
+ * Testcase for <rmic>.
+ *
  * @author <a href="mailto:stefan.bodewig@epost.de">Stefan Bodewig</a>
+ * @version $Revision$
  * @since Ant 1.5
  */
-public class ImplementationSpecificArgumentTest extends TestCase {
+public class RmicTest extends TestCase {
 
-    public ImplementationSpecificArgumentTest(String name) {
+    private Project project;
+    private Rmic rmic;
+
+    public RmicTest(String name) {
         super(name);
     }
 
-    public void testDependsOnImplementation() {
-        ImplementationSpecificArgument ia = 
-            new ImplementationSpecificArgument();
-        ia.setLine("A B");
-        String[] parts = ia.getParts();
-        assertNotNull(parts);
-        assertEquals(2, parts.length);
-        assertEquals("A", parts[0]);
-        assertEquals("B", parts[1]);
-
-        parts = ia.getParts(null);
-        assertNotNull(parts);
-        assertEquals(2, parts.length);
-        assertEquals("A", parts[0]);
-        assertEquals("B", parts[1]);
-
-        ia.setImplementation("foo");
-        parts = ia.getParts(null);
-        assertNotNull(parts);
-        assertEquals(0, parts.length);
-
-        parts = ia.getParts("foo");
-        assertNotNull(parts);
-        assertEquals(2, parts.length);
-        assertEquals("A", parts[0]);
-        assertEquals("B", parts[1]);
+    public void setUp() {
+        project = new Project();
+        project.init();
+        rmic = new Rmic();
+        rmic.setProject(project);
     }
+
+    /**
+     * Test nested compiler args.
+     */
+    public void testCompilerArg() {
+        String[] args = rmic.getCurrentCompilerArgs();
+        assertNotNull(args);
+        assertEquals("no args", 0, args.length);
+
+        Rmic.ImplementationSpecificArgument arg = rmic.createCompilerArg();
+        String ford = "Ford";
+        String prefect = "Prefect";
+        String testArg = ford + " " + prefect;
+        arg.setValue(testArg);
+        args = rmic.getCurrentCompilerArgs();
+        assertEquals("unconditional single arg", 1, args.length);
+        assertEquals(testArg, args[0]);
+
+        arg.setCompiler("weblogic");
+        args = rmic.getCurrentCompilerArgs();
+        assertNotNull(args);
+        assertEquals("implementation is weblogic but build.rmic is null", 
+                     0, args.length);
+
+        project.setProperty("build.rmic", "sun");
+        args = rmic.getCurrentCompilerArgs();
+        assertNotNull(args);
+        assertEquals("implementation is weblogic but build.rmic is sun", 
+                     0, args.length);
+
+        project.setProperty("build.rmic", "weblogic");
+        args = rmic.getCurrentCompilerArgs();
+        assertEquals("both are weblogic", 1, args.length);
+        assertEquals(testArg, args[0]);
+    }
+
+    /**
+     * Test compiler attribute.
+     */
+    public void testCompilerAttribute() {
+        // check defaults
+        String compiler = rmic.getCompiler();
+        assertNotNull(compiler);
+        assertTrue("default value", 
+                   "sun".equals(compiler) || "kaffe".equals(compiler));
+
+        project.setNewProperty("build.rmic", "weblogic");
+        compiler = rmic.getCompiler();
+        assertNotNull(compiler);
+        assertEquals("weblogic", compiler);
+
+        // check attribute overrides build.compiler
+        rmic.setCompiler("kaffe");
+        compiler = rmic.getCompiler();
+        assertNotNull(compiler);
+        assertEquals("kaffe", compiler);
+    }
+
 }

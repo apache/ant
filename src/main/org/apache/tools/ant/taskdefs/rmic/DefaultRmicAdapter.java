@@ -246,6 +246,8 @@ public abstract class DefaultRmicAdapter implements RmicAdapter {
             cmd.createArgument().setValue("-g");
         }
 
+        cmd.addArguments(attributes.getCurrentCompilerArgs());
+
         logAndAddFilesToCompile(cmd);
         return cmd;
      }

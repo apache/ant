@@ -58,6 +58,7 @@ import junit.framework.TestCase;
 
 /**
  * @author <a href="mailto:stefan.bodewig@epost.de">Stefan Bodewig</a>
+ * @since Ant 1.5
  */
 public class FacadeTaskHelperTest extends TestCase {
 

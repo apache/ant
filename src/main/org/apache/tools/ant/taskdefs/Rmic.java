@@ -66,6 +66,7 @@ import org.apache.tools.ant.types.Reference;
 import org.apache.tools.ant.util.FileNameMapper;
 import org.apache.tools.ant.util.FileUtils;
 import org.apache.tools.ant.util.SourceFileScanner;
+import org.apache.tools.ant.util.facade.FacadeTaskHelper;
 
 import java.io.File;
 import java.io.IOException;
@@ -133,6 +134,17 @@ public class Rmic extends MatchingTask {
     private ClassLoader loader = null;
 
     private FileUtils fileUtils = FileUtils.newFileUtils();
+
+    private FacadeTaskHelper facade;
+
+    public Rmic() {
+        try {
+            Class.forName("kaffe.rmi.rmic.RMIC");
+            facade = new FacadeTaskHelper("kaffe");
+        } catch (ClassNotFoundException cnfe) {
+            facade = new FacadeTaskHelper("sun");
+        }
+    }
 
     /** Sets the base directory to output generated class. */
     public void setBase(File base) {
@@ -363,6 +375,42 @@ public class Rmic extends MatchingTask {
         return compileList;
     }
 
+    /**
+     * @since Ant 1.5
+     */
+    public void setCompiler(String compiler) {
+        facade.setImplementation(compiler);
+    }
+
+    /**
+     * @since Ant 1.5
+     */
+    public String getCompiler() {
+        facade.setMagicValue(getProject().getProperty("build.rmic"));
+        return facade.getImplementation();
+    }
+
+    /**
+     * Adds an implementation specific command line argument.
+     * @since Ant 1.5
+     */
+    public ImplementationSpecificArgument createCompilerArg() {
+        ImplementationSpecificArgument arg =
+            new ImplementationSpecificArgument();
+        facade.addImplementationArgument(arg);
+        return arg;
+    }
+
+    /**
+     * Get the additional implementation specific command line arguments.
+     * @return array of command line arguments, guaranteed to be non-null.
+     * @since Ant 1.5
+     */
+    public String[] getCurrentCompilerArgs() {
+        getCompiler();
+        return facade.getArgs();
+    }
+
     public void execute() throws BuildException {
         if (baseDir == null) {
             throw new BuildException("base attribute must be set!", location);
@@ -375,8 +423,7 @@ public class Rmic extends MatchingTask {
             log("Verify has been turned on.", Project.MSG_INFO);
         }
 
-        String compiler = project.getProperty("build.rmic");
-        RmicAdapter adapter = RmicAdapterFactory.getRmic(compiler, this);
+        RmicAdapter adapter = RmicAdapterFactory.getRmic(getCompiler(), this);
             
         // now we need to populate the compiler adapter
         adapter.setRmic(this);
@@ -573,5 +620,19 @@ public class Rmic extends MatchingTask {
     public ClassLoader getLoader() {
         return loader;
     }
+
+    /**
+     * Adds an "compiler" attribute to Commandline$Attribute used to
+     * filter command line attributes based on the current
+     * implementation.
+     */
+    public class ImplementationSpecificArgument extends 
+        org.apache.tools.ant.util.facade.ImplementationSpecificArgument {
+
+        public void setCompiler(String impl) {
+            super.setImplementation(impl);
+        }
+    }
+
 }
 

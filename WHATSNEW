@@ -299,6 +299,12 @@ Other changes:
   
 * An alias of <xslt> has been added to refer to the <style> task.
 
+* The compiler implementation for <rmic> can now be chosen on a task by
+  task basis.  The new "compiler" attribute of <rmic> can be used to override
+  the value of the build.rmic property, if set.
+  
+* <rmic> has a new nested element, <compilerarg>, which allows you
+  to specify additional args for the specific compiler you're using.
 
 Changes from Ant 1.4 to Ant 1.4.1
 ===========================================
