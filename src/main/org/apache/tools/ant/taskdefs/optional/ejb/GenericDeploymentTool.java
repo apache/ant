@@ -577,8 +577,14 @@ public class GenericDeploymentTool implements EJBDeploymentTool {
             }
             baseName = descriptorFileName.substring(0, endBaseName);
         } else if (config.namingScheme.getValue().equals(EjbJar.NamingScheme.DIRECTORY)) {
-            int lastSeparatorIndex = descriptorFileName.lastIndexOf(File.separator);
-            String dirName = descriptorFileName.substring(0, lastSeparatorIndex);
+            File descriptorFile = new File(config.descriptorDir, descriptorFileName);
+            String path = descriptorFile.getAbsolutePath();
+            int lastSeparatorIndex 
+                = path.lastIndexOf(File.separator);
+            if (lastSeparatorIndex == -1) {
+                throw new BuildException("Unable to determine directory name holding descriptor");
+            }
+            String dirName = path.substring(0, lastSeparatorIndex);
             int dirSeparatorIndex = dirName.lastIndexOf(File.separator);
             if (dirSeparatorIndex != -1) {
                 dirName = dirName.substring(dirSeparatorIndex + 1);
