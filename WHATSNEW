@@ -77,6 +77,8 @@ Fixed bugs:
 
 Other changes:
 --------------
+* Shipped XML parser is now Xerces 2.4.0
+
 * The filesetmanifest attribute of <jar> has been reenabled.
 
 * The start and end tokens for <translate> may now be longer than a
