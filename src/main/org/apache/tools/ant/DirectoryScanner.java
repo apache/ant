@@ -57,6 +57,9 @@ package org.apache.tools.ant;
 import java.io.File;
 import java.io.IOException;
 import java.util.Vector;
+import java.util.Hashtable;
+import java.util.Enumeration;
+
 import org.apache.tools.ant.types.Resource;
 import org.apache.tools.ant.types.ResourceFactory;
 import org.apache.tools.ant.types.selectors.FileSelector;
@@ -639,9 +642,59 @@ public class DirectoryScanner
         } else {
             dirsNotIncluded.addElement("");
         }
-        scandir(basedir, "", true);
+        checkIncludePatterns();
     }
-
+    /**
+     *  this routine is actually checking all the include patterns
+     *  in order to avoid scanning everything under base dir
+     *  @since ant1.6
+     */
+    private void checkIncludePatterns() {
+      Hashtable newroots = new Hashtable();
+      // put in the newroots vector the include patterns without wildcard tokens
+      for (int icounter=0; icounter<includes.length; icounter++) {
+        String newpattern=SelectorUtils.rtrimWildcardTokens(includes[icounter]);
+        // check whether the candidate new pattern has a parent
+        boolean hasParent=false;
+        Enumeration myenum = newroots.keys();
+        while (myenum.hasMoreElements()) {
+          String existingpattern=(String)myenum.nextElement();
+          if (existingpattern.length() <= newpattern.length()) {
+            if (newpattern.indexOf(existingpattern)==0) {
+              hasParent=true;
+            }
+          }
+        }
+        if ( !hasParent) {
+          newroots.put(newpattern,includes[icounter]);
+        }
+      }
+      Enumeration enum2 = newroots.keys();
+      while (enum2.hasMoreElements()) {
+        String currentelement = (String) enum2.nextElement();
+        File myfile=new File(basedir,currentelement);
+        if (myfile.exists()) {
+          if (myfile.isDirectory()) {
+            if (isIncluded(currentelement) && currentelement.length()>0) {
+                accountForIncludedDir(currentelement,myfile,true);
+            }  else {
+                if (currentelement.length() > 0) {
+                    if (currentelement.charAt(currentelement.length()-1) != File.separatorChar) {
+                        currentelement = currentelement + File.separatorChar;
+                    }
+                }
+                scandir(myfile, currentelement, true);
+            }
+          }
+          else {
+            String originalpattern=(String)newroots.get(currentelement);
+            if (originalpattern.equals(currentelement)) {
+              accountForIncludedFile(currentelement,myfile);
+            }
+          }
+        }
+      }
+    }
     /**
      * Top level invocation for a slow scan. A slow scan builds up a full
      * list of excluded/included files/directories, whereas a fast scan
@@ -745,27 +798,7 @@ public class DirectoryScanner
             File   file = new File(dir, newfiles[i]);
             if (file.isDirectory()) {
                 if (isIncluded(name)) {
-                    if (!isExcluded(name)) {
-                        if (isSelected(name, file)) {
-                            dirsIncluded.addElement(name);
-                            if (fast) {
-                                scandir(file, name + File.separator, fast);
-                            }
-                        } else {
-                            everythingIncluded = false;
-                            dirsDeselected.addElement(name);
-                            if (fast && couldHoldIncluded(name)) {
-                                scandir(file, name + File.separator, fast);
-                            }
-                        }
-
-                    } else {
-                        everythingIncluded = false;
-                        dirsExcluded.addElement(name);
-                        if (fast && couldHoldIncluded(name)) {
-                            scandir(file, name + File.separator, fast);
-                        }
-                    }
+                  accountForIncludedDir(name, file, fast);
                 } else {
                     everythingIncluded = false;
                     dirsNotIncluded.addElement(name);
@@ -778,17 +811,7 @@ public class DirectoryScanner
                 }
             } else if (file.isFile()) {
                 if (isIncluded(name)) {
-                    if (!isExcluded(name)) {
-                        if (isSelected(name, file)) {
-                            filesIncluded.addElement(name);
-                        } else {
-                            everythingIncluded = false;
-                            filesDeselected.addElement(name);
-                        }
-                    } else {
-                        everythingIncluded = false;
-                        filesExcluded.addElement(name);
-                    }
+                    accountForIncludedFile(name, file);
                 } else {
                     everythingIncluded = false;
                     filesNotIncluded.addElement(name);
@@ -796,7 +819,55 @@ public class DirectoryScanner
             }
         }
     }
+    /**
+     * process included file
+     * @param name  path of the file relative to the directory of the fileset
+     * @param file  included file
+     */
+    private void accountForIncludedFile(String name, File file) {
+        if (!isExcluded(name)) {
+            if (isSelected(name, file)) {
+                filesIncluded.addElement(name);
+            } else {
+                everythingIncluded = false;
+                filesDeselected.addElement(name);
+            }
+        } else {
+            everythingIncluded = false;
+            filesExcluded.addElement(name);
+        }
 
+    }
+    /**
+     *
+     * @param name path of the directory relative to the directory of the fileset
+     * @param file directory as file
+     * @param fast
+     */
+    private void accountForIncludedDir(String name, File file, boolean fast) {
+      if (!isExcluded(name)) {
+          if (isSelected(name, file)) {
+              dirsIncluded.addElement(name);
+              if (fast) {
+                  scandir(file, name + File.separator, fast);
+              }
+          } else {
+              everythingIncluded = false;
+              dirsDeselected.addElement(name);
+              if (fast && couldHoldIncluded(name)) {
+                  scandir(file, name + File.separator, fast);
+              }
+          }
+
+      } else {
+          everythingIncluded = false;
+          dirsExcluded.addElement(name);
+          if (fast && couldHoldIncluded(name)) {
+              scandir(file, name + File.separator, fast);
+          }
+      }
+
+    }
     /**
      * Tests whether or not a name matches against at least one include
      * pattern.

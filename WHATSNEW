@@ -486,6 +486,9 @@ Other changes:
 
 * OpenVMS is detected as a valid OS family.
 
+* DirectoryScanner has been optimized for cases where include patterns do not start with wildcards
+  Bugzilla Report 20103.
+
 Changes from Ant 1.5.2 to Ant 1.5.3
 ===================================
 
