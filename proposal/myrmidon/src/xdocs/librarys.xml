@@ -104,9 +104,9 @@
                 to the manifest of your jar.</p>
 
                 <source>
-                Extension-List: trax
-                trax-Extension-Name: Java API for XML Parsing
-                trax-Specification-Version: 1.1
+Extension-List: trax
+trax-Extension-Name: Java API for XML Parsing
+trax-Specification-Version: 1.1
                 </source>
 
                 <p>In some cases you may also wish to specify a dependency on a specific vendors
@@ -114,12 +114,12 @@
                 particular extension you need. In that case you manifest may contain;</p>
 
                 <source>
-                Extension-List: trax
-                trax-Extension-Name: Java API for XML Parsing
-                trax-Specification-Version: 1.1
-                trax-Implementation-Title: org.apache.xalan.xslt
-                trax-Implementation-Version: 2.1.0
-                trax-Implementation-Vendor: Apache Software Foundation
+Extension-List: trax
+trax-Extension-Name: Java API for XML Parsing
+trax-Specification-Version: 1.1
+trax-Implementation-Title: org.apache.xalan.xslt
+trax-Implementation-Version: 2.1.0
+trax-Implementation-Vendor: Apache Software Foundation
                 </source>
 
                 <p>In many cases there will be no distinction between the specification and
@@ -129,14 +129,14 @@
                 both the Trax API and the Velocity project may look like;</p>
 
                 <source>
-                Extension-List: trax velocity
-                velocity-Extension-Name: org.apache.velocity
-                velocity-Specification-Version: 1.0
-                trax-Extension-Name: Java API for XML Parsing
-                trax-Specification-Version: 1.1
-                trax-Implementation-Title: org.apache.xalan.xslt
-                trax-Implementation-Version: 2.1.0
-                trax-Implementation-Vendor: Apache Software Foundation
+Extension-List: trax velocity
+velocity-Extension-Name: org.apache.velocity
+velocity-Specification-Version: 1.0
+trax-Extension-Name: Java API for XML Parsing
+trax-Specification-Version: 1.1
+trax-Implementation-Title: org.apache.xalan.xslt
+trax-Implementation-Version: 2.1.0
+trax-Implementation-Vendor: Apache Software Foundation
                 </source>
 
                 <p>To make other jars available to Ant librarys as "Optional Packages"
@@ -144,9 +144,9 @@
                 other jar. The minimal manifest is the following;</p>
 
                 <source>
-                Extension-Name: org.realityforge.dve
-                Specification-Vendor: Peter Donald
-                Specification-Version: 1.0
+Extension-Name: org.realityforge.dve
+Specification-Vendor: Peter Donald
+Specification-Version: 1.0
                 </source>
 
                 <p>It is important to note that looking for dependencies is recursive. For example,
