@@ -5,23 +5,22 @@
  * version 1.1, a copy of which has been included with this distribution in
  * the LICENSE.txt file.
  */
-package org.apache.tools.ant.taskdefs;
+package org.apache.tools.ant.taskdefs.exec;
 
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Hashtable;
 import org.apache.myrmidon.api.TaskException;
-import org.apache.tools.ant.DirectoryScanner;
-import org.apache.tools.ant.taskdefs.exec.ExecTask;
-import org.apache.tools.ant.taskdefs.exec.Execute;
+import org.apache.tools.ant.types.DirectoryScanner;
 import org.apache.tools.ant.types.Commandline;
 import org.apache.tools.ant.types.EnumeratedAttribute;
 import org.apache.tools.ant.types.FileSet;
 import org.apache.tools.ant.types.Mapper;
 import org.apache.tools.ant.types.Marker;
 import org.apache.tools.ant.util.FileNameMapper;
-import org.apache.tools.ant.util.SourceFileScanner;
+import org.apache.tools.ant.types.SourceFileScanner;
+import org.apache.avalon.excalibur.util.StringUtil;
 
 /**
  * Executes a given command, supplying a set of files as arguments.
@@ -420,7 +419,7 @@ public class ExecuteOn extends ExecTask
                     for( int j = 0; j < s.length; j++ )
                     {
                         String[] command = getCommandline( s[ j ], base );
-                        getLogger().debug( "Executing " + Commandline.toString( command ) );
+                        getLogger().debug( "Executing " + StringUtil.join( command, " " ) );
                         exe.setCommandline( command );
                         runExecute( exe );
                     }
@@ -436,7 +435,7 @@ public class ExecuteOn extends ExecTask
                 File[] b = new File[ baseDirs.size() ];
                 b = (File[])baseDirs.toArray( b );
                 String[] command = getCommandline( s, b );
-                getLogger().debug( "Executing " + Commandline.toString( command ) );
+                getLogger().debug( "Executing " + StringUtil.join( command, " " ) );
                 exe.setCommandline( command );
                 runExecute( exe );
             }
