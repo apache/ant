@@ -17,9 +17,11 @@
 
 package org.apache.tools.ant.taskdefs;
 
-import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Task;
-
+import org.apache.tools.ant.BuildException;
+import org.apache.tools.ant.ExitStatusException;
+import org.apache.tools.ant.taskdefs.condition.Condition;
+import org.apache.tools.ant.taskdefs.condition.ConditionBase;
 
 /**
  * Exits the active build, giving an additional message
@@ -34,13 +36,30 @@ import org.apache.tools.ant.Task;
  * are true. i.e.
  * <pre>fail := defined(ifProperty) && !defined(unlessProperty)</pre>
  *
+ * A single nested<CODE>&lt;condition&gt;</CODE> element can be specified
+ * instead of using <CODE>if</CODE>/<CODE>unless</CODE> (a combined
+ * effect can be achieved using <CODE>isset</CODE> conditions).
+ *
  * @since Ant 1.2
  *
  * @ant.task name="fail" category="control"
  */
 public class Exit extends Task {
+
+    private class NestedCondition extends ConditionBase implements Condition {
+        public boolean eval() {
+            if (countConditions() != 1) {
+                throw new BuildException(
+                    "A single nested condition is required.");
+            }
+            return ((Condition)(getConditions().nextElement())).eval();
+        }
+    }
+
     private String message;
     private String ifCondition, unlessCondition;
+    private NestedCondition nestedCondition;
+    private Integer status;
 
     /**
      * A message giving further information on why the build exited.
@@ -69,38 +88,56 @@ public class Exit extends Task {
     }
 
     /**
-     * evaluate both if and unless conditions, and if
-     * ifCondition is true or unlessCondition is false, throw a
-     * build exception to exit the build.
-     * The error message is constructed from the text fields, or from
+     * Set the status code to associate with the thrown Exception.
+     * @param i   the <CODE>int</CODE> status
+     */
+    public void setStatus(int i) {
+        status = new Integer(i);
+    }
+
+    /**
+     * Throw a <CODE>BuildException</CODE> to exit (fail) the build.
+     * If specified, evaluate conditions:
+     * A single nested condition is accepted, but requires that the
+     * <CODE>if</CODE>/<code>unless</code> attributes be omitted.
+     * If the nested condition evaluates to true, or the
+     * ifCondition is true or unlessCondition is false, the build will exit.
+     * The error message is constructed from the text fields, from
+     * the nested condition (if specified), or finally from
      * the if and unless parameters (if present).
      * @throws BuildException
      */
     public void execute() throws BuildException {
-        if (testIfCondition() && testUnlessCondition()) {
+        boolean fail = (nestedConditionPresent()) ? testNestedCondition()
+                     : (testIfCondition() && testUnlessCondition());
+        if (fail) {
             String text = null;
-            if (message != null && message.length() > 0) {
-                text = message;
+            if (message != null && message.trim().length() > 0) {
+                text = message.trim();
             } else {
-
-                if (getProject().getProperty(ifCondition) != null) {
+                if (ifCondition != null && ifCondition.length() > 0
+                    && getProject().getProperty(ifCondition) != null) {
                     text = "if=" + ifCondition;
                 }
                 if (unlessCondition != null && unlessCondition.length() > 0
-                        && getProject().getProperty(unlessCondition) == null) {
+                    && getProject().getProperty(unlessCondition) == null) {
                     if (text == null) {
                         text = "";
                     } else {
                         text += " and ";
                     }
                     text += "unless=" + unlessCondition;
+                }
+                if (nestedConditionPresent()) {
+                    text = "condition satisfied";
                 } else {
                     if (text == null) {
                         text = "No message";
                     }
                 }
             }
-            throw new BuildException(text);
+            throw ((status == null) ? new BuildException(text)
+             : new ExitStatusException(text, status.intValue()));
         }
     }
 
@@ -113,6 +150,19 @@ public class Exit extends Task {
             message = "";
         }
         message += getProject().replaceProperties(msg);
+    }
+
+    /**
+     * Add a condition element.
+     * @return <CODE>ConditionBase</CODE>.
+     * @since Ant 1.6.2
+     */
+    public ConditionBase createCondition() {
+        if (nestedCondition != null) {
+            throw new BuildException("Only one nested condition is allowed.");
+        }
+        nestedCondition = new NestedCondition();
+        return nestedCondition;
     }
 
     /**
@@ -136,6 +186,29 @@ public class Exit extends Task {
             return true;
         }
         return getProject().getProperty(unlessCondition) == null;
+    }
+
+    /**
+     * test the nested condition
+     * @return true if there is none, or it evaluates to true
+     */
+    private boolean testNestedCondition() {
+        boolean result = nestedConditionPresent();
+
+        if (result && ifCondition != null || unlessCondition != null) {
+            throw new BuildException("Nested conditions "
+                + "not permitted in conjunction with if/unless attributes");
+        }
+
+        return result && nestedCondition.eval();
+    }
+
+    /**
+     * test whether there is a nested condition.
+     * @return <CODE>boolean</CODE>.
+     */
+    private boolean nestedConditionPresent() {
+        return (nestedCondition != null);
     }
 
 }

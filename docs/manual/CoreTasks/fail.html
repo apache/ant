@@ -3,7 +3,6 @@
 <head>
 <meta http-equiv="Content-Language" content="en-us">
 <title>Fail Task</title>
-<link rel="stylesheet" type="text/css" href="../stylesheets/antmanual.css">
 </head>
 
 <body>
@@ -37,7 +36,24 @@ or character data nested into the element.</p>
       exist in the current project</td>
     <td align="center" valign="top">No</td>
   </tr>
+  <tr>
+    <td valign="top">status</td>
+    <td valign="top">Exit using the specified status code;
+      assuming the generated Exception is not caught, the
+      JVM will exit with this status. <em>Since Ant 1.7</em></td>
+    <td align="center" valign="top">No</td>
+  </tr>
 </table>
+
+<h3>Parameters specified as nested elements</h3>
+
+<p>As an alternative to the <i>if</i>/<i>unless</i> attributes,
+  conditional failure can be achieved using a single nested
+  &lt;condition&gt; element, which should contain exactly one
+  core or custom condition.  For information about conditions, see
+  <a href="conditions.html">here</a>.<br /><b>Since Ant 1.6.2</b>
+</p>
+
 <h3>Examples</h3>
 <pre>  &lt;fail/&gt;</pre>
 <p>will exit the current build with no further information given.</p>
@@ -48,8 +64,9 @@ build.xml:4: No message
 </pre>
 
 <pre>  &lt;fail message=&quot;Something wrong here.&quot;/&gt;</pre>
-<p>will exit the current build and print something like the following to wherever
-your output goes:</p>
+<p>will exit the current build and print something
+  like the following to wherever your output goes:
+</p>
 <pre>
 BUILD FAILED
 
@@ -58,6 +75,35 @@ build.xml:4: Something wrong here.
 
 <pre>  &lt;fail&gt;Something wrong here.&lt;/fail&gt;</pre>
 <p>will give the same result as above.</p>
+
+<pre>  &lt;fail unless=&quot;thisdoesnotexist&quot;/&gt;</pre>
+<p>will exit the current build and print something
+  like the following to wherever your output goes:
+</p>
+<pre>
+BUILD FAILED
+
+build.xml:2: unless=thisdoesnotexist
+</pre>
+
+Using a condition to achieve the same effect:
+
+<pre>
+  &lt;fail&gt;
+     &lt;condition&gt;
+       &lt;not&gt;
+         &lt;isset property=&quot;thisdoesnotexist&quot;/&gt;
+       &lt;/not&gt;
+     &lt;/condition&gt;
+   &lt;/fail&gt;
+</pre>
+
+<p>Output:</p>
+<pre>
+BUILD FAILED
+
+build.xml:2: condition satisfied
+</pre>
 
 <hr>
 <p align="center">Copyright &copy; 2000-2001,2004 The Apache Software Foundation. All rights

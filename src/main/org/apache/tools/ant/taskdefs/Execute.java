@@ -431,7 +431,7 @@ public class Execute {
         }
 
         if (dir != null && !dir.exists()) {
-            throw new BuildException(dir + " doesn't exists.");
+            throw new BuildException(dir + " doesn't exist.");
         }
         return launcher.exec(project, command, env, dir);
     }
@@ -445,7 +445,7 @@ public class Execute {
      */
     public int execute() throws IOException {
         if (workingDirectory != null && !workingDirectory.exists()) {
-            throw new BuildException(workingDirectory + " doesn't exists.");
+            throw new BuildException(workingDirectory + " doesn't exist.");
         }
         final Process process = launch(project, getCommandline(),
                                        getEnvironment(), workingDirectory,
@@ -475,6 +475,7 @@ public class Execute {
                 watchdog.stop();
             }
             streamHandler.stop();
+            closeStreams(process);
 
             if (watchdog != null) {
                 watchdog.checkException();
@@ -497,7 +498,7 @@ public class Execute {
      */
     public void spawn() throws IOException {
         if (workingDirectory != null && !workingDirectory.exists()) {
-            throw new BuildException(workingDirectory + " doesn't exists.");
+            throw new BuildException(workingDirectory + " doesn't exist.");
         }
         final Process process = launch(project, getCommandline(),
                                        getEnvironment(), workingDirectory,
@@ -574,7 +575,7 @@ public class Execute {
      */
     public static boolean isFailure(int exitValue) {
         if (Os.isFamily("openvms")) {
-            // odd exit value signals failure
+            // even exit value signals failure
             return (exitValue % 2) == 0;
         } else {
             // non zero exit value signals failure
@@ -649,6 +650,25 @@ public class Execute {
         } catch (java.io.IOException exc) {
             throw new BuildException("Could not launch " + cmdline[0] + ": "
                 + exc, task.getLocation());
+        }
+    }
+
+    /**
+     * Close the streams belonging to the given Process.
+     * @param process   the <CODE>Process</CODE>.
+     */
+    public static void closeStreams(Process process) {
+        try {
+            process.getInputStream().close();
+        } catch (IOException eyeOhEx) {
+        }
+        try {
+            process.getOutputStream().close();
+        } catch (IOException eyeOhEx) {
+        }
+        try {
+            process.getErrorStream().close();
+        } catch (IOException eyeOhEx) {
         }
     }
 

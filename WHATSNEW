@@ -196,6 +196,11 @@ Other changes:
 
 * Added Target.getIf/Unless().  Bugzilla Report 29320.
 
+* <fail> has a status attribute that can be used to pass an exit
+  status back to the command line.
+
+* <fail> accepts a nested <condition>.
+
 Changes from Ant 1.6.0 to Ant 1.6.1
 =============================================
 

@@ -11,8 +11,6 @@ remove items from this list once they are complete.
 
 * merge "<loadproperties> from resource" from HEAD [Matt]
 
-* merge "<fail> nested <condition> " from HEAD [Matt]
-
 * merge "<apply> differentiates between empty & up-to-date" from HEAD [Matt]
 
 * Fix or at least document support for tomcat 5.0 jsp
