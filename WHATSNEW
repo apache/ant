@@ -60,8 +60,12 @@ Other changes:
   As it tests for the implementation, it can be used to check for optional
   tasks being available. 
 
-* added textname attribute to <macrodef>
+* added nested text support to <macrodef>
   
+* added initial support for Java 1.5.  Java 1.5 is now correctly
+  detected by Ant and treated just like Java 1.4.  You can now specify
+  source="1.5" in the <javac> task.
+
 Changes from Ant 1.5.4 to Ant 1.6.0
 ===================================
 
