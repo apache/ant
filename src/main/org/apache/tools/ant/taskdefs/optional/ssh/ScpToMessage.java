@@ -113,7 +113,6 @@ public class ScpToMessage extends AbstractSshMessage {
 
             waitForAck(in);
             sendFileToRemote(localFile, in, out);
-            waitForAck(in);
         } finally {
             if (channel != null) {
                 channel.disconnect();
@@ -134,7 +133,6 @@ public class ScpToMessage extends AbstractSshMessage {
                 Directory current = (Directory) i.next();
                 sendDirectory(current, in, out);
             }
-            waitForAck(in);
         } finally {
             if (channel != null) {
                 channel.disconnect();
@@ -167,6 +165,7 @@ public class ScpToMessage extends AbstractSshMessage {
         waitForAck(in);
         sendDirectory(directory, in, out);
         out.write("E\n".getBytes());
+        waitForAck(in);
     }
 
     private void sendFileToRemote(File localFile,
@@ -200,6 +199,7 @@ public class ScpToMessage extends AbstractSshMessage {
             }
             out.flush();
             sendAck(out);
+            waitForAck(in);
         } finally {
             long endTime = System.currentTimeMillis();
             logStats(startTime, endTime, totalLength);

@@ -55,6 +55,9 @@ Fixed bugs:
 * <ftp> null pointer exception when attempting rmdir in an empty directory.
   Bugzilla Report 24440.
 
+* <scp> could corrupt files when transfering lots of files.
+  Bugzilla Report 24449.
+
 Other changes:
 --------------
 * Change default uri from ant:core to antlib:org.apache.tools.ant
