@@ -56,6 +56,7 @@ package org.apache.tools.ant.taskdefs;
 
 import org.apache.tools.ant.*;
 
+import java.lang.reflect.Method;
 import java.io.*;
 import java.util.*;
 
@@ -82,9 +83,16 @@ import java.util.*;
  * located properly in the classpath.
  *
  * @author James Davidson <a href="mailto:duncan@x180.com">duncan@x180.com</a>
+ * @author Robin Green <a href="mailto:greenrd@hotmail.com">greenrd@hotmail.com</a>
  */
 
 public class Javac extends MatchingTask {
+
+    /**
+     * Integer returned by the "Modern" jdk1.3 compiler to indicate success.
+     */
+    private static final int
+	MODERN_COMPILER_SUCCESS = 0;
 
     private File srcDir;
     private File destDir;
@@ -431,10 +439,86 @@ public class Javac extends MatchingTask {
      */
 
     private void doModernCompile() throws BuildException {
-        project.log("Performing a Modern Compile");
-        project.log("WARNING: Modern Compiler usage not implemented!");
-        project.log("Switching modes to Classic");
-        doClassicCompile();
+        project.log("Using modern compiler", project.MSG_VERBOSE);
+        String classpath = getCompileClasspath();
+        Vector argList = new Vector();
+
+        if (deprecation == true)
+            argList.addElement("-deprecation");
+
+        argList.addElement("-d");
+        argList.addElement(destDir.getAbsolutePath());
+        argList.addElement("-classpath");
+        argList.addElement(classpath);
+        argList.addElement("-sourcepath");
+        argList.addElement(srcDir.getAbsolutePath());
+        if (target != null) {
+            argList.addElement("-target");
+            argList.addElement(target);
+        }
+        if (debug) {
+            argList.addElement("-g");
+        }
+        if (optimize) {
+            argList.addElement("-O");
+        }
+        if (bootclasspath != null) {
+            argList.addElement("-bootclasspath");
+            argList.addElement(bootclasspath);
+        }
+        if (extdirs != null) {
+            argList.addElement("-extdirs");
+            argList.addElement(extdirs);
+        }
+
+        project.log("Compilation args: " + argList.toString(),
+                    project.MSG_VERBOSE);
+
+        String[] args = new String[argList.size() + compileList.size()];
+        int counter = 0;
+
+        for (int i = 0; i < argList.size(); i++) {
+            args[i] = (String)argList.elementAt(i);
+            counter++;
+        }
+
+        // XXX
+        // should be using system independent line feed!
+
+        StringBuffer niceSourceList = new StringBuffer("Files to be compiled:"
+                                                       + "\r\n");
+
+        Enumeration enum = compileList.elements();
+        while (enum.hasMoreElements()) {
+            args[counter] = (String)enum.nextElement();
+            niceSourceList.append("    " + args[counter] + "\r\n");
+            counter++;
+        }
+
+        project.log(niceSourceList.toString(), project.MSG_VERBOSE);
+
+	    // This won't build under JDK1.2.2 because the new compiler
+	    // doesn't exist there.
+        //com.sun.tools.javac.Main compiler = new com.sun.tools.javac.Main();
+        //if (compiler.compile(args) != 0) {
+
+	    // Use reflection to be able to build on all JDKs >= 1.1:
+	    try {
+	        Class c = Class.forName ("com.sun.tools.javac.Main");
+	        Object compiler = c.newInstance ();
+	        Method compile = c.getMethod ("compile",
+	            new Class [] {(new String [] {}).getClass ()});
+	        int result = ((Integer) compile.invoke
+			      (compiler, new Object [] {args})) .intValue ();
+	        if (result != MODERN_COMPILER_SUCCESS) {
+		        String msg =
+		            "Compile failed, messages should have been provided.";
+		        throw new BuildException(msg);
+	        }
+	    } catch (Exception ex) {
+	        throw new BuildException (ex);
+        }
+
     }
 
     /**
