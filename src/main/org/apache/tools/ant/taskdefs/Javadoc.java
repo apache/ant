@@ -80,7 +80,7 @@ import org.apache.tools.ant.util.FileUtils;
 import org.apache.tools.ant.util.JavaEnvUtils;
 
 /**
- * This task makes it easy to generate Javadoc documentation for a collection
+ * Generates Javadoc documentation for a collection
  * of source code.
  *
  * <P>Current known limitations are:
@@ -370,7 +370,7 @@ public class Javadoc extends Task {
      */
     public static class AccessType extends EnumeratedAttribute {
         /**
-         * @see EnumeratedAttributes#getValues().
+         * @see EnumeratedAttribute#getValues().
          */
         public String[] getValues() {
             // Protected first so if any GUI tool offers a default
@@ -640,7 +640,7 @@ public class Javadoc extends Task {
     }
 
     /**
-     * Specify the fiel containing the overview to be included in the generated
+     * Specify the file containing the overview to be included in the generated
      * documentation.
      *
      * @param f the file containing the overview.
@@ -1047,6 +1047,10 @@ public class Javadoc extends Task {
         }
     }
 
+    /**
+     * Link to docs at "url" using package list at "url2"
+     * - separate the URLs by using a space character.
+     */
     public void setLinkoffline(String src) {
         if (!javadoc1) {
             LinkArgument le = createLink();
@@ -1066,57 +1070,112 @@ public class Javadoc extends Task {
             le.setPackagelistLoc(project.resolveFile(tok.nextToken()));
         }
     }
+
+    /**
+     * Group specified packages together in overview page.
+     */
     public void setGroup(String src) {
         group = src;
     }
+
+    /**
+     * Create links to javadoc output at the given URL.
+     */
     public void setLink(String src) {
         if (!javadoc1) {
             createLink().setHref(src);
         }
     }
+
+    /**
+     * If true, do not include @deprecated information.
+     */
     public void setNodeprecated(boolean b) {
         addArgIf(b, "-nodeprecated");
     }
+
+    /**
+     * If true, do not generate deprecated list.
+     */
     public void setNodeprecatedlist(boolean b) {
         add12ArgIf(b, "-nodeprecatedlist");
     }
+
+    /**
+     * If true, do not generate class hierarchy.
+     */
     public void setNotree(boolean b) {
         addArgIf(b, "-notree");
     }
+
+    /**
+     * If true, do not generate index.
+     */
     public void setNoindex(boolean b) {
         addArgIf(b, "-noindex");
     }
+
+    /**
+     * If true, do not generate help link
+     */
     public void setNohelp(boolean b) {
         add12ArgIf(b, "-nohelp");
     }
+
+    /**
+     * If true, do not generate navigation bar.
+     */
     public void setNonavbar(boolean b) {
         add12ArgIf(b, "-nonavbar");
     }
+
+    /**
+     * If true, generate warning about @serial tag.
+     */
     public void setSerialwarn(boolean b) {
         add12ArgIf(b, "-serialwarn");
     }
+
+    /**
+     * Specifies the CSS stylesheet file to use.
+     */
     public void setStylesheetfile(File f) {
         if (!javadoc1) {
             cmd.createArgument().setValue("-stylesheetfile");
             cmd.createArgument().setFile(f);
         }
     }
+
+    /**
+     * Specifies the HTML help file to use.
+     */
     public void setHelpfile(File f) {
         if (!javadoc1) {
             cmd.createArgument().setValue("-helpfile");
             cmd.createArgument().setFile(f);
         }
     }
+
+    /**
+     * Output file encoding name.
+     */
     public void setDocencoding(String enc) {
         cmd.createArgument().setValue("-docencoding");
         cmd.createArgument().setValue(enc);
     }
+
+    /**
+     * The name of a file containing the packages to process.
+     */
     public void setPackageList(String src) {
         if (!javadoc1) {
             packageList = src;
         }
     }
 
+    /**
+     * Create link to javadoc output at the given URL.
+     */
     public LinkArgument createLink() {
         LinkArgument la = new LinkArgument();
         links.addElement(la);
@@ -1329,6 +1388,10 @@ public class Javadoc extends Task {
         }
     }
 
+    /**
+     * Separates packages on the overview page into whatever
+     * groups you specify, one group per table.
+     */
     public GroupArgument createGroup() {
         GroupArgument ga = new GroupArgument();
         groups.addElement(ga);
@@ -1380,6 +1443,9 @@ public class Javadoc extends Task {
         }
     }
 
+    /**
+     * Charset for cross-platform viewing of generated documentation.
+     */
     public void setCharset(String src) {
         this.add12ArgIfNotEmpty("-charset", src);
     }

@@ -69,7 +69,7 @@ import org.apache.tools.ant.taskdefs.compilers.CompilerAdapterFactory;
 import java.io.File;
 
 /**
- * Task to compile Java source files. This task can take the following
+ * Compiles Java source files. This task can take the following
  * arguments:
  * <ul>
  * <li>sourcedir
@@ -169,7 +169,15 @@ public class Javac extends MatchingTask {
     }
 
     /**
-     * Set the value of debugLevel.
+     * Keyword list to be appended to the -g command-line switch.
+     *
+     * This will be ignored by all implementations except modern
+     * and classic(ver >= 1.2). Legal values are none or a
+     * comma-separated list of the following keywords: lines, vars,
+     * and source. If debuglevel is not specified, by default, :none
+     * will be appended to -g. If debug is not turned on, this attribute
+     * will be ignored.
+     *
      * @param v  Value to assign to debugLevel.
      */
     public void setDebugLevel(String  v) {
@@ -185,7 +193,14 @@ public class Javac extends MatchingTask {
     }
 
     /**
-     * Set the value of source.
+     * Value of the -source command-line switch; will be ignored
+     * by all implementations except modern and jikes.
+     *
+     * If you use this attribute together with jikes, you must
+     * make sure that your version of jikes supports the -source switch.
+     * Legal values are 1.3 and 1.4 – by default, no -source argument
+     * will be used at all.
+     *
      * @param v  Value to assign to source.
      */
     public void setSource(String  v) {
@@ -193,8 +208,7 @@ public class Javac extends MatchingTask {
     }
 
     /**
-     * Create a nested src element for multiple source path
-     * support.
+     * Adds a path for source compilation.
      *
      * @return a nested src element.
      */
@@ -216,7 +230,7 @@ public class Javac extends MatchingTask {
     }
 
     /**
-     * Set the source dirs to find the source Java files.
+     * Set the source directories to find the source Java files.
      */
     public void setSrcdir(Path srcDir) {
         if (src == null) {
@@ -264,7 +278,7 @@ public class Javac extends MatchingTask {
     }
 
     /**
-     * Maybe creates a nested sourcepath element.
+     * Adds a path to sourcepath.
      */
     public Path createSourcepath() {
         if (compileSourcepath == null) {
@@ -274,7 +288,7 @@ public class Javac extends MatchingTask {
     }
 
     /**
-     * Adds a reference to a CLASSPATH defined elsewhere.
+     * Adds a reference to a source path defined elsewhere.
      */
     public void setSourcepathRef(Reference r) {
         createSourcepath().setRefid(r);
@@ -299,7 +313,7 @@ public class Javac extends MatchingTask {
     }
 
     /**
-     * Maybe creates a nested classpath element.
+     * Adds a path to the classpath.
      */
     public Path createClasspath() {
         if (compileClasspath == null) {
@@ -309,7 +323,7 @@ public class Javac extends MatchingTask {
     }
 
     /**
-     * Adds a reference to a CLASSPATH defined elsewhere.
+     * Adds a reference to a classpath defined elsewhere.
      */
     public void setClasspathRef(Reference r) {
         createClasspath().setRefid(r);
@@ -336,7 +350,7 @@ public class Javac extends MatchingTask {
     }
 
     /**
-     * Maybe creates a nested classpath element.
+     * Adds a path to the bootclasspath.
      */
     public Path createBootclasspath() {
         if (bootclasspath == null) {
@@ -346,7 +360,7 @@ public class Javac extends MatchingTask {
     }
 
     /**
-     * Adds a reference to a CLASSPATH defined elsewhere.
+     * Adds a reference to a classpath defined elsewhere.
      */
     public void setBootClasspathRef(Reference r) {
         createBootclasspath().setRefid(r);
@@ -373,7 +387,7 @@ public class Javac extends MatchingTask {
     }
 
     /**
-     * Maybe creates a nested classpath element.
+     * Adds a path to extdirs.
      */
     public Path createExtdirs() {
         if (extdirs == null) {
@@ -383,7 +397,7 @@ public class Javac extends MatchingTask {
     }
 
     /**
-     * List the source files being handed off to the compiler
+     * If true, list the source files being handed off to the compiler.
      */
     public void setListfiles(boolean list) {
         listFiles = list;
@@ -395,14 +409,16 @@ public class Javac extends MatchingTask {
     }
 
     /**
-     * Throw a BuildException if compilation fails
+     * Indicates whether the build will continue
+     * even if there are compilation errors; defaults to true.
      */
     public void setFailonerror(boolean fail) {
         failOnError = fail;
     }
 
     /**
-     * Proceed if compilation fails
+     * Proceed if compilation fails, but use
+     * failonerror instead.
      */
     public void setProceed(boolean proceed) {
         failOnError = !proceed;
@@ -416,7 +432,8 @@ public class Javac extends MatchingTask {
     }
 
     /**
-     * Set the deprecation flag.
+     * Indicates whether source should be
+     * compiled with deprecation information; defaults to off.
      */
     public void setDeprecation(boolean deprecation) {
         this.deprecation = deprecation;
@@ -428,7 +445,10 @@ public class Javac extends MatchingTask {
     }
 
     /**
-     * Set the memoryInitialSize flag.
+     * The initial size of the memory for the underlying VM
+     * if javac is run externally; ignored otherwise.
+     * Defaults to the standard VM memory setting.
+     * (Examples: 83886080, 81920k, or 80m)
      */
     public void setMemoryInitialSize(String memoryInitialSize) {
         this.memoryInitialSize = memoryInitialSize;
@@ -440,7 +460,10 @@ public class Javac extends MatchingTask {
     }
 
     /**
-     * Set the memoryMaximumSize flag.
+     * The maximum size of the memory for the underlying VM
+     * if javac is run externally; ignored otherwise.
+     * Defaults to the standard VM memory setting.
+     * (Examples: 83886080, 81920k, or 80m)
      */
     public void setMemoryMaximumSize(String memoryMaximumSize) {
         this.memoryMaximumSize = memoryMaximumSize;
@@ -464,7 +487,8 @@ public class Javac extends MatchingTask {
     }
 
     /**
-     * Set the debug flag.
+     * Indicates whether source should be compiled
+     * with debug information; defaults to off.
      */
     public void setDebug(boolean debug) {
         this.debug = debug;
@@ -476,7 +500,7 @@ public class Javac extends MatchingTask {
     }
 
     /**
-     * Set the optimize flag.
+     * If true, compiles with optimization enabled.
      */
     public void setOptimize(boolean optimize) {
         this.optimize = optimize;
@@ -488,7 +512,8 @@ public class Javac extends MatchingTask {
     }
 
     /**
-     * Set the depend flag.
+     * Enables dependency-tracking for compilers
+     * that support this (jikes and classic).
      */
     public void setDepend(boolean depend) {
         this.depend = depend;
@@ -500,7 +525,7 @@ public class Javac extends MatchingTask {
     }
 
     /**
-     * Set the verbose flag.
+     * If true, asks the compiler for verbose output.
      */
     public void setVerbose(boolean verbose) {
         this.verbose = verbose;
@@ -525,23 +550,21 @@ public class Javac extends MatchingTask {
     }
 
     /**
-     * Include ant's own classpath in this task's classpath?
+     * If true, includes Ant's own classpath in the classpath.
      */
     public void setIncludeantruntime(boolean include) {
         includeAntRuntime = include;
     }
 
     /**
-     * Gets whether or not the ant classpath is to be included in the
-     * task's classpath.
+     * Gets whether or not the ant classpath is to be included in the classpath.
      */
     public boolean getIncludeantruntime() {
         return includeAntRuntime;
     }
 
     /**
-     * Sets whether or not to include the java runtime libraries to this
-     * task's classpath.
+     * If true, includes the Java runtime libraries in the classpath.
      */
     public void setIncludejavaruntime(boolean include) {
         includeJavaRuntime = include;
@@ -556,7 +579,7 @@ public class Javac extends MatchingTask {
     }
 
     /**
-     * Sets whether to fork the javac compiler.
+     * If true, forks the javac compiler.
      *
      * @param f "true|false|on|off|yes|no"
      */
@@ -594,7 +617,7 @@ public class Javac extends MatchingTask {
     }
 
     /**
-     * Sets whether the -nowarn option should be used.
+     * If true, enables the -nowarn option.
      */
     public void setNowarn(boolean flag) {
         this.nowarn = flag;
@@ -608,7 +631,7 @@ public class Javac extends MatchingTask {
     }
 
     /**
-     * Adds an implementation specific command line argument.
+     * Adds an implementation specific command-line argument.
      */
     public ImplementationSpecificArgument createCompilerArg() {
         ImplementationSpecificArgument arg =
