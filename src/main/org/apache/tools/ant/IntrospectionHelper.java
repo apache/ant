@@ -208,6 +208,7 @@ public class IntrospectionHelper implements BuildListener {
                         }
 
                     });
+                nestedStorers.remove(propName);
 
             } else if (name.startsWith("addConfigured")
                        && java.lang.Void.TYPE.equals(returnType)
@@ -265,6 +266,7 @@ public class IntrospectionHelper implements BuildListener {
                             }
 
                         });
+                    nestedStorers.remove(name);
                 } catch (NoSuchMethodException nse) {
                 }
             }
