@@ -843,7 +843,8 @@ public class Javadoc extends Task {
     					return false;
     				}
     				File d = new File(dir1, name);
-    				if (d.isDirectory()) {
+    				if (d.isDirectory() 
+                                    && d.getName().indexOf("-") == -1) {
     					return true;
     				}
     				return false;
