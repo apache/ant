@@ -54,24 +54,14 @@
 
 package org.apache.tools.ant.taskdefs;
 
-import java.io.BufferedReader;
-import java.io.ByteArrayOutputStream;
 import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.FileInputStream;
 import java.io.IOException;
-import java.io.StringReader;
-import java.io.OutputStream;
-import java.io.InputStream;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.Task;
 import org.apache.tools.ant.types.Commandline;
 import org.apache.tools.ant.types.Environment;
-import org.apache.tools.ant.util.StringUtils;
 import org.apache.tools.ant.util.FileUtils;
-import org.apache.tools.ant.util.TeeOutputStream;
 
 /**
  * Executes a given command if the os platform is appropriate.
@@ -89,11 +79,6 @@ import org.apache.tools.ant.util.TeeOutputStream;
 public class ExecTask extends Task {
 
     private String os;
-    private File out;
-    private File error;
-    private File input;
-
-    private boolean logError = false;
     
     private File dir;
     protected boolean failOnError = false;
@@ -101,17 +86,13 @@ public class ExecTask extends Task {
     private Long timeout = null;
     private Environment env = new Environment();
     protected Commandline cmdl = new Commandline();
-    private FileOutputStream fos = null;
-    private ByteArrayOutputStream baos = null;
-    private ByteArrayOutputStream errorBaos = null;
-    private String outputprop;
-    private String errorProperty;
     private String resultProperty;
     private boolean failIfExecFails = true;
-    private boolean append = false;
     private String executable;
     private boolean resolveExecutable = false;
 
+    private Redirector redirector = new Redirector(this);
+    
     /**
      * Controls whether the VM (1.3 and above) is used to execute the
      * command
@@ -171,27 +152,31 @@ public class ExecTask extends Task {
     }
 
     /**
-     * Set the input to use for the task
-     */
-    public void setInput(File input) {
-        this.input = input;
-    }
-    
-    /**
      * File the output of the process is redirected to. If error is not 
      * redirected, it too will appear in the output
      */
     public void setOutput(File out) {
-        this.out = out;
+        redirector.setOutput(out);
     }
 
+    /**
+     * Set the input to use for the task
+     */
+    public void setInput(File input) {
+        redirector.setInput(input);
+    }
+
+    public void setInputString(String inputString) {
+        redirector.setInputString(inputString);
+    }
+    
     /**
      * Controls whether error output of exec is logged. This is only useful
      * when output is being redirected and error output is desired in the
      * Ant log
      */
     public void setLogError(boolean logError) {
-        this.logError = logError;
+        redirector.setLogError(logError);
     }
     
     /**
@@ -200,15 +185,15 @@ public class ExecTask extends Task {
      * @since ant 1.6
      */
     public void setError(File error) {
-        this.error = error;
+        redirector.setError(error);
     }
 
     /**
      * Property name whose value should be set to the output of
      * the process.
      */
-    public void setOutputproperty(String outputprop) {
-        this.outputprop = outputprop;
+    public void setOutputproperty(String outputProp) {
+        redirector.setOutputProperty(outputProp);
     }
 
     /**
@@ -218,7 +203,7 @@ public class ExecTask extends Task {
      * @since ant 1.6
      */
     public void setErrorProperty(String errorProperty) {
-        this.errorProperty = errorProperty;
+        redirector.setErrorProperty(errorProperty);
     }
 
     /**
@@ -293,7 +278,7 @@ public class ExecTask extends Task {
      * @since 1.30, Ant 1.5
      */
     public void setAppend(boolean append) {
-        this.append = append;
+        redirector.setAppend(append);
     }
 
     
@@ -382,7 +367,7 @@ public class ExecTask extends Task {
     /**
      * If true, launch new process with VM, otherwise use the OS's shell.
      */
-    public void setVMLauncher(boolean vmLauncher) {
+    public void setVMLauncher(boolean vmLauncher) {    
         this.vmLauncher = vmLauncher;
     }
 
@@ -410,22 +395,6 @@ public class ExecTask extends Task {
         return exe;
     }
 
-    private void setPropertyFromBAOS(ByteArrayOutputStream baos, 
-                                     String propertyName) throws IOException {
-    
-        BufferedReader in =
-            new BufferedReader(new StringReader(Execute.toString(baos)));
-        String line = null;
-        StringBuffer val = new StringBuffer();
-        while ((line = in.readLine()) != null) {
-            if (val.length() != 0) {
-                val.append(StringUtils.LINE_SEP);
-            }
-            val.append(line);
-        }
-        getProject().setNewProperty(propertyName, val.toString());
-    }
-    
     /**
      * A Utility method for this classes and subclasses to run an
      * Execute instance (an external command).
@@ -447,12 +416,7 @@ public class ExecTask extends Task {
                 log("Result: " + returnCode, Project.MSG_ERR);
             }
         }
-        if (baos != null) {
-            setPropertyFromBAOS(baos, outputprop);
-        }
-        if (errorBaos != null) {
-            setPropertyFromBAOS(errorBaos, errorProperty);
-        }
+        redirector.complete();
     }
 
     /**
@@ -483,86 +447,7 @@ public class ExecTask extends Task {
      * Create the StreamHandler to use with our Execute instance.
      */
     protected ExecuteStreamHandler createHandler() throws BuildException {
-        OutputStream outputStream = null;
-        OutputStream errorStream = null;
-        InputStream inputStream = null; 
-        
-        if (out == null && outputprop == null) {
-            outputStream = new LogOutputStream(this, Project.MSG_INFO);
-            errorStream = new LogOutputStream(this, Project.MSG_WARN);
-        } else {
-            if (out != null)  {
-                try {
-                    outputStream 
-                        = new FileOutputStream(out.getAbsolutePath(), append);
-                    log("Output redirected to " + out, Project.MSG_VERBOSE);
-                } catch (FileNotFoundException fne) {
-                    throw new BuildException("Cannot write to " + out, fne,
-                                             getLocation());
-                } catch (IOException ioe) {
-                    throw new BuildException("Cannot write to " + out, ioe,
-                                             getLocation());
-                }
-            }
-        
-            if (outputprop != null) {
-                baos = new ByteArrayOutputStream();
-                log("Output redirected to property: " + outputprop, 
-                     Project.MSG_VERBOSE);
-                if (out == null) {
-                    outputStream = baos;
-                } else {
-                    outputStream = new TeeOutputStream(outputStream, baos);
-                }
-            } else {
-                baos = null;
-            }
-            
-            errorStream = outputStream;
-        } 
-
-        if (logError) {
-            errorStream = new LogOutputStream(this, Project.MSG_WARN);
-        }
-        
-        if (error != null)  {
-            try {
-                errorStream 
-                    = new FileOutputStream(error.getAbsolutePath(), append);
-                log("Error redirected to " + error, Project.MSG_VERBOSE);
-            } catch (FileNotFoundException fne) {
-                throw new BuildException("Cannot write to " + error, fne,
-                                         getLocation());
-            } catch (IOException ioe) {
-                throw new BuildException("Cannot write to " + error, ioe,
-                                         getLocation());
-            }
-        }
-    
-        if (errorProperty != null) {
-            errorBaos = new ByteArrayOutputStream();
-            log("Error redirected to property: " + errorProperty, 
-                Project.MSG_VERBOSE);
-            if (error == null) {
-                errorStream = errorBaos;
-            } else {
-                errorStream = new TeeOutputStream(errorStream, errorBaos);
-            }
-        } else {
-            errorBaos = null;
-        }
-
-        if (input != null) {
-            try {
-                inputStream = new FileInputStream(input);
-            } catch (FileNotFoundException fne) {
-                throw new BuildException("Cannot read from " + input, fne,
-                                         getLocation());
-            }
-        }
-        
-        return new PumpStreamHandler(outputStream, errorStream, inputStream, 
-                                     true, true, true);         
+        return redirector.createHandler();
     }
 
     /**
@@ -579,14 +464,6 @@ public class ExecTask extends Task {
      * Flush the output stream - if there is one.
      */
     protected void logFlush() {
-        try {
-            if (fos != null) {
-                fos.close();
-            }
-            if (baos != null) {
-                baos.close();
-            }
-        } catch (IOException io) {}
     }
 
 }

@@ -77,24 +77,15 @@ public class PumpStreamHandler implements ExecuteStreamHandler {
     private OutputStream err;
     private InputStream input;
     
-    private boolean closeOutOnStop = false;
-    private boolean closeErrOnStop = false;
-    private boolean closeInputOnStop = false;
-
     public PumpStreamHandler(OutputStream out, OutputStream err, 
-                             InputStream input,
-                             boolean closeOutOnStop, boolean closeErrOnStop,
-                             boolean closeInputOnStop) {
+                             InputStream input) {
         this.out = out;
         this.err = err;
         this.input = input;
-        this.closeOutOnStop = closeOutOnStop;
-        this.closeErrOnStop = closeErrOnStop;
-        this.closeInputOnStop = closeInputOnStop;
     }
 
     public PumpStreamHandler(OutputStream out, OutputStream err) {
-        this(out, err, null, false, false, false);
+        this(out, err, null);
     }
 
     public PumpStreamHandler(OutputStream outAndErr) {
@@ -151,29 +142,18 @@ public class PumpStreamHandler implements ExecuteStreamHandler {
         if (inputThread != null) {
             try {
                 inputThread.join();
-                if (closeInputOnStop) {
-                    input.close();
-                }
             } catch (InterruptedException e) {
-                // ignore
-            } catch (IOException e) {
                 // ignore
             } 
         }
 
         try {
             err.flush();
-            if (closeErrOnStop) {
-                err.close();
-            }
         } catch (IOException e) {
             // ignore
         }
         try {
             out.flush();
-            if (closeOutOnStop) {
-                out.close();
-            }
         } catch (IOException e) {
             // ignore
         }

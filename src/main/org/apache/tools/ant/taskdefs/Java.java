@@ -55,9 +55,7 @@
 package org.apache.tools.ant.taskdefs;
 
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.PrintStream;
 import java.util.Vector;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.ExitException;
@@ -89,12 +87,10 @@ public class Java extends Task {
     private boolean fork = false;
     private boolean newEnvironment = false;
     private File dir = null;
-    private File out;
-    private PrintStream outStream = null;
     private boolean failOnError = false;
     private boolean append = false;
     private Long timeout = null;
-    
+    private Redirector redirector = new Redirector(this);
     /**
      * Do the execution.
      */
@@ -302,7 +298,54 @@ public class Java extends Task {
      * File the output of the process is redirected to.
      */
     public void setOutput(File out) {
-        this.out = out;
+        redirector.setOutput(out);
+    }
+
+    /**
+     * Set the input to use for the task
+     */
+    public void setInput(File input) {
+        redirector.setInput(input);
+    }
+
+    public void setInputString(String inputString) {
+        redirector.setInputString(inputString);
+    }
+    
+    /**
+     * Controls whether error output of exec is logged. This is only useful
+     * when output is being redirected and error output is desired in the
+     * Ant log
+     */
+    public void setLogError(boolean logError) {
+        redirector.setLogError(logError);
+    }
+    
+    /**
+     * File the error stream of the process is redirected to.
+     *
+     * @since ant 1.6
+     */
+    public void setError(File error) {
+        redirector.setError(error);
+    }
+
+    /**
+     * Property name whose value should be set to the output of
+     * the process.
+     */
+    public void setOutputproperty(String outputProp) {
+        redirector.setOutputProperty(outputProp);
+    }
+
+    /**
+     * Property name whose value should be set to the error of
+     * the process.
+     *
+     * @since ant 1.6
+     */
+    public void setErrorProperty(String errorProperty) {
+        redirector.setErrorProperty(errorProperty);
     }
 
     /**
@@ -366,8 +409,8 @@ public class Java extends Task {
      * @since Ant 1.5
      */
     protected void handleOutput(String line) {
-        if (outStream != null) {
-            outStream.println(line);
+        if (redirector.getOutputStream() != null) {
+            redirector.handleOutput(line);
         } else {
             super.handleOutput(line);
         }
@@ -379,8 +422,8 @@ public class Java extends Task {
      * @since Ant 1.5.2
      */
     protected void handleFlush(String line) {
-        if (outStream != null) {
-            outStream.print(line);
+        if (redirector.getOutputStream() != null) {
+            redirector.handleFlush(line);
         } else {
             super.handleFlush(line);
         }
@@ -392,8 +435,8 @@ public class Java extends Task {
      * @since Ant 1.5
      */
     protected void handleErrorOutput(String line) {
-        if (outStream != null) {
-            outStream.println(line);
+        if (redirector.getErrorStream() != null) {
+            redirector.handleErrorOutput(line);
         } else {
             super.handleErrorOutput(line);
         }
@@ -405,8 +448,8 @@ public class Java extends Task {
      * @since Ant 1.5.2
      */
     protected void handleErrorFlush(String line) {
-        if (outStream != null) {
-            outStream.println(line);
+        if (redirector.getErrorStream() != null) {
+            redirector.handleErrorFlush(line);
         } else {
             super.handleErrorOutput(line);
         }
@@ -417,28 +460,17 @@ public class Java extends Task {
      * was a command line application.
      */
     private void run(CommandlineJava command) throws BuildException {
-        ExecuteJava exe = new ExecuteJava();
-        exe.setJavaCommand(command.getJavaCommand());
-        exe.setClasspath(command.getClasspath());
-        exe.setSystemProperties(command.getSystemProperties());
-        exe.setTimeout(timeout);
-        if (out != null) {
-            try {
-                outStream = 
-                    new PrintStream(new FileOutputStream(out.getAbsolutePath(),
-                                                         append));
-                exe.execute(getProject());
-                System.out.flush();
-                System.err.flush();
-            } catch (IOException io) {
-                throw new BuildException(io, getLocation());
-            } finally {
-                if (outStream != null) {
-                    outStream.close();
-                }
-            }
-        } else {
+        try {
+            ExecuteJava exe = new ExecuteJava();
+            exe.setJavaCommand(command.getJavaCommand());
+            exe.setClasspath(command.getClasspath());
+            exe.setSystemProperties(command.getSystemProperties());
+            exe.setTimeout(timeout);
+            redirector.createStreams();
             exe.execute(getProject());
+            redirector.complete();
+        } catch (IOException e) {
+            throw new BuildException(e);
         }
     }
 
@@ -446,19 +478,9 @@ public class Java extends Task {
      * Executes the given classname with the given arguments in a separate VM.
      */
     private int run(String[] command) throws BuildException {
-        FileOutputStream fos = null;
-        try {
-            Execute exe = null;
-            if (out == null) {
-                exe = new Execute(new LogStreamHandler(this, Project.MSG_INFO,
-                                                       Project.MSG_WARN), 
-                                  createWatchdog());
-            } else {
-                fos = new FileOutputStream(out.getAbsolutePath(), append);
-                exe = new Execute(new PumpStreamHandler(fos),
-                                  createWatchdog());
-            }
             
+            Execute exe 
+                = new Execute(redirector.createHandler(), createWatchdog());
             exe.setAntRun(getProject());
             
             if (dir == null) {
@@ -487,17 +509,11 @@ public class Java extends Task {
                 if (exe.killedProcess()) {
                     log("Timeout: killed the sub-process", Project.MSG_WARN); 
                 }
+                redirector.complete();
                 return rc;
             } catch (IOException e) {
                 throw new BuildException(e, getLocation());
             }
-        } catch (IOException io) {
-            throw new BuildException(io, getLocation());
-        } finally {
-            if (fos != null) {
-                try {fos.close();} catch (IOException io) {}
-            }
-        }
     }
 
     /**
