@@ -686,6 +686,7 @@
         <include name="LICENSE.xerces"/>
         <include name="LICENSE.dom"/>
         <include name="LICENSE.sax"/>
+        <include name="NOTICE"/>
       </fileset>
       <mapper type="glob" from="*" to="*.txt"/>
     </copy>
@@ -738,7 +739,10 @@
           </or>
         </selector>
       </not>
-      <metainf dir="${build.dir}" includes="LICENSE.txt"/>
+      <metainf dir="${build.dir}">
+        <include name="LICENSE.txt"/>
+        <include name="NOTICE.txt"/>
+      </metainf>
 
       <manifest>
         <section name="${ant.package}/">
@@ -768,7 +772,10 @@
          basedir="${build.classes}"
          manifest="${manifest}">
       <include name="${ant.package}/Main.class"/>
-      <metainf dir="${build.dir}" includes="LICENSE.txt"/>
+      <metainf dir="${build.dir}">
+        <include name="LICENSE.txt"/>
+        <include name="NOTICE.txt"/>
+      </metainf>
       <manifest>
         <attribute name="Class-Path"
                    value="ant.jar xml-apis.jar xercesImpl.jar xalan.jar"/>
@@ -813,7 +820,10 @@
           </or>
         </not>
       </and>
-      <metainf dir="${build.dir}" includes="LICENSE.txt"/>
+      <metainf dir="${build.dir}">
+        <include name="LICENSE.txt"/>
+        <include name="NOTICE.txt"/>
+      </metainf>
     </jar>
 
     <macrodef name="optional-jar">
@@ -973,6 +983,7 @@
         <include name="LICENSE.xerces"/>
         <include name="LICENSE.dom"/>
         <include name="LICENSE.sax"/>
+        <include name="NOTICE"/>
         <include name="TODO"/>
         <include name="WHATSNEW"/>
         <include name="KEYS"/>
@@ -1064,6 +1075,7 @@
         <include name="LICENSE.xerces"/>
         <include name="LICENSE.dom"/>
         <include name="LICENSE.sax"/>
+        <include name="NOTICE"/>
         <include name="TODO"/>
         <include name="WHATSNEW"/>
         <include name="KEYS"/>
