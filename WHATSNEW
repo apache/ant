@@ -318,8 +318,6 @@ Fixed bugs:
   <exec>, <apply>, or <java> tasks was always logged to System.out
   instead of to the managing Task.
 
-* <cvschangelog> printed date where it said time.
-
 Changes from Ant 1.6.1 to Ant 1.6.2
 ===================================
 
