@@ -93,6 +93,7 @@ export CLASSPATH
 
 mkdir -p ${CLASSDIR}
 mkdir -p build
+mkdir -p bin
 
 echo ... Compiling Ant Classes
 
@@ -108,17 +109,18 @@ cp src/main/org/apache/tools/ant/taskdefs/defaults.properties \
     ${CLASSDIR}/org/apache/tools/ant/taskdefs
 cp src/main/org/apache/tools/ant/types/defaults.properties \
     ${CLASSDIR}/org/apache/tools/ant/types
+cp src/script/antRun bin
+chmod +x bin/antRun
 
 echo ... Building Ant Distribution
 
 cp -r ${CLASSDIR} build
 
-${JAVACMD} -classpath ${CLASSPATH} org.apache.tools.ant.Main -emacs bootstrap
+${JAVACMD} -classpath ${CLASSPATH} -Dant.home=. org.apache.tools.ant.Main -emacs bootstrap
 
 echo ... Cleaning Up Build Directories
 
-chmod +x bootstrap/bin/ant bootstrap/bin/antRun
-
 rm -rf ${CLASSDIR}
+rm -rf bin
 
 echo ... Done Bootstrapping Ant Distribution
