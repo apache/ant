@@ -4937,7 +4937,7 @@ if <code>basedir</code> is set. You may use any mixture of the implicit file set
 and optional subelements like <code>&lt;include&gt;</code>); explicit nested
 <code>&lt;fileset&gt;</code> elements so long as at least one fileset total is specified. The ZIP file will
 only reflect the relative paths of files <em>within</em> each fileset.</p>
-<p>Inside of <code>&lt;zip&gt;</code> elements, nested filesets may include one of two special attributes: 
+<p>Inside of <code>&lt;zip&gt;</code> elements, <code>&lt;prefixedfileset&gt;</code>s (a extended form of filesets) may include one of two special attributes: 
 <i>prefix</i> or <i>fullpath</i>. These attributes modify the location of the files when they are placed 
 inside the archive. If the <i>prefix</i> attribute is set, all the files in the fileset are prefixed
 with that path in the archive. If the <i>fullpath</i> attribute is set, the file described by the filset is placed at that 
