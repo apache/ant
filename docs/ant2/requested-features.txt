@@ -213,3 +213,7 @@ V. Things we probably don't agree on.
   specifications, and to declare for a concrete item that it should be
   built according to such a general specification.
 
+* a built-in mechanism to include build-file fragments - something
+  that doesn't use SYSTEM entities at all and therefore is XSchema
+  friendly, allows for property expansions ...
+
