@@ -65,9 +65,9 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.Set;
 import java.util.HashSet;
+import java.io.File;
 
-import org.apache.bsf.BSFException;
-import org.apache.bsf.BSFManager;
+import org.apache.tools.ant.util.ScriptRunner;
 
 /**
  * Define a task using a script
@@ -76,14 +76,11 @@ import org.apache.bsf.BSFManager;
  * @since Ant 1.6
  */
 public class ScriptDef extends Task {
+    /** Used to run the script */
+    private ScriptRunner runner = new ScriptRunner();
+
     /** the name by which this script will be activated */
     private String name;
-
-    /** the scripting language used by the script */
-    private String language;
-
-    /** the script itself */
-    private String script = "";
 
     /** Attributes definitions of this script */
     private List attributes = new ArrayList();
@@ -107,17 +104,15 @@ public class ScriptDef extends Task {
         this.name = name;
     }
 
+    /**
+     * Indicates whether the task supports a given attribute name
+     *
+     * @param attributeName the name of the attribute.
+     *
+     * @return true if the attribute is supported by the script.
+     */
     public boolean isAttributeSupported(String attributeName) {
         return attributeSet.contains(attributeName);
-    }
-
-    /**
-     * Set the scripting language used by this script
-     *
-     * @param language the scripting language used by this script.
-     */
-    public void setLanguage(String language) {
-        this.language = language;
     }
 
     /**
@@ -211,8 +206,8 @@ public class ScriptDef extends Task {
                 + "name the script");
         }
 
-        if (language == null) {
-            throw new BuildException("scriptdef requires a language attribute "
+        if (runner.getLanguage() == null) {
+            throw new BuildException("<scriptdef> requires a language attribute "
                 + "to specify the script language");
         }
 
@@ -277,6 +272,12 @@ public class ScriptDef extends Task {
         project.addTaskDefinition(name, ScriptDefBase.class);
     }
 
+    /**
+     * Create a nested element to be configured.
+     *
+     * @param elementName the name of the nested element.
+     * @return object representing the element name.
+     */
     public Object createNestedElement(String elementName) {
         NestedElement definition
             = (NestedElement) nestedElementMap.get(elementName);
@@ -336,36 +337,38 @@ public class ScriptDef extends Task {
      * @param elements a list of nested element values.
      */
     public void executeScript(Map attributes, Map elements) {
-        try {
-            BSFManager manager = new BSFManager();
-            // execute the script
-            manager.declareBean("attributes", attributes,
-                attributes.getClass());
-            manager.declareBean("elements", elements,
-                elements.getClass());
-            manager.declareBean("project", getProject(), Project.class);
-            manager.exec(language, "scriptdef <" + name + ">", 0, 0, script);
-        } catch (BSFException e) {
-            Throwable t = e;
-            Throwable te = e.getTargetException();
-            if (te != null) {
-                if (te instanceof BuildException) {
-                    throw (BuildException) te;
-                } else {
-                    t = te;
-                }
-            }
-            throw new BuildException(t);
-        }
+        runner.addBean("attributes", attributes);
+        runner.addBean("elements", elements);
+        runner.addBean("project", getProject());
+        runner.executeScript("scriptdef <" + name + ">");
+    }
+
+
+    /**
+     * Defines the language (required).
+     *
+     * @param language the scripting language name for the script.
+     */
+    public void setLanguage(String language) {
+        runner.setLanguage(language);
     }
 
     /**
-     * Ass the scipt text.
+     * Load the script from an external file ; optional.
      *
-     * @param text appended to the script text.
+     * @param file the file containing the script source.
+     */
+    public void setSrc(File file) {
+        runner.setSrc(file);
+    }
+
+    /**
+     * Set the script text.
+     *
+     * @param text a component of the script text to be added.
      */
     public void addText(String text) {
-        this.script += text;
+        runner.addText(text);
     }
 }
 

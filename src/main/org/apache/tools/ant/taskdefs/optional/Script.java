@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2000-2002 The Apache Software Foundation.  All rights
+ * Copyright (c) 2000-2003 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -54,14 +54,9 @@
 package org.apache.tools.ant.taskdefs.optional;
 
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.util.Enumeration;
-import java.util.Hashtable;
-import org.apache.bsf.BSFException;
-import org.apache.bsf.BSFManager;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Task;
+import org.apache.tools.ant.util.ScriptRunner;
 
 /**
  * Executes a script.
@@ -70,29 +65,8 @@ import org.apache.tools.ant.Task;
  * @author Sam Ruby <a href="mailto:rubys@us.ibm.com">rubys@us.ibm.com</a>
  */
 public class Script extends Task {
-    private String language;
-    private String script = "";
-    private Hashtable beans = new Hashtable();
-
-    /**
-     * Add a list of named objects to the list to be exported to the script
-     */
-    private void addBeans(Hashtable dictionary) {
-        for (Enumeration e = dictionary.keys(); e.hasMoreElements();) {
-            String key = (String) e.nextElement();
-
-            boolean isValid = key.length() > 0
-                && Character.isJavaIdentifierStart(key.charAt(0));
-
-            for (int i = 1; isValid && i < key.length(); i++) {
-                isValid = Character.isJavaIdentifierPart(key.charAt(i));
-            }
-
-            if (isValid) {
-                beans.put(key, dictionary.get(key));
-            }
-        }
-    }
+    /** Used to run the script */
+    private ScriptRunner runner = new ScriptRunner();
 
     /**
      * Do the work.
@@ -100,38 +74,15 @@ public class Script extends Task {
      * @exception BuildException if someting goes wrong with the build
      */
     public void execute() throws BuildException {
-        try {
-            addBeans(getProject().getProperties());
-            addBeans(getProject().getUserProperties());
-            addBeans(getProject().getTargets());
-            addBeans(getProject().getReferences());
+        runner.addBeans(getProject().getProperties());
+        runner.addBeans(getProject().getUserProperties());
+        runner.addBeans(getProject().getTargets());
+        runner.addBeans(getProject().getReferences());
 
-            beans.put("project", getProject());
+        runner.addBean("project", getProject());
+        runner.addBean("self", this);
 
-            beans.put("self", this);
-
-            BSFManager manager = new BSFManager ();
-
-            for (Enumeration e = beans.keys(); e.hasMoreElements();) {
-                String key = (String) e.nextElement();
-                Object value = beans.get(key);
-                manager.declareBean(key, value, value.getClass());
-            }
-
-            // execute the script
-            manager.exec(language, "<ANT>", 0, 0, script);
-        } catch (BSFException be) {
-            Throwable t = be;
-            Throwable te = be.getTargetException();
-            if (te != null) {
-                if  (te instanceof BuildException) {
-                    throw (BuildException) te;
-                } else {
-                    t = te;
-                }
-            }
-            throw new BuildException(t);
-        }
+        runner.executeScript("<ANT>");
     }
 
     /**
@@ -140,7 +91,7 @@ public class Script extends Task {
      * @param language the scripting language name for the script.
      */
     public void setLanguage(String language) {
-        this.language = language;
+        runner.setLanguage(language);
     }
 
     /**
@@ -150,22 +101,7 @@ public class Script extends Task {
      */
     public void setSrc(String fileName) {
         File file = new File(fileName);
-        if (!file.exists()) {
-            throw new BuildException("file " + fileName + " not found.");
-        }
-
-        int count = (int) file.length();
-        byte[] data = new byte[count];
-
-        try {
-            FileInputStream inStream = new FileInputStream(file);
-            inStream.read(data);
-            inStream.close();
-        } catch (IOException e) {
-            throw new BuildException(e);
-        }
-
-        script += new String(data);
+        runner.setSrc(file);
     }
 
     /**
@@ -174,6 +110,6 @@ public class Script extends Task {
      * @param text a component of the script text to be added.
      */
     public void addText(String text) {
-        this.script += text;
+        runner.addText(text);
     }
 }

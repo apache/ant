@@ -55,13 +55,8 @@ package org.apache.tools.ant.types.optional;
 
 import org.apache.tools.ant.filters.TokenFilter;
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.util.Enumeration;
-import java.util.Hashtable;
-import org.apache.bsf.BSFException;
-import org.apache.bsf.BSFManager;
 import org.apache.tools.ant.BuildException;
+import org.apache.tools.ant.util.ScriptRunner;
 
 
 /**
@@ -74,20 +69,16 @@ import org.apache.tools.ant.BuildException;
  * set self.token in the reply.
  *
  * @author Not Specified.
+ *
+ * @since Ant 1.6
  */
 public class ScriptFilter extends TokenFilter.ChainableReaderFilter {
-    /** The language - attribute of element */
-    private String language;
-    /** The script - inline text or external file */
-    private String script = "";
-    /** The beans - see ScriptTask */
-    private Hashtable beans = new Hashtable();
     /** Has this object been initialized ? */
     private boolean initialized = false;
-    /** the BSF manager */
-    private BSFManager manager;
     /** the token used by the script */
     private String token;
+
+    private ScriptRunner runner = new ScriptRunner();
 
     /**
      * Defines the language (required).
@@ -95,37 +86,11 @@ public class ScriptFilter extends TokenFilter.ChainableReaderFilter {
      * @param language the scripting language name for the script.
      */
     public void setLanguage(String language) {
-        this.language = language;
+        runner.setLanguage(language);
     }
 
-
     /**
-     * Add a list of named objects to the list to be exported to the script
-     * CAP from taskdefs.optional.Script
-     */
-    private void addBeans(Hashtable dictionary) {
-        for (Enumeration e = dictionary.keys(); e.hasMoreElements();) {
-            String key = (String) e.nextElement();
-
-            boolean isValid = key.length() > 0
-                && Character.isJavaIdentifierStart(key.charAt(0));
-
-            for (int i = 1; isValid && i < key.length(); i++) {
-                isValid = Character.isJavaIdentifierPart(key.charAt(i));
-            }
-
-            try {
-                if (isValid) {
-                    beans.put(key, dictionary.get(key));
-                }
-            } catch (Throwable t) {
-                throw new BuildException(t);
-                //System.err.println("What the helll");
-            }
-        }
-    }
-    /**
-     * Initialize, mostly CAP from taskdefs.option.Script#execute()
+     * Initialize.
      *
      * @exception BuildException if someting goes wrong
      */
@@ -134,42 +99,14 @@ public class ScriptFilter extends TokenFilter.ChainableReaderFilter {
             return;
         }
         initialized = true;
-        if (language == null) {
-            throw new BuildException(
-                "scriptfilter: language is not defined");
-        }
 
-        try {
-            addBeans(getProject().getProperties());
-            addBeans(getProject().getUserProperties());
-            addBeans(getProject().getTargets());
-            addBeans(getProject().getReferences());
+        runner.addBeans(getProject().getProperties());
+        runner.addBeans(getProject().getUserProperties());
+        runner.addBeans(getProject().getTargets());
+        runner.addBeans(getProject().getReferences());
 
-            beans.put("project", getProject());
-
-            beans.put("self", this);
-
-            manager = new BSFManager ();
-
-            for (Enumeration e = beans.keys(); e.hasMoreElements();) {
-                String key = (String) e.nextElement();
-                Object value = beans.get(key);
-                manager.declareBean(key, value, value.getClass());
-            }
-
-        } catch (BSFException e) {
-            Throwable t = e;
-            Throwable te = e.getTargetException();
-            if (te != null) {
-                if (te instanceof BuildException) {
-                    throw (BuildException) te;
-                } else {
-                    t = te;
-                }
-            }
-            throw new BuildException(t);
-        }
-
+        runner.addBean("project", getProject());
+        runner.addBean("self", this);
     }
 
     /**
@@ -201,45 +138,17 @@ public class ScriptFilter extends TokenFilter.ChainableReaderFilter {
     public String filter(String token) {
         init();
         setToken(token);
-        try {
-            manager.exec(language, "<ANT>", 0, 0, script);
-            return getToken();
-        } catch (BSFException be) {
-            Throwable t = be;
-            Throwable te = be.getTargetException();
-            if (te != null) {
-                if  (te instanceof BuildException) {
-                    throw (BuildException) te;
-                } else {
-                    t = te;
-                }
-            }
-            throw new BuildException(t);
-        }
+        runner.executeScript("<ANT-Filter>");
+        return getToken();
     }
+
     /**
      * Load the script from an external file ; optional.
      *
-     * @param fileName the name of the file containing the script source.
+     * @param file the file containing the script source.
      */
-    public void setSrc(String fileName) {
-        File file = new File(fileName);
-        if (!file.exists()) {
-            throw new BuildException("file " + fileName + " not found.");
-        }
-
-        int count = (int) file.length();
-        byte[] data = new byte[count];
-
-        try {
-            FileInputStream inStream = new FileInputStream(file);
-            inStream.read(data);
-            inStream.close();
-        } catch (IOException e) {
-            throw new BuildException(e);
-        }
-
-        script += new String(data);
+    public void setSrc(File file) {
+        runner.setSrc(file);
     }
 
     /**
@@ -248,6 +157,6 @@ public class ScriptFilter extends TokenFilter.ChainableReaderFilter {
      * @param text a component of the script text to be added.
      */
     public void addText(String text) {
-        this.script += text;
+        runner.addText(text);
     }
 }
