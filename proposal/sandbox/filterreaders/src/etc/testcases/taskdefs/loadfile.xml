@@ -61,6 +61,31 @@
     <echo>${testEvalProps}</echo>
   </target>
 
+  <target name="testFilterChain"
+    depends="init">
+      <echo file="loadfile1.tmp">#Line 1
+REM Line 2
+--Line 3
+Line 4
+Hello World!</echo>
+      <loadfile srcFile="loadfile1.tmp" 
+        property="testFilterChain">
+        <filterchain>
+          <headfilter lines="5"/>
+          <striplinecomments>
+            <comment value="--"/>
+            <comment value="REM "/>
+            <comment value="#"/>
+          </striplinecomments>
+          <filterreader classname="org.apache.tools.ant.filters.TailFilter">
+            <param name="lines" value="1"/>
+          </filterreader>
+          <linecontains>
+            <contains value="World!"/>
+          </linecontains>
+        </filterchain>
+      </loadfile>
+  </target>
 
   <target name="testOneLine"
     depends="init">
