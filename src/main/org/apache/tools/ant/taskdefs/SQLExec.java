@@ -104,7 +104,7 @@ import java.sql.ResultSetMetaData;
  *
  * @ant.task name="sql" category="database"
  */
-public class SQLExec extends Task {
+public class SQLExec extends JDBCTask {
 
     public static class DelimiterType extends EnumeratedAttribute {
         public static final String NORMAL = "normal";
@@ -114,61 +114,30 @@ public class SQLExec extends Task {
         }
     }
 
-    /**
-     * Used for caching loaders / driver. This is to avoid
-     * getting an OutOfMemoryError when calling this task
-     * multiple times in a row.
-     */
-    private static Hashtable loaderMap = new Hashtable(3);
-
-    // XXX - why is this public?
-    public boolean caching = true;
-
+    
+    
     private int goodSql = 0;
 
     private int totalSql = 0;
 
-    private Path classpath;
-
-    private AntClassLoader loader;
-
-    private Vector filesets = new Vector();
-
-    /**
+	/**
      * Database connection
      */
     private Connection conn = null;
-    
-    /**
-     * Autocommit flag. Default value is false
-     */
-    private boolean autocommit = false;
-    
+
+    private Vector filesets = new Vector();
+
+        
+        
     /**
      * SQL statement
      */
     private Statement statement = null;
 
-    /**
-     * DB driver.
-     */
-    private String driver = null;
-
-    /**
-     * DB url.
-     */
-    private String url = null;
-
-    /**
-     * User name.
-     */
-    private String userId = null;
-
-    /**
-     * Password
-     */
-    private String password = null;
-
+    
+    
+    
+    
     /**
      * SQL input file
      */
@@ -210,16 +179,8 @@ public class SQLExec extends Task {
      */
     private File output = null;
 
-    /**
-     * RDBMS Product needed for this SQL.
-     **/
-    private String rdbms = null;
-
-    /**
-     * RDBMS Version needed for this SQL.
-     **/
-    private String version = null;
-
+    
+    
     /**
      * Action to perform if an error is found
      **/
@@ -235,38 +196,10 @@ public class SQLExec extends Task {
      */
     private boolean append = false;
 
-    public void setCaching(boolean value){
-        caching = value;
-    }
 
-    /**
-     * Set the classpath for loading the driver.
-     */
-    public void setClasspath(Path classpath) {
-        if (this.classpath == null) {
-            this.classpath = classpath;
-        } else {
-            this.classpath.append(classpath);
-        }
-    }
-
-    /**
-     * Create the classpath for loading the driver.
-     */
-    public Path createClasspath() {
-        if (this.classpath == null) {
-            this.classpath = new Path(project);
-        }
-        return this.classpath.createPath();
-    }
-
-    /**
-     * Set the classpath for loading the driver using the classpath reference.
-     */
-    public void setClasspathRef(Reference r) {
-        createClasspath().setRefid(r);
-    }
     
+    
+        
     /**
      * Set the name of the sql file to be run.
      */
@@ -298,27 +231,9 @@ public class SQLExec extends Task {
         return t;
     }
     
-    /**
-     * Set the JDBC driver to be used.
-     */
-    public void setDriver(String driver) {
-        this.driver = driver;
-    }
+        
+        
     
-    /**
-     * Set the DB connection url.
-     */
-    public void setUrl(String url) {
-        this.url = url;
-    }
-    
-    /**
-     * Set the user name for the DB connection.
-     */
-    public void setUserid(String userId) {
-        this.userId = userId;
-    }
-
     /**
      * Set the file encoding to use on the sql files read in
      *
@@ -329,20 +244,8 @@ public class SQLExec extends Task {
     }
     
     
-    /**
-     * Set the password for the DB connection.
-     */
-    public void setPassword(String password) {
-        this.password = password;
-    }
+        
     
-    /**
-     * Set the autocommit flag for the DB connection.
-     */
-    public void setAutocommit(boolean autocommit) {
-        this.autocommit = autocommit;
-    }
-
     /**
      * Set the statement delimiter.
      *
@@ -395,20 +298,8 @@ public class SQLExec extends Task {
         this.append = append;
     }
 
-    /**
-     * Set the rdbms required
-     */
-    public void setRdbms(String vendor) {
-        this.rdbms = vendor.toLowerCase();
-    }
-
-    /**
-     * Set the version required
-     */
-    public void setVersion(String version) {
-        this.version = version.toLowerCase();
-    }
-
+    
+    
     /**
      * Set the action to perform onerror
      */
@@ -434,75 +325,10 @@ public class SQLExec extends Task {
                                              + "must be set!", location);
                 }
             }
-            if (driver == null) {
-                throw new BuildException("Driver attribute must be set!", 
-                                         location);
-            }
-            if (userId == null) {
-                throw new BuildException("User Id attribute must be set!", 
-                                         location);
-            }
-            if (password == null) {
-                throw new BuildException("Password attribute must be set!", 
-                                         location);
-            }
-            if (url == null) {
-                throw new BuildException("Url attribute must be set!", 
-                                         location);
-            }
-            if (srcFile != null && !srcFile.exists()) {
-                throw new BuildException("Source file does not exist!", 
-                                         location);
-            }
-            Driver driverInstance = null;
-            try {
-                Class dc;
-                if (classpath != null) {
-                    // check first that it is not already loaded otherwise
-                    // consecutive runs seems to end into an OutOfMemoryError
-                    // or it fails when there is a native library to load
-                    // several times.
-                    // this is far from being perfect but should work
-                    // in most cases.
-                    synchronized (loaderMap){
-                        if (caching){
-                            loader = (AntClassLoader) loaderMap.get(driver);
-                        }
-                        if (loader == null){
-                            log("Loading " + driver 
-                                + " using AntClassLoader with classpath " 
-                                + classpath,
-                                Project.MSG_VERBOSE);
-                            loader = new AntClassLoader(project, classpath);
-                            if (caching){
-                                loaderMap.put(driver, loader);
-                            }
-                        } else {
-                            log("Loading " + driver 
-                                + " using a cached AntClassLoader.",
-                                Project.MSG_VERBOSE);
-                        }
-                    }
-                    dc = loader.loadClass(driver);
-                } else {
-                    log("Loading " + driver + " using system loader.", 
-                        Project.MSG_VERBOSE);
-                    dc = Class.forName(driver);
-                }
-                driverInstance = (Driver) dc.newInstance();
-            } catch (ClassNotFoundException e){
-                throw new BuildException("Class Not Found: JDBC driver " 
-                                         + driver + " could not be loaded",
-                                         location);
-            } catch (IllegalAccessException e){
-                throw new BuildException("Illegal Access: JDBC driver " 
-                                         + driver + " could not be loaded", 
-                                         location);
-            } catch (InstantiationException e) {
-                throw new BuildException("Instantiation Exception: JDBC driver "
-                                         + driver + " could not be loaded", 
-                                         location);
-            }
+        
+           	if (srcFile != null && !srcFile.exists()) {
+		   	 	throw new BuildException("Source file does not exist!", location);
+			}
 
             // deal with the filesets
             for (int i = 0; i < filesets.size(); i++) {
@@ -523,25 +349,11 @@ public class SQLExec extends Task {
             Transaction t = createTransaction();
             t.setSrc(srcFile);
             t.addText(sqlCommand);
-
+			conn = getConnection();
+			if (!isValidRdbms(conn)) {
+				return;
+			}
             try {
-                log("connecting to " + url, Project.MSG_VERBOSE);
-                Properties info = new Properties();
-                info.put("user", userId);
-                info.put("password", password);
-                conn = driverInstance.connect(url, info);
-                
-                if (conn == null) {
-                    // Driver doesn't understand the URL
-                    throw new SQLException("No suitable Driver for " + url);
-                }
-                
-                if (!isValidRdbms(conn)) {
-                    return;
-                }
-
-                conn.setAutoCommit(autocommit);
-
                 statement = conn.createStatement();
 
             
@@ -562,7 +374,7 @@ public class SQLExec extends Task {
                          e.hasMoreElements();) {
                        
                         ((Transaction) e.nextElement()).runTransaction(out);
-                        if (!autocommit) {
+                        if (!isAutocommit()) {
                             log("Commiting transaction", Project.MSG_VERBOSE);
                             conn.commit();
                         }
@@ -571,16 +383,16 @@ public class SQLExec extends Task {
                     if (out != null && out != System.out) {
                         out.close();
                     }
-                }
+                } 
             } catch (IOException e){
-                if (!autocommit && conn != null && onError.equals("abort")) {
+                if (!isAutocommit() && conn != null && onError.equals("abort")) {
                     try {
                         conn.rollback();
                     } catch (SQLException ex) {}
                 }
                 throw new BuildException(e, location);
             } catch (SQLException e){
-                if (!autocommit && conn != null && onError.equals("abort")) {
+                if (!isAutocommit() && conn != null && onError.equals("abort")) {
                     try {
                         conn.rollback();
                     } catch (SQLException ex) {}
@@ -604,6 +416,7 @@ public class SQLExec extends Task {
             sqlCommand = savedSqlCommand;
         }
     }
+
 
     protected void runStatements(Reader reader, PrintStream out) 
         throws SQLException, IOException {
@@ -657,51 +470,7 @@ public class SQLExec extends Task {
         }
     }
  
-    /**
-     * Verify if connected to the correct RDBMS
-     **/
-    protected boolean isValidRdbms(Connection conn) {
-        if (rdbms == null && version == null) {
-            return true;
-        }
         
-        try {
-            DatabaseMetaData dmd = conn.getMetaData();
-            
-            if (rdbms != null) {
-                String theVendor = dmd.getDatabaseProductName().toLowerCase();
-                
-                log("RDBMS = " + theVendor, Project.MSG_VERBOSE);
-                if (theVendor == null || theVendor.indexOf(rdbms) < 0) {
-                    log("Not the required RDBMS: " + rdbms, 
-                        Project.MSG_VERBOSE);
-                    return false;
-                }
-            }
-            
-            if (version != null) {
-                // XXX maybe better toLowerCase(Locale.US)
-                String theVersion = 
-                    dmd.getDatabaseProductVersion().toLowerCase();
-                
-                log("Version = " + theVersion, Project.MSG_VERBOSE);
-                if (theVersion == null || 
-                    !(theVersion.startsWith(version) || 
-                      theVersion.indexOf(" " + version) >= 0)) {
-                    log("Not the required version: \""
-                        + version + "\"", Project.MSG_VERBOSE);
-                    return false;
-                }
-            }
-        } catch (SQLException e) {
-            // Could not get the required information
-            log("Failed to obtain required RDBMS information", Project.MSG_ERR);
-            return false;
-        }
-        
-        return true;
-    }
-    
     /**
      * Exec the sql statement.
      */
@@ -835,12 +604,6 @@ public class SQLExec extends Task {
         }
     }
 
-    protected static Hashtable getLoaderMap(){
-        return loaderMap;
-    }
 
-    protected AntClassLoader getLoader(){
-        return loader;
-    }
 
 }
