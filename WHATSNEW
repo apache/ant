@@ -61,6 +61,8 @@ Other changes:
 * Add support for iPlanet Application Server to the <ejbjar> task. Also 
   includes some iPlanet utility tasks
   
+* Add support for JBoss Application Server to the <ejbjar> task. 
+  
 * Allow the SQL Delimiter to be set in the so that Oracle stored procs may be
   entered  
 

@@ -224,6 +224,19 @@ public class EjbJar extends MatchingTask {
     }
 
     /**
+     * Create a jboss nested element used to configure a
+     * deployment tool for Jboss server.
+     *
+     * @return the deployment tool instance to be configured.
+     */
+    public JbossDeploymentTool createJboss() {
+        JbossDeploymentTool tool = new JbossDeploymentTool();
+        tool.setTask(this);
+        deploymentTools.add(tool);
+        return tool;
+    }
+
+    /**
      * Create a nested element for weblogic when using the Toplink
      * Object- Relational mapping.
      *
