@@ -323,6 +323,8 @@ public class AntClassLoader extends ClassLoader implements BuildListener {
         //addJavaLibraries();        
         addSystemPackageRoot("java");
         addSystemPackageRoot("javax");
+        addSystemPackageRoot("org.xml.sax");
+        addSystemPackageRoot("sun.reflect");
     }
 
 
@@ -906,8 +908,11 @@ public class AntClassLoader extends ClassLoader implements BuildListener {
      * on the system classpath (when not in isolated mode) or this loader's
      * classpath.
      */
-    protected Class loadClass(String classname, boolean resolve)
+    protected synchronized Class loadClass(String classname, boolean resolve)
          throws ClassNotFoundException {
+        // 'sync' is needed - otherwise 2 threads can load the same class
+        // twice, resulting in LinkageError: duplicated class definition.
+        // findLoadedClass avoids that, but without sync it won't work.
 
         Class theClass = findLoadedClass(classname);
         if (theClass != null) {
@@ -1059,12 +1064,13 @@ public class AntClassLoader extends ClassLoader implements BuildListener {
                 try {
                     stream = getResourceStream(pathComponent, classFilename);
                     if (stream != null) {
+                        // System.out.println("Found " + classFilename + "  in " + pathComponent );
                         return getClassFromStream(stream, name);
                     }
                 } catch (SecurityException se) {
                     throw se;
                 } catch (IOException ioe) {
-                    // ioe.printStackTrace();
+                    ioe.printStackTrace();
                     log("Exception reading component " + pathComponent ,
                         Project.MSG_VERBOSE);
                 }
