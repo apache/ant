@@ -159,11 +159,14 @@
                         <li>Add 'defaultexcludes' to <code>DefaultFileSet</code>.  Also add a
                         file selector implementation that matches everything except the default
                         excludes.</li>
-                        <li>Add a condition -&gt; file selector adaptor, so that arbitrary conditions
-                        can be used to select files.</li>
                         <li>Add a name selector that loads patterns from a file.</li>
                         <li>Add more selector implementations: size and last-modified comparisons,
                         checksum comparison, byte-wise content comparison.</li>
+                    </ul></li>
+                    <li>File conditions:
+                    <ul>
+                        <li>Add more condition implementations that perform checks on files.
+                        One that searches a path for a file would be useful.</li>
                     </ul></li>
                     <li>File Name Mappers:
                     <ul>
@@ -190,15 +193,7 @@
                         an antlib, an installed extension, or the system classes of another JVM
                         for cross-compiling).</li>
                     </ul></li>
-                    <li>File Filters:
-                    <ul>
-                        <li>Add a file filter interface, and use it in the copy task.</li>
-                        <li>Add a filter implementation that applies the token replacement that
-                        the old copy task provides.</li>
-                        <li>Add a filter that does cr/lf translation.</li>
-                        <li>Add a gzip/gunzip filter.</li>
-                        <li>Add a filter that applies character set encode/decode.</li>
-                    </ul></li>
+                    <li>Port across the Ant 1 file filter proposal, once it is complete.</li>
                     <li>Copy task:
                     <ul>
                         <li>Implement 'preservelastmodified', 'overwrite', and 'includeemptydirs'.</li>
@@ -241,6 +236,27 @@
                         </ul>
                     </li>
 
+                </ul>
+                    </blockquote>
+    </td></tr>
+  </table>
+                                  <table border="0" cellspacing="0" cellpadding="2" width="100%">
+    <tr><td bgcolor="#828DA6">
+      <font color="#ffffff" face="arial,helvetica,sanserif">
+        <a name="Scripting"><strong>Scripting</strong></a>
+      </font>
+    </td></tr>
+    <tr><td>
+      <blockquote>
+                        <p>Add the ability to extend Ant using languages other than
+                Java:</p>
+                                <ul>
+                    <li>Define a task using a scripting language such as Javascript.</li>
+                    <li>Use Rhino's ability to implement Java interfaces, to
+                    implement and define types, such as FileSelector, or
+                    Condition.</li>
+                    <li>Define a task using template.</li>
+                    <li>Add some lightweight scripting tasks.</li>
                 </ul>
                     </blockquote>
     </td></tr>
@@ -309,6 +325,12 @@
                     <li>Detect duplicate type names.</li>
                     <li>Add fully qualified type names, based on antlib name and type shorthand name.
                     Allow these to be used in build files in addition to the shorthand names.</li>
+                    <li>Move the <code>&lt;http&gt;</code> and <code>&lt;socket&gt;</code>
+                    conditions to an antlib.  Need to resolve how these will be passed a logger.</li>
+                    <li>Make the <code>&lt;uptodate&gt;</code> task a condition, and move to
+                    an antlib.</li>
+                    <li>Split up <code>&lt;is-set&gt;</code> condition into is-set and is-true conditions.</li>
+                    <li>Allow the <code>&lt;if&gt;</code> task to take any condition implementation.</li>
                     <li>Unit tests.</li>
                 </ul>
                     </blockquote>

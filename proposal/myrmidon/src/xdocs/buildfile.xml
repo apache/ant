@@ -206,53 +206,74 @@ attributes:</p>
 <section name="Tasks">
 
 <p>
-The following table lists some of the current set of tasks.  You can find
-example usages of these tasks in the sample project file
-<code>src/make/sample.ant</code>.
+Listed below are some of the current set of tasks.  You can find example
+usages of these tasks in the sample project file <code>src/make/sample.ant</code>.
 </p>
 
-<table>
-    <tr><th>Task</th><th>Description</th></tr>
-    <tr>
-        <td>fail</td>
-        <td>Causes the build to fail.</td>
-    </tr>
-    <tr>
-        <td>if</td>
-        <td>Conditionally executes a set of tasks.</td>
-    </tr>
-    <tr>
-        <td>load-properties</td>
-        <td>Loads a set of properties from a file.</td>
-    </tr>
-    <tr>
-        <td>log</td>
-        <td>Writes a log message.</td>
-    </tr>
-    <tr>
-        <td>property</td>
-        <td>Sets a property.</td>
-    </tr>
-    <tr>
-        <td>try-catch</td>
-        <td>Runs a set of tasks, with a provided error and clean-up handler.</td>
-    </tr>
-    <tr>
-        <td>converter-def</td>
-        <td>Register a type converter.  These are used when configuring a task
-        or data-type from attributes.</td>
-    </tr>
-    <tr>
-        <td>type-def</td>
-        <td>Register a task or data-type.</td>
-    </tr>
-    <tr>
-        <td>import</td>
-        <td>Register the contents of an antlib.</td>
-    </tr>
-</table>
+<h3><code>&lt;condition&gt;</code></h3>
+
+<p>Sets a property if a particular condition is true.  See
+<a href="#Conditions">Conditions</a> for a list of available conditions.</p>
+
+<h3><code>&lt;fail&gt;</code></h3>
+<p>Causes the build to fail.</p>
+
+<h3><code>&lt;if&gt;</code></h3>
+<p>Conditionally executes a set of tasks.</p>
+
+<h3><code>&lt;load-properties&gt;</code></h3>
+<p>Loads a set of properties from a file.</p>
+
+<h3><code>&lt;log&gt;</code></h3>
+<p>Writes a log message.</p>
+
+<h3><code>&lt;property&gt;</code></h3>
+<p>Sets a property.</p>
+
+<h3><code>&lt;try-catch&gt;</code></h3>
+<p>Runs a set of tasks, with a provided error and clean-up handler.</p>
+
+<h3><code>&lt;converter-def&gt;</code></h3>
+<p>Register a type converter.  These are used when configuring a task
+or data-type from attributes.</p>
+
+<h3><code>&lt;type-def&gt;</code></h3>
+<p>Register a task or data-type.</p>
+
+<h3><code>&lt;import&gt;</code></h3>
+<p>Register the contents of an antlib.</p>
 
 </section>
+
+<section name="Conditions">
+
+<p>The following conditions are available </p>
+
+<h3><code>&lt;and&gt;</code></h3>
+<p>Evaluates a set of nested conditions, and AND them together.  Evaluation is
+lazy.  An empty <code>&lt;and&gt;</code> condition evaluates to true.</p>
+
+<h3><code>&lt;available&gt;</code></h3>
+<p>Tests if a particular class or resource is available.</p>
+
+<h3><code>&lt;file-test&gt;</code></h3>
+<p>Tests a file against a set of <a href="vfs.html#File Selectors">file selectors</a>.</p>
+
+<h3><code>&lt;is-set&gt;</code></h3>
+<p>Tests whether a proeprty is set, and not set to 'false'.</p>
+
+<h3><code>&lt;or&gt;</code></h3>
+<p>Evaluates a set of nested conditions, and OR them together.  Evaluation is
+lazy.  An empty <code>&lt;or&gt;</code> evaluates to true.</p>
+
+<h3><code>&lt;os&gt;</code></h3>
+<p>Tests which operating system the build is running on.</p>
+
+<h3><code>&lt;not&gt;</code></h3>
+<p>Negates a nested condition.</p>
+
+</section>
+
 </body>
 
 </document>

@@ -163,6 +163,12 @@
                 <p>Selects files whose base name matches an Ant 1 style pattern, or a regular
                 expression.</p>
 
+                <h3><code>&lt;condition&gt;</code></h3>
+
+                <p>Takes a set of <a href="buildfile.html#Conditions">conditions</a>.  If
+                the conditions evaluate to true, then select every file.  Otherwise,
+                select no files.</p>
+
                 <h3><code>&lt;exists&gt;</code></h3>
 
                 <p>Selects files that exist.</p>
