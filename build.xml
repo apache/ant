@@ -38,6 +38,8 @@
   <!-- Check to see what optional dependencies are available               -->
   <!-- =================================================================== -->
   <target name="check_for_optional_packages">
+    <available property="jdk1.2+" classname="java.lang.ThreadLocal" />
+    <available property="jdk1.3+" classname="java.lang.StrictMath" />
     <available property="bsf.present" classname="com.ibm.bsf.BSFManager" />
     <available property="netrexx.present" classname="netrexx.lang.Rexx" />
     <available property="xslp.present" 
@@ -78,7 +80,7 @@
       <exclude name="**/DDCreator*.java" unless="ejb.DDCreator.present" />
       <exclude name="**/WLRun.java" unless="ejb.wls.present" />
       <exclude name="**/WLStop.java" unless="ejb.wls.present" />
-      <exclude name="**/EjbJar.java" unless="ejb.build" />
+      <exclude name="**/EjbJar.java" unless="jdk1.2+" />
       <exclude name="**/junit/*" unless="junit.present" />
     </javac>
  
