@@ -52,6 +52,9 @@ Changes that could break older environments:
 
 Fixed bugs:
 -----------
+* A bug existed that prevented generated log files from being deleted as 
+  part of the build process itself.  This has now been fixed.
+
 * Fixed bug where <move> ignored <filterset>s.
 
 * Ant works properly with the combination of Java1.4/WindowsXP.
