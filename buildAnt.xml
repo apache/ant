@@ -1,0 +1,84 @@
+<project name="Ant Nightly Distribution" default="all" basedir=".">
+
+  <!-- Build Management Properties
+
+    buildAnt.archive          Distribution directory to be archived
+    buildAnt.cvsRoot          CVS login root for Ant
+    buildAnt.dateStamp        YYYYMMDD date stamp (from executing script)
+    buildAnt.dist             Distribution directory produced by "build" target
+    buildAnt.name             Base name of packaged distribution files
+    buildAnt.package          CVS package name for Ant
+    buildAnt.server           Jakarta server's nightly builds directory
+    buildAnt.source           Directory into which Ant sources are extracted
+    buildAnt.uploads	      Directory into which archives to upload are made
+    jaxp.home                 Home directory of the JAXP distribution
+
+  -->
+
+  <property name="buildAnt.archive"      value="archive/jakarta-ant"/>
+  <property name="buildAnt.cvsRoot"      value=":pserver:anoncvs@jakarta.apache.org:/home/cvspublic"/>
+  <property name="buildAnt.dist"         value="dist/ant"/>
+  <property name="buildAnt.name"         value="jakarta-ant"/>
+  <property name="buildAnt.package"      value="jakarta-ant"/>
+  <property name="buildAnt.server"       value="/www/jakarta.apache.org/builds/ant/nightly"/>
+  <property name="buildAnt.source"       value="jakarta-ant"/>
+  <property name="buildAnt.uploads"      value="uploads/ant"/>
+
+  <!-- Extract the most recent sources from the CVS repository -->
+  <target name="extract">
+    <deltree dir="${buildAnt.source}"/>
+    <cvs cvsRoot="${buildAnt.cvsRoot}" package="${buildAnt.package}"
+         dest="${buildAnt.source}"/>
+  </target>
+
+  <!-- Build the distribution according to its instructions -->
+  <target name="build">
+    <ant dir="${buildAnt.source}" target="clean"/>
+    <ant dir="${buildAnt.source}" target="dist"/>
+  </target>
+
+  <!-- Insert add-ons as required for the nightly distribution -->
+  <target name="addons">
+    <echo message="Copying addons from '${jaxp.home}' to '${buildAnt.dist}/lib'"/>
+    <copyfile src="${jaxp.home}/jaxp.jar"
+             dest="${buildAnt.dist}/lib/jaxp.jar"/>
+    <copyfile src="${jaxp.home}/parser.jar"
+             dest="${buildAnt.dist}/lib/parser.jar"/>
+  </target>
+
+  <!-- Package up the distribution in various formats -->
+  <target name="package">
+    <!-- Recreate the archive directory -->
+    <deltree dir="${buildAnt.archive}"/>
+    <mkdir   dir="${buildAnt.archive}"/>
+    <copydir src="${buildAnt.dist}" dest="${buildAnt.archive}"/>
+    <!-- Recreate the uploads directory -->
+    <deltree dir="${buildAnt.uploads}"/>
+    <mkdir dir="${buildAnt.uploads}"/>
+    <!-- Create the uploadable files in various formats -->
+    <tstamp/>
+    <tar tarfile="${buildAnt.uploads}/${buildAnt.name}-${DSTAMP}.tar"
+         basedir="${buildAnt.archive}/.."/>
+    <gzip    src="${buildAnt.uploads}/${buildAnt.name}-${DSTAMP}.tar"
+         zipfile="${buildAnt.uploads}/${buildAnt.name}-${DSTAMP}.tar.gz"/>
+    <exec    dir="${buildAnt.uploads}"
+         command="compress ${buildAnt.name}-${DSTAMP}.tar"/>
+    <zip zipfile="${buildAnt.uploads}/${buildAnt.name}-${DSTAMP}.zip"
+         basedir="${buildAnt.archive}/.."/>
+  </target>
+
+  <!-- Install the distributable files to the Jakarta server -->
+  <!-- Obviously, this will only work right on the real server!!! -->
+  <target name="install">
+    <copydir src="${buildAnt.uploads}" dest="${buildAnt.server}"
+             includes="${buildAnt.name}-${DSTAMP}.*"/>
+    <chmod   src="${buildAnt.server}/${buildAnt.name}-${DSTAMP}.*"
+             perm="g+w"/>
+    <chmod   src="${buildAnt.server}/${buildAnt.name}-${DSTAMP}.*"
+             perm="o+r"/>
+  </target>
+
+  <!-- All-in-one target (except for install) -->
+  <target name="all" depends="extract,build,addons,package"/>
+
+</project>
