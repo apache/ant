@@ -249,10 +249,10 @@
       
     </copy>
 
-    <copy todir="${build.classes}/${optional.package}/junit">
-       <fileset dir="${java.dir}/${optional.package}/junit">
-         <include name="html/**" />
-         <include name="xsl/**" />
+    <copy todir="${build.classes}/${optional.package}/junit/xsl">
+       <fileset dir="${src.dir}/etc">
+         <include name="junit-frames.xsl" />
+         <include name="junit-noframes.xsl" />
        </fileset>
     </copy>
 
