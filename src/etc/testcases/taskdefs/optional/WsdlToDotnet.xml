@@ -190,10 +190,10 @@
   </target>
 
 
-  <target name="testParseableErrorsIgnoredWhenFalse" depends="init">
+  <target name="testideErrorsIgnoredWhenFalse" depends="init">
     <wsdltodotnet destFile="${out.csc}"
       srcFile="${local.wsdl}"
-      parseableErrors="false"
+      ideErrors="false"
       >
     </wsdltodotnet>
   </target>
@@ -222,5 +222,5 @@
         url="http://ant.apache.org/xml/AntSchema.xsd"/>
     </wsdltodotnet>
   </target>
-  
+
 </project>

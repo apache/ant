@@ -30,9 +30,14 @@ import org.apache.tools.ant.taskdefs.optional.dotnet.WsdlToDotnet;
 public class WsdlToDotnetTest extends BuildFileTest {
 
     /**
-     * Description of the Field
+     * dir for taskdefs
      */
     private final static String TASKDEFS_DIR = "src/etc/testcases/taskdefs/optional/";
+
+    /**
+     * message from exec
+     */
+    private static final String WSDL_FAILED = "WSDL returned:";
 
 
     /**
@@ -68,7 +73,7 @@ public class WsdlToDotnetTest extends BuildFileTest {
     public void testNoParams() throws Exception {
         expectBuildExceptionContaining("testNoParams",
                 "expected failure",
-                "destination file must be specified");
+                WsdlToDotnet.ERROR_NO_DEST_FILE);
     }
 
     /**
@@ -77,7 +82,7 @@ public class WsdlToDotnetTest extends BuildFileTest {
     public void testNoSrc() throws Exception {
         expectBuildExceptionContaining("testNoSrc",
                 "expected failure",
-                "you must specify either a source file or a URL");
+                WsdlToDotnet.Schema.ERROR_NONE_DECLARED);
     }
 
     /**
@@ -86,7 +91,7 @@ public class WsdlToDotnetTest extends BuildFileTest {
     public void testDestIsDir() throws Exception {
         expectBuildExceptionContaining("testDestIsDir",
                 "expected failure",
-                "is a directory");
+                WsdlToDotnet.ERROR_DEST_FILE_IS_DIR);
     }
 
     /**
@@ -95,7 +100,7 @@ public class WsdlToDotnetTest extends BuildFileTest {
     public void testBothSrc() throws Exception {
         expectBuildExceptionContaining("testBothSrc",
                 "expected failure",
-                "both a source file and a URL");
+                WsdlToDotnet.Schema.ERROR_BOTH_DECLARED);
     }
      /**
      * A unit test for JUnit
@@ -103,7 +108,7 @@ public class WsdlToDotnetTest extends BuildFileTest {
     public void testSrcIsDir() throws Exception {
         expectBuildExceptionContaining("testSrcIsDir",
                 "expected failure",
-                "is a directory");
+                WsdlToDotnet.Schema.ERROR_FILE_IS_DIR);
     }
 
     /**
@@ -112,7 +117,7 @@ public class WsdlToDotnetTest extends BuildFileTest {
     public void testSrcIsMissing() throws Exception {
         expectBuildExceptionContaining("testSrcIsMissing",
                 "expected failure",
-                "does not exist");
+                WsdlToDotnet.Schema.ERROR_FILE_NOT_FOUND);
     }
 
     /**
@@ -133,7 +138,7 @@ public class WsdlToDotnetTest extends BuildFileTest {
     public void testInvalidExtraOps() throws Exception {
         expectBuildExceptionContaining("testInvalidExtraOps",
                 "expected failure",
-                "WSDL returned:");
+                WSDL_FAILED);
     }
 
     /**
@@ -154,7 +159,7 @@ public class WsdlToDotnetTest extends BuildFileTest {
     public void testInvalidExtraOpsVB() throws Exception {
         expectBuildExceptionContaining("testInvalidExtraOpsVB",
                 "expected failure",
-                "WSDL returned:");
+                WSDL_FAILED);
     }
 
     /**

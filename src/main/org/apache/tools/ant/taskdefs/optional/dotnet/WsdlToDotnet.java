@@ -19,9 +19,12 @@ package org.apache.tools.ant.taskdefs.optional.dotnet;
 import java.io.File;
 import java.util.Vector;
 import java.util.Iterator;
+import java.net.URL;
+import java.net.MalformedURLException;
 
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Task;
+import org.apache.tools.ant.types.EnumeratedAttribute;
 import org.apache.tools.ant.taskdefs.condition.Os;
 import org.apache.tools.ant.util.FileUtils;
 
@@ -55,11 +58,6 @@ public class WsdlToDotnet extends Task  {
     private File destFile = null;
 
     /**
-     * url to retrieve
-     */
-    private String url = null;
-
-    /**
      * name of source file
      */
     private String srcFileName = null;
@@ -89,12 +87,6 @@ public class WsdlToDotnet extends Task  {
      */
     protected String extraOptions = null;
 
-    /**
-     * mono flag; we ignore the Rotor implementation of the CLR
-     * @since Ant 1.7
-     */
-    private boolean isMono = !Os.isFamily("windows");
-
 
     /**
      * protocol string. Exact value set depends on SOAP stack version.
@@ -103,17 +95,44 @@ public class WsdlToDotnet extends Task  {
     private String protocol = null;
 
     /**
-     * should errors come in a machine parseable format. This
+     * should errors come in an IDE format. This
      * is WSE only.
      * @since Ant 1.7
      */
-    private boolean parseableErrors = false;
+    private boolean ideErrors = false;
 
     /**
      * filesets of file to compile
      * @since Ant 1.7
      */
     private Vector schemas = new Vector();
+
+    /**
+     * our WSDL file.
+     * @since ant1.7
+     */
+    private Schema wsdl=new Schema();
+
+    /**
+     * compiler
+     * @since ant1.7
+     */
+    private Compiler compiler=null;
+
+    /**
+     * error message: dest file is a directory
+     */
+    public static final String ERROR_DEST_FILE_IS_DIR = "destination file is a directory";
+
+    /**
+     * error message: no dest file
+     */
+    public static final String ERROR_NO_DEST_FILE = "destination file must be specified";
+
+    /**
+     * used for timestamp checking
+     */
+    private FileUtils fileutils= FileUtils.newFileUtils();
 
     /**
      * Name of the file to generate. Required
@@ -130,7 +149,7 @@ public class WsdlToDotnet extends Task  {
      */
 
     public void setUrl(String url) {
-        this.url = url;
+        wsdl.setUrl(url);
     }
 
     /**
@@ -143,7 +162,10 @@ public class WsdlToDotnet extends Task  {
                 .removeLeadingPath(getProject().getBaseDir(), 
                                    new File(srcFileName));;
         }
+        //save the string name of the file
         this.srcFileName = srcFileName;
+        //and save the file
+        wsdl.setFile(getProject().resolveFile(srcFileName));
     }
 
     /**
@@ -194,26 +216,14 @@ public class WsdlToDotnet extends Task  {
     }
 
     /**
-     * Explicitly override the Mono auto-detection.
-     *
-     * <p>Defaults to false on Windows and true on any other platform.</p>
-     *
-     * @since Ant 1.7
-     */
-    public void setMono(boolean b) {
-        isMono = b;
-    }
-
-
-    /**
      * Should errors be machine parseable?
      * Optional, default=true
      *
      * @since Ant 1.7
-     * @param parseableErrors
+     * @param ideErrors
      */
-    public void setParseableErrors(boolean parseableErrors) {
-        this.parseableErrors = parseableErrors;
+    public void setIdeErrors(boolean ideErrors) {
+        this.ideErrors = ideErrors;
     }
 
     /**
@@ -239,38 +249,37 @@ public class WsdlToDotnet extends Task  {
     }
 
     /**
+     * flag to trigger turning a filename into a file:url
+     * ignored for the mono compiler.
+     * @param b
+     */
+    public void setMakeURL(boolean b) {
+        wsdl.setMakeURL(b);
+    }
+
+    /**
+     * identify the compiler
+     * @since Ant 1.7
+     * @param compiler
+     */
+    public void setCompiler(Compiler compiler) {
+        this.compiler = compiler;
+    }
+
+    /**
      * validation code
      * @throws  BuildException  if validation failed
      */
     protected void validate()
             throws BuildException {
         if (destFile == null) {
-            throw new BuildException("destination file must be specified");
+            throw new BuildException(ERROR_NO_DEST_FILE);
         }
         if (destFile.isDirectory()) {
             throw new BuildException(
-                "destination file is a directory");
+                    ERROR_DEST_FILE_IS_DIR);
         }
-        if (url != null && srcFileName != null) {
-            throw new BuildException(
-                    "you can not specify both a source file and a URL");
-        }
-        if (url == null && srcFileName == null) {
-            throw new BuildException(
-                    "you must specify either a source file or a URL");
-        }
-        if (srcFileName != null) {
-            File srcFile = getProject().resolveFile(srcFileName);
-            if (!srcFile.exists()) {
-                throw new BuildException(
-                    "source file does not exist");
-            }
-            if (srcFile.isDirectory()) {
-                throw new BuildException(
-                    "source file is a directory");
-            }
-        }
-
+        wsdl.validate();
     }
 
     /**
@@ -280,10 +289,16 @@ public class WsdlToDotnet extends Task  {
      */
     public void execute()
              throws BuildException {
+        if(compiler==null) {
+            compiler=Compiler.createDefaultCompiler();
+        }
         validate();
-        NetCommand command = new NetCommand(this, "WSDL", "wsdl");
+        NetCommand command = new NetCommand(this,
+                "WSDL",
+                compiler.getCommand());
         command.setFailOnError(failOnError);
         //fill in args
+        compiler.applyExtraArgs(command);
         command.addArgument("/nologo");
         command.addArgument("/out:" + destFile);
         command.addArgument("/language:", language);
@@ -294,7 +309,7 @@ public class WsdlToDotnet extends Task  {
         if(protocol!=null) {
             command.addArgument("/protocol:"+protocol);
         }
-        if(parseableErrors) {
+        if(ideErrors) {
             command.addArgument("/parsableErrors");
         }
         command.addArgument(extraOptions);
@@ -302,46 +317,47 @@ public class WsdlToDotnet extends Task  {
         //set source and rebuild options
         boolean rebuild = true;
         long destLastModified = -1;
-        if (srcFileName != null) {
-            File srcFile = getProject().resolveFile(srcFileName);
-            if (isMono) {
-                // Mono 1.0's wsdl doesn't deal with absolute paths
-                command.addArgument(srcFileName);
-            } else {
-                command.addArgument(srcFile.toString());
-            }
-            //rebuild unless the dest file is newer than the source file
-            if ( destFile.exists() ) {
-                destLastModified = destFile.lastModified();
-            }
-            if (srcFile.exists()
-                && srcFile.lastModified() <= destLastModified) {
-                rebuild = false;
-            }
-        } else {
-            //no source file? must be a url, which has no dependency
-            //handling
-            rebuild = true;
-            command.addArgument(url);
+
+        //rebuild unless the dest file is newer than the source file
+        if ( destFile.exists() ) {
+            destLastModified = destFile.lastModified();
+            rebuild = isRebuildNeeded(wsdl, destLastModified);
         }
+        String path;
+        //mark for a rebuild if the dest file is newer
+        path=wsdl.evaluate();
+        if ( !compiler.supportsAbsoluteFiles() ) {
+            // Mono 1.0's wsdl doesn't deal with absolute paths
+            path = srcFileName;
+        }
+        command.addArgument(path);
         //add in any extra files.
         //this is an error in mono, but we do not warn on it as they may fix that outside
         //the ant build cycle.
         Iterator it=schemas.iterator();
         while ( it.hasNext() ) {
             Schema schema = (Schema) it.next();
-            //get date, mark for a rebuild if we are newer
-            long schemaTimestamp;
-            schemaTimestamp=schema.getTimestamp();
-            if(schemaTimestamp>destLastModified) {
-                rebuild=true;
-            }
+            //mark for a rebuild if we are newer
+            rebuild |= isRebuildNeeded(schema, destLastModified);
             command.addArgument(schema.evaluate());
         }
         //conditionally compile
         if (rebuild) {
             command.runCommand();
         }
+    }
+
+    /**
+     * checks for a schema being out of data
+     * @param schema url/file
+     * @param destLastModified timestamp, -1 for no dest
+     * @return true if a rebuild is needed.
+     */
+    private boolean isRebuildNeeded(Schema schema, long destLastModified) {
+        if(destLastModified==-1) {
+            return true;
+        }
+        return !fileutils.isUpToDate(schema.getTimestamp(), destLastModified);
     }
 
 
@@ -352,14 +368,26 @@ public class WsdlToDotnet extends Task  {
     public static class Schema {
         private File file;
         private String url;
+        private boolean makeURL=false;
+
         public static final String ERROR_NONE_DECLARED = "One of file and url must be set";
         public static final String ERROR_BOTH_DECLARED = "Only one of file or url can be set";
         public static final String ERROR_FILE_NOT_FOUND = "Not found: ";
+        public static final String ERROR_FILE_IS_DIR = "File is a directory: ";
+        public static final String ERROR_NO_URL_CONVERT = "Could not URL convert ";
 
+        /**
+         * validate the schema
+         */
         public  void validate() {
 
-            if(file!=null && !file.exists()) {
-                throw new BuildException(ERROR_FILE_NOT_FOUND+file.toString());
+            if(file!=null) {
+                if (!file.exists()) {
+                    throw new BuildException(ERROR_FILE_NOT_FOUND+file.toString());
+                }
+                if ( file.isDirectory() ) {
+                    throw new BuildException(ERROR_FILE_IS_DIR+file.toString());
+                }
             }
             if(file!=null && url!=null) {
                 throw new BuildException(ERROR_BOTH_DECLARED);
@@ -375,16 +403,27 @@ public class WsdlToDotnet extends Task  {
          */
         public String evaluate() {
             validate();
-            if(file!=null) {
-                return file.toString();
-            } else {
+            if(url!=null) {
                 return getUrl();
             }
+            if(makeURL) {
+                try {
+                    return file.toURL().toExternalForm();
+                } catch (MalformedURLException e) {
+                    throw new BuildException(ERROR_NO_URL_CONVERT+file);
+                }
+            }
+            return file.toString();
         }
+
         public File getFile() {
             return file;
         }
 
+        /**
+         * name of a file to use as a source of WSDL or XSD data
+         * @param file
+         */
         public void setFile(File file) {
             this.file = file;
         }
@@ -393,8 +432,26 @@ public class WsdlToDotnet extends Task  {
             return url;
         }
 
+        /**
+         * url of a resource.
+         * URLs have no timestamp checking, and are not validated
+         * @param url
+         */
         public void setUrl(String url) {
             this.url = url;
+        }
+
+        public boolean isMakeURL() {
+            return makeURL;
+        }
+
+        /**
+         * flag to request that a file is turned into an absolute file: URL
+         * before being passed to the WSDL compiler
+         * @param makeURL
+         */
+        public void setMakeURL(boolean makeURL) {
+            this.makeURL = makeURL;
         }
 
         /**
@@ -408,5 +465,103 @@ public class WsdlToDotnet extends Task  {
                 return -1;
         }
     }
+
+    /**
+     * The enumerated values for our compiler
+     */
+    public static class Compiler extends EnumeratedAttribute {
+
+        public static final String COMPILER_MS = "microsoft";
+        public static final String COMPILER_MONO = "mono";
+        public static final String COMPILER_MS_ON_MONO = "microsoft-on-mono";
+        String[] compilers={
+            COMPILER_MS,
+            COMPILER_MONO,
+            COMPILER_MS_ON_MONO
+        };
+
+        public static final String EXE_WSDL = "wsdl";
+        public static final String EXE_MONO = "mono";
+        /**
+         * programs to run
+         */
+        String[] compilerExecutables = {
+            EXE_WSDL,
+            EXE_WSDL,
+            EXE_MONO
+        };
+
+
+        /**
+         * extra things
+         */
+        String[][] extraCompilerArgs = {
+            {},
+            {},
+            {EXE_WSDL}
+        };
+
+        boolean[] absoluteFiles = {
+            true,
+            false,
+            true
+        };
+
+        /**
+         * This is the only method a subclass needs to implement.
+         *
+         * @return an array holding all possible values of the enumeration.
+         *         The order of elements must be fixed so that <tt>indexOfValue(String)</tt>
+         *         always return the same index for the same value.
+         */
+        public String[] getValues() {
+            return compilers;
+        }
+
+        /**
+         * create the default compiler for this platform
+         * @return
+         */
+        public static Compiler createDefaultCompiler() {
+            Compiler c=new Compiler();
+            String compilerName;
+            compilerName= Os.isFamily("windows")?COMPILER_MS:COMPILER_MONO;
+            c.setValue(compilerName);
+            return c;
+        }
+
+        /**
+         * return the command to run
+         * @return
+         */
+        public String getCommand() {
+            return compilerExecutables[getIndex()];
+        }
+
+        /**
+         * return any extra arguments for the compiler
+         * @return
+         */
+        public String[] getExtraArgs() {
+            return extraCompilerArgs[getIndex()];
+        }
+
+        public boolean supportsAbsoluteFiles() {
+            return absoluteFiles[getIndex()];
+        }
+
+        /**
+         * apply any extra arguments of this class
+         * @param command
+         */
+        public void applyExtraArgs(NetCommand command) {
+            String[] args=getExtraArgs();
+            for(int i=0;i<args.length;i++) {
+               command.addArgument(args[i]);
+            }
+        }
+
+    }
+
 }
 
