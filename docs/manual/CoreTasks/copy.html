@@ -151,6 +151,10 @@ sets of files to copy.
  href="../CoreTypes/mapper.html">mapper</a> element. The default mapper used by
  <code>&lt;copy&gt;</code> is the <a
  href="../CoreTypes/mapper.html#identity-mapper">identity mapper</a>.</p>
+  <p>
+    <em>Since Ant 1.6.3</em>,
+    one can use a filenamemapper type in place of the mapper element.
+  </p>
 
 <h4>filterset</h4>
  <p><a href="../CoreTypes/filterset.html">FilterSet</a>s are used to replace
@@ -199,9 +203,7 @@ followed by <code>&lt;filterset&gt;</code> elements.
 <pre>
   &lt;copy todir=&quot;../backup/dir&quot;&gt;
     &lt;fileset dir=&quot;src_dir&quot;/&gt;
-    &lt;mapper&gt;
-        &lt;globmapper from=&quot;*&quot; to=&quot;*.bak&quot;/&gt;
-    &lt;/mapper&gt;
+    &lt;globmapper from=&quot;*&quot; to=&quot;*.bak&quot;/&gt;
   &lt;/copy&gt;
 </pre>
 
