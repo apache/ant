@@ -78,57 +78,63 @@ import java.util.Enumeration;
  */
 public class Main {
 
-    /** The default build file name */
+    /** The default build file name. */
     public final static String DEFAULT_BUILD_FILENAME = "build.xml";
 
-    /** Our current message output status. Follows Project.MSG_XXX */
+    /** Our current message output status. Follows Project.MSG_XXX. */
     private int msgOutputLevel = Project.MSG_INFO;
 
-    /** File that we are using for configuration */
-    private File buildFile; /** null */
+    /** File that we are using for configuration. */
+    private File buildFile; /* null */
 
-    /** Stream that we are using for logging */
+    /** Stream to use for logging. */
     private PrintStream out = System.out;
 
-    /** Stream that we are using for logging error messages */
+    /** Stream that we are using for logging error messages. */
     private PrintStream err = System.err;
 
-    /** The build targets */
+    /** The build targets. */
     private Vector targets = new Vector(5);
 
-    /** Set of properties that can be used by tasks */
+    /** Set of properties that can be used by tasks. */
     private Properties definedProps = new Properties();
 
-    /** Names of classes to add as listeners to project */
+    /** Names of classes to add as listeners to project. */
     private Vector listeners = new Vector(5);
     
-    /** File names of property files to load on startup */
+    /** File names of property files to load on startup. */
     private Vector propertyFiles = new Vector(5);
-
+    
     /**
-     * The Ant logger class. There may be only one logger. It will have the
-     * right to use the 'out' PrintStream. The class must implements the BuildLogger
-     * interface
+     * The Ant logger class. There may be only one logger. It will have 
+     * the right to use the 'out' PrintStream. The class must implements the 
+     * BuildLogger interface.
      */
     private String loggerClassname = null;
 
     /**
-     * Indicates whether output to the log is to be unadorned.
+     * Whether or not output to the log is to be unadorned.
      */
     private boolean emacsMode = false;
 
     /**
-     * Indicates if this ant should be run.
+     * Whether or not this instance has successfully been
+     * constructed and is ready to run.
      */
     private boolean readyToRun = false;
 
     /**
-     * Indicates we should only parse and display the project help information
+     * Whether or not we should only parse and display the project help 
+     * information.
      */
     private boolean projectHelp = false;
 
     /**
-     * Prints the message of the Throwable if it's not null.
+     * Prints the message of the Throwable if it (the message) is not 
+     * <code>null</code>.
+     * 
+     * @param t Throwable to print the message of.
+     *          Must not be <code>null</code>.
      */
     private static void printMessage(Throwable t) {
         String message = t.getMessage();
@@ -138,7 +144,16 @@ public class Main {
     }
 
     /**
-     * Entry point method.
+     * Creates a new instance of this class using the
+     * arguments specified, gives it any extra user properties which have been
+     * specified, and then runs the build using the classloader provided.
+     * 
+     * @param args Command line arguments. Must not be <code>null</code>.
+     * @param additionalUserProperties Any extra properties to use in this 
+     *        build. May be <code>null</code>, which is the equivalent to 
+     *        passing in an empty set of properties.
+     * @param coreLoader Classloader used for core classes. May be 
+     *        <code>null</code> in which case the system classloader is used.
      */
     public static void start(String[] args, Properties additionalUserProperties,
                              ClassLoader coreLoader) {
@@ -173,20 +188,31 @@ public class Main {
             System.exit(1);
         }
     }
-                                 
-    
-    
+                                        
     /**
      * Command line entry point. This method kicks off the building
      * of a project object and executes a build using either a given
      * target or the default target.
      *
-     * @param args Command line args.
+     * @param args Command line arguments. Must not be <code>null</code>.
      */
     public static void main(String[] args) {
         start(args, null, null);
     }
 
+    // XXX: (Jon Skeet) Error handling appears to be inconsistent here.
+    // Sometimes there's just a return statement, and sometimes a
+    // BuildException is thrown. What's the rationale for when to do
+    // what?
+    /**
+     * Sole constructor, which parses and deals with command line 
+     * arguments.
+     * 
+     * @param args Command line arguments. Must not be <code>null</code>.
+     * 
+     * @exception BuildException if the specified build file doesn't exist
+     *                           or is a directory.
+     */
     protected Main(String[] args) throws BuildException {
 
         String searchForThis = null;
@@ -253,7 +279,7 @@ public class Main {
 
                 /* Interestingly enough, we get to here when a user
                  * uses -Dname=value. However, in some cases, the JDK
-                 * goes ahead * and parses this out to args
+                 * goes ahead and parses this out to args
                  *   {"-Dname", "value"}
                  * so instead of parsing on "=", we just make the "-D"
                  * characters go away and skip one argument forward.
@@ -383,10 +409,10 @@ public class Main {
 
     /**
      * Helper to get the parent file for a given file.
+     * <p>
+     * Added to simulate File.getParentFile() from JDK 1.2.
      *
-     * <P>Added to simulate File.getParentFile() from JDK 1.2.
-     *
-     * @param file   File
+     * @param file   File to find parent of. Must not be <code>null</code>.
      * @return       Parent file or null if none
      */
     private File getParentFile(File file) {
@@ -403,16 +429,20 @@ public class Main {
 
     /**
      * Search parent directories for the build file.
+     * <p>
+     * Takes the given target as a suffix to append to each
+     * parent directory in seach of a build file.  Once the
+     * root of the file-system has been reached an exception
+     * is thrown.
      *
-     * <P>Takes the given target as a suffix to append to each
-     *    parent directory in seach of a build file.  Once the
-     *    root of the file-system has been reached an exception
-     *    is thrown.
+     * @param start  Leaf directory of search.
+     *               Must not be <code>null</code>.
+     * @param suffix  Suffix filename to look for in parents.
+     *                Must not be <code>null</code>.
+     * 
+     * @return A handle to the build file if one is found
      *
-     * @param suffix    Suffix filename to look for in parents.
-     * @return          A handle to the build file
-     *
-     * @exception BuildException    Failed to locate a build file
+     * @exception BuildException if no build file is found
      */
     private File findBuildFile(String start, String suffix) throws BuildException {
         if (msgOutputLevel >= Project.MSG_INFO) {
@@ -441,7 +471,15 @@ public class Main {
     }
 
     /**
-     * Executes the build.
+     * Executes the build. If the constructor for this instance failed
+     * (e.g. returned after issuing a warning), this method returns
+     * immediately.
+     * 
+     * @param coreLoader The classloader to use to find core classes.
+     *                   May be <code>null</code>, in which case the
+     *                   system classloader is used.
+     * 
+     * @exception BuildException if the build fails
      */
     private void runBuild(ClassLoader coreLoader) throws BuildException {
 
@@ -552,6 +590,13 @@ public class Main {
         }
     }
 
+    /**
+     * Adds the listeners specified in the command line arguments,
+     * along with the default listener, to the specified project.
+     * 
+     * @param project The project to add listeners to.
+     *                Must not be <code>null</code>.
+     */
     protected void addBuildListeners(Project project) {
 
         // Add the default listener
@@ -570,6 +615,10 @@ public class Main {
         }
     }
 
+    // XXX: (Jon Skeet) Any reason for writing a message and then using a bare 
+    // RuntimeException rather than just using a BuildException here? Is it
+    // in case the message could end up being written to no loggers (as the loggers
+    // could have failed to be created due to this failure)?
     /**
      *  Creates the default build logger for sending build events to the ant log.
      */
@@ -603,7 +652,7 @@ public class Main {
     }
 
     /**
-     * Prints the usage of how to use this class to System.out
+     * Prints the usage information for this class to <code>System.out</code>.
      */
     private static void printUsage() {
         String lSep = System.getProperty("line.separator");
@@ -629,12 +678,30 @@ public class Main {
         System.out.println(msg.toString());
     }
 
+    /**
+     * Prints the Ant version information to <code>System.out</code>.
+     * 
+     * @exception BuildException if the version information is unavailable
+     */
     private static void printVersion() throws BuildException {
         System.out.println(getAntVersion());
     }
 
+    /**
+     * Cache of the Ant version information when it has been loaded.
+     */
     private static String antVersion = null;
 
+    /**
+     * Returns the Ant version information, if available. Once the information
+     * has been loaded once, it's cached and returned from the cache on future
+     * calls.
+     * 
+     * @return the Ant version information as a String 
+     *         (always non-<code>null</code>)
+     * 
+     * @exception BuildException if the version information is unavailable
+     */
     public static synchronized String getAntVersion() throws BuildException {
         if (antVersion == null) {
             try {
@@ -662,7 +729,11 @@ public class Main {
     }
 
      /**
-      * Print the project description, if any
+      * Prints the description of a project (if there is one) to 
+      * <code>System.out</code>.
+      * 
+      * @param project The project to display a description of.
+      *                Must not be <code>null</code>.
       */
     private static void printDescription(Project project) {
        if (project.getDescription() != null) {
@@ -671,7 +742,13 @@ public class Main {
     }
 
     /**
-     * Print out a list of all targets in the current buildfile
+     * Prints a list of all targets in the specified project to 
+     * <code>System.out</code>, optionally including subtargets.
+     * 
+     * @param project The project to display a description of.
+     *                Must not be <code>null</code>.
+     * @param printSubTargets Whether or not subtarget names should also be
+     *                        printed.
      */
     private static void printTargets(Project project, boolean printSubTargets) {
         // find the target with the longest name
@@ -717,7 +794,14 @@ public class Main {
     }
 
     /**
-     * Search for the insert position to keep names a sorted list of Strings
+     * Searches for the correct place to insert a name into a list so as
+     * to keep the list sorted alphabetically.
+     * 
+     * @param names The current list of names. Must not be <code>null</code>.
+     * @param name  The name to find a place for.
+     *              Must not be <code>null</code>.
+     * 
+     * @return the correct place in the list for the given name
      */
     private static int findTargetPosition(Vector names, String name) {
         int res = names.size();
@@ -730,7 +814,8 @@ public class Main {
     }
 
     /**
-     * Output a formatted list of target names with an optional description
+     * Writes a formatted list of target names to <code>System.out</code>
+     * with an optional description
      */
     private static void printTargets(Vector names, Vector descriptions, String heading, int maxlen) {
         // now, start printing the targets and their descriptions

@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2000 The Apache Software Foundation.  All rights
+ * Copyright (c) 2000,2002 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -62,7 +62,7 @@ import java.io.File;
  * that path.
  *
  * The path can use path separators of either ':' or ';' and file separators
- * of either '/' or '\'
+ * of either '/' or '\'.
  *
  * @author Conor MacNeill (conor@ieee.org)
  *
@@ -74,21 +74,35 @@ public class PathTokenizer {
     private StringTokenizer tokenizer;
     
     /**
-     * A String which stores any path components which have been read ahead.
+     * A String which stores any path components which have been read ahead
+     * due to DOS filesystem compensation.
      */
     private String lookahead = null;
 
     /**
-     * Flag to indicate whether we are running on a platform with a DOS style
-     * filesystem
+     * Flag to indicate whether or not we are running on a platform with a
+     * DOS style filesystem
      */
     private boolean dosStyleFilesystem;
 
+    /**
+     * Constructs a path tokenizer for the specified path.
+     * 
+     * @param path The path to tokenize. Must not be <code>null</code>.
+     */
     public PathTokenizer(String path) {
        tokenizer = new StringTokenizer(path, ":;", false);
        dosStyleFilesystem = File.pathSeparatorChar == ';'; 
     }
 
+    /**
+     * Tests if there are more path elements available from this tokenizer's
+     * path. If this method returns <code>true</code>, then a subsequent call 
+     * to nextToken will successfully return a token.
+     * 
+     * @return <code>true</code> if and only if there is at least one token 
+     * in the string after the current position; <code>false</code> otherwise.
+     */
     public boolean hasMoreTokens() {
         if (lookahead != null) {
             return true;
@@ -97,6 +111,14 @@ public class PathTokenizer {
         return tokenizer.hasMoreTokens();
     }
     
+    /**
+     * Returns the next path element from this tokenizer.
+     * 
+     * @return the next path element from this tokenizer.
+     * 
+     * @exception NoSuchElementException if there are no more elements in this 
+     *            tokenizer's path.
+     */
     public String nextToken() throws NoSuchElementException {
         String token = null;
         if (lookahead != null) {

@@ -384,6 +384,10 @@ public class IntrospectionHelper implements BuildListener {
      * @param value The value to set the attribute to. This may be interpreted
      *              or converted to the necessary type if the setter method
      *              doesn't just take a string. Must not be <code>null</code>.
+     * 
+     * @exception BuildException if the introspected class doesn't support 
+     *                           the given attribute, or if the setting 
+     *                           method fails.
      */
     public void setAttribute(Project p, Object element, String attributeName,
                              String value)

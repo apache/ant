@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2000-2001 The Apache Software Foundation.  All rights
+ * Copyright (c) 2000-2002 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -63,16 +63,44 @@ import org.apache.tools.ant.util.StringUtils;
  */
 public class NoBannerLogger extends DefaultLogger {
 
+    /** 
+     * Name of the current target, if it should
+     * be displayed on the next message. This is
+     * set when a target starts building, and reset
+     * to <code>null</code> after the first message for 
+     * the target is logged.
+     */
     protected String targetName;
 
+    /** Sole constructor. */
+    public NoBannerLogger() {
+    }
+
+    /**
+     * Notes the name of the target so it can be logged
+     * if it generates any messages.
+     * 
+     * @param event A BuildEvent containing target information.
+     *              Must not be <code>null</code>.
+     */
     public void targetStarted(BuildEvent event) {
         targetName = event.getTarget().getName();
     }
 
+    /** Resets the current target name to <code>null</code>. */
     public void targetFinished(BuildEvent event) {
         targetName = null;
     }
 
+    /**
+     * Logs a message for a target if it is of an appropriate
+     * priority, also logging the name of the target if this
+     * is the first message which needs to be logged for the
+     * target.
+     * 
+     * @param event A BuildEvent containing message information.
+     *              Must not be <code>null</code>.
+     */
     public void messageLogged(BuildEvent event) {
 
         if( event.getPriority() > msgOutputLevel ||
