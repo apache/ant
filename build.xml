@@ -19,6 +19,7 @@
   <property name="Name" value="Apache Ant"/>
   <property name="name" value="ant"/>
   <property name="version" value="1.5alpha"/>
+  <property name="manifest-version" value="1.4.9"/>
 
   <property name="debug" value="true" />
   <property name="chmod.fail" value="true" />
@@ -572,16 +573,18 @@
 
       <manifest>
         <section name="${ant.package}">
+          <attribute name="Extension-name"
+                     value="org.apache.tools.ant" />
           <attribute name="Specification-Title"
                      value="Apache Ant" />
           <attribute name="Specification-Version"
-                     value="${version}" />
+                     value="${manifest-version}" />
           <attribute name="Specification-Vendor"
                      value="Apache Software Foundation" />
           <attribute name="Implementation-Title"
                      value="org.apache.tools.ant" />
           <attribute name="Implementation-Version"
-                     value="${version} ${TODAY}" />
+                     value="${manifest-version}" />
           <attribute name="Implementation-Vendor"
                      value="Apache Software Foundation" />
         </section>
