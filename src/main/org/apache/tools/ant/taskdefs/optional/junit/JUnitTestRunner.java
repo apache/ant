@@ -237,7 +237,7 @@ public class JUnitTestRunner implements TestListener {
     public void endTest(Test test) {}
 
     /**
-     * Interface TestListener.
+     * Interface TestListener for JUnit &lt;= 3.4.
      *
      * <p>A Test failed.
      */
@@ -245,6 +245,15 @@ public class JUnitTestRunner implements TestListener {
         if (haltOnFailure) {
             res.stop();
         }
+    }
+
+    /**
+     * Interface TestListener for JUnit &gt; 3.4.
+     *
+     * <p>A Test failed.
+     */
+    public void addFailure(Test test, AssertionFailedError t) {
+        addFailure(test, (Throwable) t);
     }
 
     /**

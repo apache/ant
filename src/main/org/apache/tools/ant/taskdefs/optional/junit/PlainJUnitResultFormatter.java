@@ -59,13 +59,14 @@ import org.apache.tools.ant.BuildException;
 import java.io.*;
 import java.text.NumberFormat;
 
+import junit.framework.AssertionFailedError;
 import junit.framework.Test;
 import junit.framework.TestCase;
 
 /**
  * Prints plain text output of the test to a specified Writer.
  *
- * @author <a href="mailto:stefan.bodewig@megabit.net">Stefan Bodewig</a>
+ * @author <a href="mailto:stefan.bodewig@epost.de">Stefan Bodewig</a>
  */
 
 public class PlainJUnitResultFormatter implements JUnitResultFormatter {
@@ -172,12 +173,21 @@ public class PlainJUnitResultFormatter implements JUnitResultFormatter {
     }
 
     /**
-     * Interface TestListener.
+     * Interface TestListener for JUnit &lt;= 3.4.
      *
      * <p>A Test failed.
      */
     public void addFailure(Test test, Throwable t) {
         formatError("\tFAILED", test, t);
+    }
+
+    /**
+     * Interface TestListener for JUnit &gt; 3.4.
+     *
+     * <p>A Test failed.
+     */
+    public void addFailure(Test test, AssertionFailedError t) {
+        addFailure(test, (Throwable) t);
     }
 
     /**

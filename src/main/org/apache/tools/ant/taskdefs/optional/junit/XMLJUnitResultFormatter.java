@@ -64,6 +64,7 @@ import org.w3c.dom.*;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.util.DOMElementWriter;
 
+import junit.framework.AssertionFailedError;
 import junit.framework.Test;
 import junit.framework.TestCase;
 
@@ -178,12 +179,21 @@ public class XMLJUnitResultFormatter implements JUnitResultFormatter {
     }
 
     /**
-     * Interface TestListener.
+     * Interface TestListener for JUnit &lt;= 3.4.
      *
      * <p>A Test failed.
      */
     public void addFailure(Test test, Throwable t) {
         formatError("failure", test, t);
+    }
+
+    /**
+     * Interface TestListener for JUnit &gt; 3.4.
+     *
+     * <p>A Test failed.
+     */
+    public void addFailure(Test test, AssertionFailedError t) {
+        addFailure(test, (Throwable) t);
     }
 
     /**

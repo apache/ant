@@ -57,6 +57,7 @@ package org.apache.tools.ant.taskdefs.optional.junit;
 import java.text.NumberFormat;
 import java.io.IOException;
 import java.io.OutputStream;
+import junit.framework.AssertionFailedError;
 import junit.framework.Test;
 
 import org.apache.tools.ant.BuildException;
@@ -64,7 +65,7 @@ import org.apache.tools.ant.BuildException;
 /**
  * Prints short summary output of the test to Ant's logging system.
  *
- * @author <a href="mailto:stefan.bodewig@megabit.net">Stefan Bodewig</a>
+ * @author <a href="mailto:stefan.bodewig@epost.de">Stefan Bodewig</a>
  */
  
 public class SummaryJUnitResultFormatter implements JUnitResultFormatter {
@@ -98,6 +99,14 @@ public class SummaryJUnitResultFormatter implements JUnitResultFormatter {
      * Empty
      */
     public void addFailure(Test test, Throwable t) {}
+    /**
+     * Interface TestListener for JUnit &gt; 3.4.
+     *
+     * <p>A Test failed.
+     */
+    public void addFailure(Test test, AssertionFailedError t) {
+        addFailure(test, (Throwable) t);
+    }
     /**
      * Empty
      */
