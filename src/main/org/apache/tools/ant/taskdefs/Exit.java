@@ -17,6 +17,8 @@
 
 package org.apache.tools.ant.taskdefs;
 
+import java.util.Vector;
+import org.apache.tools.ant.Task;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.taskdefs.condition.Condition;
 import org.apache.tools.ant.taskdefs.condition.ConditionBase;
@@ -42,9 +44,21 @@ import org.apache.tools.ant.taskdefs.condition.ConditionBase;
  *
  * @ant.task name="fail" category="control"
  */
-public class Exit extends ConditionBase {
+public class Exit extends Task {
+
+    private class NestedCondition extends ConditionBase implements Condition {
+        public boolean eval() {
+            if (countConditions() != 1) {
+                throw new BuildException(
+                    "A single nested condition is required.");
+            }
+            return ((Condition)(getConditions().nextElement())).eval();
+        }
+    }
+
     private String message;
     private String ifCondition, unlessCondition;
+    private NestedCondition nestedCondition;
 
     /**
      * A message giving further information on why the build exited.
@@ -129,6 +143,19 @@ public class Exit extends ConditionBase {
     }
 
     /**
+     * Add a condition element.
+     * @return <CODE>ConditionBase</CODE>.
+     * @since Ant 1.6.2
+     */
+    public ConditionBase createCondition() {
+        if (nestedCondition != null) {
+            throw new BuildException("Only one nested condition is allowed.");
+        }
+        nestedCondition = new NestedCondition();
+        return nestedCondition;
+    }
+
+    /**
      * test the if condition
      * @return true if there is no if condition, or the named property exists
      */
@@ -156,21 +183,22 @@ public class Exit extends ConditionBase {
      * @return true if there is none, or it evaluates to true
      */
     private boolean testNestedCondition() {
-        if (ifCondition != null || unlessCondition != null) {
+        boolean result = nestedConditionPresent();
+
+        if (result && ifCondition != null || unlessCondition != null) {
             throw new BuildException("Nested conditions "
-              + "not permitted in conjunction with if/unless attributes");
+                + "not permitted in conjunction with if/unless attributes");
         }
 
-        int count = countConditions();
-        if (count > 1) {
-            throw new BuildException("Too many conditions:  " + count);
-        }
-
-        return (count == 0) ? true
-            : (((Condition)(getConditions().nextElement())).eval());
+        return result && nestedCondition.eval();
     }
 
+    /**
+     * test whether there is a nested condition.
+     * @return <CODE>boolean</CODE>.
+     */
     private boolean nestedConditionPresent() {
-        return (countConditions() > 0);
+        return (nestedCondition != null);
     }
+
 }

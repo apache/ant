@@ -138,7 +138,7 @@ public class FailTest extends BuildFileTest {
     public void testNested5() {
         expectSpecificBuildException("testNested5",
             "it is required to fail :-)",
-            "Too many conditions:  2");
+            "Only one nested condition is allowed.");
     }
 
     public void testNested6() {
@@ -147,4 +147,17 @@ public class FailTest extends BuildFileTest {
             "testNested6\ntestNested6\ntestNested6");
     }
 
- }
+    public void testNested7() {
+        String specificMessage = "A single nested condition is required.";
+
+        char[] c = {'a', 'b'};
+        StringBuffer target = new StringBuffer("testNested7x");
+
+        for (int i = 0; i < c.length; i++) {
+            target.setCharAt(target.length() - 1, c[i]);
+            expectSpecificBuildException(target.toString(),
+                "it is required to fail :-)", specificMessage);
+        }
+    }
+
+}

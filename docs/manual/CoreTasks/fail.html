@@ -41,10 +41,10 @@ or character data nested into the element.</p>
 <h3>Parameters specified as nested elements</h3>
 
 <p>As an alternative to the <i>if</i>/<i>unless</i> attributes,
-  conditional failure can be achieved using a single nested condition.
-  For a complete list of core conditions, as well as information
-  about custom conditions, see <a href="conditions.html">here</a>.<br />
-  <b>Since Ant 1.6.2</b>
+  conditional failure can be achieved using a single nested
+  &lt;condition&gt; element, which should contain exactly one
+  core or custom condition.  For information about conditions, see
+  <a href="conditions.html">here</a>.<br /><b>Since Ant 1.6.2</b>
 </p>
 
 <h3>Examples</h3>
@@ -79,12 +79,15 @@ BUILD FAILED
 build.xml:2: unless=thisdoesnotexist
 </pre>
 
-A simple example using conditions to achieve the same effect:
+Using a condition to achieve the same effect:
+
 <pre>
   &lt;fail&gt;
-     &lt;not&gt;
-       &lt;isset property=&quot;thisdoesnotexist&quot;/&gt;
-     &lt;/not&gt;
+     &lt;condition&gt;
+       &lt;not&gt;
+         &lt;isset property=&quot;thisdoesnotexist&quot;/&gt;
+       &lt;/not&gt;
+     &lt;/condition&gt;
    &lt;/fail&gt;
 </pre>
 
