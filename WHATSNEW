@@ -24,7 +24,8 @@ Changes that could break older environments:
 * <xmlproperty> will no longer fail if the file to be loaded doesn't exist.
 
 * XML namespaces are now enabled in the XML parser, meaning XML namespace
-  declarations no longer cause errors.
+  declarations no longer cause errors. However task names containing colons
+  will cause errors unless there is a corresponding namespace uri.
 
 * The <ftp> and <telnet> tasks now require Jakarta Commons Net instead
   of the older ORO Netcomponents version.  See
@@ -67,6 +68,11 @@ Changes that could break older environments:
   does, so they were not equivalent.  This has been fixed, which means
   that propetries may get expanded twice if you use an
   <expandproperties> filterreader.  Bugzilla Report 17782.
+
+* User defined tasks and typedefs are now handled internally in the
+  same way as predefined tasks and typedefs. Also tasks and typedefs
+  are resolved at a later stage. This causes some
+  differences especially for user defined task containers.
 
 Fixed bugs:
 -----------
@@ -621,6 +627,16 @@ Other changes:
 * New filter <concatfilter>. Adds the content of file at the beginning
   or end of a file. Discussion started at
   http://marc.theaimsgroup.com/?l=ant-user&m=106366791228585&w=2
+
+* New task <import>
+
+* New task <macrodef>
+
+* New task <presetdef>
+
+* Ant libraries that can make use of namespaces to avoid name
+  clashes of custom tasks
+
 
 * <java> and <junit> now support <assertions>, which let you enable
   and disable Java1.4 assertions on a package or class basis. These
