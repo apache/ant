@@ -7,6 +7,8 @@
  */
 package org.apache.myrmidon.interfaces.service;
 
+import org.apache.myrmidon.interfaces.ComponentException;
+
 /**
  * ServiceException thrown when a service can not be created for
  * some reason.
@@ -15,51 +17,27 @@ package org.apache.myrmidon.interfaces.service;
  * @version $Revision$ $Date$
  */
 public class AntServiceException
-    extends Exception
+    extends ComponentException
 {
     /**
-     * The Throwable that caused this exception to be thrown.
-     */
-    private final Throwable m_throwable;
-
-    /**
-     * Basic constructor for exception that does not specify a message
-     */
-    public AntServiceException()
-    {
-        this( "", null );
-    }
-
-    /**
-     * Basic constructor with a message
+     * Constructs a non-cascaded exception.
      *
-     * @param message the message
+     * @param message The detail message for this exception.
      */
     public AntServiceException( final String message )
     {
-        this( message, null );
+        super( message );
     }
 
     /**
-     * Constructor that builds cascade so that other exception information can be retained.
+     * Constructs a cascaded exception.
      *
-     * @param message the message
-     * @param throwable the throwable
+     * @param message The detail message for this exception.
+     * @param throwable the root cause of the exception
      */
     public AntServiceException( final String message, final Throwable throwable )
     {
-        super( message );
-        m_throwable = throwable;
-    }
-
-    /**
-     * Retrieve root cause of the exception.
-     *
-     * @return the root cause
-     */
-    public final Throwable getCause()
-    {
-        return m_throwable;
+        super( message, throwable );
     }
 }
 

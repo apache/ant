@@ -7,6 +7,8 @@
  */
 package org.apache.myrmidon.interfaces.type;
 
+import org.apache.myrmidon.interfaces.ComponentException;
+
 /**
  * Exception to indicate problem with type instantiating.
  *
@@ -14,42 +16,26 @@ package org.apache.myrmidon.interfaces.type;
  * @version $Revision$ $Date$
  */
 public final class TypeException
-    extends Exception
+    extends ComponentException
 {
     /**
-     * The Throwable that caused this exception to be thrown.
-     */
-    private final Throwable m_throwable;
-
-    /**
-     * Construct a new <code>TypeException</code> instance.
+     * Constructs a non-cascaded exception.
      *
      * @param message The detail message for this exception.
      */
     public TypeException( final String message )
     {
-        this( message, null );
+        super( message );
     }
 
     /**
-     * Construct a new <code>TypeException</code> instance.
+     * Constructs a cascaded exception.
      *
      * @param message The detail message for this exception.
      * @param throwable the root cause of the exception
      */
     public TypeException( final String message, final Throwable throwable )
     {
-        super( message );
-        m_throwable = throwable;
-    }
-
-    /**
-     * Retrieve root cause of the exception.
-     *
-     * @return the root cause
-     */
-    public final Throwable getCause()
-    {
-        return m_throwable;
+        super( message, throwable );
     }
 }

@@ -7,49 +7,35 @@
  */
 package org.apache.myrmidon.interfaces.deployer;
 
+import org.apache.myrmidon.interfaces.ComponentException;
+
 /**
  * Exception to indicate error deploying.
  *
  * @author <a href="mailto:peter@apache.org">Peter Donald</a>
  * @version $Revision$ $Date$
  */
-public final class DeploymentException
-    extends Exception
+public class DeploymentException
+    extends ComponentException
 {
     /**
-     * The Throwable that caused this exception to be thrown.
-     */
-    private final Throwable m_throwable;
-
-    /**
-     * Construct a new <code>DeploymentException</code> instance.
+     * Constructs a non-cascaded exception.
      *
      * @param message The detail message for this exception.
      */
     public DeploymentException( final String message )
     {
-        this( message, null );
+        super( message );
     }
 
     /**
-     * Construct a new <code>DeploymentException</code> instance.
+     * Constructs a cascaded exception.
      *
      * @param message The detail message for this exception.
      * @param throwable the root cause of the exception
      */
     public DeploymentException( final String message, final Throwable throwable )
     {
-        super( message );
-        m_throwable = throwable;
-    }
-
-    /**
-     * Retrieve root cause of the exception.
-     *
-     * @return the root cause
-     */
-    public final Throwable getCause()
-    {
-        return m_throwable;
+        super( message, throwable );
     }
 }

@@ -7,6 +7,8 @@
  */
 package org.apache.myrmidon.interfaces.builder;
 
+import org.apache.myrmidon.interfaces.ComponentException;
+
 /**
  * A cascading exception thrown on a problem constructing a Project model.
  *
@@ -14,43 +16,26 @@ package org.apache.myrmidon.interfaces.builder;
  * @version $Revision$ $Date$
  */
 public class ProjectException
-    extends Exception
+    extends ComponentException
 {
     /**
-     * If this exception is cascaded, the cause of this exception.
-     */
-    private final Throwable m_throwable;
-
-    /**
-     * Constructs an non-cascaded exception with a message
+     * Constructs a non-cascaded exception.
      *
-     * @param message the message
+     * @param message The detail message for this exception.
      */
     public ProjectException( final String message )
     {
-        this( message, null );
+        super( message );
     }
 
     /**
-     * Constructs a cascaded exception with the supplied message, which links the
-     * Throwable provided.
+     * Constructs a cascaded exception.
      *
-     * @param message the message
-     * @param throwable the throwable that caused this exception
+     * @param message The detail message for this exception.
+     * @param throwable the root cause of the exception
      */
     public ProjectException( final String message, final Throwable throwable )
     {
-        super( message );
-        m_throwable = throwable;
-    }
-
-    /**
-     * Retrieve root cause of the exception.
-     *
-     * @return the root cause
-     */
-    public final Throwable getCause()
-    {
-        return m_throwable;
+        super( message, throwable );
     }
 }

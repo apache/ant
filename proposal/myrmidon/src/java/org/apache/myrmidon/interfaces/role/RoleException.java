@@ -7,6 +7,8 @@
  */
 package org.apache.myrmidon.interfaces.role;
 
+import org.apache.myrmidon.interfaces.ComponentException;
+
 /**
  * An exception thrown by the RoleManager.
  *
@@ -14,32 +16,26 @@ package org.apache.myrmidon.interfaces.role;
  * @version $Revision$ $Date$
  */
 public class RoleException
-    extends Exception
+    extends ComponentException
 {
     /**
-     * The Throwable that caused this exception to be thrown.
+     * Constructs a non-cascaded exception.
+     *
+     * @param message The detail message for this exception.
      */
-    private final Throwable m_throwable;
-
     public RoleException( final String message )
     {
-        this( message, null );
-    }
-
-    public RoleException( final String message,
-                          final Throwable throwable )
-    {
         super( message );
-        m_throwable = throwable;
     }
 
     /**
-     * Retrieve root cause of the exception.
+     * Constructs a cascaded exception.
      *
-     * @return the root cause
+     * @param message The detail message for this exception.
+     * @param throwable the root cause of the exception
      */
-    public final Throwable getCause()
+    public RoleException( final String message, final Throwable throwable )
     {
-        return m_throwable;
+        super( message, throwable );
     }
 }
