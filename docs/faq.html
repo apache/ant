@@ -224,6 +224,12 @@
   How can I include national characters like German
         umlauts in my build file?
   </a></li>
+                    <li><a href="#properties-not-trimmed">
+  <code>ant</code> failed to build my program via javac
+      even when I put the needed jars in an external
+      <code>build.properties</code> file and reference them by
+      <code>pathelement</code> or <code>classpath refid</code>.
+  </a></li>
                 </ul>
       </blockquote>
     </td></tr>
@@ -295,6 +301,12 @@
                     <li><a href="#delegating-classloader">
   &lt;style&gt; or &lt;junit&gt; ignores my
       &lt;classpath&gt;
+  </a></li>
+                    <li><a href="#winxp-jdk14-ant14">
+  When running Ant 1.4 on Windows XP and JDK 1.4, I get
+      various errors when trying to <code>&lt;exec&gt;</code>, fork
+      <code>&lt;java&gt;</code> or access environment
+      variables.
   </a></li>
                     <li><a href="#1.5-cygwin-sh">
   The <code>ant</code> wrapper script of Ant 1.5 fails
@@ -1322,6 +1334,31 @@ shell-prompt&gt; cat &lt; foo
     </td></tr>
   </table>
   </a>
+        <a name="properties-not-trimmed">
+  <table border="0" cellspacing="0" cellpadding="2" width="100%">
+    <tr><td bgcolor="#828DA6">
+      <font color="#ffffff" face="arial,helvetica,sanserif">
+        <strong>
+          <code>ant</code> failed to build my program via javac
+      even when I put the needed jars in an external
+      <code>build.properties</code> file and reference them by
+      <code>pathelement</code> or <code>classpath refid</code>.
+        </strong>
+      </font>
+    </td></tr>
+    <tr><td>
+      <blockquote>
+                              <p>When <code>ant</code> loads properties from an external
+        file it dosn't touch the value of properties, trailing blanks
+        will not be trimmed for example.</p>
+                                        <p>If the value represents a file path, like a jar needed to
+        compile, the task which requires the value, javac for example
+        would fail to compile since it can't find the file due to
+        trailing spaces.</p>
+                        </blockquote>
+    </td></tr>
+  </table>
+  </a>
                         <a name="integration">
   <table border="0" cellspacing="0" cellpadding="2" width="100%">
     <tr><td bgcolor="#828DA6">
@@ -2034,6 +2071,33 @@ mv /tmp/foo $ANT_HOME/bin/antRun
         for <code>&lt;junit&gt;</code>, you still have to use a
         <code>&lt;taskdef&gt;</code> with a nested
         <code>&lt;classpath&gt;</code> to define the junit task.</p>
+                        </blockquote>
+    </td></tr>
+  </table>
+  </a>
+        <a name="winxp-jdk14-ant14">
+  <table border="0" cellspacing="0" cellpadding="2" width="100%">
+    <tr><td bgcolor="#828DA6">
+      <font color="#ffffff" face="arial,helvetica,sanserif">
+        <strong>
+          When running Ant 1.4 on Windows XP and JDK 1.4, I get
+      various errors when trying to <code>&lt;exec&gt;</code>, fork
+      <code>&lt;java&gt;</code> or access environment
+      variables.
+        </strong>
+      </font>
+    </td></tr>
+    <tr><td>
+      <blockquote>
+                              <p>Ant &lt; 1.5 doesn't recognize Windows XP as a flavor
+        of Windows that runs <code>CMD.EXE</code> instead of
+        <code>COMMAND.COM</code>.  JDK 1.3 will tell Ant that Windows
+        XP is Windows 2000 so the problem doesn't show up
+        there.</p>
+                                        <p>Apart from upgrading to Ant 1.5 or better, setting the
+        environment variable <code>ANT_OPTS</code> to
+        <code>-Dos.name=Windows_NT</code> prior to invoking Ant has
+        been confirmed as a workaround.</p>
                         </blockquote>
     </td></tr>
   </table>

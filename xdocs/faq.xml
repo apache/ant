@@ -594,6 +594,25 @@ shell-prompt> cat < foo
 ]]></source>
       </answer>
     </faq>
+
+    <faq id="properties-not-trimmed">
+      <question><code>ant</code> failed to build my program via javac
+      even when I put the needed jars in an external
+      <code>build.properties</code> file and reference them by
+      <code>pathelement</code> or <code>classpath refid</code>.</question>
+
+      <answer>
+
+        <p>When <code>ant</code> loads properties from an external
+        file it dosn't touch the value of properties, trailing blanks
+        will not be trimmed for example.</p>
+
+        <p>If the value represents a file path, like a jar needed to
+        compile, the task which requires the value, javac for example
+        would fail to compile since it can't find the file due to
+        trailing spaces.</p>
+      </answer>
+    </faq>
   </faqsection>
 
   <faqsection title="Ant and IDEs/Editors">
@@ -1086,6 +1105,27 @@ mv /tmp/foo $ANT_HOME/bin/antRun
         for <code>&lt;junit&gt;</code>, you still have to use a
         <code>&lt;taskdef&gt;</code> with a nested
         <code>&lt;classpath&gt;</code> to define the junit task.</p>
+      </answer>
+    </faq>
+
+    <faq id="winxp-jdk14-ant14">
+      <question>When running Ant 1.4 on Windows XP and JDK 1.4, I get
+      various errors when trying to <code>&lt;exec&gt;</code>, fork
+      <code>&lt;java&gt;</code> or access environment
+      variables.</question>
+
+      <answer>
+
+        <p>Ant &lt; 1.5 doesn&apos;t recognize Windows XP as a flavor
+        of Windows that runs <code>CMD.EXE</code> instead of
+        <code>COMMAND.COM</code>.  JDK 1.3 will tell Ant that Windows
+        XP is Windows 2000 so the problem doesn&apos;t show up
+        there.</p>
+
+        <p>Apart from upgrading to Ant 1.5 or better, setting the
+        environment variable <code>ANT_OPTS</code> to
+        <code>-Dos.name=Windows_NT</code> prior to invoking Ant has
+        been confirmed as a workaround.</p>
       </answer>
     </faq>
 
