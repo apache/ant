@@ -52,18 +52,28 @@ public abstract class ProjectComponent
         //HACK: NOOP execute - should be deleted in the future!
     }
 
-    /**
-     * Log a mesage with the give priority.
-     *
-     * @param msgLevel the message priority at which this message is to be
-     *      logged.
-     * @param msg Description of Parameter
-     */
-    public void log( String msg, int msgLevel )
+    public void log( final String message, int priority )
     {
-        if( project != null )
+        switch( priority )
         {
-            project.log( msg, msgLevel );
+            case Project.MSG_ERR:
+                getLogger().error( message );
+                break;
+            case Project.MSG_WARN:
+                getLogger().warn( message );
+                break;
+            case Project.MSG_INFO:
+                getLogger().info( message );
+                break;
+            case Project.MSG_VERBOSE:
+                getLogger().debug( message );
+                break;
+            case Project.MSG_DEBUG:
+                getLogger().debug( message );
+                break;
+
+            default:
+                getLogger().debug( message );
         }
     }
 }
