@@ -14,7 +14,6 @@ import org.apache.myrmidon.api.AbstractTask;
 import org.apache.myrmidon.api.TaskException;
 import org.apache.myrmidon.framework.java.ExecuteJava;
 import org.apache.myrmidon.framework.file.Path;
-import org.apache.tools.todo.types.PathUtil;
 
 /**
  * Taskdef for the JavaCC compiler compiler.

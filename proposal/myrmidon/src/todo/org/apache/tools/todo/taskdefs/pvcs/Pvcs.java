@@ -241,7 +241,6 @@ public class Pvcs
         // Capture output
         // build the command line from what we got the format is
         final Commandline cmd = buildPCLICommand();
-        getContext().debug( "Executing " + cmd.toString() );
 
         File tmp = null;
 
@@ -272,17 +271,9 @@ public class Pvcs
             massagePCLI( tmp, fileList );
             return fileList;
         }
-        catch( final ParseException pe )
+        catch( final Exception e )
         {
-            final String message = "Failed executing: " +
-                cmd.toString() + ". Exception: " + pe.getMessage();
-            throw new TaskException( message );
-        }
-        catch( final IOException ioe )
-        {
-            final String message = "Failed executing: " +
-                cmd.toString() + ". Exception: " + ioe.getMessage();
-            throw new TaskException( message );
+            throw new TaskException( "Failed execution.", e );
         }
         finally
         {

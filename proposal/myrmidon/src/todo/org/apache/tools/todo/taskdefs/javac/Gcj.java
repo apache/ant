@@ -10,7 +10,7 @@ package org.apache.tools.todo.taskdefs.javac;
 import org.apache.myrmidon.api.TaskException;
 import org.apache.tools.todo.types.Commandline;
 import org.apache.myrmidon.framework.file.Path;
-import org.apache.tools.todo.types.PathUtil;
+import org.apache.myrmidon.framework.file.FileListUtil;
 
 /**
  * The implementation of the gcj compiler. This is primarily a cut-and-paste
@@ -35,10 +35,7 @@ public class Gcj extends DefaultCompilerAdapter
         getTaskContext().debug( "Using gcj compiler" );
         cmd = setupGCJCommand();
 
-        int firstFileName = cmd.size();
-        logAndAddFilesToCompile( cmd );
-
-        return executeExternalCompile( cmd.getCommandline(), firstFileName ) == 0;
+        return executeExternalCompile( cmd );
     }
 
     protected Commandline setupGCJCommand()
@@ -83,7 +80,7 @@ public class Gcj extends DefaultCompilerAdapter
         }
 
         cmd.addArgument( "-classpath" );
-        cmd.addArgument( PathUtil.formatPath( classpath, getTaskContext() ) );
+        cmd.addArgument( FileListUtil.formatPath( classpath, getTaskContext() ) );
 
         if( m_encoding != null )
         {

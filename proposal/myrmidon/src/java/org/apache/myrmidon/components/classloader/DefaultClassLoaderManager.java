@@ -30,7 +30,7 @@ import org.apache.myrmidon.interfaces.classloader.ClassLoaderException;
 import org.apache.myrmidon.interfaces.classloader.ClassLoaderManager;
 import org.apache.myrmidon.interfaces.deployer.DeploymentException;
 import org.apache.myrmidon.interfaces.extensions.ExtensionManager;
-import org.apache.tools.todo.types.PathUtil;
+import org.apache.aut.nativelib.PathUtil;
 
 /**
  * A default implementation of a ClassLoader manager.

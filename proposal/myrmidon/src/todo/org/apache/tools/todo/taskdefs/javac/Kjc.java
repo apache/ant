@@ -11,7 +11,7 @@ import java.lang.reflect.Method;
 import org.apache.myrmidon.api.TaskException;
 import org.apache.tools.todo.types.Commandline;
 import org.apache.myrmidon.framework.file.Path;
-import org.apache.tools.todo.types.PathUtil;
+import org.apache.myrmidon.framework.file.FileListUtil;
 
 /**
  * The implementation of the Java compiler for KJC. This is primarily a
@@ -99,7 +99,7 @@ public class Kjc extends DefaultCompilerAdapter
         cp.add( classpath );
         cp.add( src );
 
-        cmd.addArgument( PathUtil.formatPath( cp, getTaskContext() ) );
+        cmd.addArgument( FileListUtil.formatPath( cp, getTaskContext() ) );
 
         // kjc-1.5A doesn't support -encoding option now.
         // but it will be supported near the feature.
@@ -126,7 +126,8 @@ public class Kjc extends DefaultCompilerAdapter
 
         addCurrentCompilerArgs( cmd );
 
-        logAndAddFilesToCompile( cmd );
+        logFilesToCompile( cmd );
+        addFilesToCompile( cmd );
         return cmd;
     }
 }

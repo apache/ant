@@ -33,12 +33,11 @@ public class Sj extends DefaultCompilerAdapter
     {
         getTaskContext().debug( "Using symantec java compiler" );
 
-        Commandline cmd = setupJavacCommand();
+        Commandline cmd = new Commandline();
+        setupJavacCommandlineSwitches( cmd, false );
         cmd.setExecutable( "sj" );
 
-        int firstFileName = cmd.size() - m_compileList.length;
-
-        return executeExternalCompile( cmd.getCommandline(), firstFileName ) == 0;
+        return executeExternalCompile( cmd );
     }
 
 }

@@ -15,8 +15,9 @@ import org.apache.avalon.excalibur.util.StringUtil;
 import org.apache.myrmidon.api.AbstractTask;
 import org.apache.myrmidon.api.TaskException;
 import org.apache.tools.todo.types.Commandline;
+import org.apache.tools.todo.util.FileUtils;
 import org.apache.myrmidon.framework.file.Path;
-import org.apache.tools.todo.types.PathUtil;
+import org.apache.myrmidon.framework.file.FileListUtil;
 
 /**
  * Task to generate JNI header files using javah. This task can take the
@@ -207,10 +208,12 @@ public class Javah
      * &qout;niceSourceList&quot;
      */
     private void logAndAddFilesToCompile( final Commandline cmd )
+        throws TaskException
     {
-        int n = 0;
-        getContext().debug( "Compilation args: " + cmd.toString() );
+        final String[] args = cmd.getArguments();
+        getContext().debug( "Compilation args: " + FileUtils.formatCommandLine( args ) );
 
+        int n = 0;
         StringBuffer niceClassList = new StringBuffer();
         if( m_cls != null )
         {
@@ -268,7 +271,7 @@ public class Javah
         if( m_classpath != null )
         {
             cmd.addArgument( "-classpath" );
-            cmd.addArgument( PathUtil.formatPath( m_classpath, getContext() ) );
+            cmd.addArgument( FileListUtil.formatPath( m_classpath, getContext() ) );
         }
 
         if( m_verbose )
@@ -296,7 +299,7 @@ public class Javah
         if( m_bootclasspath != null )
         {
             cmd.addArgument( "-bootclasspath" );
-            cmd.addArgument( PathUtil.formatPath( m_bootclasspath, getContext() ) );
+            cmd.addArgument( FileListUtil.formatPath( m_bootclasspath, getContext() ) );
         }
 
         logAndAddFilesToCompile( cmd );

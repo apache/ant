@@ -10,7 +10,7 @@ package org.apache.tools.todo.taskdefs.javac;
 import org.apache.myrmidon.api.TaskException;
 import org.apache.tools.todo.types.Commandline;
 import org.apache.myrmidon.framework.file.Path;
-import org.apache.tools.todo.types.PathUtil;
+import org.apache.myrmidon.framework.file.FileListUtil;
 
 /**
  * The implementation of the jvc compiler from microsoft. This is primarily a
@@ -68,7 +68,7 @@ public class Jvc extends DefaultCompilerAdapter
 
         // Add the Classpath before the "internal" one.
         cmd.addArgument( "/cp:p" );
-        cmd.addArgument( PathUtil.formatPath( classpath, getTaskContext() ) );
+        cmd.addArgument( FileListUtil.formatPath( classpath, getTaskContext() ) );
 
         // Enable MS-Extensions and ...
         cmd.addArgument( "/x-" );
@@ -92,9 +92,6 @@ public class Jvc extends DefaultCompilerAdapter
 
         addCurrentCompilerArgs( cmd );
 
-        int firstFileName = cmd.size();
-        logAndAddFilesToCompile( cmd );
-
-        return executeExternalCompile( cmd.getCommandline(), firstFileName ) == 0;
+        return executeExternalCompile( cmd );
     }
 }

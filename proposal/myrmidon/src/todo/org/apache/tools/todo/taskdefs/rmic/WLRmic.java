@@ -10,6 +10,7 @@ package org.apache.tools.todo.taskdefs.rmic;
 import java.lang.reflect.Method;
 import org.apache.myrmidon.api.TaskException;
 import org.apache.myrmidon.api.TaskContext;
+import org.apache.myrmidon.framework.java.ExecuteJava;
 import org.apache.tools.todo.types.Commandline;
 import org.apache.tools.todo.taskdefs.rmic.DefaultRmicAdapter;
 
@@ -45,33 +46,13 @@ public class WLRmic extends DefaultRmicAdapter
         throws TaskException
     {
         getTaskContext().debug( "Using WebLogic rmic" );
-        Commandline cmd = setupRmicCommand( new String[]{"-noexit"} );
 
-        try
-        {
-            // Create an instance of the rmic
-            Class c = Class.forName( "weblogic.rmic" );
-            Method doRmic = c.getMethod( "main",
-                                         new Class[]{String[].class} );
-            doRmic.invoke( null, new Object[]{cmd.getArguments()} );
-            return true;
-        }
-        catch( ClassNotFoundException ex )
-        {
-            throw new TaskException( "Cannot use WebLogic rmic, as it is not available" +
-                                     " A common solution is to set the environment variable" +
-                                     " CLASSPATH." );
-        }
-        catch( Exception ex )
-        {
-            if( ex instanceof TaskException )
-            {
-                throw (TaskException)ex;
-            }
-            else
-            {
-                throw new TaskException( "Error starting WebLogic rmic: ", ex );
-            }
-        }
+        final ExecuteJava exe = new ExecuteJava();
+        exe.setClassName( "weblogic.rmic" );
+        final Commandline cmd = setupRmicCommand( new String[]{"-noexit"} );
+        exe.getArguments().addArguments( cmd );
+
+        exe.execute( getTaskContext() );
+        return true;
     }
 }

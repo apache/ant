@@ -9,6 +9,7 @@ package org.apache.tools.todo.taskdefs.jsp.compilers;
 
 import org.apache.myrmidon.api.TaskException;
 import org.apache.myrmidon.api.TaskContext;
+import org.apache.myrmidon.framework.java.ExecuteJava;
 import org.apache.antlib.java.JavaTask;
 import org.apache.tools.todo.taskdefs.jsp.JspC;
 import org.apache.tools.todo.types.Argument;
@@ -30,47 +31,28 @@ public class JasperC
         throws TaskException
     {
         getTaskContext().debug( "Using jasper compiler" );
-        Commandline cmd = setupJasperCommand();
 
-        try
+        final ExecuteJava exe = new ExecuteJava();
+        exe.setClassName( "org.apache.jasper.JspC" );
+        if( getJspc().getClasspath() != null )
         {
-            // Create an instance of the compiler, redirecting output to
-            // the project log
-            //FIXME
-            JavaTask java = null;//(Java)( getJspc().getProject() ).createTask( "java" );
-            if( getJspc().getClasspath() != null )
-            {
-                java.addClasspath( getJspc().getClasspath() );
-            }
-            java.setClassname( "org.apache.jasper.JspC" );
-            String args[] = cmd.getArguments();
-            for( int i = 0; i < args.length; i++ )
-            {
-                java.addArg( new Argument( args[ i ] ) );
-            }
-            java.execute();
-            return true;
+            exe.getClassPath().add( getJspc().getClasspath() );
         }
-        catch( Exception ex )
-        {
-            if( ex instanceof TaskException )
-            {
-                throw (TaskException)ex;
-            }
-            else
-            {
-                throw new TaskException( "Error running jsp compiler: ",
-                                         ex );
-            }
-        }
+
+        setupJasperCommand( exe.getArguments() );
+
+        // Create an instance of the compiler, redirecting output to
+        // the project log
+        exe.execute( getTaskContext() );
+        return true;
     }
 
     /*
      * ------------------------------------------------------------
      */
-    private Commandline setupJasperCommand()
+    private void setupJasperCommand( final Commandline cmd )
+        throws TaskException
     {
-        Commandline cmd = new Commandline();
         JspC jspc = getJspc();
         if( jspc.getDestdir() != null )
         {
@@ -106,9 +88,5 @@ public class JasperC
             cmd.addArgument( jspc.getUribase().toString() );
         }
         logAndAddFilesToCompile( getJspc(), getJspc().getCompileList(), cmd );
-        return cmd;
     }
-    /*
-     * ------------------------------------------------------------
-     */
 }

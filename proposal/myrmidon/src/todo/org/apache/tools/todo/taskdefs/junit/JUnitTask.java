@@ -19,13 +19,13 @@ import org.apache.myrmidon.api.AbstractTask;
 import org.apache.myrmidon.api.TaskContext;
 import org.apache.myrmidon.api.TaskException;
 import org.apache.myrmidon.framework.file.Path;
+import org.apache.myrmidon.framework.file.FileListUtil;
 import org.apache.myrmidon.framework.java.ExecuteJava;
 import org.apache.tools.todo.types.Argument;
 import org.apache.tools.todo.types.Commandline;
 import org.apache.tools.todo.types.EnumeratedAttribute;
 import org.apache.tools.todo.types.EnvironmentData;
 import org.apache.tools.todo.types.EnvironmentVariable;
-import org.apache.tools.todo.types.PathUtil;
 import org.apache.tools.todo.types.SysProperties;
 
 /**
@@ -640,7 +640,7 @@ public class JUnitTask extends AbstractTask
         try
         {
             getContext().debug( "Using System properties " + System.getProperties() );
-            final ClassLoader classLoader = PathUtil.createClassLoader( classPath, getContext() );
+            final ClassLoader classLoader = FileListUtil.createClassLoader( classPath, getContext() );
 
             runner = new JUnitTestRunner( test,
                                           test.getHaltonerror(),

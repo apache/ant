@@ -152,14 +152,4 @@ public class Commandline
             addArgument( parts[ i ] );
         }
     }
-
-    public int size()
-    {
-        return getCommandline().length;
-    }
-
-    public String toString()
-    {
-        return StringUtil.join( getCommandline(), " " );
-    }
 }

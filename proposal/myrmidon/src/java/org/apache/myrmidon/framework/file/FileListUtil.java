@@ -5,70 +5,28 @@
  * version 1.1, a copy of which has been included  with this distribution in
  * the LICENSE.txt file.
  */
-package org.apache.tools.todo.types;
+package org.apache.myrmidon.framework.file;
 
+import org.apache.myrmidon.api.TaskContext;
+import org.apache.myrmidon.api.TaskException;
+import org.apache.myrmidon.interfaces.classloader.ClassLoaderManager;
+import org.apache.myrmidon.interfaces.classloader.ClassLoaderException;
+import org.apache.aut.nativelib.PathUtil;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
-import java.util.Locale;
-import org.apache.myrmidon.api.TaskContext;
-import org.apache.myrmidon.api.TaskException;
-import org.apache.myrmidon.framework.file.Path;
-import org.apache.myrmidon.framework.file.FileList;
-import org.apache.myrmidon.interfaces.classloader.ClassLoaderManager;
-import org.apache.myrmidon.interfaces.classloader.ClassLoaderException;
-import org.apache.aut.nativelib.Os;
 
 /**
- * Utilities for operating on Path objects.
+ * Utility methods for dealing with {@link FileList} objects.
  *
  * @author <a href="mailto:peter@apache.org">Peter Donald</a>
+ * @author <a href="mailto:adammurdoch@apache.org">Adam Murdoch</a>
  * @version $Revision$ $Date$
  */
-public class PathUtil
+public final class FileListUtil
 {
-    /**
-     * Formats a path into its native representation.
-     */
-    public static String formatPath( final String[] path )
+    private FileListUtil()
     {
-        // empty path return empty string
-        if( path.length == 0 )
-        {
-            return "";
-        }
-
-        // path containing one or more elements
-        final StringBuffer result = new StringBuffer( path[ 0 ].toString() );
-        for( int i = 1; i < path.length; i++ )
-        {
-            result.append( File.pathSeparatorChar );
-            result.append( path[ i ] );
-        }
-
-        return result.toString();
-    }
-
-    /**
-     * Formats a path into its native representation.
-     */
-    public static String formatPath( final File[] path )
-    {
-        // empty path return empty string
-        if( path.length == 0 )
-        {
-            return "";
-        }
-
-        // path containing one or more elements
-        final StringBuffer result = new StringBuffer( path[ 0 ].toString() );
-        for( int i = 1; i < path.length; i++ )
-        {
-            result.append( File.pathSeparatorChar );
-            result.append( path[ i ].getAbsolutePath() );
-        }
-
-        return result.toString();
     }
 
     /**
@@ -78,7 +36,7 @@ public class PathUtil
         throws TaskException
     {
         final String[] list = path.listFiles( context );
-        return formatPath( list );
+        return PathUtil.formatPath( list );
     }
 
     /**
@@ -141,25 +99,4 @@ public class PathUtil
         }
     }
 
-    /**
-     * Adds the contents of a set of directories to a path.
-     */
-    public static void addExtdirs( final Path toPath,
-                                   final Path extDirs,
-                                   final TaskContext context )
-        throws TaskException
-    {
-        final String[] dirs = extDirs.listFiles( context );
-        for( int i = 0; i < dirs.length; i++ )
-        {
-            final File dir = new File( dirs[ i ] );
-            if( dir.exists() && dir.isDirectory() )
-            {
-                final FileSet fileSet = new FileSet();
-                fileSet.setDir( dir );
-                fileSet.setIncludes( "*" );
-                toPath.addFileset( fileSet );
-            }
-        }
-    }
 }

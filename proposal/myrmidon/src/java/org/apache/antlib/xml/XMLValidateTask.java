@@ -16,9 +16,9 @@ import java.util.Hashtable;
 import org.apache.myrmidon.api.AbstractTask;
 import org.apache.myrmidon.api.TaskException;
 import org.apache.myrmidon.framework.file.Path;
+import org.apache.myrmidon.framework.file.FileListUtil;
 import org.apache.tools.todo.types.DirectoryScanner;
 import org.apache.tools.todo.types.FileSet;
-import org.apache.tools.todo.types.PathUtil;
 import org.apache.tools.todo.types.ScannerUtil;
 import org.xml.sax.EntityResolver;
 import org.xml.sax.InputSource;
@@ -311,7 +311,7 @@ public class XMLValidateTask
         {
             // load the parser class
             // with JAXP, we would use a SAXParser factory
-            final ClassLoader classLoader = PathUtil.createClassLoader( m_classpath, getContext() );
+            final ClassLoader classLoader = FileListUtil.createClassLoader( m_classpath, getContext() );
             final Class readerClass = classLoader.loadClass( m_readerClassName );
 
             // then check it implements XMLReader

@@ -19,7 +19,7 @@ import org.apache.myrmidon.api.TaskException;
 import org.apache.myrmidon.framework.java.ExecuteJava;
 import org.apache.tools.todo.types.Argument;
 import org.apache.myrmidon.framework.file.Path;
-import org.apache.tools.todo.types.PathUtil;
+import org.apache.aut.nativelib.PathUtil;
 
 /**
  * Simple Metamata MParse task based on the original written by <a

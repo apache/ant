@@ -20,7 +20,7 @@ import org.apache.tools.todo.types.Argument;
 import org.apache.tools.todo.types.Commandline;
 import org.apache.tools.todo.types.FileSet;
 import org.apache.myrmidon.framework.file.Path;
-import org.apache.tools.todo.types.PathUtil;
+import org.apache.aut.nativelib.PathUtil;
 
 /**
  * Convenient task to run Sitraka JProbe Coverage from Ant. Options are pretty
@@ -304,7 +304,7 @@ public class Coverage
         params.addArguments( m_vmArgs );
 
         // classpath
-        final String[] classpath = m_classpath.listFiles();
+        final String[] classpath = m_classpath.listFiles( getContext() );
         if( classpath.length > 0 )
         {
             params.addArgument( "-classpath" );

@@ -9,8 +9,8 @@ package org.apache.antlib.java;
 
 import org.apache.myrmidon.api.TaskException;
 import org.apache.myrmidon.framework.file.Path;
+import org.apache.myrmidon.framework.file.FileListUtil;
 import org.apache.tools.todo.types.Commandline;
-import org.apache.tools.todo.types.PathUtil;
 import java.io.File;
 import java.lang.reflect.Method;
 
@@ -84,7 +84,7 @@ public class JavacAdaptor
         classpath.add( getClassPath() );
 
         cmd.addArgument( "-classpath" );
-        cmd.addArgument( PathUtil.formatPath( classpath, getContext() ) );
+        cmd.addArgument( FileListUtil.formatPath( classpath, getContext() ) );
 
         if( isDeprecation() )
         {

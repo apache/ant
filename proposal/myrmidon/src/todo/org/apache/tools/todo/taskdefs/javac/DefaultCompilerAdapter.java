@@ -18,7 +18,10 @@ import org.apache.myrmidon.api.TaskException;
 import org.apache.myrmidon.framework.Execute;
 import org.apache.tools.todo.types.Commandline;
 import org.apache.myrmidon.framework.file.Path;
-import org.apache.tools.todo.types.PathUtil;
+import org.apache.myrmidon.framework.file.FileListUtil;
+import org.apache.tools.todo.types.FileSet;
+import org.apache.tools.todo.util.FileUtils;
+import org.apache.aut.nativelib.PathUtil;
 
 /**
  * This is the default implementation for the CompilerAdapter interface.
@@ -114,7 +117,8 @@ public abstract class DefaultCompilerAdapter
     {
         Commandline cmd = new Commandline();
         setupJavacCommandlineSwitches( cmd, debugLevelCheck );
-        logAndAddFilesToCompile( cmd );
+        logFilesToCompile( cmd );
+        addFilesToCompile( cmd );
         return cmd;
     }
 
@@ -176,10 +180,10 @@ public abstract class DefaultCompilerAdapter
         }
 
         cmd.addArgument( "-classpath" );
-        cmd.addArgument( PathUtil.formatPath( classpath, getTaskContext() ) );
+        cmd.addArgument( FileListUtil.formatPath( classpath, getTaskContext() ) );
 
         cmd.addArgument( "-sourcepath" );
-        cmd.addArgument( PathUtil.formatPath( src, getTaskContext() ) );
+        cmd.addArgument( FileListUtil.formatPath( src, getTaskContext() ) );
 
         if( target != null )
         {
@@ -197,7 +201,7 @@ public abstract class DefaultCompilerAdapter
         if( m_extdirs != null )
         {
             cmd.addArgument( "-extdirs" );
-            cmd.addArgument( PathUtil.formatPath( m_extdirs, getTaskContext() ) );
+            cmd.addArgument( FileListUtil.formatPath( m_extdirs, getTaskContext() ) );
         }
 
         if( m_encoding != null )
@@ -255,7 +259,8 @@ public abstract class DefaultCompilerAdapter
         Commandline cmd = new Commandline();
         setupModernJavacCommandlineSwitches( cmd );
 
-        logAndAddFilesToCompile( cmd );
+        logFilesToCompile( cmd );
+        addFilesToCompile( cmd );
         return cmd;
     }
 
@@ -312,14 +317,14 @@ public abstract class DefaultCompilerAdapter
     /**
      * Do the compile with the specified arguments.
      *
-     * @param args - arguments to pass to process on command line
-     * @param firstFileName - index of the first source file in args
-     * @return Description of the Returned Value
+     * @param cmd - the command line, to which the names of the files to
+     *        compile are added.
      */
-    protected int executeExternalCompile( String[] args, int firstFileName )
+    protected boolean executeExternalCompile( final Commandline cmd )
         throws TaskException
     {
-        String[] commandArray = null;
+        logFilesToCompile( cmd );
+
         File tmpFile = null;
 
         try
@@ -329,43 +334,38 @@ public abstract class DefaultCompilerAdapter
              * long command lines - no, not only Windows ;-).
              *
              * POSIX seems to define a lower limit of 4k, so use a temporary
-             * file if the total length of the command line exceeds this limit.
+             * file.
              */
-            if( StringUtil.join( args, " " ).length() > 4096 )
+            try
             {
-                PrintWriter out = null;
+                tmpFile = File.createTempFile( "javac", "", new File( "." ) );
+                final FileWriter fout = new FileWriter( tmpFile );
                 try
                 {
-                    tmpFile = File.createTempFile( "jikes", "", new File( "." ) );
-                    out = new PrintWriter( new FileWriter( tmpFile ) );
-                    for( int i = firstFileName; i < args.length; i++ )
+                    final PrintWriter out = new PrintWriter( fout );
+                    for( int i = 0; i < m_compileList.length; i++ )
                     {
-                        out.println( args[ i ] );
+                        File file = m_compileList[i ];
+                        out.println( file.getAbsolutePath() );
                     }
-                    out.flush();
-                    commandArray = new String[ firstFileName + 1 ];
-                    System.arraycopy( args, 0, commandArray, 0, firstFileName );
-                    commandArray[ firstFileName ] = "@" + tmpFile.getAbsolutePath();
-                }
-                catch( final IOException ioe )
-                {
-                    throw new TaskException( "Error creating temporary file", ioe );
+                    out.close();
                 }
                 finally
                 {
-                    IOUtil.shutdownWriter( out );
+                    IOUtil.shutdownWriter( fout );
                 }
             }
-            else
+            catch( final IOException ioe )
             {
-                commandArray = args;
+                throw new TaskException( "Error creating temporary file", ioe );
             }
+
+            cmd.addArgument( "@" + tmpFile.getAbsolutePath() );
 
             final Execute exe = new Execute();
             exe.setIgnoreReturnCode( true );
-            final String[] commandline = commandArray;
-            exe.setCommandline( new Commandline( commandline ) );
-            return exe.execute( getTaskContext() );
+            exe.setCommandline( cmd );
+            return exe.execute( getTaskContext() ) == 0;
         }
         finally
         {
@@ -382,9 +382,11 @@ public abstract class DefaultCompilerAdapter
      *
      * @param cmd Description of Parameter
      */
-    protected void logAndAddFilesToCompile( Commandline cmd )
+    protected void logFilesToCompile( final Commandline cmd )
+        throws TaskException
     {
-        getTaskContext().debug( "Compilation args: " + cmd.toString() );
+        final String[] cmdline = cmd.getArguments();
+        getTaskContext().debug( "Compilation args: " + FileUtils.formatCommandLine( cmdline ) );
 
         StringBuffer niceSourceList = new StringBuffer( "File" );
         if( m_compileList.length != 1 )
@@ -398,11 +400,22 @@ public abstract class DefaultCompilerAdapter
         for( int i = 0; i < m_compileList.length; i++ )
         {
             String arg = m_compileList[ i ].getAbsolutePath();
-            cmd.addArgument( arg );
             niceSourceList.append( "    " + arg + StringUtil.LINE_SEPARATOR );
         }
 
         getTaskContext().debug( niceSourceList.toString() );
+    }
+
+    /**
+     * Adds the files to compile to a command-line
+     */
+    protected void addFilesToCompile( final Commandline cmd )
+    {
+        for( int i = 0; i < m_compileList.length; i++ )
+        {
+            File file = m_compileList[i ];
+            cmd.addArgument( file );
+        }
     }
 
     /**
@@ -426,7 +439,29 @@ public abstract class DefaultCompilerAdapter
             }
         }
 
-        PathUtil.addExtdirs( path, m_extdirs, getTaskContext() );
+        addExtdirs( path, m_extdirs, getTaskContext() );
+    }
+
+    /**
+     * Adds the contents of a set of directories to a path.
+     */
+    public static void addExtdirs( final Path toPath,
+                                   final Path extDirs,
+                                   final TaskContext context )
+        throws TaskException
+    {
+        final String[] dirs = extDirs.listFiles( context );
+        for( int i = 0; i < dirs.length; i++ )
+        {
+            final File dir = new File( dirs[ i ] );
+            if( dir.exists() && dir.isDirectory() )
+            {
+                final FileSet fileSet = new FileSet();
+                fileSet.setDir( dir );
+                fileSet.setIncludes( "*" );
+                toPath.addFileset( fileSet );
+            }
+        }
     }
 }
 

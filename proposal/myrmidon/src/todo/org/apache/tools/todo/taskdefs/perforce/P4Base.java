@@ -152,14 +152,6 @@ public abstract class P4Base
             }
             cmd.addLine( command );
 
-            String[] cmdline = cmd.getCommandline();
-            String cmdl = "";
-            for( int i = 0; i < cmdline.length; i++ )
-            {
-                cmdl += cmdline[ i ] + " ";
-            }
-
-            getContext().debug( "Execing " + cmdl );
             if( handler == null )
             {
                 handler = this;

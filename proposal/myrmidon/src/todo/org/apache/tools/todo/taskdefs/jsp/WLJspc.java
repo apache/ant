@@ -16,7 +16,7 @@ import org.apache.myrmidon.framework.java.ExecuteJava;
 import org.apache.tools.todo.taskdefs.MatchingTask;
 import org.apache.tools.todo.types.DirectoryScanner;
 import org.apache.myrmidon.framework.file.Path;
-import org.apache.tools.todo.types.PathUtil;
+import org.apache.myrmidon.framework.file.FileListUtil;
 
 /**
  * Class to precompile JSP's using weblogic's jsp compiler (weblogic.jspc)
@@ -190,7 +190,7 @@ public class WLJspc extends MatchingTask
         // Does not take the classpath from the env....
         // Am i missing something about the Java task??
         args[ j++ ] = "-classpath";
-        args[ j++ ] = PathUtil.formatPath( compileClasspath, getContext() );
+        args[ j++ ] = FileListUtil.formatPath( compileClasspath, getContext() );
 
         this.scanDir( files );
         getContext().info( "Compiling " + filesToDo.size() + " JSP files" );

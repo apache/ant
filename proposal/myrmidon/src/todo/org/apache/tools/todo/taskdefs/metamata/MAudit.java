@@ -11,7 +11,7 @@ import java.io.File;
 import java.util.ArrayList;
 import org.apache.myrmidon.api.TaskException;
 import org.apache.myrmidon.framework.file.Path;
-import org.apache.tools.todo.types.PathUtil;
+import org.apache.myrmidon.framework.file.FileListUtil;
 
 /**
  * Metamata Audit evaluates Java code for programming errors, weaknesses, and
@@ -129,7 +129,7 @@ public class MAudit
         // don't forget to modify the pattern if you change the options reporting
         classpath.add( getClassPath() );
 
-        final String formattedClasspath = PathUtil.formatPath( classpath, getContext() );
+        final String formattedClasspath = FileListUtil.formatPath( classpath, getContext() );
         if( formattedClasspath.length() > 0 )
         {
             options.add( "-classpath" );
@@ -162,7 +162,7 @@ public class MAudit
         if( m_unused )
         {
             options.add( "-unused" );
-            options.add( PathUtil.formatPath( m_searchPath, getContext() ) );
+            options.add( FileListUtil.formatPath( m_searchPath, getContext() ) );
         }
         addAllArrayList( options, getIncludedFiles().keySet().iterator() );
         return options;

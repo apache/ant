@@ -21,7 +21,7 @@ import org.apache.tools.todo.taskdefs.javac.DefaultCompilerAdapter;
 import org.apache.tools.todo.taskdefs.javac.Javac;
 import org.apache.tools.todo.types.DirectoryScanner;
 import org.apache.myrmidon.framework.file.Path;
-import org.apache.tools.todo.types.PathUtil;
+import org.apache.myrmidon.framework.file.FileListUtil;
 import org.apache.antlib.java.JavaTask;
 
 /**
@@ -774,7 +774,7 @@ public class IContract extends MatchingTask
                 }
                 iControlProps.setProperty( "sourceRoot", srcDir.getAbsolutePath() );
                 iControlProps.setProperty( "classRoot", classDir.getAbsolutePath() );
-                final String classpath = PathUtil.formatPath( afterInstrumentationClasspath, getContext() );
+                final String classpath = FileListUtil.formatPath( afterInstrumentationClasspath, getContext() );
                 iControlProps.setProperty( "classpath", classpath );
                 iControlProps.setProperty( "controlFile", controlFile.getAbsolutePath() );
                 iControlProps.setProperty( "targetsFile", targets.getAbsolutePath() );

@@ -12,8 +12,8 @@ import org.apache.myrmidon.api.TaskException;
 import org.apache.myrmidon.framework.Execute;
 import org.apache.myrmidon.framework.java.JavaRuntimeClassPath;
 import org.apache.myrmidon.framework.file.Path;
+import org.apache.myrmidon.framework.file.FileListUtil;
 import org.apache.tools.todo.types.Commandline;
-import org.apache.tools.todo.types.PathUtil;
 
 /**
  * An adaptor for the jikes compiler.
@@ -74,7 +74,7 @@ public class JikesAdaptor
         cmd.addArgument( getDestDir() );
 
         cmd.addArgument( "-classpath" );
-        cmd.addArgument( PathUtil.formatPath( classpath, getContext() ) );
+        cmd.addArgument( FileListUtil.formatPath( classpath, getContext() ) );
 
         // TODO - make this configurable
         cmd.addArgument( "+E" );

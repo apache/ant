@@ -14,8 +14,9 @@ import org.apache.myrmidon.api.TaskContext;
 import org.apache.myrmidon.api.TaskException;
 import org.apache.myrmidon.framework.FileNameMapper;
 import org.apache.tools.todo.types.Commandline;
+import org.apache.tools.todo.util.FileUtils;
 import org.apache.myrmidon.framework.file.Path;
-import org.apache.tools.todo.types.PathUtil;
+import org.apache.myrmidon.framework.file.FileListUtil;
 
 /**
  * This is the default implementation for the RmicAdapter interface. Currently,
@@ -106,10 +107,7 @@ public abstract class DefaultRmicAdapter
 
         if( options != null )
         {
-            for( int i = 0; i < options.length; i++ )
-            {
-                cmd.addArgument( options[ i ] );
-            }
+            cmd.addArguments( options );
         }
 
         Path classpath = getCompileClasspath();
@@ -120,11 +118,11 @@ public abstract class DefaultRmicAdapter
         if( attributes.getExtdirs() != null )
         {
             cmd.addArgument( "-extdirs" );
-            cmd.addArgument( PathUtil.formatPath( attributes.getExtdirs(), getTaskContext() ) );
+            cmd.addArgument( FileListUtil.formatPath( attributes.getExtdirs(), getTaskContext() ) );
         }
 
         cmd.addArgument( "-classpath" );
-        cmd.addArgument( PathUtil.formatPath( classpath, getTaskContext() ) );
+        cmd.addArgument( FileListUtil.formatPath( classpath, getTaskContext() ) );
 
         String stubVersion = attributes.getStubVersion();
         if( null != stubVersion )
@@ -222,11 +220,13 @@ public abstract class DefaultRmicAdapter
      *
      * @param cmd Description of Parameter
      */
-    protected void logAndAddFilesToCompile( Commandline cmd )
+    protected void logAndAddFilesToCompile( final Commandline cmd )
+        throws TaskException
     {
         ArrayList compileList = attributes.getCompileList();
 
-        getTaskContext().debug( "Compilation args: " + cmd.toString() );
+        final String[] args = cmd.getArguments();
+        getTaskContext().debug( "Compilation args: " + FileUtils.formatCommandLine( args ) );
 
         StringBuffer niceSourceList = new StringBuffer( "File" );
         if( compileList.size() != 1 )

@@ -33,10 +33,10 @@ import java.util.StringTokenizer;
 import org.apache.myrmidon.api.AbstractTask;
 import org.apache.myrmidon.api.TaskException;
 import org.apache.myrmidon.framework.file.Path;
+import org.apache.myrmidon.framework.file.FileListUtil;
 import org.apache.tools.todo.types.DirectoryScanner;
 import org.apache.tools.todo.types.EnumeratedAttribute;
 import org.apache.tools.todo.types.FileSet;
-import org.apache.tools.todo.types.PathUtil;
 import org.apache.tools.todo.types.ScannerUtil;
 
 /**
@@ -417,7 +417,7 @@ public class SQLExec
         // Load the driver using the
         try
         {
-            final ClassLoader classLoader = PathUtil.createClassLoader( classpath, getContext() );
+            final ClassLoader classLoader = FileListUtil.createClassLoader( classpath, getContext() );
             final Class dc = classLoader.loadClass( driver );
             driverInstance = (Driver)dc.newInstance();
         }

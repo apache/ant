@@ -15,7 +15,7 @@ import java.util.ArrayList;
 import org.apache.myrmidon.api.TaskException;
 import org.apache.tools.todo.taskdefs.exec.ExecuteStreamHandler;
 import org.apache.myrmidon.framework.file.Path;
-import org.apache.tools.todo.types.PathUtil;
+import org.apache.myrmidon.framework.file.FileListUtil;
 
 /**
  * Calculates global complexity and quality metrics on Java source code. You
@@ -132,7 +132,7 @@ public class MMetrics extends AbstractMetamataTask
         // don't forget to modify the pattern if you change the options reporting
         classpath.add( getClassPath() );
 
-        final String formattedClasspath = PathUtil.formatPath( classpath, getContext() );
+        final String formattedClasspath = FileListUtil.formatPath( classpath, getContext() );
         if( formattedClasspath.length() > 0 )
         {
             options.add( "-classpath" );

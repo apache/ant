@@ -9,10 +9,10 @@ package org.apache.myrmidon.framework.file;
 
 import org.apache.aut.converter.AbstractConverter;
 import org.apache.aut.converter.ConverterException;
+import org.apache.aut.nativelib.PathUtil;
 import org.apache.myrmidon.api.TaskContext;
 import org.apache.myrmidon.api.TaskException;
 import org.apache.myrmidon.framework.file.FileList;
-import org.apache.tools.todo.types.PathUtil;
 
 /**
  * Converters from FileList to String.

@@ -15,7 +15,7 @@ import java.util.Properties;
 import org.apache.myrmidon.api.AbstractTask;
 import org.apache.myrmidon.api.TaskException;
 import org.apache.myrmidon.framework.file.Path;
-import org.apache.tools.todo.types.PathUtil;
+import org.apache.myrmidon.framework.file.FileListUtil;
 
 /**
  * Will set a Project property. Used to be a hack in ProjectHelper Will not
@@ -120,7 +120,7 @@ public class Property
         getContext().debug( "Resource Loading " + name );
         try
         {
-            final ClassLoader classLoader = PathUtil.createClassLoader( m_classpath, getContext() );
+            final ClassLoader classLoader = FileListUtil.createClassLoader( m_classpath, getContext() );
             final InputStream is = classLoader.getResourceAsStream( name );
 
             if( is != null )

@@ -11,8 +11,10 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import org.apache.avalon.excalibur.util.StringUtil;
 import org.apache.myrmidon.api.TaskContext;
+import org.apache.myrmidon.api.TaskException;
 import org.apache.tools.todo.taskdefs.jsp.JspC;
 import org.apache.tools.todo.types.Commandline;
+import org.apache.tools.todo.util.FileUtils;
 
 /**
  * This is the default implementation for the CompilerAdapter interface. This is
@@ -60,8 +62,10 @@ public abstract class DefaultCompilerAdapter
     protected void logAndAddFilesToCompile( JspC jspc,
                                             ArrayList compileList,
                                             Commandline cmd )
+        throws TaskException
     {
-        getTaskContext().debug( "Compilation args: " + cmd.toString() );
+        final String[] args = cmd.getArguments();
+        getTaskContext().debug( "Compilation args: " + FileUtils.formatCommandLine( args ) );
 
         StringBuffer niceSourceList = new StringBuffer( "File" );
         if( compileList.size() != 1 )

@@ -11,7 +11,7 @@ import org.apache.myrmidon.api.TaskContext;
 import org.apache.myrmidon.api.TaskException;
 import org.apache.myrmidon.framework.conditions.Condition;
 import org.apache.myrmidon.framework.file.Path;
-import org.apache.tools.todo.types.PathUtil;
+import org.apache.myrmidon.framework.file.FileListUtil;
 
 /**
  * An abstract condition which checks for the availability of a particular
@@ -46,6 +46,6 @@ public abstract class AbstractAvailableCondition
      */
     protected ClassLoader buildClassLoader( final TaskContext context ) throws TaskException
     {
-        return PathUtil.createClassLoader( m_classpath, context );
+        return FileListUtil.createClassLoader( m_classpath, context );
     }
 }
