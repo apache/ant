@@ -289,7 +289,7 @@ public class XMLValidateTask
         try
         {
             getLogger().debug( "Validating " + afile.getName() + "... " );
-            m_errorHandler.init( afile );
+            m_errorHandler.reset();
             InputSource is = new InputSource( new FileReader( afile ) );
             String uri = "file:" + afile.getAbsolutePath().replace( '\\', '/' );
             for( int index = uri.indexOf( '#' ); index != -1;
