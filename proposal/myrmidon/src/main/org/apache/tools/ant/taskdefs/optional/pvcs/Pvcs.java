@@ -15,14 +15,14 @@ import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.io.OutputStream;
 import java.text.MessageFormat;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Iterator;
-import java.util.Random;
+import org.apache.myrmidon.api.AbstractTask;
 import org.apache.myrmidon.api.TaskException;
 import org.apache.tools.ant.taskdefs.exec.Execute;
+import org.apache.tools.ant.taskdefs.exec.Execute2;
 import org.apache.tools.ant.taskdefs.exec.LogOutputStream;
 import org.apache.tools.ant.types.Commandline;
 
@@ -42,7 +42,8 @@ import org.apache.tools.ant.types.Commandline;
  * @author <a href="mailto:donj@apogeenet.com">Don Jeffery</a>
  * @author <a href="snewton@standard.com">Steven E. Newton</a>
  */
-public class Pvcs extends org.apache.tools.ant.Task
+public class Pvcs
+    extends AbstractTask
 {
     /**
      * Constant for the thing to execute
@@ -59,441 +60,344 @@ public class Pvcs extends org.apache.tools.ant.Task
      * Constant for the thing to execute
      */
     private final static String GET_EXE = "get";
-    private String filenameFormat;
-    private String force;
-    private boolean ignorerc;
-    private String label;
-    private String lineStart;
-    private String promotiongroup;
-    private String pvcsProject;
-    private ArrayList pvcsProjects;
-    private String pvcsbin;
-    private String repository;
-    private boolean updateOnly;
-    private String workspace;
+    private String m_filenameFormat;
+    private boolean m_force;
+    private boolean m_ignoreReturnCode;
+    private String m_label;
+    private String m_lineStart;
+    private String m_promotiongroup;
+    private String m_pvcsProject;
+    private ArrayList m_pvcsProjects;
+    private String m_pvcsbin;
+    private String m_repository;
+    private boolean m_updateOnly;
+    private String m_workspace;
 
     /**
      * Creates a Pvcs object
      */
     public Pvcs()
     {
-        super();
-        pvcsProject = null;
-        pvcsProjects = new ArrayList();
-        workspace = null;
-        repository = null;
-        pvcsbin = null;
-        force = null;
-        promotiongroup = null;
-        label = null;
-        ignorerc = false;
-        updateOnly = false;
-        lineStart = "\"P:";
-        filenameFormat = "{0}_arc({1})";
+        m_pvcsProjects = new ArrayList();
+        m_lineStart = "\"P:";
+        m_filenameFormat = "{0}_arc({1})";
     }
 
-    public void setFilenameFormat( String f )
+    public void setFilenameFormat( final String filenameFormat )
     {
-        filenameFormat = f;
+        m_filenameFormat = filenameFormat;
     }
 
     /**
      * Specifies the value of the force argument
-     *
-     * @param f The new Force value
      */
-    public void setForce( String f )
+    public void setForce( final boolean force )
     {
-        if( f != null && f.equalsIgnoreCase( "yes" ) )
-            force = "yes";
-        else
-            force = "no";
+        m_force = force;
     }
 
     /**
      * If set to true the return value from executing the pvcs commands are
      * ignored.
-     *
-     * @param b The new IgnoreReturnCode value
      */
-    public void setIgnoreReturnCode( boolean b )
+    public void setIgnoreReturnCode( final boolean ignoreReturnCode )
     {
-        ignorerc = b;
+        m_ignoreReturnCode = ignoreReturnCode;
     }
 
     /**
      * Specifies the name of the label argument
-     *
-     * @param l The new Label value
      */
-    public void setLabel( String l )
+    public void setLabel( final String label )
     {
-        label = l;
+        m_label = label;
     }
 
-    public void setLineStart( String l )
+    public void setLineStart( final String lineStart )
     {
-        lineStart = l;
+        m_lineStart = lineStart;
     }
 
     /**
      * Specifies the name of the promotiongroup argument
-     *
-     * @param w The new Promotiongroup value
      */
-    public void setPromotiongroup( String w )
+    public void setPromotiongroup( final String promotiongroup )
     {
-        promotiongroup = w;
+        m_promotiongroup = promotiongroup;
     }
 
     /**
      * Specifies the location of the PVCS bin directory
-     *
-     * @param bin The new Pvcsbin value
      */
-    public void setPvcsbin( String bin )
+    public void setPvcsbin( final String pvcsbin )
     {
-        pvcsbin = bin;
+        m_pvcsbin = pvcsbin;
     }
 
     /**
      * Specifies the name of the project in the PVCS repository
-     *
-     * @param prj String
      */
-    public void setPvcsproject( String prj )
+    public void setPvcsproject( final String pvcsProject )
     {
-        pvcsProject = prj;
+        m_pvcsProject = pvcsProject;
     }
 
     /**
      * Specifies the network name of the PVCS repository
-     *
-     * @param repo String
      */
-    public void setRepository( String repo )
+    public void setRepository( final String repository )
     {
-        repository = repo;
+        m_repository = repository;
     }
 
     /**
      * If set to true files are gotten only if newer than existing local files.
-     *
-     * @param l The new UpdateOnly value
      */
-    public void setUpdateOnly( boolean l )
+    public void setUpdateOnly( final boolean updateOnly )
     {
-        updateOnly = l;
+        m_updateOnly = updateOnly;
     }
 
     /**
      * Specifies the name of the workspace to store retrieved files
-     *
-     * @param ws String
      */
-    public void setWorkspace( String ws )
+    public void setWorkspace( final String workspace )
     {
-        workspace = ws;
-    }
-
-    public String getFilenameFormat()
-    {
-        return filenameFormat;
-    }
-
-    /**
-     * Get value of force
-     *
-     * @return String
-     */
-    public String getForce()
-    {
-        return force;
-    }
-
-    /**
-     * Get value of ignorereturncode
-     *
-     * @return String
-     */
-    public boolean getIgnoreReturnCode()
-    {
-        return ignorerc;
-    }
-
-    /**
-     * Get value of label
-     *
-     * @return String
-     */
-    public String getLabel()
-    {
-        return label;
-    }
-
-    public String getLineStart()
-    {
-        return lineStart;
-    }
-
-    /**
-     * Get value of promotiongroup
-     *
-     * @return String
-     */
-    public String getPromotiongroup()
-    {
-        return promotiongroup;
-    }
-
-    /**
-     * Get name of the PVCS bin directory
-     *
-     * @return String
-     */
-    public String getPvcsbin()
-    {
-        return pvcsbin;
-    }
-
-    /**
-     * Get name of the project in the PVCS repository
-     *
-     * @return String
-     */
-    public String getPvcsproject()
-    {
-        return pvcsProject;
-    }
-
-    /**
-     * Get name of the project in the PVCS repository
-     *
-     * @return ArrayList
-     */
-    public ArrayList getPvcsprojects()
-    {
-        return pvcsProjects;
-    }
-
-    /**
-     * Get network name of the PVCS repository
-     *
-     * @return String
-     */
-    public String getRepository()
-    {
-        return repository;
-    }
-
-    public boolean getUpdateOnly()
-    {
-        return updateOnly;
-    }
-
-    /**
-     * Get name of the workspace to store the retrieved files
-     *
-     * @return String
-     */
-    public String getWorkspace()
-    {
-        return workspace;
+        m_workspace = workspace;
     }
 
     /**
      * handles &lt;pvcsproject&gt; subelements
-     *
-     * @param p The feature to be added to the Pvcsproject attribute
      */
-    public void addPvcsproject( PvcsProject p )
+    public void addPvcsproject( final PvcsProject pvcsProject )
     {
-        pvcsProjects.add( p );
+        m_pvcsProjects.add( pvcsProject );
     }
 
-    /**
-     * @exception org.apache.tools.ant.TaskException Something is stopping the
-     *      build...
-     */
     public void execute()
         throws TaskException
     {
         int result = 0;
 
-        if( repository == null || repository.trim().equals( "" ) )
-            throw new TaskException( "Required argument repository not specified" );
+        validate();
 
+        final File filelist = getFileList();
+
+        final Commandline cmd = buildGetCommand( filelist );
+        getLogger().info( "Getting files" );
+        getLogger().debug( "Executing " + cmd.toString() );
+        try
+        {
+            final Execute2 exe = new Execute2();
+            setupLogger( exe );
+            exe.setWorkingDirectory( getBaseDirectory() );
+            exe.setCommandline( cmd.getCommandline() );
+            result = exe.execute();
+            checkResultCode( result, cmd );
+        }
+        catch( IOException e )
+        {
+            String msg = "Failed executing: " + cmd.toString() + ". Exception: " + e.getMessage();
+            throw new TaskException( msg );
+        }
+        finally
+        {
+            if( filelist != null )
+            {
+                filelist.delete();
+            }
+        }
+    }
+
+    private Commandline buildGetCommand( final File filelist )
+    {
+        final Commandline cmd = new Commandline();
+        cmd.setExecutable( getExecutable( GET_EXE ) );
+
+        if( m_force )
+        {
+            cmd.createArgument().setValue( "-Y" );
+        }
+        else
+        {
+            cmd.createArgument().setValue( "-N" );
+        }
+
+        if( null != m_promotiongroup )
+        {
+            cmd.createArgument().setValue( "-G" + m_promotiongroup );
+        }
+        else if( null != m_label )
+        {
+            cmd.createArgument().setValue( "-r" + m_label );
+        }
+
+        if( m_updateOnly )
+        {
+            cmd.createArgument().setValue( "-U" );
+        }
+
+        cmd.createArgument().setValue( "@" + filelist.getAbsolutePath() );
+        return cmd;
+    }
+
+    private void checkResultCode( final int result, final Commandline cmd )
+        throws TaskException
+    {
+        if( result != 0 && !m_ignoreReturnCode )
+        {
+            final String message = "Failed executing: " + cmd.toString() +
+                ". Return code was " + result;
+            throw new TaskException( message );
+        }
+    }
+
+    private File getFileList()
+        throws TaskException
+    {
         // Check workspace exists
         // Launch PCLI listversionedfiles -z -aw
         // Capture output
         // build the command line from what we got the format is
-        Commandline commandLine = new Commandline();
-        commandLine.setExecutable( getExecutable( PCLI_EXE ) );
-
-        commandLine.createArgument().setValue( "lvf" );
-        commandLine.createArgument().setValue( "-z" );
-        commandLine.createArgument().setValue( "-aw" );
-        if( getWorkspace() != null )
-            commandLine.createArgument().setValue( "-sp" + getWorkspace() );
-        commandLine.createArgument().setValue( "-pr" + getRepository() );
-
-        // default pvcs project is "/"
-        if( getPvcsproject() == null && getPvcsprojects().isEmpty() )
-            pvcsProject = "/";
-
-        if( getPvcsproject() != null )
-            commandLine.createArgument().setValue( getPvcsproject() );
-        if( !getPvcsprojects().isEmpty() )
-        {
-            Iterator e = getPvcsprojects().iterator();
-            while( e.hasNext() )
-            {
-                String projectName = ( (PvcsProject)e.next() ).getName();
-                if( projectName == null || ( projectName.trim() ).equals( "" ) )
-                    throw new TaskException( "name is a required attribute of pvcsproject" );
-                commandLine.createArgument().setValue( projectName );
-            }
-        }
+        final Commandline cmd = buildPCLICommand();
+        getLogger().debug( "Executing " + cmd.toString() );
 
         File tmp = null;
-        File tmp2 = null;
+
         try
         {
-            Random rand = new Random( System.currentTimeMillis() );
-            tmp = new File( "pvcs_ant_" + rand.nextLong() + ".log" );
-            tmp2 = new File( "pvcs_ant_" + rand.nextLong() + ".log" );
-            getLogger().debug( "Executing " + commandLine.toString() );
-            result = runCmd( commandLine, new FileOutputStream( tmp ),
-                             new LogOutputStream( getLogger(), true ) );
-            if( result != 0 && !ignorerc )
-            {
-                String msg = "Failed executing: " + commandLine.toString();
-                throw new TaskException( msg );
-            }
+            tmp = File.createTempFile( "pvcs_ant_", ".log" );
+            final File fileList = File.createTempFile( "pvcs_ant_", ".log" );
+
+            final Execute exe = new Execute();
+            exe.setOutput( new FileOutputStream( tmp ) );
+            exe.setError( new LogOutputStream( getLogger(), true ) );
+            exe.setWorkingDirectory( getBaseDirectory() );
+            exe.setCommandline( cmd.getCommandline() );
+            final int result = exe.execute();
+            checkResultCode( result, cmd );
 
             if( !tmp.exists() )
-                throw new TaskException( "Communication between ant and pvcs failed. No output generated from executing PVCS commandline interface \"pcli\" and \"get\"" );
+            {
+                final String message = "Communication between ant and pvcs failed. No output " +
+                    "generated from executing PVCS commandline interface \"pcli\" and \"get\"";
+                throw new TaskException( message );
+            }
 
             // Create folders in workspace
             getLogger().info( "Creating folders" );
             createFolders( tmp );
 
             // Massage PCLI lvf output transforming '\' to '/' so get command works appropriately
-            massagePCLI( tmp, tmp2 );
-
-            // Launch get on output captured from PCLI lvf
-            commandLine.clearArgs();
-            commandLine.setExecutable( getExecutable( GET_EXE ) );
-
-            if( getForce() != null && getForce().equals( "yes" ) )
-                commandLine.createArgument().setValue( "-Y" );
-            else
-                commandLine.createArgument().setValue( "-N" );
-
-            if( getPromotiongroup() != null )
-                commandLine.createArgument().setValue( "-G" + getPromotiongroup() );
-            else
-            {
-                if( getLabel() != null )
-                    commandLine.createArgument().setValue( "-r" + getLabel() );
-            }
-
-            if( updateOnly )
-            {
-                commandLine.createArgument().setValue( "-U" );
-            }
-
-            commandLine.createArgument().setValue( "@" + tmp2.getAbsolutePath() );
-            getLogger().info( "Getting files" );
-            getLogger().debug( "Executing " + commandLine.toString() );
-            final LogOutputStream output = new LogOutputStream( getLogger(), false );
-            final LogOutputStream error = new LogOutputStream( getLogger(), true );
-            result = runCmd( commandLine, output, error );
-
-            if( result != 0 && !ignorerc )
-            {
-                String msg = "Failed executing: " + commandLine.toString() + ". Return code was " + result;
-                throw new TaskException( msg );
-            }
-
+            massagePCLI( tmp, fileList );
+            return fileList;
         }
-        catch( FileNotFoundException e )
+        catch( final ParseException pe )
         {
-            String msg = "Failed executing: " + commandLine.toString() + ". Exception: " + e.getMessage();
-            throw new TaskException( msg );
+            final String message = "Failed executing: " +
+                cmd.toString() + ". Exception: " + pe.getMessage();
+            throw new TaskException( message );
         }
-        catch( IOException e )
+        catch( final IOException ioe )
         {
-            String msg = "Failed executing: " + commandLine.toString() + ". Exception: " + e.getMessage();
-            throw new TaskException( msg );
-        }
-        catch( ParseException e )
-        {
-            String msg = "Failed executing: " + commandLine.toString() + ". Exception: " + e.getMessage();
-            throw new TaskException( msg );
+            final String message = "Failed executing: " +
+                cmd.toString() + ". Exception: " + ioe.getMessage();
+            throw new TaskException( message );
         }
         finally
         {
-            if( tmp != null )
+            if( null != tmp )
             {
                 tmp.delete();
             }
-            if( tmp2 != null )
-            {
-                tmp2.delete();
-            }
         }
     }
 
-    protected int runCmd( Commandline cmd, OutputStream output, OutputStream error )
+    private Commandline buildPCLICommand()
         throws TaskException
     {
-        try
+        final Commandline cmd = new Commandline();
+        cmd.setExecutable( getExecutable( PCLI_EXE ) );
+
+        cmd.createArgument().setValue( "lvf" );
+        cmd.createArgument().setValue( "-z" );
+        cmd.createArgument().setValue( "-aw" );
+        if( m_workspace != null )
         {
-            final Execute exe = new Execute();
-            exe.setOutput( output );
-            exe.setError( error );
-            exe.setWorkingDirectory( getBaseDirectory() );
-            exe.setCommandline( cmd.getCommandline() );
-            return exe.execute();
+            cmd.createArgument().setValue( "-sp" + m_workspace );
         }
-        catch( java.io.IOException e )
+        cmd.createArgument().setValue( "-pr" + m_repository );
+
+        if( m_pvcsProject != null )
         {
-            String msg = "Failed executing: " + cmd.toString() + ". Exception: " + e.getMessage();
-            throw new TaskException( msg );
+            cmd.createArgument().setValue( m_pvcsProject );
+        }
+
+        if( !m_pvcsProjects.isEmpty() )
+        {
+            Iterator e = m_pvcsProjects.iterator();
+            while( e.hasNext() )
+            {
+                final PvcsProject project = (PvcsProject)e.next();
+                final String name = project.getName();
+                if( name == null || ( name.trim() ).equals( "" ) )
+                {
+                    final String message = "name is a required attribute of pvcsproject";
+                    throw new TaskException( message );
+                }
+                cmd.createArgument().setValue( name );
+            }
+        }
+        return cmd;
+    }
+
+    private void validate()
+        throws TaskException
+    {
+        if( m_repository == null || m_repository.trim().equals( "" ) )
+        {
+            throw new TaskException( "Required argument repository not specified" );
+        }
+
+        // default pvcs project is "/"
+        if( m_pvcsProject == null && m_pvcsProjects.isEmpty() )
+        {
+            m_pvcsProject = "/";
         }
     }
 
-    private String getExecutable( String exe )
+    private String getExecutable( final String exe )
     {
-        StringBuffer correctedExe = new StringBuffer();
-        if( getPvcsbin() != null )
-            if( pvcsbin.endsWith( File.separator ) )
-                correctedExe.append( pvcsbin );
+        final StringBuffer correctedExe = new StringBuffer();
+        if( null != m_pvcsbin )
+        {
+            if( m_pvcsbin.endsWith( File.separator ) )
+            {
+                correctedExe.append( m_pvcsbin );
+            }
             else
-                correctedExe.append( pvcsbin ).append( File.separator );
+            {
+                correctedExe.append( m_pvcsbin ).append( File.separator );
+            }
+        }
         return correctedExe.append( exe ).toString();
     }
 
     /**
      * Parses the file and creates the folders specified in the output section
-     *
-     * @param file Description of Parameter
-     * @exception IOException Description of Exception
-     * @exception ParseException Description of Exception
      */
-    private void createFolders( File file )
+    private void createFolders( final File file )
         throws IOException, ParseException
     {
-        BufferedReader in = new BufferedReader( new FileReader( file ) );
-        MessageFormat mf = new MessageFormat( getFilenameFormat() );
+        final BufferedReader in = new BufferedReader( new FileReader( file ) );
+        final MessageFormat mf = new MessageFormat( m_filenameFormat );
         String line = in.readLine();
         while( line != null )
         {
             getLogger().debug( "Considering \"" + line + "\"" );
             if( line.startsWith( "\"\\" ) ||
                 line.startsWith( "\"/" ) ||
-                line.startsWith( getLineStart() ) )
+                line.startsWith( m_lineStart ) )
             {
                 Object[] objs = mf.parse( line );
                 String f = (String)objs[ 1 ];
@@ -536,21 +440,16 @@ public class Pvcs extends org.apache.tools.ant.Task
     /**
      * Simple hack to handle the PVCS command-line tools botch when handling UNC
      * notation.
-     *
-     * @param in Description of Parameter
-     * @param out Description of Parameter
-     * @exception FileNotFoundException Description of Exception
-     * @exception IOException Description of Exception
      */
-    private void massagePCLI( File in, File out )
+    private void massagePCLI( final File in, final File out )
         throws FileNotFoundException, IOException
     {
-        BufferedReader inReader = new BufferedReader( new FileReader( in ) );
-        BufferedWriter outWriter = new BufferedWriter( new FileWriter( out ) );
+        final BufferedReader inReader = new BufferedReader( new FileReader( in ) );
+        final BufferedWriter outWriter = new BufferedWriter( new FileWriter( out ) );
         String s = null;
         while( ( s = inReader.readLine() ) != null )
         {
-            String sNormal = s.replace( '\\', '/' );
+            final String sNormal = s.replace( '\\', '/' );
             outWriter.write( sNormal );
             outWriter.newLine();
         }
