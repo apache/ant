@@ -4,6 +4,8 @@ Changes from Ant 1.5beta1 to current CVS version
 Fixed bugs:
 -----------
 
+* Merging of Manifests in jar now works as documented.
+
 * paths that have been separated by would be incorrectly parsed on
 NetWare.
 
