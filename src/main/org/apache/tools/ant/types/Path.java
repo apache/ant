@@ -68,7 +68,7 @@ public class Path extends DataType implements Cloneable {
     /**
      * The system bootclassspath as a Path object.
      *
-     * @since Ant 1.7
+     * @since Ant 1.6.2
      */
     public static Path systemBootClasspath =
         new Path(null, System.getProperty("sun.boot.class.path"));
@@ -585,6 +585,8 @@ public class Path extends DataType implements Cloneable {
                 kaffeJarFiles.setIncludes("*.jar");
                 addFileset(kaffeJarFiles);
             }
+        } else if ("GNU libgcj".equals(System.getProperty("java.vm.name"))) {
+            addExisting(systemBootClasspath);
         }
 
         if (System.getProperty("java.vendor").toLowerCase(Locale.US).indexOf("microsoft") >= 0) {
