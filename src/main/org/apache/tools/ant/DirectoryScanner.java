@@ -727,6 +727,19 @@ strLoop:
      */
     private void scandir(File dir, String vpath, boolean fast) {
         String[] newfiles = dir.list();
+
+        if (newfiles == null) {
+            /*
+             * two reasons are mentioned in the API docs for File.list
+             * (1) dir is not a directory. This is impossible as
+             *     we wouldn't get here in this case.
+             * (2) an IO error occurred (why doesn't it throw an exception 
+             *     then???)
+             */
+            throw new BuildException("IO error scanning directory"
+                                     + dir.getAbsolutePath());
+        }
+
         for (int i = 0; i < newfiles.length; i++) {
             String name = vpath+newfiles[i];
             File   file = new File(dir,newfiles[i]);
