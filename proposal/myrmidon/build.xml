@@ -114,19 +114,27 @@ Legal:
       <exclude name="org/apache/ant/**" />
 
       <zipfileset dir="${manifest.dir}" fullpath="META-INF/ant-roles.xml">
-        <include name="base-ant-roles.xml"/>
+        <include name="builtin-ant-roles.xml"/>
       </zipfileset>
 
       <zipfileset dir="${manifest.dir}" fullpath="META-INF/ant-descriptor.xml">
-        <include name="base-ant-descriptor.xml"/>
+        <include name="builtin-ant-descriptor.xml"/>
       </zipfileset>
 
     </jar>
 
     <jar jarfile="${build.lib}/core.atl" basedir="${build.classes}">
       <include name="org/apache/ant/modules/**" />
+      <include name="org/apache/myrmidon/libs/core/**" />
       <zipfileset dir="${manifest.dir}" fullpath="META-INF/ant-descriptor.xml">
         <include name="core-ant-descriptor.xml"/>
+      </zipfileset>
+    </jar>
+
+    <jar jarfile="${build.lib}/selftest.atl" basedir="${build.classes}">
+      <include name="org/apache/myrmidon/libs/selftest/**" />
+      <zipfileset dir="${manifest.dir}" fullpath="META-INF/ant-descriptor.xml">
+        <include name="selftest-ant-descriptor.xml"/>
       </zipfileset>
     </jar>
 
@@ -137,6 +145,13 @@ Legal:
       </zipfileset>
     </jar>
 
+    <jar jarfile="${build.lib}/ant1.atl" basedir="${build.classes}">
+      <include name="org/apache/myrmidon/libs/ant1/**"/>
+      <zipfileset dir="${manifest.dir}" fullpath="META-INF/ant-descriptor.xml">
+        <include name="ant1-ant-descriptor.xml"/>
+      </zipfileset>
+    </jar>
+
   </target>
 
   <!-- Creates the distribution -->
@@ -144,6 +159,8 @@ Legal:
 
     <mkdir dir="${dist.bin}"/>
     <mkdir dir="${dist.lib}"/>
+
+    <copy file="tools/lib/ant.jar" tofile="${dist.lib}/ant1-compat.jar" />
 
     <copy todir="${dist.lib}">
       <fileset dir="${build.lib}"/>
