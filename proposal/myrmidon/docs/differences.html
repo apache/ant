@@ -11,7 +11,7 @@
                       <meta name="author" value="Adam Murdoch">
   <meta name="email" value="adammurdoch@apache.org">
         
-      <title>Apache Myrmidon - Get Involved</title>
+      <title>Apache Myrmidon - Differences to Ant1</title>
     </head>
   
     <body bgcolor="#ffffff" text="#000000" link="#525D76">    
@@ -72,23 +72,47 @@
         <table border="0" cellspacing="0" cellpadding="2" width="100%">
     <tr><td bgcolor="#525D76">
       <font color="#ffffff" face="arial,helvetica,sanserif">
-        <a name="Get Involved"><strong>Get Involved</strong></a>
+        <a name="Differences to Ant 1.x"><strong>Differences to Ant 1.x</strong></a>
       </font>
     </td></tr>
     <tr><td>
       <blockquote>
-                        <p>There are plenty of things you can do to help out with Myrmidon.  The Todo
-            list below describes items which still need to be done.  Of course, since
-            this is an open-source project, there's plenty of scope for experimentation,
-            and you can pretty much make up your own items to work on.</p>
-                                <p>Some things that are worth reading if you do want to get involved:</p>
+                        <p>Some of the differences between Ant 1.x and Myrmidon:</p>
                                 <ul>
-                <li>The <a href="http://jakarta.apache.org/ant/ant2/">Ant 2</a> goals and requirements.</li>
-                <li>The <a href="http://jakarta.apache.org/ant/ant2/actionlist.html">Ant 1.9 Action List</a>.</li>
-                <li>The Jakarta Project's <a href="http://jakarta.apache.org/site/getinvolved.html">Get Involved</a> page.</li>
+                <li>
+                Groups of tasks can be assembled into self-describing
+                    <i>antlib</i> task libraries.  This makes it very easy to
+                distribute and install tasks and data-types.
+                </li>
+                <li> A project can import other projects, and reference their targets. </li>
+                <li>Properties and data type references now share the same namespace.</li>
+                <li>
+                Changes to task and data-type API:
+                    <ul>
+                        <li>An interface based API, through which a task interacts with the
+                        task engine, and the services it provides.</li>
+                        <li>A well-defined object lifecycle.</li>
+                        <li>Polymorphic types are supported when objects are configured.</li>
+                        <li>Reference handling is handled automatically when objects are configured.</li>
+                        <li>Aspects can be used to decorate tasks, to add facilities like logging,
+                        error handling, or user preferences.</li>
+                    </ul>
+                </li>
+                <li>A set of well-defined services and APIs have been introduced, to allow
+                tasks to do their work without depending on other tasks:
+                    <ul>
+                        <li>Execute external commands.</li>
+                        <li>Execute other tasks.</li>
+                        <li>Manage ClassLoaders and Class-paths.</li>
+                        <li>Virtual file system (in progress).</li>
+                        <li>Execute Java applications (in progress).</li>
+                        <li>...</li>
+                    </ul>
+                </li>
             </ul>
-                                <p>There is no Ant 2 or Myrmidon mailing list yet, so direct any questions
-            or comments you have to the ant-dev mailing list.</p>
+                                <p>There are plenty more features planned.  You can read about them
+                <a href="todo.html">here</a>.
+            </p>
                     </blockquote>
     </td></tr>
   </table>

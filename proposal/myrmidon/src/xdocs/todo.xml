@@ -314,7 +314,6 @@ public class MyrmidonSecurityManager
 
                         <code>ant-services.xml</code> descriptor.
                     </li>
-                    <li>Route external process stdout and stderr through the logger.</li>
                     <li>Add verbosity level to ProjectListener LogEvent</li>
                     <li>Fire ProjectListener events taskFinished(), targetFinished() and
                     projectFinished() events on build failure, adding indicator methods to
@@ -350,7 +349,11 @@ public class MyrmidonSecurityManager
                     <li>Move
                         <code>crimson.jar</code> to
                         <code>bin/lib</code> in the distribution,
-                    and make to other jars via the extension mechanism.
+                    and make available to other jars via the extension mechanism.
+                    </li>
+                    <li>Change <code>DefaultPropertyResolver</code> to ignore '$${'.</li>
+                    <li>Add a <code>--type</code> command-line option, to allow
+                        the project builder to be manually selected.
                     </li>
                     <li>Unit tests.</li>
                 </ul>

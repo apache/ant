@@ -52,6 +52,8 @@
   </li>
           <li>      <a href="./ant1compat.html">Ant1 Compatibility Layer</a>
   </li>
+          <li>      <a href="./differences.html">Differences to Ant1</a>
+  </li>
         </ul>
       <p><strong>Extending Ant</strong></p>
     <ul>
@@ -82,6 +84,51 @@
                                   <table border="0" cellspacing="0" cellpadding="2" width="100%">
     <tr><td bgcolor="#828DA6">
       <font color="#ffffff" face="arial,helvetica,sanserif">
+        <a name="Security Manager"><strong>Security Manager</strong></a>
+      </font>
+    </td></tr>
+    <tr><td>
+      <blockquote>
+                        <p>Add the ability to run java programs that call System.exit() by adding a
+                security manager. Should look something like:</p>
+                                  <div align="left">
+    <table cellspacing="4" cellpadding="0" border="0">
+      <tr>
+        <td bgcolor="#023264" width="1" height="1"><img src="/images/void.gif" width="1" height="1" vspace="0" hspace="0" border="0"/></td>
+        <td bgcolor="#023264" height="1"><img src="/images/void.gif" width="1" height="1" vspace="0" hspace="0" border="0"/></td>
+        <td bgcolor="#023264" width="1" height="1"><img src="/images/void.gif" width="1" height="1" vspace="0" hspace="0" border="0"/></td>
+      </tr>
+      <tr>
+        <td bgcolor="#023264" width="1"><img src="/images/void.gif" width="1" height="1" vspace="0" hspace="0" border="0"/></td>
+        <td bgcolor="#ffffff"><pre>
+public class MyrmidonSecurityManager
+    extends SecurityManager
+{
+    public void checkExit( final int status )
+    {
+        throw new ExitException( status );
+    }
+
+    public void checkPermission( final Permission permission )
+    {
+    }
+}
+                </pre></td>
+        <td bgcolor="#023264" width="1"><img src="/images/void.gif" width="1" height="1" vspace="0" hspace="0" border="0"/></td>
+      </tr>
+      <tr>
+        <td bgcolor="#023264" width="1" height="1"><img src="/images/void.gif" width="1" height="1" vspace="0" hspace="0" border="0"/></td>
+        <td bgcolor="#023264" height="1"><img src="/images/void.gif" width="1" height="1" vspace="0" hspace="0" border="0"/></td>
+        <td bgcolor="#023264" width="1" height="1"><img src="/images/void.gif" width="1" height="1" vspace="0" hspace="0" border="0"/></td>
+      </tr>
+    </table>
+  </div>
+                    </blockquote>
+    </td></tr>
+  </table>
+                                  <table border="0" cellspacing="0" cellpadding="2" width="100%">
+    <tr><td bgcolor="#828DA6">
+      <font color="#ffffff" face="arial,helvetica,sanserif">
         <a name="Self Hosting"><strong>Self Hosting</strong></a>
       </font>
     </td></tr>
@@ -92,6 +139,20 @@
                 same build file.  To start with, however, there is no need for Myrmidon to be
                 able to do this.  Myrmidon should also be able to be bootstrapped (that is, be
                 able to be built from scratch, without using Ant 1.x at all).</p>
+                    </blockquote>
+    </td></tr>
+  </table>
+                                  <table border="0" cellspacing="0" cellpadding="2" width="100%">
+    <tr><td bgcolor="#828DA6">
+      <font color="#ffffff" face="arial,helvetica,sanserif">
+        <a name="Validation Pass"><strong>Validation Pass</strong></a>
+      </font>
+    </td></tr>
+    <tr><td>
+      <blockquote>
+                        <p>Consider calling validate() on task prior to execute(). This would allow
+                us to have a "make -k" mode that actually did basic validation and would also
+                encourage task writers to do validation properly.</p>
                     </blockquote>
     </td></tr>
   </table>
@@ -154,12 +215,14 @@
                     Write tests for the various bits that rely on Myrmidon
                     functionality:
                     <ul>
+                        <li>Simple sanity test</li>
                         <li>if/unless on targets: check that behaviour complies with Ant1</li>
                         <li>Make sure properties are shared between Ant1 and Myrmidon tasks.</li>
                         <li>Make sure that &lt;ant1.property&gt; behaves as per Ant1</li>
                     </ul>
                     </li>
                     <li>Get GUMP runs going using Myrmidon.</li>
+                    <li>i18n messages</li>
                 </ul>
                     </blockquote>
     </td></tr>
@@ -402,7 +465,6 @@
 
                         <code>ant-services.xml</code> descriptor.
                     </li>
-                    <li>Route external process stdout and stderr through the logger.</li>
                     <li>Add verbosity level to ProjectListener LogEvent</li>
                     <li>Fire ProjectListener events taskFinished(), targetFinished() and
                     projectFinished() events on build failure, adding indicator methods to
@@ -438,7 +500,11 @@
                     <li>Move
                         <code>crimson.jar</code> to
                         <code>bin/lib</code> in the distribution,
-                    and make to other jars via the extension mechanism.
+                    and make available to other jars via the extension mechanism.
+                    </li>
+                    <li>Change <code>DefaultPropertyResolver</code> to ignore '$${'.</li>
+                    <li>Add a <code>--type</code> command-line option, to allow
+                        the project builder to be manually selected.
                     </li>
                     <li>Unit tests.</li>
                 </ul>
