@@ -604,6 +604,10 @@ Other changes:
   used to checkout/list files based on a date instead of a label.
   Bugzilla Report 20578.
 
+* New filter <concatfilter>. Adds the content of file at the beginning
+  or end of a file. Discussion started at
+  http://marc.theaimsgroup.com/?l=ant-user&m=106336791228585&w=2
+
 Changes from Ant 1.5.3 to Ant 1.5.4
 ===================================
 

@@ -1,0 +1,103 @@
+<?xml version="1.0"?>
+<project default="cleanup" basedir=".">
+
+  <target name="init">
+    <mkdir dir="result" />
+    <echo file="result/before.txt" message="this-should-be-the-first-line${line.separator}"/>
+    <echo file="result/after.txt" message="this-should-be-the-last-line${line.separator}"/>
+    <copy file="input/head-tail.test" tofile="input/concatfilter.test"/>
+    <fixcrlf srcDir="input" includes="concatfilter.test"/>
+  </target>
+
+  <target name="cleanup">
+    <delete dir="result"/>
+    <delete>
+      <fileset dir="input" includes="concatfilter.test"/>
+    </delete>
+  </target>
+
+
+  <target name="testFilterReaderNoArgs" depends="init">
+    <copy file="input/concatfilter.test"
+          tofile="result/concat.filterReaderNoArgs.test">
+      <filterchain>
+        <filterreader classname="org.apache.tools.ant.filters.ConcatFilter"/>
+      </filterchain>
+    </copy>
+  </target>
+
+  <target name="testFilterReaderBefore" depends="init">
+    <copy file="input/concatfilter.test"
+          tofile="result/concat.filterReaderBefore.test">
+      <filterchain>
+        <filterreader classname="org.apache.tools.ant.filters.ConcatFilter">
+          <param name="before" value="result/before.txt"/>
+        </filterreader>
+      </filterchain>
+    </copy>
+  </target>
+
+  <target name="testFilterReaderAfter" depends="init">
+    <copy file="input/concatfilter.test"
+          tofile="result/concat.filterReaderAfter.test">
+      <filterchain>
+        <filterreader classname="org.apache.tools.ant.filters.ConcatFilter">
+          <param name="after" value="result/after.txt"/>
+        </filterreader>
+      </filterchain>
+    </copy>
+  </target>
+
+  <target name="testFilterReaderBeforeAfter" depends="init">
+    <copy file="input/concatfilter.test"
+          tofile="result/concat.filterReaderBeforeAfter.test">
+      <filterchain>
+        <filterreader classname="org.apache.tools.ant.filters.ConcatFilter">
+          <param name="before" value="result/before.txt"/>
+          <param name="after"  value="result/after.txt"/>
+        </filterreader>
+      </filterchain>
+    </copy>
+  </target>
+
+  <target name="testConcatFilter" depends="init">
+    <typedef name="concatfilter" classname="org.apache.tools.ant.filters.ConcatFilter"/>
+    <copy file="input/concatfilter.test"
+          tofile="result/concat.concatfilter.test">
+      <filterchain>
+        <concatfilter/>
+      </filterchain>
+    </copy>
+  </target>
+
+  <target name="testConcatFilterBefore" depends="init">
+    <typedef name="concatfilter" classname="org.apache.tools.ant.filters.ConcatFilter"/>
+    <copy file="input/concatfilter.test"
+          tofile="result/concat.concatfilterBefore.test">
+      <filterchain>
+        <concatfilter before="result/before.txt"/>
+      </filterchain>
+    </copy>
+  </target>
+
+  <target name="testConcatFilterAfter" depends="init">
+    <typedef name="concatfilter" classname="org.apache.tools.ant.filters.ConcatFilter"/>
+    <copy file="input/concatfilter.test"
+          tofile="result/concat.concatfilterAfter.test">
+      <filterchain>
+        <concatfilter after="result/after.txt"/>
+      </filterchain>
+    </copy>
+  </target>
+
+  <target name="testConcatFilterBeforeAfter" depends="init">
+    <typedef name="concatfilter" classname="org.apache.tools.ant.filters.ConcatFilter"/>
+    <copy file="input/concatfilter.test"
+          tofile="result/concat.concatfilterBeforeAfter.test">
+      <filterchain>
+        <concatfilter before="result/before.txt" after="result/after.txt"/>
+      </filterchain>
+    </copy>
+  </target>
+
+</project>
