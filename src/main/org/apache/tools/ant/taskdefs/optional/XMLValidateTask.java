@@ -96,9 +96,9 @@ public class XMLValidateTask extends Task {
      * The default implementation parser classname used by the task to process
      * validation.
      */
-    // The crimson implementation is shipped with ant.
+    // The Xerces implementation ships with Ant.
     public static String DEFAULT_XML_READER_CLASSNAME
-        = "org.apache.crimson.parser.XMLReaderImpl";
+        = "org.apache.xerces.parsers.SAXParser";
 
     protected static String INIT_FAILED_MSG = "Could not start xml validation: ";
 
