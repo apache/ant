@@ -883,7 +883,7 @@ public class DirectoryScanner
             File   file = new File(dir, newfiles[i]);
             if (file.isDirectory()) {
                 if (isIncluded(name)) {
-                  accountForIncludedDir(name, file, fast);
+                    accountForIncludedDir(name, file, fast);
                 } else {
                     everythingIncluded = false;
                     dirsNotIncluded.addElement(name);
@@ -914,17 +914,17 @@ public class DirectoryScanner
             && !filesExcluded.contains(name)
             && !filesDeselected.contains(name)) {
         
-        if (!isExcluded(name)) {
-            if (isSelected(name, file)) {
-                filesIncluded.addElement(name);
+            if (!isExcluded(name)) {
+                if (isSelected(name, file)) {
+                    filesIncluded.addElement(name);
+                } else {
+                    everythingIncluded = false;
+                    filesDeselected.addElement(name);
+                }
             } else {
                 everythingIncluded = false;
-                filesDeselected.addElement(name);
+                filesExcluded.addElement(name);
             }
-        } else {
-            everythingIncluded = false;
-            filesExcluded.addElement(name);
-        }
         }
     }
 
@@ -939,27 +939,28 @@ public class DirectoryScanner
         if (!dirsIncluded.contains(name)
             && !dirsExcluded.contains(name)
             && !dirsDeselected.contains(name)) {
-      if (!isExcluded(name)) {
-          if (isSelected(name, file)) {
-              dirsIncluded.addElement(name);
-              if (fast) {
-                  scandir(file, name + File.separator, fast);
-              }
-          } else {
-              everythingIncluded = false;
-              dirsDeselected.addElement(name);
-              if (fast && couldHoldIncluded(name)) {
-                  scandir(file, name + File.separator, fast);
-              }
-          }
 
-      } else {
-          everythingIncluded = false;
-          dirsExcluded.addElement(name);
-          if (fast && couldHoldIncluded(name)) {
-              scandir(file, name + File.separator, fast);
-          }
-      }
+            if (!isExcluded(name)) {
+                if (isSelected(name, file)) {
+                    dirsIncluded.addElement(name);
+                    if (fast) {
+                        scandir(file, name + File.separator, fast);
+                    }
+                } else {
+                    everythingIncluded = false;
+                    dirsDeselected.addElement(name);
+                    if (fast && couldHoldIncluded(name)) {
+                        scandir(file, name + File.separator, fast);
+                    }
+                }
+                
+            } else {
+                everythingIncluded = false;
+                dirsExcluded.addElement(name);
+                if (fast && couldHoldIncluded(name)) {
+                    scandir(file, name + File.separator, fast);
+                }
+            }
         }
     }
     /**
