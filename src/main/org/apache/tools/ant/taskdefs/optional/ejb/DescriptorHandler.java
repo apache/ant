@@ -302,7 +302,6 @@ public class DescriptorHandler extends org.xml.sax.HandlerBase {
             inEJBRef = false;
         }
         else if (parseState == STATE_IN_ENTITY && name.equals(ENTITY_BEAN)) {
-        if (parseState == STATE_IN_ENTITY && name.equals(ENTITY_BEAN )) {
             parseState = STATE_IN_BEANS;
         }
         else if (parseState == STATE_IN_SESSION && name.equals(SESSION_BEAN)) {
