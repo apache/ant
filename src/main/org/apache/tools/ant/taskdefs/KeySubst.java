@@ -1,5 +1,5 @@
 /*
- * Copyright  2000,2002-2004 The Apache Software Foundation
+ * Copyright  2000,2002-2005 The Apache Software Foundation
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -45,8 +45,9 @@ public class KeySubst extends Task {
     private Hashtable replacements = new Hashtable();
 
     /**
-        Do the execution.
-    */
+     * Do the execution.
+     * @throws BuildException on error
+     */
     public void execute() throws BuildException {
         log("!! KeySubst is deprecated. Use Filter + Copy instead. !!");
         log("Performing Substitutions");
@@ -96,38 +97,42 @@ public class KeySubst extends Task {
     }
 
     /**
-        Set the source file.
-    */
+     * Set the source file.
+     * @param s the source file
+     */
     public void setSrc(File s) {
         this.source = s;
     }
 
     /**
-        Set the destination file.
-    */
+     * Set the destination file.
+     * @param dest the destination file
+     */
     public void setDest(File dest) {
         this.dest = dest;
     }
 
     /**
-        Sets the separator between name=value arguments
-        in setKeys(). By default it is "*".
-    */
+     * Sets the separator between name=value arguments
+     * in setKeys(). By default it is "*".
+     * @param sep the separator string
+     */
     public void setSep(String sep) {
         this.sep = sep;
     }
     /**
      * Sets the keys.
      *
-        Format string is like this:
-        <p>
-        name=value*name2=value
-        <p>
-        Names are case sensitive.
-        <p>
-        Use the setSep() method to change the * to something else
-        if you need to use * as a name or value.
-    */
+     * Format string is like this:
+     *   <p>
+     *   name=value*name2=value
+     *   <p>
+     *   Names are case sensitive.
+     *   <p>
+     *   Use the setSep() method to change the * to something else
+     *   if you need to use * as a name or value.
+     * @param keys a <code>String</code> value
+     */
     public void setKeys(String keys) {
         if (keys != null && keys.length() > 0) {
             StringTokenizer tok =
@@ -145,6 +150,10 @@ public class KeySubst extends Task {
     }
 
 
+    /**
+     * A test method.
+     * @param args not used
+     */
     public static void main(String[] args) {
         try {
             Hashtable hash = new Hashtable();
@@ -158,10 +167,12 @@ public class KeySubst extends Task {
     }
 
     /**
-        Does replacement on text using the hashtable of keys.
-
-        @return the string with the replacements in it.
-    */
+     * Does replacement on text using the hashtable of keys.
+     * @param origString an input string
+     * @param keys       mapping of keys to values
+     * @return the string with the replacements in it.
+     * @throws BuildException on error
+     */
     public static String replace(String origString, Hashtable keys)
         throws BuildException {
         StringBuffer finalString = new StringBuffer();

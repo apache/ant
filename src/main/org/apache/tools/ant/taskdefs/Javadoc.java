@@ -486,6 +486,7 @@ public class Javadoc extends Task {
 
     /**
      * Adds a command-line argument.
+     * @return a command-line argument to configure
      * @since Ant 1.6
      */
     public Commandline.Argument createArg() {
@@ -1064,6 +1065,7 @@ public class Javadoc extends Task {
 
     /**
      * Create links to javadoc output at the given URL.
+     * @param src the URL to link to
      */
     public void setLink(String src) {
         if (!javadoc1) {
@@ -1199,30 +1201,55 @@ public class Javadoc extends Task {
         private boolean offline = false;
         private File packagelistLoc;
 
+        /** Constructor for LinkArguement */
         public LinkArgument() {
             //empty
         }
 
+        /**
+         * Set the href attribute.
+         * @param hr a <code>String</code> value
+         */
         public void setHref(String hr) {
             href = hr;
         }
 
+        /**
+         * Get the href attribute.
+         * @return the href attribute.
+         */
         public String getHref() {
             return href;
         }
 
+        /**
+         * Set the packetlist location attribute.
+         * @param src a <code>File</code> value
+         */
         public void setPackagelistLoc(File src) {
             packagelistLoc = src;
         }
 
+        /**
+         * Get the packetList location attribute.
+         * @return the packetList location attribute.
+         */
         public File getPackagelistLoc() {
             return packagelistLoc;
         }
 
+        /**
+         * Set the offline attribute.
+         * @param offline a <code>boolean</code> value
+         */
         public void setOffline(boolean offline) {
             this.offline = offline;
         }
 
+        /**
+         * Get the linkOffline attribute.
+         * @return the linkOffline attribute.
+         */
         public boolean isLinkOffline() {
             return offline;
         }
@@ -1233,6 +1260,7 @@ public class Javadoc extends Task {
      * custom tags. This argument is only available for JavaDoc 1.4,
      * and will generate a verbose message (and then be ignored)
      * when run on Java versions below 1.4.
+     * @return tag argument to be configured
      */
     public TagArgument createTag() {
         if (!javadoc4) {
@@ -1372,11 +1400,11 @@ public class Javadoc extends Task {
 
         /**
          * Returns the -tag parameter this argument represented.
-         *
+         * @return the -tag parameter as a string
          * @exception BuildException if either the name or description
          *                           is <code>null</code> or empty.
          */
-        public String getParameter () throws BuildException {
+        public String getParameter() throws BuildException {
             if (name == null || name.equals("")) {
                 throw new BuildException ("No name specified for custom tag.");
             }
@@ -1392,6 +1420,7 @@ public class Javadoc extends Task {
     /**
      * Separates packages on the overview page into whatever
      * groups you specify, one group per table.
+     * @return a group argument to be configured
      */
     public GroupArgument createGroup() {
         GroupArgument ga = new GroupArgument();
@@ -1399,27 +1428,48 @@ public class Javadoc extends Task {
         return ga;
     }
 
+
+    /**
+     * A class corresponding to the group nested element.
+     */
     public class GroupArgument {
         private Html title;
         private Vector packages = new Vector();
 
+        /** Constructor for GroupArgument */
         public GroupArgument() {
             //empty
         }
 
+        /**
+         * Set the title attribute using a string.
+         * @param src a <code>String</code> value
+         */
         public void setTitle(String src) {
             Html h = new Html();
             h.addText(src);
             addTitle(h);
         }
+        /**
+         * Set the title attribute using a nested Html value.
+         * @param text a <code>Html</code> value
+         */
         public void addTitle(Html text) {
             title = text;
         }
 
+        /**
+         * Get the title.
+         * @return the title
+         */
         public String getTitle() {
             return title != null ? title.getText() : null;
         }
 
+        /**
+         * Set the packages to javadoc on.
+         * @param src a comma separated list of packages
+         */
         public void setPackages(String src) {
             StringTokenizer tok = new StringTokenizer(src, ",");
             while (tok.hasMoreTokens()) {
@@ -1429,10 +1479,18 @@ public class Javadoc extends Task {
                 addPackage(pn);
             }
         }
+        /**
+         * Add a package nested element.
+         * @param pn a nested element specifing the package.
+         */
         public void addPackage(PackageName pn) {
             packages.addElement(pn);
         }
 
+        /**
+         * Get the packages as a collon separated list.
+         * @return the packages as a string
+         */
         public String getPackages() {
             StringBuffer p = new StringBuffer();
             for (int i = 0; i < packages.size(); i++) {
@@ -1447,6 +1505,7 @@ public class Javadoc extends Task {
 
     /**
      * Charset for cross-platform viewing of generated documentation.
+     * @param src the name of the charset
      */
     public void setCharset(String src) {
         this.add12ArgIfNotEmpty("-charset", src);
@@ -1457,6 +1516,7 @@ public class Javadoc extends Task {
      * a non zero return code)?
      *
      * <p>Default is false.</p>
+     * @param b a <code>boolean</code> value
      */
     public void setFailonerror(boolean b) {
         failOnError = b;
@@ -1465,7 +1525,7 @@ public class Javadoc extends Task {
     /**
      * Enables the -source switch, will be ignored if javadoc is not
      * the 1.4 version.
-     *
+     * @param source a <code>String</code> value
      * @since Ant 1.5
      */
     public void setSource(String source) {
@@ -1481,7 +1541,7 @@ public class Javadoc extends Task {
      *
      * <p>All included directories will be translated into package
      * names be converting the directory separator into dots.</p>
-     *
+     * @param packageSet a directory set
      * @since 1.5
      */
     public void addPackageset(DirSet packageSet) {
@@ -1495,7 +1555,7 @@ public class Javadoc extends Task {
      * will automatically add
      * <code>includes=&quot;**&#47;*.java&quot;</code> to the
      * fileset.</p>
-     *
+     * @param fs a file set
      * @since 1.5
      */
     public void addFileset(FileSet fs) {
@@ -1505,7 +1565,7 @@ public class Javadoc extends Task {
     /**
      * Enables the -linksource switch, will be ignored if javadoc is not
      * the 1.4 version. Default is false
-     *
+     * @param b a <code>String</code> value
      * @since Ant 1.6
      */
     public void setLinksource(boolean b) {
@@ -1519,7 +1579,7 @@ public class Javadoc extends Task {
     /**
      * Enables the -linksource switch, will be ignored if javadoc is not
      * the 1.4 version. Default is false
-     *
+     * @param b a <code>String</code> value
      * @since Ant 1.6
      */
     public void setBreakiterator(boolean b) {
@@ -1533,7 +1593,7 @@ public class Javadoc extends Task {
     /**
      * Enables the -noqualifier switch, will be ignored if javadoc is not
      * the 1.4 version.
-     *
+     * @param noqualifier the parameter to the -noqualifier switch
      * @since Ant 1.6
      */
     public void setNoqualifier(String noqualifier) {
@@ -1544,6 +1604,10 @@ public class Javadoc extends Task {
         this.noqualifier = noqualifier;
     }
 
+    /**
+     * Execute the task.
+     * @throws BuildException on error
+     */
     public void execute() throws BuildException {
         if ("javadoc2".equals(getTaskType())) {
             log("!! javadoc2 is deprecated. Use javadoc instead. !!");
@@ -2122,6 +2186,8 @@ public class Javadoc extends Task {
 
     /**
      * Convenience method to expand properties.
+     * @param content the string to expand
+     * @return the converted string
      */
     protected String expand(String content) {
         return getProject().replaceProperties(content);

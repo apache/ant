@@ -1,5 +1,5 @@
 /*
- * Copyright  2000,2002-2004 The Apache Software Foundation
+ * Copyright  2000,2002-2005 The Apache Software Foundation
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -47,18 +47,22 @@ public class JikesOutputParser implements ExecuteStreamHandler {
 
     /**
      * Ignore.
+     * @param os ignored
      */
     public void setProcessInputStream(OutputStream os) {
     }
 
     /**
      * Ignore.
+     * @param is ignored
      */
     public void setProcessErrorStream(InputStream is) {
     }
 
     /**
      * Set the inputstream
+     * @param is the input stream
+     * @throws IOException on error
      */
     public void setProcessOutputStream(InputStream is) throws IOException {
         br = new BufferedReader(new InputStreamReader(is));
@@ -66,6 +70,7 @@ public class JikesOutputParser implements ExecuteStreamHandler {
 
     /**
      * Invokes parseOutput.
+     * @throws IOException on error
      */
     public void start() throws IOException {
         parseOutput(br);
@@ -79,7 +84,8 @@ public class JikesOutputParser implements ExecuteStreamHandler {
 
     /**
      * Construct a new Parser object
-     * @param task - task in which context we are called
+     * @param task      task in which context we are called
+     * @param emacsMode if true output in emacs mode
      */
     protected JikesOutputParser(Task task, boolean emacsMode) {
         super();
@@ -97,6 +103,7 @@ public class JikesOutputParser implements ExecuteStreamHandler {
     /**
      * Parse the output of a jikes compiler
      * @param reader - Reader used to read jikes's output
+     * @throws IOException on error
      */
     protected void parseOutput(BufferedReader reader) throws IOException {
        if (emacsMode) {
