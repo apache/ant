@@ -103,6 +103,10 @@ public class UnknownElement extends Task {
         return elementName;
     }
 
+    public RuntimeConfigurable getWrapper() {
+        return wrapper;
+    }
+
     /**
      * Creates the real object instance and child elements, then configures
      * the attributes and text of the real object. This unknown element
@@ -112,11 +116,25 @@ public class UnknownElement extends Task {
      * @exception BuildException if the configuration fails
      */
     public void maybeConfigure() throws BuildException {
+        //ProjectComponentHelper helper=ProjectComponentHelper.getProjectComponentHelper();
+        //realThing = helper.createProjectComponent( this, getProject(), null,
+        //                                           this.getTag());
+
         realThing = makeObject(this, getWrapper());
 
         getWrapper().setProxy(realThing);
         if (realThing instanceof Task) {
-            ((Task) realThing).setRuntimeConfigurableWrapper(getWrapper());
+            Task task=(Task)realThing;
+
+            task.setRuntimeConfigurableWrapper(getWrapper());
+            task.setLocation(this.getLocation());
+            // UnknownElement always has an associated target
+            task.setOwningTarget(this.getOwningTarget());
+            task.init();
+
+            // For Script to work. Ugly
+            // The reference is replaced by RuntimeConfigurable
+            this.getOwningTarget().replaceChild(this, (Task)realThing);
         }
 
         handleChildren(realThing, getWrapper());
@@ -165,6 +183,10 @@ public class UnknownElement extends Task {
         if (realThing instanceof Task) {
             ((Task) realThing).execute();
         }
+
+        // the task will not be reused ( a new init() will be called )
+        // Let GC do its job
+        realThing=null;
     }
 
     /**
@@ -191,8 +213,8 @@ public class UnknownElement extends Task {
      */
     protected void handleChildren(Object parent,
                                   RuntimeConfigurable parentWrapper)
-        throws BuildException {
-
+        throws BuildException
+    {
         if (parent instanceof TaskAdapter) {
             parent = ((TaskAdapter) parent).getProxy();
         }
@@ -206,8 +228,26 @@ public class UnknownElement extends Task {
             Object realChild = null;
 
             if (parent instanceof TaskContainer) {
-                realChild = makeTask(child, childWrapper, false);
-                ((TaskContainer) parent).addTask((Task) realChild);
+                //ProjectComponentHelper helper=ProjectComponentHelper.getProjectComponentHelper();
+                //realChild = helper.createProjectComponent( child, getProject(), null,
+                   //                                           child.getTag());
+                realChild=makeTask(child, childWrapper, false);
+
+                if (realChild == null ) {
+                    throw getNotFoundException("task", child.getTag());
+                }
+
+                // XXX DataTypes will be wrapped or treated like normal components
+                if( realChild instanceof Task ) {
+                    Task task=(Task)realChild;
+                    ((TaskContainer) parent).addTask(task);
+                    task.setLocation(child.getLocation());
+                    // UnknownElement always has an associated target
+                    task.setOwningTarget(this.getOwningTarget());
+                    task.init();
+                } else {
+                    // What ? Add data type ? createElement ?
+                }
             } else {
                 realChild = ih.createElement(getProject(), parent, child.getTag());
             }
@@ -218,6 +258,10 @@ public class UnknownElement extends Task {
             }
 
             child.handleChildren(realChild, childWrapper);
+
+//            if (parent instanceof TaskContainer) {
+//                ((Task) realChild).maybeConfigure();
+//            }
         }
     }
 
@@ -330,6 +374,7 @@ public class UnknownElement extends Task {
      * @return the name to use in logging messages.
      */
     public String getTaskName() {
+        //return elementName;
         return realThing == null || !(realThing instanceof Task) ?
             super.getTaskName() : ((Task) realThing).getTaskName();
     }
