@@ -114,7 +114,7 @@ public class Classloader extends Task {
     private String name=null;
     private Path classpath;
     private boolean reset=false;
-    private boolean reverse=false;
+    private boolean parentFirst=true;
     private String parentName=null;
 
     public Classloader() {
@@ -139,9 +139,12 @@ public class Classloader extends Task {
         this.reset=b;
     }
 
-    // TODO
     public void setReverse(boolean b ) {
-        this.reverse=b;
+        this.parentFirst= ! b;
+    }
+
+    public void setParentFirst(boolean b ) {
+        this.parentFirst= b;
     }
 
     // TODO: add exceptions for delegation or reverse
@@ -211,7 +214,7 @@ public class Classloader extends Task {
             AntClassLoader acl=(AntClassLoader)obj;
 
             if( acl==null ) {
-                // Construct a class loader
+                // Construct a new class loader
                 Object parent=null;
                 if( parentName != null ) {
                     parent=project.getReference(parentName);
@@ -219,13 +222,24 @@ public class Classloader extends Task {
                         parent=null;
                     }
                 }
+                // TODO: allow user to request the system or no parent
                 if( parent==null ) {
                     parent=this.getClass().getClassLoader();
                 }
 
+                if( name==null ) {
+                    // The core loader must be reverse
+                    //reverse=true;
+                }
+                project.log("Setting parent loader " + name + " " +
+                        parent + " " + parentFirst, Project.MSG_DEBUG);
+
+                // The param is "parentFirst"
                 acl=new AntClassLoader( (ClassLoader)parent,
-                        project, classpath, reverse );
+                        project, classpath, parentFirst );
+
                 project.addReference( loaderName, acl );
+
                 if( name==null ) {
                     // This allows the core loader to load optional tasks
                     // without delegating
