@@ -26,8 +26,8 @@
             tofile="${test.dir}/zip/asf-logo.gif.zip" />
     <copy file="${etc.dir}/taskdefs/expected/asf-logo.gif.tar"
             tofile="${test.dir}/tar/asf-logo.gif.tar" />
-    <copy file="${etc.dir}/taskdefs/expected/asf-logo-huge.tar"
-            tofile="${test.dir}/tar/asf-logo-huge.tar" />
+    <copy file="${etc.dir}/taskdefs/expected/asf-logo-huge.tar.gz"
+            tofile="${test.dir}/tar/asf-logo-huge.tar.gz" />
     <copy file="${etc.dir}/taskdefs/expected/asf-logo.gif.tar.gz"
             tofile="${test.dir}/tar/gz/asf-logo.gif.tar.gz" />
     <copy file="${etc.dir}/taskdefs/expected/asf-logo.gif.tar.bz2"
@@ -51,7 +51,7 @@
             datetime="05/10/2002 2:30 PM"/>
     <touch file="${test.dir}/tar/asf-logo.gif.tar"
             datetime="05/10/2002 2:29 PM"/>
-    <touch file="${test.dir}/tar/asf-logo-huge.tar"
+    <touch file="${test.dir}/tar/asf-logo-huge.tar.gz"
             datetime="05/10/2002 2:29 AM"/>
   </target>
 
@@ -72,7 +72,7 @@
     <sleep seconds="3"/>
     <touch file="${mirror.dir}/tar/asf-logo.gif.tar"/>
     <sleep seconds="2"/>
-    <touch file="${mirror.dir}/tar/asf-logo-huge.tar"/>
+    <touch file="${mirror.dir}/tar/asf-logo-huge.tar.gz"/>
     <touch file="${mirror.dir}/tar/gz/asf-logo.gif.tar.gz"/>
     <touch file="${mirror.dir}/tar/bz2/asf-logo.gif.tar.bz2"/>
     <touch file="${mirror.dir}/tar/bz2/asf-logo-huge.tar.bz2"/>

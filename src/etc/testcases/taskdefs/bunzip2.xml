@@ -2,12 +2,16 @@
 
 <project basedir="." default="cleanup">
 
-  <target name="realTest" depends="cleanup">
+  <target name="realTest">
     <bunzip2 src="expected/asf-logo-huge.tar.bz2" dest="asf-logo-huge.tar" />
   </target>
 
   <target name="cleanup">
     <delete file="asf-logo-huge.tar" />
+    <delete file="expected/asf-logo-huge.tar" />
   </target>
 
+  <target name="prepare">
+    <gunzip src="expected/asf-logo-huge.tar.gz"/>
+  </target>
 </project>

@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2000-2002 The Apache Software Foundation.  All rights
+ * Copyright (c) 2000-2003 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -82,7 +82,7 @@ public abstract class BaseSelectorTest extends TestCase {
     protected File mirrordir = new File(mirrordirname);
     protected String[] filenames = {".","asf-logo.gif.md5","asf-logo.gif.bz2",
             "asf-logo.gif.gz","copy.filterset.filtered","zip/asf-logo.gif.zip",
-            "tar/asf-logo.gif.tar","tar/asf-logo-huge.tar",
+            "tar/asf-logo.gif.tar","tar/asf-logo-huge.tar.gz",
             "tar/gz/asf-logo.gif.tar.gz","tar/bz2/asf-logo.gif.tar.bz2",
             "tar/bz2/asf-logo-huge.tar.bz2","tar/bz2"};
     protected File[] files = new File[filenames.length];

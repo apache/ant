@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2000-2002 The Apache Software Foundation.  All rights
+ * Copyright (c) 2000-2003 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -140,13 +140,13 @@ public class FilenameSelectorTest extends BaseSelectorTest {
             s.setName("**/*.gz");
             s.setNegate(true);
             results = selectionString(s);
-            assertEquals("TTTFTTTTFTTT", results);
+            assertEquals("TTTFTTTFFTTT", results);
 
             s = (FilenameSelector)getInstance();
             s.setName("**/*.GZ");
             s.setCasesensitive(false);
             results = selectionString(s);
-            assertEquals("FFFTFFFFTFFF", results);
+            assertEquals("FFFTFFFTTFFF", results);
 
             s = (FilenameSelector)getInstance();
             Parameter param1 = new Parameter();
