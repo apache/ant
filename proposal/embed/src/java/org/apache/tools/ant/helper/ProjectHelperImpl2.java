@@ -112,7 +112,11 @@ public class ProjectHelperImpl2 extends ProjectHelper {
     private void hookSpecialTasks(Project project) {
         try {
             Class c=Class.forName("org.apache.tools.ant.taskdefs.SystemPath");
+            // deprecated
             project.addTaskDefinition( "systemPath" , c );
+            // the new name ( in ant16 )
+            project.addTaskDefinition( "classloader" , c );
+
             c=Class.forName("org.apache.tools.ant.taskdefs.Description");
             project.addTaskDefinition( "description" , c );
             c=Class.forName("org.apache.tools.ant.taskdefs.Import");
