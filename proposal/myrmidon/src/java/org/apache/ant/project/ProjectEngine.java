@@ -9,20 +9,23 @@ package org.apache.ant.project;
 
 import org.apache.ant.AntException;
 import org.apache.ant.tasklet.TaskletContext;
+import org.apache.ant.tasklet.engine.TaskletEngine;
 import org.apache.avalon.Component;
-import org.apache.avalon.camelot.Deployer;
-import org.apache.avalon.camelot.Registry;
 import org.apache.log.Logger;
 
 public interface ProjectEngine
     extends Component
 {
-    Deployer getDeployer();
+    void setLogger( Logger logger );
+
+    TaskletEngine getTaskletEngine();
+
     void addProjectListener( ProjectListener listener );
     void removeProjectListener( ProjectListener listener );
-    void setLogger( Logger logger );
+
     void execute( Project project, String target )
         throws AntException;
+
     void execute( Project project, String target, TaskletContext context )
         throws AntException;
 }

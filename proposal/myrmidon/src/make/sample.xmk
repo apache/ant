@@ -58,9 +58,17 @@ Legal:
     <property name="blah" value="fred" />
     <property name="${blah}" value="barney" />
 
-    <register-tasklet task-lib="../../dist/lib/core.tsk" 
-                      task-name="echo2" 
+    <register-tasklet lib="../../dist/lib/core.tsk" 
+                      name="echo2" 
                       classname="org.apache.ant.tasks.core.Echo" />
+
+<!--    
+    <register-tasklib lib="../../dist/lib/core.tsk" />
+    <register-converter classname="org.apache.ant.convert.core.StringToClassConverter"
+                        source-type="java.lang.String"
+                        destination-type="java.lang.Class"
+                        lib="../../dist/lib/core.tsk" />
+-->
 
     <echo message="Doing the funky Echo with ${blah} ${fred} Year=${year}!"/>
     <echo2 message="Luke to Echo base. Can you hear me?"/>
@@ -74,6 +82,7 @@ Legal:
   <target name="property-test2">
     <echo message="This should fail ...."/>
     <echo message="${blah}"/>
+    <echo message="Whoa - it no fail. Did you use ant-call to call me and set param blah?"/>
   </target>
 
 </project>

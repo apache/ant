@@ -25,5 +25,5 @@ public interface Converter
      * @exception Exception if an error occurs
      */
     Object convert( Class destination, Object original )
-        throws Exception;
+        throws ConverterException, Exception;
 }

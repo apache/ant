@@ -14,10 +14,7 @@ import java.util.Iterator;
 import org.apache.ant.configuration.Configurable;
 import org.apache.ant.configuration.Configuration;
 import org.apache.ant.convert.Converter;
-import org.apache.ant.convert.ConverterEntry;
-import org.apache.ant.convert.ConverterFactory;
-import org.apache.ant.convert.ConverterInfo;
-import org.apache.ant.convert.ConverterRegistry;
+import org.apache.ant.convert.ConverterException;
 import org.apache.ant.tasklet.Tasklet;
 import org.apache.avalon.ComponentManager;
 import org.apache.avalon.ComponentNotAccessibleException;
@@ -25,7 +22,6 @@ import org.apache.avalon.ComponentNotFoundException;
 import org.apache.avalon.Composer;
 import org.apache.avalon.ConfigurationException;
 import org.apache.avalon.Context;
-import org.apache.avalon.camelot.FactoryException;
 import org.apache.avalon.util.PropertyException;
 import org.apache.avalon.util.PropertyUtil;
 
@@ -47,16 +43,12 @@ public class DefaultTaskletConfigurer
         "content"
     };
 
-    protected ConverterRegistry    m_converterRegistry;
-    protected ConverterFactory     m_converterFactory;
+    protected Converter            m_converter;
 
     public void compose( final ComponentManager componentManager )
         throws ComponentNotFoundException, ComponentNotAccessibleException
     {
-        m_converterRegistry = (ConverterRegistry)componentManager.
-            lookup( "org.apache.ant.convert.ConverterRegistry" );
-        m_converterFactory = (ConverterFactory)componentManager.
-            lookup( "org.apache.ant.convert.ConverterFactory" );
+        m_converter = (Converter)componentManager.lookup( "org.apache.ant.convert.Converter" );
     }
     
     /**
@@ -240,23 +232,13 @@ public class DefaultTaskletConfigurer
         
         if( !parameterType.isAssignableFrom( sourceClass ) )
         {
-            final String destination = parameterType.getName();
-            
             try
             {
-                final ConverterInfo info = m_converterRegistry.
-                    getConverterInfo( source, destination );
-                
-                if( null == info ) return false;
-              
-                final ConverterEntry entry = m_converterFactory.create( info );
-                final Converter converter = entry.getConverter();
-                value = converter.convert( parameterType, value );
+                value = m_converter.convert( parameterType, object );
             }
-            catch( final FactoryException fe )
+            catch( final ConverterException ce )
             {
-                throw new ConfigurationException( "Badly configured ConverterFactory ",
-                                                  fe );
+                return false;
             }
             catch( final Exception e )
             {

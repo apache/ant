@@ -9,12 +9,10 @@ package org.apache.ant.tasklet.engine;
 
 import org.apache.ant.AntException;
 import org.apache.ant.configuration.Configuration;
-import org.apache.ant.convert.ConverterRegistry;
+import org.apache.ant.convert.ConverterEngine;
 import org.apache.ant.tasklet.TaskletContext;
 import org.apache.avalon.Component;
 import org.apache.avalon.ComponentManager;
-import org.apache.avalon.Composer;
-import org.apache.avalon.Contextualizable;
 import org.apache.log.Logger;
  
 /**
@@ -26,6 +24,13 @@ public interface TaskletEngine
     extends Component
 {
     void setLogger( Logger logger );
+
+    /**
+     * Retrieve deployer for engine.
+     *
+     * @return the deployer
+     */
+    TskDeployer getTskDeployer();
     
     /**
      * Retrieve tasklet registry associated with engine.
@@ -35,11 +40,11 @@ public interface TaskletEngine
     TaskletRegistry getTaskletRegistry();
 
     /**
-     * Retrieve converter registry associated with engine.
+     * Retrieve converter engine.
      *
-     * @return the ConverterRegistry
+     * @return the ConverterEngine
      */
-    ConverterRegistry getConverterRegistry();
+    ConverterEngine getConverterEngine();
 
     /**
      * execute a task.

@@ -11,31 +11,19 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import org.apache.ant.AntException;
 import org.apache.ant.configuration.Configuration;
-import org.apache.ant.convert.ConverterRegistry;
-import org.apache.ant.convert.DefaultConverterRegistry;
 import org.apache.ant.tasklet.DefaultTaskletContext;
 import org.apache.ant.tasklet.TaskletContext;
 import org.apache.ant.tasklet.engine.DefaultTaskletEngine;
-import org.apache.ant.tasklet.engine.DefaultTaskletInfo;
-import org.apache.ant.tasklet.engine.DefaultTaskletRegistry;
 import org.apache.ant.tasklet.engine.TaskletEngine;
-import org.apache.ant.tasklet.engine.TaskletRegistry;
-import org.apache.ant.tasklet.engine.TskDeployer;
 import org.apache.avalon.Composer;
 import org.apache.avalon.DefaultComponentManager;
 import org.apache.avalon.Disposable;
 import org.apache.avalon.Initializable;
-import org.apache.avalon.camelot.Deployer;
-import org.apache.avalon.camelot.DeploymentException;
-import org.apache.avalon.camelot.RegistryException;
 import org.apache.log.Logger;
 
 public class DefaultProjectEngine
     implements ProjectEngine, Initializable, Disposable
 {
-    protected Deployer                 m_deployer;
-    protected TaskletRegistry          m_taskletRegistry;
-    protected ConverterRegistry        m_converterRegistry;
     protected TaskletEngine            m_taskletEngine;
     protected Logger                   m_logger;
     protected ProjectListenerSupport   m_listenerSupport;
@@ -61,15 +49,13 @@ public class DefaultProjectEngine
     {
         m_listenerSupport = new ProjectListenerSupport();
 
-        m_taskletRegistry = createTaskletRegistry();
-        m_converterRegistry = createConverterRegistry();
-        m_deployer = createDeployer();
-
         setupTaskletEngine();
 
         m_componentManager = new DefaultComponentManager();
         m_componentManager.put( "org.apache.ant.project.ProjectEngine", this );
         m_componentManager.put( "org.apache.ant.tasklet.engine.TaskletEngine", m_taskletEngine );
+        m_componentManager.put( "org.apache.ant.convert.ConverterEngine", 
+                                m_taskletEngine.getConverterEngine() );
     }
 
     public void dispose()
@@ -81,9 +67,9 @@ public class DefaultProjectEngine
         }
     }
 
-    public Deployer getDeployer()
+    public TaskletEngine getTaskletEngine()
     {
-        return m_deployer;
+        return m_taskletEngine;
     }
 
     protected void setupTaskletEngine()
@@ -91,17 +77,6 @@ public class DefaultProjectEngine
     {
         m_taskletEngine = createTaskletEngine();
         m_taskletEngine.setLogger( m_logger );
-        
-        if( m_taskletEngine instanceof Composer )
-        {
-            final DefaultComponentManager componentManager = new DefaultComponentManager();
-            componentManager.put( "org.apache.ant.tasklet.engine.TaskletRegistry", 
-                                  m_taskletRegistry );
-            componentManager.put( "org.apache.ant.convert.ConverterRegistry",
-                                  m_converterRegistry );
-            
-            ((Composer)m_taskletEngine).compose( componentManager );
-        }
         
         if( m_taskletEngine instanceof Initializable )
         {
@@ -114,24 +89,6 @@ public class DefaultProjectEngine
         return new DefaultTaskletEngine();
     }    
     
-    protected TaskletRegistry createTaskletRegistry()
-    {
-        return new DefaultTaskletRegistry();
-    }
-    
-    protected ConverterRegistry createConverterRegistry()
-    {
-        return new DefaultConverterRegistry();
-    }
-       
-    protected Deployer createDeployer()
-    {
-        final TskDeployer deployer = 
-            new TskDeployer( m_taskletRegistry, m_converterRegistry );
-        deployer.setLogger( m_logger );
-        return deployer;
-    }
-        
     public void execute( final Project project, final String target )
         throws AntException
     {

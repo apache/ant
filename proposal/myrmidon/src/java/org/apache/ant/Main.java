@@ -30,9 +30,10 @@ import org.apache.ant.project.ProjectListener;
 import org.apache.ant.project.ProjectToListenerAdapter;
 import org.apache.ant.tasklet.JavaVersion;
 import org.apache.ant.tasklet.TaskletContext;
+import org.apache.ant.tasklet.engine.TaskletEngine;
+import org.apache.ant.tasklet.engine.TskDeployer;
 import org.apache.avalon.Disposable;
 import org.apache.avalon.Initializable;
-import org.apache.avalon.camelot.Deployer;
 import org.apache.avalon.camelot.DeploymentException;
 import org.apache.avalon.util.ObjectUtil;
 import org.apache.avalon.util.StringUtil;
@@ -241,7 +242,7 @@ public class Main
      * @param clOptions the list of command line options
      */
     protected void execute( final List clOptions )
-        throws Throwable
+        throws Exception
     {
         final int size = clOptions.size();
         final ArrayList targets = new ArrayList();
@@ -384,7 +385,7 @@ public class Main
         final ExtensionFileFilter filter = new ExtensionFileFilter( ".tsk" );
 
         final File[] files = taskLibDirectory.listFiles( filter );
-        final Deployer deployer = engine.getDeployer();
+        final TskDeployer deployer = engine.getTaskletEngine().getTskDeployer();
 
         for( int i = 0; i < files.length; i++ )
         {

@@ -9,6 +9,7 @@ package org.apache.ant.tasklet.engine;
 
 import org.apache.ant.configuration.Configuration;
 import org.apache.ant.tasklet.Tasklet;
+import org.apache.avalon.Component;
 import org.apache.avalon.ConfigurationException;
 import org.apache.avalon.Context;
 
@@ -18,6 +19,7 @@ import org.apache.avalon.Context;
  * @author <a href="mailto:donaldp@apache.org">Peter Donald</a>
  */
 public interface TaskletConfigurer
+    extends Component
 {
     /**
      * Configure a task based on a configuration in a particular context.
