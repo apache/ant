@@ -357,17 +357,38 @@ public class AntClassLoader  extends ClassLoader {
         InputStream resourceStream = null;
         if (isSystemFirst(name)) {
             resourceStream = loadBaseResource(name);
-            if (resourceStream == null) {
+            if (resourceStream != null) {
+                project.log("ResourceStream for " + name
+                            + " loaded from system loader", Project.MSG_DEBUG);
+
+            } else {
                 resourceStream = loadResource(name);
+                if (resourceStream != null) {
+                    project.log("ResourceStream for " + name
+                                + " loaded from ant loader", Project.MSG_DEBUG);
+                }
             }
         }
         else {
             resourceStream = loadResource(name);
-            if (resourceStream == null) {
+            if (resourceStream != null) {
+                project.log("ResourceStream for " + name
+                            + " loaded from ant loader", Project.MSG_DEBUG);
+
+            } else {
                 resourceStream = loadBaseResource(name);
+                if (resourceStream != null) {
+                    project.log("ResourceStream for " + name
+                                + " loaded from system loader", Project.MSG_DEBUG);
+                }
             }
         }
             
+        if (resourceStream == null) {
+            project.log("Couldn't load ResourceStream for " + name, 
+                        Project.MSG_WARN);
+        }
+
         return resourceStream;
     }
     
@@ -518,17 +539,26 @@ public class AntClassLoader  extends ClassLoader {
             url = super.getResource(name);
         }
 
-        // try and load from this loader if the parent eitehr didn't find it or
-        // wasn;t consulted.
-        if (url == null) {
+        if (url != null) {
+            project.log("Resource " + name + " loaded from system loader", 
+                        Project.MSG_DEBUG);
+
+        } else {
+            // try and load from this loader if the parent either didn't find 
+            // it or wasn't consulted.
             String[] pathElements = classpath.list();
             for (int i = 0; i < pathElements.length && url == null; ++i) {
                 try {
                     File pathComponent = project.resolveFile((String)pathElements[i]);
                     url = getResourceURL(pathComponent, name);
+                    if (url != null) {
+                        project.log("Resource " + name 
+                                    + " loaded from ant loader", 
+                                    Project.MSG_DEBUG);
+                    }
                 }
                 catch (BuildException e) {
-                    // ignore path elements which ar einvalid relative to the project
+                    // ignore path elements which are invalid relative to the project
                 }
             }
         }
@@ -536,6 +566,14 @@ public class AntClassLoader  extends ClassLoader {
         if (url == null && !isSystemFirst(name)) {
             // this loader was first but it didn't find it - try the parent
             url = super.getResource(name);
+            if (url != null) {
+                project.log("Resource " + name + " loaded from system loader", 
+                            Project.MSG_DEBUG);
+            }
+        }
+
+        if (url == null) {
+            project.log("Couldn't load Resource " + name, Project.MSG_WARN);
         }
 
         return url;
