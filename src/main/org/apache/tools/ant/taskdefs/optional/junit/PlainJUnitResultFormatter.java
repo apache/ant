@@ -140,7 +140,6 @@ public class PlainJUnitResultFormatter implements JUnitResultFormatter {
         sb.append(nf.format(suite.getRunTime()/1000.0));
         sb.append(" sec");
         sb.append(newLine);
-        sb.append(newLine);
         
         // append the err and output streams to the log
         if (systemOutput != null && systemOutput.length() > 0) {
@@ -158,6 +157,8 @@ public class PlainJUnitResultFormatter implements JUnitResultFormatter {
                 .append("------------- ---------------- ---------------" )
                 .append(newLine);
         }
+
+        sb.append(newLine);
 
         if (out != null) {
             try {
