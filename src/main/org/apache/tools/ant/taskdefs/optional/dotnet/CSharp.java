@@ -70,12 +70,14 @@ package org.apache.tools.ant.taskdefs.optional.dotnet;
 
 import java.io.File;
 
+import org.apache.tools.ant.taskdefs.condition.Os;
+
 // ====================================================================
 
 /**
  *  Compiles C# source into executables or modules.
  *
- * csc.exe must be on the execute path, unless another executable
+ * csc.exe on Windows or mcs on other platforms must be on the execute path, unless another executable
  * or the full path to that executable is specified in the <tt>executable</tt>
  * parameter
  * <p>
@@ -190,7 +192,7 @@ public class CSharp extends DotnetCompile {
         unsafe = false;
         noconfig = false;
         definitions = null;
-        setExecutable("csc");
+        setExecutable(Os.isFamily("windows") ? "csc" : "mcs");
     }
 
 

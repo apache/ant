@@ -289,6 +289,9 @@ automatic use of response files.  Bugzilla report #19630
 
 Other changes:
 --------------
+
+* Shipped XML parser is now Xerces 2.6.0
+
 * All tasks can be used outside of <target>s.  Note that some tasks
   will not work at all outside of targets as they would cause infinite
   loops (<antcall> as well as <ant> and <subant> if they invoke the
