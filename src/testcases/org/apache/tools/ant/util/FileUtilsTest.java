@@ -50,6 +50,16 @@ public class FileUtilsTest extends TestCase {
         }
     }
 
+    /**
+     * test modification.
+     * Since Ant1.7, the method being tested no longer uses
+     * reflection to provide backwards support to Java1.1, so this
+     * test is not so critical. But it does explore file system
+     * behaviour and will help catch any regression in Java itself,
+     * so is worth retaining.
+     * @see FileUtils#setFileLastModified(java.io.File, long)
+     * @throws IOException
+     */
     public void testSetLastModified() throws IOException {
         removeThis = new File("dummy");
         FileOutputStream fos = new FileOutputStream(removeThis);
@@ -64,20 +74,14 @@ public class FileUtilsTest extends TestCase {
          * granularity (should be > 2s to account for Windows FAT).
          */
         try {
-            Thread.currentThread().sleep(5000);
+            Thread.sleep(5000);
         } catch (InterruptedException ie) {
             fail(ie.getMessage());
         }
 
         fu.setFileLastModified(removeThis, -1);
         long secondModTime = removeThis.lastModified();
-        try {
-            Class.forName("java.lang.ThreadLocal");
-            assertTrue(secondModTime > modTime);
-        } catch (ClassNotFoundException e) {
-            // JDK 1.1
-            assertEquals(modTime, secondModTime);
-        }
+        assertTrue(secondModTime > modTime);
 
 
         // number of milliseconds in a day
@@ -87,19 +91,13 @@ public class FileUtilsTest extends TestCase {
         // it did not work on a computer running JDK 1.4.1_02 + Windows 2000
         fu.setFileLastModified(removeThis, secondModTime + millisperday);
         long thirdModTime = removeThis.lastModified();
-        try {
-            Class.forName("java.lang.ThreadLocal");
-            /*
-             * I would love to compare this with 123456, but depending on
-             * the filesystems granularity it can take an arbitrary value.
-             *
-             * Just assert the time has changed.
-             */
-            assertTrue(thirdModTime != secondModTime);
-        } catch (ClassNotFoundException e) {
-            // JDK 1.1
-            assertEquals(modTime, thirdModTime);
-        }
+        /*
+         * I would love to compare this with 123456, but depending on
+         * the filesystems granularity it can take an arbitrary value.
+         *
+         * Just assert the time has changed.
+         */
+        assertTrue(thirdModTime != secondModTime);
     }
 
     public void testResolveFile() {

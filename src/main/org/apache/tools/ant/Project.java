@@ -1531,11 +1531,6 @@ public class Project {
      */
     public void setFileLastModified(File file, long time)
          throws BuildException {
-        if (JavaEnvUtils.isJavaVersion(JavaEnvUtils.JAVA_1_1)) {
-            log("Cannot change the modification time of " + file
-                + " in JDK 1.1", Project.MSG_WARN);
-            return;
-        }
         fileUtils.setFileLastModified(file, time);
         log("Setting modification time for " + file, MSG_VERBOSE);
     }

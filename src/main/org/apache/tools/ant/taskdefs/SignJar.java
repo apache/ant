@@ -28,6 +28,7 @@ import org.apache.tools.ant.Project;
 import org.apache.tools.ant.Task;
 import org.apache.tools.ant.types.FileSet;
 import org.apache.tools.ant.util.JavaEnvUtils;
+import org.apache.tools.ant.util.FileUtils;
 
 /**
  * Signs jar or zip files with the javasign command line tool. The
@@ -321,7 +322,7 @@ public class SignJar extends Task {
             if (jarFile.equals(signedjarFile)) {
               return false;
             }
-            if (signedjarFile.lastModified() > jarFile.lastModified()) {
+            if (FileUtils.newFileUtils().isUpToDate(jarFile,signedjarFile)) {
                 return true;
             }
         } else {
@@ -333,6 +334,12 @@ public class SignJar extends Task {
         return false;
     }
 
+    /**
+     * test for a file being signed, by looking for a signature in the META-INF
+     * directory
+     * @param file
+     * @return
+     */
     protected boolean isSigned(File file) {
         final String SIG_START = "META-INF/";
         final String SIG_END = ".SF";
