@@ -17,7 +17,6 @@ import java.util.Vector;
 import org.apache.myrmidon.api.TaskException;
 import org.apache.tools.ant.AntClassLoader;
 import org.apache.tools.ant.Project;
-import org.apache.tools.ant.ProjectHelper;
 import org.apache.tools.ant.Task;
 import org.apache.tools.ant.types.Path;
 import org.apache.tools.ant.types.Reference;
@@ -197,7 +196,9 @@ public class Property extends Task
     protected void addProperties( Properties props )
         throws TaskException
     {
-        resolveAllProperties( props );
+        //no longer needs as ant2 properties are completely dynamic
+        //resolveAllProperties( props );
+
         Enumeration e = props.keys();
         while( e.hasMoreElements() )
         {
@@ -329,60 +330,6 @@ public class Property extends Task
         catch( IOException ex )
         {
             throw new TaskException( "Error", ex );
-        }
-    }
-
-    private void resolveAllProperties( Properties props )
-        throws TaskException
-    {
-        for( Enumeration e = props.keys(); e.hasMoreElements(); )
-        {
-            String name = (String)e.nextElement();
-            String value = props.getProperty( name );
-
-            boolean resolved = false;
-            while( !resolved )
-            {
-                Vector fragments = new Vector();
-                Vector propertyRefs = new Vector();
-                ProjectHelper.parsePropertyString( value, fragments, propertyRefs );
-
-                resolved = true;
-                if( propertyRefs.size() != 0 )
-                {
-                    StringBuffer sb = new StringBuffer();
-                    Enumeration i = fragments.elements();
-                    Enumeration j = propertyRefs.elements();
-                    while( i.hasMoreElements() )
-                    {
-                        String fragment = (String)i.nextElement();
-                        if( fragment == null )
-                        {
-                            String propertyName = (String)j.nextElement();
-                            if( propertyName.equals( name ) )
-                            {
-                                throw new TaskException( "Property " + name + " was circularly defined." );
-                            }
-                            fragment = getProject().getProperty( propertyName );
-                            if( fragment == null )
-                            {
-                                if( props.containsKey( propertyName ) )
-                                {
-                                    fragment = props.getProperty( propertyName );
-                                    resolved = false;
-                                }
-                                else
-                                {
-                                    fragment = "${" + propertyName + "}";
-                                }
-                            }
-                        }
-                        sb.append( fragment );
-                    }
-                    value = sb.toString();
-                    props.put( name, value );
-                }
-            }
         }
     }
 }
