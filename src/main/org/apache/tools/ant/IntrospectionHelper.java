@@ -331,6 +331,7 @@ public class IntrospectionHelper implements BuildListener {
 
                         });
                 } catch (NoSuchMethodException nse) {
+                    // ignore
                 }
             } else if (name.startsWith("add")
                        && java.lang.Void.TYPE.equals(returnType)
@@ -357,6 +358,7 @@ public class IntrospectionHelper implements BuildListener {
                         });
                     nestedStorers.remove(name);
                 } catch (NoSuchMethodException nse) {
+                    // ignore
                 }
             }
         }
@@ -409,6 +411,7 @@ public class IntrospectionHelper implements BuildListener {
      * The method will make sure the helper will be cleaned up at the end of
      * the project, and only one instance will be created for each class.
      *
+     * @param p the project instance
      * @param c The class for which a helper is required.
      *          Must not be <code>null</code>.
      *
@@ -454,9 +457,9 @@ public class IntrospectionHelper implements BuildListener {
                 dc.setDynamicAttribute(attributeName, value);
                 return;
             } else {
-                String msg = getElementName(p, element) +
-                    " doesn't support the \"" + attributeName +
-                    "\" attribute.";
+                String msg = getElementName(p, element)
+                    + " doesn't support the \"" + attributeName
+                    + "\" attribute.";
                 throw new BuildException(msg);
             }
         }
@@ -519,10 +522,17 @@ public class IntrospectionHelper implements BuildListener {
         }
     }
 
+    /**
+     * Utility method to throw a NotSupported exception
+     *
+     * @param project the Project instance.
+     * @param parent the object which doesn't support a requested element
+     * @param elementName the name of the Element which is trying to be created.
+     */
     public void throwNotSupported(Project project, Object parent,
         String elementName) {
-        String msg = project.getElementName(parent) +
-            " doesn't support the nested \"" + elementName + "\" element.";
+        String msg = project.getElementName(parent)
+            + " doesn't support the nested \"" + elementName + "\" element.";
         throw new BuildException(msg);
     }
 
@@ -564,8 +574,8 @@ public class IntrospectionHelper implements BuildListener {
             DynamicConfigurator dc = (DynamicConfigurator) parent;
             Object nestedElement = dc.createDynamicElement(elementName);
             if (nestedElement != null) {
-                if ( project != null ) {
-                    project.setProjectReference( nestedElement );
+                if (project != null) {
+                    project.setProjectReference(nestedElement);
                 }
                 return nestedElement;
             }
@@ -575,8 +585,8 @@ public class IntrospectionHelper implements BuildListener {
         }
         try {
             Object nestedElement = nc.create(parent);
-            if ( project != null ) {
-                project.setProjectReference( nestedElement );
+            if (project != null) {
+                project.setProjectReference(nestedElement);
             }
             return nestedElement;
         } catch (IllegalAccessException ie) {
@@ -603,9 +613,9 @@ public class IntrospectionHelper implements BuildListener {
      * @return true if the given nested element is supported
      */
     public boolean supportsNestedElement(String elementName) {
-        return nestedCreators.containsKey(elementName) ||
-            DynamicConfigurator.class.isAssignableFrom(bean) ||
-            addTypeMethods.size() != 0;
+        return nestedCreators.containsKey(elementName)
+            || DynamicConfigurator.class.isAssignableFrom(bean)
+            || addTypeMethods.size() != 0;
     }
 
     /**
@@ -670,8 +680,9 @@ public class IntrospectionHelper implements BuildListener {
         throws BuildException {
         Class nt = (Class) nestedTypes.get(elementName);
         if (nt == null) {
-            String msg = "Class " + bean.getName() +
-                " doesn't support the nested \"" + elementName + "\" element.";
+            String msg = "Class " + bean.getName()
+                + " doesn't support the nested \"" + elementName
+                + "\" element.";
             throw new BuildException(msg);
         }
         return nt;
@@ -839,13 +850,13 @@ public class IntrospectionHelper implements BuildListener {
                 };
 
         // EnumeratedAttributes have their own helper class
-        } else if (org.apache.tools.ant.types.EnumeratedAttribute.class.isAssignableFrom(reflectedArg)) {
+        } else if (EnumeratedAttribute.class.isAssignableFrom(reflectedArg)) {
             return new AttributeSetter() {
                     public void set(Project p, Object parent, String value)
                         throws InvocationTargetException, IllegalAccessException, BuildException {
                         try {
-                            org.apache.tools.ant.types.EnumeratedAttribute ea =
-                                (org.apache.tools.ant.types.EnumeratedAttribute) reflectedArg.newInstance();
+                            EnumeratedAttribute ea =
+                                (EnumeratedAttribute) reflectedArg.newInstance();
                             ea.setValue(value);
                             m.invoke(parent, new EnumeratedAttribute[] {ea});
                         } catch (InstantiationException ie) {
@@ -869,8 +880,8 @@ public class IntrospectionHelper implements BuildListener {
                             throws InvocationTargetException, IllegalAccessException, BuildException {
                             try {
                                 Object attribute = c.newInstance(new String[] {value});
-                                if ( p != null ) {
-                                    p.setProjectReference( attribute );
+                                if (p != null) {
+                                    p.setProjectReference(attribute);
                                 }
                                 m.invoke(parent, new Object[] {attribute});
                             } catch (InstantiationException ie) {
@@ -880,6 +891,7 @@ public class IntrospectionHelper implements BuildListener {
                     };
 
             } catch (NoSuchMethodException nme) {
+                // ignore
             }
         }
 
@@ -969,42 +981,48 @@ public class IntrospectionHelper implements BuildListener {
      * Empty implementation to satisfy the BuildListener interface.
      * @param event Ignored in this implementation.
      */
-    public void buildStarted(BuildEvent event) {}
+    public void buildStarted(BuildEvent event) {
+    }
 
     /**
      * Empty implementation to satisfy the BuildListener interface.
      *
      * @param event Ignored in this implementation.
      */
-    public void targetStarted(BuildEvent event) {}
+    public void targetStarted(BuildEvent event) {
+    }
 
     /**
      * Empty implementation to satisfy the BuildListener interface.
      *
      * @param event Ignored in this implementation.
      */
-    public void targetFinished(BuildEvent event) {}
+    public void targetFinished(BuildEvent event) {
+    }
 
     /**
      * Empty implementation to satisfy the BuildListener interface.
      *
      * @param event Ignored in this implementation.
      */
-    public void taskStarted(BuildEvent event) {}
+    public void taskStarted(BuildEvent event) {
+    }
 
     /**
      * Empty implementation to satisfy the BuildListener interface.
      *
      * @param event Ignored in this implementation.
      */
-    public void taskFinished(BuildEvent event) {}
+    public void taskFinished(BuildEvent event) {
+    }
 
     /**
      * Empty implementation to satisfy the BuildListener interface.
      *
      * @param event Ignored in this implementation.
      */
-    public void messageLogged(BuildEvent event) {}
+    public void messageLogged(BuildEvent event) {
+    }
 
     /**
      * Check if the parent accepts a typed nested element
@@ -1016,8 +1034,7 @@ public class IntrospectionHelper implements BuildListener {
      */
 
     private Object createAddTypeElement(
-        Project project, Object parent, String elementName)
-    {
+        Project project, Object parent, String elementName) {
         ComponentHelper helper = ComponentHelper.getComponentHelper(project);
         Object addedObject = null;
         Method addMethod = null;
@@ -1091,11 +1108,11 @@ public class IntrospectionHelper implements BuildListener {
                     matchedClass = methodClass;
                     matchedMethod = method;
                 } else {
-                    if (! methodClass.isAssignableFrom(matchedClass)) {
-                        throw new BuildException(
-                            "ambiguous: types " + matchedClass.getName() +
-                            " and " + methodClass.getName() +
-                            " match " + paramClass.getName());
+                    if (!methodClass.isAssignableFrom(matchedClass)) {
+                        throw new BuildException("ambiguous: types "
+                            + matchedClass.getName() + " and "
+                            + methodClass.getName() + " match "
+                            + paramClass.getName());
                     }
                 }
             }

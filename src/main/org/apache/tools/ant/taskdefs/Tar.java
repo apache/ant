@@ -88,7 +88,6 @@ import org.apache.tools.zip.UnixStat;
  *
  * @ant.task category="packaging"
  */
-
 public class Tar extends MatchingTask {
 
     /**
@@ -296,8 +295,8 @@ public class Tar extends MatchingTask {
                 tOut.setDebug(true);
                 if (longFileMode.isTruncateMode()) {
                     tOut.setLongFileMode(TarOutputStream.LONGFILE_TRUNCATE);
-                } else if (longFileMode.isFailMode() ||
-                         longFileMode.isOmitMode()) {
+                } else if (longFileMode.isFailMode()
+                            || longFileMode.isOmitMode()) {
                     tOut.setLongFileMode(TarOutputStream.LONGFILE_ERROR);
                 } else {
                     // warn or GNU
@@ -329,7 +328,9 @@ public class Tar extends MatchingTask {
                     try {
                         // close up
                         tOut.close();
-                    } catch (IOException e) {}
+                    } catch (IOException e) {
+                        // ignore
+                    }
                 }
             }
         } finally {
@@ -381,8 +382,8 @@ public class Tar extends MatchingTask {
                     log("Omitting: " + vPath, Project.MSG_INFO);
                     return;
                 } else if (longFileMode.isWarnMode()) {
-                    log("Entry: " + vPath + " longer than " +
-                        TarConstants.NAMELEN + " characters.",
+                    log("Entry: " + vPath + " longer than "
+                        + TarConstants.NAMELEN + " characters.",
                         Project.MSG_WARN);
                     if (!longWarningGiven) {
                         log("Resulting tar file can only be processed "
@@ -391,9 +392,9 @@ public class Tar extends MatchingTask {
                         longWarningGiven = true;
                     }
                 } else if (longFileMode.isFailMode()) {
-                    throw new BuildException(
-                        "Entry: " + vPath + " longer than " +
-                        TarConstants.NAMELEN + "characters.", getLocation());
+                    throw new BuildException( "Entry: " + vPath
+                        + " longer than " + TarConstants.NAMELEN
+                        + "characters.", getLocation());
                 }
             }
 
@@ -668,7 +669,7 @@ public class Tar extends MatchingTask {
          *  @return valid enumeration values
          */
         public String[] getValues() {
-            return new String[] { NONE, GZIP, BZIP2 };
+            return new String[] {NONE, GZIP, BZIP2 };
         }
 
         /**
