@@ -1,12 +1,8 @@
 <?xml version="1.0"?>
 <project default="checkstyle" name="CheckAnt">
 
-<!--  <import file="build.xml"/> -->
-  <property name="src.dir" value="src"/>
-  <property name="java.dir" value="${src.dir}/main"/>
-  <property name="etc.dir" value="${src.dir}/etc"/>
+  <import file="build.xml"/>
   <property name="config.dir" value="${etc.dir}/checkstyle"/>
-  <property name="build.dir" value="build"/>
 
   <property name="checkstyle.reportdir" value="${build.dir}/reports/checkstyle"/>
   <property name="checkstyle.raw" value="${checkstyle.reportdir}/raw.xml"/>
