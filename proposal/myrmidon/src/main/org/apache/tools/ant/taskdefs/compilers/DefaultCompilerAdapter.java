@@ -11,15 +11,15 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
+import org.apache.avalon.excalibur.io.IOUtil;
 import org.apache.avalon.excalibur.util.StringUtil;
 import org.apache.avalon.framework.logger.AbstractLogEnabled;
 import org.apache.myrmidon.api.TaskException;
-import org.apache.myrmidon.api.TaskContext;
 import org.apache.tools.ant.taskdefs.Javac;
 import org.apache.tools.ant.taskdefs.exec.Execute2;
 import org.apache.tools.ant.types.Commandline;
 import org.apache.tools.ant.types.Path;
-import org.apache.tools.ant.types.FileSet;
+import org.apache.tools.ant.types.PathUtil;
 import org.apache.tools.ant.util.FileUtils;
 
 /**
@@ -288,7 +288,7 @@ public abstract class DefaultCompilerAdapter
         }
 
         // add the classpath
-        if ( m_compileClasspath != null )
+        if( m_compileClasspath != null )
         {
             classpath.addExisting( m_compileClasspath );
         }
@@ -344,22 +344,13 @@ public abstract class DefaultCompilerAdapter
                     System.arraycopy( args, 0, commandArray, 0, firstFileName );
                     commandArray[ firstFileName ] = "@" + tmpFile.getAbsolutePath();
                 }
-                catch( IOException e )
+                catch( final IOException ioe )
                 {
-                    throw new TaskException( "Error creating temporary file", e );
+                    throw new TaskException( "Error creating temporary file", ioe );
                 }
                 finally
                 {
-                    if( out != null )
-                    {
-                        try
-                        {
-                            out.close();
-                        }
-                        catch( Throwable t )
-                        {
-                        }
-                    }
+                    IOUtil.shutdownWriter( out );
                 }
             }
             else
@@ -439,19 +430,7 @@ public abstract class DefaultCompilerAdapter
             }
         }
 
-        final String[] dirs = m_extdirs.list();
-        for( int i = 0; i < dirs.length; i++ )
-        {
-            final File dir = new File( dirs[ i ] );
-            if( dir.exists() && dir.isDirectory() )
-            {
-                final FileSet fileSet = new FileSet();
-                fileSet.setDir( dir );
-                fileSet.setIncludes( "*" );
-                path.addFileset( fileSet );
-            }
-        }
+        PathUtil.addExtdirs( path, m_extdirs );
     }
-
 }
 
