@@ -33,14 +33,14 @@ import org.apache.tools.ant.Project;
  * for Xalan2/XSLTC, then for Xalan1.
  */
 abstract class XalanExecutor {
-    private static final String pack =
+    private static final String PACKAGE =
         "org.apache.tools.ant.taskdefs.optional.junit.";
 
     /** the transformer caller */
     protected AggregateTransformer caller;
 
     /** set the caller for this object. */
-    private final void setCaller(AggregateTransformer caller) {
+    private void setCaller(AggregateTransformer caller) {
         this.caller = caller;
     }
 
@@ -51,7 +51,8 @@ abstract class XalanExecutor {
             // it's all done by extension...
             return new ByteArrayOutputStream();
         } else {
-            return new BufferedOutputStream(new FileOutputStream(new File(caller.toDir, "junit-noframes.html")));
+            return new BufferedOutputStream(
+                new FileOutputStream(new File(caller.toDir, "junit-noframes.html")));
         }
     }
 
@@ -70,12 +71,12 @@ abstract class XalanExecutor {
         throws BuildException {
         XalanExecutor executor = null;
         try {
-            Class clazz = Class.forName(pack + "Xalan2Executor");
+            Class clazz = Class.forName(PACKAGE + "Xalan2Executor");
             executor = (XalanExecutor) clazz.newInstance();
         } catch (Exception xsltcApacheMissing) {
             caller.task.log(xsltcApacheMissing.toString());
             try {
-                Class clazz = Class.forName(pack + "Xalan1Executor");
+                Class clazz = Class.forName(PACKAGE + "Xalan1Executor");
                 executor = (XalanExecutor) clazz.newInstance();
             } catch (Exception xalan1Missing) {
                 caller.task.log(xalan1Missing.toString());
