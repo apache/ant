@@ -16,10 +16,10 @@
   <property name="src.dir" value="${basedir}/src/main"/>
   <property name="lib.dir" value="lib"/>
   <property name="docs.dir" value="docs"/>
-  <property name="build.dir" value="build"/>
-  <property name="build.classes" value="build/classes"/>
-  <property name="build.javadocs" value="build/javadocs"/>
-  <property name="ant.dist.dir" value="dist"/>
+  <property name="build.dir" value="../build"/>
+  <property name="build.classes" value="${build.dir}/classes"/>
+  <property name="build.javadocs" value="${build.dir}/javadocs"/>
+  <property name="ant.dist.dir" value="../dist"/>
 
   <property name="classpath" value=""/>
   <property name="packages" value="org.apache.tools.*"/>
@@ -56,7 +56,7 @@
            destdir="${build.classes}"
            classpath="${classpath}"
            debug="on"
-           deprecation="on"
+           deprecation="off"
            optimize="on" >
       <exclude name="**/Script.java" unless="bsf.present" />
       <exclude name="**/NetRexxC.java" unless="netrexx.present" />
@@ -72,6 +72,7 @@
   <!-- Creates the jar archive                                             -->
   <!-- =================================================================== -->
   <target name="jar" depends="compile">
+    <mkdir dir="${lib.dir}"/>
     <jar jarfile="${lib.dir}/${name}.jar"
          basedir="${build.classes}"
          includes="org/**"
