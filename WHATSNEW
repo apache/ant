@@ -18,6 +18,8 @@ Changes that could break older environments:
 
 Fixed bugs:
 -----------
+* Fixed bug where ant would not perform ftp without remotedir being
+  specified even though this was not mandatory.
 
 * Fixed bug where ant would not copy system properties into new Project
   in ant/antcall tasks when inheritall="false" is set.

@@ -603,7 +603,7 @@ public class FTP
 
         FTPFile[] files = ftp.listFiles(remoteFile);
 
-        // For Microsoft's Ftp-Service an Array with length 0 is 
+        // For Microsoft's Ftp-Service an Array with length 0 is
         // returned if configured to return listings in "MS-DOS"-Format
         if (files == null || files.length == 0)
         {
@@ -916,10 +916,9 @@ public class FTP
                                                  "could not change remote directory: " +
                                                  ftp.getReplyString());
                     }
-
-                    log(ACTION_STRS[action] + " files");
-                    transferFiles(ftp);
                 }
+                log(ACTION_STRS[action] + " files");
+                transferFiles(ftp);
             }
 
         }
