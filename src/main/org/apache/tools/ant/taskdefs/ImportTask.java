@@ -62,17 +62,23 @@ import java.io.IOException;
 import java.util.Vector;
 
 /**
- * EXPERIMENTAL
- * Import task.
- *
+ * <i>EXPERIMENTAL:</i> This task is experimental and may be under continual
+ * change till Ant1.6 ships; it may even be omitted from the product.
+ * <p>
+ * Task to import another build file into the current project.
+ * <p>
  * It must be 'top level'. On execution it'll read another file
  * into the same Project.
- *
- * Important: there is one limitation related with the top level
+ * <p>
+ * <b>Important</b>: there is one limitation related to the top level
  * elements in the imported files. The current implementation will
  * add them at the end of the top-level ( instead of replacing the
  * import element - which would be more intuitive ).
- *
+ * <p>
+ * <b>Important</b>: we have not finalized how relative file references
+ * will be resolved in deep/complex build hierarchies -such as what happens
+ * when an imported file imports another file. Use absolute references for
+ * enhanced build file stability. 
  *
  * @author Nicola Ken Barozzi nicolaken@apache.org
  * @author Dominique Devienne DDevienne@lgc.com
@@ -81,6 +87,11 @@ import java.util.Vector;
 public class ImportTask extends Task {
     String file;
 
+    /**
+     * the name of the file to import. How relative paths are resolved is still
+     * in flux: use absolute paths for safety.
+     * @param file
+     */
     public void setFile( String file ) {
         // I don't think we can use File - different rules
         // for relative paths.
