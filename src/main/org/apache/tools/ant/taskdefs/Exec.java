@@ -87,12 +87,16 @@ public class Exec extends Task {
             return;
         }
 
-        String ant = project.getProperty("ant.home");
-        if (ant == null) throw new BuildException("Property 'ant.home' not found");
+        if (myos.toLowerCase().indexOf("windows") >= 0) {
+            if (!dir.equals("."))
+                command = "cmd /c cd " + project.resolveFile(dir) + " && " + command;
+        } else {
+            String ant = project.getProperty("ant.home");
+            if (ant == null) throw new BuildException("Property 'ant.home' not found");
+            String antRun = project.resolveFile(ant + "/bin/antRun").toString();
 
-        String antRun = project.resolveFile(ant + "/bin/antRun").toString();
-        if (myos.toLowerCase().indexOf("windows") >= 0) antRun = antRun + ".bat";
-        command = antRun + " " + project.resolveFile(dir) + " " + command;
+            command = antRun + " " + project.resolveFile(dir) + " " + command;
+        }
 
         try {
             // show the command
