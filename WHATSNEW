@@ -14,6 +14,9 @@ Other changes:
 * The attribute zipfile in GZip has been deprecated and superseded 
   by "tofile" attribute.
 
+* Added a new condition <isset> that test for the existence of a
+  property to the condition task.
+
 Fixed bugs:
 -----------
 

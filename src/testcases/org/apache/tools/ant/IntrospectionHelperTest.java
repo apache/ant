@@ -162,7 +162,7 @@ public class IntrospectionHelperTest extends TestCase {
         }
         try {
             ih.getElementType("eleven");
-            fail("addTen takes primitive argument");
+            fail("addEleven takes primitive argument");
         } catch (BuildException be) {
         }
         try {
@@ -424,6 +424,8 @@ public class IntrospectionHelperTest extends TestCase {
     public void setTen(File f) {
         if (isUnixStyle) { 
             assertEquals("/tmp/2", f.getAbsolutePath());
+        } else if (System.getProperty("os.name").toLowerCase().equals("netware")) {
+            assertEquals("\\tmp\\2", f.getAbsolutePath().toLowerCase());
         } else {
             assertEquals(":\\tmp\\2", f.getAbsolutePath().toLowerCase().substring(1));
         }

@@ -323,12 +323,6 @@ public class FileUtils {
             return normalize(filename);
         }
 
-        if (filename.length() >= 2 &&
-            Character.isLetter(filename.charAt(0)) &&
-            filename.charAt(1) == ':') {
-            return normalize(filename);
-        }
-
         if (file == null) {
             return new File(filename);
         }
