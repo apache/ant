@@ -284,13 +284,13 @@ See also <A href="#common-params">the required common StarTeam parameters</A>.<b
     <td align="center" valign="top">no</td>
   </tr>  
   
-<!--
+
   <tr>
-    <td valign="top">createworkingdirs</td>
-    <td valign="top">creates local folders even when the corresponding StarTeam folder is empty.  Defaults to "true".</td>
+    <td valign="top">comment</td>
+    <td valign="top">Checkin comment to be saved with the file.</td>
     <td align="center" valign="top">no</td>
   </tr>
--->
+
   <tr>
     <td valign="top">adduncontrolled</td>
     <td valign="top">if true, any files or folders NOT in StarTeam will be 
@@ -419,13 +419,14 @@ This example is like the previous one, but will only check only in one file, C:\
             password="secret"
             rootlocalfolder="C:\dev\buildtest\co"
             rootstarteamfolder="src/java"
-            includes="version.txt"
+            includes="version.java"
 	    forced="true"
 	    recursive="false"
 	    addUncontrolled="true"
+	    comment="Fix Bug #667"
   /&gt;
 </pre>
-This example is like the previous one, but will only check only in one file, C:\dev\buildtest\co\version.txt to the StarTeam folder src/java.  Because the <i>addUncontrolled</i> attribute has been set, if StarTeam does not already control this file in this location, it will be added to the repository.
+This example is like the previous one, but will only check only in one file, C:\dev\buildtest\co\version.java to the StarTeam folder src/java.  Because the <i>addUncontrolled</i> attribute has been set, if StarTeam does not already control this file in this location, it will be added to the repository.  Also, it will write a comment to the repository for this version of the file.
 
 <pre>
   &lt;stcheckin URL="STARTEAM:49201/Aproject/AView"
