@@ -8,6 +8,12 @@
 
 <body>
 
+  <section name="Best-Practices Profile of Ant at Sun&apos;s Dot-Com Builder">
+      <p>Sun has released an introductury article on Ant on their
+      Dot-Com Builder site on May 18 2001. See <a
+      href="http://dcb.sun.com/practices/profiles/ant.jsp">http://dcb.sun.com/practices/profiles/ant.jsp</a></p>
+  </section>
+
   <section name="Ant 2.0 Requirements">
     <p>Ant has been in use for quite some time and has been used in ways never conceived when it
        was originally written. While Ant 1.x has continued to sucessfully evolve and grow, there 
