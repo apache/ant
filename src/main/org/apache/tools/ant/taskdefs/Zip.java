@@ -133,25 +133,11 @@ public class Zip extends MatchingTask {
      * This is the name/location of where to
      * create the .zip file.
      * @since 1.5alpha
-     * @todo pull this before shipping 1.5
      * @deprecated Use setDestFile(File) instead
      */
     public void setFile(File file) {
         log("DEPRECATED - The file attribute has been renamed destfile.",
             Project.MSG_ERR);
-        log("This attribute will be unsupported before Ant1.5 is released.",
-            Project.MSG_ERR);
-
-        log("Be aware that the effect of using the file attribute depends on",
-            Project.MSG_WARN);
-        log("the phase of the moon.", Project.MSG_WARN);
-        int phase = DateUtils.getPhaseOfMoon(Calendar.getInstance());
-        if (phase == 4) {
-            log("You are lucky!  Full moon tonight.");
-        } else if (phase == 0) {
-            log("Be careful!  New moon tonight.", Project.MSG_WARN);
-        }
-        
         setDestFile(file);
     }
 
