@@ -70,6 +70,17 @@ public class SyncTest extends BuildFileTest {
         assertDebuglogContaining("Removed 1 dangling directory from");
     }
 
+    public void testCopyAndRemoveEmptyPreserve() {
+        executeTarget("copyandremove-emptypreserve");
+        String d = getProject().getProperty("dest") + "/a/b/c/d";
+        assertFileIsPresent(d);
+        String f = getProject().getProperty("dest") + "/e/f";
+        assertFileIsNotPresent(f);
+        assertTrue(getFullLog().indexOf("Removing orphan file:") > -1);
+        assertDebuglogContaining("Removed 1 dangling file from");
+        assertDebuglogContaining("Removed 1 dangling directory from");
+    }
+
     public void testEmptyDirCopyAndRemove() {
         executeTarget("emptydircopyandremove");
         String d = getProject().getProperty("dest") + "/a/b/c/d";
@@ -85,6 +96,15 @@ public class SyncTest extends BuildFileTest {
 
     public void testCopyNoRemove() {
         executeTarget("copynoremove");
+        String d = getProject().getProperty("dest") + "/a/b/c/d";
+        assertFileIsPresent(d);
+        String f = getProject().getProperty("dest") + "/e/f";
+        assertFileIsPresent(f);
+        assertTrue(getFullLog().indexOf("Removing orphan file:") == -1);
+    }
+
+    public void testCopyNoRemoveSelectors() {
+        executeTarget("copynoremove-selectors");
         String d = getProject().getProperty("dest") + "/a/b/c/d";
         assertFileIsPresent(d);
         String f = getProject().getProperty("dest") + "/e/f";

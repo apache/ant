@@ -28,6 +28,7 @@ import org.apache.tools.ant.Project;
 /**
  * Special <CODE>PipedInputStream</CODE> that will not die
  * when the writing <CODE>Thread</CODE> is no longer alive.
+ * @since Ant 1.6.2
  */
 public class LeadPipeInputStream extends PipedInputStream {
     private ProjectComponent managingPc;
@@ -40,6 +41,16 @@ public class LeadPipeInputStream extends PipedInputStream {
     }
 
     /**
+     * Construct a new <CODE>LeadPipeInputStream</CODE>
+     * with the specified buffer size.
+     * @param size   the size of the circular buffer.
+     */
+    public LeadPipeInputStream(int size) {
+        super();
+        setBufferSize(size);
+    }
+
+    /**
      * Construct a new <CODE>LeadPipeInputStream</CODE> to pull
      * from the specified <CODE>PipedOutputStream</CODE>.
      * @param src   the <CODE>PipedOutputStream</CODE> source.
@@ -47,6 +58,18 @@ public class LeadPipeInputStream extends PipedInputStream {
      */
     public LeadPipeInputStream(PipedOutputStream src) throws IOException {
         super(src);
+    }
+
+    /**
+     * Construct a new <CODE>LeadPipeInputStream</CODE> to pull
+     * from the specified <CODE>PipedOutputStream</CODE>, using a
+     * circular buffer of the specified size.
+     * @param src    the <CODE>PipedOutputStream</CODE> source.
+     * @param size   the size of the circular buffer.
+     */
+    public LeadPipeInputStream(PipedOutputStream src, int size) throws IOException {
+        super(src);
+        setBufferSize(size);
     }
 
     //inherit doc
@@ -66,6 +89,28 @@ public class LeadPipeInputStream extends PipedInputStream {
             }
         }
         return result;
+    }
+
+    /**
+     * Set the size of the buffer.
+     * @param size   the new buffer size.  Ignored if <= current size.
+     */
+    public synchronized void setBufferSize(int size) {
+        if (size > buffer.length) {
+            byte[] newBuffer = new byte[size];
+            if (in >= 0) {
+                if (in > out) {
+                    System.arraycopy(buffer, out, newBuffer, out, in - out);
+                } else {
+                    int outlen = buffer.length - out;
+                    System.arraycopy(buffer, out, newBuffer, 0, outlen);
+                    System.arraycopy(buffer, 0, newBuffer, outlen, in);
+                    in+= outlen;
+                    out = 0;
+                }
+            }
+            buffer = newBuffer;
+        }
     }
 
     /**

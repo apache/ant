@@ -35,6 +35,17 @@
     </sync>
   </target>
 
+  <target name="copyandremove-emptypreserve" depends="setup">
+    <mkdir dir="${src}/a/b/c"/>
+    <touch file="${src}/a/b/c/d"/>
+    <mkdir dir="${dest}/e"/>
+    <touch file="${dest}/e/f"/>
+    <sync todir="${dest}">
+      <fileset dir="${src}"/>
+      <preserveintarget/>
+    </sync>
+  </target>
+
   <target name="emptycopy" depends="setup">
     <mkdir dir="${src}/a/b/c"/>
     <touch file="${src}/a/b/c/d"/>
@@ -69,9 +80,22 @@
     <touch file="${dest}/e/f"/>
     <sync todir="${dest}">
       <fileset dir="${src}"/>
-      <deletefromtarget>
-        <exclude name="e/f"/>
-      </deletefromtarget>
+      <preserveintarget>
+        <include name="e/f"/>
+      </preserveintarget>
+    </sync>
+  </target>
+
+  <target name="copynoremove-selectors" depends="setup">
+    <mkdir dir="${src}/a/b/c"/>
+    <touch file="${src}/a/b/c/d"/>
+    <mkdir dir="${dest}/e"/>
+    <touch file="${dest}/e/f"/>
+    <sync todir="${dest}">
+      <fileset dir="${src}"/>
+      <preserveintarget>
+        <filename name="e/f"/>
+      </preserveintarget>
     </sync>
   </target>
 

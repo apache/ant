@@ -1,5 +1,5 @@
 /*
- * Copyright  2002-2004 The Apache Software Foundation
+ * Copyright  2002-2005 The Apache Software Foundation
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -63,7 +63,7 @@ public abstract class AbstractFileSet extends DataType
 
     private File dir;
     private boolean useDefaultExcludes = true;
-    private boolean isCaseSensitive = true;
+    private boolean caseSensitive = true;
     private boolean followSymlinks = true;
 
     /**
@@ -84,7 +84,7 @@ public abstract class AbstractFileSet extends DataType
         this.additionalPatterns = fileset.additionalPatterns;
         this.selectors = fileset.selectors;
         this.useDefaultExcludes = fileset.useDefaultExcludes;
-        this.isCaseSensitive = fileset.isCaseSensitive;
+        this.caseSensitive = fileset.caseSensitive;
         this.followSymlinks = fileset.followSymlinks;
         setProject(fileset.getProject());
     }
@@ -216,6 +216,24 @@ public abstract class AbstractFileSet extends DataType
     }
 
     /**
+     * Appends <code>includes</code> to the current list of include
+     * patterns.
+     *
+     * @param includes array containing the include patterns.
+     * @since Ant 1.7
+     */
+    public void appendIncludes(String[] includes) {
+        if (isReference()) {
+            throw tooManyAttributes();
+        }
+        if (includes != null) {
+            for (int i = 0; i < includes.length; i++) {
+                defaultPatterns.createInclude().setName(includes[i]);
+            }
+        }
+    }
+
+    /**
      * Appends <code>excludes</code> to the current list of exclude
      * patterns.
      *
@@ -228,6 +246,24 @@ public abstract class AbstractFileSet extends DataType
             throw tooManyAttributes();
         }
         defaultPatterns.setExcludes(excludes);
+    }
+
+    /**
+     * Appends <code>excludes</code> to the current list of include
+     * patterns.
+     *
+     * @param excludes array containing the exclude patterns.
+     * @since Ant 1.7
+     */
+    public void appendExcludes(String[] excludes) {
+        if (isReference()) {
+            throw tooManyAttributes();
+        }
+        if (excludes != null) {
+            for (int i = 0; i < excludes.length; i++) {
+                defaultPatterns.createExclude().setName(excludes[i]);
+            }
+        }
     }
 
     /**
@@ -267,15 +303,37 @@ public abstract class AbstractFileSet extends DataType
     }
 
     /**
+     * Whether default exclusions should be used or not.
+     * @since Ant 1.7
+     */
+    public boolean getDefaultexcludes() {
+        return (isReference())
+            ? getRef(getProject()).getDefaultexcludes() : useDefaultExcludes;
+    }
+
+    /**
      * Sets case sensitivity of the file system.
      *
      * @param isCaseSensitive <code>boolean</code>.
      */
-    public void setCaseSensitive(boolean isCaseSensitive) {
+    public void setCaseSensitive(boolean caseSensitive) {
         if (isReference()) {
             throw tooManyAttributes();
         }
-        this.isCaseSensitive = isCaseSensitive;
+        this.caseSensitive = caseSensitive;
+    }
+
+    /**
+     * Find out if the fileset is case sensitive.
+     *
+     * @return <code>boolean</code> indicating whether the fileset is
+     * case sensitive.
+     *
+     * @since Ant 1.7
+     */
+    public boolean isCaseSensitive() {
+        return (isReference())
+            ? getRef(getProject()).isCaseSensitive() : caseSensitive;
     }
 
     /**
@@ -365,16 +423,12 @@ public abstract class AbstractFileSet extends DataType
         }
         ds.setBasedir(dir);
 
-        final int count = additionalPatterns.size();
-        for (int i = 0; i < count; i++) {
-            Object o = additionalPatterns.elementAt(i);
-            defaultPatterns.append((PatternSet) o, p);
-        }
+        PatternSet ps = mergePatterns(p);
         p.log(getDataTypeName() + ": Setup scanner in dir " + dir
-            + " with " + defaultPatterns, Project.MSG_DEBUG);
+            + " with " + ps, Project.MSG_DEBUG);
 
-        ds.setIncludes(defaultPatterns.getIncludePatterns(p));
-        ds.setExcludes(defaultPatterns.getExcludePatterns(p));
+        ds.setIncludes(ps.getIncludePatterns(p));
+        ds.setExcludes(ps.getExcludePatterns(p));
         if (ds instanceof SelectorScanner) {
             SelectorScanner ss = (SelectorScanner) ds;
             ss.setSelectors(getSelectors(p));
@@ -382,7 +436,7 @@ public abstract class AbstractFileSet extends DataType
         if (useDefaultExcludes) {
             ds.addDefaultExcludes();
         }
-        ds.setCaseSensitive(isCaseSensitive);
+        ds.setCaseSensitive(caseSensitive);
     }
 
     /**
@@ -681,6 +735,46 @@ public abstract class AbstractFileSet extends DataType
                 throw new BuildException(e);
             }
         }
+    }
+
+    /**
+     * @return the include patterns of the default pattern set and all
+     * nested patternsets.
+     *
+     * @since Ant 1.7
+     */
+    public String[] mergeIncludes(Project p) {
+        return mergePatterns(p).getIncludePatterns(p);
+    }
+
+    /**
+     * @return the exclude patterns of the default pattern set and all
+     * nested patternsets.
+     *
+     * @since Ant 1.7
+     */
+    public String[] mergeExcludes(Project p) {
+        return mergePatterns(p).getExcludePatterns(p);
+    }
+
+    /**
+     * @return the default patternset merged with the additional sets
+     * in a new PatternSet instance.
+     *
+     * @since Ant 1.7
+     */
+    public PatternSet mergePatterns(Project p) {
+        if (isReference()) {
+            return getRef(p).mergePatterns(p);
+        }
+        PatternSet ps = new PatternSet();
+        ps.append(defaultPatterns, p);
+        final int count = additionalPatterns.size();
+        for (int i = 0; i < count; i++) {
+            Object o = additionalPatterns.elementAt(i);
+            ps.append((PatternSet) o, p);
+        }
+        return ps;
     }
 
 }

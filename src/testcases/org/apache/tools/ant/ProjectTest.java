@@ -34,7 +34,7 @@ import junit.framework.TestSuite;
 /**
  * Very limited test class for Project. Waiting to be extended.
  *
-*/
+ */
 public class ProjectTest extends TestCase {
 
     private Project p;

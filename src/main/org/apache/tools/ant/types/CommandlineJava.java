@@ -74,7 +74,7 @@ public class CommandlineJava implements Cloneable {
      * Specialized Environment class for System properties
      */
     public static class SysProperties extends Environment implements Cloneable {
-        private Properties sys = null;
+        Properties sys = null;
         private Vector propertySets = new Vector();
 
         /**

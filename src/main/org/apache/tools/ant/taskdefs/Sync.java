@@ -34,6 +34,9 @@ import org.apache.tools.ant.Project;
 import org.apache.tools.ant.Task;
 import org.apache.tools.ant.types.AbstractFileSet;
 import org.apache.tools.ant.types.FileSet;
+import org.apache.tools.ant.types.PatternSet;
+import org.apache.tools.ant.types.selectors.FileSelector;
+import org.apache.tools.ant.types.selectors.NoneSelector;
 
 /**
  * Synchronize a local target directory from the files defined
@@ -163,8 +166,33 @@ public class Sync extends Task {
 
         DirectoryScanner ds = null;
         if (syncTarget != null) {
-            syncTarget.setTargetDir(toDir);
-            ds = syncTarget.getDirectoryScanner(getProject());
+            FileSet fs = new FileSet();
+            fs.setDir(toDir);
+            fs.setCaseSensitive(syncTarget.isCaseSensitive());
+            fs.setFollowSymlinks(syncTarget.isFollowSymlinks());
+
+            // preserveInTarget would find all files we want to keep,
+            // but we need to find all that we want to delete - so the
+            // meaning of all patterns and selectors must be inverted
+            PatternSet ps = syncTarget.mergePatterns(getProject());
+            String[] excludes = ps.getExcludePatterns(getProject());
+            fs.appendExcludes(ps.getIncludePatterns(getProject()));
+            fs.appendIncludes(ps.getExcludePatterns(getProject()));
+            fs.setDefaultexcludes(!syncTarget.getDefaultexcludes());
+
+            // selectors are implicitly ANDed in DirectoryScanner.  To
+            // revert their logic we wrap them into a <none> selector
+            // instead.
+            FileSelector[] s = syncTarget.getSelectors(getProject());
+            if (s.length > 0) {
+                NoneSelector ns = new NoneSelector();
+                for (int i = 0; i < s.length; i++) {
+                    ns.appendSelector(s[i]);
+                }
+                fs.appendSelector(ns);
+            }
+            
+            ds = fs.getDirectoryScanner(getProject());
         } else {
             ds = new DirectoryScanner();
             ds.setBasedir(toDir);
@@ -180,7 +208,7 @@ public class Sync extends Task {
             ++removedCount[1];
         }
         String[] dirs = ds.getIncludedDirectories();
-        // ds returns the directories as it has visited them.
+        // ds returns the directories in lexicographic order.
         // iterating through the array backwards means we are deleting
         // leaves before their parent nodes - thus making sure (well,
         // more likely) that the directories are empty when we try to
@@ -306,13 +334,13 @@ public class Sync extends Task {
      * are not present in any source directory.
      *
      * <p>You must not invoke this method more than once.</p>
-     * @param s a deletefromtarget nested element
+     * @param s a preserveintarget nested element
      * @since Ant 1.7
      */
-    public void addDeleteFromTarget(SyncTarget s) {
+    public void addPreserveInTarget(SyncTarget s) {
         if (syncTarget != null) {
             throw new BuildException("you must not specify multiple "
-                                     + "deletefromtaget elements.");
+                                     + "preserveintarget elements.");
         }
         syncTarget = s;
     }
@@ -381,22 +409,17 @@ public class Sync extends Task {
          */
         public SyncTarget() {
             super();
-            setDefaultexcludes(false);
         }
 
         /**
          * Override AbstractFileSet#setDir(File) to disallow
-         * setting the directory. This is now set by #setTargetDir(File).
+         * setting the directory.
          * @param dir ignored
          * @throws BuildException always
          */
         public void setDir(File dir) throws BuildException {
-            throw new BuildException("synctarget doesn't support the dir "
+            throw new BuildException("preserveintarget doesn't support the dir "
                                      + "attribute");
-        }
-
-        private void setTargetDir(File dir) throws BuildException {
-            super.setDir(dir);
         }
 
     }
