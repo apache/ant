@@ -1,0 +1,68 @@
+<html>
+
+<head>
+<meta http-equiv="Content-Language" content="en-us">
+<title>Length Task</title>
+</head>
+
+<body>
+
+<h2>Length</h2>
+<h3>Description</h3>
+<p>Display or set a property containing length information for
+   a string, a file, or one or more nested filesets.</p>
+<h3>Parameters</h3>
+<table border="1" cellpadding="2" cellspacing="0">
+  <tr>
+    <td valign="top"><b>Attribute</b></td>
+    <td valign="top"><b>Description</b></td>
+    <td align="center" valign="top"><b>Required</b></td>
+  </tr>
+  <tr>
+    <td valign="top">property</td>
+    <td valign="top">The property to set.  If omitted
+      the length is written to the log.</td>
+    <td valign="top" align="center">No</td>
+  </tr>
+  <tr>
+    <td valign="top">file</td>
+    <td valign="top">Single file whose length to report.</td>
+    <td valign="top" align="center" rowspan="2">One of these,
+      or one or more nested filesets</td>
+  </tr>
+  <tr>
+    <td valign="top">string</td>
+    <td valign="top">The string whose length to report.</td>
+  </tr>
+  <tr>
+    <td valign="top">mode</td>
+    <td valign="top">File length mode; when &quot;all&quot; the resulting
+      value is the sum of all included files' lengths; when &quot;each&quot;
+      the task outputs the absolute path and length of each included file,
+      one per line.</td>
+    <td valign="top" align="center">No; default is &quot;all&quot;</td>
+  </tr>
+  <tr>
+    <td valign="top">trim</td>
+    <td valign="top">Whether to trim when operating on a string.</td>
+    <td valign="top" align="center">No; only valid when string is set</td>
+  </tr>
+</table>
+<h3>Parameters specified as nested elements</h3>
+<h4>fileset</h4><p>You can include files via nested
+  <a href="../CoreTypes/fileset.html">fileset</a>s.</p>
+<h3>Examples</h3>
+<pre>&lt;length string=&quot;foo&quot; property=&quot;length.foo&quot; /&gt;
+</pre>
+<p>Stores the length of the string &quot;foo&quot; in the property named
+<i>length.foo</i>.</p>
+<pre>&lt;length file=&quot;bar&quot; property=&quot;length.bar&quot; /&gt;
+</pre>
+<p>Stores the length of file &quot;bar&quot; in the property named
+<i>length.bar</i>.</p>
+<hr />
+<p align="center">Copyright &copy; 2005 The Apache Software Foundation.
+  All rights Reserved.</p>
+</body>
+</html>
+

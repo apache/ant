@@ -110,6 +110,8 @@ Other changes:
 * Added support to the touch task for a verbose attribute to suppress
   logging of new file creation.
 
+* Added length task to get strings' and files' lengths.
+
 Changes from Ant 1.6.2 to current Ant 1.6 CVS version
 =====================================================
 
