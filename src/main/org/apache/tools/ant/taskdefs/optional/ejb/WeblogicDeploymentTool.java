@@ -59,11 +59,8 @@ import java.util.jar.*;
 import java.util.*;
 import java.net.*;
 
-import org.apache.tools.ant.BuildException;
-import org.apache.tools.ant.Project;
-import org.apache.tools.ant.Task;
-import org.apache.tools.ant.types.Path;
-import org.apache.tools.ant.types.Commandline;
+import org.apache.tools.ant.*;
+import org.apache.tools.ant.types.*;
 import org.apache.tools.ant.taskdefs.Java;
 
 public class WeblogicDeploymentTool extends GenericDeploymentTool {
@@ -489,11 +486,14 @@ public class WeblogicDeploymentTool extends GenericDeploymentTool {
     */
     protected ClassLoader getClassLoaderFromJar(File classjar) throws IOException
     {
-        URLClassLoader loader;
-        URL[] aURL = new URL[1];
-
-        aURL[0] = new URL("file","",0,classjar.getAbsolutePath());
-        loader = new URLClassLoader(aURL);
-        return loader;
+        Path lookupPath = new Path(getTask().getProject());
+        lookupPath.setLocation(classjar);
+        
+        Path classpath = getClasspath();
+        if (classpath != null) {
+            lookupPath.append(classpath);
+        }
+        
+        return new AntClassLoader(getTask().getProject(), lookupPath);
     }
 }
