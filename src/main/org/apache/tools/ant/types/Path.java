@@ -528,6 +528,14 @@ public class Path extends DataType implements Cloneable {
             msZipFiles.setDir(new File(System.getProperty("java.home") + File.separator + "Packages"));
             msZipFiles.setIncludes("*.ZIP");
             addFileset(msZipFiles);
+        } else if(System.getProperty("java.vm.name").equals("Kaffe")) {
+            FileSet kaffeJarFiles = new FileSet();
+            kaffeJarFiles.setDir(new File(System.getProperty("java.home") 
+                                          + File.separator + "share"
+                                          + File.separator + "kaffe"));
+            
+            kaffeJarFiles.setIncludes("*.jar");
+            addFileset(kaffeJarFiles);
         }
         else if (Project.getJavaVersion() == Project.JAVA_1_1) {
             addExisting(new Path(null,
