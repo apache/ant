@@ -26,6 +26,6 @@ public interface FileList
      * @param context the context to use to evaluate the list.
      * @return The names of the files in this list.  All names are absolute paths.
      */
-    public String[] listFiles( TaskContext context )
+    String[] listFiles( TaskContext context )
         throws TaskException;
 }

@@ -27,5 +27,5 @@ public interface ExtensionManager
      * @param extension the extension to locate an optional package
      * @return the optional package, or null if not found.
      */
-    public OptionalPackage getOptionalPackage( Extension extension );
+    OptionalPackage getOptionalPackage( Extension extension );
 }
