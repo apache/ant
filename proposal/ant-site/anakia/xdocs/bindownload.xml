@@ -11,9 +11,10 @@
 <section name="Downloading Ant">
 
 <p>Use the links below to download a binary distribution of Ant from
-one of our mirrors.  You <strong>must</strong> <a href="#Verify
-Releases">verify the integrity</a> of the downloaded files using
-signatures downloaded from our main distribution directory.</p>
+one of our mirrors.  You <strong>must</strong> 
+<a href="[location]#Verify Releases">verify the integrity</a> of the 
+downloaded files using signatures downloaded from our main
+distribution directory.</p>
 
 <p>Ant is distributed as <code>zip</code>, <code>tar.gz</code> and
 <code>tar.bz2</code> archives - the contents are the same.  Please
@@ -93,7 +94,7 @@ href="http://jakarta.apache.org/builds/ant/release/">here</a>.  Those
 releases are only provided as <code>zip</code> archives that can be
 extracted by <code>jar xf </code><em>archive.zip</em> - we highly
 recommend to not use those releases but upgrade to Ant's <a
-href="#Current Release of Ant">latest</a> release.</p>
+href="[location]#Current Release of Ant">latest</a> release.</p>
 
 </section>
 
