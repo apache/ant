@@ -8,12 +8,16 @@
     -->
     
     <body>
-    <menu name="Essentials">
-        <item name="Front Page"            href="/index.html"/>
-        <item name="Ant News"              href="/antnews.html"/>
-        <item name="External Resources for Ant"
+    <menu name="Ant">
+        <item name="News"                 
+              href="/antnews.html"/>
+        <item name="External Resources"
               href="/external.html"/>
-        <item name="Jakarta News &amp; Status"     href="/site/news.html"/>
+    </menu>
+
+    <menu name="Jakarta">
+        <item name="Front Page"            href="/index.html"/>
+        <item name="News &amp; Status"     href="/site/news.html"/>
         <item name="Mission"               href="/site/mission.html"/>
         <item name="Guidelines Notes"      href="/site/guidelines.html"/>
         <item name="FAQs"                  href="/site/faqs.html"/>
