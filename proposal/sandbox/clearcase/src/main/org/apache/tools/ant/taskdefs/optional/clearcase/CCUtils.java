@@ -67,7 +67,6 @@ import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Task;
 import org.apache.tools.ant.util.regexp.RegexpMatcher;
 import org.apache.tools.ant.util.regexp.RegexpMatcherFactory;
-import org.apache.tools.ant.util.StringUtils;
 import org.apache.tools.ant.util.FileUtils;
 import org.apache.tools.ant.taskdefs.Execute;
 import org.apache.tools.ant.taskdefs.ExecuteStreamHandler;
@@ -117,7 +116,7 @@ public final class CCUtils {
      * @return the resolved link if it is a symbolic link, otherwise
      * return the original link.
      */
-    public File resolveSymbolicLink(File toresolve) throws Exception {
+    public File resolveSymbolicLink(File toresolve) throws BuildException {
         String[] args = { "ls", "-l", toresolve.getAbsolutePath() };
         CmdResult res = cleartool(args);
         if (res.getStatus() != 0 ){
@@ -139,7 +138,7 @@ public final class CCUtils {
     /**
      * Move a file to another. (ie rename)
      */
-    public void move(File from, File to) throws Exception {
+    public void move(File from, File to) throws BuildException {
         String[] args = {"move", "-nc", from.getPath(), to.getPath()};
         CmdResult res = cleartool(args);
         if (res.getStatus() != 0) {
@@ -238,6 +237,18 @@ public final class CCUtils {
 
     public void uncheckout(File file){
         String[] args = {"unco", "-rm", file.getAbsolutePath() };
+        CmdResult res = cleartool(args);
+        if (res.getStatus() != 0){
+            throw new BuildException(res.getStdErr());
+        }
+    }
+
+    public void mkdir(File file, String comment) {
+
+    }
+
+    public void mkdir(File file){
+        String[] args = {"mkdir", "-nc", file.getAbsolutePath() };
         CmdResult res = cleartool(args);
         if (res.getStatus() != 0){
             throw new BuildException(res.getStdErr());
