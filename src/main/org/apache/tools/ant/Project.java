@@ -116,7 +116,7 @@ public class Project {
      * This involves setting the default task definitions and loading the
      * system properties.
      */
-    public void init() {
+    public void init() throws BuildException {
         detectJavaVersion();
 
         String defs = "/org/apache/tools/ant/taskdefs/defaults.properties";
@@ -149,9 +149,7 @@ public class Project {
                 this.setProperty(name, value);
             }
         } catch (IOException ioe) {
-            String msg = "Can't load default task list";
-            System.out.println(msg);
-            System.exit(1);
+            throw new BuildException("Can't load default task list");
         }
     }
 

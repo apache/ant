@@ -106,7 +106,7 @@ public class Main {
         new Main(args).runBuild();
     }
 
-    protected Main(String[] args) {
+    protected Main(String[] args) throws BuildException {
 
         // cycle through given args
 
@@ -216,7 +216,7 @@ public class Main {
      * Executes the build.
      */
 
-    private void runBuild() {
+    private void runBuild() throws BuildException {
 
         if (!readyToRun) {
             return;
@@ -265,7 +265,7 @@ public class Main {
             } else {
                 be.getException().printStackTrace();
 	    }
-            System.exit(1);
+	    throw be;
         }
 
         // make sure that we have a target to execute
@@ -282,7 +282,7 @@ public class Main {
             if (msgOutputLevel > Project.MSG_INFO) {
                 be.printStackTrace();
             }
-            System.exit(1);
+            throw be;
         }
 
         // track our stop time and let the user know how long things took.
