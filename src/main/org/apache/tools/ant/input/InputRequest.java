@@ -1,5 +1,5 @@
 /*
- * Copyright  2002,2004 The Apache Software Foundation
+ * Copyright  2002,2004-2005 The Apache Software Foundation
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -28,6 +28,7 @@ public class InputRequest {
     private String input;
 
     /**
+     * Construct an InputRequest.
      * @param prompt The prompt to show to the user.  Must not be null.
      */
     public InputRequest(String prompt) {
@@ -40,6 +41,7 @@ public class InputRequest {
 
     /**
      * Retrieves the prompt text.
+     * @return the prompt.
      */
     public String getPrompt() {
         return prompt;
@@ -47,6 +49,7 @@ public class InputRequest {
 
     /**
      * Sets the user provided input.
+     * @param input the string to be used for input.
      */
     public void setInput(String input) {
         this.input = input;
@@ -54,6 +57,7 @@ public class InputRequest {
 
     /**
      * Is the user input valid?
+     * @return true if it is.
      */
     public boolean isInputValid() {
         return true;
@@ -61,6 +65,7 @@ public class InputRequest {
 
     /**
      * Retrieves the user input.
+     * @return the user input.
      */
     public String getInput() {
         return input;
