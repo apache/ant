@@ -58,6 +58,7 @@ import java.util.Stack;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.DirectoryScanner;
 import org.apache.tools.ant.Project;
+import org.apache.tools.zip.UnixStat;
 
 /**
  * A ZipFileSet is a FileSet with extra attributes useful in the context of
@@ -83,13 +84,25 @@ public class ZipFileSet extends FileSet {
     private String prefix         = "";
     private String fullpath       = "";
     private boolean hasDir        = false;
+    private int fileMode =  UnixStat.FILE_FLAG | UnixStat.DEFAULT_FILE_PERM;
+    private int dirMode =   UnixStat.DIR_FLAG  | UnixStat.DEFAULT_DIR_PERM;
 
     public ZipFileSet() {
-      super();
+        super();
     }
 
     protected ZipFileSet(FileSet fileset) {
-      super(fileset);
+        super(fileset);
+    }
+
+    protected ZipFileSet(ZipFileSet fileset) {
+        super(fileset);
+        srcFile = fileset.srcFile;
+        prefix = fileset.prefix;
+        fullpath = fileset.fullpath;
+        hasDir = fileset.hasDir;
+        fileMode = fileset.fileMode;
+        dirMode = fileset.dirMode;
     }
 
     /**
@@ -180,6 +193,44 @@ public class ZipFileSet extends FileSet {
         } else {
             return super.getDirectoryScanner(p);
         }
+    }
+
+    /**
+     * A 3 digit octal string, specify the user, group and 
+     * other modes in the standard Unix fashion; 
+     * optional, default=0644
+     *
+     * @since Ant 1.6
+     */
+    public void setFileMode(String octalString) {
+        this.fileMode = 
+            UnixStat.FILE_FLAG | Integer.parseInt(octalString, 8);
+    }
+    
+    /**
+     * @since Ant 1.6
+     */
+    public int getFileMode() {
+        return fileMode;
+    }
+    
+    /**
+     * A 3 digit octal string, specify the user, group and 
+     * other modes in the standard Unix fashion; 
+     * optional, default=0755
+     *
+     * @since Ant 1.6
+     */
+    public void setDirMode(String octalString) {
+        this.dirMode = 
+            UnixStat.DIR_FLAG | Integer.parseInt(octalString, 8);
+    }
+    
+    /**
+     * @since Ant 1.6
+     */
+    public int getDirMode() {
+        return dirMode;
     }
 
     /**
