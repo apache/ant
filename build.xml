@@ -66,6 +66,11 @@
   <path id="classpath">
   </path>
 
+  <!-- empty for JDK 1.2+, contains classes.zip otherwise -->
+  <path id="classes.zip">
+    <fileset dir="${java.home}" includes="lib/classes.zip" />
+  </path>
+
   <path id="tests-classpath">
     <pathelement location="${build.classes}" />
     <pathelement location="${build.tests}" />
@@ -79,7 +84,7 @@
   </path>
 <!--   turn this path into a string which is passed to the tests -->
   <property name="tests-classpath.value"
-      refid="tests-classpath"/>
+            refid="tests-classpath"/>
 
  <!--
        ===================================================================
@@ -909,12 +914,12 @@
            fork="${junit.fork}">
 <!--      <jvmarg value="-classic"/> -->
       <classpath refid="tests-classpath"/>
+      <classpath refid="classes.zip" />
 
       <sysproperty key="ant.home" value="${ant.home}" />
       <sysproperty key="build.tests" value="${build.tests}"/>
-      <sysproperty key="java.home" value="${java.home}" />
       <sysproperty key="tests-classpath.value" 
-        value="${tests-classpath.value}" />
+                   value="${tests-classpath.value}" />
 
       <formatter type="brief" usefile="false" />
 
@@ -1001,10 +1006,9 @@
 <!--      <jvmarg value="-classic"/> -->
       <sysproperty key="ant.home" value="${ant.home}" />
       <sysproperty key="build.tests" value="${build.tests}"/>
-      <sysproperty key="java.home" value="${java.home}" />
       <sysproperty key="tests-classpath.value" 
-        value="${tests-classpath.value}" />
-      <classpath location="${java.home}/lib/classes.zip" />
+                   value="${tests-classpath.value}" />
+      <classpath refid="classes.zip" />
       <classpath refid="tests-classpath"/>
       <formatter type="plain" usefile="false" />
       <test name="${testcase}" />
