@@ -102,6 +102,7 @@ public class MailLogger extends DefaultLogger {
 
   private StringBuffer buffer = new StringBuffer();
 
+  static private final String lSep = System.getProperty("line.separator");
 
   /**
    *  Sends an e-mail with the log results.
