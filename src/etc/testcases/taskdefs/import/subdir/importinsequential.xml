@@ -1,0 +1,5 @@
+<project>
+  <sequential>
+    <import file="importinsequential-inner.xml"/>
+  </sequential>
+</project>

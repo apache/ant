@@ -91,15 +91,32 @@ public class ImportTest extends BuildFileTest {
             "Unnamed2.xmlUnnamed1.xmlSkipped already imported file");
     }
 
+    // allow this as imported in targets are only tested when a target is run
     public void testImportInTargetNoEffect() {
         configureProject("src/etc/testcases/taskdefs/import/subdir/importintarget.xml");
         expectPropertyUnset("no-import", "foo");
         assertTrue(null == getProject().getReference("baz"));
     }
 
-    public void testImportInTargetWithEffect() {
+    // deactivate this test as imports within targets are not allowed
+    public void notTestImportInTargetWithEffect() {
         configureProject("src/etc/testcases/taskdefs/import/subdir/importintarget.xml");
         expectPropertySet("do-import", "foo", "bar");
+        assertNotNull(getProject().getReference("baz"));
+    }
+    
+    public void testImportInTargetNotAllowed() {
+        configureProject(
+            "src/etc/testcases/taskdefs/import/subdir/importintarget.xml");
+        expectBuildExceptionContaining(
+            "do-import", "not a top level task",
+            "import only allowed as a top-level task");
+    }
+
+    public void testImportInSequential() {
+        configureProject(
+            "src/etc/testcases/taskdefs/import/subdir/importinsequential.xml");
+        expectPropertySet("within-imported", "foo", "bar");
         assertNotNull(getProject().getReference("baz"));
     }
 }

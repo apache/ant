@@ -116,20 +116,20 @@ public class ImportTask extends Task {
         if (file == null) {
             throw new BuildException("import requires file attribute");
         }
-
+        if (getOwningTarget() == null
+            || !"".equals(getOwningTarget().getName())) {
+            throw new BuildException("import only allowed as a top-level task");
+        }
+        
         ProjectHelper helper =
                 (ProjectHelper) getProject().getReference("ant.projectHelper");
         Vector importStack = helper.getImportStack();
+
         if (importStack.size() == 0) {
             // this happens if ant is used with a project
             // helper that doesn't set the import.
             throw new BuildException("import requires support in ProjectHelper");
         }
-//        ProjectHelper2.AntXmlContext context;
-//        context=(ProjectHelper2.AntXmlContext)project.getReference("ant.parsing.context");
-
-//        File buildFile=context.buildFile;
-//        File buildFileParent=context.buildFileParent;
 
         if (getLocation() == null || getLocation().getFileName() == null) {
             throw new BuildException("Unable to get location of import task");
@@ -137,7 +137,7 @@ public class ImportTask extends Task {
 
         File buildFile = new File(getLocation().getFileName());
         buildFile = new File(buildFile.getAbsolutePath());
-        //System.out.println("Importing from " + currentSource);
+
         File buildFileParent = new File(buildFile.getParent());
 
         getProject().log("Importing file " + file + " from "
@@ -164,26 +164,6 @@ public class ImportTask extends Task {
                 + importedFile + "\n", Project.MSG_WARN);
             return;
         }
-
-//        // Add parent build file to the map to avoid cycles...
-//        String parentFilename = getPath(buildFile);
-//        if (!context.importedFiles.containsKey(parentFilename)) {
-//            context.importedFiles.put(parentFilename, buildFile);
-//        }
-//
-//        // Make sure we import the file only once
-//        String importedFilename = getPath(importedFile);
-//        if (context.importedFiles.containsKey(importedFilename)) {
-//            project.log("\nSkipped already imported file:\n   "+
-//                    importedFilename+"\n",Project.MSG_WARN);
-//            return;
-//        } else {
-//            context.importedFiles.put(importedFilename, importedFile);
-//        }
-
-//        context.ignoreProjectTag=true;
-//        context.helper.parse(project, importedFile,
-//                new ProjectHelper2.RootHandler(context));
 
         helper.parse(getProject(), importedFile);
     }
