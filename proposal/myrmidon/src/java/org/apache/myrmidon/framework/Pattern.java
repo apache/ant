@@ -28,6 +28,15 @@ public class Pattern
     private String m_name;
     private Condition m_condition;
 
+    public Pattern()
+    {
+    }
+
+    public Pattern( final String name )
+    {
+        m_name = name;
+    }
+
     /**
      * Retrieve value of pattern.
      *
