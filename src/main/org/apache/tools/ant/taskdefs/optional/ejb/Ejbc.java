@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2000,2002 The Apache Software Foundation.  All rights 
+ * Copyright (c) 2000,2002 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -76,38 +76,38 @@ public class Ejbc extends MatchingTask {
      * on the ejbc task provided by the MatchingTask superclass.
      */
     private File descriptorDirectory;
-    
+
     /**
      * The directory where generated files are placed.
      */
     private File generatedFilesDirectory;
-    
+
     /**
      * The name of the manifest file generated for the EJB jar.
      */
     private File generatedManifestFile;
-    
+
     /**
      * The classpath to be used in the weblogic ejbc calls. It must contain the weblogic
      * classes <b>and</b> the implementation classes of the home and remote interfaces.
      */
     private String classpath;
-    
+
     /**
      * The source directory for the home and remote interfaces. This is used to determine if
      * the generated deployment classes are out of date.
      */
     private File sourceDirectory;
-    
+
     public boolean keepgenerated;
-    
+
     /**
      * Do the work.
      *
-     * The work is actually done by creating a separate JVM to run a helper task. 
-     * This approach allows the classpath of the helper task to be set. Since the 
-     * weblogic tools require the class files of the project's home and remote 
-     * interfaces to be available in the classpath, this also avoids having to 
+     * The work is actually done by creating a separate JVM to run a helper task.
+     * This approach allows the classpath of the helper task to be set. Since the
+     * weblogic tools require the class files of the project's home and remote
+     * interfaces to be available in the classpath, this also avoids having to
      * start ant with the class path of the project it is building.
      *
      * @exception BuildException if someting goes wrong with the build
@@ -115,27 +115,27 @@ public class Ejbc extends MatchingTask {
     public void execute() throws BuildException {
         if (descriptorDirectory == null ||
             !descriptorDirectory.isDirectory()) {
-            throw new BuildException("descriptors directory " + descriptorDirectory.getPath() + 
+            throw new BuildException("descriptors directory " + descriptorDirectory.getPath() +
                                      " is not valid");
         }
         if (generatedFilesDirectory == null ||
             !generatedFilesDirectory.isDirectory()) {
-            throw new BuildException("dest directory " + generatedFilesDirectory.getPath() + 
+            throw new BuildException("dest directory " + generatedFilesDirectory.getPath() +
                                      " is not valid");
         }
-                                    
+
         if (sourceDirectory == null ||
             !sourceDirectory.isDirectory()) {
-            throw new BuildException("src directory " + sourceDirectory.getPath() + 
+            throw new BuildException("src directory " + sourceDirectory.getPath() +
                                      " is not valid");
         }
-        
+
         String systemClassPath = System.getProperty("java.class.path");
         String execClassPath = project.translatePath(systemClassPath + ":" + classpath +
                                                          ":" + generatedFilesDirectory);
         // get all the files in the descriptor directory
         DirectoryScanner ds = super.getDirectoryScanner(descriptorDirectory);
-   
+
         String[] files = ds.getIncludedFiles();
 
         Java helperTask = (Java) project.createTask("java");
@@ -148,23 +148,23 @@ public class Ejbc extends MatchingTask {
         args += " " + sourceDirectory;
         args += " " + generatedManifestFile;
         args += " " + keepgenerated;
-        
+
         for (int i = 0; i < files.length; ++i) {
             args += " " + files[i];
         }
-                                    
+
         Commandline.Argument arguments = helperTask.createArg();
         arguments.setLine(args);
         helperTask.setClasspath(new Path(project, execClassPath));
-        if (helperTask.executeJava() != 0) {                         
+        if (helperTask.executeJava() != 0) {
             throw new BuildException("Execution of ejbc helper failed");
         }
     }
-    
+
     public boolean getKeepgenerated() {
         return keepgenerated;
     }
-    
+
     /**
      * Set the directory from where the serialised deployment descriptors are
      * to be read.
@@ -174,7 +174,7 @@ public class Ejbc extends MatchingTask {
     public void setDescriptors(String dirName) {
         descriptorDirectory = new File(dirName);
     }
-    
+
     /**
      * Set the directory into which the support classes, RMI stubs, etc are to be written
      *
@@ -183,31 +183,31 @@ public class Ejbc extends MatchingTask {
     public void setDest(String dirName) {
         generatedFilesDirectory = new File(dirName);
     }
-    
+
     public void setKeepgenerated(String newKeepgenerated) {
         keepgenerated = Boolean.valueOf(newKeepgenerated.trim()).booleanValue();
-        
+
     }
-    
+
     /**
-     * Set the generated manifest file. 
+     * Set the generated manifest file.
      *
      * For each EJB that is processed an entry is created in this file. This can then be used
      * to create a jar file for dploying the beans.
      *
-     * @param manfestFilename the name of the manifest file to be generated.
+     * @param manifestFilename the name of the manifest file to be generated.
      */
     public void setManifest(String manifestFilename) {
         generatedManifestFile = new File(manifestFilename);
     }
-    
+
     /**
      * Set the classpath to be used for this compilation.
      */
     public void setClasspath(String s) {
         this.classpath = project.translatePath(s);
     }
-    
+
     /**
      * Set the directory containing the source code for the home interface, remote interface
      * and public key class definitions.
