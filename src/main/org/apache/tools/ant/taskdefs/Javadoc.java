@@ -1544,7 +1544,7 @@ public class Javadoc extends Task {
      * Enables the -noqualifier switch, will be ignored if javadoc is not
      * the 1.4 version.
      *
-     * @since Ant 1.5
+     * @since Ant 1.6
      */
     public void setNoqualifier(String noq) {
         if (!javadoc4) {
