@@ -93,7 +93,7 @@
   <target name="testConcatFilterPrependAppend" depends="init">
     <typedef name="concatfilter" classname="org.apache.tools.ant.filters.ConcatFilter"/>
     <copy file="input/concatfilter.test"
-          tofile="result/concat.concatfilterPrependAppend.test">
+          tofile="result/concat.ConcatFilterPrependAppend.test">
       <filterchain>
         <concatfilter prepend="result/prepend.txt" append="result/append.txt"/>
       </filterchain>

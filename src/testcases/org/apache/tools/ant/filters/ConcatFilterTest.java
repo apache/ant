@@ -111,22 +111,7 @@ public class ConcatFilterTest extends BuildFileTest {
     }
 
     public void tearDown() {
-        // I dont know why - but on my machine I always get a
-        // "Unable to delete file ...result\append.txt" (or prepend.txt)
-        // from Delete.removeDir(Delete.java:612).
-        // Win2000, JDK 1.4.1_02
-        // A <sleep> before <delete> doesn´t work. From 10ms to 3000ms.
-        // I modified the taskdefs.Delete.DELETE_RETRY_SLEEP_MILLIS
-        // from 10 up to 2000 ms, but no success.
-        // So I give up - and hope for a suggestion from another one.
-        // But this shouldn´t let the testcases fail, so I do the cleanup
-        // inside a try-block
-        //    Jan
-        try {
-            executeTarget("cleanup");
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        executeTarget("cleanup");
     }
 
     public void testFilterReaderNoArgs() throws IOException {
@@ -136,60 +121,70 @@ public class ConcatFilterTest extends BuildFileTest {
         assertTrue("testFilterReaderNoArgs: Result not like expected", fu.contentEquals(expected, result));
     }
 
-    public void testFilterReaderBefore() throws IOException {
-        executeTarget("testFilterReaderPrepend");
-        File resultFile = getProject().resolveFile("result/concat.filterReaderPrepend.test");
-        String resultContent = fu.readFully(new java.io.FileReader(resultFile));
-        assertTrue("First 5 lines differs.", resultContent.startsWith(FILE_PREPEND_WITH));
-        assertTrue("Last 5 lines differs.", resultContent.endsWith(FILE_APPEND));
+    public void testFilterReaderBefore() {
+        doTest("testFilterReaderPrepend", FILE_PREPEND_WITH, FILE_APPEND);
     }
 
-    public void testFilterReaderAfter() throws IOException {
-        executeTarget("testFilterReaderAppend");
-        File resultFile = getProject().resolveFile("result/concat.filterReaderAppend.test");
-        String resultContent = fu.readFully(new java.io.FileReader(resultFile));
-        assertTrue("First 5 lines differs.", resultContent.startsWith(FILE_PREPEND));
-        assertTrue("Last 5 lines differs.", resultContent.endsWith(FILE_APPEND_WITH));
+    public void testFilterReaderAfter() {
+        doTest("testFilterReaderAppend", FILE_PREPEND, FILE_APPEND_WITH);
     }
 
-    public void testFilterReaderBeforeAfter() throws IOException {
-        executeTarget("testFilterReaderPrependAppend");
-        File resultFile = getProject().resolveFile("result/concat.filterReaderPrependAppend.test");
-        String resultContent = fu.readFully(new java.io.FileReader(resultFile));
-        assertTrue("First 5 lines differs.", resultContent.startsWith(FILE_PREPEND_WITH));
-        assertTrue("Last 5 lines differs.", resultContent.endsWith(FILE_APPEND_WITH));
+    public void testFilterReaderBeforeAfter() {
+        doTest("testFilterReaderPrependAppend", FILE_PREPEND_WITH, FILE_APPEND_WITH);
     }
 
-    public void testConcatFilter() throws IOException {
-        executeTarget("testConcatFilter");
-        File resultFile = getProject().resolveFile("result/concat.concatfilter.test");
-        String resultContent = fu.readFully(new java.io.FileReader(resultFile));
-        assertTrue("First 5 lines differs.", resultContent.startsWith(FILE_PREPEND));
-        assertTrue("Last 5 lines differs.", resultContent.endsWith(FILE_APPEND));
+    public void testConcatFilter() {
+        doTest("testConcatFilter", FILE_PREPEND, FILE_APPEND);
     }
 
-    public void testConcatFilterBefore() throws IOException {
-        executeTarget("testConcatFilterPrepend");
-        File resultFile = getProject().resolveFile("result/concat.concatfilterPrepend.test");
-        String resultContent = fu.readFully(new java.io.FileReader(resultFile));
-        assertTrue("First 5 lines differs.", resultContent.startsWith(FILE_PREPEND_WITH));
-        assertTrue("Last 5 lines differs.", resultContent.endsWith(FILE_APPEND));
+    public void testConcatFilterBefore() {
+        doTest("testConcatFilterPrepend", FILE_PREPEND_WITH, FILE_APPEND);
     }
 
-    public void testConcatFilterAfter() throws IOException {
-        executeTarget("testConcatFilterAppend");
-        File resultFile = getProject().resolveFile("result/concat.concatfilterAppend.test");
-        String resultContent = fu.readFully(new java.io.FileReader(resultFile));
-        assertTrue("First 5 lines differs.", resultContent.startsWith(FILE_PREPEND));
-        assertTrue("Last 5 lines differs.", resultContent.endsWith(FILE_APPEND_WITH));
+    public void testConcatFilterAfter() {
+        doTest("testConcatFilterAppend", FILE_PREPEND, FILE_APPEND_WITH);
     }
 
-    public void testConcatFilterBeforeAfter() throws IOException {
-        executeTarget("testConcatFilterPrependAppend");
-        File resultFile = getProject().resolveFile("result/concat.concatfilterPrependAppend.test");
-        String resultContent = fu.readFully(new java.io.FileReader(resultFile));
-        assertTrue("First 5 lines differs.", resultContent.startsWith(FILE_PREPEND_WITH));
-        assertTrue("Last 5 lines differs.", resultContent.endsWith(FILE_APPEND_WITH));
+    public void testConcatFilterBeforeAfter() {
+        doTest("testConcatFilterPrependAppend", FILE_PREPEND_WITH, FILE_APPEND_WITH);
+    }
+
+
+    /**
+     * Executes a target and checks the beginning and the ending of a file.
+     * The filename depends on the target name: target name <i>testHelloWorld</i>
+     * will search for a file <i>result/concat.HelloWorld.test</i>.
+     * @param target The target to invoke
+     * @param expectedStart The string which should be at the beginning of the file
+     * @param expectedEnd The string which should be at the end of the file
+     */
+    protected void doTest(String target, String expectedStart, String expectedEnd) {
+        executeTarget(target);
+        String resultContent = read("result/concat." + target.substring(4) + ".test");
+        assertTrue("First 5 lines differs.", resultContent.startsWith(expectedStart));
+        assertTrue("Last 5 lines differs.", resultContent.endsWith(expectedEnd));
+    }
+
+
+    /**
+     * Wrapper for FileUtils.readFully().
+     * Additionally it resolves the filename according the the projects basedir
+     * and closes the used reader.
+     * @param filename The name of the file to read
+     * @return the content of the file or <i>null</i> if something goes wrong
+     */
+    protected String read(String filename) {
+        String content = null;
+        try {
+            File file = getProject().resolveFile(filename);
+            java.io.FileReader rdr = new java.io.FileReader(file);
+            content = fu.readFully(rdr);
+            rdr.close();
+            rdr = null;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return content;
     }
 
 }
