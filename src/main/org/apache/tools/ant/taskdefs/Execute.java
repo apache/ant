@@ -111,15 +111,15 @@ public class Execute {
             // Ignore and keep try
         }
 
-        if ( (new Os("mac")).eval() ) {
+        if ( Os.isFamily("mac") ) {
             // Mac
             shellLauncher = new MacCommandLauncher(new CommandLauncher());
         }
-        else if ( (new Os("os/2")).eval() ) {
+        else if ( Os.isFamily("os/2") ) {
             // OS/2 - use same mechanism as Windows 2000
             shellLauncher = new WinNTCommandLauncher(new CommandLauncher());
         }
-        else if ( (new Os("windows")).eval() ) {
+        else if ( Os.isFamily("windows") ) {
             // Windows.  Need to determine which JDK we're running in
 
             CommandLauncher baseLauncher;
@@ -203,13 +203,13 @@ public class Execute {
     }
 
     private static String[] getProcEnvCommand() {
-        if ( (new Os("os/2")).eval() ) {
+        if ( Os.isFamily("os/2") ) {
             // OS/2 - use same mechanism as Windows 2000
             // Not sure
             String[] cmd = {"cmd", "/c", "set" };
             return cmd;
         }
-        else if ( (new Os("windows")).eval() ) {
+        else if ( Os.isFamily("windows") ) {
             String osname = 
                 System.getProperty("os.name").toLowerCase(Locale.US);
             // Determine if we're running under 2000/NT or 98/95
@@ -224,14 +224,18 @@ public class Execute {
                 return cmd;
             }
         }
-        else if ( (new Os("unix")).eval() ) {
+        else if ( Os.isFamily("unix") ) {
             // Generic UNIX
             // Alternatively one could use: /bin/sh -c env
             String[] cmd = {"/usr/bin/env"};
             return cmd;
+        } 
+        else if ( Os.isFamily("netware") ) {
+            String[] cmd = {"env"};
+            return cmd;
         }
         else {
-            // MAC OS 9 and previous, Netware
+            // MAC OS 9 and previous
             // TODO: I have no idea how to get it, someone must fix it
             String[] cmd = null;
             return cmd;

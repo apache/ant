@@ -55,6 +55,7 @@
 package org.apache.tools.ant.taskdefs;
 
 import org.apache.tools.ant.BuildException;
+import org.apache.tools.ant.taskdefs.condition.Os;
 import org.apache.tools.ant.types.FileSet;
 import org.apache.tools.ant.types.PatternSet;
 
@@ -202,10 +203,6 @@ public class Chmod extends ExecuteOn {
     }
 
     protected boolean isValidOs() {
-        // XXX if OS=unix
-        return System.getProperty("path.separator").equals(":") 
-            && (!System.getProperty("os.name").startsWith("Mac") 
-                 || System.getProperty("os.name").endsWith("X"))
-            && super.isValidOs();
+        return Os.isFamily("unix") && super.isValidOs();
     }
 }

@@ -92,7 +92,6 @@ public class Cab extends MatchingTask {
     protected String archiveType = "cab";
 
     private static String myos;
-    private static boolean isWindows = (new Os("windows")).eval();
 
     /**
      * This is the name/location of where to 
@@ -310,7 +309,7 @@ public class Cab extends MatchingTask {
         log("Building "+ archiveType +": "+ cabFile.getAbsolutePath());
 
         // we must be on Windows to continue
-        if (!isWindows) {
+        if (Os.isFamily("windows")) {
             log("Using listcab/libcabinet", Project.MSG_VERBOSE);
             
             StringBuffer sb = new StringBuffer();

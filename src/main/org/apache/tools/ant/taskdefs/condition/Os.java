@@ -65,6 +65,10 @@ import java.util.Locale;
  * @version $Revision$
  */
 public class Os implements Condition {
+    private static final String osName =
+        System.getProperty("os.name").toLowerCase(Locale.US);
+    private static final String pathSep = System.getProperty("path.separator");
+
     private String family;
 
     public Os() {}
@@ -93,8 +97,16 @@ public class Os implements Condition {
      * @see Os#setFamily(String)
      */
     public boolean eval() throws BuildException {
-        String osName = System.getProperty("os.name").toLowerCase(Locale.US);
-        String pathSep = System.getProperty("path.separator");
+        return isFamily(family);
+    }
+
+    /**
+     * Determines if the OS on which Ant is executing matches the
+     * given OS family.
+     *
+     * @since 1.5
+     */
+    public static boolean isFamily(String family) {
         if (family != null) {
             if (family.equals("windows")) {
                 return osName.indexOf("windows") > -1;
@@ -103,12 +115,12 @@ public class Os implements Condition {
             } else if (family.equals("netware")) {
                 return osName.indexOf("netware") > -1;
             } else if (family.equals("dos")) {
-                return pathSep.equals(";");
+                return pathSep.equals(";") && !isFamily("netware");
             } else if (family.equals("mac")) {
                 return osName.indexOf("mac") > -1;
             } else if (family.equals("unix")) {
                 return pathSep.equals(":")
-                    && (!osName.startsWith("mac") || osName.endsWith("x"));
+                    && (!isFamily("mac") || osName.endsWith("x"));
             }
             throw new BuildException("Don\'t know how to detect os family \""
                                      + family + "\"");

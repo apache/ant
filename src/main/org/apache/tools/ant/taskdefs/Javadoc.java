@@ -1159,7 +1159,7 @@ public class Javadoc extends Task {
     {
         // This is the most common extension case - exe for windows and OS/2, 
         // nothing for *nix.
-	String extension =  (new Os("dos")).eval() ? ".exe" : "";
+	String extension =  Os.isFamily("dos") ? ".exe" : "";
 
         // Look for javadoc in the java.home/../bin directory.  Unfortunately
         // on Windows java.home doesn't always refer to the correct location,
@@ -1168,14 +1168,16 @@ public class Javadoc extends Task {
         File jdocExecutable = new File( System.getProperty("java.home") +
                                         "/../bin/javadoc" + extension );
 
-        if (jdocExecutable.exists())
+        if (jdocExecutable.exists() && !Os.isFamily("netware"))
         {
             return jdocExecutable.getAbsolutePath();
         }
         else
         {
-            log( "Unable to locate " + jdocExecutable.getAbsolutePath() +
-                 ". Using \"javadoc\" instead.", Project.MSG_VERBOSE );
+            if (!Os.isFamily("netware")) {
+                log( "Unable to locate " + jdocExecutable.getAbsolutePath() +
+                     ". Using \"javadoc\" instead.", Project.MSG_VERBOSE );
+            }
             return "javadoc";
         }
     }
