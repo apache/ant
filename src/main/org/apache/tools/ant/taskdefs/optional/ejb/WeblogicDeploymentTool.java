@@ -409,19 +409,17 @@ public class WeblogicDeploymentTool extends GenericDeploymentTool {
                 classpath = getCombinedClasspath();
             }
             
+            javaTask.setFork(true);
             if (classpath != null) {
                 javaTask.setClasspath(classpath);
-                javaTask.setFork(true);
             }
-            else {
-                javaTask.setFork(true);
-            }
-            
 
             log("Calling " + ejbcClassName + " for " + sourceJar.toString(),
                           Project.MSG_VERBOSE);
 
-            javaTask.execute();
+            if (javaTask.executeJava() != 0) {
+                throw new BuildException("Ejbc reported an error");
+            }
         }
         catch (Exception e) {
             // Have to catch this because of the semantics of calling main()
