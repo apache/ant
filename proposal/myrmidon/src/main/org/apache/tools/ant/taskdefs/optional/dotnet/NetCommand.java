@@ -180,7 +180,7 @@ public class NetCommand
      */
     protected void logError( String msg )
     {
-        _owner.getProject().log( msg, Project.MSG_ERR );
+        _owner.log( msg, Project.MSG_ERR );
     }
 
     /**
@@ -190,7 +190,7 @@ public class NetCommand
      */
     protected void logVerbose( String msg )
     {
-        _owner.getProject().log( msg, Project.MSG_VERBOSE );
+        _owner.log( msg, Project.MSG_VERBOSE );
     }
 
     /**

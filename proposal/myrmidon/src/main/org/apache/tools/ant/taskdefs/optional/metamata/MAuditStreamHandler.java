@@ -157,7 +157,7 @@ class MAuditStreamHandler implements ExecuteStreamHandler
             String fullclassname = (String)filemapping.get( filepath );
             if( fullclassname == null )
             {
-                task.getProject().log( "Could not find class mapping for " + filepath, Project.MSG_WARN );
+                task.log( "Could not find class mapping for " + filepath, Project.MSG_WARN );
                 continue;
             }
             int pos = fullclassname.lastIndexOf( '.' );
