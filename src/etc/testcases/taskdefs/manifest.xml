@@ -6,10 +6,16 @@
 
   <target name="test1">
     <jar file="mftest1.jar" manifest="manifests/test1.mf"/>
+    <unjar src="mftest1.jar" dest="manifests">
+      <include name="META-INF/MANIFEST.MF"/>
+    </unjar>
   </target>
   
   <target name="test2">
     <jar file="mftest2.jar" manifest="manifests/test2.mf"/>
+    <unjar src="mftest2.jar" dest="manifests">
+      <include name="META-INF/MANIFEST.MF"/>
+    </unjar>
   </target>
   
   <target name="test3">
@@ -41,6 +47,9 @@
         </section>
       </manifest>
     </jar>
+    <unjar src="mftest8.jar" dest="manifests">
+      <include name="META-INF/MANIFEST.MF"/>
+    </unjar>
   </target>
 
   <target name="test9">
@@ -98,10 +107,25 @@
         <attribute name="class-Path" value="Test4"/>
       </manifest>
     </jar>
+    <unjar src="mftest14.jar" dest="manifests">
+      <include name="META-INF/MANIFEST.MF"/>
+    </unjar>
   </target>
 
   <target name="testNoFile">
     <manifest />
+  </target>
+
+  <target name="testLongLine">
+    <jar file="mftestLongLine.jar">
+      <manifest>
+        <attribute name="Class-path" 
+                   value="${test.longline}"/>
+      </manifest>
+    </jar>
+    <unjar src="mftestLongLine.jar" dest="manifests">
+      <include name="META-INF/MANIFEST.MF"/>
+    </unjar>
   </target>
 
   <target name="testReplace">
@@ -120,5 +144,6 @@
     <delete>
       <fileset dir="." includes="mftest*"/>
     </delete>
+    <delete dir="manifests/META-INF"/>
   </target>
 </project>

@@ -392,6 +392,18 @@ public class Manifest extends Task {
         }
 
         /**
+         * Get a attribute of the section
+         *
+         * @param attributeName the name of the attribute
+         * @return a Manifest.Attribute instance if the attribute is 
+         *         single-valued, otherwise a Vector of Manifest.Attribute 
+         *         instances.
+         */
+        public Object getAttribute(String attributeName) {
+            return attributes.get(attributeName.toLowerCase());
+        }
+        
+        /**
          * Get the value of the attribute with the name given.
          *
          * @param attributeName the name of the attribute to be returned.
@@ -497,8 +509,8 @@ public class Manifest extends Task {
             for (Enumeration e = attributes.keys(); e.hasMoreElements();) {
                 String attributeName = (String)e.nextElement();
                 Object attributeValue  = attributes.get(attributeName);
-                Object rshAttributeValue = rhsSection.attributes.get(attributeName);
-                if (!attributeValue.equals(rshAttributeValue)) {
+                Object rhsAttributeValue = rhsSection.attributes.get(attributeName);
+                if (!attributeValue.equals(rhsAttributeValue)) {
                     return false;
                 }
             }
@@ -599,7 +611,7 @@ public class Manifest extends Task {
         if (section.getName() == null) {
             throw new BuildException("Sections must have a name");
         }
-        sections.put(section.getName().toLowerCase(), section);
+        sections.put(section.getName(), section);
     }
 
     public void addConfiguredAttribute(Attribute attribute) throws ManifestException {
@@ -624,7 +636,7 @@ public class Manifest extends Task {
             Section ourSection = (Section)sections.get(sectionName);
             Section otherSection = (Section)other.sections.get(sectionName);
             if (ourSection == null) {
-                sections.put(sectionName.toLowerCase(), otherSection);
+                sections.put(sectionName, otherSection);
             }
             else {
                 ourSection.merge(otherSection);
@@ -725,7 +737,7 @@ public class Manifest extends Task {
 
         for (Enumeration e = sections.elements(); e.hasMoreElements();) {
             Section section = (Section)e.nextElement();
-            Section rhsSection = (Section)rhsManifest.sections.get(section.getName().toLowerCase());
+            Section rhsSection = (Section)rhsManifest.sections.get(section.getName());
             if (!section.equals(rhsSection)) {
                 return false;
             }
@@ -752,6 +764,44 @@ public class Manifest extends Task {
         mode = m;
     }
 
+    /**
+     * Get the version of the manifest
+     *
+     * @return the manifest's version string
+     */
+    public String getManifestVersion() {
+        return manifestVersion;
+    }
+    
+    /**
+     * Get the main section of the manifest
+     *
+     * @return the main section of the manifest
+     */
+    public Section getMainSection() {
+        return mainSection;
+    }
+
+    /**
+     * Get a particular section from the manifest
+     *
+     * @param name the name of the section desired.
+     * @return the specified section or null if that section 
+     * does not exist in the manifest
+     */
+    public Section getSection(String name) {
+        return (Section)sections.get(name);
+    }
+    
+    /**
+     * Get the section names in this manifest.
+     *
+     * @return an Enumeration of section names
+     */
+    public Enumeration getSectionNames() {
+        return sections.keys();
+    }
+    
     /**
      * Create or update the Manifest when used as a task.
      */

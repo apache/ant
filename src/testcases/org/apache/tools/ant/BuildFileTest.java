@@ -243,6 +243,15 @@ public abstract class BuildFileTest extends TestCase {
         
     }
     
+    /**
+     * Get the project which has been configured for a test.
+     *
+     * @return the Project instance for this test.
+     */
+    protected Project getProject() {
+        return project;
+    }
+    
     protected File getProjectDir() {
         return project.getBaseDir();
     }

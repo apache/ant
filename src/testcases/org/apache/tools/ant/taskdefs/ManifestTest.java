@@ -58,7 +58,9 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.Date;
+import java.util.Vector;
 import org.apache.tools.ant.BuildFileTest;
+import org.apache.tools.ant.Project;
 
 /**
  * Testcase for the Manifest class used in the jar task. 
@@ -67,6 +69,15 @@ import org.apache.tools.ant.BuildFileTest;
  */
 public class ManifestTest extends BuildFileTest {
 
+    public static final String EXPANDED_MANIFEST
+        = "src/etc/testcases/taskdefs/manifests/META-INF/MANIFEST.MF";
+
+    public static final String LONG_LINE
+        = "AReallyLongLineToTestLineBreakingInManifests-ACapabilityWhich" + 
+          "IsSureToLeadToHundredsOfQuestionsAboutWhyAntMungesManifests" +
+          "OfCourseTheAnswerIsThatIsWhatTheSpecRequiresAndIfAnythingHas" +
+          "AProblemWithThatItIsNotABugInAnt";
+        
     public ManifestTest(String name) {
         super(name);
     }
@@ -78,19 +89,25 @@ public class ManifestTest extends BuildFileTest {
     public void tearDown() {
         executeTarget("clean");
     }
-    
+
     /**
      * Empty manifest - is OK 
      */
-    public void test1() {
+    public void test1() throws ManifestException, IOException {
         executeTarget("test1");
+        Manifest manifest = getManifest(EXPANDED_MANIFEST);
+        String version = manifest.getManifestVersion();
+        assertEquals("Manifest was not created with correct version - ", "1.0", version);
     }
     
     /**
      * Simple Manifest with version 2.0
      */
-    public void test2() {
+    public void test2() throws ManifestException, IOException {
         executeTarget("test2");
+        Manifest manifest = getManifest(EXPANDED_MANIFEST);
+        String version = manifest.getManifestVersion();
+        assertEquals("Manifest was not created with correct version - ", "2.0", version);
     }
     
     /**
@@ -143,8 +160,16 @@ public class ManifestTest extends BuildFileTest {
     /**
      * Inline manifest - OK
      */
-    public void test8() {
+    public void test8() throws IOException, ManifestException {
         executeTarget("test8");
+        Manifest manifest = getManifest(EXPANDED_MANIFEST);
+        Manifest.Section mainSection = manifest.getMainSection();
+        String classpath = mainSection.getAttributeValue("class-path");
+        assertEquals("Class-Path attribute was not set correctly - ", "fubar", classpath);
+        
+        Manifest.Section testSection = manifest.getSection("Test");
+        String testAttr = testSection.getAttributeValue("TestAttr");
+        assertEquals("TestAttr attribute was not set correctly - ", "Test", testAttr);
     }
      
     /**
@@ -190,8 +215,30 @@ public class ManifestTest extends BuildFileTest {
     /**
      * Inline manifest - OK since classpath entries can be duplicated.
      */
-    public void test14() {
+    public void test14() throws IOException, ManifestException {
         executeTarget("test14");
+        Manifest manifest = getManifest(EXPANDED_MANIFEST);
+        Manifest.Section mainSection = manifest.getMainSection();
+        String classpath = mainSection.getAttributeValue("class-path");
+        assertEquals("Class-Path attribute was not set correctly - ", 
+            "Test1 Test2 Test3 Test4", classpath);
+        Object classPathAttr = mainSection.getAttribute("class-PATH");
+        assertTrue("Class path attribute should be a Vector", classPathAttr instanceof Vector);            
+    }
+     
+    /**
+     * Tets long line wrapping
+     */
+    public void testLongLine() throws IOException, ManifestException {
+        Project project = getProject();
+        project.setUserProperty("test.longline", LONG_LINE);
+        executeTarget("testLongLine");
+
+        Manifest manifest = getManifest(EXPANDED_MANIFEST);
+        Manifest.Section mainSection = manifest.getMainSection();
+        String classpath = mainSection.getAttributeValue("class-path");
+        assertEquals("Class-Path attribute was not set correctly - ", 
+            LONG_LINE, classpath);
     }
      
     /**
@@ -206,7 +253,7 @@ public class ManifestTest extends BuildFileTest {
      */
     public void testReplace() throws IOException, ManifestException {
         executeTarget("testReplace");
-        Manifest mf = getManifest();
+        Manifest mf = getManifest("src/etc/testcases/taskdefs/mftest.mf");
         assertNotNull(mf);
         assertEquals(Manifest.getDefaultManifest(), mf);
     }
@@ -216,7 +263,7 @@ public class ManifestTest extends BuildFileTest {
      */
     public void testUpdate() throws IOException, ManifestException {
         executeTarget("testUpdate");
-        Manifest mf = getManifest();
+        Manifest mf = getManifest("src/etc/testcases/taskdefs/mftest.mf");
         assertNotNull(mf);
         assertTrue(!Manifest.getDefaultManifest().equals(mf));
         String mfAsString = mf.toString();
@@ -228,8 +275,8 @@ public class ManifestTest extends BuildFileTest {
     /**
      * Reads mftest.mf.
      */
-    private Manifest getManifest() throws IOException, ManifestException {
-        FileReader r = new FileReader("src/etc/testcases/taskdefs/mftest.mf");
+    private Manifest getManifest(String filename) throws IOException, ManifestException {
+        FileReader r = new FileReader(filename);
         try {
             return new Manifest(r);
         } finally {
