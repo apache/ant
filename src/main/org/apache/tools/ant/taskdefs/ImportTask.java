@@ -59,6 +59,7 @@ import org.apache.tools.ant.helper.ProjectHelper2;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Vector;
 
 /**
  * EXPERIMENTAL
@@ -95,50 +96,62 @@ public class ImportTask extends Task {
         if (file == null) {
             throw new BuildException("import requires file attribute");
         }
-    
-        ProjectHelper2.AntXmlContext context;
-        context=(ProjectHelper2.AntXmlContext)project.getReference("ant.parsing.context");
 
-        context.importlevel++;
+        ProjectHelper helper=
+                (ProjectHelper)project.getReference("ant.projectHelper");
+        Vector importStack=helper.getImportStack();
+        Object currentSource=importStack.elementAt(importStack.size() - 1);
 
-        project.log("Importing file "+file +" from "+
-                    context.buildFile.getAbsolutePath() +
-                "( level=" + context.importlevel + " )",
-                    Project.MSG_VERBOSE);
+//        ProjectHelper2.AntXmlContext context;
+//        context=(ProjectHelper2.AntXmlContext)project.getReference("ant.parsing.context");
+
+//        File buildFile=context.buildFile;
+//        File buildFileParent=context.buildFileParent;
+        File buildFile=(File)currentSource;
+        File buildFileParent=new File(buildFile.getParent());
+
+        project.log("Importing file "+ file +" from "+
+                    buildFile.getAbsolutePath(), Project.MSG_VERBOSE);
 
         // Paths are relative to the build file they're imported from,
         // *not* the current directory (same as entity includes).
         File importedFile = new File(file);
         if (!importedFile.isAbsolute()) {
-            importedFile = new File(context.buildFileParent, file);
+            importedFile = new File( buildFileParent, file);
         }
+
         if (!importedFile.exists()) {
                 throw new BuildException("Cannot find "+file+" imported from "+
-                                         context.buildFile.getAbsolutePath());
+                                         buildFile.getAbsolutePath());
         }
 
-        // Add parent build file to the map to avoid cycles...
-        String parentFilename = getPath(context.buildFile);
-        if (!context.importedFiles.containsKey(parentFilename)) {
-            context.importedFiles.put(parentFilename, context.buildFile);
-        }
-
-        // Make sure we import the file only once
-        String importedFilename = getPath(importedFile);
-        if (context.importedFiles.containsKey(importedFilename)) {
-            project.log("\nSkipped already imported file:\n   "+
-                    importedFilename+"\n",Project.MSG_WARN);
-            context.importlevel--;
+        if( importStack.contains(importedFile) ) {
+            project.log("\nSkipped already imported file to avoid loop:\n   "+
+                    importedFile + "\n",Project.MSG_WARN);
             return;
-        } else {
-            context.importedFiles.put(importedFilename, importedFile);
         }
 
-        context.ignoreProjectTag=true;
-        context.helper.parse(project, importedFile,
-                new ProjectHelper2.RootHandler(context));
+//        // Add parent build file to the map to avoid cycles...
+//        String parentFilename = getPath(buildFile);
+//        if (!context.importedFiles.containsKey(parentFilename)) {
+//            context.importedFiles.put(parentFilename, buildFile);
+//        }
+//
+//        // Make sure we import the file only once
+//        String importedFilename = getPath(importedFile);
+//        if (context.importedFiles.containsKey(importedFilename)) {
+//            project.log("\nSkipped already imported file:\n   "+
+//                    importedFilename+"\n",Project.MSG_WARN);
+//            return;
+//        } else {
+//            context.importedFiles.put(importedFilename, importedFile);
+//        }
 
-        context.importlevel--;
+//        context.ignoreProjectTag=true;
+//        context.helper.parse(project, importedFile,
+//                new ProjectHelper2.RootHandler(context));
+
+        helper.parse( project, importedFile );
     }
 
     private static String getPath(File file) {
