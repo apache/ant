@@ -12,6 +12,7 @@ import java.io.*;
  * TODO: 
  * Parsing could be much better
  * @author skanthak@muehlheim.de
+ * @deprecated use Jikes' exit value to detect compilation failure.
  */
 public class JikesOutputParser implements ExecuteStreamHandler {
     protected Task task;

@@ -67,6 +67,7 @@ import java.io.*;
  * <pre>System.setOut(new PrintStream(new TaskOutputStream(project, Project.MSG_INFO)));</pre>
  *
  * @author James Duncan Davidson (duncan@x180.com)
+ * @deprecated use LogOutputStream instead.
  */
 
 public class TaskOutputStream extends OutputStream {

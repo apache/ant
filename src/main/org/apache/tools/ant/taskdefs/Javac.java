@@ -57,7 +57,7 @@ package org.apache.tools.ant.taskdefs;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.DirectoryScanner;
 import org.apache.tools.ant.Project;
-import org.apache.tools.ant.types.Path;
+import org.apache.tools.ant.types.*;
 
 import java.lang.reflect.Method;
 import java.io.*;
@@ -103,10 +103,10 @@ public class Javac extends MatchingTask {
     private boolean debug = false;
     private boolean optimize = false;
     private boolean deprecation = false;
-    private boolean filtering = false;
     private String target;
     private Path bootclasspath;
     private Path extdirs;
+    private static String lSep = System.getProperty("line.separator");
 
     protected Vector compileList = new Vector();
 
@@ -237,13 +237,6 @@ public class Javac extends MatchingTask {
     }
 
     /**
-     * Set the filtering flag.
-     */
-    public void setFiltering(boolean filter) {
-        filtering = filter;
-    }
-
-    /**
      * Executes the task.
      */
     public void execute() throws BuildException {
@@ -340,14 +333,12 @@ public class Javac extends MatchingTask {
         }
     }
 
-    /**
-     * Builds the compilation classpath.
-     */
-
     // XXX
     // we need a way to not use the current classpath.
 
     /**
+     * Builds the compilation classpath.
+     *
      * @param addRuntime Shall <code>rt.jar</code> or
      * <code>classes.zip</code> be added to the classpath.  
      */
@@ -424,83 +415,19 @@ public class Javac extends MatchingTask {
     }
 
     /**
-     * Peforms a copmile using the classic compiler that shipped with
+     * Peforms a compile using the classic compiler that shipped with
      * JDK 1.1 and 1.2.
      */
 
     private void doClassicCompile() throws BuildException {
         log("Using classic compiler", Project.MSG_VERBOSE);
-        Path classpath = getCompileClasspath(false);
-        Vector argList = new Vector();
+        Commandline cmd = setupJavacCommand();
 
-        if (deprecation == true)
-            argList.addElement("-deprecation");
-
-        argList.addElement("-d");
-        argList.addElement(destDir.getAbsolutePath());
-        argList.addElement("-classpath");
-        // Just add "sourcepath" to classpath ( for JDK1.1 )
-        if (Project.getJavaVersion().startsWith("1.1")) {
-            argList.addElement(classpath.toString() + File.pathSeparator +
-                               src.toString());
-        } else {
-            argList.addElement(classpath.toString());
-            argList.addElement("-sourcepath");
-            argList.addElement(src.toString());
-            if (target != null) {
-                argList.addElement("-target");
-                argList.addElement(target);
-            }
-        }
-        if (debug) {
-            argList.addElement("-g");
-        }
-        if (optimize) {
-            argList.addElement("-O");
-        }
-        if (bootclasspath != null) {
-            argList.addElement("-bootclasspath");
-            argList.addElement(bootclasspath.toString());
-        }
-        if (extdirs != null) {
-            argList.addElement("-extdirs");
-            argList.addElement(extdirs.toString());
-        }
-
-        log("Compilation args: " + argList.toString(),
-            Project.MSG_VERBOSE);
-
-        String[] args = new String[argList.size() + compileList.size()];
-        int counter = 0;
-
-        for (int i = 0; i < argList.size(); i++) {
-            args[i] = (String)argList.elementAt(i);
-            counter++;
-        }
-
-        // XXX
-        // should be using system independent line feed!
-
-        StringBuffer niceSourceList = new StringBuffer("Files to be compiled:"
-                                                       + "\r\n");
-
-        Enumeration enum = compileList.elements();
-        while (enum.hasMoreElements()) {
-            args[counter] = (String)enum.nextElement();
-            niceSourceList.append("    " + args[counter] + "\r\n");
-            counter++;
-        }
-
-        log(niceSourceList.toString(), Project.MSG_VERBOSE);
-
-        // XXX
         // provide the compiler a different message sink - namely our own
-
-        ByteArrayOutputStream out = new ByteArrayOutputStream();
         sun.tools.javac.Main compiler =
-                new sun.tools.javac.Main(new TaskOutputStream(this, Project.MSG_WARN), "javac");
+                new sun.tools.javac.Main(new LogOutputStream(this, Project.MSG_WARN), "javac");
 
-        if (!compiler.compile(args)) {
+        if (!compiler.compile(cmd.getArguments())) {
             throw new BuildException("Compile failed");
         }
     }
@@ -518,62 +445,7 @@ public class Javac extends MatchingTask {
         }
 
         log("Using modern compiler", Project.MSG_VERBOSE);
-        Path classpath = getCompileClasspath(false);
-        Vector argList = new Vector();
-
-        if (deprecation == true)
-            argList.addElement("-deprecation");
-
-        argList.addElement("-d");
-        argList.addElement(destDir.getAbsolutePath());
-        argList.addElement("-classpath");
-        argList.addElement(classpath.toString());
-        argList.addElement("-sourcepath");
-        argList.addElement(src.toString());
-        if (target != null) {
-            argList.addElement("-target");
-            argList.addElement(target);
-        }
-        if (debug) {
-            argList.addElement("-g");
-        }
-        if (optimize) {
-            argList.addElement("-O");
-        }
-        if (bootclasspath != null) {
-            argList.addElement("-bootclasspath");
-            argList.addElement(bootclasspath.toString());
-        }
-        if (extdirs != null) {
-            argList.addElement("-extdirs");
-            argList.addElement(extdirs.toString());
-        }
-
-        log("Compilation args: " + argList.toString(),
-            Project.MSG_VERBOSE);
-
-        String[] args = new String[argList.size() + compileList.size()];
-        int counter = 0;
-
-        for (int i = 0; i < argList.size(); i++) {
-            args[i] = (String)argList.elementAt(i);
-            counter++;
-        }
-
-        // XXX
-        // should be using system independent line feed!
-
-        StringBuffer niceSourceList = new StringBuffer("Files to be compiled:"
-                                                       + "\r\n");
-
-        Enumeration enum = compileList.elements();
-        while (enum.hasMoreElements()) {
-            args[counter] = (String)enum.nextElement();
-            niceSourceList.append("    " + args[counter] + "\r\n");
-            counter++;
-        }
-
-        log(niceSourceList.toString(), Project.MSG_VERBOSE);
+        Commandline cmd = setupJavacCommand();
 
         // This won't build under JDK1.2.2 because the new compiler
         // doesn't exist there.
@@ -587,7 +459,7 @@ public class Javac extends MatchingTask {
             Method compile = c.getMethod ("compile",
                 new Class [] {(new String [] {}).getClass ()});
             int result = ((Integer) compile.invoke
-                          (compiler, new Object [] {args})) .intValue ();
+                          (compiler, cmd.getArguments())) .intValue ();
             if (result != MODERN_COMPILER_SUCCESS) {
                 String msg = 
                     "Compile failed, messages should have been provided.";
@@ -599,6 +471,75 @@ public class Javac extends MatchingTask {
     }
 
     /**
+     * Does the command line argument processing common to classic and
+     * modern.  
+     */
+    private Commandline setupJavacCommand() {
+        Commandline cmd = new Commandline();
+        Path classpath = getCompileClasspath(false);
+
+        if (deprecation == true) {
+            cmd.createArgument().setValue("-deprecation");
+        }
+
+        cmd.createArgument().setValue("-d");
+        cmd.createArgument().setFile(destDir);
+        cmd.createArgument().setValue("-classpath");
+        // Just add "sourcepath" to classpath ( for JDK1.1 )
+        if (Project.getJavaVersion().startsWith("1.1")) {
+            cmd.createArgument().setValue(classpath.toString() 
+                                          + File.pathSeparator 
+                                          + src.toString());
+        } else {
+            cmd.createArgument().setPath(classpath);
+            cmd.createArgument().setValue("-sourcepath");
+            cmd.createArgument().setPath(src);
+            if (target != null) {
+                cmd.createArgument().setValue("-target");
+                cmd.createArgument().setValue(target);
+            }
+        }
+        if (debug) {
+            cmd.createArgument().setValue("-g");
+        }
+        if (optimize) {
+            cmd.createArgument().setValue("-O");
+        }
+        if (bootclasspath != null) {
+            cmd.createArgument().setValue("-bootclasspath");
+            cmd.createArgument().setPath(bootclasspath);
+        }
+        if (extdirs != null) {
+            cmd.createArgument().setValue("-extdirs");
+            cmd.createArgument().setPath(extdirs);
+        }
+
+        logAndAddFilesToCompile(cmd);
+        return cmd;
+    }
+
+    /**
+     * Logs the compilation parameters, adds the files to compile and logs the 
+     * &qout;niceSourceList&quot;
+     */
+    private void logAndAddFilesToCompile(Commandline cmd) {
+        log("Compilation args: " + cmd.toString(),
+            Project.MSG_VERBOSE);
+
+        StringBuffer niceSourceList = new StringBuffer("Files to be compiled:");
+        niceSourceList.append(lSep);
+
+        Enumeration enum = compileList.elements();
+        while (enum.hasMoreElements()) {
+            String arg = (String)enum.nextElement();
+            cmd.createArgument().setValue(arg);
+            niceSourceList.append("    " + arg + lSep);
+        }
+
+        log(niceSourceList.toString(), Project.MSG_VERBOSE);
+    }
+
+    /**
      * Performs a compile using the Jikes compiler from IBM..
      * Mostly of this code is identical to doClassicCompile()
      * However, it does not support all options like
@@ -606,7 +547,7 @@ public class Javac extends MatchingTask {
      * there is no option in jikes and I don't understand
      * what they should do.
      *
-     * It has been successfully tested with jikes 1.10
+     * It has been successfully tested with jikes >1.10
      *
      * @author skanthak@muehlheim.de
      */
@@ -638,155 +579,166 @@ public class Javac extends MatchingTask {
             classpath.append(new Path(project, jikesPath));
         }
         
-        Vector argList = new Vector();
+        Commandline cmd = new Commandline();
+        cmd.setExecutable("jikes");
 
         if (deprecation == true)
-            argList.addElement("-deprecation");
+            cmd.createArgument().setValue("-deprecation");
 
-        // We want all output on stdout to make
-        // parsing easier
-        argList.addElement("-Xstdout");
-
-        argList.addElement("-d");
-        argList.addElement(destDir.getAbsolutePath());
-        argList.addElement("-classpath");
-        argList.addElement(classpath.toString());
+        cmd.createArgument().setValue("-d");
+        cmd.createArgument().setFile(destDir);
+        cmd.createArgument().setValue("-classpath");
+        cmd.createArgument().setPath(classpath);
 
         if (debug) {
-            argList.addElement("-g");
+            cmd.createArgument().setValue("-g");
         }
         if (optimize) {
-            argList.addElement("-O");
+            cmd.createArgument().setValue("-O");
         }
 
-       /**
-        * XXX
-        * Perhaps we shouldn't use properties for these
-        * two options (emacs mode and warnings),
-        * but include it in the javac directive?
-        */
+        /**
+         * XXX
+         * Perhaps we shouldn't use properties for these
+         * three options (emacs mode, warnings and pedantic),
+         * but include it in the javac directive?
+         */
 
-       /**
-        * Jikes has the nice feature to print error
-        * messages in a form readable by emacs, so
-        * that emcas can directly set the cursor
-        * to the place, where the error occured.
-        */
-       boolean emacsMode = false;
-       String emacsProperty = project.getProperty("build.compiler.emacs");
-       if (emacsProperty != null &&
-           (emacsProperty.equalsIgnoreCase("on") ||
-            emacsProperty.equalsIgnoreCase("true"))
-           ) {
-           emacsMode = true;
-       }
+        /**
+         * Jikes has the nice feature to print error
+         * messages in a form readable by emacs, so
+         * that emacs can directly set the cursor
+         * to the place, where the error occured.
+         */
+        String emacsProperty = project.getProperty("build.compiler.emacs");
+        if (emacsProperty != null &&
+            (emacsProperty.equalsIgnoreCase("on") ||
+             emacsProperty.equalsIgnoreCase("true"))
+            ) {
+            cmd.createArgument().setValue("+E");
+        }
 
-       /**
-        * Jikes issues more warnings that javac, for
-        * example, when you have files in your classpath
-        * that don't exist. As this is often the case, these
-        * warning can be pretty annoying.
-        */
-       boolean warnings = true;
-       String warningsProperty = project.getProperty("build.compiler.warnings");
-       if (warningsProperty != null &&
-           (warningsProperty.equalsIgnoreCase("off") ||
-            warningsProperty.equalsIgnoreCase("false"))
-           ) {
-           warnings = false;
-       }
+        /**
+         * Jikes issues more warnings that javac, for
+         * example, when you have files in your classpath
+         * that don't exist. As this is often the case, these
+         * warning can be pretty annoying.
+         */
+        String warningsProperty = project.getProperty("build.compiler.warnings");
+        if (warningsProperty != null &&
+            (warningsProperty.equalsIgnoreCase("off") ||
+             warningsProperty.equalsIgnoreCase("false"))
+            ) {
+            cmd.createArgument().setValue("-nowarn");
+        }
 
-       /**
-        * Jikes can issue pedantic warnings. 
-        */
-       boolean pedantic = false;
-       String pedanticProperty = project.getProperty("build.compiler.pedantic");
-       if (pedanticProperty != null &&
-           (pedanticProperty.equalsIgnoreCase("on") ||
-            pedanticProperty.equalsIgnoreCase("true"))
-           ) {
-           pedantic = true;
-       }
+        /**
+         * Jikes can issue pedantic warnings. 
+         */
+        String pedanticProperty = project.getProperty("build.compiler.pedantic");
+        if (pedanticProperty != null &&
+            (pedanticProperty.equalsIgnoreCase("on") ||
+             pedanticProperty.equalsIgnoreCase("true"))
+            ) {
+            cmd.createArgument().setValue("+P");
+        }
  
-       if (pedantic)
-           argList.addElement("+P");
- 
-       if (emacsMode)
-           argList.addElement("+E");
+        int firstFileName = cmd.size();
+        logAndAddFilesToCompile(cmd);
 
-       if (!warnings)
-           argList.addElement("-nowarn");
-
-        log("Compilation args: " + argList.toString(),
-            Project.MSG_VERBOSE);
-
-        String[] args = new String[argList.size() + compileList.size()];
-        int counter = 0;
-
-        for (int i = 0; i < argList.size(); i++) {
-            args[i] = (String)argList.elementAt(i);
-            counter++;
-        }
-
-        // XXX
-        // should be using system independent line feed!
-
-        StringBuffer niceSourceList = new StringBuffer("Files to be compiled:"
-                                                       + "\r\n");
-
-        Enumeration enum = compileList.elements();
-        while (enum.hasMoreElements()) {
-            args[counter] = (String)enum.nextElement();
-            niceSourceList.append("    " + args[counter] + "\r\n");
-            counter++;
-        }
-
-        log(niceSourceList.toString(), Project.MSG_VERBOSE);
-
-        // XXX
-        // provide the compiler a different message sink - namely our own
-
-        JikesOutputParser jop = new JikesOutputParser(this, emacsMode);
-
-        Jikes compiler = new Jikes(jop, "jikes", project);
-        compiler.compile(args);
-        if (jop.getErrorFlag()) {
+        if (executeJikesCompile(cmd.getCommandline(), firstFileName) != 0) {
             String msg = "Compile failed, messages should have been provided.";
             throw new BuildException(msg);
         }
     }
 
-    class JarFilenameFilter implements FilenameFilter {
-        public boolean accept(File dir,String name) {
-            return name.endsWith(".jar");
+    /**
+     * Do the compile with the specified arguments.
+     * @param args - arguments to pass to process on command line
+     */
+    private int executeJikesCompile(String[] args, int firstFileName) {
+        String[] commandArray = null;
+        File tmpFile = null;
+
+        try {
+            String myos = System.getProperty("os.name");
+
+            // Windows has a 32k limit on total arg size, so
+            // create a temporary file to store all the arguments
+
+            // There have been reports that 300 files could be compiled
+            // so 250 is a conservative approach
+            if (myos.toLowerCase().indexOf("windows") >= 0 
+                && args.length > 250) {
+                PrintWriter out = null;
+                try {
+                    tmpFile = new File("jikes"+(new Random(System.currentTimeMillis())).nextLong());
+                    out = new PrintWriter(new FileWriter(tmpFile));
+                    for (int i = 0; i < args.length; i++) {
+                        out.println(args[i]);
+                    }
+                    out.flush();
+                    commandArray = new String[firstFileName+1];
+                    System.arraycopy(args, 0, commandArray, 0, firstFileName);
+                    commandArray[firstFileName] = "@" + tmpFile.getAbsolutePath();
+                } catch (IOException e) {
+                    throw new BuildException("Error creating temporary file", e);
+                } finally {
+                    if (out != null) {
+                        try {out.close();} catch (Throwable t) {}
+                    }
+                }
+            } else {
+                commandArray = args;
+            }
+            
+            try {
+                Execute exe = new Execute(new LogStreamHandler(this, 
+                                                               Project.MSG_INFO,
+                                                               Project.MSG_WARN));
+                exe.setAntRun(project);
+                exe.setWorkingDirectory(project.getBaseDir());
+                exe.setCommandline(commandArray);
+                exe.execute();
+                return exe.getExitValue();
+            } catch (IOException e) {
+                throw new BuildException("Error running Jikes compiler", e);
+            }
+        } finally {
+            if (tmpFile != null) {
+                tmpFile.delete();
+            }
         }
     }
 
     /**
      * Emulation of extdirs feature in java >= 1.2.
-     * This method adds all jar archives in the given
+     * This method adds all file in the given
      * directories (but not in sub-directories!) to the classpath,
      * so that you don't have to specify them all one by one.
-     * @param classpath - Path to append jar files to
+     * @param classpath - Path to append files to
      */
     private void addExtdirsToClasspath(Path classpath) {
-       // FIXME
-       // Should we scan files recursively? How does
-       // javac handle this?
+        if (extdirs == null) {
+            String extProp = System.getProperty("java.ext.dirs");
+            if (extProp != null) {
+                extdirs = new Path(project, extProp);
+            } else {
+                return;
+            }
+        }
 
-       if (extdirs != null) {
-           String[] list = extdirs.list();
-           for (int j=0; j<list.length; j++) {
-               File dir = project.resolveFile(list[j]);
-               String[] files = dir.list(new JarFilenameFilter());
-               for (int i=0 ; i < files.length ; i++) {
-                   File f = new File(dir,files[i]);
-                   if (f.exists() && f.isFile()) {
-                       classpath.setLocation(f);
-                   }
-               }
-           }
-       }
+        String[] dirs = extdirs.list();
+        for (int i=0; i<dirs.length; i++) {
+            if (!dirs[i].endsWith(File.separator)) {
+                dirs[i] += File.separator;
+            }
+            File dir = project.resolveFile(dirs[i]);
+            FileSet fs = new FileSet();
+            fs.setDir(dir);
+            fs.setIncludes(dirs[i]+"*");
+            classpath.addFileset(fs);
+        }
     }
 }
 

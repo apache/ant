@@ -128,13 +128,7 @@ public class CommandlineTest extends TestCase {
         assertEquals("backslash included", "2\\3", s[1]);
 
         // now to the expected failures
-        try {
-            s = Commandline.translateCommandline("a \\");
-            fail("stray \\ undetected");
-        } catch (BuildException be) {
-            assertEquals("stray backslash in a \\", be.getMessage());
-        }
-
+        
         try {
             s = Commandline.translateCommandline("a \'b c");
             fail("unbalanced single quotes undetected");

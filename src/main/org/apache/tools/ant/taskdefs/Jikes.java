@@ -9,6 +9,7 @@ import java.util.Random;
  * Encapsulates a Jikes compiler, by
  * directly executing an external process.
  * @author skanthak@muehlheim.de
+ * @deprecated merged into the class Javac.
  */
 public class Jikes {
     protected JikesOutputParser jop;

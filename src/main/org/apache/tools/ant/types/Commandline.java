@@ -302,7 +302,7 @@ public class Commandline {
                         String escapedToken = tok.nextToken();
                         char escapedChar = escapedToken.charAt(0);
                         if (escapedChar == '\\' || escapedChar == '\'' ||
-                             escapedChar == '\"') {
+                            escapedChar == '\"' || escapedChar == ' ') {
                             current.append(escapedToken);
                         }
                         else {

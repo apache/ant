@@ -64,6 +64,7 @@ import java.io.*;
  * while compiling.
  *
  * @author James Duncan Davidson (duncan@x180.com)
+ * @deprecated use returnvalue of compile to detect compilation failure.
  */
 
 class JavacOutputStream extends OutputStream {
