@@ -54,61 +54,99 @@
 
 package org.apache.tools.ant.taskdefs.optional;
 
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.io.IOException;
 
 import org.apache.tools.ant.taskdefs.XSLTLiaison;
 
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.Transformer;
 import javax.xml.transform.Templates;
+import javax.xml.transform.Source;
 import javax.xml.transform.stream.StreamResult;
 import javax.xml.transform.stream.StreamSource;
 
 /**
+ * Concrete liaison for XSLT processor implementing TraX. (ie JAXP 1.1)
  *
  * @author <a href="mailto:rubys@us.ibm.com">Sam Ruby</a>
  * @author <a href="mailto:dims@yahoo.com">Davanum Srinivas</a>
- * @version $Revision$ $Date$
+ * @author <a href="mailto:sbailliez@apache.org">Stephane Bailliez</a>
  */
 public class TraXLiaison implements XSLTLiaison {
-
-    protected final static String FILEURL = "file:";
 
     /** The trax TransformerFactory */
     private TransformerFactory tfactory = null;
 
+    /** stylesheet stream, close it asap */
+    private FileInputStream xslStream = null;
+
     /** Stylesheet template */
     private Templates templates = null;
 
-    /** The trax Transformer itself */
-    private Transformer transformer;
+    /** transformer */
+    private Transformer transformer = null;
 
     public TraXLiaison() throws Exception {
         tfactory = TransformerFactory.newInstance();
     }
+//------------------- IMPORTANT
+    // 1) Don't use the StreamSource(File) ctor. It won't work with
+    // xalan prior to 2.2 because of systemid bugs.
 
-    public void setStylesheet(String fileName) throws Exception {
-        templates = tfactory.newTemplates(new StreamSource(normalize(fileName)));
+    // 2) Use a stream so that you can close it yourself quickly
+    // and avoid keeping the handle until the object is garbaged.
+    // (always keep control), otherwise you won't be able to delete
+    // the file quickly on windows.
+
+    // 3) Always set the systemid to the source for imports, includes...
+    // in xsl and xml...
+
+    public void setStylesheet(File stylesheet) throws Exception {
+        xslStream = new FileInputStream(stylesheet);
+        StreamSource src = new StreamSource(xslStream);
+        src.setSystemId(FILE_PROTOCOL_PREFIX + stylesheet.getAbsolutePath());
+        templates = tfactory.newTemplates(src);
         transformer = templates.newTransformer();
-    };
+    }
 
-    public void transform(String infile, String outfile) throws Exception {
-        FileOutputStream out = new FileOutputStream(outfile);
+    public void transform(File infile, File outfile) throws Exception {
+        FileInputStream fis = null;
+        FileOutputStream fos = null;
         try {
-            transformer.transform(new StreamSource(normalize(infile)), 
-                                  new StreamResult(out));
+            fis = new FileInputStream(infile);
+            fos = new FileOutputStream(outfile);
+            StreamSource src = new StreamSource(fis);
+            src.setSystemId(FILE_PROTOCOL_PREFIX + infile.getAbsolutePath());
+            StreamResult res = new StreamResult(fos);
+            // not sure what could be the need of this...
+            res.setSystemId(FILE_PROTOCOL_PREFIX + outfile.getAbsolutePath());
+
+            transformer.transform(src, res);
         } finally {
-            out.close();
+            // make sure to close all handles, otherwise the garbage
+            // collector will close them...whenever possible and
+            // Windows may complain about not being able to delete files.
+            try {
+                if (xslStream != null){
+                    xslStream.close();
+                }
+            } catch (IOException ignored){}
+            try {
+                if (fis != null){
+                    fis.close();
+                }
+            } catch (IOException ignored){}
+            try {
+                if (fos != null){
+                    fos.close();
+                }
+            } catch (IOException ignored){}
         }
     }
 
-    protected String normalize(String fileName) {
-        if(fileName != null && !fileName.startsWith(FILEURL)) {
-            return FILEURL + "///" + fileName;
-        }
-        return fileName;
-    }
-    
     public void addParam(String name, String value){
         transformer.setParameter(name, value);
     }

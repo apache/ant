@@ -1,0 +1,7 @@
+<?xml version="1.0"?>
+<!DOCTYPE project [
+    <!ENTITY include SYSTEM "xsltliaison-include.xml">
+]>
+<project>
+    &include;
+</project>

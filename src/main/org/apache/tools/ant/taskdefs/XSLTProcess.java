@@ -100,9 +100,9 @@ public class XSLTProcess extends MatchingTask {
 
     private String targetExtension = ".html";
     private Vector params = new Vector();
- 
+
     private File inFile = null;
- 
+
     private File outFile = null;
 
     private String processor;
@@ -137,7 +137,7 @@ public class XSLTProcess extends MatchingTask {
         if (baseDir == null) {
             baseDir = project.resolveFile(".");
         }
-        
+
         liaison = getLiaison();
         log("Using "+liaison.getClass().toString(), Project.MSG_VERBOSE);
 
@@ -178,7 +178,7 @@ public class XSLTProcess extends MatchingTask {
         for (int i = 0;i < list.length; ++i) {
             process( baseDir, list[i], destDir, stylesheet );
         }
-        
+
         // Process all the directoried marked for styling
         dirs = scanner.getIncludedDirectories();
         for (int j = 0;j < dirs.length;++j){
@@ -264,15 +264,15 @@ public class XSLTProcess extends MatchingTask {
      */
     private void resolveProcessor(String proc) throws Exception {
         if (proc.equals("trax")) {
-            final Class clazz = 
+            final Class clazz =
                 loadClass("org.apache.tools.ant.taskdefs.optional.TraXLiaison");
             liaison = (XSLTLiaison)clazz.newInstance();
         } else if (proc.equals("xslp")) {
-            final Class clazz = 
+            final Class clazz =
                 loadClass("org.apache.tools.ant.taskdefs.optional.XslpLiaison");
             liaison = (XSLTLiaison) clazz.newInstance();
         } else if (proc.equals("xalan")) {
-            final Class clazz = 
+            final Class clazz =
                 loadClass("org.apache.tools.ant.taskdefs.optional.XalanLiaison");
             liaison = (XSLTLiaison)clazz.newInstance();
         } else {
@@ -313,14 +313,14 @@ public class XSLTProcess extends MatchingTask {
      * Processes the given input XML file and stores the result
      * in the given resultFile.
      **/
-    private void process(File baseDir, String xmlFile, File destDir, 
+    private void process(File baseDir, String xmlFile, File destDir,
                          File stylesheet)
         throws BuildException {
 
         String fileExt=targetExtension;
         File   outFile=null;
         File   inFile=null;
-        
+
         try {
             long styleSheetLastModified = stylesheet.lastModified();
             inFile = new File(baseDir,xmlFile);
@@ -337,7 +337,7 @@ public class XSLTProcess extends MatchingTask {
                 log("Transforming into "+destDir);
 
                 configureLiaison(stylesheet);
-                liaison.transform(inFile.toString(), outFile.toString());
+                liaison.transform(inFile, outFile);
             }
         }
         catch (Exception ex) {
@@ -347,7 +347,7 @@ public class XSLTProcess extends MatchingTask {
             if (outFile != null) {
                 outFile.delete();
             }
-        
+
             throw new BuildException(ex);
         }
 
@@ -365,7 +365,7 @@ public class XSLTProcess extends MatchingTask {
                 ensureDirectoryFor( outFile );
                 log("Processing " + inFile + " to " + outFile, Project.MSG_INFO);
                 configureLiaison(stylesheet);
-                liaison.transform(inFile.toString(), outFile.toString());
+                liaison.transform(inFile, outFile);
             }
         }catch (Exception ex) {
             log("Failed to process " + inFile, Project.MSG_INFO);
@@ -378,12 +378,12 @@ public class XSLTProcess extends MatchingTask {
         File directory = new File( targetFile.getParent() );
         if (!directory.exists()) {
             if (!directory.mkdirs()) {
-                throw new BuildException("Unable to create directory: " 
+                throw new BuildException("Unable to create directory: "
                                          + directory.getAbsolutePath() );
             }
         }
     }
-    
+
     protected XSLTLiaison getLiaison() {
         // if processor wasn't specified, see if TraX is available.  If not,
         // default it to xslp or xalan, depending on which is in the classpath
@@ -424,20 +424,20 @@ public class XSLTProcess extends MatchingTask {
     public class Param {
         private String name=null;
         private String expression=null;
-        
+
         public void setName(String name){
             this.name = name;
         }
-        
+
         public void setExpression(String expression){
             this.expression = expression;
         }
-        
+
         public String getName() throws BuildException{
             if(name==null)throw new BuildException("Name attribute is missing.");
             return name;
         }
-        
+
         public String getExpression() throws BuildException{
             if(expression==null)throw new BuildException("Expression attribute is missing.");
             return expression;
@@ -455,7 +455,7 @@ public class XSLTProcess extends MatchingTask {
 
         try {
             log( "Loading stylesheet " + stylesheet, Project.MSG_INFO);
-            liaison.setStylesheet( stylesheet.toString() );
+            liaison.setStylesheet( stylesheet );
             for(Enumeration e = params.elements();e.hasMoreElements();) {
                 Param p = (Param)e.nextElement();
                 liaison.addParam( p.getName(), p.getExpression() );

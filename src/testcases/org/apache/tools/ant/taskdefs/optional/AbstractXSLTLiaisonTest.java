@@ -1,3 +1,5 @@
+package org.apache.tools.ant.taskdefs.optional;
+
 /*
  * The Apache Software License, Version 1.1
  *
@@ -23,7 +25,7 @@
  *    Alternately, this acknowlegement may appear in the software itself,
  *    if and wherever such third-party acknowlegements normally appear.
  *
- * 4. The names "The Jakarta Project", "Ant", and "Apache Software
+ * 4. The names "The Jakarta Project", "Jakarta-Regexp", and "Apache Software
  *    Foundation" must not be used to endorse or promote products derived
  *    from this software without prior written permission. For written
  *    permission, please contact apache@apache.org.
@@ -50,55 +52,77 @@
  * individuals on behalf of the Apache Software Foundation.  For more
  * information on the Apache Software Foundation, please see
  * <http://www.apache.org/>.
+ *
  */
 
-package org.apache.tools.ant.taskdefs;
+import junit.framework.TestCase;
+import org.apache.tools.ant.taskdefs.XSLTLiaison;
+import org.w3c.dom.Document;
 
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
 import java.io.File;
+import java.net.URL;
 
 /**
- * Proxy interface for XSLT processors.
+ * Abtract testcase for XSLTLiaison.
+ * Override createLiaison for each XSLTLiaison.
  *
- * @author <a href="mailto:rubys@us.ibm.com">Sam Ruby</a>
- * @author <a href="mailto:sbailliez@apache.org">Stephane Bailliez</a>
- * @see #XSLTProcess
+ * <a href="sbailliez@apache.org">Stephane Bailliez</a>
  */
-public interface XSLTLiaison {
+public abstract class AbstractXSLTLiaisonTest extends TestCase {
 
-    /**
-     * the file protocol prefix for systemid.
-     * This file protocol must be appended to an absolute path.
-     * Typically: <tt>FILE_PROTOCOL_PREFIX + file.getAbsolutePath()</tt>
-     * This is not correct in specification terms since an absolute
-     * url in Unix is file:// + file.getAbsolutePath() while it is
-     * file:/// + file.getAbsolutePath() under Windows.
-     * Whatever, it should not be a problem to put file:/// in every
-     * case since most parsers for now incorrectly makes no difference
-     * between it.. and users also have problem with that :)
-     */
-    public final static String FILE_PROTOCOL_PREFIX = "file:///";
+    protected XSLTLiaison liaison;
 
-    /**
-     * set the stylesheet to use for the transformation.
-     * @param stylesheet the stylesheet to be used for transformation.
-     */
-    public void setStylesheet(File stylesheet) throws Exception;
+    protected  AbstractXSLTLiaisonTest(String name){
+        super(name);
+    }
 
-    /**
-     * Add a parameter to be set during the XSL transformation.
-     * @param name the parameter name.
-     * @param expression the parameter value as an expression string.
-     * @throws Exception thrown if any problems happens.
-     */
-    public void addParam(String name, String expression) throws Exception;
+    protected void setUp() throws Exception {
+        liaison = createLiaison();
+    }
 
-    /**
-     * Perform the transformation of a file into another.
-     * @param infile the input file, probably an XML one. :-)
-     * @param outfile the output file resulting from the transformation
-     * @throws Exception thrown if any problems happens.
-     * @see #setStylesheet(File)
-     */
-    public void transform(File infile, File outfile) throws Exception;
+    // to override
+    protected abstract XSLTLiaison createLiaison() throws Exception ;
 
-} //-- XSLTLiaison
+    protected File getFile(String name){
+        URL url = getClass().getResource(name);
+        return new File(url.getFile());
+    }
+
+    /** keep it simple stupid */
+    public void testTransform() throws Exception {
+        File xsl = getFile("/taskdefs/optional/xsltliaison-in.xsl");
+        liaison.setStylesheet(xsl);
+        liaison.addParam("param", "value");
+        File in = getFile("/taskdefs/optional/xsltliaison-in.xml");
+        File out = new File("xsltliaison.tmp");
+        try {
+            liaison.transform(in, out);
+        } finally {
+            out.delete();
+        }
+    }
+
+    public void testEncoding() throws Exception {
+        File xsl = getFile("/taskdefs/optional/xsltliaison-encoding-in.xsl");
+        liaison.setStylesheet(xsl);
+        File in = getFile("/taskdefs/optional/xsltliaison-encoding-in.xml");
+        File out = new File("xsltliaison-encoding.tmp");
+        try {
+            liaison.transform(in, out);
+            Document doc = parseXML(out);
+            assertEquals("root",doc.getDocumentElement().getNodeName());
+            assertEquals("message",doc.getDocumentElement().getFirstChild().getNodeName());
+            assertEquals("È‡ËÔ˘",doc.getDocumentElement().getFirstChild().getFirstChild().getNodeValue());
+        } finally {
+            out.delete();
+        }
+    }
+
+    public Document parseXML(File file) throws Exception {
+        DocumentBuilderFactory dbfactory = DocumentBuilderFactory.newInstance();
+        DocumentBuilder dbuilder = dbfactory.newDocumentBuilder();
+        return dbuilder.parse(file);
+    }
+}
