@@ -89,7 +89,15 @@ public class ScriptRunner {
     public void addBeans(Map dictionary) {
         for (Iterator i = dictionary.keySet().iterator(); i.hasNext();) {
             String key = (String) i.next();
-            addBean(key, dictionary.get(key));
+            try {
+                Object val = dictionary.get(key);
+                addBean(key, val);
+            } catch (BuildException ex) {
+                // The key is in the dictionary but cannot be retrieved
+                // This is usually due references that refer to tasks
+                // that have not been taskdefed in the current run.
+                // Ignore
+            }
         }
     }
 
