@@ -199,7 +199,7 @@ public class Property extends Task {
                 addProperties(props);
             } else {
                 log("Unable to find property file: " + file.getAbsolutePath(), 
-                    Project.MSG_WARN);
+                    Project.MSG_VERBOSE);
             }
         } catch(Exception ex) {
             throw new BuildException(ex.getMessage(), ex, location);
