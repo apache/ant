@@ -112,12 +112,9 @@ public class XMLFragment implements DynamicConfigurator {
      * Creates a nested element.
      */
     public Object createDynamicElement(String name) {
-        /* I don't get the namespace prefix here
         Element e = doc
             .createElementNS(ProjectHelper.extractUriFromComponentName(name),
                              ProjectHelper.extractNameFromComponentName(name));
-        */
-        Element e = doc.createElement(name);
         fragment.appendChild(e);
         return new Child(e);
     }
@@ -154,14 +151,11 @@ public class XMLFragment implements DynamicConfigurator {
          * Creates a nested element.
          */
         public Object createDynamicElement(String name) {
-            /*
             Element e2 = doc
                 .createElementNS(ProjectHelper
                                  .extractUriFromComponentName(name),
                                  ProjectHelper
                                  .extractNameFromComponentName(name));
-            */
-            Element e2 = doc.createElement(name);
             e.appendChild(e2);
             return new Child(e2);
         }
