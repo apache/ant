@@ -39,16 +39,34 @@ Note: This document was updated in the context of releasing Ant 1.6.
     to the right areas of Ant's website. ]]
 
 5.  Before a build :
-    Update the following files for version number, and commit your changes.
-
-    * docs/manual/cover.html
-    * docs/manual/credits.html
-    * build.xml (version property)
 
     the first beta on the 1.6 branch should be called 1.6Beta1, ...
 
     the version property in build.xml governs the output of ant -version and
     the naming of the distribution files.
+
+    Update the following files for version number:
+
+        On the branch only :
+
+            * docs/manual/cover.html
+            * docs/manual/credits.html
+            * build.xml (version property & manifest-version property)
+
+        Commit your changes.
+
+        On the branch and on the main trunk (*):
+
+            * xdocs/antnews.xml (Announcement)
+            * xdocs/faq.xml (Ant's history details - not for betas)
+            * xdocs/index.xml (Announcement, latest release details, link to
+            manual under "Documentation")
+            * xdocs/srcdownload.xml
+            * xdocs/bindownload.xml
+
+        Generate the html files by invoking ant on docs.xml - you need
+        jakarta-site2 checked out for this.  Commit the modified/generated
+        files
 
 6.  Ensure you have all the external libraries that Ant uses in your
     lib/optional directory.  To find out what libraries you need, execute
@@ -101,7 +119,9 @@ Note: This document was updated in the context of releasing Ant 1.6.
 
 12. Address the available release tags in BugZilla. Create a new tag 1.6Beta1
     and a 1.7Alpha. Assign all existing 1.6 alpha bugs to one of these release
-    labels.
+    labels. Note that such massive changes can be done at once by choosing the
+    link "Change several bugs at once" at the bottom of the bug list
+    displaying the 1.6alpha bugs.
 
 13. Once that is done, do a test download to make sure everything is OK. A
     common problem may be:
@@ -114,15 +134,7 @@ Note: This document was updated in the context of releasing Ant 1.6.
     made (ant website, main jakarta website, announcements@jakarta.apache.org,
     etc).
 
-    Also ensure you:
-    * Update antnews.xml (Announcement)
-    * Update faq.xml (Ant's history details - not for betas)
-    * Update index.xml (Announcement, latest release details, link to
-      manual under "Documentation")
-
-    Generate the html files by invoking ant on docs.xml - you need
-    jakarta-site2 checked out for this.  Commit the modified/generated
-    files and also perform a cvs update on files in minotaur's
+    and also perform a cvs update on files in minotaur's
     /www/ant.apache.org/
 
     Announce beta releases at freshmeat.net (Stefan Bodewig is the
@@ -160,12 +172,13 @@ Note: This document was updated in the context of releasing Ant 1.6.
     * Make sure that the symbolic link README.html points to the new
       RELEASE-NOTES.
 
-18. Change the links in /xdocs/bindownload.xml and /xdocs/srcdownload.xml,
-    regenerate the HTML files, commit and update the site.
+18. Update the ant.apache.org site :
 
-    As the mirrors may need some days to pick up the new release, you
-    may want to add a note to that effect to the pages and remove it a few
-    days later.
+    running cvs update *.html under /www/ant.apache.org should update the
+    files regenerated and committed in point 5 above (index.html, faq.html,
+    antnews.html, srcdownload.html, bindownload.html).
+
+    Update the online manual too.
 
 19. Clean up.
 
@@ -197,3 +210,8 @@ Note: This document was updated in the context of releasing Ant 1.6.
 
 22. You can now reacquaint yourself with your family and friends.
 
+(*)  the xdocs need to be updated on both the branch and the HEAD revision
+     because traditionally the ant.apache.org web site reflects the HEAD
+     revisio of the xdocs, but the users downloading a distribution will get
+     the xdocs and the generated html from the branch and will complain if there
+     are discrepancies in version numbers.
