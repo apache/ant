@@ -1,5 +1,5 @@
-Changes from Ant 1.6 to current cvs version
-===========================================
+Changes from Ant 1.6.0 to current cvs version
+=============================================
 
 Changes that could break older environments:
 --------------------------------------------
@@ -18,6 +18,9 @@ Fixed bugs:
 
 * <whichresource> failed to load classes correctly.
 
+* Ant could fail to start with a NullPointerException if
+  ANT_HOME/lib/ant-launcher.jar was part of the system CLASSPATH.
+
 Other changes:
 --------------
 * Translate task logs a debug message specifying the number of files
@@ -33,8 +36,8 @@ Other changes:
 
 * <fixcrlf> has a new attribute - fixlast. Bugzilla Report 23262.
 
-Changes from Ant 1.5.4 to Ant 1.6
-=================================
+Changes from Ant 1.5.4 to Ant 1.6.0
+===================================
 
 Changes that could break older environments:
 --------------------------------------------
