@@ -11,7 +11,7 @@
       <question>Where do I find the latest version of this
         document?</question>
       <answer>
-        <p>The latest version can always be found at Ant's homepage 
+        <p>The latest version can always be found at Ant&apos;s homepage 
           <a href="http://jakarta.apache.org/ant/faq.html">http://jakarta.apache.org/ant/faq.html</a>.</p>
       </answer>
     </faq>
@@ -22,10 +22,10 @@
         <p>The page you are looking it is generated from 
           <a href="http://cvs.apache.org/viewcvs.cgi/~checkout~/jakarta-ant/xdocs/faq.xml">this</a>
           document.  If you want to add a new question, please submit
-          a patch against this document to one of Ant's mailing lists,
-          the structure is hoped to be self-explaining.</p>
+          a patch against this document to one of Ant&apos;s mailing lists;
+          hopefully, the structure is self-explanatory.</p>
         
-        <p>If you don't know how to create a patch, see the patches
+        <p>If you don&apos;t know how to create a patch, see the patches
           section of <a href="http://jakarta.apache.org/site/source.html">this
           page</a>.</p>
       </answer>
@@ -42,12 +42,12 @@
 
         <p>The Velocity stylesheets used to process the XML files can
         be found in the <code>xdocs/stylesheets</code> subdirectory of
-        Ant's CVS repository - the build file <code>docs.xml</code> is
+        Ant&apos;s CVS repository - the build file <code>docs.xml</code> is
         used to drive Anakia.  This file assumes that you have the
         <code>jakarta-site2</code> module checked out from CVS as
-        well, but if you follow the instruction from Anakia's
+        well, but if you follow the instruction from Anakia&apos;s
         homepage, you should get it to work without that.  Just make
-        sure all required jars are in the task's classpath.</p>
+        sure all required jars are in the task&apos;s classpath.</p>
       </answer>
     </faq>
 
@@ -57,8 +57,8 @@
     <faq id="what-is-ant">
       <question>What is Apache Ant?</question>
       <answer>
-        <p> Ant is a Java based build tool. In theory it is kind of
-        like &quot;make&quot; without makes wrinkles and with the full
+        <p> Ant is a Java-based build tool. In theory, it is kind of
+        like Make, without Make&apos;s wrinkles and with the full
         portability of pure Java code.</p>
       </answer>
     </faq>
@@ -67,14 +67,14 @@
       <question>Why do you call it Ant?</question>
       <answer>
 
-        <p>According to Ant&apos;s original author James Duncan
+        <p>According to Ant&apos;s original author, James Duncan
         Davidson, the name is an acronym for &quot;Another Neat
         Tool&quot;.</p>
         
-        <p>Later explanations go along the lines of &quot;Ants are
-        doing an extremely good job at building things&quot; or
-        &quot;Ants are very small and can carry a weight a dozen times
-        of their own&quot; - describing what Ant is intended to
+        <p>Later explanations go along the lines of &quot;ants 
+        do an extremely good job at building things&quot;, or
+        &quot;ants are very small and can carry a weight dozens of times
+        their own&quot; - describing what Ant is intended to
         be.</p>
       </answer>
     </faq>
@@ -83,29 +83,29 @@
       <question>Tell us a little bit about Ant&apos;s history.</question>
       <answer>
 
-        <p>Initially Ant was part of the Tomcat code base when it was
-        donated to the Apache Software Foundation - it has been
-        created by James Duncan Davidson, who also is the original
+        <p>Initially, Ant was part of the Tomcat code base, when it was
+        donated to the Apache Software Foundation. It was
+        created by James Duncan Davidson, who is also the original
         author of Tomcat. Ant was there to build Tomcat, nothing
         else.</p>
 
-        <p>Soon thereafter several open source Java projects realized
-        that Ant could solve the problems they had with makefiles.
+        <p>Soon thereafter, several open source Java projects realized
+        that Ant could solve the problems they had with Makefiles.
         Starting with the projects hosted at Jakarta and the old Java
-        Apache project, Ant spread like a virus and now is the build
+        Apache project, Ant spread like a virus and is now the build
         tool of choice for a lot of projects.</p>
 
-        <p>In January 2000 Ant was moved to a separate CVS module and
+        <p>In January 2000, Ant was moved to a separate CVS module and
         was promoted to a project of its own, independent of
-        Tomcat.  Ant became Apache Ant.</p>
+        Tomcat, and became Apache Ant.</p>
 
-        <p>The first version of Ant that was exposed a lager audience
+        <p>The first version of Ant that was exposed to a larger audience
         was the one that shipped with Tomcat&apos;s 3.1 release on 19 April
-        2000.  This version has later been referenced to as Ant
+        2000.  This version has later been referred to as Ant
         0.3.1.</p>
 
-        <p>The first official release of Ant as a stand alone product was
-        Ant 1.1 released on 19 July 2000.  The complete release
+        <p>The first official release of Ant as a stand-alone product was
+        Ant 1.1, released on 19 July 2000.  The complete release
         history:</p>
 
         <table>
@@ -162,7 +162,7 @@
         you cannot use it to extract the archive.</p>
 
         <p>The solution is to either install GNU tar, which can be
-        found <a href="http://www.gnu.org/software/tar/tar.html">here</a> 
+        found <a href="http://www.gnu.org/software/tar/tar.html">here</a>,
         or use the zip archive instead (you can extract it using
         <code>jar xf</code>).</p>
       </answer>
@@ -178,20 +178,29 @@
         compares the timestamps of the source files to those of the
         resulting <code>.class</code> files.  Opening all source files
         to find out which package they belong to would be very
-        inefficient - instead of this, Ant expects you to place your
+        inefficient. Instead, Ant expects you to place your
         source files in a directory hierarchy that mirrors your
         package hierarchy and to point Ant to the root of this
         directory tree with the <code>srcdir</code> attribute.</p>
 
         <p>Say you have <code>&lt;javac srcdir=&quot;src&quot;
-        destdir=&quot;dest&quot; /&gt;</code>.  If Ant finds a file
-        <code>src/a/b/C.java</code> it expects it to be in package
+        destdir=&quot;dest&quot;/&gt;</code>.  If Ant finds a file
+        <code>src/a/b/C.java</code>, it expects it to be in package
         <code>a.b</code> so that the resulting <code>.class</code>
         file is going to be <code>dest/a/b/C.class</code>.</p>
 
-        <p>If your setup is different, Ant&apos;s heuristic won&apos;t work and
-        it will recompile classes that are up to date.  Ant is not the
-        only tool, that expects a source tree layout like this.</p>
+        <p>If your source-tree directory structure does not match your
+        package structure, Ant&apos;s heuristic won&apos;t work, and
+        it will recompile classes that are up-to-date.  Ant is not the
+        only tool that expects a source-tree layout like this.</p>
+
+        <p>If you have Java source files that aren&apos;t declared to
+        be part of any package, you can still use the <code>&lt;javac&gt;</code>
+        task to compile these files correctly - just set the
+        <code>srcdir</code> and <code>destdir</code> attributes to
+        the actual directory the source
+        files live in and the directory the class files should go into,
+        respectively.</p>
 
       </answer>
     </faq>
@@ -201,22 +210,23 @@
         build file?</question>
       <answer>
 
-        <p>Use properties: <code>ant
-        -D&lt;name&gt;=&lt;value&gt;</code> lets you define values for
-        properties.  These can then be used within your build file as
-        any normal property: <code>${&lt;name&gt;}</code> will put in
-        <code>&lt;value&gt;</code>.</p>
+        <p>Use properties. Using <code>ant
+        -D<em>name</em>=<em>value</em></code> lets you define values for
+        properties on the Ant command line. These properties can then be
+        used within your build file as
+        any normal property: <code>${<em>name</em>}</code> will put in
+        <code><em>value</em></code>.</p>
 
       </answer>
     </faq>
 
     <faq id="jikes-switches">
-      <question>How can I use Jikes specific command line
+      <question>How can I use Jikes-specific command-line
         switches?</question>
 
       <answer>
 
-        <p>A couple of switches are supported via magic
+        <p>A couple of switches are supported via &quot;magic&quot;
           properties:</p>
 
         <table>
@@ -245,8 +255,10 @@
           </tr>
 
           <tr>
-            <td><strong>only for Ant &lt; 1.4, replaced by the nowarn
-                attribute of javac after that</strong> -nowarn</td>
+            <td><strong>(Only for Ant &lt; 1.4; replaced by the
+                <code><strong>nowarn</strong></code>
+                attribute of the <code><strong>&lt;javac&gt;</strong></code>
+                task after that.)</strong><br></br>-nowarn</td>
             <td>build.compiler.warnings</td>
             <td>true == not set</td>
           </tr>
@@ -257,13 +269,13 @@
     </faq>
 
     <faq id="shell-redirect-1">
-      <question>How do I include a &lt; character in my command line arguments?</question>
+      <question>How do I include a &lt; character in my command-line arguments?</question>
       <answer>
-        <p>The short answer is "Use <code>&amp;lt;</code>".</p>
+        <p>The short answer is "Use: <code>&amp;lt;</code>".</p>
 
-        <p>The long answer is, that this probably won't do what you
-        want anyway, see <a href="#shell-redirect-2">the next
-        section</a>.</p>
+        <p>The long answer is that this probably won&apos;t do what you
+        want anyway (see <a href="#shell-redirect-2">the next
+        section</a>).</p>
       </answer>
     </faq>
 
@@ -273,7 +285,7 @@
       <answer>
         <p>Say you want to redirect the standard input stream of the
         <code>cat</code> command to read from a file, something
-        like</p>
+        like:</p>
 
         <source><![CDATA[
 shell-prompt> cat < foo
@@ -288,7 +300,7 @@ shell-prompt> cat < foo
 </exec>
 ]]></source>
 
-        <p>This will not do what you expect.  The input-redirection is
+        <p>This will not do what you expect.  The input redirection is
         performed by your shell, not the command itself, so this
         should read:</p>
         
@@ -299,25 +311,54 @@ shell-prompt> cat < foo
 </exec>
 ]]></source>
 
-        <p>Note, that you must use the <code>value</code> attribute of
-        <code>&lt;arg&gt;</code> in the last element.</p>
+        <p>Note that you must use the <code>value</code> attribute of
+        <code>&lt;arg&gt;</code> in the last element, in order to have
+        the command passed as a single, quoted argument. Alternatively,
+        you can use:</p>
+        <source><![CDATA[
+<exec executable="/bin/sh">
+  <arg line='-c "cat &lt; foo"'/>
+</exec>
+]]></source>
+
+        <p>Note the double-quotes nested inside the single-quotes.</p>
+
+      </answer>
+    </faq>
+
+    <faq id="batch-shell-execute">
+      <question>How do I execute a batch file or shell script from Ant?</question>
+      <answer>
+
+        <p>Execute the command shell instead, then pass the batch file or
+           shell script as a single command, using the <code>/c</code> or
+           <code>-c</code> switch, respectively. See
+           <a href="#shell-redirect-2">the above section</a>
+           for example <code>&lt;exec&gt;</code> tasks
+           executing <code>sh</code>. On Windows, use something like:</p>
+        <source><![CDATA[
+<exec dir="." executable="cmd.exe" os="Windows NT">
+  <arg line="/c test.bat"/>
+</exec>
+]]></source>
 
       </answer>
     </faq>
 
     <faq id="defaultexcludes">
 
-      <question>I've made a &lt;delete&gt; task to delete unwanted
-      sourcesafe control files (CVS files, editor backup files), but
-      it doesn't seem to work. The files never get deleted. What's
+      <question>I&apos;ve used a <code>&lt;delete&gt;</code> task to delete
+      unwanted
+      SourceSafe control files (CVS files, editor backup files, etc.), but
+      it doesn&apos;t seem to work; the files never get deleted. What&apos;s
       wrong?</question>
 
       <answer>
-        <p>This is probably happening because by default, Ant excludes
-        SourceSafe control files (<code>vssver.scc</code>) and other
+        <p>This is probably happening because, by default, Ant excludes
+        SourceSafe control files (<code>vssver.scc</code>) and certain other
         files from FileSets.</p>
 
-        <p>Here's what you probably did:</p>
+        <p>Here&apos;s what you probably did:</p>
 
 
 	<source><![CDATA[
@@ -326,7 +367,8 @@ shell-prompt> cat < foo
 </delete>
 ]]></source>
 
-        <p>You need to switch off the default exclusions and it will work:</p>
+        <p>You need to switch off the default exclusions,
+           and it will work:</p>
 	<source><![CDATA[
 <delete>
   <fileset dir="${build.src}" includes="**/vssver.scc"
@@ -335,7 +377,7 @@ shell-prompt> cat < foo
 ]]></source>
         
         <p>For a complete listing of the patterns that are excluded
-        by default, see <a href="manual/dirtasks.html">the user
+        by default, see <a href="manual/dirtasks.html#defaultexcludes">the user
         manual</a>.</p>
 
       </answer>
@@ -349,18 +391,18 @@ shell-prompt> cat < foo
         <p>There are actually several answers to this question.</p>
 
         <p>If you have only one set and one unset property to test,
-        you can put both an <code>if</code> and an <code>unless</code>
-        attribute into the target. The target will act as if they
+        you can specify both an <code>if</code> and an <code>unless</code>
+        attribute for the target, and they will act as if they
         are &quot;anded&quot; together.</p>
 
         <p>If you are using a version of Ant 1.3 or earlier, the
         way to work with all other cases is to chain targets together
-        to determine the specific state you wish to test for.</p>
+        to determine the specific state you want to test for.</p>
 
-        <p>To see how this works, assume you have three properties,
+        <p>To see how this works, assume you have three properties:
         <code>prop1</code>, <code>prop2</code>, and <code>prop3</code>.
         You want to test that <code>prop1</code> and <code>prop2</code> 
-        are set, but that <code>prop3</code> is not. If the condition
+        are set, and that <code>prop3</code> is not. If the condition
         holds true you want to echo &quot;yes&quot;.</p>
 
         <p>Here is the implementation in Ant 1.3 and earlier:</p>
@@ -381,9 +423,13 @@ shell-prompt> cat < foo
 </target>
 ]]></source>
 
-        <p>Note that <code>&lt;antcall&gt;</code> tasks do not pass
+        <p>Note: <code>&lt;antcall&gt;</code> tasks do <em>not</em> pass
         property changes back up to the environment they were called
-        from.</p>
+        from, so you would&apos;nt be able to, for example, set a
+        <code>result</code> property in the <code>cond-if-3</code> target,
+        then do
+        <code>&lt;echo message=&quot;result is ${result}&quot;/&gt;</code>
+        in the <code>cond</code> target.</p>
 
         <p>Starting with Ant 1.4, you can use the
         <code>&lt;condition&gt;</code> task.</p>
@@ -422,10 +468,11 @@ shell-prompt> cat < foo
 
           <li>To get a literal <code>$</code> in Ant, you have to
           escape it with another <code>$</code> - this will also break
-          the special treatment of the sequence <code>${</code>.</li>
+          the special treatment of the <code>${</code> sequence.</li>
         </ul>
 
-        <p>This is neither readable, nor easy to understand, therefore
+        <p>Because testing for a literal <code>${property}</code> string
+        isn&apos;t all that readable or easy to understand,
         post-1.4.1 Ant introduces the <code>&lt;isset&gt;</code> element 
 	to the <code>&lt;condition&gt;</code> task.</p>
 
@@ -448,35 +495,39 @@ shell-prompt> cat < foo
 
         <p>The last option is to use a scripting language to set the
         properties. This can be particularly handy when you need much
-        better control than the simple conditions shown here, but of
-        course comes with the overhead of adding JAR files to support
+        finer control than the simple conditions shown here but, of
+        course, comes with the overhead of adding JAR files to support
         the language, to say nothing of the added maintenance in requiring
-        two languages to implement a single system.</p>
+        two languages to implement a single system. See the
+        <a href="manual/OptionalTasks/script.html">
+        <code>&lt;script&gt;</code> task documentation</a> for more
+        details.</p>
       </answer>
     </faq>
     
     <faq id="stop-dependency">
-      <question>I have a target I want to skip if a variable is set,
-      so I have <code>unless=&quot;variable&quot;</code> as an attribute 
-      of the target.  The trouble is that all of the targets that this target 
+      <question>I have a target I want to skip if a property is set,
+      so I have <code>unless=&quot;property&quot;</code> as an attribute 
+      of the target, but all the targets this target 
       depends on are still executed. Why?</question>
 
       <answer>
         <p>The list of dependencies is generated by Ant before any of the
-        targets are run. This allows dependent targets such as an 
-        <code>init</code> target to set properties that can control the 
-	execution of the targets higher in the dependency graph. This 
-	is a good thing.</p>
+        targets are run. This allows dependent targets, such as an 
+        <code>init</code> target, to set properties that can control the 
+       	execution of the targets higher in the dependency graph. This 
+      	is a good thing.</p>
 
-        <p>When your dependencies actually break down the higher level task
-        into several simpler steps, though, this behaviour becomes 
-        counterintuitive. There are a couple of solutions available:
+        <p>However, when your dependencies break down the
+        higher-level task
+        into several smaller steps, this behaviour becomes 
+        counter-intuitive. There are a couple of solutions available:
         </p>
 
         <ol>
           <li>Put the same condition on each of the dependent targets.</li>
 	  
-          <li>Execute the steps using <code>&lt;antcall&gt;</code>
+          <li>Execute the steps using <code>&lt;antcall&gt;</code>,
           instead of specifying them inside the <code>depends</code>
           attribute.</li>
         </ol>
@@ -485,16 +536,16 @@ shell-prompt> cat < foo
     </faq>
     
     <faq id="include-order">
-      <question>In my fileset, I've put in an
+      <question>In my <code>&lt;fileset&gt;</code>, I&apos;ve put in an
       <code>&lt;exclude&gt;</code> of all files followed by an
       <code>&lt;include&gt;</code> of just the files I want, but it
-      isn't giving me anything at all. What's wrong?
+      isn&apos;t giving me any files at all. What&apos;s wrong?
       </question>
 
       <answer>
         <p>The order of the <code>&lt;include&gt;</code> and
-        <code>&lt;exclude&gt;</code> tags within a fileset is ignored
-        when the fileset is created. Instead, all of the
+        <code>&lt;exclude&gt;</code> tags within a <code>&lt;fileset&gt;</code>
+        is ignored when the FileSet is created. Instead, all of the
         <code>&lt;include&gt;</code> elements are processed together,
         followed by all of the <code>&lt;exclude&gt;</code>
         elements. This means that the <code>&lt;exclude&gt;</code>
@@ -503,8 +554,9 @@ shell-prompt> cat < foo
 
 	<p>To get the files you want, focus on just the
 	<code>&lt;include&gt;</code> patterns that would be necessary
-	to get them. If you need to trim the list that the includes
-	would produce, use excludes.</p>
+	to get them. If you find you need to trim the list that the
+  <code>&lt;include&gt;</code> elements
+	produce, then use <code>&lt;exclude&gt;</code> elements.</p>
       </answer>
     </faq>
     
@@ -515,22 +567,22 @@ shell-prompt> cat < foo
       <question>Is Ant supported by my IDE/Editor?</question>
       <answer>
         <p>See the <a href="external.html#IDE and Editor Integration">section 
-        on IDE integration</a> on our external tools page.</p>
+        on IDE integration</a> on our External Tools and Tasks page.</p>
       </answer>
     </faq>
 
     <faq id="emacs-mode">
-      <question>Why doesn&apos;t (X)Emacs/vi/MacOS X's project builder
-      parse the error messages generated by Ant correctly?</question>
+      <question>Why doesn&apos;t (X)Emacs/vi/MacOS X&apos;s project builder
+      correctly parse the error messages generated by Ant?</question>
       <answer>
 
         <p>Ant adds a &quot;banner&quot; with the name of the current
-        task in front of all messages - and there are no built-in
-        regular expressions in your Editor that would account for
+        task in front of all logging messages - and there are no built-in
+        regular expressions in your editor that would account for
         this.</p>
 
         <p>You can disable this banner by invoking Ant with the
-        <code>-emacs</code> switch. Alternatively you can add the
+        <code>-emacs</code> switch. Alternatively, you can add the
         following snippet to your <code>.emacs</code> to make Emacs
         understand Ant&apos;s output.</p>
 
@@ -545,8 +597,8 @@ shell-prompt> cat < foo
   compilation-error-regexp-alist))
 ]]></source>
 
-        <p>Yet another alternative that preserves most of Ant's
-        formatting is to pipe Ant's output through the following Perl
+        <p>Yet another alternative that preserves most of Ant&apos;s
+        formatting is to pipe Ant&apos;s output through the following Perl
         script by Dirk-Willem van Gulik:</p>
 
         <source><![CDATA[
@@ -575,7 +627,7 @@ while(<STDIN>) {
     </faq>
   </faqsection>
 
-  <faqsection title="Advanced issues">
+  <faqsection title="Advanced Issues">
     <faq id="dtd">
       <question>Is there a DTD that I can use to validate my build
       files?</question>
@@ -602,9 +654,9 @@ while(<STDIN>) {
             happen quite frequently - if your version of Ant contains
             the optional <code>&lt;test&gt;</code> and
             <code>&lt;junit&gt;</code> tasks, there are two XML
-            elements named test (the task and the nested child element
-            of <code>&lt;junit&gt;</code>) with different attribute
-            lists.  This problem cannot be solved, DTDs don&apos;t give a
+            elements named <code>test</code> (the task and the nested child
+            element of <code>&lt;junit&gt;</code>) with different attribute
+            lists.  This problem cannot be solved; DTDs don&apos;t give a
             syntax rich enough to support this.</li>
           </ul>
       </answer>
@@ -655,23 +707,23 @@ while(<STDIN>) {
 
       <answer>
 
-        <p>If you are using a nightly-build of Ant 1.5 after
-        2001-12-14, you can use the built-in MailLogger.</p>
+        <p>If you are using a nightly build of Ant 1.5 after
+        2001-12-14, you can use the built-in MailLogger:</p>
 
         <source><![CDATA[
          ant -logger org.apache.tools.ant.listener.MailLogger
 ]]></source>
 
-        <p>See the <a href="http://cvs.apache.org/viewcvs/~checkout~/jakarta-ant/docs/manual/listeners.html?content-type=text/html">Listener
-        &amp; Logger documentation</a> for details on the properties
+        <p>See the <a href="http://cvs.apache.org/viewcvs/~checkout~/jakarta-ant/docs/manual/listeners.html?content-type=text/html">Listeners
+        &amp; Loggers</a> documentation for details on the properties
         required.</p>
 
-        <p>For older versions of Ant you can use a custom
-        BuildListener, that sends out an email
+        <p>For older versions of Ant, you can use a custom
+        BuildListener that sends out an email
         in the buildFinished() method.  Will Glozer
         &lt;will.glozer@jda.com&gt; has written such a listener based
-        on <a href="http://java.sun.com/products/javamail/">JavaMail</a>, 
-        the source is</p>
+        on <a href="http://java.sun.com/products/javamail/">JavaMail</a>. 
+        The source is:</p>
 
         <source><![CDATA[
 import java.io.*;
@@ -785,7 +837,7 @@ public class BuildMonitor implements BuildListener {
 }
 ]]></source>
           
-      <p>With a <code>monitor.properties</code> like this</p>
+      <p>With a <code>monitor.properties</code> like this:</p>
 
         <source><![CDATA[
 # configuration for build monitor
@@ -807,7 +859,7 @@ build.succeeded.email.subject=Nightly build succeeded!
 
         <p><code>monitor.properties</code> should be placed right next
         to your compiled <code>BuildMonitor.class</code>.  To use it,
-        invoke Ant like</p>
+        invoke Ant like:</p>
         
         <source><![CDATA[
 ant -listener BuildMonitor -logfile build.log
@@ -816,7 +868,7 @@ ant -listener BuildMonitor -logfile build.log
         <p>Make sure that <code>mail.jar</code> from JavaMail and
         <code>activation.jar</code> from the 
         <a href="http://java.sun.com/products/javabeans/glasgow/jaf.html">Java
-        Beans Activation Framework</a> in your <code>CLASSPATH</code>.</p>
+        Beans Activation Framework</a> are in your <code>CLASSPATH</code>.</p>
 
       </answer>
     </faq>
@@ -840,23 +892,23 @@ public void buildFinished(BuildEvent e) {
 
         <p>This is more accurate than just reading the same property
         files that your project does, since it will give the correct
-        results for properties that are specified on the command line
-        when running Ant.</p>
+        results for properties that were specified on the Ant command line.</p>
       </answer>
     </faq>
     
   </faqsection>
 
-  <faqsection title="Known problems">
+  <faqsection title="Known Problems">
     <faq id="remove-cr">
-      <question>&lt;chmod&gt; or &lt;exec&gt; don&apos;t work in Ant
+      <question>&lt;chmod&gt; or &lt;exec&gt; doesn&apos;t work in Ant
         1.3 on Unix</question>
       <answer>
 
         <p>The <code>antRun</code> script in <code>ANT_HOME/bin</code>
-        has DOS instead of Unix line endings, you must remove the
-        carriage return characters from this file.  This can be done by
-        using Ant&apos;s &lt;fixcrlf&gt; task or something like:</p>
+        has DOS instead of Unix line endings; you must remove the
+        carriage-return characters from this file.  This can be done by
+        using Ant&apos;s <code>&lt;fixcrlf&gt;</code> task
+        or something like:</p>
 
         <source><![CDATA[
 tr -d '\r' < $ANT_HOME/bin/antRun > /tmp/foo
@@ -869,8 +921,8 @@ mv /tmp/foo $ANT_HOME/bin/antRun
       <question>JavaDoc failed: java.io.IOException: javadoc: cannot execute</question>
       <answer>
         <p>There is a bug in the Solaris reference implementation of
-        the JDK, see <a href="http://developer.java.sun.com/developer/bugParade/bugs/4230399.html">http://developer.java.sun.com/developer/bugParade/bugs/4230399.html</a>.
-        This also appears to be true under Linux, moving the JDK to
+        the JDK (see <a href="http://developer.java.sun.com/developer/bugParade/bugs/4230399.html">http://developer.java.sun.com/developer/bugParade/bugs/4230399.html</a>).
+        This also appears to be true under Linux. Moving the JDK to
         the front of the PATH fixes the problem.</p>
       </answer>
     </faq>
