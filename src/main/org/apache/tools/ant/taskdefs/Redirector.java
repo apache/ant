@@ -359,13 +359,13 @@ public class Redirector {
     /**
      * Pass output sent to System.out to specified output.
      *
-     * @param line the data to be output
+     * @param output the data to be output
      */
-    protected void handleOutput(String line) {
+    protected void handleOutput(String output) {
         if (outPrintStream == null) {
             outPrintStream = new PrintStream(outputStream);
         }
-        outPrintStream.println(line);
+        outPrintStream.print(output);
     }
 
     /**
@@ -392,38 +392,38 @@ public class Redirector {
     /**
      * Process data due to a flush operation.
      *
-     * @param line the data being flushed.
+     * @param output the data being flushed.
      */
-    protected void handleFlush(String line) {
+    protected void handleFlush(String output) {
         if (outPrintStream == null) {
             outPrintStream = new PrintStream(outputStream);
         }
-        outPrintStream.print(line);
+        outPrintStream.print(output);
         outPrintStream.flush();
     }
 
     /**
      * Process error output
      *
-     * @param line the error output data.
+     * @param output the error output data.
      */
-    protected void handleErrorOutput(String line) {
+    protected void handleErrorOutput(String output) {
         if (errorPrintStream == null) {
             errorPrintStream = new PrintStream(errorStream);
         }
-        errorPrintStream.println(line);
+        errorPrintStream.print(output);
     }
 
     /**
      * Handle a flush operation on the error stream
      *
-     * @param line the error information being flushed.
+     * @param output the error information being flushed.
      */
-    protected void handleErrorFlush(String line) {
+    protected void handleErrorFlush(String output) {
         if (errorPrintStream == null) {
             errorPrintStream = new PrintStream(errorStream);
         }
-        errorPrintStream.print(line);
+        errorPrintStream.print(output);
     }
 
     /**

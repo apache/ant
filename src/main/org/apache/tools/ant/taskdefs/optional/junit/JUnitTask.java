@@ -748,14 +748,14 @@ public class JUnitTask extends Task {
      *
      * @since Ant 1.5
      */
-    protected void handleOutput(String line) {
+    protected void handleOutput(String output) {
         if (runner != null) {
-            runner.handleOutput(line);
+            runner.handleOutput(output);
             if (showOutput) {
-                super.handleOutput(line);
+                super.handleOutput(output);
             }
         } else {
-            super.handleOutput(line);
+            super.handleOutput(output);
         }
     }
 
@@ -780,14 +780,14 @@ public class JUnitTask extends Task {
      *
      * @since Ant 1.5.2
      */
-    protected void handleFlush(String line) {
+    protected void handleFlush(String output) {
         if (runner != null) {
-            runner.handleFlush(line);
+            runner.handleFlush(output);
             if (showOutput) {
-                super.handleFlush(line);
+                super.handleFlush(output);
             }
         } else {
-            super.handleFlush(line);
+            super.handleFlush(output);
         }
     }
 
@@ -797,14 +797,14 @@ public class JUnitTask extends Task {
      *
      * @since Ant 1.5
      */
-    public void handleErrorOutput(String line) {
+    public void handleErrorOutput(String output) {
         if (runner != null) {
-            runner.handleErrorOutput(line);
+            runner.handleErrorOutput(output);
             if (showOutput) {
-                super.handleErrorOutput(line);
+                super.handleErrorOutput(output);
             }
         } else {
-            super.handleErrorOutput(line);
+            super.handleErrorOutput(output);
         }
     }
 
@@ -815,14 +815,14 @@ public class JUnitTask extends Task {
      *
      * @since Ant 1.5.2
      */
-    public void handleErrorFlush(String line) {
+    public void handleErrorFlush(String output) {
         if (runner != null) {
-            runner.handleErrorFlush(line);
+            runner.handleErrorFlush(output);
             if (showOutput) {
-                super.handleErrorFlush(line);
+                super.handleErrorFlush(output);
             }
         } else {
-            super.handleErrorFlush(line);
+            super.handleErrorFlush(output);
         }
     }
 

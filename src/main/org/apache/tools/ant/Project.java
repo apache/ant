@@ -75,6 +75,8 @@ import org.apache.tools.ant.types.Description;
 import org.apache.tools.ant.types.Path;
 import org.apache.tools.ant.util.FileUtils;
 import org.apache.tools.ant.util.JavaEnvUtils;
+import org.apache.tools.ant.util.StringUtils;
+
 
 /**
  * Central representation of an Ant project. This class defines an
@@ -1089,19 +1091,19 @@ public class Project {
      * messages. If the current thread is not currently executing a task,
      * the message is logged directly.
      *
-     * @param line Message to handle. Should not be <code>null</code>.
+     * @param output Message to handle. Should not be <code>null</code>.
      * @param isError Whether the text represents an error (<code>true</code>)
      *        or information (<code>false</code>).
      */
-    public void demuxOutput(String line, boolean isError) {
+    public void demuxOutput(String output, boolean isError) {
         Task task = getThreadTask(Thread.currentThread());
         if (task == null) {
-            fireMessageLogged(this, line, isError ? MSG_ERR : MSG_INFO);
+            log(output, isError ? MSG_ERR : MSG_INFO);
         } else {
             if (isError) {
-                task.handleErrorOutput(line);
+                task.handleErrorOutput(output);
             } else {
-                task.handleOutput(line);
+                task.handleOutput(output);
             }
         }
     }
@@ -1158,19 +1160,19 @@ public class Project {
      *
      * @since Ant 1.5.2
      *
-     * @param line Message to handle. Should not be <code>null</code>.
+     * @param output Message to handle. Should not be <code>null</code>.
      * @param isError Whether the text represents an error (<code>true</code>)
      *        or information (<code>false</code>).
      */
-    public void demuxFlush(String line, boolean isError) {
+    public void demuxFlush(String output, boolean isError) {
         Task task = getThreadTask(Thread.currentThread());
         if (task == null) {
-            fireMessageLogged(this, line, isError ? MSG_ERR : MSG_INFO);
+            fireMessageLogged(this, output, isError ? MSG_ERR : MSG_INFO);
         } else {
             if (isError) {
-                task.handleErrorFlush(line);
+                task.handleErrorFlush(output);
             } else {
-                task.handleFlush(line);
+                task.handleFlush(output);
             }
         }
     }
@@ -1915,7 +1917,13 @@ public class Project {
      */
     private void fireMessageLoggedEvent(BuildEvent event, String message,
                                         int priority) {
-        event.setMessage(message, priority);
+
+        if (message.endsWith(StringUtils.LINE_SEP)) {
+            int endIndex = message.length() - StringUtils.LINE_SEP.length();
+            event.setMessage(message.substring(0, endIndex), priority);
+        } else {
+            event.setMessage(message, priority);
+        }
         Vector listeners = getBuildListeners();
         synchronized (this) {
             if (loggingMessage) {

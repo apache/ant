@@ -80,11 +80,10 @@ public class DemuxOutputStream extends OutputStream {
         private ByteArrayOutputStream buffer;
 
         /**
-         * Whether or not the next line-terminator should be skipped in terms
-         * of processing the buffer. Used to avoid \r\n invoking
-         * processBuffer twice.
+         * Indicates we have just seen a carriage return. It may be part of
+         * a crlf pair or a single cr invoking processBuffer twice.
          */
-         private boolean skip = false;
+         private boolean crSeen = false;
     }
 
     /** Maximum buffer size. */
@@ -129,7 +128,7 @@ public class DemuxOutputStream extends OutputStream {
         if (bufferInfo == null) {
             bufferInfo = new BufferInfo();
             bufferInfo.buffer = new ByteArrayOutputStream();
-            bufferInfo.skip = false;
+            bufferInfo.crSeen = false;
             buffers.put(current, bufferInfo);
         }
         return bufferInfo;
@@ -147,7 +146,7 @@ public class DemuxOutputStream extends OutputStream {
             // Shouldn't happen
         }
         bufferInfo.buffer = new ByteArrayOutputStream();
-        bufferInfo.skip = false;
+        bufferInfo.crSeen = false;
     }
 
     /**
@@ -169,17 +168,23 @@ public class DemuxOutputStream extends OutputStream {
         final byte c = (byte) cc;
 
         BufferInfo bufferInfo = getBufferInfo();
-        if ((c == '\n') || (c == '\r')) {
-            if (!bufferInfo.skip) {
-                processBuffer(bufferInfo.buffer);
-            }
-        } else {
+
+        if (c == '\n') {
+            // LF is always end of line (i.e. CRLF or single LF)
             bufferInfo.buffer.write(cc);
-            if (bufferInfo.buffer.size() > MAX_SIZE) {
+            processBuffer(bufferInfo.buffer);
+        } else {
+            if (bufferInfo.crSeen) {
+                // CR without LF - send buffer then add char
                 processBuffer(bufferInfo.buffer);
             }
+            // add into buffer
+            bufferInfo.buffer.write(cc);
         }
-        bufferInfo.skip = (c == '\r');
+        bufferInfo.crSeen = (c == '\r');
+        if (!bufferInfo.crSeen && bufferInfo.buffer.size() > MAX_SIZE) {
+            processBuffer(bufferInfo.buffer);
+        }
     }
 
     /**

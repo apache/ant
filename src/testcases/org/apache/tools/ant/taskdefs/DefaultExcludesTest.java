@@ -57,20 +57,20 @@ package org.apache.tools.ant.taskdefs;
 import org.apache.tools.ant.BuildFileTest;
 
 /**
- * @author Gus Heck <gus.heck@olin.edu> 
+ * @author Gus Heck <gus.heck@olin.edu>
  */
-public class DefaultExcludesTest extends BuildFileTest { 
-    
-    public DefaultExcludesTest(String name) { 
+public class DefaultExcludesTest extends BuildFileTest {
+
+    public DefaultExcludesTest(String name) {
         super(name);
-    }    
-    
-    public void setUp() { 
+    }
+
+    public void setUp() {
         configureProject("src/etc/testcases/taskdefs/defaultexcludes.xml");
     }
-    
+
     // Output the default excludes
-    public void test1() { 
+    public void test1() {
         expectLog("test1", "Current Default Excludes:\n"+
                   "  **/*~\n"+
                   "  **/#*#\n"+
@@ -85,11 +85,11 @@ public class DefaultExcludesTest extends BuildFileTest {
                   "  **/vssver.scc\n"+
                   "  **/.svn\n"+
                   "  **/.svn/**\n"+
-                  "  **/.DS_Store\n");          
+                  "  **/.DS_Store");
     }
-    
+
     // adding something to the excludes'
-    public void test2() { 
+    public void test2() {
         expectLog("test2", "Current Default Excludes:\n"+
                   "  **/*~\n"+
                   "  **/#*#\n"+
@@ -105,11 +105,11 @@ public class DefaultExcludesTest extends BuildFileTest {
                   "  **/.svn\n"+
                   "  **/.svn/**\n"+
                   "  **/.DS_Store\n"+
-                  "  foo\n");             // foo added
+                  "  foo");             // foo added
     }
 
     // removing something from the defaults
-    public void test3() { 
+    public void test3() {
         expectLog("test3", "Current Default Excludes:\n"+
                   "  **/*~\n"+
                   "  **/#*#\n"+
@@ -124,6 +124,6 @@ public class DefaultExcludesTest extends BuildFileTest {
                   "  **/vssver.scc\n"+
                   "  **/.svn\n"+
                   "  **/.svn/**\n"+
-                  "  **/.DS_Store\n");
+                  "  **/.DS_Store");
     }
 }

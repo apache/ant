@@ -460,11 +460,11 @@ public class Java extends Task {
      *
      * @since Ant 1.5
      */
-    protected void handleOutput(String line) {
+    protected void handleOutput(String output) {
         if (redirector.getOutputStream() != null) {
-            redirector.handleOutput(line);
+            redirector.handleOutput(output);
         } else {
-            super.handleOutput(line);
+            super.handleOutput(output);
         }
     }
 
@@ -482,11 +482,11 @@ public class Java extends Task {
      *
      * @since Ant 1.5.2
      */
-    protected void handleFlush(String line) {
+    protected void handleFlush(String output) {
         if (redirector.getOutputStream() != null) {
-            redirector.handleFlush(line);
+            redirector.handleFlush(output);
         } else {
-            super.handleFlush(line);
+            super.handleFlush(output);
         }
     }
 
@@ -495,11 +495,11 @@ public class Java extends Task {
      *
      * @since Ant 1.5
      */
-    protected void handleErrorOutput(String line) {
+    protected void handleErrorOutput(String output) {
         if (redirector.getErrorStream() != null) {
-            redirector.handleErrorOutput(line);
+            redirector.handleErrorOutput(output);
         } else {
-            super.handleErrorOutput(line);
+            super.handleErrorOutput(output);
         }
     }
 
@@ -508,11 +508,11 @@ public class Java extends Task {
      *
      * @since Ant 1.5.2
      */
-    protected void handleErrorFlush(String line) {
+    protected void handleErrorFlush(String output) {
         if (redirector.getErrorStream() != null) {
-            redirector.handleErrorFlush(line);
+            redirector.handleErrorFlush(output);
         } else {
-            super.handleErrorOutput(line);
+            super.handleErrorOutput(output);
         }
     }
 

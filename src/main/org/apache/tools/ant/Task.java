@@ -305,23 +305,23 @@ public abstract class Task extends ProjectComponent {
     }
 
     /**
-     * Handles a line of output by logging it with the INFO priority.
+     * Handles output by logging it with the INFO priority.
      *
-     * @param line The line of output to log. Should not be <code>null</code>.
+     * @param output The output to log. Should not be <code>null</code>.
      */
-    protected void handleOutput(String line) {
-        log(line, Project.MSG_INFO);
+    protected void handleOutput(String output) {
+        log(output, Project.MSG_INFO);
     }
 
     /**
-     * Handles a line of output by logging it with the INFO priority.
+     * Handles output by logging it with the INFO priority.
      *
-     * @param line The line of output to log. Should not be <code>null</code>.
+     * @param output The output to log. Should not be <code>null</code>.
      *
      * @since Ant 1.5.2
      */
-    protected void handleFlush(String line) {
-        handleOutput(line);
+    protected void handleFlush(String output) {
+        handleOutput(output);
     }
 
     /**
@@ -342,23 +342,23 @@ public abstract class Task extends ProjectComponent {
     }
 
     /**
-     * Handles an error line by logging it with the INFO priority.
+     * Handles an error output by logging it with the INFO priority.
      *
-     * @param line The error line to log. Should not be <code>null</code>.
+     * @param output The error output to log. Should not be <code>null</code>.
      */
-    protected void handleErrorOutput(String line) {
-        log(line, Project.MSG_ERR);
+    protected void handleErrorOutput(String output) {
+        log(output, Project.MSG_ERR);
     }
 
     /**
      * Handles an error line by logging it with the INFO priority.
      *
-     * @param line The error line to log. Should not be <code>null</code>.
+     * @param output The error output to log. Should not be <code>null</code>.
      *
      * @since Ant 1.5.2
      */
-    protected void handleErrorFlush(String line) {
-        handleErrorOutput(line);
+    protected void handleErrorFlush(String output) {
+        handleErrorOutput(output);
     }
 
     /**

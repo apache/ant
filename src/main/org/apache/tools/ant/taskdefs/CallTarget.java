@@ -190,11 +190,11 @@ public class CallTarget extends Task {
      *
      * @since Ant 1.5
      */
-    public void handleOutput(String line) {
+    public void handleOutput(String output) {
         if (callee != null) {
-            callee.handleOutput(line);
+            callee.handleOutput(output);
         } else {
-            super.handleOutput(line);
+            super.handleOutput(output);
         }
     }
 
@@ -217,11 +217,11 @@ public class CallTarget extends Task {
      *
      * @since Ant 1.5.2
      */
-    public void handleFlush(String line) {
+    public void handleFlush(String output) {
         if (callee != null) {
-            callee.handleFlush(line);
+            callee.handleFlush(output);
         } else {
-            super.handleFlush(line);
+            super.handleFlush(output);
         }
     }
 
@@ -230,11 +230,11 @@ public class CallTarget extends Task {
      *
      * @since Ant 1.5
      */
-    public void handleErrorOutput(String line) {
+    public void handleErrorOutput(String output) {
         if (callee != null) {
-            callee.handleErrorOutput(line);
+            callee.handleErrorOutput(output);
         } else {
-            super.handleErrorOutput(line);
+            super.handleErrorOutput(output);
         }
     }
 
@@ -243,11 +243,11 @@ public class CallTarget extends Task {
      *
      * @since Ant 1.5.2
      */
-    public void handleErrorFlush(String line) {
+    public void handleErrorFlush(String output) {
         if (callee != null) {
-            callee.handleErrorFlush(line);
+            callee.handleErrorFlush(output);
         } else {
-            super.handleErrorFlush(line);
+            super.handleErrorFlush(output);
         }
     }
 }

@@ -192,13 +192,13 @@ public class UnknownElement extends Task {
     /**
      * Handles output sent to System.out by this task or its real task.
      *
-     * @param line The line of output to log. Should not be <code>null</code>.
+     * @param output The output to log. Should not be <code>null</code>.
      */
-    protected void handleOutput(String line) {
+    protected void handleOutput(String output) {
         if (realThing instanceof Task) {
-            ((Task) realThing).handleOutput(line);
+            ((Task) realThing).handleOutput(output);
         } else {
-            super.handleOutput(line);
+            super.handleOutput(output);
         }
     }
 
@@ -219,26 +219,26 @@ public class UnknownElement extends Task {
     /**
      * Handles output sent to System.out by this task or its real task.
      *
-     * @param line The line of output to log. Should not be <code>null</code>.
+     * @param output The output to log. Should not be <code>null</code>.
      */
-    protected void handleFlush(String line) {
+    protected void handleFlush(String output) {
         if (realThing instanceof Task) {
-            ((Task) realThing).handleFlush(line);
+            ((Task) realThing).handleFlush(output);
         } else {
-            super.handleFlush(line);
+            super.handleFlush(output);
         }
     }
 
     /**
      * Handles error output sent to System.err by this task or its real task.
      *
-     * @param line The error line to log. Should not be <code>null</code>.
+     * @param output The error output to log. Should not be <code>null</code>.
      */
-    protected void handleErrorOutput(String line) {
+    protected void handleErrorOutput(String output) {
         if (realThing instanceof Task) {
-            ((Task) realThing).handleErrorOutput(line);
+            ((Task) realThing).handleErrorOutput(output);
         } else {
-            super.handleErrorOutput(line);
+            super.handleErrorOutput(output);
         }
     }
 
@@ -246,13 +246,13 @@ public class UnknownElement extends Task {
     /**
      * Handles error output sent to System.err by this task or its real task.
      *
-     * @param line The error line to log. Should not be <code>null</code>.
+     * @param output The error output to log. Should not be <code>null</code>.
      */
-    protected void handleErrorFlush(String line) {
+    protected void handleErrorFlush(String output) {
         if (realThing instanceof Task) {
-            ((Task) realThing).handleErrorOutput(line);
+            ((Task) realThing).handleErrorOutput(output);
         } else {
-            super.handleErrorOutput(line);
+            super.handleErrorOutput(output);
         }
     }
 

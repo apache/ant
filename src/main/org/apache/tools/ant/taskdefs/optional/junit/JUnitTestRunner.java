@@ -398,9 +398,9 @@ public class JUnitTestRunner implements TestListener {
         }
     }
 
-    protected void handleOutput(String line) {
+    protected void handleOutput(String output) {
         if (systemOut != null) {
-            systemOut.println(line);
+            systemOut.print(output);
         }
     }
 
@@ -414,21 +414,21 @@ public class JUnitTestRunner implements TestListener {
         return -1;
     }
 
-    protected void handleErrorOutput(String line) {
+    protected void handleErrorOutput(String output) {
         if (systemError != null) {
-            systemError.println(line);
+            systemError.print(output);
         }
     }
 
-    protected void handleFlush(String line) {
+    protected void handleFlush(String output) {
         if (systemOut != null) {
-            systemOut.print(line);
+            systemOut.print(output);
         }
     }
 
-    protected void handleErrorFlush(String line) {
+    protected void handleErrorFlush(String output) {
         if (systemError != null) {
-            systemError.print(line);
+            systemError.print(output);
         }
     }
 
