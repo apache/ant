@@ -7,12 +7,12 @@
  */
 package org.apache.antlib.vfile.selectors;
 
-import org.apache.myrmidon.framework.conditions.Condition;
-import org.apache.myrmidon.api.TaskContext;
-import org.apache.myrmidon.api.TaskException;
 import org.apache.aut.vfs.FileObject;
 import org.apache.avalon.excalibur.i18n.ResourceManager;
 import org.apache.avalon.excalibur.i18n.Resources;
+import org.apache.myrmidon.api.TaskContext;
+import org.apache.myrmidon.api.TaskException;
+import org.apache.myrmidon.framework.conditions.Condition;
 
 /**
  * A condition that applies a set of file selectors to a file.

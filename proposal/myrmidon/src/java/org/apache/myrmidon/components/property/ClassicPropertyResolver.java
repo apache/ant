@@ -7,9 +7,9 @@
  */
 package org.apache.myrmidon.components.property;
 
-import org.apache.myrmidon.interfaces.property.PropertyResolver;
 import org.apache.avalon.framework.context.Context;
 import org.apache.avalon.framework.context.ContextException;
+import org.apache.myrmidon.interfaces.property.PropertyResolver;
 
 /**
  * A {@link PropertyResolver} implementation which resolves properties

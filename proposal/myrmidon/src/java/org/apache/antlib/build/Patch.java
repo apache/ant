@@ -8,7 +8,6 @@
 package org.apache.antlib.build;
 
 import java.io.File;
-import org.apache.aut.nativelib.ExecManager;
 import org.apache.avalon.excalibur.i18n.ResourceManager;
 import org.apache.avalon.excalibur.i18n.Resources;
 import org.apache.myrmidon.api.AbstractTask;

@@ -9,7 +9,6 @@ package org.apache.antlib.core;
 
 import org.apache.myrmidon.api.AbstractTask;
 import org.apache.myrmidon.api.TaskException;
-import org.apache.myrmidon.api.TaskContext;
 import org.apache.myrmidon.framework.LogLevel;
 
 /**

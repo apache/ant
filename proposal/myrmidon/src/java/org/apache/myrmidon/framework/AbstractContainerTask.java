@@ -19,11 +19,11 @@ import org.apache.myrmidon.api.TaskException;
 import org.apache.myrmidon.interfaces.configurer.Configurer;
 import org.apache.myrmidon.interfaces.executor.ExecutionFrame;
 import org.apache.myrmidon.interfaces.executor.Executor;
+import org.apache.myrmidon.interfaces.role.RoleInfo;
+import org.apache.myrmidon.interfaces.role.RoleManager;
 import org.apache.myrmidon.interfaces.type.TypeException;
 import org.apache.myrmidon.interfaces.type.TypeFactory;
 import org.apache.myrmidon.interfaces.type.TypeManager;
-import org.apache.myrmidon.interfaces.role.RoleInfo;
-import org.apache.myrmidon.interfaces.role.RoleManager;
 
 /**
  * This is the class that Task writers should extend to provide custom tasks.

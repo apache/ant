@@ -9,7 +9,6 @@ package org.apache.antlib.selftest;
 
 import org.apache.myrmidon.api.AbstractTask;
 import org.apache.myrmidon.api.TaskException;
-import org.apache.myrmidon.api.TaskContext;
 
 /**
  * Test conversion of all the primitive types.

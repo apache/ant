@@ -9,9 +9,9 @@ package org.apache.antlib.xml;
 
 import java.net.MalformedURLException;
 import java.net.URL;
+import org.apache.myrmidon.api.TaskContext;
 import org.xml.sax.ErrorHandler;
 import org.xml.sax.SAXParseException;
-import org.apache.myrmidon.api.TaskContext;
 
 /*
  * ValidatorErrorHandler role :

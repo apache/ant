@@ -7,8 +7,8 @@
  */
 package org.apache.myrmidon.interfaces.property;
 
-import org.apache.myrmidon.api.TaskException;
 import org.apache.avalon.framework.context.Context;
+import org.apache.myrmidon.api.TaskException;
 
 /**
  *

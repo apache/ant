@@ -15,10 +15,10 @@ import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Hashtable;
+import org.apache.myrmidon.api.TaskContext;
 import org.xml.sax.EntityResolver;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
-import org.apache.myrmidon.api.TaskContext;
 
 class LocalResolver
     implements EntityResolver

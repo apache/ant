@@ -9,7 +9,6 @@ package org.apache.antlib.cvslib;
 
 import java.io.File;
 import java.util.Properties;
-import org.apache.aut.nativelib.ExecManager;
 import org.apache.myrmidon.api.AbstractTask;
 import org.apache.myrmidon.api.TaskException;
 import org.apache.myrmidon.framework.Execute;

@@ -16,7 +16,6 @@ import java.io.PrintWriter;
 import org.apache.avalon.excalibur.util.StringUtil;
 import org.apache.myrmidon.api.AbstractTask;
 import org.apache.myrmidon.api.TaskException;
-import org.apache.myrmidon.api.TaskContext;
 
 /**
  * CVSLogin Adds an new entry to a CVS password file

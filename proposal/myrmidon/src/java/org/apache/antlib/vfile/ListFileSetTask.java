@@ -11,7 +11,6 @@ import java.util.ArrayList;
 import org.apache.aut.vfs.FileObject;
 import org.apache.myrmidon.api.AbstractTask;
 import org.apache.myrmidon.api.TaskException;
-import org.apache.myrmidon.api.TaskContext;
 
 /**
  * A debug task, that lists the contents of a {@link FileSet}.

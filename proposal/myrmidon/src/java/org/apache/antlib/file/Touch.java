@@ -18,7 +18,6 @@ import org.apache.avalon.excalibur.i18n.ResourceManager;
 import org.apache.avalon.excalibur.i18n.Resources;
 import org.apache.myrmidon.api.AbstractTask;
 import org.apache.myrmidon.api.TaskException;
-import org.apache.myrmidon.api.TaskContext;
 import org.apache.tools.todo.types.DirectoryScanner;
 import org.apache.tools.todo.types.FileSet;
 import org.apache.tools.todo.types.ScannerUtil;

@@ -10,7 +10,6 @@ package org.apache.antlib.vfile.selectors;
 import org.apache.aut.vfs.FileObject;
 import org.apache.myrmidon.api.TaskContext;
 import org.apache.myrmidon.api.TaskException;
-import org.apache.myrmidon.framework.DataType;
 
 /**
  * Accepts files as part of a set.

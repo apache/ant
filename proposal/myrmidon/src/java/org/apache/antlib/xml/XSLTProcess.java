@@ -21,8 +21,6 @@ import javax.xml.transform.stream.StreamSource;
 import org.apache.avalon.excalibur.io.FileUtil;
 import org.apache.avalon.excalibur.io.IOUtil;
 import org.apache.myrmidon.api.TaskException;
-import org.apache.myrmidon.api.AbstractTask;
-import org.apache.myrmidon.api.TaskContext;
 import org.apache.myrmidon.framework.AbstractMatchingTask;
 import org.apache.myrmidon.framework.FileSet;
 import org.apache.tools.todo.types.DirectoryScanner;

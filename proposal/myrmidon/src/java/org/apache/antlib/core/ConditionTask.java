@@ -7,8 +7,8 @@
  */
 package org.apache.antlib.core;
 
-import org.apache.myrmidon.api.TaskException;
 import org.apache.myrmidon.api.AbstractTask;
+import org.apache.myrmidon.api.TaskException;
 import org.apache.myrmidon.framework.conditions.AndCondition;
 import org.apache.myrmidon.framework.conditions.Condition;
 

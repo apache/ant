@@ -21,8 +21,6 @@ import java.util.Enumeration;
 import java.util.Hashtable;
 import org.apache.avalon.excalibur.io.IOUtil;
 import org.apache.myrmidon.api.TaskException;
-import org.apache.myrmidon.api.AbstractTask;
-import org.apache.myrmidon.api.TaskContext;
 import org.apache.myrmidon.framework.AbstractMatchingTask;
 import org.apache.tools.todo.types.DirectoryScanner;
 import org.apache.tools.todo.types.FileSet;

@@ -8,10 +8,7 @@
 package org.apache.antlib.dotnet;
 
 import java.io.File;
-import org.apache.aut.nativelib.ExecManager;
 import org.apache.myrmidon.api.TaskException;
-import org.apache.myrmidon.api.AbstractTask;
-import org.apache.myrmidon.api.TaskContext;
 import org.apache.myrmidon.framework.Execute;
 import org.apache.tools.todo.taskdefs.MatchingTask;
 import org.apache.tools.todo.types.Commandline;

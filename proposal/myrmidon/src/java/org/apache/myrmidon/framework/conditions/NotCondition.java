@@ -7,8 +7,8 @@
  */
 package org.apache.myrmidon.framework.conditions;
 
-import org.apache.myrmidon.api.TaskException;
 import org.apache.myrmidon.api.TaskContext;
+import org.apache.myrmidon.api.TaskException;
 
 /**
  * &lt;not&gt; condition. Evaluates to true if the single condition nested into

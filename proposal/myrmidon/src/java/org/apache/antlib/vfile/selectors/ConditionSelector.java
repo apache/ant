@@ -7,11 +7,11 @@
  */
 package org.apache.antlib.vfile.selectors;
 
-import org.apache.myrmidon.framework.conditions.Condition;
-import org.apache.myrmidon.framework.conditions.AndCondition;
+import org.apache.aut.vfs.FileObject;
 import org.apache.myrmidon.api.TaskContext;
 import org.apache.myrmidon.api.TaskException;
-import org.apache.aut.vfs.FileObject;
+import org.apache.myrmidon.framework.conditions.AndCondition;
+import org.apache.myrmidon.framework.conditions.Condition;
 
 /**
  * A file selector that evaluates a set of nested {@link Condition} elements.
