@@ -115,7 +115,8 @@ public abstract class BuildFileTest extends TestCase {
     protected void expectLogContaining(String target, String log) { 
         executeTarget(target);
         String realLog = getLog();
-        assertTrue("expecting log to contain \""+log+"\"", 
+        assertTrue("expecting log to contain \""+log+"\" log was \""
+                   + realLog + "\"", 
                    realLog.indexOf(log) >= 0);
     }
 

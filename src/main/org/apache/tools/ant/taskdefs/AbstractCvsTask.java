@@ -377,7 +377,7 @@ public abstract class AbstractCvsTask extends Task {
 
         String c = this.getCommand();
         if( c != null ) {
-            this.cmd.createArgument().setLine(c);
+            this.cmd.createArgument(true).setLine(c);
             this.addConfiguredCommandline( this.cmd, true );
         }
 

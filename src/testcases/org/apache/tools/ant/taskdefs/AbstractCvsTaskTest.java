@@ -90,4 +90,11 @@ public class AbstractCvsTaskTest extends BuildFileTest {
         expectLogContaining("package-attribute", "U jakarta-ant/build.xml");
         assertTrue("now it is there", f.exists());
     }
+
+    public void testTagAttribute() {
+        File f = getProject().resolveFile("tmpdir/jakarta-ant/build.xml");
+        assertTrue("starting empty", !f.exists());
+        expectLogContaining("tag-attribute", "ANT_141 (revision: 1.175.2.13)");
+        assertTrue("now it is there", f.exists());
+    }
 }
