@@ -47,6 +47,37 @@
         </table>
       </subsection>
 
+      <subsection name="Configure">
+
+        <p>Recursive build support (call ant on every package level,
+        and only build files in that package or in that package and
+        everything below) with seperation of source and output.</p>
+        
+        <p>The task generates build files in any subdirectory (except
+        for CVS-directories) for you. Only place one build.xml file in
+        the top and call target &apos;setup&apos; or
+        &apos;rescan&apos;.</p>
+
+        <table>
+          <tr>
+            <th>Compatibility:</th>
+            <td>Ant 1.2 and 1.3</td>
+          </tr>
+          <tr>
+            <th>URL:</th>
+            <td><a href="http://www.dsdelft.nl/~lemval/ant/">http://www.dsdelft.nl/~lemval/ant/</a></td>
+          </tr>
+          <tr>
+            <th>Contact:</th>
+            <td><a href="mailto:lemval@dsdelft.nl">M.J.P. van Leeuwen</a></td>
+          </tr>
+          <tr>
+            <th>License:</th>
+            <td>License derived from Apache Software License</td>
+          </tr>
+        </table>
+      </subsection>
+
     </section>
 
     <section name="IDE/Editor Integration">
