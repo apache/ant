@@ -203,6 +203,15 @@ public class Jikes extends DefaultCompilerAdapter {
         int firstFileName = cmd.size();
         logAndAddFilesToCompile(cmd);
 
+        // this is a quick hack to make things work in a
+        // Gump/Kaffe/Jikes combo.  I promise I'll explain it later -
+        // and add a real solution as well ;-) Stefan
+        if ("true".equals(System.getProperty("build.clonevm"))
+            && Path.systemBootClasspath.size() > 0) {
+            cmd.createArgument().setValue("-bootclasspath");
+            cmd.createArgument().setPath(Path.systemBootClasspath);
+        }
+
         return
             executeExternalCompile(cmd.getCommandline(), firstFileName) == 0;
     }
