@@ -134,4 +134,13 @@ public class UnzipTest extends BuildFileTest {
                    !getProject().resolveFile("unziptestout/2/bar").exists());
     }
 
+    /*
+     * PR 16213
+     */
+    public void testSelfExtractingArchive() {
+        expectLogContaining("selfExtractingArchive",
+                            "found a preamble of 38439 bytes, "
+                            + "probably a self-extracting archive");
+    }
+
 }

@@ -63,4 +63,9 @@
       </patternset>
     </unzip>
   </target>
+
+  <target name="selfExtractingArchive">
+    <mkdir dir="unziptestout"/>
+    <unzip dest="unziptestout" src="zip/test.exe"/>
+  </target>
 </project>

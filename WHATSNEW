@@ -273,6 +273,9 @@ Other changes:
 
 * A wrapper script for OS/2 has been added.
 
+* <unzip> will now detect and successfully extract self-extracting
+  archives.  Bugzilla Report 16213.
+
 Changes from Ant 1.5.2 to Ant 1.5.3
 ===================================
 
