@@ -55,6 +55,7 @@
 package org.apache.tools.ant.types.selectors;
 
 import java.io.File;
+
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.types.DataType;
 
@@ -111,7 +112,6 @@ public abstract class BaseSelector extends DataType implements FileSelector {
     }
 
 
-
     /**
      * Subclasses can use this to throw the requisite exception
      * in isSelected() in the case of an error condition.
@@ -137,7 +137,7 @@ public abstract class BaseSelector extends DataType implements FileSelector {
      * @return whether the file should be selected or not
      */
     public abstract boolean isSelected(File basedir, String filename,
-            File file);
+                                       File file);
 
 }
 

@@ -153,7 +153,6 @@ public class SelectSelector extends BaseSelectorContainer {
      * Add a new selector into this container.
      *
      * @param selector the new selector to add
-     * @return the selector that was added
      */
     public void appendSelector(FileSelector selector) {
         if (isReference()) {
@@ -161,7 +160,6 @@ public class SelectSelector extends BaseSelectorContainer {
         }
         super.appendSelector(selector);
     }
-
 
 
     /**
@@ -172,7 +170,7 @@ public class SelectSelector extends BaseSelectorContainer {
         int cnt = selectorCount();
         if (cnt < 0 || cnt > 1) {
             setError("Only one selector is allowed within the " +
-                     "<selector> tag");
+                    "<selector> tag");
         }
     }
 
@@ -182,10 +180,10 @@ public class SelectSelector extends BaseSelectorContainer {
      */
     public boolean passesConditions() {
         if (ifProperty != null &&
-            getProject().getProperty(ifProperty) == null) {
+                getProject().getProperty(ifProperty) == null) {
             return false;
         } else if (unlessProperty != null &&
-                   getProject().getProperty(unlessProperty) != null) {
+                getProject().getProperty(unlessProperty) != null) {
             return false;
         }
         return true;
@@ -232,8 +230,8 @@ public class SelectSelector extends BaseSelectorContainer {
         if (!(e.hasMoreElements())) {
             return true;
         }
-        FileSelector f = (FileSelector)e.nextElement();
-        return f.isSelected(basedir,filename,file);
+        FileSelector f = (FileSelector) e.nextElement();
+        return f.isSelected(basedir, filename, file);
     }
 }
 

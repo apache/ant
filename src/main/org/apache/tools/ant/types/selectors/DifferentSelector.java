@@ -61,27 +61,29 @@ import java.io.File;
 import java.io.IOException;
 
 /**
- * This selector selects files against a mapped set of target files, selecting all those
- * files which are different. A byte-by-byte comparision is performed on equal length files;
- * files with different lengths are deemed different automatically; files with identical timestamps
- * are viewed as matching by default, unless you specify otherwise.
+ * This selector selects files against a mapped set of target files, selecting
+ * all those files which are different. A byte-by-byte comparision is performed
+ * on equal length files; files with different lengths are deemed different
+ * automatically; files with identical timestamps are viewed as matching by
+ * default, unless you specify otherwise.
  * <p>
  * This is a useful selector to work with programs and tasks that don't handle
  * dependency checking properly; Even if a predecessor task always creates its
- * output files, followup tasks can be driven off copies made with a different selector,
- * so their dependencies are driven on the absolute state of the files, not a timestamp.
+ * output files, followup tasks can be driven off copies made with a different
+ * selector, so their dependencies are driven on the absolute state of the
+ * files, not a timestamp.
  * <p>
- * Clearly, however, bulk file comparisons is inefficient; anything that can use
- * timestamps is to be preferred. If this selector must be used, use it over as few files
- * as possible, perhaps following it with an &lt;uptodate;&gt to keep the descendent
- * routines conditional.
+ * Clearly, however, bulk file comparisons is inefficient; anything that can
+ * use timestamps is to be preferred. If this selector must be used, use it
+ * over as few files as possible, perhaps following it with an &lt;uptodate;&gt
+ * to keep the descendent routines conditional.
  *
  */
 public class DifferentSelector extends MappingSelector {
 
-    private FileUtils fileUtils= FileUtils.newFileUtils();
+    private FileUtils fileUtils = FileUtils.newFileUtils();
 
-    private boolean ignoreFileTimes=true;
+    private boolean ignoreFileTimes = true;
 
 
     /**
@@ -114,19 +116,20 @@ public class DifferentSelector extends MappingSelector {
             //same date if dest timestamp is within granularity of the srcfile
             boolean sameDate;
             sameDate = destfile.lastModified() >= srcfile.lastModified() - granularity
-                && destfile.lastModified() <= srcfile.lastModified() + granularity;
+                    && destfile.lastModified() <= srcfile.lastModified() + granularity;
 
             // different dates => different files
-            if(!sameDate) {
+            if (!sameDate) {
                 return true;
             }
         }
 
         //here do a bulk comparison
         try {
-            return !fileUtils.contentEquals(srcfile,destfile);
+            return !fileUtils.contentEquals(srcfile, destfile);
         } catch (IOException e) {
-            throw new BuildException("while comparing "+srcfile+" and "+destfile,e);
+            throw new BuildException("while comparing " + srcfile + " and "
+                    + destfile, e);
         }
     }
 }

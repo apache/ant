@@ -98,9 +98,9 @@ public class OrSelector extends BaseSelectorContainer {
         boolean result;
 
         // First, check that all elements are correctly configured
-        while(e.hasMoreElements()) {
-            result = ((FileSelector)e.nextElement()).isSelected(basedir,
-                    filename,file);
+        while (e.hasMoreElements()) {
+            result = ((FileSelector) e.nextElement()).isSelected(basedir,
+                    filename, file);
             if (result) {
                 return true;
             }

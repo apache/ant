@@ -54,6 +54,7 @@
 package org.apache.tools.ant.types.selectors;
 
 import java.io.File;
+
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.types.Parameter;
 
@@ -67,8 +68,8 @@ import org.apache.tools.ant.types.Parameter;
  * @since 1.5
  */
 public abstract class BaseExtendSelector
-    extends BaseSelector
-    implements ExtendFileSelector {
+        extends BaseSelector
+        implements ExtendFileSelector {
 
     /** The passed in parameter array. */
     protected Parameter[] parameters = null;

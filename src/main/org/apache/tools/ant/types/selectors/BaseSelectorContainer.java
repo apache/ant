@@ -57,6 +57,7 @@ package org.apache.tools.ant.types.selectors;
 import java.io.File;
 import java.util.Enumeration;
 import java.util.Vector;
+
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
 
@@ -118,7 +119,7 @@ public abstract class BaseSelectorContainer extends BaseSelector
         StringBuffer buf = new StringBuffer();
         Enumeration e = selectorElements();
         if (e.hasMoreElements()) {
-            while(e.hasMoreElements()) {
+            while (e.hasMoreElements()) {
                 buf.append(e.nextElement().toString());
                 if (e.hasMoreElements()) {
                     buf.append(", ");
@@ -161,10 +162,10 @@ public abstract class BaseSelectorContainer extends BaseSelector
             throw new BuildException(errmsg);
         }
         Enumeration e = selectorElements();
-        while(e.hasMoreElements()) {
+        while (e.hasMoreElements()) {
             Object o = e.nextElement();
             if (o instanceof BaseSelector) {
-                ((BaseSelector)o).validate();
+                ((BaseSelector) o).validate();
             }
         }
     }
@@ -290,14 +291,14 @@ public abstract class BaseSelectorContainer extends BaseSelector
     public void addDifferent(DifferentSelector selector) {
         appendSelector(selector);
     }
- 
+
     /**
      * adds a type selector to the selector list
      */
     public void addType(TypeSelector selector) {
         appendSelector(selector);
     }
-   
+
     /**
      * add a regular expression selector entry on the selector list
      */
@@ -305,7 +306,7 @@ public abstract class BaseSelectorContainer extends BaseSelector
         appendSelector(selector);
     }
 
-    
+
     /**
      * add an arbitary selector
      * @since Ant 1.6

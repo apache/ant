@@ -110,8 +110,7 @@ public abstract class MappingSelector extends BaseSelector {
         }
         if (mapperElement == null) {
             map = new IdentityMapper();
-        }
-        else {
+        } else {
             map = mapperElement.getImplementation();
         }
         if (map == null) {
@@ -143,10 +142,10 @@ public abstract class MappingSelector extends BaseSelector {
         // Sanity check
         if (destfiles.length != 1 || destfiles[0] == null) {
             throw new BuildException("Invalid destination file results for "
-                + targetdir.getName() + " with filename " + filename);
+                    + targetdir.getName() + " with filename " + filename);
         }
         String destname = destfiles[0];
-        File destfile = new File(targetdir,destname);
+        File destfile = new File(targetdir, destname);
 
         boolean selected = selectionTest(file, destfile);
         return selected;
@@ -162,8 +161,8 @@ public abstract class MappingSelector extends BaseSelector {
 
     /**
      * Sets the number of milliseconds leeway we will give before we consider
-     * a file out of date. Defaults to 2000 on MS-DOS derivatives as the FAT file
-     * system.
+     * a file out of date. Defaults to 2000 on MS-DOS derivatives as the FAT
+     * file system.
      */
     public void setGranularity(int granularity) {
         this.granularity = granularity;

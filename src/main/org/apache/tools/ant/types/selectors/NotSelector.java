@@ -55,7 +55,6 @@
 package org.apache.tools.ant.types.selectors;
 
 
-
 /**
  * This selector has one other selectors whose meaning it inverts. It
  * actually relies on NoneSelector for its implementation of the

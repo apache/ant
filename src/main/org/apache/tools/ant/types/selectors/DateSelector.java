@@ -58,6 +58,7 @@ import java.io.File;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.util.Locale;
+
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.taskdefs.condition.Os;
 import org.apache.tools.ant.types.EnumeratedAttribute;
@@ -94,8 +95,7 @@ public class DateSelector extends BaseExtendSelector {
         buf.append(" compare: ");
         if (cmp == 0) {
             buf.append("before");
-        }
-        else if (cmp == 1) {
+        } else if (cmp == 1) {
             buf.append("after");
         } else {
             buf.append("equal");
@@ -133,18 +133,18 @@ public class DateSelector extends BaseExtendSelector {
         this.dateTime = dateTime;
         if (dateTime != null) {
             DateFormat df = DateFormat.getDateTimeInstance(
-                                                    DateFormat.SHORT,
-                                                    DateFormat.SHORT,
-                                                    Locale.US);
+                    DateFormat.SHORT,
+                    DateFormat.SHORT,
+                    Locale.US);
             try {
                 setMillis(df.parse(dateTime).getTime());
                 if (millis < 0) {
                     setError("Date of " + dateTime
-                        + " results in negative milliseconds value relative"
-                        + " to epoch (January 1, 1970, 00:00:00 GMT).");
+                            + " results in negative milliseconds value relative"
+                            + " to epoch (January 1, 1970, 00:00:00 GMT).");
                 }
             } catch (ParseException pe) {
-                    setError("Date of " + dateTime
+                setError("Date of " + dateTime
                         + " Cannot be parsed correctly. It should be in"
                         + " MM/DD/YYYY HH:MM AM_PM format.");
             }
@@ -192,33 +192,28 @@ public class DateSelector extends BaseExtendSelector {
                 if (MILLIS_KEY.equalsIgnoreCase(paramname)) {
                     try {
                         setMillis(new Long(parameters[i].getValue()
-                                ).longValue());
+                        ).longValue());
                     } catch (NumberFormatException nfe) {
                         setError("Invalid millisecond setting " +
-                            parameters[i].getValue());
+                                parameters[i].getValue());
                     }
-                }
-                else if (DATETIME_KEY.equalsIgnoreCase(paramname)) {
+                } else if (DATETIME_KEY.equalsIgnoreCase(paramname)) {
                     setDatetime(parameters[i].getValue());
-                }
-                else if (CHECKDIRS_KEY.equalsIgnoreCase(paramname)) {
+                } else if (CHECKDIRS_KEY.equalsIgnoreCase(paramname)) {
                     setCheckdirs(Project.toBoolean(parameters[i].getValue()));
-                }
-                else if (GRANULARITY_KEY.equalsIgnoreCase(paramname)) {
+                } else if (GRANULARITY_KEY.equalsIgnoreCase(paramname)) {
                     try {
                         setGranularity(new Integer(parameters[i].getValue()
-                                ).intValue());
+                        ).intValue());
                     } catch (NumberFormatException nfe) {
                         setError("Invalid granularity setting " +
-                            parameters[i].getValue());
+                                parameters[i].getValue());
                     }
-                }
-                else if (WHEN_KEY.equalsIgnoreCase(paramname)) {
+                } else if (WHEN_KEY.equalsIgnoreCase(paramname)) {
                     TimeComparisons cmp = new TimeComparisons();
                     cmp.setValue(parameters[i].getValue());
                     setWhen(cmp);
-                }
-                else {
+                } else {
                     setError("Invalid parameter " + paramname);
                 }
             }
@@ -232,12 +227,11 @@ public class DateSelector extends BaseExtendSelector {
     public void verifySettings() {
         if (dateTime == null && millis < 0) {
             setError("You must provide a datetime or the number of "
-                + "milliseconds.");
-        }
-        else if (millis < 0) {
+                    + "milliseconds.");
+        } else if (millis < 0) {
             setError("Date of " + dateTime
-                + " results in negative milliseconds"
-                + " value relative to epoch (January 1, 1970, 00:00:00 GMT).");
+                    + " results in negative milliseconds value"
+                    + " relative to epoch (January 1, 1970, 00:00:00 GMT).");
         }
     }
 
@@ -257,12 +251,10 @@ public class DateSelector extends BaseExtendSelector {
         }
         if (cmp == 0) {
             return ((file.lastModified() - granularity) < millis);
-        }
-        else if (cmp == 1) {
+        } else if (cmp == 1) {
             return ((file.lastModified() + granularity) > millis);
-        }
-        else {
-            return (Math.abs(file.lastModified() -  millis) <= granularity);
+        } else {
+            return (Math.abs(file.lastModified() - millis) <= granularity);
         }
     }
 
@@ -272,7 +264,7 @@ public class DateSelector extends BaseExtendSelector {
      */
     public static class TimeComparisons extends EnumeratedAttribute {
         public String[] getValues() {
-            return new String[] {"before", "after", "equal"};
+            return new String[]{"before", "after", "equal"};
         }
     }
 

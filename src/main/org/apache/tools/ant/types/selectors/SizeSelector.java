@@ -55,6 +55,7 @@
 package org.apache.tools.ant.types.selectors;
 
 import java.io.File;
+
 import org.apache.tools.ant.types.EnumeratedAttribute;
 import org.apache.tools.ant.types.Parameter;
 
@@ -83,8 +84,7 @@ public class SizeSelector extends BaseExtendSelector {
         buf.append("compare: ");
         if (cmp == 0) {
             buf.append("less");
-        }
-        else if (cmp == 1) {
+        } else if (cmp == 1) {
             buf.append("more");
         } else {
             buf.append("equal");
@@ -138,26 +138,19 @@ public class SizeSelector extends BaseExtendSelector {
         multiplier = 0;
         if ((i > -1) && (i < 4)) {
             multiplier = 1000;
-        }
-        else if ((i > 3) && (i < 9)) {
+        } else if ((i > 3) && (i < 9)) {
             multiplier = 1024;
-        }
-        else if ((i > 8) && (i < 13)) {
+        } else if ((i > 8) && (i < 13)) {
             multiplier = 1000000;
-        }
-        else if ((i > 12) && (i < 18)) {
+        } else if ((i > 12) && (i < 18)) {
             multiplier = 1048576;
-        }
-        else if ((i > 17) && (i < 22)) {
+        } else if ((i > 17) && (i < 22)) {
             multiplier = 1000000000L;
-        }
-        else if ((i > 21) && (i < 27)) {
+        } else if ((i > 21) && (i < 27)) {
             multiplier = 1073741824L;
-        }
-        else if ((i > 26) && (i < 31)) {
+        } else if ((i > 26) && (i < 31)) {
             multiplier = 1000000000000L;
-        }
-        else if ((i > 30) && (i < 36)) {
+        } else if ((i > 30) && (i < 36)) {
             multiplier = 1099511627776L;
         }
         if ((multiplier > 0) && (size > -1)) {
@@ -190,23 +183,20 @@ public class SizeSelector extends BaseExtendSelector {
                 if (SIZE_KEY.equalsIgnoreCase(paramname)) {
                     try {
                         setValue(new Long(parameters[i].getValue()
-                                ).longValue());
+                        ).longValue());
                     } catch (NumberFormatException nfe) {
                         setError("Invalid size setting "
-                            + parameters[i].getValue());
+                                + parameters[i].getValue());
                     }
-                }
-                else if (UNITS_KEY.equalsIgnoreCase(paramname)) {
+                } else if (UNITS_KEY.equalsIgnoreCase(paramname)) {
                     ByteUnits units = new ByteUnits();
                     units.setValue(parameters[i].getValue());
                     setUnits(units);
-                }
-                else if (WHEN_KEY.equalsIgnoreCase(paramname)) {
+                } else if (WHEN_KEY.equalsIgnoreCase(paramname)) {
                     SizeComparisons cmp = new SizeComparisons();
                     cmp.setValue(parameters[i].getValue());
                     setWhen(cmp);
-                }
-                else {
+                } else {
                     setError("Invalid parameter " + paramname);
                 }
             }
@@ -226,11 +216,9 @@ public class SizeSelector extends BaseExtendSelector {
     public void verifySettings() {
         if (size < 0) {
             setError("The value attribute is required, and must be positive");
-        }
-        else if (multiplier < 1) {
+        } else if (multiplier < 1) {
             setError("Invalid Units supplied, must be K,Ki,M,Mi,G,Gi,T,or Ti");
-        }
-        else if (sizelimit < 0) {
+        } else if (sizelimit < 0) {
             setError("Internal error: Code is not setting sizelimit correctly");
         }
     }
@@ -255,15 +243,12 @@ public class SizeSelector extends BaseExtendSelector {
         }
         if (cmp == 0) {
             return (file.length() < sizelimit);
-        }
-        else if (cmp == 1) {
+        } else if (cmp == 1) {
             return (file.length() > sizelimit);
-        }
-        else {
+        } else {
             return (file.length() == sizelimit);
         }
     }
-
 
 
     /**
@@ -286,15 +271,15 @@ public class SizeSelector extends BaseExtendSelector {
      */
     public static class ByteUnits extends EnumeratedAttribute {
         public String[] getValues() {
-            return new String[] {"K", "k", "kilo", "KILO",
-                                 "Ki", "KI", "ki", "kibi", "KIBI",
-                                 "M", "m", "mega", "MEGA",
-                                 "Mi", "MI", "mi", "mebi", "MEBI",
-                                 "G", "g", "giga", "GIGA",
-                                 "Gi", "GI", "gi", "gibi", "GIBI",
-                                 "T", "t", "tera", "TERA",
-            /* You wish! */      "Ti", "TI", "ti", "tebi", "TEBI"
-                                 };
+            return new String[]{"K", "k", "kilo", "KILO",
+                                "Ki", "KI", "ki", "kibi", "KIBI",
+                                "M", "m", "mega", "MEGA",
+                                "Mi", "MI", "mi", "mebi", "MEBI",
+                                "G", "g", "giga", "GIGA",
+                                "Gi", "GI", "gi", "gibi", "GIBI",
+                                "T", "t", "tera", "TERA",
+           /* You wish! */      "Ti", "TI", "ti", "tebi", "TEBI"
+            };
         }
     }
 
@@ -303,7 +288,7 @@ public class SizeSelector extends BaseExtendSelector {
      */
     public static class SizeComparisons extends EnumeratedAttribute {
         public String[] getValues() {
-            return new String[] {"less", "more", "equal"};
+            return new String[]{"less", "more", "equal"};
         }
     }
 

@@ -56,6 +56,7 @@ package org.apache.tools.ant.types.selectors;
 
 import java.io.File;
 import java.util.StringTokenizer;
+
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.types.Parameter;
 
@@ -97,7 +98,7 @@ public class DepthSelector extends BaseExtendSelector {
     /**
      * The minimum depth below the basedir before a file is selected.
      *
-     * @param min maximum directory levels below basedir to go
+     * @param max maximum directory levels below basedir to go
      */
     public void setMax(int max) {
         this.max = max;
@@ -117,22 +118,18 @@ public class DepthSelector extends BaseExtendSelector {
                 if (MIN_KEY.equalsIgnoreCase(paramname)) {
                     try {
                         setMin(Integer.parseInt(parameters[i].getValue()));
-                    }
-                    catch (NumberFormatException nfe1) {
+                    } catch (NumberFormatException nfe1) {
                         setError("Invalid minimum value "
-                            + parameters[i].getValue());
+                                + parameters[i].getValue());
                     }
-                }
-                else if (MAX_KEY.equalsIgnoreCase(paramname)) {
+                } else if (MAX_KEY.equalsIgnoreCase(paramname)) {
                     try {
                         setMax(Integer.parseInt(parameters[i].getValue()));
-                    }
-                    catch (NumberFormatException nfe1) {
+                    } catch (NumberFormatException nfe1) {
                         setError("Invalid maximum value "
-                            + parameters[i].getValue());
+                                + parameters[i].getValue());
                     }
-                }
-                else {
+                } else {
                     setError("Invalid parameter " + paramname);
                 }
             }
@@ -145,8 +142,8 @@ public class DepthSelector extends BaseExtendSelector {
      */
     public void verifySettings() {
         if (min < 0 && max < 0) {
-            setError("You must set at least one of the min or the " +
-                    "max levels.");
+            setError("You must set at least one of the min or the "
+                    + "max levels.");
         }
         if (max < min && max > -1) {
             setError("The maximum depth is lower than the minimum.");
@@ -174,19 +171,21 @@ public class DepthSelector extends BaseExtendSelector {
         // If you felt daring, you could cache the basedir absolute path
         String abs_base = basedir.getAbsolutePath();
         String abs_file = file.getAbsolutePath();
-        StringTokenizer tok_base = new StringTokenizer(abs_base, File.separator);
-        StringTokenizer tok_file = new StringTokenizer(abs_file, File.separator);
+        StringTokenizer tok_base = new StringTokenizer(abs_base,
+                File.separator);
+        StringTokenizer tok_file = new StringTokenizer(abs_file,
+                File.separator);
         while (tok_file.hasMoreTokens()) {
             String filetoken = tok_file.nextToken();
             if (tok_base.hasMoreTokens()) {
                 String basetoken = tok_base.nextToken();
                 // Sanity check. Ditch it if you want faster performance
                 if (!basetoken.equals(filetoken)) {
-                    throw new BuildException("File " + filename +
-                        " does not appear within " + abs_base + "directory");
+                    throw new BuildException("File " + filename
+                            + " does not appear within " + abs_base
+                            + "directory");
                 }
-            }
-            else {
+            } else {
                 depth += 1;
                 if (max > -1 && depth > max) {
                     return false;
@@ -195,7 +194,7 @@ public class DepthSelector extends BaseExtendSelector {
         }
         if (tok_base.hasMoreTokens()) {
             throw new BuildException("File " + filename +
-                " is outside of " + abs_base + "directory tree");
+                    " is outside of " + abs_base + "directory tree");
         }
         if (min > -1 && depth < min) {
             return false;

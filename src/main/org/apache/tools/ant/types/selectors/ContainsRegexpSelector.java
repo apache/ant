@@ -82,7 +82,8 @@ public class ContainsRegexpSelector extends BaseExtendSelector {
     }
 
     public String toString() {
-        StringBuffer buf = new StringBuffer("{containsregexpselector expression: ");
+        StringBuffer buf = new StringBuffer(
+                "{containsregexpselector expression: ");
         buf.append(userProvidedExpression);
         buf.append("}");
         return buf.toString();
@@ -91,8 +92,7 @@ public class ContainsRegexpSelector extends BaseExtendSelector {
     /**
      * The regular expression used to search the file.
      *
-     * @param regular expression that must match a line in the file to
-     * be selected.
+     * @param theexpression this must match a line in the file to be selected.
      */
     public void setExpression(String theexpression) {
         this.userProvidedExpression = theexpression;
@@ -139,15 +139,15 @@ public class ContainsRegexpSelector extends BaseExtendSelector {
     public boolean isSelected(File basedir, String filename, File file) {
         String teststr = null;
         BufferedReader in = null;
-        
+
         // throw BuildException on error
-        
+
         validate();
 
         if (file.isDirectory()) {
             return true;
         }
-        
+
         if (myRegExp == null) {
             myRegExp = new RegularExpression();
             myRegExp.setPattern(userProvidedExpression);
@@ -155,20 +155,20 @@ public class ContainsRegexpSelector extends BaseExtendSelector {
         }
 
         try {
-              in = new BufferedReader(new InputStreamReader(
+            in = new BufferedReader(new InputStreamReader(
                     new FileInputStream(file)));
-                    
-              teststr = in.readLine();
-              
-              while (teststr != null) {
-              
-                  if (myExpression.matches(teststr) == true) {
-                      return true;
-                  }
-                  teststr = in.readLine();
-              }
-              
-              return false;
+
+            teststr = in.readLine();
+
+            while (teststr != null) {
+
+                if (myExpression.matches(teststr) == true) {
+                    return true;
+                }
+                teststr = in.readLine();
+            }
+
+            return false;
         } catch (IOException ioe) {
             throw new BuildException("Could not read file " + filename);
         } finally {

@@ -75,8 +75,7 @@ public class DependSelector extends MappingSelector {
         StringBuffer buf = new StringBuffer("{dependselector targetdir: ");
         if (targetdir == null) {
             buf.append("NOT YET SET");
-        }
-        else {
+        } else {
             buf.append(targetdir.getName());
         }
         buf.append(" granularity: ");
@@ -84,8 +83,7 @@ public class DependSelector extends MappingSelector {
         if (map != null) {
             buf.append(" mapper: ");
             buf.append(map.toString());
-        }
-        else if (mapperElement != null) {
+        } else if (mapperElement != null) {
             buf.append(" mapper: ");
             buf.append(mapperElement.toString());
         }
@@ -101,7 +99,8 @@ public class DependSelector extends MappingSelector {
      * @return
      */
     public boolean selectionTest(File srcfile, File destfile) {
-        boolean selected=SelectorUtils.isOutOfDate(srcfile, destfile, granularity);
+        boolean selected = SelectorUtils.isOutOfDate(srcfile, destfile,
+                granularity);
         return selected;
     }
 

@@ -55,6 +55,7 @@
 package org.apache.tools.ant.types.selectors;
 
 import java.io.File;
+
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.types.Parameter;
 
@@ -103,7 +104,7 @@ public class FilenameSelector extends BaseExtendSelector {
      *                against in order to be selected.
      */
     public void setName(String pattern) {
-        pattern = pattern.replace('/',File.separatorChar).replace('\\',
+        pattern = pattern.replace('/', File.separatorChar).replace('\\',
                 File.separatorChar);
         if (pattern.endsWith(File.separator)) {
             pattern += "**";
@@ -145,15 +146,12 @@ public class FilenameSelector extends BaseExtendSelector {
                 String paramname = parameters[i].getName();
                 if (NAME_KEY.equalsIgnoreCase(paramname)) {
                     setName(parameters[i].getValue());
-                }
-                else if (CASE_KEY.equalsIgnoreCase(paramname)) {
+                } else if (CASE_KEY.equalsIgnoreCase(paramname)) {
                     setCasesensitive(Project.toBoolean(
-                        parameters[i].getValue()));
-                }
-                else if (NEGATE_KEY.equalsIgnoreCase(paramname)) {
+                            parameters[i].getValue()));
+                } else if (NEGATE_KEY.equalsIgnoreCase(paramname)) {
                     setNegate(Project.toBoolean(parameters[i].getValue()));
-                }
-                else {
+                } else {
                     setError("Invalid parameter " + paramname);
                 }
             }
@@ -186,7 +184,7 @@ public class FilenameSelector extends BaseExtendSelector {
     public boolean isSelected(File basedir, String filename, File file) {
         validate();
 
-        return (SelectorUtils.matchPath(pattern,filename,
+        return (SelectorUtils.matchPath(pattern, filename,
                 casesensitive) == !(negated));
     }
 

@@ -55,6 +55,7 @@
 package org.apache.tools.ant.types.selectors;
 
 import java.io.File;
+
 import org.apache.tools.ant.types.EnumeratedAttribute;
 import org.apache.tools.ant.types.Parameter;
 
@@ -102,8 +103,7 @@ public class TypeSelector extends BaseExtendSelector {
                     FileType type = new FileType();
                     type.setValue(parameters[i].getValue());
                     setType(type);
-                }
-                else {
+                } else {
                     setError("Invalid parameter " + paramname);
                 }
             }
@@ -137,17 +137,20 @@ public class TypeSelector extends BaseExtendSelector {
 
         if (file.isDirectory()) {
             return type.equals(FileType.DIR);
-        } else return type.equals(FileType.FILE);
+        } else {
+            return type.equals(FileType.FILE);
+        }
     }
 
     /**
      * Enumerated attribute with the values for types of file
      */
     public static class FileType extends EnumeratedAttribute {
-        public static final String FILE="file";
-        public static final String DIR="dir";
+        public static final String FILE = "file";
+        public static final String DIR = "dir";
+
         public String[] getValues() {
-            return new String[] {FILE, DIR};
+            return new String[]{FILE, DIR};
         }
     }
 

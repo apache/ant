@@ -111,21 +111,18 @@ public class MajoritySelector extends BaseSelectorContainer {
         Enumeration e = selectorElements();
         boolean result;
 
-        while(e.hasMoreElements()) {
-            result = ((FileSelector)e.nextElement()).isSelected(basedir,
-                    filename,file);
+        while (e.hasMoreElements()) {
+            result = ((FileSelector) e.nextElement()).isSelected(basedir,
+                    filename, file);
             if (result) {
                 yesvotes = yesvotes + 1;
-            }
-            else {
+            } else {
                 novotes = novotes + 1;
             }
         }
-        if (yesvotes > novotes)
-        {
+        if (yesvotes > novotes) {
             return true;
-        }
-        else if (novotes > yesvotes) {
+        } else if (novotes > yesvotes) {
             return false;
         }
         // At this point, we know we have a tie.

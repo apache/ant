@@ -97,9 +97,9 @@ public class AndSelector extends BaseSelectorContainer {
         Enumeration e = selectorElements();
         boolean result;
 
-        while(e.hasMoreElements()) {
-            result = ((FileSelector)e.nextElement()).isSelected(basedir,
-                    filename,file);
+        while (e.hasMoreElements()) {
+            result = ((FileSelector) e.nextElement()).isSelected(basedir,
+                    filename, file);
             if (!result) {
                 return false;
             }

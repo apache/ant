@@ -59,6 +59,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
+
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.types.Parameter;
@@ -123,7 +124,7 @@ public class ContainsSelector extends BaseExtendSelector {
     /**
      * Whether to ignore whitespace in the string being searched.
      *
-     * @param whitespace whether to ignore any whitespace (spaces, tabs, etc.) in the searchstring
+     * @param ignorewhitespace whether to ignore any whitespace (spaces, tabs, etc.) in the searchstring
      */
     public void setIgnorewhitespace(boolean ignorewhitespace) {
         this.ignorewhitespace = ignorewhitespace;
@@ -142,16 +143,13 @@ public class ContainsSelector extends BaseExtendSelector {
                 String paramname = parameters[i].getName();
                 if (CONTAINS_KEY.equalsIgnoreCase(paramname)) {
                     setText(parameters[i].getValue());
-                }
-                else if (CASE_KEY.equalsIgnoreCase(paramname)) {
+                } else if (CASE_KEY.equalsIgnoreCase(paramname)) {
                     setCasesensitive(Project.toBoolean(
-                        parameters[i].getValue()));
-                }
-                else if (WHITESPACE_KEY.equalsIgnoreCase(paramname)) {
+                            parameters[i].getValue()));
+                } else if (WHITESPACE_KEY.equalsIgnoreCase(paramname)) {
                     setIgnorewhitespace(Project.toBoolean(
-                        parameters[i].getValue()));
-                }
-                else {
+                            parameters[i].getValue()));
+                } else {
                     setError("Invalid parameter " + paramname);
                 }
             }
@@ -212,15 +210,12 @@ public class ContainsSelector extends BaseExtendSelector {
                 teststr = in.readLine();
             }
             return false;
-        }
-        catch (IOException ioe) {
+        } catch (IOException ioe) {
             throw new BuildException("Could not read file " + filename);
-        }
-        finally {
+        } finally {
             try {
                 in.close();
-            }
-            catch (Exception e) {
+            } catch (Exception e) {
                 throw new BuildException("Could not close file " + filename);
             }
         }

@@ -55,6 +55,7 @@
 package org.apache.tools.ant.types.selectors;
 
 import java.util.Enumeration;
+
 import org.apache.tools.ant.Project;
 
 /**
@@ -97,7 +98,6 @@ public interface SelectorContainer {
      * Add a new selector into this container.
      *
      * @param selector the new selector to add
-     * @return the selector that was added
      */
     public void appendSelector(FileSelector selector);
 
@@ -172,7 +172,7 @@ public interface SelectorContainer {
      * add a depends selector entry on the selector list
      */
     public void addDepend(DependSelector selector);
-    
+
     /**
      * add a regular expression selector entry on the selector list
      */

@@ -70,7 +70,7 @@ import org.apache.tools.ant.types.Parameterizable;
  */
 public interface ExtendFileSelector extends FileSelector, Parameterizable {
 
-  // No further methods necessary. This is just an amalgamation of two other
-  // interfaces.
+    // No further methods necessary. This is just an amalgamation of two other
+    // interfaces.
 }
 

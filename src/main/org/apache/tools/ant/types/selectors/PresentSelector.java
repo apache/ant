@@ -55,6 +55,7 @@
 package org.apache.tools.ant.types.selectors;
 
 import java.io.File;
+
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.types.EnumeratedAttribute;
 import org.apache.tools.ant.types.Mapper;
@@ -84,8 +85,7 @@ public class PresentSelector extends BaseSelector {
         StringBuffer buf = new StringBuffer("{presentselector targetdir: ");
         if (targetdir == null) {
             buf.append("NOT YET SET");
-        }
-        else {
+        } else {
             buf.append(targetdir.getName());
         }
         buf.append(" present: ");
@@ -96,8 +96,7 @@ public class PresentSelector extends BaseSelector {
         }
         if (map != null) {
             buf.append(map.toString());
-        }
-        else if (mapperElement != null) {
+        } else if (mapperElement != null) {
             buf.append(mapperElement.toString());
         }
         buf.append("}");
@@ -154,8 +153,7 @@ public class PresentSelector extends BaseSelector {
         }
         if (mapperElement == null) {
             map = new IdentityMapper();
-        }
-        else {
+        } else {
             map = mapperElement.getImplementation();
         }
         if (map == null) {
@@ -187,10 +185,10 @@ public class PresentSelector extends BaseSelector {
         // Sanity check
         if (destfiles.length != 1 || destfiles[0] == null) {
             throw new BuildException("Invalid destination file results for "
-                + targetdir + " with filename " + filename);
+                    + targetdir + " with filename " + filename);
         }
         String destname = destfiles[0];
-        File destfile = new File(targetdir,destname);
+        File destfile = new File(targetdir, destname);
         return destfile.exists() == destmustexist;
     }
 
@@ -200,7 +198,7 @@ public class PresentSelector extends BaseSelector {
      */
     public static class FilePresence extends EnumeratedAttribute {
         public String[] getValues() {
-            return new String[] {"srconly", "both"};
+            return new String[]{"srconly", "both"};
         }
     }
 

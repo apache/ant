@@ -56,6 +56,7 @@ package org.apache.tools.ant.types.selectors;
 
 import java.io.File;
 import java.util.Vector;
+
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.AntClassLoader;
 import org.apache.tools.ant.BuildException;
@@ -102,25 +103,22 @@ public class ExtendSelector extends BaseSelector {
                     c = Class.forName(classname);
                 } else {
                     AntClassLoader al
-                        = getProject().createClassLoader(classpath);
+                            = getProject().createClassLoader(classpath);
                     c = al.loadClass(classname);
                     AntClassLoader.initializeClass(c);
                 }
                 dynselector = (FileSelector) c.newInstance();
                 final Project project = getProject();
-                if ( project != null ) {
-                    project.setProjectReference( dynselector );
+                if (project != null) {
+                    project.setProjectReference(dynselector);
                 }
-            }
-            catch (ClassNotFoundException cnfexcept) {
+            } catch (ClassNotFoundException cnfexcept) {
                 setError("Selector " + classname +
                         " not initialized, no such class");
-            }
-            catch (InstantiationException iexcept) {
+            } catch (InstantiationException iexcept) {
                 setError("Selector " + classname +
                         " not initialized, could not create class");
-            }
-            catch (IllegalAccessException iaexcept) {
+            } catch (IllegalAccessException iaexcept) {
                 setError("Selector " + classname +
                         " not initialized, class not accessible");
             }
@@ -198,11 +196,9 @@ public class ExtendSelector extends BaseSelector {
         }
         if (classname == null || classname.length() < 1) {
             setError("The classname attribute is required");
-        }
-        else if (dynselector == null) {
+        } else if (dynselector == null) {
             setError("Internal Error: The custom selector was not created");
-        }
-        else if (!(dynselector instanceof ExtendFileSelector) &&
+        } else if (!(dynselector instanceof ExtendFileSelector) &&
                 (paramVec.size() > 0)) {
             setError("Cannot set parameters on custom selector that does not "
                     + "implement ExtendFileSelector");
@@ -224,9 +220,9 @@ public class ExtendSelector extends BaseSelector {
             Parameter[] paramArray = new Parameter[paramVec.size()];
             paramVec.copyInto(paramArray);
             // We know that dynselector must be non-null if no error message
-            ((ExtendFileSelector)dynselector).setParameters(paramArray);
+            ((ExtendFileSelector) dynselector).setParameters(paramArray);
         }
-        return dynselector.isSelected(basedir,filename,file);
+        return dynselector.isSelected(basedir, filename, file);
     }
 
 }
