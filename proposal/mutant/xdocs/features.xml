@@ -1,0 +1,599 @@
+<document>
+  <properties>
+    <author email="">Conor MacNeill</author>
+    <title>Mutant Features</title>
+  </properties>
+<body>
+
+<section name="User Features">
+
+<p>
+This page describes the major features in Mutant which are significantly
+different from those of Ant1. These are covered from a user perspective. Other
+pages describe the differences from the perspectives of a task developer and an
+Ant core developer.
+</p>
+</section>
+
+<section name="Directory Layout">
+<p>
+When Mutant is installed, the most immediately obvious difference will be in the
+directory layout, particularly the lib directory. Where Ant1's lib directory
+contained ant.jar, optional.jar and the bundled XML jars, Mutant's lib directory
+contain a number of subdirectories.
+</p>
+
+<p>
+In the root directory, there are a number of jars. These jars are the startup
+jars
+</p>
+<table>
+<tr>
+  <td>init.jar</td>
+  <td>a set of low level utility routines required at startup</td>
+</tr>
+<tr>
+  <td>start.jar</td>
+  <td>the Mutant launcher class</td>
+</tr>
+<tr>
+  <td>ant.jar</td>
+  <td>old Ant1 entry point</td>
+</tr>
+</table>
+
+<p>
+The subdirectories have the following functions
+</p>
+<table>
+<tr>
+  <td>parser</td>
+  <td>The XML parser jars. This is not available to task libraries unless
+they explicitly indicate that it is required.</td>
+</tr>
+<tr>
+  <td>antcore</td>
+  <td>Mutant's core classes. These classes are not available to
+tasks.</td>
+</tr>
+<tr>
+  <td>common</td>
+  <td>classes which are available to both the core and all task
+libraries.</td>
+</tr>
+<tr>
+  <td>syslibs/antlibs</td>
+  <td>Task libraries. The distinction between the two is
+discussed below.</td>
+</tr>
+<tr>
+  <td>frontend</td>
+  <td>Ant Frontends. Different frontends may be plugged in by placing
+jars here.</td>
+</tr>
+</table>
+
+<p>
+The directory a jar is in will control the visibility of the jar's classes and
+resources. This is closely related to the classloader hiearchy used by
+Mutant.
+</p>
+
+</section>
+
+<section name="Ant Libraries">
+<p>
+Mutant supports the concept of Ant Libraries. These are collections of
+components (tasks and types) and their supporting classes packaged into a
+Jar. In Mutant each library has a globally unique identifier. This identifier
+uses the same conventions as Java package naming - i.e. a reverse DNS name.
+</p>
+
+<p> The jar does not need to be exclusively for Ant. For example, it may be the
+jar for a tool which wishes to provide some Ant tasks for using the tool. It
+could be the main jar of an appication server that bundles Ant tasks for
+deployment. The jar does not even need to be installed in Mutant's antlib
+directory - Mutant can be configured to look in jars in other locations for Ant
+Libraries. </p>
+
+<subsection name="Ant library descriptor">
+
+<p>
+Whatever the jar contains and wherever it is located, Mutant looks for an XML
+based descriptor in the jar at META-INF/antlib.xml. This XML file describes the
+components in the jar that will be available to Mutant.
+</p>
+
+<p>
+Here is an example of the descriptor.
+</p>
+
+<source><![CDATA[
+<antlib libid="ant.system"
+        home="http://jakarta.apache.org/ant">
+
+  <taskdef name="libpath" classname="org.apache.ant.antlib.system.LibPath"/>
+  <taskdef name="loadlib" classname="org.apache.ant.antlib.system.LoadLib"/>
+  <taskdef name="import" classname="org.apache.ant.antlib.system.Import"/>
+
+  <converter classname="org.apache.ant.antlib.system.FileConverter"/>
+  <converter classname="org.apache.ant.antlib.system.URLConverter"/>
+  <converter classname="org.apache.ant.antlib.system.PrimitiveConverter"/>
+
+  <aspect classname="org.apache.ant.antlib.system.AntAspect"/>
+</antlib>
+]]></source>
+
+<p>
+As a user you generally won't need to worry about this decriptor. The library
+developer will have developed it to describe their library. Mutant uses the
+descriptor to understand what Ant related components the library provides.
+</p>
+</subsection>
+
+<subsection name="Loading libraries">
+<p>
+Library management in Mutant is split into two phases - a loading phase and an
+import phase. The loading phase is where Mutant loads the antlib.xml descriptor
+from the library. After loading, Mutant knows where the library is located and
+what components it provides. In general Mutant will not make the components
+available to build scripts automatically. A build script needs to notify Mutant
+what components it is using from each library. This is known as importing.
+</p>
+
+<p> Mutant loads libraries from two locations within the Mutant directory
+structure when Mutant starts up - the lib/syslibs and lib/antlibs directories.
+The distinction between these two locations is explained in the configuration
+discussion below. All jars in these directories will be search for library
+descriptors. All libraries providing descriptors will be available for importing
+into builds</p>
+
+<p> In addition to the automatically loaded libraries, it is possible to
+explicitly request additional libraries to be loaded using the
+<code>&lt;loadlib&gt;</code> task. Individual libraries may be loaded or a set
+of libraries loaded from a directory. Libraries may also be loaded from remote
+locations by specifying a URL. The loadlib task can request that all components
+in the loaded library also be imported at the time of loading. Examples of the
+loadlib task follow </p>
+
+<source><![CDATA[
+  <!-- load a library from a specific file and import all components -->
+  <loadlib file="/opt/tools/toollib.jar" importall="true"/>
+
+  <!-- load all libraries from a directory -->
+  <loadlib dir="/opt/appserver/lib/"/>
+
+  <!-- load libraries from a remote server -->
+  <loadlib url="http://jakarta.apache.org/ant/testtasks.jar"/>
+]]></source>
+
+<p>
+In general the loading of libraries from absolute locations would be a
+configuration task. These would be specified in the Mutant configuration file
+and would not be used in a build file. The loading of project libraries from
+relative locations may be something that you would see in a build file.
+</p>
+
+</subsection>
+
+<subsection name="Importing components">
+<p>
+Mutant is designed to allow tasks to be defined simply by dropping a jar in a
+directory or configuring Mutant to look in particular places for jars. This will
+allow tasks and types developed by many different developers to be used. With
+many developers developing tasks, however, inevitably some tasks will end up
+with the same name.
+</p>
+
+<p>
+This is very similar to the situation faced by Java with Java class names.
+Many Java classes have the same name. When a Java programmer uses a class they
+must import that class with an import statement. This tells the Java compiler
+which particular class is being referenced by the classname. Effectively the
+import statement creates a mapping from a name used in the Java source file and
+a class in the global package namespace.
+</p>
+
+<p>
+Mutant provides an import task to specify, in a manner similar to Java's import
+statement, which components are being used. When a component is imported the
+library is identified by its unique id. By default the component is imported
+into the frame using the name it is known by within the library. When this would
+conflict with a name that has already been imported, the import task allows the
+component to be given a new name, or alias, by which it will be referenced. It
+is also possible to import all the components in a library. The folowing example
+shows the various methods by which the import task can be used to import
+components.
+</p>
+
+<source><![CDATA[
+  <!-- import the runtool task from the com.foo.tools library -->
+  <import libraryId="com.foo.tools" name="runtool"/>
+
+  <!-- import the runtool task from the com.bar.tools library and
+       alias it since the runtool is already defined -->
+  <import libraryId="com.bar.tools" name="runtool" alias="runbartool"/>
+
+  <!-- import all of the tasks from the com.fubar.tools library -->
+  <import libraryId="com.fubar.tools"/>
+]]></source>
+
+<p>
+By using library identifiers, import operations are not tied to a particular
+library location. The separation of the loading and importing into separate
+phases allows environment-dependent locations to be specified as configuration
+information and location independent importing to be specified in the build
+file. This is similar to the case of Java imports. Java classes are imported by
+their global name without needing to known where the classfile is that contains
+that class. That information is provided externally in the CLASSPATH variable.
+</p>
+
+</subsection>
+
+<subsection name="Library classpath management">
+<p>
+Many libraries will have dependencies on external jars. For example, a task
+might make use of regular-expression libraries such as jakarta-regexp or a task
+may provide a wrapper around some external tool. In these cases the task will
+usually need to have the required classes available in the classloader from
+which the task itself was loaded. It is possible to avoid these direct
+dependencies using techniques such as reflection and explicitly loading the
+required classes through additional classloaders but the code is often harder to
+write and understand.
+</p>
+
+<p> It is not always possible or desirable to bundle the required classes in the
+task's jar nor is it desirable that the system classpath contains the required
+classes. In fact it is often preferable to run Mutant with an empty classpath.
+Buildfiles which do not assume that the system classpath contains particular
+classes are generally more portable. Mutant provides a task,
+<code>&lt;libpath&gt;</code>, to allow additional paths to be assodicated with a
+library. As with the loadlib task, the libpath task may be used to associate a
+single file, all jars in a directory or remote jars with a library. </p>
+
+<source><![CDATA[
+  <libpath libraryid="ant.ant1compat"
+           dir="/home/conor/jakarta-ant/lib/optional/"/>
+]]></source>
+
+<p> The above example associates all the jars in
+/home/conor/jakarta-ant/lib/optional/ with the library whose unique id is
+ant.ant1compat. A path must be associated with a library before any components
+are imported from the library. Mutant associates the paths with the library and
+at the time a component is requested from the library, Mutant will form the
+classloader that will be used. The additional paths are added to the definition
+of the classloader. Once a component is loaded, further paths will not have any
+effect. For this reason, and since the additonal paths are likely to be absolute
+paths, the <code>&lt;libpath&gt;</code> task is normally used in Mutant's
+configuration phase. </p>
+
+</subsection>
+
+<subsection name="Automatic Imports">
+<p>
+Mutant will automatically import all components of any library whose unique
+identifier begins with &quot;ant.&quot; when the ;library is loaded. This is
+mainly a convenience to provide a minimum set of tasks with which to construct
+build files.
+</p>
+</subsection>
+</section>
+
+<section name="Includes">
+
+<p>Mutant provides a mechanism for including build file fragments into a build
+file. This following example illustrates how this works</p>
+
+<source><![CDATA[
+build.ant
+==========
+<project default="main" xmlns:ant="http://jakarta.apache.org/ant">
+  <ant:include fragment="fragment.ant"/>
+</project>
+
+fragment.ant
+============
+<fragment>
+  <target name="main">
+    <echo message="main target"/>
+  </target>
+</fragment>
+]]></source>
+
+<p> The include mechanism can be used to include a complete project file or as
+shown in the example, a fragment. When including a project, any attributes on
+the included <code>&lt;project&gt;</code> element are ignored and the contents
+of the project inserted into the including project. In all cases the included
+files must be a well formed XML file containing a root element. </p>
+
+<box>
+
+<p><font color="red">This area of Mutant is subject to change.</font></p>
+
+<p>At present include elements are processed at parse-time. As such they can
+only occur at the top-level of the build file. They cannot occur in a target.
+The use of the namespace to qualify the include element is intended to convey
+the fact that this is not part of the build structure.</p>
+
+<p>An alternative approach would be to define include as a regular task. When an
+include is processed, the top-level tasks of the included project would be
+executed immediately and the targets added to the current project
+structure.</p>.
+
+</box>
+
+</section>
+
+<section name="Project References">
+<subsection name="Creating references">
+
+<p>
+Mutant allows build file writers to reference properties and targets in other
+projects by creating a project reference. Project references are introduced
+using the ref task.
+</p>
+
+<source><![CDATA[
+  <!-- create a reference to the main build -->
+  <ref project="main.xml" name="main"/>
+
+  <ref project="test.xml" name="test">
+    <property name=build.dir" value="build/test"/>
+  </ref>
+]]></source>
+
+<p>
+The above example creates two project references - one to the build in main.xml
+and one to the build in test.xml. When a reference is created, it must be given
+a label. This label will be used to refer to items within the referenced
+project (see below). Note that the ref task is a regular task and the reference
+is only created when the ref task is executed. A ref task may be placed at the
+top level of a build to effectively create static references. Alternatively a
+reference may be created dynamically by putting the ref task in a target.
+</p>
+</subsection>
+
+<subsection name="Referencing project items">
+<p>
+The label given to a project reference is used when accessing items within the
+project. So, to access the build.dir property in the project referenced by the
+main label, you would use main:build.dir. Similarly the compile target would be
+referred to as main:compile. Since the referenced projects may also create their
+own project references, labels may be concatenated to access items at arbitrary
+depths. For example, if main.xml referenced another project under the label
+&quot;sub&quot;, a property debug could be referenced as main:sub:debug. The
+following example shows various items in the referenced project being used.
+</p>
+
+<source><![CDATA[
+  <!-- Specify the build.dir in the main project prior to the reference
+       being created -->
+  <property name="main:build.dir" value="build/main"/>
+
+  <!-- create the reference to the main build -->
+  <ref project="main.xml" name="main"/>
+
+  <!-- create the reference to the test build -->
+  <ref project="test.xml" name="test">
+    <property name="build.dir" value="build/test"/>
+  </ref>
+
+  <!-- our main target calls the fubar target in the main build -->
+  <target name="main">
+    <antcall target="main:fubar"/>
+  </target>
+
+  <!-- Our alt target depends on the fubar target in the main build -->
+  <target name="alt" depends="main:fubar">
+    <echo message="main's debug flag is ${main:debug}"/>
+  </target>
+]]></source>
+
+<p>
+When a project is referenced, the top level tasks of the referenced project are
+run to allow the project to initialize itself. Mutant allows the referring
+build to set a property in a referenced project before the reference is
+created. When the reference is eventually created these properties are set
+before initialization occurs. In normal Ant fashion, these overriding
+properties take precedence. In particular properties in the referenced projects
+may be set from the command line as this example shows
+</p>
+<source>
+  mutant -Dmain:build.dir=temp
+</source>
+
+<p>
+The example above shows a target in the referenced project being used as a
+dependency and also as a target in an antcall. Since refs are dynamic, Mutant
+will only evaluate such dependencies when required. If the alt target were
+never to be run, the dependency on main:fubar would never be checked.
+</p>
+
+<p>
+The import task allows components defined in a referenced project to be brought
+into the main build. For example, the following will bring the definition of
+tool from the test project in the build. The imported component may also be
+aliased to a new name.
+</p>
+
+<source><![CDATA[
+  <!-- import a task definition from another project -->
+  <import ref="test:tool"/>
+]]></source>
+
+</subsection>
+</section>
+
+<section name="Configuration">
+<p>
+As discussed above Mutant provides a number of tasks to manage libraries and
+it is appropriate to run many of these tasks as part of a user or system-wide
+configuration rather than incorporating them into the build file. Mutant
+provides a configuration system to support running these tasks at an appropriate
+time. A Mutant configuration file looks as follows
+</p>
+
+<source><![CDATA[
+<antconfig allow-unset-properties="true">
+  <global-tasks>
+    <libpath libraryid="ant.ant1compat"
+             file="/home/conor/dev/jakarta-ant/lib/optional/"/>
+  </global-tasks>
+  <project-tasks>
+    <import libraryid="antopt.monitor"/>
+  </project-tasks>
+</antconfig>
+]]></source>
+
+<p>
+The antconfig element is the root element of the configuration file. It supports
+three attributes
+</p>
+<table>
+<tr>
+<td>allow-unset-properties</td>
+<td>controls whether Mutant will fail a build which
+refers to a property which has not been set. This defaults to the Ant1 behaviour
+(true)</td>
+</tr>
+<tr>
+<td>allow-remote-library</td>
+<td>controls whether Mutant uses components defined in remote libraries</td>
+</tr>
+<tr>
+<td>allow-remote-project</td>
+<td>controls whether Mutant can run a project or reference a project which is
+located remotely.</td>
+</tr>
+</table>
+
+<p>
+The configuration provides two collections of configuration tasks, global-tasks
+and project-tasks. Global-tasks are run once and are run in the context of the
+main project - i.e. the build file identified on the command line (defaults to
+build.xml/build.ant), whilst project-tasks are run as part of the initialization
+of every project including referenced projects and antcall projects. Looking at
+the above example, the global-tasks associate a path with the ant.ant1compat
+library while the per-project tasks import the antopt.monitor library into every
+project that Mutant processes.
+</p>
+
+<p>
+The tasks that can be run in the configuration phase are regular tasks but not
+all tasks are automatically available. This is the difference between the
+syslibs and antlibs directories. The global tasks are run after the syslibs
+libraries have been loaded but prior to the antlibs libraries being loaded. The
+syslibs library tasks are therefore available in the configuration phase. This
+arrangement is to allow the configuration tasks to setup library paths for the
+libraries contained in the antlibs directory, especially libraries in the Ant
+namespace which are automatically imported at the time they are loaded.
+</p>
+
+<p>
+If it is required to use tasks from libraries installed in the antlibs
+directory, the configuration tasks may explicitly load the library and import
+the required tasks. The following example shows the loading and use of the echo
+task in the configuration tasks. Note that the ant.home property has been set at
+the time the configuration tasks are started.
+</p>
+
+<source><![CDATA[
+<antconfig allow-unset-properties="true">
+  <global-tasks>
+    <loadlib file="${ant.home}/lib/antlibs/ant1compat.jar" importall="true"/>
+    <echo message="Starting the build"/>
+  </global-tasks>
+  <project-tasks>
+    <echo message="Starting new project"/>
+  </project-tasks>
+</antconfig>
+]]></source>
+
+<p>
+When Mutant starts up it will load configurations from two locations - The file
+.ant/conf/antconfig.xml in the user's home directory and the file
+conf/antconfig.xml in the Mutant home directory. In addition, config files can
+be specified on the command line using a -config argument. This allows project
+specific configurations to be used.
+</p>
+
+</section>
+
+<section name="Targetless builds">
+
+<p>
+Mutant allows any task or datatype to be placed outside of a target. All such
+components are processed when the project is initialized and before any targets
+are processed. In fact Mutant does not require that a project contain any
+targets. In this case the only operations performed are the top level tasks at
+project initialization. The following shows a simple example
+</p>
+
+<source><![CDATA[
+<project>
+  <echo message="Welcome to Mutant"/>
+</project>
+]]></source>
+
+
+</section>
+
+<section name="Extensibility">
+
+<p>
+Normally when a task supports a nested element, Ant automatically determines the
+type of the nested element and creates an instance of this type. This instance is
+then configured and passed to the task. Mutant extends this scheme by allowing
+a build file writer to specify the type of nested element to use rather than
+relying on the core to determine it. Mutant will process attributes and further
+nested elements based on the specified type. For example:
+</p>
+
+<source><![CDATA[
+    <copy todir="dest">
+      <fileset xsi:type="classfileset" dir="../../bin/ant1compat/">
+        <root classname="org.apache.tools.ant.Project"/>
+      </fileset>
+    </copy>
+]]></source>
+
+<p>
+In this example the nested element is actually a classfileset which supports the
+&lt;root&gt; nested element. The actual type is specified using the notation from
+XML Schema. Mutant predclares the XML Schema namespace under the xsi prefix. You
+may explicitly declare this in the build file's XML and use a different prefix
+if you wish. For example, this is equivalent to the above
+</p>
+
+<source><![CDATA[
+<?xml version="1.0"?>
+<project xmlns:schema="http://www.w3.org/2001/XMLSchema-instance"
+         name="test" default="main">
+  <target name="main">
+    <delete dir="dest"/>
+    <mkdir dir="dest"/>
+    <copy todir="dest">
+      <fileset schema:type="classfileset" dir="../../bin/ant1compat/">
+        <root classname="org.apache.tools.ant.Project"/>
+      </fileset>
+    </copy>
+  </target>
+</project>
+]]></source>
+
+</section>
+
+<section name="Default build file">
+
+<p>In Ant1, the default build file name is build.xml. In Mutant, the default
+build file is build.ant. If build.xnt cannot be found, Mutant will then look for
+build.xml. This allows you to support both Ant1 and Ant2 users. The build.xml
+file can contain an Ant1 build file. The build.ant file can include or reference
+this build and make use of Mutant's capabilities such as library management,
+library path settings, etc.
+</p>
+
+</section>
+
+</body>
+</document>

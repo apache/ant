@@ -1,0 +1,85 @@
+<document>
+  <properties>
+    <author email="">Conor MacNeill</author>
+    <title>Mutant Introduction</title>
+  </properties>
+<body>
+
+<section name="Introduction">
+<p>
+These pages describe the design and implementation of Mutant.
+</p>
+
+<p>
+For some time, there has been the concept of Ant 2.0, a rearchitecting of
+Ant designed to address the shortcomings in the design of Ant 1.x, while
+drawing the experience gained in that development. This rearchitecting
+would most likely be accompanied by at least some break in backward
+compatability. Over time Ant 2.0 has come to be known as Ant2 and the current
+Ant codebase is generally known as Ant1.
+</p>
+
+<p>
+Mutant is my proposal, a revolution, for Ant2. Actually, I consider it more
+an evolution of the design and implementation used for Ant1, but in Jakarta
+parlance, being a separate codebase, it is termed a revolution.
+</p>
+
+<p>
+There is no special significance in the name Mutant. I chose it because, as
+a word, it is an extension of the word Ant and it also signifies a change
+from the previous generation
+</p>
+</section>
+
+<section name="Other Proposals">
+<p>
+Mutant is not the only proposed revolution for Ant2. Peter Donald has
+developed another known as
+<a href="http://jakarta.apache.org/ant/myrmidon">Myrmidon</a>
+which presents a different view of how Ant2 could be realized. Other
+people hold the view that Ant1 can continue to evolve and that there
+is no need for rearchitecture of its codebase. I recommend you
+investigate all these points of view.
+</p>
+
+<p>
+As I write this, no decision has been taken as to which codebase will be
+adopted for Ant2. It may not be Mutant and it could even be some entirely
+new proposal. These pages do not compare and contrast Mutant with these
+other proposals or points of view, at least not explicitly. They are just
+intended to describe how Mutant is designed and implemented and why it is the
+way it is.
+</p>
+</section>
+
+<section name="Getting Started">
+<box>
+<h1><font color="red">Caution</font></h1>
+
+<p>
+Mutant is not even an alpha release. While it is relatively stable, it is
+subject to change. There are no backward compatability guarantees for any of
+the classes, interfaces, build files, configuration, launch scripts, etc that
+Mutant provides.
+</p>
+
+<p>In particular, some features in Mutant are experimental and may not, in the
+long run, prove to be worthwhile.</p>
+
+</box>
+
+<p>
+<a href="goals.html">Start</a> now by looking at the key requirements which have
+shaped the design of Mutant.
+</p>
+
+<div align="right">
+<p>Conor MacNeill</p>
+</div>
+
+</section>
+
+</body>
+</document>
+

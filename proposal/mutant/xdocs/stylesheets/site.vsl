@@ -12,7 +12,7 @@
     #set ($subbannerfg = "#ffffff")
     #set ($tablethbg = "#039acc")
     #set ($tabletdbg = "#a0ddf0")
-    
+
 <!-- start the processing -->
 #document()
 <!-- end the processing -->
@@ -35,6 +35,8 @@
           #source ($items)
         #elseif ($items.getName().equals("table"))
           #table ($items)
+        #elseif ($items.getName().equals("box"))
+          #box ($items)
         #else
           $xmlout.outputString($items)
         #end
@@ -62,6 +64,8 @@
           #table ($items)
         #elseif ($items.getName().equals("subsection"))
           #subsection ($items)
+        #elseif ($items.getName().equals("box"))
+          #box ($items)
         #else
           $xmlout.outputString($items)
         #end
