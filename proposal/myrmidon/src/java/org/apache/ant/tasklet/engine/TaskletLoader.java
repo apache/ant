@@ -18,6 +18,13 @@ import org.apache.avalon.camelot.Loader;
 public interface TaskletLoader
     extends Loader
 {
+    /**
+     * Load a tasklet with a particular classname.
+     *
+     * @param tasklet the tasklet classname
+     * @return the tasklet
+     * @exception Exception if an error occurs
+     */
     Tasklet loadTasklet( String tasklet )
         throws Exception;
 }

@@ -16,7 +16,8 @@ import org.apache.avalon.util.io.FileUtil;
 import org.apache.log.Logger;
 
 /**
- * This represents the *Context* in which a task can be executed.
+ * Default implementation of TaskletContext.
+ * It represents the *Context* in which a task can be executed.
  *
  * @author <a href="mailto:donaldp@apache.org">Peter Donald</a>
  */

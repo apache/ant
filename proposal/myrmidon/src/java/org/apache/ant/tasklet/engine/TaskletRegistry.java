@@ -9,6 +9,11 @@ package org.apache.ant.tasklet.engine;
 
 import org.apache.avalon.camelot.Registry;
 
+/**
+ * The registry for tasklets
+ *
+ * @author <a href="mailto:donaldp@apache.org">Peter Donald</a>
+ */
 public interface TaskletRegistry
     extends Registry
 {

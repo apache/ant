@@ -18,6 +18,7 @@ import java.net.URL;
 import java.net.URLClassLoader;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Map;
 import java.util.Iterator;
 import java.util.List;
 import org.apache.ant.launcher.AntLoader;
@@ -33,6 +34,7 @@ import org.apache.avalon.Disposable;
 import org.apache.avalon.Initializable;
 import org.apache.avalon.camelot.Deployer;
 import org.apache.avalon.camelot.DeploymentException;
+import org.apache.avalon.util.ObjectUtil;
 import org.apache.avalon.util.StringUtil;
 import org.apache.avalon.util.cli.AbstractMain;
 import org.apache.avalon.util.cli.CLOption;
@@ -54,16 +56,22 @@ import org.apache.log.Priority;
 public class Main
     extends AbstractMain
 {
+    //Constants to indicate the build of Ant/Myrmidon
     public final static String     BUILD_DATE                = "@@DATE@@";
     public final static String     BUILD_VERSION             = "@@VERSION@@";
     public final static String     VERSION                   = 
         "Ant " + BUILD_VERSION + " compiled on " + BUILD_DATE;
 
+    //default log level
     protected final static String  DEFAULT_LOGLEVEL          = "WARN";
+
+    //Some defaults for file locations/names
     protected final static String  DEFAULT_LIB_DIRECTORY     = "lib";
     protected final static String  DEFAULT_TASKLIB_DIRECTORY = DEFAULT_LIB_DIRECTORY;
     protected final static String  DEFAULT_FILENAME          = "build.xmk";
 
+    //some constants that define the classes to be loaded to perform 
+    //particular services
     protected final static String  DEFAULT_ENGINE            = 
         "org.apache.ant.project.DefaultProjectEngine";
 
@@ -73,6 +81,7 @@ public class Main
     protected final static String  DEFAULT_BUILDER           =  
         "org.apache.ant.project.DefaultProjectBuilder";
 
+    //defines for the Command Line options
     private static final int       HELP_OPT                  = 'h';
     private static final int       QUIET_OPT                 = 'q';
     private static final int       VERBOSE_OPT               = 'v';
@@ -102,8 +111,8 @@ public class Main
         QUIET_OPT, VERBOSE_OPT, LOG_LEVEL_OPT
     };
 
-    protected Logger               m_logger;
 
+    protected Logger               m_logger;
     protected ProjectListener      m_listener;
     protected File                 m_binDir;
     protected File                 m_homeDir;
@@ -112,6 +121,11 @@ public class Main
     protected File                 m_buildFile;
     protected File                 m_userDir;
 
+    /**
+     * Main entry point called to run standard Ant.
+     *
+     * @param args the args
+     */
     public static void main( final String[] args )
     {
         final Main main = new Main();
@@ -131,6 +145,7 @@ public class Main
 
     /**
      * Initialise the options for command line parser.
+     * This is called by super-class.
      */
     protected CLOptionDescriptor[] createCLOptions()
     {
@@ -278,6 +293,9 @@ public class Main
         setupListener( listenerName ); //handle listener..
         setupDefaultAntDirs();        
 
+        //try to auto-discover the location of ant so that 
+        //can populate classpath with libs/tasks and gain access
+        //to antRun
         if( null == binDir && null == homeDir ) 
         {
             m_homeDir = getDefaultHomeDir();
@@ -304,6 +322,8 @@ public class Main
         m_logger.debug( "Ant Lib Directory: " + m_libDir );
         m_logger.debug( "Ant Task Lib Directory: " + m_taskLibDir );
 
+        //setup classloader so that it will correctly load
+        //the Project/ProjectBuilder/ProjectEngine and all dependencies
         setupContextClassLoader( m_libDir );
 
         final Project project = getProject( builderName, m_buildFile );
@@ -323,8 +343,10 @@ public class Main
 
         BufferedReader reader = null;
 
+        //loop over build if we are in incremental mode..
         while( true )
         {
+            //actually do the build ...
             doBuild( engine, project, targets );
 
             if( !incremental ) break;
@@ -341,13 +363,20 @@ public class Main
             if( line.equalsIgnoreCase( "no" ) ) break;
             
         }
-        
+
+        //shutdown engine gracefully if needed
         if( engine instanceof Disposable )
         {
             ((Disposable)engine).dispose();
         }
     }
 
+    /**
+     * Deploy all tasklibs in tasklib directory into ProjectEngine.
+     *
+     * @param engine the ProjectEngine
+     * @param taskLibDirectory the directory to look for .tsk files
+     */
     protected void deployDefaultTaskLibs( final ProjectEngine engine, 
                                           final File taskLibDirectory )
     
@@ -375,6 +404,13 @@ public class Main
         }
     }
 
+    /**
+     * Actually do the build.
+     *
+     * @param engine the engine
+     * @param project the project
+     * @param targets the targets to build as passed by CLI
+     */
     protected void doBuild( final ProjectEngine engine, 
                             final Project project, 
                             final ArrayList targets )
@@ -383,6 +419,7 @@ public class Main
         {
             final int targetCount = targets.size();
         
+            //if we didn't specify a target on CLI then choose default
             if( 0 == targetCount )
             {
                 engine.execute( project, project.getDefaultTargetName() );
@@ -402,23 +439,68 @@ public class Main
         }
     } 
     
+    /**
+     * Setup Logger for a particular log-level. 
+     * This is in seperate method so it can be overidden if sub-classed.
+     *
+     * @param logLevel the log-level
+     */
     protected void setupLogger( final String logLevel )
     {
         m_logger = createLogger( logLevel );
     }
 
+    /**
+     * Create Logger of appropriate log-level.
+     *
+     * @param logLevel the log-level
+     * @return the logger
+     * @exception AntException if an error occurs
+     */
+    protected Logger createLogger( final String logLevel )
+        throws AntException
+    {
+        final String logLevelCapitalized = logLevel.toUpperCase();
+        final Priority.Enum priority = LogKit.getPriorityForName( logLevelCapitalized );
+        
+        if( !priority.getName().equals( logLevelCapitalized ) )
+        {
+            throw new AntException( "Unknown log level - " + logLevel );
+        }
+        
+        final Category category = LogKit.createCategory( "ant", priority );
+        return LogKit.createLogger( category );
+    }
+
+    /**
+     * Setup project listener.
+     *
+     * @param listenerName the name of project listener
+     */
     protected void setupListener( final String listenerName )
     {
         m_listener = createListener( listenerName );
         m_logger.addLogTarget( new ProjectToListenerAdapter( m_listener ) );
     }
 
+    /**
+     * Make sure classloader is setup correctly so can do Class.forName safely
+     *
+     * @param libDir the directory to grab all the lib files from
+     */
     protected void setupContextClassLoader( final File libDir )
     {
         setupClassLoader( libDir );
         Thread.currentThread().setContextClassLoader( AntLoader.getLoader() );
     }
 
+    /**
+     * Setup classloader so that the *current* classloader has access to parsers etc.
+     * This is a bit of a hack as it assumes that AntLoader was used to load this file
+     * but it is the only way to add to current classloader safely.
+     *
+     * @param libDir the directory of lib files to add
+     */
     protected void setupClassLoader( final File libDir )
     {
         final ExtensionFileFilter filter = 
@@ -430,6 +512,8 @@ public class Main
 
         for( int i = 0; i < files.length; i++ )
         {
+            //except for a few *special* files add all the 
+            //.zip/.jars to classloader
             if( !files[ i ].getName().equals( "ant.jar" ) &&
                 !files[ i ].getName().equals( "myrmidon.jar" ) &&
                 !files[ i ].getName().equals( "avalonapi.jar" ) )
@@ -440,6 +524,15 @@ public class Main
         }        
     }
 
+    /**
+     * Using a specified builder create a project from a particular file.
+     *
+     * @param builderName the name of the builder class
+     * @param file the file
+     * @return the newly created Project
+     * @exception AntException if an error occurs
+     * @exception IOException if an error occurs
+     */
     protected Project getProject( final String builderName, final File file )
         throws AntException, IOException
     {
@@ -453,30 +546,59 @@ public class Main
         return project;
     }
 
+    /**
+     * Setup the projects context so all the "default" properties are defined.
+     * This also takes a hashmap that is added to context. Usually these are the 
+     * ones defined on command line.
+     *
+     * @param project the project
+     * @param defines the defines
+     * @exception AntException if an error occurs
+     */
     protected void setupProjectContext( final Project project, final HashMap defines )
         throws AntException
     {
+        //put these values into defines so that they overide
+        //user-defined proeprties
+        defines.put( AntContextResources.HOME_DIR, m_homeDir );
+        defines.put( AntContextResources.BIN_DIR, m_binDir );
+        defines.put( AntContextResources.LIB_DIR, m_libDir );
+        defines.put( AntContextResources.TASKLIB_DIR, m_taskLibDir );
+        //defines.put( AntContextResources.USER_DIR, m_userDir );
+        defines.put( TaskletContext.LOGGER, m_logger );
+        defines.put( TaskletContext.JAVA_VERSION, getJavaVersion() );
+
         final TaskletContext context = project.getContext();
-        
-        final Iterator keys = defines.keySet().iterator();
-        //make sure these come before following so they get overidden if user tries to 
-        //confuse the system
+        addToContext( context, defines );
+
+        //Add system properties second so that they overide user-defined properties
+        addToContext( context, System.getProperties() );
+    }
+
+    /**
+     * Helper method to add values to a context
+     *
+     * @param context the context
+     * @param map the map of names->values
+     */
+    protected void addToContext( final TaskletContext context, final Map map )
+    {
+        final Iterator keys = map.keySet().iterator();
+
         while( keys.hasNext() )
         {
             final String key = (String)keys.next();
-            final String value = (String)defines.get( key );
+            final Object value = map.get( key );
             context.setProperty( key, value );
         }
-        
-        context.setProperty( AntContextResources.HOME_DIR, m_homeDir );
-        context.setProperty( AntContextResources.BIN_DIR, m_binDir );
-        context.setProperty( AntContextResources.LIB_DIR, m_libDir );
-        context.setProperty( AntContextResources.TASKLIB_DIR, m_taskLibDir );
-        //context.put( AntContextResources.USER_DIR, m_userDir );
-        context.setProperty( TaskletContext.LOGGER, m_logger );
-        context.setProperty( TaskletContext.JAVA_VERSION, getJavaVersion() );
     }
 
+    /**
+     * Helper method to retrieve current JVM version.
+     * Basically stolen from original Ant sources.
+     *
+     * @return the current JVM version
+     */
     protected JavaVersion getJavaVersion()
     {
         JavaVersion version = JavaVersion.JAVA1_0;
@@ -495,6 +617,11 @@ public class Main
         return version;
     }
 
+    /**
+     * Create and configure project engine
+     *
+     * @return the ProjectEngine
+     */
     protected ProjectEngine getProjectEngine()
     {
         final ProjectEngine engine = createProjectEngine();
@@ -502,6 +629,12 @@ public class Main
         return engine;
     }
 
+    /**
+     * Create the project engine.
+     * This is seperate method so that it can be overidden in a sub-class.
+     *
+     * @return the new ProjectEngine
+     */
     protected ProjectEngine createProjectEngine()
     {
         return (ProjectEngine)createObject( DEFAULT_ENGINE, "project-engine" );
@@ -510,7 +643,7 @@ public class Main
     protected File getHomeDir( final String homeDir )
         throws AntException
     {
-        final File file = new File( homeDir );
+        final File file = (new File( homeDir )).getAbsoluteFile();
         checkDirectory( file, "ant-home" );
         return file;
     }
@@ -566,21 +699,6 @@ public class Main
                                     " does not implement the ProjectListener interface",
                                     cce );
         }
-    }
-
-    protected Logger createLogger( final String logLevel )
-        throws AntException
-    {
-        final String logLevelCapitalized = logLevel.toUpperCase();
-        final Priority.Enum priority = LogKit.getPriorityForName( logLevelCapitalized );
-
-        if( !priority.getName().equals( logLevelCapitalized ) )
-        {
-            throw new AntException( "Unknown log level - " + logLevel );
-        }
-        
-        final Category category = LogKit.createCategory( "ant", priority );
-        return LogKit.createLogger( category );
     }
 
     protected void setupDefaultAntDirs()
@@ -767,8 +885,7 @@ public class Main
     {
         try
         {
-            final Class clazz = Class.forName( objectName ); 
-            return clazz.newInstance();
+            return ObjectUtil.createObject( objectName ); 
         }
         catch( final IllegalAccessException iae )
         { 

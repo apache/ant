@@ -21,6 +21,7 @@ import org.apache.ant.tasklet.engine.DefaultTaskletRegistry;
 import org.apache.ant.tasklet.engine.TaskletEngine;
 import org.apache.ant.tasklet.engine.TaskletRegistry;
 import org.apache.ant.tasklet.engine.TskDeployer;
+import org.apache.avalon.Composer;
 import org.apache.avalon.DefaultComponentManager;
 import org.apache.avalon.Disposable;
 import org.apache.avalon.Initializable;
@@ -60,29 +61,15 @@ public class DefaultProjectEngine
     {
         m_listenerSupport = new ProjectListenerSupport();
 
-        m_taskletEngine = createTaskletEngine();
-        m_taskletEngine.setLogger( m_logger );
-
         m_taskletRegistry = createTaskletRegistry();
         m_converterRegistry = createConverterRegistry();
         m_deployer = createDeployer();
 
+        setupTaskletEngine();
+
         m_componentManager = new DefaultComponentManager();
         m_componentManager.put( "org.apache.ant.project.ProjectEngine", this );
-        m_componentManager.put( "org.apache.ant.tasklet.engine.TaskletRegistry", 
-                                m_taskletRegistry );
-
-        m_componentManager.put( "org.apache.ant.convert.ConverterRegistry", 
-                                m_converterRegistry );
-
-        m_componentManager.put( "org.apache.avalon.camelot.Deployer", m_deployer );
-       
-        m_taskletEngine.compose( m_componentManager );
-        
-        if( m_taskletEngine instanceof Initializable )
-        {
-            ((Initializable)m_taskletEngine).init();
-        }
+        m_componentManager.put( "org.apache.ant.tasklet.engine.TaskletEngine", m_taskletEngine );
     }
 
     public void dispose()
@@ -99,6 +86,29 @@ public class DefaultProjectEngine
         return m_deployer;
     }
 
+    protected void setupTaskletEngine()
+        throws Exception
+    {
+        m_taskletEngine = createTaskletEngine();
+        m_taskletEngine.setLogger( m_logger );
+        
+        if( m_taskletEngine instanceof Composer )
+        {
+            final DefaultComponentManager componentManager = new DefaultComponentManager();
+            componentManager.put( "org.apache.ant.tasklet.engine.TaskletRegistry", 
+                                  m_taskletRegistry );
+            componentManager.put( "org.apache.ant.convert.ConverterRegistry",
+                                  m_converterRegistry );
+            
+            ((Composer)m_taskletEngine).compose( componentManager );
+        }
+        
+        if( m_taskletEngine instanceof Initializable )
+        {
+            ((Initializable)m_taskletEngine).init();
+        }
+    }    
+    
     protected TaskletEngine createTaskletEngine()
     {
         return new DefaultTaskletEngine();
@@ -219,19 +229,16 @@ public class DefaultProjectEngine
         m_logger.debug( "Executing task " + name );
 
         //Set up context for task...
-        final TaskletContext taskletContext = context;
 
         //is Only necessary if we are multi-threaded
         //final TaskletContext targetContext = new DefaultTaskletContext( context );
-        taskletContext.setProperty( TaskletContext.NAME, name );
-
-        m_taskletEngine.contextualize( taskletContext );
+        context.setProperty( TaskletContext.NAME, name );
 
         //notify listeners
         m_listenerSupport.taskletStarted( name );
 
         //run task
-        m_taskletEngine.execute( configuration );
+        m_taskletEngine.execute( configuration, context, m_componentManager );
 
         //notify listeners task has ended
         m_listenerSupport.taskletFinished();

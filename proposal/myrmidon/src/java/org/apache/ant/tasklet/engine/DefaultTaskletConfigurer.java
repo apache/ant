@@ -58,7 +58,20 @@ public class DefaultTaskletConfigurer
         m_converterFactory = (ConverterFactory)componentManager.
             lookup( "org.apache.ant.convert.ConverterFactory" );
     }
-
+    
+    /**
+     * Configure a task based on a configuration in a particular context.
+     * This configuring can be done in different ways for different 
+     * configurers. 
+     * This one does it by first checking if object implements Configurable 
+     * and if it does will pass the task the configuration - else it will use
+     * ants rules to map configuration to types
+     *
+     * @param tasklet the tasklet
+     * @param configuration the configuration
+     * @param context the Context
+     * @exception ConfigurationException if an error occurs
+     */
     public void configure( final Tasklet tasklet, 
                            final Configuration configuration,
                            final Context context )
@@ -67,6 +80,19 @@ public class DefaultTaskletConfigurer
         configure( (Object)tasklet, configuration, context );
     }
 
+    /**
+     * Configure a task based on a configuration in a particular context.
+     * This configuring can be done in different ways for different 
+     * configurers. 
+     * This one does it by first checking if object implements Configurable 
+     * and if it does will pass the task the configuration - else it will use
+     * ants rules to map configuration to types
+     *
+     * @param tasklet the tasklet
+     * @param configuration the configuration
+     * @param context the Context
+     * @exception ConfigurationException if an error occurs
+     */
     public void configure( final Object object, 
                            final Configuration configuration,
                            final Context context )
@@ -107,6 +133,14 @@ public class DefaultTaskletConfigurer
         }
     }
 
+    /**
+     * Try to configure content of an object.
+     *
+     * @param object the object
+     * @param content the content value to be set
+     * @param context the Context
+     * @exception ConfigurationException if an error occurs
+     */
     protected void configureContent( final Object object, 
                                      final String content,
                                      final Context context )
@@ -318,7 +352,7 @@ public class DefaultTaskletConfigurer
                 }
             }
         }
-
+        
         return (Method[])matches.toArray( new Method[0] );
     }
 

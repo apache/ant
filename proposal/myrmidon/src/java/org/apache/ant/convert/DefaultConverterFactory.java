@@ -27,6 +27,13 @@ public class DefaultConverterFactory
 {
     protected final HashMap         m_loaders        = new HashMap();
     
+    /**
+     * Method for generic Factory.
+     *
+     * @param info generic info
+     * @return the created entry
+     * @exception FactoryException if an error occurs
+     */
     public Entry create( final Info info )
         throws FactoryException
     {
@@ -37,6 +44,13 @@ public class DefaultConverterFactory
         return create( (ConverterInfo)info );
     }
     
+    /**
+     * Non-generic factory method.
+     *
+     * @param info the info to create instance from
+     * @return the created entry
+     * @exception FactoryException if an error occurs
+     */
     public ConverterEntry create( final ConverterInfo info )
         throws FactoryException
     {
@@ -54,6 +68,12 @@ public class DefaultConverterFactory
         return new ConverterEntry( info, (Converter)object );        
     }
     
+    /**
+     * Get a loader for a particular location
+     *
+     * @param locationthe location 
+     * @return the loader
+     */
     protected ConverterLoader getLoader( final URL location )
     {
         ConverterLoader loader = (ConverterLoader)m_loaders.get( location );
@@ -67,6 +87,13 @@ public class DefaultConverterFactory
         return loader;
     }
     
+    /**
+     * Create a new loader.
+     * Put in another method so that it can be overridden.
+     *
+     * @param location the location the Loader will load from
+     * @return the loader
+     */
     protected ConverterLoader createLoader( final URL location )
     {
         if( null != location ) return new DefaultConverterLoader( location );

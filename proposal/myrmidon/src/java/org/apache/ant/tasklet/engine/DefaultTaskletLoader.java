@@ -8,8 +8,8 @@
 package org.apache.ant.tasklet.engine;
 
 import java.net.URL;
-import org.apache.ant.tasklet.Tasklet;
 import org.apache.ant.convert.DefaultConverterLoader;
+import org.apache.ant.tasklet.Tasklet;
 
 /**
  * Class used to load tasks et al from a source.
@@ -29,6 +29,13 @@ public class DefaultTaskletLoader
         super( location );
     }
 
+    /**
+     * Load a tasklet with a particular classname.
+     *
+     * @param tasklet the tasklet classname
+     * @return the tasklet
+     * @exception Exception if an error occurs
+     */
     public Tasklet loadTasklet( final String tasklet )
         throws Exception
     {

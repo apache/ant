@@ -7,6 +7,11 @@
  */
 package org.apache.ant;
 
+/**
+ * Interface that holds constants used to access variables from context.
+ *
+ * @author <a href="mailto:donaldp@apache.org">Peter Donald</a>
+ */
 public interface AntContextResources
 {
     // the directory of ant

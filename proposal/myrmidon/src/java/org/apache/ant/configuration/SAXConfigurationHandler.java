@@ -8,7 +8,10 @@
 package org.apache.ant.configuration;
 
 /**
- * Hostile fork till Avalon gets equivelent functionality ;)
+ * Fork of Avalon code that will be folded back when they get equivelent facilties.
+ * Note that the code is different package so it should not cause any issues.
+ * 
+ * @author <a href="mailto:donaldp@apache.org">Peter Donald</a>
  */
 public class SAXConfigurationHandler
     extends org.apache.avalon.SAXConfigurationHandler

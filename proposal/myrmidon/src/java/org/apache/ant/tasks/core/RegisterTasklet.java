@@ -13,6 +13,7 @@ import java.net.URL;
 import org.apache.ant.AntException;
 import org.apache.ant.tasklet.AbstractTasklet;
 import org.apache.ant.tasklet.engine.DefaultTaskletInfo;
+import org.apache.ant.tasklet.engine.TaskletEngine;
 import org.apache.ant.tasklet.engine.TaskletRegistry;
 import org.apache.avalon.ComponentManager;
 import org.apache.avalon.ComponentNotAccessibleException;
@@ -37,8 +38,9 @@ public class RegisterTasklet
     public void compose( final ComponentManager componentManager )
         throws ComponentNotFoundException, ComponentNotAccessibleException
     {
-        m_taskletRegistry = (TaskletRegistry)componentManager.
-            lookup( "org.apache.ant.tasklet.engine.TaskletRegistry" );
+        final TaskletEngine engine = (TaskletEngine)componentManager.
+            lookup( "org.apache.ant.tasklet.engine.TaskletEngine" );
+        m_taskletRegistry = engine.getTaskletRegistry();
     }
 
     public void setTaskLib( final String tasklib )
@@ -59,14 +61,21 @@ public class RegisterTasklet
     public void run()
         throws AntException
     {
+/*
         if( null == m_tasklib )
         {
             throw new AntException( "Must specify tasklib parameter" );
         }
-
+*/
         if( null == m_taskName )
         {
-            throw new AntException( "Must specify taskname parameter" );            
+            throw new AntException( "Must specify taskname parameter" );
+        }
+
+        if( null == m_tasklib && null == m_classname )
+        {
+            throw new AntException( "Must specify classname if don't specify " + 
+                                    "tasklib parameter" );
         }
 
         if( null == m_classname )
@@ -76,8 +85,13 @@ public class RegisterTasklet
         
         try
         {
-            final File tasklib = new File( getContext().resolveFilename( m_tasklib ) );
-            final URL url = tasklib.toURL();
+            URL url = null;
+
+            if( null != m_tasklib )
+            {
+                final File tasklib = new File( getContext().resolveFilename( m_tasklib ) );
+                url = tasklib.toURL();
+            }
             
             final DefaultTaskletInfo info = new DefaultTaskletInfo( m_classname, url );
         

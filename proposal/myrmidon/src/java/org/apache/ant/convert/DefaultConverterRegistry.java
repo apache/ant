@@ -12,12 +12,24 @@ import org.apache.avalon.camelot.AbstractRegistry;
 import org.apache.avalon.camelot.Info;
 import org.apache.avalon.camelot.RegistryException;
 
+/**
+ * Default implementation of ConverterInfo registry.
+ * 
+ * @author <a href="mailto:donaldp@apache.org">Peter Donald</a>
+ */
 public class DefaultConverterRegistry
     extends AbstractRegistry
     implements ConverterRegistry
 {
     protected final HashMap         m_mapping        = new HashMap();
 
+    /**
+     * Retrieve ConverterInfo that describes converter that converts from source to destination.
+     *
+     * @param source the source classname
+     * @param destination the destination classname
+     * @return the converter-info or null if none available
+     */
     public ConverterInfo getConverterInfo( final String source, final String destination )
     {
         final HashMap map = (HashMap)m_mapping.get( source );

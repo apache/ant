@@ -10,7 +10,10 @@ package org.apache.ant.configuration;
 import java.util.Iterator;
 
 /**
- * Hostile fork till Avalon gets equivelent functionality ;)
+ * Fork of Avalon code that will be folded back when they get equivelent facilties.
+ * Note that the code is different package so it should not cause any issues.
+ * 
+ * @author <a href="mailto:donaldp@apache.org">Peter Donald</a>
  */
 public class DefaultConfiguration
     extends org.apache.avalon.DefaultConfiguration

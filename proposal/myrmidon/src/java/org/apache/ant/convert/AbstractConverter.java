@@ -18,12 +18,26 @@ public abstract class AbstractConverter
     protected final Class         m_source;
     protected final Class         m_destination;
 
+    /**
+     * Constructor for a converter between types source and destination
+     *
+     * @param source the source type
+     * @param destination the destination type
+     */
     public AbstractConverter( final Class source, final Class destination )
     {
         m_source = source;
         m_destination = destination;
     }
 
+    /**
+     * Convert an object from original to destination types
+     *
+     * @param destination the destination type
+     * @param original the original Object
+     * @return the converted object
+     * @exception Exception if an error occurs
+     */
     public Object convert( final Class destination, final Object original )
         throws Exception
     {
@@ -42,6 +56,13 @@ public abstract class AbstractConverter
         return convert( original );
     }
 
+    /**
+     * Overide this in a particular converter to do the conversion.
+     *
+     * @param original the original Object
+     * @return the converted object
+     * @exception Exception if an error occurs
+     */
     protected abstract Object convert( Object original )
         throws Exception;
 }

@@ -19,6 +19,16 @@ import org.apache.avalon.Context;
  */
 public interface TaskletConfigurer
 {
+    /**
+     * Configure a task based on a configuration in a particular context.
+     * This configuring can be done in different ways for different 
+     * configurers.
+     *
+     * @param tasklet the tasklet
+     * @param configuration the configuration
+     * @param context the Context
+     * @exception ConfigurationException if an error occurs
+     */
     void configure( Tasklet tasklet, Configuration configuration, Context context )
         throws ConfigurationException;
 }

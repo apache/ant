@@ -12,7 +12,8 @@ import java.net.URL;
 import java.net.URLClassLoader;
 
 /**
- * AvalonLoader is the class that bootstraps and installs the security manager.
+ * Basic Loader that is responsible for all the hackery to get classloader to work.
+ * Other classes can call AntLoader.getLoader() and add to their own classloader.
  *
  * @author <a href="mailto:donaldp@apache.org">Peter Donald</a>
  */
@@ -31,7 +32,13 @@ public final class AntLoader
         return c_classLoader;
     }
 
-    public final static void main( final String args[] ) 
+    /**
+     * Magic entry point.
+     *
+     * @param argsthe CLI arguments
+     * @exception Exception if an error occurs
+     */
+    public final static void main( final String[] args ) 
         throws Exception
     { 
         final URL archive = new URL( "file:lib/myrmidon.jar" );
@@ -52,11 +59,21 @@ public final class AntLoader
         }
     }
 
+    /**
+     * Basic constructor.
+     *
+     * @param urls the Starting URLS
+     */
     public AntLoader( final URL[] urls )
     {
         super( urls );
     }
 
+    /**
+     * Add a URL to classloader
+     *
+     * @param url the url
+     */
     public void addURL( final URL url )
     {
         super.addURL( url );

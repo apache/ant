@@ -17,6 +17,13 @@ import org.apache.avalon.camelot.Loader;
 public interface ConverterLoader
     extends Loader
 {
+    /**
+     * Load a particular converter.
+     *
+     * @param converter the converter name
+     * @return the loaded Converter
+     * @exception Exception if an error occurs
+     */
     Converter loadConverter( String converter )
         throws Exception;
 }

@@ -18,6 +18,13 @@ import org.apache.avalon.camelot.FactoryException;
 public interface ConverterFactory
     extends Factory
 {
+    /**
+     * Create entries (ie instances) from infos (ie types).
+     *
+     * @param info the info
+     * @return the entry
+     * @exception FactoryException if an error occurs
+     */
     ConverterEntry create( ConverterInfo info ) 
         throws FactoryException;
 }

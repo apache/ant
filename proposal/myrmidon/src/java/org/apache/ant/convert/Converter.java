@@ -14,6 +14,16 @@ package org.apache.ant.convert;
  */
 public interface Converter
 {
+    /**
+     * Convert original to destination type.
+     * Destination is passed so that one converter can potentiall 
+     * convert to multiple different types.
+     *
+     * @param destination the destinaiton type
+     * @param original the original type
+     * @return the converted object
+     * @exception Exception if an error occurs
+     */
     Object convert( Class destination, Object original )
         throws Exception;
 }

@@ -32,6 +32,13 @@ public class DefaultConverterLoader
                                    Thread.currentThread().getContextClassLoader() ) );
     }
     
+    /**
+     * Load a Converter object.
+     *
+     * @param converter the converter classname
+     * @return the converter instance
+     * @exception Exception if an error occurs
+     */
     public Converter loadConverter( final String converter )
         throws Exception
     {

@@ -29,10 +29,8 @@ import org.apache.avalon.camelot.RegistryException;
 import org.apache.log.Logger;
 
 public class DefaultTaskletEngine
-    implements TaskletEngine, Initializable
+    implements TaskletEngine, Initializable, Composer
 {
-    protected ComponentManager     m_componentManager;
-    protected TaskletContext       m_context;
     protected TaskletFactory       m_taskletFactory;
     protected ConverterFactory     m_converterFactory;
     protected TaskletRegistry      m_taskletRegistry;
@@ -45,19 +43,23 @@ public class DefaultTaskletEngine
         m_logger = logger;
     }
 
-    public void contextualize( final Context context )
-    {
-        m_context = (TaskletContext)context;
-    }
-
     public void compose( final ComponentManager componentManager )
         throws ComponentNotFoundException, ComponentNotAccessibleException
     {
-        m_componentManager = componentManager;
         m_taskletRegistry = (TaskletRegistry)componentManager.
             lookup( "org.apache.ant.tasklet.engine.TaskletRegistry" );
         m_converterRegistry = (ConverterRegistry)componentManager.
             lookup( "org.apache.ant.convert.ConverterRegistry" );
+    }
+
+    public TaskletRegistry getTaskletRegistry()
+    {
+        return m_taskletRegistry;
+    }
+
+    public ConverterRegistry getConverterRegistry()
+    {
+        return m_converterRegistry;
     }
 
     public void init()
@@ -69,10 +71,11 @@ public class DefaultTaskletEngine
 
         if( m_configurer instanceof Composer )
         {
-            final DefaultComponentManager componentManager = 
-                new DefaultComponentManager( m_componentManager );
+            final DefaultComponentManager componentManager = new DefaultComponentManager();
             componentManager.put( "org.apache.ant.convert.ConverterFactory", 
                                   m_converterFactory );
+            componentManager.put( "org.apache.ant.convert.ConverterRegistry",
+                                  m_converterRegistry );
 
             ((Composer)m_configurer).compose( componentManager );
         }
@@ -98,37 +101,40 @@ public class DefaultTaskletEngine
         return (ConverterFactory)m_taskletFactory;
     }
 
-    public void execute( final Configuration task )
+    public void execute( final Configuration task, 
+                         final TaskletContext context, 
+                         final ComponentManager componentManager )
         throws AntException
     {
+
+        m_logger.debug( "Creating" );
         final Tasklet tasklet = createTasklet( task );
 
-        final String name = task.getName();
-        m_logger.debug( "Created task " + name );
+        m_logger.debug( "Contextualizing" );
+        doContextualize( tasklet, task, context );
 
-        doContextualize( tasklet, task );
-        m_logger.debug( "Contextualized task " + name );
+        m_logger.debug( "Composing" );
+        doCompose( tasklet, task, componentManager );
 
-        doCompose( tasklet, task );
-        m_logger.debug( "Composed task " + name );
+        m_logger.debug( "Configuring" );
+        doConfigure( tasklet, task, context );
 
-        doConfigure( tasklet, task );
-        m_logger.debug( "Configured task " + name );
-
+        m_logger.debug( "Initializing" );
         doInitialize( tasklet, task );
-        m_logger.debug( "Initialize task " + name );
 
+        m_logger.debug( "Running" );
         tasklet.run();
-        m_logger.debug( "Ran task " + name );
 
+        m_logger.debug( "Disposing" );
         doDispose( tasklet, task );
-        m_logger.debug( "Dispose task " + name );
     }
 
-    protected void doConfigure( final Tasklet tasklet, final Configuration task )
+    protected void doConfigure( final Tasklet tasklet, 
+                                final Configuration task,
+                                final TaskletContext context )
         throws AntException
     {
-        try { m_configurer.configure( tasklet, task, m_context ); }
+        try { m_configurer.configure( tasklet, task, context ); }
         catch( final Throwable throwable )
         {
             throw new AntException( "Error configuring task " +  task.getName() + " at " +
@@ -136,24 +142,15 @@ public class DefaultTaskletEngine
                                     throwable.getMessage() + ")", throwable );
         }
     }
-
-    protected TaskletContext getContextFor( final String name )
-    {
-        //If we are single threaded we really don't need to have a new object
-        //for context ... if we are not single threaded then we need to create new 
-        //context. Alternatively we could remove getName from TaskletContext        
-
-        //final DefaultTaskletContext context = new DefaultTaskletContext( m_context );
-        m_context.setProperty( TaskletContext.NAME, name );
-        return m_context;
-    }
     
-    protected void doCompose( final Tasklet tasklet, final Configuration task )
+    protected void doCompose( final Tasklet tasklet, 
+                              final Configuration task,
+                              final ComponentManager componentManager )
         throws AntException
     {
         if( tasklet instanceof Composer )
         {
-            try { ((Composer)tasklet).compose( m_componentManager ); }
+            try { ((Composer)tasklet).compose( componentManager ); }
             catch( final Throwable throwable )
             {
                 throw new AntException( "Error composing task " +  task.getName() + " at " +
@@ -163,10 +160,13 @@ public class DefaultTaskletEngine
         }
     }
 
-    protected void doContextualize( final Tasklet tasklet, final Configuration task )
+    protected void doContextualize( final Tasklet tasklet, 
+                                    final Configuration task,
+                                    final TaskletContext context )
         throws AntException
     {
-        final TaskletContext context = getContextFor( task.getName() );
+        // Already done in container ...
+        //context.setProperty( TaskletContext.NAME, name );
 
         try { tasklet.contextualize( context ); }
         catch( final Throwable throwable )

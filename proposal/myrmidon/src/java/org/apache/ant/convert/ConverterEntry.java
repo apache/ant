@@ -10,6 +10,12 @@ package org.apache.ant.convert;
 import org.apache.ant.convert.Converter;
 import org.apache.avalon.camelot.AbstractEntry;
 
+/**
+ * An entry representing an instance of Converter. 
+ * See Cameloy documentation for more details.
+ *
+ * @author <a href="mailto:donaldp@apache.org">Peter Donald</a>
+ */
 public class ConverterEntry
     extends AbstractEntry
 {

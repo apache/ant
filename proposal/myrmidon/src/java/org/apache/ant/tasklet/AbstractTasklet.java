@@ -20,6 +20,7 @@ import org.apache.log.Logger;
 public abstract class AbstractTasklet
     implements Tasklet, Initializable
 {
+    //the user should set this in constructors of sub-classes
     protected JavaVersion             m_requiredJavaVersion;
 
     private TaskletContext            m_context;
