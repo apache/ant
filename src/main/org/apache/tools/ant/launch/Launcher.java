@@ -65,7 +65,7 @@ public class Launcher {
       * @param path        the classpath or lib path to add to the libPathULRLs
       * @param getJars     if true and a path is a directory, add the jars in
       *                    the directory to the path urls
-      * @param libPathURLS the list of paths to add to
+      * @param libPathURLs the list of paths to add to
       */
     private void addPath(String path, boolean getJars, List libPathURLs)
         throws MalformedURLException {
