@@ -123,6 +123,9 @@ Changes that could break older environments:
 * The subant task used the canonical version of a file path. This
   has been changed to use the absolute path. Bugzilla 30438.
 
+* Tar now writes two EOF blocks rather than one.
+  Bugzilla report 28776
+
 Other changes:
 --------------
 
