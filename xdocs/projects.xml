@@ -161,6 +161,33 @@
         </table>
       </subsection>
 
+        <subsection name="Invicta">
+
+          <p>Invicta is a build management tool. Using simple project definition files,
+          it generates powerful build scripts (such as ANT) while hiding their
+          complexity. Invicta is a modular framework that allows developing additional
+          components and output types.</p>
+
+          <table>
+            <tr>
+              <th>Compatibility:</th>
+              <td>Ant 1.5 and higher</td>
+            </tr>
+            <tr>
+              <th>URL:</th>
+              <td><a href="http://invicta.sf.net/">http://invicta.sf.net/</a></td>
+            </tr>
+            <tr>
+              <th>Contact:</th>
+              <td><a href ='http://invicta.sf.net/contact.html'>Project Mailing Lists and Administrators</a></td>
+            </tr>
+            <tr>
+              <th>License:</th>
+              <td>LGPL.</td>
+            </tr>
+          </table>
+        </subsection>
+
       <subsection name="Krysalis Centipede">
 
         <p>Krysalis Centipede is a project build system based on
