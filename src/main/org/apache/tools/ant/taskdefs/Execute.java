@@ -209,7 +209,9 @@ public class Execute {
                 }
             }
             // Since we "look ahead" before adding, there's one last env var.
-            procEnvironment.addElement(var);
+            if (var != null) {
+                procEnvironment.addElement(var);
+            }
         }
         catch (java.io.IOException exc) {
             exc.printStackTrace();
