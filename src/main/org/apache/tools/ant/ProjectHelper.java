@@ -97,9 +97,9 @@ public class ProjectHelper {
      */
     private void parse() throws BuildException {
         try {
-            parser = getParserFactory().newSAXParser().getParser();
-            parser.setDocumentHandler(new RootHandler());
-            parser.parse(new InputSource(new FileReader(buildFile)));
+            SAXParser saxParser = getParserFactory().newSAXParser();
+            parser = saxParser.getParser();
+            saxParser.parse(buildFile, new RootHandler());
         }
         catch(ParserConfigurationException exc) {
             throw new BuildException("Parser has not been configured correctly", exc);
