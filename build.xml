@@ -193,10 +193,10 @@
       <fileset dir="${java.dir}"/>
     </copy>
 
-    <replace file="${build.src}/org/apache/tools/ant/version.txt" 
+    <replace file="${build.src}/org/apache/tools/ant/Main.java" 
              token="@VERSION@" 
              value="${version}"/>
-    <replace file="${build.src}/org/apache/tools/ant/version.txt" 
+    <replace file="${build.src}/org/apache/tools/ant/Main.java" 
              token="@DATE@"
              value="${date}"/>
     <replace file="${build.src}/org/apache/tools/ant/defaultManifest.mf" 
@@ -446,6 +446,12 @@
     <delete dir="${dist.name}" />
   </target> 
 
+  <target name="install">
+    <antcall target="dist-lite">
+      <param name="dist.dir" value="${ant.home}" />
+    </antcall>
+  </target>
+
   <!--
        ===================================================================
                  Cleans up build and distribution directories
@@ -509,6 +515,7 @@
        =================================================================== 
   -->
   <target name="run-tests" depends="compile-tests, define-junit" if="junit.present">
+
     <junit printsummary="no" haltonfailure="yes" fork="${junit.fork}">
       <jvmarg value="-classic"/>
       <classpath refid="tests-classpath"/>
@@ -547,7 +554,7 @@
     <delete file="${tests.dir}/taskdefs/tmp.jar" />
   </target>
 
-  <target name="run-single-test" if="testcase, define-junit" depends="compile-tests">
+  <target name="run-single-test" if="testcase" depends="compile-tests, define-junit">
 
     <junit printsummary="no" haltonfailure="yes" fork="${junit.fork}">
       <jvmarg value="-classic"/>

@@ -4,7 +4,6 @@ if test ! -f build\classes\org\apache\tools\ant\Main.class ; then
   ./bootstrap.sh $*
 fi    
 
-
 # Cygwin support.  $cygwin _must_ be set to either true or false.
 case "`uname`" in
   CYGWIN*) cygwin=true ;;
@@ -20,6 +19,7 @@ if $cygwin; then
 fi
 
 LOCALCLASSPATH=`echo lib/*.jar | tr ' ' ':'`
+LOCALCLASSPATH=$LOCALCLASSPATH:build/classes:lib/optional/junit.jar
 
 if [ "$CLASSPATH" != "" ] ; then
   LOCALCLASSPATH=$CLASSPATH:$LOCALCLASSPATH
@@ -51,6 +51,11 @@ if $cygwin; then
   LOCALCLASSPATH=`cygpath --path --windows "$LOCALCLASSPATH"`
 fi
 
-${JAVA_HOME}/bin/java -classpath $LOCALCLASSPATH org.apache.tools.ant.Main -logger org.apache.tools.ant.NoBannerLogger -emacs $*
+NEW_ANT_HOME=$ANT_HOME
+if [ "$NEW_ANT_HOME" == "" ] ; then
+  NEW_ANT_HOME=dist
+fi
+
+${JAVA_HOME}/bin/java -classpath $LOCALCLASSPATH org.apache.tools.ant.Main -Dant.home=$NEW_ANT_HOME -logger org.apache.tools.ant.NoBannerLogger -emacs $*
 
 
