@@ -15,9 +15,9 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.Hashtable;
-import java.util.Vector;
 import org.apache.myrmidon.api.TaskException;
 import org.apache.tools.ant.AntClassLoader;
 import org.apache.tools.ant.DirectoryScanner;
@@ -64,7 +64,7 @@ public class XMLValidateTask
     private String readerClassName = DEFAULT_XML_READER_CLASSNAME;
 
     private File file = null;// file to be validated
-    private Vector filesets = new Vector();
+    private ArrayList filesets = new ArrayList();
 
     /**
      * the parser is viewed as a SAX2 XMLReader. If a SAX1 parser is specified,
@@ -80,7 +80,7 @@ public class XMLValidateTask
     /**
      * The list of configured DTD locations
      */
-    public Vector dtdLocations = new Vector();// sets of file to be validated
+    public ArrayList dtdLocations = new ArrayList();// sets of file to be validated
     private Path classpath;
 
     /**
@@ -195,7 +195,7 @@ public class XMLValidateTask
      */
     public void addFileset( FileSet set )
     {
-        filesets.addElement( set );
+        filesets.add( set );
     }
 
     /**
@@ -207,7 +207,7 @@ public class XMLValidateTask
     {
         if( this.classpath == null )
         {
-            this.classpath = new Path( project );
+            this.classpath = new Path( getProject() );
         }
         return this.classpath.createPath();
     }
@@ -222,7 +222,7 @@ public class XMLValidateTask
     public DTDLocation createDTD()
     {
         DTDLocation dtdLocation = new DTDLocation();
-        dtdLocations.addElement( dtdLocation );
+        dtdLocations.add( dtdLocation );
 
         return dtdLocation;
     }
@@ -259,13 +259,13 @@ public class XMLValidateTask
         for( int i = 0; i < filesets.size(); i++ )
         {
 
-            FileSet fs = (FileSet)filesets.elementAt( i );
-            DirectoryScanner ds = fs.getDirectoryScanner( project );
+            FileSet fs = (FileSet)filesets.get( i );
+            DirectoryScanner ds = fs.getDirectoryScanner( getProject() );
             String[] files = ds.getIncludedFiles();
 
             for( int j = 0; j < files.length; j++ )
             {
-                File srcFile = new File( fs.getDir( project ), files[ j ] );
+                File srcFile = new File( fs.getDir( getProject() ), files[ j ] );
                 doValidate( srcFile );
                 fileProcessed++;
             }
@@ -275,13 +275,14 @@ public class XMLValidateTask
 
     private EntityResolver getEntityResolver()
     {
-        LocalResolver resolver = new LocalResolver();
+        final LocalResolver resolver = new LocalResolver();
 
-        for( Enumeration i = dtdLocations.elements(); i.hasMoreElements(); )
+        for( int i = 0; i < dtdLocations.size(); i++ )
         {
-            DTDLocation location = (DTDLocation)i.nextElement();
+            final DTDLocation location = (DTDLocation)dtdLocations.get( i );
             resolver.registerDTD( location );
         }
+
         return resolver;
     }
 
@@ -372,7 +373,7 @@ public class XMLValidateTask
             //Class parserImpl = null;
             if( classpath != null )
             {
-                AntClassLoader loader = new AntClassLoader( project, classpath );
+                AntClassLoader loader = new AntClassLoader( getProject(), classpath );
                 //                loader.addSystemPackageRoot("org.xml"); // needed to avoid conflict
                 readerClass = loader.loadClass( readerClassName );
                 AntClassLoader.initializeClass( readerClass );
