@@ -24,6 +24,7 @@ import java.io.ObjectStreamException;
 import java.io.Reader;
 import java.io.Writer;
 import java.util.NoSuchElementException;
+import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.taskdefs.condition.Os;
 import org.apache.tools.ant.types.EnumeratedAttribute;
 
@@ -139,7 +140,7 @@ public final class FixCrLfFilter
 
             return newFilter;
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            throw new BuildException(e);
         }
     }
 
