@@ -53,15 +53,15 @@
  */
 package org.apache.tools.ant.gui.command;
 import org.apache.tools.ant.gui.core.AppContext;
-import org.apache.tools.ant.gui.core.ProjectProxy;
 import org.apache.tools.ant.gui.event.ErrorEvent;
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
+import org.apache.tools.ant.gui.acs.ACSProjectElement;
+import java.io.*;
 import org.apache.tools.ant.gui.core.XMLFileFilter;
 import javax.swing.JFileChooser;
 import javax.swing.filechooser.FileFilter;
 import javax.swing.JOptionPane;
+import java.net.URL;
+import java.net.MalformedURLException;
 
 
 /**
@@ -72,7 +72,9 @@ import javax.swing.JOptionPane;
  */
 public class SaveAsCmd extends AbstractCommand {
     /** File to save to. */
-    private File _file = null;
+    private URL _location = null;
+    /** Project to save. */
+    private ACSProjectElement _project = null;
 
 	/** 
 	 * Standard ctor.
@@ -84,12 +86,21 @@ public class SaveAsCmd extends AbstractCommand {
     }
 
 	/** 
-	 * Set the file to save to. 
+	 * Set the location to save to
 	 * 
-	 * @param file File to save to.
+	 * @param location location to save to.
 	 */
-    public void setFile(File file) {
-        _file = file;
+    public void setLocation(URL location) {
+        _location = location;
+    }
+
+    /** 
+     * Set the specific project to save (instead of the default).
+     * 
+     * @param project Project to save.
+     */
+    public void setProject(ACSProjectElement project) {
+        _project = project;
     }
 
 
@@ -100,58 +111,58 @@ public class SaveAsCmd extends AbstractCommand {
     public void run() {
         FileFilter filter = new XMLFileFilter(getContext().getResources());
 
-        ProjectProxy project = getContext().getProject();
-        if(project != null) {
-            if(_file == null) {
-                // XXX code here to select a file to save to.
+        if(_project == null) {
+            _project = getContext().getSelectionManager().getSelectedProject();
+        }
+
+        if(_project != null) {
+            // If no location is specified, then this truly is a SaveAs 
+            // command. Provide the user the UI to select the output.
+            if(_location == null) {
                 JFileChooser chooser = new JFileChooser();
                 chooser.addChoosableFileFilter(filter);
                 int val = chooser.showSaveDialog(
                     getContext().getParentFrame());
                 if(val == JFileChooser.APPROVE_OPTION) {
-                    _file = chooser.getSelectedFile();
-                    if(_file.exists()) {
+                    File file = chooser.getSelectedFile();
+                    if(file.exists()) {
                         String title = getContext().getResources().
                             getString(SaveCmd.class, "title");
                         String message = getContext().getResources().
                             getMessage(SaveCmd.class, "overwrite", 
-                                       new Object[] {_file.toString()});
+                                       new Object[] { file.toString()});
                         val = JOptionPane.showConfirmDialog(
                             getContext().getParentFrame(), message, title, 
                             JOptionPane.YES_NO_OPTION);
                         // If cancelled unset file.
-                        if(val != JOptionPane.YES_OPTION) {
-                            _file = null;
+                        if(val == JOptionPane.YES_OPTION) {
+                            try {
+                                _location = new URL(
+                                    "file", null, file.getAbsolutePath());
+                            }
+                            catch(MalformedURLException ex) {
+                                // Shouldn't happen. Save will just not
+                                // happen.
+                                ex.printStackTrace();
+                            }
                         }
                     }
                 }
             }
             
-            if(_file != null) {
-                project.setFile(_file);
-                FileWriter out = null;
+            // If a location is now available, do the save operation.
+            if(_location != null) {
                 try {
-                    out = new FileWriter(_file);
-                    project.write(out);
+                    getContext().getProjectManager().saveAs(
+                        _project, _location);
                 }
                 catch(IOException ex) {
                     String message = getContext().getResources().getMessage(
                         SaveCmd.class, "saveError", 
-                        new Object[] { _file.toString() });
+                        new Object[] { _location.toString() });
                     
                     getContext().getEventBus().
                         postEvent(new ErrorEvent(getContext(), message));
-                }
-                finally {
-                    if (out != null) {
-                        try {
-                            out.flush();
-                            out.close();
-                        }
-                        catch(IOException ex) {
-                            // Intentionally ignored.
-                        }
-                    }
                 }
             }
         }

@@ -53,6 +53,7 @@
  */
 package org.apache.tools.ant.gui.command;
 import org.apache.tools.ant.gui.core.AppContext;
+import org.apache.tools.ant.gui.acs.ACSProjectElement;
 
 /**
  * Command to execute the saving of the current build file.
@@ -69,6 +70,10 @@ public class SaveCmd extends SaveAsCmd {
 	 */
     public SaveCmd(AppContext context) {
         super(context);
-        setFile(context.getProject().getFile());
+        ACSProjectElement project = 
+            getContext().getSelectionManager().getSelectedProject();
+        if(project != null) {
+            setLocation(project.getLocation());
+        }
     }
 }

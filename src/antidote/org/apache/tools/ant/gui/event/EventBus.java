@@ -75,13 +75,13 @@ import javax.swing.SwingUtilities;
  * @author Simeon Fitch 
 */
 public class EventBus {
-	/** The default "monitoring" interrupt level, used by members who
-	 * are only listeners/monitors of events. */
-	public static final int MONITORING = 1;
 	/** The default "vetoing" interrupt level, used by bus members
 	 *  whose role is to veto request events or otherwise handle an
 	 *  event before it is processed by the default handler. */
-	public static final int VETOING = 5;
+	public static final int VETOING = 1;
+	/** The default "monitoring" interrupt level, used by members who
+	 * are only listeners/monitors of events. */
+	public static final int MONITORING = 5;
 	/** The default "responding" interrupt level, for members who service
 	 *  events in a default manner. */
 	public static final int RESPONDING = 10;

@@ -52,24 +52,38 @@
  * <http://www.apache.org/>.
  */
 package org.apache.tools.ant.gui.event;
-import org.apache.tools.ant.gui.acs.ACSElement;
 import org.apache.tools.ant.gui.core.AppContext;
+import org.apache.tools.ant.gui.acs.ACSProjectElement;
+import org.apache.tools.ant.gui.acs.ACSElement;
 
 /**
- * Event fired when the project node is selected.
+ * Event providing notification of a change in the currently selected project.
  * 
  * @version $Revision$ 
  * @author Simeon Fitch 
  */
-public class ProjectSelectionEvent extends ElementSelectionEvent {
+public class ProjectSelectedEvent extends ElementSelectionEvent {
+    /** The selected project. */
+    private ACSProjectElement _project = null;
+
 	/** 
 	 * Standard ctor.
 	 * 
 	 * @param context application context.
-     * @param selected the selected Elements.
 	 */
-    public ProjectSelectionEvent(AppContext context, 
-                                 ACSElement[] selected) {
-        super(context, selected);
+    public ProjectSelectedEvent(
+        AppContext context, ACSProjectElement project) {
+        super(context, new ACSElement[] { project });
+        _project = project;
+    }
+
+    /** 
+     * Get the selected project, or null if there are no
+     * open projects.
+     * 
+     * @return Selected project, or null if no projects selected.
+     */
+    public ACSProjectElement getSelectedProject() {
+        return _project;
     }
 }

@@ -100,7 +100,7 @@ public class Antidote extends JPanel {
 
         add(BorderLayout.NORTH, populateModules("top"));
 
-        setPreferredSize(new Dimension(640, 600));
+        setPreferredSize(new Dimension(640, 480));
     }
 
 

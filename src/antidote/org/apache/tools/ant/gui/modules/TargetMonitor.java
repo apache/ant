@@ -54,6 +54,7 @@
 package org.apache.tools.ant.gui.modules;
 import org.apache.tools.ant.gui.core.*;
 import org.apache.tools.ant.gui.event.*;
+import org.apache.tools.ant.gui.acs.ACSElement;
 import org.apache.tools.ant.gui.acs.ACSTargetElement;
 import org.apache.tools.ant.gui.acs.ElementTreeSelectionModel;
 import javax.swing.*;
@@ -139,20 +140,21 @@ public class TargetMonitor extends AntModule {
         public boolean eventPosted(EventObject event) {
             ElementSelectionEvent e = (ElementSelectionEvent) event;
             String text = _defText;
+            ACSElement[] selected = e.getSelectedElements();
 
-            ProjectProxy p =  getContext().getProject();
-            if(p != null) {
-                ElementTreeSelectionModel selections = 
-                    p.getTreeSelectionModel();
-                ACSTargetElement[] targets = selections.getSelectedTargets();
-                if(targets != null && targets.length > 0) {
-                    StringBuffer buf = new StringBuffer();
-                    for(int i = 0; i < targets.length; i++) {
-                        buf.append(targets[i].getName());
-                        if(i < targets.length - 1) {
+            if(selected != null && selected.length > 0) {
+                StringBuffer buf = new StringBuffer();
+
+                for(int i = 0; i < selected.length; i++) {
+                    if(selected[i] instanceof ACSTargetElement) {
+                        if(buf.length() > 0) {
                             buf.append(", ");
                         }
+                        buf.append(((ACSTargetElement)selected[i]).getName());
                     }
+                }
+
+                if(buf.length() > 0) {
                     text = buf.toString();
                 }
             }

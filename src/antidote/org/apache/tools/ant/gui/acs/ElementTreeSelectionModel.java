@@ -76,7 +76,9 @@ public class ElementTreeSelectionModel extends DefaultTreeSelectionModel {
 
 	/** 
 	 * Convenience method for providing the set of currently selected
-     * elements.
+     * elements. NB: It returns all of the nodes in the selection path, 
+     * so the root node will be a selected element whenever a child is 
+     * selected.
 	 * 
      * @return the currently selected elements.
 	 */
@@ -84,40 +86,18 @@ public class ElementTreeSelectionModel extends DefaultTreeSelectionModel {
         TreePath[] path = getSelectionPaths();
         List values = new LinkedList();
         for(int i = 0; path != null && i < path.length; i++) {
-            Object val = path[i].getLastPathComponent();
-            if(val instanceof ACSElement) {
-                values.add(val);
+            TreePath curr = path[i];
+            for(int j = 0; j < curr.getPathCount(); j++) {
+                Object item = curr.getPathComponent(j);
+                if(item instanceof ACSElement) {
+                    values.add(item);
+                }
             }
         }
 
         ACSElement[] retval = new ACSElement[values.size()];
         values.toArray(retval);
         return retval;
-    }
-
-	/** 
-	 * Get the set of selected tagets. A target is included if one of its
-     * child nodes is selected.
-	 * 
-     * @return the currently selected targets, and indirectly selected targets.
-	 */
-    public ACSTargetElement[] getSelectedTargets() {
-        TreePath[] path = getSelectionPaths();
-        List values = new LinkedList();
-        for(int i = 0; path != null && i < path.length; i++) {
-            TreePath curr = path[i];
-            for(int j = 0; j < curr.getPathCount(); j++) {
-                Object item = curr.getPathComponent(j);
-                if(item instanceof ACSTargetElement) {
-                    values.add(item);
-                }
-            }
-        }
-
-        ACSTargetElement[] retval = new ACSTargetElement[values.size()];
-        values.toArray(retval);
-        return retval;
-
     }
 
 }

@@ -54,7 +54,12 @@
 package org.apache.tools.ant.gui.modules.edit;
 import org.apache.tools.ant.gui.core.*;
 import org.apache.tools.ant.gui.event.*;
+import org.apache.tools.ant.gui.acs.ElementTreeSelectionModel;
+import org.apache.tools.ant.gui.acs.ElementTreeModel;
+import org.apache.tools.ant.gui.acs.ACSProjectElement;
 import javax.swing.*;
+import javax.swing.event.TreeSelectionListener;
+import javax.swing.event.TreeSelectionEvent;
 import java.awt.GridLayout;
 import java.awt.Dimension;
 import java.awt.event.MouseAdapter;
@@ -71,6 +76,8 @@ public class ElementNavigator extends AntModule {
 
     /** Navigation via a tree widget. */
     private JTree _tree = null;
+    /** The selection model being used. */
+    private ElementTreeSelectionModel _selections = null;
 
 	/** 
 	 * Default ctor.
@@ -94,11 +101,13 @@ public class ElementNavigator extends AntModule {
         _tree.setModel(null);
         _tree.setCellRenderer(new ElementTreeCellRenderer());
         _tree.addMouseListener(new PopupHandler());
+        _tree.putClientProperty("JTree.lineStyle", "Angled");
         JScrollPane scroller = new JScrollPane(_tree);
         add(scroller);
 
         setPreferredSize(new Dimension(200, 100));
         setMinimumSize(new Dimension(200, 100));
+
 	}
 
     /** Class for handling project events. */
@@ -123,7 +132,11 @@ public class ElementNavigator extends AntModule {
          * it should be cancelled.
          */
         public boolean eventPosted(EventObject event) {
-            ProjectProxy project = getContext().getProject();
+            ACSProjectElement project = null;
+            if(event instanceof ProjectSelectedEvent) {
+                ProjectSelectedEvent e = (ProjectSelectedEvent) event;
+                project = e.getSelectedProject();
+            }
 
             if(project == null) {
                 // The project has been closed.
@@ -131,12 +144,26 @@ public class ElementNavigator extends AntModule {
                 // different version of Swing...
                 _tree.setModel(null);
                 _tree.setSelectionModel(null);
+                // Send an empty selection event to notify others that
+                // nothing is selected.
+                ElementSelectionEvent.createEvent(getContext(), null);
             }
             else {
-                _tree.setModel(project.getTreeModel());
-                _tree.setSelectionModel(project.getTreeSelectionModel());
+                _tree.setModel(new ElementTreeModel(project));
+                _selections = new ElementTreeSelectionModel();
+                _selections.addTreeSelectionListener(new SelectionForwarder());
+                _tree.setSelectionModel(_selections);
             }
             return true;
+        }
+    }
+
+    /** Forwards selection events to the event bus. */
+    private class SelectionForwarder implements TreeSelectionListener {
+        public void valueChanged(TreeSelectionEvent e) {
+            getContext().getEventBus().postEvent(
+                ElementSelectionEvent.createEvent(
+                    getContext(), _selections.getSelectedElements()));
         }
     }
 
@@ -149,7 +176,8 @@ public class ElementNavigator extends AntModule {
          * @return True if event should be given to BusMember, false otherwise.
          */
         public boolean accept(EventObject event) {
-            return event instanceof NewProjectEvent;
+            return event instanceof ProjectSelectedEvent ||
+                event instanceof ProjectClosedEvent;
         }
     }
 

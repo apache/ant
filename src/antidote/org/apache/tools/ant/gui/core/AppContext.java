@@ -54,6 +54,8 @@
 package org.apache.tools.ant.gui.core;
 import org.apache.tools.ant.BuildListener;
 import org.apache.tools.ant.gui.event.*;
+import org.apache.tools.ant.gui.acs.ACSProjectElement;
+import org.apache.tools.ant.gui.acs.ACSTargetElement;
 import java.awt.Frame;
 import java.util.*;
 
@@ -71,26 +73,46 @@ public class AppContext {
     private ResourceManager _resources = new ResourceManager();
     /** The project manager. */
     private ProjectManager _projectManager = new ProjectManager();
+    /** Thing that keeps track of the current selection state. */
+    private SelectionManager _selectionManager = new SelectionManager();
+
     /** Application actions. */
     private ActionManager _actions = 
         new ActionManager(_eventBus, new ResourceManager(
             "org.apache.tools.ant.gui.resources.action"));
-    /** List of build listeners to register when build starts. */
-    private List _buildListeners = new LinkedList();
 
     /** Parent frame used in various operations. XXX what do we do 
      *  in the applet context. */
     private Frame _parentFrame = null;
 
-    /** The current data model. */
-    private ProjectProxy _project = null;
+    /** 
+     * Constructor of apps that don't have a graphical
+     * component (e.g. web based).
+     *  
+     */
+    public AppContext() {
+        this(null);
+    }
 
+    /** 
+     * Standard constructor.
+     * 
+     * @param parent Parent frame. XXX may go away.
+     */
     public AppContext(Frame parent) {
         _parentFrame = parent;
-        // Add the build listener for dispatching BuildEvent
-        // objects to the EventBus.
         BuildEventForwarder handler = new BuildEventForwarder(this);
-        addBuildListener(handler);
+        _projectManager.addBuildListener(handler);
+        _eventBus.addMember(EventBus.MONITORING, _selectionManager);
+    }
+
+	/** 
+	 * Get the parent frame. XXX may change...
+	 * 
+	 * @return Parent frame.
+	 */
+    public Frame getParentFrame() {
+        return _parentFrame;
     }
 
 	/** 
@@ -120,15 +142,6 @@ public class AppContext {
         return _eventBus;
     }
 
-	/** 
-	 * Get the parent frame. XXX may change...
-	 * 
-	 * @return Parent frame.
-	 */
-    public Frame getParentFrame() {
-        return _parentFrame;
-    }
-
     /** 
      * Get the project manager.
      * 
@@ -138,68 +151,15 @@ public class AppContext {
         return _projectManager;
     }
 
-	/** 
-	 * Get the current project.
-	 * 
-	 * @return Current project. NUll if  no active project.
-	 */
-    public ProjectProxy getProject() {
-        return _project;
+    /** 
+     * Get the selection manager.
+     * 
+     * @return Selection manager.
+     */
+    public SelectionManager getSelectionManager() {
+        return _selectionManager;
     }
 
-
-	/** 
-	 * Add a build listener.
-	 * 
-	 * @param l Listener to add.
-	 */
-    public void addBuildListener(BuildListener l) {
-        _buildListeners.add(l);
-    }
-
-	/** 
-	 * Remove a build listener.
-	 * 
-	 * @param l Listener to remove.
-	 */
-    public void removeBuildListener(BuildListener l) {
-        _buildListeners.remove(l);
-    }
-
-	/** 
-	 * Determine if the given BuildListener is registered.
-	 * 
-	 * @param l Listener to test for.
-	 * @return True if listener has been added, false if unknown.
-	 */
-    public boolean isRegisteredBuildListener(BuildListener l) {
-        return _buildListeners.contains(l);
-    }
-
-	/** 
-	 * Get the set of current build listeners.
-	 * 
-     * @return Set of current build listeners.
-	 */
-    public BuildListener[] getBuildListeners() {
-        BuildListener[] retval = new BuildListener[_buildListeners.size()];
-        _buildListeners.toArray(retval);
-        return retval;
-    }
-
-	/** 
-	 * Set the current project.
-	 * 
-	 * @param project Next project to operate on. May be null for the "close" 
-     * action.
-
-	 */
-    public void setProject(ProjectProxy project) {
-        if(_project == null || !_project.equals(project)) {
-            _project = project;
-            getEventBus().postEvent(new NewProjectEvent(this));
-        }
-    }
 }
 
 

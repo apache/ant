@@ -80,11 +80,12 @@ public class EmacsNotifyCmd extends AbstractCommand {
 	 * 
 	 */
     public void run() {
-        if(getContext().isRegisteredBuildListener(_notifier)) {
-            getContext().removeBuildListener(_notifier);
+        if(getContext().getProjectManager().
+           isRegisteredBuildListener(_notifier)) {
+            getContext().getProjectManager().removeBuildListener(_notifier);
         }
         else {
-            getContext().addBuildListener(_notifier);
+            getContext().getProjectManager().addBuildListener(_notifier);
         }
     }
 }

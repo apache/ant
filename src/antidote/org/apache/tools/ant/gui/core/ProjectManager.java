@@ -53,15 +53,24 @@
  */
 package org.apache.tools.ant.gui.core;
 
+import org.apache.tools.ant.BuildListener;
+import org.apache.tools.ant.BuildException;
+import org.apache.tools.ant.Project;
+import org.apache.tools.ant.ProjectHelper;
+import org.apache.tools.ant.BuildEvent;
 import org.apache.tools.ant.gui.acs.*;
-import java.io.IOException;
+import org.apache.tools.ant.gui.event.BuildEventType;
+import java.io.*;
 import java.net.URL;
+import java.net.URLConnection;
 import java.util.*;
 
 /**
  * This class is responsible for managing the currently open projects,
  * and the loading of new projects.
  * 
+ * XXX need to add property change listeners support.
+ *
  * @version $Revision$ 
  * @author Simeon Fitch 
  */
@@ -69,6 +78,10 @@ public class ProjectManager {
 
     /** Set of open projects. */
     private List _projects = new ArrayList(1);
+    /** List of build listeners to register when build starts. */
+    private List _buildListeners = new LinkedList();
+    /** The current thread executing a build. */
+    private Thread _buildThread = null;
 
     public ProjectManager() {
     }
@@ -110,18 +123,44 @@ public class ProjectManager {
             // xxx Fix me.
             throw new IOException("xxx need a file name xxx");
         }
+
+        Writer out = null;
+        try {
+            URLConnection connection = location.openConnection();
+            connection.setDoInput(false);
+            connection.setDoOutput(true);
+            out = new OutputStreamWriter(connection.getOutputStream());
+            project.write(out);
+            project.setLocation(location);
+        }
+        finally {
+            try { out.close(); } catch(Exception ex) {}
+        }
     }
 
     /** 
      * Open the project persisted at the given location
      * 
-     * @param location  Location to save to.
+     * @param location Location of project file.
+     * @return Successfully loaded project.
+     * @throws IOException thrown if there is a problem opening the project.
+     */
+    public ACSProjectElement open(File location) throws IOException {
+        return open(new URL("file", null, location.getPath()));
+    }
+
+    /** 
+     * Open the project persisted at the given location
+     * 
+     * @param location Location of project file.
      * @return Successfully loaded project.
      * @throws IOException thrown if there is a problem opening the project.
      */
     public ACSProjectElement open(URL location) throws IOException {
         ACSProjectElement retval = null;
         retval = ACSFactory.getInstance().load(location);
+        retval.setLocation(location);
+        _projects.add(retval);
         return retval;
     }
 
@@ -133,5 +172,197 @@ public class ProjectManager {
     public ACSProjectElement createNew() {
         ACSProjectElement retval = null;
         return retval;
+    }
+
+    /** 
+     * Remove the given project from the set of active projects. 
+     * 
+     * @param project Project to close.
+     */
+    public void close(ACSProjectElement project) {
+        _projects.remove(project);
+    }
+
+	/** 
+	 * Build the project with the given target (or the default target
+     * if none is selected.  Build occurs on a separate thread, so method
+     * returns immediately.
+	 * 
+     * @param project Project to build.
+     * @param targets Targets to build in project.
+	 */
+    public void build(ACSProjectElement project, ACSTargetElement[] targets) 
+        throws BuildException {
+        _buildThread = new Thread(new BuildRunner(project, targets));
+        _buildThread.start();
+    }
+
+	/** 
+	 * Add a build listener.
+	 * 
+	 * @param l Listener to add.
+	 */
+    public void addBuildListener(BuildListener l) {
+        synchronized(_buildListeners) {
+            _buildListeners.add(l);
+        }
+    }
+
+	/** 
+	 * Remove a build listener.
+	 * 
+	 * @param l Listener to remove.
+	 */
+    public void removeBuildListener(BuildListener l) {
+        synchronized(_buildListeners) {
+            _buildListeners.remove(l);
+        }
+    }
+
+	/** 
+	 * Determine if the given BuildListener is registered.
+	 * 
+	 * @param l Listener to test for.
+	 * @return True if listener has been added, false if unknown.
+	 */
+    public boolean isRegisteredBuildListener(BuildListener l) {
+        synchronized(_buildListeners) {
+            return _buildListeners.contains(l);
+        }
+    }
+
+	/** 
+	 * Get the set of current build listeners.
+	 * 
+     * @return Set of current build listeners.
+	 */
+    public BuildListener[] getBuildListeners() {
+        synchronized(_buildListeners) {
+            BuildListener[] retval = new BuildListener[_buildListeners.size()];
+            _buildListeners.toArray(retval);
+            return retval;
+        }
+    }
+
+    /** Class for executing the build in a separate thread. */
+    private class BuildRunner implements Runnable {
+        /** The project to execute build on. */
+        private ACSProjectElement _project = null;
+        /** Targets to build. */
+        private ACSTargetElement[] _targets = null;
+        /** The Ant core representation of a project. */
+        private Project _antProject = null;
+
+        /** 
+         * Standard ctor.
+         * 
+         * @param project Project to execute build on.
+         * @param targets Targets to build. 
+         */
+        public BuildRunner(ACSProjectElement project, 
+                           ACSTargetElement[] targets) throws BuildException {
+            _project = project;
+            _targets = targets;
+
+            URL location = _project.getLocation();
+            if(location == null) {
+                // XXX this needs to be changed so that if the project is
+                // not saved, or the persistence mechanism is remote
+                // then a temporary version is saved first.
+                throw new BuildException("Project must be saved first");
+            }
+
+            // XXX hopefully we will eventually be able to save
+            // project files to any type of URL. Right now the Ant core
+            // only supports Files.
+            if(!location.getProtocol().equals("file")) {
+                throw new IllegalArgumentException(
+                    "The Ant core only supports building from locally " +
+                    "stored build files.");
+            }
+
+            File f = new File(location.getFile());
+
+            _antProject = new Project();
+            _antProject.init();
+            // XXX there is a bunch of stuff in the class
+            // org.apache.tools.ant.Main that needs to be
+            // refactored out so that it doesn't have to be
+            // replicated here.
+            
+            // XXX need to provide a way to pass in externally
+            // defined properties.  Perhaps define an external
+            // Antidote properties file. JAVA_HOME may have to be set, 
+            // as well as checking the .ant.properties
+            _antProject.setUserProperty(
+                "ant.file" , f.getAbsolutePath());
+            ProjectHelper.configureProject(_antProject, f);
+        }
+
+        /** 
+         * Convenience method for causeing the project to fire a build event.
+         * Implemented because the corresponding method in the Project class
+         * is not publically accessible.
+         * 
+         * @param event Event to fire.
+         */
+        private void fireBuildEvent(BuildEvent event, BuildEventType type) {
+            Enumeration enum = _antProject.getBuildListeners().elements();
+            while(enum.hasMoreElements()) {
+                BuildListener l = (BuildListener) enum.nextElement();
+                type.fireEvent(event, l);
+            }
+        }
+
+        /** 
+         * Run the build.
+         * 
+         */
+        public void run() {
+            synchronized(_antProject) {
+                // Add the build listeners
+                BuildListener[] listeners = getBuildListeners();
+                for(int i = 0; i < listeners.length; i++) {
+                    _antProject.addBuildListener(listeners[i]);
+                }
+                
+                try {
+                    
+                    fireBuildEvent(new BuildEvent(
+                        _antProject), BuildEventType.BUILD_STARTED);
+                    
+                    
+                    Vector targetNames = new Vector();
+                    if(_targets == null || _targets.length == 0) {
+                        targetNames.add(_antProject.getDefaultTarget());
+                    }
+                    else {
+                        for(int i = 0; i < _targets.length; i++) {
+                            targetNames.add(_targets[i].getName());
+                        }
+                    }
+                    
+                    // Execute build on selected targets. XXX It would be 
+                    // nice if the Project API supported passing in target 
+                    // objects rather than String names.
+                    _antProject.executeTargets(targetNames);
+                }
+                catch(BuildException ex) {
+                    BuildEvent errorEvent = new BuildEvent(_antProject);
+                    errorEvent.setException(ex);
+                    errorEvent.setMessage(ex.getMessage(), Project.MSG_ERR);
+                    fireBuildEvent(errorEvent, BuildEventType.MESSAGE_LOGGED);
+                }
+                finally {
+                    fireBuildEvent(new BuildEvent(
+                        _antProject), BuildEventType.BUILD_FINISHED);
+                    
+                    // Remove the build listeners.
+                    for(int i = 0; i < listeners.length; i++) {
+                        _antProject.removeBuildListener(listeners[i]);
+                    }
+                }
+            }
+        }
     }
 }

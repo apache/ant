@@ -153,7 +153,7 @@ public class BuildConsole extends AntModule {
          * it should be cancelled.
          */
         public boolean eventPosted(EventObject event) {
-            if(event instanceof NewProjectEvent) {
+            if(event instanceof ProjectSelectedEvent) {
                 clearDisplay();
                 return true;
             }
@@ -215,7 +215,7 @@ public class BuildConsole extends AntModule {
          */
         public boolean accept(EventObject event) {
             return event instanceof AntBuildEvent ||
-                event instanceof NewProjectEvent;
+                event instanceof ProjectSelectedEvent;
         }
     }
 

@@ -53,8 +53,9 @@ q *
  */
 package org.apache.tools.ant.gui.command;
 import org.apache.tools.ant.gui.core.AppContext;
-import org.apache.tools.ant.gui.core.ProjectProxy;
 import org.apache.tools.ant.gui.event.ErrorEvent;
+import org.apache.tools.ant.gui.acs.ACSProjectElement;
+import org.apache.tools.ant.gui.acs.ACSTargetElement;
 
 /**
  * Starts an Ant build.
@@ -64,6 +65,11 @@ import org.apache.tools.ant.gui.event.ErrorEvent;
  */
 public class BuildCmd extends AbstractCommand {
 
+    /** Project to build. */
+    private ACSProjectElement _project = null;
+    /** Targets to build. */
+    private ACSTargetElement[] _targets = null;
+
 	/** 
 	 * Standard ctor.
 	 * 
@@ -72,15 +78,40 @@ public class BuildCmd extends AbstractCommand {
         super(context);
     }
 
+    /** 
+     * Set the specific project to build (instead of the default).
+     * 
+     * @param project Project to build.
+     */
+    public void setProject(ACSProjectElement project) {
+        _project = project;
+    }
+
+    /** 
+     * Set the specific targets to build (instead of the default).
+     * 
+     * @param targets Array of targets to build.
+     */
+    public void setTargets(ACSTargetElement[] targets) {
+        _targets = targets;
+    }
+
 	/** 
 	 * Start the Ant build.
 	 * 
 	 */
     public void run() {
-        ProjectProxy project = getContext().getProject();
-        if(project != null) {
+        if(_project == null) {
+            _project = getContext().getSelectionManager().getSelectedProject();
+        }
+
+        if(_targets == null) {
+            _targets = getContext().getSelectionManager().getSelectedTargets();
+        }
+
+        if(_project != null) {
             try {
-                project.build();
+                getContext().getProjectManager().build(_project, _targets);
             }
             catch(Throwable ex) {
                 getContext().getEventBus().postEvent(

@@ -53,6 +53,7 @@
  */
 package org.apache.tools.ant.gui.event;
 import org.apache.tools.ant.gui.acs.ACSElement;
+import org.apache.tools.ant.gui.acs.ACSTargetElement;
 import org.apache.tools.ant.gui.core.AppContext;
 
 /**
@@ -69,7 +70,16 @@ public class TargetSelectionEvent extends ElementSelectionEvent {
      * @param selected the selected Elements.
 	 */
     public TargetSelectionEvent(AppContext context, 
-                               ACSElement[] selected) {
+                                ACSElement[] selected) {
         super(context, selected);
     }
+
+    /** 
+     * Get the selected targets.
+     * 
+     */
+    public ACSTargetElement[] getSelectedTargets() {
+        return (ACSTargetElement[]) getFiltered(ACSTargetElement.class);
+    }
+
 }

@@ -53,6 +53,7 @@
  */
 package org.apache.tools.ant.gui.event;
 import org.apache.tools.ant.gui.acs.ACSElement;
+import org.apache.tools.ant.gui.acs.ACSPropertyElement;
 import org.apache.tools.ant.gui.core.AppContext;
 
 /**
@@ -72,4 +73,13 @@ public class PropertySelectionEvent extends ElementSelectionEvent {
                               ACSElement[] selected) {
         super(context, selected);
     }
+
+    /** 
+     * Get the selected properties.
+     * 
+     */
+    public ACSPropertyElement[] getSelectedProperties() {
+        return (ACSPropertyElement[]) getFiltered(ACSPropertyElement.class);
+    }
+
 }

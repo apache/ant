@@ -112,12 +112,16 @@ public class PropertyEditor extends AntModule {
             _customizer = null;
         }
 
-        if(items != null && items.length == 1) {
+        if(items != null && items.length > 0) {
+            // The last selection element is the the one the
+            // user most recently selected.
+            ACSElement item = items[items.length - 1];
+
             try {
-                BeanInfo info = Introspector.getBeanInfo(items[0].getClass());
+                BeanInfo info = Introspector.getBeanInfo(item.getClass());
                 _customizer = (Customizer) info.getBeanDescriptor().
                     getCustomizerClass().newInstance();
-                _customizer.setObject(items[0]);
+                _customizer.setObject(item);
                 _container.add(BorderLayout.CENTER, (Component) _customizer);
             }
             catch(Exception ex) {
@@ -126,7 +130,7 @@ public class PropertyEditor extends AntModule {
             }
         }
 
-        _container.revalidate();
+        _container.repaint();
     }
 
 

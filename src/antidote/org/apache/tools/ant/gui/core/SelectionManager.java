@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 1999, 2000 The Apache Software Foundation.  All rights
+ * Copyright (c) 2001 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -51,117 +51,97 @@
  * information on the Apache Software Foundation, please see
  * <http://www.apache.org/>.
  */
-package org.apache.tools.ant.gui.acs;
+package org.apache.tools.ant.gui.core;
 
-import com.sun.xml.tree.ElementNode;
-import java.net.URL;
-import java.io.File;
+import org.apache.tools.ant.gui.event.*;
+import org.apache.tools.ant.gui.command.*;
+import org.apache.tools.ant.gui.acs.*;
+import java.util.EventObject;
+import java.awt.event.ActionEvent;
+import javax.swing.*;
 
 /**
- * Class representing a project element in the build file.
- * 
+ * State management class for keeping track of what build file elements are
+ * currently selected. It monitors the EventBus for selection events and
+ * Records the current state. It should be registered with the EventBus
+ * at the MONITORING level.
+ *
  * @version $Revision$ 
  * @author Simeon Fitch 
  */
-public class ACSProjectElement extends ACSNamedElement {
-    /** The 'default' property name. */
-    public static final String DEFAULT = "default";
-    /** The 'basdir' property name. */
-    public static final String BASEDIR = "basedir";
-    /** Property name of the persistence location. */
-    public static final String LOCATION = "location";
-    /** The location where this project is persisted. */
-    private URL _location = null;
+public class SelectionManager implements BusMember {
+    /** The filter for getting the correct events.*/
+    private final Filter _filter = new Filter();
 
-	/** 
-	 * Default ctor.
-	 * 
-	 */
-    public ACSProjectElement() {
-    }
+    /** The currently selected project. */
+    private ACSProjectElement _project = null;
+    /** The current set of selected targets. */
+    private ACSTargetElement[] _targets = null;
+    /** The current set of selected elements. */
+    private ACSElement[] _elements = null;
 
-	/** 
-	 * Get the type that this BeanInfo represents.
-	 * 
-	 * @return Type.
-	 */
-    public Class getType() {
-        return ACSProjectElement.class;
-    }
-
-	/** 
-	 * Get the name of the default target.
-	 * 
-	 * @return Default target name.
-	 */
-    public String getDefault() {
-        return getAttribute(DEFAULT);
-    }
-
-	/** 
-	 * Set the name of the default target.
-	 * 
-	 * @param def Name of the default target.
-	 */
-    public void setDefault(String def) {
-        String old = getDefault();
-        setAttribute(DEFAULT, def);
-        firePropertyChange(DEFAULT, old, def);
-    }
-
-	/** 
-	 * Get the specified base directory for the build.
-	 * 
-	 * @return Base directory
-	 */
-    public String getBasedir() {
-        return getAttribute(BASEDIR);
-    }
-
-	/** 
-	 * Set the base directory for builds.
-	 * 
-	 * @param baseDir Build base directory.
-	 */
-    public void setBasedir(String baseDir) {
-        String old = getBasedir();
-        setAttribute(BASEDIR, baseDir);
-        firePropertyChange(BASEDIR, old, baseDir);
+    public SelectionManager() {
     }
 
     /** 
-     * Get the location where this project is persisted.
+     * Get the filter to that is used to determine if an event should
+     * to to the member.
      * 
-     * @return Saved location, or null if not persisted.
+     * @return Filter to use.
      */
-    public URL getLocation() {
-        return _location;
+    public BusFilter getBusFilter() {
+        return _filter;
+    }
+    
+
+    /** 
+     * Get the currently selected project.
+     * 
+     * @return Current project.
+     */
+    public ACSProjectElement getSelectedProject() {
+        return _project;
     }
 
     /** 
-     * Set the loction where the project is persisted.
+     * Get the selected elements that are targets.
      * 
-     * @param location Location of project.
      */
-    public void setLocation(URL location) {
-        URL old = _location;
-        _location = location;
-        firePropertyChange(LOCATION, old, _location);
+    public ACSTargetElement[] getSelectedTargets() {
+        return _targets;
     }
 
     /** 
-     * Set the loction where the project is persisted.
+     * Get the selected elements.
      * 
-     * @param location Location of project as a file.
      */
-    public void setLocation(File location) {
-        try {
-            setLocation(new URL("file", null, location.getAbsolutePath()));
+    public ACSElement[] getSelectedElements() {
+        return _elements;
+    }
+
+    /** 
+     * Called when an event is to be posed to the member.
+     * 
+     * @param event Event to post.
+     * @return true if event should be propogated, false if
+     * it should be cancelled.
+     */
+    public boolean eventPosted(EventObject event) {
+        _elements = ((ElementSelectionEvent)event).getSelectedElements();
+
+        if(event instanceof TargetSelectionEvent) {
+            _targets = ((TargetSelectionEvent)event).getSelectedTargets();
         }
-        catch(java.net.MalformedURLException ex) {
-            // No reason why this should happen.
-            // xxx Log me.
-            ex.printStackTrace();
+        else if(event instanceof ProjectSelectedEvent) {
+            _project = ((ProjectSelectedEvent)event).getSelectedProject();
+        }
+        return true;
+    }
+
+    /** Filter for ElementSelectionEvent objects. */
+    private static class Filter implements BusFilter {
+        public boolean accept(EventObject event) {
+            return event instanceof ElementSelectionEvent;
         }
     }
 }

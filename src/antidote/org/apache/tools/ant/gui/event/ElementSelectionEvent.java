@@ -57,6 +57,9 @@ import org.apache.tools.ant.gui.command.Command;
 import org.apache.tools.ant.gui.command.DisplayErrorCmd;
 import org.apache.tools.ant.gui.core.AppContext;
 
+import java.lang.reflect.Array;
+import java.util.*;
+
 /**
  * Event indicating that the current set of selected targets has changed.
  * 
@@ -90,6 +93,29 @@ public class ElementSelectionEvent extends AntEvent {
     }
 
 
+    /** 
+     * Get only those events of a specific type.
+     * 
+     * @param type Specific type to get values for, or null if none.
+     */
+    protected ACSElement[] getFiltered(Class type) {
+        ACSElement[] retval = null;
+        List vals = new ArrayList(1);
+        if(_selected != null) {
+            for(int i = 0; i < _selected.length; i++) {
+                if(type.isInstance(_selected[i])) {
+                    vals.add(_selected[i]);
+                }
+            }
+        }
+
+        if(vals.size() > 0) {
+            retval = (ACSElement[]) Array.newInstance(type, vals.size());
+            vals.toArray(retval);
+        }
+        return retval;
+    }
+
 	/** 
 	 * Factory method for creating the appropriate specialization of this
      * for communicating an element selection.
@@ -116,7 +142,8 @@ public class ElementSelectionEvent extends AntEvent {
                 retval = new PropertySelectionEvent(context, selected);
             }
             else if(type.isAssignableFrom(ACSProjectElement.class)) {
-                retval = new ProjectSelectionEvent(context, selected);
+                retval = new ProjectSelectedEvent(
+                    context, (ACSProjectElement) selected[0]);
             }
             else {
                 // For elements without a specific event

@@ -54,6 +54,8 @@
 package org.apache.tools.ant.gui.command;
 import org.apache.tools.ant.gui.core.AppContext;
 import org.apache.tools.ant.gui.event.ProjectClosedEvent;
+import org.apache.tools.ant.gui.event.ProjectSelectedEvent;
+import org.apache.tools.ant.gui.acs.ACSProjectElement;
 
 
 /**
@@ -64,6 +66,9 @@ import org.apache.tools.ant.gui.event.ProjectClosedEvent;
  */
 public class CloseCmd extends AbstractCommand {
 
+    /** Project to close. */
+    private ACSProjectElement _project = null;
+
 	/** 
 	 * Standard constructor. 
 	 * 
@@ -72,13 +77,35 @@ public class CloseCmd extends AbstractCommand {
         super(context);
     }
 
+    /** 
+     * Set the specific project to close (instead of the default).
+     * 
+     * @param project Project to close.
+     */
+    public void setProject(ACSProjectElement project) {
+        _project = project;
+    }
+
 	/** 
 	 * Send a close event to the parent window. 
 	 * 
 	 */
     public void run() {
-        getContext().setProject(null);
-        getContext().getEventBus().postEvent(
-            new ProjectClosedEvent(getContext()));
+        if(_project == null) {
+            _project = getContext().getSelectionManager().getSelectedProject();
+        }
+
+        if(_project != null) {
+            getContext().getProjectManager().close(_project);
+            getContext().getEventBus().postEvent(
+                new ProjectClosedEvent(getContext()));
+
+            ACSProjectElement[] open = 
+                getContext().getProjectManager().getOpen();
+            if(open != null && open.length > 0) {
+                getContext().getEventBus().postEvent(
+                    new ProjectSelectedEvent(getContext(), open[0]));
+            }
+        }
     }
 }

@@ -87,7 +87,7 @@ public class Main {
                                    context.getActions().createToolBar());
 
             ImageIcon icon = 
-                context.getResources().getImageIcon("icon-small.gif");
+                context.getResources().loadImageIcon("icon-small.gif");
             if(icon != null) {
                 f.setIconImage(icon.getImage());
             }
