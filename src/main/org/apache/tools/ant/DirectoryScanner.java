@@ -808,6 +808,14 @@ public class DirectoryScanner
      * @see #slowScan
      */
     protected void scandir(File dir, String vpath, boolean fast) {
+        if (dir == null) {
+            throw new BuildException("dir must not be null.");
+        } else if (!dir.exists()) {
+            throw new BuildException(dir + " doesn't exists.");
+        } else if (!dir.isDirectory()) {
+            throw new BuildException(dir + " is not a directory.");
+        }
+
         // avoid double scanning of directories, can only happen in fast mode
         if (fast && hasBeenScanned(vpath)) {
             return;
