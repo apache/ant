@@ -13,7 +13,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.jar.Attributes;
-import java.util.jar.JarFile;
 import java.util.jar.Manifest;
 import org.apache.avalon.excalibur.extension.Extension;
 import org.apache.avalon.excalibur.i18n.ResourceManager;
@@ -22,8 +21,6 @@ import org.apache.avalon.excalibur.io.IOUtil;
 import org.apache.myrmidon.Constants;
 import org.apache.myrmidon.api.AbstractTask;
 import org.apache.myrmidon.api.TaskException;
-import org.apache.tools.todo.types.DirectoryScanner;
-import org.apache.tools.todo.types.ScannerUtil;
 
 /**
  * Task to generate a manifest that declares all the dependencies
@@ -80,18 +77,6 @@ public final class JarLibManifestTask
     private final ArrayList m_optionals = new ArrayList();
 
     /**
-     * Filesets specifying all the librarys
-     * to generate dependency information about.
-     */
-    private final ArrayList m_dependsFilesets = new ArrayList();
-
-    /**
-     * Filesets specifying all the librarys
-     * to generate optional dependency information about.
-     */
-    private final ArrayList m_optionalsFilesets = new ArrayList();
-
-    /**
      * Extra attributes the user specifies for main section
      * in manifest.
      */
@@ -127,43 +112,23 @@ public final class JarLibManifestTask
     }
 
     /**
-     * Adds an extension that this library requires.
+     * Adds a set of extensions that this library requires.
      *
-     * @param extensionAdapter an extension that this library requires.
+     * @param extensionSet a set of extensions that this library requires.
      */
-    public void addDepends( final ExtensionAdapter extensionAdapter )
+    public void addDepends( final ExtensionSet extensionSet )
     {
-        m_dependencies.add( extensionAdapter );
+        m_dependencies.add( extensionSet );
     }
 
     /**
-     * Adds an extension that this library optionally requires.
+     * Adds a set of extensions that this library optionally requires.
      *
-     * @param extensionAdapter an extension that this library optionally requires.
+     * @param extensionSet a set of extensions that this library optionally requires.
      */
-    public void addOption( final ExtensionAdapter extensionAdapter )
+    public void addOption( final ExtensionSet extensionSet )
     {
-        m_optionals.add( extensionAdapter );
-    }
-
-    /**
-     * Adds a set of files about which library data will be displayed.
-     *
-     * @param fileSet a set of files about which library data will be displayed.
-     */
-    public void addDependsfileset( final LibFileSet fileSet )
-    {
-        m_dependsFilesets.add( fileSet );
-    }
-
-    /**
-     * Adds a set of files about which library data will be displayed.
-     *
-     * @param fileSet a set of files about which library data will be displayed.
-     */
-    public void addOptionalfileset( final LibFileSet fileSet )
-    {
-        m_optionalsFilesets.add( fileSet );
+        m_optionals.add( extensionSet );
     }
 
     /**
@@ -196,7 +161,6 @@ public final class JarLibManifestTask
 
         //Add all the dependency data to manifest for dependencies
         final ArrayList depends = toExtensions( m_dependencies );
-        extractLibraryData( depends, m_dependsFilesets );
         appendExtensionList( attributes,
                              Extension.EXTENSION_LIST,
                              "lib",
@@ -206,7 +170,6 @@ public final class JarLibManifestTask
         //Add all the dependency data to manifest for "optional"
         //dependencies
         final ArrayList option = toExtensions( m_optionals );
-        extractLibraryData( option, m_optionalsFilesets );
         appendExtensionList( attributes,
                              Extension.OPTIONAL_EXTENSION_LIST,
                              "opt",
@@ -290,47 +253,25 @@ public final class JarLibManifestTask
     }
 
     /**
-     * Generate a list of extensions from a specified fileset.
-     *
-     * @param librarys the list to add extensions to
-     * @param fileset the filesets containing librarys
-     * @throws TaskException if an error occurs
-     */
-    private void extractLibraryData( final ArrayList librarys,
-                                     final ArrayList fileset )
-        throws TaskException
-    {
-        if( !fileset.isEmpty() )
-        {
-            final Extension[] extensions = getExtensions( fileset );
-            for( int i = 0; i < extensions.length; i++ )
-            {
-                librarys.add( extensions[ i ] );
-            }
-        }
-    }
-
-    /**
-     * Append specified librarys extension data to specified attributes.
+     * Append specified extensions to specified attributes.
      * Use the extensionKey to list the extensions, usually "Extension-List:"
      * for required dependencies and "Optional-Extension-List:" for optional
      * dependencies. NOTE: "Optional" dependencies are not part of the
      * specification.
      *
      * @param attributes the attributes to add extensions to
-     * @param librarys the filesets containing librarys
+     * @param extensions the list of extensions
      * @throws TaskException if an error occurs
      */
     private void appendLibraryList( final Attributes attributes,
                                     final String listPrefix,
-                                    final ArrayList librarys )
+                                    final ArrayList extensions )
         throws TaskException
     {
-        final int size = librarys.size();
-
+        final int size = extensions.size();
         for( int i = 0; i < size; i++ )
         {
-            final Extension extension = (Extension)librarys.get( i );
+            final Extension extension = (Extension)extensions.get( i );
             final String prefix = listPrefix + i + "-";
             Extension.addExtension( extension, prefix, attributes );
         }
@@ -365,77 +306,25 @@ public final class JarLibManifestTask
     }
 
     /**
-     * Retrieve extensions from the specified librarys.
+     * Convert a list of ExtensionSet objects to extensions.
      *
-     * @param librarys the filesets for librarys
-     * @return the extensions contained in librarys
-     * @throws TaskException if failing to scan librarys
-     */
-    private static Extension[] getExtensions( final ArrayList librarys )
-        throws TaskException
-    {
-        final ArrayList extensions = new ArrayList();
-        final Iterator iterator = librarys.iterator();
-        while( iterator.hasNext() )
-        {
-            final LibFileSet fileSet = (LibFileSet)iterator.next();
-            final DirectoryScanner scanner = ScannerUtil.getDirectoryScanner( fileSet );
-            final File basedir = scanner.getBasedir();
-            final String[] files = scanner.getIncludedFiles();
-            for( int i = 0; i < files.length; i++ )
-            {
-                final File file = new File( basedir, files[ i ] );
-                loadExtensions( file, extensions );
-            }
-        }
-        return (Extension[])extensions.toArray( new Extension[ extensions.size() ] );
-    }
-
-    /**
-     * Load list of available extensions from specified file.
-     *
-     * @param file the file
-     * @param extensions the list to add available extensions to
-     * @throws TaskException if there is an error
-     */
-    private static void loadExtensions( final File file,
-                                        final ArrayList extensions )
-        throws TaskException
-    {
-        try
-        {
-            final JarFile jarFile = new JarFile( file );
-            final Extension[] extension =
-                Extension.getAvailable( jarFile.getManifest() );
-            for( int i = 0; i < extension.length; i++ )
-            {
-                extensions.add( extension[ i ] );
-            }
-        }
-        catch( final Exception e )
-        {
-            throw new TaskException( e.getMessage(), e );
-        }
-    }
-
-    /**
-     * Convert a list of extensionAdapter objects to extensions.
-     *
-     * @param adapters the list of ExtensionAdapterss to add to convert
+     * @param extensionSets the list of ExtensionSets to add to list
      * @throws TaskException if an error occurs
      */
-    private static ArrayList toExtensions( final ArrayList adapters )
+    private static ArrayList toExtensions( final ArrayList extensionSets )
         throws TaskException
     {
         final ArrayList results = new ArrayList();
 
-        final int size = adapters.size();
+        final int size = extensionSets.size();
         for( int i = 0; i < size; i++ )
         {
-            final ExtensionAdapter adapter =
-                (ExtensionAdapter)adapters.get( i );
-            final Extension extension = adapter.toExtension();
-            results.add( extension );
+            final ExtensionSet set = (ExtensionSet)extensionSets.get( i );
+            final Extension[] extensions = set.toExtensions();
+            for( int j = 0; j < extensions.length; j++ )
+            {
+                results.add( extensions[ j ] );
+            }
         }
 
         return results;

@@ -12,6 +12,7 @@ import org.apache.avalon.excalibur.extension.Extension;
 import org.apache.avalon.excalibur.i18n.ResourceManager;
 import org.apache.avalon.excalibur.i18n.Resources;
 import org.apache.myrmidon.api.TaskException;
+import org.apache.myrmidon.framework.DataType;
 
 /**
  * Simple class that represents an Extension and conforms to Ants
@@ -19,8 +20,10 @@ import org.apache.myrmidon.api.TaskException;
  *
  * @author <a href="mailto:peter@apache.org">Peter Donald</a>
  * @version $Revision$ $Date$
+ * @ant.data-type name="extension"
  */
 public class ExtensionAdapter
+    implements DataType
 {
     private static final Resources REZ =
         ResourceManager.getPackageResources( ExtensionAdapter.class );

@@ -337,21 +337,33 @@ Legal:
     -->
 
     <target name="manifest-test">
-        <jarlib-manifest destfile="../../generated-manifest.txt">
-            <extension
-                extension-name="org.realityforge.dve"
-                specification-version="1.0"
-                specification-vendor="Peter Donald"/>
-            <attribute name="Main-class"
-                       value="org.realityforg.dve.WorldGen"/>
 
+        <extension-set id="my-dependencies">
             <dependsfileset dir="../../">
                 <include name="src/ant1compat/jar/*.jar"/>
             </dependsfileset>
+            <extension
+                extension-name="MrMadeUpExtension"
+                specification-version="1.0"
+                specification-vendor="Peter Donald"/>
+        </extension-set>
+
+        <extension-set id="my-options">
             <dependsfileset dir="../../">
                 <include name="lib/*.jar"/>
             </dependsfileset>
+        </extension-set>
 
+        <extension id="my-extension"
+            extension-name="org.realityforge.dve"
+            specification-version="1.0"
+            specification-vendor="Peter Donald"/>
+
+        <jarlib-manifest destfile="../../generated-manifest.txt">
+            <attribute name="Main-class" value="org.realityforg.dve.WorldGen"/>
+            <extension-ref id="my-extension"/>
+            <depends-ref id="my-dependencies"/>
+            <options-ref id="my-options"/>
         </jarlib-manifest>
     </target>
 
