@@ -1,0 +1,25 @@
+<?xml version="1.0"?>
+
+<project name="xxx-test" basedir="." default="test1">
+
+  <target name="test1">
+    <dirname/>
+  </target>
+
+  <target name="test2">
+    <dirname property="propname"/>
+  </target>
+
+  <target name="test3">
+    <dirname file="filename"/>
+  </target>
+
+  <target name="test4">
+    <dirname property="local.dir" file="/usr/local/foo.txt"/>
+  </target>
+
+  <target name="test5">
+    <dirname property="base.dir" file="foo.txt"/>
+  </target>
+
+</project>
