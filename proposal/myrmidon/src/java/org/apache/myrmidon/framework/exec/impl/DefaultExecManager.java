@@ -154,7 +154,7 @@ public class DefaultExecManager
                 launcher = new ScriptCommandLauncher( script );
             }
         }
-        else if( ( new Os( "netware" ) ).eval() )
+        else if( Os.isFamily( "netware" ) )
         {
             // NetWare.  Need to determine which JDK we're running in
             final String perlScript = resolveCommand( antDir, "bin/antRun.pl" );
