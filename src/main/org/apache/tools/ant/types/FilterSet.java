@@ -209,7 +209,7 @@ public class FilterSet extends DataType implements Cloneable {
      */
     public Hashtable getFilterHash() {
         int filterSize = getFilters().size();
-        Hashtable filterHash = new Hashtable(filterSize);
+        Hashtable filterHash = new Hashtable(filterSize + 1);
         for (Enumeration e = getFilters().elements(); e.hasMoreElements();) {
            Filter filter = (Filter) e.nextElement();
            filterHash.put(filter.getToken(), filter.getValue());
