@@ -12,6 +12,8 @@ Fixed bugs:
 * <basename> would remove more than it should if the file name
   contained more than one dot.
 
+* <filterset>s nested into <filterset>s didn't work.
+
 Other changes:
 --------------
 

@@ -31,6 +31,23 @@
     </copy>
   </target>
   
+  <target name="test-nested-filtersets">
+    <filterset id="1">
+      <filter token="token1" value="value1"/>
+    </filterset>
+    <filterset id="2">
+      <filterset refid="testset.one"/>
+    </filterset>
+    <filterset id="3">
+      <filterset id="4">
+        <filter token="token4" value="value4"/>
+      </filterset>
+    </filterset>
+    <filterset id="5">
+      <filterset refid="1"/>
+    </filterset>
+  </target>
+
   <target name="cleanup">
     <delete file="dest1.txt" quiet="true" />
     <delete file="dest2.txt" quiet="true" />
