@@ -55,6 +55,7 @@
 package org.apache.tools.ant.taskdefs;
 
 import org.apache.tools.ant.*;
+import org.apache.tools.ant.util.FileUtils;
 import java.io.*;
 import java.util.*;
 
@@ -243,14 +244,8 @@ public class Ant extends Task {
                 antFile = "build.xml";
             }
 
-            File file = new File(antFile);
-            if (!file.isAbsolute()) {
-                antFile = (new File(dir, antFile)).getAbsolutePath();
-                file = (new File(antFile)) ;
-                if( ! file.isFile() ) {
-                  throw new BuildException("Build file " + file + " not found.");
-                }
-            }
+            File file = FileUtils.newFileUtils().resolveFile(dir, antFile);
+            antFile = file.getAbsolutePath();
 
             newProject.setUserProperty( "ant.file" , antFile );
             ProjectHelper.configureProject(newProject, new File(antFile));
