@@ -17,6 +17,7 @@ import org.apache.avalon.excalibur.i18n.ResourceManager;
 import org.apache.avalon.excalibur.i18n.Resources;
 import org.apache.avalon.excalibur.io.ExtensionFileFilter;
 import org.apache.avalon.excalibur.io.FileUtil;
+import org.apache.avalon.framework.CascadingException;
 import org.apache.avalon.framework.activity.Disposable;
 import org.apache.avalon.framework.activity.Initializable;
 import org.apache.avalon.framework.logger.AbstractLogEnabled;
@@ -25,9 +26,9 @@ import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.avalon.framework.service.DefaultServiceManager;
 import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.avalon.framework.service.Serviceable;
-import org.apache.myrmidon.components.deployer.ClassLoaderManager;
 import org.apache.myrmidon.interfaces.aspect.AspectManager;
 import org.apache.myrmidon.interfaces.builder.ProjectBuilder;
+import org.apache.myrmidon.interfaces.classloader.ClassLoaderManager;
 import org.apache.myrmidon.interfaces.configurer.Configurer;
 import org.apache.myrmidon.interfaces.converter.ConverterRegistry;
 import org.apache.myrmidon.interfaces.deployer.Deployer;
@@ -93,14 +94,22 @@ public class DefaultEmbeddor
                                   final Parameters parameters )
         throws Exception
     {
-        String projectType = type;
-        if( null == projectType )
+        try
         {
-            projectType = FileUtil.getExtension( location );
-        }
+            String projectType = type;
+            if( null == projectType )
+            {
+                projectType = FileUtil.getExtension( location );
+            }
 
-        final ProjectBuilder builder = getProjectBuilder( projectType, parameters );
-        return builder.build( location );
+            final ProjectBuilder builder = getProjectBuilder( projectType, parameters );
+            return builder.build( location );
+        }
+        catch( final Exception e )
+        {
+            final String message = REZ.getString( "create-project.error", location );
+            throw new CascadingException( message, e );
+        }
     }
 
     /**
@@ -110,7 +119,6 @@ public class DefaultEmbeddor
                                               final Parameters parameters )
         throws Exception
     {
-
         final TypeFactory factory = m_typeManager.getFactory( ProjectBuilder.class );
         final ProjectBuilder builder = (ProjectBuilder)factory.create( type );
         setupObject( builder, m_workspaceServiceManager, parameters );
@@ -253,7 +261,7 @@ public class DefaultEmbeddor
         createComponent( RoleManager.class, PREFIX + "role.DefaultRoleManager" );
         createComponent( AspectManager.class, PREFIX + "aspect.DefaultAspectManager" );
         createComponent( Deployer.class, PREFIX + "deployer.DefaultDeployer" );
-        createComponent( ClassLoaderManager.class, PREFIX + "deployer.DefaultClassLoaderManager" );
+        createComponent( ClassLoaderManager.class, PREFIX + "classloader.DefaultClassLoaderManager" );
         createComponent( Executor.class, PREFIX + "executor.AspectAwareExecutor" );
         createComponent( PropertyResolver.class, PREFIX + "workspace.DefaultPropertyResolver" );
 

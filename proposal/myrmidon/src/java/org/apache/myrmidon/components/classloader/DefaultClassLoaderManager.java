@@ -5,7 +5,7 @@
  * version 1.1, a copy of which has been included  with this distribution in
  * the LICENSE.txt file.
  */
-package org.apache.myrmidon.components.deployer;
+package org.apache.myrmidon.components.classloader;
 
 import java.io.File;
 import java.net.JarURLConnection;
@@ -27,6 +27,7 @@ import org.apache.avalon.framework.logger.AbstractLogEnabled;
 import org.apache.avalon.framework.service.ServiceException;
 import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.avalon.framework.service.Serviceable;
+import org.apache.myrmidon.interfaces.classloader.ClassLoaderManager;
 import org.apache.myrmidon.interfaces.deployer.DeploymentException;
 import org.apache.myrmidon.interfaces.extensions.ExtensionManager;
 
@@ -160,26 +161,8 @@ public class DefaultClassLoaderManager
 
         if( 0 != unsatisfied.size() )
         {
-            final int size = unsatisfied.size();
-            for( int i = 0; i < size; i++ )
-            {
-                final Extension extension = (Extension)unsatisfied.get( i );
-                final Object[] params = new Object[]
-                {
-                    extension.getExtensionName(),
-                    extension.getSpecificationVendor(),
-                    extension.getSpecificationVersion(),
-                    extension.getImplementationVendor(),
-                    extension.getImplementationVendorId(),
-                    extension.getImplementationVersion(),
-                    extension.getImplementationURL()
-                };
-                final String message = REZ.format( "missing.extension", params );
-                getLogger().warn( message );
-            }
-
             final String message =
-                REZ.getString( "unsatisfied.extensions.error", new Integer( size ) );
+                REZ.getString( "unsatisfied.extensions.error", new Integer( unsatisfied.size() ) );
             throw new Exception( message );
         }
 

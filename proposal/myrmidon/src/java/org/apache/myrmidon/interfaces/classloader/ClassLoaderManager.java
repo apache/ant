@@ -5,7 +5,7 @@
  * version 1.1, a copy of which has been included  with this distribution in
  * the LICENSE.txt file.
  */
-package org.apache.myrmidon.components.deployer;
+package org.apache.myrmidon.interfaces.classloader;
 
 import java.io.File;
 import org.apache.myrmidon.interfaces.deployer.DeploymentException;
