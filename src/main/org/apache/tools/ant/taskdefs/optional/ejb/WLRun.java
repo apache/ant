@@ -29,7 +29,6 @@ import org.apache.tools.ant.types.Path;
  * instance. Note that the task, and hence ant, will not complete until the
  * weblogic instance is stopped.</p>
  *
- * @author Conor MacNeill, Cortex ebusiness Pty Limited
  */
 public class WLRun extends Task {
     protected static final String DEFAULT_WL51_POLICY_FILE = "weblogic.policy";

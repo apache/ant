@@ -36,8 +36,6 @@ import org.apache.tools.ant.Task;
  * element. If file is a file, the directory will be the current
  * directory.
  *
- * @author Diane Holt <a href="mailto:holtdl@apache.org">holtdl@apache.org</a>
- *
  * @version $Revision$
  *
  * @since Ant 1.5

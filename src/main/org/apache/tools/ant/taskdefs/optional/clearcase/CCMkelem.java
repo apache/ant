@@ -85,7 +85,6 @@ import org.apache.tools.ant.types.Commandline;
  *   <tr>
  * </table>
  *
- * @author Sean Egan
  */
 public class CCMkelem extends ClearCase {
     private String  mComment = null;

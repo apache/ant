@@ -24,7 +24,6 @@ import org.apache.tools.ant.Project;
 import org.apache.tools.ant.util.JavaEnvUtils;
 
 /**
- * @author Nico Seessle <nico@seessle.de>
  */
 public class CallTargetTest extends BuildFileTest {
 

@@ -21,7 +21,6 @@ import java.io.File;
 import org.apache.tools.ant.BuildFileTest;
 
 /**
- * @author Diane Holt <holtdl@apache.org>
  */
 public class DirnameTest extends BuildFileTest {
 

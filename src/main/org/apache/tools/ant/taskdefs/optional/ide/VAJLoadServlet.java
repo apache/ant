@@ -41,7 +41,6 @@ import java.util.Vector;
  *   </tr>
  * </table>
  *
- * @author Wolf Siberski, based on servlets written by Glenn McAllister
  */
 public class VAJLoadServlet extends VAJToolsServlet {
 

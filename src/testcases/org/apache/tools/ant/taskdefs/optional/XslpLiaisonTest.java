@@ -21,7 +21,6 @@ import org.apache.tools.ant.taskdefs.XSLTLiaison;
 
 /**
  * XSLP Liaison testcase
- * @author <a href="mailto:sbailliez@apache.org">Stephane Bailliez</a>
  */
 public class XslpLiaisonTest extends AbstractXSLTLiaisonTest {
     public XslpLiaisonTest(String name){

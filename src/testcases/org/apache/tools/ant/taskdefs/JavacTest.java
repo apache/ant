@@ -31,7 +31,6 @@ import junit.framework.TestCase;
 /**
  * Testcase for <javac>.
  *
- * @author Stefan Bodewig
  * @version $Revision$ $Date$
  */
 public class JavacTest extends TestCase {

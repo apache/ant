@@ -22,7 +22,6 @@ import org.apache.tools.ant.Task;
 /**
  * A facade that makes logging nicers to use.
  *
- * @author <a href="mailto:peter@apache.org">Peter Donald</a>
  * @version $Revision$ $Date$
  */
 public final class TaskLogger {

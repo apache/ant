@@ -37,7 +37,6 @@ import junit.framework.TestCase;
 /**
  * JUnit 3 testcases for org.apache.tools.mail.MailMessage.
  *
- * @author Michael Davey
  * @since Ant 1.6
  */
 public class MailMessageTest extends TestCase {

@@ -29,7 +29,6 @@ import org.apache.tools.ant.util.StringUtils;
  * only writes which targets are being executed, and
  * any messages that get logged.
  *
- * @author Matt Foemmel
  */
 public class DefaultLogger implements BuildLogger {
     /**

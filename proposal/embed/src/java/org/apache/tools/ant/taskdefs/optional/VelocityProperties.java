@@ -68,7 +68,6 @@ import org.apache.velocity.Template;
  *  Enable Velocity dynamic properties
  *  
  *
- * @author Costin Manolache
  */
 public class VelocityProperties extends Task {
     public static final String PREFIX="vm:";

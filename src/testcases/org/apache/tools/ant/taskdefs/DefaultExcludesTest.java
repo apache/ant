@@ -21,7 +21,6 @@ import org.apache.tools.ant.BuildFileTest;
 import org.apache.tools.ant.DirectoryScanner;
 
 /**
- * @author Gus Heck <gus.heck@olin.edu>
  */
 public class DefaultExcludesTest extends BuildFileTest {
 

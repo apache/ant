@@ -24,7 +24,6 @@ import java.util.Vector;
  * Helper interface for VAJ tasks. Encapsulates
  * the interface to the VAJ tool API.
  *
- * @author Wolf Siberski, TUI Infotec GmbH
  */
 interface VAJUtil {
     // log levels

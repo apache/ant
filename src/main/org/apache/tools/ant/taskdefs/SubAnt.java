@@ -54,8 +54,6 @@ import org.apache.tools.ant.types.Reference;
  * </li>
  * </ul>
  * @since Ant1.6
- * @author <a href="mailto:ddevienne@lgc.com">Dominique Devienne</a>
- * @author <A HREF="mailto:andreas.ames@tenovis.com">Andreas Ames</A>
  * @ant.task name="subant" category="control"
  */
 public class SubAnt

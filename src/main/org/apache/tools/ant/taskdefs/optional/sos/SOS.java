@@ -30,7 +30,6 @@ import org.apache.tools.ant.types.Path;
  *
  *  These tasks were inspired by the VSS tasks
  *
- * @author Jesse Stockall
  */
 
 public abstract class SOS extends Task implements SOSCmd {

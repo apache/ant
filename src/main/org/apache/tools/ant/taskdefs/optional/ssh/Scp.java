@@ -36,7 +36,6 @@ import org.apache.tools.ant.types.FileSet;
 /**
  * Ant task for sending files to remote machine over ssh/scp.
  *
- * @author charliehubbard76@yahoo.com
  * @since Ant 1.6
  */
 public class Scp extends SSHBase {

@@ -34,10 +34,6 @@ import org.apache.tools.ant.types.EnumeratedAttribute;
  * around {@link Manifest Manifest}.  This task can be used to write a
  * Manifest file, optionally replacing or updating an existing file.
  *
- * @author Conor MacNeill
- * @author Stefan Bodewig
- * @author <a href="mailto:j_a_fernandez@yahoo.com">Jose Alberto Fernandez</a>
- *
  * @since Ant 1.5
  *
  * @ant.task category="java"

@@ -35,13 +35,6 @@ import org.apache.tools.ant.util.SourceFileScanner;
  * Sets the given property if the specified target has a timestamp
  * greater than all of the source files.
  *
- * @author William Ferguson
- *         <a href="mailto:williamf@mincom.com">williamf@mincom.com</a>
- * @author Hiroaki Nakamura
- *         <a href="mailto:hnakamur@mc.neweb.ne.jp">hnakamur@mc.neweb.ne.jp</a>
- * @author Stefan Bodewig
- * @author <a href="http://nerdmonkey.com">Eli Tucker</a>
- *
  * @since Ant 1.2
  *
  * @ant.task category="control"

@@ -22,7 +22,6 @@ import org.apache.tools.ant.BuildFileTest;
 /**
  * Tests DependSet.
  *
- * @author <a href="mailto:cstrong@arielpartners.com">Craeg Strong</a>
  */
 public class DependSetTest extends BuildFileTest {
 

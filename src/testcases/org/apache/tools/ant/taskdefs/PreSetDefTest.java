@@ -24,7 +24,6 @@ import org.apache.tools.ant.Task;
 import org.apache.tools.ant.types.FileSet;
 
 /**
- * @author Peter Reilly
  */
 public class PreSetDefTest extends BuildFileTest {
     public PreSetDefTest(String name) {

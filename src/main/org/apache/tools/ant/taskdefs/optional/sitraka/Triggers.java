@@ -25,7 +25,6 @@ import org.apache.tools.ant.BuildException;
  * Trigger information. It will return as a command line argument by calling
  * the <tt>toString()</tt> method.
  *
- * @author <a href="mailto:sbailliez@imediation.com">Stephane Bailliez</a>
  */
 public class Triggers {
 

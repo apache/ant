@@ -35,7 +35,6 @@ import java.util.zip.ZipFile;
 /**
  * Core of the bytecode analyzer. It loads classes from a given classpath.
  *
- * @author <a href="sbailliez@imediation.com">Stephane Bailliez</a>
  */
 public class ClassPathLoader {
 

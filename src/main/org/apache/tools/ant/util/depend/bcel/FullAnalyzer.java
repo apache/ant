@@ -28,8 +28,6 @@ import org.apache.tools.ant.util.depend.AbstractAnalyzer;
 /**
  * An analyzer capable fo traversing all class - class relationships.
  *
- * @author Conor MacNeill
- * @author <a href="mailto:hengels@innovidata.com">Holger Engels</a>
  */
 public class FullAnalyzer extends AbstractAnalyzer {
     /**

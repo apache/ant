@@ -23,7 +23,6 @@ import java.io.IOException;
  * The constant pool entry subclass used to represent double constant
  * values.
  *
- * @author Conor MacNeill
  */
 public class DoubleCPInfo extends ConstantCPInfo {
     /**

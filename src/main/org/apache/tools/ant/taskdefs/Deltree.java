@@ -25,8 +25,6 @@ import org.apache.tools.ant.Task;
 /**
  *
  *
- * @author duncan@x180.com
- *
  * @since Ant 1.1
  *
  * @deprecated The deltree task is deprecated since Ant 1.2.  Use

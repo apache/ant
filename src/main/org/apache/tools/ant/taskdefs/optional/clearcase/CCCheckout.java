@@ -91,7 +91,6 @@ import org.apache.tools.ant.types.Commandline;
  *   <tr>
  * </table>
  *
- * @author Curtis White (Extended by Sean Egan)
  */
 public class CCCheckout extends ClearCase {
     private boolean mReserved = true;

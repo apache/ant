@@ -30,7 +30,6 @@ import org.apache.tools.ant.types.Path;
  *
  * This ant task is a front end for the weblogic DDCreator tool.
  *
- * @author Conor MacNeill, Cortex ebusiness Pty Limited
  */
 public class DDCreator extends MatchingTask {
     /**

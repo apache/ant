@@ -26,7 +26,6 @@ import org.apache.tools.ant.BuildFileTest;
 import org.apache.tools.ant.util.FileUtils;
 
 /**
- * @author Peter Reilly
  */
 public class TokenFilterTest extends BuildFileTest {
 

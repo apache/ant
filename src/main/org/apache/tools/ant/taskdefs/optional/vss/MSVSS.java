@@ -45,9 +45,6 @@ import org.apache.tools.ant.types.Commandline;
  * also contains constants for the flags that can be passed to SS.
  * </p>
  *
- * @author Craig Cottingham
- * @author Andrew Everitt
- * @author Jesse Stockall
  */
 public abstract class MSVSS extends Task implements MSVSSConstants {
 

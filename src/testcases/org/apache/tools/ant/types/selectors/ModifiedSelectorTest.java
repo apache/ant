@@ -36,7 +36,6 @@ import org.apache.tools.ant.types.selectors.modifiedselector.*;
 /**
  * Unit tests for ModifiedSelector.
  *
- * @author Jan Mat\u00e8rne
  * @version 2003-09-13
  * @since  Ant 1.6
  */

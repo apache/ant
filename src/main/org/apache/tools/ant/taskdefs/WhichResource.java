@@ -33,7 +33,6 @@ import java.net.URL;
  * &lt;whichresource resource="/log4j.properties"
  *   property="log4j.url" &gt;
  * </pre>
- * @author steve loughran while stuck in Enumclaw, WA, with a broken down car
  * @since Ant 1.6
  * @ant.attribute.group name="oneof" description="Exactly one of these two"
  */

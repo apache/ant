@@ -34,8 +34,6 @@ import com.jcraft.jsch.Session;
 /**
  * Executes a command on a remote machine via ssh.
  *
- * @author    Robert Anderson, riznob@hotmail.com
- * @author    Dale Anson, danson@germane-software.com
  * @version   $Revision$
  * @created   February 2, 2003
  * @since     Ant 1.6

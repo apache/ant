@@ -26,8 +26,6 @@ import org.apache.tools.ant.Task;
 /**
  * Copies a file.
  *
- * @author duncan@x180.com
- *
  * @since Ant 1.1
  *
  * @deprecated The copyfile task is deprecated since Ant 1.2.  Use

@@ -75,7 +75,6 @@ import org.apache.tools.ant.types.Commandline;
  *   <tr>
  * </table>
  *
- * @author Curtis White
  */
 public class CCCheckin extends ClearCase {
     private String mComment = null;

@@ -23,7 +23,6 @@ import org.apache.tools.ant.BuildException;
 /**
  * Wrapper for environment variables.
  *
- * @author Stefan Bodewig
  */
 public class Environment {
 

@@ -24,7 +24,6 @@ import org.apache.tools.ant.types.selectors.modifiedselector.ModifiedSelector;
 /**
  * This is the interface for selectors that can contain other selectors.
  *
- * @author <a href="mailto:bruce@callenish.com">Bruce Atherton</a>
  * @since 1.5
  */
 public interface SelectorContainer {

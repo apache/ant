@@ -29,7 +29,6 @@ import org.apache.tools.ant.Project;
 /**
  * Testcase for the Signjar task
  *
- * @author Conor MacNeill
  */
 public class SignJarTest extends BuildFileTest {
 

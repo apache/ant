@@ -20,8 +20,6 @@ package org.apache.tools.ant.taskdefs.optional.ccm;
 /**
  * Performs Continuus Checkin Default task command.
  *
- * @author Benoit Moussaud benoit.moussaud@criltelecom.com
- *
  * @ant.task name="ccmcheckintask" category="scm"
  */
 public class CCMCheckinDefault extends CCMCheck {

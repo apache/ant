@@ -26,7 +26,6 @@ import org.apache.tools.ant.ExitException;
  * fully terminate Ant.
  *
  * @see ExitException
- * @author <a href="mailto:sbailliez@apache.org">Stephane Bailliez</a>
  */
 public class NoExitSecurityManager extends SecurityManager {
 

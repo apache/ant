@@ -19,7 +19,6 @@ package org.apache.tools.ant.taskdefs.optional.sos;
 /**
  * Interface to hold constants used by the SOS tasks
  *
- * @author    Jesse Stockall
  */
 public interface SOSCmd {
     // soscmd Command options

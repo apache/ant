@@ -18,9 +18,6 @@
  * jlink.java links together multiple .jar files Original code by Patrick
  * Beard. Modifications to work with ANT by Matthew Kuperus Heun.
  *
- * @author <a href="mailto:beard@netscape.com>Patrick C. Beard</a> .
- * @author <a href="mailto:matthew.k.heun@gaerospace.com>Matthew Kuperus Heun
- *      </a>
  */
 package org.apache.tools.ant.taskdefs.optional.jlink;
 

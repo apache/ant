@@ -60,9 +60,6 @@ import org.apache.tools.ant.types.Reference;
  * This also holds for properties loaded from a property file.</p>
  * Properties are case sensitive.
  *
- * @author costin@dnt.ro
- * @author <a href="mailto:rubys@us.ibm.com">Sam Ruby</a>
- * @author <a href="mailto:glennm@ca.ibm.com">Glenn McAllister</a>
  * @since Ant 1.1
  *
  * @ant.attribute.group name="name" description="One of these, when using the name attribute"

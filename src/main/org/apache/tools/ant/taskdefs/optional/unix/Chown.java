@@ -33,9 +33,6 @@ import org.apache.tools.ant.BuildException;
 /**
  * Chown equivalent for unix-like environments.
  *
- * @author Patrick G. Heck
- *         <a href="mailto:gus.heck@olin.edu">gus.heck@olin.edu</a>
- *
  * @since Ant 1.6
  *
  * @ant.task category="filesystem"

@@ -144,8 +144,6 @@ import org.apache.tools.ant.selectors.FileSelector;
  * This will scan a directory called test for .class files, but excludes all
  * .class files in all directories under a directory called "modules"
  *
- * @author Arnout J. Kuiper <a href="mailto:ajkuiper@wxs.nl">ajkuiper@wxs.nl</a>
- * @author Magesh Umasankar
  */
 public class DirectoryScanner implements FileScanner {
 

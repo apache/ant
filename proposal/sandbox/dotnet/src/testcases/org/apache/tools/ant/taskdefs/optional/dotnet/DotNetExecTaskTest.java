@@ -58,7 +58,6 @@ import org.apache.tools.ant.BuildFileTest;
 /**
  * Tests the DotNetExecTask task, based off Ant's DotnetTest.
  *
- * @author steve loughran
  */
 public class DotNetExecTaskTest extends BuildFileTest {
 

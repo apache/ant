@@ -24,8 +24,6 @@ import org.apache.tools.ant.Task;
 /**
  * Creates the necessary rmic adapter, given basic criteria.
  *
- * @author <a href="mailto:tokamoto@rd.nttdata.co.jp">Takashi Okamoto</a>
- * @author <a href="mailto:jayglanville@home.com">J D Glanville</a>
  * @since 1.4
  */
 public class RmicAdapterFactory {

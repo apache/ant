@@ -72,7 +72,6 @@ import org.apache.commons.discovery.resource.*;
  * - properties files found in the classpath ( META-INF/ant.tasks ).
  * - resources named after the task name: META-INF/ant/[TASK_NAME].task
  *
- * @author Costin Manolache
  */
 public class TaskDiscovery extends Task implements ProjectComponentFactory
 {

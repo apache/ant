@@ -182,7 +182,6 @@ import org.apache.tools.ant.types.selectors.BaseExtendSelector;
  * a nested <i><param name="algorithm.provider" value="MyProvider"/></i>.
  *
  *
- * @author Jan Mat\u00e8rne
  * @version 2003-09-13
  * @since  Ant 1.6
 */

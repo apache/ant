@@ -27,9 +27,6 @@ import org.apache.tools.ant.util.StringUtils;
 /**
  * Reads an input line from the console.
  *
- * @author <a href="mailto:usch@usch.net">Ulrich Schmidt</a>
- * @author Stefan Bodewig
- *
  * @since Ant 1.5
  *
  * @ant.task category="control"

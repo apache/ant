@@ -33,8 +33,6 @@ import org.apache.tools.ant.types.Commandline;
 /**
  * Creates new Continuus ccm task and sets it as the default.
  *
- * @author Benoit Moussaud benoit.moussaud@criltelecom.com
- *
  * @ant.task name="ccmcreatetask" category="scm"
  */
 public class CCMCreateTask extends Continuus implements ExecuteStreamHandler {

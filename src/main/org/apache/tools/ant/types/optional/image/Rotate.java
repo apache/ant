@@ -26,7 +26,6 @@ import java.awt.Graphics2D;
 /**
  * ImageOperation to rotate an image by a certain degree
  *
- * @author <a href="mailto:kzgrey@ntplx.net">Kevin Z Grey</a>
  * @see org.apache.tools.ant.taskdefs.optional.image.Image
  */
 public class Rotate extends TransformOperation implements DrawOperation {

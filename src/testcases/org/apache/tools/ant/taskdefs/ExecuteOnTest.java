@@ -29,7 +29,6 @@ import java.util.GregorianCalendar;
 import junit.framework.ComparisonFailure;
 
 /**
- * @author Matt Benson
  */
 public class ExecuteOnTest extends BuildFileTest {
     private static final String BUILD_PATH = "src/etc/testcases/taskdefs/exec/";

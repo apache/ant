@@ -25,8 +25,6 @@ import org.apache.tools.ant.DirectoryScanner;
 /**
  * Alters the default excludes for the <strong>entire</strong> build..
  *
- * @author Gus Heck &lt;gus.heck@olin.edu&gt;
- *
  * @since Ant 1.6
  *
  * @ant.task category="utility"

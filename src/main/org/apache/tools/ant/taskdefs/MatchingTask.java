@@ -50,14 +50,6 @@ import org.apache.tools.ant.types.selectors.modifiedselector.ModifiedSelector;
  * This is an abstract task that should be used by all those tasks that
  * require to include or exclude files based on pattern matching.
  *
- * @author Arnout J. Kuiper
- *         <a href="mailto:ajkuiper@wxs.nl">ajkuiper@wxs.nl</a>
- * @author Stefano Mazzocchi
- *         <a href="mailto:stefano@apache.org">stefano@apache.org</a>
- * @author Sam Ruby <a href="mailto:rubys@us.ibm.com">rubys@us.ibm.com</a>
- * @author Jon S. Stevens <a href="mailto:jon@clearink.com">jon@clearink.com</a>
- * @author Stefan Bodewig
- * @author <a href="mailto:bruce@callenish.com">Bruce Atherton</a>
  * @since Ant 1.1
  */
 

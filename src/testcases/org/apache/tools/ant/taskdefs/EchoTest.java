@@ -20,7 +20,6 @@ package org.apache.tools.ant.taskdefs;
 import org.apache.tools.ant.BuildFileTest;
 
 /**
- * @author Nico Seessle <nico@seessle.de>
  */
 public class EchoTest extends BuildFileTest {
 

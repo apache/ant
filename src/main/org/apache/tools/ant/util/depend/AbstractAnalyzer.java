@@ -26,7 +26,6 @@ import org.apache.tools.ant.types.Path;
  * An abstract implementation of the analyzer interface providing support
  * for the bulk of interface methods.
  *
- * @author Conor MacNeill
  */
 public abstract class AbstractAnalyzer implements DependencyAnalyzer {
     /** Maximum number of loops for looking for indirect dependencies. */

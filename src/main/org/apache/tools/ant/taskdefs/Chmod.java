@@ -29,12 +29,6 @@ import org.apache.tools.ant.types.PatternSet;
 /**
  * Chmod equivalent for unix-like environments.
  *
- * @author costin@eng.sun.com
- * @author Mariusz Nowostawski (Marni)
- *         <a href="mailto:mnowostawski@infoscience.otago.ac.nz">
- *              mnowostawski@infoscience.otago.ac.nz</a>
- * @author Stefan Bodewig
- *
  * @since Ant 1.1
  *
  * @ant.task category="filesystem"

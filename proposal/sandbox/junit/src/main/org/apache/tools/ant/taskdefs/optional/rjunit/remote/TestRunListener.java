@@ -58,7 +58,6 @@ import java.util.EventListener;
 
 /**
  *
- * @author <a href="mailto:sbailliez@apache.org">Stephane Bailliez</a>
  */
 public interface TestRunListener extends EventListener {
 

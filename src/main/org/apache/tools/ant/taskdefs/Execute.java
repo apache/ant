@@ -38,10 +38,6 @@ import org.apache.tools.ant.types.Commandline;
 /**
  * Runs an external program.
  *
- * @author thomas.haas@softwired-inc.com
- * @author <a href="mailto:jtulley@novell.com">Jeff Tulley</a>
- * @author <a href="mailto:CHudak@arrowheadgrp.com">Charles Hudak</a>
- *
  * @since Ant 1.2
  *
  * @version $Revision$

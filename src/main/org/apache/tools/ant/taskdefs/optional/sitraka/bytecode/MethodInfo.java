@@ -25,7 +25,6 @@ import org.apache.tools.ant.taskdefs.optional.sitraka.bytecode.attributes.Attrib
  * Method info structure.
  * @todo give a more appropriate name to methods.
  *
- * @author <a href="sbailliez@imediation.com">Stephane Bailliez</a>
  */
 public final class MethodInfo {
     private int access_flags;

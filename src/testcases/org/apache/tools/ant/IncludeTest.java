@@ -22,7 +22,6 @@ import org.apache.tools.ant.BuildFileTest;
 /**
  * Test the build file inclusion using XML entities.
  *
- * @author Conor MacNeill
  */
 public class IncludeTest extends BuildFileTest {
 

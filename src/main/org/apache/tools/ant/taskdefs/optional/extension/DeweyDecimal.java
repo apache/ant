@@ -26,7 +26,6 @@ import java.util.StringTokenizer;
  * represent major, minor, micro, etc versions.  The version number
  * must begin with a number.
  *
- * @author <a href="mailto:peter@apache.org">Peter Donald</a>
  * @version $Revision$ $Date$
  */
 public final class DeweyDecimal {

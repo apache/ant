@@ -24,9 +24,6 @@ import org.apache.tools.ant.types.Path;
 /**
  * Performs CheckOut commands to Microsoft Visual SourceSafe.
  *
- * @author Martin Poeschl
- * @author Jesse Stockall
- *
  * @ant.task name="vsscheckout" category="scm"
  * @ant.attribute.group name="vdl" description="Only one of version, date or label"
  */

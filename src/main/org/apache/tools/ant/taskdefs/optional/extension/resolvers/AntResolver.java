@@ -27,8 +27,6 @@ import org.apache.tools.ant.taskdefs.optional.extension.ExtensionResolver;
 /**
  * Resolver that just returns s specified location.
  *
- * @author <a href="mailto:peter@apache.org">Peter Donald</a>
- * @author <a href="mailto:jeff@socialchange.net.au">Jeff Turner</>
  * @version $Revision$ $Date$
  */
 public class AntResolver

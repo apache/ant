@@ -20,7 +20,6 @@ package org.apache.tools.zip;
 /**
  * Constants from stat.h on Unix systems.
  *
- * @author Stefan Bodewig
  * @version $Revision$
  */
 public interface UnixStat {

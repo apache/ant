@@ -38,12 +38,6 @@ import org.apache.tools.ant.types.Permissions;
  * the same JVM for the called application thus resulting in much
  * faster operation.
  *
- * @author Stefano Mazzocchi
- *         <a href="mailto:stefano@apache.org">stefano@apache.org</a>
- * @author Stefan Bodewig
- * @author <a href="mailto:donal@savvion.com">Donal Quinlan</a>
- * @author <a href="mailto:martijn@kruithof.xs4all.nl">Martijn Kruithof</a>
- *
  * @since Ant 1.1
  *
  * @ant.task category="java"

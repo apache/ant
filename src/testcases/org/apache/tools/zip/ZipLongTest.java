@@ -22,7 +22,6 @@ import junit.framework.TestCase;
 /**
  * JUnit 3 testcases for org.apache.tools.zip.ZipLong.
  *
- * @author Stefan Bodewig
  */
 public class ZipLongTest extends TestCase {
 

@@ -55,8 +55,6 @@ import org.apache.tools.ant.util.FileUtils;
  * </pre>
  *
  *
- * @author Costin Manolache
- *
  * @since Ant 1.1
  *
  * @ant.task category="control"

@@ -24,7 +24,6 @@ import org.apache.tools.ant.BuildException;
 
 /***
  * Regular expression implementation using the JDK 1.4 regular expression package
- * @author Matthew Inger <a href="mailto:mattinger@mindless.com">mattinger@mindless.com</a>
  */
 public class Jdk14RegexpRegexp extends Jdk14RegexpMatcher implements Regexp {
 

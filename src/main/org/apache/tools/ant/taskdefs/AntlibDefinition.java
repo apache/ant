@@ -25,8 +25,6 @@ import org.apache.tools.ant.Task;
  * Base class for tasks that that can be used in antlibs.
  * For handling uri and class loading.
  *
- * @author Peter Reilly
- *
  * @since Ant 1.6
  */
 public class AntlibDefinition extends Task {

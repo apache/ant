@@ -34,7 +34,6 @@ import org.apache.tools.ant.Task;
  * Keywords in input files look like this: @foo@. See the docs for the
  * setKeys method to understand how to do the substitutions.
  *
- * @author Jon S. Stevens <a href="mailto:jon@clearink.com">jon@clearink.com</a>
  * @since Ant 1.1
  * @deprecated KeySubst is deprecated since Ant 1.1. Use Filter + Copy
  * instead.

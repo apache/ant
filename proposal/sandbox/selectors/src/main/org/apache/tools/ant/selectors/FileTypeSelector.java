@@ -59,7 +59,6 @@ import java.io.File;
  * File selector that performs selection based on
  * file type - file and directory.
  *
- * @author Magesh Umasankar
  */
 public class FileTypeSelector implements FileSelector {
     private String value = null;

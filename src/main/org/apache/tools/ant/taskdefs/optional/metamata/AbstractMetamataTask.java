@@ -43,7 +43,6 @@ import org.apache.tools.ant.util.JavaEnvUtils;
  * For more information, visit the website at
  * <a href="http://www.metamata.com">www.metamata.com</a>
  *
- * @author <a href="mailto:sbailliez@apache.org">Stephane Bailliez</a>
  */
 public abstract class AbstractMetamataTask extends Task {
 

@@ -31,7 +31,6 @@ import org.apache.tools.ant.BuildException;
  * are not managed by the repository to its control.
  * Created: Sat Dec 15 20:26:07 2001
  *
- * @author <a href="mailto:scohen@localhost.localdomain">Steve Cohen</a>
  * @version 1.0
  *
  * @ant.task name="stcheckin" category="scm" product="Starteam"

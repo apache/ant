@@ -23,7 +23,6 @@ import org.apache.tools.ant.Location;
 import org.apache.tools.ant.Project;
 
 /**
- * @author Conor MacNeill
  */
 public class ImportTest extends BuildFileTest {
 

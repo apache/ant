@@ -27,7 +27,6 @@ import org.apache.tools.ant.Task;
 /**
  * Test of the parallel TaskContainer
  *
- * @author Conor MacNeill
  * @created 21 February 2002
  */
 public class ParallelTest extends BuildFileTest {

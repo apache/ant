@@ -80,7 +80,6 @@ import org.apache.tools.ant.taskdefs.condition.Os;
  *   <tr>
  * </table>
  *
- * @author Sean Egan
  */
 public class CCMkattr extends ClearCase {
     private boolean mReplace = false;

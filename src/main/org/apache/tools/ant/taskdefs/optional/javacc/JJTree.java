@@ -34,9 +34,6 @@ import org.apache.tools.ant.util.JavaEnvUtils;
 /**
  * Runs the JJTree compiler compiler.
  *
- * @author thomas.haas@softwired-inc.com
- * @author Michael Saunders
- *         <a href="mailto:michael@amtec.com">michael@amtec.com</a>
  */
 public class JJTree extends Task {
 

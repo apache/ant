@@ -25,7 +25,6 @@ import org.apache.tools.ant.util.StringUtils;
 /**
  * Test for the Audit parser.
  *
- * @author <a href="mailto:sbailliez@apache.org">Stephane Bailliez</a>
  */
 public class MAuditParserTest extends TestCase {
 

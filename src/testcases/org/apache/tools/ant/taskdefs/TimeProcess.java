@@ -21,7 +21,6 @@ package org.apache.tools.ant.taskdefs;
  *
  * <p>Used to be an inner class of ExecuteWatchdogTest.
  *
- * @author <a href="mailto:sbailliez@imediation.com">Stephane Bailliez</a>
  */
 public class TimeProcess {
     public static void main(String[] args) throws Exception {

@@ -31,7 +31,6 @@ import org.apache.tools.ant.util.regexp.Regexp;
 /**
  * Selector that filters files based on a regular expression.
  *
- * @author <a href="mailto:jvandermeer2@comcast.net">Jay van der Meer</a>
  * @since Ant 1.6
  */
 public class ContainsRegexpSelector extends BaseExtendSelector {

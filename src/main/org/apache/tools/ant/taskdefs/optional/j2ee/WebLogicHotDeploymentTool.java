@@ -29,8 +29,6 @@ import org.apache.tools.ant.taskdefs.Java;
  *  <p>In the end, this task assembles the commadline parameters
  *  and runs the weblogic.deploy tool in a seperate JVM.
  *
- *  @author Christopher A. Longo - cal@cloud9.net
- *
  *  @see org.apache.tools.ant.taskdefs.optional.j2ee.HotDeploymentTool
  *  @see org.apache.tools.ant.taskdefs.optional.j2ee.AbstractHotDeploymentTool
  *  @see org.apache.tools.ant.taskdefs.optional.j2ee.ServerDeploy

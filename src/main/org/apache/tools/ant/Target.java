@@ -29,7 +29,6 @@ import org.apache.tools.ant.util.CollectionUtils;
 /**
  * Class to implement a target object with required parameters.
  *
- * @author James Davidson <a href="mailto:duncan@x180.com">duncan@x180.com</a>
  */
 public class Target implements TaskContainer {
 

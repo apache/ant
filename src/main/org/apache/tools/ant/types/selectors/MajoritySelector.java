@@ -29,7 +29,6 @@ import java.util.Enumeration;
  * as exercises for the reader (as are the usecases where this would
  * be necessary).
  *
- * @author <a href="mailto:bruce@callenish.com">Bruce Atherton</a>
  * @since 1.5
  */
 public class MajoritySelector extends BaseSelectorContainer {

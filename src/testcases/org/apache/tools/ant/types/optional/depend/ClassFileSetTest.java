@@ -32,7 +32,6 @@ import org.apache.tools.ant.DirectoryScanner;
 /**
  * Testcase for the Classfileset optional type.
  *
- * @author Conor MacNeill
  */
 public class ClassFileSetTest extends BuildFileTest {
     public static final String RESULT_FILESET = "result";

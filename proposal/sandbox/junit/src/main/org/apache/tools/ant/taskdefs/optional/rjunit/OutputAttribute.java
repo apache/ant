@@ -70,7 +70,6 @@ import org.apache.tools.ant.ProjectComponent;
  * Note that stdout and stderr are wrapped by a <tt>KeepAliveOutputStream</tt>
  * so that the stream cannot be closed.
  *
- * @author <a href="mailto:sbailliez@apache.org">Stephane Bailliez</a>
  * @see KeepAliveOutputStream
  */
 public class OutputAttribute extends ProjectComponent {

@@ -23,9 +23,6 @@ import org.apache.tools.ant.types.Commandline;
 /**
  * Creates a new project in Microsoft Visual SourceSafe.
  *
- * @author Gary S. Weaver
- * @author Jesse Stockall
- *
  * @ant.task name="vsscreate" category="scm"
  */
 public class MSVSSCREATE extends MSVSS {

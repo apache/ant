@@ -74,7 +74,6 @@ import org.apache.tools.ant.types.EnumeratedAttribute;
  * <!ATTLIST formatter usefile (yes|no) no>
  * </pre>
  *
- * @author <a href="mailto:sbailliez@apache.org">Stephane Bailliez</a>
  *
  * @see RJUnitTask
  * @see Formatter

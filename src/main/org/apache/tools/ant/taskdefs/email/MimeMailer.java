@@ -52,8 +52,6 @@ import org.apache.tools.ant.BuildException;
 /**
  * Uses the JavaMail classes to send Mime format email.
  *
- * @author roxspring@yahoo.com Rob Oxspring
- * @author <a href="mailto:ishu@akm.ru">Aleksandr Ishutin</a>
  * @since Ant 1.5
  */
 public class MimeMailer extends Mailer {

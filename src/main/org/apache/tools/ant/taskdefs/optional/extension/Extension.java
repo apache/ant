@@ -33,8 +33,6 @@ import java.util.jar.Manifest;
  * Java2 Standard Edition package, in file
  * <code>guide/extensions/versioning.html</code>.</p>
  *
- * @author <a href="mailto:craigmcc@apache.org">Craig R. McClanahan</a>
- * @author <a href="mailto:peter@apache.org">Peter Donald</a>
  * @version $Revision$ $Date$
  */
 public final class Extension {

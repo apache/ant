@@ -33,15 +33,12 @@ import org.apache.tools.ant.Project;
  *
  * A filter set may have begintoken and endtokens defined.
  *
- * @author     <A href="mailto:gholam@xtra.co.nz">  Michael McCallum  </A>
- * @author     <A href="mailto:martin@mvdb.net">  Martin van den Bemt </A>
  */
 public class FilterSet extends DataType implements Cloneable {
 
     /**
      * Individual filter component of filterset
      *
-     * @author    Michael McCallum
      */
     public static class Filter {
         /** Token which will be replaced in the filter operation */
@@ -107,7 +104,6 @@ public class FilterSet extends DataType implements Cloneable {
     /**
      * The filtersfile nested element.
      *
-     * @author    Michael McCallum
      */
     public class FiltersFile {
 

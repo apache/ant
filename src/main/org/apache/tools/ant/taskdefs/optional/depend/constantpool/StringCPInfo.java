@@ -23,7 +23,6 @@ import java.io.IOException;
  * A String Constant Pool Entry. The String info contains an index into the
  * constant pool where a UTF8 string is stored.
  *
- * @author Conor MacNeill
  */
 public class StringCPInfo extends ConstantCPInfo {
 

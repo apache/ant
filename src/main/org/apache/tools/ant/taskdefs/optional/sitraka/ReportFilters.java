@@ -24,7 +24,6 @@ import org.apache.tools.ant.util.regexp.RegexpMatcherFactory;
 /**
  * Filters information from coverage, somewhat similar to a <tt>FileSet</tt>.
  *
- * @author <a href="mailto:sbailliez@imediation.com">Stephane Bailliez</a>
  */
 public class ReportFilters {
 

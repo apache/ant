@@ -24,7 +24,6 @@ import org.apache.tools.ant.BuildFileTest;
 /**
  * Testcase for the war task
  *
- * @author Conor MacNeill
  */
 public class WarTest extends BuildFileTest {
     public static final String TEST_BUILD_FILE

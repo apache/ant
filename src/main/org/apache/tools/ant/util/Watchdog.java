@@ -27,9 +27,6 @@ import java.util.Vector;
  *
  * @see org.apache.tools.ant.taskdefs.ExecuteWatchdog
  *
- * @author Stefan Bodewig
- * @author thomas.haas@softwired-inc.com
- * @author <a href="mailto:sbailliez@imediation.com">Stephane Bailliez</a>
  */
 public class Watchdog implements Runnable {
 

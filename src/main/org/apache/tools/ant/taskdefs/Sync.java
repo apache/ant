@@ -42,7 +42,6 @@ import org.apache.tools.ant.util.IdentityMapper;
  * mappers and filter chains. Files of the destination directory not
  * present in any of the source fileset are removed.</p>
  *
- * @author <a href="mailto:ddevienne@lgc.com">Dominique Devienne</a>
  * @version $Revision$
  * @since Ant 1.6
  *

@@ -35,7 +35,6 @@ import org.apache.tools.ant.util.FileUtils;
  * create a temporary file with the .xml suffix.
  * <pre>&lt;tempfile property="temp.file" destDir="build"/&gt;</pre>
  * create a temp file in the build subdir
- *@author      steve loughran
  *@since       Ant 1.5
  *@ant.task
  */

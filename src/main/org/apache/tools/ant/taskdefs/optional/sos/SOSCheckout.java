@@ -21,8 +21,6 @@ import org.apache.tools.ant.types.Commandline;
 /**
  * Retrieves and locks files in Visual SourceSafe via a SourceOffSite server.
  *
- * @author    Jesse Stockall
- *
  * @ant.task name="soscheckout" category="scm"
  */
 public class SOSCheckout extends SOS {

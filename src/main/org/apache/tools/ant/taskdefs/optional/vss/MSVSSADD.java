@@ -24,9 +24,6 @@ import org.apache.tools.ant.types.Path;
 /**
  * Performs Add commands to Microsoft Visual SourceSafe.
  *
- * @author Nigel Magnay
- * @author Jesse Stockall
- *
  * @ant.task name="vssadd" category="scm"
  */
 public class MSVSSADD extends MSVSS {

@@ -29,7 +29,6 @@ import org.apache.tools.ant.types.Path;
  * source files. Analyzer specific configuration is catered for through a
  * generic configure method
  *
- * @author Conor MacNeill
  */
 public interface DependencyAnalyzer {
     /**

@@ -57,7 +57,6 @@ import java.io.File;
  *
  * </pre>
  *
- * @author Costin Manolache
  */
 public class Classloader extends Task {
     /** @see MagicNames#SYSTEM_LOADER_REF */

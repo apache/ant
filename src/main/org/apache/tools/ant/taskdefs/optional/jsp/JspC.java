@@ -58,13 +58,7 @@ import org.apache.tools.ant.types.Reference;
  * &lt;/jspc&gt;
  * </pre>
  *
- * @author Steve Loughran
- * @author <a href="mailto:mattw@i3sp.com">Matthew Watson</a>
  * <p> Large Amount of cutting and pasting from the Javac task...
- * @author James Davidson <a href="mailto:duncan@x180.com">duncan@x180.com</a>
- * @author Robin Green <a href="mailto:greenrd@hotmail.com">greenrd@hotmail.com</a>
- * @author Stefan Bodewig
- * @author <a href="mailto:jayglanville@home.com">J D Glanville</a>
  * @since 1.5
  */
 public class JspC extends MatchingTask {

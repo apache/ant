@@ -19,7 +19,6 @@ package org.apache.tools.ant.types;
 /**
  * A parameter is composed of a name, type and value.
  *
- * @author Magesh Umasankar
  */
 public final class Parameter {
     private String name = null;

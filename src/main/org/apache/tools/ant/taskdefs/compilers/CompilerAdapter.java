@@ -30,8 +30,6 @@ import org.apache.tools.ant.taskdefs.Javac;
  * task, the execute command and a parameterless constructor (for
  * reflection).</p>
  *
- * @author Jay Dickon Glanville
- *         <a href="mailto:jayglanville@home.com">jayglanville@home.com</a>
  * @since Ant 1.3
  */
 

@@ -25,7 +25,6 @@ import java.io.OutputStream;
  * Used by <code>Execute</code> to handle input and output stream of
  * subprocesses.
  *
- * @author thomas.haas@softwired-inc.com
  * @since Ant 1.2
  */
 public interface ExecuteStreamHandler {

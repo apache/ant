@@ -22,8 +22,6 @@ import java.util.Vector;
 /**
  * CVS Entry.
  *
- * @author <a href="mailto:jeff.martin@synamic.co.uk">Jeff Martin</a>
- * @author <a href="mailto:peter@apache.org">Peter Donald</a>
  * @version $Revision$ $Date$
  */
 class CVSEntry {

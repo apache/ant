@@ -36,8 +36,6 @@ import org.apache.tools.ant.types.Commandline;
 import org.apache.tools.ant.types.FileSet;
 
 /**
- * @author Patrick G. Heck
- *         <a href="mailto:gus.heck@olin.edu">gus.heck@olin.edu</a>
  * @since Ant 1.6
  *
  * @ant.task category="filesystem"

@@ -60,7 +60,6 @@ import org.apache.tools.ant.types.Commandline;
  *   <tr>
  * </table>
  *
- * @author Sean Egan
  */
 public class CCMkdir extends ClearCase {
     private String  mComment = null;

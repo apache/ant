@@ -28,7 +28,6 @@ import org.apache.tools.mail.MailMessage;
 /**
  * Class responsible for sending email through raw protocol methods.
  *
- * @author roxspring@imapmail.org Rob Oxspring
  * @since Ant 1.5
  */
 class PlainMailer extends Mailer {

@@ -19,7 +19,6 @@ package org.apache.tools.ant.taskdefs;
 
 import org.apache.tools.ant.BuildFileTest;
 /**
- * @author steve_l@iseran.com steve loughran
  * @created 01 May 2001
  */
 public class SleepTest extends BuildFileTest {

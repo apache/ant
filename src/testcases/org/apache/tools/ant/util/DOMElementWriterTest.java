@@ -24,7 +24,6 @@ import junit.framework.TestSuite;
 /**
  * Tests for org.apache.tools.ant.util.DOMElementWriter.
  *
- * @author Stefan Bodewig
  */
 public class DOMElementWriterTest extends TestCase {
 

@@ -23,7 +23,6 @@ import org.apache.tools.ant.Project;
 /**
  * Class to hold a reference to another object in the project.
  *
- * @author Stefan Bodewig
  */
 public class Reference {
 

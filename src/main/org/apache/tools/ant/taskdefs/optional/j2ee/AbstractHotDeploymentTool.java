@@ -38,8 +38,6 @@ import org.apache.tools.ant.types.Path;
  *  whatever task it takes to hot-deploy the component.  IE: spawn a JVM and
  *  run class, exec a native executable, run Java code...
  *
- *  @author Christopher A. Longo - cal@cloud9.net
- *
  *  @see org.apache.tools.ant.taskdefs.optional.j2ee.HotDeploymentTool
  *  @see org.apache.tools.ant.taskdefs.optional.j2ee.ServerDeploy
  */

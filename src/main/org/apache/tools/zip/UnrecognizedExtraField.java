@@ -24,7 +24,6 @@ package org.apache.tools.zip;
  * <p>Assumes local file data and central directory entries are
  * identical - unless told the opposite.</p>
  *
- * @author Stefan Bodewig
  * @version $Revision$
  */
 public class UnrecognizedExtraField implements ZipExtraField {

@@ -30,8 +30,6 @@ import java.io.IOException;
  * An output stream that compresses into the BZip2 format (without the file
  * header chars) into another stream.
  *
- * @author <a href="mailto:keiron@aftexsw.com">Keiron Liddle</a>
- *
  * TODO:    Update to BZip2 1.0.1
  */
 public class CBZip2OutputStream extends OutputStream implements BZip2Constants {

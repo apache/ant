@@ -34,7 +34,6 @@ import org.apache.tools.ant.util.FileUtils;
  * it will increment the build number by one and write it back out into the
  * file.
  *
- * @author <a href="mailto:peter@apache.org">Peter Donald</a>
  * @version $Revision$ $Date$
  * @since Ant 1.5
  * @ant.task name="buildnumber"

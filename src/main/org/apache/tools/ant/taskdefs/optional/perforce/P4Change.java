@@ -34,7 +34,6 @@ import org.apache.tools.ant.Project;
  *
  * @see P4Edit
  * @see P4Submit
- * @author <A HREF="mailto:leslie.hughes@rubus.com">Les Hughes</A>
  *
  * @ant.task category="scm"
  */

@@ -38,13 +38,11 @@ import org.apache.tools.ant.util.depend.DependencyAnalyzer;
 /**
  * Generates a dependency file for a given set of classes.
  *
- * @author Conor MacNeill
  */
 public class Depend extends MatchingTask {
     /**
      * A class (struct) user to manage information about a class
      *
-     * @author Conor MacNeill
      */
     private static class ClassFileInfo {
         /** The file where the class file is stored in the file system */

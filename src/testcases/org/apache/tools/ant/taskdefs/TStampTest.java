@@ -27,7 +27,6 @@ import org.apache.tools.ant.Location;
 
 /**
  *
- * @author <a href="mailto:sbailliez@apache.org">Stephane Bailliez</a>
  */
 public class TStampTest extends TestCase {
 

@@ -27,7 +27,6 @@ import junit.framework.TestSuite;
 /**
  * Tests for all implementations of the RegexpMatcher interface.
  *
- * @author Stefan Bodewig
  */
 public abstract class RegexpMatcherTest extends TestCase {
 

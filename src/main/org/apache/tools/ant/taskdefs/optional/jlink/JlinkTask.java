@@ -48,7 +48,6 @@ import org.apache.tools.ant.types.Path;
  * </pre>
  * </code>
  *
- * @author <a href="mailto:matthew.k.heun@gaerospace.com">Matthew Kuperus Heun</a>
  * @ant.task ignore="true"
  */
 public class JlinkTask extends MatchingTask {

@@ -34,10 +34,6 @@ import org.apache.tools.ant.types.FileSet;
  * A <code>JUnitTest</code> is created for each of these named classes with
  * basic setup inherited from the parent <code>BatchTest</code>.
  *
- * @author <a href="mailto:jeff.martin@synamic.co.uk">Jeff Martin</a>
- * @author Stefan Bodewig
- * @author <a href="mailto:sbailliez@imediation.com">Stephane Bailliez</a>
- *
  * @see JUnitTest
  */
 public final class BatchTest extends BaseTest {

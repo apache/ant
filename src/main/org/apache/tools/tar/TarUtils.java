@@ -25,8 +25,6 @@ package org.apache.tools.tar;
 /**
  * This class provides static utility methods to work with byte streams.
  *
- * @author Timothy Gerard Endres <a href="mailto:time@ice.com">time@ice.com</a>
- * @author Stefano Mazzocchi <a href="mailto:stefano@apache.org">stefano@apache.org</a>
  */
 public class TarUtils {
 

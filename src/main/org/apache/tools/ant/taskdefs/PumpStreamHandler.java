@@ -25,7 +25,6 @@ import java.io.OutputStream;
  * Copies standard output and error of subprocesses to standard output and
  * error of the parent process.
  *
- * @author thomas.haas@softwired-inc.com
  * @since Ant 1.2
  */
 public class PumpStreamHandler implements ExecuteStreamHandler {

@@ -27,7 +27,6 @@ import java.io.File;
 /**
  * JUnit 3 testcases for org.apache.tools.ant.CommandlineJava
  *
- * @author Stefan Bodewig
  */
 public class CommandlineJavaTest extends TestCase {
 

@@ -24,7 +24,6 @@ import org.apache.tools.ant.Project;
  * actual implementation class depends on the System or Ant Property:
  * <code>ant.regexp.regexpimpl</code>.
  *
- * @author Matthew Inger <a href="mailto:mattinger@mindless.com">mattinger@mindless.com</a>
  * @version $Revision$
  */
 public class RegexpFactory extends RegexpMatcherFactory {

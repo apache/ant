@@ -29,7 +29,6 @@ import org.apache.tools.ant.util.StringUtils;
  * Abstract base class to provide common services for the
  * VAJ tool API servlets
  *
- * @author Wolf Siberski, based on servlets written by Glenn McAllister
  */
 public abstract class VAJToolsServlet extends HttpServlet {
     /**

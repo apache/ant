@@ -72,10 +72,6 @@ import org.w3c.dom.Element;
  *  "my.properties", and will log a message if the file could not be created or
  *  written to, but will still allow the build to continue.
  *
- *@author     Matt Albrecht <a href="mailto:groboclown@users.sourceforge.net">
- *      groboclown@users.sourceforge.net</a>
- *@author     Ingmar Stein <a href="mailto:stein@xtramind.com">
-        stein@xtramind.com</a>
  *@since      Ant 1.5
  */
 public class EchoProperties extends Task {

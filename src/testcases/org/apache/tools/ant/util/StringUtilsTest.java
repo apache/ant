@@ -22,7 +22,6 @@ import junit.framework.TestCase;
 
 /**
  * Test for StringUtils
- * @author <a href="mailto:sbailliez@apache.org">Stephane Bailliez</a>
  */
 public class StringUtilsTest extends TestCase {
     public StringUtilsTest(String s) {

@@ -53,12 +53,6 @@ import org.apache.tools.ant.launch.Locator;
  * system file paths at runtime as well as copying files or setting
  * there last modification time.
  *
- * @author duncan@x180.com
- * @author Conor MacNeill
- * @author Stefan Bodewig
- * @author Magesh Umasankar
- * @author <a href="mailto:jtulley@novell.com">Jeff Tulley</a>
- *
  * @version $Revision$
  */
 

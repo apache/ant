@@ -34,7 +34,6 @@ import org.apache.tools.ant.util.regexp.Regexp;
  * This splits up input into tokens and passes
  * the tokens to a sequence of filters.
  *
- * @author Peter Reilly
  * @since Ant 1.6
  * @see BaseFilterReader
  * @see ChainableReader

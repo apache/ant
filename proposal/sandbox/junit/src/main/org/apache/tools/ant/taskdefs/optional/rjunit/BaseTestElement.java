@@ -63,7 +63,6 @@ import org.apache.tools.ant.ProjectComponent;
 /**
  * Base test implementation that implements the if/unless logic.
  *
- * @author <a href="mailto:sbailliez@apache.org">Stephane Bailliez</a>
  */
 public abstract class BaseTestElement
         extends ProjectComponent implements TestCollector {

@@ -45,7 +45,6 @@ import org.xml.sax.AttributeList;
  * However, if no namespace is used the behavior should be exactly
  * identical with the default helper.
  *
- * @author duncan@x180.com
  */
 public class ProjectHelper {
     /** The URI for ant name space */

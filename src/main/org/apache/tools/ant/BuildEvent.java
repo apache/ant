@@ -25,7 +25,6 @@ import java.util.EventObject;
  * a target level event will have project and target references;
  * a task level event will have project, target and task references.
  *
- * @author Matt Foemmel
  */
 public class BuildEvent extends EventObject {
 

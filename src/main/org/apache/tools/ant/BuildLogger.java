@@ -26,7 +26,6 @@ import java.io.PrintStream;
  * the ant log, which is usually <code>System.out</code> unless redirected by
  * the <code>-logfile</code> option.
  *
- * @author Conor MacNeill
  */
 public interface BuildLogger extends BuildListener {
 

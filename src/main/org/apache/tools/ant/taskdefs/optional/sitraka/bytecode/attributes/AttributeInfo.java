@@ -19,7 +19,6 @@ package org.apache.tools.ant.taskdefs.optional.sitraka.bytecode.attributes;
 /**
  * Attribute info structure that provides base methods
  *
- * @author <a href="sbailliez@imediation.com">Stephane Bailliez</a>
  */
 public interface AttributeInfo {
 

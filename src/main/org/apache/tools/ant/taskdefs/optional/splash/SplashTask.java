@@ -34,7 +34,6 @@ import org.apache.tools.ant.Task;
  * well. Use in conjunction with the sound task to provide interest
  * whilst waiting for your builds to complete...
  * @since Ant1.5
- * @author Les Hughes (leslie.hughes@rubus.com)
  */
 public class SplashTask extends Task {
 

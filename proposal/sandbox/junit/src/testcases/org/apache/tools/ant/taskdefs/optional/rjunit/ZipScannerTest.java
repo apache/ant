@@ -60,7 +60,6 @@ import junit.framework.TestCase;
 /**
  * Basic test to ensure that the collector is working.
  *
- * @author <a href="mailto:sbailliez@apache.org">Stephane Bailliez</a>
  */
 public class ZipScannerTest extends TestCase {
     public ZipScannerTest(String s) {

@@ -31,7 +31,6 @@ import java.util.Iterator;
 /**
  * JUnit 3 testcases for org.apache.tools.ant.DirectoryScanner
  *
- * @author Stefan Bodewig
  */
 public class DirectoryScannerTest extends BuildFileTest {
 

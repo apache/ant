@@ -22,7 +22,6 @@ import org.apache.tools.ant.BuildException;
 /**
  * Interface for conditions to use inside the &lt;condition&gt; task.
  *
- * @author Stefan Bodewig
  * @version $Revision$
  */
 public interface Condition {

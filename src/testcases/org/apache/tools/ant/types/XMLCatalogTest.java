@@ -39,7 +39,6 @@ import javax.xml.transform.TransformerException;
 /**
  * JUnit testcases for org.apache.tools.ant.types.XMLCatalog
  *
- * @author <a href="mailto:cstrong@arielpartners.com">Craeg Strong</a>
  */
 public class XMLCatalogTest extends TestCase {
 

@@ -77,7 +77,6 @@ import org.apache.tools.ant.types.Commandline;
  *   <tr>
  * </table>
  *
- * @author Curtis White
  */
 public class CCUpdate extends ClearCase {
     private boolean mGraphical = false;

@@ -45,9 +45,6 @@ import org.apache.tools.ant.util.StringUtils;
  * or the value of a property available in a designated property file.
  * If you want to replace a text that crosses line boundaries, you
  * must use a nested <code>&lt;replacetoken&gt;</code> element.
- * @author Stefano Mazzocchi
- *         <a href="mailto:stefano@apache.org">stefano@apache.org</a>
- * @author <a href="mailto:erik@desknetinc.com">Erik Langenbach</a>
  *
  * @since Ant 1.1
  *

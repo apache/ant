@@ -55,7 +55,6 @@ import org.xml.sax.helpers.AttributesImpl;
  * This class can be used to transform a text file or to process the
  * output stream directly.
  *
- * @author  <a href="mailto:sbailliez@imediation.com">Stephane Bailliez</a>
  */
 public class MMetricsStreamHandler implements ExecuteStreamHandler {
 

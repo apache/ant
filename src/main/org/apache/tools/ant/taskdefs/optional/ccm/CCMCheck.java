@@ -30,7 +30,6 @@ import org.apache.tools.ant.types.FileSet;
 
 /**
  * Class common to all check commands (checkout, checkin,checkin default task);
- * @author Benoit Moussaud benoit.moussaud@criltelecom.com
  * @ant.task ignore="true"
  */
 public class CCMCheck extends Continuus {

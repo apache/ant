@@ -72,12 +72,6 @@ import org.apache.tools.ant.util.facade.FacadeTaskHelper;
  * project contains a compiler implementation for this task as well,
  * please consult miniRMI's documentation to learn how to use it.</p>
  *
- * @author duncan@x180.com
- * @author ludovic.claude@websitewatchers.co.uk
- * @author David Maclean <a href="mailto:david@cm.co.za">david@cm.co.za</a>
- * @author Stefan Bodewig
- * @author Takashi Okamoto tokamoto@rd.nttdata.co.jp
- *
  * @since Ant 1.1
  *
  * @ant.task category="java"

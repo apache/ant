@@ -67,7 +67,6 @@ import org.apache.tools.ant.taskdefs.optional.rjunit.remote.TestRunListener;
  * and are made available as public instances
  * </p>
  *
- * @author <a href="mailto:sbailliez@apache.org">Stephane Bailliez</a>
  */
 public class TestRunRecorder implements TestRunListener {
 

@@ -29,8 +29,6 @@ import org.apache.tools.ant.util.StringUtils;
 /**
  * simple implementation of P4HandlerAdapter used by tasks which are not
  * actually processing the output from Perforce
- * @author <A HREF="mailto:leslie.hughes@rubus.com">Les Hughes</A>
- * @author <a href="mailto:matt@thebishops.org">Matt Bishop</a>
  */
 public class SimpleP4OutputHandler extends P4HandlerAdapter {
 

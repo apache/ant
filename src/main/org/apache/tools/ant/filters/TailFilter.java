@@ -35,7 +35,6 @@ import org.apache.tools.ant.util.LineTokenizer;
  *   &lt;param name=&quot;lines&quot; value=&quot;3&quot;/&gt;
  * &lt;/filterreader&gt;</pre>
  *
- * @author Magesh Umasankar
  */
 public final class TailFilter extends BaseParamFilterReader
     implements ChainableReader {

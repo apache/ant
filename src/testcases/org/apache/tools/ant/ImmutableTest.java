@@ -20,7 +20,6 @@ package org.apache.tools.ant;
 import org.apache.tools.ant.BuildFileTest;
 
 /**
- * @author Erik Hatcher
  */
 public class ImmutableTest extends BuildFileTest {
 

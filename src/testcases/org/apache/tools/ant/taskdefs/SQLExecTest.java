@@ -37,7 +37,6 @@ import org.apache.tools.ant.BuildException;
  * It would be much better to extend this testcase by using HSQL
  * as the test db, so that a db is really used.
  *
- * @author <a href="mailto:sbailliez@apache.org">Stephane Bailliez</a>
  */
 public class SQLExecTest extends TestCase {
 

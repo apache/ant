@@ -39,8 +39,6 @@ import org.apache.tools.ant.types.Commandline;
  * @see P4Submit
  * @see P4Label
  * @see org.apache.tools.ant.taskdefs.Execute
- * @author <A HREF="mailto:leslie.hughes@rubus.com">Les Hughes</A>
- * @author <a href="mailto:matt@thebishops.org">Matt Bishop</a>
  */
 public abstract class P4Base extends org.apache.tools.ant.Task {
 

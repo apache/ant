@@ -29,8 +29,6 @@ import org.apache.tools.ant.ProjectComponent;
 /**
  * Class representing an email message.
  *
- * @author roxspring@yahoo.com Rob Oxspring
- * @author <a href="mailto:ishu@akm.ru">Aleksandr Ishutin</a>
  * @since Ant 1.5
  */
 public class Message extends ProjectComponent {

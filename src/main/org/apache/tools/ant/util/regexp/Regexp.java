@@ -22,7 +22,6 @@ import org.apache.tools.ant.BuildException;
  * Interface which represents a regular expression, and the operations
  * that can be performed on it.
  *
- * @author <a href="mailto:mattinger@mindless.com">Matthew Inger</a>
  */
 public interface Regexp extends RegexpMatcher {
 

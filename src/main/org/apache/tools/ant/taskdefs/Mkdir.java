@@ -26,7 +26,6 @@ import org.apache.tools.ant.Task;
  * Creates a directory and any non-existent parent directories, when
  * necessary
  *
- * @author duncan@x180.com
  * @since Ant 1.1
  *
  * @ant.task category="filesystem"

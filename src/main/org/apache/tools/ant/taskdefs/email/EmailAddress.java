@@ -19,8 +19,6 @@ package org.apache.tools.ant.taskdefs.email;
 /**
  * Holds an email address.
  *
- * @author roxspring@yahoo.com Rob Oxspring
- * @author Michael Davey
  * @since Ant 1.5
  */
 public class EmailAddress {

@@ -28,7 +28,6 @@ import org.apache.tools.ant.taskdefs.PreSetDef;
  * or data type that did not exist when Ant started, or one which
  * has had its definition updated to use a different implementation class.
  *
- * @author Stefan Bodewig
  */
 public class UnknownElement extends Task {
 

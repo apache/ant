@@ -47,9 +47,6 @@ import org.apache.tools.ant.types.FileSet;
  * <td>&lt;p4add Commandlength="450"&gt;</td></tr>
  * </table>
  *
- * @author <A HREF="mailto:leslie.hughes@rubus.com">Les Hughes</A>
- * @author <A HREF="mailto:ashundi@tibco.com">Anli Shundi</A>
- *
  * @ant.task category="scm"
  */
 public class P4Add extends P4Base {

@@ -86,7 +86,6 @@ import org.apache.tools.ant.util.FileUtils;
  * <!ATTLIST server host CDATA 127.0.0.1>
  * </pre>
 
- * @author <a href="mailto:sbailliez@apache.org">Stephane Bailliez</a>
  */
 public final class ClientElement extends ProjectComponent {
     /** resources */

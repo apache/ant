@@ -29,7 +29,6 @@ import org.apache.tools.ant.types.Commandline;
 /**
  * The implementation of the rmic for SUN's JDK.
  *
- * @author <a href="mailto:tokamoto@rd.nttdata.co.jp">Takashi Okamoto</a>
  * @since Ant 1.4
  */
 public class SunRmic extends DefaultRmicAdapter {

@@ -24,7 +24,6 @@ import java.io.IOException;
 /**
  * heavily inspired from LogOutputStream
  * this stream class calls back the P4Handler on each line of stdout or stderr read
- * @author : <a href="mailto:levylambert@tiscali-dsl.de">Antoine Levy-Lambert</a>
  */
 public class P4OutputStream extends OutputStream {
     private P4Handler handler;

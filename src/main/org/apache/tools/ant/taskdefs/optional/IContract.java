@@ -50,7 +50,6 @@ import org.apache.tools.ant.types.Reference;
  * <p/>
  * Thanks to Rainer Schmitz for enhancements and comments.
  *
- * @author <a href="mailto:aslak.hellesoy@bekk.no">Aslak Helles\u00f8y</a>
  *
  * <p/>
  * <table border="1" cellpadding="2" cellspacing="0">
@@ -866,7 +865,6 @@ public class IContract extends MatchingTask {
      * about missing iContract is missing. Used to indicate a more verbose
      * error to the user, with advice about how to solve the problem
      *
-     * @author Conor MacNeill
      */
     private class IContractPresenceDetector implements BuildListener {
         public void buildFinished(BuildEvent event) {
@@ -906,7 +904,6 @@ public class IContract extends MatchingTask {
      * like Jikes. It reuses the logic from DefaultCompilerAdapter, which is
      * protected, so we have to subclass it.
      *
-     * @author Conor MacNeill
      */
     private class ClasspathHelper extends DefaultCompilerAdapter {
         private final String compiler;

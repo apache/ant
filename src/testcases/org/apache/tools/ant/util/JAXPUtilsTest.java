@@ -22,7 +22,6 @@ import java.io.File;
 
 /**
  * JAXPUtils test case
- * @author <a href="mailto:sbailliez@apache.org">Stephane Bailliez</a>
  */
 public class JAXPUtilsTest extends TestCase {
     public JAXPUtilsTest(String name){

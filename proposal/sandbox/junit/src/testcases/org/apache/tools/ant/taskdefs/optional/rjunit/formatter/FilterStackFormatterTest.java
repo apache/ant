@@ -67,7 +67,6 @@ import org.apache.tools.ant.taskdefs.optional.rjunit.remote.TestRunEvent;
 /**
  * Not exactly rocket science test.. dooh !
  *
- * @author <a href="mailto:sbailliez@apache.org">Stephane Bailliez</a>
  */
 public class FilterStackFormatterTest extends TestCase
         implements Formatter {

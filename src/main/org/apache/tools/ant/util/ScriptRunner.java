@@ -29,8 +29,6 @@ import java.util.Iterator;
 /**
  * This class is used to run BSF scripts
  *
- * @author Sam Ruby <a href="mailto:rubys@us.ibm.com">rubys@us.ibm.com</a>
- * @author Conor MacNeill
  */
 public class ScriptRunner {
 

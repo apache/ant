@@ -43,8 +43,6 @@ import org.apache.tools.ant.Task;
  * If a suffix is specified, and the specified file ends in that suffix,
  * the basename will be the simple file name without the suffix.
  *
- * @author Diane Holt <a href="mailto:holtdl@apache.org">holtdl@apache.org</a>
- *
  * @version $Revision$
  *
  * @since Ant 1.5

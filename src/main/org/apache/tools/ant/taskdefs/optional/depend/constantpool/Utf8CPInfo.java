@@ -22,7 +22,6 @@ import java.io.IOException;
 /**
  * A UTF8 Constant Pool Entry.
  *
- * @author Conor MacNeill
  */
 public class Utf8CPInfo extends ConstantPoolEntry {
     /** The String value of the UTF-8 entry */

@@ -31,8 +31,6 @@ import java.util.Properties;
 /**
  * Tests the EchoProperties task.
  *
- * @author    Matt Albrecht <a href="mailto:groboclown@users.sourceforge.net">groboclown@users.sourceforge.net</a>
- * @author    Ingmar Stein <a href="mailto:stein@xtramind.com">stein@xtramind.com</a>
  * @created   17-Jan-2002
  * @since     Ant 1.5
  */

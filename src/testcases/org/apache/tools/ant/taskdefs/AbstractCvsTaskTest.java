@@ -21,8 +21,6 @@ import java.io.File;
 import org.apache.tools.ant.BuildFileTest;
 
 /**
- * @author stephan <stephan@wanderinghorse.net>
- * @author Stefan Bodewig
  * @version $Revision$
  */
 public class AbstractCvsTaskTest extends BuildFileTest {

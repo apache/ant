@@ -31,10 +31,6 @@ import org.apache.tools.ant.types.Resource;
  * </p>
  * <p>This is a Singleton.</p>
  *
- * @author Arnout J. Kuiper
- * <a href="mailto:ajkuiper@wxs.nl">ajkuiper@wxs.nl</a>
- * @author Magesh Umasankar
- * @author <a href="mailto:bruce@callenish.com">Bruce Atherton</a>
  * @since 1.5
  */
 public final class SelectorUtils {

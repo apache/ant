@@ -29,8 +29,6 @@ import java.util.GregorianCalendar;
 import junit.framework.ComparisonFailure;
 
 /**
- * @author <a href="antoine@antbuild.com">Antoine Levy-Lambert</a>
- * @author Matt Benson
  */
 public class ExecTaskTest extends BuildFileTest {
     private static final String BUILD_PATH = "src/etc/testcases/taskdefs/exec/";

@@ -106,13 +106,6 @@ import junit.framework.TestResult;
  * different testcases, you need to enable <code>fork</code>.  A
  * number of attributes and elements allow you to set up how this JVM
  * runs.
- * @author Thomas Haas
- * @author Stefan Bodewig
- * @author <a href="mailto:sbailliez@imediation.com">Stephane Bailliez</a>
- * @author <a href="mailto:Gerrit.Riessen@web.de">Gerrit Riessen</a>
- * @author <a href="mailto:ehatcher@apache.org">Erik Hatcher</a>
- * @author <a href="mailto:martijn@kruithof.xs4all.nl">Martijn Kruithof></a>
- * @author <a href="http://nerdmonkey.com">Eli Tucker</a>
  *
  * @version $Revision$
  *

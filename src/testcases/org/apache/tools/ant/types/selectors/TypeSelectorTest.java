@@ -33,8 +33,6 @@ import junit.framework.AssertionFailedError;
 /**
  * Tests Type Selectors.
  *
- * @author <a href="mailto:bruce@callenish.com">Bruce Atherton</a>
- * @author <a href="mailto:levylambert@tiscali-dsl.de">Antoine Levy-Lambert</a>
  */
 public class TypeSelectorTest extends BaseSelectorTest {
 

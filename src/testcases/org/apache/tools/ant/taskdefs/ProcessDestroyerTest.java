@@ -27,7 +27,6 @@ import org.apache.tools.ant.util.JavaEnvUtils;
 import junit.framework.TestCase;
 
 /**
- * @author Jim Allers
  */
 public class ProcessDestroyerTest extends TestCase {
 

@@ -26,7 +26,6 @@ import java.util.Random;
  * exception is thrown
  *
  * @since 1.5
- * @author Conor MacNeill
  * @created 21 February 2002
  */
 public class DemuxOutputTask extends Task {

@@ -36,7 +36,6 @@ import java.lang.reflect.InvocationTargetException;
  * jar existing in ant.home/lib and the jar versions...
  *
  * @since Ant 1.5
- * @author <a href="mailto:sbailliez@apache.org">Stephane Bailliez</a>
  */
 public final class Diagnostics {
 

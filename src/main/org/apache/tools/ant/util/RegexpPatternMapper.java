@@ -26,7 +26,6 @@ import org.apache.tools.ant.util.regexp.RegexpMatcherFactory;
  * Implementation of FileNameMapper that does regular expression
  * replacements.
  *
- * @author Stefan Bodewig
  */
 public class RegexpPatternMapper implements FileNameMapper {
     protected RegexpMatcher reg = null;

@@ -82,7 +82,6 @@ import org.apache.tools.ant.types.Commandline;
  *   <tr>
  * </table>
  *
- * @author Sean P. Kane (Based on work by: Curtis White)
  */
 public class CCLock extends ClearCase {
     private boolean mReplace = false;

@@ -38,7 +38,6 @@ import org.apache.tools.ant.util.ScriptRunner;
 /**
  * Define a task using a script
  *
- * @author Conor MacNeill
  * @since Ant 1.6
  */
 public class ScriptDef extends DefBase {

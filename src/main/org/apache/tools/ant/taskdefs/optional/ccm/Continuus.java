@@ -35,7 +35,6 @@ import org.apache.tools.ant.types.Commandline;
  * you can override this be specifying the ccmdir attribute.
  * </p>
  *
- * @author Benoit Moussaud benoit.moussaud@criltelecom.com
  */
 public abstract class Continuus extends Task {
 

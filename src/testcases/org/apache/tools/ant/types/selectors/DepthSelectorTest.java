@@ -29,7 +29,6 @@ import junit.framework.AssertionFailedError;
 /**
  * Tests Depth Selectors
  *
- * @author <a href="mailto:bruce@callenish.com">Bruce Atherton</a>
  */
 public class DepthSelectorTest extends BaseSelectorTest {
 

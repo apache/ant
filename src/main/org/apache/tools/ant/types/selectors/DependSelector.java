@@ -25,7 +25,6 @@ import java.io.File;
  * element, so isn't available as an ExtendSelector (since those
  * parameters can't hold other elements).
  *
- * @author <a href="mailto:bruce@callenish.com">Bruce Atherton</a>
  * @since 1.5
  */
 public class DependSelector extends MappingSelector {

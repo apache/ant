@@ -29,10 +29,6 @@ import org.apache.tools.ant.Project;
  * <p> The JUnit test is actually run by {@link JUnitTestRunner}.
  * So read the doc comments for that class :)
  *
- * @author Thomas Haas
- * @author Stefan Bodewig,
- * @author <a href="mailto:sbailliez@imediation.com">Stephane Bailliez</a>
- *
  * @since Ant 1.2
  *
  * @see JUnitTask

@@ -27,7 +27,6 @@ import org.apache.tools.ant.types.Path;
  *  Testcase to ensure that command line generation and required attributes are
  *  correct.
  *
- * @author    Jesse Stockall
  */
 public class SOSTest extends BuildFileTest {
 

@@ -62,7 +62,6 @@ import org.apache.tools.ant.BuildException;
  *
  * @see http://clearcase.rational.com/doc/latest/ccase_ux/ccref/mklabel.html#2051
  *
- * @author <a href="mailto:sbailliez@apache.org">Stephane Bailliez</a>
  */
 public class CCMklabel extends CCMatchingTask {
     private boolean replace = false;

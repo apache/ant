@@ -59,8 +59,6 @@ import java.net.URLEncoder;
  * This class is used to store name-value pairs for request parameters
  * and headers
  *
- * @author matth@pobox.com Matt Humphrey
- * @author steve_l@iseran.com Steve Loughran
  * @created March 17, 2001
  */
 

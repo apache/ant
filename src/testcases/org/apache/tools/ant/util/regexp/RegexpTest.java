@@ -20,7 +20,6 @@ package org.apache.tools.ant.util.regexp;
 /**
  * Tests for all implementations of the Regexp interface.
  *
- * @author Stefan Bodewig
  */
 public abstract class RegexpTest extends RegexpMatcherTest {
 

@@ -33,8 +33,6 @@ import org.apache.tools.zip.UnixStat;
  *
  * Since ant 1.6 ZipFileSet can be defined with an id and referenced in packaging tasks
  *
- * @author Don Ferguson <a href="mailto:don@bea.com">don@bea.com</a>
- * @author <a href="mailto:levylambert@tiscali-dsl.de">Antoine Levy-Lambert</a>
  */
 public class ZipFileSet extends FileSet {
 

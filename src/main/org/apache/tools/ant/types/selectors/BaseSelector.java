@@ -28,7 +28,6 @@ import org.apache.tools.ant.types.DataType;
  * for Selectors to inherit from this class, it is only necessary that
  * they implement FileSelector.
  *
- * @author <a href="mailto:bruce@callenish.com">Bruce Atherton</a>
  * @since 1.5
  */
 public abstract class BaseSelector extends DataType implements FileSelector {

@@ -53,7 +53,6 @@ import org.apache.tools.ant.types.FileSet;
  *  in. You can also use nested &lt;src&gt filesets to refer to source.
  * <p>
  *
- * @author     Steve Loughran
  * @ant.task    name="ilasm" category="dotnet"
  */
 

@@ -48,7 +48,6 @@ import java.io.PrintStream;
  * TODO: this is _very_ inefficient. Switching the out and tracking the logs
  * can be optimized a lot - but may require few more changes to the core.
  *
- * @author Erik Hatcher
  * @since Ant 1.5
  */
 public class CommonsLoggingListener implements BuildListener, BuildLogger {

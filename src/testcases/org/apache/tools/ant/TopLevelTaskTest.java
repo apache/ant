@@ -23,7 +23,6 @@ package org.apache.tools.ant;
 /**
  * Tests for builds with tasks at the top level
  *
- * @author Stefan Bodewig
  * @since Ant 1.6
  */
 public class TopLevelTaskTest extends BuildFileTest {

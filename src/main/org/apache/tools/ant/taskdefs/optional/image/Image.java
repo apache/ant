@@ -49,8 +49,6 @@ import java.util.Vector;
  *
  * @see org.apache.tools.ant.types.optional.image.ImageOperation
  * @see org.apache.tools.ant.types.DataType
- * @author <a href="mailto:kzgrey@ntplx.net">Kevin Z Grey</a>
- * @author <a href="mailto:dep4b@yahoo.com">Eric Pugh</a>
  */
 public class Image extends MatchingTask {
     protected Vector instructions = new Vector();

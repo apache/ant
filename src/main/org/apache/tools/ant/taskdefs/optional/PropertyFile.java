@@ -102,9 +102,6 @@ import org.apache.tools.ant.types.EnumeratedAttribute;
  *The message property is used for the property file header, with "\\" being
  *a newline delimiter character.
  *
- * @author Thomas Christen <a href="mailto:chr@active.ch">chr@active.ch</a>
- * @author Jeremy Mawson <a href="mailto:jem@loftinspace.com.au">jem@loftinspace.com.au</a>
- * @author Erik Hatcher <a href="mailto:ehatcher@apache.org">ehatcher@apache.org</a>
  */
 public class PropertyFile extends Task {
 

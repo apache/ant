@@ -26,10 +26,6 @@ import org.apache.tools.ant.BuildException;
  * Compresses a file with the GZIP algorithm. Normally used to compress
  * non-compressed archives such as TAR files.
  *
- * @author James Davidson <a href="mailto:duncan@x180.com">duncan@x180.com</a>
- * @author Jon S. Stevens <a href="mailto:jon@clearink.com">jon@clearink.com</a>
- * @author Magesh Umasankar
- *
  * @since Ant 1.1
  *
  * @ant.task category="packaging"

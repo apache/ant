@@ -69,7 +69,6 @@ import org.apache.tools.ant.taskdefs.MatchingTask;
  *
  * @see http://clearcase.rational.com/doc/latest/ccase_ux/ccref/mkelem.html
  *
- * @author <a href="mailto:sbailliez@apache.org">Stephane Bailliez</a>
  */
 public class CCMkelem extends CCMatchingTask {
 

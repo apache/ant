@@ -22,7 +22,6 @@ import junit.framework.TestCase;
 /**
  * Testcase for the &lt;contains&gt; condition.
  *
- * @author Stefan Bodewig
  * @version $Revision$
  */
 public class ContainsTest extends TestCase {

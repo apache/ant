@@ -32,7 +32,6 @@ import java.io.Reader;
         classname=&quot;org.apache.tools.ant.filters.EscapeUnicode&quot;/&gt;
  *  </pre>
  *
- * @author <a href="mailto:levylambert@tiscali-dsl.de">Antoine Levy-Lambert</a>
  * @since Ant 1.6
  */
 public class EscapeUnicode

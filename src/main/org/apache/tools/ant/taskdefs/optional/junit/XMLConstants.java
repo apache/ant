@@ -25,7 +25,6 @@ package org.apache.tools.ant.taskdefs.optional.junit;
  * <----------------- @todo describe DTDs ---------------------->
  *
  * </pre></code>
- * @author <a href="mailto:sbailliez@imediation.com">Stephane Bailliez</a>
  * @see XMLJUnitResultFormatter
  * @see XMLResultAggregator
  */

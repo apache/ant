@@ -29,7 +29,6 @@ import java.io.Reader;
  * A test class for the 'concat' task, used to concatenate a series of
  * files into a single stream.
  *
- * @author <a href="mailto:derek@activate.net">Derek Slager</a>
  */
 public class ConcatTest
     extends BuildFileTest {

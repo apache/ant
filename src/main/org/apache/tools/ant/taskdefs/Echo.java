@@ -27,8 +27,6 @@ import org.apache.tools.ant.types.EnumeratedAttribute;
 /**
  * Writes a message to the Ant logging facilities.
  *
- * @author costin@dnt.ro
- *
  * @since Ant 1.1
  *
  * @ant.task category="utility"

@@ -26,7 +26,6 @@ import org.apache.tools.ant.AntTypeDefinition;
  * looks for a task or other Ant type that exists. Existence is defined as
  * the type is defined, and its implementation class is present. This
  * will work for datatypes and preset, script and macro definitions.
- * @author Steve Loughran
  */
 public class TypeFound extends ProjectComponent implements Condition {
 

@@ -25,7 +25,6 @@ import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.util.FileUtils;
 
 /**
- * @author Conor MacNeill
  */
 public class PropertyTest extends BuildFileTest {
 

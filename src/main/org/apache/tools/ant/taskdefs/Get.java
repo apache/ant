@@ -37,9 +37,6 @@ import org.apache.tools.ant.util.JavaEnvUtils;
  * actions on failures. NB: access through a firewall only works if the whole
  * Java runtime is correctly configured.
  *
- * @author costin@dnt.ro
- * @author gg@grtmail.com (Added Java 1.1 style HTTP basic auth)
- *
  * @since Ant 1.1
  *
  * @ant.task category="network"
@@ -320,10 +317,6 @@ public class Get extends Task {
     *
     * Based on RFC 1421.
     *
-    * @author
-    *    Unknown
-    * @author
-    *    <a HREF="gg@grtmail.com">Gautam Guliani</a>
     *********************************************************************/
 
     private static class  Base64Converter {

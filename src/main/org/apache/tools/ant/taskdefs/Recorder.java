@@ -38,7 +38,6 @@ import org.apache.tools.ant.types.EnumeratedAttribute;
  * <p>Some technical issues: the file's print stream is flushed for &quot;finished&quot;
  * events (buildFinished, targetFinished and taskFinished), and is closed on
  * a buildFinished event.</p>
- * @author <a href="mailto:jayglanville@home.com">J D Glanville</a>
  * @see RecorderEntry
  * @version 0.5
  * @since Ant 1.4

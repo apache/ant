@@ -27,8 +27,6 @@ import org.apache.tools.ant.BuildException;
 /**
  * Reopen Perforce checkout files between changelists.
  *
- * @author <A HREF="mailto:leslie.hughes@rubus.com">Les Hughes</A>
- *
  * @ant.task category="scm"
  */
 public class P4Reopen extends P4Base {

@@ -27,7 +27,6 @@ import org.apache.tools.ant.types.Path;
  * The implementation of the gcj compiler.
  * This is primarily a cut-and-paste from the jikes.
  *
- * @author <a href="mailto:tora@debian.org">Takashi Okamoto</a>
  * @since Ant 1.4
  */
 public class Gcj extends DefaultCompilerAdapter {

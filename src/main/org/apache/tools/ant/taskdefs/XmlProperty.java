@@ -163,10 +163,6 @@ import org.xml.sax.SAXException;
  *     part of the property name.  Defaults to false.</li>
  * </ul>
  *
- * @author <a href="mailto:nicolaken@apache.org">Nicola Ken Barozzi</a>
- * @author Erik Hatcher
- * @author <a href="mailto:paul@priorartisans.com">Paul Christmann</a>
- *
  * @ant.task name="xmlproperty" category="xml"
  */
 

@@ -24,7 +24,6 @@ import junit.framework.TestSuite;
 /**
  * Tests for org.apache.tools.ant.util;GlobPatternMapper.
  *
- * @author Stefan Bodewig
  */
 public class GlobPatternMapperTest extends TestCase {
 

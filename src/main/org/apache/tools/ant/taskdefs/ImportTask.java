@@ -51,9 +51,6 @@ import java.util.Vector;
  * </pre>
  * Import the project defined by the property deploy-platform
  *
- * @author Nicola Ken Barozzi nicolaken@apache.org
- * @author Dominique Devienne DDevienne@lgc.com
- * @author Costin Manolache
  * @since Ant1.6
  * @ant.task category="control"
  */

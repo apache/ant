@@ -22,7 +22,6 @@ import org.apache.tools.ant.BuildFileTest;
 /**
  * TODO : develop these testcases - the email task needs to have attributes allowing
  * to simulate sending mail and to catch the output in text files or streams
- * @author <a href="mailto:levylambert@tiscali-dsl.de">Antoine Levy-Lambert</a>
  */
 public class EmailTaskTest extends BuildFileTest {
 

@@ -39,8 +39,6 @@ import org.apache.tools.ant.util.LineTokenizer;
  * Translates text embedded in files using Resource Bundle files.
  * Since ant 1.6 preserves line endings
  *
- * @author Magesh Umasankar, Don Brown
- * @author <a href="mailto:tom@tbee.org">Tom Eugelink</a>
  */
 public class Translate extends MatchingTask {
     /**

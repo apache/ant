@@ -22,7 +22,6 @@ import java.io.File;
  * An interface used to describe the actions required of any type of
  * directory scanner.
  *
- * @author Apache Ant
  */
 public interface FileScanner {
     /**

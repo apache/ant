@@ -23,7 +23,6 @@ import org.apache.tools.ant.types.FileSet;
  * Asociated with the libraries is data pertaining to
  * how they are to be handled when building manifests.
  *
- * @author <a href="mailto:peter@apache.org">Peter Donald</a>
  * @version $Revision$ $Date$
  */
 public class LibFileSet

@@ -28,9 +28,6 @@ import org.apache.tools.ant.BuildException;
  * algorithm. Normally used to compress non-compressed archives such
  * as TAR files.
  *
- * @author Stefan Bodewig
- * @author Magesh Umasankar
- *
  * @since Ant 1.1
  *
  * @ant.task category="packaging"

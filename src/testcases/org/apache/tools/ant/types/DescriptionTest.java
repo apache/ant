@@ -29,7 +29,6 @@ import java.io.*;
 /**
  * FilterSet testing
  *
- * @author Conor MacNeill
  */
 public class DescriptionTest extends BuildFileTest {
 

@@ -40,7 +40,6 @@ import org.apache.tools.ant.Task;
  * available online at <a href="http://java.sun.com/j2se/1.3/docs/guide/extensions/versioning.html">
  * http://java.sun.com/j2se/1.3/docs/guide/extensions/versioning.html</a>.</p>
  *
- * @author <a href="mailto:peter@apache.org">Peter Donald</a>
  * @ant.task name="jarlib-manifest"
  */
 public final class JarLibManifestTask extends Task {

@@ -28,7 +28,6 @@ import org.apache.tools.ant.types.Path;
  * To shut down an instance you must supply both a username and
  * a password.
  *
- * @author Conor MacNeill, Cortex ebusiness Pty Limited
  */
 public class WLStop extends Task {
     /**

@@ -94,7 +94,6 @@ import org.apache.tools.ant.Project;
  *  46 -> Cyan
  *  47 -> White
  *
- * @author Magesh Umasankar
  */
 public final class AnsiColorLogger extends DefaultLogger {
     // private static final int ATTR_NORMAL = 0;

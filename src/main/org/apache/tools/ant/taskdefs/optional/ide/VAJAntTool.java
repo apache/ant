@@ -30,7 +30,6 @@ import org.apache.tools.ant.BuildException;
  * Additionally this class provides methods to save build info for
  * a project in the repository and load it from the repository
  *
- * @author Wolf Siberski
  */
 public class VAJAntTool {
     private static final String TOOL_DATA_KEY = "AntTool";

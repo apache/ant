@@ -75,7 +75,6 @@ import org.apache.tools.ant.taskdefs.PumpStreamHandler;
 /**
  * Helper methods related to clearcase commands.
  *
- * @author <a href="mailto:sbailliez@apache.org">Stephane Bailliez</a>
  */
 public final class CCUtils {
 

@@ -26,7 +26,6 @@ import java.io.InputStream;
  * individual tasks and threads.
  *
  * @since Ant 1.6
- * @author Conor MacNeill
  */
 public class DemuxInputStream extends InputStream {
 

@@ -65,7 +65,6 @@ import junit.framework.TestResult;
  * Here the difference is that this test summary should register to
  * the test result the time you wan to collect information.
  *
- * @author <a href="mailto:sbailliez@apache.org">Stephane Bailliez</a>
  */
 public final class TestSummary implements Serializable, TestListener {
 

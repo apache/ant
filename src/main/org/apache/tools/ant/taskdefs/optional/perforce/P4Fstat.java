@@ -47,10 +47,6 @@ import org.apache.tools.ant.types.FileSet;
  * &lt;/project&gt;
  * </pre>
  *
- * @author <A HREF="mailto:miha@softhome.net">Miha</A>
- * @author <A HREF="mailto:leslie.hughes@rubus.com">Les Hughes</A>
- * @author <A HREF="mailto:ashundi@tibco.com">Anli Shundi</A>
- *
  * @ant.task category="scm"
  */
 public class P4Fstat extends P4Base {

@@ -24,7 +24,6 @@ import java.util.zip.ZipException;
 /**
  * ZipExtraField related methods
  *
- * @author Stefan Bodewig
  * @version $Revision$
  */
 public class ExtraFieldUtils {

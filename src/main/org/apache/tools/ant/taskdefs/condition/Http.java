@@ -29,7 +29,6 @@ import org.apache.tools.ant.ProjectComponent;
  * Condition to wait for a HTTP request to succeed. Its attribute(s) are:
  *   url - the URL of the request.
  *   errorsBeginAt - number at which errors begin at; default=400.
- * @author <a href="mailto:denis@network365.com">Denis Hennessy</a>
  * @since Ant 1.5
  */
 public class Http extends ProjectComponent implements Condition {

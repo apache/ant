@@ -30,8 +30,6 @@ import java.net.URL;
  * This class provides a number of utility methods for particular build file
  * tests which extend this class.
  *
- * @author Nico Seessle <nico@seessle.de>
- * @author Conor MacNeill
  */
 public abstract class BuildFileTest extends TestCase {
 

@@ -29,7 +29,6 @@ import org.apache.tools.ant.BuildException;
  *
  * P4Have simply dumps the current file version info into
  * the Ant log (or stdout).
- * @author <A HREF="mailto:leslie.hughes@rubus.com">Les Hughes</A>
  *
  * @ant.task category="scm"
  */

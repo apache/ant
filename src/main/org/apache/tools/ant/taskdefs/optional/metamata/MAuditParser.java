@@ -33,7 +33,6 @@ import org.apache.tools.ant.util.regexp.RegexpMatcherFactory;
  * different packages)
  * </p>
  *
- * @author <a href="mailto:sbailliez@apache.org">Stephane Bailliez</a>
  */
 final class MAuditParser {
 

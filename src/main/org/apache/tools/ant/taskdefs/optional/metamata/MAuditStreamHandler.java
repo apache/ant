@@ -51,7 +51,6 @@ import org.w3c.dom.Element;
  * <li>it does not report error that goes to stderr.
  * </ul>
  *
- * @author <a href="mailto:sbailliez@apache.org">Stephane Bailliez</a>
  */
 class MAuditStreamHandler implements ExecuteStreamHandler {
 

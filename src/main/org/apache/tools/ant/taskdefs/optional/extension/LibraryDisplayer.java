@@ -26,7 +26,6 @@ import org.apache.tools.ant.BuildException;
  * to "Optional Packages" (formely known as "Extensions")
  * and Package Specifications.
  *
- * @author <a href="mailto:peter@apache.org">Peter Donald</a>
  * @version $Revision$ $Date$
  */
 class LibraryDisplayer {

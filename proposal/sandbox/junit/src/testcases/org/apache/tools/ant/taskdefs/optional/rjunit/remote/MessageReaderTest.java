@@ -68,7 +68,6 @@ import org.apache.tools.ant.taskdefs.optional.rjunit.TestRunRecorder;
 /**
  * Ensure that the Reader/Writer works fine.
  *
- * @author <a href="mailto:sbailliez@apache.org">Stephane Bailliez</a>
  */
 public class MessageReaderTest extends TestCase {
 

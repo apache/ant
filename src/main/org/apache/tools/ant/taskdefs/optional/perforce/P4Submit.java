@@ -35,8 +35,6 @@ import java.util.Vector;
  * Example Usage:-<br>
  * &lt;p4submit change="${p4.change}" /&gt;
  *
- * @author <A HREF="mailto:leslie.hughes@rubus.com">Les Hughes</A>
- *
  * @ant.task category="scm"
  */
 public class P4Submit extends P4Base {

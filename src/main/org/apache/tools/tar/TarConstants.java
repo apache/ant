@@ -25,8 +25,6 @@ package org.apache.tools.tar;
 /**
  * This interface contains all the definitions used in the package.
  *
- * @author Timothy Gerard Endres <a href="mailto:time@ice.com">time@ice.com</a>
- * @author Stefano Mazzocchi <a href="mailto:stefano@apache.org">stefano@apache.org</a>
  */
 
 public interface TarConstants {

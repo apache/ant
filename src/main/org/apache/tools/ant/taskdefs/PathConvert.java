@@ -38,8 +38,6 @@ import org.apache.tools.ant.util.FileNameMapper;
  * Converts path and classpath information to a specific target OS
  * format. The resulting formatted path is placed into the specified property.
  *
- * @author Larry Streepy <a href="mailto:streepy@healthlanguage.com">
- *      streepy@healthlanguage.com</a>
  * @since Ant 1.4
  * @ant.task category="utility"
  */

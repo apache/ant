@@ -24,10 +24,6 @@ import org.apache.tools.ant.types.Path;
 /**
  * Perform Get commands from Microsoft Visual SourceSafe.
  *
- * @author Craig Cottingham
- * @author Andrew Everitt
- * @author Jesse Stockall
- *
  * @ant.task name="vssget" category="scm"
  * @ant.attribute.group name="vdl" description="Only one of version, date or label"
  */

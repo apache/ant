@@ -26,7 +26,6 @@ import java.io.Reader;
  * Since this class heavily relies on the single char read function,
  * you are recommended to make it work on top of a buffered reader.
  *
- * @author Not Specified.
  */
 public final class StripJavaComments
     extends BaseFilterReader

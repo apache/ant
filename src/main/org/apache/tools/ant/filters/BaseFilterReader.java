@@ -26,7 +26,6 @@ import org.apache.tools.ant.util.FileUtils;
 /**
  * Base class for core filter readers.
  *
- * @author Magesh Umasankar
  */
 public abstract class BaseFilterReader extends FilterReader {
     /** Buffer size used when reading */

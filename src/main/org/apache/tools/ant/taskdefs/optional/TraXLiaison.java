@@ -56,9 +56,6 @@ import org.xml.sax.XMLReader;
 /**
  * Concrete liaison for XSLT processor implementing TraX. (ie JAXP 1.1)
  *
- * @author <a href="mailto:rubys@us.ibm.com">Sam Ruby</a>
- * @author <a href="mailto:dims@yahoo.com">Davanum Srinivas</a>
- * @author <a href="mailto:sbailliez@apache.org">Stephane Bailliez</a>
  * @since Ant 1.3
  */
 public class TraXLiaison implements XSLTLiaison2, ErrorListener, XSLTLoggerAware {

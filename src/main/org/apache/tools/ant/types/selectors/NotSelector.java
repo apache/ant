@@ -24,7 +24,6 @@ package org.apache.tools.ant.types.selectors;
  * isSelected() method, but it adds a check to ensure there is only one
  * other selector contained within.
  *
- * @author <a href="mailto:bruce@callenish.com">Bruce Atherton</a>
  * @since 1.5
  */
 public class NotSelector extends NoneSelector {

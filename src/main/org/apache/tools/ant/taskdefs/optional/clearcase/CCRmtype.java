@@ -83,7 +83,6 @@ import org.apache.tools.ant.types.Commandline;
  *   <tr>
  * </table>
  *
- * @author Curtis White
  */
 public class CCRmtype extends ClearCase {
     private String mTypeKind = null;

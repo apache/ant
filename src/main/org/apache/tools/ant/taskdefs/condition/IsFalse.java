@@ -23,7 +23,6 @@ import org.apache.tools.ant.ProjectComponent;
 /**
  * Condition that tests whether a given string evals to false
  *
- * @author Steve Loughran
  * @since Ant 1.5
  */
 public class IsFalse extends ProjectComponent implements Condition {

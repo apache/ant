@@ -24,7 +24,6 @@ import org.apache.tools.ant.Task;
 /**
  * Logs standard output and error of a subprocess to the log system of ant.
  *
- * @author thomas.haas@softwired-inc.com
  * @since Ant 1.2
  */
 public class LogStreamHandler extends PumpStreamHandler {

@@ -32,13 +32,6 @@ import org.apache.tools.ant.util.FileUtils;
 /**
  * Executes a given command if the os platform is appropriate.
  *
- * @author duncan@x180.com
- * @author rubys@us.ibm.com
- * @author thomas.haas@softwired-inc.com
- * @author Stefan Bodewig
- * @author <a href="mailto:mariusz@rakiura.org">Mariusz Nowostawski</a>
- * @author <a href="mailto:CHudak@arrowheadgrp.com">Charles Hudak</a>
- *
  * @since Ant 1.2
  *
  * @ant.task category="control"

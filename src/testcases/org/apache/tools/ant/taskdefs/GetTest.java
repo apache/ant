@@ -21,7 +21,6 @@ import java.io.File;
 import org.apache.tools.ant.BuildFileTest;
 
 /**
- * @author Nico Seessle <nico@seessle.de>
  */
 public class GetTest extends BuildFileTest {
 

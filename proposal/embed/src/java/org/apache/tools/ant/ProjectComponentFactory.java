@@ -93,7 +93,6 @@ import org.apache.tools.ant.util.FileUtils;
  *
  * Note that 'delayed' construction of tasks is used.
  *
- * @author Costin Manolache
  */
 public interface ProjectComponentFactory {
 

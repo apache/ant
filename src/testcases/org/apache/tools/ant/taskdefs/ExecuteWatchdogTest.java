@@ -26,7 +26,6 @@ import java.io.*;
 /**
  * Simple testcase for the ExecuteWatchdog class.
  *
- * @author <a href="mailto:sbailliez@imediation.com">Stephane Bailliez</a>
  */
 public class ExecuteWatchdogTest extends TestCase {
 

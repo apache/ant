@@ -68,9 +68,6 @@ import org.apache.tools.ant.types.EnumeratedAttribute;
  * then, if needed, overriding doConnect, and the onConnected(),
  * OnDownloadFinished() methods.
  * @since ant1.5
- * @author costin@dnt.ro
- * @author matth@pobox.com Matt Humphrey
- * @author steve_l@iseran.com Steve Loughran
  * @created March 17, 2001
  */
 public abstract class HttpTask extends Task {
@@ -1112,7 +1109,6 @@ public abstract class HttpTask extends Task {
      * Enumerated attribute for "authType" with the value "basic" (note,
      * eventually we can add "digest" authentication)
      *
-     * @author matt_h@pobox.com;
      * @created March 17, 2001
      */
     public static class AuthMethodType extends EnumeratedAttribute {

@@ -25,7 +25,6 @@ import java.util.zip.ZipInputStream;
  * A class file iterator which iterates through the contents of a Java jar
  * file.
  *
- * @author Conor MacNeill
  */
 public class JarFileIterator implements ClassFileIterator {
     /** The jar stream from the jar file being iterated over*/

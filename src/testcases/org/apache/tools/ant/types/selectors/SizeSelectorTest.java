@@ -29,7 +29,6 @@ import junit.framework.AssertionFailedError;
 /**
  * Tests Size Selectors
  *
- * @author <a href="mailto:bruce@callenish.com">Bruce Atherton</a>
  */
 public class SizeSelectorTest extends BaseSelectorTest {
 

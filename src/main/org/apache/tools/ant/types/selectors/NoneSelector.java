@@ -25,7 +25,6 @@ import java.util.Enumeration;
  * must refuse to select a file before the file is considered selected by
  * this selector.
  *
- * @author <a href="mailto:bruce@callenish.com">Bruce Atherton</a>
  * @since 1.5
  */
 public class NoneSelector extends BaseSelectorContainer {

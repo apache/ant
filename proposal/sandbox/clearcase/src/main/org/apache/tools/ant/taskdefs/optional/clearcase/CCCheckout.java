@@ -60,7 +60,6 @@ import java.util.Vector;
  *
  * @see http://clearcase.rational.com/doc/latest/ccase_ux/ccref/checkout.html
  *
- * @author <a href="mailto:sbailliez@apache.org">Stephane Bailliez</a>
  */
 public class CCCheckout extends CCMatchingTask {
     private boolean reserved = true;

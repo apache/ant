@@ -28,9 +28,6 @@ import org.apache.tools.ant.BuildException;
  * @todo What to do if file is already open in one of our changelists perhaps
  * (See also {@link P4Edit P4Edit})?<br>
  *
- * @author <A HREF="mailto:mike@tmorph.com">Mike Roberts</A>
- * @author <A HREF="mailto:leslie.hughes@rubus.com">Les Hughes</A>
- *
  * @ant.task category="scm"
  */
 public class P4Delete extends P4Base {

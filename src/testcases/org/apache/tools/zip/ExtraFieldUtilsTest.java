@@ -22,7 +22,6 @@ import junit.framework.TestCase;
 /**
  * JUnit 3 testcases for org.apache.tools.zip.ExtraFieldUtils.
  *
- * @author Stefan Bodewig
  */
 public class ExtraFieldUtilsTest extends TestCase implements UnixStat {
     public ExtraFieldUtilsTest(String name) {

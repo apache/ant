@@ -32,8 +32,6 @@ import org.apache.tools.ant.types.Path;
 import org.apache.tools.ant.util.FileUtils;
 
 /**
- * @author Erik Hatcher
- * @author <a href="mailto:paul@priorartisans.com">Paul Christmann</a>
  */
 public class XmlPropertyTest extends BuildFileTest {
     private static FileUtils fileUtils = FileUtils.newFileUtils();

@@ -19,7 +19,6 @@ package org.apache.tools.ant.taskdefs.optional.vss;
 /**
  *  Holds all the constants for the VSS tasks.
  *
- * @author  Jesse Stockall
  */
 public interface MSVSSConstants {
     /**  Constant for the thing to execute  */

@@ -30,7 +30,6 @@ import org.apache.tools.ant.BuildException;
  * @see <A=ref="http://msdn.microsoft.com/library/default.asp?url=/library/en-us/dv_vjsharp/html/vjoriMicrosoftVisualJ.asp">
  * Visual J++ online documentation</a>
  *
- * @author Steve Loughran
  * @since ant1.6
  * @ant.task category="dotnet" name="jsharpc"
  */

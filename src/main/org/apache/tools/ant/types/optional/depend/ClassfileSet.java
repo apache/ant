@@ -30,7 +30,6 @@ import org.apache.tools.ant.types.FileSet;
  * nested FileSet attribute provides the domain, that is used for searching
  * for dependent classes
  *
- * @author <a href="mailto:hengels@innovidata.com">Holger Engels</a>
  */
 public class ClassfileSet extends FileSet {
     /**

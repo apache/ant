@@ -26,8 +26,6 @@ import org.apache.tools.ant.types.Commandline;
  *  <p>The simple implementation spawns a JVM with the supplied
  *  class name, jvm args, and arguments.
  *
- *  @author Christopher A. Longo - cal@cloud9.net
- *
  *  @see org.apache.tools.ant.taskdefs.optional.j2ee.HotDeploymentTool
  *  @see org.apache.tools.ant.taskdefs.optional.j2ee.AbstractHotDeploymentTool
  *  @see org.apache.tools.ant.taskdefs.optional.j2ee.ServerDeploy

@@ -36,9 +36,6 @@ import org.w3c.dom.Text;
  * org.apache.tools.ant.taskdefs.optional.junit.XMLJUnitResultFormatter
  * XMLJUnitResultFormatter}.</p>
  *
- * @author The original author of XmlLogger
- * @author Stefan Bodewig
- * @author <a href="mailto:sbailliez@apache.org">Stephane Bailliez</a>
  */
 public class DOMElementWriter {
 

@@ -31,7 +31,6 @@ import org.apache.tools.ant.Task;
 /**
  * Automates the telnet protocol.
  *
- * @author <a href="mailto:ScottCarlson@email.com">ScottCarlson@email.com</a>
  * @version $Revision$
  */
 

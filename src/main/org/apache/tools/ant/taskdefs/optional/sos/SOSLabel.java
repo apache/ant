@@ -22,8 +22,6 @@ import org.apache.tools.ant.types.Commandline;
 /**
  * Labels Visual SourceSafe files via a SourceOffSite server.
  *
- * @author    Jesse Stockall
- *
  * @ant.task name="soslabel" category="scm"
  */
 public class SOSLabel extends SOS {

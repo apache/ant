@@ -70,7 +70,6 @@ import javax.xml.parsers.ParserConfigurationException;
 /**
  * Loads an xml file as DOM in a DataType
  *
- * @author Nicola Ken Barozzi nicolaken@apache.org
  */
 public class XMLDOM extends DataType {
     /** The name of this data type */

@@ -67,7 +67,6 @@ import org.apache.tools.ant.types.Path;
 /**
  * A set of helpers functions to deal with JUnit.
  *
- * @author <a href="mailto:sbailliez@apache.org">Stephane Bailliez</a>
  */
 public final class JUnitHelper {
 

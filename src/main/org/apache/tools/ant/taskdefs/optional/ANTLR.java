@@ -41,9 +41,6 @@ import org.apache.tools.ant.util.FileUtils;
 /**
  *  Invokes the ANTLR Translator generator on a grammar file.
  *
- * @author <a href="mailto:emeade@geekfarm.org">Erik Meade</a>
- * @author <a href="mailto:sbailliez@apache.org">Stephane Bailliez</a>
- * @author <a href="mailto:aphid@browsecode.org">Stephen Chin</a>
  */
 public class ANTLR extends Task {
 

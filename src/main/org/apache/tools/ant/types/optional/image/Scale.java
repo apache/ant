@@ -25,8 +25,6 @@ import java.awt.image.renderable.ParameterBlock;
 
 /**
  *
- * @author <a href="mailto:kzgrey@ntplx.net">Kevin Z Grey</a>
- * @author <a href="mailto:roxspring@imapmail.org">Rob Oxspring</a>
  * @see org.apache.tools.ant.taskdefs.optional.image.Image
  */
 public class Scale extends TransformOperation implements DrawOperation {

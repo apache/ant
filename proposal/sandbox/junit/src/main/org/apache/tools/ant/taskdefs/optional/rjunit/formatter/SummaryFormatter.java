@@ -62,7 +62,6 @@ import org.apache.tools.ant.taskdefs.optional.rjunit.remote.TestSummary;
  * Display a summary message at the end of a testsuite stating
  * runs, failures, errors, and elapsed time.
  *
- * @author <a href="mailto:sbailliez@apache.org">Stephane Bailliez</a>
  */
 public class SummaryFormatter extends BaseStreamFormatter {
 

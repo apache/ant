@@ -66,7 +66,6 @@ import org.apache.commons.jexl.*;
  *  Enable JEXL dynamic properties
  *  
  *
- * @author Costin Manolache
  */
 public class JexlProperties extends Task {
     public static String PREFIX="jexl:";

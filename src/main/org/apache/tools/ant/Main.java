@@ -42,7 +42,6 @@ import org.apache.tools.ant.launch.AntMain;
  * to use as an entry point. Please see the source code of this
  * class to see how it manipulates the Ant project classes.
  *
- * @author duncan@x180.com
  */
 public class Main implements AntMain {
 

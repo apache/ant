@@ -66,8 +66,6 @@ import org.apache.tools.ant.*;
  * a file post will have content type determined from the extension, you can
  * override it
  * @since ant1.5
- * @author matth@pobox.com Matt Humphrey
- * @author steve_l@iseran.com Steve Loughran
  * @created March 17, 2001
  */
 

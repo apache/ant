@@ -20,7 +20,6 @@ package org.apache.tools.ant.taskdefs.optional.ssh;
 import com.jcraft.jsch.UserInfo;
 
 /**
- * @author rhanderson
  */
 public class SSHUserInfo implements UserInfo {
 

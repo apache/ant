@@ -25,7 +25,6 @@ import org.apache.tools.ant.types.Parameter;
 /**
  * Selector that selects a certain kind of file: directory or regular.
  *
- * @author <a href="mailto:jefft@apache.org">Jeff Turner</a>
  * @since 1.6
  */
 public class TypeSelector extends BaseExtendSelector {

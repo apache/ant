@@ -71,7 +71,6 @@ import org.apache.tools.ant.types.FileSet;
  * file changes
  * </li></ul>
  *
- * @author <a href="mailto:cstrong@arielpartners.com">Craeg Strong</a>
  * @ant.task category="filesystem"
  * @version $Revision$ $Date$
  * @since Ant 1.4

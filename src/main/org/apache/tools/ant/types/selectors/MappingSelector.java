@@ -28,7 +28,6 @@ import java.io.File;
 /**
  * A mapping selector is an abstract class adding mapping support to the base
  * selector
- * @author not specified
  */
 public abstract class MappingSelector extends BaseSelector {
     protected File targetdir = null;

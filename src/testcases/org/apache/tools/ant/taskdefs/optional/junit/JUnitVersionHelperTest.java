@@ -22,7 +22,6 @@ import junit.framework.TestResult;
 
 /**
  * @version $Revision$
- * @author Stefan Bodewig
  */
 public class JUnitVersionHelperTest extends TestCase {
 

@@ -91,7 +91,6 @@ import org.apache.tools.ant.types.Commandline;
  *   <tr>
  * </table>
  *
- * @author Curtis White
  */
 public class CCMklbtype extends ClearCase {
     private String mTypeName = null;

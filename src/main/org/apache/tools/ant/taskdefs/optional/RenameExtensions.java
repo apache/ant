@@ -36,8 +36,6 @@ import org.apache.tools.ant.types.Mapper;
 
 /**
  *
- * @author dIon Gillard <a href="mailto:dion@multitask.com.au">dion@multitask.com.au</a>
- * @author Stefan Bodewig
  * @version 1.2
  *
  * @deprecated Use &lt;move&gt; instead

@@ -22,8 +22,6 @@ import org.apache.tools.ant.types.Commandline;
  * Retrieves a read-only copy of the specified project or file
  * from Visual SourceSafe via a SourceOffSite server.
  *
- * @author    Jesse Stockall
- *
  * @ant.task name="sosget" category="scm"
  */
 public class SOSGet extends SOS {

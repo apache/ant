@@ -34,7 +34,6 @@ import org.apache.tools.ant.Project;
  *
  * Created: Tue Dec 25 06:51:14 2001
  *
- * @author <a href="mailto:stevec@ignitesports.com">Steve Cohen</a>
  * @version 1.0
  *
  * @ant.task name="stlist" category="scm"

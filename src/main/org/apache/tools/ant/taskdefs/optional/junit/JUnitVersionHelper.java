@@ -25,7 +25,6 @@ import junit.framework.TestCase;
  * Work around for some changes to the public JUnit API between
  * different JUnit releases.
  *
- * @author Stefan Bodewig
  * @version $Revision$
  */
 public class JUnitVersionHelper {

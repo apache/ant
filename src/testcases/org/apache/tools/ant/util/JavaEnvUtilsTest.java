@@ -26,7 +26,6 @@ import org.apache.tools.ant.taskdefs.condition.Os;
 /**
  * TestCase for JavaEnvUtils.
  *
- * @author Stefan Bodewig
  */
 public class JavaEnvUtilsTest extends TestCase {
     public JavaEnvUtilsTest(String s) {

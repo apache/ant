@@ -25,9 +25,6 @@ import org.apache.tools.ant.taskdefs.email.EmailTask;
  * text, UU encoding or Mime format mail depending on what is available.
  * Attachments may be sent using nested FileSet
  * elements.
-
- * @author glenn_twiggs@bmc.com
- * @author Magesh Umasankar
  *
  * @since Ant 1.2
  *

@@ -65,7 +65,6 @@ import org.apache.tools.ant.BuildException;
  *
  *
  * @see TestRunRecorder
- * @author <a href="mailto:sbailliez@apache.org">Stephane Bailliez</a>
  */
 public class FormatterRecorder extends TestRunRecorder
         implements Formatter {

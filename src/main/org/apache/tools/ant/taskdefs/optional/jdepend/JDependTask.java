@@ -48,8 +48,6 @@ import org.apache.tools.ant.util.LoaderUtils;
  *
  * The current implementation spawn a new Java VM.
  *
- * @author <a href="mailto:Jerome@jeromelacoste.com">Jerome Lacoste</a>
- * @author <a href="mailto:roxspring@yahoo.com">Rob Oxspring</a>
  */
 public class JDependTask extends Task {
     //private CommandlineJava commandline = new CommandlineJava();

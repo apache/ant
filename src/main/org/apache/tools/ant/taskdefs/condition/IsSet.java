@@ -23,7 +23,6 @@ import org.apache.tools.ant.ProjectComponent;
 /**
  * Condition that tests whether a given property has been set.
  *
- * @author Stefan Bodewig
  * @since Ant 1.5
  * @version $Revision$
  */

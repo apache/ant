@@ -98,7 +98,6 @@ import javax.xml.parsers.ParserConfigurationException;
  * the jars that you need. It'll automatically reload optional.jar
  * tasks in a different (non-delegating) loader.
  *
- * @author Costin Manolache
  */
 public class SystemPath extends Task {
     public static final String SYSTEM_LOADER_REF="ant.system.loader";

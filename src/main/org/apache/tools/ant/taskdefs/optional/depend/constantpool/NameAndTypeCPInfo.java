@@ -22,7 +22,6 @@ import java.io.IOException;
 /**
  * A NameAndType CP Info
  *
- * @author Conor MacNeill
  */
 public class NameAndTypeCPInfo extends ConstantPoolEntry {
 

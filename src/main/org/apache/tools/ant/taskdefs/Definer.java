@@ -39,10 +39,6 @@ import org.apache.tools.ant.types.EnumeratedAttribute;
  * the attributes for Typedef. The uri and class
  * handling is handled by DefBase
  *
- * @author Costin Manolache
- * @author Stefan Bodewig
- * @author Peter Reilly
- *
  * @since Ant 1.4
  */
 public abstract class Definer extends DefBase {

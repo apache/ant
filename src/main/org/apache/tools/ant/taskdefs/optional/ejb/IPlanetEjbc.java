@@ -61,7 +61,6 @@ import org.xml.sax.SAXException;
  *
  * @see    IPlanetDeploymentTool
  * @see    IPlanetEjbcTask
- * @author Greg Nelson <a href="mailto:greg@netscape.com">greg@netscape.com</a>
  * @ant.task ignore="true"
  */
 public class IPlanetEjbc {
@@ -578,8 +577,6 @@ public class IPlanetEjbc {
      * This inner class is used to signal any problems during the execution of
      * the ejbc compiler.
      *
-     * @author Greg Nelson
-     *         <a href="mailto:greg@netscape.com">greg@netscape.com</a>
      */
     public class EjbcException extends Exception {
 
@@ -602,8 +599,6 @@ public class IPlanetEjbc {
      * the <code>getEjbs()</code> method.
      *
      * @see    IPlanetEjbc.EjbInfo
-     * @author Greg Nelson
-     *         <a href="mailto:greg@netscape.com">greg@netscape.com</a>
      */
     private class EjbcHandler extends HandlerBase {
 
@@ -884,8 +879,6 @@ public class IPlanetEjbc {
     /**
      * This inner class represents an EJB that will be compiled using ejbc.
      *
-     * @author Greg Nelson
-     *         <a href="mailto:greg@netscape.com">greg@netscape.com</a>
      */
     private class EjbInfo {
         private String     name;              // EJB's display name
@@ -1347,7 +1340,6 @@ public class IPlanetEjbc {
      * class.  It provides an easy way to retrieve components of the class name
      * in a format that is convenient for building iAS stubs and skeletons.
      *
-     * @author Greg Nelson <a href="mailto:greg@netscape.com">greg@netscape.com</a>
      */
     private static class Classname {
         private String qualifiedName;  // Fully qualified name of the Java class
@@ -1449,7 +1441,6 @@ public class IPlanetEjbc {
      * the JRE standard output.  This class may be used to redirect output from
      * an external process to the standard output.
      *
-     * @author Greg Nelson <a href="mailto:greg@netscape.com">greg@netscape.com</a>
      */
     private static class RedirectOutput extends Thread {
         InputStream stream;  // Stream to read and redirect to standard output

@@ -67,7 +67,6 @@ import org.apache.tools.ant.taskdefs.optional.rjunit.TestRunRecorder;
 /**
  * TestCase for the test runner.
  *
- * @author <a href="mailto:sbailliez@apache.org">Stephane Bailliez</a>
  */
 public class TestRunnerTest extends TestCase
         implements TestRunListener {

@@ -64,9 +64,6 @@ import org.apache.tools.ant.*;
  * destination file missing. Why would anyone want to make a HEAD
  * request? a) side effects on the server and b) polling for stuff
  * @since ant1.5
- * @author costin@dnt.ro
- * @author matth@pobox.com Matt Humphrey
- * @author steve_l@iseran.com Steve Loughran
  * @created March 17, 2001
  */
 

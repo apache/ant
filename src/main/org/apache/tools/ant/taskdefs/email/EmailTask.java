@@ -33,14 +33,6 @@ import org.apache.tools.ant.types.FileSet;
  * A task to send SMTP email. This is a refactoring of the SendMail and
  * MimeMail tasks such that both are within a single task.
  *
- * @author Magesh Umasankar
- * @author glenn_twiggs@bmc.com
- * @author steve_l@iseran.com steve loughran
- * @author ehatcher@apache.org Erik Hatcher
- * @author paulo.gaspar@krankikom.de Paulo Gaspar
- * @author roxspring@imapmail.org Rob Oxspring
- * @author <a href="mailto:ishu@akm.ru">Aleksandr Ishutin</a>
- * @author <a href="mailto:levylambert@tiscali-dsl.de">Antoine Levy-Lambert</a>
  * @since Ant 1.5
  * @ant.task name="mail" category="network"
  */

@@ -28,8 +28,6 @@ import org.apache.tools.ant.Project;
 /**
  * Copies a directory.
  *
- * @author James Davidson <a href="mailto:duncan@x180.com">duncan@x180.com</a>
- *
  * @since Ant 1.1
  *
  * @deprecated The copydir task is deprecated since Ant 1.2.  Use copy instead.

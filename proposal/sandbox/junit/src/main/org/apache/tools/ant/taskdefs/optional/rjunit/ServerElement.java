@@ -71,7 +71,6 @@ import org.apache.tools.ant.taskdefs.optional.rjunit.remote.Server;
  * <!ATTLIST server haltonerror (yes|no) no>
  * </pre>
  *
- * @author <a href="mailto:sbailliez@apache.org">Stephane Bailliez</a>
  */
 public final class ServerElement extends ProjectComponent {
 

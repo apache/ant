@@ -21,8 +21,6 @@ import org.apache.tools.ant.BuildException;
 /**
  * Represents a CVS user with a userID and a full name.
  *
- * @author <a href="mailto:peter@apache.org">Peter Donald</a>
- * @author <a href="mailto:jeff.martin@synamic.co.uk">Jeff Martin</a>
  * @version $Revision$ $Date$
  */
 public class CvsUser {

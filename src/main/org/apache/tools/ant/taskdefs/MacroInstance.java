@@ -42,7 +42,6 @@ import org.apache.tools.ant.UnknownElement;
  * It is given a pointer to the template definition,
  * and makes a copy of the unknown element, substituting
  * the parameter values in attributes and text.
- * @author Peter Reilly
  * @since Ant 1.6
  */
 public class MacroInstance extends Task implements DynamicConfigurator {

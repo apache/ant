@@ -29,7 +29,6 @@ import java.util.ArrayList;
  * The script execution class. This class finds the defining script task
  * and passes control to that task's executeScript method.
  *
- * @author Conor MacNeill
  * @since Ant 1.6
  */
 public class ScriptDefBase extends Task implements DynamicConfigurator {

@@ -22,8 +22,6 @@ import java.io.*;
 import org.apache.tools.ant.BuildFileTest;
 
 /**
- * @author Nico Seessle <nico@seessle.de>
- *
  * @deprecated use BuildFileTest instead.
  */
 public abstract class TaskdefsTest extends BuildFileTest {

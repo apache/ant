@@ -21,7 +21,6 @@ package org.apache.tools.ant.taskdefs.optional.depend;
  * utility methods to convert between the formats used in the Java class
  * file format and those commonly used in Java programming.
  *
- * @author Conor MacNeill
  *
  */
 public class ClassFileUtils {

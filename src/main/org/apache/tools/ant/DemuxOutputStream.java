@@ -28,7 +28,6 @@ import java.util.Hashtable;
  * task.
  *
  * @since 1.4
- * @author Conor MacNeill
  */
 public class DemuxOutputStream extends OutputStream {
 

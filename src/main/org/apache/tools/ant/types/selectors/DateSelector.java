@@ -30,7 +30,6 @@ import org.apache.tools.ant.types.Parameter;
 /**
  * Selector that chooses files based on their last modified date.
  *
- * @author <a href="mailto:bruce@callenish.com">Bruce Atherton</a>
  * @since 1.5
  */
 public class DateSelector extends BaseExtendSelector {

@@ -30,8 +30,6 @@ import java.util.Hashtable;
 /**
  * FilterSet testing
  *
- * @author Conor MacNeill
- * @author <a href="mailto:martin@mvdb.net">Martin van den Bemt</a>
  */
 public class FilterSetTest extends BuildFileTest {
 

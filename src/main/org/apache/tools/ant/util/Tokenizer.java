@@ -22,7 +22,6 @@ import java.io.IOException;
 /**
  * input stream tokenizers implement this interface
  *
- * @author Peter Reilly
  * @version Ant 1.6
  */
 public interface Tokenizer {

@@ -63,7 +63,6 @@ import org.apache.tools.ant.util.StringUtils;
  * This is not very extensible but since the events should be somewhat
  * limited, for now this is better to do it like this.
  *
- * @author <a href="mailto:sbailliez@apache.org">Stephane Bailliez</a>
  */
 public class TestRunEvent extends EventObject {
 

@@ -31,8 +31,6 @@ import org.apache.tools.ant.util.ScriptRunner;
  * The script is meant to use get self.token and
  * set self.token in the reply.
  *
- * @author Not Specified.
- *
  * @since Ant 1.6
  */
 public class ScriptFilter extends TokenFilter.ChainableReaderFilter {

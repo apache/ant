@@ -37,7 +37,6 @@ import org.apache.tools.ant.types.Path;
  * is given in <tt>etc</tt> directory, so that an HTML report can be generated
  * from the XML file.
  *
- * @author <a href="mailto:sbailliez@apache.org">Stephane Bailliez</a>
  */
 public class MAudit extends AbstractMetamataTask {
 

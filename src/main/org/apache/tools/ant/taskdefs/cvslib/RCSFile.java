@@ -19,8 +19,6 @@ package org.apache.tools.ant.taskdefs.cvslib;
 /**
  * Represents a RCS File change.
  *
- * @author <a href="mailto:peter@apache.org">Peter Donald</a>
- * @author <a href="mailto:jeff.martin@synamic.co.uk">Jeff Martin</a>
  * @version $Revision$ $Date$
  */
 class RCSFile {

@@ -32,7 +32,6 @@ import org.w3c.dom.Text;
 /**
  * Some utilities that might be useful when manipulating DOM trees.
  *
- * @author <a href="bailliez@noos.fr">Stephane Bailliez</a>
  */
 public final class DOMUtil {
 

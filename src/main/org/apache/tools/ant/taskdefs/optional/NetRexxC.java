@@ -85,7 +85,6 @@ import org.apache.tools.ant.types.EnumeratedAttribute;
  * <li>The directory the source is in (see sourcedir option)
  * </ol>
  *
- * @author dIon Gillard <a href="mailto:dion@multitask.com.au">dion@multitask.com.au</a>
  */
 public class NetRexxC extends MatchingTask {
 

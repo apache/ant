@@ -28,7 +28,6 @@ import org.apache.tools.ant.types.Path;
  * This is primarily a cut-and-paste from Jikes.java and
  * DefaultCompilerAdapter.
  *
- * @author <a href="mailto:tora@debian.org">Takashi Okamoto</a>
  * @since Ant 1.4
  */
 public class Kjc extends DefaultCompilerAdapter {

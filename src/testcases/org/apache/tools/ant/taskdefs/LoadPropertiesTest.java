@@ -21,7 +21,6 @@ import org.apache.tools.ant.*;
 import org.apache.tools.ant.BuildFileTest;
 
 /**
- * @author Magesh Umasankar
  */
 public class LoadPropertiesTest extends BuildFileTest {
 

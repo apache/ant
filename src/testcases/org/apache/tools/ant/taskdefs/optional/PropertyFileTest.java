@@ -29,7 +29,6 @@ import java.io.File;
  *  (this is really more of a functional test so far.., but it's enough to let
  *   me start refactoring...)
  *
- *@author     Levi Cook <levicook@papajo.com>
  *@created    October 2, 2001
  */
 

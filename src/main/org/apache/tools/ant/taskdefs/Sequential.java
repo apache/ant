@@ -34,7 +34,6 @@ import org.apache.tools.ant.TaskContainer;
  * elements apart from Ant tasks. Any valid Ant task may be embedded within the
  * sequential task.</p>
 
- * @author Thomas Christen <a href="mailto:chr@active.ch">chr@active.ch</a>
  * @since Ant 1.4
  * @ant.task category="control"
  */

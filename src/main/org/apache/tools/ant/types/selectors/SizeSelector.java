@@ -25,7 +25,6 @@ import org.apache.tools.ant.types.Parameter;
 /**
  * Selector that filters files based on their size.
  *
- * @author <a href="mailto:bruce@callenish.com">Bruce Atherton</a>
  * @since 1.5
  */
 public class SizeSelector extends BaseExtendSelector {

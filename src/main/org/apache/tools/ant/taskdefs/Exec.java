@@ -35,9 +35,6 @@ import org.apache.tools.ant.Task;
  * implementation of Ant's &lt;exec&gt; task - it is considered to be
  * dead code by the Ant developers and is unmaintained.  Don't use
  * it.</strong></p>
-
- * @author duncan@x180.com
- * @author rubys@us.ibm.com
  *
  * @deprecated delegate to {@link org.apache.tools.ant.taskdefs.Execute Execute}
  *             instead.

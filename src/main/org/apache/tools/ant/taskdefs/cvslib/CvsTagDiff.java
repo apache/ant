@@ -60,8 +60,6 @@ import org.apache.tools.ant.util.FileUtils;
  * &lt;!ELEMENT prevrevision ( #PCDATA ) &gt;
  * </PRE>
  *
- * @author <a href="mailto:fred@castify.net">Frederic Lavigne</a>
- * @author <a href="mailto:rob@springwellfarms.ca">Rob van Oostrum</a>
  * @version $Revision$ $Date$
  * @since Ant 1.5
  * @ant.task name="cvstagdiff"

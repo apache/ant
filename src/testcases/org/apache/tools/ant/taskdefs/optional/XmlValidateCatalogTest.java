@@ -26,8 +26,6 @@ import org.apache.tools.ant.BuildFileTest;
  * Tests the XMLValidate optional task with nested external catalogs.
  *
  * @see XmlValidateTest
- * @author steve loughran
- * @author Jeff Turner
  * @since Ant 1.6
  */
 public class XmlValidateCatalogTest extends BuildFileTest {

@@ -22,7 +22,6 @@ import junit.framework.TestCase;
  * Not really a test of Ant but a test that is run by the test of the
  * junit task.  Confused?
  *
- * @author Stefan Bodewig
  * @since Ant 1.5
  */
 public class Output extends TestCase {

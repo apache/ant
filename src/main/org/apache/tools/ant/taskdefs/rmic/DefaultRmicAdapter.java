@@ -32,11 +32,6 @@ import org.apache.tools.ant.util.JavaEnvUtils;
  * Currently, this is a cut-and-paste of the original rmic task and
  * DefaultCopmpilerAdapter.
  *
- * @author duncan@x180.com
- * @author ludovic.claude@websitewatchers.co.uk
- * @author David Maclean <a href="mailto:david@cm.co.za">david@cm.co.za</a>
- * @author Stefan Bodewig
- * @author <a href="tokamoto@rd.nttdata.co.jp">Takashi Okamoto</a>
  * @since Ant 1.4
  */
 public abstract class DefaultRmicAdapter implements RmicAdapter {

@@ -31,7 +31,6 @@ import org.apache.tools.ant.Task;
  * TODO: This class can be split to implement other line based processing
  * of data written to the stream.
  *
- * @author thomas.haas@softwired-inc.com
  * @since Ant 1.2
  */
 public class LogOutputStream extends OutputStream {

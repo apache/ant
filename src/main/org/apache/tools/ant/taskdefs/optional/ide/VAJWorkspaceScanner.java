@@ -46,7 +46,6 @@ import org.apache.tools.ant.DirectoryScanner;
  *
  * @see org.apache.tools.ant.DirectoryScanner
  *
- * @author Wolf Siberski, TUI Infotec (based on Arnout J. Kuipers DirectoryScanner)
  */
 class VAJWorkspaceScanner extends DirectoryScanner {
 

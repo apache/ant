@@ -55,7 +55,6 @@ import org.apache.tools.ant.util.regexp.RegexpFactory;
  * @see java.util.regex.Pattern
  *
  * @see org.apache.tools.ant.util.regexp.Regexp
- * @author Matthew Inger <a href="mailto:mattinger@mindless.com">mattinger@mindless.com</a>
  *
  * @ant.datatype name="regexp"
  */

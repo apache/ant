@@ -24,7 +24,6 @@ import org.apache.tools.ant.BuildException;
 /**
  * This is the interface to be used by all selectors.
  *
- * @author <a href="mailto:bruce@callenish.com">Bruce Atherton</a>
  * @since 1.5
  */
 public interface FileSelector {

@@ -25,8 +25,6 @@ import junit.framework.TestCase;
 /**
  * TestCase for DateUtils.
  *
- * @author <a href="mailto:sbailliez@apache.org">Stephane Bailliez</a>
- * @author Stefan Bodewig
  */
 public class DateUtilsTest extends TestCase {
     public DateUtilsTest(String s) {

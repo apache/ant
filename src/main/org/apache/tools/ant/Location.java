@@ -26,7 +26,6 @@ import org.xml.sax.Locator;
  * line number and column number). Note that the column number is
  * currently ignored.
  *
- * @author Matt Foemmel
  */
 public class Location implements Serializable {
 

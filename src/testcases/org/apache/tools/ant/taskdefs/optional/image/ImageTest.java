@@ -32,7 +32,6 @@ import java.util.Properties;
 /**
  * Tests the Image task.
  *
- * @author    Eric Pugh <a href="mailto:dep4b@yahoo.com">dep4b@yahoo.com</a>
  * @since     Ant 1.5
  */
 public class ImageTest extends BuildFileTest {

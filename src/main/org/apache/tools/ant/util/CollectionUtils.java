@@ -24,10 +24,6 @@ import java.util.Vector;
 /**
  * A set of helper methods related to collection manipulation.
  *
- * @author Stefan Bodewig
- * @author <a href="mailto:stein@xtramind.com">Ingmar Stein</a>
- * @author  <a href="mailto:martijn@kruithof.xs4all.nl">Martijn Kruithof</a>
- *
  * @since Ant 1.5
  */
 public class CollectionUtils {

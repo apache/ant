@@ -32,7 +32,6 @@ import org.apache.tools.ant.Project;
  * by the Ant developers and is unmaintained.  Don't use
  * it.</strong></p>
  *
- * @author skanthak@muehlheim.de
  * @deprecated merged into the class Javac.
  */
 public class Jikes {

@@ -57,10 +57,6 @@ import org.apache.tools.ant.util.TeeOutputStream;
  *
  * <p> Summary output is generated at the end.
  *
- * @author Stefan Bodewig
- * @author <a href="mailto:ehatcher@apache.org">Erik Hatcher</a>
- * @author <a href="mailto:martijn@kruithof.xs4all.nl">Martijn Kruithof</a>
- *
  * @since Ant 1.2
  */
 

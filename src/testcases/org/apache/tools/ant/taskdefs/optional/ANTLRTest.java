@@ -30,8 +30,6 @@ import org.apache.tools.ant.BuildFileTest;
  * Unless of course you specify the ANTLR classpath in your
  * system classpath. (see ANTLR install.html)
  *
- * @author Erik Meade <emeade@geekfarm.org>
- * @author Stephen Chin <aphid@browsecode.org>
  */
 public class ANTLRTest extends BuildFileTest {
 

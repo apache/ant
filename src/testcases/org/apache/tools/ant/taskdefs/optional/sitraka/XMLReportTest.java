@@ -34,7 +34,6 @@ import org.w3c.dom.NodeList;
 
 /**
  * Ensure that reference classpath feature is working fine...
- * @author <a href="mailto:sbailliez@apache.org">Stephane Bailliez</a>
  */
 public class XMLReportTest extends TestCase {
     public XMLReportTest(String s) {

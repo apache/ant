@@ -118,11 +118,6 @@ import org.apache.tools.ant.util.FileUtils;
  * This will scan a directory called test for .class files, but excludes all
  * files in all proper subdirectories of a directory called "modules"
  *
- * @author Arnout J. Kuiper
- * <a href="mailto:ajkuiper@wxs.nl">ajkuiper@wxs.nl</a>
- * @author Magesh Umasankar
- * @author <a href="mailto:bruce@callenish.com">Bruce Atherton</a>
- * @author <a href="mailto:levylambert@tiscali-dsl.de">Antoine Levy-Lambert</a>
  */
 public class DirectoryScanner
        implements FileScanner, SelectorScanner, ResourceFactory {

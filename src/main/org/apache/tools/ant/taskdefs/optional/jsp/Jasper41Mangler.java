@@ -23,11 +23,6 @@ import java.io.File;
  * this class implements the name mangling rules of the jasper in tomcat4.1.x
  * which is likely to remain for some time
  * @see org.apache.jasper.JspCompilationContext
- * @author Anil K. Vijendran
- * @author Harish Prabandham
- * @author Pierre Delisle
- * @author Costin Manolache
- * @author Steve Loughran (copied from JspCompilationContext)
  */
 public class Jasper41Mangler implements JspMangler {
 

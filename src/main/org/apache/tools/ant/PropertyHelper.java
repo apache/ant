@@ -43,7 +43,6 @@ import java.util.Enumeration;
  * to chain multiple PropertyHelpers and to replace the default.
  *
  * @since Ant 1.6
- * @author Costin Manolache
  */
 public class PropertyHelper {
 

@@ -26,7 +26,6 @@ import org.apache.tools.ant.taskdefs.condition.Os;
 /**
  * JUnit 3 testcases for org.apache.tools.ant.IntrospectionHelper.
  *
- * @author Stefan Bodewig
  */
 
 public class IntrospectionHelperTest extends TestCase {

@@ -37,8 +37,6 @@ import org.apache.tools.zip.ZipFile;
  * This implementation of FileScanner defines getIncludedFiles to return
  * the matching Zip entries.
  *
- * @author Don Ferguson <a href="mailto:don@bea.com">don@bea.com</a>
- * @author <a href="mailto:levylambert@tiscali-dsl.de">Antoine Levy-Lambert</a>
  */
 public class ZipScanner extends DirectoryScanner {
 

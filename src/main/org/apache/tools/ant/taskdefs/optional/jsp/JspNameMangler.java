@@ -22,8 +22,6 @@ import java.io.File;
  * (org.apache.jasper.compiler.CommandLineCompiler) to map from a JSP filename
  * to a valid Java classname.
  *
- * @author Steve Loughran
- * @author Danno Ferrin
  */
 public class JspNameMangler implements JspMangler {
 

@@ -58,7 +58,6 @@ import java.io.File;
 /**
  * File Selector API.
  *
- * @author Magesh Umasankar
  */
 public interface FileSelector {
     public void setValue(final String value);

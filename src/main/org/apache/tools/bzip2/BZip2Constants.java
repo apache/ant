@@ -27,7 +27,6 @@ package org.apache.tools.bzip2;
  * Base class for both the compress and decompress classes.
  * Holds common arrays, and static data.
  *
- * @author <a href="mailto:keiron@aftexsw.com">Keiron Liddle</a>
  */
 public interface BZip2Constants {
 

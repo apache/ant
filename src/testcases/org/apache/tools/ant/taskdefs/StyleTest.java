@@ -29,7 +29,6 @@ import java.io.FileWriter;
 
 /**
  * TestCases for <style> / <xslt> task.
- * @author Jan Materne
  * @version 2003-08-05
  */
 public class StyleTest extends BuildFileTest {

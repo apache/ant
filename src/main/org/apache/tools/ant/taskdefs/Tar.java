@@ -42,11 +42,6 @@ import org.apache.tools.zip.UnixStat;
 /**
  * Creates a tar archive.
  *
- * @author Stefano Mazzocchi
- *         <a href="mailto:stefano@apache.org">stefano@apache.org</a>
- * @author Stefan Bodewig
- * @author Magesh Umasankar
- *
  * @since Ant 1.1
  *
  * @ant.task category="packaging"
@@ -555,7 +550,6 @@ public class Tar extends MatchingTask {
     /**
      * Set of options for long file handling in the task.
      *
-     * @author Magesh Umasankar
      */
     public static class TarLongFileMode extends EnumeratedAttribute {
 

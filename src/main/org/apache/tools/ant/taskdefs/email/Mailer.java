@@ -24,7 +24,6 @@ import org.apache.tools.ant.util.DateUtils;
 /**
  * Base class for the various emailing implementations.
  *
- * @author roxspring@yahoo.com Rob Oxspring
  * @since Ant 1.5
  */
 public abstract class Mailer {

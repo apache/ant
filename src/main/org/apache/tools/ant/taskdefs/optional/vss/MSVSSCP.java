@@ -24,9 +24,6 @@ import org.apache.tools.ant.types.Commandline;
  * Performs CP (Change Project) commands to Microsoft Visual SourceSafe.
  * <p>This task is typically used before a VssAdd in order to set the target project</p>
  *
- * @author Nigel Magnay
- * @author Jesse Stockall
- *
  * @ant.task name="vsscp" category="scm"
  */
 public class MSVSSCP extends MSVSS {

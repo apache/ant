@@ -24,7 +24,6 @@ import org.apache.tools.ant.taskdefs.PumpStreamHandler;
 /**
  * A dummy stream handler that just passes stuff to the parser.
  *
- * @author <a href="mailto:peter@apache.org">Peter Donald</a>
  * @version $Revision$ $Date$
  */
 class RedirectingStreamHandler

@@ -31,8 +31,6 @@ import org.apache.tools.ant.types.Resource;
  * subset of the files given as a parameter and holds only those that
  * are newer than their corresponding target files.</p>
  *
- * @author Stefan Bodewig
- * @author <a href="mailto:levylambert@tiscali-dsl.de">Antoine Levy-Lambert</a>
  */
 public class SourceFileScanner implements ResourceFactory {
 

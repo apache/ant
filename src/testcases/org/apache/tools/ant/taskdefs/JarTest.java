@@ -33,7 +33,6 @@ import org.apache.tools.ant.taskdefs.condition.Os;
 import org.apache.tools.ant.util.FileUtils;
 
 /**
- * @author Erik Meade <emeade@geekfarm.org>
  */
 public class JarTest extends BuildFileTest {
 

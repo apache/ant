@@ -26,7 +26,6 @@ package org.apache.tools.ant;
  * This type replaces the task/datatype split
  * of pre ant 1.6.
  *
- * @author Peter Reilly
  */
 public class AntTypeDefinition {
     private String      name;

@@ -22,7 +22,6 @@ import java.util.Date;
 /**
  * Performs Continuus checkin command.
  *
- * @author Benoit Moussaud benoit.moussaud@criltelecom.com
  */
 public class CCMCheckin extends CCMCheck {
 

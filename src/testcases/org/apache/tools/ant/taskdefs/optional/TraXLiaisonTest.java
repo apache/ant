@@ -27,7 +27,6 @@ import junit.framework.AssertionFailedError;
 
 /**
  * TraX XSLTLiaison testcase
- * @author <a href="mailto:sbailliez@apache.org">Stephane Bailliez</a>
  */
 public class TraXLiaisonTest extends AbstractXSLTLiaisonTest
     implements XSLTLogger {

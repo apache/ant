@@ -37,9 +37,6 @@ import org.apache.tools.ant.BuildException;
  * starteamurl="server:port/project/view"/&gt;
  * </pre>
  *
- * @author Christopher Charlier, ThoughtWorks, Inc. 2001
- * @author <a href="mailto:jcyip@thoughtworks.com">Jason Yip</a>
- * @author <a href="mailto:scohen@apache.org">Steve Cohen</a>
  * @see <A HREF="http://www.starbase.com/">StarBase Web Site</A>
  *
  * @ant.task name="stlabel" category="scm"

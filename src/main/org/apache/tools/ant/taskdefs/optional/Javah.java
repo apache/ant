@@ -60,7 +60,6 @@ import org.apache.tools.ant.util.JavaEnvUtils;
  * When this task executes, it will generate C header and source files that
  * are needed to implement native methods.
  *
- * @author Rick Beton <a href="mailto:richard.beton@physics.org">richard.beton@physics.org</a>
  */
 
 public class Javah extends Task {

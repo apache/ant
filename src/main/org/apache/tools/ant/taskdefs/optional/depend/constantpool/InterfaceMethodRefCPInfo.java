@@ -22,7 +22,6 @@ import java.io.IOException;
 /**
  * A InterfaceMethodRef CP Info
  *
- * @author Conor MacNeill
  */
 public class InterfaceMethodRefCPInfo extends ConstantPoolEntry {
     /** the class name of the class defining the interface method */

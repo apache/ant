@@ -33,7 +33,6 @@ import org.apache.tools.ant.taskdefs.optional.sitraka.bytecode.attributes.Attrib
  * JVM can quickly run out of memory when analyzing a great deal of
  * classes and keeping them in memory for global analysis.
  *
- * @author <a href="sbailliez@imediation.com">Stephane Bailliez</a>
  */
 public final class ClassFile {
 

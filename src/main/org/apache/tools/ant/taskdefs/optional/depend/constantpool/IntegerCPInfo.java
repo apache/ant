@@ -22,7 +22,6 @@ import java.io.IOException;
 /**
  * An Integer CP Info
  *
- * @author Conor MacNeill
  */
 public class IntegerCPInfo extends ConstantCPInfo {
 

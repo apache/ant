@@ -24,7 +24,6 @@ import org.apache.tools.ant.BuildFileTest;
 import org.apache.tools.ant.util.FileUtils;
 
 /**
- * @author <a href="mailto:jan@materne.de">Jan Materne</a>
  */
 public class StripJavaCommentsTest extends BuildFileTest {
 

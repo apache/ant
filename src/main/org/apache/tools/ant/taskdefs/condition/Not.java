@@ -25,7 +25,6 @@ import org.apache.tools.ant.BuildException;
  * Evaluates to true if the single condition nested into it is false
  * and vice versa.
  *
- * @author Stefan Bodewig
  * @since Ant 1.4
  * @version $Revision$
  */

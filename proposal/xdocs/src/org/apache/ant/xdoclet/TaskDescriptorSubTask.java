@@ -62,7 +62,6 @@ import xjavadoc.XClass;
 /**
  * Generates Ant task descriptors.
  *
- * @author               Erik Hatcher (ehatcher@apache.org)
  * @created              January 1, 2003
  * @ant.element          display-name="taskdescriptor" name="taskdescriptor"
  *      parent="xdoclet.modules.apache.ant.org.apache.ant.xdoclet.AntDocletTask"

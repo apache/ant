@@ -31,8 +31,6 @@ import org.apache.tools.ant.types.Path;
 /**
  * Precompiles JSP's using WebLogic's JSP compiler (weblogic.jspc).
  *
- * @author <a href="mailto:avik@aviksengupta.com">Avik Sengupta</a> http://www.webteksoftware.com
- *
  * Tested only on Weblogic 4.5.1 - NT4.0 and Solaris 5.7
  *
  * required attributes

@@ -23,8 +23,6 @@ import java.util.Vector;
 /**
  * Baseclass for BatchTest and JUnitTest.
  *
- * @author Stefan Bodewig
- * @author <a href="mailto:sbailliez@imediation.com">Stephane Bailliez</a>
  */
 public abstract class BaseTest {
     protected boolean haltOnError = false;

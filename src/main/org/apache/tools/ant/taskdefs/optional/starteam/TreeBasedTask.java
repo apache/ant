@@ -46,8 +46,6 @@ import org.apache.tools.ant.Project;
  *
  * Created: Sat Dec 15 16:55:19 2001
  *
- * @author <a href="mailto:scohen@apache.org">Steve Cohen</a>
- * @version 1.0
  * @see <A HREF="http://www.starbase.com/">StarBase Web Site</A>
  */
 

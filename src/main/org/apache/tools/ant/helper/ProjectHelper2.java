@@ -51,8 +51,6 @@ import org.xml.sax.XMLReader;
 /**
  * Sax2 based project reader
  *
- * @author duncan@x180.com
- * @author Costin Manolache
  */
 public class ProjectHelper2 extends ProjectHelper {
     /* Stateless */

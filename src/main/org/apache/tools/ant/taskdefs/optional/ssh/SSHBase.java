@@ -28,8 +28,6 @@ import org.apache.tools.ant.Project;
 /**
  * Base class for Ant tasks using jsch.
  *
- * @author charliehubbard76@yahoo.com
- * @author riznob@hotmail.com
  * @since Ant 1.6
  */
 public abstract class SSHBase extends Task implements LogListener {

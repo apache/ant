@@ -52,8 +52,6 @@ import org.apache.tools.ant.util.StringUtils;
  * to using abstract path names which are translated to native system
  * file paths at runtime.
  *
- * @author duncan@x180.com
- *
  * @version $Revision$
  */
 

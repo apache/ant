@@ -50,7 +50,6 @@ import org.apache.tools.ant.types.Commandline;
  *   <tr>
  * </table>
  *
- * @author Curtis White
  */
 public class CCUnCheckout extends ClearCase {
     private boolean mKeep = false;

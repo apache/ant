@@ -24,7 +24,6 @@ import junit.framework.TestCase;
 /**
  * Testcase for <rmic>.
  *
- * @author Stefan Bodewig
  * @version $Revision$
  * @since Ant 1.5
  */
