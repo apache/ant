@@ -79,6 +79,7 @@ public final class FixCrLfFilter
     private AddAsisRemove tabs;
     private boolean javafiles = false;
     private boolean fixlast = true;
+    private boolean initialized = false;
 
     /**
      * Constructor for "dummy" instances.
@@ -263,6 +264,7 @@ public final class FixCrLfFilter
         }
         // Add missing EOF character
         in = (ctrlz == AddAsisRemove.ADD) ? new AddEofFilter(in) : in;
+        initialized = true;
      }
 
     /**
@@ -274,7 +276,10 @@ public final class FixCrLfFilter
      * @exception IOException if the underlying stream throws an IOException
      * during reading.
      */
-    public final int read() throws IOException {
+    public synchronized final int read() throws IOException {
+        if (!initialized) {
+            initInternalFilters();
+        }
         return in.read();
     }
 
@@ -552,16 +557,24 @@ public final class FixCrLfFilter
 
             if (normalizedEOL == 0) {
                 int numEOL = 0;
- 
+                boolean atEnd = false;
                 switch (thisChar) {
                 case CTRLZ:
-                case -1:
-                    if (fixLast && !previousWasEOL) {
-                        numEOL = 1;
-
-                        if (thisChar == CTRLZ) {
+                    int c = super.read();
+                    if (c == -1) {
+                        atEnd = true;
+                        if (fixLast && !previousWasEOL) {
+                            numEOL = 1;
                             push(thisChar);
                         }
+                    } else {
+                        push(c);
+                    }
+                    break;
+                case -1:
+                    atEnd = true;
+                    if (fixLast && !previousWasEOL) {
+                        numEOL = 1;
                     }
                     break;
                 case '\n':
@@ -595,39 +608,12 @@ public final class FixCrLfFilter
                     }
                     previousWasEOL = true;
                     thisChar = read();
-                } else if (thisChar != -1) {
+                } else if (!atEnd) {
                     previousWasEOL = false;
                 }
             } else {
                 normalizedEOL--;
             }
-            return thisChar;
-        }
-    }
-
-    private static class FixLastFilter extends SimpleFilterReader {
-        int lastChar = -1;
-        char[] eol = null;
-
-        public FixLastFilter(Reader in, String eolString) {
-            super(in);
-            eol = eolString.toCharArray();
-        }
-
-        public int read() throws IOException {
-            int thisChar = super.read();
-            // if source is EOF but last character was NOT eol, return eol
-            if (thisChar == -1) {
-                switch (lastChar) {
-                case '\r':
-                case '\n':
-                    // Return first character of EOL
-                    thisChar = eol[0];
-                    // Push remaining characters onto input stream
-                    push(eol, 1, eol.length - 1);
-                }
-            }
-            lastChar = thisChar;
             return thisChar;
         }
     }
@@ -643,10 +629,14 @@ public final class FixCrLfFilter
             int thisChar = super.read();
 
             // if source is EOF but last character was NOT ctrl-z, return ctrl-z
-            if (thisChar == -1 && lastChar != CTRLZ) {
-                thisChar = CTRLZ;
+            if (thisChar == -1) {
+                if (lastChar != CTRLZ) {
+                    lastChar = CTRLZ;
+                    return lastChar;
+                }
+            } else {
+                lastChar = thisChar;
             }
-            lastChar = thisChar;
             return thisChar;
         }
     }
