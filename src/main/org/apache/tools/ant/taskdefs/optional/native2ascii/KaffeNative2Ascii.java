@@ -29,6 +29,13 @@ import org.apache.tools.ant.types.Commandline;
  */
 public final class KaffeNative2Ascii extends DefaultNative2Ascii {
 
+    // sorted by newest Kaffe version first
+    private static final String[] N2A_CLASSNAMES = new String[] {
+        "gnu.classpath.tools.native2ascii.Native2Ascii",
+        // pre Kaffe 1.1.5
+        "kaffe.tools.native2ascii.Native2Ascii",
+    };
+
     /**
      * Identifies this adapter.
      */
@@ -45,10 +52,33 @@ public final class KaffeNative2Ascii extends DefaultNative2Ascii {
     protected boolean run(Commandline cmd, ProjectComponent log)
         throws BuildException {
         ExecuteJava ej = new ExecuteJava();
-        cmd.setExecutable("kaffe.tools.native2ascii.Native2Ascii");
+        Class c = getN2aClass();
+        if (c == null) {
+            throw new BuildException("Couldn't load Kaffe's Native2Ascii"
+                                     + " class");
+        }
+
+        cmd.setExecutable(c.getName());
         ej.setJavaCommand(cmd);
         ej.execute(log.getProject());
         // otherwise ExecuteJava has thrown an exception
         return true;
     }
+
+    /**
+     * tries to load Kaffe Native2Ascii and falls back to the older
+     * class name if necessary.
+     *
+     * @return null if neither class can get loaded.
+     */
+    private static Class getN2aClass() {
+        for (int i = 0; i < N2A_CLASSNAMES.length; i++) {
+            try {
+                return Class.forName(N2A_CLASSNAMES[i]);
+            } catch (ClassNotFoundException cnfe) {
+            }
+        }
+        return null;
+    }
+
 }
