@@ -120,7 +120,14 @@ public class JbossDeploymentTool extends GenericDeploymentTool {
      * of this jar will be checked against the dependent bean classes.
      */
     File getVendorOutputJarFile(String baseName) {
-        return new File(getParent().getDestdir(), baseName + jarSuffix);
+        if (getDestDir() == null && getParent().getDestdir() == null) {
+            throw new BuildException("DestDir not specified");
+        }
+        if (getDestDir() == null) {
+            return new File(getParent().getDestdir(), baseName + jarSuffix);
+        } else {
+            return new File(getDestDir(), baseName + jarSuffix);
+        }
     }
 
     /**
