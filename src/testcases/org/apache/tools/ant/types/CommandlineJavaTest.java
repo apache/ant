@@ -1,5 +1,5 @@
 /*
- * Copyright  2000-2004 The Apache Software Foundation
+ * Copyright  2000-2005 The Apache Software Foundation
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -39,15 +39,15 @@ public class CommandlineJavaTest extends TestCase {
         project = new Project();
         project.setBasedir(System.getProperty("root"));
         project.setProperty("build.sysclasspath", "ignore");
-        cloneVm = System.getProperty("build.clonevm");
+        cloneVm = System.getProperty("ant.build.clonevm");
         if (cloneVm != null) {
-            System.setProperty("build.clonevm", "false");
+            System.setProperty("ant.build.clonevm", "false");
         }
     }
 
     public void tearDown() {
         if (cloneVm != null) {
-            System.setProperty("build.clonevm", cloneVm);
+            System.setProperty("ant.build.clonevm", cloneVm);
         }
     }
 

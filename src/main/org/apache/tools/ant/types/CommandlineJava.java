@@ -640,7 +640,7 @@ public class CommandlineJava implements Cloneable {
 
     /**
      * Calculate the bootclasspath based on the bootclasspath
-     * specified, the build.sysclasspath and build.clonevm magic
+     * specified, the build.sysclasspath and ant.build.clonevm magic
      * properties as well as the cloneVm attribute.
      *
      * @since Ant 1.7
@@ -664,11 +664,13 @@ public class CommandlineJava implements Cloneable {
     }
 
     /**
-     * Has the cloneVm attribute or the magic property build.clonevm been set?
+     * Has the cloneVm attribute or the magic property
+     * ant.build.clonevm been set?
      *
      * @since 1.7
      */
     private boolean isCloneVm() {
-        return cloneVm || "true".equals(System.getProperty("build.clonevm"));
+        return cloneVm 
+            || "true".equals(System.getProperty("ant.build.clonevm"));
     }
 }
