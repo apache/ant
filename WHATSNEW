@@ -16,6 +16,11 @@ argument version present in 1.5beta1.
 
 Fixed bugs:
 -----------
+* When <move> attempts a rename, it deletes the destination file, if it
+  exists, before renaming the source file.  However, <move> was not
+  checking if the destination file was actually a directory before
+  trying to delete it.
+
 * Make CVS Tasks to work under Cygwin.
 
 * Fix LineContains to handle huge files elegantly without causing
