@@ -41,6 +41,9 @@
                classname="com.kvisco.xsl.XSLProcessor" />
     <available property="xalan.present" 
                classname="org.apache.xalan.xslt.XSLTProcessorFactory" />
+    <available property="ejb.ejbc.present" classname="weblogic.ejbc" />
+    <available property="ejb.DDCreator.present" classname="weblogic.ejb.utils.DDCreator" />
+    <available property="ejb.wls.present" classname="weblogic.Server" />
   </target>
 
   <!-- =================================================================== -->
@@ -64,11 +67,15 @@
            deprecation="off"
            optimize="on" >
       <include name="**/*.java"/>
+      <exclude name="**/version.txt" />
       <exclude name="**/Script.java" unless="bsf.present" />
       <exclude name="**/NetRexxC.java" unless="netrexx.present" />
       <exclude name="**/XslpLiaison.java" unless="xslp.present" />
       <exclude name="**/XalanLiaison.java" unless="xalan.present" />
-      <exclude name="**/version.txt" />
+      <exclude name="**/Ejbc*.java" unless="ejb.ejbc.present" />
+      <exclude name="**/DDCreator*.java" unless="ejb.DDCreator.present" />
+      <exclude name="**/WLRun.java" unless="ejb.wls.present" />
+      <exclude name="**/WLStop.java" unless="ejb.wls.present" />
     </javac>
  
     <copydir src="${src.dir}" dest="${build.classes}">
