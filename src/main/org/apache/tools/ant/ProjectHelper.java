@@ -70,6 +70,7 @@ import java.lang.reflect.Method;
 
 import org.xml.sax.AttributeList;
 import org.apache.tools.ant.helper.ProjectHelperImpl;
+import org.apache.tools.ant.util.LoaderUtils;
 
 /**
  * Configures a Project (complete with Targets and Tasks) based on
@@ -236,30 +237,11 @@ public class ProjectHelper {
     public static ClassLoader getContextClassLoader()
         throws BuildException
     {
-        // Are we running on a JDK 1.2 or later system?
-        Method method = null;
-        try {
-            method = Thread.class.getMethod("getContextClassLoader", null);
-        } catch (NoSuchMethodException e) {
-            // we are running on JDK 1.1
-            return null; 
+        if (!LoaderUtils.isContextLoaderAvailable()) {
+            return null;
         }
-
-        // Get the thread context class loader (if there is one)
-        ClassLoader classLoader = null;
-        try {
-            classLoader = (ClassLoader)
-                method.invoke(Thread.currentThread(), null);
-        } catch (IllegalAccessException e) {
-            throw new BuildException
-                ("Unexpected IllegalAccessException", e);
-        } catch (InvocationTargetException e) {
-            throw new BuildException
-                ("Unexpected InvocationTargetException", e);
-        }
-
-        // Return the selected class loader
-        return (classLoader);
+        
+        return LoaderUtils.getContextClassLoader();
     }
 
     // -------------------- Static utils, used by most helpers -------------------- 

@@ -74,6 +74,8 @@ import java.util.Random;
 import java.util.Stack;
 import java.util.StringTokenizer;
 import java.util.Vector;
+import java.net.URL;
+import java.net.MalformedURLException;
 
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
@@ -115,6 +117,25 @@ public class FileUtils {
      */
     protected FileUtils() {}
 
+    /**
+     * Get the URL for a file taking into account # characters
+     *
+     * @param file the file whose URL representation is required.
+     * @return The FileURL value
+     * @throws MalformedURLException if the URL representation cannot be
+     *      formed.
+     */
+    public URL getFileURL(File file) throws MalformedURLException {
+        String uri = "file:" + file.getAbsolutePath().replace('\\', '/');
+        for (int i = uri.indexOf('#'); i != -1; i = uri.indexOf('#')) {
+            uri = uri.substring(0, i) + "%23" + uri.substring(i + 1);
+        }
+        if (file.isDirectory()) {
+            uri += "/";
+        }
+        return new URL(uri);
+    }
+    
     /**
      * Convienence method to copy a file from a source to a destination.
      * No filtering is performed.

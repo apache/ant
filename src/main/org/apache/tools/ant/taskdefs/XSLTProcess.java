@@ -65,7 +65,7 @@ import org.apache.tools.ant.AntClassLoader;
 import org.apache.tools.ant.types.Path;
 import org.apache.tools.ant.types.Reference;
 import org.apache.tools.ant.util.FileUtils;
-import org.apache.tools.ant.types.XCatalog;
+import org.apache.tools.ant.types.XMLCatalog;
 import org.xml.sax.EntityResolver;
 
 /**
@@ -142,7 +142,7 @@ public class XSLTProcess extends MatchingTask implements XSLTLogger {
     private String outputtype = null;
     
     /** for resolving entities such as dtds */
-    private XCatalog xcatalog;
+    private XMLCatalog xmlCatalog;
     
     /** Name of the TRAX Liason class */
     private static final String TRAX_LIAISON_CLASS =
@@ -344,12 +344,12 @@ public class XSLTProcess extends MatchingTask implements XSLTLogger {
     }
     
     /**
-     * store the xcatalog for resolving entities
+     * store the xml catalog for resolving entities
      * 
-     * @param xcatalog the xcatalog instance to use to look up DTDs
+     * @param xmlCatalog the XMLCatalog instance to use to look up DTDs
      */
-    public void addXcatalog(XCatalog xcatalog) {
-        this.xcatalog = xcatalog;
+    public void addXMLcatalog(XMLCatalog xmlCatalog) {
+        this.xmlCatalog = xmlCatalog;
     }
     
     /**
@@ -660,16 +660,16 @@ public class XSLTProcess extends MatchingTask implements XSLTLogger {
                 Param p = (Param)e.nextElement();
                 liaison.addParam( p.getName(), p.getExpression() );
             }
-            // if liaison is a TraxLiason, use XCatalog as the entity
+            // if liaison is a TraxLiason, use XMLCatalog as the entity
             // resolver
             if (liaison.getClass().getName().equals(TRAX_LIAISON_CLASS) &&
-                xcatalog != null) {
+                xmlCatalog != null) {
                 log("Configuring TraxLiaison and calling entity resolver",
                     Project.MSG_DEBUG);
                 Method resolver = liaison.getClass()
                                     .getDeclaredMethod("setEntityResolver", 
                                         new Class[] {EntityResolver.class});
-                resolver.invoke(liaison, new Object[] {xcatalog});
+                resolver.invoke(liaison, new Object[] {xmlCatalog});
             }
         } catch (Exception ex) {
             log("Failed to read stylesheet " + stylesheet, Project.MSG_INFO);

@@ -59,13 +59,15 @@ import java.io.FileInputStream;
 import java.io.InputStream;
 import java.io.IOException;
 import java.net.URL;
-import java.util.Enumeration;
+import java.util.Iterator;
 import java.util.Vector;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
 import org.xml.sax.EntityResolver;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
+import org.apache.tools.ant.util.LoaderUtils;
+import org.apache.tools.ant.util.FileUtils;
 
 /**
  * This data type provides a catalog of DTD locations
@@ -90,7 +92,9 @@ import org.xml.sax.SAXException;
  * @author  dIon Gillard
  * @version $Id$
  */
-public class XCatalog extends DataType implements Cloneable, EntityResolver {
+public class XMLCatalog extends DataType implements Cloneable, EntityResolver {
+    
+    private FileUtils fileUtils = FileUtils.newFileUtils();
     
     //-- Fields ----------------------------------------------------------------
     
@@ -121,7 +125,7 @@ public class XCatalog extends DataType implements Cloneable, EntityResolver {
      * @param aDTD the DTDLocation instance to be aded to the catalog
      */
     private void addElement(DTDLocation aDTD) {
-        getElements().addElement(aDTD);
+        getElements().add(aDTD);
     }
     
     /**
@@ -135,7 +139,7 @@ public class XCatalog extends DataType implements Cloneable, EntityResolver {
         if (isReference()) {
             throw noChildrenAllowed();
         }
-        getElements().addElement(dtd);
+        getElements().add(dtd);
     }
     
     /**
@@ -165,9 +169,9 @@ public class XCatalog extends DataType implements Cloneable, EntityResolver {
         // change this to get the objects from the other reference
         Object o = r.getReferencedObject(getProject());
         // we only support references to other XCatalogs
-        if (o instanceof XCatalog) {
+        if (o instanceof XMLCatalog) {
             // set all elements from referenced catalog to this one
-            XCatalog catalog = (XCatalog) o;
+            XMLCatalog catalog = (XMLCatalog) o;
             setElements(catalog.getElements());
         } else {
             String msg = r.getRefId() + " doesn\'t refer to an XCatalog";
@@ -191,16 +195,20 @@ public class XCatalog extends DataType implements Cloneable, EntityResolver {
                 Project.MSG_DEBUG);
             File dtdFile = new File(matchingDTD.getLocation());
             if (dtdFile.exists() && dtdFile.canRead()) {
-                source = new InputSource( new FileInputStream(dtdFile) );
-                source.setSystemId(dtdFile.toURL().toExternalForm());
+                source = new InputSource(new FileInputStream(dtdFile));
+                URL dtdFileURL = fileUtils.getFileURL(dtdFile);
+                source.setSystemId(dtdFileURL.toExternalForm());
                 log("matched a readable file", Project.MSG_DEBUG);
             } else {
                 // check if publicId is a resource
                 // FIXME: ClassLoader: should this be context?
-                ClassLoader loader 
-                    = Thread.currentThread().getContextClassLoader();
-                InputStream is = loader.getResourceAsStream(
-                    matchingDTD.getLocation() );
+                ClassLoader loader = LoaderUtils.getContextClassLoader();
+                if (loader == null) {
+                    loader = getClass().getClassLoader();
+                }
+                
+                InputStream is 
+                    = loader.getResourceAsStream(matchingDTD.getLocation());
                 if (is != null) {
                     source = new InputSource(is);
                     source.setSystemId(loader.getResource(
@@ -242,10 +250,10 @@ public class XCatalog extends DataType implements Cloneable, EntityResolver {
      *         of the DTD or null if no such information is available
      */
     private DTDLocation findMatchingDTD(String publicId) {
-        Enumeration elements = getElements().elements();
+        Iterator elements = getElements().iterator();
         DTDLocation element = null;
-        while (elements.hasMoreElements()) {
-            element = (DTDLocation)elements.nextElement();
+        while (elements.hasNext()) {
+            element = (DTDLocation)elements.next();
             if (element.getPublicId().equals(publicId)) {
                 return element;
             }
