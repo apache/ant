@@ -158,13 +158,13 @@
             <frame src="allclasses-frame.html" name="classListFrame"/>
         </frameset>
         <frame src="overview-summary.html" name="classFrame"/>
+        <noframes>
+            <h2>Frame Alert</h2>
+            <p>
+                This document is designed to be viewed using the frames feature. If you see this message, you are using a non-frame-capable web client.
+            </p>
+        </noframes>
     </frameset>
-    <noframes>
-        <h2>Frame Alert</h2>
-        <p>
-        This document is designed to be viewed using the frames feature. If you see this message, you are using a non-frame-capable web client.
-        </p>
-    </noframes>
 </html>
 </xsl:template>
 
@@ -227,22 +227,24 @@ h6 {
      ====================================================================== -->
 <xsl:template match="testsuite" mode="class.details">
     <xsl:variable name="package.name" select="@package"/>
+    <xsl:variable name="class.name"><xsl:if test="not($package.name = '')"><xsl:value-of select="$package.name"/>.</xsl:if><xsl:value-of select="@name"/></xsl:variable>
     <html>
         <head>
+          <title>Unit Test Results: <xsl:value-of select="$class.name"/></title>
             <xsl:call-template name="create.stylesheet.link">
                 <xsl:with-param name="package.name" select="$package.name"/>
             </xsl:call-template>
-      <script language="JavaScript">
+       <script type="text/javascript" language="JavaScript">
         var TestCases = new Array();
         var cur;
         <xsl:apply-templates select="properties"/>
        </script>
-       <script language="JavaScript"><![CDATA[
+       <script type="text/javascript" language="JavaScript"><![CDATA[
         function displayProperties (name) {
           var win = window.open('','JUnitSystemProperties','scrollbars=1,resizable=1');
           var doc = win.document.open();
           doc.write("<html><head><title>Properties of " + name + "</title>");
-          doc.write("<style>")
+          doc.write("<style type=\"text/css\">");
           doc.write("body {font:normal 68% verdana,arial,helvetica; color:#000000; }");
           doc.write("table tr td, table tr th { font-size: 68%; }");
           doc.write("table.properties { border-collapse:collapse; border-left:solid 1 #cccccc; border-top:solid 1 #cccccc; padding:5px; }");
@@ -268,7 +270,7 @@ h6 {
         </head>
         <body>
             <xsl:call-template name="pageHeader"/>  
-            <h3>Class <xsl:if test="not($package.name = '')"><xsl:value-of select="$package.name"/>.</xsl:if><xsl:value-of select="@name"/></h3>
+            <h3>Class <xsl:value-of select="$class.name"/></h3>
 
             
             <table class="details" border="0" cellpadding="5" cellspacing="2" width="95%">
@@ -277,7 +279,6 @@ h6 {
             </table>
     
             <h2>Tests</h2>
-            <p>
             <table class="details" border="0" cellpadding="5" cellspacing="2" width="95%">
         <xsl:call-template name="testcase.test.header"/>
               <!--
@@ -291,7 +292,6 @@ h6 {
                 </xsl:if>
                 <xsl:apply-templates select="./testcase" mode="print.test"/>
             </table>
-            </p>
             <div class="Properties">
                 <a>
                     <xsl:attribute name="href">javascript:displayProperties('<xsl:value-of select="@package"/>.<xsl:value-of select="@name"/>');</xsl:attribute>
@@ -341,6 +341,7 @@ h6 {
     <xsl:param name="name"/>
     <html>
         <head>
+            <title>Unit Test Classes: <xsl:value-of select="$name"/></title>
             <xsl:call-template name="create.stylesheet.link">
                 <xsl:with-param name="package.name" select="$name"/>
             </xsl:call-template>
@@ -355,7 +356,6 @@ h6 {
             </table>
     
             <h2>Classes</h2>
-            <p>
             <table width="100%">
                 <xsl:for-each select="/testsuites/testsuite[./@package = $name]">
                     <xsl:sort select="@name"/>
@@ -366,7 +366,6 @@ h6 {
                     </tr>
                 </xsl:for-each>
             </table>
-            </p>
         </body>
     </html>
 </xsl:template>
@@ -379,19 +378,18 @@ h6 {
 <xsl:template match="testsuites" mode="all.classes">
     <html>
         <head>
+            <title>All Unit Test Classes</title>
             <xsl:call-template name="create.stylesheet.link">
                 <xsl:with-param name="package.name"/>
             </xsl:call-template>
         </head>
         <body>
             <h2>Classes</h2>
-            <p>
             <table width="100%">
                 <xsl:apply-templates select="testsuite" mode="all.classes">
                     <xsl:sort select="@name"/>
                 </xsl:apply-templates>
             </table>
-            </p>
         </body>
     </html>
 </xsl:template>
@@ -421,6 +419,7 @@ h6 {
 <xsl:template match="testsuites" mode="all.packages">
     <html>
         <head>
+            <title>All Unit Test Packages</title>
             <xsl:call-template name="create.stylesheet.link">
                 <xsl:with-param name="package.name"/>
             </xsl:call-template>
@@ -428,13 +427,11 @@ h6 {
         <body>
             <h2><a href="overview-summary.html" target="classFrame">Home</a></h2>
             <h2>Packages</h2>
-            <p>
-                <table width="100%">
-                    <xsl:apply-templates select="testsuite[not(./@package = preceding-sibling::testsuite/@package)]" mode="all.packages">
-                        <xsl:sort select="@package"/>
-                    </xsl:apply-templates>
-                </table>
-            </p>
+            <table width="100%">
+                <xsl:apply-templates select="testsuite[not(./@package = preceding-sibling::testsuite/@package)]" mode="all.packages">
+                    <xsl:sort select="@package"/>
+                </xsl:apply-templates>
+            </table>
         </body>
     </html>
 </xsl:template>
@@ -453,6 +450,7 @@ h6 {
 <xsl:template match="testsuites" mode="overview.packages">
     <html>
         <head>
+            <title>Unit Test Results: Summary</title>
             <xsl:call-template name="create.stylesheet.link">
                 <xsl:with-param name="package.name"/>
             </xsl:call-template>
@@ -605,7 +603,7 @@ h6 {
     <table width="100%">
     <tr>
         <td align="left"></td>
-        <td align="right">Designed for use with <a href='http://www.junit.org'>JUnit</a> and <a href='http://jakarta.apache.org'>Ant</a>.</td>
+        <td align="right">Designed for use with <a href="http://www.junit.org/">JUnit</a> and <a href="http://jakarta.apache.org/">Ant</a>.</td>
     </tr>
     </table>
     <hr size="1"/>
@@ -706,8 +704,8 @@ h6 {
         </xsl:otherwise>
     </xsl:choose>
     <!-- display the stacktrace -->
+    <br/><br/>
     <code>
-        <p/>
         <xsl:call-template name="br-replace">
             <xsl:with-param name="word" select="."/>
         </xsl:call-template>

@@ -1,5 +1,6 @@
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version="1.0">
-<xsl:output method="html" indent="yes" encoding="US-ASCII"/>
+<xsl:output method="html" indent="yes" encoding="US-ASCII"
+  doctype-public="-//W3C//DTD HTML 4.01 Transitional//EN" />
 <xsl:decimal-format decimal-separator="." grouping-separator="," />
 <!--
  The Apache Software License, Version 1.1
@@ -67,8 +68,9 @@
  
 -->
 <xsl:template match="testsuites">
-    <HTML>
-        <HEAD>
+    <html>
+        <head>
+            <title>Unit Test Results</title>
     <style type="text/css">
       body {
         font:normal 68% verdana,arial,helvetica;
@@ -118,7 +120,7 @@
         text-align:right;
       }
       </style>
-      <script language="JavaScript">
+      <script type="text/javascript" language="JavaScript">
         var TestCases = new Array();
         var cur;
         <xsl:for-each select="./testsuite">      
@@ -126,7 +128,7 @@
         </xsl:for-each>
 
        </script>
-       <script language="JavaScript"><![CDATA[
+       <script type="text/javascript" language="JavaScript"><![CDATA[
         function displayProperties (name) {
           var win = window.open('','JUnitSystemProperties','scrollbars=1,resizable=1');
           var doc = win.document.open();
@@ -154,7 +156,7 @@
         }
       ]]>  
       </script>
-        </HEAD>
+        </head>
         <body>
             <a name="top"></a>
             <xsl:call-template name="pageHeader"/>  
@@ -175,7 +177,7 @@
             <xsl:call-template name="classes"/>
             
         </body>
-    </HTML>
+    </html>
 </xsl:template>
     
     
@@ -454,7 +456,7 @@
     </xsl:choose>
     <!-- display the stacktrace -->
     <code>
-        <p/>
+        <br/><br/>
         <xsl:call-template name="br-replace">
             <xsl:with-param name="word" select="."/>
         </xsl:call-template>
