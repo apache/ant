@@ -83,6 +83,12 @@ Other mirrors: <select name="Preferred">
 <div class="content">Ant 1.6.2 has been released on 16-July-2004 and
 may not be available on all mirrors for a few days.</div>
 </div>
+<br></br>
+<div class="warning">
+<div class="label">Tar files may require gnu tar to extract</div>
+<div class="content">Tar files in the distribution contain long file names, and may
+ require gnu tar to do the extraction.</div>
+</div>
 
 <ul>
 <li><code>.zip</code> archive: 
