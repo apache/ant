@@ -489,20 +489,21 @@ public final class IntrospectionHelper implements BuildListener {
             = (AttributeSetter) attributeSetters.get(
                 attributeName.toLowerCase(Locale.US));
         if (as == null) {
-            if (element instanceof DynamicConfiguratorNS) {
-                DynamicConfiguratorNS dc = (DynamicConfiguratorNS) element;
-                String uriPlusPrefix =
-                    ProjectHelper.extractUriFromComponentName(attributeName);
-                String uri =
-                    ProjectHelper.extractUriFromComponentName(uriPlusPrefix);
-                String localName =
-                    ProjectHelper.extractNameFromComponentName(attributeName);
-                String qName = ("".equals(uri)
-                                ? localName : (uri + ":" + localName));
-
-                dc.setDynamicAttribute(uri, localName, qName, value);
-                return;
-            } else if (element instanceof DynamicConfigurator) {
+//            if (element instanceof DynamicConfiguratorNS) {
+//                DynamicConfiguratorNS dc = (DynamicConfiguratorNS) element;
+//                String uriPlusPrefix =
+//                    ProjectHelper.extractUriFromComponentName(attributeName);
+//                String uri =
+//                    ProjectHelper.extractUriFromComponentName(uriPlusPrefix);
+//                String localName =
+//                    ProjectHelper.extractNameFromComponentName(attributeName);
+//                String qName = ("".equals(uri)
+//                                ? localName : (uri + ":" + localName));
+//
+//                dc.setDynamicAttribute(uri, localName, qName, value);
+//                return;
+//            } else 
+            if (element instanceof DynamicConfigurator) {
                 DynamicConfigurator dc = (DynamicConfigurator) element;
                 dc.setDynamicAttribute(attributeName.toLowerCase(Locale.US), value);
                 return;
@@ -611,35 +612,35 @@ public final class IntrospectionHelper implements BuildListener {
         if (nc == null) {
             nc = createAddTypeCreator(project, parent, elementName);
         }
-        if (nc == null && parent instanceof DynamicConfiguratorNS) {
-            DynamicConfiguratorNS dc = (DynamicConfiguratorNS) parent;
-            String qName = (child == null ? name : child.getQName());
-            final Object nestedElement =
-                dc.createDynamicElement(
-                    (child == null ? "" : child.getNamespace()),
-                    name, qName);
-            if (nestedElement != null) {
-                nc = new NestedCreator() {
-                    public boolean isPolyMorphic() {
-                        return false;
-                    }
-                    public Class getElementClass() {
-                        return null;
-                    }
-
-                    public Object getRealObject() {
-                        return null;
-                    }
-
-                    public Object create(
-                        Project project, Object parent, Object ignore) {
-                        return nestedElement;
-                    }
-                    public void store(Object parent, Object child) {
-                    }
-                };
-            }
-        }
+//        if (nc == null && parent instanceof DynamicConfiguratorNS) {
+//            DynamicConfiguratorNS dc = (DynamicConfiguratorNS) parent;
+//            String qName = (child == null ? name : child.getQName());
+//            final Object nestedElement =
+//                dc.createDynamicElement(
+//                    (child == null ? "" : child.getNamespace()),
+//                    name, qName);
+//            if (nestedElement != null) {
+//                nc = new NestedCreator() {
+//                    public boolean isPolyMorphic() {
+//                        return false;
+//                    }
+//                    public Class getElementClass() {
+//                        return null;
+//                    }
+//
+//                    public Object getRealObject() {
+//                        return null;
+//                    }
+//
+//                    public Object create(
+//                        Project project, Object parent, Object ignore) {
+//                        return nestedElement;
+//                    }
+//                    public void store(Object parent, Object child) {
+//                    }
+//                };
+//            }
+//        }
         if (nc == null && parent instanceof DynamicConfigurator) {
             DynamicConfigurator dc = (DynamicConfigurator) parent;
             final Object nestedElement =
@@ -750,7 +751,7 @@ public final class IntrospectionHelper implements BuildListener {
     public boolean supportsNestedElement(String elementName) {
         return nestedCreators.containsKey(elementName.toLowerCase(Locale.US))
             || DynamicConfigurator.class.isAssignableFrom(bean)
-            || DynamicConfiguratorNS.class.isAssignableFrom(bean)
+            //            || DynamicConfiguratorNS.class.isAssignableFrom(bean)
             || addTypeMethods.size() != 0;
     }
 
@@ -777,7 +778,7 @@ public final class IntrospectionHelper implements BuildListener {
             nestedCreators.containsKey(name.toLowerCase(Locale.US))
             && (uri.equals(parentUri))) // || uri.equals("")))
             || DynamicConfigurator.class.isAssignableFrom(bean)
-            || DynamicConfiguratorNS.class.isAssignableFrom(bean)
+            //            || DynamicConfiguratorNS.class.isAssignableFrom(bean)
             || addTypeMethods.size() != 0;
     }
 
