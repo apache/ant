@@ -114,7 +114,8 @@ public class Zip extends MatchingTask {
     }
 
     /**
-     * @deprecated addPrefixedfileset is deprecated; replaced by ZipFileSet
+     * Adds a set of files (nested zipfileset attribute) that can be
+     * read from an archive and be given a prefix/fullpath.
      */
     public void addZipfileset(ZipFileSet set) {
         filesets.addElement(set);
