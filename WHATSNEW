@@ -63,7 +63,7 @@ Other changes:
 * Added support for specifying CVS_RSH in the <cvs/> task
 
 * New tasks bzip2 and bunzip2 to pack and unpack files using the 
-  BZip2 alogrithm, replaceregexp, checksum, translate
+  BZip2 alogrithm, replaceregexp, checksum, translate, waitfor
 
 * The attributes zipfile, jarfile, warfile and earfile (from the Zip, 
   Jar, War and Ear tasks) have been deprecated and superseded by a 
@@ -72,7 +72,7 @@ Other changes:
 * Added a new condition <isset> that test for the existence of a
   property to the condition task.
 
-* Added a new condition <checksum>.
+* Added a new conditions <checksum>, <http>, <socket>.
 
 * Ant's testcases require JUnit 3.7 or above as they now use the new
   assertTrue method instead of assert.

@@ -1,0 +1,79 @@
+<html>
+
+<head>
+<meta http-equiv="Content-Language" content="en-us">
+<title>Apache Ant User Manual</title>
+</head>
+
+<body>
+
+<h2>Waitfor</h2>
+<h3>Description</h3>
+<p>Blocks execution until a set of specified conditions become true. This is intended 
+  to be used with the <a href="parallel.html">parallel</a> task to 
+  synchronize a set of processes.</p>
+<p>The conditions to wait for are defined in <a href="waitfor.html#nested">nested elements</a>, if multiple conditions 
+  are specified, then the task will wait until all conditions are true..</p>
+<p></p>
+<p>The time attributes (maxwait and checkevery) are specified in milliseconds 
+  unless the values are followed by one of the following suffixes: &quot;ms&quot;, 
+  &quot;s&quot;, &quot;m&quot;, &quot;h&quot; which cause the value to be interpreted 
+  as milliseconds, seconds, minutes or hours.</p>
+<h3>Parameters</h3>
+<table border="1" cellpadding="2" cellspacing="0">
+  <tr> 
+    <td valign="top"><b>Attribute</b></td>
+    <td valign="top"><b>Description</b></td>
+    <td align="center" valign="top"><b>Required</b></td>
+  </tr>
+  <tr> 
+    <td valign="top">maxwait</td>
+    <td valign="top">The maximum amount of time to wait for all the required conditions 
+      to become true before failing the task. Defaults to 5 minutes.</td>
+    <td valign="top" align="center">No</td>
+  </tr>
+  <tr> 
+    <td valign="top">checkevery</td>
+    <td valign="top">The amount of time to wait between each test of the conditions. 
+      Defaults to 200mS.</td>
+    <td valign="top" align="center">No</td>
+  </tr>
+</table>
+<h3><a name="nested">Nested Elements</a></h3>
+
+<p>The available conditions that satisfy the
+<code>&lt;waitfor&gt;</code> task are the same as those for the 
+<a href="condition.html"><code>&lt;condition&gt;</code></a> task. See
+<a href="conditions.html">here</a> for the full list.</p>
+
+<h3>Examples</h3>
+<blockquote> 
+  <p><code>&lt;waitfor maxwait=&quot;30s&quot;&gt;<br>
+    &nbsp;&nbsp;&nbsp;&nbsp;&lt;available file="errors.log"/&gt;<br>
+    &lt;/waitfor&gt;</code></p>
+</blockquote>
+<p>waits up to 30 seconds for a file called errors.log to appear.</p>
+<blockquote>
+  <p><code>&lt;waitfor maxwait=&quot;3m&quot; checkevery=&quot;500ms&quot;&gt;<br>
+    &nbsp;&nbsp;&nbsp;&nbsp;&lt;http url=&quot;http://localhost/myapp/index.html&quot;/&gt;<br>
+    &lt;/waitfor&gt;</code></p>
+</blockquote>
+<p>waits up to 3 minutes (and checks every 500mS) for a web server on localhost 
+  to serve up the specified URL.</p>
+<blockquote> 
+  <p><code>&lt;waitfor maxwait=&quot;10s&quot;&gt;<br>
+    &nbsp;&nbsp;&nbsp;&nbsp;&lt;and&gt;<br>
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;socket server=&quot;dbserver&quot; port=&quot;1521&quot;/&gt;<br>
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;http url=&quot;http://webserver/mypage.html&quot;/&gt;<br>
+    &nbsp;&nbsp;&nbsp;&nbsp;&lt;/and&gt;<br>
+    &lt;/waitfor&gt;</code></p>
+</blockquote>
+<p>waits up to 10 seconds for a server on the dbserver machine to begin listening 
+  on port 1521 and for the http://webserver/mypage.html web page 
+  to become available.</p>
+<hr><p align="center">Copyright &copy; 2000,2001 Apache Software Foundation. All rights
+Reserved.</p>
+
+</body>
+</html>
+

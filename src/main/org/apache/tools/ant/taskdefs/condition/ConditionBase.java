@@ -155,6 +155,20 @@ public abstract class ConditionBase extends ProjectComponent {
     public void addIsSet(IsSet i) {conditions.addElement(i);}
 
     /**
+     * Add an &lt;http&gt; condition.
+     *
+     * @since 1.7
+     */
+    public void addHttp(Http h) {conditions.addElement(h);}
+
+    /**
+     * Add a &lt;socket&gt; condition.
+     *
+     * @since 1.7
+     */
+    public void addSocket(Socket s) {conditions.addElement(s);}
+
+    /**
      * Inner class that configures those conditions with a project
      * instance that need it.
      *
