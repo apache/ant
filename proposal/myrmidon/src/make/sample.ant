@@ -250,4 +250,37 @@ Legal:
         </filtered-copy>
     </target>
 
+    <target name="ant-test">
+        <!-- test elided until we decide scope and necessity of ant-call -->
+        <log message="Testing ant task..."/>
+        <ant file="sample.ant" target="if-test"/>
+
+        <log message="Using params..."/>
+        <ant file="sample.ant" target="prop-print">
+            <param name="meep.meep" value="Meep!"/>
+        </ant>
+
+        <log message="Using params value-ref..."/>
+        <pattern id="meep.data" name="*.java" if="..." />
+        <ant file="sample.ant" target="prop-print">
+            <param name="meep.meep" value-ref="meep.data"/>
+        </ant>
+
+        <log message="Using inheritall..."/>
+        <pattern id="meep.meep" name="*.java" if="..." />
+        <ant file="sample.ant" target="prop-print" inherit-all="true"/>
+
+        <!--
+        <log message="Fail as no define property..."/>
+        <ant file="sample.ant" target="prop-print"/>
+        -->
+
+        <log message="Fail as no build.ant file in correct place..."/>
+        <ant/>
+    </target>
+
+    <target name="prop-print">
+        <log message="Give me a property ... ${meep.meep}"/>
+    </target>
+
 </project>
