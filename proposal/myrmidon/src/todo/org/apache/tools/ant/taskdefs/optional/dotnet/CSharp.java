@@ -92,7 +92,6 @@ import org.apache.tools.ant.types.Path;
  * @author Steve Loughran steve_l@iseran.com
  * @version 0.3
  */
-
 public class CSharp
     extends org.apache.tools.ant.taskdefs.MatchingTask
 {
