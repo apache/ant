@@ -236,6 +236,8 @@ decide between several possible options.
 
   Whatever that means in detail.
 
+* build files should be declarative in nature
+
 V. Things we probably don't agree on. 
 ======================================================================
 
@@ -412,4 +414,6 @@ V. Things we probably don't agree on.
   all entries in A).
 
 * Homogenize notion of PATHs and filesets.
+
+* build files should be purely declarative
 
