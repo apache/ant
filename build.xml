@@ -70,6 +70,7 @@
     <available property="junit.present" classname="junit.framework.TestCase" />
     <available property="ftp.present" classname="com.oroinc.net.ftp.FTPClient" />
     <available property="starteam.present" classname="com.starbase.util.Platform" />
+    <available property="antlr.present" classname="antlr.Tool" />
   </target>
 
   <!-- =================================================================== -->
@@ -106,6 +107,7 @@
       <exclude name="**/junit/*" unless="junit.present" />
       <exclude name="**/FTP*.java" unless="ftp.present" />
       <exclude name="**/AntStarTeam*.java" unless="starteam.present" />
+      <exclude name="**/ANTLR.java" unless="antlr.present" />
     </javac>
  
     <copy todir="${build.classes}">
@@ -324,6 +326,7 @@
         <pathelement location="${lib.dir}/${name}.jar" />
         <path refid="classpath" />
       </classpath>
+      <exclude name="org/apache/tools/ant/taskdefs/optional/ANTLRTest.java" unless="antlr.present" />
     </javac>
    </target>
 
@@ -332,6 +335,7 @@
   <!-- =================================================================== -->
   <target name="runtests" depends="compiletests" if="junit.present">
     <junit printsummary="no" haltonfailure="yes" fork="${junit.fork}">
+      <jvmarg value="-classic"/>
       <classpath>
         <pathelement location="${lib.dir}/${name}.jar" />
         <pathelement location="${build.tests}" />
@@ -350,6 +354,9 @@
           <!-- these depend on order -->
           <exclude name="org/apache/tools/ant/taskdefs/GUnzipTest.java" />
           <exclude name="org/apache/tools/ant/taskdefs/GzipTest.java" />
+
+          <!-- only run this test if ANTLR is installed -->
+          <exclude name="org/apache/tools/ant/taskdefs/optional/ANTLRTest.java" unless="antlr.present" />
         </fileset>
       </batchtest>
 
@@ -358,12 +365,14 @@
     </junit>
 
     <!-- clean up again -->
+    <delete dir="src/etc/testcases/taskdefs/optional/antlr/antlr.tmp" />
     <delete dir="src/etc/testcases/taskdefs/taskdefs.tmp" />
     <delete dir="src/etc/testcases/taskdefs.tmp" />
   </target>
 
   <target name="run.single.test" if="testcase" depends="compiletests">
     <junit printsummary="no" haltonfailure="yes" fork="${junit.fork}">
+      <jvmarg value="-classic"/>
       <classpath>
         <pathelement location="${lib.dir}/${name}.jar" />
         <pathelement location="${build.tests}" />

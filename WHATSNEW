@@ -4,7 +4,7 @@ Changes from Ant 1.2 to the current sources
 Other changes:
 --------------
 
-* New tasks: propertyfile, depend
+* New tasks: propertyfile, depend, antlr
 
 * Added output attribute to <java>.
 
