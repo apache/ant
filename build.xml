@@ -162,9 +162,8 @@
        Kaffe for example -->
   <selector id="needs.sun.tools">
     <or>
-      <filename name="${optional.package}/Native2Ascii*"/>
       <filename name="${optional.package}/Javah*"/>
-      <filename name="${optional.package}/native2ascii/*"/>
+      <filename name="${optional.package}/native2ascii/Sun*"/>
     </or>
   </selector>
 

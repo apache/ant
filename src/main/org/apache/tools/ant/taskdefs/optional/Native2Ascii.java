@@ -1,5 +1,5 @@
 /*
- * Copyright  2000-2004 The Apache Software Foundation
+ * Copyright  2000-2005 The Apache Software Foundation
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -22,6 +22,8 @@ import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.DirectoryScanner;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.taskdefs.MatchingTask;
+import org.apache.tools.ant.taskdefs.optional.native2ascii.Native2AsciiAdapter;
+import org.apache.tools.ant.taskdefs.optional.native2ascii.Native2AsciiAdapterFactory;
 import org.apache.tools.ant.types.Commandline;
 import org.apache.tools.ant.types.Mapper;
 import org.apache.tools.ant.util.FileNameMapper;
@@ -55,6 +57,15 @@ public class Native2Ascii extends MatchingTask {
     }
 
     /**
+     * The value of the reverse attribute.
+     *
+     * @since Ant 1.6.3
+     */
+    public boolean getReverse() {
+        return reverse;
+    }
+
+    /**
      * Set the encoding to translate to/from.
      * If unset, the default encoding for the JVM is used.
      *
@@ -63,6 +74,15 @@ public class Native2Ascii extends MatchingTask {
      */
     public void setEncoding(String encoding) {
         this.encoding = encoding;
+    }
+
+    /**
+     * The value of the reverse attribute.
+     *
+     * @since Ant 1.6.3
+     */
+    public String getEncoding() {
+        return encoding;
     }
 
     /**
@@ -181,29 +201,15 @@ public class Native2Ascii extends MatchingTask {
      * @param srcName name of the input file.
      * @param destName name of the input file.
      */
-    private void convert(String srcName, String destName) throws BuildException {
-
-        Commandline cmd = new Commandline();  // Command line to run
+    private void convert(String srcName, String destName) 
+        throws BuildException {
         File srcFile;                         // File to convert
         File destFile;                        // where to put the results
-
-        // Set up the basic args (this could be done once, but
-        // it's cleaner here)
-        if (reverse) {
-            cmd.createArgument().setValue("-reverse");
-        }
-
-        if (encoding != null) {
-            cmd.createArgument().setValue("-encoding");
-            cmd.createArgument().setValue(encoding);
-        }
 
         // Build the full file names
         srcFile = new File(srcDir, srcName);
         destFile = new File(destDir, destName);
 
-        cmd.createArgument().setFile(srcFile);
-        cmd.createArgument().setFile(destFile);
         // Make sure we're not about to clobber something
         if (srcFile.equals(destFile)) {
             throw new BuildException("file " + srcFile
@@ -223,9 +229,9 @@ public class Native2Ascii extends MatchingTask {
         }
 
         log("converting " + srcName, Project.MSG_VERBOSE);
-        sun.tools.native2ascii.Main n2a
-            = new sun.tools.native2ascii.Main();
-        if (!n2a.convert(cmd.getArguments())) {
+        Native2AsciiAdapter ad = 
+            Native2AsciiAdapterFactory.getAdapter(null, this);
+        if (!ad.convert(this, srcFile, destFile)) {
             throw new BuildException("conversion failed");
         }
     }

@@ -16,25 +16,34 @@
  */
 package org.apache.tools.ant.taskdefs.optional.native2ascii;
 
-import java.io.File;
 import org.apache.tools.ant.BuildException;
+import org.apache.tools.ant.ProjectComponent;
 import org.apache.tools.ant.taskdefs.optional.Native2Ascii;
+import org.apache.tools.ant.types.Commandline;
 
 /**
- * Interface for an adapter to a native2ascii implementation.
+ * Adapter to sun.tools.native2ascii.Main.
  *
  * @since Ant 1.6.3
  */
-public interface Native2AsciiAdapter {
+public final class SunNative2Ascii extends DefaultNative2Ascii {
+
     /**
-     * Convert the encoding of srcFile writing to destFile.
-     *
-     * @param args Task that holds command line arguments and allows
-     * the implementation to send messages to Ant's logging system
-     * @param srcFile the source to convert
-     * @param destFile where to send output to
-     * @return whether the conversion has been successful.
+     * Identifies this adapter.
      */
-    boolean convert(Native2Ascii args, File srcFile, File destFile)
-        throws BuildException;
+    public static final String IMPLEMENTATION_NAME = "sun";
+
+    protected void setup(Commandline cmd, Native2Ascii args)
+        throws BuildException {
+        if (args.getReverse()) {
+            cmd.createArgument().setValue("-reverse");
+        }
+        super.setup(cmd, args);
+    }
+
+    protected boolean run(Commandline cmd, ProjectComponent log)
+        throws BuildException {
+        sun.tools.native2ascii.Main n2a = new sun.tools.native2ascii.Main();
+        return n2a.convert(cmd.getArguments());
+    }
 }
