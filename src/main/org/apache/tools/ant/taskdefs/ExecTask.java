@@ -96,6 +96,7 @@ public class ExecTask extends Task {
     private String outputprop;
     private String resultProperty;
     private boolean failIfExecFails=true;
+    private boolean append = false;
 
     /** Controls whether the VM (1.3 and above) is used to execute the command */
     private boolean vmLauncher = true;
@@ -208,6 +209,15 @@ public class ExecTask extends Task {
         failIfExecFails=flag;
     }
     
+    /**
+     * Shall we append to an existing file?
+     *
+     * @since 1.30, Ant 1.5
+     */
+    public void setAppend(boolean append) {
+        this.append = append;
+    }
+
     /**
      * Do the work.
      */
@@ -342,7 +352,7 @@ public class ExecTask extends Task {
     protected ExecuteStreamHandler createHandler() throws BuildException {
         if(out!=null)  {
             try {
-                fos = new FileOutputStream(out);
+                fos = new FileOutputStream(out.getAbsolutePath(), append);
                 log("Output redirected to " + out, Project.MSG_VERBOSE);
                 return new PumpStreamHandler(fos);
             } catch (FileNotFoundException fne) {

@@ -227,6 +227,10 @@ public class SQLExec extends Task {
      */
     private String encoding = null;
 
+    /**
+     * Append to an existing file or overwrite it?
+     */
+    private boolean append = false;
 
     public void setCaching(boolean value){
         caching = value;
@@ -378,6 +382,15 @@ public class SQLExec extends Task {
     }
 
     /**
+     * Shall we append to an existing file?
+     *
+     * @since 1.36, Ant 1.5
+     */
+    public void setAppend(boolean append) {
+        this.append = append;
+    }
+
+    /**
      * Set the rdbms required
      */
     public void setRdbms(String vendor) {
@@ -510,7 +523,7 @@ public class SQLExec extends Task {
             try {
                 if (output != null) {
                     log("Opening PrintStream to output file " + output, Project.MSG_VERBOSE);
-                    out = new PrintStream(new BufferedOutputStream(new FileOutputStream(output)));
+                    out = new PrintStream(new BufferedOutputStream(new FileOutputStream(output.getAbsolutePath(), append)));
                 }
                         
                 // Process all transactions

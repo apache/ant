@@ -90,6 +90,7 @@ public class Java extends Task {
     private File out;
     private PrintStream outStream = null;
     private boolean failOnError = false;
+    private boolean append = false;
     
     /**
      * Do the execution.
@@ -299,6 +300,15 @@ public class Java extends Task {
         newEnvironment = newenv;
     }
 
+    /**
+     * Shall we append to an existing file?
+     *
+     * @since 1.36, Ant 1.5
+     */
+    public void setAppend(boolean append) {
+        this.append = append;
+    }
+
     protected void handleOutput(String line) {
         if (outStream != null) {
             outStream.println(line);
@@ -328,7 +338,9 @@ public class Java extends Task {
         exe.setSystemProperties(command.getSystemProperties());
         if (out != null) {
             try {
-                outStream = new PrintStream(new FileOutputStream(out));
+                outStream = 
+                    new PrintStream(new FileOutputStream(out.getAbsolutePath(),
+                                                         append));
                 exe.execute(project);
             } catch (IOException io) {
                 throw new BuildException(io, location);
@@ -356,7 +368,7 @@ public class Java extends Task {
                                                        Project.MSG_WARN), 
                                   null);
             } else {
-                fos = new FileOutputStream(out);
+                fos = new FileOutputStream(out.getAbsolutePath(), append);
                 exe = new Execute(new PumpStreamHandler(fos), null);
             }
             

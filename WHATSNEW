@@ -275,6 +275,9 @@ Other changes:
 * <uptodate> now has a 'srcfile' attribute to allow specifying a 
   full-path filename.
 
+* <exec>, <sql> and <java> now support append attributes to allow
+  appending the output to an existing file.
+
 Changes from Ant 1.4 to Ant 1.4.1
 ===========================================
 
