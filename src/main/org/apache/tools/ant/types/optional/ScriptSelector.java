@@ -106,9 +106,9 @@ public class ScriptSelector extends BaseSelector {
     public boolean isSelected(File basedir, String filename, File file) {
         init();
         setSelected(true);
-        this.file=file;
-        this.basedir=basedir;
-        this.filename=filename;
+        this.file = file;
+        this.basedir = basedir;
+        this.filename = filename;
         runner.addBean("basedir", basedir);
         runner.addBean("filename", filename);
         runner.addBean("file", file);
@@ -119,7 +119,7 @@ public class ScriptSelector extends BaseSelector {
 
     /**
      * get the base directory
-     * @return
+     * @return the base directory
      */
     public File getBasedir() {
         return basedir;
@@ -127,7 +127,7 @@ public class ScriptSelector extends BaseSelector {
 
     /**
      * get the filename of the file
-     * @return
+     * @return the filename of the file that is currently been tested
      */
     public String getFilename() {
         return filename;
@@ -135,7 +135,7 @@ public class ScriptSelector extends BaseSelector {
 
     /**
      * get the file that is currently to be tested
-     * @return
+     * @return the file that is currently been tested
      */
     public File getFile() {
         return file;
@@ -143,7 +143,7 @@ public class ScriptSelector extends BaseSelector {
 
     /**
      * get state of selected flag
-     * @return
+     * @return the selected flag
      */
     public boolean isSelected() {
         return selected;
@@ -152,7 +152,7 @@ public class ScriptSelector extends BaseSelector {
     /**
      * set the selected state
      * Intended for script use, not as an Ant attribute
-     * @param selected
+     * @param selected the selected state
      */
     public void setSelected(boolean selected) {
         this.selected = selected;
