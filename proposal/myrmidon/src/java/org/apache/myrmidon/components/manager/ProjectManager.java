@@ -7,7 +7,7 @@
  */
 package org.apache.myrmidon.components.manager;
 
-import org.apache.ant.AntException;
+import org.apache.myrmidon.AntException;
 import org.apache.avalon.framework.component.Component;
 import org.apache.myrmidon.api.TaskContext;
 import org.apache.myrmidon.components.model.Project;

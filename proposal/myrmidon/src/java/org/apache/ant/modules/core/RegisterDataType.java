@@ -8,7 +8,7 @@
 package org.apache.ant.modules.core;
 
 import java.net.URL;
-import org.apache.ant.AntException;
+import org.apache.myrmidon.AntException;
 import org.apache.avalon.framework.camelot.DefaultLocator;
 import org.apache.avalon.framework.camelot.DeploymentException;
 import org.apache.avalon.framework.camelot.RegistryException;

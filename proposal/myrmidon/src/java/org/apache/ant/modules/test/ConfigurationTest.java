@@ -7,7 +7,7 @@
  */
 package org.apache.ant.modules.test;
 
-import org.apache.ant.AntException;
+import org.apache.myrmidon.AntException;
 import org.apache.myrmidon.api.AbstractTask;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.Configurable;
@@ -28,7 +28,15 @@ public class ConfigurationTest
         throws ConfigurationException
     {
         String message = configuration.getAttribute( "message" );
-        final Object object = getContext().resolveValue( message );
+        
+        Object object = null;
+
+        try { object = getContext().resolveValue( message ); }
+        catch( final AntException ae )
+        {
+            throw new ConfigurationException( "Error resolving : " + message, ae );
+        }
+
         if( object instanceof String )
         {
             m_message = (String)object;

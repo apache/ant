@@ -10,7 +10,7 @@ package org.apache.ant.modules.core;
 import java.io.File;
 import java.net.MalformedURLException;
 import java.net.URL;
-import org.apache.ant.AntException;
+import org.apache.myrmidon.AntException;
 import org.apache.ant.convert.engine.ConverterEngine;
 import org.apache.ant.convert.engine.DefaultConverterInfo;
 import org.apache.myrmidon.api.AbstractTask;
@@ -126,6 +126,7 @@ public class RegisterConverter
     }
     
     protected URL getURL( final String libName )
+        throws AntException
     {
         if( null != libName )
         {

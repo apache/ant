@@ -10,7 +10,7 @@ package org.apache.myrmidon.components.model;
 import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
-import org.apache.ant.AntException;
+import org.apache.myrmidon.AntException;
 
 /**
  * Default project implementation.

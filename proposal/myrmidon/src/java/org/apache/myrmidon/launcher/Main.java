@@ -44,7 +44,7 @@ public final class Main
             final LauncherClassLoader classLoader = new LauncherClassLoader( urls );
 
             //load class and retrieve appropriate main method.
-            final Class clazz = classLoader.loadClass( "org.apache.ant.Main" );
+            final Class clazz = classLoader.loadClass( "org.apache.myrmidon.Main" );
             final Method method = clazz.getMethod( "main", new Class[] { args.getClass() } );
 
             //kick the tires and light the fires....

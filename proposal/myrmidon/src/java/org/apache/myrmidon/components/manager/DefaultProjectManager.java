@@ -9,7 +9,7 @@ package org.apache.myrmidon.components.manager;
 
 import java.util.ArrayList;
 import java.util.Iterator;
-import org.apache.ant.AntException;
+import org.apache.myrmidon.AntException;
 import org.apache.ant.util.Condition;
 import org.apache.avalon.framework.activity.Disposable;
 import org.apache.avalon.framework.activity.Initializable;
@@ -192,6 +192,7 @@ public class DefaultProjectManager
     private void executeTargetWork( final String name,
                                     final Target target,
                                     final TaskContext context )
+        throws AntException
     {
         //check the condition associated with target.
         //if it is not satisfied then skip target

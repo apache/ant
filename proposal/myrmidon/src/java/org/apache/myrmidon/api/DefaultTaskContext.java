@@ -8,7 +8,7 @@
 package org.apache.myrmidon.api;
 
 import java.io.File;
-import org.apache.ant.AntException;
+import org.apache.myrmidon.AntException;
 import org.apache.avalon.excalibur.io.FileUtil;
 import org.apache.avalon.excalibur.property.PropertyException;
 import org.apache.avalon.excalibur.property.PropertyUtil;
@@ -116,6 +116,7 @@ public class DefaultTaskContext
      * @return the resolved property
      */
     public Object resolveValue( final String property )
+        throws AntException
     {
         try { return PropertyUtil.resolveProperty( property, this, false ); }
         catch( final PropertyException pe )
@@ -147,6 +148,7 @@ public class DefaultTaskContext
      * @param value the value of property
      */
     public void setProperty( final String name, final Object value )
+        throws AntException
     {
         setProperty( name, value, CURRENT );
     }
@@ -156,7 +158,8 @@ public class DefaultTaskContext
      *
      * @param property the property
      */
-    public void setProperty(  final String name, final Object value, final ScopeEnum scope  )
+    public void setProperty(  final String name, final Object value, final ScopeEnum scope )
+        throws AntException
     {
         checkPropertyValid( name, value );
 
@@ -182,7 +185,7 @@ public class DefaultTaskContext
                 context = (DefaultTaskContext)context.m_parent;
             }
 
-            context.put( name, value );
+            context.putValue( name, value );
         }
         else
         {
@@ -199,7 +202,8 @@ public class DefaultTaskContext
      * @param key the key
      * @param value the value
      */
-    public void put( final Object key, final Object value  )
+    public void putValue( final Object key, final Object value  )
+        throws AntException
     {
         if( key.equals( BASE_DIRECTORY ) )
         {
@@ -211,7 +215,7 @@ public class DefaultTaskContext
             }
         }
 
-        super.put( key, value );
+        put( key, value );
     }
 
     /**

@@ -8,7 +8,7 @@
 package org.apache.myrmidon.components.executor;
 
 import java.util.HashMap;
-import org.apache.ant.AntException;
+import org.apache.myrmidon.AntException;
 import org.apache.ant.convert.engine.ConverterEngine;
 import org.apache.avalon.framework.activity.Disposable;
 import org.apache.avalon.framework.activity.Initializable;

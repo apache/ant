@@ -8,7 +8,7 @@
 package org.apache.ant.modules.basic;
 
 import java.util.Iterator;
-import org.apache.ant.AntException;
+import org.apache.myrmidon.AntException;
 import org.apache.ant.convert.Converter;
 import org.apache.ant.tasklet.DataType;
 import org.apache.ant.tasklet.engine.DataTypeEngine;
@@ -61,11 +61,18 @@ public class Property
             final String name = attributes[ i ];
             final String value = configuration.getAttribute( name );
 
-            final Object object = getContext().resolveValue( value );
+            
+            Object object = null;
+
+            try { object = getContext().resolveValue( value ); }
+            catch( final AntException ae )
+            {
+                throw new ConfigurationException( "Error resolving value: " + value, ae );
+            }
 
             if( null == object )
             {
-                throw new AntException( "Value for attribute " + name + "resolved to null" );
+                throw new ConfigurationException( "Value for attribute " + name + "resolved to null" );
             }
 
             if( name.equals( "name" ) )
@@ -83,7 +90,11 @@ public class Property
             }
             else if( name.equals( "value" ) )
             {
-                setValue( object );
+                try { setValue( object ); }
+                catch( final AntException ae )
+                {
+                    throw new ConfigurationException( "Error setting value: " + value, ae );
+                }
             }
             else if( name.equals( "local-scope" ) )
             {

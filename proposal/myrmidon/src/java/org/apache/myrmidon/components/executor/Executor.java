@@ -7,7 +7,7 @@
  */
 package org.apache.myrmidon.components.executor;
 
-import org.apache.ant.AntException;
+import org.apache.myrmidon.AntException;
 import org.apache.avalon.framework.camelot.Registry;
 import org.apache.avalon.framework.component.Component;
 import org.apache.avalon.framework.configuration.Configuration;

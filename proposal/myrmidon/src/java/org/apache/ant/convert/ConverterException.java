@@ -7,7 +7,7 @@
  */
 package org.apache.ant.convert;
 
-import org.apache.ant.AntException;
+import org.apache.myrmidon.AntException;
 
 /**
  * ConverterException thrown when a problem occurs during convertion etc.

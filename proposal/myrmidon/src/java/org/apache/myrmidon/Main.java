@@ -5,7 +5,7 @@
  * version 1.1, a copy of which has been included with this distribution in
  * the LICENSE file.
  */
-package org.apache.ant;
+package org.apache.myrmidon;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -37,11 +37,11 @@ import org.apache.myrmidon.api.TaskContext;
 import org.apache.myrmidon.components.builder.ProjectBuilder;
 import org.apache.myrmidon.components.embeddor.Embeddor;
 import org.apache.myrmidon.components.embeddor.MyrmidonEmbeddor;
-import org.apache.myrmidon.launcher.LauncherClassLoader;
-import org.apache.myrmidon.listeners.ProjectListener;
-import org.apache.myrmidon.components.model.Project;
 import org.apache.myrmidon.components.manager.LogTargetToListenerAdapter;
 import org.apache.myrmidon.components.manager.ProjectManager;
+import org.apache.myrmidon.components.model.Project;
+import org.apache.myrmidon.launcher.LauncherClassLoader;
+import org.apache.myrmidon.listeners.ProjectListener;
 
 /**
  * The class to kick the tires and light the fires.
@@ -510,6 +510,7 @@ public class Main
      * @param map the map of names->values
      */
     protected void addToContext( final TaskContext context, final Map map )
+        throws AntException
     {
         final Iterator keys = map.keySet().iterator();
 

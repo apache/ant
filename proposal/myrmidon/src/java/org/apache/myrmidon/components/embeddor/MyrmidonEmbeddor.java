@@ -8,7 +8,7 @@
 package org.apache.myrmidon.components.embeddor;
 
 import java.io.File;
-import org.apache.ant.AntException;
+import org.apache.myrmidon.AntException;
 import org.apache.ant.convert.engine.ConverterEngine;
 import org.apache.ant.tasklet.engine.DataTypeEngine;
 import org.apache.avalon.excalibur.io.FileUtil;
@@ -290,6 +290,7 @@ public class MyrmidonEmbeddor
      * Setup all the files attributes.
      */
     private void setupFiles()
+        throws AntException
     {
         String filepath = null;
 

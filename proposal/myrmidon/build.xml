@@ -58,7 +58,7 @@ Legal:
   <property name="dist.bin" value="${dist.dir}/bin"/>
   <property name="dist.lib" value="${dist.dir}/lib"/>
 
-  <property name="constants.file" value="org/apache/ant/Constants.java"/>
+  <property name="constants.file" value="org/apache/myrmidon/Constants.java"/>
 
   <path id="project.class.path">
     <pathelement path="${java.class.path}" />

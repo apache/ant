@@ -9,7 +9,6 @@ package org.apache.myrmidon.components.builder;
 
 import java.io.File;
 import java.io.IOException;
-import org.apache.ant.AntException;
 import org.apache.ant.util.Condition;
 import org.apache.avalon.framework.ExceptionUtil;
 import org.apache.avalon.framework.configuration.Configuration;
@@ -17,6 +16,7 @@ import org.apache.avalon.framework.configuration.ConfigurationException;
 import org.apache.avalon.framework.configuration.DefaultConfigurationBuilder;
 import org.apache.avalon.framework.logger.AbstractLoggable;
 import org.apache.log.Logger;
+import org.apache.myrmidon.AntException;
 import org.apache.myrmidon.api.TaskContext;
 import org.apache.myrmidon.components.model.DefaultProject;
 import org.apache.myrmidon.components.model.DefaultTarget;
@@ -164,6 +164,7 @@ public class DefaultProjectBuilder
      * @param task the Configuration
      */
     protected void buildTarget( final DefaultProject project, final Configuration target )
+        throws AntException
     {
         final String name = target.getAttribute( "name", null );
         final String depends = target.getAttribute( "depends", null );

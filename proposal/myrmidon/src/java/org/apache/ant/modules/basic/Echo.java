@@ -7,7 +7,7 @@
  */
 package org.apache.ant.modules.basic;
 
-import org.apache.ant.AntException;
+import org.apache.myrmidon.AntException;
 import org.apache.myrmidon.api.AbstractTask;
 
 /**

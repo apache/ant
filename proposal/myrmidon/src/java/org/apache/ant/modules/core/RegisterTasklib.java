@@ -10,11 +10,11 @@ package org.apache.ant.modules.core;
 import java.io.File;
 import java.net.MalformedURLException;
 import java.net.URL;
-import org.apache.ant.AntException;
 import org.apache.avalon.framework.camelot.DeploymentException;
 import org.apache.avalon.framework.component.ComponentException;
 import org.apache.avalon.framework.component.ComponentManager;
 import org.apache.avalon.framework.component.Composable;
+import org.apache.myrmidon.AntException;
 import org.apache.myrmidon.api.AbstractTask;
 import org.apache.myrmidon.components.deployer.TskDeployer;
 

@@ -7,7 +7,7 @@
  */
 package org.apache.ant.util;
 
-import org.apache.ant.AntException;
+import org.apache.myrmidon.AntException;
 import org.apache.avalon.framework.component.Component;
 import org.apache.avalon.framework.context.Context;
 import org.apache.avalon.framework.context.ContextException;
@@ -42,6 +42,7 @@ public class Condition
     }
     
     public boolean evaluate( final Context context )
+        throws AntException
     {
         boolean result = false;
 

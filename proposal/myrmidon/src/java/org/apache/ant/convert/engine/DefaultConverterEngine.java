@@ -7,7 +7,7 @@
  */
 package org.apache.ant.convert.engine;
 
-import org.apache.ant.AntException;
+import org.apache.myrmidon.AntException;
 import org.apache.ant.convert.Converter;
 import org.apache.ant.convert.ConverterException;
 import org.apache.avalon.framework.logger.AbstractLoggable;
