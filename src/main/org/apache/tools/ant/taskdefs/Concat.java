@@ -677,6 +677,8 @@ public class Concat extends Task {
 
         private Reader getReader() throws IOException {
             if (reader == null) {
+                log("Concating file " + sourceFiles.elementAt(pos),
+                    Project.MSG_VERBOSE);
                 if (encoding == null) {
                     reader = new BufferedReader(
                         new FileReader((File) sourceFiles.elementAt(pos)));
@@ -773,7 +775,7 @@ public class Concat extends Task {
                         for (int i = nRead;
                                  i > (nRead - lastChars.length);
                                  --i) {
-                            if (i < 0) {
+                            if (i <= 0) {
                                 break;
                             }
                             addLastChar(cbuf[off + i - 1]);
