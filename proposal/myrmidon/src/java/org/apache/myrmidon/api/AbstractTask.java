@@ -8,7 +8,6 @@
 package org.apache.myrmidon.api;
 
 import java.io.File;
-import org.apache.avalon.framework.context.ContextException;
 import org.apache.avalon.framework.logger.AbstractLogEnabled;
 
 /**
