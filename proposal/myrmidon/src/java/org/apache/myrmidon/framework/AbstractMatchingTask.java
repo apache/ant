@@ -8,7 +8,6 @@
 package org.apache.myrmidon.framework;
 
 import org.apache.myrmidon.api.AbstractTask;
-import org.apache.tools.ant.types.FileSet;
 
 /**
  * An abstract base class for tasks that wish to operate on
