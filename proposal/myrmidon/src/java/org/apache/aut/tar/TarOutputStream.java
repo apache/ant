@@ -33,7 +33,6 @@ public class TarOutputStream
     private int m_currBytes;
     private int m_currSize;
 
-    private boolean m_debug;
     private byte[] m_oneBuf;
     private byte[] m_recordBuf;
 
@@ -54,7 +53,6 @@ public class TarOutputStream
         super( output );
 
         m_buffer = new TarBuffer( output, blockSize, recordSize );
-        m_debug = false;
         m_assemLen = 0;
         m_assemBuf = new byte[ recordSize ];
         m_recordBuf = new byte[ recordSize ];
@@ -69,16 +67,6 @@ public class TarOutputStream
     public void setBufferDebug( boolean debug )
     {
         m_buffer.setDebug( debug );
-    }
-
-    /**
-     * Sets the debugging flag.
-     *
-     * @param debugF True to turn on debugging.
-     */
-    public void setDebug( boolean debug )
-    {
-        m_debug = debug;
     }
 
     public void setLongFileMode( final int longFileMode )
@@ -228,7 +216,7 @@ public class TarOutputStream
      * Writes bytes to the current tar archive entry. This method simply calls
      * write( byte[], int, int ).
      *
-     * @param wBuf The buffer to write to the archive.
+     * @param buffer The buffer to write to the archive.
      */
     public void write( final byte[] buffer )
         throws IOException
