@@ -179,42 +179,7 @@
     </faq>
   </faqsection>
 
-  <faqsection title="Using Ant">
-    <faq id="always-recompiles">
-      <question>Why does Ant always recompile all my Java files?</question>
-      <answer>
-
-        <p>In order to find out which files should be compiled, Ant
-        compares the timestamps of the source files to those of the
-        resulting <code>.class</code> files.  Opening all source files
-        to find out which package they belong to would be very
-        inefficient. Instead, Ant expects you to place your
-        source files in a directory hierarchy that mirrors your
-        package hierarchy and to point Ant to the root of this
-        directory tree with the <code>srcdir</code> attribute.</p>
-
-        <p>Say you have <code>&lt;javac srcdir=&quot;src&quot;
-        destdir=&quot;dest&quot;/&gt;</code>.  If Ant finds a file
-        <code>src/a/b/C.java</code>, it expects it to be in package
-        <code>a.b</code> so that the resulting <code>.class</code>
-        file is going to be <code>dest/a/b/C.class</code>.</p>
-
-        <p>If your source-tree directory structure does not match your
-        package structure, Ant&apos;s heuristic won&apos;t work, and
-        it will recompile classes that are up-to-date.  Ant is not the
-        only tool that expects a source-tree layout like this.</p>
-
-        <p>If you have Java source files that aren&apos;t declared to
-        be part of any package, you can still use the <code>&lt;javac&gt;</code>
-        task to compile these files correctly - just set the
-        <code>srcdir</code> and <code>destdir</code> attributes to
-        the actual directory the source
-        files live in and the directory the class files should go into,
-        respectively.</p>
-
-      </answer>
-    </faq>
-
+  <faqsection title="How do I ...">
     <faq id="passing-cli-args">
       <question>How do I pass parameters from the command line to my
         build file?</question>
@@ -363,44 +328,6 @@ shell-prompt> cat < foo
       </answer>
     </faq>
 
-    <faq id="defaultexcludes">
-
-      <question>I&apos;ve used a <code>&lt;delete&gt;</code> task to delete
-      unwanted
-      SourceSafe control files (CVS files, editor backup files, etc.), but
-      it doesn&apos;t seem to work; the files never get deleted. What&apos;s
-      wrong?</question>
-
-      <answer>
-        <p>This is probably happening because, by default, Ant excludes
-        SourceSafe control files (<code>vssver.scc</code>) and certain other
-        files from FileSets.</p>
-
-        <p>Here&apos;s what you probably did:</p>
-
-
-	<source><![CDATA[
-<delete>
-  <fileset dir="${build.src}" includes="**/vssver.scc"/>
-</delete>
-]]></source>
-
-        <p>You need to switch off the default exclusions,
-           and it will work:</p>
-	<source><![CDATA[
-<delete>
-  <fileset dir="${build.src}" includes="**/vssver.scc"
-           defaultexcludes="no"/>
-</delete>
-]]></source>
-        
-        <p>For a complete listing of the patterns that are excluded
-        by default, see <a href="manual/dirtasks.html#defaultexcludes">the user
-        manual</a>.</p>
-
-      </answer>
-    </faq>
-
     <faq id="multi-conditions">
       <question>I want to execute a particular target only if
         multiple conditions are true.</question>
@@ -523,6 +450,102 @@ shell-prompt> cat < foo
       </answer>
     </faq>
     
+    <faq id="encoding">
+      <question>How can I include national characters like German
+        umlauts in my build file?</question>
+
+      <answer>
+        <p>You need to tell the XML parser which character encoding
+        your build file uses, this is done inside the <a
+        href="http://www.w3.org/TR/2000/REC-xml-20001006#sec-prolog-dtd">XML
+        declaration</a>.</p>  
+
+        <p>By default the parser assumes you are using the UTF-8
+        encoding instead of your platform's default.  For most Western
+        European countries you should set the encoding to
+        <code>ISO-8859-1</code>.  To do so, make the very first line
+        of you build file read like</p>
+
+        <source><![CDATA[
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+]]></source>
+      </answer>
+    </faq>
+  </faqsection>
+
+  <faqsection title="It doesn&apos;t work (as expected)">
+    <faq id="always-recompiles">
+      <question>Why does Ant always recompile all my Java files?</question>
+      <answer>
+
+        <p>In order to find out which files should be compiled, Ant
+        compares the timestamps of the source files to those of the
+        resulting <code>.class</code> files.  Opening all source files
+        to find out which package they belong to would be very
+        inefficient. Instead, Ant expects you to place your
+        source files in a directory hierarchy that mirrors your
+        package hierarchy and to point Ant to the root of this
+        directory tree with the <code>srcdir</code> attribute.</p>
+
+        <p>Say you have <code>&lt;javac srcdir=&quot;src&quot;
+        destdir=&quot;dest&quot;/&gt;</code>.  If Ant finds a file
+        <code>src/a/b/C.java</code>, it expects it to be in package
+        <code>a.b</code> so that the resulting <code>.class</code>
+        file is going to be <code>dest/a/b/C.class</code>.</p>
+
+        <p>If your source-tree directory structure does not match your
+        package structure, Ant&apos;s heuristic won&apos;t work, and
+        it will recompile classes that are up-to-date.  Ant is not the
+        only tool that expects a source-tree layout like this.</p>
+
+        <p>If you have Java source files that aren&apos;t declared to
+        be part of any package, you can still use the <code>&lt;javac&gt;</code>
+        task to compile these files correctly - just set the
+        <code>srcdir</code> and <code>destdir</code> attributes to
+        the actual directory the source
+        files live in and the directory the class files should go into,
+        respectively.</p>
+
+      </answer>
+    </faq>
+
+    <faq id="defaultexcludes">
+
+      <question>I&apos;ve used a <code>&lt;delete&gt;</code> task to
+      delete unwanted SourceSafe control files (CVS files, editor
+      backup files, etc.), but it doesn&apos;t seem to work; the files
+      never get deleted. What&apos;s wrong?</question>
+
+      <answer>
+        <p>This is probably happening because, by default, Ant excludes
+        SourceSafe control files (<code>vssver.scc</code>) and certain other
+        files from FileSets.</p>
+
+        <p>Here&apos;s what you probably did:</p>
+
+
+	<source><![CDATA[
+<delete>
+  <fileset dir="${build.src}" includes="**/vssver.scc"/>
+</delete>
+]]></source>
+
+        <p>You need to switch off the default exclusions,
+           and it will work:</p>
+	<source><![CDATA[
+<delete>
+  <fileset dir="${build.src}" includes="**/vssver.scc"
+           defaultexcludes="no"/>
+</delete>
+]]></source>
+        
+        <p>For a complete listing of the patterns that are excluded
+        by default, see <a href="manual/dirtasks.html#defaultexcludes">the user
+        manual</a>.</p>
+
+      </answer>
+    </faq>
+
     <faq id="stop-dependency">
       <question>I have a target I want to skip if a property is set,
       so I have <code>unless=&quot;property&quot;</code> as an attribute 
@@ -573,33 +596,11 @@ shell-prompt> cat < foo
 	<p>To get the files you want, focus on just the
 	<code>&lt;include&gt;</code> patterns that would be necessary
 	to get them. If you find you need to trim the list that the
-  <code>&lt;include&gt;</code> elements
-	produce, then use <code>&lt;exclude&gt;</code> elements.</p>
+	<code>&lt;include&gt;</code> elements produce, then use
+	<code>&lt;exclude&gt;</code> elements.</p>
       </answer>
     </faq>
     
-    <faq id="encoding">
-      <question>How can I include national characters like German
-        umlauts in my build file?</question>
-
-      <answer>
-        <p>You need to tell the XML parser which character encoding
-        your build file uses, this is done inside the <a
-        href="http://www.w3.org/TR/2000/REC-xml-20001006#sec-prolog-dtd">XML
-        declaration</a>.</p>  
-
-        <p>By default the parser assumes you are using the UTF-8
-        encoding instead of your platform's default.  For most Western
-        European countries you should set the encoding to
-        <code>ISO-8859-1</code>.  To do so, make the very first line
-        of you build file read like</p>
-
-        <source><![CDATA[
-<?xml version="1.0" encoding="ISO-8859-1" ?>
-]]></source>
-      </answer>
-    </faq>
-
     <faq id="properties-not-trimmed">
       <question><code>ant</code> failed to build my program via javac
       even when I put the needed jars in an external
@@ -616,6 +617,25 @@ shell-prompt> cat < foo
         compile, the task which requires the value, javac for example
         would fail to compile since it can't find the file due to
         trailing spaces.</p>
+      </answer>
+    </faq>
+
+    <faq id="winzip-lies">
+      <question>Ant creates WAR files with a lower-case
+        <code>web-inf</code> or JAR files with a lower-case
+        <code>meta-inf</code> directory.</question>
+
+      <answer>
+        <p>No it doesn't.</p>
+
+        <p>You may have seen these lower-case directory names in
+        WinZIP, but WinZIP is trying to be helpful (and fails).  If
+        WinZIP encounters a filename that is all upper-case, it
+        assumes it has come from an old DOS box andchanges the case to
+        all lower-case for you.</p>
+
+        <p>If you extract (or just check) the archive with jar, you
+        will see that the names have the correct case.</p>
       </answer>
     </faq>
   </faqsection>
