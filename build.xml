@@ -1197,6 +1197,7 @@
       <patternset refid="needs.jakarta.regexp"/>
       <patternset refid="needs.jakarta.oro"/>
 
+      <patternset refid="needs.swing"/>
       <patternset refid="needs.trax"/>
       <patternset refid="needs.xslp"/>
       <patternset refid="needs.xalan1"/>
@@ -1294,8 +1295,9 @@
           <exclude name="org/example/**"/>
           <exclude name="${ant.package}/taskdefs/TaskdefTest*Task.java"/>
 
-          <!-- interactive test -->
+          <!-- interactive tests -->
           <exclude name="${ant.package}/taskdefs/TestProcess.java"/>
+          <exclude name="${optional.package}/splash/SplashScreenTest.java"/>
 
           <!-- only run these tests if their required libraries are
                installed -->

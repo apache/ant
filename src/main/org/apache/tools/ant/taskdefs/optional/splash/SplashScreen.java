@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2002 The Apache Software Foundation.  All rights
+ * Copyright (c) 2002-2003 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -140,7 +140,11 @@ class SplashScreen extends JWindow implements ActionListener, BuildListener {
     }
 
     public void buildStarted(BuildEvent event){ actionPerformed(null);}
-    public void buildFinished(BuildEvent event){actionPerformed(null);}
+    public void buildFinished(BuildEvent event){
+        pb.setValue(max);
+        setVisible(false);
+        dispose();
+    }
     public void targetStarted(BuildEvent event){actionPerformed(null);}
     public void targetFinished(BuildEvent event){actionPerformed(null);}
     public void taskStarted(BuildEvent event){actionPerformed(null);}

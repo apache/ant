@@ -80,6 +80,8 @@ Fixed bugs:
 
 * Java task (and output system) now stores output which doos not end with a line feed.
 
+* splash screen wouldn't disppear when build was finished.
+
 Other changes:
 --------------
 
