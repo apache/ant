@@ -8,6 +8,10 @@ Changes that could break older environments:
   rather than blocking. If you run such a process and rely on it blocking, as
   it would do in Ant 1.5, you may have problem.
 
+* Change logging level of captured standard error output from MSG_ERR to MSG_WARN.
+  Previous some standard error was output as MSG_ERR and some as MSG_WARN (namely
+  standard error from exec and forked jvms).
+
 Fixed bugs:
 -----------
 
