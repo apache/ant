@@ -61,11 +61,11 @@ package org.apache.tools.ant.taskdefs.optional.perforce;
 
 import org.apache.tools.ant.BuildException;
 
-/* P4Reopen - move files to a new changelist
+/** P4Reopen - move files to a new changelist
  *
  * @author <A HREF="mailto:leslie.hughes@rubus.com">Les Hughes</A>
+ * @ant.task ignore="true"
  */
-
 public class P4Reopen extends P4Base {
 
     private String toChange = "";

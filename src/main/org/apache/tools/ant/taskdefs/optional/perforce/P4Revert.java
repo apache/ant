@@ -61,11 +61,11 @@ package org.apache.tools.ant.taskdefs.optional.perforce;
 
 import org.apache.tools.ant.BuildException;
 
-/* P4Revert - revert open files or files in a changelist
+/** P4Revert - revert open files or files in a changelist
  *
  * @author <A HREF="mailto:leslie.hughes@rubus.com">Les Hughes</A>
+ * @ant.task ignore="true"
  */
-
 public class P4Revert extends P4Base {
 
     private String revertChange = null;
