@@ -89,7 +89,8 @@ class Deployment
 
         // Deploy the roles
         // TODO - need to defer this
-        for( int i = 0; i < roleDescriptors.size(); i++ )
+        final int roleCount = roleDescriptors.size();
+        for( int i = 0; i < roleCount; i++ )
         {
             final RoleDescriptor descriptor = (RoleDescriptor)roleDescriptors.get( i );
             deployRoles( descriptor );
@@ -212,7 +213,8 @@ class Deployment
         throws Exception
     {
         final ArrayList descriptors = new ArrayList();
-        for( int i = 0; i < urls.size(); i++ )
+        final int size = urls.size();
+        for( int i = 0; i < size; i++ )
         {
             final String url = (String)urls.get( i );
 
