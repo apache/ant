@@ -61,7 +61,9 @@
   <xsl:param name="module"/>
   <xsl:param name="cvsweb"/>
 
-  <xsl:output method="html" indent="yes"  encoding="US-ASCII"/>
+  <xsl:output method="html" indent="yes" encoding="US-ASCII"
+              doctype-public="-//W3C//DTD HTML 4.01//EN"
+              doctype-system="http://www.w3.org/TR/html401/strict.dtd"/>
 
   <!-- Copy standard document elements.  Elements that
        should be ignored must be filtered by apply-templates
@@ -74,66 +76,72 @@
   </xsl:template>
 
   <xsl:template match="changelog">
-    <HTML>
-      <HEAD>
-        <TITLE><xsl:value-of select="$title"/></TITLE>
-      </HEAD>
-      <BODY link="#000000" alink="#000000" vlink="#000000" text="#000000">
+    <html>
+      <head>
+        <title><xsl:value-of select="$title"/></title>
         <style type="text/css">
           body, p {
-          font-family: verdana,arial,helvetica;
-          font-size: 80%;
-          color:#000000;
+            font-family: Verdana, Arial, Helvetica, sans-serif;
+            font-size: 80%;
+            color: #000000;
+            background-color: #ffffff;
+          }
+          tr, td {
+            font-family: Verdana, Arial, Helvetica, sans-serif;
+            background: #eeeee0;
+          }
+          td {
+            padding-left: 20px;
           }
 	  .dateAndAuthor {
-          font-family: verdana,arial,helvetica;
-          font-size: 80%;
-          font-weight: bold;
-          text-align:left;
-          background:#a6caf0;
+            font-family: Verdana, Arial, Helvetica, sans-serif;
+            font-weight: bold;
+            text-align: left;
+            background: #a6caf0;
+            padding-left: 3px;
 	  }
-          tr, td{
-          font-family: verdana,arial,helvetica;
-          font-size: 80%;
-          background:#eeeee0;
-          }	  
-	  </style>        
-          <h1>
-            <a name="top"><xsl:value-of select="$title"/></a>
-          </h1>
-          <p align="right">Designed for use with <a href="http://jakarta.apache.org">Ant</a>.</p>
-          <hr size="2"/>
-        <TABLE BORDER="0" WIDTH="100%" CELLPADDING="3" CELLSPACING="1">
+          a {
+            color: #000000;
+          }
+          pre {
+            font-weight: bold;
+          }
+        </style>
+      </head>
+      <body>
+        <h1>
+          <a name="top"><xsl:value-of select="$title"/></a>
+        </h1>
+        <p style="text-align: right">Designed for use with <a href="http://jakarta.apache.org/ant/">Ant</a>.</p>
+        <hr/>
+        <table border="0" width="100%" cellspacing="1">
           
           <xsl:apply-templates select=".//entry">
             <xsl:sort select="date" data-type="text" order="descending"/>
             <xsl:sort select="time" data-type="text" order="descending"/>
           </xsl:apply-templates>
           
-        </TABLE>
+        </table>
         
-      </BODY>
-    </HTML>
+      </body>
+    </html>
   </xsl:template>
   
   <xsl:template match="entry">
-    <TR>
-      <TD colspan="2" class="dateAndAuthor">
+    <tr>
+      <td class="dateAndAuthor">
         <xsl:value-of select="date"/><xsl:text> </xsl:text><xsl:value-of select="time"/><xsl:text> </xsl:text><xsl:value-of select="author"/>
-      </TD>
-    </TR>
-    <TR>
-      <TD width="20">
-        <xsl:text>    </xsl:text>
-      </TD>
-      <TD>
+      </td>
+    </tr>
+    <tr>
+      <td>
         <pre>
 <xsl:apply-templates select="msg"/></pre>
         <ul>
           <xsl:apply-templates select="file"/>
         </ul>
-      </TD>
-    </TR>
+      </td>
+    </tr>
   </xsl:template>
 
   <xsl:template match="date">
@@ -148,8 +156,7 @@
     <i>
       <a>
         <xsl:attribute name="href">mailto:<xsl:value-of select="."/></xsl:attribute>
-        <xsl:value-of select="."/>
-      </a>
+        <xsl:value-of select="."/></a>
     </i>
   </xsl:template>
 
@@ -164,16 +171,14 @@
             <xsl:attribute name="href"><xsl:value-of select="$cvsweb"/><xsl:value-of select="$module" />/<xsl:value-of select="name" />?r1=<xsl:value-of select="revision" />&amp;r2=<xsl:value-of select="prevrevision"/></xsl:attribute>
           </xsl:otherwise>
         </xsl:choose>
-        <xsl:value-of select="name" /> (<xsl:value-of select="revision"/>)
-      </a>
+        <xsl:value-of select="name" /> (<xsl:value-of select="revision"/>)</a>
     </li>
   </xsl:template>
 
   <!-- Any elements within a msg are processed,
        so that we can preserve HTML tags. -->
   <xsl:template match="msg">
-    <b><xsl:apply-templates/></b>
+    <xsl:apply-templates/>
   </xsl:template>
   
 </xsl:stylesheet>
-
