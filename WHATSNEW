@@ -78,6 +78,9 @@ Fixed bugs:
 * <copy> and <move>'s failonerror didn't apply to filesets pointing to
   non-existant directories.  Bugzilla Report 18414.
 
+* The <stripjavacomments> filter sometimes removed parts of string
+  constants.  Bugzilla Report 17441.
+
 Other changes:
 --------------
 * Shipped XML parser is now Xerces 2.4.0
