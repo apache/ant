@@ -64,4 +64,8 @@ public class GetTest extends BuildFileTest {
         executeTarget("testUseTimestamp");
     }
 
+    public void testUseTomorrow() {
+        executeTarget("testUseTomorrow");
+    }
+
 }

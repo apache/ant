@@ -37,11 +37,25 @@
     </fail>
   </target>
 
-  <target name="testUseTimestamp">
+  <target name="testUseTimestamp" depends="-90s,-timestamp" />
+
+  <target name="-90s">
+    <property name="off" value="-90" />
+    <property name="unit" value="second" />
+  </target>
+
+  <target name="testUseTomorrow" depends="+1d,-timestamp" />
+
+  <target name="+1d">
+    <property name="off" value="1" />
+    <property name="unit" value="day" />
+  </target>
+
+  <target name="-timestamp">
     <property name="pat" value="yyyyMMddHHmm" />
 
     <tstamp>
-      <format property="dt" pattern="${pat}" offset="-90" unit="second" />
+      <format property="dt" pattern="${pat}" offset="${off}" unit="${unit}" />
     </tstamp>
 
     <touch file="get.tmp" datetime="${dt}" pattern="${pat}" />

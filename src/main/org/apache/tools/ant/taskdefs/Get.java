@@ -160,20 +160,17 @@ public class Get extends Task {
         if (connection instanceof HttpURLConnection) {
             HttpURLConnection httpConnection
                     = (HttpURLConnection) connection;
+            long lastModified = httpConnection.getLastModified();
             if (httpConnection.getResponseCode()
                     == HttpURLConnection.HTTP_NOT_MODIFIED
-                //workaround:  doesn't work on 1.2
-                || (hasTimestamp
-                && JavaEnvUtils.isJavaVersion(JavaEnvUtils.JAVA_1_2)
-                && timestamp > httpConnection.getLastModified())) {
+                || (lastModified != 0 && hasTimestamp
+                && timestamp > lastModified)) {
                 //not modified so no file download. just return
                 //instead and trace out something so the user
                 //doesn't think that the download happened when it
                 //didn't
                 log("Not modified - so not downloaded", logLevel);
                 return false;
-                // also, if timestamp is roughly >= now, HTTP_NOT_MODIFIED is _not_
-                // returned... We may want to remove the 1.2 qualifier above.
             }
             // test for 401 result (HTTP only)
             if (httpConnection.getResponseCode()
