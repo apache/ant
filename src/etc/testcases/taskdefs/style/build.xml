@@ -70,6 +70,13 @@
       <delete file="tmp.xsl"/>
   </target>
 
+  <target name="testDirectoryHierarchyWithDirMatching">
+    <mkdir dir="${out.dir}/src/level1/"/>
+    <copy file="data.xml" todir="${out.dir}/src/level1/"/>
+    <style basedir="${out.dir}/src" destdir="${out.dir}/dest"
+           style="printParams.xsl"/>
+  </target>
+
   <target name="copyXsl" if="xsl.value">
       <copy file="testNewerStylesheet.xsl" tofile="tmp.xsl" overwrite="true">
           <filterchain><expandproperties/></filterchain>
