@@ -87,6 +87,8 @@ import org.apache.tools.ant.util.FileUtils;
  * such as images, or html files in the source directory will be
  * copied into the destination directory.
  *
+ * @version $Revision$ 
+ *
  * @author <a href="mailto:kvisco@exoffice.com">Keith Visco</a>
  * @author <a href="mailto:rubys@us.ibm.com">Sam Ruby</a>
  * @author <a href="mailto:russgold@acm.org">Russell Gold</a>
@@ -120,6 +122,13 @@ public class XSLTProcess extends MatchingTask implements XSLTLogger {
     private String outputtype = null;
 
     /**
+     * Whether to style all files in the included directories as well.
+     *
+     * @since 1.35, Ant 1.5
+     */
+    private boolean performDirectoryScan = true;
+
+    /**
      * Creates a new XSLTProcess Task.
      **/
     public XSLTProcess() {
@@ -127,9 +136,17 @@ public class XSLTProcess extends MatchingTask implements XSLTLogger {
     } //-- XSLTProcess
 
     /**
+     * Whether to style all files in the included directories as well.
+     *
+     * @since 1.35, Ant 1.5
+     */
+    public void setScanIncludedDirectories(boolean b) {
+        performDirectoryScan = b;
+    }
+    
+    /**
      * Executes the task.
      */
-
     public void execute() throws BuildException {
         DirectoryScanner scanner;
         String[]         list;
@@ -190,12 +207,14 @@ public class XSLTProcess extends MatchingTask implements XSLTLogger {
             process( baseDir, list[i], destDir, stylesheet );
         }
 
-        // Process all the directoried marked for styling
-        dirs = scanner.getIncludedDirectories();
-        for (int j = 0;j < dirs.length;++j){
-            list=new File(baseDir,dirs[j]).list();
-            for (int i = 0;i < list.length;++i) {
-                process( baseDir, list[i], destDir, stylesheet );
+        if (performDirectoryScan) {
+            // Process all the directories marked for styling
+            dirs = scanner.getIncludedDirectories();
+            for (int j = 0;j < dirs.length;++j){
+                list=new File(baseDir,dirs[j]).list();
+                for (int i = 0;i < list.length;++i) {
+                    process( baseDir, list[i], destDir, stylesheet );
+                }
             }
         }
     } //-- execute
@@ -325,7 +344,7 @@ public class XSLTProcess extends MatchingTask implements XSLTLogger {
     /**
      * Processes the given input XML file and stores the result
      * in the given resultFile.
-     **/
+     */
     private void process(File baseDir, String xmlFile, File destDir,
                          File stylesheet)
         throws BuildException {
@@ -337,6 +356,13 @@ public class XSLTProcess extends MatchingTask implements XSLTLogger {
         try {
             long styleSheetLastModified = stylesheet.lastModified();
             inFile = new File(baseDir,xmlFile);
+
+            if (inFile.isDirectory()) {
+                log("Skipping " + inFile + " it is a directory.",
+                    Project.MSG_VERBOSE);
+                return;
+            }
+            
             int dotPos = xmlFile.lastIndexOf('.');
             if(dotPos>0){
                 outFile = new File(destDir,xmlFile.substring(0,xmlFile.lastIndexOf('.'))+fileExt);

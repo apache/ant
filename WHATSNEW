@@ -188,6 +188,11 @@ Other changes:
   this feature can now be disabled by setting the new includeantruntime
   attribute to false.
 
+* <style> behaves different than any other directory based task as it
+  processes all files that it finds in included directories in
+  addition to the files matched by your patterns.  There now is a new
+  attribute to suppress this behavior.
+
 Changes from Ant 1.4 to Ant 1.4.1
 ===========================================
 
