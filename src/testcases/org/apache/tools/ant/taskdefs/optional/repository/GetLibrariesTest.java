@@ -14,10 +14,9 @@
  *  limitations under the License.
  *
  */
-package org.apache.tools.ant.taskdefs.optional;
+package org.apache.tools.ant.taskdefs.optional.repository;
 
 import org.apache.tools.ant.BuildFileTest;
-import org.apache.tools.ant.taskdefs.optional.repository.GetLibraries;
 
 /**
  * test the test libraries stuff.

@@ -328,7 +328,7 @@
     <filename name="${ant.package}/launch/**/*"/>
   </selector>
 
-  <selector id="needs.commons.httpclient">
+  <selector id="needs.apache-httpclient">
     <filename name="${optional.package}/repository/**/*"/>
   </selector>
 
@@ -568,10 +568,10 @@
     </condition>
 
     <!-- http client needs commons logging -->
-    <condition property="commons.httpclient.present">
+    <condition property="apache-httpclient.present">
       <and>
         <available
-          classname="org.apache.commons.httpclient.HttpClient"
+          classname="org.apache.apache-httpclient.HttpClient"
           classpathref="classpath"/>
         <isset property="commons.logging.present"/>
       </and>
@@ -695,7 +695,8 @@
             <selector refid="needs.jdepend" unless="jdepend.present"/>
             <selector refid="needs.swing"  unless="swing.present"/>
             <selector refid="needs.jsch" unless="jsch.present"/>
-            <selector refid="needs.commons.httpclient" unless="commons.httpclient.present"/>
+            <selector refid="needs.apache-httpclient"
+                      unless="apache-httpclient.present"/>
           </or>
         </not>
       </selector>
@@ -870,7 +871,7 @@
             <selector refid="needs.jdepend"/>
             <selector refid="needs.swing"/>
             <selector refid="needs.jsch"/>
-            <selector refid="needs.commons.httpclient"/>
+            <selector refid="needs.apache-httpclient"/>
           </or>
         </not>
       </and>
@@ -915,7 +916,7 @@
     <optional-jar dep="swing"/>
     <optional-jar dep="jsch"/>
     <optional-jar dep="jdepend"/>
-    <optional-jar dep="commons.httpclient"/>
+    <optional-jar dep="apache-httpclient"/>
 
     <jar destfile="${build.lib}/${optional.jars.prefix}-weblogic.jar"
          basedir="${build.classes}"
