@@ -220,6 +220,8 @@ public class ProjectHelper2 extends ProjectHelper {
                     be.setLocation(location);
                 }
                 throw be;
+            } else if (t == null) {
+                t = exc;
             }
 
             throw new BuildException(exc.getMessage(), t, location);
@@ -227,6 +229,8 @@ public class ProjectHelper2 extends ProjectHelper {
             Throwable t = exc.getException();
             if (t instanceof BuildException) {
                 throw (BuildException) t;
+            } else if (t == null) {
+                t = exc;
             }
             throw new BuildException(exc.getMessage(), t);
         } catch (FileNotFoundException exc) {
@@ -552,8 +556,14 @@ public class ProjectHelper2 extends ProjectHelper {
 //                     if (qname.equals( "target" ) )
 //                         return ProjectHelper2.targetHandler;
 //                 }
-                throw new SAXParseException("Unexpected element \"" + qname
+                if (name.equals(qname)) {
+                    throw new SAXParseException("Unexpected element \"{" + uri
+                    + "}" + name + "\" {" + ANT_CORE_URI + "}" + name,
+                    context.getLocator());
+                } else {
+                    throw new SAXParseException("Unexpected element \"" + qname
                     + "\" " + name, context.getLocator());
+                }
             }
         }
     }
