@@ -526,29 +526,29 @@ public final class SelectorUtils {
      *
      * @param path Path to tokenize. Must not be <code>null</code>.
      *
-    * @return a Vector of path elements from the tokenized path
-    */
-   public static Vector tokenizePath (String path) {
-     return tokenizePath(path, File.separator);
-   }
- /**
-  * Breaks a path up into a Vector of path elements, tokenizing on
-  *
-  * @param path Path to tokenize. Must not be <code>null</code>.
-  * @param separator the separator against which to tokenize.
-  *
-  * @return a Vector of path elements from the tokenized path
-  * @since ant 1.6
-  */
-   public static Vector tokenizePath (String path, String separator) {
-     Vector ret = new Vector();
-     StringTokenizer st = new StringTokenizer(path,separator);
-     while (st.hasMoreTokens()) {
-         ret.addElement(st.nextToken());
-     }
-     return ret;
+     * @return a Vector of path elements from the tokenized path
+     */
+    public static Vector tokenizePath (String path) {
+        return tokenizePath(path, File.separator);
+    }
 
-   }
+    /**
+     * Breaks a path up into a Vector of path elements, tokenizing on
+     *
+     * @param path Path to tokenize. Must not be <code>null</code>.
+     * @param separator the separator against which to tokenize.
+     *
+     * @return a Vector of path elements from the tokenized path
+     * @since Ant 1.6
+     */
+    public static Vector tokenizePath (String path, String separator) {
+        Vector ret = new Vector();
+        StringTokenizer st = new StringTokenizer(path,separator);
+        while (st.hasMoreTokens()) {
+            ret.addElement(st.nextToken());
+        }
+        return ret;
+    }
 
     /**
      * Same as {@link #tokenizePath tokenizePath} but hopefully faster.
@@ -662,14 +662,16 @@ public final class SelectorUtils {
         }
         return result.toString();
     }
+
     /**
      * Tests if a string contains stars or question marks
-     *  @param input a String which one wants to test for containing wildcard
+     * @param input a String which one wants to test for containing wildcard
      * @return true if the string contains at least a star or a question mark
      */
     public static boolean hasWildcards(String input) {
         return (input.indexOf('*')!=-1 || input.indexOf('?')!=-1);
     }
+
     /**
      * removes from a pattern all tokens to the right containing wildcards
      * @param input

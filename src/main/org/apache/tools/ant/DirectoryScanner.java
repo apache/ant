@@ -644,57 +644,66 @@ public class DirectoryScanner
         }
         checkIncludePatterns();
     }
+
     /**
-     *  this routine is actually checking all the include patterns
-     *  in order to avoid scanning everything under base dir
-     *  @since ant1.6
+     * this routine is actually checking all the include patterns in
+     * order to avoid scanning everything under base dir
+     * @since ant1.6
      */
     private void checkIncludePatterns() {
-      Hashtable newroots = new Hashtable();
-      // put in the newroots vector the include patterns without wildcard tokens
-      for (int icounter=0; icounter<includes.length; icounter++) {
-        String newpattern=SelectorUtils.rtrimWildcardTokens(includes[icounter]);
-        // check whether the candidate new pattern has a parent
-        boolean hasParent=false;
-        Enumeration myenum = newroots.keys();
-        while (myenum.hasMoreElements()) {
-          String existingpattern=(String)myenum.nextElement();
-          if (existingpattern.length() <= newpattern.length()) {
-            if (newpattern.indexOf(existingpattern)==0) {
-              hasParent=true;
-            }
-          }
-        }
-        if ( !hasParent) {
-          newroots.put(newpattern,includes[icounter]);
-        }
-      }
-      Enumeration enum2 = newroots.keys();
-      while (enum2.hasMoreElements()) {
-        String currentelement = (String) enum2.nextElement();
-        File myfile=new File(basedir,currentelement);
-        if (myfile.exists()) {
-          if (myfile.isDirectory()) {
-            if (isIncluded(currentelement) && currentelement.length()>0) {
-                accountForIncludedDir(currentelement,myfile,true);
-            }  else {
-                if (currentelement.length() > 0) {
-                    if (currentelement.charAt(currentelement.length()-1) != File.separatorChar) {
-                        currentelement = currentelement + File.separatorChar;
+        Hashtable newroots = new Hashtable();
+        // put in the newroots vector the include patterns without
+        // wildcard tokens
+        for (int icounter = 0; icounter < includes.length; icounter++) {
+            String newpattern = 
+                SelectorUtils.rtrimWildcardTokens(includes[icounter]);
+            // check whether the candidate new pattern has a parent
+            boolean hasParent=false;
+            Enumeration myenum = newroots.keys();
+            while (myenum.hasMoreElements()) {
+                String existingpattern= (String) myenum.nextElement();
+                if (existingpattern.length() <= newpattern.length()) {
+                    if (newpattern.indexOf(existingpattern)==0) {
+                        hasParent=true;
                     }
                 }
-                scandir(myfile, currentelement, true);
             }
-          }
-          else {
-            String originalpattern=(String)newroots.get(currentelement);
-            if (originalpattern.equals(currentelement)) {
-              accountForIncludedFile(currentelement,myfile);
+            if (!hasParent) {
+                newroots.put(newpattern,includes[icounter]);
             }
-          }
         }
-      }
+
+        Enumeration enum2 = newroots.keys();
+        while (enum2.hasMoreElements()) {
+            String currentelement = (String) enum2.nextElement();
+            File myfile=new File(basedir, currentelement);
+            if (myfile.exists()) {
+                if (myfile.isDirectory()) {
+                    if (isIncluded(currentelement) 
+                        && currentelement.length()>0) {
+                        accountForIncludedDir(currentelement,myfile,true);
+                    }  else {
+                        if (currentelement.length() > 0) {
+                            if (currentelement.charAt(currentelement.length()
+                                                      -1 ) 
+                                != File.separatorChar) {
+                                currentelement = 
+                                    currentelement + File.separatorChar;
+                            }
+                        }
+                        scandir(myfile, currentelement, true);
+                    }
+                } else {
+                    String originalpattern= 
+                        (String) newroots.get(currentelement);
+                    if (originalpattern.equals(currentelement)) {
+                        accountForIncludedFile(currentelement,myfile);
+                    }
+                }
+            }
+        }
     }
+
     /**
      * Top level invocation for a slow scan. A slow scan builds up a full
      * list of excluded/included files/directories, whereas a fast scan
@@ -838,9 +847,11 @@ public class DirectoryScanner
         }
 
     }
+
     /**
      *
-     * @param name path of the directory relative to the directory of the fileset
+     * @param name path of the directory relative to the directory of
+     * the fileset
      * @param file directory as file
      * @param fast
      */
