@@ -1,5 +1,5 @@
 /*
- * Copyright  2000,2002-2004 The Apache Software Foundation
+ * Copyright  2000,2002-2005 The Apache Software Foundation
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -42,18 +42,26 @@ public class Test extends Java {
         protected String m_testname = "";
 
 
-        /** name of test. No property expansion takes place here */
+        /**
+         * name of test. No property expansion takes place here
+         * @param testname the test name
+         */
         public void addText(final String testname) {
             m_testname += testname;
         }
 
 
+        /**
+         * Get the test name
+         * @return the test name
+         */
         public String toString() {
             return m_testname;
         }
     }
 
 
+    /** Constructor for the Test task. */
     public Test() {
         setClassname("org.apache.testlet.engine.TextTestEngine");
     }
@@ -61,6 +69,7 @@ public class Test extends Java {
 
     /**
      * add a declaration of a testlet to run
+     * @return a <code>TestletEntry</code> to configure
      */
     public TestletEntry createTestlet() {
         final TestletEntry entry = new TestletEntry();
@@ -73,6 +82,7 @@ public class Test extends Java {
     /**
      * a boolean value indicating whether tests should display a
      * message on success; optional
+     * @param showSuccess a <code>boolean</code> value
      */
 
     public void setShowSuccess(final boolean showSuccess) {
@@ -83,6 +93,7 @@ public class Test extends Java {
     /**
      * a boolean value indicating whether a banner should be displayed
      * when starting testlet engine; optional.
+     * @param showBanner a <code>String</code> value
      */
     public void setShowBanner(final String showBanner) {
         createArg().setValue("-b=" + showBanner);
@@ -92,17 +103,26 @@ public class Test extends Java {
     /**
      * a boolean indicating that a stack trace is displayed on
      * error (but not normal failure); optional.
+     * @param showTrace a <code>boolean</code> value
      */
     public void setShowTrace(final boolean showTrace) {
         createArg().setValue("-t=" + showTrace);
     }
 
 
+    /**
+     * a boolean indicating that a stack trace is to be displayed always.
+     * @param forceShowTrace a <code>boolean</code> value
+     */
     public void setForceShowTrace(final boolean forceShowTrace) {
         createArg().setValue("-f=" + forceShowTrace);
     }
 
 
+    /**
+     * Execute the task.
+     * @throws BuildException on error
+     */
     public void execute()
          throws BuildException {
 

@@ -61,7 +61,10 @@ public class IsSigned extends DataType implements Condition {
      * Returns <code>true</code> if the file exists and is signed with
      * the signature specified, or, if <code>name</code> wasn't
      * specified, if the file contains a signature.
+     * @param zipFile the zipfile to check
+     * @param name the signature to check (may be killed)
      * @return true if the file is signed.
+     * @throws IOException on error
      */
     public static boolean isSigned(File zipFile, String name)
         throws IOException {

@@ -86,6 +86,7 @@ public class ANTLR extends Task {
     /** Instance of a utility class to use for file operations. */
     private static final FileUtils FILE_UTILS = FileUtils.getFileUtils();
 
+    /** Constructor for ANTLR task. */
     public ANTLR() {
         commandline.setVm(JavaEnvUtils.getJreExecutable("java"));
         commandline.setClassname("antlr.Tool");
@@ -93,6 +94,7 @@ public class ANTLR extends Task {
 
     /**
      * The grammar file to process.
+     * @param target the gramer file
      */
     public void setTarget(File target) {
         log("Setting target to: " + target.toString(), Project.MSG_VERBOSE);
@@ -101,6 +103,7 @@ public class ANTLR extends Task {
 
     /**
      * The directory to write the generated files to.
+     * @param outputDirectory the output directory
      */
     public void setOutputdirectory(File outputDirectory) {
         log("Setting output directory to: " + outputDirectory.toString(), Project.MSG_VERBOSE);
@@ -110,6 +113,7 @@ public class ANTLR extends Task {
     /**
      * Sets an optional super grammar file.
      * Use setGlib(File superGrammar) instead.
+     * @param superGrammar the super grammar filename
      * @deprecated  since ant 1.6
      */
     public void setGlib(String superGrammar) {
@@ -123,6 +127,7 @@ public class ANTLR extends Task {
     }
     /**
      * Sets an optional super grammar file
+     * @param superGrammar the super grammar file
      * @since ant 1.6
      */
     public void setGlib(File superGrammar) {
@@ -130,6 +135,7 @@ public class ANTLR extends Task {
     }
     /**
      * Sets a flag to enable ParseView debugging
+     * @param enable a <code>boolean</code> value
      */
     public void setDebug(boolean enable) {
         this.debug = enable;
@@ -137,6 +143,7 @@ public class ANTLR extends Task {
 
     /**
      * If true, emit html
+     * @param enable a <code>boolean</code> value
      */
     public void setHtml(boolean enable) {
         html = enable;
@@ -144,6 +151,7 @@ public class ANTLR extends Task {
 
     /**
      * Sets a flag to emit diagnostic text
+     * @param enable a <code>boolean</code> value
      */
     public void setDiagnostic(boolean enable) {
         diagnostic = enable;
@@ -151,6 +159,7 @@ public class ANTLR extends Task {
 
     /**
      * If true, enables all tracing.
+     * @param enable a <code>boolean</code> value
      */
     public void setTrace(boolean enable) {
         trace = enable;
@@ -158,6 +167,7 @@ public class ANTLR extends Task {
 
     /**
      * If true, enables parser tracing.
+     * @param enable a <code>boolean</code> value
      */
     public void setTraceParser(boolean enable) {
         traceParser = enable;
@@ -165,6 +175,7 @@ public class ANTLR extends Task {
 
     /**
      * If true, enables lexer tracing.
+     * @param enable a <code>boolean</code> value
      */
     public void setTraceLexer(boolean enable) {
         traceLexer = enable;
@@ -172,6 +183,7 @@ public class ANTLR extends Task {
 
     /**
      * Sets a flag to allow the user to enable tree walker tracing
+     * @param enable a <code>boolean</code> value
      */
     public void setTraceTreeWalker(boolean enable) {
         traceTreeWalker = enable;
@@ -183,6 +195,7 @@ public class ANTLR extends Task {
     // I'm not removing this method to keep backward compatibility
     /**
      * @ant.attribute ignore="true"
+     * @param s a <code>boolean</code> value
      */
     public void setFork(boolean s) {
         //this.fork = s;
@@ -190,6 +203,7 @@ public class ANTLR extends Task {
 
     /**
      * The working directory of the process
+     * @param d the working directory
      */
     public void setDir(File d) {
         this.workingdir = d;
@@ -198,6 +212,7 @@ public class ANTLR extends Task {
     /**
      * Adds a classpath to be set
      * because a directory might be given for Antlr debug.
+     * @return a path to be configured
      */
     public Path createClasspath() {
         return commandline.createClasspath(getProject()).createPath();
@@ -216,6 +231,7 @@ public class ANTLR extends Task {
      * Adds the jars or directories containing Antlr
      * this should make the forked JVM work without having to
      * specify it directly.
+     * @throws BuildException on error
      */
     public void init() throws BuildException {
         addClasspathEntry("/antlr/ANTLRGrammarParseBehavior.class");
@@ -227,6 +243,7 @@ public class ANTLR extends Task {
      *
      * <p>Doesn't work for archives in JDK 1.1 as the URL returned by
      * getResource doesn't contain the name of the archive.</p>
+     * @param resource the resource name to search for
      */
     protected void addClasspathEntry(String resource) {
         /*
@@ -255,6 +272,10 @@ public class ANTLR extends Task {
         }
     }
 
+    /**
+     * Execute the task.
+     * @throws BuildException on error
+     */
     public void execute() throws BuildException {
         validateAttributes();
 

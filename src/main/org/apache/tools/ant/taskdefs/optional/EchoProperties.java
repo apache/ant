@@ -177,20 +177,31 @@ public class EchoProperties extends Task {
 
     /**
      * A set of properties to write.
-     *
+     * @param ps the property set to write
      * @since Ant 1.6
      */
     public void addPropertyset(PropertySet ps) {
         propertySets.addElement(ps);
     }
 
+    /**
+     * Set the output format - xml or text.
+     * @param ea an enumerated <code>FormatAttribute</code> value
+     */
     public void setFormat(FormatAttribute ea) {
         format = ea.getValue();
     }
 
+    /**
+     * A enumerated type for the format attribute.
+     * The values are "xml" and "text".
+     */
     public static class FormatAttribute extends EnumeratedAttribute {
         private String [] formats = new String[]{"xml", "text"};
 
+        /**
+         * @see EnumeratedAttribute#getValues()
+         */
         public String[] getValues() {
             return formats;
         }
@@ -320,9 +331,10 @@ public class EchoProperties extends Task {
      *  sent to the output stream.
      *  The output stream will be closed when this method returns.
      *
-     *@param  allProps         propfile to save
-     *@param  os               output stream
-     *@exception  IOException  trouble
+     * @param  allProps         propfile to save
+     * @param  os               output stream
+     * @throws IOException      on output errors
+     * @throws BuildException   on other errors
      */
     protected void saveProperties(Hashtable allProps, OutputStream os)
         throws IOException, BuildException {
@@ -383,6 +395,12 @@ public class EchoProperties extends Task {
         return sorted;
     }
 
+    /**
+     * Output the properties as xml output.
+     * @param props the properties to save
+     * @param os    the output stream to write to (Note this gets closed)
+     * @throws IOException on error in writing to the stream
+     */
     protected void xmlSaveProperties(Properties props,
                                      OutputStream os) throws IOException {
         // create XML document
