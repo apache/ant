@@ -17,6 +17,12 @@ else
   echo "  to the installation directory of java."
 fi
 
+if [ ! -f "$JAVA_HOME/bin/java" ] ; then
+  echo "Error: JAVA_HOME is not defined correctly."
+  echo "  We were unable to locate JAVA_HOME/bin/java"
+  exit
+fi
+
 # More Cygwin support
 if [ "$OSTYPE" = "cygwin32" ] || [ "$OSTYPE" = "cygwin" ] ; then
   CLASSPATH=`cygpath --path --unix "$CLASSPATH"`
