@@ -443,7 +443,7 @@ public class Tar extends MatchingTask {
         SourceFileScanner sfs = new SourceFileScanner(this);
         MergingMapper mm = new MergingMapper();
         mm.setTo(tarFile.getAbsolutePath());
-        return sfs.restrict(files, baseDir, null, mm).length == 0;
+        return sfs.restrict(files, dir, null, mm).length == 0;
     }
 
     /**
