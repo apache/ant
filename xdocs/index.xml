@@ -4,16 +4,17 @@
   <properties>
     <author email="">Conor MacNeill</author>
     <author email="stefan.bodewig@epost.de">Stefan Bodewig</author>
-    <title>Ant</title>
+    <title>Welcome</title>
   </properties>
 
 <body>
 
   <section name="Ant 1.5.1">
     <h3>Apache Ant 1.5.1 Released!</h3>
-    <p>Version 1.5.1 of Ant has been released. It is available for download 
-      <a href="http://www.apache.org/dist/ant/">here</a>.
-    </p>
+
+    <p>Version 1.5.1 of Ant has been released. It is available for
+    download as <a href="http://ant.apache.org/bindownload.cgi">binary</a> or as <a
+    href="http://ant.apache.org/srcdownload.cgi">source</a> distribution.</p>
   </section>
 
   <section name="Apache Ant">
@@ -77,23 +78,6 @@ Comprehensive documentation is included in the source and binary distributions.
 
   </section>
 
-  <section name="Latest Release">
-    <p>
-    You can download the latest release:
-    </p>
-    <ul>
-        <li><a href="http://www.apache.org/dist/ant/binaries/">
-                Download the binary release</a> 
-          [<a href="http://www.apache.org/dyn/closer.cgi/ant/binaries/">from a mirror</a>]</li>
-        <li><a href="http://www.apache.org/dist/ant/source/">
-                Download the source release</a>
-          [<a href="http://www.apache.org/dyn/closer.cgi/ant/source/">from a mirror</a>]</li>
-        <li><a href="http://www.apache.org/dist/ant/binaries/rpms/">
-                Download source or binary RPMs</a>
-          [<a href="http://www.apache.org/dyn/closer.cgi/ant/binaries/rpms/">from a mirror</a>]</li>
-    </ul>  
-  </section>
-  
   <section name="Nightly Builds">
     <p>
     If you wish to use the latest Ant features, you can try downloading a nightly 
@@ -112,7 +96,7 @@ Comprehensive documentation is included in the source and binary distributions.
   <section name="Get Involved">
 <ul>
 <li><a href="http://jakarta.apache.org/getinvolved/getinvolvedindex.html">Get Involved</a></li>
-<li><a href="http://jakarta.apache.org/getinvolved/mail.html">Join Mailing Lists</a></li>
+<li><a href="mail.html">Join Mailing Lists</a></li>
 <li><a href="http://marc.theaimsgroup.com/?l=ant-dev&amp;r=1&amp;w=2">Search the Dev Mailing List</a>
 </li>
 <li><a href="http://marc.theaimsgroup.com/?l=ant-user&amp;r=1&amp;w=2">Search the User Mailing List</a>

@@ -5,14 +5,14 @@
     <author email="">Conor MacNeill</author>
     <author email="stefan.bodewig@epost.de">Stefan Bodewig</author>
     <author email="">Magesh Umasankar</author>
-    <title>Ant News</title>
+    <title>News</title>
   </properties>
 
 <body>
   <section name="Ant 1.5.1">
     <h3>October 3, 2002 - Ant 1.5.1 Available !</h3>
     <p>The final version of Ant 1.5.1 is now available for 
-     <a href="http://www.apache.org/dist/ant/">
+     <a href="http://ant.apache.org/bindownload.cgi">
      download</a>. If you have any feedback on this release, feel free to join the 
      discussion on the ant-dev and ant-user mailing lists.
      </p>
@@ -21,8 +21,7 @@
   <section name="Ant 1.5.1Beta1">
     <h3>August 19, 2002 - Ant 1.5.1 Beta1 Available !</h3>
     <p>The first beta version of Ant 1.5.1 is now available for 
-     <a href="http://jakarta.apache.org/builds/jakarta-ant/release/v1.5.1beta1/">
-     download</a>. If you have any feedback on the beta feel free to join the 
+     download. If you have any feedback on the beta feel free to join the 
      discussion on the ant-dev and ant-user mailing lists.
      </p>
   </section>
@@ -44,8 +43,7 @@
   <section name="Ant 1.5Beta3">
     <h3>June 24, 2002 - Ant 1.5 Beta3 Available!</h3>
     <p>The third beta version of Ant 1.5 is now available for 
-     <a href="http://jakarta.apache.org/builds/jakarta-ant/release/v1.5Beta3/">
-     download</a>. If you have any feedback on the beta feel free to join the 
+     download. If you have any feedback on the beta feel free to join the 
      discussion on the ant-dev and ant-user mailing lists.
      </p>
   </section>
@@ -53,8 +51,7 @@
   <section name="Ant 1.5Beta2">
     <h3>June 1, 2002 - Ant 1.5 Beta2 Available!</h3>
     <p>The second beta version of Ant 1.5 is now available for 
-     <a href="http://jakarta.apache.org/builds/jakarta-ant/release/v1.5Beta2/">
-     download</a>. If you have any feedback on the beta feel free to join the 
+     download. If you have any feedback on the beta feel free to join the 
      discussion on the ant-dev and ant-user mailing lists.
      </p>
   </section>
@@ -62,8 +59,7 @@
   <section name="Ant 1.5Beta1">
     <h3>Ant 1.5 Beta1 Available !</h3>
     <p>The first beta version of Ant 1.5 is now available for 
-     <a href="http://jakarta.apache.org/builds/jakarta-ant/release/v1.5Beta1/">
-     download</a>. If you have any feedback on the beta feel free to join the 
+     download. If you have any feedback on the beta feel free to join the 
      discussion on the ant-dev and ant-user mailing lists.
      </p>
   </section>
@@ -72,7 +68,7 @@
     <h3>Apr 29, 2002: Ant wins <em>Software Development</em> magazine&apos;s
     2002 Productivity Award.</h3>
     <p>
-    <a href="http://www.sdmagazine.com"><img src="images/sdm_productivity_award.gif" border="0" height="75" width="135" align="right"/></a>
+    <a href="http://www.sdmagazine.com"><img src="images/sdm_productivity_award.gif" alt="" border="0" height="75" width="135" align="right"/></a>
     Ant has been awarded a <strong>2002 Productivity Award</strong> by
     <a href="http://www.sdmagazine.com/"><em>Software Development</em></a>
     magazine.  Read the
@@ -86,7 +82,7 @@
     Award</h3>
 
     <p>
-    <a href="http://www.javaworld.com"><img src="images/jw_ec_logo_winner2002.gif" border="0" height="85" width="230" align="right"/></a>
+    <a href="http://www.javaworld.com"><img src="images/jw_ec_logo_winner2002.gif" alt="" border="0" height="85" width="230" align="right"/></a>
     Ant has won the JavaWorld Editors&apos; Choice Award for
     <strong>Most Useful Java Community-Developed Technology</strong>.
     Read the
@@ -146,6 +142,7 @@
     <p>
        As we continue to evolve and enhance Ant 1.x, it is now time to define what Ant 2.0 will
        encompass. Ant 2.0 will be a major rearchitecting of Ant. It has a number of goals including:
+    </p>
        <ul>
          <li>Define the "contract" with build file writers to which Ant will be bound.</li>
          <li>Define the "contract" between the Ant core and Task writers.</li>
@@ -153,7 +150,7 @@
          <li>Allow Ant to function as a component to simplify integration with GUIs and IDEs.</li>
          <li>Make Ant more regular and logical.</li>
        </ul>
-       
+     <p>       
        It is expected that Ant 2.0 will break Ant 1.x based build files. The intention is to
        make this the last time that will happen.
      </p>
@@ -175,7 +172,7 @@
       
       <p>
         If you want to shape the future of Ant, join the 
-        <a href="http://jakarta.apache.org/site/mail.html">Ant-Dev mailing list</a> and contribute
+        <a href="mail.html">Ant-Dev mailing list</a> and contribute
         your ideas.
       </p>
   </section>

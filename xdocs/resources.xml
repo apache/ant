@@ -1,4 +1,4 @@
-<?xml version="1.0"?>
+<?xml version="1.0" encoding="ISO-8859-1" ?>
 <document>
 
   <properties>
@@ -17,7 +17,7 @@
         <table>
           <tr>
             <th>FAQ:</th>
-            <td><a href="faq.html">http://jakarta.apache.org/ant/faq.html</a></td>
+            <td><a href="faq.html">http://ant.apache.org/faq.html</a></td>
           </tr>
         </table>
       </subsection>
@@ -42,8 +42,26 @@
       <p>Listed by descending publication date.</p>
       <!-- TODO: reorganize as a table? -->
       <subsection name="Java Development with Ant">
-        <p>Coming soon: August 2002, covers Ant 1.5
-        </p>
+        <p>Covers Ant 1.5, including:</p>
+            <ul>
+                <li>The new Ant 1.5 features</li>
+                <li>Ant's datatypes and property handling</li> 
+                <li>JUnit testing and reporting</li> 
+                <li>Continuous integration techniques</li> 
+                <li>XDoclet for attribute-oriented programming</li> 
+                <li>EJB generation, building, and packaging</li> 
+                <li>Writing and testing native code</li> 
+                <li>Building Web Services with Apache Axis</li> 
+                <li>Deploying your system to multiple remote servers</li> 
+                <li>Using and writing
+                    <ul>
+                        <li>Loggers</li>
+                        <li>Listeners</li> 
+                        <li>Selectors</li> 
+                        <li>Custom tasks</li>
+                    </ul>
+                </li>
+            </ul>
 
         <table>
           <tr>
@@ -72,8 +90,32 @@
         </table>
       </subsection>
 
+      <subsection name="Ant. Kurz und Gut.">
+
+        <p>A German language short reference for Ant that covers Ant
+        1.4.  This is the original description:</p>
+
+        <source>
+  Ant kurz &amp; gut enth&#xe4;lt eine vollst&#xe4;ndige Referenz der Built-in Tasks
+  und ihrer jeweiligen Attribute sowie kurze Beispiele f&#xfc;r ihre Verwendung.
+  Daneben bietet das Buch eine knappe Einf&#xfc;hrung in die Arbeit mit Ant und
+  eine Erl&#xe4;uterung der Ant-Basiselemente (Projekte, Properties, Targets und Tasks).
+  Behandelt werden au&#xdf;erdem grundlegende Konzepte wie Filesets, Patternsets und
+  Pfadstrukturen, das Schreiben eigener Tasks, die Aufruf-Syntax und Optional Tasks. </source>
+        <table>
+          <tr>
+            <th>Author:</th>
+            <td>Stefan Edlich</td>
+          </tr>
+          <tr>
+            <th>URL:</th>
+            <td><a href="http://www.amazon.de/exec/obidos/ASIN/3897212412/">http://www.amazon.de/exec/obidos/ASIN/3897212412/</a></td>
+          </tr>
+        </table>
+      </subsection>
+
       <subsection name="Java Tools for eXtreme Programming">
-        <p>This book covers the following XP subjects:
+        <p>This book covers the following XP subjects:</p>
             <ul>
                 <li>Automated unit and functional testing</li>
                 <li>Continuous integration through build and deployment automation</li>
@@ -81,7 +123,6 @@
                 <li>How Ant, JUnit, JUnitPerf, Cactus, HTTPUnit, and JMeter
                 can be used to achieve the goals of the XP methodology</li>
             </ul>
-        </p>
 
         <table>
           <tr>
@@ -119,7 +160,7 @@
           </tr>
           <tr>
             <th>URL:</th>
-            <td><a href="ant_in_anger.html">http://jakarta.apache.org/ant/ant_in_anger.html</a></td>
+            <td><a href="ant_in_anger.html">http://ant.apache.org/ant_in_anger.html</a></td>
           </tr>
         </table>
       </subsection>
@@ -135,7 +176,7 @@
           </tr>
           <tr>
             <th>URL:</th>
-            <td><a href="ant_task_guidelines.html">http://jakarta.apache.org/ant/ant_task_guidelines.html</a></td>
+            <td><a href="ant_task_guidelines.html">http://ant.apache.org/ant_task_guidelines.html</a></td>
           </tr>
         </table>
       </subsection>

@@ -135,23 +135,24 @@
 
       <subsection name="Krysalis Centipede">
 
-        <p>Krysalis Centipede is a template for a software module;
-        gives you build with Ant and Site+Documentation with Apache
-        Cocoon.</p>
+        <p>Krysalis Centipede is a project build system based on
+        Apache Ant. Centipede uses pre-packaged modules called "cents"
+        that it downloads and installs automatically.  Cents can be
+        used as Ant tasks or easy to use targets.</p>
 
-        <p>Centipede is a starter project, empty in many respects, but
-        has a decent and standardized Ant build file, and some xdocs
-        that render to HTML using Cocoon. A developer would take
-        Centipede and use it to start development. After starting, the
-        build file would evolve as the developer see fit and move away
-        from the Centipede starting point.  Subsequent releases of
-        Centipede will address the issues found using it, and evolve
-        on user requests-issues.</p>
+        <p>For example, Forrest is an XML standards oriented project
+        documentation framework based on Apache Cocoon. In order to
+        assist your projects adoption of this powerful documentation
+        generation tool we have packaged it as a cent that will
+        (optionally) be automatically downloaded, installed and used
+        to build project documentation which includes output from
+        other cents such as Javadoc, JDepend, Checkstyle and many
+        others.</p>
 
         <table>
           <tr>
             <th>Compatibility:</th>
-            <td>1.4.1</td>
+            <td>1.4.1 an later</td>
           </tr>
           <tr>
             <th>URL:</th>
