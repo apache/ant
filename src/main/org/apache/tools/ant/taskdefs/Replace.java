@@ -63,29 +63,43 @@ import java.util.*;
  * string value of the indicated files.
  *
  * @author Stefano Mazzocchi <a href="mailto:stefano@apache.org">stefano@apache.org</a>
+ * @author <a href="mailto:erik@desknetinc.com">Erik Langenbach</a> 
  */
 public class Replace extends MatchingTask {
     
     private File src = null;
-    private String token = null;
-    private String value = "";
+    private NestedString token = null;
+    private NestedString value = new NestedString();
 
     private File dir = null;
     
+    public class NestedString {
+
+        private StringBuffer buf = new StringBuffer();
+
+        public void addText(String val) {
+            buf.append(val);
+        }
+
+        public String getText() {
+            return buf.toString();
+        }
+    }
+
     /**
      * Do the execution.
      */
     public void execute() throws BuildException {
         
         if (token == null) {
-            throw new BuildException("replace token must not be null");
+            throw new BuildException("replace token must not be null", location);
         }
 
         if (src == null && dir == null) {
-            throw new BuildException("Either the file or the dir attribute must be specified");
+            throw new BuildException("Either the file or the dir attribute must be specified", location);
         }
         
-        log("Replacing " + token + " --> " + value);
+        log("Replacing " + token.getText() + " --> " + value.getText());
 
         if (src != null) {
             processFile(src);
@@ -113,31 +127,47 @@ public class Replace extends MatchingTask {
         File temp = new File(src.getPath() + ".temp");
 
         if (temp.exists()) {
-            throw new BuildException("Replace: temporary file " + temp.getPath() + " already exists");
+            throw new BuildException("Replace: temporary file " + temp.getPath() + " already exists", location);
         }
 
         try {
             BufferedReader br = new BufferedReader(new FileReader(src));
             BufferedWriter bw = new BufferedWriter(new FileWriter(temp));
 
-            String line;
-            
-            while (true) {
-                line = br.readLine();
-                if (line == null) break;
-                if (line.length() != 0) bw.write(replace(line));
-                bw.newLine();
+            // read the entire file into a char[]
+            int fileLength = (int)(src.length());
+            char[] tmpBuf = new char[fileLength];
+            int numread = 0;
+            int totread = 0;
+            while (numread != -1 && totread < fileLength) {
+                numread = br.read(tmpBuf,totread,fileLength);
+                totread += numread;
             }
-             
+
+            // create a String so we can use indexOf
+            String buf = new String(tmpBuf);
+
+            // line separators in values and tokens are "\n"
+            // in order to compare with the file contents, replace them
+            // as needed
+            String linesep = System.getProperty("line.separator");
+            String val = stringReplace(value.getText(), "\n", linesep);
+            String tok = stringReplace(token.getText(), "\n", linesep);
+
+            // for each found token, replace with value and write to the
+            // output file
+            buf = stringReplace(buf, tok, val);
+            bw.write(buf,0,buf.length());
             bw.flush();
+            
+            // cleanup
             bw.close();
             br.close();
-            
             src.delete();
             temp.renameTo(src);
         } catch (IOException ioe) {
             ioe.printStackTrace();
-            throw new BuildException(ioe);
+            throw new BuildException(ioe, location);
         }       
     }
 
@@ -145,46 +175,77 @@ public class Replace extends MatchingTask {
     /**
      * Set the source file.
      */
-    public void setFile(String file) {
-        this.src = project.resolveFile(file);
+    public void setFile(File file) {
+        this.src = file;
     }
 
     /**
      * Set the source files path when using matching tasks.
      */
-    public void setDir(String dirName) {
-        dir = project.resolveFile(dirName);
+    public void setDir(File dir) {
+        this.dir = dir;
     }
 
     /**
      * Set the string token to replace.
      */
     public void setToken(String token) {
-        this.token = token;
+        createReplaceToken().addText(token);
     }
 
     /**
      * Set the string value to use as token replacement.
      */
     public void setValue(String value) {
-        this.value = value;
+        createReplaceValue().addText(value);
     }
 
     /**
-     * Perform the token substitution.
-     */    
-    private String replace (String orig) {
-        StringBuffer buffer = new StringBuffer();
-        int start = 0, end = 0;
-        
-        while ((end = orig.indexOf(token, start)) > -1) {
-            buffer.append(orig.substring(start, end));
-            buffer.append(value);
-            start = end + token.length();
+     * Nested <replacetoken> element.
+     */
+    public NestedString createReplaceToken() {
+        if (token == null) {
+            token = new NestedString();
         }
-        
-        buffer.append(orig.substring(start));
-        
-        return buffer.toString();            
+        return token;
     }
+
+    /**
+     * Nested <replacevalue> element.
+     */
+    public NestedString createReplaceValue() {
+        return value;
+    }
+
+    /**
+     * Replace occurrences of str1 in string str with str2
+     */    
+    private String stringReplace(String str, String str1, String str2) {
+        StringBuffer ret = new StringBuffer();
+        int start = 0;
+        int found = str.indexOf(str1);
+        while (found >= 0) {
+            // write everything up to the found str1
+            if (found > start) {
+                ret.append(str.substring(start, found));
+            }
+
+            // write the replacement str2
+            if (str2 != null) {
+                ret.append(str2);
+            }
+
+            // search again
+            start = found + str1.length();
+            found = str.indexOf(str1,start);
+        }
+
+        // write the remaining characters
+        if (str.length() > start) {
+            ret.append(str.substring(start, str.length()));
+        }
+
+        return ret.toString();
+    }
+
 }
