@@ -14,8 +14,9 @@
     <li>Phillip Wells</li>
     <li>Jon Skeet (<a href="mailto:jon.skeet@peramon.com">jon.skeet@peramon.com</a>)</li>
     <li>Nigel Magnay (<a href="mailto:nigel.magnay@parsec.co.uk">nigel.magnay@parsec.co.uk</a>)</li>
+    <li>Gary S. Weaver</li>
  </ul>
-<p>2001/04/29</p>
+<p>$Date$</p>
 <hr>
 <h2>Contents</h2>
 <ul>
@@ -62,6 +63,10 @@ they were primarily intended to be used by automated build systems.</p>
         <td><a href="#vsscp">vsscp</a></td>
         <td>Change the current project being used in VSS</td>
     </tr>
+    <tr>
+		<td><a href="#vsscreate">vsscreate</a></td>
+		<td>Creates a project in VSS.</td>
+	</tr>
 </table>
 
 <hr>
@@ -664,6 +669,65 @@ directory (see vsscp).</p>
 <p>Sets the current VSS project to <i>$/Projects/ant</i>.</p>
 <hr>
 
+<!-- VSSCREATE -->
+
+ <h2><a name="vsscreate">VssCreate</a></h2>
+ <h3>Description</h3>
+ Task to perform CREATE commands to Microsoft Visual Source Safe.
+ <p>Creates a new project in VSS.</p>
+<h3>Parameters</h3>
+<table border="1" cellpadding="2" cellspacing="0">
+  <tr>
+    <th>Attribute</th>
+    <th>Values</th>
+    <th>Required</th>
+  </tr>
+  <tr>
+    <td>login</td>
+    <td>username,password</td>
+    <td>No</td>
+  </tr>
+  <tr>
+    <td>vsspath</td>
+    <td>SourceSafe path of project to be created</td>
+    <td>Yes</td>
+  </tr>
+  <tr>
+    <td>ssdir</td>
+    <td>directory where <code>ss.exe</code> resides. By default the task expects it to be in the PATH.</td>
+    <td>No</td>
+  </tr>
+  <tr>
+    <td>quiet</td>
+    <td>suppress output (off by default)</td>
+    <td>No</td>
+   </tr>
+  <tr>
+    <td>failOnError</td>
+    <td>fail if there is an error creating the project (true by default)</td>
+    <td>No</td>
+  </tr>
+  <tr>
+    <td>autoresponse</td>
+    <td>What to respond with (sets the -I option). By default, -I- is used; values of Y or N will be appended to this.</td>
+    <td>No</td>
+  </tr>
+  <tr>
+    <td>comment</td>
+    <td>The comment to use for this label. Empty or '-' for no comment.</td>
+    <td>No</td>
+  </tr>
+</table>
+<h3>Examples</h3>
+<blockquote>
+<pre>
+&lt;vsscreate vsspath=&quot;/existingProject/newProject&quot;/&gt;
+</pre>
+</blockquote>
+<p>Creates the VSS-Project <i>$/existingProject/newProject</i>.</p>
+<hr>
+
+<!-- Footer -->
 <p align="center">Copyright &copy; 2001-2002 Apache Software Foundation. All rights
 Reserved.</p>
 </body>
