@@ -609,7 +609,8 @@
       <exclude name="${optional.type.package}/**" />
       <exclude name="${util.package}/depend/**" />
       <exclude name="${util.package}/optional/**" />
-      <exclude name="${util.package}/regexp/**" />
+      <exclude name="${util.package}/regexp/Jakarta*" />
+      <exclude name="${util.package}/regexp/Jdk*" />
       <exclude name="${ant.package}/listener/Log4jListener.class" />
       <exclude name="${ant.package}/listener/CommonsLoggingListener.class" />
       <exclude name="${ant.package}/taskdefs/email/UUMailer.class" />
@@ -648,7 +649,8 @@
       <include name="${optional.type.package}/**" />
       <include name="${util.package}/depend/**" />
       <include name="${util.package}/optional/**" />
-      <include name="${util.package}/regexp/**" />
+      <include name="${util.package}/regexp/Jakarta*" />
+      <include name="${util.package}/regexp/Jdk*" />
       <include name="${ant.package}/listener/Log4jListener.class" />
       <include name="${ant.package}/listener/CommonsLoggingListener.class" />
       <include name="${ant.package}/taskdefs/email/UUMailer.class" />
