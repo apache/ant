@@ -93,13 +93,11 @@ public class TaskdefTest extends TaskdefsTest {
         executeTarget("test5a");
     }
 
-    /* disabled until I know why they fail when run via the junit task --SB
     public void test6() {
-        expectOutput("test6", "simpletask: worked");
+        expectLog("test6", "simpletask: worked");
     }
 
     public void test7() {
-        expectOutput("test7", "worked");
+        expectLog("test7", "worked");
     }
-    */
 }

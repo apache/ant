@@ -52,7 +52,9 @@
  * <http://www.apache.org/>.
  */
 
-package org.apache.tools.ant.taskdefs;
+package org.example.tasks;
+
+import org.apache.tools.ant.taskdefs.Sequential;
 
 public class TaskdefTestContainerTask extends Sequential {
     public TaskdefTestContainerTask() {}

@@ -2,6 +2,11 @@
 
 <project name="xxx-test" basedir="." default="test1">
 
+  <path id="testclasses">
+    <pathelement location="../../../../build/testcases" />
+    <pathelement path="${java.class.path}" />
+  </path>
+
   <target name="test1">
     <taskdef/>
   </target>
@@ -27,9 +32,10 @@
   </target>
 
   <target name="test6">
-    <echo message="${build.test}" />
     <taskdef name="test6"
-             classname="org.apache.tools.ant.taskdefs.TaskdefTestSimpleTask" />
+             classname="org.example.tasks.TaskdefTestSimpleTask">
+      <classpath refid="testclasses" />
+    </taskdef>
     <test6>
       <echo message="worked" />
     </test6>
@@ -37,7 +43,9 @@
 
   <target name="test7">
     <taskdef name="test7"
-             classname="org.apache.tools.ant.taskdefs.TaskdefTestContainerTask" />
+             classname="org.example.tasks.TaskdefTestContainerTask">
+      <classpath refid="testclasses" />
+    </taskdef>
     <test7>
       <echo message="worked" />
     </test7>

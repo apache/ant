@@ -52,7 +52,7 @@
  * <http://www.apache.org/>.
  */
 
-package org.apache.tools.ant.taskdefs;
+package org.example.tasks;
 
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.Task;
