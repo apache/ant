@@ -78,7 +78,10 @@
     <filter token="VERSION" value="${version}" />
     <filter token="DATE" value="${TODAY}" />
     <filter token="TIME" value="${TSTAMP}" />
-    <copydir src="${src.dir}" dest="${build.classes}" filtering="on">
+    <copydir src="${src.dir}" 
+             dest="${build.classes}" 
+             filtering="on"
+             forceoverwrite="true">
       <include name="**/version.txt" />
     </copydir>
   </target>

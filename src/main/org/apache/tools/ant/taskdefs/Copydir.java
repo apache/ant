@@ -70,6 +70,7 @@ public class Copydir extends MatchingTask {
     private File srcDir;
     private File destDir;
     private boolean filtering = false;
+    private boolean forceOverwrite = false;
     private Hashtable filecopyList = new Hashtable();
 
     public void setSrc(String src) {
@@ -82,6 +83,10 @@ public class Copydir extends MatchingTask {
 
     public void setFiltering(String filter) {
         filtering = Project.toBoolean(filter);
+    }
+
+    public void setForceoverwrite(String force) {
+        forceOverwrite = Project.toBoolean(force);
     }
 
     public void execute() throws BuildException {
@@ -122,7 +127,8 @@ public class Copydir extends MatchingTask {
             String filename = files[i];
             File srcFile = new File(from, filename);
             File destFile = new File(to, filename);
-            if (srcFile.lastModified() > destFile.lastModified()) {
+            if (forceOverwrite ||
+                (srcFile.lastModified() > destFile.lastModified())) {
                 filecopyList.put(srcFile.getAbsolutePath(),
                     destFile.getAbsolutePath());
             }
