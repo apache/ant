@@ -77,7 +77,6 @@ public abstract class SSHBase extends Task implements LogListener {
     private String host;
     private String keyfile;
     private String knownHosts;
-    private boolean trust = false;
     private int port = SSH_PORT;
     private boolean failOnError = true;
     private SSHUserInfo userInfo;
@@ -185,7 +184,6 @@ public abstract class SSHBase extends Task implements LogListener {
     public void init() throws BuildException {
         super.init();
         this.knownHosts = System.getProperty("user.home") + "/.ssh/known_hosts";
-        this.trust = false;
         this.port = SSH_PORT;
     }
 
@@ -195,7 +193,7 @@ public abstract class SSHBase extends Task implements LogListener {
             jsch.addIdentity(userInfo.getKeyfile());
         }
 
-        if (knownHosts != null) {
+        if (!userInfo.getTrust() && knownHosts != null) {
             log("Using known hosts: " + knownHosts, Project.MSG_DEBUG);
             jsch.setKnownHosts(knownHosts);
         }

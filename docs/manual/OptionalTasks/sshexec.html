@@ -47,7 +47,11 @@ jsch-0.1.8 and won't work with versions of jsch earlier than
   </tr>
   <tr>
     <td valign="top">trust</td>
-    <td valign="top">This trusts all unknown hosts if set to yes/true.</td>
+
+    <td valign="top">This trusts all unknown hosts if set to yes/true.<br>
+      <strong>Note</strong> If you set this to false (the default), the
+      host you connect to must be listed in your knownhosts file, this
+      also implies that the file exists.</td>
     <td valian="top" align="center">No, defaults to No.</td>
   </tr>
   <tr>
