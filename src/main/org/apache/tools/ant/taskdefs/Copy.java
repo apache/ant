@@ -426,66 +426,66 @@ public class Copy extends Task {
         }
     }
 
-    //************************************************************************
-        //  protected and private methods
-        //************************************************************************
+    /************************************************************************
+     **  protected and private methods
+     ************************************************************************/
 
-        /**
-         * Ensure we have a consistent and legal set of attributes, and set
-         * any internal flags necessary based on different combinations
-         * of attributes.
-         */
-        protected void validateAttributes() throws BuildException {
-            if (file == null && filesets.size() == 0) {
-                throw new BuildException("Specify at least one source "
-                                         + "- a file or a fileset.");
-            }
+    /**
+     * Ensure we have a consistent and legal set of attributes, and set
+     * any internal flags necessary based on different combinations
+     * of attributes.
+     */
+    protected void validateAttributes() throws BuildException {
+        if (file == null && filesets.size() == 0) {
+            throw new BuildException("Specify at least one source "
+                                     + "- a file or a fileset.");
+        }
+        
+        if (destFile != null && destDir != null) {
+            throw new BuildException("Only one of tofile and todir "
+                                     + "may be set.");
+        }
+        
+        if (destFile == null && destDir == null) {
+            throw new BuildException("One of tofile or todir must be set.");
+        }
+        
+        if (file != null && file.exists() && file.isDirectory()) {
+            throw new BuildException("Use a fileset to copy directories.");
+        }
+        
+        if (destFile != null && filesets.size() > 0) {
+            if (filesets.size() > 1) {
+                throw new BuildException(
+                                         "Cannot concatenate multiple files into a single file.");
+            } else {
+                FileSet fs = (FileSet) filesets.elementAt(0);
+                DirectoryScanner ds = fs.getDirectoryScanner(getProject());
+                String[] srcFiles = ds.getIncludedFiles();
 
-            if (destFile != null && destDir != null) {
-                throw new BuildException("Only one of tofile and todir "
-                                         + "may be set.");
-            }
-
-            if (destFile == null && destDir == null) {
-                throw new BuildException("One of tofile or todir must be set.");
-            }
-
-            if (file != null && file.exists() && file.isDirectory()) {
-                throw new BuildException("Use a fileset to copy directories.");
-            }
-
-            if (destFile != null && filesets.size() > 0) {
-                if (filesets.size() > 1) {
+                if (srcFiles.length == 0) {
                     throw new BuildException(
-                                             "Cannot concatenate multiple files into a single file.");
-                } else {
-                    FileSet fs = (FileSet) filesets.elementAt(0);
-                    DirectoryScanner ds = fs.getDirectoryScanner(getProject());
-                    String[] srcFiles = ds.getIncludedFiles();
-
-                    if (srcFiles.length == 0) {
-                        throw new BuildException(
-                                                 "Cannot perform operation from directory to file.");
-                    } else if (srcFiles.length == 1) {
-                        if (file == null) {
-                            file = new File(ds.getBasedir(), srcFiles[0]);
-                            filesets.removeElementAt(0);
-                        } else {
-                            throw new BuildException("Cannot concatenate multiple "
-                                                     + "files into a single file.");
-                        }
+                                             "Cannot perform operation from directory to file.");
+                } else if (srcFiles.length == 1) {
+                    if (file == null) {
+                        file = new File(ds.getBasedir(), srcFiles[0]);
+                        filesets.removeElementAt(0);
                     } else {
                         throw new BuildException("Cannot concatenate multiple "
                                                  + "files into a single file.");
                     }
+                } else {
+                    throw new BuildException("Cannot concatenate multiple "
+                                             + "files into a single file.");
                 }
             }
-
-            if (destFile != null) {
-                destDir = fileUtils.getParentFile(destFile);
-            }
-
         }
+
+        if (destFile != null) {
+            destDir = fileUtils.getParentFile(destFile);
+        }
+
+    }
 
     /**
      * Compares source files to destination files to see if they should be
