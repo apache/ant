@@ -62,6 +62,7 @@ import java.io.File;
  * Test the load file task
  *
  * @author Steve Loughran
+ * @author <a href="mailto:umagesh@apache.org">Magesh Umasankar</a>
  * @created 10 December 2001
  */
 public class LoadFileTest extends BuildFileTest {
@@ -163,7 +164,7 @@ public class LoadFileTest extends BuildFileTest {
     }
 
     /**
-     * A unit test for JUnit
+     * Test FilterChain and FilterReaders
      */
     public void testFilterChain()
             throws BuildException {
@@ -174,15 +175,14 @@ public class LoadFileTest extends BuildFileTest {
     }
 
     /**
-     * A unit test for JUnit
+     * Test StripJavaComments filterreader functionality.
      */
-    public void testStripJavaComments()
+    public final void testStripJavaComments()
             throws BuildException {
         executeTarget("testStripJavaComments");
-        String expected = project.getProperty("expected");
-        if(!project.getProperty("testStripJavaComments").equals(expected)) {
-            fail("StripJavaComments broken");
-        }
+        final String expected = project.getProperty("expected");
+        final String generated = project.getProperty("testStripJavaComments");
+        assertEquals(expected, generated);
     }
 
     /**
