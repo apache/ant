@@ -67,7 +67,7 @@ public class Main
     protected final static String  DEFAULT_LOGLEVEL          = "WARN";
 
     //Some defaults for file locations/names
-    protected final static String  DEFAULT_FILENAME          = "build.xmk";
+    protected final static String  DEFAULT_FILENAME          = "build.ant";
 
     protected final static String  DEFAULT_LISTENER          = 
         "org.apache.ant.project.DefaultProjectListener";
