@@ -64,7 +64,11 @@ import junit.framework.Test;
 import junit.framework.TestSuite;
 import junit.framework.AssertionFailedError;
 import java.lang.reflect.Method;
+import java.io.BufferedReader;
 import java.io.PrintStream;
+import java.io.PrintWriter;
+import java.io.StringReader;
+import java.io.StringWriter;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.FileInputStream;
@@ -122,6 +126,24 @@ public class JUnitTestRunner implements TestListener {
     private TestResult res;
 
     /**
+     * Do we filter junit.*.* stack frames out of failure and error exceptions.
+     */
+    private static boolean filtertrace = true;
+    
+    private final static String[] DEFAULT_TRACE_FILTERS = new String[] {
+                "junit.framework.TestCase",
+                "junit.framework.TestResult",
+                "junit.framework.TestSuite",
+                "junit.framework.Assert.", // don't filter AssertionFailure
+                "junit.swingui.TestRunner",
+                "junit.awtui.TestRunner",
+                "junit.textui.TestRunner",
+                "java.lang.reflect.Method.invoke(",
+                "org.apache.tools.ant."
+        };
+
+    
+    /**
      * Do we stop on errors.
      */
     private boolean haltOnError = false;
@@ -161,16 +183,18 @@ public class JUnitTestRunner implements TestListener {
      * Constructor for fork=true or when the user hasn't specified a
      * classpath.  
      */
-    public JUnitTestRunner(JUnitTest test, boolean haltOnError,
+    public JUnitTestRunner(JUnitTest test, boolean haltOnError, boolean filtertrace,
                            boolean haltOnFailure) {
-        this(test, haltOnError, haltOnFailure, null);
+        this(test, haltOnError, filtertrace, haltOnFailure, null);
     }
 
     /**
      * Constructor to use when the user has specified a classpath.
      */
-    public JUnitTestRunner(JUnitTest test, boolean haltOnError,
+    public JUnitTestRunner(JUnitTest test, boolean haltOnError, boolean filtertrace,
                            boolean haltOnFailure, ClassLoader loader) {
+        //JUnitTestRunner.filtertrace = filtertrace;
+        this.filtertrace = filtertrace;
         this.junitTest = test;
         this.haltOnError = haltOnError;
         this.haltOnFailure = haltOnFailure;
@@ -378,6 +402,7 @@ public class JUnitTestRunner implements TestListener {
         boolean exitAtEnd = true;
         boolean haltError = false;
         boolean haltFail = false;
+        boolean stackfilter = true;
         Properties props = new Properties();
 
         if (args.length == 0) {
@@ -390,6 +415,8 @@ public class JUnitTestRunner implements TestListener {
                 haltError = Project.toBoolean(args[i].substring(12));
             } else if (args[i].startsWith("haltOnFailure=")) {
                 haltFail = Project.toBoolean(args[i].substring(14));
+            } else if (args[i].startsWith("filtertrace=")) {
+                stackfilter = Project.toBoolean(args[i].substring(12));
             } else if (args[i].startsWith("formatter=")) {
                 try {
                     createAndStoreFormatter(args[i].substring(10));
@@ -405,7 +432,7 @@ public class JUnitTestRunner implements TestListener {
         }
         
         JUnitTest t = new JUnitTest(args[0]);
-
+        
         // Add/overlay system properties on the properties from the Ant project
         Hashtable p = System.getProperties();
         for (Enumeration enum = p.keys(); enum.hasMoreElements(); ) {
@@ -414,7 +441,7 @@ public class JUnitTestRunner implements TestListener {
         }
         t.setProperties(props);
 
-        JUnitTestRunner runner = new JUnitTestRunner(t, haltError, haltFail);
+        JUnitTestRunner runner = new JUnitTestRunner(t, haltError, stackfilter, haltFail);
         transferFormatters(runner);
         runner.run();
         System.exit(runner.getRetCode());
@@ -443,5 +470,53 @@ public class JUnitTestRunner implements TestListener {
         }
         fromCmdLine.addElement(fe.createFormatter());
     }
+    
+    /**
+     * Returns a filtered stack trace.
+     * This is ripped out of junit.runner.BaseTestRunner.
+     * Scott M. Stirling.
+     */
+    public static String getFilteredTrace(Throwable t) {
+        StringWriter stringWriter = new StringWriter();
+        PrintWriter writer = new PrintWriter(stringWriter);
+        t.printStackTrace(writer);
+        StringBuffer buffer = stringWriter.getBuffer();
+        String trace = buffer.toString();
+        return JUnitTestRunner.filterStack(trace);
+    }
 
+    /**
+     * Filters stack frames from internal JUnit and Ant classes
+     */
+    public static String filterStack(String stack) {
+        if (!filtertrace) {
+            return stack;
+        }
+        StringWriter sw = new StringWriter();
+        PrintWriter pw = new PrintWriter(sw);
+        StringReader sr = new StringReader(stack);
+        BufferedReader br = new BufferedReader(sr);
+
+        String line;
+        try {
+            while ((line = br.readLine()) != null) {
+                if (!filterLine(line)) {
+                    pw.println(line);
+                }
+            }
+        } catch (Exception IOException) {
+            return stack; // return the stack unfiltered
+        }
+        return sw.toString();
+    }
+
+    private static boolean filterLine(String line) {
+        for (int i = 0; i < DEFAULT_TRACE_FILTERS.length; i++) {
+            if (line.indexOf(DEFAULT_TRACE_FILTERS[i]) > 0) {
+                return true;
+            }
+        }
+        return false;
+    }
+    
 } // JUnitTestRunner

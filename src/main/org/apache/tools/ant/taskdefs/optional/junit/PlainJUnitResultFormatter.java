@@ -248,7 +248,8 @@ public class PlainJUnitResultFormatter implements JUnitResultFormatter {
 
             wri.println(type);
             wri.println(t.getMessage());
-            t.printStackTrace(wri);
+            String strace = JUnitTestRunner.getFilteredTrace(t);
+            wri.print(strace);
             wri.println("");
         }
     }

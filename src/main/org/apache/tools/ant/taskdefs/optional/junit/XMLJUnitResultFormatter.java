@@ -261,9 +261,8 @@ public class XMLJUnitResultFormatter implements JUnitResultFormatter, XMLConstan
         }
         nested.setAttribute(ATTR_TYPE, t.getClass().getName());
 
-        StringWriter swr = new StringWriter();
-        t.printStackTrace(new PrintWriter(swr, true));
-        Text trace = doc.createTextNode(swr.toString());
+        String strace = JUnitTestRunner.getFilteredTrace(t);
+        Text trace = doc.createTextNode(strace);
         nested.appendChild(trace);
     }
 

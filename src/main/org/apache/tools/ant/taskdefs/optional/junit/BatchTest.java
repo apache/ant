@@ -199,6 +199,7 @@ public final class BatchTest extends BaseTest {
         test.setName(classname);
         test.setHaltonerror(this.haltOnError);
         test.setHaltonfailure(this.haltOnFail);
+        test.setFiltertrace(this.filtertrace);
         test.setFork(this.fork);
         test.setIf(this.ifProperty);
         test.setUnless(this.unlessProperty);

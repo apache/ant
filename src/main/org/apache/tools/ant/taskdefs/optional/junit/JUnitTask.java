@@ -155,7 +155,23 @@ public class JUnitTask extends Task {
     private Integer timeout = null;
     private boolean summary = false;
     private String summaryValue = "";
+    private boolean filtertrace = true;
     private JUnitTestRunner runner = null;
+     
+    /**
+     * Tells this task whether to smartly filter the stack frames of JUnit testcase 
+     * errors and failures before reporting them.  This property is applied on all 
+     * BatchTest (batchtest) and JUnitTest (test) however it can possibly be 
+     * overridden by their own properties.
+     * @param   value   <tt>false</tt> if it should not filter, otherwise <tt>true<tt>
+     */
+    public void setFiltertrace(boolean value) {
+        Enumeration enum = allTests();
+        while (enum.hasMoreElements()) {
+            BaseTest test = (BaseTest) enum.nextElement();
+            test.setFiltertrace(value);
+        }
+    }
     
     /**
      * Tells this task to halt when there is an error in a test.
@@ -361,7 +377,7 @@ public class JUnitTask extends Task {
     /**
      * Adds the jars or directories containing Ant, this task and
      * JUnit to the classpath - this should make the forked JVM work
-     * without having to specify the directly.
+     * without having to specify them directly.
      */
     public void init() {
         addClasspathEntry("/junit/framework/TestCase.class");
@@ -447,6 +463,7 @@ public class JUnitTask extends Task {
 
         cmd.setClassname("org.apache.tools.ant.taskdefs.optional.junit.JUnitTestRunner");
         cmd.createArgument().setValue(test.getName());
+        cmd.createArgument().setValue("filtertrace=" + test.getFiltertrace());
         cmd.createArgument().setValue("haltOnError=" + test.getHaltonerror());
         cmd.createArgument().setValue("haltOnFailure=" + test.getHaltonfailure());
         if (summary) {
@@ -555,8 +572,7 @@ public class JUnitTask extends Task {
                 // will cause trouble in JDK 1.1 if omitted
                 cl.addSystemPackageRoot("org.apache.tools.ant");
             }
-            runner = new JUnitTestRunner(test, test.getHaltonerror(), test.getHaltonfailure(), cl);
-
+            runner = new JUnitTestRunner(test, test.getHaltonerror(), test.getFiltertrace(), test.getHaltonfailure(), cl);
             if (summary) {
                 log("Running " + test.getName(), Project.MSG_INFO);
 

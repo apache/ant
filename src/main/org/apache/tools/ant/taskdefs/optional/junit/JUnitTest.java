@@ -100,10 +100,11 @@ public class JUnitTest extends BaseTest {
         this.name  = name;
     }
 
-    public JUnitTest(String name, boolean haltOnError, boolean haltOnFailure) {
+    public JUnitTest(String name, boolean haltOnError, boolean haltOnFailure, boolean filtertrace) {
         this.name  = name;
         this.haltOnError = haltOnError;
-        this.haltOnFail = haltOnFail;
+        this.haltOnFail = haltOnFailure;
+        this.filtertrace = filtertrace;
     }
 
     /** 
