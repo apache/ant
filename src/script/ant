@@ -139,6 +139,7 @@ fi
 if $cygwin; then
   ANT_HOME=`cygpath --path --windows "$ANT_HOME"`
   JAVA_HOME=`cygpath --path --windows "$JAVA_HOME"`
+  CLASSPATH=`cygpath --path --windows "$CLASSPATH"`
   LOCALCLASSPATH=`cygpath --path --windows "$LOCALCLASSPATH"`
 fi
 
