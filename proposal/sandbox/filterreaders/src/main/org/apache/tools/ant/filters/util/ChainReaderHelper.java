@@ -114,17 +114,14 @@ public final class ChainReaderHelper {
     }
 
     /**
-     * Process the reader chain
+     * Assemble the reader
      */
-    public final String processStream()
-        throws BuildException, IOException {
-
+    public final Reader getAssembledReader() throws BuildException {
         if (primaryReader == null) {
             throw new BuildException("primaryReader must not be null.");
         }
 
         Reader instream = primaryReader;
-        final char[] buffer = new char[bufferSize];
         final int filterReadersCount = filterChains.size();
         final Vector finalFilters = new Vector();
 
@@ -201,11 +198,21 @@ public final class ChainReaderHelper {
                 }
             }
         }
+        return instream;
+    }
 
+    /**
+     * Read data from the reader and return the
+     * contents as a string.
+     */
+    public final String readFully(Reader rdr)
+        throws IOException {
+
+        final char[] buffer = new char[bufferSize];
         int bufferLength = 0;
         String text = null;
         while (bufferLength != -1) {
-            bufferLength = instream.read(buffer);
+            bufferLength = rdr.read(buffer);
             if (bufferLength != -1) {
                 if (text == null) {
                     text = new String(buffer, 0, bufferLength);

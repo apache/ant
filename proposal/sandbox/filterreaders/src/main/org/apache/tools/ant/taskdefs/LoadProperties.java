@@ -128,8 +128,9 @@ public final class LoadProperties extends Task {
             crh.setBufferSize(size);
             crh.setPrimaryReader(instream);
             crh.setFilterChains(filterChains);
+            instream = crh.getAssembledReader();
 
-            String text = crh.processStream();
+            String text = crh.readFully(instream);
 
             if (text != null) {
                 if (!text.endsWith("\n")) {
