@@ -89,7 +89,7 @@ Other changes:
 * Added a new "failall" value for the onerror attribute of <typedef>.
   Bugzilla report 31685.
 
-* New task <getlibraries> can retrieve library files from a maven repository.
+* New task <libraries> can retrieve library files from a maven repository.
 
 * unzip/unwar/unjar/untar now supports a nested mapper, which lets you unzip
   in useful ways.
@@ -107,9 +107,6 @@ Other changes:
   Bugzilla report 30987.
 
 * Added isfileselected condition.
-
-* Overloaded FileUtils.createNewFile with a boolean mkdirs attribute
-  to create nonexistent parent directories.
 
 * Added support to the touch task for a mkdirs attribute to create
   nonexistent parent directories before touching new files.
@@ -191,6 +188,9 @@ Other changes:
 * Made the dest attribute of the apply task optional; mapped target
   filenames will be interpreted as absolute pathnames when dest is omitted.
 
+* Overloaded FileUtils.createNewFile with a boolean mkdirs attribute
+  to create nonexistent parent directories.
+
 Fixed bugs:
 -----------
 
@@ -268,6 +268,9 @@ Fixed bugs:
   Bugzilla report 32948
 
 * propertyset references did not handle nested propertyset references.
+
+* oata.types.Description.getDescription(Project) would throw a
+  NullPointerException when the "ant.targets" reference was unset.
 
 Changes from Ant 1.6.1 to Ant 1.6.2
 ===================================
