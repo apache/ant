@@ -1,14 +1,11 @@
 Status:
 =======
 
-The items in the first four categories have been voted upon with votes
-coming from Peter Donald, Simeon Fitch, Conor MacNeill, Nico Seessle,
-Stefan Bodewig and Glenn McAllister. The items that didn't get the
-required number of positive votes - or received negative votes - will
-need to be discussed in detail.
+The committers have cast votes on all items (except those that came in
+too late) and the results are listed below - the next step will be a
+design phase.
 
-The items in category five are under discussion right now on the
-ant-dev mailing list.
+This list of items will be summarized into an Ant2 specification soon.
 
 I. Things that don't affect the core but are requests for new tasks or
 enhancements of existing tasks.
