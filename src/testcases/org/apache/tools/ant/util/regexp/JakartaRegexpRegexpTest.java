@@ -75,15 +75,15 @@ public class JakartaRegexpRegexpTest extends RegexpTest {
         super(name);
     }
 
-    public void testWindowsLineSeparator() throws IOException {
+    public void testWindowsLineSeparator2() throws IOException {
         if ( Os.isFamily("windows") ) {
             try {
-                super.testWindowsLineSeparator();
+                super.testWindowsLineSeparator2();
                 fail("Windows issue. Should trigger when this bug is fixed. {@since 1.2}");
             } catch (AssertionFailedError e){
             }
         } else {
-            super.testWindowsLineSeparator();
+            super.testWindowsLineSeparator2();
         }
     }
 

@@ -167,6 +167,9 @@ public abstract class RegexpMatcherTest extends TestCase {
     public void testWindowsLineSeparator() throws IOException {
         reg.setPattern("end of text$");
         assertTrue("Windows line separator", !reg.matches("end of text\r\n"));
+    }
+
+    public void testWindowsLineSeparator2() throws IOException {
         reg.setPattern("end of text\r$");
         assertTrue("Windows line separator", reg.matches("end of text\r\n"));
     }
