@@ -105,7 +105,9 @@ public class ANTLRTest extends BuildFileTest {
     }
 
     public void test5() {
-        executeTarget("test5");
+        // should print "panic: Cannot find importVocab file 'JavaTokenTypes.txt'"
+        // since it needs to run java.g first before java.tree.g
+        expectBuildException("test5", "ANTLR returned: 1");
     }
 
     public void test6() {
