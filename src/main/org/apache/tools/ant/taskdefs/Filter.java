@@ -54,10 +54,7 @@
 
 package org.apache.tools.ant.taskdefs;
 
-
-
 import java.io.File;
-
 
 import org.apache.tools.ant.Task;
 import org.apache.tools.ant.BuildException;
@@ -71,6 +68,8 @@ import org.apache.tools.ant.Project;
  * @author Stefano Mazzocchi <a href="mailto:stefano@apache.org">stefano@apache.org</a>
  * @author Gero Vermaas <a href="mailto:gero@xs4all.nl">gero@xs4all.nl</a>
  * @author <A href="gholam@xtra.co.nz">Michael McCallum</A>
+ *
+ * @since Ant 1.1
  *
  * @ant.task category="filesystem"
  */
@@ -93,11 +92,15 @@ public class Filter extends Task {
     }
 
     public void execute() throws BuildException {
-        boolean isFiltersFromFile = filtersFile != null && token == null && value == null;
-        boolean isSingleFilter = filtersFile == null && token != null && value != null;
+        boolean isFiltersFromFile = 
+            filtersFile != null && token == null && value == null;
+        boolean isSingleFilter = 
+            filtersFile == null && token != null && value != null;
         
         if (!isFiltersFromFile && !isSingleFilter) {
-            throw new BuildException("both token and value parameters, or only a filtersFile parameter is required", location);
+            throw new BuildException("both token and value parameters, or "
+                                     + "only a filtersFile parameter is "
+                                     + "required", location);
         }
         
         if (isSingleFilter) {

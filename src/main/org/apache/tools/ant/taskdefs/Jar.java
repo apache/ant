@@ -59,7 +59,6 @@ import org.apache.tools.ant.FileScanner;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.types.ZipFileSet;
 import org.apache.tools.ant.types.EnumeratedAttribute;
-import org.apache.tools.ant.util.StringUtils;
 import org.apache.tools.zip.ZipOutputStream;
 
 import java.io.IOException;

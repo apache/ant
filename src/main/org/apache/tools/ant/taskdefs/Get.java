@@ -62,9 +62,10 @@ import java.net.URL;
 import java.net.URLConnection;
 import java.net.HttpURLConnection;
 import java.util.Date;
-import org.apache.tools.ant.Task;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
+import org.apache.tools.ant.Task;
+import org.apache.tools.ant.util.FileUtils;
 
 /**
  * Get a particular file from a URL source.
@@ -74,6 +75,8 @@ import org.apache.tools.ant.Project;
  *
  * @author costin@dnt.ro
  * @author gg@grtmail.com (Added Java 1.1 style HTTP basic auth)
+ *
+ * @since Ant 1.1
  *
  * @ant.task category="network"
  */
@@ -143,7 +146,8 @@ public class Get extends Task {
                 // check to see if sun's Base64 encoder is available.
                 try {
                     sun.misc.BASE64Encoder encoder =
-                        (sun.misc.BASE64Encoder) Class.forName("sun.misc.BASE64Encoder").newInstance();
+                        (sun.misc.BASE64Encoder) 
+                        Class.forName("sun.misc.BASE64Encoder").newInstance();
                     encoding = encoder.encode (up.getBytes());
 
                 }
@@ -151,7 +155,8 @@ public class Get extends Task {
                     Base64Converter encoder = new Base64Converter();
                     encoding = encoder.encode(up.getBytes());
                 }
-                connection.setRequestProperty ("Authorization", "Basic " + encoding);
+                connection.setRequestProperty ("Authorization", 
+                                               "Basic " + encoding);
             }
 
             //connect to the remote site (may take some time)
@@ -159,24 +164,29 @@ public class Get extends Task {
             //next test for a 304 result (HTTP only)
             if(connection instanceof HttpURLConnection)  {
                 HttpURLConnection httpConnection=(HttpURLConnection)connection;
-                if(httpConnection.getResponseCode()==HttpURLConnection.HTTP_NOT_MODIFIED)  {
-                    //not modified so no file download. just return instead
-                    //and trace out something so the user doesn't think that the
-                    //download happened when it didnt
+                if(httpConnection.getResponseCode() 
+                   == HttpURLConnection.HTTP_NOT_MODIFIED)  {
+                    //not modified so no file download. just return
+                    //instead and trace out something so the user
+                    //doesn't think that the download happened when it
+                    //didnt
                     log("Not modified - so not downloaded");
                     return;
                 }
                 // test for 401 result (HTTP only)
-                if(httpConnection.getResponseCode()==HttpURLConnection.HTTP_UNAUTHORIZED)  {
+                if(httpConnection.getResponseCode()
+                   == HttpURLConnection.HTTP_UNAUTHORIZED)  {
                     log("Not authorized - check " + dest + " for details");
                     return;
                 }
 
             }
 
-            //REVISIT: at this point even non HTTP connections may support the if-modified-since
-            //behaviour -we just check the date of the content and skip the write if it is not
-            //newer. Some protocols (FTP) dont include dates, of course.
+            //REVISIT: at this point even non HTTP connections may
+            //support the if-modified-since behaviour -we just check
+            //the date of the content and skip the write if it is not
+            //newer. Some protocols (FTP) dont include dates, of
+            //course.
 
             FileOutputStream fos = new FileOutputStream(dest);
 
@@ -204,26 +214,30 @@ public class Get extends Task {
             while ((length = is.read(buffer)) >= 0) {
                 fos.write(buffer, 0, length);
                 if (verbose) {
-                  System.out.print(".");
+                    System.out.print(".");
                 }
             }
             if(verbose) {
-              System.out.println();
+                System.out.println();
             }
             fos.close();
             is.close();
 
-            //if (and only if) the use file time option is set, then the
-            //saved file now has its timestamp set to that of the downloaded file
+            //if (and only if) the use file time option is set, then
+            //the saved file now has its timestamp set to that of the
+            //downloaded file
             if(useTimestamp)  {
                 long remoteTimestamp=connection.getLastModified();
                 if (verbose)  {
                     Date t=new Date(remoteTimestamp);
                     log("last modified = "+t.toString()
-                        +((remoteTimestamp==0)?" - using current time instead":""));
+                        +((remoteTimestamp==0) 
+                          ? " - using current time instead"
+                          : ""));
                 }
                 if(remoteTimestamp!=0) {
-                    touchFile(dest,remoteTimestamp);
+                    FileUtils.newFileUtils()
+                        .setFileLastModified(dest, remoteTimestamp);
                 }
             }
         } catch (IOException ioe) {
@@ -232,34 +246,6 @@ public class Get extends Task {
                 return;
             }
             throw new BuildException(ioe, location);
-        }
-    }
-
-    /**
-     * set the timestamp of a named file to a specified time.
-     *
-     * @param filename
-     * @param time in milliseconds since the start of the era
-     * @return true if it succeeded. False means that this is a
-     * java1.1 system and that file times can not be set
-     *@exception BuildException Thrown in unrecoverable error. Likely
-     *this comes from file access failures.
-     */
-    protected boolean touchFile(File file, long timemillis)
-        throws BuildException  {
-
-        if (Project.getJavaVersion() != Project.JAVA_1_1) {
-            Touch touch = (Touch) project.createTask("touch");
-            touch.setOwningTarget(target);
-            touch.setTaskName(getTaskName());
-            touch.setLocation(getLocation());
-            touch.setFile(file);
-            touch.setMillis(timemillis);
-            touch.touch();
-            return true;
-
-        } else {
-            return false;
         }
     }
 
@@ -302,16 +288,18 @@ public class Get extends Task {
     /**
      * Use timestamps, if set to "<CODE>true</CODE>".
      *
-     * <p>In this situation, the if-modified-since header is set so that the file is
-     * only fetched if it is newer than the local file (or there is no local file)
-     * This flag is only valid on HTTP connections, it is ignored in other cases.
-     * When the flag is set, the local copy of the downloaded file will also
-     * have its timestamp set to the remote file time.
-     * <br>
-     * Note that remote files of date 1/1/1970 (GMT) are treated as 'no timestamp', and
-     * web servers often serve files with a timestamp in the future by replacing their timestamp
-     * with that of the current time. Also, inter-computer clock differences can cause no end of
-     * grief.
+     * <p>In this situation, the if-modified-since header is set so
+     * that the file is only fetched if it is newer than the local
+     * file (or there is no local file) This flag is only valid on
+     * HTTP connections, it is ignored in other cases.  When the flag
+     * is set, the local copy of the downloaded file will also have
+     * its timestamp set to the remote file time.</p>
+     * 
+     * <p>Note that remote files of date 1/1/1970 (GMT) are treated as
+     * 'no timestamp', and web servers often serve files with a
+     * timestamp in the future by replacing their timestamp with that
+     * of the current time. Also, inter-computer clock differences can
+     * cause no end of grief.</p>
      * @param v "true" to enable file time fetching
      */
     public void setUseTimestamp(boolean v) {
@@ -327,7 +315,7 @@ public class Get extends Task {
      * @param u username for authentication
      */
     public void setUsername(String u) {
-      this.uname = u;
+        this.uname = u;
     }
 
     /**
@@ -336,7 +324,7 @@ public class Get extends Task {
      * @param p password for authentication
      */
     public void setPassword(String p) {
-      this.pword = p;
+        this.pword = p;
     }
 
     /*********************************************************************
@@ -346,7 +334,7 @@ public class Get extends Task {
     *
     * @author
     *    Unknown
-    *  @author
+    * @author
     *    <a HREF="gg@grtmail.com">Gautam Guliani</a>
     *********************************************************************/
 

@@ -65,6 +65,8 @@ import org.apache.tools.ant.types.Commandline;
  * 
  * @author <a href="mailto:donaldp@apache.org">Peter Donald</a>
  *
+ * @since Ant 1.2
+ *
  * @ant.task name="genkey" category="java"
  */
 public class GenerateKey extends Task {
@@ -172,10 +174,12 @@ public class GenerateKey extends Task {
 
     public DistinguishedName createDname() throws BuildException {
         if( null != expandedDname ) {
-            throw new BuildException( "DName sub-element can only be specified once." );
+            throw new BuildException( "DName sub-element can only be "
+                                      + "specified once." );
         }
         if( null != dname ) {
-            throw new BuildException( "It is not possible to specify dname both " +
+            throw new BuildException( "It is not possible to specify dname " +
+                                      " both " +
                                       "as attribute and element." );
         }
         expandedDname = new DistinguishedName();
@@ -184,11 +188,12 @@ public class GenerateKey extends Task {
   
     public void setDname(final String dname) {
         if( null != expandedDname ) {
-            throw new BuildException( "It is not possible to specify dname both " +
+            throw new BuildException( "It is not possible to specify dname " +
+                                      " both " +
                                       "as attribute and element." );
         }
         this.dname = dname;
-    } 
+    }
 
     public void setAlias(final String alias) {
         this.alias = alias;
@@ -240,9 +245,9 @@ public class GenerateKey extends Task {
 
     public void execute() throws BuildException {
         if (Project.getJavaVersion().equals(Project.JAVA_1_1)) {
-            throw new BuildException( "The genkey task is only available on JDK" +
-                                      " versions 1.2 or greater" );
-        } 
+            throw new BuildException( "The genkey task is only available on JDK"
+                                      + " versions 1.2 or greater" );
+        }
 
         if (null == alias) {
             throw new BuildException( "alias attribute must be set" );

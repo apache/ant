@@ -117,6 +117,7 @@ import java.util.NoSuchElementException;
  * @author Sam Ruby <a href="mailto:rubys@us.ibm.com">rubys@us.ibm.com</a>
  * @author <a href="mailto:pbwest@powerup.com.au">Peter B. West</a>
  * @version $Revision$ $Name$
+ * @since Ant 1.1
  *
  * @ant.task category="filesystem"
  */
@@ -309,7 +310,7 @@ public class FixCRLF extends MatchingTask {
     }
 
     /**
-     * Specify how DOS EOF (control-z) charaters are to be handled
+     * Specify how DOS EOF (control-z) characters are to be handled
      *
      * @param option valid values:
      * <ul>
@@ -405,7 +406,8 @@ public class FixCRLF extends MatchingTask {
             try {
                 tmpFile = fileUtils.createTempFile("fixcrlf", "", destD);
                 Writer writer = (encoding == null) ? new FileWriter(tmpFile)
-                    : new OutputStreamWriter(new FileOutputStream(tmpFile), encoding);
+                    : new OutputStreamWriter(new FileOutputStream(tmpFile),
+                                             encoding);
                 outWriter = new BufferedWriter(writer);
             } catch (IOException e) {
                 throw new BuildException(e);
@@ -469,11 +471,13 @@ public class FixCRLF extends MatchingTask {
 
                         case IN_CHAR_CONST:
                         case IN_STR_CONST:
-                            // Got here from LOOKING by finding an opening "\'"
-                            // next points to that quote character.
-                            // Find the end of the constant.  Watch out for
-                            // backslashes.  Literal tabs are left unchanged, and
-                            // the column is adjusted accordingly.
+                            // Got here from LOOKING by finding an
+                            // opening "\'" next points to that quote
+                            // character.
+                            // Find the end of the constant.  Watch
+                            // out for backslashes.  Literal tabs are
+                            // left unchanged, and the column is
+                            // adjusted accordingly.
 
                             int begin = line.getNext();
                             char terminator = (lines.getState() == IN_STR_CONST
@@ -482,10 +486,10 @@ public class FixCRLF extends MatchingTask {
                             endOfCharConst(line, terminator);
                             while (line.getNext() < line.getLookahead()) {
                                 if (line.getNextCharInc() == '\t') {
-                                    line.setColumn(
-                                                   line.getColumn() +
+                                    line.setColumn(line.getColumn() +
                                                    tablength -
-                                                   line.getColumn() % tablength);
+                                                   (line.getColumn() 
+                                                    % tablength));
                                 }
                                 else {
                                     line.incColumn();
@@ -494,7 +498,8 @@ public class FixCRLF extends MatchingTask {
 
                             // Now output the substring
                             try {
-                                outWriter.write(line.substring(begin, line.getNext()));
+                                outWriter.write(line.substring(begin, 
+                                                               line.getNext()));
                             } catch (IOException e) {
                                 throw new BuildException(e);
                             }
@@ -541,15 +546,16 @@ public class FixCRLF extends MatchingTask {
             }
 
 
-            File destFile = new File(destD, file);
-
             try {
                 lines.close();
                 lines = null;
             }
             catch (IOException e) {
-                throw new BuildException("Unable to close source file " + srcFile);
+                throw new BuildException("Unable to close source file " 
+                                         + srcFile);
             }
+
+            File destFile = new File(destD, file);
 
             if (destFile.exists()) {
                 // Compare the destination with the temp file
