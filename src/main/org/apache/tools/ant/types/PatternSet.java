@@ -205,8 +205,8 @@ public class PatternSet extends DataType {
     }
 
     /**
-     * Sets the set of include patterns. Patterns may be separated by a comma
-     * or a space.
+     * Appends <code>includes</code> to the current list of include patterns. 
+     * Patterns may be separated by a comma or a space.
      *
      * @param includes the string containing the include patterns
      */
@@ -223,8 +223,8 @@ public class PatternSet extends DataType {
     }
 
     /**
-     * Sets the set of exclude patterns. Patterns may be separated by a comma
-     * or a space.
+     * Appends <code>excludes</code> to the current list of exclude patterns. 
+     * Patterns may be separated by a comma or a space.
      *
      * @param excludes the string containing the exclude patterns
      */
