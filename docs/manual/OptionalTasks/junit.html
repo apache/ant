@@ -91,6 +91,13 @@ elements</a>.</p>
       fork is disabled)</td>
     <td align="center" valign="top">No</td>
   </tr>
+  <tr>
+    <td valign="top">newenvironment</td>
+    <td valign="top">Do not propagate old environment when new
+      environment variables are specified.  Ignored if fork is
+      disabled.</td>
+    <td align="center" valign="top">No, default is &quot;false&quot;.</td>
+  </tr>
 </table>
 
 <h3><a name="nested">Nested Elements</a></h3>
@@ -133,6 +140,19 @@ The attributes for this element are the same as for <a href="../CoreTasks/exec.h
 <p>would run the test in ANT's VM and make the <code>basedir</code> property
 available to the test.</p>
 
+
+<h4>env</h4> 
+
+<p>It is possible to specify environment variables to pass to the
+forked VM via nested <code>&lt;env&gt;</code> elements. See the
+description in the section about 
+<a href="../CoreTasks/exec.html#env">exec</a></p>
+
+<p>Please note that the environment of the current Ant process is
+<b>not</b> passed to the forked VM if you specify variables using
+<code>&lt;env&gt;</code>.</p>
+
+<p>Settings will be ignored if fork is disabled.</p>
 
 <h4>formatter</h4>
 
@@ -405,7 +425,7 @@ string patterns:<pre>
    "java.lang.reflect.Method.invoke("
    "org.apache.tools.ant."</pre></p> 
 <hr>
-<p align="center">Copyright &copy; 2001 Apache Software Foundation. All rights
+<p align="center">Copyright &copy; 2001-2002 Apache Software Foundation. All rights
 Reserved.</p>
 </body>
 </html>

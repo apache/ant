@@ -135,7 +135,7 @@ Other changes:
 * A "package" mapper type has been added to allow package directory
   names replaced with the dotted form.
   
-* you can now specify environment variables in the <java> task 
+* you can now specify environment variables in the <java> and <junit> tasks 
   if the fork attribute has been set to true.
 
 Changes from Ant 1.4 to Ant 1.4.1

@@ -141,6 +141,8 @@ import java.net.URL;
  * @author <a href="mailto:Gerrit.Riessen@web.de">Gerrit Riessen</a>
  * @author <a href="mailto:ehatcher@apache.org">Erik Hatcher</a>
  *
+ * @version $Revision$
+ *
  * @see JUnitTest
  * @see BatchTest
  */
@@ -156,6 +158,9 @@ public class JUnitTask extends Task {
     private boolean summary = false;
     private String summaryValue = "";
     private JUnitTestRunner runner = null;
+
+    private boolean newEnvironment = false;
+    private Environment env = new Environment();
 
     /**
      * Tells this task whether to smartly filter the stack frames of JUnit testcase
@@ -341,6 +346,28 @@ public class JUnitTask extends Task {
     }
 
     /**
+     * Add a nested env element - an environment variable.
+     *
+     * <p>Will be ignored if we are not forking a new VM.
+     *
+     * @since 1.33, Ant 1.5
+     */
+    public void addEnv(Environment.Variable var) {
+        env.addVariable(var);
+    }
+
+    /**
+     * Use a completely new environment
+     *
+     * <p>Will be ignored if we are not forking a new VM.
+     *
+     * @since 1.33, Ant 1.5
+     */
+    public void setNewenvironment(boolean newenv) {
+        newEnvironment = newenv;
+    }
+
+    /**
      * Add a new single testcase.
      * @param   test    a new single testcase
      * @see JUnitTest
@@ -510,6 +537,16 @@ public class JUnitTask extends Task {
             execute.setWorkingDirectory(dir);
         }
 
+        String[] environment = env.getVariables();
+        if (environment != null) {
+            for (int i=0; i<environment.length; i++) {
+                log("Setting environment variable: "+environment[i],
+                    Project.MSG_VERBOSE);
+            }
+        }
+        execute.setNewenvironment(newEnvironment);
+        execute.setEnvironment(environment);
+
         log("Executing: "+cmd.toString(), Project.MSG_VERBOSE);
         int retVal;
         try {
@@ -555,6 +592,11 @@ public class JUnitTask extends Task {
         test.setProperties(project.getProperties());
         if (dir != null) {
             log("dir attribute ignored if running in the same VM", Project.MSG_WARN);
+        }
+
+        if (newEnvironment || null != env.getVariables()) {
+            log("Changes to environment variables are ignored if running in the same VM.", 
+                Project.MSG_WARN);
         }
 
         CommandlineJava.SysProperties sysProperties = commandline.getSystemProperties();
