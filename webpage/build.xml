@@ -28,7 +28,7 @@
     </target>
 
     <target name="docs" depends="prepare-error" if="AnakiaTask.present">
-        <taskdef name="anakia" classname="org.apache.velocity.anakia.AnakiaTask">
+        <taskdef name="anakia" classname="org.apache.velocity.anakia.AnakiaTask" reverseloader="true">
             <classpath refid="anakia.classpath"/>
         </taskdef>
         

@@ -68,21 +68,17 @@
   -->
   <property name="dist.name" value="jakarta-${name}-${version}"/>
   <property name="dist.base" value="distribution"/>
-  <property name="defaultdist.dir" value="dist"/>
+  <property name="dist.dir" value="dist"/>
+  <property name="dist.dir" value="${defaultdist.dir}"/>
+  <property name="dist.bin" value="${dist.dir}/bin"/>
+  <property name="dist.lib" value="${dist.dir}/lib"/>
+  <property name="dist.docs" value="${dist.dir}/docs"/>
+  <property name="dist.javadocs" value="${dist.dir}/docs/manual/api"/>
 
-  <target name="setup-distproperties">
-
-    <property name="dist.dir" value="${defaultdist.dir}"/>
-    <property name="dist.bin" value="${dist.dir}/bin"/>
-    <property name="dist.lib" value="${dist.dir}/lib"/>
-    <property name="dist.docs" value="${dist.dir}/docs"/>
-    <property name="dist.javadocs" value="${dist.dir}/docs/manual/api"/>
-
-    <property name="src.dist.dir" value="dist-src"/>
-    <property name="src.dist.src" value="${src.dist.dir}/src"/>
-    <property name="src.dist.docs" value="${src.dist.dir}/docs"/>
-    <property name="src.dist.lib" value="${src.dist.dir}/lib"/>
-  </target>
+  <property name="src.dist.dir" value="dist-src"/>
+  <property name="src.dist.src" value="${src.dist.dir}/src"/>
+  <property name="src.dist.docs" value="${src.dist.dir}/docs"/>
+  <property name="src.dist.lib" value="${src.dist.dir}/lib"/>
 
   <!-- 
        ===================================================================
@@ -295,7 +291,7 @@
        ===================================================================
   -->
   <target name="dist-lite" 
-          depends="jars, setup-distproperties"
+          depends="jars"
           description="--> creates a minimum distribution to run ant">
 
     <mkdir dir="${dist.dir}"/>
@@ -334,7 +330,7 @@
        ===================================================================
   -->
   <target name="dist" description="--> creates a complete distribution">
-    <antcall target="internal_dist">
+    <antcall inheritAll="false" target="internal_dist">
       <param name="dist.dir" value="${dist.name}" />
     </antcall>
   </target>  
@@ -390,7 +386,7 @@
        ===================================================================
   -->
   <target name="bootstrap" description="--> creates a bootstrap build">
-    <antcall target="dist-lite">
+    <antcall inheritAll="false" target="dist-lite">
       <param name="dist.dir" value="${bootstrap.dir}" />
     </antcall>
   </target>
@@ -402,7 +398,6 @@
        ===================================================================
   -->
   <target name="src-dist" 
-          depends="setup-distproperties"
           description="--> creates a source distribution">
 
     <mkdir dir="${src.dist.dir}" />
@@ -471,7 +466,7 @@
           description="--> creates a binary distribution">
     <mkdir dir="${dist.base}"/>
 
-    <antcall target="internal_dist">
+    <antcall inheritAll="false" target="internal_dist">
       <param name="dist.dir" value="${dist.name}" />
     </antcall>
     <zip zipfile="${dist.base}/${dist.name}-bin.zip" 
@@ -498,7 +493,7 @@
     <delete dir="${dist.name}" />
 
 
-    <antcall target="src-dist">
+    <antcall inheritAll="false" target="src-dist">
       <param name="src.dist.dir" value="${dist.name}" />
     </antcall>
     <zip zipfile="${dist.base}/${dist.name}-src.zip" 
@@ -555,13 +550,13 @@
        ===================================================================
   -->
   <target name="install" if="ant.install">
-    <antcall target="internal_dist">
+    <antcall inheritAll="false" target="internal_dist">
       <param name="dist.dir" value="${ant.install}" />
     </antcall>
   </target>
 
   <target name="install-lite" if="ant.install">
-    <antcall target="dist-lite">
+    <antcall inheritAll="false" target="dist-lite">
       <param name="dist.dir" value="${ant.install}" />
     </antcall>
   </target>
@@ -722,7 +717,7 @@
   -->
   <target name="main" 
           description="--> creates a minimum distribution in ./dist">
-    <antcall target="dist-lite"/>
+    <antcall inheritAll="false" target="dist-lite"/>
   </target>
   
 </project>

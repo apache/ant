@@ -8,6 +8,11 @@ if test ! -f bootstrap/lib/ant.jar -o  ! -x bootstrap/bin/ant -o ! -x bootstrap/
   /bin/sh ./bootstrap.sh
 fi    
 
+if test ! -f bootstrap/lib/ant.jar -o  ! -x bootstrap/bin/ant -o ! -x bootstrap/bin/antRun ; then
+  echo Bootstrap FAILED
+  exit
+fi
+
 LOCALCLASSPATH=lib/crimson.jar:lib/jaxp.jar
 # add in the dependency .jar files
 DIRLIBS=lib/optional/*.jar

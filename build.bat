@@ -5,6 +5,9 @@ set REAL_ANT_HOME=%ANT_HOME%
 set ANT_HOME=bootstrap
 if exist bootstrap\lib\ant.jar if exist bootstrap\bin\ant.bat if exist bootstrap\bin\lcp.bat if exist bootstrap\bin\antRun.bat goto runAnt
 call bootstrap.bat
+if exist bootstrap\lib\ant.jar if exist bootstrap\bin\ant.bat if exist bootstrap\bin\lcp.bat if exist bootstrap\bin\antRun.bat goto runAnt
+echo Bootstrap FAILED
+goto cleanup
 
 :runAnt
 set LOCALCLASSPATH=lib\crimson.jar;lib\jaxp.jar;bootstrap\lib\ant.jar
