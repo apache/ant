@@ -5,6 +5,10 @@
 ANT_HOME=.
 export ANT_HOME
 
+if [ -z "$JAVAC" ] ; then
+  JAVAC=javac;
+fi
+
 echo ... Bootstrapping Ant Distribution
 
 if test -f lib/ant.jar ; then
@@ -44,10 +48,10 @@ mkdir -p ${CLASSDIR}
 
 echo ... Compiling Ant Classes
 
-javac  -d ${CLASSDIR} ${TOOLS}/tar/*.java
-javac  -d ${CLASSDIR} ${TOOLS}/ant/types/*.java
-javac  -d ${CLASSDIR} ${TOOLS}/ant/*.java
-javac  -d ${CLASSDIR} ${TOOLS}/ant/taskdefs/*.java
+${JAVAC} -d ${CLASSDIR} ${TOOLS}/tar/*.java
+${JAVAC} -d ${CLASSDIR} ${TOOLS}/ant/types/*.java
+${JAVAC} -d ${CLASSDIR} ${TOOLS}/ant/*.java
+${JAVAC} -d ${CLASSDIR} ${TOOLS}/ant/taskdefs/*.java
 
 echo ... Copying Required Files
 
@@ -55,7 +59,7 @@ cp src/main/org/apache/tools/ant/taskdefs/defaults.properties ${CLASSDIR}/org/ap
 
 echo ... Building Ant Distribution
 
-java org.apache.tools.ant.Main clean main bootstrap
+java org.apache.tools.ant.Main clean main bootstrap $JIKESON
 
 echo ... Cleaning Up Build Directories
 

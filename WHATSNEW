@@ -48,6 +48,10 @@ instance of this class are going to fail.
 name attribute to be a single pattern, they don't accept multiple
 patterns anymore. Split them into multiple elements of the same type.
 
+* <delete dir="somedir" /> will now delete the directory itself as
+well as all included files. If you just want to clean out the
+directory and keep the empty one, use a nested fileset.
+
 Other changes:
 --------------
 
