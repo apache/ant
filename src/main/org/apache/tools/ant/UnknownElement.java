@@ -84,7 +84,10 @@ public class UnknownElement extends Task {
         if (realTask == null) {
             throw new BuildException("Could not create task of type: "+elementName+
                                      " because I can\'t find it in the list of task"+
-                                     " class definitions", location);
+                                     " class definitions.  Common solutions are: 1"+
+                                     " execute bin/bootstrap. 2 use taskdef to declare"+
+                                     " your task. 3 add the task to defaults.properties."
+                                     , location);
         }
 
         realTask.setLocation(location);
