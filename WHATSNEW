@@ -18,7 +18,7 @@ Changes that could break older environments:
 Other changes:
 --------------
 
-* New tasks: ear, p4counter, record, cvspass
+* New tasks: ear, p4counter, record, cvspass, vsscheckin, vsscheckout
 
 * Ant now uses JAXP 1.1
 
