@@ -322,10 +322,12 @@ public class Ant extends Task {
                     + " in build file " +  antFile, Project.MSG_VERBOSE);
             newProject.setUserProperty("ant.file" , antFile);
 
+            String thisAntFile = getProject().getProperty("ant.file");
             // Are we trying to call the target in which we are defined (or
             // the build file if this is a top level task)?
-            if (newProject.getProperty("ant.file")
-                .equals(getProject().getProperty("ant.file"))
+            if (thisAntFile != null
+                && newProject.resolveFile(newProject.getProperty("ant.file"))
+                .equals(getProject().resolveFile(thisAntFile)) 
                 && getOwningTarget() != null) {
 
                 if (getOwningTarget().getName().equals("")) {
