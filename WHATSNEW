@@ -55,9 +55,6 @@ Other changes:
 * It is now possible to specify the pattern created/parsed by <checksum>.
   Bugzilla Report 16539.
 
-* Added searchpath attribute to <exec> for searching path variable(s)
-  when resolveexecutable = true.
-
 * Added -nouserlib option to allow running ant without automatically loading
   up ${user.dir}/.lib/ant. This is useful when compiling ant, and antlibs.
   Modified the build.sh and build.bat to use the option.
@@ -173,6 +170,9 @@ Other changes:
   filenames will be interpreted as absolute pathnames when dest is omitted.
 
 * Changed default tempdir for <javac> from user.dir to java.io.tmpdir.
+
+* Added searchpath attribute to <exec> for searching path variable(s)
+  when resolveexecutable = true.
 
 Fixed bugs:
 -----------
