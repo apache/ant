@@ -38,6 +38,16 @@ properties. These references are resolved at the time these properties are set.
 This also holds for properties loaded from a property file.</p>
 <p>A list of predefined properties can be found <a
 href="../using.html#built-in-props">here</a>.</p>
+
+<h4>OpenVMS Users</h4>
+<p>With the <code>environment</code> attribute this task will load all defined
+logicals on an OpenVMS system.  Logicals with multiple equivalence names get
+mapped to a property whose value is a comma separated list of all equivalence
+names.  If a logical is defined in multiple tables, only the most local
+definition is available (the table priority order being PROCESS, JOB, GROUP,
+SYSTEM).
+</p>
+
 <h3>Parameters</h3>
 <table border="1" cellpadding="2" cellspacing="0">
   <tr>

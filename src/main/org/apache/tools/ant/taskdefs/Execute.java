@@ -63,6 +63,8 @@ import java.io.PrintWriter;
 import java.io.StringReader;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Vector;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
@@ -191,6 +193,11 @@ public class Execute {
 
             BufferedReader in =
                 new BufferedReader(new StringReader(toString(out)));
+
+            if (Os.isFamily("openvms")) {
+                procEnvironment = addVMSLogicals(procEnvironment, in);
+                return procEnvironment;
+            }
 
             String var = null;
             String line, lineSep = System.getProperty("line.separator");
@@ -585,6 +592,58 @@ public class Execute {
             throw new BuildException("Could not launch " + cmdline[0] + ": "
                 + exc, task.getLocation());
         }
+    }
+
+    /**
+     * This method is VMS specific and used by getProcEnvironment().
+     * 
+     * Parses VMS logicals from <code>in</code> and adds them to
+     * <code>environment</code>.  <code>in</code> is expected to be the
+     * output of "SHOW LOGICAL".  The method takes care of parsing the output
+     * correctly as well as making sure that a logical defined in multiple
+     * tables only gets added from the highest order table.  Logicals with
+     * multiple equivalence names are mapped to a variable with multiple
+     * values separated by a comma (,).
+     */
+    private static Vector addVMSLogicals(Vector environment, BufferedReader in)
+        throws IOException {
+        HashMap logicals = new HashMap();
+
+        String logName = null, logValue = null, newLogName;
+        String line, lineSep = System.getProperty("line.separator");
+        while ((line = in.readLine()) != null) {
+            // parse the VMS logicals into required format ("VAR=VAL[,VAL2]")
+            if (line.startsWith("\t=")) {
+                // further equivalence name of previous logical
+                if (logName != null) {
+                    logValue += "," + line.substring(4, line.length() - 1);
+                }
+            } else if (line.startsWith("  \"")) {
+                // new logical?
+                if (logName != null) {
+                    logicals.put(logName, logValue);
+                }
+                int eqIndex = line.indexOf('=');
+                newLogName = line.substring(3, eqIndex - 2);
+                if (logicals.containsKey(newLogName)) {
+                    // already got this logical from a higher order table
+                    logName = null;
+                } else {
+                    logName = newLogName;
+                    logValue = line.substring(eqIndex + 3, line.length() - 1);
+                }
+            }
+        }
+        // Since we "look ahead" before adding, there's one last env var.
+        if (logName != null) {
+            logicals.put(logName, logValue);
+        }
+
+        for (Iterator i = logicals.keySet().iterator(); i.hasNext();) {
+            String logical = (String) i.next();
+            environment.add(logical + "=" + logicals.get(logical));
+        }
+        return environment;
     }
 
     /**
