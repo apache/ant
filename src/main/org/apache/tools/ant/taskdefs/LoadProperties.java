@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2002 The Apache Software Foundation.  All rights
+ * Copyright (c) 2002-2003 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -143,7 +143,6 @@ public final class LoadProperties extends Task {
 
         try {
             final long len = srcFile.length();
-            final int size = (int) len;
 
             //open up the file
             fis = new FileInputStream(srcFile);
@@ -155,7 +154,6 @@ public final class LoadProperties extends Task {
             }
 
             ChainReaderHelper crh = new ChainReaderHelper();
-            crh.setBufferSize(size);
             crh.setPrimaryReader(instream);
             crh.setFilterChains(filterChains);
             crh.setProject(getProject());

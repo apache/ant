@@ -51,40 +51,16 @@
  * information on the Apache Software Foundation, please see
  * <http://www.apache.org/>.
  */
-
-package org.apache.tools.ant.taskdefs;
-
-import org.apache.tools.ant.BuildFileTest;
-import org.apache.tools.ant.Project;
-import org.apache.tools.ant.Task;
+ 
 
 /**
- * @author Peter Reilly
+ * this is an assertion tester
  */
-public class MacroDefTest extends BuildFileTest {
-    public MacroDefTest(String name) {
-        super(name);
+public class AssertionTest {
+    
+    public static void main(String args[]) {
+		assert true == false : "there exist no facts that are both true and false";
+		System.out.println("Assertions are disabled");
     }
-
-    public void setUp() {
-        configureProject("src/etc/testcases/taskdefs/macrodef.xml");
-    }
-
-    public void testSimple() {
-        expectLog("simple", "Hello World");
-    }
-
-    public void testText() {
-        expectLog("text", "Inner Text");
-    }
-
-    public void testUri() {
-        expectLog("uri", "Hello World");
-    }
-
-    public void testNested() {
-        expectLog("nested", "A nested element");
-    }
-
+    
 }
-

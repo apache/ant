@@ -57,6 +57,11 @@ import java.net.URL;
 import java.net.URLClassLoader;
 import java.net.MalformedURLException;
 import java.io.File;
+import java.util.StringTokenizer;
+import java.util.List;
+import java.util.ArrayList;
+import java.util.Iterator;
+
 
 /**
  *  This is a launcher for Ant.
@@ -118,6 +123,47 @@ public class Launcher {
                 + "ant could not be located");
         }
 
+        List libPaths = new ArrayList();
+        List argList = new ArrayList();
+        String[] newArgs;
+
+        for (int i = 0; i < args.length; ++i) {
+            if (args[i].equals("-lib")) {
+                if (i == args.length - 1) {
+                    throw new IllegalStateException("The -lib argument must "
+                        + "be followed by a library location");
+                }
+                libPaths.add(args[++i]);
+            } else {
+                argList.add(args[i]);
+            }
+        }
+
+        if (libPaths.size() == 0) {
+            newArgs = args;
+        } else {
+            newArgs = (String[]) argList.toArray(new String[0]);
+        }
+
+        List libPathURLs = new ArrayList();
+        for (Iterator i = libPaths.iterator(); i.hasNext();) {
+            String libPath = (String) i.next();
+            StringTokenizer myTokenizer
+                = new StringTokenizer(libPath, System.getProperty("path.separator"));
+            while (myTokenizer.hasMoreElements()) {
+                File element = new File(myTokenizer.nextToken());
+                if (element.isDirectory()) {
+                    // add any jars in the directory
+                    URL[] dirURLs = Locator.getLocationURLs(element);
+                    for (int j = 0; j < dirURLs.length; ++j) {
+                        libPathURLs.add(dirURLs[j]);
+                    }
+                }
+                libPathURLs.add(element.toURL());
+            }
+        }
+
+        URL[] libJars = (URL[])libPathURLs.toArray(new URL[0]);
 
         // Now try and find JAVA_HOME
         File toolsJar = Locator.getToolsJar();
@@ -129,13 +175,14 @@ public class Launcher {
         URL[] userJars = Locator.getLocationURLs(userLibDir);
 
 
-        int numJars = userJars.length + systemJars.length;
+        int numJars = libJars.length + userJars.length + systemJars.length;
         if (toolsJar != null) {
             numJars++;
         }
         URL[] jars = new URL[numJars];
-        System.arraycopy(userJars, 0, jars, 0, userJars.length);
-        System.arraycopy(systemJars, 0, jars, userJars.length,
+        System.arraycopy(libJars, 0, jars, 0, libJars.length);
+        System.arraycopy(userJars, 0, jars, libJars.length, userJars.length);
+        System.arraycopy(systemJars, 0, jars, userJars.length + libJars.length,
             systemJars.length);
 
         if (toolsJar != null) {
@@ -146,6 +193,10 @@ public class Launcher {
         // now update the class.path property
         StringBuffer baseClassPath
             = new StringBuffer(System.getProperty("java.class.path"));
+        if (baseClassPath.charAt(baseClassPath.length() - 1)
+                == File.pathSeparatorChar) {
+            baseClassPath.setLength(baseClassPath.length() - 1);
+        }
 
         for (int i = 0; i < jars.length; ++i) {
             baseClassPath.append(File.pathSeparatorChar);
@@ -159,7 +210,7 @@ public class Launcher {
         try {
             Class mainClass = loader.loadClass(MAIN_CLASS);
             AntMain main = (AntMain) mainClass.newInstance();
-            main.startAnt(args, null, null);
+            main.startAnt(newArgs, null, null);
         } catch (Throwable t) {
             t.printStackTrace();
         }

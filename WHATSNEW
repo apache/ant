@@ -1,5 +1,5 @@
-Changes from Ant 1.5.4 to current CVS version
-=============================================
+Changes from Ant 1.5.4 to Ant 1.6
+=================================
 
 Changes that could break older environments:
 --------------------------------------------
@@ -244,6 +244,12 @@ Fixed bugs:
 
 * <junit includeantruntime="true" fork="true"> replaced the CLASSPATH instead
   of adding to it.  Bugzilla Report 14971.
+
+* <splash> could fail on JVMs that use null to indicate the system classloader.
+  Bugzilla Report 23320.
+
+* <xmlcatalog>s only worked when defined inside of tasks.  Bugzilla
+  Report 20965.
 
 Other changes:
 --------------
@@ -610,6 +616,18 @@ Other changes:
 * New filter <concatfilter>. Adds the content of file at the beginning
   or end of a file. Discussion started at
   http://marc.theaimsgroup.com/?l=ant-user&m=106366791228585&w=2
+
+* <java> and <junit> now support <assertions>, which let you enable
+  and disable Java1.4 assertions on a package or class basis. These
+  only work when fork=true, currently.
+
+* .NET tasks expanded with VB support <vbc> and J#, via <jsharp>, 
+  <importtypelib> and <ilasm>. <csc> supports nested <src> types, 
+  <defines> for (potentially conditional) definitions, <reference>
+  filesets for references. The executable attribute lets you switch to
+  mono or other implementations -<csc> has been tested with Mono on
+  Linux and OSX.
+    
 
 Changes from Ant 1.5.3 to Ant 1.5.4
 ===================================

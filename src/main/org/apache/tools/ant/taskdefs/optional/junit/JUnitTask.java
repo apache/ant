@@ -568,7 +568,10 @@ public class JUnitTask extends Task {
      * @since Ant 1.6
      * @param asserts assertion set
      */
-    public void setAssertions(Assertions asserts) {
+    public void addAssertions(Assertions asserts) {
+        if (commandline.getAssertions() != null) {
+            throw new BuildException("Only one assertion declaration is allowed");
+        }
         commandline.setAssertions(asserts);
     }
 

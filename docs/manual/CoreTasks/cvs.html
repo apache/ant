@@ -54,7 +54,10 @@ from the command line in the target directory in which you are working.
   </tr>
   <tr>
     <td valign="top">dest</td>
-    <td valign="top">the directory where the checked out files should be placed.</td>
+    <td valign="top">the directory where the checked out files should
+    be placed.  Note that this is different from CVS's -d command line
+    switch as Ant will never shorten pathnames to avoid empty
+    directories.</td>
     <td align="center" valign="top">No, default is project's basedir.</td>
   </tr>
   <tr>

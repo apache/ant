@@ -142,7 +142,7 @@
       destFile="${testCSC.exe}"
       targetType="exe"
       executable="mcs"
-      includedefaultreferences="false"
+      includedefaultreferences="true"
       >
     </csc>
     <available property="app.created" file="${testCSC.exe}"/>
@@ -179,7 +179,7 @@
       targetType="exe"
       srcDir="."
       executable="mcs"
-      includedefaultreferences="false"
+      includedefaultreferences="true"
       >
     </csc>
     <available property="app.created" file="${testCSC.exe}"/>
@@ -213,7 +213,7 @@
       destFile="${testCSC.dll}"
       targetType="library"
       executable="mcs"
-      includedefaultreferences="false"
+      includedefaultreferences="true"
       >
       <src dir="${src.dir}" includes="example2.cs"/>
     </csc>
@@ -251,7 +251,7 @@
       destFile="${testCscReferences.exe}"
       targetType="exe"
       executable="mcs"
-      includedefaultreferences="false"
+      includedefaultreferences="true"
       >
       <src file="${src.dir}/example.cs"/>
       <reference file="${testCSC.dll}" />

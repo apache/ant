@@ -39,7 +39,7 @@ use strict;
 #use warnings;
 
 #and set $debug to 1 to turn on trace info
-my $debug=0;
+my $debug=1;
 
 #######################################################################
 #
@@ -74,26 +74,7 @@ if(($^O eq "MSWin32") || ($^O eq "dos") || ($^O eq "cygwin") ||
         }
 
 #build up standard classpath
-my $localpath=$ENV{CLASSPATH};
-if ($localpath eq "")
-        {
-        print "warning: no initial classpath\n" if ($debug);
-        $localpath="";
-        }
-if ($onnetware == 1)
-{
-# avoid building a command line bigger than 512 characters - make localpath
-# only include the "extra" stuff, and add in the system classpath as an expanded
-# variable. 
-  $localpath="";
-} 
-
-if ($localpath eq "") {
-  $localpath = "$HOME/lib/ant-launcher.jar";
-} else {
-  $localpath = "$HOME/lib/ant-launcher.jar$s$localpath";
-}
-
+my $localpath = "$HOME/lib/ant-launcher.jar";
 #set JVM options and Ant arguments, if any
 my @ANT_OPTS=split(" ", $ENV{ANT_OPTS});
 my @ANT_ARGS=split(" ", $ENV{ANT_ARGS});
@@ -110,25 +91,21 @@ push @ARGS, @ANT_OPTS;
 
 my $CYGHOME = "";
 
+my $classpath=$ENV{CLASSPATH};
 if ($oncygwin == 1) {
   $localpath = `cygpath --path --windows $localpath`;
   chomp ($localpath);
+  if (! $classpath eq "")
+  {
+    $classpath = `cygpath --path --windows "$classpath"`;
+    chomp ($classpath);
+  }
   $HOME = `cygpath --path --windows $HOME`;
   chomp ($HOME);
   $CYGHOME = `cygpath --path --windows $ENV{HOME}`;
   chomp ($CYGHOME);
 }
-if ($onnetware == 1)
-{
-# make classpath literally $CLASSPATH; and then the contents of $localpath
-# this is to avoid pushing us over the 512 character limit
-# even skip the ; - that is already in $localpath
-  push @ARGS, "-classpath", "\$CLASSPATH$localpath";
-}
-else
-{
-  push @ARGS, "-classpath", "$localpath";
-}
+push @ARGS, "-classpath", "$localpath";
 push @ARGS, "-Dant.home=$HOME";
 if ( ! $CYGHOME eq "" )
 {
@@ -136,7 +113,20 @@ if ( ! $CYGHOME eq "" )
 }
 push @ARGS, "org.apache.tools.ant.launch.Launcher", @ANT_ARGS;
 push @ARGS, @ARGV;
-
+if (! $classpath eq "")
+{
+  if ($onnetware == 1)
+  {
+    # make classpath literally $CLASSPATH
+    # this is to avoid pushing us over the 512 character limit
+    # even skip the ; - that is already in $localpath
+    push @ARGS, "-lib", "\$CLASSPATH";
+  }
+  else
+  {
+    push @ARGS, "-lib", "$classpath";
+  }
+}
 print "\n $JAVACMD @ARGS\n\n" if ($debug);
 
 my $returnValue = system $JAVACMD, @ARGS;

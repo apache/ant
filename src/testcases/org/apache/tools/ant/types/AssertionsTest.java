@@ -23,8 +23,8 @@
  *    Alternately, this acknowlegement may appear in the software itself,
  *    if and wherever such third-party acknowlegements normally appear.
  *
- * 4. The names "Ant" and "Apache Software
- *    Foundation" must not be used to endorse or promote products derived
+ * 4. The names "Ant" and "Apache Software Foundation"
+ *    must not be used to endorse or promote products derived
  *    from this software without prior written permission. For written
  *    permission, please contact apache@apache.org.
  *
@@ -51,40 +51,82 @@
  * information on the Apache Software Foundation, please see
  * <http://www.apache.org/>.
  */
-
-package org.apache.tools.ant.taskdefs;
+package org.apache.tools.ant.types;
 
 import org.apache.tools.ant.BuildFileTest;
-import org.apache.tools.ant.Project;
-import org.apache.tools.ant.Task;
 
 /**
- * @author Peter Reilly
+ * test assertion handling
  */
-public class MacroDefTest extends BuildFileTest {
-    public MacroDefTest(String name) {
+public class AssertionsTest extends BuildFileTest {
+
+    public AssertionsTest(String name) {
         super(name);
     }
 
-    public void setUp() {
-        configureProject("src/etc/testcases/taskdefs/macrodef.xml");
+    protected void setUp() throws Exception {
+        configureProject("src/etc/testcases/types/assertions.xml");
     }
 
-    public void testSimple() {
-        expectLog("simple", "Hello World");
+    protected void tearDown() throws Exception {
+        executeTarget("teardown");
     }
 
-    public void testText() {
-        expectLog("text", "Inner Text");
+    /**
+     * runs a test and expects an assertion thrown in forked code
+     * @param target
+     */
+    protected void expectAssertion(String target) {
+        expectBuildExceptionContaining(target,
+                "assertion not thrown in "+target,
+                "Java returned: 1");
     }
 
-    public void testUri() {
-        expectLog("uri", "Hello World");
+    public void testClassname() {
+        expectAssertion("test-classname");
     }
 
-    public void testNested() {
-        expectLog("nested", "A nested element");
+    public void testPackage() {
+        expectAssertion("test-package");
     }
+
+    public void testEmptyAssertions() {
+        executeTarget("test-empty-assertions");
+    }
+
+    public void testDisable() {
+        executeTarget("test-disable");
+    }
+
+    public void testOverride() {
+        expectAssertion("test-override");
+    }
+
+    public void testOverride2() {
+        executeTarget("test-override2");
+    }
+    public void testReferences() {
+        expectAssertion("test-references");
+    }
+
+    public void testMultipleAssertions() {
+        expectBuildExceptionContaining("test-multiple-assertions",
+                "multiple assertions rejected",
+                "Only one assertion declaration is allowed");
+    }
+
+    public void testReferenceAbuse() {
+        expectBuildExceptionContaining("test-reference-abuse",
+                "reference abuse rejected",
+                "You must not specify more than one attribute when using refid");
+    }
+
+    public void testNofork() {
+        expectLogContaining("test-nofork",
+                "Assertion statements are currently ignored in non-forked mode");
+    }
+
 
 }
+
 

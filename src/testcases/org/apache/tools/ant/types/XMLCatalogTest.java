@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2000-2002 The Apache Software Foundation.  All rights
+ * Copyright (c) 2000-2003 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -172,14 +172,6 @@ public class XMLCatalogTest extends TestCase {
     }
 
     public void testEmptyElementIfIsReference() {
-        try {
-            catalog.setRefid(new Reference("dummyref"));
-            fail("Can add reference to nonexistent XMLCatalog");
-        } catch (BuildException be) {
-            assertEquals("Reference dummyref not found.",
-                         be.getMessage());
-        }
-
         ResourceLocation dtd = new ResourceLocation();
         dtd.setPublicId("PUBLIC ID ONE");
         dtd.setLocation("i/dont/exist.dtd");

@@ -93,7 +93,7 @@ public class StarTeamLabel extends StarTeamTask {
     private String description;
 
     /**
-     * If true, this will be a build label.  If false, it will be a build
+     * If true, this will be a build label.  If false, it will be a non-build
      * label.  The default is false.  Has no effect if revision label is
      * true.
      */

@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2000-2001 The Apache Software Foundation.  All rights
+ * Copyright (c) 2000-2001,2003 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -108,8 +108,9 @@ public class ReplaceTest extends BuildFileTest {
 
     public void test9() throws IOException{
         executeTarget("test9");
-        assertEqualContent(new File(TEST_PATH + "result.txt"),
-                    new File(TEST_PATH + "output.txt"));
+        String tmpdir = project.getProperty("tmp.dir");
+        assertEqualContent(new File(tmpdir, "result.txt"),
+                    new File(tmpdir, "output.txt"));
     }
     public void tearDown() {
         executeTarget("cleanup");

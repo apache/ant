@@ -22,10 +22,10 @@
 <br>
 <h2><a name="intro">Introduction</a></h2>
 <p>These tasks provide an interface to the <a href="http://www.perforce.com" target="_top">Perforce</a> SCM.
-The <code>org.apache.tools.ant.taskdefs.optional.perforce</code> package consists of a simple framework to support 
-p4 functionality as well as some Ant tasks encapsulating frequently used (by me :-) p4 commands. 
-However, the addition of new p4 commands is a pretty simple task (see the source). 
-Although it is possible to use these commands on the desktop, 
+The <code>org.apache.tools.ant.taskdefs.optional.perforce</code> package consists of a simple framework to support
+p4 functionality as well as some Ant tasks encapsulating frequently used (by me :-) p4 commands.
+However, the addition of new p4 commands is a pretty simple task (see the source).
+Although it is possible to use these commands on the desktop,
 they were primarily intended to be used by automated build systems.</p>
 
 <p><b>Note:</b> These tasks require the <a href="http://jakarta.apache.org/oro" target="_top">oro 2.0.XXX</a> regular
@@ -79,7 +79,7 @@ You will also need the Perforce client executable (p4 or p4.exe but not p4win.ex
         <td><a href="#p4revert">P4Revert</a></td>
         <td>Revert files</td>
     </tr>
-	    
+
     <tr>
         <td><a href="#p4add">P4Add</a></td>
         <td>Add files</td>
@@ -103,7 +103,7 @@ You will also need the Perforce client executable (p4 or p4.exe but not p4win.ex
 </table>
 
 <h3>General P4 Properties</h3>
-<p>Each p4 task requires a number of settings, either through build-wide properties, individual attributes 
+<p>Each p4 task requires a number of settings, either through build-wide properties, individual attributes
 or environment variables. These are
 </p>
 <table border="1" cellpadding="2" cellspacing="0">
@@ -147,7 +147,7 @@ or environment variables. These are
 <p> Your local installation of Perforce may require other settings (e.g.
 P4PASSWD, P4CONFIG). Many of these settings can be set using the globalopts
 attribute (described below), but not all. If a setting cannot be set
-by the command-line options, then it can only be set outside of Ant as an 
+by the command-line options, then it can only be set outside of Ant as an
 environment variable.
 </p>
 <p>
@@ -245,7 +245,7 @@ available from the <a href="http://www.perforce.com/" target="_top">Perforce web
 
 <h2><a name="p4change">P4Change</a></h2>
 <h3>Description:</h3>
-<p>Request a new changelist from the Perforce server. 
+<p>Request a new changelist from the Perforce server.
 This task sets the ${p4.change} property which can then be passed to <A HREF="#p4submit">P4Submit</A>,
 <A HREF="#p4edit">P4Edit</A>, or <a HREF="#p4add">P4Add</A>, or <a HREF="#p4delete">P4Delete</A>,
 then to <A HREF="#p4submit">P4Submit</A>.
@@ -384,7 +384,8 @@ is not the latest any more.
   </tr>
   <tr>
     <td valign="top">view</td>
-    <td valign="top">client view to use for label</td>
+    <td valign="top">client view to use for label<br/>
+    The view can contain multiple lines separated by ; or :</td>
     <td valign="top" align="center">No</td>
   </tr>
   <tr>
@@ -403,9 +404,10 @@ is not the latest any more.
 <h3>Examples</h3>
 <pre>
 &lt;p4label
-	name=&quot;NightlyBuild:${DSTAMP}:${TSTAMP}&quot; 
+	name=&quot;NightlyBuild:${DSTAMP}:${TSTAMP}&quot;
 	desc=&quot;Auto Nightly Build&quot;
 	lock=&quot;locked&quot;
+	label=&quot;//firstdepot/...;//secondepot/foo/bar/...&quot;
 /&gt;
 </pre>
 <hr>
@@ -614,7 +616,7 @@ Reverts files.
     <td valign="top">Revert only unchanged files (p4 revert -a)</td>
     <td valign="top" align="center">No</td>
   </tr>
-  
+
 </table>
 
 <h3>Examples</h3>
@@ -643,7 +645,7 @@ Adds files specified in nested fileset children.
   <tr>
     <td valign="top">commandlength</td>
     <td valign="top">A positive integer specifying the maximum length
-        of the commandline when calling Perforce to add the files. 
+        of the commandline when calling Perforce to add the files.
         Defaults to 450, higher values mean faster execution,
         but also possible failures.</td>
     <td valign="top" align="center">No</td>
@@ -655,7 +657,7 @@ specified pending changelist number; otherwise the open files are
 associated with the default changelist.</td>
     <td valign="top" align="center">No</td>
   </tr>
-  
+
 </table>
 
 <h3>Examples</h3>
@@ -920,7 +922,6 @@ P4Resolve does not use a change list number (it takes it from the files it is wo
 <pre>
 &lt;p4resolve
     view=&quot;//depot/projects/projectfoo/main/src/Blah.java...&quot;
-    change=&quot;${p4.change}&quot;
     resolvemode=&quot;automatic&quot;/&gt;
 </pre>
 
@@ -942,12 +943,12 @@ P4Resolve does not use a change list number (it takes it from the files it is wo
     <td valign="top">V1.1</td>
     <td valign="top">Fixed cross platform (NT/Unix) bug<br>
     Refactored p4 output handling code<br>
-    Refactored exec'ing code</td>    
+    Refactored exec'ing code</td>
 </tr>
 <tr>
     <td valign="top">Jan 2003</td>
     <td valign="top">V1.2</td>
-    <td valign="top">Added globalopts to P4Base to allow 
+    <td valign="top">Added globalopts to P4Base to allow
                      additional global options to be set.<br>
                      Added p4fstat task</td>
 </tr>
