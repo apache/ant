@@ -19,7 +19,7 @@ Other changes:
 * A GUI Frontend: Antidote. This is currently in development.
 
 * New tasks: stylebook, propertyfile, depend, antlr, telnet, csc,
-  ilasm, transform, javah, several clearcase tasks
+  ilasm, apply, javah, several clearcase tasks
 
 * Added output attribute to <java>.
 
@@ -39,7 +39,7 @@ Other changes:
 
 * New <mapper> data type that can be used to get influence on the
   target files for some tasks like <copy> or enable new types of tasks
-  like <transform>.
+  like <apply>.
 
 * <execon> provides more control over the command line now, the names
   of the source files are no longer required to be at the end of the
