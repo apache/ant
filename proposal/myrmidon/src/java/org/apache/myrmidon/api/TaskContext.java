@@ -96,6 +96,17 @@ public interface TaskContext
         throws TaskException;
 
     /**
+     * Create a Child Context.
+     * This allows separate hierarchly contexts to be easily constructed.
+     *
+     * @param name the name of sub-context
+     * @return the created TaskContext
+     * @exception TaskException if an error occurs
+     */
+    //TaskContext createSubContext( String name )
+    //throws TaskException;
+
+    /**
      * Safe wrapper class for Scope enums.
      */
     final class ScopeEnum

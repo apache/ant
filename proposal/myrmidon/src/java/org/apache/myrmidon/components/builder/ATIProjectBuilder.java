@@ -113,6 +113,8 @@ public class ATIProjectBuilder
 
             final SAXResult result = new SAXResult( handler );
             transformer.transform( new StreamSource( sourceID.toString() ), result );
+            //transformer.transform( new StreamSource( sourceID.toString() ), 
+            //new StreamResult( System.out ) );
         }        
     }
 

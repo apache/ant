@@ -7,6 +7,8 @@
 <project default="main" basedir=".">
 
   <target name="main">
+    <property name="year" value="2000"/>
+
     <echo message="Before template"/>
     <echo-template msg="Template echo 1!" />
     <echo-template msg="Template echo 2!" />
