@@ -184,6 +184,28 @@
            you in the right direction.
         </p>
                                       <h4 class="subsection">
+        <a name="Ensure that you are actually running the version of Ant that you think you do"></a>
+        Ensure that you are actually running the version of Ant that you think you do
+      </h4>
+                        <p>Many tools include a version of Ant and some Operating
+        Systems even install it by default now, so you may have a
+        version of Ant installed that you haven't been aware of.</p>
+                                <p>One of the first things to do is to run
+          <br /><br />
+          <font face="verdana" size="-1">ant -version</font>
+          <br /><br />
+          and
+          <br /><br />
+          <font face="verdana" size="-1">ant -diagnostics</font>
+          <br /><br />
+          to be sure.  Also, we highly recommend that you run Ant with
+          an empty CLASSPATH.  If any other version of Ant can be
+          loaded from the CLASSPATH, many types of errors may happen
+          because of incompatible classes being loaded.</p>
+                                <p>See <a href="faq.html">the FAQ</a> for <a href="faq.html#NoClassDefFoundError">some</a> <a href="faq.html#InstantiationException">examples</a>, but many
+        other problems are a result of an old version of Ant on your
+        system as well.</p>
+                                                    <h4 class="subsection">
         <a name="Read the Manual"></a>
         Read the Manual
       </h4>
