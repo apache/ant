@@ -141,7 +141,14 @@ public class CLIFrontEnd extends FrontEnd {
                 return;
             } else {
                 // XXX need to separate on path seps so that real paths can be taken
-                taskManager.addTaskPathNode(new File(argTaskpath));
+                try {
+                    taskManager.addTaskPathNode(new File(argTaskpath));
+                } catch (AntException ae) {
+                    System.out.println(ae);
+                    System.out.println(ae.getMessage());
+                    ae.printStackTrace(System.out);
+                    return;
+                }
             }
         }
         

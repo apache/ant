@@ -234,6 +234,7 @@ public class Project {
     public void startBuild(String targetName) throws AntException {
         
         // notify FrontEnd that we are starting a build on a project
+        
         frontEnd.notifyProjectStart(this);
         
         Target target = getTarget(targetName);

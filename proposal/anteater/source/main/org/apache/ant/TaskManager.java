@@ -47,7 +47,6 @@ public class TaskManager {
      * Creates a new TaskManager.
      */
     TaskManager(FrontEnd frontEnd) {
-        System.out.println("CREATING TM");
         this.frontEnd = frontEnd;
     }
     
@@ -58,7 +57,7 @@ public class TaskManager {
     /**
      * Adds a node to the task path 
      */
-    public void addTaskPathNode(File file) {
+    public void addTaskPathNode(File file) throws AntException {
         taskPathNodes.addElement(file);
         processTaskPathNode(file);
     }
@@ -141,7 +140,7 @@ public class TaskManager {
     /**
      * Processes a jar file to get class definitions from it
      */
-    private void processJar(File file) {
+    private void processJar(File file) throws AntException {
         frontEnd.writeMessage("Scanning " + file + " for tasks", 
                                        FrontEnd.MSG_LEVEL_LOW);
         try {
@@ -155,8 +154,14 @@ public class TaskManager {
             
                 Enumeration enum = getTaskNames(props);
                 while (enum.hasMoreElements()) {
+
                     String taskName = (String)enum.nextElement();
                     String taskClass = props.getProperty("task." + taskName + ".class");
+                    if (taskClass == null) {
+                        String msg = "No class definition for task " + taskName +
+                                     "in jar file " + file;
+                        throw new AntException(msg);
+                    }
                     URLClassLoader loader = new URLClassLoader(new URL[] {file.toURL()});
                     try {
                         Class clazz = loader.loadClass(taskClass);
@@ -183,7 +188,7 @@ public class TaskManager {
      * Processes a node of the task path searching for task definitions there
      * and adding them to the list of known tasks
      */
-    private void processTaskPathNode(File file) {
+    private void processTaskPathNode(File file) throws AntException {
     
         // task path nodes can be any of the following:
         //     * jar file
@@ -214,7 +219,7 @@ public class TaskManager {
      * system directory, and then installation. This allows users or
      * system admins to override or add tasks.
      */
-    private void setUpTaskPath() {
+    private void setUpTaskPath() throws AntException {
         
         // 1st, add user's home dir.
         

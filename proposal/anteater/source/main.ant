@@ -8,10 +8,11 @@
 
   <description>Primary buildfile for building Ant itself</description>
 
-  <property name="foo" value="bar"/>
+  <property name="foo" value="true"/>
 
   <target name="default" depends="main">
     <echo text="Default Target is Executing"/>
+    <buildtarget target="main" if="foo"/>
   </target>
 
   <target name="main">
