@@ -2,7 +2,7 @@
  * Copyright (C) The Apache Software Foundation. All rights reserved.
  *
  * This software is published under the terms of the Apache Software License
- * version 1.1, a copy of which has been included  with this distribution in
+ * version 1.1, a copy of which has been included with this distribution in
  * the LICENSE.txt file.
  */
 package org.apache.antlib.cvslib;
@@ -12,6 +12,8 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Hashtable;
 import java.util.Properties;
+import org.apache.avalon.excalibur.i18n.Resources;
+import org.apache.avalon.excalibur.i18n.ResourceManager;
 import org.apache.aut.nativelib.ExecOutputHandler;
 
 /**
@@ -23,6 +25,9 @@ import org.apache.aut.nativelib.ExecOutputHandler;
 class ChangeLogParser
     implements ExecOutputHandler
 {
+    private final static Resources REZ =
+        ResourceManager.getPackageResources( ChangeLogParser.class );
+
     //private static final int GET_ENTRY = 0;
     private static final int GET_FILE = 1;
     private static final int GET_DATE = 2;
@@ -71,6 +76,15 @@ class ChangeLogParser
 
     /**
      * Receive notification about the process writing
+     * to standard error.
+     */
+    public void stderr( String line )
+    {
+        //ignore
+    }
+
+    /**
+     * Receive notification about the process writing
      * to standard output.
      */
     public void stdout( final String line )
@@ -83,7 +97,8 @@ class ChangeLogParser
             case GET_REVISION:
                 processRevision( line );
                 //Was a fall through ....
-                //break;
+                break;
+
             case GET_DATE:
                 processDate( line );
                 break;
@@ -106,7 +121,17 @@ class ChangeLogParser
     private void processComment( final String line )
     {
         final String lineSeparator = System.getProperty( "line.separator" );
-        if( line.startsWith( "======" ) || line.startsWith( "------" ) )
+        if( line.startsWith( "======" ) )
+        {
+            //We have ended changelog for that particular file
+            //so we can save it
+            final int end = m_comment.length() - lineSeparator.length(); //was -1
+            m_comment = m_comment.substring( 0, end );
+            m_comment = "<![CDATA[" + m_comment + "]]>";
+            saveEntry();
+            m_status = GET_FILE;
+        }
+        else if( line.startsWith( "------" ) )
         {
             final int end = m_comment.length() - lineSeparator.length(); //was -1
             m_comment = m_comment.substring( 0, end );
@@ -180,48 +205,38 @@ class ChangeLogParser
      */
     private void processGetPreviousRevision( final String line )
     {
-        final String entryKey = m_date + m_author + m_comment;
-        if( line.startsWith( "revision" ) )
+        if( !line.startsWith( "revision" ) )
         {
-            m_previousRevision = line.substring( 9 );
-            m_status = GET_FILE;
+            final String message =
+                REZ.getString( "changelog.unexpected.line", line );
+            throw new IllegalStateException( message );
+        }
+        m_previousRevision = line.substring( 9 );
 
-            CVSEntry entry;
-            if( !m_entries.containsKey( entryKey ) )
-            {
-                entry = new CVSEntry( parseDate( m_date ), m_author, m_comment );
-                m_entries.put( entryKey, entry );
-            }
-            else
-            {
-                entry = (CVSEntry)m_entries.get( entryKey );
-            }
-            entry.addFile( m_file, m_revision, m_previousRevision );
-        }
-        else if( line.startsWith( "======" ) )
-        {
-            m_status = GET_FILE;
-            CVSEntry entry;
-            if( !m_entries.containsKey( entryKey ) )
-            {
-                entry = new CVSEntry( parseDate( m_date ), m_author, m_comment );
-                m_entries.put( entryKey, entry );
-            }
-            else
-            {
-                entry = (CVSEntry)m_entries.get( entryKey );
-            }
-            entry.addFile( m_file, m_revision );
-        }
+        saveEntry();
+
+        m_revision = m_previousRevision;
+        m_status = GET_COMMENT;
     }
 
     /**
-     * Receive notification about the process writing
-     * to standard error.
+     * Utility method that saves the current entry.
      */
-    public void stderr( String line )
+    private void saveEntry()
     {
-        //ignored
+        final String entryKey = m_date + m_author + m_comment;
+        CVSEntry entry;
+        if( !m_entries.containsKey( entryKey ) )
+        {
+            entry = new CVSEntry( parseDate( m_date ), m_author, m_comment );
+            m_entries.put( entryKey, entry );
+        }
+        else
+        {
+            entry = (CVSEntry)m_entries.get( entryKey );
+        }
+
+        entry.addFile( m_file, m_revision, m_previousRevision );
     }
 
     /**

@@ -19,13 +19,16 @@ import java.util.Properties;
 import java.util.Vector;
 import java.util.ArrayList;
 import java.util.Date;
+import java.text.SimpleDateFormat;
 import org.apache.avalon.excalibur.i18n.ResourceManager;
 import org.apache.avalon.excalibur.i18n.Resources;
 import org.apache.avalon.excalibur.io.IOUtil;
 import org.apache.myrmidon.api.AbstractTask;
 import org.apache.myrmidon.api.TaskException;
 import org.apache.myrmidon.framework.Execute;
+import org.apache.myrmidon.framework.FileSet;
 import org.apache.tools.todo.types.Commandline;
+import org.apache.tools.todo.types.DirectoryScanner;
 
 /**
  * Change log task.
@@ -86,6 +89,13 @@ public class ChangeLog
     private Date m_stop;
 
     /**
+     * Filesets containting list of files against which the cvs log will be
+     * performed. If empty then all files will in the working directory will
+     * be checked.
+     */
+    private final Vector m_filesets = new Vector();
+
+    /**
      * Set the base dir for cvs.
      */
     public void setBasedir( final File basedir )
@@ -140,6 +150,25 @@ public class ChangeLog
     }
 
     /**
+     * Set the numbers of days worth of log entries to process.
+     */
+    public void setDaysinpast( final int days )
+    {
+        final long time = System.currentTimeMillis() - (long)days * 24 * 60 * 60 * 1000;
+        setStart( new Date( time ) );
+    }
+
+    /**
+     * Adds a set of files about which cvs logs will be generated.
+     *
+     * @param fileSet a set of files about which cvs logs will be generated.
+     */
+    public void addFileset( final FileSet fileSet )
+    {
+        m_filesets.addElement( fileSet );
+    }
+
+    /**
      * Execute task
      */
     public void execute() throws TaskException
@@ -160,6 +189,36 @@ public class ChangeLog
         final Commandline command = new Commandline();
         command.setExecutable( "cvs" );
         command.addArgument( "log" );
+
+        if( null != m_start )
+        {
+            final SimpleDateFormat outputDate =
+                new SimpleDateFormat( "yyyy-MM-dd" );
+
+            // We want something of the form: -d ">=YYYY-MM-dd"
+            final String dateRange = "-d >=" + outputDate.format( m_start );
+            command.addArgument( dateRange );
+        }
+
+        // Check if list of files to check has been specified
+        /*
+        if( !m_filesets.isEmpty() )
+        {
+            final Enumeration e = m_filesets.elements();
+            while( e.hasMoreElements() )
+            {
+                final FileSet fileSet = (FileSet)e.nextElement();
+                //FIXME: DOES NOT WORK
+                final DirectoryScanner scanner = new DirectoryScanner();
+                //fileSet.getDirectoryScanner( null );
+                final String[] files = scanner.getIncludedFiles();
+                for( int i = 0; i < files.length; i++ )
+                {
+                    command.addArgument( files[ i ] );
+                }
+            }
+        }
+        */
 
         final ChangeLogParser parser = new ChangeLogParser( userList );
         final Execute exe = new Execute();
