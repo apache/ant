@@ -318,37 +318,11 @@ public class CLIMain
             return;
         }
 
-        //handle logging...
-        final String logLevel = m_parameters.getParameter( "log.level", null );
-        enableLogging( new LogKitLogger( createLogger( logLevel ) ) );
+        prepareLogging();
 
-        final String home = m_parameters.getParameter( "myrmidon.home", null );
-        final File homeDir = ( new File( home ) ).getAbsoluteFile();
-        if( !homeDir.isDirectory() )
-        {
-            final String message = REZ.getString( "home-not-dir.error", homeDir );
-            throw new Exception( message );
-        }
+        final File homeDir = getHomeDir();
+        final File buildFile = getBuildFile();
 
-        final String filename = m_parameters.getParameter( "filename", null );
-        final File buildFile = ( new File( filename ) ).getCanonicalFile();
-        if( !buildFile.isFile() )
-        {
-            final String message = REZ.getString( "bad-file.error", buildFile );
-            throw new Exception( message );
-        }
-
-        if( getLogger().isInfoEnabled() )
-        {
-            final String message = REZ.getString( "buildfile.notice", buildFile );
-            getLogger().info( message );
-        }
-
-        if( getLogger().isInfoEnabled() )
-        {
-            final String message = REZ.getString( "homedir.notice", homeDir );
-            getLogger().info( message );
-        }
         //getLogger().info( "Ant Bin Directory: " + m_binDir );
         //getLogger().debug( "Ant Lib Directory: " + m_libDir );
         //getLogger().debug( "Ant Task Lib Directory: " + m_taskLibDir );
@@ -359,36 +333,37 @@ public class CLIMain
                                        "org.apache.myrmidon.components.executor.PrintingExecutor" );
         }
 
-        final Embeddor embeddor = createEmbeddor();
-        setupLogger( embeddor );
-        embeddor.parameterize( m_parameters );
-        embeddor.initialize();
-        embeddor.start();
-
-        //create the listener
-        final String listenerName = m_parameters.getParameter( "listener", null );
-        final ProjectListener listener = embeddor.createListener( listenerName );
+        final Embeddor embeddor = prepareEmbeddor();
+        final ProjectListener listener = prepareListener( embeddor );
 
         //create the project
         final Project project =
             embeddor.createProject( buildFile.toString(), null, m_builderParameters );
 
-        BufferedReader reader = null;
-
         //loop over build if we are in incremental mode..
         final boolean incremental = m_parameters.getParameterAsBoolean( "incremental", false );
+        if( !incremental )
+        {
+            executeBuild( embeddor, project, listener );
+        }
+        else
+        {
+            executeIncrementalBuild( embeddor, project, listener );
+        }
+
+        shutdownEmbeddor( embeddor );
+    }
+
+    private void executeIncrementalBuild( final Embeddor embeddor,
+                                          final Project project,
+                                          final ProjectListener listener )
+        throws Exception
+    {
+        BufferedReader reader = null;
+
         while( true )
         {
-            //actually do the build ...
-            final Workspace workspace = embeddor.createWorkspace( m_defines );
-            workspace.addProjectListener( listener );
-
-            doBuild( workspace, project, m_targets );
-
-            if( !incremental )
-            {
-                break;
-            }
+            executeBuild( embeddor, project, listener );
 
             final String message = REZ.getString( "repeat.notice" );
             System.out.println( message );
@@ -406,9 +381,90 @@ public class CLIMain
             }
 
         }
+    }
 
+    private void executeBuild( final Embeddor embeddor,
+                               final Project project,
+                               final ProjectListener listener )
+        throws Exception
+    {
+        //actually do the build ...
+        final Workspace workspace = embeddor.createWorkspace( m_defines );
+        workspace.addProjectListener( listener );
+
+        doBuild( workspace, project, m_targets );
+    }
+
+    private File getBuildFile() throws Exception
+    {
+        final String filename = m_parameters.getParameter( "filename", null );
+        final File buildFile = ( new File( filename ) ).getCanonicalFile();
+        if( !buildFile.isFile() )
+        {
+            final String message = REZ.getString( "bad-file.error", buildFile );
+            throw new Exception( message );
+        }
+
+        if( getLogger().isInfoEnabled() )
+        {
+            final String message = REZ.getString( "buildfile.notice", buildFile );
+            getLogger().info( message );
+        }
+
+        return buildFile;
+    }
+
+    private File getHomeDir() throws Exception
+    {
+        final String home = m_parameters.getParameter( "myrmidon.home", null );
+        final File homeDir = ( new File( home ) ).getAbsoluteFile();
+        if( !homeDir.isDirectory() )
+        {
+            final String message = REZ.getString( "home-not-dir.error", homeDir );
+            throw new Exception( message );
+        }
+
+        if( getLogger().isInfoEnabled() )
+        {
+            final String message = REZ.getString( "homedir.notice", homeDir );
+            getLogger().info( message );
+        }
+
+        return homeDir;
+    }
+
+    private void prepareLogging() throws Exception
+    {
+        //handle logging...
+        final String logLevel = m_parameters.getParameter( "log.level", null );
+        enableLogging( new LogKitLogger( createLogger( logLevel ) ) );
+    }
+
+    private void shutdownEmbeddor( final Embeddor embeddor )
+        throws Exception
+    {
         embeddor.stop();
         embeddor.dispose();
+    }
+
+    private ProjectListener prepareListener( final Embeddor embeddor )
+        throws Exception
+    {
+        //create the listener
+        final String listenerName = m_parameters.getParameter( "listener", null );
+        final ProjectListener listener = embeddor.createListener( listenerName );
+        return listener;
+    }
+
+    private Embeddor prepareEmbeddor()
+        throws Exception
+    {
+        final Embeddor embeddor = createEmbeddor();
+        setupLogger( embeddor );
+        embeddor.parameterize( m_parameters );
+        embeddor.initialize();
+        embeddor.start();
+        return embeddor;
     }
 
     private Embeddor createEmbeddor()
