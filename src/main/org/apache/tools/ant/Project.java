@@ -415,7 +415,7 @@ public class Project {
      * @param value The new value of the property.
      *              Must not be <code>null</code>.
      */
-    public void setProperty(String name, String value) {
+    public synchronized void setProperty(String name, String value) {
         // command line properties take precedence
         if (null != userProperties.get(name)) {
             log("Override ignored for user property " + name, MSG_VERBOSE);
@@ -443,7 +443,7 @@ public class Project {
      *              Must not be <code>null</code>.
      * @since 1.5
      */
-    public void setNewProperty(String name, String value) {
+    public synchronized void setNewProperty(String name, String value) {
         if (null != properties.get(name)) {
             log("Override ignored for property " + name, MSG_VERBOSE);
             return;
@@ -462,7 +462,7 @@ public class Project {
      *              Must not be <code>null</code>.
      * @see #setProperty(String,String)
      */
-    public void setUserProperty(String name, String value) {
+    public synchronized void setUserProperty(String name, String value) {
         log("Setting ro project property: " + name + " -> " +
             value, MSG_DEBUG);
         userProperties.put(name, value);
@@ -892,23 +892,24 @@ public class Project {
      *                  Must not be <code>null</code>.
      */
     public void addDataTypeDefinition(String typeName, Class typeClass) {
-        Class old = (Class) dataClassDefinitions.get(typeName);
-        if (null != old) {
-            if (old.equals(typeClass)) {
-                log("Ignoring override for datatype " + typeName
-                    + ", it is already defined by the same class.",
-                    MSG_VERBOSE);
-                return;
-            } else {
-                log("Trying to override old definition of datatype "
-                    + typeName, MSG_WARN);
+        synchronized(dataClassDefinitions) {
+            Class old = (Class) dataClassDefinitions.get(typeName);
+            if (null != old) {
+                if (old.equals(typeClass)) {
+                    log("Ignoring override for datatype " + typeName
+                        + ", it is already defined by the same class.",
+                        MSG_VERBOSE);
+                    return;
+                } else {
+                    log("Trying to override old definition of datatype "
+                        + typeName, MSG_WARN);
+                }
             }
+            dataClassDefinitions.put(typeName, typeClass);
         }
-
         String msg = " +User datatype: " + typeName + "     "
             + typeClass.getName();
         log(msg, MSG_DEBUG);
-        dataClassDefinitions.put(typeName, typeClass);
     }
 
     /**
@@ -1676,22 +1677,24 @@ public class Project {
      * @param value The value of the reference. Must not be <code>null</code>.
      */
     public void addReference(String name, Object value) {
-        Object old = references.get(name);
-        if (old == value) {
-            // no warning, this is not changing anything
-            return;
+        synchronized (references) {
+            Object old = references.get(name);
+            if (old == value) {
+                // no warning, this is not changing anything
+                return;
+            }
+            if (old != null) {
+                log("Overriding previous definition of reference to " + name,
+                    MSG_WARN);
+            }
+            log("Adding reference: " + name + " -> " + value, MSG_DEBUG);
+            references.put(name, value);
         }
-        if (old != null) {
-            log("Overriding previous definition of reference to " + name,
-                MSG_WARN);
-        }
-        log("Adding reference: " + name + " -> " + value, MSG_DEBUG);
-        references.put(name, value);
     }
 
     /**
      * Returns a map of the references in the project (String to Object).
-     * The returned hashtable is "live" and so should not be modified.
+     * The returned hashtable is "live" and so must not be modified.
      *
      * @return a map of the references in the project (String to Object).
      */
@@ -1925,9 +1928,9 @@ public class Project {
      *
      * @param thread the thread on which the task is registered.
      * @param task the task to be registered.
-     * @since 1.102, Ant 1.5
+     * @since Ant 1.5
      */
-    public void registerThreadTask(Thread thread, Task task) {
+    public synchronized void registerThreadTask(Thread thread, Task task) {
         if (task != null) {
             threadTasks.put(thread, task);
         } else {
