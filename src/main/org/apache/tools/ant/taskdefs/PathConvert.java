@@ -161,14 +161,19 @@ public class PathConvert extends Task {
 
         targetOS = target.toLowerCase();
 
-        if( ! targetOS.equals( "windows" ) && ! target.equals( "unix" ) ) {
-            throw new BuildException( "targetos must be one of 'unix' or 'windows'" );
+        if( ! targetOS.equals( "windows" ) && ! target.equals( "unix" ) && 
+            ! targetOS.equals( "netware" )) {
+            throw new BuildException( "targetos must be one of 'unix', 'netware', or 'windows'" );
         }
 
         // Currently, we deal with only two path formats: Unix and Windows
         // And Unix is everything that is not Windows
 
-        targetWindows = targetOS.equals("windows");
+        // for NetWare, piggy-back on Windows, since in the validateSetup code,
+        // the same assumptions can be made as with windows -
+        // that ; is the path separator
+
+        targetWindows = (targetOS.equals("windows") || targetOS.equals("netware"));
     }
 
     /**
@@ -235,9 +240,15 @@ public class PathConvert extends Task {
 
         // Currently, we deal with only two path formats: Unix and Windows
         // And Unix is everything that is not Windows
+        // (with the exception for NetWare below)
 
         String osname = System.getProperty("os.name").toLowerCase();
-        onWindows = ( osname.indexOf("windows") >= 0 );
+
+        // for NetWare, piggy-back on Windows, since here and in the
+        // apply code, the same assumptions can be made as with windows -
+        // that \\ is an OK separator, and do comparisons case-insensitive.
+        onWindows = ( (osname.indexOf("windows") >= 0) ||
+                      (osname.indexOf("netware") >= 0)  );
 
         // Determine the from/to char mappings for dir sep
         char fromDirSep = onWindows ? '\\' : '/';
