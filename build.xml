@@ -403,6 +403,23 @@
          manifest="${manifest}">
       <exclude name="org/apache/tools/ant/taskdefs/optional/**" />
       <metainf dir="${build.dir}" includes="LICENSE.txt"/>
+
+      <manifest>
+        <section name="org/apache/tools/ant">
+          <attribute name="Specification-Title"
+                     value="Apache Ant" />
+          <attribute name="Specification-Version"
+                     value="${version}" />
+          <attribute name="Specification-Vendor"
+                     value="Apache Software Foundation" />
+          <attribute name="Implementation-Title"
+                     value="org.apache.tools.ant" />
+          <attribute name="Implementation-Version"
+                     value="${version} ${TODAY}" />
+          <attribute name="Implementation-Vendor"
+                     value="Apache Software Foundation" />
+        </section>
+      </manifest>
     </jar>
 
     <jar destfile="${build.lib}/optional.jar"
@@ -410,6 +427,23 @@
          manifest="${manifest}">
       <include name="org/apache/tools/ant/taskdefs/optional/**" />
       <metainf dir="${build.dir}" includes="LICENSE.txt"/>
+
+      <manifest>
+        <section name="org/apache/tools/ant/taskdefs/optional">
+          <attribute name="Specification-Title"
+                     value="Apache Ant Optional Tasks" />
+          <attribute name="Specification-Version"
+                     value="${version}" />
+          <attribute name="Specification-Vendor"
+                     value="Apache Software Foundation" />
+          <attribute name="Implementation-Title"
+                     value="org.apache.tools.ant.taskdefs.optional" />
+          <attribute name="Implementation-Version"
+                     value="${version} ${TODAY}" />
+          <attribute name="Implementation-Vendor"
+                     value="Apache Software Foundation" />
+        </section>
+      </manifest>
     </jar>
 
   </target>
