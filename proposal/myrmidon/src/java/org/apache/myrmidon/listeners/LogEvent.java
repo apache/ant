@@ -19,10 +19,10 @@ public interface LogEvent
     /**
      * Returns the message.
      */
-    public String getMessage();
+    String getMessage();
 
     /**
      * Returns the error that occurred.
      */
-    public Throwable getThrowable();
+    Throwable getThrowable();
 }

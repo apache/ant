@@ -19,5 +19,5 @@ public interface TaskEvent
     /**
      * Returns the name of the task.
      */
-    public String getTaskName();
+    String getTaskName();
 }

@@ -21,5 +21,5 @@ public interface TargetEvent
     /**
      * Returns the name of the target.
      */
-    public String getTargetName();
+    String getTargetName();
 }

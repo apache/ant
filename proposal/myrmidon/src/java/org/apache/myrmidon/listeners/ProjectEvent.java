@@ -20,5 +20,5 @@ public interface ProjectEvent
     /**
      * Returns the name of the project.
      */
-    public String getProjectName();
+    String getProjectName();
 }
