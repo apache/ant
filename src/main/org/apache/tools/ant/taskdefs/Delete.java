@@ -68,9 +68,10 @@ import java.util.*;
  * to provide backwards compatibility for a release.  The future position
  * is to use nested filesets exclusively.</p>
  * 
- * @author stefano@apache.org
+ * @author Stefano Mazzocchi <a href="mailto:stefano@apache.org">stefano@apache.org</a>
  * @author Tom Dimock <a href="mailto:tad1@cornell.edu">tad1@cornell.edu</a>
  * @author Glenn McAllister <a href="mailto:glennm@ca.ibm.com">glennm@ca.ibm.com</a>
+ * @author Jon S. Stevens <a href="mailto:jon@latchkey.com">jon@latchkey.com</a>
  */
 public class Delete extends MatchingTask {
     protected File file = null;
@@ -79,6 +80,7 @@ public class Delete extends MatchingTask {
     protected boolean usedMatchingTask = false;
 
     private int verbosity = Project.MSG_VERBOSE;
+    private boolean quiet = false;
 
     /**
      * Set the name of a single file to be removed.
@@ -109,6 +111,19 @@ public class Delete extends MatchingTask {
         } else {
             this.verbosity = Project.MSG_VERBOSE;
         } 
+    } 
+
+    /**
+     * If the file does not exist, do not display a diagnostic 
+     * message or modify the exit status to reflect an error.
+     * This means that if a file or directory cannot be deleted,
+     * then no error is reported. This setting emulates the 
+     * -f option to the Unix &quot;rm&quot; command.
+     * Default is false meaning things are &quot;noisy&quot;
+     * @param quiet "true" or "on"
+     */
+    public void setQuiet(boolean quiet) {
+        this.quiet = quiet;
     } 
 
     /**
@@ -218,7 +233,7 @@ public class Delete extends MatchingTask {
                 } else {
                     log("Deleting: " + file.getAbsolutePath());
   
-                    if (!file.delete()) {
+                    if (!quiet && !file.delete()) {
                         throw new BuildException("Unable to delete file " + file.getAbsolutePath());
                     } 
                 } 
@@ -262,13 +277,13 @@ public class Delete extends MatchingTask {
                 removeDir(f);
             } else {
                 log("Deleting " + f.getAbsolutePath(), verbosity);
-                if (!f.delete()) {
+                if (!quiet && !f.delete()) {
                     throw new BuildException("Unable to delete file " + f.getAbsolutePath());
                 }
             }
         }
         log("Deleting directory " + d.getAbsolutePath(), verbosity);
-        if (!d.delete()) {
+        if (!quiet && !d.delete()) {
             throw new BuildException("Unable to delete directory " + dir.getAbsolutePath());
         }
     }
@@ -279,7 +294,7 @@ public class Delete extends MatchingTask {
             for (int j=0; j<files.length; j++) {
                 File f = new File(d, files[j]);
                 log("Deleting " + f.getAbsolutePath(), verbosity);
-                if (!f.delete()) {
+                if (!quiet && !f.delete()) {
                     throw new BuildException("Unable to delete file " + f.getAbsolutePath());
                 }
             }
