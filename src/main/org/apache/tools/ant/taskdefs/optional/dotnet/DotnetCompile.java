@@ -160,6 +160,8 @@ public abstract class DotnetCompile
 
     protected String executable;
 
+    protected Boolean standardLib;
+
     /**
      *  Fix .NET reference inclusion. .NET is really dumb in how it handles
      *  inclusion. You have to list every 'assembly' -read DLL that is imported.
@@ -392,7 +394,11 @@ public abstract class DotnetCompile
      *@return    The Parameter to CSC
      */
     protected String getIncludeDefaultReferencesParameter() {
-        return "/nostdlib" + (includeDefaultReferences ? "-" : "+");
+        if(standardLib==null) {
+            return "/nostdlib" + (includeDefaultReferences ? "-" : "+");
+        } else {
+            return null;
+        }
     }
 
 
@@ -817,6 +823,29 @@ public abstract class DotnetCompile
     }
 
     /**
+     * turn standard lib support on or off.
+     * Setting this in either direction overrides anything set in defaultreferences.
+     * @param standardLib
+     */
+    public void setStandardLib(Boolean standardLib) {
+        this.standardLib = standardLib;
+    }
+
+
+    /**
+     *  get the include default references flag or null for no argument needed
+     *
+     *@return    The Parameter to CSC
+     */
+    protected String getStandardLibParameter() {
+        if (standardLib != null) {
+            return "/nostdlib" + (standardLib.booleanValue() ? "-" : "+");
+        } else {
+            return null;
+        }
+    }
+
+    /**
      *  test for a string containing something useful
      *
      *@param  s  string in
@@ -909,6 +938,7 @@ public abstract class DotnetCompile
         command.addArgument(getAdditionalModulesParameter());
         command.addArgument(getDebugParameter());
         command.addArgument(getDefaultReferenceParameter());
+        command.addArgument(getStandardLibParameter());
         command.addArgument(getDefinitionsParameter());
         command.addArgument(getExtraOptionsParameter());
         command.addArgument(getMainClassParameter());
