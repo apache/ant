@@ -36,7 +36,7 @@
 
           <tr>
             <td>Document Path datatype</td>
-            <td>Its documented, but more hidden than the other types</td>
+            <td>It's documented, but more hidden than the other types</td>
             <td>Erik</td>
           </tr>
 
@@ -75,6 +75,15 @@
             <td>Peter</td>
           </tr>
 
+          <tr>
+            <td>Fully functional on Java 1.4</td>
+            <td>Fix outstanding java1.4 defects, maybe add an 
+            assertions datatype for java and other tasks (junit?)
+            which lets people turn on asserts.
+            </td>
+            <td>Steve + any other help he can get</td>
+          </tr>
+          
 <!-- for cut and paste use
           <tr>
             <td></td>
