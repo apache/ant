@@ -66,55 +66,55 @@ import org.apache.tools.ant.input.PropertyFileInputHandler;
 import org.apache.tools.ant.types.Path;
 
 /**
- * @author Nico Seessle <nico@seessle.de> 
- * @author <a href="mailto:stefan.bodewig@epost.de">Stefan Bodewig</a> 
+ * @author Nico Seessle <nico@seessle.de>
+ * @author <a href="mailto:stefan.bodewig@epost.de">Stefan Bodewig</a>
  * @version $Revision$
  */
-public class AntTest extends BuildFileTest { 
-    
-    public AntTest(String name) { 
+public class AntTest extends BuildFileTest {
+
+    public AntTest(String name) {
         super(name);
-    }    
-    
-    public void setUp() { 
+    }
+
+    public void setUp() {
         configureProject("src/etc/testcases/taskdefs/ant.xml");
     }
-    
+
     public void tearDown() {
         executeTarget("cleanup");
     }
 
-    public void test1() { 
+    public void test1() {
         expectBuildException("test1", "recursive call");
     }
 
     // target must be specified
-    public void test2() { 
+    public void test2() {
         expectBuildException("test2", "required argument not specified");
     }
 
     // Should fail since a recursion will occur...
-    public void test3() { 
+    public void test3() {
         expectBuildException("test1", "recursive call");
     }
 
-    public void test4() { 
+    public void test4() {
         expectBuildException("test4", "target doesn't exist");
     }
 
-    public void test5() { 
+    public void test5() {
         executeTarget("test5");
     }
 
-    public void test6() { 
+    public void test6() {
         executeTarget("test6");
     }
 
     public void testExplicitBasedir1() {
         File dir1 = getProjectDir();
         File dir2 = project.resolveFile("..");
-        testBaseDirs("explicitBasedir1", 
-                     new String[] {dir1.getAbsolutePath(), 
+        testBaseDirs("explicitBasedir1",
+                     new String[] {dir1.getAbsolutePath(),
                                    dir2.getAbsolutePath()
                      });
     }
@@ -123,7 +123,7 @@ public class AntTest extends BuildFileTest {
         File dir1 = getProjectDir();
         File dir2 = project.resolveFile("..");
         testBaseDirs("explicitBasedir2",
-                     new String[] {dir1.getAbsolutePath(), 
+                     new String[] {dir1.getAbsolutePath(),
                                    dir2.getAbsolutePath()
                      });
     }
@@ -138,7 +138,7 @@ public class AntTest extends BuildFileTest {
         File dir2 = project.resolveFile("ant");
         String basedir = getProjectDir().getAbsolutePath();
         testBaseDirs("doNotInheritBasedir",
-                     new String[] {dir1.getAbsolutePath(), 
+                     new String[] {dir1.getAbsolutePath(),
                                    dir2.getAbsolutePath()
                      });
     }
@@ -146,8 +146,8 @@ public class AntTest extends BuildFileTest {
     public void testBasedirTripleCall() {
         File dir1 = getProjectDir();
         File dir2 = project.resolveFile("ant");
-        testBaseDirs("tripleCall", 
-                     new String[] {dir1.getAbsolutePath(), 
+        testBaseDirs("tripleCall",
+                     new String[] {dir1.getAbsolutePath(),
                                    dir2.getAbsolutePath(),
                                    dir1.getAbsolutePath()
                      });
@@ -171,10 +171,10 @@ public class AntTest extends BuildFileTest {
         project.addReference("no-override", p);
         testReference("testInherit", new String[] {"path", "path"},
                       new boolean[] {true, true}, p);
-        testReference("testInherit", 
+        testReference("testInherit",
                       new String[] {"no-override", "no-override"},
                       new boolean[] {true, false}, p);
-        testReference("testInherit", 
+        testReference("testInherit",
                       new String[] {"no-override", "no-override"},
                       new boolean[] {false, false}, null);
     }
@@ -188,10 +188,10 @@ public class AntTest extends BuildFileTest {
                       new boolean[] {true, false}, p);
         testReference("testNoInherit", new String[] {"path", "path"},
                       new boolean[] {false, true}, null);
-        testReference("testInherit", 
+        testReference("testInherit",
                       new String[] {"no-override", "no-override"},
                       new boolean[] {true, false}, p);
-        testReference("testInherit", 
+        testReference("testInherit",
                       new String[] {"no-override", "no-override"},
                       new boolean[] {false, false}, null);
     }
@@ -208,7 +208,7 @@ public class AntTest extends BuildFileTest {
                       new boolean[] {false, true}, p);
     }
 
-    protected void testReference(String target, String[] keys, 
+    protected void testReference(String target, String[] keys,
                                  boolean[] expect, Object value) {
         ReferenceChecker rc = new ReferenceChecker(keys, expect, value);
         project.addBuildListener(rc);
@@ -231,7 +231,7 @@ public class AntTest extends BuildFileTest {
             assertTrue(logFiles[i].getName()+" doesn\'t exist",
                        !logFiles[i].exists());
         }
-        
+
         executeTarget("testLogfilePlacement");
 
         for (int i=0; i<logFiles.length; i++) {
@@ -256,9 +256,9 @@ public class AntTest extends BuildFileTest {
     public void testRefId() {
         Path testPath = new Path(project);
         testPath.createPath().setPath(System.getProperty("java.class.path"));
-        PropertyChecker pc = 
+        PropertyChecker pc =
             new PropertyChecker("testprop",
-                                new String[] {null, 
+                                new String[] {null,
                                               testPath.toString()});
         project.addBuildListener(pc);
         executeTarget("testRefid");
@@ -267,6 +267,28 @@ public class AntTest extends BuildFileTest {
             throw ae;
         }
         project.removeBuildListener(pc);
+    }
+
+    public void testUserPropertyWinsInheritAll() {
+        getProject().setUserProperty("test", "7");
+        expectLogContaining("test-property-override-inheritall-start",
+                            "The value of test is 7");
+    }
+
+    public void testUserPropertyWinsNoInheritAll() {
+        getProject().setUserProperty("test", "7");
+        expectLogContaining("test-property-override-no-inheritall-start",
+                            "The value of test is 7");
+    }
+
+    public void testOverrideWinsInheritAll() {
+        expectLogContaining("test-property-override-inheritall-start",
+                            "The value of test is 4");
+    }
+
+    public void testOverrideWinsNoInheritAll() {
+        expectLogContaining("test-property-override-no-inheritall-start",
+                            "The value of test is 4");
     }
 
     private class BasedirChecker implements BuildListener {
@@ -325,7 +347,7 @@ public class AntTest extends BuildFileTest {
         public void targetStarted(BuildEvent event) {
             if (error == null) {
                 try {
-                    String msg = 
+                    String msg =
                         "Call " + calls + " refid=\'" + keys[calls] + "\'";
                     if (value == null) {
                         Object o = event.getProject().getReference(keys[calls]);

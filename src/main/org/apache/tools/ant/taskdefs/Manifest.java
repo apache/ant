@@ -76,8 +76,20 @@ import org.apache.tools.ant.types.EnumeratedAttribute;
 import org.apache.tools.ant.util.CollectionUtils;
 
 /**
- * Class to manage Manifest information
  *
+ * Creates a manifest file for inclusion in a JAR.
+ * This task can be used to write a Manifest file, optionally
+ *  replacing or updating an existing file.
+ * Manifests are processed according to the
+ * {@link <a href="http://java.sun.com/j2se/1.4/docs/guide/jar/jar.html">Jar
+ * file specification.</a>}.
+ * Specifically, a manifest element consists of
+ * a set of attributes and sections. These sections in turn may contain
+ * attributes. Note in particular that this may result in manifest lines
+ * greater than 72 bytes being wrapped and continued on the next
+ * line. If an application can not handle the continuation mechanism, it
+ * is a defect in the application, not this task.
+
  * @author Conor MacNeill
  * @author <a href="mailto:stefan.bodewig@epost.de">Stefan Bodewig</a>
  * @author <a href="mailto:j_a_fernandez@yahoo.com">Jose Alberto Fernandez</a>
@@ -88,11 +100,11 @@ import org.apache.tools.ant.util.CollectionUtils;
  */
 public class Manifest extends Task {
     /** The standard manifest version header */
-    public static final String ATTRIBUTE_MANIFEST_VERSION 
+    public static final String ATTRIBUTE_MANIFEST_VERSION
         = "Manifest-Version";
 
     /** The standard Signature Version header */
-    public static final String ATTRIBUTE_SIGNATURE_VERSION 
+    public static final String ATTRIBUTE_SIGNATURE_VERSION
         = "Signature-Version";
 
     /** The Name Attribute is the first in a named section */
@@ -109,21 +121,21 @@ public class Manifest extends Task {
 
     /** The max length of a line in a Manifest */
     public static final int MAX_LINE_LENGTH = 72;
-    
-    /** 
-     * Max length of a line section which is continued. Need to allow 
+
+    /**
+     * Max length of a line section which is continued. Need to allow
      * for the CRLF.
      */
     public static final int MAX_SECTION_LENGTH = MAX_LINE_LENGTH - 2;
 
     /** The End-Of-Line marker in manifests */
     public static final String EOL = "\r\n";
-    
+
     /**
      * Helper class for Manifest's mode attribute.
      */
     public static class Mode extends EnumeratedAttribute {
-        /** 
+        /**
          * Get Allowed values for the mode attribute.
          *
          * @return a String array of the allowed values.
@@ -134,7 +146,8 @@ public class Manifest extends Task {
     }
 
     /**
-     * Class to hold manifest attributes
+     * An attribute for the manifest.
+     * Those attributes that are not nested into a section will be added to the "Main" section.
      */
     public static class Attribute {
         /** The attribute's name */
@@ -148,7 +161,7 @@ public class Manifest extends Task {
          * currently being defined.
          */
         private int currentIndex = 0;
-        
+
         /**
          * Construct an empty attribute */
         public Attribute() {
@@ -181,11 +194,11 @@ public class Manifest extends Task {
          */
         public int hashCode() {
             int hashCode = 0;
-            
+
             if (name != null) {
                 hashCode += name.hashCode();
             }
-            
+
             hashCode += values.hashCode();
             return hashCode;
         }
@@ -197,7 +210,7 @@ public class Manifest extends Task {
             if (rhs == null || rhs.getClass() != getClass()) {
                 return false;
             }
-    
+
             if (rhs == this) {
                 return true;
             }
@@ -205,12 +218,12 @@ public class Manifest extends Task {
             Attribute rhsAttribute = (Attribute) rhs;
             String lhsKey = getKey();
             String rhsKey = rhsAttribute.getKey();
-            if ((lhsKey == null && rhsKey != null) 
+            if ((lhsKey == null && rhsKey != null)
                  || (lhsKey != null && rhsKey == null)
                  || !lhsKey.equals(rhsKey)) {
                 return false;
             }
-            
+
             return CollectionUtils.equals(values, rhsAttribute.values);
         }
 
@@ -225,8 +238,8 @@ public class Manifest extends Task {
         public void parse(String line) throws ManifestException {
             int index = line.indexOf(": ");
             if (index == -1) {
-                throw new ManifestException("Manifest line \"" + line 
-                    + "\" is not valid as it does not " 
+                throw new ManifestException("Manifest line \"" + line
+                    + "\" is not valid as it does not "
                     + "contain a name and a value separated by ': ' ");
             }
             name = line.substring(0, index);
@@ -234,7 +247,7 @@ public class Manifest extends Task {
         }
 
         /**
-         * Set the Attribute's name
+         * Set the Attribute's name; required
          *
          * @param name the attribute's name
          */
@@ -262,9 +275,9 @@ public class Manifest extends Task {
             }
             return name.toLowerCase();
         }
-        
+
         /**
-         * Set the Attribute's value
+         * Set the Attribute's value; required
          *
          * @param value the attribute's value
          */
@@ -278,7 +291,7 @@ public class Manifest extends Task {
         }
 
         /**
-         * Get the Attribute's value
+         * Get the Attribute's value.
          *
          * @return the attribute's value.
          */
@@ -286,7 +299,7 @@ public class Manifest extends Task {
             if (values.size() == 0) {
                 return null;
             }
-            
+
             String fullValue = "";
             for (Enumeration e = getValues(); e.hasMoreElements();) {
                 String value = (String) e.nextElement();
@@ -296,7 +309,7 @@ public class Manifest extends Task {
         }
 
         /**
-         * Add a new value to this attribute - making it multivalued
+         * Add a new value to this attribute - making it multivalued.
          *
          * @param value the attribute's additional value
          */
@@ -304,18 +317,18 @@ public class Manifest extends Task {
             currentIndex++;
             setValue(value);
         }
-        
-        /** 
-         * Get all the attribute's values
+
+        /**
+         * Get all the attribute's values.
          *
          * @return an enumeration of the attributes values
          */
         public Enumeration getValues() {
             return values.elements();
         }
-        
+
         /**
-         * Add a continuation line from the Manifest file
+         * Add a continuation line from the Manifest file.
          *
          * When lines are too long in a manifest, they are continued on the
          * next line by starting with a space. This method adds the continuation
@@ -340,7 +353,7 @@ public class Manifest extends Task {
                 writeValue(writer, (String) e.nextElement());
             }
         }
-        
+
         /**
          * Write a single attribute value out
          *
@@ -349,20 +362,20 @@ public class Manifest extends Task {
          *
          * @throws IOException if the attribte value cannot be written
          */
-        private void writeValue(PrintWriter writer, String value) 
+        private void writeValue(PrintWriter writer, String value)
              throws IOException {
             String line = name + ": " + value;
             while (line.getBytes().length > MAX_LINE_LENGTH) {
                 // try to find a MAX_LINE_LENGTH byte section
                 int breakIndex = MAX_SECTION_LENGTH;
                 String section = line.substring(0, breakIndex);
-                while (section.getBytes().length > MAX_SECTION_LENGTH 
+                while (section.getBytes().length > MAX_SECTION_LENGTH
                      && breakIndex > 0) {
                     breakIndex--;
                     section = line.substring(0, breakIndex);
                 }
                 if (breakIndex == 0) {
-                    throw new IOException("Unable to write manifest line " 
+                    throw new IOException("Unable to write manifest line "
                         + name + ": " + value);
                 }
                 writer.print(section + EOL);
@@ -371,18 +384,18 @@ public class Manifest extends Task {
             writer.print(line + EOL);
         }
     }
-    
+
     /**
-     * Class to represent an individual section in the
-     * Manifest. A section consists of a set of attribute values,
+     * A manifest section - you can nest attribute elements into sections.
+     * A section consists of a set of attribute values,
      * separated from other sections by a blank line.
      */
     public static class Section {
         /** Warnings for this section */
         private Vector warnings = new Vector();
 
-        /** 
-         * The section's name if any. The main section in a 
+        /**
+         * The section's name if any. The main section in a
          * manifest is unnamed.
          */
         private String name = null;
@@ -392,10 +405,9 @@ public class Manifest extends Task {
 
         /** Index used to retain the attribute ordering */
         private Vector attributeIndex = new Vector();
-        
+
         /**
-         * Set the Section's name
-         *
+         * The name of the section; optional -default is the main section.
          * @param name the section's name
          */
         public void setName(String name) {
@@ -403,7 +415,7 @@ public class Manifest extends Task {
         }
 
         /**
-         * Get the Section's name
+         * Get the Section's name.
          *
          * @return the section's name.
          */
@@ -412,19 +424,19 @@ public class Manifest extends Task {
         }
 
         /**
-         * Read a section through a reader
+         * Read a section through a reader.
          *
          * @param reader the reader from which the section is read
          *
-         * @return the name of the next section if it has been read as 
-         *         part of this section - This only happens if the 
+         * @return the name of the next section if it has been read as
+         *         part of this section - This only happens if the
          *         Manifest is malformed.
          *
-         * @throws ManifestException if the section is not valid according 
+         * @throws ManifestException if the section is not valid according
          *         to the JAR spec
          * @throws IOException if the section cannot be read from the reader.
          */
-        public String read(BufferedReader reader) 
+        public String read(BufferedReader reader)
              throws ManifestException, IOException {
             Attribute attribute = null;
             while (true) {
@@ -436,12 +448,12 @@ public class Manifest extends Task {
                     // continuation line
                     if (attribute == null) {
                         if (name != null) {
-                            // a continuation on the first line is a 
-                            // continuation of the name - concatenate this 
+                            // a continuation on the first line is a
+                            // continuation of the name - concatenate this
                             // line and the name
                             name += line.substring(1);
                         } else {
-                            throw new ManifestException("Can't start an " 
+                            throw new ManifestException("Can't start an "
                                 + "attribute with a continuation line " + line);
                         }
                     } else {
@@ -465,10 +477,10 @@ public class Manifest extends Task {
          * @throws ManifestException if the sections cannot be merged.
          */
         public void merge(Section section) throws ManifestException {
-            if (name == null && section.getName() != null 
-                || name != null 
+            if (name == null && section.getName() != null
+                || name != null
                 && !(name.equalsIgnoreCase(section.getName()))) {
-                throw new ManifestException("Unable to merge sections " 
+                throw new ManifestException("Unable to merge sections "
                     + "with different names");
             }
 
@@ -539,7 +551,7 @@ public class Manifest extends Task {
         public Enumeration getAttributeKeys() {
             return attributeIndex.elements();
         }
-        
+
         /**
          * Get the value of the attribute with the name given.
          *
@@ -574,11 +586,11 @@ public class Manifest extends Task {
          *
          * @exception ManifestException if the attribute is not valid.
          */
-        public void addConfiguredAttribute(Attribute attribute) 
+        public void addConfiguredAttribute(Attribute attribute)
              throws ManifestException {
             String check = addAttributeAndCheck(attribute);
             if (check != null) {
-                throw new BuildException("Specify the section name using " 
+                throw new BuildException("Specify the section name using "
                     + "the \"name\" attribute of the <section> element rather "
                     + "than using a \"Name\" manifest attribute");
             }
@@ -589,36 +601,36 @@ public class Manifest extends Task {
          *
          * @param attribute the attribute to be added.
          *
-         * @return the value of the attribute if it is a name 
+         * @return the value of the attribute if it is a name
          *         attribute - null other wise
          *
-         * @exception ManifestException if the attribute already 
+         * @exception ManifestException if the attribute already
          *            exists in this section.
          */
-        public String addAttributeAndCheck(Attribute attribute) 
+        public String addAttributeAndCheck(Attribute attribute)
              throws ManifestException {
             if (attribute.getName() == null || attribute.getValue() == null) {
                 throw new BuildException("Attributes must have name and value");
             }
             if (attribute.getKey().equalsIgnoreCase(ATTRIBUTE_NAME)) {
-                warnings.addElement("\"" + ATTRIBUTE_NAME + "\" attributes " 
+                warnings.addElement("\"" + ATTRIBUTE_NAME + "\" attributes "
                     + "should not occur in the main section and must be the "
-                    + "first element in all other sections: \"" 
+                    + "first element in all other sections: \""
                     + attribute.getName() + ": " + attribute.getValue() + "\"");
                 return attribute.getValue();
             }
 
             if (attribute.getKey().startsWith(ATTRIBUTE_FROM.toLowerCase())) {
-                warnings.addElement("Manifest attributes should not start " 
-                    + "with \"" + ATTRIBUTE_FROM + "\" in \"" 
+                warnings.addElement("Manifest attributes should not start "
+                    + "with \"" + ATTRIBUTE_FROM + "\" in \""
                     + attribute.getName() + ": " + attribute.getValue() + "\"");
             } else {
                 // classpath attributes go into a vector
                 String attributeKey = attribute.getKey();
                 if (attributeKey.equals(ATTRIBUTE_CLASSPATH)) {
-                    Attribute classpathAttribute = 
+                    Attribute classpathAttribute =
                         (Attribute) attributes.get(attributeKey);
-                    
+
                     if (classpathAttribute == null) {
                         storeAttribute(attribute);
                     } else {
@@ -629,8 +641,8 @@ public class Manifest extends Task {
                         }
                     }
                 } else if (attributes.containsKey(attributeKey)) {
-                    throw new ManifestException("The attribute \"" 
-                        + attribute.getName() + "\" may not occur more " 
+                    throw new ManifestException("The attribute \""
+                        + attribute.getName() + "\" may not occur more "
                         + "than once in the same section");
                 } else {
                     storeAttribute(attribute);
@@ -638,7 +650,7 @@ public class Manifest extends Task {
             }
             return null;
         }
-        
+
         /**
          * Store an attribute and update the index.
          *
@@ -669,11 +681,11 @@ public class Manifest extends Task {
          */
         public int hashCode() {
             int hashCode = 0;
-            
+
             if (name != null) {
                 hashCode += name.hashCode();
             }
-            
+
             hashCode += attributes.hashCode();
             return hashCode;
         }
@@ -685,13 +697,13 @@ public class Manifest extends Task {
             if (rhs == null || rhs.getClass() != getClass()) {
                 return false;
             }
-    
+
             if (rhs == this) {
                 return true;
             }
 
             Section rhsSection = (Section) rhs;
-            
+
             return attributes.equals(rhsSection.attributes);
         }
     }
@@ -715,7 +727,7 @@ public class Manifest extends Task {
     private File manifestFile;
 
     /**
-     * The mode with which the manifest file is written 
+     * The mode with which the manifest file is written
      */
     private Mode mode;
 
@@ -723,7 +735,7 @@ public class Manifest extends Task {
      * Construct a manifest from Ant's default manifest file.
      *
      * @return the default manifest.
-     * @exception BuildException if there is a problem loading the 
+     * @exception BuildException if there is a problem loading the
      *            default manifest
      */
     public static Manifest getDefaultManifest() throws BuildException {
@@ -731,7 +743,7 @@ public class Manifest extends Task {
             String defManifest = "/org/apache/tools/ant/defaultManifest.mf";
             InputStream in = Manifest.class.getResourceAsStream(defManifest);
             if (in == null) {
-                throw new BuildException("Could not find default manifest: " 
+                throw new BuildException("Could not find default manifest: "
                     + defManifest);
             }
             try {
@@ -758,7 +770,7 @@ public class Manifest extends Task {
      *
      * @param r is the reader from which the Manifest is read
      *
-     * @throws ManifestException if the manifest is not valid according 
+     * @throws ManifestException if the manifest is not valid according
      *         to the JAR spec
      * @throws IOException if the manifest cannot be read from the reader.
      */
@@ -766,7 +778,7 @@ public class Manifest extends Task {
         BufferedReader reader = new BufferedReader(r);
         // This should be the manifest version
         String nextSectionName = mainSection.read(reader);
-        String readManifestVersion 
+        String readManifestVersion
             = mainSection.getAttributeValue(ATTRIBUTE_MANIFEST_VERSION);
         if (readManifestVersion != null) {
             manifestVersion = readManifestVersion;
@@ -783,15 +795,15 @@ public class Manifest extends Task {
             if (nextSectionName == null) {
                 Attribute sectionName = new Attribute(line);
                 if (!sectionName.getName().equalsIgnoreCase(ATTRIBUTE_NAME)) {
-                    throw new ManifestException("Manifest sections should " 
-                        + "start with a \"" + ATTRIBUTE_NAME 
-                        + "\" attribute and not \"" 
+                    throw new ManifestException("Manifest sections should "
+                        + "start with a \"" + ATTRIBUTE_NAME
+                        + "\" attribute and not \""
                         + sectionName.getName() + "\"");
                 }
                 nextSectionName = sectionName.getValue();
             } else {
                 // we have already started reading this section
-                // this line is the first attribute. set it and then 
+                // this line is the first attribute. set it and then
                 // let the normal read handle the rest
                 Attribute firstAttribute = new Attribute(line);
                 section.addAttributeAndCheck(firstAttribute);
@@ -810,7 +822,7 @@ public class Manifest extends Task {
      *
      * @exception ManifestException if the secti0on is not valid.
      */
-    public void addConfiguredSection(Section section) 
+    public void addConfiguredSection(Section section)
          throws ManifestException {
         String sectionName = section.getName();
         if (sectionName == null) {
@@ -829,7 +841,7 @@ public class Manifest extends Task {
      *
      * @exception ManifestException if the attribute is not valid.
      */
-    public void addConfiguredAttribute(Attribute attribute) 
+    public void addConfiguredAttribute(Attribute attribute)
          throws ManifestException {
         mainSection.addConfiguredAttribute(attribute);
     }
@@ -839,7 +851,7 @@ public class Manifest extends Task {
      *
      * @param other the Manifest to be merged with this one.
      *
-     * @throws ManifestException if there is a problem merging the 
+     * @throws ManifestException if there is a problem merging the
      *         manfest according to the Manifest spec.
      */
     public void merge(Manifest other) throws ManifestException {
@@ -850,13 +862,13 @@ public class Manifest extends Task {
      * Merge the contents of the given manifest into this manifest
      *
      * @param other the Manifest to be merged with this one.
-     * @param overwriteMain whether to overwrite the main section 
+     * @param overwriteMain whether to overwrite the main section
      *        of the current manifest
      *
-     * @throws ManifestException if there is a problem merging the 
+     * @throws ManifestException if there is a problem merging the
      *         manfest according to the Manifest spec.
      */
-    public void merge(Manifest other, boolean overwriteMain) 
+    public void merge(Manifest other, boolean overwriteMain)
          throws ManifestException {
         if (other != null) {
              if (overwriteMain) {
@@ -873,7 +885,7 @@ public class Manifest extends Task {
              while (e.hasMoreElements()) {
                  String sectionName = (String) e.nextElement();
                  Section ourSection = (Section) sections.get(sectionName);
-                 Section otherSection 
+                 Section otherSection
                     = (Section) other.sections.get(sectionName);
                  if (ourSection == null) {
                      if (otherSection != null) {
@@ -895,19 +907,19 @@ public class Manifest extends Task {
     */
     public void write(PrintWriter writer) throws IOException {
         writer.print(ATTRIBUTE_MANIFEST_VERSION + ": " + manifestVersion + EOL);
-        String signatureVersion 
+        String signatureVersion
             = mainSection.getAttributeValue(ATTRIBUTE_SIGNATURE_VERSION);
         if (signatureVersion != null) {
-            writer.print(ATTRIBUTE_SIGNATURE_VERSION + ": " 
+            writer.print(ATTRIBUTE_SIGNATURE_VERSION + ": "
                 + signatureVersion + EOL);
             mainSection.removeAttribute(ATTRIBUTE_SIGNATURE_VERSION);
         }
         mainSection.write(writer);
-        
+
         // add it back
         if (signatureVersion != null) {
             try {
-                Attribute svAttr = new Attribute(ATTRIBUTE_SIGNATURE_VERSION, 
+                Attribute svAttr = new Attribute(ATTRIBUTE_SIGNATURE_VERSION,
                     signatureVersion);
                 mainSection.addConfiguredAttribute(svAttr);
             } catch (ManifestException e) {
@@ -926,7 +938,7 @@ public class Manifest extends Task {
     /**
      * Convert the manifest to its string representation
      *
-     * @return a multiline string with the Manifest as it 
+     * @return a multiline string with the Manifest as it
      *         appears in a Manifest file.
      */
     public String toString() {
@@ -947,16 +959,16 @@ public class Manifest extends Task {
     public Enumeration getWarnings() {
         Vector warnings = new Vector();
 
-        Enumeration warnEnum = mainSection.getWarnings(); 
+        Enumeration warnEnum = mainSection.getWarnings();
         while (warnEnum.hasMoreElements()) {
             warnings.addElement(warnEnum.nextElement());
         }
 
         // create a vector and add in the warnings for all the sections
-        Enumeration e = sections.elements(); 
+        Enumeration e = sections.elements();
         while (e.hasMoreElements()) {
             Section section = (Section) e.nextElement();
-            Enumeration e2 = section.getWarnings(); 
+            Enumeration e2 = section.getWarnings();
             while (e2.hasMoreElements()) {
                 warnings.addElement(e2.nextElement());
             }
@@ -970,16 +982,16 @@ public class Manifest extends Task {
      */
     public int hashCode() {
         int hashCode = 0;
-        
+
         if (manifestVersion != null) {
             hashCode += manifestVersion.hashCode();
         }
         hashCode += mainSection.hashCode();
         hashCode += sections.hashCode();
-        
+
         return hashCode;
     }
-    
+
     /**
      * @see java.lang.Object#equals
      */
@@ -991,7 +1003,7 @@ public class Manifest extends Task {
         if (rhs == this) {
             return true;
         }
-        
+
         Manifest rhsManifest = (Manifest) rhs;
         if (manifestVersion == null) {
             if (rhsManifest.manifestVersion != null) {
@@ -1009,8 +1021,8 @@ public class Manifest extends Task {
     }
 
     /**
-     * The name of the manifest file to write (if used as a task).
-     *
+     * The name of the manifest file to create/update.
+     * Required if used as a task.
      * @param f the Manifest file to be written
      */
     public void setFile(File f) {
@@ -1018,8 +1030,7 @@ public class Manifest extends Task {
     }
 
     /**
-     * Shall we update or replace an existing manifest?
-     *
+     * Update policy: either "update" or "replace"; default is "replace".
      * @param m the mode value - update or replace.
      */
     public void setMode(Mode m) {
@@ -1113,7 +1124,7 @@ public class Manifest extends Task {
         }
 
         if (toWrite.equals(current)) {
-            log("Manifest has not changed, do not recreate", 
+            log("Manifest has not changed, do not recreate",
                 Project.MSG_VERBOSE);
             return;
         }

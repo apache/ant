@@ -93,7 +93,7 @@ import org.apache.tools.ant.taskdefs.condition.Os;
  * @author Conor MacNeill
  * @author <a href="mailto:stefan.bodewig@epost.de">Stefan Bodewig</a>
  * @author <a href="mailto:umagesh@apache.org">Magesh Umasankar</a>
- * @author <a href="mailto:jtulley@novell.com">Jeff Tulley</a> 
+ * @author <a href="mailto:jtulley@novell.com">Jeff Tulley</a>
  *
  * @version $Revision$
  */
@@ -135,7 +135,7 @@ public class FileUtils {
         }
         return new URL(uri);
     }
-    
+
     /**
      * Convienence method to copy a file from a source to a destination.
      * No filtering is performed.
@@ -342,13 +342,13 @@ public class FileUtils {
                         in = new BufferedReader(new FileReader(sourceFile));
                         out = new BufferedWriter(new FileWriter(destFile));
                     } else {
-                        in = 
+                        in =
                             new BufferedReader(new InputStreamReader(
-                                                 new FileInputStream(sourceFile), 
+                                                 new FileInputStream(sourceFile),
                                                  encoding));
-                        out = 
+                        out =
                             new BufferedWriter(new OutputStreamWriter(
-                                                 new FileOutputStream(destFile), 
+                                                 new FileOutputStream(destFile),
                                                  encoding));
                     }
 
@@ -361,7 +361,7 @@ public class FileUtils {
                         Reader rdr = crh.getAssembledReader();
                         in = new BufferedReader(rdr);
                     }
-                    
+
                     int length;
                     String newline = null;
                     String line = in.readLine();
@@ -488,9 +488,9 @@ public class FileUtils {
 
         // deal with absolute files
         if (!onNetWare) {
-            if (filename.startsWith(File.separator) 
-                || (filename.length() >= 2 
-                    && Character.isLetter(filename.charAt(0)) 
+            if (filename.startsWith(File.separator)
+                || (filename.length() >= 2
+                    && Character.isLetter(filename.charAt(0))
                     && filename.charAt(1) == ':')) {
                 return normalize(filename);
             }
@@ -499,7 +499,7 @@ public class FileUtils {
             // the path name breaks down when NetWare is a supported platform.
             // Netware volumes are of the pattern: "data:\"
             int colon = filename.indexOf(":");
-            if (filename.startsWith(File.separator) 
+            if (filename.startsWith(File.separator)
                 || (colon > -1)) {
                 return normalize(filename);
             }
@@ -564,7 +564,7 @@ public class FileUtils {
                 throw new BuildException(msg);
             }
         } else {
-            if (!path.startsWith(File.separator) 
+            if (!path.startsWith(File.separator)
                 && (colon == -1)) {
                 String msg = path + " is not an absolute path";
                 throw new BuildException(msg);
@@ -574,7 +574,7 @@ public class FileUtils {
         boolean dosWithDrive = false;
         String root = null;
         // Eliminate consecutive slashes after the drive spec
-        if ((!onNetWare && 
+        if ((!onNetWare &&
              path.length() >= 2 &&
              Character.isLetter(path.charAt(0)) &&
              path.charAt(1) == ':') ||
@@ -782,7 +782,7 @@ public class FileUtils {
      */
     public static final String readFully(Reader rdr, int bufferSize) throws IOException {
         if (bufferSize <= 0) {
-            throw new IllegalArgumentException("Buffer size must be greater " 
+            throw new IllegalArgumentException("Buffer size must be greater "
                 + "than 0");
         }
         final char[] buffer = new char[bufferSize];
@@ -819,7 +819,7 @@ public class FileUtils {
             if (f.exists()) {
                 return false;
             }
-            
+
             FileOutputStream fos = null;
             try {
                 fos = new FileOutputStream(f);
@@ -829,7 +829,7 @@ public class FileUtils {
                     fos.close();
                 }
             }
-            
+
             return true;
         }
         return false;

@@ -105,7 +105,7 @@ public class Echo extends Task {
     }
 
     /**
-     * Sets the message variable.
+     * Message to write.
      *
      * @param msg Sets the value for the message variable.
      */
@@ -114,14 +114,14 @@ public class Echo extends Task {
     }
 
     /**
-     * Sets the file attribute.
+     * File to write to.
      */
     public void setFile(File file) {
         this.file = file;
     }
 
     /**
-     * Shall we append to an existing file?
+     * If true, append to existing file.
      */
     public void setAppend(boolean append) {
         this.append = append;

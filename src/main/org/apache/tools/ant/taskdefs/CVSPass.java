@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2001-2002 The Apache Software Foundation.  All rights 
+ * Copyright (c) 2001-2002 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -80,7 +80,7 @@ import java.io.IOException;
  */
 public class CVSPass extends Task {
     /** CVS Root */
-    private String cvsRoot = null; 
+    private String cvsRoot = null;
     /** Password file to add password to */
     private File passFile = null;
     /** Password to add to file */
@@ -103,7 +103,7 @@ public class CVSPass extends Task {
         192, 159, 244, 239, 185, 168, 215, 144, 139, 165, 180, 157, 147, 186, 214, 176,
         227, 231, 219, 169, 175, 156, 206, 198, 129, 164, 150, 210, 154, 177, 134, 127,
         182, 128, 158, 208, 162, 132, 167, 209, 149, 241, 153, 251, 237, 236, 171, 195,
-        243, 233, 253, 240, 194, 250, 191, 155, 142, 137, 245, 235, 163, 242, 178, 152 
+        243, 233, 253, 240, 194, 250, 191, 155, 142, 137, 245, 235, 163, 242, 178, 152
     };
 
     /**
@@ -150,7 +150,7 @@ public class CVSPass extends Task {
                 }
             }
 
-            String pwdfile = buf.toString() + cvsRoot + " A" 
+            String pwdfile = buf.toString() + cvsRoot + " A"
                 + mangle(password);
 
             log("Writing -> " + pwdfile , Project.MSG_DEBUG);
@@ -181,21 +181,21 @@ public class CVSPass extends Task {
     }
 
     /**
-     * Sets cvs root to be added to the password file
+     * The CVS repository to add an entry for.
      */
     public void setCvsroot(String cvsRoot) {
         this.cvsRoot = cvsRoot;
     }
 
     /**
-     * Sets the password file attribute.
+     * Password file to add the entry to.
      */
     public void setPassfile(File passFile) {
         this.passFile = passFile;
     }
 
     /**
-     * Sets the password attribute.
+     * Password to be added to the password file.
      */
     public void setPassword(String password) {
         this.password = password;

@@ -160,6 +160,13 @@ public class Project {
      * Mapping is String to String.
      */
     private Hashtable userProperties = new Hashtable();
+    /**
+     * Map of inherited "user" properties - that are those "user"
+     * properties that have been created by tasks and not been set
+     * from the command line or a GUI tool.
+     * Mapping is String to String.
+     */
+    private Hashtable inheritedProperties = new Hashtable();
     /** Map of references within the project (paths etc) (String to Object). */
     private Hashtable references = new Hashtable();
 
@@ -350,13 +357,12 @@ public class Project {
     }
 
     /**
-     * Returns a list of build listeners for the project. The returned
-     * vector is "live" and so should not be modified.
+     * Returns a list of build listeners for the project.
      *
      * @return a list of build listeners for the project
      */
     public Vector getBuildListeners() {
-        return listeners;
+        return (Vector) listeners.clone();
     }
 
     /**
@@ -416,7 +422,7 @@ public class Project {
      * @param value The new value of the property.
      *              Must not be <code>null</code>.
      */
-    public void setProperty(String name, String value) {
+    public synchronized void setProperty(String name, String value) {
         // command line properties take precedence
         if (null != userProperties.get(name)) {
             log("Override ignored for user property " + name, MSG_VERBOSE);
@@ -444,7 +450,7 @@ public class Project {
      *              Must not be <code>null</code>.
      * @since 1.5
      */
-    public void setNewProperty(String name, String value) {
+    public synchronized void setNewProperty(String name, String value) {
         if (null != properties.get(name)) {
             log("Override ignored for property " + name, MSG_VERBOSE);
             return;
@@ -463,11 +469,28 @@ public class Project {
      *              Must not be <code>null</code>.
      * @see #setProperty(String,String)
      */
-    public void setUserProperty(String name, String value) {
+    public synchronized void setUserProperty(String name, String value) {
         log("Setting ro project property: " + name + " -> " +
             value, MSG_DEBUG);
         userProperties.put(name, value);
         properties.put(name, value);
+    }
+
+    /**
+     * Sets a user property, which cannot be overwritten by set/unset
+     * property calls. Any previous value is overwritten. Also marks
+     * these properties as properties that have not come from the
+     * command line.
+     *
+     * @param name The name of property to set.
+     *             Must not be <code>null</code>.
+     * @param value The new value of the property.
+     *              Must not be <code>null</code>.
+     * @see #setProperty(String,String)
+     */
+    public synchronized void setInheritedProperty(String name, String value) {
+        inheritedProperties.put(name, value);
+        setUserProperty(name, value);
     }
 
     /**
@@ -532,7 +555,7 @@ public class Project {
      */
      public String getUserProperty(String name) {
         if (name == null) {
-          return null;
+            return null;
         }
         String property = (String) userProperties.get(name);
         return property;
@@ -571,6 +594,54 @@ public class Project {
         }
 
         return propertiesCopy;
+    }
+
+    /**
+     * Copies all user properties that have been set on the command
+     * line or a GUI tool from this instance to the Project instance
+     * given as the argument.
+     *
+     * <p>To copy all "user" properties, you will also have to call
+     * {@link #copyInheritedProperties copyInheritedProperties}.</p>
+     *
+     * @param other the project to copy the properties to.  Must not be null.
+     *
+     * @since Ant 1.5
+     */
+    public void copyUserProperties(Project other) {
+        Enumeration e = userProperties.keys();
+        while (e.hasMoreElements()) {
+            Object arg = e.nextElement();
+            if (inheritedProperties.containsKey(arg)) {
+                continue;
+            }
+            Object value = userProperties.get(arg);
+            other.setUserProperty(arg.toString(), value.toString());
+        }
+    }
+
+    /**
+     * Copies all user properties that have not been set on the
+     * command line or a GUI tool from this instance to the Project
+     * instance given as the argument.
+     *
+     * <p>To copy all "user" properties, you will also have to call
+     * {@link #copyUserProperties copyUserProperties}.</p>
+     *
+     * @param other the project to copy the properties to.  Must not be null.
+     *
+     * @since Ant 1.5
+     */
+    public void copyInheritedProperties(Project other) {
+        Enumeration e = inheritedProperties.keys();
+        while (e.hasMoreElements()) {
+            String arg = e.nextElement().toString();
+            if (other.getUserProperty(arg) != null) {
+                continue;
+            }
+            Object value = inheritedProperties.get(arg);
+            other.setInheritedProperty(arg, value.toString());
+        }
     }
 
     /**
@@ -818,8 +889,26 @@ public class Project {
                     MSG_VERBOSE);
                 return;
             } else {
+                int logLevel = MSG_WARN;
+                if (old.getName().equals(taskClass.getName())) {
+                    ClassLoader oldLoader = old.getClassLoader();
+                    ClassLoader newLoader = taskClass.getClassLoader();
+                    // system classloader on older JDKs can be null
+                    if (oldLoader != null
+                        && newLoader != null
+                        && oldLoader instanceof AntClassLoader
+                        && newLoader instanceof AntClassLoader
+                        && ((AntClassLoader) oldLoader).getClasspath()
+                        .equals(((AntClassLoader) newLoader).getClasspath())
+                        ) {
+                        // same classname loaded from the same
+                        // classpath components
+                        logLevel = MSG_VERBOSE;
+                    }
+                }
+
                 log("Trying to override old definition of task " + taskName,
-                    MSG_WARN);
+                    logLevel);
                 invalidateCreatedTasks(taskName);
             }
         }
@@ -893,23 +982,24 @@ public class Project {
      *                  Must not be <code>null</code>.
      */
     public void addDataTypeDefinition(String typeName, Class typeClass) {
-        Class old = (Class) dataClassDefinitions.get(typeName);
-        if (null != old) {
-            if (old.equals(typeClass)) {
-                log("Ignoring override for datatype " + typeName
-                    + ", it is already defined by the same class.",
-                    MSG_VERBOSE);
-                return;
-            } else {
-                log("Trying to override old definition of datatype "
-                    + typeName, MSG_WARN);
+        synchronized(dataClassDefinitions) {
+            Class old = (Class) dataClassDefinitions.get(typeName);
+            if (null != old) {
+                if (old.equals(typeClass)) {
+                    log("Ignoring override for datatype " + typeName
+                        + ", it is already defined by the same class.",
+                        MSG_VERBOSE);
+                    return;
+                } else {
+                    log("Trying to override old definition of datatype "
+                        + typeName, MSG_WARN);
+                }
             }
+            dataClassDefinitions.put(typeName, typeClass);
         }
-
         String msg = " +User datatype: " + typeName + "     "
             + typeClass.getName();
         log(msg, MSG_DEBUG);
-        dataClassDefinitions.put(typeName, typeClass);
     }
 
     /**
@@ -1677,22 +1767,24 @@ public class Project {
      * @param value The value of the reference. Must not be <code>null</code>.
      */
     public void addReference(String name, Object value) {
-        Object old = references.get(name);
-        if (old == value) {
-            // no warning, this is not changing anything
-            return;
+        synchronized (references) {
+            Object old = references.get(name);
+            if (old == value) {
+                // no warning, this is not changing anything
+                return;
+            }
+            if (old != null) {
+                log("Overriding previous definition of reference to " + name,
+                    MSG_WARN);
+            }
+            log("Adding reference: " + name + " -> " + value, MSG_DEBUG);
+            references.put(name, value);
         }
-        if (old != null) {
-            log("Overriding previous definition of reference to " + name,
-                MSG_WARN);
-        }
-        log("Adding reference: " + name + " -> " + value, MSG_DEBUG);
-        references.put(name, value);
     }
 
     /**
      * Returns a map of the references in the project (String to Object).
-     * The returned hashtable is "live" and so should not be modified.
+     * The returned hashtable is "live" and so must not be modified.
      *
      * @return a map of the references in the project (String to Object).
      */
@@ -1757,6 +1849,7 @@ public class Project {
      */
     public void fireBuildStarted() {
         BuildEvent event = new BuildEvent(this);
+        Vector listeners = getBuildListeners();
         for (int i = 0; i < listeners.size(); i++) {
             BuildListener listener = (BuildListener) listeners.elementAt(i);
             listener.buildStarted(event);
@@ -1772,6 +1865,7 @@ public class Project {
     public void fireBuildFinished(Throwable exception) {
         BuildEvent event = new BuildEvent(this);
         event.setException(exception);
+        Vector listeners = getBuildListeners();
         for (int i = 0; i < listeners.size(); i++) {
             BuildListener listener = (BuildListener) listeners.elementAt(i);
             listener.buildFinished(event);
@@ -1787,6 +1881,7 @@ public class Project {
      */
     protected void fireTargetStarted(Target target) {
         BuildEvent event = new BuildEvent(target);
+        Vector listeners = getBuildListeners();
         for (int i = 0; i < listeners.size(); i++) {
             BuildListener listener = (BuildListener) listeners.elementAt(i);
             listener.targetStarted(event);
@@ -1806,6 +1901,7 @@ public class Project {
     protected void fireTargetFinished(Target target, Throwable exception) {
         BuildEvent event = new BuildEvent(target);
         event.setException(exception);
+        Vector listeners = getBuildListeners();
         for (int i = 0; i < listeners.size(); i++) {
             BuildListener listener = (BuildListener) listeners.elementAt(i);
             listener.targetFinished(event);
@@ -1822,6 +1918,7 @@ public class Project {
         // register this as the current task on the current thread.
         registerThreadTask(Thread.currentThread(), task);
         BuildEvent event = new BuildEvent(task);
+        Vector listeners = getBuildListeners();
         for (int i = 0; i < listeners.size(); i++) {
             BuildListener listener = (BuildListener) listeners.elementAt(i);
             listener.taskStarted(event);
@@ -1844,6 +1941,7 @@ public class Project {
         System.err.flush();
         BuildEvent event = new BuildEvent(task);
         event.setException(exception);
+        Vector listeners = getBuildListeners();
         for (int i = 0; i < listeners.size(); i++) {
             BuildListener listener = (BuildListener) listeners.elementAt(i);
             listener.taskFinished(event);
@@ -1863,6 +1961,7 @@ public class Project {
     private void fireMessageLoggedEvent(BuildEvent event, String message,
                                         int priority) {
         event.setMessage(message, priority);
+        Vector listeners = getBuildListeners();
         for (int i = 0; i < listeners.size(); i++) {
             BuildListener listener = (BuildListener) listeners.elementAt(i);
             listener.messageLogged(event);
@@ -1919,9 +2018,9 @@ public class Project {
      *
      * @param thread the thread on which the task is registered.
      * @param task the task to be registered.
-     * @since 1.102, Ant 1.5
+     * @since Ant 1.5
      */
-    public void registerThreadTask(Thread thread, Task task) {
+    public synchronized void registerThreadTask(Thread thread, Task task) {
         if (task != null) {
             threadTasks.put(thread, task);
         } else {

@@ -132,7 +132,7 @@ public class CCMReconfigure extends Continuus {
     }
 
     /**
-     * Set the value of project.
+     * Sets the ccm project on which the operation is applied.
      * @param v  Value to assign to project.
      */
     public void setCcmProject(String v) {
@@ -149,7 +149,8 @@ public class CCMReconfigure extends Continuus {
     }
 
     /**
-     * Set the value of recurse.
+     * If true, recurse on subproject (default false).
+     *
      * @param v  Value to assign to recurse.
      */
     public void setRecurse(boolean v) {
@@ -166,7 +167,7 @@ public class CCMReconfigure extends Continuus {
     }
 
     /**
-     * Set the value of verbose.
+     * If true, do a verbose reconfigure operation (default false).
      * @param v  Value to assign to verbose.
      */
     public void setVerbose(boolean v) {

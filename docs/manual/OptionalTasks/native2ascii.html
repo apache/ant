@@ -2,9 +2,9 @@
   <head><title>Native2Ascii Task</title></head>
   <body>
     <h2>Native2Ascii</h2>
-    
+
     <h3>Description:</h3>
-    
+
     <p>
       Converts files from native encodings to ASCII with escaped Unicode.
       A common usage is to convert source files maintained in a native
@@ -20,12 +20,12 @@
       For more information on file matching patterns,
       see the section on
       <a href="../dirtasks.html#directorybasedtasks">directory based tasks</a>.
-      If no <em>encoding</em> is specified, 
+      If no <em>encoding</em> is specified,
       the default encoding for the JVM is used.
       If <em>ext</em> is specified, then output files are renamed
-      to use it as a new extension. 
+      to use it as a new extension.
       More sophisticated file name translations can be achieved using a nested
-      <em>&lt;mapper&gt;</em> element. By default an 
+      <em>&lt;mapper&gt;</em> element. By default an
       <a href="../CoreTypes/mapper.html#identity-mapper">identity mapper</a> will be used.
       If <em>dest</em> and <em>src</em> point to the same directory,
       the <em>ext</em> attribute or a nested <em>&lt;mapper&gt;</em>
@@ -35,7 +35,7 @@
     <p>
       This task forms an implicit <a href="../CoreTypes/fileset.html">File Set</a>,
       and supports all attributes of <code>&lt;fileset&gt;</code>
-      (<code>dir</code> becomes <code>src</code>) as well as 
+      (<code>dir</code> becomes <code>src</code>) as well as
       nested <code>&lt;include&gt;</code>, <code>&lt;exclude&gt;</code>,
       and <code>&lt;patternset&gt;</code> elements.
     </p>
@@ -83,7 +83,7 @@
       </tr>
       <tr>
         <td>includes</td>
-        <td>comma separated list of patterns of files that must be
+        <td>comma- or space-separated list of patterns of files that must be
           included. All files are included when omitted.</td>
         <td align="center">No</td>
       </tr>
@@ -95,7 +95,7 @@
       </tr>
       <tr>
         <td>excludes</td>
-        <td>comma separated list of patterns of files that must be excluded.
+        <td>comma- or space-separated list of patterns of files that must be excluded.
           No files (except default excludes) are excluded when omitted.</td>
         <td align="center">No</td>
       </tr>
@@ -106,7 +106,7 @@
         <td align="center">No</td>
       </tr>
     </table>
-      
+
     <h3>Examples</h3>
 
     <pre>
@@ -133,6 +133,6 @@
     </p>
   </body>
 <hr>
-<p align="center">Copyright &copy; 2000-2001 Apache Software Foundation. All rights
+<p align="center">Copyright &copy; 2000-2002 Apache Software Foundation. All rights
 Reserved.</p>
 </html>

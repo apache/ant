@@ -63,7 +63,8 @@ import org.apache.tools.ant.types.Commandline;
 
 
 /**
- * Task to perform an Update command to ClearCase.
+ * Performs a ClearCase Update command.
+ *
  * <p>
  * The following attributes are interpretted:
  * <table border="1">
@@ -195,7 +196,7 @@ public class CCUpdate extends ClearCase {
     }
 
     /**
-     * Set graphical flag status
+     * If true, displays a graphical dialog during the update.
      *
      * @param graphical the status to set the flag to
      */
@@ -213,7 +214,7 @@ public class CCUpdate extends ClearCase {
     }
 
     /**
-     * Set overwrite hijacked files status
+     * If true, overwrite hijacked files.
      *
      * @param ow the status to set the flag to
      */
@@ -231,7 +232,7 @@ public class CCUpdate extends ClearCase {
     }
 
     /**
-     * Set rename hijacked files status
+     * If true, hijacked files are renamed with a .keep extension.
      *
      * @param ren the status to set the flag to
      */
@@ -249,7 +250,8 @@ public class CCUpdate extends ClearCase {
     }
 
     /**
-     * Set modified time based on current time
+     * If true, modification time should be written as the current time.
+     * Either currenttime or preservetime can be specified.
      *
      * @param ct the status to set the flag to
      */
@@ -267,7 +269,8 @@ public class CCUpdate extends ClearCase {
     }
 
     /**
-     * Preserve modified time from the VOB time
+     * If true, modification time should be preserved from the VOB time.
+     * Either currenttime or preservetime can be specified.
      *
      * @param pt the status to set the flag to
      */
@@ -285,7 +288,8 @@ public class CCUpdate extends ClearCase {
     }
 
     /**
-     * Set log file where cleartool can record the status of the command
+     * Sets the log file where cleartool records
+     * the status of the command.
      *
      * @param log the path to the log file
      */
@@ -305,9 +309,7 @@ public class CCUpdate extends ClearCase {
     /**
      * Get the 'log' command
      *
-     * @return the 'log' command if the attribute was specified, otherwise an empty string
-     *
-     * @param CommandLine containing the command line string with or without the log flag and path appended
+     * @param cmd containing the command line string with or without the log flag and path appended
      */
     private void getLogCommand(Commandline cmd) {
         if (getLog() == null) {

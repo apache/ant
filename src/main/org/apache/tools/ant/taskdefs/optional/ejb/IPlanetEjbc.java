@@ -1336,12 +1336,17 @@ public class IPlanetEjbc {
                 return classnames;
             }
 
-            classnames[index++] = remotePkg + "_" + remoteClass + "_Stub";
-            classnames[index++] = homePkg + "_" + homeClass + "_Stub";
-            classnames[index++] = remotePkg + "_ejb_RmiCorbaBridge_"
-                                                        + remoteClass + "_Tie";
-            classnames[index++] = homePkg + "_ejb_RmiCorbaBridge_" + homeClass
-                                                        + "_Tie";
+            classnames[index++] = "org.omg.stub." + remotePkg + "_"
+                                    + remoteClass + "_Stub";
+            classnames[index++] = "org.omg.stub." + homePkg + "_"
+                                    + homeClass + "_Stub";
+            classnames[index++] = "org.omg.stub." + remotePkg
+                                    + "_ejb_RmiCorbaBridge_"
+                                    + remoteClass + "_Tie";
+            classnames[index++] = "org.omg.stub." + homePkg
+                                    + "_ejb_RmiCorbaBridge_"
+                                    + homeClass + "_Tie";
+
             classnames[index++] = remotePkg + "ejb_RmiCorbaBridge_"
                                                         + remoteClass;
             classnames[index++] = homePkg + "ejb_RmiCorbaBridge_" + homeClass;

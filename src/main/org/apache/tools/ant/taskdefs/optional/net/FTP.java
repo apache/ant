@@ -79,7 +79,7 @@ import java.util.Locale;
 import java.util.Vector;
 
 /**
- * Basic FTP client that performs the following actions:
+ * Basic FTP client. Performs the following actions:
  * <ul>
  *   <li> <strong>send</strong> - send files to a remote server. This is the
  *   default action.</li>
@@ -296,8 +296,7 @@ public class FTP
 
 
     /**
-     * Specifies whether to use binary-mode or text-mode transfers. Set to
-     * true to send binary mode. Binary mode is enabled by default.
+     * If true, uses binary mode, otherwise text mode (default is binary).
      */
     public void setBinary(boolean binary) {
         this.binary = binary;
@@ -333,7 +332,7 @@ public class FTP
 
 
     /**
-     * A synonym for setNewer. Set to true to transmit only new or changed
+     * A synonym for setnewer. Set to true to transmit only new or changed
      * files.
      */
     public void setDepends(boolean depends) {
@@ -368,7 +367,9 @@ public class FTP
     }
 
 
-    /** Adds a set of files (nested fileset attribute).  */
+    /**
+     *  Adds a set of files.
+     */
     public void addFileset(FileSet set) {
         filesets.addElement(set);
     }
@@ -412,15 +413,19 @@ public class FTP
     }
 
 
-    /** set the failed transfer flag  */
+    /**
+     * If true, enables unsuccessful file put, delete and get
+     * operations to be skipped with a warning and the remainder
+     * of the files still transferred.
+     */
     public void setSkipFailedTransfers(boolean skipFailedTransfers) {
         this.skipFailedTransfers = skipFailedTransfers;
     }
 
 
     /**
-     * set the flag to skip errors on dir creation (and maybe later other
-     * server specific errors)
+     * set the flag to skip errors on directory creation.
+     * (and maybe later other server specific errors)
      */
     public void setIgnoreNoncriticalErrors(boolean ignoreNoncriticalErrors) {
         this.ignoreNoncriticalErrors = ignoreNoncriticalErrors;

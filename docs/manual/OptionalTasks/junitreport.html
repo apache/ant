@@ -14,13 +14,14 @@ the Ant distribution.  See <a href="../install.html#librarydependencies">
 Library Dependencies</a> for more information.</p>
 
 <h3>Requirements</h3>
-<p>The task will run with either <a href="http://xml.apache.org/xalan-j/">Xalan 2.x</a>
-or <a href="http://xml.apache.org/dist/xalan-j/old/xalan-j_1_2_2.zip">Xalan 1.2.2</a>.</p>
+<p>The task needs <a href="http://xml.apache.org/xalan-j/">Xalan 2.x</a>;
+although
+<a href="http://xml.apache.org/dist/xalan-j/old/xalan-j_1_2_2.zip">Xalan 1.2.2</a>
+does work, but as Xalan1 is not supported, we do not recommend this.
+</p>
 <p>
-Note:<i>For a framed format Xalan 1.2.2 will need Xerces(xerces.jar) as well as BSF(bsf.jar)
-that can be found in the distribution archive. Xerces will need to be before any other
-parser (such as the shipped version of Xerces, which is too new). It is *highly* recommended to use Xalan2 instead
-because Xalan1 is no more supported.
+If you do you use Xalan 1.2.2 you will need a compatible (older) version of Xerces.
+as well as BSF(bsf.jar). Again, using Xalan 2 is simpler and supported.
 </i></p>
 <h3>Parameters</h3>
 <table border="1" cellpadding="2" cellspacing="0">

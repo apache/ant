@@ -88,10 +88,6 @@ import org.apache.tools.ant.types.Reference;
  * attribute classpath, if the jsp compiler is not already in the ant
  * classpath.
  *
- * <p><h4>Notes</h4>
- * <p> At present, this task only supports the jasper compiler. In future,
- other compilers will be supported by setting the jsp.compiler property.
- *
  * <p><h4>Usage</h4>
  * <pre>
  * &lt;jspc srcdir="${basedir}/src/war"
@@ -203,6 +199,7 @@ public class JspC extends MatchingTask {
     public String getPackage(){
         return packageName;
     }
+    
     /* ------------------------------------------------------------ */
     /**
      * Set the verbose level of the compiler
@@ -213,9 +210,10 @@ public class JspC extends MatchingTask {
     public int getVerbose(){
         return verbose;
     }
+    
     /* ------------------------------------------------------------ */
     /**
-     * Throw a BuildException if compilation fails
+     * should the build halt if compilation fails? default=true
      */
     public void setFailonerror(boolean fail) {
         failOnError = fail;

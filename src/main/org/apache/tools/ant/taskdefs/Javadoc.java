@@ -80,7 +80,7 @@ import org.apache.tools.ant.util.FileUtils;
 import org.apache.tools.ant.util.JavaEnvUtils;
 
 /**
- * This task makes it easy to generate Javadoc documentation for a collection
+ * Generates Javadoc documentation for a collection
  * of source code.
  *
  * <P>Current known limitations are:
@@ -100,9 +100,9 @@ import org.apache.tools.ant.util.JavaEnvUtils;
  * <CODE>System.exit()</CODE> which would break Ant functionality.
  *
  * @author Jon S. Stevens <a href="mailto:jon@clearink.com">jon@clearink.com</a>
- * @author Stefano Mazzocchi 
+ * @author Stefano Mazzocchi
  *         <a href="mailto:stefano@apache.org">stefano@apache.org</a>
- * @author Patrick Chanezon 
+ * @author Patrick Chanezon
  *         <a href="mailto:chanezon@netscape.com">chanezon@netscape.com</a>
  * @author Ernst de Haan <a href="mailto:ernst@jollem.com">ernst@jollem.com</a>
  * @author <a href="mailto:stefan.bodewig@epost.de">Stefan Bodewig</a>
@@ -118,7 +118,7 @@ public class Javadoc extends Task {
     public class DocletParam {
         /** The parameter name */
         private String name;
-        
+
         /** The parameter value */
         private String value;
 
@@ -141,10 +141,10 @@ public class Javadoc extends Task {
         }
 
         /**
-         * Set the parameter value. 
+         * Set the parameter value.
          *
-         * Note that only string values are supported. No resolution of file 
-         * paths is performed. 
+         * Note that only string values are supported. No resolution of file
+         * paths is performed.
          *
          * @param value the parameter value.
          */
@@ -171,10 +171,10 @@ public class Javadoc extends Task {
     public static class ExtensionInfo extends ProjectComponent {
         /** The name of the extension */
         private String name;
-        
+
         /** The optional path to use to load the extension */
         private Path path;
-        
+
         /**
          * Set the name of the extension
          *
@@ -209,7 +209,7 @@ public class Javadoc extends Task {
         /**
          * Get the extension's path.
          *
-         * @return the path to be used to load the extension. 
+         * @return the path to be used to load the extension.
          * May be <code>null</code>
          */
         public Path getPath() {
@@ -217,7 +217,7 @@ public class Javadoc extends Task {
         }
 
         /**
-         * Create an empty nested path to be configured by Ant with the 
+         * Create an empty nested path to be configured by Ant with the
          * classpath for the extension.
          *
          * @return a new Path instance to be configured.
@@ -238,18 +238,18 @@ public class Javadoc extends Task {
             createPath().setRefid(r);
         }
     }
-    
+
     /**
      * This class stores info about doclets.
      *
      * @author Conor MacNeill
      */
     public class DocletInfo extends ExtensionInfo {
-        
+
         /** Collection of doclet parameters. */
         private Vector params = new Vector();
 
-        /** 
+        /**
          * Create a doclet parameter to be configured by Ant.
          *
          * @return a new DocletParam instance to be configured.
@@ -277,7 +277,7 @@ public class Javadoc extends Task {
     public static class PackageName {
         /** The package name */
         private String name;
-        
+
         /**
          * Set the name of the package
          *
@@ -286,8 +286,8 @@ public class Javadoc extends Task {
         public void setName(String name) {
             this.name = name.trim();
         }
-        
-        /** 
+
+        /**
          * Get the package name.
          *
          * @return the package's name.
@@ -295,7 +295,7 @@ public class Javadoc extends Task {
         public String getName() {
             return name;
         }
-        
+
         /**
          * @see java.lang.Object#toString
          */
@@ -310,7 +310,7 @@ public class Javadoc extends Task {
     public static class SourceFile {
         /** The source file */
         private File file;
-        
+
         public SourceFile() {}
         public SourceFile(File file) {
             this.file = file;
@@ -324,7 +324,7 @@ public class Javadoc extends Task {
         public void setFile(File file) {
             this.file = file;
         }
-        
+
         /**
          * Get the source file.
          *
@@ -344,7 +344,7 @@ public class Javadoc extends Task {
     public static class Html {
         /** The text for the element */
         private StringBuffer text = new StringBuffer();
-        
+
         /**
          * Add text to the element.
          *
@@ -353,7 +353,7 @@ public class Javadoc extends Task {
         public void addText(String t) {
             text.append(t);
         }
-        
+
         /**
          * Get the current text for the element.
          *
@@ -370,7 +370,7 @@ public class Javadoc extends Task {
      */
     public static class AccessType extends EnumeratedAttribute {
         /**
-         * @see EnumeratedAttributes#getValues().
+         * @see EnumeratedAttribute#getValues().
          */
         public String[] getValues() {
             // Protected first so if any GUI tool offers a default
@@ -381,9 +381,9 @@ public class Javadoc extends Task {
 
     /** The command line built to execute Javadoc. */
     private Commandline cmd = new Commandline();
-    
+
     /** Flag which indicates if javadoc from JDK 1.1 is to be used. */
-    private static boolean javadoc1 = 
+    private static boolean javadoc1 =
         JavaEnvUtils.isJavaVersion(JavaEnvUtils.JAVA_1_1);
 
     /** Flag which indicates if javadoc from JDK 1.4 is available */
@@ -417,14 +417,14 @@ public class Javadoc extends Task {
                 cmd.createArgument().setValue(key);
                 cmd.createArgument().setValue(value);
             } else {
-                log("Warning: Leaving out empty argument '" + key + "'", 
+                log("Warning: Leaving out empty argument '" + key + "'",
                     Project.MSG_WARN);
             }
         }
     }
 
     /**
-     * Utility method to add a non-JDK1.1 argument to the command line 
+     * Utility method to add a non-JDK1.1 argument to the command line
      * conditionally based on the given flag.
      *
      * @param b the flag which controls if the argument is added.
@@ -436,7 +436,7 @@ public class Javadoc extends Task {
         }
     }
 
-    /** 
+    /**
      * Flag which indicates if the task should fail if there is a
      * javadoc error.
      */
@@ -494,7 +494,7 @@ public class Javadoc extends Task {
     /**
      * Set the maximum memory to be used by the javadoc process
      *
-     * @param max a string indicating the maximum memory according to the 
+     * @param max a string indicating the maximum memory according to the
      *        JVM conventions (e.g. 128m is 128 Megabytes)
      */
     public void setMaxmemory(String max){
@@ -526,7 +526,7 @@ public class Javadoc extends Task {
             sourcePath.append(src);
         }
     }
-    
+
     /**
      * Create a path to be configured with the locations of the source
      * files.
@@ -549,7 +549,7 @@ public class Javadoc extends Task {
         createSourcepath().setRefid(r);
     }
 
-    /** 
+    /**
      * Set the directory where the Javadoc output will be generated.
      *
      * @param dir the destination directory.
@@ -559,7 +559,7 @@ public class Javadoc extends Task {
         cmd.createArgument().setValue("-d");
         cmd.createArgument().setFile(destDir);
     }
-    
+
     /**
      * Set the list of source files to process.
      *
@@ -574,7 +574,7 @@ public class Javadoc extends Task {
             addSource(sf);
         }
     }
-    
+
     /**
      * Add a single source file.
      *
@@ -583,11 +583,11 @@ public class Javadoc extends Task {
     public void addSource(SourceFile sf) {
         sourceFiles.addElement(sf);
     }
-    
+
     /**
      * Set the package names to be processed.
      *
-     * @param packages a comma separated list of packages specs 
+     * @param packages a comma separated list of packages specs
      *        (may be wildcarded).
      *
      * @see #addPackage for wildcard information.
@@ -601,7 +601,7 @@ public class Javadoc extends Task {
             addPackage(pn);
         }
     }
-    
+
     /**
      * Add a single package to be processed.
      *
@@ -617,7 +617,7 @@ public class Javadoc extends Task {
     /**
      * Set the list of packages to be excluded.
      *
-     * @param packages a comma separated list of packages to be excluded. 
+     * @param packages a comma separated list of packages to be excluded.
      *        This may not include wildcards.
      */
     public void setExcludePackageNames(String packages) {
@@ -629,7 +629,7 @@ public class Javadoc extends Task {
             addExcludePackage(pn);
         }
     }
-    
+
     /**
      * Add a package to be excluded from the javadoc run.
      *
@@ -640,7 +640,7 @@ public class Javadoc extends Task {
     }
 
     /**
-     * Specify the fiel containing the overview to be included in the generated
+     * Specify the file containing the overview to be included in the generated
      * documentation.
      *
      * @param f the file containing the overview.
@@ -651,9 +651,9 @@ public class Javadoc extends Task {
             cmd.createArgument().setFile(f);
         }
     }
-    
+
     /**
-     * Indicate whether only public classes and members are to be included in 
+     * Indicate whether only public classes and members are to be included in
      * the scope processed
      *
      * @param b true if scope is to be public.
@@ -663,7 +663,7 @@ public class Javadoc extends Task {
     }
 
     /**
-     * Indicate whether only protected and public classes and members are to 
+     * Indicate whether only protected and public classes and members are to
      * be included in the scope processed
      *
      * @param b true if scope is to be protected.
@@ -673,7 +673,7 @@ public class Javadoc extends Task {
     }
 
     /**
-     * Indicate whether only package, protected and public classes and 
+     * Indicate whether only package, protected and public classes and
      * members are to be included in the scope processed
      *
      * @param b true if scope is to be package level.
@@ -681,9 +681,9 @@ public class Javadoc extends Task {
     public void setPackage(boolean b) {
         addArgIf(b, "-package");
     }
-    
+
     /**
-     * Indicate whether all classes and 
+     * Indicate whether all classes and
      * members are to be included in the scope processed
      *
      * @param b true if scope is to be private level.
@@ -691,7 +691,7 @@ public class Javadoc extends Task {
     public void setPrivate(boolean b) {
         addArgIf(b, "-private");
     }
-    
+
     /**
      * Set the scope to be processed. This is an alternative to the
      * use of the setPublic, setPrivate, etc methods. It gives better build
@@ -702,9 +702,9 @@ public class Javadoc extends Task {
     public void setAccess(AccessType at) {
         cmd.createArgument().setValue("-" + at.getValue());
     }
-    
+
     /**
-     * Set the class that starts the doclet used in generating the 
+     * Set the class that starts the doclet used in generating the
      * documentation.
      *
      * @param docletName the name of the doclet class.
@@ -733,7 +733,7 @@ public class Javadoc extends Task {
     /**
      * Set the classpath used to find the doclet class by reference.
      *
-     * @param r the reference to the Path instance to use as the doclet 
+     * @param r the reference to the Path instance to use as the doclet
      *        classpath.
      */
     public void setDocletPathRef(Reference r) {
@@ -762,22 +762,22 @@ public class Javadoc extends Task {
     public void addTaglet(ExtensionInfo tagletInfo) {
         tags.addElement(tagletInfo);
     }
-    
+
     /**
-     * Indicate whether Javadoc should produce old style (JDK 1.1) 
+     * Indicate whether Javadoc should produce old style (JDK 1.1)
      * documentation.
      *
      * This is not supported by JDK 1.1 and has been phased out in JDK 1.4
-     * 
+     *
      * @param b if true attempt to generate old style documentation.
      */
     public void setOld(boolean b) {
         if (b) {
             if (javadoc1) {
-                log("Javadoc 1.1 doesn't support the -1.1 switch", 
+                log("Javadoc 1.1 doesn't support the -1.1 switch",
                     Project.MSG_WARN);
             } else if (javadoc4) {
-                log("Javadoc 1.4 doesn't support the -1.1 switch anymore", 
+                log("Javadoc 1.4 doesn't support the -1.1 switch anymore",
                     Project.MSG_WARN);
             } else {
                 cmd.createArgument().setValue("-1.1");
@@ -787,8 +787,8 @@ public class Javadoc extends Task {
 
     /**
      * Set the classpath to be used for this javadoc run.
-     * 
-     * @param path an Ant Path object containing the compilation 
+     *
+     * @param path an Ant Path object containing the compilation
      *        classpath.
      */
     public void setClasspath(Path path) {
@@ -798,7 +798,7 @@ public class Javadoc extends Task {
             classpath.append(path);
         }
     }
-    
+
     /**
      * Create a Path to be configured with the classpath to use
      *
@@ -820,7 +820,7 @@ public class Javadoc extends Task {
         createClasspath().setRefid(r);
     }
 
-    /** 
+    /**
      * Set the boot classpath to use.
      *
      * @param path the boot classpath.
@@ -832,7 +832,7 @@ public class Javadoc extends Task {
             bootclasspath.append(path);
         }
     }
-    
+
     /**
      * Create a Path to be configured with the boot classpath
      *
@@ -887,7 +887,7 @@ public class Javadoc extends Task {
     public void setVerbose(boolean b) {
         add12ArgIf(b, "-verbose");
     }
-    
+
     /**
      * Set the local to use in documentation generation.
      *
@@ -901,7 +901,7 @@ public class Javadoc extends Task {
             cmd.createArgument(true).setValue("-locale");
         }
     }
-    
+
     /**
      * Set the encoding name of the source files,
      *
@@ -911,7 +911,7 @@ public class Javadoc extends Task {
         cmd.createArgument().setValue("-encoding");
         cmd.createArgument().setValue(enc);
     }
-    
+
     /**
      * Include the version tag in the generated documentation.
      *
@@ -920,7 +920,7 @@ public class Javadoc extends Task {
     public void setVersion(boolean b) {
         this.version = b;
     }
-    
+
     /**
      * Generate the &quot;use&quot page for each package.
      *
@@ -929,8 +929,8 @@ public class Javadoc extends Task {
     public void setUse(boolean b) {
         add12ArgIf(b, "-use");
     }
-    
-    
+
+
     /**
      * Include the author tag in the generated documentation.
      *
@@ -939,7 +939,7 @@ public class Javadoc extends Task {
     public void setAuthor(boolean b) {
         author = b;
     }
-    
+
     /**
      * Generate a split index
      *
@@ -948,9 +948,9 @@ public class Javadoc extends Task {
     public void setSplitindex(boolean b) {
         add12ArgIf(b, "-splitindex");
     }
-    
+
     /**
-     * Set the title to be placed in the HTML &lt;title&gt; tag of the 
+     * Set the title to be placed in the HTML &lt;title&gt; tag of the
      * generated documentation.
      *
      * @param title the window title to use.
@@ -958,7 +958,7 @@ public class Javadoc extends Task {
     public void setWindowtitle(String title) {
         add12ArgIfNotEmpty("-windowtitle", title);
     }
-    
+
     /**
      * Set the title of the generated overview page.
      *
@@ -969,7 +969,7 @@ public class Javadoc extends Task {
         h.addText(doctitle);
         addDoctitle(h);
     }
-    
+
     /**
      * Add a document title to use for the overview page.
      *
@@ -980,7 +980,7 @@ public class Javadoc extends Task {
             doctitle = text;
         }
     }
-    
+
     /**
      * Set the header text to be placed at the top of each output file.
      *
@@ -1013,7 +1013,7 @@ public class Javadoc extends Task {
         h.addText(footer);
         addFooter(h);
     }
-    
+
     /**
      * Set the footer text to be placed at the bottom of each output file.
      *
@@ -1035,7 +1035,7 @@ public class Javadoc extends Task {
         h.addText(bottom);
         addBottom(h);
     }
-    
+
     /**
      * Set the text to be placed at the bottom of each output file.
      *
@@ -1047,6 +1047,10 @@ public class Javadoc extends Task {
         }
     }
 
+    /**
+     * Link to docs at "url" using package list at "url2"
+     * - separate the URLs by using a space character.
+     */
     public void setLinkoffline(String src) {
         if (!javadoc1) {
             LinkArgument le = createLink();
@@ -1066,57 +1070,112 @@ public class Javadoc extends Task {
             le.setPackagelistLoc(project.resolveFile(tok.nextToken()));
         }
     }
+
+    /**
+     * Group specified packages together in overview page.
+     */
     public void setGroup(String src) {
         group = src;
     }
+
+    /**
+     * Create links to javadoc output at the given URL.
+     */
     public void setLink(String src) {
         if (!javadoc1) {
             createLink().setHref(src);
         }
     }
+
+    /**
+     * If true, do not include @deprecated information.
+     */
     public void setNodeprecated(boolean b) {
         addArgIf(b, "-nodeprecated");
     }
+
+    /**
+     * If true, do not generate deprecated list.
+     */
     public void setNodeprecatedlist(boolean b) {
         add12ArgIf(b, "-nodeprecatedlist");
     }
+
+    /**
+     * If true, do not generate class hierarchy.
+     */
     public void setNotree(boolean b) {
         addArgIf(b, "-notree");
     }
+
+    /**
+     * If true, do not generate index.
+     */
     public void setNoindex(boolean b) {
         addArgIf(b, "-noindex");
     }
+
+    /**
+     * If true, do not generate help link
+     */
     public void setNohelp(boolean b) {
         add12ArgIf(b, "-nohelp");
     }
+
+    /**
+     * If true, do not generate navigation bar.
+     */
     public void setNonavbar(boolean b) {
         add12ArgIf(b, "-nonavbar");
     }
+
+    /**
+     * If true, generate warning about @serial tag.
+     */
     public void setSerialwarn(boolean b) {
         add12ArgIf(b, "-serialwarn");
     }
+
+    /**
+     * Specifies the CSS stylesheet file to use.
+     */
     public void setStylesheetfile(File f) {
         if (!javadoc1) {
             cmd.createArgument().setValue("-stylesheetfile");
             cmd.createArgument().setFile(f);
         }
     }
+
+    /**
+     * Specifies the HTML help file to use.
+     */
     public void setHelpfile(File f) {
         if (!javadoc1) {
             cmd.createArgument().setValue("-helpfile");
             cmd.createArgument().setFile(f);
         }
     }
+
+    /**
+     * Output file encoding name.
+     */
     public void setDocencoding(String enc) {
         cmd.createArgument().setValue("-docencoding");
         cmd.createArgument().setValue(enc);
     }
+
+    /**
+     * The name of a file containing the packages to process.
+     */
     public void setPackageList(String src) {
         if (!javadoc1) {
             packageList = src;
         }
     }
 
+    /**
+     * Create link to javadoc output at the given URL.
+     */
     public LinkArgument createLink() {
         LinkArgument la = new LinkArgument();
         links.addElement(la);
@@ -1164,14 +1223,14 @@ public class Javadoc extends Task {
      */
     public TagArgument createTag() {
         if (!javadoc4) {
-            log ("-tag option not supported on JavaDoc < 1.4", 
+            log ("-tag option not supported on JavaDoc < 1.4",
                  Project.MSG_VERBOSE);
         }
         TagArgument ta = new TagArgument();
         tags.addElement (ta);
         return ta;
     }
-    
+
     /**
      * Scope element verbose names. (Defined here as fields
      * cannot be static in inner classes.) The first letter
@@ -1192,49 +1251,49 @@ public class Javadoc extends Task {
         private String description = null;
         /** Whether or not the tag is enabled. */
         private boolean enabled = true;
-        /** 
+        /**
          * Scope string of the tag. This will form the middle
          * argument of the -tag parameter when the tag is enabled
          * (with an X prepended for and is parsed from human-readable form.
          */
         private String scope = "a";
-        
+
         /** Sole constructor. */
         public TagArgument () {
         }
-        
-        /** 
+
+        /**
          * Sets the name of the tag.
-         * 
-         * @param name The name of the tag. 
+         *
+         * @param name The name of the tag.
          *             Must not be <code>null</code> or empty.
          */
         public void setName (String name) {
             this.name = name;
         }
-        
-        /** 
+
+        /**
          * Sets the description of the tag. This is what appears in
          * the JavaDoc.
-         * 
-         * @param description The description of the tag. 
+         *
+         * @param description The description of the tag.
          *                    Must not be <code>null</code> or empty.
          */
         public void setDescription (String description) {
             this.description = description;
         }
 
-        /** 
+        /**
          * Sets the scope of the tag. This is in comma-separated
          * form, with each element being one of "all" (the default),
          * "overview", "packages", "types", "constructors", "methods",
          * "fields". The elements are treated in a case-insensitive
-         * manner. 
-         * 
+         * manner.
+         *
          * @param verboseScope The scope of the tag.
-         *                     Must not be <code>null</code>, 
+         *                     Must not be <code>null</code>,
          *                     should not be empty.
-         * 
+         *
          * @exception BuildException if all is specified along with
          * other elements, if any elements are repeated, if no
          * elements are specified, or if any unrecognised elements are
@@ -1244,18 +1303,18 @@ public class Javadoc extends Task {
             verboseScope = verboseScope.toLowerCase(Locale.US);
 
             boolean[] elements = new boolean[SCOPE_ELEMENTS.length];
-            
+
             boolean gotAll = false;
             boolean gotNotAll = false;
-            
+
             // Go through the tokens one at a time, updating the
             // elements array and issuing warnings where appropriate.
             StringTokenizer tok = new StringTokenizer (verboseScope, ",");
             while (tok.hasMoreTokens()) {
                 String next = tok.nextToken().trim();
                 if (next.equals("all")) {
-                    if (gotAll) {   
-                        getProject().log ("Repeated tag scope element: all", 
+                    if (gotAll) {
+                        getProject().log ("Repeated tag scope element: all",
                                           Project.MSG_VERBOSE);
                     }
                     gotAll = true;
@@ -1278,7 +1337,7 @@ public class Javadoc extends Task {
                     }
                 }
             }
-            
+
             if (gotNotAll && gotAll) {
                 throw new BuildException ("Mixture of \"all\" and other scope "
                                           + "elements in tag parameter.");
@@ -1299,19 +1358,19 @@ public class Javadoc extends Task {
                 this.scope = buff.toString();
             }
         }
-        
+
         /**
          * Sets whether or not the tag is enabled.
-         * 
+         *
          * @param enabled Whether or not this tag is enabled.
          */
         public void setEnabled (boolean enabled) {
             this.enabled = enabled;
         }
-        
+
         /**
          * Returns the -tag parameter this argument represented.
-         * 
+         *
          * @exception BuildException if either the name or description
          *                           is <code>null</code> or empty.
          */
@@ -1320,15 +1379,19 @@ public class Javadoc extends Task {
                 throw new BuildException ("No name specified for custom tag.");
             }
             if (description == null || description.equals("")){
-                throw new BuildException 
+                throw new BuildException
                     ("No description specified for custom tag " + name);
             }
-            
-            return name + ":" + (enabled ? "" : "X") 
+
+            return name + ":" + (enabled ? "" : "X")
                 + scope + ":" + description;
         }
     }
 
+    /**
+     * Separates packages on the overview page into whatever
+     * groups you specify, one group per table.
+     */
     public GroupArgument createGroup() {
         GroupArgument ga = new GroupArgument();
         groups.addElement(ga);
@@ -1380,6 +1443,9 @@ public class Javadoc extends Task {
         }
     }
 
+    /**
+     * Charset for cross-platform viewing of generated documentation.
+     */
     public void setCharset(String src) {
         this.add12ArgIfNotEmpty("-charset", src);
     }
@@ -1439,10 +1505,16 @@ public class Javadoc extends Task {
         Vector packagesToDoc = new Vector();
         Path sourceDirs = new Path(getProject());
 
+        if (packageList != null && sourcePath == null) {
+            String msg = "sourcePath attribute must be set when "
+                + "specifying packagelist.";
+            throw new BuildException(msg);
+        }
+
         if (sourcePath != null) {
             sourceDirs.addExisting(sourcePath);
         }
-        
+
         parsePackages(packagesToDoc, sourceDirs);
 
         if (packagesToDoc.size() != 0 && sourceDirs.size() == 0) {
@@ -1454,11 +1526,12 @@ public class Javadoc extends Task {
         Vector sourceFilesToDoc = (Vector) sourceFiles.clone();
         addFileSets(sourceFilesToDoc);
 
-        if (packagesToDoc.size() == 0 && sourceFilesToDoc.size() == 0) {
+        if (packageList == null && packagesToDoc.size() == 0
+            && sourceFilesToDoc.size() == 0) {
             throw new BuildException("No source files and no packages have "
                                      + "been specified.");
         }
-        
+
         log("Generating Javadoc", Project.MSG_INFO);
 
         Commandline toExecute = (Commandline) cmd.clone();
@@ -1489,16 +1562,20 @@ public class Javadoc extends Task {
         }
 
         if (!javadoc1) {
-            toExecute.createArgument().setValue("-classpath");
-            toExecute.createArgument().setPath(classpath);
+            if (classpath.size() > 0) {
+                toExecute.createArgument().setValue("-classpath");
+                toExecute.createArgument().setPath(classpath);
+            }
             if (sourceDirs.size() > 0) {
                 toExecute.createArgument().setValue("-sourcepath");
                 toExecute.createArgument().setPath(sourceDirs);
             }
         } else {
             sourceDirs.append(classpath);
-            toExecute.createArgument().setValue("-classpath");
-            toExecute.createArgument().setPath(sourceDirs);
+            if (sourceDirs.size() > 0) {
+                toExecute.createArgument().setValue("-classpath");
+                toExecute.createArgument().setPath(sourceDirs);
+            }
         }
 
         if (version && doclet == null) {
@@ -1526,14 +1603,14 @@ public class Javadoc extends Task {
                     toExecute.createArgument().setValue("-doclet");
                     toExecute.createArgument().setValue(doclet.getName());
                     if (doclet.getPath() != null) {
-                        Path docletPath 
+                        Path docletPath
                             = doclet.getPath().concatSystemClasspath("ignore");
                         if (docletPath.size() != 0) {
                             toExecute.createArgument().setValue("-docletpath");
                             toExecute.createArgument().setPath(docletPath);
                         }
                     }
-                    for (Enumeration e = doclet.getParams(); 
+                    for (Enumeration e = doclet.getParams();
                          e.hasMoreElements();) {
                         DocletParam param = (DocletParam) e.nextElement();
                         if (param.getName() == null) {
@@ -1549,7 +1626,7 @@ public class Javadoc extends Task {
                     }
                 }
             }
-            if (bootclasspath != null) {
+            if (bootclasspath != null && bootclasspath.size() > 0) {
                 toExecute.createArgument().setValue("-bootclasspath");
                 toExecute.createArgument().setPath(bootclasspath);
             }
@@ -1560,7 +1637,7 @@ public class Javadoc extends Task {
                     LinkArgument la = (LinkArgument) e.nextElement();
 
                     if (la.getHref() == null || la.getHref().length() == 0) {
-                        log("No href was given for the link - skipping", 
+                        log("No href was given for the link - skipping",
                             Project.MSG_VERBOSE);
                         continue;
                     } else {
@@ -1570,13 +1647,13 @@ public class Javadoc extends Task {
                             URL testHref = new URL(base, la.getHref());
                         } catch (MalformedURLException mue) {
                             // ok - just skip
-                            log("Link href \"" + la.getHref() 
-                                + "\" is not a valid url - skipping link", 
+                            log("Link href \"" + la.getHref()
+                                + "\" is not a valid url - skipping link",
                                 Project.MSG_WARN);
                             continue;
                         }
-                    }                                
-                        
+                    }
+
 
                     if (la.isLinkOffline()) {
                         File packageListLocation = la.getPackagelistLoc();
@@ -1586,16 +1663,16 @@ public class Javadoc extends Task {
                                 + " must be provided because the link is "
                                 + "offline");
                         }
-                        File packageList = 
+                        File packageListFile =
                             new File(packageListLocation, "package-list");
-                        if (packageList.exists()) {
+                        if (packageListFile.exists()) {
                             toExecute.createArgument().setValue("-linkoffline");
                             toExecute.createArgument().setValue(la.getHref());
                             toExecute.createArgument()
                                 .setValue(packageListLocation
                                           .getAbsolutePath());
                         } else {
-                            log("Warning: No package list was found at " 
+                            log("Warning: No package list was found at "
                                 + packageListLocation, Project.MSG_VERBOSE);
                         }
                     } else {
@@ -1648,7 +1725,7 @@ public class Javadoc extends Task {
                     toExecute.createArgument().setValue(packages);
                 }
             }
-            
+
             // JavaDoc 1.4 parameters
             if (javadoc4) {
                 for (Enumeration e = tags.elements(); e.hasMoreElements();) {
@@ -1715,7 +1792,7 @@ public class Javadoc extends Task {
                     toExecute.createArgument().setValue(packageName);
                 }
             }
-            
+
             enum = sourceFilesToDoc.elements();
             while (enum.hasMoreElements()) {
                 SourceFile sf = (SourceFile) enum.nextElement();
@@ -1829,7 +1906,7 @@ public class Javadoc extends Task {
                 }
                 ps.createInclude().setName(pkg);
             }
-            
+
             enum = excludePackageNames.elements();
             while (enum.hasMoreElements()) {
                 PackageName p = (PackageName) enum.nextElement();
@@ -1839,7 +1916,7 @@ public class Javadoc extends Task {
                 }
                 ps.createExclude().setName(pkg);
             }
-            
+
 
             String[] pathElements = sourcePath.list();
             for (int i = 0; i < pathElements.length; i++) {
@@ -1855,7 +1932,7 @@ public class Javadoc extends Task {
         while (enum.hasMoreElements()) {
             DirSet ds = (DirSet) enum.nextElement();
             File baseDir = ds.getDir(getProject());
-            log("scanning " + baseDir + " for packages.", Project.MSG_DEBUG); 
+            log("scanning " + baseDir + " for packages.", Project.MSG_DEBUG);
             DirectoryScanner dsc = ds.getDirectoryScanner(getProject());
             String[] dirs = dsc.getIncludedDirectories();
             boolean containsPackages = false;
@@ -1873,7 +1950,7 @@ public class Javadoc extends Task {
 
                 if (files.length > 0) {
                     containsPackages = true;
-                    String packageName = 
+                    String packageName =
                         dirs[i].replace(File.separatorChar, '.');
                     if (!addedPackages.contains(packageName)) {
                         addedPackages.addElement(packageName);
@@ -1887,7 +1964,7 @@ public class Javadoc extends Task {
                 sp.createPathElement().setLocation(baseDir);
             } else {
                 log(baseDir + " doesn\'t contain any packages, dropping it.",
-                    Project.MSG_VERBOSE); 
+                    Project.MSG_VERBOSE);
             }
         }
     }
@@ -1904,7 +1981,7 @@ public class Javadoc extends Task {
         //
         private String queuedLine = null;
         protected void processLine(String line, int messageLevel) {
-            if (messageLevel == Project.MSG_INFO 
+            if (messageLevel == Project.MSG_INFO
                 && line.startsWith("Generating ")) {
                 if (queuedLine != null) {
                     super.processLine(queuedLine, Project.MSG_VERBOSE);

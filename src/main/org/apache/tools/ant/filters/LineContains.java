@@ -155,10 +155,6 @@ public final class LineContains
                         break;
                     }
                 }
-                line = readLine();
-            }
-            if (goodLine != null) {
-                line = goodLine;
                 return read();
             };
         }

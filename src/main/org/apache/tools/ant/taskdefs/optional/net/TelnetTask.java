@@ -85,12 +85,12 @@ public class TelnetTask extends Task {
     private String password = null;
 
     /**
-     *  The server to connect to. 
+     *  The server to connect to.
      */
     private String server  = null;
 
     /**
-     *  The tcp port to connect to. 
+     *  The tcp port to connect to.
      */
     private int port = 23;
 
@@ -104,7 +104,7 @@ public class TelnetTask extends Task {
      */
     private Vector telnetTasks = new Vector();
 
-    /** 
+    /**
      *  If true, adds a CR to beginning of login script
      */
     private boolean addCarriageReturn = false;
@@ -115,17 +115,17 @@ public class TelnetTask extends Task {
      */
     private Integer defaultTimeout = null;
 
-    /** 
-     *  Verify that all parameters are included. 
+    /**
+     *  Verify that all parameters are included.
      *  Connect and possibly login
-     *  Iterate through the list of Reads and writes 
+     *  Iterate through the list of Reads and writes
      */
     public void execute() throws BuildException {
        /**  A server name is required to continue */
        if (server == null) {
            throw new BuildException("No Server Specified");
        }
-       /**  A userid and password must appear together 
+       /**  A userid and password must appear together
         *   if they appear.  They are not required.
         */
        if (userid == null && password != null) {
@@ -157,8 +157,8 @@ public class TelnetTask extends Task {
        }
     }
 
-    /**  
-     *  Process a 'typical' login.  If it differs, use the read 
+    /**
+     *  Process a 'typical' login.  If it differs, use the read
      *  and write tasks explicitely
      */
     private void login() {
@@ -172,34 +172,34 @@ public class TelnetTask extends Task {
     }
 
     /**
-     *  Set the userid attribute 
+     *  Set the userid attribute
      */
     public void setUserid(String u) { this.userid = u; }
 
     /**
-     *  Set the password attribute 
+     *  Set the password attribute
      */
     public void setPassword(String p) { this.password = p; }
 
     /**
-     *  Set the server address attribute 
+     *  Set the server address attribute
      */
     public void setServer(String m) { this.server = m; }
 
     /**
-     *  Set the tcp port to connect to attribute 
+     *  Set the tcp port to connect to attribute
      */
     public void setPort(int p) { this.port = p; }
 
     /**
-     *  Set the tcp port to connect to attribute 
+     *  Set the tcp port to connect to attribute
      */
     public void setInitialCR(boolean b) {
        this.addCarriageReturn = b;
     }
 
     /**
-     *  Change the default timeout to wait for 
+     *  Change the default timeout to wait for
      *  valid responses
      */
     public void setTimeout(Integer i) {
@@ -207,10 +207,10 @@ public class TelnetTask extends Task {
     }
 
     /**
-     *  A subTask &lt;read&gt; tag was found.  Create the object, 
+     *  A subTask &lt;read&gt; tag was found.  Create the object,
      *  Save it in our list, and return it.
      */
-   
+
     public TelnetSubTask createRead() {
         TelnetSubTask task = (TelnetSubTask) new TelnetRead();
         telnetTasks.addElement(task);
@@ -218,7 +218,7 @@ public class TelnetTask extends Task {
     }
 
     /**
-     *  A subTask &lt;write&gt; tag was found.  Create the object, 
+     *  A subTask &lt;write&gt; tag was found.  Create the object,
      *  Save it in our list, and return it.
      */
     public TelnetSubTask createWrite() {
@@ -227,13 +227,13 @@ public class TelnetTask extends Task {
         return task;
     }
 
-    /**  
+    /**
      *  This class is the parent of the Read and Write tasks.
      *  It handles the common attributes for both.
      */
     public class TelnetSubTask {
         protected String taskString = "";
-        public void execute(AntTelnetClient telnet) 
+        public void execute(AntTelnetClient telnet)
                 throws BuildException {
             throw new BuildException("Shouldn't be able instantiate a SubTask directly");
         }
@@ -247,30 +247,30 @@ public class TelnetTask extends Task {
          * attribute assignment of properties
          */
         public void setString(String s) {
-           taskString += s; 
+           taskString += s;
         }
     }
     /**
-     *  This class sends text to the connected server 
+     *  This class sends text to the connected server
      */
     public class TelnetWrite extends TelnetSubTask {
         private boolean echoString = true;
-        public void execute(AntTelnetClient telnet) 
+        public void execute(AntTelnetClient telnet)
                throws BuildException {
            telnet.sendString(taskString, echoString);
         }
-        
+
         public void setEcho(boolean b) {
            echoString = b;
         }
     }
     /**
      *  This class reads the output from the connected server
-     *  until the required string is found. 
+     *  until the required string is found.
      */
     public class TelnetRead extends TelnetSubTask {
         private Integer timeout = null;
-        public void execute(AntTelnetClient telnet) 
+        public void execute(AntTelnetClient telnet)
                throws BuildException {
             telnet.waitForString(taskString, timeout);
         }
@@ -291,23 +291,23 @@ public class TelnetTask extends Task {
     }
     /**
      *  This class handles the abstraction of the telnet protocol.
-     *  Currently it is a wrapper around <a href="www.oroinc.com">ORO</a>'s 
+     *  Currently it is a wrapper around <a href="www.oroinc.com">ORO</a>'s
      *  NetComponents
      */
     public class AntTelnetClient extends TelnetClient {
         /**
-         * Read from the telnet session until the string we are 
-         * waiting for is found 
-         * @param s The string to wait on 
+         * Read from the telnet session until the string we are
+         * waiting for is found
+         * @param s The string to wait on
          */
         public void waitForString(String s) {
             waitForString(s, null);
         }
 
         /**
-         * Read from the telnet session until the string we are 
+         * Read from the telnet session until the string we are
          * waiting for is found or the timeout has been reached
-         * @param s The string to wait on 
+         * @param s The string to wait on
          * @param timeout The maximum number of seconds to wait
          */
         public void waitForString(String s, Integer timeout) {
@@ -319,7 +319,7 @@ public class TelnetTask extends Task {
                         sb.append((char) is.read());
                     }
                 } else {
-                    Calendar endTime = Calendar.getInstance(); 
+                    Calendar endTime = Calendar.getInstance();
                     endTime.add(Calendar.SECOND, timeout.intValue());
                     while (sb.toString().indexOf(s) == -1) {
                         while (Calendar.getInstance().before(endTime) &&
@@ -328,16 +328,16 @@ public class TelnetTask extends Task {
                         }
                         if (is.available() == 0) {
                             throw new BuildException(
-                                "Response timed-out waiting for \""+s+'\"', 
+                                "Response timed-out waiting for \""+s+'\"',
                                 getLocation());
                         }
                         sb.append((char) is.read());
                     }
                 }
                 log(sb.toString(), Project.MSG_INFO);
-            } catch (BuildException be) { 
+            } catch (BuildException be) {
                 throw be;
-            } catch (Exception e) { 
+            } catch (Exception e) {
                 throw new BuildException(e, getLocation());
             }
         }
@@ -354,7 +354,7 @@ public class TelnetTask extends Task {
                     log(s, Project.MSG_INFO);
                 }
                 os.flush();
-            } catch (Exception e) { 
+            } catch (Exception e) {
                 throw new BuildException(e, getLocation());
             }
         }

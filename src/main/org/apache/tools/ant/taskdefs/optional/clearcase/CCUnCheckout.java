@@ -62,7 +62,8 @@ import org.apache.tools.ant.types.Commandline;
 
 
 /**
- * Task to perform UnCheckout command to ClearCase.
+ * Performs ClearCase UnCheckout command.
+ *
  * <p>
  * The following attributes are interpretted:
  * <table border="1">
@@ -138,7 +139,7 @@ public class CCUnCheckout extends ClearCase {
     }
 
     /**
-     * Set keepcopy flag status
+     * If true, keep a copy of the file with a .keep extension.
      *
      * @param keep the status to set the flag to
      */

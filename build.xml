@@ -186,6 +186,8 @@
              unless="trax.present"/>
     <exclude name="${optional.package}/XsltTest.java"
              unless="trax.present"/>
+    <exclude name="${ant.package}/types/XMLCatalogBuildFileTest.java"
+             unless="trax.present"/>
   </patternset>
   <patternset id="needs.xalan1">
     <exclude name="${optional.package}/XalanLiaison*.java"
@@ -302,6 +304,7 @@
     <exclude name="${optional.package}/splash/*.java" unless="swing.present" />
   </patternset>
   <patternset id="teststhatfail">
+    <exclude name="${ant.package}/types/XMLCatalogTest.java"/>
   </patternset>
   
   <!--
@@ -1288,6 +1291,8 @@
           <exclude name="${optional.package}/TraXLiaisonTest.java"
                    unless="trax.impl.present"/>
           <exclude name="${optional.package}/XsltTest.java"
+                   unless="trax.impl.present"/>
+          <exclude name="${ant.package}/types/XMLCatalogBuildFileTest.java"
                    unless="trax.impl.present"/>
 
           <!-- needs BSF to work -->

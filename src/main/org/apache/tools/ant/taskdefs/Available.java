@@ -94,7 +94,7 @@ public class Available extends Task implements Condition {
     private boolean ignoreSystemclasses = false;
 
     /**
-     * Set the classpath to be used when searching for classes and resources
+     * Set the classpath to be used when searching for classes and resources.
      * 
      * @param classpath an Ant Path object containing the search path.
      */
@@ -103,8 +103,7 @@ public class Available extends Task implements Condition {
     }
 
     /**
-     * Create a classpath object to be configured by Ant. The resulting
-     * path will be used when searching for classes or resources
+     * Classpath to be used when searching for classes and resources.
      *
      * @return an empty Path instance to be configured by Ant.
      */
@@ -126,7 +125,7 @@ public class Available extends Task implements Condition {
     }
 
     /**
-     * Set the path to use when looking for a file
+     * Set the path to use when looking for a file.
      *
      * @param filepath a Path instance containing the search path for files.
      */
@@ -135,7 +134,7 @@ public class Available extends Task implements Condition {
     }
 
     /**
-     * Create a filepath to be configured by Ant.
+     * Path to search for file resources.
      *
      * @return a new Path instance which Ant will configure with a file search
      *         path.
@@ -158,7 +157,7 @@ public class Available extends Task implements Condition {
     }
 
     /**
-     * Set the value to be given to the property of the desired resource is
+     * Set the value to be given to the property if the desired resource is
      * available.
      *
      * @param value the value to be given.
@@ -191,7 +190,7 @@ public class Available extends Task implements Condition {
     }
 
     /**
-     * Set the name of a Java resouirce which is required to set the property.
+     * Set the name of a Java resource which is required to set the property.
      *
      * @param resource the name of a resource which is required to be available.
      */
@@ -213,7 +212,7 @@ public class Available extends Task implements Condition {
     }
 
     /**
-     * Set what type of file is required - either a directory or a file.
+     * Set what type of file is required - either directory or file.
      *
      * @param type an instance of the FileDir enumeratedAttribute indicating
      *             whether the file required is to be a directory or a plain 

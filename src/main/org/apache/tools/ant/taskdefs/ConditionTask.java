@@ -60,8 +60,8 @@ import org.apache.tools.ant.taskdefs.condition.Condition;
 import org.apache.tools.ant.taskdefs.condition.ConditionBase;
 
 /**
- * &lt;condition&gt; task as a generalization of &lt;available&gt; and
- * &lt;uptodate&gt;.
+ * Task to set a property conditionally using &lt;uptodate&gt;, &lt;available&gt;,
+ * and many other supported conditions.
  *
  * <p>This task supports boolean logic as well as pluggable conditions
  * to decide, whether a property should be set.</p>
@@ -89,7 +89,8 @@ public class ConditionTask extends ConditionBase {
     public void setProperty(String p) {property = p;}
 
     /**
-     * The value for the property to set. Defaults to "true".
+     * The value for the property to set, if condition evaluates to true.
+     * Defaults to "true".
      *
      * @since Ant 1.4
      */
@@ -102,17 +103,17 @@ public class ConditionTask extends ConditionBase {
      */
     public void execute() throws BuildException {
         if (countConditions() > 1) {
-            throw new BuildException("You must not nest more than one " 
+            throw new BuildException("You must not nest more than one "
                 + "condition into <condition>");
         }
         if (countConditions() < 1) {
-            throw new BuildException("You must nest a condition into " 
+            throw new BuildException("You must nest a condition into "
                 + "<condition>");
         }
         if (property == null) {
             throw new BuildException("The property attribute is required.");
         }
-        
+
         Condition c = (Condition) getConditions().nextElement();
         if (c.eval()) {
             log("Condition true; setting "+property+" to "+value,

@@ -120,7 +120,7 @@ public final class LoadFile extends Task {
 
 
     /**
-     * Sets the Property attribute of the LoadFile object
+     * Property name to save to.
      *
      * @param property The new Property value
      */
@@ -130,7 +130,7 @@ public final class LoadFile extends Task {
 
 
     /**
-     * Sets the srcfile attribute.
+     * Sets the file to load.
      *
      * @param srcFile The new SrcFile value
      */
@@ -140,7 +140,7 @@ public final class LoadFile extends Task {
 
 
     /**
-     * Sets the Failonerror attribute of the LoadFile object
+     * If true, fail on load error.
      *
      * @param fail The new Failonerror value
      */

@@ -65,11 +65,13 @@ import java.io.IOException;
 import java.util.Enumeration;
 
 /**
- * Moves a file or directory to a new file or directory.  By default,
- * the destination is overwriten when existing.  When overwrite is
+ * Moves a file or directory to a new file or directory.
+ * By default, the
+ * destination file is overwritten if it already exists.
+ * When <i>overwrite</i> is
  * turned off, then files are only moved if the source file is
  * newer than the destination file, or when the destination file does
- * not exist.</p>
+ * not exist.
  *
  * <p>Source files and directories are only deleted when the file or
  * directory has been copied to the destination successfully.  Filtering
@@ -79,7 +81,7 @@ import java.util.Enumeration;
  * document, the following mailing list discussions, and the
  * copyfile/copydir tasks.</p>
  *
- * @author Glenn McAllister 
+ * @author Glenn McAllister
  *         <a href="mailto:glennm@ca.ibm.com">glennm@ca.ibm.com</a>
  * @author <a href="mailto:umagesh@rediffmail.com">Magesh Umasankar</a>
  * @version $Revision$
@@ -151,24 +153,24 @@ public class Move extends Copy {
 
                     if (!moved) {
                         try {
-                            log("Moving " + fromFile + " to " + toFile, 
+                            log("Moving " + fromFile + " to " + toFile,
                                 verbosity);
 
-                            FilterSetCollection executionFilters = 
+                            FilterSetCollection executionFilters =
                                 new FilterSetCollection();
                             if (filtering) {
                                 executionFilters
                                     .addFilterSet(project.getGlobalFilterSet());
                             }
-                            for (Enumeration filterEnum = 
-                                     getFilterSets().elements(); 
+                            for (Enumeration filterEnum =
+                                     getFilterSets().elements();
                                  filterEnum.hasMoreElements();) {
                                 executionFilters
                                     .addFilterSet((FilterSet) filterEnum
                                                   .nextElement());
                             }
-                            getFileUtils().copyFile(f, d, executionFilters, 
-                                                    getFilterChains(), 
+                            getFileUtils().copyFile(f, d, executionFilters,
+                                                    getFilterChains(),
                                                     forceOverwrite,
                                                     getPreserveLastModified(),
                                                     getEncoding(), project);
@@ -197,7 +199,7 @@ public class Move extends Copy {
                 File d = new File((String) e.nextElement());
                 if (!d.exists()) {
                     if (!d.mkdirs()) {
-                        log("Unable to create directory " 
+                        log("Unable to create directory "
                             + d.getAbsolutePath(), Project.MSG_ERR);
                     } else {
                         count++;
@@ -206,7 +208,7 @@ public class Move extends Copy {
             }
 
             if (count > 0) {
-                log("Moved " + count + " empty directories to " 
+                log("Moved " + count + " empty directories to "
                     + destDir.getAbsolutePath());
             }
         }
@@ -227,6 +229,7 @@ public class Move extends Copy {
     /**
      * Its only ok to delete a directory tree if there are
      * no files in it.
+     * @return true if a deletion can go ahead
      */
     protected boolean okToDelete(File d) {
         String[] list = d.list();
@@ -264,14 +267,14 @@ public class Move extends Copy {
             if (f.isDirectory()) {
                 deleteDir(f);
             } else {
-                throw new BuildException("UNEXPECTED ERROR - The file " 
-                                         + f.getAbsolutePath() 
+                throw new BuildException("UNEXPECTED ERROR - The file "
+                                         + f.getAbsolutePath()
                                          + " should not exist!");
             }
         }
         log("Deleting directory " + d.getAbsolutePath(), verbosity);
         if (!d.delete()) {
-            throw new BuildException("Unable to delete directory " 
+            throw new BuildException("Unable to delete directory "
                                      + d.getAbsolutePath());
         }
     }

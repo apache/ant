@@ -11,10 +11,12 @@
 
 <h3>Description</h3>
 <p>Sets the <code>DSTAMP</code>, <code>TSTAMP</code>, and <code>TODAY</code>
-properties in the current project. The <code>DSTAMP</code> property is in the
+properties in the current project. By default,
+the <code>DSTAMP</code> property is in the
 format &quot;yyyyMMdd&quot;, <code>TSTAMP</code> is in the
 format &quot;hhmm&quot;, and <code>TODAY</code> is in the
-format &quot;month day year&quot;.</p>
+format &quot;MMMM dd yyyy&quot;. Use the nested &lt;format&gt; element
+to specify a different format.</p>
 
 <p>These properties can be used in the build-file, for instance, to create
 time-stamped filenames, or used to replace placeholder tags inside documents
@@ -132,7 +134,7 @@ is suitable for use with the &lt;touch&gt; task. The standard properties are set
   &lt;tstamp prefix="start"/&gt;
 </pre>
 <p>
-Sets three properties with the standard formats, prefixed with "start.": 
+Sets three properties with the standard formats, prefixed with "start.":
 <code>start.DSTAMP</code>, <code>start.TSTAMP</code>, and <code>start.TODAY</code>.</p>
 
 

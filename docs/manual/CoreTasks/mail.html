@@ -10,9 +10,14 @@
 <h2><a name="mail">Mail</a></h2>
 <h3>Description</h3>
 <p>A task to send SMTP email. This task can send mail using either plain
-text, uu encoding or Mime format mail depending on what is available.
+text, UU encoding, or MIME format mail, depending on what is available.
 Attachments may be sent using nested
 <a href="../CoreTypes/fileset.html">fileset</a> elements.</p>
+<p><strong>Note:</strong> This task may depend on external libraries
+that are not included
+in the Ant distribution.  See <a href="../install.html#librarydependencies">
+Library Dependencies</a> for more information.
+</p>
 
 <h3>Parameters</h3>
 <table border="1" cellpadding="2" cellspacing="0">
@@ -49,7 +54,8 @@ Attachments may be sent using nested
   </tr>
   <tr>
     <td valign="top">messagefile</td>
-    <td valign="top">File to send as the body of the email.</td>
+    <td valign="top">File to send as the body of the email. Property
+    values in the file will be expanded.</td>
   </tr>
       <td valign="top">messagemimetype</td>
     <td valign="top">The content type of the message.  The default is
@@ -148,7 +154,9 @@ attributes:</p>
 </table>
 
 <p>If the <code>src</code> attribute is not specified, then text can be added
-inside the <code>&lt;message&gt;</code> element.</p>
+inside the <code>&lt;message&gt;</code> element. Property expansion will occur
+in the message, whether it is specified as an external file or as text within
+the <code>&lt;message&gt;</code> element.</p>
 
 <h3>Examples</h3>
 
@@ -167,7 +175,7 @@ inside the <code>&lt;message&gt;</code> element.</p>
 &lt;mail mailhost=&quot;smtp.myisp.com&quot; mailport=&quot;1025&quot; subject=&quot;Test build&quot;&gt;
   &lt;from name=&quot;me@myisp.com&quot;&gt;
   &lt;to name=&quot;all@xyz.com&quot;&gt;
-  &lt;message&gt;A new nightly build has completed&lt;/message&gt;
+  &lt;message&gt;The ${buildname} nightly build has completed&lt;/message&gt;
   &lt;fileset dir=&quot;dist&quot;&gt;
     &lt;includes name=&quot;**/*.zip&quot;/&gt;
   &lt;/fileset&gt;
@@ -177,7 +185,8 @@ inside the <code>&lt;message&gt;</code> element.</p>
 <p>Sends an eMail from <i>me@myisp.com</i> to <i>all@xyz.com</i> with a subject of
 <i>Test Build</i> and attaches any zip files from the dist directory.&nbsp; The
 task will attempt to use JavaMail and fall back to UU encoding or no encoding in
-that order depending on what support classes are available.</p>
+that order depending on what support classes are available. <code>${buildname}</code>
+will be replaced with the <code>buildname</code> property's value.</p>
 <hr>
 <p align="center">Copyright &copy; 2000-2002 Apache Software Foundation. All rights
 Reserved.</p>

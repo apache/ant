@@ -75,6 +75,7 @@ import org.apache.tools.ant.taskdefs.Java;
 import org.apache.tools.ant.taskdefs.Execute;
 import org.apache.tools.ant.types.Commandline;
 import org.apache.tools.ant.types.Path;
+import org.apache.tools.ant.taskdefs.ExecTask;
 
 
 /**
@@ -89,6 +90,7 @@ import org.apache.tools.ant.types.Path;
  * <li>verifyargs (String) : add optional argument to verify command (see vbj com.inprise.ejb.util.Verify)</li>
  * <li>basdtd (String)     : location of the BAS DTD </li>
  * <li>generateclient (boolean) : turn on the client jar file generation </li>
+ * <li>version (int)       : tell what is the borland appserver version 4 or 5 </li>
  * </ul>
  *
  *<PRE>
@@ -119,6 +121,8 @@ public class BorlandDeploymentTool extends GenericDeploymentTool  implements Exe
     = "/com/inprise/j2ee/xml/dtds/ejb-inprise.dtd";
 
     protected static final String BAS_DD = "ejb-inprise.xml";
+    protected static final String BES_DD = "ejb-borland.xml";
+
 
     /** Java2iiop executable **/
     protected static final String JAVA2IIOP = "java2iiop";
@@ -137,6 +141,16 @@ public class BorlandDeploymentTool extends GenericDeploymentTool  implements Exe
 
     /** Instance variable that determines whetger the client jar file is generated */
     private boolean generateclient = false;
+
+    /** Borland Entreprise Server = version 5 */
+    static final int    BES       = 5;
+    /** Borland Application Server or Inprise Applcation Server  = version 4 */
+    static final int    BAS       = 4;
+
+    /** borland appserver version 4 or 5 */
+    private int version = BAS;
+
+
     /** Instance variable that determines whether it is necessary to verify the produced jar */
     private boolean verify     = true;
     private String  verifyArgs = "";
@@ -193,6 +207,13 @@ public class BorlandDeploymentTool extends GenericDeploymentTool  implements Exe
         this.generateclient = b;
     }
 
+    /**
+     * setter used to store the borland appserver version [4 or 5]
+     * @param version app server version 4 or 5
+     */
+    public void setVersion(int version) {
+        this.version = version;
+    }
 
     protected DescriptorHandler getBorlandDescriptorHandler(final File srcDir) {
         DescriptorHandler handler =
@@ -227,10 +248,19 @@ public class BorlandDeploymentTool extends GenericDeploymentTool  implements Exe
      */
     protected void addVendorFiles(Hashtable ejbFiles, String ddPrefix) {
 
-        File borlandDD = new File(getConfig().descriptorDir, ddPrefix + BAS_DD);
+        //choose the right vendor DD
+        if ( !(version == BES || version == BAS)) {
+            throw new BuildException("version "+version+" is not supported");
+        }
+
+        String dd = ( version == BES ? BES_DD : BAS_DD);
+
+        log("vendor file : "+ddPrefix + dd,Project.MSG_DEBUG);
+
+        File borlandDD = new File(getConfig().descriptorDir, ddPrefix + dd);
         if (borlandDD.exists()) {
             log("Borland specific file found " + borlandDD,  Project.MSG_VERBOSE);
-            ejbFiles.put(META_DIR + BAS_DD,  borlandDD);
+            ejbFiles.put(META_DIR + dd ,  borlandDD);
         } else {
             log("Unable to locate borland deployment descriptor. It was expected to be in " +
                 borlandDD.getPath(), Project.MSG_WARN);
@@ -251,10 +281,59 @@ public class BorlandDeploymentTool extends GenericDeploymentTool  implements Exe
      * @param sourceJar java.io.File representing the produced jar file
      */
     private void verifyBorlandJar(File sourceJar) {
-        org.apache.tools.ant.taskdefs.Java javaTask = null;
-        log("verify " + sourceJar, Project.MSG_INFO);
-        try {
+        if ( version == BAS) {
+            verifyBorlandJarV4(sourceJar);
+            return ;
+        }
+        if ( version == BES ) {
+            verifyBorlandJarV5(sourceJar);
+            return;
+        }
+        log("verify jar skipped because the version is invalid ["+version+"]",Project.MSG_WARN);
+    }
 
+    /**
+     * Verify the produced jar file by invoking the Borland iastool tool
+     * @param sourceJar java.io.File representing the produced jar file
+     */
+    private void verifyBorlandJarV5(File sourceJar) {
+        log("verify BES " + sourceJar, Project.MSG_INFO);
+        try {
+            org.apache.tools.ant.taskdefs.ExecTask execTask = null;
+            execTask = (ExecTask) getTask().getProject().createTask("exec");
+            execTask.setDir(new File("."));
+            execTask.setExecutable("iastool");
+            //classpath
+            if (getCombinedClasspath() != null)  {
+                execTask.createArg().setValue("-VBJclasspath");
+                execTask.createArg().setValue(getCombinedClasspath().toString());
+            }
+
+            if (java2iiopdebug) {
+                execTask.createArg().setValue("-debug");
+            }
+            execTask.createArg().setValue("-verify");
+            execTask.createArg().setValue("-src");
+            // ejb jar file to verfiy
+            execTask.createArg().setValue(sourceJar.getPath());
+            log("Calling iastool", Project.MSG_VERBOSE);
+            execTask.execute();
+        } catch (Exception e) {
+            // Have to catch this because of the semantics of calling main()
+            String msg = "Exception while calling generateclient Details: "
+                + e.toString();
+            throw new BuildException(msg, e);
+        }
+    }
+
+    /**
+     * Verify the produced jar file by invoking the Borland verify tool
+     * @param sourceJar java.io.File representing the produced jar file
+     */
+    private void verifyBorlandJarV4(File sourceJar) {
+        org.apache.tools.ant.taskdefs.Java javaTask = null;
+        log("verify BAS " + sourceJar, Project.MSG_INFO);
+        try  {
             String args = verifyArgs;
             args += " " + sourceJar.getPath();
 
@@ -280,6 +359,7 @@ public class BorlandDeploymentTool extends GenericDeploymentTool  implements Exe
         }
     }
 
+
     /**
      * Generate the client jar corresponding to the jar file passed as paremeter
      * the method uses the BorlandGenerateClient task.
@@ -299,6 +379,7 @@ public class BorlandDeploymentTool extends GenericDeploymentTool  implements Exe
             if (classpath != null) {
                 gentask.setClasspath(classpath);
             }
+            gentask.setVersion(version);
             gentask.setTaskName("generate client");
             gentask.execute();
         } catch (Exception e) {
@@ -391,11 +472,11 @@ public class BorlandDeploymentTool extends GenericDeploymentTool  implements Exe
 
         if (verify) {
             verifyBorlandJar(jarFile);
-        } // end of if ()
+        }
 
         if (generateclient) {
             generateClient(jarFile);
-        } // end of if ()
+        }
     }
 
     /**
@@ -460,3 +541,4 @@ public class BorlandDeploymentTool extends GenericDeploymentTool  implements Exe
         } // end of if ()
     }
 }
+

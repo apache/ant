@@ -11,11 +11,8 @@
 <h3>Description</h3>
 <p>Sets a property (by name and value), or set of properties (from file or
 resource) in the project.  Properties are case sensitive.</p>
-<p>When a property was set by the user, or was a property in a parent project
-(that started this project with the <a href="ant.html">ant task</a>), then this
-property cannot be set, and will be ignored. This means that properties set
-outside the current project always override the properties of the current
-project.</p>
+ Properties are immutable: whoever sets a property first freezes it for the
+ rest of the build; they are most definately not variable. 
 <p>There are five ways to set properties:</p>
 <ul>
   <li>By supplying both the <i>name</i> and <i>value</i> attribute.</li>
@@ -30,7 +27,7 @@ project.</p>
     Properties will be defined for every environment variable by
     prefixing the supplied name and a period to the name of the variable.</li>
 </ul>
-<p>Although combinations of the three ways are possible, only one should be used
+<p>Although combinations of these ways are possible, only one should be used
 at a time. Problems might occur with the order in which properties are set, for
 instance.</p>
 <p>The value part of the properties being set, might contain references to other
@@ -85,10 +82,10 @@ href="../using.html#built-in-props">here</a>.</p>
     <td valign="top">the prefix to use when retrieving environment variables. Thus
     if you specify environment=&quot;myenv&quot; you will be able to access OS-specific 
     environment variables via property names &quot;myenv.PATH&quot; or 
-	&quot;myenv.TERM&quot;. Note that if you supply a property name with a final 
-	&quot;.&quot; it will not be doubled. ie environment=&quot;myenv.&quot; will still 
-	allow access of environment variables through &quot;myenv.PATH&quot; and 
-	&quot;myenv.TERM&quot;. This functionality is currently only implemented 
+    &quot;myenv.TERM&quot;. Note that if you supply a property name with a final 
+    &quot;.&quot; it will not be doubled. ie environment=&quot;myenv.&quot; will still 
+    allow access of environment variables through &quot;myenv.PATH&quot; and 
+    &quot;myenv.TERM&quot;. This functionality is currently only implemented 
     on select platforms. Feel free to send patches to increase the number of platforms
     this functionality is supported on ;).<br>
     Note also that properties are case sensitive, even if the
@@ -104,7 +101,7 @@ href="../using.html#built-in-props">here</a>.</p>
   <tr>
     <td valign="top">classpathref</td> 
     <td valign="top">the classpath to use when looking up a resource,
-      given as <a href="../using.html#references">reference</a> to a PATH defined
+      given as <a href="../using.html#references">reference</a> to a &lt;path&gt; defined
       elsewhere..</td>
     <td align="center" valign="top">No</td>
   </tr>

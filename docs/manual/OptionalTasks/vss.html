@@ -25,11 +25,11 @@
 </ul>
 <br>
 <h2><a name="intro">Introduction</a></h2>
-<p>These tasks provide an interface to the 
+<p>These tasks provide an interface to the
 <a href="http://msdn.microsoft.com/ssafe/default.asp" target="_top">Microsoft Visual SourceSafe</a> SCM.
-The <code>org.apache.tools.ant.taskdefs.optional.vss</code> package consists of a simple framework to support 
-vss functionality as well as some Ant tasks encapsulating frequently used vss commands. 
-Although it is possible to use these commands on the desktop, 
+The <code>org.apache.tools.ant.taskdefs.optional.vss</code> package consists of a simple framework to support
+vss functionality as well as some Ant tasks encapsulating frequently used vss commands.
+Although it is possible to use these commands on the desktop,
 they were primarily intended to be used by automated build systems.</p>
 
 <h2><a name="tasks">The Tasks</a></h2>
@@ -77,7 +77,7 @@ they were primarily intended to be used by automated build systems.</p>
 <h2><a name="vssget">VssGet</a></h2>
 <h3>Description</h3>
 Task to perform GET commands to Microsoft Visual SourceSafe.
-<p>If you specify two or more attributes from version, date and 
+<p>If you specify two or more attributes from version, date and
 label only one will be used in the order version, date, label.</p>
 <h3>Parameters</h3>
 <table border="1" cellpadding="2" cellspacing="0">
@@ -88,16 +88,16 @@ label only one will be used in the order version, date, label.</p>
   </tr>
   <tr>
      <td>vsspath</td>
-     <td>SourceSafe path which specifies the project/file(s) you wish to 
-         perform the action on. You should not specify the leading dollar-sign - 
+     <td>SourceSafe path which specifies the project/file(s) you wish to
+         perform the action on. You should not specify the leading dollar-sign -
          it is prepended by Ant automatically.</td>
      <td>Yes</td>
   </tr>
   <tr>
      <td>login</td>
      <td>username[,password] - The username and password needed to get access
-         to VSS. Note that you may need to specify both (if you have a password) - 
-         Ant/VSS will hang if you leave the password out and VSS does not accept 
+         to VSS. Note that you may need to specify both (if you have a password) -
+         Ant/VSS will hang if you leave the password out and VSS does not accept
          login without a password. </td>
      <td>No</td>
   </tr>
@@ -157,7 +157,7 @@ label only one will be used in the order version, date, label.</p>
 <blockquote>
 <pre>
 &lt;vssget localPath=&quot;C:\mysrc\myproject&quot;
-        recursive=&quot;true&quot; 
+        recursive=&quot;true&quot;
         label=&quot;Release1&quot;
         login=&quot;me,mypassword&quot;
         vsspath=&quot;/source/aProject&quot;
@@ -165,7 +165,7 @@ label only one will be used in the order version, date, label.</p>
 </pre>
 </blockquote>
 <p>Does a get on the VSS-Project <i>$/source/myproject</i> using the username
-<i>me</i> and the password <i>mypassword</i>. It will recursively get the files 
+<i>me</i> and the password <i>mypassword</i>. It will recursively get the files
 which are labeled <i>Release1</i> and write them to the local directory
 <i>C:\mysrc\myproject</i>. The local files will be writable.</p>
 <hr>
@@ -186,16 +186,16 @@ project.</p>
    </tr>
   <tr>
      <td>vsspath</td>
-     <td>SourceSafe path which specifies the project/file(s) you wish to 
-         perform the action on. You should not specify the leading dollar-sign - 
+     <td>SourceSafe path which specifies the project/file(s) you wish to
+         perform the action on. You should not specify the leading dollar-sign -
          it is prepended by Ant automatically.</td>
      <td>Yes</td>
   </tr>
   <tr>
      <td>login</td>
      <td>username[,password] - The username and password needed to get access
-         to VSS. Note that you may need to specify both (if you have a password) - 
-         Ant/VSS will hang if you leave the password out and VSS does not accept 
+         to VSS. Note that you may need to specify both (if you have a password) -
+         Ant/VSS will hang if you leave the password out and VSS does not accept
          login without a password. </td>
      <td>No</td>
   </tr>
@@ -242,7 +242,7 @@ project.</p>
 </pre>
 </blockquote>
 <p>Labels the current version of the VSS project <i>$/source/aProject</i> with
-the label <i>Release1</i> using the username <i>me</i> and the password 
+the label <i>Release1</i> using the username <i>me</i> and the password
 <i>mypassword</i>.
 </p>
 <blockquote>
@@ -265,23 +265,23 @@ the build) will fail.
 Task to perform HISTORY commands to Microsoft Visual SourceSafe.
 <h3>Parameters</h3>
 <table border="1" cellpadding="2" cellspacing="0">
-  <tr> 
+  <tr>
     <th>Attribute</th>
     <th>Values</th>
     <th>Required</th>
   </tr>
   <tr>
      <td>vsspath</td>
-     <td>SourceSafe path which specifies the project/file(s) you wish to 
-         perform the action on. You should not specify the leading dollar-sign - 
+     <td>SourceSafe path which specifies the project/file(s) you wish to
+         perform the action on. You should not specify the leading dollar-sign -
          it is prepended by Ant automatically.</td>
      <td>Yes</td>
   </tr>
   <tr>
      <td>login</td>
      <td>username[,password] - The username and password needed to get access
-         to VSS. Note that you may need to specify both (if you have a password) - 
-         Ant/VSS will hang if you leave the password out and VSS does not accept 
+         to VSS. Note that you may need to specify both (if you have a password) -
+         Ant/VSS will hang if you leave the password out and VSS does not accept
          login without a password. </td>
      <td>No</td>
   </tr>
@@ -296,53 +296,53 @@ Task to perform HISTORY commands to Microsoft Visual SourceSafe.
      <td>directory where <code>srssafe.ini</code> resides.</td>
      <td>No</td>
   </tr>
-  <tr> 
+  <tr>
     <td>fromDate</td>
     <td>Start date for comparison</td>
     <td>See below</td>
   </tr>
-  <tr> 
+  <tr>
     <td>toDate</td>
     <td>Start date for comparison</td>
     <td>See below</td>
   </tr>
   <tr>
     <td>dateFormat</td>
-    <td>Format of dates in fromDate and toDate. Used when calculating dates with 
-      the numdays attribute. This string uses the formatting rules of SimpleDateFormat. 
+    <td>Format of dates in fromDate and toDate. Used when calculating dates with
+      the numdays attribute. This string uses the formatting rules of SimpleDateFormat.
       Defaults to DateFormat.SHORT.</td>
     <td>No</td>
   </tr>
-  <tr> 
+  <tr>
     <td>fromLabel</td>
     <td>Start label for comparison</td>
     <td>No</td>
   </tr>
-  <tr> 
+  <tr>
     <td>toLabel</td>
     <td>Start label for comparison</td>
     <td>No</td>
   </tr>
-  <tr> 
+  <tr>
     <td>numdays</td>
     <td>The number of days for comparison.</td>
     <td>See below</td>
   </tr>
-  <tr> 
+  <tr>
     <td>output</td>
     <td>File to write the diff.</td>
     <td>No</td>
   </tr>
-  <tr> 
+  <tr>
     <td>recursive</td>
     <td>true or false</td>
     <td>No</td>
-  </tr> 
-  <tr> 
+  </tr>
+  <tr>
     <td>style</td>
     <td>brief, codediff, default or nofile. The default is default.</td>
     <td>No</td>
-  </tr> 
+  </tr>
 </table>
 
 <h4>Specifying the time-frame</h4>
@@ -359,7 +359,7 @@ Task to perform HISTORY commands to Microsoft Visual SourceSafe.
 <h3>Examples</h3>
 <blockquote>
   <pre>
-&lt;vsshistory vsspath=&quot;/myProject&quot; recursive=&quot;true&quot; 
+&lt;vsshistory vsspath=&quot;/myProject&quot; recursive=&quot;true&quot;
             fromLabel=&quot;Release1&quot;
             toLabel=&quot;Release2&quot;/&gt;
 </pre>
@@ -368,20 +368,20 @@ Task to perform HISTORY commands to Microsoft Visual SourceSafe.
 
 <blockquote>
   <pre>
-&lt;vsshistory vsspath=&quot;/myProject&quot; recursive=&quot;true&quot; 
+&lt;vsshistory vsspath=&quot;/myProject&quot; recursive=&quot;true&quot;
             fromDate=&quot;01.01.2001&quot;
             toDate=&quot;31.03.2001&quot;/&gt;
 </pre>
 </blockquote>
 <p>Shows all changes between January 1st 2001 and March 31st 2001 (in Germany, date must be specified according to your locale).</p>
 
-<blockquote> 
+<blockquote>
   <pre>
 &lt;tstamp&gt;
   &lt;format property=&quot;to.tstamp&quot; pattern=&quot;M-d-yy;h:mma&quot; /&gt;
 &lt;/tstamp&gt;
 
-&lt;vsshistory vsspath=&quot;/myProject&quot; recursive=&quot;true&quot; 
+&lt;vsshistory vsspath=&quot;/myProject&quot; recursive=&quot;true&quot;
             numDays=&quot;-14&quot;
             dateFormat=&quot;M-d-yy;h:mma&quot;
             toDate=&quot;${to.tstamp}&quot;/&gt;
@@ -404,16 +404,16 @@ Task to perform CHECKIN commands to Microsoft Visual SourceSafe.
   </tr>
   <tr>
      <td>vsspath</td>
-     <td>SourceSafe path which specifies the project/file(s) you wish to 
-         perform the action on. You should not specify the leading dollar-sign - 
+     <td>SourceSafe path which specifies the project/file(s) you wish to
+         perform the action on. You should not specify the leading dollar-sign -
          it is prepended by Ant automatically.</td>
      <td>Yes</td>
   </tr>
   <tr>
      <td>login</td>
      <td>username[,password] - The username and password needed to get access
-         to VSS. Note that you may need to specify both (if you have a password) - 
-         Ant/VSS will hang if you leave the password out and VSS does not accept 
+         to VSS. Note that you may need to specify both (if you have a password) -
+         Ant/VSS will hang if you leave the password out and VSS does not accept
          login without a password. </td>
      <td>No</td>
   </tr>
@@ -463,7 +463,7 @@ Task to perform CHECKIN commands to Microsoft Visual SourceSafe.
             comment=&quot;Modified by automatic build&quot;/&gt;
 </pre>
 </blockquote>
-<p>Checks in the file(s) named <i>test*</i> in the project <i>test</i> using 
+<p>Checks in the file(s) named <i>test*</i> in the project <i>test</i> using
 the local directory <i>D:\build</i>.</p>
 <hr>
 
@@ -472,7 +472,7 @@ the local directory <i>D:\build</i>.</p>
 <h2><a name="vsscheckout">VssCheckout</a></h2>
 <h3>Description</h3>
 Task to perform CHECKOUT commands to Microsoft Visual SourceSafe.
-<p>If you specify two or more attributes from version, date and 
+<p>If you specify two or more attributes from version, date and
 label only one will be used in the order version, date, label.</p>
 <h3>Parameters</h3>
 <table border="1" cellpadding="2" cellspacing="0">
@@ -483,16 +483,16 @@ label only one will be used in the order version, date, label.</p>
   </tr>
   <tr>
      <td>vsspath</td>
-     <td>SourceSafe path which specifies the project/file(s) you wish to 
-         perform the action on. You should not specify the leading dollar-sign - 
+     <td>SourceSafe path which specifies the project/file(s) you wish to
+         perform the action on. You should not specify the leading dollar-sign -
          it is prepended by Ant automatically.</td>
      <td>Yes</td>
   </tr>
   <tr>
      <td>login</td>
      <td>username[,password] - The username and password needed to get access
-         to VSS. Note that you may need to specify both (if you have a password) - 
-         Ant/VSS will hang if you leave the password out and VSS does not accept 
+         to VSS. Note that you may need to specify both (if you have a password) -
+         Ant/VSS will hang if you leave the password out and VSS does not accept
          login without a password. </td>
      <td>No</td>
   </tr>
@@ -546,7 +546,7 @@ label only one will be used in the order version, date, label.</p>
              login=&quot;me,mypass&quot;/&gt;
 </pre>
 </blockquote>
-<p>Does a recursive checkout of the project test to the directory D:\build. 
+<p>Does a recursive checkout of the project test to the directory D:\build.
 </p>
 <hr>
 
@@ -570,8 +570,8 @@ Task to perform ADD commands to Microsoft Visual SourceSafe.
   <tr>
      <td>login</td>
      <td>username[,password] - The username and password needed to get access
-         to VSS. Note that you may need to specify both (if you have a password) - 
-         Ant/VSS will hang if you leave the password out and VSS does not accept 
+         to VSS. Note that you may need to specify both (if you have a password) -
+         Ant/VSS will hang if you leave the password out and VSS does not accept
          login without a password. </td>
      <td>No</td>
   </tr>
@@ -634,16 +634,16 @@ directory (see vsscp).</p>
   </tr>
   <tr>
      <td>vsspath</td>
-     <td>SourceSafe path which specifies the project you wish to 
-         make the current project. You should not specify the leading dollar-sign - 
+     <td>SourceSafe path which specifies the project you wish to
+         make the current project. You should not specify the leading dollar-sign -
          it is prepended by Ant automatically.</td>
      <td>Yes</td>
   </tr>
   <tr>
      <td>login</td>
      <td>username[,password] - The username and password needed to get access
-         to VSS. Note that you may need to specify both (if you have a password) - 
-         Ant/VSS will hang if you leave the password out and VSS does not accept 
+         to VSS. Note that you may need to specify both (if you have a password) -
+         Ant/VSS will hang if you leave the password out and VSS does not accept
          login without a password. </td>
      <td>No</td>
   </tr>

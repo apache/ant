@@ -87,7 +87,7 @@ public final class Extension
      * Manifest Attribute Name object for EXTENSION_LIST.
      * @see Attributes.Name#EXTENSION_LIST
      */
-    public static final Attributes.Name EXTENSION_LIST = 
+    public static final Attributes.Name EXTENSION_LIST =
         new Attributes.Name( "Extension-List" );//Attributes.Name.EXTENSION_LIST;
 
     /**
@@ -100,14 +100,14 @@ public final class Extension
      * @see <a href="http://java.sun.com/j2se/1.3/docs/guide/extensions/spec.html#dependnecy">
      *      Installed extension dependency</a>
      */
-    public static final Attributes.Name OPTIONAL_EXTENSION_LIST = 
+    public static final Attributes.Name OPTIONAL_EXTENSION_LIST =
         new Attributes.Name( "Optional-Extension-List" );
 
     /**
      * Manifest Attribute Name object for EXTENSION_NAME.
      * @see Attributes.Name#EXTENSION_NAME
      */
-    public static final Attributes.Name EXTENSION_NAME = 
+    public static final Attributes.Name EXTENSION_NAME =
         new Attributes.Name( "Extension-Name" );//Attributes.Name.EXTENSION_NAME;
     /**
      * Manifest Attribute Name object for SPECIFICATION_VERSION.

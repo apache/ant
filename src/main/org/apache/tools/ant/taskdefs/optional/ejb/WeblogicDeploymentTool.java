@@ -64,6 +64,7 @@ import java.util.jar.JarEntry;
 import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.Enumeration;
+import java.util.Vector;
 
 import javax.xml.parsers.SAXParserFactory;
 import javax.xml.parsers.SAXParser;
@@ -74,6 +75,7 @@ import org.apache.tools.ant.Project;
 import org.apache.tools.ant.AntClassLoader;
 import org.apache.tools.ant.types.Path;
 import org.apache.tools.ant.taskdefs.Java;
+import org.apache.tools.ant.types.Environment;
 import org.apache.tools.ant.util.FileUtils;
 
 public class WeblogicDeploymentTool extends GenericDeploymentTool {
@@ -132,6 +134,11 @@ public class WeblogicDeploymentTool extends GenericDeploymentTool {
 
     private String additionalArgs = "";
 
+    /**
+     * additional args to pass to the spawned jvm
+     */
+    private String additionalJvmArgs = "";
+
     private boolean keepGeneric = false;
 
     private String compiler = null;
@@ -147,6 +154,9 @@ public class WeblogicDeploymentTool extends GenericDeploymentTool {
     /** The classpath to the weblogic classes. */
     private Path wlClasspath = null;
 
+    /** System properties for the JVM. */
+    private Vector sysprops = new Vector();
+
     /**
      * The weblogic.StdoutSeverityLevel to use when running the JVM that
      * executes ejbc. Set to 16 to avoid the warnings about EJB Home and
@@ -157,6 +167,15 @@ public class WeblogicDeploymentTool extends GenericDeploymentTool {
     /** File utilities instance for copying jars */
     private FileUtils fileUtils = FileUtils.newFileUtils();
 
+    private File outputDir;
+
+    /**
+     * Add a nested sysproperty element.
+     */
+    public void addSysproperty(Environment.Variable sysp) {
+        sysprops.add(sysp);
+    }
+
 
     /** Get the classpath to the weblogic classpaths  */
     public Path createWLClasspath() {
@@ -164,6 +183,13 @@ public class WeblogicDeploymentTool extends GenericDeploymentTool {
             wlClasspath = new Path(getTask().getProject());
         }
         return wlClasspath.createPath();
+    }
+
+    /**
+     * Output the generated jar to a directory.
+     */
+    public void setOutputDir(File outputDir) {
+        this.outputDir = outputDir;
     }
 
 
@@ -239,6 +265,13 @@ public class WeblogicDeploymentTool extends GenericDeploymentTool {
         this.additionalArgs = args;
     }
 
+    /**
+     * Set the additional arguments to pass to the weblogic JVM
+     * @param args the arguments to be passed to the JVM
+     */
+    public void setJvmargs(String args) {
+        this.additionalJvmArgs = args;
+    }
 
     /** Set the classname of the ejbc compiler  */
     public void setEjbcClass(String ejbcClass) {
@@ -436,7 +469,7 @@ public class WeblogicDeploymentTool extends GenericDeploymentTool {
      *      jarfile.
      */
     private void buildWeblogicJar(File sourceJar, File destJar, String publicId) {
-        org.apache.tools.ant.taskdefs.Java javaTask = null;
+        Java javaTask = null;
 
         if (noEJBC) {
             try {
@@ -455,6 +488,15 @@ public class WeblogicDeploymentTool extends GenericDeploymentTool {
         try {
             javaTask = (Java) getTask().getProject().createTask("java");
             javaTask.setTaskName("ejbc");
+
+            javaTask.createJvmarg().setLine(additionalJvmArgs);
+            if (!(sysprops.isEmpty())) {
+                for (Enumeration en = sysprops.elements() ; en.hasMoreElements();) {
+                    Environment.Variable entry
+                        = (Environment.Variable) en.nextElement();
+                    javaTask.addSysproperty(entry);
+                }
+            }
 
             if (getJvmDebugLevel() != null) {
                 javaTask.createJvmarg().setLine(" -Dweblogic.StdoutSeverityLevel=" + jvmDebugLevel);
@@ -494,14 +536,18 @@ public class WeblogicDeploymentTool extends GenericDeploymentTool {
             }
 
             Path combinedClasspath = getCombinedClasspath();
-            if (combinedClasspath != null
+            if (wlClasspath != null && combinedClasspath != null
                  && combinedClasspath.toString().trim().length() > 0) {
                 javaTask.createArg().setValue("-classpath");
                 javaTask.createArg().setPath(combinedClasspath);
             }
 
             javaTask.createArg().setValue(sourceJar.getPath());
-            javaTask.createArg().setValue(destJar.getPath());
+            if (outputDir == null) {
+                javaTask.createArg().setValue(destJar.getPath());
+            } else {
+                javaTask.createArg().setValue(outputDir.getPath());
+            }
 
             Path classpath = wlClasspath;
 

@@ -223,7 +223,7 @@ public class Os implements Condition {
                           osName.indexOf("2000") >= 0 ||
                           osName.indexOf("xp") >= 0);
                 } else if (family.equals("z/os")) {
-                    isFamily = osName.indexOf("z/os") > -1 
+                    isFamily = osName.indexOf("z/os") > -1
                         || osName.indexOf("os/390") > -1;
                 } else {
                     throw new BuildException(

@@ -154,7 +154,7 @@ public class Copy extends Task {
     }
 
     /**
-     * Create a nested filterchain
+     * Adds a FilterChain.
      */
     public FilterChain createFilterChain() {
         FilterChain filterChain = new FilterChain();
@@ -163,7 +163,7 @@ public class Copy extends Task {
     }
 
     /**
-     * Create a nested filterset
+     * Adds a filterset.
      */
     public FilterSet createFilterSet() {
         FilterSet filterSet = new FilterSet();
@@ -217,7 +217,7 @@ public class Copy extends Task {
     }
 
     /**
-     * Sets filtering.
+     * If true, enables filtering.
      */
     public void setFiltering(boolean filtering) {
         this.filtering = filtering;
@@ -260,7 +260,7 @@ public class Copy extends Task {
     }
 
     /**
-     * Note errors to the output, but keep going
+     * If false, note errors to the output but keep going.
      * @param failonerror true or false
      */
      public void setFailOnError(boolean failonerror) {
@@ -268,14 +268,14 @@ public class Copy extends Task {
      }
 
     /**
-     * Adds a set of files (nested fileset attribute).
+     * Adds a set of files to copy.
      */
     public void addFileset(FileSet set) {
         filesets.addElement(set);
     }
 
     /**
-     * Defines the FileNameMapper to use (nested mapper element).
+     * Defines the mapper to map source to destination files.
      */
     public Mapper createMapper() throws BuildException {
         if (mapperElement != null) {

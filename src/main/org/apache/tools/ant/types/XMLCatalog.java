@@ -386,11 +386,25 @@ public class XMLCatalog extends DataType implements Cloneable, EntityResolver, U
         if (source == null) {
             log("No matching catalog entry found, parser will use: '" +
                 href + "'", Project.MSG_DEBUG);
-        }
-        else {
-            setEntityResolver(source);
+            //
+            // Cannot return a null source, because we have to call
+            // setEntityResolver (see setEntityResolver javadoc comment)
+            //
+            source = new SAXSource();
+            try
+            {
+                URL baseURL = new URL(base);
+                URL url = (uri.length() == 0 ? baseURL : new URL(baseURL, uri));
+                source.setInputSource(new InputSource(url.toString()));
+            }
+            catch (MalformedURLException ex) {
+                // At this point we are probably in failure mode, but
+                // try to use the bare URI as a last gasp
+                source.setInputSource(new InputSource(uri));
+            }
         }
 
+        setEntityResolver(source);
         return source;
     }
 

@@ -114,7 +114,7 @@ public class Delete extends MatchingTask {
     }
 
     /**
-     * Used to force listing of all names of deleted files.
+     * If true, list all names of deleted files.
      *
      * @param verbose "true" or "on"
      */
@@ -127,7 +127,7 @@ public class Delete extends MatchingTask {
     }
 
     /**
-     * If the file does not exist, do not display a diagnostic
+     * If true and the file does not exist, do not display a diagnostic
      * message or modify the exit status to reflect an error.
      * This means that if a file or directory cannot be deleted,
      * then no error is reported. This setting emulates the
@@ -143,7 +143,8 @@ public class Delete extends MatchingTask {
     }
 
     /**
-     * this flag means 'note errors to the output, but keep going'
+     * If false, note errors but continue.
+     *
      * @param failonerror true or false
      */
      public void setFailOnError(boolean failonerror) {
@@ -152,14 +153,14 @@ public class Delete extends MatchingTask {
 
 
     /**
-     * Used to delete empty directories.
+     * If true, delete empty directories.
      */
     public void setIncludeEmptyDirs(boolean includeEmpty) {
         this.includeEmpty = includeEmpty;
     }
 
    /**
-     * Adds a set of files (nested fileset attribute).
+     * Adds a set of files to be deleted.
      */
     public void addFileset(FileSet set) {
         filesets.addElement(set);

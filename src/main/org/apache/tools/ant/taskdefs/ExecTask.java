@@ -133,21 +133,21 @@ public class ExecTask extends Task {
     }
 
     /**
-     * The working directory of the process
+     * The working directory of the process.
      */
     public void setDir(File d) {
         this.dir = d;
     }
 
     /**
-     * Only execute the process if <code>os.name</code> is included in
-     * this string.
+     * List of operating systems on which the command may be executed.
      */
     public void setOs(String os) {
         this.os = os;
     }
 
     /**
+     * Deprecated, use executable instead.
      * The full commandline to execute, executable + arguments.
      */
     public void setCommand(Commandline cmdl) {
@@ -166,43 +166,43 @@ public class ExecTask extends Task {
 
     /**
      * Property name whose value should be set to the output of
-     * the process
+     * the process.
      */
     public void setOutputproperty(String outputprop) {
         this.outputprop = outputprop;
     }
 
     /**
-     * Throw a BuildException if process returns non 0.
+     * Fail if the command exits with a non-zero return code.
      */
     public void setFailonerror(boolean fail) {
         failOnError = fail;
     }
 
     /**
-     * Use a completely new environment
+     * Do not propagate old environment when new environment variables are specified.
      */
     public void setNewenvironment(boolean newenv) {
         newEnvironment = newenv;
     }
 
     /**
-     * Add a nested env element - an environment variable.
+     * Add an environment variable to the launched process.
      */
     public void addEnv(Environment.Variable var) {
         env.addVariable(var);
     }
 
     /**
-     * Add a nested arg element - a command line argument.
+     * Adds a command-line argument.
      */
     public Commandline.Argument createArg() {
         return cmdl.createArgument();
     }
 
     /**
-     * fill a property in with a result. 
-     * when no property is defined: failure to execute
+     * The name of a property in which the return code of the
+     * command should be stored. Only of interest if failonerror=false.
      *
      * @since Ant 1.5
      */
@@ -222,7 +222,8 @@ public class ExecTask extends Task {
     }
     
     /**
-     * fail if execution is wrong
+     * Stop the build if program cannot be started. Defaults to true.
+     *
      * @since Ant 1.5     
      */
     public void setFailIfExecutionFails(boolean flag) {
@@ -230,7 +231,8 @@ public class ExecTask extends Task {
     }
     
     /**
-     * Shall we append to an existing file?
+     * Whether output should be appended to or overwrite an existing file.
+     * Defaults to false.
      *
      * @since 1.30, Ant 1.5
      */
@@ -288,8 +290,7 @@ public class ExecTask extends Task {
     }
 
     /**
-     * Control whether the VM is used to launch the new process or
-     * whether the OS's shell is used.
+     * If true, launch new process with VM, otherwise use the OS's shell.
      */
     public void setVMLauncher(boolean vmLauncher) {
         this.vmLauncher = vmLauncher;

@@ -1,0 +1,65 @@
+<html>
+
+<head>
+<meta http-equiv="Content-Language" content="en-us">
+<title>jarlib-display Task</title>
+</head>
+
+<body>
+
+<h2><a name="jarlib-display">jarlib-display</a></h2>
+<h3>Description</h3>
+<p>Display the "Optional Package" and "Package Specification" information
+ contained within the specified jars.</p>
+
+<p>Note that this task
+works with extensions as defined by the "Optional Package" specification.
+ For more information about optional packages, see the document
+<em>Optional Package Versioning</em> in the documentation bundle for your
+Java2 Standard Edition package, in file
+<code>guide/extensions/versioning.html</code> or online at
+<a href="http://java.sun.com/j2se/1.3/docs/guide/extensions/versioning.html">
+http://java.sun.com/j2se/1.3/docs/guide/extensions/versioning.html</a>.</p>
+<p>See the Extension and ExtensionSet documentation for further details</p>
+
+<h3>Parameters</h3>
+<table border="1" cellpadding="2" cellspacing="0">
+  <tr>
+    <td valign="top"><b>Attribute</b></td>
+    <td valign="top"><b>Description</b></td>
+    <td align="center" valign="top"><b>Required</b></td>
+  </tr>
+  <tr>
+    <td valign="top">file</td>
+    <td valign="top">The file to display extension information about.</td>
+    <td valign="top" align="center">No, but one of file or fileset must be
+    present.</td>
+  </tr>
+</table>
+<h3>Parameters specified as nested elements</h3>
+
+<h4>fileset</h4>
+ <p><a href="../CoreTypes/fileset.html">FileSet</a>s contain list of files to
+ display Extension information  about.</p>
+
+<h3>Examples</h3>
+<p><b>Display Extension info for a single file</b></p>
+<pre>
+  &lt;jarlib-display file=&quot;myfile.jar&quot;&gt;
+</pre>
+
+<p><b>Display Extension info for a fileset</b></p>
+<pre>
+  &lt;jarlib-display&gt;
+    &lt;fileset dir="lib"&gt;
+      &lt;include name="*.jar"/&gt;
+    &lt;/fileset&gt;
+  &lt;/jarlib-display&gt;
+</pre>
+
+<hr><p align="center">Copyright &copy; 2002 Apache Software Foundation.
+All rights Reserved.</p>
+
+</body>
+</html>
+

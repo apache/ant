@@ -53,19 +53,18 @@
  */
 package org.apache.tools.ant.xdoclet;
 
-import com.sun.javadoc.ClassDoc;
-import com.sun.javadoc.MethodDoc;
-import com.sun.javadoc.Parameter;
-import com.sun.javadoc.Type;
-
+import com.sun.javadoc.*;
+import org.apache.tools.ant.IntrospectionHelper;
 import xdoclet.XDocletException;
 import xdoclet.XDocletTagSupport;
+import xdoclet.util.TypeConversionUtil;
 import xdoclet.tags.AbstractProgramElementTagsHandler;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -172,11 +171,9 @@ public class TaskTagsHandler extends XDocletTagSupport {
         String elementName = "<not a valid element>";
         if (methodName.startsWith("addConfigured")) {
             elementName = methodName.substring(13, methodName.length());
-        }
-        else if (methodName.startsWith("add")) {
+        } else if (methodName.startsWith("add")) {
             elementName = methodName.substring(3, methodName.length());
-        }
-        else if (methodName.startsWith("create")) {
+        } else if (methodName.startsWith("create")) {
             elementName = methodName.substring(6, methodName.length());
         }
         return elementName.toLowerCase();
@@ -201,9 +198,8 @@ public class TaskTagsHandler extends XDocletTagSupport {
         ClassDoc classDoc = null;
         String methodName = getCurrentMethod().name();
         if (methodName.startsWith("addConfigured") ||
-            methodName.startsWith("add") ||
-            methodName.startsWith("create"))
-        {
+                methodName.startsWith("add") ||
+                methodName.startsWith("create")) {
             classDoc = getCurrentMethod().returnType().asClassDoc();
             if (classDoc == null) {
                 Parameter[] params = getCurrentMethod().parameters();
@@ -219,10 +215,40 @@ public class TaskTagsHandler extends XDocletTagSupport {
      * Provides the Ant task name.
      *
      * @see #getTaskName(ClassDoc)
-	 * @doc:tag      type="content"
+     * @doc:tag      type="content"
      */
     public String taskName() throws XDocletException {
         return getTaskName(getCurrentClass());
+    }
+
+    private static String[] fluffPrefixes = { "set a","set the","sets a","sets the" };
+
+    public String shortMethodDescription() throws XDocletException {
+        Tag[] tags = getCurrentMethod().firstSentenceTags();
+        String desc = null;
+
+        if( tags != null && tags.length > 0 ) {
+            desc = tags[0].text();
+        }
+
+        if( desc == null || desc.length() == 0 )
+        {
+            desc = "no description";
+        }
+
+        desc = desc.trim();
+        String descLower = desc.toLowerCase();
+        for (int i=0; i < fluffPrefixes.length; i++) {
+            String prefix = fluffPrefixes[i].toLowerCase() + " ";
+            if (descLower.startsWith(prefix)) {
+                desc = desc.substring(prefix.length());
+                break;
+            }
+        }
+
+        desc = desc.substring(0,1).toUpperCase() + desc.substring(1);
+
+        return desc;
     }
 
     /**
@@ -272,8 +298,7 @@ public class TaskTagsHandler extends XDocletTagSupport {
                 null, false, XDocletTagSupport.FOR_CLASS, false);
         if (tagValue != null) {
             tagValue = tagValue.toLowerCase();
-        }
-        else {
+        } else {
             tagValue = DEFAULT_CATEGORY;
         }
         return tagValue;
@@ -281,75 +306,61 @@ public class TaskTagsHandler extends XDocletTagSupport {
 
 
     /**
-     * Returns true if the method corresponds to an Ant task attribute using
-     * the rules from IntrospectionHelper
-     *
-     * @todo filter out deprecated methods
-     *       only filter org.apache.tools.ant.Task setters that are hidden
-     *       check that it returns void and only has single argument
-     *       incorporate rules for argument types from IntrospectionHelper
-     *           - i.e. not an array
-     *           - primitives/wrappers
-     *           - File
-     *           - Path
-     *           - EnumeratedAttribute
-     *           - Class with string constructor
+     * @todo refactor to cache methods per class, and save some time
      */
-    private boolean isAntAttribute(MethodDoc method) {
-        String[] excludeList = new String[]{"setLocation", "setDescription", "setOwningTarget", "setRuntimeConfigurableWrapper",
-                                            "setTaskName", "setTaskType", "setProject"};
-        for (int i = 0; i < excludeList.length; i++) {
-            if (excludeList[i].equals(method.name())) {
-                return true;
-            }
+    private MethodDoc[] getAttributeMethods(ClassDoc cur_class) throws XDocletException {
+        // Use Ant's own introspection mechanism to gather the
+        // attributes this class supports
+        IntrospectionHelper is = null;
+        try {
+            is = IntrospectionHelper.getHelper(Class.forName(cur_class.qualifiedName()));
+        } catch (ClassNotFoundException e) {
+            throw new XDocletException(e,e.getMessage());
         }
 
-        return false;
-    }
+        // Regroup the attributes, since IntrospectionHelper
+        // doesn't give us the whole data structure directly
+        Enumeration enum = is.getAttributes();
+        Properties attributeTypeMap = new Properties();
+        while (enum.hasMoreElements()) {
+            String name = (String) enum.nextElement();
+            Class type = is.getAttributeType(name);
+            attributeTypeMap.setProperty(name, type.getName());
+//            System.out.println(name + " = " + type.getName());
+        }
 
-    private MethodDoc[] getAttributeMethods(ClassDoc cur_class) throws XDocletException {
-        MethodDoc[] methods = getMethods(cur_class);
+        // We need to return MethodDoc[] from this method
+        // so get all methods from the current class
+        MethodDoc[] allMethods = getMethods(cur_class);
+
+        // And now filter the MethodDoc's based
+        // on what IntrospectionHelper says
         List attributeMethods = new ArrayList();
-        Map nameTypeMap = new HashMap();
-
-        for (int i = 0; i < methods.length; i++) {
-            MethodDoc method = methods[i];
-
-            if (!method.isPublic()) {
+        for (int i = 0; i < allMethods.length; i++) {
+            MethodDoc method = allMethods[i];
+            String methodName = method.name();
+            if (!methodName.startsWith("set")) {
                 continue;
             }
 
-            if (!method.name().startsWith("set")) {
+            String attributeName = methodName.substring(3).toLowerCase();
+            if ((method.parameters().length != 1) || (!method.isPublic())) {
+                continue;
+            }
+            String attributeType = method.parameters()[0].typeName();
+
+            String mapAttribute = attributeTypeMap.getProperty(attributeName);
+            if (mapAttribute == null) {
                 continue;
             }
 
-            // if superclass is org.apache.tools.ant.Task then
-            // remove some known unallowed properties
-            if (isAntAttribute(method)) {
+            // inner classes are noted with $ in our map, but not
+            // n the parameter type name.
+            if (!attributeType.equals(mapAttribute.replace('$','.'))) {
                 continue;
             }
 
-            // ensure method only has one parameter
-            Parameter[] params = method.parameters();
-            if (params.length != 1) {
-                continue;
-            }
-
-            Parameter param = params[0];
-
-            // Screen out attribute setters if there are duplicates,
-            // and only return the first non-String one
-            // (this may or may not jive with IntrospectionHelper)
-            MethodDoc oldMethod = (MethodDoc) nameTypeMap.get(method.name());
-            if (oldMethod == null) {
-                nameTypeMap.put(method.name(), method);
-            }
-            else {
-                if ("java.lang.String".equals(oldMethod.parameters()[0].typeName())) {
-                    attributeMethods.remove(oldMethod);
-                    nameTypeMap.put(method.name(), method);
-                }
-            }
+//            System.out.println(methodName + " : " + attributeName + " : " + attributeType);
 
             attributeMethods.add(method);
         }
@@ -361,46 +372,95 @@ public class TaskTagsHandler extends XDocletTagSupport {
      * @todo add checks for number parameters and appropriate return value
      *       check for proper exception too?
      *       method prefixes: add, create, addConfigured (but not addText)
+     *
+     * @todo add DynamicConfigurator (this should be noted in the template, not dealt with here)
      */
     private MethodDoc[] getElementMethods(ClassDoc cur_class) throws XDocletException {
-        MethodDoc[] methods = getMethods(cur_class);
-        List attributeMethods = new ArrayList();
-
-        for (int i = 0; i < methods.length; i++) {
-            if (! methods[i].isPublic()) {
-                continue;
-            }
-
-            String name = methods[i].name();
-
-            // ensure if there are no parameters, there is a return type,
-            // otherwise ensure there's only one parameter.
-            Parameter[] params = methods[i].parameters();
-            if (params.length == 0) {
-                if (methods[i].returnType().asClassDoc() == null) {
-                    continue;
-                }
-
-                // only the "createXXX" method has zero params
-                // the "addXXX" and "addConfiguredXXX" have 1 param
-                if (!name.startsWith("create")) {
-                    continue;
-                }
-            }
-            else if (params.length != 1) {
-                continue;
-            }
-
-            if ((name.startsWith("add") && !name.equals("addTask")) ||
-                    name.startsWith("create")) {
-                attributeMethods.add(methods[i]);
-            }
-
+        // Use Ant's own introspection mechanism to gather the
+        // elements this class supports
+        IntrospectionHelper is = null;
+        try {
+            is = IntrospectionHelper.getHelper(Class.forName(cur_class.qualifiedName()));
+        } catch (ClassNotFoundException e) {
+            throw new XDocletException(e.getMessage());
         }
 
-        return (MethodDoc[]) attributeMethods.toArray(new MethodDoc[0]);
-    }
+        // Regroup the elements, since IntrospectionHelper
+        // doesn't give us the whole data structure directly
+        Enumeration enum = is.getNestedElements();
+        Properties elementTypeMap = new Properties();
+        while (enum.hasMoreElements()) {
+            String name = (String) enum.nextElement();
+            Class type = is.getElementType(name);
+            elementTypeMap.setProperty(name, type.getName());
+//            System.out.println(name + " = " + type.getName());
+        }
 
+        // We need to return MethodDoc[] from this method
+        // so get all methods from the current class
+        MethodDoc[] allMethods = getMethods(cur_class);
+
+        // And now filter the MethodDoc's based
+        // on what IntrospectionHelper says
+        List elementMethods = new ArrayList();
+        for (int i = 0; i < allMethods.length; i++) {
+            MethodDoc method = allMethods[i];
+            String methodName = method.name();
+
+            // Object create(), void add(Object), void addConfigured(Object)
+            String elementName = null;
+            boolean adder = false;  // true if addXXX or addConfiguredXXX
+            if (methodName.startsWith("create")) {
+                elementName = methodName.substring(6).toLowerCase();
+            }
+
+            if (methodName.startsWith("add")) {
+                int length = 3;
+                if (methodName.startsWith("addConfigured")) {
+                    length = 13;
+                }
+
+                elementName = methodName.substring(length).toLowerCase();
+                adder = true;
+            }
+
+            if (elementName == null) {
+                continue;
+            }
+
+            System.out.println("elementName = " + elementName);
+            String elementType = null;
+            if (adder) {
+                if (method.parameters().length != 1) {
+                    continue;
+                }
+                elementType = method.parameters()[0].typeName();
+            } else {
+                elementType = method.returnType().qualifiedTypeName();
+            }
+
+            if (!method.isPublic()) {
+                continue;
+            }
+
+            String mapElementType = elementTypeMap.getProperty(elementName);
+            System.out.println("elementType = " + elementType + " mapElementType = " + mapElementType);
+            if (mapElementType == null) {
+                continue;
+            }
+
+            // inner classes are noted with $ in our map, but not
+            // the parameter type name.
+            if (!elementType.equals(mapElementType.replace('$','.'))) {
+                continue;
+            }
+
+
+            elementMethods.add(method);
+        }
+
+        return (MethodDoc[]) elementMethods.toArray(new MethodDoc[0]);
+    }
 
     /**
      * This is a slightly refactored (thank you IntelliJ) version of
@@ -413,13 +473,26 @@ public class TaskTagsHandler extends XDocletTagSupport {
         List methods = new ArrayList();
 
         while (cur_class != null) {
+            // hardcoded to stop when it hits Task, nothing there
+            // or above that needs to be processed
+            if (cur_class.qualifiedName().equals("org.apache.tools.ant.Task") ||
+                cur_class.qualifiedName().equals("org.apache.tools.ant.taskdefs.MatchingTask")) {
+                break;
+            }
             List curMethods = Arrays.asList(cur_class.methods());
 
             for (int j = 0; j < curMethods.size(); j++) {
                 MethodDoc method = (MethodDoc) curMethods.get(j);
+                if (isDeprecated(method)) {
+                  continue;
+                }
+                if (shouldIgnore(method)) {
+                    continue;
+                }
+                String methodName = method.name();
                 if (method.containingClass() == cur_class) {
-                    if (already.containsKey(method) == false) {
-                        already.put(method, method);
+                    if (already.containsKey(methodName) == false) {
+                        already.put(methodName, method);
                         methods.add(method);
                     }
                 }
@@ -429,6 +502,36 @@ public class TaskTagsHandler extends XDocletTagSupport {
         }
 
         return sortMethods(methods);
+    }
+
+    private boolean isDeprecated (MethodDoc method) {
+        Tag[] tags = method.tags();
+        for (int i=0; i < tags.length; i++) {
+            if (tags[i].name().equals("@deprecated")) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
+     * For now, lump attributes and elements together since we won't
+     * have those tags on the same method.
+     */
+    private boolean shouldIgnore (MethodDoc method) throws XDocletException {
+        String value = getTagValue(method, "ant:attribute", "ignore", -1,
+                null, null, null, null,
+                null, false, XDocletTagSupport.FOR_METHOD, false);
+        if ("true".equals(value)) {
+            return true;
+        }
+        value = getTagValue(method, "ant:element", "ignore", -1,
+                null, null, null, null,
+                null, false, XDocletTagSupport.FOR_METHOD, false);
+        if ("true".equals(value)) {
+            return true;
+        }
+        return false;
     }
 
     private MethodDoc[] sortMethods(List methods) {

@@ -101,9 +101,9 @@ public class JarLibAvailableTask
     }
 
     /**
-     * The jar library to display information for.
+     * The jar library to check.
      *
-     * @param file The jar library to display information for.
+     * @param file The jar library to check.
      */
     public void setFile( final File file )
     {

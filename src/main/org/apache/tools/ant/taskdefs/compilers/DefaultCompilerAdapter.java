@@ -277,11 +277,11 @@ public abstract class DefaultCompilerAdapter implements CompilerAdapter {
                 cmd.createArgument().setValue("-target");
                 cmd.createArgument().setValue(target);
             }
-            if (bootclasspath != null) {
+            if (bootclasspath != null && bootclasspath.size() > 0) {
                 cmd.createArgument().setValue("-bootclasspath");
                 cmd.createArgument().setPath(bootclasspath);
             }
-            if (extdirs != null) {
+            if (extdirs != null && extdirs.size() > 0) {
                 cmd.createArgument().setValue("-extdirs");
                 cmd.createArgument().setPath(extdirs);
             }
@@ -335,7 +335,7 @@ public abstract class DefaultCompilerAdapter implements CompilerAdapter {
      */
     protected Commandline setupModernJavacCommandlineSwitches(Commandline cmd) {
         setupJavacCommandlineSwitches(cmd, true);
-        if (attributes.getSource() != null) {
+        if (attributes.getSource() != null && !assumeJava13()) {
             cmd.createArgument().setValue("-source");
             cmd.createArgument().setValue(attributes.getSource());
         }
@@ -498,6 +498,20 @@ public abstract class DefaultCompilerAdapter implements CompilerAdapter {
              && JavaEnvUtils.isJavaVersion(JavaEnvUtils.JAVA_1_2)) ||
             ("extJavac".equals(attributes.getCompilerVersion()) 
              && JavaEnvUtils.isJavaVersion(JavaEnvUtils.JAVA_1_2));
+    }
+
+    /**
+     * Shall we assume JDK 1.3 command line switches?
+     * @since Ant 1.5
+     */
+    protected boolean assumeJava13() {
+        return "javac1.3".equals(attributes.getCompilerVersion()) ||
+            ("classic".equals(attributes.getCompilerVersion()) 
+             && JavaEnvUtils.isJavaVersion(JavaEnvUtils.JAVA_1_3)) ||
+            ("modern".equals(attributes.getCompilerVersion()) 
+             && JavaEnvUtils.isJavaVersion(JavaEnvUtils.JAVA_1_3)) ||
+            ("extJavac".equals(attributes.getCompilerVersion()) 
+             && JavaEnvUtils.isJavaVersion(JavaEnvUtils.JAVA_1_3));
     }
 
 }

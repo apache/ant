@@ -81,21 +81,21 @@ import org.apache.tools.ant.types.FileList;
  * <li>targetfileset  (fileset describing the target files to examine)
  * <li>targetfilelist (filelist describing the target files to examine)
  * </ul>
- * At least one instance of either a fileset or filelist for both source and 
+ * At least one instance of either a fileset or filelist for both source and
  * target are required.
  * <p>
- * This task will examine each of the source files against each of the target 
- * files. If any target files are out of date with respect to any of the source 
- * files, all targets are removed. If any files named in a (src or target) 
+ * This task will examine each of the source files against each of the target
+ * files. If any target files are out of date with respect to any of the source
+ * files, all targets are removed. If any files named in a (src or target)
  * filelist do not exist, all targets are removed.
- * Hint: If missing files should be ignored, specify them as include patterns 
+ * Hint: If missing files should be ignored, specify them as include patterns
  * in filesets, rather than using filelists.
  * </p><p>
- * This task attempts to optimize speed of dependency checking.  It will stop 
- * after the first out of date file is found and remove all targets, rather 
+ * This task attempts to optimize speed of dependency checking.  It will stop
+ * after the first out of date file is found and remove all targets, rather
  * than exhaustively checking every source vs target combination unnecessarily.
  * </p><p>
- * Example uses: 
+ * Example uses:
  * <ul><li>
  * Record the fact that an XML file must be up to date
  * with respect to its XSD (Schema file), even though the XML file
@@ -107,7 +107,7 @@ import org.apache.tools.ant.types.FileList;
  * Record the fact that java files must be recompiled if the ant build
  * file changes
  * </li></ul>
- * 
+ *
  * @author <a href="mailto:cstrong@arielpartners.com">Craeg Strong</a>
  * @ant.task category="filesystem"
  * @version $Revision$ $Date$
@@ -127,28 +127,28 @@ public class DependSet extends MatchingTask {
     } //-- DependSet
 
     /**
-     * Nested &lt;srcfileset&gt; element.
+     * Add a set of source files.
      */
     public void addSrcfileset(FileSet fs) {
         sourceFileSets.addElement(fs);
     }
 
     /**
-     * Nested &lt;srcfilelist&gt; element.
+     * Add a list of source files.
      */
     public void addSrcfilelist(FileList fl) {
         sourceFileLists.addElement(fl);
     }
 
     /**
-     * Nested &lt;targetfileset&gt; element.
+     * Add a set of target files.
      */
     public void addTargetfileset(FileSet fs) {
         targetFileSets.addElement(fs);
     }
 
     /**
-     * Nested &lt;targetfilelist&gt; element.
+     * Add a list of target files.
      */
     public void addTargetfilelist(FileList fl) {
         targetFileLists.addElement(fl);
@@ -160,7 +160,7 @@ public class DependSet extends MatchingTask {
 
     public void execute() throws BuildException {
 
-        if ((sourceFileSets.size() == 0) && (sourceFileLists.size() == 0)) { 
+        if ((sourceFileSets.size() == 0) && (sourceFileLists.size() == 0)) {
           throw new BuildException("At least one <srcfileset> or <srcfilelist>"
                                    + " element must be set");
         }
@@ -188,23 +188,23 @@ public class DependSet extends MatchingTask {
         File oldestTarget = null;
         Enumeration enumTargetSets = targetFileSets.elements();
         while (enumTargetSets.hasMoreElements()) {
-                 
+
            FileSet targetFS          = (FileSet) enumTargetSets.nextElement();
            if (!targetFS.getDir(getProject()).exists()) {
                // this is the same as if it was empty, no target files found
                continue;
            }
-           
+
            DirectoryScanner targetDS = targetFS.getDirectoryScanner(project);
            String[] targetFiles      = targetDS.getIncludedFiles();
-                 
+
            for (int i = 0; i < targetFiles.length; i++) {
-                    
+
               File dest = new File(targetFS.getDir(project), targetFiles[i]);
               allTargets.addElement(dest);
 
               if (dest.lastModified() > now) {
-                 log("Warning: " + targetFiles[i] + " modified in the future.", 
+                 log("Warning: " + targetFiles[i] + " modified in the future.",
                      Project.MSG_WARN);
               }
 
@@ -222,12 +222,12 @@ public class DependSet extends MatchingTask {
         boolean upToDate            = true;
         Enumeration enumTargetLists = targetFileLists.elements();
         while (enumTargetLists.hasMoreElements()) {
-                 
+
            FileList targetFL    = (FileList) enumTargetLists.nextElement();
            String[] targetFiles = targetFL.getFiles(project);
-                 
+
            for (int i = 0; i < targetFiles.length; i++) {
-                    
+
               File dest = new File(targetFL.getDir(project), targetFiles[i]);
               if (!dest.exists()) {
                  log(targetFiles[i] + " does not exist.", Project.MSG_VERBOSE);
@@ -237,7 +237,7 @@ public class DependSet extends MatchingTask {
                  allTargets.addElement(dest);
               }
               if (dest.lastModified() > now) {
-                 log("Warning: " + targetFiles[i] + " modified in the future.", 
+                 log("Warning: " + targetFiles[i] + " modified in the future.",
                      Project.MSG_WARN);
               }
 
@@ -250,7 +250,7 @@ public class DependSet extends MatchingTask {
         }
         if (oldestTarget != null) {
             log(oldestTarget + " is oldest target file", Project.MSG_VERBOSE);
-        } else { 
+        } else {
             // no target files, then we cannot remove any target files and
             // skip the following tests right away
             upToDate = false;
@@ -262,7 +262,7 @@ public class DependSet extends MatchingTask {
         if (upToDate) {
            Enumeration enumSourceLists = sourceFileLists.elements();
            while (upToDate && enumSourceLists.hasMoreElements()) {
-          
+
               FileList sourceFL    = (FileList) enumSourceLists.nextElement();
               String[] sourceFiles = sourceFL.getFiles(project);
 
@@ -270,12 +270,12 @@ public class DependSet extends MatchingTask {
                  File src = new File(sourceFL.getDir(project), sourceFiles[i]);
 
                  if (src.lastModified() > now) {
-                    log("Warning: " + sourceFiles[i] 
+                    log("Warning: " + sourceFiles[i]
                         + " modified in the future.", Project.MSG_WARN);
                  }
 
                  if (!src.exists()) {
-                    log(sourceFiles[i] + " does not exist.", 
+                    log(sourceFiles[i] + " does not exist.",
                         Project.MSG_VERBOSE);
                     upToDate = false;
                     break;
@@ -296,7 +296,7 @@ public class DependSet extends MatchingTask {
         if (upToDate) {
            Enumeration enumSourceSets = sourceFileSets.elements();
            while (upToDate && enumSourceSets.hasMoreElements()) {
-          
+
               FileSet sourceFS         = (FileSet) enumSourceSets.nextElement();
               DirectoryScanner sourceDS = sourceFS.getDirectoryScanner(project);
               String[] sourceFiles      = sourceDS.getIncludedFiles();
@@ -322,12 +322,12 @@ public class DependSet extends MatchingTask {
            log("Deleting all target files. ", Project.MSG_VERBOSE);
            for (Enumeration e = allTargets.elements(); e.hasMoreElements();) {
               File fileToRemove = (File) e.nextElement();
-              log("Deleting file " + fileToRemove.getAbsolutePath(), 
+              log("Deleting file " + fileToRemove.getAbsolutePath(),
                   Project.MSG_VERBOSE);
               fileToRemove.delete();
            }
         }
 
     } //-- execute
-   
+
 } //-- DependSet.java

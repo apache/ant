@@ -63,6 +63,7 @@ import org.apache.tools.ant.types.Commandline;
 /**
  * Class common to all check commands (checkout, checkin,checkin default task);
  * @author Benoit Moussaud benoit.moussaud@criltelecom.com
+ * @ant.task ignore="true"
  */
 public class CCMCheck extends Continuus {
 
@@ -83,7 +84,7 @@ public class CCMCheck extends Continuus {
     }
 
     /**
-     * Set the value of file.
+     * Sets the path to the file that the command will operate on.
      * @param v  Value to assign to file.
      */
     public void setFile(File v) {
@@ -99,7 +100,7 @@ public class CCMCheck extends Continuus {
     }
 
     /**
-     * Set the value of comment.
+     * Specifies a comment.
      * @param v  Value to assign to comment.
      */
     public void setComment(String v) {
@@ -116,7 +117,8 @@ public class CCMCheck extends Continuus {
     }
 
     /**
-     * Set the value of task.
+     * Specifies the task number used to check
+     * in the file (may use 'default').
      * @param v  Value to assign to task.
      */
     public void setTask(String v) {
