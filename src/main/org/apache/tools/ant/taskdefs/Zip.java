@@ -418,7 +418,7 @@ public class Zip extends MatchingTask {
             try {
 
                 if (!skipWriting) {
-                    zOut = new ZipOutputStream(new FileOutputStream(zipFile));
+                    zOut = new ZipOutputStream(zipFile);
 
                     zOut.setEncoding(encoding);
                     if (doCompress) {
