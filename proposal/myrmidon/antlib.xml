@@ -33,6 +33,9 @@ Legal:
 
     <path id="project.class.path">
         <pathelement path="${java.class.path}" />
+        <pathelement location="../../lib/optional/junit.jar" />
+        <pathelement location="../xdocs/lib/xdoclet.jar" />
+        <pathelement location="../xdocs/lib/log4j-core.jar" />
         <fileset dir="${lib.dir}">
             <include name="*.jar" />
         </fileset>
