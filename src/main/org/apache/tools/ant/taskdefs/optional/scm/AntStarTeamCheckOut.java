@@ -1,7 +1,7 @@
-/* 
+/*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 1999 The Apache Software Foundation.  All rights 
+ * Copyright (c) 1999 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -9,7 +9,7 @@
  * are met:
  *
  * 1. Redistributions of source code must retain the above copyright
- *    notice, this list of conditions and the following disclaimer. 
+ *    notice, this list of conditions and the following disclaimer.
  *
  * 2. Redistributions in binary form must reproduce the above copyright
  *    notice, this list of conditions and the following disclaimer in
@@ -17,15 +17,15 @@
  *    distribution.
  *
  * 3. The end-user documentation included with the redistribution, if
- *    any, must include the following acknowlegement:  
- *       "This product includes software developed by the 
+ *    any, must include the following acknowlegement:
+ *       "This product includes software developed by the
  *        Apache Software Foundation (http://www.apache.org/)."
  *    Alternately, this acknowlegement may appear in the software itself,
  *    if and wherever such third-party acknowlegements normally appear.
  *
  * 4. The names "The Jakarta Project", "Ant", and "Apache Software
  *    Foundation" must not be used to endorse or promote products derived
- *    from this software without prior written permission. For written 
+ *    from this software without prior written permission. For written
  *    permission, please contact apache@apache.org.
  *
  * 5. Products derived from this software may not be called "Apache"
@@ -52,8 +52,8 @@
  * <http://www.apache.org/>.
  *
  */
-package org.apache.tools.ant.taskdefs.optional.scm; 
- 
+package org.apache.tools.ant.taskdefs.optional.scm;
+
 
 import java.util.StringTokenizer;
 
@@ -109,16 +109,17 @@ import org.apache.tools.ant.Project;
  * @author <A HREF="mailto:chris.povirk@paytec.com">Chris Povirk</A>
  * @author <A HREF="mailto:jc.mann@paytec.com">JC Mann</A>
  * @author <A HREF="mailto:jeff.gettle@paytec.com">Jeff Gettle</A>
+ * @author <A HREF="mailto:stevec@ignitesports.com">Steve Cohen</A>
  * @version 1.0
  * @see <A HREF="http://www.starbase.com/">StarBase Web Site</A>
  */
-public class AntStarTeamCheckOut extends org.apache.tools.ant.Task 
+public class AntStarTeamCheckOut extends org.apache.tools.ant.Task
 {
 
     /**
      * This constant sets the filter to include all files. This default has
      * the same result as <CODE>setIncludes("*")</CODE>.
-     * 
+     *
      * @see #getIncludes()
      * @see #setIncludes(String includes)
      */
@@ -128,7 +129,7 @@ public class AntStarTeamCheckOut extends org.apache.tools.ant.Task
      * This disables the exclude filter by default. In other words, no files
      * are excluded. This setting is equivalent to
      * <CODE>setExcludes(null)</CODE>.
-     * 
+     *
      * @see #getExcludes()
      * @see #setExcludes(String excludes)
      */
@@ -138,7 +139,7 @@ public class AntStarTeamCheckOut extends org.apache.tools.ant.Task
      * The default folder to search; the root folder.  Since
      * AntStarTeamCheckOut searches subfolders, by default it processes an
      * entire view.
-     * 
+     *
      * @see #getFolderName()
      * @see #setFolderName(String folderName)
      */
@@ -156,7 +157,7 @@ public class AntStarTeamCheckOut extends org.apache.tools.ant.Task
     private int checkedOut = 0;
 
     // Change these through their GET and SET methods.
-    
+
     /**
      * The name of the server you wish to connect to.
      */
@@ -228,17 +229,18 @@ public class AntStarTeamCheckOut extends org.apache.tools.ant.Task
      * All files fitting this pattern are ignored.
      */
     private String excludes = DEFAULT_EXCLUDESETTING;
-    
+
     /**
      * The file delimitor on the user's system.
      */
     private String delim = Platform.getFilePathDelim();
 
     /**
-     * whether or not to use the Starteam "default folder" when calculating
-     * the target paths to which files are checked out.
+     * whether to use the Starteam "default folder" when calculating
+     * the target paths to which files are checked out (false) or
+     * if targetFolder represents an absolute mapping to folderName.
      */
-    private boolean usesDefaultFolder = false;
+    private boolean targetFolderAbsolute = false;
 
 
     /** convenient method to check for conditions */
@@ -278,7 +280,7 @@ public class AntStarTeamCheckOut extends org.apache.tools.ant.Task
 
     /**
      * Do the execution.
-     * 
+     *
      * @exception BuildException
      */
     public void execute() throws BuildException
@@ -303,7 +305,7 @@ public class AntStarTeamCheckOut extends org.apache.tools.ant.Task
 
     /**
      * Creates and logs in to a StarTeam server.
-     * 
+     *
      * @return A StarTeam server.
      */
     protected Server getServer()
@@ -322,7 +324,7 @@ public class AntStarTeamCheckOut extends org.apache.tools.ant.Task
 
     /**
      * Searches for the specified project on the server.
-     * 
+     *
      * @param s      A StarTeam server.
      */
     protected void runServer(Server s)
@@ -331,7 +333,7 @@ public class AntStarTeamCheckOut extends org.apache.tools.ant.Task
         for (int i = 0; i < projects.length; i++)
         {
             com.starbase.starteam.Project p = projects[i];
-            
+
             if (p.getName().equals(getProjectName()))
             {
                 if (getVerbose())
@@ -346,7 +348,7 @@ public class AntStarTeamCheckOut extends org.apache.tools.ant.Task
 
     /**
      * Searches for the given view in the project.
-     * 
+     *
      * @param s      A StarTeam server.
      * @param p      A valid project on the given server.
      */
@@ -370,7 +372,7 @@ public class AntStarTeamCheckOut extends org.apache.tools.ant.Task
 
     /**
      * Searches for folders in the given view.
-     * 
+     *
      * @param s      A StarTeam server.
      * @param p      A valid project on the server.
      * @param v      A view name from the specified project.
@@ -389,13 +391,10 @@ public class AntStarTeamCheckOut extends org.apache.tools.ant.Task
             else
             {
                 f = StarTeamFinder.findFolder(v.getRootFolder(), getFolderName());
-            }
-        }
-
-        if (null==f) {
-            throw new BuildException("ERROR: " + getProjectName() + delim + getViewName() + delim + 
-                                                 v.getRootFolder() + delim + getFolderName() + delim + 
+		assertTrue(null != f,"ERROR: " + getProjectName() + delim + getViewName() + delim +
+                                                 v.getRootFolder() + delim + getFolderName() + delim +
                                                 " does not exist.");
+            }
         }
 
 
@@ -436,29 +435,84 @@ public class AntStarTeamCheckOut extends org.apache.tools.ant.Task
         f.populateNow(t.getName(), strNames, -1);
 
         // Now, search for items in the selected folder.
-        runFolder(s, p, v, t, f, getTargetFolder());
+        runFolder(s, p, v, t, f, calcTargetFolder(v,f));
 
         // Free up the memory used by the cached items.
         f.discardItems(t.getName(), -1);
     }
 
     /**
+     * returns a file object that defines the root of the local checkout tree
+     * Depending on the value of targetFolderAbsolute, this will be either
+     * the targetFolder exactly as set by the user or the path formed by appending
+     * the default folder onto the specified target folder.
+     *
+     * @param v      view from which the file is checked out, supplies the "default folder"
+     * @param rootSourceFolder   root folder of the checkout operation in Star Team
+     * @return an object referencing the local file
+     * @see getTargetFolderAbsolute()
+     */
+    private java.io.File calcTargetFolder(View v, Folder rootSourceFolder)
+    {
+	java.io.File root = new java.io.File(getTargetFolder());
+        if (!getTargetFolderAbsolute())
+	{
+	    // Create a variable dir that contains the name of
+	    // the StarTeam folder that is the root folder in this view.
+	    // Get the default path to the current view.
+            String defaultPath = v.getDefaultPath();
+
+	    // convert whatever separator char is in starteam to that of the target system.
+	    defaultPath=defaultPath.replace('/', java.io.File.separatorChar);
+	    defaultPath=defaultPath.replace('\\', java.io.File.separatorChar);
+
+	    java.io.File dir = new java.io.File(defaultPath);
+	    String dirName = dir.getName();
+
+            // If it ends with separator then strip it off
+	    if (dirName.endsWith(delim))
+	    {
+		dirName = dirName.substring(0, dirName.length()-1);
+	    }
+
+	    // Replace the projectName in the file's absolute path to the viewName.
+	    // This makes the root target of a checkout operation equal to:
+	    // targetFolder + dirName
+	    StringTokenizer pathTokenizer = new StringTokenizer(rootSourceFolder.getFolderHierarchy(), delim);
+	    String currentToken = null;
+	    boolean foundRoot = false;
+	    while (pathTokenizer.hasMoreTokens())
+	    {
+		currentToken = pathTokenizer.nextToken();
+		if (currentToken.equals(getProjectName()) && !foundRoot)
+		{
+		    currentToken = dirName;
+		    foundRoot = true;    // only want to do this the first time
+		}
+		root = new java.io.File(root, currentToken);
+	    }
+	}
+
+        return root;
+    }
+
+    /**
      * Searches for files in the given folder.  This method is recursive and
      * thus searches all subfolders.
-     * 
+     *
      * @param s      A StarTeam server.
      * @param p      A valid project on the server.
      * @param v      A view name from the specified project.
      * @param t      An item type which is currently always "file".
      * @param f      The folder to search.
-     * @param tgt    Name of target folder on local machine
+     * @param tgt    Target folder on local machine
      */
-    protected void runFolder( Server s, 
-                              com.starbase.starteam.Project p, 
-                              View v, 
-                              Type t, 
+    protected void runFolder( Server s,
+                              com.starbase.starteam.Project p,
+                              View v,
+                              Type t,
                               Folder f,
-                              String tgt )
+                              java.io.File tgt )
     {
         // Process all items in this folder.
         Item[] items = f.getItems(t.getName());
@@ -473,7 +527,7 @@ public class AntStarTeamCheckOut extends org.apache.tools.ant.Task
             Folder[] subfolders = f.getSubFolders();
             for (int i = 0; i < subfolders.length; i++)
             {
-                runFolder(s, p, v, t, subfolders[i], tgt + delim + subfolders[i].getName());
+                runFolder(s, p, v, t, subfolders[i], new java.io.File(tgt, subfolders[i].getName()));
             }
         }
     }
@@ -481,22 +535,22 @@ public class AntStarTeamCheckOut extends org.apache.tools.ant.Task
     /**
      * Check out one file if it matches the include filter but not the
      * exclude filter.
-     * 
+     *
      * @param s      A StarTeam server.
      * @param p      A valid project on the server.
      * @param v      A view name from the specified project.
      * @param t      An item type which is currently always "file".
      * @param f      The folder the file is localed in.
      * @param item   The file to check out.
-     * @param tgt    Name of target folder on local machine
+     * @param tgt    target folder on local machine
      */
-    protected void runItem( Server s, 
-                            com.starbase.starteam.Project p, 
-                            View v, 
-                            Type t, 
-                            Folder f, 
+    protected void runItem( Server s,
+                            com.starbase.starteam.Project p,
+                            View v,
+                            Type t,
+                            Folder f,
                             Item item,
-                            String tgt )
+                            java.io.File tgt )
     {
         // Get descriptors for this item type.
         Property p1 = getPrimaryDescriptor(t);
@@ -515,7 +569,7 @@ public class AntStarTeamCheckOut extends org.apache.tools.ant.Task
             if (bShowHeader)
             {
                 // We want to display the folder the same way you would
-                // enter it on the command line ... so we remove the 
+                // enter it on the command line ... so we remove the
                 // View name (which is also the name of the root folder,
                 // and therefore shows up at the start of the path).
                 String strFolder = f.getFolderHierarchy();
@@ -573,11 +627,10 @@ public class AntStarTeamCheckOut extends org.apache.tools.ant.Task
         // Change the item to be checked out to a StarTeam File.
         com.starbase.starteam.File remote = (com.starbase.starteam.File)item;
 
-        // Create a reference to the local target file using either the "default path" calculation or the calculation based
-        // solely on targetFolder.
-        java.io.File local = (getUsesDefaultFolder()
-                              ? getLocalFileUsingDefault(v,item.getParentFolder().getFolderHierarchy(),(String)item.get(p1.getName()))
-                              : getLocalFile(tgt,(String)item.get(p1.getName())));
+        // The local file name is simply the local target path (tgt) which has
+	// been passed recursively down from the top of the tree, with the item's name appended.
+        java.io.File local = new java.io.File(tgt,(String)item.get(p1.getName()));
+
         try
         {
             remote.checkoutTo(local, Item.LockType.UNCHANGED, false, true, true);
@@ -585,16 +638,15 @@ public class AntStarTeamCheckOut extends org.apache.tools.ant.Task
         }
         catch (Exception e)
         {
-            log("Failed to checkout '" + local + "': " + e.getMessage(), Project.MSG_WARN);
-            // probably not a good idea to swallow the stacktrace
+            throw new BuildException("Failed to checkout '" + local + "'", e);
         }
     }
 
     /**
-     * Look if the file should be checkouted. Don't check it out
+     * Look if the file should be checked out. Don't check it out
      * if It fits no include filters and It fits an exclude filter.
      * @param pName the item name to look for being included.
-     * @return whether the file should be checkouted or not.
+     * @return whether the file should be checked out or not.
      */
     protected boolean shouldCheckout(String pName){
         boolean includeIt = matchPatterns(getIncludes(), pName);
@@ -624,74 +676,11 @@ public class AntStarTeamCheckOut extends org.apache.tools.ant.Task
         return false;
     }
 
-
-    /**
-     * returns a file object that defines the local file as it will be
-     * checked out onto the target using the new "targetFolder only" method.
-     * Will only be called when getUsesDefaultFolder() returns false.
-     * 
-     * @param tgt    string representing the target folder plus any subfolder, as created
-     *               by recursive calls to runTarget()
-     * @param item   item to be checked out.
-     * @return an object referencing the local file
-     * @see getUsesDefaultFolderAsBoolean
-     * @see runFolder
-     */
-    private java.io.File getLocalFile(String tgt, String itemname) {
-        java.io.File tgtFolder = new java.io.File(tgt);
-        return new java.io.File(tgtFolder,itemname);
-    }
-    
-    /**
-     * returns a file object that defines the local file as it will be 
-     * checked out onto the target using the old "default folder" method.  
-     * Will only be called when getUsesDefaultFolder() returns true.
-     * 
-     * @param v      view from which the file is checked out, supplies the "default folder"
-     * @param item   item to be checked out.
-     * @return an object referencing the local file
-     */
-    private java.io.File getLocalFileUsingDefault(View v, String folderHierarchy, String itemname)
-    {
-        // Create a variable dirName that contains the name of 
-        //the StarTeam folder that is the root folder in this view.
-        // Get the default path to the current view.
-        String dirName = v.getDefaultPath();
-        // Settle on "/" as the default path separator for this purpose only.
-        dirName = dirName.replace('\\', '/');
-        // Take the StarTeam folder name furthest down in the hierarchy.
-        int endDirIndex = dirName.length();
-        // If it ends with separator then strip it off
-        if (dirName.endsWith("/"))
-        {
-            // This should be the SunOS and Linux case
-            endDirIndex--;
-        }
-        dirName = 
-            dirName.substring(dirName.lastIndexOf("/", dirName.length() - 2) + 1, endDirIndex);
-        // Replace the projectName in the file's absolute path to the viewName.
-        // This eventually makes the target of a checkout operation equal to:
-        // targetFolder + dirName + [subfolders] + itemName
-        StringTokenizer pathTokenizer = new StringTokenizer(folderHierarchy, delim);
-        String localName = delim;
-        String currentToken = null;
-        while (pathTokenizer.hasMoreTokens())
-        {
-            currentToken = pathTokenizer.nextToken();
-            if (currentToken.equals(getProjectName()))
-            {
-                currentToken = dirName;
-            }
-            localName += currentToken + delim;
-        }
-        return new java.io.File( getTargetFolder() + localName + itemname );
-    }
-
     /**
      * Get the primary descriptor of the given item type.
      *  Returns null if there isn't one.
      *  In practice, all item types have a primary descriptor.
-     * 
+     *
      * @param t      An item type. At this point it will always be "file".
      * @return The specified item's primary descriptor.
      */
@@ -712,7 +701,7 @@ public class AntStarTeamCheckOut extends org.apache.tools.ant.Task
     /**
      * Get the secondary descriptor of the given item type.
      * Returns null if there isn't one.
-     * 
+     *
      * @param t      An item type. At this point it will always be "file".
      * @return The specified item's secondary descriptor. There may not be
      *         one for every file.
@@ -733,7 +722,7 @@ public class AntStarTeamCheckOut extends org.apache.tools.ant.Task
 
     /**
      * Formats a property value for display to the user.
-     * 
+     *
      * @param p      An item property to format.
      * @param value
      * @return A string containing the property, which is truncated to 35
@@ -767,7 +756,7 @@ public class AntStarTeamCheckOut extends org.apache.tools.ant.Task
 
     /**
      * Sets the <CODE>serverName</CODE> attribute to the given value.
-     * 
+     *
      * @param serverName The name of the server you wish to connect to.
      * @see #getServerName()
      */
@@ -778,7 +767,7 @@ public class AntStarTeamCheckOut extends org.apache.tools.ant.Task
 
     /**
      * Gets the <CODE>serverName</CODE> attribute.
-     * 
+     *
      * @return The StarTeam server to log in to.
      * @see #setServerName(String serverName)
      */
@@ -790,7 +779,7 @@ public class AntStarTeamCheckOut extends org.apache.tools.ant.Task
     /**
      * Sets the <CODE>serverPort</CODE> attribute to the given value. The
      * given value must be a valid integer, but it must be a string object.
-     * 
+     *
      * @param serverPort A string containing the port on the StarTeam server
      *                   to use.
      * @see #getServerPort()
@@ -802,7 +791,7 @@ public class AntStarTeamCheckOut extends org.apache.tools.ant.Task
 
     /**
      * Gets the <CODE>serverPort</CODE> attribute.
-     * 
+     *
      * @return A string containing the port on the StarTeam server to use.
      * @see #setServerPort(int)
      */
@@ -813,7 +802,7 @@ public class AntStarTeamCheckOut extends org.apache.tools.ant.Task
 
     /**
      * Sets the <CODE>projectName</CODE> attribute to the given value.
-     * 
+     *
      * @param projectName
      *               The StarTeam project to search.
      * @see #getProjectName()
@@ -825,7 +814,7 @@ public class AntStarTeamCheckOut extends org.apache.tools.ant.Task
 
     /**
      * Gets the <CODE>projectName</CODE> attribute.
-     * 
+     *
      * @return The StarTeam project to search.
      * @see #setProjectName(String projectName)
      */
@@ -836,7 +825,7 @@ public class AntStarTeamCheckOut extends org.apache.tools.ant.Task
 
     /**
      * Sets the <CODE>viewName</CODE> attribute to the given value.
-     * 
+     *
      * @param viewName The view to find the specified folder in.
      * @see #getViewName()
      */
@@ -847,7 +836,7 @@ public class AntStarTeamCheckOut extends org.apache.tools.ant.Task
 
     /**
      * Gets the <CODE>viewName</CODE> attribute.
-     * 
+     *
      * @return The view to find the specified folder in.
      * @see #setViewName(String viewName)
      */
@@ -860,7 +849,7 @@ public class AntStarTeamCheckOut extends org.apache.tools.ant.Task
      * Sets the <CODE>folderName</CODE> attribute to the given value. To
      * search the root folder, use a slash or backslash, or simply don't set
      * a folder at all.
-     * 
+     *
      * @param folderName The subfolder from which to check out files.
      * @see #getFolderName()
      */
@@ -883,7 +872,7 @@ public class AntStarTeamCheckOut extends org.apache.tools.ant.Task
 
     /**
      * Sets the <CODE>username</CODE> attribute to the given value.
-     * 
+     *
      * @param username Your username for the specified StarTeam server.
      * @see #getUsername()
      */
@@ -894,7 +883,7 @@ public class AntStarTeamCheckOut extends org.apache.tools.ant.Task
 
     /**
      * Gets the <CODE>username</CODE> attribute.
-     * 
+     *
      * @return The username given by the user.
      * @see #setUsername(String username)
      */
@@ -905,7 +894,7 @@ public class AntStarTeamCheckOut extends org.apache.tools.ant.Task
 
     /**
      * Sets the <CODE>password</CODE> attribute to the given value.
-     * 
+     *
      * @param password Your password for the specified StarTeam server.
      * @see #getPassword()
      */
@@ -916,7 +905,7 @@ public class AntStarTeamCheckOut extends org.apache.tools.ant.Task
 
     /**
      * Gets the <CODE>password</CODE> attribute.
-     * 
+     *
      * @return The password given by the user.
      * @see #setPassword(String password)
      */
@@ -927,7 +916,7 @@ public class AntStarTeamCheckOut extends org.apache.tools.ant.Task
 
     /**
      * Sets the <CODE>targetFolder</CODE> attribute to the given value.
-     * 
+     *
      * @param target The target path on the local machine to check out to.
      * @see #getTargetFolder()
      */
@@ -938,7 +927,7 @@ public class AntStarTeamCheckOut extends org.apache.tools.ant.Task
 
     /**
      * Gets the <CODE>targetFolder</CODE> attribute.
-     * 
+     *
      * @return The target path on the local machine to check out to.
      *
      * @see #setTargetFolder(String targetFolder)
@@ -950,7 +939,7 @@ public class AntStarTeamCheckOut extends org.apache.tools.ant.Task
 
     /**
      * Sets the <CODE>force</CODE> attribute to the given value.
-     * 
+     *
      * @param force  if true, it overwrites files in the target
      *               directory.  By default it set to false as a safeguard.
      *               Note that if the target directory does not exist, this
@@ -964,7 +953,7 @@ public class AntStarTeamCheckOut extends org.apache.tools.ant.Task
 
     /**
      * Gets the <CODE>force</CODE> attribute.
-     * 
+     *
      * @return whether to continue if the target directory exists.
      * @see #setForce(boolean)
      */
@@ -976,7 +965,7 @@ public class AntStarTeamCheckOut extends org.apache.tools.ant.Task
     /**
      * Turns recursion on or off.
      *
-     * @param verbose If it is true, the default, subfolders are searched
+     * @param recursion if it is true, the default, subfolders are searched
      *                recursively for files to check out.  Otherwise, only
      *                files specified by <CODE>folderName</CODE> are scanned.
      * @see #getRecursion()
@@ -1002,23 +991,23 @@ public class AntStarTeamCheckOut extends org.apache.tools.ant.Task
 
     /**
      * Sets the <CODE>verbose</CODE> attribute to the given value.
-     * 
+     *
      * @param verbose whether to display all files as it checks them out.
      *                By default it is false, so the
      *                program only displays the total number of files unless
      *                you override this default.
-     * @see #getForce()
+     * @see #getVerbose()
      */
     public void setVerbose(boolean verbose)
     {
         this.verbose = verbose;
     }
-    
+
     /**
      * Gets the <CODE>verbose</CODE> attribute.
-     * 
+     *
      * @return whether to display all files as it checks them out.
-     * @see #setVerbose(String verbose)
+     * @see #setVerbose(boolean verbose)
      */
     public boolean getVerbose()
     {
@@ -1057,7 +1046,7 @@ public class AntStarTeamCheckOut extends org.apache.tools.ant.Task
      * filter, as well.
      * <BR><BR>
      * Please also read the following sections before using filters:
-     * 
+     *
      * @param includes A string of filter patterns to include. Separate the
      *                 patterns by spaces.
      * @see #getIncludes()
@@ -1073,7 +1062,7 @@ public class AntStarTeamCheckOut extends org.apache.tools.ant.Task
      * Gets the patterns from the include filter. Rather that duplicate the
      * details of AntStarTeanCheckOut's filtering here, refer to these
      * links:
-     * 
+     *
      * @return A string of filter patterns separated by spaces.
      * @see #setIncludes(String includes)
      * @see #setExcludes(String excludes)
@@ -1111,7 +1100,7 @@ public class AntStarTeamCheckOut extends org.apache.tools.ant.Task
      * filter, as well.
      * <BR><BR>
      * Please also read the following sections before using filters:
-     * 
+     *
      * @param excludes A string of filter patterns to exclude. Separate the
      *                 patterns by spaces.
      * @see #setIncludes(String includes)
@@ -1127,7 +1116,7 @@ public class AntStarTeamCheckOut extends org.apache.tools.ant.Task
      * Gets the patterns from the exclude filter. Rather that duplicate the
      * details of AntStarTeanCheckOut's filtering here, refer to these
      * links:
-     * 
+     *
      * @return A string of filter patterns separated by spaces.
      * @see #setExcludes(String excludes)
      * @see #setIncludes(String includes)
@@ -1140,28 +1129,30 @@ public class AntStarTeamCheckOut extends org.apache.tools.ant.Task
 
 
     /**
-     * returns whether or not the StarTeam default path is factored into
-     * calculated target path locations.
-     * 
-     * @return returns true if the StarTeam default path is factored into the
-     *         calculation of the location on the target of an item, false if it is
+     * returns whether the StarTeam default path is factored into
+     * calculated target path locations (false) or whether
+     * targetFolder is an absolute mapping to the root folder
+     * named by folderName
+     *
+     * @return returns true if absolute mapping is used, false if it is
      *         not used.
-     * @see #setUsesDefaultFolder(boolean)
+     * @see #setTargetFolderAbsolute(boolean)
      */
-    public boolean getUsesDefaultFolder()
+    public boolean getTargetFolderAbsolute()
     {
-        return this.usesDefaultFolder;
+        return this.targetFolderAbsolute;
     }
     /**
      * sets the property that indicates whether or not the Star Team
      * "default folder" is to be used when calculation paths for items on
-     * the target.
-     * 
-     * @param usesDefaultFolder <tt>true</tt> if the "default folder" is to be used.
-     *               <tt>false</tt> (the default) if the default folder is not to be used.
-     * @see #getUsesDefaultFolder()
+     * the target (false) or if targetFolder is an absolute mapping to the
+     * root folder named by foldername.
+     *
+     * @param targetFolderAbsolute <tt>true</tt> if the absolute mapping is to be used.
+     *               <tt>false</tt> (the default) if the "default folder" is to be factored in.
+     * @see #getTargetFolderAbsolute()
      */
-    public void setUsesDefaultFolder(boolean usesDefaultFolder) {
-        this.usesDefaultFolder = usesDefaultFolder;
+    public void setTargetFolderAbsolute(boolean targetFolderAbsolute) {
+        this.targetFolderAbsolute = targetFolderAbsolute;
     }
 }

@@ -13,7 +13,7 @@ Checks out files from a StarTeam project.
 
 <p>
 The <i>includes</i> and <i>excludes</i> attributes function differently from
-other tasks in Ant.  Multiple patters must be seperated by spaces, not
+other tasks in Ant.  Multiple patterns must be separated by spaces, not
 commas.  See the examples for more information.</p>
 
 <p>
@@ -62,14 +62,13 @@ the <a href="http://www.starbase.com">StarBase</a> web site.</p>
   </tr>
   <tr>
     <td valign="top">targetfolder</td>
-    <td valign="top">The folder to which files are checked out.  What this precisely means is determined by the <i>usesDefaultFolder</i> param.</td>
+    <td valign="top">The folder to which files are checked out.  What this precisely means is determined by the <i>targetFolderAbsolute</i> param.</td>
     <td align="center" valign="top">yes</td>
   </tr>  
   <tr>
-    <td valign="top">usesDefaultFolder</td>
-    <td valign="top">Determines how <i>targetfolder</i> is interpreted, that is, whether the StarTeam "default folder" for the project is factored in.
-      If "true", the target tree will be rooted at <i>targetfolder+"default folder"</i>.  If false, the target tree will be rooted at <i>targetfolder</i>.  Defaults to "false".  
-      The behavior of older versions was as if this were "true".</td>
+    <td valign="top">targetFolderAbsolute</td>
+    <td valign="top">Determines how <i>targetfolder</i> is interpreted, that is, whether the StarTeam "default folder" for the project is factored in (false) or whether <i>targetFolder</i> is a complete mapping to <i>foldername</i> (true).
+      If "true", the target tree will be rooted at <i>targetfolder+"default folder"</i>.  If false, the target tree will be rooted at <i>targetfolder</i>.  Defaults to "false".  </td>
     <td align="center" valign="top">no</td>
   </tr>  
   <tr>
@@ -94,12 +93,12 @@ the <a href="http://www.starbase.com">StarBase</a> web site.</p>
   </tr>
   <tr>
     <td valign="top">includes</td>
-    <td valign="top">Only check out files that match at least one of the patterns in this list.  Patterns must be seperated by spaces.  Patterns in <i>excludes</i> take precedence over patterns in <i>includes</i>.</td>
+    <td valign="top">Only check out files that match at least one of the patterns in this list.  Patterns must be separated by spaces.  Patterns in <i>excludes</i> take precedence over patterns in <i>includes</i>.</td>
     <td align="center" valign="top">no</td>
   </tr>
   <tr>
     <td valign="top">excludes</td>
-    <td valign="top">Do not check out files that match at least one of the patterns in this list.  Patterns must be seperated by spaces.  Patterns in <i>excludes</i> take precedence over patterns in <i>includes</i>.</td>
+    <td valign="top">Do not check out files that match at least one of the patterns in this list.  Patterns must be separated by spaces.  Patterns in <i>excludes</i> take precedence over patterns in <i>includes</i>.</td>
     <td align="center" valign="top">no</td>
   </tr>
 </table>
@@ -163,29 +162,44 @@ not be checked out by this command.
  &lt;starteam servername="STARTEAM" 
             serverport="49201"
             projectname="AProject" 
+            foldername="src/java"
             viewname="AView"
             username="auser"
             password="secret"
             targetfolder="C:\dev\buildtest\co"
-            usesDefaultFolder="false"
+            targetfolderabsolute="true"
   /&gt;
 </pre>
-<br>
+<br></br>
 <pre>
  &lt;starteam servername="STARTEAM" 
             serverport="49201"
             projectname="AProject" 
+            foldername="src/java"
             viewname="AView"
             username="auser"
             password="secret"
             targetfolder="C:\dev\buildtest\co"
-            usesDefaultFolder="true"
+            targetfolderabsolute ="false"
+  /&gt;
+</pre>
+<br></br>
+<pre>
+ &lt;starteam servername="STARTEAM" 
+            serverport="49201"
+            projectname="AProject" 
+            foldername="src/java"
+            viewname="AView"
+            username="auser"
+            password="secret"
+            targetfolder="C:\dev\buildtest\co\src\java"
+            targetfolderabsolute="true"
   /&gt;
 </pre>
 
-In the preceding two examples, assuming that the AProject project has a default folder of
-"AProject", the first example will check the files out to a tree rooted at C:\dev\buildtest\co 
-and the second will check them out to a tree rooted at C:\dev\buildtest\co\AProject.
+In the preceding three examples, assuming that the AProject project has a default folder of
+"AProject", the first example will check the files located in starteam under src/java out to a tree rooted at C:\dev\buildtest\co, 
+the second to a tree rooted at C:\dev\buildtest\co\AProject\src\java and the third to a tree rooted at C:\dev\buildtest\co\src\java.
 
 <hr>
 <p align="center">
