@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2000-2002 The Apache Software Foundation.  All rights
+ * Copyright (c) 2000-2003 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -532,6 +532,10 @@ public class Copy extends Task {
                 } catch (IOException ioe) {
                     String msg = "Failed to copy " + fromFile + " to " + toFile
                         + " due to " + ioe.getMessage();
+                    File targetFile = new File(toFile);
+                    if (targetFile.exists() && !targetFile.delete()) {
+                        msg += " and I couldn't delete the corrupt " + toFile;
+                    }
                     throw new BuildException(msg, ioe, getLocation());
                 }
             }
