@@ -1765,8 +1765,11 @@ public class VAJAntToolGUI extends Frame
             if( event.getPriority() <= getBuildInfo().getOutputMessageLevel() )
             {
                 String msg = "";
-                if( event.getTask() != null )
-                    msg = "[" + event.getTask().getName() + "] ";
+                final String task = event.getTask();
+                if( task != null )
+                {
+                    msg = "[" + task + "] ";
+                }
                 getMessageTextArea().append( lineSeparator + msg + event.getMessage() );
             }
         }
@@ -1792,7 +1795,7 @@ public class VAJAntToolGUI extends Frame
         {
             if( getBuildInfo().getOutputMessageLevel() <= Project.MSG_INFO )
             {
-                getMessageTextArea().append( lineSeparator + event.getTarget().getName() + ":" );
+                getMessageTextArea().append( lineSeparator + event.getTarget() + ":" );
             }
         }
 

@@ -157,7 +157,7 @@ public class RecorderEntry
         StringBuffer buf = new StringBuffer();
         if( event.getTask() != null )
         {
-            String name = "[" + event.getTask().getName() + "]";
+            String name = "[" + event.getTask() + "]";
             /**
              * @todo replace 12 with DefaultLogger.LEFT_COLUMN_SIZE
              */
@@ -180,10 +180,10 @@ public class RecorderEntry
         out.flush();
     }
 
-    public void targetStarted( BuildEvent event )
+    public void targetStarted( final BuildEvent event )
     {
         getLogger().debug( ">> TARGET STARTED -- " + event.getTarget() );
-        getLogger().info( LINE_SEP + event.getTarget().getName() + ":" );
+        getLogger().info( LINE_SEP + event.getTarget() + ":" );
         targetStartTime = System.currentTimeMillis();
     }
 

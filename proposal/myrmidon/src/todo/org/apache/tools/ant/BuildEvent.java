@@ -12,60 +12,32 @@ import java.util.EventObject;
 public class BuildEvent
     extends EventObject
 {
-    private int priority = Project.MSG_VERBOSE;
-    private Throwable exception;
-    private String message;
-    private Project project;
-    private Target target;
-    private Task task;
-
-    /**
-     * Construct a BuildEvent for a project level event
-     *
-     * @param project the project that emitted the event.
-     */
-    public BuildEvent( Project project )
-    {
-        super( project );
-        this.project = project;
-        this.target = null;
-        this.task = null;
-    }
+    private int m_priority = Project.MSG_VERBOSE;
+    private Throwable m_exception;
+    private String m_message;
+    private String m_target;
+    private String m_task;
 
     /**
      * Construct a BuildEvent for a target level event
      *
      * @param target the target that emitted the event.
      */
-    public BuildEvent( Target target )
+    public BuildEvent( String target )
     {
         super( target );
-        this.project = target.getProject();
-        this.target = target;
-        this.task = null;
-    }
-
-    /**
-     * Construct a BuildEvent for a task level event
-     *
-     * @param task the task that emitted the event.
-     */
-    public BuildEvent( Task task )
-    {
-        super( task );
-        this.project = task.getProject();
-        this.task = task;
+        m_target = target;
     }
 
     public void setException( Throwable exception )
     {
-        this.exception = exception;
+        m_exception = exception;
     }
 
     public void setMessage( String message, int priority )
     {
-        this.message = message;
-        this.priority = priority;
+        m_message = message;
+        m_priority = priority;
     }
 
     /**
@@ -79,7 +51,7 @@ public class BuildEvent
      */
     public Throwable getException()
     {
-        return exception;
+        return m_exception;
     }
 
     /**
@@ -91,7 +63,7 @@ public class BuildEvent
      */
     public String getMessage()
     {
-        return message;
+        return m_message;
     }
 
     /**
@@ -103,17 +75,7 @@ public class BuildEvent
      */
     public int getPriority()
     {
-        return priority;
-    }
-
-    /**
-     * Returns the project that fired this event.
-     *
-     * @return The Project value
-     */
-    public Project getProject()
-    {
-        return project;
+        return m_priority;
     }
 
     /**
@@ -121,10 +83,9 @@ public class BuildEvent
      *
      * @return The Target value
      */
-    public Target getTarget()
+    public String getTarget()
     {
-
-        return target;
+        return m_target;
     }
 
     /**
@@ -132,8 +93,8 @@ public class BuildEvent
      *
      * @return The Task value
      */
-    public Task getTask()
+    public String getTask()
     {
-        return task;
+        return m_task;
     }
 }

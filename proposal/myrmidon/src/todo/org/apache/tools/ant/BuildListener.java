@@ -13,13 +13,12 @@ import java.util.EventListener;
  * Classes that implement this interface will be notified when things happend
  * during a build.
  *
- * @author RT
  * @see BuildEvent
  * @see Project#addBuildListener(BuildListener)
  */
-public interface BuildListener extends EventListener
+public interface BuildListener
+    extends EventListener
 {
-
     /**
      * Fired before any targets are started.
      *

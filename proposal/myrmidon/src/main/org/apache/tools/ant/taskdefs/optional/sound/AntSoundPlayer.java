@@ -22,6 +22,7 @@ import javax.sound.sampled.UnsupportedAudioFileException;
 import org.apache.tools.ant.BuildEvent;
 import org.apache.tools.ant.BuildListener;
 import org.apache.tools.ant.Project;
+import org.apache.avalon.framework.logger.AbstractLogEnabled;
 
 /**
  * This class is designed to be used by any AntTask that requires audio output.
@@ -34,6 +35,7 @@ import org.apache.tools.ant.Project;
  * @version $Revision$, $Date$
  */
 public class AntSoundPlayer
+    extends AbstractLogEnabled
     implements LineListener, BuildListener
 {
     private File m_fileSuccess;
@@ -80,7 +82,6 @@ public class AntSoundPlayer
      * Fired after the last target has finished. This event will still be thrown
      * if an error occured during the build.
      *
-     * @param event Description of Parameter
      * @see BuildEvent#getException()
      */
     public void buildFinished( BuildEvent event )
@@ -88,18 +89,16 @@ public class AntSoundPlayer
         if( event.getException() == null && m_fileSuccess != null )
         {
             // build successfull!
-            play( event.getProject(), m_fileSuccess, m_loopsSuccess, m_durationSuccess );
+            play( m_fileSuccess, m_loopsSuccess, m_durationSuccess );
         }
         else if( event.getException() != null && m_fileFail != null )
         {
-            play( event.getProject(), m_fileFail, m_loopsFail, m_durationFail );
+            play( m_fileFail, m_loopsFail, m_durationFail );
         }
     }
 
     /**
      * Fired before any targets are started.
-     *
-     * @param event Description of Parameter
      */
     public void buildStarted( BuildEvent event )
     {
@@ -108,7 +107,6 @@ public class AntSoundPlayer
     /**
      * Fired whenever a message is logged.
      *
-     * @param event Description of Parameter
      * @see BuildEvent#getMessage()
      * @see BuildEvent#getPriority()
      */
@@ -120,7 +118,6 @@ public class AntSoundPlayer
      * Fired when a target has finished. This event will still be thrown if an
      * error occured during the build.
      *
-     * @param event Description of Parameter
      * @see BuildEvent#getException()
      */
     public void targetFinished( BuildEvent event )
@@ -130,7 +127,6 @@ public class AntSoundPlayer
     /**
      * Fired when a target is started.
      *
-     * @param event Description of Parameter
      * @see BuildEvent#getTarget()
      */
     public void targetStarted( BuildEvent event )
@@ -141,7 +137,6 @@ public class AntSoundPlayer
      * Fired when a task has finished. This event will still be throw if an
      * error occured during the build.
      *
-     * @param event Description of Parameter
      * @see BuildEvent#getException()
      */
     public void taskFinished( BuildEvent event )
@@ -151,7 +146,6 @@ public class AntSoundPlayer
     /**
      * Fired when a task is started.
      *
-     * @param event Description of Parameter
      * @see BuildEvent#getTask()
      */
     public void taskStarted( BuildEvent event )
@@ -161,8 +155,6 @@ public class AntSoundPlayer
     /**
      * This is implemented to listen for any line events and closes the clip if
      * required.
-     *
-     * @param event Description of Parameter
      */
     public void update( LineEvent event )
     {
@@ -184,15 +176,9 @@ public class AntSoundPlayer
 
     /**
      * Plays the file for duration milliseconds or loops.
-     *
-     * @param project Description of Parameter
-     * @param file Description of Parameter
-     * @param loops Description of Parameter
-     * @param duration Description of Parameter
      */
-    private void play( Project project, File file, int loops, Long duration )
+    private void play( File file, int loops, Long duration )
     {
-
         Clip audioClip = null;
 
         AudioInputStream audioInputStream = null;
@@ -203,7 +189,8 @@ public class AntSoundPlayer
         }
         catch( UnsupportedAudioFileException uafe )
         {
-            project.getLogger().info( "Audio format is not yet supported: " + uafe.getMessage() );
+            final String message = "Audio format is not yet supported: " + uafe.getMessage();
+            getLogger().info( message );
         }
         catch( IOException ioe )
         {
@@ -223,7 +210,8 @@ public class AntSoundPlayer
             }
             catch( LineUnavailableException e )
             {
-                project.getLogger().info( "The sound device is currently unavailable" );
+                final String message = "The sound device is currently unavailable";
+                getLogger().info( message );
                 return;
             }
             catch( IOException e )
@@ -244,7 +232,8 @@ public class AntSoundPlayer
         }
         else
         {
-            project.getLogger().info( "Can't get data from file " + file.getName() );
+            final String message = "Can't get data from file " + file.getName();
+            getLogger().info( message );
         }
     }
 
