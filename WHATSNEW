@@ -21,6 +21,8 @@ Fixed bugs:
 * Ant could fail to start with a NullPointerException if
   ANT_HOME/lib/ant-launcher.jar was part of the system CLASSPATH.
 
+* presetdef'ed types did not work with the ant-type attribute
+
 Other changes:
 --------------
 * Translate task logs a debug message specifying the number of files
