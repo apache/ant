@@ -145,7 +145,7 @@ if [ -n "$JAVA_HOME" ] ; then
 
   # OSX hack to make Ant work with jikes
   if $darwin ; then
-    OSXHACK="/System/Library/Frameworks/JavaVM.framework/Versions/CurrentJDK/Classes"
+    OSXHACK="${JAVA_HOME}/../Classes"
     if [ -d "${OSXHACK}" ] ; then
       for i in "${OSXHACK}"/*.jar
       do
