@@ -112,7 +112,7 @@ public abstract class AbstractFileSet extends DataType implements Cloneable,
      * this element if you make it a reference.</p>
      */
     public void setRefid(Reference r) throws BuildException {
-        if (dir != null || defaultPatterns.hasPatterns()) {
+        if (dir != null || defaultPatterns.hasPatterns(getProject())) {
             throw tooManyAttributes();
         }
         if (!additionalPatterns.isEmpty()) {
@@ -407,14 +407,14 @@ public abstract class AbstractFileSet extends DataType implements Cloneable,
      * @return whether any patterns are in this container
      */
     public boolean hasPatterns() {
-        if (defaultPatterns.hasPatterns()) {
+        if (defaultPatterns.hasPatterns(getProject())) {
             return true;
         }
 
         Enumeration enum = additionalPatterns.elements();
         while (enum.hasMoreElements()) {
             PatternSet ps = (PatternSet) enum.nextElement();
-            if (ps.hasPatterns()) {
+            if (ps.hasPatterns(getProject())) {
                 return true;
             }
         }
