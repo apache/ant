@@ -62,11 +62,12 @@ import org.apache.tools.ant.AntClassLoader;
 import org.apache.tools.ant.Project;
 import java.util.jar.Manifest;
 import java.util.jar.JarFile;
+import java.util.zip.ZipFile;
 import java.util.jar.Attributes;
 import java.util.jar.Attributes.Name;
 import java.net.URL;
 import java.net.MalformedURLException;
-import java.util.jar.JarEntry;
+import java.util.zip.ZipEntry;
 import java.util.StringTokenizer;
 import org.apache.tools.ant.util.FileUtils;
 
@@ -272,12 +273,12 @@ public class AntClassLoader2 extends AntClassLoader {
         }
         
         String classpath = null;
-        JarFile jarFile = null;
+        ZipFile jarFile = null;
         InputStream manifestStream = null;
         try {
-            jarFile = new JarFile(pathComponent);
+            jarFile = new ZipFile(pathComponent);
             manifestStream 
-                = jarFile.getInputStream(new JarEntry("META-INF/MANIFEST.MF"));
+                = jarFile.getInputStream(new ZipEntry("META-INF/MANIFEST.MF"));
 
             if (manifestStream == null) {
                 return;
