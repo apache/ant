@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2002 The Apache Software Foundation.  All rights
+ * Copyright (c) 2002-2003 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -56,6 +56,7 @@ package org.apache.tools.ant.types;
 import java.util.Vector;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.filters.ClassConstants;
+import org.apache.tools.ant.filters.EscapeUnicode;
 import org.apache.tools.ant.filters.ExpandProperties;
 import org.apache.tools.ant.filters.HeadFilter;
 import org.apache.tools.ant.filters.LineContains;
@@ -135,6 +136,13 @@ public final class FilterChain extends DataType implements Cloneable {
 
     public final void addTailFilter(final TailFilter tailFilter) {
         filterReaders.addElement(tailFilter);
+    }
+
+    /**
+     * @since Ant 1.6
+     */
+    public final void addEscapeUnicode(final EscapeUnicode escapeUnicode) {
+        filterReaders.addElement(escapeUnicode);
     }
 
     /**

@@ -89,6 +89,7 @@ A FilterChain is formed by defining zero or more of the following
 nested elements.<BR>
 <a href="#filterreader">FilterReader</a><BR>
 <a href="#classconstants">ClassConstants</a><BR>
+<a href="#escapeunicode">EscapeUnicode</a><BR>
 <a href="#expandproperties">ExpandProperties</a><BR>
 <a href="#headfilter">HeadFilter</a><BR>
 <a href="#linecontains">LineContains</a><BR>
@@ -158,6 +159,33 @@ Convenience method:
 &lt;loadproperties srcfile=&quot;foo.class&quot;&gt;
   &lt;filterchain&gt;
     &lt;classconstants/&gt;
+  &lt;/filterchain&gt;
+&lt;/loadproperties&gt;
+</PRE></BLOCKQUOTE>
+
+<H3><a name="escapeunicode">EscapeUnicode</a></H3>
+<P>
+This filter converts its input by changing all non US-ASCII characters
+into their equivalent unicode escape backslash u plus 4 digits.</p>
+
+<P><em>since Ant 1.6</em></p>
+
+<H4>Example:</H4>
+
+This loads the basic constants defined in a Java class as Ant properties.
+<BLOCKQUOTE><PRE>
+&lt;loadproperties srcfile=&quot;non_ascii_property.properties&quot;&gt;
+  &lt;filterchain&gt;
+    &lt;filterreader classname=&quot;org.apache.tools.ant.filters.EscapeUnicode&quot;/&gt;
+  &lt;/filterchain&gt;
+&lt;/loadproperties&gt;
+</PRE></BLOCKQUOTE>
+
+Convenience method:
+<BLOCKQUOTE><PRE>
+&lt;loadproperties srcfile=&quot;non_ascii_property.properties&quot;&gt;
+  &lt;filterchain&gt;
+    &lt;escapeunicode/&gt;
   &lt;/filterchain&gt;
 &lt;/loadproperties&gt;
 </PRE></BLOCKQUOTE>
@@ -629,5 +657,5 @@ Convenience method:
 
 <HR>
 
-<P align=center>Copyright &copy; 2002 Apache Software Foundation. All rights
+<P align=center>Copyright &copy; 2002-2003 Apache Software Foundation. All rights
 Reserved.</P></BODY></HTML>

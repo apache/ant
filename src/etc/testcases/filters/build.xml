@@ -6,18 +6,37 @@
   </target>
 
   <target name="cleanup">
-    <delete dir="result" />
+    <delete dir="result"/>
   </target>
 
   <target name="testLineContains" depends="init">
     <copy todir="result">
-      <fileset dir="input"/>
+      <fileset dir="input">
+        <include name="linecontains.test"/>
+      </fileset>
       <filterchain>
         <filterreader classname="org.apache.tools.ant.filters.LineContains">
           <param type="contains" value="beta"/>
         </filterreader>
       </filterchain>
     </copy>
+    <!--fixcrlf srcdir="result" eol="lf">
+      <include name="linecontains.test"/>
+    </fixcrlf-->
+  </target>
+
+  <target name="testEscapeUnicode" depends="init">
+    <copy todir="result" encoding="UTF-8">
+      <fileset dir="input">
+        <include name="escapeunicode.test"/>
+      </fileset>
+      <filterchain>
+        <escapeunicode/>
+      </filterchain>
+    </copy>
+    <fixcrlf srcdir="result" eol="crlf">
+      <include name="escapeunicode.test"/>
+    </fixcrlf>
   </target>
 
 </project>
