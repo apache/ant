@@ -244,6 +244,35 @@ public class AntClassLoader  extends ClassLoader {
      * found on the loader's classpath.
      */
     public InputStream getResourceAsStream(String name) {
+
+        InputStream resourceStream = null;
+        if (isSystemFirst(name)) {
+            resourceStream = loadBaseResource(name);
+            if (resourceStream == null) {
+                resourceStream = loadResource(name);
+            }
+        }
+        else {
+            resourceStream = loadResource(name);
+            if (resourceStream == null) {
+                resourceStream = loadBaseResource(name);
+            }
+        }
+            
+        return resourceStream;
+    }
+    
+    
+    
+    /**
+     * Get a stream to read the requested resource name from this loader.
+     *
+     * @param name the name of the resource for which a stream is required.
+     *
+     * @return a stream to the required resource or null if the resource cannot be
+     * found on the loader's classpath.
+     */
+    private InputStream loadResource(String name) {
         // we need to search the components of the path to see if we can find the 
         // class we want. 
         InputStream stream = null;
@@ -255,6 +284,19 @@ public class AntClassLoader  extends ClassLoader {
         }
 
         return stream;
+    }
+
+    /**
+     * Find a system resource (which should be loaded from the same classloader as the Ant core).
+     */
+    private InputStream loadBaseResource(String name) {
+        ClassLoader base = AntClassLoader.class.getClassLoader();
+        if (base == null) {
+            return getSystemResourceAsStream(name);
+        }
+        else {
+            return base.getResourceAsStream(name);
+        }
     }
 
     /**
@@ -313,6 +355,32 @@ public class AntClassLoader  extends ClassLoader {
         return null;   
     }
 
+    private boolean isSystemFirst(String resourceName) {
+        // default to the global setting and then see
+        // if this class belongs to a package which has been
+        // designated to use a specific loader first (this one or the system one)
+        boolean useSystemFirst = systemFirst; 
+
+        for (Enumeration e = systemPackages.elements(); e.hasMoreElements();) {
+            String packageName = (String)e.nextElement();
+            if (resourceName.startsWith(packageName)) {
+                useSystemFirst = true;
+                break;
+            }
+        }
+
+        for (Enumeration e = loaderPackages.elements(); e.hasMoreElements();) {
+            String packageName = (String)e.nextElement();
+            if (resourceName.startsWith(packageName)) {
+                useSystemFirst = false;
+                break;
+            }
+        }
+        
+        return useSystemFirst;
+    }
+
+
     /**
      * Load a class with this class loader.
      *
@@ -331,51 +399,32 @@ public class AntClassLoader  extends ClassLoader {
      */
     protected Class loadClass(String classname, boolean resolve) throws ClassNotFoundException {
 
-        // default to the global setting and then see
-        // if this class belongs to a package which has been
-        // designated to use a specific loader first (this one or the system one)
-        boolean useSystemFirst = systemFirst; 
-
-        for (Enumeration e = systemPackages.elements(); e.hasMoreElements();) {
-            String packageName = (String)e.nextElement();
-            if (classname.startsWith(packageName)) {
-                useSystemFirst = true;
-                break;
-            }
-        }
-
-        for (Enumeration e = loaderPackages.elements(); e.hasMoreElements();) {
-            String packageName = (String)e.nextElement();
-            if (classname.startsWith(packageName)) {
-                useSystemFirst = false;
-                break;
-            }
-        }
-
         Class theClass = findLoadedClass(classname);
-        if (theClass == null) {
-            if (useSystemFirst) {
-                try {
-                    theClass = findBaseClass(classname);
-                    project.log("Class " + classname + " loaded from system loader", Project.MSG_DEBUG);
-                }
-                catch (ClassNotFoundException cnfe) {
-                    theClass = findClass(classname);
-                    project.log("Class " + classname + " loaded from ant loader", Project.MSG_DEBUG);
-                }
+        if (theClass != null) {
+            return theClass;
+        }
+        
+        if (isSystemFirst(classname)) {
+            try {
+                theClass = findBaseClass(classname);
+                project.log("Class " + classname + " loaded from system loader", Project.MSG_DEBUG);
             }
-            else {
-                try {
-                    theClass = findClass(classname);
-                    project.log("Class " + classname + " loaded from ant loader", Project.MSG_DEBUG);
+            catch (ClassNotFoundException cnfe) {
+                theClass = findClass(classname);
+                project.log("Class " + classname + " loaded from ant loader", Project.MSG_DEBUG);
+            }
+        }
+        else {
+            try {
+                theClass = findClass(classname);
+                project.log("Class " + classname + " loaded from ant loader", Project.MSG_DEBUG);
+            }
+            catch (ClassNotFoundException cnfe) {
+                if (ignoreBase) {
+                    throw cnfe;
                 }
-                catch (ClassNotFoundException cnfe) {
-                    if (ignoreBase) {
-                        throw cnfe;
-                    }
-                    theClass = findBaseClass(classname);
-                    project.log("Class " + classname + " loaded from system loader", Project.MSG_DEBUG);
-                }
+                theClass = findBaseClass(classname);
+                project.log("Class " + classname + " loaded from system loader", Project.MSG_DEBUG);
             }
         }
             
