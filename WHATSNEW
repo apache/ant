@@ -43,6 +43,9 @@ Fixed bugs:
   the -C switch to gcj.  This means you can now compile to native code
   with gcj which has been impossible in Ant < 1.6.2.
 
+* <xslt> now sets the context classloader if you've specified a nested
+  <classpath>.  Bugzilla report 24802.
+
 Other changes:
 --------------
 

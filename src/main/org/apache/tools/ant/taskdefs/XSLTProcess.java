@@ -121,6 +121,18 @@ public class XSLTProcess extends MatchingTask implements XSLTLogger {
     private boolean reuseLoadedStylesheet = true;
 
     /**
+     * AntClassLoader for the nested &lt;classpath&gt; - if set.
+     *
+     * <p>We keep this here in order to reset the context classloader
+     * in execute.  We can't use liaison.getClass().getClassLoader()
+     * since the actual liaison class may have been loaded by a loader
+     * higher up (system classloader, for example).</p>
+     *
+     * @since Ant 1.6.2
+     */
+    private AntClassLoader loader = null;
+
+    /**
      * Creates a new XSLTProcess Task.
      */
     public XSLTProcess() {
@@ -170,6 +182,7 @@ public class XSLTProcess extends MatchingTask implements XSLTLogger {
         if (inFile != null && !inFile.exists()) {
             throw new BuildException("input file " + inFile.toString() + " does not exist", getLocation());
         }
+
         try {
             if (baseDir == null) {
                 baseDir = getProject().resolveFile(".");
@@ -233,6 +246,10 @@ public class XSLTProcess extends MatchingTask implements XSLTLogger {
                 }
             }
         } finally {
+            if (loader != null) {
+                loader.resetThreadContextLoader();
+                loader = null;
+            }
             liaison = null;
             stylesheetLoaded = false;
             baseDir = savedBaseDir;
@@ -379,8 +396,9 @@ public class XSLTProcess extends MatchingTask implements XSLTLogger {
         if (classpath == null) {
             return Class.forName(classname);
         } else {
-            AntClassLoader al = getProject().createClassLoader(classpath);
-            Class c = Class.forName(classname, true, al);
+            loader = getProject().createClassLoader(classpath);
+            loader.setThreadContextLoader();
+            Class c = Class.forName(classname, true, loader);
             return c;
         }
     }
