@@ -606,7 +606,7 @@
         <table class="externals">
           <tr>
             <th>Compatibility:</th>
-            <td>Ant 1.6</td>
+            <td>Ant 1.4 and later</td>
           </tr>
           <tr>
             <th>URL:</th>
