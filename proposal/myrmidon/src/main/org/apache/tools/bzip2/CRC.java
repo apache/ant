@@ -15,7 +15,8 @@ package org.apache.tools.bzip2;
  */
 class CRC
 {
-    public static int crc32Table[] = {
+    private static int CRC32_TABLE[] = new int[]
+    {
         0x00000000, 0x04c11db7, 0x09823b6e, 0x0d4326d9,
         0x130476dc, 0x17c56b6b, 0x1a864db2, 0x1e475005,
         0x2608edb8, 0x22c9f00f, 0x2f8ad6d6, 0x2b4bcb61,
@@ -82,39 +83,41 @@ class CRC
         0xbcb4666d, 0xb8757bda, 0xb5365d03, 0xb1f740b4
     };
 
-    int globalCrc;
+    private int m_globalCrc;
 
-    public CRC()
+    protected CRC()
     {
         initialiseCRC();
     }
 
-    void setGlobalCRC( int newCrc )
+    void setGlobalCRC( final int newCrc )
     {
-        globalCrc = newCrc;
+        m_globalCrc = newCrc;
     }
 
     int getFinalCRC()
     {
-        return ~globalCrc;
+        return ~m_globalCrc;
     }
 
     int getGlobalCRC()
     {
-        return globalCrc;
+        return m_globalCrc;
     }
 
     void initialiseCRC()
     {
-        globalCrc = 0xffffffff;
+        m_globalCrc = 0xffffffff;
     }
 
-    void updateCRC( int inCh )
+    void updateCRC( final int inCh )
     {
-        int temp = ( globalCrc >> 24 ) ^ inCh;
+        int temp = ( m_globalCrc >> 24 ) ^ inCh;
         if( temp < 0 )
+        {
             temp = 256 + temp;
-        globalCrc = ( globalCrc << 8 ) ^ CRC.crc32Table[ temp ];
+        }
+        m_globalCrc = ( m_globalCrc << 8 ) ^ CRC32_TABLE[ temp ];
     }
 }
 
