@@ -15,8 +15,9 @@
 
     <attributes>
     <XDtAnt:forAllAttributes>
-      <attribute name="<XDtMethod:propertyName/>" type="<XDtParameter:forAllMethodParams><XDtParameter:methodParamType/></XDtParameter:forAllMethodParams>"
-                 <XDtMethod:ifHasMethodTag tagName="deprecated">deprecated="true"</XDtMethod:ifHasMethodTag>>
+      <attribute name="<XDtAnt:propertyName/>" type="<XDtParameter:forAllMethodParams><XDtParameter:methodParamType/></XDtParameter:forAllMethodParams>"
+                 <XDtMethod:ifHasMethodTag tagName="deprecated">deprecated="true"</XDtMethod:ifHasMethodTag>
+                 briefType="<XDtAnt:displayAttributeType/>">
         <short-description><![CDATA[<XDtAnt:shortMethodDescription/>]]></short-description>
         <description><![CDATA[
           <XDtMethod:methodComment no-comment-signs="true"/>
@@ -29,6 +30,7 @@
     <XDtAnt:forAllElements>
       <element name="<XDtAnt:elementName/>" type="<XDtAnt:elementType/>"
                <XDtMethod:ifHasMethodTag tagName="deprecated">deprecated="true"</XDtMethod:ifHasMethodTag>
+               briefType="<XDtAnt:displayElementType/>"
         <XDtClass:pushClass value="<XDtAnt:elementType/>">
                <XDtClass:ifIsClassAbstract>abstract="true"</XDtClass:ifIsClassAbstract>>
         </XDtClass:pushClass>

@@ -55,10 +55,11 @@ package org.apache.tools.ant.xdoclet;
 
 import com.sun.javadoc.*;
 import org.apache.tools.ant.IntrospectionHelper;
+import org.apache.tools.ant.types.EnumeratedAttribute;
 import xdoclet.XDocletException;
 import xdoclet.XDocletTagSupport;
-import xdoclet.util.TypeConversionUtil;
 import xdoclet.tags.AbstractProgramElementTagsHandler;
+import xdoclet.tags.MethodTagsHandler;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -69,12 +70,12 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
+import java.lang.reflect.InvocationTargetException;
 
 /**
  * Custom tag handler for XDoclet templates for Ant-specific processing.
  *
  * @author     Erik Hatcher
- * @created    February 17, 2002
  *
  * @todo clean up logic so that all setters are gathered first (even
  * superclass) and sorted along wih them
@@ -179,6 +180,100 @@ public class TaskTagsHandler extends XDocletTagSupport {
         return elementName.toLowerCase();
     }
 
+    static private Map attributeDisplayMap = new HashMap();
+    static private Map elementDisplayMap = new HashMap();
+
+    static {
+        attributeDisplayMap.put("java.lang.String","String");
+        attributeDisplayMap.put("boolean","boolean");
+        attributeDisplayMap.put("org.apache.tools.ant.types.Path","Path");
+        attributeDisplayMap.put("org.apache.tools.ant.types.Reference","Reference");
+        attributeDisplayMap.put("java.io.File","File");
+        attributeDisplayMap.put("java.util.Date","Date");
+        attributeDisplayMap.put("java.net.URL","URL");
+        attributeDisplayMap.put("java.lang.Long","long");
+        attributeDisplayMap.put("java.lang.Integer","int");
+        attributeDisplayMap.put("java.lang.Float","float");
+        attributeDisplayMap.put("java.lang.Double","double");
+
+        elementDisplayMap.put("org.apache.tools.ant.types.Path","Path");
+        elementDisplayMap.put("org.apache.tools.ant.types.FileSet","Fileset");
+        elementDisplayMap.put("org.apache.tools.ant.taskdefs.Property", "see &lt;property&gt;");
+        elementDisplayMap.put("org.apache.tools.ant.types.Mapper","Mapper");
+        elementDisplayMap.put("org.apache.tools.ant.types.PatternSet", "Patternset");
+        elementDisplayMap.put("org.apache.tools.ant.types.FileList","Filelist");
+        elementDisplayMap.put("org.apache.tools.ant.types.FilterChain", "FilterChain");
+        elementDisplayMap.put("org.apache.tools.ant.types.FilterSet", "Filterset");
+        elementDisplayMap.put("org.apache.tools.ant.types.ZipFileSet", "ZipFileset");
+        elementDisplayMap.put("org.apache.tools.ant.types.DirSet", "Dirset");
+        elementDisplayMap.put("org.apache.tools.ant.types.XMLCatalog", "XMLCatalog");
+    }
+
+    public String displayAttributeType() throws XDocletException {
+        String methodType = getCurrentMethod().parameters()[0].type().qualifiedTypeName();
+        String display = (String) attributeDisplayMap.get(methodType);
+        if (display == null) {
+
+            System.out.println("type = " + methodType);
+            Class clazz = getAttributeClass(methodType);
+            if (clazz == null) {
+                return methodType;
+            }
+
+            Object instance = null;
+            try {
+                instance = clazz.newInstance();
+            } catch (InstantiationException e) {
+            } catch (IllegalAccessException e) {
+            }
+
+            if (instance != null && instance instanceof EnumeratedAttribute) {
+                EnumeratedAttribute enum = (EnumeratedAttribute) instance;
+                String[] values = enum.getValues();
+                display = "";
+                for (int i=0; i < values.length; i++) {
+                    display += "&quot;" + values[i] + "&quot;";
+                    if (i != (values.length - 1)) {
+                        display += ", ";
+                    }
+                }
+                return display;
+            }
+
+            display = "";
+        }
+        return display;
+    }
+
+    private Class getAttributeClass(String type) throws XDocletException {
+        Class clazz = null;
+        try {
+            clazz = Class.forName(type);
+        } catch (ClassNotFoundException e) {
+            int lastDotPosition = type.lastIndexOf('.');
+            if (lastDotPosition < 0) {
+                // probably a primitive
+                return null;
+            }
+            type = type.substring(0,lastDotPosition) + "$" + type.substring(lastDotPosition + 1);
+            try {
+                clazz = Class.forName(type);
+            } catch (ClassNotFoundException e1) {
+                throw new XDocletException(e1.getMessage());
+            }
+        }
+        return clazz;
+    }
+
+    public String displayElementType() throws XDocletException {
+        String elementType = elementType();
+        String display = (String) elementDisplayMap.get(elementType);
+        if (display == null) {
+            display = "";
+        }
+        return display;
+    }
+
     /**
      * Provides the element type for the current method
      */
@@ -194,7 +289,7 @@ public class TaskTagsHandler extends XDocletTagSupport {
      * Provides the element type for the current method.  If the return type
      * is null, the first parameter is used.
      */
-    private ClassDoc elementClassDoc() throws XDocletException {
+    private ClassDoc elementClassDoc() {
         ClassDoc classDoc = null;
         String methodName = getCurrentMethod().name();
         if (methodName.startsWith("addConfigured") ||
@@ -215,26 +310,29 @@ public class TaskTagsHandler extends XDocletTagSupport {
      * Provides the Ant task name.
      *
      * @see #getTaskName(ClassDoc)
-     * @doc:tag      type="content"
      */
     public String taskName() throws XDocletException {
         return getTaskName(getCurrentClass());
     }
 
+    public String propertyName() {
+        return MethodTagsHandler.getPropertyNameFor( getCurrentMethod() ).toLowerCase();
+    }
+
     private static String[] fluffPrefixes = { "set a","set the","sets a","sets the" };
 
     public String shortMethodDescription() throws XDocletException {
-        Tag[] tags = getCurrentMethod().firstSentenceTags();
-        String desc = null;
+		Tag[] tags = getCurrentMethod().firstSentenceTags();
+		String desc = null;
 
-        if( tags != null && tags.length > 0 ) {
-            desc = tags[0].text();
+		if( tags != null && tags.length > 0 ) {
+			desc = tags[0].text();
         }
 
-        if( desc == null || desc.length() == 0 )
-        {
-            desc = "no description";
-        }
+		if( desc == null || desc.length() == 0 )
+		{
+        	desc = "no description";
+		}
 
         desc = desc.trim();
         String descLower = desc.toLowerCase();
@@ -248,7 +346,11 @@ public class TaskTagsHandler extends XDocletTagSupport {
 
         desc = desc.substring(0,1).toUpperCase() + desc.substring(1);
 
-        return desc;
+        if (!desc.endsWith(".")) {
+            desc += ".";
+        }
+
+		return desc;
     }
 
     /**
@@ -428,7 +530,7 @@ public class TaskTagsHandler extends XDocletTagSupport {
                 continue;
             }
 
-            System.out.println("elementName = " + elementName);
+//            System.out.println("elementName = " + elementName);
             String elementType = null;
             if (adder) {
                 if (method.parameters().length != 1) {
@@ -444,7 +546,7 @@ public class TaskTagsHandler extends XDocletTagSupport {
             }
 
             String mapElementType = elementTypeMap.getProperty(elementName);
-            System.out.println("elementType = " + elementType + " mapElementType = " + mapElementType);
+//            System.out.println("elementType = " + elementType + " mapElementType = " + mapElementType);
             if (mapElementType == null) {
                 continue;
             }
