@@ -291,7 +291,7 @@ public class FTP
                         } else {
                             String name = vpath + file.getName();
                             if (!isFollowSymlinks() && file.isSymbolicLink()) {
-                                dirsExcluded.addElement(name);
+                                filesExcluded.addElement(name);
                             } else if (isFunctioningAsFile(ftp, dir, file)) {
                                 if (isIncluded(name)) {
                                     if (!isExcluded(name)) {
