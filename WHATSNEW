@@ -39,6 +39,15 @@ Fixed bugs:
   fix problem : script task cannot cope with undefined task/type elements in buildfile
   Bugzilla Report 23915.
 
+* <cvstagdiff> had a problem with aliased modules and with requests for multiple modules.
+  Bugzilla Reports 21373 and 22877.
+
+* <cvstagdiff> could not parse properly the revision number of new files with CVS 1.11.9 or higher.
+  Bugzilla Report 24406.
+
+* <ftp> null pointer exception when attempting rmdir in an empty directory.
+  Bugzilla Report 24440.
+
 Other changes:
 --------------
 * Change default uri from ant:core to antlib:org.apache.tools.ant
