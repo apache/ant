@@ -314,7 +314,7 @@ public class UnknownElement extends Task {
             + " - The task is not an Ant core or optional task " + lSep
             + "   and needs to be declared using <taskdef>." + lSep
             + lSep 
-            + "Remember that for JAR files to be visible to An t tasks implemented" + lSep
+            + "Remember that for JAR files to be visible to Ant tasks implemented" + lSep
             + "in ANT_HOME/lib, the files must be in the same directory or on the" + lSep
             + "classpath" + lSep
             + lSep
