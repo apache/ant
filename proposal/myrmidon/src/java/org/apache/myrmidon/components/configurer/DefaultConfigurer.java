@@ -40,7 +40,7 @@ public class DefaultConfigurer
         ResourceManager.getPackageResources( DefaultConfigurer.class );
 
     ///Compile time constant to turn on extreme debugging
-    private final static boolean DEBUG = true;
+    private final static boolean DEBUG = false;
 
     /*
      * TODO: Should reserved names be "configurable" ?
