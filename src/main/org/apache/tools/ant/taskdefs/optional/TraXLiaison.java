@@ -79,6 +79,7 @@ import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.taskdefs.XSLTLiaison;
 import org.apache.tools.ant.taskdefs.XSLTLogger;
 import org.apache.tools.ant.taskdefs.XSLTLoggerAware;
+import org.apache.tools.ant.util.JAXPUtils;
 import org.xml.sax.EntityResolver;
 import org.xml.sax.InputSource;
 import org.xml.sax.XMLReader;
@@ -144,7 +145,7 @@ public class TraXLiaison implements XSLTLiaison, ErrorListener, XSLTLoggerAware 
             fos = new BufferedOutputStream(new FileOutputStream(outfile));
             StreamResult res = new StreamResult(fos);
             // not sure what could be the need of this...
-            res.setSystemId(getSystemId(outfile));
+            res.setSystemId(JAXPUtils.getSystemId(outfile));
             Source src = getSource(fis, infile);
             transformer.transform(src, res);
         } finally {
@@ -192,7 +193,7 @@ public class TraXLiaison implements XSLTLiaison, ErrorListener, XSLTLoggerAware 
         } else {
             src = new StreamSource(is);
         }
-        src.setSystemId(getSystemId(infile));
+        src.setSystemId(JAXPUtils.getSystemId(infile));
         return src;
     }
 
@@ -218,7 +219,7 @@ public class TraXLiaison implements XSLTLiaison, ErrorListener, XSLTLoggerAware 
             StreamSource src = new StreamSource(xslStream);
             // Always set the systemid to the source for imports, includes...
             // in xsl and xml...
-            src.setSystemId(getSystemId(stylesheet));
+            src.setSystemId(JAXPUtils.getSystemId(stylesheet));
             Templates templates = getFactory().newTemplates(src);
             Transformer transformer = templates.newTransformer();
 
@@ -243,23 +244,6 @@ public class TraXLiaison implements XSLTLiaison, ErrorListener, XSLTLoggerAware 
             }
         }
     }
-
-    // make sure that the systemid is made of '/' and not '\' otherwise
-    // crimson will complain that it cannot resolve relative entities
-    // because it grabs the base uri via lastIndexOf('/') without
-    // making sure it is really a /'ed path
-    protected String getSystemId(File file) {
-        String path = file.getAbsolutePath();
-        path = path.replace('\\', '/');
-
-        // on Windows, use 'file:///'
-        if (File.separatorChar == '\\') {
-            return FILE_PROTOCOL_PREFIX + "/" + path;
-        }
-        // Unix, use 'file://'
-        return FILE_PROTOCOL_PREFIX + path;
-    }
-
 
     /**
      * return the Transformer factory associated to this liaison.
@@ -398,6 +382,14 @@ public class TraXLiaison implements XSLTLiaison, ErrorListener, XSLTLoggerAware 
         }
 
         logger.log(msg.toString());
+    }
+
+    // kept for backwards compatibility
+    /**
+     * @deprecated use org.apache.tools.ant.util.JAXPUtils#getSystemId instead
+     */
+    protected String getSystemId(File file) {
+        return JAXPUtils.getSystemId(file);
     }
 
 } //-- TraXLiaison

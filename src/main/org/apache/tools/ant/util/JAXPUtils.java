@@ -53,6 +53,7 @@
  */
 package org.apache.tools.ant.util;
 
+import java.io.File;
 import javax.xml.parsers.FactoryConfigurationError;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.parsers.SAXParser;
@@ -73,6 +74,11 @@ import org.xml.sax.XMLReader;
  * @since Ant 1.5
  */
 public class JAXPUtils {
+
+    /**
+     * The file protocol: 'file://'
+     */
+    private static final String FILE_PROTOCOL_PREFIX = "file://";
 
     /**
      * Parser factory to use to create parsers.
@@ -145,6 +151,27 @@ public class JAXPUtils {
         } catch (SAXException e) {
             throw convertToBuildException(e);
         }
+    }
+
+    /**
+     * This is a best attempt to provide a URL.toExternalForm() from
+     * a file URL. Some parsers like Crimson choke on uri that are made of
+     * backslashed paths (ie windows) as it is does not conform
+     * URI specifications.
+     * @param file the file to create the system id from.
+     * @return the systemid corresponding to the given file.
+     * @since Ant 1.5.2
+     */
+    public static String getSystemId(File file){
+        String path = file.getAbsolutePath();
+        path = path.replace('\\', '/');
+
+        // on Windows, use 'file:///'
+        if (File.separatorChar == '\\') {
+            return FILE_PROTOCOL_PREFIX + "/" + path;
+        }
+        // Unix, use 'file://'
+        return FILE_PROTOCOL_PREFIX + path;
     }
 
     /**
