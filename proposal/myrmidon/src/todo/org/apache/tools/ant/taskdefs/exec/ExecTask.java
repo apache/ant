@@ -5,7 +5,7 @@
  * version 1.1, a copy of which has been included with this distribution in
  * the LICENSE file.
  */
-package org.apache.tools.ant.taskdefs;
+package org.apache.tools.ant.taskdefs.exec;
 
 import java.io.BufferedReader;
 import java.io.ByteArrayOutputStream;
@@ -31,7 +31,6 @@ import org.apache.tools.ant.types.Environment;
  */
 public class ExecTask extends Task
 {
-
     private static String lSep = System.getProperty( "line.separator" );
     protected boolean failOnError = false;
     protected boolean newEnvironment = false;
@@ -370,7 +369,7 @@ public class ExecTask extends Task
      * @param result Description of Parameter
      */
     protected void maybeSetResultPropertyValue( int result )
-    throws TaskException
+        throws TaskException
     {
         String res = Integer.toString( result );
         if( resultProperty != null )

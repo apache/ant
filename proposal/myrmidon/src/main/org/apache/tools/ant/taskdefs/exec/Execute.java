@@ -5,7 +5,7 @@
  * version 1.1, a copy of which has been included with this distribution in
  * the LICENSE file.
  */
-package org.apache.tools.ant.taskdefs;
+package org.apache.tools.ant.taskdefs.exec;
 
 import java.io.BufferedReader;
 import java.io.ByteArrayOutputStream;
@@ -239,7 +239,7 @@ public class Execute
             // Since we "look ahead" before adding, there's one last env var.
             procEnvironment.addElement( var );
         }
-        catch( java.io.IOException exc )
+        catch( IOException exc )
         {
             exc.printStackTrace();
             // Just try to see how much we got
@@ -272,7 +272,7 @@ public class Execute
                 throw new TaskException( cmdline[ 0 ] + " failed with return code " + retval );
             }
         }
-        catch( java.io.IOException exc )
+        catch( IOException exc )
         {
             throw new TaskException( "Could not launch " + cmdline[ 0 ] + ": " + exc );
         }
