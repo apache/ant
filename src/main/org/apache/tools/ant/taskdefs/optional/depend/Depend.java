@@ -619,7 +619,7 @@ public class Depend extends MatchingTask {
                     outOfDateClasses.put(className, className);
                 } else {
                     if (srcFile.lastModified() 
-                        > (info.absoluteFile.lastModified() + TIME_TOLERANCE)) {
+                        > info.absoluteFile.lastModified()) {
                         outOfDateClasses.put(className, className);
                     }
                 }
