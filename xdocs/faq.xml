@@ -1490,6 +1490,29 @@ mv /tmp/foo $ANT_HOME/bin/antRun
 
       </answer>
     </faq>
+
+    <faq id="xalan-jdk1.5">
+      <question>
+        <code>&lt;junitreport&gt;</code> doesn't work with JDK 1.5 but
+        worked fine with JDK 1.4.
+      </question>
+      <answer>
+
+        <p>While JDK 1.4.x contains a version of Xalan-J 2, JDK 1.5
+        (and later?) have <a
+        href="http://java.sun.com/j2se/1.5.0/compatibility.html#4959783">moved
+        to XSLTC</a>.  Since this task uses Xalan's redirect
+        extensions for its internal stylesheet, Ant doesn't support
+        XSLTC yet.  This means that you have to install <a
+        href="http://xml.apache.org/xalan-j/">Xalan-J 2</a> in order
+        to use this task with JDK 1.5.</p>
+
+        <p>If you want to follow progress on this, <a
+        href="http://issues.apache.org/bugzilla/show_bug.cgi?id=27541">here</a>
+        is the relevant bug report.</p>
+
+      </answer>
+    </faq>
   </faqsection>
 
 </document>

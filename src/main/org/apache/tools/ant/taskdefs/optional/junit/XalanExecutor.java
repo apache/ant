@@ -27,6 +27,7 @@ import java.io.StringWriter;
 import java.lang.reflect.Field;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
+import org.apache.tools.ant.util.JavaEnvUtils;
 
 /**
  * Command class that encapsulate specific behavior for each
@@ -86,8 +87,17 @@ abstract class XalanExecutor {
                 xalan1missing.printStackTrace(new PrintWriter(swr));
                 caller.task.log("Didn't find Xalan1.", Project.MSG_DEBUG);
                 caller.task.log(swr.toString(), Project.MSG_DEBUG);
-                throw new BuildException("Could not find xalan2 nor xalan1 "
-                    + "in the classpath. Check http://xml.apache.org/xalan-j");
+                String msg = "Could not find xalan2 nor xalan1 "
+                    + "in the classpath. Check http://xml.apache.org/xalan-j/";
+                if (!JavaEnvUtils.isJavaVersion(JavaEnvUtils.JAVA_1_1)
+                    && !JavaEnvUtils.isJavaVersion(JavaEnvUtils.JAVA_1_2)
+                    && !JavaEnvUtils.isJavaVersion(JavaEnvUtils.JAVA_1_3)
+                    && !JavaEnvUtils.isJavaVersion(JavaEnvUtils.JAVA_1_4)) {
+                    msg += "\r\nStarting with JDK 1.5, the built-in processor "
+                        + "of the JDK is no longer Xalan\r\nbut XSLTC which is "
+                        + "not (yet) supported by the junitreport task.";
+                }
+                throw new BuildException(msg);
             }
         }
         String version = getXalanVersion(procVersion);
