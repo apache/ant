@@ -89,6 +89,9 @@ Other changes:
 * <apply> has a new "force" attribute that, when true, disables
   checking of target files.
 
+* Added isSigned condition and task, and signedselector selector
+  Bugzilla report 32126.
+
 Changes from Ant 1.6.2 to current Ant 1.6 CVS version
 =====================================================
 
