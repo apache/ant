@@ -23,7 +23,7 @@
  *    Alternately, this acknowlegement may appear in the software itself,
  *    if and wherever such third-party acknowlegements normally appear.
  *
- * 4. The names "The Jakarta Project", "Tomcat", and "Apache Software
+ * 4. The names "The Jakarta Project", "Ant", and "Apache Software
  *    Foundation" must not be used to endorse or promote products derived
  *    from this software without prior written permission. For written
  *    permission, please contact apache@apache.org.
@@ -54,6 +54,7 @@
 
 package org.apache.tools.ant.types;
 
+import org.apache.tools.ant.AntClassLoader;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.util.*;
@@ -84,6 +85,58 @@ public class Mapper extends DataType {
             throw tooManyAttributes();
         }
         this.type = type;
+    }
+
+    protected String classname = null;
+
+    /**
+     * Set the class name of the FileNameMapper to use.
+     */
+    public void setClassname(String classname) {
+        if (isReference()) {
+            throw tooManyAttributes();
+        }
+        this.classname = classname;
+    }
+
+    protected Path classpath = null;
+
+    /**
+     * Set the classpath to load the FileNameMapper through (attribute).
+     */
+    public void setClasspath(Path classpath) {
+        if (isReference()) {
+            throw tooManyAttributes();
+        }
+        if (this.classpath == null) {
+            this.classpath = classpath;
+        } else {
+            this.classpath.append(classpath);
+        }
+    }
+
+    /**
+     * Set the classpath to load the FileNameMapper through (nested element).
+     */
+    public Path createClasspath() {
+        if (isReference()) {
+            throw noChildrenAllowed();
+        }
+        if (this.classpath == null) {
+            this.classpath = new Path(p);
+        }
+        return this.classpath.createPath();
+    }
+
+    /**
+     * Set the classpath to load the FileNameMapper through via
+     * reference (attribute).
+     */
+    public void setClasspathRef(Reference r) {
+        if (isReference()) {
+            throw tooManyAttributes();
+        }
+        createClasspath().setRefid(r);
     }
 
     protected String from = null;
@@ -131,12 +184,27 @@ public class Mapper extends DataType {
             return getRef().getImplementation();
         }
         
-        if (type == null) {
-            throw new BuildException("type attribute is required");
+        if (type == null && classname == null) {
+            throw new BuildException("one of the attributes type or classname is required");
+        }
+
+        if (type != null && classname != null) {
+            throw new BuildException("must not specify both type and classname attribute");
         }
 
         try {
-            Class c = Class.forName(type.getImplementation());
+            if (type != null) {
+                classname = type.getImplementation();
+            }
+
+            Class c = null;
+            if (classpath == null) {
+                c = Class.forName(classname);
+            } else {
+                AntClassLoader al = new AntClassLoader(p, classpath);
+                c = al.loadClass(classname);
+            }
+            
             FileNameMapper m = (FileNameMapper) c.newInstance();
             m.setFrom(from);
             m.setTo(to);
