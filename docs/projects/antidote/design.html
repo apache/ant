@@ -170,11 +170,11 @@
     Antidote will be able to be assembled in different configurations
     to provide the type of application or plug-in desired.
     </p>
-                                <p>To acheive this modularity, a high level of decoupling is
+                                <p>To achieve this modularity, a high level of decoupling is
     necessary. The standard UI design approach of providing separation
     of view (presentation) from model (data) is applied, leveraging
     the built-in Ant data model where possible, as well as the
-    predifined Swing model interfaces. Furthermore, the architecture
+    predefined Swing model interfaces. Furthermore, the architecture
     is highly event driven, whereby modules communicate via a shared
     communications channel.
     </p>
@@ -228,7 +228,7 @@
     objects, as well as <code>AWTEvent</code> objects can be posted (if desired). A
     new class of events called <code>AntEvent</code> is defined for Antidote
     specific events, which have the additional capability of being
-    cancelled mid-dispatch.
+    canceled mid-dispatch.
     </p>
                                 <p>Each <code>BusMember</code> must provide a <code>BusFilter</code> instance,
     which is the members' means of telling the bus which
@@ -241,7 +241,7 @@
     for dispatching <code>EventObject</code>s to <code>BusMember</code>s. The
     purpose of this is to allow certain <code>BusMember</code> instances
     to see an event before others, and in the case of <code>AntEvent</code>
-    objects, keep the event from propogating onward. The
+    objects, keep the event from propagating onward. The
     <code>EventBus</code> class defines the interrupt level constants
     <code>VETOING=1</code>, <code>MONITORING=5</code>, and <code>RESPONDING=10</code> to
     help define categories of members. The implied purpose being that:
@@ -250,7 +250,7 @@
 
       <li><code>VETOING</code>: Listens for certain types of events, and
         may process them in a non-default manner to determine if the
-        event should be cancelled before being dispatched to the
+        event should be canceled before being dispatched to the
         <code>RESPONDING</code> group.
       </li>
 
@@ -264,7 +264,7 @@
 
     </ul>
                                 <p>Within a specific interrupt level, the order in which members will
-    receive events is undefied. A <code>BusMember</code> may be registered
+    receive events is undefined. A <code>BusMember</code> may be registered
     at a level that is +/- of one of the defined levels, as long as it
     follows the constraint <code>MONITORING &lt;= interruptLevel &lt;=
     MAX_INTERRUPT</code>.
@@ -322,7 +322,7 @@
     </p>
                                 <p>The purpose of this encapsulation is to allow the clean
     separation of making a request, and servicing a request. Due to
-    various conditions in the application state, the actualy response
+    various conditions in the application state, the actually response
     to a request may change, as well as who services it. This
     design approach facilitates that.
     </p>
@@ -344,7 +344,7 @@
   <table class="nowrap" border="0" cellspacing="0" cellpadding="2" width="100%">
     <tr><td bgcolor="#294563"><font color="#ffffff"><a name="Application Context"><strong>Application Context</strong></a></font></td></tr>
   </table>
-                        <p>In order to keep the coupling amoung application modules to a
+                        <p>In order to keep the coupling among application modules to a
     minimum, a single point of reference is needed for coordination
     and data sharing. The class <code>AppContext</code> is the catch-all
     class for containing the application state. Most modules and
@@ -362,9 +362,9 @@
   </table>
                         <p>Full "i18n" support should be assumed in modern applications,
     and all user viewable strings should be defined in a configuration
-    file. For Antidote this configuraiton file is
+    file. For Antidote this configuration file is
     <code>antidote.properties</code>, which is located (with other UI
-    resources) in the subpackage "resources".
+    resources) in the sub-package "resources".
     </p>
                                 <p>To aid in the lookup of text properties, as well as other
     resources like icons, a class called <code>ResourceManager</code> is
@@ -373,7 +373,7 @@
     values as easy as possible.
     </p>
                                 <p>The organization of configuration properties is based on the
-    fully qualifed path of the class that requires the property. For
+    fully qualified path of the class that requires the property. For
     example, the "about" box contains a messages, so it looks for the
     property "<code>org.apache.tools.ant.gui.About.message</code>" for the text
     message it should display. Therefore, the <code>ResourceManager</code>

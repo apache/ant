@@ -55,7 +55,7 @@
     <code>AntModule.contextualize()</code> method has been called. Follow
     the naming convention currently used in the properties file and
     you should have to problems. This task should be done
-    <b>during</b> development of your module. Under no cercumstances
+    <b>during</b> development of your module. Under no circumstances
     should your module be submitted or committed without this task
     being completed. Remember that Antidote has an international
     audience.

@@ -1445,7 +1445,6 @@ public class BuildMonitor implements BuildListener {
             Transport transport = session.getTransport();
             transport.connect();
             transport.send(message);
-
             transport.close();
         } catch (Exception ex) {
             System.out.println(&quot;BuildMonitor failed to send email!&quot;);
