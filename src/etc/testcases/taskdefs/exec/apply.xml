@@ -21,6 +21,16 @@
                 <isset property="sed.exe.executable"/>
             </or>
         </condition>
+        <!-- UNIX -->
+        <available file="echo" filepath="${env.PATH}" property="echo.executable"/>
+        <!-- CYGWIN -->
+        <available file="echo.exe" filepath="${env.PATH}" property="echo.exe.executable"/>
+        <condition property="echo.can.run">
+            <or>
+                <isset property="echo.executable"/>
+                <isset property="echo.exe.executable"/>
+            </or>
+        </condition>
     </target>
 
     <target name="xyz">
@@ -303,12 +313,9 @@
         </apply>
     </target>
 
-    <target name="ignoremissing">
+    <target name="ignoremissing" depends="init,xyz" if="echo.can.run">
         <filelist id="xylist" dir="${basedir}" files="x,y" />
-        <filelist id="xyzlist" dir="${basedir}" files="x,y,z" />
-
-        <touch file="x" />
-        <touch file="y" />
+        <delete file="z" />
 
         <condition property="pad" value="">
             <or>
