@@ -380,14 +380,12 @@ public class Javac extends MatchingTask {
      * @param addRuntime Shall <code>rt.jar</code> or
      * <code>classes.zip</code> be added to the classpath.  
      */
-    private String getCompileClasspath(boolean addRuntime) {
+    private Path getCompileClasspath(boolean addRuntime) {
         Path classpath = new Path();
 
         // add dest dir to classpath so that previously compiled and
         // untouched classes are on classpath
 
-        //classpath.append(sourceDir.getAbsolutePath());
-        //classpath.append(File.pathSeparator);
         classpath.setLocation(destDir.getAbsolutePath());
 
         // add our classpath to the mix
@@ -422,13 +420,13 @@ public class Javac extends MatchingTask {
             }
         }
             
-        return classpath.toString();
+        return classpath;
     }
 
 
      /**
-     * Takes a classpath-like string, and adds each element of
-     * this string to a new classpath, if the components exist.
+     * Takes a Path, and adds each element of
+     * another Path to a new classpath, if the components exist.
      * Components that don't exist, aren't added.
      * We do this, because jikes issues warnings for non-existant
      * files/dirs in his classpath, and these warnings are pretty
@@ -458,7 +456,7 @@ public class Javac extends MatchingTask {
 
     private void doClassicCompile() throws BuildException {
         log("Using classic compiler", Project.MSG_VERBOSE);
-        String classpath = getCompileClasspath(false);
+        Path classpath = getCompileClasspath(false);
         Vector argList = new Vector();
 
         if (deprecation == true)
@@ -546,7 +544,7 @@ public class Javac extends MatchingTask {
         }
 
         log("Using modern compiler", Project.MSG_VERBOSE);
-        String classpath = getCompileClasspath(false);
+        Path classpath = getCompileClasspath(false);
         Vector argList = new Vector();
 
         if (deprecation == true)
@@ -650,7 +648,7 @@ public class Javac extends MatchingTask {
             classpath.append(bootclasspath);
         }
 
-        classpath.append(new Path(getCompileClasspath(true)));
+        classpath.append(getCompileClasspath(true));
 
         // Jikes doesn't support an extension dir (-extdir)
         // so we'll emulate it for compatibility and convenience.
@@ -774,7 +772,7 @@ public class Javac extends MatchingTask {
      * This method adds all jar archives in the given
      * directories (but not in sub-directories!) to the classpath,
      * so that you don't have to specify them all one by one.
-     * @param classpath - stringbuffer to append jar files to
+     * @param classpath - Path to append jar files to
      */
     private void addExtdirsToClasspath(Path classpath) {
        // FIXME
