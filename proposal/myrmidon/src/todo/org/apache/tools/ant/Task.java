@@ -7,8 +7,6 @@
  */
 package org.apache.tools.ant;
 
-import org.apache.myrmidon.api.TaskException;
-
 public abstract class Task
     extends ProjectComponent
     implements org.apache.myrmidon.api.Task
