@@ -14,6 +14,7 @@
  *  limitations under the License.
  *
  */
+
 package org.apache.tools.ant;
 
 import java.io.ByteArrayOutputStream;
@@ -21,14 +22,22 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.Reader;
 import java.lang.reflect.Constructor;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.Collections;
 import java.util.Enumeration;
+import java.util.HashMap;
 import java.util.Hashtable;
+import java.util.Map;
+import java.util.StringTokenizer;
 import java.util.Vector;
+import java.util.jar.Attributes;
+import java.util.jar.Attributes.Name;
+import java.util.jar.JarFile;
+import java.util.jar.Manifest;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 import org.apache.tools.ant.types.Path;
@@ -192,6 +201,9 @@ public class AntClassLoader extends ClassLoader implements SubBuildListener {
      */
     private Hashtable zipFiles = new Hashtable();
 
+    /** Static map of jar file/time to manifiest class-path entries */
+    private static Map/*<String,String>*/ pathMap = Collections.synchronizedMap(new HashMap());
+
     /**
      * The context loader saved when setting the thread's current
      * context loader.
@@ -201,36 +213,6 @@ public class AntClassLoader extends ClassLoader implements SubBuildListener {
      * Whether or not the context loader is currently saved.
      */
     private boolean isContextLoaderSaved = false;
-
-    /**
-     * Reflection method reference for getProtectionDomain;
-     * used to avoid 1.1-compatibility problems.
-     */
-    private static Method getProtectionDomain = null;
-
-    /**
-     * Reflection method reference for defineClassProtectionDomain;
-     * used to avoid 1.1-compatibility problems.
-     */
-    private static Method defineClassProtectionDomain = null;
-
-
-    // Set up the reflection-based Java2 methods if possible
-    static {
-        try {
-            getProtectionDomain
-                = Class.class.getMethod("getProtectionDomain", new Class[0]);
-            Class protectionDomain
-                = Class.forName("java.security.ProtectionDomain");
-            Class[] args = new Class[] {String.class, byte[].class,
-                                        Integer.TYPE, Integer.TYPE, protectionDomain};
-            defineClassProtectionDomain
-                = ClassLoader.class.getDeclaredMethod("defineClass", args);
-        } catch (Exception e) {
-            // ignore failure to get access to 1.2+ methods
-        }
-    }
-
 
     /**
      * Create an Ant Class Loader
@@ -452,7 +434,9 @@ public class AntClassLoader extends ClassLoader implements SubBuildListener {
     }
 
     /**
-     * Add a file to the path
+     * Add a file to the path.
+     * Reads the manifest, if available, and adds any additional class path jars
+     * specified in the manifest.
      *
      * @param pathComponent the file which is to be added to the path for
      *                      this class loader
@@ -461,6 +445,66 @@ public class AntClassLoader extends ClassLoader implements SubBuildListener {
      */
     protected void addPathFile(File pathComponent) throws IOException {
         pathComponents.addElement(pathComponent);
+        if (pathComponent.isDirectory()) {
+            return;
+        }
+
+        String absPathPlusTimeAndLength =
+            pathComponent.getAbsolutePath() + pathComponent.lastModified() + "-"
+            + pathComponent.length();
+        String classpath = (String) pathMap.get(absPathPlusTimeAndLength);
+        if (classpath == null) {
+            ZipFile jarFile = null;
+            InputStream manifestStream = null;
+            try {
+                jarFile = new ZipFile(pathComponent);
+                manifestStream
+                    = jarFile.getInputStream(new ZipEntry("META-INF/MANIFEST.MF"));
+
+                if (manifestStream == null) {
+                    return;
+                }
+                Reader manifestReader
+                    = new InputStreamReader(manifestStream, "UTF-8");
+                org.apache.tools.ant.taskdefs.Manifest manifest
+                    = new org.apache.tools.ant.taskdefs.Manifest(manifestReader);
+                classpath
+                    = manifest.getMainSection().getAttributeValue("Class-Path");
+
+            } catch (org.apache.tools.ant.taskdefs.ManifestException e) {
+                // ignore
+            } finally {
+                if (manifestStream != null) {
+                    manifestStream.close();
+                }
+                if (jarFile != null) {
+                    jarFile.close();
+                }
+            }
+            if (classpath == null) {
+                classpath = "";
+            }
+            pathMap.put(absPathPlusTimeAndLength, classpath);
+        }
+
+        if (!"".equals(classpath)) {
+            URL baseURL = FILE_UTILS.getFileURL(pathComponent);
+            StringTokenizer st = new StringTokenizer(classpath);
+            while (st.hasMoreTokens()) {
+                String classpathElement = st.nextToken();
+                URL libraryURL = new URL(baseURL, classpathElement);
+                if (!libraryURL.getProtocol().equals("file")) {
+                    log("Skipping jar library " + classpathElement
+                        + " since only relative URLs are supported by this"
+                        + " loader", Project.MSG_VERBOSE);
+                    continue;
+                }
+                File libraryFile = new File(libraryURL.getFile());
+                if (libraryFile.exists() && !isInPath(libraryFile)) {
+                    addPathFile(libraryFile);
+                }
+            }
+        }
     }
 
     /**
@@ -1029,36 +1073,159 @@ public class AntClassLoader extends ClassLoader implements SubBuildListener {
      */
     protected Class defineClassFromData(File container, byte[] classData,
                                         String classname) throws IOException {
-        // Simply put:
-        // defineClass(classname, classData, 0, classData.length,
-        //             Project.class.getProtectionDomain());
-        // Made more elaborate to be 1.1-safe.
-        if (defineClassProtectionDomain != null) {
-            try {
-                Object domain
-                    = getProtectionDomain.invoke(Project.class, new Object[0]);
-                Object[] args
-                    = new Object[] {classname, classData, new Integer(0),
-                                    new Integer(classData.length), domain};
-                return (Class) defineClassProtectionDomain.invoke(this, args);
-            } catch (InvocationTargetException ite) {
-                Throwable t = ite.getTargetException();
-                if (t instanceof ClassFormatError) {
-                    throw (ClassFormatError) t;
-                } else if (t instanceof NoClassDefFoundError) {
-                    throw (NoClassDefFoundError) t;
-                } else if (t instanceof SecurityException) {
-                    throw (SecurityException) t;
-                } else {
-                    throw new IOException(t.toString());
-                }
-            } catch (Exception e) {
-                throw new IOException(e.toString());
-            }
+        definePackage(container, classname);
+        // XXX should instead make a new ProtectionDomain with a CodeSource
+        // corresponding to container.toURI().toURL() and the same
+        // PermissionCollection as Project.class.protectionDomain had
+        return defineClass(classname, classData, 0, classData.length,
+                           Project.class.getProtectionDomain());
+    }
+
+    /**
+     * Define the package information associated with a class.
+     *
+     * @param container the file containing the class definition.
+     * @param className the class name of for which the package information
+     *        is to be determined.
+     *
+     * @exception IOException if the package information cannot be read from the
+     *            container.
+     */
+    protected void definePackage(File container, String className)
+        throws IOException {
+        int classIndex = className.lastIndexOf('.');
+        if (classIndex == -1) {
+            return;
+        }
+
+        String packageName = className.substring(0, classIndex);
+        if (getPackage(packageName) != null) {
+            // already defined
+            return;
+        }
+
+        // define the package now
+        Manifest manifest = getJarManifest(container);
+
+        if (manifest == null) {
+            definePackage(packageName, null, null, null, null, null,
+                          null, null);
         } else {
-            return defineClass(classname, classData, 0, classData.length);
+            definePackage(container, packageName, manifest);
         }
     }
+
+    /**
+     * Get the manifest from the given jar, if it is indeed a jar and it has a
+     * manifest
+     *
+     * @param container the File from which a manifest is required.
+     *
+     * @return the jar's manifest or null is the container is not a jar or it
+     *         has no manifest.
+     *
+     * @exception IOException if the manifest cannot be read.
+     */
+    private Manifest getJarManifest(File container) throws IOException {
+        if (container.isDirectory()) {
+            return null;
+        }
+        JarFile jarFile = null;
+        try {
+            jarFile = new JarFile(container);
+            return jarFile.getManifest();
+        } finally {
+            if (jarFile != null) {
+                jarFile.close();
+            }
+        }
+    }
+
+    /**
+     * Define the package information when the class comes from a
+     * jar with a manifest
+     *
+     * @param container the jar file containing the manifest
+     * @param packageName the name of the package being defined.
+     * @param manifest the jar's manifest
+     */
+    protected void definePackage(File container, String packageName,
+                                 Manifest manifest) {
+        String sectionName = packageName.replace('.', '/') + "/";
+
+        String specificationTitle = null;
+        String specificationVendor = null;
+        String specificationVersion = null;
+        String implementationTitle = null;
+        String implementationVendor = null;
+        String implementationVersion = null;
+        String sealedString = null;
+        URL sealBase = null;
+
+        Attributes sectionAttributes = manifest.getAttributes(sectionName);
+        if (sectionAttributes != null) {
+            specificationTitle
+                = sectionAttributes.getValue(Name.SPECIFICATION_TITLE);
+            specificationVendor
+                = sectionAttributes.getValue(Name.SPECIFICATION_VENDOR);
+            specificationVersion
+                = sectionAttributes.getValue(Name.SPECIFICATION_VERSION);
+            implementationTitle
+                = sectionAttributes.getValue(Name.IMPLEMENTATION_TITLE);
+            implementationVendor
+                = sectionAttributes.getValue(Name.IMPLEMENTATION_VENDOR);
+            implementationVersion
+                = sectionAttributes.getValue(Name.IMPLEMENTATION_VERSION);
+            sealedString
+                = sectionAttributes.getValue(Name.SEALED);
+        }
+
+        Attributes mainAttributes = manifest.getMainAttributes();
+        if (mainAttributes != null) {
+            if (specificationTitle == null) {
+                specificationTitle
+                    = mainAttributes.getValue(Name.SPECIFICATION_TITLE);
+            }
+            if (specificationVendor == null) {
+                specificationVendor
+                    = mainAttributes.getValue(Name.SPECIFICATION_VENDOR);
+            }
+            if (specificationVersion == null) {
+                specificationVersion
+                    = mainAttributes.getValue(Name.SPECIFICATION_VERSION);
+            }
+            if (implementationTitle == null) {
+                implementationTitle
+                    = mainAttributes.getValue(Name.IMPLEMENTATION_TITLE);
+            }
+            if (implementationVendor == null) {
+                implementationVendor
+                    = mainAttributes.getValue(Name.IMPLEMENTATION_VENDOR);
+            }
+            if (implementationVersion == null) {
+                implementationVersion
+                    = mainAttributes.getValue(Name.IMPLEMENTATION_VERSION);
+            }
+            if (sealedString == null) {
+                sealedString
+                    = mainAttributes.getValue(Name.SEALED);
+            }
+        }
+
+        if (sealedString != null && sealedString.equalsIgnoreCase("true")) {
+            try {
+                // XXX should be using FileUtils!
+                sealBase = new URL("file:" + container.getPath());
+            } catch (MalformedURLException e) {
+                // ignore
+            }
+        }
+
+        definePackage(packageName, specificationTitle, specificationVersion,
+                      specificationVendor, implementationTitle,
+                      implementationVersion, implementationVendor, sealBase);
+    }
+
 
     /**
      * Reads a class definition from a stream.

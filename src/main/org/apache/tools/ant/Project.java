@@ -33,7 +33,6 @@ import java.util.Set;
 import java.util.HashSet;
 import org.apache.tools.ant.input.DefaultInputHandler;
 import org.apache.tools.ant.input.InputHandler;
-import org.apache.tools.ant.loader.AntClassLoader2;
 import org.apache.tools.ant.helper.DefaultExecutor;
 import org.apache.tools.ant.helper.KeepGoingExecutor;
 import org.apache.tools.ant.types.FilterSet;
@@ -43,7 +42,6 @@ import org.apache.tools.ant.types.Path;
 import org.apache.tools.ant.util.FileUtils;
 import org.apache.tools.ant.util.JavaEnvUtils;
 import org.apache.tools.ant.util.StringUtils;
-
 
 /**
  * Central representation of an Ant project. This class defines an
@@ -56,7 +54,6 @@ import org.apache.tools.ant.util.StringUtils;
  * file paths at runtime.
  *
  */
-
 public class Project {
     /** Message priority of &quot;error&quot;. */
     public static final int MSG_ERR = 0;
@@ -270,7 +267,7 @@ public class Project {
      * @return an appropriate classloader.
      */
     public AntClassLoader createClassLoader(Path path) {
-        AntClassLoader loader = new AntClassLoader2();
+        AntClassLoader loader = new AntClassLoader();
         loader.setProject(this);
         loader.setClassPath(path);
         return loader;
