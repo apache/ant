@@ -988,6 +988,8 @@
                    unless="tests.and.ant.share.classloader" />
           <exclude name="${optional.package}/sos/SOSTest.java"
                    unless="tests.and.ant.share.classloader" />
+          <exclude name="${optional.package}/TraXLiaisonTest.java"
+                   unless="tests.and.ant.share.classloader" />
 
           <!-- failure of this test case kills the current JVM
           so until the defect is actually fixed it is taken
