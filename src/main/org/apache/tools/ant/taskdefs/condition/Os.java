@@ -73,6 +73,8 @@ public class Os implements Condition {
         if (family != null) {
             if (family.equals("windows")) {
                 return osName.indexOf("windows") > -1;
+            } else if (family.equals("netware")) {
+                return osName.indexOf("netware") > -1;
             } else if (family.equals("dos")) {
                 return pathSep.equals(";");
             } else if (family.equals("mac")) {
