@@ -119,7 +119,12 @@ public class JXPath extends Task {
         public boolean setProperty( String ns, String name, Object v, boolean inh,
                                     boolean user, boolean isNew)
         {
-            return false;
+            if( ! name.startsWith(PREFIX) )
+                return false;
+            name=name.substring( PREFIX.length() );
+
+            jxpathCtx.setValue( name, v );
+            return true;
         }
 
         public Object getPropertyHook( String ns, String name , boolean user) {
