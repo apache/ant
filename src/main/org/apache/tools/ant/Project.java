@@ -253,6 +253,11 @@ public class Project {
     /** Instance of a utility class to use for file operations. */
     private FileUtils fileUtils;
 
+    /** 
+     * Flag which catches Listeners which try to use System.out or System.err 
+     */
+    private boolean loggingMessage = false;
+    
     /**
      * Creates a new Ant project.
      */
@@ -2055,9 +2060,18 @@ public class Project {
                                         int priority) {
         event.setMessage(message, priority);
         Vector listeners = getBuildListeners();
-        for (int i = 0; i < listeners.size(); i++) {
-            BuildListener listener = (BuildListener) listeners.elementAt(i);
-            listener.messageLogged(event);
+        synchronized(this) {
+            if (loggingMessage) {
+                throw new BuildException("Listener attempted to access " 
+                    + (priority == MSG_ERR ? "System.err" : "System.out") 
+                    + " - infinite loop terminated");
+            }
+            loggingMessage = true;                
+            for (int i = 0; i < listeners.size(); i++) {
+                BuildListener listener = (BuildListener) listeners.elementAt(i);
+                listener.messageLogged(event);
+            }
+            loggingMessage = false;
         }
     }
 

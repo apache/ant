@@ -336,6 +336,14 @@ If you wish to attach a listener from the command line you may use the
 <p>will run Ant with a listener that generates an XML representation of the build progress. This
 listener is included with Ant, as is the default listener, which generates the logging to standard output.</p>
 
+<p><b>Note: </b>A listener must not access System.out and System.err directly since ouput on 
+these streams is redirected by Ant's core to the build event system. Accessing these 
+streams can cause an infinite loop in Ant. Depending on the version of Ant, this will
+either cause the build to terminate or the Java VM to run out of Stack space. A logger, also, may 
+not access System.out and System.err directly. It must use the streams with which it has
+been configured.
+</p>
+
 <hr>
 <h2><a name="integration">Source code integration</a></h2>
 
