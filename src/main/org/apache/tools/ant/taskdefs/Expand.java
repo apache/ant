@@ -146,7 +146,7 @@ public class Expand extends Task {
      * This method is to be overridden by extending unarchival tasks.
      */
     protected void expandFile(FileUtils fileUtils, File srcF, File dir) {
-        log("Expanding: " + srcF + " into " + dir, Project.MSG_INFO);        
+        log("Expanding: " + srcF + " into " + dir, Project.MSG_INFO);
         ZipInputStream zis = null;
         try {
             // code from WarExpand
@@ -186,7 +186,7 @@ public class Expand extends Task {
                 String[] incls = p.getIncludePatterns(project);
                 if (incls != null) {
                     for (int w = 0; w < incls.length; w++) {
-                        boolean isIncl = 
+                        boolean isIncl =
                             DirectoryScanner.match(incls[w], name);
                         if (isIncl) {
                             included = true;
@@ -197,7 +197,7 @@ public class Expand extends Task {
                 String[] excls = p.getExcludePatterns(project);
                 if (excls != null) {
                     for (int w = 0; w < excls.length; w++) {
-                        boolean isExcl = 
+                        boolean isExcl =
                             DirectoryScanner.match(excls[w], name);
                         if (isExcl) {
                             included = false;
@@ -225,7 +225,9 @@ public class Expand extends Task {
                 Project.MSG_VERBOSE);
             // create intermediary directories - sometimes zip don't add them
             File dirF = fileUtils.getParentFile(f);
-            dirF.mkdirs();
+            if ( dirF != null ) {
+                dirF.mkdirs();
+            }
 
             if (isDirectory) {
                 f.mkdirs();
