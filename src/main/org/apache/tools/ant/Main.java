@@ -735,6 +735,8 @@ public class Main {
         msg.append("  -help                  print this message" + lSep);
         msg.append("  -projecthelp           print project help information" + lSep);
         msg.append("  -version               print the version information and exit" + lSep);
+        msg.append("  -diagnostics           print information that might be helpful to" + lSep);
+        msg.append("                         diagnose or report problems." + lSep);
         msg.append("  -quiet, -q             be extra quiet" + lSep);
         msg.append("  -verbose, -v           be extra verbose" + lSep);
         msg.append("  -debug                 print debugging information" + lSep);

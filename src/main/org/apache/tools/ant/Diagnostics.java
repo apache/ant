@@ -56,11 +56,12 @@ package org.apache.tools.ant;
 import java.io.File;
 import java.io.FilenameFilter;
 import java.io.PrintStream;
+import java.io.InputStream;
+import java.io.IOException;
 import java.util.Enumeration;
+import java.util.Properties;
 import java.lang.reflect.Method;
 import java.lang.reflect.InvocationTargetException;
-
-import org.apache.tools.ant.util.JavaEnvUtils;
 
 /**
  * A little diagnostic helper that output some information that may help
@@ -193,31 +194,62 @@ public final class Diagnostics {
         out.println("-------------------------------------------");
         out.println(" ANT_HOME/lib jar listing");
         out.println("-------------------------------------------");
+        doReportLibraries(out);
+
+        out.println();
+        out.println("-------------------------------------------");
+        out.println(" Tasks availability");
+        out.println("-------------------------------------------");
+        doReportTasksAvailability(out);
+
+        out.println();
+        out.println("-------------------------------------------");
+        out.println(" org.apache.env.Which diagnostics");
+        out.println("-------------------------------------------");
+        doReportWhich(out);
+
+        out.println();
+        out.println("-------------------------------------------");
+        out.println(" System properties");
+        out.println("-------------------------------------------");
+        doReportSystemProperties(out);
+
+        out.println();
+    }
+
+    /**
+     * Report a listing of system properties existing in the current vm.
+     * @param out the stream to print the properties to.
+     */
+    private static void doReportSystemProperties(PrintStream out){
+        for( Enumeration keys = System.getProperties().keys();
+            keys.hasMoreElements(); ){
+            String key = (String)keys.nextElement();
+            out.println(key + " : " + System.getProperty(key));
+        }
+    }
+
+
+    /**
+     * Report the content of ANT_HOME/lib directory
+     * @param out the stream to print the content to
+     */
+    private static void doReportLibraries(PrintStream out){
         File[] libs = listLibraries();
         for (int i = 0; i < libs.length; i++){
             out.println(libs[i].getName()
                     + " (" + libs[i].length() + " bytes)");
         }
+    }
 
-/*
-        out.println();
-        out.println("-------------------------------------------");
-        out.println(" Core tasks availability");
-        out.println("-------------------------------------------");
-        Properties props = new Properties();
-        InputStream is = Main.class.getResourceAsStream("org/apache/tools/ant/taskdefs/default.properties");
 
-        out.println();
-        out.println("-------------------------------------------");
-        out.println(" Optional tasks availability");
-        out.println("-------------------------------------------");
-*/
-        out.println();
+    /**
+     * Call org.apache.env.Which if available
+     * @param out the stream to print the content to.
+     */
+    private static void doReportWhich(PrintStream out){
         Throwable error = null;
         try {
-            out.println("-------------------------------------------");
-            out.println(" org.apache.env.Which diagnostics");
-            out.println("-------------------------------------------");
             Class which = Class.forName("org.apache.env.Which");
             Method method = which.getMethod("main", new Class[]{ String[].class });
             method.invoke(null, new Object[]{new String[]{}});
@@ -234,40 +266,42 @@ public final class Diagnostics {
             out.println("Error while running org.apache.env.Which");
             error.printStackTrace();
         }
-
-        out.println();
-        out.println("-------------------------------------------");
-        out.println(" System properties");
-        out.println("-------------------------------------------");
-        for( Enumeration keys = System.getProperties().keys();
-            keys.hasMoreElements(); ){
-            String key = (String)keys.nextElement();
-            out.println(key + " : " + System.getProperty(key));
-        }
-
-        out.println();
     }
 
-/*
-    private void doReportTasksAvailability(PrintStream out, InputStream in) {
+    /**
+     * Create a report about non-available tasks that are defined in the
+     * mapping but could not be found via lookup. It might generally happen
+     * because Ant requires multiple libraries to compile and one of them
+     * was missing when compiling Ant.
+     * @param out the stream to print the tasks report to
+     * @param is the stream defining the mapping task name/classname, can be
+     * <tt>null</tt> for a missing stream (ie mapping).
+     */
+    private static void doReportTasksAvailability(PrintStream out){
+        InputStream is = Main.class.getResourceAsStream("/org/apache/tools/ant/taskdefs/defaults.properties");
         if (is == null) {
             out.println("None available");
         } else {
-            props.load(is);
-            for (Enumeration keys = props.keys(); keys.hasMoreElements();){
-                String key = (String)keys.nextElement();
-                String classname = props.getProperty(key);
-                try {
-                    Class.forName(classname);
-                    props.remove(key);
-                } catch (ClassNotFoundException e){
-                    out.println(classname + " : Not Available");
+            Properties props = new Properties();
+            try {
+                props.load(is);
+                for (Enumeration keys = props.keys(); keys.hasMoreElements();){
+                    String key = (String)keys.nextElement();
+                    String classname = props.getProperty(key);
+                    try {
+                        Class.forName(classname);
+                        props.remove(key);
+                    } catch (ClassNotFoundException e){
+                        out.println(key + " : Not Available");
+                    }
                 }
+                if (props.size() == 0){
+                    out.println("All defined tasks are available");
+                }
+            } catch (IOException e){
+                out.println(e.getMessage());
             }
-            if (props.size() == 0){
-                out.println("All defined tasks are available");
-            }          
-        }      
-    } */
+        }
+    }
 
 }
