@@ -104,8 +104,7 @@ public class ExtendSelector extends BaseSelector {
                 } else {
                     AntClassLoader al
                             = getProject().createClassLoader(classpath);
-                    c = al.loadClass(classname);
-                    AntClassLoader.initializeClass(c);
+                    c = Class.forName(classname, true, al);
                 }
                 dynselector = (FileSelector) c.newInstance();
                 final Project project = getProject();

@@ -235,7 +235,7 @@ public class XMLValidateTask extends Task {
      * Add an attribute nested element. This is used for setting arbitrary
      * features of the SAX parser.
      * Valid attributes
-     * <a href=http://www.saxproject.org/apidoc/org/xml/sax/package-summary.html#package_description">include</a>
+     * <a href="http://www.saxproject.org/apidoc/org/xml/sax/package-summary.html#package_description">include</a>
      * @since ant1.6
      */
     public Attribute createAttribute() {
@@ -323,8 +323,7 @@ public class XMLValidateTask extends Task {
                 if (classpath != null) {
                     AntClassLoader loader
                         = getProject().createClassLoader(classpath);
-                    readerClass = loader.loadClass(readerClassName);
-                    AntClassLoader.initializeClass(readerClass);
+                    readerClass = Class.forName(readerClassName, true, loader);
                 } else {
                     readerClass = Class.forName(readerClassName);
                 }

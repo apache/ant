@@ -174,8 +174,7 @@ public final class ChainReaderHelper {
                             } else {
                                 AntClassLoader al
                                     = project.createClassLoader(classpath);
-                                clazz = al.loadClass(className);
-                                AntClassLoader.initializeClass(clazz);
+                                clazz = Class.forName(className, true, al);
                             }
                             if (clazz != null) {
                                 if (!FilterReader.class.isAssignableFrom(clazz)) {

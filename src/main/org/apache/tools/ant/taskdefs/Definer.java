@@ -513,18 +513,15 @@ public abstract class Definer extends Task {
         try {
             try {
                 if (onError != OnError.IGNORE) {
-                    cl = al.loadClass(classname);
-                    AntClassLoader.initializeClass(cl);
+                    cl = Class.forName(classname, true, al);
                 }
 
                 if (adapter != null) {
-                    adapterClass = al.loadClass(adapter);
-                    AntClassLoader.initializeClass(adapterClass);
+                    adapterClass = Class.forName(adapter, true, al);
                 }
 
                 if (adaptTo != null) {
-                    adaptToClass = al.loadClass(adaptTo);
-                    AntClassLoader.initializeClass(adaptToClass);
+                    adaptToClass = Class.forName(adaptTo, true, al);
                 }
 
                 AntTypeDefinition def = new AntTypeDefinition();

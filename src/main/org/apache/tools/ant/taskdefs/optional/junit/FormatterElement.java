@@ -65,7 +65,7 @@ import org.apache.tools.ant.types.EnumeratedAttribute;
 /**
  * <p> A wrapper for the implementations of <code>JUnitResultFormatter</code>.
  * In particular, used as a nested <code>&lt;formatter&gt;</code> element in a <code>&lt;junit&gt;</code> task.
- * <p> For example, 
+ * <p> For example,
  * <code><pre>
  *       &lt;junit printsummary="no" haltonfailure="yes" fork="false"&gt;
  *           &lt;formatter type="plain" usefile="false" /&gt;
@@ -74,7 +74,7 @@ import org.apache.tools.ant.types.EnumeratedAttribute;
  * adds a <code>plain</code> type implementation (<code>PlainJUnitResultFormatter</code>) to display the results of the test.
  *
  * <p> Either the <code>type</code> or the <code>classname</code> attribute
- * must be set. 
+ * must be set.
  *
  * @author Stefan Bodewig
  * @author <a href="http://nerdmonkey.com">Eli Tucker</a>
@@ -179,14 +179,14 @@ public class FormatterElement {
 
     /**
      * Set whether this formatter should be used.  It will be
-     * used if the property has been set, otherwise it won't.  
+     * used if the property has been set, otherwise it won't.
      * @param ifProperty name of property
      */
     public void setIf(String ifProperty)
     {
         this.ifProperty = ifProperty;
     }
-    
+
     /**
      * Set whether this formatter should NOT be used. It
      * will not be used if the property has been set, orthwise it
@@ -201,11 +201,11 @@ public class FormatterElement {
     /**
      * Ensures that the selector passes the conditions placed
      * on it with <code>if</code> and <code>unless</code> properties.
-     */    
+     */
     public boolean shouldUse(Task t) {
         if (ifProperty != null && t.getProject().getProperty(ifProperty) == null) {
             return false;
-        } else if (unlessProperty != null && 
+        } else if (unlessProperty != null &&
                    t.getProject().getProperty(unlessProperty) != null) {
             return false;
         }
@@ -223,20 +223,19 @@ public class FormatterElement {
     /**
      * @since Ant 1.6
      */
-    JUnitResultFormatter createFormatter(ClassLoader loader) 
+    JUnitResultFormatter createFormatter(ClassLoader loader)
         throws BuildException {
 
         if (classname == null) {
             throw new BuildException("you must specify type or classname");
         }
-        
+
         Class f = null;
         try {
             if (loader == null) {
                 f = Class.forName(classname);
             } else {
-                f = loader.loadClass(classname);
-                AntClassLoader.initializeClass(f);
+                f = Class.forName(classname, true, loader);
             }
         } catch (ClassNotFoundException e) {
             throw new BuildException(e);
@@ -252,7 +251,7 @@ public class FormatterElement {
         }
 
         if (!(o instanceof JUnitResultFormatter)) {
-            throw new BuildException(classname 
+            throw new BuildException(classname
                 + " is not a JUnitResultFormatter");
         }
 
@@ -271,7 +270,7 @@ public class FormatterElement {
 
     /**
      * <p> Enumerated attribute with the values "plain", "xml" and "brief".
-     * 
+     *
      * <p> Use to enumerate options for <code>type</code> attribute.
      */
     public static class TypeAttribute extends EnumeratedAttribute {

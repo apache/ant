@@ -84,7 +84,7 @@ import org.apache.tools.ant.util.TeeOutputStream;
  *
  * <p>This TestRunner expects a name of a TestCase class as its
  * argument. If this class provides a static suite() method it will be
- * called and the resulting Test will be run. So, the signature should be 
+ * called and the resulting Test will be run. So, the signature should be
  * <pre><code>
  *     public static junit.framework.Test suite()
  * </code></pre>
@@ -92,7 +92,7 @@ import org.apache.tools.ant.util.TeeOutputStream;
  * <p> If no such method exists, all public methods starting with
  * "test" and taking no argument will be run.
  *
- * <p> Summary output is generated at the end. 
+ * <p> Summary output is generated at the end.
  *
  * @author Stefan Bodewig
  * @author <a href="mailto:ehatcher@apache.org">Erik Hatcher</a>
@@ -131,7 +131,7 @@ public class JUnitTestRunner implements TestListener {
      * Do we filter junit.*.* stack frames out of failure and error exceptions.
      */
     private static boolean filtertrace = true;
-    
+
     /**
      * Do we send output to System.out/.err in addition to the formatters?
      */
@@ -149,7 +149,7 @@ public class JUnitTestRunner implements TestListener {
                 "org.apache.tools.ant."
         };
 
-    
+
     /**
      * Do we stop on errors.
      */
@@ -182,27 +182,27 @@ public class JUnitTestRunner implements TestListener {
 
     /** output written during the test */
     private PrintStream systemError;
-    
+
     /** Error output during the test */
-    private PrintStream systemOut;    
-    
+    private PrintStream systemOut;
+
     /** is this runner running in forked mode? */
     private boolean forked = false;
 
     /**
      * Constructor for fork=true or when the user hasn't specified a
-     * classpath.  
+     * classpath.
      */
-    public JUnitTestRunner(JUnitTest test, boolean haltOnError, 
+    public JUnitTestRunner(JUnitTest test, boolean haltOnError,
                            boolean filtertrace, boolean haltOnFailure) {
         this(test, haltOnError, filtertrace, haltOnFailure, false);
     }
 
     /**
      * Constructor for fork=true or when the user hasn't specified a
-     * classpath.  
+     * classpath.
      */
-    public JUnitTestRunner(JUnitTest test, boolean haltOnError, 
+    public JUnitTestRunner(JUnitTest test, boolean haltOnError,
                            boolean filtertrace, boolean haltOnFailure,
                            boolean showOutput) {
         this(test, haltOnError, filtertrace, haltOnFailure, showOutput, null);
@@ -211,8 +211,8 @@ public class JUnitTestRunner implements TestListener {
     /**
      * Constructor to use when the user has specified a classpath.
      */
-    public JUnitTestRunner(JUnitTest test, boolean haltOnError, 
-                           boolean filtertrace, boolean haltOnFailure, 
+    public JUnitTestRunner(JUnitTest test, boolean haltOnError,
+                           boolean filtertrace, boolean haltOnFailure,
                            ClassLoader loader) {
         this(test, haltOnError, filtertrace, haltOnFailure, false, loader);
     }
@@ -220,8 +220,8 @@ public class JUnitTestRunner implements TestListener {
     /**
      * Constructor to use when the user has specified a classpath.
      */
-    public JUnitTestRunner(JUnitTest test, boolean haltOnError, 
-                           boolean filtertrace, boolean haltOnFailure, 
+    public JUnitTestRunner(JUnitTest test, boolean haltOnError,
+                           boolean filtertrace, boolean haltOnFailure,
                            boolean showOutput, ClassLoader loader) {
         this.filtertrace = filtertrace;
         this.junitTest = test;
@@ -234,10 +234,9 @@ public class JUnitTestRunner implements TestListener {
             if (loader == null) {
                 testClass = Class.forName(test.getName());
             } else {
-                testClass = loader.loadClass(test.getName());
-                AntClassLoader.initializeClass(testClass);
+                testClass = Class.forName(test.getName(), true, loader);
             }
-            
+
             Method suiteMethod = null;
             try {
                 // check if there is a suite method
@@ -258,7 +257,7 @@ public class JUnitTestRunner implements TestListener {
                 // this will generate warnings if the class is no suitable Test
                 suite = new TestSuite(testClass);
             }
-            
+
         } catch (Exception e) {
             retCode = ERRORS;
             exception = e;
@@ -277,7 +276,7 @@ public class JUnitTestRunner implements TestListener {
         fireStartTestSuite();
         if (exception != null) { // had an exception in the constructor
             for (int i = 0; i < formatters.size(); i++) {
-                ((TestListener) formatters.elementAt(i)).addError(null, 
+                ((TestListener) formatters.elementAt(i)).addError(null,
                                                                  exception);
             }
             junitTest.setCounts(1, 0, 1);
@@ -287,7 +286,7 @@ public class JUnitTestRunner implements TestListener {
 
             ByteArrayOutputStream errStrm = new ByteArrayOutputStream();
             systemError = new PrintStream(errStrm);
-            
+
             ByteArrayOutputStream outStrm = new ByteArrayOutputStream();
             systemOut = new PrintStream(outStrm);
 
@@ -306,13 +305,13 @@ public class JUnitTestRunner implements TestListener {
                                       )
                                   );
                     System.setErr(new PrintStream(
-                                      new TeeOutputStream(savedErr, 
+                                      new TeeOutputStream(savedErr,
                                                           systemError)
                                       )
                                   );
                 }
             }
-            
+
 
             try {
                 suite.run(res);
@@ -323,7 +322,7 @@ public class JUnitTestRunner implements TestListener {
                 if (savedErr != null) {
                     System.setErr(savedErr);
                 }
-                
+
                 systemError.close();
                 systemError = null;
                 systemOut.close();
@@ -331,7 +330,7 @@ public class JUnitTestRunner implements TestListener {
                 sendOutAndErr(new String(outStrm.toByteArray()),
                               new String(errStrm.toByteArray()));
 
-                junitTest.setCounts(res.runCount(), res.failureCount(), 
+                junitTest.setCounts(res.runCount(), res.failureCount(),
                                     res.errorCount());
                 junitTest.setRunTime(System.currentTimeMillis() - start);
             }
@@ -404,40 +403,40 @@ public class JUnitTestRunner implements TestListener {
             systemOut.println(line);
         }
     }
-    
+
     /**
      * @see Task#handleInput(byte[], int, int)
-     * 
+     *
      * @since Ant 1.6
      */
-    protected int handleInput(byte[] buffer, int offset, int length) 
+    protected int handleInput(byte[] buffer, int offset, int length)
         throws IOException {
         return -1;
     }
-    
+
     protected void handleErrorOutput(String line) {
         if (systemError != null) {
             systemError.println(line);
         }
     }
-    
+
     protected void handleFlush(String line) {
         if (systemOut != null) {
             systemOut.print(line);
         }
     }
-    
+
     protected void handleErrorFlush(String line) {
         if (systemError != null) {
             systemError.print(line);
         }
     }
-    
+
     private void sendOutAndErr(String out, String err) {
         for (int i = 0; i < formatters.size(); i++) {
-            JUnitResultFormatter formatter = 
+            JUnitResultFormatter formatter =
                 ((JUnitResultFormatter) formatters.elementAt(i));
-            
+
             formatter.setSystemOutput(out);
             formatter.setSystemError(err);
         }
@@ -483,7 +482,7 @@ public class JUnitTestRunner implements TestListener {
      * <tr><td>showoutput</td><td>send output to System.err/.out as
      * well as to the formatters?</td><td>false</td></tr>
      *
-     * </table> 
+     * </table>
      */
     public static void main(String[] args) throws IOException {
         boolean haltError = false;
@@ -520,9 +519,9 @@ public class JUnitTestRunner implements TestListener {
                 showOut = Project.toBoolean(args[i].substring(11));
             }
         }
-        
+
         JUnitTest t = new JUnitTest(args[0]);
-        
+
         // Add/overlay system properties on the properties from the Ant project
         Hashtable p = System.getProperties();
         for (Enumeration enum = p.keys(); enum.hasMoreElements();) {
@@ -563,7 +562,7 @@ public class JUnitTestRunner implements TestListener {
         }
         fromCmdLine.addElement(fe.createFormatter());
     }
-    
+
     /**
      * Returns a filtered stack trace.
      * This is ripped out of junit.runner.BaseTestRunner.
@@ -607,5 +606,5 @@ public class JUnitTestRunner implements TestListener {
         }
         return false;
     }
-    
+
 } // JUnitTestRunner

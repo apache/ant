@@ -486,12 +486,11 @@ public class Available extends Task implements Condition {
                 // Can return null to represent the bootstrap class loader.
                 // see API docs of Class.getClassLoader.
                 if (l != null) {
-                    requiredClass = l.loadClass(classname);
+                    requiredClass = Class.forName(classname, true, l);
                 } else {
                     requiredClass = Class.forName(classname);
                 }
             }
-            AntClassLoader.initializeClass(requiredClass);
             return true;
         } catch (ClassNotFoundException e) {
             log("class \"" + classname + "\" was not found",

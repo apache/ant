@@ -138,8 +138,8 @@ public class ExecuteJava implements Runnable, TimeoutObserver {
                 loader.addJavaLibraries();
                 loader.setIsolated(true);
                 loader.setThreadContextLoader();
-                target = loader.forceLoadClass(classname);
-                AntClassLoader.initializeClass(target);
+                loader.forceLoadClass(classname);
+                target = Class.forName(classname, true, loader);
             }
             main = target.getMethod("main", param);
             if (main == null) {
