@@ -51,7 +51,7 @@ public class DefaultProjectBuilder
      * @exception IOException if an error occurs
      * @exception Exception if an error occurs
      */
-    public Project build( final String source, final Parameters parameters )
+    public Project build( final String source )
         throws Exception
     {
         final File file = new File( source );
@@ -62,25 +62,15 @@ public class DefaultProjectBuilder
         throws Exception
     {
         final String systemID = file.toURL().toString();
-
-        Project result = (Project)projects.get( systemID );
+        final Project result = (Project)projects.get( systemID );
         if( null != result )
         {
             return result;
         }
 
-        final SAXParserFactory saxParserFactory = SAXParserFactory.newInstance();
-        final SAXParser saxParser = saxParserFactory.newSAXParser();
-        final XMLReader parser = saxParser.getXMLReader();
-        parser.setFeature( "http://xml.org/sax/features/namespace-prefixes", false );
-        parser.setFeature( "http://xml.org/sax/features/namespaces", false );
-        //parser.setFeature( "http://xml.org/sax/features/validation", false );
-
         final SAXConfigurationHandler handler = new SAXConfigurationHandler();
-        parser.setContentHandler( handler );
-        parser.setErrorHandler( handler );
 
-        parser.parse( systemID );
+        process( systemID, handler );
 
         final Configuration configuration = handler.getConfiguration();
         final DefaultProject project = buildProject( file, configuration );
@@ -91,6 +81,34 @@ public class DefaultProjectBuilder
         buildTopLevelProject( project, configuration, projects );
 
         return project;
+    }
+
+    protected void process( final String systemID, 
+                            final SAXConfigurationHandler handler )
+        throws Exception
+    {
+        final SAXParserFactory saxParserFactory = SAXParserFactory.newInstance();
+        final SAXParser saxParser = saxParserFactory.newSAXParser();
+        final XMLReader parser = saxParser.getXMLReader();
+        parser.setFeature( "http://xml.org/sax/features/namespace-prefixes", false );
+        parser.setFeature( "http://xml.org/sax/features/namespaces", false );
+        //parser.setFeature( "http://xml.org/sax/features/validation", false );
+
+        parser.setContentHandler( handler );
+        parser.setErrorHandler( handler );
+        parser.parse( systemID );
+/*
+        // Create a transform factory instance.
+        final TransformerFactory factory = TransformerFactory.newInstance();
+    
+        // Create a transformer for the stylesheet.
+        final Transformer transformer = factory.newTransformer( new StreamSource(xslID) );
+
+        final Result result = new SAXResult( handler );
+
+        // Transform the source XML to System.out.
+        transformer.transform( new StreamSource(sourceID), result );
+*/
     }
 
     /**
@@ -139,7 +157,7 @@ public class DefaultProjectBuilder
      * @param configuration the Configuration
      * @exception Exception if an error occurs
      */
-    private void buildTopLevelProject( final DefaultProject project,
+    private void buildTopLevelProject( final DefaultProject project, 
                                        final Configuration configuration,
                                        final HashMap projects )
         throws Exception
