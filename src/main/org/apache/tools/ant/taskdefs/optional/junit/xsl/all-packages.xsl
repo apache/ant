@@ -1,9 +1,6 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-
-<!-- This style sheet should contain just a named templates that used in the other specific templates -->
 <xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
 
-<!-- import the commun templates -->
 <xsl:include href="toolkit.xsl"/>
 
 <xsl:template match="testsuites">
