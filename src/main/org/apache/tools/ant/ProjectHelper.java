@@ -362,11 +362,11 @@ public class ProjectHelper {
         }
 
         private void handleTaskdef(String name, AttributeList attrs) throws SAXParseException {
-            (new TaskHandler(this, null, null)).init(name, attrs);
+            (new TaskHandler(this, null, null, null)).init(name, attrs);
         }
 
         private void handleProperty(String name, AttributeList attrs) throws SAXParseException {
-            (new TaskHandler(this, null, null)).init(name, attrs);
+            (new TaskHandler(this, null, null, null)).init(name, attrs);
         }
 
         private void handleTarget(String tag, AttributeList attrs) throws SAXParseException {
@@ -443,7 +443,7 @@ public class ProjectHelper {
             if (project.getDataTypeDefinitions().get(name) != null) {
                 new DataTypeHandler(this, target).init(name, attrs);
             } else {
-                new TaskHandler(this, target, target).init(name, attrs);
+                new TaskHandler(this, target, null, target).init(name, attrs);
             }
         }
     }
@@ -455,11 +455,13 @@ public class ProjectHelper {
         private Target target;
         private TaskContainer container;
         private Task task;
+        private RuntimeConfigurable parentWrapper;
         private RuntimeConfigurable wrapper = null;
 
-        public TaskHandler(DocumentHandler parentHandler, TaskContainer container, Target target) {
+        public TaskHandler(DocumentHandler parentHandler, TaskContainer container, RuntimeConfigurable parentWrapper, Target target) {
             super(parentHandler);
             this.container = container;
+            this.parentWrapper = parentWrapper;
             this.target = target;
         }
 
@@ -488,6 +490,8 @@ public class ProjectHelper {
                 task.init();
                 wrapper = task.getRuntimeConfigurableWrapper();
                 wrapper.setAttributes(attrs);
+                if (parentWrapper != null)
+                  parentWrapper.addChild(wrapper);
             } else {
                 task.init();
                 configure(task, attrs, project);
@@ -515,7 +519,7 @@ public class ProjectHelper {
         public void startElement(String name, AttributeList attrs) throws SAXParseException {
             if (task instanceof TaskContainer) {
                 // task can contain other tasks - no other nested elements possible
-                new TaskHandler(this, (TaskContainer)task, target).init(name, attrs);
+                new TaskHandler(this, (TaskContainer)task, wrapper, target).init(name, attrs);
             }
             else {
                 new NestedElementHandler(this, task, wrapper, target).init(name, attrs);
@@ -593,7 +597,7 @@ public class ProjectHelper {
             if (child instanceof TaskContainer) {
                 // taskcontainer nested element can contain other tasks - no other 
                 // nested elements possible
-                new TaskHandler(this, (TaskContainer)child, target).init(name, attrs);
+                new TaskHandler(this, (TaskContainer)child, childWrapper, target).init(name, attrs);
             }
             else {
                 new NestedElementHandler(this, child, childWrapper, target).init(name, attrs);
