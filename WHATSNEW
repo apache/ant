@@ -148,7 +148,7 @@ Other changes:
 
 * New tasks <replaceregexp>, <checksum>, <translate>, <waitfor>, 
   <manifest>, <vsscp>, <vssadd>, <vsscreate>, <splash>, <basename>, <dirname>,
-  <concat>, <do>.
+  <concat>.
 
 * A new combined <mail> task, which replaces the old <mail> and
   <mimemail> tasks, has been added.  The <mimemail> task, and 
