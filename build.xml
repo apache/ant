@@ -1209,6 +1209,9 @@
           <!-- DateTime handling seems to be broken in JDK 1.1 -->
           <exclude name="${util.package}/DateUtilsTest.java"
                    unless="jdk1.2+" />
+          <!-- test needs a working touch task -->
+          <exclude name="${optional.package}/depend/DependTest.java"
+                   unless="jdk1.2+" />
 
           <exclude name="${optional.package}/JspcTest.java"
                    unless="jasper.present" />
