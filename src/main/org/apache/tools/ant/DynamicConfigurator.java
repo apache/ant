@@ -61,7 +61,8 @@ package org.apache.tools.ant;
  * @since Ant 1.5
  */
 public interface DynamicConfigurator {
-    public void setDynamicAttribute(String name, String value);
+    public void setDynamicAttribute(String name, String value)
+            throws BuildException;
 
-    public Object createDynamicElement(String name);
+    public Object createDynamicElement(String name) throws BuildException;
 }
