@@ -91,7 +91,8 @@ Note: This document was created in the context of releasing Ant 1.5.
     This would eliminate the need to release minor patch versions like
     we had to do when releasing Ant 1.4.  
     
-    [[TODO: Document how to monitor the number of downloads ]]
+    To monitor the number of downloads, look at the access_log
+    file under /usr/local/apache2/logs
 
 15. When the final beta is considered OK, propose a vote on ant-dev to 
     officially adopt the latest beta as the Ant 1.5 release. If it is passed, 
