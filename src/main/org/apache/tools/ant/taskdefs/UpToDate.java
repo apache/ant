@@ -23,7 +23,7 @@
  *    Alternately, this acknowlegement may appear in the software itself,
  *    if and wherever such third-party acknowlegements normally appear.
  *
- * 4. The names "The Jakarta Project", "Tomcat", and "Apache Software
+ * 4. The names "The Jakarta Project", "Ant", and "Apache Software
  *    Foundation" must not be used to endorse or promote products derived
  *    from this software without prior written permission. For written
  *    permission, please contact apache@apache.org.
@@ -77,6 +77,8 @@ public class UpToDate extends MatchingTask {
     private File _targetFile;
     private Vector sourceFileSets = new Vector();
 
+    protected Mapper mapperElement = null;
+
     /**
      * The property to set if the target file is more up to date than each of
      * the source files.
@@ -98,15 +100,27 @@ public class UpToDate extends MatchingTask {
     }
 
     /**
-     * Nested <srcfiles> element.
+     * Nested &lt;srcfiles&gt; element.
      */
     public void addSrcfiles(FileSet fs) {
         sourceFileSets.addElement(fs);
     }
 
     /**
-     * Sets property to true if target file has a more recent timestamp than
-     * each of the source files.
+     * Defines the FileNameMapper to use (nested mapper element).
+     */
+    public Mapper createMapper() throws BuildException {
+        if (mapperElement != null) {
+            throw new BuildException("Cannot define more than one mapper",
+                                     location);
+        }
+        mapperElement = new Mapper(project);
+        return mapperElement;
+    }
+
+    /**
+     * Sets property to true if target files have a more recent timestamp than
+     * each of the corresponding source files.
      */
     public void execute() throws BuildException {
 
@@ -114,33 +128,44 @@ public class UpToDate extends MatchingTask {
           throw new BuildException("At least one <srcfiles> element must be set");
         }
 
-        if (_targetFile == null) {
-          throw new BuildException("The targetfile attribute must be set");
+        if (_targetFile == null && mapperElement == null) {
+          throw new BuildException("The targetfile attribute or a nested mapper element must be set");
         }
 
         // if not there then it can't be up to date
-        if (!_targetFile.exists()) return; 
+        if (_targetFile != null && !_targetFile.exists()) return; 
 
         Enumeration enum = sourceFileSets.elements();
         boolean upToDate = true;
         while (upToDate && enum.hasMoreElements()) {
             FileSet fs = (FileSet) enum.nextElement();
             DirectoryScanner ds = fs.getDirectoryScanner(project);
-            upToDate = upToDate && scanDir(fs.getDir(project), _targetFile, 
+            upToDate = upToDate && scanDir(fs.getDir(project), 
                                            ds.getIncludedFiles());
         }
 
         if (upToDate) {
             this.project.setProperty(_property, "true");
-            log("File \"" + _targetFile.getAbsolutePath() + "\" is up to date.",
-                Project.MSG_VERBOSE);
+            if (mapperElement == null) {
+                log("File \"" + _targetFile.getAbsolutePath() + "\" is up to date.",
+                    Project.MSG_VERBOSE);
+            } else {
+                log("All target files have been up to date.",
+                    Project.MSG_VERBOSE);
+            }
         }
     }
 
-    protected boolean scanDir(File srcDir, File destFile, String files[]) {
+    protected boolean scanDir(File srcDir, String files[]) {
         SourceFileScanner sfs = new SourceFileScanner(this);
-        MergingMapper mm = new MergingMapper();
-        mm.setTo(destFile.getAbsolutePath());
-        return sfs.restrict(files, srcDir, null, mm).length == 0;
+        FileNameMapper mapper = null;
+        if (mapperElement == null) {
+            MergingMapper mm = new MergingMapper();
+            mm.setTo(_targetFile.getAbsolutePath());
+        } else {
+            mapper = mapperElement.getImplementation();
+        }
+        
+        return sfs.restrict(files, srcDir, null, mapper).length == 0;
     }
 }
