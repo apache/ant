@@ -20,6 +20,9 @@ Other changes:
 * Ant's testcases require JUnit 3.7 or above as they now use the new
   assertTrue method instead of assert.
 
+* <taskdef> and <typedef> will now emit a warning if a task/type of
+  the given name already exists.
+
 Fixed bugs:
 -----------
 
@@ -27,6 +30,8 @@ Fixed bugs:
   in ant/antcall tasks when inheritall="false" is set.
 
 * <propertyfile> would not close the original property file.
+
+* <ant> will no longer override a subbuilds basedir with inheritall="true". 
 
 Changes from Ant 1.4 to Ant 1.4.1
 ===========================================

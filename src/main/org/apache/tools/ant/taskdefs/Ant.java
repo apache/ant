@@ -160,6 +160,10 @@ public class Ant extends Task {
         Enumeration et = taskdefs.keys();
         while (et.hasMoreElements()) {
             String taskName = (String) et.nextElement();
+            if (taskName.equals("property")) {
+                // we have already added this taskdef in #init
+                continue;
+            }
             Class taskClass = (Class) taskdefs.get(taskName);
             newProject.addTaskDefinition(taskName, taskClass);
         }
@@ -224,15 +228,18 @@ public class Ant extends Task {
                 reinit();
             }
         
-            if (dir == null) {
+            if ( (dir == null) && (inheritAll == true) )
+                dir = project.getBaseDir();
+
+            if (dir != null) {
+                newProject.setBaseDir(dir);
+                newProject.setUserProperty("basedir" , dir.getAbsolutePath());
+            } else {
                 dir = project.getBaseDir();
             }
 
             initializeProject();
 
-            newProject.setBaseDir(dir);
-            newProject.setUserProperty("basedir" , dir.getAbsolutePath());
-            
             // Override with local-defined properties
             Enumeration e = properties.elements();
             while (e.hasMoreElements()) {
