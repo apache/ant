@@ -53,7 +53,7 @@
   <property name="junit.filtertrace" value="off"/>
   <property name="junit.summary" value="no"/>
   <property name="test.haltonfailure" value="yes" />
-  <property name="junit.forkstyle" value="once"/>
+  <property name="junit.forkmode" value="once"/>
   <property name="unfiltered.files" value="**/*.gif,**/*.jpg,**/*.ico,**/*.pdf,**/*.zip"/>
 
   <!--
@@ -1429,7 +1429,7 @@
 
     <junit printsummary="${junit.summary}" haltonfailure="${test.haltonfailure}"
            filtertrace="${junit.filtertrace}"
-           fork="${junit.fork}" forkstyle="${junit.forkstyle}"
+           fork="${junit.fork}" forkmode="${junit.forkmode}"
            failureproperty="tests.failed">
 <!--      <jvmarg value="-classic"/> -->
       <classpath refid="tests-classpath"/>

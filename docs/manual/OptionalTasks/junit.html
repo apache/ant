@@ -68,6 +68,24 @@ elements</a>).</p>
     <td align="center" valign="top">No; default is <code>off</code>.</td>
   </tr>
   <tr>
+    <td valign="top">forkmode</td>
+    <td valign="top">Controls how many Java Virtual Machines get
+    created if you want to fork some tests.  Possible values are
+    &quot;perTest&quot; (the default), &quot;perBatch&quot; and
+    &quot;once&quot;.  &quot;once&quot; creates only a single Java VM
+    for all tests while &quot;perTest&quot; creates a new VM for each
+    TestCase class.  &quot;perBatch&quot; creates a VM for each nested
+    <code>&lt;batchtest&gt;</code> and one collecting all nested
+    <code>&lt;test&gt;</code>s.  Note that only tests with the same
+    settings of <code>filtertrace</code>, <code>haltonerror</code>,
+    <code>haltonfailure</code>, <code>errorproperty</code> and
+    <code>failureproperty</code> can share a VM, so even if you set
+    <code>forkmode</code> to &quot;once&quot;, Ant may have to create
+    more than a single Java VM.  This attribute is ignored for tests
+    that don't get forked into a new Java VM.</td>
+    <td align="center" valign="top">No; default is <code>perTest</code>.</td>
+  </tr>
+  <tr>
     <td valign="top">haltonerror</td>
     <td valign="top">Stop the build process if an error occurs during the test
        run.</td>
