@@ -559,9 +559,6 @@
           <exclude name="org/apache/tools/ant/taskdefs/TaskdefsTest.java" />
           <exclude name="org/apache/tools/ant/util/regexp/RegexpMatcherTest.java" />
 
-          <!-- currently fails - will be sorted out soon -->
-          <exclude name="org/apache/tools/ant/types/CommandlineJavaTest.java" />
-
           <!-- these depend on order -->
           <exclude name="org/apache/tools/ant/taskdefs/GUnzipTest.java" />
           <exclude name="org/apache/tools/ant/taskdefs/GzipTest.java" />
