@@ -59,7 +59,9 @@ Legal:
   <property name="dist.lib" value="${dist.dir}/lib"/>
   <property name="dist.ext" value="${dist.dir}/ext"/>
 
-  <property name="test.classes" value="${build.dir}/test/classes"/>
+  <property name="test.dir" value="${build.dir}/test"/>
+  <property name="test.working.dir" value="${test.dir}/testcases"/>
+  <property name="test.classes" value="${test.dir}/classes"/>
 
   <property name="constants.file" value="org/apache/myrmidon/Constants.java"/>
 
@@ -111,6 +113,9 @@ Legal:
                classpathref="project.class.path" />
     <available property="netcomp.present"
                classname="com.oroinc.net.ftp.FTPClient"
+               classpathref="project.class.path" />
+    <available property="jcifs.present"
+               classname="jcifs.smb.SmbFile"
                classpathref="project.class.path" />
     <available property="starteam.present"
                classname="com.starbase.util.Platform"
@@ -187,6 +192,7 @@ Legal:
 
     <property name="ant.package" value="org/apache/tools/ant"/>
     <property name="antlib.package" value="org/apache/antlib"/>
+    <property name="vfs.package" value="org/apache/aut/vfs"/>
     <property name="optional.package" value="${ant.package}/taskdefs/optional"/>
     <property name="optional.type.package" value="${ant.package}/types/optional"/>
     <property name="util.package" value="${ant.package}/util"/>
@@ -221,6 +227,8 @@ Legal:
                unless="jdk1.2+" />
       <exclude name="${ant.package}/listener/Log4jListener.java"
                unless="log4j.present" />
+      <exclude name="${vfs.package}/provider/ftp/**" unless="netcomp.present"/>
+      <exclude name="${vfs.package}/provider/smb/**" unless="jcifs.present"/>
 
       <exclude name="${optional.package}/IContract.java" unless="icontract.present" />
       <exclude name="${optional.package}/Script.java" unless="bsf.present" />
@@ -277,7 +285,6 @@ Legal:
       <exclude name="${util.package}/depend/*.java"
                unless="jdk1.2+" />
     </javac>
-
 
     <copy todir="${build.classes}">
       <fileset dir="${java.dir}">
@@ -373,6 +380,18 @@ Legal:
       </zipfileset>
     </jar>
 
+    <!--
+    <jar jarfile="${build.lib}/vfile.atl" basedir="${build.classes}">
+      <include name="org/apache/antlib/vfile/**" />
+      <zipfileset dir="${manifest.dir}" fullpath="META-INF/ant-descriptor.xml">
+        <include name="vfile-ant-descriptor.xml"/>
+      </zipfileset>
+      <zipfileset dir="${manifest.dir}" fullpath="META-INF/ant-roles.xml">
+        <include name="vfile-ant-roles.xml"/>
+      </zipfileset>
+    </jar>
+    -->
+
     <jar jarfile="${build.lib}/selftest.atl"
          basedir="${build.classes}"
          manifest="${manifest.dir}/selftest.mf">
@@ -436,6 +455,7 @@ Legal:
 
   <!-- Compiles and runs the unit tests -->
   <target name="test" depends="compile" if="junit.present">
+    <!-- Compile the unit tests -->
     <mkdir dir="${test.classes}"/>
     <javac srcdir="src/testcases"
            destdir="${test.classes}"
@@ -444,13 +464,38 @@ Legal:
            deprecation="${deprecation}">
       <classpath refid="project.class.path"/>
     </javac>
+
+    <property name="test.local.dir" location="${test.working.dir}/localfs"/>
+    <property name="test.zip.file" location="${test.working.dir}/zipfs/test.zip"/>
+
+    <!-- Prepare test files -->
+    <delete dir="${test.working.dir}"/>
+    <copy todir="${test.local.dir}/read-tests">
+        <fileset dir="etc/testcases/org/apache/aut/vfs/basedir"/>
+    </copy>
+    <mkdir dir="${test.local.dir}/read-tests/emptydir"/>
+    <mkdir dir="${test.working.dir}/zipfs"/>
+    <zip zipfile="${test.zip.file}">
+        <zipfileset dir="${test.local.dir}/read-tests" prefix="/basedir"/>
+    </zip>
+
     <junit printsummary="on"
            fork="false">
       <formatter type="brief" usefile="false"/>
       <classpath refid="project.class.path"/>
       <classpath location="${test.classes}"/>
+
+      <!-- Pass config to the tests -->
+      <sysproperty key="test.local.dir" value="${test.local.dir}"/>
+      <sysproperty key="test.zip.file" value="${test.zip.file}"/>
+      <sysproperty key="test.smb.uri" value="smb://${vfs.user}:${vfs.password}@${vfs.host}/${vfs.user}/vfs"/>
+      <sysproperty key="test.ftp.uri" value="ftp://${vfs.user}:${vfs.password}@${vfs.host}/home/${vfs.user}/vfs"/>
+
       <batchtest>
-        <fileset dir="${test.classes}" includes="**/*Test.class"/>
+        <fileset dir="${test.classes}" includes="**/*Test.class">
+          <exclude name="**/SmbFileSystemTest.class" unless="test.smb"/>
+          <exclude name="**/FtpFileSystemTest.class" unless="test.ftp"/>
+        </fileset>
       </batchtest>
     </junit>
   </target>
