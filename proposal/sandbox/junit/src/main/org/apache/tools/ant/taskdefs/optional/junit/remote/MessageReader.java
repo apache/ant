@@ -203,7 +203,7 @@ public class MessageReader {
     protected void notifyTestFailed(int kind, String testname, String trace) {
         synchronized (listeners) {
             for (int i = 0; i < listeners.size(); i++) {
-                ((TestRunListener) listeners.elementAt(i)).onTestFailed(kind, testname, trace);
+                ((TestRunListener) listeners.elementAt(i)).onTestFailure(kind);
             }
         }
     }
@@ -211,7 +211,7 @@ public class MessageReader {
     protected void notifyTestSuiteStarted(int count) {
         synchronized (listeners) {
             for (int i = 0; i < listeners.size(); i++) {
-                ((TestRunListener) listeners.elementAt(i)).onTestRunStarted(count);
+                ((TestRunListener) listeners.elementAt(i)).onRunStarted(count);
             }
         }
     }
@@ -219,7 +219,7 @@ public class MessageReader {
     protected void notifyTestSuiteEnded(long elapsedtime) {
         synchronized (listeners) {
             for (int i = 0; i < listeners.size(); i++) {
-                ((TestRunListener) listeners.elementAt(i)).onTestRunEnded(elapsedtime);
+                ((TestRunListener) listeners.elementAt(i)).onRunEnded(elapsedtime);
             }
         }
     }
@@ -227,7 +227,7 @@ public class MessageReader {
     protected void notifyTestSuiteStopped(long elapsedtime) {
         synchronized (listeners) {
             for (int i = 0; i < listeners.size(); i++) {
-                ((TestRunListener) listeners.elementAt(i)).onTestRunStopped(elapsedtime);
+                ((TestRunListener) listeners.elementAt(i)).onRunStopped(elapsedtime);
             }
         }
     }

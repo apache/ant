@@ -56,6 +56,7 @@ package org.apache.tools.ant.taskdefs.optional.junit.formatter;
 import java.util.Properties;
 
 import org.apache.tools.ant.BuildException;
+import org.apache.tools.ant.taskdefs.optional.junit.remote.TestRunEvent;
 
 /**
  * A base class that can be used to filter data.
@@ -75,40 +76,40 @@ public abstract class FilterFormatter implements Formatter {
         formatter.init(props);
     }
 
-    public void onTestStdOutLine(String testname, String line) {
-        formatter.onTestStdOutLine(testname, line);
+    public void onSuiteStarted(TestRunEvent evt) {
+        formatter.onSuiteStarted(evt);
     }
 
-    public void onTestStdErrLine(String testname, String line) {
-        formatter.onTestStdErrLine(testname, line);
+    public void onSuiteEnded(TestRunEvent evt) {
+        formatter.onSuiteEnded(evt);
     }
 
-    public void onTestStarted(String testname) {
-        formatter.onTestStarted(testname);
+    public void onTestStarted(TestRunEvent evt) {
+        formatter.onTestStarted(evt);
     }
 
-    public void onTestEnded(String testname) {
-        formatter.onTestEnded(testname);
+    public void onTestEnded(TestRunEvent evt) {
+        formatter.onTestEnded(evt);
     }
 
-    public void onTestFailed(int status, String testname, String trace) {
-        formatter.onTestFailed(status, testname, trace);
+    public void onTestFailure(TestRunEvent evt) {
+        formatter.onTestFailure(evt);
     }
 
-    public void onTestRunSystemProperties(Properties props) {
-        formatter.onTestRunSystemProperties(props);
+    public void onTestError(TestRunEvent evt) {
+        formatter.onTestError(evt);
     }
 
-    public void onTestRunStarted(int testcount) {
-        formatter.onTestRunStarted(testcount);
+    public void onRunStarted(TestRunEvent evt) {
+        formatter.onRunStarted(evt);
     }
 
-    public void onTestRunEnded(long elapsedtime) {
-        formatter.onTestRunEnded(elapsedtime);
+    public void onRunEnded(TestRunEvent evt) {
+        formatter.onRunEnded(evt);
     }
 
-    public void onTestRunStopped(long elapsedtime) {
-        formatter.onTestRunEnded(elapsedtime);
+    public void onRunStopped(TestRunEvent evt) {
+        formatter.onRunEnded(evt);
     }
 
     /** set the wrapped formatter */

@@ -51,89 +51,66 @@
  * information on the Apache Software Foundation, please see
  * <http://www.apache.org/>.
  */
-package org.apache.tools.ant.taskdefs.optional.junit.formatter;
+package org.apache.tools.ant.taskdefs.optional.junit.remote;
 
-import java.util.Properties;
-
-import org.apache.tools.ant.BuildException;
-import org.apache.tools.ant.taskdefs.optional.junit.remote.TestRunEvent;
+import java.io.OutputStream;
+import java.io.InputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 
 /**
- * Provide a common set of attributes and methods to factorize
  *
  * @author <a href="mailto:sbailliez@apache.org">Stephane Bailliez</a>
  */
-public abstract class BaseFormatter implements Formatter {
+public class Messenger {
 
-    /** number of errors */
-    private int errorCount;
+    private InputStream in;
 
-    /** number of failures */
-    private int failureCount;
+    private OutputStream out;
 
-    /** number of runs (success + failure + error) */
-    private int runCount;
-
-    public void init(Properties props) throws BuildException {
+    public Messenger(InputStream in, OutputStream out) throws IOException {
+        setOutputStream( new ObjectOutputStream(out) );
+        setInputStream( new ObjectInputStream(in) );
     }
 
     protected void finalize() throws Throwable {
-        super.finalize();
         close();
     }
 
-    public void onTestStarted(TestRunEvent evt) {
-        runCount++;
+    public void close() throws IOException {
+        if (in != null) {
+            in.close();
+            in = null;
+        }
+        if (out != null) {
+            out.flush();
+            out.close();
+            out = null;
+        }
     }
 
-    public void onTestEnded(TestRunEvent evt) {
+    public TestRunEvent read() throws IOException {
+        return (TestRunEvent)((ObjectInputStream)in).readObject();
     }
 
-    public void onTestFailure(TestRunEvent evt) {
-        failureCount++;
+    public void writeEvent(TestRunEvent evt) throws IOException {
+        ((ObjectOutputStream)out).writeObject(evt);
     }
 
-    public void onTestError(TestRunEvent evt) {
-        errorCount++;
+    protected OutputStream getOutputStream(){
+        return out;
     }
 
-    public void onSuiteStarted(TestRunEvent evt) {
+    protected InputStream getInputStream(){
+        return in;
     }
 
-    public void onSuiteEnded(TestRunEvent evt) {
+    protected void setOutputStream(OutputStream out){
+        this.out = out;
     }
 
-    public void onRunStarted(TestRunEvent evt) {
-    }
-
-    public void onRunEnded(TestRunEvent evt) {
-        finished();
-    }
-
-    public void onRunStopped(TestRunEvent evt) {
-        finished();
-    }
-
-    protected void finished() {
-        close();
-    }
-
-    /** @return the number of errors */
-    protected final int getErrorCount() {
-        return errorCount;
-    }
-
-    /** @return the number of failures */
-    protected final int getFailureCount() {
-        return failureCount;
-    }
-
-    /** @return the number of runs */
-    protected final int getRunCount() {
-        return runCount;
-    }
-
-    /** helper method to flush and close the stream */
-    protected void close() {
+    protected void setInputStream(InputStream in){
+        this.in = in;
     }
 }

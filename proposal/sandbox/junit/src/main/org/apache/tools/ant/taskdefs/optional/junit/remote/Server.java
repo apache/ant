@@ -57,8 +57,6 @@ import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
 
-import org.apache.tools.ant.taskdefs.optional.junit.TestRunListener;
-
 /**
  * The server that will receive events from a remote client.
  *
@@ -83,10 +81,9 @@ public class Server {
     private Socket client;
 
     /** the reader in charge of interpreting messages from the client */
-    private MessageReader reader = new MessageReader();
+    private Messenger messenger;
 
-    /** writer used to send message to clients */
-    private MessageWriter writer;
+    private EventDispatcher dispatcher = new EventDispatcher();
 
     public Server(int port) {
         this.port = port;
@@ -102,7 +99,7 @@ public class Server {
      * @param listener a instance of a listener.
      */
     public void addListener(TestRunListener listener) {
-        reader.addListener(listener);
+        dispatcher.addListener(listener);
     }
 
     /**
@@ -110,7 +107,7 @@ public class Server {
      * @param listener a instance of a listener.
      */
     public void removeListener(TestRunListener listener) {
-        reader.removeListener(listener);
+        dispatcher.removeListener(listener);
     }
 
     /** return whether there is a client running or not */
@@ -127,19 +124,16 @@ public class Server {
     /** cancel the connection to the client */
     public void cancel() {
         if (isRunning()) {
-            writer.sendMessage(MessageIds.TEST_STOP);
+            TestRunEvent evt = new TestRunEvent(new Integer(-1), TestRunEvent.RUN_STOP);
+            messenger.writeEvent(evt);
         }
     }
 
     /** shutdown the server and any running client */
     public void shutdown() {
-        if (writer != null) {
-            writer.close();
-            writer = null;
-        }
-        if (reader != null) {
-            //@fixme what about the stream ?
-            reader = null;
+        if (messenger != null) {
+            messenger.close();
+            messenger = null;
         }
         try {
             if (client != null) {
@@ -166,8 +160,11 @@ public class Server {
             try {
                 server = new ServerSocket(port);
                 client = server.accept();
-                writer = new MessageWriter(client.getOutputStream());
-                reader.process(client.getInputStream());
+                messenger = new Messenger(client.getInputStream(), client.getOutputStream());
+                TestRunEvent evt = null;
+                while ( (evt = messenger.read()) != null ) {
+                    dispatcher.dispatchEvent(evt);
+                }
             } catch (IOException e) {
                 //@fixme this stacktrace might be normal when closing
                 // the socket. So decompose the above in distinct steps

@@ -51,89 +51,26 @@
  * information on the Apache Software Foundation, please see
  * <http://www.apache.org/>.
  */
-package org.apache.tools.ant.taskdefs.optional.junit.formatter;
+package org.apache.tools.ant.taskdefs.optional.junit.remote;
 
-import java.util.Properties;
+import java.util.EventListener;
 
-import org.apache.tools.ant.BuildException;
-import org.apache.tools.ant.taskdefs.optional.junit.remote.TestRunEvent;
 
 /**
- * Provide a common set of attributes and methods to factorize
  *
  * @author <a href="mailto:sbailliez@apache.org">Stephane Bailliez</a>
  */
-public abstract class BaseFormatter implements Formatter {
+public interface TestRunListener extends EventListener {
 
-    /** number of errors */
-    private int errorCount;
+    void onRunStarted(TestRunEvent evt);
+    void onRunEnded(TestRunEvent evt);
+    void onRunStopped(TestRunEvent evt);
 
-    /** number of failures */
-    private int failureCount;
+    void onSuiteStarted(TestRunEvent evt);
+    void onSuiteEnded(TestRunEvent evt);
 
-    /** number of runs (success + failure + error) */
-    private int runCount;
-
-    public void init(Properties props) throws BuildException {
-    }
-
-    protected void finalize() throws Throwable {
-        super.finalize();
-        close();
-    }
-
-    public void onTestStarted(TestRunEvent evt) {
-        runCount++;
-    }
-
-    public void onTestEnded(TestRunEvent evt) {
-    }
-
-    public void onTestFailure(TestRunEvent evt) {
-        failureCount++;
-    }
-
-    public void onTestError(TestRunEvent evt) {
-        errorCount++;
-    }
-
-    public void onSuiteStarted(TestRunEvent evt) {
-    }
-
-    public void onSuiteEnded(TestRunEvent evt) {
-    }
-
-    public void onRunStarted(TestRunEvent evt) {
-    }
-
-    public void onRunEnded(TestRunEvent evt) {
-        finished();
-    }
-
-    public void onRunStopped(TestRunEvent evt) {
-        finished();
-    }
-
-    protected void finished() {
-        close();
-    }
-
-    /** @return the number of errors */
-    protected final int getErrorCount() {
-        return errorCount;
-    }
-
-    /** @return the number of failures */
-    protected final int getFailureCount() {
-        return failureCount;
-    }
-
-    /** @return the number of runs */
-    protected final int getRunCount() {
-        return runCount;
-    }
-
-    /** helper method to flush and close the stream */
-    protected void close() {
-    }
+    void onTestStarted(TestRunEvent evt);
+    void onTestError(TestRunEvent evt);
+    void onTestFailure(TestRunEvent evt);
+    void onTestEnded(TestRunEvent evt);
 }

@@ -55,6 +55,7 @@ package org.apache.tools.ant.taskdefs.optional.junit.formatter;
 
 import org.apache.avalon.excalibur.i18n.ResourceManager;
 import org.apache.avalon.excalibur.i18n.Resources;
+import org.apache.tools.ant.taskdefs.optional.junit.remote.TestRunEvent;
 
 /**
  * Display additional messages from a <tt>SummaryFormatter</tt>
@@ -67,15 +68,15 @@ public class BriefFormatter extends SummaryFormatter {
     private final static Resources RES =
             ResourceManager.getPackageResources(BriefFormatter.class);
 
-    public void onTestFailed(int status, String testname, String trace) {
-        String msg = null;
-        if (status == STATUS_ERROR) {
-            msg = RES.getString("brief.status-error.msg", testname, trace);
-        } else {
-            msg = RES.getString("brief.status-failure.msg", testname, trace);
-        }
+    public void onTestFailure(TestRunEvent evt) {
+        String msg = RES.getString("brief.status-failure.msg", evt.getName(), evt.getStackTrace());
         getWriter().println(msg);
-        super.onTestFailed(status, testname, trace);
+        super.onTestFailure(evt);
     }
 
+    public void onTestError(TestRunEvent evt) {
+        String msg = RES.getString("brief.status-error.msg", evt.getName(), evt.getStackTrace());
+        getWriter().println(msg);
+        super.onTestError(evt);
+    }
 }

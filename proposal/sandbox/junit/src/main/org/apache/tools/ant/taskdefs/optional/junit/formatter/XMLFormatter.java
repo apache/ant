@@ -64,6 +64,7 @@ import org.w3c.dom.Text;
 
 import org.apache.tools.ant.util.DOMElementWriter;
 import org.apache.tools.ant.BuildException;
+import org.apache.tools.ant.taskdefs.optional.junit.remote.TestRunEvent;
 
 /**
  * XML Formatter. Due to the nature of the XML we are forced to store
@@ -140,67 +141,63 @@ public class XMLFormatter extends BaseStreamFormatter {
     /** Timing helper. */
     private Hashtable testStarts = new Hashtable();
 
-    public void onTestStarted(String testname) {
+    public void onTestStarted(TestRunEvent evt) {
         //@fixme, eh, a testname only can obviouslly be a duplicate...
-        testStarts.put(testname, new Long(System.currentTimeMillis()));
+        testStarts.put(evt.getName(), evt);
         Element currentTest = doc.createElement(TESTCASE);
-        currentTest.setAttribute(ATTR_NAME, testname);
+        currentTest.setAttribute(ATTR_NAME, evt.getName());
         rootElement.appendChild(currentTest);
-        testElements.put(testname, currentTest);
-        super.onTestStarted(testname);
+        testElements.put(evt.getName(), currentTest);
+        super.onTestStarted(evt);
+        removeEvent(evt);
     }
 
-    public void onTestEnded(String testname) {
-        Element currentTest = (Element) testElements.get(testname);
+    public void onTestEnded(TestRunEvent evt) {
+        Element currentTest = (Element) testElements.get(evt);
         // with a TestSetup, startTest and endTest are not called.
         if (currentTest == null) {
-            onTestStarted(testname);
-            currentTest = (Element) testElements.get(testname);
+            onTestStarted(evt);
+            currentTest = (Element) testElements.get(evt.getName());
         }
-        Long l = (Long) testStarts.get(testname);
-        float time = ((System.currentTimeMillis() - l.longValue()) / 1000.0f);
+        TestRunEvent start = (TestRunEvent)testStarts.get(evt);
+        float time = ((evt.getTimeStamp() - start.getTimeStamp()) / 1000.0f);
         currentTest.setAttribute(ATTR_TIME, Float.toString(time));
-        super.onTestEnded(testname);
-        // remove the test objects
-        //testStarts.remove(testname);
-        //testElements.remove(testname);
+        super.onTestEnded(evt);
+        removeEvent(evt);
     }
 
-    public void onTestFailed(int status, String testname, String trace) {
-        if (testname != null) {
-            onTestEnded(testname);
-        }
-        String type = status == STATUS_FAILURE ? FAILURE : ERROR;
+    public void onTestFailure(TestRunEvent evt) {
+        String type = evt == evt.getType() == TestRunEvent.TEST_FAILURE ? FAILURE : ERROR;
         Element nested = doc.createElement(type);
-        Element currentTest = null;
-        if (testname != null) {
-            currentTest = (Element) testElements.get(testname);
-        } else {
-            currentTest = rootElement;
-        }
-
+        Element currentTest = (Element) testElements.get(evt.getName());
         currentTest.appendChild(nested);
 
-        String[] args = parseFirstLine(trace);
+        String[] args = parseFirstLine(evt.getStackTrace());
         if (args[1] != null && args[1].length() > 0) {
             nested.setAttribute(ATTR_MESSAGE, args[1]);
         }
         nested.setAttribute(ATTR_TYPE, args[0]);
-        Text text = doc.createTextNode(trace);
+        Text text = doc.createTextNode(evt.getStackTrace());
         nested.appendChild(text);
-        super.onTestFailed(status, testname, trace);
+        super.onTestFailure(evt);
+        removeEvent(evt);
     }
 
-    public void onTestRunStarted(int testcount) {
-        super.onTestRunStarted(testcount);
+    protected void removeEvent(TestRunEvent evt){
+        testStarts.remove(evt.getName());
+        testElements.remove(evt.getName());
     }
 
-    public void onTestRunEnded(long elapsedtime) {
-        super.onTestRunEnded(elapsedtime);
+    public void onRunStarted(TestRunEvent evt) {
+        super.onRunStarted(evt);
     }
 
-    public void onTestRunStopped(long elapsedtime) {
-        super.onTestRunStopped(elapsedtime);
+    public void onRunEnded(TestRunEvent evt) {
+        super.onRunEnded(evt);
+    }
+
+    public void onRunStopped(TestRunEvent evt) {
+        super.onRunStopped(evt);
     }
 
     protected void close() {

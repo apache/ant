@@ -54,6 +54,9 @@
 package org.apache.tools.ant.taskdefs.optional.junit;
 
 import java.util.Properties;
+import java.util.EventListener;
+
+import org.apache.tools.ant.taskdefs.optional.junit.remote.TestRunEvent;
 
 
 /**
@@ -67,27 +70,21 @@ import java.util.Properties;
  *
  * @author <a href="mailto:sbailliez@apache.org">Stephane Bailliez</a>
  */
-public interface TestRunListener {
-
-    /** Some tests failed. */
-    public final static int STATUS_FAILURE = 1;
-
-    /** An error occured. */
-    public final static int STATUS_ERROR = 2;
+public interface TestRunListener extends EventListener{
 
     /**
      * A test has started.
      * @param a testname made of the testname and testcase classname.
      * in the following format: <tt>&lt;testname&gt;(&lt;testcase&gt;)</tt>
      */
-    public void onTestStarted(String testname);
+    public void onTestStarted(TestRunEvent evt);
 
     /**
      * A test ended.
      * @param a testname made of the testname and testcase classname.
      * in the following format: <tt>&lt;testname&gt;(&lt;testcase&gt;)</tt>
      */
-    public void onTestEnded(String testname);
+    public void onTestEnded(TestRunEvent evt);
 
     /**
      * A test has failed.
@@ -97,24 +94,19 @@ public interface TestRunListener {
      * @param trace the error/failure stacktrace.
      * @todo change this to a testFailure / testError ?
      */
-    public void onTestFailed(int status, String testname, String trace);
+    public void onTestFailure(TestRunEvent evt);
 
-    /** test logged this line on stdout */
-    public void onTestStdOutLine(String testname, String line);
-
-    /** test logged this line on sterr */
-    public void onTestStdErrLine(String testname, String line);
-
-    /** these system properties are used on the remote client */
-    public void onTestRunSystemProperties(Properties props);
+    public void onTestError(TestRunEvent evt);
 
     /** starting a sequence of <tt>testcount</tt> tests. */
-    public void onTestRunStarted(int testcount);
+    public void onRunStarted(TestRunEvent evt);
 
     /** ending gracefully the sequence after <tt>elapsedtime</tt> ms. */
-    public void onTestRunEnded(long elapsedtime);
+    public void onRunEnded(TestRunEvent evt);
 
     /** stopping the sequence after <tt>elapsedtime</tt> ms. */
-    public void onTestRunStopped(long elapsedtime);
+    public void onRunStopped(TestRunEvent evt);
 
+    public void onSuiteStarted(TestRunEvent evt);
+    public void onSuiteEnded(TestRunEvent evt);
 }

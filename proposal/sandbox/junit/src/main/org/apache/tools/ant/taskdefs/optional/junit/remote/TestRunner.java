@@ -61,6 +61,7 @@ import java.net.Socket;
 import java.util.Properties;
 import java.util.StringTokenizer;
 import java.util.Vector;
+import java.util.Random;
 
 import junit.framework.AssertionFailedError;
 import junit.framework.Test;
@@ -86,6 +87,9 @@ import org.apache.tools.ant.util.StringUtils;
  */
 public class TestRunner implements TestListener {
 
+    /** unique identifier for the runner */
+    private final Integer id = new Integer( (new Random()).nextInt() );
+
     /** host to connect to */
     private String host = "127.0.0.1";
 
@@ -104,10 +108,7 @@ public class TestRunner implements TestListener {
     private Socket clientSocket;
 
     /** writer to send message to the server */
-    private MessageWriter writer;
-
-    /** reader to listen for a shutdown from the server */
-    private BufferedReader reader;
+    private Messenger messenger;
 
     /** bean constructor */
     public TestRunner() {
@@ -152,9 +153,9 @@ public class TestRunner implements TestListener {
     private class StopThread extends Thread {
         public void run() {
             try {
-                String line = null;
-                if ((line = reader.readLine()) != null) {
-                    if (line.startsWith(MessageIds.TEST_STOP)) {
+                TestRunEvent evt = null;
+                if ((evt = messenger.read()) != null) {
+                    if (evt.getType() == TestRunEvent.RUN_STOP) {
                         TestRunner.this.stop();
                     }
                 }
@@ -298,26 +299,26 @@ public class TestRunner implements TestListener {
         // count all testMethods and inform TestRunListeners
         int count = countTests(suites);
         log("Total tests to run: " + count);
-        writer.notifyTestRunStarted(count);
-
-        // send system properties to know for the JVM status
-        writer.notifySystemProperties();
+        fireEvent(new TestRunEvent(id, TestRunEvent.RUN_STARTED));
 
         long startTime = System.currentTimeMillis();
         for (int i = 0; i < suites.length; i++) {
+            String name = suites[i].getClass().getName();
             if (suites[i] instanceof TestCase) {
-                suites[i] = new TestSuite(suites[i].getClass().getName());
+                suites[i] = new TestSuite(name);
             }
             log("running suite: " + suites[i]);
+            fireEvent(new TestRunEvent(id, TestRunEvent.SUITE_STARTED, name));
             suites[i].run(testResult);
+            fireEvent(new TestRunEvent(id, TestRunEvent.SUITE_ENDED, name));
         }
 
         // inform TestRunListeners of test end
         long elapsedTime = System.currentTimeMillis() - startTime;
         if (testResult == null || testResult.shouldStop()) {
-            writer.notifyTestRunStopped(elapsedTime);
+            fireEvent(new TestRunEvent(id, TestRunEvent.RUN_STOPPED, System.getProperties()));
         } else {
-            writer.notifyTestRunEnded(elapsedTime);
+            fireEvent(new TestRunEvent(id, TestRunEvent.RUN_ENDED, System.getProperties()));
         }
         log("Finished after " + elapsedTime + "ms");
         shutDown();
@@ -345,23 +346,16 @@ public class TestRunner implements TestListener {
     protected void connect() throws IOException {
         log("Connecting to " + host + " on port " + port + "...");
         clientSocket = new Socket(host, port);
-        writer = new MessageWriter(clientSocket.getOutputStream());
-        reader = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
+        messenger = new Messenger(clientSocket.getInputStream(), clientSocket.getOutputStream());
         new StopThread().start();
     }
 
 
     protected void shutDown() {
-
-        if (writer != null) {
-            writer.close();
-            writer = null;
-        }
-
         try {
-            if (reader != null) {
-                reader.close();
-                reader = null;
+            if (messenger != null) {
+                messenger.close();
+                messenger = null;
             }
         } catch (IOException e) {
             log(e);
@@ -377,6 +371,9 @@ public class TestRunner implements TestListener {
         }
     }
 
+    protected void fireEvent(TestRunEvent evt){
+        messenger.writeEvent(evt);
+    }
 
 // -------- JUnit TestListener implementation
 
@@ -384,14 +381,13 @@ public class TestRunner implements TestListener {
     public void startTest(Test test) {
         String testName = test.toString();
         log("starting test: " + test);
-        writer.notifyTestStarted(testName);
+        fireEvent(new TestRunEvent(id, TestRunEvent.TEST_STARTED, testName));
     }
 
     public void addError(Test test, Throwable t) {
         log("Adding error for test: " + test);
         String testName = test.toString();
-        String trace = StringUtils.getStackTrace(t);
-        writer.notifyTestFailed(TestRunListener.STATUS_ERROR, testName, trace);
+        fireEvent(new TestRunEvent(id, TestRunEvent.TEST_ERROR, testName, t));
     }
 
     /**
@@ -409,14 +405,13 @@ public class TestRunner implements TestListener {
     public void addFailure(Test test, Throwable t) {
         log("Adding failure for test: " + test);
         String testName = test.toString();
-        String trace = StringUtils.getStackTrace(t);
-        writer.notifyTestFailed(TestRunListener.STATUS_FAILURE, testName, trace);
+        fireEvent(new TestRunEvent(id, TestRunEvent.TEST_FAILURE, testName, t));
     }
 
     public void endTest(Test test) {
         log("Ending test: " + test);
         String testName = test.toString();
-        writer.notifyTestEnded(testName);
+        fireEvent(new TestRunEvent(id, TestRunEvent.TEST_ENDED, testName));
     }
 
     public void log(String msg) {

@@ -51,90 +51,109 @@
  * information on the Apache Software Foundation, please see
  * <http://www.apache.org/>.
  */
-package org.apache.tools.ant.taskdefs.optional.junit.formatter;
+package org.apache.tools.ant.taskdefs.optional.junit.remote;
 
-import java.util.StringTokenizer;
+import java.util.EventObject;
+import java.util.Properties;
 
 import org.apache.tools.ant.util.StringUtils;
-import org.apache.tools.ant.taskdefs.optional.junit.remote.TestRunEvent;
 
 /**
- * Filtered Formatter that strips out unwanted stack frames from the full
- * stack trace, for instance it will filter the lines containing the
- * following matches:
- * <pre>
- *   junit.framework.TestCase
- *   junit.framework.TestResult
- *   junit.framework.TestSuite
- *   junit.framework.Assert.
- *   junit.swingui.TestRunner
- *   junit.awtui.TestRunner
- *   junit.textui.TestRunner
- *   java.lang.reflect.Method.invoke(
- *   org.apache.tools.ant.
- * </pre>
- * Removing all the above will help to make stacktrace more readable.
  *
  * @author <a href="mailto:sbailliez@apache.org">Stephane Bailliez</a>
  */
-public class FilterStackFormatter extends FilterFormatter {
+public class TestRunEvent extends EventObject {
 
-    /** the set of matches to look for in a stack trace */
-    private final static String[] DEFAULT_TRACE_FILTERS = new String[]{
-        "junit.framework.TestCase",
-        "junit.framework.TestResult",
-        "junit.framework.TestSuite",
-        "junit.framework.Assert.", // don't filter AssertionFailure
-        "junit.swingui.TestRunner",
-        "junit.awtui.TestRunner",
-        "junit.textui.TestRunner",
-        "java.lang.reflect.Method.invoke(",
-        "org.apache.tools.ant."
-    };
+    // received from clients
+    public final static int RUN_STARTED = 0;
+    public final static int RUN_ENDED = 1;
+    public final static int RUN_STOPPED = 2;
+    public final static int TEST_STARTED = 3;
+    public final static int TEST_FAILURE = 4;
+    public final static int TEST_ERROR = 5;
+    public final static int TEST_ENDED = 6;
+    public final static int SUITE_STARTED = 7;
+    public final static int SUITE_ENDED = 8;
 
-    /**
-     * Creates a new <tt>FilterStackFormatter</tt>
-     * @param formatter the formatter to be filtered.
-     */
-    public FilterStackFormatter(Formatter formatter) {
-        super(formatter);
+    // received from server
+    public final static int RUN_STOP = 9;
+
+    /** the type of event */
+    private int type = -1;
+
+    /** timestamp for all tests */
+    private long timestamp = System.currentTimeMillis();
+
+    /** name of testcase(method name) or testsuite (classname) */
+    private String name;
+
+    /** stacktrace for error or failure */
+    private String stacktrace;
+
+    /** properties for end of testrun */
+    private Properties props;
+
+    public TestRunEvent(Integer id, int type){
+        super(id);
+        this.type = type;
     }
 
-    public void onTestFailure(TestRunEvent evt) {
-        String filteredTrace = filter(evt.getStackTrace());
-        evt.setStackTrace(filteredTrace);
-        super.onTestFailure(evt);
+    public TestRunEvent(Integer id, int type, String name){
+        this(id, type);
+        this.name = name;
     }
 
-    public void onTestError(TestRunEvent evt) {
-        String filteredTrace = filter(evt.getStackTrace());
-        evt.setStackTrace(filteredTrace);
-        super.onTestFailure(evt);
+    public TestRunEvent(Integer id, int type, Properties props){
+        this(id, type);
+        this.props = props;
     }
 
-    protected String filter(String trace){
-        StringTokenizer st = new StringTokenizer(trace, "\r\n");
-        StringBuffer buf = new StringBuffer(trace.length());
-        while (st.hasMoreTokens()) {
-            String line = st.nextToken();
-            if (accept(line)) {
-                buf.append(line).append(StringUtils.LINE_SEP);
-            }
-        }
-        return buf.toString();
-    }
-    /**
-     * Check whether or not the line should be accepted.
-     * @param the line to be check for acceptance.
-     * @return <tt>true</tt> if the line is accepted, <tt>false</tt> if not.
-     */
-    protected boolean accept(String line) {
-        for (int i = 0; i < DEFAULT_TRACE_FILTERS.length; i++) {
-            if (line.indexOf(DEFAULT_TRACE_FILTERS[i]) > 0) {
-                return false;
-            }
-        }
-        return true;
+    public TestRunEvent(Integer id, int type, String name, Throwable t){
+        this(id, type, name);
+        this.stacktrace = StringUtils.getStackTrace(t);
     }
 
+    public void setType(int type) {
+        this.type = type;
+    }
+
+    public void setTimeStamp(long timestamp) {
+        this.timestamp = timestamp;
+    }
+
+    public void setStackTrace(String stacktrace) {
+        this.stacktrace = stacktrace;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setProperties(Properties props) {
+        this.props = props;
+    }
+
+    public int getType(){
+        return type;
+    }
+
+    public long getTimeStamp(){
+        return timestamp;
+    }
+
+    public String getName(){
+        return name;
+    }
+
+    public String getStackTrace(){
+        return stacktrace;
+    }
+
+    public Properties getProperties(){
+        return props;
+    }
+
+    public String toString(){
+        return "Id: " + source + ", Type: " + type;
+    }
 }

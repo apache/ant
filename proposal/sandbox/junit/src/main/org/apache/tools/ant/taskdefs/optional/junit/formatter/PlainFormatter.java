@@ -55,6 +55,8 @@ package org.apache.tools.ant.taskdefs.optional.junit.formatter;
 
 import java.util.Properties;
 
+import org.apache.tools.ant.taskdefs.optional.junit.remote.TestRunEvent;
+
 /**
  * Default formatter to text.
  *
@@ -62,38 +64,39 @@ import java.util.Properties;
  */
 public class PlainFormatter extends BaseStreamFormatter {
 
-    public void onTestStarted(String testname) {
-        getWriter().println("Started " + testname);
+    public void onSuiteStarted(TestRunEvent evt) {
+        getWriter().println("  suite: " + evt.getName());
+        super.onSuiteStarted(evt);
     }
 
-    public void onTestEnded(String testname) {
-        getWriter().println("Ended " + testname);
+    public void onSuiteEnded(TestRunEvent evt) {
+        getWriter().println("  end suite");
+        super.onSuiteEnded(evt);
     }
 
-    public void onTestFailed(int status, String testname, String trace) {
-        getWriter().println(testname + " failed with status " + status);
-        getWriter().println(trace);
+    public void onTestStarted(TestRunEvent evt) {
+        getWriter().println("    running test: " + evt.getName());
     }
 
-    public void onTestRunSystemProperties(Properties props) {
-        getWriter().println("properties: " + props);
+    public void onTestEnded(TestRunEvent evt) {
+        getWriter().println("    success: " + evt.getName());
     }
 
-    public void onTestRunStarted(int testcount) {
-        getWriter().println("testsuite:  " + testcount);
+    public void onTestFailure(TestRunEvent evt) {
+        getWriter().println("    failure: " + evt.getName());
+        getWriter().println(evt.getStackTrace());
     }
 
-    public void onTestStdOutLine(String testname, String line) {
+    public void onTestError(TestRunEvent evt) {
+        getWriter().println("    error: " + evt.getName());
+        getWriter().println(evt.getStackTrace());
     }
 
-    public void onTestStdErrLine(String testname, String line) {
+    public void onRunEnded(TestRunEvent evt) {
+        getWriter().println("run ended");
     }
 
-    public void onTestRunEnded(long elapsedtime) {
-        getWriter().println("testsuite ended after: " + elapsedtime);
-    }
-
-    public void onTestRunStopped(long elapsedtime) {
-        getWriter().println("testsuite stopped after: " + elapsedtime);
+    public void onRunStopped(TestRunEvent evt) {
+        getWriter().println("run stopped");
     }
 }
