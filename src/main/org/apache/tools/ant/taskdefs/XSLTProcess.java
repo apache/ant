@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2000-2002 The Apache Software Foundation.  All rights
+ * Copyright (c) 2000-2003 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -79,6 +79,7 @@ import org.xml.sax.EntityResolver;
  * @author <a href="mailto:rubys@us.ibm.com">Sam Ruby</a>
  * @author <a href="mailto:russgold@acm.org">Russell Gold</a>
  * @author <a href="mailto:stefan.bodewig@epost.de">Stefan Bodewig</a>
+ * @author <a href="mailto:sbailliez@apache.org">Stephane Bailliez</a>
  *
  * @since Ant 1.1
  *
@@ -88,63 +89,63 @@ import org.xml.sax.EntityResolver;
 public class XSLTProcess extends MatchingTask implements XSLTLogger {
     /** destination directory */
     private File destDir = null;
-    
+
     /** where to find the source XML file, default is the project's basedir */
     private File baseDir = null;
-    
+
     /** XSL stylesheet */
     private String xslFile = null;
-    
+
     /** extension of the files produced by XSL processing */
     private String targetExtension = ".html";
 
     /** additional parameters to be passed to the stylesheets */
     private Vector params = new Vector();
-    
+
     /** Input XML document to be used */
     private File inFile = null;
-    
+
     /** Output file */
     private File outFile = null;
-    
+
     /** The name of the XSL processor to use */
     private String processor;
-    
+
     /** Classpath to use when trying to load the XSL processor */
     private Path classpath = null;
     
     /** The Liason implementation to use to communicate with the XSL 
      *  processor */
     private XSLTLiaison liaison;
-    
-    /** Flag which indicates if the stylesheet has been loaded into 
+
+    /** Flag which indicates if the stylesheet has been loaded into
      *  the processor */
     private boolean stylesheetLoaded = false;
-    
+
     /** force output of target files even if they already exist */
     private boolean force = false;
-    
+
     /** Utilities used for file operations */
     private FileUtils fileUtils;
-    
-    /** XSL output method to be used */
+
+    /** XSL output properties to be used */
     private Vector outputProperties = new Vector();
-    
+
     /** for resolving entities such as dtds */
     private XMLCatalog xmlCatalog = new XMLCatalog();
-    
-    /** Name of the TRAX Liason class */
+
+    /** Name of the TRAX Liaison class */
     private static final String TRAX_LIAISON_CLASS =
                         "org.apache.tools.ant.taskdefs.optional.TraXLiaison";
 
-    /** Name of the now-deprecated XSLP Liason class */                        
+    /** Name of the now-deprecated XSLP Liaison class */
     private static final String XSLP_LIAISON_CLASS =
                         "org.apache.tools.ant.taskdefs.optional.XslpLiaison";
 
-    /** Name of the Xalan liason class */                            
+    /** Name of the Xalan liaison class */
     private static final String XALAN_LIAISON_CLASS =
                         "org.apache.tools.ant.taskdefs.optional.XalanLiaison";
-                        
+
     /**
      * Whether to style all files in the included directories as well.
      *
@@ -153,23 +154,41 @@ public class XSLTProcess extends MatchingTask implements XSLTLogger {
     private boolean performDirectoryScan = true;
 
     /**
+     * whether to reuse Transformer if transforming multiple files.
+     * @since 1.5.2
+     */
+    private boolean reuseLoadedStylesheet = true;
+
+    /**
      * Creates a new XSLTProcess Task.
      */
     public XSLTProcess() {
         fileUtils = FileUtils.newFileUtils();
     } //-- XSLTProcess
-    
+
     /**
      * Whether to style all files in the included directories as well;
      * optional, default is true.
-     * 
+     *
      * @param b true if files in included directories are processed.
      * @since Ant 1.5
      */
     public void setScanIncludedDirectories(boolean b) {
         performDirectoryScan = b;
     }
-    
+
+    /**
+     * Controls whether the stylesheet is reloaded for every transform
+     *
+     * <p>Setting this to true may get around a bug in certain
+     * Xalan-J versions, default is false.</p>
+     *
+     * @since Ant 1.5.2
+     */
+    public void setReloadStylesheet(boolean b) {
+        reuseLoadedStylesheet = !b;
+    }
+
     /**
      * Executes the task.
      *
@@ -182,26 +201,26 @@ public class XSLTProcess extends MatchingTask implements XSLTLogger {
         DirectoryScanner scanner;
         String[]         list;
         String[]         dirs;
-        
+
         if (xslFile == null) {
-            throw new BuildException("no stylesheet specified", location);
+            throw new BuildException("no stylesheet specified", getLocation());
         }
-        
+
         try {
             if (baseDir == null) {
-                baseDir = project.resolveFile(".");
+                baseDir = getProject().resolveFile(".");
             }
-        
+
             liaison = getLiaison();
-            
+
             // check if liaison wants to log errors using us as logger
             if (liaison instanceof XSLTLoggerAware) {
                 ((XSLTLoggerAware) liaison).setLogger(this);
             }
-            
+
             log("Using " + liaison.getClass().toString(), Project.MSG_VERBOSE);
-            
-            File stylesheet = project.resolveFile(xslFile);
+
+            File stylesheet = getProject().resolveFile(xslFile);
             if (!stylesheet.exists()) {
                 stylesheet = fileUtils.resolveFile(baseDir, xslFile);
                 /*
@@ -209,23 +228,23 @@ public class XSLTProcess extends MatchingTask implements XSLTLogger {
                  * the wrong version has been used.
                  */
                 if (stylesheet.exists()) {
-                    log("DEPRECATED - the style attribute should be relative " 
+                    log("DEPRECATED - the style attribute should be relative "
                         + "to the project\'s");
                     log("             basedir, not the tasks\'s basedir.");
                 }
             }
-        
+
             // if we have an in file and out then process them
             if (inFile != null && outFile != null) {
                 process(inFile, outFile, stylesheet);
                 return;
             }
-        
+
             /*
              * if we get here, in and out have not been specified, we are
              * in batch processing mode.
              */
-        
+
             //-- make sure Source directory exists...
             if (destDir == null) {
                 String msg = "destdir attributes must be set!";
@@ -233,7 +252,7 @@ public class XSLTProcess extends MatchingTask implements XSLTLogger {
             }
             scanner = getDirectoryScanner(baseDir);
             log("Transforming into " + destDir, Project.MSG_INFO);
-        
+
             // Process all the files marked for styling
             list = scanner.getIncludedFiles();
             for (int i = 0; i < list.length; ++i) {
@@ -255,7 +274,7 @@ public class XSLTProcess extends MatchingTask implements XSLTLogger {
             baseDir = savedBaseDir;
         }
     }
-    
+
     /**
      * Set whether to check dependencies, or always generate;
      * optional, default is false.
@@ -265,9 +284,9 @@ public class XSLTProcess extends MatchingTask implements XSLTLogger {
     public void setForce(boolean force) {
         this.force = force;
     }
-    
+
     /**
-     * Set the base directory; 
+     * Set the base directory;
      * optional, default is the project's basedir.
      *
      * @param dir the base directory
@@ -275,10 +294,10 @@ public class XSLTProcess extends MatchingTask implements XSLTLogger {
     public void setBasedir(File dir) {
         baseDir = dir;
     }
-    
+
     /**
      * Set the destination directory into which the XSL result
-     * files should be copied to; 
+     * files should be copied to;
      * required, unless <tt>in</tt> and <tt>out</tt> are
      * specified.
      * @param dir the name of the destination directory
@@ -286,26 +305,26 @@ public class XSLTProcess extends MatchingTask implements XSLTLogger {
     public void setDestdir(File dir) {
         destDir = dir;
     }
-    
+
     /**
      * Set the desired file extension to be used for the target;
-     * optional, default is html. 
+     * optional, default is html.
      * @param name the extension to use
      **/
     public void setExtension(String name) {
         targetExtension = name;
     }
-    
+
     /**
      * Name of the stylesheet to use - given either relative
      * to the project's basedir or as an absolute path; required.
-     * 
+     *
      * @param xslFile the stylesheet to use
      */
     public void setStyle(String xslFile) {
         this.xslFile = xslFile;
     }
-    
+
     /**
      * Set the optional classpath to the XSL processor
      *
@@ -314,7 +333,7 @@ public class XSLTProcess extends MatchingTask implements XSLTLogger {
     public void setClasspath(Path classpath) {
         createClasspath().append(classpath);
     }
-    
+
     /**
      * Set the optional classpath to the XSL processor
      *
@@ -322,41 +341,41 @@ public class XSLTProcess extends MatchingTask implements XSLTLogger {
      */
     public Path createClasspath() {
         if (classpath == null) {
-            classpath = new Path(project);
+            classpath = new Path(getProject());
         }
         return classpath.createPath();
     }
-    
+
     /**
      * Set the reference to an optional classpath to the XSL processor
      *
-     * @param r the id of the Ant path instance to act as the classpath 
+     * @param r the id of the Ant path instance to act as the classpath
      *          for loading the XSL processor
      */
     public void setClasspathRef(Reference r) {
         createClasspath().setRefid(r);
     }
-    
+
     /**
      * Set the name of the XSL processor to use; optional, default trax.
      * Other values are "xalan" for Xalan1 and "xslp" for XSL:P, though the
-     * later is strongly deprecated. 
+     * later is strongly deprecated.
      *
      * @param processor the name of the XSL processor
      */
     public void setProcessor(String processor) {
         this.processor = processor;
     }
-    
+
     /**
      * Add the catalog to our internal catalog
-     * 
+     *
      * @param xmlCatalog the XMLCatalog instance to use to look up DTDs
      */
     public void addConfiguredXMLCatalog(XMLCatalog xmlCatalog) {
         this.xmlCatalog.addConfiguredXMLCatalog(xmlCatalog);
     }
-    
+
     /**
      * Load processor here instead of in setProcessor - this will be
      * called from within execute, so we have access to the latest
@@ -381,7 +400,7 @@ public class XSLTProcess extends MatchingTask implements XSLTLogger {
             liaison = (XSLTLiaison) loadClass(proc).newInstance();
         }
     }
-    
+
     /**
      * Load named class either via the system classloader or a given
      * custom classloader.
@@ -394,15 +413,15 @@ public class XSLTProcess extends MatchingTask implements XSLTLogger {
         if (classpath == null) {
             return Class.forName(classname);
         } else {
-            AntClassLoader al = new AntClassLoader(project, classpath);
+            AntClassLoader al = new AntClassLoader(getProject(), classpath);
             Class c = al.loadClass(classname);
             AntClassLoader.initializeClass(c);
             return c;
         }
     }
-    
+
     /**
-     * Specifies the output name for the styled result from the 
+     * Specifies the output name for the styled result from the
      * <tt>in</tt> attribute; required if <tt>in</tt> is set
      *
      * @param outFile the output File instance.
@@ -410,9 +429,9 @@ public class XSLTProcess extends MatchingTask implements XSLTLogger {
     public void setOut(File outFile){
         this.outFile = outFile;
     }
-    
+
     /**
-     * specifies a single XML document to be styled. Should be used 
+     * specifies a single XML document to be styled. Should be used
      * with the <tt>out</tt> attribute; ; required if <tt>out</tt> is set
      *
      * @param inFile the input file
@@ -420,7 +439,7 @@ public class XSLTProcess extends MatchingTask implements XSLTLogger {
     public void setIn(File inFile){
         this.inFile = inFile;
     }
-    
+
     /**
      * Processes the given input XML file and stores the result
      * in the given resultFile.
@@ -434,11 +453,11 @@ public class XSLTProcess extends MatchingTask implements XSLTLogger {
     private void process(File baseDir, String xmlFile, File destDir,
                          File stylesheet)
         throws BuildException {
-        
+
         String fileExt = targetExtension;
         File   outFile = null;
         File   inFile = null;
-        
+
         try {
             long styleSheetLastModified = stylesheet.lastModified();
             inFile = new File(baseDir, xmlFile);
@@ -448,10 +467,10 @@ public class XSLTProcess extends MatchingTask implements XSLTLogger {
                     Project.MSG_VERBOSE);
                 return;
             }
-            
+
             int dotPos = xmlFile.lastIndexOf('.');
             if (dotPos > 0) {
-                outFile = new File(destDir, 
+                outFile = new File(destDir,
                     xmlFile.substring(0, xmlFile.lastIndexOf('.')) + fileExt);
             } else {
                 outFile = new File(destDir, xmlFile + fileExt);
@@ -461,7 +480,7 @@ public class XSLTProcess extends MatchingTask implements XSLTLogger {
                 styleSheetLastModified > outFile.lastModified()) {
                 ensureDirectoryFor(outFile);
                 log("Processing " + inFile + " to " + outFile);
-                
+
                 configureLiaison(stylesheet);
                 liaison.transform(inFile, outFile);
             }
@@ -472,12 +491,12 @@ public class XSLTProcess extends MatchingTask implements XSLTLogger {
             if (outFile != null) {
                 outFile.delete();
             }
-            
+
             throw new BuildException(ex);
         }
-        
+
     } //-- processXML
-    
+
     /**
      * Process the input file to the output file with the given stylesheet.
      *
@@ -486,7 +505,7 @@ public class XSLTProcess extends MatchingTask implements XSLTLogger {
      * @param stylesheet the stylesheet to use.
      * @exception BuildException if the processing fails.
      */
-    private void process(File inFile, File outFile, File stylesheet) 
+    private void process(File inFile, File outFile, File stylesheet)
          throws BuildException {
         try {
             long styleSheetLastModified = stylesheet.lastModified();
@@ -500,7 +519,7 @@ public class XSLTProcess extends MatchingTask implements XSLTLogger {
                 inFile.lastModified() > outFile.lastModified() ||
                 styleSheetLastModified > outFile.lastModified()) {
                 ensureDirectoryFor(outFile);
-                log("Processing " + inFile + " to " + outFile, 
+                log("Processing " + inFile + " to " + outFile,
                     Project.MSG_INFO);
                 configureLiaison(stylesheet);
                 liaison.transform(inFile, outFile);
@@ -513,14 +532,14 @@ public class XSLTProcess extends MatchingTask implements XSLTLogger {
             throw new BuildException(ex);
         }
     }
-    
+
     /**
-     * Ensure the directory exists for a given file 
+     * Ensure the directory exists for a given file
      *
      * @param targetFile the file for which the directories are required.
      * @exception BuildException if the directories cannot be created.
      */
-    private void ensureDirectoryFor(File targetFile) 
+    private void ensureDirectoryFor(File targetFile)
          throws BuildException {
         File directory = fileUtils.getParentFile(targetFile);
         if (!directory.exists()) {
@@ -530,7 +549,7 @@ public class XSLTProcess extends MatchingTask implements XSLTLogger {
             }
         }
     }
-    
+
     /**
      * Get the Liason implementation to use in processing.
      *
@@ -566,7 +585,7 @@ public class XSLTProcess extends MatchingTask implements XSLTLogger {
         }
         return liaison;
     }
-    
+
     /**
      * Create an instance of an XSL parameter for configuration by Ant.
      *
@@ -577,36 +596,36 @@ public class XSLTProcess extends MatchingTask implements XSLTLogger {
         params.addElement(p);
         return p;
     }
-    
+
     /**
      * The Param inner class used to store XSL parameters
      */
-    public class Param {
+    public static class Param {
         /** The parameter name */
         private String name = null;
-        
+
         /** The parameter's XSL expression */
         private String expression = null;
-        
-        /** 
+
+        /**
          * Set the parameter name.
-         * 
+         *
          * @param name the name of the parameter.
          */
         public void setName(String name){
             this.name = name;
         }
-        
-        /** 
+
+        /**
          * The XSL expression for the parameter value
          *
-         * @param expression the XSL expression representing the 
+         * @param expression the XSL expression representing the
          *   parameter's value.
          */
         public void setExpression(String expression){
             this.expression = expression;
         }
-        
+
         /**
          * Get the parameter name
          *
@@ -619,7 +638,7 @@ public class XSLTProcess extends MatchingTask implements XSLTLogger {
             }
             return name;
         }
-        
+
         /**
          * Get the parameter expression
          *
@@ -697,7 +716,7 @@ public class XSLTProcess extends MatchingTask implements XSLTLogger {
      */
     public void init() throws BuildException {
         super.init();
-        xmlCatalog.setProject(project);
+        xmlCatalog.setProject(getProject());
     }
 
     /**
@@ -707,11 +726,11 @@ public class XSLTProcess extends MatchingTask implements XSLTLogger {
      * @exception BuildException if the stylesheet cannot be loaded.
      */
     protected void configureLiaison(File stylesheet) throws BuildException {
-        if (stylesheetLoaded) {
+        if (stylesheetLoaded && reuseLoadedStylesheet) {
             return;
         }
         stylesheetLoaded = true;
-        
+
         try {
             log("Loading stylesheet " + stylesheet, Project.MSG_INFO);
             liaison.setStylesheet(stylesheet);
@@ -729,8 +748,8 @@ public class XSLTProcess extends MatchingTask implements XSLTLogger {
     }
 
     /**
-     * Specific configuration for the TRaX liaison... support for
-     * all other has been dropped so this liaison will soon look
+     * Specific configuration for the TRaX liaison. Support for
+     * all others has been dropped so this liaison will soon look
      * like the exact copy of JAXP interface..
      * @param liaison the TRaXLiaison to configure.
      */
