@@ -55,14 +55,14 @@ package org.apache.tools.ant.taskdefs.optional.perforce;
 
 import org.apache.tools.ant.BuildException;
 
-/** P4Delete - checkout file(s) for deletion.
+/** Checkout files for deletion.
  *
  * Example Usage:<br>
  * &lt;p4delete change="${p4.change}" view="//depot/project/foo.txt" /&gt;<br>
  *
  * Simple re-write of P4Edit changing 'edit' to 'delete'.<br>
  *
- * @todo: What to do if file is already open in one of our changelists perhaps
+ * @todo What to do if file is already open in one of our changelists perhaps
  * (See also {@link P4Edit P4Edit})?<br>
  *
  * @author <A HREF="mailto:mike@tmorph.com">Mike Roberts</A>, <A HREF="mailto:leslie.hughes@rubus.com">Les Hughes</A>

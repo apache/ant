@@ -63,7 +63,7 @@ import java.util.Random;
 import java.util.Vector;
 
 /**
- * This is an example of an AntTask that makes of use of the AntSoundPlayer.
+ * Plays a sound file at the end of the build, according to whether the build failed or succeeded.
  *
  * There are three attributes to be set:
  *

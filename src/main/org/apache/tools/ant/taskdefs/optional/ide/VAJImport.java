@@ -65,7 +65,7 @@ import java.lang.reflect.Field;
 
 /**
  * Import source, class files, and resources to the Visual Age for Java
- * workspace using FileSets.
+ * workspace.
  * <p>
  * Example:
  * <pre>

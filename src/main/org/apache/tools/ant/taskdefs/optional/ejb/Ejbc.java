@@ -63,7 +63,7 @@ import org.apache.tools.ant.types.Path;
 import java.io.File;
 
 /**
- * Build EJB support classes using Weblogic's ejbc tool from a directory containing
+ * Builds EJB support classes using WebLogic's ejbc tool from a directory containing
  * a set of deployment descriptors.
  *
  *

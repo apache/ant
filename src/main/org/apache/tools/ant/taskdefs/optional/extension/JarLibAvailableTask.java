@@ -61,7 +61,7 @@ import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Task;
 
 /**
- * Check whether an extension is present in a fileset or an extensionSet.
+ * Checks whether an extension is present in a fileset or an extensionSet.
  *
  * @author <a href="mailto:peter@apache.org">Peter Donald</a>
  * @ant.task name="jarlib-available"

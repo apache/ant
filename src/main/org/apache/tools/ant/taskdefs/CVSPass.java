@@ -67,9 +67,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 
 /**
- * CVSLogin
- *
- * Adds an new entry to a CVS password file
+ * Adds an new entry to a CVS password file.
  *
  * @author <a href="jeff@custommonkey.org">Jeff Martin</a>
  * @version $Revision$

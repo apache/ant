@@ -62,7 +62,7 @@ import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Task;
 
 /**
- *  A task to support hot deployment tools for J2EE servers.
+ *  Controls hot deployment tools for J2EE servers.
  *
  *  This class is used as a framework for the creation of vendor specific
  *  hot deployment tools.

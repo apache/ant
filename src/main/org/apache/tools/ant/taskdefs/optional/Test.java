@@ -61,6 +61,7 @@ import java.util.Vector;
  * This is a primitive task to execute a unit test in the org.apache.testlet framework.
  * 
  * @author <a href="mailto:donaldp@apache.org">Peter Donald</a>
+ * @ant.task ignore="true"
  */
 public class Test extends Java {
 

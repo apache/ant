@@ -59,7 +59,7 @@ import org.apache.tools.ant.BuildException;
 
 
 /**
- * Exit the active build, giving an additional message
+ * Exits the active build, giving an additional message
  * if available.
  *
  * @author <a href="mailto:nico@seessle.de">Nico Seessle</a>

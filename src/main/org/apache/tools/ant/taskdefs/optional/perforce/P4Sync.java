@@ -62,7 +62,8 @@ package org.apache.tools.ant.taskdefs.optional.perforce;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
 
-/** P4Sync  - synchronise client space to a perforce depot view.
+/** Synchronize client space to a Perforce depot view.
+ *
  *  The API allows additional functionality of the "p4 sync" command
  * (such as "p4 sync -f //...#have" or other exotic invocations).</P>
  *
@@ -75,7 +76,7 @@ import org.apache.tools.ant.Project;
  * <tr><td>Sync to a label</td><td>&lt;P4Sync label="myPerforceLabel" /&gt;</td></tr>
  * </table>
  *
- * ToDo:  Add decent label error handling for non-exsitant labels
+ * @todo Add decent label error handling for non-exsitant labels
  *
  * @author <A HREF="mailto:leslie.hughes@rubus.com">Les Hughes</A>
  */

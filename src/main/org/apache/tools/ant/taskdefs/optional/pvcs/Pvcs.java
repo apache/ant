@@ -77,8 +77,8 @@ import org.apache.tools.ant.types.Commandline;
 
 /**
  *
- * The pvcs task allows the user of ant to extract the latest edition
- * of the source code from a PVCS repository. PVCS is a version control system
+ * Extracts the latest edition of the source code from a PVCS repository.
+ * PVCS is a version control system
  * developed by <a href="http://www.merant.com/products/pvcs">Merant</a>.
  * <br>
  * Before using this tag, the user running ant must have access to the commands 

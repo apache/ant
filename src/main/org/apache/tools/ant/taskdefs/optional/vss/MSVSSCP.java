@@ -58,7 +58,7 @@ import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.types.Commandline;
 
 /**
- * Task to perform CP (Change Project) commands to Microsoft Visual Source Safe.
+ * Performs CP (Change Project) commands to Microsoft Visual SourceSafe.
  * <p>This task is typically used before a VssAdd in order to set the target project</p>
  * Based on the VSS Checkin code by Martin Poeschl
  *

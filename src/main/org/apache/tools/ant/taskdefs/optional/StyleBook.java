@@ -60,7 +60,7 @@ import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.taskdefs.Java;
 
 /**
- * This executes the apache Stylebook documentation generator. 
+ * Executes the Apache Stylebook documentation generator.
  * Unlike the commandline version of this tool, all three arguments
  * are required to run stylebook.
  * <p>

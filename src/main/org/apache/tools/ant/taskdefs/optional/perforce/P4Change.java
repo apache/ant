@@ -63,7 +63,7 @@ import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
 
 /** 
- * Request a new changelist from the Perforce server. 
+ * Requests a new changelist from the Perforce server.
  * P4Change creates a new changelist in perforce. P4Change sets the property
  * ${p4.change} with the new changelist number. This should then be passed into
  * p4edit and p4submit.

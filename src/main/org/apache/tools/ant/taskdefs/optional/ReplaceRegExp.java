@@ -74,8 +74,7 @@ import java.io.PrintWriter;
 import java.util.Vector;
 
 /**
- * <pre>
- * Task to do regular expression string replacements in a text
+ * Performs regular expression string replacements in a text
  * file.  The input file(s) must be able to be properly processed by
  * a Reader instance.  That is, they must be text only, no binary.
  *
@@ -85,6 +84,7 @@ import java.util.Vector;
  * is <code>org.apache.tools.ant.util.regexp.JakartaOroRegexp</code> and
  * requires the Jakarta Oro Package).
  *
+ * <pre>
  * For jdk  &lt;= 1.3, there are two available implementations:
  *   org.apache.tools.ant.util.regexp.JakartaOroRegexp (the default)
  *        Requires  the jakarta-oro package

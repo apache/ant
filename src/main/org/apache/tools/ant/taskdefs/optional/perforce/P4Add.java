@@ -68,7 +68,7 @@ import org.apache.tools.ant.DirectoryScanner;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.types.FileSet;
 
-/** P4Add  - add specified files to Perforce.
+/** Adds specified files to Perforce.
  *
  * <b>Example Usage:</b>
  * <table border="1">

@@ -64,7 +64,7 @@ import org.apache.tools.ant.Task;
 import org.apache.tools.ant.BuildException;
 
 /**
- * Execute a script
+ * Executes a script.
  *
  * @ant.task name="script"
  * @author Sam Ruby <a href="mailto:rubys@us.ibm.com">rubys@us.ibm.com</a>

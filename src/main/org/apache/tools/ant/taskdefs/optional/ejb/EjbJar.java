@@ -76,8 +76,9 @@ import org.apache.tools.ant.types.EnumeratedAttribute;
 import org.apache.tools.ant.types.FileSet;
 
 /**
+ * Provides automated EJB JAR file creation.
  * <p>
- * Provides automated EJB JAR file creation. Extends the
+ * Extends the
  * MatchingTask class provided in the default ant distribution to provide a
  * directory scanning EJB jarfile generator.
  * </p>
@@ -473,7 +474,7 @@ public class EjbJar extends MatchingTask {
 
     /**
      * Controls whether the
-     * destination jars are written out in the destination directory with
+     * destination JARs are written out in the destination directory with
      * the same hierarchical structure from which the deployment descriptors
      * have been read. If this is set to true the generated EJB jars are
      * written into the root of the destination directory, otherwise they

@@ -70,7 +70,7 @@ import org.apache.tools.ant.taskdefs.Execute;
 import org.apache.tools.ant.types.Commandline;
 
 /**
- *
+ * Invokes the rpm tool to build a Linux installation file.
  *  @author lucas@collab.net
  */
 public class Rpm extends Task {

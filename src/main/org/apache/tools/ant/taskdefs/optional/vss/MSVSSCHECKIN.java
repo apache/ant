@@ -61,7 +61,7 @@ import org.apache.tools.ant.types.Path;
 import java.io.File;
 
 /**
- * Task to perform CheckIn commands to Microsoft Visual Source Safe.
+ * Performs CheckIn commands to Microsoft Visual SourceSafe.
  *
  * @author Martin Poeschl
  *

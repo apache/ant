@@ -65,8 +65,8 @@ import com.starbase.util.OLEDate;
 import org.apache.tools.ant.BuildException;
 
 /**
- * This class logs into StarTeam and creates a label for the repository at the
- * time of the last successful build.
+ * Creates a view label in StarTeam at the specified view.
+ *
  * Ant Usage:
  * <pre>
  * &lt;taskdef name="stlabel"

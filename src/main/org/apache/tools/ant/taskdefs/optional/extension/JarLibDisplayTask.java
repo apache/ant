@@ -62,8 +62,8 @@ import org.apache.tools.ant.Task;
 import org.apache.tools.ant.types.FileSet;
 
 /**
- * Display the "Optional Package" and "Package Specification" information
- * contained within the specified jars.
+ * Displays the "Optional Package" and "Package Specification" information
+ * contained within the specified JARs.
  *
  * <p>Prior to JDK1.3, an "Optional Package" was known as an Extension.
  * The specification for this mechanism is available in the JDK1.3

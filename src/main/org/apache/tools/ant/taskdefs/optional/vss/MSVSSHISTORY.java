@@ -65,7 +65,7 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.text.ParseException;
 /**
- * Task to perform HISTORY commands to Microsoft Visual Source Safe.
+ * Performs History commands to Microsoft Visual SourceSafe.
  *
  * @author Balazs Fejes 2
  * @author Glenn_Twiggs@bmc.com

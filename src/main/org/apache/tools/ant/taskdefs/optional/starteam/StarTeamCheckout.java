@@ -68,8 +68,8 @@ import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
 
 /**
- * This class logs into StarTeam checks out any changes that have occurred since
- * the last successful build. It also creates all working directories on the
+ * Checks out files from a StarTeam project.
+ * It also creates all working directories on the
  * local directory if appropriate. Ant Usage:
  * <pre>
  * &lt;taskdef name="starteamcheckout"

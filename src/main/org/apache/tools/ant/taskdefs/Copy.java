@@ -76,7 +76,7 @@ import java.util.Hashtable;
 import java.util.Enumeration;
 
 /**
- * A consolidated copy task.  Copies a file or directory to a new file
+ * Copies a file or directory to a new file
  * or directory.  Files are only copied if the source file is newer
  * than the destination file, or when the destination file does not
  * exist.  It is possible to explicitly overwrite existing files.</p>

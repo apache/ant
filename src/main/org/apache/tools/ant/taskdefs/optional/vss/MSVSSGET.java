@@ -61,7 +61,7 @@ import org.apache.tools.ant.types.Path;
 import java.io.File;
 
 /**
- * Task to perform GET commands to Microsoft Visual Source Safe.
+ * Perform Get commands to Microsoft Visual SourceSafe.
  * <p>
  * The following attributes are interpreted:
  * <table border="1">

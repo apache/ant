@@ -66,8 +66,8 @@ import com.starbase.starteam.ViewConfiguration;
 import org.apache.tools.ant.BuildException;
 
 /**
- * StarTeamList.java
- *
+ * Produces a listing of the contents of the StarTeam repository
+ * at the specified view and StarTeamFolder.
  *
  * Created: Tue Dec 25 06:51:14 2001
  *

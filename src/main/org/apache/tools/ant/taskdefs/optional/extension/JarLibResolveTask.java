@@ -65,7 +65,7 @@ import org.apache.tools.ant.taskdefs.optional.extension.resolvers.AntResolver;
 
 /**
  * Tries to locate a JAR to satisfy an extension and place
- * location of jar into property.
+ * location of JAR into property.
  *
  * @author <a href="mailto:peter@apache.org">Peter Donald</a>
  * @author <a href="mailto:jeff@socialchange.net.au">Jeff Turner</a>

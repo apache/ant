@@ -62,7 +62,7 @@ package org.apache.tools.ant.taskdefs.optional.perforce;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
 
-/** P4Submit - submit a numbered changelist to Perforce.
+/** Submits a numbered changelist to Perforce.
  *
  * <B>Note:</B> P4Submit cannot (yet) submit the default changelist.
  * This shouldn't be a problem with the ANT task as the usual flow is

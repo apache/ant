@@ -61,7 +61,7 @@ import org.apache.tools.ant.types.Path;
 import java.io.File;
 
 /**
- * Task to perform CheckOut commands to Microsoft Visual Source Safe.
+ * Performs CheckOut commands to Microsoft Visual SourceSafe.
  * <p>If you specify two or more attributes from version, date and 
  * label only one will be used in the order version, date, label.</p>
  * @author Martin Poeschl

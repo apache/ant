@@ -73,7 +73,8 @@ import org.apache.tools.ant.taskdefs.MatchingTask;
 import org.apache.tools.ant.types.EnumeratedAttribute;
 
 /**
- * Task to compile NetRexx source files. This task can take the following
+ * Compiles NetRexx source files.
+ * This task can take the following
  * arguments:
  * <ul>
  * <li>binary</li>

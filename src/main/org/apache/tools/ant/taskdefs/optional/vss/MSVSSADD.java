@@ -59,7 +59,7 @@ import org.apache.tools.ant.types.Commandline;
 import org.apache.tools.ant.types.Path;
 
 /**
- * Task to perform Add commands to Microsoft Visual Source Safe.
+ * Performs Add commands to Microsoft Visual SourceSafe.
  * Based on the VSS Checkin code by Martin Poeschl
  *
  * @author Nigel Magnay

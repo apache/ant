@@ -69,7 +69,7 @@ import org.apache.tools.ant.util.FileUtils;
 import org.apache.tools.ant.util.JavaEnvUtils;
 
 /**
- * Get a particular file from a URL source.
+ * Gets a particular file from a URL source.
  * Options include verbose reporting, timestamp based fetches and controlling
  * actions on failures. NB: access through a firewall only works if the whole
  * Java runtime is correctly configured.

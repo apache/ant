@@ -66,7 +66,7 @@ import org.apache.tools.ant.Project;
 import org.apache.tools.ant.Task;
  
 /**
- * creates a splash screen. The splash screen is displayed
+ * Creates a splash screen. The splash screen is displayed
  * for the duration of the build and includes a handy progress bar as
  * well. Use in conjunction with the sound task to provide interest
  * whilst waiting for your builds to complete...

@@ -72,7 +72,7 @@ import java.util.Vector;
 import java.text.SimpleDateFormat;
 
 /**
- * Sets properties to the current time.
+ * Sets properties to the current time, or offsets from the current time.
  * The default properties are TSTAMP, DSTAMP and TODAY;
  *
  * @author costin@dnt.ro

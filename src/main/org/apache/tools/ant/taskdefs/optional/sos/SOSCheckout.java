@@ -57,7 +57,8 @@ import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.types.Commandline;
 
 /**
- * Task to retreive and lock file(s) in Visual Source Safe via a SourceOffSite server.
+ * Retrieves and locks files in Visual SourceSafe via a SourceOffSite server.
+ *
  * <p>
  * The following attributes are interpretted:
  * <table border="1">

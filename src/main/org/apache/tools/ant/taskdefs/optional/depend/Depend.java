@@ -74,7 +74,7 @@ import org.apache.tools.ant.types.Reference;
 import org.apache.tools.ant.util.depend.DependencyAnalyzer;
 
 /**
- * Generate a dependency file for a given set of classes
+ * Generates a dependency file for a given set of classes.
  *
  * @author Conor MacNeill
  */

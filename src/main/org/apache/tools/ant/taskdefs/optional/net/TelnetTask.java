@@ -67,7 +67,7 @@ import java.util.Enumeration;
 import java.util.Vector;
 
 /**
- * Class to provide automated telnet protocol support for the Ant build tool
+ * Automates the telnet protocol.
  *
  * @author <a href="mailto:ScottCarlson@email.com">ScottCarlson@email.com</a>
  * @version $Revision$

@@ -72,7 +72,8 @@ import java.util.Vector;
 import java.util.Random;
 
 /**
- * Simple Metamata MParse task based on the original written by
+ * Simple Metamata MParse task.
+ * Based on the original written by
  * <a href="mailto:thomas.haas@softwired-inc.com">Thomas Haas</a>.
  * 
  * This version was written for Metamata 2.0 available at
@@ -299,7 +300,7 @@ public class MParse extends Task {
     
     /**
      * return all options of the command line as string elements
-     * @param an array of options corresponding to the setted options.
+     * @return an array of options corresponding to the setted options.
      */
     protected String[] getOptions(){
         Vector options = new Vector();

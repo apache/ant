@@ -62,7 +62,7 @@ package org.apache.tools.ant.taskdefs.optional.perforce;
 import org.apache.tools.ant.BuildException;
 
 /* 
- * Move (or reopen in Perforce speak) checkout files between changelists.
+ * Reopen Perforce checkout files between changelists.
  *
  * @author <A HREF="mailto:leslie.hughes@rubus.com">Les Hughes</A>
  */

@@ -58,7 +58,8 @@ import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.types.Commandline;
 
 /**
- * Task to perform LABEL commands to Microsoft Visual Source Safe.
+ * Performs Label commands to Microsoft Visual SourceSafe.
+ *
  * <p>
  * The following attributes are interpreted:
  * <table border="1">

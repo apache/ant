@@ -63,7 +63,8 @@ import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
 
 /** 
- * Obtain or set the value of a counter.
+ * Obtains or sets the value of a counter.
+ *
  * <p> When used in its base form
  * (where only the counter name is provided), the counter value will be
  * printed to the output stream. When the value is provided, the counter

@@ -92,7 +92,7 @@ import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 
 /**
- * Executes a series of SQL statements to a database using JDBC.
+ * Executes a series of SQL statements on a database using JDBC.
  *
  * <p>Statements can
  * either be read in from a text file using the <i>src</i> attribute or from 

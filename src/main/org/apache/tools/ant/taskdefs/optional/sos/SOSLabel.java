@@ -57,7 +57,7 @@ import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.types.Commandline;
 
 /**
- * Task to label a Visual Source Safe via a SourceOffSite server.
+ * Labels Visual SourceSafe files via a SourceOffSite server.
  * <p>
  * The following attributes are interpreted:
  * <table border="1">

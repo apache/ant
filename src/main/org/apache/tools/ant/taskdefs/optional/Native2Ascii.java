@@ -67,7 +67,7 @@ import org.apache.tools.ant.util.SourceFileScanner;
 import java.io.File;
 
 /**
- * Convert files from native encodings to ascii.
+ * Converts files from native encodings to ASCII.
  *
  * @author <a href="asudell@acm.org">Drew Sudell</a>
  * @author <a href="mailto:stefan.bodewig@epost.de">Stefan Bodewig</a>

@@ -58,7 +58,7 @@ import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.types.Commandline;
 
 /**
- * Creates a new project in VSS.
+ * Creates a new project in Microsoft Visual SourceSafe.
  * <p>
  * The following attributes are interpreted:
  * <table border="1">

@@ -63,7 +63,7 @@ import org.apache.tools.ant.types.Path;
 import java.io.File;
 
 /**
- * Build a serialised deployment descriptor given a text file description of the 
+ * Builds a serialized deployment descriptor given a text file description of the
  * descriptor in the format supported by WebLogic.
  *
  * This ant task is a front end for the weblogic DDCreator tool.

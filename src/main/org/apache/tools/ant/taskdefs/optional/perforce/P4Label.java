@@ -67,8 +67,7 @@ import org.apache.tools.ant.Project;
 
 
 /** 
- *
- *  Create a new Perforce label and set contents to reflect current 
+ *  Creates a new Perforce label and set contents to reflect current
  *  client file revisions.
  *
  *  Label name defaults to AntLabel if none set.

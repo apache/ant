@@ -63,7 +63,7 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 /**
- * Echo
+ * Writes a message to the Ant logging facilities.
  *
  * @author costin@dnt.ro
  *

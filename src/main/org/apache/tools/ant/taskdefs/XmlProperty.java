@@ -72,8 +72,9 @@ import java.io.IOException;
 import java.util.Vector;
 
 /**
- * Task that gets property values from a valid xml file,
+ * Loads property values from a valid XML file,
  * generating the property names from the file's element and attribute names.
+ *
  * Example:
  * <pre>
  *   &lt;root-tag myattr="true"&gt;

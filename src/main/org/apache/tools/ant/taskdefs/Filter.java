@@ -61,8 +61,8 @@ import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
 
 /**
- * Sets a token filter that is used by the file copy methods
- * of the project to do token substitution, or sets mutiple tokens by
+ * Sets a token filter that is used by the file copy tasks
+ * to do token substitution. Sets mutiple tokens by
  * reading these from a file.
  *
  * @author Stefano Mazzocchi 

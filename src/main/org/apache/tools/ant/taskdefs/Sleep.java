@@ -58,7 +58,8 @@ import org.apache.tools.ant.Task;
 import org.apache.tools.ant.BuildException;
 
 /**
- * Sleep for a period of time
+ * Sleep, or pause, for a period of time.
+ *
  * A task for sleeping a short period of time, useful when a
  * build or deployment process requires an interval between tasks.
  *<p>

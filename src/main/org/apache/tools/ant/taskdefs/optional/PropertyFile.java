@@ -78,10 +78,9 @@ import java.text.ParseException;
 import java.text.DecimalFormat;
 
 /**
- *PropertyFile task uses java.util.Properties to modify integer, String and
- *Date settings in a property file.<p>
+ *Modifies settings in a property file.
  *
- *
+ * <p>
  *The following is an example of its usage:
  *    <ul>&lt;target name="setState"&gt;<br>
  *    <ul>&lt;property<br>
@@ -286,8 +285,9 @@ public class PropertyFile extends Task {
         }
     }
 
-    /*
+    /**
     * Returns whether the given parameter has been defined.
+    * @todo IDEA is saying this method is never used - remove?
     */
     private boolean checkParam(String param) {
         return !((param == null) || (param.equals("null")));

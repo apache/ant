@@ -69,7 +69,7 @@ import org.apache.tools.ant.types.XMLCatalog;
 import org.xml.sax.EntityResolver;
 
 /**
- * A Task to process via XSLT a set of XML documents. This is
+ * Processes a set of XML documents via XSLT. This is
  * useful for building views of XML based documentation.
  *
  * @version $Revision$ 
