@@ -66,7 +66,12 @@ with the following attributes:</p>
 <p>Note that Ant will not automatically convert / or \ characters in
 the <code>to</code> and <code>from</code> attributes to the correct
 directory separator of your current platform.  If you need to specify
-this separator, use <code>${file.separator}</code> instead.</p>
+this separator, use <code>${file.separator}</code> instead.
+  For the regexpmapper, <code>${file.separator}</code> will not work,
+as on windows it is the '\' character, and this is an escape character
+for regular expressions, one should use the <code>handledirchar</code> attribute
+instead.
+</p>
 <h3>Parameters specified as nested elements</h3>
 <p>The classpath can be specified via a nested
 <code>&lt;classpath&gt;</code>, as well - that is,
