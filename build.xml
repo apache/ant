@@ -107,6 +107,17 @@
 
   <!--
        ===================================================================
+         Set up patternsets to be used by javac and junit to exclude
+         files that have dependencies that are not available
+       ===================================================================
+  -->
+  <patternset id="needs.jakarta.regexp">
+    <exclude name="${regexp.package}/JakartaRegexp*.java"
+             unless="jakarta.regexp.present" />
+  </patternset>
+
+  <!--
+       ===================================================================
          Check to see what optional dependencies are available
        ===================================================================
   -->
@@ -289,8 +300,7 @@
            deprecation="${deprecation}"
            optimize="${optimize}" >
       <classpath refid="classpath" />
-      <exclude name="${regexp.package}/JakartaRegexp*.java"
-               unless="jakarta.regexp.present" />
+      <patternset refid="needs.jakarta.regexp" />
       <exclude name="${regexp.package}/JakartaOro*.java"
                unless="jakarta.oro.present" />
       <exclude name="${regexp.package}/Jdk14Regexp*.java"
@@ -346,6 +356,7 @@
                unless="xalan.present" />
       <exclude name="${optional.package}/jdepend/*" unless="jdepend.present" />
       <exclude name="${optional.package}/sitraka/**" unless="some.regexp.support"/>
+      <exclude name="${optional.package}/sitraka/**" unless="trax.present"/>
       <exclude name="${optional.package}/metamata/MAudit*" unless="jakarta.oro.present"/>
       <exclude name="${optional.package}/metamata/MMetrics*"
                unless="trax.present"/>
@@ -904,8 +915,7 @@
 
       <exclude name="${optional.package}/ANTLRTest.java"
                unless="antlr.present" />
-      <exclude name="${regexp.package}/JakartaRegexp*Test.java"
-               unless="jakarta.regexp.present" />
+      <patternset refid="needs.jakarta.regexp" />
       <exclude name="${regexp.package}/JakartaOro*Test.java"
                unless="jakarta.oro.present" />
       <exclude name="${regexp.package}/Jdk14Regexp*Test.java"
@@ -916,6 +926,8 @@
 
       <exclude name="${optional.package}/sitraka/*.java"
                unless="some.regexp.support" />
+      <exclude name="${optional.package}/sitraka/*.java"
+               unless="trax.present" />
       <exclude name="${optional.package}/sitraka/XMLReportTest.java"
                unless="trax.present" />
 
@@ -1006,8 +1018,7 @@
           <!-- only run these tests if their required libraries are installed -->
           <exclude name="${optional.package}/ANTLRTest.java"
                    unless="antlr.present" />
-          <exclude name="${regexp.package}/JakartaRegexp*Test.java"
-                   unless="jakarta.regexp.present" />
+          <patternset refid="needs.jakarta.regexp" />
           <exclude name="${regexp.package}/JakartaOro*Test.java"
                    unless="jakarta.oro.present" />
           <exclude name="${regexp.package}/Jdk14Regexp*Test.java"
