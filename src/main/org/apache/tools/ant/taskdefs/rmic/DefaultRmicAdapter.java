@@ -25,7 +25,6 @@ import org.apache.tools.ant.taskdefs.Rmic;
 import org.apache.tools.ant.types.Commandline;
 import org.apache.tools.ant.types.Path;
 import org.apache.tools.ant.util.FileNameMapper;
-import org.apache.tools.ant.util.JavaEnvUtils;
 
 /**
  * This is the default implementation for the RmicAdapter interface.
@@ -39,6 +38,9 @@ public abstract class DefaultRmicAdapter implements RmicAdapter {
     private Rmic attributes;
     private FileNameMapper mapper;
     private static final Random rand = new Random();
+    public static final String RMI_STUB_SUFFIX = "_Stub";
+    public static final String RMI_SKEL_SUFFIX = "_Skel";
+    public static final String RMI_TIE_SUFFIX = "_Tie";
 
     public DefaultRmicAdapter() {
     }
@@ -53,15 +55,15 @@ public abstract class DefaultRmicAdapter implements RmicAdapter {
     }
 
     protected String getStubClassSuffix() {
-        return "_Stub";
+        return RMI_STUB_SUFFIX;
     }
 
     protected String getSkelClassSuffix() {
-        return "_Skel";
+        return RMI_SKEL_SUFFIX;
     }
 
     protected String getTieClassSuffix() {
-        return "_Tie";
+        return RMI_TIE_SUFFIX;
     }
 
     /**

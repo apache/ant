@@ -23,8 +23,8 @@ package org.apache.tools.ant.taskdefs.rmic;
 
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
+import org.apache.tools.ant.util.JavaEnvUtils;
 import org.apache.tools.ant.taskdefs.Rmic;
-import org.apache.tools.ant.taskdefs.Java;
 import org.apache.tools.ant.taskdefs.Execute;
 import org.apache.tools.ant.taskdefs.LogStreamHandler;
 import org.apache.tools.ant.types.Commandline;
@@ -56,7 +56,7 @@ public class ForkingSunRmic extends DefaultRmicAdapter {
         Commandline cmd = setupRmicCommand();
         Project project=owner.getProject();
         //rely on RMIC being on the path
-        cmd.setExecutable(SunRmic.RMIC_EXECUTABLE);
+        cmd.setExecutable(JavaEnvUtils.getJdkExecutable(SunRmic.RMIC_EXECUTABLE));
 
         //set up the args
         String[] args=cmd.getCommandline();
