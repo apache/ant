@@ -57,10 +57,8 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.io.ObjectInputStream;
-import java.io.ByteArrayInputStream;
-import java.util.Vector;
 import java.util.Properties;
+import java.util.Vector;
 
 import org.apache.tools.ant.taskdefs.optional.junit.TestRunListener;
 
@@ -128,7 +126,7 @@ public class MessageReader {
      * appropriate message to the listeners.
      */
     protected void processMessage(String message) {
-        if (message == null){
+        if (message == null) {
             return;
         }
 
@@ -173,17 +171,16 @@ public class MessageReader {
             notifyTestSuiteStopped(elapsedTime);
             return;
         }
-        if (message.startsWith(MessageIds.PROPS_START)){
+        if (message.startsWith(MessageIds.PROPS_START)) {
             try {
                 byte[] bytes = arg.substring(0, arg.indexOf(MessageIds.PROPS_END)).getBytes();
                 bytes = Base64.decode(bytes);
-                ObjectInputStream ois = new ObjectInputStream(new ByteArrayInputStream(bytes));
-                sysprops = (Properties)ois.readObject();
-            } catch (Exception e){
+                sysprops = (Properties) SocketUtil.deserialize(bytes);
+                notifyTestSystemProperties(sysprops);
+            } catch (Exception e) {
                 // ignore now
                 e.printStackTrace();
             }
-            notifyTestSystemProperties(sysprops);
         }
     }
 

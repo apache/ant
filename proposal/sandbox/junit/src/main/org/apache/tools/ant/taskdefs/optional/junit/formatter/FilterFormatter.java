@@ -65,7 +65,7 @@ public abstract class FilterFormatter implements Formatter {
 
     protected Formatter formatter;
 
-    protected FilterFormatter(Formatter value){
+    protected FilterFormatter(Formatter value) {
         formatter = value;
     }
 

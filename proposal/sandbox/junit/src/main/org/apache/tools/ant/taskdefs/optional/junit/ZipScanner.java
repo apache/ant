@@ -55,14 +55,12 @@ package org.apache.tools.ant.taskdefs.optional.junit;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.Vector;
 import java.util.Enumeration;
-import java.util.zip.ZipFile;
+import java.util.Vector;
 import java.util.zip.ZipEntry;
+import java.util.zip.ZipFile;
 
 import org.apache.tools.ant.DirectoryScanner;
-import org.apache.tools.ant.FileScanner;
-import org.apache.tools.ant.BuildException;
 
 /**
  * Provide a way to scan entries in a zip file. Note that it extends
@@ -93,10 +91,10 @@ public class ZipScanner extends DirectoryScanner {
      * normalize a set of paths so that it uses / otherwise matching will
      * fail beautifully since archives use / to denote a path.
      */
-    protected void normalize(String[] files){
-        if (files != null){
-            for (int i = 0; i < files.length; i++){
-                files[i] = files[i].replace('\\','/');
+    protected void normalize(String[] files) {
+        if (files != null) {
+            for (int i = 0; i < files.length; i++) {
+                files[i] = files[i].replace('\\', '/');
             }
         }
     }
@@ -113,11 +111,11 @@ public class ZipScanner extends DirectoryScanner {
         }
         if (!basedir.exists()) {
             throw new IllegalStateException("zipfile " + basedir
-                                            + " does not exist");
+                    + " does not exist");
         }
         if (basedir.isDirectory()) {
             throw new IllegalStateException("zipfile " + basedir
-                                            + " is not a file");
+                    + " is not a file");
         }
 
         if (includes == null) {
@@ -129,12 +127,12 @@ public class ZipScanner extends DirectoryScanner {
             excludes = new String[0];
         }
 
-        filesIncluded    = new Vector();
+        filesIncluded = new Vector();
         filesNotIncluded = new Vector();
-        filesExcluded    = new Vector();
-        dirsIncluded     = new Vector();
-        dirsNotIncluded  = new Vector();
-        dirsExcluded     = new Vector();
+        filesExcluded = new Vector();
+        dirsIncluded = new Vector();
+        dirsNotIncluded = new Vector();
+        dirsExcluded = new Vector();
 
         if (isIncluded("")) {
             if (!isExcluded("")) {
@@ -152,13 +150,13 @@ public class ZipScanner extends DirectoryScanner {
         ZipFile zip = null;
         try {
             zip = new ZipFile(file);
-        } catch (IOException e){
+        } catch (IOException e) {
             throw new IllegalStateException(e.getMessage());
         }
 
         Enumeration entries = zip.entries();
-        while ( entries.hasMoreElements() ) {
-            ZipEntry entry = (ZipEntry)entries.nextElement();
+        while (entries.hasMoreElements()) {
+            ZipEntry entry = (ZipEntry) entries.nextElement();
             String name = entry.getName();
             // @fixme do we need to strip out entries that starts
             // with . or ./ ?

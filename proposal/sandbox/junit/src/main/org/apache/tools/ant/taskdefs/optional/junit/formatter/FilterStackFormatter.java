@@ -53,10 +53,6 @@
  */
 package org.apache.tools.ant.taskdefs.optional.junit.formatter;
 
-import java.io.StringWriter;
-import java.io.PrintWriter;
-import java.io.StringReader;
-import java.io.BufferedReader;
 import java.util.StringTokenizer;
 
 import org.apache.tools.ant.util.StringUtils;
@@ -83,32 +79,32 @@ import org.apache.tools.ant.util.StringUtils;
 public class FilterStackFormatter extends FilterFormatter {
 
     /** the set of matches to look for in a stack trace */
-    private final static String[] DEFAULT_TRACE_FILTERS = new String[] {
-                "junit.framework.TestCase",
-                "junit.framework.TestResult",
-                "junit.framework.TestSuite",
-                "junit.framework.Assert.", // don't filter AssertionFailure
-                "junit.swingui.TestRunner",
-                "junit.awtui.TestRunner",
-                "junit.textui.TestRunner",
-                "java.lang.reflect.Method.invoke(",
-                "org.apache.tools.ant."
-        };
+    private final static String[] DEFAULT_TRACE_FILTERS = new String[]{
+        "junit.framework.TestCase",
+        "junit.framework.TestResult",
+        "junit.framework.TestSuite",
+        "junit.framework.Assert.", // don't filter AssertionFailure
+        "junit.swingui.TestRunner",
+        "junit.awtui.TestRunner",
+        "junit.textui.TestRunner",
+        "java.lang.reflect.Method.invoke(",
+        "org.apache.tools.ant."
+    };
 
     /**
      * Creates a new <tt>FilterStackFormatter</tt>
      * @param formatter the formatter to be filtered.
      */
-    public FilterStackFormatter(Formatter formatter){
+    public FilterStackFormatter(Formatter formatter) {
         super(formatter);
     }
 
     public void onTestFailed(int status, String testname, String trace) {
-        StringTokenizer st = new StringTokenizer(trace,"\r\n");
+        StringTokenizer st = new StringTokenizer(trace, "\r\n");
         StringBuffer buf = new StringBuffer(trace.length());
-        while ( st.hasMoreTokens() ){
+        while (st.hasMoreTokens()) {
             String line = st.nextToken();
-            if ( accept(line) ){
+            if (accept(line)) {
                 buf.append(line).append(StringUtils.LINE_SEP);
             }
         }
@@ -120,7 +116,7 @@ public class FilterStackFormatter extends FilterFormatter {
      * @param the line to be check for acceptance.
      * @return <tt>true</tt> if the line is accepted, <tt>false</tt> if not.
      */
-    protected boolean accept(String line){
+    protected boolean accept(String line) {
         for (int i = 0; i < DEFAULT_TRACE_FILTERS.length; i++) {
             if (line.indexOf(DEFAULT_TRACE_FILTERS[i]) > 0) {
                 return false;

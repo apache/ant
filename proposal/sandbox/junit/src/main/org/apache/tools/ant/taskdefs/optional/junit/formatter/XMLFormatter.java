@@ -61,8 +61,6 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Text;
 
-import org.apache.tools.ant.taskdefs.optional.junit.TestRunListener;
-
 /**
  *
  * @author <a href="mailto:sbailliez@apache.org">Stephane Bailliez</a>
@@ -148,12 +146,12 @@ public class XMLFormatter extends BaseFormatter {
     public void onTestEnded(String testname) {
         Element currentTest = (Element) testElements.get(testname);
         // with a TestSetup, startTest and endTest are not called.
-        if (currentTest == null){
+        if (currentTest == null) {
             onTestStarted(testname);
             currentTest = (Element) testElements.get(testname);
         }
         Long l = (Long) testStarts.get(testname);
-        float time = ((System.currentTimeMillis()-l.longValue()) / 1000.0f);
+        float time = ((System.currentTimeMillis() - l.longValue()) / 1000.0f);
         currentTest.setAttribute(ATTR_TIME, Float.toString(time));
         super.onTestEnded(testname);
         // remove the test objects
@@ -201,23 +199,23 @@ public class XMLFormatter extends BaseFormatter {
     private static DocumentBuilder getDocumentBuilder() {
         try {
             return DocumentBuilderFactory.newInstance().newDocumentBuilder();
-        } catch(Exception exc) {
+        } catch (Exception exc) {
             throw new ExceptionInInitializerError(exc);
         }
     }
 
-    protected static String[] parseFirstLine(String trace){
+    protected static String[] parseFirstLine(String trace) {
         int pos = trace.indexOf('\n');
-        if (pos == -1){
-            return new String[]{ trace, ""};
+        if (pos == -1) {
+            return new String[]{trace, ""};
         }
         String line = trace.substring(0, pos);
         pos = line.indexOf(':');
-        if (pos != -1){
+        if (pos != -1) {
             String classname = line.substring(0, pos).trim();
             String message = line.substring(pos + 1).trim();
-            return new String[]{ classname, message };
+            return new String[]{classname, message};
         }
-        return new String[]{ trace, ""};
+        return new String[]{trace, ""};
     }
 }

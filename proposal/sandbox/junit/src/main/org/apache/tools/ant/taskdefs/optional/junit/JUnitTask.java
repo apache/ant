@@ -58,18 +58,18 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.util.Enumeration;
 import java.util.Properties;
 import java.util.Vector;
-import java.util.Enumeration;
 
 import junit.runner.TestCollector;
 
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.Task;
-import org.apache.tools.ant.taskdefs.optional.junit.formatter.Formatter;
 import org.apache.tools.ant.taskdefs.Execute;
 import org.apache.tools.ant.taskdefs.LogStreamHandler;
+import org.apache.tools.ant.taskdefs.optional.junit.formatter.Formatter;
 import org.apache.tools.ant.types.Commandline;
 import org.apache.tools.ant.types.CommandlineJava;
 import org.apache.tools.ant.types.Path;
@@ -136,8 +136,8 @@ public class JUnitTask extends Task {
         // get all test classes to run...
         StringBuffer buf = new StringBuffer(10240);
         Enumeration classnames = collectTests();
-        while ( classnames.hasMoreElements() ){
-            String classname = (String)classnames.nextElement();
+        while (classnames.hasMoreElements()) {
+            String classname = (String) classnames.nextElement();
             buf.append(classname).append(" ");
         }
         props.setProperty("classnames", buf.toString());
@@ -170,10 +170,10 @@ public class JUnitTask extends Task {
     /**
      * @return all collected tests specified with test elements.
      */
-    protected Enumeration collectTests(){
+    protected Enumeration collectTests() {
         Enumeration[] tests = new Enumeration[testCollectors.size()];
-        for (int i = 0; i < testCollectors.size(); i++){
-            TestCollector te = (TestCollector)testCollectors.elementAt(i);
+        for (int i = 0; i < testCollectors.size(); i++) {
+            TestCollector te = (TestCollector) testCollectors.elementAt(i);
             tests[i] = te.collectTests();
         }
         return Enumerations.fromCompound(tests);

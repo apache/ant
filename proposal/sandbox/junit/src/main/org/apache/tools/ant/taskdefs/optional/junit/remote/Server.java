@@ -54,7 +54,6 @@
 package org.apache.tools.ant.taskdefs.optional.junit.remote;
 
 import java.io.IOException;
-import java.io.PrintWriter;
 import java.net.ServerSocket;
 import java.net.Socket;
 
@@ -134,11 +133,11 @@ public class Server {
 
     /** shutdown the server and any running client */
     public void shutdown() {
-        if (writer != null){
+        if (writer != null) {
             writer.close();
             writer = null;
         }
-        if (reader != null){
+        if (reader != null) {
             //@fixme what about the stream ?
             reader = null;
         }
@@ -152,11 +151,11 @@ public class Server {
         } catch (IOException e) {
         }
         try {
-            if (server != null){
+            if (server != null) {
                 server.close();
                 server = null;
             }
-        } catch (IOException e){
+        } catch (IOException e) {
         }
     }
 

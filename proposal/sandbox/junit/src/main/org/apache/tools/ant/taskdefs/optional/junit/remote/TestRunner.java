@@ -54,13 +54,13 @@
 package org.apache.tools.ant.taskdefs.optional.junit.remote;
 
 import java.io.BufferedReader;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.io.FileInputStream;
 import java.net.Socket;
-import java.util.Vector;
 import java.util.Properties;
 import java.util.StringTokenizer;
+import java.util.Vector;
 
 import junit.framework.AssertionFailedError;
 import junit.framework.Test;
@@ -69,9 +69,9 @@ import junit.framework.TestListener;
 import junit.framework.TestResult;
 import junit.framework.TestSuite;
 
-import org.apache.tools.ant.util.StringUtils;
 import org.apache.tools.ant.taskdefs.optional.junit.JUnitHelper;
 import org.apache.tools.ant.taskdefs.optional.junit.TestRunListener;
+import org.apache.tools.ant.util.StringUtils;
 
 /**
  * TestRunner for running tests and send results to a remote server.
@@ -110,7 +110,7 @@ public class TestRunner implements TestListener {
     private BufferedReader reader;
 
     /** bean constructor */
-    public TestRunner(){
+    public TestRunner() {
     }
 
     /**
@@ -216,28 +216,29 @@ public class TestRunner implements TestListener {
             }
         }
     }
+
     /**
      * Initialize the TestRunner from properties.
      * @param the properties containing configuration data.
      * @see #init(String[])
      */
-    protected void init(Properties props){
-        if ( props.getProperty("debug") != null ){
+    protected void init(Properties props) {
+        if (props.getProperty("debug") != null) {
             setDebug(true);
         }
         String port = props.getProperty("port");
-        if (port != null){
+        if (port != null) {
             setPort(Integer.parseInt(port));
         }
         String host = props.getProperty("host");
-        if (host != null){
+        if (host != null) {
             setHost(host);
         }
         String classnames = props.getProperty("classnames");
-        if (classnames != null){
+        if (classnames != null) {
             StringTokenizer st = new StringTokenizer(classnames);
-            while (st.hasMoreTokens()){
-                addTestClassName( st.nextToken() );
+            while (st.hasMoreTokens()) {
+                addTestClassName(st.nextToken());
             }
         }
     }
@@ -272,10 +273,10 @@ public class TestRunner implements TestListener {
             String classname = (String) testClassNames.elementAt(i);
             try {
                 Test test = JUnitHelper.getTest(null, classname);
-                if (test != null){
+                if (test != null) {
                     suites.addElement(test);
                 }
-            } catch (Exception e){
+            } catch (Exception e) {
                 // notify log error instead ?
                 log("Could not get Test instance from " + classname);
                 log(e);
@@ -304,7 +305,7 @@ public class TestRunner implements TestListener {
 
         long startTime = System.currentTimeMillis();
         for (int i = 0; i < suites.length; i++) {
-            if (suites[i] instanceof TestCase){
+            if (suites[i] instanceof TestCase) {
                 suites[i] = new TestSuite(suites[i].getClass().getName());
             }
             suites[i].run(testResult);
@@ -413,14 +414,14 @@ public class TestRunner implements TestListener {
         writer.notifyTestEnded(testName);
     }
 
-    public void log(String msg){
-        if (debug){
+    public void log(String msg) {
+        if (debug) {
             System.out.println(msg);
         }
     }
 
-    public void log(Throwable t){
-        if (debug){
+    public void log(Throwable t) {
+        if (debug) {
             t.printStackTrace();
         }
     }

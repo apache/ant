@@ -69,7 +69,7 @@ import junit.framework.TestResult;
 public class WatchdogTest extends TestDecorator {
 
     /** the time out delay in msecs */
-    protected long timeOut;
+    private long timeOut;
 
     /**
      * Create a new watchdog.

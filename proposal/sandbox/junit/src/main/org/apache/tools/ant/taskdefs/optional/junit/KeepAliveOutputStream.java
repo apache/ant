@@ -54,8 +54,8 @@
 package org.apache.tools.ant.taskdefs.optional.junit;
 
 import java.io.FilterOutputStream;
-import java.io.OutputStream;
 import java.io.IOException;
+import java.io.OutputStream;
 
 /**
  * Class that can be used to wrap <tt>System.out</tt> and <tt>System.err</tt>

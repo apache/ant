@@ -53,8 +53,8 @@
  */
 package org.apache.tools.ant.taskdefs.optional.junit.formatter;
 
+import java.io.PrintWriter;
 import java.text.MessageFormat;
-import java.util.ResourceBundle;
 
 /**
  * Display a summary message at the end of a testsuite stating
@@ -64,19 +64,20 @@ import java.util.ResourceBundle;
  */
 public class SummaryFormatter extends BaseFormatter {
 
-    protected MessageFormat mf = new MessageFormat(
+    protected final MessageFormat mf = new MessageFormat(
             "Tests run: {0, number, integer}" +
             ", Failures: {1, number, integer}" +
             ", Errors: {2, number, integer}" +
             ", Time elapsed: {3, number, integer} sec");
 
     protected void finished(long elapsedtime) {
+        PrintWriter writer = getWriter();
         writer.print("Testsuite: ");
         writer.println();
         String line = mf.format(new Object[]{
-            new Integer(runCount),
-            new Integer(failureCount),
-            new Integer(errorCount),
+            new Integer(getRunCount()),
+            new Integer(getFailureCount()),
+            new Integer(getErrorCount()),
             new Long(elapsedtime / 1000)
         });
         writer.print(line);

@@ -53,6 +53,8 @@
  */
 package org.apache.tools.ant.taskdefs.optional.junit.formatter;
 
+import java.io.PrintWriter;
+
 
 /**
  * Display additional messages from a <tt>SummaryFormatter</tt>
@@ -63,6 +65,7 @@ package org.apache.tools.ant.taskdefs.optional.junit.formatter;
 public class BriefFormatter extends SummaryFormatter {
 
     public void onTestFailed(int status, String testname, String trace) {
+        PrintWriter writer = getWriter();
         writer.print("TestCase: ");
         writer.print(testname);
         if (status == STATUS_ERROR) {

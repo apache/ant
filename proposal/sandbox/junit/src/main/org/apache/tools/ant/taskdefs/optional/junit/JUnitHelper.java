@@ -53,14 +53,13 @@
  */
 package org.apache.tools.ant.taskdefs.optional.junit;
 
-import java.lang.reflect.Method;
 import java.io.File;
+import java.lang.reflect.Method;
 import java.net.URL;
 
 import junit.framework.Test;
 import junit.framework.TestSuite;
 
-import org.apache.tools.ant.Project;
 import org.apache.tools.ant.types.Path;
 
 /**
@@ -78,12 +77,12 @@ public final class JUnitHelper {
      * <tt>name(classname)</tt>
      * @return an array with the elements in the order name, classname.
      */
-    public static String[] parseTestString(String testname){
+    public static String[] parseTestString(String testname) {
         int p1 = testname.indexOf('(');
         int p2 = testname.indexOf(')', p1);
         return new String[]{
             testname.substring(0, p1),
-            testname.substring(p1 + 1, p2) };
+            testname.substring(p1 + 1, p2)};
     }
 
     /**
@@ -110,10 +109,10 @@ public final class JUnitHelper {
     public static Test getTest(Class clazz) {
         try {
             Object obj = clazz.newInstance();
-			if (obj instanceof TestSuite){
-				return (TestSuite) obj;
+            if (obj instanceof TestSuite) {
+                return (TestSuite) obj;
             }
-        } catch (Exception e){
+        } catch (Exception e) {
         }
         try {
             // check if there is a suite method
@@ -125,7 +124,7 @@ public final class JUnitHelper {
         // this will generate warnings if the class is no suitable Test
         try {
             return new TestSuite(clazz);
-        } catch (Exception e){
+        } catch (Exception e) {
         }
         return null;
     }
@@ -141,7 +140,7 @@ public final class JUnitHelper {
      * @return the file or directory containing the resource or
      * <tt>null</tt> if it does not know how to handle it.
      */
-    public static File getResourceEntry(String resource){
+    public static File getResourceEntry(String resource) {
         URL url = JUnitHelper.class.getResource(resource);
         if (url != null) {
             // can't find the resource...
@@ -169,7 +168,7 @@ public final class JUnitHelper {
      * @param resource the resource to look for.
      * @see #getResourceEntry(String)
      */
-    public static void addClasspathEntry(Path path, String resource){
+    public static void addClasspathEntry(Path path, String resource) {
         File f = getResourceEntry(resource);
         if (f != null) {
             path.createPathElement().setLocation(f);

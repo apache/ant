@@ -105,7 +105,7 @@ public class FilterElement {
         try {
             Class clazz = Class.forName(classname);
             if (!FilterFormatter.class.isAssignableFrom(clazz)) {
-                throw new BuildException( clazz + " must be a FilterFormatter.");
+                throw new BuildException(clazz + " must be a FilterFormatter.");
             }
             Constructor ctor = clazz.getConstructor(new Class[]{Formatter.class});
             return (Formatter) ctor.newInstance(new Object[]{f});

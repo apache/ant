@@ -70,12 +70,12 @@ public class TestElement implements TestCollector {
 //@fixme, a path is needed for a test.
 
     public Enumeration collectTests() {
-        return Enumerations.fromArray( new String[]{ name } );
+        return Enumerations.fromArray(new String[]{name});
     }
 
 // Ant bean setters
 
-    public String setName(String value){
+    public void setName(String value) {
         this.name = value;
     }
 }

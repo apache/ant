@@ -51,120 +51,45 @@
  * information on the Apache Software Foundation, please see
  * <http://www.apache.org/>.
  */
-package org.apache.tools.ant.taskdefs.optional.junit.formatter;
+package org.apache.tools.ant.taskdefs.optional.junit.remote;
 
-import java.io.BufferedWriter;
-import java.io.IOException;
-import java.io.OutputStream;
-import java.io.OutputStreamWriter;
-import java.io.PrintWriter;
-import java.util.Properties;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 
 /**
- * Provide a common set of attributes and methods to factorize
+ * A set of helper methods related to sockets.
  *
  * @author <a href="mailto:sbailliez@apache.org">Stephane Bailliez</a>
  */
-public abstract class BaseFormatter implements Formatter {
+public class SocketUtil {
 
-    /** writer to output the data to */
-    private PrintWriter writer;
 
-    /** number of errors */
-    private int errorCount;
-
-    /** number of failures */
-    private int failureCount;
-
-    /** number of runs (success + failure + error) */
-    private int runCount;
-
-    public void setOutput(OutputStream value) {
-        try {
-            writer = new PrintWriter(new BufferedWriter(new OutputStreamWriter(value, "UTF8")), true);
-        } catch (IOException e) {
-            // should not happen
-            throw new IllegalStateException(e.getMessage());
-        }
-    }
-
-    protected void finalize() throws Throwable {
-        super.finalize();
-        close();
-    }
-
-    public void setSystemOutput(String out) {
-    }
-
-    public void setSystemError(String err) {
-    }
-
-    public void onTestStdOutLine(String testname, String line) {
-    }
-
-    public void onTestStdErrLine(String testname, String line) {
-    }
-
-    public void onTestRunSystemProperties(Properties props) {
-    }
-
-    public void onTestStarted(String testname) {
-    }
-
-    public void onTestEnded(String testname) {
-    }
-
-    public void onTestFailed(int status, String testname, String trace) {
-        if (status == STATUS_ERROR) {
-            errorCount++;
-        } else if (status == STATUS_FAILURE) {
-            failureCount++;
-        }
-    }
-
-    public void onTestRunStarted(int testcount) {
-        runCount = testcount;
-    }
-
-    public void onTestRunEnded(long elapsedtime) {
-        finished(elapsedtime);
-    }
-
-    public void onTestRunStopped(long elapsedtime) {
-        finished(elapsedtime);
-    }
-
-    protected void finished(long elapsedtime) {
-        close();
+    /**
+     * Helper method to deserialize an object
+     * @param bytes the binary data representing the serialized object.
+     * @return the deserialized object.
+     * @throws Exception a generic exception if an error occurs when
+     * deserializing the object.
+     */
+    public static Object deserialize(byte[] bytes) throws Exception {
+        ObjectInputStream ois = new ObjectInputStream(new ByteArrayInputStream(bytes));
+        return ois.readObject();
     }
 
     /**
-     * @return the writer used to print data.
+     * Helper method to serialize an object
+     * @param o the object to serialize.
+     * @return the binary data representing the serialized object.
+     * @throws Exception a generic exception if an error occurs when
+     * serializing the object.
      */
-    protected final PrintWriter getWriter() {
-        return writer;
-    }
-
-    /** @return the number of errors */
-    protected final int getErrorCount() {
-        return errorCount;
-    }
-
-    /** @return the number of failures */
-    protected final int getFailureCount() {
-        return failureCount;
-    }
-
-    /** @return the number of runs */
-    protected final int getRunCount() {
-        return runCount;
-    }
-
-    /** helper method to flush and close the stream */
-    protected void close() {
-        if (writer != null) {
-            writer.flush();
-            writer.close();
-        }
+    public static byte[] serialize(Object o) throws Exception {
+        ByteArrayOutputStream out = new ByteArrayOutputStream();
+        ObjectOutputStream oos = new ObjectOutputStream(out);
+        oos.writeObject(o);
+        oos.close();
+        return out.toByteArray();
     }
 }

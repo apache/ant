@@ -55,9 +55,6 @@ package org.apache.tools.ant.taskdefs.optional.junit.remote;
 
 import java.io.OutputStream;
 import java.io.PrintWriter;
-import java.io.ObjectOutputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
 
 import org.apache.tools.ant.taskdefs.optional.junit.TestRunListener;
 
@@ -80,12 +77,12 @@ public class MessageWriter implements MessageIds {
         this.pw = new PrintWriter(out, true);
     }
 
-    protected void finalize(){
+    protected void finalize() {
         close();
     }
 
     public void close() {
-        if (pw != null){
+        if (pw != null) {
             pw.close();
             pw = null;
         }
@@ -140,13 +137,13 @@ public class MessageWriter implements MessageIds {
 
     public void notifySystemProperties() {
         try {
-            ByteArrayOutputStream out = new ByteArrayOutputStream();
-            ObjectOutputStream oos = new ObjectOutputStream(out);
-            oos.writeObject(System.getProperties());
-            oos.close();
-            String msg = new String(Base64.encode(out.toByteArray()));
-            sendMessage(MessageIds.PROPS_START + msg + MessageIds.PROPS_END);
-        } catch (IOException e){
+            StringBuffer msg = new StringBuffer(512);
+            msg.append(MessageIds.PROPS_START);
+            byte[] data = SocketUtil.serialize(System.getProperties());
+            msg.append(Base64.encode(data));
+            msg.append(MessageIds.PROPS_END);
+            sendMessage(msg.toString());
+        } catch (Exception e) {
             // ignore
             e.printStackTrace();
         }

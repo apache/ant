@@ -53,20 +53,18 @@
  */
 package org.apache.tools.ant.taskdefs.optional.junit;
 
-import java.util.Enumeration;
-import java.util.Vector;
-import java.util.Hashtable;
-import java.util.zip.ZipFile;
-import java.util.zip.ZipEntry;
 import java.io.File;
+import java.util.Enumeration;
+import java.util.Hashtable;
+import java.util.Vector;
 
 import junit.runner.TestCollector;
 
-import org.apache.tools.ant.types.PatternSet;
-import org.apache.tools.ant.types.Path;
-import org.apache.tools.ant.ProjectComponent;
 import org.apache.tools.ant.DirectoryScanner;
 import org.apache.tools.ant.Project;
+import org.apache.tools.ant.ProjectComponent;
+import org.apache.tools.ant.types.Path;
+import org.apache.tools.ant.types.PatternSet;
 
 /**
  * A rough implementation of a test collector that will collect tests
@@ -78,7 +76,7 @@ import org.apache.tools.ant.Project;
 public class ClasspathTestCollector extends ProjectComponent
         implements TestCollector {
 
-    private final static int SUFFIX_LENGTH= ".class".length();
+    private final static int SUFFIX_LENGTH = ".class".length();
 
     private PatternSet patterns = new PatternSet();
 
@@ -90,21 +88,21 @@ public class ClasspathTestCollector extends ProjectComponent
         // override last one in case there are duplicates.
         // ie mimic classpath behavior.
         String[] paths = path.list();
-        for (int i = paths.length; i >= 0; i--){
+        for (int i = paths.length; i >= 0; i--) {
             File f = new File(paths[i]);
             Vector included = null;
-            if ( f.isDirectory() ){
+            if (f.isDirectory()) {
                 included = gatherFromDirectory(f);
-            } else if ( f.getName().endsWith(".zip")
-                    || f.getName().endsWith(".jar") ) {
+            } else if (f.getName().endsWith(".zip")
+                    || f.getName().endsWith(".jar")) {
                 included = gatherFromArchive(f);
             } else {
                 continue;
             }
             // add tests to the already collected one
             final int includedCount = included.size();
-            for (int j = 0; j < includedCount; j++){
-                String testname = (String)included.elementAt(i);
+            for (int j = 0; j < includedCount; j++) {
+                String testname = (String) included.elementAt(i);
                 collected.put(testname, "");
             }
         }
@@ -112,7 +110,7 @@ public class ClasspathTestCollector extends ProjectComponent
     }
 
 
-    protected Vector gatherFromDirectory(File dir){
+    protected Vector gatherFromDirectory(File dir) {
         Project project = getProject();
         DirectoryScanner ds = new DirectoryScanner();
         ds.setBasedir(dir);
@@ -123,7 +121,7 @@ public class ClasspathTestCollector extends ProjectComponent
         return testClassNameFromFile(included);
     }
 
-    protected Vector gatherFromArchive(File zip){
+    protected Vector gatherFromArchive(File zip) {
         ZipScanner zs = new ZipScanner();
         zs.setBasedir(zip);
         zs.setIncludes(patterns.getIncludePatterns(project));
@@ -133,11 +131,11 @@ public class ClasspathTestCollector extends ProjectComponent
         return testClassNameFromFile(included);
     }
 
-    protected Vector testClassNameFromFile(String[] classFileNames){
+    protected Vector testClassNameFromFile(String[] classFileNames) {
         Vector tests = new Vector(classFileNames.length);
-        for (int i = 0; i < classFileNames.length; i++){
+        for (int i = 0; i < classFileNames.length; i++) {
             String file = classFileNames[i];
-            if ( isTestClass(file) ){
+            if (isTestClass(file)) {
                 String classname = classNameFromFile(file);
                 tests.addElement(classname);
             }
@@ -146,30 +144,30 @@ public class ClasspathTestCollector extends ProjectComponent
     }
 
     protected boolean isTestClass(String classFileName) {
-		return classFileName.endsWith(".class");
-	}
+        return classFileName.endsWith(".class");
+    }
 
-	protected String classNameFromFile(String classFileName) {
-		// convert /a/b.class to a.b
-		String s= classFileName.substring(0, classFileName.length()-SUFFIX_LENGTH);
-		String s2= s.replace(File.separatorChar, '.');
-		if ( s2.startsWith(".") ){
-			s2 =  s2.substring(1);
+    protected String classNameFromFile(String classFileName) {
+        // convert /a/b.class to a.b
+        String s = classFileName.substring(0, classFileName.length() - SUFFIX_LENGTH);
+        String s2 = s.replace(File.separatorChar, '.');
+        if (s2.startsWith(".")) {
+            s2 = s2.substring(1);
         }
-		return s2;
-	}
+        return s2;
+    }
 
 // Ant bean accessors
 
-    public void setPath(Path path){
+    public void setPath(Path path) {
         this.path = path;
     }
 
-    public PatternSet.NameEntry createInclude(){
+    public PatternSet.NameEntry createInclude() {
         return patterns.createInclude();
     }
 
-    public PatternSet.NameEntry createExclude(){
+    public PatternSet.NameEntry createExclude() {
         return patterns.createExclude();
     }
 
