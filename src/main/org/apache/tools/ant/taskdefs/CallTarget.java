@@ -83,6 +83,16 @@ public class CallTarget extends Task {
     private Ant callee;
     private String subTarget;
     private boolean initialized = false;
+    private boolean inheritAll = true;
+
+    /**
+     * If true, inherit all properties from parent Project
+     * If false, inherit only userProperties and those defined
+     * inside the antcall call itself
+     **/
+    public void setInheritAll(boolean inherit) {
+       inheritAll = inherit;
+    } //-- setInheritAll
 
     public void init() {
         callee = (Ant) project.createTask("ant");
@@ -106,6 +116,7 @@ public class CallTarget extends Task {
         callee.setDir(project.getBaseDir());
         callee.setAntfile(project.getProperty("ant.file"));
         callee.setTarget(subTarget);
+        callee.setInheritAll(inheritAll);
         callee.execute();
     }
 

@@ -11,6 +11,16 @@
 <h3>Description</h3>
 <p>Call another target within the same build-file optionally specifying some
 properties (param's in this context)</p>
+<p>By default, all of the properties of the current project will be
+available in the new project.   Alternatively, you can
+set the <i>inheritAll</i> attribute to <code>false</code> and only
+&quot;user&quot; properties (i.e., those passed on the command-line)
+will be passed to the new project.  In either case, the set of
+properties passed to the new project will override the properties that 
+are set in the new project (See also the <a href="property.html">property task</a>).</p>
+<p>You can also set properties in the new project from the old project by
+using nested param tags. These properties are always passed regardless of the
+setting of <i>inheritAll</i>.  This allows you to parameterize your subprojects.</p>
 <h3>Parameters</h3>
 <table border="1" cellpadding="2" cellspacing="0">
   <tr>
@@ -22,6 +32,13 @@ properties (param's in this context)</p>
     <td valign="top">target</td>
     <td valign="top">The target to execute.</td>
     <td valign="top" align="center">Yes</td>
+  </tr>
+  <tr>
+    <td valign="top">inheritAll</td>
+    <td valign="top">If <code>true</code>, pass all properties to the new Ant
+    project.  Defaults to <code>true</code>.
+    </td>
+    <td align="center" valign="top">No</td>
   </tr>
 </table>
 <h3>Parameters specified as nested elements</h3>
