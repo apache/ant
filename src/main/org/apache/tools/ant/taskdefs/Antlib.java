@@ -177,8 +177,8 @@ public class Antlib extends Task implements TaskContainer {
     public void execute() {
         for (Iterator i = tasks.iterator(); i.hasNext();) {
             UnknownElement ue = (UnknownElement) i.next();
-            ue.maybeConfigure();
             setLocation(ue.getLocation());
+            ue.maybeConfigure();
             Task t = ue.getTask();
             if (t == null) {
                 continue;
