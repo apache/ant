@@ -119,7 +119,7 @@ public class ProjectHelper2 extends ProjectHelper {
     public void parse(Project project, Object source, RootHandler handler)
             throws BuildException
     {
-        long t1=System.currentTimeMillis();
+        
         AntXmlContext context=handler.context;
 
         if(source instanceof File) {
@@ -158,11 +158,6 @@ public class ProjectHelper2 extends ProjectHelper {
             context.parser.setErrorHandler(hb);
             context.parser.setDTDHandler(hb);
             context.parser.parse(inputSource);
-
-            long t2=System.currentTimeMillis();
-            //project.log("parsing buildfile " + context.buildFile +
-            //        " with URI = " + uri + " in " + ( t2-t1 ) , Project.MSG_INFO);
-
         } catch(SAXParseException exc) {
             Location location =
                 new Location(exc.getSystemId(), exc.getLineNumber(), exc.getColumnNumber());
@@ -574,12 +569,11 @@ public class ProjectHelper2 extends ProjectHelper {
             for (int i = 0; i < attrs.getLength(); i++) {
                 String key = attrs.getQName(i);
                 String value = attrs.getValue(i);
-
+                
                 if (key.equals("default")) {
                     if ( value != null && !value.equals("")) {
-                        if( !context.ignoreProjectTag ) {
+                        if( !context.ignoreProjectTag )
                             project.setDefaultTarget(value);
-                        }
                     }
                 } else if (key.equals("name")) {
                     if (value != null) {
@@ -588,7 +582,7 @@ public class ProjectHelper2 extends ProjectHelper {
                         if( !context.ignoreProjectTag ) {
                             project.setName(value);
                             project.addReference(value, project);
-                        }
+                        } 
                     }
                 } else if (key.equals("id")) {
                     if (value != null) {
@@ -598,45 +592,38 @@ public class ProjectHelper2 extends ProjectHelper {
                         }
                     }
                 } else if (key.equals("basedir")) {
-                    baseDir = value;
+                    if( !context.ignoreProjectTag )
+                        baseDir = value;
                 } else {
                     // XXX ignore attributes in a different NS ( maybe store them ? )
-                    throw new SAXParseException("Unexpected attribute \"" +
-                            attrs.getQName(i) + "\"", context.locator);
+                    throw new SAXParseException("Unexpected attribute \"" + attrs.getQName(i) + "\"", context.locator);
                 }
             }
 
-            // make the location available ( for imported files and top level )
-            project.setUserProperty("ant.file."+context.currentProjectName,
-                    context.buildFile.toString());
-
-            if (baseDir == null) {
-                baseDir=context.buildFile.getAbsolutePath();
+            if( context.ignoreProjectTag ) {
+                // no further processing
+                return;
+            }
+            // set explicitely before starting ?
+            if (project.getProperty("basedir") != null) {
+                project.setBasedir(project.getProperty("basedir"));
             } else {
-                // check whether the user has specified an absolute path
-                if (! (new File(baseDir)).isAbsolute()) {
-                    baseDir=project.resolveFile(baseDir,
-                            context.buildFileParent).toString();
+                // Default for baseDir is the location of the build file.
+                if (baseDir == null) {
+                    project.setBasedir(context.buildFileParent.getAbsolutePath());
+                } else {
+                    // check whether the user has specified an absolute path
+                    if ((new File(baseDir)).isAbsolute()) {
+                        project.setBasedir(baseDir);
+                    } else {
+                        project.setBaseDir(project.resolveFile(baseDir,
+                                                               context.buildFileParent));
+                    }
                 }
             }
-            // set basedir.NAME for all projects
-            project.setUserProperty("basedir." + context.currentProjectName,
-                        baseDir);
-
-            // setBasedir - only for top level project
-            if( ! context.ignoreProjectTag ) {
-               if (project.getProperty("basedir") != null) {
-                    project.setBasedir(project.getProperty("basedir"));
-               } else {
-                    project.setBasedir(baseDir);
-               }
-            }
-
-            // Create an implicit target - only top level project
-            if( ! context.ignoreProjectTag ) {
-                project.addTarget("", context.implicitTarget);
-                context.currentTarget=context.implicitTarget;
-            }
+            
+            project.addTarget("", context.implicitTarget);
+            context.currentTarget=context.implicitTarget;
         }
 
         /**
@@ -847,6 +834,7 @@ public class ProjectHelper2 extends ProjectHelper {
                delayed eval */
             UnknownElement task= new UnknownElement(qname);
             task.setProject(context.getProject());
+            //XXX task.setTaskType(qname);
 
             task.setTaskName(qname);
 
