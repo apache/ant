@@ -37,6 +37,10 @@ Other changes:
   target files for some tasks like <copy> or enable new types of tasks
   like <transform>.
 
+* <execon> provides more control over the command line now, the names
+  of the source files are no longer required to be at the end of the
+  command.
+
 Fixed bugs:
 -----------
 

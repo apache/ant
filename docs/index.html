@@ -2171,6 +2171,11 @@ elements to define the files for this task and refer to
 <p>Command line arguments should be specified as nested
 <code>&lt;arg&gt;</code> elements. See <a
 href="index.html#arg">Command line arguments</a>.</p>
+<h4>srcfile</h4>
+<p>By default the file names of the source files will be added to the
+end of the command line. If you need to place it somewhere different,
+use a nested <code>&lt;srcfile&gt; element between your
+<code>&lt;arg&gt;</code> elements to mark the insertion point.</code>
 <h4>env</h4>
 <p>It is possible to specify environment variables to pass to the
 system command via nested <code>&lt;env&gt;</code> elements. See the
@@ -2194,6 +2199,19 @@ description in the section about <a href="#env">exec</a></p>
 files below <code>/tmp</code> not ending in <code>.txt</code> and all
 files of the FileSet with <code>id</code> <code>other.files</code> to
 the command line.</p>
+<blockquote><pre>
+&lt;execon executable=&quot;somecommand&quot; parallel=&quot;false&quot; &gt;
+  &lt;arg value=&quot;arg1&quot; /&gt;
+  &lt;srfile/&gt;
+  &lt;arg value=&quot;arg2&quot; /&gt;
+  &lt;fileset dir=&quot;/tmp&quot; /&gt;
+&lt;/execon&gt;
+</pre></blockquote>
+<p>invokes <code>somecommand arg1 SOURCEFILENAME arg2</code> for each
+file in <code>/tmp</code> replacing SOURCEFILENAME with the absolute
+filename of each file in turn. If <code>parallel</code> had been set
+to true, SOURCEFILENAME would be replaced with the absolute filenames
+of all files separated by spaces.</p>
 <hr>
 <h2><a name="fail">Fail</a></h2>
 <h3>Description</h3>
@@ -4510,7 +4528,7 @@ element.</p>
 <p>The value part of the property being set is <i>true</i> if the
 timestamp of the target files is more recent than the timestamp of
 every corresponding source file.</p>
-<p>The default behavior is to use a <a href="merge-mapper">merge
+<p>The default behavior is to use a <a href="#merge-mapper">merge
 mapper</a> whith the <code>to</code> attribute set to the value of the
 targetfile attribute.</p>
 <p>Normally, this task is used to set properties that are useful to avoid target
