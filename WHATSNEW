@@ -132,6 +132,8 @@ Fixed bugs:
   one it currently builds as well.  See the new <indexjars> element
   for details.  Bugzilla Report 14255.
 
+* Using <macrodef> could break XmlLogger. Bugzilla Report 28993.
+
 Other changes:
 --------------
 
@@ -174,6 +176,17 @@ Other changes:
   Java VMs that get created when forking tests.  This allows you to
   run all tests in a single forked JVM reducing the overhead of VM
   creation a lot.  Bugzilla Report 24697.
+
+* Permit building under JDK 1.5. Bugzilla Report 28996.
+
+* minor Javadoc changes. Bugzilla Report 28998.
+
+* Misc. corrections in SignJar.java. Bugzilla Report 28999.
+
+* Remove redundant <hr> from javah.html. Bugzilla Report 28995.
+
+* Ignore built distributions. Bugzilla Report 28997.
+
 
 Changes from Ant 1.6.0 to Ant 1.6.1
 =============================================
