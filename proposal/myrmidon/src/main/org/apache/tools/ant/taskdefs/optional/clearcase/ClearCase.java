@@ -7,9 +7,9 @@
  */
 package org.apache.tools.ant.taskdefs.optional.clearcase;
 
+import java.io.File;
 import java.io.IOException;
 import org.apache.myrmidon.api.TaskException;
-import org.apache.tools.ant.Project;
 import org.apache.tools.ant.Task;
 import org.apache.tools.ant.taskdefs.exec.Execute;
 import org.apache.tools.ant.taskdefs.exec.LogOutputStream;
@@ -60,9 +60,9 @@ public abstract class ClearCase extends Task
      *
      * @param dir the directory containing the cleartool executable
      */
-    public final void setClearToolDir( String dir )
+    public final void setClearToolDir( final File dir )
     {
-        m_ClearToolDir = getProject().translatePath( dir );
+        m_ClearToolDir = dir.toString();
     }
 
     /**

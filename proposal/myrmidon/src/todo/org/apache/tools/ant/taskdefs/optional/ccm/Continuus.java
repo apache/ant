@@ -8,6 +8,7 @@
 package org.apache.tools.ant.taskdefs.optional.ccm;
 
 import java.io.IOException;
+import java.io.File;
 import org.apache.myrmidon.api.TaskException;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.Task;
@@ -65,9 +66,9 @@ public abstract class Continuus
      *
      * @param dir the directory containing the ccm executable
      */
-    public final void setCcmDir( String dir )
+    public final void setCcmDir( final File dir )
     {
-        m_ccmDir = getProject().translatePath( dir );
+        m_ccmDir = dir.toString();
     }
 
     /**

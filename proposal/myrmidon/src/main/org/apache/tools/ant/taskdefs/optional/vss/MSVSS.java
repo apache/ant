@@ -8,6 +8,7 @@
 package org.apache.tools.ant.taskdefs.optional.vss;
 
 import java.io.IOException;
+import java.io.File;
 import java.util.Properties;
 import org.apache.myrmidon.api.TaskException;
 import org.apache.tools.ant.Project;
@@ -134,9 +135,9 @@ public abstract class MSVSS extends Task
      *
      * @param dir the directory containing ss.exe
      */
-    public final void setSsdir( String dir )
+    public final void setSsdir( final File dir )
     {
-        m_SSDir = getProject().translatePath( dir );
+        m_SSDir = dir.toString();
     }
 
     /**

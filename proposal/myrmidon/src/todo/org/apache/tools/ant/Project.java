@@ -139,42 +139,6 @@ public class Project
     }
 
     /**
-     * Translate a path into its native (platform specific) format. <p>
-     *
-     * This method uses the PathTokenizer class to separate the input path into
-     * its components. This handles DOS style paths in a relatively sensible
-     * way. The file separators are then converted to their platform specific
-     * versions.
-     *
-     * @param to_process the path to be converted
-     * @return the native version of to_process or an empty string if to_process
-     *      is null or empty
-     */
-    public static String translatePath( String to_process )
-    {
-        if( to_process == null || to_process.length() == 0 )
-        {
-            return "";
-        }
-
-        StringBuffer path = new StringBuffer( to_process.length() + 50 );
-        PathTokenizer tokenizer = new PathTokenizer( to_process );
-        while( tokenizer.hasMoreTokens() )
-        {
-            String pathComponent = tokenizer.nextToken();
-            pathComponent = pathComponent.replace( '/', File.separatorChar );
-            pathComponent = pathComponent.replace( '\\', File.separatorChar );
-            if( path.length() != 0 )
-            {
-                path.append( File.pathSeparatorChar );
-            }
-            path.append( pathComponent );
-        }
-
-        return path.toString();
-    }
-
-    /**
      * set the ant.java.version property, also tests for unsupported JVM
      * versions, prints the verbose log messages
      *

@@ -62,9 +62,9 @@ public class Ejbc extends MatchingTask
      *
      * @param s The new Classpath value
      */
-    public void setClasspath( String s )
+    public void setClasspath( final Path s )
     {
-        this.classpath = getProject().translatePath( s );
+        this.classpath = s.toString();
     }
 
     /**
@@ -85,9 +85,9 @@ public class Ejbc extends MatchingTask
      *
      * @param dirName the name of the directory into which code is generated
      */
-    public void setDest( String dirName )
+    public void setDest( final File dirName )
     {
-        generatedFilesDirectory = new File( dirName );
+        generatedFilesDirectory = dirName;
     }
 
     public void setKeepgenerated( String newKeepgenerated )
@@ -159,8 +159,8 @@ public class Ejbc extends MatchingTask
         }
 
         String systemClassPath = System.getProperty( "java.class.path" );
-        String execClassPath = getProject().translatePath( systemClassPath + ":" + classpath +
-                                                           ":" + generatedFilesDirectory );
+        String execClassPath =
+            systemClassPath + File.separator + classpath + File.separator + generatedFilesDirectory;
         // get all the files in the descriptor directory
         DirectoryScanner ds = super.getDirectoryScanner( descriptorDirectory );
 
