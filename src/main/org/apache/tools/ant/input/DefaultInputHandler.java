@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2001-2002 The Apache Software Foundation.  All rights
+ * Copyright (c) 2002 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -52,94 +52,86 @@
  * <http://www.apache.org/>.
  */
 
-package org.apache.tools.ant.taskdefs;
+package org.apache.tools.ant.input;
 
-import  java.util.Vector;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.util.Enumeration;
 
 import org.apache.tools.ant.BuildException;
-import org.apache.tools.ant.Project;
-import org.apache.tools.ant.Task;
-import org.apache.tools.ant.input.InputRequest;
-import org.apache.tools.ant.input.MultipleChoiceInputRequest;
-import org.apache.tools.ant.util.StringUtils;
 
 /**
- * Ant task to read input line from console.
+ * Prompts on System.out, reads input from System.in
  *
- * @author <a href="mailto:usch@usch.net">Ulrich Schmidt</a>
  * @author <a href="mailto:stefan.bodewig@epost.de">Stefan Bodewig</a>
- *
+ * @version $Revision$
  * @since Ant 1.5
- *
- * @ant.task category="control"
  */
-public class Input extends Task {
-    private String validargs = null;
-    private String message = "";
-    private String addproperty = null;
+public class DefaultInputHandler implements InputHandler {
+    
+    /**
+     * Empty no-arg constructor
+     */
+    public DefaultInputHandler() {
+    }
 
     /**
-     * Defines valid input parameters as comma separated String. If set, input
-     * task will reject any input not defined as accepted and requires the user
-     * to reenter it. Validargs are case sensitive. If you want 'a' and 'A' to
-     * be accepted you need to define both values as accepted arguments.
+     * Prompts and requests input.  May loop until a valid input has
+     * been entered.
+     */
+    public void handleInput(InputRequest request) throws BuildException {
+        String prompt = getPrompt(request);
+        BufferedReader in = 
+            new BufferedReader(new InputStreamReader(getInputStream()));
+        do {
+            System.out.println(prompt);
+            try {
+                String input = in.readLine();
+                request.setInput(input);
+            } catch (IOException e) {
+                throw new BuildException("Failed to read input from Console.",
+                                         e);
+            }
+        } while (!request.isInputValid());
+    }
+
+    /**
+     * Constructs user prompt from a request.
      *
-     * @param validargs A comma separated String defining valid input args.
-     */
-    public void setValidargs (String validargs) {
-        this.validargs = validargs;
-    }
-
-    /**
-     * Defines the name of a property to be created from input. Behaviour is
-     * according to property task which means that existing properties
-     * cannot be overriden.
+     * <p>This implementation adds (choice1,choice2,choice3,...) to the
+     * prompt for <code>MultipleChoiceInputRequest</code>s.</p>
      *
-     * @param addproperty Name for the property to be created from input
+     * @param request the request to construct the prompt for.
+     *                Must not be <code>null</code>.
      */
-    public void setAddproperty (String addproperty) {
-        this.addproperty = addproperty;
-    }
-
-    /**
-     * Sets the Message which gets displayed to the user during the build run.
-     * @param message The message to be displayed.
-     */
-    public void setMessage (String message) {
-        this.message = message;
-    }
-
-    /**
-     * Set a multiline message.
-     */
-    public void addText(String msg) {
-        message += getProject().replaceProperties(msg);
-    }
-
-    /**
-     * No arg constructor.
-     */
-    public Input () {
-    }
-
-    /**
-     * Actual test method executed by jakarta-ant.
-     * @exception BuildException
-     */
-    public void execute () throws BuildException {
-        InputRequest request = null;
-        if (validargs != null) {
-            Vector accept = StringUtils.split(validargs, ',');
-            request = new MultipleChoiceInputRequest(message, accept);
-        } else {
-            request = new InputRequest(message);
+    protected String getPrompt(InputRequest request) {
+        String prompt = request.getPrompt();
+        if (request instanceof MultipleChoiceInputRequest) {
+            StringBuffer sb = new StringBuffer(prompt);
+            sb.append("(");
+            Enumeration enum = 
+                ((MultipleChoiceInputRequest) request).getChoices().elements();
+            boolean first = true;
+            while (enum.hasMoreElements()) {
+                if (!first) {
+                    sb.append(",");
+                }
+                sb.append(enum.nextElement());
+                first = false;
+            }
+            sb.append(")");
+            prompt = sb.toString();
         }
+        return prompt;
+    }
 
-        getProject().getInputHandler().handleInput(request);
-
-        if (addproperty != null) {
-            project.setNewProperty(addproperty, request.getInput());
-        }
+    /**
+     * Returns the input stream from which the user input should be read.
+     */
+    protected InputStream getInputStream() {
+        return System.in;
     }
 
 }

@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2001-2002 The Apache Software Foundation.  All rights
+ * Copyright (c) 2002 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -52,94 +52,26 @@
  * <http://www.apache.org/>.
  */
 
-package org.apache.tools.ant.taskdefs;
-
-import  java.util.Vector;
-
-import org.apache.tools.ant.BuildException;
-import org.apache.tools.ant.Project;
-import org.apache.tools.ant.Task;
-import org.apache.tools.ant.input.InputRequest;
-import org.apache.tools.ant.input.MultipleChoiceInputRequest;
-import org.apache.tools.ant.util.StringUtils;
+package org.apache.tools.ant.input;
 
 /**
- * Ant task to read input line from console.
+ * Plugin to Ant to handle requests for user input.
  *
- * @author <a href="mailto:usch@usch.net">Ulrich Schmidt</a>
  * @author <a href="mailto:stefan.bodewig@epost.de">Stefan Bodewig</a>
- *
+ * @version $Revision$
  * @since Ant 1.5
- *
- * @ant.task category="control"
  */
-public class Input extends Task {
-    private String validargs = null;
-    private String message = "";
-    private String addproperty = null;
+public interface InputHandler {
 
     /**
-     * Defines valid input parameters as comma separated String. If set, input
-     * task will reject any input not defined as accepted and requires the user
-     * to reenter it. Validargs are case sensitive. If you want 'a' and 'A' to
-     * be accepted you need to define both values as accepted arguments.
+     * Handle the request encapsulated in the argument.
      *
-     * @param validargs A comma separated String defining valid input args.
-     */
-    public void setValidargs (String validargs) {
-        this.validargs = validargs;
-    }
-
-    /**
-     * Defines the name of a property to be created from input. Behaviour is
-     * according to property task which means that existing properties
-     * cannot be overriden.
+     * <p>Precondition: the request.getPrompt will return a non-null
+     * value.</p>
      *
-     * @param addproperty Name for the property to be created from input
+     * <p>Postcondition: request.getInput will return a non-null
+     * value, request.isInputValid will return true.</p>
      */
-    public void setAddproperty (String addproperty) {
-        this.addproperty = addproperty;
-    }
-
-    /**
-     * Sets the Message which gets displayed to the user during the build run.
-     * @param message The message to be displayed.
-     */
-    public void setMessage (String message) {
-        this.message = message;
-    }
-
-    /**
-     * Set a multiline message.
-     */
-    public void addText(String msg) {
-        message += getProject().replaceProperties(msg);
-    }
-
-    /**
-     * No arg constructor.
-     */
-    public Input () {
-    }
-
-    /**
-     * Actual test method executed by jakarta-ant.
-     * @exception BuildException
-     */
-    public void execute () throws BuildException {
-        InputRequest request = null;
-        if (validargs != null) {
-            Vector accept = StringUtils.split(validargs, ',');
-            request = new MultipleChoiceInputRequest(message, accept);
-        } else {
-            request = new InputRequest(message);
-        }
-
-        getProject().getInputHandler().handleInput(request);
-
-        if (addproperty != null) {
-            project.setNewProperty(addproperty, request.getInput());
-        }
-    }
-
+    void handleInput(InputRequest request) 
+        throws org.apache.tools.ant.BuildException;
 }

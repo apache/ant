@@ -69,6 +69,7 @@ import org.apache.tools.ant.types.FilterSet;
 import org.apache.tools.ant.types.FilterSetCollection; 
 import org.apache.tools.ant.util.FileUtils; 
 import org.apache.tools.ant.util.JavaEnvUtils;
+import org.apache.tools.ant.input.InputHandler;
 
 /**
  * Central representation of an Ant project. This class defines an
@@ -181,6 +182,25 @@ public class Project {
     /** Records the latest task to be executed on a thread (Thread to Task). */ 
     private Hashtable threadTasks = new Hashtable();
     
+    /**
+     * Called to handle any input requests.
+     */
+    private InputHandler inputHandler = null;
+
+    /**
+     * Sets the input handler
+     */
+    public void setInputHandler(InputHandler handler) {
+        inputHandler = handler;
+    }
+
+    /**
+     * Retrieves the current input handler.
+     */
+    public InputHandler getInputHandler() {
+        return inputHandler;
+    }
+
     /** Instance of a utility class to use for file operations. */
     private FileUtils fileUtils;
 

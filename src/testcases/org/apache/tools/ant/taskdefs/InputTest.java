@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2001 The Apache Software Foundation.  All rights
+ * Copyright (c) 2001-2002 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -53,10 +53,13 @@
  */
 
 package org.apache.tools.ant.taskdefs;
+
 import org.apache.tools.ant.BuildFileTest;
+import org.apache.tools.ant.input.PropertyFileInputHandler;
 
 /**
  * @author Ulrich Schmidt <usch@usch.net>
+ * @author <a href="mailto:stefan.bodewig@epost.de">Stefan Bodewig</a>
  */
 public class InputTest extends BuildFileTest {
 
@@ -65,37 +68,34 @@ public class InputTest extends BuildFileTest {
     }
 
     public void setUp() {
+        System.getProperties()
+            .put(PropertyFileInputHandler.FILE_NAME_KEY,
+                 "src/etc/testcases/taskdefs/input.properties");
         configureProject("src/etc/testcases/taskdefs/input.xml");
+        getProject().setInputHandler(new PropertyFileInputHandler());
     }
 
     public void test1() {
-        expectLog("test1", "Press Return key to continue...");
+        executeTarget("test1");
     }
 
     public void test2() {
-        expectLog("test2", "Press Return key to continue...");
+        executeTarget("test1");
     }
 
     public void test3() {
-        String log = "All data is going to be deleted from DB continue (y/n)?";
-        String message = "Invalid input please reenter.";
-        try {
-            executeTarget("test3");
-        } catch (org.apache.tools.ant.BuildException e) {
-            String realLog = getLog();
-            assertEquals(log, realLog);
-            assertEquals(message, e.getMessage());
-        }
+        expectSpecificBuildException("test3", "invalid input",
+                                     "Found invalid input test for All data is"
+                                     + " going to be deleted from DB"
+                                     + " continue?");
     }
 
     public void test5() {
-        expectLog("test5",
-                "All data is going to be deleted from DB continue (y/n)?");
+        executeTarget("test5");
     }
 
     public void test6() {
-        expectLog("test6",
-                "Please enter db-username:");
+        executeTarget("test6");
         assertEquals("scott", project.getProperty("db.user"));
     }
 

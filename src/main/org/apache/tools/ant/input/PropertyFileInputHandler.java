@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2001-2002 The Apache Software Foundation.  All rights
+ * Copyright (c) 2002 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -52,93 +52,76 @@
  * <http://www.apache.org/>.
  */
 
-package org.apache.tools.ant.taskdefs;
-
-import  java.util.Vector;
+package org.apache.tools.ant.input;
 
 import org.apache.tools.ant.BuildException;
-import org.apache.tools.ant.Project;
-import org.apache.tools.ant.Task;
-import org.apache.tools.ant.input.InputRequest;
-import org.apache.tools.ant.input.MultipleChoiceInputRequest;
-import org.apache.tools.ant.util.StringUtils;
+
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.util.Properties;
 
 /**
- * Ant task to read input line from console.
+ * Reads input from a property file, the file name is read from the
+ * system property ant.input.properties, the prompt is the key for input.
  *
- * @author <a href="mailto:usch@usch.net">Ulrich Schmidt</a>
  * @author <a href="mailto:stefan.bodewig@epost.de">Stefan Bodewig</a>
- *
+ * @version $Revision$
  * @since Ant 1.5
- *
- * @ant.task category="control"
  */
-public class Input extends Task {
-    private String validargs = null;
-    private String message = "";
-    private String addproperty = null;
+public class PropertyFileInputHandler implements InputHandler {
+    private Properties props = null;
 
     /**
-     * Defines valid input parameters as comma separated String. If set, input
-     * task will reject any input not defined as accepted and requires the user
-     * to reenter it. Validargs are case sensitive. If you want 'a' and 'A' to
-     * be accepted you need to define both values as accepted arguments.
+     * Name of the system property we expect to hold the file name.
+     */
+    public static final String FILE_NAME_KEY = "ant.input.properties";
+
+    /**
+     * Empty no-arg constructor.
+     */
+    public PropertyFileInputHandler() {
+    }
+
+    /**
+     * Picks up the input from a property, using the prompt as the
+     * name of the property.
      *
-     * @param validargs A comma separated String defining valid input args.
+     * @exception BuildException if no property of that name can be found.
      */
-    public void setValidargs (String validargs) {
-        this.validargs = validargs;
-    }
-
-    /**
-     * Defines the name of a property to be created from input. Behaviour is
-     * according to property task which means that existing properties
-     * cannot be overriden.
-     *
-     * @param addproperty Name for the property to be created from input
-     */
-    public void setAddproperty (String addproperty) {
-        this.addproperty = addproperty;
-    }
-
-    /**
-     * Sets the Message which gets displayed to the user during the build run.
-     * @param message The message to be displayed.
-     */
-    public void setMessage (String message) {
-        this.message = message;
-    }
-
-    /**
-     * Set a multiline message.
-     */
-    public void addText(String msg) {
-        message += getProject().replaceProperties(msg);
-    }
-
-    /**
-     * No arg constructor.
-     */
-    public Input () {
-    }
-
-    /**
-     * Actual test method executed by jakarta-ant.
-     * @exception BuildException
-     */
-    public void execute () throws BuildException {
-        InputRequest request = null;
-        if (validargs != null) {
-            Vector accept = StringUtils.split(validargs, ',');
-            request = new MultipleChoiceInputRequest(message, accept);
-        } else {
-            request = new InputRequest(message);
+    public void handleInput(InputRequest request) throws BuildException {
+        readProps();
+        Object o = props.get(request.getPrompt());
+        if (o == null) {
+            throw new BuildException("Unable to find input for "
+                                     + request.getPrompt());
         }
+        request.setInput(o.toString());
+        if (!request.isInputValid()) {
+            throw new BuildException("Found invalid input " + o
+                                     + " for " + request.getPrompt());
+        }
+    }
 
-        getProject().getInputHandler().handleInput(request);
-
-        if (addproperty != null) {
-            project.setNewProperty(addproperty, request.getInput());
+    /**
+     * Reads the properties file if it hasn't already been read.
+     */
+    private synchronized void readProps() throws BuildException {
+        if (props == null) {
+            String propsFile = System.getProperty(FILE_NAME_KEY);
+            if (propsFile == null) {
+                throw new BuildException("System property "
+                                         + FILE_NAME_KEY
+                                         + " for PropertyFileInputHandler not"
+                                         + " set");
+            }
+            
+            props = new Properties();
+            
+            try {
+                props.load(new FileInputStream(propsFile));
+            } catch (IOException e) {
+                throw new BuildException("Couldn't load " + propsFile, e);
+            }
         }
     }
 

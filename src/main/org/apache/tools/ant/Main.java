@@ -54,6 +54,9 @@
 
 package org.apache.tools.ant;
 
+import org.apache.tools.ant.input.DefaultInputHandler;
+import org.apache.tools.ant.input.InputHandler;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.PrintStream;
@@ -111,6 +114,12 @@ public class Main {
      * BuildLogger interface.
      */
     private String loggerClassname = null;
+    
+    /**
+     * The Ant InputHandler class.  There may be only one input
+     * handler.
+     */
+    private String inputHandlerClassname = null;
 
     /**
      * Whether or not output to the log is to be unadorned.
@@ -339,6 +348,19 @@ public class Main {
                                        "using the -logger argument");
                     return;
                 }
+            } else if (arg.equals("-inputhandler")) {
+                if (inputHandlerClassname != null) {
+                    System.out.println("Only one input handler class may " +
+                                       "be specified.");
+                    return;
+                }
+                try {
+                    inputHandlerClassname = args[++i];
+                } catch (ArrayIndexOutOfBoundsException aioobe) {
+                    System.out.println("You must specify a classname when " +
+                                       "using the -inputhandler argument");
+                    return;
+                }
             } else if (arg.equals("-emacs")) {
                 emacsMode = true;
             } else if (arg.equals("-projecthelp")) {
@@ -528,6 +550,7 @@ public class Main {
 
         try {
             addBuildListeners(project);
+            addInputHandler(project);
 
             PrintStream err = System.err;
             PrintStream out = System.out;
@@ -625,6 +648,36 @@ public class Main {
                     + className, exc);
             }
         }
+    }
+
+    /**
+     * Creates the InputHandler and adds it to the project.
+     *
+     * @exception BuildException if a specified InputHandler
+     *                           implementation could not be loaded.
+     */
+    private void addInputHandler(Project project) {
+        InputHandler handler = null;
+        if (inputHandlerClassname == null) {
+            handler = new DefaultInputHandler();
+        } else {
+            try {
+                handler = (InputHandler)
+                    (Class.forName(inputHandlerClassname).newInstance());
+            } catch (ClassCastException e) {
+                String msg = "The specified input handler class " 
+                    + inputHandlerClassname 
+                    + " does not implement the InputHandler interface";
+                throw new BuildException(msg);
+            }
+            catch (Exception e) {
+                String msg = "Unable to instantiate specified input handler "
+                    + "class " + inputHandlerClassname + " : " 
+                    + e.getClass().getName();
+                throw new BuildException(msg);
+            }
+        }
+        project.setInputHandler(handler);
     }
 
     // XXX: (Jon Skeet) Any reason for writing a message and then using a bare
