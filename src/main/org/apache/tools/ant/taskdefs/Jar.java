@@ -75,6 +75,12 @@ public class Jar extends Zip {
         emptyBehavior = "create";
     }
 
+    public void execute() {
+        if (manifest != null && !manifest.exists())
+            throw new BuildException("Manifest file: " + manifest + " does not exists.");
+        super.execute();
+    }
+
     public void setJarfile(File jarFile) {
         super.setZipfile(jarFile);
     }
