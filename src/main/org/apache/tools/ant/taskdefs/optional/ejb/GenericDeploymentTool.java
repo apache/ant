@@ -113,6 +113,11 @@ public class GenericDeploymentTool implements EJBDeploymentTool {
      */
     private List addedfiles;
 
+	/**
+	 * Handler used to parse the EJB XML descriptor
+	 */
+	private DescriptorHandler handler;
+
     /**
      * Setter used to store the value of destination directory prior to execute()
      * being called.
@@ -205,6 +210,10 @@ public class GenericDeploymentTool implements EJBDeploymentTool {
         getTask().log(message, level);
     }
 
+	protected Location getLocation() {
+		return getTask().getLocation();
+	}
+
 
     /**
      * Configure this tool for use in the ejbjar task.
@@ -293,54 +302,18 @@ public class GenericDeploymentTool implements EJBDeploymentTool {
     }
 
     public void processDescriptor(String descriptorFileName, SAXParser saxParser) {
-        FileInputStream descriptorStream = null;
 
-        try {
-            DescriptorHandler handler = getDescriptorHandler(config.srcDir);
-            
-            /* Parse the ejb deployment descriptor.  While it may not
-             * look like much, we use a SAXParser and an inner class to
-             * get hold of all the classfile names for the descriptor.
-             */
-            descriptorStream = new FileInputStream(new File(config.descriptorDir, descriptorFileName));
-            saxParser.parse(new InputSource(descriptorStream), handler);
-                            
-            Hashtable ejbFiles = handler.getFiles();
+		checkConfiguration(descriptorFileName, saxParser);
                     
-            // add in support classes if any
-            Project project = task.getProject();
-            for (Iterator i = config.supportFileSets.iterator(); i.hasNext();) {
-                FileSet supportFileSet = (FileSet)i.next();
-                File supportBaseDir = supportFileSet.getDir(project);
-                DirectoryScanner supportScanner = supportFileSet.getDirectoryScanner(project);
-                supportScanner.scan();
-                String[] supportFiles = supportScanner.getIncludedFiles();
-                for (int j = 0; j < supportFiles.length; ++j) {
-                    ejbFiles.put(supportFiles[j], new File(supportBaseDir, supportFiles[j]));
-                }
-            }            
+        try {
+			// Retrive the files to be added to JAR from EJB descriptor
+			Hashtable ejbFiles = parseEjbFiles(descriptorFileName, saxParser);
 
-            String baseName = "";
-            
-            // Work out what the base name is
-            if (config.baseJarName != null) {
-                baseName = config.baseJarName;
-            } else {
-                int lastSeparatorIndex = descriptorFileName.lastIndexOf(File.separator);
-                int endBaseName = -1;
-                if (lastSeparatorIndex != -1) {
-                    endBaseName = descriptorFileName.indexOf(config.baseNameTerminator, 
-                                                             lastSeparatorIndex);
-                }
-                else {
-                    endBaseName = descriptorFileName.indexOf(config.baseNameTerminator);
-                }
+			// Add any support classes specified in the build file
+			addSupportClasses(ejbFiles);
 
-                if (endBaseName != -1) {
-                    baseName = descriptorFileName.substring(0, endBaseName);
-                }
-                baseName = descriptorFileName.substring(0, endBaseName);
-            }
+			// Determine the JAR filename (without filename extension)
+			String baseName = getJarBaseName(descriptorFileName);
 
             // First the regular deployment descriptor
             ejbFiles.put(META_DIR + EJB_DD,
@@ -366,30 +339,9 @@ public class GenericDeploymentTool implements EJBDeploymentTool {
             
             File jarFile = getVendorOutputJarFile(baseName);
             
-            // By default we assume we need to build.
-            boolean needBuild = true;
-
-            if (jarFile.exists()) {
-                long    lastBuild = jarFile.lastModified();
-                Iterator fileIter = ejbFiles.values().iterator();
-                // Set the need build to false until we find out otherwise.
-                needBuild = false;
-
-                // Loop through the files seeing if any has been touched
-                // more recently than the destination jar.
-                while( (needBuild == false) && (fileIter.hasNext()) ) {
-                    File currentFile = (File) fileIter.next();
-                    needBuild = ( lastBuild < currentFile.lastModified() );
-                    if (needBuild) {
-                        log("Build needed because " + currentFile.getPath() + " is out of date",
-                            Project.MSG_VERBOSE);
-                    }
-                }
-            }
             
-            // Check to see if we need a build and start
-            // doing the work!
-            if (needBuild) {
+            // Check to see if we need a build and start doing the work!
+            if (needToRebuild(ejbFiles, jarFile)) {
                 // Log that we are going to build...
                 log( "building "
                               + jarFile.getName()
@@ -399,7 +351,8 @@ public class GenericDeploymentTool implements EJBDeploymentTool {
                               Project.MSG_INFO);
     
                 // Use helper method to write the jarfile
-                writeJar(baseName, jarFile, ejbFiles, handler.getPublicId());
+				String publicId = getPublicId();
+                writeJar(baseName, jarFile, ejbFiles, publicId);
 
             }
             else {
@@ -425,7 +378,63 @@ public class GenericDeploymentTool implements EJBDeploymentTool {
                 + ioe.getMessage();
             throw new BuildException(msg, ioe);
         }
-        finally {
+    }
+    
+	/**
+	 * This method is called as the first step in the processDescriptor method
+	 * to allow vendor-specific subclasses to validate the task configuration
+	 * prior to processing the descriptor.  If the configuration is invalid,
+	 * a BuildException should be thrown.
+	 *
+	 * @param descriptorFileName String representing the file name of an EJB
+	 *                           descriptor to be processed
+	 * @param saxParser          SAXParser which may be used to parse the XML
+	 *                           descriptor
+	 * @thows BuildException     Thrown if the configuration is invalid
+	 */
+	protected void checkConfiguration(String descriptorFileName, 
+									SAXParser saxParser) throws BuildException {
+
+		/* 
+		 * For the GenericDeploymentTool, do nothing.  Vendor specific 
+		 * subclasses should throw a BuildException if the configuration is 
+		 * invalid for their server.
+		 */
+	}
+
+	/**
+	 * This method returns a list of EJB files found when the specified EJB
+	 * descriptor is parsed and processed.
+	 *
+	 * @param descriptorFileName String representing the file name of an EJB
+	 *                           descriptor to be processed
+	 * @param saxParser          SAXParser which may be used to parse the XML
+	 *                           descriptor
+	 * @return                   Hashtable of EJB class (and other) files to be
+	 *                           added to the completed JAR file
+	 * @throws SAXException      Any SAX exception, possibly wrapping another 
+	 *                           exception
+     * @throws IOException       An IOException from the parser, possibly from a
+	 *                           the byte stream or character stream 
+	 */
+	protected Hashtable parseEjbFiles(String descriptorFileName, SAXParser saxParser)
+							throws IOException, SAXException {
+		FileInputStream descriptorStream = null;
+		Hashtable ejbFiles = null;
+
+		try {
+			handler = getDescriptorHandler(config.srcDir);
+
+			/* Parse the ejb deployment descriptor.  While it may not
+			 * look like much, we use a SAXParser and an inner class to
+			 * get hold of all the classfile names for the descriptor.
+			 */
+			descriptorStream = new FileInputStream(new File(config.descriptorDir, descriptorFileName));
+			saxParser.parse(new InputSource(descriptorStream), handler);
+							
+			ejbFiles = handler.getFiles();
+
+        } finally {
             if (descriptorStream != null) {
                 try {
                     descriptorStream.close();
@@ -433,8 +442,70 @@ public class GenericDeploymentTool implements EJBDeploymentTool {
                 catch (IOException closeException) {}
             }
         }
-    }
-    
+
+		return ejbFiles;
+	}
+
+	/**
+	 * Adds any classes the user specifies using <i>support</i> nested elements
+	 * to the <code>ejbFiles</code> Hashtable.
+	 *
+	 * @param ejbFiles Hashtable of EJB classes (and other) files that will be
+	 *                 added to the completed JAR file
+	 */
+	protected void addSupportClasses(Hashtable ejbFiles) {
+		// add in support classes if any
+		Project project = task.getProject();
+		for (Iterator i = config.supportFileSets.iterator(); i.hasNext();) {
+			FileSet supportFileSet = (FileSet)i.next();
+			File supportBaseDir = supportFileSet.getDir(project);
+			DirectoryScanner supportScanner = supportFileSet.getDirectoryScanner(project);
+			supportScanner.scan();
+			String[] supportFiles = supportScanner.getIncludedFiles();
+			for (int j = 0; j < supportFiles.length; ++j) {
+				ejbFiles.put(supportFiles[j], new File(supportBaseDir, supportFiles[j]));
+			}
+		}            
+	}
+
+
+	/**
+	 * Using the EJB descriptor file name passed from the <code>ejbjar</code>
+	 * task, this method returns the "basename" which will be used to name the
+	 * completed JAR file.
+	 *
+	 * @param descriptorFileName String representing the file name of an EJB
+	 *                           descriptor to be processed
+	 * @return                   The "basename" which will be used to name the
+	 *                           completed JAR file
+	 */
+	protected String getJarBaseName(String descriptorFileName) {
+
+		String baseName = "";
+
+		// Work out what the base name is
+		if (config.baseJarName != null) {
+			baseName = config.baseJarName;
+		} else {
+			int lastSeparatorIndex = descriptorFileName.lastIndexOf(File.separator);
+			int endBaseName = -1;
+			if (lastSeparatorIndex != -1) {
+				endBaseName = descriptorFileName.indexOf(config.baseNameTerminator, 
+															lastSeparatorIndex);
+			} else {
+				endBaseName = descriptorFileName.indexOf(config.baseNameTerminator);
+			}
+
+			if (endBaseName != -1) {
+				baseName = descriptorFileName.substring(0, endBaseName);
+			}
+			baseName = descriptorFileName.substring(0, endBaseName);
+		}
+
+		return baseName;
+	}
+
+
     /**
      * Add any vendor specific files which should be included in the 
      * EJB Jar.
@@ -451,6 +522,56 @@ public class GenericDeploymentTool implements EJBDeploymentTool {
     File getVendorOutputJarFile(String baseName) {
         return new File(destDir, baseName + genericJarSuffix);
     }
+
+	/**
+	 * This method checks the timestamp on each file listed in the <code>
+	 * ejbFiles</code> and compares them to the timestamp on the <code>jarFile
+	 * </code>.  If the <code>jarFile</code>'s timestamp is more recent than
+	 * each EJB file, <code>false</code> is returned.  Otherwise, <code>true
+	 * </code> is returned.
+	 *
+	 * @param ejbFiles Hashtable of EJB classes (and other) files that will be
+	 *                 added to the completed JAR file
+	 * @param jarFile  JAR file which will contain all of the EJB classes (and
+	 *                 other) files
+	 * @return         boolean indicating whether or not the <code>jarFile</code>
+	 *                 is up to date
+	 */
+	protected boolean needToRebuild(Hashtable ejbFiles, File jarFile) {
+		// By default we assume we need to build.
+		boolean needBuild = true;
+
+		if (jarFile.exists()) {
+			long    lastBuild = jarFile.lastModified();
+			Iterator fileIter = ejbFiles.values().iterator();
+			// Set the need build to false until we find out otherwise.
+			needBuild = false;
+
+			// Loop through the files seeing if any has been touched
+			// more recently than the destination jar.
+			while( (needBuild == false) && (fileIter.hasNext()) ) {
+				File currentFile = (File) fileIter.next();
+				needBuild = ( lastBuild < currentFile.lastModified() );
+				if (needBuild) {
+					log("Build needed because " + currentFile.getPath() + " is out of date",
+						Project.MSG_VERBOSE);
+				}
+			}
+		}
+		
+		return needBuild;
+	}
+
+	/**
+	 * Returns the Public ID of the DTD specified in the EJB descriptor.  Not
+	 * every vendor-specific <code>DeploymentTool</code> will need to reference
+	 * this value or may want to determine this value in a vendor-specific way.
+	 *
+	 * @return         Public ID of the DTD specified in the EJB descriptor.
+	 */
+	protected String getPublicId() {
+		return handler.getPublicId();
+	}
 
     /**
      * Method used to encapsulate the writing of the JAR file. Iterates over the
@@ -664,10 +785,14 @@ public class GenericDeploymentTool implements EJBDeploymentTool {
     /**
      * Called to validate that the tool parameters have been configured.
      *
+	 * @throws BuildException If the Deployment Tool's configuration isn't
+	 *                        valid
      */
     public void validateConfigured() throws BuildException {
-        if (destDir == null) {
-            throw new BuildException("The destdir attribute must be specified");
+        if ((destDir == null) || (!destDir.isDirectory())) {
+			String msg = "A valid destination directory must be specified "
+							+ "using the \"destdir\" attribute.";
+			throw new BuildException(msg, getLocation());
         }
     }
 }

@@ -209,6 +209,21 @@ public class EjbJar extends MatchingTask {
     }
 
     /**
+     * Create a nested element used to configure a deployment tool for iPlanet
+	 * Application Server.
+     *
+     * @return the deployment tool instance to be configured.
+     */
+    public IPlanetDeploymentTool createIplanet() {
+        log("iPlanet Application Server deployment tools", Project.MSG_VERBOSE);
+
+        IPlanetDeploymentTool tool = new IPlanetDeploymentTool();
+        tool.setTask(this);
+        deploymentTools.add(tool);
+        return tool;
+    }
+
+    /**
      * Create a nested element for weblogic when using the Toplink
      * Object- Relational mapping.
      *

@@ -189,6 +189,7 @@
       <exclude name="${optional.package}/ejb/WLStop.java" unless="ejb.wls.present" />
       <exclude name="${optional.package}/ejb/EjbJar.java" unless="jdk1.2+" />
       <exclude name="${optional.package}/ejb/*DeploymentTool.java" unless="jdk1.2+" />
+      <exclude name="${optional.package}/ejb/IPlanet*.java" unless="jdk1.2+" />
       <exclude name="${optional.package}/Javah.java" unless="jdk1.2+" />
       <exclude name="${optional.package}/junit/*" unless="junit.present" />
       <exclude name="${optional.package}/net/*.java" unless="netcomp.present" />
