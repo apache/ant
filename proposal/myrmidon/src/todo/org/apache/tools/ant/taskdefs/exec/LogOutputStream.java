@@ -23,7 +23,6 @@ import org.apache.tools.ant.Task;
  */
 public class LogOutputStream extends OutputStream
 {
-
     private ByteArrayOutputStream buffer = new ByteArrayOutputStream();
     private boolean skip = false;
     private int level = Project.MSG_INFO;
