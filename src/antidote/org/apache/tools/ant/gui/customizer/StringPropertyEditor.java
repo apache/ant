@@ -55,6 +55,7 @@ package org.apache.tools.ant.gui.customizer;
 
 import javax.swing.*;
 import java.awt.Component;
+import javax.swing.border.BevelBorder;
 
 /**
  * Custom property editor for string types.
@@ -63,15 +64,17 @@ import java.awt.Component;
  * @author Simeon Fitch 
  */
 public class StringPropertyEditor extends AbstractPropertyEditor {
-    private JTextField _widget = null;
+    private JTextPane _widget = null;
 
     /** 
      * Default ctor.
      * 
      */
     public StringPropertyEditor() {
-        _widget = new JTextField();
+        _widget = new JTextPane();
         _widget.addFocusListener(new FocusHandler(this));
+        _widget.setBorder(
+            BorderFactory.createBevelBorder(BevelBorder.LOWERED));
     }
 
     /** 

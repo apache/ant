@@ -54,6 +54,7 @@
 package org.apache.tools.ant.gui.customizer;
 
 import javax.swing.*;
+import javax.swing.border.BevelBorder;
 import java.awt.Component;
 import java.util.StringTokenizer;
 
@@ -64,14 +65,16 @@ import java.util.StringTokenizer;
  * @author Simeon Fitch 
  */
 public class StringArrayPropertyEditor extends AbstractPropertyEditor {
-    private JTextField _widget = null;
+    private JTextPane _widget = null;
 
     /** 
      * Default ctor.
      * 
      */
     public StringArrayPropertyEditor() {
-        _widget = new JTextField();
+        _widget = new JTextPane();
+        _widget.setBorder(
+            BorderFactory.createBevelBorder(BevelBorder.LOWERED));
         _widget.addFocusListener(new FocusHandler(this));
     }
 

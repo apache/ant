@@ -1,5 +1,9 @@
 2000-11-16  Simeon H.K. Fitch  <simeon@fitch.net>
 
+	* org/apache/tools/ant/gui/customizer/StringPropertyEditor.java:
+	Changed underlying widget type to JTextPane so that it would
+	accomidate multi-line strings property.
+
 	* org/apache/tools/ant/gui/acs/ACSTreeNodeElement.java: Fixed
 	nasty java.lang.IllegalAccessException bug that I thought was
 	related to Java 1.3 Blackdown RC1, but wasn't. It was related to
