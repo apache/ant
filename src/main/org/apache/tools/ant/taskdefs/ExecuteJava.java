@@ -57,7 +57,7 @@ package org.apache.tools.ant.taskdefs;
 
 import org.apache.tools.ant.AntClassLoader;
 import org.apache.tools.ant.BuildException;
-
+import org.apache.tools.ant.Task;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.types.Commandline;
 import org.apache.tools.ant.types.CommandlineJava;
@@ -139,7 +139,9 @@ public class ExecuteJava implements Runnable, TimeoutObserver {
                 run();
             } else {
                 thread = new Thread(this, "ExecuteJava");
-                project.registerThreadLikeCurrent(thread);
+                Task currentThreadTask 
+                    = project.getThreadTask(Thread.currentThread());
+                project.registerThreadTask(thread, currentThreadTask);
                 // if we run into a timout, the run-away thread shall not
                 // make the VM run forever - if no timeout occurs, Ant's
                 // main thread will still be there to let the new thread

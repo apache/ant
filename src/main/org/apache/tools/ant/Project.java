@@ -1782,7 +1782,7 @@ public class Project {
      */
     protected void fireTaskStarted(Task task) {
         // register this as the current task on the current thread.
-        threadTasks.put(Thread.currentThread(), task);
+        registerThreadTask(Thread.currentThread(), task);
         BuildEvent event = new BuildEvent(task);
         for (int i = 0; i < listeners.size(); i++) {
             BuildListener listener = (BuildListener) listeners.elementAt(i);
@@ -1801,7 +1801,7 @@ public class Project {
      *                  a successful build.
      */
     protected void fireTaskFinished(Task task, Throwable exception) {
-        threadTasks.remove(Thread.currentThread());
+        registerThreadTask(Thread.currentThread(), null);
         System.out.flush();
         System.err.flush();
         BuildEvent event = new BuildEvent(task);
@@ -1876,16 +1876,31 @@ public class Project {
     }
 
     /**
-     * Treat messages generated in the given thread as messages that
-     * come from the same task that is performed on the current
-     * thread.
+     * Register a task as the current task for a thread.
+     * If the task is null, the thread's entry is removed.
      *
+     * @param thread the thread on which the task is registered.
+     * @param task the task to be registered.
      * @since 1.102, Ant 1.5
      */
-    public void registerThreadLikeCurrent(Thread thread) {
-        Task task = (Task) threadTasks.get(Thread.currentThread());
+    public void registerThreadTask(Thread thread, Task task) {
         if (task != null) {
             threadTasks.put(thread, task);
+        } else {
+            threadTasks.remove(thread);
         }
     }
+    
+    /**
+     * Get the current task assopciated with a thread, if any
+     *
+     * @param thread the thread for which the task is required.
+     * @return the task which is currently registered for the given thread or
+     *         null if no task is registered. 
+     */
+    public Task getThreadTask(Thread thread) {
+        return (Task)threadTasks.get(thread);
+    }
+    
+    
 }
