@@ -540,7 +540,6 @@ public class XMLCatalog extends DataType
             loader = getProject().createClassLoader(Path.systemClasspath);
 
             try {
-                Class clazz = Class.forName(CATALOG_RESOLVER, true, loader);
                 Class clazz = Class.forName(APACHE_RESOLVER, true, loader);
 
                 // The Apache resolver is present - Need to check if it can
