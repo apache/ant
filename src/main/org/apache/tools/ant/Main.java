@@ -929,7 +929,7 @@ public class Main {
         String lSep = System.getProperty("line.separator");
         // got a bit annoyed that I couldn't find a pad function
         String spaces = "    ";
-        while (spaces.length() < maxlen) {
+        while (spaces.length() <= maxlen) {
             spaces += spaces;
         }
         StringBuffer msg = new StringBuffer();
