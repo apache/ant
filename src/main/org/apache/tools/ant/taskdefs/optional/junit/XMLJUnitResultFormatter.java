@@ -207,6 +207,15 @@ public class XMLJUnitResultFormatter implements JUnitResultFormatter, XMLConstan
      */
     public void endTest(Test test) {
         Element currentTest = (Element) testElements.get(test);
+        
+        // Fix for bug #5637 - if a junit.extensions.TestSetup is
+        // used and throws an exception during setUp then startTest
+        // would never have been called
+        if (currentTest == null) {
+            startTest(test);
+            currentTest = (Element) testElements.get(test);
+        }
+        
         Long l = (Long) testStarts.get(test);
         currentTest.setAttribute(ATTR_TIME,
                                  ""+((System.currentTimeMillis()-l.longValue())
