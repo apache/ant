@@ -420,7 +420,7 @@ public class Rmic extends MatchingTask {
         }
 
         if (verify) {
-            log("Verify has been turned on.", Project.MSG_INFO);
+            log("Verify has been turned on.", Project.MSG_VERBOSE);
         }
 
         RmicAdapter adapter = RmicAdapterFactory.getRmic(getCompiler(), this);
