@@ -37,6 +37,8 @@
   <patternset id="converted">
     <exclude name="org/apache/tools/ant/taskdefs/Ant.java"/>
     <exclude name="org/apache/tools/ant/taskdefs/CallTarget.java"/>
+    <exclude name="org/apache/tools/ant/taskdefs/input/InputRequest.java"/>
+    <exclude name="org/apache/tools/ant/types/DataType.java"/>
   </patternset>
 
   <fileset id="ant1src_tocopy" dir="${ant1java.dir}">
@@ -63,7 +65,6 @@
     <include name="org/apache/tools/ant/BuildListener.java"/>
     <include name="org/apache/tools/ant/BuildLogger.java"/>
     <!-- <patternset refid="deprecated"/> -->
-    <exclude name="org/apache/tools/ant/types/DataType.java"/>
     <patternset refid="toohard"/>
     <patternset refid="converted"/>
   </fileset>

@@ -87,6 +87,9 @@ public class Builder {
     /** the util root */
     private static final File UTIL_ROOT
          = new File(PACKAGE_ROOT, "util");
+    /** the input root */
+    private static final File INPUT_ROOT
+         = new File(PACKAGE_ROOT, "input");
          
          
     /** the root forthe depend task's support classes */
@@ -142,6 +145,7 @@ public class Builder {
         addJavaFiles(files, new File(UTIL_ROOT, "depend"));
         addJavaFiles(files, ZIP_ROOT);
         addJavaFiles(files, new File(UTIL_ROOT, "facade"));
+        addJavaFiles(files, INPUT_ROOT);
 
         files.add(new File(PACKAGE_ROOT, "BuildException.java"));
         files.add(new File(PACKAGE_ROOT, "Location.java"));
@@ -171,6 +175,8 @@ public class Builder {
         files.remove(new File(TASKDEFS_ROOT, "AntStructure.java"));
         files.remove(new File(TASKDEFS_ROOT, "Recorder.java"));
         files.remove(new File(TASKDEFS_ROOT, "RecorderEntry.java"));
+        files.remove(new File(TASKDEFS_ROOT, "SendEmail.java"));
+        files.remove(new File(INPUT_ROOT, "InputRequest.java"));
         
         // not needed for bootstrap
         files.remove(new File(TASKDEFS_ROOT, "Java.java"));

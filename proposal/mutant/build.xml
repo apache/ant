@@ -145,10 +145,10 @@
   </target>
 
   <target name="antlibs" depends="common">
-    <antcall target="build-lib" inheritall="false">
+    <antcall target="build-lib">
       <param name="libset" value="system"/>
     </antcall>
-    <ant antfile="build/script.xml" inheritAll="false"/> 
+    <ant antfile="build/script.xml"/> 
   </target>
   
   <target name="build-lib">

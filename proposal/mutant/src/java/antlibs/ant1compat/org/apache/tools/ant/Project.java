@@ -69,8 +69,10 @@ import org.apache.ant.common.service.ComponentService;
 import org.apache.ant.common.service.DataService;
 import org.apache.ant.common.service.ExecService;
 import org.apache.ant.common.service.FileService;
+import org.apache.ant.common.service.InputService;
 import org.apache.ant.common.util.ExecutionException;
 import org.apache.ant.common.util.PropertyUtils;
+import org.apache.tools.ant.input.InputHandler;
 import org.apache.tools.ant.types.FilterSet;
 import org.apache.tools.ant.types.FilterSetCollection;
 import org.apache.tools.ant.util.FileUtils;
@@ -118,9 +120,12 @@ public class Project implements org.apache.ant.common.event.BuildListener {
     /** The java version detected that Ant is running on */
     private static String javaVersion;
 
+    /** Called to handle any input requests. */
+    private InputHandler inputHandler = null;
+
     /**
-     * the factory which created this project instance. This is used to
-     * define new types and tasks
+     * the factory which created this project instance. This is used to define
+     * new types and tasks
      */
     private AntLibFactory factory;
 
@@ -146,7 +151,7 @@ public class Project implements org.apache.ant.common.event.BuildListener {
 
     /** Th ecore's execution service */
     private ExecService execService;
-    
+
     /** The core's Component Service instance */
     private ComponentService componentService;
 
@@ -202,36 +207,10 @@ public class Project implements org.apache.ant.common.event.BuildListener {
      * @deprecated
      */
     public Project() {
-        throw new BuildException("Projects can not be constructed to " 
-            + "invoke Ant");
-    }
-    
-    /**
-     * The old initialisation method for Projects. Not used now
-     *
-     * @deprecated
-     * @exception BuildException if the default task list cannot be loaded
-     */
-    public void init() throws BuildException {
-        throw new BuildException("Projects can not be initialized in this " 
-            + "manner any longer.");
+        throw new BuildException("Projects can not be constructed to "
+             + "invoke Ant");
     }
 
-
-    /**
-     * Old method used to execute targets
-     * 
-     * @param targetNames A vector of target name strings to execute.
-     *                    Must not be <code>null</code>.
-     * 
-     * @exception BuildException always
-     * @deprecated
-     */
-    public void executeTargets(Vector targetNames) throws BuildException {
-        throw new BuildException("Targets within the project cannot be " 
-            + "executed with this method.");
-    }
-        
     /**
      * static query of the java version
      *
@@ -242,8 +221,8 @@ public class Project implements org.apache.ant.common.event.BuildListener {
     }
 
     /**
-     * returns the boolean equivalent of a string, which is considered true
-     * if either "on", "true", or "yes" is found, ignoring case.
+     * returns the boolean equivalent of a string, which is considered true if
+     * either "on", "true", or "yes" is found, ignoring case.
      *
      * @param s the string value to be interpreted at a boolean
      * @return the value of s as a boolean
@@ -257,8 +236,8 @@ public class Project implements org.apache.ant.common.event.BuildListener {
      *
      * This method uses the PathTokenizer class to separate the input path
      * into its components. This handles DOS style paths in a relatively
-     * sensible way. The file separators are then converted to their
-     * platform specific versions.
+     * sensible way. The file separators are then converted to their platform
+     * specific versions.
      *
      * @param toProcess the path to be converted
      * @return the native version of to_process or an empty string if
@@ -282,6 +261,31 @@ public class Project implements org.apache.ant.common.event.BuildListener {
         }
 
         return path.toString();
+    }
+
+    /**
+     * The old initialisation method for Projects. Not used now
+     *
+     * @exception BuildException if the default task list cannot be loaded
+     * @deprecated
+     */
+    public void init() throws BuildException {
+        throw new BuildException("Projects can not be initialized in this "
+             + "manner any longer.");
+    }
+
+
+    /**
+     * Old method used to execute targets
+     *
+     * @param targetNames A vector of target name strings to execute. Must not
+     *      be <code>null</code>.
+     * @exception BuildException always
+     * @deprecated
+     */
+    public void executeTargets(Vector targetNames) throws BuildException {
+        throw new BuildException("Targets within the project cannot be "
+             + "executed with this method.");
     }
 
     /**
@@ -355,22 +359,22 @@ public class Project implements org.apache.ant.common.event.BuildListener {
     }
 
     /**
-     * Returns the current datatype definition hashtable. The returned 
+     * Returns the current datatype definition hashtable. The returned
      * hashtable is "live" and so should not be modified.
-     * 
-     * @return a map of from datatype name to implementing class 
-     *         (String to Class). 
+     *
+     * @return a map of from datatype name to implementing class (String to
+     *      Class).
      */
     public Hashtable getDataTypeDefinitions() {
         return dataClassDefinitions;
     }
 
     /**
-     * Returns the current task definition hashtable. The returned hashtable is 
-     * "live" and so should not be modified.
-     * 
-     * @return a map of from task name to implementing class 
-     *         (String to Class). 
+     * Returns the current task definition hashtable. The returned hashtable
+     * is "live" and so should not be modified.
+     *
+     * @return a map of from task name to implementing class (String to
+     *      Class).
      */
     public Hashtable getTaskDefinitions() {
         return taskClassDefinitions;
@@ -410,8 +414,8 @@ public class Project implements org.apache.ant.common.event.BuildListener {
      * @deprecated
      */
     public String getDefaultTarget() {
-        throw new BuildException("The default project target is no longer " 
-            + "available through this method.");
+        throw new BuildException("The default project target is no longer "
+             + "available through this method.");
     }
 
     /**
@@ -534,8 +538,8 @@ public class Project implements org.apache.ant.common.event.BuildListener {
     }
 
     /**
-     * Register a task as the current task for a thread.
-     * If the task is null, the thread's entry is removed.
+     * Register a task as the current task for a thread. If the task is null,
+     * the thread's entry is removed.
      *
      * @param thread the thread on which the task is registered.
      * @param task the task to be registered.
@@ -548,19 +552,19 @@ public class Project implements org.apache.ant.common.event.BuildListener {
 //            threadTasks.remove(thread);
 //        }
     }
-    
+
     /**
      * Get the current task assopciated with a thread, if any
      *
      * @param thread the thread for which the task is required.
      * @return the task which is currently registered for the given thread or
-     *         null if no task is registered. 
+     *      null if no task is registered.
      */
     public Task getThreadTask(Thread thread) {
         return null;
         // return (Task)threadTasks.get(thread);
     }
-    
+
     /**
      * build started event
      *
@@ -649,8 +653,8 @@ public class Project implements org.apache.ant.common.event.BuildListener {
     }
 
     /**
-     * Add a reference to an object. NOte that in Ant2 objects and
-     * properties occupy the same namespace.
+     * Add a reference to an object. NOte that in Ant2 objects and properties
+     * occupy the same namespace.
      *
      * @param name the reference name
      * @param value the object to be associated with the given name.
@@ -715,9 +719,9 @@ public class Project implements org.apache.ant.common.event.BuildListener {
     /**
      * Convienence method to copy a file from a source to a destination
      * specifying if token filtering must be used, if source files may
-     * overwrite newer destination files and the last modified time of
-     * <code>destFile</code> file should be made equal to the last modified
-     * time of <code>sourceFile</code>.
+     * overwrite newer destination files and the last modified time 
+     * of <code>destFile</code> file should be made equal to the last 
+     * modified time of <code>sourceFile</code>.
      *
      * @param sourceFile the source file to be copied
      * @param destFile the destination to which the file is copied
@@ -786,9 +790,9 @@ public class Project implements org.apache.ant.common.event.BuildListener {
     /**
      * Convienence method to copy a file from a source to a destination
      * specifying if token filtering must be used, if source files may
-     * overwrite newer destination files and the last modified time of
-     * <code>destFile</code> file should be made equal to the last modified
-     * time of <code>sourceFile</code>.
+     * overwrite newer destination files and the last modified time of 
+     * <code>destFile</code> file should be made equal to the last 
+     * modified time of <code>sourceFile</code>.
      *
      * @param sourceFile the source file to be copied
      * @param destFile the destination to which the file is copied
@@ -819,6 +823,10 @@ public class Project implements org.apache.ant.common.event.BuildListener {
         execService = (ExecService) context.getCoreService(ExecService.class);
         componentService = (ComponentService) 
             context.getCoreService(ComponentService.class);
+
+        InputService inputService
+             = (InputService) context.getCoreService(InputService.class);
+        setInputHandler(new Ant1InputHandler(inputService));
 
         String defs = "/org/apache/tools/ant/taskdefs/defaults.properties";
 
@@ -892,8 +900,8 @@ public class Project implements org.apache.ant.common.event.BuildListener {
     }
 
     /**
-     * Output a message to the log with the given log level and an event
-     * scope of project
+     * Output a message to the log with the given log level and an event scope
+     * of project
      *
      * @param msg text to log
      * @param msgLevel level to log at
@@ -903,8 +911,26 @@ public class Project implements org.apache.ant.common.event.BuildListener {
     }
 
     /**
-     * Output a message to the log with the given log level and an event
-     * scope of a task
+     * Retrieves the current input handler.
+     *
+     * @return the Project's current input handler.
+     */
+    public InputHandler getInputHandler() {
+        return inputHandler;
+    }
+
+    /**
+     * Sets the input handler
+     *
+     * @param handler the new input handler to use.
+     */
+    public void setInputHandler(InputHandler handler) {
+        inputHandler = handler;
+    }
+
+    /**
+     * Output a message to the log with the given log level and an event scope
+     * of a task
      *
      * @param task task to use in the log
      * @param msg text to log
@@ -982,7 +1008,6 @@ public class Project implements org.apache.ant.common.event.BuildListener {
      *
      * @param taskType the name of the task to be created.
      * @return the created task instance
-     *
      * @exception BuildException if there is a build problem
      */
     public Task createTask(String taskType) throws BuildException {
@@ -1016,8 +1041,8 @@ public class Project implements org.apache.ant.common.event.BuildListener {
      *
      * @param typeName The name of the data type to create an instance of.
      *      Must not be <code>null</code>.
-     * @return an instance of the specified data type, or <code>null</code>
-     *      if the data type name is not recognised.
+     * @return an instance of the specified data type, or <code>null</code> if
+     *      the data type name is not recognised.
      * @exception BuildException if the data type name is recognised but
      *      instance creation fails.
      */
@@ -1176,7 +1201,7 @@ public class Project implements org.apache.ant.common.event.BuildListener {
             listener.messageLogged(event);
         }
     }
-    
+
     /**
      * Get the name of the project.
      *
