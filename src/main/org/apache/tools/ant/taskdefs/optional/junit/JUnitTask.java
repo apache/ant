@@ -70,6 +70,7 @@ import org.apache.tools.ant.taskdefs.Execute;
 import org.apache.tools.ant.taskdefs.ExecuteWatchdog;
 import org.apache.tools.ant.taskdefs.LogOutputStream;
 import org.apache.tools.ant.taskdefs.LogStreamHandler;
+import org.apache.tools.ant.types.Assertions;
 import org.apache.tools.ant.types.Commandline;
 import org.apache.tools.ant.types.CommandlineJava;
 import org.apache.tools.ant.types.EnumeratedAttribute;
@@ -558,6 +559,15 @@ public class JUnitTask extends Task {
      */
     public void setShowOutput(boolean showOutput) {
         this.showOutput = showOutput;
+    }
+
+    /**
+     * Assertions to enable in this program (if fork=true)
+     * @since Ant 1.6
+     * @param asserts assertion set 
+     */
+    public void setAssertions(Assertions asserts) {
+        commandline.setAssertions(asserts);
     }
 
     /**
