@@ -403,7 +403,7 @@ public class FixCRLF extends MatchingTask {
         try {
             // Set up the output Writer
             try {
-                tmpFile = fileUtils.createTempFile("fixcrlf", "", destD);
+                tmpFile = fileUtils.createTempFile("fixcrlf", "", null);
                 Writer writer = (encoding == null) ? new FileWriter(tmpFile)
                     : new OutputStreamWriter(new FileOutputStream(tmpFile),
                                              encoding);
