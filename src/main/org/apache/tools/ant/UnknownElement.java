@@ -148,14 +148,17 @@ public class UnknownElement extends Task {
     protected Task makeTask(UnknownElement ue, RuntimeConfigurable w) {
         Task task = project.createTask(ue.getTag());
         if (task == null) {
-            log("Could not create task of type: " + elementName + " Common solutions" +
-                " are adding the task to defaults.properties and executing bin/bootstrap",
-                Project.MSG_DEBUG);
-            throw new BuildException("Could not create task of type: " + elementName +
-                                     ". Common solutions are to use taskdef to declare" +
-                                     " your task, or, if this is an optional task," +
-                                     " to put the optional.jar in the lib directory of" +
-                                     " your ant installation (ANT_HOME).", location);
+            String lSep = System.getProperty("line.separator");
+            String msg = "Could not create task of type: " + elementName
+                + "." + lSep
+                + "Ant could not find the task or a class this" + lSep
+                + "task relies upon." + lSep
+                + "Common solutions are to use taskdef to declare" + lSep
+                + "your task, or, if this is an optional task," + lSep
+                + "to put the optional.jar and all required libraries of" +lSep
+                + "this task in the lib directory of" + lSep
+                + "your ant installation (ANT_HOME).";
+            throw new BuildException(msg, location);
         }
 
         task.setLocation(getLocation());
