@@ -436,7 +436,19 @@ public class Javac extends MatchingTask {
 
     private void doJikesCompile() throws BuildException {
         project.log("Using jikes compiler",project.MSG_VERBOSE);
-        String classpath = getCompileClasspath();
+
+        StringBuffer classpath = new StringBuffer();
+        classpath.append(getCompileClasspath());
+
+        // Jikes doesn't support an extension dir (-extdir)
+        // so we'll emulate it for compatibility and convenience.
+        addExtdirsToClasspath(classpath);
+
+        // Jikes has no option for source-path so we
+        // will add it to classpath.
+        classpath.append(File.pathSeparator);
+        classpath.append(srcDir.getAbsolutePath());
+
         Vector argList = new Vector();
 
         if (deprecation == true)
@@ -449,11 +461,8 @@ public class Javac extends MatchingTask {
         argList.addElement("-d");
         argList.addElement(destDir.getAbsolutePath());
         argList.addElement("-classpath");
-        // Jikes has no option for source-path so we
-        // will add it to classpath.
-        // XXX is this correct?
-        argList.addElement(classpath+File.pathSeparator +
-                           srcDir.getAbsolutePath());
+        argList.addElement(classpath.toString());
+
         if (debug) {
             argList.addElement("-g");
         }
@@ -542,4 +551,41 @@ public class Javac extends MatchingTask {
             throw new BuildException(msg);
         }
     }
+
+    class JarFilenameFilter implements FilenameFilter {
+        public boolean accept(File dir,String name) {
+            return name.endsWith(".jar");
+        }
+    }
+
+    /**
+     * Emulation of extdirs feature in java >= 1.2.
+     * This method adds all jar archives in the given
+     * directories (but not in sub-directories!) to the classpath,
+     * so that you don't have to specify them all one by one.
+     * @param classpath - stringbuffer to append jar files to
+     */
+    private void addExtdirsToClasspath(StringBuffer classpath) {
+       // FIXME
+       // Should we scan files recursively? How does
+       // javac handle this?
+
+       if (extdirs != null) {
+           StringTokenizer tok = new StringTokenizer(extdirs,
+                                                     File.pathSeparator,
+                                                     false);
+           while (tok.hasMoreTokens()) {
+               File dir = project.resolveFile(tok.nextToken());
+               String[] files = dir.list(new JarFilenameFilter());
+               for (int i=0 ; i < files.length ; i++) {
+                   File f = new File(dir,files[i]);
+                   if (f.exists() && f.isFile()) {
+                       classpath.append(File.pathSeparator);
+                       classpath.append(f.getAbsolutePath());
+                   }
+               }
+           }
+       }
+    }
 }
+

@@ -112,11 +112,7 @@ public class Available extends Task {
     }
 
     private boolean checkResource(String resource) {
-        try {
-            return (ClassLoader.getSystemResource(resource) != null);
-        } catch (Exception e) {
-            return false;
-        }
+        return (ClassLoader.getSystemResource(resource) != null);
     }
 
     private boolean checkClass(String classname) {

@@ -281,13 +281,13 @@ public class FixCRLF extends MatchingTask {
 
             for (int k=0; k<count; k++) {
                 switch (indata[k]) {
-                    case ' ':
+                    case (byte)' ':
                         // advance column
                         if (addtab == 0) outdata[o++]=(byte)' ';
                         col++;
                         break;
 
-                    case '\t':
+                    case (byte)'\t':
                         if (addtab == 0) {
                             // treat like any other character
                             outdata[o++]=(byte)'\t';
@@ -298,7 +298,7 @@ public class FixCRLF extends MatchingTask {
                         }
                         break;
 
-                    case '\r':
+                    case (byte)'\r':
                         if (addcr == 0) {
                             // treat like any other character
                             outdata[o++]=(byte)'\r';
@@ -306,7 +306,7 @@ public class FixCRLF extends MatchingTask {
                         }
                         break;
 
-                    case '\n':
+                    case (byte)'\n':
                         // start a new line (optional CR followed by LF)
                         if (addcr == +1) outdata[o++]=(byte)'\r';
                         outdata[o++]=(byte)'\n';
