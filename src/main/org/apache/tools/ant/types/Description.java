@@ -137,7 +137,7 @@ public class Description extends DataType {
             UnknownElement ue = ((UnknownElement) task);
             StringBuffer descComp = ue.getWrapper().getText();
             if (descComp != null) {
-                description.append(descComp);
+                description.append((Object) descComp);
             }
         }
     }
