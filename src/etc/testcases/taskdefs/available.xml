@@ -114,6 +114,7 @@
       <classpath>
         <pathelement location="${java.home}/lib/rt.jar" />
         <pathelement location="${java.home}/lib/classes.zip" />
+        <pathelement location="${java.home}/lib/graphics.jar" /> <!-- IBM JDK -->
         <pathelement location="/System/Library/Frameworks/JavaVM.framework/Versions/CurrentJDK/Classes/classes.jar" />
         <pathelement location="/System/Library/Frameworks/JavaVM.framework/Versions/CurrentJDK/Classes/ui.jar" />
       </classpath>

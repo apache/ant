@@ -78,6 +78,18 @@ public class MacroDefTest extends BuildFileTest {
         expectLog("text", "Inner Text");
     }
 
+    public void testDuplicateAttribute() {
+        expectBuildException(
+            "duplicate.attribute",
+            "the attribute text has already been specified");
+    }
+    
+    public void testDuplicateElement() {
+        expectBuildException(
+            "duplicate.element",
+            "the element text has already been specified");
+    }
+    
     public void testUri() {
         expectLog("uri", "Hello World");
     }
@@ -86,8 +98,10 @@ public class MacroDefTest extends BuildFileTest {
         expectLog("nested", "A nested element");
     }
 
-    public void testXPathStyle() {
-        expectLog("xpathstyle", "attribute is this is a testthis is a test");
+    public void testDouble() {
+        expectLog(
+            "double",
+            "@{prop} is 'property', value of ${property} is 'A property value'");
     }
 }
 

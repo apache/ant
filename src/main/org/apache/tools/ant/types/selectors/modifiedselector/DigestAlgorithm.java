@@ -68,7 +68,7 @@ import org.apache.tools.ant.BuildException;
 /**
  * Computes a 'hashvalue' for the content of file using
  * java.security.MessageDigest.
- * Use of this algorithm doesn´t require any additional nested <param>s.
+ * Use of this algorithm doesn't require any additional nested <param>s.
  * Supported <param>s are:
  * <table>
  * <tr>
@@ -88,7 +88,7 @@ import org.apache.tools.ant.BuildException;
  * </tr>
  * </table>
  *
- * @author Jan Matèrne
+ * @author Jan Mat\u00e8rne
  * @version 2003-09-13
  * @since  Ant 1.6
  */
@@ -170,8 +170,8 @@ public class DigestAlgorithm implements Algorithm {
 
 
     /**
-     * This algorithm doesn´t need any configuration.
-     * Therefore it´s always valid.
+     * This algorithm doesn't need any configuration.
+     * Therefore it's always valid.
      * @return <i>true</i> if all is ok, otherwise <i>false</i>.
      */
     public boolean isValid() {

@@ -247,11 +247,9 @@ public class JUnitTestRunner implements TestListener {
             try {
                 // check if there is a suite method
                 suiteMethod = testClass.getMethod("suite", new Class[0]);
-            } catch (Exception e) {
+            } catch (NoSuchMethodException e) {
                 // no appropriate suite method found. We don't report any
-                // error here since it might be perfectly normal. We don't
-                // know exactly what is the cause, but we're doing exactly
-                // the same as JUnit TestRunner do. We swallow the exceptions.
+                // error here since it might be perfectly normal.
             }
             if (suiteMethod != null) {
                 // if there is a suite method available, then try

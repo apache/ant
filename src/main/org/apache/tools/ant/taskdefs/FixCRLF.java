@@ -404,6 +404,7 @@ public class FixCRLF extends MatchingTask {
             // Set up the output Writer
             try {
                 tmpFile = fileUtils.createTempFile("fixcrlf", "", null);
+                tmpFile.deleteOnExit();
                 Writer writer = (encoding == null) ? new FileWriter(tmpFile)
                     : new OutputStreamWriter(new FileOutputStream(tmpFile),
                                              encoding);

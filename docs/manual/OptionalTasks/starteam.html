@@ -2,6 +2,7 @@
 <head>
 <meta http-equiv="Content-Language" content="en-us">
 <title>StarTeam Tasks</title>
+<link rel="stylesheet" type="text/css" href="../stylesheets/antmanual.css">
 </head>
 <body>
 <h1>StarTeam Support</h1>
@@ -26,7 +27,8 @@ the <a href="http://www.borland.com/starteam/">Borland</a> web site.</p>
 is not sufficient for getting these tasks to work properly.</b>  These tasks also require a 
 fully-installed and fully-licensed version of the StarGate Runtime.  This is part 
 of a StarTeam client installation or may be installed separately.  The full client
-install is not required.
+install is not required.  In particular, the Windows path must include the directory where 
+the StarGate Runtime <CODE>.dll</CODE> files are installed.
 </p><p>
 Earlier versions of Ant (prior to 1.5.2) did not have this restriction because they
 were not as dependent on the StarTeam runtime - which the newer versions use to access
@@ -565,27 +567,27 @@ See also <A href="#common-params">the required common StarTeam parameters</A>.<b
     <td align="center" valign="top">yes</td>
   </tr> 
   <tr>
+    <td valign="top">description</td>
+    <td valign="top">A description of the label to be stored in the StarTeam project.</td>
+    <td align="center" valign="top">yes</td>
+  </tr>
+  <tr>
     <td valign="top">revisionlabel</td>
     <td valign="top">Yes means that the label attribute is to be saved as a &quot;revision label&quot;.  No (default) means that it will be saved as a &quot;view label&quot;</td>
     <td align="center" valign="top">no</td>
   </tr> 
   <tr>
     <td valign="top">buildlabel</td>
-    <td valign="top">Yes (default) means that the label attribute is to be saved as a &quot;build label&quot;.  
+    <td valign="top">Yes means that the label attribute is to be saved as a &quot;build label&quot;.  
       This means that Change Requests which have an &quot;AddressedIn&quot; field value of &quot;next build&quot;
        will have this label assigned to that field when the label is created.  
-       No means that no CRs will have this label assigned to them.  This will have no effect if <b>revisionlabel</b> is also true.  </td>
+       No (default) means that no CRs will have this label assigned to them.  This will have no effect if <b>revisionlabel</b> is also true.  </td>
     <td align="center" valign="top">no</td>
   </tr> 
 
  <tr>
     <td valign="top">lastbuild</td>
     <td valign="top">The timestamp of the build that will be stored with the label.  Must be formatted <code>yyyyMMddHHmmss</code></td>
-    <td align="center" valign="top">no</td>
-  </tr>
-  <tr>
-    <td valign="top">description</td>
-    <td valign="top">A description of the label to be stored in the StarTeam project.</td>
     <td align="center" valign="top">no</td>
   </tr>
 </table>

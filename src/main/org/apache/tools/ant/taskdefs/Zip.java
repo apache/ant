@@ -416,15 +416,20 @@ public class Zip extends MatchingTask {
                 renamedFile =
                     fileUtils.createTempFile("zip", ".tmp",
                                              fileUtils.getParentFile(zipFile));
+                renamedFile.deleteOnExit();
 
                 try {
                     fileUtils.rename(zipFile, renamedFile);
                 } catch (SecurityException e) {
-                    throw new BuildException("Not allowed to rename old file "
-                                             + "to temporary file");
+                    throw new BuildException(
+                        "Not allowed to rename old file ("
+                        + zipFile.getAbsolutePath()
+                        + ") to temporary file");
                 } catch (IOException e) {
-                    throw new BuildException("Unable to rename old file "
-                                             + "to temporary file");
+                    throw new BuildException(
+                        "Unable to rename old file ("
+                        + zipFile.getAbsolutePath()
+                        + ") to temporary file");
                 }
             }
 

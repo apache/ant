@@ -25,6 +25,16 @@
     </xmlvalidate>
   </target>
 
+  <target name="xmlcatalogViaRefid">
+    <xmlcatalog classpath="xml" id="cat">
+      <dtd publicID="-//stevo//DTD doc 1.0//EN" location="doc.dtd"/>
+    </xmlcatalog>
+    <xmlvalidate warn="false">
+      <xmlcatalog refid="cat"/>
+      <fileset dir="xml" includes="**/about.xml"/>
+    </xmlvalidate>
+  </target>
+
   <target name="xmlcatalognested">
     <xmlvalidate warn="false">
       <fileset dir="xml" includes="**/about.xml"/>

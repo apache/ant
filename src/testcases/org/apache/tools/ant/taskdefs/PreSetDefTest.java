@@ -55,6 +55,7 @@
 package org.apache.tools.ant.taskdefs;
 
 import org.apache.tools.ant.BuildFileTest;
+import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.Task;
 
@@ -82,5 +83,43 @@ public class PreSetDefTest extends BuildFileTest {
         expectLog("uri", "Hello world");
     }
 
+    public void testDefaultTest() {
+        expectLog("defaulttest", "attribute is false");
+    }
+
+    public void testDoubleDefault() {
+        expectLog("doubledefault", "attribute is falseattribute is true");
+    }
+
+    public void testTextOptional() {
+        expectLog("text.optional", "MyTextoverride text");
+    }
+
+    public void testElementOrder() {
+        expectLog("element.order", "Line 1Line 2");
+    }
+
+    public void testElementOrder2() {
+        expectLog("element.order2", "Line 1Line 2Line 3");
+    }
+    
+    /**
+     * A test class to check default properties
+     */
+    public static class DefaultTest extends Task {
+        boolean isSet = false;
+        boolean attribute = false;
+        public void setAttribute(boolean b) {
+            if (isSet) {
+                throw new BuildException("Attribute Already set");
+            }
+            attribute = b;
+            isSet = true;
+        }
+
+        public void execute() {
+            getProject().log("attribute is " + attribute);
+        }
+    }
 }
 

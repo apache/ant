@@ -55,17 +55,17 @@
 package org.apache.tools.ant.taskdefs;
 
 import org.apache.tools.ant.BuildException;
+import org.apache.tools.ant.ProjectHelper;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.ProjectHelper;
 import org.apache.tools.ant.Task;
+import org.apache.tools.ant.util.FileUtils;
 
 import java.io.File;
 import java.io.IOException;
 import java.util.Vector;
 
 /**
- * <i>EXPERIMENTAL:</i> This task is experimental and may be under continual
- * change till Ant1.6 ships; it may even be omitted from the product.
  * <p>
  * Task to import another build file into the current project.
  * <p>
@@ -96,7 +96,19 @@ import java.util.Vector;
  */
 public class ImportTask extends Task {
     private String file;
+    private boolean optional;
+    private static final FileUtils FILE_UTILS = FileUtils.newFileUtils();
 
+    /**
+     * sets the optional attribute
+     *
+     * @param optional if true ignore files that are not present,
+     *                 default is false
+     */
+    public void setOptional(boolean optional) {
+        this.optional = true;
+    }
+    
     /**
      * the name of the file to import. How relative paths are resolved is still
      * in flux: use absolute paths for safety.
@@ -138,22 +150,25 @@ public class ImportTask extends Task {
         File buildFile = new File(getLocation().getFileName());
         buildFile = new File(buildFile.getAbsolutePath());
 
-        File buildFileParent = new File(buildFile.getParent());
-
         getProject().log("Importing file " + file + " from "
                          + buildFile.getAbsolutePath(), Project.MSG_VERBOSE);
 
         // Paths are relative to the build file they're imported from,
         // *not* the current directory (same as entity includes).
-        File importedFile = new File(file);
-        if (!importedFile.isAbsolute()) {
-            importedFile = new File(buildFileParent, file);
-        }
+
+        File buildFileParent = new File(buildFile.getParent());
+        File importedFile = FILE_UTILS.resolveFile(buildFileParent,  file);
 
         if (!importedFile.exists()) {
-                throw new BuildException(
-                    "Cannot find " + file + " imported from "
-                    + buildFile.getAbsolutePath());
+            String message =
+                "Cannot find " + file + " imported from "
+                + buildFile.getAbsolutePath();
+            if (optional) {
+                getProject().log(message, Project.MSG_VERBOSE);
+                return;
+            } else {
+                throw new BuildException(message);
+            }
         }
 
         importedFile = new File(getPath(importedFile));
@@ -165,7 +180,12 @@ public class ImportTask extends Task {
             return;
         }
 
-        helper.parse(getProject(), importedFile);
+        try {
+            helper.parse(getProject(), importedFile);
+        } catch (BuildException ex) {
+            throw ProjectHelper.addLocationToBuildException(
+                ex, getLocation());
+        }
     }
 
     private static String getPath(File file) {

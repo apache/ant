@@ -196,6 +196,7 @@ public class CovMerge extends CovBase {
     protected File createParamFile() throws BuildException {
         File[] snapshots = getSnapshots();
         File file = createTempFile("jpcovm");
+        file.deleteOnExit();
         FileWriter fw = null;
         try {
             fw = new FileWriter(file);

@@ -172,10 +172,7 @@ public class ZipFileSet extends FileSet {
      * @param prefix The prefix to prepend to entries in the zip file.
      */
     public void setPrefix(String prefix) {
-        if (isReference()) {
-             throw tooManyAttributes();
-         }
-        if (!fullpath.equals("")) {
+        if (!prefix.equals("") && !fullpath.equals("")) {
             throw new BuildException("Cannot set both fullpath and prefix attributes");
         }
         this.prefix = prefix;
@@ -198,10 +195,7 @@ public class ZipFileSet extends FileSet {
      * @param fullpath the full pathname of the single entry in this fileset.
      */
     public void setFullpath(String fullpath) {
-        if (isReference()) {
-             throw tooManyAttributes();
-         }
-        if (!prefix.equals("")) {
+        if (!prefix.equals("") && !fullpath.equals("")) {
             throw new BuildException("Cannot set both fullpath and prefix attributes");
         }
         this.fullpath = fullpath;
@@ -246,9 +240,6 @@ public class ZipFileSet extends FileSet {
      * @since Ant 1.5.2
      */
     public void setFileMode(String octalString) {
-        if (isReference()) {
-             throw tooManyAttributes();
-        }
         fileModeHasBeenSet = true;
         this.fileMode =
             UnixStat.FILE_FLAG | Integer.parseInt(octalString, 8);
@@ -284,9 +275,6 @@ public class ZipFileSet extends FileSet {
      * @since Ant 1.5.2
      */
     public void setDirMode(String octalString) {
-        if (isReference()) {
-             throw tooManyAttributes();
-        }
         dirModeHasBeenSet = true;
         this.dirMode =
             UnixStat.DIR_FLAG | Integer.parseInt(octalString, 8);
@@ -328,7 +316,14 @@ public class ZipFileSet extends FileSet {
         if (o instanceof ZipFileSet) {
             return (AbstractFileSet) o;
         } else if (o instanceof FileSet) {
-           return (new ZipFileSet((FileSet) o));
+            ZipFileSet zfs = new ZipFileSet((FileSet) o);
+            zfs.setPrefix(prefix);
+            zfs.setFullpath(fullpath);
+            zfs.fileModeHasBeenSet = fileModeHasBeenSet;
+            zfs.fileMode = fileMode;
+            zfs.dirModeHasBeenSet = dirModeHasBeenSet;
+            zfs.dirMode = dirMode;
+            return zfs;
         } else {
             String msg = getRefid().getRefId() + " doesn\'t denote a zipfileset or a fileset";
             throw new BuildException(msg);

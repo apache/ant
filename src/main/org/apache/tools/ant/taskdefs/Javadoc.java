@@ -1919,6 +1919,7 @@ public class Javadoc extends Task {
             if (useExternalFile) {
                 if (tmpList == null) {
                     tmpList = fileUtils.createTempFile("javadoc", "", null);
+                    tmpList.deleteOnExit();
                     toExecute.createArgument()
                         .setValue("@" + tmpList.getAbsolutePath());
                 }

@@ -63,7 +63,7 @@ import java.util.Comparator;
  * compare() returns '0' (should not be selected) if both parameter
  * are equal otherwise '1' (should be selected).
  *
- * @author Jan Matèrne
+ * @author Jan Mat\u00e8rne
  * @version 2003-09-13
  * @since  Ant 1.6
  */

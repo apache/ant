@@ -76,6 +76,7 @@ import org.apache.tools.ant.BuildException;
  *
  * @author Christopher Charlier, ThoughtWorks, Inc. 2001
  * @author <a href="mailto:jcyip@thoughtworks.com">Jason Yip</a>
+ * @author <a href="mailto:scohen@apache.org">Steve Cohen</a>
  * @see <A HREF="http://www.starbase.com/">StarBase Web Site</A>
  *
  * @ant.task name="stlabel" category="scm"
@@ -93,7 +94,7 @@ public class StarTeamLabel extends StarTeamTask {
     private String description;
 
     /**
-     * If true, this will be a build label.  If false, it will be a build
+     * If true, this will be a build label.  If false, it will be a non-build
      * label.  The default is false.  Has no effect if revision label is
      * true.
      */
@@ -123,7 +124,7 @@ public class StarTeamLabel extends StarTeamTask {
     }
 
     /**
-     * Optional description of the label to be stored in the StarTeam project.
+     * Description of the label to be stored in the StarTeam project.
      */
     public void setDescription(String description) {
         this.description = description;
@@ -179,25 +180,32 @@ public class StarTeamLabel extends StarTeamTask {
                 + "both specified.  A revision label cannot be a build label.");
         }
 
-        View snapshot = openView();
+        try {
+            View snapshot = openView();
 
-        // Create the new label and update the repository
+            // Create the new label and update the repository
 
-        if (this.revisionlabel) {
-            new Label(snapshot, this.labelName, this.description).update();
-            log("Created Revision Label " + this.labelName);
-        } else if (null != lastBuild) {
-            new Label(snapshot, this.labelName, this.description, this.lastBuild,
-                      this.buildlabel).update();
-            log("Created View Label ("
-                + (this.buildlabel ? "" : "non-") + "build) " + this.labelName
-                + " as of " + this.lastBuild.toString());
-        } else {
-            new Label(snapshot, this.labelName, this.description,
-                      this.buildlabel).update();
-            log("Created View Label ("
-                + (this.buildlabel ? "" : "non-") + "build) " + this.labelName);
+            if (this.revisionlabel) {
+                new Label(snapshot, this.labelName, this.description).update();
+                log("Created Revision Label " + this.labelName);
+            } else if (null != lastBuild) {
+                new Label(snapshot, this.labelName, this.description, this.lastBuild,
+                          this.buildlabel).update();
+                log("Created View Label ("
+                    + (this.buildlabel ? "" : "non-") + "build) " + this.labelName
+                    + " as of " + this.lastBuild.toString());
+            } else {
+                new Label(snapshot, this.labelName, this.description,
+                          this.buildlabel).update();
+                log("Created View Label ("
+                    + (this.buildlabel ? "" : "non-") + "build) " + this.labelName);
+            }
+        } catch (Exception e) {
+            throw new BuildException(e);
+        } finally {
+            disconnectFromServer();
         }
+
     }
 
     /**

@@ -77,10 +77,9 @@ import org.apache.tools.ant.UnknownElement;
  * @author Peter Reilly
  * @since Ant 1.6
  */
-public class PreSetDef extends Task implements AntlibInterface, TaskContainer {
+public class PreSetDef extends AntlibDefinition implements TaskContainer {
     private UnknownElement nestedTask;
     private String         name;
-    private String         uri;
 
     /**
      * Name of the definition
@@ -89,29 +88,6 @@ public class PreSetDef extends Task implements AntlibInterface, TaskContainer {
      public void setName(String name) {
         this.name = name;
     }
-    /**
-     * The URI for this definition.
-     * @param uri the namespace URI
-     * @throws BuildException if uri is not allowed
-     */
-    public void setURI(String uri) throws BuildException {
-        if (uri.equals(ProjectHelper.ANT_CORE_URI)) {
-            uri = "";
-        }
-        if (uri.startsWith("ant:")) {
-            throw new BuildException("Attempt to use a reserved URI " + uri);
-        }
-        this.uri = uri;
-    }
-    /**
-     * Set the class loader.
-     * Not used
-     * @param classLoader a <code>ClassLoader</code> value
-     */
-    public void setAntlibClassLoader(ClassLoader classLoader) {
-        // Ignore
-    }
-
 
     /**
      * Add a nested task to predefine attributes and elements on
@@ -140,7 +116,7 @@ public class PreSetDef extends Task implements AntlibInterface, TaskContainer {
             throw new BuildException("Name not specified");
         }
 
-        name = ProjectHelper.genComponentName(uri, name);
+        name = ProjectHelper.genComponentName(getURI(), name);
 
         ComponentHelper helper = ComponentHelper.getComponentHelper(
             getProject());
@@ -154,26 +130,52 @@ public class PreSetDef extends Task implements AntlibInterface, TaskContainer {
                 "Unable to find typedef " + componentName);
         }
 
-        MyAntTypeDefinition newDef = new MyAntTypeDefinition(def, nestedTask);
+        PreSetDefinition newDef = new PreSetDefinition(def, nestedTask);
 
         newDef.setName(name);
 
         helper.addDataTypeDefinition(newDef);
     }
 
-    private static class MyAntTypeDefinition extends AntTypeDefinition {
+    /**
+     * This class contains the unknown element and the object
+     * that is predefined.
+     * @see AntTypeDefinition
+     */
+    public static class PreSetDefinition extends AntTypeDefinition {
         private AntTypeDefinition parent;
         private UnknownElement    element;
 
-        public MyAntTypeDefinition(AntTypeDefinition parent, UnknownElement el) {
+        /**
+         * Creates a new <code>PresetDefinition</code> instance.
+         *
+         * @param parent The parent of this predefintion.
+         * @param el     The predefined attributes, nested elements and text.
+         */
+        public PreSetDefinition(AntTypeDefinition parent, UnknownElement el) {
+            if (parent instanceof PreSetDefinition) {
+                PreSetDefinition p = (PreSetDefinition) parent;
+                el.applyPreSet(p.element);
+                parent = p.parent;
+            }
             this.parent = parent;
             this.element = el;
         }
 
+        /**
+         * Override so that it is not allowed
+         *
+         * @param clazz a <code>Class</code> value
+         */
         public void setClass(Class clazz) {
             throw new BuildException("Not supported");
         }
 
+        /**
+         * Override so that it is not allowed
+         *
+         * @param className a <code>String</code> value
+         */
         public void setClassName(String className) {
             throw new BuildException("Not supported");
         }
@@ -224,6 +226,7 @@ public class PreSetDef extends Task implements AntlibInterface, TaskContainer {
 
         /**
          * get the exposed class for this definition.
+         * @param project the current project
          * @return the exposed class
          */
         public Class getExposedClass(Project project) {
@@ -251,16 +254,35 @@ public class PreSetDef extends Task implements AntlibInterface, TaskContainer {
         /**
          * create an instance of the definition.
          * The instance may be wrapped in a proxy class.
+         * This is a special version of create for IH and UE.
          * @param project the current project
          * @return the created object
          */
-        public Object create(Project project) {
+        public Object createObject(Project project) {
             Object o = parent.create(project);
             if (o == null) {
                 return null;
             }
-            element.configure(o);
             return o;
+        }
+
+        /**
+         * @return the predefined attributes, elements and text as
+         *         a UnknownElement
+         */
+        public UnknownElement getPreSets() {
+            return element;
+        }
+
+        /**
+         * Fake create an object, used by IH and UE to see that
+         * this is a predefined object.
+         *
+         * @param project the current project
+         * @return this object
+         */
+        public Object create(Project project) {
+            return this;
         }
 
         /**
@@ -277,7 +299,7 @@ public class PreSetDef extends Task implements AntlibInterface, TaskContainer {
             if (other.getClass() != getClass()) {
                 return false;
             }
-            MyAntTypeDefinition otherDef = (MyAntTypeDefinition) other;
+            PreSetDefinition otherDef = (PreSetDefinition) other;
             if (!parent.sameDefinition(otherDef.parent, project)) {
                 return false;
             }
@@ -302,7 +324,7 @@ public class PreSetDef extends Task implements AntlibInterface, TaskContainer {
             if (!other.getClass().getName().equals(getClass().getName())) {
                 return false;
             }
-            MyAntTypeDefinition otherDef = (MyAntTypeDefinition) other;
+            PreSetDefinition otherDef = (PreSetDefinition) other;
             if (!parent.similarDefinition(otherDef.parent, project)) {
                 return false;
             }

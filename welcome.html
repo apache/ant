@@ -1,124 +1,352 @@
-<html>
-<head>
-<title>Welcome to Ant1.5</title>
-</head>
-<body bgcolor="#ffffff">
-<h1>Welcome to Ant1.5</h1>
-Hello, and welcome to Ant1.5
-<p>
-For new users to Ant, welcome to a new way to build your software.
-<p>
-For veteran Ant users, its been, what nine months since Ant 1.4.1 
-shipped, and we've been as busy enhancing it as you've been using it.
-<p>
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<HTML>
+<HEAD>
+	<META HTTP-EQUIV="CONTENT-TYPE" CONTENT="text/html; charset=windows-1252">
+	<TITLE>Welcome to Apache Ant 1.6</TITLE>
+</HEAD>
+<BODY LANG="en-US" BGCOLOR="#ffffff" DIR="LTR">
+<H1>Welcome to Apache Ant 1.6</H1>
+<P><BR><BR>
+</P>
+<H2>Your life just got better. 
+</H2>
+<P>Not in big ways. Your social life isn't going to be helped, though
+with any luck you may now have more time for one. Nor is it going to
+take less time to write your Java code -although we note that running
+<A HREF="http://xdoclet.sf.net/" TARGET="other">XDoclet</A> under Ant
+lets you avoid writing so much code. Nor is a new release of Ant
+likely to provide a fundamental kick-start to the currently somewhat
+subdued technology and software industries. 
+</P>
+<P>No, Ant1.6 will not fundamentally change your life. But if you do
+have to get software out on time -"roughly what you asked for,
+roughly when you asked", then Ant1.6 provides lots of little
+improvements over the existing version. 
+</P>
+<P>Before we look at those details, lets look at the world of The
+Automated Build.</P>
+<P>Firstly, we'd like to thank everyone for all those awards that
+have been flowing in. The JavaWorld Editors' Choice Award for "Most
+Useful Java Community-Developed Technology", The Java
+Developer's Journal "Editors Choice Award", and Java Pro
+Reader's Choice award for "Most Valuable Java Deployment
+Technology." Wow. That's a lot of awards. Aardman Animations
+keep all their Wallace and Gromit -related oscars in a cabinet in
+their tea room. If the Apache organization had a tea room, those Ant
+awards would be forcing all the other (excellent) Apache products to
+fight hard for their cabinet space. 
+</P>
+<P>All those awards come for a reason: everyone, at least everyone
+working on any project of moderate complexity, needs to control their
+build process. Ant is one of the best ways to do it in Java, and,
+over the past four years, it has moved from a tool used simply to
+build Tomcat cross-platform, to a tool used across many open source
+projects, and now to a tool used by almost all Java projects. Indeed,
+pretty much the only competitor in the Java space is a sibling
+project under the Apache banner, <A HREF="http://maven.apache.org/" TARGET="other">Maven</A>.
+One of the obvious signs of Ant's success is that all the popular
+IDEs, from the Open Source -Emacs JDE, Eclipse, NetBeans and jEdit -
+to the commercial: IntelliJ IDEA, Borland JBuilder- all ship with
+built in Ant support. This lets you use your favourite IDE for what
+it is good at: editing text, creating Java source, refactoring
+existing code, debugging and the like, and you can turn to Ant for
+co-ordinating the build-test-deploy/deliver process. That Ant based
+process can be triggered from keystrokes in the IDE, command line
+invocations for those so inclined, and in automated scheduled builds
+so the machines can keep an eye on the engineers. Another sign is how
+Ant is helping the Java aisle of bookstores fight back against
+attempts by books about Macromedia Flash to take over all the space
+-there are now seven or eight books on the subject, with more on the
+way. Germany and Korea have their own native language books too,
+which shows how global the tool is -in use and in development terms. 
+</P>
+<P>The other metric of success is the pre-announcement hints from our
+distant software colleagues in Redmond, Microsoft, of a new build
+tool, "MSBuild", which "might be the single most
+important feature innovation in our pipeline", according to one
+MS developer. That is surely the greatest metric of success: XML
+based build tools are now viewed as so essential to the modern build
+process, that Microsoft has to come up with a competitor to Ant to
+win Java developers over to .NET. Let's hope they discover we like
+ubiquitous JUnit testing too, and refactoring IDEs that create and
+run the tests for us. 
+</P>
+<P>Success comes at a price, of course. One price is all those
+support calls. We try and stay on top of the bug reports, but one
+thing we cannot do is fix inconsistencies or things that seem like
+defects if they stand a significant chance of breaking existing
+builds. Its sad, but there are lots of little minor faults with Ant
+that we don't dare fix because, well, things might break. For
+example, why don't if= and unless= clauses also support
+<code>if="${property}"</code> clauses? Alternatively, why isn't it an
+error to use a property that isn't defined. Everyone that has ever
+seen directories called ${build.dir} popping up the source tree will
+understand why that behaviour is not always what you want. Well, we
+could fix these things, but we won't, because backwards compatibility
+is sacred. 
+</P>
+<P>That is the other price of success: all those users who have
+existing build files they want to work. And all those IDEs that host
+Ant, and who want an easy upgrade to a new version. This means we
+have lost a lot of the flexibility we used to have in the early days
+of the project, when different versions of Ant could have completely
+different property evaluation algorithms and nobody would bat an
+eyelid. Now, even the most obscure bug fix ends up generating 'you
+broke my build complaints'. 
+</P>
+<P>This explains why there will not be the 'incompatible upgrade'
+version of Ant, Ant2.0, that has long been discussed on our web site.
+</P>
+<H2>Where is Ant2.0?</H2>
+<P>For years we have been discussing Ant2.0, the complete rewrite
+version that would be cleaner and faster, and slightly incompatible
+with Ant1.x. It would be the opportunity to take the lessons from the
+1.x line, and support them cleanly. We even got as far as having
+multiple implementations of new Ant engines in the CVS repository,
+especially Mutant and Myrmidion. But we always seemed to have a hard
+time making progress -everyone was too busy using and firefighting
+Ant1.x that nobody got time to work on the 2.x codebase. Which is a
+shame, as all the proposals had interesting ideas.</P>
+<P>After Ant1.5 shipped, the future of Ant effectively resolved into
+one of evolution rather than revolution. There will be no Ant2.0 with
+a complete new engine underneath. There will be no need to run XSL
+transforms over existing build files to move them to the Ant2.0
+world. Instead Ant1.x is getting better underneath the build file
+-improving its internal design while retaining five-nines backwards
+compatibility with existing build files. 
+</P>
+<P>And that is what we have been up to.</P>
+<P>Under the hood, Ant1.6 contains some of the most major reworkings
+of the core Ant system yet seen. We haven't finished yet, and are
+holding back some of the more visible developments so we can see what
+works before their release in a product forces us to maintain them.
+But the underlying parts of Ant are now set up for the next stage in
+development. 
+</P>
+<P>Whether we call the next version of Ant 1.7 or 2.0 is something we
+have yet to decide. Maybe we should call it 3.0 just to surprise
+people.</P>
+<H2>What has changed</H2>
+<P>Look at the <A HREF="WHATSNEW" TARGET="other">WHATSNEW</A>
+document to get a full list of changes. Here are some of the core
+conceptual differences.</P>
+<H3>No more Java1.1</H3>
+<P>We got fed up of jumping through reflection hoops to do everything
+from weak references to setting file timestamps. After consultation
+with the Ant user mail list, Ant1.6 only runs on Java1.2 or later. It
+can still cross compile to Java1.1 if that is what you have to do. We
+haven't completely purged all 1.1 references in the docs, or 1.1
+support from the source, but that will come over time.</P>
+<H3>New classloader use.</H3>
+<P>This is going to make people nervous. If there is one thing Java
+developers have learned over time, only the very naive, the very
+brave, or the very competent do things with classloaders. We will let
+the Ant users decide what category to put us in, but before everyone
+panics, Costin, of Tomcat fame, did a lot of the work here. You don't
+write application servers without understanding classloaders inside
+and out. 
+</P>
+<P>The impact of these changes will trickle out over Ant versions. In
+1.6, the key features are 
+</P>
+<OL>
+	<LI><P>We have got rid of the bit in the batch file/shell script
+	that built up a really big classpath environment variable from
+	everything in ANT_HOME/lib. Now that is done in a launcher class
+	that does the work then calls tools.ant.Main as before.</P>
+	<LI><P>You can add new library directories to that classloader with
+	the -lib option on the command line. This option is interpreted by
+	the launcher class, so will not work with IDEs and other apps that
+	use the inner entry point.</P>
+	<LI><P>We have broken up optional.jar into many-many jar files, such
+	as ant-commons-logging.jar, ant-xalan2.jar, etc etc, and a
+	nodeps.jar for optional stuff without any dependencies. This creates
+	a lot of jar files.</P>
+	<LI><P>You can now &lt;taskdef&gt; existing tasks -like &lt;junit&gt;-
+	by including the specific ant jar <I>and</I> the dependent libraries
+	(i.e. junit.jar) in the declaration. This solves the problem of
+	ANT_HOME/lib needing to contain every jar possibly needed by every
+	user/project. You still have to declare the tasks one by one,
+	something we will fix in Ant1.7</P>
+</OL>
+<H3>Adapters</H3>
+<P>These are Java classes that <I>adapt</I>&gt; arbitrary Java
+classes into ant tasks or types. There has always been some of this
+stuff inside Ant, but now you can &lt;taskdef&gt; a task by naming
+not just the implementation class, but the adapter class. An adapter
+is essentially a meta task implementation -something that can be used
+to create new tasks dynamically. Which, when you consider that the
+core of Ant is fundamentally an XML to java mapping system and a
+simple workflow engine, may let you do very unusual things with Ant. 
+</P>
+<H3>Antlib: Ant libraries</H3>
+<P>This is something we will expand in future. Till now you could
+declare tasks and types with &lt;taskdef&gt; and &lt;typedef&gt;. If
+they were in a jar, you could write a properties file and name the
+resource path of the file in the jar. If you wanted to have both
+tasks and types, you had name a shared classloader. If you wanted to
+add more things -such as conditions or mappers, you were out of luck.</P>
+<P>Antlibs are Ant Libraries, JAR files containing the code to extend
+Ant, and an XML description file to describe how Ant is extended.
+Before anyone panics at 'yet another XML descriptor syntax' to learn:
+you may already know the syntax. We call it "Ant build files".
+Actually it is a subset: it can only contain those task declarations
+that are derived from org.apache.tools.ant.taskdefs.AntlibDefinition.
+That includes &lt;taskdef&gt; and &lt;typedef&gt;, and <I>any other
+task you choose to derive. </I>We are experimenting with scripting
+and some kind of task predefinition declarations in antlibs. With the
+latter, you will be able to write a predefined task -such as a
+&lt;javac&gt; derivative with the compiler options set, and then use
+it any of your build files. This is all too experimental to get into
+Ant1.6 -expect it in the successor. For now, start using antlibs and
+use the &lt;taskdef&gt; task to load them into your projects.</P>
+<H3>XML Namespace aware</H3>
+<P>Ant finally adopts XML namespaces. This is to address build file
+scalability; antlibs can be imported into their own namespaces, and
+so you can avoid namespace clashes with other libraries. If you do
+not know what namespaces are, do not worry -they are not compulsory.</P>
 
-We know you've been using Ant, not just from the all the bug reports we
-see, but from the awards we've been getting from JavaWorld and SD Magazine
-and from the fact that it is now clearly a mainstream product. Every quality IDE,
-from the Open Source projects: Emacs, NetBeans, Eclipse, JEdit, to the
-commercial offerings such as IntelliJ IDEA and JBuilder now have high
-quality Ant integration  either built in or available as a
-download. And they do that not just because it improves their products,
-giving users the best of both worlds -great editors and a great build
-process, but because Java developers are starting to expect Ant (and
-JUnit) everywhere.
+<h3>All tasks can go in at the toplevel</h3>
 <p>
-Even in mid-2001, if you said you were using Ant in your project, people
-would stare at you. Now, as long as you are talking with Java developers
-and not management or your family and friends, people will nod, shrug
-and maybe ask you questions about build file and Ant configurations. The good 
-news: Ant 1.5 includes more helpful error messages and a new
-<tt>-diagnostics</tt> command to look at your Ant installation and help work out why
-things arent working.
+ 
+Prior to Ant1.6, only three tasks were allowed outside 
+targets : &lt;taskdef&gt;,&lt;typedef&gt; and &lt;property&gt;.
+Ant 1.6 puts an end to this distinction; anything can go in at the top
+level. This is partly because there were many more tasks that merited the 
+option based on the original rationale of "global initialization tasks":
+&lt;import&gt; and &lt;antlib&gt; were the new additions, but existing
+tasks like &lt;condition&gt;, &lt;available&gt;, &lt;xmlproperties&gt; 
+and &lt;loadproperties&gt; had equal rights. 
+</p>
 <p>
-Now, when you tell people you work on Ant in your spare time,
-people used to give you very funny stares; now they ask you about how to
-set up automated build processes, or deploy to some random app server.
-The good news: Ant 1.5 makes it easier to answer those questions.
+Rather that expand the set slightly, now all tasks are allowed outside
+targets. This gives external tasks the same rights as built in code,
+eliminates sporadic bug reports, and annoying error messages. It gives
+users the ability to write build files without any targets at all; the
+top-level declarations are processed in sequence. 
+</p>
 
-The other sign of mainstream is that there are also books on the
-subject, first Java Tools for Extreme Programming, then Ant: The
-Definitive Guide, and the first Ant1.5 book, Java Development with Ant,
-due to ship at the end of the month. (Steve says: I prefer the one with 
-my name on the cover as co-author, but I'm biased). 
-As usual, the manual has improved too:
-regardless of whether you need a book to work with Ant or not, you need
-that on-line documentation. And as usual, any extra contributions to the
-docs are welcome indeed. 
-<p>
-Ant has also influenced how projects are built. Now when you download
-any open source project, or work with a closed source team, you expect
-to see a file called build.xml there. Equally important, you expect that
-build file to compile and run a set of tests using JUnit or a derivative
-thereof; if they are missing, you worry.
-<p>
-Together, Ant and JUnit have transformed the mainstream process for
-building and deploying Java projects. And that's pretty profound, when
-you think about it. What is equally impressive is that this was all done
-as a co-operative effort. Nobody works on Ant full-time; everybody uses
-it to solve their problems, to address their build crises and generally
-get something done in a hurry. It just so happens that the architectural
-model of Java classes bound via introspection to the XML build file
-makes it easy for people to add new tasks, extend existing ones and
-generally ease their way into developing and extending Ant. It is the
-users that have helped Ant become the success it is today, and will keep
-it that way tomorrow.
-<p>
-<h2>What has changed</h2>
-<p>
-So, what is new in Ant1.5? Lots of stuff. You will have to look at the
-<a href="WHATSNEW">whatsnew</a> file to see, but basically the changes
-fall into a number of categories
-<ol>
-<li>Bug fixes. We know, some things were broken in 1.4. In ant1.5 we
-have moved the bugs, fixing the ones we could, and no doubt adding
-different ones. Hopefully the total bug count has decreased.
-<li>Scalability. Changes in &lt;ant&gt; and a few other tasks should 
-make it easier to write large, scalable build files. 
-<li>Deployment. Take a look at the new &lt;serverdeploy&gt; task, add support
-for your server if it isnt there. Tomcat 4.1 has its own deployment
-tasks incidentally -fetch them from the tomcat pages.
-<li>Ease of use. We have added new attributes to make the archive tasks
-consistent with each other, new error messages for common problems (you
-get a screenful of help when a task wont instantiate, for example), and
-generally try and be helpful. As usual, we will accept contributions to 
-the documentation or the code for even more helpfulness. Hey, in ant1.5
-you dont need to double escape the $ sign to preserve it in a string!
-<li>Java 1.4 support. We build and test fine on Java 1.4, and have the
-extensions to javac needed to build code with assertions in. We should
-point out that we have more work to do in this area: if someone wants to
-write an &lt;assertionset&gt; datatype to give users control of which assertions
-to enable, and patch this in to things like the &lt;junit&gt; and 
-&lt;java&gt; tasks, things would get very interesting.
-<li>Continuous builds. Automated build tools are becoming more widely
-used; fork options on &lt;javac&gt; and &lt;javadoc&gt; are there to 
-stop memory use growth on a continuous process. 
-<li>New platforms: MacOS X for owners of those cute little laptops, 
-Novell Netware servers, and even z/OS and OS/390 for mainframe
-developers who write their build files on their virtual card punches.
-<li>Conditions. Take a look at the &lt;condition&gt; tag to see what you can
-look for, then at &lt;waitfor&gt; to use the same tests in deployment.
-Finally, notice the <tt>if</tt> and <tt>unless</tt> attributes on
-&lt;fail&gt; for easy halting of the build on a condition, without
-having to resort to conditional targets. 
-</ol>
- 
-There are many more enhancements, so we hope you will find your build
-projects easier. We have, as usual, jumped through hoops to keep
-existing builds working, even those build files that went out their way
-to not work on Java 1.4 (hint: dont ask for the classic compiler, it has
-gone away). If your build file stops working, and it isnt something listed 
-on the 'changes that may break your build' part of the WHATSNEW file, or
-something we know about on bugzilla, please dont hesitate to file a new
-bug report, preferably one with a replicable test and a patch to fix the
-problem.
-<p>
-Thanks,
-<p>
-The Ant development team.
-<p>
-PS: many thanks for Magesh to being the build manager for this release!
-He has been busy since Feb/March organizing it. Magesh -you are so good
-at this you should do it next time too :) 
-</body></html>
- 
+On a style note, we strongly advocate using this feature carefully. It
+is best if zero-side-effect, initialization-only tasks get put into the
+top level. Remember also that all top level statements are processed in
+order, before any targets are executed. Even tasks at the end of the
+file will get executed before targets declared above them. 
+
+<H2>New Tasks</H2>
+<P>As usual, the task base is growing and expanding. These days the
+ant core is resisting adopting many of the highly worthy donations of
+tasks from people, because they make maintenance and firefighting
+worse. Our current stance is that except in special circumstances,
+Ant tasks to support third party open source projects, should live
+with the projects themselves. This keeps them in sync with the
+libraries they integrate with, avoids GPL/Apache licensing issues,
+and reduces the Ant team's support workload, letting them focus on
+the core. The antlib mechanism is intended to make it easier for
+people to load tasks from libraries for this very reason.</P>
+<P>That said, we are pleased to introduce many new tasks. Of
+particular interest may be the SSH tasks, which let one deploy code
+to remote servers securely. Now you really can do live updates with
+Ant -if the operations team will let you. The other one that is quite
+interesting is &lt;subant&gt;. This is an extension of the &lt;ant&gt;
+task, to take an entire fileset of directories and run their build
+files. This is incredibly useful in very large projects. This does
+not mean that we are advocating the many-build-file development
+pattern, but in a sufficiently complex project it happens anyway.
+&lt;subant&gt; keeps things manageable.</P>
+<H2>What else</H2>
+<P>So, what is new in Ant1.6? Lots of stuff. You will have to look at
+the <A HREF="WHATSNEW">whatsnew</A> file to see, but here are some
+key points. 
+</P>
+<OL>
+	<LI><P STYLE="margin-bottom: 0in">Bug fixes. We know, some things
+	were broken in 1.5. In ant1.6 we have moved the bugs, fixing the
+	ones we could, and no doubt adding different ones. Hopefully the
+	total bug count has decreased. 
+	</P>
+	<LI><P STYLE="margin-bottom: 0in">New platforms: Open VMS and HP's
+	NonStop Kernel (Tandem) OS. OpenVMS is very different from the rest;
+	Read the &lt;exec&gt; task documentation carefully. 
+	</P>
+	<LI><P STYLE="margin-bottom: 0in">Spawning. &lt;java&gt; and &lt;exec&gt;
+	started applications can outlive Ant if you set spawn=true. Note
+	that the moment you do so, Ant cannot bind to their input or output,
+	for obvious reasons. 
+	</P>
+	<LI><P>Synchronisation with Java versions (heh, thought by moving
+	javah's entry point that you could hide from us? Think again).</P>
+	<LI><P>Synchronization with third party libraries. Of special note:
+	we have moved to the Apache commons-net.jar, the successor to
+	NetComponents for telnet and FTP as well as Apache BSF, the
+	successor to IBM BSF, for script.</P>
+</OL>
+<P>There are many more enhancements, so we hope you will find your
+build projects easier. We have, as usual, jumped through hoops to
+keep existing builds working. If your build file stops working, and
+it isn't something listed on the 'changes that may break your build'
+part of the WHATSNEW file, or something we know about on bugzilla,
+please don't hesitate to file a new bug report, preferably one with a
+replicable test and a patch to fix the problem. Please, please,
+please, do a search on bugzilla first. You do not want to be the
+seventy-third person to complain that Ant1.6 doesn't do something
+that it should. 
+</P>
+<P>Thanks, 
+</P>
+<P>The Ant development team. 
+</P>
+<H3>Acknowledgements</H3>
+<UL>
+	<LI><P>Many thanks for Antoine to being the build manager for this
+	release! 
+	</P>
+	<LI><P>Thank you to everyone who supplies the components we use in
+	Ant, particularly JUnit, commons-logging, log4J, bcel, ORO, Xerces, and Xalan. 
+	</P>
+	<LI><P>Everyone who has supplied bug reports, especially those with
+	patches and tests.</P>
+	<LI><P>IDE projects who incorporate Ant into their products. Not
+	only does this help Ant's success, you find lots of interesting
+	integration defects. Special mention to the Eclipse team for fixing
+	our memory leaks :)</P>
+</UL>
+<H3>Call to Action</H3>
+
+<P>
+
+It is an interesting time for Java. .NET is a serious challenger, and
+will get better. A core strength of Java over .NET is its community. It
+is the community that gave the world leading edge development tools and
+other core components: Ant, JUnit, XDoclet, hsqldb, Hibernate, Struts,
+etc. These things weren't created by JCP committees, or built according
+to the strategic vision of a Fortune 100 company. They were written by
+Java developers, for Java developers, usually to meet their own tactical
+goals.
+
+</P>
+
+<P>If Java is to survive -and we think it ought to- everyone who can
+needs to become active members of that community. It could be helping
+with Ant, but it could just as easily be helping with any other open
+source Java project, be hosted by Apache, FSF, Sourceforge or someone
+else, be it server-side, client-side or mobile-side. It could be an
+existing project, or it could be your own idea as to how things could
+be better. The key is: things will only be better if you put in the
+time to make it so. 
+</P>
+<H3>Call to Inaction</H3>
+<P>A special message to whoever it is in charge of commands in
+tools.jar: stop moving your entry points! In Ant1.5 we had to deal
+with the 'classic' javac entry point going away in Java1.4.0,
+seemingly coming back later. In Java 1.4.2, the javah entry point
+moved. The traditional command line invocation mechanism has been
+replaced by hosted invocation -Ant, Maven, IDEs, etc, and moving
+entry points around breaks these host applications. Even if we get a
+bug fix out in Ant a few weeks after the Java release, it takes
+months for this to trickle down to end users, especially via IDEs and
+other distributions. For example, Sun's own Java Web Services
+Developer Pack ships with Ant1.5.1, and so cannot run &lt;javah&gt;
+on a 1.4.2 installation. 
+</P>
+</BODY>
+</HTML>

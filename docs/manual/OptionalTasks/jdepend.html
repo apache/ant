@@ -5,6 +5,7 @@
    <title>JDepend Task</title>
    <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
    <meta http-equiv="Content-Language" content="en-us">
+<link rel="stylesheet" type="text/css" href="../stylesheets/antmanual.css">
 </head>
 
 <body>
@@ -70,6 +71,12 @@ href="#nested">nested elements</a>.</p>
     <td VALIGN=TOP>dir</td>
     <td VALIGN=TOP>The directory to invoke the VM in. (Ignored if fork is disabled)</td>
     <td ALIGN=CENTER VALIGN=TOP>No</td>
+  </tr>
+  <tr>
+    <td VALIGN=TOP>includeruntime</td>
+    <td VALIGN=TOP>Implicitly add the classes required to run jdepend
+    in forked mode. (Ignored if fork is disabled). Since ant 1.6.</td>
+    <td ALIGN=CENTER VALIGN=TOP>No, default is "no".</td>
   </tr>
   <tr>
     <td VALIGN=TOP>classpathref</td>

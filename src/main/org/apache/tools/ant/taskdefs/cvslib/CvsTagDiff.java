@@ -62,6 +62,8 @@ import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
 import java.util.Vector;
+import java.util.StringTokenizer;
+
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.taskdefs.AbstractCvsTask;
@@ -113,7 +115,11 @@ public class CvsTagDiff extends AbstractCvsTask {
     /**
      * Token to identify a new file in the rdiff log
      */
-    static final String FILE_IS_NEW = " is new; current revision ";
+    static final String FILE_IS_NEW = " is new;";
+    /**
+     * Token to identify the revision
+     */
+    static final String REVISION = "revision ";
 
     /**
      * Token to identify a modified file in the rdiff log
@@ -239,12 +245,17 @@ public class CvsTagDiff extends AbstractCvsTask {
             addCommandArgument("-D");
             addCommandArgument(myendDate);
         }
-        addCommandArgument(mypackage);
+        // support multiple packages
+        StringTokenizer myTokenizer = new StringTokenizer(mypackage);
+        while (myTokenizer.hasMoreTokens()) {
+            addCommandArgument(myTokenizer.nextToken());
+        }
         // force command not to be null
         setCommand("");
         File tmpFile = null;
         try {
             tmpFile = myfileUtils.createTempFile("cvstagdiff", ".log", null);
+            tmpFile.deleteOnExit();
             setOutput(tmpFile);
 
             // run the cvs command
@@ -279,15 +290,21 @@ public class CvsTagDiff extends AbstractCvsTask {
             reader = new BufferedReader(new FileReader(tmpFile));
 
             // entries are of the form:
+            //CVS 1.11
             // File module/filename is new; current revision 1.1
+            //CVS 1.11.9
+            // File module/filename is new; cvstag_2003_11_03_2  revision 1.1
             // or
             // File module/filename changed from revision 1.4 to 1.6
             // or
             // File module/filename is removed; not included in
             // release tag SKINLF_12
-
+            //CVS 1.11.9
+            // File testantoine/antoine.bat is removed; TESTANTOINE_1 revision 1.1.1.1
+            //
             // get rid of 'File module/"
-            int headerLength = FILE_STRING.length() + mypackage.length() + 1;
+            String toBeRemoved = FILE_STRING + mypackage + "/";
+            int headerLength = toBeRemoved.length();
             Vector entries = new Vector();
 
             String line = reader.readLine();
@@ -296,13 +313,25 @@ public class CvsTagDiff extends AbstractCvsTask {
 
             while (null != line) {
                 if (line.length() > headerLength) {
-                    line = line.substring(headerLength);
+                    if (line.startsWith(toBeRemoved)) {
+                        line = line.substring(headerLength);
+                    } else {
+                        line = line.substring(FILE_STRING.length());
+                    }
 
                     if ((index = line.indexOf(FILE_IS_NEW)) != -1) {
+//CVS 1.11
+//File apps/websphere/lib/something.jar is new; current revision 1.2
+//CVS 1.11.9
+//File apps/websphere/lib/something.jar is new; cvstag_2003_11_03_2 revision 1.2
                         // it is a new file
                         // set the revision but not the prevrevision
                         String filename = line.substring(0, index);
-                        String rev = line.substring(index + FILE_IS_NEW.length());
+                        String rev = null;
+                        int indexrev = -1;
+                        if ((indexrev = line.indexOf(REVISION, index)) != -1) {
+                            rev = line.substring(indexrev + REVISION.length());
+                        }
                         entry = new CvsTagEntry(filename, rev);
                         entries.addElement(entry);
                         log(entry.toString(), Project.MSG_VERBOSE);
@@ -323,7 +352,12 @@ public class CvsTagDiff extends AbstractCvsTask {
                     } else if ((index = line.indexOf(FILE_WAS_REMOVED)) != -1) {
                         // it is a removed file
                         String filename = line.substring(0, index);
-                        entry = new CvsTagEntry(filename);
+                        String rev = null;
+                        int indexrev = -1;
+                        if ((indexrev = line.indexOf(REVISION, index)) != -1) {
+                            rev = line.substring(indexrev + REVISION.length());
+                        }
+                        entry = new CvsTagEntry(filename, null, rev);
                         entries.addElement(entry);
                         log(entry.toString(), Project.MSG_VERBOSE);
                     }

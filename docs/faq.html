@@ -233,6 +233,10 @@
   How can I include national characters like German
         umlauts in my build file?
       </a></li>
+                <li><a href="#use-zip-instead-of-jar">
+  How do I use <code>jar</code>'s <code>M</code> switch?
+      I don't want a MANIFEST.
+      </a></li>
             </ul>
                 <h4 class="toc">It doesn't work (as expected)</h4>
         <ul>
@@ -846,6 +850,19 @@ shell-prompt&gt; m4 foo.m4 &gt; foo
                         <pre class="code">
 &lt;?xml version=&quot;1.0&quot; encoding=&quot;ISO-8859-1&quot; ?&gt;
 </pre>
+                    <p class="faq">
+      <a name="use-zip-instead-of-jar"></a>
+      How do I use <code>jar</code>'s <code>M</code> switch?
+      I don't want a MANIFEST.
+    </p>
+                  <p>A JAR archive is a ZIP file, so if you don't want a
+        MANIFEST you can simply use <code>&lt;zip&gt;</code>.</p>
+                        <p>If your file names contain national characters you should
+        know that Sun's <code>jar</code> utility like Ant's
+        <code>&lt;jar&gt;</code> uses UFT8 to encode their names while
+        <code>&lt;zip&gt;</code> uses your platforms default encoding.
+        Use the encoding attribute of <code>&lt;zip&gt;</code> if
+        necessary.</p>
                                 <p class="faq">
       <a name="always-recompiles"></a>
       Why does Ant always recompile all my Java files?
@@ -970,7 +987,7 @@ shell-prompt&gt; m4 foo.m4 &gt; foo
                         <p>You may have seen these lower-case directory names in
         WinZIP, but WinZIP is trying to be helpful (and fails).  If
         WinZIP encounters a filename that is all upper-case, it
-        assumes it has come from an old DOS box andchanges the case to
+        assumes it has come from an old DOS box and changes the case to
         all lower-case for you.</p>
                         <p>If you extract (or just check) the archive with jar, you
         will see that the names have the correct case.</p>
@@ -1103,6 +1120,28 @@ while(&lt;STDIN&gt;) {
    &lt;!ENTITY include SYSTEM &quot;file:./header.xml&quot;&gt;
 ]&gt;
 </pre>
+                        <p>Starting with Ant 1.6, there is a new
+        <code>&lt;import&gt;</code> task that can (also) be used to
+        include build file fragments.  Unlike the snippets used with
+        entity includes, the referenced files have to be complete Ant
+        build files, though.</p>
+                        <p>The example above would become:</p>
+                        <pre class="code">
+&lt;?xml version=&quot;1.0&quot;?&gt;
+&lt;project name=&quot;test&quot; default=&quot;test&quot; basedir=&quot;.&quot;&gt;
+
+  &lt;target name=&quot;setup&quot;&gt;
+    ...
+  &lt;/target&gt;
+
+  &lt;import file=&quot;../common.xml&quot;/&gt;
+
+  ...
+
+&lt;/project&gt;
+</pre>
+                        <p>Unlike entity includes, <code>&lt;import&gt;</code> will
+        let you use Ant properties in the file name.</p>
                     <p class="faq">
       <a name="mail-logger"></a>
       How do I send an email with the result of my build
@@ -1315,6 +1354,10 @@ mv /tmp/foo $ANT_HOME/bin/antRun
         <code>CLASSPATH</code> environment variable or
         <code>ANT_HOME/lib</code>" for the rest of this
         answer.</p>
+                        <p>Technically the sentence above isn't true for Ant 1.6
+        and later anymore, but the result is the same.  For the sake
+        of this discussion, <code>CLASSPATH</code> and
+        <code>ANT_HOME/lib</code> are identical.</p>
                         <p>This question collects a common type of problem: A task
         needs an external library and it has a nested classpath
         element so that you can point it to this external library, but
@@ -1367,6 +1410,8 @@ mv /tmp/foo $ANT_HOME/bin/antRun
           <li>remove the class that loads the external library from
           the <code>CLASSPATH</code>.</li>
         </ol>
+                        <p><strong>Using The Second Option with Ant 1.5.4 and
+        Earlier:</strong></p>
                         <p>The easiest way to do this is to remove
         <code>optional.jar</code> from <code>ANT_HOME/lib</code>.  If
         you do so, you will have to <code>&lt;taskdef&gt;</code> all
@@ -1393,8 +1438,20 @@ mv /tmp/foo $ANT_HOME/bin/antRun
         directory, in the <code>&lt;style&gt;</code> case it is one of
         the <code>*Liaison</code> classes in
         <code>org/apache/tools/ant/taskdefs/optional</code>.</p>
+                        <p><strong>Using The Second Option with Ant 1.6 and
+        later:</strong></p>
+                        <p>In Ant 1.6 <code>optional.jar</code> has been split into
+        multiple jars, each one containing classes with the same
+        dependencies on external libraries.  You can move the
+        "offending" jar out of ANT_HOME/lib.  For the
+        <code>&lt;junit&gt;</code> task it would be
+        <code>ant-junit.jar</code> and for <code>&lt;style&gt;</code>
+        it would be <code>ant-trax.jar</code>,
+        <code>ant-xalan1.jar</code> or <code>ant-xslp.jar</code> -
+        depending on the processor you use.</p>
                         <p>If you use the option to break up <code>optional.jar</code>
-        for <code>&lt;junit&gt;</code>, you still have to use a
+        for <code>&lt;junit&gt;</code> or remove
+        <code>ant-junit.jar</code>, you still have to use a
         <code>&lt;taskdef&gt;</code> with a nested
         <code>&lt;classpath&gt;</code> to define the junit task.</p>
                     <p class="faq">

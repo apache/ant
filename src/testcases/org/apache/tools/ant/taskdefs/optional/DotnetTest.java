@@ -157,5 +157,13 @@ public class DotnetTest extends BuildFileTest {
     public void testJsharp() throws Exception {
         executeTarget("jsharp");
     }
+
+    /**
+     * test we can handle jsharp (if found)
+     */
+    public void testResponseFile() throws Exception {
+        executeTarget("testCSCresponseFile");
+    }
+
 }
 

@@ -1,5 +1,187 @@
-Changes from Ant 1.5.4 to current CVS version
-=============================================
+Changes from Ant 1.6.B2 to Ant 1.6.B3
+=====================================
+
+Changes that could break older environments:
+--------------------------------------------
+* Changed namespace processing. The namespace uri
+  of nested elements of a type or a task are now the
+  same as the type or task. Previously the namespace uri
+  of nested elements was ant's namespace uri. This change will affect users
+  of ant 1.6b1 and ant 1.6b2.
+
+* <csc>'s executable attribute defaults to mcs on non-Windows platforms.
+
+Fixed bugs:
+-----------
+* the <java> task checks that the Main method of the class to be executed is static,
+  and fails with a decent BuildException if it is not the case
+
+* a space at the end of the Ant-Version line of the default manifest has been removed
+
+* better debugging support for ApacheCatalogResolver
+  Bugzilla Report 24070.
+
+* better report of exceptions in the renaming of the old file in <zip update="true"/>
+  and the derived classes <jar>, ...
+
+* use of <parallel> and xmlns:prefix="antlib:package"
+
+* user and new arguments were swapped in PropertyHelper setNew and setUser.
+  Bugzilla Report 23966.
+
+* <style/> be able to resolve entities inside stylesheets.
+
+* <csc> and other .NET tasks : fixed Error when compiling many source files.
+  Bugzilla Report 19630.
+
+* <junit> Make properties available in timed-out tests.
+   Bugzilla Report 23935.
+
+* <junit> Pull ant-launcher.jar in the runtime as well.
+
+* <telnet> : better support for people debugging timed out reads.
+
+* <ssh> : parse properly return codes from server.
+  Also fix for Bugzilla Report 23986.
+
+* <scp> If remotedir has been omitted, make it default to "." .
+  Bugzilla Report 23987.
+
+* starteam tasks : insure proper disconnect from the server.
+  Bugzilla Report 24110.
+
+* <script>, <scriptdef>
+  fix problem : script task cannot cope with undefined task/type elements in buildfile
+  Bugzilla Report 23915.
+
+* <cvstagdiff> had a problem with aliased modules and with requests for multiple modules.
+  Bugzilla Reports 21373 and 22877.
+
+* <cvstagdiff> could not parse properly the revision number of new files with CVS 1.11.9 or higher.
+  Bugzilla Report 24406.
+
+* <ftp> null pointer exception when attempting rmdir in an empty directory.
+  Bugzilla Report 24440.
+
+* <scp> could corrupt files when transfering lots of files.
+  Bugzilla Report 24449.
+
+* <jdepend>   Fix NPE
+  Bugzilla Report 24344.
+
+
+Other changes:
+--------------
+* Attributes in the template bodies of <macrodef> are now denoted by @{attribute} instead of ${attribute}
+
+* <concat> will expand properties entered in the text of the tag
+
+* <exec> resolution behavior (resolveexecutable attribute) has been improved
+
+* running.html has been augmented with a list of the magic properties
+
+* welcome.html documentation has been updated
+
+* Change default uri from ant:core to antlib:org.apache.tools.ant
+
+* upgrade to xml-apis.jar from Xerces-J 2.6.0.
+
+* Shipped XML parser is now Xerces 2.6.0
+
+* set project for created targets.
+
+* make sure that the checkstyle stylesheets make their way into the distribution.
+
+* improve ant's own build file concerning the sources which depend upon bsf (rhino).
+
+* a number of documentation corrections.
+  Bugzilla reports 24059, 24060, 24069, 24074.
+
+* replacement of accentuated characters in the source code (actually in JavaDoc comments)
+  by UNICODE escapes.
+  Bugzilla report 23919.
+
+* load all xml resources for typedef not just the first
+  Bugzilla report 24024
+
+* <presetdef> fix so that the preset attributes are optional and
+  may be overridded (previosly the attributes were set twice)
+
+* provide stack for errors using import, ant, antcall, subant and macros
+
+* import task uses the FileUtils#resolveFile method to resolve the imported file,
+  in order to avoid trouble on Windows or Netware
+
+* ignore attributes from different URIS
+
+* <jdepend>
+  fix timeout attribute of jdepend
+  add unit tests
+  add includeruntime to allow unittests to run
+  checkstyle
+Changes from Ant 1.6.B1 to Ant 1.6.B2
+=====================================
+
+Changes that could break older environments:
+--------------------------------------------
+
+Fixed bugs:
+-----------
+
+* fix usage of mixed case names of add(typedef) introspection.
+  fix by moving the tolower method from unknownelement to introspectionhelper.
+
+* documentation added for -lib option used when starting ant via launcher
+  Bugzilla Report 23454.
+
+* user-friendly messages added for incorrect use of -lib option
+  Bugzilla Report 23454.
+
+* make <input/> be skipped when a property is already set
+  Bugzilla Report 19967.
+
+* improved cleanup of temporary files 
+  this concerns <javadoc/>, <replace/>, <zip/>, <javac/>, <cvstagdiff/>, <cab/>,
+  <replaceregexp/>, <junit/>, metamata tasks, sitraka tasks, <symlink/> 
+  temporary files are now marked with deleteOnExit
+  Bugzilla Report 17512.
+
+* Reuse the resolution logic of <property> inside <loadproperties>.
+  So <expandproperties/> is not needed any more together with <loadproperties/>
+  Bugzilla Report 17782.
+
+* Comparison of TemplateElement(s) and Attribute(s) fixed inside macrodef.
+
+* Don't silently swallow exceptions when something is wrong with adding or removing 
+  shutdown hooks , Bugzilla Report 23609.
+
+* noinform attribute for Websphere element of <ejbjar/> 
+  Bugzilla Report 23535.
+
+* <junit/> (JunitTestRunner)
+  Don't mask arbitrary exceptions when looking for a suite method.
+  Bugzilla Report 23033.
+
+* <ftp/> fix problem with relative remotedir
+  Bugzilla Report 23833.
+
+* ssh tasks : make .ssh/known_hosts optional
+
+* <vssget/>  was sending a wrong command line prefix for labels -VL-Lsome.label
+  this change fixes it to -VLsome.label instead
+
+* <zipfileset/> allow it to refer to a fileset, to which zipfileset specific attributes are added
+  this solves one frequent use case in the <war/> task
+
+Other changes:
+--------------
+
+* add an optional attribute to <import/>
+
+* upgrade protected access to public for setMacroDef for macroinstance object
+
+Changes from Ant 1.5.4 to Ant 1.6
+=================================
 
 Changes that could break older environments:
 --------------------------------------------
@@ -24,7 +206,8 @@ Changes that could break older environments:
 * <xmlproperty> will no longer fail if the file to be loaded doesn't exist.
 
 * XML namespaces are now enabled in the XML parser, meaning XML namespace
-  declarations no longer cause errors.
+  declarations no longer cause errors. However task names containing colons
+  will cause errors unless there is a corresponding namespace uri.
 
 * The <ftp> and <telnet> tasks now require Jakarta Commons Net instead
   of the older ORO Netcomponents version.  See
@@ -62,6 +245,16 @@ Changes that could break older environments:
   String[]. (In java 1.5 terms it was Hashtable<String, String> and
   is now Hashtable<String, String[]>). This will affect third party code
   that extend Copy and override Copy#doFileOperations.
+
+* <loadproperties> didn't expand properties while <property file="..."/>
+  does, so they were not equivalent.  This has been fixed, which means
+  that propetries may get expanded twice if you use an
+  <expandproperties> filterreader.  Bugzilla Report 17782.
+
+* User defined tasks and typedefs are now handled internally in the
+  same way as predefined tasks and typedefs. Also tasks and typedefs
+  are resolved at a later stage. This causes some
+  differences especially for user defined task containers.
 
 Fixed bugs:
 -----------
@@ -244,6 +437,15 @@ Fixed bugs:
 
 * <junit includeantruntime="true" fork="true"> replaced the CLASSPATH instead
   of adding to it.  Bugzilla Report 14971.
+
+* <splash> could fail on JVMs that use null to indicate the system classloader.
+  Bugzilla Report 23320.
+
+* <xmlcatalog>s only worked when defined inside of tasks.  Bugzilla
+  Report 20965.
+  
+* <csc> and siblings (<vbc> <jsharpc>) handle large filesets by
+automatic use of response files.  Bugzilla report #19630
 
 Other changes:
 --------------
@@ -610,6 +812,28 @@ Other changes:
 * New filter <concatfilter>. Adds the content of file at the beginning
   or end of a file. Discussion started at
   http://marc.theaimsgroup.com/?l=ant-user&m=106366791228585&w=2
+
+* New task <import>
+
+* New task <macrodef>
+
+* New task <presetdef>
+
+* Ant libraries that can make use of namespaces to avoid name
+  clashes of custom tasks
+
+
+* <java> and <junit> now support <assertions>, which let you enable
+  and disable Java1.4 assertions on a package or class basis. These
+  only work when fork=true, currently.
+
+* .NET tasks expanded with VB support <vbc> and J#, via <jsharp>, 
+  <importtypelib> and <ilasm>. <csc> supports nested <src> types, 
+  <defines> for (potentially conditional) definitions, <reference>
+  filesets for references. The executable attribute lets you switch to
+  mono or other implementations -<csc> has been tested with Mono on
+  Linux and OSX.
+    
 
 Changes from Ant 1.5.3 to Ant 1.5.4
 ===================================

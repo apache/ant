@@ -64,6 +64,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.Vector;
 import java.util.Enumeration;
+import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.parsers.SAXParserFactory;
 import javax.xml.transform.ErrorListener;
 import javax.xml.transform.Source;
@@ -86,6 +87,7 @@ import org.apache.tools.ant.types.XMLCatalog;
 import org.apache.tools.ant.util.JAXPUtils;
 import org.xml.sax.EntityResolver;
 import org.xml.sax.InputSource;
+import org.xml.sax.SAXException;
 import org.xml.sax.XMLReader;
 
 /**
@@ -199,7 +201,8 @@ public class TraXLiaison implements XSLTLiaison2, ErrorListener, XSLTLoggerAware
      * @return the configured source instance matching the stylesheet.
      * @throws Exception if there is a problem creating the source.
      */
-    private Source getSource(InputStream is, File infile) throws Exception {
+    private Source getSource(InputStream is, File infile) 
+        throws ParserConfigurationException, SAXException {
         // todo: is this comment still relevant ??
         // FIXME: need to use a SAXSource as the source for the transform
         // so we can plug in our own entity resolver
@@ -216,6 +219,8 @@ public class TraXLiaison implements XSLTLiaison2, ErrorListener, XSLTLoggerAware
                     + "parser doesn't support SAX");
             }
         } else {
+            // WARN: Don't use the StreamSource(File) ctor. It won't work with
+            // xalan prior to 2.2 because of systemid bugs.
             src = new StreamSource(is);
         }
         src.setSystemId(JAXPUtils.getSystemId(infile));
@@ -226,9 +231,8 @@ public class TraXLiaison implements XSLTLiaison2, ErrorListener, XSLTLoggerAware
      * Read in templates from the stylesheet
      */
     private void readTemplates()
-        throws IOException, TransformerConfigurationException {
-        // WARN: Don't use the StreamSource(File) ctor. It won't work with
-        // xalan prior to 2.2 because of systemid bugs.
+        throws IOException, TransformerConfigurationException, 
+               ParserConfigurationException, SAXException {
 
         // Use a stream so that you can close it yourself quickly
         // and avoid keeping the handle until the object is garbaged.
@@ -239,10 +243,7 @@ public class TraXLiaison implements XSLTLiaison2, ErrorListener, XSLTLoggerAware
             xslStream
                 = new BufferedInputStream(new FileInputStream(stylesheet));
             templatesModTime = stylesheet.lastModified();
-            StreamSource src = new StreamSource(xslStream);
-            // Always set the systemid to the source for imports, includes...
-            // in xsl and xml...
-            src.setSystemId(JAXPUtils.getSystemId(stylesheet));
+            Source src = getSource(xslStream, stylesheet);
             templates = getFactory().newTemplates(src);
         } finally {
             if (xslStream != null) {
