@@ -342,12 +342,8 @@ public class DescriptorHandler extends org.xml.sax.HandlerBase {
 
 
     protected void processElement() {
-<<<<<<< DescriptorHandler.java
-        if (parseState != STATE_IN_ENTITY && parseState != STATE_IN_SESSION && parseState != STATE_IN_MESSAGE) {
-=======
         if (inEJBRef || 
-            (parseState != STATE_IN_ENTITY && parseState != STATE_IN_SESSION)) {
->>>>>>> 1.12
+            (parseState != STATE_IN_ENTITY && parseState != STATE_IN_SESSION && parseState != STATE_IN_MESSAGE)) {
             return;
         }
 
