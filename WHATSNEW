@@ -259,6 +259,11 @@ Other changes:
 * <junitreport> now also works with Xalan XSLTC and/or JDK 1.5.
   Bugzilla Report 27541.
 
+* <jspc> doesn't work properly with Tomcat 5.x.  We've implemented a
+  work-around but don't intend to support future changes in Tomcat
+  5.x.  Please use the jspc task that ships with Tomcat instead of
+  Ant's.
+
 Changes from Ant 1.6.0 to Ant 1.6.1
 =============================================
 

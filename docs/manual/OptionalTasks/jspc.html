@@ -11,6 +11,13 @@
 <h3>Description</h3>
 
 <p> Ant task to run the JSP compiler and turn JSP pages into Java source.
+
+<p><b>Deprecated</b> if you use this task with Tomcat's Jasper JSP
+compiler, you should seriously consider using the task shipping with
+Tomcat instead.  This task is only tested against Tomcat 4.x. There
+are known problems with Tomcat 5.x that won't get fixed in Ant, please
+use Tomcat's jspc task instead.</p>
+
 <p>
 
 It can be used to precompile JSP pages for fast initial invocation

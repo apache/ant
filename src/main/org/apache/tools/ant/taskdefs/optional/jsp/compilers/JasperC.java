@@ -18,6 +18,7 @@
 package org.apache.tools.ant.taskdefs.optional.jsp.compilers;
 
 import java.io.File;
+import org.apache.tools.ant.AntClassLoader;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.taskdefs.Java;
@@ -52,23 +53,19 @@ public class JasperC extends DefaultJspCompilerAdapter {
         getJspc().log("Using jasper compiler", Project.MSG_VERBOSE);
         CommandlineJava cmd = setupJasperCommand();
 
-
         try {
             // Create an instance of the compiler, redirecting output to
             // the project log
             Java java = (Java) (getProject().createTask("java"));
+            Path p = getClasspath();
             if (getJspc().getClasspath() != null) {
-                getProject().log("using user supplied classpath: "
-                    + getJspc().getClasspath(), Project.MSG_DEBUG);
-                java.setClasspath(getJspc().getClasspath()
-                                  .concatSystemClasspath("ignore"));
-            } else {
-                Path classpath = new Path(getProject());
-                classpath = classpath.concatSystemClasspath("only");
-                getProject().log("using system classpath: " + classpath,
+                getProject().log("using user supplied classpath: " + p, 
                                  Project.MSG_DEBUG);
-                java.setClasspath(classpath);
+            } else {
+                getProject().log("using system classpath: " + p,
+                                 Project.MSG_DEBUG);
             }
+            java.setClasspath(p);
             java.setDir(getProject().getBaseDir());
             java.setClassname("org.apache.jasper.JspC");
             //this is really irritating; we need a way to set stuff
@@ -106,7 +103,15 @@ public class JasperC extends DefaultJspCompilerAdapter {
         JspC jspc = getJspc();
         addArg(cmd, "-d", jspc.getDestdir());
         addArg(cmd, "-p", jspc.getPackage());
-        addArg(cmd, "-v" + jspc.getVerbose());
+
+        if (!isTomcat5x()) {
+            addArg(cmd, "-v" + jspc.getVerbose());
+        } else {
+            getProject().log("this task doesn't support Tomcat 5.x properly, "
+                             + "please use the Tomcat provided jspc task "
+                             + "instead");
+        }
+        
         addArg(cmd, "-uriroot", jspc.getUriroot());
         addArg(cmd, "-uribase", jspc.getUribase());
         addArg(cmd, "-ieplugin", jspc.getIeplugin());
@@ -131,5 +136,36 @@ public class JasperC extends DefaultJspCompilerAdapter {
 
     public JspMangler createMangler() {
         return mangler;
+    }
+
+    /**
+     * @since Ant 1.6.2
+     */
+    private Path getClasspath() {
+        Path p = getJspc().getClasspath();
+        if (p == null) {
+            p = new Path(getProject());
+            return p.concatSystemClasspath("only");
+        } else {
+            return p.concatSystemClasspath("ignore");
+        }
+    }
+
+    /**
+     * @since Ant 1.6.2
+     */
+    private boolean isTomcat5x() {
+        AntClassLoader l = null;
+        try {
+            l = getProject().createClassLoader(getClasspath());
+            l.loadClass("org.apache.jasper.tagplugins.jstl.If");
+            return true;
+        } catch (ClassNotFoundException e) {
+            return false;
+        } finally {
+            if (l != null) {
+                l.cleanup();
+            }
+        }
     }
 }
