@@ -146,6 +146,9 @@ Fixed bugs:
 * <different> selector can now be nested directly under a fileset
   Bugzilla Report 20220.
 
+* <cvstagdiff> had a problem with "dd-MM-yy hh:mm:ss" formats
+  Bugzilla Report 15995.
+
 Other changes:
 --------------
 * Six new Clearcase tasks added.
