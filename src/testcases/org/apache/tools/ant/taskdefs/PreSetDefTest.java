@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2003 The Apache Software Foundation.  All rights
+ * Copyright (c) 2003-2004 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -58,6 +58,7 @@ import org.apache.tools.ant.BuildFileTest;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.Task;
+import org.apache.tools.ant.types.FileSet;
 
 /**
  * @author Peter Reilly
@@ -102,6 +103,10 @@ public class PreSetDefTest extends BuildFileTest {
     public void testElementOrder2() {
         expectLog("element.order2", "Line 1Line 2Line 3");
     }
+
+    public void testAntTypeTest() {
+        expectLog("antTypeTest", "");
+    }
     
     /**
      * A test class to check default properties
@@ -119,6 +124,16 @@ public class PreSetDefTest extends BuildFileTest {
 
         public void execute() {
             getProject().log("attribute is " + attribute);
+        }
+    }
+
+    /**
+     * A test class to check presetdef with add and addConfigured and ant-type
+     */
+    public static class AntTypeTest extends Task {
+        public void addFileSet(FileSet fileset) {
+        }
+        public void addConfiguredConfigured(FileSet fileset) {
         }
     }
 }

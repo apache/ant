@@ -349,19 +349,22 @@ public final class IntrospectionHelper implements BuildListener {
                                 throws InvocationTargetException,
                                 IllegalAccessException, InstantiationException {
                                 if (child != null) {
-                                    return child;
                                 } else if (c.getParameterTypes().length == 0) {
-                                    return c.newInstance(new Object[] {});
+                                    child = c.newInstance(new Object[] {});
                                 } else {
-                                    return c.newInstance(new Object[] {
+                                    child = c.newInstance(new Object[] {
                                         project});
                                 }
+                                if (child instanceof  PreSetDef.PreSetDefinition) {
+                                    child = ((PreSetDef.PreSetDefinition) child)
+                                        .createObject(project);
+                                }
+                                return child;
                             }
 
                             public void store(Object parent, Object child)
                                 throws InvocationTargetException,
                                 IllegalAccessException, InstantiationException {
-
                                 m.invoke(parent, new Object[] {child});
                             }
 
@@ -414,6 +417,10 @@ public final class IntrospectionHelper implements BuildListener {
                                 } else {
                                     child = c.newInstance(new Object[] {
                                         project});
+                                }
+                                if (child instanceof  PreSetDef.PreSetDefinition) {
+                                    child = ((PreSetDef.PreSetDefinition) child)
+                                        .createObject(project);
                                 }
                                 m.invoke(parent, new Object[] {child});
                                 return child;
