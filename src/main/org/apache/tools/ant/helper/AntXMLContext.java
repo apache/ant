@@ -54,6 +54,10 @@
 package org.apache.tools.ant.helper;
 
 import java.io.File;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.Vector;
 
 import org.xml.sax.Locator;
@@ -120,6 +124,11 @@ public class AntXMLContext {
      * when processing a particular build file.
      */
     private boolean ignoreProjectTag = false;
+
+    /** Keeps track of prefix -> uri mapping during parsing */
+    private Map prefixMapping = new HashMap();
+
+
     /**
      * constructor
      * @param project the project to which this antxml context belongs to
@@ -263,7 +272,7 @@ public class AntXMLContext {
 
     /**
      * sets the implicit target
-     * @param target
+     * @param target the implicit target
      */
     public void setImplicitTarget(Target target) {
         this.implicitTarget = target;
@@ -284,6 +293,8 @@ public class AntXMLContext {
      * <p>
      * This method was moved out of the configure method to allow
      * it to be executed at parse time.
+     * @param element the current element
+     * @param attr attributes of the current element
      */
     public void configureId(Object element, Attributes attr) {
         String id = attr.getValue("id");
@@ -322,6 +333,48 @@ public class AntXMLContext {
      */
     public void setIgnoreProjectTag(boolean flag) {
         this.ignoreProjectTag = flag;
+    }
+
+    /**
+     * Called during parsing, stores the prefix to uri mapping.
+     *
+     * @param prefix a namespace prefix
+     * @param uri    a namespace uri
+     */
+    public void startPrefixMapping(String prefix, String uri) {
+        List list = (List) prefixMapping.get(prefix);
+        if (list == null) {
+            list = new ArrayList();
+            prefixMapping.put(prefix, list);
+        }
+        list.add(uri);
+    }
+
+    /**
+     * End of prefix to uri mapping.
+     *
+     * @param prefix the namespace prefix
+     */
+    public void endPrefixMapping(String prefix) {
+        List list = (List) prefixMapping.get(prefix);
+        if (list == null || list.size() == 0) {
+            return; // Should not happen
+        }
+        list.remove(list.size() - 1);
+    }
+
+    /**
+     * prefix to namespace uri mapping
+     *
+     * @param prefix the prefix to map
+     * @return the uri for this prefix, null if not present
+     */
+    public String getPrefixMapping(String prefix) {
+        List list = (List) prefixMapping.get(prefix);
+        if (list == null || list.size() == 0) {
+            return null;
+        }
+        return (String) list.get(list.size() - 1);
     }
 }
 

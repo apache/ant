@@ -62,7 +62,7 @@ import java.util.List;
 
 import org.apache.tools.ant.TaskContainer;
 import org.apache.tools.ant.BuildException;
-import org.apache.tools.ant.Location;
+import org.apache.tools.ant.ComponentHelper;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.Task;
 import org.apache.tools.ant.helper.ProjectHelper2;
@@ -124,6 +124,7 @@ public class Antlib extends Task implements TaskContainer {
     //
     private ClassLoader classLoader;
     private String      prefix;
+    private String      uri = "";
     private List  tasks = new ArrayList();
 
     /**
@@ -135,6 +136,14 @@ public class Antlib extends Task implements TaskContainer {
      */
     protected void setClassLoader(ClassLoader classLoader) {
         this.classLoader = classLoader;
+    }
+
+    /**
+     * Set the URI for this antlib.
+     * @param uri the namespace uri
+     */
+    protected void  setURI(String uri) {
+        this.uri = uri;
     }
 
     private ClassLoader getClassLoader() {
@@ -158,20 +167,28 @@ public class Antlib extends Task implements TaskContainer {
      * any tasks that derive from Definer.
      */
     public void execute() {
-        for (Iterator i = tasks.iterator(); i.hasNext();) {
-            UnknownElement ue = (UnknownElement) i.next();
-            ue.maybeConfigure();
-            setLocation(ue.getLocation());
-            Task t = ue.getTask();
-            if (t == null) {
-                continue;
+        ComponentHelper helper =
+            ComponentHelper.getComponentHelper(getProject());
+        helper.enterAntLib();
+        try {
+            for (Iterator i = tasks.iterator(); i.hasNext();) {
+                UnknownElement ue = (UnknownElement) i.next();
+                ue.maybeConfigure();
+                setLocation(ue.getLocation());
+                Task t = ue.getTask();
+                if (t == null) {
+                    continue;
+                }
+                if (t instanceof AntlibInterface) {
+                    AntlibInterface d = (AntlibInterface) t;
+                    d.setURI(uri);
+                    d.setAntlibClassLoader(getClassLoader());
+                }
+                t.init();
+                t.execute();
             }
-            if (t instanceof Definer) {
-                Definer d = (Definer) t;
-                d.setInternalClassLoader(getClassLoader());
-            }
-            t.init();
-            t.execute();
+        } finally {
+            helper.exitAntLib();
         }
     }
 

@@ -63,32 +63,29 @@ import java.util.Locale;
 import java.util.Properties;
 
 import org.apache.tools.ant.AntTypeDefinition;
-import org.apache.tools.ant.AntClassLoader;
 import org.apache.tools.ant.ComponentHelper;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Location;
 import org.apache.tools.ant.Project;
-import org.apache.tools.ant.Task;
-import org.apache.tools.ant.types.Path;
-import org.apache.tools.ant.types.Reference;
-import org.apache.tools.ant.util.ClasspathUtils;
+import org.apache.tools.ant.ProjectHelper;
 import org.apache.tools.ant.types.EnumeratedAttribute;
 
 /**
- * Base class for Taskdef and Typedef - does all the classpath
- * handling and and class loading.
+ * Base class for Taskdef and Typedef - handles all
+ * the attributes for Typedef. The uri and class
+ * handling is handled by DefBase
  *
  * @author Costin Manolache
  * @author Stefan Bodewig
+ * @author Peter Reilly
  *
  * @since Ant 1.4
  */
-public abstract class Definer extends Task {
+public abstract class Definer extends DefBase {
     private String name;
     private String classname;
     private File file;
     private String resource;
-    private ClasspathUtils.Delegate cpDelegate;
 
     private   int    format = Format.PROPERTIES;
     private   boolean definerSet = false;
@@ -173,29 +170,10 @@ public abstract class Definer extends Task {
     }
 
     /**
-     * @param reverseLoader if true a delegated loader will take precedence over
-     *                      the parent
-     * @deprecated stop using this attribute
-     * @ant.attribute ignore="true"
-     */
-    public void setReverseLoader(boolean reverseLoader) {
-        this.cpDelegate.setReverseLoader(reverseLoader);
-        log("The reverseloader attribute is DEPRECATED. It will be removed",
-            Project.MSG_WARN);
-    }
-
-    /**
      * @return the name for this definition
      */
     public String getName() {
         return name;
-    }
-
-    /**
-     * @return the class path path for this definition
-     */
-    public Path getClasspath() {
-        return cpDelegate.getClasspath();
     }
 
     /**
@@ -210,72 +188,6 @@ public abstract class Definer extends Task {
      */
     public String getResource() {
         return resource;
-    }
-
-    /**
-     * @return the reverse loader attribute of the classpath delegate.
-     */
-    public boolean isReverseLoader() {
-        return cpDelegate.isReverseLoader();
-    }
-
-    /**
-     * Returns the loader id of the class path Delegate.
-     * @return the loader id
-     */
-    public String getLoaderId() {
-        return cpDelegate.getClassLoadId();
-    }
-
-    /**
-     * Returns the class path id of the class path delegate.
-     * @return the class path id
-     */
-    public String getClasspathId() {
-        return cpDelegate.getClassLoadId();
-    }
-
-    /**
-     * Set the classpath to be used when searching for component being defined
-     *
-     * @param classpath an Ant Path object containing the classpath.
-     */
-    public void setClasspath(Path classpath) {
-        this.cpDelegate.setClasspath(classpath);
-    }
-
-    /**
-     * Create the classpath to be used when searching for component being
-     * defined
-     * @return the classpath of the this definition
-     */
-    public Path createClasspath() {
-        return this.cpDelegate.createClasspath();
-    }
-
-    /**
-     * reference to a classpath to use when loading the files.
-     * To actually share the same loader, set loaderref as well
-     * @param r the reference to the classpath
-     */
-    public void setClasspathRef(Reference r) {
-        this.cpDelegate.setClasspathref(r);
-    }
-
-    /**
-     * Use the reference to locate the loader. If the loader is not
-     * found, taskdef will use the specified classpath and register it
-     * with the specified name.
-     *
-     * This allow multiple taskdef/typedef to use the same class loader,
-     * so they can be used together. It eliminate the need to
-     * put them in the CLASSPATH.
-     *
-     * @param r the reference to locate the loader.
-     * @since Ant 1.5
-     */
-    public void setLoaderRef(Reference r) {
-        this.cpDelegate.setLoaderRef(r);
     }
 
 
@@ -406,6 +318,7 @@ public abstract class Definer extends Task {
         try {
             Antlib antlib = Antlib.createAntlib(getProject(), url);
             antlib.setClassLoader(classLoader);
+            antlib.setURI(getUri());
             antlib.perform();
         } catch (BuildException ex) {
             Location exLocation = ex.getLocation();
@@ -418,23 +331,6 @@ public abstract class Definer extends Task {
                 + exLocation.toString()
                 + " " + ex.getMessage());
         }
-    }
-
-    /**
-     * create a classloader for this definition
-     * @return the classloader from the cpDelegate
-     */
-    protected ClassLoader createLoader() {
-        if (internalClassLoader != null) {
-            return internalClassLoader;
-        }
-        ClassLoader al = this.cpDelegate.getClassLoader();
-        // need to load Task via system classloader or the new
-        // task we want to define will never be a Task but always
-        // be wrapped into a TaskAdapter.
-        ((AntClassLoader) al).addSystemPackageRoot("org.apache.tools.ant");
-
-        return al;
     }
 
     /**
@@ -474,7 +370,7 @@ public abstract class Definer extends Task {
         definerSet = true;
         this.name = name;
     }
-    
+
     /**
      * Returns the classname of the object we are defining.
      * May be <code>null</code>.
@@ -542,25 +438,6 @@ public abstract class Definer extends Task {
 
 
     /**
-     * Set the class loader, overrides the cpDelagate
-     * classloader.
-     *
-     * @param classLoader a <code>ClassLoader</code> value
-     */
-    protected void setInternalClassLoader(ClassLoader classLoader) {
-        this.internalClassLoader = classLoader;
-    }
-
-    /**
-     * @see org.apache.tools.ant.Task#init()
-     * @since Ant 1.6
-     */
-    public void init() throws BuildException {
-        this.cpDelegate = ClasspathUtils.getDelegate(this);
-        super.init();
-    }
-
-    /**
      * Add a definition using the attributes of Definer
      *
      * @param al the ClassLoader to use
@@ -573,6 +450,8 @@ public abstract class Definer extends Task {
         Class cl = null;
         try {
             try {
+                name = ProjectHelper.genComponentName(getUri(), name);
+
                 if (onError != OnError.IGNORE) {
                     cl = Class.forName(classname, true, al);
                 }

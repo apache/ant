@@ -58,13 +58,18 @@ import org.apache.tools.ant.util.WeakishReference;
 
 import java.util.Enumeration;
 import java.util.Hashtable;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Properties;
+import java.util.Set;
+import java.util.Stack;
 
 import java.util.Vector;
 import java.io.InputStream;
 import java.io.IOException;
 import java.lang.reflect.Modifier;
+
+import org.apache.tools.ant.taskdefs.Typedef;
 
 /**
  * Component creation and configuration.
@@ -97,6 +102,17 @@ public class ComponentHelper  {
     private Hashtable typeClassDefinitions = new Hashtable();
     /** flag to rebuild typeClassDefinitions */
     private boolean rebuildTypeClassDefinitions = true;
+
+    /** Set of namespaces that have been checked for antlibs */
+    private Set checkedNamespaces = new HashSet();
+
+    /**
+     * Stack of antlib contexts used to resolve definitions while
+     *   processing antlib
+     */
+    private Stack antLibStack = new Stack();
+    /** current antlib context */
+    private AntTypeTable antLibTypeTable = null;
 
     /**
      * Map from task names to vectors of created tasks
@@ -175,32 +191,38 @@ public class ComponentHelper  {
             AntTypeDefinition def = (AntTypeDefinition) i.next();
             antTypeTable.put(def.getName(), def);
         }
+        // add the parsed namespaces of the parent project
+        checkedNamespaces.add(helper.checkedNamespaces);
     }
 
     /** Factory method to create the components.
      *
      * This should be called by UnknownElement.
      *
-     * @param ue The component helper has access via ue to the entire XML tree.
-     * @param ns Namespace. Also available as ue.getNamespace()
-     * @param taskName The element name. Also available as ue.getTag()
+     * @param ue The Unknown Element creating this component
+     * @param ns Namespace URI. Also available as ue.getNamespace()
+     * @param componentType The component type,
+     *                       Also available as ue.getComponentName()
      * @return the created component
      * @throws BuildException if an error occuries
      */
     public Object createComponent(UnknownElement ue,
                                   String ns,
-                                  String taskName)
+                                  String componentType)
         throws BuildException {
-        Object component = createComponent(taskName);
+        Object component = createComponent(componentType);
         if (component == null) {
             return null;
         }
 
         if (component instanceof Task) {
             Task task = (Task) component;
-            task.setTaskType(taskName);
-            task.setTaskName(taskName);
-            addCreatedTask(taskName, task);
+            task.setLocation(ue.getLocation());
+            task.setTaskType(componentType);
+            task.setTaskName(ue.getTaskName());
+            task.setOwningTarget(ue.getOwningTarget());
+            task.init();
+            addCreatedTask(componentType, task);
         }
 
         return component;
@@ -215,7 +237,11 @@ public class ComponentHelper  {
      * @return the class if found or null if not.
      */
     public Object createComponent(String componentName) {
-        return antTypeTable.create(componentName);
+        AntTypeDefinition def = getDefinition(componentName);
+        if (def == null) {
+            return null;
+        }
+        return def.create(project);
     }
 
     /**
@@ -227,7 +253,11 @@ public class ComponentHelper  {
      * @return the class if found or null if not.
      */
     public Class getComponentClass(String componentName) {
-        return antTypeTable.getExposedClass(componentName);
+        AntTypeDefinition def = getDefinition(componentName);
+        if (def == null) {
+            return null;
+        }
+        return def.getExposedClass(project);
     }
 
     /**
@@ -236,7 +266,15 @@ public class ComponentHelper  {
      * @return the ant definition or null if not present
      */
     public AntTypeDefinition getDefinition(String componentName) {
-        return antTypeTable.getDefinition(componentName);
+        checkNamespace(componentName);
+        AntTypeDefinition ret = null;
+        if (antLibTypeTable != null && componentName.indexOf(':') == -1) {
+            ret = antLibTypeTable.getDefinition(componentName);
+        }
+        if (ret == null) {
+            ret = antTypeTable.getDefinition(componentName);
+        }
+        return ret;
     }
 
     /**
@@ -474,7 +512,7 @@ public class ComponentHelper  {
      *                           creation fails.
      */
     private Task createNewTask(String taskType) throws BuildException {
-        Class c = antTypeTable.getExposedClass(taskType);
+        Class c = getComponentClass(taskType);
         if (c == null) {
             return null;
         }
@@ -482,7 +520,7 @@ public class ComponentHelper  {
         if (!(Task.class.isAssignableFrom(c))) {
             return null;
         }
-        Task task = (Task) antTypeTable.create(taskType);
+        Task task = (Task) createComponent(taskType);
         if (task == null) {
             return null;
         }
@@ -557,7 +595,7 @@ public class ComponentHelper  {
      *                           instance creation fails.
      */
     public Object createDataType(String typeName) throws BuildException {
-        return antTypeTable.create(typeName);
+        return createComponent(typeName);
     }
 
     /**
@@ -660,6 +698,31 @@ public class ComponentHelper  {
             project.log(" +Datatype " + name + " " + def.getClassName(),
                         Project.MSG_DEBUG);
             antTypeTable.put(name, def);
+
+            if (antLibTypeTable != null && name.lastIndexOf(':') != -1) {
+                String baseName = name.substring(name.lastIndexOf(':') + 1);
+                antLibTypeTable.put(baseName, def);
+            }
+        }
+    }
+
+    /**
+     * Called at the start of processing an antlib
+     */
+    public void enterAntLib() {
+        antLibTypeTable = new AntTypeTable(project);
+        antLibStack.push(antLibTypeTable);
+    }
+
+    /**
+     * Called at the end of processing an antlib
+     */
+    public void exitAntLib() {
+        antLibStack.pop();
+        if (antLibStack.size() != 0) {
+            antLibTypeTable = (AntTypeTable) antLibStack.peek();
+        } else {
+            antLibTypeTable = null;
         }
     }
 
@@ -749,6 +812,35 @@ public class ComponentHelper  {
                 }
             }
         }
+    }
+
+    /**
+     * called for each component name, check if the
+     * associated URI has been examined for antlibs.
+     */
+    private void checkNamespace(String componentName) {
+        if (componentName.indexOf(':') == -1) {
+            return; // not a namespaced name
+        }
+
+        String uri = ProjectHelper.extractUriFromComponentName(componentName);
+        if (!uri.startsWith(ProjectHelper.ANTLIB_URI)) {
+            return; // namespace that does not contain antlib
+        }
+        if (checkedNamespaces.contains(uri)) {
+            return; // Alreay processed
+        }
+        checkedNamespaces.add(uri);
+        Typedef definer = new Typedef();
+        definer.setProject(project);
+        definer.setURI(uri);
+        definer.setResource(
+            uri.substring("antlib:".length()).replace('.', '/')
+            + "/antlib.xml");
+        // a fishing expedition :- ignore errors if antlib not present
+        definer.setOnError(new Typedef.OnError("ignore"));
+        definer.init();
+        definer.execute();
     }
 
     /**

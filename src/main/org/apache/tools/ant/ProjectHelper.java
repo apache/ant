@@ -85,6 +85,12 @@ import org.xml.sax.AttributeList;
  * @author duncan@x180.com
  */
 public class ProjectHelper {
+    /** The URI for ant name space */
+    public static final String ANT_CORE_URI       = "ant:core";
+
+    /** The URI for defined types/tasks - the format is antlib:<package> */
+    public static final String ANTLIB_URI     = "antlib:";
+
     /**
      * Name of JVM system property which provides the name of the
      * ProjectHelper class to use.
@@ -492,6 +498,35 @@ public class ProjectHelper {
         throws BuildException {
         PropertyHelper.parsePropertyStringDefault(value, fragments,
                 propertyRefs);
+    }
+    /**
+     * Map a namespaced {uri,name} to an internal string format.
+     * For BC purposes the names from the ant core uri will be
+     * mapped to "name", other names will be mapped to
+     * uri + ":" + name.
+     * @param uri   The namepace URI
+     * @param name  The localname
+     * @return      The stringified form of the ns name
+     */
+    public static String genComponentName(String uri, String name) {
+        if (uri == null || uri.equals("") || uri.equals(ANT_CORE_URI)) {
+            return name;
+        }
+        return uri + ":" + name;
+    }
+
+    /**
+     * extract a uri from a component name
+     *
+     * @param componentName  The stringified form for {uri, name}
+     * @return               The uri or "" if not present
+     */
+    public static String extractUriFromComponentName(String componentName) {
+        int index = componentName.lastIndexOf(':');
+        if (index == -1) {
+            return "";
+        }
+        return componentName.substring(0, index);
     }
 //end class
 }

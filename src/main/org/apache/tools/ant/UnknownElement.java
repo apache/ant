@@ -82,6 +82,11 @@ public class UnknownElement extends Task {
     private String namespace;
 
     /**
+     * Holds the namespace qname of the element.
+     */
+    private String qname;
+
+    /**
      * The real object after it has been loaded.
      */
     private Object realThing;
@@ -128,6 +133,24 @@ public class UnknownElement extends Task {
     public void setNamespace(String namespace) {
         this.namespace = namespace;
     }
+
+    /** Return the qname of the XML element associated with this component.
+     *
+     * @return namespace Qname used in the element declaration.
+     */
+    public String getQName() {
+        return qname;
+    }
+
+    /** Set the namespace qname of the XML element.
+     * This method is typically called by the XML processor.
+     *
+     * @param qname the qualified name of the element
+     */
+    public void setQName(String qname) {
+        this.qname = qname;
+    }
+
 
     /**
      * Get the RuntimeConfigurable instance for this UnknownElement, containing
@@ -335,6 +358,13 @@ public class UnknownElement extends Task {
     }
 
     /**
+     * @return the component name - uses ProjectHelper#genComponentName()
+     */
+    protected String getComponentName() {
+        return ProjectHelper.genComponentName(getNamespace(), getTag());
+    }
+
+    /**
      * Creates a named task or data type. If the real object is a task,
      * it is configured up to the init() stage.
      *
@@ -345,12 +375,17 @@ public class UnknownElement extends Task {
      * @return the task or data type represented by the given unknown element.
      */
     protected Object makeObject(UnknownElement ue, RuntimeConfigurable w) {
-        Object o = makeTask(ue, w);
+        ComponentHelper helper = ComponentHelper.getComponentHelper(
+            getProject());
+        String name = ue.getComponentName();
+        Object o = helper.createComponent(ue, ue.getNamespace(), name);
         if (o == null) {
-            o = getProject().createDataType(ue.getTag());
+            throw getNotFoundException("task or type", name);
         }
-        if (o == null) {
-            throw getNotFoundException("task or type", ue.getTag());
+        if (o instanceof Task) {
+            Task task = (Task) o;
+            task.setOwningTarget(getOwningTarget());
+            task.init();
         }
         return o;
     }

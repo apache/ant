@@ -474,6 +474,9 @@ public class ProjectHelper2 extends ProjectHelper {
          */
         public void startElement(String uri, String tag, String qname, Attributes attrs)
             throws SAXParseException {
+            if (uri.equals(ANT_CORE_URI)) {
+                uri = "";
+            }
             AntHandler next
                 = currentHandler.onStartChild(uri, tag, qname, attrs, context);
             antHandlers.push(currentHandler);
@@ -506,6 +509,9 @@ public class ProjectHelper2 extends ProjectHelper {
          *
          */
         public void endElement(String uri, String name, String qName) throws SAXException {
+            if (uri.equals(ANT_CORE_URI)) {
+                uri = "";
+            }
             currentHandler.onEndElement(uri, name, context);
             AntHandler prev = (AntHandler) antHandlers.pop();
             currentHandler = prev;
@@ -525,6 +531,25 @@ public class ProjectHelper2 extends ProjectHelper {
         public void characters(char[] buf, int start, int count)
             throws SAXParseException {
             currentHandler.characters(buf, start, count, context);
+        }
+
+        /**
+         * Start a namespace prefix to uri mapping
+         *
+         * @param prefix the namespace prefix
+         * @param uri the namespace uri
+         */
+        public void startPrefixMapping(String prefix, String uri) {
+            context.startPrefixMapping(prefix, uri);
+        }
+
+        /**
+         * End a namepace prefix to uri mapping
+         *
+         * @param prefix the prefix that is not mapped anymore
+         */
+        public void endPrefixMapping(String prefix) {
+            context.endPrefixMapping(prefix);
         }
     }
 
@@ -550,7 +575,7 @@ public class ProjectHelper2 extends ProjectHelper {
                                        Attributes attrs,
                                        AntXMLContext context)
             throws SAXParseException {
-            if (qname.equals("project")) {
+            if (name.equals("project") && uri.equals("")) {
                 return ProjectHelper2.projectHandler;
             } else {
 //                 if (context.importlevel > 0) {
@@ -610,7 +635,7 @@ public class ProjectHelper2 extends ProjectHelper {
              */
 
             for (int i = 0; i < attrs.getLength(); i++) {
-                String key = attrs.getQName(i);
+                String key = attrs.getLocalName(i);
                 String value = attrs.getValue(i);
 
                 if (key.equals("default")) {
@@ -715,7 +740,7 @@ public class ProjectHelper2 extends ProjectHelper {
                                        Attributes attrs,
                                        AntXMLContext context)
             throws SAXParseException {
-            if (qname.equals("target")) {
+            if (name.equals("target") && uri.equals("")) {
                 return ProjectHelper2.targetHandler;
             } else {
                 return ProjectHelper2.elementHandler;
@@ -761,7 +786,7 @@ public class ProjectHelper2 extends ProjectHelper {
             context.addTarget(target);
 
             for (int i = 0; i < attrs.getLength(); i++) {
-                String key = attrs.getQName(i);
+                String key = attrs.getLocalName(i);
                 String value = attrs.getValue(i);
 
                 if (key.equals("name")) {
@@ -904,7 +929,7 @@ public class ProjectHelper2 extends ProjectHelper {
             task.setNamespace(uri);
             task.setProject(context.getProject());
             //XXX task.setTaskType(qname);
-
+            task.setQName(qname);
             task.setTaskName(qname);
 
             Location location = new Location(context.getLocator().getSystemId(),
@@ -930,8 +955,26 @@ public class ProjectHelper2 extends ProjectHelper {
                 = new RuntimeConfigurable(task, task.getTaskName());
 
             for (int i = 0; i < attrs.getLength(); i++) {
-                wrapper.setAttribute(attrs.getQName(i),
-                        attrs.getValue(i));
+                String name = attrs.getLocalName(i);
+                String value = attrs.getValue(i);
+                // PR: Hack for ant-type value
+                //  an ant-type is a component name which can
+                // be namespaced, need to extract the name
+                // and convert from qualifed name to uri/name
+                if (name.equals("ant-type")) {
+                    int index = value.indexOf(":");
+                    if (index != -1) {
+                        String prefix = value.substring(0, index);
+                        String mappedUri = context.getPrefixMapping(prefix);
+                        if (mappedUri == null) {
+                            throw new BuildException(
+                                "Unable to find XML NS prefix " + prefix);
+                        }
+                        value = ProjectHelper.genComponentName(
+                            mappedUri, value.substring(index + 1));
+                    }
+                }
+                wrapper.setAttribute(name, value);
             }
 
             if (parentWrapper != null) {

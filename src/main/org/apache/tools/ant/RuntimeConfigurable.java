@@ -177,6 +177,14 @@ public class RuntimeConfigurable implements Serializable {
     }
 
     /**
+     * set the polymorphic type for this element
+     * @param polyType the ant component type name, null if not set
+     */
+    public void setPolyType(String polyType) {
+        this.polyType = polyType;
+    }
+
+    /**
      * Sets the attributes for the wrapped element.
      *
      * @deprecated
@@ -260,10 +268,10 @@ public class RuntimeConfigurable implements Serializable {
 
     /**
      * Returns an enumeration of all child wrappers.
-     *
+     * @return an enumeration of the child wrappers.
      * @since Ant 1.5.1
      */
-    Enumeration getChildren() {
+    public Enumeration getChildren() {
         if (children != null) {
             return Collections.enumeration(children);
         } else {
