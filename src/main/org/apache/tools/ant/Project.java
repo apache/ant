@@ -287,7 +287,7 @@ public class Project {
             throw new BuildException("Ant cannot work on Java 1.0");
         }
 
-        log("Detected Java Version: " + javaVersion);
+        log("Detected Java Version: " + javaVersion, MSG_VERBOSE);
 
         log("Detected OS: " + System.getProperty("os.name"), MSG_VERBOSE);
     }

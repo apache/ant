@@ -66,6 +66,7 @@ public class Get extends Task {
     private String source; // required
     private String dest; // required
     private String verbose = "";
+    String ignoreErrors=null;
     
     /**
      * Does the work.
@@ -86,7 +87,21 @@ public class Get extends Task {
 	    File destF=new File(dest);
 	    FileOutputStream fos = new FileOutputStream(destF);
 
-	    InputStream is = url.openStream();
+	    InputStream is=null;
+	    for( int i=0; i< 3 ; i++ ) {
+		try {
+		    is = url.openStream();
+		    break;
+		} catch( IOException ex ) {
+		    project.log( "Error opening connection " + ex );
+		}
+	    }
+	    if( is==null ) {
+		project.log( "Can't get " + source + " to " + dest);
+		if( ignoreErrors != null ) return;
+		throw new BuildException( "Can't get " + source + " to " + dest);
+	    }
+		
 	    byte[] buffer = new byte[100 * 1024];
 	    int length;
 	    
@@ -98,7 +113,8 @@ public class Get extends Task {
 	    fos.close();
 	    is.close();
 	} catch (IOException ioe) {
-	    ioe.printStackTrace();
+	    project.log("Error getting " + source + " to " + dest );
+	    if( ignoreErrors != null ) return;
 	    throw new BuildException(ioe.toString());
 	}
     }
@@ -128,5 +144,14 @@ public class Get extends Task {
      */
     public void setVerbose(String v) {
 	verbose = v;
+    }
+
+    /**
+     * Don't stop if get fails if set to "<CODE>true</CODE>".
+     *
+     * @param v if "true" then be verbose
+     */
+    public void setIgnoreErrors(String v) {
+	ignoreErrors = v;
     }
 }

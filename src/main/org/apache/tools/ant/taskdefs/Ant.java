@@ -103,8 +103,6 @@ public class Ant extends Task {
      * Do the execution.
      */
     public void execute() throws BuildException {
-	if( antFile==null) throw new BuildException( "ant required antFile property ");
-
         if( dir==null) dir=".";
 	p1.setBasedir(dir);
         p1.setUserProperty("basedir" , dir);
@@ -118,6 +116,8 @@ public class Ant extends Task {
         }
 
 	if (antFile == null) antFile = dir + "/build.xml";
+
+	p1.setUserProperty( "ant.file" , antFile );
         ProjectHelper.configureProject(p1, new File(antFile));
 
         if (target == null) {

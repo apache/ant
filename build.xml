@@ -14,7 +14,7 @@
     <property name="ant.home" value="."/>
     <property name="bin.dir" value="bin"/>
     <property name="src.bin.dir" value="src/bin"/>
-    <property name="src.dir" value="src/main"/>
+    <property name="src.dir" value="${basedir}/src/main"/>
     <property name="lib.dir" value="lib"/>
     <property name="docs.dir" value="docs"/>
     <property name="build.dir" value="build"/>
@@ -96,7 +96,7 @@
   <!-- =================================================================== -->
   <!-- Creates the distribution                                            -->
   <!-- =================================================================== -->
-  <target name="dist" depends="jar,javadocs">
+  <target name="dist" depends="main,jar,javadocs">
      <mkdir dir="${ant.dist.dir}"/>
      <mkdir dir="${ant.dist.dir}/bin"/>
      <mkdir dir="${ant.dist.dir}/lib"/>

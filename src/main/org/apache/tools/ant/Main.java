@@ -215,7 +215,8 @@ public class Main {
             String value = (String)definedProps.get(arg);
             project.setUserProperty(arg, value);
         }
-
+	project.setUserProperty( "ant.file" , buildFile.getAbsolutePath() );
+	
         // first use the ProjectHelper to create the project object
         // from the given build file.
         try {
