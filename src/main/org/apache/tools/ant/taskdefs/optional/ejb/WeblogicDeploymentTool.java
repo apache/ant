@@ -85,6 +85,8 @@ public class WeblogicDeploymentTool extends GenericDeploymentTool {
          = "-//BEA Systems, Inc.//DTD WebLogic 5.1.0 EJB//EN";
     public static final String PUBLICID_WEBLOGIC_EJB600
          = "-//BEA Systems, Inc.//DTD WebLogic 6.0.0 EJB//EN";
+    public static final String PUBLICID_WEBLOGIC_EJB700
+         = "-//BEA Systems, Inc.//DTD WebLogic 7.0.0 EJB//EN";
 
     protected static final String DEFAULT_WL51_EJB11_DTD_LOCATION
          = "/weblogic/ejb/deployment/xml/ejb-jar.dtd";
@@ -99,6 +101,8 @@ public class WeblogicDeploymentTool extends GenericDeploymentTool {
          = "/weblogic/ejb20/dd/xml/weblogic510-ejb-jar.dtd";
     protected static final String DEFAULT_WL60_DTD_LOCATION
          = "/weblogic/ejb20/dd/xml/weblogic600-ejb-jar.dtd";
+    protected static final String DEFAULT_WL70_DTD_LOCATION
+         = "/weblogic/ejb20/dd/xml/weblogic700-ejb-jar.dtd";
 
     protected static final String DEFAULT_COMPILER = "default";
 
@@ -338,6 +342,7 @@ public class WeblogicDeploymentTool extends GenericDeploymentTool {
         handler.registerDTD(PUBLICID_WEBLOGIC_EJB510, DEFAULT_WL51_DTD_LOCATION);
         handler.registerDTD(PUBLICID_WEBLOGIC_EJB510, DEFAULT_WL60_51_DTD_LOCATION);
         handler.registerDTD(PUBLICID_WEBLOGIC_EJB600, DEFAULT_WL60_DTD_LOCATION);
+        handler.registerDTD(PUBLICID_WEBLOGIC_EJB700, DEFAULT_WL70_DTD_LOCATION);
         handler.registerDTD(PUBLICID_WEBLOGIC_EJB510, weblogicDTD);
         handler.registerDTD(PUBLICID_WEBLOGIC_EJB600, weblogicDTD);
 
@@ -391,9 +396,8 @@ public class WeblogicDeploymentTool extends GenericDeploymentTool {
                 DescriptorHandler handler = getWeblogicDescriptorHandler(ejbDescriptor.getParentFile());
 
                 saxParser.parse(new InputSource
-                    (new FileInputStream
-                    (weblogicDD)),
-                    handler);
+                    (new FileInputStream(weblogicDD)),
+                        handler);
 
                 Hashtable ht = handler.getFiles();
                 Enumeration e = ht.keys();

@@ -1037,6 +1037,15 @@ define this as META-INF/Customer-weblogic-cmp-rdbms-jar.xml.</p>
                      Use this if you prefer to run ejbc at deployment time.</td>
     <td valign="top" align="center">No.</td>
   </tr>
+  <tr>
+    <td valign="top">ejbcclass</td>
+    <td valign="top">Specifies the classname of the ejbc compiler. Normally ejbjar determines
+                     the appropriate class based on the DTD used for the EJB. The EJB 2.0 compiler
+                     featured in weblogic 6 has, however, been deprecated in version 7. When
+                     using with version 7 this attribute should be set to 
+                     &quot;weblogic.ejbc&quot; to avoid the deprecation warning.</td>
+    <td valign="top" align="center">No.</td>
+  </tr>
 </table>
 
 <p>The weblogic nested element itself supports two nested elements &lt;classpath&gt; and
