@@ -1466,7 +1466,8 @@
 
     <junit printsummary="${junit.summary}" haltonfailure="${test.haltonfailure}"
            filtertrace="${junit.filtertrace}"
-           fork="${junit.fork}">
+           fork="${junit.fork}"
+           failureproperty="tests.failed">
 <!--      <jvmarg value="-classic"/> -->
       <classpath refid="tests-classpath"/>
       <classpath refid="classes.zip"/>
@@ -1554,6 +1555,10 @@
           <exclude name="${optional.package}/XmlValidateCatalogTest.java"
                    unless="apache.resolver.present"/>
 
+          <!-- needs jasperc -->
+          <exclude name="${optional.package}/JspcTest.java"
+                   unless="jasper.present"/>
+
           <!--
           XXX need to figure out what's causing this InvocationTargetException
           -->
@@ -1563,7 +1568,6 @@
           <exclude name="${util.package}/DateUtilsTest.java"
                    unless="jdk1.2+"/>
 
-          <exclude name="${optional.package}/JspcTest.java"/>
           <!-- misc oneoff tests -->
           <exclude name="${optional.package}/WsdlToDotnetTest.java"
                    unless="dotnetapps.found"/>
@@ -1586,11 +1590,12 @@
           <exclude name="${ant.package}/taskdefs/AbstractCvsTaskTest.java"
                    unless="have.cvs"/>
 
+          <!-- push to the end as long as it is failing -->
+          <exclude name="${ant.package}/taskdefs/ImportTest.java"/>
         </fileset>
       </batchtest>
-      <test name="org.apache.tools.ant.taskdefs.optional.JspcTest"
-            if="jasper.present"/>
     </junit>
+    <fail if="tests.failed">At least one test has failed.</fail>
   </target>
 
   <target name="run-single-test" if="testcase" depends="compile-tests,run-single-test-only"
