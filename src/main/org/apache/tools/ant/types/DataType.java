@@ -232,8 +232,34 @@ public abstract class DataType extends ProjectComponent {
         this.checked = checked;
     }
 
+    /**
+     * get the reference set on this object
+     * @return the reference or null
+     */
     protected Reference getRefid()
     {
         return ref;
+    }
+
+    /**
+     * check that it is ok to set attributes, i.e that no reference is defined
+     * @since Ant 1.6
+     * @throw BuildException if not allowed
+     */
+    protected void checkAttributesAllowed() {
+        if (isReference()) {
+            throw tooManyAttributes();
+        }
+    }
+
+    /**
+     * check that it is ok to add children, i.e that no reference is defined
+     * @since Ant 1.6
+     * @throw BuildException if not allowed
+     */
+    protected void checkChildrenAllowed() {
+        if (isReference()) {
+            throw noChildrenAllowed();
+        }
     }
 }
