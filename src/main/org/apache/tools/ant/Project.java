@@ -98,6 +98,7 @@ public class Project {
     public static final String TOKEN_END = FilterSet.DEFAULT_TOKEN_END;
 
     private String name;
+    private String description;
 
     private Hashtable properties = new Hashtable();
     private Hashtable userProperties = new Hashtable();
@@ -316,6 +317,15 @@ public class Project {
 
     public String getName() {
         return name;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+   // Will return null if no description has been set
+    public String getDescription() {
+        return description;
     }
 
     /** @deprecated */

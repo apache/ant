@@ -458,6 +458,7 @@ public class Main {
                 System.setErr(err);
             }
             if (projectHelp) {
+                printDescription(project);
                 printTargets(project);
             }
         }
@@ -579,6 +580,15 @@ public class Main {
             }
         }
         return antVersion;
+    }
+
+     /**
+      * Print the project description, if any
+      */
+    private static void printDescription(Project project) {
+       if (project.getDescription() != null) {
+          System.out.println(project.getDescription());
+       }
     }
 
     /**
