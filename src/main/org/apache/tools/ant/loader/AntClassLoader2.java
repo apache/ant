@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2003 The Apache Software Foundation.  All rights
+ * Copyright (c) 2003-2004 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -68,6 +68,9 @@ import java.util.jar.Attributes.Name;
 import java.net.URL;
 import java.net.MalformedURLException;
 import java.util.zip.ZipEntry;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.StringTokenizer;
 import org.apache.tools.ant.util.FileUtils;
 
@@ -80,6 +83,9 @@ import org.apache.tools.ant.util.FileUtils;
 public class AntClassLoader2 extends AntClassLoader {
     /** Instance of a utility class to use for file operations. */
     private FileUtils fileUtils;
+
+    /** Static map of jar file/time to manifiest class-path entries */
+    private static Map pathMap = Collections.synchronizedMap(new HashMap());
 
     /**
      * Constructor
@@ -272,36 +278,45 @@ public class AntClassLoader2 extends AntClassLoader {
             return;
         }
 
-        String classpath = null;
-        ZipFile jarFile = null;
-        InputStream manifestStream = null;
-        try {
-            jarFile = new ZipFile(pathComponent);
-            manifestStream
-                = jarFile.getInputStream(new ZipEntry("META-INF/MANIFEST.MF"));
+        String absPathPlusTimeAndLength =
+            pathComponent.getAbsolutePath() + pathComponent.lastModified() + "-"
+            + pathComponent.length();
+        String classpath = (String) pathMap.get(absPathPlusTimeAndLength);
+        if (classpath == null) {
+            ZipFile jarFile = null;
+            InputStream manifestStream = null;
+            try {
+                jarFile = new ZipFile(pathComponent);
+                manifestStream
+                    = jarFile.getInputStream(new ZipEntry("META-INF/MANIFEST.MF"));
 
-            if (manifestStream == null) {
-                return;
-            }
-            Reader manifestReader
-                = new InputStreamReader(manifestStream, "UTF-8");
-            org.apache.tools.ant.taskdefs.Manifest manifest
-                = new org.apache.tools.ant.taskdefs.Manifest(manifestReader);
-            classpath
-                = manifest.getMainSection().getAttributeValue("Class-Path");
+                if (manifestStream == null) {
+                    return;
+                }
+                Reader manifestReader
+                    = new InputStreamReader(manifestStream, "UTF-8");
+                org.apache.tools.ant.taskdefs.Manifest manifest
+                    = new org.apache.tools.ant.taskdefs.Manifest(manifestReader);
+                classpath
+                    = manifest.getMainSection().getAttributeValue("Class-Path");
 
-        } catch (org.apache.tools.ant.taskdefs.ManifestException e) {
-            // ignore
-        } finally {
-            if (manifestStream != null) {
-                manifestStream.close();
+            } catch (org.apache.tools.ant.taskdefs.ManifestException e) {
+                // ignore
+            } finally {
+                if (manifestStream != null) {
+                    manifestStream.close();
+                }
+                if (jarFile != null) {
+                    jarFile.close();
+                }
             }
-            if (jarFile != null) {
-                jarFile.close();
+            if (classpath == null) {
+                classpath = "";
             }
+            pathMap.put(absPathPlusTimeAndLength, classpath);
         }
 
-        if (classpath != null) {
+        if (!"".equals(classpath)) {
             URL baseURL = fileUtils.getFileURL(pathComponent);
             StringTokenizer st = new StringTokenizer(classpath);
             while (st.hasMoreTokens()) {
