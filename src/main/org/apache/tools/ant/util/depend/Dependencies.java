@@ -60,7 +60,7 @@ import java.util.StringTokenizer;
 import java.util.TreeSet;
 import java.util.Iterator;
 import java.util.Collection;
-import org.apache.bcel.classfile.Visitor;
+import org.apache.bcel.classfile.EmptyVisitor;
 import org.apache.bcel.classfile.JavaClass;
 import org.apache.bcel.classfile.ConstantPool;
 import org.apache.bcel.classfile.Code;
@@ -97,7 +97,7 @@ import org.apache.bcel.classfile.ClassParser;
 
 
 
-public class Dependencies implements Visitor {
+public class Dependencies extends EmptyVisitor {
     private boolean verbose = false;
 
     private JavaClass javaClass;
@@ -112,9 +112,6 @@ public class Dependencies implements Visitor {
         return dependencies;
     }
 
-    public void visitCode(Code obj) {}
-    public void visitCodeException(CodeException obj) {}
-    
     public void visitConstantClass(ConstantClass obj) {
         if (verbose) {
             System.out.println("visit ConstantClass");
@@ -122,15 +119,6 @@ public class Dependencies implements Visitor {
         }
         dependencies.add("" + obj.getConstantValue(constantPool));
     }
-    
-    public void visitConstantDouble(ConstantDouble obj) {}
-    public void visitConstantFieldref(ConstantFieldref obj) {}
-    public void visitConstantFloat(ConstantFloat obj) {}
-    public void visitConstantInteger(ConstantInteger obj) {}
-    public void visitConstantInterfaceMethodref(ConstantInterfaceMethodref obj) {}
-    public void visitConstantLong(ConstantLong obj) {}
-    public void visitConstantMethodref(ConstantMethodref obj) {}
-    public void visitConstantNameAndType(ConstantNameAndType obj) {}
     
     public void visitConstantPool(ConstantPool obj) {
         if (verbose) {
@@ -146,11 +134,6 @@ public class Dependencies implements Visitor {
             }
         }
     }
-    public void visitConstantString(ConstantString obj) {}
-    public void visitConstantUtf8(ConstantUtf8 obj) {}
-    public void visitConstantValue(ConstantValue obj) {}
-    public void visitDeprecated(Deprecated obj) {}
-    public void visitExceptionTable(ExceptionTable obj) {}
     
     public void visitField(Field obj) {
         if (verbose) {
@@ -160,9 +143,6 @@ public class Dependencies implements Visitor {
         addClasses(obj.getSignature());
     }
 
-    public void visitInnerClass(InnerClass obj) {}
-    public void visitInnerClasses(InnerClasses obj) {}
-    
     public void visitJavaClass(JavaClass obj) {
         if (verbose) {
             System.out.println("visit JavaClass");
@@ -186,10 +166,6 @@ public class Dependencies implements Visitor {
             methods[i].accept(this);
         }
     }
-    public void visitLineNumber(LineNumber obj) {}
-    public void visitLineNumberTable(LineNumberTable obj) {}
-    public void visitLocalVariable(LocalVariable obj) {}
-    public void visitLocalVariableTable(LocalVariableTable obj) {}
     
     public void visitMethod(Method obj) {
         if (verbose) {
@@ -202,12 +178,6 @@ public class Dependencies implements Visitor {
         addClasses(signature.substring(pos + 1));
     }
     
-    public void visitSourceFile(SourceFile obj) {}
-    public void visitSynthetic(Synthetic obj) {}
-    public void visitUnknown(Unknown obj) {}
-    public void visitStackMap(StackMap obj) {}
-    public void visitStackMapEntry(StackMapEntry obj) {}
-
     void addClasses(String string) {
         StringTokenizer tokens = new StringTokenizer(string, ";");
         while (tokens.hasMoreTokens()) {
