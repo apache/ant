@@ -18,6 +18,7 @@ import java.io.InputStreamReader;
 import java.io.PrintStream;
 import java.io.Reader;
 import java.io.StringReader;
+import java.net.URLClassLoader;
 import java.sql.Connection;
 import java.sql.DatabaseMetaData;
 import java.sql.Driver;
@@ -31,7 +32,6 @@ import java.util.Iterator;
 import java.util.Properties;
 import java.util.StringTokenizer;
 import org.apache.myrmidon.api.TaskException;
-import org.apache.tools.ant.AntClassLoader;
 import org.apache.tools.ant.DirectoryScanner;
 import org.apache.tools.ant.Task;
 import org.apache.tools.ant.types.EnumeratedAttribute;
@@ -47,9 +47,9 @@ import org.apache.tools.ant.types.Reference;
  * @author <A href="mailto:gholam@xtra.co.nz">Michael McCallum</A>
  * @author <A href="mailto:tim.stephenson@sybase.com">Tim Stephenson</A>
  */
-public class SQLExec extends Task
+public class SQLExec
+    extends Task
 {
-
     private int goodSql = 0, totalSql = 0;
 
     private ArrayList filesets = new ArrayList();
@@ -57,42 +57,42 @@ public class SQLExec extends Task
     /**
      * Database connection
      */
-    private Connection conn = null;
+    private Connection conn;
 
     /**
      * Autocommit flag. Default value is false
      */
-    private boolean autocommit = false;
+    private boolean autocommit;
 
     /**
      * SQL statement
      */
-    private Statement statement = null;
+    private Statement statement;
 
     /**
      * DB driver.
      */
-    private String driver = null;
+    private String driver;
 
     /**
      * DB url.
      */
-    private String url = null;
+    private String url;
 
     /**
      * User name.
      */
-    private String userId = null;
+    private String userId;
 
     /**
      * Password
      */
-    private String password = null;
+    private String password;
 
     /**
      * SQL input file
      */
-    private File srcFile = null;
+    private File srcFile;
 
     /**
      * SQL input command
@@ -118,7 +118,7 @@ public class SQLExec extends Task
     /**
      * Print SQL results.
      */
-    private boolean print = false;
+    private boolean print;
 
     /**
      * Print header columns.
@@ -128,17 +128,17 @@ public class SQLExec extends Task
     /**
      * Results Output file.
      */
-    private File output = null;
+    private File output;
 
     /**
      * RDBMS Product needed for this SQL.
      */
-    private String rdbms = null;
+    private String rdbms;
 
     /**
      * RDBMS Version needed for this SQL.
      */
-    private String version = null;
+    private String version;
 
     /**
      * Action to perform if an error is found
@@ -148,11 +148,9 @@ public class SQLExec extends Task
     /**
      * Encoding to use when reading SQL statements from a file
      */
-    private String encoding = null;
+    private String encoding;
 
     private Path classpath;
-
-    private AntClassLoader loader;
 
     /**
      * Set the autocommit flag for the DB connection.
@@ -457,8 +455,8 @@ public class SQLExec extends Task
             {
                 getLogger().debug( "Loading " + driver + " using AntClassLoader with classpath " + classpath );
 
-                loader = new AntClassLoader( getProject(), classpath );
-                dc = loader.loadClass( driver );
+                final ClassLoader classLoader = new URLClassLoader( classpath.toURLs() );
+                dc = classLoader.loadClass( driver );
             }
             else
             {

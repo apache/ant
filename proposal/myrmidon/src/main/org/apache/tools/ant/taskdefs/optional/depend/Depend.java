@@ -15,12 +15,12 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.net.URL;
+import java.net.URLClassLoader;
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.Hashtable;
 import java.util.Iterator;
 import org.apache.myrmidon.api.TaskException;
-import org.apache.tools.ant.AntClassLoader;
 import org.apache.tools.ant.DirectoryScanner;
 import org.apache.tools.ant.taskdefs.MatchingTask;
 import org.apache.tools.ant.types.Path;
@@ -579,7 +579,7 @@ public class Depend extends MatchingTask
         {
             // now determine which jars each class depends upon
             classpathDependencies = new Hashtable();
-            AntClassLoader loader = new AntClassLoader( getProject(), dependClasspath );
+            final ClassLoader classLoader = new URLClassLoader( dependClasspath.toURLs() );
 
             Hashtable classpathFileCache = new Hashtable();
             Object nullFileMarker = new Object();
@@ -599,7 +599,8 @@ public class Depend extends MatchingTask
 
                         if( !dependency.startsWith( "java." ) && !dependency.startsWith( "javax." ) )
                         {
-                            URL classURL = loader.getResource( dependency.replace( '.', '/' ) + ".class" );
+                            final String name = dependency.replace( '.', '/' ) + ".class";
+                            URL classURL = classLoader.getResource( name );
                             if( classURL != null )
                             {
                                 if( classURL.getProtocol().equals( "jar" ) )

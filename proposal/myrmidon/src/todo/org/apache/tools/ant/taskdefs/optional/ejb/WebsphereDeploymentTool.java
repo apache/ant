@@ -11,13 +11,13 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.URLClassLoader;
 import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 import java.util.jar.JarOutputStream;
 import org.apache.myrmidon.api.TaskException;
-import org.apache.tools.ant.AntClassLoader;
 import org.apache.tools.ant.taskdefs.Java;
 import org.apache.tools.ant.types.Argument;
 import org.apache.tools.ant.types.EnumeratedAttribute;
@@ -410,7 +410,7 @@ public class WebsphereDeploymentTool
         {
             lookupPath.append( classpath );
         }
-        return new AntClassLoader( getTask().getProject(), lookupPath );
+        return new URLClassLoader( lookupPath.toURLs() );
     }
 
     protected DescriptorHandler getDescriptorHandler( File srcDir )

@@ -7,10 +7,10 @@
  */
 package org.apache.tools.ant.types;
 
-import java.util.Properties;
+import java.net.URL;
+import java.net.URLClassLoader;
 import java.util.Stack;
 import org.apache.myrmidon.api.TaskException;
-import org.apache.tools.ant.AntClassLoader;
 import org.apache.tools.ant.util.FileNameMapper;
 
 /**
@@ -182,10 +182,9 @@ public class Mapper
             }
             else
             {
-                AntClassLoader al = new AntClassLoader( getProject(),
-                                                        m_classpath );
-                c = al.loadClass( m_classname );
-                AntClassLoader.initializeClass( c );
+                final URL[] urls = m_classpath.toURLs();
+                final URLClassLoader classLoader = new URLClassLoader( urls );
+                c = classLoader.loadClass( m_classname );
             }
 
             FileNameMapper m = (FileNameMapper)c.newInstance();

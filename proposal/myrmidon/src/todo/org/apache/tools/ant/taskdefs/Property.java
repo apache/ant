@@ -11,13 +11,13 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.Enumeration;
+import java.net.URL;
+import java.net.URLClassLoader;
 import java.util.Iterator;
 import java.util.Properties;
 import org.apache.myrmidon.api.TaskException;
 import org.apache.myrmidon.framework.exec.Environment;
 import org.apache.myrmidon.framework.exec.ExecException;
-import org.apache.tools.ant.AntClassLoader;
 import org.apache.tools.ant.Task;
 import org.apache.tools.ant.types.Path;
 import org.apache.tools.ant.types.Reference;
@@ -269,26 +269,18 @@ public class Property
         getLogger().debug( "Resource Loading " + name );
         try
         {
-            ClassLoader cL = null;
-            InputStream is = null;
+            ClassLoader classLoader = null;
 
             if( m_classpath != null )
             {
-                cL = new AntClassLoader( getProject(), m_classpath );
+                final URL[] urls = m_classpath.toURLs();
+                classLoader = new URLClassLoader( urls );
             }
             else
             {
-                cL = getClass().getClassLoader();
+                classLoader = ClassLoader.getSystemClassLoader();
             }
-
-            if( cL == null )
-            {
-                is = ClassLoader.getSystemResourceAsStream( name );
-            }
-            else
-            {
-                is = cL.getResourceAsStream( name );
-            }
+            final InputStream is = classLoader.getResourceAsStream( name );
 
             if( is != null )
             {

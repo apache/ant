@@ -28,9 +28,6 @@ import junit.framework.TestResult;
 import junit.framework.TestSuite;
 import org.apache.avalon.framework.ExceptionUtil;
 import org.apache.myrmidon.api.TaskException;
-import org.apache.tools.ant.AntClassLoader;
-import org.apache.tools.ant.Project;
-import org.apache.tools.ant.util.StringUtils;
 
 /**
  * Simple Testrunner for JUnit that runs all tests of a testsuite. <p>
@@ -179,7 +176,6 @@ public class JUnitTestRunner implements TestListener
             else
             {
                 testClass = loader.loadClass( test.getName() );
-                AntClassLoader.initializeClass( testClass );
             }
 
             Method suiteMethod = null;

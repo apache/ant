@@ -9,11 +9,11 @@ package org.apache.tools.ant.taskdefs;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.URLClassLoader;
 import java.rmi.Remote;
 import java.util.ArrayList;
 import org.apache.avalon.excalibur.io.FileUtil;
 import org.apache.myrmidon.api.TaskException;
-import org.apache.tools.ant.AntClassLoader;
 import org.apache.tools.ant.DirectoryScanner;
 import org.apache.tools.ant.taskdefs.rmic.RmicAdapter;
 import org.apache.tools.ant.taskdefs.rmic.RmicAdapterFactory;
@@ -525,7 +525,7 @@ public class Rmic extends MatchingTask
         adapter.setRmic( this );
 
         Path classpath = adapter.getClasspath();
-        loader = new AntClassLoader( getProject(), classpath );
+        loader = new URLClassLoader( classpath.toURLs() );
 
         // scan base dirs to build up compile lists only if a
         // specific classname is not given

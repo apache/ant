@@ -15,13 +15,12 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.net.URLClassLoader;
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.Hashtable;
 import org.apache.myrmidon.api.TaskException;
-import org.apache.tools.ant.AntClassLoader;
 import org.apache.tools.ant.DirectoryScanner;
-import org.apache.tools.ant.Project;
 import org.apache.tools.ant.Task;
 import org.apache.tools.ant.types.FileSet;
 import org.apache.tools.ant.types.Path;
@@ -369,17 +368,15 @@ public class XMLValidateTask
             // load the parser class
             // with JAXP, we would use a SAXParser factory
             Class readerClass = null;
-            //Class readerImpl = null;
-            //Class parserImpl = null;
             if( classpath != null )
             {
-                AntClassLoader loader = new AntClassLoader( getProject(), classpath );
-                //                loader.addSystemPackageRoot("org.xml"); // needed to avoid conflict
-                readerClass = loader.loadClass( readerClassName );
-                AntClassLoader.initializeClass( readerClass );
+                final ClassLoader classLoader = new URLClassLoader( classpath.toURLs() );
+                readerClass = classLoader.loadClass( readerClassName );
             }
             else
+            {
                 readerClass = Class.forName( readerClassName );
+            }
 
             // then check it implements XMLReader
             if( XMLReader.class.isAssignableFrom( readerClass ) )

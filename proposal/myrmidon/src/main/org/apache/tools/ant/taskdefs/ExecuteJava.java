@@ -9,8 +9,9 @@ package org.apache.tools.ant.taskdefs;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.net.URL;
+import java.net.URLClassLoader;
 import org.apache.myrmidon.api.TaskException;
-import org.apache.tools.ant.AntClassLoader;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.types.Commandline;
 import org.apache.tools.ant.types.CommandlineJava;
@@ -20,56 +21,51 @@ import org.apache.tools.ant.types.Path;
  * @author thomas.haas@softwired-inc.com
  * @author <a href="mailto:stefan.bodewig@epost.de">Stefan Bodewig</a>
  */
-
 public class ExecuteJava
 {
+    private Commandline m_javaCommand;
+    private Path m_classpath;
+    private CommandlineJava.SysProperties m_sysProperties;
 
-    private Commandline javaCommand = null;
-    private Path classpath = null;
-    private CommandlineJava.SysProperties sysProperties = null;
-
-    public void setClasspath( Path p )
+    public void setClasspath( final Path classpath )
     {
-        classpath = p;
+        m_classpath = classpath;
     }
 
-    public void setJavaCommand( Commandline javaCommand )
+    public void setJavaCommand( final Commandline javaCommand )
     {
-        this.javaCommand = javaCommand;
+        m_javaCommand = javaCommand;
     }
 
-    public void setSystemProperties( CommandlineJava.SysProperties s )
+    public void setSystemProperties( final CommandlineJava.SysProperties sysProperties )
     {
-        sysProperties = s;
+        m_sysProperties = sysProperties;
     }
 
     public void execute( Project project )
         throws TaskException
     {
-        final String classname = javaCommand.getExecutable();
-        final Object[] argument = {javaCommand.getArguments()};
+        final String classname = m_javaCommand.getExecutable();
+        final Object[] argument = {m_javaCommand.getArguments()};
 
-        AntClassLoader loader = null;
         try
         {
-            if( sysProperties != null )
+            if( m_sysProperties != null )
             {
-                sysProperties.setSystem();
+                m_sysProperties.setSystem();
             }
 
             final Class[] param = {Class.forName( "[Ljava.lang.String;" )};
             Class target = null;
-            if( classpath == null )
+            if( m_classpath == null )
             {
                 target = Class.forName( classname );
             }
             else
             {
-                loader = new AntClassLoader( Project.class.getClassLoader(), project, classpath, false );
-                loader.setIsolated( true );
-                loader.setThreadContextLoader();
-                target = loader.forceLoadClass( classname );
-                AntClassLoader.initializeClass( target );
+                final URL[] urls = m_classpath.toURLs();
+                final URLClassLoader classLoader = new URLClassLoader( urls );
+                target = classLoader.loadClass( classname );
             }
             final Method main = target.getMethod( "main", param );
             main.invoke( null, argument );
@@ -100,14 +96,9 @@ public class ExecuteJava
         }
         finally
         {
-            if( loader != null )
+            if( m_sysProperties != null )
             {
-                loader.resetThreadContextLoader();
-                loader.cleanup();
-            }
-            if( sysProperties != null )
-            {
-                sysProperties.restoreSystem();
+                m_sysProperties.restoreSystem();
             }
         }
     }

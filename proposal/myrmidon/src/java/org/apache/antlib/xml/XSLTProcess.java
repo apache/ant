@@ -8,10 +8,10 @@
 package org.apache.antlib.xml;
 
 import java.io.File;
+import java.net.URLClassLoader;
 import java.util.ArrayList;
 import java.util.Iterator;
 import org.apache.myrmidon.api.TaskException;
-import org.apache.tools.ant.AntClassLoader;
 import org.apache.tools.ant.DirectoryScanner;
 import org.apache.tools.ant.taskdefs.MatchingTask;
 import org.apache.tools.ant.types.Path;
@@ -378,10 +378,8 @@ public class XSLTProcess
         }
         else
         {
-            AntClassLoader al = new AntClassLoader( getProject(), m_classpath );
-            Class c = al.loadClass( classname );
-            AntClassLoader.initializeClass( c );
-            return c;
+            final ClassLoader classLoader = new URLClassLoader( m_classpath.toURLs() );
+            return classLoader.loadClass( classname );
         }
     }
 

@@ -401,8 +401,7 @@ public abstract class DefaultCompilerAdapter
             }
             catch( IOException e )
             {
-                throw new TaskException( "Error running " + args[ 0 ]
-                                         + " compiler", e );
+                throw new TaskException( "Error running " + args[ 0 ] + " compiler", e );
             }
         }
         finally

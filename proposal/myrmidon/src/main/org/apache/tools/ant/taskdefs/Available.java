@@ -8,8 +8,9 @@
 package org.apache.tools.ant.taskdefs;
 
 import java.io.File;
+import java.net.URL;
+import java.net.URLClassLoader;
 import org.apache.myrmidon.api.TaskException;
-import org.apache.tools.ant.AntClassLoader;
 import org.apache.tools.ant.Task;
 import org.apache.tools.ant.taskdefs.condition.Condition;
 import org.apache.tools.ant.types.EnumeratedAttribute;
@@ -29,22 +30,22 @@ public class Available
     extends Task
     implements Condition
 {
-    private String value = "true";
-    private String classname;
-    private Path classpath;
-    private String file;
-    private Path filepath;
-    private AntClassLoader loader;
+    private String m_value = "true";
+    private String m_classname;
+    private Path m_classpath;
+    private String m_file;
+    private Path m_filepath;
+    private ClassLoader m_classLoader;
 
-    private String property;
-    private String resource;
-    private FileDir type;
+    private String m_property;
+    private String m_resource;
+    private FileDir m_type;
 
     public void setClassname( String classname )
     {
         if( !"".equals( classname ) )
         {
-            this.classname = classname;
+            m_classname = classname;
         }
     }
 
@@ -62,7 +63,7 @@ public class Available
 
     public void setFile( String file )
     {
-        this.file = file;
+        m_file = file;
     }
 
     public void setFilepath( Path filepath )
@@ -73,93 +74,89 @@ public class Available
 
     public void setProperty( String property )
     {
-        this.property = property;
+        m_property = property;
     }
 
     public void setResource( String resource )
     {
-        this.resource = resource;
+        m_resource = resource;
     }
 
     public void setType( FileDir type )
     {
-        this.type = type;
+        m_type = type;
     }
 
     public void setValue( String value )
     {
-        this.value = value;
+        m_value = value;
     }
 
     public Path createClasspath()
         throws TaskException
     {
-        if( this.classpath == null )
+        if( m_classpath == null )
         {
-            this.classpath = new Path();
+            m_classpath = new Path();
         }
-        return this.classpath.createPath();
+        return m_classpath.createPath();
     }
 
     public Path createFilepath()
         throws TaskException
     {
-        if( this.filepath == null )
+        if( m_filepath == null )
         {
-            this.filepath = new Path();
+            m_filepath = new Path();
         }
-        return this.filepath.createPath();
+        return m_filepath.createPath();
     }
 
     public boolean eval()
         throws TaskException
     {
-        if( classname == null && file == null && resource == null )
+        if( m_classname == null && m_file == null && m_resource == null )
         {
             throw new TaskException( "At least one of (classname|file|resource) is required" );
         }
 
-        if( type != null )
+        if( m_type != null )
         {
-            if( file == null )
+            if( m_file == null )
             {
                 throw new TaskException( "The type attribute is only valid when specifying the file attribute." );
             }
         }
 
-        if( classpath != null )
+        if( m_classpath != null )
         {
-            this.loader = new AntClassLoader( getProject(), classpath );
+            final URL[] urls = m_classpath.toURLs();
+            m_classLoader = new URLClassLoader( urls );
         }
 
-        if( ( classname != null ) && !checkClass( classname ) )
+        if( ( m_classname != null ) && !checkClass( m_classname ) )
         {
-            getLogger().debug( "Unable to load class " + classname + " to set property " + property );
+            getLogger().debug( "Unable to load class " + m_classname + " to set property " + m_property );
             return false;
         }
 
-        if( ( file != null ) && !checkFile() )
+        if( ( m_file != null ) && !checkFile() )
         {
-            if( type != null )
+            if( m_type != null )
             {
-                getLogger().debug( "Unable to find " + type + " " + file + " to set property " + property );
+                getLogger().debug( "Unable to find " + m_type + " " + m_file + " to set property " + m_property );
             }
             else
             {
-                getLogger().debug( "Unable to find " + file + " to set property " + property );
+                getLogger().debug( "Unable to find " + m_file + " to set property " + m_property );
             }
             return false;
         }
 
-        if( ( resource != null ) && !checkResource( resource ) )
+        if( ( m_resource != null ) && !checkResource( m_resource ) )
         {
-            getLogger().debug( "Unable to load resource " + resource + " to set property " + property );
+            getLogger().debug( "Unable to load resource " + m_resource + " to set property " + m_property );
             return false;
-        }
-
-        if( loader != null )
-        {
-            loader.cleanup();
         }
 
         return true;
@@ -168,7 +165,7 @@ public class Available
     public void execute()
         throws TaskException
     {
-        if( property == null )
+        if( m_property == null )
         {
             throw new TaskException( "property attribute is required" );
         }
@@ -176,9 +173,9 @@ public class Available
         if( eval() )
         {
             String lSep = System.getProperty( "line.separator" );
-            if( null == getProject().getProperty( property ) )
+            if( null == getProject().getProperty( m_property ) )
             {
-                setProperty( property, value );
+                setProperty( m_property, m_value );
             }
             //else ignore
         }
@@ -188,24 +185,8 @@ public class Available
     {
         try
         {
-            if( loader != null )
-            {
-                loader.loadClass( classname );
-            }
-            else
-            {
-                ClassLoader l = this.getClass().getClassLoader();
-                // Can return null to represent the bootstrap class loader.
-                // see API docs of Class.getClassLoader.
-                if( l != null )
-                {
-                    l.loadClass( classname );
-                }
-                else
-                {
-                    Class.forName( classname );
-                }
-            }
+            final ClassLoader classLoader = getClassLoader();
+            classLoader.loadClass( classname );
             return true;
         }
         catch( ClassNotFoundException e )
@@ -221,13 +202,13 @@ public class Available
     private boolean checkFile()
         throws TaskException
     {
-        if( filepath == null )
+        if( m_filepath == null )
         {
-            return checkFile( resolveFile( file ), file );
+            return checkFile( resolveFile( m_file ), m_file );
         }
         else
         {
-            String[] paths = filepath.list();
+            String[] paths = m_filepath.list();
             for( int i = 0; i < paths.length; ++i )
             {
                 getLogger().debug( "Searching " + paths[ i ] );
@@ -248,20 +229,20 @@ public class Available
 
                 // **   full-pathname specified == path in list
                 // **   simple name specified   == path in list
-                if( path.exists() && file.equals( paths[ i ] ) )
+                if( path.exists() && m_file.equals( paths[ i ] ) )
                 {
-                    if( type == null )
+                    if( m_type == null )
                     {
                         getLogger().debug( "Found: " + path );
                         return true;
                     }
-                    else if( type.isDir()
+                    else if( m_type.isDir()
                         && path.isDirectory() )
                     {
                         getLogger().debug( "Found directory: " + path );
                         return true;
                     }
-                    else if( type.isFile()
+                    else if( m_type.isFile()
                         && path.isFile() )
                     {
                         getLogger().debug( "Found file: " + path );
@@ -274,14 +255,14 @@ public class Available
                 File parent = path.getParentFile();
                 // **   full-pathname specified == parent dir of path in list
                 if( parent != null && parent.exists()
-                    && file.equals( parent.getAbsolutePath() ) )
+                    && m_file.equals( parent.getAbsolutePath() ) )
                 {
-                    if( type == null )
+                    if( m_type == null )
                     {
                         getLogger().debug( "Found: " + parent );
                         return true;
                     }
-                    else if( type.isDir() )
+                    else if( m_type.isDir() )
                     {
                         getLogger().debug( "Found directory: " + parent );
                         return true;
@@ -293,8 +274,8 @@ public class Available
                 // **   simple name specified   == path in list + name
                 if( path.exists() && path.isDirectory() )
                 {
-                    if( checkFile( new File( path, file ),
-                                   file + " in " + path ) )
+                    if( checkFile( new File( path, m_file ),
+                                   m_file + " in " + path ) )
                     {
                         return true;
                     }
@@ -303,8 +284,8 @@ public class Available
                 // **   simple name specified   == parent dir + name
                 if( parent != null && parent.exists() )
                 {
-                    if( checkFile( new File( parent, file ),
-                                   file + " in " + parent ) )
+                    if( checkFile( new File( parent, m_file ),
+                                   m_file + " in " + parent ) )
                     {
                         return true;
                     }
@@ -316,8 +297,8 @@ public class Available
                     File grandParent = parent.getParentFile();
                     if( grandParent != null && grandParent.exists() )
                     {
-                        if( checkFile( new File( grandParent, file ),
-                                       file + " in " + grandParent ) )
+                        if( checkFile( new File( grandParent, m_file ),
+                                       m_file + " in " + grandParent ) )
                         {
                             return true;
                         }
@@ -330,9 +311,9 @@ public class Available
 
     private boolean checkFile( File f, String text )
     {
-        if( type != null )
+        if( m_type != null )
         {
-            if( type.isDir() )
+            if( m_type.isDir() )
             {
                 if( f.isDirectory() )
                 {
@@ -340,7 +321,7 @@ public class Available
                 }
                 return f.isDirectory();
             }
-            else if( type.isFile() )
+            else if( m_type.isFile() )
             {
                 if( f.isFile() )
                 {
@@ -358,22 +339,19 @@ public class Available
 
     private boolean checkResource( String resource )
     {
-        if( loader != null )
+        final ClassLoader classLoader = getClassLoader();
+        return ( null != classLoader.getResourceAsStream( resource ) );
+    }
+
+    private ClassLoader getClassLoader()
+    {
+        if( null == m_classLoader )
         {
-            return ( loader.getResourceAsStream( resource ) != null );
+            return ClassLoader.getSystemClassLoader();
         }
         else
         {
-            ClassLoader cL = this.getClass().getClassLoader();
-            if( cL != null )
-            {
-                return ( cL.getResourceAsStream( resource ) != null );
-            }
-            else
-            {
-                return
-                    ( ClassLoader.getSystemResourceAsStream( resource ) != null );
-            }
+            return m_classLoader;
         }
     }
 

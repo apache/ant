@@ -12,6 +12,7 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.URLClassLoader;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Hashtable;
@@ -27,7 +28,6 @@ import org.apache.avalon.framework.logger.AbstractLogEnabled;
 import org.apache.bcel.*;
 import org.apache.bcel.classfile.*;
 import org.apache.myrmidon.api.TaskException;
-import org.apache.tools.ant.AntClassLoader;
 import org.apache.tools.ant.DirectoryScanner;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.Task;
@@ -329,7 +329,7 @@ public class GenericDeploymentTool
         }
         else
         {
-            classpathLoader = new AntClassLoader( getTask().getProject(), combinedClasspath );
+            classpathLoader = new URLClassLoader( combinedClasspath.toURLs() );
         }
 
         return classpathLoader;

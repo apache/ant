@@ -24,7 +24,6 @@ import org.apache.tools.ant.DirectoryScanner;
 import org.apache.tools.ant.Task;
 import org.apache.tools.ant.types.FileSet;
 import org.apache.tools.ant.util.DOMElementWriter;
-import org.apache.tools.ant.util.StringUtils;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.xml.sax.SAXException;
@@ -184,7 +183,7 @@ public class XMLResultAggregator extends Task implements XMLConstants
         }
         if( toDir == null )
         {
-            toDir = FileUtil.resolveFile( getProject().getBaseDir(), DEFAULT_DIR );
+            toDir = FileUtil.resolveFile( getBaseDirectory(), DEFAULT_DIR );
         }
         return new File( toDir, toFile );
     }
@@ -210,16 +209,13 @@ public class XMLResultAggregator extends Task implements XMLConstants
                 if( pathname.endsWith( ".xml" ) )
                 {
                     File file = new File( ds.getBasedir(), pathname );
-                    file = FileUtil.
-                        resolveFile( getProject().getBaseDir(), file.getPath() );
+                    file = FileUtil.resolveFile( getBaseDirectory(), file.getPath() );
                     v.add( file );
                 }
             }
         }
 
-        File[] files = new File[ v.size() ];
-        v.copyInto( files );
-        return files;
+        return (File[])v.toArray( new File[ v.size() ] );
     }
 
     /**

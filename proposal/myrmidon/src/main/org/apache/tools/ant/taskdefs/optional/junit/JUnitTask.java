@@ -12,6 +12,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.net.URL;
+import java.net.URLClassLoader;
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.Hashtable;
@@ -19,7 +20,6 @@ import java.util.Iterator;
 import java.util.Properties;
 import java.util.Random;
 import org.apache.myrmidon.api.TaskException;
-import org.apache.tools.ant.AntClassLoader;
 import org.apache.tools.ant.Task;
 import org.apache.tools.ant.taskdefs.exec.Execute;
 import org.apache.tools.ant.taskdefs.exec.LogOutputStream;
@@ -694,19 +694,18 @@ public class JUnitTask extends Task
         try
         {
             getLogger().debug( "Using System properties " + System.getProperties() );
-            AntClassLoader cl = null;
+            ClassLoader classLoader = null;
             Path classpath = commandline.getClasspath();
             if( classpath != null )
             {
                 getLogger().debug( "Using CLASSPATH " + classpath );
-
-                cl = new AntClassLoader( null, getProject(), classpath, false );
-                // make sure the test will be accepted as a TestCase
-                cl.addSystemPackageRoot( "junit" );
-                // will cause trouble in JDK 1.1 if omitted
-                cl.addSystemPackageRoot( "org.apache.tools.ant" );
+                classLoader = new URLClassLoader( classpath.toURLs() );
             }
-            runner = new JUnitTestRunner( test, test.getHaltonerror(), test.getFiltertrace(), test.getHaltonfailure(), cl );
+            runner = new JUnitTestRunner( test,
+                                          test.getHaltonerror(),
+                                          test.getFiltertrace(),
+                                          test.getHaltonfailure(),
+                                          classLoader );
             if( summary )
             {
                 getLogger().info( "Running " + test.getName() );

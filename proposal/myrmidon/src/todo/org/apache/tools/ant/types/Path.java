@@ -8,6 +8,8 @@
 package org.apache.tools.ant.types;
 
 import java.io.File;
+import java.io.IOException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.Locale;
@@ -645,6 +647,33 @@ public class Path
     }
 
     /**
+     * Returns an array of URLs - useful for building a ClassLoader.
+     */
+    public URL[] toURLs()
+        throws TaskException
+    {
+        try
+        {
+            final String[] list = list();
+
+            final URL[] result = new URL[ list.length ];
+
+            // path containing one or more elements
+            for( int i = 0; i < list.length; i++ )
+            {
+                result[ i ] = new File( list[ i ] ).toURL();
+            }
+
+            return result;
+        }
+        catch( final IOException ioe )
+        {
+            final String message = "Malformed path entry. Reason:" + ioe;
+            throw new TaskException( message, ioe );
+        }
+    }
+
+    /**
      * Overrides the version of DataType to recurse on all DataType child
      * elements that may have been added.
      *
@@ -655,7 +684,6 @@ public class Path
     protected void dieOnCircularReference( Stack stk, Project p )
         throws TaskException
     {
-
         if( checked )
         {
             return;
