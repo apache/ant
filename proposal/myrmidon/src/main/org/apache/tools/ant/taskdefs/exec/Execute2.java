@@ -10,13 +10,15 @@ package org.apache.tools.ant.taskdefs.exec;
 import java.io.File;
 import java.io.IOException;
 import java.util.Properties;
-import org.apache.avalon.framework.logger.AbstractLogEnabled;
-import org.apache.myrmidon.api.TaskException;
 import org.apache.aut.nativelib.DefaultExecOutputHandler;
 import org.apache.aut.nativelib.ExecException;
+import org.apache.aut.nativelib.ExecManager;
 import org.apache.aut.nativelib.ExecMetaData;
 import org.apache.aut.nativelib.ExecOutputHandler;
-import org.apache.aut.nativelib.impl.DefaultExecManager;
+import org.apache.avalon.framework.logger.AbstractLogEnabled;
+import org.apache.myrmidon.api.TaskException;
+import org.apache.myrmidon.framework.factorys.ExecManagerFactory;
+import org.apache.myrmidon.services.ServiceException;
 
 /**
  * Runs an external program.
@@ -38,19 +40,6 @@ public class Execute2
      */
     private boolean m_useVMLauncher = true;
 
-    private static File getAntHomeDirectory()
-    {
-        final String antHome = System.getProperty( "myrmidon.home" );
-        if( null == antHome )
-        {
-            final String message =
-                "Cannot locate antRun script: Property 'ant.home' not specified";
-            throw new IllegalStateException( message );
-        }
-
-        return new File( antHome );
-    }
-
     public void setTimeout( final long timeout )
     {
         m_timeout = timeout;
@@ -66,7 +55,7 @@ public class Execute2
      *
      * @param commandline the commandline of the subprocess to launch
      */
-    public void setCommandline( String[] commandline )
+    public void setCommandline( final String[] commandline )
     {
         m_command = commandline;
     }
@@ -117,8 +106,8 @@ public class Execute2
 
         try
         {
-            final DefaultExecManager manager =
-                new DefaultExecManager( getAntHomeDirectory() );
+            final ExecManagerFactory factory = new ExecManagerFactory();
+            final ExecManager manager = (ExecManager)factory.createService();
 
             final ExecMetaData metaData =
                 new ExecMetaData( m_command, m_environment,
@@ -129,6 +118,10 @@ public class Execute2
         catch( final ExecException ee )
         {
             throw new TaskException( ee.getMessage(), ee );
+        }
+        catch( final ServiceException se )
+        {
+            throw new TaskException( se.getMessage(), se );
         }
     }
 }

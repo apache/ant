@@ -11,10 +11,13 @@ import java.io.File;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.util.Properties;
-import org.apache.myrmidon.api.TaskException;
 import org.apache.aut.nativelib.ExecException;
+import org.apache.aut.nativelib.ExecManager;
 import org.apache.aut.nativelib.ExecMetaData;
-import org.apache.aut.nativelib.impl.DefaultExecManager;
+import org.apache.avalon.excalibur.io.IOUtil;
+import org.apache.myrmidon.api.TaskException;
+import org.apache.myrmidon.framework.factorys.ExecManagerFactory;
+import org.apache.myrmidon.services.ServiceException;
 
 /**
  * Runs an external program.
@@ -35,34 +38,6 @@ public class Execute
      * Controls whether the VM is used to launch commands, where possible
      */
     private boolean m_useVMLauncher = true;
-
-    private static File getAntHomeDirectory()
-    {
-        final String antHome = System.getProperty( "myrmidon.home" );
-        if( null == antHome )
-        {
-            final String message =
-                "Cannot locate antRun script: Property 'ant.home' not specified";
-            throw new IllegalStateException( message );
-        }
-
-        return new File( antHome );
-    }
-
-    /**
-     * Creates a new execute object.
-     *
-     * @param streamHandler the stream handler used to handle the input and
-     *      output streams of the subprocess.
-     */
-    public Execute( final ExecuteStreamHandler streamHandler )
-    {
-        //m_streamHandler = streamHandler;
-    }
-
-    public Execute()
-    {
-    }
 
     public void setTimeout( final long timeout )
     {
@@ -142,8 +117,8 @@ public class Execute
     {
         try
         {
-            final DefaultExecManager manager =
-                new DefaultExecManager( getAntHomeDirectory() );
+            final ExecManagerFactory factory = new ExecManagerFactory();
+            final ExecManager manager = (ExecManager)factory.createService();
 
             final ExecMetaData metaData =
                 new ExecMetaData( m_command, m_environment,
@@ -153,6 +128,15 @@ public class Execute
         catch( final ExecException ee )
         {
             throw new TaskException( ee.getMessage(), ee );
+        }
+        catch( final ServiceException se )
+        {
+            throw new TaskException( se.getMessage(), se );
+        }
+        finally
+        {
+            IOUtil.shutdownStream( m_output );
+            IOUtil.shutdownStream( m_error );
         }
     }
 }
