@@ -30,6 +30,7 @@ import org.apache.tools.ant.types.EnvironmentVariable;
  * @author <a href="mailto:stefan.bodewig@epost.de">Stefan Bodewig</a>
  * @author <a href="mailto:mariusz@rakiura.org">Mariusz Nowostawski</a>
  * @author <a href="mailto:thomas.haas@softwired-inc.com">Thomas Haas</a>
+ * @ant:task name="exec"
  */
 public class Exec
     extends AbstractTask

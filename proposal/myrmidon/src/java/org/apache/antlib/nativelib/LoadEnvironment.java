@@ -24,6 +24,7 @@ import org.apache.myrmidon.services.ServiceException;
  * prefix.
  *
  * @author <a href="mailto:peter@apache.org">Peter Donald</a>
+ * @ant:task name="load-environment"
  */
 public class LoadEnvironment
     extends AbstractTask
