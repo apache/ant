@@ -1,3 +1,28 @@
+2000-11-14  Simeon H.K. Fitch  <simeon@fitch.net>
+
+	* org/apache/tools/ant/gui/Antidote.java: Added top area widget,
+	which is *not* managed inside a split pane.
+
+	* org/apache/tools/ant/gui/ProjectNavigator.java: Added minimum
+	size to keep resizing of parent from hiding widget.
+
+	* org/apache/tools/ant/gui/ActionManager.java: Large functionality
+	addtion for allowing action enabled/disabled state to be defined
+	in the configuration file. The triggering of state changes is
+	based on the firing of specific events.
+
+	* org/apache/tools/ant/gui/AntAction.java: Broke out from inner
+	class of ActionManager to its own self (I'm my own man!).
+
+	* org/apache/tools/ant/gui/command/CloseCmd.java: Added firing of
+	ProjectClosedEvent so state updates could occur.
+
+	* org/apache/tools/ant/gui/resources/action.properties: Added
+	enabledOn and disabledOn event specifications.
+
+	* org/apache/tools/ant/gui/Console.java: Improved reporting level
+	handling (some events weren't getting reported).
+
 2000-11-10  Simeon H.K. Fitch  <simeon@fitch.net>
 
 	* org/apache/tools/ant/gui/PropertyEditor.java: Added new

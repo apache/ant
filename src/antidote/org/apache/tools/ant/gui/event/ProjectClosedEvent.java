@@ -51,39 +51,36 @@
  * information on the Apache Software Foundation, please see
  * <http://www.apache.org/>.
  */
-package org.apache.tools.ant.gui.command;
+package org.apache.tools.ant.gui.event;
 import org.apache.tools.ant.gui.AppContext;
-import org.apache.tools.ant.gui.event.ProjectClosedEvent;
+import org.apache.tools.ant.gui.command.NoOpCmd;
+import org.apache.tools.ant.gui.command.Command;
 
 
 /**
- * Handler for the close command.
+ * Provides notification that the project was closed.
  * 
  * @version $Revision$ 
  * @author Simeon Fitch 
  */
-public class CloseCmd implements Command {
-    /** Name of the exit command. */
-    public static final String ACTION_NAME = "close";
+public class ProjectClosedEvent extends AntEvent {
 
-    /** Application context. */
-    private AppContext _context = null;
 
 	/** 
-	 * Standard constructor. 
+	 * Standard ctor.
 	 * 
-	 * @param window 
+	 * @param context The application context.
 	 */
-    public CloseCmd(AppContext context) {
-        _context = context;
+    public ProjectClosedEvent(AppContext context) {
+        super(context);
     }
 
 	/** 
-	 * Send a close event to the parent window. 
+	 * Create the appropriate response command to this event.
 	 * 
+	 * @return Command representing an appropriate response to this event.
 	 */
-    public void execute() {
-        _context.setProject(null);
-        _context.getEventBus().postEvent(new ProjectClosedEvent(_context));
+    public Command createDefaultCmd() {
+        return new NoOpCmd();
     }
 }

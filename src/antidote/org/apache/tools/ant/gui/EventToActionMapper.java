@@ -52,105 +52,95 @@
  * <http://www.apache.org/>.
  */
 package org.apache.tools.ant.gui;
-import org.apache.tools.ant.gui.event.*;
-import org.apache.tools.ant.BuildListener;
-import org.apache.tools.ant.BuildEvent;
+import java.util.*;
 
 /**
- * BuildListener for forwarding events to the EventBus.
+ * The purpose of this class is to manage the 
+ * mappings between event type and action enabled state.
  * 
  * @version $Revision$ 
  * @author Simeon Fitch 
  */
-public class BuildEventForwarder implements BuildListener {
+class EventToActionMapper {
 
-    /** Application context. */
-    private AppContext _context = null;
+    /** Lookup for enable(true) events. Key is event type, value is
+     *  a list of actions that are changed by the event. */
+    private Map _enableOn = new HashMap();
+    /** Lookup for enable(false) events. Key is event type, value is
+     *  a list of actions that are changed by the event. */
+    private Map _disableOn = new HashMap();
 
-    public BuildEventForwarder(AppContext context) {
-        _context = context;
-    }
 
-    /**
-     *  Fired before any targets are started.
-     */
-    public void buildStarted(BuildEvent event){
-        postEvent(event, BuildEventType.BUILD_STARTED);
-        // We doubly post this event.
-        _context.getEventBus().postEvent(
-            new BuildStartedEvent(_context, event));
-    }
+    public EventToActionMapper() {
 
-    /**
-     *  Fired after the last target has finished. This event
-     *  will still be thrown if an error occured during the build.
-     *
-     *  @see BuildEvent#getException()
-     */
-    public void buildFinished(BuildEvent event) {
-        postEvent(event, BuildEventType.BUILD_FINISHED);
-        // We doubly post this event.
-        _context.getEventBus().postEvent(
-            new BuildFinishedEvent(_context, event));
-    }
-
-    /**
-     *  Fired when a target is started.
-     *
-     *  @see BuildEvent#getTarget()
-     */
-    public void targetStarted(BuildEvent event) {
-        postEvent(event, BuildEventType.TARGET_STARTED);
-    }
-
-    /**
-     *  Fired when a target has finished. This event will
-     *  still be thrown if an error occured during the build.
-     *
-     *  @see BuildEvent#getException()
-     */
-    public void targetFinished(BuildEvent event) {
-        postEvent(event, BuildEventType.TARGET_FINISHED);
-    }
-
-    /**
-     *  Fired when a task is started.
-     *
-     *  @see BuildEvent#getTask()
-     */
-    public void taskStarted(BuildEvent event) {
-        postEvent(event, BuildEventType.TASK_STARTED);
-    }
-
-    /**
-     *  Fired when a task has finished. This event will still
-     *  be throw if an error occured during the build.
-     *
-     *  @see BuildEvent#getException()
-     */
-    public void taskFinished(BuildEvent event) {
-        postEvent(event, BuildEventType.TASK_FINISHED);
-    }
-
-    /**
-     *  Fired whenever a message is logged.
-     *
-     *  @see BuildEvent#getMessage()
-     *  @see BuildEvent#getPriority()
-     */
-    public void messageLogged(BuildEvent event) {
-        postEvent(event, BuildEventType.MESSAGE_LOGGED);
     }
 
 	/** 
-	 * Forward the event.
+	 * Add an action.
 	 * 
-	 * @param event Event to forward.
-	 * @param type Description of how the event came in.
+	 * @param action Action to add.
 	 */
-    private void postEvent(BuildEvent event, BuildEventType type) {
-        _context.getEventBus().postEvent(
-            new AntBuildEvent(_context, event, type));
+    public void addAction(AntAction action) {
+        putAction(action, action.getEnableOnEvents(), _enableOn);
+        putAction(action, action.getDisableOnEvents(), _disableOn);
+    }
+
+
+	/** 
+	 * For the given action store it in the event type mapping
+     * for each of the given types.
+	 * 
+	 * @param action Action to store.
+	 * @param clazzes Array of types to store it under.
+	 * @param storage The place to store the association.
+	 */
+    private void putAction(AntAction action, Class[] clazzes, Map storage) {
+        if(clazzes == null) return;
+
+        for(int i = 0; i < clazzes.length; i++) {
+            List values = (List) storage.get(clazzes[i]);
+            if(values == null) {
+                values = new ArrayList(1);
+                storage.put(clazzes[i], values);
+            }
+
+            values.add(action);
+        }
+    }
+
+
+	/** 
+	 * For the given event change the state of any actions that 
+     * have been registered as needing a transition as a result of
+     * the event.
+	 * 
+	 * @param event The event to apply.
+	 */
+    public void applyEvent(EventObject event) {
+        if(event == null) return;
+
+        List vals = null;
+
+        vals = (List) _enableOn.get(event.getClass());
+        changeState(vals, true);
+
+        vals = (List) _disableOn.get(event.getClass());
+        changeState(vals, false);
+    }
+
+	/** 
+	 * Set the enabled state of the given actions.
+	 * 
+	 * @param actions List of AntActions to set state for.
+	 * @param state The state to set them to.
+	 */
+    private void changeState(List actions, boolean state) {
+        if(actions == null) return;
+
+        for(int i = 0, len = actions.size(); i < len; i++) {
+            AntAction action = (AntAction) actions.get(i);
+            action.setEnabled(state);
+        }
     }
 
 

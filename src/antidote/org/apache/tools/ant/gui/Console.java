@@ -148,6 +148,8 @@ public class Console extends AntEditor {
             switch(buildEvent.getType().getValue()) {
               case BuildEventType.BUILD_STARTED_VAL:
                   clearDisplay();
+              case BuildEventType.BUILD_FINISHED_VAL:
+                  text = buildEvent.getType().toString();
                   break;
               case BuildEventType.TARGET_STARTED_VAL:
                   text = buildEvent.getEvent().getTarget().getName() + ":";
@@ -157,13 +159,16 @@ public class Console extends AntEditor {
               case BuildEventType.TASK_FINISHED_VAL:
                   break;
               case BuildEventType.MESSAGE_LOGGED_VAL:
-                  text = buildEvent.toString();
+                  // Filter out events that are below our
+                  // selected filterint level.
+                  LogLevelEnum level = 
+                      (LogLevelEnum) _logLevel.getSelectedItem();
+                  if(buildEvent.getEvent().getPriority() <= level.getValue()) {
+                      text = buildEvent.toString();
+                  }
                   break;
             }
 
-            // Filter out events that are below our selected filterint level.
-            LogLevelEnum level = (LogLevelEnum) _logLevel.getSelectedItem();
-            if(buildEvent.getEvent().getPriority() > level.getValue()) return;
 
             if(text != null) {
                 try {

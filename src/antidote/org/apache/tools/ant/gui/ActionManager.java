@@ -55,10 +55,7 @@ package org.apache.tools.ant.gui;
 
 import org.apache.tools.ant.gui.event.*;
 import javax.swing.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.util.*;
-import java.net.URL;
 
 /**
  * Manager of antidote actions. Receives its configuration from the action
@@ -80,6 +77,10 @@ public class ActionManager {
 
     /** Event bus. */
     private EventBus _bus = null;
+    /** Class for storing the event type to action type
+     *  mapping for setting enabled state. */
+    private EventToActionMapper _mapper = null;
+
 
 	/** 
 	 * Standard ctor.
@@ -88,6 +89,9 @@ public class ActionManager {
 	 */
     public ActionManager(EventBus bus) {
         _bus = bus;
+        bus.addMember(EventBus.RESPONDING, new Enabler());
+
+        _mapper = new EventToActionMapper();
 
         // Configure the set of actions.
         String toTok = _resources.getString("actions");
@@ -95,8 +99,16 @@ public class ActionManager {
         _actionIDs = new String[tok.countTokens()];
         for(int i = 0; i < _actionIDs.length; i++) {
             _actionIDs[i] = tok.nextToken();
-            _actions.put(_actionIDs[i], new AntAction(_actionIDs[i]));
+            AntAction action = new AntAction(_resources, _bus, _actionIDs[i]);
+            _actions.put(_actionIDs[i], action);
+                         
+
+            // For each action we need to add the reverse event trigger
+            // lookup.
+            _mapper.addAction(action);
+
         }
+
     }
 
 	/** 
@@ -204,137 +216,44 @@ public class ActionManager {
         }
     }
 
-	/** 
-	 * Convenience method for looking put a resource with the name
-     * "id.key". Will return null if the resource doesn't exist.
-	 * 
-	 * @param id Action id.
-	 * @param key Key name for the action.
-	 * @return String resource for composite key, or null if not found.
-	 */
-    private String getString(String id, String key) {
-        String retval = null;
-        try {
-            retval = _resources.getString(id + "." + key);
+
+    /** Class for updating the enabled status of icons based
+     *  on the events seen. */
+    private class Enabler implements BusMember {
+        private final Filter _filter = new Filter();
+
+        /** 
+         * Get the filter to that is used to determine if an event should
+         * to to the member.
+         * 
+         * @return Filter to use.
+         */
+        public BusFilter getBusFilter() {
+            return _filter;
         }
-        catch(MissingResourceException ex) {
-            // Its ok to be missing a resource name...
-            // Too bad the API throws an exception in this case. 
+        
+        /** 
+         * Receives all events.
+         * 
+         * @param event Event to post.
+         */
+        public void eventPosted(EventObject event) {
+            _mapper.applyEvent(event);
         }
-        return retval;
     }
 
-    /** Class representing an action in the Antidote application. */
-    private class AntAction extends AbstractAction {
-        /** Property name for the parent menu item. */
-        public static final String PARENT_MENU_NAME = "parentMenuName";
-        public static final String SEPARATOR = "separator";
-        public static final String ACCELERATOR = "accelerator";
-
-        /** Unique id. */
-        private String _id = null;
-
+    /** Class providing filtering for project events. */
+    private static class Filter implements BusFilter {
         /** 
-         * Standard ctor.
+         * Determines if the given event should be accepted.
          * 
-         * @param id Unique id for the action
+         * @param event Event to test.
+         * @return True if event should be given to BusMember, false otherwise.
          */
-        public AntAction(String id) {
-            _id = id;
-            putValue(NAME, getString(id, "name"));
-            putValue(SHORT_DESCRIPTION, getString(id, "shortDescription"));
-            putValue(PARENT_MENU_NAME, getString(id, PARENT_MENU_NAME));
-            putValue(SEPARATOR, getString(id, SEPARATOR));
-
-            String accelerator = getString(id, ACCELERATOR);
-
-            if(accelerator != null) {
-                putValue(ACCELERATOR, KeyStroke.getKeyStroke(accelerator));
-            }
-
-            String iconName = getString(id, "icon");
-            if(iconName != null) {
-                try {
-                    URL imageLoc = 
-                        AntAction.class.getResource("resources/" + iconName);
-                    if(imageLoc != null) {
-                        putValue(SMALL_ICON, new ImageIcon(imageLoc));
-                    }
-                }
-                catch(Exception ex) {
-                    // XXX log me.
-                    ex.printStackTrace();
-                }
-            }
-        }
-        
-        /** 
-         * Unique id for the action.
-         * 
-         * @return Action id.
-         */
-        public String getID() {
-            return _id;
-        }
-
-        /** 
-         * Get the name of the menu in the menu bar that this action shoul
-         * appear under.
-         * 
-         * @return Menu to appear under, or null if not a menu action.
-         */
-        public String getParentMenuName() {
-            return (String) getValue(PARENT_MENU_NAME);
-        }
-        
-        /** 
-         * Get the localized name for the action.
-         * 
-         * @return Name
-         */
-        public String getName() {
-            return (String) getValue(NAME);
-        }
-        
-        /** 
-         * Get the short description. Used in tool tips.
-         * 
-         * @return Short description.
-         */
-        public String getShortDescription() {
-            return (String) getValue(SHORT_DESCRIPTION);
-        }
-        
-        /** 
-         * Determine if a separator should appear before the action.
-         * 
-         * @return True if add separator, false otherwise.
-         */
-        public boolean isPreceededBySeparator() {
-            return Boolean.valueOf(
-                String.valueOf(getValue(SEPARATOR))).booleanValue();
-        }
-
-        /** 
-         * Get the icon.
-         * 
-         * @return Icon for action, or null if none.
-         */
-        public Icon getIcon() {
-            return (Icon) getValue(SMALL_ICON);
-        }
-
-        public KeyStroke getAccelerator() {
-            return (KeyStroke) getValue(ACCELERATOR);
-        }
-
-        /** 
-         * Pass the action on to the EventBus.
-         * 
-         * @param e Event to forward.
-         */
-        public void actionPerformed(ActionEvent e) {
-            _bus.postEvent(e);
+        public boolean accept(EventObject event) {
+            return true;
         }
     }
+
+
 }
