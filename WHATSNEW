@@ -21,6 +21,8 @@ Other changes:
 
 * <tar> will now add empty directories as well
 
+* you can now specify a description for <p4change>
+
 Fixed bugs:
 -----------
 

@@ -75,7 +75,8 @@ import org.apache.tools.ant.*;
  */
 public class P4Change extends P4Base {
 
-	protected String emptyChangeList = null;
+    protected String emptyChangeList = null;
+    protected String description = "AutoSubmit By Ant";
 
     public void execute() throws BuildException {
 
@@ -83,21 +84,21 @@ public class P4Change extends P4Base {
         final Project myProj = project;
 
         P4Handler handler = new P4HandlerAdapter() {
-            public void process(String line) {
-                if (util.match("/Change/", line)) {
+                public void process(String line) {
+                    if (util.match("/Change/", line)) {
                     
-                    //Remove any non-numerical chars - should leave the change number
-   	        		line = util.substitute("s/[^0-9]//g", line);
-   	        		
-   			       	int changenumber = Integer.parseInt(line);
-   			        log("Change Number is "+changenumber, Project.MSG_INFO);
-				    myProj.setProperty("p4.change", ""+changenumber);
+                        //Remove any non-numerical chars - should leave the change number
+                        line = util.substitute("s/[^0-9]//g", line);
+                                
+                        int changenumber = Integer.parseInt(line);
+                        log("Change Number is "+changenumber, Project.MSG_INFO);
+                        myProj.setProperty("p4.change", ""+changenumber);
 
-       			} else if(util.match("/error/", line)) {
-   	    		    throw new BuildException("Perforce Error, check client settings and/or server");
-       			}
-   			        
-   	        }};
+                    } else if(util.match("/error/", line)) {
+                        throw new BuildException("Perforce Error, check client settings and/or server");
+                    }
+                                
+                }};
 
         handler.setOutput(emptyChangeList);
 
@@ -109,30 +110,34 @@ public class P4Change extends P4Base {
         final StringBuffer stringbuf = new StringBuffer();
         
         execP4Command("change -o", new P4HandlerAdapter() {
-            public void process(String line) {
-        	    if(!util.match("/^#/",line)){
-                    if(util.match("/error/", line)) {
-	        		
-   			            log("Client Error", Project.MSG_VERBOSE);
-   			            throw new BuildException("Perforce Error, check client settings and/or server");
-   			            
-           			} else if(util.match("/<enter description here>/",line)) {
+                public void process(String line) {
+                    if(!util.match("/^#/",line)){
+                        if(util.match("/error/", line)) {
+                                
+                            log("Client Error", Project.MSG_VERBOSE);
+                            throw new BuildException("Perforce Error, check client settings and/or server");
+                                    
+                        } else if(util.match("/<enter description here>/",line)) {
 
-                        line = util.substitute("s/<enter description here>/AutoSubmit By Ant/", line);
-			    		
-			        } else if(util.match("/\\/\\//", line)) {
-			            //Match "//" for begining of depot filespec
-			    	    return;
-				    }
-				    
-    				stringbuf.append(line);
-	    			stringbuf.append("\n");
-	    			
-		    	}
-    		}});
-		
-    	   	return stringbuf.toString();
+                            line = util.substitute("s/<enter description here>/" + description + "/", line);
+                                        
+                        } else if(util.match("/\\/\\//", line)) {
+                            //Match "//" for begining of depot filespec
+                            return;
+                        }
+                                    
+                        stringbuf.append(line);
+                        stringbuf.append("\n");
+                                
+                    }
+                }});
+                
+        return stringbuf.toString();
     }
 
+    /* Set Description Variable. */
+    public void setDescription(String desc){
+        this.description = desc;
+    }
 
 } //EoF

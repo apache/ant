@@ -190,14 +190,15 @@ This task sets the ${p4.change} property which can then be passed to P4Submit or
     <td align="center" valign="top"><b>Required</b></td>
   </tr>
   <tr>
-    <td valign="top">None</td>
-    <td valign="top" align="center">--</td>
-    <td valign="top" align="center">--</td>
+    <td valign="top">description</td>
+    <td valign="top">Description for ChangeList. If none specified, it will
+                     default to "AutoSubmit By Ant"</td>
+    <td valign="top" align="center">No.</td>
   </tr>
 </table>
 
 <h3>Examples</h3>
-<pre>&lt;p4change /&gt;
+<pre>&lt;p4change description="Change Build Number in Script"&gt;
 </pre>
 <hr>
 
