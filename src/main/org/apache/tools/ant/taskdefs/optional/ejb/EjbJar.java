@@ -183,13 +183,14 @@ public class EjbJar extends MatchingTask {
         return classpath.createPath();
     }
 
-    public Object createElement(String elementName) {
-        if (elementName.equals("support-classes")) {
-            supportClasses = new FileSet();
-            return supportClasses;
-        }
-        
-        return null;
+    /**
+     * Create a file set for support elements
+     *
+     * @return a fileset which can be populated with support files.
+     */
+    public FileSet createSupport() {
+        supportClasses = new FileSet();
+        return supportClasses;
     }
     
 
