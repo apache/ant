@@ -76,6 +76,13 @@ public class Available extends Task {
     }
 
     public void setClass(String classname) {
+        project.log("The class attribute is deprecated. " +
+                    "Please use the classname attribute.",
+                    Project.MSG_WARN);
+        this.classname = classname;
+    }
+
+    public void setClassname(String classname) {
         this.classname = classname;
     }
 

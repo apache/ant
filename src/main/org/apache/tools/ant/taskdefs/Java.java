@@ -118,9 +118,19 @@ public class Java extends Exec {
     }
     
     /**
-     * Set the source file.
+     * Set the source file (deprecated).
      */
     public void setClass(String s) {
+        project.log("The class attribute is deprecated. " +
+                    "Please use the classname attribute.",
+                    Project.MSG_WARN);
+        this.classname = s;
+    }
+
+    /**
+     * Set the source file.
+     */
+    public void setClassname(String s) {
         this.classname = s;
     }
 
