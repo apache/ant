@@ -421,6 +421,15 @@ public class FileUtilsTest extends TestCase {
                                               new File("/foo/bar/")));
         assertEquals("", fu.removeLeadingPath(new File("/foo/bar/"),
                                               new File("/foo/bar")));
+
+        String expected = "foo/bar".replace('\\', File.separatorChar)
+            .replace('/', File.separatorChar);
+        assertEquals(expected, fu.removeLeadingPath(new File("/"),
+                                                    new File("/foo/bar")));
+        assertEquals(expected, fu.removeLeadingPath(new File("c:/"),
+                                                    new File("c:/foo/bar")));
+        assertEquals(expected, fu.removeLeadingPath(new File("c:\\"),
+                                                    new File("c:\\foo\\bar")));
     }
 
     /**

@@ -1186,10 +1186,12 @@ public class FileUtils {
             return "";
         }
 
-        // if leading's path ends with a slash, it will be stripped by
-        // normalize - we always add one so we never think /foo was a
-        // parent directory of /foobar
-        l += File.separator;
+        // ensure that l ends with a /
+        // so we never think /foo was a parent directory of /foobar
+        if (!l.endsWith("/")) {
+            l += File.separator;
+        }
+
         if (p.startsWith(l)) {
             return p.substring(l.length());
         } else {
