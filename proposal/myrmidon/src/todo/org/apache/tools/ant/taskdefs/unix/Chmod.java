@@ -107,10 +107,10 @@ public class Chmod extends ExecuteOn
         havePerm = true;
     }
 
-    public void setSkipEmptyFilesets( boolean skip )
-        throws TaskException
+    public void setSkipEmptyFilesets( final boolean skip )
     {
-        throw new TaskException( getName() + " doesn\'t support the skipemptyfileset attribute" );
+        final String message = getName() + " doesn\'t support the skipemptyfileset attribute";
+        throw new IllegalArgumentException( message );
     }
 
     /**
@@ -168,7 +168,8 @@ public class Chmod extends ExecuteOn
             }
             catch( IOException e )
             {
-                throw new TaskException( "Execute failed: " + e, e );
+                final String message = "Execute failed: " + e;
+                throw new TaskException( message, e );
             }
             finally
             {
