@@ -168,10 +168,6 @@
   <patternset id="needs.trax">
     <exclude name="${optional.package}/TraXLiaison*.java"
              unless="trax.present" />
-    <exclude name="${optional.package}/junit/XMLResultAggregator.java"
-             unless="trax.present" />
-    <exclude name="${optional.package}/junit/AggregateTransformer.java"
-             unless="trax.present" />
     <exclude name="${optional.package}/sitraka/**" 
              unless="trax.present"/>
     <exclude name="${optional.package}/metamata/MMetrics*" 
@@ -184,10 +180,6 @@
              unless="xalan.present" />
   </patternset>
   <patternset id="needs.xalan2">
-    <exclude name="${optional.package}/junit/XMLResultAggregator.java"
-             unless="xalan2.present" />
-    <exclude name="${optional.package}/junit/AggregateTransformer.java"
-             unless="xalan2.present" />
     <exclude name="${optional.package}/junit/Xalan2Executor.java"
              unless="xalan2.present" />
   </patternset>
