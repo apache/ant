@@ -85,7 +85,6 @@ public class FileUtils
                 BufferedReader in = new BufferedReader( new FileReader( sourceFile ) );
                 BufferedWriter out = new BufferedWriter( new FileWriter( destFile ) );
 
-                int length;
                 String newline = null;
                 String line = in.readLine();
                 while( line != null )
@@ -398,10 +397,6 @@ public class FileUtils
     /**
      * Translates all occurrences of / or \ to correct separator of the current
      * platform and returns whether it had to do any replacements.
-     *
-     * @param buffer Description of Parameter
-     * @param pos Description of Parameter
-     * @return Description of the Returned Value
      */
     public static void translateFileSep( StringBuffer buffer )
     {
