@@ -17,6 +17,10 @@ org.apache.tools.ant to org.apache.tools.ant.types.
 
 * <java> and <cvs> have lost some undocumented attributes.
 
+* the Unix antRun script would search for command.sh in the directory
+it changed to and invoke this instead of command if present. This
+beahvior has been dropped.
+
 Other changes:
 --------------
 
