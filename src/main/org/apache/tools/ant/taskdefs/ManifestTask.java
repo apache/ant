@@ -128,7 +128,7 @@ public class ManifestTask extends Task {
      *
      * @param section the manifest section to be added
      *
-     * @exception ManifestException if the secti0on is not valid.
+     * @exception ManifestException if the section is not valid.
      */
     public void addConfiguredSection(Manifest.Section section)
          throws ManifestException {
@@ -158,7 +158,7 @@ public class ManifestTask extends Task {
 
     /**
      * The encoding to use for reading in an existing manifest file
-     * @param encoding the maniofets file encoding.
+     * @param encoding the manifest file encoding.
      */
     public void setEncoding(String encoding) {
         this.encoding = encoding;
