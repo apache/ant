@@ -88,7 +88,7 @@ import org.apache.tools.ant.util.SourceFileScanner;
  *         <a href="mailto:glennm@ca.ibm.com">glennm@ca.ibm.com</a>
  * @author <a href="mailto:stefan.bodewig@epost.de">Stefan Bodewig</a>
  * @author <A href="gholam@xtra.co.nz">Michael McCallum</A>
- * @author <a href="mailto:umagesh@rediffmail.com">Magesh Umasankar</a>
+ * @author Magesh Umasankar
  *
  * @version $Revision$
  *

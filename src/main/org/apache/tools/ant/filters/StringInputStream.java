@@ -60,7 +60,7 @@ import java.io.StringReader;
 /**
  * Wraps a String as an InputStream.
  *
- * @author <a href="mailto:umagesh@apache.org">Magesh Umasankar</a>
+ * @author Magesh Umasankar
  */
 public class StringInputStream
     extends InputStream {

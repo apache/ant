@@ -69,7 +69,7 @@ import org.apache.tools.ant.types.Parameter;
  *  &lt;param name=&quot;prefix&quot; value=&quot;Foo&quot;/&gt;
  * &lt;/filterreader&gt;</pre>
  *
- * @author <a href="mailto:umagesh@apache.org">Magesh Umasankar</a>
+ * @author Magesh Umasankar
  */
 public final class PrefixLines
     extends BaseParamFilterReader

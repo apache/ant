@@ -75,7 +75,7 @@ import org.apache.tools.ant.types.Parameter;
  *   &lt;param type="token" name="DATE" value="${TODAY}"/&gt;
  * &lt;/filterreader&gt;</pre>
  *
- * @author <a href="mailto:umagesh@apache.org">Magesh Umasankar</a>
+ * @author Magesh Umasankar
  */
 public final class ReplaceTokens
     extends BaseParamFilterReader

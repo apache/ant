@@ -72,7 +72,7 @@ import org.apache.tools.ant.util.StringUtils;
  *
  * @author Stefano Mazzocchi 
  *         <a href="mailto:stefano@apache.org">stefano@apache.org</a>
- * @author <a href="mailto:umagesh@apache.org">Magesh Umasankar</a>
+ * @author Magesh Umasankar
  *
  * @since Ant 1.1
  *

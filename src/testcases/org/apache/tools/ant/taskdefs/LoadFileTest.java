@@ -62,7 +62,7 @@ import java.io.File;
  * Test the load file task
  *
  * @author Steve Loughran
- * @author <a href="mailto:umagesh@apache.org">Magesh Umasankar</a>
+ * @author Magesh Umasankar
  * @created 10 December 2001
  */
 public class LoadFileTest extends BuildFileTest {

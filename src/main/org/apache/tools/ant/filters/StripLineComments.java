@@ -81,7 +81,7 @@ import org.apache.tools.ant.types.Parameter;
  *   &lt;param type=&quot;comment&quot; value=&quot;//&quot;/&gt;
  * &lt;/filterreader&gt;</pre>
  *
- * @author <a href="mailto:umagesh@apache.org">Magesh Umasankar</a>
+ * @author Magesh Umasankar
  */
 public final class StripLineComments
     extends BaseParamFilterReader

@@ -62,7 +62,7 @@ import org.apache.tools.ant.Task;
 /**
  * Abstract Base class for unpack tasks.
  *
- * @author <a href="mailto:umagesh@apache.org">Magesh Umasankar</a>
+ * @author Magesh Umasankar
  *
  * @since Ant 1.5
  */

@@ -63,7 +63,7 @@ import org.apache.bcel.classfile.JavaClass;
 /**
  * Helper class that filters constants from a Java Class
  *
- * @author <a href="mailto:umagesh@apache.org">Magesh Umasankar</a>
+ * @author Magesh Umasankar
  */
 public final class JavaClassHelper {
 

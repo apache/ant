@@ -63,7 +63,7 @@ import java.io.IOException;
 /**
  * Tests the Move task.
  *
- * @author <a href="mailto:umagesh@apache.org">Magesh Umasankar</a>
+ * @author Magesh Umasankar
  */
 public class MoveTest extends BuildFileTest {
 

@@ -80,7 +80,7 @@ import org.apache.tools.ant.types.EnumeratedAttribute;
  * millesond, second, minute, hour, day and week. The default is millisecond.
  *
  * @author <a href="mailto:denis@network365.com">Denis Hennessy</a>
- * @author <a href="mailto:umagesh@apache.org">Magesh Umasankar</a>
+ * @author Magesh Umasankar
  *
  * @since Ant 1.5
  *

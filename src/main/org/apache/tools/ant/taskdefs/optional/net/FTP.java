@@ -101,7 +101,7 @@ import org.apache.tools.ant.util.FileUtils;
  *      rvaughn@seaconinc.com</a>
  * @author Glenn McAllister <a href="mailto:glennm@ca.ibm.com">
  *      glennm@ca.ibm.com</a>
- * @author <a href="mailto:umagesh@apache.org">Magesh Umasankar</a>
+ * @author Magesh Umasankar
  * @author <a href="mailto:kadams@gfs.com">Kyle Adams</a>
  * @since Ant 1.3
  */

@@ -77,7 +77,7 @@ import org.apache.tools.ant.util.FileUtils;
  *
  * @author costin@dnt.ro
  * @author <a href="mailto:stefan.bodewig@epost.de">Stefan Bodewig</a>
- * @author <a href="mailto:umagesh@apache.org">Magesh Umasankar</a>
+ * @author Magesh Umasankar
  *
  * @since Ant 1.1
  *

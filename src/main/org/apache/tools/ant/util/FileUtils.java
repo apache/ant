@@ -92,7 +92,7 @@ import org.apache.tools.ant.types.FilterSetCollection;
  * @author duncan@x180.com
  * @author Conor MacNeill
  * @author <a href="mailto:stefan.bodewig@epost.de">Stefan Bodewig</a>
- * @author <a href="mailto:umagesh@apache.org">Magesh Umasankar</a>
+ * @author Magesh Umasankar
  * @author <a href="mailto:jtulley@novell.com">Jeff Tulley</a>
  *
  * @version $Revision$

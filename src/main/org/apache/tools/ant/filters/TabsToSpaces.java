@@ -70,7 +70,7 @@ import org.apache.tools.ant.types.Parameter;
  *   &lt;param name=&quot;tablength&quot; value=&quot;8&quot;/&gt;
  * &lt;/filterreader&gt;</pre>
  *
- * @author <a href="mailto:umagesh@apache.org">Magesh Umasankar</a>
+ * @author Magesh Umasankar
  */
 public final class TabsToSpaces
     extends BaseParamFilterReader

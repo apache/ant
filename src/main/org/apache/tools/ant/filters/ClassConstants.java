@@ -77,7 +77,7 @@ import java.lang.reflect.Method;
  * <pre>&lt;classconstants/&gt;</pre>
  * Or:
  * <pre>&lt;filterreader classname=&quot;org.apache.tools.ant.filters.ClassConstants&quot;/&gt;</pre>
- * @author <a href="mailto:umagesh@apache.org">Magesh Umasankar</a>
+ * @author Magesh Umasankar
  */
 public final class ClassConstants
     extends BaseFilterReader

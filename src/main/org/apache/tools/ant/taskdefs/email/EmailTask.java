@@ -70,7 +70,7 @@ import org.apache.tools.ant.types.FileSet;
  * A task to send SMTP email. This is a refactoring of the SendMail and
  * MimeMail tasks such that both are within a single task.
  *
- * @author <a href="mailto:umagesh@apache.org">Magesh Umasankar</a>
+ * @author Magesh Umasankar
  * @author glenn_twiggs@bmc.com
  * @author steve_l@iseran.com steve loughran
  * @author ehatcher@apache.org Erik Hatcher

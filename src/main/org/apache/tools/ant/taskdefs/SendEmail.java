@@ -64,7 +64,7 @@ import org.apache.tools.ant.taskdefs.email.EmailTask;
  * elements.
  
  * @author glenn_twiggs@bmc.com
- * @author <a href="mailto:umagesh@rediffmail.com">Magesh Umasankar</a>
+ * @author Magesh Umasankar
  *
  * @since Ant 1.2
  *

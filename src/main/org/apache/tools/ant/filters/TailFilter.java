@@ -70,7 +70,7 @@ import org.apache.tools.ant.types.Parameter;
  *   &lt;param name=&quot;lines&quot; value=&quot;3&quot;/&gt;
  * &lt;/filterreader&gt;</pre>
  *
- * @author <a href="mailto:umagesh@apache.org">Magesh Umasankar</a>
+ * @author Magesh Umasankar
  */
 public final class TailFilter
     extends BaseParamFilterReader

@@ -82,7 +82,7 @@ import org.apache.tools.ant.types.FilterSetCollection;
  *
  * @author Glenn McAllister
  *         <a href="mailto:glennm@ca.ibm.com">glennm@ca.ibm.com</a>
- * @author <a href="mailto:umagesh@rediffmail.com">Magesh Umasankar</a>
+ * @author Magesh Umasankar
  * @version $Revision$
  *
  * @since Ant 1.2

@@ -77,7 +77,7 @@ import org.apache.tools.ant.util.regexp.Regexp;
  *
  * This will fetch all those lines that contain the pattern <code>foo</code>
  *
- * @author <a href="mailto:umagesh@apache.org">Magesh Umasankar</a>
+ * @author Magesh Umasankar
  */
 public final class LineContainsRegExp
     extends BaseParamFilterReader
