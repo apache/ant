@@ -164,9 +164,16 @@ public class SignJarTest extends BuildFileTest {
                 AbstractJarSignerTask.ERROR_NO_SOURCE);
     }
 
-    public void NotestVerifyJarUnsigned() {
-        expectBuildException("testVerifyJarUnsigned",
-                "unsigned JAR file");
+    public void testVerifyJarUnsigned() {
+        expectBuildExceptionContaining("testVerifyJarUnsigned",
+                "unsigned JAR file",
+                VerifyJar.ERROR_NO_VERIFY);
+    }
+
+    public void NotestVerifyJarNotInKeystore() {
+        expectBuildExceptionContaining("testVerifyJarNotInKeystore",
+                "signature not in keystore",
+                VerifyJar.ERROR_NO_VERIFY);
     }
 
     public void testVerifyFileset() {

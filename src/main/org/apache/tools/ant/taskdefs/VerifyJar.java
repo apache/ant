@@ -19,10 +19,15 @@ package org.apache.tools.ant.taskdefs;
 
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.DirectoryScanner;
+import org.apache.tools.ant.filters.ChainableReader;
 import org.apache.tools.ant.types.FileSet;
+import org.apache.tools.ant.types.RedirectorElement;
+import org.apache.tools.ant.types.FilterChain;
 
 import java.util.Vector;
 import java.io.File;
+import java.io.Reader;
+import java.io.IOException;
 
 /**
  * JAR verification task.
@@ -39,9 +44,16 @@ public class VerifyJar extends AbstractJarSignerTask {
     public static final String ERROR_NO_FILE = "Not found :";
 
     /**
+     * The string we look for in the text to indicate direct verification
+     */
+    private static final String VERIFIED_TEXT = "jar verified.";
+
+    /**
      * certification flag
      */
     private boolean certificates=false;
+    private BufferingOutputFilter outputCache = new BufferingOutputFilter();
+    public static final String ERROR_NO_VERIFY = "Failed to verify ";
 
     /**
      * Ask for certificate information to be printed
@@ -65,6 +77,13 @@ public class VerifyJar extends AbstractJarSignerTask {
         }
 
         beginExecution();
+
+        //patch the redirector to save output to a file
+        RedirectorElement redirector = getRedirector();
+        redirector.setAlwaysLog(true);
+        FilterChain outputFilterChain = redirector.createOutputFilterChain();
+        outputFilterChain.add(outputCache);
+
         try {
             Vector sources = createUnifiedSources();
             for (int i = 0; i < sources.size(); i++) {
@@ -114,7 +133,69 @@ public class VerifyJar extends AbstractJarSignerTask {
 
         log("Verifying JAR: " +
                 jar.getAbsolutePath());
-
+        outputCache.clear();
         cmd.execute();
+        String results=outputCache.toString();
+        if(results.indexOf(VERIFIED_TEXT)<0) {
+            throw new BuildException(ERROR_NO_VERIFY+jar);
+        }
+    }
+
+    /**
+     * we are not thread safe here. Do not use on multiple threads at the same time.
+     */
+    private class BufferingOutputFilter implements ChainableReader {
+
+        private BufferingOutputFilterReader buffer;
+
+        public Reader chain(Reader rdr) {
+            buffer = new BufferingOutputFilterReader(rdr);
+            return buffer;
+        }
+
+        public String toString() {
+            return buffer.toString();
+        }
+
+        public void clear() {
+            if(buffer!=null) {
+                buffer.clear();
+            }
+        }
+    }
+
+    /**
+     * catch the output of the buffer
+     */
+    private class BufferingOutputFilterReader extends Reader {
+
+        private Reader next;
+
+        private StringBuffer buffer=new StringBuffer();
+
+        public BufferingOutputFilterReader(Reader next) {
+            this.next = next;
+        }
+
+        public int read(char cbuf[], int off, int len) throws IOException {
+            //hand down
+            int result=next.read(cbuf,off,len);
+            //cache
+            buffer.append(cbuf,off,len);
+            //return
+            return result;
+        }
+
+        public void close() throws IOException {
+            next.close();
+        }
+
+        public String toString() {
+            return buffer.toString();
+        }
+
+        public void clear() {
+            buffer=new StringBuffer();
+        }
     }
 }

@@ -194,10 +194,18 @@
     <verify-base jar="${test.jar}"/>
   </target>
 
+  <target name="testVerifyJarCertificates" depends="basic">
+    <verify-base jar="${test.jar}" certificates="true" verbose="true"/>
+  </target>
+  
   <target name="testVerifyJarUnsigned" depends="jar">
     <verify-base jar="${test.jar}"/>
   </target>
   
+  <target name="testVerifyJarNotInKeystore" depends="basic">
+    <verifyjar jar="${test.jar}" certificates="true" verbose="true"/>
+  </target>
+    
   <target name="testVerifyFileset" depends="basic">
     <verify-base >
       <fileset file="${test.jar}" />

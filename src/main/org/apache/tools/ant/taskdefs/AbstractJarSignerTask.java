@@ -203,13 +203,24 @@ public abstract class AbstractJarSignerTask extends Task {
      */
     private RedirectorElement createRedirector() {
         RedirectorElement result = new RedirectorElement();
-        StringBuffer input = new StringBuffer(storepass).append('\n');
-        if (keypass != null) {
-            input.append(keypass).append('\n');
+        if(storepass!=null) {
+            StringBuffer input = new StringBuffer(storepass).append('\n');
+            if (keypass != null) {
+                input.append(keypass).append('\n');
+            }
+            result.setInputString(input.toString());
+            result.setLogInputString(false);
         }
-        result.setInputString(input.toString());
-        result.setLogInputString(false);
         return result;
+    }
+
+    /**
+     * get the redirector. Non-null between invocations of
+     * {@link #beginExecution()} and {@link #endExecution()}
+     * @return a redirector or null
+     */
+    public RedirectorElement getRedirector() {
+        return redirector;
     }
 
     /**
@@ -224,7 +235,7 @@ public abstract class AbstractJarSignerTask extends Task {
         if (verbose) {
             addValue(cmd,"-verbose");
         }
-        
+
         //now patch in all system properties
         Vector props=sysProperties.getVariablesVector();
         Enumeration e=props.elements();
