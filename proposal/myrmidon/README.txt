@@ -1,1 +1,0 @@
-Myrmidon has moved to a new top level cvs jakarta-ant-myrmidon

@@ -1,9 +1,0 @@
-<project name="mutant-bootstrap" default="main" basedir="..">
-  <target name="main">
-    <style in="build.xml" out="src/java/bootstrap/org/apache/ant/builder/MutantBuilder.java" 
-           style="build/bootstrap.xsl"/>
-    <style in="build/ant1compat.xml" out="src/java/bootstrap/org/apache/ant/builder/Ant1CompatBuilder.java" 
-           style="build/bootstrap.xsl"/>
-  </target>
-</project>
-
