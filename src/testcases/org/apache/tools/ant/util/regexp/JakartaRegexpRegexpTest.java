@@ -76,14 +76,10 @@ public class JakartaRegexpRegexpTest extends RegexpTest {
     }
 
     public void testWindowsLineSeparator2() throws IOException {
-        if ( Os.isFamily("windows") ) {
-            try {
-                super.testWindowsLineSeparator2();
-                fail("Windows issue. Should trigger when this bug is fixed. {@since 1.2}");
-            } catch (AssertionFailedError e){
-            }
-        } else {
+        try {
             super.testWindowsLineSeparator2();
+            fail("Should trigger when this bug is fixed. {@since 1.2}");
+        } catch (AssertionFailedError e){
         }
     }
 
