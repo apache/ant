@@ -70,8 +70,8 @@ public class Available extends Task {
     private String property;
     private String classname;
     private File file;
-    private File dir;
     private String resource;
+    private String type;
     private Path classpath;
     private AntClassLoader loader;
     private String value = "true";
@@ -113,12 +113,12 @@ public class Available extends Task {
         this.file = file;
     }
 
-    public void setDir(File dir) {
-        this.dir = dir;
-    }
-
     public void setResource(String resource) {
         this.resource = resource;
+    }
+
+    public void setType(String type) {
+        this.type = type;
     }
 
     public void execute() throws BuildException {
@@ -126,8 +126,14 @@ public class Available extends Task {
             throw new BuildException("property attribute is required", location);
         }
         
-        if (classname == null && file == null && dir == null && resource == null) {
-            throw new BuildException("At least one of (classname|file|dir|resource) is required", location);
+        if (classname == null && file == null && resource == null) {
+            throw new BuildException("At least one of (classname|file|resource) is required", location);
+        }
+
+        if (type != null){
+            if (!type.equalsIgnoreCase("file") && !type.equalsIgnoreCase("dir")){
+                throw new BuildException("Type must be one of either dir or file");
+            }
         }
 
         if (classpath != null) {
@@ -140,12 +146,7 @@ public class Available extends Task {
         }
         
         if ((file != null) && !checkFile(file)) {
-            log("Unable to find file " + file + " to set property " + property, Project.MSG_VERBOSE);
-            return;
-        }
-        
-        if ((dir != null) && !checkDir(dir)) {
-            log("Unable to find dir " + dir + " to set property " + property, Project.MSG_VERBOSE);
+            log("Unable to find " + file + " to set property " + property, Project.MSG_VERBOSE);
             return;
         }
         
@@ -158,11 +159,14 @@ public class Available extends Task {
     }
 
     private boolean checkFile(File file) {
-        return file.isFile();
-    }
-
-    private boolean checkDir(File dir) {
-        return dir.isDirectory();
+        if (type != null) {
+            if (type.equalsIgnoreCase("dir")){
+                return file.isDirectory();
+            } else if (type.equalsIgnoreCase("file")){
+                return file.isFile();
+            }
+        }
+        return file.exists();
     }
 
     private boolean checkResource(String resource) {

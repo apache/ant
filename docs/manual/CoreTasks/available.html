@@ -12,8 +12,8 @@
 <p>Sets a property if a resource is available at runtime. This resource can be a
 file, a directory, a class in the classpath, or a JVM system resource.</p>
 <p>If the resource is present, the property value is set to true by
-default, otherwise the property is not set. You can set the value to
-something specific by specifying the <code>value</code> attribute.</p>
+default; otherwise, the property is not set. You can set the value to
+something other than the default by specifying the <code>value</code> attribute.</p>
 <p>Normally, this task is used to set properties that are useful to avoid target
 execution depending on system parameters.</p>
 <h3>Parameters</h3>
@@ -36,11 +36,7 @@ execution depending on system parameters.</p>
   <tr>
     <td valign="top">classname</td>
     <td valign="top">The class to look for in the classpath.</td>
-    <td valign="middle" align="center" rowspan="4">Yes</td>
-  </tr>
-  <tr>
-    <td valign="top">dir</td>
-    <td valign="top">The directory to look for.</td>
+    <td valign="middle" align="center" rowspan="3">Yes</td>
   </tr>
   <tr>
     <td valign="top">file</td>
@@ -51,13 +47,18 @@ execution depending on system parameters.</p>
     <td valign="top">The resource to look for in the JVM.</td>
   </tr>
   <tr>
-    <td valign="top">classpath</td> <td valign="top">The classpath to
-      use when looking up <code>classname</code> or <code>resource</code>.</td> <td
-    align="center" valign="top">No</td>
+    <td valign="top">classpath</td>
+    <td valign="top">The classpath to use when looking up <code>classname</code> or <code>resource</code>.</td>
+    <td align="center" valign="top">No</td>    
   </tr>
   <tr>
     <td valign="top">classpathref</td>
-	<td valign="top">The classpath to use, given as a <a href="../using.html#references">reference</a> to a path defined elsewhere.</td>
+    <td valign="top">The classpath to use, given as a <a href="../using.html#references">reference</a> to a path defined elsewhere.</td>
+    <td align="center" valign="top">No</td>    
+  </tr>
+  <tr>
+    <td valign="top">type</td>
+    <td valign="top">The type of <code>file</code> to look for, either a directory (<code>type="dir"</code>) or a file (<code>type="file"</code>). If not set, the property will be set if the name specified in the <code>file</code> attribute exists as either a file or a directory.</td>
     <td align="center" valign="top">No</td>    
   </tr>
   
@@ -77,6 +78,11 @@ if the class <code>org.whatever.Myclass</code> is found in Ant's classpath.</p>
 </pre>
 <p>sets the <code>jaxp.jar.present</code> property to the value &quot;true&quot;
 if the file <code>./lib/jaxp11/jaxp.jar</code> is found.</p>
+<pre>
+&lt;available file=&quot;/usr/local/lib&quot; type=&quot;dir&quot; property=&quot;local.lib.present&quot;/&gt;
+</pre>
+<p>sets the <code>local.lib.present</code> property to the value &quot;true&quot;
+if the directory <code>/usr/local/lib</code> is found.</p>
 <pre>
 ...in project ...
 &lt;property name=&quot;jaxp.jar&quot; value=&quot;./lib/jaxp11/jaxp.jar&quot;/&gt;

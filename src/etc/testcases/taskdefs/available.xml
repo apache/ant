@@ -80,17 +80,17 @@
 
   <target name="test16">
     <available property="test" 
-               dir=""/>
+               file="" type="dir"/>
   </target>
 
   <target name="test17">
     <available property="test" 
-               dir="../taskdefs"/>
+               file="../taskdefs" type="dir"/>
   </target>
 
   <target name="test18">
     <available property="test" 
-               dir="../this_dir_should_never_exist"/>
+               file="../this_dir_should_never_exist" type="dir"/>
   </target>
 
 </project>
