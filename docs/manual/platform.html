@@ -7,6 +7,37 @@
 
 <h1>Platform Issues</h1>
 
+<h2>Java versions</h2>
+<h3>Java 1.5</h3>
+
+You may need a bigger stack than default, especially if you are using the built in
+XSLT engine. We recommend you use Apache Xalan; indeed, some tasks (JUnit report in XML,
+for example) may not work against the shipping XSL engine.
+
+<h3>Java 1.2</h3>
+
+
+You may sometimes see messages like
+<pre>
+A nonfatal internal JIT (3.10.107(x)) error 'chgTarg: Conditional' has
+occurred in :
+  'org/apache/tools/ant/Project.addReference
+(Ljava/lang/String;Ljava/lang/Object;)V': Interpreting method.
+  Please report this error in detail to
+  http://java.sun.com/cgi-bin/bugreport.cgi
+</pre>
+These are caused by subtle incompatibilities between the Java1.4+ compiled
+release; bugs in the Java runtime that Sun won't fix. Possible solutions:-
+<ol>
+<li>Upgrade your JVM.
+<li>Recompile Ant on a Java1.2 machine
+<li>Add <tt>-Djava.compiler=NONE</tt> to
+the value of your ANT_OPTS environment variable. This turns the JIT off.
+<li>Ignore the messages.
+</ol>
+
+
+
 
 <h2>Unix and Linux</h2>
 
@@ -47,7 +78,8 @@ confusing patternsets.
 <p>
 Ant can often not delete a directory which is open in an Explorer window. 
 There is nothing we can do about this short of spawning a program to kill
-the shell before deleting directories.  
+the shell before deleting directories.
+Nor can files that are in use be overwritten.
 
 <h2>Cygwin</h2>
 
