@@ -3,6 +3,7 @@
 
   <properties>
     <author email="conor@cortexebusiness.com.au">Conor MacNeill</author>
+    <author email="stefan.bodewig@epost.de">Stefan Bodewig</author>
     <title>Ant</title>
   </properties>
 
@@ -90,8 +91,8 @@ Comprehensive documentation is included in the source and binary distribtions.
   
   <section name="Towards Ant2">
     <p>
-    We are currently collecting feature requests for Ant2. Please
-    read the latest <a href="/ant/antnews.html">Ant news</a> for more details.
+    We are currently hashing out design details for Ant2. Please
+    read the latest <a href="antnews.html">Ant news</a> for more details.
     </p>
   </section>
   

@@ -1,0 +1,46 @@
+<?xml version="1.0"?>
+<document>
+
+  <properties>
+    <author email="stefan.bodewig@epost.de">Stefan Bodewig</author>
+    <title>Ant</title>
+  </properties>
+
+<body>
+
+  <section name="Ant needs a Logo">
+    <p>One of the requirements for Ant2 is, that Ant should have a
+    logo.  You can find the logos that have been proposed to the Ant
+    mailing lists on this page.</p>
+
+    <p>Tell us what you think of them (yes, <em>Powered by</em> should
+    better be <em>Built by</em>).</p>
+
+    <table>
+      <tr>
+        <th>Author</th><th> </th>
+      </tr>
+      <tr>
+        <td>Bill J. Fellows (Bill.J.Fellows at mail.sprint.com)</td>
+        <td><img src="images/antLogo1.png" /></td>
+      </tr>
+      <tr>
+        <td>Bill J. Fellows (Bill.J.Fellows at mail.sprint.com)</td>
+        <td><img src="images/antLogo2.png" /></td>
+      </tr>
+      <tr>
+        <td>Christoph Wilhelms (Christoph.Wilhelms at t-online.de)</td>
+        <td><img src="images/ant_logo.gif" /></td>
+      </tr>
+      <tr>
+        <td>Christoph Wilhelms (Christoph.Wilhelms at t-online.de)</td>
+        <td><img src="images/ant2_logo.gif" /></td>
+      </tr>
+      <tr>
+        <td>Warner Onstine (warner at warneronstine.com)</td>
+        <td><img src="images/ant-logo2.gif" /></td>
+      </tr>
+    </table>
+  </section>
+</body>
+</document>
