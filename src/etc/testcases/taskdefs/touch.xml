@@ -83,6 +83,38 @@
 
   </target>
 
+  <target name="testExplicitMappedFileset">
+    <touch file="touchtest" millis="${mappermillis}" />
+    <touch>
+      <fileset file="touchtest" />
+      <mapper>
+        <compositemapper>
+          <globmapper from="*" to="*foo" />
+          <globmapper from="*" to="*bar" />
+        </compositemapper>
+      </mapper>
+    </touch>
+
+    <fail>
+      <condition>
+        <not>
+          <and>
+            <isfileselected file="touchtest">
+              <selector refid="map.selector" />
+            </isfileselected>
+            <isfileselected file="touchtestfoo">
+              <selector refid="map.selector" />
+            </isfileselected>
+            <isfileselected file="touchtestbar">
+              <selector refid="map.selector" />
+            </isfileselected>
+          </and>
+        </not>
+      </condition>
+    </fail>
+
+  </target>
+
   <target name="testMappedFilelist">
     <touch millis="${mappermillis}">
       <filelist dir="." files="idonotexist" />

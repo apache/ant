@@ -110,6 +110,13 @@ public class TouchTest extends BuildFileTest {
     }
 
     /**
+     * test the explicit mapped file set
+     */
+    public void testExplicitMappedFileset() {
+        executeTarget("testExplicitMappedFileset");
+    }
+
+    /**
      * test the mapped file list
      */
     public void testMappedFilelist() {

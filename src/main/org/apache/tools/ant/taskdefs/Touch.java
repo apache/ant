@@ -168,7 +168,7 @@ public class Touch extends Task {
      * @param mapper the <code>Mapper</code> to add.
      * @since Ant 1.6.3
      */
-    public void addMapper(Mapper mapper) {
+    public void addConfiguredMapper(Mapper mapper) {
         add(mapper.getImplementation());
     }
 
