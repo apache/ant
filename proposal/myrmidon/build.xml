@@ -187,6 +187,7 @@ Legal:
       <property name="custom-tasks-dir" value="${build.dir}/tasks"/>
       <mkdir dir="${custom-tasks-dir}"/>
       <javac srcdir="src/make" destdir="${custom-tasks-dir}">
+          <classpath refid="project.class.path"/>
       </javac>
       <taskdef name="antlib-jar" classname="org.apache.myrmidon.build.AntlibJarTask">
           <classpath location="${custom-tasks-dir}"/>
