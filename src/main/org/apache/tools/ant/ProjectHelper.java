@@ -253,7 +253,7 @@ public class ProjectHelper {
             if (node.getNodeType() == Node.ELEMENT_NODE) {
                 Element element = (Element)node;
                 String propType = element.getTagName();
-                String methodName = "add" +
+                String methodName = "create" +
 		    Character.toUpperCase(propType.charAt(0)) +
                     propType.substring(1);
 

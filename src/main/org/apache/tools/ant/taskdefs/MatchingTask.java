@@ -102,7 +102,7 @@ public abstract class MatchingTask extends Task {
     /**
      * add a name entry on the include list
      */
-    public NameEntry addInclude() {
+    public NameEntry createInclude() {
         NameEntry result = new NameEntry();
         includeList.addElement(result);
         return result;
@@ -111,7 +111,7 @@ public abstract class MatchingTask extends Task {
     /**
      * add a name entry on the exclude list
      */
-    public NameEntry addExclude() {
+    public NameEntry createExclude() {
         NameEntry result = new NameEntry();
         excludeList.addElement(result);
         return result;
@@ -125,7 +125,7 @@ public abstract class MatchingTask extends Task {
      */
     public void setIncludes(String includes) {
         if (includes != null && includes.length() > 0) {
-            addInclude().setName(includes);
+            createInclude().setName(includes);
         }
     }
 
@@ -141,13 +141,13 @@ public abstract class MatchingTask extends Task {
                     "Please use the includes attribute.",
                     Project.MSG_WARN);
         if (itemString == null || itemString.equals("*")) {
-            addInclude().setName("**");
+            createInclude().setName("**");
         } else {
             StringTokenizer tok = new StringTokenizer(itemString, ", ");
             while (tok.hasMoreTokens()) {
                 String pattern = tok.nextToken().trim();
                 if (pattern.length() > 0) {
-                    addInclude().setName(pattern+"/**");
+                    createInclude().setName(pattern+"/**");
                 }
             }
         }
@@ -161,7 +161,7 @@ public abstract class MatchingTask extends Task {
      */
     public void setExcludes(String excludes) {
         if (excludes != null && excludes.length() > 0) {
-            addExclude().setName(excludes);
+            createExclude().setName(excludes);
         }
     }
 
@@ -179,7 +179,7 @@ public abstract class MatchingTask extends Task {
             Vector tmpExcludes = new Vector();
             StringTokenizer tok = new StringTokenizer(ignoreString, ", ", false);
             while (tok.hasMoreTokens()) {
-                addExclude().setName("**/"+tok.nextToken().trim()+"/**");
+                createExclude().setName("**/"+tok.nextToken().trim()+"/**");
             }
         }
     }
