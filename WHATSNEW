@@ -79,6 +79,8 @@ Fixed bugs:
 Other changes:
 --------------
 
+* <javadoc> can now take an attribute 'executable'. Bugzilla report 30606.
+
 * <WsdlToDotnet> and <style> are now deprecated in favor of <wsdltodotnet> and
   <xslt>, respectively. Bugzilla report 25832.
 
