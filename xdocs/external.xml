@@ -728,7 +728,15 @@
         &quot;border&quot; (add a border), &quot;text&quot; (text on
         image), &quot;crop&quot; (a sub-image of a bigger image),
         &quot;rotate&quot;, &quot;grayscale&quot; (change a color
-        image to shades of gray).</p>
+        image to shades of gray).<br/>
+        Now it supports transparency (making images translucent), a
+        bestfit option for Resize, simple support for images within
+        a security-constraint, a preliminary support (if pjatools.jar
+        is available) for saving files as GIF and some other fixes.</p>
+
+        <p>IMPORTANT: You will need the PMIW (Poor Man's Imaging Wrapper) jar
+        for all the operations and the pjatools jar for GIF encoding/ saving
+        support.</p>
 
         <table class="externals">
           <tr>
@@ -741,8 +749,20 @@
                 href="http://www.mullassery.com/software/ANT/">http://www.mullassery.com/software/ANT/</a></td>
           </tr>
           <tr>
+            <th>pmiw jar</th>
+            <td><a
+                href="http://www.mullassery.com/software/PMIW/">http://www.mullassery.com/software/PMIW/</a>
+                (Poor Man's Imaging Wrapper)</td>
+          </tr>
+          <tr>
+            <th>pjatools jar</th>
+            <td><a
+                href="http://www.eteks.com/pja/en/">http://www.eteks.com/pja/en/</a>
+                (pjatools for GIF encoding support)</td>
+          </tr>
+          <tr>
             <th>Contact:</th>
-            <td><a href="http://www.mullassery.com/contact/feedback.jsp">Abey Mullassery</a></td>
+            <td><a href="http://www.mullassery.com">Abey Mullassery</a></td>
           </tr>
           <tr>
             <th>License:</th>
