@@ -22,18 +22,22 @@ import org.apache.myrmidon.components.configurer.DefaultConfigurer;
 import org.apache.myrmidon.components.converter.DefaultConverterRegistry;
 import org.apache.myrmidon.components.converter.DefaultMasterConverter;
 import org.apache.myrmidon.components.deployer.DefaultDeployer;
+import org.apache.myrmidon.components.executor.DefaultExecutor;
 import org.apache.myrmidon.components.extensions.DefaultExtensionManager;
 import org.apache.myrmidon.components.property.DefaultPropertyResolver;
 import org.apache.myrmidon.components.role.DefaultRoleManager;
 import org.apache.myrmidon.components.type.DefaultTypeManager;
+import org.apache.myrmidon.framework.DataType;
 import org.apache.myrmidon.interfaces.classloader.ClassLoaderManager;
 import org.apache.myrmidon.interfaces.configurer.Configurer;
 import org.apache.myrmidon.interfaces.converter.ConverterRegistry;
 import org.apache.myrmidon.interfaces.deployer.Deployer;
+import org.apache.myrmidon.interfaces.executor.Executor;
 import org.apache.myrmidon.interfaces.extensions.ExtensionManager;
 import org.apache.myrmidon.interfaces.property.PropertyResolver;
 import org.apache.myrmidon.interfaces.role.RoleInfo;
 import org.apache.myrmidon.interfaces.role.RoleManager;
+import org.apache.myrmidon.interfaces.service.ServiceFactory;
 import org.apache.myrmidon.interfaces.type.DefaultTypeFactory;
 import org.apache.myrmidon.interfaces.type.TypeManager;
 
@@ -46,6 +50,10 @@ public abstract class AbstractComponentTest
     extends AbstractMyrmidonTest
 {
     private DefaultServiceManager m_serviceManager;
+
+    public static final String DATA_TYPE_ROLE = "data-type";
+    public static final String CONVERTER_ROLE = "converter";
+    public static final String SERVICE_FACTORY_ROLE = "service-factory";
 
     public AbstractComponentTest( final String name )
     {
@@ -83,6 +91,10 @@ public abstract class AbstractComponentTest
 
             component = new DefaultDeployer();
             m_serviceManager.put( Deployer.ROLE, component );
+            components.add( component );
+
+            component = new DefaultExecutor();
+            m_serviceManager.put( Executor.ROLE, component );
             components.add( component );
 
             final DefaultClassLoaderManager classLoaderMgr = new DefaultClassLoaderManager();
@@ -123,7 +135,15 @@ public abstract class AbstractComponentTest
                     serviceable.service( m_serviceManager );
                 }
             }
+
+            // Register some standard roles
+            // Add some core roles
+            final RoleManager roleManager = (RoleManager)getServiceManager().lookup( RoleManager.ROLE );
+            roleManager.addRole( new RoleInfo( DataType.ROLE, DATA_TYPE_ROLE, DataType.class ) );
+            roleManager.addRole( new RoleInfo( Converter.ROLE, CONVERTER_ROLE, Converter.class ) );
+            roleManager.addRole( new RoleInfo( ServiceFactory.ROLE, SERVICE_FACTORY_ROLE, ServiceFactory.class ) );
         }
+
         return m_serviceManager;
     }
 
@@ -149,7 +169,7 @@ public abstract class AbstractComponentTest
     /**
      * Utility method to register a type.
      */
-    protected void registerType( final Class roleType,
+    protected void registerType( final String roleName,
                                  final String typeName,
                                  final Class type )
         throws Exception
@@ -157,7 +177,7 @@ public abstract class AbstractComponentTest
         final ClassLoader loader = getClass().getClassLoader();
         final DefaultTypeFactory factory = new DefaultTypeFactory( loader );
         factory.addNameClassMapping( typeName, type.getName() );
-        getTypeManager().registerType( roleType, typeName, factory );
+        getTypeManager().registerType( roleName, typeName, factory );
     }
 
     /**
@@ -172,6 +192,6 @@ public abstract class AbstractComponentTest
         converterRegistry.registerConverter( converterClass.getName(), sourceClass.getName(), destClass.getName() );
         DefaultTypeFactory factory = new DefaultTypeFactory( getClass().getClassLoader() );
         factory.addNameClassMapping( converterClass.getName(), converterClass.getName() );
-        getTypeManager().registerType( Converter.class, converterClass.getName(), factory );
+        getTypeManager().registerType( Converter.ROLE, converterClass.getName(), factory );
     }
 }

@@ -97,7 +97,7 @@ public class DefaultExecutor
     {
         try
         {
-            final TypeFactory factory = frame.getTypeManager().getFactory( Task.class );
+            final TypeFactory factory = frame.getTypeManager().getFactory( Task.ROLE );
             return (Task)factory.create( name );
         }
         catch( final TypeException te )

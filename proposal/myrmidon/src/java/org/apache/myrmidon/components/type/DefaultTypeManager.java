@@ -8,6 +8,13 @@
 package org.apache.myrmidon.components.type;
 
 import java.util.HashMap;
+import org.apache.avalon.excalibur.i18n.ResourceManager;
+import org.apache.avalon.excalibur.i18n.Resources;
+import org.apache.avalon.framework.service.ServiceException;
+import org.apache.avalon.framework.service.ServiceManager;
+import org.apache.avalon.framework.service.Serviceable;
+import org.apache.myrmidon.interfaces.role.RoleInfo;
+import org.apache.myrmidon.interfaces.role.RoleManager;
 import org.apache.myrmidon.interfaces.type.TypeException;
 import org.apache.myrmidon.interfaces.type.TypeFactory;
 import org.apache.myrmidon.interfaces.type.TypeManager;
@@ -19,13 +26,18 @@ import org.apache.myrmidon.interfaces.type.TypeManager;
  * @version $Revision$ $Date$
  */
 public class DefaultTypeManager
-    implements TypeManager
+    implements TypeManager, Serviceable
 {
+    private final static Resources REZ
+        = ResourceManager.getPackageResources( DefaultTypeManager.class );
+
     ///Parent type manager to inherit values from.
     private final DefaultTypeManager m_parent;
 
     ///Maps role Class to MultiSourceTypeFactory.
     private final HashMap m_roleMap = new HashMap();
+
+    private RoleManager m_roleManager;
 
     public DefaultTypeManager()
     {
@@ -35,21 +47,31 @@ public class DefaultTypeManager
     public DefaultTypeManager( final DefaultTypeManager parent )
     {
         m_parent = parent;
+        if( m_parent != null )
+        {
+            m_roleManager = m_parent.m_roleManager;
+        }
     }
 
-    public void registerType( final Class role,
+    public void service( final ServiceManager serviceManager )
+        throws ServiceException
+    {
+        m_roleManager = (RoleManager)serviceManager.lookup( RoleManager.ROLE );
+    }
+
+    public void registerType( final String roleName,
                               final String shorthandName,
                               final TypeFactory factory )
         throws TypeException
     {
-        final MultiSourceTypeFactory msFactory = createFactory( role );
+        final MultiSourceTypeFactory msFactory = createFactory( roleName );
         msFactory.register( shorthandName, factory );
     }
 
-    public TypeFactory getFactory( final Class role )
+    public TypeFactory getFactory( final String roleName )
         throws TypeException
     {
-        return createFactory( role );
+        return createFactory( roleName );
     }
 
     public TypeManager createChildTypeManager()
@@ -57,29 +79,29 @@ public class DefaultTypeManager
         return new DefaultTypeManager( this );
     }
 
-    protected final MultiSourceTypeFactory lookupFactory( final Class role )
+    protected final MultiSourceTypeFactory lookupFactory( final String roleName )
     {
-        return (MultiSourceTypeFactory)m_roleMap.get( role );
+        return (MultiSourceTypeFactory)m_roleMap.get( roleName );
     }
 
     /**
      * Get a factory of appropriate role.
      * Create a Factory if none exists with same name.
      *
-     * @param role the role name(must be name of work interface)
+     * @param roleName the role name
      * @return the Factory for interface
      * @exception TypeException role does not specify accessible work interface
      */
-    private MultiSourceTypeFactory createFactory( final Class role )
+    private MultiSourceTypeFactory createFactory( final String roleName )
         throws TypeException
     {
-        MultiSourceTypeFactory factory = (MultiSourceTypeFactory)m_roleMap.get( role );
+        MultiSourceTypeFactory factory = (MultiSourceTypeFactory)m_roleMap.get( roleName );
         if( null != factory )
         {
             return factory;
         }
 
-        final MultiSourceTypeFactory parentFactory = getParentTypedFactory( role );
+        final MultiSourceTypeFactory parentFactory = getParentTypedFactory( roleName );
         if( null != parentFactory )
         {
             factory = new MultiSourceTypeFactory( parentFactory );
@@ -88,19 +110,26 @@ public class DefaultTypeManager
         ///If we haven't got factory try to create a new one
         if( null == factory )
         {
-            factory = new MultiSourceTypeFactory( role );
+            // Lookup the role type
+            final RoleInfo role = m_roleManager.getRole( roleName );
+            if( role == null )
+            {
+                final String message = REZ.getString( "unknown-role.error", roleName );
+                throw new TypeException( message );
+            }
+            factory = new MultiSourceTypeFactory( role.getType() );
         }
 
-        m_roleMap.put( role, factory );
+        m_roleMap.put( roleName, factory );
 
         return factory;
     }
 
-    private MultiSourceTypeFactory getParentTypedFactory( final Class role )
+    private MultiSourceTypeFactory getParentTypedFactory( final String roleName )
     {
         if( null != m_parent )
         {
-            return m_parent.lookupFactory( role );
+            return m_parent.lookupFactory( roleName );
         }
         else
         {

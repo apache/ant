@@ -19,7 +19,6 @@ import org.apache.avalon.framework.service.ServiceException;
 import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.avalon.framework.service.Serviceable;
 import org.apache.myrmidon.interfaces.converter.ConverterRegistry;
-import org.apache.myrmidon.interfaces.type.TypeException;
 import org.apache.myrmidon.interfaces.type.TypeFactory;
 import org.apache.myrmidon.interfaces.type.TypeManager;
 
@@ -37,7 +36,7 @@ public class DefaultMasterConverter
         ResourceManager.getPackageResources( DefaultMasterConverter.class );
 
     private ConverterRegistry m_registry;
-    private TypeFactory m_factory;
+    private TypeManager m_typeManager;
 
     /** Map from converter name to Converter. */
     private Map m_converters = new HashMap();
@@ -52,17 +51,7 @@ public class DefaultMasterConverter
         throws ServiceException
     {
         m_registry = (ConverterRegistry)serviceManager.lookup( ConverterRegistry.ROLE );
-
-        final TypeManager typeManager = (TypeManager)serviceManager.lookup( TypeManager.ROLE );
-        try
-        {
-            m_factory = typeManager.getFactory( Converter.class );
-        }
-        catch( final TypeException te )
-        {
-            final String message = REZ.getString( "no-converter-factory.error" );
-            throw new ServiceException( message, te );
-        }
+        m_typeManager = (TypeManager)serviceManager.lookup( TypeManager.ROLE );
     }
 
     /**
@@ -95,7 +84,8 @@ public class DefaultMasterConverter
             Converter converter = (Converter)m_converters.get( name );
             if( converter == null )
             {
-                converter = (Converter)m_factory.create( name );
+                final TypeFactory factory = m_typeManager.getFactory( Converter.ROLE );
+                converter = (Converter)factory.create( name );
                 m_converters.put( name, converter );
             }
 

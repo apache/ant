@@ -401,7 +401,7 @@ public class DefaultConfigurerTest
         config.addChild( child );
 
         registerRole( new RoleInfo( "myrole1", null, MyRole1.class, "default-type" ) );
-        registerType( MyRole1.class, "default-type", MyType1.class );
+        registerType( "myrole1", "default-type", MyType1.class );
 
         final ConfigTestInterfaceAdder test = new ConfigTestInterfaceAdder();
 
@@ -487,8 +487,8 @@ public class DefaultConfigurerTest
         config.addChild( child1 );
         config.addChild( child2 );
 
-        registerType( DataType.class, "my-type1", MyType1.class );
-        registerType( DataType.class, "my-type2", MyType2.class );
+        registerType( DataType.ROLE, "my-type1", MyType1.class );
+        registerType( DataType.ROLE, "my-type2", MyType2.class );
 
         final ConfigTestTypedAdder test = new ConfigTestTypedAdder();
 
@@ -514,8 +514,8 @@ public class DefaultConfigurerTest
 
         // Register incompatible types with the same name, as data-type and myrole1.
         registerRole( new RoleInfo( "myrole1", "myrole1", MyRole1.class ) );
-        registerType( MyRole1.class, "my-type1", MyType1.class );
-        registerType( DataType.class, "my-type1", StringBuffer.class );
+        registerType( "myrole1", "my-type1", MyType1.class );
+        registerType( DataType.ROLE, "my-type1", StringBuffer.class );
 
         final ConfigTestTypedAdderRole test = new ConfigTestTypedAdderRole();
 
@@ -540,7 +540,7 @@ public class DefaultConfigurerTest
         child.setAttribute( "prop", "some value" );
         config.addChild( child );
 
-        registerType( DataType.class, "some-type", ConfigTestTypedAdderConversion.class );
+        registerType( DataType.ROLE, "some-type", ConfigTestTypedAdderConversion.class );
         registerConverter( ObjectToMyRole1Converter.class, Object.class, MyRole1.class );
 
         final ConfigTestTypedAdderConversion test = new ConfigTestTypedAdderConversion();

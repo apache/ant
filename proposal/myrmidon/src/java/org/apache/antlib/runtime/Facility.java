@@ -51,7 +51,7 @@ public class Facility
             final String typeName = children[ 0 ].getName();
             try
             {
-                m_aspectHandler = (AspectHandler)newInstance( AspectHandler.class, typeName );
+                m_aspectHandler = (AspectHandler)newInstance( AspectHandler.ROLE, typeName );
             }
             catch( final Exception e )
             {

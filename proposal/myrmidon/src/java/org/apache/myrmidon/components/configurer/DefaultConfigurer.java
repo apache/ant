@@ -585,7 +585,7 @@ public class DefaultConfigurer
             if( typeName != null )
             {
                 // Create the instance
-                final TypeFactory factory = m_typeManager.getFactory( roleInfo.getType() );
+                final TypeFactory factory = m_typeManager.getFactory( roleInfo.getName() );
                 return factory.create( typeName );
             }
         }
@@ -613,7 +613,7 @@ public class DefaultConfigurer
         final RoleInfo roleInfo = m_roleManager.getRoleByType( type );
         if( roleInfo != null )
         {
-            final TypeFactory factory = m_typeManager.getFactory( roleInfo.getType() );
+            final TypeFactory factory = m_typeManager.getFactory( roleInfo.getName() );
             if( factory.canCreate( name ) )
             {
                 return factory.create( name );
@@ -621,7 +621,7 @@ public class DefaultConfigurer
         }
 
         // Use the generic 'data-type' role.
-        final TypeFactory factory = m_typeManager.getFactory( DataType.class );
+        final TypeFactory factory = m_typeManager.getFactory( DataType.ROLE );
         if( !factory.canCreate( name ) )
         {
             throw new NoSuchPropertyException();

@@ -110,14 +110,14 @@ class Deployment
     /**
      * Returns the type factory for a role.
      */
-    public DefaultTypeFactory getFactory( final Class roleType )
+    public DefaultTypeFactory getFactory( final String roleName )
     {
-        DefaultTypeFactory factory = (DefaultTypeFactory)m_factories.get( roleType );
+        DefaultTypeFactory factory = (DefaultTypeFactory)m_factories.get( roleName );
 
         if( null == factory )
         {
             factory = new DefaultTypeFactory( m_classLoader );
-            m_factories.put( roleType, factory );
+            m_factories.put( roleName, factory );
         }
 
         return factory;

@@ -16,8 +16,6 @@ import org.apache.myrmidon.interfaces.deployer.ConverterDefinition;
 import org.apache.myrmidon.interfaces.deployer.Deployer;
 import org.apache.myrmidon.interfaces.deployer.TypeDefinition;
 import org.apache.myrmidon.interfaces.deployer.TypeDeployer;
-import org.apache.myrmidon.interfaces.role.RoleInfo;
-import org.apache.myrmidon.interfaces.role.RoleManager;
 import org.apache.myrmidon.interfaces.type.TypeException;
 import org.apache.myrmidon.interfaces.type.TypeFactory;
 
@@ -30,11 +28,8 @@ public class DefaultDeployerTest
     extends AbstractComponentTest
 {
     private static final String TEST_TYPE1_NAME = "test-type1";
-    private static final String DATA_TYPE_ROLE = "data-type";
-    private static final String CONVERTER_ROLE = "converter";
 
     private Deployer m_deployer;
-    private RoleManager m_roleManager;
     private Converter m_converter;
 
     public DefaultDeployerTest( final String name )
@@ -51,11 +46,6 @@ public class DefaultDeployerTest
         super.setUp();
         m_deployer = (Deployer)getServiceManager().lookup( Deployer.ROLE );
         m_converter = (Converter)getServiceManager().lookup( Converter.ROLE );
-
-        // Add some core roles
-        m_roleManager = (RoleManager)getServiceManager().lookup( RoleManager.ROLE );
-        m_roleManager.addRole( new RoleInfo( DataType.ROLE, DATA_TYPE_ROLE, DataType.class ) );
-        m_roleManager.addRole( new RoleInfo( Converter.ROLE, CONVERTER_ROLE, Converter.class ) );
     }
 
     /**
@@ -81,7 +71,7 @@ public class DefaultDeployerTest
         typeDeployer.deployType( typeDef );
 
         // Check the type has been registered
-        final TypeFactory typeFactory = getTypeManager().getFactory( DataType.class );
+        final TypeFactory typeFactory = getTypeManager().getFactory( DataType.ROLE );
         final Object result = typeFactory.create( typeName );
         assertTrue( result instanceof TestType1 );
     }
@@ -137,7 +127,7 @@ public class DefaultDeployerTest
     private void assertTypesNotRegistered() throws Exception
     {
         // Check the data-type
-        TypeFactory typeFactory = getTypeManager().getFactory( DataType.class );
+        TypeFactory typeFactory = getTypeManager().getFactory( DataType.ROLE );
         try
         {
             typeFactory.create( TEST_TYPE1_NAME );
@@ -149,9 +139,9 @@ public class DefaultDeployerTest
         }
 
         // Check the custom role implementation
-        typeFactory = getTypeManager().getFactory( TestRole1.class );
         try
         {
+            typeFactory = getTypeManager().getFactory( TestRole1.ROLE );
             typeFactory.create( TEST_TYPE1_NAME );
             fail();
         }
@@ -179,12 +169,12 @@ public class DefaultDeployerTest
     private void assertTypesRegistered() throws Exception
     {
         // Check the data-type
-        TypeFactory typeFactory = getTypeManager().getFactory( DataType.class );
+        TypeFactory typeFactory = getTypeManager().getFactory( DataType.ROLE );
         Object object = typeFactory.create( TEST_TYPE1_NAME );
         assertTrue( object instanceof TestType1 );
 
         // Check the custom role implementation
-        typeFactory = getTypeManager().getFactory( TestRole1.class );
+        typeFactory = getTypeManager().getFactory( TestRole1.ROLE );
         object = typeFactory.create( TEST_TYPE1_NAME );
         assertTrue( object instanceof TestType1 );
 

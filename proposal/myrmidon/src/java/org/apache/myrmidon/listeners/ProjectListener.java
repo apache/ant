@@ -17,6 +17,8 @@ package org.apache.myrmidon.listeners;
  */
 public interface ProjectListener
 {
+    String ROLE = ProjectListener.class.getName();
+
     /**
      * Notify the listener that a project is about to start.  This method
      * is called for top-level projects only.

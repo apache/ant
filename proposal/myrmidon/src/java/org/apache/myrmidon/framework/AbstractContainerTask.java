@@ -22,6 +22,8 @@ import org.apache.myrmidon.interfaces.executor.Executor;
 import org.apache.myrmidon.interfaces.type.TypeException;
 import org.apache.myrmidon.interfaces.type.TypeFactory;
 import org.apache.myrmidon.interfaces.type.TypeManager;
+import org.apache.myrmidon.interfaces.role.RoleInfo;
+import org.apache.myrmidon.interfaces.role.RoleManager;
 
 /**
  * This is the class that Task writers should extend to provide custom tasks.
@@ -171,35 +173,69 @@ public abstract class AbstractContainerTask
     protected final Object newInstance( final Class roleType, final String typeName )
         throws TaskException
     {
-        final TypeFactory typeFactory = getTypeFactory( roleType );
         try
         {
+            final RoleInfo role = getRoleByType( roleType );
+            final TypeFactory typeFactory = getTypeFactory( role.getName() );
             return typeFactory.create( typeName );
         }
-        catch( final TypeException te )
+        catch( Exception e )
         {
             final String message =
-                REZ.getString( "container.no-create-type.error",
-                               roleType.getName(),
-                               typeName );
-            throw new TaskException( message, te );
+                REZ.getString( "container.no-create-type-for-type.error", roleType.getName(), typeName );
+            throw new TaskException( message, e );
         }
+    }
+
+    /**
+     * Create an instance of type with specified type and in specified role.
+     */
+    protected final Object newInstance( final String roleName, final String typeName )
+        throws TaskException
+    {
+        try
+        {
+            final TypeFactory typeFactory = getTypeFactory( roleName );
+            return typeFactory.create( typeName );
+        }
+        catch( final Exception e )
+        {
+            final String message =
+                REZ.getString( "container.no-create-type.error", roleName, typeName );
+            throw new TaskException( message, e );
+        }
+    }
+
+    /**
+     * Looks up a role using the role type.
+     */
+    protected final RoleInfo getRoleByType( final Class roleType )
+        throws TaskException
+    {
+        final RoleManager roleManager = (RoleManager)getService( RoleManager.class );
+        final RoleInfo role = roleManager.getRoleByType( roleType );
+        if( role == null )
+        {
+            final String message = REZ.getString( "container.unknown-role-type.error", roleType.getName() );
+            throw new TaskException( message );
+        }
+        return role;
     }
 
     /**
      * Locates a type factory.
      */
-    protected final TypeFactory getTypeFactory( final Class roleType )
+    protected final TypeFactory getTypeFactory( final String roleName )
         throws TaskException
     {
-        final TypeManager typeManager = (TypeManager)getService( TypeManager.class );
         try
         {
-            return typeManager.getFactory( roleType );
+            final TypeManager typeManager = (TypeManager)getService( TypeManager.class );
+            return typeManager.getFactory( roleName );
         }
         catch( final TypeException te )
         {
-            final String message = REZ.getString( "container.no-factory.error", roleType.getName() );
+            final String message = REZ.getString( "container.no-factory.error", roleName );
             throw new TaskException( message, te );
         }
     }

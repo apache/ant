@@ -61,7 +61,7 @@ public class TypeInstanceTask
 
         try
         {
-            m_value = newInstance( DataType.class, configuration.getName() );
+            m_value = newInstance( DataType.ROLE, configuration.getName() );
         }
         catch( final Exception e )
         {

@@ -7,19 +7,18 @@
  */
 package org.apache.myrmidon.framework.factories;
 
+import org.apache.aut.vfs.FileSystemException;
 import org.apache.aut.vfs.impl.DefaultFileSystemManager;
 import org.apache.aut.vfs.provider.FileSystemProvider;
-import org.apache.aut.vfs.FileSystemException;
-import org.apache.avalon.framework.activity.Disposable;
-import org.apache.avalon.framework.activity.Initializable;
-import org.apache.avalon.framework.service.Serviceable;
-import org.apache.avalon.framework.service.ServiceManager;
-import org.apache.avalon.framework.service.ServiceException;
 import org.apache.avalon.excalibur.i18n.ResourceManager;
 import org.apache.avalon.excalibur.i18n.Resources;
-import org.apache.myrmidon.interfaces.type.TypeManager;
+import org.apache.avalon.framework.activity.Disposable;
+import org.apache.avalon.framework.activity.Initializable;
+import org.apache.avalon.framework.service.ServiceException;
+import org.apache.avalon.framework.service.ServiceManager;
+import org.apache.avalon.framework.service.Serviceable;
 import org.apache.myrmidon.interfaces.type.TypeFactory;
-import org.apache.myrmidon.interfaces.type.TypeException;
+import org.apache.myrmidon.interfaces.type.TypeManager;
 
 /**
  * The myrmidon FileSystemManager implementation.
@@ -34,22 +33,14 @@ public class VfsManager
     private final static Resources REZ
         = ResourceManager.getPackageResources( VfsManager.class );
 
-    private TypeFactory m_typeFactory;
+    private TypeManager m_typeManager;
 
     /**
      * Locate the services used by this service.
      */
     public void service( final ServiceManager serviceManager ) throws ServiceException
     {
-        final TypeManager typeManager = (TypeManager)serviceManager.lookup( TypeManager.ROLE );
-        try
-        {
-            m_typeFactory = typeManager.getFactory( FileSystemProvider.class );
-        }
-        catch( TypeException e )
-        {
-            throw new ServiceException( e.getMessage(), e );
-        }
+        m_typeManager = (TypeManager)serviceManager.lookup( TypeManager.ROLE );
     }
 
     /**
@@ -57,14 +48,16 @@ public class VfsManager
      */
     public void initialize() throws Exception
     {
+        final TypeFactory factory = m_typeManager.getFactory( FileSystemProvider.ROLE );
+
         // TODO - make this list configurable
 
         // Required providers
-        addProvider( new String[] { "zip", "jar" }, "zip", false );
+        addProvider( factory, new String[]{"zip", "jar"}, "zip", false );
 
         // Optional providers
-        addProvider( new String[] { "smb" }, "smb", true );
-        addProvider( new String[] { "ftp" }, "ftp", true );
+        addProvider( factory, new String[]{"smb"}, "smb", true );
+        addProvider( factory, new String[]{"ftp"}, "ftp", true );
     }
 
     /**
@@ -79,13 +72,14 @@ public class VfsManager
     /**
      * Registers a file system provider.
      */
-    public void addProvider( final String[] urlSchemes,
-                             final String providerName,
-                             final boolean ignoreIfNotPresent )
+    private void addProvider( final TypeFactory factory,
+                              final String[] urlSchemes,
+                              final String providerName,
+                              final boolean ignoreIfNotPresent )
         throws FileSystemException
     {
         // Create an instance
-        if( ignoreIfNotPresent && ! m_typeFactory.canCreate( providerName ) )
+        if( ignoreIfNotPresent && !factory.canCreate( providerName ) )
         {
             return;
         }
@@ -93,7 +87,7 @@ public class VfsManager
         final FileSystemProvider provider;
         try
         {
-            provider = (FileSystemProvider)m_typeFactory.create( providerName );
+            provider = (FileSystemProvider)factory.create( providerName );
         }
         catch( Exception e )
         {

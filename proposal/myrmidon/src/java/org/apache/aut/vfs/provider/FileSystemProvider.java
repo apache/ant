@@ -20,6 +20,8 @@ import org.apache.aut.vfs.FileSystemException;
  */
 public interface FileSystemProvider
 {
+    String ROLE = FileSystemProvider.class.getName();
+
     /**
      * Sets the context for this file system provider.  This method is called
      * before any of the other provider methods.

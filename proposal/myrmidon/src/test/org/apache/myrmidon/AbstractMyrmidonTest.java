@@ -31,16 +31,18 @@ public abstract class AbstractMyrmidonTest
     {
         super( name );
         final String baseDirProp = System.getProperty( "test.basedir" );
-        m_baseDir = new File( baseDirProp );
+        m_baseDir = getCanonicalFile( new File( baseDirProp ) );
         String packagePath = getClass().getName();
         int idx = packagePath.lastIndexOf( '.' );
         packagePath = packagePath.substring( 0, idx );
         packagePath = packagePath.replace( '.', File.separatorChar );
-        m_testBaseDir = new File( m_baseDir, packagePath );
+        m_testBaseDir = getCanonicalFile( new File( m_baseDir, packagePath ) );
     }
 
     /**
      * Locates a test resource, and asserts that the resource exists
+     *
+     * @param name path of the resource, relative to this test's base directory.
      */
     protected File getTestResource( final String name )
     {
@@ -49,6 +51,8 @@ public abstract class AbstractMyrmidonTest
 
     /**
      * Locates a test resource.
+     *
+     * @param name path of the resource, relative to this test's base directory.
      */
     protected File getTestResource( final String name, final boolean mustExist )
     {
@@ -67,13 +71,22 @@ public abstract class AbstractMyrmidonTest
     }
 
     /**
+     * Locates the base directory for this test.
+     */
+    protected File getTestDirectory()
+    {
+        return m_testBaseDir;
+    }
+
+    /**
      * Locates a test directory, creating it if it does not exist.
+     *
+     * @param name path of the directory, relative to this test's base directory.
      */
     protected File getTestDirectory( final String name )
     {
         File file = new File( m_testBaseDir, name );
         file = getCanonicalFile( file );
-
         assertTrue( "Test directory \"" + file + "\" does not exist or is not a directory.",
                     file.isDirectory() || file.mkdirs() );
         return file;

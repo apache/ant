@@ -14,6 +14,8 @@ package org.apache.myrmidon.interfaces.service;
  *
  * @author <a href="mailto:peter@apache.org">Peter Donald</a>
  * @version $Revision$ $Date$
+ *
+ * @ant:role shorthand="service-factory"
  */
 public interface ServiceFactory
 {

@@ -310,7 +310,7 @@ public class DefaultWorkspace
      * @exception TaskException if an error occurs
      */
     private void executeTarget( final ProjectEntry entry,
-                          final String targetName )
+                                final String targetName )
         throws TaskException
     {
         // Locate the target

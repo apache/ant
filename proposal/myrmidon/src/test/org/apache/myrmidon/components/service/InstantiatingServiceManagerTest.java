@@ -140,6 +140,6 @@ public class InstantiatingServiceManagerTest
         final DefaultTypeFactory typeFactory = new DefaultTypeFactory( getClass().getClassLoader() );
         typeFactory.addNameClassMapping( serviceRoleName, factoryClass.getName() );
         final TypeManager typeManager = (TypeManager)getServiceManager().lookup( TypeManager.ROLE );
-        typeManager.registerType( ServiceFactory.class, serviceRoleName, typeFactory );
+        typeManager.registerType( ServiceFactory.ROLE, serviceRoleName, typeFactory );
     }
 }

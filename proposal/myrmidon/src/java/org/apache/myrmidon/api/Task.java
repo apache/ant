@@ -25,6 +25,8 @@ package org.apache.myrmidon.api;
  */
 public interface Task
 {
+    String ROLE = Task.class.getName();
+
     /**
      * Specify the context in which the task operates in.
      * The Task will use the TaskContext to receive information

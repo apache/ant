@@ -148,7 +148,7 @@ public class DefaultDeployer
         final String roleShorthand = definition.getRoleShorthand();
         final String roleName = getRole( roleShorthand ).getName();
         final String factoryClassName = definition.getFactoryClass();
-        handleType( deployment, ServiceFactory.class, roleName, factoryClassName );
+        handleType( deployment, ServiceFactory.ROLE, roleName, factoryClassName );
     }
 
     /**
@@ -203,8 +203,8 @@ public class DefaultDeployer
             }
 
             // Deploy general-purpose type
-            final Class roleType = getRole( roleShorthand ).getType();
-            handleType( deployment, roleType, typeName, className );
+            final String roleName = getRole( roleShorthand ).getName();
+            handleType( deployment, roleName, typeName, className );
 
             if( getLogger().isDebugEnabled() )
             {
@@ -219,15 +219,15 @@ public class DefaultDeployer
      * Handles a type definition.
      */
     private void handleType( final Deployment deployment,
-                             final Class roleType,
+                             final String roleName,
                              final String typeName,
                              final String className )
         throws Exception
     {
         // TODO - detect duplicates
-        final DefaultTypeFactory factory = deployment.getFactory( roleType );
+        final DefaultTypeFactory factory = deployment.getFactory( roleName );
         factory.addNameClassMapping( typeName, className );
-        m_typeManager.registerType( roleType, typeName, factory );
+        m_typeManager.registerType( roleName, typeName, factory );
     }
 
     /**
@@ -240,9 +240,9 @@ public class DefaultDeployer
         throws Exception
     {
         m_converterRegistry.registerConverter( className, source, destination );
-        final DefaultTypeFactory factory = deployment.getFactory( Converter.class );
+        final DefaultTypeFactory factory = deployment.getFactory( Converter.ROLE );
         factory.addNameClassMapping( className, className );
-        m_typeManager.registerType( Converter.class, className, factory );
+        m_typeManager.registerType( Converter.ROLE, className, factory );
 
         if( getLogger().isDebugEnabled() )
         {

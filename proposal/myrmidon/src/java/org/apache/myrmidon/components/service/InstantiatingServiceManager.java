@@ -63,6 +63,7 @@ public class InstantiatingServiceManager
     private RoleManager m_roleManager;
     private ServiceManager m_serviceManager;
     private Parameters m_parameters;
+    private TypeManager m_typeManager;
 
     public void parameterize( Parameters parameters ) throws ParameterException
     {
@@ -83,15 +84,7 @@ public class InstantiatingServiceManager
     {
         m_serviceManager = manager;
         m_roleManager = (RoleManager)manager.lookup( RoleManager.ROLE );
-        final TypeManager typeManager = (TypeManager)manager.lookup( TypeManager.ROLE );
-        try
-        {
-            m_typeFactory = typeManager.getFactory( ServiceFactory.class );
-        }
-        catch( final TypeException e )
-        {
-            throw new ServiceException( e.getMessage(), e );
-        }
+        m_typeManager = (TypeManager)manager.lookup( TypeManager.ROLE );
     }
 
     /**
@@ -129,12 +122,27 @@ public class InstantiatingServiceManager
         {
             return true;
         }
-        if( m_typeFactory.canCreate( serviceRole ) )
+        try
         {
-            return true;
+            return getFactory().canCreate( serviceRole );
         }
-
+        catch( TypeException e )
+        {
+            // Throw away exception - yuck
+        }
         return false;
+    }
+
+    /**
+     * Locates the type factory to use to instantiate service factories.
+     */
+    private TypeFactory getFactory() throws TypeException
+    {
+        if( m_typeFactory == null )
+        {
+            m_typeFactory = m_typeManager.getFactory( ServiceFactory.ROLE );
+        }
+        return m_typeFactory;
     }
 
     /**
@@ -169,7 +177,7 @@ public class InstantiatingServiceManager
         try
         {
             // Create the factory
-            final ServiceFactory factory = (ServiceFactory)m_typeFactory.create( serviceRole );
+            final ServiceFactory factory = (ServiceFactory)getFactory().create( serviceRole );
             setupObject( factory );
 
             // Create the service

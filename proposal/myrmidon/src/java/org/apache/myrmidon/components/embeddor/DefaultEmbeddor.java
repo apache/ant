@@ -38,11 +38,11 @@ import org.apache.myrmidon.interfaces.embeddor.Embeddor;
 import org.apache.myrmidon.interfaces.executor.Executor;
 import org.apache.myrmidon.interfaces.extensions.ExtensionManager;
 import org.apache.myrmidon.interfaces.model.Project;
+import org.apache.myrmidon.interfaces.property.PropertyResolver;
 import org.apache.myrmidon.interfaces.role.RoleManager;
 import org.apache.myrmidon.interfaces.service.MultiSourceServiceManager;
 import org.apache.myrmidon.interfaces.type.TypeFactory;
 import org.apache.myrmidon.interfaces.type.TypeManager;
-import org.apache.myrmidon.interfaces.property.PropertyResolver;
 import org.apache.myrmidon.interfaces.workspace.Workspace;
 import org.apache.myrmidon.listeners.ProjectListener;
 
@@ -119,7 +119,7 @@ public class DefaultEmbeddor
                                               final Parameters parameters )
         throws Exception
     {
-        final TypeFactory factory = m_typeManager.getFactory( ProjectBuilder.class );
+        final TypeFactory factory = m_typeManager.getFactory( ProjectBuilder.ROLE );
         final ProjectBuilder builder = (ProjectBuilder)factory.create( type );
         setupObject( builder, m_workspaceServiceManager, parameters );
         return builder;
@@ -146,7 +146,7 @@ public class DefaultEmbeddor
     public ProjectListener createListener( String name )
         throws Exception
     {
-        final TypeFactory factory = m_typeManager.getFactory( ProjectListener.class );
+        final TypeFactory factory = m_typeManager.getFactory( ProjectListener.ROLE );
         return (ProjectListener)factory.create( name );
     }
 
