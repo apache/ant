@@ -102,20 +102,21 @@ else
 	}
 
 #jikes
-my $ANT_OPTS=$ENV{ANT_OPTS};
+my @ANT_OPTS=split $ENV{ANT_OPTS};
 if($ENV{JIKESPATH} ne "")
 	{
-	$ANT_OPTS.=" -Djikes.class.path=$ENV{JIKESPATH}";
+	push @ANT_OPTS, "-Djikes.class.path=$ENV{JIKESPATH}";
 	}
 
 #construct arguments to java
 
-my $METHOD = "org.apache.tools.ant.Main";
-my $ARGS = "@ARGV";
-my $JAVAPARAMS = "-classpath $localpath -Dant.home=$HOME ";
-my $COMMAND = "$JAVACMD $JAVAPARAMS $ANT_OPTS $METHOD $ARGS" ;
+my @ARGS;
+push @ARGS, "-classpath", "$localpath", "-Dant.home=$HOME";
+push @ARGS, @ANT_OPTS;
+push @ARGS, "org.apache.tools.ant.Main";
+push @ARGS, @ARGV;
 
-print "\n $COMMAND\n\n" if ($debug);
-system $COMMAND;
+print "\n $JAVACMD @ARGS\n\n" if ($debug);
+system $JAVACMD, @ARGS;
 
 
