@@ -5,9 +5,9 @@
  * version 1.1, a copy of which has been included  with this distribution in
  * the LICENSE.txt file.
  */
-package org.apache.myrmidon.components.workspace;
+package org.apache.myrmidon.components.property;
 
-import org.apache.myrmidon.interfaces.workspace.PropertyResolver;
+import org.apache.myrmidon.interfaces.property.PropertyResolver;
 import org.apache.avalon.framework.context.Context;
 import org.apache.avalon.framework.context.ContextException;
 

@@ -7,7 +7,8 @@
  */
 package org.apache.myrmidon.components.workspace;
 
-import org.apache.myrmidon.interfaces.workspace.PropertyResolver;
+import org.apache.myrmidon.interfaces.property.PropertyResolver;
+import org.apache.myrmidon.components.property.ClassicPropertyResolver;
 
 /**
  * A test for {@link ClassicPropertyResolver}

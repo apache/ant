@@ -14,7 +14,8 @@ import org.apache.avalon.excalibur.i18n.Resources;
 import org.apache.avalon.framework.context.Context;
 import org.apache.myrmidon.api.TaskException;
 import org.apache.myrmidon.components.AbstractComponentTest;
-import org.apache.myrmidon.interfaces.workspace.PropertyResolver;
+import org.apache.myrmidon.components.property.DefaultPropertyResolver;
+import org.apache.myrmidon.interfaces.property.PropertyResolver;
 
 /**
  * Functional tests for {@link DefaultPropertyResolver}.

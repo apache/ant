@@ -26,7 +26,7 @@ import org.apache.myrmidon.components.deployer.DefaultDeployer;
 import org.apache.myrmidon.components.extensions.DefaultExtensionManager;
 import org.apache.myrmidon.components.role.DefaultRoleManager;
 import org.apache.myrmidon.components.type.DefaultTypeManager;
-import org.apache.myrmidon.components.workspace.DefaultPropertyResolver;
+import org.apache.myrmidon.components.property.DefaultPropertyResolver;
 import org.apache.myrmidon.interfaces.classloader.ClassLoaderManager;
 import org.apache.myrmidon.interfaces.configurer.Configurer;
 import org.apache.myrmidon.interfaces.converter.ConverterRegistry;
@@ -37,7 +37,7 @@ import org.apache.myrmidon.interfaces.role.RoleManager;
 import org.apache.myrmidon.interfaces.type.DefaultTypeFactory;
 import org.apache.myrmidon.interfaces.type.TypeException;
 import org.apache.myrmidon.interfaces.type.TypeManager;
-import org.apache.myrmidon.interfaces.workspace.PropertyResolver;
+import org.apache.myrmidon.interfaces.property.PropertyResolver;
 
 /**
  * A base class for tests for the default components.

@@ -21,7 +21,7 @@ import org.apache.avalon.framework.logger.Logger;
 import org.apache.myrmidon.api.TaskContext;
 import org.apache.myrmidon.api.TaskException;
 import org.apache.myrmidon.interfaces.model.DefaultNameValidator;
-import org.apache.myrmidon.interfaces.workspace.PropertyResolver;
+import org.apache.myrmidon.interfaces.property.PropertyResolver;
 
 /**
  * Default implementation of TaskContext.
