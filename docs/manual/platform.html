@@ -50,14 +50,15 @@ it is treated like any other Unix.
 <p>To give the same level of sophisticated control as Ant's startup scripts on other platforms, it was decided to make the main ant startup on NetWare be via a Perl Script, "runant.pl".  This is found in the bin directory (for instance - bootstrap\bin or dist\bin).</p>
 
 <p>One important item of note is that you need to set up the following to run ant:</p>
-<ul><li><code>CLASSPATH</code> - put ant.jar, crimson.jar, optional.jar, and any other needed jars on the system classpath.</li>
+<ul><li><code>CLASSPATH</code> - put ant.jar, xercesImpl.jar, xmlParserAPIs.jar and any other needed jars on the system classpath.</li>
    <li><code>ANT_OPTS</code> - On NetWare, <code>ANT_OPTS</code> needs to include a parameter of the form, <nobr>"-envCWD=<code>ANT_HOME</code>"</nobr>, with <code>ANT_HOME</code> being the fully expanded location of Ant, <b>not</b> an environment variable.  This is due to the fact that the NetWare System Console has no notion of a current working directory.</li>
 </ul>
 <p>It is suggested that you create up an ant.ncf that sets up these parameters, and calls <code>perl ANT_HOME/dist/bin/runant.pl</code></p>
 <p>The following is an example of such an NCF file(assuming ant is installed in <nobr>'sys:/jakarta-ant/'):</nobr></p>
 <code>
    &nbsp;&nbsp;&nbsp;envset CLASSPATH=SYS:/jakarta-ant/bootstrap/lib/ant.jar<br />
-   &nbsp;&nbsp;&nbsp;envset CLASSPATH=$CLASSPATH;SYS:/jakarta-ant/lib/crimson.jar <br />
+   &nbsp;&nbsp;&nbsp;envset CLASSPATH=$CLASSPATH;SYS:/jakarta-ant/lib/xercesImpl.jar <br />
+   &nbsp;&nbsp;&nbsp;envset CLASSPATH=$CLASSPATH;SYS:/jakarta-ant/lib/xmlParserAPIs.jar <br />
    &nbsp;&nbsp;&nbsp;envset CLASSPATH=$CLASSPATH;SYS:/jakarta-ant/lib/optional/junit.jar <br />
    &nbsp;&nbsp;&nbsp;envset CLASSPATH=$CLASSPATH;SYS:/jakarta-ant/bootstrap/lib/optional.jar <br />
 <br />

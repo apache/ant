@@ -261,17 +261,7 @@ public class CSharp
             "Accessibility.dll;" +
             "cscompmgd.dll;" +
             "CustomMarshalers.dll;" +
-            "IEExecRemote.dll;" +
-            "IEHost.dll;" +
-            "IIEHost.dll;" +
-            "ISymWrapper.dll;" +
-            "Microsoft.JScript.dll;" +
-            "Microsoft.VisualBasic.dll;" +
-            "Microsoft.VisualC.dll;" +
-            "Microsoft.Vsa.dll;" +
             "Mscorcfg.dll;" +
-            "office.dll;" +
-            "RegCode.dll;" +
             "System.Configuration.Install.dll;" +
             "System.Data.dll;" +
             "System.Design.dll;" +
@@ -753,7 +743,8 @@ public class CSharp
                 targetType.equals("module") || targetType.equals("winexe")) {
             targetType = targetType;
         } else {
-            throw new BuildException("targetType " + targetType + " is not a valid type");
+            throw new BuildException("targetType " + targetType 
+                    + " is not one of 'exe', 'module', 'winexe' or 'library'" );
         }
     }
 

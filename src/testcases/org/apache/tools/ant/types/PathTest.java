@@ -282,6 +282,32 @@ public class PathTest extends TestCase {
             assertTrue("temp resolved relative to project\'s basedir", 
                    l[3].endsWith("\\temp"));
          }
+
+        // try a multi-part netware-volume length path with UNIX
+        // separator (this testcase if from an actual bug that was
+        // found, in AvailableTest, which uses PathTokenizer)
+        p = new Path(project, 
+                     "SYS:\\JAVA/lib/rt.jar:SYS:\\JAVA/lib/classes.zip");
+        l = p.list();
+        if (isUnixStyle) {
+            assertEquals("no drives on Unix", 3, l.length);
+            assertTrue("sys resolved relative to project\'s basedir", 
+                   l[0].endsWith("/SYS"));
+            assertEquals("/JAVA/lib/rt.jar", l[1]);
+            assertEquals("/JAVA/lib/classes.zip", l[2]);
+        } else if (isNetWare) {
+            assertEquals("volumes on NetWare", 2, l.length);
+            assertEquals("sys:\\java\\lib\\rt.jar", l[0].toLowerCase(Locale.US));
+            assertEquals("sys:\\java\\lib\\classes.zip", l[1].toLowerCase(Locale.US));
+        } else {
+            assertEquals("no multiple character-length volumes on Windows", 3, l.length);
+            assertTrue("sys resolved relative to project\'s basedir", 
+                   l[0].endsWith("\\SYS"));
+            assertTrue("java/lib/rt.jar resolved relative to project\'s basedir", 
+                   l[1].endsWith("\\JAVA\\lib\\rt.jar"));
+            assertTrue("java/lib/classes.zip resolved relative to project\'s basedir", 
+                   l[2].endsWith("\\JAVA\\lib\\classes.zip"));
+        }
     }
 
     public void testConstructorMixedStyle() {

@@ -55,6 +55,7 @@
 package org.apache.tools.ant.taskdefs;
 
 import org.apache.tools.ant.BuildException;
+import org.apache.tools.ant.Project;
 import org.apache.tools.ant.taskdefs.condition.Condition;
 import org.apache.tools.ant.taskdefs.condition.ConditionBase;
 
@@ -114,7 +115,12 @@ public class ConditionTask extends ConditionBase {
         
         Condition c = (Condition) getConditions().nextElement();
         if (c.eval()) {
+            log("Condition true; setting "+property+" to "+value,
+                Project.MSG_DEBUG);
             getProject().setNewProperty(property, value);
+        } else {
+            log("Condition false; not setting "+property,
+                Project.MSG_DEBUG);
         }
     }
 }

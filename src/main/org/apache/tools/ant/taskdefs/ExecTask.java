@@ -342,7 +342,7 @@ public class ExecTask extends Task {
         }
         if (baos != null) {
             BufferedReader in =
-                new BufferedReader(new StringReader(baos.toString()));
+                new BufferedReader(new StringReader(Execute.toString(baos)));
             String line = null;
             StringBuffer val = new StringBuffer();
             while ((line = in.readLine()) != null) {

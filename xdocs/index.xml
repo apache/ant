@@ -9,10 +9,10 @@
 
 <body>
 
-  <section name="Ant 1.5Beta1">
-    <h3>Apache Ant 1.5Beta1 Available !</h3>
-    <p>Version 1.5Beta1 of Ant has been released. It is available for download 
-      <a href="http://jakarta.apache.org/builds/jakarta-ant/release/v1.5Beta1/">
+  <section name="Ant 1.5Beta2">
+    <h3>Apache Ant 1.5Beta2 Available !</h3>
+    <p>Version 1.5Beta2 of Ant has been released. It is available for download 
+      <a href="http://jakarta.apache.org/builds/jakarta-ant/release/v1.5Beta2/">
       here</a>.
     </p>
     <p><a href="./antnews.html">Read more news about Ant</a></p>

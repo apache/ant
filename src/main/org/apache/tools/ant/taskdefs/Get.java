@@ -64,6 +64,7 @@ import java.net.HttpURLConnection;
 import java.util.Date;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Task;
+import org.apache.tools.ant.Project;
 import org.apache.tools.ant.util.FileUtils;
 import org.apache.tools.ant.util.JavaEnvUtils;
 
@@ -176,8 +177,13 @@ public class Get extends Task {
                 // test for 401 result (HTTP only)
                 if (httpConnection.getResponseCode()
                     == HttpURLConnection.HTTP_UNAUTHORIZED)  {
-                    log("Not authorized - check " + dest + " for details");
-                    return;
+                    String message="HTTP Authorization failure";
+                    if(ignoreErrors) {
+                        log(message,Project.MSG_WARN);
+                        return;
+                    } else {
+                        throw new BuildException(message);
+                    }
                 }
 
             }

@@ -59,6 +59,13 @@ href="../develop.html#writingowntask">Writing your own task</a>&quot;.</p>
     <code>resource</code>.</td>
     <td align="center" valign="top">No</td>
   </tr>
+  <tr>
+    <td valign="top">loaderRef</td> <td valign="top">the name of the loader that is
+    used to load the class, constructed from the specified classpath. Use this to
+    allow multiple tasks/types to be loaded with the same loader, so they can call
+    each other. ( introduced in ant1.5 )</td>
+    <td align="center" valign="top">No</td>
+  </tr>
 </table>
 <h3>Parameters specified as nested elements</h3>
 <h4>classpath</h4>
@@ -70,7 +77,7 @@ href="../using.html#path">PATH like structure</a> and can also be set via a nest
 <p>makes a task called <code>myjavadoc</code> available to Ant. The class <code>com.mydomain.JavadocTask</code>
 implements the task.</p>
 <hr>
-<p align="center">Copyright &copy; 2001 Apache Software Foundation. All rights
+<p align="center">Copyright &copy; 2000-2002 Apache Software Foundation. All rights
 Reserved.</p>
 
 </body>

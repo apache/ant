@@ -61,12 +61,14 @@ import org.apache.tools.ant.Project;
 import org.apache.tools.ant.Task;
 import org.apache.tools.ant.taskdefs.optional.extension.resolvers.LocationResolver;
 import org.apache.tools.ant.taskdefs.optional.extension.resolvers.URLResolver;
+import org.apache.tools.ant.taskdefs.optional.extension.resolvers.AntResolver;
 
 /**
  * Try to locate a jar to satisfy an extension and place
  * location of jar into property.
  *
  * @author <a href="mailto:peter@apache.org">Peter Donald</a>
+ * @author <a href="mailto:jeff@socialchange.net.au">Jeff Turner</a>
  * @ant.task name="jarlib-resolver"
  */
 public class JarLibResolveTask
@@ -133,6 +135,11 @@ public class JarLibResolveTask
     public void addConfiguredUrl( final URLResolver url )
     {
         m_resolvers.add( url );
+    }
+
+    public void addConfiguredAnt( final AntResolver ant )
+    {
+        m_resolvers.add( ant );
     }
 
     /**

@@ -492,10 +492,14 @@ public class WeblogicDeploymentTool extends GenericDeploymentTool {
                     javaTask.createArg().setLine(compiler);
                 }
             }
-            
-            javaTask.createArg().setValue("-classpath");
-            javaTask.createArg().setPath(getCombinedClasspath());
-            
+
+            Path combinedClasspath = getCombinedClasspath();
+            if (combinedClasspath != null
+                 && combinedClasspath.toString().trim().length() > 0) {
+                javaTask.createArg().setValue("-classpath");
+                javaTask.createArg().setPath(combinedClasspath);
+            }
+
             javaTask.createArg().setValue(sourceJar.getPath());
             javaTask.createArg().setValue(destJar.getPath());
 
@@ -616,7 +620,7 @@ public class WeblogicDeploymentTool extends GenericDeploymentTool {
                 }
 
                 //Cycle Through generic and make sure its in weblogic
-                ClassLoader genericLoader 
+                ClassLoader genericLoader
                     = getClassLoaderFromJar(genericJarFile);
 
                 for (Enumeration e = genericEntries.keys(); e.hasMoreElements();) {
@@ -711,7 +715,7 @@ public class WeblogicDeploymentTool extends GenericDeploymentTool {
                     log("Weblogic Jar rebuild needed due to changed "
                          + "interface or XML", Project.MSG_VERBOSE);
                 }
-                
+
                 if (genericLoader instanceof AntClassLoader) {
                     AntClassLoader loader = (AntClassLoader)genericLoader;
                     loader.cleanup();

@@ -847,6 +847,28 @@
           </tr>
         </table>
       </subsection>
+
+
+      <subsection name="WebSphere Studio Application Developer">
+
+        <p>WSAD features Ant integrate by virtue of being built on the Eclipse tools platform.</p>
+
+        <table>
+          <tr>
+            <th>Compatibility:</th>
+            <td>bundles Ant 1.4.1</td>
+          </tr>
+          <tr>
+            <th>Article:</th>
+            <td><a href="http://www7b.software.ibm.com/wsdd/library/techarticles/0203_searle/searle1.html">Ant Integration Part1</a></td>
+          </tr>
+          <tr>
+            <th>License:</th>
+            <td>Commercial</td>
+          </tr>
+        </table>
+      </subsection>
+
     </section>
     
   </body>

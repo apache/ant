@@ -58,6 +58,8 @@ import java.io.PrintWriter;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.FilenameFilter;
+import java.net.URL;
+import java.net.MalformedURLException;
 import java.util.Locale;
 import java.util.Vector;
 import java.util.Enumeration;
@@ -710,6 +712,7 @@ public class Javadoc extends Task {
     public void setDoclet(String docletName) {
         if (doclet == null) {
             doclet = new DocletInfo();
+            doclet.setProject(getProject());
         }
         doclet.setName(docletName);
     }
@@ -722,6 +725,7 @@ public class Javadoc extends Task {
     public void setDocletPath(Path docletPath) {
         if (doclet == null) {
             doclet = new DocletInfo();
+            doclet.setProject(getProject());
         }
         doclet.setPath(docletPath);
     }
@@ -735,6 +739,7 @@ public class Javadoc extends Task {
     public void setDocletPathRef(Reference r) {
         if (doclet == null) {
             doclet = new DocletInfo();
+            doclet.setProject(getProject());
         }
         doclet.createPath().setRefid(r);
     }
@@ -1423,7 +1428,6 @@ public class Javadoc extends Task {
      * @since 1.5
      */
     public void addFileset(FileSet fs) {
-        fs.createInclude().setName("**/*.java");
         fileSets.addElement(fs);
     }
 
@@ -1434,6 +1438,11 @@ public class Javadoc extends Task {
 
         Vector packagesToDoc = new Vector();
         Path sourceDirs = new Path(getProject());
+
+        if (sourcePath != null) {
+            sourceDirs.addExisting(sourcePath);
+        }
+        
         parsePackages(packagesToDoc, sourceDirs);
 
         if (packagesToDoc.size() != 0 && sourceDirs.size() == 0) {
@@ -1550,21 +1559,32 @@ public class Javadoc extends Task {
                 for (Enumeration e = links.elements(); e.hasMoreElements();) {
                     LinkArgument la = (LinkArgument) e.nextElement();
 
-                    if (la.getHref() == null) {
-                        throw new BuildException("Links must provide the URL "
-                                                 + "to the external class "
-                                                 + "documentation.");
-                    }
+                    if (la.getHref() == null || la.getHref().length() == 0) {
+                        log("No href was given for the link - skipping", 
+                            Project.MSG_VERBOSE);
+                        continue;
+                    } else {
+                        // is the href a valid URL
+                        try {
+                            URL base = new URL("file://.");
+                            URL testHref = new URL(base, la.getHref());
+                        } catch (MalformedURLException mue) {
+                            // ok - just skip
+                            log("Link href \"" + la.getHref() 
+                                + "\" is not a valid url - skipping link", 
+                                Project.MSG_WARN);
+                            continue;
+                        }
+                    }                                
+                        
 
                     if (la.isLinkOffline()) {
                         File packageListLocation = la.getPackagelistLoc();
                         if (packageListLocation == null) {
                             throw new BuildException("The package list "
-                                                     + " location for link " 
-                                                     + la.getHref()
-                                                     + " must be provided "
-                                                     + "because the link is "
-                                                     + "offline");
+                                + " location for link " + la.getHref()
+                                + " must be provided because the link is "
+                                + "offline");
                         }
                         File packageList = 
                             new File(packageListLocation, "package-list");
@@ -1769,6 +1789,10 @@ public class Javadoc extends Task {
         Enumeration enum = fileSets.elements();
         while (enum.hasMoreElements()) {
             FileSet fs = (FileSet) enum.nextElement();
+            if (!fs.hasPatterns() && !fs.hasSelectors()) {
+                fs = (FileSet) fs.clone();
+                fs.createInclude().setName("**/*.java");
+            }
             File baseDir = fs.getDir(getProject());
             DirectoryScanner ds = fs.getDirectoryScanner(getProject());
             String[] files = ds.getIncludedFiles();
@@ -1858,6 +1882,8 @@ public class Javadoc extends Task {
                 }
             }
             if (containsPackages) {
+                // We don't need to care for duplicates here,
+                // Path.list does it for us.
                 sp.createPathElement().setLocation(baseDir);
             } else {
                 log(baseDir + " doesn\'t contain any packages, dropping it.",

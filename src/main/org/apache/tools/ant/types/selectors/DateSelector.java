@@ -62,6 +62,7 @@ import java.util.Locale;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.types.EnumeratedAttribute;
 import org.apache.tools.ant.types.Parameter;
+import org.apache.tools.ant.taskdefs.condition.Os;
 
 /**
  * Selector that chooses files based on their last modified date.
@@ -74,19 +75,24 @@ public class DateSelector extends BaseExtendSelector {
     private long millis = -1;
     private String dateTime = null;
     private boolean includeDirs = false;
-    private int cmp = 0;
+    private int granularity = 0;
+    private int cmp = 2;
     public final static String MILLIS_KEY = "millis";
     public final static String DATETIME_KEY = "datetime";
     public final static String CHECKDIRS_KEY = "checkdirs";
+    public final static String GRANULARITY_KEY = "granularity";
     public final static String WHEN_KEY = "when";
 
     public DateSelector() {
+        if (Os.isFamily("dos")) {
+            granularity = 2000;
+        }
     }
 
     public String toString() {
         StringBuffer buf = new StringBuffer("{dateselector date: ");
         buf.append(dateTime);
-        buf.append("compare: ");
+        buf.append(" compare: ");
         if (cmp == 0) {
             buf.append("before");
         }
@@ -95,6 +101,8 @@ public class DateSelector extends BaseExtendSelector {
         } else {
             buf.append("equal");
         }
+        buf.append(" granularity: ");
+        buf.append(granularity);
         buf.append("}");
         return buf.toString();
     }
@@ -107,6 +115,13 @@ public class DateSelector extends BaseExtendSelector {
      */
     public void setMillis(long millis) {
         this.millis = millis;
+    }
+
+    /**
+     * Returns the millisecond value the selector is set for.
+     */
+    public long getMillis() {
+        return millis;
     }
 
     /**
@@ -147,6 +162,14 @@ public class DateSelector extends BaseExtendSelector {
     }
 
     /**
+     * Sets the number of milliseconds leeway we will give before we consider
+     * a file not to have matched a date.
+     */
+    public void setGranularity(int granularity) {
+        this.granularity = granularity;
+    }
+
+    /**
      * Sets the type of comparison to be done on the file's last modified
      * date.
      *
@@ -157,7 +180,7 @@ public class DateSelector extends BaseExtendSelector {
     }
 
     /**
-     * When using this as a dynamic selector, this method will be called.
+     * When using this as a custom selector, this method will be called.
      * It translates each parameter into the appropriate setXXX() call.
      *
      * @param parameters the complete set of parameters for this selector
@@ -181,6 +204,15 @@ public class DateSelector extends BaseExtendSelector {
                 }
                 else if (CHECKDIRS_KEY.equalsIgnoreCase(paramname)) {
                     setCheckdirs(Project.toBoolean(parameters[i].getValue()));
+                }
+                else if (GRANULARITY_KEY.equalsIgnoreCase(paramname)) {
+                    try {
+                        setGranularity(new Integer(parameters[i].getValue()
+                                ).intValue());
+                    } catch (NumberFormatException nfe) {
+                        setError("Invalid granularity setting " +
+                            parameters[i].getValue());
+                    }
                 }
                 else if (WHEN_KEY.equalsIgnoreCase(paramname)) {
                     TimeComparisons cmp = new TimeComparisons();
@@ -225,13 +257,13 @@ public class DateSelector extends BaseExtendSelector {
             return true;
         }
         if (cmp == 0) {
-            return (file.lastModified() < millis);
+            return ((file.lastModified() - granularity) < millis);
         }
         else if (cmp == 1) {
-            return (file.lastModified() > millis);
+            return ((file.lastModified() + granularity) > millis);
         }
         else {
-            return (file.lastModified() == millis);
+            return (Math.abs(file.lastModified() -  millis) <= granularity);
         }
     }
 

@@ -80,6 +80,7 @@ public class EchoPropertiesTest extends BuildFileTest {
     private static final String GOOD_OUTFILE_XML = "test.xml";
     private static final String PREFIX_OUTFILE = "test-prefix.properties";
     private static final String TEST_VALUE = "isSet";
+    private static final String BAD_OUTFILE = ".";
 
     public EchoPropertiesTest(String name) {
         super(name);
@@ -230,6 +231,25 @@ public class EchoPropertiesTest extends BuildFileTest {
         props.list(System.out);
         assertEquals("test property not found ",
                      TEST_VALUE, props.getProperty("test.property"));
+/*
+        // read in the file
+        FileReader fr = new FileReader( f );
+        try {
+            BufferedReader br = new BufferedReader( fr );
+            String read = null;
+            while ( (read = br.readLine()) != null)
+            {
+                if (read.indexOf("test.property" + TEST_VALUE) >= 0)
+                {
+                    // found the property we set - it's good.
+                    return;
+                }
+            }
+            fail( "did not encounter set property in generated file." );
+        } finally {
+            try { fr.close(); } catch(IOException e) {}
+        }
+*/
     }
 
 

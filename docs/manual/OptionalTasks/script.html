@@ -15,7 +15,14 @@
 See <a href="../install.html#librarydependencies">Library Dependencies</a> for more information.</p>
 <p>All items (tasks, targets, etc) of the running project are
 accessible from the script, using either their <code>name</code> or
-<code>id</code> attributes.  The name "project" is a pre-defined reference to the Project, which can be used instead of the project name.</p>
+<code>id</code> attributes (as long as their names are considered
+valid Java identifiers, that is). 
+The name "project" is a pre-defined reference to the Project, which can be
+used instead of the project name.</p>
+<p><b>BeanShell users:</b> This task now natively supports the BeanShell
+scripting language, using language="beanshell". The BeanShell engine is
+still required.
+</p>
 <p>Scripts can do almost anything a task written in Java could do.</p>
 <h3>Parameters</h3>
 <table border="1" cellpadding="2" cellspacing="0">
@@ -115,7 +122,7 @@ BUILD SUCCESSFUL
 </pre></blockquote>
 
 <hr>
-<p align="center">Copyright &copy; 2001-2002 Apache Software Foundation. All rights
+<p align="center">Copyright &copy; 2000-2002 Apache Software Foundation. All rights
 Reserved.</p>
 
 </body>

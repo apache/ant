@@ -75,7 +75,7 @@ public class JavacExternal extends DefaultCompilerAdapter {
         Commandline cmd = new Commandline();
         cmd.setExecutable(getJavac().getJavacExecutable());
         setupModernJavacCommandlineSwitches(cmd);
-        int firstFileName = cmd.size();
+        int firstFileName = assumeJava11() ? -1 : cmd.size();
         logAndAddFilesToCompile(cmd);
 
         return 

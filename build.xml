@@ -52,6 +52,8 @@
   <property name="regexp.package" value="${util.package}/regexp"/>
 
   <property name="manifest" value="src/etc/manifest"/>
+  
+  <property name="unfiltered.files" value="**/*.gif,**/*.jpg,**/*.ico"/>
 
 
   <!--
@@ -65,6 +67,7 @@
   <property name="build.lib" value="${build.dir}/lib"/>
   <property name="build.javadocs" value="${build.dir}/javadocs"/>
   <property name="build.tests" value="${build.dir}/testcases"/>
+  <property name="build.tests.javadocs" value="${build.dir}/javadocs.test/"/>
 
   <path id="classpath">
   </path>
@@ -118,6 +121,8 @@
   -->
   <!-- depends on JDK version -->
   <patternset id="needs.jdk1.2+">
+    <exclude name="${optional.package}/extension/**/*.java"
+             unless="jdk1.2+" />
     <exclude name="${util.package}/optional/NoExitSecurityManager.java"
              unless="jdk1.2+" />
     <exclude name="${optional.package}/Javah.java"
@@ -135,6 +140,10 @@
              unless="jdk1.2+" />
     <!-- use various 1.2 methods -->
     <exclude name="${optional.package}/sitraka/**/*.java"
+             unless="jdk1.2+" />
+    <exclude name="${optional.package}/ide/VAJ*.java"
+             unless="jdk1.2+" />
+    <exclude name="${optional.package}/starteam/*.java"
              unless="jdk1.2+" />
   </patternset>
   <patternset id="needs.jdk1.3+">
@@ -294,6 +303,20 @@
   </patternset>
   <patternset id="teststhatfail">
   </patternset>
+  
+  <!--
+       ===================================================================
+         Set up a patternsets that matches the parts of our JUnit testsuite
+         that may be useful for task developers.
+       ===================================================================
+  -->
+  <patternset id="useful.tests">
+    <include name="${ant.package}/BuildFileTest*" />
+    <include name="${regexp.package}/RegexpMatcherTest*" />
+    <include name="${regexp.package}/RegexpTest*" />
+    <include name="${optional.package}/AbstractXSLTLiaisonTest*" />
+    <include name="${ant.package}/types/AbstractFileSetTest*" />
+  </patternset>
 
   <!--
        ===================================================================
@@ -317,6 +340,16 @@
     <available property="trax.present"
                classname="javax.xml.transform.Transformer"
                classpathref="classpath" />
+    <condition property="trax.impl.present">
+      <or>
+        <and>
+          <isset property="javax.xml.transform.TransformerFactory"/>
+          <available classname="${javax.xml.transform.TransformerFactory}"
+                     classpathref="classpath" />
+        </and>
+        <available resource="META-INF/services/javax.xml.transform.TransformerFactory"/>
+      </or>
+    </condition>
     <available property="xslp.present"
                classname="com.kvisco.xsl.XSLProcessor"
                classpathref="classpath" />
@@ -377,10 +410,6 @@
                classpathref="classpath"/>
     <available property="commons.logging.present"
                classname="org.apache.commons.logging.LogFactory"
-               classpathref="classpath"/>
-    <!-- this is just a way to check for a TraX implementation -->
-    <available property="trax.impl.present"
-               resource="META-INF/services/javax.xml.transform.TransformerFactory"
                classpathref="classpath"/>
     <available property="xalan.envcheck"
                classname="org.apache.xalan.xslt.EnvironmentCheck"
@@ -459,9 +488,13 @@
       </and>
     </condition>
 
-    <available property="swing.present"
-               classname="javax.swing.ImageIcon"
-               classpathref="classpath"/>
+    <condition property="swing.present">
+      <or>
+        <isset property="jdk1.2+" />
+        <available classname="javax.swing.ImageIcon"
+                   classpathref="classpath"/>
+      </or>
+    </condition>
 
    <condition property="wsdl.found">
       <or>
@@ -681,6 +714,17 @@
 
   </target>
 
+  <!--   Creates jar of test utility classes -->
+  <target name="test-jar"
+          depends="compile-tests"
+          description="--> creates the Apache Ant Test Utilties jar">
+
+    <jar destfile="${build.lib}/${name}-testutil.jar"
+         basedir="${build.tests}">
+      <patternset refid="useful.tests" />
+    </jar>
+  </target>
+
   <!--
        ===================================================================
          Create the essential distribution that can run Apache Ant
@@ -757,16 +801,12 @@
     <copy todir="${dist.lib}" file="${lib.dir}/README"/>
 
     <copy todir="${dist.docs}">
-      <fileset dir="${docs.dir}">
-        <exclude name="**/images/**"/>
-      </fileset>
+      <fileset dir="${docs.dir}" excludes="${unfiltered.files}"/>
       <filterchain refid="ant.filters"/>
     </copy>
 
     <copy todir="${dist.docs}" filtering="false">
-      <fileset dir="${docs.dir}">
-        <include name="**/images/**"/>
-      </fileset>
+      <fileset dir="${docs.dir}" includes="${unfiltered.files}"/>
     </copy>
 
     <copy todir="${dist.dir}">
@@ -1037,6 +1077,12 @@
               targetfile="${build.javadocs}/packages.html" >
         <srcfiles dir= "${java.dir}" includes="**/*.java"/>
     </uptodate>
+    <uptodate property="tests.javadoc.notrequired"
+              targetfile="${build.tests.javadocs}/packages.html" >
+      <srcfiles dir= "${tests.dir}">
+        <patternset refid="useful.tests" />
+      </srcfiles>
+    </uptodate>
   </target>
 
   <target name="javadocs" depends="prepare, javadoc_check"
@@ -1062,6 +1108,26 @@
       <group title="Optional Tasks" packages="org.apache.tools.ant.taskdefs.optional*" />
       <group title="Optional Types" packages="org.apache.tools.ant.types.optional*" />
       <group title="Ant Utilities" packages="org.apache.tools.ant.util*" />
+
+      <bottom>Copyright &#169; 2000-${year} Apache Software Foundation. All Rights Reserved.</bottom>
+    </javadoc>
+  </target>
+
+  <target name="test-javadocs" depends="prepare, javadoc_check"
+          unless="tests.javadoc.notrequired"
+          description="--> creates the API documentation for test utilities">
+    <mkdir dir="${build.tests.javadocs}"/>
+    <javadoc useexternalfile="yes"
+             destdir="${build.tests.javadocs}"
+             author="true"
+             version="true"
+             locale="en"
+             windowtitle="${Name} Test Utilities"
+             doctitle="${Name}">
+
+      <fileset dir="${tests.dir}">
+        <patternset refid="useful.tests" />
+      </fileset>
 
       <bottom>Copyright &#169; 2000-${year} Apache Software Foundation. All Rights Reserved.</bottom>
     </javadoc>
@@ -1171,6 +1237,7 @@
           <exclude name="${regexp.package}/RegexpTest.java" />
           <exclude name="${optional.package}/AbstractXSLTLiaisonTest.java" />
           <exclude name="${ant.package}/types/AbstractFileSetTest.java" />
+          <exclude name="${ant.package}/types/selectors/BaseSelectorTest.java" />
 
           <!-- helper classes, not testcases -->
           <exclude name="org/example/**" />
@@ -1217,9 +1284,11 @@
           <!-- these tests need to be localised before being ran???? -->
           <exclude name="${optional.package}/PvcsTest.java" />
 
-          <!-- ehm, this is not really a TraX test but rather a xalan2 test..-->
+          <!-- These tests need a TraX implementation like xalan2 or saxon -->
           <exclude name="${optional.package}/TraXLiaisonTest.java"
-                   unless="xalan2.present"/>
+                   unless="trax.impl.present"/>
+          <exclude name="${optional.package}/XsltTest.java"
+                   unless="trax.impl.present"/>
 
           <!-- needs BSF to work -->
           <exclude name="${optional.package}/XalanLiaisonTest.java"

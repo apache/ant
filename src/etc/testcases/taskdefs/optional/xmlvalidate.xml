@@ -24,5 +24,19 @@
       </xmlcatalog>
     </xmlvalidate>
   </target>
+
+  <target name="xmlcatalognested">
+    <xmlvalidate warn="false">
+      <fileset dir="xml" includes="**/about.xml"/>
+      <xmlcatalog classpath="xml">
+	 <entity publicID = "bogusImage"
+                 location = "/i/dont/exist.jpg"/>
+        <xmlcatalog>
+          <dtd publicID="-//stevo//DTD doc 1.0//EN"
+               location="doc.dtd"/>
+        </xmlcatalog>
+      </xmlcatalog>
+    </xmlvalidate>
+  </target>
   
 </project>

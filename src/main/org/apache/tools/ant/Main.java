@@ -851,7 +851,11 @@ public class Main {
         }
 
         printTargets(topNames, topDescriptions, "Main targets:", maxLength);
-
+        //if there were no main targets, we list all subtargets
+        //as it means nothing has a description
+        if(topNames.size()==0) {
+            printSubTargets=true;
+        }
         if (printSubTargets) {
             printTargets(subNames, null, "Subtargets:", 0);
         }

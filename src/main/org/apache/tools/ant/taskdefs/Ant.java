@@ -99,9 +99,9 @@ public class Ant extends Task {
     /** the basedir where is executed the build file */
     private File dir = null;
 
-    /** 
+    /**
      * the build.xml file (can be absolute) in this case dir will be
-     * ignored 
+     * ignored
      */
     private String antFile = null;
 
@@ -184,11 +184,17 @@ public class Ant extends Task {
             if (p.getResource() != null) {
                 newP.setResource(p.getResource());
             }
+            if (p.getPrefix() != null) {
+                newP.setPrefix(p.getPrefix());
+            }
             if (p.getRefid() != null) {
                 newP.setRefid(p.getRefid());
             }
             if (p.getEnvironment() != null) {
                 newP.setEnvironment(p.getEnvironment());
+            }
+            if (p.getClasspath() != null) {
+                newP.setClasspath(p.getClasspath());
             }
             properties.setElementAt(newP, i);
         }
@@ -274,7 +280,6 @@ public class Ant extends Task {
                     // basedir and ant.file get special treatment in execute()
                     continue;
                 }
-
                 String value = props.get(arg).toString();
                 if (newProject.getProperty(arg) == null){
                     // no user property
@@ -362,7 +367,7 @@ public class Ant extends Task {
                 getOwningTarget() != null &&
                 target.equals(this.getOwningTarget().getName())) {
 
-                throw new BuildException("ant task calling its own parent " 
+                throw new BuildException("ant task calling its own parent "
                     + "target");
             }
 
@@ -527,7 +532,7 @@ public class Ant extends Task {
         if (newProject == null) {
             reinit();
         }
-        Property p = new Property(true);
+        Property p = new Property(true, getProject());
         p.setProject(newProject);
         p.setTaskName("property");
         properties.addElement(p);
@@ -560,10 +565,10 @@ public class Ant extends Task {
          * Set the id that this reference to be stored under in the
          * new project.
          *
-         * @param targetid the id under which this reference will be passed to 
-         *        the new project */ 
+         * @param targetid the id under which this reference will be passed to
+         *        the new project */
         public void setToRefid(String targetid) {
-            this.targetid = targetid; 
+            this.targetid = targetid;
         }
 
         /**
@@ -572,8 +577,8 @@ public class Ant extends Task {
          *
          * @return the id of the reference in the new project.
          */
-        public String getToRefid() { 
-            return targetid; 
+        public String getToRefid() {
+            return targetid;
         }
     }
 }

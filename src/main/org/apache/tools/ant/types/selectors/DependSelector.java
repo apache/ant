@@ -61,6 +61,7 @@ import org.apache.tools.ant.types.Mapper;
 import org.apache.tools.ant.util.IdentityMapper;
 import org.apache.tools.ant.util.FileNameMapper;
 import org.apache.tools.ant.BuildException;
+import org.apache.tools.ant.taskdefs.condition.Os;
 
 /**
  * Selector that filters files based on whether they are newer than
@@ -80,6 +81,9 @@ public class DependSelector extends BaseSelector {
     private int granularity = 0;
 
     public DependSelector() {
+        if (Os.isFamily("dos")) {
+            granularity = 2000;
+        }
     }
 
     public String toString() {
@@ -171,6 +175,11 @@ public class DependSelector extends BaseSelector {
 
         // Determine file whose out-of-dateness is to be checked
         String[] destfiles = map.mapFileName(filename);
+        // If filename does not match the To attribute of the mapper
+        // then filter it out of the files we are considering
+        if (destfiles == null) {
+            return false;
+        }
         // Sanity check
         if (destfiles.length != 1 || destfiles[0] == null) {
             throw new BuildException("Invalid destination file results for "

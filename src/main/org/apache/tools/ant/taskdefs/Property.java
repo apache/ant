@@ -88,18 +88,27 @@ public class Property extends Task {
     protected String env;
     protected Reference ref;
     protected String prefix;
+    private Project fallback;
 
     protected boolean userProperty; // set read-only properties
 
     public Property() {
-        super();
+        this(false);
     }
 
     /**
      * @since Ant 1.5
      */
     protected Property(boolean userProperty) {
+        this(userProperty, null);
+    }
+
+    /**
+     * @since Ant 1.5
+     */
+    protected Property(boolean userProperty, Project fallback) {
         this.userProperty = userProperty;
+        this.fallback = fallback;
     }
 
     public void setName(String name) {
@@ -130,11 +139,21 @@ public class Property extends Task {
         return file;
     }
     
+    /**
+     * @since Ant 1.5
+     */
     public void setPrefix(String prefix) {
         this.prefix = prefix;
         if (!prefix.endsWith(".")) {
             this.prefix += ".";
         }
+    }
+
+    /**
+     * @since Ant 1.5
+     */
+    public String getPrefix() {
+        return prefix;
     }
 
     public void setRefid(Reference ref) {
@@ -157,6 +176,9 @@ public class Property extends Task {
         this.env = env;
     }
 
+    /**
+     * @since Ant 1.5
+     */
     public String getEnvironment() {
         return env;
     }
@@ -178,6 +200,13 @@ public class Property extends Task {
 
     public void setClasspathRef(Reference r) {
         createClasspath().setRefid(r);
+    }
+
+    /**
+     * @since Ant 1.5
+     */
+    public Path getClasspath() {
+        return classpath;
     }
 
     /**
@@ -230,10 +259,17 @@ public class Property extends Task {
         }
 
         if ((name != null) && (ref != null)) {
-            Object obj = ref.getReferencedObject(getProject());
-            if (obj != null) {
-                addProperty(name, obj.toString());
-            }
+            try {
+                addProperty(name, 
+                            ref.getReferencedObject(getProject()).toString());
+            } catch (BuildException be) {
+                if (fallback != null) {
+                    addProperty(name, 
+                                ref.getReferencedObject(fallback).toString());
+                } else {
+                    throw be;
+                }
+            }                
         }
     }
 

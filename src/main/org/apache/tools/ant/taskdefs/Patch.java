@@ -171,6 +171,7 @@ public class Patch extends Task {
         Execute exe = new Execute(new LogStreamHandler(this, Project.MSG_INFO,
                                                        Project.MSG_WARN), 
                                   null);
+        exe.setCommandline(toExecute.getCommandline());
 
         if (directory != null) {
             if (directory.exists() && directory.isDirectory()) {
@@ -186,6 +187,7 @@ public class Patch extends Task {
             exe.setWorkingDirectory(getProject().getBaseDir());
         }
 
+        log(toExecute.describeCommand(), Project.MSG_VERBOSE);
         try {
             exe.execute();
         } catch (IOException e) {

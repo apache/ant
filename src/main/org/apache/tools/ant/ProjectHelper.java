@@ -76,7 +76,7 @@ import org.apache.tools.ant.util.LoaderUtils;
  *
  * All helper plugins must provide backward compatiblity with the
  * original ant patterns, unless a different behavior is explicitely
- * specified. For example, if namespace is used on the <project> tag
+ * specified. For example, if namespace is used on the &lt;project&gt; tag
  * the helper can expect the entire build file to be namespace-enabled.
  * Namespaces or helper-specific tags can provide meta-information to
  * the helper, allowing it to use new ( or different policies ).

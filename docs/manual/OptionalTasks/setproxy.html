@@ -1,0 +1,219 @@
+    
+<html>
+<head>
+  <meta http-equiv="Content-Language" content="en-us">
+  <title>Setproxy
+ Task</title>
+</head>
+
+<body bgcolor="#ffffff" text="#000000" link="#525D76"
+      alink="#525D76" vlink="#525D76">
+
+<table border="0" width="100%" cellspacing="4">
+
+  <!-- PAGE HEADER -->
+  <tr>
+    <td>
+      <table border="0" width="100%"><tr>
+          <td valign="bottom">
+            <font size="+3" face="arial,helvetica,sanserif"><strong>Setproxy
+ Task</strong></font>
+            <br><font face="arial,helvetica,sanserif">Sets Java's web proxy properties, so that tasks and code run in the same JVM can have through-the-firewall access to remote web sites, and remote ftp sites.</font>
+          </td>
+          <td>
+            <!-- PROJECT LOGO -->
+            <a href="http://jakarta.apache.org/ant/">
+              <img src="../../images/ant_logo_large.gif" align="right" alt="Apache Ant" border="0"/>
+            </a>
+          </td>
+      </tr></table>
+    </td>
+  </tr>
+
+  <!-- START RIGHT SIDE MAIN BODY -->
+  <tr>
+    <td  valign="top" align="left">
+
+          <!-- Applying task/long-description -->
+    <!-- Start Description -->
+    <table border="0" cellspacing="0" cellpadding="2" width="100%">
+      <tr><td>&nbsp;</td></tr>
+
+      <tr><td bgcolor="#525D76">
+        <font color="#ffffff" face="arial,helvetica.sanserif">
+          <a name="description">
+          <strong>Description</strong></a></font>
+      </td></tr>
+
+      <tr><td><blockquote>
+        Sets Java's web proxy properties, so that tasks and code run in
+ the same JVM can have through-the-firewall access to remote web sites,
+ and remote ftp sites.
+ You can nominate an http and ftp proxy, or a socks server, reset the server 
+ settings, or do nothing at all.
+ <p> 
+ Examples
+ <pre>&lt;setproxy/&gt;</pre>
+ do nothing
+ <pre>&lt;setproxy proxyhost="firewall"/&gt;</pre>
+ set the proxy to firewall:80
+ <pre>&lt;setproxy proxyhost="firewall" proxyport="81"/&gt;</pre>
+ set the proxy to firewall:81
+ <pre>&lt;setproxy proxyhost=""/&gt;</pre>
+ stop using the http proxy; don't change the socks settings
+ <pre>&lt;setproxy socksproxyhost="socksy"/&gt;</pre>
+ use socks via socksy:1080
+ <pre>&lt;setproxy socksproxyhost=""/&gt;</pre>
+ stop using the socks server
+      </blockquote></td></tr>
+
+    </table>
+    <!-- End Description -->
+
+    <!-- Start Attributes -->
+    <table border="0" cellspacing="0" cellpadding="2" width="100%">
+      <tr><td>&nbsp;</td></tr>
+
+      <tr><td bgcolor="#525D76">
+        <font color="#ffffff" face="arial,helvetica.sanserif">
+          <a name="attributes">
+          <strong>Parameters</strong></a></font>
+      </td></tr>
+
+      <tr><td><blockquote>
+        <table>
+          <tr>
+        <td bgcolor="#cccccc" valign="top" align="left">
+          <font color="#000000" size="-1" face="arial,helvetica,sanserif"><b>Attribute</b></font>
+        </td>
+        <td bgcolor="#cccccc" valign="top" align="left">
+          <font color="#000000" size="-1" face="arial,helvetica,sanserif"><b>Description</b></font>
+        </td>
+        <td bgcolor="#cccccc" valign="top" align="left">
+          <font color="#000000" size="-1" face="arial,helvetica,sanserif"><b>Type</b></font>
+        </td>
+          </tr>
+    <!-- Attribute -->
+    <tr>
+        <td bgcolor="#eeeeee" valign="top" align="left">
+          <font color="#000000" size="-1" face="arial,helvetica,sanserif">nonProxyHosts</font>
+        </td>
+        <td bgcolor="#eeeeee" valign="top" align="left">
+          <font color="#000000" size="-1" face="arial,helvetica,sanserif">
+          A list of hosts to bypass the proxy on. These should be separated
+ with the vertical bar character '|'. Only in Java 1.4 does ftp use
+ this list.
+ e.g. fozbot.corp.sun.com|*.eng.sun.com.
+        </font>
+        </td>
+        <td bgcolor="#eeeeee" valign="top" align="left">
+          <font color="#000000" size="-1" face="arial,helvetica,sanserif">String</font>
+        </td>
+    </tr>
+    <!-- Attribute -->
+    <tr>
+        <td bgcolor="#eeeeee" valign="top" align="left">
+          <font color="#000000" size="-1" face="arial,helvetica,sanserif">proxyHost</font>
+        </td>
+        <td bgcolor="#eeeeee" valign="top" align="left">
+          <font color="#000000" size="-1" face="arial,helvetica,sanserif">
+          the HTTP/ftp proxy host. Set this to "" for the http proxy
+ option to be disabled
+        </font>
+        </td>
+        <td bgcolor="#eeeeee" valign="top" align="left">
+          <font color="#000000" size="-1" face="arial,helvetica,sanserif">String</font>
+        </td>
+    </tr>
+    <!-- Attribute -->
+    <tr>
+        <td bgcolor="#eeeeee" valign="top" align="left">
+          <font color="#000000" size="-1" face="arial,helvetica,sanserif">proxyPort</font>
+        </td>
+        <td bgcolor="#eeeeee" valign="top" align="left">
+          <font color="#000000" size="-1" face="arial,helvetica,sanserif">
+          the HTTP/ftp proxy port number; default is 80
+        </font>
+        </td>
+        <td bgcolor="#eeeeee" valign="top" align="left">
+          <font color="#000000" size="-1" face="arial,helvetica,sanserif">int</font>
+        </td>
+    </tr>
+    <!-- Attribute -->
+    <tr>
+        <td bgcolor="#eeeeee" valign="top" align="left">
+          <font color="#000000" size="-1" face="arial,helvetica,sanserif">socksProxyHost</font>
+        </td>
+        <td bgcolor="#eeeeee" valign="top" align="left">
+          <font color="#000000" size="-1" face="arial,helvetica,sanserif">
+          The name of a Socks server. Set to "" to turn socks
+ proxying off.
+        </font>
+        </td>
+        <td bgcolor="#eeeeee" valign="top" align="left">
+          <font color="#000000" size="-1" face="arial,helvetica,sanserif">String</font>
+        </td>
+    </tr>
+    <!-- Attribute -->
+    <tr>
+        <td bgcolor="#eeeeee" valign="top" align="left">
+          <font color="#000000" size="-1" face="arial,helvetica,sanserif">socksProxyPort</font>
+        </td>
+        <td bgcolor="#eeeeee" valign="top" align="left">
+          <font color="#000000" size="-1" face="arial,helvetica,sanserif">
+          Set the ProxyPort for socks connections. The default value is 1080
+        </font>
+        </td>
+        <td bgcolor="#eeeeee" valign="top" align="left">
+          <font color="#000000" size="-1" face="arial,helvetica,sanserif">int</font>
+        </td>
+    </tr>
+
+        </table>
+      </blockquote></td></tr>
+
+    </table>
+    <!-- End Attributes -->
+
+    <!-- Start Elements -->
+    <table border="0" cellspacing="0" cellpadding="2" width="100%">
+      <tr><td>&nbsp;</td></tr>
+
+      <tr><td bgcolor="#525D76">
+        <font color="#ffffff" face="arial,helvetica.sanserif">
+          <a name="elements">
+          <strong>Parameters as nested elements</strong></a></font>
+      </td></tr>
+
+      <tr><td><blockquote>
+
+      </blockquote></td></tr>
+
+    </table>
+    <!-- End Elements -->
+
+
+    </td>
+  </tr>
+  <!-- END RIGHT SIDE MAIN BODY -->
+
+  <!-- FOOTER SEPARATOR -->
+  <tr>
+    <td>
+      <hr noshade="" size="1"/>
+    </td>
+  </tr>
+
+  <!-- PAGE FOOTER -->
+  <tr>
+    <td>
+      <div align="center"><font color="#525D76" size="-1"><em>
+        Copyright &#169; 2000-2002, Apache Software Foundation
+      </em></font></div>
+    </td>
+  </tr>
+
+</table>
+
+</body>
+</html>

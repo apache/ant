@@ -611,17 +611,8 @@ public class FTP
             if (!dirCache.contains(dir)) {
                 log("creating remote directory " + resolveFile(dir.getPath()),
                     Project.MSG_VERBOSE);
-                ftp.makeDirectory(resolveFile(dir.getPath()));
-                // Both codes 550 and 553 can be produced by FTP Servers
-                //  to indicate that an attempt to create a directory has
-                //  failed because the directory already exists.
-                int result = ftp.getReplyCode();
-
-                if (!FTPReply.isPositiveCompletion(result) &&
-                    (result != 550) && (result != 553) &&
-                    !ignoreNoncriticalErrors) {
-                    throw new BuildException("could not create directory: " +
-                        ftp.getReplyString());
+                if(!ftp.makeDirectory(resolveFile(dir.getPath()))) {
+                    handleMkDirFailure(ftp);
                 }
                 dirCache.addElement(dir);
             }
@@ -880,15 +871,7 @@ public class FTP
             // codes 521, 550 and 553 can be produced by FTP Servers
             //  to indicate that an attempt to create a directory has
             //  failed because the directory already exists.
-
-            int rc = ftp.getReplyCode();
-
-            if (!(ignoreNoncriticalErrors
-                 && (rc == 550 || rc == 553 || rc == 521))) {
-                throw new BuildException("could not create directory: " +
-                    ftp.getReplyString());
-            }
-
+            handleMkDirFailure(ftp);
             if (verbose) {
                 log("directory already exists");
             }
@@ -899,6 +882,21 @@ public class FTP
         }
     }
 
+    /**
+     * look at the response for a failed mkdir action, decide whether
+     * it matters or not. If it does, we throw an exception
+     * @param ftp current ftp connection
+     * @throws BuildException if this is an error to signal
+     */
+    private void handleMkDirFailure(FTPClient ftp) 
+            throws BuildException {
+        int rc=ftp.getReplyCode();
+        if (!(ignoreNoncriticalErrors
+             && (rc == 550 || rc == 553 || rc == 521))) {
+            throw new BuildException("could not create directory: " +
+                ftp.getReplyString());
+        }
+    }
 
     /** Runs the task.  */
     public void execute()

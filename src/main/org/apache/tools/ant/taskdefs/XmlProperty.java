@@ -74,10 +74,10 @@ import java.util.Vector;
 /**
  * Task that gets property values from a valid xml file.
  * Example:
- *   <root-tag myattr="true">
- *     <inner-tag someattr="val">Text</inner-tag>
- *     <a2><a3><a4>false</a4></a3></a2>
- *   </root-tag>
+ *   &lt;root-tag myattr="true"&gt;
+ *     &lt;inner-tag someattr="val"&gt;Text&lt;/inner-tag&gt;
+ *     &lt;a2&gt;&lt;a3&gt;&lt;a4&gt;false&lt;/a4&gt;&lt;/a3&gt;&lt;/a2&gt;
+ *   &lt;/root-tag&gt;
  *
  *  root-tag(myattr)=true
  *  root-tag.inner-tag=Text

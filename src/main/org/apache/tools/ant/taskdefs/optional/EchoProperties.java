@@ -310,9 +310,9 @@ public class EchoProperties extends Task {
                     }
                     return;
                 }
-                
+
                 if (destfile.exists() && !destfile.canWrite()) {
-                    String message = 
+                    String message =
                         "Can not write to the specified destfile!";
                     if (failonerror) {
                         throw new BuildException(message, location);
@@ -333,7 +333,7 @@ public class EchoProperties extends Task {
         } finally {
             if (os != null) {
                 try {
-                    os.close();                    
+                    os.close();
                 } catch (IOException e) {
                 }
             }
