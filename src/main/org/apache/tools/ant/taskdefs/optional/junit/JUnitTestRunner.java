@@ -129,7 +129,7 @@ public class JUnitTestRunner implements TestListener {
     /**
      * Do we filter junit.*.* stack frames out of failure and error exceptions.
      */
-    private static boolean filtertrace = true;
+    private boolean filtertrace = true;
     
     private final static String[] DEFAULT_TRACE_FILTERS = new String[] {
                 "junit.framework.TestCase",
@@ -194,7 +194,6 @@ public class JUnitTestRunner implements TestListener {
      */
     public JUnitTestRunner(JUnitTest test, boolean haltOnError, boolean filtertrace,
                            boolean haltOnFailure, ClassLoader loader) {
-        //JUnitTestRunner.filtertrace = filtertrace;
         this.filtertrace = filtertrace;
         this.junitTest = test;
         this.haltOnError = haltOnError;
