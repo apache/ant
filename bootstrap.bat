@@ -17,7 +17,7 @@ if "" == "%JAVAC%"                        set JAVAC=%JAVA_HOME%\bin\javac
 echo.
 echo ... Bootstrapping Ant Distribution
 
-SET LOCALCLASSPATH=classes
+SET LOCALCLASSPATH=classes;src\main
 if exist lib\ant.jar erase lib\ant.jar
 for %%i in (lib\*.jar) do call lcp.bat %%i
 if exist %JAVA_HOME%\lib\tools.jar call lcp.bat %JAVA_HOME%\lib\tools.jar
