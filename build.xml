@@ -760,13 +760,6 @@
       </fileset>
     </jar>
 
-    <jar destfile="${build.lib}/optional.jar"
-         basedir="${build.classes}"
-         manifest="${manifest.tmp}">
-      <selector refid="non-core"/>
-      <metainf dir="${build.dir}" includes="LICENSE.txt"/>
-    </jar>
-
     <jar destfile="${build.lib}/${bootstrap.jar}"
          basedir="${build.classes}"
          manifest="${manifest}">
@@ -774,7 +767,7 @@
       <metainf dir="${build.dir}" includes="LICENSE.txt"/>
       <manifest>
         <attribute name="Class-Path"
-                   value="ant.jar xml-apis.jar xercesImpl.jar optional.jar xalan.jar"/>
+                   value="ant.jar xml-apis.jar xercesImpl.jar xalan.jar"/>
       </manifest>
     </jar>
 
