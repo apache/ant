@@ -141,20 +141,28 @@ public class EchoPropertiesTest extends BuildFileTest {
 
 
     public void testEchoPrefix() throws Exception {
-        executeTarget( "testEchoPrefix" );
-        Properties props=loadPropFile(PREFIX_OUTFILE);
-//        props.list(System.out);
-        assertEquals("prefix didn't include 'a.set' property","true",props.getProperty("a.set"));
-        assertNull("prefix failed to filter out property 'b.set'",
-                   props.getProperty("b.set"));
+        testEchoPrefixVarious("testEchoPrefix");
     }
 
     public void testEchoPrefixAsPropertyset() throws Exception {
-        executeTarget( "testEchoPrefixAsPropertyset" );
-        Properties props=loadPropFile(PREFIX_OUTFILE);
-        assertEquals("prefix didn't include 'a.set' property","true",props.getProperty("a.set"));
+        testEchoPrefixVarious("testEchoPrefixAsPropertyset");
+    }
+
+    public void testEchoPrefixAsNegatedPropertyset() throws Exception {
+        testEchoPrefixVarious("testEchoPrefixAsNegatedPropertyset");
+    }
+
+    public void testEchoPrefixAsDoublyNegatedPropertyset() throws Exception {
+        testEchoPrefixVarious("testEchoPrefixAsDoublyNegatedPropertyset");
+    }
+
+    private void testEchoPrefixVarious(String target) throws Exception {
+        executeTarget(target);
+        Properties props = loadPropFile(PREFIX_OUTFILE);
+        assertEquals("prefix didn't include 'a.set' property",
+            "true", props.getProperty("a.set"));
         assertNull("prefix failed to filter out property 'b.set'",
-                   props.getProperty("b.set"));
+            props.getProperty("b.set"));
     }
 
     protected Properties loadPropFile(String relativeFilename)

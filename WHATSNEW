@@ -46,6 +46,8 @@ Other changes:
   nested FileNameMapper implementations directly, allowing a usage
   comparable to those of <condition>, <filter>, and <selector>.
 
+* New attribute "negate" on <propertyset> to invert selection criteria.
+
 Changes from Ant 1.6.1 to current Ant 1.6 CVS version
 =============================================
 

@@ -72,6 +72,24 @@
     </echoproperties>
   </target>
 
+  <target name="testEchoPrefixAsNegatedPropertyset" depends="setup">
+    <echoproperties destfile="test-prefix.properties">
+      <propertyset negate="true">
+        <propertyref prefix="b."/>
+      </propertyset>
+    </echoproperties>
+  </target>
+
+  <target name="testEchoPrefixAsDoublyNegatedPropertyset" depends="setup">
+    <echoproperties destfile="test-prefix.properties">
+      <propertyset negate="true">
+        <propertyset negate="true">
+          <propertyref prefix="a."/>
+        </propertyset>
+      </propertyset>
+    </echoproperties>
+  </target>
+
   <target name="cleanup">
     <delete file="test.properties" failonerror="no" />
     <delete file="test-prefix.properties" failonerror="no" />
