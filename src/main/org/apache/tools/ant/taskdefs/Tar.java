@@ -212,7 +212,7 @@ public class Tar extends MatchingTask {
                 TarFileSet fs = (TarFileSet)e.nextElement();
                 String[] files = fs.getFiles(project);
                 for (int i = 0; i < files.length; i++) {
-                    File f = new File(baseDir,files[i]);
+                    File f = new File(fs.getDir(project), files[i]);
                     String name = files[i].replace(File.separatorChar,'/');
                     tarFile(f, tOut, name, fs);
                 }
