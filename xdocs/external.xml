@@ -1841,6 +1841,35 @@
         </table>
       </subsection>
 
+      <subsection name="snip">
+        <p>A task designed to help with the single-sourcing of program documentation.
+        Snip extracts snippets of text from files, placing them into properties in the Ant project.
+        These properties can then be used by any other Ant task, and are particularly useful when
+        referenced by &lt;filter&gt;s within the &lt;copy&gt; task.</p>
+
+        <p>Snip was originally written to keep snippets of sample code in API documentation synchronized
+        with the actual sample classes.</p>
+
+        <table class="externals">
+          <tr>
+            <th>Compatibility:</th>
+            <td>Tested with 1.5.1.  Should work with all versions.</td>
+          </tr>
+          <tr>
+            <th>URL:</th>
+            <td><a href="http://www.martiansoftware.com/lab/index.html#snip">http://www.martiansoftware.com/lab/index.html#snip</a></td>
+          </tr>
+          <tr>
+            <th>Contact:</th>
+            <td><a href="http://www.martiansoftware.com/contact.html">Marty Lamb</a></td>
+          </tr>
+          <tr>
+            <th>License:</th>
+            <td>Revised BSD</td>
+          </tr>
+        </table>
+      </subsection>
+
       <subsection name="Speech4J">
 
         <p>A text-to-speech task and build listener, which produce
