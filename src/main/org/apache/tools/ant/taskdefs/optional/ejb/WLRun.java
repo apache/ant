@@ -183,21 +183,6 @@ public class WLRun extends Task {
                                      " is not valid");
         }
 
-        if (beaHome != null) {
-            executeWLS6();
-        }
-        else {
-            executeWLS();
-        }
-    }
-    
-    private void executeWLS6() {
-        
-        if (!beaHome.isDirectory()) {
-            throw new BuildException("BEA home " + beaHome.getPath() + 
-                                     " is not valid");
-        }
-        
         File securityPolicyFile = null;
         if (securityPolicy == null) {
             securityPolicyFile = new File(weblogicSystemHome, DEFAULT_WL60_POLICY_FILE);
@@ -206,6 +191,31 @@ public class WLRun extends Task {
             securityPolicyFile = new File(weblogicSystemHome, securityPolicy);
         }
 
+        if (!securityPolicyFile.exists()) {
+            // OK it maybe an absolute path. Use the project to resolve it
+            securityPolicyFile = project.resolveFile(securityPolicy);
+            if (!securityPolicyFile.exists()) {
+                throw new BuildException("Security policy " + securityPolicy +
+                                         " was not found.");
+            }                                         
+        }
+
+
+        if (beaHome != null) {
+            executeWLS6(securityPolicyFile);
+        }
+        else {
+            executeWLS(securityPolicyFile);
+        }
+    }
+    
+    private void executeWLS6(File securityPolicyFile) {
+        
+        if (!beaHome.isDirectory()) {
+            throw new BuildException("BEA home " + beaHome.getPath() + 
+                                     " is not valid");
+        }
+        
         File configFile = new File(weblogicSystemHome, "config/" + weblogicDomainName + "/config.xml");
         if (!configFile.exists()) {
             throw new BuildException("Server config file " + configFile + " not found.");
@@ -249,7 +259,7 @@ public class WLRun extends Task {
         }
      }
     
-    private void executeWLS() {
+    private void executeWLS(File securityPolicyFile) {
 
         File propertiesFile = null;
         
@@ -260,21 +270,13 @@ public class WLRun extends Task {
             propertiesFile = new File(weblogicSystemHome, weblogicPropertiesFile);
         }
         if (!propertiesFile.exists()) {
-            throw new BuildException("Properties file " + weblogicPropertiesFile +
-                                     " not found in weblogic home " + weblogicSystemHome);
-        }
-
-        File securityPolicyFile = null;
-        if (securityPolicy == null) {
-            securityPolicyFile = new File(weblogicSystemHome, DEFAULT_WL51_POLICY_FILE);
-        }
-        else {
-            securityPolicyFile = new File(weblogicSystemHome, securityPolicy);
-        }
-        
-        if (!securityPolicyFile.exists()) {
-            throw new BuildException("Security policy " + securityPolicyFile +
-                                     " was not found.");
+            // OK, properties file may be absolute
+            propertiesFile = project.resolveFile(weblogicPropertiesFile);
+            if (!propertiesFile.exists()) {
+                throw new BuildException("Properties file " + weblogicPropertiesFile +
+                                         " not found in weblogic home " + weblogicSystemHome +
+                                         " or as absolute file");
+            }                                         
         }
 
         Java weblogicServer = (Java)project.createTask("java");
