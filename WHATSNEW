@@ -61,6 +61,11 @@ Other changes:
 * load all xml resources for typedef not just the first
   Bugzilla report 24024
 
+* <presetdef> fix so that the preset attributes are optional and
+  may be overridded (previosly the attributes were set twice)
+
+* provide stack for errors using import, ant, antcall, subant and macros
+
 Changes from Ant 1.6.B1 to Ant 1.6.B2
 =====================================
 
