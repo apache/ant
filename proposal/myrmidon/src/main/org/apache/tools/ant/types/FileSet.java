@@ -25,10 +25,8 @@ import org.apache.myrmidon.framework.PatternSet;
  * @author <a href="mailto:umagesh@rediffmail.com">Magesh Umasankar</a>
  */
 public class FileSet
+    extends org.apache.myrmidon.framework.FileSet
 {
-    private File m_dir;
-    private PatternSet m_patternSet = new PatternSet();
-    private boolean m_useDefaultExcludes = true;
     private boolean m_isCaseSensitive = true;
 
     /**
@@ -39,80 +37,8 @@ public class FileSet
         m_isCaseSensitive = isCaseSensitive;
     }
 
-    /**
-     * Sets whether default exclusions should be used or not.
-     */
-    public void setDefaultexcludes( final boolean useDefaultExcludes )
-    {
-        m_useDefaultExcludes = useDefaultExcludes;
-    }
-
-    public void setDir( final File dir )
-        throws TaskException
-    {
-        m_dir = dir;
-    }
-
-    /**
-     * Sets the set of exclude patterns. Patterns may be separated by a comma or
-     * a space.
-     *
-     * @param excludes the string containing the exclude patterns
-     */
-    public void setExcludes( final String excludes )
-    {
-        m_patternSet.setExcludes( excludes );
-    }
-
-    /**
-     * add a name entry on the exclude list
-     */
-    public void addExclude( final Pattern pattern )
-    {
-        m_patternSet.addExclude( pattern );
-    }
-
-    /**
-     * add a name entry on the include list
-     */
-    public void addInclude( final Pattern pattern )
-    {
-        m_patternSet.addInclude( pattern );
-    }
-
-    public void addPatternSet( final PatternSet set )
-    {
-        m_patternSet.append( set );
-    }
-
-    /**
-     * Sets the set of include patterns. Patterns may be separated by a comma or
-     * a space.
-     *
-     * @param includes the string containing the include patterns
-     */
-    public void setIncludes( final String includes )
-    {
-        m_patternSet.setIncludes( includes );
-    }
-
-    public final PatternSet getPatternSet()
-    {
-        return m_patternSet;
-    }
-
     public boolean isCaseSensitive()
     {
         return m_isCaseSensitive;
-    }
-
-    public boolean useDefaultExcludes()
-    {
-        return m_useDefaultExcludes;
-    }
-
-    public File getDir()
-    {
-        return m_dir;
     }
 }
