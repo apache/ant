@@ -261,8 +261,8 @@ to be unique.</p>
   </tr>
   <tr>
     <td valign="top">name</td>
-    <td valign="top">the name of the target.</td>
-    <td align="center" valign="top">Yes</td>
+    <td valign="top">the name of the project.</td>
+    <td align="center" valign="top">No</td>
   </tr>
   <tr>
     <td valign="top">default</td>
@@ -273,9 +273,10 @@ to be unique.</p>
     <td valign="top">basedir</td>
     <td valign="top">the base directory from which all path calculations are
       done. This attribute might be overridden by setting the &quot;basedir&quot;
-      property on forehand. When this is done, it might be omitted in the
-      project tag.</td>
-    <td align="center" valign="top">Yes</td>
+      property on forehand. When this is done, it must be omitted in the
+      project tag. If neither the attribute not the property have
+      been set, the parent directory of the build file will be used.</td>
+    <td align="center" valign="top">No</td>
   </tr>
 </table>
 <p>Each project defines one or more targets. A target is a set of tasks you want

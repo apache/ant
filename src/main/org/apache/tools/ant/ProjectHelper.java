@@ -257,6 +257,12 @@ public class ProjectHelper {
                 }
             }
 
+            if (def == null) {
+                throw new SAXParseException("The default attribute of project is required", 
+                                            locator);
+            }
+            
+
             project.setDefaultTarget(def);
 
             if (name != null) {
