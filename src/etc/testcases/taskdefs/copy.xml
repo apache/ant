@@ -84,7 +84,7 @@
   </target>
 
   <target name="testMissingDirBail">
-    <copy todir="copytest1dir" failonerror="false">
+    <copy todir="copytest1dir" failonerror="true">
       <fileset dir="not-there"/>
     </copy>
   </target>
