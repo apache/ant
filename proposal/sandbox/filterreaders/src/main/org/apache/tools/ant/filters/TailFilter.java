@@ -146,18 +146,19 @@ public final class TailFilter
                     }
                 }
 
-                if (ch == '\n') {
+                if (ch == '\n' || ch == -1) {
                     ++linesRead;
 
                     if (linesRead == lines) {
                         int i = 0;
                         for (i = returnedCharPos + 1;
-                                buffer[i] != 0 && buffer[i] != '\n'; i++) {
+                            buffer[i] != 0 && buffer[i] != '\n'; i++) {
                         }
                         returnedCharPos = i;
                         --linesRead;
                     }
-                } else if (ch == -1) {
+                }
+                if (ch == -1) {
                     break;
                 }
 
