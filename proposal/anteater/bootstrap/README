@@ -22,10 +22,9 @@ downloading a build from somewhere? Ok. Here's how it works:
     installed on your machine. You can do a quick check using
     the 'javap sun.tools.javac.Main' command to see if it is.
 
-  * Make sure that you have a JAXP 1.1 compliant parser in your
-    classpath. The Bootstrap itself doesn't need XML parsing
-    classes, but Ant itself does. A good test for this is
-    'javap javax.xml.parsers.DocumentBuilder'
+  * Make sure that you have xml-crimson checked out next to
+    the jakarta-ant workspace so that the Bootstrap can find
+    this necessary code.
 
   * Compile Bootstrap.java. You should end up with Bootstrap.class
     and maybe a few other classes (depending).
