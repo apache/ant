@@ -137,7 +137,7 @@ Other changes:
   <antcall> using nested <reference> elements or the new inheritRefs
   attribute.
 
-* <fail> no supports builds to fail based on conditions via if and
+* <fail> now supports builds to fail based on conditions via if and
   unless attributes.
 
 * Ant now comes with two new BuildLogger implementations - one that 
@@ -158,6 +158,8 @@ Other changes:
 * You can now set an ANT_ARGS environment variable to hold arguments you
   always want passed to the 'ant' command -- for example, if you always
   want to use a different logger or the -find flag.
+  
+* <tstamp> now supports a new "prefix" attribute to prefix properties set.WHATSNEW
 
 Changes from Ant 1.4 to Ant 1.4.1
 ===========================================
