@@ -228,6 +228,9 @@ Fixed bugs:
 
 * Get with usetimestamp did not work when local timestamp roughly >= now.
 
+* NPE when when <presetdef> tries to configure a task that
+  cannot be instantiated. Bugzilla Report 33689.
+
 Changes from Ant 1.6.1 to Ant 1.6.2
 ===================================
 
