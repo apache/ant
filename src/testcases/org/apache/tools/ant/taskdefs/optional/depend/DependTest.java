@@ -125,4 +125,39 @@ public class DependTest extends BuildFileTest {
         assertTrue("Result did not contain D.class", 
             files.containsKey("D.class"));
     }
+
+    /**
+     * Test that inner class dependencies trigger deletion of the outer class
+     */
+    public void testInner() {
+        Project project = getProject();
+        executeTarget("testinner");
+        FileSet resultFileSet = (FileSet)project.getReference(RESULT_FILESET);
+        DirectoryScanner scanner = resultFileSet.getDirectoryScanner(project);
+        String[] scannedFiles = scanner.getIncludedFiles();
+        Hashtable files = new Hashtable();
+        for (int i = 0; i < scannedFiles.length; ++i) {
+            files.put(scannedFiles[i], scannedFiles[i]);
+        }
+        assertEquals("Depend did not leave correct number of files", 0, 
+            files.size());
+    }
+
+    /**
+     * Test that multi-leve inner class dependencies trigger deletion of 
+     * the outer class
+     */
+    public void testInnerInner() {
+        Project project = getProject();
+        executeTarget("testinnerinner");
+        FileSet resultFileSet = (FileSet)project.getReference(RESULT_FILESET);
+        DirectoryScanner scanner = resultFileSet.getDirectoryScanner(project);
+        String[] scannedFiles = scanner.getIncludedFiles();
+        Hashtable files = new Hashtable();
+        for (int i = 0; i < scannedFiles.length; ++i) {
+            files.put(scannedFiles[i], scannedFiles[i]);
+        }
+        assertEquals("Depend did not leave correct number of files", 0, 
+            files.size());
+    }
 }

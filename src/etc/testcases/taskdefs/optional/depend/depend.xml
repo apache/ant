@@ -2,6 +2,8 @@
 
 <project name="depend" basedir="." default="help">
   <property name="src1.dir" value="src1"/>
+  <property name="src2.dir" value="src2"/>
+  <property name="src3.dir" value="src3"/>
   <property name="tempsrc.dir" value="working"/>
   <property name="classes.dir" value="classes"/>
   <target name="help">
@@ -18,7 +20,19 @@
     </copy>
   </target>
   
-  <target name="src1compile" depends="src1setup">
+  <target name="src2setup" depends="basesetup">
+    <copy todir="${tempsrc.dir}">
+      <fileset dir="${src2.dir}"/>
+    </copy>
+  </target>
+
+  <target name="src3setup" depends="basesetup">
+    <copy todir="${tempsrc.dir}">
+      <fileset dir="${src3.dir}"/>
+    </copy>
+  </target>
+
+  <target name="compile">
     <mkdir dir="${classes.dir}"/>
     <javac srcdir="${tempsrc.dir}" destdir="${classes.dir}"/>
   </target>
@@ -28,7 +42,7 @@
     <delete dir="${tempsrc.dir}"/>
   </target>
 
-  <target name="testdirect" depends="src1compile">
+  <target name="testdirect" depends="src1setup, compile">
     <sleep seconds="3"/>
     <delete file="${tempsrc.dir}/C.java"/>
     <copy file="${src1.dir}/C.java" tofile="${tempsrc.dir}/C.java"/>
@@ -36,7 +50,7 @@
     <fileset id="result" dir="${classes.dir}"/>
   </target>
 
-  <target name="testclosure" depends="src1compile">
+  <target name="testclosure" depends="src1setup, compile">
     <sleep seconds="3"/>
     <delete file="${tempsrc.dir}/C.java"/>
     <copy file="${src1.dir}/C.java" tofile="${tempsrc.dir}/C.java"/>
@@ -44,21 +58,21 @@
     <fileset id="result" dir="${classes.dir}"/>
   </target>
 
-  <target name="testbasicset" depends="src1compile">
+  <target name="testbasicset" depends="src1setup, compile">
     <classfileset id="result" dir="${classes.dir}" rootclass="A"/>
   </target>
 
-  <target name="testsmallset" depends="src1compile">
+  <target name="testsmallset" depends="src1setup, compile">
     <classfileset id="result" dir="${classes.dir}" rootclass="B"/>
   </target>
 
-  <target name="testcomboset" depends="src1compile">
+  <target name="testcomboset" depends="src1setup, compile">
     <classfileset id="result" dir="${classes.dir}" rootclass="B">
       <include name="**/C.class"/>
     </classfileset>
   </target>
   
-  <target name="testbyreference" depends="src1compile">
+  <target name="testbyreference" depends="src1setup, compile">
     <classfileset id="classSet" dir="${classes.dir}" rootclass="A">
       <include name="**/C.class"/>
     </classfileset>
@@ -67,4 +81,19 @@
     </jar>
   </target>
   
+  <target name="testinner" depends="src2setup, compile">
+    <sleep seconds="3"/>
+    <delete file="${tempsrc.dir}/B.java"/>
+    <copy file="${src2.dir}/B.java" tofile="${tempsrc.dir}/B.java"/>
+    <depend srcdir="${tempsrc.dir}" destdir="${classes.dir}" closure="yes"/>
+    <fileset id="result" dir="${classes.dir}"/>
+  </target>
+
+  <target name="testinnerinner" depends="src3setup, compile">
+    <sleep seconds="3"/>
+    <delete file="${tempsrc.dir}/B.java"/>
+    <copy file="${src3.dir}/B.java" tofile="${tempsrc.dir}/B.java"/>
+    <depend srcdir="${tempsrc.dir}" destdir="${classes.dir}" closure="yes"/>
+    <fileset id="result" dir="${classes.dir}"/>
+  </target>
 </project>
