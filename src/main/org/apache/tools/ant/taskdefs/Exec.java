@@ -58,9 +58,10 @@ import org.apache.tools.ant.*;
 import java.io.*;
 
 /**
- *
+ * Executes a given command if the os platform is appropriate.
  *
  * @author duncan@x180.com
+ * @author rubys@us.ibm.com
  */
 
 public class Exec extends Task {
@@ -80,19 +81,19 @@ public class Exec extends Task {
             project.log("Not found in " + os, Project.MSG_VERBOSE);
             return;
         }
-        
+
         String ant = project.getProperty("ant.home");
         if (ant == null) throw new BuildException("Property 'ant.home' not found");
 
         String antRun = project.resolveFile(ant + "/bin/antRun").toString();
         if (myos.toLowerCase().indexOf("windows") >= 0) antRun = antRun + ".bat";
         command = antRun + " " + project.resolveFile(dir) + " " + command;
-        
+
         run(command);
     }
 
     protected void run(String command) throws BuildException {
-        
+
         try {
             // show the command
             project.log(command, "exec", Project.MSG_VERBOSE);
@@ -107,11 +108,12 @@ public class Exec extends Task {
             }
 
             // copy input and error to the output stream
-            StreamPumper inputPumper = 
+            StreamPumper inputPumper =
                 new StreamPumper(proc.getInputStream(), "exec", project, fos);
-            StreamPumper errorPumper = 
+            StreamPumper errorPumper =
                 new StreamPumper(proc.getErrorStream(), "error", project, fos);
 
+            // starts pumping away the generated output/error
             inputPumper.start();
             errorPumper.start();
 
@@ -121,7 +123,7 @@ public class Exec extends Task {
             errorPumper.join();
             proc.destroy();
 
-            // close the output file if required 
+            // close the output file if required
             if (fos != null) fos.close();
 
             // check its exit value
@@ -131,8 +133,7 @@ public class Exec extends Task {
             }
         } catch (IOException ioe) {
             throw new BuildException("Error exec: " + command );
-        } catch (InterruptedException ex) {
-        }
+        } catch (InterruptedException ex) {}
     }
 
     public void setDir(String d) {
@@ -154,51 +155,48 @@ public class Exec extends Task {
     // Inner class for continually pumping the input stream during
     // Process's runtime.
     class StreamPumper extends Thread {
-	private BufferedReader din;
+        private BufferedReader din;
         private String name;
-	private boolean endOfStream = false;
-	private int SLEEP_TIME = 5;
+        private boolean endOfStream = false;
+        private int SLEEP_TIME = 5;
         private Project project;
-	private PrintWriter fos;
+        private PrintWriter fos;
 
-	public StreamPumper(InputStream is, String name, Project project, PrintWriter fos) {
+        public StreamPumper(InputStream is, String name, Project project, PrintWriter fos) {
             this.din     = new BufferedReader(new InputStreamReader(is));
             this.name    = name;
             this.project = project;
-	    this.fos     = fos;
-	}
+            this.fos     = fos;
+        }
 
-	public void pumpStream()
-	    throws IOException
-	{
-	    byte[] buf = new byte[BUFFER_SIZE];
-	    if (!endOfStream) {
+        public void pumpStream()
+            throws IOException
+        {
+            byte[] buf = new byte[BUFFER_SIZE];
+            if (!endOfStream) {
                 String line = din.readLine();
 
-		if (line != null) {
-                    if (fos==null)
+                if (line != null) {
+                    if (fos == null)
                         project.log(line, name, Project.MSG_INFO);
                     else
                         fos.println(line);
-		} else {
-		    endOfStream=true;
-		}
-	    }
-	}
-
-	public void run() {
-            try {
-	        try {
-		    while (!endOfStream) {
-		        pumpStream();
-		        sleep(SLEEP_TIME);
-		    }
-	        } catch (InterruptedException ie) {
+                } else {
+                    endOfStream = true;
                 }
-                din.close();
-	    } catch (IOException ioe) {
-	    }
-	}
-    }
+            }
+        }
 
+        public void run() {
+            try {
+                try {
+                    while (!endOfStream) {
+                        pumpStream();
+                        sleep(SLEEP_TIME);
+                    }
+                } catch (InterruptedException ie) {}
+                din.close();
+            } catch (IOException ioe) {}
+        }
+    }
 }
