@@ -15,8 +15,7 @@ import java.net.URL;
 import org.apache.myrmidon.api.TaskException;
 import org.apache.tools.ant.Task;
 import org.apache.tools.ant.taskdefs.ExecuteJava;
-import org.apache.tools.ant.taskdefs.exec.Execute;
-import org.apache.tools.ant.taskdefs.exec.LogOutputStream;
+import org.apache.tools.ant.taskdefs.exec.Execute2;
 import org.apache.tools.ant.types.Argument;
 import org.apache.tools.ant.types.CommandlineJava;
 import org.apache.tools.ant.types.Path;
@@ -93,7 +92,7 @@ public class ANTLR extends Task
      */
     public Path createClasspath()
     {
-        return commandline.createClasspath( getProject() ).createPath();
+        return commandline.createClasspath().createPath();
     }
 
     /**
@@ -223,9 +222,8 @@ public class ANTLR extends Task
     private int run( String[] command )
         throws TaskException
     {
-        final Execute exe = new Execute();
-        exe.setOutput( new LogOutputStream( getLogger(), false ) );
-        exe.setError( new LogOutputStream( getLogger(), true ) );
+        final Execute2 exe = new Execute2();
+        setupLogger( exe );
 
         if( workingdir != null )
         {

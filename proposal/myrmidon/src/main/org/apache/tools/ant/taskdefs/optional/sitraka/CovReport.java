@@ -19,8 +19,7 @@ import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 import org.apache.myrmidon.api.TaskException;
 import org.apache.tools.ant.Task;
-import org.apache.tools.ant.taskdefs.exec.Execute;
-import org.apache.tools.ant.taskdefs.exec.LogOutputStream;
+import org.apache.tools.ant.taskdefs.exec.Execute2;
 import org.apache.tools.ant.types.Commandline;
 import org.apache.tools.ant.types.EnumeratedAttribute;
 import org.apache.tools.ant.types.Path;
@@ -241,9 +240,8 @@ public class CovReport extends Task
             }
 
             // use the custom handler for stdin issues
-            final Execute exe = new Execute();
-            exe.setOutput( new LogOutputStream( getLogger(), false ) );
-            exe.setError( new LogOutputStream( getLogger(), true ) );
+            final Execute2 exe = new Execute2();
+            setupLogger( exe );
             getLogger().debug( cmdl.toString() );
             exe.setCommandline( cmdl.getCommandline() );
             int exitValue = exe.execute();

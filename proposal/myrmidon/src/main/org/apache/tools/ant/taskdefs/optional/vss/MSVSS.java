@@ -12,8 +12,7 @@ import java.io.IOException;
 import java.util.Properties;
 import org.apache.myrmidon.api.TaskException;
 import org.apache.tools.ant.Task;
-import org.apache.tools.ant.taskdefs.exec.Execute;
-import org.apache.tools.ant.taskdefs.exec.LogOutputStream;
+import org.apache.tools.ant.taskdefs.exec.Execute2;
 import org.apache.tools.ant.types.Commandline;
 
 /**
@@ -205,9 +204,8 @@ public abstract class MSVSS extends Task
     {
         try
         {
-            final Execute exe = new Execute();
-            exe.setOutput( new LogOutputStream( getLogger(), false ) );
-            exe.setError( new LogOutputStream( getLogger(), true ) );
+            final Execute2 exe = new Execute2();
+            setupLogger( exe );
 
             // If location of ss.ini is specified we need to set the
             // environment-variable SSDIR to this value

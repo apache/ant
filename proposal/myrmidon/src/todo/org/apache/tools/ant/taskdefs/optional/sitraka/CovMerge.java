@@ -16,8 +16,7 @@ import java.util.Random;
 import org.apache.myrmidon.api.TaskException;
 import org.apache.tools.ant.DirectoryScanner;
 import org.apache.tools.ant.Task;
-import org.apache.tools.ant.taskdefs.exec.Execute;
-import org.apache.tools.ant.taskdefs.exec.LogOutputStream;
+import org.apache.tools.ant.taskdefs.exec.Execute2;
 import org.apache.tools.ant.types.Commandline;
 import org.apache.tools.ant.types.FileSet;
 
@@ -114,9 +113,8 @@ public class CovMerge extends Task
             }
             cmdl.createArgument().setValue( "-jp_paramfile=" + paramfile.getAbsolutePath() );
 
-            final Execute exe = new Execute();
-            exe.setOutput( new LogOutputStream( getLogger(), false ) );
-            exe.setError( new LogOutputStream( getLogger(), true ) );
+            final Execute2 exe = new Execute2();
+            setupLogger( exe );
             getLogger().debug( cmdl.toString() );
             exe.setCommandline( cmdl.getCommandline() );
 
@@ -164,9 +162,7 @@ public class CovMerge extends Task
             }
         }
 
-        File[] files = new File[ v.size() ];
-        v.copyInto( files );
-        return files;
+        return (File[])v.toArray( new File[ v.size() ] );
     }
 
     /**

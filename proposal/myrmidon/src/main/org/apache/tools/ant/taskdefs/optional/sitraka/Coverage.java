@@ -15,9 +15,7 @@ import java.io.StringWriter;
 import java.util.ArrayList;
 import org.apache.myrmidon.api.TaskException;
 import org.apache.tools.ant.Task;
-import org.apache.tools.ant.taskdefs.exec.Execute;
-import org.apache.tools.ant.taskdefs.exec.LogOutputStream;
-import org.apache.tools.ant.taskdefs.exec.LogStreamHandler;
+import org.apache.tools.ant.taskdefs.exec.Execute2;
 import org.apache.tools.ant.types.Argument;
 import org.apache.tools.ant.types.Commandline;
 import org.apache.tools.ant.types.CommandlineJava;
@@ -189,7 +187,7 @@ public class Coverage
      */
     public Path createClasspath()
     {
-        return cmdlJava.createClasspath( getProject() ).createPath();
+        return cmdlJava.createClasspath().createPath();
     }
 
     public Filters createFilters()
@@ -251,13 +249,11 @@ public class Coverage
             cmdl.createArgument().setValue( "-jp_input=" + paramfile.getAbsolutePath() );
 
             // use the custom handler for stdin issues
-            final LogOutputStream output = new LogOutputStream( getLogger(), false );
-            final LogOutputStream error = new LogOutputStream( getLogger(), true );
-            final LogStreamHandler handler = new CoverageStreamHandler( output, error );
-            Execute exec = new Execute( handler );
+            final Execute2 exe = new Execute2();
+            setupLogger( exe );
             getLogger().debug( cmdl.toString() );
-            exec.setCommandline( cmdl.getCommandline() );
-            int exitValue = exec.execute();
+            exe.setCommandline( cmdl.getCommandline() );
+            int exitValue = exe.execute();
             if( exitValue != 0 )
             {
                 throw new TaskException( "JProbe Coverage failed (" + exitValue + ")" );
