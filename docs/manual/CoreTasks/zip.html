@@ -33,6 +33,11 @@ if <code>basedir</code> is set. You may use any mixture of the implicit file set
 and optional subelements like <code>&lt;include&gt;</code>); explicit nested
 <code>&lt;fileset&gt;</code> elements so long as at least one fileset total is specified. The ZIP file will
 only reflect the relative paths of files <i>within</i> each fileset. The Zip task and its derivatives know a special form of a fileset named zipfileset that has additional attributes (described below). </p>
+<p>The <code>update</code> parameter controls what happens if the
+ZIP file already exists. When set to <code>yes</code>, the ZIP file is
+updated with the files specified. (New files are added; old files are
+replaced with the new versions.) When set to <code>no</code> (the
+default) the ZIP file is overwritten.
 <p>The <code>whenempty</code> parameter controls what happens when no files match.
 If <code>skip</code> (the default), the ZIP is not created and a warning is issued.
 If <code>fail</code>, the ZIP is not created and the build is halted with an error.
@@ -110,6 +115,12 @@ Java.</p>
     <td valign="top" align="center">No</td>
   </tr>
   <tr>
+    <td valign="top">update</td>
+    <td valign="top">indicates whether to update or overwrite
+      the destination file if it already exists.</td>
+    <td valign="top" align="center">No</td>
+  </tr>
+  <tr>
     <td valign="top">whenempty</td>
     <td valign="top">Behavior when no files match.</td>
     <td valign="top" align="center">No</td>
@@ -136,6 +147,14 @@ for inclusion in the archive.</p>
   /&gt;</pre>
 <p>zips all files in the <code>htdocs/manual</code> directory into a file called <code>manual.zip</code>
 in the <code>${dist}</code> directory.</p>
+<pre>  &lt;zip zipfile=&quot;${dist}/manual.zip&quot;
+       basedir=&quot;htdocs/manual&quot;
+       update=&quot;true&quot;
+  /&gt;</pre>
+<p>zips all files in the <code>htdocs/manual</code> directory into a file called <code>manual.zip</code>
+in the <code>${dist}</code> directory. If <code>manual.zip</code>
+doesn't exist, it is created; otherwise it is updated with the
+new/changed files.</p>
 <pre>  &lt;zip zipfile=&quot;${dist}/manual.zip&quot;
        basedir=&quot;htdocs/manual&quot;
        excludes=&quot;mydocs/**, **/todo.html&quot;
@@ -169,8 +188,6 @@ under <code>docs/examples</code>.  The archive might end up containing the files
     docs/ChangeLog.txt
     docs/examples/index.html
 </code></pre>
-
-
 <hr>
 <p align="center">Copyright &copy; 2000,2001 Apache Software Foundation. All rights
 Reserved.</p>
