@@ -386,13 +386,11 @@ public class CommandlineJava implements Cloneable {
         }
 
         //boot classpath
-        if (haveBootclasspath(true)) {
-            listIterator.add("-Xbootclasspath:" + bootclasspath.toString());
-        } else if (cloneBootclasspath()) {
-            listIterator.add("-Xbootclasspath:"
-                             + Path.systemBootClasspath.toString());
+        Path bcp = calculateBootclasspath(true);
+        if (bcp.size() > 0) {
+            listIterator.add("-Xbootclasspath:" + bcp.toString());
         }
-
+        
         //main classpath
         if (haveClasspath()) {
             listIterator.add("-classpath");
@@ -493,7 +491,7 @@ public class CommandlineJava implements Cloneable {
             size += 2;
         }
         // bootclasspath is "-Xbootclasspath:<classpath>" -> 1 arg
-        if (haveBootclasspath(true) || cloneBootclasspath()) {
+        if (calculateBootclasspath(true).size() > 0) {
             size++;
         }
         // jar execution requires an additional -jar option
@@ -622,37 +620,32 @@ public class CommandlineJava implements Cloneable {
      * @since Ant 1.6
      */
     protected boolean haveBootclasspath(boolean log) {
-        if (bootclasspath != null
-            && bootclasspath.toString().trim().length() > 0) {
-
-            if (!bootclasspath.toString()
-                .equals(bootclasspath.concatSystemClasspath("ignore")
-                        .toString())) {
-                if (log) {
-                    bootclasspath.log("Ignoring bootclasspath as "
-                                       + "build.sysclasspath has been set.");
-                }
-            } else if (vmVersion.startsWith("1.1")) {
-                if (log) {
-                    bootclasspath.log("Ignoring bootclasspath as "
-                                       + "the target VM doesn't support it.");
-                }
-            } else {
-                return true;
-            }
-        }
-        return false;
+        return calculateBootclasspath(log).size() > 0;
     }
 
     /**
-     * Should a bootclasspath argument be created to clone the current
-     * VM settings?
+     * Calculate the bootclasspath based on the bootclasspath
+     * specified, the build.sysclasspath and build.clonevm magic
+     * properties as well as the cloneVm attribute.
      *
      * @since Ant 1.7
      */
-    private boolean cloneBootclasspath() {
-        return isCloneVm() && !vmVersion.startsWith("1.1")
-            && Path.systemBootClasspath.size() > 0;
+    private Path calculateBootclasspath(boolean log) {
+        if (vmVersion.startsWith("1.1")) {
+            if (bootclasspath != null && log) {
+                bootclasspath.log("Ignoring bootclasspath as "
+                                  + "the target VM doesn't support it.");
+            }
+        } else {
+            if (bootclasspath != null) {
+                return bootclasspath.concatSystemBootClasspath(isCloneVm()
+                                                               ? "last"
+                                                               : "ignore");
+            } else if (isCloneVm()) {
+                return Path.systemBootClasspath;
+            }
+        }
+        return new Path(null);
     }
 
     /**

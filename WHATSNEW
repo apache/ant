@@ -10,6 +10,11 @@ Changes that could break older environments:
   to upgrade to a newer version of log4j.
   Bugzilla Report 31951.
 
+* build.sysclasspath now also affects the bootclasspath handling of
+  spawned Java VMs.  If you set build.sysclasspath to anything other
+  than "ignore" (or leave it unset, since "ignore" is the default when
+  it comes to bootclasspath handling), then the bootclasspath of the
+  VM running Ant will be added to the bootclasspath you've specified.
 
 Fixed bugs:
 -----------
