@@ -250,7 +250,7 @@
 
   <target name="get.snapshot">
     <get src="http://jakarta.apache.org/build/tmp/ant/ant.src.zip" dest="ant-src.zip" />
-    <expand src="ant-src.zip" dest="." />
+    <unzip src="ant-src.zip" dest="." />
   </target>
 
   <target name="make.snapshot">

@@ -85,8 +85,8 @@ public class Patch extends Task {
             throw new BuildException("patchfile "+file+" doesn\'t exist", 
                                      location);
         }
-        cmd.addValue("-i");
-        cmd.addValue(file.getAbsolutePath());
+        cmd.createArgument().setValue("-i");
+        cmd.createArgument().setFile(file);
         havePatchfile = true;
     }
 
@@ -95,7 +95,7 @@ public class Patch extends Task {
      */
     public void setBackups(boolean backups) {
         if (backups) {
-            cmd.addValue("-b");
+            cmd.createArgument().setValue("-b");
         }
     }
 
@@ -104,7 +104,7 @@ public class Patch extends Task {
      */
     public void setIgnorewhitespace(boolean ignore) {
         if (ignore) {
-            cmd.addValue("-l");
+            cmd.createArgument().setValue("-l");
         }
     }
 
@@ -118,7 +118,7 @@ public class Patch extends Task {
         if (num < 0) {
             throw new BuildException("strip has to be >= 0", location);
         }
-        cmd.addValue("-p"+num);
+        cmd.createArgument().setValue("-p"+num);
     }
 
     /**
@@ -126,7 +126,7 @@ public class Patch extends Task {
      */
     public void setQuiet(boolean q) {
         if (q) {
-            cmd.addValue("-s");
+            cmd.createArgument().setValue("-s");
         }
     }
 
@@ -135,7 +135,7 @@ public class Patch extends Task {
      */
     public void setReverse(boolean r) {
         if (r) {
-            cmd.addValue("-R");
+            cmd.createArgument().setValue("-R");
         }
     }
 
@@ -148,7 +148,7 @@ public class Patch extends Task {
         cmd.setExecutable("patch");
 
         if (originalFile != null) {
-            cmd.addValue(originalFile.getAbsolutePath());
+            cmd.createArgument().setFile(originalFile);
         }
 
         Execute exe = new Execute(new LogStreamHandler(this, Project.MSG_INFO,

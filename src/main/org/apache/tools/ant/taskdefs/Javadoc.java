@@ -223,7 +223,7 @@ public class Javadoc extends Task {
     }
     public void setDestdir(File dir) {
         cmd.createArgument().setValue("-d");
-        cmd.createArgument().setValue(dir.getAbsolutePath());
+        cmd.createArgument().setFile(dir);
         destDir = dir;
     }
     public void setSourcefiles(String src) {
@@ -235,7 +235,7 @@ public class Javadoc extends Task {
     public void setOverview(File f) {
         if (!javadoc1) {
             cmd.createArgument().setValue("-overview");
-            cmd.createArgument().setValue(f.getAbsolutePath());
+            cmd.createArgument().setFile(f);
         }
     }
     public void setPublic(boolean b) {
@@ -400,13 +400,13 @@ public class Javadoc extends Task {
     public void setStylesheetfile(File f) {
         if (!javadoc1) {
             cmd.createArgument().setValue("-stylesheetfile");
-            cmd.createArgument().setValue(f.getAbsolutePath());
+            cmd.createArgument().setFile(f);
         }
     }
     public void setHelpfile(File f) {
         if (!javadoc1) {
             cmd.createArgument().setValue("-helpfile");
-            cmd.createArgument().setValue(f.getAbsolutePath());
+            cmd.createArgument().setFile(f);
         }
     }
     public void setDocencoding(String enc) {
@@ -517,10 +517,10 @@ public class Javadoc extends Task {
 
         if ( (!javadoc1) || (sourcePath == null) ) {
             cmd.createArgument().setValue("-classpath");
-            cmd.createArgument().setValue(classpath.toString());
+            cmd.createArgument().setPath(classpath);
             if (sourcePath != null) {
                 cmd.createArgument().setValue("-sourcepath");
-                cmd.createArgument().setValue(sourcePath.toString());
+                cmd.createArgument().setPath(sourcePath);
             }
         } else {
             cmd.createArgument().setValue("-classpath");
@@ -547,7 +547,7 @@ public class Javadoc extends Task {
                     cmd.createArgument().setValue(doclet.getName());
                     if (doclet.getPath() != null) {
                         cmd.createArgument().setValue("-docletpath");
-                        cmd.createArgument().setValue(doclet.getPath().toString());
+                        cmd.createArgument().setPath(doclet.getPath());
                     }
                     for (Enumeration e = doclet.getParams(); e.hasMoreElements();) {
                         DocletParam param = (DocletParam)e.nextElement();
@@ -564,7 +564,7 @@ public class Javadoc extends Task {
             } 
             if (bootclasspath != null) {
                 cmd.createArgument().setValue("-bootclasspath");
-                cmd.createArgument().setValue(bootclasspath.toString());
+                cmd.createArgument().setPath(bootclasspath);
             }
             
             // add the links arguments
@@ -573,7 +573,7 @@ public class Javadoc extends Task {
                     LinkArgument la = (LinkArgument)e.nextElement();
                 
                     if (la.getHref() == null) {
-                        throw new BuildException("Links must provide the RUL to the external class documentation.");
+                        throw new BuildException("Links must provide the URL to the external class documentation.");
                     }
                 
                     if (la.isLinkOffline()) {

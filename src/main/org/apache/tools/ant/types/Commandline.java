@@ -55,6 +55,7 @@
 package org.apache.tools.ant.types;
 
 import org.apache.tools.ant.BuildException;
+import java.io.File;
 import java.util.Vector;
 import java.util.StringTokenizer;
 
@@ -93,7 +94,7 @@ public class Commandline {
         if (tmp != null && tmp.length > 0) {
             setExecutable(tmp[0]);
             for (int i=1; i<tmp.length; i++) {
-                addValue(tmp[i]);
+                createArgument().setValue(tmp[i]);
             }
         }
     }
@@ -107,13 +108,16 @@ public class Commandline {
      */
     public class Argument {
 
+        private String[] parts;
+        private Reference pathRef;
+
         /**
          * Sets a single commandline argument.
          *
          * @param value a single commandline argument.
          */
         public void setValue(String value) {
-            Commandline.this.addValue(value);
+            parts = new String[] {value};
         }
 
         /**
@@ -122,7 +126,35 @@ public class Commandline {
          * @param line line to split into several commandline arguments
          */
         public void setLine(String line) {
-            Commandline.this.addLine(translateCommandline(line));
+            parts = translateCommandline(line);
+        }
+
+        /**
+         * Sets a single commandline argument and treats it like a
+         * PATH - ensures the right separator for the local platform
+         * is used.
+         *
+         * @param value a single commandline argument.  
+         */
+        public void setPath(Path value) {
+            parts = new String[] {value.toString()};
+        }
+
+        /**
+         * Sets a single commandline argument to the absolute filename
+         * of the given file.  
+         *
+         * @param value a single commandline argument.  
+         */
+        public void setFile(File value) {
+            parts = new String[] {value.getAbsolutePath()};
+        }
+
+        /**
+         * Returns the parts this Argument consists of.
+         */
+        public String[] getParts() {
+            return parts;
         }
     }
 
@@ -133,9 +165,8 @@ public class Commandline {
      * @return the argument object.
      */
     public Argument createArgument() {
-        if (argument == null) {
-            argument = new Argument();
-        }
+        Argument argument = new Argument();
+        definition.addElement(argument);
         return argument;
     }
 
@@ -154,25 +185,18 @@ public class Commandline {
     }
 
 
-    public void addValue(String value) {
-        if (value == null || value.length() == 0) return;
-        definition.addElement(value);
-    }
-
-
-    public void addLine(String[] line) {
+    public void addArguments(String[] line) {
         for (int i=0; i < line.length; i++) {
             createArgument().setValue(line[i]);
         }
     }
 
-
     /**
      * Returns the executable and all defined arguments.
      */
     public String[] getCommandline() {
-        if (executable == null) return getArguments();
         final String[] args = getArguments();
+        if (executable == null) return args;
         final String[] result = new String[args.length+1];
         result[0] = executable;
         System.arraycopy(args, 0, result, 1, args.length);
@@ -185,10 +209,18 @@ public class Commandline {
      * <code>addValue</code> or the argument object.
      */
     public String[] getArguments() {
-        final String [] result;
-        result = new String[definition.size()];
-        definition.copyInto(result);
-        return result;
+        Vector result = new Vector(definition.size()*2);
+        for (int i=0; i<definition.size(); i++) {
+            Argument arg = (Argument) definition.elementAt(i);
+            String[] s = arg.getParts();
+            for (int j=0; j<s.length; j++) {
+                result.addElement(s[j]);
+            }
+        }
+        
+        String [] res = new String[result.size()];
+        result.copyInto(res);
+        return res;
     }
 
 
@@ -294,7 +326,7 @@ public class Commandline {
     }
 
     public int size() {
-        return definition.size() + (executable == null ? 0 : 1);
+        return getCommandline().length;
     }
 
 }

@@ -224,8 +224,8 @@ public class JUnitTask extends Task {
 		    // Create a watchdog based on the timeout attribute
                     final Execute execute = new Execute(new PumpStreamHandler(), createWatchdog());
                     final Commandline cmdl = new Commandline();
-                    cmdl.addLine(commandline.getCommandline());
-                    cmdl.addLine(test.getCommandline());
+                    cmdl.addArguments(commandline.getCommandline());
+                    cmdl.addArguments(test.getCommandline());
                     execute.setCommandline(cmdl.getCommandline());
                     log("Execute JUnit: " + cmdl, Project.MSG_VERBOSE);
                     exitValue = execute.execute();

@@ -194,23 +194,23 @@ public class Cab extends MatchingTask {
     {
         Commandline command = new Commandline();
         command.setExecutable("cabarc");
-        command.addValue("-r");
-        command.addValue("-p");
+        command.createArgument().setValue("-r");
+        command.createArgument().setValue("-p");
 
         if (!doCompress)
         {
-            command.addValue("-m");
-            command.addValue("none");
+            command.createArgument().setValue("-m");
+            command.createArgument().setValue("none");
         }
 
         if (cmdOptions != null)
         {
-            command.addValue(cmdOptions);
+            command.createArgument().setValue(cmdOptions);
         }
         
-        command.addValue("n");
-        command.addValue(cabFile.getAbsolutePath());
-        command.addValue("@" + listFile.getAbsolutePath());
+        command.createArgument().setValue("n");
+        command.createArgument().setFile(cabFile);
+        command.createArgument().setValue("@" + listFile.getAbsolutePath());
 
         return command;
     }

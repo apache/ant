@@ -85,6 +85,10 @@ public class Environment {
             this.value = path.toString();
         }
 
+        public void setFile(java.io.File file) {
+            this.value = file.getAbsolutePath();
+        }
+
         public String getContent() throws BuildException {
             if (key == null || value == null) {
                 throw new BuildException("key and value must be specified for environment variables.");

@@ -88,20 +88,20 @@ public class Cvs extends Task {
 
         toExecute.setExecutable("cvs");
         if (cvsRoot != null) { 
-            toExecute.addValue("-d");
-            toExecute.addValue(cvsRoot);
+            toExecute.createArgument().setValue("-d");
+            toExecute.createArgument().setValue(cvsRoot);
         }
         if (noexec) {
-            toExecute.addValue("-n");
+            toExecute.createArgument().setValue("-n");
         }
         if (quiet) {
-            toExecute.addValue("-q");
+            toExecute.createArgument().setValue("-q");
         }
-        toExecute.addValue(command);
-        toExecute.addLine(cmd.getCommandline());
+        toExecute.createArgument().setValue(command);
+        toExecute.addArguments(cmd.getCommandline());
 
 	if (pack != null) {
-            toExecute.addValue(pack);
+            toExecute.createArgument().setValue(pack);
 	}
 
         Execute exe = new Execute(new LogStreamHandler(this, Project.MSG_INFO,
@@ -141,16 +141,16 @@ public class Cvs extends Task {
     public void setTag(String p) { 
         // Check if not real tag => set it to null 
         if (p != null && p.trim().length() > 0) {
-            cmd.addValue("-r");
-            cmd.addValue(p);
+            cmd.createArgument().setValue("-r");
+            cmd.createArgument().setValue(p);
         }
     } 
 
     
     public void setDate(String p) {
         if(p != null && p.trim().length() > 0) {
-            cmd.addValue("-D");
-            cmd.addValue(p);
+            cmd.createArgument().setValue("-D");
+            cmd.createArgument().setValue(p);
         }
     }
 

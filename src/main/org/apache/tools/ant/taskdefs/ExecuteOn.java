@@ -135,7 +135,7 @@ public class ExecuteOn extends ExecTask {
             String myos = System.getProperty("os.name");
 
             if (parallel) {
-                cmdl.addLine(s);
+                cmdl.addArguments(s);
                 exe.setCommandline(cmdl.getCommandline());
                 err = exe.execute();
                 if (err != 0) {
