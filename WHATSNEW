@@ -15,13 +15,19 @@ Fixed bugs:
 * The sh wrapper script could fail if you started Ant from a directory
   with whitespace in its name.
 
+* ant -diagnostics was not working properly when the task dependency
+  was missing and was just printing the missing dependency.
+
+* The ExpandProperties filter threw NPEs when defined using
+  the <filterreader> format.
+
 Other changes:
 --------------
 
 * <echoproperties> can now create XML output.
 
 * <echoproperties> has a new srcfile attribute that can make it read
-properties files and output them instead of Ant's properties.
+  properties files and output them instead of Ant's properties.
 
 * <filterset> will now resolve filters recursively.
 
@@ -29,7 +35,8 @@ properties files and output them instead of Ant's properties.
 
 * All tasks can be used outside of <target>s
 
-* Appendix E of Java Development with Ant (Loughran/Hatcher) contributed to the docs
+* Appendix E of Java Development with Ant (Loughran/Hatcher)
+  contributed to the docs
 
 Changes from Ant 1.5beta3 to Ant 1.5
 ====================================
