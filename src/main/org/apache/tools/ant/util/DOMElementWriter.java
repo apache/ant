@@ -117,6 +117,12 @@ public class DOMElementWriter {
                 out.write(encode(child.getNodeValue()));
                 break;
 
+            case Node.COMMENT_NODE:
+                out.write("<!--");
+                out.write(encode(child.getNodeValue()));
+                out.write("-->");
+                break;
+
             case Node.CDATA_SECTION_NODE:
                 out.write("<![CDATA[");
                 out.write(encodedata(((Text) child).getData()));
