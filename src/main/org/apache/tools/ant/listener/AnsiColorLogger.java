@@ -231,35 +231,37 @@ public final class AnsiColorLogger extends DefaultLogger {
     protected final void printMessage(final String message,
                                       final PrintStream stream,
                                       final int priority) {
-        if (!colorsSet) {
-            setColors();
-            colorsSet = true;
-        }
+        if (message != null && stream != null) {
+            if (!colorsSet) {
+                setColors();
+                colorsSet = true;
+            }
 
-        final StringBuffer msg = new StringBuffer(message);
-        switch (priority) {
-            case Project.MSG_ERR:
-                msg.insert(0, errColor);
-                msg.append(END_COLOR);
-                break;
-            case Project.MSG_WARN:
-                msg.insert(0, warnColor);
-                msg.append(END_COLOR);
-                break;
-            case Project.MSG_INFO:
-                msg.insert(0, infoColor);
-                msg.append(END_COLOR);
-                break;
-            case Project.MSG_VERBOSE:
-                msg.insert(0, verboseColor);
-                msg.append(END_COLOR);
-                break;
-            case Project.MSG_DEBUG:
-                msg.insert(0, debugColor);
-                msg.append(END_COLOR);
-                break;
+            final StringBuffer msg = new StringBuffer(message);
+            switch (priority) {
+                case Project.MSG_ERR:
+                    msg.insert(0, errColor);
+                    msg.append(END_COLOR);
+                    break;
+                case Project.MSG_WARN:
+                    msg.insert(0, warnColor);
+                    msg.append(END_COLOR);
+                    break;
+                case Project.MSG_INFO:
+                    msg.insert(0, infoColor);
+                    msg.append(END_COLOR);
+                    break;
+                case Project.MSG_VERBOSE:
+                    msg.insert(0, verboseColor);
+                    msg.append(END_COLOR);
+                    break;
+                case Project.MSG_DEBUG:
+                    msg.insert(0, debugColor);
+                    msg.append(END_COLOR);
+                    break;
+            }
+            final String strmessage = msg.toString();
+            stream.println(strmessage);
         }
-        final String strmessage = msg.toString();
-        stream.println(strmessage);
     }
 }
