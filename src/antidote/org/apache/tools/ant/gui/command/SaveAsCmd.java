@@ -135,17 +135,18 @@ public class SaveAsCmd extends AbstractCommand {
                             getContext().getParentFrame(), message, title, 
                             JOptionPane.YES_NO_OPTION);
                         // If cancelled unset file.
-                        if(val == JOptionPane.YES_OPTION) {
-                            try {
-                                _location = new URL(
-                                    "file", null, file.getAbsolutePath());
-                            }
-                            catch(MalformedURLException ex) {
-                                // Shouldn't happen. Save will just not
-                                // happen.
-                                ex.printStackTrace();
-                            }
+                        if(val != JOptionPane.YES_OPTION) {
+                            return;
                         }
+                    }
+                    try {
+                        _location = new URL(
+                            "file", null, file.getAbsolutePath());
+                    }
+                    catch(MalformedURLException ex) {
+                        // Shouldn't happen. Save will just not
+                        // happen.
+                        ex.printStackTrace();
                     }
                 }
             }
@@ -162,7 +163,7 @@ public class SaveAsCmd extends AbstractCommand {
                         new Object[] { _location.toString() });
                     
                     getContext().getEventBus().
-                        postEvent(new ErrorEvent(getContext(), message));
+                        postEvent(new ErrorEvent(getContext(), message, ex));
                 }
             }
         }
