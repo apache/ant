@@ -41,12 +41,6 @@
           </tr>
 
           <tr>
-            <td>XmlLogger implements BuildLogger</td>
-            <td>Its currently a BuildListener, lets remove the confusion</td>
-            <td>Erik</td>
-          </tr>
-
-          <tr>
             <td>Novell NetWare support</td>
             <td></td>
             <td>Jeff Tulley</td>
@@ -126,6 +120,11 @@
             <th>Item</th>
             <th>Details</th>
             <th>Assigned</th>
+          </tr>
+          <tr>
+            <td>XmlLogger implements BuildLogger</td>
+            <td>Its currently a BuildListener, lets remove the confusion</td>
+            <td>Erik</td>
           </tr>
           <tr>
             <td>Dotnet library tweaks</td>
