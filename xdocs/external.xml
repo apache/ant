@@ -117,7 +117,7 @@
         <table>
           <tr>
             <th>Compatibility:</th>
-            <td>Ant 1.2 to 1.4.1</td>
+            <td>Ant 1.4.1 and later</td>
           </tr>
           <tr>
             <th>URL:</th>
@@ -362,11 +362,11 @@
           </tr>
           <tr>
             <th>URL:</th>
-            <td><a href="http://www.discore.com/oz/new/index.htm">http://www.discore.com/oz/new/index.htm</a></td>
+            <td><a href="http://greebo.sourceforge.net/">http://greebo.sourceforge.net/</a></td>
           </tr>
           <tr>
             <th>Contact:</th>
-            <td><a href="mailto:ozbene@discore.com">Ozben Evren</a></td>
+            <td><a href="http://sourceforge.net/mail/?group_id=73733">project mailing lists</a></td>
           </tr>
           <tr>
             <th>License:</th>
@@ -452,7 +452,7 @@
 
       <subsection name="J2ME Ant Tasks">
 
-        <p>There are three different sets of tasks to help build <a
+        <p>There are four different sets of tasks to help build <a
         href="http://java.sun.com/j2me/">Java 2 Platform, Micro
         Edition</a> (J2ME) applications.</p>
         
@@ -525,13 +525,41 @@
           </tr>
         </table>
 
+        <p>Antic is a freely available task for packaging J2ME
+        applications. It produces both the Jar and Jad files in a
+        single step. This allows *all* entries to be correclty set in
+        the jad file, including the size of the jar file that is
+        produced. This task has been used and tested extensively with
+        Sun's Wireless Toolkit and also the Nokia SDK and
+        emulators.</p>
+
+        <table>
+          <tr>
+            <th>Compatibility:</th>
+            <td>Ant 1.5</td>
+          </tr>
+          <tr>
+            <th>URL:</th>
+            <td><a href="http://www.smartkey.co.uk/antic.html">www.smartkey.co.uk</a>
+            </td>
+          </tr>
+          <tr>
+            <th>Contact:</th>
+            <td><a href="mailto:support@smartkey.co.uk">smartkey.co.uk</a></td>
+          </tr>
+          <tr>
+            <th>License:</th>
+            <td>GNU General Public License</td>
+          </tr>
+        </table>
+
       </subsection>
 
       <subsection name="Jacson">
         
-	<p>Jacson is a configurable and plugable tool (much like Ant
-	itself) to create filters for text (line based) files without
-	programming.</p>
+        <p>Jacson is a configurable and plugable tool (much like Ant
+        itself) to create filters for text (line based) files without
+        programming.</p>
 
         <table>
           <tr>
@@ -626,6 +654,32 @@
           <tr>
             <th>License:</th>
             <td>BSD-like License</td>
+          </tr>
+        </table>
+      </subsection>
+
+      <subsection name="Java2Html">
+
+        <p>Uses the Java2Html library for converting java source files
+        or snipplets to syntax highlighted html, rtf, tex and
+        others.</p>
+
+        <table>
+          <tr>
+            <th>Compatibility:</th>
+            <td>Ant 1.5 and later</td>
+          </tr>
+          <tr>
+            <th>URL:</th>
+            <td><a href="http://www.java2html.de">http://www.java2html.de</a></td>
+          </tr>
+          <tr>
+            <th>Contact:</th>
+            <td><a href="mailto:java2html@jave.de">java2html@jave.de</a></td>
+          </tr>
+          <tr>
+            <th>License:</th>
+            <td>GNU General Public License</td>
           </tr>
         </table>
       </subsection>
@@ -1277,8 +1331,36 @@
         </table>
       </subsection>
       
-     <subsection name="XmlTask">
+      <subsection name="XInclude">
+        <p><a href="http://www.jeckle.de/freeStuff/xia/index.html">XInclude</a> is
+          a W3C standardized vocabulary for including arbitrary text or XML
+          documents in other XML documents. This task perfomes the inclusion
+          using an existing XInclude implementation</p>
 
+        <table>
+          <tr>
+            <th>Compatibility:</th>
+            <td>Ant 1.5.2</td>
+          </tr>
+          <tr>
+            <th>URL:</th>
+            <td>
+              <a href="http://www.jeckle.de/freeStuff/xia/index.html">http://www.jeckle.de/freeStuff/xia/index.html</a>
+            </td>
+          </tr>
+          <tr>
+            <th>Contact:</th>
+            <td><a href="mailto:mario@jeckle.de">mario@jeckle.de</a></td>
+          </tr>
+          <tr>
+            <th>License:</th>
+            <td>Lesser GNU Public License</td>
+          </tr>
+        </table>
+      </subsection>
+
+      <subsection name="XmlTask">
+        
         <p>XmlTask provides a simple means to modify XML documents
         without having to learn XSLT. A simple path reference to an
         XML node specifies the node you want to change, and how you

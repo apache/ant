@@ -14,6 +14,34 @@
       developers, if you encounter any problems with them, please use
       the contact information.</p>
 
+      <subsection name="AndroMDA">
+
+        <p>AndroMDA is a code generator tool that follows the Model
+        Driven Architecture (MDA) paradigm. It takes a UML model from
+        a CASE-tool and generates classes and deployable components
+        (J2EE or other) specific for your application
+        architecture.</p>
+
+        <table>
+          <tr>
+            <th>Compatibility:</th>
+            <td>1.4.1 and above</td>
+          </tr>
+          <tr>
+            <th>URL:</th>
+            <td><a href="http://www.andromda.org/">http://www.AndroMDA.org/</a></td>
+          </tr>
+          <tr>
+            <th>Contact:</th>
+            <td><a href="http://sourceforge.net/mail/?group_id=73047">project mailing lists</a></td>
+          </tr>
+          <tr>
+            <th>License:</th>
+            <td>BSD license</td>
+          </tr>
+        </table>
+      </subsection>
+
       <subsection name="AntContrib">
 
         <p>The Ant-Contrib project is a collection of user supplied
@@ -60,7 +88,7 @@
           </tr>
           <tr>
             <th>URL:</th>
-            <td><a href="http://mapage.noos.fr/antdoc">http://mapage.noos.fr/antdoc</a></td>
+            <td><a href="http://antdoc.free.fr/">http://antdoc.free.fr/</a></td>
           </tr>
           <tr>
             <th>Contact:</th>
@@ -68,7 +96,7 @@
           </tr>
           <tr>
             <th>License:</th>
-            <td>At the moment, no license is being attached to the tool.</td>
+            <td>The Apache Software License</td>
           </tr>
         </table>
       </subsection>
