@@ -9,7 +9,6 @@ package org.apache.tools.ant.taskdefs.optional.vss;
 
 import java.io.File;
 import org.apache.myrmidon.api.TaskException;
-import org.apache.myrmidon.api.AbstractTask;
 import org.apache.tools.ant.types.Commandline;
 import org.apache.tools.ant.types.Path;
 
@@ -18,34 +17,32 @@ import org.apache.tools.ant.types.Path;
  *
  * @author Martin Poeschl
  */
-public class MSVSSCHECKIN extends MSVSS
+public class MSVSSCHECKIN
+    extends MSVSS
 {
-
-    private String m_LocalPath = null;
-    private boolean m_Recursive = false;
-    private boolean m_Writable = false;
-    private String m_AutoResponse = null;
-    private String m_Comment = "-";
+    private String m_localPath;
+    private boolean m_recursive;
+    private boolean m_writable;
+    private String m_autoResponse;
+    private String m_comment = "-";
 
     /**
      * Set behaviour, used in get command to make files that are 'got' writable
-     *
-     * @param argWritable The new Writable value
      */
-    public final void setWritable( boolean argWritable )
+    public final void setWritable( final boolean writable )
     {
-        m_Writable = argWritable;
+        m_writable = writable;
     }
 
-    public void setAutoresponse( String response )
+    public void setAutoresponse( final String autoResponse )
     {
-        if( response.equals( "" ) || response.equals( "null" ) )
+        if( autoResponse.equals( "" ) || autoResponse.equals( "null" ) )
         {
-            m_AutoResponse = null;
+            m_autoResponse = null;
         }
         else
         {
-            m_AutoResponse = response;
+            m_autoResponse = autoResponse;
         }
     }
 
@@ -54,120 +51,98 @@ public class MSVSSCHECKIN extends MSVSS
      *
      * If this is null or empty, it will be replaced with "-" which is what
      * SourceSafe uses for an empty comment.
-     *
-     * @param comment The new Comment value
      */
-    public void setComment( String comment )
+    public void setComment( final String comment )
     {
         if( comment.equals( "" ) || comment.equals( "null" ) )
         {
-            m_Comment = "-";
+            m_comment = "-";
         }
         else
         {
-            m_Comment = comment;
+            m_comment = comment;
         }
     }
 
     /**
      * Set the local path.
-     *
-     * @param localPath The new Localpath value
      */
-    public void setLocalpath( Path localPath )
+    public void setLocalpath( final Path localPath )
     {
-        m_LocalPath = localPath.toString();
+        m_localPath = localPath.toString();
     }
 
     /**
      * Set behaviour recursive or non-recursive
-     *
-     * @param recursive The new Recursive value
      */
-    public void setRecursive( boolean recursive )
+    public void setRecursive( final boolean recursive )
     {
-        m_Recursive = recursive;
+        m_recursive = recursive;
     }
 
     /**
      * Checks the value set for the autoResponse. if it equals "Y" then we
      * return -I-Y if it equals "N" then we return -I-N otherwise we return -I
-     *
-     * @param cmd Description of Parameter
      */
-    public void getAutoresponse( Commandline cmd )
+    public void getAutoresponse( final Commandline cmd )
     {
-
-        if( m_AutoResponse == null )
+        if( null == m_autoResponse )
         {
             cmd.addArgument( FLAG_AUTORESPONSE_DEF );
         }
-        else if( m_AutoResponse.equalsIgnoreCase( "Y" ) )
+        else if( m_autoResponse.equalsIgnoreCase( "Y" ) )
         {
             cmd.addArgument( FLAG_AUTORESPONSE_YES );
 
         }
-        else if( m_AutoResponse.equalsIgnoreCase( "N" ) )
+        else if( m_autoResponse.equalsIgnoreCase( "N" ) )
         {
             cmd.addArgument( FLAG_AUTORESPONSE_NO );
         }
         else
         {
             cmd.addArgument( FLAG_AUTORESPONSE_DEF );
-        }// end of else
-
-    }
-
-    /**
-     * Gets the comment to be applied.
-     *
-     * @return the comment to be applied.
-     */
-    public String getComment()
-    {
-        return m_Comment;
+        }
     }
 
     /**
      * Builds and returns the -GL flag command if required <p>
      *
      * The localpath is created if it didn't exist
-     *
-     * @param cmd Description of Parameter
      */
-    public void getLocalpathCommand( Commandline cmd )
+    private void getLocalpathCommand( final Commandline cmd )
         throws TaskException
     {
-        if( m_LocalPath == null )
+        if( m_localPath == null )
         {
             return;
         }
         else
         {
             // make sure m_LocalDir exists, create it if it doesn't
-            File dir = getContext().resolveFile( m_LocalPath );
+            final File dir = getContext().resolveFile( m_localPath );
             if( !dir.exists() )
             {
-                boolean done = dir.mkdirs();
-                if( done == false )
+                final boolean done = dir.mkdirs();
+                if( !done )
                 {
-                    String msg = "Directory " + m_LocalPath + " creation was not " +
+                    final String message =
+                        "Directory " + m_localPath + " creation was not " +
                         "succesful for an unknown reason";
-                    throw new TaskException( msg );
+                    throw new TaskException( message );
                 }
-                getLogger().info( "Created dir: " + dir.getAbsolutePath() );
+
+                final String message = "Created dir: " + dir.getAbsolutePath();
+                getLogger().info( message );
             }
 
-            cmd.addArgument( FLAG_OVERRIDE_WORKING_DIR + m_LocalPath );
+            cmd.addArgument( FLAG_OVERRIDE_WORKING_DIR + m_localPath );
         }
     }
 
-    /**
-     * @param cmd Description of Parameter
-     */
-    public void getRecursiveCommand( Commandline cmd )
+    private void getRecursiveCommand( final Commandline cmd )
     {
-        if( !m_Recursive )
+        if( !m_recursive )
         {
             return;
         }
@@ -177,12 +152,9 @@ public class MSVSSCHECKIN extends MSVSS
         }
     }
 
-    /**
-     * @param cmd Description of Parameter
-     */
-    public void getWritableCommand( Commandline cmd )
+    private void getWritableCommand( final Commandline cmd )
     {
-        if( !m_Writable )
+        if( !m_writable )
         {
             return;
         }
@@ -197,20 +169,18 @@ public class MSVSSCHECKIN extends MSVSS
      *
      * Builds a command line to execute ss and then calls Exec's run method to
      * execute the command line.
-     *
-     * @exception TaskException Description of Exception
      */
     public void execute()
         throws TaskException
     {
-        Commandline commandLine = new Commandline();
-        int result = 0;
+        final Commandline commandLine = new Commandline();
 
         // first off, make sure that we've got a command and a vssdir ...
-        if( getVsspath() == null )
+        final String vsspath = getVsspath();
+        if( null == vsspath )
         {
-            String msg = "vsspath attribute must be set!";
-            throw new TaskException( msg );
+            final String message = "vsspath attribute must be set!";
+            throw new TaskException( message );
         }
 
         // now look for illegal combinations of things ...
@@ -222,7 +192,7 @@ public class MSVSSCHECKIN extends MSVSS
         commandLine.addArgument( COMMAND_CHECKIN );
 
         // VSS items
-        commandLine.addArgument( getVsspath() );
+        commandLine.addArgument( vsspath );
         // -GL
         getLocalpathCommand( commandLine );
         // -I- or -I-Y or -I-N
@@ -234,13 +204,13 @@ public class MSVSSCHECKIN extends MSVSS
         // -Y
         getLoginCommand( commandLine );
         // -C
-        commandLine.addArgument( "-C" + getComment() );
+        commandLine.addArgument( "-C" + m_comment );
 
-        result = run( commandLine );
+        final int result = run( commandLine );
         if( result != 0 )
         {
-            String msg = "Failed executing: " + commandLine.toString();
-            throw new TaskException( msg );
+            final String message = "Failed executing: " + commandLine.toString();
+            throw new TaskException( message );
         }
     }
 }

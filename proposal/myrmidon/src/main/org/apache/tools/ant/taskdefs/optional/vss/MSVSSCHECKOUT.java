@@ -18,25 +18,25 @@ import org.apache.tools.ant.types.Path;
  *
  * @author Martin Poeschl
  */
-public class MSVSSCHECKOUT extends MSVSS
+public class MSVSSCHECKOUT
+    extends MSVSS
 {
+    private String m_localPath;
+    private boolean m_recursive;
+    private String m_version;
+    private String m_date;
+    private String m_label;
+    private String m_autoResponse;
 
-    private String m_LocalPath = null;
-    private boolean m_Recursive = false;
-    private String m_Version = null;
-    private String m_Date = null;
-    private String m_Label = null;
-    private String m_AutoResponse = null;
-
-    public void setAutoresponse( String response )
+    public void setAutoresponse( final String response )
     {
         if( response.equals( "" ) || response.equals( "null" ) )
         {
-            m_AutoResponse = null;
+            m_autoResponse = null;
         }
         else
         {
-            m_AutoResponse = response;
+            m_autoResponse = response;
         }
     }
 
@@ -47,18 +47,16 @@ public class MSVSSCHECKOUT extends MSVSS
      * something went wrong and that the string value got populated from a null
      * object. This happens if a ant variable is used e.g. date="${date}" when
      * date has not been defined to ant!
-     *
-     * @param date The new Date value
      */
-    public void setDate( String date )
+    public void setDate( final String date )
     {
         if( date.equals( "" ) || date.equals( "null" ) )
         {
-            m_Date = null;
+            m_date = null;
         }
         else
         {
-            m_Date = date;
+            m_date = date;
         }
     }
 
@@ -69,39 +67,33 @@ public class MSVSSCHECKOUT extends MSVSS
      * something went wrong and that the string value got populated from a null
      * object. This happens if a ant variable is used e.g.
      * label="${label_server}" when label_server has not been defined to ant!
-     *
-     * @param label The new Label value
      */
-    public void setLabel( String label )
+    public void setLabel( final String label )
     {
         if( label.equals( "" ) || label.equals( "null" ) )
         {
-            m_Label = null;
+            m_label = null;
         }
         else
         {
-            m_Label = label;
+            m_label = label;
         }
     }
 
     /**
      * Set the local path.
-     *
-     * @param localPath The new Localpath value
      */
-    public void setLocalpath( Path localPath )
+    public void setLocalpath( final Path localPath )
     {
-        m_LocalPath = localPath.toString();
+        m_localPath = localPath.toString();
     }
 
     /**
      * Set behaviour recursive or non-recursive
-     *
-     * @param recursive The new Recursive value
      */
-    public void setRecursive( boolean recursive )
+    public void setRecursive( final boolean recursive )
     {
-        m_Recursive = recursive;
+        m_recursive = recursive;
     }
 
     /**
@@ -111,90 +103,83 @@ public class MSVSSCHECKOUT extends MSVSS
      * something went wrong and that the string value got populated from a null
      * object. This happens if a ant variable is used e.g.
      * version="${ver_server}" when ver_server has not been defined to ant!
-     *
-     * @param version The new Version value
      */
-    public void setVersion( String version )
+    public void setVersion( final String version )
     {
         if( version.equals( "" ) || version.equals( "null" ) )
         {
-            m_Version = null;
+            m_version = null;
         }
         else
         {
-            m_Version = version;
+            m_version = version;
         }
     }
 
     /**
      * Checks the value set for the autoResponse. if it equals "Y" then we
      * return -I-Y if it equals "N" then we return -I-N otherwise we return -I
-     *
-     * @param cmd Description of Parameter
      */
-    public void getAutoresponse( Commandline cmd )
+    public void getAutoresponse( final Commandline cmd )
     {
-
-        if( m_AutoResponse == null )
+        if( m_autoResponse == null )
         {
             cmd.addArgument( FLAG_AUTORESPONSE_DEF );
         }
-        else if( m_AutoResponse.equalsIgnoreCase( "Y" ) )
+        else if( m_autoResponse.equalsIgnoreCase( "Y" ) )
         {
             cmd.addArgument( FLAG_AUTORESPONSE_YES );
 
         }
-        else if( m_AutoResponse.equalsIgnoreCase( "N" ) )
+        else if( m_autoResponse.equalsIgnoreCase( "N" ) )
         {
             cmd.addArgument( FLAG_AUTORESPONSE_NO );
         }
         else
         {
             cmd.addArgument( FLAG_AUTORESPONSE_DEF );
-        }// end of else
-
+        }
     }
 
     /**
      * Builds and returns the -GL flag command if required <p>
      *
      * The localpath is created if it didn't exist
-     *
-     * @param cmd Description of Parameter
      */
-    public void getLocalpathCommand( Commandline cmd )
+    public void getLocalpathCommand( final Commandline cmd )
         throws TaskException
     {
-        if( m_LocalPath == null )
+        if( m_localPath == null )
         {
             return;
         }
         else
         {
             // make sure m_LocalDir exists, create it if it doesn't
-            File dir = getContext().resolveFile( m_LocalPath );
+            final File dir = getContext().resolveFile( m_localPath );
             if( !dir.exists() )
             {
-                boolean done = dir.mkdirs();
-                if( done == false )
+                if( !dir.mkdirs() )
                 {
-                    String msg = "Directory " + m_LocalPath + " creation was not " +
+                    final String message =
+                        "Directory " + m_localPath + " creation was not " +
                         "succesful for an unknown reason";
-                    throw new TaskException( msg );
+                    throw new TaskException( message );
                 }
-                getLogger().info( "Created dir: " + dir.getAbsolutePath() );
+                else
+                {
+                    final String message = "Created dir: " + dir.getAbsolutePath();
+                    getLogger().info( message );
+                }
             }
 
-            cmd.addArgument( FLAG_OVERRIDE_WORKING_DIR + m_LocalPath );
+            cmd.addArgument( FLAG_OVERRIDE_WORKING_DIR + m_localPath );
         }
     }
 
-    /**
-     * @param cmd Description of Parameter
-     */
-    public void getRecursiveCommand( Commandline cmd )
+    private void getRecursiveCommand( final Commandline cmd )
     {
-        if( !m_Recursive )
+        if( !m_recursive )
         {
             return;
         }
@@ -207,23 +192,20 @@ public class MSVSSCHECKOUT extends MSVSS
     /**
      * Simple order of priority. Returns the first specified of version, date,
      * label If none of these was specified returns ""
-     *
-     * @param cmd Description of Parameter
      */
-    public void getVersionCommand( Commandline cmd )
+    private void getVersionCommand( final Commandline cmd )
     {
-
-        if( m_Version != null )
+        if( null != m_version )
         {
-            cmd.addArgument( FLAG_VERSION + m_Version );
+            cmd.addArgument( FLAG_VERSION + m_version );
         }
-        else if( m_Date != null )
+        else if( null != m_date )
         {
-            cmd.addArgument( FLAG_VERSION_DATE + m_Date );
+            cmd.addArgument( FLAG_VERSION_DATE + m_date );
         }
-        else if( m_Label != null )
+        else if( null != m_label )
         {
-            cmd.addArgument( FLAG_VERSION_LABEL + m_Label );
+            cmd.addArgument( FLAG_VERSION_LABEL + m_label );
         }
     }
 
@@ -232,20 +214,18 @@ public class MSVSSCHECKOUT extends MSVSS
      *
      * Builds a command line to execute ss and then calls Exec's run method to
      * execute the command line.
-     *
-     * @exception TaskException Description of Exception
      */
     public void execute()
         throws TaskException
     {
-        Commandline commandLine = new Commandline();
-        int result = 0;
+        final Commandline commandLine = new Commandline();
 
         // first off, make sure that we've got a command and a vssdir ...
-        if( getVsspath() == null )
+        final String vsspath = getVsspath();
+        if( null == vsspath )
         {
-            String msg = "vsspath attribute must be set!";
-            throw new TaskException( msg );
+            final String message = "vsspath attribute must be set!";
+            throw new TaskException( message );
         }
 
         // now look for illegal combinations of things ...
@@ -257,7 +237,7 @@ public class MSVSSCHECKOUT extends MSVSS
         commandLine.addArgument( COMMAND_CHECKOUT );
 
         // VSS items
-        commandLine.addArgument( getVsspath() );
+        commandLine.addArgument( vsspath );
         // -GL
         getLocalpathCommand( commandLine );
         // -I- or -I-Y or -I-N
@@ -269,13 +249,12 @@ public class MSVSSCHECKOUT extends MSVSS
         // -Y
         getLoginCommand( commandLine );
 
-        result = run( commandLine );
+        final int result = run( commandLine );
         if( result != 0 )
         {
-            String msg = "Failed executing: " + commandLine.toString();
-            throw new TaskException( msg );
+            final String message = "Failed executing: " + commandLine.toString();
+            throw new TaskException( message );
         }
     }
-
 }
 

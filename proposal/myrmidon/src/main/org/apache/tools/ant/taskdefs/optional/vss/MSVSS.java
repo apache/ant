@@ -32,7 +32,6 @@ import org.apache.tools.ant.types.Commandline;
 public abstract class MSVSS
     extends AbstractTask
 {
-
     /**
      * Constant for the thing to execute
      */
