@@ -62,6 +62,7 @@ import java.io.File;
  * @author <a href="mailto:rubys@us.ibm.com">Sam Ruby</a>
  * @author <a href="mailto:sbailliez@apache.org">Stephane Bailliez</a>
  * @see XSLTProcess
+ * @since Ant 1.1
  */
 public interface XSLTLiaison {
 
@@ -71,12 +72,14 @@ public interface XSLTLiaison {
      * Typically: <tt>FILE_PROTOCOL_PREFIX + file.getAbsolutePath()</tt>
      * Note that on Windows, an extra '/' must be appended to the
      * protocol prefix so that there is always 3 consecutive slashes.
+     * @since Ant 1.4
      */
     String FILE_PROTOCOL_PREFIX = "file://";
 
     /**
      * set the stylesheet to use for the transformation.
      * @param stylesheet the stylesheet to be used for transformation.
+     * @since Ant 1.4
      */
     void setStylesheet(File stylesheet) throws Exception;
 
@@ -85,6 +88,7 @@ public interface XSLTLiaison {
      * @param name the parameter name.
      * @param expression the parameter value as an expression string.
      * @throws Exception thrown if any problems happens.
+     * @since Ant 1.3
      */
     void addParam(String name, String expression) throws Exception;
 
@@ -93,6 +97,7 @@ public interface XSLTLiaison {
      * default) is guaranteed to work for all parsers.  Xalan2 also
      * supports "html" and "text".
      * @param type the output method to use
+     * @since Ant 1.5
      */
     void setOutputtype(String type) throws Exception;
 
@@ -102,6 +107,7 @@ public interface XSLTLiaison {
      * @param outfile the output file resulting from the transformation
      * @throws Exception thrown if any problems happens.
      * @see #setStylesheet(File)
+     * @since Ant 1.4
      */
     void transform(File infile, File outfile) throws Exception;
 
