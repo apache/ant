@@ -55,6 +55,7 @@ package org.apache.ant.antlib.system;
 import java.io.File;
 import org.apache.ant.common.service.ExecService;
 import org.apache.ant.common.util.ExecutionException;
+import org.apache.ant.common.service.MagicProperties;
 
 /**
  * The Ant task - used to execute a different build file
@@ -112,7 +113,8 @@ public class Ant extends AntBase {
                 antFile = new File(baseDir, "build.xml");
             }
         }
-
+        setProperty(MagicProperties.BASEDIR, baseDir.getAbsolutePath());
+        
         ExecService execService
              = (ExecService)getCoreService(ExecService.class);
 

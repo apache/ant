@@ -123,7 +123,8 @@ public abstract class AntBase extends AbstractTask {
         /**
          * Validate this data type instance
          *
-         * @exception ExecutionException if either attribute has not been set
+         * @exception ExecutionException if either attribute has not been
+         *      set
          */
         public void validateComponent() throws ExecutionException {
             if (name == null) {
@@ -188,7 +189,8 @@ public abstract class AntBase extends AbstractTask {
         /**
          * Validate this data type instance
          *
-         * @exception ExecutionException if the refid attribute has not been set
+         * @exception ExecutionException if the refid attribute has not been
+         *      set
          */
         public void validateComponent() throws ExecutionException {
             if (refId == null) {
@@ -289,6 +291,16 @@ public abstract class AntBase extends AbstractTask {
     }
 
     /**
+     * Set a property for the subbuild
+     *
+     * @param propertyName the property name
+     * @param propertyValue the value of the property
+     */
+    protected void setProperty(String propertyName, Object propertyValue) {
+        properties.put(propertyName, propertyValue);
+    }
+
+    /**
      * Get the list of targets to be executed
      *
      * @return A List of string target names.
@@ -310,7 +322,7 @@ public abstract class AntBase extends AbstractTask {
         if (!inheritAll) {
             return properties;
         }
-        
+
         // need to combine existing properties with new ones
         Map subBuildProperties = dataService.getAllProperties();
         subBuildProperties.putAll(properties);
