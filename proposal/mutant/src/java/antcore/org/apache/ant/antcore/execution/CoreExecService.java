@@ -59,13 +59,11 @@ import java.util.List;
 import java.util.Map;
 import org.apache.ant.antcore.modelparser.XMLProjectParser;
 import org.apache.ant.antcore.xml.XMLParseException;
-import org.apache.ant.common.antlib.AntContext;
 import org.apache.ant.common.antlib.Task;
 import org.apache.ant.common.model.Project;
 import org.apache.ant.common.service.ExecService;
 import org.apache.ant.common.util.ExecutionException;
 import org.apache.ant.init.InitUtils;
-import org.apache.ant.init.LoaderUtils;
 
 /**
  * This is the core's implementation of the Execution Service.
@@ -100,36 +98,7 @@ public class CoreExecService implements ExecService {
      * @exception ExecutionException if there is an execution problem
      */
     public void executeTask(Task task) throws ExecutionException {
-        AntContext context = task.getAntContext();
-
-        if (!(context instanceof ExecutionContext)) {
-            throw new ExecutionException("The Task was not configured with an"
-                 + " appropriate context");
-        }
-        ExecutionContext execContext = (ExecutionContext) context;
-
-        frame.getEventSupport().fireTaskStarted(task);
-
-        Throwable failureCause = null;
-
-        try {
-            ClassLoader currentLoader
-                 = LoaderUtils.setContextLoader(execContext.getClassLoader());
-
-            task.execute();
-            LoaderUtils.setContextLoader(currentLoader);
-        } catch (ExecutionException e) {
-            failureCause = e;
-            throw e;
-        } catch (Throwable e) {
-            ExecutionException ee =
-                new ExecutionException(e);
-
-            failureCause = ee;
-            throw ee;
-        } finally {
-            frame.getEventSupport().fireTaskFinished(task, failureCause);
-        }
+        frame.executeTask(task);
     }
 
 

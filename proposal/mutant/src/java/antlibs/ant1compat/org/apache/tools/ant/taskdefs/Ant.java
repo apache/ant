@@ -146,9 +146,7 @@ public class Ant extends Task {
             ComponentService componentService = getComponentService();
             AntLibFactory factory = getProject().getFactory();
             realAnt = (org.apache.ant.antlib.system.Ant)
-                componentService.createComponent(factory,
-                context.getClassLoader(),
-                org.apache.ant.antlib.system.Ant.class, false, "antcall");
+                componentService.createComponent("ant.system", "ant");
         } catch (ExecutionException e) {
             throw new BuildException(e);
         }

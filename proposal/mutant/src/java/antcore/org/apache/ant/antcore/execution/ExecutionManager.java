@@ -148,9 +148,11 @@ public class ExecutionManager implements DemuxOutputReceiver {
         } catch (RuntimeException e) {
             buildFailureCause = e;
             throw e;
-        } catch (AntException e) {
+        } catch (ExecutionException e) {
+            ExecutionException ee = e instanceof ExecutionException 
+                ? e : new ExecutionException(e);
             buildFailureCause = e;
-            throw e;
+            throw ee;
         } finally {
             eventSupport.fireBuildFinished(project, buildFailureCause);
         }

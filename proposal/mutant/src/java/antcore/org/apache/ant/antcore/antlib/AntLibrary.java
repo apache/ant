@@ -88,6 +88,9 @@ public class AntLibrary implements ComponentLibrary {
     /** The list of converter classnames defined in this library */
     private List converterClassNames = new ArrayList();
 
+    /** The list of aspect classnames defined in this library */
+    private List aspectClassNames = new ArrayList();
+
     /** The class name of this library's factory class, if any */
     private String factoryClassName;
 
@@ -116,6 +119,7 @@ public class AntLibrary implements ComponentLibrary {
         this.definitions = spec.getDefinitions();
         this.isolated = spec.isIsolated();
         this.converterClassNames.addAll(spec.getConverters());
+        this.aspectClassNames.addAll(spec.getAspects());
         this.factoryClassName = spec.getFactory();
         this.definitionURL = spec.getLibraryURL();
     }
@@ -182,12 +186,21 @@ public class AntLibrary implements ComponentLibrary {
     }
 
     /**
-     * Gets an the converter class names of the AntLibrary
+     * Gets the converter class names of the AntLibrary
      *
      * @return an iterator over a list of String class names
      */
     public Iterator getConverterClassNames() {
         return converterClassNames.iterator();
+    }
+
+    /**
+     * Gets the aspect class names of the AntLibrary
+     *
+     * @return an iterator over a list of String class names
+     */
+    public Iterator getAspectClassNames() {
+        return aspectClassNames.iterator();
     }
 
     /**
@@ -249,6 +262,15 @@ public class AntLibrary implements ComponentLibrary {
      */
     public boolean hasConverters() {
         return !converterClassNames.isEmpty();
+    }
+
+    /**
+     * Indicate whether this library has any aspects defined
+     *
+     * @return true if any aspects have been defined
+     */
+    public boolean hasAspects() {
+        return !aspectClassNames.isEmpty();
     }
 
     /**

@@ -61,8 +61,11 @@ import java.util.Map;
 import java.util.StringTokenizer;
 import java.util.List;
 import java.util.ArrayList;
+import java.util.Set;
 import org.apache.ant.antcore.config.AntConfig;
 import org.apache.ant.common.antlib.Task;
+import org.apache.ant.common.antlib.Aspect;
+import org.apache.ant.common.antlib.AntContext;
 import org.apache.ant.common.event.BuildListener;
 import org.apache.ant.common.event.MessageLevel;
 import org.apache.ant.common.model.BuildElement;
@@ -79,6 +82,7 @@ import org.apache.ant.common.util.DemuxOutputReceiver;
 import org.apache.ant.common.util.ExecutionException;
 import org.apache.ant.common.util.FileUtils;
 import org.apache.ant.init.InitConfig;
+import org.apache.ant.init.LoaderUtils;
 
 /**
  * An Frame maintains the state of a project during an execution. The Frame
@@ -98,6 +102,13 @@ public class Frame implements DemuxOutputReceiver {
     /** The referenced frames corresponding to the referenced projects */
     private Map referencedFrames = new HashMap();
 
+    /** 
+     * This is a Map of Maps. This map is keyed on an executing task.
+     * Each entry is itself a Map of Aspects to their context for the
+     * particular task.
+     */
+    private Map aspectContextsMap = new HashMap();
+    
     /** 
      * The property overrides for the referenced frames. This map is indexed 
      * by the reference names of the frame. Each entry is another Map of 
@@ -390,7 +401,7 @@ public class Frame implements DemuxOutputReceiver {
                  + "to the name \"" + definitionName + "\"");
         }
         if (containingFrame == this) {
-            return componentManager.getDefinition(localName);
+            return componentManager.getImport(localName);
         } else {
             return containingFrame.getReferencedDefinition(localName);
         }
@@ -656,8 +667,6 @@ public class Frame implements DemuxOutputReceiver {
            referencedFrame.setInitialProperties(initialProperties);
            overrides.remove(name);
        }
-
-
         
        referencedFrames.put(name, referencedFrame);
        referencedFrame.initialize();
@@ -850,6 +859,68 @@ public class Frame implements DemuxOutputReceiver {
         }
     }
 
+    /**
+     * Execute a task notifiying all registered aspects of the fact
+     *
+     * @param task the Task instance to execute.
+     *
+     * @exception ExecutionException if the task has a problem.
+     */
+    protected void executeTask(Task task) throws ExecutionException {
+        List aspects = componentManager.getAspects();
+        Map aspectContexts = new HashMap();
+        for (Iterator i = aspects.iterator(); i.hasNext();) {
+            Aspect aspect = (Aspect) i.next();
+            Object context = aspect.preExecuteTask(task);
+            aspectContexts.put(aspect, context);
+        }
+        if (aspectContexts.size() != 0) {
+            aspectContextsMap.put(task, aspectContexts);
+        }
+        
+        AntContext context = task.getAntContext();
+
+        if (!(context instanceof ExecutionContext)) {
+            throw new ExecutionException("The Task was not configured with an"
+                 + " appropriate context");
+        }
+        ExecutionContext execContext = (ExecutionContext) context;
+
+        eventSupport.fireTaskStarted(task);
+
+        Throwable failureCause = null;
+
+        try {
+            ClassLoader currentLoader
+                 = LoaderUtils.setContextLoader(execContext.getClassLoader());
+
+            task.execute();
+            LoaderUtils.setContextLoader(currentLoader);
+        } catch (Throwable e) {
+            failureCause = e;
+        }
+
+        // Now call back the aspects that registered interest
+        Set activeAspects = aspectContexts.keySet();
+        for (Iterator i = activeAspects.iterator(); i.hasNext();) {
+            Aspect aspect = (Aspect) i.next();
+            Object aspectContext = aspectContexts.get(aspect);
+            failureCause 
+                = aspect.postExecuteTask(aspectContext, failureCause);
+        }
+        eventSupport.fireTaskFinished(task, failureCause);
+        if (aspectContexts.size() != 0) {
+            aspectContextsMap.remove(task);
+        }
+        
+        if (failureCause != null) {
+            if (failureCause instanceof ExecutionException) {
+                throw (ExecutionException) failureCause;
+            }
+            throw new ExecutionException(failureCause);
+        }
+    }
+    
 
     /**
      * Run the tasks returned by the given iterator
@@ -860,23 +931,26 @@ public class Frame implements DemuxOutputReceiver {
      */
     protected void executeTasks(Iterator taskIterator)
          throws ExecutionException {
+        
         while (taskIterator.hasNext()) {
             BuildElement model = (BuildElement) taskIterator.next();
 
             // what sort of element is this.
+            List aspects = componentManager.getAspects();
             try {
                 Object component = componentManager.createComponent(model);
-
-                if (component instanceof Task) {
-                    execService.executeTask((Task) component);
-                } else {
-                    String typeId
-                         = model.getAspectValue(Constants.ANT_ASPECT, "id");
-
-                    if (typeId != null) {
-                        setDataValue(typeId, component, true);
+                for (Iterator i = aspects.iterator(); i.hasNext();) {
+                    Aspect aspect = (Aspect) i.next();
+                    Object replacement 
+                        = aspect.postCreateComponent(component, model);
+                    if (replacement != null) {
+                        component = replacement;
                     }
                 }
+
+                if (component instanceof Task) {
+                    executeTask((Task) component);
+                } 
             } catch (ExecutionException e) {
                 e.setLocation(model.getLocation(), false);
                 throw e;
@@ -1009,8 +1083,11 @@ public class Frame implements DemuxOutputReceiver {
     /**
      * Configure the services that the frame makes available to its library
      * components
+     *
+     * @exception ExecutionException if the services required by the core 
+     * could not be configured.
      */
-    private void configureServices() {
+    private void configureServices() throws ExecutionException {
         // create services and make them available in our services map
         fileService = new CoreFileService(this);
         componentManager = new ComponentManager(this);

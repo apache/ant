@@ -51,78 +51,57 @@
  * information on the Apache Software Foundation, please see
  * <http://www.apache.org/>.
  */
-package org.apache.ant.antcore.execution;
-
-import org.apache.ant.antcore.antlib.AntLibDefinition;
-import org.apache.ant.antcore.antlib.ComponentLibrary;
+package org.apache.ant.antlib.system;
+import org.apache.ant.common.antlib.AbstractAspect;
+import org.apache.ant.common.antlib.AntContext;
+import org.apache.ant.common.service.DataService;
+import org.apache.ant.common.util.ExecutionException;
+import org.apache.ant.common.model.BuildElement;
 
 /**
- * This class is used to maintain information about imports
+ * The Ant aspect - handles all ant aspects
  *
  * @author Conor MacNeill
- * @created 16 January 2002
  */
-public class ImportInfo {
-    /** the component library from which the import is made */
-    private ComponentLibrary library;
-    /** the library definition information */
-    private AntLibDefinition libDefinition;
+public class AntAspect extends AbstractAspect {
+    /** The Ant aspect used to identify Ant metadata */
+    public static final String ANT_ASPECT = "ant";
+    
+    /** The core's data service implementation */
+    private DataService dataService = null;
 
     /**
-     * ImportInfo records what has been imported from an Ant Library
+     * Initialise the aspect with a context. 
      *
-     * @param library The library from which the import was made
-     * @param libDefinition the library definition information
+     * @param context the aspect's context
+     * @exception ExecutionException if the aspect cannot be initialised
      */
-    public ImportInfo(ComponentLibrary library,
-                      AntLibDefinition libDefinition) {
-        this.library = library;
-        this.libDefinition = libDefinition;
+    public void init(AntContext context) throws ExecutionException {
+        super.init(context);
+        dataService = (DataService) context.getCoreService(DataService.class);
     }
-
+    
     /**
-     * Get the classname that has been imported
+     * This join point is activated after a component has been created and
+     * configured. If the aspect wishes, an object can be returned in place
+     * of the one created by Ant. 
      *
-     * @return the classname that was imported.
-     */
-    public String getClassName() {
-        return libDefinition.getClassName();
-    }
-
-    /**
-     * Get the library from which the import was made
+     * @param component the component that has been created.
+     * @param model the Build model used to create the component.
      *
-     * @return the library from which the import was made
-     */
-    public ComponentLibrary getComponentLibrary() {
-        return library;
-    }
-
-    /**
-     * Get the type of the definition that was imported
-     *
-     * @return the type of definition
-     */
-    public int getDefinitionType() {
-        return libDefinition.getDefinitionType();
-    }
-
-    /**
-     * Get the name of the component within its library.
-     *
-     * @return the name of the component within its library
-     */
-    public String getLocalName() {
-        return libDefinition.getDefinitionName();
-    }
-
-    /**
-     * Get the definition of the imported component.
-     *
-     * @return the component's library definition.
-     */
-    public AntLibDefinition getDefinition() {
-        return libDefinition;
+     * @return a replacement for the component if desired. If null is returned
+     *         the current component is used.
+     * @exception ExecutionException if the component cannot be processed.
+     */         
+    public Object postCreateComponent(Object component, BuildElement model) 
+         throws ExecutionException {
+        String typeId = model.getAspectValue(ANT_ASPECT, "id");
+    
+        if (typeId != null) {
+            dataService.setMutableDataValue(typeId, component);
+        }
+        
+        return null;
     }
 }
 

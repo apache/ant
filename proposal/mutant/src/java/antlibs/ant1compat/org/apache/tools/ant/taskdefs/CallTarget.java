@@ -102,8 +102,8 @@ public class CallTarget extends Task {
         try {
             ComponentService componentService = getComponentService();
             AntLibFactory factory = getProject().getFactory();
-            antCall = (AntCall) componentService.createComponent(factory,
-                context.getClassLoader(), AntCall.class, false, "antcall");
+            antCall = (AntCall) componentService.createComponent("ant.system",
+                "antcall");
         } catch (ExecutionException e) {
             throw new BuildException(e);
         }

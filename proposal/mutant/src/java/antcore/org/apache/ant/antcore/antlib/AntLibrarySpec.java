@@ -85,6 +85,9 @@ public class AntLibrarySpec {
     /** The list of converter classnames defined in this library */
     private List converterClassNames = new ArrayList();
 
+    /** The list of aspect classnames defined in this library */
+    private List aspectClassNames = new ArrayList();
+
     /** The name of the factory class for this library */
     private String factoryClassName;
 
@@ -196,6 +199,16 @@ public class AntLibrarySpec {
         return converterClassNames;
     }
 
+
+    /**
+     * Get the list of aspect classnames defined in this library spec
+     *
+     * @return the aspect classnames list
+     */
+    public List getAspects() {
+        return aspectClassNames;
+    }
+
     /**
      * Gets the factory classname of the AntLibrarySpec
      *
@@ -262,7 +275,7 @@ public class AntLibrarySpec {
     }
 
     /**
-     * Add a converter to this library sec
+     * Add a converter to this library spec
      *
      * @param className the name of the converter class
      */
@@ -270,6 +283,15 @@ public class AntLibrarySpec {
         converterClassNames.add(className);
     }
 
+    /**
+     * Add an aspect to this the library spec
+     *
+     * @param className the name of the aspect class
+     */
+    public void addAspect(String className) {
+        aspectClassNames.add(className);
+    }
+    
     /**
      * Indicates if this library requires Ant's XML parser
      *

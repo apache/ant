@@ -1058,8 +1058,7 @@ public class Project implements org.apache.ant.common.event.BuildListener {
         }
 
         try {
-            Object taskObject = componentService.createComponent(factory,
-                context.getClassLoader(), taskClass, false, taskType);
+            Object taskObject = componentService.createComponent(taskType);
             if (taskObject instanceof Task) {
                 task = (Task) taskObject;
             } else {
@@ -1093,9 +1092,7 @@ public class Project implements org.apache.ant.common.event.BuildListener {
         }
 
         try {
-            Object dataInstance = componentService.createComponent(factory,
-                context.getClassLoader(), typeClass, false, typeName);
-            return dataInstance;
+            return componentService.createComponent(typeName);
         } catch (Throwable e) {
             throw new BuildException(e);
         }

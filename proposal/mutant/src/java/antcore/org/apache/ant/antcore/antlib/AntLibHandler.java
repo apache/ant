@@ -144,12 +144,17 @@ public class AntLibHandler extends ElementHandler {
                 antLibrarySpec.addDefinition(defnHandler.getDefinitionType(),
                     defnHandler.getName(), defnHandler.getClassName());
             } else if (qualifiedName.equals("converter")) {
-                ClassNameHandler converterHandler
-                    = new ClassNameHandler();
+                ClassNameHandler converterHandler = new ClassNameHandler();
                 converterHandler.start(getParseContext(), getXMLReader(),
                     this, getLocator(), attributes, getElementSource(),
                     qualifiedName);
                 antLibrarySpec.addConverter(converterHandler.getClassName());
+            } else if (qualifiedName.equals("aspect")) {
+                ClassNameHandler aspectHandler = new ClassNameHandler();
+                aspectHandler.start(getParseContext(), getXMLReader(),
+                    this, getLocator(), attributes, getElementSource(),
+                    qualifiedName);
+                antLibrarySpec.addAspect(aspectHandler.getClassName());
             } else if (qualifiedName.equals("factory")) {
                 ClassNameHandler factoryHandler
                     = new ClassNameHandler();

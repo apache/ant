@@ -63,10 +63,10 @@ import org.apache.ant.common.util.ExecutionException;
  */
 public interface ExecutionComponent {
     /**
-     * Initialise the task. The task may use the AntContext to request
+     * Initialise the component. The component may use the AntContext to request
      * services from the Ant core.
      *
-     * @param context the Task's context
+     * @param context the Component's context
      * @param componentType the type of the component
      * @exception ExecutionException if the component cannot be initialised
      */

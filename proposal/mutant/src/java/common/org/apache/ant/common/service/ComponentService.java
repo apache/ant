@@ -174,22 +174,17 @@ public interface ComponentService {
     Object createComponent(String componentName) throws ExecutionException;
 
     /**
-     * Create a component given its class. The component will have a context
-     * but will not be configured. It should be configured using the
-     * appropriate set methods and then validated before being used.
+     * Create a component given its libraryId and local name within the 
+     * library. This method is unambiguous in the face of imports, aliases and
+     * taskdefs performed in the build.
      *
-     * @param componentClass the component's class
-     * @param factory the factory to create the component
-     * @param loader the classloader associated with the component
-     * @param addTaskAdapter whenther the returned component should be a
-     *      task, potentially being wrapped in an adapter
-     * @param componentName the name of the component type
+     * @param libraryId the component's library identifier.
+     * @param localName the name component within the library.
      * @return the created component. The return type of this method depends
      *      on the component type.
      * @exception ExecutionException if the component cannot be created
      */
-    Object createComponent(AntLibFactory factory, ClassLoader loader,
-                           Class componentClass, boolean addTaskAdapter,
-                           String componentName) throws ExecutionException;
+    Object createComponent(String libraryId, String localName)
+        throws ExecutionException;
 }
 

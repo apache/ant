@@ -53,7 +53,6 @@
  */
 package org.apache.tools.ant;
 import org.apache.ant.common.antlib.AntContext;
-import org.apache.ant.common.antlib.Converter;
 import org.apache.ant.common.antlib.StandardLibFactory;
 import org.apache.ant.common.service.EventService;
 import org.apache.ant.common.util.ExecutionException;
@@ -145,40 +144,41 @@ public class Ant1Factory extends StandardLibFactory {
     }
 
     /**
-     * Create a converter.
+     * Create an instance of the given class
      *
-     * @param converterClass the class of the converter.
-     * @return an instance of the requested converter class
-     * @exception InstantiationException if the converter cannot be
-     *      instantiated
-     * @exception IllegalAccessException if the converter cannot be accessed
-     * @exception ExecutionException if the converter cannot be created
+     * @param requiredClass the class for which an instance is
+     *      required
+     * @return a instance of the required class
+     * @exception InstantiationException if the class cannot be instantiated
+     * @exception IllegalAccessException if the instance cannot be accessed
+     * @exception ExecutionException if there is a problem creating the
+     *      converter
      */
-    public Converter createConverter(Class converterClass)
+    public Object createInstance(Class requiredClass)
          throws InstantiationException, IllegalAccessException,
         ExecutionException {
 
         java.lang.reflect.Constructor c = null;
 
-        Converter converter = null;
+        Object instance = null;
         try {
             try {
-                c = converterClass.getConstructor(new Class[0]);
-                converter = (Converter) c.newInstance(new Object[0]);
+                c = requiredClass.getConstructor(new Class[0]);
+                instance = c.newInstance(new Object[0]);
             } catch (NoSuchMethodException nse) {
-                c = converterClass.getConstructor(new Class[]{Project.class});
-                converter = (Converter) c.newInstance(new Object[]{project});
+                c = requiredClass.getConstructor(new Class[]{Project.class});
+                instance = c.newInstance(new Object[]{project});
             }
 
-            return converter;
+            return instance;
         } catch (java.lang.reflect.InvocationTargetException ite) {
             Throwable t = ite.getTargetException();
-            String msg = "Could not create converter of type: "
-                 + converterClass.getName() + " due to " + t;
+            String msg = "Could not create instance of type: "
+                 + requiredClass.getName() + " due to " + t;
             throw new ExecutionException(msg, t);
         } catch (NoSuchMethodException e) {
             throw new ExecutionException("Unable to find an appropriate "
-                 + "constructor for converter " + converterClass.getName(), e);
+                 + "constructor for class " + requiredClass.getName(), e);
         }
     }
 

@@ -60,6 +60,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.HashMap;
 import org.apache.ant.antcore.xml.ParseContext;
 import org.apache.ant.antcore.xml.XMLParseException;
 import org.apache.ant.common.util.CircularDependencyChecker;
@@ -153,10 +154,11 @@ public class AntLibManager {
      * @param initConfig the Ant initialization configuration
      * @param libraries the collection of libraries already configured
      * @param libPathsMap a map of lists of library paths for each library
+     * @return A map of the newly configured libraries
      * @exception ExecutionException if a library cannot be configured from
      *      the given specification
      */
-    public void configLibraries(InitConfig initConfig, Map librarySpecs,
+    public Map configLibraries(InitConfig initConfig, Map librarySpecs,
                                 Map libraries, Map libPathsMap)
          throws ExecutionException {
 
@@ -180,15 +182,18 @@ public class AntLibManager {
             }
         }
 
+        Map newLibraries = new HashMap();
         CircularDependencyChecker configuring
              = new CircularDependencyChecker("configuring Ant libraries");
         for (Iterator i = librarySpecs.keySet().iterator(); i.hasNext();) {
             String libraryId = (String) i.next();
             if (!libraries.containsKey(libraryId)) {
                 configLibrary(initConfig, librarySpecs, libraryId,
-                    configuring, libraries, libPathsMap);
+                    configuring, libraries, newLibraries, libPathsMap);
             }
         }
+        
+        return newLibraries;
     }
 
     /**
@@ -267,13 +272,14 @@ public class AntLibManager {
      *      dependencies.
      * @param libraries the collection of libraries which have already been
      *      configured
+     * @param newLibraries the new libraries being configured. 
      * @param libPathsMap a map of lists of library patsh fro each library
      * @exception ExecutionException if the library cannot be configured.
      */
     private void configLibrary(InitConfig initConfig, Map librarySpecs,
                                String libraryId,
                                CircularDependencyChecker configuring,
-                               Map libraries, Map libPathsMap)
+                               Map libraries, Map newLibraries, Map libPathsMap)
          throws ExecutionException {
 
         try {
@@ -283,14 +289,15 @@ public class AntLibManager {
                  = (AntLibrarySpec) librarySpecs.get(libraryId);
             String extendsId = librarySpec.getExtendsLibraryId();
             if (extendsId != null) {
-                if (!libraries.containsKey(extendsId)) {
+                if (!libraries.containsKey(extendsId) &&
+                    !newLibraries.containsKey(extendsId)) {
                     if (!librarySpecs.containsKey(extendsId)) {
                         throw new ExecutionException("Could not find library, "
                              + extendsId + ", upon which library "
                              + libraryId + " depends");
                     }
                     configLibrary(initConfig, librarySpecs, extendsId,
-                        configuring, libraries, libPathsMap);
+                        configuring, libraries, newLibraries, libPathsMap);
                 }
             }
 
@@ -323,10 +330,14 @@ public class AntLibManager {
             if (extendsId != null) {
                 AntLibrary extendsLibrary
                      = (AntLibrary) libraries.get(extendsId);
+                if (extendsLibrary == null) {
+                    extendsLibrary = (AntLibrary) newLibraries.get(extendsId);
+                }
+                
                 antLibrary.setExtendsLibrary(extendsLibrary);
             }
             antLibrary.setParentLoader(initConfig.getCommonLoader());
-            libraries.put(libraryId, antLibrary);
+            newLibraries.put(libraryId, antLibrary);
 
             if (libPathsMap != null) {
                 List libPaths = (List) libPathsMap.get(libraryId);

@@ -15,5 +15,7 @@
   
   <converter classname="org.apache.ant.antlib.system.FileConverter"/>          
   <converter classname="org.apache.ant.antlib.system.URLConverter"/>          
-  <converter classname="org.apache.ant.antlib.system.PrimitiveConverter"/>          
+  <converter classname="org.apache.ant.antlib.system.PrimitiveConverter"/> 
+
+  <aspect classname="org.apache.ant.antlib.system.AntAspect"/>         
 </antlib>

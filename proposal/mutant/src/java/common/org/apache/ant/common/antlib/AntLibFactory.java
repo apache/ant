@@ -88,17 +88,17 @@ public interface AntLibFactory {
         ExecutionException;
 
     /**
-     * Create an instance of the given converter class
+     * Create an instance of the given class
      *
-     * @param converterClass the converter class for which an instance is
+     * @param requiredClass the class for which an instance is
      *      required
-     * @return a converter instance
+     * @return a instance of the required class
      * @exception InstantiationException if the class cannot be instantiated
      * @exception IllegalAccessException if the instance cannot be accessed
      * @exception ExecutionException if there is a problem creating the
      *      converter
      */
-    Converter createConverter(Class converterClass)
+    Object createInstance(Class requiredClass)
          throws InstantiationException, IllegalAccessException,
         ExecutionException;
 
