@@ -245,12 +245,12 @@ public class DOMElementWriter {
      *
      * <p>Also ensure that we are not including an <code>]]&gt;</code>
      * marker by replacing that sequence with
-     * <code>&amp;x5d;&amp;x5d;&amp;gt;</code>.</p>
+     * <code>&amp;#x5d;&amp;#x5d;&amp;gt;</code>.</p>
      *
      * <p>See XML 1.0 2.2 <a
-     * href="http://www.w3.org/TR/1998/REC-xml-19980210#charsets">http://www.w3.org/TR/1998/REC-xml-19980210#charsets</a>. and
+     * href="http://www.w3.org/TR/1998/REC-xml-19980210#charsets">http://www.w3.org/TR/1998/REC-xml-19980210#charsets</a> and
      * 2.7 <a
-     * href="http://www.w3.org/TR/1998/REC-xml-19980210#sec-cdata-sect">http://www.w3.org/TR/1998/REC-xml-19980210#sec-cdata-sect</a></p>
+     * href="http://www.w3.org/TR/1998/REC-xml-19980210#sec-cdata-sect">http://www.w3.org/TR/1998/REC-xml-19980210#sec-cdata-sect</a>.</p>
 
      */
     public String encodedata(final String value) {
@@ -266,7 +266,7 @@ public class DOMElementWriter {
         int cdEnd = result.indexOf("]]>");
         while (cdEnd != -1) {
             sb.setLength(cdEnd);
-            sb.append("&x5d;&x5d;&gt;")
+            sb.append("&#x5d;&#x5d;&gt;")
                 .append(result.substring(cdEnd+3));
             result = sb.toString();
             cdEnd = result.indexOf("]]>");

@@ -123,11 +123,11 @@ public class DOMElementWriterTest extends TestCase {
     public void testCDATAEndEncoding() {
         assertEquals("]>", w.encodedata("]>"));
         assertEquals("]]", w.encodedata("]]"));
-        assertEquals("&x5d;&x5d;&gt;", w.encodedata("]]>"));
-        assertEquals("&x5d;&x5d;&gt;A", w.encodedata("]]>A"));
-        assertEquals("A&x5d;&x5d;&gt;", w.encodedata("A]]>"));
-        assertEquals("A&x5d;&x5d;&gt;A", w.encodedata("A]]>A"));
-        assertEquals("A&x5d;&x5d;&gt;B&x5d;&x5d;&gt;C",
+        assertEquals("&#x5d;&#x5d;&gt;", w.encodedata("]]>"));
+        assertEquals("&#x5d;&#x5d;&gt;A", w.encodedata("]]>A"));
+        assertEquals("A&#x5d;&#x5d;&gt;", w.encodedata("A]]>"));
+        assertEquals("A&#x5d;&#x5d;&gt;A", w.encodedata("A]]>A"));
+        assertEquals("A&#x5d;&#x5d;&gt;B&#x5d;&#x5d;&gt;C",
                      w.encodedata("A]]>B]]>C"));
     }
 }
