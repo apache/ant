@@ -247,6 +247,13 @@ Other changes:
 * Added verbose="true|false" attribute to <subant>. When verbose is enabled,
   the directory name is logged on entry and exit of the sub-build. Bugzilla 33787.
 
+* Added -nouserlib option to allow running ant without automatically loading
+  up ${user.home}/.lib/ant. This is useful when compiling ant, and antlibs.
+  Modified the build.sh and build.bat to use the option.
+
+* Added -noclasspath option to allow running ant WITHOUT using CLASSPATH env
+  variable. Modified ant.bat to do this so that %CLASSPATH% is not looked at.
+
 Fixed bugs:
 -----------
 
