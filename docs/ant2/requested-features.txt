@@ -759,4 +759,8 @@ VI. entries that have been submitted too late
 
 * Integration of the depends task and javac tasks
 
+  [REJECTED - only two +1 votes]
+
 * recursive property resolution( ie resolving ${dist.${name}.dir} )
+
+  [REJECTED - veto by Peter Donald]
