@@ -196,6 +196,56 @@
 
       </answer>
     </faq>
+
+    <faq id="shell-redirect-1">
+      <question>How do I include a &lt; character in my command line arguments?</question>
+      <answer>
+        <p>The short answer is "Use <code>&amp;lt;</code>".</p>
+
+        <p>The long answer is, that this probably won't do what you
+        want anyway, see <a href="#shell-redirect-2">the next
+        section</a>.</p>
+      </answer>
+    </faq>
+
+    <faq id="shell-redirect-2">
+      <question>How do I redirect standard input or standard output
+        in the <code>&lt;exec&gt;</code> task?</question>
+      <answer>
+        <p>Say you want to redirect the standard input stream of the
+        <code>cat</code> command to read from a file, something
+        like</p>
+
+        <source><![CDATA[
+shell-prompt> cat < foo
+]]></source>
+        
+        <p>and try to translate it into</p>
+
+        <source><![CDATA[
+<exec executable="cat">
+  <arg value="&lt;" />
+  <arg value="foo" />
+</exec>
+]]></source>
+
+        <p>This will not do what you expect.  The input-redirection is
+        performed by your shell, not the command itself, so this
+        should read:</p>
+        
+        <source><![CDATA[
+<exec executable="/bin/sh">
+  <arg value="-c" />
+  <arg value="cat &lt; foo" />
+</exec>
+]]></source>
+
+        <p>Note, that you must use the <code>value</code> attribute of
+        <code>&lt;arg&gt;</code> in the last element.</p>
+
+      </answer>
+    </faq>
+
   </faqsection>
 
   <faqsection title="Ant and IDEs/Editors">
