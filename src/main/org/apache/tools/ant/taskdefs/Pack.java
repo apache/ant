@@ -67,6 +67,8 @@ import org.apache.tools.ant.Task;
  * Abstract Base class for pack tasks.
  *
  * @author <a href="mailto:umagesh@rediffmail.com">Magesh Umasankar</a>
+ *
+ * @since Ant 1.5
  */
 
 public abstract class Pack extends Task {

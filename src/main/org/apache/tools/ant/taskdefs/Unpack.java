@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2001 The Apache Software Foundation.  All rights
+ * Copyright (c) 2001-2002 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -63,6 +63,8 @@ import org.apache.tools.ant.Task;
  * Abstract Base class for unpack tasks.
  *
  * @author <a href="mailto:umagesh@apache.org">Magesh Umasankar</a>
+ *
+ * @since 1.5
  */
 
 public abstract class Unpack extends Task {
@@ -139,8 +141,13 @@ public abstract class Unpack extends Task {
     }
 
     public void execute() throws BuildException {
-        validate();
-        extract();
+        File savedDest = dest; // may be altered in validate
+        try {
+            validate();
+            extract();
+        } finally {
+            dest = savedDest;
+        }
     }
 
     protected abstract String getDefaultExtension();

@@ -69,6 +69,8 @@ import org.apache.tools.bzip2.CBZip2InputStream;
  *
  * @author <a href="mailto:umagesh@rediffmail.com">Magesh Umasankar</a>
  *
+ * @since Ant 1.5
+ *
  * @ant.task category="packaging"
  */
 
