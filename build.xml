@@ -323,6 +323,18 @@
 
   <!--
        ===================================================================
+         Set up a patternsets that matches the parts of our site that
+         should not be part of the distribution.
+       ===================================================================
+  -->
+  <patternset id="site.excludes">
+    <exclude name="bindownload.html"/>
+    <exclude name="srcdownload.html"/>
+    <exclude name="*.cgi"/>
+  </patternset>
+
+  <!--
+       ===================================================================
          Check to see what optional dependencies are available
        ===================================================================
   -->
@@ -818,12 +830,16 @@
     <copy todir="${dist.lib}" file="${lib.dir}/README"/>
 
     <copy todir="${dist.docs}">
-      <fileset dir="${docs.dir}" excludes="${unfiltered.files}"/>
+      <fileset dir="${docs.dir}" excludes="${unfiltered.files}">
+        <patternset refid="site.excludes"/>
+      </fileset>
       <filterchain refid="ant.filters"/>
     </copy>
 
     <copy todir="${dist.docs}" filtering="false">
-      <fileset dir="${docs.dir}" includes="${unfiltered.files}"/>
+      <fileset dir="${docs.dir}" includes="${unfiltered.files}">
+        <patternset refid="site.excludes"/>
+      </fileset>
     </copy>
 
     <copy todir="${dist.dir}">
@@ -910,6 +926,7 @@
     <copy todir="${src.dist.docs}">
       <fileset dir="${docs.dir}">
         <exclude name="manual/api/**"/>
+        <patternset refid="site.excludes"/>
       </fileset>
     </copy>
 
