@@ -87,7 +87,11 @@ public class NoBannerLogger extends DefaultLogger {
         targetName = event.getTarget().getName();
     }
 
-    /** Resets the current target name to <code>null</code>. */
+    /** 
+     * Resets the current target name to <code>null</code>.
+     * 
+     * @param event Ignored in this implementation.
+     */
     public void targetFinished(BuildEvent event) {
         targetName = null;
     }

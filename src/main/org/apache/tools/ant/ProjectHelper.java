@@ -140,11 +140,19 @@ public class ProjectHelper {
     }
 
     
-    /** Discover a project helper instance. Uses the same patterns
-     *  as JAXP, commons-logging, etc: a system property, a JDK1.3
-     *  service discovery, default.
+    /** 
+     * Discovers a project helper instance. Uses the same patterns
+     * as JAXP, commons-logging, etc: a system property, a JDK1.3
+     * service discovery, default.
+     * 
+     * @return a ProjectHelper, either a custom implementation
+     * if one is available and configured, or the default implementation
+     * otherwise.
+     * 
+     * @exception BuildException if a specified helper class cannot
+     * be loaded/instantiated.
      */
-    public static ProjectHelper getProjectHelper()
+    public static ProjectHelper getProjectHelper() 
         throws BuildException {
         // Identify the class loader we will be using. Ant may be
         // in a webapp or embeded in a different app
@@ -206,9 +214,18 @@ public class ProjectHelper {
         }
     }
 
-    /** Create a new helper. It'll first try the thread class loader,
-     *  then Class.forName() will load from the same loader that
-     *  loaded this class.
+    /** 
+     * Creates a new helper instance from the name of the class. 
+     * It'll first try the thread class loader, then Class.forName() 
+     * will load from the same loader that loaded this class.
+     * 
+     * @param helperClass The name of the class to create an instance
+     *                    of. Must not be <code>null</code>.
+     * 
+     * @return a new instance of the specified class.
+     * 
+     * @exception BuildException if the class cannot be found or
+     * cannot be appropriate instantiated.
      */
     private static ProjectHelper newHelper(String helperClass)
         throws BuildException {
@@ -232,11 +249,13 @@ public class ProjectHelper {
     }
 
     /**
-     *  JDK1.1 compatible access to the context class loader.
-     *  Cut&paste from Jaxp.
+     * JDK1.1 compatible access to the context class loader.
+     * Cut&paste from JAXP.
+     * 
+     * @return the current context class loader, or <code>null</code>
+     * if the context class loader is unavailable.
      */
-    public static ClassLoader getContextClassLoader()
-        throws BuildException {
+    public static ClassLoader getContextClassLoader() {
         if (!LoaderUtils.isContextLoaderAvailable()) {
             return null;
         }
@@ -357,6 +376,9 @@ public class ProjectHelper {
      * Replaces <code>${xxx}</code> style constructions in the given value with 
      * the string value of the corresponding properties.
      *
+     * @param project The project containing the properties to replace.
+     *                Must not be <code>null</code>.
+     * 
      * @param value The string to be scanned for property references.
      *              May be <code>null</code>.
      *

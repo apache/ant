@@ -187,6 +187,11 @@ public class UnknownElement extends Task {
      *
      * @param parent The configured object for the parent. 
      *               Must not be <code>null</code>.
+     * 
+     * @param parentWrapper The wrapper containing child wrappers
+     *                      to be configured. Must not be <code>null</code>
+     *                      if there are any children.
+     * 
      * @exception BuildException if the children cannot be configured.
      */
     protected void handleChildren(Object parent,
@@ -286,6 +291,8 @@ public class UnknownElement extends Task {
      *             <code>"task"</code>. Should not be <code>null</code>.
      * @param elementName The name of the element which could not be found.
      *                    Should not be <code>null</code>.
+     * 
+     * @return a detailed description of what might have caused the problem.
      */
     protected BuildException getNotFoundException(String what,
                                                   String elementName) {

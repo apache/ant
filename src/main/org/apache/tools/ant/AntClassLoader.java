@@ -971,7 +971,7 @@ public class AntClassLoader extends ClassLoader implements BuildListener {
      * reading the class from the stream.
      */
     private Class getClassFromStream(InputStream stream, String classname)
-                throws IOException {
+                throws IOException, SecurityException {
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         int bytesRead = -1;
         byte[] buffer = new byte[BUFFER_SIZE];

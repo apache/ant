@@ -108,6 +108,9 @@ public class TaskAdapter extends Task {
     
     /**
      * Executes the proxied task.
+     * 
+     * @exception BuildException if the project could not be set
+     * or the method could not be executed.
      */
     public void execute() throws BuildException {
         Method setProjectM = null;

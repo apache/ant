@@ -430,7 +430,8 @@ public class IntrospectionHelper implements BuildListener {
      *                           method is available to handle it, or if
      *                           the handling method fails.
      */
-    public void addText(Project project, Object element, String text) {
+    public void addText(Project project, Object element, String text) 
+        throws BuildException {
         if (addText == null) {
             // Element doesn't handle text content
             if ( text.trim().length() == 0 ) {
@@ -845,6 +846,8 @@ public class IntrospectionHelper implements BuildListener {
     /**
      * Clears all storage used by this class, including the static cache of 
      * helpers.
+     * 
+     * @param event Ignored in this implementation.
      */
     public void buildFinished(BuildEvent event) {
         attributeTypes.clear();

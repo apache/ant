@@ -92,6 +92,8 @@ public class XmlLogger implements BuildListener {
     /** 
      * Returns a default DocumentBuilder instance or throws an
      * ExceptionInInitializerError if it can't be created.
+     * 
+     * @return a default DocumentBuilder instance.
      */
     private static DocumentBuilder getDocumentBuilder() {
         try {
@@ -141,7 +143,12 @@ public class XmlLogger implements BuildListener {
 
     /** Utility class representing the time an element started. */
     private static class TimedElement {
+        /** 
+         * Start time in milliseconds 
+         * (as returned by <code>System.currentTimeMillis()</code>). 
+         */
         long startTime;
+        /** Element created at the start time. */ 
         Element element;
     }
 
