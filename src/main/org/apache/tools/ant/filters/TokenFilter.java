@@ -526,7 +526,7 @@ public class TokenFilter extends BaseFilterReader
 
                 // search again
                 start = found + from.length();
-                found = line.indexOf(line, start);
+                found = line.indexOf(from, start);
             }
 
             // write the remaining characters
