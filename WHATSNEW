@@ -33,6 +33,14 @@ Changes that could break older environments:
   failonerror attribute.
   Bugzilla report 33361.
 
+* <signjar> now notices when the jar and signedjar are equal, and switches
+  to the same dependency logic as when signedjar is omitted. This may break
+  something that depended upon signing in this situation. However, since
+  invoking the JDK jarsigner program with -signedjar set to the source jar
+  actually crashes the JVM on our (Java1.5) systems, we don't think any
+  build files which actually worked will be affected by the change.
+
+
 Fixed bugs:
 -----------
 
