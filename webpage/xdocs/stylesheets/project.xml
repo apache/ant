@@ -40,7 +40,8 @@
         <item name="CVS Repositories"      href="/site/cvsindex.html"/>
         <item name="Mailing Lists"         href="/site/mail.html"/>
         <item name="Reference Library"     href="/site/library.html"/>
-        <item name="Bug Database"          href="/site/bugs.html"/>
+        <item name="Bug Database"          href="http://nagoya.apache.org/bugzilla/enter_bug.cgi?product=Ant"/>
+        <item name="Enhancement Requests"  href="http://nagoya.apache.org/bugzilla/enter_bug.cgi?product=Ant&amp;bug_severity=Enhancement"/>
     </menu>
 
     </body>
