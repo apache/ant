@@ -1,0 +1,73 @@
+<html>
+
+<head>
+<title>XMLValidate Task</title>
+</head>
+
+<body>
+
+<h2><a name="xmlvalidate">XMLValidate</a></h2>
+<h3>Description</h3>
+<p>
+  This task checks xml files are valid (or only well formed). The task uses crimson SAX2 parser implementation by default, but one can specify any SAX1/2 parser if needed
+</p>
+
+<h3>Parameters</h3>
+<table border="1" cellpadding="2" cellspacing="0">
+  <tr>
+    <td valign="top"><b>Attribute</b></td>
+    <td valign="top"><b>Description</b></td>
+    <td align="center" valign="top"><b>Required</b></td>
+  </tr>
+  <tr>
+    <td valign="top">file</td>
+    <td valign="top">the file(s) you want to check. (optionally can use an embedded fileset)</td>
+    <td valign="top" align="center">No</td>
+  </tr>
+  <tr>
+    <td valign="top">lenient</td>
+    <td valign="top">
+      if true, only check the xml document is well formed
+	    (ignored if the specified parser is as SAX1 parser)
+    </td>
+    <td valign="top" align="center">No</td>
+  </tr>
+  <tr>
+    <td valign="top">classname</td>
+    <td valign="top">the parser to use. (default: crimson).</td>
+    <td align="center" valign="top">No</td>
+  </tr>
+  <tr>
+    <td valign="top">classpathref</td>
+    <td valign="top">where to find the parser class. Optionally can use an embedded classpath element.</td>
+    <td align="center" valign="top">No</td>
+  </tr>
+  <tr>
+    <td valign="top">failonerror</td>
+    <td valign="top">fails on a error if set to true (defaults to true).</td>
+    <td align="center" valign="top">No</td>
+  </tr>
+  <tr>
+    <td valign="top">warn</td>
+    <td valign="top">log parser warn events.</td>
+    <td align="center" valign="top">No</td>
+  </tr>
+</table>
+<h3>Examples</h3>
+<blockquote><pre>
+&lt;xmlvalidate file="toto.xml"/&gt;
+
+    &lt;xmlvalidate failonerror="no" lenient="yes" warn="yes"
+	         classname="org.apache.xerces.parsers.SAXParser" &gt;
+	         classpath="lib/xerces.jar"&gt;
+        &lt;fileset dir="src" includes="style/*.xsl"/&gt;  
+    &lt;/xmlvalidate&gt;
+</pre></blockquote>
+<hr>
+
+<p align="center">Copyright &copy; 2000,2001 Apache Software Foundation. All rights
+Reserved.</p>
+
+</body>
+</html>
+
