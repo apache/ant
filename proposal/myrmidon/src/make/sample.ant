@@ -69,6 +69,16 @@ Legal:
     <log message="Whoa - it no fail. You used ant-call to call me and set param blah!"/>
   </target>
 
+  <target name="log-level-test">
+    <log message="Testing log level debug" level="debug"/>
+    <log message="Testing log level info" level="info"/>
+    <log message="Testing log level warn" level="warn"/>
+    <log message="Testing log level error" level="error"/>
+
+    <log message="Testing log level fatal error" level="fatalError"/>
+    <log message="Testing log level error" level="this-no-work"/>
+  </target>
+
   <target name="datatype-test">
     <property name="foo">
       <pattern value="*.java"/>
