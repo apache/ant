@@ -169,7 +169,7 @@ public class Ant extends Task {
 
            // set Java built-in properties separately,
            // b/c we won't inherit them.
-           project.setSystemProperties();
+           p1.setSystemProperties();
         }
         
         e = prop1.keys();
