@@ -1302,6 +1302,49 @@
         </table>
       </subsection>
 
+      <subsection name="Kanaputs">
+
+        <p>Kanaputs is a parser for java based scripting. It is an
+        interpreter for Java. With Kanaputs you can use Java as an
+        interpreted language: no more compilation, each instruction is
+        executed when you write it.  It is a small programmation
+        language to make script files above Java.</p>
+
+        <p>Kanaputs Ant Task provides a way to add any kind of
+        programmatic features in your Ant script. The code you insert
+        stays OS independent (because Kanaputs uses Java) and is
+        completely integrated with Ant as you can give Ant properties
+        to the Kanaputs code and get back the results in other
+        properties.</p> 
+
+        <p>Moreover, as you can invoke any kind of Java code with
+        Kanaputs, you can popup windows from your Ant file to ask the
+        user to do a choice.</p>
+        <table class="externals">
+          <tr>
+            <th>Compatibility:</th> 
+            <td>Ant 1.2 and above</td> 
+          </tr>
+          <tr>
+            <th>URL:</th> 
+            <td>
+              <a href="http://www.kanaputs.org/">http://www.kanaputs.org/</a> 
+              <a href="http://www.kanaputs.org/ant.html">http://www.kanaputs.org/ant.html</a> 
+            </td>
+          </tr>
+          <tr>
+            <th>Contact:</th> 
+            <td>
+              <a href="mailto:kfra@kanaputs.org">kfra@kanaputs.org</a> 
+            </td>
+          </tr>
+          <tr>
+            <th>License:</th> 
+            <td>Freeware</td> 
+          </tr>
+        </table>
+      </subsection>
+
      <subsection name="Macker">
 
         <p>A build-time architectural testing tool, designed
