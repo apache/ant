@@ -63,8 +63,10 @@ import java.util.Hashtable;
 import java.util.Locale;
 import java.util.Vector;
 import org.apache.tools.ant.helper.ProjectHelperImpl;
+import org.apache.tools.ant.helper.ProjectHelper2;
 import org.apache.tools.ant.util.LoaderUtils;
 import org.xml.sax.AttributeList;
+import org.xml.sax.Attributes;
 
 /**
  * Configures a Project (complete with Targets and Tasks) based on
@@ -213,7 +215,8 @@ public class ProjectHelper {
         } else {
             try {
                 // Default
-                return new ProjectHelperImpl();
+                // return new ProjectHelperImpl();
+                return new ProjectHelper2();
             } catch (Throwable e) {
                 String message = "Unable to load default ProjectHelper due to "
                     + e.getClass().getName() + ": " + e.getMessage();
@@ -308,6 +311,44 @@ public class ProjectHelper {
             } catch (BuildException be) {
                 // id attribute must be set externally
                 if (!attrs.getName(i).equals("id")) {
+                    throw be;
+                }
+            }
+        }
+    }
+
+    /** Configure a component using SAX2 attributes.
+     */
+    public static void configure( Object target, Attributes attrs, Project project )
+        throws BuildException
+    {
+        if (target instanceof TaskAdapter) {
+            target = ((TaskAdapter) target).getProxy();
+        }
+
+        IntrospectionHelper ih =
+            IntrospectionHelper.getHelper(target.getClass());
+
+        // Why ???
+        project.addBuildListener(ih);
+
+        for (int i = 0; i < attrs.getLength(); i++) {
+            // reflect these into the target
+            String attValue=attrs.getValue(i);
+
+            // XXX ADD SPECIAL CASE FOR ${property} - don't convert to string
+            // and support ARRAYS.
+            // reflect these into the target
+            //String value = replaceProperties(attValue);
+            String value = replaceProperties(project, attValue,
+                                           project.getProperties());
+            try {
+                ih.setAttribute(project, target,
+                                attrs.getQName(i).toLowerCase(Locale.US), value);
+
+            } catch (BuildException be) {
+                // id attribute must be set externally
+                if (!attrs.getQName(i).equals("id")) {
                     throw be;
                 }
             }
