@@ -605,7 +605,7 @@
 
     <a name="modified"></a>
     <h4>Modified Selector</h4>
-    <p>The &lt;modified&gt; computes a value for a file, compares that
+    <p>The &lt;modified&gt; selector computes a value for a file, compares that
     to the value stored in a cache and select the file, if these two values
     differ.</p>
     <p>Because this selector is highly configurable the order in which the selection is done
@@ -614,7 +614,7 @@
         <li> get the cached value from the configured cache (absolute path as key) </li>
         <li> get the new value from the configured algorithm </li>
         <li> compare these two values with the configured comparator </li>
-        <li> update the cache if needed and wished </li>
+        <li> update the cache if needed and requested </li>
         <li> do the selection according to the comparison result </li>
         </ol>
     The comparison, computing of the hashvalue and the store is done by implementation
@@ -720,6 +720,17 @@
             <li><i>cache.cachefile</i> (optional): Name of the properties-file
                 (default = <i>cache.properties</i>) </li>
           </ul>
+        </td>
+      </tr>
+      <tr><td colspan="2"><font size="+1"><b> Comparator´s </b></font></td></tr>
+      <tr>
+        <td valign="top"> equal </td>
+        <td valign="top"> Very simple object comparison. </td>
+      </tr>
+      <tr>
+        <td valign="top"> rule </td>
+        <td valign="top"> Uses <i>java.text.RuleBasedCollator</i> for Object
+          comparison.
         </td>
       </tr>
     </table>
@@ -1187,6 +1198,5 @@
   </body>
 
 </html>
-
 
 
