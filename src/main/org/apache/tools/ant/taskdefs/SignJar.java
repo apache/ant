@@ -214,6 +214,13 @@ public class SignJar extends Task {
             throw new BuildException("jar must be set through jar attribute "
                                      + "or nested filesets");
         }
+        if (null == alias) {
+            throw new BuildException("alias attribute must be set");
+        }
+
+        if (null == storepass) {
+            throw new BuildException("storepass attribute must be set");
+        }
         redirector = createRedirector();
         if (null != jar) {
             if (filesets.size() != 0) {
@@ -241,14 +248,8 @@ public class SignJar extends Task {
      * @return a configured RedirectorElement.
      */
     private RedirectorElement createRedirector() {
-        if (storepass == null && keypass == null) {
-            return null;
-        }
         RedirectorElement result = new RedirectorElement();
-        StringBuffer input = new StringBuffer();
-        if (storepass != null) {
-            input.append(storepass).append('\n');
-        }
+        StringBuffer input = new StringBuffer(storepass).append('\n');
         if (keypass != null) {
             input.append(keypass).append('\n');
         }
@@ -262,14 +263,6 @@ public class SignJar extends Task {
      */
     private void doOneJar(File jarSource, File jarTarget)
         throws BuildException {
-
-        if (null == alias) {
-            throw new BuildException("alias attribute must be set");
-        }
-
-        if (null == storepass) {
-            throw new BuildException("storepass attribute must be set");
-        }
 
         if (isUpToDate(jarSource, jarTarget)) {
             return;
@@ -329,9 +322,7 @@ public class SignJar extends Task {
         log("Signing JAR: " + jarSource.getAbsolutePath());
         cmd.setFailonerror(true);
         cmd.setTaskName(getTaskName());
-        if (redirector != null) {
-            cmd.addConfiguredRedirector(redirector);
-        }
+        cmd.addConfiguredRedirector(redirector);
         cmd.execute();
 
         // restore the lastModified attribute
