@@ -136,6 +136,7 @@ public class Exit extends Task {
                     }
                 }
             }
+            log("failing due to " + text, getProject().MSG_DEBUG);
             throw ((status == null) ? new BuildException(text)
              : new ExitStatusException(text, status.intValue()));
         }
