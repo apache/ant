@@ -165,7 +165,8 @@ public class Available extends Task implements Condition {
      */
     public void setType(String type) {
         log("DEPRECATED - The setType(String) method has been deprecated."
-            + " Use setType(Available.FileDir) instead.");
+            + " Use setType(Available.FileDir) instead.",
+            Project.MSG_WARN);
         this.type = new FileDir();
         this.type.setValue(type);
     }
@@ -211,7 +212,8 @@ public class Available extends Task implements Condition {
                         + " property."
                         + StringUtils.LINE_SEP
                         + "  Build file should not reuse the same property"
-                        + " name for different values.");
+                        + " name for different values.",
+                        Project.MSG_WARN);
                 }
                 // NB: this makes use of Project#setProperty rather than Project#setNewProperty
                 //     due to backwards compatiblity reasons
