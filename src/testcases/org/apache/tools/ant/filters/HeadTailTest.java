@@ -61,7 +61,7 @@ import org.apache.tools.ant.BuildFileTest;
 import org.apache.tools.ant.util.FileUtils;
 
 /** JUnit Testcases for TailFilter and HeadFilter
- * @author <a href="mailto:jan@materne.de">Jan Matèrne</a>
+ * @author <a href="mailto:jan@materne.de">Jan Materne</a>
  */
 /* I wrote the testcases in one java file because I want also to test the
  * combined behaviour (see end of the class).

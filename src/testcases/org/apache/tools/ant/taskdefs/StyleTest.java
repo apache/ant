@@ -64,8 +64,8 @@ import java.io.Reader;
 
 
 /**
- * TestCases für <style> / <xslt> task.
- * @author Jan Matèrne
+ * TestCases fuer <style> / <xslt> task.
+ * @author Jan Materne
  * @version 2003-08-05
  */
 public class StyleTest extends BuildFileTest {
