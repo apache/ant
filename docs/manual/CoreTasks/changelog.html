@@ -50,6 +50,7 @@
   </tr>
 </table>
 
+<h3>Parameters specified as nested elements</h3>
 <h4><a name="user">user</a></h4>
 <p>The changelog task all allows a user element. It maps between a usernid
 as it appears on the cvs server and a display name. Any time the userid
@@ -85,7 +86,7 @@ ever occured on repository. It writes these changes into the file &quot;changelo
 
 <pre>  &lt;changelog basedir=&quot;dve/network&quot;
              destfile=&quot;changelog.xml&quot;
-             days=&quot;10&quot;
+             daysinpast=&quot;10&quot;
   /&gt;</pre>
 
 <p>Generates a changelog for the dve/network directory for the last 10 days. It writes
