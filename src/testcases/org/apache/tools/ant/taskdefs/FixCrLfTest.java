@@ -42,144 +42,78 @@ public class FixCrLfTest extends BuildFileTest {
 
     public void test1() throws IOException {
         executeTarget("test1");
-        assertEqualContent(new File(System.getProperty("root"), "src/etc/testcases/taskdefs/fixcrlf/expected/Junk1.java"),
-                           new File(System.getProperty("root"), "src/etc/testcases/taskdefs/fixcrlf/result/Junk1.java"));
     }
 
     public void test2() throws IOException {
         executeTarget("test2");
-        assertEqualContent(new File(System.getProperty("root"), "src/etc/testcases/taskdefs/fixcrlf/expected/Junk2.java"),
-                           new File(System.getProperty("root"), "src/etc/testcases/taskdefs/fixcrlf/result/Junk2.java"));
     }
 
     public void test3() throws IOException {
         executeTarget("test3");
-        assertEqualContent(new File(System.getProperty("root"), "src/etc/testcases/taskdefs/fixcrlf/expected/Junk3.java"),
-                           new File(System.getProperty("root"), "src/etc/testcases/taskdefs/fixcrlf/result/Junk3.java"));
     }
 
     public void test4() throws IOException {
         executeTarget("test4");
-        assertEqualContent(new File(System.getProperty("root"), "src/etc/testcases/taskdefs/fixcrlf/expected/Junk4.java"),
-                           new File(System.getProperty("root"), "src/etc/testcases/taskdefs/fixcrlf/result/Junk4.java"));
     }
 
     public void test5() throws IOException {
         executeTarget("test5");
-        assertEqualContent(new File(System.getProperty("root"), "src/etc/testcases/taskdefs/fixcrlf/expected/Junk5.java"),
-                           new File(System.getProperty("root"), "src/etc/testcases/taskdefs/fixcrlf/result/Junk5.java"));
     }
 
     public void test6() throws IOException {
         executeTarget("test6");
-        assertEqualContent(new File(System.getProperty("root"), "src/etc/testcases/taskdefs/fixcrlf/expected/Junk6.java"),
-                           new File(System.getProperty("root"), "src/etc/testcases/taskdefs/fixcrlf/result/Junk6.java"));
     }
 
     public void test7() throws IOException {
         executeTarget("test7");
-        assertEqualContent(new File(System.getProperty("root"), "src/etc/testcases/taskdefs/fixcrlf/expected/Junk7.java"),
-                           new File(System.getProperty("root"), "src/etc/testcases/taskdefs/fixcrlf/result/Junk7.java"));
     }
 
     public void test8() throws IOException {
         executeTarget("test8");
-        assertEqualContent(new File(System.getProperty("root"), "src/etc/testcases/taskdefs/fixcrlf/expected/Junk8.java"),
-                           new File(System.getProperty("root"), "src/etc/testcases/taskdefs/fixcrlf/result/Junk8.java"));
     }
 
     public void test9() throws IOException {
         executeTarget("test9");
-        assertEqualContent(new File(System.getProperty("root"), "src/etc/testcases/taskdefs/fixcrlf/expected/Junk9.java"),
-                           new File(System.getProperty("root"), "src/etc/testcases/taskdefs/fixcrlf/result/Junk9.java"));
     }
 
     public void testMacLines() throws IOException {
         executeTarget("testMacLines");
-        assertEqualContent(new File(System.getProperty("root"), "src/etc/testcases/taskdefs/fixcrlf/expected/Mac2Unix"),
-                           new File(System.getProperty("root"), "src/etc/testcases/taskdefs/fixcrlf/result/Mac2Unix"));
     }
 
     public void testNoOverwrite() throws IOException {
-        executeTarget("test1");
-        File result =
-            new File(System.getProperty("root"), "src/etc/testcases/taskdefs/fixcrlf/result/Junk1.java");
-        long modTime = result.lastModified();
-
-        /*
-         * Sleep for some time to make sure a newer file would get a
-         * more recent timestamp according to the file system's
-         * granularity (should be > 2s to account for Windows FAT).
-         */
-        try {
-            Thread.sleep(5000);
-        } catch (InterruptedException ie) {
-            fail(ie.getMessage());
-        } // end of try-catch
-
-        /*
-         * make sure we get a new Project instance or the target won't get run
-         * a second time.
-         */
-        configureProject("src/etc/testcases/taskdefs/fixcrlf/build.xml");
-
-        executeTarget("test1");
-        result =
-            new File(System.getProperty("root"), "src/etc/testcases/taskdefs/fixcrlf/result/Junk1.java");
-        assertEquals(modTime, result.lastModified());
+        executeTarget("testNoOverwrite");
     }
 
     public void testEncoding() throws IOException {
-        if (JavaEnvUtils.isJavaVersion(JavaEnvUtils.JAVA_1_1)) {
-            // UTF16 is not supported in JDK 1.1
-            return;
-        }
         executeTarget("testEncoding");
-        assertEqualContent(new File(System.getProperty("root"), "src/etc/testcases/taskdefs/fixcrlf/expected/input.lf.utf16"),
-                           new File(System.getProperty("root"), "src/etc/testcases/taskdefs/fixcrlf/result/input.crlf.utf16"));
     }
 
     public void testLongLines() throws IOException {
         executeTarget("testLongLines");
-        assertEqualContent(new File(System.getProperty("root"), "src/etc/testcases/taskdefs/fixcrlf/expected/longlines.lf"),
-                           new File(System.getProperty("root"), "src/etc/testcases/taskdefs/fixcrlf/result/longlines.crlf"));
     }
 
     public void testCrCrLfSequenceUnix() throws IOException {
         executeTarget("testCrCrLfSequence-unix");
-        assertEqualContent(new File(System.getProperty("root"), "src/etc/testcases/taskdefs/fixcrlf/expected/crcrlf.unix"),
-                           new File(System.getProperty("root"), "src/etc/testcases/taskdefs/fixcrlf/result/crcrlf"));
     }
 
     public void testCrCrLfSequenceDos() throws IOException {
         executeTarget("testCrCrLfSequence-dos");
-        assertEqualContent(new File(System.getProperty("root"), "src/etc/testcases/taskdefs/fixcrlf/expected/crcrlf.dos"),
-                           new File(System.getProperty("root"), "src/etc/testcases/taskdefs/fixcrlf/result/crcrlf"));
     }
 
     public void testCrCrLfSequenceMac() throws IOException {
         executeTarget("testCrCrLfSequence-mac");
-        assertEqualContent(new File(System.getProperty("root"), "src/etc/testcases/taskdefs/fixcrlf/expected/crcrlf.mac"),
-                           new File(System.getProperty("root"), "src/etc/testcases/taskdefs/fixcrlf/result/crcrlf"));
     }
 
     public void testFixlastDos() throws IOException {
         executeTarget("testFixlastDos");
-        assertEqualContent(new File(System.getProperty("root"), "src/etc/testcases/taskdefs/fixcrlf/expected/fixlast.dos"),
-                           new File(System.getProperty("root"), "src/etc/testcases/taskdefs/fixcrlf/result/fixlastfalse.lf"));
     }
 
     public void testFixlastFalseMac() throws IOException {
         executeTarget("testFixlastFalseMac");
-        assertEqualContent(new File(System.getProperty("root"), "src/etc/testcases/taskdefs/fixcrlf/expected/fixlastfalse.mac"),
-                           new File(System.getProperty("root"), "src/etc/testcases/taskdefs/fixcrlf/result/fixlastfalse.lf"));
     }
 
     public void testFixFile() throws Exception {
         executeTarget("testFixFile");
-        File created= new File(System.getProperty("root"),
-            "src/etc/testcases/taskdefs/fixcrlf/result/longlines.crlf");
-        assertTrue("didnt create output file",created.exists());
     }
 
     public void testFixFileExclusive() throws Exception {
@@ -237,6 +171,11 @@ public class FixCrLfTest extends BuildFileTest {
         executeTarget("testFilter9");
     }
 
+    public void testCannotDoubleEof() {
+        executeTarget("testCannotDoubleEof");
+    }
+
+    // not used, but public so theoretically must remain for BC?
     public void assertEqualContent(File expect, File result)
         throws AssertionFailedError, IOException {
         if (!result.exists()) {
