@@ -96,7 +96,7 @@ public class ScriptCondition extends ProjectComponent implements Condition {
      * This is used by the script to pass the return value.
      * It can be used by an attribute, in which case it sets the default
      * value
-     * @param value
+     * @param value the value to set the condition to
      */
     public void setValue(boolean value) {
         this.value = value;
