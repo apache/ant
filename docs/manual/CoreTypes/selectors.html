@@ -23,21 +23,21 @@
     contain other selectors, and these are called 
     <a href="#selectcontainers"><code>Selector Containers</code></a>. 
     There is also a category of selectors that allow
-    user-defined extensions, called 
+    user-defined extensions, called
     <a href="#customselect"><code>Custom Selectors</code></a>.
     The ones built in to Ant are called 
     <a href="#coreselect"><code>Core Selectors</code></a>.
     </p>
-    
+
     <a name="coreselect"></a>
     <h3>Core Selectors</h3>
 
     <p>Core selectors are the ones that come standard
     with Ant. They can be used within a fileset and can be contained
     within Selector Containers.</p>
-    
+
     <p>The core selectors are:</p>
-    
+
     <ul>
       <li><a href="#containsselect">&lt;contains&gt;</a> - Select
         files that contain a particular text string
@@ -173,7 +173,7 @@
     <h4>Depend Selector</h4>
 
     <p>The <code>&lt;depend&gt;</code> tag selects files
-    whose last modified date is later than another, equivalent file in 
+    whose last modified date is later than another, equivalent file in
     another location.</p>
     
     <p>The <code>&lt;depend&gt;</code> tag supports the use of a
@@ -216,7 +216,7 @@
 &lt;/fileset&gt;
 </pre></blockquote>
 
-    <p>Selects all the Java source files which were modified in the
+    <p>Selects all the Java source files which were modified in the 
       1.5 release.
     </p>
 
@@ -622,7 +622,7 @@
 &lt;/fileset&gt;
 </pre></blockquote>
 
-    <p>Selects all the files in the top directory along with all the
+    <p>Selects all the files in the top directory along with all the 
     image files below it.
     </p>
 
@@ -631,7 +631,8 @@
     <h4>Selector Reference</h4>
 
     <p>The <code>&lt;selector&gt;</code> tag is used to create selectors
-    that can be reused through references. It should be used outside of
+    that can be reused through references. It is the only selector which can
+    be used outside of
     any target, as an element of the <code>&lt;project&gt;</code> tag. It
     can contain only one other selector, but of course that selector can
     be a container.
@@ -766,9 +767,9 @@
     <p>For more details concerning writing your own selectors, consult
     <a href="selectors-program.html">Programming Selectors in Ant</a>.</p>
 
-<hr>
-<p align="center">Copyright &copy; 2002 Apache Software
-Foundation. All rights Reserved.</p>
+    <hr>
+    <p align="center">Copyright &copy; 2002 Apache Software
+    Foundation. All rights Reserved.</p>
 
   </body>
 
