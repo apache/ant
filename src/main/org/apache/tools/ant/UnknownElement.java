@@ -426,6 +426,11 @@ public class UnknownElement extends Task {
             PreSetDef.PreSetDefinition def = (PreSetDef.PreSetDefinition) o;
             o = def.createObject(ue.getProject());
             ue.applyPreSet(def.getPreSets());
+            if (o instanceof Task) {
+                Task task = (Task) o;
+                task.setTaskType(ue.getTaskType());
+                task.setTaskName(ue.getTaskName());
+            }
         }
 
         if (o instanceof Task) {
