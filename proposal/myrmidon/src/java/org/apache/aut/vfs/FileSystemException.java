@@ -7,33 +7,49 @@
  */
 package org.apache.aut.vfs;
 
-import org.apache.avalon.framework.CascadingException;
-
 /**
  * Thrown for file system errors.
  *
  * @author Adam Murdoch
  */
-public class FileSystemException extends CascadingException
+public class FileSystemException
+    extends Exception
 {
+    /**
+     * The Throwable that caused this exception to be thrown.
+     */
+    private final Throwable m_throwable;
+
     /**
      * Constructs exception with the specified detail message.
      *
-     * @param   msg   the detail message.
+     * @param   message   the detail message.
      */
-    public FileSystemException( String msg )
+    public FileSystemException( final String message )
     {
-        super( msg );
+        this( message, null );
     }
 
     /**
      * Constructs exception with the specified detail message.
      *
-     * @param   msg   the detail message.
-     * @param   cause the cause.
+     * @param   message   the detail message.
+     * @param   throwable the cause.
      */
-    public FileSystemException( String msg, Throwable cause )
+    public FileSystemException( final String message,
+                                final Throwable throwable )
     {
-        super( msg, cause );
+        super( message );
+        m_throwable = throwable;
+    }
+
+    /**
+     * Retrieve root cause of the exception.
+     *
+     * @return the root cause
+     */
+    public final Throwable getCause()
+    {
+        return m_throwable;
     }
 }

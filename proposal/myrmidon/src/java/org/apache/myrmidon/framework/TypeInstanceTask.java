@@ -13,7 +13,6 @@ import org.apache.avalon.framework.configuration.Configurable;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
 import org.apache.avalon.framework.configuration.DefaultConfiguration;
-import org.apache.myrmidon.api.TaskContext;
 import org.apache.myrmidon.api.TaskException;
 
 /**
@@ -31,7 +30,6 @@ public class TypeInstanceTask
 
     private String m_id;
     private Object m_value;
-    private boolean m_localScope = true;
 
     public void configure( final Configuration configuration )
         throws ConfigurationException
@@ -79,11 +77,6 @@ public class TypeInstanceTask
         m_id = id;
     }
 
-    public void setLocalScope( final boolean localScope )
-    {
-        m_localScope = localScope;
-    }
-
     public void execute()
         throws TaskException
     {
@@ -93,13 +86,6 @@ public class TypeInstanceTask
             throw new TaskException( message );
         }
 
-        if( m_localScope )
-        {
-            getContext().setProperty( m_id, m_value );
-        }
-        else
-        {
-            getContext().setProperty( m_id, m_value, TaskContext.PARENT );
-        }
+        getContext().setProperty( m_id, m_value );
     }
 }

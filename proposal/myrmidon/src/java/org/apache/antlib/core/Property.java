@@ -10,7 +10,6 @@ package org.apache.antlib.core;
 import org.apache.avalon.excalibur.i18n.ResourceManager;
 import org.apache.avalon.excalibur.i18n.Resources;
 import org.apache.myrmidon.api.AbstractTask;
-import org.apache.myrmidon.api.TaskContext;
 import org.apache.myrmidon.api.TaskException;
 import org.apache.myrmidon.framework.DataType;
 
@@ -31,16 +30,10 @@ public class Property
 
     private String m_name;
     private Object m_value;
-    private boolean m_localScope = true;
 
     public void setName( final String name )
     {
         m_name = name;
-    }
-
-    public void setLocalScope( final boolean localScope )
-    {
-        m_localScope = localScope;
     }
 
     /**
@@ -91,13 +84,6 @@ public class Property
             throw new TaskException( message );
         }
 
-        if( m_localScope )
-        {
-            getContext().setProperty( m_name, m_value );
-        }
-        else
-        {
-            getContext().setProperty( m_name, m_value, TaskContext.PARENT );
-        }
+        getContext().setProperty( m_name, m_value );
     }
 }

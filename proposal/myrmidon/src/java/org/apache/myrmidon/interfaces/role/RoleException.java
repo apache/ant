@@ -7,8 +7,6 @@
  */
 package org.apache.myrmidon.interfaces.role;
 
-import org.apache.avalon.framework.CascadingException;
-
 /**
  * An exception thrown by the RoleManager.
  *
@@ -16,15 +14,32 @@ import org.apache.avalon.framework.CascadingException;
  * @version $Revision$ $Date$
  */
 public class RoleException
-    extends CascadingException
+    extends Exception
 {
-    public RoleException( String s )
+    /**
+     * The Throwable that caused this exception to be thrown.
+     */
+    private final Throwable m_throwable;
+
+    public RoleException( final String message )
     {
-        super( s );
+        this( message, null );
     }
 
-    public RoleException( String s, Throwable throwable )
+    public RoleException( final String message,
+                          final Throwable throwable )
     {
-        super( s, throwable );
+        super( message );
+        m_throwable = throwable;
+    }
+
+    /**
+     * Retrieve root cause of the exception.
+     *
+     * @return the root cause
+     */
+    public final Throwable getCause()
+    {
+        return m_throwable;
     }
 }

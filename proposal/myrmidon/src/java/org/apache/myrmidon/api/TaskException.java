@@ -7,8 +7,6 @@
  */
 package org.apache.myrmidon.api;
 
-import org.apache.avalon.framework.CascadingException;
-
 /**
  * TaskException thrown when a problem with tasks etc.
  * It is cascading so that further embedded information can be contained.
@@ -18,8 +16,13 @@ import org.apache.avalon.framework.CascadingException;
  * @version $Revision$ $Date$
  */
 public class TaskException
-    extends CascadingException
+    extends Exception
 {
+    /**
+     * The Throwable that caused this exception to be thrown.
+     */
+    private final Throwable m_throwable;
+
     /**
      * Basic constructor for exception that does not specify a message
      */
@@ -46,7 +49,18 @@ public class TaskException
      */
     public TaskException( final String message, final Throwable throwable )
     {
-        super( message, throwable );
+        super( message );
+        m_throwable = throwable;
+    }
+
+    /**
+     * Retrieve root cause of the exception.
+     *
+     * @return the root cause
+     */
+    public final Throwable getCause()
+    {
+        return m_throwable;
     }
 }
 

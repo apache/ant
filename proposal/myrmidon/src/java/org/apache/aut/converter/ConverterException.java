@@ -7,8 +7,6 @@
  */
 package org.apache.aut.converter;
 
-import org.apache.avalon.framework.CascadingException;
-
 /**
  * ConverterException thrown when a problem occurs during convertion etc.
  *
@@ -16,8 +14,13 @@ import org.apache.avalon.framework.CascadingException;
  * @version $Revision$ $Date$
  */
 public class ConverterException
-    extends CascadingException
+    extends Exception
 {
+    /**
+     * The Throwable that caused this exception to be thrown.
+     */
+    private final Throwable m_throwable;
+
     /**
      * Basic constructor with a message
      *
@@ -36,7 +39,18 @@ public class ConverterException
      */
     public ConverterException( final String message, final Throwable throwable )
     {
-        super( message, throwable );
+        super( message );
+        m_throwable = throwable;
+    }
+
+    /**
+     * Retrieve root cause of the exception.
+     *
+     * @return the root cause
+     */
+    public final Throwable getCause()
+    {
+        return m_throwable;
     }
 }
 

@@ -17,7 +17,6 @@ import org.apache.avalon.excalibur.i18n.ResourceManager;
 import org.apache.avalon.excalibur.i18n.Resources;
 import org.apache.avalon.excalibur.io.FileUtil;
 import org.apache.avalon.excalibur.util.StringUtil;
-import org.apache.avalon.framework.CascadingException;
 import org.apache.avalon.framework.Version;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
@@ -57,7 +56,6 @@ public class DefaultProjectBuilder
      *
      * @param source the source
      * @return the constructed Project
-     * @exception IOException if an error occurs
      * @exception Exception if an error occurs
      */
     public Project build( final String source )
@@ -115,7 +113,7 @@ public class DefaultProjectBuilder
      * @param file the file from which configuration was loaded
      * @param configuration the configuration loaded
      * @return the created Project
-     * @exception IOException if an error occurs
+     * @exception Exception if an error occurs
      * @exception Exception if an error occurs
      * @exception ConfigurationException if an error occurs
      */
@@ -172,7 +170,7 @@ public class DefaultProjectBuilder
      * Throw exceptions with meaningful errors if malformed or missing.
      */
     private Version getVersion( final Configuration configuration )
-        throws CascadingException
+        throws Exception
     {
         try
         {
@@ -182,7 +180,7 @@ public class DefaultProjectBuilder
         catch( final ConfigurationException ce )
         {
             final String message = REZ.getString( "ant.version-missing.error" );
-            throw new CascadingException( message, ce );
+            throw new ConfigurationException( message, ce );
         }
     }
 
@@ -190,7 +188,7 @@ public class DefaultProjectBuilder
      * Utility function to extract version
      */
     private Version parseVersion( final String versionString )
-        throws CascadingException
+        throws Exception
     {
 
         try
@@ -202,7 +200,7 @@ public class DefaultProjectBuilder
             final String message =
                 REZ.getString( "ant.malformed.version", versionString );
             getLogger().warn( message );
-            throw new CascadingException( message, e );
+            throw new ConfigurationException( message, e );
         }
     }
 

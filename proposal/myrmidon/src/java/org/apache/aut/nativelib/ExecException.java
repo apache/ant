@@ -7,16 +7,19 @@
  */
 package org.apache.aut.nativelib;
 
-import org.apache.avalon.framework.CascadingException;
-
 /**
  * ExecException indicates there was an error executing native process.
  *
  * @author <a href="mailto:peter@apache.org">Peter Donald</a>
  */
 public class ExecException
-    extends CascadingException
+    extends Exception
 {
+    /**
+     * The Throwable that caused this exception to be thrown.
+     */
+    private final Throwable m_throwable;
+
     /**
      * Basic constructor for exception that does not specify a message
      */
@@ -43,7 +46,18 @@ public class ExecException
      */
     public ExecException( final String message, final Throwable throwable )
     {
-        super( message, throwable );
+        super( message );
+        m_throwable = throwable;
+    }
+
+    /**
+     * Retrieve root cause of the exception.
+     *
+     * @return the root cause
+     */
+    public final Throwable getCause()
+    {
+        return m_throwable;
     }
 }
 

@@ -7,8 +7,6 @@
  */
 package org.apache.myrmidon.interfaces.deployer;
 
-import org.apache.avalon.framework.CascadingException;
-
 /**
  * Exception to indicate error deploying.
  *
@@ -16,8 +14,13 @@ import org.apache.avalon.framework.CascadingException;
  * @version $Revision$ $Date$
  */
 public final class DeploymentException
-    extends CascadingException
+    extends Exception
 {
+    /**
+     * The Throwable that caused this exception to be thrown.
+     */
+    private final Throwable m_throwable;
+
     /**
      * Construct a new <code>DeploymentException</code> instance.
      *
@@ -36,6 +39,17 @@ public final class DeploymentException
      */
     public DeploymentException( final String message, final Throwable throwable )
     {
-        super( message, throwable );
+        super( message );
+        m_throwable = throwable;
+    }
+
+    /**
+     * Retrieve root cause of the exception.
+     *
+     * @return the root cause
+     */
+    public final Throwable getCause()
+    {
+        return m_throwable;
     }
 }

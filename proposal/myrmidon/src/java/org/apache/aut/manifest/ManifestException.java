@@ -7,8 +7,6 @@
  */
 package org.apache.aut.manifest;
 
-import org.apache.avalon.framework.CascadingException;
-
 /**
  * ManifestException is thrown when there is a problem parsing, generating or
  * handling a Manifest.
@@ -17,8 +15,13 @@ import org.apache.avalon.framework.CascadingException;
  * @version $Revision$ $Date$
  */
 public class ManifestException
-    extends CascadingException
+    extends Exception
 {
+    /**
+     * The Throwable that caused this exception to be thrown.
+     */
+    private final Throwable m_throwable;
+
     /**
      * Basic constructor for exception that does not specify a message
      */
@@ -45,6 +48,17 @@ public class ManifestException
      */
     public ManifestException( final String message, final Throwable throwable )
     {
-        super( message, throwable );
+        super( message );
+        m_throwable = throwable;
+    }
+
+    /**
+     * Retrieve root cause of the exception.
+     *
+     * @return the root cause
+     */
+    public final Throwable getCause()
+    {
+        return m_throwable;
     }
 }
