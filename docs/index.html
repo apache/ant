@@ -6205,7 +6205,11 @@ output.
   <li>All attributes of all child elements get set via their corresponding
     <code>setXXX</code> methods - at runtime.</li>
 
-  <li><code>execute()</code> is called at runtime.</li>
+  <li><code>execute()</code> is called at runtime. While the above initialization 
+    steps only occur once, the execute() method may be 
+    called more than once, if the task is invoked more than once. For example, 
+    if target1 and target2 both depend on target3, then running 
+    "ant target1 target2" will run all tasks in target3 twice.</li>
 
 </ol>
 <h3>Example</h3>
