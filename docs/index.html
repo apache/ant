@@ -980,6 +980,19 @@ by tasks that support this feature, or by FileSets.</p>
 multiple elements separated by commas or spaces, the nested
 &lt;include&gt; and &lt;exclude&gt; elements expect their name
 attribute to hold a single pattern.</p>
+<p>The nested &lt;include&gt; and &lt;exclude&gt; elements allow you to use
+if and unless arguments to specify that the element should only be used if a 
+property is set, or that it should be used only if a property is not set.</p>
+<p>For example</p>
+<blockquote><pre>
+&lt;patternset id=&quot;sources&quot; &gt;
+  &lt;include name=&quot;std/**/*.java&quot;/&gt;
+  &lt;include name=&quot;prof/**/*.java&quot; if=&quot;professional&quot;/&gt;
+  &lt;exclude name=&quot;**/*Test*&quot;/&gt;
+&lt;/patternset&gt;
+</pre></blockquote>
+<p>will only include the files in the sub-directory <em>prof</em> if the property
+<em>professional</em> is set to some value.</p>
 
 <h3><a name="fileset">FileSets</a></h3>
 <p>FileSets are groups of files. These files can be found in a
