@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 1999 The Apache Software Foundation.  All rights 
+ * Copyright (c) 1999 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -9,7 +9,7 @@
  * are met:
  *
  * 1. Redistributions of source code must retain the above copyright
- *    notice, this list of conditions and the following disclaimer. 
+ *    notice, this list of conditions and the following disclaimer.
  *
  * 2. Redistributions in binary form must reproduce the above copyright
  *    notice, this list of conditions and the following disclaimer in
@@ -17,15 +17,15 @@
  *    distribution.
  *
  * 3. The end-user documentation included with the redistribution, if
- *    any, must include the following acknowlegement:  
- *       "This product includes software developed by the 
+ *    any, must include the following acknowlegement:
+ *       "This product includes software developed by the
  *        Apache Software Foundation (http://www.apache.org/)."
  *    Alternately, this acknowlegement may appear in the software itself,
  *    if and wherever such third-party acknowlegements normally appear.
  *
  * 4. The names "The Jakarta Project", "Tomcat", and "Apache Software
  *    Foundation" must not be used to endorse or promote products derived
- *    from this software without prior written permission. For written 
+ *    from this software without prior written permission. For written
  *    permission, please contact apache@apache.org.
  *
  * 5. Products derived from this software may not be called "Apache"
@@ -68,80 +68,87 @@ public class Exec extends Task {
     private String out;
     private String dir;
     private String command;
-    
+
     public void execute() throws BuildException {
-	try {
-	    // test if os match
-	    String myos=System.getProperty("os.name");
-	    project.log("Myos= " + myos, Project.MSG_VERBOSE);
-	    if( ( os != null ) && ( os.indexOf(myos) < 0 ) ){
-		// this command will be executed only on the specified OS
-		project.log("Not found in " + os, Project.MSG_VERBOSE);
-		return;
-	    }
-		
-	    // XXX: we should use JCVS (www.ice.com/JCVS) instead of command line
-	    // execution so that we don't rely on having native CVS stuff around (SM)
-	    
-	    String ant=project.getProperty("ant.home");
-	    if(ant==null) throw new BuildException("Needs ant.home");
-		
-	    String antRun = project.resolveFile(ant + "/bin/antRun").toString();
-	    if (myos.toLowerCase().indexOf("windows")>=0)
-		antRun=antRun+".bat";
-	    command=antRun + " " + project.resolveFile(dir) + " " + command;
-            project.log(command, Project.MSG_VERBOSE);
-		
-	    // exec command on system runtime
-	    Process proc = Runtime.getRuntime().exec( command);
-	    // ignore response
-	    InputStreamReader isr=new InputStreamReader(proc.getInputStream());
-	    BufferedReader din = new BufferedReader(isr);
-	    
-	    PrintWriter fos=null;
-	    if( out!=null )  {
-		fos=new PrintWriter( new FileWriter( out ) );
-        	project.log("Output redirected to " + out, Project.MSG_VERBOSE);
-	    }
+        // test if os match
+        String myos = System.getProperty("os.name");
+        project.log("Myos = " + myos, Project.MSG_VERBOSE);
+        if ((os != null) && (os.indexOf(myos) < 0)){
+            // this command will be executed only on the specified OS
+            project.log("Not found in " + os, Project.MSG_VERBOSE);
+            return;
+        }
+        
+        String ant = project.getProperty("ant.home");
+        if (ant == null) throw new BuildException("Property 'ant.home' not found");
 
-	    // pipe CVS output to STDOUT
-	    String line;
-	    while((line = din.readLine()) != null) {
-		if( fos==null)
-		    project.log(line, "exec", Project.MSG_INFO);
-		else
-		    fos.println(line);
-	    }
-	    if(fos!=null)
-		fos.close();
-	    
-	    proc.waitFor();
-	    int err = proc.exitValue();
-	    if (err != 0) {
-		project.log("Result: " + err, "exec", Project.MSG_ERR);
-	    }
-	    
-	} catch (IOException ioe) {
-	    throw new BuildException("Error exec: " + command );
-	} catch (InterruptedException ex) {
-	}
+        String antRun = project.resolveFile(ant + "/bin/antRun").toString();
+        if (myos.toLowerCase().indexOf("windows") >= 0) antRun = antRun + ".bat";
+        command = antRun + " " + project.resolveFile(dir) + " " + command;
+        
+        run(command);
+    }
 
+    protected void run(String command) throws BuildException {
+        
+        try {
+            // show the command
+            project.log(command, "exec", Project.MSG_VERBOSE);
+
+            // exec command on system runtime
+            Process proc = Runtime.getRuntime().exec(command);
+            
+            // get process response
+            BufferedReader din = new BufferedReader(new InputStreamReader(proc.getInputStream()));
+
+            // if "out" attribute is present, redirect to it
+            PrintWriter fos = null;
+            if (out != null)  {
+                fos = new PrintWriter(new FileWriter(out));
+                project.log("Output redirected to " + out, Project.MSG_VERBOSE);
+            }
+
+
+            // pipe the process output
+            String line;
+            while((line = din.readLine()) != null) {
+                if (fos == null) {
+                    project.log(line, "exec", Project.MSG_INFO);
+                } else {
+                    fos.println(line);
+                }
+            }
+
+            // wait until the process is finished
+            proc.waitFor();
+            
+            // close the output file if required 
+            if (fos != null) fos.close();
+
+            // check its exit value
+            int err = proc.exitValue();
+            if (err != 0) {
+                project.log("Result: " + err, "exec", Project.MSG_ERR);
+            }
+        } catch (IOException ioe) {
+            throw new BuildException("Error exec: " + command );
+        } catch (InterruptedException ex) {
+        }
     }
 
     public void setDir(String d) {
-	this.dir = d;
+        this.dir = d;
     }
 
     public void setOs(String os) {
-	this.os = os;
+        this.os = os;
     }
 
     public void setCommand(String command) {
-	this.command = command;
+        this.command = command;
     }
 
     public void setOutput(String out) {
-	this.out = out;
+        this.out = out;
     }
-
 }

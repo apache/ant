@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 1999 The Apache Software Foundation.  All rights 
+ * Copyright (c) 1999 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -9,7 +9,7 @@
  * are met:
  *
  * 1. Redistributions of source code must retain the above copyright
- *    notice, this list of conditions and the following disclaimer. 
+ *    notice, this list of conditions and the following disclaimer.
  *
  * 2. Redistributions in binary form must reproduce the above copyright
  *    notice, this list of conditions and the following disclaimer in
@@ -17,15 +17,15 @@
  *    distribution.
  *
  * 3. The end-user documentation included with the redistribution, if
- *    any, must include the following acknowlegement:  
- *       "This product includes software developed by the 
+ *    any, must include the following acknowlegement:
+ *       "This product includes software developed by the
  *        Apache Software Foundation (http://www.apache.org/)."
  *    Alternately, this acknowlegement may appear in the software itself,
  *    if and wherever such third-party acknowlegements normally appear.
  *
  * 4. The names "The Jakarta Project", "Tomcat", and "Apache Software
  *    Foundation" must not be used to endorse or promote products derived
- *    from this software without prior written permission. For written 
+ *    from this software without prior written permission. For written
  *    permission, please contact apache@apache.org.
  *
  * 5. Products derived from this software may not be called "Apache"
@@ -66,16 +66,22 @@ import java.util.*;
  *  - multiple source path breaks operation
  *  - patterns must be of the form "xxx.*", every other pattern doesn't work.
  *  - the java comment-stripper reader is horribly slow
- *  - stupid javadoc calls System.exit() and breaks Ant execution
- *    (two solutions: security manager and decompilation for better hooks)
  *  - there is no control on arguments sanity since they are left
  *    to the javadoc implementation.
+ *  - argument J in javadoc1 is not supported (what is that for anyway?)
+ *
+ * Note: This task is run on another VM because stupid Javadoc calls
+ * System.exit() that would break Ant functionality.
  *
  * @author Jon S. Stevens <a href="mailto:jon@clearink.com">jon@clearink.com</a>
  * @author Stefano Mazzocchi <a href="mailto:stefano@pache.org">stefano@apache.org</a>
  */
-public class Javadoc2 extends Java {
 
+public class Javadoc extends Exec {
+
+    private static final String JAVADOC1 = "sun.tools.javadoc.Main";
+    private static final String JAVADOC2 = "com.sun.tools.javadoc.Main";
+    
     private String sourcePath = null;
     private File destDir = null;
     private File overviewFile = null;
@@ -115,9 +121,8 @@ public class Javadoc2 extends Java {
     private File stylesheetfile = null;
     private File helpfile = null;
     private String docencoding = null;
+    private Vector compileList = new Vector(10);
 
-    private Vector compileList = new Vector();
-   
     public void setSourcepath(String src) {
         sourcePath = project.translatePath(src);
     }
@@ -238,15 +243,38 @@ public class Javadoc2 extends Java {
             String msg = "sourcePath and destDir attributes must be set!";
             throw new BuildException(msg);
         }
-        
+
+        boolean javadoc1 = (Project.getJavaVersion() == Project.JAVA_1_1);
+
         project.log("Generating Javadoc", project.MSG_INFO);
-        
+
         Vector argList = new Vector();
 
-        if (overviewFile != null) {
-            argList.addElement("-overview");
-            argList.addElement(overviewFile.getAbsolutePath());
+// ------------------------------------------------ general javadoc arguments
+        if (sourcePath != null) {
+            argList.addElement("-sourcepath");
+            argList.addElement(sourcePath);
         }
+        argList.addElement("-classpath");
+        if (classpath != null) {
+            argList.addElement(classpath);
+        } else {
+            argList.addElement(System.getProperty("java.class.path"));
+        }
+        if (destDir != null) {
+            argList.addElement("-d");
+            argList.addElement(destDir.getAbsolutePath());
+        }
+        if (version)
+            argList.addElement ("-version");
+        if (nodeprecated)
+            argList.addElement ("-nodeprecated");
+        if (author)
+            argList.addElement ("-author");
+        if (noindex)
+            argList.addElement ("-noindex");
+        if (notree)
+            argList.addElement ("-notree");
         if (pub)
             argList.addElement ("-public");
         if (prot)
@@ -255,108 +283,98 @@ public class Javadoc2 extends Java {
             argList.addElement ("-package");
         if (priv)
             argList.addElement ("-private");
-        if (old)
-            argList.addElement ("-1.1");
-        if (verbose)
-            argList.addElement ("-verbose");
-        if (version)
-            argList.addElement ("-version");
-        if (use)
-            argList.addElement ("-use");
-        if (author)
-            argList.addElement ("-author");
-        if (splitindex)
-            argList.addElement ("-splitindex");
-        if (nodeprecated)
-            argList.addElement ("-nodeprecated");
-        if (nodeprecatedlist)
-            argList.addElement ("-nodeprecatedlist");
-        if (notree)
-            argList.addElement ("-notree");
-        if (noindex)
-            argList.addElement ("-noindex");
-        if (nohelp)
-            argList.addElement ("-nohelp");
-        if (nonavbar)
-            argList.addElement ("-nonavbar");
-            
-        if (doclet != null) {
-            argList.addElement("-doclet");
-            argList.addElement(doclet);
-        }
-        argList.addElement("-classpath");
-        if (classpath != null) {
-            argList.addElement(classpath);
-        } else {
-            argList.addElement(System.getProperty("java.class.path"));
-        }
-        if (bootclasspath != null) {
-            argList.addElement("-bootclasspath");
-            argList.addElement(bootclasspath);
-        }
-        if (extdirs != null) {
-            argList.addElement("-extdirs");
-            argList.addElement(extdirs);
-        }
-        if (locale != null) {
-            argList.addElement("-locale");
-            argList.addElement(locale);
-        }
         if (encoding != null) {
             argList.addElement("-encoding");
             argList.addElement(encoding);
-        }
-        if (windowtitle != null) {
-            argList.addElement("-windowtitle");
-            argList.addElement(windowtitle);
-        }
-        if (doctitle != null) {
-            argList.addElement("-doctitle");
-            argList.addElement(doctitle);
-        }
-        if (header != null) {
-            argList.addElement("-header");
-            argList.addElement(header);
-        }
-        if (footer != null) {
-            argList.addElement("-footer");
-            argList.addElement(footer);
-        }
-        if (bottom != null) {
-            argList.addElement("-bottom");
-            argList.addElement(bottom);
-        }
-        if (link != null) {
-            argList.addElement("-link");
-            argList.addElement(link);
-        }
-        if (linkoffline != null) {
-            argList.addElement("-linkoffline");
-            argList.addElement(linkoffline);
-        }
-        if (group != null) {
-            argList.addElement("-group");
-            argList.addElement(group);
-        }
-        if (stylesheetfile != null) {
-            argList.addElement("-stylesheetfile");
-            argList.addElement(stylesheetfile.getAbsolutePath());
-        }
-        if (helpfile != null) {
-            argList.addElement("-helpfile");
-            argList.addElement(helpfile.getAbsolutePath());
         }
         if (docencoding != null) {
             argList.addElement("-docencoding");
             argList.addElement(docencoding);
         }
-        if (destDir != null) {
-            argList.addElement("-d");
-            argList.addElement(destDir.getAbsolutePath());
-        }
-        if (sourcePath != null) {
-            argList.addElement("-sourcepath");
-            argList.addElement(sourcePath);
+
+// --------------------------------- javadoc2 arguments for default doclet
+
+// XXX: how do we handle a custom doclet?
+
+        if (!javadoc1) {
+            if (overviewFile != null) {
+                argList.addElement("-overview");
+                argList.addElement(overviewFile.getAbsolutePath());
+            }
+            if (old)
+                argList.addElement("-1.1");
+            if (verbose)
+                argList.addElement("-verbose");
+            if (use)
+                argList.addElement("-use");
+            if (splitindex)
+                argList.addElement("-splitindex");
+            if (nodeprecatedlist)
+                argList.addElement("-nodeprecatedlist");
+            if (nohelp)
+                argList.addElement("-nohelp");
+            if (nonavbar)
+                argList.addElement("-nonavbar");
+            if (doclet != null) {
+                argList.addElement("-doclet");
+                argList.addElement(doclet);
+            }
+            if (bootclasspath != null) {
+                argList.addElement("-bootclasspath");
+                argList.addElement(bootclasspath);
+            }
+            if (extdirs != null) {
+                argList.addElement("-extdirs");
+                argList.addElement(extdirs);
+            }
+            if (locale != null) {
+                argList.addElement("-locale");
+                argList.addElement(locale);
+            }
+            if (encoding != null) {
+                argList.addElement("-encoding");
+                argList.addElement(encoding);
+            }
+            if (windowtitle != null) {
+                argList.addElement("-windowtitle");
+                argList.addElement(windowtitle);
+            }
+            if (doctitle != null) {
+                argList.addElement("-doctitle");
+                argList.addElement(doctitle);
+            }
+            if (header != null) {
+                argList.addElement("-header");
+                argList.addElement(header);
+            }
+            if (footer != null) {
+                argList.addElement("-footer");
+                argList.addElement(footer);
+            }
+            if (bottom != null) {
+                argList.addElement("-bottom");
+                argList.addElement(bottom);
+            }
+            if (link != null) {
+                argList.addElement("-link");
+                argList.addElement(link);
+            }
+            if (linkoffline != null) {
+                argList.addElement("-linkoffline");
+                argList.addElement(linkoffline);
+            }
+            if (group != null) {
+                argList.addElement("-group");
+                argList.addElement(group);
+            }
+            if (stylesheetfile != null) {
+                argList.addElement("-stylesheetfile");
+                argList.addElement(stylesheetfile.getAbsolutePath());
+            }
+            if (helpfile != null) {
+                argList.addElement("-helpfile");
+                argList.addElement(helpfile.getAbsolutePath());
+            }
         }
 
         if ((packageNames != null) && (packageNames.length() > 0)) {
@@ -383,10 +401,32 @@ public class Javadoc2 extends Java {
         }
 
         project.log("Javadoc args: " + argList.toString(), "javadoc", project.MSG_VERBOSE);
-        
+
         project.log("Javadoc execution", project.MSG_INFO);
 
-        run("com.sun.tools.javadoc.Main", argList);
+        StringBuffer b = new StringBuffer();
+        b.append("java ");
+        if (javadoc1) {
+            b.append(JAVADOC1);
+        } else {
+            b.append(JAVADOC2);
+        }
+        b.append(" ");
+        
+        Enumeration e = argList.elements();
+        while (e.hasMoreElements()) {
+            String arg = (String) e.nextElement();
+            if (!arg.startsWith("-")) {
+                b.append("\"");
+                b.append(arg);
+                b.append("\"");
+            } else {
+                b.append(arg);
+            }
+            if (e.hasMoreElements()) b.append(" ");
+        }
+        
+        run(b.toString());
     }
 
     /**
@@ -394,17 +434,19 @@ public class Javadoc2 extends Java {
      * with the packages found in that path subdirs matching one of the given
      * patterns.
      */
-    private void evaluatePackages(String source, Vector packages, Vector list) {
-        project.log("Parsing source files for packages (will take a while)", project.MSG_INFO);
+    private void evaluatePackages(String source, Vector packages, Vector argList) {
+        project.log("Parsing source files for packages", project.MSG_INFO);
+        project.log("Source dir = " + source, project.MSG_VERBOSE);
+        project.log("Packages = " + packages, project.MSG_VERBOSE);
 
         Hashtable map = mapClasses(new File(source));
-        
+
         Enumeration e = map.keys();
         while (e.hasMoreElements()) {
             String pack = (String) e.nextElement();
             for (int i = 0; i < packages.size(); i++) {
                 if (matches(pack, (String) packages.elementAt(i))) {
-                    list.addElement(pack);
+                    argList.addElement(pack);
                     break;
                 }
             }
@@ -419,7 +461,7 @@ public class Javadoc2 extends Java {
     private boolean matches(String string, String pattern) {
         return string.startsWith(pattern.substring(0, pattern.length() - 2));
     }
-    
+
     /**
      * Returns an hashtable of packages linked to the last parsed
      * file in that package. This map is use to return a list of unique
@@ -427,20 +469,20 @@ public class Javadoc2 extends Java {
      */
     private Hashtable mapClasses(File path) {
         Hashtable map = new Hashtable();
-        
+
         Vector files = new Vector();
         getFiles(path, files);
-        
+
         Enumeration e = files.elements();
         while (e.hasMoreElements()) {
             File file = (File) e.nextElement();
             String packageName = getPackageName(file);
             if (packageName != null) map.put(packageName, file);
         }
-        
+
         return map;
     }
-    
+
     /**
      * Fills the given vector with files under the given path filtered
      * by the given file filter.
@@ -449,19 +491,19 @@ public class Javadoc2 extends Java {
         if (!path.exists()) {
             throw new BuildException("Path " + path + " does not exist.");
         }
-        
+
         String[] files = path.list();
-        String cwd = path.getName() + System.getProperty("path.separator");
-        
+        String cwd = path.getPath() + System.getProperty("file.separator");
+
         if (files != null) {
             int count = 0;
             for (int i = 0; i < files.length; i++) {
-		File file = new File(cwd + files[i]);
-                if (file.isDirectory()) { 
+                File file = new File(cwd + files[i]);
+                if (file.isDirectory()) {
                     getFiles(file, list);
                 } else if (files[i].endsWith(".java")) {
                     count++;
-                    list.addElement(files[i]);
+                    list.addElement(file);
                 }
             }
             if (count > 0) {
@@ -471,16 +513,17 @@ public class Javadoc2 extends Java {
             throw new BuildException("Error occurred during " + path + " evaluation.");
         }
     }
-    
+
     /**
      * Return the package name of the given java source file.
      * This method performs valid java parsing to figure out the package.
      */
     private String getPackageName(File file) {
         String name = null;
-        
+
         try {
-            BufferedReader reader = new BufferedReader(new JavaReader(new FileReader(file)));
+            // do not remove the double buffered reader, this is a _major_ speed up in this special case!
+            BufferedReader reader = new BufferedReader(new JavaReader(new BufferedReader(new FileReader(file))));
             String line;
             while (true) {
                 line = reader.readLine();
@@ -498,22 +541,24 @@ public class Javadoc2 extends Java {
             project.log("Exception " + e + " parsing " + file, "javadoc", project.MSG_WARN);
             return null;
         }
-        
+
         project.log(file + " --> " + name, "javadoc", project.MSG_VERBOSE);
-        
+
         return name;
     }
-    
+
     /**
      * This is a java comment stripper reader that filters comments out
-     * for more significant java parsing.
+     * for more significant java parsing. Since this class heavily relies on
+     * the single char read function, you are reccomended to make it work
+     * on top of a buffered reader.
      */
     class JavaReader extends FilterReader {
 
         public JavaReader(Reader in) {
             super(in);
         }
-        
+
         public int read() throws IOException {
             int c = in.read();
             if (c == '/') {
@@ -531,14 +576,9 @@ public class Javadoc2 extends Java {
                     }
                 }
             }
-            return c;               
+            return c;
         }
-        
-        /**
-         * FIXME: this method is the one called by BuffereReader and it should
-         * use char[] based methods instead of relying on single char ones
-         * to speed up execution. Please, make this faster.
-         */
+
         public int read(char cbuf[], int off, int len) throws IOException {
             for (int i = 0; i < len; i++) {
                 int c = read();
