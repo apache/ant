@@ -9,6 +9,11 @@
 
 <body>
 
+  <section name="Logo Contest">
+    <h3>Logo Submission Deadline Approaching</h3>
+    <p>See the <a href="antnews.html">News</a> page for details.</p>
+  </section>
+
   <section name="Ant 1.4.1">
   <h3>Apache Ant 1.4.1 Available !</h3>
   <p>Version 1.4.1 of Ant has been released. This is a bugfix release which corrects a few problems

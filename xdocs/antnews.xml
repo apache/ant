@@ -8,6 +8,14 @@
   </properties>
 
 <body>
+  <section name="Logo Submission Deadline is Approaching!">
+    <h3>Hurry - submit your logo entries</h3>
+    <p>
+      E-mail your logo entries to <a href="mailto:ant-dev@jakarta.apache.org">
+      ant-dev@jakarta.apache.org</a>. The deadline for submissions is 25 January 2002.
+    </p>
+  </section>
+  
   <section name="Ant 1.4.1">
   <h3>11 October 2001 Ant 1.4.1 released !</h3>
   <p>Please visit the 
