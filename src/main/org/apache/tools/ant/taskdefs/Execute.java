@@ -480,6 +480,10 @@ public class Execute {
                 watchdog.checkException();
             }
             return getExitValue();
+        } catch (ThreadDeath t) {
+            // #31928: forcibly kill it before continuing.
+            process.destroy();
+            throw t;
         } finally {
             // remove the process to the list of those to destroy if the VM exits
             //

@@ -141,6 +141,9 @@ Other changes:
 Fixed bugs:
 -----------
 
+* Killing a thread running <java fork="true"> (e.g. from an IDE) would
+  not stop the forked process. Bugzilla 31928.
+
 * Programs run with <java fork="true"> can now accept standard input
   from the Ant console.  (Programs run with <java fork="false"> could
   already do so.)  Bugzilla 24918.
