@@ -15,6 +15,7 @@ import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
 import org.apache.avalon.excalibur.i18n.ResourceManager;
 import org.apache.avalon.excalibur.i18n.Resources;
+import org.apache.avalon.excalibur.util.StringUtil;
 import org.apache.avalon.framework.CascadingException;
 import org.apache.avalon.framework.ExceptionUtil;
 import org.apache.avalon.framework.Version;
@@ -419,7 +420,7 @@ public class DefaultProjectBuilder
         //apply depends attribute
         if( null != depends )
         {
-            final String[] elements = ExceptionUtil.splitString( depends, "," );
+            final String[] elements = StringUtil.split( depends, "," );
             final ArrayList dependsList = new ArrayList();
 
             for( int i = 0; i < elements.length; i++ )
