@@ -68,7 +68,7 @@ public class Target {
     private String ifCondition = "";
     private String unlessCondition = "";
     private Vector dependencies = new Vector(2);
-    private Vector tasks = new Vector(5);
+    private Vector children = new Vector(5);
     private Project project;
     private String description = null;
 
@@ -99,15 +99,28 @@ public class Target {
     }
 
     public void addTask(Task task) {
-        tasks.addElement(task);
+        children.addElement(task);
     }
 
-	/** 
-	 * Get the current set of tasks to be executed by this target.
-	 * 
+    public void addDataType(RuntimeConfigurable r) {
+        children.addElement(r);
+    }
+
+    /** 
+     * Get the current set of tasks to be executed by this target.
+     * 
      * @return The current set of tasks.
-	 */
+     */
     public Task[] getTasks() {
+        Vector tasks = new Vector(children.size());
+        Enumeration enum = children.elements();
+        while (enum.hasMoreElements()) {
+            Object o = enum.nextElement();
+            if (o instanceof Task) {
+                tasks.addElement(o);
+            }
+        }
+        
         Task[] retval = new Task[tasks.size()];
         tasks.copyInto(retval);
         return retval;
@@ -143,25 +156,31 @@ public class Target {
 
     public void execute() throws BuildException {
         if (testIfCondition() && testUnlessCondition()) {
-            Enumeration enum = tasks.elements();
+            Enumeration enum = children.elements();
             while (enum.hasMoreElements()) {
-                Task task = (Task) enum.nextElement();
-
-                try {
-                    project.fireTaskStarted(task);
-                    task.maybeConfigure();
-                    task.execute();
-                    project.fireTaskFinished(task, null);
-                }
-                catch(RuntimeException exc) {
-                    if (exc instanceof BuildException) {
-                        BuildException be = (BuildException) exc;
-                        if (be.getLocation() == Location.UNKNOWN_LOCATION) {
-                            be.setLocation(task.getLocation());
-                        }
+                Object o = enum.nextElement();
+                if (o instanceof Task) {
+                    Task task = (Task) o;
+                    
+                    try {
+                        project.fireTaskStarted(task);
+                        task.maybeConfigure();
+                        task.execute();
+                        project.fireTaskFinished(task, null);
                     }
-                    project.fireTaskFinished(task, exc);
-                    throw exc;
+                    catch(RuntimeException exc) {
+                        if (exc instanceof BuildException) {
+                            BuildException be = (BuildException) exc;
+                            if (be.getLocation() == Location.UNKNOWN_LOCATION) {
+                                be.setLocation(task.getLocation());
+                            }
+                        }
+                        project.fireTaskFinished(task, exc);
+                        throw exc;
+                    }
+                } else {
+                    RuntimeConfigurable r = (RuntimeConfigurable) o;
+                    r.maybeConfigure(project);
                 }
             }
         } else if (!testIfCondition()) {
@@ -175,8 +194,8 @@ public class Target {
 
     void replaceTask(UnknownElement el, Task t) {
         int index = -1;
-        while ((index = tasks.indexOf(el)) >= 0) {
-            tasks.setElementAt(t, index);
+        while ((index = children.indexOf(el)) >= 0) {
+            children.setElementAt(t, index);
         }
     }
 

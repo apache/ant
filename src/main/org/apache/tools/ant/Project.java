@@ -1034,6 +1034,7 @@ public class Project {
     }
 
     public void addReference(String name, Object value) {
+        log("Adding reference: " + name + " -> " + value, MSG_DEBUG);
         references.put(name,value);
     }
 

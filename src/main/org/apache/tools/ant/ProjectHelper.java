@@ -430,7 +430,11 @@ public class ProjectHelper {
         }
 
         public void startElement(String name, AttributeList attrs) throws SAXParseException {
-            new TaskHandler(this, target).init(name, attrs);
+            if (project.getDataTypeDefinitions().get(name) != null) {
+                new DataTypeHandler(this, target).init(name, attrs);
+            } else {
+                new TaskHandler(this, target).init(name, attrs);
+            }
         }
     }
 
@@ -570,10 +574,17 @@ public class ProjectHelper {
      * Handler for all data types at global level.
      */
     private class DataTypeHandler extends AbstractHandler {
+        private Target target;
         private Object element;
+        private RuntimeConfigurable wrapper = null;
 
         public DataTypeHandler(DocumentHandler parentHandler) {
+            this(parentHandler, null);
+        }
+
+        public DataTypeHandler(DocumentHandler parentHandler, Target target) {
             super(parentHandler);
+            this.target = target;
         }
 
         public void init(String propType, AttributeList attrs) throws SAXParseException {
@@ -584,7 +595,13 @@ public class ProjectHelper {
                 }
                 
                 configureId(element, attrs);
-                configure(element, attrs, project);
+                if (target != null) {
+                    wrapper = new RuntimeConfigurable(element);
+                    wrapper.setAttributes(attrs);
+                    target.addDataType(wrapper);
+                } else {
+                    configure(element, attrs, project);
+                }
             } catch (BuildException exc) {
                 throw new SAXParseException(exc.getMessage(), locator, exc);
             }
@@ -599,7 +616,7 @@ public class ProjectHelper {
         }
 
         public void startElement(String name, AttributeList attrs) throws SAXParseException {
-            new NestedElementHandler(this, element, null).init(name, attrs);
+            new NestedElementHandler(this, element, wrapper).init(name, attrs);
         }
     }
 

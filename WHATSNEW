@@ -73,6 +73,8 @@ Other changes:
   temporary file for sourcefile and package names - helps to defeat
   command line length limitations.
 
+* Data types like <path> can now be defined inside of <target>s
+
 Fixed bugs:
 -----------
 
