@@ -81,6 +81,7 @@ public abstract class MSVSS extends Task {
     private String m_SSDir = "";
     private String m_vssLogin = null;
     private String m_vssPath = null;
+    private String m_serverPath = null;
 
     /**
      * Set the directory where ss.exe is located
@@ -149,11 +150,37 @@ public abstract class MSVSS extends Task {
         return m_vssPath;
     }
 
+    /**
+     * Set the path to the location of the ss.ini
+     *
+     * @param serverPath
+     */
+    public final void setServerpath(String serverPath) {
+        m_serverPath = serverPath;
+    }
+
     protected int run(Commandline cmd) {
         try {
             Execute exe = new Execute(new LogStreamHandler(this, 
                                                            Project.MSG_INFO,
                                                            Project.MSG_WARN));
+
+            // If location of ss.ini is specified we need to set the 
+            // environment-variable SSDIR to this value
+            if (m_serverPath != null) {
+                String[] env = exe.getEnvironment();
+                if( env == null ) {
+                    env = new String[0];
+                }
+                String[] newEnv = new String[env.length+1];
+                for( int i=0;i<env.length;i++ ) {
+                    newEnv[i] = env[i];
+                }
+                newEnv[env.length] = "SSDIR=" + m_serverPath;
+
+                exe.setEnvironment(newEnv);
+            }
+            
             exe.setAntRun(project);
             exe.setWorkingDirectory(project.getBaseDir());
             exe.setCommandline(cmd.getCommandline());
