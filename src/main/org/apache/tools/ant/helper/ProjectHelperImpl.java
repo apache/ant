@@ -454,6 +454,8 @@ public class ProjectHelperImpl extends ProjectHelper {
 
             if (def != null && !def.equals("")) {
                 helperImpl.project.setDefaultTarget(def);
+            } else {
+                throw new BuildException("The default attribute is required");
             }
 
             if (name != null) {

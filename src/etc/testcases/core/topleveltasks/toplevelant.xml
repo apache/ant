@@ -1,3 +1,4 @@
-<project basedir=".">
+<project basedir="." default="foo">
   <ant antfile="notarget.xml" />
+  <target name="foo" />
 </project>

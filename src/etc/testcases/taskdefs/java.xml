@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 
-<project name="java-test" basedir="." default="">
+<project name="java-test" basedir="." default="foo">
 
   <property name="app" 
     value="org.apache.tools.ant.taskdefs.JavaTest$$EntryPoint" />
@@ -89,4 +89,5 @@
     </java>
   </target>
   
+  <target name="foo" />
 </project>
