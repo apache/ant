@@ -111,7 +111,7 @@ public class Ear extends Jar {
         throws IOException, BuildException
     {
         // If no webxml file is specified, it's an error.
-        if (deploymentDescriptor == null) {
+        if (deploymentDescriptor == null && !isInUpdateMode()) {
             throw new BuildException("appxml attribute is required", location);
         }
         

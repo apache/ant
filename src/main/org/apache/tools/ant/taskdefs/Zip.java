@@ -76,6 +76,7 @@ import org.apache.tools.ant.types.FileSet;
 import org.apache.tools.ant.types.EnumeratedAttribute;
 import org.apache.tools.ant.types.ZipFileSet;
 import org.apache.tools.ant.types.ZipScanner;
+import org.apache.tools.ant.util.FileUtils;
 import org.apache.tools.ant.util.SourceFileScanner;
 import org.apache.tools.ant.util.MergingMapper;
 import org.apache.tools.zip.ZipOutputStream;
@@ -166,6 +167,13 @@ public class Zip extends MatchingTask {
     }
 
     /**
+     * Are we updating an existing archive?
+     */
+    public boolean isInUpdateMode() {
+        return doUpdate;
+    }
+
+    /**
      * Adds a set of files (nested fileset attribute).
      */
     public void addFileset(FileSet set) {
@@ -228,23 +236,12 @@ public class Zip extends MatchingTask {
         // we don't need to update if the original file doesn't exist
 
         addingNewFiles = true;
-        boolean reallyDoUpdate = false;
-        if (doUpdate && zipFile.exists())
+        doUpdate = doUpdate && zipFile.exists();
+        if (doUpdate)
         {
-            reallyDoUpdate = true;
-
-            int i;
-            for (i=0; i < 1000; i++)
-            {
-                renamedFile = new File(zipFile.getParent(), "tmp."+i);
-
-                if (!renamedFile.exists()) {
-                    break;
-                }
-            }
-            if (i == 1000) {
-                throw new BuildException("Can't find available temporary filename to which to rename old file.");
-            }
+            FileUtils fileUtils = FileUtils.newFileUtils();
+            renamedFile = fileUtils.createTempFile("zip", ".tmp",
+                                                   fileUtils.getParentFile(zipFile));
 
             try
             {
@@ -277,7 +274,7 @@ public class Zip extends MatchingTask {
             return;
         }
 
-        String action = reallyDoUpdate ? "Updating " : "Building ";
+        String action = doUpdate ? "Updating " : "Building ";
 
         log(action + archiveType +": "+ zipFile.getAbsolutePath());
 
@@ -300,7 +297,7 @@ public class Zip extends MatchingTask {
                 }
                 // Add the explicit filesets to the archive.
                 addFiles(filesets, zOut);
-                if (reallyDoUpdate) {
+                if (doUpdate) {
                     addingNewFiles = false;
                     ZipFileSet oldFiles = new ZipFileSet();
                     oldFiles.setSrc(renamedFile);
@@ -345,7 +342,7 @@ public class Zip extends MatchingTask {
                 msg += " (and the archive is probably corrupt but I could not delete it)";
             }
 
-            if (reallyDoUpdate) {
+            if (doUpdate) {
                 if (!renamedFile.renameTo(zipFile)) {
                     msg+=" (and I couldn't rename the temporary file "+
                         renamedFile.getName()+" back)";
@@ -358,7 +355,7 @@ public class Zip extends MatchingTask {
         }
 
         // If we've been successful on an update, delete the temporary file
-        if (success && reallyDoUpdate) {
+        if (success && doUpdate) {
             if (!renamedFile.delete()) {
                 log ("Warning: unable to delete temporary file " +
                      renamedFile.getName(), Project.MSG_WARN);
