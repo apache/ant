@@ -1,5 +1,5 @@
 /*
- * Copyright  2001-2004 The Apache Software Foundation
+ * Copyright  2001-2005 The Apache Software Foundation
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -326,8 +326,8 @@ public class ZipOutputStream extends FilterOutputStream {
                 deflate();
             }
 
-            entry.setSize(def.getTotalIn());
-            entry.setComprSize(def.getTotalOut());
+            entry.setSize(adjustToLong(def.getTotalIn()));
+            entry.setComprSize(adjustToLong(def.getTotalOut()));
             entry.setCrc(realCrc);
 
             def.reset();
@@ -829,4 +829,19 @@ public class ZipOutputStream extends FilterOutputStream {
             out.write(data, offset, length);
         }
     }
+
+    /**
+     * Assumes a negative integer really is a positive integer that
+     * has wrapped around and re-creates the original value.
+     *
+     * @since 1.17.2.8
+     */
+    protected static long adjustToLong(int i) {
+        if (i < 0) {
+            return 2 * ((long) Integer.MAX_VALUE) + 2 + i;
+        } else {
+            return i;
+        }
+    }
+
 }
