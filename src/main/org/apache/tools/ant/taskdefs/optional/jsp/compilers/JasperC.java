@@ -120,7 +120,14 @@ public class JasperC extends DefaultCompilerAdapter
             cmd.createArgument().setValue("-ieplugin");
             cmd.createArgument().setValue(jspc.getIeplugin());
         }
-
+        if (jspc.getUriroot() != null){
+            cmd.createArgument().setValue("-uriroot");
+            cmd.createArgument().setValue(jspc.getUriroot().toString());
+        }
+        if (jspc.getUribase() != null){
+            cmd.createArgument().setValue("-uribase");
+            cmd.createArgument().setValue(jspc.getUribase().toString());
+        }
         logAndAddFilesToCompile(getJspc(), getJspc().getCompileList(), cmd);
         return cmd;
     }

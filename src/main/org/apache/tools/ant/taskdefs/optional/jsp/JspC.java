@@ -118,6 +118,20 @@ public class JspC extends MatchingTask
     private int verbose = 0;
     protected Vector compileList = new Vector();
     protected boolean failOnError = true;
+	
+    /**
+     *  -uribase <dir>The uri directory compilations should be relative to
+     *  (Default is "/")
+     */
+
+    private File uribase;
+
+    /**
+     *  -uriroot <dir>The root directory that uri files should be resolved
+     *  against, 
+     */
+    private File uriroot;
+	
     private static final String FAIL_MSG
         = "Compile failed, messages should have been provided.";
     /* ------------------------------------------------------------ */
@@ -198,6 +212,38 @@ public class JspC extends MatchingTask
     {
         mapped = mapped_;
     }
+	
+	    /**
+     *  -uribase. the uri context of relative URI 
+     * references in the JSP pages. If it does not 
+     * exist then it is derived from the location of the file
+     * relative to the declared or derived value of -uriroot. 
+     *
+     * @param  uribase  The new Uribase value
+     */
+    public void setUribase(File uribase) {
+        this.uribase = uribase;
+    }
+
+	public File getUribase() {
+		return uriroot;
+	}
+
+    /**
+     *  -uriroot <dir>The root directory that uri files should be resolved
+     *  against, (Default is the directory jspc is invoked from)
+     *
+     * @param  uriroot  The new Uribase value
+     */
+    public void setUriroot(File uriroot) {
+        this.uriroot = uriroot;
+    }
+
+	public File getUriroot() {
+		return uriroot;
+	}
+	
+	
     /* ------------------------------------------------------------ */
     /** Set the classpath to be used for this compilation */
     public void setClasspath(Path cp) {
