@@ -481,7 +481,7 @@ public class MailMessage {
  * This PrintStream subclass makes sure that <CRLF>. becomes <CRLF>..
  *  per RFC 821.  It also ensures that new lines are always \r\n.
 */
-class MailPrintStream extends java.io.PrintStream {
+class MailPrintStream extends PrintStream {
 
   private int lastChar;
 
