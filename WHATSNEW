@@ -45,6 +45,8 @@ Fixed bugs:
 
 * Ant didn't find the runtime libraries on IBM's JDK 1.4 for Linux.
 
+* random component of temporary files is now always a positive integer.
+
 * Ant could incorrectly try to use the 1.4 regexp implementation even
   if it isn't available if you run the JVM with -Xverify:none.
 

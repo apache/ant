@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2001-2002 The Apache Software Foundation.  All rights
+ * Copyright (c) 2001-2003 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -682,7 +682,7 @@ public class FileUtils {
         synchronized (rand) {
             do {
                 result = new File(parent,
-                                  prefix + fmt.format(rand.nextInt())
+                                  prefix + fmt.format(Math.abs(rand.nextInt()))
                                   + suffix);
             } while (result.exists());
         }
