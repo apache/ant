@@ -352,6 +352,9 @@ V. Things we probably don't agree on.
 * specify an onfail task or target that runs in case of a build
   failure.
 
+* allow sequence to be specified in depends attribute or enhance
+  antcall to work with current list of executed targets
+
 * Support nesting tasks into other elements - not just as children of
   target - as proposed by Thomas Christen in
   <http://marc.theaimsgroup.com/?l=ant-dev&m=98130655812010&w=2>.
