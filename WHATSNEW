@@ -90,6 +90,9 @@ Other changes:
 --------------
 * <available> has a new attribute named ignoreSystemClasses.
 
+* New task <changelog/> generates an XML report of changes that occur
+  on CVS repository.
+
 * New filter readers: ClassConstants, ExpandProperties, HeadFilter, 
   LineContains, LineContainsRegExp, PrefixLines, ReplaceTokens, 
   StripJavaComments, StripLineBreaks, StripLineComments, TabsToSpaces, 
