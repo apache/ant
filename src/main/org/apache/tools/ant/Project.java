@@ -56,6 +56,7 @@ package org.apache.tools.ant;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.EOFException;
 import java.io.InputStream;
 import java.lang.reflect.Modifier;
 import java.util.Enumeration;
@@ -238,6 +239,16 @@ public class Project {
      */
     public void setDefaultInputStream(InputStream defaultInputStream) {
         this.defaultInputStream = defaultInputStream;
+    }
+
+    /**
+     * Get this project's input stream
+     *
+     * @return the InputStream instance in use by this Porject instance to 
+     * read input
+     */
+    public InputStream getDefaultInputStream() {
+        return defaultInputStream;
     }
     
     /**
@@ -1309,7 +1320,7 @@ public class Project {
         if (defaultInputStream != null) {
             return defaultInputStream.read(buffer, offset, length);
         } else {
-            return System.in.read(buffer, offset, length);
+            throw new EOFException("No input provided for project");
         }
     }
     

@@ -150,6 +150,7 @@ public class Ant extends Task {
      */
     public void init() {
         newProject = new Project();
+        newProject.setDefaultInputStream(getProject().getDefaultInputStream());
         newProject.setJavaVersionProperty();
         newProject.addTaskDefinition("property",
                                      (Class) getProject().getTaskDefinitions()
