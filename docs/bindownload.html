@@ -2,20 +2,20 @@
 
 <!-- Content Stylesheet for Site -->
 
-        
+
 <!-- start the processing -->
     <html>
     <!-- GENERATED FILE, DO NOT EDIT, EDIT THE XML FILE IN xdocs INSTEAD! -->
     <head>
       <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1"/>
-  
-              
+
+
                         <base href="http://jakarta.apache.org/ant/."/>
-              
+
       <title>Apache Ant - Downloading Ant - Binary Distribution</title>
     </head>
-  
-    <body bgcolor="#ffffff" text="#000000" link="#525D76">    
+
+    <body bgcolor="#ffffff" text="#000000" link="#525D76">
       <table border="0" width="100%" cellspacing="0">
         <!-- TOP IMAGE -->
         <tr>
@@ -31,7 +31,7 @@
         <tr><td colspan="2">
           <hr noshade="" size="1"/>
         </td></tr>
-        
+
         <tr>
           <!-- LEFT SIDE NAVIGATION -->
           <td valign="top" nowrap="true">
@@ -100,8 +100,8 @@
     <tr><td>
       <blockquote>
                         <p>Use the links below to download a binary distribution of Ant from
-one of our mirrors.  You <strong>must</strong> 
-<a href="[location]#Verify Releases">verify the integrity</a> of 
+one of our mirrors.  You <strong>must</strong>
+<a href="[location]#Verify Releases">verify the integrity</a> of
 the downloaded files using signatures downloaded from our main
 distribution directory.</p>
                                 <p>Ant is distributed as <code>zip</code>, <code>tar.gz</code> and
@@ -133,7 +133,7 @@ the mirrors list) that should be available.</p>
 Other mirrors: <select name="Preferred">
 [if-any http]
   [for http]<option value="[http]">[http]</option>[end]
-[end]  
+[end]
 [if-any ftp]
   [for ftp]<option value="[ftp]">[ftp]</option>[end]
 [end]
@@ -141,7 +141,7 @@ Other mirrors: <select name="Preferred">
   [for backup]<option value="[backup]">[backup] (backup)</option>[end]
 [end]
 </select>
-<input type="submit" value="Change" />     
+<input type="submit" value="Change" />
 </form>
                     </blockquote>
     </td></tr>
@@ -157,18 +157,18 @@ Other mirrors: <select name="Preferred">
                         <p>Currently, Apache Ant 1.5.1 is the best available version, see the
 <a href="[preferred]/ant/README.html">release notes</a>.</p>
                                 <ul>
-<li><code>.zip</code> archive: 
-<a href="[preferred]/ant/binaries/jakarta-ant-1.5.1-bin.zip">jakarta-ant-1.5.1-bin.zip</a> 
+<li><code>.zip</code> archive:
+<a href="[preferred]/ant/binaries/jakarta-ant-1.5.1-bin.zip">jakarta-ant-1.5.1-bin.zip</a>
 [<a href="http://www.apache.org/dist/ant/binaries/jakarta-ant-1.5.1-bin.zip.asc">PGP</a>]
 [<a href="http://www.apache.org/dist/ant/binaries/jakarta-ant-1.5.1-bin.zip.md5">MD5</a>]</li>
 
-<li><code>.tar.gz</code> archive: 
-<a href="[preferred]/ant/binaries/jakarta-ant-1.5.1-bin.tar.gz">jakarta-ant-1.5.1-bin.tar.gz</a> 
+<li><code>.tar.gz</code> archive:
+<a href="[preferred]/ant/binaries/jakarta-ant-1.5.1-bin.tar.gz">jakarta-ant-1.5.1-bin.tar.gz</a>
 [<a href="http://www.apache.org/dist/ant/binaries/jakarta-ant-1.5.1-bin.tar.gz.asc">PGP</a>]
 [<a href="http://www.apache.org/dist/ant/binaries/jakarta-ant-1.5.1-bin.tar.gz.md5">MD5</a>]</li>
 
-<li><code>.tar.bz2</code> archive: 
-<a href="[preferred]/ant/binaries/jakarta-ant-1.5.1-bin.tar.bz2">jakarta-ant-1.5.1-bin.tar.bz2</a> 
+<li><code>.tar.bz2</code> archive:
+<a href="[preferred]/ant/binaries/jakarta-ant-1.5.1-bin.tar.bz2">jakarta-ant-1.5.1-bin.tar.bz2</a>
 [<a href="http://www.apache.org/dist/ant/binaries/jakarta-ant-1.5.1-bin.tar.bz2.asc">PGP</a>]
 [<a href="http://www.apache.org/dist/ant/binaries/jakarta-ant-1.5.1-bin.tar.bz2.md5">MD5</a>]</li>
 </ul>
@@ -231,8 +231,8 @@ using</p>
 </code>
 <em>or</em><br />
 <code>
-% gpg -import KEYS<br />
-% gpg -verify jakarta-ant-bin-1.5.1.tar.gz.asc
+% gpg --import KEYS<br />
+% gpg --verify jakarta-ant-bin-1.5.1.tar.gz.asc
 </code></p>
                                 <p>Alternatively, you can verify the MD5 signature on the files.  A
 unix program called <code>md5</code> or <code>md5sum</code> is
