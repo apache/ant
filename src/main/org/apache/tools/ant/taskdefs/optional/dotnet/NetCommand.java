@@ -126,7 +126,6 @@ public class NetCommand {
         this.program = program;
         commandLine = new Commandline();
         commandLine.setExecutable(program);
-        prepareExecutor();
     }
 
 
@@ -207,7 +206,8 @@ public class NetCommand {
      *
      *@param  argument1  The first argument
      *@param  argument2  The second argument
-     */   public void addArgument(String argument1, String argument2) {
+     */   
+    public void addArgument(String argument1, String argument2) {
         if (argument2 != null && argument2.length() != 0) {
             commandLine.createArgument().setValue(argument1 + argument2);
         }
@@ -277,13 +277,16 @@ public class NetCommand {
      */
     public void runCommand()
              throws BuildException {
+        prepareExecutor();
         int err = -1;
         // assume the worst
         try {
             if (traceCommandLine) {
+                owner.log("In directory " + executable.getWorkingDirectory());
                 owner.log(commandLine.describeCommand());
             } else {
                 //in verbose mode we always log stuff
+                logVerbose("In directory " + executable.getWorkingDirectory());
                 logVerbose(commandLine.describeCommand());
             }
             setExecutableCommandLine();

@@ -383,6 +383,14 @@ public class Execute {
     }
 
     /**
+     * @since Ant 1.7
+     */
+    public File getWorkingDirectory() {
+        return workingDirectory == null ? new File(antWorkingDirectory)
+                                        : workingDirectory;
+    }
+
+    /**
      * Set the name of the antRun script using the project's value.
      *
      * @param project the current project.
