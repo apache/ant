@@ -46,7 +46,7 @@
 
   <target name="init" depends="buildsetup">
     <mkdir dir="${bin.dir}/init"/>
-    <depend destdir="${bin.dir}/init" srcdir="${java.dir}/init"/>
+    <depend destdir="${bin.dir}/init" srcdir="${java.dir}/init" closure="yes"/>
     <javac destdir="${bin.dir}/init" srcdir="${java.dir}/init" debug="${debug}"/>
     <jar basedir="${bin.dir}/init" jarfile="${distlib.dir}/init.jar"/>
   </target>
@@ -54,7 +54,7 @@
   <target name="common" depends="init">
     <mkdir dir="${bin.dir}/common"/>
     <mkdir dir="${distlib.dir}/common"/>
-    <depend destdir="${bin.dir}/common" srcdir="${java.dir}/common">
+    <depend destdir="${bin.dir}/common" srcdir="${java.dir}/common" closure="yes">
       <classpath refid="classpath.common"/>
     </depend>
     <javac destdir="${bin.dir}/common" srcdir="${java.dir}/common" debug="${debug}">
@@ -66,7 +66,7 @@
   <target name="antcore" depends="common">
     <mkdir dir="${bin.dir}/antcore"/>
     <mkdir dir="${distlib.dir}/antcore"/>
-    <depend destdir="${bin.dir}/antcore" srcdir="${java.dir}/antcore">
+    <depend destdir="${bin.dir}/antcore" srcdir="${java.dir}/antcore" closure="yes">
       <classpath refid="classpath.antcore"/>
     </depend>
     <javac destdir="${bin.dir}/antcore" srcdir="${java.dir}/antcore" debug="${debug}">
@@ -78,7 +78,7 @@
   <target name="frontend" depends="antcore, start">
     <mkdir dir="${bin.dir}/frontend"/>
     <mkdir dir="${distlib.dir}/frontend"/>
-    <depend destdir="${bin.dir}/frontend" srcdir="${java.dir}/frontend">
+    <depend destdir="${bin.dir}/frontend" srcdir="${java.dir}/frontend" closure="yes">
       <classpath refid="classpath.frontend"/>
     </depend>
     <javac destdir="${bin.dir}/frontend" srcdir="${java.dir}/frontend" debug="${debug}">
@@ -98,7 +98,7 @@
 
   <target name="start" depends="init">
     <mkdir dir="${bin.dir}/start"/>
-    <depend destdir="${bin.dir}/start" srcdir="${java.dir}/start">
+    <depend destdir="${bin.dir}/start" srcdir="${java.dir}/start" closure="yes">
       <classpath refid="classpath.start"/>
     </depend>
     <javac destdir="${bin.dir}/start" srcdir="${java.dir}/start" debug="${debug}">
@@ -126,7 +126,7 @@
   
   <target name="remote" depends="init">
     <mkdir dir="${bin.dir}/remote"/>
-    <depend destdir="${bin.dir}/remote" srcdir="${java.dir}/remote">
+    <depend destdir="${bin.dir}/remote" srcdir="${java.dir}/remote" closure="yes">
       <classpath refid="classpath.start"/>
     </depend>
     <javac destdir="${bin.dir}/remote" srcdir="${java.dir}/remote" debug="${debug}">
@@ -155,7 +155,7 @@
       <path refid="classpath.common"/>
       <pathelement location="${distlib.dir}/common/common.jar"/>
     </path>
-    <depend destdir="${bin.dir}/antlibs/system" srcdir="${java.dir}/antlibs/system">
+    <depend destdir="${bin.dir}/antlibs/system" srcdir="${java.dir}/antlibs/system" closure="yes">
       <classpath refid="classpath.antlibs"/>
     </depend>
     <javac destdir="${bin.dir}/antlibs/system" srcdir="${java.dir}/antlibs/system" debug="${debug}">

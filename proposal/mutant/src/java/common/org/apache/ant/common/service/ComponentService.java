@@ -53,8 +53,10 @@
  */
 package org.apache.ant.common.service;
 import java.net.URL;
+import java.util.Map;
 import org.apache.ant.common.antlib.AntLibFactory;
 import org.apache.ant.common.util.ExecutionException;
+
 
 /**
  * The Component Service is used to manage the definitions that Ant uses at
@@ -186,5 +188,17 @@ public interface ComponentService {
      */
     Object createComponent(String libraryId, String localName)
         throws ExecutionException;
+        
+    /**
+     * Configure an object with attribtes from the given map
+     *
+     * @param object the object to be configured.
+     * @param attributeValues a map containing named attribute values.
+     *
+     * @exception ExecutionException if the object does not support an
+     *            attribute in the map.
+     */
+    void configureAttributes(Object object, Map attributeValues)
+         throws ExecutionException;
 }
 

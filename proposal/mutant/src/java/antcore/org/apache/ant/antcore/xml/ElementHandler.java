@@ -101,7 +101,7 @@ public abstract class ElementHandler extends DefaultHandler {
     private Map elementAttributes;
 
     /** The aspect attributes read from the element definition */
-    private Map aspects;
+    private Map aspectAttributes;
 
     /** The content of this element */
     private String content;
@@ -150,8 +150,8 @@ public abstract class ElementHandler extends DefaultHandler {
      *
      * @return The aspect attributes.
      */
-    public Map getAspects() {
-        return aspects;
+    public Map getAspectAttributes() {
+        return aspectAttributes;
     }
 
     /**
@@ -313,14 +313,14 @@ public abstract class ElementHandler extends DefaultHandler {
      */
     protected final void processAttributes(Attributes attributes)
          throws SAXParseException {
-        aspects = new HashMap();
+        aspectAttributes = new HashMap();
         elementAttributes = new HashMap();
         int length = attributes.getLength(); 
         for (int i = 0; i < length; ++i) {
             String attributeName = attributes.getQName(i);
             String attributeValue = attributes.getValue(i);
             if (attributeName.indexOf(":") != -1) {
-                aspects.put(attributeName, attributeValue);
+                aspectAttributes.put(attributeName, attributeValue);
             } else {
                 validateAttribute(attributeName, attributeValue);
                 elementAttributes.put(attributeName, attributeValue);

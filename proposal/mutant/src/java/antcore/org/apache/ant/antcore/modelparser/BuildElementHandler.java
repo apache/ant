@@ -93,7 +93,7 @@ public class BuildElementHandler extends ModelElementHandler {
             buildElement.addAttribute(attributeName,
                 getAttribute(attributeName));
         }
-        buildElement.setAspects(getAspects());
+        buildElement.addAspectAttributes(getAspectAttributes());
     }
 
 

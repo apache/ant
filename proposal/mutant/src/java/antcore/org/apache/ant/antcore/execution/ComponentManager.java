@@ -184,7 +184,6 @@ public class ComponentManager implements ComponentService {
                 if (importAll || doAuto) {
                     importLibrary(libraryId);
                 }
-                addAspects((AntLibrary) antLibraries.get(libraryId));
             }
         } catch (MalformedURLException e) {
             throw new ExecutionException("Unable to load libraries from "
@@ -265,6 +264,7 @@ public class ComponentManager implements ComponentService {
             importLibraryDef(library, defName, null);
         }
         addConverters(library);
+        addAspects(library);
     }
 
     /**
@@ -288,6 +288,7 @@ public class ComponentManager implements ComponentService {
         }
         importLibraryDef(library, defName, alias);
         addConverters(library);
+        addAspects(library);
     }
 
     /**
@@ -392,7 +393,7 @@ public class ComponentManager implements ComponentService {
             return (AntLibFactory) libFactories.get(libraryId);
         }
         ExecutionContext context
-             = new ExecutionContext(frame, null, Location.UNKNOWN_LOCATION);
+             = new ExecutionContext(frame, null, null);
         AntLibFactory libFactory = componentLibrary.getFactory(context);
         if (libFactory == null) {
             libFactory = new StandardLibFactory();
@@ -511,7 +512,7 @@ public class ComponentManager implements ComponentService {
             // initialise the component with it.
             if (execComponent != null) {
                 ExecutionContext context
-                     = new ExecutionContext(frame, execComponent, location);
+                     = new ExecutionContext(frame, execComponent, model);
                 context.setClassLoader(componentLoader);
                 execComponent.init(context, componentName);
             }
@@ -605,98 +606,6 @@ public class ComponentManager implements ComponentService {
     }
 
     /**
-     * Create a component - handles all the variations
-     *
-     * @param loader the component's classloader
-     * @param componentClass The class of the component.
-     * @param componentName The component's name in the global context
-     * @param addTaskAdapter whether the component should add a Task adapter
-     *      to make this component a Task.
-     * @param localName The name of the component within its library
-     * @param model the BuildElement model of the component's configuration
-     * @param factory the facrtory object used to create the component
-     * @return the required component potentially wrapped in a wrapper object.
-     * @exception ExecutionException if the component cannot be created
-     */
-    private Object createComponent(ClassLoader loader, AntLibFactory factory,
-                                   Class componentClass, String componentName,
-                                   String localName, boolean addTaskAdapter,
-                                   BuildElement model)
-         throws ExecutionException {
-        // set the location to unknown unless we have a build model to use
-        Location location = Location.UNKNOWN_LOCATION;
-        if (model != null) {
-            location = model.getLocation();
-        }
-
-        try {
-            // create the component using the factory
-            Object component
-                 = factory.createComponent(componentClass, localName);
-
-            // wrap the component in an adapter if required.
-            ExecutionComponent execComponent = null;
-            if (addTaskAdapter) {
-                if (component instanceof Task) {
-                    execComponent = (Task) component;
-                } else {
-                    execComponent = new TaskAdapter(componentName, component);
-                }
-            } else if (component instanceof ExecutionComponent) {
-                execComponent = (ExecutionComponent) component;
-            }
-
-            // set the context loader to that for the component
-            ClassLoader currentLoader
-                 = LoaderUtils.setContextLoader(loader);
-
-            // if the component is an execution component create a context and
-            // initialise the component with it.
-            if (execComponent != null) {
-                ExecutionContext context
-                     = new ExecutionContext(frame, execComponent, location);
-                context.setClassLoader(loader);
-                execComponent.init(context, componentName);
-            }
-
-            // if we have a model, use it to configure the component. Otherwise
-            // the caller is expected to configure thre object
-            if (model != null) {
-                configureElement(factory, component, model);
-                // if the component is an execution component and we have a
-                // model, validate it
-                if (execComponent != null) {
-                    execComponent.validateComponent();
-                }
-            }
-
-            // reset the loader
-            LoaderUtils.setContextLoader(currentLoader);
-
-            // if we have an execution component, potentially a wrapper,
-            // return it otherwise the component directly
-            if (execComponent != null) {
-                return execComponent;
-            } else {
-                return component;
-            }
-        } catch (InstantiationException e) {
-            throw new ExecutionException("Unable to instantiate component "
-                 + "class " + componentClass.getName() + " for component <"
-                 + componentName + ">", e, location);
-        } catch (IllegalAccessException e) {
-            throw new ExecutionException("Unable to access task class "
-                 + componentClass.getName() + " for component <"
-                 + componentName + ">", e, location);
-        } catch (ExecutionException e) {
-            e.setLocation(location, false);
-            throw e;
-        } catch (RuntimeException e) {
-            throw new ExecutionException(e, location);
-        }
-    }
-
-    /**
      * Create an instance of a type given its required class
      *
      * @param typeClass the class from which the instance should be created
@@ -718,8 +627,8 @@ public class ComponentManager implements ComponentService {
             if (typeInstance instanceof ExecutionComponent) {
                 ExecutionComponent component
                      = (ExecutionComponent) typeInstance;
-                ExecutionContext context = new ExecutionContext(frame,
-                    component, model.getLocation());
+                ExecutionContext context 
+                    = new ExecutionContext(frame, component, model);
                 component.init(context, localName);
                 configureElement(libFactory, typeInstance, model);
                 component.validateComponent();
@@ -761,8 +670,10 @@ public class ComponentManager implements ComponentService {
         Class nestedType = setter.getType(nestedElementName);
 
         // is there a polymorph indicator - look in Ant aspects
-        String typeName = model.getAspectValue(Constants.ANT_ASPECT, "type");
-        String refId = model.getAspectValue(Constants.ANT_ASPECT, "refid");
+        String typeName 
+            = model.getAspectAttributeValue(Constants.ANT_ASPECT, "type");
+        String refId 
+            = model.getAspectAttributeValue(Constants.ANT_ASPECT, "refid");
         if (refId != null && typeName != null) {
             throw new ExecutionException("Only one of " + Constants.ANT_ASPECT
                  + ":type and " + Constants.ANT_ASPECT
@@ -849,8 +760,8 @@ public class ComponentManager implements ComponentService {
             if (nestedElement instanceof ExecutionComponent) {
                 ExecutionComponent component
                      = (ExecutionComponent) nestedElement;
-                ExecutionContext context = new ExecutionContext(frame,
-                    component, model.getLocation());
+                ExecutionContext context 
+                    = new ExecutionContext(frame, component, model);
                 component.init(context, nestedElementName);
                 configureElement(factory, nestedElement, model);
                 component.validateComponent();
@@ -865,6 +776,30 @@ public class ComponentManager implements ComponentService {
         }
     }
 
+    /**
+     * configure an object with attribtes from the given map
+     *
+     * @param object the object to be configured.
+     * @param attributeValues a map containing named attribute values.
+     *
+     * @exception ExecutionException if the object does not support an
+     *            attribute in the map.
+     */
+    public void configureAttributes(Object object, Map attributeValues)
+         throws ExecutionException {
+        Setter setter = getSetter(object.getClass());
+        for (Iterator i = attributeValues.keySet().iterator(); i.hasNext();) {
+            String attributeName = (String) i.next();
+            String attributeValue = (String) attributeValues.get(attributeName);
+            if (!setter.supportsAttribute(attributeName)) {
+                throw new ExecutionException(object.getClass().getName()
+                     + " does not support the \"" + attributeName
+                     + "\" attribute");
+            }
+            setter.setAttribute(object, attributeName,
+                frame.replacePropertyRefs(attributeValue));
+        }
+    }
 
     /**
      * Configure an element according to the given model.
@@ -985,8 +920,8 @@ public class ComponentManager implements ComponentService {
                          + " does not implement the Aspect interface");
                 }
                 Aspect aspect = (Aspect) libFactory.createInstance(aspectClass);
-                ExecutionContext context = new ExecutionContext(frame,
-                    null, Location.UNKNOWN_LOCATION);
+                ExecutionContext context 
+                    = new ExecutionContext(frame, null, null);
                 aspect.init(context);
                 aspects.add(aspect);
             }
@@ -1045,8 +980,8 @@ public class ComponentManager implements ComponentService {
                 }
                 Converter converter
                      = (Converter) libFactory.createInstance(converterClass);
-                ExecutionContext context = new ExecutionContext(frame,
-                    null, Location.UNKNOWN_LOCATION);
+                ExecutionContext context 
+                    = new ExecutionContext(frame, null, null);
                 converter.init(context);
                 Class[] converterTypes = converter.getTypes();
                 for (int j = 0; j < converterTypes.length; ++j) {

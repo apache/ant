@@ -56,6 +56,7 @@ import org.apache.ant.common.antlib.AntContext;
 import org.apache.ant.common.antlib.ExecutionComponent;
 import org.apache.ant.common.util.ExecutionException;
 import org.apache.ant.common.util.Location;
+import org.apache.ant.common.model.BuildElement;
 
 /**
  * This is the core's implementation of the AntContext for all core objects.
@@ -71,8 +72,8 @@ public class ExecutionContext implements AntContext {
     /** the event support instance used to manage build events */
     private BuildEventSupport eventSupport;
 
-    /** The location of the object associated with this context */
-    private Location location;
+    /** The build model associated with this context. */
+    private BuildElement model;
 
     /** the execution component associated with the context, if any */
     private ExecutionComponent component;
@@ -89,13 +90,13 @@ public class ExecutionContext implements AntContext {
      *
      * @param frame the frame containing this context
      * @param component the component associated with this context - may be null
-     * @param location the location associated with the component
+     * @param model the build model associated with this component if any. 
      */
     protected ExecutionContext(Frame frame, ExecutionComponent component,
-                               Location location) {
+                               BuildElement model) {
         this.frame = frame;
         this.eventSupport = frame.getEventSupport();
-        this.location = location;
+        this.model = model;
         this.component = component;
     }
 
@@ -120,7 +121,10 @@ public class ExecutionContext implements AntContext {
      * @return the location in the build model associated with this context.
      */
     public Location getLocation() {
-        return location;
+        if (model == null) {
+            return Location.UNKNOWN_LOCATION;
+        }
+        return model.getLocation();
     }
 
     /**
@@ -165,6 +169,15 @@ public class ExecutionContext implements AntContext {
      */
     protected ExecutionComponent getExecutionComponent() {
         return component;
+    }
+    
+    /**
+     * Get the build model associated with this context.
+     *
+     * @return the build model or null if there is no build model.
+     */
+    protected BuildElement getModel() {
+        return model;
     }
 }
 

@@ -52,7 +52,7 @@
  * <http://www.apache.org/>.
  */
 package org.apache.ant.common.model;
-import java.util.HashMap;
+
 import java.util.Iterator;
 import java.util.Map;
 
@@ -67,8 +67,8 @@ import org.apache.ant.common.util.Location;
  * @created 11 January 2002
  */
 public abstract class ModelElement {
-    /** The aspects defined for this element. */
-    private Map aspectMaps;
+    /** The aspectValues defined for this element. */
+    private AspectValueCollection aspectValues = new AspectValueCollection();
 
     /** The starting location of this element */
     private Location location = Location.UNKNOWN_LOCATION;
@@ -107,28 +107,13 @@ public abstract class ModelElement {
     }
     
     /**
-     * Set the aspects of this element
+     * Adds aspect related attributes of this element
      *
-     * @param aspects a Map of apects that relate to this model element.
+     * @param aspectAttributes a Map of aspect realted attributes that pertain 
+     * to this model element.
      */
-    public void setAspects(Map aspects) {
-        aspectMaps = new HashMap();
-        for (Iterator i = aspects.keySet().iterator(); i.hasNext();) {
-            String aspectName = (String) i.next();
-            int separator = aspectName.indexOf(":");
-            if (separator != -1) {
-                String prefix = aspectName.substring(0, separator);
-                String name = aspectName.substring(separator + 1);
-                if (prefix.length() != 0 && name.length() != 0) {
-                    Map prefixMap = (Map) aspectMaps.get(prefix);
-                    if (prefixMap == null) {
-                        prefixMap = new HashMap();
-                        aspectMaps.put(prefix, prefixMap);
-                    }
-                    prefixMap.put(name, aspects.get(aspectName));
-                }
-            }
-        }
+    public void addAspectAttributes(Map aspectAttributes) {
+        aspectValues.addAttributes(aspectAttributes);
     }
 
     /**
@@ -159,39 +144,44 @@ public abstract class ModelElement {
     }
 
     /**
-     * Get an iterator on the aspects which have been given values on this
+     * Get an iterator on the aspectValues which have been given values on this
      * element
      *
-     * @return an iterator of Strings , being the aspects which have been
+     * @return an iterator of Strings , being the aspectValues which have been
      *      given values on this element.
      */
     public Iterator getAspectNames() {
-        return aspectMaps.keySet().iterator();
+        return aspectValues.getNames();
     }
 
     /**
      * Get the set of attribute values related to the given aspect
      *
-     * @param aspectPrefix the aspect identifier
+     * @param aspectName the aspect identifier
      * @return a map of the attribute values for the given aspect.
      */
-    public Map getAspectAttributes(String aspectPrefix) {
-        return (Map) aspectMaps.get(aspectPrefix);
+    public Map getAspectAttributes(String aspectName) {
+        return aspectValues.getAttributes(aspectName);
     }
 
     /**
      * Get the value of a single aspect attribute
      *
-     * @param aspectPrefix the prefix which identifies the aspectr
+     * @param aspectName the aspect name
      * @param keyName the attribute name
      * @return the aspect value
      */
-    public String getAspectValue(String aspectPrefix, String keyName) {
-        Map aspectAttributes = getAspectAttributes(aspectPrefix);
-        if (aspectAttributes == null) {
-            return null;
-        }
-        return (String) aspectAttributes.get(keyName);
+    public String getAspectAttributeValue(String aspectName, String keyName) {
+        return aspectValues.getAttributeValue(aspectName, keyName);
+    }
+    
+    /**
+     * Get the complete collection of aspect attribute values.
+     *
+     * @return an AspectValueCollection instance.
+     */
+    public AspectValueCollection getAspectAttributes() {
+        return aspectValues;
     }
 }
 

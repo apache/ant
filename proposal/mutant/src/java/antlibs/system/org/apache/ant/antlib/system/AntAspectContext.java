@@ -51,45 +51,44 @@
  * information on the Apache Software Foundation, please see
  * <http://www.apache.org/>.
  */
-package org.apache.ant.common.antlib;
-import org.apache.ant.common.util.ExecutionException;
-import org.apache.ant.common.util.Location;
+package org.apache.ant.antlib.system;
 
 /**
- * The AntContext is the interface through which the Ant container and the
- * Ant components communicate. Common operations are provided directly in
- * this interface. Other core services are available through the generic
- * service objects supported by the core.
+ * The context for the Ant Aspect
  *
  * @author Conor MacNeill
- * @created 14 January 2002
  */
-public interface AntContext {
+public class AntAspectContext {
+    /** Indicates if the task's execution should not fail */ 
+    private boolean failOnError = true;
+    
     /**
-     * Log a message
+     * Set the flag covering whether a task failure halts the build.
      *
-     * @param message the message to be logged
-     * @param level the priority level of the message
+     * @param failOnError false if the build should continue.
      */
-    void log(String message, int level);
+    public void setFailOnError(boolean failOnError) {
+        this.failOnError = failOnError;
+    }
 
     /**
-     * Get a instance of the specified service interface with which to
-     * interact with the core.
+     * Indicate whether a task failure halts the build.
      *
-     * @param serviceInterfaceClass the class object for the required
-     *      interface
-     * @return an instance of the requested interface
-     * @exception ExecutionException if the core service is not supported
+     * @return true if a task error causes the build to fail.
      */
-    Object getCoreService(Class serviceInterfaceClass)
-         throws ExecutionException;
+    public boolean getFailOnError() {
+        return failOnError;
+    }
 
     /**
-     * Gets the location associated with the AntContext
+     * Indicate if this aspect context is required - i.e. whether the 
+     * aspect needs to be reactivated after task execution
      *
-     * @return the location which may be the unknown location
+     * @return true if the context should be used and the aspect reactivated 
+     *         after task execution.
      */
-    Location getLocation();
+    public boolean isRequired() {
+        return failOnError != true;
+    }
 }
 

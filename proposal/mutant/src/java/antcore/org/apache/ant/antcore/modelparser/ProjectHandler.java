@@ -133,7 +133,7 @@ public class ProjectHandler extends ModelElementHandler {
             project.setDefaultTarget(getAttribute(DEFAULT_ATTR));
             project.setBase(getAttribute(BASEDIR_ATTR));
             project.setName(getAttribute(NAME_ATTR));
-            project.setAspects(getAspects());
+            project.addAspectAttributes(getAspectAttributes());
         }
     }
 

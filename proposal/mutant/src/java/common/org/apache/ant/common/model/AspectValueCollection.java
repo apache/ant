@@ -51,45 +51,84 @@
  * information on the Apache Software Foundation, please see
  * <http://www.apache.org/>.
  */
-package org.apache.ant.common.antlib;
-import org.apache.ant.common.util.ExecutionException;
-import org.apache.ant.common.util.Location;
+package org.apache.ant.common.model;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
 
 /**
- * The AntContext is the interface through which the Ant container and the
- * Ant components communicate. Common operations are provided directly in
- * this interface. Other core services are available through the generic
- * service objects supported by the core.
- *
+ * The AspectValueCollection holds aspect values for a range of aspects.
+ * Values can be retrieved for a particular aspect attribute or all attributes
+ * of a given aspect.
+ * 
  * @author Conor MacNeill
- * @created 14 January 2002
+ * @created 11 January 2002
  */
-public interface AntContext {
-    /**
-     * Log a message
-     *
-     * @param message the message to be logged
-     * @param level the priority level of the message
-     */
-    void log(String message, int level);
+public class AspectValueCollection {
+    /** The aspects defined for this element. */
+    private Map aspectMaps = new HashMap();
 
     /**
-     * Get a instance of the specified service interface with which to
-     * interact with the core.
+     * Set the aspect attribute values.
      *
-     * @param serviceInterfaceClass the class object for the required
-     *      interface
-     * @return an instance of the requested interface
-     * @exception ExecutionException if the core service is not supported
+     * The attributes are sorted into their various aspects 
+     *
+     * @param attributes a Map of aspect attributes values. The keys are the
+     *        aspect
      */
-    Object getCoreService(Class serviceInterfaceClass)
-         throws ExecutionException;
+    public void addAttributes(Map attributes) {
+        for (Iterator i = attributes.keySet().iterator(); i.hasNext();) {
+            String attributeName = (String) i.next();
+            int separator = attributeName.indexOf(":");
+            if (separator != -1) {
+                String aspectName = attributeName.substring(0, separator);
+                String name = attributeName.substring(separator + 1);
+                if (aspectName.length() != 0 && name.length() != 0) {
+                    Map prefixMap = (Map) aspectMaps.get(aspectName);
+                    if (prefixMap == null) {
+                        prefixMap = new HashMap();
+                        aspectMaps.put(aspectName, prefixMap);
+                    }
+                    prefixMap.put(name, attributes.get(attributeName));
+                }
+            }
+        }
+    }
 
     /**
-     * Gets the location associated with the AntContext
+     * Get an iterator on the aspects which have been given values on this
+     * element
      *
-     * @return the location which may be the unknown location
+     * @return an iterator of Strings , being the aspects which have been
+     *      given values on this element.
      */
-    Location getLocation();
+    public Iterator getNames() {
+        return aspectMaps.keySet().iterator();
+    }
+
+    /**
+     * Get the set of attribute values related to the given aspect
+     *
+     * @param aspectName the aspect name
+     * @return a map of the attribute values for the given aspect.
+     */
+    public Map getAttributes(String aspectName) {
+        return (Map) aspectMaps.get(aspectName);
+    }
+
+    /**
+     * Get the value of a single aspect attribute
+     *
+     * @param aspectName the prefix which identifies the aspectr
+     * @param keyName the attribute name
+     * @return the aspect value
+     */
+    public String getAttributeValue(String aspectName, String keyName) {
+        Map aspectAttributes = getAttributes(aspectName);
+        if (aspectAttributes == null) {
+            return null;
+        }
+        return (String) aspectAttributes.get(keyName);
+    }
 }
 

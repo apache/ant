@@ -431,7 +431,8 @@
     <copy todir="${bin.dir}/ant1src_copy">
       <fileset refid="ant1src_tocopy"/>
     </copy>
-    <depend destdir="${bin.dir}/ant1compat" srcdir="${bin.dir}/ant1src_copy:${java.dir}/antlibs/ant1compat">
+    <depend destdir="${bin.dir}/ant1compat" srcdir="${bin.dir}/ant1src_copy:${java.dir}/antlibs/ant1compat" 
+            closure="yes">
       <classpath refid="classpath"/>
     </depend>
     <javac destdir="${bin.dir}/ant1compat" 

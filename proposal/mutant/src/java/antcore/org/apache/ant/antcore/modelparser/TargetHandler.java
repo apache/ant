@@ -105,7 +105,7 @@ public class TargetHandler extends ModelElementHandler {
         target = new Target(getLocation(), getAttribute(NAME_ATTR));
         setModelElement(target);
         target.setDescription(getAttribute(DESC_ATTR));
-        target.setAspects(getAspects());
+        target.addAspectAttributes(getAspectAttributes());
 
         String depends = getAttribute(DEPENDS_ATTR);
         if (depends != null) {

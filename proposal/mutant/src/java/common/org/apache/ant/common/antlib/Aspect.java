@@ -55,6 +55,7 @@ package org.apache.ant.common.antlib;
 
 import org.apache.ant.common.util.ExecutionException;
 import org.apache.ant.common.model.BuildElement;
+import org.apache.ant.common.model.AspectValueCollection;
 
 /**
  * An aspect is a component which is activated across all task and 
@@ -93,14 +94,17 @@ public interface Aspect {
      * This join point is activated just prior to task execution.
      *
      * @param task the task being executed.
-     *
-     * @return an objectwhich indicates that this aspect wishes to 
+     * @param aspectValues a collection of aspect attribute values for use 
+     *        during the task execution - may be null if no aspect values are
+     *        provided.
+     * @return an object which indicates that this aspect wishes to 
      * be notified after execution has been completed, in which case the obkect
      * is returned to provide the aspect its context. If this returns null
      * the aspect's postExecuteTask method will not be invoked.
      * @exception ExecutionException if the aspect cannot process the task.
      */
-    Object preExecuteTask(Task task) throws ExecutionException;
+    Object preExecuteTask(Task task, AspectValueCollection aspectValues) 
+        throws ExecutionException;
     
     /**
      * This join point is activated after a task has executed. The aspect

@@ -58,6 +58,7 @@ import java.util.Map;
 import org.apache.ant.common.antlib.Task;
 import org.apache.ant.common.model.Project;
 import org.apache.ant.common.util.ExecutionException;
+import org.apache.ant.common.model.AspectValueCollection;
 
 /**
  * The ExecService provides executiuon services to tasks
@@ -133,6 +134,21 @@ public interface ExecService {
     void executeTask(Task task) throws ExecutionException;
 
 
+    /**
+     * Execute a task with a set of aspect values. Normally aspect values come 
+     * from a build model but not all tasks will be created from a build model.
+     * Some may be created dynamically and configured programatically. This 
+     * method allows aspect values to provided for execution of such tasks since
+     * by their nature, aspect values are not part of the task configuration.
+     *
+     * @param task the task to be executed
+     * @param aspectValues the aspect attribute values.
+     * @exception ExecutionException if there is an execution problem
+     */
+    void executeTask(Task task, AspectValueCollection aspectValues) 
+         throws ExecutionException;
+         
+         
     /**
      * get the name of the project associated with this execution.
      *

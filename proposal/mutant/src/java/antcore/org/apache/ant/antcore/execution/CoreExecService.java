@@ -60,10 +60,13 @@ import java.util.Map;
 import org.apache.ant.antcore.modelparser.XMLProjectParser;
 import org.apache.ant.antcore.xml.XMLParseException;
 import org.apache.ant.common.antlib.Task;
+import org.apache.ant.common.antlib.AntContext;
 import org.apache.ant.common.model.Project;
+import org.apache.ant.common.model.BuildElement;
 import org.apache.ant.common.service.ExecService;
 import org.apache.ant.common.util.ExecutionException;
 import org.apache.ant.init.InitUtils;
+import org.apache.ant.common.model.AspectValueCollection;
 
 /**
  * This is the core's implementation of the Execution Service.
@@ -98,8 +101,54 @@ public class CoreExecService implements ExecService {
      * @exception ExecutionException if there is an execution problem
      */
     public void executeTask(Task task) throws ExecutionException {
-        frame.executeTask(task);
+        ExecutionContext execContext = getTaskExecutionContext(task);
+
+        BuildElement model = execContext.getModel();
+        AspectValueCollection aspectValues = null;
+        if (model != null) {
+            aspectValues = model.getAspectAttributes();
+        }
+        frame.executeTask(task, aspectValues);
     }
+    
+    /**
+     * Retrieve the execution context from a task and verify that the context
+     * is valid.
+     *
+     * @param task the task.
+     * @return the task's execution context.
+     *
+     * @exception ExecutionException if the task's context is not valid.
+     */
+    private ExecutionContext getTaskExecutionContext(Task task) 
+         throws ExecutionException {
+        AntContext context = task.getAntContext();
+
+        if (!(context instanceof ExecutionContext)) {
+            throw new ExecutionException("The Task was not configured with an"
+                 + " appropriate context");
+        }
+        return (ExecutionContext) context;
+    }
+    
+    /**
+     * Execute a task with a set of aspect values. Normally aspect values come 
+     * from a build model but not all tasks will be created from a build model.
+     * Some may be created dynamically and configured programatically. This 
+     * method allows aspect values to provided for execution of such tasks since
+     * by their nature, aspect values are not part of the task configuration.
+     *
+     * @param task the task to be executed
+     * @param aspectValues the aspect attribute values.
+     * @exception ExecutionException if there is an execution problem
+     */
+    public void executeTask(Task task, AspectValueCollection aspectValues) 
+         throws ExecutionException {
+        ExecutionContext execContext = getTaskExecutionContext(task);
+
+        frame.executeTask(task, aspectValues);
+    }
+    
 
 
     /**

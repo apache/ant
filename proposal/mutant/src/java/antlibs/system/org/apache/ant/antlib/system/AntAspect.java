@@ -52,11 +52,16 @@
  * <http://www.apache.org/>.
  */
 package org.apache.ant.antlib.system;
+
+import java.util.Map;
 import org.apache.ant.common.antlib.AbstractAspect;
 import org.apache.ant.common.antlib.AntContext;
+import org.apache.ant.common.antlib.Task;
 import org.apache.ant.common.service.DataService;
+import org.apache.ant.common.service.ComponentService;
 import org.apache.ant.common.util.ExecutionException;
 import org.apache.ant.common.model.BuildElement;
+import org.apache.ant.common.model.AspectValueCollection;
 
 /**
  * The Ant aspect - handles all ant aspects
@@ -70,6 +75,9 @@ public class AntAspect extends AbstractAspect {
     /** The core's data service implementation */
     private DataService dataService = null;
 
+    /** The core's component service */
+    private ComponentService componentService = null;
+
     /**
      * Initialise the aspect with a context. 
      *
@@ -79,6 +87,8 @@ public class AntAspect extends AbstractAspect {
     public void init(AntContext context) throws ExecutionException {
         super.init(context);
         dataService = (DataService) context.getCoreService(DataService.class);
+        componentService 
+            = (ComponentService) context.getCoreService(ComponentService.class);
     }
     
     /**
@@ -95,7 +105,7 @@ public class AntAspect extends AbstractAspect {
      */         
     public Object postCreateComponent(Object component, BuildElement model) 
          throws ExecutionException {
-        String typeId = model.getAspectValue(ANT_ASPECT, "id");
+        String typeId = model.getAspectAttributeValue(ANT_ASPECT, "id");
     
         if (typeId != null) {
             dataService.setMutableDataValue(typeId, component);
@@ -103,5 +113,51 @@ public class AntAspect extends AbstractAspect {
         
         return null;
     }
+
+    /**
+     * This join point is activated just prior to task execution.
+     *
+     * @param task the task being executed.
+     * @param aspectValues a collection of aspect attribute values for use 
+     *        during the task execution.
+     *
+     * @return an objectwhich indicates that this aspect wishes to 
+     * be notified after execution has been completed, in which case the obkect
+     * is returned to provide the aspect its context. If this returns null
+     * the aspect's postExecuteTask method will not be invoked.
+     * @exception ExecutionException if the aspect cannot process the task.
+     */
+    public Object preExecuteTask(Task task, AspectValueCollection aspectValues) 
+         throws ExecutionException {
+        AntAspectContext aspectContext = new AntAspectContext();
+        Map antAspectValues = aspectValues.getAttributes(ANT_ASPECT);
+        if (antAspectValues == null) {
+            return null;
+        }
+        
+        componentService.configureAttributes(aspectContext, antAspectValues);
+        if (aspectContext.isRequired()) {
+            return aspectContext;
+        }
+        return null;             
+    }
+    
+    /**
+     * This join point is activated after a task has executed. The aspect
+     * may override the task's failure cause by returning a new failure.
+     *
+     * @param context the context the aspect provided in preExecuteTask.
+     * @param failureCause the current failure reason for the task.
+     *
+     * @return a new failure reason or null if the task is not to fail.
+     */
+    public Throwable postExecuteTask(Object context, Throwable failureCause) {
+        AntAspectContext aspectContext = (AntAspectContext) context;
+        if (!aspectContext.getFailOnError()) {
+            return null;
+        }
+        return super.postExecuteTask(context, failureCause);
+    }
+
 }
 

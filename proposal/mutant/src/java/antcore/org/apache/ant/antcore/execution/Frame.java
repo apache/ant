@@ -65,12 +65,12 @@ import java.util.Set;
 import org.apache.ant.antcore.config.AntConfig;
 import org.apache.ant.common.antlib.Task;
 import org.apache.ant.common.antlib.Aspect;
-import org.apache.ant.common.antlib.AntContext;
 import org.apache.ant.common.event.BuildListener;
 import org.apache.ant.common.event.MessageLevel;
 import org.apache.ant.common.model.BuildElement;
 import org.apache.ant.common.model.Project;
 import org.apache.ant.common.model.Target;
+import org.apache.ant.common.model.AspectValueCollection;
 import org.apache.ant.common.service.ComponentService;
 import org.apache.ant.common.service.DataService;
 import org.apache.ant.common.service.EventService;
@@ -860,36 +860,32 @@ public class Frame implements DemuxOutputReceiver {
     }
 
     /**
-     * Execute a task notifiying all registered aspects of the fact
+     * Execute a task with the given aspect values.
      *
-     * @param task the Task instance to execute.
-     *
+     * @param task the task to be executed.
+     * @param aspectValues the collection of aspect attribute values.
      * @exception ExecutionException if the task has a problem.
      */
-    protected void executeTask(Task task) throws ExecutionException {
+    protected void executeTask(Task task, AspectValueCollection aspectValues) 
+         throws ExecutionException {
         List aspects = componentManager.getAspects();
         Map aspectContexts = new HashMap();
         for (Iterator i = aspects.iterator(); i.hasNext();) {
             Aspect aspect = (Aspect) i.next();
-            Object context = aspect.preExecuteTask(task);
-            aspectContexts.put(aspect, context);
+            Object aspectContext = aspect.preExecuteTask(task, aspectValues);
+            if (aspectContext != null) {
+                aspectContexts.put(aspect, aspectContext);
+            }
         }
         if (aspectContexts.size() != 0) {
             aspectContextsMap.put(task, aspectContexts);
         }
         
-        AntContext context = task.getAntContext();
-
-        if (!(context instanceof ExecutionContext)) {
-            throw new ExecutionException("The Task was not configured with an"
-                 + " appropriate context");
-        }
-        ExecutionContext execContext = (ExecutionContext) context;
-
         eventSupport.fireTaskStarted(task);
 
         Throwable failureCause = null;
 
+        ExecutionContext execContext = (ExecutionContext) task.getAntContext();
         try {
             ClassLoader currentLoader
                  = LoaderUtils.setContextLoader(execContext.getClassLoader());
@@ -949,7 +945,7 @@ public class Frame implements DemuxOutputReceiver {
                 }
 
                 if (component instanceof Task) {
-                    executeTask((Task) component);
+                    execService.executeTask((Task) component);
                 } 
             } catch (ExecutionException e) {
                 e.setLocation(model.getLocation(), false);

@@ -37,7 +37,7 @@
   <target name="build" depends="check_bsf, nobsf" if="bsf.present">
     <mkdir dir="${bin.dir}/antlibs/script"/>
     <mkdir dir="${distlib.dir}/antlibs"/>
-    <depend destdir="${bin.dir}/antlibs/script" srcdir="${java.dir}/antlibs/script">
+    <depend destdir="${bin.dir}/antlibs/script" srcdir="${java.dir}/antlibs/script" closure="yes">
       <classpath refid="classpath.script"/>
     </depend>
     <javac destdir="${bin.dir}/antlibs/script" srcdir="${java.dir}/antlibs/script" debug="${debug}">
