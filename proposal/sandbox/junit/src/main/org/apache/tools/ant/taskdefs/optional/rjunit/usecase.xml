@@ -1,0 +1,51 @@
+<project name="" basedir="." default="tests">
+
+    <target name="tests">
+
+        <rjunit port="1234">
+            <server>
+                <formatter type="xml" filters="stacktrace"/>
+                <formatter type="plain" filters="stacktrace"/>
+                <formatter type="jms" filters="stacktrace">
+                    <param name="queue" value="test_queue"/>
+                </formatter>
+                <formatter type="rmi" filters="stacktrace">
+                    <param name="host" value="127.0.0.1"/>
+                    <param name="port" value="6789"/>
+                </formatter>
+            </server>
+
+            <client host="127.0.0.1">
+                <classpath refid="test-classpath"/>
+                <jvmarg value="-Xmx=512MB"/>
+                <test name="org.apache.test.NullTest" if="condition1">
+                <batchtest path="${classpath}" unless="condition2">
+                    <include name="**Test*"/>
+                </batchtest>
+            </client>
+        <rjunit>
+    </target>
+
+    <target name="server-only">
+        <!-- will block until a client connect and finishes -->
+        <rjunit port="1234">
+            <server>
+                <formatter type="xml" filters="stacktrace"/>
+                    <param name="file" location="test.xml"/>
+                </formatter>
+            </server>
+       </rjunit>
+    </target>
+
+    <target name="server-only">
+        <!-- will connect to an existing server and send results -->
+        <rjunit port="1234">
+            <client host="127.0.0.1">
+                <classpath refid="test-classpath"/>
+                <jvmarg value="-Xmx=512MB"/>
+                <test name="org.apache.test.NullTest" if="condition1">
+            </client>
+       </rjunit>
+    </target>
+
+</project>
