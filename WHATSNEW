@@ -18,6 +18,8 @@ Fixed bugs:
 * AbstractCvsTask prematurely closed its outputStream and errorStream.
   Bugzilla 30097.
 
+* Target Location was always UNKNOWN_LOCATION due to an omitted merge.
+
 Changes from Ant 1.6.1 to Ant 1.6.2
 ===================================
 
