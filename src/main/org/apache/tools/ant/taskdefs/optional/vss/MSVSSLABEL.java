@@ -102,6 +102,7 @@ public class MSVSSLABEL extends MSVSS
 
     private String m_Label = null;
     private String m_Version = null;
+    private String m_Comment = "-";
 
     public static final String FLAG_LABEL = "-L";
 
@@ -137,8 +138,7 @@ public class MSVSSLABEL extends MSVSS
         commandLine.createArgument().setValue(getVsspath());
 
         // -C
-        // Use the same comment for all labels
-        // Not required
+        commandLine.createArgument().setValue("-C"+getComment());
 
         // -I-
         commandLine.createArgument().setValue("-I-");  // ignore all errors
@@ -222,4 +222,25 @@ public class MSVSSLABEL extends MSVSS
         return m_Label;
     }
 
+    /**
+     * Set the comment to apply in SourceSafe
+     * <p>
+     * If this is null or empty, it will be replaced with "-" which
+     * is what SourceSafe uses for an empty comment.
+     */
+    public void setComment(String comment) {
+        if ( comment.equals("") || comment.equals("null") ) {
+            m_Comment = "-";
+        } else {
+            m_Comment = comment;
+        }
+    }
+
+    /**
+     * Gets the comment to be applied.
+     * @return the comment to be applied.
+     */
+    public String getComment() {
+        return m_Comment;
+    }
 }
