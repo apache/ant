@@ -61,6 +61,8 @@ Other changes:
 * Enable to choose the regexp implementation without system property.
   Bugzilla Report 15390.
 
+* Expose objects and  methods in IntrospectionHelper. Bugzilla Report 30794.
+
 Fixed bugs:
 -----------
 
