@@ -276,6 +276,7 @@
       <exclude name="${optional.package}/net/FTP.java" unless="netcomp.present" />
       <exclude name="${optional.package}/net/TelnetTask.java" unless="netcomp.present" />
       <exclude name="${optional.package}/scm/AntStarTeam*.java" unless="starteam.present" />
+      <exclude name="${optional.package}/starteam/*.java" unless="starteam.present" />
       <exclude name="${optional.package}/ANTLR.java" unless="antlr.present" />
       <exclude name="${optional.package}/ide/VAJ*.java" unless="vaj.present" />
       <exclude name="${optional.package}/ide/VAJ*Servlet.java"
