@@ -30,14 +30,11 @@ import org.apache.tools.ant.types.FileSet;
 import org.apache.tools.ant.util.JavaEnvUtils;
 
 /**
- * Signs jar or zip files with the javasign command line tool. The
+ * Signs JAR or ZIP files with the javasign command line tool. The
  * tool detailed dependency checking: files are only signed if they
  * are not signed. The <tt>signjar</tt> attribute can point to the file to
  * generate; if this file exists then
  * its modification date is used as a cue as to whether to resign any JAR file.
- * <br>
- * <strong>Note:</strong> Requires Java 1.2 or later. </p>
-
  *
  * @since Ant 1.1
  * @ant.task category="java"
@@ -299,7 +296,7 @@ public class SignJar extends Task {
 
         cmd.createArg().setValue(alias);
 
-        log("Signing Jar : " + jarSource.getAbsolutePath());
+        log("Signing JAR: " + jarSource.getAbsolutePath());
         cmd.setFailonerror(true);
         cmd.setTaskName(getTaskName());
         cmd.execute();
@@ -333,6 +330,12 @@ public class SignJar extends Task {
         return false;
     }
 
+    /**
+     * test for a file being signed, by looking for a signature in the META-INF
+     * directory
+     * @param file
+     * @return true if the file is signed
+     */
     protected boolean isSigned(File file) {
         final String SIG_START = "META-INF/";
         final String SIG_END = ".SF";
