@@ -219,6 +219,9 @@ Fixed bugs:
 * ftp chmod failed when the remote system was UNIX and local system Windows
   Bugzilla Report 21865.
 
+* ftp put with chmod failed when the remote system was UNIX and local system Windows
+  Bugzilla Report 23143.
+
 * ftp did not set the ascii mode explicity, causing problems with ftp servers
   having binary as default
 

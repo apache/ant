@@ -1706,7 +1706,7 @@ public class FTP
             } else {
                 // see if we should issue a chmod command
                 if (chmod != null) {
-                    doSiteCommand(ftp, "chmod " + chmod + " " + filename);
+                    doSiteCommand(ftp, "chmod " + chmod + " " + resolveFile(filename));
                 }
                 log("File " + file.getAbsolutePath() + " copied to " + server,
                     Project.MSG_VERBOSE);
