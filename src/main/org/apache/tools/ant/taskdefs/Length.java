@@ -29,6 +29,7 @@ import org.apache.tools.ant.Project;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.DirectoryScanner;
 import org.apache.tools.ant.types.FileSet;
+import org.apache.tools.ant.types.Resource;
 import org.apache.tools.ant.types.EnumeratedAttribute;
 import org.apache.tools.ant.util.FileUtils;
 
@@ -147,31 +148,35 @@ public class Length extends Task {
     }
 
     private void handleFilesets(Handler h) {
-        HashSet included = new HashSet(filesets.size() * 10);
+        HashSet included = new HashSet(filesets.size());
         for (int i = 0; i < filesets.size(); i++) {
             FileSet fs = (FileSet) (filesets.get(i));
             DirectoryScanner ds = fs.getDirectoryScanner(getProject());
-            File basedir = fs.getDir(getProject());
             String[] f = ds.getIncludedFiles();
             for (int j = 0; j < f.length; j++) {
-                File file = FileUtils.getFileUtils().resolveFile(basedir, f[j]);
-                if (included.add(file)) {
-                    h.handle(file);
+                Resource r = ds.getResource(f[j]);
+                if (!r.isExists()) {
+                    log(r.getName() + " does not exist", Project.MSG_ERR);
+                } else if (r.isDirectory()) {
+                    log(r.getName() + " is a directory; length unspecified",
+                        Project.MSG_ERR);
+                } else {
+                    //clone the Resource and alter path
+                    File basedir = ds.getBasedir();
+                    if (basedir != null) {
+                        r = (Resource) (r.clone());
+                        r.setName(FileUtils.getFileUtils().resolveFile(
+                            basedir, r.getName()).getAbsolutePath());
+                    }
+                    if (included.add(r.getName())) {
+                        h.handle(r);
+                    }
                 }
             }
         }
         included.clear();
         included = null;
         h.complete();
-    }
-
-    private static long getLength(File f) {
-        //should be an existing file
-        if (!(f.isFile())) {
-            throw new BuildException("The absolute pathname " + f
-                + " does not denote an existing file.");
-        }
-        return f.length();
     }
 
     /** EnumeratedAttribute operation mode */
@@ -201,7 +206,7 @@ public class Length extends Task {
             this.ps = ps;
         }
 
-        protected abstract void handle(File f);
+        protected abstract void handle(Resource r);
 
         void complete() {
             ps.close();
@@ -212,11 +217,16 @@ public class Length extends Task {
         EachHandler(PrintStream ps) {
             super(ps);
         }
-        protected void handle(File f) {
-            ps.print(f);
+        protected void handle(Resource r) {
+            ps.print(r.getName());
             ps.print(" : ");
             //when writing to the log, we'll see what's happening:
-            ps.println(getLength(f));
+            long size = r.getSize();
+            if (size == Resource.UNKNOWN_SIZE) {
+                ps.println("unknown");
+            } else {
+                ps.println(size);
+            }
        }
     }
 
@@ -225,8 +235,13 @@ public class Length extends Task {
         AllHandler(PrintStream ps) {
             super(ps);
         }
-        protected synchronized void handle(File f) {
-            length += getLength(f);
+        protected synchronized void handle(Resource r) {
+            long size = r.getSize();
+            if (size == Resource.UNKNOWN_SIZE) {
+                log("Size unknown for " + r.getName(), Project.MSG_WARN);
+            } else {
+                length += size;
+            }
         }
         void complete() {
             ps.print(length);

@@ -226,7 +226,8 @@ public class ZipScanner extends DirectoryScanner {
                 myentries.put(new String(entry.getName()),
                               new Resource(entry.getName(), true,
                                            entry.getTime(),
-                                           entry.isDirectory()));
+                                           entry.isDirectory(),
+                                           entry.getSize()));
             }
         } finally {
             if (zf != null) {

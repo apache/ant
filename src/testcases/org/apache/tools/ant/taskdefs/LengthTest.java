@@ -71,4 +71,7 @@ public class LengthTest extends BuildFileTest {
         executeTarget("testImmutable");
     }
 
+    public void testZipFileSet() {
+        executeTarget("testZipFileSet");
+    }
 }

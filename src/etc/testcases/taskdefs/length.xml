@@ -2,6 +2,7 @@
   <property name="dir" location="lengthtestdir" />
   <property name="dir.a" location="${dir}/a" />
   <property name="dir.b" location="${dir}/b" />
+  <property name="zipfile" location="lengthtest.zip" />
 
   <target name="init">
     <mkdir dir="${dir.a}" />
@@ -116,8 +117,32 @@
     </fail>
   </target>
 
+  <target name="testZipFileSet" depends="init">
+    <zip destfile="${zipfile}">
+      <fileset file="${foo}" />
+      <fileset file="${bar}" />
+    </zip>
+    <length property="length.zipfile1">
+      <zipfileset src="${zipfile}" />
+    </length>
+    <length property="length.zipfile2">
+      <zipfileset src="${zipfile}" includes="bar" />
+    </length>
+    <fail>
+      <condition>
+        <not>
+          <and>
+            <equals arg1="6" arg2="${length.zipfile1}" />
+            <equals arg1="3" arg2="${length.zipfile2}" />
+          </and>
+        </not>
+      </condition>
+    </fail>
+  </target>
+
   <target name="cleanup">
     <delete dir="${dir}" />
+    <delete file="${zipfile}" />
   </target>
 
 </project>
