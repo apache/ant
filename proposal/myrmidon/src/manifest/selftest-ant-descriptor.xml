@@ -1,0 +1,13 @@
+<ant-lib>
+  
+  <types>
+
+    <!-- tasks to test operation of engine -->
+    <task name="prim-test" classname="org.apache.myrmidon.libs.selftest.PrimitiveTypesTest" />
+    <task name="sub-elements-test" classname="org.apache.myrmidon.libs.selftest.SubElementTest" />
+    <task name="conf-test" classname="org.apache.myrmidon.libs.selftest.ConfigurationTest" />
+    <task name="content-test" classname="org.apache.myrmidon.libs.selftest.ContentTest" />
+
+  </types>
+
+</ant-lib>
