@@ -71,15 +71,22 @@ import org.apache.tools.ant.util.DOMElementWriter;
 import org.apache.tools.ant.util.StringUtils;
 
 /**
- *  Generates a "log.xml" file in the current directory with
- *  an XML description of what happened during a build.
+ * Generates a file in the current directory with
+ * an XML description of what happened during a build.
+ * The default filename is "log.xml", but this can be overridden
+ * with the property <code>XmlLogger.file</code>
  *
- *  @see Project#addBuildListener(BuildListener)
+ * @see Project#addBuildListener(BuildListener)
  */
 public class XmlLogger implements BuildListener {
 
+    /** DocumentBuilder to use when creating the document to start with. */
     private final static DocumentBuilder builder = getDocumentBuilder();
 
+    /** 
+     * Returns a default DocumentBuilder instance or throws an
+     * ExceptionInInitializerError if it can't be created.
+     */
     private static DocumentBuilder getDocumentBuilder() {
         try {
             return DocumentBuilderFactory.newInstance().newDocumentBuilder();
@@ -89,24 +96,52 @@ public class XmlLogger implements BuildListener {
         }
     }
 
-    // XML constants for tag names and attribute names
+    /** XML element name for a build. */
     private final static String BUILD_TAG = "build";
+    /** XML element name for a target. */
     private final static String TARGET_TAG = "target";
+    /** XML element name for a task. */
     private final static String TASK_TAG = "task";
+    /** XML element name for a message. */
     private final static String MESSAGE_TAG = "message";
+    /** XML attribute name for a name. */
     private final static String NAME_ATTR = "name";
+    /** XML attribute name for a time. */
     private final static String TIME_ATTR = "time";
+    /** XML attribute name for a message priority. */
     private final static String PRIORITY_ATTR = "priority";
+    /** XML attribute name for a file location. */
     private final static String LOCATION_ATTR = "location";
+    /** XML attribute name for an error description. */
     private final static String ERROR_ATTR = "error";
+    /** XML element name for a stack trace. */
     private final static String STACKTRACE_TAG = "stacktrace";
 
+    /** The complete log document for this build. */
     private Document doc = builder.newDocument();
+    // XXX: (Jon Skeet) I don't see the use for these maps, myself,
+    // and they don't seem threadsafe to me. Is there something
+    // preventing a task being executed by two different threads
+    // at the same time? If not, we could get a mismatch error
+    // for no good reason. I'd have thought that checking
+    // the information in the element stored in the TimedElement
+    // would give enough of a validity check and end up being more 
+    // threadsafe.
+    /** Mapping for when tasks started (Task to TimedElement). */
     private Hashtable tasks = new Hashtable();
+    /** Mapping for when targets started (Task to TimedElement). */
     private Hashtable targets = new Hashtable();
+    /** 
+     * Mapping of threads to stacks of elements 
+     * (Thread to Stack of TimedElement).
+     */
     private Hashtable threadStacks = new Hashtable();
+    /**
+     * When the build started.
+     */
     private TimedElement buildElement = null;
 
+    /** Utility class representing the time an element started. */
     private static class TimedElement {
         long startTime;
         Element element;
@@ -118,12 +153,25 @@ public class XmlLogger implements BuildListener {
     public XmlLogger() {
     }
 
+    /**
+     * Fired when the build starts, this builds the top-level element for the
+     * document and remembers the time of the start of the build.
+     * 
+     * @param event Ignored.
+     */
     public void buildStarted(BuildEvent event) {
         buildElement = new TimedElement();
         buildElement.startTime = System.currentTimeMillis();
         buildElement.element = doc.createElement(BUILD_TAG);
     }
 
+    /**
+     * Fired when the build finishes, this adds the time taken and any
+     * error stacktrace to the build element and writes the document to disk.
+     * 
+     * @param event An event with any relevant extra information.
+     *              Will not be <code>null</code>.
+     */
     public void buildFinished(BuildEvent event) {
         long totalTime = System.currentTimeMillis() - buildElement.startTime;
         buildElement.element.setAttribute(TIME_ATTR, DefaultLogger.formatTime(totalTime));
@@ -165,6 +213,10 @@ public class XmlLogger implements BuildListener {
         buildElement = null;
     }
 
+    /** 
+     * Returns the stack of timed elements for the current thread.
+     * @return the stack of timed elements for the current thread
+     */
     private Stack getStack() {    
         Stack threadStack = (Stack)threadStacks.get(Thread.currentThread());
         if (threadStack == null) {
@@ -174,6 +226,14 @@ public class XmlLogger implements BuildListener {
         return threadStack;
     }
 
+    /**
+     * Fired when a target starts building, this pushes a timed element
+     * for the target onto the stack of elements for the current thread,
+     * rememebering the current time and the name of the target.
+     * 
+     * @param event An event with any relevant extra information.
+     *              Will not be <code>null</code>.
+     */
     public void targetStarted(BuildEvent event) {
         Target target = event.getTarget();
         TimedElement targetElement = new TimedElement();
@@ -184,6 +244,13 @@ public class XmlLogger implements BuildListener {
         getStack().push(targetElement);
     }
 
+    /**
+     * Fired when a target finishes building, this adds the time taken
+     * and any error stacktrace to the appropriate target element in the log.
+     * 
+     * @param event An event with any relevant extra information.
+     *              Will not be <code>null</code>.
+     */
     public void targetFinished(BuildEvent event) {
         Target target = event.getTarget();
         TimedElement targetElement = (TimedElement)targets.get(target);
@@ -212,6 +279,14 @@ public class XmlLogger implements BuildListener {
         }
     }
 
+    /**
+     * Fired when a task starts building, this pushes a timed element
+     * for the task onto the stack of elements for the current thread,
+     * rememebering the current time and the name of the task.
+     * 
+     * @param event An event with any relevant extra information.
+     *              Will not be <code>null</code>.
+     */
     public void taskStarted(BuildEvent event) {
         Task task = event.getTask();
         TimedElement taskElement = new TimedElement();
@@ -225,6 +300,13 @@ public class XmlLogger implements BuildListener {
         getStack().push(taskElement);
     }
 
+    /**
+     * Fired when a task finishes building, this adds the time taken
+     * and any error stacktrace to the appropriate task element in the log.
+     * 
+     * @param event An event with any relevant extra information.
+     *              Will not be <code>null</code>.
+     */
     public void taskFinished(BuildEvent event) {
         Task task = event.getTask();
         TimedElement taskElement = (TimedElement)tasks.get(task);
@@ -253,6 +335,14 @@ public class XmlLogger implements BuildListener {
         }
     }
 
+    /**
+     * Fired when a message is logged, this adds a message element to the
+     * most appropriate parent element (task, target or build) and records
+     * the priority and text of the message.
+     * 
+     * @param event An event with any relevant extra information.
+     *              Will not be <code>null</code>.
+     */
     public void messageLogged(BuildEvent event) {
         Element messageElement = doc.createElement(MESSAGE_TAG);
 
@@ -295,5 +385,4 @@ public class XmlLogger implements BuildListener {
             buildElement.element.appendChild(messageElement);
         }
     }
-
 }
