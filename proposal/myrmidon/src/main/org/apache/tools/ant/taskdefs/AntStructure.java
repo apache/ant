@@ -16,12 +16,8 @@ import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
 import java.util.Enumeration;
 import java.util.Hashtable;
-import java.util.Vector;
 import org.apache.myrmidon.api.TaskException;
-import org.apache.tools.ant.IntrospectionHelper;
 import org.apache.tools.ant.Task;
-import org.apache.tools.ant.TaskContainer;
-import org.apache.tools.ant.types.EnumeratedAttribute;
 
 /**
  * Creates a partial DTD for Ant from the currently known tasks.
@@ -170,6 +166,7 @@ public class AntStructure extends Task
         }
         visited.put( name, "" );
 
+        /*
         IntrospectionHelper ih = null;
         try
         {
@@ -177,11 +174,8 @@ public class AntStructure extends Task
         }
         catch( Throwable t )
         {
-            /*
-             * XXX - failed to load the class properly.
-             *
-             * should we print a warning here?
-             */
+            // FIXME: failed to load the class properly.
+            // should we print a warning here?
             return;
         }
 
@@ -318,6 +312,7 @@ public class AntStructure extends Task
                 printElementDecl( out, nestedName, ih.getElementType( nestedName ) );
             }
         }
+        */
     }
 
     private void printHead( PrintWriter out, Enumeration tasks,
