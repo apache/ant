@@ -106,6 +106,23 @@ public class JavaCC extends Task {
 
     private CommandlineJava cmdl = new CommandlineJava();
 
+    protected static final int TASKDEF_TYPE_JAVACC = 1;
+    protected static final int TASKDEF_TYPE_JJTREE = 2;
+    protected static final int TASKDEF_TYPE_JJDOC = 3;
+
+    protected static final String[] ARCHIVE_LOCATIONS = 
+        new String[] {"JavaCC.zip", "bin/lib/JavaCC.zip", 
+                      "bin/lib/javacc.jar"};
+
+    protected static final String COM_PACKAGE = "COM.sun.labs.";
+    protected static final String COM_JAVACC_CLASS = "javacc.Main";
+    protected static final String COM_JJTREE_CLASS = "jjtree.Main";
+    protected static final String COM_JJDOC_CLASS = "jjdoc.JJDocMain";
+
+    protected static final String ORG_PACKAGE = "org.netbeans.javacc.";
+    protected static final String ORG_JAVACC_CLASS = "parser.Main";
+    protected static final String ORG_JJTREE_CLASS = COM_JJTREE_CLASS;
+    protected static final String ORG_JJDOC_CLASS = COM_JJDOC_CLASS;
 
     /**
      * Sets the LOOKAHEAD grammar option.
@@ -272,7 +289,6 @@ public class JavaCC extends Task {
 
     public JavaCC() {
         cmdl.setVm(JavaEnvUtils.getJreExecutable("java"));
-        cmdl.setClassname("COM.sun.labs.javacc.Main");
     }
 
     public void execute() throws BuildException {
@@ -307,6 +323,9 @@ public class JavaCC extends Task {
         }
         cmdl.createArgument().setValue(target.getAbsolutePath());
 
+        cmdl.setClassname(JavaCC.getMainClass(javaccHome,
+                                              JavaCC.TASKDEF_TYPE_JAVACC));
+
         final Path classpath = cmdl.createClasspath(getProject());
         final File javaccJar = JavaCC.getArchiveFile(javaccHome);
         classpath.createPathElement().setPath(javaccJar.getAbsolutePath());
@@ -320,34 +339,114 @@ public class JavaCC extends Task {
     }
 
     /**
-     * Helper class to retrieve the path used to store the JavaCC.zip which is
-     * different from versions.
+     * Helper method to retrieve the path used to store the JavaCC.zip
+     * or javacc.jar which is different from versions.
+     *
      * @param home the javacc home path directory.
-     * @throws BuildException thrown if the home directory is invalid or if the archive
-     * could not be found despite attemps to do so.
+     * @throws BuildException thrown if the home directory is invalid
+     * or if the archive could not be found despite attempts to do so.
      * @return the file object pointing to the JavaCC archive.
      */
     protected static File getArchiveFile(File home) throws BuildException {
+        return new File(home, 
+                        ARCHIVE_LOCATIONS[getMajorVersionNumber(home) - 1]);
+    }
+
+    /**
+     * Helper method to retrieve main class which is different from versions.
+     * @param home the javacc home path directory.
+     * @param type the taskdef.
+     * @throws BuildException thrown if the home directory is invalid
+     * or if the archive could not be found despite attempts to do so.
+     * @return the main class for the taskdef.
+     */
+    protected static String getMainClass(File home, int type) 
+        throws BuildException {
+
+        int majorVersion = getMajorVersionNumber(home);
+        String packagePrefix = null;
+        String mainClass = null;
+
+        switch (majorVersion) {
+            case 1:
+            case 2:
+                packagePrefix = COM_PACKAGE;
+
+                switch (type) {
+                    case TASKDEF_TYPE_JAVACC:
+                        mainClass = COM_JAVACC_CLASS;
+
+                        break;
+
+                    case TASKDEF_TYPE_JJTREE:
+                        mainClass = COM_JJTREE_CLASS;
+
+                        break;
+
+                    case TASKDEF_TYPE_JJDOC:
+                        mainClass = COM_JJDOC_CLASS;
+
+                        break;
+                }
+
+                break;
+
+            case 3:
+                packagePrefix = ORG_PACKAGE;
+
+                switch (type) {
+                    case TASKDEF_TYPE_JAVACC:
+                        mainClass = ORG_JAVACC_CLASS;
+
+                        break;
+
+                    case TASKDEF_TYPE_JJTREE:
+                        mainClass = ORG_JJTREE_CLASS;
+
+                        break;
+
+                    case TASKDEF_TYPE_JJDOC:
+                        mainClass = ORG_JJDOC_CLASS;
+
+                        break;
+                }
+
+                break;
+        }
+
+        return packagePrefix + mainClass;
+    }
+
+    /**
+     * Helper method to determine the major version number of JavaCC.
+     * @param home the javacc home path directory.
+     * @throws BuildException thrown if the home directory is invalid
+     * or if the archive could not be found despite attempts to do so.
+     * @return the file object pointing to the JavaCC archive.
+     */
+    protected static int getMajorVersionNumber(File home) 
+        throws BuildException {
+
         if (home == null || !home.isDirectory()) {
             throw new BuildException("JavaCC home must be a valid directory.");
         }
-        // javacc prior to 2.0
-        File f = new File(home, "JavaCC.zip");
-        if (f.exists()){
-          return f;
+
+        for (int i = 0; i < ARCHIVE_LOCATIONS.length; i++) {
+            File f = new File(home, ARCHIVE_LOCATIONS[i]);
+
+            if (f.exists()){
+                return (i + 1);
+            }
         }
-        // javacc install 2.0+
-        f = new File(home, "bin/lib/JavaCC.zip");
-        if (f.exists()){
-          return f;
-        }
-        throw new BuildException("Could not find a path to JavaCC.zip from '" + home + "'.");
+
+        throw new BuildException("Could not find a path to JavaCC.zip "
+                                 + "or javacc.jar from '" + home + "'.");
     }
 
     /**
      * Determines the output Java file to be generated by the given grammar
      * file.
-     * 
+     *
      */
     private File getOutputJavaFile(File outputdir, File srcfile) {
         String path = srcfile.getPath();

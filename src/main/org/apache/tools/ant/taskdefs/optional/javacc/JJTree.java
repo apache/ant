@@ -202,7 +202,6 @@ public class JJTree extends Task {
 
     public JJTree() {
         cmdl.setVm(JavaEnvUtils.getJreExecutable("java"));
-        cmdl.setClassname("COM.sun.labs.jjtree.Main");
     }
 
     public void execute() throws BuildException {
@@ -218,30 +217,33 @@ public class JJTree extends Task {
         if (target == null || !target.isFile()) {
             throw new BuildException("Invalid target: " + target);
         }
-        
+
         // use the directory containing the target as the output directory
         if (outputDirectory == null) {
             outputDirectory = new File(target.getParent());
-        }        
+        }
         if (!outputDirectory.isDirectory()) {
-            throw new BuildException("'outputdirectory' " + outputDirectory 
+            throw new BuildException("'outputdirectory' " + outputDirectory
                 + " is not a directory.");
         }
         // convert backslashes to slashes, otherwise jjtree will put this as
         // comments and this seems to confuse javacc
-        cmdl.createArgument().setValue("-OUTPUT_DIRECTORY:" 
+        cmdl.createArgument().setValue("-OUTPUT_DIRECTORY:"
             + outputDirectory.getAbsolutePath().replace('\\', '/'));
-        
+
         String targetName = target.getName();
         final File javaFile = new File(outputDirectory,
             targetName.substring(0, targetName.indexOf(".jjt")) + ".jj");
-        if (javaFile.exists() 
+        if (javaFile.exists()
              && target.lastModified() < javaFile.lastModified()) {
             log("Target is already built - skipping (" + target + ")",
                 Project.MSG_VERBOSE);
             return;
         }
         cmdl.createArgument().setValue(target.getAbsolutePath());
+
+        cmdl.setClassname(JavaCC.getMainClass(javaccHome, 
+                                              JavaCC.TASKDEF_TYPE_JJTREE));
 
         final Path classpath = cmdl.createClasspath(getProject());
         final File javaccJar = JavaCC.getArchiveFile(javaccHome);

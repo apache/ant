@@ -218,6 +218,8 @@ Other changes:
 
 * The JProbe tasks now also work with JProbe 4.x.  Bugzilla Report 14849.
 
+* <javacc> and <jjtree> will now autodetect JavaCC 3.x and can use it.
+
 Changes from Ant 1.5.2 to Ant 1.5.3
 ===================================
 
