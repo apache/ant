@@ -10,3 +10,5 @@ distribution
 velocity.log*
 patch.txt
 patch.tar.gz
+.classpath
+.project
