@@ -138,7 +138,7 @@ public abstract class CCMatchingTask extends MatchingTask {
     }
 
     protected Hashtable getFiles(){
-        if (files == null){
+        if (files != null){
             return files;
         }
         files = new Hashtable();

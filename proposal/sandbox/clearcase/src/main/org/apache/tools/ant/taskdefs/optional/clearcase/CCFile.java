@@ -123,7 +123,7 @@ public class CCFile extends File {
      * first access.
      */
     public void refresh() {
-        String[] args = {"describe", "-fmt", "%m %o", getAbsolutePath() };
+        String[] args = {"describe", "-fmt", "\"%m %o\"", getAbsolutePath() };
         CmdResult res = CCUtils.cleartool(args);
         if (res.getStatus() != 0){
             throw new BuildException(res.getStdErr());
