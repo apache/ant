@@ -116,6 +116,11 @@ echo ... Compiling Ant Classes
     ${TOOLS}/ant/*.java ${TOOLS}/ant/taskdefs/*.java \
     ${TOOLS}/ant/taskdefs/compilers/*.java \
     ${TOOLS}/ant/taskdefs/condition/*.java
+ret=$?
+if [ $ret != 0 ]; then  
+  echo ... Failed compiling Ant classes !
+  exit $ret
+fi
 
 echo ... Copying Required Files
 
@@ -129,6 +134,12 @@ chmod +x bin/antRun
 echo ... Building Ant Distribution
 
 "${JAVACMD}" -classpath "${CLASSPATH}" -Dant.home=. org.apache.tools.ant.Main -emacs "$@" bootstrap
+ret=$?
+if [ $ret != 0 ]; then  
+  echo ... Failed Building Ant Distribution !
+  exit $ret
+fi
+
 
 echo ... Cleaning Up Build Directories
 
