@@ -416,7 +416,6 @@ public class Path
      * @exception TaskException Description of Exception
      */
     public Path createPath()
-        throws TaskException
     {
         final Path other = new Path();
         elements.add( other );
@@ -443,18 +442,6 @@ public class Path
         for( int i = 0; i < elements.size(); i++ )
         {
             Object o = elements.get( i );
-            if( o instanceof Reference )
-            {
-                Reference r = (Reference)o;
-                o = r.getReferencedObject( getProject() );
-                // we only support references to paths right now
-                if( !( o instanceof Path ) )
-                {
-                    String msg = r.getRefId() + " doesn\'t denote a path";
-                    throw new TaskException( msg );
-                }
-            }
-
             if( o instanceof String )
             {
                 // obtained via append
@@ -465,7 +452,7 @@ public class Path
                 String[] parts = ( (PathElement)o ).getParts();
                 if( parts == null )
                 {
-                    throw new TaskException( "You must either set location or path on <pathelement>" );
+                    throw new NullPointerException( "You must either set location or path on <pathelement>" );
                 }
                 for( int j = 0; j < parts.length; j++ )
                 {
@@ -483,10 +470,10 @@ public class Path
             }
             else if( o instanceof FileSet )
             {
-                FileSet fs = (FileSet)o;
-                DirectoryScanner ds = fs.getDirectoryScanner();
-                String[] s = ds.getIncludedFiles();
-                File dir = fs.getDir();
+                final FileSet fs = (FileSet)o;
+                final DirectoryScanner ds = fs.getDirectoryScanner();
+                final String[] s = ds.getIncludedFiles();
+                final File dir = fs.getDir();
                 for( int j = 0; j < s.length; j++ )
                 {
                     File f = new File( dir, s[ j ] );
