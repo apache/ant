@@ -150,7 +150,6 @@ public class PreSetDef extends Task implements AntlibInterface, TaskContainer {
             nestedTask.getNamespace(), nestedTask.getTag());
 
         AntTypeDefinition def = helper.getDefinition(componentName);
-
         if (def == null) {
             throw new BuildException(
                 "Unable to find typedef " + componentName);
@@ -263,6 +262,18 @@ public class PreSetDef extends Task implements AntlibInterface, TaskContainer {
             }
             element.configure(o);
             return o;
+        }
+
+        /**
+         * Equality method for this definition
+         * This only checks for pointer equality.
+         *
+         * @param other another definition
+         * @param project the current project
+         * @return true if the definitions are the same
+         */
+        public boolean sameDefinition(AntTypeDefinition other, Project project) {
+            return this == other;
         }
     }
 }
