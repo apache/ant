@@ -115,9 +115,9 @@ public class CBZip2OutputStream extends OutputStream implements BZip2Constants {
         int nNodes, nHeap, n1, n2, i, j, k;
         boolean  tooLong;
 
-        int heap[] = new int[MAX_ALPHA_SIZE + 2];
-        int weight[] = new int[MAX_ALPHA_SIZE * 2];
-        int parent[] = new int[MAX_ALPHA_SIZE * 2];
+        int[] heap = new int[MAX_ALPHA_SIZE + 2];
+        int[] weight = new int[MAX_ALPHA_SIZE * 2];
+        int[] parent = new int[MAX_ALPHA_SIZE * 2];
 
         for (i = 0; i < alphaSize; i++) {
             weight[i+1] = (freq[i] == 0 ? 1 : freq[i]) << 8;
@@ -278,24 +278,24 @@ public class CBZip2OutputStream extends OutputStream implements BZip2Constants {
     int bsLive;
     CRC mCrc = new CRC();
 
-    private boolean inUse[] = new boolean[256];
+    private boolean[] inUse = new boolean[256];
     private int nInUse;
 
-    private char seqToUnseq[] = new char[256];
-    private char unseqToSeq[] = new char[256];
+    private char[] seqToUnseq = new char[256];
+    private char[] unseqToSeq = new char[256];
 
-    private char selector[] = new char[MAX_SELECTORS];
-    private char selectorMtf[] = new char[MAX_SELECTORS];
+    private char[] selector = new char[MAX_SELECTORS];
+    private char[] selectorMtf = new char[MAX_SELECTORS];
 
-    private char block[];
-    private int quadrant[];
-    private int zptr[];
-    private short szptr[];
-    private int ftab[];
+    private char[] block;
+    private int[] quadrant;
+    private int[] zptr;
+    private short[] szptr;
+    private int[] ftab;
 
     private int nMTF;
 
-    private int mtfFreq[] = new int[MAX_ALPHA_SIZE];
+    private int[] mtfFreq = new int[MAX_ALPHA_SIZE];
 
     /*
      * Used when sorting.  If too many long comparisons
@@ -668,9 +668,9 @@ public class CBZip2OutputStream extends OutputStream implements BZip2Constants {
             }
         }
 
-        int rfreq[][] = new int[N_GROUPS][MAX_ALPHA_SIZE];
-        int fave[] = new int[N_GROUPS];
-        short cost[] = new short[N_GROUPS];
+        int[][] rfreq = new int[N_GROUPS][MAX_ALPHA_SIZE];
+        int[] fave = new int[N_GROUPS];
+        short[] cost = new short[N_GROUPS];
         /*
           Iterate up to N_ITERS times to improve the tables.
         */
@@ -783,7 +783,7 @@ public class CBZip2OutputStream extends OutputStream implements BZip2Constants {
 
         /* Compute MTF values for the selectors. */
         {
-            char pos[] = new char[N_GROUPS];
+            char[] pos = new char[N_GROUPS];
             char ll_i, tmp2, tmp;
             for (i = 0; i < nGroups; i++) {
                 pos[i] = (char)i;
@@ -803,7 +803,7 @@ public class CBZip2OutputStream extends OutputStream implements BZip2Constants {
             }
         }
 
-        int code[][] = new int[N_GROUPS][MAX_ALPHA_SIZE];
+        int[][] code = new int[N_GROUPS][MAX_ALPHA_SIZE];
 
         /* Assign actual codes for the tables. */
         for (t = 0; t < nGroups; t++) {
@@ -828,7 +828,7 @@ public class CBZip2OutputStream extends OutputStream implements BZip2Constants {
 
         /* Transmit the mapping table. */
         {
-            boolean inUse16[] = new boolean[16];
+            boolean[] inUse16 = new boolean[16];
             for (i = 0; i < 16; i++) {
                 inUse16[i] = false;
                 for (j = 0; j < 16; j++) {
@@ -1160,9 +1160,9 @@ public class CBZip2OutputStream extends OutputStream implements BZip2Constants {
 
     private void mainSort() {
         int i, j, ss, sb;
-        int runningOrder[] = new int[256];
-        int copy[] = new int[256];
-        boolean bigDone[] = new boolean[256];
+        int[] runningOrder = new int[256];
+        int[] copy = new int[256];
+        boolean[] bigDone = new boolean[256];
         int c1, c2;
         int numQSorted;
 
@@ -1539,7 +1539,7 @@ public class CBZip2OutputStream extends OutputStream implements BZip2Constants {
       because the number of elems to sort is
       usually small, typically <= 20.
     */
-    private int incs[] = { 1, 4, 13, 40, 121, 364, 1093, 3280,
+    private int[] incs = { 1, 4, 13, 40, 121, 364, 1093, 3280,
                            9841, 29524, 88573, 265720,
                            797161, 2391484 };
 
@@ -1573,7 +1573,7 @@ public class CBZip2OutputStream extends OutputStream implements BZip2Constants {
     }
 
     private void generateMTFValues() {
-        char yy[] = new char[256];
+        char[] yy = new char[256];
         int  i, j;
         char tmp;
         char tmp2;

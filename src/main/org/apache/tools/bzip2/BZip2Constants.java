@@ -79,7 +79,7 @@ public interface BZip2Constants {
     int MAX_SELECTORS = (2 + (900000 / G_SIZE));
     int NUM_OVERSHOOT_BYTES = 20;
 
-    int rNums[] = {
+    int[] rNums = {
         619, 720, 127, 481, 931, 816, 813, 233, 566, 247,
         985, 724, 205, 454, 863, 491, 741, 242, 949, 214,
         733, 859, 335, 708, 621, 574, 73, 654, 730, 472,

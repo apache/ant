@@ -123,14 +123,14 @@ public class CBZip2InputStream extends InputStream implements BZip2Constants {
     private int bsLive;
     private CRC mCrc = new CRC();
 
-    private boolean inUse[] = new boolean[256];
+    private boolean[] inUse = new boolean[256];
     private int nInUse;
 
-    private char seqToUnseq[] = new char[256];
-    private char unseqToSeq[] = new char[256];
+    private char[] seqToUnseq = new char[256];
+    private char[] unseqToSeq = new char[256];
 
-    private char selector[] = new char[MAX_SELECTORS];
-    private char selectorMtf[] = new char[MAX_SELECTORS];
+    private char[] selector = new char[MAX_SELECTORS];
+    private char[] selectorMtf = new char[MAX_SELECTORS];
 
     private int[] tt;
     private char[] ll8;
@@ -400,7 +400,7 @@ public class CBZip2InputStream extends InputStream implements BZip2Constants {
         char len[][] = new char[N_GROUPS][MAX_ALPHA_SIZE];
         int i, j, t, nGroups, nSelectors, alphaSize;
         int minLen, maxLen;
-        boolean inUse16[] = new boolean[16];
+        boolean[] inUse16 = new boolean[16];
 
         /* Receive the mapping table */
         for (i = 0; i < 16; i++) {
@@ -441,7 +441,7 @@ public class CBZip2InputStream extends InputStream implements BZip2Constants {
 
         /* Undo the MTF values for the selectors. */
         {
-            char pos[] = new char[N_GROUPS];
+            char[] pos = new char[N_GROUPS];
             char tmp, v;
             for (v = 0; v < nGroups; v++) {
                 pos[v] = v;
@@ -493,7 +493,7 @@ public class CBZip2InputStream extends InputStream implements BZip2Constants {
     }
 
     private void getAndMoveToFrontDecode() {
-        char yy[] = new char[256];
+        char[] yy = new char[256];
         int i, j, nextSym, limitLast;
         int EOB, groupNo, groupPos;
 
@@ -699,7 +699,7 @@ public class CBZip2InputStream extends InputStream implements BZip2Constants {
     }
 
     private void setupBlock() {
-        int cftab[] = new int[257];
+        int[] cftab = new int[257];
         char ch;
 
         cftab[0] = 0;
