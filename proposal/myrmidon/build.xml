@@ -185,12 +185,15 @@ Legal:
   <!-- Compiles and installs the custom build tasks -->
   <target name="custom-tasks">
     <property name="custom-tasks-dir" value="${build.dir}/tasks"/>
+    <property name="custom-package-dir" value="${custom-tasks-dir}/org/apache/myrmidon/build"/>
     <mkdir dir="${custom-tasks-dir}"/>
     <javac srcdir="src/make" destdir="${custom-tasks-dir}">
       <classpath refid="project.class.path"/>
     </javac>
-    <copy file="${manifest.dir}/ant-descriptor.template" todir="${build.dir}/tasks"/>
-    <copy file="${manifest.dir}/ant-roles.template" todir="${build.dir}/tasks"/>
+
+    <copy file="${manifest.dir}/ant-descriptor.template" tofile="${custom-package-dir}/ant-descriptor.j"/>
+    <copy file="${manifest.dir}/ant-roles.template" tofile="${custom-package-dir}/ant-roles.j"/>
+    <copy file="${manifest.dir}/type.j" tofile="${custom-package-dir}/type.j"/>
 
     <taskdef name="antlib-jar" classname="org.apache.myrmidon.build.AntlibJarTask">
       <classpath location="${custom-tasks-dir}"/>
@@ -320,6 +323,15 @@ Legal:
       <include name="org/apache/myrmidon/launcher/*" />
     </patternset>
 
+    <patternset id="myrmidon-api-xdoclet.include">
+      <include name="org/apache/myrmidon/api/*" />
+      <include name="org/apache/myrmidon/aspects/*" />
+      <include name="org/apache/myrmidon/interfaces/**" />
+      <include name="org/apache/myrmidon/listeners/*" />
+      <include name="org/apache/myrmidon/framework/**" />
+      <include name="org/apache/aut/converter/**" />
+    </patternset>
+
     <patternset id="myrmidon-api.include">
       <include name="org/apache/myrmidon/api/*" />
       <include name="org/apache/myrmidon/aspects/*" />
@@ -357,12 +369,13 @@ Legal:
     <!-- The "builtin" descriptors include metainfo for both
          myrmidon-api and myrmidon-container jars.
          (Packaged with myrmidon-api.jar). -->
+
     <antlib-descriptor libName="builtin"
                        destdir="${gen.dir}"
                        classpathref="project.class.path">
       <fileset dir="${java.dir}">
-        <patternset refid="myrmidon-api.include"/>
-        <patternset refid="myrmidon-container.include"/>
+        <patternset refid="myrmidon-api-xdoclet.include"/>
+        <!-- <patternset refid="myrmidon-container.include"/>-->
       </fileset>
     </antlib-descriptor>
 
@@ -373,6 +386,7 @@ Legal:
         <patternset refid="selftest.include"/>
       </fileset>
     </antlib-descriptor>
+
   </target>
 
   <!-- Package the jar files -->

@@ -25,12 +25,13 @@ import xdoclet.TemplateSubTask;
 public class AntlibDescriptorTask
     extends DocletTask
 {
+    private static final String DESCRIPTOR_TEMPLATE = "/org/apache/myrmidon/build/ant-descriptor.j";
+    private static final String ROLES_TEMPLATE = "/org/apache/myrmidon/build/ant-roles.j";
+
+    private TemplateSubTask m_antDocs;
     private String m_libName;
     private String m_descriptorFileName;
     private String m_rolesFileName;
-
-    private static final String DESCRIPTOR_TEMPLATE = "/ant-descriptor.template";
-    private static final String ROLES_TEMPLATE = "/ant-roles.template";
 
     /**
      * Specifies the Antlib name, which is used to name the generated files.
@@ -56,6 +57,11 @@ public class AntlibDescriptorTask
         m_rolesFileName = rolesFileName;
     }
 
+    public void addAntdoc( final AntDocSubTask antDocs )
+    {
+        m_antDocs = antDocs;
+    }
+
     public void execute() throws BuildException
     {
         // Add the base directories of all the filesets to the sourcepath
@@ -75,6 +81,11 @@ public class AntlibDescriptorTask
         final TemplateSubTask rolesTemplate =
             makeTemplateSubTask( ROLES_TEMPLATE, getRolesFileName() );
         addTemplate( rolesTemplate );
+
+        if( null != m_antDocs )
+        {
+            addTemplate( m_antDocs );
+        }
 
         if( !upToDate() )
         {
