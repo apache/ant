@@ -79,14 +79,14 @@ Activation Framework</a> are required for this task.</p>
 </table>
 <h3>Examples</h3>
 <p><b>Send a single HTML file as the body of a message</b></p>
-<pre>	&lt;mimemail messageMimeType=&quot;text/html&quot; messageFile=&quot;overview-summary.html&quot; 
-		tolist=&quot;you&quot; subject=&quot;JUnit Test Results: ${TODAY}&quot; from=&quot;me&quot;/&gt;</pre>
+<pre>    &lt;mimemail messageMimeType=&quot;text/html&quot; messageFile=&quot;overview-summary.html&quot; 
+        tolist=&quot;you&quot; subject=&quot;JUnit Test Results: ${TODAY}&quot; from=&quot;me&quot;/&gt;</pre>
 <p><b>Sends all files in a directory as attachments</b></p>
-<pre>	&lt;mimemail message=&quot;See attached files&quot; tolist=&quot;you&quot; subject=&quot;Attachments&quot; from=&quot;me&quot;&gt;
-	    &lt;fileset dir=&quot;.&quot;&gt;
-	        &lt;include name=&quot;dist/*.*&quot;/&gt;
-	    &lt;/fileset&gt;
-	&lt;/mimemail&gt;
+<pre>    &lt;mimemail message=&quot;See attached files&quot; tolist=&quot;you&quot; subject=&quot;Attachments&quot; from=&quot;me&quot;&gt;
+        &lt;fileset dir=&quot;.&quot;&gt;
+            &lt;include name=&quot;dist/*.*&quot;/&gt;
+        &lt;/fileset&gt;
+    &lt;/mimemail&gt;
 </pre>
 <hr><p align="center">Copyright &copy; 2000,2001 Apache Software Foundation. All rights
 Reserved.</p>
