@@ -1,0 +1,29 @@
+<document>
+
+<properties>
+<author email="adammurdoch@apache.org">Adam Murdoch</author>
+<title>Get Involved</title>
+</properties>
+
+<body>
+<section name="Get Involved">
+
+<p>There are plenty of things you can do to help out with Myrmidon.  The Todo
+list below describes items which still need to be done.  Of course, since
+this is an open-source project, there's plenty of scope for experimentation,
+and you can pretty much make up your own items to work on.</p>
+
+<p>Some things that are worth reading if you do want to get involved:</p>
+<ul>
+<li>The <a href="http://jakarta.apache.org/ant/ant2/">Ant 2</a> goals and requirements.</li>
+<li>The <a href="http://jakarta.apache.org/ant/ant2/actionlist.html">Ant 1.9 Action List</a>.</li>
+<li>The Jakarta Project's <a href="http://jakarta.apache.org/site/getinvolved.html">Get Involved</a> page.</li>
+</ul>
+
+<p>There is no Ant 2 or Myrmidon mailing list yet, so direct any questions
+or comments you have to the ant-dev mailing list.</p>
+
+</section>
+
+</body>
+</document>
