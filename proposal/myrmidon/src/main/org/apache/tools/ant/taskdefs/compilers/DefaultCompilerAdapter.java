@@ -348,7 +348,7 @@ public abstract class DefaultCompilerAdapter
              * POSIX seems to define a lower limit of 4k, so use a temporary
              * file if the total length of the command line exceeds this limit.
              */
-            if( Commandline.toString( args ).length() > 4096 )
+            if( StringUtil.join( args, " " ).length() > 4096 )
             {
                 PrintWriter out = null;
                 try
