@@ -79,7 +79,9 @@ public class P4Change extends P4Base {
 
     public void execute() throws BuildException {
 
-        if(emptyChangeList == null) emptyChangeList = getEmptyChangeList();
+        if(emptyChangeList == null) {
+          emptyChangeList = getEmptyChangeList();
+        }
         final Project myProj = project;
 
         P4Handler handler = new P4HandlerAdapter() {

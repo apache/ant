@@ -537,9 +537,9 @@ public class CSharp
      * @return    The ExtraOptions Parameter to CSC 
      */
     protected String getExtraOptionsParameter() {
-        if (_extraOptions!=null && _extraOptions.length()!=0)
+        if (_extraOptions!=null && _extraOptions.length()!=0) {
             return _extraOptions;
-        else {
+        } else {
             return null;
         }
     } 

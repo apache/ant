@@ -211,13 +211,17 @@ public class Move extends Copy {
      */
     protected boolean okToDelete(File d) {
         String[] list = d.list();
-        if (list == null) return false;     // maybe io error?
+        if (list == null) {
+          return false;
+        }     // maybe io error?
 
         for (int i = 0; i < list.length; i++) {
             String s = list[i];
             File f = new File(d, s);
             if (f.isDirectory()) {
-                if (!okToDelete(f)) return false;
+                if (!okToDelete(f)) {
+                  return false;
+                }
             } else {
                 return false;   // found a file
             }
@@ -231,7 +235,9 @@ public class Move extends Copy {
      */
     protected void deleteDir(File d) {
         String[] list = d.list();
-        if (list == null) return;      // on an io error list() can return null
+        if (list == null) {
+          return;
+        }      // on an io error list() can return null
 
         for (int i = 0; i < list.length; i++) {
             String s = list[i];

@@ -95,8 +95,9 @@ public class Dependencies implements Visitor {
     public void visitConstantNameAndType(ConstantNameAndType obj) {}
     
     public void visitConstantPool(ConstantPool obj) {
-        if (verbose)
+        if (verbose) {
             System.out.println("visit ConstantPool");
+        }
         this.constantPool = obj;
 
         // visit constants
@@ -203,8 +204,9 @@ public class Dependencies implements Visitor {
 
             for (int i=o; i < args.length; i++) {
                 String fileName = args[i].substring(0, args[i].length() - ".class".length());
-                if (base != null && fileName.startsWith(base))
+                if (base != null && fileName.startsWith(base)) {
                     fileName = fileName.substring(base.length());
+                }
                 newSet.add(fileName);
             }
             set.addAll(newSet);
@@ -228,8 +230,9 @@ public class Dependencies implements Visitor {
                 applyFilter(newSet, new Filter() {
                         public boolean accept(Object object) {
                             String fileName = object + ".class";
-                            if (base != null)
+                            if (base != null) {
                                 fileName = base + fileName;
+                            }
                             return new File(fileName).exists();
                         }
                     });

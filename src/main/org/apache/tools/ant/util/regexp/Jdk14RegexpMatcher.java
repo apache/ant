@@ -163,12 +163,15 @@ public class Jdk14RegexpMatcher implements RegexpMatcher {
     {
         int cOptions = 0;
 
-        if (RegexpUtil.hasFlag(options, MATCH_CASE_INSENSITIVE))
+        if (RegexpUtil.hasFlag(options, MATCH_CASE_INSENSITIVE)) {
             cOptions |= Pattern.CASE_INSENSITIVE;
-        if (RegexpUtil.hasFlag(options, MATCH_MULTILINE))
+        }
+        if (RegexpUtil.hasFlag(options, MATCH_MULTILINE)) {
             cOptions |= Pattern.MULTILINE;
-        if (RegexpUtil.hasFlag(options, MATCH_SINGLELINE))
+        }
+        if (RegexpUtil.hasFlag(options, MATCH_SINGLELINE)) {
             cOptions |= Pattern.DOTALL;
+        }
 
         return cOptions;
     }

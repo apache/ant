@@ -390,7 +390,9 @@ public class PatternSet extends DataType {
      * Convert a vector of NameEntry elements into an array of Strings.
      */
     private String[] makeArray(Vector list, Project p) {
-        if (list.size() == 0) return null;
+        if (list.size() == 0) {
+          return null;
+        }
 
         Vector tmpNames = new Vector();
         for (Enumeration e = list.elements() ; e.hasMoreElements() ;) {
@@ -417,10 +419,11 @@ public class PatternSet extends DataType {
                 String fileName = ne.evalName(p);
                 if (fileName != null) {
                     File inclFile = p.resolveFile(fileName);
-                    if (!inclFile.exists())
+                    if (!inclFile.exists()) {
                         throw new BuildException("Includesfile "
                                                  + inclFile.getAbsolutePath()
                                                  + " not found.");
+                    }
                     readPatterns(inclFile, includeList, p);
                 }
             }
@@ -434,10 +437,11 @@ public class PatternSet extends DataType {
                 String fileName = ne.evalName(p);
                 if (fileName != null) {
                     File exclFile = p.resolveFile(fileName);
-                    if (!exclFile.exists())
+                    if (!exclFile.exists()) {
                         throw new BuildException("Excludesfile "
                                                  + exclFile.getAbsolutePath()
                                                  + " not found.");
+                    }
                     readPatterns(exclFile, excludeList, p);
                 }
             }

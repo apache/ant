@@ -121,8 +121,9 @@ public class RecorderEntry implements BuildLogger  {
      * @param state true for on, false for off, null for no change.
      */
     public void setRecordState( Boolean state ) {
-        if ( state != null )
+        if ( state != null ) {
             record = state.booleanValue();
+        }
     }
 
     public void buildStarted(BuildEvent event) {
@@ -194,8 +195,9 @@ public class RecorderEntry implements BuildLogger  {
     }
 
     public void setMessageOutputLevel(int level) {
-        if ( level >= Project.MSG_ERR  &&  level <= Project.MSG_DEBUG )
+        if ( level >= Project.MSG_ERR  &&  level <= Project.MSG_DEBUG ) {
             loglevel = level;
+        }
     }
 
     public void setOutputPrintStream(PrintStream output) {

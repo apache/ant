@@ -149,12 +149,15 @@ public class JakartaRegexpMatcher implements RegexpMatcher {
     {
         int cOptions = RE.MATCH_NORMAL;
 
-        if (RegexpUtil.hasFlag(options, MATCH_CASE_INSENSITIVE))
+        if (RegexpUtil.hasFlag(options, MATCH_CASE_INSENSITIVE)) {
             cOptions |= RE.MATCH_CASEINDEPENDENT;
-        if (RegexpUtil.hasFlag(options, MATCH_MULTILINE))
+        }
+        if (RegexpUtil.hasFlag(options, MATCH_MULTILINE)) {
             cOptions |= RE.MATCH_MULTILINE;
-        if (RegexpUtil.hasFlag(options, MATCH_SINGLELINE))
+        }
+        if (RegexpUtil.hasFlag(options, MATCH_SINGLELINE)) {
             cOptions |= RE.MATCH_SINGLELINE;
+        }
 
         return cOptions;
     }

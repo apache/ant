@@ -143,11 +143,13 @@ public class Pvcs extends org.apache.tools.ant.Task {
 
     private String getExecutable(String exe) {
         StringBuffer correctedExe = new StringBuffer();
-        if(getPvcsbin()!=null)
-            if(pvcsbin.endsWith(File.separator))
+        if(getPvcsbin()!=null) {
+            if(pvcsbin.endsWith(File.separator)) {
                 correctedExe.append(pvcsbin);
-            else
+            } else {
                 correctedExe.append(pvcsbin).append(File.separator);
+            }
+        }
         return correctedExe.append(exe).toString();
     }
 
@@ -158,8 +160,9 @@ public class Pvcs extends org.apache.tools.ant.Task {
         Project aProj = getProject();
         int result = 0;
 
-        if(repository == null || repository.trim().equals("")) 
+        if(repository == null || repository.trim().equals("")) { 
             throw new BuildException("Required argument repository not specified");
+        }
 
         // Check workspace exists
         // Launch PCLI listversionedfiles -z -aw
@@ -171,22 +174,26 @@ public class Pvcs extends org.apache.tools.ant.Task {
         commandLine.createArgument().setValue("lvf");
         commandLine.createArgument().setValue("-z");
         commandLine.createArgument().setValue("-aw");
-        if(getWorkspace()!=null)
+        if(getWorkspace()!=null) {
             commandLine.createArgument().setValue("-sp"+getWorkspace());
+        }
         commandLine.createArgument().setValue("-pr"+getRepository());
 
         // default pvcs project is "/"
-        if(getPvcsproject() == null && getPvcsprojects().isEmpty())
+        if(getPvcsproject() == null && getPvcsprojects().isEmpty()) {
             pvcsProject = "/";
+        }
 
-        if(getPvcsproject()!=null)
+        if(getPvcsproject()!=null) {
             commandLine.createArgument().setValue(getPvcsproject());
+        }
         if(!getPvcsprojects().isEmpty()) {
             Enumeration e = getPvcsprojects().elements();
             while (e.hasMoreElements()) {
                 String projectName = ((PvcsProject)e.nextElement()).getName();
-                if (projectName == null || (projectName.trim()).equals(""))
+                if (projectName == null || (projectName.trim()).equals("")) {
                     throw new BuildException("name is a required attribute of pvcsproject");
+                }
                 commandLine.createArgument().setValue(projectName);
             }
         }
@@ -204,8 +211,9 @@ public class Pvcs extends org.apache.tools.ant.Task {
                 throw new BuildException(msg, location);
             }
 
-            if(!tmp.exists())
+            if(!tmp.exists()) {
                 throw new BuildException("Communication between ant and pvcs failed. No output generated from executing PVCS commandline interface \"pcli\" and \"get\"");
+            }
 
             // Create folders in workspace
             log("Creating folders", Project.MSG_INFO);
@@ -218,16 +226,18 @@ public class Pvcs extends org.apache.tools.ant.Task {
             commandLine.clearArgs();
             commandLine.setExecutable(getExecutable(GET_EXE));
 
-            if(getForce()!=null && getForce().equals("yes"))
+            if(getForce()!=null && getForce().equals("yes")) {
                 commandLine.createArgument().setValue("-Y");
-            else
+            } else {
                 commandLine.createArgument().setValue("-N");
+            }
 
-            if(getPromotiongroup()!=null)
+            if(getPromotiongroup()!=null) {
                 commandLine.createArgument().setValue("-G"+getPromotiongroup());
-            else {
-                if(getLabel()!=null)
+            } else {
+                if(getLabel()!=null) {
                     commandLine.createArgument().setValue("-r"+getLabel());
+                }
             }
 
             if (updateOnly) {
@@ -419,10 +429,11 @@ public class Pvcs extends org.apache.tools.ant.Task {
      * @param repo String (yes/no)
      */
     public void setForce(String f) {
-        if(f!=null && f.equalsIgnoreCase("yes"))
+        if(f!=null && f.equalsIgnoreCase("yes")) {
             force="yes";
-        else
+        } else {
             force = "no";
+        }
     }
 
     /**

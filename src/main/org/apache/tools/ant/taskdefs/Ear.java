@@ -92,8 +92,9 @@ public class Ear extends Jar {
      */
     public void setAppxml(File descr) {
         deploymentDescriptor = descr; 
-        if (!deploymentDescriptor.exists())
+        if (!deploymentDescriptor.exists()) {
             throw new BuildException("Deployment descriptor: " + deploymentDescriptor + " does not exist.");
+        }
 
         // Create a ZipFileSet for this file, and pass it up.
         ZipFileSet fs = new ZipFileSet();

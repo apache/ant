@@ -215,7 +215,9 @@ public class Path extends DataType implements Cloneable {
      * Append the contents of the other Path instance to this.
      */
     public void append(Path other) {
-        if (other == null) return;
+        if (other == null) {
+          return;
+        }
         String[] l = other.list();
         for (int i=0; i<l.length; i++) {
             if (elements.indexOf(l[i]) == -1) {
@@ -319,7 +321,9 @@ public class Path extends DataType implements Cloneable {
         final String[] list = list();
 
         // empty path return empty string
-        if (list.length == 0) return "";
+        if (list.length == 0) {
+          return "";
+        }
 
         // path containing one or more elements
         final StringBuffer result = new StringBuffer(list[0].toString());
@@ -336,7 +340,9 @@ public class Path extends DataType implements Cloneable {
      */
     public static String[] translatePath(Project project, String source) {
         final Vector result = new Vector();
-        if (source == null) return new String[0];
+        if (source == null) {
+          return new String[0];
+        }
 
         PathTokenizer tok = new PathTokenizer(source);
         StringBuffer element = new StringBuffer();
@@ -365,7 +371,9 @@ public class Path extends DataType implements Cloneable {
      * replaced so that they match the local OS conventions.  
      */
     public static String translateFile(String source) {
-        if (source == null) return "";
+        if (source == null) {
+          return "";
+        }
 
         final StringBuffer result = new StringBuffer(source);
         for (int i=0; i < result.length(); i++) {

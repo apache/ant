@@ -264,8 +264,9 @@ public class Main {
                 if (posEq > 0) {
                     value = name.substring(posEq+1);
                     name = name.substring(0, posEq);
-                } else if (i < args.length-1)
+                } else if (i < args.length-1) {
                     value = args[++i];
+                       }
 
                 definedProps.put(name, value);
             } else if (arg.equals("-logger")) {

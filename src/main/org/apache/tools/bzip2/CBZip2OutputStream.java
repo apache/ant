@@ -678,10 +678,11 @@ public class CBZip2OutputStream extends OutputStream implements BZip2Constants {
                 fave[t] = 0;
             }
 
-            for (t = 0; t < nGroups; t++)
+            for (t = 0; t < nGroups; t++) {
                 for (v = 0; v < alphaSize; v++) {
                     rfreq[t][v] = 0;
                 }
+            }
 
             nSelectors = 0;
             totc = 0;
@@ -771,8 +772,9 @@ public class CBZip2OutputStream extends OutputStream implements BZip2Constants {
         fave = null;
         cost = null;
 
-        if (!(nGroups < 8))
+        if (!(nGroups < 8)) {
             panic();
+        }
         if (!(nSelectors < 32768 && nSelectors <= (2 + (900000 / G_SIZE)))) {
             panic();
         }
@@ -1192,8 +1194,9 @@ public class CBZip2OutputStream extends OutputStream implements BZip2Constants {
             simpleSort ( 0, last, 0 );
         } else {
             numQSorted = 0;
-            for (i = 0; i <= 255; i++)
+            for (i = 0; i <= 255; i++) {
                 bigDone[i] = false;
+            }
 
             for (i = 0; i <= 65536; i++) {
                 ftab[i] = 0;

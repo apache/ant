@@ -197,11 +197,17 @@ public class Property extends Task {
             addProperty(name, value);
         }
 
-        if (file != null) loadFile(file);
+        if (file != null) {
+          loadFile(file);
+        }
 
-        if (resource != null) loadResource(resource);
+        if (resource != null) {
+          loadResource(resource);
+        }
 
-        if (env != null) loadEnvironment(env);
+        if (env != null) {
+          loadEnvironment(env);
+        }
 
         if ((name != null) && (ref != null)) {
             Object obj = ref.getReferencedObject(getProject());
@@ -266,7 +272,9 @@ public class Property extends Task {
 
     protected void loadEnvironment( String prefix ) {
         Properties props = new Properties();
-        if (!prefix.endsWith(".")) prefix += ".";
+        if (!prefix.endsWith(".")) {
+          prefix += ".";
+        }
         log("Loading Environment " + prefix, Project.MSG_VERBOSE);
         Vector osEnv = Execute.getProcEnvironment();
         for (Enumeration e = osEnv.elements(); e.hasMoreElements(); ) {

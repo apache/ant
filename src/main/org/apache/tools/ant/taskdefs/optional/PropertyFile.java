@@ -420,7 +420,9 @@ public class PropertyFile extends Task
             GregorianCalendar value = new GregorianCalendar();
             GregorianCalendar newValue = new GregorianCalendar();
 
-            if (m_pattern == null) m_pattern = "yyyy/MM/dd HH:mm";
+            if (m_pattern == null) {
+              m_pattern = "yyyy/MM/dd HH:mm";
+            }
             DateFormat fmt = new SimpleDateFormat(m_pattern);
 
             // special case

@@ -248,15 +248,17 @@ public class JspC extends MatchingTask
     /* ------------------------------------------------------------ */
     /** Set the classpath to be used for this compilation */
     public void setClasspath(Path cp) {
-        if (classpath == null)
+        if (classpath == null) {
             classpath = cp;
-        else
+        } else {
             classpath.append(cp);
+        }
     }
     /** Maybe creates a nested classpath element. */
     public Path createClasspath() {
-        if (classpath == null)
+        if (classpath == null) {
             classpath = new Path(project);
+        }
         return classpath.createPath();
     }
     /** Adds a reference to a CLASSPATH defined elsewhere */
@@ -294,9 +296,9 @@ public class JspC extends MatchingTask
 
         // calculate where the files will end up:
         File dest = null;
-        if (packageName == null)
+        if (packageName == null) {
             dest = destDir;
-        else {
+        } else {
             String path = destDir.getPath() + File.separatorChar +
                 packageName.replace('.', File.separatorChar);
             dest = new File(path);

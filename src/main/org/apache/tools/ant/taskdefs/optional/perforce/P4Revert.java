@@ -70,8 +70,9 @@ public class P4Revert extends P4Base {
     private boolean onlyUnchanged = false;
 
     public void setChange(String revertChange) throws BuildException {
-        if(revertChange == null && !revertChange.equals(""))
+        if(revertChange == null && !revertChange.equals("")) {
             throw new BuildException("P4Revert: change cannot be null or empty");
+        }
 
         this.revertChange = revertChange;
 
@@ -91,9 +92,13 @@ public class P4Revert extends P4Base {
          * The whole process also accepts a p4 filespec
          */
         String p4cmd = "-s revert";
-        if(onlyUnchanged) p4cmd+=" -a";
+        if(onlyUnchanged) {
+          p4cmd+=" -a";
+        }
 
-        if (revertChange != null) p4cmd += " -c "+revertChange;
+        if (revertChange != null) {
+          p4cmd += " -c "+revertChange;
+        }
 
         execP4Command(p4cmd+" "+P4View, new SimpleP4OutputHandler(this));
     }

@@ -518,7 +518,9 @@ public class JUnitTask extends Task {
         } catch (IOException e) {
             throw new BuildException("Process fork failed.", e, location);
         } finally {
-          if (! propsFile.delete()) throw new BuildException("Could not delete temporary properties file.");
+          if (! propsFile.delete()) {
+            throw new BuildException("Could not delete temporary properties file.");
+          }
         }
 
         return retVal;

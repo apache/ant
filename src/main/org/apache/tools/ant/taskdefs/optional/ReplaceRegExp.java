@@ -180,8 +180,9 @@ public class ReplaceRegExp extends Task
 
     public void setMatch(String match)
     {
-        if (regex != null)
+        if (regex != null) {
             throw new BuildException("Only one regular expression is allowed");
+        }
 
         regex = new RegularExpression();
         regex.setPattern(match);
@@ -189,8 +190,9 @@ public class ReplaceRegExp extends Task
 
     public void setReplace(String replace)
     {
-        if (subs != null)
+        if (subs != null) {
             throw new BuildException("Only one substitution expression is allowed");
+        }
 
         subs = new Substitution();
         subs.setExpression(replace);
@@ -204,8 +206,9 @@ public class ReplaceRegExp extends Task
     public void setByLine(String byline)
     {
         Boolean res = Boolean.valueOf(byline);
-        if (res == null)
+        if (res == null) {
             res = Boolean.FALSE;
+        }
         this.byline = res.booleanValue();
     }
 
@@ -216,8 +219,9 @@ public class ReplaceRegExp extends Task
 
     public RegularExpression createRegularExpression()
     {
-        if (regex != null)
+        if (regex != null) {
             throw new BuildException("Only one regular expression is allowed.");
+        }
 
         regex = new RegularExpression();
         return regex;
@@ -225,8 +229,9 @@ public class ReplaceRegExp extends Task
 
     public Substitution createSubstitution()
     {
-        if (subs != null)
+        if (subs != null) {
             throw new BuildException("Only one substitution expression is allowed");
+        }
 
         subs = new Substitution();
         return subs;
@@ -287,8 +292,9 @@ public class ReplaceRegExp extends Task
                 while ((line = lnr.readLine()) != null)
                 {
                     String res = doReplace(regex, subs, line, options);
-                    if (! res.equals(line))
+                    if (! res.equals(line)) {
                         changes = true;
+                    }
 
                     pw.println(res);
                 }
@@ -309,8 +315,9 @@ public class ReplaceRegExp extends Task
                 String buf = new String(tmpBuf);
                 
                 String res = doReplace(regex, subs, buf, options);
-                if (! res.equals(buf))
+                if (! res.equals(buf)) {
                     changes = true;
+                }
 
                 pw.println(res);
                 pw.flush();
@@ -333,10 +340,14 @@ public class ReplaceRegExp extends Task
         }
         finally
         {
-            try { if (r != null) r.close(); }
+            try { if (r != null) {
+                    r.close();
+                  } }
             catch (Exception e) { };
 
-            try { if (w != null) r.close(); }
+            try { if (w != null) {
+                    r.close();
+                  } }
             catch (Exception e) { };
         }
     }
@@ -344,28 +355,35 @@ public class ReplaceRegExp extends Task
     public void execute()
         throws BuildException
     {
-        if (regex == null)
+        if (regex == null) {
             throw new BuildException("No expression to match.");
-        if (subs == null)
+        }
+        if (subs == null) {
             throw new BuildException("Nothing to replace expression with.");
+        }
 
-        if (file != null && filesets.size() > 0)
+        if (file != null && filesets.size() > 0) {
             throw new BuildException("You cannot supply the 'file' attribute and filesets at the same time.");
+        }
 
 
         int options = 0;
         
-        if (flags.indexOf('g') != -1)
+        if (flags.indexOf('g') != -1) {
             options |= Regexp.REPLACE_ALL;
+        }
 
-        if (flags.indexOf('i') != -1)
+        if (flags.indexOf('i') != -1) {
             options |= Regexp.MATCH_CASE_INSENSITIVE;
+        }
 
-        if (flags.indexOf('m') != -1)
+        if (flags.indexOf('m') != -1) {
             options |= Regexp.MATCH_MULTILINE;
+        }
 
-        if (flags.indexOf('s') != -1)
+        if (flags.indexOf('s') != -1) {
             options |= Regexp.MATCH_SINGLELINE;
+        }
 
         if (file != null && file.exists())
         {

@@ -89,12 +89,13 @@ public class CBZip2InputStream extends InputStream implements BZip2Constants {
     private void makeMaps() {
         int i;
         nInUse = 0;
-        for (i = 0; i < 256; i++)
+        for (i = 0; i < 256; i++) {
             if (inUse[i]) {
                 seqToUnseq[nInUse] = (char)i;
                 unseqToSeq[i] = (char)nInUse;
                 nInUse++;
             }
+        }
     }
 
     /*
@@ -249,10 +250,11 @@ public class CBZip2InputStream extends InputStream implements BZip2Constants {
 
         storedBlockCRC = bsGetInt32();
 
-        if (bsR(1) == 1)
+        if (bsR(1) == 1) {
             blockRandomised = true;
-        else
+        } else {
             blockRandomised = false;
+        }
 
         //        currBlockNo++;
         getAndMoveToFrontDecode();
@@ -264,8 +266,9 @@ public class CBZip2InputStream extends InputStream implements BZip2Constants {
     private void endBlock() {
         computedBlockCRC = mCrc.getFinalCRC();
         /* A bad CRC is considered a fatal error. */
-        if (storedBlockCRC != computedBlockCRC)
+        if (storedBlockCRC != computedBlockCRC) {
             crcError();
+        }
 
         computedCombinedCRC = (computedCombinedCRC << 1)
             | (computedCombinedCRC >>> 31);
@@ -274,8 +277,9 @@ public class CBZip2InputStream extends InputStream implements BZip2Constants {
 
     private void complete() {
         storedCombinedCRC = bsGetInt32();
-        if (storedCombinedCRC != computedCombinedCRC)
+        if (storedCombinedCRC != computedCombinedCRC) {
             crcError();
+        }
 
         bsFinishedWithStream();
         streamEnd = true;
@@ -357,23 +361,29 @@ public class CBZip2InputStream extends InputStream implements BZip2Constants {
         int pp, i, j, vec;
 
         pp = 0;
-        for(i = minLen; i <= maxLen; i++)
-            for(j = 0; j < alphaSize; j++)
+        for(i = minLen; i <= maxLen; i++) {
+            for(j = 0; j < alphaSize; j++) {
                 if (length[j] == i) {
                     perm[pp] = j;
                     pp++;
-                };
+                }
+            }
+        };
 
-        for(i = 0; i < MAX_CODE_LEN; i++)
+        for(i = 0; i < MAX_CODE_LEN; i++) {
             base[i] = 0;
-        for(i = 0; i < alphaSize; i++)
+        }
+        for(i = 0; i < alphaSize; i++) {
             base[length[i]+1]++;
+        }
 
-        for(i = 1; i < MAX_CODE_LEN; i++)
+        for(i = 1; i < MAX_CODE_LEN; i++) {
             base[i] += base[i-1];
+        }
 
-        for (i = 0; i < MAX_CODE_LEN; i++)
+        for (i = 0; i < MAX_CODE_LEN; i++) {
             limit[i] = 0;
+        }
         vec = 0;
 
         for (i = minLen; i <= maxLen; i++) {
@@ -381,8 +391,9 @@ public class CBZip2InputStream extends InputStream implements BZip2Constants {
             limit[i] = vec-1;
             vec <<= 1;
         }
-        for (i = minLen + 1; i <= maxLen; i++)
+        for (i = minLen + 1; i <= maxLen; i++) {
             base[i] = ((limit[i-1] + 1) << 1) - base[i];
+        }
     }
 
     private void recvDecodingTables() {
@@ -392,20 +403,27 @@ public class CBZip2InputStream extends InputStream implements BZip2Constants {
         boolean inUse16[] = new boolean[16];
 
         /* Receive the mapping table */
-        for (i = 0; i < 16; i++)
-            if (bsR(1) == 1)
+        for (i = 0; i < 16; i++) {
+            if (bsR(1) == 1) {
                 inUse16[i] = true;
-            else
+            } else {
                 inUse16[i] = false;
+            }
+        }
 
-        for (i = 0; i < 256; i++)
+        for (i = 0; i < 256; i++) {
             inUse[i] = false;
+        }
 
-        for (i = 0; i < 16; i++)
-            if (inUse16[i])
-                for (j = 0; j < 16; j++)
-                    if (bsR(1) == 1)
+        for (i = 0; i < 16; i++) {
+            if (inUse16[i]) {
+                for (j = 0; j < 16; j++) {
+                    if (bsR(1) == 1) {
                         inUse[i * 16 + j] = true;
+                    }
+                }
+            }
+        }
 
         makeMaps();
         alphaSize = nInUse+2;
@@ -415,8 +433,9 @@ public class CBZip2InputStream extends InputStream implements BZip2Constants {
         nSelectors = bsR(15);
         for (i = 0; i < nSelectors; i++) {
             j = 0;
-            while (bsR(1) == 1)
+            while (bsR(1) == 1) {
                 j++;
+            }
             selectorMtf[i] = (char)j;
         }
 
@@ -424,8 +443,9 @@ public class CBZip2InputStream extends InputStream implements BZip2Constants {
         {
             char pos[] = new char[N_GROUPS];
             char tmp, v;
-            for (v = 0; v < nGroups; v++)
+            for (v = 0; v < nGroups; v++) {
                 pos[v] = v;
+            }
 
             for (i = 0; i < nSelectors; i++) {
                 v = selectorMtf[i];
@@ -444,10 +464,11 @@ public class CBZip2InputStream extends InputStream implements BZip2Constants {
             int curr = bsR ( 5 );
             for (i = 0; i < alphaSize; i++) {
                 while (bsR(1) == 1) {
-                    if (bsR(1) == 0)
+                    if (bsR(1) == 0) {
                         curr++;
-                    else
+                    } else {
                         curr--;
+                    }
                 }
                 len[t][i] = (char)curr;
             }
@@ -458,10 +479,12 @@ public class CBZip2InputStream extends InputStream implements BZip2Constants {
             minLen = 32;
             maxLen = 0;
             for (i = 0; i < alphaSize; i++) {
-                if (len[t][i] > maxLen)
+                if (len[t][i] > maxLen) {
                     maxLen = len[t][i];
-                if (len[t][i] < minLen)
+                }
+                if (len[t][i] < minLen) {
                     minLen = len[t][i];
+                }
             }
             hbCreateDecodeTables(limit[t], base[t], perm[t], len[t], minLen,
                                  maxLen, alphaSize);
@@ -488,11 +511,13 @@ public class CBZip2InputStream extends InputStream implements BZip2Constants {
           in a separate pass, and so saves a block's worth of
           cache misses.
         */
-        for (i = 0; i <= 255; i++)
+        for (i = 0; i <= 255; i++) {
             unzftab[i] = 0;
+        }
 
-        for (i = 0; i <= 255; i++)
+        for (i = 0; i <= 255; i++) {
             yy[i] = (char) i;
+        }
 
         last = -1;
 
@@ -536,18 +561,20 @@ public class CBZip2InputStream extends InputStream implements BZip2Constants {
 
         while(true) {
 
-            if (nextSym == EOB)
+            if (nextSym == EOB) {
                 break;
+            }
 
             if (nextSym == RUNA || nextSym == RUNB) {
                 char ch;
                 int s = -1;
                 int N = 1;
                 do {
-                    if (nextSym == RUNA)
+                    if (nextSym == RUNA) {
                         s = s + (0+1) * N;
-                    else if (nextSym == RUNB)
+                    } else if (nextSym == RUNB) {
                         s = s + (1+1) * N;
+                           }
                     N = N * 2;
                     {
                         int zt, zn, zvec, zj;
@@ -598,14 +625,16 @@ public class CBZip2InputStream extends InputStream implements BZip2Constants {
                     s--;
                 };
 
-                if (last >= limitLast)
+                if (last >= limitLast) {
                     blockOverrun();
+                }
                 continue;
             } else {
                 char tmp;
                 last++;
-                if (last >= limitLast)
+                if (last >= limitLast) {
                     blockOverrun();
+                }
 
                 tmp = yy[nextSym-1];
                 unzftab[seqToUnseq[tmp]]++;
@@ -625,8 +654,9 @@ public class CBZip2InputStream extends InputStream implements BZip2Constants {
                     yy[j-2] = yy[j-3];
                     yy[j-3] = yy[j-4];
                 }
-                for (; j > 0; j--)
+                for (; j > 0; j--) {
                     yy[j] = yy[j-1];
+                }
 
                 yy[0] = tmp;
                 {
@@ -673,10 +703,12 @@ public class CBZip2InputStream extends InputStream implements BZip2Constants {
         char ch;
 
         cftab[0] = 0;
-        for (i = 1; i <= 256; i++)
+        for (i = 1; i <= 256; i++) {
             cftab[i] = unzftab[i-1];
-        for (i = 1; i <= 256; i++)
+        }
+        for (i = 1; i <= 256; i++) {
             cftab[i] += cftab[i-1];
+        }
 
         for (i = 0; i <= last; i++) {
             ch = (char)ll8[i];
@@ -708,8 +740,9 @@ public class CBZip2InputStream extends InputStream implements BZip2Constants {
             if (rNToGo == 0) {
                 rNToGo = rNums[rTPos];
                 rTPos++;
-                if(rTPos == 512)
+                if(rTPos == 512) {
                     rTPos = 0;
+                }
             }
             rNToGo--;
             ch2 ^= (int)((rNToGo == 1) ? 1 : 0);
@@ -755,8 +788,9 @@ public class CBZip2InputStream extends InputStream implements BZip2Constants {
                 if (rNToGo == 0) {
                     rNToGo = rNums[rTPos];
                     rTPos++;
-                    if(rTPos == 512)
+                    if(rTPos == 512) {
                         rTPos = 0;
+                    }
                 }
                 rNToGo--;
                 z ^= ((rNToGo == 1) ? 1 : 0);
@@ -824,8 +858,9 @@ public class CBZip2InputStream extends InputStream implements BZip2Constants {
 
         blockSize100k = newSize100k;
 
-        if(newSize100k == 0)
+        if(newSize100k == 0) {
             return;
+        }
 
         int n = baseBlockSize * newSize100k;
         ll8 = new char[n];

@@ -259,7 +259,9 @@ public class ExecTask extends Task {
      */
     protected Execute prepareExec() throws BuildException {
         // default directory to the project's base directory
-        if (dir == null) dir = project.getBaseDir();
+        if (dir == null) {
+          dir = project.getBaseDir();
+        }
         // show the command
         log(cmdl.toString(), Project.MSG_VERBOSE);
 
@@ -360,7 +362,9 @@ public class ExecTask extends Task {
      * Create the Watchdog to kill a runaway process.
      */
     protected ExecuteWatchdog createWatchdog() throws BuildException {
-        if (timeout == null) return null;
+        if (timeout == null) {
+          return null;
+        }
         return new ExecuteWatchdog(timeout.intValue());
     }
 
@@ -369,8 +373,12 @@ public class ExecTask extends Task {
      */
     protected void logFlush() {
         try {
-            if (fos != null) fos.close();
-            if (baos != null) baos.close();
+            if (fos != null) {
+              fos.close();
+            }
+            if (baos != null) {
+              baos.close();
+            }
         } catch (IOException io) {}
     }
 

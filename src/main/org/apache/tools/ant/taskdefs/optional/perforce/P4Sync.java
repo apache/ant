@@ -84,8 +84,9 @@ public class P4Sync extends P4Base {
     private String syncCmd = "";
 
     public void setLabel(String label) throws BuildException { 
-        if(label == null && !label.equals(""))
+        if(label == null && !label.equals("")) {
                 throw new BuildException("P4Sync: Labels cannot be Null or Empty");
+        }
 
         this.label = label;
 
@@ -93,8 +94,9 @@ public class P4Sync extends P4Base {
 
 
     public void setForce(String force) throws BuildException {
-        if(force == null && !label.equals(""))
+        if(force == null && !label.equals("")) {
                 throw new BuildException("P4Sync: If you want to force, set force to non-null string!");
+        }
             P4CmdOpts = "-f";
         }
         

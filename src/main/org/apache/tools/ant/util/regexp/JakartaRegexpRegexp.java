@@ -73,8 +73,9 @@ public class JakartaRegexpRegexp extends JakartaRegexpMatcher implements Regexp
     protected int getSubsOptions(int options)
     {
         int subsOptions = RE.REPLACE_FIRSTONLY;
-        if (RegexpUtil.hasFlag(options, REPLACE_ALL))
+        if (RegexpUtil.hasFlag(options, REPLACE_ALL)) {
             subsOptions = RE.REPLACE_ALL;
+        }
         return subsOptions;
     }
 

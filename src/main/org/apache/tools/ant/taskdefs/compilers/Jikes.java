@@ -122,8 +122,9 @@ public class Jikes extends DefaultCompilerAdapter {
         Commandline cmd = new Commandline();
         cmd.setExecutable("jikes");
 
-        if (deprecation == true)
+        if (deprecation == true) {
             cmd.createArgument().setValue("-deprecation");
+        }
 
         if (destDir != null) {
             cmd.createArgument().setValue("-d");

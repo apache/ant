@@ -300,7 +300,9 @@ public class FileSet extends DataType implements Cloneable {
         
         ds.setIncludes(defaultPatterns.getIncludePatterns(p));
         ds.setExcludes(defaultPatterns.getExcludePatterns(p));
-        if (useDefaultExcludes) ds.addDefaultExcludes();
+        if (useDefaultExcludes) {
+          ds.addDefaultExcludes();
+        }
         ds.setCaseSensitive(isCaseSensitive);
     }
 

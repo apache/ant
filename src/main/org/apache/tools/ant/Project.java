@@ -366,7 +366,9 @@ public class Project {
      * @return the property value, or null for no match
      */
     public String getProperty(String name) {
-        if (name == null) return null;
+        if (name == null) {
+          return null;
+        }
         String property = (String) properties.get(name);
         return property;
     }
@@ -388,7 +390,9 @@ public class Project {
      * @return the property value, or null for no match
      */
     public String getUserProperty(String name) {
-        if (name == null) return null;
+        if (name == null) {
+          return null;
+        }
         String property = (String) userProperties.get(name);
         return property;
     }
@@ -516,10 +520,12 @@ public class Project {
      */
     public void setBaseDir(File baseDir) throws BuildException {
         baseDir = fileUtils.normalize(baseDir.getAbsolutePath());
-        if (!baseDir.exists()) 
+        if (!baseDir.exists()) { 
             throw new BuildException("Basedir " + baseDir.getAbsolutePath() + " does not exist");
-        if (!baseDir.isDirectory()) 
+        }
+        if (!baseDir.isDirectory()) { 
             throw new BuildException("Basedir " + baseDir.getAbsolutePath() + " is not a directory");
+        }
         this.baseDir = baseDir;
         setPropertyInternal( "basedir", this.baseDir.getPath());
         String msg = "Project base dir set to: " + this.baseDir;
@@ -635,8 +641,9 @@ public class Project {
             log(message, Project.MSG_ERR);
             throw new BuildException(message);
         }
-        if( !Task.class.isAssignableFrom(taskClass) )
+        if( !Task.class.isAssignableFrom(taskClass) ) {
             TaskAdapter.checkTaskClass(taskClass, this);
+        }
     }
 
     /**
@@ -815,8 +822,9 @@ public class Project {
     public Object createDataType(String typeName) throws BuildException {
         Class c = (Class) dataClassDefinitions.get(typeName);
 
-        if (c == null)
+        if (c == null) {
             return null;
+        }
 
         try {
             java.lang.reflect.Constructor ctor = null;

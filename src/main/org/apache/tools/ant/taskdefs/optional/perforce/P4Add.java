@@ -87,14 +87,16 @@ public class P4Add extends P4Base {
     private int m_cmdLength = 450;
 
     public void setCommandlength(int len) throws BuildException {
-        if(len <= 0)
+        if(len <= 0) {
             throw new BuildException("P4Add: Commandlength should be a positive number");
+        }
         this.m_cmdLength = len;
     }
 
     public void setChangelist(int changelist) throws BuildException {
-        if(changelist <= 0)
+        if(changelist <= 0) {
             throw new BuildException("P4Add: Changelist# should be a positive number");
+        }
 
         this.m_changelist = changelist;
     }

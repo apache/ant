@@ -777,8 +777,9 @@ public class GenericDeploymentTool implements EJBDeploymentTool {
         Iterator i = checkEntries.keySet().iterator();
         while (i.hasNext()) {
             String entryName = (String)i.next();
-            if (entryName.endsWith(".class"))
+            if (entryName.endsWith(".class")) {
                 newSet.add(entryName.substring(0, entryName.length() - ".class".length()).replace(File.separatorChar, '/'));
+            }
         }
         set.addAll(newSet);
 

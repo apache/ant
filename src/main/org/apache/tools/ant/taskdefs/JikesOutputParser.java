@@ -125,10 +125,11 @@ public class JikesOutputParser implements ExecuteStreamHandler {
      * @param reader - Reader used to read jikes's output
      */
     protected void parseOutput(BufferedReader reader) throws IOException {
-       if (emacsMode)
+       if (emacsMode) {
            parseEmacsOutput(reader);
-       else
+       } else {
            parseStandardOutput(reader);
+       }
     }
 
     private void parseStandardOutput(BufferedReader reader) throws IOException {
@@ -145,21 +146,23 @@ public class JikesOutputParser implements ExecuteStreamHandler {
 
         while ((line = reader.readLine()) != null) {
             lower = line.toLowerCase();
-            if (line.trim().equals(""))
+            if (line.trim().equals("")) {
                 continue;
-            if (lower.indexOf("error") != -1)
+            }
+            if (lower.indexOf("error") != -1) {
                 setError(true);
-            else if (lower.indexOf("warning") != -1)
+            } else if (lower.indexOf("warning") != -1) {
                 setError(false);
-            else {
+                   } else {
                 // If we don't know the type of the line
                 // and we are in emacs mode, it will be
                 // an error, because in this mode, jikes won't
                 // always print "error", but sometimes other
                 // keywords like "Syntax". We should look for
                 // all those keywords.
-                if (emacsMode)
+                if (emacsMode) {
                     setError(true);
+                }
             }
             log(line);
         }
@@ -172,8 +175,9 @@ public class JikesOutputParser implements ExecuteStreamHandler {
 
     private void setError(boolean err) {
         error = err;
-        if(error)
+        if(error) {
             errorFlag = true;
+        }
     }
 
     private void log(String line) {

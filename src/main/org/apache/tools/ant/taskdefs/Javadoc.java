@@ -751,10 +751,11 @@ public class Javadoc extends Task {
         toExecute.setExecutable( getJavadocExecutableName() );
 
 // ------------------------------------------------ general javadoc arguments
-        if (classpath == null)
+        if (classpath == null) {
             classpath = Path.systemClasspath;
-        else
+        } else {
             classpath = classpath.concatSystemClasspath("ignore");
+        }
 
         if (!javadoc1) {
             toExecute.createArgument().setValue("-classpath");
@@ -767,10 +768,12 @@ public class Javadoc extends Task {
                                                 System.getProperty("path.separator") + classpath.toString());
         }
 
-        if (version && doclet == null)
+        if (version && doclet == null) {
             toExecute.createArgument().setValue("-version");
-        if (author && doclet == null)
+        }
+        if (author && doclet == null) {
             toExecute.createArgument().setValue("-author");
+        }
 
         if (javadoc1 || doclet == null) {
             if (destDir == null) {
@@ -1027,7 +1030,9 @@ public class Javadoc extends Task {
         Vector addedPackages = new Vector();
 
         String[] list = sourcePath.list();
-        if (list == null) list = new String[0];
+        if (list == null) {
+          list = new String[0];
+        }
 
         FileSet fs = new FileSet();
         fs.setDefaultexcludes(useDefaultExcludes);
@@ -1123,10 +1128,11 @@ public class Javadoc extends Task {
                 queuedLine = line;
             } else {
                 if (queuedLine != null) {
-                    if (line.startsWith("Building "))
+                    if (line.startsWith("Building ")) {
                         super.processLine(queuedLine, Project.MSG_VERBOSE);
-                    else
+                    } else {
                         super.processLine(queuedLine, Project.MSG_INFO);
+                    }
                     queuedLine = null;
                 }
                 super.processLine(line, messageLevel);

@@ -94,7 +94,9 @@ public class CommandlineJava implements Cloneable {
         public String[] getVariables() throws BuildException {
             String props[] = super.getVariables();
       
-            if (props == null) return null;
+            if (props == null) {
+              return null;
+            }
 
             for (int i = 0; i < props.length; i++) {
                 props[i] = "-D" + props[i];
@@ -121,8 +123,9 @@ public class CommandlineJava implements Cloneable {
         }
 
         public void restoreSystem() throws BuildException {
-            if (sys == null)
+            if (sys == null) {
                 throw new BuildException("Unbalanced nesting of SysProperties");
+            }
 
             try {
                 System.setProperties(sys);

@@ -100,8 +100,12 @@ public class LogOutputStream extends OutputStream {
     public void write(int cc) throws IOException {
         final byte c = (byte)cc;
         if ((c == '\n') || (c == '\r')) {
-            if (!skip) processBuffer();
-        } else buffer.write(cc);
+            if (!skip) {
+              processBuffer();
+            }
+        } else {
+          buffer.write(cc);
+        }
         skip = (c == '\r');
     }
 
@@ -137,7 +141,9 @@ public class LogOutputStream extends OutputStream {
      * Writes all remaining
      */
     public void close() throws IOException {
-        if (buffer.size() > 0) processBuffer();
+        if (buffer.size() > 0) {
+          processBuffer();
+        }
         super.close();
     }
 

@@ -257,17 +257,20 @@ public class JDependTask extends Task {
 
         CommandlineJava commandline = new CommandlineJava();
 
-        if("text".equals(format))
+        if("text".equals(format)) {
             commandline.setClassname("jdepend.textui.JDepend");
-        else
-        if("xml".equals(format))
+        } else
+        if("xml".equals(format)) {
             commandline.setClassname("jdepend.xmlui.JDepend");
+        }
 
-        if(_jvm!=null)
+        if(_jvm!=null) {
             commandline.setVm(_jvm);
+        }
 
-        if (getSourcespath() == null)
+        if (getSourcespath() == null) {
             throw new BuildException("Missing Sourcepath required argument");
+        }
 
         // execute the test and get the return code
         int exitValue = JDependTask.ERRORS;
@@ -289,11 +292,12 @@ public class JDependTask extends Task {
         boolean errorOccurred = exitValue == JDependTask.ERRORS;
 
         if (errorOccurred) {
-            if  (getHaltonerror())
+            if  (getHaltonerror()) {
                 throw new BuildException("JDepend failed",
                                          location);
-            else
+            } else {
                 log("JDepend FAILED", Project.MSG_ERR);
+            }
         }
     }
 
@@ -310,10 +314,11 @@ public class JDependTask extends Task {
     public int executeInVM(CommandlineJava commandline) throws BuildException {
         jdepend.textui.JDepend jdepend;
 
-        if("xml".equals(format))
+        if("xml".equals(format)) {
             jdepend = new jdepend.xmlui.JDepend();
-        else
+        } else {
             jdepend = new jdepend.textui.JDepend();
+        }
 
         if (getOutputFile() != null) {
             FileWriter fw;
@@ -386,8 +391,9 @@ public class JDependTask extends Task {
             File f = new File(sourcesPath.nextToken());
 
             // not necessary as JDepend would fail, but why loose some time?
-            if (! f.exists() || !f.isDirectory())
+            if (! f.exists() || !f.isDirectory()) {
                 throw new BuildException("\""+ f.getPath() + "\" does not represent a valid directory. JDepend would fail.");
+            }
             commandline.createArgument().setValue(f.getPath());
         }
 
@@ -398,8 +404,9 @@ public class JDependTask extends Task {
             execute.setAntRun(project);
         }
 
-        if (getOutputFile() != null)
+        if (getOutputFile() != null) {
             log("Output to be stored in " + getOutputFile().getPath());
+        }
         log("Executing: "+commandline.toString(), Project.MSG_VERBOSE);
         try {
             return execute.execute();

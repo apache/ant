@@ -137,8 +137,9 @@ public class PathConvert extends Task {
      */
     public Path createPath() {
 
-        if( isReference() )
+        if( isReference() ) {
             throw noChildrenAllowed();
+        }
 
         if( path == null ) {
             path = new Path(getProject());
@@ -190,8 +191,9 @@ public class PathConvert extends Task {
      * Adds a reference to a PATH or FILESET defined elsewhere.
      */
     public void setRefid(Reference r) {
-        if( path != null )
+        if( path != null ) {
             throw noChildrenAllowed();
+        }
 
         refid = r;
     }
@@ -271,7 +273,9 @@ public class PathConvert extends Task {
 
             elem = elem.replace( fromDirSep, toDirSep );
 
-            if( i != 0 ) rslt.append( pathSep );
+            if( i != 0 ) {
+              rslt.append( pathSep );
+            }
             rslt.append( elem );
         }
 
@@ -323,16 +327,19 @@ public class PathConvert extends Task {
      */
     private void validateSetup() throws BuildException {
 
-        if( path == null )
+        if( path == null ) {
             throw new BuildException( "You must specify a path to convert" );
+        }
 
-        if( property == null )
+        if( property == null ) {
             throw new BuildException( "You must specify a property" );
+        }
 
         // Must either have a target OS or both a dirSep and pathSep
 
-        if( targetOS == null && pathSep == null && dirSep == null )
+        if( targetOS == null && pathSep == null && dirSep == null ) {
             throw new BuildException( "You must specify at least one of targetOS, dirSep, or pathSep" );
+        }
 
         // Determine the separator strings.  The dirsep and pathsep attributes
         // override the targetOS settings.

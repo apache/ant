@@ -119,16 +119,18 @@ public class RegularExpression extends DataType
      */
     public String getPattern(Project p)
     {
-        if (isReference())
+        if (isReference()) {
             return getRef(p).getPattern(p);
+        }
 
         return regexp.getPattern();
     }
 
     public Regexp getRegexp(Project p)
     {
-        if (isReference())
+        if (isReference()) {
             return getRef(p).getRegexp(p);
+        }
         return this.regexp;
     }
 

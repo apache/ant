@@ -172,7 +172,9 @@ public class Execute {
      * Find the list of environment variables for this process.
      */
     public static synchronized Vector getProcEnvironment() {
-        if (procEnvironment != null) return procEnvironment;
+        if (procEnvironment != null) {
+          return procEnvironment;
+        }
 
         procEnvironment = new Vector();
         try {
@@ -326,7 +328,9 @@ public class Execute {
      * @return the environment used to create a subprocess
      */
     public String[] getEnvironment() {
-        if (env == null || newEnvironment) return env;
+        if (env == null || newEnvironment) {
+          return env;
+        }
         return patchEnvironment();
     }
 
@@ -352,10 +356,11 @@ public class Execute {
      * @param wd the working directory of the process.
      */
     public void setWorkingDirectory(File wd) {
-        if (wd == null || wd.getAbsolutePath().equals(antWorkingDirectory))
+        if (wd == null || wd.getAbsolutePath().equals(antWorkingDirectory)) {
             workingDirectory = null;
-        else
+        } else {
             workingDirectory = wd;
+        }
     }
 
     /**
@@ -408,16 +413,22 @@ public class Execute {
         //
         processDestroyer.add(process);
 
-        if (watchdog != null) watchdog.start(process);
+        if (watchdog != null) {
+          watchdog.start(process);
+        }
         waitFor(process);
 
         // remove the process to the list of those to destroy if the VM exits
         //
         processDestroyer.remove(process);
 
-        if (watchdog != null) watchdog.stop();
+        if (watchdog != null) {
+          watchdog.stop();
+        }
         streamHandler.stop();
-        if (watchdog != null) watchdog.checkException();
+        if (watchdog != null) {
+          watchdog.checkException();
+        }
         return getExitValue();
     }
 

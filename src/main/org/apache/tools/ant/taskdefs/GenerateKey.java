@@ -128,7 +128,9 @@ public class GenerateKey extends Task {
         public String encode( final String string ) {
             int end = string.indexOf(',');
 
-            if( -1 == end ) return string;
+            if( -1 == end ) {
+              return string;
+            }
                 
             final StringBuffer sb = new StringBuffer();
                 

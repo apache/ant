@@ -157,8 +157,9 @@ public class Recorder extends Task {
      * The main execution.
      */
     public void execute() throws BuildException {
-        if ( filename == null )
+        if ( filename == null ) {
             throw new BuildException( "No filename specified" );
+        }
 
         getProject().log( "setting a recorder for name " + filename,
             Project.MSG_DEBUG );

@@ -116,9 +116,15 @@ public abstract class P4Base extends org.apache.tools.ant.Task {
         //Get default P4 settings from environment - Mark would have done something cool with
             //introspection here.....:-)
             String tmpprop;
-        if((tmpprop = project.getProperty("p4.port")) != null) setPort(tmpprop);
-        if((tmpprop = project.getProperty("p4.client")) != null) setClient(tmpprop);
-        if((tmpprop = project.getProperty("p4.user")) != null) setUser(tmpprop);        
+        if((tmpprop = project.getProperty("p4.port")) != null) {
+          setPort(tmpprop);
+        }
+        if((tmpprop = project.getProperty("p4.client")) != null) {
+          setClient(tmpprop);
+        }
+        if((tmpprop = project.getProperty("p4.user")) != null) {
+          setUser(tmpprop);
+        }        
     }
 
     protected void execP4Command(String command) throws BuildException {
@@ -157,7 +163,9 @@ public abstract class P4Base extends org.apache.tools.ant.Task {
     
             log("Execing "+cmdl, Project.MSG_VERBOSE);
 
-            if(handler == null ) handler = new SimpleP4OutputHandler(this);
+            if(handler == null ) {
+              handler = new SimpleP4OutputHandler(this);
+            }
 
             Execute exe = new Execute(handler, null);
 
