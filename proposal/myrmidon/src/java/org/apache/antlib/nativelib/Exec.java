@@ -10,11 +10,11 @@ package org.apache.antlib.nativelib;
 import java.io.File;
 import java.io.IOException;
 import java.util.Properties;
+import org.apache.aut.nativelib.Os;
 import org.apache.avalon.excalibur.i18n.ResourceManager;
 import org.apache.avalon.excalibur.i18n.Resources;
 import org.apache.myrmidon.api.AbstractTask;
 import org.apache.myrmidon.api.TaskException;
-import org.apache.aut.nativelib.Os;
 import org.apache.tools.ant.taskdefs.exec.Execute2;
 import org.apache.tools.ant.types.Argument;
 import org.apache.tools.ant.types.Commandline;
@@ -107,7 +107,7 @@ public class Exec
         throws TaskException
     {
         validate();
-        if( Os.isFamily( m_os ) )
+        if( null == m_os || Os.isFamily( m_os ) )
         {
             final Execute2 exe = createExecute();
             doExecute( exe );
