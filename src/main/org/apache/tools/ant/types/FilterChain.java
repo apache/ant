@@ -1,5 +1,5 @@
 /*
- * Copyright  2002-2004 The Apache Software Foundation
+ * Copyright  2002-2005 The Apache Software Foundation
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -45,82 +45,160 @@ public class FilterChain extends DataType
 
     private Vector filterReaders = new Vector();
 
-    public final void addFilterReader(final AntFilterReader filterReader) {
+    /**
+     * Add an AntFilterReader filter.
+     *
+     * @param filterReader an <code>AntFilterReader</code> value
+     */
+    public void addFilterReader(final AntFilterReader filterReader) {
         filterReaders.addElement(filterReader);
     }
 
-    public final Vector getFilterReaders() {
+    /**
+     * Return the filters.
+     *
+     * @return a <code>Vector</code> value containing the filters
+     */
+    public Vector getFilterReaders() {
         return filterReaders;
     }
 
-    public final void addClassConstants(final ClassConstants classConstants) {
+    /**
+     * Add a ClassConstants filter.
+     *
+     * @param classConstants a <code>ClassConstants</code> value
+     */
+    public void addClassConstants(final ClassConstants classConstants) {
         filterReaders.addElement(classConstants);
     }
 
-    public final void addExpandProperties(final ExpandProperties expandProperties) {
+    /**
+     * Add an ExpandProperties filter.
+     *
+     * @param expandProperties an <code>ExpandProperties</code> value
+     */
+    public void addExpandProperties(final ExpandProperties expandProperties) {
         filterReaders.addElement(expandProperties);
     }
 
-    public final void addHeadFilter(final HeadFilter headFilter) {
+    /**
+     * Add a HeadFilter filter.
+     *
+     * @param headFilter a <code>HeadFilter</code> value
+     */
+    public void addHeadFilter(final HeadFilter headFilter) {
         filterReaders.addElement(headFilter);
     }
 
-    public final void addLineContains(final LineContains lineContains) {
+    /**
+     * Add a LineContains filter.
+     *
+     * @param lineContains a <code>LineContains</code> value
+     */
+    public void addLineContains(final LineContains lineContains) {
         filterReaders.addElement(lineContains);
     }
 
-    public final void addLineContainsRegExp(final LineContainsRegExp
+    /**
+     * Add a LineContainsRegExp filter.
+     *
+     * @param lineContainsRegExp a <code>LineContainsRegExp</code> value
+     */
+    public void addLineContainsRegExp(final LineContainsRegExp
                                                 lineContainsRegExp) {
         filterReaders.addElement(lineContainsRegExp);
     }
 
-    public final void addPrefixLines(final PrefixLines prefixLines) {
+    /**
+     * Add a PrefixLines filter.
+     *
+     * @param prefixLines a <code>PrefixLines</code> value
+     */
+    public void addPrefixLines(final PrefixLines prefixLines) {
         filterReaders.addElement(prefixLines);
     }
 
-    public final void addReplaceTokens(final ReplaceTokens replaceTokens) {
+    /**
+     * Add a ReplaceTokens filter.
+     *
+     * @param replaceTokens a <code>ReplaceTokens</code> value
+     */
+    public void addReplaceTokens(final ReplaceTokens replaceTokens) {
         filterReaders.addElement(replaceTokens);
     }
 
-    public final void addStripJavaComments(final StripJavaComments
+    /**
+     * Add a StripJavaCommands filter.
+     *
+     * @param stripJavaComments a <code>StripJavaComments</code> value
+     */
+    public void addStripJavaComments(final StripJavaComments
                                                 stripJavaComments) {
         filterReaders.addElement(stripJavaComments);
     }
 
-    public final void addStripLineBreaks(final StripLineBreaks
+    /**
+     * Add a StripLineBreaks filter.
+     *
+     * @param stripLineBreaks a <code>StripLineBreaks</code> value
+     */
+    public void addStripLineBreaks(final StripLineBreaks
                                                 stripLineBreaks) {
         filterReaders.addElement(stripLineBreaks);
     }
 
-    public final void addStripLineComments(final StripLineComments
+    /**
+     * Add a StripLineComments filter.
+     *
+     * @param stripLineComments a <code>StripLineComments</code> value
+     */
+    public void addStripLineComments(final StripLineComments
                                                 stripLineComments) {
         filterReaders.addElement(stripLineComments);
     }
 
-    public final void addTabsToSpaces(final TabsToSpaces tabsToSpaces) {
+    /**
+     * Add a TabsToSpaces filter.
+     *
+     * @param tabsToSpaces a <code>TabsToSpaces</code> value
+     */
+    public void addTabsToSpaces(final TabsToSpaces tabsToSpaces) {
         filterReaders.addElement(tabsToSpaces);
     }
 
-    public final void addTailFilter(final TailFilter tailFilter) {
+    /**
+     * Add a TailFilter filter.
+     *
+     * @param tailFilter a <code>TailFilter</code> value
+     */
+    public void addTailFilter(final TailFilter tailFilter) {
         filterReaders.addElement(tailFilter);
     }
 
     /**
+     * Add an EscapeUnicode filter.
+     *
+     * @param escapeUnicode an <code>EscapeUnicode</code> value
      * @since Ant 1.6
      */
-    public final void addEscapeUnicode(final EscapeUnicode escapeUnicode) {
+    public void addEscapeUnicode(final EscapeUnicode escapeUnicode) {
         filterReaders.addElement(escapeUnicode);
     }
 
     /**
+     * Add a TokenFilter filter.
+     *
+     * @param tokenFilter a <code>TokenFilter</code> value
      * @since Ant 1.6
      */
-    public final void addTokenFilter(final TokenFilter tokenFilter) {
+    public void addTokenFilter(final TokenFilter tokenFilter) {
         filterReaders.addElement(tokenFilter);
     }
 
     /**
-     * delete characters filter
+     * Add a delete characters filter.
+     *
+     * @param filter a <code>TokenFilter.DeleteCharacters</code> value
      * @since Ant 1.6
      */
     public void addDeleteCharacters(TokenFilter.DeleteCharacters filter) {
@@ -128,7 +206,9 @@ public class FilterChain extends DataType
     }
 
     /**
-     * containsregex
+     * Add a containsregex filter.
+     *
+     * @param filter a <code>TokenFilter.ContainsRegex</code> value
      * @since Ant 1.6
      */
     public void addContainsRegex(TokenFilter.ContainsRegex filter) {
@@ -136,15 +216,18 @@ public class FilterChain extends DataType
     }
 
     /**
-     * replaceregex
-     * @since Ant 1.6
+     * Add a replaceregex filter.
+     *
+     * @param filter a <code>TokenFilter.ReplaceRegex</code> value
      */
     public void addReplaceRegex(TokenFilter.ReplaceRegex filter) {
         filterReaders.addElement(filter);
     }
 
     /**
-     * trim
+     * Add a trim filter.
+     *
+     * @param filter a <code>TokenFilter.Trim</code> value
      * @since Ant 1.6
      */
     public void addTrim(TokenFilter.Trim filter) {
@@ -152,7 +235,9 @@ public class FilterChain extends DataType
     }
 
     /**
-     * replacestring
+     * Add a replacestring filter.
+     *
+     * @param filter a <code>TokenFilter.ReplaceString</code> value
      * @since Ant 1.6
      */
     public void addReplaceString(
@@ -161,7 +246,9 @@ public class FilterChain extends DataType
     }
 
     /**
-     * ignoreBlank
+     * Add an ignoreBlank filter.
+     *
+     * @param filter a <code>TokenFilter.IgnoreBlank</code> value
      * @since Ant 1.6
      */
     public void addIgnoreBlank(
@@ -198,7 +285,9 @@ public class FilterChain extends DataType
     }
 
     /**
-     * add a chainfilter
+     * Add a chainfilter filter.
+     *
+     * @param filter a <code>ChainableReader</code> value
      * @since Ant 1.6
      */
 
