@@ -1,0 +1,89 @@
+<?xml version="1.0"?>
+<project name="rmic" default="teardown" basedir=".">
+
+  <property name="rmic.dir" location="." />
+  <property name="src.dir" location="${rmic.dir}/src"/>
+  <property name="build.dir" location="${rmic.dir}/build"/>
+
+  <target name="teardown">
+    <delete dir="${build.dir}"/>
+  </target>
+
+  <!-- init builds the java source -->
+  <target name="init" depends="probe-rmic">
+    <mkdir dir="${build.dir}"/>
+
+    <javac
+      destdir="${build.dir}"
+      srcdir="${src.dir}" >
+    </javac>
+
+    <presetdef name="base-rmic">
+      <rmic
+        base="${build.dir}"
+        verify="true"
+        includes="**/*.class"/>
+    </presetdef>
+  </target>
+  
+  <target name="probe-rmic">
+    <available property="kaffe.present" classname="jkaffe.rmi.rmic.RMIC"/>
+    <available property="rmic.present" classname="sun.rmi.rmic.Main"/>
+    <available property="wlrmic.present" classname="weblogic.rmic"/>
+  </target>
+  
+  <target name="testRmic" if="rmic.present" depends="init">
+    <base-rmic />
+  </target>
+
+  <target name="testKaffe" if="kaffe.present" depends="init">
+    <base-rmic
+      compiler="kaffe"
+      />
+  </target>
+
+  <target name="testWlrmic" if="wlrmic.present" depends="init">
+    <base-rmic
+      compiler="wlrmic"
+      />
+  </target>
+
+  <target name="testForking" if="rmic.present" depends="init">
+    <base-rmic
+      compiler="forking"
+      />
+  </target>
+
+  <target name="testBadName" if="rmic.present" depends="init">
+    <base-rmic
+      compiler="no-such-compiler"
+      />
+  </target>
+
+  <target name="testWrongClass" if="rmic.present" depends="init">
+    <base-rmic
+      compiler="org.apache.tools.ant.BuildException"
+      />
+  </target>
+
+  <target name="testNoBase" depends="init">
+    <rmic
+      verify="true"
+      includes="**/*.class"/>
+  </target>
+
+  <target name="testBaseDoesntExist" depends="init">
+    <rmic
+      base="${build.dir}/classes"
+      verify="true"
+      includes="**/*.class"/>
+  </target>
+
+  <target name="testBaseIsntDir" depends="init">
+    <rmic
+      base="${ant.file}"
+      verify="true"
+      includes="**/*.class"/>
+  </target>
+
+</project>

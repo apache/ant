@@ -26,6 +26,7 @@ import org.apache.tools.ant.DirectoryScanner;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.taskdefs.rmic.RmicAdapter;
 import org.apache.tools.ant.taskdefs.rmic.RmicAdapterFactory;
+import org.apache.tools.ant.taskdefs.rmic.KaffeRmic;
 import org.apache.tools.ant.types.FilterSetCollection;
 import org.apache.tools.ant.types.Path;
 import org.apache.tools.ant.types.Reference;
@@ -106,14 +107,17 @@ public class Rmic extends MatchingTask {
     private FileUtils fileUtils = FileUtils.newFileUtils();
 
     private FacadeTaskHelper facade;
+    public static final String ERROR_UNABLE_TO_VERIFY_CLASS = "Unable to verify class ";
+    public static final String ERROR_NOT_FOUND = ". It could not be found.";
+    public static final String ERROR_NOT_DEFINED = ". It is not defined.";
+    public static final String ERROR_LOADING_CAUSED_EXCEPTION = ". Loading caused Exception: ";
+    public static final String ERROR_NO_BASE_EXISTS = "base does not exist: ";
+    public static final String ERROR_NOT_A_DIR = "base is not a directory:";
+    public static final String ERROR_BASE_NOT_SET = "base attribute must be set!";
 
     public Rmic() {
-        try {
-            Class.forName("kaffe.rmi.rmic.RMIC");
-            facade = new FacadeTaskHelper("kaffe");
-        } catch (ClassNotFoundException cnfe) {
-            facade = new FacadeTaskHelper("sun");
-        }
+        String facadeName=KaffeRmic.isAvailable()?"kaffe":"sun";
+        facade = new FacadeTaskHelper(facadeName);
     }
 
     /**
@@ -433,12 +437,14 @@ public class Rmic extends MatchingTask {
      */
     public void execute() throws BuildException {
         if (baseDir == null) {
-            throw new BuildException("base attribute must be set!", getLocation());
+            throw new BuildException(ERROR_BASE_NOT_SET, getLocation());
         }
         if (!baseDir.exists()) {
-            throw new BuildException("base does not exist!", getLocation());
+            throw new BuildException(ERROR_NO_BASE_EXISTS+baseDir, getLocation());
         }
-
+        if ( !baseDir.isDirectory() ) {
+            throw new BuildException(ERROR_NOT_A_DIR+baseDir, getLocation());
+        }
         if (verify) {
             log("Verify has been turned on.", Project.MSG_VERBOSE);
         }
@@ -595,14 +601,14 @@ public class Rmic extends MatchingTask {
             }
             return isValidRmiRemote(testClass);
         } catch (ClassNotFoundException e) {
-            log("Unable to verify class " + classname
-                + ". It could not be found.", Project.MSG_WARN);
+            log(ERROR_UNABLE_TO_VERIFY_CLASS + classname
+                + ERROR_NOT_FOUND, Project.MSG_WARN);
         } catch (NoClassDefFoundError e) {
-            log("Unable to verify class " + classname
-                + ". It is not defined.", Project.MSG_WARN);
+            log(ERROR_UNABLE_TO_VERIFY_CLASS + classname
+                + ERROR_NOT_DEFINED, Project.MSG_WARN);
         } catch (Throwable t) {
-            log("Unable to verify class " + classname
-                + ". Loading caused Exception: "
+            log(ERROR_UNABLE_TO_VERIFY_CLASS + classname
+                + ERROR_LOADING_CAUSED_EXCEPTION
                 + t.getMessage(), Project.MSG_WARN);
         }
         // we only get here if an exception has been thrown

@@ -21,6 +21,7 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
+import org.apache.tools.ant.util.facade.FacadeTaskHelper;
 import org.apache.tools.ant.types.Commandline;
 
 /**
@@ -29,6 +30,7 @@ import org.apache.tools.ant.types.Commandline;
  * @since Ant 1.4
  */
 public class KaffeRmic extends DefaultRmicAdapter {
+    public static final String RMIC_CLASSNAME = "kaffe.rmi.rmic.RMIC";
 
     public boolean execute() throws BuildException {
         getRmic().log("Using Kaffe rmic", Project.MSG_VERBOSE);
@@ -36,7 +38,7 @@ public class KaffeRmic extends DefaultRmicAdapter {
 
         try {
 
-            Class c = Class.forName("kaffe.rmi.rmic.RMIC");
+            Class c = Class.forName(RMIC_CLASSNAME);
             Constructor cons = c.getConstructor(new Class[] {String[].class});
             Object rmic = cons.newInstance(new Object[] {cmd.getArguments()});
             Method doRmic = c.getMethod("run", null);
@@ -56,6 +58,19 @@ public class KaffeRmic extends DefaultRmicAdapter {
                 throw new BuildException("Error starting Kaffe rmic: ",
                                          ex, getRmic().getLocation());
             }
+        }
+    }
+
+    /**
+     * test for kaffe being on the system
+     * @return
+     */
+    public static boolean isAvailable() {
+        try {
+            Class.forName(RMIC_CLASSNAME);
+            return true;
+        } catch (ClassNotFoundException cnfe) {
+            return false;
         }
     }
 }

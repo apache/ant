@@ -29,6 +29,12 @@ import org.apache.tools.ant.types.Commandline;
  * @since Ant 1.4
  */
 public class WLRmic extends DefaultRmicAdapter {
+    public static final String WLRMIC_CLASSNAME = "weblogic.rmic";
+    public static final String ERROR_NO_WLRMIC_ON_CLASSPATH = "Cannot use WebLogic rmic, as it is not "
+                                         + "available.  A common solution is to "
+                                         + "set the environment variable "
+                                         + "CLASSPATH.";
+    public static final String ERROR_WLRMIC_FAILED = "Error starting WebLogic rmic: ";
 
     public boolean execute() throws BuildException {
         getRmic().log("Using WebLogic rmic", Project.MSG_VERBOSE);
@@ -39,26 +45,23 @@ public class WLRmic extends DefaultRmicAdapter {
             // Create an instance of the rmic
             Class c = null;
             if (getRmic().getClasspath() == null) {
-                c = Class.forName("weblogic.rmic");
+                c = Class.forName(WLRMIC_CLASSNAME);
             } else {
                 loader
                     = getRmic().getProject().createClassLoader(getRmic().getClasspath());
-                c = Class.forName("weblogic.rmic", true, loader);
+                c = Class.forName(WLRMIC_CLASSNAME, true, loader);
             }
             Method doRmic = c.getMethod("main",
                                         new Class [] {String[].class});
             doRmic.invoke(null, new Object[] {cmd.getArguments()});
             return true;
         } catch (ClassNotFoundException ex) {
-            throw new BuildException("Cannot use WebLogic rmic, as it is not "
-                                     + "available.  A common solution is to "
-                                     + "set the environment variable "
-                                     + "CLASSPATH.", getRmic().getLocation());
+            throw new BuildException(ERROR_NO_WLRMIC_ON_CLASSPATH, getRmic().getLocation());
         } catch (Exception ex) {
             if (ex instanceof BuildException) {
                 throw (BuildException) ex;
             } else {
-                throw new BuildException("Error starting WebLogic rmic: ", ex,
+                throw new BuildException(ERROR_WLRMIC_FAILED, ex,
                                          getRmic().getLocation());
             }
         } finally {
