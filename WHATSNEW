@@ -1,6 +1,9 @@
 Changes from Ant 1.5.1 to current CVS version
 =============================================
 
+Changes that could break older environments:
+--------------------------------------------
+
 Fixed bugs:
 -----------
 
@@ -20,9 +23,14 @@ Fixed bugs:
   process a file if it is current.  Previously you had to process everything
   unless you ran against the default folder which wasn't the normal use-case for
   ant-starteam.  The stlist task now similarly displays that status correctly
-  making it a more generally useful tool.  Support added for revision labels and
-  build labels.  Checkouts now have the option of using repository timestamps,
-  instead of current.
+  making it a more generally useful tool. 
+  
+  Other changes:
+  --------------
+  
+* Starteam tasks now have support for revision labels and build labels.
+  Checkouts now have the option of using repository timestamps, instead
+  of current.
 
 
 Changes from Ant 1.5.1Beta1 to 1.5.1
