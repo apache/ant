@@ -72,9 +72,9 @@ import org.apache.tools.ant.types.Parameter;
  *
  * Or:
  *
- * <pre>&lt;filterreader classname="org.apache.tools.ant.filters.LineContains"&gt;
- *    &lt;param type="contains" value="foo"/&gt;
- *    &lt;param type="contains" value="bar"/&gt;
+ * <pre>&lt;filterreader classname=&quot;org.apache.tools.ant.filters.LineContains&quot;&gt;
+ *    &lt;param type=&quot;contains&quot; value=&quot;foo&quot;/&gt;
+ *    &lt;param type=&quot;contains&quot; value=&quot;bar&quot;/&gt;
  * &lt;/filterreader&gt;</pre>
  *
  * This will include only those lines that contain <code>foo</code> and
