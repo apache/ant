@@ -137,7 +137,7 @@ public class FixCrLfTest extends BuildFileTest {
         assertEqualContent(new File("src/etc/testcases/taskdefs/fixcrlf/expected/Mac2Unix"),
                            new File("src/etc/testcases/taskdefs/fixcrlf/result/Mac2Unix"));
     }
-    
+
     public void testNoOverwrite() throws IOException {
         executeTarget("test1");
         File result = 

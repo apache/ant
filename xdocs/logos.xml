@@ -326,6 +326,36 @@
         <td>fmignon at mail.com</td>
         <td><img src="images/florent2.jpg"/></td>
       </tr>
+      <tr>
+        <td>52</td>
+        <td>38</td>
+        <td>Dylan Schiemann (dylans at yahoo.com)</td>
+        <td><img src="http://www.sitepen.com/portfolio/images/antlogo.jpg"/></td>
+      </tr>
+      <tr>
+        <td>53</td>
+        <td>39</td>
+        <td>Magesh Umasankar (umagesh at apache.org)</td>
+        <td><img src="images/umasankar.jpg"/></td>
+      </tr>
+      <tr>
+        <td>54</td>
+        <td>40</td>
+        <td>James Andrews (jimhole23 at yahoo.com)</td>
+        <td><img src="images/andrews.gif"/></td>
+      </tr>
+      <tr>
+        <td>55</td>
+        <td>41</td>
+        <td>Conor MacNeill (conor at cortexebusiness.com.au)</td>
+        <td><pre>
+&lt;ant&gt;
+ \_/
+\(_)/
+-(_)-
+/(_)\
+</pre></td>
+      </tr>
      </table>
   </section>
 </body>
