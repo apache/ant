@@ -51,6 +51,9 @@ Fixed bugs:
 
 * <junit> and <assertions> are working together. Bugzilla report 27218
 
+* AntClassLoader#getResource could return invalid URLs.  Bugzilla
+  Report 28060.
+
 Other changes:
 --------------
 
