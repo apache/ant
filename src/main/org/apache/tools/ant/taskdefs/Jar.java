@@ -57,6 +57,7 @@ package org.apache.tools.ant.taskdefs;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -134,6 +135,12 @@ public class Jar extends Zip {
 
     /** jar index is JDK 1.3+ only */
     private boolean index = false;
+
+    /** 
+     * whether to really create the archive in createEmptyZip, will
+     * get set in getResourcesToAdd.
+     */
+    private boolean createEmpty = false;
 
     /** constructor */
     public Jar() {
@@ -232,6 +239,11 @@ public class Jar extends Zip {
         return newManifest;
     }
 
+    /**
+     * @return null if jarFile doesn't contain a manifest, the
+     * manifest otherwise.
+     * @since Ant 1.5.2
+     */
     private Manifest getManifestFromJar(File jarFile) throws IOException {
         ZipFile zf = null;
         try {
@@ -563,33 +575,43 @@ public class Jar extends Zip {
             // no existing archive
             needsUpdate = true;
         }
-        
-        Resource[][] fromZip = 
-            super.getResourcesToAdd(filesets, zipFile, needsUpdate);
-        if (needsUpdate && isEmpty(fromZip)) {
-            // archive doesn't have any content apart from the manifest
 
-            /*
-             * OK, this is a hack.
-             *
-             * Zip doesn't care if the array we return is longer than
-             * the array of filesets, so we can savely append an
-             * additional non-empty array.  This will make Zip think
-             * that there are resources out-of-date and at the same
-             * time add nothing.
-             *
-             * The whole manifest handling happens in initZipOutputStream.
-             */
-            Resource[][] tmp = new Resource[fromZip.length + 1][];
-            System.arraycopy(fromZip, 0, tmp, 0, fromZip.length);
-            tmp[fromZip.length] = new Resource[] {new Resource("")};
-            fromZip = tmp;
-        }
-        return fromZip;
+        createEmpty = needsUpdate;
+        return super.getResourcesToAdd(filesets, zipFile, needsUpdate);
     }
 
-    protected boolean createEmptyZip(File zipFile) {
-        // Jar files always contain a manifest and can never be empty
+    protected boolean createEmptyZip(File zipFile) throws BuildException {
+        if (!createEmpty) {
+            return true;
+        }
+        
+        ZipOutputStream zOut = null;
+        try {
+            log("Building jar: " + getDestFile().getAbsolutePath());
+            zOut = new ZipOutputStream(new FileOutputStream(getDestFile()));
+
+            zOut.setEncoding(getEncoding());
+            if (isCompress()) {
+                zOut.setMethod(ZipOutputStream.DEFLATED);
+            } else {
+                zOut.setMethod(ZipOutputStream.STORED);
+            }
+            initZipOutputStream(zOut);
+            finalizeZipOutputStream(zOut);
+        } catch (IOException ioe) {
+            throw new BuildException("Could not create almost empty JAR archive "
+                                     + "(" + ioe.getMessage() + ")", ioe,
+                                     getLocation());
+        } finally {
+            // Close the output stream.
+            try {
+                if (zOut != null) {
+                    zOut.close();
+                }
+            } catch (IOException ex) {
+            }
+            createEmpty = false;
+        }
         return true;
     }
 

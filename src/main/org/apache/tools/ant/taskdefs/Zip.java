@@ -174,6 +174,14 @@ public class Zip extends MatchingTask {
        this.zipFile = destFile;
     }
 
+    /**
+     * The file to create.
+     * @since Ant 1.5.2
+     */
+    public File getDestFile() {
+        return zipFile;
+    }
+
 
     /**
      * Directory from which to archive files; optional.
@@ -188,6 +196,15 @@ public class Zip extends MatchingTask {
      */
     public void setCompress(boolean c) {
         doCompress = c;
+    }
+
+    /**
+     * Whether we want to compress the files or only store them;
+     *
+     * @since Ant 1.5.2
+     */
+    public boolean isCompress() {
+        return doCompress;
     }
 
     /**
@@ -281,6 +298,15 @@ public class Zip extends MatchingTask {
      */
     public void setEncoding(String encoding) {
         this.encoding = encoding;
+    }
+
+    /**
+     * Encoding to use for filenames.
+     *
+     * @since Ant 1.5.2
+     */
+    public String getEncoding() {
+        return encoding;
     }
 
     /**
@@ -597,7 +623,7 @@ public class Zip extends MatchingTask {
      *
      * @return true for historic reasons
      */
-    protected boolean createEmptyZip(File zipFile) {
+    protected boolean createEmptyZip(File zipFile) throws BuildException {
         // In this case using java.util.zip will not work
         // because it does not permit a zero-entry archive.
         // Must create it manually.
