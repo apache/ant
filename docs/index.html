@@ -461,6 +461,7 @@ but excludes all &quot;*.gif&quot; files from the copy.</p>
   <li><a href="#keysubst">KeySubst</a></li>
   <li><a href="#mkdir">Mkdir</a></li>
   <li><a href="#property">Property</a></li>
+  <li><a href="#rename">Rename</a></li>
   <li><a href="#replace">Replace</a></li>
   <li><a href="#rmic">Rmic</a></li>
   <li><a href="#tar">Tar</a></li>
@@ -1771,6 +1772,38 @@ This also holds for properties loaded from a property file.</p>
 <p>reads a set of properties from a file called &quot;foo.properties&quot;.</p>
 <pre>  &lt;property resource=&quot;foo.properties&quot; /&gt;</pre>
 <p>reads a set of properties from a resource called &quot;foo.properties&quot;.</p>
+<hr>
+<h2><a name="rename">Rename</a></h2>
+<h3>Description</h3>
+<p>Renames a given file.</p>
+<h3>Parameters</h3>
+<table border="1" cellpadding="2" cellspacing="0">
+  <tr>
+    <td valign="top"><b>Attribute</b></td>
+    <td valign="top"><b>Description</b></td>
+    <td align="center" valign="top"><b>Required</b></td>
+  </tr>
+  <tr>
+    <td valign="top">src</td>
+    <td valign="top">file to rename.</td>
+    <td valign="top" align="center">Yes</td>
+  </tr>
+  <tr>
+    <td valign="top">dest</td>
+    <td valign="top">new name of the file.</td>
+    <td valign="top" align="center">Yes</td>
+  </tr>
+  <tr>
+    <td valign="top">replace</td>
+    <td valign="top">Enable replacing of existing file (default: on).</td>
+    <td valign="top" align="center">No</td>
+  </tr>
+</table>
+<h3>Examples</h3>
+<pre>  &lt;rename src=&quot;foo.jar&quot; dest=&quot;${name}-${version}.jar&quot; /&gt;</pre> 
+<p>Renames the file <code>foo.jar</code> to <code>${name}-${version}.jar</code> (assuming <code>name</code>
+ and <code>version</code> being predefined properties). If a file named <code>${name}-${version}.jar</code>
+ already exists, it will be removed prior to renameing <code>foo.jar</code>.</p>
 <hr>
 <h2><a name="replace">Replace</a></h2>
 <h3>Description</h3>
