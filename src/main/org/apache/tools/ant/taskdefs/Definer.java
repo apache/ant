@@ -408,14 +408,14 @@ public abstract class Definer extends Task {
             antlib.setClassLoader(classLoader);
             antlib.perform();
         } catch (BuildException ex) {
-            Location location = ex.getLocation();
-            if (location == null) {
+            Location exLocation = ex.getLocation();
+            if (exLocation == null) {
                 throw ex;
             }
             throw new BuildException(
-                "Error in "
+                "Error executing antlib"
                 + System.getProperty("line.separator")
-                + getLocation().toString()
+                + exLocation.toString()
                 + " " + ex.getMessage());
         }
     }
@@ -474,7 +474,7 @@ public abstract class Definer extends Task {
         definerSet = true;
         this.name = name;
     }
-
+    
     /**
      * Returns the classname of the object we are defining.
      * May be <code>null</code>.

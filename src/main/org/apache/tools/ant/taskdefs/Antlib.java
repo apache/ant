@@ -101,33 +101,21 @@ public class Antlib extends Task implements TaskContainer {
                 "Unable to find " + antlibUrl, ex);
         }
         // Should be safe to parse
-        try {
-            ProjectHelper2 parser = new ProjectHelper2();
-            UnknownElement ue =
-                parser.parseUnknownElement(project, antlibUrl);
-            // Check name is "antlib"
-            if (!(ue.getTag().equals(TAG))) {
-                throw new BuildException(
-                    "Unexpected tag " + ue.getTag() + " expecting "
-                    + TAG, ue.getLocation());
-            }
-            Antlib antlib = new Antlib();
-            antlib.setProject(project);
-            antlib.setLocation(ue.getLocation());
-            antlib.init();
-            ue.configure(antlib);
-            return antlib;
-        } catch (BuildException ex) {
-            Location location = ex.getLocation();
-            if (location == null) {
-                throw ex;
-            }
+        ProjectHelper2 parser = new ProjectHelper2();
+        UnknownElement ue =
+            parser.parseUnknownElement(project, antlibUrl);
+        // Check name is "antlib"
+        if (!(ue.getTag().equals(TAG))) {
             throw new BuildException(
-                "Error in "
-                + System.getProperty("line.separator")
-                + location.toString()
-                + " " + ex.getMessage());
+                "Unexpected tag " + ue.getTag() + " expecting "
+                + TAG, ue.getLocation());
         }
+        Antlib antlib = new Antlib();
+        antlib.setProject(project);
+        antlib.setLocation(ue.getLocation());
+        antlib.init();
+        ue.configure(antlib);
+        return antlib;
     }
 
 
@@ -173,6 +161,7 @@ public class Antlib extends Task implements TaskContainer {
         for (Iterator i = tasks.iterator(); i.hasNext();) {
             UnknownElement ue = (UnknownElement) i.next();
             ue.maybeConfigure();
+            setLocation(ue.getLocation());
             Task t = ue.getTask();
             if (t == null) {
                 continue;
