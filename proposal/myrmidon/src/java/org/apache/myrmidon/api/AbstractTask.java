@@ -61,11 +61,6 @@ public abstract class AbstractTask
         return getContext().get( key );
     }
 
-    protected final String getName()
-    {
-        return getContext().getName();
-    }
-
     //Needs to be made protected
     public final File getBaseDirectory()
     {
@@ -87,20 +82,6 @@ public abstract class AbstractTask
     protected final Object getProperty( final String name )
     {
         return getContext().getProperty( name );
-    }
-
-    protected final void setProperty( final String name, final Object value )
-        throws TaskException
-    {
-        getContext().setProperty( name, value );
-    }
-
-    protected final void setProperty( final String name,
-                                      final Object value,
-                                      final TaskContext.ScopeEnum scope )
-        throws TaskException
-    {
-        getContext().setProperty( name, value, scope );
     }
 
     protected final Object getService( final Class serviceClass )
