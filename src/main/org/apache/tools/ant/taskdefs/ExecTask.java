@@ -289,6 +289,7 @@ public class ExecTask extends Task {
     /**
      * Indicates whether to attempt to resolve the executable to a
      * file.
+     * @return the resolveExecutable flag
      *
      * @since Ant 1.6
      */

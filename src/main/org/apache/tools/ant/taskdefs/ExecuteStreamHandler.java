@@ -1,5 +1,5 @@
 /*
- * Copyright  2000,2002,2004 The Apache Software Foundation
+ * Copyright  2000,2002,2004-2005 The Apache Software Foundation
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -34,6 +34,7 @@ public interface ExecuteStreamHandler {
      *
      * @param os output stream to write to the standard input stream of the
      *           subprocess
+     * @throws IOException on error
      */
     void setProcessInputStream(OutputStream os) throws IOException;
 
@@ -41,6 +42,7 @@ public interface ExecuteStreamHandler {
      * Install a handler for the error stream of the subprocess.
      *
      * @param is input stream to read from the error stream from the subprocess
+     * @throws IOException on error
      */
     void setProcessErrorStream(InputStream is) throws IOException;
 
@@ -48,11 +50,13 @@ public interface ExecuteStreamHandler {
      * Install a handler for the output stream of the subprocess.
      *
      * @param is input stream to read from the error stream from the subprocess
+     * @throws IOException on error
      */
     void setProcessOutputStream(InputStream is) throws IOException;
 
     /**
      * Start handling of the streams.
+     * @throws IOException on error
      */
     void start() throws IOException;
 

@@ -1,5 +1,5 @@
 /*
- * Copyright  2000-2004 The Apache Software Foundation
+ * Copyright  2000-2005 The Apache Software Foundation
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -63,6 +63,10 @@ public class Filter extends Task {
         this.filtersFile = filtersFile;
     }
 
+    /**
+     * Execute the task.
+     * @throws BuildException on error
+     */
     public void execute() throws BuildException {
         boolean isFiltersFromFile =
             filtersFile != null && token == null && value == null;
@@ -84,6 +88,10 @@ public class Filter extends Task {
         }
     }
 
+    /**
+     * Read the filters.
+     * @throws BuildException on error
+     */
     protected void readFilters() throws BuildException {
         log("Reading filters from " + filtersFile, Project.MSG_VERBOSE);
         getProject().getGlobalFilterSet().readFiltersFromFile(filtersFile);

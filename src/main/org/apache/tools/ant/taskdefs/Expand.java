@@ -63,7 +63,7 @@ public class Expand extends Task {
     private String encoding = "UTF8";
     /** Error message when more that one mapper is defined */
     public static final String ERROR_MULTIPLE_MAPPERS = "Cannot define more than one mapper";
-    
+
     private static final FileUtils FILE_UTILS = FileUtils.getFileUtils();
 
     /**

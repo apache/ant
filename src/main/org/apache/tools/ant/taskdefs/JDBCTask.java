@@ -1,5 +1,5 @@
 /*
- * Copyright  2002-2004 The Apache Software Foundation
+ * Copyright  2002-2005 The Apache Software Foundation
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -151,7 +151,7 @@ public abstract class JDBCTask extends Task {
      * Caching loaders / driver. This is to avoid
      * getting an OutOfMemoryError when calling this task
      * multiple times in a row; default: true
-     * @param enable
+     * @param enable a <code>boolean</code> value
      */
     public void setCaching(boolean enable) {
         caching = enable;
@@ -159,6 +159,7 @@ public abstract class JDBCTask extends Task {
 
     /**
      * Add a path to the classpath for loading the driver.
+     * @return a path to be configured
      */
     public Path createClasspath() {
         if (this.classpath == null) {
@@ -170,6 +171,7 @@ public abstract class JDBCTask extends Task {
     /**
      * Set the classpath for loading the driver
      * using the classpath reference.
+     * @param r a reference to a classpath
      */
     public void setClasspathRef(Reference r) {
         createClasspath().setRefid(r);
@@ -228,6 +230,8 @@ public abstract class JDBCTask extends Task {
 
     /**
      * Verify we are connected to the correct RDBMS
+     * @param conn the jdbc connection
+     * @return true if we are connected to the correct RDBMS
      */
     protected boolean isValidRdbms(Connection conn) {
         if (rdbms == null && version == null) {
@@ -268,10 +272,18 @@ public abstract class JDBCTask extends Task {
         return true;
     }
 
+    /**
+     * Get the cache of loaders and drivers.
+     * @return a hashtable
+     */
     protected static Hashtable getLoaderMap() {
         return loaderMap;
     }
 
+    /**
+     * Get the classloader used to create a driver.
+     * @return the classloader
+     */
     protected AntClassLoader getLoader() {
         return loader;
     }
@@ -380,6 +392,10 @@ public abstract class JDBCTask extends Task {
     }
 
 
+    /**
+     * Set the caching attribute. (!)
+     * @param value a <code>boolean</code> value
+     */
     public void isCaching(boolean value) {
         caching = value;
     }
