@@ -310,8 +310,7 @@ public class JUnitTask extends Task {
             exitValue = executeAsForked(test, watchdog);
             // null watchdog means no timeout, you'd better not check with null
             if (watchdog != null) {
-                //info will be used in later version do nothing for now
-                //wasKilled = watchdog.killedProcess();
+                wasKilled = watchdog.killedProcess();
             }
         }
 
@@ -321,10 +320,10 @@ public class JUnitTask extends Task {
         boolean failureOccurredHere = exitValue != JUnitTestRunner.SUCCESS;
         if (errorOccurredHere && test.getHaltonerror()
             || failureOccurredHere && test.getHaltonfailure()) {
-            throw new BuildException("Test "+test.getName()+" failed",
+            throw new BuildException("Test "+test.getName()+" failed"+(wasKilled ? " (timeout)" : ""),
                                      location);
         } else if (errorOccurredHere || failureOccurredHere) {
-            log("TEST "+test.getName()+" FAILED", Project.MSG_ERR);
+            log("TEST "+test.getName()+" FAILED" + (wasKilled ? " (timeout)" : ""), Project.MSG_ERR);
         }
     }
 
