@@ -113,6 +113,9 @@ Fixed bugs:
 * <import optional="false"> and <import optional="true">
   behaved identically.
 
+* <xslt> now sets the context classloader if you've specified a nested
+  <classpath>.  Bugzilla report 24802.
+
 Other changes:
 --------------
 
