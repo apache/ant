@@ -64,6 +64,7 @@ import org.apache.ant.common.event.BuildListener;
 import org.apache.ant.common.model.Project;
 import org.apache.ant.common.util.AntException;
 import org.apache.ant.common.util.ExecutionException;
+import org.apache.ant.common.util.DemuxOutputReceiver;
 import org.apache.ant.init.InitConfig;
 
 /**
@@ -75,7 +76,7 @@ import org.apache.ant.init.InitConfig;
  * @author <a href="mailto:conor@apache.org">Conor MacNeill</a>
  * @created 12 January 2002
  */
-public class ExecutionManager {
+public class ExecutionManager implements DemuxOutputReceiver {
     /** The AntLibraries built from Ant's Populated Task Libraries. */
     private Map antLibraries = new HashMap();
 
@@ -210,6 +211,18 @@ public class ExecutionManager {
         if (mainFrame != null) {
             mainFrame.removeBuildListener(listener);
         }
+    }
+
+    /**
+     * Handle the content from a single thread. This method will be called
+     * by the thread producing the content. The content is broken up into
+     * separate lines
+     *
+     * @param line the content produce by the current thread.
+     * @param isErr true if this content is from the thread's error stream.
+     */
+    public void threadOutput(String line, boolean isErr) {
+        eventSupport.threadOutput(line, isErr);
     }
 
 }

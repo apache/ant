@@ -51,61 +51,21 @@
  * information on the Apache Software Foundation, please see
  * <http://www.apache.org/>.
  */
-package org.apache.ant.common.antlib;
-import org.apache.ant.common.event.MessageLevel;
+package org.apache.tools.ant;
 
 /**
- * Abstract implementation of the Task interface
+ * Old Ant1 entry point
  *
  * @author <a href="mailto:conor@apache.org">Conor MacNeill</a>
- * @created 16 January 2002
  */
-public abstract class AbstractTask extends AbstractComponent implements Task {
-    /** The name of this task. */
-    private String taskName;
-
-    /**
-     * Sets the taskName of the AbstractTask
+public class Main {
+   /**
+     * Entry point for starting command line Ant
      *
-     * @param taskName the new taskName value
+     * @param args commandline arguments
      */
-    public final void setTaskName(String taskName) {
-        this.taskName = taskName;
-    }
-
-    /**
-     * Gets the taskName of the AbstractTask
-     *
-     * @return the taskName value
-     */
-    public final String getTaskName() {
-        return taskName;
-    }
-
-    /**
-     * Handle Output produced by the task. When a task prints to System.out
-     * the container may catch this and redirect the content back to the
-     * task by invoking this method. This method must NOT call System.out,
-     * directly or indirectly.
-     *
-     * @param line The line of content produce by the task
-     */
-    public void handleSystemOut(String line) {
-        // default behaviout is to log at INFO level
-        log(line, MessageLevel.MSG_INFO);
-    }
-
-    /**
-     * Handle error information produced by the task. When a task prints to
-     * System.err the container may catch this and redirect the content back
-     * to the task by invoking this method. This method must NOT call
-     * System.err, directly or indirectly.
-     *
-     * @param line The line of error info produce by the task
-     */
-    public void handleSystemErr(String line) {
-        // default behaviout is to log at WARN level
-        log(line, MessageLevel.MSG_WARN);
+    public static void main(String[] args) {
+        org.apache.ant.start.Main.main(args);
     }
 }
 

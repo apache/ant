@@ -76,6 +76,15 @@ public class ProjectHandler extends ElementHandler {
     /** The default attribute name */
     public static final String DEFAULT_ATTR = "default";
 
+    /** The name of the element used to define references */
+    public static final String REF_ELEMENT = "ant:ref";
+    
+    /** The name of the element used to define references */
+    public static final String INCLUDE_ELEMENT = "ant:include";
+    
+    /** The name of the element used to define references */
+    public static final String TARGET_ELEMENT = "target";
+
     /** The project being parsed. */
     private Project project;
 
@@ -148,8 +157,8 @@ public class ProjectHandler extends ElementHandler {
     public void startElement(String uri, String localName, String qualifiedName,
                              Attributes attributes)
          throws SAXParseException {
-             
-        if (qualifiedName.equals("ref")) {
+
+        if (qualifiedName.equals(REF_ELEMENT)) {
             RefHandler refHandler = new RefHandler();
             refHandler.start(getParseContext(), getXMLReader(), this,
                 getLocator(), attributes, getElementSource(),
@@ -160,12 +169,12 @@ public class ProjectHandler extends ElementHandler {
             } catch (ModelException e) {
                 throw new SAXParseException(e.getMessage(), getLocator(), e);
             }
-        } else if (qualifiedName.equals("include")) {
+        } else if (qualifiedName.equals(INCLUDE_ELEMENT)) {
             IncludeHandler includeHandler = new IncludeHandler(project);
             includeHandler.start(getParseContext(), getXMLReader(),
                 this, getLocator(), attributes, getElementSource(),
                 qualifiedName);
-        } else if (qualifiedName.equals("target")) {
+        } else if (qualifiedName.equals(TARGET_ELEMENT)) {
             TargetHandler targetHandler = new TargetHandler();
             targetHandler.start(getParseContext(), getXMLReader(),
                 this, getLocator(), attributes,
@@ -175,13 +184,17 @@ public class ProjectHandler extends ElementHandler {
             } catch (ModelException e) {
                 throw new SAXParseException(e.getMessage(), getLocator(), e);
             }
-        } else {
+        } else if (localName != null) {
             // everything else is a task
             BuildElementHandler buildElementHandler = new BuildElementHandler();
             buildElementHandler.start(getParseContext(), getXMLReader(),
                 this, getLocator(), attributes, getElementSource(),
                 qualifiedName);
             project.addTask(buildElementHandler.getBuildElement());
+        } else {
+          // ignore namespaced elements
+          throw new SAXParseException("Only the \"ant\" namespace is "
+            + "currently recognized (" + qualifiedName + ")", getLocator());
         }
     }
 

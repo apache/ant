@@ -74,6 +74,7 @@ import org.apache.ant.common.service.FileService;
 import org.apache.ant.common.service.MagicProperties;
 import org.apache.ant.common.util.AntException;
 import org.apache.ant.common.util.ConfigException;
+import org.apache.ant.common.util.DemuxOutputReceiver;
 import org.apache.ant.common.util.ExecutionException;
 import org.apache.ant.common.util.FileUtils;
 import org.apache.ant.init.InitConfig;
@@ -86,7 +87,7 @@ import org.apache.ant.init.InitConfig;
  * @author <a href="mailto:conor@apache.org">Conor MacNeill</a>
  * @created 14 January 2002
  */
-public class Frame {
+public class Frame implements DemuxOutputReceiver {
     /** the base dir of the project */
     private File baseDir;
 
@@ -143,11 +144,9 @@ public class Frame {
      */
     private ComponentManager componentManager;
 
-    /**
-     * The core's execution Service
-     */
+    /** The core's execution Service  */
     private CoreExecService execService;
-    
+
     /**
      * Create an Execution Frame for the given project
      *
@@ -163,6 +162,18 @@ public class Frame {
         this.standardLibs = standardLibs;
         this.config = config;
         this.initConfig = initConfig;
+    }
+
+    /**
+     * Replace ${} style constructions in the given value with the string
+     * value of the corresponding data values in the frame
+     *
+     * @param value the string to be scanned for property references.
+     * @return the string with all property references replaced
+     * @exception ExecutionException if any of the properties do not exist
+     */
+    public String replacePropertyRefs(String value) throws ExecutionException {
+        return dataService.replacePropertyRefs(value);
     }
 
     /**
@@ -189,18 +200,6 @@ public class Frame {
         setMagicProperties();
     }
 
-    /**
-     * Replace ${} style constructions in the given value with the string
-     * value of the corresponding data values in the frame
-     *
-     * @param value the string to be scanned for property references.
-     * @return the string with all property references replaced
-     * @exception ExecutionException if any of the properties do not exist
-     */
-    public String replacePropertyRefs(String value) throws ExecutionException {
-        return dataService.replacePropertyRefs(value);
-    }
-    
     /**
      * Set a value in this frame or any of its imported frames.
      *
@@ -603,7 +602,6 @@ public class Frame {
         } catch (ConfigException e) {
             throw new ExecutionException(e);
         }
-
     }
 
     /**
@@ -623,8 +621,8 @@ public class Frame {
                 if (component instanceof Task) {
                     execService.executeTask((Task)component);
                 } else {
-                    String typeId 
-                        = model.getAspectValue(Constants.ANT_ASPECT, "id");
+                    String typeId
+                         = model.getAspectValue(Constants.ANT_ASPECT, "id");
                     if (typeId != null) {
                         setDataValue(typeId, component, true);
                     }
@@ -710,6 +708,18 @@ public class Frame {
     }
 
     /**
+     * Handle the content from a single thread. This method will be called
+     * by the thread producing the content. The content is broken up into
+     * separate lines
+     *
+     * @param line the content produce by the current thread.
+     * @param isErr true if this content is from the thread's error stream.
+     */
+    public void threadOutput(String line, boolean isErr) {
+        eventSupport.threadOutput(line, isErr);
+    }
+
+    /**
      * Determine the base directory for each frame in the frame hierarchy
      *
      * @exception ExecutionException if the base directories cannot be
@@ -755,7 +765,7 @@ public class Frame {
         dataService = new CoreDataService(this,
             config.isUnsetPropertiesAllowed());
         execService = new CoreExecService(this);
-            
+
         services.put(FileService.class, fileService);
         services.put(ComponentService.class, componentManager);
         services.put(DataService.class, dataService);

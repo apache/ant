@@ -165,6 +165,31 @@ public abstract class Task extends ProjectComponent
     }
 
     /**
+     * Handle Output produced by the task. When a task prints to System.out
+     * the container may catch this and redirect the content back to the
+     * task by invoking this method. This method must NOT call System.out,
+     * directly or indirectly.
+     *
+     * @param line The line of content produce by the task
+     */
+    public void handleSystemOut(String line) {
+        handleOutput(line);
+    }
+
+    /**
+     * Handle error information produced by the task. When a task prints to
+     * System.err the container may catch this and redirect the content back
+     * to the task by invoking this method. This method must NOT call
+     * System.err, directly or indirectly.
+     *
+     * @param line The line of error info produce by the task
+     */
+    public void handleSystemErr(String line) {
+        // default behaviout is to log at WARN level
+        handleErrorOutput(line);
+    }
+
+    /**
      * Handle output captured for this task
      *
      * @param line the captured output

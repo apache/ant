@@ -422,7 +422,12 @@ public class ComponentManager implements ComponentService {
          throws ExecutionException {
 
         ImportInfo definition = getDefinition(componentName);
+        if (definition == null) {
+            throw new ExecutionException("There is no definition of the <"
+                + componentName + "> component");
+        }
         String className = definition.getClassName();
+            
         ComponentLibrary componentLibrary
              = definition.getComponentLibrary();
         String localName = definition.getLocalName();

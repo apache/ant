@@ -253,9 +253,16 @@ public class Project extends ModelElement {
      *
      * @param fullTargetName The name of the target relative to this project
      * @return the Target object with the given name
+     * @exception ModelException if the given target does not exist in this
+     *      project
      */
-    public Target getRefTarget(String fullTargetName) {
+    public Target getRefTarget(String fullTargetName) throws ModelException {
         Project containingProject = getRefProject(fullTargetName);
+        if (containingProject == null) {
+            throw new ModelException("The target name \"" + fullTargetName
+                 + "\" does not exist in this project");
+        }
+
         if (containingProject == this) {
             return getTarget(fullTargetName);
         }
@@ -504,19 +511,23 @@ public class Project extends ModelElement {
         if (flattenedList.contains(fullTargetName)) {
             return;
         }
-        String fullProjectName = getFullProjectName(fullTargetName);
-        Target target = getRefTarget(fullTargetName);
-        if (target == null) {
-            throw new ConfigException("Target " + fullTargetName
-                 + " does not exist");
-        }
-        for (Iterator i = target.getDependencies(); i.hasNext(); ) {
-            String localDependencyName = (String)i.next();
-            String fullDependencyName
-                 = fullProjectName == null ? localDependencyName
-                 : fullProjectName + REF_DELIMITER + localDependencyName;
-            flattenDependency(flattenedList, fullDependencyName);
-            flattenedList.add(fullDependencyName);
+        try {
+            String fullProjectName = getFullProjectName(fullTargetName);
+            Target target = getRefTarget(fullTargetName);
+            if (target == null) {
+                throw new ConfigException("Target " + fullTargetName
+                     + " does not exist");
+            }
+            for (Iterator i = target.getDependencies(); i.hasNext(); ) {
+                String localDependencyName = (String)i.next();
+                String fullDependencyName
+                     = fullProjectName == null ? localDependencyName
+                     : fullProjectName + REF_DELIMITER + localDependencyName;
+                flattenDependency(flattenedList, fullDependencyName);
+                flattenedList.add(fullDependencyName);
+            }
+        } catch (ModelException e) {
+            throw new ConfigException(e);
         }
     }
 }

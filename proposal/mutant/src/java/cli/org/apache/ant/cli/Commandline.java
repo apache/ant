@@ -57,6 +57,7 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.PrintStream;
+import java.io.OutputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
@@ -75,6 +76,7 @@ import org.apache.ant.common.event.BuildListener;
 import org.apache.ant.common.event.MessageLevel;
 import org.apache.ant.common.model.Project;
 import org.apache.ant.common.util.ConfigException;
+import org.apache.ant.common.util.DemuxOutputStream;
 import org.apache.ant.init.InitConfig;
 import org.apache.ant.init.InitUtils;
 
@@ -298,6 +300,12 @@ public class Commandline {
 
             // create the execution manager to execute the build
             executionManager = new ExecutionManager(initConfig, config);
+            OutputStream demuxOut
+                = new DemuxOutputStream(executionManager, false);
+            OutputStream demuxErr
+                = new DemuxOutputStream(executionManager, true);
+            System.setOut(new PrintStream(demuxOut));
+            System.setErr(new PrintStream(demuxErr));
             addBuildListeners(executionManager);
         } catch (Throwable e) {
             if (logger != null) {

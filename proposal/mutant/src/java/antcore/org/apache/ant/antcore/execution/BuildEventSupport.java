@@ -54,12 +54,15 @@
 package org.apache.ant.antcore.execution;
 import java.util.ArrayList;
 import java.util.Iterator;
-
+import java.util.Map;
+import java.util.HashMap;
 import java.util.List;
-import org.apache.ant.common.model.ModelElement;
-import org.apache.ant.common.event.BuildListener;
-import org.apache.ant.common.event.BuildEvent;
 import org.apache.ant.common.antlib.Task;
+import org.apache.ant.common.event.BuildEvent;
+import org.apache.ant.common.event.BuildListener;
+import org.apache.ant.common.model.ModelElement;
+import org.apache.ant.common.util.DemuxOutputReceiver;
+import org.apache.ant.common.event.MessageLevel;
 
 /**
  * BuildEventSupport is used by classes which which to send build events to
@@ -68,12 +71,15 @@ import org.apache.ant.common.antlib.Task;
  * @author <a href="mailto:conor@apache.org">Conor MacNeill</a>
  * @created 15 January 2002
  */
-public class BuildEventSupport {
+public class BuildEventSupport implements DemuxOutputReceiver {
     /**
      * The listeners attached to the object which contains this support
      * object
      */
     private List listeners = new ArrayList();
+
+    /** Records the latest task to be executed on a thread (Thread to Task). */
+    private Map threadTasks = new HashMap();
 
     /**
      * Gets the listeners of the BuildEventSupport
@@ -166,6 +172,9 @@ public class BuildEventSupport {
      * @param task the task with which the event is associated
      */
     public void fireTaskStarted(Task task) {
+        synchronized (this) {
+            threadTasks.put(Thread.currentThread(), task);
+        }
         BuildEvent event = new BuildEvent(task, BuildEvent.TASK_STARTED);
         for (Iterator i = listeners.iterator(); i.hasNext(); ) {
             BuildListener listener = (BuildListener)i.next();
@@ -181,6 +190,11 @@ public class BuildEventSupport {
      */
     public void fireTaskFinished(Task task,
                                  Throwable cause) {
+        System.out.flush();
+        System.err.flush();
+        synchronized (this) {
+            threadTasks.remove(Thread.currentThread());
+        }
         BuildEvent event = new BuildEvent(task, BuildEvent.TASK_FINISHED,
             cause);
         for (Iterator i = listeners.iterator(); i.hasNext(); ) {
@@ -202,6 +216,29 @@ public class BuildEventSupport {
         for (Iterator i = listeners.iterator(); i.hasNext(); ) {
             BuildListener listener = (BuildListener)i.next();
             listener.messageLogged(event);
+        }
+    }
+
+    /**
+     * Demultiplexes output so that each task receives the appropriate
+     * messages. If the current thread is not currently executing a task,
+     * the message is logged directly.
+     *
+     * @param line Message to handle. Should not be <code>null</code>.
+     * @param isError Whether the text represents an error (<code>true</code>
+     *      ) or information (<code>false</code>).
+     */
+    public void threadOutput(String line, boolean isError) {
+        Task task = (Task)threadTasks.get(Thread.currentThread());
+        if (task == null) {
+            fireMessageLogged(this, line, 
+                isError ? MessageLevel.MSG_ERR : MessageLevel.MSG_INFO);
+        } else {
+            if (isError) {
+                task.handleSystemErr(line);
+            } else {
+                task.handleSystemOut(line);
+            }
         }
     }
 }
