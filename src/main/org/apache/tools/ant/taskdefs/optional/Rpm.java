@@ -1,5 +1,5 @@
 /*
- * Copyright  2001-2004 The Apache Software Foundation
+ * Copyright  2001-2005 The Apache Software Foundation
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -89,6 +89,17 @@ public class Rpm extends Task {
     private File error;
 
     /**
+     * Halt on error return value from rpm build.
+     */
+    private boolean failOnError = false;
+
+    /**
+     * Don't show output of RPM build command on console. This does not affect
+     * the printing of output and error messages to files.
+     */
+    private boolean quiet = false;
+
+    /**
      * Execute the task
      *
      * @throws BuildException is there is a problem in the task execution.
@@ -123,8 +134,13 @@ public class Rpm extends Task {
         OutputStream outputstream = null;
         OutputStream errorstream = null;
         if (error == null && output == null) {
-            streamhandler = new LogStreamHandler(this, Project.MSG_INFO,
-                                                 Project.MSG_WARN);
+            if (!quiet) {
+                streamhandler = new LogStreamHandler(this, Project.MSG_INFO,
+                                                     Project.MSG_WARN);
+            } else {
+                streamhandler = new LogStreamHandler(this, Project.MSG_DEBUG,
+                                                     Project.MSG_DEBUG);
+            }
         } else {
             if (output != null) {
                 try {
@@ -134,8 +150,10 @@ public class Rpm extends Task {
                 } catch (IOException e) {
                     throw new BuildException(e, getLocation());
                 }
-            } else {
+            } else if (!quiet) {
                 outputstream = new LogOutputStream(this, Project.MSG_INFO);
+            } else {
+                outputstream = new LogOutputStream(this, Project.MSG_DEBUG);
             }
             if (error != null) {
                 try {
@@ -145,24 +163,27 @@ public class Rpm extends Task {
                 }  catch (IOException e) {
                     throw new BuildException(e, getLocation());
                 }
-            } else {
+            } else if (!quiet) {
                 errorstream = new LogOutputStream(this, Project.MSG_WARN);
+            } else {
+                errorstream = new LogOutputStream(this, Project.MSG_DEBUG);
             }
             streamhandler = new PumpStreamHandler(outputstream, errorstream);
         }
 
-        Execute exe = new Execute(streamhandler, null);
-
-        exe.setAntRun(getProject());
-        if (topDir == null) {
-            topDir = getProject().getBaseDir();
-        }
-        exe.setWorkingDirectory(topDir);
-
-        exe.setCommandline(toExecute.getCommandline());
+        Execute exe = getExecute(toExecute, streamhandler);
         try {
-            exe.execute();
             log("Building the RPM based on the " + specFile + " file");
+            int returncode = exe.execute();
+            if (Execute.isFailure(returncode)) {
+                String msg = "'" + toExecute.getExecutable() 
+                    + "' failed with exit code " + returncode;
+                if (failOnError) {
+                    throw new BuildException(msg);
+                } else {
+                    log(msg, Project.MSG_ERR);
+                }
+            }
         } catch (IOException e) {
             throw new BuildException(e, getLocation());
         } finally {
@@ -263,6 +284,29 @@ public class Rpm extends Task {
     }
 
     /**
+     * If <code>true</code>, stop the build process when the rpmbuild command 
+     * exits with an error status. 
+     * @param value <code>true</code> if it should halt, otherwise
+     * <code>false</code>. The default is <code>false</code>.
+     *
+     * @since Ant 1.6.3
+     */
+    public void setFailOnError(boolean value) {
+        failOnError = value;
+    }
+
+    /**
+     * If true, output from the RPM build command will only be logged to DEBUG. 
+     * @param value <code>false</code> if output should be logged, otherwise
+     * <code>true</code>. The default is <code>false</code>.
+     *
+     * @since Ant 1.6.3
+     */
+    public void setQuiet(boolean value) {
+        quiet = value;
+    }
+
+    /**
      * Checks whether <code>rpmbuild</code> is on the PATH and returns
      * the absolute path to it - falls back to <code>rpm</code>
      * otherwise.
@@ -294,5 +338,22 @@ public class Rpm extends Task {
         }
 
         return "rpm";
+    }
+
+    /**
+     * @since Ant 1.6.3
+     */
+    protected Execute getExecute(Commandline toExecute,
+                                 ExecuteStreamHandler streamhandler) {
+        Execute exe = new Execute(streamhandler, null);
+
+        exe.setAntRun(getProject());
+        if (topDir == null) {
+            topDir = getProject().getBaseDir();
+        }
+        exe.setWorkingDirectory(topDir);
+
+        exe.setCommandline(toExecute.getCommandline());
+        return exe;
     }
 }

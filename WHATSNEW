@@ -1,11 +1,13 @@
-Changes from Ant 1.6.3 to current Ant 1.6 CVS version
-=====================================================
+Changes from Ant 1.6.3beta1 to current Ant 1.6 CVS version
+==========================================================
 
 Changes that could break older environments:
 --------------------------------------------
 
 Other changes:
 --------------
+
+* <rpm> has new attributes failonerror and quiet.
 
 Fixed bugs:
 -----------
