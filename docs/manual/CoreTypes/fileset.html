@@ -68,7 +68,19 @@ attributes.</p>
         Defaults to true.</td>
     <td valign="top" align="center">No</td>
   </tr>
+  <tr>
+    <td valign="top">followsymlinks</td>
+    <td valign="top">Shall symbolic links be followed? Defaults to
+      true. See <a href="symlink">below</a>.</td>
+    <td valign="top" align="center">No</td>
+  </tr>
 </table>
+
+<p><a name="symlink"><b>Note</b></a>: All files/directories for which
+the canonical path is different from its path are considered symbolic
+links.  On Unix systems this usually means the file really is a
+symbolic links but it may lead to false results on other
+platforms.</p>
 
 <h4>Examples</h4>
 <blockquote><pre>

@@ -89,7 +89,7 @@ public abstract class AbstractFileSet extends DataType implements Cloneable,
     private File dir;
     private boolean useDefaultExcludes = true;
     private boolean isCaseSensitive = true;
-
+    private boolean followSymlinks = true;
 
     public AbstractFileSet() {
         super();
@@ -101,6 +101,7 @@ public abstract class AbstractFileSet extends DataType implements Cloneable,
         this.additionalPatterns = fileset.additionalPatterns;
         this.useDefaultExcludes = fileset.useDefaultExcludes;
         this.isCaseSensitive = fileset.isCaseSensitive;
+        this.followSymlinks = fileset.followSymlinks;
         setProject(fileset.getProject());
     }
 
@@ -276,7 +277,14 @@ public abstract class AbstractFileSet extends DataType implements Cloneable,
         this.isCaseSensitive = isCaseSensitive;
     }
 
-
+    /**
+     * Sets whether or not symbolic links should be followed.
+     *
+     * @param followSymlinks whether or not symbolic links should be followed
+     */
+    public void setFollowSymlinks(boolean followSymlinks) {
+        this.followSymlinks = followSymlinks;
+    }
 
     /**
      * sets the name used for this datatype instance.
@@ -327,6 +335,7 @@ public abstract class AbstractFileSet extends DataType implements Cloneable,
 
         DirectoryScanner ds = new DirectoryScanner();
         setupDirectoryScanner(ds, p);
+        ds.setFollowSymlinks(followSymlinks);
         ds.scan();
         return ds;
     }

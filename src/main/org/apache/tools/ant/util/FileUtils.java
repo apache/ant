@@ -831,5 +831,24 @@ public class FileUtils {
         return false;
     }
 
+    /**
+     * Checks whether a given file is a symbolic link.
+     *
+     * <p>It doesn't really test for symbolic links but whether the
+     * canonical and absolute paths of the file are identical - this
+     * may lead to false positives on some platforms.</p>
+     *
+     * @param parent the parent directory of the file to test
+     * @param name the name of the file to test.
+     *
+     * @since Ant 1.5
+     */
+    public boolean isSymbolicLink(File parent, String name)
+        throws IOException {
+        File resolvedParent = new File(parent.getCanonicalPath());
+        File toTest = new File(resolvedParent, name);
+        return !toTest.getAbsolutePath().equals(toTest.getCanonicalPath());
+    }
+
 }
 

@@ -55,12 +55,14 @@
 package org.apache.tools.ant;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.Vector;
 import java.util.StringTokenizer;
 
 import org.apache.tools.ant.types.selectors.SelectorScanner;
 import org.apache.tools.ant.types.selectors.FileSelector;
 import org.apache.tools.ant.types.selectors.SelectorUtils;
+import org.apache.tools.ant.util.FileUtils;
 
 /**
  * Class for scanning a directory for files/directories which match certain
@@ -228,6 +230,16 @@ public class DirectoryScanner implements FileScanner, SelectorScanner {
      * one.
      */
     protected boolean isCaseSensitive = true;
+
+    /**
+     * Whether or not symbolic links should be followed.
+     *
+     * @since Ant 1.5
+     */
+    private boolean followSymlinks = true;
+
+    /** Helper. */
+    private static final FileUtils fileUtils = FileUtils.newFileUtils();
 
     /** Whether or not everything tested so far has been included. */
     protected boolean everythingIncluded = true;
@@ -408,6 +420,15 @@ public class DirectoryScanner implements FileScanner, SelectorScanner {
      */
     public void setCaseSensitive(boolean isCaseSensitive) {
         this.isCaseSensitive = isCaseSensitive;
+    }
+
+    /**
+     * Sets whether or not symbolic links should be followed.
+     *
+     * @param followSymlinks whether or not symbolic links should be followed
+     */
+    public void setFollowSymlinks(boolean followSymlinks) {
+        this.followSymlinks = followSymlinks;
     }
 
     /**
@@ -617,6 +638,33 @@ public class DirectoryScanner implements FileScanner, SelectorScanner {
              */
             throw new BuildException("IO error scanning directory "
                                      + dir.getAbsolutePath());
+        }
+
+        if (!followSymlinks) {
+            Vector noLinks = new Vector();
+            for (int i = 0; i < newfiles.length; i++) {
+                try {
+                    if (fileUtils.isSymbolicLink(dir, newfiles[i])) {
+                        String name = vpath + newfiles[i];
+                        File   file = new File(dir, newfiles[i]);
+                        if (file.isDirectory()) {
+                            dirsExcluded.addElement(name);
+                        } else {
+                            filesExcluded.addElement(name);
+                        }
+                    } else {
+                        noLinks.add(newfiles[i]);
+                    }
+                } catch (IOException ioe) {
+                    String msg = "IOException caught while checking "
+                        + "for links, couldn't get cannonical path!";
+                    // will be caught and redirected to Ant's logging system
+                    System.err.println(msg);
+                    noLinks.add(newfiles[i]);
+                }
+            }
+            newfiles = new String[noLinks.size()]; 
+            noLinks.copyInto(newfiles);
         }
 
         for (int i = 0; i < newfiles.length; i++) {
