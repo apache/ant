@@ -16,6 +16,7 @@ import org.apache.tools.ant.Project;
 import org.apache.tools.ant.taskdefs.Javac;
 import org.apache.tools.ant.taskdefs.exec.Execute;
 import org.apache.tools.ant.taskdefs.exec.LogStreamHandler;
+import org.apache.tools.ant.taskdefs.exec.LogOutputStream;
 import org.apache.tools.ant.types.Commandline;
 import org.apache.tools.ant.types.Path;
 
@@ -434,9 +435,9 @@ public abstract class DefaultCompilerAdapter implements CompilerAdapter
 
             try
             {
-                Execute exe = new Execute( new LogStreamHandler( attributes,
-                                                                 Project.MSG_INFO,
-                                                                 Project.MSG_WARN ) );
+                final Execute exe = new Execute();
+                exe.setOutput( new LogOutputStream( attributes, Project.MSG_INFO ) );
+                exe.setError( new LogOutputStream( attributes, Project.MSG_WARN ) );
                 exe.setWorkingDirectory( project.getBaseDir() );
                 exe.setCommandline( commandArray );
                 return exe.execute();

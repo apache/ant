@@ -13,7 +13,7 @@ import org.apache.myrmidon.api.TaskException;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.Task;
 import org.apache.tools.ant.taskdefs.exec.Execute;
-import org.apache.tools.ant.taskdefs.exec.LogStreamHandler;
+import org.apache.tools.ant.taskdefs.exec.LogOutputStream;
 import org.apache.tools.ant.types.Commandline;
 
 /**
@@ -142,8 +142,9 @@ public class Patch extends Task
             toExecute.createArgument().setFile( originalFile );
         }
 
-        Execute exe = new Execute( new LogStreamHandler( this, Project.MSG_INFO,
-                                                         Project.MSG_WARN ) );
+        Execute exe = new Execute();
+        exe.setOutput( new LogOutputStream( this, Project.MSG_INFO ) );
+        exe.setError( new LogOutputStream( this, Project.MSG_WARN ) );
         exe.setCommandline( toExecute.getCommandline() );
         try
         {

@@ -18,6 +18,7 @@ import org.apache.tools.ant.Task;
 import org.apache.tools.ant.taskdefs.ExecuteJava;
 import org.apache.tools.ant.taskdefs.exec.Execute;
 import org.apache.tools.ant.taskdefs.exec.LogStreamHandler;
+import org.apache.tools.ant.taskdefs.exec.LogOutputStream;
 import org.apache.tools.ant.types.Commandline;
 import org.apache.tools.ant.types.CommandlineJava;
 import org.apache.tools.ant.types.Path;
@@ -228,8 +229,10 @@ public class ANTLR extends Task
     private int run( String[] command )
         throws TaskException
     {
-        Execute exe = new Execute( new LogStreamHandler( this, Project.MSG_INFO,
-                                                         Project.MSG_WARN ) );
+        final Execute exe = new Execute();
+        exe.setOutput( new LogOutputStream( this, Project.MSG_INFO ) );
+        exe.setError( new LogOutputStream( this, Project.MSG_WARN ) );
+
         if( workingdir != null )
         {
             exe.setWorkingDirectory( workingdir );

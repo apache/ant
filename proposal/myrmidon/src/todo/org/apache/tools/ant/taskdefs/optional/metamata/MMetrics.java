@@ -16,6 +16,8 @@ import org.apache.myrmidon.api.TaskException;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.taskdefs.exec.ExecuteStreamHandler;
 import org.apache.tools.ant.taskdefs.exec.LogStreamHandler;
+import org.apache.tools.ant.taskdefs.exec.LogOutputStream;
+import org.apache.tools.ant.taskdefs.exec.Execute;
 import org.apache.tools.ant.types.Path;
 
 /**
@@ -161,7 +163,7 @@ public class MMetrics extends AbstractMetamataTask
             options.add( dirs[ i ] );
         }
         // files next.
-        addAllArrayList( options, includedFiles.keys() );
+        addAllArrayList( options, includedFiles.keySet().iterator() );
         return options;
     }
 
@@ -223,11 +225,10 @@ public class MMetrics extends AbstractMetamataTask
      *
      * @return Description of the Returned Value
      */
-    protected ExecuteStreamHandler createStreamHandler()
+    protected void setupStreamHandler( final Execute exe )
     {
-        // write the report directtly to an XML stream
-        // return new MMetricsStreamHandler(this, xmlStream);
-        return new LogStreamHandler( this, Project.MSG_INFO, Project.MSG_INFO );
+        exe.setOutput( new LogOutputStream( this, Project.MSG_INFO ) );
+        exe.setError( new LogOutputStream( this, Project.MSG_INFO ) );
     }
 
     protected void execute0( ExecuteStreamHandler handler )

@@ -19,6 +19,7 @@ import org.apache.tools.ant.Project;
 import org.apache.tools.ant.Task;
 import org.apache.tools.ant.taskdefs.exec.Execute;
 import org.apache.tools.ant.taskdefs.exec.LogStreamHandler;
+import org.apache.tools.ant.taskdefs.exec.LogOutputStream;
 import org.apache.tools.ant.types.Commandline;
 import org.apache.tools.ant.types.FileSet;
 
@@ -115,14 +116,15 @@ public class CovMerge extends Task
             }
             cmdl.createArgument().setValue( "-jp_paramfile=" + paramfile.getAbsolutePath() );
 
-            LogStreamHandler handler = new LogStreamHandler( this, Project.MSG_INFO, Project.MSG_WARN );
-            Execute exec = new Execute( handler );
+            final Execute exe = new Execute();
+            exe.setOutput( new LogOutputStream( this, Project.MSG_INFO ) );
+            exe.setError( new LogOutputStream( this, Project.MSG_WARN ) );
             log( cmdl.toString(), Project.MSG_VERBOSE );
-            exec.setCommandline( cmdl.getCommandline() );
+            exe.setCommandline( cmdl.getCommandline() );
 
             // JProbe process always return 0 so  we will not be
             // able to check for failure ! :-(
-            int exitValue = exec.execute();
+            int exitValue = exe.execute();
             if( exitValue != 0 )
             {
                 throw new TaskException( "JProbe Coverage Merging failed (" + exitValue + ")" );

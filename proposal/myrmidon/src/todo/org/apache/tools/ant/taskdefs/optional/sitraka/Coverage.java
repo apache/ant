@@ -539,8 +539,6 @@ public class Coverage extends Task
 
     /**
      * specific pumper to avoid those nasty stdin issues
-     *
-     * @author RT
      */
     static class CoverageStreamHandler extends LogStreamHandler
     {

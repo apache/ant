@@ -200,8 +200,7 @@ public abstract class AbstractMetamataTask extends Task
         try
         {
             setUp();
-            ExecuteStreamHandler handler = createStreamHandler();
-            execute0( handler );
+            execute0();
         }
         finally
         {
@@ -304,7 +303,7 @@ public abstract class AbstractMetamataTask extends Task
      *
      * @return Description of the Returned Value
      */
-    protected abstract ExecuteStreamHandler createStreamHandler();
+    protected abstract void setupStreamHandler( Execute exe );
 
     /**
      * execute the process with a specific handler
@@ -312,15 +311,16 @@ public abstract class AbstractMetamataTask extends Task
      * @param handler Description of Parameter
      * @exception TaskException Description of Exception
      */
-    protected void execute0( ExecuteStreamHandler handler )
+    protected void execute0()
         throws TaskException
     {
-        final Execute process = new Execute( handler );
+        final Execute exe = new Execute();
+        setupStreamHandler( exe );
         log( cmdl.toString(), Project.MSG_VERBOSE );
-        process.setCommandline( cmdl.getCommandline() );
+        exe.setCommandline( cmdl.getCommandline() );
         try
         {
-            if( process.execute() != 0 )
+            if( exe.execute() != 0 )
             {
                 throw new TaskException( "Metamata task failed." );
             }

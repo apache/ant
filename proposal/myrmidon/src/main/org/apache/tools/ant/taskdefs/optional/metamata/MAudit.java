@@ -16,6 +16,8 @@ import org.apache.myrmidon.api.TaskException;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.taskdefs.exec.ExecuteStreamHandler;
 import org.apache.tools.ant.taskdefs.exec.LogStreamHandler;
+import org.apache.tools.ant.taskdefs.exec.Execute;
+import org.apache.tools.ant.taskdefs.exec.LogOutputStream;
 import org.apache.tools.ant.types.Path;
 
 /**
@@ -186,7 +188,7 @@ public class MAudit extends AbstractMetamataTask
             options.add( "-unused" );
             options.add( searchPath.toString() );
         }
-        addAllArrayList( options, includedFiles.keys() );
+        addAllArrayList( options, includedFiles.keySet().iterator() );
         return options;
     }
 
@@ -220,14 +222,14 @@ public class MAudit extends AbstractMetamataTask
          */
     }
 
-    protected ExecuteStreamHandler createStreamHandler()
+    protected void setupStreamHandler( final Execute exe )
         throws TaskException
     {
-        ExecuteStreamHandler handler = null;
         // if we didn't specify a file, then use a screen report
         if( outFile == null )
         {
-            handler = new LogStreamHandler( this, Project.MSG_INFO, Project.MSG_INFO );
+            exe.setOutput( new LogOutputStream( this, Project.MSG_INFO ) );
+            exe.setError( new LogOutputStream( this, Project.MSG_WARN ) );
         }
         else
         {
@@ -235,14 +237,16 @@ public class MAudit extends AbstractMetamataTask
             {
                 //XXX
                 OutputStream out = new FileOutputStream( outFile );
-                handler = new MAuditStreamHandler( this, out );
+                //handler = new MAuditStreamHandler( this, out );
+                //FIXME: should behave like in Ant1.x
+                exe.setOutput( out );
+                exe.setError( out );
             }
             catch( IOException e )
             {
                 throw new TaskException( "Error", e );
             }
         }
-        return handler;
     }
 
     /**

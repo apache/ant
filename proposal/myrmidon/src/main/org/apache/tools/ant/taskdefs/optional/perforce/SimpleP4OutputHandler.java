@@ -10,10 +10,10 @@ package org.apache.tools.ant.taskdefs.optional.perforce;
 import org.apache.myrmidon.api.TaskException;
 import org.apache.tools.ant.Project;
 
-public class SimpleP4OutputHandler extends P4HandlerAdapter
+public class SimpleP4OutputHandler
+    extends P4HandlerAdapter
 {
-
-    P4Base parent;
+    private P4Base parent;
 
     public SimpleP4OutputHandler( P4Base parent )
     {

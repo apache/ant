@@ -144,13 +144,13 @@ public class Rpm extends Task
 
         toExecute.createArgument().setValue( "SPECS/" + specFile );
 
-        ExecuteStreamHandler streamhandler = null;
         OutputStream outputstream = null;
         OutputStream errorstream = null;
+
         if( error == null && output == null )
         {
-            streamhandler = new LogStreamHandler( this, Project.MSG_INFO,
-                                                  Project.MSG_WARN );
+            outputstream = new LogOutputStream( this, Project.MSG_INFO );
+            errorstream = new LogOutputStream( this, Project.MSG_WARN );
         }
         else
         {
@@ -184,10 +184,11 @@ public class Rpm extends Task
             {
                 errorstream = new LogOutputStream( this, Project.MSG_WARN );
             }
-            streamhandler = new PumpStreamHandler( outputstream, errorstream );
         }
 
-        Execute exe = new Execute( streamhandler );
+        Execute exe = new Execute();
+        exe.setOutput( outputstream );
+        exe.setError( errorstream );
 
         if( topDir == null ) topDir = getBaseDirectory();
         exe.setWorkingDirectory( topDir );

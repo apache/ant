@@ -16,6 +16,7 @@ import org.apache.tools.ant.Project;
 import org.apache.tools.ant.Task;
 import org.apache.tools.ant.taskdefs.exec.Execute;
 import org.apache.tools.ant.taskdefs.exec.LogStreamHandler;
+import org.apache.tools.ant.taskdefs.exec.LogOutputStream;
 import org.apache.tools.ant.types.Commandline;
 import org.apache.tools.ant.types.CommandlineJava;
 import org.apache.tools.ant.types.Path;
@@ -185,16 +186,16 @@ public class JJTree extends Task
         arg.setValue( "-mx140M" );
         arg.setValue( "-Dinstall.root=" + javaccHome.getAbsolutePath() );
 
-        final Execute process =
-            new Execute( new LogStreamHandler( this,
-                                               Project.MSG_INFO,
-                                               Project.MSG_INFO ) );
+        final Execute exe = new Execute();
+        exe.setOutput( new LogOutputStream( this, Project.MSG_INFO ) );
+        exe.setError( new LogOutputStream( this, Project.MSG_INFO ) );
+
         log( cmdl.toString(), Project.MSG_VERBOSE );
-        process.setCommandline( cmdl.getCommandline() );
+        exe.setCommandline( cmdl.getCommandline() );
 
         try
         {
-            if( process.execute() != 0 )
+            if( exe.execute() != 0 )
             {
                 throw new TaskException( "JJTree failed." );
             }

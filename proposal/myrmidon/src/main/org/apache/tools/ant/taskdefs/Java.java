@@ -16,15 +16,13 @@ import org.apache.myrmidon.api.TaskException;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.Task;
 import org.apache.tools.ant.taskdefs.exec.Execute;
-import org.apache.tools.ant.taskdefs.exec.LogStreamHandler;
+import org.apache.tools.ant.taskdefs.exec.LogOutputStream;
 import org.apache.tools.ant.taskdefs.exec.PumpStreamHandler;
-import org.apache.tools.ant.types.Commandline;
+import org.apache.tools.ant.types.Argument;
 import org.apache.tools.ant.types.CommandlineJava;
-import org.apache.tools.ant.types.EnvironmentData;
+import org.apache.tools.ant.types.EnvironmentVariable;
 import org.apache.tools.ant.types.Path;
 import org.apache.tools.ant.types.Reference;
-import org.apache.tools.ant.types.EnvironmentVariable;
-import org.apache.tools.ant.types.Argument;
 
 /**
  * This task acts as a loader for java applications but allows to use the same
@@ -377,13 +375,17 @@ public class Java extends Task
             Execute exe = null;
             if( out == null )
             {
-                exe = new Execute( new LogStreamHandler( this, Project.MSG_INFO,
-                                                         Project.MSG_WARN ) );
+                exe = new Execute();
+                exe.setOutput( new LogOutputStream( this, Project.MSG_INFO ) );
+                exe.setError( new LogOutputStream( this, Project.MSG_WARN ) );
+
             }
             else
             {
                 fos = new FileOutputStream( out );
-                exe = new Execute( new PumpStreamHandler( fos ) );
+                exe = new Execute();
+                exe.setOutput( fos );
+                exe.setError( fos );
             }
 
             if( dir == null )

@@ -22,6 +22,7 @@ import org.apache.tools.ant.Project;
 import org.apache.tools.ant.Task;
 import org.apache.tools.ant.taskdefs.exec.Execute;
 import org.apache.tools.ant.taskdefs.exec.LogStreamHandler;
+import org.apache.tools.ant.taskdefs.exec.LogOutputStream;
 import org.apache.tools.ant.types.Commandline;
 import org.apache.tools.ant.types.EnumeratedAttribute;
 import org.apache.tools.ant.types.Path;
@@ -242,11 +243,12 @@ public class CovReport extends Task
             }
 
             // use the custom handler for stdin issues
-            LogStreamHandler handler = new LogStreamHandler( this, Project.MSG_INFO, Project.MSG_WARN );
-            Execute exec = new Execute( handler );
+            final Execute exe = new Execute();
+            exe.setOutput( new LogOutputStream( this, Project.MSG_INFO ) );
+            exe.setError( new LogOutputStream( this, Project.MSG_WARN ) );
             log( cmdl.toString(), Project.MSG_VERBOSE );
-            exec.setCommandline( cmdl.getCommandline() );
-            int exitValue = exec.execute();
+            exe.setCommandline( cmdl.getCommandline() );
+            int exitValue = exe.execute();
             if( exitValue != 0 )
             {
                 throw new TaskException( "JProbe Coverage Report failed (" + exitValue + ")" );

@@ -15,6 +15,7 @@ import org.apache.tools.ant.Task;
 import org.apache.tools.ant.taskdefs.exec.Execute;
 import org.apache.tools.ant.taskdefs.exec.ExecuteStreamHandler;
 import org.apache.tools.ant.taskdefs.exec.LogStreamHandler;
+import org.apache.tools.ant.taskdefs.exec.LogOutputStream;
 import org.apache.tools.ant.types.Commandline;
 
 /**
@@ -201,9 +202,9 @@ public class NetCommand
     {
         // default directory to the project's base directory
         File dir = _owner.getBaseDirectory();
-        ExecuteStreamHandler handler = new LogStreamHandler( _owner,
-                                                             Project.MSG_INFO, Project.MSG_WARN );
-        _exe = new Execute( handler );
+        _exe = new Execute();
+        _exe.setOutput( new LogOutputStream( _owner, Project.MSG_INFO ) );
+        _exe.setError( new LogOutputStream( _owner, Project.MSG_WARN ) );
         _exe.setWorkingDirectory( dir );
     }
-}//class
+}

@@ -16,14 +16,13 @@ import org.apache.tools.ant.PathTokenizer;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.Task;
 import org.apache.tools.ant.taskdefs.exec.Execute;
-import org.apache.myrmidon.framework.exec.ExecuteWatchdog;
 import org.apache.tools.ant.taskdefs.exec.LogStreamHandler;
-import org.apache.tools.ant.types.Commandline;
+import org.apache.tools.ant.taskdefs.exec.LogOutputStream;
+import org.apache.tools.ant.types.Argument;
 import org.apache.tools.ant.types.CommandlineJava;
 import org.apache.tools.ant.types.EnumeratedAttribute;
 import org.apache.tools.ant.types.Path;
 import org.apache.tools.ant.types.Reference;
-import org.apache.tools.ant.types.Argument;
 
 /**
  * Ant task to run JDepend tests. <p>
@@ -329,12 +328,14 @@ public class JDependTask extends Task
             commandline.createArgument().setValue( f.getPath() );
         }
 
-        Execute execute =
-            new Execute( new LogStreamHandler( this, Project.MSG_INFO, Project.MSG_WARN ) );
-        execute.setCommandline( commandline.getCommandline() );
+        final Execute exe = new Execute();
+        exe.setOutput( new LogOutputStream( this, Project.MSG_INFO ) );
+        exe.setError( new LogOutputStream( this, Project.MSG_WARN ) );
+
+        exe.setCommandline( commandline.getCommandline() );
         if( getDir() != null )
         {
-            execute.setWorkingDirectory( getDir() );
+            exe.setWorkingDirectory( getDir() );
         }
 
         if( getOutputFile() != null )
@@ -342,7 +343,7 @@ public class JDependTask extends Task
         log( "Executing: " + commandline.toString(), Project.MSG_VERBOSE );
         try
         {
-            return execute.execute();
+            return exe.execute();
         }
         catch( IOException e )
         {

@@ -15,6 +15,7 @@ import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.OutputStream;
 import java.text.MessageFormat;
 import java.text.ParseException;
 import java.util.ArrayList;
@@ -23,10 +24,7 @@ import java.util.Random;
 import org.apache.myrmidon.api.TaskException;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.taskdefs.exec.Execute;
-import org.apache.tools.ant.taskdefs.exec.ExecuteStreamHandler;
 import org.apache.tools.ant.taskdefs.exec.LogOutputStream;
-import org.apache.tools.ant.taskdefs.exec.LogStreamHandler;
-import org.apache.tools.ant.taskdefs.exec.PumpStreamHandler;
 import org.apache.tools.ant.types.Commandline;
 
 /**
@@ -367,7 +365,7 @@ public class Pvcs extends org.apache.tools.ant.Task
             tmp = new File( "pvcs_ant_" + rand.nextLong() + ".log" );
             tmp2 = new File( "pvcs_ant_" + rand.nextLong() + ".log" );
             log( "Executing " + commandLine.toString(), Project.MSG_VERBOSE );
-            result = runCmd( commandLine, new PumpStreamHandler( new FileOutputStream( tmp ), new LogOutputStream( this, Project.MSG_WARN ) ) );
+            result = runCmd( commandLine, new FileOutputStream( tmp ), new LogOutputStream( this, Project.MSG_WARN ) );
             if( result != 0 && !ignorerc )
             {
                 String msg = "Failed executing: " + commandLine.toString();
@@ -409,7 +407,10 @@ public class Pvcs extends org.apache.tools.ant.Task
             commandLine.createArgument().setValue( "@" + tmp2.getAbsolutePath() );
             log( "Getting files", Project.MSG_INFO );
             log( "Executing " + commandLine.toString(), Project.MSG_VERBOSE );
-            result = runCmd( commandLine, new LogStreamHandler( this, Project.MSG_INFO, Project.MSG_WARN ) );
+            final LogOutputStream output = new LogOutputStream( this, Project.MSG_INFO );
+            final LogOutputStream error = new LogOutputStream( this, Project.MSG_WARN );
+            result = runCmd( commandLine, output, error );
+
             if( result != 0 && !ignorerc )
             {
                 String msg = "Failed executing: " + commandLine.toString() + ". Return code was " + result;
@@ -445,13 +446,14 @@ public class Pvcs extends org.apache.tools.ant.Task
         }
     }
 
-    protected int runCmd( Commandline cmd, ExecuteStreamHandler out )
+    protected int runCmd( Commandline cmd, OutputStream output, OutputStream error )
         throws TaskException
     {
         try
         {
-            Project aProj = getProject();
-            Execute exe = new Execute( out );
+            final Execute exe = new Execute();
+            exe.setOutput( output );
+            exe.setError( error );
             exe.setWorkingDirectory( getBaseDirectory() );
             exe.setCommandline( cmd.getCommandline() );
             return exe.execute();

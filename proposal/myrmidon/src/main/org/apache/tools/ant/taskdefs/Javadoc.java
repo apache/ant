@@ -916,7 +916,9 @@ public class Javadoc extends Task
 
         JavadocOutputStream out = new JavadocOutputStream( Project.MSG_INFO );
         JavadocOutputStream err = new JavadocOutputStream( Project.MSG_WARN );
-        Execute exe = new Execute( new PumpStreamHandler( out, err ) );
+        Execute exe = new Execute();
+        exe.setOutput( out );
+        exe.setError( err );
 
         /*
          * No reason to change the working directory as all filenames and

@@ -13,6 +13,7 @@ import org.apache.tools.ant.Project;
 import org.apache.tools.ant.Task;
 import org.apache.tools.ant.taskdefs.exec.Execute;
 import org.apache.tools.ant.taskdefs.exec.LogStreamHandler;
+import org.apache.tools.ant.taskdefs.exec.LogOutputStream;
 import org.apache.tools.ant.types.Commandline;
 
 /**
@@ -108,8 +109,9 @@ public abstract class ClearCase extends Task
     {
         try
         {
-            Project aProj = getProject();
-            Execute exe = new Execute( new LogStreamHandler( this, Project.MSG_INFO, Project.MSG_WARN ) );
+            final Execute exe = new Execute();
+            exe.setOutput( new LogOutputStream( this, Project.MSG_INFO ) );
+            exe.setError( new LogOutputStream( this, Project.MSG_WARN ) );
             exe.setWorkingDirectory( getBaseDirectory() );
             exe.setCommandline( cmd.getCommandline() );
             return exe.execute();
