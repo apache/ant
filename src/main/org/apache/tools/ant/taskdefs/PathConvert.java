@@ -57,11 +57,13 @@ package org.apache.tools.ant.taskdefs;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.Task;
+import org.apache.tools.ant.taskdefs.condition.Os;
+import org.apache.tools.ant.types.DirSet;
+import org.apache.tools.ant.types.EnumeratedAttribute;
+import org.apache.tools.ant.types.FileList;
+import org.apache.tools.ant.types.FileSet;
 import org.apache.tools.ant.types.Path;
 import org.apache.tools.ant.types.Reference;
-import org.apache.tools.ant.types.FileSet;
-import org.apache.tools.ant.types.DirSet;
-import org.apache.tools.ant.types.FileList;
 
 import java.util.StringTokenizer;
 import java.util.Vector;
@@ -137,6 +139,12 @@ public class PathConvert extends Task {
         private String to = null;
     }
 
+    public static class TargetOs extends EnumeratedAttribute {
+        public String[] getValues() {
+            return new String[] {"windows", "unix", "netware", "os/2"};
+        }
+    }
+
     /**
      * Create a nested PATH element
      */
@@ -165,23 +173,18 @@ public class PathConvert extends Task {
     /**
      * Set the value of the targetos attribute
      */
-    public void setTargetos( String target ) {
+    public void setTargetos( TargetOs target ) {
 
-        targetOS = target.toLowerCase();
-
-        if( ! targetOS.equals( "windows" ) && ! target.equals( "unix" ) && 
-            ! targetOS.equals( "netware" )) {
-            throw new BuildException( "targetos must be one of 'unix', 'netware', or 'windows'" );
-        }
+        targetOS = target.getValue();
 
         // Currently, we deal with only two path formats: Unix and Windows
         // And Unix is everything that is not Windows
 
-        // for NetWare, piggy-back on Windows, since in the validateSetup code,
-        // the same assumptions can be made as with windows -
-        // that ; is the path separator
+        // for NetWare and os/2, piggy-back on Windows, since in the
+        // validateSetup code, the same assumptions can be made as
+        // with windows - that ; is the path separator
 
-        targetWindows = (targetOS.equals("windows") || targetOS.equals("netware"));
+        targetWindows = !targetOS.equals("unix");
     }
 
     /**
@@ -259,17 +262,11 @@ public class PathConvert extends Task {
         // And Unix is everything that is not Windows
         // (with the exception for NetWare below)
 
-        String osname = System.getProperty("os.name").toLowerCase();
-
-        // for NetWare, piggy-back on Windows, since here and in the
-        // apply code, the same assumptions can be made as with windows -
-        // that \\ is an OK separator, and do comparisons case-insensitive.
-        onWindows = ( (osname.indexOf("windows") >= 0) ||
-                      (osname.indexOf("netware") >= 0)  );
-
-        // Determine the from/to char mappings for dir sep
-//        char fromDirSep = onWindows ? '\\' : '/';
-//        char toDirSep   = dirSep.charAt(0);
+        // for NetWare and OS/2, piggy-back on Windows, since here and
+        // in the apply code, the same assumptions can be made as with
+        // windows - that \\ is an OK separator, and do comparisons
+        // case-insensitive.
+        onWindows = Os.isFamily("dos");
 
         String fromDirSep = onWindows ? "\\" : "/";
 
@@ -287,25 +284,23 @@ public class PathConvert extends Task {
             // Now convert the path and file separator characters from the
             // current os to the target os.
 
-//            elem = elem.replace( fromDirSep, toDirSep );
-
             if( i != 0 ) {
-              rslt.append( pathSep );
+                rslt.append( pathSep );
             }
-//            rslt.append( elem );
 
-            StringTokenizer stDirectory = new StringTokenizer(elem, fromDirSep, true);
+            StringTokenizer stDirectory = 
+                new StringTokenizer(elem, fromDirSep, true);
             String token = null;
 
             while ( stDirectory.hasMoreTokens() ) {
-              token = stDirectory.nextToken();
+                token = stDirectory.nextToken();
 
-              if (fromDirSep.equals(token)) {
-                rslt.append( dirSep ); 
-              }
-              else {
-                rslt.append( token );
-              }
+                if (fromDirSep.equals(token)) {
+                    rslt.append( dirSep ); 
+                }
+                else {
+                    rslt.append( token );
+                }
             }
         }
 
@@ -412,4 +407,5 @@ public class PathConvert extends Task {
     private Vector prefixMap = new Vector();  // Path prefix map
     private String pathSep = null;          // User override on path sep char
     private String dirSep = null;           // User override on directory sep char
+
 }
