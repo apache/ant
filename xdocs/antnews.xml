@@ -1,0 +1,101 @@
+<?xml version="1.0"?>
+<document>
+
+  <properties>
+    <author email="conor@cortexebusiness.com.au">Conor MacNeill</author>
+    <author email="stefan.bodewig@epost.de">Stefan Bodewig</author>
+    <title>Ant News</title>
+  </properties>
+
+<body>
+
+  <section name="Ant Needs a Logo">
+    <p>Ant still doesn't have a Logo, but it sure deserves one. We've
+    put together a <a href="logos.html">page with proposed
+    logos</a>, please take a look at them and tell us what you
+    think. If you have a nice logo idea yourself, just submit it to
+    the mailing lists.</p>
+  </section>
+
+  <section name="Ant 2.0 Requirements Collected - Next is Design">
+      <p>A commented version of the collected user requirements is now
+      available <a href="/ant/ant2/features.html">here</a> - it is not
+      complete as some details still have to be defined, but it should
+      give you an idea of what Ant2 is going to look like.</p>
+
+      <p>Several details can only be decided in the light of real code
+      and prototypes.  Several people are working on prototypes (that
+      can be found in Ant's CVS module in the proposals directory) and
+      discussion is going on on the Ant-Dev mailing list.</p>
+  </section>
+
+  <section name="Best-Practices Profile of Ant at Sun&apos;s Dot-Com Builder">
+      <p>Sun has released an introductory article on Ant on their
+      Dot-Com Builder site on May&#160;30&#160;2001. See <a
+      href="http://dcb.sun.com/practices/profiles/ant.jsp">http://dcb.sun.com/practices/profiles/ant.jsp</a></p>
+  </section>
+
+  <section name="Ant 2.0 Requirements">
+    <p>Ant has been in use for quite some time and has been used in ways never conceived when it
+       was originally written. While Ant 1.x has continued to sucessfully evolve and grow, there 
+       are a number of limitations and inconsistencies that are now apparent and which need to 
+       be addressed. 
+    </p>
+    
+    <p>
+       As we continue to evolve and enhance Ant 1.x, it is now time to define what Ant 2.0 will
+       encompass. Ant 2.0 will be a major rearchitecting of Ant. It has a number of goals including:
+       <ul>
+         <li>Define the "contract" with build file writers to which Ant will be bound.</li>
+         <li>Define the "contract" between the Ant core and Task writers.</li>
+         <li>Make Ant more easily extendable by allowing additional tasks to be "dropped" in.</li>
+         <li>Allow Ant to function as a component to simplify integration with GUIs and IDEs.</li>
+         <li>Make Ant more regular and logical.</li>
+       </ul>
+       
+       It is expected that Ant 2.0 will break Ant 1.x based build files. The intention is to
+       make this the last time that will happen.
+     </p>
+     
+     <p>
+        To advance the definition of Ant, user requirements are now being accepted on the 
+        Ant-Dev mailing list. Any requirement will be accepted for consideration. The 
+        requirements are being collected into a document which is available 
+        <a href="/ant/ant2/requested-features.txt">on-line</a>. New features will be excepted 
+        until March 21st, 2001. At that time, each requirement will be discussed 
+        for inclusion in an Ant 2.0 requirement document.
+      </p>
+      
+      <p>
+        For your reference some of the goals which have shaped the development of Ant 1.x are
+        available <a href="/ant/ant2/original-specification.html">here</a>. These continue to be
+        relevant to Ant 2.0.
+      </p>
+      
+      <p>
+        If you want to shape the future of Ant, join the 
+        <a href="/site/mail.html">Ant-Dev mailing list</a> and contribute
+        your ideas.
+      </p>
+  </section>
+
+  <section name="Ant 1.3 Released">
+
+    <p>
+    Ant 1.3 has been released after going through three betas. Thanks to everyone who
+    took the time to test the beta and report bugs and enhancements.
+    </p>
+    
+    <p>You can download the release from 
+        <a href="http://jakarta.apache.org/builds/jakarta-ant/release/v1.3/">here</a>. 
+       Both source and binary releases are available in zip, tarball and RPM formats.
+    </p>
+    <p>Please report all bugs using the 
+        <a href="http://nagoya.apache.org/bugzilla/enter_bug.cgi?product=Ant">Apache Bugzilla</a>
+    </p>
+
+  </section>
+
+</body>
+</document>
+

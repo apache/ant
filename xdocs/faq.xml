@@ -1,0 +1,581 @@
+<?xml version="1.0"?>
+<document>
+
+  <properties>
+    <author email="bodewig@apache.org">Stefan Bodewig</author>
+    <title>Frequently Asked Questions</title>
+  </properties>
+
+  <faqsection title="General">
+    <faq id="what-is-ant">
+      <question>What is Ant?</question>
+      <answer>
+        <p> Ant is a Java based build tool. In theory it is kind of
+        like &quot;make&quot; without makes wrinkles and with the full
+        portability of pure Java code.</p>
+      </answer>
+    </faq>
+
+    <faq id="ant-name">
+      <question>Why do you call it Ant?</question>
+      <answer>
+
+        <p>According to Ant&apos;s original author James Duncan
+        Davidson, the name is an acronym for &quot;Another Neat
+        Tool&quot;.</p>
+        
+        <p>Later explanations go along the lines of &quot;Ants are
+        doing an extremely good job at building things&quot; or
+        &quot;Ants are very small and can carry a weight a dozen times
+        of their own&quot; - describing what Ant is intended to
+        be.</p>
+      </answer>
+    </faq>
+
+    <faq id="history">
+      <question>Tell us a little bit about Ant&apos;s history.</question>
+      <answer>
+
+        <p>Initially Ant was part of the Tomcat code base when it was
+        donated to the Apache Software Foundation - it has been
+        created by James Duncan Davidson, who also is the original
+        author of Tomcat. Ant was there to build Tomcat, nothing
+        else.</p>
+
+        <p>Soon thereafter several open source Java projects realized
+        that Ant could solve the problems they had with makefiles.
+        Starting with the projects hosted at Jakarta and the old Java
+        Apache project, Ant spread like a virus and now is the build
+        tool of choice for a lot of projects.</p>
+
+        <p>In January 2000 Ant was moved to a separate CVS module and
+        was promoted to a project of its own, independent of
+        Tomcat.</p>
+
+        <p>The first version of Ant that was exposed a lager audience
+        was the one that shipped with Tomcat&apos;s 3.1 release on 19 April
+        2000.  This version has later been referenced to as Ant
+        0.3.1.</p>
+
+        <p>The first official release of Ant as a stand alone product was
+        Ant 1.1 released on 19 July 2000.  The complete release
+        history:</p>
+
+        <table>
+          <tr>
+            <th>Ant Version</th>
+            <th>Release Date</th>
+          </tr>
+
+          <tr>
+            <td>1.1</td>
+            <td>19 July 2000</td>
+          </tr>
+
+          <tr>
+            <td>1.2</td>
+            <td>24 October 2000</td>
+          </tr>
+
+          <tr>
+            <td>1.3</td>
+            <td>3 March 2001</td>
+          </tr>
+        </table>
+      </answer>
+    </faq>
+
+  </faqsection>
+
+  <faqsection title="Installation">
+    <faq id="no-gnu-tar">
+      <question>I get checksum errors when I try to extract the
+      <code>tar.gz</code> distribution file. Why?</question>
+      <answer>
+        <p>Ant&apos;s distribution contains file names that are longer
+        than 100 characters, which is not supported by the standard
+        tar file format. Several different implementations of tar use
+        different and incompatible ways to work around this
+        restriction.</p>
+
+        <p>Ant&apos;s &lt;tar&gt; task can create tar archives that use
+        the GNU tar extension, and this has been used when putting
+        together the distribution. If you are using a different
+        version of tar (for example, the one shipping with Solaris),
+        you cannot use it to extract the archive.</p>
+
+        <p>The solution is to either install GNU tar, which can be
+        found <a href="http://www.gnu.org/software/tar/tar.html">here</a> 
+        or use the zip archive instead (you can extract it using
+        <code>jar xf</code>).</p>
+      </answer>
+    </faq>
+  </faqsection>
+
+  <faqsection title="Using Ant">
+    <faq id="always-recompiles">
+      <question>Why does Ant always recompile all my Java files?</question>
+      <answer>
+
+        <p>In order to find out which files should be compiled, Ant
+        compares the timestamps of the source files to those of the
+        resulting <code>.class</code> files.  Opening all source files
+        to find out which package they belong to would be very
+        inefficient - instead of this, Ant expects you to place your
+        source files in a directory hierarchy that mirrors your
+        package hierarchy and to point Ant to the root of this
+        directory tree with the <code>srcdir</code> attribute.</p>
+
+        <p>Say you have <code>&lt;javac srcdir=&quot;src&quot;
+        destdir=&quot;dest&quot; /&gt;</code>.  If Ant finds a file
+        <code>src/a/b/C.java</code> it expects it to be in package
+        <code>a.b</code> so that the resulting <code>.class</code>
+        file is going to be <code>dest/a/b/C.class</code>.</p>
+
+        <p>If your setup is different, Ant&apos;s heuristic won&apos;t work and
+        it will recompile classes that are up to date.  Ant is not the
+        only tool, that expects a source tree layout like this.</p>
+
+      </answer>
+    </faq>
+
+    <faq id="passing-cli-args">
+      <question>How do I pass parameters from the command line to my
+        build file?</question>
+      <answer>
+
+        <p>Use properties: <code>ant
+        -D&lt;name&gt;=&lt;value&gt;</code> lets you define values for
+        properties.  These can then be used within your build file as
+        any normal property: <code>${&lt;name&gt;}</code> will put in
+        <code>&lt;value&gt;</code>.</p>
+
+      </answer>
+    </faq>
+
+    <faq id="jikes-switches">
+      <question>How can I use Jikes specific command line
+        switches?</question>
+
+      <answer>
+
+        <p>A couple of switches are supported via magic
+          properties:</p>
+
+        <table>
+          <tr>
+            <th>switch</th>
+            <th>property</th>
+            <th>default</th>
+          </tr>
+
+          <tr>
+            <td>+E</td>
+            <td>build.compiler.emacs</td>
+            <td>false == not set</td>
+          </tr>
+
+          <tr>
+            <td>-nowarn</td>
+            <td>build.compiler.warnings</td>
+            <td>true == not set</td>
+          </tr>
+
+          <tr>
+            <td>+P</td>
+            <td>build.compiler.pedantic</td>
+            <td>false == not set</td>
+          </tr>
+
+          <tr>
+            <td>+F</td>
+            <td>build.compiler.fulldepend</td>
+            <td>false == not set</td>
+          </tr>
+        </table>
+
+      </answer>
+    </faq>
+
+    <faq id="shell-redirect-1">
+      <question>How do I include a &lt; character in my command line arguments?</question>
+      <answer>
+        <p>The short answer is "Use <code>&amp;lt;</code>".</p>
+
+        <p>The long answer is, that this probably won't do what you
+        want anyway, see <a href="#shell-redirect-2">the next
+        section</a>.</p>
+      </answer>
+    </faq>
+
+    <faq id="shell-redirect-2">
+      <question>How do I redirect standard input or standard output
+        in the <code>&lt;exec&gt;</code> task?</question>
+      <answer>
+        <p>Say you want to redirect the standard input stream of the
+        <code>cat</code> command to read from a file, something
+        like</p>
+
+        <source><![CDATA[
+shell-prompt> cat < foo
+]]></source>
+        
+        <p>and try to translate it into</p>
+
+        <source><![CDATA[
+<exec executable="cat">
+  <arg value="&lt;" />
+  <arg value="foo" />
+</exec>
+]]></source>
+
+        <p>This will not do what you expect.  The input-redirection is
+        performed by your shell, not the command itself, so this
+        should read:</p>
+        
+        <source><![CDATA[
+<exec executable="/bin/sh">
+  <arg value="-c" />
+  <arg value="cat &lt; foo" />
+</exec>
+]]></source>
+
+        <p>Note, that you must use the <code>value</code> attribute of
+        <code>&lt;arg&gt;</code> in the last element.</p>
+
+      </answer>
+    </faq>
+
+  </faqsection>
+
+  <faqsection title="Ant and IDEs/Editors">
+    <faq id="integration">
+      <question>Is Ant supported by my IDE/Editor?</question>
+      <answer>
+        <p>See the <a href="external.html#IDE%47Editor+Integration">section 
+        on IDE integration</a> on our external tools page.</p>
+      </answer>
+    </faq>
+
+    <faq id="emacs-mode">
+      <question>Why doesn&apos;t (X)Emacs/vi/MacOS X's project builder
+      parse the error messages generated by Ant correctly?</question>
+      <answer>
+
+        <p>Ant adds a &quot;banner&quot; with the name of the current
+        task in front of all messages - and there are no built-in
+        regular expressions in your Editor that would account for
+        this.</p>
+
+        <p>You can disable this banner by invoking Ant with the
+        <code>-emacs</code> switch. Alternatively you can add the
+        following snippet to your <code>.emacs</code> to make Emacs
+        understand Ant&apos;s output.</p>
+
+        <source><![CDATA[
+(require 'compile)
+(setq compilation-error-regexp-alist
+  (append (list 
+     ;; works for jikes
+     '("^\\s-*\\[[^]]*\\]\\s-*\\(.+\\):\\([0-9]+\\):\\([0-9]+\\):[0-9]+:[0-9]+:" 1 2 3)
+     ;; works for javac 
+     '("^\\s-*\\[[^]]*\\]\\s-*\\(.+\\):\\([0-9]+\\):" 1 2))
+  compilation-error-regexp-alist))
+]]></source>
+
+        <p>Yet another alternative that preserves most of Ant's
+        formatting is to pipe Ant's output through the following Perl
+        script by Dirk-Willem van Gulik:</p>
+
+        <source><![CDATA[
+#!/usr/bin/perl
+#
+# May 2001 dirkx@apache.org - remove any
+# [foo] lines from the output; keeping
+# spacing more or less there.
+#
+$|=1;
+while(<STDIN>) {
+	if (s/^(\s+)\[(\w+)\]//) {
+		if ($2 ne $last) {
+			print "$1\[$2\]";
+			$s = ' ' x length($2);
+		} else {
+			print "$1 $s ";
+		};
+		$last = $2;
+	};
+	print;
+};
+]]></source>
+
+      </answer>
+    </faq>
+  </faqsection>
+
+  <faqsection title="Advanced issues">
+    <faq id="dtd">
+      <question>Is there a DTD that I can use to validate my build
+      files?</question>
+
+      <answer>
+
+        <p>An incomplete DTD can be created by the
+          <code>&lt;antstructure&gt;</code> task - but this one
+          has a few problems:</p>
+
+          <ul>
+            <li>It doesn&apos;t know about required attributes.  Only
+            manual tweaking of this file can help here.</li>
+          
+            <li>It is not complete - if you add new tasks via
+            <code>&lt;taskdef&gt;</code> it won&apos;t know about it.  See
+            <a href="http://www.sdv.fr/pages/casa/html/ant-dtd.en.html">this
+            page</a> by Michel Casabianca for a solution to this
+            problem.  Note that the DTD you can download at this page
+            is based on Ant 0.3.1.</li>
+
+            <li>It may even be an invalid DTD.  As Ant allows tasks
+            writers to define arbitrary elements, name collisions will
+            happen quite frequently - if your version of Ant contains
+            the optional <code>&lt;test&gt;</code> and
+            <code>&lt;junit&gt;</code> tasks, there are two XML
+            elements named test (the task and the nested child element
+            of <code>&lt;junit&gt;</code>) with different attribute
+            lists.  This problem cannot be solved, DTDs don&apos;t give a
+            syntax rich enough to support this.</li>
+          </ul>
+      </answer>
+    </faq>
+
+    <faq id="xml-entity-include">
+      <question>How do I include an XML snippet in my build file?</question>
+      <answer>
+        <p>You can use XML&apos;s way of including external files and let
+        the parser do the job for Ant:</p>
+
+        <source><![CDATA[
+<?xml version="1.0"?>
+
+<!DOCTYPE project [
+    <!ENTITY common SYSTEM "file:./common.xml">
+]>
+
+<project name="test" default="test" basedir=".">
+
+  <target name="setup">
+    ...
+  </target>
+
+  &common;
+
+  ...
+
+</project>
+]]></source>
+
+        <p>will literally include the contents of <code>common.xml</code> where
+        you&apos;ve placed the <code>&amp;common;</code> entity.</p>
+
+        <p>In combination with a DTD, this would look like this:</p>
+
+        <source><![CDATA[
+<!DOCTYPE project PUBLIC "-//ANT//DTD project//EN" "file:./ant.dtd" [
+   <!ENTITY include SYSTEM "file:./header.xml">
+]>
+]]></source>
+      </answer>
+    </faq>
+
+    <faq id="mail-logger">
+      <question>How do I send an email with the result of my build
+        process?</question>
+
+      <answer>
+
+        <p>You can use a custom BuildListener, that sends out an email
+        in the buildFinished() method.  Will Glozer
+        &lt;will.glozer@jda.com&gt; has written such a listener based
+        on <a href="http://java.sun.com/products/javamail/">JavaMail</a>, 
+        the source is</p>
+
+        <source><![CDATA[
+import java.io.*;
+import java.util.*;
+import javax.mail.*;
+import javax.mail.internet.*;
+import org.apache.tools.ant.*;
+
+/**
+ * A simple listener that waits for a build to finish and sends an email
+ * of the results.  The settings are stored in "monitor.properties" and
+ * are fairly self explanatory.
+ *
+ * @author      Will Glozer
+ * @version     1.05a 09/06/2000
+ */
+public class BuildMonitor implements BuildListener {
+    protected Properties props;
+
+    /**
+     * Create a new BuildMonitor.
+     */
+    public BuildMonitor() throws Exception {
+        props = new Properties();
+        InputStream is = getClass().getResourceAsStream("monitor.properties");
+        props.load(is);
+        is.close();
+    }
+
+    public void buildStarted(BuildEvent e) {
+    }
+
+    /**
+     * Determine the status of the build and the actions to follow, now that
+     * the build has completed.
+     *
+     * @param       e       Event describing the build tatus.
+     */
+    public void buildFinished(BuildEvent e) {
+        Throwable th = e.getException();
+        String status = (th != null) ? "failed" : "succeeded";
+        
+        try {
+            String key = "build." + status;
+            if (props.getProperty(key + ".notify").equalsIgnoreCase("false")) {
+                    return;
+            }
+            
+            Session session = Session.getDefaultInstance(props, null);
+
+            MimeMessage message = new MimeMessage(session);
+            message.addRecipients(Message.RecipientType.TO, parseAddresses(
+                props.getProperty(key + ".email.to")));
+            message.setSubject(props.getProperty(key + ".email.subject"));
+
+            BufferedReader br = new BufferedReader(new FileReader(
+                props.getProperty("build.log")));
+            StringWriter sw = new StringWriter();
+            
+            String line = br.readLine();
+            while (line != null) {
+                sw.write(line);
+                sw.write("\n");
+                line = br.readLine();
+            }
+            br.close();
+            
+            message.setText(sw.toString(), "UTF-8");
+            sw.close();
+            
+            Transport transport = session.getTransport();
+            transport.connect();
+            transport.send(message);
+            transport.close();
+        } catch (Exception ex) {
+            System.out.println("BuildMonitor failed to send email!");
+            ex.printStackTrace();
+        }
+    }
+
+    /**
+     * Parse a comma separated list of internet email addresses.
+     *
+     * @param       s       The list of addresses.
+     * @return      Array of Addresses.
+     */
+    protected Address[] parseAddresses(String s) throws Exception {
+        StringTokenizer st = new StringTokenizer(s, ",");
+        Address[] addrs = new Address[st.countTokens()];
+
+        for (int i = 0; i < addrs.length; i++) {
+            addrs[i] = new InternetAddress(st.nextToken());
+        }
+        return addrs;
+    }
+
+    public void messageLogged(BuildEvent e) {
+    }
+
+    public void targetStarted(BuildEvent e) {
+    }
+
+    public void targetFinished(BuildEvent e) {
+    }
+
+    public void taskStarted(BuildEvent e) {        
+    }
+
+    public void taskFinished(BuildEvent e) {
+    }
+}
+]]></source>
+          
+      <p>With a <code>monitor.properties</code> like this</p>
+
+        <source><![CDATA[
+# configuration for build monitor
+
+mail.transport.protocol=smtp
+mail.smtp.host=<host>
+mail.from=Will Glozer <will.glozer@jda.com>
+
+build.log=build.log
+
+build.failed.notify=true
+build.failed.email.to=will.glozer@jda.com
+build.failed.email.subject=Nightly build failed!
+
+build.succeeded.notify=true
+build.succeeded.email.to=will.glozer@jda.com
+build.succeeded.email.subject=Nightly build succeeded!
+]]></source>
+
+        <p><code>monitor.properties</code> should be placed right next
+        to your compiled <code>BuildMonitor.class</code>.  To use it,
+        invoke Ant like</p>
+        
+        <source><![CDATA[
+ant -listener BuildMonitor
+]]></source>
+
+        <p>Make sure that <code>mail.jar</code> from JavaMail and
+        <code>activation.jar</code> from the 
+        <a href="http://java.sun.com/products/javabeans/glasgow/jaf.html">Java
+        Beans Activation Framework</a> in your <code>CLASSPATH</code>.</p>
+
+      </answer>
+    </faq>
+
+  </faqsection>
+
+  <faqsection title="Known problems">
+    <faq id="remove-cr">
+      <question>&lt;chmod&gt; or &lt;exec&gt; don&apos;t work in Ant
+        1.3 on Unix</question>
+      <answer>
+
+        <p>The <code>antRun</code> script in <code>ANT_HOME/bin</code>
+        has DOS instead of Unix line endings, you must remove the
+        carriage return characters from this file.  This can be done by
+        using Ant&apos;s &lt;fixcrlf&gt; task or something like:</p>
+
+        <source><![CDATA[
+tr -d '\r' < $ANT_HOME/bin/antRun > /tmp/foo
+mv /tmp/foo $ANT_HOME/bin/antRun
+]]></source>
+      </answer>
+    </faq>
+
+    <faq id="javadoc-cannot-execute">
+      <question>JavaDoc failed: java.io.IOException: javadoc: cannot execute</question>
+      <answer>
+        <p>There is a bug in the Solaris reference implementation of
+        the JDK, see <a href="http://developer.java.sun.com/developer/bugParade/bugs/4230399.html">http://developer.java.sun.com/developer/bugParade/bugs/4230399.html</a>.
+        This also appears to be true under Linux, moving the JDK to
+        the front of the PATH fixes the problem.</p>
+      </answer>
+    </faq>
+  </faqsection>
+
+</document>
