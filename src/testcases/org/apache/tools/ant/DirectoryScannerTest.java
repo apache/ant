@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 1999 The Apache Software Foundation.  All rights 
+ * Copyright (c) 2000 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -9,7 +9,7 @@
  * are met:
  *
  * 1. Redistributions of source code must retain the above copyright
- *    notice, this list of conditions and the following disclaimer. 
+ *    notice, this list of conditions and the following disclaimer.
  *
  * 2. Redistributions in binary form must reproduce the above copyright
  *    notice, this list of conditions and the following disclaimer in
@@ -17,15 +17,15 @@
  *    distribution.
  *
  * 3. The end-user documentation included with the redistribution, if
- *    any, must include the following acknowlegement:  
- *       "This product includes software developed by the 
+ *    any, must include the following acknowlegement:
+ *       "This product includes software developed by the
  *        Apache Software Foundation (http://www.apache.org/)."
  *    Alternately, this acknowlegement may appear in the software itself,
  *    if and wherever such third-party acknowlegements normally appear.
  *
  * 4. The names "The Jakarta Project", "Ant", and "Apache Software
  *    Foundation" must not be used to endorse or promote products derived
- *    from this software without prior written permission. For written 
+ *    from this software without prior written permission. For written
  *    permission, please contact apache@apache.org.
  *
  * 5. Products derived from this software may not be called "Apache"
@@ -50,83 +50,63 @@
  * individuals on behalf of the Apache Software Foundation.  For more
  * information on the Apache Software Foundation, please see
  * <http://www.apache.org/>.
- */ 
+ */
 
 package org.apache.tools.ant;
 
+import junit.framework.TestCase;
+import junit.framework.AssertionFailedError;
 import java.io.File;
-import java.io.FilenameFilter;
-import java.io.IOException;
+import java.util.*;
 
 /**
- * Filters filenames to determine whether or not the file is desirable.
+ * JUnit 3 testcases for org.apache.tools.ant.DirectoryScanner
  *
- * @author Jason Hunter [jhunter@servlets.com]
- * @author james@x180.com
+ * @author <a href="mailto:stefan.bodewig@epost.de">Stefan Bodewig</a> 
  */
-public class DesirableFilter implements FilenameFilter {
+public class DirectoryScannerTest extends TestCase {
+
+    public DirectoryScannerTest(String name) {super(name);}
 
     /**
-     * Test the given filename to determine whether or not it's desirable.
-     * This helps tasks filter temp files and files used by CVS.
+     * Test inspired by Bug#1415.
      */
+    public void testChildrenOfExcludedDirectory() {
+        File dir = new File("src/main/org/apache/tools");
+        DirectoryScanner ds = new DirectoryScanner();
+        ds.setBasedir(dir);
+        ds.setExcludes(new String[] {"ant/**"});
+        ds.scan();
 
-    public boolean accept(File dir, String name) {
-        
-        // emacs save file
-        if (name.endsWith("~")) {
-            return false;
+        boolean haveZipPackage = false;
+        boolean haveTaskdefsPackage = false;
+        String[] included = ds.getIncludedDirectories();
+        for (int i=0; i<included.length; i++) {
+            if (included[i].equals("zip")) {
+                haveZipPackage = true;
+            } else if (included[i].equals("ant/taskdefs")) {
+                haveTaskdefsPackage = true;
+            }
         }
+        assert("(1) zip package included", haveZipPackage);
+        assert("(1) taskdefs package not included", !haveTaskdefsPackage);
 
-        // emacs autosave file
-        if (name.startsWith("#") && name.endsWith("#")) {
-            return false;
+        ds = new DirectoryScanner();
+        ds.setBasedir(dir);
+        ds.setExcludes(new String[] {"ant"});
+        ds.scan();
+        haveZipPackage = false;
+        included = ds.getIncludedDirectories();
+        for (int i=0; i<included.length; i++) {
+            if (included[i].equals("zip")) {
+                haveZipPackage = true;
+            } else if (included[i].equals("ant/taskdefs")) {
+                haveTaskdefsPackage = true;
+            }
         }
+        assert("(2) zip package included", haveZipPackage);
+        assert("(2) taskdefs package included", haveTaskdefsPackage);
 
-        // openwindows text editor does this I think
-        if (name.startsWith("%") && name.endsWith("%")) {
-            return false;
-        }
-
-        /* CVS stuff -- hopefully there won't be a case with
-         * an all cap file/dir named "CVS" that somebody wants
-         * to keep around...
-         */
-        
-        if (name.equals("CVS")) {
-            return false;
-        }
-        
-        /* If we are going to ignore CVS might as well ignore 
-         * this one as well...
-         */
-        if (name.equals(".cvsignore")){
-            return false;
-        }
-
-        // CVS merge autosaves.
-        if (name.startsWith(".#")) {
-            return false;
-        }
-
-        // SCCS/CSSC/TeamWare:
-        if (name.equals("SCCS")) {
-            return false;
-        }
-    
-        // Visual Source Save
-        if (name.equals("vssver.scc")) {
-            return false;
-        }
-
-        // default
-        return true;
     }
+
 }
-
-
-
-
-
-
-

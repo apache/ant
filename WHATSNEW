@@ -110,6 +110,8 @@ Other changes:
 
 * <apply> and <execon> have been merged into a single task.
 
+* added vssver.scc to the default excludes
+
 Fixed bugs:
 -----------
 
@@ -179,6 +181,9 @@ Fixed bugs:
 
 * <apply> and <execon> do now execute the command only once, if you
   specify the parallel attribute - instead of once per fileset.
+
+* directory based tasks and fileset could miss some included files in
+  directories that have been excluded
 
 Changes from Ant 1.2 to Ant 1.3
 ===========================================

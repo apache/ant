@@ -149,7 +149,8 @@ public class DirectoryScanner implements FileScanner {
         "**/CVS/**",
         "**/.cvsignore",
         "**/SCCS",
-        "**/SCCS/**"
+        "**/SCCS/**",
+        "**/vssver.scc"
     };
 
     /**
@@ -708,7 +709,10 @@ strLoop:
         dirsNotIncluded.copyInto(notIncl);
 
         for (int i=0; i<excl.length; i++) {
-            scandir(new File(basedir, excl[i]), excl[i]+File.separator, false);
+            if (!couldHoldIncluded(excl[i])) {
+                scandir(new File(basedir, excl[i]), 
+                        excl[i]+File.separator, false);
+            }
         }
         
         for (int i=0; i<notIncl.length; i++) {
@@ -766,6 +770,9 @@ strLoop:
                         }
                     } else {
                         dirsExcluded.addElement(name);
+                        if (fast && couldHoldIncluded(name)) {
+                            scandir(file, name+File.separator, fast);
+                        }
                     }
                 } else {
                     dirsNotIncluded.addElement(name);
@@ -839,7 +846,6 @@ strLoop:
         }
         return false;
     }
-
 
 
     /**
