@@ -65,7 +65,8 @@ import java.util.Enumeration;
  * @author Nico Seessle <nico@seessle.de>
  */
 public class ZipTest extends BuildFileTest {
-
+    //instance variable to allow cleanup
+    ZipFile zfPrefixAddsDir = null;
     public ZipTest(String name) {
         super(name);
     }
@@ -91,6 +92,14 @@ public class ZipTest extends BuildFileTest {
 //    }
 
     public void tearDown() {
+        try {
+            if ( zfPrefixAddsDir != null) {
+                zfPrefixAddsDir.close();
+            }
+
+        } catch (IOException e) {
+            //ignored
+        }
         executeTarget("cleanup");
     }
 
@@ -140,9 +149,10 @@ public class ZipTest extends BuildFileTest {
     public void testPrefixAddsDir() throws IOException {
         executeTarget("testPrefixAddsDir");
         File archive = getProject().resolveFile("test3.zip");
-        ZipFile zf = new ZipFile(archive);
-        ZipEntry ze = zf.getEntry("test/");
+        zfPrefixAddsDir = new ZipFile(archive);
+        ZipEntry ze = zfPrefixAddsDir.getEntry("test/");
         assertNotNull("test/ has been added", ze);
+
     }
 
     // Bugzilla Report 19449
