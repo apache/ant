@@ -1,0 +1,6 @@
+<antlib>
+  <taskdef
+    name="dotnetexec"
+    classname="org.apache.tools.ant.taskdefs.optional.dotnet.DotNetExecTask"
+    />
+</antlib>

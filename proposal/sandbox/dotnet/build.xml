@@ -1,0 +1,74 @@
+<project default="compile">
+
+  <target name="setup">
+    <property name="build" value="build"/>
+    <property name="build.classes" value="${build}/classes"/>
+    <property name="build.testclasses" value="${build}/test-classes"/>
+    <property name="build.lib" value="${build}/lib"/>
+    <property name="jarname" value="${build.lib}/dotnet.jar"/>
+    <mkdir dir="${build.classes}"/>
+    <mkdir dir="${build.testclasses}"/>
+    <mkdir dir="${build.lib}"/>
+  </target>
+
+  <target name="compile" depends="setup">
+    <javac 
+      srcdir="src/main"
+      destdir="${build.classes}"
+      debug="true"
+      />
+  </target>
+
+  <target name="antlib" depends="compile">
+    <copy todir="${build.classes}">
+      <fileset dir="src/main" includes="**/antlib.xml"/>
+    </copy>
+    <jar 
+      destfile="${jarname}"
+      basedir="${build.classes}"
+      />
+  </target>
+
+  <target name="setup-for-tests" depends="setup">
+    <ant 
+      antfile="../../../build.xml" 
+      target="test-jar" 
+      inheritall="false"
+      />
+  </target>
+
+  <target name="compile-tests" depends="setup-for-tests, antlib">
+    <javac 
+      srcdir="src/testcases"
+      destdir="${build.testclasses}"
+      debug="true"
+      >
+      <classpath>
+        <pathelement location="${jarname}"/>
+        <pathelement location="../../../build/lib/ant-testutil.jar"/>
+      </classpath>
+    </javac>
+  </target>
+
+  <target name="test" depends="compile-tests">
+    <junit
+      printsummary="false"
+      haltonfailure="false"
+      failureproperty="tests.failed"
+      >
+      <classpath>
+        <pathelement location="${jarname}"/>
+        <pathelement location="../../../build/lib/ant-testutil.jar"/>
+        <pathelement location="${build.testclasses}"/>
+      </classpath>
+
+      <batchtest>
+        <fileset dir="src/testcases"/>
+      </batchtest>
+
+      <formatter type="plain" usefile="false"/>
+    </junit>
+
+    <fail if="tests.failed">At least one test has failed.</fail>
+  </target>
+</project>

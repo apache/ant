@@ -1,0 +1,87 @@
+<?xml version="1.0"?>
+
+<project name="dotnet" basedir="." default="testCSC"
+  xmlns:dn="antlib:org.apache.tools.ant.taskdefs.optional.dotnet">
+
+  <property environment="env"/>
+  <property name="build.dir" location="build"/>
+  <property name="src.dir" location="src"/>
+
+  <property name="out.csc" location="${src.dir}/out.cs"/>
+  <property name="out.app" location="${build.dir}/out.exe"/>
+  <property name="out.type" value="exe"/>
+
+  <taskdef 
+    uri="antlib:org.apache.tools.ant.taskdefs.optional.dotnet"
+    resource="org/apache/tools/ant/taskdefs/optional/dotnet/antlib.xml">
+    <classpath>
+      <pathelement location="../../../build/lib/dotnet.jar"/>
+    </classpath>
+  </taskdef>
+
+  <target name="probe_for_apps" >
+   <condition property="csc.found">
+      <or>
+        <available file="csc"     filepath="${env.PATH}" />
+        <available file="csc.exe" filepath="${env.PATH}" />
+        <available file="csc.exe" filepath="${env.Path}" />
+      </or>
+    </condition>
+   <echo> csc.found=${csc.found}</echo>
+
+   <!-- Mono C# compiler -->
+   <condition property="mcs.found">
+      <available file="mcs"     filepath="${env.PATH}" />
+    </condition>
+   <echo> mcs.found=${mcs.found}</echo>
+
+   <!-- any C# compiler -->
+   <condition property="c#.found">
+      <or>
+        <isset property="csc.found"/>
+        <isset property="mcs.found"/>
+      </or>
+   </condition>
+  </target>
+
+  <target name="init" depends="probe_for_apps">
+    <mkdir dir="${build.dir}"/>
+    <property name="testCSC.exe"
+      location="${build.dir}/ExampleCsc.exe" />
+  </target>
+
+  <target name="teardown">
+    <delete dir="${build.dir}"/>
+  </target>
+
+  <target name="validate_csc" depends="init">
+    <fail unless="c#.found">Needed C# compiler is missing</fail>
+  </target>
+
+  <target name="testCSC" depends="testCSC-Mono,testCSC-MS">
+    <available property="app.created" file="${testCSC.exe}"/>
+    <fail unless="app.created">No app ${testCSC.exe} created</fail>
+    <dn:dotnetexec executable="${testCSC.exe}" failonerror="true" />
+    <delete file="${testCSC.exe}"/>
+  </target>
+
+  <target name="testCSC-MS" depends="validate_csc" if="csc.found">
+    <csc
+      destFile="${testCSC.exe}"
+      targetType="exe"
+      >
+    </csc>
+  </target>
+
+  <target name="testCSC-Mono" depends="validate_csc" if="mcs.found">
+    <csc
+      destFile="${testCSC.exe}"
+      targetType="exe"
+      executable="mcs"
+      includedefaultreferences="true"
+      >
+    </csc>
+  </target>
+
+</project>
+
