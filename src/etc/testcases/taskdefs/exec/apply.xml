@@ -310,13 +310,37 @@
         <touch file="x" />
         <touch file="y" />
 
-        <pathconvert property="xy" pathsep="${line.separator}">
+        <condition property="pad" value="">
+            <or>
+                <not>
+                    <os family="dos" />
+                </not>
+                <not>
+                    <or>
+                        <equals arg1="${ant.java.version}" arg2="1.1" />
+                        <equals arg1="${ant.java.version}" arg2="1.2" />
+                    </or>
+                </not>
+            </or>
+        </condition>
+
+        <condition property="pad" value=" ">
+            <and>
+                <os family="dos" />
+                <or>
+                    <equals arg1="${ant.java.version}" arg2="1.1" />
+                    <equals arg1="${ant.java.version}" arg2="1.2" />
+                </or>
+            </and>
+        </condition>
+
+        <pathconvert property="xy" pathsep="${pad}${line.separator}">
             <path>
                 <filelist refid="xylist" />
             </path>
         </pathconvert>
 
-        <pathconvert property="xyz" pathsep="${line.separator}">
+        <pathconvert property="xyz" pathsep="${pad}${line.separator}">
             <path>
                 <filelist refid="xyzlist" />
             </path>
@@ -336,8 +360,8 @@
             <condition>
                 <not>
                     <and>
-                        <equals arg1="${xy}" arg2="${ignoretrue}" />
-                        <equals arg1="${xyz}" arg2="${ignorefalse}" />
+                        <equals arg1="${xy}${pad}" arg2="${ignoretrue}" />
+                        <equals arg1="${xyz}${pad}" arg2="${ignorefalse}" />
                     </and>
                 </not>
             </condition>
