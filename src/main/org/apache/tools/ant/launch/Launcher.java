@@ -127,10 +127,16 @@ public class Launcher {
                 break;
             }
         }
-        if (libPath.equals("")) {
+        if (args.length > 0 && args[args.length -1].equals("-lib")) {
+            // if the last argument is -lib
+            // remove it from the arguments passed to Launcher
+            //
+            newargs = new String[args.length - 1];
+            System.arraycopy(args, 0, newargs, 0, args.length -1);
+        } else if (libPath.equals("")) {
            newargs = new String[args.length];
            System.arraycopy(args, 0, newargs, 0, args.length);
-        } else {
+        }  else {
             newargs = new String[args.length - 2];
             // copy the beginning of the args array
             if (argcount > 0 ) {
