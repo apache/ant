@@ -304,7 +304,7 @@ public class Zip extends MatchingTask {
                 log("Adding file " + files[j] + " to fileset", Project.MSG_VERBOSE);
                 ZipFileSet zf = new ZipFileSet();
                 zf.setSrc(new File(basedir, files[j]));
-                filesets.add(zf);
+                filesets.addElement(zf);
             }
         }
 
@@ -852,12 +852,12 @@ public class Zip extends MatchingTask {
      */
     protected void cleanUp() {
         addedDirs.clear();
-        addedFiles.clear();
-        filesets.clear();
+        addedFiles.removeAllElements();
+        filesets.removeAllElements();
         zipFile = null;
         baseDir = null;
         entries.clear();
-        groupfilesets.clear();
+        groupfilesets.removeAllElements();
         duplicate = "add";
         archiveType = "zip";
         doCompress = true;

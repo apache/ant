@@ -253,7 +253,7 @@ public class Jar extends Zip {
             }
 
             // need to set the line.separator as \r\n due to a bug with the jar verifier
-            System.setProperty("line.separator", "\r\n");
+            System.getProperties().put("line.separator", "\r\n");
 
             zipDir(null, zOut, "META-INF/");
             // time to write the manifest
@@ -271,7 +271,7 @@ public class Jar extends Zip {
             throw new BuildException("Invalid Manifest", e, getLocation());
         }
         finally {
-            System.setProperty("line.separator", ls);
+            System.getProperties().put("line.separator", ls);
         }
     }
 

@@ -59,7 +59,7 @@ import java.io.FileInputStream;
 import java.io.InputStream;
 import java.io.IOException;
 import java.net.URL;
-import java.util.Iterator;
+import java.util.Enumeration;
 import java.util.Vector;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
@@ -121,7 +121,7 @@ public class XCatalog extends DataType implements Cloneable, EntityResolver {
      * @param aDTD the DTDLocation instance to be aded to the catalog
      */
     private void addElement(DTDLocation aDTD) {
-        getElements().add(aDTD);
+        getElements().addElement(aDTD);
     }
     
     /**
@@ -135,7 +135,7 @@ public class XCatalog extends DataType implements Cloneable, EntityResolver {
         if (isReference()) {
             throw noChildrenAllowed();
         }
-        getElements().add(dtd);
+        getElements().addElement(dtd);
     }
     
     /**
@@ -242,10 +242,10 @@ public class XCatalog extends DataType implements Cloneable, EntityResolver {
      *         of the DTD or null if no such information is available
      */
     private DTDLocation findMatchingDTD(String publicId) {
-        Iterator elements = getElements().iterator();
+        Enumeration elements = getElements().elements();
         DTDLocation element = null;
-        while (elements.hasNext()) {
-            element = (DTDLocation)elements.next();
+        while (elements.hasMoreElements()) {
+            element = (DTDLocation)elements.nextElement();
             if (element.getPublicId().equals(publicId)) {
                 return element;
             }

@@ -752,8 +752,8 @@ public class Javadoc extends Task {
                 String next = tok.nextToken().trim();
                 if (next.equals("all")) {
                     if (gotAll) {   
-                        project.log ("Repeated tag scope element: all", 
-                                     Project.MSG_VERBOSE);
+                        getProject().log ("Repeated tag scope element: all", 
+                                          Project.MSG_VERBOSE);
                     }
                     gotAll=true;
                 }
@@ -768,8 +768,8 @@ public class Javadoc extends Task {
                     } 
                     else {
                         if (elements[i]) {
-                            project.log ("Repeated tag scope element: "+next, 
-                                         Project.MSG_VERBOSE);
+                            getProject().log ("Repeated tag scope element: "+next, 
+                                              Project.MSG_VERBOSE);
                         }
                         elements[i]=true;
                         gotNotAll=true;

@@ -134,6 +134,12 @@
     <!-- uses the context classloader -->
     <exclude name="${optional.package}/junit/JUnitClassLoaderTest.java"
              unless="jdk1.2+" />
+
+    <!-- I hope these are just temporary -->
+    <exclude name="${ant.package}/types/XCatalog.java"
+             unless="jdk1.2+" />
+    <exclude name="${ant.package}/taskdefs/XSLTProcess.java"
+             unless="jdk1.2+" />
   </patternset>
   <patternset id="needs.jdk1.3+">
     <exclude name="${ant.package}/taskdefs/TestProcess.java"
