@@ -159,7 +159,7 @@ public class UnknownElement extends Task {
      * @return the configuration info.
      */
     public RuntimeConfigurable getWrapper() {
-        return wrapper;
+        return super.getWrapper();
     }
 
     /**

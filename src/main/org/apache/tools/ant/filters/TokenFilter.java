@@ -654,7 +654,7 @@ public class TokenFilter extends BaseFilterReader
             }
             regularExpression = new RegularExpression();
             regularExpression.setPattern(from);
-            regexp = regularExpression.getRegexp(project);
+            regexp = regularExpression.getRegexp(getProject());
             if (to == null) {
                 to = "";
             }
