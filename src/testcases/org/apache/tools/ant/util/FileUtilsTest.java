@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2001 The Apache Software Foundation.  All rights
+ * Copyright (c) 2001-2002 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -59,6 +59,7 @@ import java.io.*;
 import junit.framework.TestCase;
 
 import org.apache.tools.ant.BuildException;
+import org.apache.tools.ant.taskdefs.condition.Os;
 
 /**
  * Tests for org.apache.tools.ant.util.FileUtils.
@@ -164,6 +165,29 @@ public class FileUtilsTest extends TestCase {
         assertEquals(driveSpec + "\\", 
                      fu.resolveFile(null, driveSpec + "\\\\\\\\\\\\").getPath());
 
+        if (Os.isFamily("netware")) {
+            /*
+             * throw in NetWare volume names
+             */
+            driveSpec = "SYS:";
+            assertEquals(driveSpec, 
+                         fu.resolveFile(null, driveSpec + "/").getPath());
+            assertEquals(driveSpec, 
+                         fu.resolveFile(null, driveSpec + "\\").getPath());
+            driveSpecLower = "sys:";
+            assertEquals(driveSpec, 
+                         fu.resolveFile(null, driveSpecLower + "/").getPath());
+            assertEquals(driveSpec, 
+                         fu.resolveFile(null, driveSpecLower + "\\").getPath());
+            /*
+             * promised to eliminate consecutive slashes after drive letter.
+             */
+            assertEquals(driveSpec, 
+                         fu.resolveFile(null, driveSpec + "/////").getPath());
+            assertEquals(driveSpec, 
+                         fu.resolveFile(null, driveSpec + "\\\\\\\\\\\\").getPath());
+        }
+
         /*
          * Now test some relative file name magic.
          */
@@ -206,6 +230,8 @@ public class FileUtilsTest extends TestCase {
          * throw in drive letters
          */
         String driveSpec = "C:";
+        assertEquals(driveSpec, 
+                     fu.normalize(driveSpec).getPath());
         assertEquals(driveSpec + "\\", 
                      fu.normalize(driveSpec + "/").getPath());
         assertEquals(driveSpec + "\\", 
@@ -222,6 +248,35 @@ public class FileUtilsTest extends TestCase {
                      fu.normalize(driveSpec + "/////").getPath());
         assertEquals(driveSpec + "\\", 
                      fu.normalize(driveSpec + "\\\\\\\\\\\\").getPath());
+
+        if (Os.isFamily("netware")) {
+            /*
+             * throw in NetWare volume names 
+             */
+            driveSpec = "SYS:";
+            assertEquals(driveSpec, 
+                         fu.normalize(driveSpec).getPath());
+            assertEquals(driveSpec, 
+                         fu.normalize(driveSpec + "/").getPath());
+            assertEquals(driveSpec, 
+                         fu.normalize(driveSpec + "\\").getPath());
+            driveSpecLower = "sys:";
+            assertEquals(driveSpec, 
+                         fu.normalize(driveSpecLower).getPath());
+            assertEquals(driveSpec, 
+                         fu.normalize(driveSpecLower + "/").getPath());
+            assertEquals(driveSpec, 
+                         fu.normalize(driveSpecLower + "\\").getPath());
+            assertEquals(driveSpec + "\\junk", 
+                         fu.normalize(driveSpecLower + "\\junk").getPath());
+            /*
+             * promised to eliminate consecutive slashes after drive letter.
+             */
+            assertEquals(driveSpec, 
+                         fu.normalize(driveSpec + "/////").getPath());
+            assertEquals(driveSpec, 
+                         fu.normalize(driveSpec + "\\\\\\\\\\\\").getPath());
+        }
 
         /*
          * Now test some relative file name magic.

@@ -79,6 +79,7 @@ import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.filters.util.ChainReaderHelper;
 import org.apache.tools.ant.types.FilterSetCollection;
+import org.apache.tools.ant.taskdefs.condition.Os;
 
 /**
  * This class also encapsulates methods which allow Files to be
@@ -98,6 +99,8 @@ public class FileUtils {
     private static Random rand = new Random(System.currentTimeMillis());
     private static Object lockReflection = new Object();
     private static java.lang.reflect.Method setLastModified = null;
+
+    private boolean onNetWare = Os.isFamily("netware");
 
     /**
      * Factory method.
@@ -445,14 +448,26 @@ public class FileUtils {
             .replace('\\', File.separatorChar);
 
         // deal with absolute files
-        if (filename.startsWith(File.separator) ||
-
-            (filename.length() >= 2 &&
-             Character.isLetter(filename.charAt(0)) &&
-             filename.charAt(1) == ':')
-
-            ) {
-            return normalize(filename);
+        if (!onNetWare) {
+            if (filename.startsWith(File.separator) ||
+                
+                (filename.length() >= 2 &&
+                 Character.isLetter(filename.charAt(0)) &&
+                 filename.charAt(1) == ':')
+                
+                ) {
+                return normalize(filename);
+            }
+        } else {
+            // the assumption that the : will appear as the second character in
+            // the path name breaks down when NetWare is a supported platform.
+            // Netware volumes are of the pattern: "data:\"
+            int colon = filename.indexOf(":");
+            if (filename.startsWith(File.separator) ||
+                (colon > -1)
+                ) {
+                return normalize(filename);
+            }
         }
 
         if (file == null) {
@@ -503,44 +518,59 @@ public class FileUtils {
             .replace('\\', File.separatorChar);
 
         // make sure we are dealing with an absolute path
-        if (!path.startsWith(File.separator) &&
-            ! (path.length() >= 2 &&
-               Character.isLetter(path.charAt(0)) &&
-               path.charAt(1) == ':')
-            ) {
-            String msg = path + " is not an absolute path";
-            throw new BuildException(msg);
+        int colon = path.indexOf(":");
+
+        if (!onNetWare) {
+            if (!path.startsWith(File.separator) &&
+                ! (path.length() >= 2 &&
+                   Character.isLetter(path.charAt(0)) &&
+                   colon == 1)
+                ) {
+                String msg = path + " is not an absolute path";
+                throw new BuildException(msg);
+            }
+        } else {
+            if (!path.startsWith(File.separator) &&
+                (colon == -1)
+                ) {
+                String msg = path + " is not an absolute path";
+                throw new BuildException(msg);
+            }
         }
 
         boolean dosWithDrive = false;
         String root = null;
         // Eliminate consecutive slashes after the drive spec
-        if (path.length() >= 2 &&
-            Character.isLetter(path.charAt(0)) &&
-            path.charAt(1) == ':') {
+        if ((!onNetWare && 
+             path.length() >= 2 &&
+             Character.isLetter(path.charAt(0)) &&
+             path.charAt(1) == ':') ||
+            (onNetWare && colon > -1)
+            ) {
 
             dosWithDrive = true;
 
             char[] ca = path.replace('/', '\\').toCharArray();
-            StringBuffer sb = new StringBuffer();
-            sb.append(Character.toUpperCase(ca[0])).append(':');
+            StringBuffer sbRoot = new StringBuffer();
+            for (int i = 0; i < colon; i++) {
+                sbRoot.append(Character.toUpperCase(ca[i]));
+            }
+            sbRoot.append(':');
+            if (colon + 1 < path.length()) {
+                sbRoot.append(File.separatorChar);
+            }
+            root = sbRoot.toString();
 
-            for (int i = 2; i < ca.length; i++) {
+            // Eliminate consecutive slashes after the drive spec
+            StringBuffer sbPath = new StringBuffer();
+            for (int i = colon+1; i < ca.length; i++) {
                 if ((ca[i] != '\\') ||
                     (ca[i] == '\\' && ca[i - 1] != '\\')
                     ) {
-                    sb.append(ca[i]);
+                    sbPath.append(ca[i]);
                 }
             }
-
-            path = sb.toString().replace('\\', File.separatorChar);
-            if (path.length() == 2) {
-                root = path;
-                path = "";
-            } else {
-                root = path.substring(0, 3);
-                path = path.substring(3);
-            }
+            path = sbPath.toString().replace('\\', File.separatorChar);
 
         } else {
             if (path.length() == 1) {
