@@ -20,11 +20,9 @@ import java.io.OutputStreamWriter;
 import java.io.Reader;
 import java.io.UnsupportedEncodingException;
 import java.io.Writer;
-import java.util.ArrayList;
 import org.apache.avalon.excalibur.io.IOUtil;
 import org.apache.myrmidon.api.TaskException;
-import org.apache.myrmidon.framework.FilterSetCollection;
-import org.apache.tools.ant.types.FilterSet;
+import org.apache.myrmidon.framework.filters.LineFilterSet;
 
 /**
  * A task used to copy files and simultaneously apply a
@@ -37,13 +35,12 @@ import org.apache.tools.ant.types.FilterSet;
 public class FilteredCopyTask
     extends CopyTask
 {
-    private ArrayList m_filterSets = new ArrayList();
-    private FilterSetCollection m_filterSetCollection;
+    private LineFilterSet m_filterSetCollection = new LineFilterSet();
     private String m_encoding = "US-ASCII";
 
-    public void addFilterSet( final FilterSet filterSet )
+    public void addFilterset( final LineFilterSet filter )
     {
-        m_filterSets.add( filterSet );
+        m_filterSetCollection.add( filter );
     }
 
     public void setEncoding( final String encoding )
@@ -121,31 +118,15 @@ public class FilteredCopyTask
     private String replaceTokens( final String line )
         throws IOException
     {
-        final FilterSetCollection filters = buildFilterSetCollection();
         try
         {
-            return filters.replaceTokens( line );
+            final StringBuffer buffer = new StringBuffer( line );
+            m_filterSetCollection.filterLine( buffer, getContext() );
+            return buffer.toString();
         }
         catch( final TaskException te )
         {
             throw new IOException( te.getMessage() );
         }
-    }
-
-    private FilterSetCollection buildFilterSetCollection()
-    {
-        if( null == m_filterSetCollection )
-        {
-            m_filterSetCollection = new FilterSetCollection();
-
-            final int size = m_filterSets.size();
-            for( int i = 0; i < size; i++ )
-            {
-                final FilterSet filterSet = (FilterSet)m_filterSets.get( i );
-                m_filterSetCollection.addFilterSet( filterSet );
-            }
-        }
-
-        return m_filterSetCollection;
     }
 }

@@ -5,15 +5,22 @@
  * version 1.1, a copy of which has been included  with this distribution in
  * the LICENSE.txt file.
  */
-package org.apache.myrmidon.framework;
+package org.apache.antlib.core;
+
+import org.apache.myrmidon.api.TaskContext;
+import org.apache.myrmidon.api.TaskException;
+import org.apache.myrmidon.framework.filters.TokenSet;
 
 /**
- * Individual filter component of filterset
+ * A single token and its value.
  *
  * @author Michael McCallum
  * @created 14 March 2001
+ *
+ * @ant:type type="token-set" name="token"
  */
-public class Filter
+public class SingletonTokenSet
+    implements TokenSet
 {
     /**
      * Token which will be replaced in the filter operation
@@ -31,7 +38,7 @@ public class Filter
      * @param token The token which will be replaced when filtering
      * @param value The value which will replace the token when filtering
      */
-    public Filter( final String token, final String value )
+    public SingletonTokenSet( final String token, final String value )
     {
         m_token = token;
         m_value = value;
@@ -40,7 +47,7 @@ public class Filter
     /**
      * No argument conmstructor
      */
-    public Filter()
+    public SingletonTokenSet()
     {
     }
 
@@ -61,18 +68,15 @@ public class Filter
     }
 
     /**
-     * Gets the Token attribute of the Filter object
+     * Evaluates the value for a token.
      */
-    public String getToken()
+    public String getValue( final String token, final TaskContext context )
+        throws TaskException
     {
-        return m_token;
-    }
-
-    /**
-     * Gets the Value attribute of the Filter object
-     */
-    public String getValue()
-    {
-        return m_value;
+        if( token.equals( m_token ) )
+        {
+            return m_value;
+        }
+        return null;
     }
 }
