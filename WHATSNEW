@@ -183,6 +183,11 @@ Other changes:
 * <property> now supports a 'prefix' attribute when loading from a file
   or resource.
 
+* In Ant 1.4 a feature has been added to the <junit> task that would
+  add ant.jar, optional.jar and junit.jar implicitly to the classpath -
+  this feature can now be disabled by setting the new includeantruntime
+  attribute to false.
+
 Changes from Ant 1.4 to Ant 1.4.1
 ===========================================
 

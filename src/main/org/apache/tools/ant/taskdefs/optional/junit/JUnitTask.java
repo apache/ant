@@ -162,6 +162,9 @@ public class JUnitTask extends Task {
     private boolean newEnvironment = false;
     private Environment env = new Environment();
 
+    private boolean includeAntRuntime = true;
+    private Path antRuntimeClasses = null;
+
     /**
      * Tells this task whether to smartly filter the stack frames of JUnit testcase
      * errors and failures before reporting them.  This property is applied on all
@@ -395,6 +398,15 @@ public class JUnitTask extends Task {
     }
 
     /**
+     * Whether to include ant.jar, optional.jar and junit.jar in the forked VM.
+     *
+     * @since 1.37, Ant 1.5
+     */
+    public void setIncludeantruntime(boolean b) {
+        includeAntRuntime = b;
+    }
+
+    /**
      * Creates a new JUnitRunner and enables fork of a new Java VM.
      */
     public JUnitTask() throws Exception {
@@ -407,6 +419,7 @@ public class JUnitTask extends Task {
      * without having to specify them directly.
      */
     public void init() {
+        antRuntimeClasses = new Path(getProject());
         addClasspathEntry("/junit/framework/TestCase.class");
         addClasspathEntry("/org/apache/tools/ant/Task.class");
         addClasspathEntry("/org/apache/tools/ant/taskdefs/optional/junit/JUnitTestRunner.class");
@@ -493,6 +506,13 @@ public class JUnitTask extends Task {
         cmd.createArgument().setValue("filtertrace=" + test.getFiltertrace());
         cmd.createArgument().setValue("haltOnError=" + test.getHaltonerror());
         cmd.createArgument().setValue("haltOnFailure=" + test.getHaltonfailure());
+        if (includeAntRuntime) {
+            log("Implicitly adding "+antRuntimeClasses+" to CLASSPATH",
+                Project.MSG_VERBOSE);
+            cmd.createClasspath(getProject()).createPath()
+                .append(antRuntimeClasses);
+        }
+
         if (summary) {
             log("Running " + test.getName(), Project.MSG_INFO);
             cmd.createArgument().setValue("formatter=org.apache.tools.ant.taskdefs.optional.junit.SummaryJUnitResultFormatter");
@@ -606,7 +626,13 @@ public class JUnitTask extends Task {
         AntClassLoader cl = null;
         try {
             log("Using System properties " + System.getProperties(), Project.MSG_VERBOSE);
-            Path classpath = commandline.getClasspath();
+            Path classpath = (Path) commandline.getClasspath().clone();
+            if (includeAntRuntime) {
+                log("Implicitly adding "+antRuntimeClasses+" to CLASSPATH", 
+                    Project.MSG_VERBOSE);
+                classpath.append(antRuntimeClasses);
+            }
+
             if (classpath != null) {
                 cl = new AntClassLoader(null, project, classpath, false);
                 log("Using CLASSPATH " + cl.getClasspath(),
@@ -722,15 +748,13 @@ public class JUnitTask extends Task {
             if (u.startsWith("jar:file:")) {
                 int pling = u.indexOf("!");
                 String jarName = u.substring(9, pling);
-                log("Implicitly adding "+jarName+" to classpath",
-                    Project.MSG_DEBUG);
-                createClasspath().setLocation(new File((new File(jarName)).getAbsolutePath()));
+                log("Found "+jarName, Project.MSG_DEBUG);
+                antRuntimeClasses.createPath().setLocation(new File((new File(jarName)).getAbsolutePath()));
             } else if (u.startsWith("file:")) {
                 int tail = u.indexOf(resource);
                 String dirName = u.substring(5, tail);
-                log("Implicitly adding "+dirName+" to classpath",
-                    Project.MSG_DEBUG);
-                createClasspath().setLocation(new File((new File(dirName)).getAbsolutePath()));
+                log("Found "+dirName, Project.MSG_DEBUG);
+                antRuntimeClasses.createPath().setLocation(new File((new File(dirName)).getAbsolutePath()));
             } else {
                 log("Don\'t know how to handle resource URL "+u,
                     Project.MSG_DEBUG);
