@@ -116,13 +116,17 @@ Legal:
         <include name="base-ant-roles.xml"/>
       </zipfileset>
 
+      <zipfileset dir="${manifest.dir}" fullpath="META-INF/ant-types.xml">
+        <include name="base-ant-types.xml"/>
+      </zipfileset>
+
     </jar>
 
     <jar jarfile="${build.lib}/core.tsk" basedir="${build.classes}">
       <include name="org/apache/ant/modules/**" />
 
-      <zipfileset dir="${manifest.dir}" fullpath="TASK-LIB/taskdefs.xml">
-        <include name="taskdefs.xml"/>
+      <zipfileset dir="${manifest.dir}" fullpath="META-INF/ant-types.xml">
+        <include name="core-ant-types.xml"/>
       </zipfileset>
 
     </jar>
