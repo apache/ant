@@ -482,8 +482,7 @@ public class Zip extends MatchingTask {
                     ZipFileSet oldFiles = new ZipFileSet();
                     oldFiles.setProject(getProject());
                     oldFiles.setSrc(renamedFile);
-                    oldFiles.setDefaultexcludes(getImplicitFileSet()
-                                                .getDefaultexcludes());
+                    oldFiles.setDefaultexcludes(false);
 
                     for (int i = 0; i < addedFiles.size(); i++) {
                         PatternSet.NameEntry ne = oldFiles.createExclude();
