@@ -84,6 +84,7 @@ import org.apache.tools.ant.*;
  * @author <a href="mailto:kvisco@exoffice.com">Keith Visco</a>
  * @author <a href="mailto:rubys@us.ibm.com">Sam Ruby</a>
  * @author <a href="mailto:russgold@acm.org">Russell Gold</a>
+ * @author <a href="stefan.bodewig@epost.de">Stefan Bodewig</a>
  * @version $Revision$ $Date$
  */
 public class XSLTProcess extends MatchingTask {
@@ -102,6 +103,7 @@ public class XSLTProcess extends MatchingTask {
     private File outFile = null;
 
     private XSLTLiaison liaison;
+    private boolean stylesheetLoaded = false;
 
     /**
      * Creates a new XSLTProcess Task.
@@ -118,6 +120,10 @@ public class XSLTProcess extends MatchingTask {
         String[]         list;
         String[]         dirs;
 
+        if (xslFile == null) {
+            throw new BuildException("no stylesheet specified", location);
+        }
+
         if (baseDir == null) {
             baseDir = project.resolveFile(".");
         }
@@ -125,40 +131,22 @@ public class XSLTProcess extends MatchingTask {
         liaison = getLiaison();
         log("Using "+liaison.getClass().toString(), Project.MSG_VERBOSE);
 
-        long styleSheetLastModified = 0;
-        if (xslFile != null) {
-            try {
-                File file = project.resolveFile(xslFile, project.getBaseDir());
-
-                if (!file.exists()) {
-                    file = project.resolveFile(xslFile, baseDir);
-                    /*
-                     * shouldn't throw out deprectaion warnings before we know,
-                     * the wrong version has been used.
-                     */
-                    if (file.exists()) {
-                        log("DEPRECATED - the style attribute should be relative to the project\'s");
-                        log("             basedir, not the tasks\'s basedir.");
-                    }
-                }
-                
-                // Create a new XSL processor with the specified stylesheet
-                styleSheetLastModified = file.lastModified();
-                log( "Loading stylesheet " + file, Project.MSG_INFO);
-                liaison.setStylesheet( file.toString() );
-                for(Enumeration e = params.elements();e.hasMoreElements();) {
-                    Param p = (Param)e.nextElement();
-                    liaison.addParam( p.getName(), p.getExpression() );
-                }
-            } catch (Exception ex) {
-                log("Failed to read stylesheet " + xslFile, Project.MSG_INFO);
-                throw new BuildException(ex);
+        File stylesheet = project.resolveFile(xslFile, project.getBaseDir());
+        if (!stylesheet.exists()) {
+            stylesheet = project.resolveFile(xslFile, baseDir);
+            /*
+             * shouldn't throw out deprecation warnings before we know,
+             * the wrong version has been used.
+             */
+            if (stylesheet.exists()) {
+                log("DEPRECATED - the style attribute should be relative to the project\'s");
+                log("             basedir, not the tasks\'s basedir.");
             }
         }
 
         // if we have an in file and out then process them
         if (inFile != null && outFile != null) {
-            process(inFile, outFile, styleSheetLastModified);
+            process(inFile, outFile, stylesheet);
             return;
         }
 
@@ -178,7 +166,7 @@ public class XSLTProcess extends MatchingTask {
         // Process all the files marked for styling
         list = scanner.getIncludedFiles();
         for (int i = 0;i < list.length; ++i) {
-            process( baseDir, list[i], destDir, styleSheetLastModified );
+            process( baseDir, list[i], destDir, stylesheet );
         }
         
         // Process all the directoried marked for styling
@@ -186,7 +174,7 @@ public class XSLTProcess extends MatchingTask {
         for (int j = 0;j < dirs.length;++j){
             list=new File(baseDir,dirs[j]).list();
             for (int i = 0;i < list.length;++i)
-                process( baseDir, list[i], destDir, styleSheetLastModified );
+                process( baseDir, list[i], destDir, stylesheet );
         }
     } //-- execute
 
@@ -211,7 +199,7 @@ public class XSLTProcess extends MatchingTask {
      * @param name the extension to use
      **/
     public void setExtension(String name) {
-            targetExtension = name;
+        targetExtension = name;
     } //-- setDestDir
 
     /**
@@ -261,14 +249,15 @@ public class XSLTProcess extends MatchingTask {
      * in the given resultFile.
      **/
     private void process(File baseDir, String xmlFile, File destDir, 
-                         long styleSheetLastModified)
+                         File stylesheet)
         throws BuildException {
 
         String fileExt=targetExtension;
         File   outFile=null;
         File   inFile=null;
-
+        
         try {
+            long styleSheetLastModified = stylesheet.lastModified();
             inFile = new File(baseDir,xmlFile);
             int dotPos = xmlFile.lastIndexOf('.');
             if(dotPos>0){
@@ -281,6 +270,7 @@ public class XSLTProcess extends MatchingTask {
                 ensureDirectoryFor( outFile );
                 log("Transforming into "+destDir);
 
+                configureLiaison(stylesheet);
                 liaison.transform(inFile.toString(), outFile.toString());
             }
         }
@@ -297,8 +287,9 @@ public class XSLTProcess extends MatchingTask {
 
     } //-- processXML
 
-    private void process(File inFile, File outFile, long styleSheetLastModified) throws BuildException {
+    private void process(File inFile, File outFile, File stylesheet) throws BuildException {
         try{
+            long styleSheetLastModified = stylesheet.lastModified();
             log("In file "+inFile+" time: " + inFile.lastModified() , Project.MSG_DEBUG);
             log("Out file "+outFile+" time: " + outFile.lastModified() , Project.MSG_DEBUG);
             log("Style file "+xslFile+" time: " + styleSheetLastModified , Project.MSG_DEBUG);
@@ -306,6 +297,7 @@ public class XSLTProcess extends MatchingTask {
                 styleSheetLastModified > outFile.lastModified()) {
                 ensureDirectoryFor( outFile );
                 log("Processing " + inFile + " to " + outFile, Project.MSG_INFO);
+                configureLiaison(stylesheet);
                 liaison.transform(inFile.toString(), outFile.toString());
             }
         }catch (Exception ex) {
@@ -374,4 +366,27 @@ public class XSLTProcess extends MatchingTask {
             return expression;
         }
     }
+
+    /**
+     * Loads the stylesheet and set xsl:param parameters.
+     */
+    protected void configureLiaison(File stylesheet) throws BuildException {
+        if (stylesheetLoaded) {
+            return;
+        }
+        stylesheetLoaded = true;
+
+        try {
+            log( "Loading stylesheet " + stylesheet, Project.MSG_INFO);
+            liaison.setStylesheet( stylesheet.toString() );
+            for(Enumeration e = params.elements();e.hasMoreElements();) {
+                Param p = (Param)e.nextElement();
+                liaison.addParam( p.getName(), p.getExpression() );
+            }
+        } catch (Exception ex) {
+            log("Failed to read stylesheet " + stylesheet, Project.MSG_INFO);
+            throw new BuildException(ex);
+        }
+    }
+
 } //-- XSLTProcess
