@@ -180,6 +180,39 @@
   </faqsection>
 
   <faqsection title="How do I ...">
+    <faq id="adding-external-tasks">
+      <question>How do I add an external task that I've written to the
+      page &quot;External Tools and Task&quot;?</question>
+      <answer>
+
+        <p>Join and post a message to the ant-dev or ant-user mailing
+        list (one list is enough), including the following
+        information:</p>
+
+        <ul>
+          <li>the name of the task/tool</li>
+          <li>a short description of the task/tool</li>
+          <li>a Compatibility: entry stating with which version(s) of
+          Ant the tool/task is compatible to</li>
+          <li>a URL: entry linking to the main page of the tool/task</li>
+          <li>a Contact: entry containing the email address or the URL
+          of a webpage for the person or list to contact for issues
+          related to the tool/task.  <strong>Note that we'll add a
+          link on the page, so any email address added there is not
+          obfuscated and can (and probably will) be abused by robots
+          harvesting websites for addresses to spam.</strong></li>
+          <li>a License: entry containing the type of license for the
+          tool/task</li>
+        </ul>
+
+        <p>The preferred format for this information is a patch to <a
+        href="http://cvs.apache.org/viewcvs.cgi/~checkout~/jakarta-ant/xdocs/external.xml">this</a>
+        document.</p>
+
+      </answer>
+
+    </faq>
+
     <faq id="passing-cli-args">
       <question>How do I pass parameters from the command line to my
         build file?</question>

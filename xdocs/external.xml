@@ -741,6 +741,31 @@
         </table>
       </subsection>
 
+      <subsection name="pack">
+
+        <p>pack is a task to build the smallest possible JAR to link
+        and run one or more classes.</p>
+
+        <table>
+          <tr>
+            <th>Compatibility:</th>
+            <td>Ant 1.5</td>
+          </tr>
+          <tr>
+            <th>URL:</th>
+            <td><a href="http://sadun-util.sourceforge.net/pack.html">http://sadun-util.sourceforge.net/pack.html</a></td>
+          </tr>
+          <tr>
+            <th>Contact:</th>
+            <td><a href="mailto:cristiano@xtractor.com">Cristiano Sadun</a></td>
+          </tr>
+          <tr>
+            <th>License:</th>
+            <td>GNU Lesser General Public License</td>
+          </tr>
+        </table>
+      </subsection>
+
       <subsection name="PMD">
 
         <p>PMD checks Java source code for unused variables,
