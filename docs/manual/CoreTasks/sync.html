@@ -15,6 +15,11 @@
 <p>Synchronize a target directory from the files defined in one or
 more filesets.</p>
 
+<p>Any file in the target directory that has not been matched by at
+least one of the nested filesets gets removed.  I.e. if you exclude a
+file in your sources and a file of that name is present in the target
+dir, it will get removed from the target.</p>
+
 <h3>Parameters</h3>
 <table border="1" cellpadding="2" cellspacing="0">
   <tr>
@@ -61,7 +66,7 @@ more filesets.</p>
 sets of files and directories.</p>
 
 <hr>
-<p align="center">Copyright &copy; 2003-2004 The Apache Software Foundation. All rights
+<p align="center">Copyright &copy; 2003-2005 The Apache Software Foundation. All rights
 Reserved.</p>
 
 </body>
