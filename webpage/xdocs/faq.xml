@@ -53,7 +53,7 @@
         Tomcat.</p>
 
         <p>The first version of Ant that was exposed a lager audience
-        was the one that shipped with Tomcat's 3.1 release on 19 April
+        was the one that shipped with Tomcat&apos;s 3.1 release on 19 April
         2000.  This version has later been referenced to as Ant
         0.3.1.</p>
 
@@ -112,6 +112,34 @@
     </faq>
   </faqsection>
 
+  <faqsection title="Using Ant">
+    <faq id="always-recompiles">
+      <question>Why does Ant always recompile all my Java files</question>
+      <answer>
+
+        <p>In order to find out which files should be compiled, Ant
+        compares the timestamps of the source files to those of the
+        resulting <code>.class</code> files.  Opening all source files
+        to find out which package they belong to would be very
+        inefficient - instead of this, Ant expects you to place your
+        source files in a directory hierarchy that mirrors your
+        package hierarchy and to point Ant to the root of this
+        directory tree with the <code>srcdir</code> attribute.</p>
+
+        <p>Say you have <code>&lt;javac srcdir=&quot;src&quot;
+        destdir=&quot;dest&quot; /&gt;</code>.  If Ant finds a file
+        <code>src/a/b/C.java</code> it expects it to be in package
+        <code>a.b</code> so that the resulting <code>.class</code>
+        file is going to be <code>dest/a/b/C.class</code>.</p>
+
+        <p>If your setup is different, Ant&apos;s heuristic won&apos;t work and
+        it will recompile classes that are up to date.  Ant is not the
+        only tool, that expects a source tree layout like this.</p>
+
+      </answer>
+    </faq>
+  </faqsection>
+
   <faqsection title="Ant and IDEs/Editors">
     <faq id="integration">
       <question>Is Ant supported by my IDE/Editor?</question>
@@ -122,7 +150,7 @@
     </faq>
 
     <faq id="emacs-mode">
-      <question>Why doesn't (X)Emacs parse the error messages generated
+      <question>Why doesn&apos;t (X)Emacs parse the error messages generated
         by Ant correctly?</question>
       <answer>
 
@@ -151,6 +179,40 @@
   </faqsection>
 
   <faqsection title="Advanced issues">
+    <faq id="dtd">
+      <question>Is there a DTD that I can use to validate my build
+      files?</question>
+
+      <answer>
+
+        <p>An incomplete DTD can be created by the
+          <code>&lt;antstructure&gt;</code> task - but this one
+          has a few problems:</p>
+
+          <ul>
+            <li>It doesn&apos;t know about required attributes.  Only
+            manual tweaking of this file can help here.</li>
+          
+            <li>It is not complete - if you add new tasks via
+            <code>&lt;taskdef&gt;</code> it won&apos;t know about it.  See
+            <a href="http://www.sdv.fr/pages/casa/html/ant-dtd.en.html">this
+            page</a> by Michel Casabianca for a solution to this
+            problem.  Note that the DTD you can download at this page
+            is based on Ant 0.3.1.</li>
+
+            <li>It may even be an invalid DTD.  As Ant allows tasks
+            writers to define arbitrary elements, name collisions will
+            happen quite frequently - if your version of Ant contains
+            the optional <code>&lt;test&gt;</code> and
+            <code>&lt;junit&gt;</code> tasks, there are two XML
+            elements named test (the task and the nested child element
+            of <code>&lt;junit&gt;</code>) with different attribute
+            lists.  This problem cannot be solved, DTDs don&apos;t give a
+            syntax rich enough to support this.</li>
+          </ul>
+      </answer>
+    </faq>
+
     <faq id="xml-entity-include">
       <question>How do I include an XML snippet in my build file?</question>
       <answer>
@@ -199,7 +261,8 @@
         <p>You can use a custom BuildListener, that sends out an email
         in the buildFinished() method.  Will Glozer
         &lt;will.glozer@jda.com&gt; has written such a listener based
-        on JavaMail, the source is</p>
+        on <a href="http://java.sun.com/products/javamail/">JavaMail</a>, 
+        the source is</p>
 
         <source><![CDATA[
 import java.io.*;
@@ -340,6 +403,12 @@ build.succeeded.email.subject=Nightly build succeeded!
         <source><![CDATA[
 ant -listener BuildMonitor
 ]]></source>
+
+        <p>Make sure that <code>mail.jar</code> from JavaMail and
+        <code>activation.jar</code> from the 
+        <a href="http://java.sun.com/products/javabeans/glasgow/jaf.html">Java
+        Beans Activation Framework</a> in your <code>CLASSPATH</code>.</p>
+
       </answer>
     </faq>
 
