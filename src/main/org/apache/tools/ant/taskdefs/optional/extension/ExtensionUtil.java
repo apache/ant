@@ -1,5 +1,5 @@
 /*
- * Copyright  2002-2004 The Apache Software Foundation
+ * Copyright  2002-2005 The Apache Software Foundation
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -20,8 +20,10 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 import java.util.jar.JarFile;
 import java.util.jar.Manifest;
+
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.DirectoryScanner;
 import org.apache.tools.ant.Project;
@@ -37,6 +39,7 @@ public class ExtensionUtil {
      * Class is not meant to be instantiated.
      */
     private ExtensionUtil() {
+        //all methods static
     }
 
     /**
@@ -45,7 +48,7 @@ public class ExtensionUtil {
      * @param adapters the list of ExtensionAdapterss to add to convert
      * @throws BuildException if an error occurs
      */
-    static ArrayList toExtensions(final ArrayList adapters)
+    static ArrayList toExtensions(final List adapters)
         throws BuildException {
         final ArrayList results = new ArrayList();
 
@@ -63,35 +66,35 @@ public class ExtensionUtil {
     /**
      * Generate a list of extensions from a specified fileset.
      *
-     * @param librarys the list to add extensions to
+     * @param libraries the list to add extensions to
      * @param fileset the filesets containing librarys
      * @throws BuildException if an error occurs
      */
     static void extractExtensions(final Project project,
-                                   final ArrayList librarys,
-                                   final ArrayList fileset)
+                                   final List libraries,
+                                   final List fileset)
         throws BuildException {
         if (!fileset.isEmpty()) {
             final Extension[] extensions = getExtensions(project,
                                                           fileset);
             for (int i = 0; i < extensions.length; i++) {
-                librarys.add(extensions[ i ]);
+                libraries.add(extensions[ i ]);
             }
         }
     }
 
     /**
-     * Retrieve extensions from the specified librarys.
+     * Retrieve extensions from the specified libraries.
      *
-     * @param librarys the filesets for librarys
-     * @return the extensions contained in librarys
-     * @throws BuildException if failing to scan librarys
+     * @param libraries the filesets for libraries
+     * @return the extensions contained in libraries
+     * @throws BuildException if failing to scan libraries
      */
     private static Extension[] getExtensions(final Project project,
-                                              final ArrayList librarys)
+                                              final List libraries)
         throws BuildException {
         final ArrayList extensions = new ArrayList();
-        final Iterator iterator = librarys.iterator();
+        final Iterator iterator = libraries.iterator();
         while (iterator.hasNext()) {
             final FileSet fileSet = (FileSet) iterator.next();
 
@@ -123,7 +126,7 @@ public class ExtensionUtil {
      * @throws BuildException if there is an error
      */
     private static void loadExtensions(final File file,
-                                        final ArrayList extensionList,
+                                        final List extensionList,
                                         final boolean includeImpl,
                                         final boolean includeURL)
         throws BuildException {
@@ -151,7 +154,7 @@ public class ExtensionUtil {
      * @param includeImpl false to exclude implementation details
      * @param includeURL false to exclude implementation URL
      */
-    private static void addExtension(final ArrayList extensionList,
+    private static void addExtension(final List extensionList,
                                       final Extension originalExtension,
                                       final boolean includeImpl,
                                       final boolean includeURL) {
@@ -189,12 +192,12 @@ public class ExtensionUtil {
     }
 
     /**
-     * retrieve manifest for specified file.
+     * Retrieve manifest for specified file.
      *
      * @param file the file
      * @return the manifest
-     * @throws BuildException if errror occurs (file not exist,
-     *         file not a jar, manifest not exist in file)
+     * @throws BuildException if errror occurs (file doesn't exist,
+     *         file not a jar, manifest doesn't exist in file)
      */
     static Manifest getManifest(final File file)
         throws BuildException {

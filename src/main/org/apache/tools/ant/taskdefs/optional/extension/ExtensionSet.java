@@ -1,5 +1,5 @@
 /*
- * Copyright  2002,2004 The Apache Software Foundation
+ * Copyright  2002,2004-2005 The Apache Software Foundation
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -73,14 +73,14 @@ public class ExtensionSet
     /**
      * Extract a set of Extension objects from the ExtensionSet.
      *
-     * @param project the project instance.
+     * @param proj the project instance.
      * @return an array containing the Extensions from this set
      * @throws BuildException if an error occurs
      */
-    public Extension[] toExtensions(final Project project)
+    public Extension[] toExtensions(final Project proj)
         throws BuildException {
         final ArrayList extensionsList = ExtensionUtil.toExtensions(extensions);
-        ExtensionUtil.extractExtensions(project, extensionsList, extensionsFilesets);
+        ExtensionUtil.extractExtensions(proj, extensionsList, extensionsFilesets);
         return (Extension[]) extensionsList.toArray(new Extension[extensionsList.size()]);
     }
 

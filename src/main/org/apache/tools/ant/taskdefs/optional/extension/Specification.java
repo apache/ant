@@ -1,5 +1,5 @@
 /*
- * Copyright  2002,2004 The Apache Software Foundation
+ * Copyright  2002,2004-2005 The Apache Software Foundation
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -24,6 +24,8 @@ import java.util.Map;
 import java.util.jar.Attributes;
 import java.util.jar.Manifest;
 
+import org.apache.tools.ant.util.StringUtils;
+
 /**
  * <p>Utility class that represents either an available "Optional Package"
  * (formerly known as "Standard Extension") as described in the manifest
@@ -37,6 +39,9 @@ import java.util.jar.Manifest;
  * @version $Revision$ $Date$
  */
 public final class Specification {
+    
+    private static final String MISSING = "Missing ";
+    
     /**
      * Manifest Attribute Name object for SPECIFICATION_TITLE.
      */
@@ -320,11 +325,10 @@ public final class Specification {
     public String[] getSections() {
         if (null == sections) {
             return null;
-        } else {
-            final String[] newSections = new String[ sections.length ];
-            System.arraycopy(sections, 0, newSections, 0, sections.length);
-            return newSections;
-        }
+        } 
+        final String[] newSections = new String[ sections.length ];
+        System.arraycopy(sections, 0, newSections, 0, sections.length);
+        return newSections;
     }
 
     /**
@@ -394,48 +398,47 @@ public final class Specification {
      * @return string representation of object.
      */
     public String toString() {
-        final String lineSeparator = System.getProperty("line.separator");
         final String brace = ": ";
 
         final StringBuffer sb
             = new StringBuffer(SPECIFICATION_TITLE.toString());
         sb.append(brace);
         sb.append(specificationTitle);
-        sb.append(lineSeparator);
+        sb.append(StringUtils.LINE_SEP);
 
         if (null != specificationVersion) {
             sb.append(SPECIFICATION_VERSION);
             sb.append(brace);
             sb.append(specificationVersion);
-            sb.append(lineSeparator);
+            sb.append(StringUtils.LINE_SEP);
         }
 
         if (null != specificationVendor) {
             sb.append(SPECIFICATION_VENDOR);
             sb.append(brace);
             sb.append(specificationVendor);
-            sb.append(lineSeparator);
+            sb.append(StringUtils.LINE_SEP);
         }
 
         if (null != implementationTitle) {
             sb.append(IMPLEMENTATION_TITLE);
             sb.append(brace);
             sb.append(implementationTitle);
-            sb.append(lineSeparator);
+            sb.append(StringUtils.LINE_SEP);
         }
 
         if (null != implementationVersion) {
             sb.append(IMPLEMENTATION_VERSION);
             sb.append(brace);
             sb.append(implementationVersion);
-            sb.append(lineSeparator);
+            sb.append(StringUtils.LINE_SEP);
         }
 
         if (null != implementationVendor) {
             sb.append(IMPLEMENTATION_VENDOR);
             sb.append(brace);
             sb.append(implementationVendor);
-            sb.append(lineSeparator);
+            sb.append(StringUtils.LINE_SEP);
         }
 
         return sb.toString();
@@ -521,20 +524,19 @@ public final class Specification {
                                               final ArrayList sectionsToAdd) {
         if (0 == sectionsToAdd.size()) {
             return specification;
-        } else {
-            sectionsToAdd.addAll(Arrays.asList(specification.getSections()));
-
-            final String[] sections =
-                (String[]) sectionsToAdd.toArray(new String[sectionsToAdd.size()]);
-
-            return new Specification(specification.getSpecificationTitle(),
-                                      specification.getSpecificationVersion().toString(),
-                                      specification.getSpecificationVendor(),
-                                      specification.getImplementationTitle(),
-                                      specification.getImplementationVersion(),
-                                      specification.getImplementationVendor(),
-                                      sections);
         }
+        sectionsToAdd.addAll(Arrays.asList(specification.getSections()));
+        
+        final String[] sections =
+            (String[]) sectionsToAdd.toArray(new String[sectionsToAdd.size()]);
+        
+        return new Specification(specification.getSpecificationTitle(),
+                specification.getSpecificationVersion().toString(),
+                specification.getSpecificationVendor(),
+                specification.getImplementationTitle(),
+                specification.getImplementationVersion(),
+                specification.getImplementationVendor(),
+                sections);
     }
 
     /**
@@ -544,11 +546,7 @@ public final class Specification {
      * @return the trimmed string or null
      */
     private static String getTrimmedString(final String value) {
-        if (null == value) {
-            return null;
-        } else {
-            return value.trim();
-        }
+        return value == null ? null : value.trim();
     }
 
     /**
@@ -572,31 +570,31 @@ public final class Specification {
         final String specVendor
             = getTrimmedString(attributes.getValue(SPECIFICATION_VENDOR));
         if (null == specVendor) {
-            throw new ParseException("Missing " + SPECIFICATION_VENDOR, 0);
+            throw new ParseException(MISSING + SPECIFICATION_VENDOR, 0);
         }
 
         final String specVersion
             = getTrimmedString(attributes.getValue(SPECIFICATION_VERSION));
         if (null == specVersion) {
-            throw new ParseException("Missing " + SPECIFICATION_VERSION, 0);
+            throw new ParseException(MISSING + SPECIFICATION_VERSION, 0);
         }
 
         final String impTitle
             = getTrimmedString(attributes.getValue(IMPLEMENTATION_TITLE));
         if (null == impTitle) {
-            throw new ParseException("Missing " + IMPLEMENTATION_TITLE, 0);
+            throw new ParseException(MISSING + IMPLEMENTATION_TITLE, 0);
         }
 
         final String impVersion
             = getTrimmedString(attributes.getValue(IMPLEMENTATION_VERSION));
         if (null == impVersion) {
-            throw new ParseException("Missing " + IMPLEMENTATION_VERSION, 0);
+            throw new ParseException(MISSING + IMPLEMENTATION_VERSION, 0);
         }
 
         final String impVendor
             = getTrimmedString(attributes.getValue(IMPLEMENTATION_VENDOR));
         if (null == impVendor) {
-            throw new ParseException("Missing " + IMPLEMENTATION_VENDOR, 0);
+            throw new ParseException(MISSING + IMPLEMENTATION_VENDOR, 0);
         }
 
         return new Specification(name, specVersion, specVendor,

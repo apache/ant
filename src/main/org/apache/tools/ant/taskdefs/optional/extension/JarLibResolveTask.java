@@ -1,5 +1,5 @@
 /*
- * Copyright  2002-2004 The Apache Software Foundation
+ * Copyright  2002-2005 The Apache Software Foundation
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -98,10 +98,10 @@ public class JarLibResolveTask extends Task {
      * Adds location resolver to look for a library in a location
      * relative to project directory.
      *
-     * @param location the resolver location to search.
+     * @param loc the resolver location to search.
      */
-    public void addConfiguredLocation(final LocationResolver location) {
-        resolvers.add(location);
+    public void addConfiguredLocation(final LocationResolver loc) {
+        resolvers.add(loc);
     }
 
     /**
@@ -155,10 +155,9 @@ public class JarLibResolveTask extends Task {
             final String message = "Property Already set to: " + candidate;
             if (failOnError) {
                 throw new BuildException(message);
-            } else {
-                getProject().log(message, Project.MSG_ERR);
-                return;
-            }
+            } 
+            getProject().log(message, Project.MSG_ERR);
+            return;
         }
 
         final int size = resolvers.size();
@@ -201,9 +200,8 @@ public class JarLibResolveTask extends Task {
             "Unable to resolve extension to a file";
         if (failOnError) {
             throw new BuildException(message);
-        } else {
-            getProject().log(message, Project.MSG_ERR);
         }
+        getProject().log(message, Project.MSG_ERR);
     }
 
     /**

@@ -1,5 +1,5 @@
 /*
- * Copyright  2002-2004 The Apache Software Foundation
+ * Copyright  2002-2005 The Apache Software Foundation
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -22,6 +22,8 @@ import java.util.Map;
 import java.util.StringTokenizer;
 import java.util.jar.Attributes;
 import java.util.jar.Manifest;
+
+import org.apache.tools.ant.util.StringUtils;
 
 /**
  * <p>Utility class that represents either an available "Optional Package"
@@ -489,54 +491,53 @@ public final class Extension {
      * @return string representation of object.
      */
     public String toString() {
-        final String lineSeparator = System.getProperty("line.separator");
         final String brace = ": ";
 
         final StringBuffer sb = new StringBuffer(EXTENSION_NAME.toString());
         sb.append(brace);
         sb.append(extensionName);
-        sb.append(lineSeparator);
+        sb.append(StringUtils.LINE_SEP);
 
         if (null != specificationVersion) {
             sb.append(SPECIFICATION_VERSION);
             sb.append(brace);
             sb.append(specificationVersion);
-            sb.append(lineSeparator);
+            sb.append(StringUtils.LINE_SEP);
         }
 
         if (null != specificationVendor) {
             sb.append(SPECIFICATION_VENDOR);
             sb.append(brace);
             sb.append(specificationVendor);
-            sb.append(lineSeparator);
+            sb.append(StringUtils.LINE_SEP);
         }
 
         if (null != implementationVersion) {
             sb.append(IMPLEMENTATION_VERSION);
             sb.append(brace);
             sb.append(implementationVersion);
-            sb.append(lineSeparator);
+            sb.append(StringUtils.LINE_SEP);
         }
 
         if (null != implementationVendorID) {
             sb.append(IMPLEMENTATION_VENDOR_ID);
             sb.append(brace);
             sb.append(implementationVendorID);
-            sb.append(lineSeparator);
+            sb.append(StringUtils.LINE_SEP);
         }
 
         if (null != implementationVendor) {
             sb.append(IMPLEMENTATION_VENDOR);
             sb.append(brace);
             sb.append(implementationVendor);
-            sb.append(lineSeparator);
+            sb.append(StringUtils.LINE_SEP);
         }
 
         if (null != implementationURL) {
             sb.append(IMPLEMENTATION_URL);
             sb.append(brace);
             sb.append(implementationURL);
-            sb.append(lineSeparator);
+            sb.append(StringUtils.LINE_SEP);
         }
 
         return sb.toString();
@@ -683,10 +684,6 @@ public final class Extension {
      * @return the trimmed string or null
      */
     private static String getTrimmedString(final String value) {
-        if (null == value) {
-            return null;
-        } else {
-            return value.trim();
-        }
+        return null == value ? null : value.trim();
     }
 }
