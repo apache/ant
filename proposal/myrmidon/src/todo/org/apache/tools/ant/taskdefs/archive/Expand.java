@@ -56,7 +56,7 @@ public abstract class Expand
      * Should we overwrite files in dest, even if they are newer than the
      * corresponding entries in the archive?
      *
-     * @param b The new Overwrite value
+     * @param overwrite The new Overwrite value
      */
     public void setOverwrite( final boolean overwrite )
     {
@@ -66,7 +66,7 @@ public abstract class Expand
     /**
      * Set the path to zip-file.
      *
-     * @param s Path to zip-file.
+     * @param src Path to zip-file.
      */
     public void setSrc( final File src )
     {
