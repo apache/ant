@@ -86,11 +86,6 @@ public class Move extends Copy {
 
     public void execute() throws BuildException {
         super.execute();
-
-        // take care of the source directory
-        if (dir != null && dir.exists()) {
-            deleteDir(dir);
-        }
     }
 
 //************************************************************************
@@ -139,7 +134,7 @@ public class Move extends Copy {
         }
         log("Deleting directory " + d.getAbsolutePath(), verbosity);
         if (!d.delete()) {
-	       throw new BuildException("Unable to delete directory " + dir.getAbsolutePath());
+	       throw new BuildException("Unable to delete directory " + d.getAbsolutePath());
 	   }
     }
 

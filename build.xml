@@ -136,7 +136,9 @@
   <!-- =================================================================== -->
   <target name="main" depends="jar" description="Creates the binary structure">
      <mkdir dir="${bin.dir}"/>
-     <copy dir="${src.bin.dir}" todir="${bin.dir}"/>
+     <copy todir="${bin.dir}">
+       <fileset dir="${src.bin.dir}"/>
+     </copy>
      <chmod perm="+x">
        <fileset dir="${bin.dir}">
          <patternset refid="chmod.patterns"/>
@@ -173,13 +175,23 @@
      <mkdir dir="${ant.dist.dir}/docs/api"/>
      <mkdir dir="${ant.dist.dir}/src"/>
 
-     <copy dir="${src.dir}" todir="${ant.dist.dir}/src"/>
-     <copy dir="${lib.dir}" todir="${ant.dist.dir}/lib"/>
+     <copy todir="${ant.dist.dir}/src">
+       <fileset dir="${src.dir}"/>
+     </copy>
+     <copy todir="${ant.dist.dir}/lib">
+       <fileset dir="${lib.dir}"/>
+     </copy>
 
      <copy file="build.xml" tofile="${ant.dist.dir}/lib/build.xml"/>
-     <copy dir="src/bin" todir="${ant.dist.dir}/bin"/>
-     <copy dir="${docs.dir}" todir="${ant.dist.dir}/docs"/>
-     <copy dir="${build.javadocs}" todir="${ant.dist.dir}/docs/api"/>
+     <copy todir="${ant.dist.dir}/bin">
+       <fileset dir="src/bin"/>
+     </copy>
+     <copy todir="${ant.dist.dir}/docs">
+       <fileset dir="${docs.dir}"/>
+     </copy>
+     <copy todir="${ant.dist.dir}/docs/api">
+       <fileset dir="${build.javadocs}"/>
+     </copy>
 
      <fixcrlf srcdir="${ant.dist.dir}/bin" includes="ant,antRun" cr="remove"/>
      <fixcrlf srcdir="${ant.dist.dir}/bin" includes="*.bat" cr="add"/>
@@ -215,14 +227,20 @@
   <!-- =================================================================== -->
   <target name="bootstrap" depends="main" description="Installs the ant.jar library and binary files into ant.home">
     <echo message="copying bootstrapped files into bin and lib"/>
-    <copy dir="${lib.dir}" todir="lib"/>
-    <copy dir="${bin.dir}" todir="bin"/>
+    <copy todir="lib">
+      <fileset dir="${lib.dir}"/>
+    </copy>
+    <copy todir="bin">
+      <fileset dir="${bin.dir}"/>
+    </copy>
   </target>     
 
   <target name="install" depends="dist" if="ant.install">
     <echo message="installing full copy of ant into ${ant.install}"/>
     <mkdir dir="${ant.install}"/>
-    <copy dir="${ant.dist.dir}" todir="${ant.install}"/>
+    <copy todir="${ant.install}">
+      <fileset dir="${ant.dist.dir}"/>
+    </copy>
     <chmod perm="+x">
       <fileset dir="${ant.install}/bin">
         <patternset refid="chmod.patterns"/>
@@ -235,8 +253,12 @@
   <target name="mininstall" depends="main" if="ant.install">
     <echo message="copy minimal ant installation into ${ant.install}"/>
     <mkdir dir="${ant.install}"/>
-    <copy dir="${lib.dir}" todir="${ant.install}/lib"/>
-    <copy dir="${bin.dir}" todir="${ant.install}/bin"/>
+    <copy todir="${ant.install}/lib">
+      <fileset dir="${lib.dir}"/>
+    </copy>
+    <copy todir="${ant.install}/bin">
+      <fileset dir="${bin.dir}"/>
+    </copy>
     <chmod perm="+x">
       <fileset dir="${ant.install}/bin">
         <patternset refid="chmod.patterns"/>

@@ -74,7 +74,6 @@ import java.util.*;
  */
 public class Copy extends Task {
     protected File file = null;     // the source file 
-    protected File dir = null;      // the source directory
     protected File destFile = null; // the destination file 
     protected File destDir = null;  // the destination directory
     protected Vector filesets = new Vector();
@@ -91,13 +90,6 @@ public class Copy extends Task {
      */
     public void setFile(File file) {
         this.file = file;
-    }
-
-    /**
-     * Sets a directory to copy.
-     */
-    public void setDir(File dir) {
-        this.dir = dir;
     }
 
     /**
@@ -176,16 +168,6 @@ public class Copy extends Task {
             }
         }
 
-        // deal with the directory
-        if (dir != null) {
-            DirectoryScanner ds = new DirectoryScanner();
-            ds.setBasedir(dir);
-            ds.scan();          // include EVERYTHING
-
-            String[] srcFiles = ds.getIncludedFiles();
-            scan(dir, destDir, srcFiles);                   // add to fileCopyMap
-        }
-
         // deal with the filesets
         for (int i=0; i<filesets.size(); i++) {
             FileSet fs = (FileSet) filesets.elementAt(i);
@@ -209,8 +191,8 @@ public class Copy extends Task {
      * of attributes.
      */
     protected void validateAttributes() throws BuildException {
-        if (file == null && dir == null && filesets.size() == 0) {
-            throw new BuildException("Specify at least one source - a file, a dir, or a fileset.");
+        if (file == null && filesets.size() == 0) {
+            throw new BuildException("Specify at least one source - a file or a fileset.");
         }
 
         if (destFile != null && destDir != null) {
@@ -221,8 +203,8 @@ public class Copy extends Task {
             throw new BuildException("One of destfile or destdir must be set.");
         }
 
-        if (dir != null && destFile != null) {
-            throw new BuildException("Cannot copy a directory into a file.");
+        if (file != null && destFile != null && file.exists() && file.isDirectory()) {
+            throw new BuildException("Use the dir attribute to copy directories.");
         }
 
         if (destFile != null && filesets.size() > 0) {
