@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 1999 The Apache Software Foundation.  All rights
+ * Copyright (c) 1999, 2000 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -108,6 +108,11 @@ public class Main {
     private boolean readyToRun = false;
 
     /**
+     * Indicates we should only parse and display the project help information
+     */
+    private boolean projectHelp = false;
+    
+    /**
      * Command line entry point. This method kicks off the building
      * of a project object and executes a build using either a given
      * target or the default target.
@@ -211,6 +216,9 @@ public class Main {
                 loggerClassname = args[++i];
             } else if (arg.equals("-emacs")) {
                 emacsMode = true;
+            } else if (arg.equals("-projecthelp")) {
+                // set the flag to display the targets and quit
+                projectHelp = true;
             } else if (arg.startsWith("-")) {
                 // we don't have any more args to recognize!
                 String msg = "Unknown arg: " + arg;
@@ -295,8 +303,12 @@ public class Main {
                 targets.addElement(project.getDefaultTarget());
             }
 
-            // actually do some work
-            project.executeTargets(targets);
+            if (projectHelp) {
+                printTargets(project);
+            } else {
+                // actually do some work
+                project.executeTargets(targets);
+            }
         }
         catch(RuntimeException exc) {
             error = exc;
@@ -369,6 +381,7 @@ public class Main {
         msg.append("ant [options] [target]" + lSep);
         msg.append("Options: " + lSep);
         msg.append("  -help                  print this message" + lSep);
+        msg.append("  -projecthelp           print project help information" + lSep);
         msg.append("  -version               print the version information and exit" + lSep);
         msg.append("  -quiet                 be extra quiet" + lSep);
         msg.append("  -verbose               be extra verbose" + lSep);
@@ -403,5 +416,51 @@ public class Main {
         } catch (NullPointerException npe) {
             System.err.println("Could not load the version information.");
         }
+    }
+    
+    /**
+     * Print out a list of all targets in the current buildfile
+     */
+    private static void printTargets(Project project) {
+        // find the target with the longest name and
+        // filter out the targets with no description
+        int maxLength = 0;
+        Enumeration ptargets = project.getTargets().elements();
+        String targetName;
+        String targetDescription;
+        Target currentTarget;
+        Vector names = new Vector();
+        Vector descriptions = new Vector();
+
+        while (ptargets.hasMoreElements()) {
+            currentTarget = (Target)ptargets.nextElement();
+            targetName = currentTarget.getName();
+            targetDescription = currentTarget.getDescription();
+            if (targetDescription == null) {
+                targetDescription = "";
+            }
+            
+            names.addElement(targetName);
+            descriptions.addElement(targetDescription);
+            if (targetName.length() > maxLength) {
+                maxLength = targetName.length();
+            }
+        }
+
+        // now, start printing the targets and their descriptions
+        String lSep = System.getProperty("line.separator");
+        // got a bit annoyed that I couldn't find a pad function
+        String spaces = "    ";
+        while (spaces.length()<maxLength) {
+            spaces += spaces;
+        }
+        StringBuffer msg = new StringBuffer();
+        msg.append("Targets: " + lSep);
+        for (int i=0; i<names.size(); i++) {
+            msg.append(" -"+names.elementAt(i));
+            msg.append(spaces.substring(0, maxLength - ((String)names.elementAt(i)).length() + 2));
+            msg.append(descriptions.elementAt(i)+lSep);
+        }
+        System.out.println(msg.toString());
     }
 }

@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 1999 The Apache Software Foundation.  All rights
+ * Copyright (c) 1999, 2000 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -70,6 +70,7 @@ public class Target {
     private Vector dependencies = new Vector(2);
     private Vector tasks = new Vector(5);
     private Project project;
+    private String description = null;
 
     public void setProject(Project project) {
         this.project = project;
@@ -115,6 +116,14 @@ public class Target {
  
     public void setUnless(String property) {
         this.unlessCondition = (property == null) ? "" : property;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public String getDescription() {
+        return description;
     }
 
     public String toString() {
