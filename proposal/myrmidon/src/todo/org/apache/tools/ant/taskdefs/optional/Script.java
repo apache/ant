@@ -90,7 +90,7 @@ public class Script extends Task
             //In Ant2 there is no difference between properties and references
             //addBeans( getProject().getReferences() );
 
-            beans.put( "project", getProject() );
+            beans.put( "context", getContext() );
 
             beans.put( "self", this );
 
