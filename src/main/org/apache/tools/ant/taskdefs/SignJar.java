@@ -180,7 +180,7 @@ public class SignJar extends Task {
                 DirectoryScanner ds = fs.getDirectoryScanner(project);
                 String[] jarFiles = ds.getIncludedFiles();
                 for(int j=0; j<jarFiles.length; j++) {
-                    doOneJar( new File( jarFiles[j] ), null);
+                    doOneJar( new File( fs.getDir(project), jarFiles[j] ), null);
                 }
             }
         }
