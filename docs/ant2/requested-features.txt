@@ -16,6 +16,11 @@ enhancements of existing tasks.
 
 * Obfuscating task
 
+* Add an <ant> task that will find build files according to a fileset
+  and invokes a common target in them.
+
+  <anton>?
+
 II. Abstract goals that need to be abstract until we get into design
 decisions.
 ======================================================================
@@ -191,3 +196,7 @@ V. Things we probably don't agree on.
 * Target inheritance
 
   What's this?
+
+* Add an attribute to <ant> to feed back the environment (properties and
+  taskdefs) from the child build to the parent.
+
