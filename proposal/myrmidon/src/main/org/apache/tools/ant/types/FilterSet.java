@@ -16,6 +16,7 @@ import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.Properties;
 import org.apache.myrmidon.api.TaskException;
+import org.apache.tools.ant.ProjectComponent;
 
 /**
  * A set of filters to be applied to something. A filter set may have begintoken
@@ -25,7 +26,7 @@ import org.apache.myrmidon.api.TaskException;
  * @created 14 March 2001
  */
 public class FilterSet
-    extends DataType
+    extends ProjectComponent
     implements Cloneable
 {
 
@@ -39,13 +40,13 @@ public class FilterSet
      */
     public final static String DEFAULT_TOKEN_END = "@";
 
-    private String startOfToken = DEFAULT_TOKEN_START;
-    private String endOfToken = DEFAULT_TOKEN_END;
+    private String m_startOfToken = DEFAULT_TOKEN_START;
+    private String m_endOfToken = DEFAULT_TOKEN_END;
 
     /**
      * List of ordered filters and filter files.
      */
-    private ArrayList filters = new ArrayList();
+    private ArrayList m_filters = new ArrayList();
 
     public FilterSet()
     {
@@ -60,7 +61,7 @@ public class FilterSet
         throws TaskException
     {
         super();
-        this.filters = (ArrayList)filterset.getFilters().clone();
+        m_filters = (ArrayList)filterset.getFilters().clone();
     }
 
     /**
@@ -71,15 +72,11 @@ public class FilterSet
     public void setBeginToken( String startOfToken )
         throws TaskException
     {
-        if( isReference() )
-        {
-            throw tooManyAttributes();
-        }
         if( startOfToken == null || "".equals( startOfToken ) )
         {
             throw new TaskException( "beginToken must not be empty" );
         }
-        this.startOfToken = startOfToken;
+        m_startOfToken = startOfToken;
     }
 
     /**
@@ -90,15 +87,11 @@ public class FilterSet
     public void setEndToken( String endOfToken )
         throws TaskException
     {
-        if( isReference() )
-        {
-            throw tooManyAttributes();
-        }
         if( endOfToken == null || "".equals( endOfToken ) )
         {
             throw new TaskException( "endToken must not be empty" );
         }
-        this.endOfToken = endOfToken;
+        m_endOfToken = endOfToken;
     }
 
     /**
@@ -111,31 +104,17 @@ public class FilterSet
     public void setFiltersfile( File filtersFile )
         throws TaskException
     {
-        if( isReference() )
-        {
-            throw tooManyAttributes();
-        }
         readFiltersFromFile( filtersFile );
     }
 
     public String getBeginToken()
-        throws TaskException
     {
-        if( isReference() )
-        {
-            return getRef().getBeginToken();
-        }
-        return startOfToken;
+        return m_startOfToken;
     }
 
     public String getEndToken()
-        throws TaskException
     {
-        if( isReference() )
-        {
-            return getRef().getEndToken();
-        }
-        return endOfToken;
+        return m_endOfToken;
     }
 
     /**
@@ -162,13 +141,8 @@ public class FilterSet
      * @param filter The feature to be added to the Filter attribute
      */
     public void addFilter( Filter filter )
-        throws TaskException
     {
-        if( isReference() )
-        {
-            throw noChildrenAllowed();
-        }
-        filters.add( filter );
+        m_filters.add( filter );
     }
 
     /**
@@ -178,13 +152,8 @@ public class FilterSet
      * @param value The value for the new filter.
      */
     public void addFilter( String token, String value )
-        throws TaskException
     {
-        if( isReference() )
-        {
-            throw noChildrenAllowed();
-        }
-        filters.add( new Filter( token, value ) );
+        m_filters.add( new Filter( token, value ) );
     }
 
     /**
@@ -193,34 +162,10 @@ public class FilterSet
      * @param filterSet the filterset to be added to this filterset
      */
     public void addFilterSet( FilterSet filterSet )
-        throws TaskException
     {
-        if( isReference() )
-        {
-            throw noChildrenAllowed();
-        }
         for( Iterator e = filterSet.getFilters().iterator(); e.hasNext(); )
         {
-            filters.add( (Filter)e.next() );
-        }
-    }
-
-    public Object clone()
-    {
-        try
-        {
-            if( isReference() )
-            {
-                return new FilterSet( getRef() );
-            }
-            else
-            {
-                return new FilterSet( this );
-            }
-        }
-        catch( final TaskException te )
-        {
-            throw new RuntimeException( te.toString() );
+            m_filters.add( (Filter)e.next() );
         }
     }
 
@@ -230,12 +175,7 @@ public class FilterSet
      * @return The filter that was created.
      */
     public FiltersFile createFiltersfile()
-        throws TaskException
     {
-        if( isReference() )
-        {
-            throw noChildrenAllowed();
-        }
         return new FiltersFile();
     }
 
@@ -260,11 +200,6 @@ public class FilterSet
     public void readFiltersFromFile( File filtersFile )
         throws TaskException
     {
-        if( isReference() )
-        {
-            throw tooManyAttributes();
-        }
-
         if( filtersFile.isFile() )
         {
             getLogger().debug( "Reading filters from " + filtersFile );
@@ -371,97 +306,8 @@ public class FilterSet
     }
 
     protected ArrayList getFilters()
-        throws TaskException
     {
-        if( isReference() )
-        {
-            return getRef().getFilters();
-        }
-        return filters;
-    }
-
-    protected FilterSet getRef()
-        throws TaskException
-    {
-        return (FilterSet)getCheckedRef( FilterSet.class, "filterset" );
-    }
-
-    /**
-     * Individual filter component of filterset
-     *
-     * @author Michael McCallum
-     * @created 14 March 2001
-     */
-    public static class Filter
-    {
-        /**
-         * Token which will be replaced in the filter operation
-         */
-        String token;
-
-        /**
-         * The value which will replace the token in the filtering operation
-         */
-        String value;
-
-        /**
-         * Constructor for the Filter object
-         *
-         * @param token The token which will be replaced when filtering
-         * @param value The value which will replace the token when filtering
-         */
-        public Filter( String token, String value )
-        {
-            this.token = token;
-            this.value = value;
-        }
-
-        /**
-         * No argument conmstructor
-         */
-        public Filter()
-        {
-        }
-
-        /**
-         * Sets the Token attribute of the Filter object
-         *
-         * @param token The new Token value
-         */
-        public void setToken( String token )
-        {
-            this.token = token;
-        }
-
-        /**
-         * Sets the Value attribute of the Filter object
-         *
-         * @param value The new Value value
-         */
-        public void setValue( String value )
-        {
-            this.value = value;
-        }
-
-        /**
-         * Gets the Token attribute of the Filter object
-         *
-         * @return The Token value
-         */
-        public String getToken()
-        {
-            return token;
-        }
-
-        /**
-         * Gets the Value attribute of the Filter object
-         *
-         * @return The Value value
-         */
-        public String getValue()
-        {
-            return value;
-        }
+        return m_filters;
     }
 
     /**
@@ -472,7 +318,6 @@ public class FilterSet
      */
     public class FiltersFile
     {
-
         /**
          * Constructor for the Filter object
          */

@@ -7,9 +7,8 @@
  */
 package org.apache.tools.ant.types;
 
-import java.util.Stack;
 import org.apache.myrmidon.api.TaskException;
-import org.apache.tools.ant.Project;
+import org.apache.tools.ant.ProjectComponent;
 import org.apache.tools.ant.util.regexp.Regexp;
 import org.apache.tools.ant.util.regexp.RegexpFactory;
 
@@ -42,79 +41,37 @@ import org.apache.tools.ant.util.regexp.RegexpFactory;
  * @see java.util.regex.Pattern
  * @see org.apache.tools.ant.util.regexp.Regexp
  */
-public class RegularExpression extends DataType
+public class RegularExpression
+    extends ProjectComponent
 {
-    public final static String DATA_TYPE_NAME = "regularexpression";
-
     // The regular expression factory
     private final static RegexpFactory factory = new RegexpFactory();
 
-    private Regexp regexp;
+    private Regexp m_regexp;
 
     public RegularExpression()
         throws TaskException
     {
-        this.regexp = factory.newRegexp();
+        m_regexp = factory.newRegexp();
     }
 
-    public void setPattern( String pattern )
+    public void setPattern( final String pattern )
         throws TaskException
     {
-        this.regexp.setPattern( pattern );
+        m_regexp.setPattern( pattern );
     }
 
     /**
      * Gets the pattern string for this RegularExpression in the given project.
-     *
-     * @param p Description of Parameter
-     * @return The Pattern value
      */
-    public String getPattern( Project p )
+    public String getPattern()
         throws TaskException
     {
-        if( isReference() )
-            return getRef( p ).getPattern( p );
-
-        return regexp.getPattern();
+        return m_regexp.getPattern();
     }
 
-    /**
-     * Get the RegularExpression this reference refers to in the given project.
-     * Check for circular references too
-     *
-     * @param p Description of Parameter
-     * @return The Ref value
-     */
-    public RegularExpression getRef( Project p )
-        throws TaskException
+    public Regexp getRegexp()
     {
-        if( !checked )
-        {
-            Stack stk = new Stack();
-            stk.push( this );
-            dieOnCircularReference( stk, p );
-        }
-
-        Object o = ref.getReferencedObject( p );
-        if( !( o instanceof RegularExpression ) )
-        {
-            String msg = ref.getRefId() + " doesn\'t denote a regularexpression";
-            throw new TaskException( msg );
-        }
-        else
-        {
-            return (RegularExpression)o;
-        }
+        return m_regexp;
     }
-
-    public Regexp getRegexp( Project p )
-        throws TaskException
-    {
-        if( isReference() )
-        {
-            return getRef( p ).getRegexp( p );
-        }
-        return this.regexp;
-    }
-
 }

@@ -16,6 +16,7 @@ import java.util.Iterator;
 import java.util.StringTokenizer;
 import org.apache.myrmidon.api.TaskException;
 import org.apache.tools.ant.Project;
+import org.apache.tools.ant.ProjectComponent;
 
 /**
  * Named collection of include/exclude tags. <p>
@@ -31,7 +32,7 @@ import org.apache.tools.ant.Project;
  * @author <a href="mailto:stefan.bodewig@epost.de">Stefan Bodewig</a>
  */
 public class PatternSet
-    extends DataType
+    extends ProjectComponent
 {
     private ArrayList m_includeList = new ArrayList();
     private ArrayList m_excludeList = new ArrayList();

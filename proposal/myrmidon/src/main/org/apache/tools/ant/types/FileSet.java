@@ -12,6 +12,7 @@ import java.util.ArrayList;
 import org.apache.myrmidon.api.TaskException;
 import org.apache.tools.ant.DirectoryScanner;
 import org.apache.tools.ant.FileScanner;
+import org.apache.tools.ant.ProjectComponent;
 
 /**
  * Moved out of MatchingTask to make it a standalone object that could be
@@ -26,7 +27,7 @@ import org.apache.tools.ant.FileScanner;
  * @author <a href="mailto:umagesh@rediffmail.com">Magesh Umasankar</a>
  */
 public class FileSet
-    extends DataType
+    extends ProjectComponent
     implements Cloneable
 {
     private PatternSet m_defaultPatterns = new PatternSet();

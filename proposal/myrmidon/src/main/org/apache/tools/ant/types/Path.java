@@ -11,14 +11,12 @@ import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.Locale;
-import java.util.Stack;
 import org.apache.avalon.excalibur.io.FileUtil;
 import org.apache.myrmidon.api.TaskException;
 import org.apache.tools.ant.DirectoryScanner;
 import org.apache.tools.ant.PathTokenizer;
-import org.apache.tools.ant.Project;
+import org.apache.tools.ant.ProjectComponent;
 
 /**
  * This object represents a path as used by CLASSPATH or PATH environment
@@ -51,9 +49,8 @@ import org.apache.tools.ant.Project;
  * @author Thomas.Haas@softwired-inc.com
  * @author <a href="mailto:stefan.bodewig@epost.de">Stefan Bodewig</a>
  */
-
 public class Path
-    extends DataType
+    extends ProjectComponent
     implements Cloneable
 {
     public final static Path systemClasspath = createSystemClasspath();
@@ -91,11 +88,8 @@ public class Path
     /**
      * Returns its argument with all file separator characters replaced so that
      * they match the local OS conventions.
-     *
-     * @param source Description of Parameter
-     * @return Description of the Returned Value
      */
-    public static String translateFile( String source )
+    private static String translateFile( final String source )
     {
         if( source == null )
             return "";
@@ -112,7 +106,7 @@ public class Path
     /**
      * Splits a PATH (with : or ; as separators) into its parts.
      */
-    public String[] translatePath( Project project, String source )
+    private String[] translatePath( final File baseDirectory, String source )
     {
         final ArrayList result = new ArrayList();
         if( source == null )
@@ -123,15 +117,18 @@ public class Path
         while( tok.hasMoreTokens() )
         {
             element.setLength( 0 );
-            String pathElement = tok.nextToken();
+            final String pathElement = tok.nextToken();
             try
             {
-                element.append( resolveFile( project, pathElement ) );
+                element.append( resolveFile( baseDirectory, pathElement ) );
             }
             catch( TaskException e )
             {
-                getLogger().debug( "Dropping path element " + pathElement + " as it is not valid relative to the project" );
+                final String message =
+                    "Dropping path element " + pathElement + " as it is not valid relative to the project";
+                getLogger().debug( message );
             }
+
             for( int i = 0; i < element.length(); i++ )
             {
                 translateFileSep( element, i );
@@ -139,8 +136,7 @@ public class Path
             result.add( element.toString() );
         }
 
-        final String[] res = new String[ result.size() ];
-        return (String[])result.toArray( res );
+        return (String[])result.toArray( new String[ result.size() ] );
     }
 
     /**
@@ -151,7 +147,7 @@ public class Path
      * @param pos Description of Parameter
      * @return Description of the Returned Value
      */
-    protected static boolean translateFileSep( StringBuffer buffer, int pos )
+    private static boolean translateFileSep( StringBuffer buffer, int pos )
     {
         if( buffer.charAt( pos ) == '/' || buffer.charAt( pos ) == '\\' )
         {
@@ -163,15 +159,12 @@ public class Path
 
     /**
      * Adds a String to the ArrayList if it isn't already included.
-     *
-     * @param v The feature to be added to the UnlessPresent attribute
-     * @param s The feature to be added to the UnlessPresent attribute
      */
-    private static void addUnlessPresent( ArrayList v, String s )
+    private static void addUnlessPresent( final ArrayList list, final String entry )
     {
-        if( v.indexOf( s ) == -1 )
+        if( !list.contains( entry ) )
         {
-            v.add( s );
+            list.add( entry );
         }
     }
 
@@ -179,18 +172,14 @@ public class Path
      * Resolve a filename with Project's help - if we know one that is. <p>
      *
      * Assume the filename is absolute if project is null.</p>
-     *
-     * @param project Description of Parameter
-     * @param relativeName Description of Parameter
-     * @return Description of the Returned Value
      */
-    private static String resolveFile( Project project, String relativeName )
+    private static String resolveFile( final File baseDirectory, final String relativeName )
         throws TaskException
     {
-        if( project != null )
+        if( null != baseDirectory )
         {
-            File f = FileUtil.resolveFile( project.getBaseDir(), relativeName );
-            return f.getAbsolutePath();
+            final File file = FileUtil.resolveFile( baseDirectory, relativeName );
+            return file.getAbsolutePath();
         }
         return relativeName;
     }
@@ -200,15 +189,9 @@ public class Path
      *
      * @param location the location of the element to add (must not be <code>null</code>
      *      nor empty.
-     * @exception TaskException Description of Exception
      */
-    public void setLocation( File location )
-        throws TaskException
+    public void setLocation( final File location )
     {
-        if( isReference() )
-        {
-            throw tooManyAttributes();
-        }
         createPathElement().setLocation( location );
     }
 
@@ -216,36 +199,10 @@ public class Path
      * Parses a path definition and creates single PathElements.
      *
      * @param path the path definition.
-     * @exception TaskException Description of Exception
      */
     public void setPath( String path )
-        throws TaskException
     {
-        if( isReference() )
-        {
-            throw tooManyAttributes();
-        }
         createPathElement().setPath( path );
-    }
-
-    /**
-     * Makes this instance in effect a reference to another Path instance. <p>
-     *
-     * You must not set another attribute or nest elements inside this element
-     * if you make it a reference.</p>
-     *
-     * @param r The new Refid value
-     * @exception TaskException Description of Exception
-     */
-    public void setRefid( Reference r )
-        throws TaskException
-    {
-        if( !elements.isEmpty() )
-        {
-            throw tooManyAttributes();
-        }
-        elements.add( r );
-        super.setRefid( r );
     }
 
     /**
@@ -254,25 +211,16 @@ public class Path
      *
      * @param source - source path whose components are examined for existence
      */
-    public void addExisting( Path source )
+    public void addExisting( final Path source )
         throws TaskException
     {
-        String[] list = source.list();
+        final String[] list = source.list();
         for( int i = 0; i < list.length; i++ )
         {
-            File f = null;
-            if( getProject() != null )
+            final File file = new File( list[ i ] );
+            if( file.exists() )
             {
-                f = resolveFile( list[ i ] );
-            }
-            else
-            {
-                f = new File( list[ i ] );
-            }
-
-            if( f.exists() )
-            {
-                setLocation( f );
+                setLocation( file );
             }
         }
     }
@@ -281,8 +229,6 @@ public class Path
      * Emulation of extdirs feature in java >= 1.2. This method adds all files
      * in the given directories (but not in sub-directories!) to the classpath,
      * so that you don't have to specify them all one by one.
-     *
-     * @param extdirs The feature to be added to the Extdirs attribute
      */
     public void addExtdirs( Path extdirs )
         throws TaskException
@@ -300,16 +246,16 @@ public class Path
             }
         }
 
-        String[] dirs = extdirs.list();
+        final String[] dirs = extdirs.list();
         for( int i = 0; i < dirs.length; i++ )
         {
-            File dir = resolveFile( dirs[ i ] );
+            final File dir = resolveFile( dirs[ i ] );
             if( dir.exists() && dir.isDirectory() )
             {
-                FileSet fs = new FileSet();
-                fs.setDir( dir );
-                fs.setIncludes( "*" );
-                addFileset( fs );
+                final FileSet fileSet = new FileSet();
+                fileSet.setDir( dir );
+                fileSet.setIncludes( "*" );
+                addFileset( fileSet );
             }
         }
     }
@@ -320,15 +266,9 @@ public class Path
      * @param fs The feature to be added to the Fileset attribute
      * @exception TaskException Description of Exception
      */
-    public void addFileset( FileSet fs )
-        throws TaskException
+    public void addFileset( final FileSet fileSet )
     {
-        if( isReference() )
-        {
-            throw noChildrenAllowed();
-        }
-        elements.add( fs );
-        checked = false;
+        elements.add( fileSet );
     }
 
     /**
@@ -382,42 +322,24 @@ public class Path
 
     /**
      * Append the contents of the other Path instance to this.
-     *
-     * @param other Description of Parameter
      */
-    public void append( Path other )
+    public void append( final Path other )
         throws TaskException
     {
-        if( other == null )
-            return;
-        String[] l = other.list();
-        for( int i = 0; i < l.length; i++ )
+        if( null == other )
         {
-            if( elements.indexOf( l[ i ] ) == -1 )
+            throw new NullPointerException( "other" );
+        }
+
+        final String[] list = other.list();
+        for( int i = 0; i < list.length; i++ )
+        {
+            final String file = list[ i ];
+            if( elements.contains( file ) )
             {
-                elements.add( l[ i ] );
+                elements.add( file );
             }
         }
-    }
-
-    /**
-     * Return a Path that holds the same elements as this instance.
-     *
-     * @return Description of the Returned Value
-     */
-    public Object clone()
-    {
-        try
-        {
-            Path p = new Path();
-            p.append( this );
-            return p;
-        }
-        catch( TaskException e )
-        {
-            throw new IllegalStateException( e.getMessage() );
-        }
-
     }
 
     /**
@@ -459,20 +381,17 @@ public class Path
         {
             // only: the developer knows what (s)he is doing
             result.addExisting( Path.systemClasspath );
-
         }
         else if( order.equals( "first" ) )
         {
             // first: developer could use a little help
             result.addExisting( Path.systemClasspath );
             result.addExisting( this );
-
         }
         else if( order.equals( "ignore" ) )
         {
             // ignore: don't trust anyone
             result.addExisting( this );
-
         }
         else
         {
@@ -499,50 +418,27 @@ public class Path
     public Path createPath()
         throws TaskException
     {
-        if( isReference() )
-        {
-            throw noChildrenAllowed();
-        }
-        Path p = new Path();
-        elements.add( p );
-        checked = false;
-        return p;
+        final Path other = new Path();
+        elements.add( other );
+        return other;
     }
 
     /**
      * Creates the nested <code>&lt;pathelement&gt;</code> element.
-     *
-     * @return Description of the Returned Value
-     * @exception TaskException Description of Exception
      */
     public PathElement createPathElement()
-        throws TaskException
     {
-        if( isReference() )
-        {
-            throw noChildrenAllowed();
-        }
-        PathElement pe = new PathElement();
-        elements.add( pe );
-        return pe;
+        final PathElement pathElement = new PathElement();
+        elements.add( pathElement );
+        return pathElement;
     }
 
     /**
      * Returns all path elements defined by this and nested path objects.
-     *
-     * @return list of path elements.
      */
     public String[] list()
         throws TaskException
     {
-        if( !checked )
-        {
-            // make sure we don't have a circular reference here
-            Stack stk = new Stack();
-            stk.push( this );
-            dieOnCircularReference( stk, getProject() );
-        }
-
         ArrayList result = new ArrayList( 2 * elements.size() );
         for( int i = 0; i < elements.size(); i++ )
         {
@@ -599,14 +495,11 @@ public class Path
                 }
             }
         }
-        String[] res = new String[ result.size() ];
-        return (String[])result.toArray( res );
+        return (String[])result.toArray( new String[ result.size() ] );
     }
 
     /**
      * How many parts does this Path instance consist of.
-     *
-     * @return Description of the Returned Value
      */
     public int size()
         throws TaskException
@@ -674,51 +567,7 @@ public class Path
     }
 
     /**
-     * Overrides the version of DataType to recurse on all DataType child
-     * elements that may have been added.
-     *
-     * @param stk Description of Parameter
-     * @param p Description of Parameter
-     * @exception TaskException Description of Exception
-     */
-    protected void dieOnCircularReference( Stack stk, Project p )
-        throws TaskException
-    {
-        if( checked )
-        {
-            return;
-        }
-
-        Iterator enum = elements.iterator();
-        while( enum.hasNext() )
-        {
-            Object o = enum.next();
-            if( o instanceof Reference )
-            {
-                o = ( (Reference)o ).getReferencedObject( p );
-            }
-
-            if( o instanceof DataType )
-            {
-                if( stk.contains( o ) )
-                {
-                    throw circularReference();
-                }
-                else
-                {
-                    stk.push( o );
-                    ( (DataType)o ).dieOnCircularReference( stk, p );
-                    stk.pop();
-                }
-            }
-        }
-        checked = true;
-    }
-
-    /**
      * Helper class, holds the nested <code>&lt;pathelement&gt;</code> values.
-     *
-     * @author RT
      */
     public class PathElement
     {
@@ -731,7 +580,7 @@ public class Path
 
         public void setPath( String path )
         {
-            parts = translatePath( getProject(), path );
+            parts = translatePath( getProject().getBaseDir(), path );
         }
 
         public String[] getParts()

@@ -9,10 +9,9 @@ package org.apache.tools.ant.types;
 
 import java.io.File;
 import java.util.ArrayList;
-import java.util.Stack;
 import java.util.StringTokenizer;
 import org.apache.myrmidon.api.TaskException;
-import org.apache.tools.ant.Project;
+import org.apache.tools.ant.ProjectComponent;
 
 /**
  * FileList represents an explicitly named list of files. FileLists are useful
@@ -23,135 +22,54 @@ import org.apache.tools.ant.Project;
  * @author <a href="mailto:cstrong@arielpartners.com">Craeg Strong</a>
  * @version $Revision$ $Date$
  */
-public class FileList extends DataType
+public class FileList
+    extends ProjectComponent
 {
-
-    private ArrayList filenames = new ArrayList();
-    private File dir;
+    private final ArrayList m_filenames = new ArrayList();
+    private File m_dir;
 
     public FileList()
     {
-        super();
-    }
-
-    protected FileList( FileList filelist )
-    {
-        this.dir = filelist.dir;
-        this.filenames = filelist.filenames;
     }
 
     public void setDir( File dir )
-        throws TaskException
     {
-        if( isReference() )
-        {
-            throw tooManyAttributes();
-        }
-        this.dir = dir;
+        m_dir = dir;
     }
 
     public void setFiles( String filenames )
-        throws TaskException
     {
-        if( isReference() )
-        {
-            throw tooManyAttributes();
-        }
         if( filenames != null && filenames.length() > 0 )
         {
             StringTokenizer tok = new StringTokenizer( filenames, ", \t\n\r\f", false );
             while( tok.hasMoreTokens() )
             {
-                this.filenames.add( tok.nextToken() );
+                m_filenames.add( tok.nextToken() );
             }
         }
     }
 
-    /**
-     * Makes this instance in effect a reference to another FileList instance.
-     * <p>
-     *
-     * You must not set another attribute or nest elements inside this element
-     * if you make it a reference.</p>
-     *
-     * @param r The new Refid value
-     * @exception TaskException Description of Exception
-     */
-    public void setRefid( Reference r )
-        throws TaskException
+    public File getDir()
     {
-        if( ( dir != null ) || ( filenames.size() != 0 ) )
-        {
-            throw tooManyAttributes();
-        }
-        super.setRefid( r );
-    }
-
-    public File getDir( Project p )
-        throws TaskException
-    {
-        if( isReference() )
-        {
-            return getRef( p ).getDir( p );
-        }
-        return dir;
+        return m_dir;
     }
 
     /**
      * Returns the list of files represented by this FileList.
-     *
-     * @param p Description of Parameter
-     * @return The Files value
      */
-    public String[] getFiles( Project p )
+    public String[] getFiles()
         throws TaskException
     {
-        if( isReference() )
-        {
-            return getRef( p ).getFiles( p );
-        }
-
-        if( dir == null )
+        if( m_dir == null )
         {
             throw new TaskException( "No directory specified for filelist." );
         }
 
-        if( filenames.size() == 0 )
+        if( m_filenames.size() == 0 )
         {
             throw new TaskException( "No files specified for filelist." );
         }
 
-        final String result[] = new String[ filenames.size() ];
-        return (String[])filenames.toArray( result );
+        return (String[])m_filenames.toArray( new String[ m_filenames.size() ] );
     }
-
-    /**
-     * Performs the check for circular references and returns the referenced
-     * FileList.
-     *
-     * @param p Description of Parameter
-     * @return The Ref value
-     */
-    protected FileList getRef( Project p )
-        throws TaskException
-    {
-        if( !checked )
-        {
-            Stack stk = new Stack();
-            stk.push( this );
-            dieOnCircularReference( stk, p );
-        }
-
-        Object o = ref.getReferencedObject( p );
-        if( !( o instanceof FileList ) )
-        {
-            String msg = ref.getRefId() + " doesn\'t denote a filelist";
-            throw new TaskException( msg );
-        }
-        else
-        {
-            return (FileList)o;
-        }
-    }
-
-}//-- FileList.java
+}

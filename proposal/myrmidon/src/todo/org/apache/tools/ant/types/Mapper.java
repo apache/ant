@@ -9,8 +9,8 @@ package org.apache.tools.ant.types;
 
 import java.net.URL;
 import java.net.URLClassLoader;
-import java.util.Stack;
 import org.apache.myrmidon.api.TaskException;
+import org.apache.tools.ant.ProjectComponent;
 import org.apache.tools.ant.util.FileNameMapper;
 
 /**
@@ -19,7 +19,7 @@ import org.apache.tools.ant.util.FileNameMapper;
  * @author <a href="mailto:stefan.bodewig@epost.de">Stefan Bodewig</a>
  */
 public class Mapper
-    extends DataType
+    extends ProjectComponent
     implements Cloneable
 {
     private MapperType m_type;
@@ -33,14 +33,9 @@ public class Mapper
      *
      * @param classname The new Classname value
      */
-    public void setClassname( String classname )
-        throws TaskException
+    public void setClassname( final String classname )
     {
-        if( isReference() )
-        {
-            throw tooManyAttributes();
-        }
-        this.m_classname = classname;
+        m_classname = classname;
     }
 
     /**
@@ -51,97 +46,38 @@ public class Mapper
     public void setClasspath( Path classpath )
         throws TaskException
     {
-        if( isReference() )
+        if( m_classpath == null )
         {
-            throw tooManyAttributes();
-        }
-        if( this.m_classpath == null )
-        {
-            this.m_classpath = classpath;
+            m_classpath = classpath;
         }
         else
         {
-            this.m_classpath.append( classpath );
+            m_classpath.append( classpath );
         }
-    }
-
-    /**
-     * Set the classpath to load the FileNameMapper through via reference
-     * (attribute).
-     *
-     * @param r The new ClasspathRef value
-     */
-    public void setClasspathRef( Reference r )
-        throws TaskException
-    {
-        if( isReference() )
-        {
-            throw tooManyAttributes();
-        }
-        createClasspath().setRefid( r );
     }
 
     /**
      * Set the argument to FileNameMapper.setFrom
-     *
-     * @param from The new From value
      */
-    public void setFrom( String from )
-        throws TaskException
+    public void setFrom( final String from )
     {
-        if( isReference() )
-        {
-            throw tooManyAttributes();
-        }
-        this.m_from = from;
-    }
-
-    /**
-     * Make this Mapper instance a reference to another Mapper. <p>
-     *
-     * You must not set any other attribute if you make it a reference.</p>
-     *
-     * @param r The new Refid value
-     * @exception TaskException Description of Exception
-     */
-    public void setRefid( Reference r )
-        throws TaskException
-    {
-        if( m_type != null || m_from != null || m_to != null )
-        {
-            throw tooManyAttributes();
-        }
-        super.setRefid( r );
+        m_from = from;
     }
 
     /**
      * Set the argument to FileNameMapper.setTo
-     *
-     * @param to The new To value
      */
-    public void setTo( String to )
-        throws TaskException
+    public void setTo( final String to )
     {
-        if( isReference() )
-        {
-            throw tooManyAttributes();
-        }
-        this.m_to = to;
+        m_to = to;
     }
 
     /**
      * Set the type of FileNameMapper to use.
-     *
-     * @param type The new Type value
      */
     public void setType( MapperType type )
-        throws TaskException
     {
-        if( isReference() )
-        {
-            throw tooManyAttributes();
-        }
-        this.m_type = type;
+        m_type = type;
     }
 
     /**
@@ -153,11 +89,6 @@ public class Mapper
     public FileNameMapper getImplementation()
         throws TaskException
     {
-        if( isReference() )
-        {
-            return getRef().getImplementation();
-        }
-
         if( m_type == null && m_classname == null )
         {
             throw new TaskException( "one of the attributes type or classname is required" );
@@ -217,43 +148,10 @@ public class Mapper
     public Path createClasspath()
         throws TaskException
     {
-        if( isReference() )
+        if( m_classpath == null )
         {
-            throw noChildrenAllowed();
+            m_classpath = new Path();
         }
-        if( this.m_classpath == null )
-        {
-            this.m_classpath = new Path();
-        }
-        return this.m_classpath.createPath();
+        return m_classpath.createPath();
     }
-
-    /**
-     * Performs the check for circular references and returns the referenced
-     * Mapper.
-     *
-     * @return The Ref value
-     */
-    protected Mapper getRef()
-        throws TaskException
-    {
-        if( !checked )
-        {
-            Stack stk = new Stack();
-            stk.push( this );
-            dieOnCircularReference( stk, getProject() );
-        }
-
-        Object o = ref.getReferencedObject( getProject() );
-        if( !( o instanceof Mapper ) )
-        {
-            String msg = ref.getRefId() + " doesn\'t denote a mapper";
-            throw new TaskException( msg );
-        }
-        else
-        {
-            return (Mapper)o;
-        }
-    }
-
 }
