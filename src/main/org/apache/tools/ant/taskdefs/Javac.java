@@ -75,6 +75,7 @@ import java.util.*;
  * <li>extdirs
  * <li>optimize
  * <li>debug
+ * <li>encoding
  * <li>target
  * </ul>
  * Of these arguments, the <b>sourcedir</b> and <b>destdir</b> are required.
@@ -100,6 +101,7 @@ public class Javac extends MatchingTask {
     private Path src;
     private File destDir;
     private Path compileClasspath;
+    private String encoding;
     private Vector classpathReferences = new Vector();
     private boolean debug = false;
     private boolean optimize = false;
@@ -246,6 +248,13 @@ public class Javac extends MatchingTask {
      */
     public void setDeprecation(boolean deprecation) {
         this.deprecation = deprecation;
+    }
+
+    /**
+     * Set the Java source file encoding name.
+     */
+    public void setEncoding(String encoding) {
+        this.encoding = encoding;
     }
 
     /**
@@ -515,6 +524,10 @@ public class Javac extends MatchingTask {
                 cmd.createArgument().setValue(target);
             }
         }
+        if (encoding != null) {
+            cmd.createArgument().setValue("-encoding");
+            cmd.createArgument().setValue(encoding);
+        }
         if (debug) {
             cmd.createArgument().setValue("-g");
         }
@@ -608,6 +621,10 @@ public class Javac extends MatchingTask {
         cmd.createArgument().setValue("-classpath");
         cmd.createArgument().setPath(classpath);
 
+        if (encoding != null) {
+            cmd.createArgument().setValue("-encoding");
+            cmd.createArgument().setValue(encoding);
+        }
         if (debug) {
             cmd.createArgument().setValue("-g");
         }
