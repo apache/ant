@@ -711,7 +711,6 @@
       <selector refid="ant.launcher"/>
       <manifest>
         <attribute name="Main-Class" value="org.apache.tools.ant.launch.Launcher"/>
-        <attribute name="Class-Path" value="xercesImpl.jar xml-apis.jar"/>
       </manifest>
     </jar>
 

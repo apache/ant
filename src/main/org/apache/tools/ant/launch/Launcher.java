@@ -153,8 +153,9 @@ public class Launcher {
         }
 
         System.setProperty("java.class.path", baseClassPath.toString());
-        
+
         URLClassLoader loader = new URLClassLoader(jars);
+        Thread.currentThread().setContextClassLoader(loader);
         try {
             Class mainClass = loader.loadClass(MAIN_CLASS);
             AntMain main = (AntMain) mainClass.newInstance();
