@@ -202,6 +202,17 @@
     </manifest>
   </target>
 
+
+  <target name="testFrom">
+    <manifest file="mftestfrom.mf" >
+      <section name="Test">
+        <attribute name="before" value="before" />
+        <attribute name="From" value="illegal"/>
+        <attribute name="after" value="after" />
+      </section>
+    </manifest>
+  </target>
+
   <target name="clean">
     <delete>
       <fileset dir="." includes="mftest*"/>

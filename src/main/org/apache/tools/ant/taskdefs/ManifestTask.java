@@ -24,9 +24,12 @@ import java.io.FileOutputStream;
 import java.io.OutputStreamWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.Enumeration;
+
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.Task;
+import org.apache.tools.ant.util.FileUtils;
 import org.apache.tools.ant.types.EnumeratedAttribute;
 
 /**
@@ -163,16 +166,16 @@ public class ManifestTask extends Task {
                 error = new BuildException("Failed to read " + manifestFile,
                                            e, getLocation());
             } finally {
-                if (isr != null) {
-                    try {
-                        isr.close();
-                    } catch (IOException e) {
-                        // ignore
-                    }
-                }
+                FileUtils.close(isr);
             }
         }
 
+        //look for and print warnings
+        for (Enumeration e = nestedManifest.getWarnings();
+                e.hasMoreElements();) {
+            log("Manifest warning: " + (String) e.nextElement(),
+                    Project.MSG_WARN);
+        }
         try {
             if (mode.getValue().equals("update") && manifestFile.exists()) {
                 if (current != null) {

@@ -116,7 +116,7 @@ public class ManifestTest extends BuildFileTest {
     public void test7() {
         executeTarget("test7");
 
-        boolean hasWarning = getLog().indexOf("Manifest attributes should not start with \"From\"") != -1;
+        boolean hasWarning = getLog().indexOf(Manifest.ERROR_FROM_FORBIDDEN) != -1;
         assertEquals("Expected warning about From: attribute", true, hasWarning);
     }
 
@@ -286,6 +286,10 @@ public class ManifestTest extends BuildFileTest {
         assertTrue(mfAsString.indexOf("Foo: Baz") > -1);
     }
 
+    public void testFrom() {
+        expectLogContaining("testFrom", Manifest.ERROR_FROM_FORBIDDEN);
+    }
+    
     /**
      * Reads mftest.mf.
      */

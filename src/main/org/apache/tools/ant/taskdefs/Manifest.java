@@ -79,6 +79,8 @@ public class Manifest {
 
     /** The End-Of-Line marker in manifests */
     public static final String EOL = "\r\n";
+    public static final String ERROR_FROM_FORBIDDEN = "Manifest attributes should not start "
+                        + "with \"" + ATTRIBUTE_FROM + "\" in \"";
 
     /**
      * An attribute for the manifest.
@@ -566,8 +568,7 @@ public class Manifest {
             }
 
             if (attribute.getKey().startsWith(ATTRIBUTE_FROM.toLowerCase())) {
-                warnings.addElement("Manifest attributes should not start "
-                    + "with \"" + ATTRIBUTE_FROM + "\" in \""
+                warnings.addElement(ERROR_FROM_FORBIDDEN
                     + attribute.getName() + ": " + attribute.getValue() + "\"");
             } else {
                 // classpath attributes go into a vector
