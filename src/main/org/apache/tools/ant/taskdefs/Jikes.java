@@ -13,16 +13,18 @@ import java.util.Random;
 public class Jikes {
     protected JikesOutputParser jop;
     protected String command;
-    
+    protected Project project;
+
     /**
      * Constructs a new Jikes obect.
      * @param jop - Parser to send jike's output to
      * @param command - name of jikes executeable
      */
-    protected Jikes(JikesOutputParser jop,String command) {
+    protected Jikes(JikesOutputParser jop,String command, Project project) {
         super();
         this.jop = jop;
         this.command = command;
+        this.project = project;
     }
 
     /**
@@ -71,9 +73,11 @@ public class Jikes {
             // -Xstdout that is given to Jikes in Javac.doJikesCompile()
             // should guarantee this. At least I hope so. :)
             try {
-                Process jikes = Runtime.getRuntime().exec(commandArray);
-                BufferedReader reader = new BufferedReader(new InputStreamReader(jikes.getInputStream()));
-                jop.parseOutput(reader);
+                Execute exe = new Execute(jop);
+                exe.setAntRun(project);
+                exe.setWorkingDirectory(project.getBaseDir());
+                exe.setCommandline(commandArray);
+                exe.execute();
             } catch (IOException e) {
                 throw new BuildException("Error running Jikes compiler", e);
             }

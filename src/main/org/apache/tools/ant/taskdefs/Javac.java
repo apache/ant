@@ -748,7 +748,7 @@ public class Javac extends MatchingTask {
 
         JikesOutputParser jop = new JikesOutputParser(this, emacsMode);
 
-        Jikes compiler = new Jikes(jop,"jikes");
+        Jikes compiler = new Jikes(jop, "jikes", project);
         compiler.compile(args);
         if (jop.getErrorFlag()) {
             String msg = "Compile failed, messages should have been provided.";

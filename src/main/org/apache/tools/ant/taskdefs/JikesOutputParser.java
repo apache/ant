@@ -13,13 +13,44 @@ import java.io.*;
  * Parsing could be much better
  * @author skanthak@muehlheim.de
  */
-public class JikesOutputParser {
+public class JikesOutputParser implements ExecuteStreamHandler {
     protected Task task;
     protected boolean errorFlag = false; // no errors so far
     protected int errors,warnings;
     protected boolean error = false;
     protected boolean emacsMode;
     
+    protected BufferedReader br;
+
+    /**
+     * Ignore.
+     */
+    public void setProcessInputStream(OutputStream os) {}
+
+    /**
+     * Ignore.
+     */
+    public void setProcessErrorStream(InputStream is) {}
+
+    /**
+     * Set the inputstream
+     */
+    public void setProcessOutputStream(InputStream is) throws IOException {
+        br = new BufferedReader(new InputStreamReader(is));
+    }
+
+    /**
+     * Invokes parseOutput.
+     */
+    public void start() throws IOException {
+        parseOutput(br);
+    }
+
+    /**
+     * Ignore.
+     */
+    public void stop() {}
+
     /**
      * Construct a new Parser object
      * @param task - task in whichs context we are called
