@@ -641,7 +641,7 @@ public class FTP
                         listFile(ftp, bw, dsfiles[i]);
                         break;
                     case CHMOD:
-                        doSiteCommand(ftp, "chmod " + chmod + " " + dsfiles[i]);
+                        doSiteCommand(ftp, "chmod " + chmod + " " + resolveFile(dsfiles[i]));
                         transferred++;
                         break;
                     case RM_DIR:
