@@ -33,7 +33,7 @@ public class IsSet extends ProjectComponent implements Condition
             throw new TaskException( "No property specified for isset condition" );
         }
 
-        return getProject().getProperty( property ) != null;
+        return getProperty( property ) != null;
     }
 
 }
