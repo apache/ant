@@ -1054,7 +1054,7 @@ public class Project {
     /**
      * Creates a new instance of a data type.
      * 
-     * @param taskType The name of the data type to create an instance of.
+     * @param typeName The name of the data type to create an instance of.
      *                 Must not be <code>null</code>.
      * 
      * @return an instance of the specified data type, or <code>null</code> if
