@@ -256,7 +256,7 @@ public class GenerateKey extends Task {
 
         final StringBuffer sb = new StringBuffer();
 
-        sb.append("keytool -genkey ");
+        sb.append("-genkey ");
 
         if (verbose) {
             sb.append("-v ");
@@ -332,7 +332,9 @@ public class GenerateKey extends Task {
 
         log("Generating Key for " + alias );
         final ExecTask cmd = (ExecTask) project.createTask("exec");
-        cmd.setCommand(new Commandline(sb.toString()));
+        cmd.setExecutable("keytool");
+        Commandline.Argument arg=cmd.createArg();
+        arg.setLine(sb.toString());
         cmd.setFailonerror(true);
         cmd.setTaskName( getTaskName() );
         cmd.execute();
