@@ -20,11 +20,10 @@ import java.util.StringTokenizer;
  */
 public class PathTokenizer
 {
-
     /**
      * A String which stores any path components which have been read ahead.
      */
-    private String lookahead = null;
+    private String lookahead;
 
     /**
      * Flag to indicate whether we are running on a platform with a DOS style
