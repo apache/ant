@@ -67,6 +67,7 @@
   <property name="build.lib" value="${build.dir}/lib"/>
   <property name="build.javadocs" value="${build.dir}/javadocs"/>
   <property name="build.tests" value="${build.dir}/testcases"/>
+  <property name="build.tests.javadocs" value="${build.dir}/javadocs.test/"/>
 
   <path id="classpath">
   </path>
@@ -301,6 +302,20 @@
   <patternset id="teststhatfail">
   </patternset>
   
+  <!--
+       ===================================================================
+         Set up a patternsets that matches the parts of our JUnit testsuite
+         that may be useful for task developers.
+       ===================================================================
+  -->
+  <patternset id="useful.tests">
+    <include name="${ant.package}/BuildFileTest*" />
+    <include name="${regexp.package}/RegexpMatcherTest*" />
+    <include name="${regexp.package}/RegexpTest*" />
+    <include name="${optional.package}/AbstractXSLTLiaisonTest*" />
+    <include name="${ant.package}/types/AbstractFileSetTest*" />
+  </patternset>
+
   <!--
        ===================================================================
          Check to see what optional dependencies are available
@@ -691,6 +706,17 @@
 
   </target>
 
+  <!--   Creates jar of test utility classes -->
+  <target name="test-jar"
+          depends="compile-tests"
+          description="--> creates the Apache Ant Test Utilties jar">
+
+    <jar destfile="${build.lib}/${name}-testutil.jar"
+         basedir="${build.tests}">
+      <patternset refid="useful.tests" />
+    </jar>
+  </target>
+
   <!--
        ===================================================================
          Create the essential distribution that can run Apache Ant
@@ -1043,6 +1069,12 @@
               targetfile="${build.javadocs}/packages.html" >
         <srcfiles dir= "${java.dir}" includes="**/*.java"/>
     </uptodate>
+    <uptodate property="tests.javadoc.notrequired"
+              targetfile="${build.tests.javadocs}/packages.html" >
+      <srcfiles dir= "${tests.dir}">
+        <patternset refid="useful.tests" />
+      </srcfiles>
+    </uptodate>
   </target>
 
   <target name="javadocs" depends="prepare, javadoc_check"
@@ -1068,6 +1100,26 @@
       <group title="Optional Tasks" packages="org.apache.tools.ant.taskdefs.optional*" />
       <group title="Optional Types" packages="org.apache.tools.ant.types.optional*" />
       <group title="Ant Utilities" packages="org.apache.tools.ant.util*" />
+
+      <bottom>Copyright &#169; 2000-${year} Apache Software Foundation. All Rights Reserved.</bottom>
+    </javadoc>
+  </target>
+
+  <target name="test-javadocs" depends="prepare, javadoc_check"
+          unless="tests.javadoc.notrequired"
+          description="--> creates the API documentation for test utilities">
+    <mkdir dir="${build.tests.javadocs}"/>
+    <javadoc useexternalfile="yes"
+             destdir="${build.tests.javadocs}"
+             author="true"
+             version="true"
+             locale="en"
+             windowtitle="${Name} Test Utilities"
+             doctitle="${Name}">
+
+      <fileset dir="${tests.dir}">
+        <patternset refid="useful.tests" />
+      </fileset>
 
       <bottom>Copyright &#169; 2000-${year} Apache Software Foundation. All Rights Reserved.</bottom>
     </javadoc>
