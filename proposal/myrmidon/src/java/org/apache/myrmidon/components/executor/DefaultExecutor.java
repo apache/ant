@@ -61,34 +61,34 @@ public class DefaultExecutor
         }
     }
 
-    public void execute( final Configuration taskData, final TaskContext context )
+    public void execute( final Configuration taskModel, final TaskContext context )
         throws TaskException
     {
         getLogger().debug( "Creating" );
-        final Task task = createTask( taskData.getName() );
+        final Task task = createTask( taskModel.getName() );
         setupLogger( task );
 
         getLogger().debug( "Contextualizing" );
-        doContextualize( task, taskData, context );
+        doContextualize( task, taskModel, context );
 
         getLogger().debug( "Composing" );
-        doCompose( task, taskData );
+        doCompose( task, taskModel );
 
         getLogger().debug( "Configuring" );
-        doConfigure( task, taskData, context );
+        doConfigure( task, taskModel, context );
 
         getLogger().debug( "Initializing" );
-        doInitialize( task, taskData );
+        doInitialize( task, taskModel );
 
         getLogger().debug( "Running" );
 
         task.execute();
 
         getLogger().debug( "Disposing" );
-        doDispose( task, taskData );
+        doDispose( task, taskModel );
     }
 
-    private Task createTask( final String name )
+    protected final Task createTask( final String name )
         throws TaskException
     {
         try
@@ -101,21 +101,21 @@ public class DefaultExecutor
         }
     }
 
-    private void doConfigure( final Task task,
-                              final Configuration taskData,
-                              final TaskContext context )
+    protected final void doConfigure( final Task task,
+                                      final Configuration taskModel,
+                                      final TaskContext context )
         throws TaskException
     {
-        try { m_configurer.configure( task, taskData, context ); }
+        try { m_configurer.configure( task, taskModel, context ); }
         catch( final Throwable throwable )
         {
-            throw new TaskException( "Error configuring task " +  taskData.getName() + " at " +
-                                     taskData.getLocation() + "(Reason: " +
-                                     throwable.getMessage() + ")", throwable );
+            throw new TaskException( "Error configuring task " +  taskModel.getName() + " at " +
+                                     taskModel.getLocation() + "(Reason: " +
+                                     throwable.getMessage() + ")" );
         }
     }
 
-    private void doCompose( final Task task, final Configuration taskData )
+    protected final void doCompose( final Task task, final Configuration taskModel )
         throws TaskException
     {
         if( task instanceof Composable )
@@ -123,15 +123,15 @@ public class DefaultExecutor
             try { ((Composable)task).compose( m_componentManager ); }
             catch( final Throwable throwable )
             {
-                throw new TaskException( "Error composing task " +  taskData.getName() + " at " +
-                                         taskData.getLocation() + "(Reason: " +
+                throw new TaskException( "Error composing task " +  taskModel.getName() + " at " +
+                                         taskModel.getLocation() + "(Reason: " +
                                          throwable.getMessage() + ")", throwable );
             }
         }
     }
 
-    private void doContextualize( final Task task,
-                                  final Configuration taskData,
+    protected final void doContextualize( final Task task,
+                                  final Configuration taskModel,
                                   final TaskContext context )
         throws TaskException
     {
@@ -144,13 +144,13 @@ public class DefaultExecutor
         }
         catch( final Throwable throwable )
         {
-            throw new TaskException( "Error contextualizing task " +  taskData.getName() + " at " +
-                                     taskData.getLocation() + "(Reason: " +
+            throw new TaskException( "Error contextualizing task " +  taskModel.getName() + " at " +
+                                     taskModel.getLocation() + "(Reason: " +
                                      throwable.getMessage() + ")", throwable );
         }
     }
 
-    private void doDispose( final Task task, final Configuration taskData )
+    protected final void doDispose( final Task task, final Configuration taskModel )
         throws TaskException
     {
         if( task instanceof Disposable )
@@ -158,14 +158,14 @@ public class DefaultExecutor
             try { ((Disposable)task).dispose(); }
             catch( final Throwable throwable )
             {
-                throw new TaskException( "Error disposing task " +  taskData.getName() + " at " +
-                                         taskData.getLocation() + "(Reason: " +
+                throw new TaskException( "Error disposing task " +  taskModel.getName() + " at " +
+                                         taskModel.getLocation() + "(Reason: " +
                                          throwable.getMessage() + ")", throwable );
             }
         }
     }
 
-    private void doInitialize( final Task task, final Configuration taskData )
+    protected final void doInitialize( final Task task, final Configuration taskModel )
         throws TaskException
     {
         if( task instanceof Initializable )
@@ -173,8 +173,8 @@ public class DefaultExecutor
             try { ((Initializable)task).initialize(); }
             catch( final Throwable throwable )
             {
-                throw new TaskException( "Error initializing task " +  taskData.getName() + " at " +
-                                         taskData.getLocation() + "(Reason: " +
+                throw new TaskException( "Error initializing task " +  taskModel.getName() + " at " +
+                                         taskModel.getLocation() + "(Reason: " +
                                          throwable.getMessage() + ")", throwable );
             }
         }

@@ -102,6 +102,8 @@ Legal:
     <echo message="This should fail ...."/>
     <echo message="${blah}"/>
     <echo message="Whoa - it no fail. Did you use ant-call to call me and set param blah?"/>
+
+    <echo ant:fail-on-error="true" message="This should fail ...."/>
   </target>
 
 </project>

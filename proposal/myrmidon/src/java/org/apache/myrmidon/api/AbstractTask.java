@@ -63,7 +63,6 @@ public abstract class AbstractTask
      * @exception Exception if an error occurs
      */
     public void dispose()
-        throws Exception
     {
     }
 

@@ -165,23 +165,23 @@ public class DefaultTaskContext
         if( CURRENT == scope ) put( name, value );
         else if( PARENT == scope )
         {
-            if( null == m_parent )
+            if( null == getParent() )
             {
                 throw new TaskException( "Can't set a property with parent scope when context " +
                                         " has no parent" );
             }
             else
             {
-                ((DefaultTaskContext)m_parent).put( name, value );
+                ((DefaultTaskContext)getParent()).put( name, value );
             }
         }
         else if( TOP_LEVEL == scope )
         {
             DefaultTaskContext context = this;
 
-            while( null != context.m_parent )
+            while( null != context.getParent() )
             {
-                context = (DefaultTaskContext)context.m_parent;
+                context = (DefaultTaskContext)context.getParent();
             }
 
             context.putValue( name, value );
