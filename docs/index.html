@@ -3133,6 +3133,28 @@ arguments.</p>
   </tr>
 </table>
 
+<h4>doclet</h4>
+<p>The doclet nested element is used to specify the doclet that javadoc will 
+use to process the input source files. A number of the standard javadoc arguments
+are actually arguments of the standard doclet. If these are specified in the javadoc
+task's attributes, they will be passed to the doclet specified in the 
+<code>&lt;doclet&gt;</code> nested element. Such attributes should only be specified, 
+therefore, if they can be interpreted by the doclet in use.
+
+<p>If the doclet requires additional parameters, these can be specified with
+<code>&lt;param&gt;</code> elements within the <code>&lt;doclet&gt;</code> 
+element. These paramaters are restricted to simple strings. An example usage
+of the doclet element is shown below:
+
+<pre>  &lt;javadoc ...&gt;
+     &lt;doclet name="theDoclet"
+             path="path/to/theDoclet"&gt;
+        &lt;param name="-foo" value="foovalue"/&gt;
+        &lt;param name="-bar" value="barvalue"/&gt;
+     &lt;/doclet&gt;
+  &lt;/javadoc&gt;
+</pre>
+
 <h4>sourcepath, classpath and bootclasspath</h4>
 <p><code>Javadoc</code>'s <em>sourcepath</em>, <em>classpath</em> and
 <em>bootclasspath</em> attributes are <a href="#path">PATH like
