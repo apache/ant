@@ -357,7 +357,7 @@ particular implementation has been made.
 
   [will need more discussion because of vote by Conor MacNeill]
 
-  [REJECTED - vetoes by Conor MacNeill and glenn McAllister]
+  [REJECTED - vetoes by Conor MacNeill and Glenn McAllister]
 
 * It should be possible to modify details of the actual build (e.g. classpath,
   used compiler) without the need to change the build specification.
@@ -452,7 +452,7 @@ V. Things we probably don't agree on.
                 value="29th Feb 2003"/>
  </include>
 
- [REJECTED - only two +1 votes]
+ [ACCEPTED]
 
 * provide datatypes through property tag and remove need for separate free
   standing entities. ie
@@ -481,7 +481,7 @@ V. Things we probably don't agree on.
   relevent if you build ant based testing systems and use ant in certain
   web-related areas.
 
-  [REJECTED - only two +1 votes]
+  [ACCEPTED]
 
 * Make all datatypes interfaces to allow them to be customized in many
   ways.
@@ -490,7 +490,7 @@ V. Things we probably don't agree on.
 
 * Set arithmetic for fileset/patternset/*set
 
-  [REJECTED - only two +1 votes]
+  [ACCEPTED]
 
 * inheritance of ant properties/datatypes/context etc in project hierarchy
 
