@@ -28,6 +28,8 @@ Other changes:
 * <cab> can work on non-Windows platforms with the help of libcabinet. 
   See http://trill.cis.fordham.edu/~barbacha/cabinet_library/.
 
+* <FTP> now supports passive mode.
+
 Fixed bugs:
 -----------
 

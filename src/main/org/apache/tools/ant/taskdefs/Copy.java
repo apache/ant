@@ -266,7 +266,7 @@ public class Copy extends Task {
         if (forceOverwrite) {
             toCopy = names;
         } else {
-            SourceFileScanner ds = new SourceFileScanner();
+            SourceFileScanner ds = new SourceFileScanner(this);
             toCopy = ds.restrict(names, fromDir, toDir, mapper);
         }
         
