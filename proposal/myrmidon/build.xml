@@ -76,7 +76,7 @@ Legal:
   </path>
 
   <!-- Main target -->
-  <target name="main" depends="dist" />
+  <target name="main" depends="dist-lite" />
 
   <!-- lets see what is available -->
   <target name="check_for_optional_packages">
@@ -448,7 +448,7 @@ Legal:
   </target>
 
   <!-- Creates the distribution -->
-  <target name="dist" depends="jars">
+  <target name="dist-lite" depends="jars">
 
     <mkdir dir="${dist.bin}"/>
     <mkdir dir="${dist.lib}"/>
@@ -489,6 +489,10 @@ Legal:
     <fixcrlf srcdir="${dist.bin}" eol="lf" includes="ant" />
 
   </target>
+
+  <!-- Creates the distribution -->
+  <target name="dist" depends="dist-lite,test"/>
+
 
   <!-- Cleans up build and distribution directories -->
   <target name="clean">
