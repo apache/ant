@@ -18,6 +18,7 @@ import org.apache.tools.ant.types.Argument;
 import org.apache.tools.ant.types.Commandline;
 import org.apache.tools.ant.types.CommandlineJava;
 import org.apache.tools.ant.types.Path;
+import org.apache.avalon.excalibur.util.StringUtil;
 
 /**
  * Taskdef for the JavaCC compiler compiler.
@@ -243,7 +244,7 @@ public class JavaCC extends Task
     {
         try
         {
-            getLogger().debug( Commandline.toString( cmdline ) );
+            getLogger().debug( StringUtil.join( cmdline, " " ) );
             final Execute2 exe = new Execute2();
             setupLogger( exe );
             exe.setCommandline( cmdline );
