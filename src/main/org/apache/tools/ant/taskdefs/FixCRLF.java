@@ -77,7 +77,7 @@ import java.util.Enumeration;
 import java.util.NoSuchElementException;
 
 /**
- * Task to convert text source files to local OS formatting conventions, as
+ * Converts text source files to local OS formatting conventions, as
  * well as repair text files damaged by misconfigured or misguided editors or
  * file transfer programs.
  * <p>
@@ -205,7 +205,7 @@ public class FixCRLF extends MatchingTask {
     }
 
     /**
-     * Fixing Java source files?
+     * Set to true if modifying Java source files.
      */
     public void setJavafiles(boolean javafiles) {
         this.javafiles = javafiles;
@@ -213,9 +213,9 @@ public class FixCRLF extends MatchingTask {
 
 
     /**
-     * Specify how EndOfLine characters are to be handled
+     * Specify how EndOfLine characters are to be handled.
      *
-     * @param option valid values:
+     * @param attr valid values:
      * <ul>
      * <li>asis: leave line endings alone
      * <li>cr: convert line endings to CR
@@ -241,7 +241,7 @@ public class FixCRLF extends MatchingTask {
     }
 
     /**
-     * Specify how carriage return (CR) characters are to be handled
+     * Specify how carriage return (CR) characters are to be handled.
      *
      * @param option valid values:
      * <ul>
@@ -270,9 +270,9 @@ public class FixCRLF extends MatchingTask {
     }
 
     /**
-     * Specify how tab characters are to be handled
+     * Specify how tab characters are to be handled.
      *
-     * @param option valid values:
+     * @param attr valid values:
      * <ul>
      * <li>add: convert sequences of spaces which span a tab stop to tabs
      * <li>asis: leave tab and space characters alone
@@ -292,7 +292,7 @@ public class FixCRLF extends MatchingTask {
     }
 
     /**
-     * Specify tab length in characters
+     * Specify tab length in characters.
      *
      * @param tlength specify the length of tab in spaces,
      */
@@ -310,9 +310,9 @@ public class FixCRLF extends MatchingTask {
     }
 
     /**
-     * Specify how DOS EOF (control-z) characters are to be handled
+     * Specify how DOS EOF (control-z) characters are to be handled.
      *
-     * @param option valid values:
+     * @param attr valid values:
      * <ul>
      * <li>add: ensure that there is an eof at the end of the file
      * <li>asis: leave eof characters alone
@@ -617,7 +617,7 @@ public class FixCRLF extends MatchingTask {
      * field lookahead to the first character of the state-changing token, or
      * to the next eol character.
      *
-     * @param BufferLine bufline       BufferLine containing the string
+     * @param bufline       BufferLine containing the string
      *                                 to be processed
      * @exception org.apache.tools.ant.BuildException
      *                                 Thrown when end of line is reached
@@ -666,9 +666,9 @@ public class FixCRLF extends MatchingTask {
      * for the end of a character constant.  Set 'lookahead' pointer to the
      * character following the terminating quote.
      *
-     * @param BufferLine bufline       BufferLine containing the string
+     * @param bufline       BufferLine containing the string
      *                                 to be processed
-     * @param char terminator          The constant terminator
+     * @param terminator          The constant terminator
      *
      * @exception org.apache.tools.ant.BuildException
      *                                 Thrown when end of line is reached
@@ -700,11 +700,11 @@ public class FixCRLF extends MatchingTask {
      * The start position of the string is given by the 'next' field.
      * Sets the 'next' and 'column' fields in the BufferLine.
      *
-     * @param BufferLine bufline       BufferLine containing the string
+     * @param bufline       BufferLine containing the string
      *                                 to be processed
-     * @param int end                  Index just past the end of the
+     * @param end                  Index just past the end of the
      *                                 string
-     * @param BufferedWriter outWriter Sink for the processed string
+     * @param outWriter Sink for the processed string
      */
     private void notInConstant(OneLiner.BufferLine bufline, int end,
                                 BufferedWriter outWriter) {

@@ -244,7 +244,7 @@ public class Jar extends Zip {
      * Note: if this attribute's value is not "skip", the created jar will not
      * be readable by using java.util.jar.JarInputStream
      *
-     * @param config
+     * @param config setting for found manifest behavior.
      */
     public void setFilesetmanifest(FilesetManifestConfig config) {
         filesetManifestConfig = config;
@@ -254,7 +254,7 @@ public class Jar extends Zip {
     /**
      * Adds a zipfileset to include in the META-INF directory.
      *
-     * @param fs
+     * @param fs zipfileset to add
      */
     public void addMetainf(ZipFileSet fs) {
         // We just set the prefix for this fileset, and pass it up.

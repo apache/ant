@@ -59,7 +59,7 @@ import org.apache.tools.ant.BuildException;
 
 
 /**
- * Just exit the active build, giving an additional message 
+ * Exit the active build, giving an additional message
  * if available.
  *
  * @author <a href="mailto:nico@seessle.de">Nico Seessle</a>
@@ -71,15 +71,29 @@ import org.apache.tools.ant.BuildException;
 public class Exit extends Task { 
     private String message;
     private String ifCondition, unlessCondition;
-    
-    public void setMessage(String value) { 
+
+    /**
+     * A message giving further information on why the build exited.
+     *
+     * @param value message to output
+     */
+    public void setMessage(String value) {
         this.message = value;
     }
-    
+
+    /**
+     * Only fail if a property of the given name exists in the current project.
+     * @param c property name
+     */
     public void setIf(String c) {
         ifCondition = c;
     }
 
+    /**
+     * Only fail if a property of the given name does not
+     * exist in the current project.
+     * @param c property name
+     */
     public void setUnless(String c) {
         unlessCondition = c;
     }

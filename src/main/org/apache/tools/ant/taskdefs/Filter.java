@@ -61,7 +61,7 @@ import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
 
 /**
- * This task sets a token filter that is used by the file copy methods
+ * Sets a token filter that is used by the file copy methods
  * of the project to do token substitution, or sets mutiple tokens by
  * reading these from a file.
  *
@@ -79,15 +79,29 @@ public class Filter extends Task {
     private String token;
     private String value;
     private File filtersFile;
-    
+
+    /**
+     * The token string without @ delimiters.
+     * @param token token to set
+     */
     public void setToken(String token) {
         this.token = token;
     }
 
+    /**
+     * The string that should replace the token during filtered copies.
+     * @param value token replace value
+     */
     public void setValue(String value) {
         this.value = value;
     }
 
+    /**
+     * The file from which the filters must be read.
+     * This file must be a formatted as a property file.
+     *
+     * @param filtersFile filter file
+     */
     public void setFiltersfile(File filtersFile) {
         this.filtersFile = filtersFile;
     }

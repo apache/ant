@@ -166,7 +166,7 @@ public class ExecTask extends Task {
 
     /**
      * Property name whose value should be set to the output of
-     * the process
+     * the process.
      */
     public void setOutputproperty(String outputprop) {
         this.outputprop = outputprop;
@@ -187,14 +187,14 @@ public class ExecTask extends Task {
     }
 
     /**
-     * Add an environment variable.
+     * Add an environment variable to the launched process.
      */
     public void addEnv(Environment.Variable var) {
         env.addVariable(var);
     }
 
     /**
-     * Add a nested arg element - a command line argument.
+     * Adds a command-line argument.
      */
     public Commandline.Argument createArg() {
         return cmdl.createArgument();
@@ -290,8 +290,7 @@ public class ExecTask extends Task {
     }
 
     /**
-     * Control whether the VM is used to launch the new process or
-     * whether the OS's shell is used.
+     * If true, launch new process with VM, otherwise use the OS's shell.
      */
     public void setVMLauncher(boolean vmLauncher) {
         this.vmLauncher = vmLauncher;
