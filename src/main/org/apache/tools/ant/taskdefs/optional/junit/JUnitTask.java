@@ -68,12 +68,15 @@ import org.apache.tools.ant.types.CommandlineJava;
 import org.apache.tools.ant.types.Path;
 import org.apache.tools.ant.types.EnumeratedAttribute;
 
-
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 
 import java.util.Enumeration;
+import java.util.Hashtable;
+import java.util.Properties;
+import java.util.Random;
 import java.util.Vector;
 
 /**
@@ -90,6 +93,7 @@ import java.util.Vector;
  * @author <a href="mailto:stefan.bodewig@epost.de">Stefan Bodewig</a>
  * @author <a href="mailto:sbailliez@imediation.com">Stephane Bailliez</a>
  * @author <a href="mailto:Gerrit.Riessen@web.de">Gerrit Riessen</a> -
+ * @author <a href="mailto:erik@hatcher.net">Erik Hatcher</a>
  */
 public class JUnitTask extends Task {
 
@@ -363,6 +367,23 @@ public class JUnitTask extends Task {
             formatterArg.setLength(0);
         }
 
+        // Create a temporary file to pass the Ant properties to the forked test
+        File propsFile = new File("junit" + (new Random(System.currentTimeMillis())).nextLong() + ".properties");
+        cmd.createArgument().setValue("propsfile=" + propsFile.getAbsolutePath());
+        Hashtable p = project.getProperties(); 
+        Properties props = new Properties();
+        for (Enumeration enum = p.keys(); enum.hasMoreElements(); ) {
+            Object key = enum.nextElement();
+            props.put(key, p.get(key));
+        }
+        try {
+            FileOutputStream outstream = new FileOutputStream(propsFile);
+            props.save(outstream,"Ant JUnitTask generated properties file");
+            outstream.close();
+        } catch (java.io.IOException e) {
+            throw new BuildException("Error creating temporary properties file.", e, location);
+        }
+
         Execute execute = new Execute(new LogStreamHandler(this, Project.MSG_INFO, Project.MSG_WARN), watchdog);
         execute.setCommandline(cmd.getCommandline());
         if (dir != null) {
@@ -371,11 +392,16 @@ public class JUnitTask extends Task {
         }
 
         log("Executing: "+cmd.toString(), Project.MSG_VERBOSE);
+        int retVal; 
         try {
-            return execute.execute();
+            retVal = execute.execute();
         } catch (IOException e) {
             throw new BuildException("Process fork failed.", e, location);
+        } finally {
+          if (! propsFile.delete()) throw new BuildException("Could not delete temporary properties file.");
         }
+
+        return retVal;
     }
 
     // in VM is not very nice since it could probably hang the
@@ -386,6 +412,7 @@ public class JUnitTask extends Task {
      * Execute inside VM.
      */
     private int executeInVM(JUnitTest test) throws BuildException {
+        test.setProperties(project.getProperties());
         if (dir != null) {
             log("dir attribute ignored if running in the same VM", Project.MSG_WARN);
         }

@@ -58,6 +58,9 @@ import org.apache.tools.ant.Project;
 import org.apache.tools.ant.types.Commandline;
 
 import java.io.File;
+import java.util.Enumeration;
+import java.util.Hashtable;
+import java.util.Properties;
 import java.util.Vector;
 
 /**
@@ -79,6 +82,9 @@ public class JUnitTest extends BaseTest {
     // and deal with it. (SB)
     private long runs, failures, errors;
     private long runTime;
+
+    // Snapshot of the system properties
+    private Properties props = null;
 
     public JUnitTest() {
     }
@@ -127,6 +133,15 @@ public class JUnitTest extends BaseTest {
     public long errorCount() {return errors;}
     public long getRunTime() {return runTime;}
 
+    public Properties getProperties() { return props;}
+    public void setProperties(Hashtable p) { 
+        props = new Properties();  
+        for (Enumeration enum = p.keys(); enum.hasMoreElements(); ) {
+            Object key = enum.nextElement();
+            props.put(key, p.get(key));
+        }
+    }
+
     public boolean shouldRun(Project p) {
         if (ifProperty != null && p.getProperty(ifProperty) == null) {
             return false;
@@ -134,6 +149,7 @@ public class JUnitTest extends BaseTest {
                    p.getProperty(unlessProperty) != null) {
             return false;
         }
+
         return true;
     }
 

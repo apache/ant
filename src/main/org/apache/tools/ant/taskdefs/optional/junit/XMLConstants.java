@@ -89,7 +89,7 @@ public interface XMLConstants {
     /** package attribute for the aggregate document */
     public final static String ATTR_PACKAGE = "package";
 
-    /** name attribute for testcase and testsuite elements */
+    /** name attribute for property, testcase and testsuite elements */
     public final static String ATTR_NAME = "name";
 
     /** time attribute for testcase and testsuite elements */
@@ -109,4 +109,14 @@ public interface XMLConstants {
 
     /** message attribute for failure elements */
     public final static String ATTR_MESSAGE = "message";
+
+    /** the properties element */
+    public final static String PROPERTIES = "properties";
+
+    /** the property element */
+    public final static String PROPERTY = "property";
+
+    /** value attribute for property elements */
+    public final static String ATTR_VALUE = "value";
+
 }

@@ -59,6 +59,9 @@ import org.apache.tools.ant.*;
 import junit.framework.*;
 import java.lang.reflect.*;
 import java.io.*;
+import java.util.Enumeration;
+import java.util.Hashtable;
+import java.util.Properties;
 import java.util.StringTokenizer;
 import java.util.Vector;
 
@@ -75,6 +78,7 @@ import java.util.Vector;
  * <p>Summary output is generated at the end.
  *
  * @author <a href="mailto:stefan.bodewig@epost.de">Stefan Bodewig</a>
+ * @author <a href="mailto:erik@hatcher.net">Erik Hatcher</a>
  */
 
 public class JUnitTestRunner implements TestListener {
@@ -346,6 +350,7 @@ public class JUnitTestRunner implements TestListener {
         boolean exitAtEnd = true;
         boolean haltError = false;
         boolean haltFail = false;
+        Properties props = new Properties();
 
         if (args.length == 0) {
             System.err.println("required argument TestClassName missing");
@@ -364,10 +369,23 @@ public class JUnitTestRunner implements TestListener {
                     System.err.println(be.getMessage());
                     System.exit(ERRORS);
                 }
+            } else if (args[i].startsWith("propsfile=")) {
+                FileInputStream in = new FileInputStream(args[i].substring(10));
+                props.load(in);
+                in.close();
             }
         }
         
         JUnitTest t = new JUnitTest(args[0]);
+
+        // Add/overlay system properties on the properties from the Ant project
+        Hashtable p = System.getProperties();
+        for (Enumeration enum = p.keys(); enum.hasMoreElements(); ) {
+            Object key = enum.nextElement();
+            props.put(key, p.get(key));
+        }
+        t.setProperties(props);
+
         JUnitTestRunner runner = new JUnitTestRunner(t, haltError, haltFail);
         transferFormatters(runner);
         runner.run();

@@ -72,6 +72,7 @@ import junit.framework.TestCase;
  * Prints XML output of the test to a specified Writer.
  *
  * @author <a href="mailto:stefan.bodewig@epost.de">Stefan Bodewig</a>
+ * @author <a href="mailto:erik@hatcher.net">Erik Hatcher</a>
  */
 
 public class XMLJUnitResultFormatter implements JUnitResultFormatter, XMLConstants {
@@ -132,6 +133,21 @@ public class XMLJUnitResultFormatter implements JUnitResultFormatter, XMLConstan
         doc = getDocumentBuilder().newDocument();
         rootElement = doc.createElement(TESTSUITE);
         rootElement.setAttribute(ATTR_NAME, suite.getName());
+
+        // Output properties
+        Element propsElement = doc.createElement(PROPERTIES);
+        rootElement.appendChild(propsElement);
+        Properties props = suite.getProperties();
+        if (props != null) {
+            Enumeration e = props.propertyNames();
+            while (e.hasMoreElements()) {
+                String name = (String) e.nextElement();
+                Element propElement = doc.createElement(PROPERTY);
+                propElement.setAttribute(ATTR_NAME, name);
+                propElement.setAttribute(ATTR_VALUE, props.getProperty(name));
+                propsElement.appendChild(propElement);
+            }
+        }
     }
 
     /**
