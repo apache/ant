@@ -289,7 +289,7 @@ public class ANTLR extends Task {
             }
         } else {
             log("Skipped grammar file. Generated file " + generatedFile
-                + "is newer.", Project.MSG_VERBOSE);
+                + " is newer.", Project.MSG_VERBOSE);
         }
     }
 
