@@ -118,54 +118,71 @@
 </html>
 </xsl:template>
 
-
 <!-- this is the stylesheet css to use for nearly everything -->
 <xsl:template name="stylesheet.css">
 body {
 	font:normal 68% verdana,arial,helvetica;
 	color:#000000;
 }
-td {
-	font-size: 68%
+table tr td, table tr th {
+    font-size: 68%;
 }
+table.details tr th{
+	font-weight: bold;
+	text-align:left;
+	background:#a6caf0;
+}
+table.details tr td{
+	background:#eeeee0;
+}
+
+table.properties {
+	border-collapse:collapse;
+	border-left:solid 1 #cccccc; border-top:solid 1 #cccccc;
+	padding:5px;
+}
+
+table.properties th {
+  text-align:left;
+	border-right:solid 1 #cccccc; border-bottom:solid 1 #cccccc;
+	background-color:#eeeeee;
+}
+
+table.properties td {
+	font:normal;
+	text-align:left;
+	border-right:solid 1 #cccccc; border-bottom:solid 1 #cccccc;
+	background-color:#fffffff;
+}
+
 p {
 	line-height:1.5em;
 	margin-top:0.5em; margin-bottom:1.0em;
 }
 h1 {
-	margin: 0px 0px 5px;
-	font: 165% verdana,arial,helvetica
+	margin: 0px 0px 5px; font: 165% verdana,arial,helvetica
 }
 h2 {
-	margin-top: 1em;
-	margin-bottom: 0.5em;
-	font: bold 125% verdana,arial,helvetica
+	margin-top: 1em; margin-bottom: 0.5em; font: bold 125% verdana,arial,helvetica
 }
 h3 {
-	margin-bottom: 0.5em;
-	font: bold 115% verdana,arial,helvetica
+	margin-bottom: 0.5em; font: bold 115% verdana,arial,helvetica
 }
 h4 {
-	margin-bottom: 0.5em;
-	font: bold 100% verdana,arial,helvetica
+	margin-bottom: 0.5em; font: bold 100% verdana,arial,helvetica
 }
 h5 {
-	margin-bottom: 0.5em;
-	font: bold 100% verdana,arial,helvetica
+	margin-bottom: 0.5em; font: bold 100% verdana,arial,helvetica
 }
 h6 {
-	margin-bottom: 0.5em;
-	font: bold 100% verdana,arial,helvetica
+	margin-bottom: 0.5em; font: bold 100% verdana,arial,helvetica
 }
 .Error {
-	font-weight:bold;
-	color:red;
+	font-weight:bold; color:red;
 }
 .Failure {
-	font-weight:bold;
-	color:purple;
+	font-weight:bold; color:purple;
 }
-
 </xsl:template>
 
 
@@ -181,27 +198,55 @@ h6 {
 			<xsl:call-template name="create.stylesheet.link">
 				<xsl:with-param name="package.name" select="$package.name"/>
 			</xsl:call-template>
+      <script language="JavaScript">
+        function toggle (field) {
+          field.style.display = (field.style.display == "block") ? "none" : "block";
+        }
+      </script>			
 		</head>
 		<body>
 			<xsl:call-template name="pageHeader"/>	
 			<h3>Class <xsl:if test="not($package.name = '')"><xsl:value-of select="$package.name"/>.</xsl:if><xsl:value-of select="@name"/></h3>
 
 			
-			<table border="0" cellpadding="5" cellspacing="2" width="95%">
+			<table class="details" border="0" cellpadding="5" cellspacing="2" width="95%">
 				<xsl:call-template name="testsuite.test.header"/>
 				<xsl:apply-templates select="." mode="print.test"/>
 			</table>
 	
 			<h2>Tests</h2>
 			<p>
-			<table border="0" cellpadding="5" cellspacing="2" width="95%">
+			<table class="details" border="0" cellpadding="5" cellspacing="2" width="95%">
 				<xsl:call-template name="testcase.test.header"/>
 				<xsl:apply-templates select="./testcase" mode="print.test"/>
 			</table>
 			
 			</p>
+			<xsl:apply-templates select="properties"/>
 		</body>
 	</html>
+</xsl:template>
+
+<!--
+ Simple way to display properties, it is not very nice but it does
+ the job. Properties are sorted so that they can be found easily.
+ This is based on the original idea by Erik Hatcher (erik@hatcher.net)
+ -->
+<xsl:template match="properties">
+  <xsl:variable name="id" select="concat(translate(../@package,'.','_'),'_', ../@name)"/>
+  <i><a href="javascript:toggle({$id});">Show/Hide System Properties &gt;&gt;</a></i>
+  <div id="{$id}" style="display:none">
+	  <table class="properties" border="0" cellpadding="5" cellspacing="2" width="95%">
+	    <xsl:for-each select="property">
+      <xsl:sort select="@name"/>
+		  <tr valign="top">
+			  <th><xsl:value-of select="@name"/></th>
+			  <td><xsl:value-of select="@value"/></td>
+		  </tr>			  
+	    </xsl:for-each>
+	  </table>
+  </div>
+  <p/>
 </xsl:template>
 
 
@@ -340,15 +385,15 @@ h6 {
 		<xsl:variable name="failureCount" select="sum(testsuite/@failures)"/>
 		<xsl:variable name="timeCount" select="sum(testsuite/@time)"/>
 		<xsl:variable name="successRate" select="($testCount - $failureCount - $errorCount) div $testCount"/>
-		<table border="0" cellpadding="5" cellspacing="2" width="95%">
-		<tr bgcolor="#A6CAF0" valign="top">
-			<td><strong>Tests</strong></td>
-			<td><strong>Failures</strong></td>
-			<td><strong>Errors</strong></td>
-			<td><strong>Success rate</strong></td>
-			<td><strong>Time</strong></td>
+		<table class="details" border="0" cellpadding="5" cellspacing="2" width="95%">
+		<tr valign="top">
+			<th>Tests</th>
+			<th>Failures</th>
+			<th>Errors</th>
+			<th>Success rate</th>
+			<th>Time</th>
 		</tr>
-		<tr bgcolor="#EEEEE" valign="top">
+		<tr valign="top">
 			<xsl:attribute name="class">
 				<xsl:choose>
 					<xsl:when test="$errorCount &gt; 0">Error</xsl:when>
@@ -381,13 +426,13 @@ h6 {
 		</table>
 		
 		<h2>Packages</h2>
-		<table border="0" cellpadding="5" cellspacing="2" width="95%">
+		<table class="details" border="0" cellpadding="5" cellspacing="2" width="95%">
 			<xsl:call-template name="testsuite.test.header"/>
 			<xsl:for-each select="testsuite[not(./@package = preceding-sibling::testsuite/@package)]">
 				<xsl:sort select="@package" order="ascending"/>
 				<!-- get the node set containing all testsuites that have the same package -->
 				<xsl:variable name="insamepackage" select="/testsuites/testsuite[./@package = current()/@package]"/>
-				<tr bgcolor="#EEEEE" valign="top">
+				<tr valign="top">
 					<!-- display a failure if there is any failure/error in the package -->
 					<xsl:attribute name="class">
 						<xsl:choose>
@@ -435,7 +480,7 @@ h6 {
 			<xsl:if test="count($insamepackage) &gt; 0">
 				<h2>Classes</h2>
 				<p>
-				<table border="0" cellpadding="5" cellspacing="2" width="95%">
+				<table class="details" border="0" cellpadding="5" cellspacing="2" width="95%">
 					<xsl:call-template name="testsuite.test.header"/>
 					<xsl:apply-templates select="$insamepackage" mode="print.test">
 						<xsl:sort select="@name"/>
@@ -487,29 +532,29 @@ h6 {
 
 <!-- class header -->
 <xsl:template name="testsuite.test.header">
-	<tr bgcolor="#A6CAF0" valign="top">
-		<td width="80%"><strong>Name</strong></td>
-		<td><strong>Tests</strong></td>
-		<td><strong>Errors</strong></td>
-		<td><strong>Failures</strong></td>
-		<td nowrap="nowrap"><strong>Time(s)</strong></td>
+	<tr valign="top">
+		<th width="80%">Name</th>
+		<th>Tests</th>
+		<th>Errors</th>
+		<th>Failures</th>
+		<th nowrap="nowrap">Time(s)</th>
 	</tr>
 </xsl:template>
 
 <!-- method header -->
 <xsl:template name="testcase.test.header">
-	<tr bgcolor="#A6CAF0" valign="top">
-		<td><strong>Name</strong></td>
-		<td><strong>Status</strong></td>
-		<td width="80%"><strong>Type</strong></td>
-		<td nowrap="nowrap"><strong>Time(s)</strong></td>
+	<tr valign="top">
+		<th>Name</th>
+		<th>Status</th>
+		<th width="80%">Type</th>
+		<th nowrap="nowrap">Time(s)</th>
 	</tr>
 </xsl:template>
 
 
 <!-- class information -->
 <xsl:template match="testsuite" mode="print.test">
-	<tr bgcolor="#EEEEE" valign="top">		
+	<tr valign="top">		
 		<xsl:attribute name="class">
 			<xsl:choose>
 				<xsl:when test="@errors[.&gt; 0]">Error</xsl:when>
@@ -529,7 +574,7 @@ h6 {
 </xsl:template>
 
 <xsl:template match="testcase" mode="print.test">
-	<tr bgcolor="#EEEEE" valign="top">
+	<tr valign="top">
 	    <xsl:attribute name="class">
 			<xsl:choose>
 				<xsl:when test="error">Error</xsl:when>
