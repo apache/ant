@@ -61,7 +61,7 @@ import java.util.zip.*;
  * Unzip a file. 
  *
  * @author costin@dnt.ro
- * @author Stefan Bodewig <a href="mailto:stefan.bodewig@megabit.net">stefan.bodewig@megabit.net</a>
+ * @author <a href="mailto:stefan.bodewig@megabit.net">Stefan Bodewig</a>
  */
 public class Expand extends Task {
     private String dest; // req
@@ -81,6 +81,8 @@ public class Expand extends Task {
 
         Touch touch = (Touch) project.createTask("touch");
         touch.setOwningTarget(target);
+        touch.setTaskName(getTaskName());
+        touch.setLocation(getLocation());
         
         File srcF=project.resolveFile(source);
         File dir=project.resolveFile(dest);
@@ -116,7 +118,7 @@ public class Expand extends Task {
 		    }
 
                     if (project.getJavaVersion() != Project.JAVA_1_1) {
-                        touch.setFile(f.getAbsolutePath());
+                        touch.setFile(f);
                         touch.setMillis(ze.getTime());
                         touch.touch();
                     }

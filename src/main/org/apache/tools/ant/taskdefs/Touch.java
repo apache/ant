@@ -73,7 +73,7 @@ import java.util.Locale;
  * created. Setting the modification time of files is not supported in
  * JDK 1.1.
  *
- * @author Stefan Bodewig <a href="mailto:stefan.bodewig@megabit.net">stefan.bodewig@megabit.net</a> 
+ * @author <a href="mailto:stefan.bodewig@megabit.net">Stefan Bodewig</a> 
  */
 public class Touch extends Task {
 
@@ -87,8 +87,8 @@ public class Touch extends Task {
     /**
      * The name of the file to touch.
      */
-    public void setFile(String name) {
-        file = project.resolveFile(name);
+    public void setFile(File file) {
+        this.file = file;
     }
 
     /**

@@ -133,6 +133,18 @@ public class BuildException extends RuntimeException {
     }
 
     /**
+     * Constructs an exception with the given exception as
+     * a root cause and a location in a file.
+     * @param cause Exception that might have cause this one.
+     * @param location Location in the project file where the error occured.
+     */
+
+    public BuildException(Throwable cause, Location location) {
+        this(cause);
+	this.location = location;
+    }
+
+    /**
      * Returns the nested exception.
      */
     public Throwable getException() {
