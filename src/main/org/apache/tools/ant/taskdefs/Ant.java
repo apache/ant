@@ -202,6 +202,11 @@ public class Ant extends Task {
         e = prop1.keys();
         while (e.hasMoreElements()) {
             String arg = (String) e.nextElement();
+            if ("basedir".equals(arg) || "ant.file".equals(arg)) {
+                // basedir and ant.file get special treatment in execute()
+                continue;
+            }
+            
             String value = (String) prop1.get(arg);
             if (inheritAll == true){
                newProject.setProperty(arg, value);
@@ -238,8 +243,11 @@ public class Ant extends Task {
                 reinit();
             }
         
-            if ( (dir == null) && (inheritAll == true) )
+            if ( (dir == null) && (inheritAll == true) ) {
                 dir = project.getBaseDir();
+            }
+
+            initializeProject();
 
             if (dir != null) {
                 newProject.setBaseDir(dir);
@@ -247,8 +255,6 @@ public class Ant extends Task {
             } else {
                 dir = project.getBaseDir();
             }
-
-            initializeProject();
 
             // Override with local-defined properties
             Enumeration e = properties.elements();
