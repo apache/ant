@@ -630,12 +630,12 @@ public class DirectoryScanner
     public void addExcludes(String[] excludes) {
         if (excludes != null) {
             if (this.excludes != null) {
-                String[] tmp = new String[excludes.length 
+                String[] tmp = new String[excludes.length
                                           + this.excludes.length];
-                System.arraycopy(this.excludes, 0, tmp, 0, 
+                System.arraycopy(this.excludes, 0, tmp, 0,
                                  this.excludes.length);
                 for (int i = 0; i < excludes.length; i++) {
-                    tmp[this.excludes.length + i] = 
+                    tmp[this.excludes.length + i] =
                         normalizePattern(excludes[i]);
                 }
                 this.excludes = tmp;
@@ -1052,7 +1052,7 @@ public class DirectoryScanner
 
         if ((isCaseSensitive() && includeNonPatterns.contains(name))
             ||
-            (!isCaseSensitive() 
+            (!isCaseSensitive()
              && includeNonPatterns.contains(name.toUpperCase()))) {
                 return true;
         }
@@ -1122,7 +1122,7 @@ public class DirectoryScanner
 
         if ((isCaseSensitive() && excludeNonPatterns.contains(name))
             ||
-            (!isCaseSensitive() 
+            (!isCaseSensitive()
              && excludeNonPatterns.contains(name.toUpperCase()))) {
                 return true;
         }
@@ -1538,7 +1538,8 @@ public class DirectoryScanner
         scannedDirs.clear();
         includeNonPatterns.clear();
         excludeNonPatterns.clear();
-        includePatterns = excludePatterns = null;
+        includePatterns = null;
+        excludePatterns = null;
         areNonPatternSetsReady = false;
     }
 
