@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2001-2003 The Apache Software Foundation.  All rights
+ * Copyright (c) 2001-2004 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -357,6 +357,8 @@ public class FilterSet extends DataType implements Cloneable {
      * @return      The string with the tokens replaced.
      */
     public String replaceTokens(String line) {
+        passedTokens = null; // reset for new line
+        
         String beginToken = getBeginToken();
         String endToken = getEndToken();
         int index = line.indexOf(beginToken);
@@ -415,7 +417,7 @@ public class FilterSet extends DataType implements Cloneable {
      * This parses tokens which point to tokens.
      * It also maintains a list of currently used tokens, so we cannot
      * get into an infinite loop
-     * @param value the value / token to parse
+     * @param line the value / token to parse
      * @param parent the parant token (= the token it was parsed from)
      */
     private String replaceTokens(String line, String parent)
@@ -426,7 +428,7 @@ public class FilterSet extends DataType implements Cloneable {
         if (passedTokens.contains(parent) && !duplicateToken) {
             duplicateToken = true;
             StringBuffer sb = new StringBuffer();
-            sb.append("Inifinite loop in tokens. Currently known tokens : ");
+            sb.append("Infinite loop in tokens. Currently known tokens : ");
             sb.append(passedTokens);
             sb.append("\nProblem token : " + getBeginToken() + parent
                 + getEndToken());
