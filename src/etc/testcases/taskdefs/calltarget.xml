@@ -41,5 +41,13 @@
        <fail message="filterset not properly passed across by antcall" unless="success"/>
     </target>
 
-
+    <property name="multi" value="DEFAULT"/>
+    <target name="multi">
+        <echo>multi is ${multi}</echo>
+    </target>
+    <target name="call-multi">
+        <antcall target="multi">
+            <param name="multi" value="SET"/>
+        </antcall>
+    </target>
 </project>

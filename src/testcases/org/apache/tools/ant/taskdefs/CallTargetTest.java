@@ -54,6 +54,8 @@
 
 package org.apache.tools.ant.taskdefs;
 
+import java.util.Vector;
+
 import org.apache.tools.ant.BuildFileTest;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.util.JavaEnvUtils;
@@ -81,6 +83,16 @@ public class CallTargetTest extends BuildFileTest {
         project.executeTarget("testinheritreffilterset");
     }
 
+    // see bugrep 11418 (In repeated calls to the same target,
+    // params will not be passed in)
+    public void testMultiCall() {
+        Vector v = new Vector();
+        v.add("call-multi");
+        v.add("call-multi");
+        project.executeTargets(v);
+        assertLogContaining("multi is SETmulti is SET");
+    }
+    
     public void tearDown() {
         project.executeTarget("cleanup");
     }
