@@ -647,7 +647,7 @@
             <selector refid="needs.jdk1.3+" unless="jdk1.3+"/>
             <selector refid="needs.jdk1.4+" unless="jdk1.4+"/>
             <selector refid="needs.jdk1.5+" unless="jdk1.5+"/>
-            <selector refid="not.in.kaffe" unless="kaffe"/>
+            <selector refid="not.in.kaffe" if="kaffe"/>
             <selector refid="needs.sun.uue" unless="sunuue.present"/>
             <selector refid="needs.sun.b64" unless="base64.present"/>
 
