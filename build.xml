@@ -117,6 +117,7 @@
       <exclude name="**/ide/VAJ*.java" unless="vaj.present" />
       <exclude name="**/JakartaRegexpMatcher.java" unless="jakarta.regexp.present" />
       <exclude name="**/JakartaOroMatcher.java" unless="jakarta.oro.present" />
+      <exclude name="**/perforce/*.java" unless="jakarta.oro.present" />
     </javac>
  
     <copy todir="${build.classes}">
