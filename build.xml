@@ -33,8 +33,13 @@
   <property name="packages" value="org.apache.tools.*"/>
   <property name="manifest" value="src/etc/manifest"/>
 
+
+  <!-- =================================================================== -->
+  <!-- Set some the defaults the user can override in .ant.properties      -->
+  <!-- =================================================================== -->
   <property name="build.compiler" value="classic"/>
   <property name="build.compiler.emacs" value="on"/>
+  <property name="junit.fork" value="false" />
 
   <!-- =================================================================== -->
   <!-- Define a global set of patterns that can be referenced by           -->
@@ -326,7 +331,7 @@
   <!-- Run testcase                                                        -->
   <!-- =================================================================== -->
   <target name="runtests" depends="compiletests" if="junit.present">
-    <junit printsummary="no" haltonfailure="yes">
+    <junit printsummary="no" haltonfailure="yes" fork="${junit.fork}">
       <classpath>
         <pathelement location="${lib.dir}/${name}.jar" />
         <pathelement location="${build.tests}" />
@@ -358,7 +363,7 @@
   </target>
 
   <target name="run.single.test" if="testcase" depends="compiletests">
-    <junit printsummary="no" haltonfailure="yes">
+    <junit printsummary="no" haltonfailure="yes" fork="${junit.fork}">
       <classpath>
         <pathelement location="${lib.dir}/${name}.jar" />
         <pathelement location="${build.tests}" />
