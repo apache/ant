@@ -169,7 +169,7 @@ public class Chmod extends ExecuteOn {
         if (defaultSetDefined || defaultSet.getDir(project) == null) {
             super.execute();
         }
-        else {
+        else if (isValidOs()) {
             // we are chmodding the given directory
             createArg().setValue(defaultSet.getDir(project).getPath());
             Execute execute = prepareExec();
