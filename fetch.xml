@@ -1,0 +1,192 @@
+<?xml version="1.0"?>
+
+<!--
+  =======================================================================
+    Build file to fetch optiona libraries for Apache Ant
+
+   Copyright (c) 2005 The Apache Software Foundation.  All rights
+   reserved.
+
+  =======================================================================
+-->
+<project name="fetch" default="all" basedir=".">
+
+<description>
+  This build file downloads JAR files that optional Ant tasks use,
+  and installs them in a location that is accessible the next time Ant runs.
+  
+  You can choose three locations, by going -Ddest=LOCATION on the command line
+  -Ddest=user     user lib dir  ${user.home}/.ant/lib  --Default--
+  -Ddest=system   ant lib dir   ${ant.home}/lib
+  -Ddest=optional optional dir  ${ant.home}/lib/optional  (for Ant developers)
+  
+  You may also need to set proxy settings. This can be done on the command line,
+  or in ${user.home}/.ant/proxy.properties 
+    proxy.host  hostname of proxy
+    proxy.port  port (default 80)
+    proxy.user  user (default="")
+    proxy.pass  pass (default="" )
+
+  Note that this project does not download any scripting language implementations.
+    
+</description>
+
+  <!-- Give user a chance to override without editing this file
+       (and without typing -D each time it compiles it) -->
+  <property file=".ant.properties"/>
+  <property file="${user.home}/.ant.properties"/>
+  <property name="lib.dir" location="lib" />
+  <property name="optional.dir" location="${lib.dir}/optional" />
+  <property name="userlib.dir" location="${user.home}/.ant/lib" />
+  
+  <!-- load in our properties table -->
+  <property file="${lib.dir}/libraries.properties"/>
+  
+    <!-- configure an HTTP proxy -->
+  <property file="${user.home}/.ant/proxy.properties" />
+  <target name="setproxy" unless="setproxy.disabled" >
+    <property name="proxy.host" value="" />
+    <property name="proxy.port" value="80" />
+    <property name="proxy.user" value="" />
+    <property name="proxy.pass" value="" />
+    <echo level="verbose">
+      proxy: ${proxy.host}:${proxy.port} [${proxy.user}/${proxy.pass}]
+    </echo>
+      <setproxy proxyhost="${proxy.host}" proxyport="${proxy.port}"
+        proxyuser="${proxy.user}" proxypassword="${proxy.pass}" />
+  </target> 
+  
+  
+  <target name="pick-dest">
+    <condition property="dest.dir" 
+      value="${lib.dir}">
+      <equals arg1="${dest}" arg2="system" />
+    </condition>
+    <condition property="dest.dir" 
+      value="${optional.dir}">
+      <equals arg1="${dest}" arg2="optional" />
+    </condition>
+    <condition property="dest.dir" 
+      value="${userlib.dir}">
+      <or>
+        <equals arg1="${dest}" arg2="user" />
+        <not><isset property="dest"/></not>
+      </or>
+    </condition>
+    <fail>
+      Unknown destination : ${dest}
+      <condition>
+        <not><isset property="dest.dir" /></not>
+      </condition>
+    </fail>
+    <echo>Downloading to ${dest.dir}</echo>
+  </target>
+  
+  <!-- any init stuff -->
+  <target name="init" depends="setproxy,pick-dest" >
+    
+    <macrodef name="f">
+      <attribute name="project" />
+      <sequential>
+        <fail>
+        Unknown project @{project}
+          <condition>
+            <not>
+            <isset property="@{project}.version"/>
+            </not>
+          </condition>
+        </fail>
+        <libraries destDir="${dest.dir}" flatten="true" >
+          <library project="@{project}" version="${@{project}.version}" />
+        </libraries>
+      </sequential>
+    </macrodef> 
+
+    <macrodef name="f2">
+      <attribute name="project" />
+      <attribute name="archive" />
+      <sequential>
+        <fail>
+        Unknown file @{archive}/
+          <condition>
+            <not>
+            <isset property="@{archive}.version"/>
+            </not>
+          </condition>
+        </fail>      
+        <libraries destDir="${dest.dir}" flatten="true" >
+          <library project="@{project}"
+            archive="archive"
+            version="${@{archive}.version}" />
+        </libraries>
+      </sequential>
+    </macrodef> 
+  </target>
+  
+  <target name="diag" depends="init">
+    <echoproperties />
+  </target>
+  
+  <target name="logging" 
+    description="load logging libraries"
+    depends="init">
+    <f project="log4j" />
+    <f project="commons-logging" />
+  </target>
+    
+  <target name="junit" 
+    description="load junit libraries"
+    depends="init">
+    <f project="junit" />
+  </target>
+  
+  <target name="xml" 
+    description="load full XML libraries (xalan, resolver)"
+    depends="init">
+    <f project="xalan" />
+    <f project="xml-resolver" />
+  </target>
+
+  <target name="networking" 
+    description="load networking libraries (commons-net; jsch)"
+    depends="init">
+    <f project="commons-net" />
+    <f project="jsch" />
+  </target>  
+
+  <target name="regexp" 
+    description="load regexp libraries"
+    depends="init">
+    <f project="regexp" />
+    <f project="oro" />
+  </target>  
+ 
+  <target name="antlr" 
+    description="load antlr libraries"
+    depends="init">
+    <f project="antlr" />
+  </target>  
+
+  <target name="bcel" 
+    description="load bcel libraries"
+    depends="init">
+    <f project="bcel" />
+  </target>  
+
+  <target name="jdepend" 
+    description="load jdepend libraries"
+    depends="init">
+    <f project="jdepend" />
+  </target>  
+
+  <target name="bsf" 
+    description="load bsf libraries"
+    depends="init">
+    <f project="bsf" />
+  </target>  
+  
+  <target name="all"
+    description="load all the libraries"
+    depends="logging,junit,xml,networking,regexp,antlr,bcel,jdepend,bsf" />
+  
+</project>
