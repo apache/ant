@@ -352,45 +352,29 @@ Legal:
       <include name="org/apache/myrmidon/*" />
     </jar>
 
-    <jar jarfile="${build.lib}/core.atl" basedir="${build.classes}">
-      <include name="org/apache/antlib/core/**" />
-      <zipfileset dir="${manifest.dir}" fullpath="META-INF/ant-descriptor.xml">
-        <include name="core-ant-descriptor.xml"/>
-      </zipfileset>
-    </jar>
+    <ant antfile="antlib.xml">
+      <property name="antlib.name" value="core"/>
+    </ant>
 
-    <jar jarfile="${build.lib}/archive.atl" basedir="${build.classes}">
-      <include name="org/apache/antlib/archive/**" />
-      <zipfileset dir="${manifest.dir}" fullpath="META-INF/ant-descriptor.xml">
-        <include name="archive-ant-descriptor.xml"/>
-      </zipfileset>
-    </jar>
+    <ant antfile="antlib.xml">
+      <property name="antlib.name" value="archive"/>
+    </ant>
 
-    <jar jarfile="${build.lib}/cvslib.atl" basedir="${build.classes}">
-      <include name="org/apache/antlib/cvslib/**" />
-      <zipfileset dir="${manifest.dir}" fullpath="META-INF/ant-descriptor.xml">
-        <include name="cvslib-ant-descriptor.xml"/>
-      </zipfileset>
-    </jar>
+    <ant antfile="antlib.xml">
+      <property name="antlib.name" value="cvslib"/>
+    </ant>
 
-    <jar jarfile="${build.lib}/nativelib.atl" basedir="${build.classes}">
-      <include name="org/apache/antlib/nativelib/**" />
-      <zipfileset dir="${manifest.dir}" fullpath="META-INF/ant-descriptor.xml">
-        <include name="nativelib-ant-descriptor.xml"/>
-      </zipfileset>
-    </jar>
+    <ant antfile="antlib.xml">
+      <property name="antlib.name" value="nativelib"/>
+    </ant>
 
-    <!--
-    <jar jarfile="${build.lib}/vfile.atl" basedir="${build.classes}">
-      <include name="org/apache/antlib/vfile/**" />
-      <zipfileset dir="${manifest.dir}" fullpath="META-INF/ant-descriptor.xml">
-        <include name="vfile-ant-descriptor.xml"/>
-      </zipfileset>
-      <zipfileset dir="${manifest.dir}" fullpath="META-INF/ant-roles.xml">
-        <include name="vfile-ant-roles.xml"/>
-      </zipfileset>
-    </jar>
-    -->
+    <ant antfile="antlib.xml">
+      <property name="antlib.name" value="security"/>
+    </ant>
+
+    <ant antfile="antlib.xml">
+      <property name="antlib.name" value="runtime"/>
+    </ant>
 
     <jar jarfile="${build.lib}/selftest.atl"
          basedir="${build.classes}"
@@ -408,49 +392,6 @@ Legal:
       <include name="org/apache/antlib/selftest/extension1/**" />
     </jar>
 
-    <jar jarfile="${build.lib}/security.atl" basedir="${build.classes}">
-      <include name="org/apache/antlib/security/**"/>
-      <zipfileset dir="${manifest.dir}" fullpath="META-INF/ant-descriptor.xml">
-        <include name="security-ant-descriptor.xml"/>
-      </zipfileset>
-    </jar>
-
-    <jar jarfile="${build.lib}/runtime.atl" basedir="${build.classes}">
-      <include name="org/apache/antlib/runtime/**"/>
-      <zipfileset dir="${manifest.dir}" fullpath="META-INF/ant-descriptor.xml">
-        <include name="runtime-ant-descriptor.xml"/>
-      </zipfileset>
-    </jar>
-
-    <jar jarfile="${build.lib}/ant1.atl" basedir="${build.classes}">
-      <include name="org/apache/antlib/ant1/**"/>
-      <zipfileset dir="${manifest.dir}" fullpath="META-INF/ant-descriptor.xml">
-        <include name="ant1-ant-descriptor.xml"/>
-      </zipfileset>
-    </jar>
-
-  </target>
-
-  <target name="xdoclet">
-    <path id="xdoclet.classpath">
-      <pathelement location="lib/xdoclet.jar"/>
-      <pathelement location="lib/log4j-core.jar"/>
-      <path refid="project.class.path"/>
-    </path>
-    <taskdef name="xdoclet"
-           classname="xdoclet.DocletTask"
-           classpath="lib/xdoclet.jar"/>
-    <xdoclet sourcepath="${java.dir}"
-              destdir="${build.dir}"
-              classpathref="xdoclet.classpath">
-      <fileset dir="${java.dir}">
-        <include name="**/*.java" />
-      </fileset>
-      <template templateFile="${manifest.dir}/core-ant-descriptor.template"
-                destinationfile="core-ant-descriptor.xml"/>
-      <template templateFile="${manifest.dir}/builtin-ant-roles.template"
-                destinationfile="builtin-ant-roles.xml"/>
-    </xdoclet>
   </target>
 
   <!-- Compiles and runs the unit tests -->
