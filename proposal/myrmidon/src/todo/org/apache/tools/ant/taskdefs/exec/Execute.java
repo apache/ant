@@ -11,13 +11,10 @@ import java.io.File;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.util.Properties;
-import org.apache.avalon.framework.logger.Logger;
 import org.apache.myrmidon.api.TaskException;
 import org.apache.myrmidon.framework.exec.ExecException;
 import org.apache.myrmidon.framework.exec.ExecMetaData;
 import org.apache.myrmidon.framework.exec.impl.DefaultExecManager;
-import org.apache.tools.ant.Task;
-import org.apache.tools.ant.types.Commandline;
 
 /**
  * Runs an external program.
@@ -50,38 +47,6 @@ public class Execute
         }
 
         return new File( antHome );
-    }
-
-    /**
-     * A utility method that runs an external command. Writes the output and
-     * error streams of the command to the project log.
-     *
-     * @param task The task that the command is part of. Used for logging
-     * @param cmdline The command to execute.
-     * @throws TaskException if the command does not return 0.
-     */
-    public static void runCommand( final Task task, final String[] cmdline )
-        throws TaskException
-    {
-        try
-        {
-            final Logger logger = task.hackGetLogger();
-            logger.debug( Commandline.toString( cmdline ) );
-            final Execute exe = new Execute();
-            exe.setOutput( new LogOutputStream( logger, false ) );
-            exe.setError( new LogOutputStream( logger, true ) );
-
-            exe.setCommandline( cmdline );
-            int retval = exe.execute();
-            if( retval != 0 )
-            {
-                throw new TaskException( cmdline[ 0 ] + " failed with return code " + retval );
-            }
-        }
-        catch( final IOException ioe )
-        {
-            throw new TaskException( "Could not launch " + cmdline[ 0 ] + ": " + ioe );
-        }
     }
 
     /**
