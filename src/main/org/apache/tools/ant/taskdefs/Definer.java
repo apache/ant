@@ -66,6 +66,7 @@ import org.apache.tools.ant.Project;
 import org.apache.tools.ant.Task;
 import org.apache.tools.ant.types.Path;
 import org.apache.tools.ant.types.Reference;
+import org.apache.tools.ant.util.ClasspathUtils;
 
 /**
  * Base class for Taskdef and Typedef - does all the classpath
@@ -79,21 +80,16 @@ import org.apache.tools.ant.types.Reference;
 public abstract class Definer extends Task {
     private String name;
     private String value;
-    private Path classpath;
     private File file;
     private String resource;
-    private boolean reverseLoader = false;
-    private String loaderId = null;
-    private String classpathId = null;
-
-    private static final String REUSE_LOADER_REF = "ant.reuse.loader";
+    private ClasspathUtils.Delegate cpDelegate;
 
     /**
      * @deprecated stop using this attribute
      * @ant.attribute ignore="true"
      */
     public void setReverseLoader(boolean reverseLoader) {
-        this.reverseLoader = reverseLoader;
+        this.cpDelegate.setReverseLoader(reverseLoader);
         log("The reverseloader attribute is DEPRECATED. It will be removed",
             Project.MSG_WARN);
     }
@@ -103,7 +99,7 @@ public abstract class Definer extends Task {
     }
 
     public Path getClasspath() {
-        return classpath;
+        return cpDelegate.getClasspath();
     }
 
     public File getFile() {
@@ -115,15 +111,15 @@ public abstract class Definer extends Task {
     }
 
     public boolean isReverseLoader() {
-        return reverseLoader;
+        return cpDelegate.isReverseLoader();
     }
 
     public String getLoaderId() {
-        return loaderId;
+        return cpDelegate.getClassLoadId();
     }
 
     public String getClasspathId() {
-        return classpathId;
+        return cpDelegate.getClassLoadId();
     }
 
     /**
@@ -132,21 +128,14 @@ public abstract class Definer extends Task {
      * @param classpath an Ant Path object containing the classpath.
      */
     public void setClasspath(Path classpath) {
-        if (this.classpath == null) {
-            this.classpath = classpath;
-        } else {
-            this.classpath.append(classpath);
-        }
+        this.cpDelegate.setClasspath(classpath);
     }
 
     /**
      * Create the classpath to be used when searching for component being defined
      */
     public Path createClasspath() {
-        if (this.classpath == null) {
-            this.classpath = new Path(getProject());
-        }
-        return this.classpath.createPath();
+        return this.cpDelegate.createClasspath();
     }
 
     /**
@@ -154,8 +143,7 @@ public abstract class Definer extends Task {
      * To actually share the same loader, set loaderref as well
      */
     public void setClasspathRef(Reference r) {
-        classpathId=r.getRefId();
-        createClasspath().setRefid(r);
+        this.cpDelegate.setClasspathref(r);
     }
 
     /**
@@ -170,7 +158,7 @@ public abstract class Definer extends Task {
      * @since Ant 1.5
      */
     public void setLoaderRef(Reference r) {
-        loaderId = r.getRefId();
+        this.cpDelegate.setLoaderRef(r);
     }
 
 
@@ -272,80 +260,11 @@ public abstract class Definer extends Task {
      * create a classloader for this definition
      */
     private ClassLoader createLoader() {
-        // magic property
-        if (getProject().getProperty(REUSE_LOADER_REF) != null) {
-            // Generate the 'reuse' name automatically from the reference.
-            // This allows <taskdefs> that work on both ant1.4 and ant1.5.
-            // ( in 1.4 it'll require the task/type to be in classpath if they
-            //   are used togheter ).
-            if (loaderId == null && classpathId != null) {
-                loaderId = "ant.loader." + classpathId;
-            }
-        }
-
-        // If a loader has been set ( either by loaderRef or magic property )
-        if (loaderId != null) {
-            Object reusedLoader = getProject().getReference(loaderId);
-            if (reusedLoader != null) {
-                if (!(reusedLoader instanceof ClassLoader)) {
-                    throw new BuildException("The specified loader id " +
-                        loaderId + " does not reference a class loader");
-                }
-
-                return (ClassLoader)reusedLoader;
-                //if (reusedLoader instanceof AntClassLoader) {
-                //    return (AntClassLoader)reusedLoader;
-                //}
-                // In future the reference object may be the <loader> type
-                // if (reusedLoader instanceof Loader ) {
-                //      return ((Loader)reusedLoader).getLoader(project);
-                // }
-            }
-        }
-
-        ClassLoader al = null;
-
-        if (classpath == null) {
-            // do we need to create another loader ?
-            al=project.getCoreLoader();
-            if (al != null ) {
-                return al;
-            }
-        }
-
-        if (classpath != null) {
-            project.log( "Creating new loader for taskdef using " + classpath +
-                    " reverse=" + reverseLoader, Project.MSG_DEBUG );
-            AntClassLoader acl = getProject().createClassLoader(classpath);
-            if (reverseLoader) {
-                acl.setParentFirst(false);
-                acl.addJavaLibraries();
-            }
-            al = acl;
-        } else {
-            // XXX Probably it would be better to reuse getClass().getClassLoader()
-            // I don't think we need a new ( identical ) loader for each task
-            AntClassLoader acl
-                = getProject().createClassLoader(Path.systemClasspath);
-            if (reverseLoader) {
-                acl.setParentFirst(false);
-                acl.addJavaLibraries();
-            }
-            al = acl;
-        }
+        ClassLoader al = this.cpDelegate.getClassLoader();
         // need to load Task via system classloader or the new
         // task we want to define will never be a Task but always
         // be wrapped into a TaskAdapter.
         ((AntClassLoader)al).addSystemPackageRoot("org.apache.tools.ant");
-
-
-        // If the loader is new, record it for future uses by other
-        // task/typedefs
-        if (loaderId != null) {
-            if (getProject().getReference(loaderId) == null) {
-                getProject().addReference(loaderId, al);
-            }
-        }
 
         return al;
     }
@@ -396,4 +315,15 @@ public abstract class Definer extends Task {
      * they will get to add a new definition of their type.
      */
     protected abstract void addDefinition(String name, Class c);
+    
+    
+    /**
+     * @see org.apache.tools.ant.Task#init()
+     * @since Ant 1.6
+     */
+    public void init() throws BuildException {
+        this.cpDelegate = ClasspathUtils.getDelegate(this);
+        super.init();
+    }
+
 }
