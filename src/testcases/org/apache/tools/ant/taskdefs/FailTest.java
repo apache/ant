@@ -101,4 +101,50 @@ public class FailTest extends BuildFileTest {
         }
     }
 
-}
+    public void testNested1() {
+        expectSpecificBuildException("testNested1",
+            "it is required to fail :-)",
+            "condition satisfied");
+    }
+
+    public void testNested2() {
+        try {
+            executeTarget("testNested2");
+        } catch (BuildException be) {
+            fail("condition not satisfied; testNested2 must not fail");
+        }
+    }
+
+    public void testNested3() {
+        expectSpecificBuildException("testNested3",
+            "it is required to fail :-)",
+            "testNested3");
+    }
+
+    public void testNested4() {
+        String specificMessage = "Nested conditions "
+          + "not permitted in conjunction with if/unless attributes";
+
+        char[] c = {'a', 'b', 'c'};
+        StringBuffer target = new StringBuffer("testNested4x");
+
+        for (int i = 0; i < c.length; i++) {
+            target.setCharAt(target.length() - 1, c[i]);
+            expectSpecificBuildException(target.toString(),
+                "it is required to fail :-)", specificMessage);
+        }
+    }
+
+    public void testNested5() {
+        expectSpecificBuildException("testNested5",
+            "it is required to fail :-)",
+            "Too many conditions:  2");
+    }
+
+    public void testNested6() {
+        expectSpecificBuildException("testNested6",
+            "it is required to fail :-)",
+            "testNested6\ntestNested6\ntestNested6");
+    }
+
+ }

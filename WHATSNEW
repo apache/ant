@@ -34,6 +34,8 @@ Other changes:
 
 * <loadproperties> supports loading from a resource.
 
+* <fail> accepts nested conditions.
+
 Changes from Ant 1.6.1 to current Ant 1.6 CVS version
 =============================================
 

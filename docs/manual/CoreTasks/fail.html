@@ -37,6 +37,16 @@ or character data nested into the element.</p>
     <td align="center" valign="top">No</td>
   </tr>
 </table>
+
+<h3>Parameters specified as nested elements</h3>
+
+<p>As an alternative to the <i>if</i>/<i>unless</i> attributes,
+  conditional failure can be achieved using a single nested condition.
+  For a complete list of core conditions, as well as information
+  about custom conditions, see <a href="conditions.html">here</a>.<br />
+  <b>Since Ant 1.6.2</b>
+</p>
+
 <h3>Examples</h3>
 <pre>  &lt;fail/&gt;</pre>
 <p>will exit the current build with no further information given.</p>
@@ -47,8 +57,9 @@ build.xml:4: No message
 </pre>
 
 <pre>  &lt;fail message=&quot;Something wrong here.&quot;/&gt;</pre>
-<p>will exit the current build and print something like the following to wherever
-your output goes:</p>
+<p>will exit the current build and print something
+  like the following to wherever your output goes:
+</p>
 <pre>
 BUILD FAILED
 
@@ -57,6 +68,32 @@ build.xml:4: Something wrong here.
 
 <pre>  &lt;fail&gt;Something wrong here.&lt;/fail&gt;</pre>
 <p>will give the same result as above.</p>
+
+<pre>  &lt;fail unless=&quot;thisdoesnotexist&quot;/&gt;</pre>
+<p>will exit the current build and print something
+  like the following to wherever your output goes:
+</p>
+<pre>
+BUILD FAILED
+
+build.xml:2: unless=thisdoesnotexist
+</pre>
+
+A simple example using conditions to achieve the same effect:
+<pre>
+  &lt;fail&gt;
+     &lt;not&gt;
+       &lt;isset property=&quot;thisdoesnotexist&quot;/&gt;
+     &lt;/not&gt;
+   &lt;/fail&gt;
+</pre>
+
+<p>Output:</p>
+<pre>
+BUILD FAILED
+
+build.xml:2: condition satisfied
+</pre>
 
 <hr>
 <p align="center">Copyright &copy; 2000-2001,2004 The Apache Software Foundation. All rights

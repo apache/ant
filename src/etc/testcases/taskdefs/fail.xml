@@ -25,5 +25,57 @@
   <target name="testIfAndUnless">
     <fail unless="unless" if="if"/>
   </target>
+  
+  <target name="testNested1" description="should fail with default message">
+    <fail>
+      <and />
+    </fail>
+  </target>
+
+  <target name="testNested2" description="should pass">
+    <fail>
+      <or />
+    </fail>
+  </target>
+
+  <target name="testNested3" description="should fail">
+    <fail message="testNested3">
+      <and />
+    </fail>
+  </target>
+
+  <target name="testNested4a" description="should error">
+    <fail if="if">
+      <and />
+    </fail>
+  </target>
+
+  <target name="testNested4b" description="should error">
+    <fail unless="unless">
+      <and />
+    </fail>
+  </target>
+
+  <target name="testNested4c" description="should error">
+    <fail if="if" unless="unless">
+      <and />
+    </fail>
+  </target>
+
+  <target name="testNested5" description="should error">
+    <fail>
+      <and />
+      <or />
+    </fail>
+  </target>
+
+  <target name="testNested6" description="should fail with message">
+    <fail>
+      <and />
+testNested6
+testNested6
+testNested6
+    </fail>
+  </target>
 
 </project>

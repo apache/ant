@@ -18,8 +18,8 @@
 package org.apache.tools.ant.taskdefs;
 
 import org.apache.tools.ant.BuildException;
-import org.apache.tools.ant.Task;
-
+import org.apache.tools.ant.taskdefs.condition.Condition;
+import org.apache.tools.ant.taskdefs.condition.ConditionBase;
 
 /**
  * Exits the active build, giving an additional message
@@ -34,11 +34,15 @@ import org.apache.tools.ant.Task;
  * are true. i.e.
  * <pre>fail := defined(ifProperty) && !defined(unlessProperty)</pre>
  *
+ * A single nested<CODE>&lt;condition&gt;</CODE> element can be specified
+ * instead of using <CODE>if</CODE>/<CODE>unless</CODE> (a combined
+ * effect can be achieved using <CODE>isset</CODE> conditions).
+ *
  * @since Ant 1.2
  *
  * @ant.task name="fail" category="control"
  */
-public class Exit extends Task {
+public class Exit extends ConditionBase {
     private String message;
     private String ifCondition, unlessCondition;
 
@@ -69,31 +73,40 @@ public class Exit extends Task {
     }
 
     /**
-     * evaluate both if and unless conditions, and if
-     * ifCondition is true or unlessCondition is false, throw a
-     * build exception to exit the build.
-     * The error message is constructed from the text fields, or from
+     * Throw a <CODE>BuildException</CODE> to exit (fail) the build.
+     * If specified, evaluate conditions:
+     * A single nested condition is accepted, but requires that the
+     * <CODE>if</CODE>/<code>unless</code> attributes be omitted.
+     * If the nested condition evaluates to true, or the
+     * ifCondition is true or unlessCondition is false, the build will exit.
+     * The error message is constructed from the text fields, from
+     * the nested condition (if specified), or finally from
      * the if and unless parameters (if present).
      * @throws BuildException
      */
     public void execute() throws BuildException {
-        if (testIfCondition() && testUnlessCondition()) {
+        boolean fail = (nestedConditionPresent()) ? testNestedCondition()
+                     : (testIfCondition() && testUnlessCondition());
+        if (fail) {
             String text = null;
-            if (message != null && message.length() > 0) {
-                text = message;
+            if (message != null && message.trim().length() > 0) {
+                text = message.trim();
             } else {
-
-                if (getProject().getProperty(ifCondition) != null) {
+                if (ifCondition != null && ifCondition.length() > 0
+                    && getProject().getProperty(ifCondition) != null) {
                     text = "if=" + ifCondition;
                 }
                 if (unlessCondition != null && unlessCondition.length() > 0
-                        && getProject().getProperty(unlessCondition) == null) {
+                    && getProject().getProperty(unlessCondition) == null) {
                     if (text == null) {
                         text = "";
                     } else {
                         text += " and ";
                     }
                     text += "unless=" + unlessCondition;
+                }
+                if (nestedConditionPresent()) {
+                    text = "condition satisfied";
                 } else {
                     if (text == null) {
                         text = "No message";
@@ -138,4 +151,26 @@ public class Exit extends Task {
         return getProject().getProperty(unlessCondition) == null;
     }
 
+    /**
+     * test the nested condition
+     * @return true if there is none, or it evaluates to true
+     */
+    private boolean testNestedCondition() {
+        if (ifCondition != null || unlessCondition != null) {
+            throw new BuildException("Nested conditions "
+              + "not permitted in conjunction with if/unless attributes");
+        }
+
+        int count = countConditions();
+        if (count > 1) {
+            throw new BuildException("Too many conditions:  " + count);
+        }
+
+        return (count == 0) ? true
+            : (((Condition)(getConditions().nextElement())).eval());
+    }
+
+    private boolean nestedConditionPresent() {
+        return (countConditions() > 0);
+    }
 }
