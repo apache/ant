@@ -99,6 +99,14 @@ public class StarTeamCheckout extends TreeBasedTask {
     private boolean deleteUncontrolled = true;
 
     /**
+     * holder for the deleteUncontrolled attribute.  If true,
+     * (default) local non-binary files will be checked out using the local 
+     * platform's EOL convention.  If false, checkouts will preserve the
+     * server's EOL convention.
+     */
+    private boolean convertEOL = true;
+
+    /**
      * flag (defaults to true) to create all directories
      * that are in the Starteam repository even if they are empty.
      *
@@ -117,6 +125,16 @@ public class StarTeamCheckout extends TreeBasedTask {
         this.deleteUncontrolled = value;
     }
 
+    /**
+     * Set whether or not files should be checked out using the
+     * local machine's EOL convention.
+     * Optional, defaults to <code>true</code>.
+     * @param value  the value to set the attribute to.
+     */
+    public void setConvertEOL(boolean value) {
+        this.convertEOL = value;
+    }
+    
     /**
      * Sets the label StarTeam is to use for checkout; defaults to the most recent file.
      * The label must exist in starteam or an exception will be thrown. 
@@ -277,7 +295,8 @@ public class StarTeamCheckout extends TreeBasedTask {
             log("  Items will be checked out with Exclusive locks.");
         }
         else if (this.lockStatus == Item.LockType.UNLOCKED) {
-            log("  Items will be checked out unlocked (even if presently locked).");
+            log("  Items will be checked out unlocked "
+                 +"(even if presently locked).");
         } 
         else {
             log("  Items will be checked out with no change in lock status.");
@@ -291,9 +310,14 @@ public class StarTeamCheckout extends TreeBasedTask {
         if (this.deleteUncontrolled) {
             log("  Local items not found in the repository will be deleted.");
         }
+        log("  Items will be checked out " +
+            (this.convertEOL 
+             ? "using the local machine's EOL convention"
+             : "without changing the EOL convention used on the server"));
         log("  Directories will be created"+
-            (this.createDirs ? " wherever they exist in the repository, even if empty." 
-                             : " only where needed to check out files."));
+            (this.createDirs 
+             ? " wherever they exist in the repository, even if empty." 
+             : " only where needed to check out files."));
         
     }
     /**
@@ -520,7 +544,7 @@ public class StarTeamCheckout extends TreeBasedTask {
                     }
                 }
                 eachFile.checkout(this.lockStatus, 
-                                 !this.useRepositoryTimeStamp, true, true);
+                                 !this.useRepositoryTimeStamp, this.convertEOL, true);
             }
         }
     }

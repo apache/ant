@@ -279,6 +279,10 @@ Other changes:
 * <unzip> will now detect and successfully extract self-extracting
   archives.  Bugzilla Report 16213.
 
+* <stcheckout> has a new attribute "converteol" that can be used to
+  control the automatic line-end conversion performed on ASCII files.
+  Bugzilla Report 18884.
+
 Changes from Ant 1.5.2 to Ant 1.5.3
 ===================================
 
