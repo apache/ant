@@ -137,9 +137,12 @@ public final class ClientElement extends ProjectComponent {
         execute.setAntRun(project);
 
         log(RES.getString("task.process-cmdline.log", cmd.toString()), Project.MSG_VERBOSE);
-        int retVal;
+        int retVal = 0;
         try {
             retVal = execute.execute();
+            if (retVal != 0){
+                throw new BuildException("task.process-failed.error");
+            }
         } catch (IOException e) {
             String msg = RES.getString("task.process-failed.error");
             throw new BuildException(msg, e);
