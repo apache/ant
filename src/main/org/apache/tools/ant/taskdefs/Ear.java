@@ -56,6 +56,7 @@ package org.apache.tools.ant.taskdefs;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.types.ZipFileSet;
+import org.apache.tools.ant.util.FileUtils;
 import org.apache.tools.zip.ZipOutputStream;
 
 import java.io.File;
@@ -64,7 +65,7 @@ import java.io.IOException;
 /**
  * Creates a EAR archive. Based on WAR task
  *
- * @author <a href="mailto:stefan.bodewig@epost.de">Stefan Bodewig</a>
+ * @author Stefan Bodewig
  * @author <a href="mailto:leslie.hughes@rubus.com">Les Hughes</a>
  *
  * @since Ant 1.4
@@ -75,6 +76,7 @@ public class Ear extends Jar {
 
     private File deploymentDescriptor;
     private boolean descriptorAdded;
+    private static final FileUtils fu = FileUtils.newFileUtils();
 
     /**
      * Create an Ear task.
@@ -147,7 +149,7 @@ public class Ear extends Jar {
         // <fileset> element.
         if (vPath.equalsIgnoreCase("META-INF/application.xml"))  {
             if (deploymentDescriptor == null 
-                || !deploymentDescriptor.equals(file) 
+                || !fu.fileNameEquals(deploymentDescriptor, file)
                 || descriptorAdded) {
                 log("Warning: selected " + archiveType
                     + " files include a META-INF/application.xml which will"

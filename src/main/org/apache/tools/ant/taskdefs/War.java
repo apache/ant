@@ -57,6 +57,7 @@ package org.apache.tools.ant.taskdefs;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.types.ZipFileSet;
+import org.apache.tools.ant.util.FileUtils;
 import org.apache.tools.zip.ZipOutputStream;
 
 import java.io.File;
@@ -73,7 +74,7 @@ import java.io.IOException;
  * attributes of zipfilesets in a Zip or Jar task.)</p>
  * <p>The extended zipfileset element from the zip task (with attributes <i>prefix</i>, <i>fullpath</i>, and <i>src</i>) is available in the War task.</p>
  *
- * @author <a href="mailto:stefan.bodewig@epost.de">Stefan Bodewig</a>
+ * @author Stefan Bodewig
  *
  * @since Ant 1.2
  *
@@ -91,6 +92,8 @@ public class War extends Jar {
      * flag set if the descriptor is added
      */
     private boolean descriptorAdded;
+
+    private static final FileUtils fu = FileUtils.newFileUtils();
 
     public War() {
         super();
@@ -181,7 +184,7 @@ public class War extends Jar {
         // by the "webxml" attribute and in a <fileset> element.
         if (vPath.equalsIgnoreCase("WEB-INF/web.xml"))  {
             if (deploymentDescriptor == null
-                || !deploymentDescriptor.equals(file)
+                || !fu.fileNameEquals(deploymentDescriptor, file)
                 || descriptorAdded) {
                 log("Warning: selected " + archiveType
                     + " files include a WEB-INF/web.xml which will be ignored "
