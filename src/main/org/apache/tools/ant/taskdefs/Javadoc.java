@@ -863,7 +863,6 @@ public class Javadoc extends Task {
                 }
                 File d = new File(dir1, name);
                 if (d.isDirectory() 
-                    && !name.equals("CVS")	// hack to ignore CVS directories
                     && d.getName().indexOf("-") == -1) {
                         return true;
                     }
