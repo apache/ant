@@ -57,6 +57,16 @@ package org.apache.tools.ant.taskdefs.optional;
 import java.io.*;
 import org.apache.tools.ant.BuildFileTest;
 /**
+ * If you want to run tests, it is highly recommended
+ * to download ANTLR (www.antlr.org), build the 'all' jar
+ * with the mkalljar script and drop the jar (about 300KB) into
+ * Ant lib.
+ * - Running w/ the default antlr.jar (70KB) does not work (missing class)
+ * - Running w/ the antlr jar made w/ mkjar (88KB) does not work (still another class missing)
+ *
+ * Unless of course you specify the ANTLR classpath in your
+ * system classpath. (see ANTLR install.html)
+ *
  * @author Erik Meade <emeade@geekfarm.org>
  */
 public class ANTLRTest extends BuildFileTest {
@@ -91,7 +101,7 @@ public class ANTLRTest extends BuildFileTest {
     }
 
     public void test5() {
-        expectBuildException("test5", "Invalid working directory");
+        executeTarget("test5");
     }
 
     public void test6() {

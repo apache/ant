@@ -89,7 +89,7 @@ public class ANTLR extends Task {
     private File outputDirectory;
 
     /** should fork ? */
-    private boolean fork = false;
+    private final boolean fork = true;
 
     /** working directory */
     private File workingdir = null;
@@ -109,8 +109,13 @@ public class ANTLR extends Task {
         this.outputDirectory = outputDirectory;
     }
 
+    // we are forced to fork ANTLR since there is a call
+    // to System.exit() and there is nothing we can do
+    // right now to avoid this. :-( (SBa)
+    // I'm not removing this method to keep backward compatibility
+    // and
     public void setFork(boolean s) {
-        this.fork = s;
+        //this.fork = s;
     }
 
     /**
@@ -180,31 +185,19 @@ public class ANTLR extends Task {
 
     public void execute() throws BuildException {
         validateAttributes();
-
         //TODO: use ANTLR to parse the grammer file to do this.
         if (target.lastModified() > getGeneratedFile().lastModified()) {
             commandline.createArgument().setValue("-o");
             commandline.createArgument().setValue(outputDirectory.toString());
             commandline.createArgument().setValue(target.toString());
 
-            if (fork) {
-                log("Forking " + commandline.toString(), Project.MSG_VERBOSE);
-                int err = run(commandline.getCommandline());
-                if (err == 1) {
-                    throw new BuildException("ANTLR returned: "+err, location);
-                }
-            } else {
-                ExecuteJava exe = new ExecuteJava();
-                exe.setJavaCommand(commandline.getJavaCommand());
-                exe.setClasspath(commandline.getClasspath());
-                try {
-                    exe.execute(project);
-                } catch (ExitException e){
-                    if ( e.getStatus() != 0 ){
-                        throw new BuildException("ANTLR returned: " + e.getStatus(), location);
-                    }
-                }
+            log("Forking " + commandline.toString(), Project.MSG_VERBOSE);
+            int err = run(commandline.getCommandline());
+            if (err == 1) {
+                throw new BuildException("ANTLR returned: "+err, location);
             }
+        } else {
+            log("Skipped grammar file. Generated file is newer.", Project.MSG_VERBOSE);
         }
     }
 
