@@ -150,6 +150,9 @@ public class Available extends Task implements Condition {
         }
 
         if (type != null){
+            if (file == null){
+                throw new BuildException("The type attribute is only valid when specifying the file attribute.");
+            }
             if (!type.equalsIgnoreCase("file") && !type.equalsIgnoreCase("dir")){
                 throw new BuildException("Type must be one of either dir or file");
             }
@@ -166,7 +169,11 @@ public class Available extends Task implements Condition {
         }
         
         if ((file != null) && !checkFile()) {
-            log("Unable to find " + file + " to set property " + property, Project.MSG_VERBOSE);
+            if (type != null) {
+                log("Unable to find " + type + " " + file.getName() + " to set property " + property, Project.MSG_VERBOSE);
+            } else {
+                log("Unable to find " + file.getName() + " to set property " + property, Project.MSG_VERBOSE);
+            }
             return false;
         }
         
@@ -188,9 +195,32 @@ public class Available extends Task implements Condition {
         } else {
             String[] paths = filepath.list();
             for(int i = 0; i < paths.length; ++i) {
-                log("Searching " + paths[i], Project.MSG_VERBOSE);
-                if(new File(paths[i], file.getName()).isFile()) {
-                    return true;
+                log("Searching " + paths[i], Project.MSG_DEBUG);
+                File filename = new File(paths[i]);
+                if (type != null) {
+                    if (type.equalsIgnoreCase("dir")) {
+                        String dir = filename.getParent();
+                        if(dir != null) {
+                            int index = dir.lastIndexOf(File.separator);
+                            String dirname = dir.substring(index + 1);
+                            if(dirname.equals(file.getName())) {
+                                log("Found directory: " + dir, Project.MSG_VERBOSE);
+                                return true;
+                            }
+                        }
+                    } else if (type.equalsIgnoreCase("file")) {
+                        if(filename.isFile()) {
+                            if(filename.getName().equals(file.getName())) {
+                                log("Found file: " + filename, Project.MSG_VERBOSE);
+                                return true;
+                            }
+                        }
+                    }
+                } else if(filename.isFile()) {
+                    if(filename.getName().equals(file.getName())) {
+                        log("Found file: " + filename, Project.MSG_VERBOSE);
+                        return true;
+                    }
                 }
             }
         }
@@ -200,11 +230,14 @@ public class Available extends Task implements Condition {
     private boolean checkFile(File file) {
         if (type != null) {
             if (type.equalsIgnoreCase("dir")) {
+                log("Found directory: " + file, Project.MSG_VERBOSE);
                 return file.isDirectory();
             } else if (type.equalsIgnoreCase("file")) {
+                log("Found file: " + file, Project.MSG_VERBOSE);
                 return file.isFile();
             }
         }
+        log("Found: " + file, Project.MSG_VERBOSE);
         return file.exists();
     }
 
