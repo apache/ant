@@ -76,8 +76,7 @@ public class Untar extends Task {
      */
     public void execute() throws BuildException {
 
-        Touch touch = new Touch();
-        touch.setProject(project);
+        Touch touch = (Touch) project.createTask("touch");
         touch.setTarget(target);
                     
         try {
