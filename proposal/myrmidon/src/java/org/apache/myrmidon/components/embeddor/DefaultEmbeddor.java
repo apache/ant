@@ -9,6 +9,7 @@ package org.apache.myrmidon.components.embeddor;
 
 import java.io.File;
 import java.io.FilenameFilter;
+import java.util.Map;
 import org.apache.avalon.excalibur.io.ExtensionFileFilter;
 import org.apache.avalon.excalibur.io.FileUtil;
 import org.apache.avalon.framework.activity.Initializable;
@@ -30,6 +31,7 @@ import org.apache.myrmidon.components.deployer.RoleManager;
 import org.apache.myrmidon.components.executor.Executor;
 import org.apache.myrmidon.components.manager.ProjectManager;
 import org.apache.myrmidon.components.type.TypeManager;
+import org.apache.myrmidon.components.model.Project;
 
 /**
  * Default implementation of Embeddor.
@@ -41,7 +43,6 @@ public class DefaultEmbeddor
     extends AbstractLoggable
     implements Embeddor
 {
-    private ProjectManager           m_projectManager;
     private ProjectBuilder           m_builder;
     private Deployer                 m_deployer;
     private RoleManager              m_roleManager;
@@ -53,7 +54,6 @@ public class DefaultEmbeddor
 
     private Executor                 m_executor;
     private Configurer               m_configurer;
-
 
     private DefaultComponentManager  m_componentManager;
     private Parameters               m_parameters;
@@ -75,26 +75,43 @@ public class DefaultEmbeddor
         m_parameters = parameters;
     }
 
-    /**
-     * Retrieve builder for runtime.
-     * Valid after init() call
-     *
-     * @return the ProjectBuilder
-     */
-    public ProjectBuilder getProjectBuilder()
+    public Project createProject( final String location, 
+                                  final String type, 
+                                  final Parameters parameters )
+        throws Exception
     {
-        return m_builder;
+        return m_builder.build( location );
     }
 
-    /**
-     * Retrieve project engine for runtime.
-     * Valid after init() call
-     *
-     * @return the ProjectBuilder
-     */
-    public ProjectManager getProjectManager()
+    public ProjectManager createProjectManager( final Project project, 
+                                                final Parameters parameters )
+        throws Exception
     {
-        return m_projectManager;
+        final String component = getParameter( ProjectManager.ROLE );
+        final ProjectManager projectManager = 
+            (ProjectManager)createComponent( component, ProjectManager.class );
+
+        setupLogger( projectManager );
+
+        if( projectManager instanceof Composable )
+        {
+            final DefaultComponentManager componentManager =
+                new DefaultComponentManager( m_componentManager );
+            componentManager.put( Project.ROLE, project );
+            ((Composable)projectManager).compose( componentManager );
+        }
+
+        if( projectManager instanceof Parameterizable )
+        {
+            ((Parameterizable)projectManager).parameterize( parameters );
+        }        
+
+        if( projectManager instanceof Initializable )
+        {
+            ((Initializable)projectManager).initialize();
+        }        
+
+        return projectManager;
     }
 
     /**
@@ -122,7 +139,7 @@ public class DefaultEmbeddor
     public void start()
         throws Exception
     {
-        final ExtensionFileFilter filter = new ExtensionFileFilter( ".tsk" );
+        final ExtensionFileFilter filter = new ExtensionFileFilter( ".atl" );
         deployFromDirectory( m_deployer, m_taskLibDir, filter );
     }
 
@@ -143,7 +160,6 @@ public class DefaultEmbeddor
         m_converterRegistry = null;
         m_converter = null;
         m_executor = null;
-        m_projectManager = null;
         m_builder = null;
         m_deployer = null;
         m_configurer = null;
@@ -208,7 +224,6 @@ public class DefaultEmbeddor
         componentManager.put( MasterConverter.ROLE, m_converter );
 
         //Following components required when Myrmidon is used as build tool
-        componentManager.put( ProjectManager.ROLE, m_projectManager );
         componentManager.put( ProjectBuilder.ROLE, m_builder );
 
         //Following components required when Myrmidon allows user deployment of tasks etal.
@@ -262,11 +277,8 @@ public class DefaultEmbeddor
         component = getParameter( Executor.ROLE );
         m_executor = (Executor)createComponent( component, Executor.class );
 
-        component = getParameter( ProjectManager.ROLE );
-        m_projectManager = (ProjectManager)createComponent( component, ProjectManager.class );
-
         component = getParameter( ProjectBuilder.ROLE );
-        m_builder =(ProjectBuilder)createComponent( component, ProjectBuilder.class );
+        m_builder = (ProjectBuilder)createComponent( component, ProjectBuilder.class );
     }
 
     /**
@@ -282,7 +294,6 @@ public class DefaultEmbeddor
         setupComponent( m_converterRegistry );
         setupComponent( m_converter );
         setupComponent( m_executor );
-        setupComponent( m_projectManager );
         setupComponent( m_builder );
         setupComponent( m_deployer );
         setupComponent( m_configurer );
