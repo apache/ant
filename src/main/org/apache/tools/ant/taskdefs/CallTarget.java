@@ -54,7 +54,8 @@
 
 package org.apache.tools.ant.taskdefs;
 
-import org.apache.tools.ant.*;
+import org.apache.tools.ant.Task;
+import org.apache.tools.ant.BuildException;
 
 /**
  * Call another target in the same project.

@@ -72,7 +72,7 @@ public class ClassFileUtils {
      * 
      * @return the class name in dot notation (eg. java.lang.Object).
      */
-    static public String convertSlashName(String name) {
+    public static String convertSlashName(String name) {
         return name.replace('\\', '.').replace( '/', '.' );
     } 
 
@@ -83,7 +83,7 @@ public class ClassFileUtils {
      * 
      * @return the class name in slash notation (eg. java/lang/Object).
      */
-    static public String convertDotName(String dotName) {
+    public static String convertDotName(String dotName) {
         return dotName.replace( '.', '/');
     } 
 }

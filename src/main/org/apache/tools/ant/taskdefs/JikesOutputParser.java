@@ -53,9 +53,14 @@
  */
 package org.apache.tools.ant.taskdefs;
 
-import org.apache.tools.ant.*;
+import org.apache.tools.ant.Task;
+import org.apache.tools.ant.Project;
     
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.OutputStream;
+import java.io.InputStream;
+import java.io.IOException;
+import java.io.InputStreamReader;
 
 /**
  * Parses output from jikes and

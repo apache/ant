@@ -53,8 +53,9 @@
  */
 package org.apache.tools.ant.taskdefs.optional.depend.constantpool;
 
-import java.io.*;
-import java.util.*;
+import java.io.IOException;
+import java.io.DataInputStream;
+
 
 /**
  * An entry in the constant pool.
@@ -70,57 +71,57 @@ public abstract class ConstantPoolEntry {
     /**
      * Tag value for UTF8 entries.
      */
-    static public final int CONSTANT_Utf8 = 1;
+    public final static int CONSTANT_Utf8 = 1;
 
     /**
      * Tag value for Integer entries.
      */
-    static public final int CONSTANT_Integer = 3;
+    public final static int CONSTANT_Integer = 3;
 
     /**
      * Tag value for Float entries.
      */
-    static public final int CONSTANT_Float = 4;
+    public final static int CONSTANT_Float = 4;
 
     /**
      * Tag value for Long entries.
      */
-    static public final int CONSTANT_Long = 5;
+    public final static int CONSTANT_Long = 5;
 
     /**
      * Tag value for Double entries.
      */
-    static public final int CONSTANT_Double = 6;
+    public final static int CONSTANT_Double = 6;
 
     /**
      * Tag value for Class entries.
      */
-    static public final int CONSTANT_Class = 7;
+    public final static int CONSTANT_Class = 7;
 
     /**
      * Tag value for String entries.
      */
-    static public final int CONSTANT_String = 8;
+    public final static int CONSTANT_String = 8;
 
     /**
      * Tag value for Field Reference entries.
      */
-    static public final int CONSTANT_FieldRef = 9;
+    public final static int CONSTANT_FieldRef = 9;
 
     /**
      * Tag value for Method Reference entries.
      */
-    static public final int CONSTANT_MethodRef = 10;
+    public final static int CONSTANT_MethodRef = 10;
 
     /**
      * Tag value for Interface Method Reference entries.
      */
-    static public final int CONSTANT_InterfaceMethodRef = 11;
+    public final static int CONSTANT_InterfaceMethodRef = 11;
 
     /**
      * Tag value for Name and Type entries.
      */
-    static public final int CONSTANT_NameAndType = 12;
+    public final static int CONSTANT_NameAndType = 12;
 
     /**
      * This entry's tag which identifies the type of this constant pool entry.
@@ -163,7 +164,7 @@ public abstract class ConstantPoolEntry {
      * 
      * @throws IOExcception if there is a problem reading the entry from the stream.
      */
-    static public ConstantPoolEntry readEntry(DataInputStream cpStream) throws IOException {
+    public static ConstantPoolEntry readEntry(DataInputStream cpStream) throws IOException {
         ConstantPoolEntry cpInfo = null;
         int               cpTag = cpStream.readUnsignedByte();
 

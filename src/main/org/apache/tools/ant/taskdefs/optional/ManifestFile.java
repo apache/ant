@@ -1,9 +1,19 @@
 package org.apache.tools.ant.taskdefs.optional;
 
-import java.io.*;
-import java.util.*;
-import org.apache.tools.ant.*;
-import org.apache.tools.ant.types.*;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.util.Vector;
+import java.util.Enumeration;
+import java.util.Comparator;
+import java.util.ListIterator;
+import java.util.StringTokenizer;
+import java.util.ArrayList;
+import org.apache.tools.ant.Task;
+import org.apache.tools.ant.BuildException;
+
 
 /**
  * Task for creating a manifest file for a jar archiv.
@@ -22,10 +32,10 @@ import org.apache.tools.ant.types.*;
  */
 public class ManifestFile extends Task {
 
-    private static final String newLine = System.getProperty("line.separator");
-    private static final String keyValueSeparator = ":";
-    private static final String UPDATE_ = "update";
-    private static final String REPLACEALL_ = "replaceAll";
+    private final static String newLine = System.getProperty("line.separator");
+    private final static String keyValueSeparator = ":";
+    private final static String UPDATE_ = "update";
+    private final static String REPLACEALL_ = "replaceAll";
 
     private File manifestFile;
     private Vector entries;

@@ -53,7 +53,7 @@
  */
 package org.apache.tools.ant;
 
-import java.io.*;
+import java.io.File;
 
 /**
  * An interface used to describe the actions required by any type of 

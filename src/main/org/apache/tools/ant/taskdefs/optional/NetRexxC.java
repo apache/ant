@@ -53,12 +53,21 @@
  */
 package org.apache.tools.ant.taskdefs.optional;
 
-import java.io.*;
-import java.lang.reflect.*;
-import java.util.*;
+import java.io.File;
+import java.io.IOException;
+import java.io.StringWriter;
+import java.io.PrintWriter;
+
+import java.util.Vector;
+import java.util.Hashtable;
+import java.util.Enumeration;
+import java.util.Properties;
+import java.util.StringTokenizer;
 import netrexx.lang.Rexx;
-import org.apache.tools.ant.*;
-import org.apache.tools.ant.taskdefs.*;
+import org.apache.tools.ant.BuildException;
+import org.apache.tools.ant.DirectoryScanner;
+import org.apache.tools.ant.Project;
+import org.apache.tools.ant.taskdefs.MatchingTask;
 
 /**
  * Task to compile NetRexx source files. This task can take the following

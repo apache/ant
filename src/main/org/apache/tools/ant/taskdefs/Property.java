@@ -54,11 +54,20 @@
 
 package org.apache.tools.ant.taskdefs;
 
-import org.apache.tools.ant.*;
+import org.apache.tools.ant.Task;
+import org.apache.tools.ant.BuildException;
+import org.apache.tools.ant.Project;
+import org.apache.tools.ant.AntClassLoader;
+import org.apache.tools.ant.ProjectHelper;
 import org.apache.tools.ant.types.Path;
 import org.apache.tools.ant.types.Reference;
-import java.io.*;
-import java.util.*;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.Properties;
+import java.util.Vector;
+import java.util.Enumeration;
 
 /**
  * Will set a Project property. Used to be a hack in ProjectHelper

@@ -55,12 +55,15 @@
 package org.apache.tools.ant.taskdefs;
 
 
-import java.io.*;
+import java.io.File;
 import java.util.Enumeration;
-import java.util.Hashtable;
-import java.util.StringTokenizer;
+
+
 import java.util.Vector;
-import org.apache.tools.ant.*;
+import org.apache.tools.ant.BuildException;
+import org.apache.tools.ant.DirectoryScanner;
+import org.apache.tools.ant.Project;
+import org.apache.tools.ant.AntClassLoader;
 import org.apache.tools.ant.types.Path;
 import org.apache.tools.ant.types.Reference;
 import org.apache.tools.ant.util.FileUtils;

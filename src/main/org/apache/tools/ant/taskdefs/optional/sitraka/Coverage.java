@@ -62,7 +62,7 @@ import java.io.OutputStream;
 import java.io.IOException;
 import java.util.Vector;
 import java.util.Random;
-import java.util.Hashtable;
+
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.Task;
 import org.apache.tools.ant.BuildException;

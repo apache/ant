@@ -63,12 +63,12 @@ import java.io.FileInputStream;
 import java.io.IOException;
 
 //imported for the mail api
-import javax.mail.Address;
+
 import javax.mail.Session;
 import javax.mail.Message;
-import javax.mail.BodyPart;
-import javax.mail.Multipart;
-import javax.mail.SendFailedException;
+
+
+
 import javax.mail.MessagingException;
 import javax.mail.Transport;
 import javax.mail.internet.InternetAddress;
@@ -84,10 +84,10 @@ import javax.activation.FileDataSource;
 // Ant imports
 import org.apache.tools.ant.Task;
 import org.apache.tools.ant.BuildException;
-import org.apache.tools.ant.FileScanner;
+
 import org.apache.tools.ant.DirectoryScanner;
 import org.apache.tools.ant.Project;
-import org.apache.tools.ant.types.EnumeratedAttribute;
+
 import org.apache.tools.ant.types.FileSet;
 
 

@@ -53,7 +53,7 @@
  */
 package org.apache.tools.ant.taskdefs.optional.depend.constantpool;
 
-import java.io.*;
+
 
 /**
  * A Constant Pool entry which represents a constant value.

@@ -54,15 +54,27 @@
 
 package org.apache.tools.ant.taskdefs.optional.depend;
 
-import org.apache.tools.ant.*;
-import org.apache.tools.ant.types.*;
+import org.apache.tools.ant.Project;
+import org.apache.tools.ant.AntClassLoader;
+import org.apache.tools.ant.BuildException;
+import org.apache.tools.ant.DirectoryScanner;
+import org.apache.tools.ant.types.Path;
+import org.apache.tools.ant.types.Reference;
 import org.apache.tools.ant.taskdefs.MatchingTask;
 
-import java.util.*;
-import java.io.*;
+import java.util.Hashtable;
+import java.util.Vector;
+import java.util.Enumeration;
+import java.io.File;
+import java.io.IOException;
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.PrintWriter;
+import java.io.FileWriter;
+import java.io.FileInputStream;
 import java.net.URL;
 
-import org.apache.tools.ant.taskdefs.optional.depend.*;
+
 
 /**
  * Generate a dependency file for a given set of classes 
@@ -73,7 +85,7 @@ public class Depend extends MatchingTask {
     /**
      * A class (struct) user to manage information about a class
      */
-    static private class ClassFileInfo {
+    private static class ClassFileInfo {
         /** The file where the class file is stored in the file system */
         public File absoluteFile;
         

@@ -60,13 +60,13 @@ import org.apache.tools.ant.Project;
 import org.apache.tools.ant.PathTokenizer;
 
 import java.io.File;
-import java.io.IOException;
+
 import java.util.Enumeration;
-import java.util.StringTokenizer;
+
 import java.util.Stack;
 import java.util.Vector;
-import java.text.CharacterIterator;
-import java.text.StringCharacterIterator;
+
+
 
 /**
  * This object represents a path as used by CLASSPATH or PATH

@@ -54,9 +54,12 @@
 
 package org.apache.tools.ant.taskdefs;
 
-import java.io.*;
-import java.util.*;
-import org.apache.tools.ant.*;
+import java.io.File;
+import java.io.IOException;
+import java.util.Hashtable;
+import java.util.Enumeration;
+import org.apache.tools.ant.BuildException;
+import org.apache.tools.ant.DirectoryScanner;
 
 /**
  * Copies a directory.

@@ -54,11 +54,13 @@
 
 package org.apache.tools.ant.taskdefs;
 
-import org.apache.tools.ant.*;
-import org.apache.tools.ant.types.*;
+import org.apache.tools.ant.BuildException;
+import org.apache.tools.ant.types.FileSet;
+import org.apache.tools.ant.types.PatternSet;
 
-import java.io.*;
-import java.util.*;
+import java.io.File;
+import java.io.IOException;
+
 
 /**
  * Chmod equivalent for unix-like environments.

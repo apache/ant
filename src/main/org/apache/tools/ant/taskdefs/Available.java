@@ -54,11 +54,15 @@
 
 package org.apache.tools.ant.taskdefs;
 
-import java.io.*;
-import java.util.*;
-import org.apache.tools.ant.*;
+import java.io.File;
+
+import org.apache.tools.ant.Task;
+import org.apache.tools.ant.AntClassLoader;
+import org.apache.tools.ant.BuildException;
+import org.apache.tools.ant.Project;
 import org.apache.tools.ant.taskdefs.condition.Condition;
-import org.apache.tools.ant.types.*;
+import org.apache.tools.ant.types.Path;
+import org.apache.tools.ant.types.Reference;
 
 /**
  * Will set the given property if the requested resource is available at runtime.

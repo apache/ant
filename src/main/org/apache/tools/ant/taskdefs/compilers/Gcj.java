@@ -54,10 +54,11 @@
 
 package org.apache.tools.ant.taskdefs.compilers;
 
-import java.io.File;
+
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
-import org.apache.tools.ant.types.*;
+import org.apache.tools.ant.types.Commandline;
+import org.apache.tools.ant.types.Path;
 
 /**
  * The implementation of the gcj compiler.

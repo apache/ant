@@ -53,10 +53,15 @@
  */
 package org.apache.tools.ant.taskdefs.optional;
 
-import com.ibm.bsf.*;
-import java.io.*;
-import java.util.*;
-import org.apache.tools.ant.*;
+import com.ibm.bsf.BSFManager;
+import com.ibm.bsf.BSFException;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.util.Hashtable;
+import java.util.Enumeration;
+import org.apache.tools.ant.Task;
+import org.apache.tools.ant.BuildException;
 
 /**
  * Execute a script

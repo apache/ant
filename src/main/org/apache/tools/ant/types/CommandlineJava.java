@@ -54,7 +54,9 @@
 
 package org.apache.tools.ant.types;
 
-import java.util.*;
+import java.util.Properties;
+import java.util.Enumeration;
+import java.util.Vector;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.BuildException;
 

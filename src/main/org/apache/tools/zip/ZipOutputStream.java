@@ -54,7 +54,9 @@
 
 package org.apache.tools.zip;
 
-import java.io.*;
+import java.io.OutputStream;
+import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.util.Date;
 import java.util.Hashtable;
 import java.util.Vector;
@@ -157,14 +159,14 @@ public class ZipOutputStream extends DeflaterOutputStream {
      *
      * @since 1.1
      */
-    private static final byte[] ZERO = {0, 0};
+    private final static byte[] ZERO = {0, 0};
 
     /**
      * Helper, a 0 as ZipLong.
      *
      * @since 1.1
      */
-    private static final byte[] LZERO = {0, 0, 0, 0};
+    private final static byte[] LZERO = {0, 0, 0, 0};
 
     /**
      * Holds the offsets of the LFH starts for each entry
@@ -189,14 +191,14 @@ public class ZipOutputStream extends DeflaterOutputStream {
      *
      * @since 1.1
      */
-    public static final int DEFLATED = ZipEntry.DEFLATED;
+    public final static int DEFLATED = ZipEntry.DEFLATED;
 
     /**
      * Compression method for deflated entries.
      *
      * @since 1.1
      */
-    public static final int STORED = ZipEntry.STORED;
+    public final static int STORED = ZipEntry.STORED;
 
     /**
      * Creates a new ZIP OutputStream filtering the underlying stream.
@@ -390,25 +392,25 @@ public class ZipOutputStream extends DeflaterOutputStream {
      *
      * @since 1.1
      */
-    protected static final ZipLong LFH_SIG = new ZipLong(0X04034B50L);
+    protected final static ZipLong LFH_SIG = new ZipLong(0X04034B50L);
     /**
      * data descriptor signature
      *
      * @since 1.1
      */
-    protected static final ZipLong DD_SIG = new ZipLong(0X08074B50L);
+    protected final static ZipLong DD_SIG = new ZipLong(0X08074B50L);
     /**
      * central file header signature
      *
      * @since 1.1
      */
-    protected static final ZipLong CFH_SIG = new ZipLong(0X02014B50L);
+    protected final static ZipLong CFH_SIG = new ZipLong(0X02014B50L);
     /**
      * end of central dir signature
      *
      * @since 1.1
      */
-    protected static final ZipLong EOCD_SIG = new ZipLong(0X06054B50L);
+    protected final static ZipLong EOCD_SIG = new ZipLong(0X06054B50L);
 
     /**
      * Writes the local file header entry
@@ -619,7 +621,7 @@ public class ZipOutputStream extends DeflaterOutputStream {
      *
      * @since 1.1
      */
-    private static final ZipLong DOS_TIME_MIN = new ZipLong(0x00002100L);
+    private final static ZipLong DOS_TIME_MIN = new ZipLong(0x00002100L);
 
     /**
      * Convert a Date object to a DOS date/time field.

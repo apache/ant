@@ -54,7 +54,7 @@
 
 package org.apache.tools.ant.taskdefs.optional.vss;
 
-import org.apache.tools.ant.*;
+import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.types.Commandline;
 import org.apache.tools.ant.types.Path;
 

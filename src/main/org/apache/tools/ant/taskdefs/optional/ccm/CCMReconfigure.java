@@ -55,15 +55,16 @@
 package org.apache.tools.ant.taskdefs.optional.ccm;
 
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.OutputStream;
-import org.apache.tools.ant.*;
+
+
+
+
+
+
+import org.apache.tools.ant.BuildException;
+import org.apache.tools.ant.Project;
 import org.apache.tools.ant.types.Commandline;
-import org.apache.tools.ant.types.Path;
+
 
 /**
  * Task allows to reconfigure a project, recurcively or not 
@@ -185,18 +186,18 @@ public class CCMReconfigure extends Continuus {
     /**
      * /recurse -- 
      */
-    public static final String FLAG_RECURSE = "/recurse";
+    public final static String FLAG_RECURSE = "/recurse";
 
     /**
      * /recurse -- 
      */
-    public static final String FLAG_VERBOSE = "/verbose";
+    public final static String FLAG_VERBOSE = "/verbose";
 
     
     /**
      *  /project flag -- target project
      */
-    public static final String FLAG_PROJECT = "/project";   
+    public final static String FLAG_PROJECT = "/project";   
 
 }
 

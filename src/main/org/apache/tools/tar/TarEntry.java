@@ -59,8 +59,8 @@
 
 package org.apache.tools.tar;
 
-import java.io.*;
-import java.util.*;
+import java.io.File;
+import java.util.Date;
 
 /**
  * This class represents an entry in a Tar archive. It consists

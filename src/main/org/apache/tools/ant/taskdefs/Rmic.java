@@ -58,10 +58,12 @@ import org.apache.tools.ant.AntClassLoader;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.DirectoryScanner;
 import org.apache.tools.ant.Project;
-import org.apache.tools.ant.taskdefs.rmic.*;
+import org.apache.tools.ant.taskdefs.rmic.RmicAdapter;
+import org.apache.tools.ant.taskdefs.rmic.RmicAdapterFactory;
 import org.apache.tools.ant.types.Path;
 import org.apache.tools.ant.types.Reference;
-import org.apache.tools.ant.util.*;
+import org.apache.tools.ant.util.FileNameMapper;
+import org.apache.tools.ant.util.SourceFileScanner;
 
 import java.io.File;
 import java.io.IOException;
@@ -100,7 +102,7 @@ import java.util.Vector;
 
 public class Rmic extends MatchingTask {
 
-    private static final String FAIL_MSG 
+    private final static String FAIL_MSG 
         = "Rmic failed, messages should have been provided.";
 
     private File baseDir;

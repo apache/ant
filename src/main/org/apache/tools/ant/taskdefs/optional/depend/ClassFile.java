@@ -53,10 +53,14 @@
  */
 package org.apache.tools.ant.taskdefs.optional.depend;
 
-import java.io.*;
-import java.lang.reflect.Modifier;
-import java.util.*;
-import org.apache.tools.ant.taskdefs.optional.depend.constantpool.*;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.DataInputStream;
+
+import java.util.Vector;
+import org.apache.tools.ant.taskdefs.optional.depend.constantpool.ConstantPool;
+import org.apache.tools.ant.taskdefs.optional.depend.constantpool.ClassCPInfo;
+import org.apache.tools.ant.taskdefs.optional.depend.constantpool.ConstantPoolEntry;
 
 /**
  * A ClassFile object stores information about a Java class.
@@ -72,7 +76,7 @@ public class ClassFile {
     /**
      * The Magic Value that marks the start of a Java class file
      */
-    static private final int CLASS_MAGIC = 0xCAFEBABE;
+    private final static int CLASS_MAGIC = 0xCAFEBABE;
 
 
     /**

@@ -59,7 +59,9 @@
  
 package org.apache.tools.tar;
 
-import java.io.*;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.io.IOException;
 
 /**
  * The TarBuffer class implements the tar archive concept
@@ -77,8 +79,8 @@ import java.io.*;
  
 public class TarBuffer {
         
-    public static final int DEFAULT_RCDSIZE = (512);
-    public static final int DEFAULT_BLKSIZE = (DEFAULT_RCDSIZE * 20);
+    public final static int DEFAULT_RCDSIZE = (512);
+    public final static int DEFAULT_BLKSIZE = (DEFAULT_RCDSIZE * 20);
     
     private InputStream     inStream;
     private OutputStream    outStream;

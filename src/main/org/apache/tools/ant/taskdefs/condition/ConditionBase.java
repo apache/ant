@@ -58,7 +58,7 @@ import java.util.Enumeration;
 import java.util.NoSuchElementException;
 import java.util.Vector;
 
-import org.apache.tools.ant.Project;
+
 import org.apache.tools.ant.ProjectComponent;
 import org.apache.tools.ant.taskdefs.Available;
 import org.apache.tools.ant.taskdefs.UpToDate;

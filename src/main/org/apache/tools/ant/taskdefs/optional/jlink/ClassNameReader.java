@@ -53,7 +53,10 @@
  */
 package org.apache.tools.ant.taskdefs.optional.jlink;
 
-import java.io .*;
+import java.io.IOException;
+import java.io.DataInput;
+import java.io.InputStream;
+import java.io.DataInputStream;
 
 /**
  * Reads just enough of a class file to determine the class' full name.
@@ -64,7 +67,7 @@ import java.io .*;
  */
 class ConstantPool extends Object{
 
-    static final 
+    final static 
         byte UTF8 = 1, UNUSED = 2, INTEGER = 3, FLOAT = 4, LONG = 5, DOUBLE = 6,
         CLASS = 7, STRING = 8, FIELDREF = 9, METHODREF = 10,
         INTERFACEMETHODREF = 11, NAMEANDTYPE = 12;

@@ -54,12 +54,14 @@
 
 package org.apache.tools.ant.taskdefs.optional.clearcase;
 
-import org.apache.tools.ant.*;
+import org.apache.tools.ant.Task;
+import org.apache.tools.ant.Project;
+import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.taskdefs.Execute;
 import org.apache.tools.ant.taskdefs.LogStreamHandler;
 import org.apache.tools.ant.types.Commandline;
 
-import java.io.File;
+
 
 /**
  * A base class for creating tasks for executing commands on ClearCase.
@@ -140,24 +142,24 @@ public abstract class ClearCase extends Task {
     /**
      * Constant for the thing to execute
      */
-    private static final String CLEARTOOL_EXE = "cleartool";
+    private final static String CLEARTOOL_EXE = "cleartool";
 
     /**
      * The 'Update' command
      */
-    public static final String COMMAND_UPDATE = "update";
+    public final static String COMMAND_UPDATE = "update";
     /**
      * The 'Checkout' command
      */
-    public static final String COMMAND_CHECKOUT = "checkout";
+    public final static String COMMAND_CHECKOUT = "checkout";
     /**
      * The 'Checkin' command
      */
-    public static final String COMMAND_CHECKIN = "checkin";
+    public final static String COMMAND_CHECKIN = "checkin";
     /**
      * The 'UndoCheckout' command
      */
-    public static final String COMMAND_UNCHECKOUT = "uncheckout";
+    public final static String COMMAND_UNCHECKOUT = "uncheckout";
 
 }
 

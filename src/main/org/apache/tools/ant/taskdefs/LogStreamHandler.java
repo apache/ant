@@ -55,11 +55,11 @@
 package org.apache.tools.ant.taskdefs;
 
 import org.apache.tools.ant.BuildException;
-import org.apache.tools.ant.Project;
+
 import org.apache.tools.ant.Task;
 
-import java.io.OutputStream;
-import java.io.InputStream;
+
+
 import java.io.IOException;
 
 /**

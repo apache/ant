@@ -55,17 +55,20 @@
 
 package org.apache.tools.ant.taskdefs.optional.ejb;
 
-import java.io.*;
-import java.net.*;
-import java.util.*;
-import javax.xml.parsers.*;
+import java.io.File;
 
-import org.apache.tools.ant.*;
+
+
+
+import org.apache.tools.ant.Task;
+import org.apache.tools.ant.BuildException;
+import org.apache.tools.ant.Project;
 import org.apache.tools.ant.taskdefs.ExecTask;
 import org.apache.tools.ant.taskdefs.Java;
-import org.apache.tools.ant.types.*;
-import org.apache.tools.ant.types.Commandline.Argument;
-import org.xml.sax.*;
+import org.apache.tools.ant.types.Path;
+import org.apache.tools.ant.types.Reference;
+
+
 
 /**
  * BorlandGenerateClient is dedicated to the Borland Application Server 4.5
@@ -78,8 +81,8 @@ import org.xml.sax.*;
  */
 public class BorlandGenerateClient extends Task
 {
-    static final String JAVA_MODE = "java";
-    static final String FORK_MODE = "fork";
+    final static String JAVA_MODE = "java";
+    final static String FORK_MODE = "fork";
 
     /** debug the generateclient task */
     boolean debug = false;

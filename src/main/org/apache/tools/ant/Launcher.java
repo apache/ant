@@ -54,10 +54,13 @@
 
 package org.apache.tools.ant;
 
-import java.io.*;
-import java.util.*;
-import java.net.*;
-import java.lang.reflect.*;
+import java.io.File;
+import java.io.FilenameFilter;
+import java.util.StringTokenizer;
+import java.util.Properties;
+import java.net.URL;
+import java.net.MalformedURLException;
+import java.lang.reflect.Method;
 
 /**
  * This is the Ant command line front end to end. This front end
@@ -67,7 +70,7 @@ import java.lang.reflect.*;
  * @author <a href="mailto:conor@apache.org">Conor MacNeill</a>
  */ 
 public class Launcher {
-    static private File determineAntHome11() {
+    private static File determineAntHome11() {
         String classpath = System.getProperty("java.class.path");
         StringTokenizer tokenizer = new StringTokenizer(classpath, System.getProperty("path.separator"));
         while (tokenizer.hasMoreTokens()) {
@@ -82,7 +85,7 @@ public class Launcher {
         return null;
     }
 
-    static private File determineAntHome(ClassLoader systemClassLoader) {
+    private static File determineAntHome(ClassLoader systemClassLoader) {
         try {
             String className = Launcher.class.getName().replace('.', '/') + ".class";
             URL classResource = systemClassLoader.getResource(className);
@@ -119,7 +122,7 @@ public class Launcher {
         return null;
     }
     
-    static private void addDirJars(AntClassLoader classLoader, File jarDir) {
+    private static void addDirJars(AntClassLoader classLoader, File jarDir) {
         String[] fileList = jarDir.list(new FilenameFilter() {
                                             public boolean accept(File dir, String name) {
                                                 return name.endsWith(".jar");
@@ -134,7 +137,7 @@ public class Launcher {
         }
     }
     
-    static private void addToolsJar(AntClassLoader antLoader) {
+    private static void addToolsJar(AntClassLoader antLoader) {
         String javaHome = System.getProperty("java.home");
         if (javaHome.endsWith("jre")) {
             javaHome = javaHome.substring(0, javaHome.length() - 4);
@@ -150,7 +153,7 @@ public class Launcher {
     }
     
 
-    static public void main(String[] args) {
+    public static void main(String[] args) {
         File antHome = null;
         ClassLoader systemClassLoader = Launcher.class.getClassLoader();
         if (systemClassLoader == null) {

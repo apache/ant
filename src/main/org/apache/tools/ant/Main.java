@@ -54,8 +54,14 @@
 
 package org.apache.tools.ant;
 
-import java.io.*;
-import java.util.*;
+import java.io.File;
+import java.io.PrintStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.Vector;
+import java.util.Properties;
+import java.util.Enumeration;
 
 /**
  * Command line entry point into Ant. This class is entered via the
@@ -72,7 +78,7 @@ import java.util.*;
 public class Main {
 
     /** The default build file name */
-    public static final String DEFAULT_BUILD_FILENAME = "build.xml";
+    public final static String DEFAULT_BUILD_FILENAME = "build.xml";
 
     /** Our current message output status. Follows Project.MSG_XXX */
     private int msgOutputLevel = Project.MSG_INFO;
@@ -562,7 +568,7 @@ public class Main {
 
     private static String antVersion = null;
 
-    public synchronized static String getAntVersion() throws BuildException {
+    public static synchronized String getAntVersion() throws BuildException {
         if (antVersion == null) {
             try {
                 Properties props = new Properties();

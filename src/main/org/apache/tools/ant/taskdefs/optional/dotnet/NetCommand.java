@@ -65,12 +65,17 @@ package org.apache.tools.ant.taskdefs.optional.dotnet;
 
 // imports
 
-import java.io.*;
-import java.text.*;
-import java.util.*;
-import org.apache.tools.ant.*;
-import org.apache.tools.ant.taskdefs.*;
-import org.apache.tools.ant.types.*;
+import java.io.File;
+import java.io.IOException;
+
+
+import org.apache.tools.ant.Task;
+import org.apache.tools.ant.Project;
+import org.apache.tools.ant.BuildException;
+import org.apache.tools.ant.taskdefs.Execute;
+import org.apache.tools.ant.taskdefs.ExecuteStreamHandler;
+import org.apache.tools.ant.taskdefs.LogStreamHandler;
+import org.apache.tools.ant.types.Commandline;
 
 
 /**

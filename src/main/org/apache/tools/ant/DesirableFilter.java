@@ -56,7 +56,7 @@ package org.apache.tools.ant;
 
 import java.io.File;
 import java.io.FilenameFilter;
-import java.io.IOException;
+
 
 /**
  * Filters filenames to determine whether or not the file is desirable.

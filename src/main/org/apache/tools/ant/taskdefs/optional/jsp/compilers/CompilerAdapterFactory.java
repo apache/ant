@@ -55,7 +55,7 @@ package org.apache.tools.ant.taskdefs.optional.jsp.compilers;
 
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Task;
-import org.apache.tools.ant.Project;
+
 
 /**
  * Creates the necessary compiler adapter, given basic criteria.

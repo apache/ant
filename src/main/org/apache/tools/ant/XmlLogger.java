@@ -54,10 +54,17 @@
 
 package org.apache.tools.ant;
 
-import java.io.*;
-import java.util.*;
-import javax.xml.parsers.*;
-import org.w3c.dom.*;
+import java.io.Writer;
+import java.io.OutputStreamWriter;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.util.Hashtable;
+import java.util.Stack;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.Text;
 import org.apache.tools.ant.util.DOMElementWriter;
 
 /**
@@ -68,7 +75,7 @@ import org.apache.tools.ant.util.DOMElementWriter;
  */
 public class XmlLogger implements BuildListener {
 
-    private static final DocumentBuilder builder = getDocumentBuilder();
+    private final static DocumentBuilder builder = getDocumentBuilder();
 
     private static DocumentBuilder getDocumentBuilder() {
         try {
@@ -80,15 +87,15 @@ public class XmlLogger implements BuildListener {
     }
 
     // XML constants for tag names and attribute names
-    private static final String BUILD_TAG = "build";
-    private static final String TARGET_TAG = "target";
-    private static final String TASK_TAG = "task";
-    private static final String MESSAGE_TAG = "message";
-    private static final String NAME_ATTR = "name";
-    private static final String TIME_ATTR = "time";
-    private static final String PRIORITY_ATTR = "priority";
-    private static final String LOCATION_ATTR = "location";
-    private static final String ERROR_ATTR = "error";
+    private final static String BUILD_TAG = "build";
+    private final static String TARGET_TAG = "target";
+    private final static String TASK_TAG = "task";
+    private final static String MESSAGE_TAG = "message";
+    private final static String NAME_ATTR = "name";
+    private final static String TIME_ATTR = "time";
+    private final static String PRIORITY_ATTR = "priority";
+    private final static String LOCATION_ATTR = "location";
+    private final static String ERROR_ATTR = "error";
 
     private Document doc;
     private Hashtable tasks = new Hashtable();
@@ -96,7 +103,7 @@ public class XmlLogger implements BuildListener {
     private Hashtable threadStacks = new Hashtable();
     private TimedElement buildElement = null;
 
-    static private class TimedElement {
+    private static class TimedElement {
         long startTime;
         Element element;
     }

@@ -58,9 +58,15 @@
 
 package org.apache.tools.mail;
 
-import java.io.*;
-import java.net.*;
-import java.util.*;
+import java.io.IOException;
+import java.io.PrintStream;
+import java.io.BufferedOutputStream;
+import java.io.OutputStream;
+import java.net.Socket;
+import java.net.InetAddress;
+import java.util.Vector;
+import java.util.Hashtable;
+import java.util.Enumeration;
 
 /** 
  * A class to help send SMTP email.

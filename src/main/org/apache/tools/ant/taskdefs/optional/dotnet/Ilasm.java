@@ -72,12 +72,14 @@ package org.apache.tools.ant.taskdefs.optional.dotnet;
 // imports
 // ====================================================================
 
-import java.io.*;
-import java.text.*;
-import java.util.*;
-import org.apache.tools.ant.*;
-import org.apache.tools.ant.taskdefs.*;
-import org.apache.tools.ant.types.*;
+import java.io.File;
+
+
+import org.apache.tools.ant.BuildException;
+import org.apache.tools.ant.Project;
+import org.apache.tools.ant.DirectoryScanner;
+
+
 
 /**
 Task to assemble .net 'Intermediate Language' files.
@@ -122,19 +124,19 @@ public class Ilasm
     /** name of the executable. the .exe suffix is deliberately not included 
      * in anticipation of the unix version
      */
-    protected static final String exe_name="ilasm";
+    protected final static String exe_name="ilasm";
     
     /** what is the file extension we search on?
      */
-    protected static final String file_ext="il";
+    protected final static String file_ext="il";
     
     /** and now derive the search pattern from the extension 
      */
-    protected static final String file_pattern="**/*."+file_ext;
+    protected final static String file_pattern="**/*."+file_ext;
     
     /** title of task for external presentation
      */
-    protected static final String exe_title="ilasm";
+    protected final static String exe_title="ilasm";
     
     /** reset all contents. 
     */

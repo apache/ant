@@ -54,9 +54,16 @@
 
 package org.apache.tools.ant.taskdefs;
 
-import org.apache.tools.ant.*;
-import java.io.*;
-import java.util.zip.*;
+import org.apache.tools.ant.BuildException;
+import org.apache.tools.ant.DirectoryScanner;
+import org.apache.tools.ant.Project;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.util.zip.ZipInputStream;
+import java.util.zip.ZipEntry;
 /**
  * Unzip a file. 
  *

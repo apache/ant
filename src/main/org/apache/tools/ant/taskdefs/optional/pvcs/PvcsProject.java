@@ -56,7 +56,7 @@
 
 package org.apache.tools.ant.taskdefs.optional.pvcs;
 
-import org.apache.tools.ant.Project;
+
 
 /**
  * class to handle &lt;pvcsprojec&gt; elements

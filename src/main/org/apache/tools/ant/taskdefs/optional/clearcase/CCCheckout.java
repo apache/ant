@@ -54,11 +54,12 @@
 
 package org.apache.tools.ant.taskdefs.optional.clearcase;
 
-import org.apache.tools.ant.*;
+import org.apache.tools.ant.BuildException;
+import org.apache.tools.ant.Project;
 import org.apache.tools.ant.types.Commandline;
-import org.apache.tools.ant.types.Path;
 
-import java.io.File;
+
+
 
 /**
  * Task to perform Checkout command to ClearCase.
@@ -441,43 +442,43 @@ public class CCCheckout extends ClearCase {
         /**
      *  -reserved flag -- check out the file as reserved
      */
-    public static final String FLAG_RESERVED = "-reserved";
+    public final static String FLAG_RESERVED = "-reserved";
         /**
      *  -reserved flag -- check out the file as unreserved
      */
-    public static final String FLAG_UNRESERVED = "-unreserved";
+    public final static String FLAG_UNRESERVED = "-unreserved";
         /**
      * -out flag -- create a writable file under a different filename
      */
-    public static final String FLAG_OUT = "-out";
+    public final static String FLAG_OUT = "-out";
         /**
      * -ndata flag -- checks out the file but does not create an editable file containing its data
      */
-    public static final String FLAG_NODATA = "-ndata";
+    public final static String FLAG_NODATA = "-ndata";
         /**
      * -branch flag -- checks out the file on a specified branch
      */
-    public static final String FLAG_BRANCH = "-branch";
+    public final static String FLAG_BRANCH = "-branch";
         /**
      * -version flag -- allows checkout of a version that is not main latest
      */
-    public static final String FLAG_VERSION = "-version";
+    public final static String FLAG_VERSION = "-version";
         /**
      * -nwarn flag -- suppresses warning messages
      */
-    public static final String FLAG_NOWARN = "-nwarn";
+    public final static String FLAG_NOWARN = "-nwarn";
         /**
      * -c flag -- comment to attach to the file
      */
-    public static final String FLAG_COMMENT = "-c";
+    public final static String FLAG_COMMENT = "-c";
         /**
      * -cfile flag -- file containing a comment to attach to the file
      */
-    public static final String FLAG_COMMENTFILE = "-cfile";
+    public final static String FLAG_COMMENTFILE = "-cfile";
         /**
      * -nc flag -- no comment is specified
      */
-    public static final String FLAG_NOCOMMENT = "-nc";
+    public final static String FLAG_NOCOMMENT = "-nc";
 
 }
 

@@ -54,11 +54,15 @@
 
 package org.apache.tools.ant.taskdefs;
 
-import org.apache.tools.ant.*;
-import org.apache.tools.ant.types.*;
+import org.apache.tools.ant.Task;
+import org.apache.tools.ant.DirectoryScanner;
+import org.apache.tools.ant.Project;
+import org.apache.tools.ant.types.FileSet;
+import org.apache.tools.ant.types.PatternSet;
 
-import java.io.*;
-import java.util.*;
+import java.io.File;
+import java.util.StringTokenizer;
+import java.util.Vector;
 
 /**
  * This is an abstract task that should be used by all those tasks that 

@@ -57,16 +57,17 @@ package org.apache.tools.ant.taskdefs.optional.sitraka;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.Task;
-import org.apache.tools.ant.taskdefs.*;
+import org.apache.tools.ant.taskdefs.LogStreamHandler;
+import org.apache.tools.ant.taskdefs.Execute;
 import org.apache.tools.ant.types.Commandline;
-import org.apache.tools.ant.types.CommandlineJava;
-import org.apache.tools.ant.types.Path;
+
+
 import org.apache.tools.ant.types.FileSet;
 import org.apache.tools.ant.DirectoryScanner;
 import java.util.Vector;
 import java.util.Random;
 import java.io.File;
-import java.io.FilenameFilter;
+
 import java.io.FileWriter;
 import java.io.PrintWriter;
 import java.io.IOException;

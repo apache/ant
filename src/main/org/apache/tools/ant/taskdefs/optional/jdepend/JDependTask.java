@@ -58,8 +58,8 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.util.Enumeration;
-import java.util.Vector;
+
+
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.PathTokenizer;
 import org.apache.tools.ant.Project;
@@ -247,11 +247,11 @@ public class JDependTask extends Task {
     /**
      * No problems with this test.
      */
-    private static final int SUCCESS = 0;
+    private final static int SUCCESS = 0;
     /**
      * An error occured.
      */
-    private static final int ERRORS = 1;
+    private final static int ERRORS = 1;
 
     public void execute() throws BuildException {
 

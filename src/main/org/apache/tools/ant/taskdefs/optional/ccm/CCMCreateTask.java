@@ -56,16 +56,17 @@ package org.apache.tools.ant.taskdefs.optional.ccm;
 
 
 import java.io.BufferedReader;
-import java.io.File;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
-import java.lang.NullPointerException;
-import org.apache.tools.ant.*;
+
+import org.apache.tools.ant.BuildException;
+import org.apache.tools.ant.Project;
 import org.apache.tools.ant.taskdefs.ExecuteStreamHandler;
 import org.apache.tools.ant.types.Commandline;
-import org.apache.tools.ant.types.Path;
+
 
 /**
  * Task allows to create new ccm task and set it as the default
@@ -262,32 +263,32 @@ public class CCMCreateTask extends Continuus implements ExecuteStreamHandler  {
     /**
      * /comment -- comments associated to the task
      */
-    public static final String FLAG_COMMENT = "/synopsis";
+    public final static String FLAG_COMMENT = "/synopsis";
     
     /**
      *  /platform flag -- target platform
      */
-    public static final String FLAG_PLATFORM = "/plat";   
+    public final static String FLAG_PLATFORM = "/plat";   
 
     /**
      * /resolver flag
      */
-    public static final String FLAG_RESOLVER = "/resolver";   
+    public final static String FLAG_RESOLVER = "/resolver";   
 
     /**
      * /release flag
      */
-    public static final String FLAG_RELEASE = "/release";   
+    public final static String FLAG_RELEASE = "/release";   
 
     /**
      * /release flag
      */
-    public static final String FLAG_SUBSYSTEM = "/subsystem";   
+    public final static String FLAG_SUBSYSTEM = "/subsystem";   
 
     /**
      *  -task flag -- associate checckout task with task
      */
-    public static final String FLAG_TASK = "/task";   
+    public final static String FLAG_TASK = "/task";   
 
 
     // implementation of org.apache.tools.ant.taskdefs.ExecuteStreamHandler interface

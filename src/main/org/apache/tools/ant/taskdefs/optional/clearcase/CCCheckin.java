@@ -54,11 +54,12 @@
 
 package org.apache.tools.ant.taskdefs.optional.clearcase;
 
-import org.apache.tools.ant.*;
+import org.apache.tools.ant.BuildException;
+import org.apache.tools.ant.Project;
 import org.apache.tools.ant.types.Commandline;
-import org.apache.tools.ant.types.Path;
 
-import java.io.File;
+
+
 
 /**
  * Task to perform Checkin command to ClearCase.
@@ -341,31 +342,31 @@ public class CCCheckin extends ClearCase {
         /**
      * -c flag -- comment to attach to the file
      */
-    public static final String FLAG_COMMENT = "-c";
+    public final static String FLAG_COMMENT = "-c";
         /**
      * -cfile flag -- file containing a comment to attach to the file
      */
-    public static final String FLAG_COMMENTFILE = "-cfile";
+    public final static String FLAG_COMMENTFILE = "-cfile";
         /**
      * -nc flag -- no comment is specified
      */
-    public static final String FLAG_NOCOMMENT = "-nc";
+    public final static String FLAG_NOCOMMENT = "-nc";
         /**
      * -nwarn flag -- suppresses warning messages
      */
-    public static final String FLAG_NOWARN = "-nwarn";
+    public final static String FLAG_NOWARN = "-nwarn";
         /**
      * -ptime flag -- preserves the modification time
      */
-    public static final String FLAG_PRESERVETIME = "-ptime";
+    public final static String FLAG_PRESERVETIME = "-ptime";
         /**
      * -keep flag -- keeps a copy of the file with a .keep extension
      */
-    public static final String FLAG_KEEPCOPY = "-keep";
+    public final static String FLAG_KEEPCOPY = "-keep";
         /**
      * -identical flag -- allows the file to be checked in even if it is identical to the original
      */
-    public static final String FLAG_IDENTICAL = "-identical";
+    public final static String FLAG_IDENTICAL = "-identical";
 
 }
 

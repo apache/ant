@@ -54,12 +54,14 @@
 
 package org.apache.tools.ant.taskdefs;
 
-import java.util.Enumeration;
-import java.util.Properties;
-import java.io.File;
-import java.io.FileInputStream;
 
-import org.apache.tools.ant.*;
+
+import java.io.File;
+
+
+import org.apache.tools.ant.Task;
+import org.apache.tools.ant.BuildException;
+import org.apache.tools.ant.Project;
 
 /**
  * This task sets a token filter that is used by the file copy methods

@@ -55,14 +55,18 @@ package org.apache.tools.ant.taskdefs.optional.metamata;
 
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
-import org.apache.tools.ant.Task;
-import org.apache.tools.ant.taskdefs.*;
-import org.apache.tools.ant.types.*;
+
+import org.apache.tools.ant.taskdefs.ExecuteStreamHandler;
+import org.apache.tools.ant.taskdefs.LogStreamHandler;
+import org.apache.tools.ant.types.Path;
 
 
 
-import java.io.*;
-import java.util.*;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.FileOutputStream;
+import java.util.Vector;
 
 /**
  * Calculates global complexity and quality metrics on Java source code.

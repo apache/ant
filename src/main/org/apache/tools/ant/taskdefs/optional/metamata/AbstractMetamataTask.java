@@ -56,12 +56,22 @@ package org.apache.tools.ant.taskdefs.optional.metamata;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.Task;
-import org.apache.tools.ant.taskdefs.*;
-import org.apache.tools.ant.types.*;
+import org.apache.tools.ant.taskdefs.ExecuteStreamHandler;
+import org.apache.tools.ant.taskdefs.Execute;
+import org.apache.tools.ant.types.Path;
+import org.apache.tools.ant.types.CommandlineJava;
+import org.apache.tools.ant.types.Commandline;
+import org.apache.tools.ant.types.FileSet;
 import org.apache.tools.ant.DirectoryScanner;
 
-import java.io.*;
-import java.util.*;
+import java.io.File;
+import java.io.IOException;
+import java.io.FileWriter;
+import java.io.PrintWriter;
+import java.util.Hashtable;
+import java.util.Vector;
+import java.util.Enumeration;
+import java.util.Random;
 
 /**
  * Somewhat abstract framework to be used for other metama 2.0 tasks.
@@ -279,7 +289,7 @@ public abstract class AbstractMetamataTask extends Task{
         }
     }
     
-    protected final static File createTmpFile(){
+    protected static final File createTmpFile(){
         // must be compatible with JDK 1.1 !!!!
         final long rand = (new Random(System.currentTimeMillis())).nextLong();
         File file = new File("metamata" + rand + ".tmp");

@@ -54,11 +54,12 @@
 
 package org.apache.tools.ant.taskdefs.optional.clearcase;
 
-import org.apache.tools.ant.*;
+import org.apache.tools.ant.BuildException;
+import org.apache.tools.ant.Project;
 import org.apache.tools.ant.types.Commandline;
-import org.apache.tools.ant.types.Path;
 
-import java.io.File;
+
+
 
 /**
  * Task to perform UnCheckout command to ClearCase.
@@ -158,11 +159,11 @@ public class CCUnCheckout extends ClearCase {
         /**
      *  -keep flag -- keep a copy of the file with .keep extension
      */
-    public static final String FLAG_KEEPCOPY = "-keep";
+    public final static String FLAG_KEEPCOPY = "-keep";
         /**
      *  -rm flag -- remove the copy of the file
      */
-    public static final String FLAG_RM = "-rm";
+    public final static String FLAG_RM = "-rm";
 
 }
 

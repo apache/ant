@@ -53,8 +53,9 @@
  */
 package org.apache.tools.ant.taskdefs.optional.depend.constantpool;
 
-import java.io.*;
-import java.util.*;
+import java.io.IOException;
+import java.io.DataInputStream;
+
 
 /**
  * A String Constant Pool Entry.

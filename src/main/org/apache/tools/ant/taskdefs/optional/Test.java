@@ -66,7 +66,7 @@ public class Test
  
     protected Vector                          m_tests            = new Vector();
 
-    protected static final class TestletEntry {
+    protected final static class TestletEntry {
 
         protected String m_testname = "";
 

@@ -57,9 +57,12 @@ package org.apache.tools.ant.taskdefs;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.DirectoryScanner;
 import org.apache.tools.ant.Project;
-import org.apache.tools.ant.types.*;
-import org.apache.tools.ant.util.*;
-import org.apache.tools.ant.taskdefs.compilers.*;
+import org.apache.tools.ant.types.Path;
+import org.apache.tools.ant.types.Reference;
+import org.apache.tools.ant.util.GlobPatternMapper;
+import org.apache.tools.ant.util.SourceFileScanner;
+import org.apache.tools.ant.taskdefs.compilers.CompilerAdapter;
+import org.apache.tools.ant.taskdefs.compilers.CompilerAdapterFactory;
 
 import java.io.File;
 
@@ -98,7 +101,7 @@ import java.io.File;
 
 public class Javac extends MatchingTask {
 
-    private static final String FAIL_MSG
+    private final static String FAIL_MSG
         = "Compile failed, messages should have been provided.";
 
     private Path src;

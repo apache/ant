@@ -54,12 +54,25 @@
 
 package org.apache.tools.ant.taskdefs;
 
-import org.apache.tools.ant.*;
-import org.apache.tools.ant.types.*;
-import org.apache.tools.ant.util.*;
+import org.apache.tools.ant.Task;
+import org.apache.tools.ant.BuildException;
+import org.apache.tools.ant.Project;
+import org.apache.tools.ant.DirectoryScanner;
+import org.apache.tools.ant.types.FileSet;
+import org.apache.tools.ant.types.Mapper;
+import org.apache.tools.ant.types.FilterSet;
+import org.apache.tools.ant.types.FilterSetCollection;
+import org.apache.tools.ant.util.FileUtils;
+import org.apache.tools.ant.util.FileNameMapper;
+import org.apache.tools.ant.util.FlatFileNameMapper;
+import org.apache.tools.ant.util.IdentityMapper;
+import org.apache.tools.ant.util.SourceFileScanner;
 
-import java.io.*;
-import java.util.*;
+import java.io.File;
+import java.io.IOException;
+import java.util.Vector;
+import java.util.Hashtable;
+import java.util.Enumeration;
 
 /**
  * A consolidated copy task.  Copies a file or directory to a new file 

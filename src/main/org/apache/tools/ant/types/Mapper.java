@@ -57,7 +57,7 @@ package org.apache.tools.ant.types;
 import org.apache.tools.ant.AntClassLoader;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
-import org.apache.tools.ant.util.*;
+import org.apache.tools.ant.util.FileNameMapper;
 
 import java.util.Properties;
 import java.util.Stack;

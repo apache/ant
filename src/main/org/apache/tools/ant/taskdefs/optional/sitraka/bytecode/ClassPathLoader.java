@@ -53,9 +53,21 @@
  */
 package org.apache.tools.ant.taskdefs.optional.sitraka.bytecode;
 
-import java.io.*;
-import java.util.*;
-import java.util.zip.*;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.BufferedInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.ByteArrayInputStream;
+import java.io.FilenameFilter;
+import java.io.FileInputStream;
+import java.util.Enumeration;
+import java.util.StringTokenizer;
+import java.util.Vector;
+import java.util.Hashtable;
+import java.util.NoSuchElementException;
+import java.util.zip.ZipFile;
+import java.util.zip.ZipEntry;
 
 /**
  * Core of the bytecode analyzer. It loads classes from a given classpath.

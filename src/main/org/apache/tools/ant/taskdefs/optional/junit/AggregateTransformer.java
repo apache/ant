@@ -58,10 +58,17 @@ import org.apache.tools.ant.Project;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.types.EnumeratedAttribute;
 
-import java.io.*;
+import java.io.File;
+import java.io.InputStream;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.FileNotFoundException;
+import java.io.OutputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.FileOutputStream;
 
-import java.util.Enumeration;
-import java.util.Hashtable;
+
+
 import java.lang.reflect.Field;
 import java.net.URL;
 
@@ -72,7 +79,7 @@ import org.apache.xalan.xslt.XSLTResultTarget;
 
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.ParserConfigurationException;
+
 import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.Source;
@@ -83,12 +90,12 @@ import javax.xml.transform.stream.StreamResult;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
-import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
-import org.w3c.dom.NamedNodeMap;
 
-import org.xml.sax.SAXException;
-import org.xml.sax.InputSource;
+
+
+
+
+
 
 /**
  * Transform a JUnit xml report.
@@ -127,7 +134,7 @@ public class AggregateTransformer {
     protected String format;
 
     /** XML Parser factory */
-    protected static final DocumentBuilderFactory dbfactory = DocumentBuilderFactory.newInstance();
+    protected final static DocumentBuilderFactory dbfactory = DocumentBuilderFactory.newInstance();
 
     public AggregateTransformer(Task task){
         this.task = task;

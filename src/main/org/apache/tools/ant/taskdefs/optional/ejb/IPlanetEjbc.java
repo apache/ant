@@ -69,8 +69,8 @@ import java.util.Iterator;
 import java.util.StringTokenizer;
 import java.util.Properties;
 import java.util.Date;
-import java.util.jar.JarFile;
-import java.util.zip.ZipEntry;
+
+
 
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
@@ -106,9 +106,9 @@ import org.xml.sax.AttributeList;
 public class IPlanetEjbc {
 
 	/* Constants used for the "beantype" attribute */
-	private static final String ENTITY_BEAN       = "entity";
-	private static final String STATELESS_SESSION = "stateless";
-	private static final String STATEFUL_SESSION  = "stateful";
+	private final static String ENTITY_BEAN       = "entity";
+	private final static String STATELESS_SESSION = "stateless";
+	private final static String STATEFUL_SESSION  = "stateful";
 
 	/* Filenames of the standard EJB descriptor and the iAS-specific descriptor */
 	private File        stdDescriptor;

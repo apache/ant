@@ -53,7 +53,7 @@
  */
 package org.apache.tools.ant.taskdefs.optional.perforce;
 
-import org.apache.tools.ant.*;
+import org.apache.tools.ant.BuildException;
 
 /** P4Delete - checkout file(s) for delete.
  *

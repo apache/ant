@@ -54,8 +54,10 @@
 
 package org.apache.tools.ant.taskdefs;
 
-import org.apache.tools.ant.*;
-import java.io.*;
+import org.apache.tools.ant.Task;
+import org.apache.tools.ant.BuildException;
+import java.io.File;
+import java.io.IOException;
 
 /**
  *

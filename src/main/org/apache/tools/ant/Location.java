@@ -62,7 +62,7 @@ public class Location {
     private int lineNumber;
     private int columnNumber;
 
-    public static final Location UNKNOWN_LOCATION = new Location();
+    public final static Location UNKNOWN_LOCATION = new Location();
 
     /**
      * Creates an "unknown" location.

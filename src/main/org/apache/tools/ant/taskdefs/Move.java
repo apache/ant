@@ -54,11 +54,15 @@
 
 package org.apache.tools.ant.taskdefs;
 
-import org.apache.tools.ant.*;
-import org.apache.tools.ant.types.*;
+import org.apache.tools.ant.BuildException;
+import org.apache.tools.ant.Project;
+import org.apache.tools.ant.types.FilterSetCollection;
+import org.apache.tools.ant.types.FilterSet;
+import org.apache.tools.ant.types.FileSet;
 
-import java.io.*;
-import java.util.*;
+import java.io.File;
+import java.io.IOException;
+import java.util.Enumeration;
 
 /**
  * Moves a file or directory to a new file or directory.  By default,

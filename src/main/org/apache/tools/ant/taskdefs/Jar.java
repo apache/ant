@@ -54,11 +54,19 @@
 
 package org.apache.tools.ant.taskdefs;
 
-import org.apache.tools.ant.*;
+import org.apache.tools.ant.BuildException;
+import org.apache.tools.ant.FileScanner;
+import org.apache.tools.ant.Project;
 import org.apache.tools.ant.types.ZipFileSet;
-import org.apache.tools.zip.*;
+import org.apache.tools.zip.ZipOutputStream;
 
-import java.io.*;
+import java.io.IOException;
+import java.io.File;
+import java.io.InputStream;
+import java.io.FileInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.PrintWriter;
+import java.io.ByteArrayInputStream;
 import java.util.Enumeration;
 
 /**

@@ -53,7 +53,7 @@
  */
 package org.apache.tools.ant.types;
 
-import java.util.Hashtable;
+
 import java.util.Stack;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
@@ -74,7 +74,7 @@ import org.apache.tools.ant.types.DataType;
  */
 public class Substitution extends DataType
 {
-    public static final String DATA_TYPE_NAME = "substitition";
+    public final static String DATA_TYPE_NAME = "substitition";
 
     private String expression;
 

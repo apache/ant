@@ -54,7 +54,8 @@
 
 package org.apache.tools.ant.util.regexp;
 
-import org.apache.regexp.*;
+import org.apache.regexp.RE;
+import org.apache.regexp.RESyntaxException;
 
 import org.apache.tools.ant.BuildException;
 import java.util.Vector;

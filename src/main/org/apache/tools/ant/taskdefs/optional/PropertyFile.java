@@ -55,13 +55,28 @@
 
 package org.apache.tools.ant.taskdefs.optional;
 
-import org.apache.tools.ant.*;
-import org.apache.tools.ant.types.*;
-import java.io.*;
+import org.apache.tools.ant.Task;
+import org.apache.tools.ant.BuildException;
+import org.apache.tools.ant.types.EnumeratedAttribute;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.BufferedInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.BufferedOutputStream;
+import java.io.OutputStream;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.util.*;
-import java.text.*;
+import java.util.Properties;
+import java.util.Vector;
+import java.util.Enumeration;
+import java.util.GregorianCalendar;
+import java.util.Date;
+import java.util.Calendar;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.text.ParseException;
+import java.text.DecimalFormat;
 
 /**
  *PropertyFile task uses java.util.Properties to modify integer, String and
@@ -144,7 +159,7 @@ public class PropertyFile extends Task
     * Static variables.
     */
 
-    private static final String NEWLINE = System.getProperty("line.separator");
+    private final static String NEWLINE = System.getProperty("line.separator");
 
 
     /* ========================================================================
@@ -311,11 +326,11 @@ public class PropertyFile extends Task
     public static class Entry
     {
 
-        static final String NOW_VALUE_ =        "now";
-        static final String NULL_VALUE_ =       "never";
+        final static String NOW_VALUE_ =        "now";
+        final static String NULL_VALUE_ =       "never";
 
-        private static final int    DEFAULT_INT_VALUE =     1;
-        private static final GregorianCalendar
+        private final static int    DEFAULT_INT_VALUE =     1;
+        private final static GregorianCalendar
             DEFAULT_DATE_VALUE = new GregorianCalendar();
 
         private String              m_key = null;
@@ -601,13 +616,13 @@ public class PropertyFile extends Task
         public static class Operation extends EnumeratedAttribute {
 
             // Property type operations
-            public static final int INCREMENT_OPER =   0;
-            public static final int DECREMENT_OPER =   1;
-            public static final int EQUALS_OPER =      2;
+            public final static int INCREMENT_OPER =   0;
+            public final static int DECREMENT_OPER =   1;
+            public final static int EQUALS_OPER =      2;
 
             // Special values
-            public static final int NOW_VALUE =        3;
-            public static final int NULL_VALUE =       4;
+            public final static int NOW_VALUE =        3;
+            public final static int NULL_VALUE =       4;
 
             public String[] getValues() {
                 return new String[] {"+", "-", "=", NOW_VALUE_, NULL_VALUE_};
@@ -636,9 +651,9 @@ public class PropertyFile extends Task
         public static class Type extends EnumeratedAttribute {
 
             // Property types
-            public static final int INTEGER_TYPE =     0;
-            public static final int DATE_TYPE =        1;
-            public static final int STRING_TYPE =      2;
+            public final static int INTEGER_TYPE =     0;
+            public final static int DATE_TYPE =        1;
+            public final static int STRING_TYPE =      2;
 
             public String[] getValues() {
                 return new String[] {"int", "date", "string"};

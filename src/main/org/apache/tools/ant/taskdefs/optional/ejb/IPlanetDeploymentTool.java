@@ -150,7 +150,7 @@ public class IPlanetDeploymentTool extends GenericDeploymentTool {
      * written in the completed JAR file as "ias-ejb-jar.xml".  This is the
      * naming convention implemented by iAS.
      */
-    private static final String IAS_DD = "ias-ejb-jar.xml";    
+    private final static String IAS_DD = "ias-ejb-jar.xml";    
 
     /**
      * Setter method used to store the "home" directory of the user's iAS

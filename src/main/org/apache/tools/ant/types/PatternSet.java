@@ -58,7 +58,10 @@ import org.apache.tools.ant.Project;
 import org.apache.tools.ant.ProjectHelper;
 import org.apache.tools.ant.BuildException;
 
-import java.io.*;
+import java.io.File;
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
 import java.util.Enumeration;
 import java.util.Stack;
 import java.util.StringTokenizer;

@@ -58,7 +58,7 @@ import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.util.regexp.RegexpMatcher;
 import org.apache.tools.ant.util.regexp.RegexpMatcherFactory;
 
-import java.util.Enumeration;
+
 import java.util.Vector;
 
 /**

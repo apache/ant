@@ -54,8 +54,10 @@
 
 package org.apache.tools.ant;
 
-import java.io.*;
-import java.util.*;
+import java.io.OutputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.util.Hashtable;
 
 
 /**
@@ -67,7 +69,7 @@ import java.util.*;
  */
 public class DemuxOutputStream extends OutputStream {
 
-    static private final int MAX_SIZE = 1024;
+    private final static int MAX_SIZE = 1024;
     
     private Hashtable buffers = new Hashtable();
 //    private ByteArrayOutputStream buffer = new ByteArrayOutputStream();

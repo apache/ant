@@ -53,8 +53,12 @@
  */
 package org.apache.tools.ant.taskdefs.optional.depend;
 
-import java.util.*;
-import java.io.*;
+import java.util.Stack;
+import java.util.Enumeration;
+import java.util.Vector;
+import java.io.IOException;
+import java.io.File;
+import java.io.FileInputStream;
 
 /**
  * An iterator which iterates through the contents of a java directory.

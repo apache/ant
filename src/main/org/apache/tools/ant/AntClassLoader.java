@@ -54,11 +54,20 @@
 
 package org.apache.tools.ant;
 
-import java.lang.reflect.*;
-import java.util.*;
-import java.util.zip.*;
-import java.io.*;
-import java.net.*;
+import java.lang.reflect.Method;
+import java.lang.reflect.InvocationTargetException;
+import java.util.Enumeration;
+import java.util.Vector;
+import java.util.Hashtable;
+import java.util.zip.ZipFile;
+import java.util.zip.ZipEntry;
+import java.io.File;
+import java.io.InputStream;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.ByteArrayOutputStream;
+import java.net.URL;
+import java.net.MalformedURLException;
 import org.apache.tools.ant.types.Path;
 
 /**
@@ -163,7 +172,7 @@ public class AntClassLoader extends ClassLoader implements BuildListener {
     /**
      * The size of buffers to be used in this classloader.
      */
-    static private final int BUFFER_SIZE = 8192;
+    private final static int BUFFER_SIZE = 8192;
     
     /**
      * The components of the classpath that the classloader searches for classes
@@ -402,7 +411,7 @@ public class AntClassLoader extends ClassLoader implements BuildListener {
      * Force initialization of a class in a JDK 1.1 compatible, albeit hacky 
      * way 
      */
-    static public void initializeClass(Class theClass) {
+    public static void initializeClass(Class theClass) {
         // ***HACK*** We try to create an instance to force the VM to run the
         // class' static initializer. We don't care if the instance can't 
         // be created - we are just interested in the side effect.

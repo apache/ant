@@ -54,15 +54,15 @@
 
 package org.apache.tools.ant.taskdefs.optional.ejb;
 
-import java.io.*;
-import java.util.*;
+import java.io.File;
+import java.util.Hashtable;
 
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
 
 public class WeblogicTOPLinkDeploymentTool extends WeblogicDeploymentTool {
 
-    private static final String TL_DTD_LOC = "http://www.objectpeople.com/tlwl/dtd/toplink-cmp_2_5_1.dtd";
+    private final static String TL_DTD_LOC = "http://www.objectpeople.com/tlwl/dtd/toplink-cmp_2_5_1.dtd";
 
     private String toplinkDescriptor;
     private String toplinkDTD;

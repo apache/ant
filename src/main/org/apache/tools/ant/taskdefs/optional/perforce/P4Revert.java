@@ -58,7 +58,7 @@
 
 package org.apache.tools.ant.taskdefs.optional.perforce;
 
-import org.apache.tools.ant.*;
+import org.apache.tools.ant.BuildException;
 
 /* P4Revert - revert open files or files in a changelist
  *

@@ -56,7 +56,7 @@ package org.apache.tools.ant.taskdefs.compilers;
 
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
-import org.apache.tools.ant.types.*;
+import org.apache.tools.ant.types.Commandline;
 
 /**
  * Performs a compile using javac externally.

@@ -54,8 +54,15 @@
 
 package org.apache.tools.ant.taskdefs;
 
-import java.util.*;
-import java.io.*;
+import java.util.Vector;
+import java.util.Hashtable;
+import java.util.Enumeration;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.io.BufferedReader;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.StringWriter;
 
 import org.apache.tools.ant.BuildException;
 
@@ -66,27 +73,27 @@ import org.apache.tools.ant.BuildException;
  */
 public class Manifest {
     /** The standard manifest version header */
-    static public final String ATTRIBUTE_MANIFEST_VERSION = "Manifest-Version";
+    public final static String ATTRIBUTE_MANIFEST_VERSION = "Manifest-Version";
     
     /** The standard Signature Version header */
-    static public final String ATTRIBUTE_SIGNATURE_VERSION = "Signature-Version";
+    public final static String ATTRIBUTE_SIGNATURE_VERSION = "Signature-Version";
     
     /** The Name Attribute is the first in a named section */
-    static public final String ATTRIBUTE_NAME = "Name";
+    public final static String ATTRIBUTE_NAME = "Name";
     
     /** THe From Header is disallowed in a Manifest */    
-    static public final String ATTRIBUTE_FROM = "From";
+    public final static String ATTRIBUTE_FROM = "From";
     
     /** Default Manifest version if one is not specified */
-    static public final String DEFAULT_MANIFEST_VERSION = "1.0";
+    public final static String DEFAULT_MANIFEST_VERSION = "1.0";
     
     /** The max length of a line in a Manifest */
-    static public final int MAX_LINE_LENGTH = 70;
+    public final static int MAX_LINE_LENGTH = 70;
     
     /**
      * Class to hold manifest attributes
      */
-    static public class Attribute {
+    public static class Attribute {
         /** The attribute's name */
         private String name = null;
         
@@ -227,7 +234,7 @@ public class Manifest {
      * Manifest. A section consists of a set of attribute values,
      * separated from other sections by a blank line.
      */
-    static public class Section {
+    public static class Section {
         private Vector warnings = new Vector();
         
         /** The section's name if any. The main section in a manifest is unnamed.*/

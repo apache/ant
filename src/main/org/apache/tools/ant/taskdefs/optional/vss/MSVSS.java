@@ -55,8 +55,10 @@
 package org.apache.tools.ant.taskdefs.optional.vss;
 
 
-import java.io.File;
-import org.apache.tools.ant.*;
+
+import org.apache.tools.ant.Task;
+import org.apache.tools.ant.Project;
+import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.taskdefs.Execute;
 import org.apache.tools.ant.taskdefs.LogStreamHandler;
 import org.apache.tools.ant.types.Commandline;
@@ -193,56 +195,56 @@ public abstract class MSVSS extends Task {
     /**
      * Constant for the thing to execute
      */
-    private static final String SS_EXE = "ss";
+    private final static String SS_EXE = "ss";
     /** */
-    public static final String PROJECT_PREFIX = "$";
+    public final static String PROJECT_PREFIX = "$";
 
     /**
      * The 'Get' command
      */
-    public static final String COMMAND_GET = "Get";
+    public final static String COMMAND_GET = "Get";
     /**
      * The 'Checkout' command
      */
-    public static final String COMMAND_CHECKOUT = "Checkout";
+    public final static String COMMAND_CHECKOUT = "Checkout";
     /**
      * The 'Checkin' command
      */
-    public static final String COMMAND_CHECKIN = "Checkin";
+    public final static String COMMAND_CHECKIN = "Checkin";
     /**
      * The 'Label' command
      */
-    public static final String COMMAND_LABEL = "Label";
+    public final static String COMMAND_LABEL = "Label";
     /**
      * The 'History' command
      */
-    public static final String COMMAND_HISTORY = "History";
+    public final static String COMMAND_HISTORY = "History";
 
     /** */
-    public static final String FLAG_LOGIN = "-Y";
+    public final static String FLAG_LOGIN = "-Y";
     /** */
-    public static final String FLAG_OVERRIDE_WORKING_DIR = "-GL";
+    public final static String FLAG_OVERRIDE_WORKING_DIR = "-GL";
     /** */
-    public static final String FLAG_AUTORESPONSE_DEF = "-I-";
+    public final static String FLAG_AUTORESPONSE_DEF = "-I-";
     /** */
-    public static final String FLAG_AUTORESPONSE_YES = "-I-Y";
+    public final static String FLAG_AUTORESPONSE_YES = "-I-Y";
     /** */
-    public static final String FLAG_AUTORESPONSE_NO = "-I-N";
+    public final static String FLAG_AUTORESPONSE_NO = "-I-N";
     /** */
-    public static final String FLAG_RECURSION = "-R";
+    public final static String FLAG_RECURSION = "-R";
     /** */
-    public static final String FLAG_VERSION = "-V";
+    public final static String FLAG_VERSION = "-V";
     /** */
-    public static final String FLAG_VERSION_DATE = "-Vd";
+    public final static String FLAG_VERSION_DATE = "-Vd";
     /** */
-    public static final String FLAG_VERSION_LABEL = "-VL";
+    public final static String FLAG_VERSION_LABEL = "-VL";
     /** */
-    public static final String FLAG_WRITABLE = "-W";
+    public final static String FLAG_WRITABLE = "-W";
     /** */
-    public static final String VALUE_NO = "-N";
+    public final static String VALUE_NO = "-N";
     /** */
-    public static final String VALUE_YES = "-Y";
+    public final static String VALUE_YES = "-Y";
     /** */
-    public static final String FLAG_QUIET = "-O-";
+    public final static String FLAG_QUIET = "-O-";
 }
 

@@ -53,10 +53,11 @@
  */
 package org.apache.tools.ant.taskdefs.optional.sitraka.bytecode;
 
-import java.io.*;
+import java.io.IOException;
+import java.io.DataInputStream;
 
 import org.apache.tools.ant.taskdefs.optional.depend.constantpool.ConstantPool;
-import org.apache.tools.ant.taskdefs.optional.depend.constantpool.Utf8CPInfo;
+
 
 /**
  * A list of method_info structures.

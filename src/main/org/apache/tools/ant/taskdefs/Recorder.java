@@ -55,16 +55,18 @@
 package org.apache.tools.ant.taskdefs;
 
 import org.apache.tools.ant.BuildException;
-import org.apache.tools.ant.DirectoryScanner;
+
 import org.apache.tools.ant.Project;
-import org.apache.tools.ant.types.*;
-import org.apache.tools.ant.util.*;
-import org.apache.tools.ant.taskdefs.compilers.*;
+import org.apache.tools.ant.types.EnumeratedAttribute;
+
+
 import org.apache.tools.ant.Task;
 
-import java.io.*;
+import java.io.PrintStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
 
-import java.util.*;
+import java.util.Hashtable;
 
 /**
  * This task is the manager for RecorderEntry's.  It is this class
@@ -176,7 +178,7 @@ public class Recorder extends Task {
      * Possible values include: start and stop.
      */
     public static class ActionChoices extends EnumeratedAttribute {
-        private static final String[] values = {"start", "stop"};
+        private final static String[] values = {"start", "stop"};
         public String[] getValues() {
             return values;
         }
@@ -187,7 +189,7 @@ public class Recorder extends Task {
      * Possible values include: error, warn, info, verbose, debug.
      */
     public static class VerbosityLevelChoices extends EnumeratedAttribute {
-        private static final String[] values = { "error", "warn", "info",
+        private final static String[] values = { "error", "warn", "info",
             "verbose", "debug"};
         public String[] getValues() {
             return values;

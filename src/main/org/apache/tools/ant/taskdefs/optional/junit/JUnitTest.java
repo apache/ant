@@ -55,9 +55,9 @@
 package org.apache.tools.ant.taskdefs.optional.junit;
 
 import org.apache.tools.ant.Project;
-import org.apache.tools.ant.types.Commandline;
 
-import java.io.File;
+
+
 import java.util.Enumeration;
 import java.util.Hashtable;
 import java.util.Properties;

@@ -58,7 +58,8 @@
 
 package org.apache.tools.ant.taskdefs.optional.perforce;
 
-import org.apache.tools.ant.*;
+import org.apache.tools.ant.BuildException;
+import org.apache.tools.ant.Project;
 
 /** P4Counter - Obtain or set the value of a counter.
  * P4Counter can be used to either print the value of a counter

@@ -56,7 +56,8 @@ package org.apache.tools.ant.taskdefs.optional.junit;
 
 import org.apache.tools.ant.BuildException;
 
-import junit.framework.*;
+import junit.framework.Test;
+import junit.framework.AssertionFailedError;
 
 /**
  * Prints plain text output of the test to a specified Writer.

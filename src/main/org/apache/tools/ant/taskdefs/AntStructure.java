@@ -56,7 +56,7 @@ package org.apache.tools.ant.taskdefs;
 
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.IntrospectionHelper;
-import org.apache.tools.ant.Project;
+
 import org.apache.tools.ant.Task;
 import org.apache.tools.ant.TaskContainer;
 import org.apache.tools.ant.types.EnumeratedAttribute;
@@ -64,7 +64,13 @@ import org.apache.tools.ant.types.EnumeratedAttribute;
 import java.util.Enumeration;
 import java.util.Hashtable;
 import java.util.Vector;
-import java.io.*;
+import java.io.File;
+import java.io.PrintWriter;
+import java.io.OutputStreamWriter;
+import java.io.FileOutputStream;
+import java.io.UnsupportedEncodingException;
+import java.io.FileWriter;
+import java.io.IOException;
 
 /**
  * Creates a partial DTD for Ant from the currently known tasks.

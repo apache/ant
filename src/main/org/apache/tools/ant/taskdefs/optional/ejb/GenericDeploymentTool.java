@@ -53,18 +53,32 @@
  */
 package org.apache.tools.ant.taskdefs.optional.ejb;
 
-import java.io.*;
-import java.util.*;
-import java.util.jar.*;
-import java.util.zip.*;
-import java.net.*;
+import java.io.File;
+import java.io.IOException;
+import java.io.FileInputStream;
+import java.io.InputStream;
+import java.io.FileOutputStream;
+import java.util.Hashtable;
+import java.util.List;
+import java.util.Iterator;
+import java.util.ArrayList;
+import java.util.jar.JarOutputStream;
+import java.util.jar.Manifest;
+import java.util.zip.ZipEntry;
+
 
 import javax.xml.parsers.SAXParser;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
-import org.apache.tools.ant.*;
-import org.apache.tools.ant.types.*;
+import org.apache.tools.ant.Task;
+import org.apache.tools.ant.BuildException;
+import org.apache.tools.ant.Location;
+import org.apache.tools.ant.Project;
+import org.apache.tools.ant.DirectoryScanner;
+import org.apache.tools.ant.AntClassLoader;
+import org.apache.tools.ant.types.Path;
+import org.apache.tools.ant.types.FileSet;
 
 /**
  * A deployment tool which creates generic EJB jars. Generic jars contains
@@ -76,8 +90,8 @@ import org.apache.tools.ant.types.*;
  */
 public class GenericDeploymentTool implements EJBDeploymentTool {
     /** Private constants that are used when constructing the standard jarfile */
-    protected static final String META_DIR  = "META-INF/";
-    protected static final String EJB_DD    = "ejb-jar.xml";
+    protected final static String META_DIR  = "META-INF/";
+    protected final static String EJB_DD    = "ejb-jar.xml";
 
     /**
      * The configuration from the containing task. This config combined with the 

@@ -54,10 +54,11 @@
 
 package org.apache.tools.ant.taskdefs.optional.sound;
 
-import org.apache.tools.ant.*;
+import org.apache.tools.ant.Task;
+import org.apache.tools.ant.Project;
 
-import java.io.*;
-import java.util.*;
+import java.io.File;
+import java.util.Random;
 
 /**
  * This is an example of an AntTask that makes of use of the AntSoundPlayer.

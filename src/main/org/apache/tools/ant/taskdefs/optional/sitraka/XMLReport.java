@@ -55,15 +55,29 @@ package org.apache.tools.ant.taskdefs.optional.sitraka;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.transform.*;
-import javax.xml.transform.dom.*;
-import javax.xml.transform.stream.*;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.Transformer;
+import javax.xml.transform.OutputKeys;
+import javax.xml.transform.dom.DOMSource;
+import javax.xml.transform.stream.StreamResult;
 
-import org.w3c.dom.*;
-import org.xml.sax.*;
-import java.io.*;
-import java.util.*;
-import org.apache.tools.ant.taskdefs.optional.sitraka.bytecode.*;
+import org.w3c.dom.Document;
+import org.w3c.dom.NodeList;
+import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+import org.xml.sax.InputSource;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.util.Hashtable;
+import java.util.Enumeration;
+import java.util.Vector;
+import java.util.NoSuchElementException;
+import org.apache.tools.ant.taskdefs.optional.sitraka.bytecode.ClassPathLoader;
+import org.apache.tools.ant.taskdefs.optional.sitraka.bytecode.ClassFile;
+import org.apache.tools.ant.taskdefs.optional.sitraka.bytecode.MethodInfo;
+import org.apache.tools.ant.taskdefs.optional.sitraka.bytecode.MethodInfoList;
+import org.apache.tools.ant.taskdefs.optional.sitraka.bytecode.Utils;
 import org.apache.tools.ant.Task;
 import org.apache.tools.ant.Project;
 

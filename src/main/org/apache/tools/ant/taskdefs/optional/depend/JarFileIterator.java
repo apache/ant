@@ -53,8 +53,11 @@
  */
 package org.apache.tools.ant.taskdefs.optional.depend;
 
-import java.util.zip.*;
-import java.io.*;
+import java.util.zip.ZipInputStream;
+import java.util.zip.ZipEntry;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.ByteArrayOutputStream;
 
 /**
  * A class file iterator which iterates through the contents of a Java jar file.

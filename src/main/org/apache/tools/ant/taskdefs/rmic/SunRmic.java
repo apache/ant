@@ -59,7 +59,8 @@ import org.apache.tools.ant.Project;
 import org.apache.tools.ant.taskdefs.LogOutputStream;
 import org.apache.tools.ant.types.Commandline;
 
-import java.io.*;
+import java.io.OutputStream;
+import java.io.IOException;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
 

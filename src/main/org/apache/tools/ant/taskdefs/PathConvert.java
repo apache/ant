@@ -57,9 +57,11 @@ package org.apache.tools.ant.taskdefs;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.Task;
-import org.apache.tools.ant.types.*;
+import org.apache.tools.ant.types.Path;
+import org.apache.tools.ant.types.Reference;
+import org.apache.tools.ant.types.FileSet;
 
-import java.util.*;
+import java.util.Vector;
 import java.io.File;
 
 /**

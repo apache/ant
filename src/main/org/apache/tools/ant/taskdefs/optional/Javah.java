@@ -55,16 +55,20 @@
 package org.apache.tools.ant.taskdefs.optional;
 
 import org.apache.tools.ant.BuildException;
-import org.apache.tools.ant.DirectoryScanner;
+
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.Task;
-import org.apache.tools.ant.taskdefs.LogOutputStream;
-import org.apache.tools.ant.types.*;
 
-import java.lang.reflect.Method;
-import java.lang.reflect.Constructor;
-import java.io.*;
-import java.util.*;
+import org.apache.tools.ant.types.Path;
+import org.apache.tools.ant.types.Reference;
+import org.apache.tools.ant.types.Commandline;
+
+
+
+import java.io.File;
+import java.util.Vector;
+import java.util.StringTokenizer;
+import java.util.Enumeration;
 
 /**
  * Task to generate JNI header files using javah. This task can take the following
@@ -99,7 +103,7 @@ import java.util.*;
 
 public class Javah extends Task {
 
-    private static final String FAIL_MSG = "Compile failed, messages should have been provided.";
+    private final static String FAIL_MSG = "Compile failed, messages should have been provided.";
 
     private Vector classes = new Vector(2);
     private String cls;

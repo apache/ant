@@ -58,11 +58,12 @@
 
 package org.apache.tools.ant.taskdefs.optional.perforce;
 
-import java.io.*;
-import org.apache.tools.ant.*;
-import org.apache.tools.ant.taskdefs.*;
-import org.apache.tools.ant.types.*;
-import org.apache.oro.text.perl.*;
+import java.io.IOException;
+import org.apache.tools.ant.BuildException;
+import org.apache.tools.ant.Project;
+import org.apache.tools.ant.taskdefs.Execute;
+import org.apache.tools.ant.types.Commandline;
+import org.apache.oro.text.perl.Perl5Util;
 
 
 /** Base class for Perforce (P4) ANT tasks. See individual task for example usage.

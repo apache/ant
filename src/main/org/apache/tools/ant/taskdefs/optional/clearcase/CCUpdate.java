@@ -54,12 +54,13 @@
 
 package org.apache.tools.ant.taskdefs.optional.clearcase;
 
-import org.apache.tools.ant.*;
+import org.apache.tools.ant.BuildException;
+import org.apache.tools.ant.Project;
 import org.apache.tools.ant.types.Commandline;
-import org.apache.tools.ant.types.Path;
 
-import java.io.File;
-import java.lang.System;
+
+
+
 
 /**
  * Task to perform an Update command to ClearCase.
@@ -325,31 +326,31 @@ public class CCUpdate extends ClearCase {
         /**
      *  -graphical flag -- display graphical dialog during update operation
      */
-    public static final String FLAG_GRAPHICAL = "-graphical";
+    public final static String FLAG_GRAPHICAL = "-graphical";
         /**
      * -log flag -- file to log status to
      */
-    public static final String FLAG_LOG = "-log";
+    public final static String FLAG_LOG = "-log";
         /**
      * -overwrite flag -- overwrite hijacked files
      */
-    public static final String FLAG_OVERWRITE = "-overwrite";
+    public final static String FLAG_OVERWRITE = "-overwrite";
         /**
      * -noverwrite flag -- do not overwrite hijacked files
      */
-    public static final String FLAG_NOVERWRITE = "-noverwrite";
+    public final static String FLAG_NOVERWRITE = "-noverwrite";
         /**
      * -rename flag -- rename hijacked files with .keep extension
      */
-    public static final String FLAG_RENAME = "-rename";
+    public final static String FLAG_RENAME = "-rename";
         /**
      * -ctime flag -- modified time is written as the current time
      */
-    public static final String FLAG_CURRENTTIME = "-ctime";
+    public final static String FLAG_CURRENTTIME = "-ctime";
         /**
      * -ptime flag -- modified time is written as the VOB time
      */
-    public static final String FLAG_PRESERVETIME = "-ptime";
+    public final static String FLAG_PRESERVETIME = "-ptime";
 
 }
 

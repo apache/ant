@@ -54,9 +54,10 @@
 
 package org.apache.tools.ant.taskdefs.optional.ccm;
 
-import org.apache.tools.ant.*;
+import org.apache.tools.ant.BuildException;
+import org.apache.tools.ant.Project;
 import org.apache.tools.ant.types.Commandline;
-import org.apache.tools.ant.types.Path;
+
 
 import java.io.File;
 
@@ -174,11 +175,11 @@ public class CCMCheck extends Continuus {
     /**
      * -comment flag -- comment to attach to the file
      */
-    public static final String FLAG_COMMENT = "/comment";
+    public final static String FLAG_COMMENT = "/comment";
     
     /**
      *  -task flag -- associate checckout task with task
      */
-    public static final String FLAG_TASK = "/task";   
+    public final static String FLAG_TASK = "/task";   
 }
 

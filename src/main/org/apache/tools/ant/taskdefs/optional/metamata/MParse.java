@@ -57,13 +57,19 @@ package org.apache.tools.ant.taskdefs.optional.metamata;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.Task;
-import org.apache.tools.ant.taskdefs.*;
+import org.apache.tools.ant.taskdefs.ExecuteStreamHandler;
+import org.apache.tools.ant.taskdefs.LogStreamHandler;
+import org.apache.tools.ant.taskdefs.Execute;
 import org.apache.tools.ant.types.Commandline;
 import org.apache.tools.ant.types.CommandlineJava;
 import org.apache.tools.ant.types.Path;
 
-import java.io.*;
-import java.util.*;
+import java.io.File;
+import java.io.IOException;
+import java.io.FileWriter;
+import java.io.PrintWriter;
+import java.util.Vector;
+import java.util.Random;
 
 /**
  * Simple Metamata MParse task based on the original written by
@@ -341,7 +347,7 @@ public class MParse extends Task {
     }
     
     /** create a temporary file in the current directory */
-    protected final static File createTmpFile(){
+    protected static final File createTmpFile(){
         // must be compatible with JDK 1.1 !!!!
         final long rand = (new Random(System.currentTimeMillis())).nextLong();
         File file = new File("metamata" + rand + ".tmp");

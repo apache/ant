@@ -59,8 +59,15 @@ import org.apache.tools.ant.DirectoryScanner;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.types.EnumeratedAttribute;
 
-import java.io.*;
-import java.util.*;
+import java.io.File;
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
+import java.io.BufferedWriter;
+import java.io.FileWriter;
+import java.util.Random;
+import java.util.Enumeration;
+import java.util.NoSuchElementException;
 
 /**
  * Task to convert text source files to local OS formatting conventions, as
@@ -106,27 +113,27 @@ import java.util.*;
 
 public class FixCRLF extends MatchingTask {
 
-    private static final int UNDEF = -1;
-    private static final int NOTJAVA = 0;
-    private static final int LOOKING = 1;
-    private static final int IN_CHAR_CONST = 2;
-    private static final int IN_STR_CONST = 3;
-    private static final int IN_SINGLE_COMMENT = 4;
-    private static final int IN_MULTI_COMMENT = 5;
+    private final static int UNDEF = -1;
+    private final static int NOTJAVA = 0;
+    private final static int LOOKING = 1;
+    private final static int IN_CHAR_CONST = 2;
+    private final static int IN_STR_CONST = 3;
+    private final static int IN_SINGLE_COMMENT = 4;
+    private final static int IN_MULTI_COMMENT = 5;
 
-    private static final int ASIS = 0;
-    private static final int CR = 1;
-    private static final int LF = 2;
-    private static final int CRLF = 3;
-    private static final int ADD = 1;
-    private static final int REMOVE = -1;
-    private static final int SPACES = -1;
-    private static final int TABS = 1;
+    private final static int ASIS = 0;
+    private final static int CR = 1;
+    private final static int LF = 2;
+    private final static int CRLF = 3;
+    private final static int ADD = 1;
+    private final static int REMOVE = -1;
+    private final static int SPACES = -1;
+    private final static int TABS = 1;
 
-    private static final int INBUFLEN = 8192;
-    private static final int LINEBUFLEN = 200;
+    private final static int INBUFLEN = 8192;
+    private final static int LINEBUFLEN = 200;
 
-    private static final char CTRLZ = '\u001A';
+    private final static char CTRLZ = '\u001A';
 
     private int tablength = 8;
     private String spaces = "        ";

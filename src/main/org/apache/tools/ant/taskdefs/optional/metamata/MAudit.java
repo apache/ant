@@ -55,14 +55,18 @@ package org.apache.tools.ant.taskdefs.optional.metamata;
 
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
-import org.apache.tools.ant.Task;
-import org.apache.tools.ant.taskdefs.*;
-import org.apache.tools.ant.types.*;
-import org.apache.tools.ant.DirectoryScanner;
-import org.apache.tools.ant.util.regexp.*;
 
-import java.io.*;
-import java.util.*;
+import org.apache.tools.ant.taskdefs.ExecuteStreamHandler;
+import org.apache.tools.ant.taskdefs.LogStreamHandler;
+import org.apache.tools.ant.types.Path;
+
+
+
+import java.io.File;
+import java.io.OutputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.util.Vector;
 
 /**
  * Metamata Audit evaluates Java code for programming errors, weaknesses, and
@@ -113,7 +117,7 @@ public class MAudit extends AbstractMetamataTask {
     /** pattern used by maudit to report the error for a file */
     /** RE does not seems to support regexp pattern with comments so i'm stripping it*/
     // (?:file:)?((?#filepath).+):((?#line)\\d+)\\s*:\\s+((?#message).*)
-    static final String AUDIT_PATTERN = "(?:file:)?(.+):(\\d+)\\s*:\\s+(.*)";
+    final static String AUDIT_PATTERN = "(?:file:)?(.+):(\\d+)\\s*:\\s+(.*)";
 
     protected File outFile = null;
     
@@ -237,7 +241,7 @@ public class MAudit extends AbstractMetamataTask {
     }
 
     /** the inner class used to report violation information */
-    static final class Violation {
+    final static class Violation {
         int line;
         String error;
     }

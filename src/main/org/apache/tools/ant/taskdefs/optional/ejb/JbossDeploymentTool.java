@@ -53,9 +53,9 @@
  */
 package org.apache.tools.ant.taskdefs.optional.ejb;
 
-import java.io.*;
-import java.util.*;
-import org.apache.tools.ant.*;
+import java.io.File;
+import java.util.Hashtable;
+import org.apache.tools.ant.Project;
 
 /**
  * The deployment tool to add the jboss specific deployment descriptor to the ejb jar file.
@@ -67,8 +67,8 @@ import org.apache.tools.ant.*;
  * @see EjbJar#createJboss
  */
 public class JbossDeploymentTool extends GenericDeploymentTool {
-    protected static final String JBOSS_DD = "jboss.xml";
-    protected static final String JBOSS_CMPD = "jaws.xml";
+    protected final static String JBOSS_DD = "jboss.xml";
+    protected final static String JBOSS_CMPD = "jaws.xml";
 
     /** Instance variable that stores the suffix for the jboss jarfile. */
     private String jarSuffix = ".jar";

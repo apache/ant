@@ -50,7 +50,10 @@
 
 package org.apache.tools.mail;
 
-import java.io.*;
+import java.io.InputStream;
+import java.io.IOException;
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
 
 /**
  * A wrapper around the raw input from the SMTP server that assembles

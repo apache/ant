@@ -53,8 +53,11 @@
  */
 package org.apache.tools.ant.taskdefs.optional.depend.constantpool;
 
-import java.io.*;
-import java.util.*;
+import java.io.IOException;
+import java.io.DataInputStream;
+import java.util.Vector;
+import java.util.Hashtable;
+import java.util.Enumeration;
 
 /**
  * The constant pool of a Java class.

@@ -57,10 +57,18 @@
  */
 package org.apache.tools.ant.taskdefs.optional.pvcs;
 
-import java.io.*;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.FileNotFoundException;
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.BufferedWriter;
+import java.io.FileWriter;
 import java.util.Enumeration;
 import java.util.Vector;
-import java.text.*;
+import java.text.ParseException;
+import java.text.MessageFormat;
 import java.util.Random;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
@@ -105,17 +113,17 @@ public class Pvcs extends org.apache.tools.ant.Task {
     /**
      * Constant for the thing to execute
      */
-    private static final String PCLI_EXE = "pcli";
+    private final static String PCLI_EXE = "pcli";
 
     /**
      * Constant for the PCLI listversionedfiles recursive i a format "get" understands
      */
-    private static final String PCLI_LVF_ARGS = "lvf -z -aw";
+    private final static String PCLI_LVF_ARGS = "lvf -z -aw";
 
     /**
      * Constant for the thing to execute
      */
-    private static final String GET_EXE = "get";
+    private final static String GET_EXE = "get";
 
 
     protected int runCmd(Commandline cmd, ExecuteStreamHandler out) {

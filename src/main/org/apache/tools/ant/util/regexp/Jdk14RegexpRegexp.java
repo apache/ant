@@ -55,10 +55,10 @@ package org.apache.tools.ant.util.regexp;
 
 
 import org.apache.tools.ant.BuildException;
-import java.util.Vector;
+
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import java.util.regex.PatternSyntaxException;
+
 
 /***
  * Regular expression implementation using the JDK 1.4 regular expression package

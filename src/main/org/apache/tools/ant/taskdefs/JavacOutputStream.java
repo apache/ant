@@ -55,8 +55,9 @@
 
 package org.apache.tools.ant.taskdefs;
 
-import org.apache.tools.ant.*;
-import java.io.*;
+import org.apache.tools.ant.Task;
+import java.io.OutputStream;
+import java.io.IOException;
 
 /**
  * Serves as an output stream to Javac. This let's us print messages

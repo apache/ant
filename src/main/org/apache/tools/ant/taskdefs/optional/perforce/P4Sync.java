@@ -58,7 +58,8 @@
 
 package org.apache.tools.ant.taskdefs.optional.perforce;
 
-import org.apache.tools.ant.*;
+import org.apache.tools.ant.BuildException;
+import org.apache.tools.ant.Project;
 
 /** P4Sync  - synchronise client space to a perforce depot view.
  *  The API allows additional functionality of the "p4 sync" command 

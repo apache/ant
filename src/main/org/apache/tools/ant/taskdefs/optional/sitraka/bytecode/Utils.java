@@ -54,7 +54,8 @@
 
 package org.apache.tools.ant.taskdefs.optional.sitraka.bytecode;
 
-import org.apache.tools.ant.taskdefs.optional.depend.constantpool.*;
+import org.apache.tools.ant.taskdefs.optional.depend.constantpool.ConstantPool;
+import org.apache.tools.ant.taskdefs.optional.depend.constantpool.Utf8CPInfo;
 import java.util.Vector;
 
 /**
@@ -64,31 +65,31 @@ import java.util.Vector;
  */
 public class Utils {
 	/** public access flag */
-    public static final short ACC_PUBLIC = 1;
+    public final static short ACC_PUBLIC = 1;
 	/** private access flag */
-    public static final short ACC_PRIVATE = 2;
+    public final static short ACC_PRIVATE = 2;
 	/** protected access flag */
-    public static final short ACC_PROTECTED = 4;
+    public final static short ACC_PROTECTED = 4;
 	/** static access flag */
-    public static final short ACC_STATIC = 8;
+    public final static short ACC_STATIC = 8;
 	/** final access flag */
-    public static final short ACC_FINAL = 16;
+    public final static short ACC_FINAL = 16;
 	/** super access flag */
-    public static final short ACC_SUPER = 32;
+    public final static short ACC_SUPER = 32;
 	/** synchronized access flag */
-    public static final short ACC_SYNCHRONIZED = 32;
+    public final static short ACC_SYNCHRONIZED = 32;
 	/** volatile access flag */
-    public static final short ACC_VOLATILE = 64;
+    public final static short ACC_VOLATILE = 64;
 	/** transient access flag */
-    public static final short ACC_TRANSIENT = 128;
+    public final static short ACC_TRANSIENT = 128;
 	/** native access flag */
-    public static final short ACC_NATIVE = 256;
+    public final static short ACC_NATIVE = 256;
 	/** interface access flag */
-    public static final short ACC_INTERFACE = 512;
+    public final static short ACC_INTERFACE = 512;
 	/** abstract access flag */
-    public static final short ACC_ABSTRACT = 1024;
+    public final static short ACC_ABSTRACT = 1024;
 	/** strict access flag */
-    public static final short ACC_STRICT = 2048;
+    public final static short ACC_STRICT = 2048;
 
 	/** private constructor */
 	private Utils(){

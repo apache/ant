@@ -67,7 +67,7 @@ import java.util.Vector;
 // ant classes
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
-import org.apache.tools.ant.Task;
+
 
 /**
  * A set of filters to be applied to something.
@@ -171,10 +171,10 @@ public class FilterSet extends DataType {
     }
     
     /** The default token start string */
-    public static final String DEFAULT_TOKEN_START = "@";
+    public final static String DEFAULT_TOKEN_START = "@";
     
     /** The default token end string */
-    public static final String DEFAULT_TOKEN_END = "@";
+    public final static String DEFAULT_TOKEN_END = "@";
     
     private String startOfToken = DEFAULT_TOKEN_START;
     private String endOfToken = DEFAULT_TOKEN_END;

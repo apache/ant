@@ -54,7 +54,9 @@
 
 package org.apache.tools.ant.taskdefs;
 
-import org.apache.tools.ant.*;
+import org.apache.tools.ant.Task;
+import org.apache.tools.ant.BuildException;
+import org.apache.tools.ant.ProjectHelper;
 
 /**
  * Just exit the active build, giving an additional message 

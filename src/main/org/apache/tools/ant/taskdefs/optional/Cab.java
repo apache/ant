@@ -54,13 +54,21 @@
 
 package org.apache.tools.ant.taskdefs.optional;
 
-import org.apache.tools.ant.*;
-import org.apache.tools.ant.taskdefs.*;
-import org.apache.tools.ant.types.*;
+import org.apache.tools.ant.BuildException;
+import org.apache.tools.ant.DirectoryScanner;
+import org.apache.tools.ant.Project;
+import org.apache.tools.ant.taskdefs.MatchingTask;
+import org.apache.tools.ant.taskdefs.ExecTask;
+import org.apache.tools.ant.types.FileSet;
+import org.apache.tools.ant.types.Commandline;
 
-import java.io.*;
+import java.io.File;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.io.FileOutputStream;
+import java.io.OutputStream;
 import java.util.Enumeration;
-import java.util.StringTokenizer;
+
 import java.util.Vector;
 import java.util.Random;
 import java.text.DecimalFormat;

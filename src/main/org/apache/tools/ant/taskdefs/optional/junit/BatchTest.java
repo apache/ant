@@ -54,13 +54,14 @@
 
 package org.apache.tools.ant.taskdefs.optional.junit;
 
-import org.apache.tools.ant.BuildException;
+
 import org.apache.tools.ant.DirectoryScanner;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.types.FileSet;
-import org.apache.tools.ant.types.Reference;
 
-import java.util.*;
+
+import java.util.Enumeration;
+import java.util.Vector;
 import java.io.File;
 
 /**
@@ -182,7 +183,7 @@ public final class BatchTest extends BaseTest {
      * @param filename the filename to "convert" to a classname.
      * @return the classname matching the filename.
      */
-    public final static String javaToClass(String filename){
+    public static final String javaToClass(String filename){
         return filename.replace(File.separatorChar, '.');
     }
 

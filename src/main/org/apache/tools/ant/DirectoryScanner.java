@@ -54,8 +54,9 @@
 
 package org.apache.tools.ant;
 
-import java.io.*;
-import java.util.*;
+import java.io.File;
+import java.util.Vector;
+import java.util.StringTokenizer;
 
 /**
  * Class for scanning a directory for files/directories that match a certain

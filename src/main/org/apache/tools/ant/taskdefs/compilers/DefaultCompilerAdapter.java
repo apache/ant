@@ -54,11 +54,20 @@
 
 package org.apache.tools.ant.taskdefs.compilers;
 
-import org.apache.tools.ant.*;
-import org.apache.tools.ant.taskdefs.*;
-import org.apache.tools.ant.types.*;
+import org.apache.tools.ant.Location;
+import org.apache.tools.ant.Project;
+import org.apache.tools.ant.BuildException;
+import org.apache.tools.ant.taskdefs.Javac;
+import org.apache.tools.ant.taskdefs.Execute;
+import org.apache.tools.ant.taskdefs.LogStreamHandler;
+import org.apache.tools.ant.types.Path;
+import org.apache.tools.ant.types.Commandline;
+import org.apache.tools.ant.types.FileSet;
 
-import java.io.*;
+import java.io.File;
+import java.io.PrintWriter;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.Random;
 
 /**

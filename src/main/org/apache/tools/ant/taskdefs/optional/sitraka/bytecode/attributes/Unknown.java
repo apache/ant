@@ -53,7 +53,7 @@
  */
 package org.apache.tools.ant.taskdefs.optional.sitraka.bytecode.attributes;
 
-import java.io.*;
+
 
 import org.apache.tools.ant.taskdefs.optional.depend.constantpool.ConstantPool;
 

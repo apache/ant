@@ -54,10 +54,11 @@
 
 package org.apache.tools.ant.taskdefs;
 
-import org.apache.tools.ant.*;
+
 import org.apache.tools.ant.types.PatternSet;
 
-import java.util.*;
+import java.util.Vector;
+import java.util.Enumeration;
 
 /**
  * This task will compile and load a new taskdef all in one step.

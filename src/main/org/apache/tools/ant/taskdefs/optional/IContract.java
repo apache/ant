@@ -75,7 +75,7 @@ import org.apache.tools.ant.taskdefs.Javac;
 import org.apache.tools.ant.taskdefs.MatchingTask;
 import org.apache.tools.ant.taskdefs.Mkdir;
 import org.apache.tools.ant.taskdefs.compilers.DefaultCompilerAdapter;
-import org.apache.tools.ant.types.FileSet;
+
 import org.apache.tools.ant.types.Path;
 import org.apache.tools.ant.types.Reference;
 
@@ -226,14 +226,14 @@ import org.apache.tools.ant.types.Reference;
  */
 public class IContract extends MatchingTask {
 
-    private static final String ICONTROL_PROPERTIES_HEADER =
+    private final static String ICONTROL_PROPERTIES_HEADER =
         " You might want to set classRoot to point to your normal compilation class root directory.";
 
-    private static final String ICONTROL_PROPERTIES_MESSAGE =
+    private final static String ICONTROL_PROPERTIES_MESSAGE =
         "You should probably modify icontrol.properties' classRoot to where comiled (uninstrumented) classes go.";
 
     /** \ on windows, / on linux/unix */
-    private static final String ps = System.getProperty( "path.separator" );
+    private final static String ps = System.getProperty( "path.separator" );
 
     /** compiler to use for instrumenation */
     private String icCompiler = "javac";

@@ -53,14 +53,25 @@
  */
 package org.apache.tools.ant.taskdefs;
 
-import java.io.*;
-import java.util.*;
+import java.io.File;
+import java.io.PrintWriter;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.FilenameFilter;
+import java.util.Vector;
+import java.util.Enumeration;
+import java.util.StringTokenizer;
+import java.util.Random;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.DirectoryScanner;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.ProjectHelper;
 import org.apache.tools.ant.Task;
-import org.apache.tools.ant.types.*;
+import org.apache.tools.ant.types.Path;
+import org.apache.tools.ant.types.Reference;
+import org.apache.tools.ant.types.EnumeratedAttribute;
+import org.apache.tools.ant.types.Commandline;
+import org.apache.tools.ant.types.FileSet;
 
 /**
  * This task makes it easy to generate Javadoc documentation for a collection

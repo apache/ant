@@ -53,8 +53,9 @@
  */
 package org.apache.tools.ant;
 
-import java.util.*;
-import java.io.*;
+import java.util.NoSuchElementException;
+import java.util.StringTokenizer;
+import java.io.File;
 
 /**
  * A Path tokenizer takes a path and returns the components that make up

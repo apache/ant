@@ -58,9 +58,10 @@
 
 package org.apache.tools.ant.taskdefs.optional.perforce;
 
-import java.io.*;
 
-import org.apache.tools.ant.*;
+
+import org.apache.tools.ant.BuildException;
+import org.apache.tools.ant.Project;
 
 /** P4Change - grab a new changelist from Perforce.
  *

@@ -54,8 +54,13 @@
 
 package org.apache.tools.ant.taskdefs.optional.perforce;
 
-import java.io.*;
-import org.apache.tools.ant.*;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.io.InputStream;
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.io.SequenceInputStream;
+import org.apache.tools.ant.BuildException;
 
 public abstract class P4HandlerAdapter implements P4Handler {
 

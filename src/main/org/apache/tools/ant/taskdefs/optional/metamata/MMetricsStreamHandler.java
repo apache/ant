@@ -54,14 +54,28 @@
 package org.apache.tools.ant.taskdefs.optional.metamata;
 
 
-import org.xml.sax.*;
-import org.xml.sax.helpers.*;
-import javax.xml.transform.*;
-import javax.xml.transform.stream.*;
-import javax.xml.transform.sax.*;
-import java.util.*;
-import java.io.*;
-import java.text.*;
+import org.xml.sax.SAXException;
+import org.xml.sax.Attributes;
+import org.xml.sax.helpers.AttributesImpl;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.Transformer;
+import javax.xml.transform.OutputKeys;
+import javax.xml.transform.stream.StreamResult;
+import javax.xml.transform.sax.TransformerHandler;
+import javax.xml.transform.sax.SAXTransformerFactory;
+import java.util.Stack;
+import java.util.EmptyStackException;
+import java.util.Enumeration;
+import java.util.Vector;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.io.IOException;
+import java.io.OutputStreamWriter;
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.text.ParseException;
+import java.text.NumberFormat;
+import java.text.DecimalFormat;
 
 import org.apache.tools.ant.taskdefs.ExecuteStreamHandler;
 import org.apache.tools.ant.Task;

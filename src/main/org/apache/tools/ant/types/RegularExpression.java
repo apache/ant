@@ -53,7 +53,7 @@
  */
 package org.apache.tools.ant.types;
 
-import java.util.Hashtable;
+
 import java.util.Stack;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
@@ -96,10 +96,10 @@ import org.apache.tools.ant.util.regexp.RegexpFactory;
  */
 public class RegularExpression extends DataType
 {
-    public static final String DATA_TYPE_NAME = "regularexpression";
+    public final static String DATA_TYPE_NAME = "regularexpression";
 
     // The regular expression factory
-    private static final RegexpFactory factory = new RegexpFactory();
+    private final static RegexpFactory factory = new RegexpFactory();
 
     private Regexp regexp;
 

@@ -55,8 +55,9 @@
 
 package org.apache.tools.ant.taskdefs;
 
-import org.apache.tools.ant.*;
-import java.io.*;
+import org.apache.tools.ant.Task;
+import java.io.OutputStream;
+import java.io.IOException;
 
 /**
  * Redirects text written to a stream thru the standard

@@ -54,9 +54,15 @@
 
 package org.apache.tools.ant;
 
-import java.io.*;
-import java.util.*;
-import java.text.*;
+import java.io.File;
+import java.io.InputStream;
+import java.io.IOException;
+import java.util.Hashtable;
+import java.util.Vector;
+import java.util.Properties;
+import java.util.Enumeration;
+import java.util.Stack;
+
 
 import org.apache.tools.ant.types.FilterSet; 
 import org.apache.tools.ant.types.FilterSetCollection; 
@@ -76,27 +82,27 @@ import org.apache.tools.ant.util.FileUtils;
 
 public class Project {
 
-    public static final int MSG_ERR = 0;
-    public static final int MSG_WARN = 1;
-    public static final int MSG_INFO = 2;
-    public static final int MSG_VERBOSE = 3;
-    public static final int MSG_DEBUG = 4;
+    public final static int MSG_ERR = 0;
+    public final static int MSG_WARN = 1;
+    public final static int MSG_INFO = 2;
+    public final static int MSG_VERBOSE = 3;
+    public final static int MSG_DEBUG = 4;
 
     // private set of constants to represent the state
     // of a DFS of the Target dependencies
-    private static final String VISITING = "VISITING";
-    private static final String VISITED = "VISITED";
+    private final static String VISITING = "VISITING";
+    private final static String VISITED = "VISITED";
 
     private static String javaVersion;
 
-    public static final String JAVA_1_0 = "1.0";
-    public static final String JAVA_1_1 = "1.1";
-    public static final String JAVA_1_2 = "1.2";
-    public static final String JAVA_1_3 = "1.3";
-    public static final String JAVA_1_4 = "1.4";
+    public final static String JAVA_1_0 = "1.0";
+    public final static String JAVA_1_1 = "1.1";
+    public final static String JAVA_1_2 = "1.2";
+    public final static String JAVA_1_3 = "1.3";
+    public final static String JAVA_1_4 = "1.4";
 
-    public static final String TOKEN_START = FilterSet.DEFAULT_TOKEN_START;
-    public static final String TOKEN_END = FilterSet.DEFAULT_TOKEN_END;
+    public final static String TOKEN_START = FilterSet.DEFAULT_TOKEN_START;
+    public final static String TOKEN_END = FilterSet.DEFAULT_TOKEN_END;
 
     private String name;
     private String description;
@@ -641,7 +647,7 @@ public class Project {
      * @return the native version of to_process or 
      *         an empty string if to_process is null or empty
      */
-    static public String translatePath(String to_process) {
+    public static String translatePath(String to_process) {
         if ( to_process == null || to_process.length() == 0 ) {
             return "";
         }

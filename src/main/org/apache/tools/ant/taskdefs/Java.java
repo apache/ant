@@ -58,11 +58,18 @@ import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.ExitException;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.Task;
-import org.apache.tools.ant.types.*;
+import org.apache.tools.ant.types.Commandline;
+import org.apache.tools.ant.types.Path;
+import org.apache.tools.ant.types.CommandlineJava;
+import org.apache.tools.ant.types.Reference;
+import org.apache.tools.ant.types.Environment;
 
-import java.io.*;
-import java.lang.reflect.*;
-import java.util.*;
+import java.io.File;
+import java.io.PrintStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+
+import java.util.Vector;
 
 /**
  * This task acts as a loader for java applications but allows to use the same JVM 

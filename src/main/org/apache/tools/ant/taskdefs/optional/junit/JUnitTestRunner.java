@@ -54,15 +54,25 @@
 
 package org.apache.tools.ant.taskdefs.optional.junit;
 
-import org.apache.tools.ant.*;
+import org.apache.tools.ant.AntClassLoader;
+import org.apache.tools.ant.Project;
+import org.apache.tools.ant.BuildException;
 
-import junit.framework.*;
-import java.lang.reflect.*;
-import java.io.*;
+import junit.framework.TestListener;
+import junit.framework.TestResult;
+import junit.framework.Test;
+import junit.framework.TestSuite;
+import junit.framework.AssertionFailedError;
+import java.lang.reflect.Method;
+import java.io.PrintStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.FileInputStream;
+import java.io.File;
 import java.util.Enumeration;
 import java.util.Hashtable;
 import java.util.Properties;
-import java.util.StringTokenizer;
+
 import java.util.Vector;
 
 /**
@@ -89,17 +99,17 @@ public class JUnitTestRunner implements TestListener {
     /**
      * No problems with this test.
      */
-    public static final int SUCCESS = 0;
+    public final static int SUCCESS = 0;
 
     /**
      * Some tests failed.
      */
-    public static final int FAILURES = 1;
+    public final static int FAILURES = 1;
 
     /**
      * An error occured.
      */
-    public static final int ERRORS = 2;
+    public final static int ERRORS = 2;
 
     /**
      * Holds the registered formatters.

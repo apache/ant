@@ -54,10 +54,16 @@
 
 package org.apache.tools.ant.taskdefs;
 
-import org.apache.tools.ant.*;
+import org.apache.tools.ant.Task;
+import org.apache.tools.ant.BuildException;
+import org.apache.tools.ant.Project;
 
-import java.io.*;
-import java.util.zip.*;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.FileOutputStream;
+import java.io.FileInputStream;
+import java.util.zip.GZIPOutputStream;
 
 /**
  * Compresses a file with the GZIP algorightm. Normally used to compress

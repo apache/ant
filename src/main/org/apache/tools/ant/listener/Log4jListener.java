@@ -54,7 +54,11 @@
 
 package org.apache.tools.ant.listener;
 
-import org.apache.tools.ant.*;
+import org.apache.tools.ant.BuildListener;
+import org.apache.tools.ant.BuildEvent;
+import org.apache.tools.ant.Project;
+import org.apache.tools.ant.Target;
+import org.apache.tools.ant.Task;
 
 import org.apache.log4j.Category;
 import org.apache.log4j.helpers.NullEnumeration;
@@ -66,7 +70,7 @@ import org.apache.log4j.helpers.NullEnumeration;
  * @author <a href="mailto:conor@apache.org>Conor MacNeill </a>
  */
 public class Log4jListener implements BuildListener {
-    static final String LOG4J_CONFIG_PROPERTY = "log4j.configuration";
+    final static String LOG4J_CONFIG_PROPERTY = "log4j.configuration";
     
     private boolean initialized = false;
     

@@ -53,7 +53,8 @@
  */
 package org.apache.tools.ant.taskdefs.optional.ejb;
 
-import java.io.*;
+import java.io.FilenameFilter;
+import java.io.File;
 
 public class InnerClassFilenameFilter implements FilenameFilter {
     private String baseClassName;

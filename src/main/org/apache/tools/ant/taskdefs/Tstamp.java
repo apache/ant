@@ -54,10 +54,19 @@
 
 package org.apache.tools.ant.taskdefs;
 
-import org.apache.tools.ant.*;
-import java.io.*;
-import java.util.*;
-import java.text.*;
+import org.apache.tools.ant.Task;
+import org.apache.tools.ant.BuildException;
+import org.apache.tools.ant.Project;
+import org.apache.tools.ant.Location;
+
+import java.util.Vector;
+import java.util.Date;
+import java.util.Locale;
+import java.util.Enumeration;
+import java.util.Calendar;
+import java.util.StringTokenizer;
+import java.util.NoSuchElementException;
+import java.text.SimpleDateFormat;
 
 /**
  * Sets TSTAMP, DSTAMP and TODAY

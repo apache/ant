@@ -54,11 +54,11 @@
  */
 package org.apache.tools.ant.taskdefs.optional.scm; 
  
-import com.starbase.starteam.*;
+
 import com.starbase.util.Platform;
-import java.io.*;
-import java.util.*;
-import org.apache.tools.ant.*;
+
+import java.util.StringTokenizer;
+import org.apache.tools.ant.BuildException;
 
 /**
  * Checks out files from a specific StarTeam server, project, view, and
@@ -116,7 +116,7 @@ public class AntStarTeamCheckOut extends org.apache.tools.ant.Task
      * @see #getForceAsBoolean()
      * @see #setForce(String force)
      */
-    static public final String DEFAULT_FORCESETTING = "false";
+    public final static String DEFAULT_FORCESETTING = "false";
 
     /**
      * This field is used in setting <CODE>verbose</CODE> to "false", the
@@ -131,7 +131,7 @@ public class AntStarTeamCheckOut extends org.apache.tools.ant.Task
      * @see #getVerboseAsBoolean()
      * @see #setVerbose(String verbose)
      */
-    static public final String DEFAULT_VERBOSESETTING = "false";
+    public final static String DEFAULT_VERBOSESETTING = "false";
 
     /**
      * <CODE>DEFAULT_RECURSIONSETTING</CODE> contains the normal setting --
@@ -143,7 +143,7 @@ public class AntStarTeamCheckOut extends org.apache.tools.ant.Task
      * @see #getRecursion()
      * @see #setRecursion(String recursion)
      */
-    static public final String DEFAULT_RECURSIONSETTING = "true";
+    public final static String DEFAULT_RECURSIONSETTING = "true";
 
     /**
      * This constant sets the filter to include all files. This default has
@@ -152,7 +152,7 @@ public class AntStarTeamCheckOut extends org.apache.tools.ant.Task
      * @see #getIncludes()
      * @see #setIncludes(String includes)
      */
-    static public final String DEFAULT_INCLUDESETTING = "*";
+    public final static String DEFAULT_INCLUDESETTING = "*";
 
     /**
      * This disables the exclude filter by default. In other words, no files
@@ -162,7 +162,7 @@ public class AntStarTeamCheckOut extends org.apache.tools.ant.Task
      * @see #getExcludes()
      * @see #setExcludes(String excludes)
      */
-    static public final String DEFAULT_EXCLUDESETTING = null;
+    public final static String DEFAULT_EXCLUDESETTING = null;
 
     /**
      * The default folder to search; the root folder.  Since
@@ -172,7 +172,7 @@ public class AntStarTeamCheckOut extends org.apache.tools.ant.Task
      * @see #getFolderName()
      * @see #setFolderName(String folderName)
      */
-    static public final String DEFAULT_FOLDERSETTING = null;
+    public final static String DEFAULT_FOLDERSETTING = null;
 
     /**
      * This is used when formatting the output. The directory name is

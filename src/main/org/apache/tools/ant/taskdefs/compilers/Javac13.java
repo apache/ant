@@ -56,11 +56,11 @@ package org.apache.tools.ant.taskdefs.compilers;
 
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
-import org.apache.tools.ant.taskdefs.LogOutputStream;
+
 import org.apache.tools.ant.types.Commandline;
 
 import java.lang.reflect.Method;
-import java.io.*;
+
 
 /**
  * The implementation of the javac compiler for JDK 1.3
@@ -77,7 +77,7 @@ public class Javac13 extends DefaultCompilerAdapter {
     /**
      * Integer returned by the "Modern" jdk1.3 compiler to indicate success.
      */
-    private static final int MODERN_COMPILER_SUCCESS = 0;
+    private final static int MODERN_COMPILER_SUCCESS = 0;
 
     public boolean execute() throws BuildException {
         attributes.log("Using modern compiler", Project.MSG_VERBOSE);

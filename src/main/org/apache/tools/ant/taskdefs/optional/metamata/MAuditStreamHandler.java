@@ -54,18 +54,29 @@
 package org.apache.tools.ant.taskdefs.optional.metamata;
 
 import org.apache.tools.ant.Project;
-import org.apache.tools.ant.Task;
-import org.apache.tools.ant.taskdefs.*;
-import org.apache.tools.ant.types.*;
-import org.apache.tools.ant.util.regexp.*;
-import org.apache.tools.ant.BuildException;
+
+import org.apache.tools.ant.taskdefs.ExecuteStreamHandler;
+
+import org.apache.tools.ant.util.regexp.RegexpMatcher;
+import org.apache.tools.ant.util.regexp.RegexpMatcherFactory;
+
 import org.apache.tools.ant.util.DOMElementWriter;
 
-import org.w3c.dom.*;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
 
-import java.io.*;
-import java.util.*;
-import javax.xml.parsers.*;
+import java.io.BufferedReader;
+import java.io.OutputStream;
+import java.io.InputStream;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.Writer;
+import java.io.OutputStreamWriter;
+import java.util.Hashtable;
+import java.util.Enumeration;
+import java.util.Vector;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
 
 
 /**

@@ -59,7 +59,9 @@
 
 package org.apache.tools.tar;
 
-import java.io.*;
+import java.io.FilterOutputStream;
+import java.io.OutputStream;
+import java.io.IOException;
 
 /**
  * The TarOutputStream writes a UNIX tar archive as an OutputStream.
@@ -69,9 +71,9 @@ import java.io.*;
  * @author Timothy Gerard Endres <a href="mailto:time@ice.com">time@ice.com</a>
  */
 public class TarOutputStream extends FilterOutputStream {
-    static public final int LONGFILE_ERROR = 0;
-    static public final int LONGFILE_TRUNCATE = 1;
-    static public final int LONGFILE_GNU = 2;
+    public final static int LONGFILE_ERROR = 0;
+    public final static int LONGFILE_TRUNCATE = 1;
+    public final static int LONGFILE_GNU = 2;
     
     protected boolean   debug;
     protected int       currSize;

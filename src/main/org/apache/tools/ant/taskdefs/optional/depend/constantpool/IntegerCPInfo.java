@@ -53,7 +53,8 @@
  */
 package org.apache.tools.ant.taskdefs.optional.depend.constantpool;
 
-import java.io.*;
+import java.io.IOException;
+import java.io.DataInputStream;
 
 /**
  * An Integer CP Info

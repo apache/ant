@@ -53,18 +53,33 @@
  */
 package org.apache.tools.ant.taskdefs;
 
-import java.io.*;
-import java.util.Enumeration;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.FileOutputStream;
+import java.io.FileInputStream;
+import java.io.OutputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.ByteArrayInputStream;
+
 import java.util.Hashtable;
 import java.util.Stack;
-import java.util.StringTokenizer;
+
 import java.util.Vector;
 import java.util.zip.CRC32;
 import java.util.zip.ZipInputStream;
-import org.apache.tools.ant.*;
-import org.apache.tools.ant.types.*;
-import org.apache.tools.ant.util.*;
-import org.apache.tools.zip.*;
+import org.apache.tools.ant.BuildException;
+import org.apache.tools.ant.FileScanner;
+import org.apache.tools.ant.Project;
+import org.apache.tools.ant.DirectoryScanner;
+import org.apache.tools.ant.types.FileSet;
+import org.apache.tools.ant.types.EnumeratedAttribute;
+import org.apache.tools.ant.types.ZipFileSet;
+import org.apache.tools.ant.types.ZipScanner;
+import org.apache.tools.ant.util.SourceFileScanner;
+import org.apache.tools.ant.util.MergingMapper;
+import org.apache.tools.zip.ZipOutputStream;
+import org.apache.tools.zip.ZipEntry;
 
 /**
  * Create a ZIP archive.

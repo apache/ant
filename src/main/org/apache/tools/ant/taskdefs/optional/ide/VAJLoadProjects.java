@@ -56,11 +56,11 @@ package org.apache.tools.ant.taskdefs.optional.ide;
 
 
 
-import java.util.Enumeration;
-import java.util.Vector;
-import org.apache.tools.ant.BuildException;
-import org.apache.tools.ant.Project;
-import org.apache.tools.ant.Task;
+
+
+
+
+
 
 /**
  * This is only there for backward compatibility with the default task list

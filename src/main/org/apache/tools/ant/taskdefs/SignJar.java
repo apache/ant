@@ -59,8 +59,11 @@ import java.util.Enumeration;
 import java.util.Vector;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
-import org.apache.tools.ant.*;
-import org.apache.tools.ant.types.Commandline;
+import org.apache.tools.ant.Task;
+import org.apache.tools.ant.BuildException;
+import org.apache.tools.ant.DirectoryScanner;
+import org.apache.tools.ant.Project;
+
 import org.apache.tools.ant.types.FileSet;
 
 /**

@@ -54,7 +54,8 @@
 package org.apache.tools.ant;
 
 
-import java.io.*;
+import java.io.PrintWriter;
+import java.io.PrintStream;
 
 /**
  * Signals an error condition during a build.

@@ -56,7 +56,8 @@ package org.apache.tools.ant.taskdefs.compilers;
 
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
-import org.apache.tools.ant.types.*;
+import org.apache.tools.ant.types.Path;
+import org.apache.tools.ant.types.Commandline;
 
 /**
  * The implementation of the jikes compiler.

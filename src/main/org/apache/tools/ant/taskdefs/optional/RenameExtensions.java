@@ -63,10 +63,12 @@
 
 package org.apache.tools.ant.taskdefs.optional;
 
-import java.io.*;
-import java.util.*;
-import org.apache.tools.ant.*;
-import org.apache.tools.ant.taskdefs.*;
+import java.io.File;
+
+import org.apache.tools.ant.BuildException;
+import org.apache.tools.ant.Project;
+import org.apache.tools.ant.taskdefs.MatchingTask;
+import org.apache.tools.ant.taskdefs.Move;
 import org.apache.tools.ant.types.Mapper;
 
 /**

@@ -53,9 +53,11 @@
  */
 package org.apache.tools.ant.taskdefs.optional.sitraka.bytecode;
 
-import java.io.*;
+import java.io.IOException;
+import java.io.DataInputStream;
 
-import org.apache.tools.ant.taskdefs.optional.depend.constantpool.*;
+import org.apache.tools.ant.taskdefs.optional.depend.constantpool.ConstantPool;
+import org.apache.tools.ant.taskdefs.optional.depend.constantpool.ClassCPInfo;
 
 /**
  * list of interfaces implemented in a class.

@@ -58,7 +58,9 @@ import java.io.File;
 import java.util.Enumeration;
 import java.util.Vector;
 import java.util.Date;
-import org.apache.tools.ant.*;
+import org.apache.tools.ant.BuildException;
+import org.apache.tools.ant.DirectoryScanner;
+import org.apache.tools.ant.Project;
 import org.apache.tools.ant.types.FileSet;
 import org.apache.tools.ant.types.FileList;
 

@@ -54,12 +54,21 @@
 
 package org.apache.tools.ant.taskdefs;
 
-import java.io.*;
-import java.util.*;
-import org.apache.tools.ant.*;
-import org.apache.tools.ant.util.*;
-import org.apache.tools.tar.*;
-import org.apache.tools.ant.types.*;
+import java.io.File;
+import java.io.IOException;
+import java.io.FileOutputStream;
+import java.io.FileInputStream;
+import java.util.Vector;
+import java.util.Enumeration;
+import org.apache.tools.ant.BuildException;
+import org.apache.tools.ant.Project;
+import org.apache.tools.ant.DirectoryScanner;
+import org.apache.tools.ant.util.SourceFileScanner;
+import org.apache.tools.ant.util.MergingMapper;
+import org.apache.tools.tar.TarOutputStream;
+import org.apache.tools.tar.TarConstants;
+import org.apache.tools.tar.TarEntry;
+import org.apache.tools.ant.types.FileSet;
 
 /**
  * Creates a TAR archive.
@@ -71,11 +80,11 @@ import org.apache.tools.ant.types.*;
 public class Tar extends MatchingTask {
 
     // permissable values for longfile attribute
-    static public final String WARN = "warn";
-    static public final String FAIL = "fail";
-    static public final String TRUNCATE = "truncate";
-    static public final String GNU = "gnu";
-    static public final String OMIT = "omit";
+    public final static String WARN = "warn";
+    public final static String FAIL = "fail";
+    public final static String TRUNCATE = "truncate";
+    public final static String GNU = "gnu";
+    public final static String OMIT = "omit";
 
     private String[] validModes = new String[] {WARN, FAIL, TRUNCATE, GNU, OMIT};
 
@@ -302,7 +311,7 @@ public class Tar extends MatchingTask {
         return sfs.restrict(files, baseDir, null, mm).length == 0;
     }
 
-    static public class TarFileSet extends FileSet {
+    public static class TarFileSet extends FileSet {
         private String[] files = null;
         
         private int mode = 0100644;

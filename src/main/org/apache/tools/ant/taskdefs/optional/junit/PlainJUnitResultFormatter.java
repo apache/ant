@@ -56,7 +56,10 @@ package org.apache.tools.ant.taskdefs.optional.junit;
 
 import org.apache.tools.ant.BuildException;
 
-import java.io.*;
+import java.io.OutputStream;
+import java.io.StringWriter;
+import java.io.PrintWriter;
+import java.io.IOException;
 import java.text.NumberFormat;
 
 import junit.framework.AssertionFailedError;

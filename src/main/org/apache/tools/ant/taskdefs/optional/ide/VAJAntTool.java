@@ -57,7 +57,7 @@ package org.apache.tools.ant.taskdefs.optional.ide;
 
 import com.ibm.ivj.util.base.Project;
 import com.ibm.ivj.util.base.ToolData;
-import com.ibm.ivj.util.base.IvjException;
+
 import org.apache.tools.ant.BuildException;
 
 
@@ -71,7 +71,7 @@ import org.apache.tools.ant.BuildException;
  * @author: Wolf Siberski
  */
 public class VAJAntTool {
-    private static final String TOOL_DATA_KEY = "AntTool";
+    private final static String TOOL_DATA_KEY = "AntTool";
 
 	
     /**

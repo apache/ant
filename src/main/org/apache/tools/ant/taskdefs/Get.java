@@ -54,10 +54,17 @@
 
 package org.apache.tools.ant.taskdefs;
 
-import java.io.*;
-import java.net.*;
-import java.util.*;
-import org.apache.tools.ant.*;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.InputStream;
+import java.io.IOException;
+import java.net.URL;
+import java.net.URLConnection;
+import java.net.HttpURLConnection;
+import java.util.Date;
+import org.apache.tools.ant.Task;
+import org.apache.tools.ant.BuildException;
+import org.apache.tools.ant.Project;
 
 /**
  * Get a particular file from a URL source. 

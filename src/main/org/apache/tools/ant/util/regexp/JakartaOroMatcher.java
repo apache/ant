@@ -59,8 +59,8 @@ import org.apache.oro.text.regex.MatchResult;
 import org.apache.oro.text.regex.Pattern;
 import org.apache.oro.text.regex.Perl5Compiler;
 import org.apache.oro.text.regex.Perl5Matcher;
-import org.apache.oro.text.regex.Perl5Pattern;
-import org.apache.oro.text.regex.Util;
+
+
 
 import java.util.Vector;
 

@@ -72,10 +72,11 @@ package org.apache.tools.ant.taskdefs.optional.dotnet;
 // imports
 // ====================================================================
 
-import org.apache.tools.ant.*;
-import org.apache.tools.ant.taskdefs.*;
-import org.apache.tools.ant.types.*;
-import java.io.*;
+import org.apache.tools.ant.BuildException;
+import org.apache.tools.ant.DirectoryScanner;
+
+import org.apache.tools.ant.types.Path;
+import java.io.File;
 
 
 // ====================================================================
@@ -145,15 +146,15 @@ public class CSharp
     /** name of the executable. the .exe suffix is deliberately not included 
      * in anticipation of the unix version
      */
-    protected static final String csc_exe_name="csc";
+    protected final static String csc_exe_name="csc";
     
     /** what is the file extension we search on?
      */
-    protected static final String csc_file_ext="cs";
+    protected final static String csc_file_ext="cs";
     
     /** derive the search pattern from the extension 
      */
-    protected static final String csc_file_pattern="**/*."+csc_file_ext;
+    protected final static String csc_file_pattern="**/*."+csc_file_ext;
     
     /** list of reference classes. (pretty much a classpath equivalent)
      */
@@ -238,7 +239,7 @@ public class CSharp
      * so may work on a unix box too. 
      */
 
-    protected static final String DEFAULT_REFERENCE_LIST=
+    protected final static String DEFAULT_REFERENCE_LIST=
             "Accessibility.dll;"+
             "cscompmgd.dll;"+
             "CustomMarshalers.dll;"+

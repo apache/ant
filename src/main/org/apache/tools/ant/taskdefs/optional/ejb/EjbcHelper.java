@@ -53,8 +53,13 @@
  */
 package org.apache.tools.ant.taskdefs.optional.ejb;
 
-import java.io.*;
-import java.util.*;
+import java.io.File;
+import java.io.IOException;
+import java.io.FileInputStream;
+import java.io.ObjectInputStream;
+import java.io.FileWriter;
+import java.io.PrintWriter;
+import java.util.Vector;
 
 import javax.ejb.deployment.EntityDescriptor;
 import javax.ejb.deployment.DeploymentDescriptor;

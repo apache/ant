@@ -57,13 +57,17 @@ package org.apache.tools.ant.taskdefs.optional.net;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Task;
 import org.apache.tools.ant.Project;
-import org.apache.tools.ant.DirectoryScanner;
-import org.apache.tools.ant.taskdefs.MatchingTask;
-import com.oroinc.net.telnet.*;
-import org.apache.tools.ant.BuildException;
-import java.io.*;
-import java.lang.*;
-import java.util.*;
+
+
+
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+
+import java.util.Vector;
+import java.util.Enumeration;
+import java.util.Calendar;
 
 /**
  * Class to provide automated telnet protocol support for the Ant build tool

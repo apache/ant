@@ -59,7 +59,7 @@ import java.util.Vector;
 import java.util.Enumeration;
 import java.io.File;
 
-import com.ibm.ivj.util.base.*;
+
 import com.ibm.ivj.util.base.Package;
 
 import org.apache.tools.ant.BuildException;
@@ -74,7 +74,7 @@ import org.apache.tools.ant.DirectoryScanner;
  */
 abstract class VAJLocalUtil implements VAJUtil{
     // singleton containing the VAJ workspace
-    static private Workspace workspace;
+    private static Workspace workspace;
 		
     /**
      * Wraps IvjException into a BuildException

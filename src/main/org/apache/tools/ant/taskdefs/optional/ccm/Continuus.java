@@ -54,13 +54,15 @@
 
 package org.apache.tools.ant.taskdefs.optional.ccm;
 
-import org.apache.tools.ant.*;
+import org.apache.tools.ant.Task;
+import org.apache.tools.ant.BuildException;
+import org.apache.tools.ant.Project;
 import org.apache.tools.ant.taskdefs.Execute;
 import org.apache.tools.ant.taskdefs.LogStreamHandler;
 import org.apache.tools.ant.taskdefs.ExecuteStreamHandler;
 import org.apache.tools.ant.types.Commandline;
 
-import java.io.File;
+
 
 /**
  * A base class for creating tasks for executing commands on Continuus 5.1
@@ -139,29 +141,29 @@ public abstract class Continuus extends Task {
     /**
      * Constant for the thing to execute
      */
-    private static final String CCM_EXE = "ccm";
+    private final static String CCM_EXE = "ccm";
 
     /**
      * The 'CreateTask' command
      */
-    public static final String COMMAND_CREATE_TASK = "create_task";
+    public final static String COMMAND_CREATE_TASK = "create_task";
     /**
      * The 'Checkout' command
      */
-    public static final String COMMAND_CHECKOUT = "co";
+    public final static String COMMAND_CHECKOUT = "co";
     /**
      * The 'Checkin' command
      */
-    public static final String COMMAND_CHECKIN = "ci";
+    public final static String COMMAND_CHECKIN = "ci";
     /**
      * The 'Reconfigure' command
      */
-    public static final String COMMAND_RECONFIGURE = "reconfigure";
+    public final static String COMMAND_RECONFIGURE = "reconfigure";
 
     /**
      * The 'Reconfigure' command
      */
-    public static final String COMMAND_DEFAULT_TASK = "default_task";
+    public final static String COMMAND_DEFAULT_TASK = "default_task";
 
 
 }

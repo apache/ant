@@ -54,13 +54,15 @@
 
 package org.apache.tools.ant.taskdefs.optional;
 
-import java.io.*;
-import java.net.URL;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.OutputStreamWriter;
+
 
 import org.apache.tools.ant.taskdefs.XSLTLiaison;
-import org.xml.sax.InputSource;
 
-import com.kvisco.xsl.*;
+
+
 
 /**
  * Concrete liaison for XSLP

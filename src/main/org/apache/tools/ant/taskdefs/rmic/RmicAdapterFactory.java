@@ -56,7 +56,7 @@ package org.apache.tools.ant.taskdefs.rmic;
 
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Task;
-import org.apache.tools.ant.Project;
+
 
 /**
  * Creates the necessary rmic adapter, given basic criteria.

@@ -55,7 +55,7 @@ package org.apache.tools.ant.taskdefs.optional.depend.constantpool;
 
 import java.io.IOException;
 import java.io.DataInputStream;
-import java.io.DataOutputStream;
+
 
 /**
  * The constant pool entry subclass used to represent double constant values.

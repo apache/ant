@@ -54,12 +54,21 @@
 
 package org.apache.tools.ant.taskdefs.optional.junit;
 
-import java.io.*;
-import java.text.CharacterIterator;
-import java.text.StringCharacterIterator;
-import java.util.*;
-import javax.xml.parsers.*;
-import org.w3c.dom.*;
+import java.io.OutputStream;
+import java.io.Writer;
+import java.io.OutputStreamWriter;
+import java.io.IOException;
+import java.io.StringWriter;
+import java.io.PrintWriter;
+
+
+import java.util.Properties;
+import java.util.Enumeration;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.Text;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.util.DOMElementWriter;
 

@@ -55,9 +55,9 @@ package org.apache.tools.ant.taskdefs.optional.ejb;
 
 
 import org.apache.tools.ant.BuildException;
-import org.apache.tools.ant.Project;
+
 import org.apache.tools.ant.Task;
-import org.apache.tools.ant.taskdefs.*;
+import org.apache.tools.ant.taskdefs.Java;
 import org.apache.tools.ant.types.Path;
 
 import java.io.File;
@@ -69,9 +69,9 @@ import java.io.File;
  * @author <a href="mailto:conor@cortexebusiness.com.au">Conor MacNeill</a>, Cortex ebusiness Pty Limited
  */
 public class WLRun extends Task {
-    static protected final String DEFAULT_WL51_POLICY_FILE = "weblogic.policy";
-    static protected final String DEFAULT_WL60_POLICY_FILE = "lib/weblogic.policy";
-    static protected final String DEFAULT_PROPERTIES_FILE = "weblogic.properties";
+    protected final static String DEFAULT_WL51_POLICY_FILE = "weblogic.policy";
+    protected final static String DEFAULT_WL60_POLICY_FILE = "lib/weblogic.policy";
+    protected final static String DEFAULT_PROPERTIES_FILE = "weblogic.properties";
 
     /**
      * The classpath to be used when running the Java VM. It must contain the weblogic

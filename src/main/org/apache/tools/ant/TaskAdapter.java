@@ -54,8 +54,8 @@
 
 package org.apache.tools.ant;
 
-import java.lang.reflect.*;
-import java.util.*;
+import java.lang.reflect.Method;
+
 
 /**
  *  Use introspection to "adapt" an arbitrary Bean ( not extending Task, but with similar

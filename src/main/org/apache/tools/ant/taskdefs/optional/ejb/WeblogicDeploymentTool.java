@@ -54,49 +54,60 @@
 
 package org.apache.tools.ant.taskdefs.optional.ejb;
 
-import java.io.*;
-import java.util.jar.*;
-import java.util.*;
-import java.net.*;
+import java.io.File;
+import java.io.IOException;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.InputStream;
+import java.util.jar.JarFile;
+import java.util.jar.JarOutputStream;
+import java.util.jar.JarEntry;
+import java.util.Hashtable;
+import java.util.Iterator;
+import java.util.Enumeration;
 
-import javax.xml.parsers.*;
-import org.xml.sax.*;
 
-import org.apache.tools.ant.*;
-import org.apache.tools.ant.types.*;
+import javax.xml.parsers.SAXParserFactory;
+import javax.xml.parsers.SAXParser;
+import org.xml.sax.InputSource;
+
+import org.apache.tools.ant.BuildException;
+import org.apache.tools.ant.Project;
+import org.apache.tools.ant.AntClassLoader;
+import org.apache.tools.ant.types.Path;
 import org.apache.tools.ant.taskdefs.Java;
 
 public class WeblogicDeploymentTool extends GenericDeploymentTool {
-    public static final String PUBLICID_EJB11
+    public final static String PUBLICID_EJB11
         = "-//Sun Microsystems, Inc.//DTD Enterprise JavaBeans 1.1//EN";
-    public static final String PUBLICID_EJB20
+    public final static String PUBLICID_EJB20
         = "-//Sun Microsystems, Inc.//DTD Enterprise JavaBeans 2.0//EN";
-    public static final String PUBLICID_WEBLOGIC_EJB510
+    public final static String PUBLICID_WEBLOGIC_EJB510
         = "-//BEA Systems, Inc.//DTD WebLogic 5.1.0 EJB//EN";
-    public static final String PUBLICID_WEBLOGIC_EJB600
+    public final static String PUBLICID_WEBLOGIC_EJB600
         = "-//BEA Systems, Inc.//DTD WebLogic 6.0.0 EJB//EN";
 
-    protected static final String DEFAULT_WL51_EJB11_DTD_LOCATION
+    protected final static String DEFAULT_WL51_EJB11_DTD_LOCATION
         = "/weblogic/ejb/deployment/xml/ejb-jar.dtd";
-    protected static final String DEFAULT_WL60_EJB11_DTD_LOCATION
+    protected final static String DEFAULT_WL60_EJB11_DTD_LOCATION
         = "/weblogic/ejb20/dd/xml/ejb11-jar.dtd";
-    protected static final String DEFAULT_WL60_EJB20_DTD_LOCATION
+    protected final static String DEFAULT_WL60_EJB20_DTD_LOCATION
         = "/weblogic/ejb20/dd/xml/ejb20-jar.dtd";
 
-    protected static final String DEFAULT_WL51_DTD_LOCATION
+    protected final static String DEFAULT_WL51_DTD_LOCATION
         = "/weblogic/ejb/deployment/xml/weblogic-ejb-jar.dtd";
-    protected static final String DEFAULT_WL60_51_DTD_LOCATION
+    protected final static String DEFAULT_WL60_51_DTD_LOCATION
         = "/weblogic/ejb20/dd/xml/weblogic510-ejb-jar.dtd";
-    protected static final String DEFAULT_WL60_DTD_LOCATION
+    protected final static String DEFAULT_WL60_DTD_LOCATION
         = "/weblogic/ejb20/dd/xml/weblogic600-ejb-jar.dtd";
 
-    protected static final String DEFAULT_COMPILER = "default";
+    protected final static String DEFAULT_COMPILER = "default";
 
-    protected static final String WL_DD = "weblogic-ejb-jar.xml";
-    protected static final String WL_CMP_DD = "weblogic-cmp-rdbms-jar.xml";
+    protected final static String WL_DD = "weblogic-ejb-jar.xml";
+    protected final static String WL_CMP_DD = "weblogic-cmp-rdbms-jar.xml";
 
-    protected static final String COMPILER_EJB11 = "weblogic.ejbc";
-    protected static final String COMPILER_EJB20 = "weblogic.ejbc20";
+    protected final static String COMPILER_EJB11 = "weblogic.ejbc";
+    protected final static String COMPILER_EJB20 = "weblogic.ejbc20";
 
     /** Instance variable that stores the suffix for the weblogic jarfile. */
     private String jarSuffix = ".jar";

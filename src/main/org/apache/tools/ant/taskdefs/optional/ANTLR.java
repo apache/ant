@@ -54,10 +54,16 @@
 
 package org.apache.tools.ant.taskdefs.optional;
 
-import java.io.*;
-import org.apache.tools.ant.*;
-import org.apache.tools.ant.taskdefs.*;
-import org.apache.tools.ant.types.*;
+import java.io.File;
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
+import org.apache.tools.ant.Task;
+import org.apache.tools.ant.Project;
+import org.apache.tools.ant.BuildException;
+import org.apache.tools.ant.taskdefs.Execute;
+import org.apache.tools.ant.taskdefs.LogStreamHandler;
+import org.apache.tools.ant.types.CommandlineJava;
 /**
  * @author Erik Meade, emeade@geekfarm.org
  */

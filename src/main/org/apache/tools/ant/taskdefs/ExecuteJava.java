@@ -57,7 +57,7 @@ package org.apache.tools.ant.taskdefs;
 
 import org.apache.tools.ant.AntClassLoader;
 import org.apache.tools.ant.BuildException;
-import org.apache.tools.ant.ExitException;
+
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.types.Commandline;
 import org.apache.tools.ant.types.CommandlineJava;
@@ -65,7 +65,7 @@ import org.apache.tools.ant.types.Path;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.io.*;
+import java.io.PrintStream;
 
 /*
  *

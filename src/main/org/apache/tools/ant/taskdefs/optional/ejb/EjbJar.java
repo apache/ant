@@ -55,8 +55,10 @@
 package org.apache.tools.ant.taskdefs.optional.ejb;
 
 // Standard java imports
-import java.io.*;
-import java.util.*;
+import java.io.File;
+import java.util.List;
+import java.util.ArrayList;
+import java.util.Iterator;
 
 // XML imports
 import javax.xml.parsers.SAXParser;
@@ -69,7 +71,9 @@ import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.DirectoryScanner;
 import org.apache.tools.ant.taskdefs.MatchingTask;
-import org.apache.tools.ant.types.*;
+import org.apache.tools.ant.types.Path;
+import org.apache.tools.ant.types.EnumeratedAttribute;
+import org.apache.tools.ant.types.FileSet;
 
 /**
  * <p>Provides automated ejb jar file creation for ant.  Extends the MatchingTask
@@ -175,10 +179,10 @@ public class EjbJar extends MatchingTask {
     }
 
     public static class NamingScheme extends EnumeratedAttribute {
-        static public final String EJB_NAME = "ejb-name";
-        static public final String DIRECTORY = "directory";
-        static public final String DESCRIPTOR = "descriptor";
-        static public final String BASEJARNAME = "basejarname";
+        public final static String EJB_NAME = "ejb-name";
+        public final static String DIRECTORY = "directory";
+        public final static String DESCRIPTOR = "descriptor";
+        public final static String BASEJARNAME = "basejarname";
         public String[] getValues() {
             return new String[] {EJB_NAME, DIRECTORY, DESCRIPTOR, BASEJARNAME};
         }

@@ -53,11 +53,17 @@
  */
 package org.apache.tools.ant.taskdefs.optional.sitraka.bytecode;
 
-import java.io.*;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.DataInputStream;
 
 import org.apache.tools.ant.taskdefs.optional.depend.constantpool.ConstantPool;
 import org.apache.tools.ant.taskdefs.optional.depend.constantpool.ClassCPInfo;
-import org.apache.tools.ant.taskdefs.optional.sitraka.bytecode.attributes.*;
+import org.apache.tools.ant.taskdefs.optional.sitraka.bytecode.attributes.AttributeInfoList;
+import org.apache.tools.ant.taskdefs.optional.sitraka.bytecode.attributes.SourceFile;
+import org.apache.tools.ant.taskdefs.optional.sitraka.bytecode.attributes.AttributeInfo;
+import org.apache.tools.ant.taskdefs.optional.sitraka.bytecode.attributes.SourceDir;
+import org.apache.tools.ant.taskdefs.optional.sitraka.bytecode.attributes.LineNumberTable;
 
 
 /**

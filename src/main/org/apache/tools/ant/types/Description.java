@@ -54,7 +54,7 @@
 
 package org.apache.tools.ant.types;
 
-import org.apache.tools.ant.Project;
+
 
 /**
  * Description is used to provide a project-wide description element

@@ -54,7 +54,7 @@
 
 package org.apache.tools.ant.taskdefs.optional.vss;
 
-import org.apache.tools.ant.*;
+import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.types.Commandline;
 
 /**
@@ -116,7 +116,7 @@ public class MSVSSLABEL extends MSVSS
     private String m_Version = null;
     private String m_Comment = "-";
 
-    public static final String FLAG_LABEL = "-L";
+    public final static String FLAG_LABEL = "-L";
 
     /**
      * Executes the task.

@@ -54,10 +54,25 @@
 
 package org.apache.tools.ant.taskdefs;
 
-import org.apache.tools.ant.*;
-import org.apache.tools.ant.taskdefs.*;
-import java.io.*;
-import java.util.*;
+import org.apache.tools.ant.BuildException;
+import org.apache.tools.ant.DirectoryScanner;
+import org.apache.tools.ant.Project;
+
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.Reader;
+import java.io.FileReader;
+import java.io.InputStreamReader;
+import java.io.Writer;
+import java.io.FileWriter;
+import java.io.OutputStreamWriter;
+import java.io.FileOutputStream;
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.util.Properties;
+import java.util.Vector;
 
 /**
  * Replaces all occurrences of one or more string tokens with given

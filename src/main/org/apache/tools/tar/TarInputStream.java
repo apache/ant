@@ -59,7 +59,10 @@
 
 package org.apache.tools.tar;
 
-import java.io.*;
+import java.io.FilterInputStream;
+import java.io.InputStream;
+import java.io.IOException;
+import java.io.OutputStream;
 
 /**
  * The TarInputStream reads a UNIX tar archive as an InputStream.

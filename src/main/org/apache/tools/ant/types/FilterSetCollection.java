@@ -54,20 +54,20 @@
 package org.apache.tools.ant.types;
 
 // java io classes
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
+
+
+
 
 // java util classes
 import java.util.Enumeration;
-import java.util.Hashtable;
-import java.util.Properties;
+
+
 import java.util.Vector;
 
 // ant classes
-import org.apache.tools.ant.BuildException;
-import org.apache.tools.ant.Project;
-import org.apache.tools.ant.Task;
+
+
+
 
 /**
  * A FilterSetCollection is a collection of filtersets each of which may have

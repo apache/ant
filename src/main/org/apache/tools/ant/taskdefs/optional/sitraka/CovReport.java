@@ -57,26 +57,31 @@ package org.apache.tools.ant.taskdefs.optional.sitraka;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.Task;
-import org.apache.tools.ant.taskdefs.*;
+import org.apache.tools.ant.taskdefs.LogStreamHandler;
+import org.apache.tools.ant.taskdefs.Execute;
 import org.apache.tools.ant.types.Commandline;
-import org.apache.tools.ant.types.CommandlineJava;
+
 import org.apache.tools.ant.types.Path;
 import org.apache.tools.ant.types.EnumeratedAttribute;
-import org.apache.tools.ant.types.FileSet;
-import org.apache.tools.ant.DirectoryScanner;
+
+
 import java.util.Vector;
 import java.io.File;
-import java.io.FilenameFilter;
+
 import java.io.IOException;
 
-import javax.xml.transform.*;
-import javax.xml.transform.stream.*;
-import javax.xml.transform.dom.*;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.Transformer;
+import javax.xml.transform.OutputKeys;
+import javax.xml.transform.Source;
+import javax.xml.transform.Result;
+import javax.xml.transform.stream.StreamResult;
+import javax.xml.transform.dom.DOMSource;
 import org.w3c.dom.Document;
 
-import org.apache.tools.ant.taskdefs.optional.depend.*;
-import org.apache.tools.ant.taskdefs.optional.depend.constantpool.*;
-import java.io.*;
+
+
+
 
 /**
  * Convenient task to run the snapshot merge utility for JProbe Coverage 3.0.

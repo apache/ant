@@ -55,7 +55,7 @@
 package org.apache.tools.ant.taskdefs.optional.ide;
 
 import java.util.Vector;
-import java.net.URLConnection;
+
 import java.net.HttpURLConnection;
 import java.util.Enumeration;
 import java.net.URL;

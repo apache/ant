@@ -55,8 +55,9 @@
 package org.apache.tools.ant.taskdefs.optional.sitraka;
 
 import java.util.Vector;
-import java.util.Enumeration;
-import org.apache.tools.ant.util.regexp.*;
+
+import org.apache.tools.ant.util.regexp.RegexpMatcher;
+import org.apache.tools.ant.util.regexp.RegexpMatcherFactory;
 
 /**
  * Filters information from coverage, somewhat similar to a <tt>FileSet</tt>.
@@ -131,7 +132,7 @@ public class ReportFilters {
 
 
 	/** default abstract filter element class */
-	public static abstract class FilterElement {
+	abstract public static class FilterElement {
 		protected String clazz = "*"; // default is all classes
 		protected String method = "*"; // default is all methods
 

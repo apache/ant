@@ -54,10 +54,16 @@
  
 package org.apache.tools.ant.taskdefs;
 
-import java.io.*;
-import java.util.*;
+import java.io.PrintStream;
+import java.io.File;
+import java.io.BufferedInputStream;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.util.Vector;
+import java.util.StringTokenizer;
+import java.util.Enumeration;
 import org.apache.tools.mail.MailMessage;
-import org.apache.tools.ant.Project;
+
 import org.apache.tools.ant.Task;
 import org.apache.tools.ant.BuildException;
 

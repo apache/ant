@@ -58,7 +58,7 @@ import org.apache.oro.text.regex.Perl5Substitution;
 import org.apache.oro.text.regex.Substitution;
 import org.apache.oro.text.regex.Util;
 
-import java.util.Vector;
+
 
 /***
  * Regular expression implementation using the Jakarta Oro package

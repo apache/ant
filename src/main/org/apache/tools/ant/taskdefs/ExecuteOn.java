@@ -54,9 +54,15 @@
 
 package org.apache.tools.ant.taskdefs;
 
-import org.apache.tools.ant.*;
-import org.apache.tools.ant.types.*;
-import org.apache.tools.ant.util.*;
+import org.apache.tools.ant.BuildException;
+import org.apache.tools.ant.DirectoryScanner;
+import org.apache.tools.ant.Project;
+import org.apache.tools.ant.types.FileSet;
+import org.apache.tools.ant.types.Commandline;
+import org.apache.tools.ant.types.Mapper;
+import org.apache.tools.ant.types.EnumeratedAttribute;
+import org.apache.tools.ant.util.FileNameMapper;
+import org.apache.tools.ant.util.SourceFileScanner;
 
 import java.util.Hashtable;
 import java.util.Vector;

@@ -54,8 +54,16 @@
 
 package org.apache.tools.ant.taskdefs;
 
-import org.apache.tools.ant.*;
-import java.io.*;
+import org.apache.tools.ant.Task;
+import org.apache.tools.ant.BuildException;
+import org.apache.tools.ant.Project;
+import java.io.File;
+import java.io.PrintWriter;
+import java.io.FileWriter;
+import java.io.InputStream;
+import java.io.IOException;
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
 
 /**
  * Executes a given command if the os platform is appropriate.
@@ -74,7 +82,7 @@ public class Exec extends Task {
     protected PrintWriter fos = null;
     private boolean failOnError = false;
 
-    private static final int BUFFER_SIZE = 512;
+    private final static int BUFFER_SIZE = 512;
 
     public void execute() throws BuildException {
         run(command);

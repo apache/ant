@@ -54,16 +54,41 @@
 
 package org.apache.tools.ant.taskdefs;
 
-import org.apache.tools.ant.*;
-import org.apache.tools.ant.types.*;
+import org.apache.tools.ant.Task;
+import org.apache.tools.ant.AntClassLoader;
+import org.apache.tools.ant.BuildException;
+import org.apache.tools.ant.DirectoryScanner;
+import org.apache.tools.ant.Project;
+import org.apache.tools.ant.ProjectHelper;
+import org.apache.tools.ant.types.EnumeratedAttribute;
+import org.apache.tools.ant.types.Path;
+import org.apache.tools.ant.types.Reference;
+import org.apache.tools.ant.types.FileSet;
 
-import java.io.*;
+import java.io.File;
+import java.io.PrintStream;
+import java.io.BufferedOutputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.Reader;
+import java.io.BufferedReader;
+import java.io.StringReader;
+import java.io.FileReader;
+import java.io.InputStreamReader;
+import java.io.FileInputStream;
 import java.util.Enumeration;
 import java.util.StringTokenizer;
 import java.util.Vector;
 import java.util.Properties;
-import java.util.zip.*;
-import java.sql.*;
+
+import java.sql.Connection;
+import java.sql.Statement;
+import java.sql.Driver;
+import java.sql.SQLException;
+import java.sql.DatabaseMetaData;
+import java.sql.SQLWarning;
+import java.sql.ResultSet;
+import java.sql.ResultSetMetaData;
 
 /**
  * Reads in a text file containing SQL statements seperated with semicolons
@@ -76,9 +101,9 @@ import java.sql.*;
  */
 public class SQLExec extends Task {
 
-    static public class DelimiterType extends EnumeratedAttribute {
-        static public final String NORMAL = "normal";
-        static public final String ROW = "row";
+    public static class DelimiterType extends EnumeratedAttribute {
+        public final static String NORMAL = "normal";
+        public final static String ROW = "row";
         public String[] getValues() {
             return new String[] {NORMAL, ROW};
         }

@@ -54,7 +54,7 @@
 
 package org.apache.tools.ant;
 
-import java.io.*;
+import java.io.PrintStream;
 
 /**
  * Interface used by Ant to log the build output. 

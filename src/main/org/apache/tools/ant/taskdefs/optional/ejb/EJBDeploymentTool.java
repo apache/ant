@@ -54,13 +54,13 @@
 
 package org.apache.tools.ant.taskdefs.optional.ejb;
 
-import java.io.*;
+
 
 import javax.xml.parsers.SAXParser;
 
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Task;
-import org.apache.tools.ant.types.*;
+
 
 public interface EJBDeploymentTool {
     /**

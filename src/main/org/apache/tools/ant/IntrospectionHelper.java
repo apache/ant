@@ -58,9 +58,12 @@ import org.apache.tools.ant.types.Path;
 import org.apache.tools.ant.types.DataType;
 import org.apache.tools.ant.types.EnumeratedAttribute;
 
-import java.lang.reflect.*;
+import java.lang.reflect.Method;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Constructor;
 import java.io.File;
-import java.util.*;
+import java.util.Enumeration;
+import java.util.Hashtable;
 
 /**
  * Helper class that collects the methods a task or nested element
@@ -250,7 +253,7 @@ public class IntrospectionHelper implements BuildListener {
     /**
      * Factory method for helper objects.
      */
-    public synchronized static IntrospectionHelper getHelper(Class c) {
+    public static synchronized IntrospectionHelper getHelper(Class c) {
         IntrospectionHelper ih = (IntrospectionHelper) helpers.get(c);
         if (ih == null) {
             ih = new IntrospectionHelper(c);

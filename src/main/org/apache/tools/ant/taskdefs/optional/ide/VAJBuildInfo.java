@@ -88,7 +88,7 @@ class VAJBuildInfo implements Runnable {
     /**
      * This exception is thrown when a build is interrupted
      */
-    static public class BuildInterruptedException extends BuildException {
+    public static class BuildInterruptedException extends BuildException {
         public String toString() {
             return "BUILD INTERRUPTED";
         }
