@@ -536,6 +536,13 @@ public class Execute {
             setExitValue(process.exitValue());
         } catch (InterruptedException e) {
             process.destroy();
+        } finally {
+            try {
+                process.getInputStream().close();
+                process.getOutputStream().close();
+                process.getErrorStream().close();
+            } catch (IOException eyeOhEx) {
+            }
         }
     }
 
