@@ -269,7 +269,7 @@ public class Replace extends MatchingTask {
          * received data.
          */
         void flush() {
-            int pos = replace();
+            replace();
             outputBuffer.append(inputBuffer);
             inputBuffer.delete(0, inputBuffer.length());
         }
@@ -365,7 +365,7 @@ public class Replace extends MatchingTask {
 
         /**
          * Constructs the output component. Opens the file for writing.
-         * @param source The file to read from.
+         * @param out The file to read to.
          * @throws IOException When the file cannot be read from.
          */
         FileOutput(File out) throws IOException {
@@ -394,6 +394,7 @@ public class Replace extends MatchingTask {
          * @return false to be inline with the Replacefilter.
          * (Yes defining an interface crossed my mind, but would publish the
          * internal behavior.)
+         * @throws IOException when the output cannot be written.
          */
         boolean process() throws IOException {
             writer.write(inputBuffer.toString());
@@ -403,6 +404,7 @@ public class Replace extends MatchingTask {
 
         /**
          * Processes the buffer to the end.
+         * @throws IOException when the output cannot be flushed.
          */
         void flush() throws IOException {
             process();
