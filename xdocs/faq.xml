@@ -8,7 +8,7 @@
 
   <faqsection title="General">
     <faq id="what-is-ant">
-      <question>What is Ant?</question>
+      <question>What is Apache Ant?</question>
       <answer>
         <p> Ant is a Java based build tool. In theory it is kind of
         like &quot;make&quot; without makes wrinkles and with the full
@@ -50,7 +50,7 @@
 
         <p>In January 2000 Ant was moved to a separate CVS module and
         was promoted to a project of its own, independent of
-        Tomcat.</p>
+        Tomcat.  Ant became Apache Ant.</p>
 
         <p>The first version of Ant that was exposed a lager audience
         was the one that shipped with Tomcat&apos;s 3.1 release on 19 April

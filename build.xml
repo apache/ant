@@ -2,7 +2,7 @@
 
 <!-- 
   =======================================================================
-    Ant own build file                                                      
+    Apache Ant own build file                                                      
   ======================================================================= 
 -->
 <project default="main" basedir=".">
@@ -12,7 +12,7 @@
   <property file=".ant.properties" />
   <property file="${user.home}/.ant.properties" />
 
-  <property name="Name" value="Ant"/>
+  <property name="Name" value="Apache Ant"/>
   <property name="name" value="ant"/>
   <property name="version" value="1.5alpha"/>
 
@@ -299,12 +299,12 @@
   
   <!-- 
        =================================================================== 
-         Create the ant jars: ant.jar and optional.jar
+         Create the Apache Ant jars: ant.jar and optional.jar
        =================================================================== 
   -->
   <target name="jars" 
           depends="build" 
-          description="--> creates the ant jars">
+          description="--> creates the Apache Ant jars">
 
     <jar file="${build.lib}/${name}.jar" 
          basedir="${build.classes}" 
@@ -325,12 +325,12 @@
 
   <!--
        ===================================================================
-         Create the essential distribution that can run ant
+         Create the essential distribution that can run Apache Ant
        ===================================================================
   -->
   <target name="dist-lite" 
           depends="jars"
-          description="--> creates a minimum distribution to run ant">
+          description="--> creates a minimum distribution to run Apache Ant">
 
     <mkdir dir="${dist.dir}"/>
     <mkdir dir="${dist.bin}"/>
@@ -596,7 +596,7 @@
 
   <!--
        ===================================================================
-         Installs ant
+         Installs Apache Ant
        ===================================================================
   -->
   <target name="install" if="ant.install">
@@ -635,7 +635,7 @@
              version="true"
              windowtitle="${Name} API"
              doctitle="${Name}">
-      <group title="Ant Core" packages="org.apache.tools.ant*" />
+      <group title="Apache Ant Core" packages="org.apache.tools.ant*" />
       <group title="Core Tasks" packages="org.apache.tools.ant.taskdefs*" />
       <group title="Optional Tasks" packages="org.apache.tools.ant.taskdefs.optional*" />
 

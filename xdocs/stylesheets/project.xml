@@ -8,7 +8,7 @@
     -->
     
     <body>
-    <menu name="Ant">
+    <menu name="Apache Ant">
         <item name="Front Page"            
               href="/index.html"/>
         <item name="News"                 

@@ -579,7 +579,7 @@ public class Main {
                 
                 String lSep = System.getProperty("line.separator");
                 StringBuffer msg = new StringBuffer();
-                msg.append("Ant version ");
+                msg.append("Apache Ant version ");
                 msg.append(props.getProperty("VERSION"));
                 msg.append(" compiled on ");
                 msg.append(props.getProperty("DATE"));
