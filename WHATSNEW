@@ -6,10 +6,21 @@ Fixed bugs:
 
 * <ant>'s antfile attribute will now also be considered an absolute path on
   Windows systems, if it starts with a \ and no drive specifier.
-
+ 
 * The fullpath attribute of <zipfileset> has been ignored if you used
   the src attribute at the same time.
 
+* The manifest file is now always placed as the second entry (after /META-INF)
+  in generated jars. This allows the manifest to be read by JarInputStreams
+  
+* Fixed bug in depend task which would fail with a NullPointerException if no
+  dependency cache was specified.
+  
+* sql task now handles REM statements correctly so that lines starying with rem
+  but which are not comments are actually processed.
+  
+* XMLLogger no uses the task's name rather than the classname
+  
 Other changes:
 --------------
 
