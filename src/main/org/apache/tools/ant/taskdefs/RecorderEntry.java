@@ -21,6 +21,7 @@ import org.apache.tools.ant.BuildEvent;
 import org.apache.tools.ant.BuildLogger;
 import org.apache.tools.ant.DefaultLogger;
 import org.apache.tools.ant.Project;
+import org.apache.tools.ant.SubBuildListener;
 import org.apache.tools.ant.util.StringUtils;
 
 /**
@@ -30,7 +31,7 @@ import org.apache.tools.ant.util.StringUtils;
  * @version 0.5
  * @since Ant 1.4
  */
-public class RecorderEntry implements BuildLogger {
+public class RecorderEntry implements BuildLogger, SubBuildListener {
 
     //////////////////////////////////////////////////////////////////////
     // ATTRIBUTES
@@ -47,6 +48,8 @@ public class RecorderEntry implements BuildLogger {
     private long targetStartTime = 0L;
     /** Strip task banners if true.  */
     private boolean emacsMode = false;
+    /** project instance the recorder is associated with */
+    private Project project;
 
     //////////////////////////////////////////////////////////////////////
     // CONSTRUCTORS / INITIALIZERS
@@ -99,7 +102,32 @@ public class RecorderEntry implements BuildLogger {
                  + StringUtils.LINE_SEP);
             error.printStackTrace(out);
         }
-        close();
+        cleanup();
+    }
+
+    /**
+     * Cleans up any resources held by this recorder entry at the end
+     * of a subbuild if it has been created for the subbuild's project
+     * instance.
+     *
+     * @param event the buildFinished event
+     *
+     * @since Ant 1.6.2
+     */
+    public void subBuildFinished(BuildEvent event) {
+        if (event.getProject() == project) {
+            cleanup();
+        }
+    }
+
+    /**
+     * Empty implementation to satisfy the BuildListener interface.
+     *
+     * @param event the buildStarted event
+     *
+     * @since Ant 1.6.2
+     */
+    public void subBuildStarted(BuildEvent event) {
     }
 
 
@@ -209,11 +237,29 @@ public class RecorderEntry implements BuildLogger {
     }
 
     /**
+     * Set the project associated with this recorder entry.
+     *
+     * @param project the project instance
+     *
      * @since 1.6.2
      */
-    public void close() {
+    public void setProject(Project project) {
+        this.project = project;
+        if (project != null) {
+            project.addBuildListener(this);
+        }
+    }
+
+    /**
+     * @since 1.6.2
+     */
+    public void cleanup() {
         out.flush();
         out.close();
+        if (project != null) {
+            project.removeBuildListener(this);
+        }
+        project = null;
     }
 }
 

@@ -379,32 +379,22 @@ public class Ant extends Task {
             addReferences();
 
             if (target != null && !"".equals(target)) {
+                Throwable t = null;
                 try {
                     log("Entering " + antFile + "...", Project.MSG_VERBOSE);
+                    newProject.fireSubBuildStarted();
                     newProject.executeTarget(target);
                 } catch (BuildException ex) {
-                    throw ProjectHelper.addLocationToBuildException(
-                        ex, getLocation());
-              } finally {
+                    t = ProjectHelper
+                        .addLocationToBuildException(ex, getLocation());
+                    throw (BuildException) t;
+                } finally {
                     log("Exiting " + antFile + ".", Project.MSG_VERBOSE);
+                    newProject.fireSubBuildFinished(t);
                 }
             }
         } finally {
             // help the gc
-            Iterator iter = getBuildListeners();
-            while (iter.hasNext()) {
-                newProject.removeBuildListener((BuildListener) iter.next());
-            }
-            iter = newProject.getBuildListeners().iterator();
-            while (iter.hasNext()) {
-                Object o = iter.next();
-                if (o instanceof RecorderEntry) {
-                    ((RecorderEntry) o).close();
-                } else if (o instanceof AntClassLoader) {
-                    ((AntClassLoader) o).cleanup();
-                }
-            }
-            
             newProject = null;
             Enumeration e = properties.elements();
             while (e.hasMoreElements()) {
