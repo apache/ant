@@ -11,7 +11,6 @@ import java.util.Properties;
 import java.util.Stack;
 import org.apache.myrmidon.api.TaskException;
 import org.apache.tools.ant.AntClassLoader;
-import org.apache.tools.ant.Project;
 import org.apache.tools.ant.util.FileNameMapper;
 
 /**
@@ -19,23 +18,15 @@ import org.apache.tools.ant.util.FileNameMapper;
  *
  * @author <a href="mailto:stefan.bodewig@epost.de">Stefan Bodewig</a>
  */
-public class Mapper extends DataType implements Cloneable
+public class Mapper
+    extends DataType
+    implements Cloneable
 {
-
-    protected MapperType type = null;
-
-    protected String classname = null;
-
-    protected Path classpath = null;
-
-    protected String from = null;
-
-    protected String to = null;
-
-    public Mapper( Project p )
-    {
-        setProject( p );
-    }
+    private MapperType m_type;
+    private String m_classname;
+    private Path m_classpath;
+    private String m_from;
+    private String m_to;
 
     /**
      * Set the class name of the FileNameMapper to use.
@@ -49,7 +40,7 @@ public class Mapper extends DataType implements Cloneable
         {
             throw tooManyAttributes();
         }
-        this.classname = classname;
+        this.m_classname = classname;
     }
 
     /**
@@ -64,13 +55,13 @@ public class Mapper extends DataType implements Cloneable
         {
             throw tooManyAttributes();
         }
-        if( this.classpath == null )
+        if( this.m_classpath == null )
         {
-            this.classpath = classpath;
+            this.m_classpath = classpath;
         }
         else
         {
-            this.classpath.append( classpath );
+            this.m_classpath.append( classpath );
         }
     }
 
@@ -102,7 +93,7 @@ public class Mapper extends DataType implements Cloneable
         {
             throw tooManyAttributes();
         }
-        this.from = from;
+        this.m_from = from;
     }
 
     /**
@@ -116,7 +107,7 @@ public class Mapper extends DataType implements Cloneable
     public void setRefid( Reference r )
         throws TaskException
     {
-        if( type != null || from != null || to != null )
+        if( m_type != null || m_from != null || m_to != null )
         {
             throw tooManyAttributes();
         }
@@ -135,7 +126,7 @@ public class Mapper extends DataType implements Cloneable
         {
             throw tooManyAttributes();
         }
-        this.to = to;
+        this.m_to = to;
     }
 
     /**
@@ -150,7 +141,7 @@ public class Mapper extends DataType implements Cloneable
         {
             throw tooManyAttributes();
         }
-        this.type = type;
+        this.m_type = type;
     }
 
     /**
@@ -167,39 +158,39 @@ public class Mapper extends DataType implements Cloneable
             return getRef().getImplementation();
         }
 
-        if( type == null && classname == null )
+        if( m_type == null && m_classname == null )
         {
             throw new TaskException( "one of the attributes type or classname is required" );
         }
 
-        if( type != null && classname != null )
+        if( m_type != null && m_classname != null )
         {
             throw new TaskException( "must not specify both type and classname attribute" );
         }
 
         try
         {
-            if( type != null )
+            if( m_type != null )
             {
-                classname = type.getImplementation();
+                m_classname = m_type.getImplementation();
             }
 
             Class c = null;
-            if( classpath == null )
+            if( m_classpath == null )
             {
-                c = Class.forName( classname );
+                c = Class.forName( m_classname );
             }
             else
             {
                 AntClassLoader al = new AntClassLoader( getProject(),
-                                                        classpath );
-                c = al.loadClass( classname );
+                                                        m_classpath );
+                c = al.loadClass( m_classname );
                 AntClassLoader.initializeClass( c );
             }
 
             FileNameMapper m = (FileNameMapper)c.newInstance();
-            m.setFrom( from );
-            m.setTo( to );
+            m.setFrom( m_from );
+            m.setTo( m_to );
             return m;
         }
         catch( TaskException be )
@@ -212,9 +203,9 @@ public class Mapper extends DataType implements Cloneable
         }
         finally
         {
-            if( type != null )
+            if( m_type != null )
             {
-                classname = null;
+                m_classname = null;
             }
         }
     }
@@ -231,11 +222,11 @@ public class Mapper extends DataType implements Cloneable
         {
             throw noChildrenAllowed();
         }
-        if( this.classpath == null )
+        if( this.m_classpath == null )
         {
-            this.classpath = new Path( getProject() );
+            this.m_classpath = new Path();
         }
-        return this.classpath.createPath();
+        return this.m_classpath.createPath();
     }
 
     /**
@@ -263,41 +254,6 @@ public class Mapper extends DataType implements Cloneable
         else
         {
             return (Mapper)o;
-        }
-    }
-
-    /**
-     * Class as Argument to FileNameMapper.setType.
-     *
-     * @author RT
-     */
-    public static class MapperType extends EnumeratedAttribute
-    {
-        private Properties implementations;
-
-        public MapperType()
-        {
-            implementations = new Properties();
-            implementations.put( "identity",
-                                 "org.apache.tools.ant.util.IdentityMapper" );
-            implementations.put( "flatten",
-                                 "org.apache.tools.ant.util.FlatFileNameMapper" );
-            implementations.put( "glob",
-                                 "org.apache.tools.ant.util.GlobPatternMapper" );
-            implementations.put( "merge",
-                                 "org.apache.tools.ant.util.MergingMapper" );
-            implementations.put( "regexp",
-                                 "org.apache.tools.ant.util.RegexpPatternMapper" );
-        }
-
-        public String getImplementation()
-        {
-            return implementations.getProperty( getValue() );
-        }
-
-        public String[] getValues()
-        {
-            return new String[]{"identity", "flatten", "glob", "merge", "regexp"};
         }
     }
 
