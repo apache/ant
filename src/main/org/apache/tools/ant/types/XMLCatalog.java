@@ -84,8 +84,23 @@ import org.xml.sax.XMLReader;
 
 
 /**
- * This data type provides a catalog of DTD locations.
- * <p>
+ * <p>This data type provides a catalog of resource locations (such as
+ * DTDs and XML entities), based on the <a
+ * href="http://oasis-open.org/committees/entity/spec-2001-08-06.html">
+ * OASIS "Open Catalog" standard</a>.  The catalog entries are used
+ * both for Entity resolution and URI resolution, in accordance with
+ * the {@link org.xml.sax.EntityResolver EntityResolver} and {@link
+ * javax.xml.transform.URIResolver URIResolver} interfaces as defined
+ * in the <a href="http://java.sun.com/xml/jaxp">Java API for XML
+ * Processing Specification</a>.</p>
+ *
+ * <p>Currently, only <code>&lt;dtd&gt;</code> and
+ * <code>&lt;entity&gt;</code> elements may be specified inline; these
+ * correspond to OASIS catalog entry types <code>PUBLIC</code> and
+ * <code>URI</code> respectively.</p>
+ *
+ * <p>The following is a usage example:</p>
+ *
  * <code>
  * &lt;xmlcatalog&gt;<br>
  * &nbsp;&nbsp;&lt;dtd publicId="" location="/path/to/file.jar" /&gt;<br>
@@ -146,8 +161,7 @@ public class XMLCatalog extends DataType implements Cloneable, EntityResolver, U
     }
 
     /**
-     * Returns the elements of the catalog - ResolverLocation and
-     * FileSet objects.
+     * Returns the elements of the catalog - DTDLocation objects.
      *
      * @return the elements of the catalog - DTDLocation objects
      */
@@ -291,7 +305,7 @@ public class XMLCatalog extends DataType implements Cloneable, EntityResolver, U
      * Makes this instance in effect a reference to another XMLCatalog
      * instance.
      *
-     * <p>You must not set another attribute or nest elements inside *
+     * <p>You must not set another attribute or nest elements inside
      * this element if you make it a reference.  That is, a catalog
      * cannot both refer to another <em>and</em> contain elements or
      * attributes.</p>
