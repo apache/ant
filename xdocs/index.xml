@@ -9,11 +9,12 @@
 
 <body>
 
-  <section name="Ant 1.4">
-  <h3>Ant 1.4 Available !</h3>
-  <p>The Ant 1.4 release is now available for 
-     <a href="http://www.apache.org/dist/jakarta/jakarta-ant/release/v1.4/">
-     download</a>.
+  <section name="Ant 1.4.1">
+  <h3>Ant 1.4.1 Available !</h3>
+  <p>Version 1.4.1 of Ant has been release. This is a bugfix release which corrects a few problems
+     in the 1.4 release. The release is available for download 
+     <a href="http://www.apache.org/dist/jakarta/jakarta-ant/release/v1.4.1/">
+     here</a>.
      </p>
   </section>
 
