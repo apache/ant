@@ -322,8 +322,8 @@ Fixed bugs:
   connetced to, potentially leading to exceptions in commons-net.
   Bugzilla Report 33618.
 
-* <zip>'s defaultexcludes attribute was ignored when an archive was
-  updated.  Bugzilla Report 33412.
+* <zip> would drop files matched by defaultexcludes during updates.
+  Bugzilla Report 33412.
 
 * <zip> couldn't store files with size between 2GB and 4GB (the
   upper limit set by the ZIP format itself).  Bugzilla Report 33310.
