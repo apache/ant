@@ -135,6 +135,7 @@ public class Builder {
         files.add(new File(UTIL_ROOT, "regexp/RegexpFactory.java"));
         files.add(new File(UTIL_ROOT, "regexp/RegexpMatcherFactory.java"));
         files.add(new File(TYPES_ROOT, "Commandline.java"));
+        files.add(new File(UTIL_ROOT, "JavaEnvUtils.java"));
         files.add(new File(PACKAGE_ROOT, "BuildException.java"));
         files.add(new File(PACKAGE_ROOT, "Location.java"));
         files.add(new File(PACKAGE_ROOT, "AntClassLoader.java"));
