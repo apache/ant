@@ -284,14 +284,14 @@ try {
                 switch (indata[k]) {
                     case ' ':
                         // advance column
-                        if (addtab == 0) outdata[o++]=indata[k];
+                        if (addtab == 0) outdata[o++]=(byte)' ';
                         col++;
                         break;
 
                     case '\t':
                         if (addtab == 0) {
                             // treat like any other character
-                            outdata[o++]=indata[k];
+                            outdata[o++]=(byte)'\t';
                             col++;
                         } else {
                             // advance column to next tab stop
@@ -302,15 +302,15 @@ try {
                     case '\r':
                         if (addcr == 0) {
                             // treat like any other character
-                            outdata[o++]=indata[k];
+                            outdata[o++]=(byte)'\r';
                             col++;
                         }
                         break;
 
                     case '\n':
                         // start a new line (optional CR followed by LF)
-                        if (addcr == +1) outdata[o++]='\r';
-                        outdata[o++]='\n';
+                        if (addcr == +1) outdata[o++]=(byte)'\r';
+                        outdata[o++]=(byte)'\n';
                         line=o;
                         col=0;
                         break;
@@ -324,14 +324,14 @@ try {
                             // add tabs until this column would be passed
                             // note: the start of line is adjusted to match
                             while ((diff|7)<col) {
-                                outdata[o++]='\t';
+                                outdata[o++]=(byte)'\t';
                                 line-=7-(diff&7);
                                 diff=o-line;
                             };
                         };
 
                         // space out to desired column
-                        while (o<line+col) outdata[o++]=' ';
+                        while (o<line+col) outdata[o++]=(byte)' ';
 
                         // append desired character
                         outdata[o++]=indata[k];
