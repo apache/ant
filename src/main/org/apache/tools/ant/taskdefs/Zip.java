@@ -1,5 +1,5 @@
 /*
- * Copyright  2000-2004 The Apache Software Foundation
+ * Copyright  2000-2005 The Apache Software Foundation
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -113,6 +113,12 @@ public class Zip extends MatchingTask {
      * @since Ant 1.6.2
      */
     private boolean roundUp = true;
+
+    /**
+     * Comment for the archive.
+     * @since Ant 1.6.3
+     */
+    private String comment = "";
 
     /**
      * This is the name/location of where to
@@ -289,6 +295,26 @@ public class Zip extends MatchingTask {
      */
     public void setKeepCompression(boolean keep) {
         keepCompression = keep;
+    }
+    
+    /**
+     * Comment to use for archive.
+     *
+     * @param comment The content of the comment.
+     * @since Ant 1.6.3
+     */
+    public void setComment(String comment) {
+        this.comment = comment;
+    }
+
+    /**
+     * Comment of the archive
+     *
+     * @return Comment of the archive.
+     * @since Ant 1.6.3
+     */
+    public String getComment() {
+        return comment;
     }
 
     /**
@@ -484,6 +510,7 @@ public class Zip extends MatchingTask {
                     }
                     addResources(oldFiles, r, zOut);
                 }
+                zOut.setComment(comment);
                 finalizeZipOutputStream(zOut);
 
                 // If we've been successful on an update, delete the

@@ -161,6 +161,9 @@ Changes that could break older environments:
 
 * Expose objects and  methods in IntrospectionHelper. Bugzilla Report 30794.
 
+* Added a comment attribute to the zip task.
+  Bugzilla report 22793.
+
 Fixed bugs:
 -----------
 
