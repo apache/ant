@@ -633,6 +633,7 @@
     <fixcrlf srcdir="${dist.bin}" eol="lf">
       <include name="ant" />
       <include name="antRun" />
+      <include name="*.pl" />
     </fixcrlf>
     <fixcrlf srcdir="${dist.bin}" includes="*.pl" />
 
@@ -645,6 +646,7 @@
          <include name="**/ant" />
          <include name="**/antRun" />
          <include name="**/*.pl" />
+         <include name="**/*.py" />
        </fileset>
     </chmod>
 
@@ -714,7 +716,8 @@
        <fileset dir="${dist.bin}">
          <include name="**/ant" />
          <include name="**/antRun" />
-         <include name="**/runant.pl" />
+         <include name="**/*.pl" />
+         <include name="**/*.py" />
        </fileset>
     </chmod>
 
@@ -808,9 +811,10 @@
     <chmod perm="ugo+x" failonerror="${chmod.fail}">
        <fileset dir="${src.dist.dir}">
          <include name="**/.sh" />
+         <include name="**/.pl" />
+         <include name="**/.py" />
          <include name="**/ant" />
          <include name="**/antRun" />
-         <include name="**/runant.pl" />
        </fileset>
     </chmod>
 
@@ -840,12 +844,14 @@
         <include name="${dist.name}/bin/ant"/>
         <include name="${dist.name}/bin/antRun"/>
         <include name="${dist.name}/bin/*.pl"/>
+        <include name="${dist.name}/bin/*.py"/>
       </tarfileset>
       <tarfileset dir="${dist.name}/.." username="ant" group="ant">
         <include name="${dist.name}/**"/>
         <exclude name="${dist.name}/bin/ant"/>
         <exclude name="${dist.name}/bin/antRun"/>
         <include name="${dist.name}/bin/*.pl"/>
+        <include name="${dist.name}/bin/*.py"/>
       </tarfileset>
     </tar>
     <gzip zipfile="${dist.base}/bin/${dist.name}-bin.tar.gz"
@@ -971,6 +977,8 @@
           description="--> cleans up everything">
     <delete file="${bootstrap.dir}/bin/antRun" />
     <delete file="${bootstrap.dir}/bin/antRun.bat" />
+    <delete file="${bootstrap.dir}/bin/*.pl" />
+    <delete file="${bootstrap.dir}/bin/*.py" />
   </target>
 
   <!--
