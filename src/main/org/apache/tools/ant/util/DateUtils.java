@@ -59,6 +59,7 @@ import java.text.MessageFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Locale;
 import java.util.TimeZone;
 
 /**
@@ -93,6 +94,12 @@ public final class DateUtils {
      */
     public static final String ISO8601_TIME_PATTERN
             = "HH:mm:ss";
+
+    /**
+     * Format used for SMTP (and probably other) Date headers.
+     */
+    public static final DateFormat DATE_HEADER_FORMAT
+        = new SimpleDateFormat("EEE, dd MMM yyyy HH:mm:ss ", Locale.US);
 
 
 // code from Magesh moved from DefaultLogger and slightly modified
@@ -218,5 +225,35 @@ public final class DateUtils {
             epact++;
         }
         return (((((dayOfTheYear + epact) * 6) + 11) % 177) / 22) & 7;
+    }
+
+    /**
+     * Returns the current Date in a format suitable for a SMTP date
+     * header.
+     *
+     * @since Ant 1.5.2
+     */
+    public static String getDateForHeader() {
+        Calendar cal = Calendar.getInstance();
+        TimeZone tz = cal.getTimeZone();
+        int offset = tz.getOffset(cal.get(Calendar.ERA), 
+                                  cal.get(Calendar.YEAR),
+                                  cal.get(Calendar.MONTH),
+                                  cal.get(Calendar.DAY_OF_MONTH),
+                                  cal.get(Calendar.DAY_OF_WEEK),
+                                  cal.get(Calendar.MILLISECOND));
+        StringBuffer tzMarker = new StringBuffer(offset < 0 ? "-" : "+");
+        offset = Math.abs(offset);
+        int hours = offset / (60 * 60 * 1000);
+        int minutes = offset / (60 * 1000) - 60 * hours;
+        if (hours < 10) {
+            tzMarker.append("0");
+        }
+        tzMarker.append(hours);
+        if (minutes < 10) {
+            tzMarker.append("0");
+        }
+        tzMarker.append(minutes);
+        return DATE_HEADER_FORMAT.format(cal.getTime()) + tzMarker.toString();
     }
 }

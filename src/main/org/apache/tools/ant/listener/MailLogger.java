@@ -64,6 +64,7 @@ import java.util.StringTokenizer;
 import org.apache.tools.ant.BuildEvent;
 import org.apache.tools.ant.DefaultLogger;
 import org.apache.tools.ant.Project;
+import org.apache.tools.ant.util.DateUtils;
 import org.apache.tools.ant.util.StringUtils;
 import org.apache.tools.mail.MailMessage;
 
@@ -218,6 +219,7 @@ public class MailLogger extends DefaultLogger {
     private void sendMail(String mailhost, int port, String from, String toList,
                           String subject, String message) throws IOException {
         MailMessage mailMessage = new MailMessage(mailhost, port);
+        mailMessage.setHeader("Date", DateUtils.getDateForHeader());
 
         mailMessage.from(from);
 

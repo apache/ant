@@ -96,6 +96,8 @@ Other changes:
 
 * new task <attrib> to change file attributes on Windows systems.
 
+* MailLogger now sets the Date header correctly.
+
 Changes from Ant 1.5.1Beta1 to 1.5.1
 ====================================
 
