@@ -68,15 +68,10 @@ import org.apache.tools.zip.UnixStat;
  * entries of a Zip file for inclusion in another Zip file.  It also includes
  * a prefix attribute which is prepended to each entry in the output Zip file.
  *
- * At present, ZipFileSets are not surfaced in the public API.  FileSets
- * nested in a Zip task are instantiated as ZipFileSets, and their attributes
- * are only recognized in the context of the the Zip task.
- * It is not possible to define a ZipFileSet outside of the Zip task and
- * refer to it via a refid.  However a standard FileSet may be included by
- * reference in the Zip task, and attributes in the refering ZipFileSet
- * can augment FileSet definition.
+ * Since ant 1.6 ZipFileSet can be defined with an id and referenced in packaging tasks
  *
  * @author Don Ferguson <a href="mailto:don@bea.com">don@bea.com</a>
+ * @author <a href="mailto:levylambert@tiscali-dsl.de">Antoine Levy-Lambert</a>
  */
 public class ZipFileSet extends FileSet {
 
@@ -126,6 +121,9 @@ public class ZipFileSet extends FileSet {
      * from being specified.
      */
     public void setDir(File dir) throws BuildException {
+        if (isReference()) {
+             throw tooManyAttributes();
+         }
         if (srcFile != null) {
             throw new BuildException("Cannot set both dir and src attributes");
         } else {
@@ -141,6 +139,9 @@ public class ZipFileSet extends FileSet {
      * @param srcFile The zip file from which to extract entries.
      */
     public void setSrc(File srcFile) {
+        if (isReference()) {
+             throw tooManyAttributes();
+         }
         if (hasDir) {
             throw new BuildException("Cannot set both dir and src attributes");
         }
@@ -152,41 +153,62 @@ public class ZipFileSet extends FileSet {
      * References are not followed, since it is not possible
      * to have a reference to a ZipFileSet, only to a FileSet.
      */
-    public File getSrc() {
+    public File getSrc(Project p) {
+        if (isReference()) {
+            return ((ZipFileSet)getRef(p)).getSrc(p);
+        }
         return srcFile;
     }
 
     /**
      * Prepend this prefix to the path for each zip entry.
-     * Does not perform reference test; the referenced file set
-     * can be augmented with a prefix.
+     * Prevents both prefix and fullpath from being specified
      *
      * @param prefix The prefix to prepend to entries in the zip file.
      */
     public void setPrefix(String prefix) {
+        if (isReference()) {
+             throw tooManyAttributes();
+         }
+        if (!fullpath.equals("")) {
+            throw new BuildException("Cannot set both fullpath and prefix attributes");
+        }
         this.prefix = prefix;
     }
 
     /**
      * Return the prefix prepended to entries in the zip file.
      */
-    public String getPrefix() {
+    public String getPrefix(Project p) {
+        if (isReference()) {
+            return ((ZipFileSet)getRef(p)).getPrefix(p);
+        }
         return prefix;
     }
 
     /**
      * Set the full pathname of the single entry in this fileset.
+     * Prevents both prefix and fullpath from being specified
      *
      * @param fullpath the full pathname of the single entry in this fileset.
      */
     public void setFullpath(String fullpath) {
+        if (isReference()) {
+             throw tooManyAttributes();
+         }
+        if (!prefix.equals("")) {
+            throw new BuildException("Cannot set both fullpath and prefix attributes");
+        }
         this.fullpath = fullpath;
     }
 
     /**
      * Return the full pathname of the single entry in this fileset.
      */
-    public String getFullpath() {
+    public String getFullpath(Project p) {
+        if (isReference()) {
+            return ((ZipFileSet)getRef(p)).getFullpath(p);
+        }
         return fullpath;
     }
 
@@ -219,14 +241,20 @@ public class ZipFileSet extends FileSet {
      * @since Ant 1.5.2
      */
     public void setFileMode(String octalString) {
-        this.fileMode = 
+        if (isReference()) {
+             throw tooManyAttributes();
+         }
+        this.fileMode =
             UnixStat.FILE_FLAG | Integer.parseInt(octalString, 8);
     }
     
     /**
      * @since Ant 1.5.2
      */
-    public int getFileMode() {
+    public int getFileMode(Project p) {
+        if (isReference()) {
+            return ((ZipFileSet)getRef(p)).getFileMode(p);
+        }
         return fileMode;
     }
     
@@ -238,20 +266,25 @@ public class ZipFileSet extends FileSet {
      * @since Ant 1.6
      */
     public void setDirMode(String octalString) {
-        this.dirMode = 
+        if (isReference()) {
+             throw tooManyAttributes();
+         }
+        this.dirMode =
             UnixStat.DIR_FLAG | Integer.parseInt(octalString, 8);
     }
     
     /**
      * @since Ant 1.6
      */
-    public int getDirMode() {
+    public int getDirMode(Project p) {
+        if (isReference()) {
+            return ((ZipFileSet)getRef(p)).getDirMode(p);
+        }
         return dirMode;
     }
 
     /**
-     * A ZipFileset can accept any fileset as a reference as it just uses the
-     * standard directory scanner.
+     * A ZipFileset accepts only another ZipFileSet as reference
      */
     protected AbstractFileSet getRef(Project p) {
         if (!isChecked()) {
@@ -261,11 +294,23 @@ public class ZipFileSet extends FileSet {
         }
 
         Object o = getRefid().getReferencedObject(p);
-        if (!(o instanceof FileSet)) {
-            String msg = getRefid().getRefId() + " doesn\'t denote a fileset";
+        if (!(o instanceof ZipFileSet)) {
+            String msg = getRefid().getRefId() + " doesn\'t denote a zipfileset";
             throw new BuildException(msg);
         } else {
             return (AbstractFileSet) o;
+        }
+    }
+    /**
+     * Return a ZipFileSet that has the same properties
+     * as this one.
+     * @since Ant 1.6
+     */
+    public Object clone() {
+        if (isReference()) {
+            return new ZipFileSet((ZipFileSet) getRef(getProject()));
+        } else {
+            return new ZipFileSet(this);
         }
     }
 }

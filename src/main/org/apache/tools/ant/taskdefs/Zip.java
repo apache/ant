@@ -67,7 +67,6 @@ import java.util.Stack;
 import java.util.Vector;
 import java.util.zip.CRC32;
 import java.util.zip.ZipFile;
-import java.util.zip.ZipInputStream;
 
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.DirectoryScanner;
@@ -541,10 +540,10 @@ public class Zip extends MatchingTask {
         ZipFileSet zfs = null;
         if (fileset instanceof ZipFileSet) {
             zfs = (ZipFileSet) fileset;
-            prefix = zfs.getPrefix();
-            fullpath = zfs.getFullpath();
-            dirMode = zfs.getDirMode();
-            fileMode = zfs.getFileMode();
+            prefix = zfs.getPrefix(getProject());
+            fullpath = zfs.getFullpath(getProject());
+            dirMode = zfs.getDirMode(getProject());
+            fileMode = zfs.getFileMode(getProject());
         }
 
         if (prefix.length() > 0 && fullpath.length() > 0) {
@@ -570,11 +569,11 @@ public class Zip extends MatchingTask {
             boolean dealingWithFiles = false;
             File base = null;
 
-            if (zfs == null || zfs.getSrc() == null) {
+            if (zfs == null || zfs.getSrc(getProject()) == null) {
                 dealingWithFiles = true;
                 base = fileset.getDir(getProject());
             } else {
-                zf = new ZipFile(zfs.getSrc());
+                zf = new ZipFile(zfs.getSrc(getProject()));
             }
             
             for (int i = 0; i < resources.length; i++) {
@@ -604,7 +603,7 @@ public class Zip extends MatchingTask {
                         zf.getEntry(resources[i].getName());
                     if (ze != null) {
                         zipFile(zf.getInputStream(ze), zOut, prefix + name, 
-                                ze.getTime(), zfs.getSrc(), fileMode);
+                                ze.getTime(), zfs.getSrc(getProject()), fileMode);
                     }
                 }
             }
@@ -763,7 +762,7 @@ public class Zip extends MatchingTask {
 
         for (int i = 0; i < filesets.length; i++) {
             if (!(fileset instanceof ZipFileSet) 
-                || ((ZipFileSet) fileset).getSrc() == null) {
+                || ((ZipFileSet) fileset).getSrc(getProject()) == null) {
                 File base = filesets[i].getDir(getProject());
             
                 for (int j = 0; j < initialResources[i].length; j++) {
@@ -787,20 +786,20 @@ public class Zip extends MatchingTask {
             FileNameMapper myMapper = new IdentityMapper();
             if (filesets[i] instanceof ZipFileSet) {
                 ZipFileSet zfs = (ZipFileSet) filesets[i];
-                if (zfs.getFullpath() != null
-                    && !zfs.getFullpath().equals("") ) {
+                if (zfs.getFullpath(getProject()) != null
+                    && !zfs.getFullpath(getProject()).equals("") ) {
                     // in this case all files from origin map to
                     // the fullPath attribute of the zipfileset at
                     // destination
                     MergingMapper fm = new MergingMapper();
-                    fm.setTo(zfs.getFullpath());
+                    fm.setTo(zfs.getFullpath(getProject()));
                     myMapper = fm;
 
-                } else if (zfs.getPrefix() != null 
-                           && !zfs.getPrefix().equals("")) {
+                } else if (zfs.getPrefix(getProject()) != null
+                           && !zfs.getPrefix(getProject()).equals("")) {
                     GlobPatternMapper gm=new GlobPatternMapper();
                     gm.setFrom("*");
-                    String prefix = zfs.getPrefix();
+                    String prefix = zfs.getPrefix(getProject());
                     if (!prefix.endsWith("/") && !prefix.endsWith("\\")) {
                         prefix += "/";
                     }
