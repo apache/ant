@@ -90,8 +90,7 @@ public class BZip2 extends Pack {
                 try {
                     // close up
                     zOut.close();
-                }
-                catch (IOException e) {}
+                } catch (IOException e) {}
             }
         }
     }

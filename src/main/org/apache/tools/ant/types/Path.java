@@ -260,8 +260,7 @@ public class Path extends DataType implements Cloneable {
             File f = null;
             if (getProject() != null) {
                 f = getProject().resolveFile(list[i]);
-            }
-            else {
+            } else {
                 f = new File(list[i]);
             }
 
@@ -384,8 +383,7 @@ public class Path extends DataType implements Cloneable {
             String pathElement = tok.nextToken();
             try {
                 element.append(resolveFile(project, pathElement));
-            }
-            catch (BuildException e) {
+            } catch (BuildException e) {
                 project.log("Dropping path element " + pathElement 
                     + " as it is not valid relative to the project", 
                     Project.MSG_VERBOSE);
@@ -585,8 +583,7 @@ public class Path extends DataType implements Cloneable {
             
             kaffeJarFiles.setIncludes("*.jar");
             addFileset(kaffeJarFiles);
-        }
-        else if (Project.getJavaVersion() == Project.JAVA_1_1) {
+        } else if (Project.getJavaVersion() == Project.JAVA_1_1) {
             addExisting(new Path(null,
                                  System.getProperty("java.home")
                                  + File.separator + "lib"

@@ -86,8 +86,7 @@ class ConstantPool {
         for (int i = 1; i < count; i++) {
             byte type = data.readByte();
             types[i] = type;
-            switch (type)
-            {
+            switch (type) {
             case UTF8 :
                 values[i] = data.readUTF();
                 break;

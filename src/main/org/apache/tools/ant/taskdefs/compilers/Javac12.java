@@ -100,15 +100,13 @@ public class Javac12 extends DefaultCompilerAdapter {
                 (Boolean) compile.invoke(compiler, 
                                         new Object[] {cmd.getArguments()});
             return ok.booleanValue();
-        }
-        catch (ClassNotFoundException ex) {
+        } catch (ClassNotFoundException ex) {
             throw new BuildException("Cannot use classic compiler, as it is "
                                      + "not available.  A common solution is "
                                      + "to set the environment variable"
                                      + " JAVA_HOME to your jdk directory.", 
                                      location);
-        }
-        catch (Exception ex) {
+        } catch (Exception ex) {
             if (ex instanceof BuildException) {
                 throw (BuildException) ex;
             } else {

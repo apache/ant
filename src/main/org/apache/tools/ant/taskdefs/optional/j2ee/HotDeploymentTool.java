@@ -63,8 +63,7 @@ import org.apache.tools.ant.BuildException;
  *  @see org.apache.tools.ant.taskdefs.optional.j2ee.AbstractHotDeploymentTool
  *  @see org.apache.tools.ant.taskdefs.optional.j2ee.ServerDeploy
  */
-public interface HotDeploymentTool
-{
+public interface HotDeploymentTool {
     /** The delete action String **/
     public static final String ACTION_DELETE = "delete";
 

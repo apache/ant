@@ -147,14 +147,11 @@ class ChangeLogParser {
             m_comment = m_comment.substring(0, end);
             saveEntry();
             m_status = GET_FILE;
-        }
-        else if (line.startsWith("----------------------------")) {
+        } else if (line.startsWith("----------------------------")) {
             final int end = m_comment.length() - lineSeparator.length(); //was -1
             m_comment = m_comment.substring(0, end);
             m_status = GET_PREVIOUS_REV;
-        }
-        else
-        {
+        } else {
             m_comment += line + lineSeparator;
         }
     }
@@ -180,8 +177,7 @@ class ChangeLogParser {
         if (line.startsWith("revision")) {
             m_revision = line.substring(9);
             m_status = GET_DATE;
-        }
-        else if (line.startsWith("======")) {
+        } else if (line.startsWith("======")) {
             //There was no revisions in this changelog
             //entry so lets move unto next file
             m_status = GET_FILE;

@@ -254,8 +254,7 @@ public class XMLValidateTask extends Task {
             if (file.exists() && file.canRead() && file.isFile())  {
                 doValidate(file);
                 fileProcessed++;
-            }
-            else {
+            } else {
                 String errorMsg = "File " + file + " cannot be read";
                 if (failOnError) {
                     throw new BuildException(errorMsg);
@@ -479,8 +478,7 @@ public class XMLValidateTask extends Task {
     }
 
     private class LocalResolver
-        implements EntityResolver
-    {
+        implements EntityResolver {
         private Hashtable fileDTDs = new Hashtable();
         private Hashtable resourceDTDs = new Hashtable();
         private Hashtable urlDTDs = new Hashtable();
@@ -521,8 +519,7 @@ public class XMLValidateTask extends Task {
         }
 
         public InputSource resolveEntity(String publicId, String systemId)
-            throws SAXException
-        {
+            throws SAXException {
             File dtdFile = (File) fileDTDs.get(publicId);
             if (dtdFile != null) {
                 try {

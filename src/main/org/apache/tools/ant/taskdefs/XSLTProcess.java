@@ -454,8 +454,7 @@ public class XSLTProcess extends MatchingTask implements XSLTLogger {
                 configureLiaison(stylesheet);
                 liaison.transform(inFile, outFile);
             }
-        }
-        catch (Exception ex) {
+        } catch (Exception ex) {
             // If failed to process document, must delete target document,
             // or it will not attempt to process it the second time
             log("Failed to process " + inFile, Project.MSG_INFO);

@@ -293,8 +293,7 @@ public class IPlanetEjbcTask extends Task {
         } catch (SAXException e) {
             String msg = "Unable to create a SAXParser: " + e.getMessage();
             throw new BuildException(msg, e, location);
-        }
-        catch (ParserConfigurationException e) {
+        } catch (ParserConfigurationException e) {
             String msg = "Unable to create a SAXParser: " + e.getMessage();
             throw new BuildException(msg, e, location);
         }

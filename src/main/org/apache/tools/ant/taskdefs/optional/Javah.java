@@ -321,13 +321,7 @@ public class Javah extends Task {
             com.sun.tools.javah.Main main 
                 = new com.sun.tools.javah.Main(cmd.getArguments());
             main.run();
-        }
-        //catch (ClassNotFoundException ex) {
-        //    throw new BuildException("Cannot use javah because it is not available"+
-        //                             " A common solution is to set the environment variable"+
-        //                             " JAVA_HOME to your jdk directory.", location);
-        //}
-        catch (Exception ex) {
+        } catch (Exception ex) {
             if (ex instanceof BuildException) {
                 throw (BuildException) ex;
             } else {

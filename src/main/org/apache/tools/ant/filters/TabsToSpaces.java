@@ -76,8 +76,7 @@ import org.apache.tools.ant.types.Parameter;
  */
 public final class TabsToSpaces
     extends BaseParamFilterReader
-    implements ChainableReader
-{
+    implements ChainableReader {
     /** The default tab length is 8 */
     private static final int DEFAULT_TAB_LENGTH = 8;
 

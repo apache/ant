@@ -1208,8 +1208,7 @@ public class IPlanetEjbc {
                     return -1;
                 }
                 latestModified = Math.max(latestModified, modified);
-            }
-            else {
+            } else {
                 pkFile = null;
             }
 

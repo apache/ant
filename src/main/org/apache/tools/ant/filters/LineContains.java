@@ -84,8 +84,7 @@ import org.apache.tools.ant.types.Parameter;
  */
 public final class LineContains
     extends BaseParamFilterReader
-    implements ChainableReader
-{
+    implements ChainableReader {
     /** contains key */
     private static final String CONTAINS_KEY = "contains";
 

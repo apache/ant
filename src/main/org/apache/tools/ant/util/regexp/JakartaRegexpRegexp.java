@@ -62,16 +62,14 @@ import java.util.Vector;
  * Regular expression implementation using the Jakarta Regexp package
  * @author Matthew Inger <a href="mailto:mattinger@mindless.com">mattinger@mindless.com</a>
  */
-public class JakartaRegexpRegexp extends JakartaRegexpMatcher implements Regexp
-{
+public class JakartaRegexpRegexp extends JakartaRegexpMatcher 
+    implements Regexp {
 
-    public JakartaRegexpRegexp()
-    {
+    public JakartaRegexpRegexp() {
         super();
     }
 
-    protected int getSubsOptions(int options)
-    {
+    protected int getSubsOptions(int options) {
         int subsOptions = RE.REPLACE_FIRSTONLY;
         if (RegexpUtil.hasFlag(options, REPLACE_ALL)) {
             subsOptions = RE.REPLACE_ALL;
@@ -80,8 +78,7 @@ public class JakartaRegexpRegexp extends JakartaRegexpMatcher implements Regexp
     }
 
     public String substitute(String input, String argument, int options)
-        throws BuildException
-    {
+        throws BuildException {
         Vector v = getGroups(input, options);
 
         // replace \1 with the corresponding group

@@ -120,8 +120,7 @@ public class TelnetTask extends Task {
      *  Connect and possibly login
      *  Iterate through the list of Reads and writes 
      */
-    public void execute() throws BuildException 
-    {
+    public void execute() throws BuildException {
        /**  A server name is required to continue */
        if (server == null) {
            throw new BuildException("No Server Specified");
@@ -149,8 +148,7 @@ public class TelnetTask extends Task {
        }
        /**  Process each sub command */
        Enumeration tasksToRun = telnetTasks.elements();
-       while (tasksToRun != null && tasksToRun.hasMoreElements())
-       {
+       while (tasksToRun != null && tasksToRun.hasMoreElements()) {
            TelnetSubTask task = (TelnetSubTask) tasksToRun.nextElement();
            if (task instanceof TelnetRead && defaultTimeout != null) {
                ((TelnetRead) task).setDefaultTimeout(defaultTimeout);
@@ -163,8 +161,7 @@ public class TelnetTask extends Task {
      *  Process a 'typical' login.  If it differs, use the read 
      *  and write tasks explicitely
      */
-    private void login()
-    {
+    private void login() {
        if (addCarriageReturn) {
           telnet.sendString("\n", true);
        }
@@ -197,8 +194,7 @@ public class TelnetTask extends Task {
     /**
      *  Set the tcp port to connect to attribute 
      */
-    public void setInitialCR(boolean b)
-    {
+    public void setInitialCR(boolean b) {
        this.addCarriageReturn = b;
     }
 
@@ -206,8 +202,7 @@ public class TelnetTask extends Task {
      *  Change the default timeout to wait for 
      *  valid responses
      */
-    public void setTimeout(Integer i)
-    {
+    public void setTimeout(Integer i) {
        this.defaultTimeout = i;
     }
 
@@ -216,8 +211,7 @@ public class TelnetTask extends Task {
      *  Save it in our list, and return it.
      */
    
-    public TelnetSubTask createRead()
-    {
+    public TelnetSubTask createRead() {
         TelnetSubTask task = (TelnetSubTask) new TelnetRead();
         telnetTasks.addElement(task);
         return task;
@@ -227,8 +221,7 @@ public class TelnetTask extends Task {
      *  A subTask &lt;write&gt; tag was found.  Create the object, 
      *  Save it in our list, and return it.
      */
-    public TelnetSubTask createWrite()
-    {
+    public TelnetSubTask createWrite() {
         TelnetSubTask task = (TelnetSubTask) new TelnetWrite();
         telnetTasks.addElement(task);
         return task;
@@ -238,12 +231,10 @@ public class TelnetTask extends Task {
      *  This class is the parent of the Read and Write tasks.
      *  It handles the common attributes for both.
      */
-    public class TelnetSubTask
-    {
+    public class TelnetSubTask {
         protected String taskString = "";
         public void execute(AntTelnetClient telnet) 
-                throws BuildException
-        {
+                throws BuildException {
             throw new BuildException("Shouldn't be able instantiate a SubTask directly");
         }
         /**
@@ -255,25 +246,21 @@ public class TelnetTask extends Task {
         /**
          * attribute assignment of properties
          */
-        public void setString(String s)
-        {
+        public void setString(String s) {
            taskString += s; 
         }
     }
     /**
      *  This class sends text to the connected server 
      */
-    public class TelnetWrite extends TelnetSubTask
-    {
+    public class TelnetWrite extends TelnetSubTask {
         private boolean echoString = true;
         public void execute(AntTelnetClient telnet) 
-               throws BuildException
-        {
+               throws BuildException {
            telnet.sendString(taskString, echoString);
         }
         
-        public void setEcho(boolean b)
-        {
+        public void setEcho(boolean b) {
            echoString = b;
         }
     }
@@ -281,110 +268,93 @@ public class TelnetTask extends Task {
      *  This class reads the output from the connected server
      *  until the required string is found. 
      */
-    public class TelnetRead extends TelnetSubTask
-    {
+    public class TelnetRead extends TelnetSubTask {
         private Integer timeout = null;
         public void execute(AntTelnetClient telnet) 
-               throws BuildException
-        {
+               throws BuildException {
             telnet.waitForString(taskString, timeout);
         }
         /**
          *  Override any default timeouts
          */
-        public void setTimeout(Integer i)
-        {
+        public void setTimeout(Integer i) {
            this.timeout = i;
         }
         /**
          *  Sets the default timeout if none has been set already
          */
-        public void setDefaultTimeout(Integer defaultTimeout)
-        {
+        public void setDefaultTimeout(Integer defaultTimeout) {
            if (timeout == null) {
               timeout = defaultTimeout;
            }
-    }
+        }
     }
     /**
      *  This class handles the abstraction of the telnet protocol.
      *  Currently it is a wrapper around <a href="www.oroinc.com">ORO</a>'s 
      *  NetComponents
      */
-    public class AntTelnetClient extends TelnetClient
-    {
-      /**
-       * Read from the telnet session until the string we are 
-       * waiting for is found 
-       * @param s The string to wait on 
-       */
-      public void waitForString(String s)
-      {
-           waitForString(s, null);
-      }
-
-      /**
-       * Read from the telnet session until the string we are 
-       * waiting for is found or the timeout has been reached
-       * @param s The string to wait on 
-       * @param timeout The maximum number of seconds to wait
-       */
-      public void waitForString(String s, Integer timeout)
-      {
-        InputStream is = this.getInputStream();
-        try {
-          StringBuffer sb = new StringBuffer();
-          if (timeout == null || timeout.intValue() == 0)
-          {
-              while (sb.toString().indexOf(s) == -1)
-                  {
-                      sb.append((char) is.read());
-                  }
-          }
-          else
-          {
-              Calendar endTime = Calendar.getInstance(); 
-              endTime.add(Calendar.SECOND, timeout.intValue());
-              while (sb.toString().indexOf(s) == -1)
-              {
-                  while (Calendar.getInstance().before(endTime) &&
-                         is.available() == 0) {
-                      Thread.sleep(250);
-                  }
-                  if (is.available() == 0) {
-                      throw new BuildException("Response Timed-Out", getLocation());
-                  }
-                  sb.append((char) is.read());
-              }
-          }
-          log(sb.toString(), Project.MSG_INFO);
-        } catch (BuildException be)
-        { 
-            throw be;
-        } catch (Exception e)
-        { 
-            throw new BuildException(e, getLocation());
+    public class AntTelnetClient extends TelnetClient {
+        /**
+         * Read from the telnet session until the string we are 
+         * waiting for is found 
+         * @param s The string to wait on 
+         */
+        public void waitForString(String s) {
+            waitForString(s, null);
         }
-      }
 
-    
-      /**
-       * Write this string to the telnet session.
-       * @param echoString  Logs string sent
-       */
-      public void sendString(String s, boolean echoString)
-      {
-        OutputStream os = this.getOutputStream();
-        try {
-          os.write((s + "\n").getBytes());
-          if (echoString) {
-              log(s, Project.MSG_INFO);
-          }
-          os.flush();
-        } catch (Exception e)
-        { 
-          throw new BuildException(e, getLocation());
+        /**
+         * Read from the telnet session until the string we are 
+         * waiting for is found or the timeout has been reached
+         * @param s The string to wait on 
+         * @param timeout The maximum number of seconds to wait
+         */
+        public void waitForString(String s, Integer timeout) {
+            InputStream is = this.getInputStream();
+            try {
+                StringBuffer sb = new StringBuffer();
+                if (timeout == null || timeout.intValue() == 0) {
+                    while (sb.toString().indexOf(s) == -1){
+                        sb.append((char) is.read());
+                    }
+                } else {
+                    Calendar endTime = Calendar.getInstance(); 
+                    endTime.add(Calendar.SECOND, timeout.intValue());
+                    while (sb.toString().indexOf(s) == -1) {
+                        while (Calendar.getInstance().before(endTime) &&
+                        is.available() == 0) {
+                            Thread.sleep(250);
+                        }
+                        if (is.available() == 0) {
+                            throw new BuildException("Response Timed-Out", getLocation());
+                        }
+                        sb.append((char) is.read());
+                    }
+                }
+                log(sb.toString(), Project.MSG_INFO);
+            } catch (BuildException be) { 
+                throw be;
+            } catch (Exception e) { 
+                throw new BuildException(e, getLocation());
+            }
         }
-      }
+
+        /**
+        * Write this string to the telnet session.
+        * @param echoString  Logs string sent
+        */
+        public void sendString(String s, boolean echoString) {
+            OutputStream os = this.getOutputStream();
+            try {
+                os.write((s + "\n").getBytes());
+                if (echoString) {
+                    log(s, Project.MSG_INFO);
+                }
+                os.flush();
+            } catch (Exception e) { 
+                throw new BuildException(e, getLocation());
+            }
+        }
     }
 }

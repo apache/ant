@@ -80,8 +80,7 @@ import org.apache.tools.ant.types.Path;
  *  @see org.apache.tools.ant.taskdefs.optional.j2ee.HotDeploymentTool
  *  @see org.apache.tools.ant.taskdefs.optional.j2ee.ServerDeploy
  */
-public abstract class AbstractHotDeploymentTool implements HotDeploymentTool
-{
+public abstract class AbstractHotDeploymentTool implements HotDeploymentTool {
     /** The parent task **/
     private ServerDeploy task;
 

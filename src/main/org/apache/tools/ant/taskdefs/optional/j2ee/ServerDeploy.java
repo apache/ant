@@ -74,8 +74,7 @@ import org.apache.tools.ant.Task;
  *  @see org.apache.tools.ant.taskdefs.optional.j2ee.GenericHotDeploymentTool
  *  @see org.apache.tools.ant.taskdefs.optional.j2ee.WebLogicHotDeploymentTool
  */
-public class ServerDeploy extends Task
-{
+public class ServerDeploy extends Task {
     /** The action to be performed.  IE: "deploy", "delete", etc... **/
     private String action;
 

@@ -137,8 +137,7 @@ public class GenerateKey extends Task {
                 
             int start = 0;
 
-            while (-1 != end)
-            {
+            while (-1 != end) {
                 sb.append(string.substring(start, end));
                 sb.append("\\,");
                 start = end + 1;
@@ -306,8 +305,7 @@ public class GenerateKey extends Task {
         sb.append("-keypass \"");
         if (null != keypass) {
             sb.append(keypass);
-        } 
-        else {
+        } else {
             sb.append(storepass);
         }
         sb.append("\" ");

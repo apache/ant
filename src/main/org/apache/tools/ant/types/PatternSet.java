@@ -470,8 +470,7 @@ public class PatternSet extends DataType {
         }
     }
 
-    public String toString()
-    {
+    public String toString() {
         return "patternSet{ includes: " + includeList + 
             " excludes: " + excludeList + " }";
     }

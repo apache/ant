@@ -111,8 +111,7 @@ import org.apache.tools.ant.types.Commandline;
  *
  * @ant.task name="vsslabel" category="scm"
  */
-public class MSVSSLABEL extends MSVSS
-{
+public class MSVSSLABEL extends MSVSS {
     private String m_AutoResponse = null;
     private String m_Label = null;
     private String m_Version = null;

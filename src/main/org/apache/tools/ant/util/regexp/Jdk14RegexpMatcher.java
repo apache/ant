@@ -89,16 +89,12 @@ public class Jdk14RegexpMatcher implements RegexpMatcher {
     }
 
     protected Pattern getCompiledPattern(int options)
-        throws BuildException
-    {
+        throws BuildException {
         int cOptions = getCompilerOptions(options);
-        try
-        {
+        try {
             Pattern p = Pattern.compile(this.pattern, cOptions);
             return p;
-        }
-        catch (PatternSyntaxException e)
-        {
+        } catch (PatternSyntaxException e) {
             throw new BuildException(e);
         }
     }
@@ -114,15 +110,11 @@ public class Jdk14RegexpMatcher implements RegexpMatcher {
      * Does the given argument match the pattern?
      */
     public boolean matches(String input, int options)
-        throws BuildException
-    {
-        try
-        {
+        throws BuildException {
+        try {
             Pattern p = getCompiledPattern(options);
             return p.matcher(input).find();
-        }
-        catch (Exception e)
-        {
+        } catch (Exception e) {
             throw new BuildException(e);
         }
     }
@@ -144,8 +136,7 @@ public class Jdk14RegexpMatcher implements RegexpMatcher {
      * parenthesized subexpressions</p>.
      */
     public Vector getGroups(String input, int options)
-        throws BuildException
-    {
+        throws BuildException {
         Pattern p = getCompiledPattern(options);
         Matcher matcher = p.matcher(input);
         if (!matcher.find()) {
@@ -159,8 +150,7 @@ public class Jdk14RegexpMatcher implements RegexpMatcher {
         return v;
     }
 
-    protected int getCompilerOptions(int options)
-    {
+    protected int getCompilerOptions(int options) {
         // be strict about line separator
         int cOptions = Pattern.UNIX_LINES;
 

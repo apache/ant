@@ -145,8 +145,7 @@ public class Sleep extends Task {
     public void doSleep(long millis) {
         try {
             Thread.sleep(millis);
-        }
-        catch (InterruptedException ie) {
+        } catch (InterruptedException ie) {
         }
     }
 
@@ -201,12 +200,10 @@ public class Sleep extends Task {
             log("sleeping for " + sleepTime + " milliseconds",
                 Project.MSG_VERBOSE);
             doSleep(sleepTime);
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             if (failOnError) {
                 throw new BuildException(e);
-            }
-            else {
+            } else {
                 String text = e.toString();
                 log(text, Project.MSG_ERR);
             }

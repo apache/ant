@@ -128,8 +128,7 @@ public class War extends Jar {
     }
 
     protected void initZipOutputStream(ZipOutputStream zOut)
-        throws IOException, BuildException
-    {
+        throws IOException, BuildException {
         // If no webxml file is specified, it's an error.
         if (deploymentDescriptor == null && !isInUpdateMode()) {
             throw new BuildException("webxml attribute is required", location);
@@ -139,8 +138,7 @@ public class War extends Jar {
     }
 
     protected void zipFile(File file, ZipOutputStream zOut, String vPath)
-        throws IOException
-    {
+        throws IOException {
         // If the file being added is WEB-INF/web.xml, we warn if it's
         // not the one specified in the "webxml" attribute - or if
         // it's being added twice, meaning the same file is specified

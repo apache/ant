@@ -110,8 +110,7 @@ import org.apache.tools.ant.types.Reference;
  * @author <a href="mailto:jayglanville@home.com">J D Glanville</a>
  * @since 1.5
  */
-public class JspC extends MatchingTask
-{
+public class JspC extends MatchingTask {
     /* ------------------------------------------------------------ */
     private Path classpath;
     private Path src;
@@ -226,23 +225,19 @@ public class JspC extends MatchingTask
         return failOnError;
     }
     /* ------------------------------------------------------------ */
-    public String getIeplugin()
-    {
+    public String getIeplugin() {
         return iepluginid;
     }
     /** Set the ieplugin id */
-    public void setIeplugin(String iepluginid_)
-    {
+    public void setIeplugin(String iepluginid_) {
         iepluginid = iepluginid_;
     }
     /* ------------------------------------------------------------ */
-    public boolean isMapped()
-    {
+    public boolean isMapped() {
         return mapped;
     }
     /** set the mapped flag */
-    public void setMapped(boolean mapped_)
-    {
+    public void setMapped(boolean mapped_) {
         mapped = mapped_;
     }
         
@@ -338,8 +333,7 @@ public class JspC extends MatchingTask
         //demand create vector of filesets
         if (webApp == null) {
             webApp = webappParam;
-        }
-        else {
+        } else {
             throw new BuildException("Only one webapp can be specified");
         }
     }
@@ -429,12 +423,10 @@ public class JspC extends MatchingTask
                 + dest);
             doCompilation(compiler);
 
-        }
-        else {
+        } else {
             if (filecount == 0) {
                 log("there were no files to compile", Project.MSG_INFO);
-            }
-            else {
+            } else {
                 log("all files are up to date", Project.MSG_VERBOSE);
             }
         }
@@ -468,8 +460,7 @@ public class JspC extends MatchingTask
         if (!compiler.execute()) {
             if (failOnError) {
                 throw new BuildException(FAIL_MSG, location);
-            }
-            else {
+            } else {
                 log(FAIL_MSG, Project.MSG_ERR);
             }
         }

@@ -76,8 +76,7 @@ import org.apache.tools.ant.types.Parameter;
  */
 public final class TailFilter
     extends BaseParamFilterReader
-    implements ChainableReader
-{
+    implements ChainableReader {
     /** The name that param recognizes to set the number of lines. */
     private static final String LINES_KEY = "lines";
 

@@ -275,8 +275,7 @@ public class EchoProperties extends Task {
      *@param header prepend this header to the property output
      */
     protected void jdk10SaveProperties(Properties props, OutputStream os,
-            String header)
-    {
+            String header) {
         props.save(os, header);
     }
 }

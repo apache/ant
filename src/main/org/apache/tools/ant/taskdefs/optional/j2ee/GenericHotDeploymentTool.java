@@ -69,8 +69,7 @@ import org.apache.tools.ant.taskdefs.Java;
  *  @see org.apache.tools.ant.taskdefs.optional.j2ee.AbstractHotDeploymentTool
  *  @see org.apache.tools.ant.taskdefs.optional.j2ee.ServerDeploy
  */
-public class GenericHotDeploymentTool extends AbstractHotDeploymentTool
-{
+public class GenericHotDeploymentTool extends AbstractHotDeploymentTool {
     /** A Java task used to run the deployment tool **/
     private Java java;
 

@@ -76,8 +76,7 @@ import org.apache.tools.ant.types.Parameter;
  */
 public final class HeadFilter
     extends BaseParamFilterReader
-    implements ChainableReader
-{
+    implements ChainableReader {
     /** Lines key to represent the number of lines to be returned. */
     private static final String LINES_KEY = "lines";
 

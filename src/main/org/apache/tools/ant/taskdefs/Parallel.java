@@ -112,8 +112,7 @@ public class Parallel extends Task
         for (int i = 0; i < threads.length; ++i) {
             try {
                 threads[i].join();
-            }
-            catch (InterruptedException ie) {
+            } catch (InterruptedException ie) {
                 // who would interrupt me at a time like this?
             }
         }
@@ -142,12 +141,10 @@ public class Parallel extends Task
         if (numExceptions == 1) {
             if (firstException instanceof BuildException) {
                 throw (BuildException) firstException;
-            }
-            else {
+            } else {
                 throw new BuildException(firstException);
             }
-        }
-        else if (numExceptions > 1) {
+        } else if (numExceptions > 1) {
             throw new BuildException(exceptionMessage.toString(), 
                                      firstLocation);
         }
@@ -175,8 +172,7 @@ public class Parallel extends Task
         public void run() {
             try {
                 task.perform();
-            }
-            catch (Throwable t) {
+            } catch (Throwable t) {
                 exception = t;
             }
         }

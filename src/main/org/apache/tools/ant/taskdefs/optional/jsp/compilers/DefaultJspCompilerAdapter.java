@@ -83,8 +83,7 @@ public abstract class DefaultJspCompilerAdapter
      */
     protected void logAndAddFilesToCompile(JspC jspc,
                                            Vector compileList,
-                                           Commandline cmd)
-    {
+                                           Commandline cmd) {
         jspc.log("Compilation args: " + cmd.toString(), Project.MSG_VERBOSE);
 
         StringBuffer niceSourceList = new StringBuffer("File");

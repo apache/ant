@@ -306,22 +306,18 @@ public class FilterSet extends DataType implements Cloneable {
                  String strValue = props.getProperty(strPropName);
                  filters.addElement(new Filter(strPropName, strValue));
               }
-           }
-           catch (Exception e) {
+           } catch (Exception e) {
               throw new BuildException("Could not read filters from file: " 
                 + filtersFile);
-           }
-           finally {
+           } finally {
               if (in != null) {
                  try {
                     in.close();
-                 }
-                 catch (IOException ioex) {
+                 } catch (IOException ioex) {
                  }
               }
            }
-        }
-        else {
+        } else {
            throw new BuildException("Must specify a file not a directory in " 
             + "the filtersfile attribute:" + filtersFile);
         }
@@ -363,8 +359,7 @@ public class FilterSet extends DataType implements Cloneable {
                         b.append(value);
                         i = index + beginToken.length() + token.length() 
                             + endToken.length();
-                    }
-                    else {
+                    } else {
                         // just append beginToken and search further
                         b.append(beginToken);
                         i = index + beginToken.length();
@@ -373,12 +368,10 @@ public class FilterSet extends DataType implements Cloneable {
                 
                 b.append(line.substring(i));
                 return b.toString();
-            }
-            catch (StringIndexOutOfBoundsException e) {
+            } catch (StringIndexOutOfBoundsException e) {
                 return line;
             }
-        }
-        else {
+        } else {
            return line;
         }
     }

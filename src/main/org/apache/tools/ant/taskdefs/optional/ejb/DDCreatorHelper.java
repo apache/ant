@@ -125,8 +125,7 @@ public class DDCreatorHelper {
             String serName = null;
             if (extIndex != -1) {
                 serName = descriptorName.substring(0, extIndex) + ".ser";
-            }
-            else {
+            } else {
                 serName = descriptorName + ".ser";
             }
             File serFile = new File(generatedFilesDirectory, serName);
@@ -141,8 +140,7 @@ public class DDCreatorHelper {
                                  descriptorFile.getPath()};
                 try {
                     weblogic.ejb.utils.DDCreator.main(args);
-                }
-                catch (Exception e) {
+                } catch (Exception e) {
                     // there was an exception - run with no exit to get proper error
                     String[] newArgs = {"-d", generatedFilesDirectory.getPath(),
                                  "-outputfile", serFile.getName(),

@@ -227,8 +227,7 @@ public class DependSet extends MatchingTask {
                  log(targetFiles[i] + " does not exist.", Project.MSG_VERBOSE);
                  upToDate = false;
                  continue;
-              }
-              else {
+              } else {
                  allTargets.addElement(dest);
               }
               if (dest.lastModified() > now) {

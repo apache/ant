@@ -88,15 +88,13 @@ public class Kjc extends DefaultCompilerAdapter {
                 (Boolean) compile.invoke(null, 
                                         new Object[] {cmd.getArguments()});
             return ok.booleanValue();
-        }
-        catch (ClassNotFoundException ex) {
+        } catch (ClassNotFoundException ex) {
             throw new BuildException("Cannot use kjc compiler, as it is not "
                                      + "available. A common solution is to "
                                      + "set the environment variable CLASSPATH "
                                      + "to your kjc archive (kjc.jar).", 
                                      location);
-        }
-        catch (Exception ex) {
+        } catch (Exception ex) {
             if (ex instanceof BuildException) {
                 throw (BuildException) ex;
             } else {

@@ -91,8 +91,7 @@ public class XMLJUnitResultFormatter implements JUnitResultFormatter, XMLConstan
     private static DocumentBuilder getDocumentBuilder() {
         try {
             return DocumentBuilderFactory.newInstance().newDocumentBuilder();
-        }
-        catch (Exception exc) {
+        } catch (Exception exc) {
             throw new ExceptionInInitializerError(exc);
         }
     }

@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2000-2001 The Apache Software Foundation.  All rights
+ * Copyright (c) 2000-2002 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -179,8 +179,7 @@ public class TarOutputStream extends FilterOutputStream {
                 write(entry.getName().getBytes());
                 write(0);
                 closeEntry();
-            }
-            else if (longFileMode != LONGFILE_TRUNCATE) {
+            } else if (longFileMode != LONGFILE_TRUNCATE) {
                 throw new RuntimeException("file name '" + entry.getName() 
                                              + "' is too long ( > " 
                                              + TarConstants.NAMELEN + " bytes)");

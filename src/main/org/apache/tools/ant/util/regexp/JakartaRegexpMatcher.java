@@ -85,17 +85,13 @@ public class JakartaRegexpMatcher implements RegexpMatcher {
     }
 
     protected RE getCompiledPattern(int options)
-        throws BuildException
-    {
+        throws BuildException {
         int cOptions = getCompilerOptions(options);
-        try
-        {
+        try {
             RE reg = new RE(pattern);
             reg.setMatchFlags(cOptions);
             return reg;
-        }
-        catch (RESyntaxException e)
-        {
+        } catch (RESyntaxException e) {
             throw new BuildException(e);
         }
     }
@@ -111,8 +107,7 @@ public class JakartaRegexpMatcher implements RegexpMatcher {
      * Does the given argument match the pattern?
      */
     public boolean matches(String input, int options)
-        throws BuildException
-    {
+        throws BuildException {
         return matches(input, getCompiledPattern(options));
     }
 
@@ -131,8 +126,7 @@ public class JakartaRegexpMatcher implements RegexpMatcher {
     }
 
     public Vector getGroups(String input, int options)
-        throws BuildException
-    {
+        throws BuildException {
         RE reg = getCompiledPattern(options);
         if (!matches(input, reg)) {
             return null;
@@ -145,8 +139,7 @@ public class JakartaRegexpMatcher implements RegexpMatcher {
         return v;
     }
 
-    protected int getCompilerOptions(int options)
-    {
+    protected int getCompilerOptions(int options) {
         int cOptions = RE.MATCH_NORMAL;
 
         if (RegexpUtil.hasFlag(options, MATCH_CASE_INSENSITIVE)) {

@@ -111,8 +111,7 @@ public class CompilerAdapterFactory {
                     compilerType.equalsIgnoreCase("javac1.2")) {
                 if (isClassicCompilerSupported) {
                     return new Javac12();
-                }
-                else {
+                } else {
                     throw new BuildException("This version of java does "
                         + "not support the classic compiler");
                 }
@@ -131,8 +130,7 @@ public class CompilerAdapterFactory {
                         task.log("Modern compiler not found - looking for "
                                 + "classic compiler", Project.MSG_WARN);
                         return new Javac12();
-                    }
-                    else {
+                    } else {
                         throw new BuildException("Unable to find a javac compiler;\n"
                             + "com.sun.tools.javac.Main is not on the classpath.\n"
                             + "Perhaps JAVA_HOME does not point to the JDK");

@@ -220,8 +220,7 @@ public class TarEntry implements TarConstants {
                         name = name.substring(2);
                     } 
                 } 
-            } 
-            else if (osname.toLowerCase().indexOf("netware") > -1) {
+            } else if (osname.toLowerCase().indexOf("netware") > -1) {
                 int colon = name.indexOf(':');
                 if (colon != -1) {
                     name = name.substring(colon + 1);

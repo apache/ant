@@ -96,8 +96,7 @@ import org.apache.tools.ant.util.regexp.RegexpFactory;
  *
  * @ant.datatype name="regexp"
  */
-public class RegularExpression extends DataType
-{
+public class RegularExpression extends DataType {
     public final static String DATA_TYPE_NAME = "regexp";
 
     // The regular expression factory
@@ -105,13 +104,11 @@ public class RegularExpression extends DataType
 
     private Regexp regexp;
 
-    public RegularExpression()
-    {
+    public RegularExpression() {
         this.regexp = factory.newRegexp();
     }
 
-    public void setPattern(String pattern)
-    {
+    public void setPattern(String pattern) {
         this.regexp.setPattern(pattern);
     }
 
@@ -119,8 +116,7 @@ public class RegularExpression extends DataType
      * Gets the pattern string for this RegularExpression in the
      * given project.
      */
-    public String getPattern(Project p)
-    {
+    public String getPattern(Project p) {
         if (isReference()) {
             return getRef(p).getPattern(p);
         }
@@ -128,8 +124,7 @@ public class RegularExpression extends DataType
         return regexp.getPattern();
     }
 
-    public Regexp getRegexp(Project p)
-    {
+    public Regexp getRegexp(Project p) {
         if (isReference()) {
             return getRef(p).getRegexp(p);
         }
@@ -140,10 +135,8 @@ public class RegularExpression extends DataType
      * Get the RegularExpression this reference refers to in
      * the given project.  Check for circular references too
      */
-    public RegularExpression getRef(Project p)
-    {
-        if (!checked)
-        {
+    public RegularExpression getRef(Project p) {
+        if (!checked) {
             Stack stk = new Stack();
             stk.push(this);
             dieOnCircularReference(stk, p);
@@ -151,16 +144,12 @@ public class RegularExpression extends DataType
 
         
         Object o = ref.getReferencedObject(p);
-        if (!(o instanceof RegularExpression))
-        {
+        if (!(o instanceof RegularExpression)) {
             String msg = ref.getRefId() + " doesn\'t denote a " 
                 + DATA_TYPE_NAME;
             throw new BuildException(msg);
-        } 
-        else 
-        {
+        } else {
             return (RegularExpression) o;
         }
     }
-
 }

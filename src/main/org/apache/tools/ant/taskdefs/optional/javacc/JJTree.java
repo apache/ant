@@ -219,8 +219,7 @@ public class JJTree extends Task {
             if (process.execute() != 0) {
                 throw new BuildException("JJTree failed.");
             }
-        }
-        catch (IOException e) {
+        } catch (IOException e) {
             throw new BuildException("Failed to launch JJTree", e);
         }
     }

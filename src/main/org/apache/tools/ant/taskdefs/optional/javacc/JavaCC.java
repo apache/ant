@@ -224,8 +224,7 @@ public class JavaCC extends Task {
         // use the directory containing the target as the output directory
         if (outputDirectory == null) {
             outputDirectory = new File(target.getParent());
-        }
-        else if (!outputDirectory.isDirectory()) {
+        } else if (!outputDirectory.isDirectory()) {
             throw new BuildException("Outputdir not a directory.");
         }
         cmdl.createArgument().setValue("-OUTPUT_DIRECTORY:"
@@ -281,8 +280,7 @@ public class JavaCC extends Task {
      * file.
      * 
      */
-    private File getOutputJavaFile(File outputdir, File srcfile)
-    {
+    private File getOutputJavaFile(File outputdir, File srcfile) {
         String path = srcfile.getPath();
 
         // Extract file's base-name
@@ -295,8 +293,7 @@ public class JavaCC extends Task {
         int startExtn = path.lastIndexOf('.');
         if (startExtn != -1) {
             path = path.substring(0, startExtn) + ".java";
-        }
-        else {
+        } else {
             path += ".java";
         }
 

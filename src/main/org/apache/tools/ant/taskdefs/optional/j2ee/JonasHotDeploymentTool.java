@@ -241,11 +241,9 @@ public class JonasHotDeploymentTool extends GenericHotDeploymentTool implements 
                 action.equals(ACTION_UPDATE) ||
                 action.equals("redeploy")) {
             java.createArg().setLine("-a " + getTask().getSource());
-        }
-        else if (action.equals(ACTION_DELETE) || action.equals(ACTION_UNDEPLOY)) {
+        } else if (action.equals(ACTION_DELETE) || action.equals(ACTION_UNDEPLOY)) {
             java.createArg().setLine("-r " + getTask().getSource());
-        }
-        else if (action.equals(ACTION_LIST)) {
+        } else if (action.equals(ACTION_LIST)) {
             java.createArg().setValue("-l");
         }
     }

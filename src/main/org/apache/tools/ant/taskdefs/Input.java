@@ -151,10 +151,9 @@ public class Input extends Task {
             } catch (IOException e) {
                 throw  new BuildException("Failed to read input from Console.", e);
             }
-        }
-        // not quite the original intention of this task but for the sake
-        // of testing ;-)
-        else {
+        } else {
+            // not quite the original intention of this task but for the sake
+            // of testing ;-)
             if (accept != null && (!accept.contains(input))) {
                 throw  new BuildException("Invalid input please reenter.");
             }
@@ -163,8 +162,7 @@ public class Input extends Task {
         if (addproperty != null) {
             if (project.getProperty(addproperty) == null) {
                 project.setProperty(addproperty, input);
-            }
-            else {
+            } else {
                 log("Override ignored for " + addproperty, Project.MSG_VERBOSE);
             }
         }

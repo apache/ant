@@ -70,19 +70,16 @@ import org.apache.tools.ant.Project;
  * @see org.apache.oro.text.regex.Perl5Substitution
  * @author Matthew Inger <a href="mailto:mattinger@mindless.com">mattinger@mindless.com</a>
  */
-public class Substitution extends DataType
-{
+public class Substitution extends DataType {
     public final static String DATA_TYPE_NAME = "substitition";
 
     private String expression;
 
-    public Substitution()
-    {
+    public Substitution() {
         this.expression = null;
     }
 
-    public void setExpression(String expression)
-    {
+    public void setExpression(String expression) {
         this.expression = expression;
     }
 
@@ -90,8 +87,7 @@ public class Substitution extends DataType
      * Gets the pattern string for this RegularExpression in the
      * given project.
      */
-    public String getExpression(Project p)
-    {
+    public String getExpression(Project p) {
         if (isReference()) {
             return getRef(p).getExpression(p);
         }
@@ -103,10 +99,8 @@ public class Substitution extends DataType
      * Get the RegularExpression this reference refers to in
      * the given project.  Check for circular references too
      */
-    public Substitution getRef(Project p)
-    {
-        if (!checked)
-        {
+    public Substitution getRef(Project p) {
+        if (!checked) {
             Stack stk = new Stack();
             stk.push(this);
             dieOnCircularReference(stk, p);
@@ -114,15 +108,11 @@ public class Substitution extends DataType
 
         
         Object o = ref.getReferencedObject(p);
-        if (!(o instanceof Substitution))
-        {
+        if (!(o instanceof Substitution)) {
             String msg = ref.getRefId() + " doesn\'t denote a substitution";
             throw new BuildException(msg);
-        } 
-        else 
-        {
+        } else {
             return (Substitution) o;
         }
     }
-
 }

@@ -80,8 +80,7 @@ import org.apache.tools.ant.types.Reference;
  *
  * @ant.task name="blgenclient" category="ejb"
  */
-public class BorlandGenerateClient extends Task
-{
+public class BorlandGenerateClient extends Task {
     final static String JAVA_MODE = "java";
     final static String FORK_MODE = "fork";
 
@@ -118,8 +117,7 @@ public class BorlandGenerateClient extends Task
     public void setClasspath(Path classpath) {
         if (this.classpath == null) {
             this.classpath = classpath;
-        }
-        else {
+        } else {
             this.classpath.append(classpath);
         }
     }
@@ -167,8 +165,7 @@ public class BorlandGenerateClient extends Task
 
         if (mode.equalsIgnoreCase(FORK_MODE)) {
             executeFork();
-        } // end of if ()
-        else {            
+        } else {            
             executeJava();
         } // end of else                       
     }
@@ -207,8 +204,7 @@ public class BorlandGenerateClient extends Task
             log("Calling EJBUtilities", Project.MSG_VERBOSE);
             execTask.execute();        
 
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             // Have to catch this because of the semantics of calling main()
             String msg = "Exception while calling generateclient Details: " + e.toString();
             throw new BuildException(msg, e);
@@ -242,8 +238,7 @@ public class BorlandGenerateClient extends Task
 
             log("Calling java2iiop", Project.MSG_VERBOSE);
             execTask.execute();        
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             // Have to catch this because of the semantics of calling main()
             String msg = "Exception while calling generateclient Details: " 
                 + e.toString();

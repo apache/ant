@@ -87,8 +87,9 @@ public class GZip extends Pack {
                 try {
                     // close up
                     zOut.close();
+                } catch (IOException e) {
+                    // do nothing
                 }
-                catch (IOException e) {}
             }
         }
     }

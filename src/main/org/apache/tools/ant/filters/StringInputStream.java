@@ -63,8 +63,7 @@ import java.io.StringReader;
  * @author <a href="mailto:umagesh@apache.org">Magesh Umasankar</a>
  */
 public class StringInputStream
-    extends InputStream
-{
+    extends InputStream {
     /** Source string is stored as a StringReader */
     private StringReader in;
 

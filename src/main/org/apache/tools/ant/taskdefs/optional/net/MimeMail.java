@@ -69,16 +69,14 @@ import org.apache.tools.ant.taskdefs.email.EmailTask;
  * @author ehatcher@apache.org Erik Hatcher
  * @author paulo.gaspar@krankikom.de Paulo Gaspar
  */
-public class MimeMail extends EmailTask
-{
+public class MimeMail extends EmailTask {
     /**
      * Executes this build task.
      *
      * @exception BuildException On error.
      */
     public void execute()
-        throws BuildException
-    {
+        throws BuildException {
         log("DEPRECATED - The " + getTaskName() + " task is deprecated. " 
             + "Use the mail task instead.");
         super.execute();

@@ -64,10 +64,8 @@ import org.apache.tools.ant.Project;
  * @author Matthew Inger <a href="mailto:mattinger@mindless.com">mattinger@mindless.com</a>
  * @version $Revision$
  */
-public class RegexpFactory extends RegexpMatcherFactory
-{
-    public RegexpFactory()
-    {
+public class RegexpFactory extends RegexpMatcherFactory {
+    public RegexpFactory() {
     }
 
     /***

@@ -117,8 +117,7 @@ public abstract class Pack extends Task {
     }
 
     private void zipFile(InputStream in, OutputStream zOut)
-        throws IOException
-    {
+        throws IOException {
         byte[] buffer = new byte[8 * 1024];
         int count = 0;
         do {
@@ -128,8 +127,7 @@ public abstract class Pack extends Task {
     }
 
     protected void zipFile(File file, OutputStream zOut)
-        throws IOException
-    {
+        throws IOException {
         FileInputStream fIn = new FileInputStream(file);
         try {
             zipFile(fIn, zOut);

@@ -76,8 +76,7 @@ import org.apache.tools.ant.types.Parameter;
  */
 public final class PrefixLines
     extends BaseParamFilterReader
-    implements ChainableReader
-{
+    implements ChainableReader {
     /** prefix key */
     private static final String PREFIX_KEY = "prefix";
 

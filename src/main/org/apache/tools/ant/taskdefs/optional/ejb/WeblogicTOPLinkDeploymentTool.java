@@ -114,8 +114,7 @@ public class WeblogicTOPLinkDeploymentTool extends WeblogicDeploymentTool {
         if (toplinkDD.exists()) {
             ejbFiles.put(META_DIR + toplinkDescriptor,
                          toplinkDD);
-        }
-        else {
+        } else {
             log("Unable to locate toplink deployment descriptor. It was expected to be in " + 
                 toplinkDD.getPath(), Project.MSG_WARN);
         }                

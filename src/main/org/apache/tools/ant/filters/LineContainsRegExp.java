@@ -84,8 +84,7 @@ import org.apache.tools.ant.util.regexp.Regexp;
  */
 public final class LineContainsRegExp
     extends BaseParamFilterReader
-    implements ChainableReader
-{
+    implements ChainableReader {
     /** contains key */
     private static final String REGEXP_KEY = "regexp";
 

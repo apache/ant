@@ -133,8 +133,7 @@ public abstract class ClearCase extends Task {
             exe.setWorkingDirectory(aProj.getBaseDir());
             exe.setCommandline(cmd.getCommandline());
             return exe.execute();
-        }
-        catch (java.io.IOException e) {
+        } catch (java.io.IOException e) {
             throw new BuildException(e, location);
         }
     }

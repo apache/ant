@@ -97,8 +97,7 @@ public class Untar extends Expand {
             if (tis != null) {
                 try {
                     tis.close();
-                }
-                catch (IOException e) {}
+                } catch (IOException e) {}
             }
         }
     }

@@ -377,8 +377,7 @@ public class Property extends Task {
                                 if (props.containsKey(propertyName)) {
                                     fragment = props.getProperty(propertyName);
                                     resolved = false;
-                                }
-                                else {
+                                } else {
                                     fragment = "${" + propertyName + "}";
                                 }
                             }

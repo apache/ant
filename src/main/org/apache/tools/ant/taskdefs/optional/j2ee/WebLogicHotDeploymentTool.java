@@ -96,8 +96,7 @@ public class WebLogicHotDeploymentTool extends AbstractHotDeploymentTool impleme
      *  tools is executed.
      *  @exception org.apache.tools.ant.BuildException if the attributes are invalid or incomplete.
      */
-    public void deploy()
-    {
+    public void deploy() {
         Java java = (Java) getTask().getProject().createTask("java");
         java.setFork(true);
         java.setFailonerror(true);

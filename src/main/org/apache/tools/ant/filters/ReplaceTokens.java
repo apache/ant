@@ -81,8 +81,7 @@ import org.apache.tools.ant.types.Parameter;
  */
 public final class ReplaceTokens
     extends BaseParamFilterReader
-    implements ChainableReader
-{
+    implements ChainableReader {
     /** Default begin token character. */
     private static final char DEFAULT_BEGIN_TOKEN = '@';
 

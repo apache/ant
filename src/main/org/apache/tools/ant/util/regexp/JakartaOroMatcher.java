@@ -96,16 +96,12 @@ public class JakartaOroMatcher implements RegexpMatcher {
      * Get a compiled representation of the regexp pattern
      */
     protected Pattern getCompiledPattern(int options)
-        throws BuildException
-    {
-        try
-        {
+        throws BuildException {
+        try {
             // compute the compiler options based on the input options first
             Pattern p = compiler.compile(pattern, getCompilerOptions(options));
             return p;
-        }
-        catch (Exception e)
-        {
+        } catch (Exception e) {
             throw new BuildException(e);
         }
     }
@@ -121,8 +117,7 @@ public class JakartaOroMatcher implements RegexpMatcher {
      * Does the given argument match the pattern?
      */
     public boolean matches(String input, int options)
-        throws BuildException
-    {
+        throws BuildException {
         Pattern p = getCompiledPattern(options);
         return matcher.contains(input, p);
     }
@@ -144,8 +139,7 @@ public class JakartaOroMatcher implements RegexpMatcher {
      * parenthesized subexpressions</p>.
      */
     public Vector getGroups(String input, int options)
-        throws BuildException
-    {
+        throws BuildException {
         if (!matches(input, options)) {
             return null;
         }
@@ -158,8 +152,7 @@ public class JakartaOroMatcher implements RegexpMatcher {
         return v;
     }
 
-    protected int getCompilerOptions(int options)
-    {
+    protected int getCompilerOptions(int options) {
         int cOptions = Perl5Compiler.DEFAULT_MASK;
 
         if (RegexpUtil.hasFlag(options, MATCH_CASE_INSENSITIVE)) {

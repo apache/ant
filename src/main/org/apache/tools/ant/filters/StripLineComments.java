@@ -87,8 +87,7 @@ import org.apache.tools.ant.types.Parameter;
  */
 public final class StripLineComments
     extends BaseParamFilterReader
-    implements ChainableReader
-{
+    implements ChainableReader {
     /** The type that param recognizes to set the comments. */
     private static final String COMMENTS_KEY = "comment";
 

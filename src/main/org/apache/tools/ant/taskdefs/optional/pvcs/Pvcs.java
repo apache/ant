@@ -131,8 +131,7 @@ public class Pvcs extends org.apache.tools.ant.Task {
             exe.setWorkingDirectory(aProj.getBaseDir());
             exe.setCommandline(cmd.getCommandline());
             return exe.execute();
-        }
-        catch (java.io.IOException e) {
+        } catch (java.io.IOException e) {
             String msg = "Failed executing: " + cmd.toString() 
                 + ". Exception: " + e.getMessage();
             throw new BuildException(msg, location);

@@ -560,8 +560,7 @@ public class CBZip2OutputStream extends OutputStream implements BZip2Constants {
             int ch = (bsBuff >> 24);
             try {
                 bsStream.write(ch); // write 8-bit
-            }
-            catch (IOException e) {
+            } catch (IOException e) {
                 throw  e;
             }
             bsBuff <<= 8;
@@ -575,8 +574,7 @@ public class CBZip2OutputStream extends OutputStream implements BZip2Constants {
             int ch = (bsBuff >> 24);
             try {
                 bsStream.write(ch); // write 8-bit
-            }
-            catch (IOException e) {
+            } catch (IOException e) {
                 throw e;
             }
             bsBuff <<= 8;

@@ -455,8 +455,7 @@ public class FixCRLF extends MatchingTask {
                                 // End of multiLineComment on this line
                                 endComment += 2;  // Include the end token
                                 lines.setState(LOOKING);
-                            }
-                            else {
+                            } else {
                                 endComment = linelen;
                             }
 
@@ -489,8 +488,7 @@ public class FixCRLF extends MatchingTask {
                                                    tablength -
                                                    (line.getColumn() 
                                                     % tablength));
-                                }
-                                else {
+                                } else {
                                     line.incColumn();
                                 }
                             }
@@ -548,8 +546,7 @@ public class FixCRLF extends MatchingTask {
             try {
                 lines.close();
                 lines = null;
-            }
-            catch (IOException e) {
+            } catch (IOException e) {
                 throw new BuildException("Unable to close source file " 
                                          + srcFile);
             }
@@ -627,8 +624,7 @@ public class FixCRLF extends MatchingTask {
      *                                 before the terminator is found.
      */
     private void nextStateChange(OneLiner.BufferLine bufline)
-        throws BuildException
-    {
+        throws BuildException {
         int eol = bufline.length();
         int ptr = bufline.getNext();
 
@@ -650,8 +646,7 @@ public class FixCRLF extends MatchingTask {
                         bufline.setState(IN_MULTI_COMMENT);
                         bufline.setLookahead(--ptr);
                         return;
-                    }
-                    else if (bufline.getChar(ptr) == '/') {
+                    } else if (bufline.getChar(ptr) == '/') {
                         bufline.setState(IN_SINGLE_COMMENT);
                         bufline.setLookahead(--ptr);
                         return;
@@ -680,8 +675,7 @@ public class FixCRLF extends MatchingTask {
      *                                 before the terminator is found.
      */
     private void endOfCharConst(OneLiner.BufferLine bufline, char terminator)
-        throws BuildException
-    {
+        throws BuildException {
         int ptr = bufline.getNext();
         int eol = bufline.length();
         char c;
@@ -689,8 +683,7 @@ public class FixCRLF extends MatchingTask {
         while (ptr < eol) {
             if ((c = bufline.getChar(ptr++)) == '\\') {
                 ptr++;
-            }
-            else {
+            } else {
                 if (c == terminator) {
                     bufline.setLookahead(ptr);
                     return;
@@ -714,8 +707,7 @@ public class FixCRLF extends MatchingTask {
      * @param BufferedWriter outWriter Sink for the processed string
      */
     private void notInConstant(OneLiner.BufferLine bufline, int end,
-                                BufferedWriter outWriter)
-    {
+                                BufferedWriter outWriter) {
         // N.B. both column and string index are zero-based
         // Process a string not part of a constant;
         // i.e. convert tabs<->spaces as required
@@ -747,8 +739,7 @@ public class FixCRLF extends MatchingTask {
             } catch (IOException e) {
                 throw new BuildException(e);
             } // end of try-catch
-        }
-        else { // tabs == ADD
+        } else { // tabs == ADD
             int tabCol;
             linebuf2.setLength(0);
             place = 0;
@@ -780,8 +771,7 @@ public class FixCRLF extends MatchingTask {
                     linebuf2.append(linestring.substring(
                                     place, ++tabCol - placediff));
                     linebuf2.append('\t');
-                }
-                else {
+                } else {
                     linebuf2.append(linestring.substring(
                                     place, nextStop - placediff));
                 } // end of else
@@ -819,8 +809,7 @@ public class FixCRLF extends MatchingTask {
         private boolean reachedEof = false;
 
         public OneLiner(File srcFile)
-            throws BuildException
-        {
+            throws BuildException {
             try {
                 reader = new BufferedReader
                         (getReader(srcFile), INBUFLEN);
@@ -924,14 +913,12 @@ public class FixCRLF extends MatchingTask {
             this.state = state;
         }
 
-        public boolean hasMoreElements()
-        {
+        public boolean hasMoreElements() {
             return !reachedEof;
         }
 
         public Object nextElement()
-            throws NoSuchElementException
-        {
+            throws NoSuchElementException {
             if (!hasMoreElements()) {
                 throw new NoSuchElementException("OneLiner");
             }
@@ -955,8 +942,7 @@ public class FixCRLF extends MatchingTask {
             private String eolStr;
 
             public BufferLine(String line, String eolStr)
-                throws BuildException
-            {
+                throws BuildException {
                 next = 0;
                 column = 0;
                 this.line = line;

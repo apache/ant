@@ -74,8 +74,7 @@ import org.apache.tools.ant.Project;
  */
 public final class ExpandProperties
     extends BaseFilterReader
-    implements ChainableReader
-{
+    implements ChainableReader {
     /** Data that must be read from, if not null. */
     private String queuedData = null;
 

@@ -65,8 +65,7 @@ import org.apache.tools.ant.types.Parameterizable;
  */
 public abstract class BaseParamFilterReader
     extends BaseFilterReader
-    implements Parameterizable
-{
+    implements Parameterizable {
     /** The passed in parameter array. */
     private Parameter[] parameters;
 

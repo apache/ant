@@ -1068,8 +1068,7 @@ public class Manifest extends Task {
             if (mode.getValue().equals("update") && manifestFile.exists()) {
                 if (current != null) {
                     toWrite.merge(current);
-                }
-                else if (error != null) {
+                } else if (error != null) {
                     throw error;
                 }
             }

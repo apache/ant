@@ -282,22 +282,18 @@ public class Zip extends MatchingTask {
 
         addingNewFiles = true;
         doUpdate = doUpdate && zipFile.exists();
-        if (doUpdate)
-        {
+        if (doUpdate) {
             FileUtils fileUtils = FileUtils.newFileUtils();
             renamedFile = 
                 fileUtils.createTempFile("zip", ".tmp",
                                          fileUtils.getParentFile(zipFile));
 
-            try
-            {
+            try {
                 if (!zipFile.renameTo(renamedFile)) {
                     throw new BuildException("Unable to rename old file to "
                                              + "temporary file");
                 }
-            }
-            catch (SecurityException e)
-            {
+            } catch (SecurityException e) {
                 throw new BuildException("Not allowed to rename old file to "
                                          + "temporary file");
             }
@@ -369,8 +365,7 @@ public class Zip extends MatchingTask {
                     ZipFileSet oldFiles = new ZipFileSet();
                     oldFiles.setSrc(renamedFile);
 
-                    for (int i = 0; i < addedFiles.size(); i++)
-                    {
+                    for (int i = 0; i < addedFiles.size(); i++) {
                         PatternSet.NameEntry ne = oldFiles.createExclude();
                         ne.setName((String) addedFiles.elementAt(i));
                     }
@@ -485,14 +480,11 @@ public class Zip extends MatchingTask {
         }
         for (int i = 0; i < files.length; i++) {
             File f = new File(thisBaseDir, files[i]);
-            if (fullpath.length() > 0)
-            {
+            if (fullpath.length() > 0) {
                 // Add this file at the specified location.
                 addParentDirs(null, fullpath, zOut, "");
                 zipFile(f, zOut, fullpath);
-            }
-            else
-            {
+            } else {
                 // Add this file with the specified prefix.
                 String name = files[i].replace(File.separatorChar, '/');
                 addParentDirs(thisBaseDir, name, zOut, prefix);
@@ -504,8 +496,7 @@ public class Zip extends MatchingTask {
     protected void addZipEntries(ZipFileSet fs, DirectoryScanner ds,
                                  ZipOutputStream zOut, String prefix, 
                                  String fullpath)
-        throws IOException
-    {
+        throws IOException {
         log("adding zip entries: " + fullpath, Project.MSG_VERBOSE);
 
         if (prefix.length() > 0 && fullpath.length() > 0) {
@@ -546,13 +537,11 @@ public class Zip extends MatchingTask {
     }
 
     protected void initZipOutputStream(ZipOutputStream zOut)
-        throws IOException, BuildException
-    {
+        throws IOException, BuildException {
     }
 
     protected void finalizeZipOutputStream(ZipOutputStream zOut)
-        throws IOException, BuildException
-    {
+        throws IOException, BuildException {
     }
 
     /**
@@ -603,8 +592,7 @@ public class Zip extends MatchingTask {
      * @exception BuildException if it likes
      */
     protected boolean isUpToDate(FileScanner[] scanners, File zipFile) 
-        throws BuildException
-    {
+        throws BuildException {
         String[][] fileNames = grabFileNames(scanners);
         File[] files = grabFiles(scanners, fileNames);
         if (files.length == 0) {
@@ -676,8 +664,7 @@ public class Zip extends MatchingTask {
     }
 
     protected void zipDir(File dir, ZipOutputStream zOut, String vPath)
-        throws IOException
-    {
+        throws IOException {
         if (addedDirs.get(vPath) != null) {
             // don't add directories we've already added.
             // no warning if we try, it is harmless in and of itself
@@ -706,30 +693,22 @@ public class Zip extends MatchingTask {
 
     protected void zipFile(InputStream in, ZipOutputStream zOut, String vPath,
                            long lastModified, File file)
-        throws IOException
-    {
+        throws IOException {
         if (entries.contains(vPath)) {
 
-            if (duplicate.equals("preserve"))
-            {
+            if (duplicate.equals("preserve")) {
                 log(vPath + " already added, skipping", Project.MSG_INFO);
                 return;
-            }
-            else if (duplicate.equals("fail"))
-            {
+            } else if (duplicate.equals("fail")) {
                 throw new BuildException("Duplicate file " + vPath 
                                          + " was found and the duplicate "
                                          + "attribute is 'fail'.");
-            }
-            else
-            {
+            } else {
                 // duplicate equal to add, so we continue
                 log("duplicate file " + vPath 
                     + " found, adding.", Project.MSG_VERBOSE);
             }
-        }
-        else
-        {
+        } else {
             log("adding entry " + vPath, Project.MSG_VERBOSE);
         }
 
@@ -794,8 +773,7 @@ public class Zip extends MatchingTask {
     }
 
     protected void zipFile(File file, ZipOutputStream zOut, String vPath)
-        throws IOException
-    {
+        throws IOException {
         if (file.equals(zipFile)) {
             throw new BuildException("A zip file cannot include itself", 
                                      location);

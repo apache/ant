@@ -86,8 +86,7 @@ import java.lang.reflect.Method;
  */
 public final class ClassConstants
     extends BaseFilterReader
-    implements ChainableReader
-{
+    implements ChainableReader {
     /** Data that must be read from, if not null. */
     private String queuedData = null;
 

@@ -67,8 +67,7 @@ import org.apache.tools.ant.util.FileUtils;
  * @author <a href="mailto:umagesh@apache.org">Magesh Umasankar</a>
  */
 public abstract class BaseFilterReader
-    extends FilterReader
-{
+    extends FilterReader {
     /** Have the parameters passed been interpreted? */
     private boolean initialized = false;
 

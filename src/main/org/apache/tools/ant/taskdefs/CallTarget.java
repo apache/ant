@@ -182,8 +182,7 @@ public class CallTarget extends Task {
     protected void handleOutput(String line) {
         if (callee != null) {
             callee.handleOutput(line);
-        }
-        else {
+        } else {
             super.handleOutput(line);
         }
     }
@@ -196,8 +195,7 @@ public class CallTarget extends Task {
     protected void handleErrorOutput(String line) {
         if (callee != null) {
             callee.handleErrorOutput(line);
-        }
-        else {
+        } else {
             super.handleErrorOutput(line);
         }
     }

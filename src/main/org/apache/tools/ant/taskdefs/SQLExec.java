@@ -484,8 +484,7 @@ public class SQLExec extends Task {
                         }
                     }
                     dc = loader.loadClass(driver);
-                }
-                else {
+                } else {
                     log("Loading " + driver + " using system loader.", 
                         Project.MSG_VERBOSE);
                     dc = Class.forName(driver);
@@ -568,8 +567,7 @@ public class SQLExec extends Task {
                             conn.commit();
                         }
                     }
-                }
-                finally {
+                } finally {
                     if (out != null && out != System.out) {
                         out.close();
                     }
@@ -588,8 +586,7 @@ public class SQLExec extends Task {
                     } catch (SQLException ex) {}
                 }
                 throw new BuildException(e, location);
-            }
-            finally {
+            } finally {
                 try {
                     if (statement != null) {
                         statement.close();
@@ -597,8 +594,7 @@ public class SQLExec extends Task {
                     if (conn != null) {
                         conn.close();
                     }
-                }
-                catch (SQLException e) {}
+                } catch (SQLException e) {}
             }
             
             log(goodSql + " of " + totalSql + 
@@ -697,8 +693,7 @@ public class SQLExec extends Task {
                     return false;
                 }
             }
-        }
-        catch (SQLException e) {
+        } catch (SQLException e) {
             // Could not get the required information
             log("Failed to obtain required RDBMS information", Project.MSG_ERR);
             return false;
@@ -721,8 +716,7 @@ public class SQLExec extends Task {
             if (!statement.execute(sql)) {
                 log(statement.getUpdateCount() + " rows affected", 
                     Project.MSG_VERBOSE);
-            }
-            else {
+            } else {
                 if (print) {
                     printResults(out);
                 }
@@ -735,8 +729,7 @@ public class SQLExec extends Task {
             }
             conn.clearWarnings();
             goodSql++;
-        }
-        catch (SQLException e) {
+        } catch (SQLException e) {
             log("Failed to execute: " + sql, Project.MSG_ERR);
             if (!onError.equals("continue")) {
                 throw e;
@@ -776,8 +769,7 @@ public class SQLExec extends Task {
                          
                         if (first) {
                             first = false;
-                        }
-                        else {
+                        } else {
                             line.append(",");
                         }
                         line.append(columnValue);

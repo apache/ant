@@ -126,8 +126,7 @@ public class Replace extends MatchingTask {
     }
 
     //Inner class
-    public class Replacefilter
-    {
+    public class Replacefilter {
         private String token;
         private String value;
         private String property;
@@ -173,18 +172,14 @@ public class Replace extends MatchingTask {
             }
         }
 
-        public String getReplaceValue()
-        {
+        public String getReplaceValue() {
             if (property != null) {
                 return properties.getProperty(property);
-            }
-            else if (value != null) {
+            } else if (value != null) {
                 return value;
-            }
-            else if (Replace.this.value != null) {
+            } else if (Replace.this.value != null) {
                 return Replace.this.value.getText();
-            }
-            else {
+            } else {
                 //Default is empty string
                 return new String("");
             }
@@ -319,13 +314,11 @@ public class Replace extends MatchingTask {
 
         try {
             properties.load(new FileInputStream(propertyFile));
-        }
-        catch (FileNotFoundException e) {
+        } catch (FileNotFoundException e) {
             String message = "Property file (" + propertyFile.getPath() 
                 + ") not found.";
             throw new BuildException(message);
-        }
-        catch (IOException e) {
+        } catch (IOException e) {
             String message = "Property file (" + propertyFile.getPath() 
                 + ") cannot be loaded.";
             throw new BuildException(message);
@@ -384,8 +377,7 @@ public class Replace extends MatchingTask {
             //Preserve original string (buf) so we can compare the result
             String newString = new String(buf);
 
-            if (token != null)
-            {
+            if (token != null) {
                 // line separators in values and tokens are "\n"
                 // in order to compare with the file contents, replace them
                 // as needed

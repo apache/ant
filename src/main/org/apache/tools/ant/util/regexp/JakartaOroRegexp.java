@@ -64,17 +64,14 @@ import org.apache.oro.text.regex.Util;
  * Regular expression implementation using the Jakarta Oro package
  * @author Matthew Inger <a href="mailto:mattinger@mindless.com">mattinger@mindless.com</a>
  */
-public class JakartaOroRegexp extends JakartaOroMatcher implements Regexp
-{
+public class JakartaOroRegexp extends JakartaOroMatcher implements Regexp {
 
-    public JakartaOroRegexp()
-    {
+    public JakartaOroRegexp() {
         super();
     }
 
     public String substitute(String input, String argument, int options)
-        throws BuildException
-    {
+        throws BuildException {
         // translate \1 to $1 so that the Perl5Substitution will work
         StringBuffer subst = new StringBuffer();
         for (int i = 0; i < argument.length(); i++) {
@@ -109,8 +106,7 @@ public class JakartaOroRegexp extends JakartaOroMatcher implements Regexp
                                getSubsOptions(options));
     }
 
-    protected int getSubsOptions(int options)
-    {
+    protected int getSubsOptions(int options) {
         boolean replaceAll = RegexpUtil.hasFlag(options, REPLACE_ALL);
         int subsOptions = 1;
         if (replaceAll) {

@@ -176,8 +176,7 @@ public class Jar extends Zip {
         try {
             r = new FileReader(manifestFile);
             newManifest = getManifest(r);
-        }
-        catch (IOException e) {
+        } catch (IOException e) {
             throw new BuildException("Unable to read manifest file: " 
                                      + manifestFile 
                                      + " (" + e.getMessage() + ")", e);
@@ -185,8 +184,7 @@ public class Jar extends Zip {
             if (r != null) {
                 try {
                     r.close();
-                }
-                catch (IOException e) {
+                } catch (IOException e) {
                     // do nothing
                 }
             }
@@ -199,13 +197,11 @@ public class Jar extends Zip {
         Manifest newManifest = null;
         try {
             newManifest = new Manifest(r);
-        }
-        catch (ManifestException e) {
+        } catch (ManifestException e) {
             log("Manifest is invalid: " + e.getMessage(), Project.MSG_ERR);
             throw new BuildException("Invalid Manifest: " + manifestFile, 
                                      e, getLocation());
-        }
-        catch (IOException e) {
+        } catch (IOException e) {
             throw new BuildException("Unable to read manifest file"
                                      + " (" + e.getMessage() + ")", e);
         }
@@ -225,8 +221,7 @@ public class Jar extends Zip {
     }
 
     protected void initZipOutputStream(ZipOutputStream zOut)
-        throws IOException, BuildException
-    {
+        throws IOException, BuildException {
         String ls = System.getProperty("line.separator");
 
         try {
@@ -240,14 +235,12 @@ public class Jar extends Zip {
                     finalManifest.merge(filesetManifest);
                     finalManifest.merge(configuredManifest);
                     finalManifest.merge(manifest, !mergeManifestsMain);
-                }
-                else if (configuredManifest != null) {
+                } else if (configuredManifest != null) {
                     // configuredManifest is the final merge
                     finalManifest.merge(filesetManifest);
                     finalManifest.merge(configuredManifest, 
                                         !mergeManifestsMain);
-                }
-                else if (filesetManifest != null) {
+                } else if (filesetManifest != null) {
                     // filesetManifest is the final (and only) merge
                     finalManifest.merge(filesetManifest, !mergeManifestsMain);
                 }
@@ -280,12 +273,10 @@ public class Jar extends Zip {
             super.zipFile(bais, zOut, "META-INF/MANIFEST.MF", 
                           System.currentTimeMillis(), null);
             super.initZipOutputStream(zOut);
-        }
-        catch (ManifestException e) {
+        } catch (ManifestException e) {
             log("Manifest is invalid: " + e.getMessage(), Project.MSG_ERR);
             throw new BuildException("Invalid Manifest", e, getLocation());
-        }
-        finally {
+        } finally {
             System.getProperties().put("line.separator", ls);
         }
     }
@@ -355,8 +346,7 @@ public class Jar extends Zip {
      * Overriden from Zip class to deal with manifests
      */
     protected void zipFile(File file, ZipOutputStream zOut, String vPath)
-        throws IOException
-    {
+        throws IOException {
         if ("META-INF/MANIFEST.MF".equalsIgnoreCase(vPath))  {
             filesetManifest(file, null);
         } else {
@@ -369,8 +359,7 @@ public class Jar extends Zip {
      */
     protected void zipFile(InputStream is, ZipOutputStream zOut, String vPath,
                            long lastModified, File file)
-        throws IOException
-    {
+        throws IOException {
         if ("META-INF/MANIFEST.MF".equalsIgnoreCase(vPath))  {
             filesetManifest(file, is);
         } else {
@@ -385,31 +374,26 @@ public class Jar extends Zip {
             log("Found manifest " + file, Project.MSG_VERBOSE);
             if (is != null) {
                 manifest = getManifest(new InputStreamReader(is));
-            }
-            else {
+            } else {
                 manifest = getManifest(file);
             }
-        }
-        else if (mergeManifests) {
+        } else if (mergeManifests) {
             // we add this to our group of fileset manifests
             log("Found manifest to merge in file " + file, 
                 Project.MSG_VERBOSE);
 
-            try
-            {
+            try {
                 Manifest newManifest = getManifest(new InputStreamReader(is));
                 if (filesetManifest == null) {
                     filesetManifest = newManifest;
                 } else {
                     filesetManifest.merge(newManifest);
                 }
-            }
-            catch (ManifestException e) {
+            } catch (ManifestException e) {
                 log("Manifest in file " + file + " is invalid: " + e.getMessage(), Project.MSG_ERR);
                 throw new BuildException("Invalid Manifest", e, getLocation());
             }
-        }
-        else {
+        } else {
             // assuming 'skip' otherwise
             log("File " + file 
                 + " includes a META-INF/MANIFEST.MF which will be ignored. " 
@@ -451,26 +435,22 @@ public class Jar extends Zip {
                         Project.MSG_VERBOSE);
                     return false;
                 }
-            }
-            catch (Exception e) {
+            } catch (Exception e) {
                 // any problems and we will rebuild
                 log("Updating jar since cannot read current jar manifest: " 
                     + e.getClass().getName() + " - " + e.getMessage(),
                     Project.MSG_VERBOSE);
                 return false;
-            }
-            finally {
+            } finally {
                 if (theZipFile != null) {
                     try {
                         theZipFile.close();
-                    }
-                    catch (IOException e) {
+                    } catch (IOException e) {
                         //ignore
                     }
                 }
             }
-        }
-        else if (manifestFile.lastModified() > zipFile.lastModified()) {
+        } else if (manifestFile.lastModified() > zipFile.lastModified()) {
             return false;
         }
         return super.isUpToDate(scanners, zipFile);

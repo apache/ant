@@ -330,36 +330,29 @@ public abstract class AbstractCvsTask extends Task {
                                          + "Command line was ["
                                          + actualCommandLine + "]", location);
             }
-        }
-        catch (IOException e) {
+        } catch (IOException e) {
             if (failOnError) {
                 throw new BuildException(e, location);
-            }
-            else {
+            } else {
                 log("Caught exception: " + e.getMessage(), Project.MSG_WARN);
             }
-        }
-        catch (BuildException e) {
+        } catch (BuildException e) {
             if (failOnError) {
                 throw(e);
-            }
-            else {
+            } else {
                 Throwable t = e.getException();
                 if (t == null) {
                     t = e;
                 }
                 log("Caught exception: " + t.getMessage(), Project.MSG_WARN);
             }
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             if (failOnError) {
                 throw new BuildException(e, location);
-            }
-            else {
+            } else {
                 log("Caught exception: " + e.getMessage(), Project.MSG_WARN);
             }
-        }
-        finally {
+        } finally {
             //
             // condition used to be if(output == null) outputStream.close().  This is
             //      not appropriate.  Check if the stream itself is not null, then close().
@@ -607,8 +600,7 @@ public abstract class AbstractCvsTask extends Task {
         this.configureCommandline(c);
         if (insertAtStart) {
             vecCommandlines.insertElementAt(c, 0);
-        }
-        else {
+        } else {
             vecCommandlines.addElement(c);
         }
     }

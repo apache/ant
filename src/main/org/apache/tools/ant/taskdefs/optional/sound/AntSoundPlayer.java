@@ -139,12 +139,10 @@ public class AntSoundPlayer implements LineListener, BuildListener {
 
         try {
             audioInputStream = AudioSystem.getAudioInputStream(file);
-        }
-        catch (UnsupportedAudioFileException uafe) {
+        } catch (UnsupportedAudioFileException uafe) {
             project.log("Audio format is not yet supported: " 
                 + uafe.getMessage());
-        }
-        catch (IOException ioe) {
+        } catch (IOException ioe) {
             ioe.printStackTrace();
         }
 
@@ -156,12 +154,10 @@ public class AntSoundPlayer implements LineListener, BuildListener {
                 audioClip = (Clip) AudioSystem.getLine(info);
                 audioClip.addLineListener(this);
                 audioClip.open(audioInputStream);
-            }
-            catch (LineUnavailableException e) {
+            } catch (LineUnavailableException e) {
                 project.log("The sound device is currently unavailable");
                 return;
-            }
-            catch (IOException e) {
+            } catch (IOException e) {
                 e.printStackTrace();
             }
 
@@ -172,8 +168,7 @@ public class AntSoundPlayer implements LineListener, BuildListener {
             }
             audioClip.drain();
             audioClip.close();
-        }
-        else {
+        } else {
             project.log("Can't get data from file " + file.getName());
         }
     }
@@ -189,8 +184,7 @@ public class AntSoundPlayer implements LineListener, BuildListener {
         clip.loop(Clip.LOOP_CONTINUOUSLY);
         try {
             Thread.sleep(duration);
-        }
-        catch (InterruptedException e) {
+        } catch (InterruptedException e) {
         }
     }
 
@@ -202,8 +196,7 @@ public class AntSoundPlayer implements LineListener, BuildListener {
         if (event.getType().equals(LineEvent.Type.STOP)) {
             Line line = event.getLine();
             line.close();
-        }
-        else if (event.getType().equals(LineEvent.Type.CLOSE)) {
+        } else if (event.getType().equals(LineEvent.Type.CLOSE)) {
             /*
              *  There is a bug in JavaSound 0.90 (jdk1.3beta).
              *  It prevents correct termination of the VM.

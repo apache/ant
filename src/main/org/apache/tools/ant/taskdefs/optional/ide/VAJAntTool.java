@@ -117,8 +117,7 @@ public class VAJAntTool {
             if (args.length >= 2 && args[1] instanceof String) {
                 String projectName = (String) args[1];
                 info = loadBuildData(projectName);
-            }
-            else {
+            } else {
                 info = new VAJBuildInfo();
             }
 

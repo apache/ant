@@ -229,13 +229,11 @@ public class EjbcHelper {
                     primaryKeyClassSource.lastModified() > classModificationTime) {
                 return true;
             }
-        }
-        catch (Throwable descriptorLoadException) {
+        } catch (Throwable descriptorLoadException) {
             System.out.println("Exception occurred reading " + descriptorFile.getName() + " - continuing");
             // any problems - just regenerate
             return true;
-        }
-        finally {
+        } finally {
             if (fis != null) {
                 fis.close();
             }
@@ -257,8 +255,7 @@ public class EjbcHelper {
             if (isRegenRequired(descriptorFile)) {
                 System.out.println("Running ejbc for " + descriptorFile.getName());
                 regenerateSupportClasses(descriptorFile);
-            }
-            else {
+            } else {
                 System.out.println(descriptorFile.getName() + " is up to date");
             }
             manifest += "Name: " + descriptorName.replace('\\', '/') + "\nEnterprise-Bean: True\n\n";
@@ -285,8 +282,7 @@ public class EjbcHelper {
         
         try {
             weblogic.ejbc.main(args);
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             // run with no exit for better reporting
             String[] newArgs = getCommandLine(true, descriptorFile);
             weblogic.ejbc.main(newArgs);

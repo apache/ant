@@ -228,17 +228,14 @@ public class JDependTask extends Task {
     }
 
 
-    public void setFormat(FormatAttribute ea)
-    {
+    public void setFormat(FormatAttribute ea) {
         format = ea.getValue();
     }
 
-    public static class FormatAttribute extends EnumeratedAttribute
-    {
+    public static class FormatAttribute extends EnumeratedAttribute {
         private String [] formats = new String[]{"xml", "text"};
 
-        public String[] getValues()
-        {
+        public String[] getValues() {
             return formats;
         }
     }
@@ -324,8 +321,7 @@ public class JDependTask extends Task {
             FileWriter fw;
             try {
                 fw = new FileWriter(getOutputFile().getPath());
-            }
-            catch (IOException e) {
+            } catch (IOException e) {
                 String msg = "JDepend Failed when creating the output file: " 
                     + e.getMessage();
                 log(msg);
@@ -349,8 +345,7 @@ public class JDependTask extends Task {
             }
             try {
                 jdepend.addDirectory(f.getPath());
-            }
-            catch (IOException e) {
+            } catch (IOException e) {
                 String msg = "JDepend Failed when adding a source directory: " 
                     + e.getMessage();
                 log(msg);

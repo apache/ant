@@ -396,14 +396,12 @@ public class Java extends Task {
                 exe.execute(project);
             } catch (IOException io) {
                 throw new BuildException(io, location);
-            }
-            finally {
+            } finally {
                 if (outStream != null) {
                     outStream.close();
                 }
             }
-        }
-        else {
+        } else {
             exe.execute(project);
         }
     }

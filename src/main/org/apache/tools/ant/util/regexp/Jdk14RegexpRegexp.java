@@ -64,16 +64,13 @@ import java.util.regex.Pattern;
  * Regular expression implementation using the JDK 1.4 regular expression package
  * @author Matthew Inger <a href="mailto:mattinger@mindless.com">mattinger@mindless.com</a>
  */
-public class Jdk14RegexpRegexp extends Jdk14RegexpMatcher implements Regexp
-{
+public class Jdk14RegexpRegexp extends Jdk14RegexpMatcher implements Regexp {
 
-    public Jdk14RegexpRegexp()
-    {
+    public Jdk14RegexpRegexp() {
         super();
     }
 
-    protected int getSubsOptions(int options)
-    {
+    protected int getSubsOptions(int options) {
         int subsOptions = REPLACE_FIRST;
         if (RegexpUtil.hasFlag(options, REPLACE_ALL)) {
             subsOptions = REPLACE_ALL;
@@ -82,8 +79,7 @@ public class Jdk14RegexpRegexp extends Jdk14RegexpMatcher implements Regexp
     }
 
     public String substitute(String input, String argument, int options)
-        throws BuildException
-    {
+        throws BuildException {
         // translate \1 to $(1) so that the Matcher will work
         StringBuffer subst = new StringBuffer();
         for (int i = 0; i < argument.length(); i++) {
@@ -112,12 +108,9 @@ public class Jdk14RegexpRegexp extends Jdk14RegexpMatcher implements Regexp
         StringBuffer sb = new StringBuffer();
 
         Matcher m = p.matcher(input);
-        if (RegexpUtil.hasFlag(sOptions, REPLACE_ALL))
-        {
+        if (RegexpUtil.hasFlag(sOptions, REPLACE_ALL)) {
             sb.append(m.replaceAll(argument));
-        }
-        else
-        {
+        } else {
             boolean res = m.find();
             if (res) {
                 m.appendReplacement(sb, argument);

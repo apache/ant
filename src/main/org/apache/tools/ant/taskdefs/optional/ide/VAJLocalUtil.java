@@ -350,8 +350,7 @@ abstract class VAJLocalUtil implements VAJUtil{
             Type[] importedTypes = getWorkspace().importData(importSpec);
             if (importedTypes == null) {
                 throw new BuildException("Unable to import into Workspace!");
-            }
-            else {
+            } else {
                 log(importedTypes.length + " types imported", MSG_DEBUG);
                 for (int i = 0; i < importedTypes.length; i++) {
                     log(importedTypes[i].getPackage().getName()
@@ -428,11 +427,9 @@ abstract class VAJLocalUtil implements VAJUtil{
      * @param fileType   type of files (Source/Class/Resource)
      * @param summaryLog buffer for logging
      */
-    private void addFilesToImport(
-                                  ImportCodeSpec spec, boolean doImport,
+    private void addFilesToImport(ImportCodeSpec spec, boolean doImport,
                                   Vector files, String fileType,
-                                  StringBuffer summaryLog)
-    {
+                                  StringBuffer summaryLog) {
 
         if (doImport) {
             String[] fileArr = new String[files.size()];

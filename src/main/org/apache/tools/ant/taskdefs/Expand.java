@@ -166,8 +166,7 @@ public class Expand extends MatchingTask {
             if (zis != null) {
                 try {
                     zis.close();
-                }
-                catch (IOException e) {}
+                } catch (IOException e) {}
             }
         }
     }

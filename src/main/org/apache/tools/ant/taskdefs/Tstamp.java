@@ -121,15 +121,13 @@ public class Tstamp extends Task {
         }
     }
 
-    public CustomFormat createFormat()
-    {
+    public CustomFormat createFormat() {
         CustomFormat cts = new CustomFormat(prefix);
         customFormats.addElement(cts);
         return cts;
     }
 
-    public class CustomFormat
-    {
+    public class CustomFormat {
         private TimeZone timeZone;
         private String propertyName;
         private String pattern;
@@ -140,23 +138,19 @@ public class Tstamp extends Task {
         private int field = Calendar.DATE;
         private String prefix = "";
 
-        public CustomFormat(String prefix)
-        {
+        public CustomFormat(String prefix) {
             this.prefix = prefix;
         }
 
-        public void setProperty(String propertyName)
-        {
+        public void setProperty(String propertyName) {
             this.propertyName = prefix + propertyName;
         }
 
-        public void setPattern(String pattern)
-        {
+        public void setPattern(String pattern) {
             this.pattern = pattern;
         }
 
-        public void setLocale(String locale)
-        {
+        public void setLocale(String locale) {
             StringTokenizer st = new StringTokenizer(locale, " \t\n\r\f,");
             try {
                 language = st.nextToken();
@@ -169,12 +163,10 @@ public class Tstamp extends Task {
                                                       getLocation());
                         }
                     }
-                }
-                else {
+                } else {
                     country = "";
                 }
-            }
-            catch (NoSuchElementException e) {
+            } catch (NoSuchElementException e) {
                 throw new BuildException("bad locale format", e, 
                                          getLocation());
             }
@@ -207,8 +199,7 @@ public class Tstamp extends Task {
             field = unit.getCalendarField();
         }
 
-        public void execute(Project project, Date date, Location location)
-        {
+        public void execute(Project project, Date date, Location location) {
             if (propertyName == null) {
                 throw new BuildException("property attribute must be provided",
                                          location);
@@ -222,12 +213,10 @@ public class Tstamp extends Task {
             SimpleDateFormat sdf;
             if (language == null) {
                 sdf = new SimpleDateFormat(pattern);
-            }
-            else if (variant == null) {
+            } else if (variant == null) {
                 sdf = new SimpleDateFormat(pattern,
                                            new Locale(language, country));
-            }
-            else {
+            } else {
                 sdf = new SimpleDateFormat(pattern,
                                            new Locale(language, country,
                                                       variant));

@@ -130,8 +130,7 @@ public class StreamPumper implements Runnable {
      * @see #isFinished()
      **/
     public synchronized void waitFor()
-        throws InterruptedException
-    {
+        throws InterruptedException {
         while (!isFinished()) {
             wait();
         }

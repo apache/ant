@@ -65,8 +65,7 @@ import java.io.Reader;
  */
 public final class StripJavaComments
     extends BaseFilterReader
-    implements ChainableReader
-{
+    implements ChainableReader {
     private int readAheadCh = -1;
 
     private boolean inString = false;

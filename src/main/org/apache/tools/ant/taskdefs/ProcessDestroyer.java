@@ -65,8 +65,7 @@ import java.util.Vector;
  * @since Ant 1.5
  */
 class ProcessDestroyer
-    extends Thread
-{
+    extends Thread {
 
     private Vector processes = new Vector();
 
@@ -74,10 +73,8 @@ class ProcessDestroyer
      * Constructs a <code>ProcessDestroyer</code> and registers it as
      * a shutdown hook.
      */
-    public ProcessDestroyer()
-    {
-        try
-        {
+    public ProcessDestroyer() {
+        try {
             // check to see if the method exists (support pre-JDK 1.3 VMs)
             //
             Class[] paramTypes = {Thread.class};
@@ -88,9 +85,7 @@ class ProcessDestroyer
             //
             Object[] args = {this};
             addShutdownHook.invoke(Runtime.getRuntime(), args);
-        }
-        catch (Exception e)
-        {
+        } catch (Exception e) {
             // it just won't be added as a shutdown hook... :(
         }
     }
@@ -103,8 +98,7 @@ class ProcessDestroyer
      * @return  <code>true</code> if the specified <code>Process</code> was
      *          successfully added
      */
-    public boolean add(Process process)
-    {
+    public boolean add(Process process) {
         processes.addElement(process);
         return processes.contains(process);
     }
@@ -117,21 +111,17 @@ class ProcessDestroyer
      * @return  <code>true</code> if the specified <code>Process</code> was
      *          successfully removed
      */
-    public boolean remove(Process process)
-    {
+    public boolean remove(Process process) {
         return processes.removeElement(process);
     }
 
     /**
      * Invoked by the VM when it is exiting.
      */
-    public void run()
-    {
-        synchronized (processes)
-        {
+    public void run() {
+        synchronized (processes) {
             Enumeration e = processes.elements();
-            while (e.hasMoreElements())
-            {
+            while (e.hasMoreElements()) {
                 ((Process) e.nextElement()).destroy();
             }
         }

@@ -120,8 +120,7 @@ public class Exec extends Task {
             if (!dir.equals(project.resolveFile("."))) {
                 if (myos.toLowerCase().indexOf("nt") >= 0) {
                     command = "cmd /c cd " + dir + " && " + command;
-                }
-                else {
+                } else {
                     String ant = project.getProperty("ant.home");
                     if (ant == null) {
                         throw new BuildException("Property 'ant.home' not found", location);
@@ -237,9 +236,7 @@ public class Exec extends Task {
             this.parent = parent;
         }
 
-        public void pumpStream()
-            throws IOException
-        {
+        public void pumpStream() throws IOException {
             byte[] buf = new byte[BUFFER_SIZE];
             if (!endOfStream) {
                 String line = din.readLine();

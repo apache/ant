@@ -216,8 +216,7 @@ public class Ant extends Task {
                 logger.setOutputPrintStream(out);
                 logger.setErrorPrintStream(out);
                 newProject.addBuildListener(logger);
-            }
-            catch (IOException ex) {
+            } catch (IOException ex) {
                 log("Ant: Can't set output to " + output);
             }
         }

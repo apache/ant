@@ -113,8 +113,7 @@ import java.util.StringTokenizer;
  * 
  */
 
-public class WLJspc extends MatchingTask
-{
+public class WLJspc extends MatchingTask {
     //TODO Test on other versions of weblogic
     //TODO add more attributes to the task, to take care of all jspc options
     //TODO Test on Unix

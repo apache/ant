@@ -178,8 +178,7 @@ public final class LoadFile extends Task {
             bis = new BufferedInputStream(fis);
             if (encoding == null) {
                 instream = new InputStreamReader(bis);
-            }
-            else {
+            } else {
                 instream = new InputStreamReader(bis, encoding);
             }
 
@@ -203,15 +202,13 @@ public final class LoadFile extends Task {
             final String message = "Unable to load file: " + ioe.toString();
             if (failOnError) {
                 throw new BuildException(message, ioe, location);
-            }
-            else {
+            } else {
                 log(message, Project.MSG_ERR);
             }
         } catch (final BuildException be) {
             if (failOnError) {
                 throw be;
-            }
-            else {
+            } else {
                 log(be.getMessage(), Project.MSG_ERR);
             }
         } finally {

@@ -118,8 +118,7 @@ public class Ear extends Jar {
 
 
     protected void initZipOutputStream(ZipOutputStream zOut)
-        throws IOException, BuildException
-    {
+        throws IOException, BuildException {
         // If no webxml file is specified, it's an error.
         if (deploymentDescriptor == null && !isInUpdateMode()) {
             throw new BuildException("appxml attribute is required", location);
@@ -129,8 +128,7 @@ public class Ear extends Jar {
     }
 
     protected void zipFile(File file, ZipOutputStream zOut, String vPath)
-        throws IOException
-    {
+        throws IOException {
         // If the file being added is META-INF/application.xml, we
         // warn if it's not the one specified in the "appxml"
         // attribute - or if it's being added twice, meaning the same

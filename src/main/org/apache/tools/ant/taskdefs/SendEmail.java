@@ -110,8 +110,7 @@ import org.apache.tools.ant.taskdefs.email.EmailTask;
  *
  * @ant.task name="mail" category="network"
  */
-public class SendEmail extends EmailTask
-{
+public class SendEmail extends EmailTask {
     /**
      * Sets the mailport parameter of this build task.
      * @param value mail port name.

@@ -73,8 +73,7 @@ import java.io.File;
  * @author steve loughran
  * @since ant1.5
  */
-public class JasperC extends DefaultJspCompilerAdapter
-{
+public class JasperC extends DefaultJspCompilerAdapter {
     /**
      * our execute method
      */
@@ -90,8 +89,7 @@ public class JasperC extends DefaultJspCompilerAdapter
             Java java = (Java) (getJspc().getProject()).createTask("java");
             if (getJspc().getClasspath() != null) {
                 java.setClasspath(getJspc().getClasspath());
-            }
-            else {
+            } else {
                 java.setClasspath(Path.systemClasspath);
             }
             java.setClassname("org.apache.jasper.JspC");
@@ -105,8 +103,7 @@ public class JasperC extends DefaultJspCompilerAdapter
             java.setFork(true);
             java.execute();
             return true;
-        }
-        catch (Exception ex) {
+        } catch (Exception ex) {
             //@todo implement failonerror support here?
             if (ex instanceof BuildException) {
                 throw (BuildException) ex;
@@ -114,8 +111,7 @@ public class JasperC extends DefaultJspCompilerAdapter
                 throw new BuildException("Error running jsp compiler: ",
                                          ex, getJspc().getLocation());
             }
-        }
-        finally {
+        } finally {
             getJspc().deleteEmptyJavaFiles();
         }
     }

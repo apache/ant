@@ -145,16 +145,14 @@ public class Rpm extends Task {
         if (error == null && output == null) {
             streamhandler = new LogStreamHandler(this, Project.MSG_INFO,
                                                  Project.MSG_WARN);
-        }
-        else {
+        } else {
             if (output != null) {
                 try {
                     outputstream = new PrintStream(new BufferedOutputStream(new FileOutputStream(output)));
                 } catch (IOException e) {
                     throw new BuildException(e, location);
                 }
-            }
-            else {
+            } else {
                 outputstream = new LogOutputStream(this, Project.MSG_INFO);
             }
             if (error != null) {
@@ -163,8 +161,7 @@ public class Rpm extends Task {
                 }  catch (IOException e) {
                     throw new BuildException(e, location);
                 }
-            }
-            else {
+            } else {
                 errorstream = new LogOutputStream(this, Project.MSG_WARN);
             }
             streamhandler = new PumpStreamHandler(outputstream, errorstream);

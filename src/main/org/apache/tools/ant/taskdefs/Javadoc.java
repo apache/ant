@@ -776,8 +776,7 @@ public class Javadoc extends Task {
                                           Project.MSG_VERBOSE);
                     }
                     gotAll = true;
-                }
-                else {
+                } else {
                     int i;
                     for (i = 0; i < SCOPE_ELEMENTS.length; i++) {
                         if (next.equals (SCOPE_ELEMENTS[i]))
@@ -786,8 +785,7 @@ public class Javadoc extends Task {
                     if (i == SCOPE_ELEMENTS.length) {
                         throw new BuildException ("Unrecognised scope element: "
                                                   + next);
-                    } 
-                    else {
+                    } else {
                         if (elements[i]) {
                             getProject().log ("Repeated tag scope element: "
                                               + next, Project.MSG_VERBOSE);
@@ -808,8 +806,7 @@ public class Javadoc extends Task {
             }
             if (gotAll) {
                 this.scope = "a";
-            }
-            else {
+            } else {
                 StringBuffer buff = new StringBuffer (elements.length);
                 for (int i = 0; i < elements.length; i++) {
                     if (elements[i]) {
@@ -998,8 +995,7 @@ public class Javadoc extends Task {
                 if (doclet.getName() == null) {
                     throw new BuildException("The doclet name must be "
                                              + "specified.", location);
-                }
-                else {
+                } else {
                     toExecute.createArgument().setValue("-doclet");
                     toExecute.createArgument().setValue(doclet.getName());
                     if (doclet.getPath() != null) {
@@ -1060,13 +1056,11 @@ public class Javadoc extends Task {
                             toExecute.createArgument()
                                 .setValue(packageListLocation
                                           .getAbsolutePath());
-                        }
-                        else {
+                        } else {
                             log("Warning: No package list was found at " 
                                 + packageListLocation, Project.MSG_VERBOSE);
                         }
-                    }
-                    else {
+                    } else {
                         toExecute.createArgument().setValue("-link");
                         toExecute.createArgument().setValue(la.getHref());
                     }

@@ -337,17 +337,14 @@ public class MailMessage {
         if (start == 0) {
           end = i;  // support "address (name)"
         }
-      }
-      else if (c == ')') {
+      } else if (c == ')') {
         paramDepth--;
         if (end == 0) {
           start = i + 1;  // support "(name) address"
         }
-      }
-      else if (paramDepth == 0 && c == '<') {
+      } else if (paramDepth == 0 && c == '<') {
         start = i + 1;
-      }
-      else if (paramDepth == 0 && c == '>') {
+      } else if (paramDepth == 0 && c == '>') {
         end = i;
       }
     }
@@ -469,12 +466,10 @@ class MailPrintStream extends PrintStream {
     if (b == '\n' && lastChar != '\r') {
       rawWrite('\r');  // ensure always \r\n
       rawWrite(b);
-    }
-    else if (b == '.' && lastChar == '\n') {
+    } else if (b == '.' && lastChar == '\n') {
       rawWrite('.');  // add extra dot
       rawWrite(b);
-    }
-    else {
+    } else {
       rawWrite(b);
     }
     lastChar = b;

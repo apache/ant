@@ -121,8 +121,7 @@ public class JspNameMangler implements JspMangler {
         char firstChar = className.charAt(0);
         if (Character.isJavaIdentifierStart(firstChar)) {
             modifiedClassName.append(firstChar);
-        }
-        else {
+        } else {
             modifiedClassName.append(mangleChar(firstChar));
         }
         // this is the rest
@@ -130,8 +129,7 @@ public class JspNameMangler implements JspMangler {
             char subChar = className.charAt(i);
             if (Character.isJavaIdentifierPart(subChar)) {
                 modifiedClassName.append(subChar);
-            }
-            else {
+            } else {
                 modifiedClassName.append(mangleChar(subChar));
             }
         }
@@ -150,8 +148,7 @@ public class JspNameMangler implements JspMangler {
         String filename = jspFile.getName();
         if (filename.endsWith(".jsp")) {
             className = filename.substring(0, filename.length() - 4);
-        }
-        else {
+        } else {
             className = filename;
         }
         return className;

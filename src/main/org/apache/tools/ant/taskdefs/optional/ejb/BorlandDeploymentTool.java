@@ -231,8 +231,7 @@ public class BorlandDeploymentTool extends GenericDeploymentTool  implements Exe
         if (borlandDD.exists()) {
             log("Borland specific file found " + borlandDD,  Project.MSG_VERBOSE);
             ejbFiles.put(META_DIR + BAS_DD,  borlandDD);
-        }
-        else {
+        } else {
             log("Unable to locate borland deployment descriptor. It was expected to be in " + 
                 borlandDD.getPath(), Project.MSG_WARN);
             return;
@@ -265,8 +264,7 @@ public class BorlandDeploymentTool extends GenericDeploymentTool  implements Exe
             Commandline.Argument arguments = javaTask.createArg();
             arguments.setLine(args);
             Path classpath = getCombinedClasspath();             
-            if (classpath != null) 
-            {
+            if (classpath != null)  {
                 javaTask.setClasspath(classpath);
                 javaTask.setFork(true);
             }
@@ -274,8 +272,7 @@ public class BorlandDeploymentTool extends GenericDeploymentTool  implements Exe
             log("Calling " + VERIFY + " for " + sourceJar.toString(), 
                 Project.MSG_VERBOSE);
             javaTask.execute();
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             //TO DO : delete the file if it is not a valid file.
             String msg = "Exception while calling " + VERIFY + " Details: " 
                 + e.toString();
@@ -307,8 +304,7 @@ public class BorlandDeploymentTool extends GenericDeploymentTool  implements Exe
             }
             gentask.setTaskName("generate client");
             gentask.execute();
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             //TO DO : delete the file if it is not a valid file.
             String msg = "Exception while calling " + VERIFY + " Details: " 
                 + e.toString();
@@ -363,8 +359,7 @@ public class BorlandDeploymentTool extends GenericDeploymentTool  implements Exe
                     + result + ")";
                 throw new BuildException(msg, getTask().getLocation());
             }                       
-        }
-        catch (java.io.IOException e) {
+        } catch (java.io.IOException e) {
             log("java2iiop exception :" + e.getMessage(), Project.MSG_ERR);
             throw new BuildException(e, getTask().getLocation());
         }            
@@ -439,8 +434,7 @@ public class BorlandDeploymentTool extends GenericDeploymentTool  implements Exe
      * @param is
      * @exception java.io.IOException
      */
-    public void setProcessOutputStream(InputStream is) throws IOException
-    {
+    public void setProcessOutputStream(InputStream is) throws IOException {
         try {
             BufferedReader reader = new BufferedReader(new InputStreamReader(is));
             String javafile;
@@ -455,8 +449,7 @@ public class BorlandDeploymentTool extends GenericDeploymentTool  implements Exe
                 } // end of if ()                
             } // end of while ()
             reader.close();            
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             String msg = "Exception while parsing  java2iiop output. Details: " + e.toString();
             throw new BuildException(msg, e);
         }
@@ -466,8 +459,7 @@ public class BorlandDeploymentTool extends GenericDeploymentTool  implements Exe
      * @param param1
      * @exception java.io.IOException
      */
-    public void setProcessErrorStream(InputStream is) throws IOException
-    {
+    public void setProcessErrorStream(InputStream is) throws IOException {
         BufferedReader reader = new BufferedReader(new InputStreamReader(is));
         String s = reader.readLine();
         if (s != null) {

@@ -72,8 +72,7 @@ import org.apache.tools.ant.types.Parameter;
  */
 public final class StripLineBreaks
     extends BaseParamFilterReader
-    implements ChainableReader
-{
+    implements ChainableReader {
     /**
      * Linebreaks. What do to on funny IBM mainframes with odd line endings?
      */

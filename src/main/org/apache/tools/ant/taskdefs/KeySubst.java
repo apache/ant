@@ -179,8 +179,7 @@ public class KeySubst extends Task {
     }
         
 
-    public static void main(String[] args)
-    {
+    public static void main(String[] args) {
         try {
             Hashtable hash = new Hashtable();
             hash.put("VERSION", "1.0.3");
@@ -198,8 +197,7 @@ public class KeySubst extends Task {
         @return the string with the replacements in it.
     */
     public static String replace(String origString, Hashtable keys)
-        throws BuildException
-    {
+        throws BuildException {
         StringBuffer finalString = new StringBuffer();
         int index = 0;
         int i = 0;

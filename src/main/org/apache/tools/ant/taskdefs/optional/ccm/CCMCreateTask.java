@@ -350,8 +350,7 @@ public class CCMCreateTask extends Continuus implements ExecuteStreamHandler {
             log("error procession stream , null pointer exception", Project.MSG_ERR);
             npe.printStackTrace();
             throw new BuildException(npe.getClass().getName());
-        } // end of catch
-        catch (Exception e) {
+        } catch (Exception e) {
             log("error procession stream " + e.getMessage(), Project.MSG_ERR);
             throw new BuildException(e.getMessage());
         } // end of try-catch

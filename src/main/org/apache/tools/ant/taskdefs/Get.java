@@ -150,8 +150,7 @@ public class Get extends Task {
                         Class.forName("sun.misc.BASE64Encoder").newInstance();
                     encoding = encoder.encode (up.getBytes());
 
-                }
-                catch (Exception ex) { // sun's base64 encoder isn't available
+                } catch (Exception ex) { // sun's base64 encoder isn't available
                     Base64Converter encoder = new Base64Converter();
                     encoding = encoder.encode(up.getBytes());
                 }
@@ -339,8 +338,7 @@ public class Get extends Task {
     *    <a HREF="gg@grtmail.com">Gautam Guliani</a>
     *********************************************************************/
 
-    class  Base64Converter
-    {
+    class  Base64Converter {
 
         public final char [ ]  alphabet = {
             'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H',   //  0 to  7
@@ -353,13 +351,11 @@ public class Get extends Task {
             '4', '5', '6', '7', '8', '9', '+', '/' }; // 56 to 63
 
 
-        public String  encode(String  s)
-        {
+        public String  encode(String  s) {
             return encode (s.getBytes());
         }
 
-        public String  encode(byte[ ] octetString)
-        {
+        public String  encode(byte[ ] octetString) {
             int  bits24;
             int  bits6;
 
@@ -384,8 +380,7 @@ public class Get extends Task {
                 out[outIndex++] = alphabet[bits6];
             }
 
-            if (octetString.length - i == 2)
-            {
+            if (octetString.length - i == 2) {
                 // store the octets
                 bits24 = (octetString[i] & 0xFF) << 16;
                 bits24 |= (octetString[i + 1] & 0xFF) << 8;
@@ -398,9 +393,7 @@ public class Get extends Task {
 
                 // padding
                 out[outIndex++] = '=';
-            }
-            else if (octetString.length - i == 1)
-            {
+            } else if (octetString.length - i == 1) {
                 // store the octets
                 bits24 = (octetString[i] & 0xFF) << 16;
                 bits6 = (bits24 & 0x00FC0000) >> 18;
