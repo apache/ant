@@ -54,7 +54,7 @@
 package org.apache.tools.ant;
 
 /**
- * Used to report exit status of classes which call System.exit()
+ * Used to report exit status of classes which call System.exit().
  *
  * @see org.apache.tools.ant.util.optional.NoExitSecurityManager
  *

@@ -70,7 +70,7 @@ public class DemuxOutputStream extends OutputStream {
 
     /** Maximum buffer size */
     private final static int MAX_SIZE = 1024;
-    /** Mapping from thread to buffer (Thread->ByteOutputStream) */
+    /** Mapping from thread to buffer (Thread to ByteOutputStream) */
     private Hashtable buffers = new Hashtable();
 //    private ByteArrayOutputStream buffer = new ByteArrayOutputStream();
     /** 

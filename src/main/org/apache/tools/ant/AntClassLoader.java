@@ -223,7 +223,7 @@ public class AntClassLoader extends ClassLoader implements BuildListener {
     private ClassLoader parent = null;
 
     /**
-     * A hashtable of zip files opened by the classloader
+     * A hashtable of zip files opened by the classloader (File to ZipFile)
      */
     private Hashtable zipFiles = new Hashtable();
 
@@ -561,8 +561,8 @@ public class AntClassLoader extends ClassLoader implements BuildListener {
      *
      * @return the required Class object
      *
-     * @throws ClassNotFoundException if the requested class does not exist on
-     * this loader's classpath.
+     * @exception ClassNotFoundException if the requested class does not exist
+     * on this loader's classpath.
      */
     public Class forceLoadClass(String classname) throws ClassNotFoundException {
         log("force loading " + classname, Project.MSG_DEBUG);
@@ -589,8 +589,8 @@ public class AntClassLoader extends ClassLoader implements BuildListener {
      *
      * @return the required Class object
      *
-     * @throws ClassNotFoundException if the requested class does not exist on
-     * this loader's classpath.
+     * @exception ClassNotFoundException if the requested class does not exist
+     * on this loader's classpath.
      */
     public Class forceLoadSystemClass(String classname) throws ClassNotFoundException {
         log("force system loading " + classname, Project.MSG_DEBUG);
@@ -841,7 +841,7 @@ public class AntClassLoader extends ClassLoader implements BuildListener {
      * @param name the resource name to search for. Must not be 
      *             <code>null</code>.
      * @return an enumeration of URLs for the resources.
-     * @throws IOException if I/O errors occurs (can't happen)
+     * @exception IOException if I/O errors occurs (can't happen)
      */
     protected Enumeration findResources(String name) throws IOException {
         return new ResourceEnumeration(name);
@@ -916,8 +916,8 @@ public class AntClassLoader extends ClassLoader implements BuildListener {
      *
      * @return the required Class object
      *
-     * @throws ClassNotFoundException if the requested class does not exist on
-     * the system classpath (when not in isolated mode) or this loader's 
+     * @exception ClassNotFoundException if the requested class does not exist
+     * on the system classpath (when not in isolated mode) or this loader's 
      * classpath.
      */
     protected Class loadClass(String classname, boolean resolve) throws ClassNotFoundException {
@@ -981,7 +981,7 @@ public class AntClassLoader extends ClassLoader implements BuildListener {
      *
      * @return the Class object read from the stream.
      *
-     * @throws IOException if there is a problem reading the class from the
+     * @exception IOException if there is a problem reading the class from the
      * stream.
      */
     private Class getClassFromStream(InputStream stream, String classname)
@@ -1034,8 +1034,8 @@ public class AntClassLoader extends ClassLoader implements BuildListener {
      *
      * @return the required Class object
      *
-     * @throws ClassNotFoundException if the requested class does not exist on
-     * this loader's classpath.
+     * @exception ClassNotFoundException if the requested class does not exist
+     * on this loader's classpath.
      */
     public Class findClass(String name) throws ClassNotFoundException {
         log("Finding class " + name, Project.MSG_DEBUG);
@@ -1052,8 +1052,8 @@ public class AntClassLoader extends ClassLoader implements BuildListener {
      * 
      * @return the required Class object
      *
-     * @throws ClassNotFoundException if the requested class does not exist on
-     * this loader's classpath.
+     * @exception ClassNotFoundException if the requested class does not exist
+     * on this loader's classpath.
      */
     private Class findClassInComponents(String name) throws ClassNotFoundException {
         // we need to search the components of the path to see if we can find the
@@ -1099,8 +1099,8 @@ public class AntClassLoader extends ClassLoader implements BuildListener {
      * 
      * @return the required Class object
      *
-     * @throws ClassNotFoundException if the requested class does not exist on
-     * this loader's classpath.
+     * @exception ClassNotFoundException if the requested class does not exist
+     * on this loader's classpath.
      */
     private Class findBaseClass(String name) throws ClassNotFoundException {
         if (parent == null) {

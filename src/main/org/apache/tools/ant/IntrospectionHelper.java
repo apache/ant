@@ -422,9 +422,9 @@ public class IntrospectionHelper implements BuildListener {
      * @param text    The text to add.
      *                Must not be <code>null</code>.
      * 
-     * @throws BuildException if non-whitespace text is provided and no
-     *                        method is available to handle it, or if
-     *                        the handling method fails.
+     * @exception BuildException if non-whitespace text is provided and no
+     *                           method is available to handle it, or if
+     *                           the handling method fails.
      */
     public void addText(Project project, Object element, String text) {
         if (addText == null) {
@@ -471,9 +471,9 @@ public class IntrospectionHelper implements BuildListener {
      * 
      * @return an instance of the specified element type
      * 
-     * @throws BuildException if no method is available to create the 
-     *                        element instance, or if the creating method
-     *                        fails.
+     * @exception BuildException if no method is available to create the
+     *                           element instance, or if the creating method
+     *                           fails.
      */
     public Object createElement(Project project, Object parent, String elementName)
         throws BuildException {
@@ -522,7 +522,7 @@ public class IntrospectionHelper implements BuildListener {
      *                     May be <code>null</code>, in which case
      *                     this method returns immediately.
      * 
-     * @throws BuildException if the storage method fails.
+     * @exception BuildException if the storage method fails.
      */
     public void storeElement(Project project, Object parent, Object child, String elementName)
         throws BuildException {
@@ -559,8 +559,8 @@ public class IntrospectionHelper implements BuildListener {
      * @return the type of the nested element with the specified name.
      *         This will never be <code>null</code>.
      * 
-     * @throws BuildException if the introspected class does not
-     *                        support the named nested element.
+     * @exception BuildException if the introspected class does not
+     *                           support the named nested element.
      */
     public Class getElementType(String elementName)
         throws BuildException {
@@ -582,8 +582,8 @@ public class IntrospectionHelper implements BuildListener {
      * @return the type of the attribute with the specified name.
      *         This will never be <code>null</code>.
      * 
-     * @throws BuildException if the introspected class does not
-     *                        support the named attribute.
+     * @exception BuildException if the introspected class does not
+     *                           support the named attribute.
      */
     public Class getAttributeType(String attributeName)
         throws BuildException {
