@@ -51,7 +51,7 @@
  * information on the Apache Software Foundation, please see
  * <http://www.apache.org/>.
  */
-/* 
+/*
  * Portions of this software are based upon public domain software
  * originally written at the National Center for Supercomputing Applications,
  * University of Illinois, Urbana-Champaign.
@@ -79,6 +79,8 @@ import org.apache.tools.ant.types.FileSet;
  *
  * @author <A HREF="mailto:leslie.hughes@rubus.com">Les Hughes</A>
  * @author <A HREF="mailto:ashundi@tibco.com">Anli Shundi</A>
+ *
+ * @ant.task category="scm"
  */
 public class P4Add extends P4Base {
 
@@ -89,11 +91,11 @@ public class P4Add extends P4Base {
 
     /**
      *   positive integer specifying the maximum length
-     *   of the commandline when calling Perforce to add the files. 
+     *   of the commandline when calling Perforce to add the files.
      *   Defaults to 450, higher values mean faster execution,
      *   but also possible failures.
      */
-     
+
     public void setCommandlength(int len) throws BuildException {
         if (len <= 0) {
             throw new BuildException("P4Add: Commandlength should be a positive number");

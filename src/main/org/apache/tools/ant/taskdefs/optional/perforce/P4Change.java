@@ -62,17 +62,18 @@ package org.apache.tools.ant.taskdefs.optional.perforce;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
 
-/** 
+/**
  * Requests a new changelist from the Perforce server.
  * P4Change creates a new changelist in perforce. P4Change sets the property
  * ${p4.change} with the new changelist number. This should then be passed into
  * p4edit and p4submit.
- * 
+ *
  *
  * @see P4Edit
  * @see P4Submit
  * @author <A HREF="mailto:leslie.hughes@rubus.com">Les Hughes</A>
  *
+ * @ant.task category="scm"
  */
 public class P4Change extends P4Base {
 

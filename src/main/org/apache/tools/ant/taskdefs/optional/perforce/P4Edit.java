@@ -61,17 +61,19 @@ package org.apache.tools.ant.taskdefs.optional.perforce;
 
 import org.apache.tools.ant.BuildException;
 
-/** 
- * Open file(s) for edit. 
+/**
+ * Open file(s) for edit.
  * P4Change should be used to obtain a new changelist for P4Edit as,
- * although P4Edit can open files to the default change,  
+ * although P4Edit can open files to the default change,
  * P4Submit cannot yet submit to it.
  * Example Usage:<br>
  * &lt;p4edit change="${p4.change}" view="//depot/project/foo.txt" /&gt;
- * 
+ *
  * @author <A HREF="mailto:leslie.hughes@rubus.com">Les Hughes</A>
  *
  * @todo Should call reopen if file is already open in one of our changelists perhaps?
+ *
+ * @ant.task category="scm"
  */
 
 public class P4Edit extends P4Base {

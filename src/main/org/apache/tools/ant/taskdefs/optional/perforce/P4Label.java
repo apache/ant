@@ -77,6 +77,8 @@ import org.apache.tools.ant.util.StringUtils;
  * </pre>
  *
  * @author <A HREF="mailto:leslie.hughes@rubus.com">Les Hughes</A>
+ *
+ * @ant.task category="scm"
  */
 public class P4Label extends P4Base {
 
@@ -120,7 +122,7 @@ public class P4Label extends P4Base {
         }
 
         if (desc == null || desc.length() < 1) {
-            log("Label Description not set, assuming 'AntLabel'", 
+            log("Label Description not set, assuming 'AntLabel'",
                 Project.MSG_WARN);
             desc = "AntLabel";
         }
@@ -130,7 +132,7 @@ public class P4Label extends P4Base {
         }
 
         if (name == null || name.length() < 1) {
-            SimpleDateFormat formatter 
+            SimpleDateFormat formatter
                 = new SimpleDateFormat("yyyy.MM.dd-hh:mm");
             Date now = new Date();
             name = "AntLabel-" + formatter.format(now);
@@ -162,7 +164,7 @@ public class P4Label extends P4Base {
         });
 
 
-        log("Created Label " + name + " (" + desc + ") with view:\n" + P4View, 
+        log("Created Label " + name + " (" + desc + ") with view:\n" + P4View,
             Project.MSG_INFO);
 
         //Now lock if required

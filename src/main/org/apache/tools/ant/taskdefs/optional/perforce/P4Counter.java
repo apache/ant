@@ -62,7 +62,7 @@ package org.apache.tools.ant.taskdefs.optional.perforce;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
 
-/** 
+/**
  * Obtains or sets the value of a counter.
  *
  * <p> When used in its base form
@@ -77,10 +77,12 @@ import org.apache.tools.ant.Project;
  * The user performing this task must have Perforce &quot;review&quot; permissions
  * as defined by Perforce protections in order for this task to succeed.
 </P>
- 
+
  * Example Usage:<br>
  * &lt;p4counter name="${p4.counter}" property=${p4.change}"/&gt;
  * @author <a href="mailto:kirk@radik.com">Kirk Wylie</a>
+ *
+ * @ant.task category="scm"
  */
 
 public class P4Counter extends P4Base {

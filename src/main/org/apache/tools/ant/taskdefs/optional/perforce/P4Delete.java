@@ -66,6 +66,8 @@ import org.apache.tools.ant.BuildException;
  * (See also {@link P4Edit P4Edit})?<br>
  *
  * @author <A HREF="mailto:mike@tmorph.com">Mike Roberts</A>, <A HREF="mailto:leslie.hughes@rubus.com">Les Hughes</A>
+ *
+ * @ant.task category="scm"
  */
 public class P4Delete extends P4Base {
 
@@ -74,7 +76,7 @@ public class P4Delete extends P4Base {
     /**
      * An existing changelist number for the deletion; optional
      * but strongly recommended.
-     */    
+     */
     public void setChange(String change) {
         this.change = change;
     }

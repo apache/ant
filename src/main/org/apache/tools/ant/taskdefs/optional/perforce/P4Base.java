@@ -108,7 +108,7 @@ public abstract class P4Base extends org.apache.tools.ant.Task {
     protected String P4CmdOpts = "";
 
     //Setters called by Ant
-    
+
     /**
      * The p4d server and port to connect to;
      * optional, default "perforce:1666"
@@ -152,13 +152,13 @@ public abstract class P4Base extends org.apache.tools.ant.Task {
     /**
      * Set extra command options; only used on some
      * of the Perforce tasks.
-     */ 
+     */
     public void setCmdopts(String P4CmdOpts) {
         this.P4CmdOpts = P4CmdOpts;
     }
 
     /**
-     * whether to stop the build (true, default) 
+     * whether to stop the build (true, default)
      * or keep going if an error is returned from the p4 command
      */
     public void setFailonerror(boolean fail) {

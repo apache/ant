@@ -74,6 +74,7 @@ import java.util.Vector;
  *
  * @author <A HREF="mailto:leslie.hughes@rubus.com">Les Hughes</A>
  *
+ * @ant.task category="scm"
  */
 public class P4Submit extends P4Base {
 
