@@ -753,7 +753,8 @@ public class ProjectHelper2 extends ProjectHelper {
 
             /* UnknownElement is used for tasks and data types - with
                delayed eval */
-            UnknownElement task = new UnknownElement(qname);
+            UnknownElement task = new UnknownElement(tag);
+            task.setNamespace(uri);
             task.setProject(context.getProject());
             //XXX task.setTaskType(qname);
 

@@ -73,6 +73,11 @@ public class UnknownElement extends Task {
      * been redefined since original creation.
      */
     private String elementName;
+    
+    /** 
+     * Holds the namespace of the element.
+     */ 
+    private String namespace;
 
     /**
      * The real object after it has been loaded.
@@ -103,6 +108,23 @@ public class UnknownElement extends Task {
      */
     public String getTag() {
         return elementName;
+    }
+
+    /** Return the namespace of the XML element associated with this component.
+     * 
+     * @return Namespace URI used in the xmlns declaration.
+     */ 
+    public String getNamespace() {
+        return namespace;
+    }
+
+    /** Set the namespace of the XML element associated with this component.
+     * This method is typically called by the XML processor.
+     * 
+     * @param namespace URI used in the xmlns declaration.
+     */ 
+    public void setNamespace(String namespace) {
+        this.namespace = namespace;
     }
 
     /**
