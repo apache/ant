@@ -206,6 +206,10 @@ public abstract class DefaultCompilerAdapter implements CompilerAdapter {
     protected Commandline setupJavacCommandlineSwitches(Commandline cmd) {
         Path classpath = getCompileClasspath();
 
+        if (attributes.getNowarn()) {
+            cmd.createArgument().setValue("-nowarn");
+        }
+        
         if (deprecation == true) {
             cmd.createArgument().setValue("-deprecation");
         }

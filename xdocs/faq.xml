@@ -176,12 +176,6 @@
           </tr>
 
           <tr>
-            <td>-nowarn</td>
-            <td>build.compiler.warnings</td>
-            <td>true == not set</td>
-          </tr>
-
-          <tr>
             <td>+P</td>
             <td>build.compiler.pedantic</td>
             <td>false == not set</td>
@@ -192,6 +186,14 @@
             <td>build.compiler.fulldepend</td>
             <td>false == not set</td>
           </tr>
+
+          <tr>
+            <td><strong>only for Ant &lt; 1.4, replaced by the nowarn
+                attribute of javac after that</strong> -nowarn</td>
+            <td>build.compiler.warnings</td>
+            <td>true == not set</td>
+          </tr>
+
         </table>
 
       </answer>

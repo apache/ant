@@ -223,6 +223,9 @@ Other changes:
 * Introduced the concept of <filtersets> to allow for more control in which 
   filters get applied in a <copy> or <move> operation.       
 
+* Added nowarn attribute to javac and deprecated the Jikes-magic property
+  build.compiler.warnings.
+
 Fixed bugs:
 -----------
 

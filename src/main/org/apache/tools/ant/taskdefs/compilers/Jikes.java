@@ -173,7 +173,21 @@ public class Jikes extends DefaultCompilerAdapter {
          * warning can be pretty annoying.
          */
         String warningsProperty = project.getProperty("build.compiler.warnings");
-        if (warningsProperty != null && !Project.toBoolean(warningsProperty)) {
+        if (warningsProperty != null) {
+            attributes.log("!! the build.compiler.warnings property is deprecated. !!",
+                           Project.MSG_WARN);
+            attributes.log("!! Use the nowarn attribute instead. !!",
+                           Project.MSG_WARN);
+            if (!Project.toBoolean(warningsProperty)) {
+                cmd.createArgument().setValue("-nowarn");
+            }
+        } if (attributes.getNowarn()) {
+            /* 
+             * FIXME later
+             *
+             * let the magic property win over the attribute for backwards 
+             * compatibility
+             */
             cmd.createArgument().setValue("-nowarn");
         }
 
