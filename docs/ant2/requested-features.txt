@@ -79,6 +79,8 @@ II. Abstract goals that need to be abstract until we get into design
 decisions.
 ======================================================================
 
+* Provide a clear mission statement for Ant.
+
 * Main goals: Simplicity, Understandability, Extensibility
 
   Simple and understandable for the target audience - developers,
