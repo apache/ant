@@ -69,10 +69,15 @@ import org.apache.tools.ant.Task;
  * @author Conor MacNeill
  */
 public class Log4jListener implements BuildListener {
-    final static String LOG4J_CONFIG_PROPERTY = "log4j.configuration";
+    /** Log4j Configuration file */
+    private static final String LOG4J_CONFIG_PROPERTY = "log4j.configuration";
 
+    /** Indicates if the listener was initialized. */
     private boolean initialized = false;
 
+    /** 
+     * Construct the listener and make sure there is a valid appender.
+     */
     public Log4jListener() {
         initialized = false;
         Category cat = Category.getInstance("org.apache.tools.ant");
@@ -84,6 +89,9 @@ public class Log4jListener implements BuildListener {
         }
     }
 
+    /**
+     * @see BuildListener@buildStarted.
+     */
     public void buildStarted(BuildEvent event) {
         if (initialized) {
             Category cat = Category.getInstance(Project.class.getName());
@@ -91,6 +99,9 @@ public class Log4jListener implements BuildListener {
         }
     }
 
+    /**
+     * @see BuildListener@buildFinished.
+     */
     public void buildFinished(BuildEvent event) {
         if (initialized) {
             Category cat = Category.getInstance(Project.class.getName());
@@ -102,6 +113,9 @@ public class Log4jListener implements BuildListener {
         }
     }
 
+    /**
+     * @see BuildListener@targetStarted.
+     */
     public void targetStarted(BuildEvent event) {
         if (initialized) {
             Category cat = Category.getInstance(Target.class.getName());
@@ -109,6 +123,9 @@ public class Log4jListener implements BuildListener {
         }
     }
 
+    /**
+     * @see BuildListener@targetFinished.
+     */
     public void targetFinished(BuildEvent event) {
         if (initialized) {
             String targetName = event.getTarget().getName();
@@ -116,11 +133,15 @@ public class Log4jListener implements BuildListener {
             if (event.getException() == null) {
                 cat.info("Target \"" + targetName + "\" finished.");
             } else {
-                cat.error("Target \"" + targetName + "\" finished with error.", event.getException());
+                cat.error("Target \"" + targetName 
+                    + "\" finished with error.", event.getException());
             }
         }
     }
 
+    /**
+     * @see BuildListener@taskStarted.
+     */
     public void taskStarted(BuildEvent event) {
         if (initialized) {
             Task task = event.getTask();
@@ -129,6 +150,9 @@ public class Log4jListener implements BuildListener {
         }
     }
 
+    /**
+     * @see BuildListener@taskFinished.
+     */
     public void taskFinished(BuildEvent event) {
         if (initialized) {
             Task task = event.getTask();
@@ -136,11 +160,15 @@ public class Log4jListener implements BuildListener {
             if (event.getException() == null) {
                 cat.info("Task \"" + task.getTaskName() + "\" finished.");
             } else {
-                cat.error("Task \"" + task.getTaskName() + "\" finished with error.", event.getException());
+                cat.error("Task \"" + task.getTaskName() 
+                    + "\" finished with error.", event.getException());
             }
         }
     }
 
+    /**
+     * @see BuildListener@messageLogged.
+     */
     public void messageLogged(BuildEvent event) {
         if (initialized) {
             Object categoryObject = event.getTask();
@@ -151,7 +179,8 @@ public class Log4jListener implements BuildListener {
                 }
             }
 
-            Category cat = Category.getInstance(categoryObject.getClass().getName());
+            Category cat 
+                = Category.getInstance(categoryObject.getClass().getName());
             switch (event.getPriority()) {
                 case Project.MSG_ERR:
                     cat.error(event.getMessage());

@@ -1,55 +1,55 @@
 /*
- *  The Apache Software License, Version 1.1
+ * The Apache Software License, Version 1.1
  *
- *  Copyright (c) 2001-2002 The Apache Software Foundation.  All rights
- *  reserved.
+ * Copyright (c) 2002-2002 The Apache Software Foundation.  All rights
+ * reserved.
  *
- *  Redistribution and use in source and binary forms, with or without
- *  modification, are permitted provided that the following conditions
- *  are met:
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions
+ * are met:
  *
- *  1. Redistributions of source code must retain the above copyright
- *  notice, this list of conditions and the following disclaimer.
+ * 1. Redistributions of source code must retain the above copyright
+ *    notice, this list of conditions and the following disclaimer.
  *
- *  2. Redistributions in binary form must reproduce the above copyright
- *  notice, this list of conditions and the following disclaimer in
- *  the documentation and/or other materials provided with the
- *  distribution.
+ * 2. Redistributions in binary form must reproduce the above copyright
+ *    notice, this list of conditions and the following disclaimer in
+ *    the documentation and/or other materials provided with the
+ *    distribution.
  *
- *  3. The end-user documentation included with the redistribution, if
- *  any, must include the following acknowlegement:
- *  "This product includes software developed by the
- *  Apache Software Foundation (http://www.apache.org/)."
- *  Alternately, this acknowlegement may appear in the software itself,
- *  if and wherever such third-party acknowlegements normally appear.
+ * 3. The end-user documentation included with the redistribution, if
+ *    any, must include the following acknowlegement:
+ *       "This product includes software developed by the
+ *        Apache Software Foundation (http://www.apache.org/)."
+ *    Alternately, this acknowlegement may appear in the software itself,
+ *    if and wherever such third-party acknowlegements normally appear.
  *
- *  4. The names "The Jakarta Project", "Ant", and "Apache Software
- *  Foundation" must not be used to endorse or promote products derived
- *  from this software without prior written permission. For written
- *  permission, please contact apache@apache.org.
+ * 4. The names "The Jakarta Project", "Ant", and "Apache Software
+ *    Foundation" must not be used to endorse or promote products derived
+ *    from this software without prior written permission. For written
+ *    permission, please contact apache@apache.org.
  *
- *  5. Products derived from this software may not be called "Apache"
- *  nor may "Apache" appear in their names without prior written
- *  permission of the Apache Group.
+ * 5. Products derived from this software may not be called "Apache"
+ *    nor may "Apache" appear in their names without prior written
+ *    permission of the Apache Group.
  *
- *  THIS SOFTWARE IS PROVIDED ``AS IS'' AND ANY EXPRESSED OR IMPLIED
- *  WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
- *  OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
- *  DISCLAIMED.  IN NO EVENT SHALL THE APACHE SOFTWARE FOUNDATION OR
- *  ITS CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
- *  SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
- *  LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF
- *  USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
- *  ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
- *  OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT
- *  OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
- *  SUCH DAMAGE.
- *  ====================================================================
+ * THIS SOFTWARE IS PROVIDED ``AS IS'' AND ANY EXPRESSED OR IMPLIED
+ * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
+ * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+ * DISCLAIMED.  IN NO EVENT SHALL THE APACHE SOFTWARE FOUNDATION OR
+ * ITS CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+ * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+ * LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF
+ * USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
+ * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
+ * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT
+ * OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
+ * SUCH DAMAGE.
+ * ====================================================================
  *
- *  This software consists of voluntary contributions made by many
- *  individuals on behalf of the Apache Software Foundation.  For more
- *  information on the Apache Software Foundation, please see
- *  <http://www.apache.org/>.
+ * This software consists of voluntary contributions made by many
+ * individuals on behalf of the Apache Software Foundation.  For more
+ * information on the Apache Software Foundation, please see
+ * <http://www.apache.org/>.
  */
 package org.apache.tools.ant.listener;
 
@@ -94,16 +94,16 @@ import org.apache.tools.mail.MailMessage;
  *  MailLogger.properties.file property</i> . Any properties defined in that
  *  file will override Ant properties.
  *
- *@author     Erik Hatcher <a href="mailto:ehatcher@apache.org">ehatcher@apache.org</a>
+ * @author Erik Hatcher <a href="mailto:ehatcher@apache.org">ehatcher@apache.org</a>
  */
 public class MailLogger extends DefaultLogger {
-
+    /** Buffer in which the message is constructed prior to sending */
     private StringBuffer buffer = new StringBuffer();
 
     /**
      *  Sends an e-mail with the log results.
      *
-     * @param  event
+     * @param event the build finished event
      */
     public void buildFinished(BuildEvent event) {
         super.buildFinished(event);
@@ -132,8 +132,8 @@ public class MailLogger extends DefaultLogger {
             }
         }
 
-        for (Enumeration enum = fileProperties.keys(); enum.hasMoreElements();) {
-            String key = (String) enum.nextElement();
+        for (Enumeration e = fileProperties.keys(); e.hasMoreElements();) {
+            String key = (String) e.nextElement();
             properties.put(key, fileProperties.getProperty(key));
         }
 
@@ -166,7 +166,7 @@ public class MailLogger extends DefaultLogger {
     /**
      *  Receives and buffers log messages.
      *
-     * @param  message
+     * @param message the message being logger
      */
     protected void log(String message) {
         buffer.append(message).append(StringUtils.LINE_SEP);
@@ -179,14 +179,14 @@ public class MailLogger extends DefaultLogger {
      * @param  properties     Properties to obtain value from
      * @param  name           suffix of property name. "MailLogger." will be
      *      prepended internally.
-     * @param  defaultValue   value returned if not present in the properties. Set
-     *      to null to make required.
+     * @param  defaultValue   value returned if not present in the properties. 
+     *      Set to null to make required.
      * @return                The value of the property, or default value.
      * @exception  Exception  thrown if no default value is specified and the
      *      property is not present in properties.
      */
-    private String getValue(Hashtable properties, String name, String defaultValue)
-            throws Exception {
+    private String getValue(Hashtable properties, String name, 
+                            String defaultValue) throws Exception {
         String propertyName = "MailLogger." + name;
         String value = (String) properties.get(propertyName);
 
