@@ -92,7 +92,8 @@
        <script type="text/javascript" language="JavaScript"><![CDATA[
         function displayProperties (name) {
           var win = window.open('','JUnitSystemProperties','scrollbars=1,resizable=1');
-          var doc = win.document.open();
+          var doc = win.document;
+          doc.open();
           doc.write("<html><head><title>Properties of " + name + "</title>");
           doc.write("<style>")
           doc.write("body {font:normal 68% verdana,arial,helvetica; color:#000000; }");
