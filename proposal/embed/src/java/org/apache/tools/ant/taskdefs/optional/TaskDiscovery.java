@@ -55,9 +55,10 @@
  *
  */
 
-package org.apache.tools.ant.taskdefs;
+package org.apache.tools.ant.taskdefs.optional;
+import org.apache.tools.ant.*;
 
-import java.util.Vector;
+import java.util.*;
 
 import org.apache.commons.discovery.ResourceName;
 import org.apache.commons.discovery.ResourceNameIterator;
@@ -66,51 +67,78 @@ import org.apache.commons.discovery.resource.DiscoverResources;
 
 
 /**
- * Small ant task that will use discovery to locate a particular impl.
- * and display all values.
+ * Default implementation for discovery and (lazy) creation of tasks.
  *
- * You can execute this and save it with an id, then other classes can use it.
+ * Several mechanisms will be used:
+ * - properties files found in the classpath ( META-INF/ant.tasks ).
+ * - resources named after the task name: META-INF/ant/[TASK_NAME].task
  *
  * @author Costin Manolache
  */
-public class ServiceDiscoveryTask
+public class TaskDiscovery extends Task implements ProjectComponentFactory
 {
-    String name;
-    int debug=0;
-    ResourceName[] drivers = null;
+    String RESOURCE_NAME="META-INF/ant.tasks";
+
+    // Also discovery the 'legacy' names - in ant1.6 the initial preloaded tasks
+    // should be deprecated.
+    
+    ResourceName[] discoveredTasks = null;
+
+    Hashtable taskDefs=new Hashtable();
+
+    public Object createProjectComponent( Project project,
+                                          String ns,
+                                          String taskName )
+        throws BuildException
+    {
+        //        System.out.println("Try create " + taskName);
+        // 
+        return null;
+    }
+
+    public String toString() {
+        StringBuffer sb=new StringBuffer();
+        sb.append( "DiscoveredTasks[" );
+        if( discoveredTasks != null ) {
+            for( int i=0; i<discoveredTasks.length; i++ ) {
+                if( i>0) sb.append( ", ");
+                sb.append( discoveredTasks[i] );
+            }
+            sb.append( "]");
+        }
+        return sb.toString();
+    }
+
+
+    Properties taskClassNames=new Properties();
+
+    /** @TODO: Register itself as ProjectComponentHelper.
+     */
+    public void execute() throws BuildException
+    {
+        ProjectComponentHelper pcHelper=ProjectComponentHelper.getProjectComponentHelper();
+        pcHelper.addComponentFactory( this );
         
-    public void setServiceName(String name ) {
-        this.name=name;
-    }
-
-    public void setDebug(int i) {
-        this.debug=debug;
-    }
-
-    public ResourceName[] getServiceInfo() {
-        return drivers;
-    }
-
-    public void execute() throws Exception {
-        System.out.println("XXX ");
-        
+        // We'll read all 'ant.tasks' at startup, and every time an unknown task
+        // is found ( the classloader may be different from last time ). Not the best
+        // solution, just a start.
         DiscoverResources disc = new DiscoverResources();
         disc.addClassLoader( JDKHooks.getJDKHooks().getThreadContextClassLoader() );
         disc.addClassLoader( this.getClass().getClassLoader() );
         
-        ResourceNameIterator enum = disc.findResources(name);
-
+        ResourceNameIterator enum = disc.findResources(RESOURCE_NAME);
+        
         Vector vector = new Vector();
         while (enum.hasNext()) {
             ResourceName resourceInfo = enum.nextResourceName();
             vector.add(resourceInfo);
-            if( debug > 0 ) {
-                System.out.println("Found " + resourceInfo);
-            }
+            System.out.println("Found " + resourceInfo);
+
+            
         }
         
-        drivers = new ResourceName[vector.size()];
-        vector.copyInto(drivers);
+        discoveredTasks = new ResourceName[vector.size()];
+        vector.copyInto(discoveredTasks);
     }
         
 }
