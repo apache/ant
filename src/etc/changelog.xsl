@@ -93,13 +93,13 @@
           td {
             padding-left: 20px;
           }
-	  .dateAndAuthor {
+      .dateAndAuthor {
             font-family: Verdana, Arial, Helvetica, sans-serif;
             font-weight: bold;
             text-align: left;
             background: #a6caf0;
             padding-left: 3px;
-	  }
+      }
           a {
             color: #000000;
           }
