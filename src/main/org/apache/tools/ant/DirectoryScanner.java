@@ -1117,7 +1117,7 @@ public class DirectoryScanner
             dirsDeselected.addElement(name);
         }
         everythingIncluded &= included;
-        if (fast && (included || couldHoldIncluded(name))) {
+        if (fast && couldHoldIncluded(name)) {
             scandir(file, name + File.separator, fast);
         }
     }
@@ -1156,13 +1156,27 @@ public class DirectoryScanner
      */
     protected boolean couldHoldIncluded(String name) {
         for (int i = 0; i < includes.length; i++) {
-            if (matchPatternStart(includes[i], name, isCaseSensitive())) {
-                if (isMorePowerfulThanExcludes(name, includes[i])) {
-                    return true;
-                }
+            if (matchPatternStart(includes[i], name, isCaseSensitive())
+                && isMorePowerfulThanExcludes(name, includes[i])
+                && isDeeper(includes[i], name)) {
+                return true;
             }
         }
         return false;
+    }
+
+    /**
+     * Verify that a pattern specifies files deeper
+     * than the level of the specified file.
+     * @param pattern the pattern to check.
+     * @param name the name to check.
+     * @return whether the pattern is deeper than the name.
+     * @since Ant 1.6.3
+     */
+    private boolean isDeeper(String pattern, String name) {
+        Vector p = SelectorUtils.tokenizePath(pattern);
+        Vector n = SelectorUtils.tokenizePath(name);
+        return p.contains("**") || p.size() > n.size();
     }
 
     /**
