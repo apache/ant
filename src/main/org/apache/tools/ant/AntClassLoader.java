@@ -1225,6 +1225,10 @@ public class AntClassLoader extends ClassLoader implements BuildListener {
             }
         }
         zipFiles = new Hashtable();
+        if (project != null) {
+            project.removeBuildListener(this);
+        }
+        project = null;
     }
 
     /**
@@ -1242,8 +1246,6 @@ public class AntClassLoader extends ClassLoader implements BuildListener {
      * @param event the buildFinished event
      */
     public void buildFinished(BuildEvent event) {
-        project.removeBuildListener(this);
-        project = null;
         cleanup();
     }
 
