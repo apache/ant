@@ -328,6 +328,9 @@ Fixed bugs:
 * <zip> couldn't store files with size between 2GB and 4GB (the
   upper limit set by the ZIP format itself).  Bugzilla Report 33310.
 
+* NPE when when <presetdef> tries to configure a task that
+  cannot be instantiated. Bugzilla Report 33689.
+
 Changes from Ant 1.6.1 to Ant 1.6.2
 ===================================
 
