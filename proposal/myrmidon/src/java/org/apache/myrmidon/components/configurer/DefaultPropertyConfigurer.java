@@ -28,13 +28,11 @@ class DefaultPropertyConfigurer
 
     private final int m_propIndex;
     private final Class m_type;
-    private final Method m_createMethod;
     private final Method m_addMethod;
     private final int m_maxCount;
 
     public DefaultPropertyConfigurer( final int propIndex,
                                       final Class type,
-                                      final Method createMethod,
                                       final Method addMethod,
                                       final int maxCount )
     {
@@ -47,7 +45,6 @@ class DefaultPropertyConfigurer
         {
             m_type = type;
         }
-        m_createMethod = createMethod;
         m_addMethod = addMethod;
         m_maxCount = maxCount;
     }
@@ -58,44 +55,6 @@ class DefaultPropertyConfigurer
     public Class getType()
     {
         return m_type;
-    }
-
-    /**
-     * Creates a default value for this property.
-     */
-    public Object createValue( final ConfigurationState state )
-        throws ConfigurationException
-    {
-        if( null == m_createMethod )
-        {
-            return null;
-        }
-
-        final DefaultConfigurationState defState = (DefaultConfigurationState)state;
-
-        // Make sure there isn't a pending object for this property
-        if( defState.getCreatedObject( m_propIndex ) != null )
-        {
-            final String message = REZ.getString( "pending-property-value.error" );
-            throw new ConfigurationException( message );
-        }
-
-        try
-        {
-            // Create the value
-            final Object object = m_createMethod.invoke( defState.getObject(), null );
-            defState.setCreatedObject( m_propIndex, object );
-            return object;
-        }
-        catch( final InvocationTargetException ite )
-        {
-            final Throwable cause = ite.getTargetException();
-            throw new ConfigurationException( cause.getMessage(), cause );
-        }
-        catch( final Exception e )
-        {
-            throw new ConfigurationException( e.getMessage(), e );
-        }
     }
 
     /**
@@ -110,13 +69,6 @@ class DefaultPropertyConfigurer
         final Object pending = defState.getCreatedObject( m_propIndex );
         if( pending != null && pending != value )
         {
-        }
-
-        // Make sure the creator method was called, if necessary
-        if( pending == null && m_createMethod != null )
-        {
-            final String message = REZ.getString( "must-be-element.error" );
-            throw new ConfigurationException( message );
         }
 
         defState.setCreatedObject( m_propIndex, null );

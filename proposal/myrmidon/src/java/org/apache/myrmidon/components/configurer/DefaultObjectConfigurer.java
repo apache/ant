@@ -12,11 +12,9 @@ import java.lang.reflect.Modifier;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import org.apache.avalon.excalibur.i18n.ResourceManager;
 import org.apache.avalon.excalibur.i18n.Resources;
 import org.apache.avalon.framework.configuration.ConfigurationException;
@@ -72,58 +70,28 @@ class DefaultObjectConfigurer
     public void enableAll()
         throws ConfigurationException
     {
-        // TODO - get rid of creators
         enableProperties();
         enableContent();
     }
 
     /**
-     * Enables all creators + adders.
+     * Enables all adders.
      */
     private void enableProperties()
         throws ConfigurationException
     {
-        final Map creators = findCreators();
         final Map adders = findAdders();
 
         // Add the elements
-        final Set elemNames = new HashSet();
-        elemNames.addAll( creators.keySet() );
-        elemNames.addAll( adders.keySet() );
 
-        final Iterator iterator = elemNames.iterator();
+        final Iterator iterator = adders.keySet().iterator();
         while( iterator.hasNext() )
         {
             final String propName = (String)iterator.next();
-            final Method createMethod = (Method)creators.get( propName );
             final Method addMethod = (Method)adders.get( propName );
 
             // Determine and check the return type
-            Class type;
-            if( createMethod != null && addMethod != null )
-            {
-                // Make sure the add method is more general than the create
-                // method
-                type = createMethod.getReturnType();
-                final Class addType = addMethod.getParameterTypes()[ 0 ];
-                if( !addType.isAssignableFrom( type ) )
-                {
-                    final String message =
-                        REZ.getString( "incompatible-element-types.error",
-                                       m_class.getName(),
-                                       propName );
-                    throw new ConfigurationException( message );
-                }
-            }
-            else if( createMethod != null )
-            {
-                type = createMethod.getReturnType();
-            }
-            else
-            {
-                type = addMethod.getParameterTypes()[ 0 ];
-            }
-
+            final Class type = addMethod.getParameterTypes()[ 0 ];
             final boolean isTypedProp = ( propName.length() == 0 );
             if( isTypedProp && !type.isInterface() )
             {
@@ -144,7 +112,6 @@ class DefaultObjectConfigurer
             final DefaultPropertyConfigurer configurer =
                 new DefaultPropertyConfigurer( m_allProps.size(),
                                                type,
-                                               createMethod,
                                                addMethod,
                                                maxCount );
             m_allProps.add( configurer );
@@ -225,45 +192,6 @@ class DefaultObjectConfigurer
     }
 
     /**
-     * Find all 'create' methods, which return a non-primitive type,
-     *  and take no parameters.
-     */
-    private Map findCreators()
-        throws ConfigurationException
-    {
-        final Map creators = new HashMap();
-        final List methodSet = new ArrayList();
-        findMethodsWithPrefix( "create", methodSet );
-
-        final Iterator iterator = methodSet.iterator();
-        while( iterator.hasNext() )
-        {
-            final Method method = (Method)iterator.next();
-            final String methodName = method.getName();
-            if( method.getReturnType().isPrimitive() ||
-                method.getParameterTypes().length != 0 )
-            {
-                continue;
-            }
-
-            // Extract element name
-            final String elemName = extractName( 6, methodName );
-
-            // Add to the creators map
-            if( creators.containsKey( elemName ) )
-            {
-                final String message =
-                    REZ.getString( "multiple-creator-methods-for-element.error",
-                                   m_class.getName(),
-                                   methodName );
-                throw new ConfigurationException( message );
-            }
-            creators.put( elemName, method );
-        }
-        return creators;
-    }
-
-    /**
      * Enables content.
      */
     private void enableContent()
@@ -300,7 +228,6 @@ class DefaultObjectConfigurer
             m_contentConfigurer =
                 new DefaultPropertyConfigurer( m_allProps.size(),
                                                type,
-                                               null,
                                                method,
                                                1 );
             m_allProps.add( m_contentConfigurer );

@@ -459,19 +459,16 @@ public class DefaultConfigurer
         }
 
         // Create an instance
-        Object child = childConfigurer.createValue( state );
-        if( null == child )
+        Object child = null;
+        if( childConfigurer == state.getConfigurer().getTypedProperty() )
         {
-            if( childConfigurer == state.getConfigurer().getTypedProperty() )
-            {
-                // Typed property
-                child = createTypedObject( name, type );
-            }
-            else
-            {
-                // Named property
-                child = createNamedObject( type );
-            }
+            // Typed property
+            child = createTypedObject( name, type );
+        }
+        else
+        {
+            // Named property
+            child = createNamedObject( type );
         }
 
         // Configure the object

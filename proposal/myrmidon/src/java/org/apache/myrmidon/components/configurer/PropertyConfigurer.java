@@ -24,19 +24,6 @@ interface PropertyConfigurer
     Class getType();
 
     /**
-     * Creates a default value for this property.  This value must be configured,
-     * and then attached to the object using {@link #addValue}.
-     *
-     * @param state The state object, representing the object being configured.
-     * @return An object which is assignable to the type returned by
-     *         {@link #getType}.  Returns null if this property does not
-     *         need a default value.
-     * @throws ConfigurationException If the object cannot be created.
-     */
-    Object createValue( ConfigurationState state )
-        throws ConfigurationException;
-
-    /**
      * Adds a value for this property, to an object.
      *
      * @param state The state object, representing the object being configured.
