@@ -80,13 +80,21 @@ which may be important.
 One important rule is 'no tabs'. Use four spaces instead. Not two,
 not eight, four. Even if your editor is configured to have a tab of four
 spaces, lots of others aren't -spaces have more consistency across
-editors and platforms.
+editors and platforms. Some IDEs (JEdit) can highlight tabs, to stop you
+accidentally inserting them
 
-<h2>Recommended Names for attributes and elements</h2>
+<h2>Attributes and elements</h2>
 
+Use the Ant introspection based mapping of attributes into Java datatypes,
+rather than implementing all your attributes as setFoo(String) and doing
+the mapping to Int, bool or file yourself. This saves work on your part,
+lets Java callers use you in a typesafe manner, and will let the Xdocs 
+documentation generator work out what the parameters are.   
+ 
+<p>
 The ant1.x tasks are very inconsistent regarding naming of attributes
--some tasks use source, others src. Here is a list of preferred attribute
-names. 
+-some tasks use <tt>source<tt>, others <tt>src</tt>tt>. 
+Here is a list of preferred attribute names. 
 
 <table>
 <tr>
@@ -193,7 +201,7 @@ Java 1.4 adds a new optional change to the language itself, the
 <tt>assert</tt> keyword, which is only enabled if the compiler is told
 to compile 1.4 version source. Clearly with the 1.1 compatibility requirement,
 Ant tasks can not use this keyword. They also need to move away from
-using the JUnit <tt>assert()</tt> method and start calling <tt>assertTrue()</tt>
+using the JUnit <tt>assert()</tt> method and call <tt>assertTrue()</tt>
 instead.    
 
 
