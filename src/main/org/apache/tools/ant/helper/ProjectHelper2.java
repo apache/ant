@@ -105,13 +105,13 @@ public class ProjectHelper2 extends ProjectHelper {
         context=(AntXmlContext)project.getReference("ant.parsing.context");
 //        System.out.println("Parsing " + getImportStack().size() + " " +
 //                context+ " " + getImportStack() );
-        if( context==null ) {
+        if (context==null ) {
             context=new AntXmlContext(project, this);
             project.addReference( "ant.parsing.context", context );
             project.addReference( "ant.targets", context.targetVector );
         }
 
-        if( this.getImportStack().size() > 1 ) {
+        if (this.getImportStack().size() > 1 ) {
             // we are in an imported file.
             context.ignoreProjectTag=true;
             parse(project, source, new RootHandler(context));
@@ -125,21 +125,21 @@ public class ProjectHelper2 extends ProjectHelper {
 
     /**
      * Parses the project file, configuring the project as it goes.
-     * 
+     *
      * @exception org.apache.tools.ant.BuildException if the configuration is invalid or cannot
      *                           be read
      */
     public void parse(Project project, Object source, RootHandler handler)
             throws BuildException
     {
-        
+
         AntXmlContext context=handler.context;
 
         if(source instanceof File) {
             context.buildFile=(File)source;
-//         } else if( source instanceof InputStream ) {
-//         } else if( source instanceof URL ) {
-//         } else if( source instanceof InputSource ) {
+//         } else if (source instanceof InputStream ) {
+//         } else if (source instanceof URL ) {
+//         } else if (source instanceof InputSource ) {
         } else {
             throw new BuildException( "Source " + source.getClass().getName() +
                                       " not supported by this plugin" );
@@ -150,10 +150,10 @@ public class ProjectHelper2 extends ProjectHelper {
 
         context.buildFile = new File(context.buildFile.getAbsolutePath());
         context.buildFileParent = new File(context.buildFile.getParent());
-        
+
         try {
             /**
-             * SAX 2 style parser used to parse the given file. 
+             * SAX 2 style parser used to parse the given file.
              */
             context.parser =JAXPUtils.getXMLReader();
 
@@ -183,7 +183,7 @@ public class ProjectHelper2 extends ProjectHelper {
                 }
                 throw be;
             }
-            
+
             throw new BuildException(exc.getMessage(), t, location);
         }
         catch(SAXException exc) {
@@ -216,21 +216,21 @@ public class ProjectHelper2 extends ProjectHelper {
 
     /**
      * The common superclass for all SAX event handlers used to parse
-     * the configuration file. 
+     * the configuration file.
      *
      * The context will hold all state information. At each time
      * there is one active handler for the current element. It can
      * use onStartChild() to set an alternate handler for the child.
-     */ 
+     */
     public static class AntHandler  {
         /**
          * Handles the start of an element. This base implementation does nothing.
-         * 
-         * @param tag The name of the element being started. 
+         *
+         * @param tag The name of the element being started.
          *            Will not be <code>null</code>.
          * @param attrs Attributes of the element being started.
          *              Will not be <code>null</code>.
-         * 
+         *
          * @exception org.xml.sax.SAXParseException if this method is not overridden, or in
          *                              case of error in an overridden version
          */
@@ -245,12 +245,12 @@ public class ProjectHelper2 extends ProjectHelper {
          * Handles the start of an element. This base implementation just
          * throws an exception - you must override this method if you expect
          * child elements.
-         * 
-         * @param tag The name of the element being started. 
+         *
+         * @param tag The name of the element being started.
          *            Will not be <code>null</code>.
          * @param attrs Attributes of the element being started.
          *              Will not be <code>null</code>.
-         * 
+         *
          * @exception org.xml.sax.SAXParseException if this method is not overridden, or in
          *                              case of error in an overridden version
          */
@@ -278,12 +278,12 @@ public class ProjectHelper2 extends ProjectHelper {
         /**
          * Handles text within an element. This base implementation just
          * throws an exception, you must override it if you expect content.
-         * 
+         *
          * @param buf A character array of the text within the element.
          *            Will not be <code>null</code>.
          * @param start The start element in the array.
          * @param count The number of characters to read from the array.
-         * 
+         *
          * @exception org.xml.sax.SAXParseException if this method is not overridden, or in
          *                              case of error in an overridden version
          */
@@ -301,7 +301,7 @@ public class ProjectHelper2 extends ProjectHelper {
             It'll verify if the ns was processed, and if not load the task definitions.
         */
         protected void checkNamespace( String uri ) {
-            
+
         }
     }
 
@@ -329,8 +329,8 @@ public class ProjectHelper2 extends ProjectHelper {
         /** Name of the current project */
         public String currentProjectName;
 
-        /** 
-         * Locator for the configuration file parser. 
+        /**
+         * Locator for the configuration file parser.
          * Used for giving locations of errors etc.
          */
          public Locator locator;
@@ -353,12 +353,12 @@ public class ProjectHelper2 extends ProjectHelper {
         public Target currentTarget=null;
 
         /** The stack of RuntimeConfigurable2 wrapping the
-            objects. 
+            objects.
         */
         public Vector wStack=new Vector();
 
         public Hashtable namespaces=new Hashtable();
-        
+
         // Import stuff
         public boolean ignoreProjectTag=false;
         public Hashtable importedFiles = new Hashtable();
@@ -376,12 +376,12 @@ public class ProjectHelper2 extends ProjectHelper {
         }
 
         public RuntimeConfigurable currentWrapper() {
-            if( wStack.size() < 1 ) return null;
+            if (wStack.size() < 1 ) return null;
             return (RuntimeConfigurable)wStack.elementAt( wStack.size() - 1 );
         }
 
         public RuntimeConfigurable parentWrapper() {
-            if( wStack.size() < 2 ) return null;
+            if (wStack.size() < 2 ) return null;
             return (RuntimeConfigurable)wStack.elementAt( wStack.size() - 2 );
         }
 
@@ -390,22 +390,22 @@ public class ProjectHelper2 extends ProjectHelper {
         }
 
         public void popWrapper() {
-            if( wStack.size() > 0 ) 
+            if (wStack.size() > 0 )
                 wStack.removeElementAt( wStack.size() - 1 );
         }
 
         public Vector getWrapperStack() {
             return wStack;
         }
-        
+
         /**
-         * Scans an attribute list for the <code>id</code> attribute and 
+         * Scans an attribute list for the <code>id</code> attribute and
          * stores a reference to the target object in the project if an
          * id is found.
          * <p>
          * This method was moved out of the configure method to allow
          * it to be executed at parse time.
-         * 
+         *
          * @see #configure(java.lang.Object,org.xml.sax.AttributeList,org.apache.tools.ant.Project)
          */
         public void configureId(Object element, Attributes attr) {
@@ -416,7 +416,7 @@ public class ProjectHelper2 extends ProjectHelper {
         }
 
     }
-    
+
     /**
      * Handler for ant processing. Uses a stack of AntHandlers to
      * implement each element ( the original parser used a recursive behavior,
@@ -426,28 +426,28 @@ public class ProjectHelper2 extends ProjectHelper {
         private Stack antHandlers=new Stack();
         private AntHandler currentHandler=null;
         private AntXmlContext context;
-        
+
         public RootHandler(AntXmlContext context) {
             currentHandler=ProjectHelper2.mainHandler;
             antHandlers.push( currentHandler );
             this.context=context;
         }
-        
+
         /**
          * Resolves file: URIs relative to the build file.
-         * 
+         *
          * @param publicId The public identifer, or <code>null</code>
-         *                 if none is available. Ignored in this 
+         *                 if none is available. Ignored in this
          *                 implementation.
-         * @param systemId The system identifier provided in the XML 
+         * @param systemId The system identifier provided in the XML
          *                 document. Will not be <code>null</code>.
          */
         public InputSource resolveEntity(String publicId,
                                          String systemId) {
-        
+
             context.getProject().log("resolving systemId: " +
                     systemId, Project.MSG_VERBOSE);
-        
+
             if (systemId.startsWith("file:")) {
                 String path = fu.fromURI(systemId);
 
@@ -473,12 +473,12 @@ public class ProjectHelper2 extends ProjectHelper {
         /**
          * Handles the start of a project element. A project handler is created
          * and initialised with the element name and attributes.
-         * 
-         * @param tag The name of the element being started. 
+         *
+         * @param tag The name of the element being started.
          *            Will not be <code>null</code>.
          * @param attrs Attributes of the element being started.
          *              Will not be <code>null</code>.
-         * 
+         *
          * @exception org.xml.sax.SAXParseException if the tag given is not
          *                              <code>"project"</code>
          */
@@ -493,7 +493,7 @@ public class ProjectHelper2 extends ProjectHelper {
 
         /**
          * Sets the locator in the project helper for future reference.
-         * 
+         *
          * @param locator The locator used by the parser.
          *                Will not be <code>null</code>.
          */
@@ -505,19 +505,19 @@ public class ProjectHelper2 extends ProjectHelper {
          * Handles the end of an element. Any required clean-up is performed
          * by the onEndElement() method and then the original handler is restored to
          * the parser.
-         * 
+         *
          * @param name The name of the element which is ending.
          *             Will not be <code>null</code>.
-         * 
+         *
          * @exception org.xml.sax.SAXException in case of error (not thrown in
          *                         this implementation)
-         * 
+         *
          */
         public void endElement(String uri, String name, String qName) throws SAXException {
             currentHandler.onEndElement(uri, name, context);
             AntHandler prev=(AntHandler)antHandlers.pop();
             currentHandler=prev;
-            if( currentHandler!=null )
+            if (currentHandler!=null )
                 currentHandler.onEndChild( uri, name, qName, context );
         }
 
@@ -538,33 +538,33 @@ public class ProjectHelper2 extends ProjectHelper {
             if (qname.equals("project")) {
                 return ProjectHelper2.projectHandler;
             } else {
-//                 if( context.importlevel > 0 ) {
+//                 if (context.importlevel > 0 ) {
 //                     // we are in an imported file. Allow top-level <target>.
-//                     if( qname.equals( "target" ) )
+//                     if (qname.equals( "target" ) )
 //                         return ProjectHelper2.targetHandler;
 //                 }
                 throw new SAXParseException("Unexpected element \"" + qname + "\" " + name, context.locator);
             }
-        }        
+        }
     }
-    
+
     /**
      * Handler for the top level "project" element.
      */
     public static class ProjectHandler extends AntHandler {
-        
+
         /**
          * Initialisation routine called after handler creation
          * with the element name and attributes. The attributes which
          * this handler can deal with are: <code>"default"</code>,
          * <code>"name"</code>, <code>"id"</code> and <code>"basedir"</code>.
-         * 
+         *
          * @param tag Name of the element which caused this handler
          *            to be created. Should not be <code>null</code>.
          *            Ignored in this implementation.
          * @param attrs Attributes of the element which caused this
          *              handler to be created. Must not be <code>null</code>.
-         * 
+         *
          * @exception org.xml.sax.SAXParseException if an unexpected attribute is
          *            encountered or if the <code>"default"</code> attribute
          *            is missing.
@@ -596,14 +596,14 @@ public class ProjectHelper2 extends ProjectHelper {
 
                 if (key.equals("default")) {
                     if ( value != null && !value.equals("")) {
-                        if( !context.ignoreProjectTag )
+                        if (!context.ignoreProjectTag )
                             project.setDefaultTarget(value);
                     }
                 } else if (key.equals("name")) {
                     if (value != null) {
                         context.currentProjectName=value;
 
-                        if( !context.ignoreProjectTag ) {
+                        if (!context.ignoreProjectTag ) {
                             project.setName(value);
                             project.addReference(value, project);
                         }
@@ -611,12 +611,12 @@ public class ProjectHelper2 extends ProjectHelper {
                 } else if (key.equals("id")) {
                     if (value != null) {
                         // What's the difference between id and name ?
-                        if( !context.ignoreProjectTag ) {
+                        if (!context.ignoreProjectTag ) {
                             project.addReference(value, project);
                         }
                     }
                 } else if (key.equals("basedir")) {
-                    if( !context.ignoreProjectTag )
+                    if (!context.ignoreProjectTag )
                         baseDir = value;
                 } else {
                     // XXX ignore attributes in a different NS ( maybe store them ? )
@@ -625,21 +625,24 @@ public class ProjectHelper2 extends ProjectHelper {
             }
 
             // XXX Move to Project ( so it is shared by all helpers )
-            String antFileProp="ant.file." + context.currentProjectName;
-            String dup=project.getProperty(antFileProp);
-            if( dup!=null && ! dup.equals(context.buildFile)) {
-                project.log("Duplicated project name in import. Project "+
+            String antFileProp = "ant.file." + context.currentProjectName;
+            String dup = project.getProperty(antFileProp);
+            if (dup != null) {
+                File dupFile = new File(dup);
+                if (!dupFile.equals(context.buildFile)) {
+                    project.log("Duplicated project name in import. Project "+
                         context.currentProjectName + " defined first in " +
                         dup + " and again in " + context.buildFile,
                         Project.MSG_WARN);
+                }
             }
 
-            if( context.buildFile != null ) {
+            if (context.buildFile != null ) {
                 project.setUserProperty("ant.file."+context.currentProjectName,
                         context.buildFile.toString());
             }
 
-            if( context.ignoreProjectTag ) {
+            if (context.ignoreProjectTag ) {
                 // no further processing
                 return;
             }
@@ -669,12 +672,12 @@ public class ProjectHelper2 extends ProjectHelper {
          * Handles the start of a top-level element within the project. An
          * appropriate handler is created and initialised with the details
          * of the element.
-         * 
-         * @param tag The name of the element being started. 
+         *
+         * @param tag The name of the element being started.
          *            Will not be <code>null</code>.
          * @param attrs Attributes of the element being started.
          *              Will not be <code>null</code>.
-         * 
+         *
          * @exception org.xml.sax.SAXParseException if the tag given is not
          *            <code>"taskdef"</code>, <code>"typedef"</code>,
          *            <code>"property"</code>, <code>"target"</code>
@@ -689,7 +692,7 @@ public class ProjectHelper2 extends ProjectHelper {
                 return ProjectHelper2.targetHandler;
             } else {
                 return ProjectHelper2.elementHandler;
-            } 
+            }
         }
 
     }
@@ -704,15 +707,15 @@ public class ProjectHelper2 extends ProjectHelper {
          * with the element name and attributes. The attributes which
          * this handler can deal with are: <code>"name"</code>,
          * <code>"depends"</code>, <code>"if"</code>,
-         * <code>"unless"</code>, <code>"id"</code> and 
+         * <code>"unless"</code>, <code>"id"</code> and
          * <code>"description"</code>.
-         * 
+         *
          * @param tag Name of the element which caused this handler
          *            to be created. Should not be <code>null</code>.
          *            Ignored in this implementation.
          * @param attrs Attributes of the element which caused this
          *              handler to be created. Must not be <code>null</code>.
-         * 
+         *
          * @exception org.xml.sax.SAXParseException if an unexpected attribute is encountered
          *            or if the <code>"name"</code> attribute is missing.
          */
@@ -735,7 +738,7 @@ public class ProjectHelper2 extends ProjectHelper {
 
                 if (key.equals("name")) {
                     name = value;
-                    if( "".equals( name ) )
+                    if ("".equals( name ) )
                         throw new BuildException("name attribute must not be empty");
                 } else if (key.equals("depends")) {
                     depends = value;
@@ -758,13 +761,13 @@ public class ProjectHelper2 extends ProjectHelper {
                 throw new SAXParseException("target element appears without a name attribute",
                                             context.locator);
             }
-            
+
             Hashtable currentTargets = project.getTargets();
 
             // If the name has already beend defined ( import for example )
             if(currentTargets.containsKey(name)) {
                 // Alter the name.
-                if( context.currentProjectName != null ) {
+                if (context.currentProjectName != null ) {
                     String newName=context.currentProjectName + "." + name;
                     project.log("Already defined in main or a previous import, define "
                                 + name + " as " + newName,
@@ -778,7 +781,7 @@ public class ProjectHelper2 extends ProjectHelper {
                 }
             }
 
-            if( name != null ) {
+            if (name != null ) {
                 target.setName(name);
                 project.addOrReplaceTarget(name, target);
             }
@@ -791,12 +794,12 @@ public class ProjectHelper2 extends ProjectHelper {
 
         /**
          * Handles the start of an element within a target.
-         * 
-         * @param tag The name of the element being started. 
+         *
+         * @param tag The name of the element being started.
          *            Will not be <code>null</code>.
          * @param attrs Attributes of the element being started.
          *              Will not be <code>null</code>.
-         * 
+         *
          * @exception org.xml.sax.SAXParseException if an error occurs when initialising
          *                              the appropriate child handler
          */
@@ -829,13 +832,13 @@ public class ProjectHelper2 extends ProjectHelper {
          * the element with its attributes and sets it up with
          * its parent container (if any). Nested elements are then
          * added later as the parser encounters them.
-         * 
+         *
          * @param tag Name of the element which caused this handler
          *            to be created. Must not be <code>null</code>.
-         *            
+         *
          * @param attrs Attributes of the element which caused this
          *              handler to be created. Must not be <code>null</code>.
-         * 
+         *
          * @exception org.xml.sax.SAXParseException in case of error (not thrown in
          *                              this implementation)
          */
@@ -848,11 +851,11 @@ public class ProjectHelper2 extends ProjectHelper {
             RuntimeConfigurable wrapper=null;
             Object parent=null;
 
-            if( parentWrapper!=null ) {
+            if (parentWrapper!=null ) {
                 parent=parentWrapper.getProxy();
             }
 
-            if( parent != null ) {
+            if (parent != null ) {
                 // nested elements. Backward compatibilitiy - only nested elements
                 // are lower cased in the original processor
                 qname=qname.toLowerCase( Locale.US );
@@ -868,7 +871,7 @@ public class ProjectHelper2 extends ProjectHelper {
                 // different based on context ( if the enclosing task is taskdefed in target
                 // or known at top level ).
             }
-            
+
             /* UnknownElement is used for tasks and data types - with
                delayed eval */
             UnknownElement task= new UnknownElement(qname);
@@ -885,7 +888,7 @@ public class ProjectHelper2 extends ProjectHelper {
 
             context.configureId(task, attrs);
 
-            if( parent != null ) {
+            if (parent != null ) {
                 // Nested element
                 ((UnknownElement)parent).addChild( task );
             }  else {
@@ -912,14 +915,14 @@ public class ProjectHelper2 extends ProjectHelper {
 
         /**
          * Adds text to the task, using the wrapper
-         * 
+         *
          * @param buf A character array of the text within the element.
          *            Will not be <code>null</code>.
          * @param start The start element in the array.
          * @param count The number of characters to read from the array.
-         * 
+         *
          * @exception org.xml.sax.SAXParseException if the element doesn't support text
-         * 
+         *
          * @see org.apache.tools.ant.ProjectHelper#addText(org.apache.tools.ant.Project,java.lang.Object,char[],int,int)
          */
         public void characters(char[] buf, int start, int count,
@@ -929,17 +932,17 @@ public class ProjectHelper2 extends ProjectHelper {
             RuntimeConfigurable wrapper=context.currentWrapper();
             wrapper.addText(buf, start, count);
         }
-        
+
         /**
          * Handles the start of an element within a target. Task containers
          * will always use another task handler, and all other tasks
          * will always use a nested element handler.
-         * 
-         * @param tag The name of the element being started. 
+         *
+         * @param tag The name of the element being started.
          *            Will not be <code>null</code>.
          * @param attrs Attributes of the element being started.
          *              Will not be <code>null</code>.
-         * 
+         *
          * @exception org.xml.sax.SAXParseException if an error occurs when initialising
          *                              the appropriate child handler
          */
@@ -950,7 +953,7 @@ public class ProjectHelper2 extends ProjectHelper {
         {
             // this element
             RuntimeConfigurable wrapper=context.currentWrapper();
-            
+
             Object element=wrapper.getProxy();
 //            return ProjectHelper2.nestedElementHandler;
             return ProjectHelper2.elementHandler;
