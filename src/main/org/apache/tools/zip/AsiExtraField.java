@@ -135,15 +135,15 @@ public class AsiExtraField implements ZipExtraField, UnixStat, Cloneable {
     public byte[] getLocalFileDataData() {
         // CRC will be added later
         byte[] data = new byte[getLocalFileDataLength().getValue() - 4];
-        System.arraycopy((new ZipShort(getMode())).getBytes(), 0, data, 0, 2);
+        System.arraycopy(ZipShort.getBytes(getMode()), 0, data, 0, 2);
 
         byte[] linkArray = getLinkedFile().getBytes();
-        System.arraycopy((new ZipLong(linkArray.length)).getBytes(),
+        System.arraycopy(ZipLong.getBytes(linkArray.length),
                          0, data, 2, 4);
 
-        System.arraycopy((new ZipShort(getUserId())).getBytes(),
+        System.arraycopy(ZipShort.getBytes(getUserId()),
                          0, data, 6, 2);
-        System.arraycopy((new ZipShort(getGroupId())).getBytes(),
+        System.arraycopy(ZipShort.getBytes(getGroupId()),
                          0, data, 8, 2);
 
         System.arraycopy(linkArray, 0, data, 10, linkArray.length);
@@ -153,7 +153,7 @@ public class AsiExtraField implements ZipExtraField, UnixStat, Cloneable {
         long checksum = crc.getValue();
 
         byte[] result = new byte[data.length + 4];
-        System.arraycopy((new ZipLong(checksum)).getBytes(), 0, result, 0, 4);
+        System.arraycopy(ZipLong.getBytes(checksum), 0, result, 0, 4);
         System.arraycopy(data, 0, result, 4, data.length);
         return result;
     }
@@ -282,7 +282,7 @@ public class AsiExtraField implements ZipExtraField, UnixStat, Cloneable {
     public void parseFromLocalFileData(byte[] data, int offset, int length)
         throws ZipException {
 
-        long givenChecksum = (new ZipLong(data, offset)).getValue();
+        long givenChecksum = ZipLong.getValue(data, offset);
         byte[] tmp = new byte[length - 4];
         System.arraycopy(data, offset + 4, tmp, 0, length - 4);
         crc.reset();
@@ -295,10 +295,10 @@ public class AsiExtraField implements ZipExtraField, UnixStat, Cloneable {
                                    + Long.toHexString(realChecksum));
         }
 
-        int newMode = (new ZipShort(tmp, 0)).getValue();
-        byte[] linkArray = new byte[(int) (new ZipLong(tmp, 2)).getValue()];
-        uid = (new ZipShort(tmp, 6)).getValue();
-        gid = (new ZipShort(tmp, 8)).getValue();
+        int newMode = ZipShort.getValue(tmp, 0);
+        byte[] linkArray = new byte[(int) ZipLong.getValue(tmp, 2)];
+        uid = ZipShort.getValue(tmp, 6);
+        gid = ZipShort.getValue(tmp, 8);
 
         if (linkArray.length == 0) {
             link = "";

@@ -64,17 +64,17 @@ public class ZipFile {
      * Maps ZipEntrys to Longs, recording the offsets of the local
      * file headers.
      */
-    private Hashtable entries = new Hashtable();
+    private Hashtable entries = new Hashtable(509);
 
     /**
      * Maps String to ZipEntrys, name -> actual entry.
      */
-    private Hashtable nameMap = new Hashtable();
+    private Hashtable nameMap = new Hashtable(509);
 
-    /**
-     * Maps ZipEntrys to Longs, recording the offsets of the actual file data.
-     */
-    private Hashtable dataOffsets = new Hashtable();
+    private static final class OffsetEntry {
+        long headerOffset = -1;
+        long dataOffset = - 1;
+    }
 
     /**
      * The encoding to use for filenames and the file comment.
@@ -201,12 +201,13 @@ public class ZipFile {
      */
     public InputStream getInputStream(ZipEntry ze)
         throws IOException, ZipException {
-        Long start = (Long) dataOffsets.get(ze);
-        if (start == null) {
+        OffsetEntry offsetEntry = (OffsetEntry)entries.get(ze);
+        if (offsetEntry == null){
             return null;
         }
+        long start = offsetEntry.dataOffset;
         BoundedInputStream bis =
-            new BoundedInputStream(start.longValue(), ze.getCompressedSize());
+            new BoundedInputStream(start, ze.getCompressedSize());
         switch (ze.getMethod()) {
             case ZipEntry.STORED:
                 return bis;
@@ -253,56 +254,65 @@ public class ZipFile {
 
         byte[] signatureBytes = new byte[4];
         archive.readFully(signatureBytes);
-        ZipLong sig = new ZipLong(signatureBytes);
-        while (sig.equals(ZipOutputStream.CFH_SIG)) {
+        long sig = ZipLong.getValue(signatureBytes);
+        final long cfh_sig = ZipLong.getValue(ZipOutputStream.CFH_SIG);
+        while (sig == cfh_sig) {
             archive.readFully(cfh);
             int off = 0;
             ZipEntry ze = new ZipEntry();
 
-            ZipShort versionMadeBy = new ZipShort(cfh, off);
+            int versionMadeBy = ZipShort.getValue(cfh, off);
             off += 2;
-            ze.setPlatform((versionMadeBy.getValue() >> 8) & 0x0F);
+            ze.setPlatform((versionMadeBy >> 8) & 0x0F);
 
             off += 4; // skip version info and general purpose byte
 
-            ze.setMethod((new ZipShort(cfh, off)).getValue());
+            ze.setMethod(ZipShort.getValue(cfh, off));
             off += 2;
 
-            ze.setTime(fromDosTime(new ZipLong(cfh, off)).getTime());
+            // FIXME this is actually not very cpu cycles friendly as we are converting from
+            // dos to java while the underlying Sun implementation will convert
+            // from java to dos time for internal storage...
+            long time = dosToJavaTime(ZipLong.getValue(cfh, off));
+            ze.setTime(time);
             off += 4;
 
-            ze.setCrc((new ZipLong(cfh, off)).getValue());
+            ze.setCrc(ZipLong.getValue(cfh, off));
             off += 4;
 
-            ze.setCompressedSize((new ZipLong(cfh, off)).getValue());
+            ze.setCompressedSize(ZipLong.getValue(cfh, off));
             off += 4;
 
-            ze.setSize((new ZipLong(cfh, off)).getValue());
+            ze.setSize(ZipLong.getValue(cfh, off));
             off += 4;
 
-            int fileNameLen = (new ZipShort(cfh, off)).getValue();
+            int fileNameLen = ZipShort.getValue(cfh, off);
             off += 2;
 
-            int extraLen = (new ZipShort(cfh, off)).getValue();
+            int extraLen = ZipShort.getValue(cfh, off);
             off += 2;
 
-            int commentLen = (new ZipShort(cfh, off)).getValue();
+            int commentLen = ZipShort.getValue(cfh, off);
             off += 2;
 
             off += 2; // disk number
 
-            ze.setInternalAttributes((new ZipShort(cfh, off)).getValue());
+            ze.setInternalAttributes(ZipShort.getValue(cfh, off));
             off += 2;
 
-            ze.setExternalAttributes((new ZipLong(cfh, off)).getValue());
+            ze.setExternalAttributes(ZipLong.getValue(cfh, off));
             off += 4;
-
-            // LFH offset
-            entries.put(ze, new Long((new ZipLong(cfh, off)).getValue()));
 
             byte[] fileName = new byte[fileNameLen];
             archive.readFully(fileName);
             ze.setName(getString(fileName));
+
+
+            // LFH offset,
+            OffsetEntry offset = new OffsetEntry();
+            offset.headerOffset = ZipLong.getValue(cfh, off);
+            // data offset will be filled later
+            entries.put(ze, offset);
 
             nameMap.put(ze.getName(), ze);
 
@@ -313,7 +323,7 @@ public class ZipFile {
             ze.setComment(getString(comment));
 
             archive.readFully(signatureBytes);
-            sig = new ZipLong(signatureBytes);
+            sig = ZipLong.getValue(signatureBytes);
         }
     }
 
@@ -352,7 +362,7 @@ public class ZipFile {
         throws IOException {
         long off = archive.length() - MIN_EOCD_SIZE;
         archive.seek(off);
-        byte[] sig = ZipOutputStream.EOCD_SIG.getBytes();
+        byte[] sig = ZipOutputStream.EOCD_SIG;
         int curr = archive.read();
         boolean found = false;
         while (curr != -1) {
@@ -378,7 +388,7 @@ public class ZipFile {
         archive.seek(off + CFD_LOCATOR_OFFSET);
         byte[] cfdOffset = new byte[4];
         archive.readFully(cfdOffset);
-        archive.seek((new ZipLong(cfdOffset)).getValue());
+        archive.seek(ZipLong.getValue(cfdOffset));
     }
 
     /**
@@ -408,31 +418,42 @@ public class ZipFile {
         Enumeration e = getEntries();
         while (e.hasMoreElements()) {
             ZipEntry ze = (ZipEntry) e.nextElement();
-            long offset = ((Long) entries.get(ze)).longValue();
+            OffsetEntry offsetEntry = (OffsetEntry)entries.get(ze);
+            long offset = offsetEntry.headerOffset;
             archive.seek(offset + LFH_OFFSET_FOR_FILENAME_LENGTH);
             byte[] b = new byte[2];
             archive.readFully(b);
-            int fileNameLen = (new ZipShort(b)).getValue();
+            int fileNameLen = ZipShort.getValue(b);
             archive.readFully(b);
-            int extraFieldLen = (new ZipShort(b)).getValue();
+            int extraFieldLen = ZipShort.getValue(b);
             archive.skipBytes(fileNameLen);
             byte[] localExtraData = new byte[extraFieldLen];
             archive.readFully(localExtraData);
             ze.setExtra(localExtraData);
-            dataOffsets.put(ze,
+            /*dataOffsets.put(ze,
                             new Long(offset + LFH_OFFSET_FOR_FILENAME_LENGTH
                                      + 2 + 2 + fileNameLen + extraFieldLen));
+            */
+            offsetEntry.dataOffset = offset + LFH_OFFSET_FOR_FILENAME_LENGTH
+                                     + 2 + 2 + fileNameLen + extraFieldLen;
         }
     }
 
     /**
      * Convert a DOS date/time field to a Date object.
      *
-     * @param l contains the stored DOS time.
+     * @param zipDosTime contains the stored DOS time.
      * @return a Date instance corresponding to the given time.
      */
-    protected static Date fromDosTime(ZipLong l) {
-        long dosTime = l.getValue();
+    protected static Date fromDosTime(ZipLong zipDosTime) {
+        long dosTime = zipDosTime.getValue();
+        return new Date(dosToJavaTime(dosTime));
+    }
+
+    /*
+     * Converts DOS time to Java time (number of milliseconds since epoch).
+     */
+    private static long dosToJavaTime(long dosTime) {
         Calendar cal = Calendar.getInstance();
         cal.set(Calendar.YEAR, (int) ((dosTime >> 25) & 0x7f) + 1980);
         cal.set(Calendar.MONTH, (int) ((dosTime >> 21) & 0x0f) - 1);
@@ -440,8 +461,9 @@ public class ZipFile {
         cal.set(Calendar.HOUR_OF_DAY, (int) (dosTime >> 11) & 0x1f);
         cal.set(Calendar.MINUTE, (int) (dosTime >> 5) & 0x3f);
         cal.set(Calendar.SECOND, (int) (dosTime << 1) & 0x3e);
-        return cal.getTime();
+        return cal.getTimeInMillis();
     }
+
 
     /**
      * Retrieve a String from the given bytes using the encoding set

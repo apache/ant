@@ -38,7 +38,6 @@ public final class ZipShort implements Cloneable {
 
     /**
      * Create instance from bytes.
-     *
      * @since 1.1
      */
     public ZipShort (byte[] bytes) {
@@ -47,17 +46,14 @@ public final class ZipShort implements Cloneable {
 
     /**
      * Create instance from the two bytes starting at offset.
-     *
      * @since 1.1
      */
     public ZipShort (byte[] bytes, int offset) {
-        value = (bytes[offset + 1] << 8) & 0xFF00;
-        value += (bytes[offset] & 0xFF);
+        value = ZipShort.getValue(bytes, offset);
     }
 
     /**
      * Get value as two bytes in big endian byte order.
-     *
      * @since 1.1
      */
     public byte[] getBytes() {
@@ -69,11 +65,41 @@ public final class ZipShort implements Cloneable {
 
     /**
      * Get value as Java int.
-     *
      * @since 1.1
      */
     public int getValue() {
         return value;
+    }
+
+    /**
+     * Get value as two bytes in big endian byte order.
+     */
+    public static byte[] getBytes(int value){
+        byte[] result = new byte[2];
+        result[0] = (byte) (value & 0xFF);
+        result[1] = (byte) ((value & 0xFF00) >> 8);
+        return result;
+    }
+
+    /**
+     * Helper method to get the value as a java int from two bytes starting at given array offset
+     * @param bytes the array of bytes
+     * @param offset the offset to start
+     * @return the correspondanding java int value
+     */
+    public static int getValue(byte[] bytes, int offset){
+        int value = (bytes[offset + 1] << 8) & 0xFF00;
+        value += (bytes[offset] & 0xFF);
+        return value;
+    }
+
+    /**
+     * Helper method to get the value as a java int from a two-byte array
+     * @param bytes the array of bytes
+     * @return the correspondanding java int value
+     */
+    public static int getValue(byte[] bytes){
+        return getValue(bytes, 0);    
     }
 
     /**

@@ -29,7 +29,6 @@ public final class ZipLong implements Cloneable {
 
     /**
      * Create instance from a number.
-     *
      * @since 1.1
      */
     public ZipLong(long value) {
@@ -38,7 +37,6 @@ public final class ZipLong implements Cloneable {
 
     /**
      * Create instance from bytes.
-     *
      * @since 1.1
      */
     public ZipLong (byte[] bytes) {
@@ -47,22 +45,34 @@ public final class ZipLong implements Cloneable {
 
     /**
      * Create instance from the four bytes starting at offset.
-     *
      * @since 1.1
      */
     public ZipLong (byte[] bytes, int offset) {
-        value = (bytes[offset + 3] << 24) & 0xFF000000L;
-        value += (bytes[offset + 2] << 16) & 0xFF0000;
-        value += (bytes[offset + 1] << 8) & 0xFF00;
-        value += (bytes[offset] & 0xFF);
+        value = ZipLong.getValue(bytes, offset);
     }
 
     /**
-     * Get value as two bytes in big endian byte order.
-     *
+     * Get value as four bytes in big endian byte order.
      * @since 1.1
      */
     public byte[] getBytes() {
+        return ZipLong.getBytes(value);
+    }
+
+    /**
+     * Get value as Java int.
+     * @since 1.1
+     */
+    public long getValue() {
+        return value;
+    }
+
+    /**
+     * Get value as four bytes in big endian byte order.
+     * @param value the value to convert
+     * @return value as four bytes in big endian byte order
+     */
+    public static byte[] getBytes(long value){
         byte[] result = new byte[4];
         result[0] = (byte) ((value & 0xFF));
         result[1] = (byte) ((value & 0xFF00) >> 8);
@@ -72,12 +82,26 @@ public final class ZipLong implements Cloneable {
     }
 
     /**
-     * Get value as Java int.
-     *
-     * @since 1.1
+     * Helper method to get the value as a java long from four bytes starting at given array offset
+     * @param bytes the array of bytes
+     * @param offset the offset to start
+     * @return the correspondanding java int value
      */
-    public long getValue() {
+    public static long getValue(byte[] bytes, int offset){
+        long value = (bytes[offset + 3] << 24) & 0xFF000000L;
+        value += (bytes[offset + 2] << 16) & 0xFF0000;
+        value += (bytes[offset + 1] << 8) & 0xFF00;
+        value += (bytes[offset] & 0xFF);
         return value;
+    }
+
+    /**
+     * Helper method to get the value as a java long from a four-byte array
+     * @param bytes the array of bytes
+     * @return the correspondanding java long value
+     */
+    public static long getValue(byte[] bytes){
+        return getValue(bytes, 0);
     }
 
     /**

@@ -20,6 +20,8 @@ package org.apache.tools.zip;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Vector;
+import java.util.Date;
+import java.util.Calendar;
 import java.util.zip.ZipException;
 
 /**
@@ -384,6 +386,24 @@ public class ZipEntry extends java.util.zip.ZipEntry implements Cloneable {
 
     protected void setName(String name) {
         this.name = name;
+    }
+
+    /**
+     * @since Ant 1.7
+     */
+    public int hashCode(){
+        return getName().hashCode();
+    }
+
+    /**
+     * @since Ant 1.7
+     */
+    public boolean equals(Object o){
+        if (o instanceof ZipEntry){
+            ZipEntry other = (ZipEntry)o;
+            return other.getName().equals(getName());
+        }
+        return false;
     }
 
     /**
