@@ -54,83 +54,54 @@
 
 package org.apache.tools.ant.taskdefs.optional.junit;
 
-import org.apache.tools.ant.BuildException;
-import org.apache.tools.ant.DirectoryScanner;
-import org.apache.tools.ant.Project;
-import org.apache.tools.ant.types.FileSet;
-import org.apache.tools.ant.types.Reference;
-
-import java.util.*;
+import java.util.Vector;
 
 /**
- * Create JUnitTests from a list of files.
+ * Baseclass for BatchTest and JUnitTest.
  *
- * @author <a href="mailto:jeff.martin@synamic.co.uk">Jeff Martin</a>
  * @author <a href="mailto:stefan.bodewig@megabit.net">Stefan Bodewig</a> 
  */
-public final class BatchTest extends BaseTest {
-    private Project project;
+public abstract class BaseTest {
+    protected boolean haltOnError = false;
+    protected boolean haltOnFail = false;
+    protected boolean fork = false;
+    protected String ifProperty = null;
+    protected String unlessProperty = null;
+    protected Vector formatters = new Vector();
 
-    private Vector filesets = new Vector();
-
-    public BatchTest(Project project){
-        this.project = project;
+    public void setFork(boolean value) {
+        fork = value;
     }
 
-    public void addFileSet(FileSet fs) {
-        filesets.addElement(fs);
+    public boolean getFork() {
+        return fork;
     }
 
-    public final Enumeration elements(){
-        return new FileList();
+    public void setHaltonerror(boolean value) {
+        haltOnError = value;
     }
 
-    public class FileList implements Enumeration{
-        private String files[]=null;
-        private int i=0;
-        
-        private FileList(){
-            Vector v = new Vector();
-            for (int j=0; j<filesets.size(); j++) {
-                FileSet fs = (FileSet) filesets.elementAt(j);
-                DirectoryScanner ds = fs.getDirectoryScanner(project);
-                ds.scan();
-                String[] f = ds.getIncludedFiles();
-                for (int k=0; k<f.length; k++) {
-                    if (f[k].endsWith(".java")) {
-                        v.addElement(f[k].substring(0, f[k].length()-5));
-                    } else if (f[k].endsWith(".class")) {
-                        v.addElement(f[k].substring(0, f[k].length()-6));
-                    }
-                }
-            }
+    public void setHaltonfailure(boolean value) {
+        haltOnFail = value;
+    }
 
-            files = new String[v.size()];
-            v.copyInto(files);
-        }
-        public final boolean hasMoreElements(){
-            if(i<files.length)return true;
-            return false;
-        }
-        public final Object nextElement() throws NoSuchElementException{
-            if(hasMoreElements()){
-                JUnitTest test = new JUnitTest(javaToClass(files[i]));
-                test.setHaltonerror(haltOnError);
-                test.setHaltonfailure(haltOnFail);
-                test.setFork(fork);
-                test.setIf(ifProperty);
-                test.setUnless(unlessProperty);
-                Enumeration list = formatters.elements();
-                while (list.hasMoreElements()) {
-                    test.addFormatter((FormatterElement)list.nextElement());
-                }
-                i++;
-                return test;
-            }
-            throw new NoSuchElementException();
-        }
-        public final String javaToClass(String fileName){
-            return fileName.replace(java.io.File.separatorChar, '.');
-        }
+    public boolean getHaltonerror() {
+        return haltOnError;
+    }
+
+    public boolean getHaltonfailure() {
+        return haltOnFail;
+    }
+
+    public void setIf(String propertyName) {
+        ifProperty = propertyName;
+    }
+
+    public void setUnless(String propertyName) {
+        unlessProperty = propertyName;
+    }
+
+    public void addFormatter(FormatterElement elem) {
+        formatters.addElement(elem);
     }
 }

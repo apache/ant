@@ -317,7 +317,7 @@
 
       <formatter type="plain" usefile="false" />
 
-      <batchtest fork="yes">
+      <batchtest>
         <fileset dir="${src.tests.dir}">
           <include name="**/*Test*" />
           <exclude name="**/All*" />

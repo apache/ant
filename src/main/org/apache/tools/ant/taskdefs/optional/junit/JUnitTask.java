@@ -92,16 +92,23 @@ public class JUnitTask extends Task {
     private Vector batchTests = new Vector();
     private Vector formatters = new Vector();
 
-    private JUnitTest defaults = new JUnitTest();
     private Integer timeout = null;
     private boolean summary = false;
 
     public void setHaltonerror(boolean value) {
-        defaults.setHaltonerror(value);
+        Enumeration enum = allTests();
+        while (enum.hasMoreElements()) {
+            BaseTest test = (BaseTest) enum.nextElement();
+            test.setHaltonerror(value);
+        }
     }
 
     public void setHaltonfailure(boolean value) {
-        defaults.setHaltonfailure(value);
+        Enumeration enum = allTests();
+        while (enum.hasMoreElements()) {
+            BaseTest test = (BaseTest) enum.nextElement();
+            test.setHaltonfailure(value);
+        }
     }
 
     public void setPrintsummary(boolean value) {
@@ -114,7 +121,6 @@ public class JUnitTask extends Task {
         } else {
             createJvmarg().setValue("-Xmx"+max);
         }
-        
     }
 
     public void setTimeout(Integer value) {
@@ -122,7 +128,11 @@ public class JUnitTask extends Task {
     }
 
     public void setFork(boolean value) {
-        defaults.setFork(value);
+        Enumeration enum = allTests();
+        while (enum.hasMoreElements()) {
+            BaseTest test = (BaseTest) enum.nextElement();
+            test.setFork(value);
+        }
     }
 
     public void setJvm(String value) {
@@ -138,17 +148,11 @@ public class JUnitTask extends Task {
     }
 
     public void addTest(JUnitTest test) {
-        test.setHaltonerror(defaults.getHaltonerror());
-        test.setHaltonfailure(defaults.getHaltonfailure());
-        test.setFork(defaults.getFork());
         tests.addElement(test);
     }
 
     public BatchTest createBatchTest() {
         BatchTest test = new BatchTest(project);
-        test.setHaltonerror(defaults.getHaltonerror());
-        test.setHaltonfailure(defaults.getHaltonfailure());
-        test.setFork(defaults.getFork());
         batchTests.addElement(test);
         return test;
     }
@@ -171,16 +175,18 @@ public class JUnitTask extends Task {
         boolean errorOccurred = false;
         boolean failureOccurred = false;
 
+        Vector runTests = (Vector) tests.clone();
+
         Enumeration list = batchTests.elements();
         while (list.hasMoreElements()) {
             BatchTest test = (BatchTest)list.nextElement();
             Enumeration list2 = test.elements();
             while (list2.hasMoreElements()) {
-                tests.addElement(list2.nextElement());
+                runTests.addElement(list2.nextElement());
             }
         }
 
-        list = tests.elements();
+        list = runTests.elements();
         while (list.hasMoreElements()) {
             JUnitTest test = (JUnitTest)list.nextElement();
 
@@ -194,8 +200,6 @@ public class JUnitTask extends Task {
 
             int exitValue = JUnitTestRunner.ERRORS;
             
-            System.err.println(test.getFork());
-
             if (!test.getFork()) {
                 JUnitTestRunner runner = 
                     new JUnitTestRunner(test, test.getHaltonerror(),
@@ -311,5 +315,25 @@ public class JUnitTask extends Task {
 
         if (dest.exists()) dest.delete();
         src.renameTo(dest);
+    }
+
+    protected Enumeration allTests() {
+
+        return new Enumeration() {
+                private Enumeration testEnum = tests.elements();
+                private Enumeration batchEnum = batchTests.elements();
+                
+                public boolean hasMoreElements() {
+                    return testEnum.hasMoreElements() ||
+                        batchEnum.hasMoreElements();
+                }
+                
+                public Object nextElement() {
+                    if (testEnum.hasMoreElements()) {
+                        return testEnum.nextElement();
+                    }
+                    return batchEnum.nextElement();
+                }
+            };
     }
 }

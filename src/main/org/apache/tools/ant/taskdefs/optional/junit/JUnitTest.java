@@ -65,17 +65,12 @@ import java.util.Vector;
  * @author Thomas Haas
  * @author <a href="mailto:stefan.bodewig@megabit.net">Stefan Bodewig</a> 
  */
-public class JUnitTest {
-    private boolean haltOnError = false;
-    private boolean haltOnFail = false;
+public class JUnitTest extends BaseTest {
     private String name = null;
     private File outfile = null;
-    private boolean fork = false;
 
     private long runs, failures, errors;
     private long runTime;
-
-    private Vector formatters = new Vector();
 
     public JUnitTest() {
     }
@@ -90,36 +85,12 @@ public class JUnitTest {
         this.haltOnFail = haltOnFail;
     }
 
-    public void setFork(boolean value) {
-        fork = value;
-    }
-
-    public boolean getFork() {
-        return fork;
-    }
-
-    public void setHaltonerror(boolean value) {
-        haltOnError = value;
-    }
-
-    public void setHaltonfailure(boolean value) {
-        haltOnFail = value;
-    }
-
     public void setName(String value) {
         name = value;
     }
 
     public void setOutfile(File value) {
         outfile = value;
-    }
-
-    public boolean getHaltonerror() {
-        return haltOnError;
-    }
-
-    public boolean getHaltonfailure() {
-        return haltOnFail;
     }
 
     public String getName() {
@@ -148,17 +119,6 @@ public class JUnitTest {
     public long errorCount() {return errors;}
     public long getRunTime() {return runTime;}
 
-    private String ifProperty = null;
-    private String unlessProperty = null;
-
-    public void setIf(String propertyName) {
-        ifProperty = propertyName;
-    }
-
-    public void setUnless(String propertyName) {
-        unlessProperty = propertyName;
-    }
-
     public boolean shouldRun(Project p) {
         if (ifProperty != null && p.getProperty(ifProperty) == null) {
             return false;
@@ -167,10 +127,6 @@ public class JUnitTest {
             return false;
         }
         return true;
-    }
-
-    public void addFormatter(FormatterElement elem) {
-        formatters.addElement(elem);
     }
 
     public FormatterElement[] getFormatters() {
