@@ -7,336 +7,263 @@
  */
 package org.apache.antlib.cvslib;
 
-import java.io.BufferedOutputStream;
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.OutputStream;
-import java.io.PrintStream;
+import org.apache.myrmidon.api.AbstractTask;
 import org.apache.myrmidon.api.TaskException;
 import org.apache.tools.ant.Project;
-import org.apache.tools.ant.Task;
+import org.apache.tools.ant.taskdefs.Execute;
 import org.apache.tools.ant.taskdefs.ExecuteStreamHandler;
 import org.apache.tools.ant.taskdefs.LogStreamHandler;
-import org.apache.tools.ant.taskdefs.LogOutputStream;
-import org.apache.tools.ant.taskdefs.PumpStreamHandler;
-import org.apache.tools.ant.taskdefs.Execute;
 import org.apache.tools.ant.types.Commandline;
 import org.apache.tools.ant.types.Environment;
 
 /**
- * @author costin@dnt.ro
- * @author stefano@apache.org
- * @author Wolfgang Werner <a href="mailto:wwerner@picturesafe.de">
- *      wwerner@picturesafe.de</a>
+ *
+ * @author <a href="mailto:peter@apache.org">Peter Donald</a>
+ * @author <a href="mailto:costin@dnt.ro">costin@dnt.ro</a>
+ * @author <a href="mailto:stefano@apache.org">stefano@apache.org</a>
+ * @author <a href="mailto:wwerner@picturesafe.de">Wolfgang Werner [wwerner@picturesafe.de]</a>
+ * @version $Revision$ $Date$
  */
-
-public class Cvs extends Task
+public class Cvs
+    extends AbstractTask
 {
-
-    private Commandline cmd = new Commandline();
-
     /**
      * the CVS command to execute.
      */
-    private String command = "checkout";
+    private String m_command = "checkout";
 
     /**
      * suppress information messages.
      */
-    private boolean quiet = false;
+    private boolean m_quiet;
 
     /**
      * report only, don't change any files.
      */
-    private boolean noexec = false;
+    private boolean m_noexec;
 
     /**
      * CVS port
      */
-    private int port = 0;
+    private int m_port;
 
     /**
      * CVS password file
      */
-    private File passFile = null;
+    private File m_passwordFile;
 
     /**
      * If true it will stop the build if cvs exits with error. Default is false.
      * (Iulian)
      */
-    private boolean failOnError = false;
+    private boolean m_failOnError;
 
     /**
      * the CVSROOT variable.
      */
-    private String cvsRoot;
+    private String m_cvsRoot;
 
     /**
      * the CVS_RSH variable.
      */
-    private String cvsRsh;
+    private String m_cvsRsh;
 
     /**
      * the directory where the checked out files should be placed.
      */
-    private File dest;
+    private File m_dest;
 
     /**
-     * the file to direct standard error from the command.
+     * the module to check out.
      */
-    private File error;
+    private String m_module;
 
     /**
-     * the file to direct standard output from the command.
+     * the date at which to extract files from repository
      */
-    private File output;
+    private String m_date;
 
     /**
-     * the package/module to check out.
+     * the tag with which to extract files from the repository
      */
-    private String pack;
+    private String m_tag;
 
-    public void setCommand( String c )
+    public void setCommand( final String command )
     {
-        this.command = c;
+        m_command = command;
     }
 
-    public void setCvsRoot( String root )
+    public void setCvsRoot( final String cvsRoot )
     {
         // Check if not real cvsroot => set it to null
-        if( root != null )
-        {
-            if( root.trim().equals( "" ) )
-                root = null;
-        }
-
-        this.cvsRoot = root;
+        m_cvsRoot = getNonEmptyString( cvsRoot );
     }
 
-    public void setCvsRsh( String rsh )
+    public void setCvsRsh( final String cvsRsh )
     {
         // Check if not real cvsrsh => set it to null
-        if( rsh != null )
-        {
-            if( rsh.trim().equals( "" ) )
-                rsh = null;
-        }
-
-        this.cvsRsh = rsh;
+        m_cvsRsh = getNonEmptyString( cvsRsh );
     }
 
-    public void setDate( String p )
+    public void setDate( final String date )
     {
-        if( p != null && p.trim().length() > 0 )
-        {
-            cmd.createArgument().setValue( "-D" );
-            cmd.createArgument().setValue( p );
-        }
+        m_date = getNonEmptyString( date );
     }
 
-    public void setDest( File dest )
+    public void setDest( final File dest )
     {
-        this.dest = dest;
-    }
-
-    public void setError( File error )
-    {
-        this.error = error;
-    }
-
-    public void setFailOnError( boolean failOnError )
-    {
-        this.failOnError = failOnError;
+        m_dest = dest;
     }
 
     public void setNoexec( boolean ne )
     {
-        noexec = ne;
+        m_noexec = ne;
     }
 
-    public void setOutput( File output )
+    public void setModule( final String module )
     {
-        this.output = output;
+        m_module = module;
     }
 
-    public void setPackage( String p )
+    public void setPassfile( final File passwordFile )
     {
-        this.pack = p;
+        m_passwordFile = passwordFile;
     }
 
-    public void setPassfile( File passFile )
+    public void setPort( final int port )
     {
-        this.passFile = passFile;
+        m_port = port;
     }
 
-    public void setPort( int port )
+    public void setQuiet( final boolean quiet )
     {
-        this.port = port;
+        m_quiet = quiet;
     }
 
-    public void setQuiet( boolean q )
+    public void setTag( final String tag )
     {
-        quiet = q;
-    }
-
-    public void setTag( String p )
-    {
-        // Check if not real tag => set it to null
-        if( p != null && p.trim().length() > 0 )
-        {
-            cmd.createArgument().setValue( "-r" );
-            cmd.createArgument().setValue( p );
-        }
+        m_tag = getNonEmptyString( tag );
     }
 
     public void execute()
         throws TaskException
     {
-        // XXX: we should use JCVS (www.ice.com/JCVS) instead of command line
-        // execution so that we don't rely on having native CVS stuff around (SM)
+        final Commandline command = buildCommandline();
+        final Environment env = buildEnvironment();
 
-        // We can't do it ourselves as jCVS is GPLed, a third party task
-        // outside of jakarta repositories would be possible though (SB).
+        //FIXME:
+        ExecuteStreamHandler streamhandler =
+            new LogStreamHandler( null, Project.MSG_INFO, Project.MSG_WARN );
 
-        Commandline toExecute = new Commandline();
+        final Execute exe = new Execute( streamhandler, null );
+        if( m_dest == null ) m_dest = getBaseDirectory();
+        exe.setWorkingDirectory( m_dest );
 
-        toExecute.setExecutable( "cvs" );
-        if( cvsRoot != null )
-        {
-            toExecute.createArgument().setValue( "-d" );
-            toExecute.createArgument().setValue( cvsRoot );
-        }
-        if( noexec )
-        {
-            toExecute.createArgument().setValue( "-n" );
-        }
-        if( quiet )
-        {
-            toExecute.createArgument().setValue( "-q" );
-        }
-        toExecute.createArgument().setLine( command );
-        toExecute.addArguments( cmd.getCommandline() );
-
-        if( pack != null )
-        {
-            toExecute.createArgument().setLine( pack );
-        }
-
-        Environment env = new Environment();
-
-        if( port > 0 )
-        {
-            Environment.Variable var = new Environment.Variable();
-            var.setKey( "CVS_CLIENT_PORT" );
-            var.setValue( String.valueOf( port ) );
-            env.addVariable( var );
-        }
-
-        if( passFile != null )
-        {
-            Environment.Variable var = new Environment.Variable();
-            var.setKey( "CVS_PASSFILE" );
-            var.setValue( String.valueOf( passFile ) );
-            env.addVariable( var );
-        }
-
-        if( cvsRsh != null )
-        {
-            Environment.Variable var = new Environment.Variable();
-            var.setKey( "CVS_RSH" );
-            var.setValue( String.valueOf( cvsRsh ) );
-            env.addVariable( var );
-        }
-
-        ExecuteStreamHandler streamhandler = null;
-        OutputStream outputstream = null;
-        OutputStream errorstream = null;
-        if( error == null && output == null )
-        {
-            streamhandler = new LogStreamHandler( this, Project.MSG_INFO,
-                                                  Project.MSG_WARN );
-        }
-        else
-        {
-            if( output != null )
-            {
-                try
-                {
-                    outputstream = new PrintStream( new BufferedOutputStream( new FileOutputStream( output ) ) );
-                }
-                catch( IOException e )
-                {
-                    throw new TaskException( e.toString(), e );
-                }
-            }
-            else
-            {
-                outputstream = new LogOutputStream( this, Project.MSG_INFO );
-            }
-            if( error != null )
-            {
-                try
-                {
-                    errorstream = new PrintStream( new BufferedOutputStream( new FileOutputStream( error ) ) );
-                }
-                catch( IOException e )
-                {
-                    throw new TaskException( e.toString(), e );
-                }
-            }
-            else
-            {
-                errorstream = new LogOutputStream( this, Project.MSG_WARN );
-            }
-            streamhandler = new PumpStreamHandler( outputstream, errorstream );
-        }
-
-        Execute exe = new Execute( streamhandler,
-                                   null );
-
-        exe.setAntRun( project );
-        if( dest == null ) dest = getBaseDirectory();
-        exe.setWorkingDirectory( dest );
-
-        exe.setCommandline( toExecute.getCommandline() );
+        exe.setCommandline( command.getCommandline() );
         exe.setEnvironment( env.getVariables() );
         try
         {
-            int retCode = exe.execute();
-            /*
-             * Throw an exception if cvs exited with error. (Iulian)
-             */
-            if( failOnError && retCode != 0 )
+            final int retCode = exe.execute();
+            if( retCode != 0 )
+            {
+                //replace with an ExecuteException(message,code);
                 throw new TaskException( "cvs exited with error code " + retCode );
+            }
         }
         catch( IOException e )
         {
             throw new TaskException( e.toString(), e );
         }
-        finally
+    }
+
+    private Environment buildEnvironment()
+    {
+        final Environment env = new Environment();
+        if( 0 < m_port )
         {
-            if( output != null )
-            {
-                try
-                {
-                    outputstream.close();
-                }
-                catch( IOException e )
-                {
-                }
-            }
-            if( error != null )
-            {
-                try
-                {
-                    errorstream.close();
-                }
-                catch( IOException e )
-                {
-                }
-            }
+            final Environment.Variable var = new Environment.Variable();
+            var.setKey( "CVS_CLIENT_PORT" );
+            var.setValue( String.valueOf( m_port ) );
+            env.addVariable( var );
         }
+
+        if( null != m_passwordFile )
+        {
+            final Environment.Variable var = new Environment.Variable();
+            var.setKey( "CVS_PASSFILE" );
+            var.setValue( String.valueOf( m_passwordFile ) );
+            env.addVariable( var );
+        }
+
+        if( null != m_cvsRsh )
+        {
+            final Environment.Variable var = new Environment.Variable();
+            var.setKey( "CVS_RSH" );
+            var.setValue( String.valueOf( m_cvsRsh ) );
+            env.addVariable( var );
+        }
+        return env;
+    }
+
+    private Commandline buildCommandline() throws TaskException
+    {
+        final Commandline command = new Commandline();
+
+        command.setExecutable( "cvs" );
+        if( m_cvsRoot != null )
+        {
+            command.createArgument().setValue( "-d" );
+            command.createArgument().setValue( m_cvsRoot );
+        }
+
+        if( m_noexec )
+        {
+            command.createArgument().setValue( "-n" );
+        }
+
+        if( m_quiet )
+        {
+            command.createArgument().setValue( "-q" );
+        }
+
+        command.createArgument().setLine( m_command );
+
+        if( null != m_date )
+        {
+            command.createArgument().setValue( "-D" );
+            command.createArgument().setValue( m_date );
+        }
+
+        if( null != m_tag )
+        {
+            command.createArgument().setValue( "-r" );
+            command.createArgument().setValue( m_tag );
+        }
+
+        if( m_module != null )
+        {
+            command.createArgument().setLine( m_module );
+        }
+        return command;
+    }
+
+    private String getNonEmptyString( final String value )
+    {
+        if( isEmpty( value ) )
+        {
+            return null;
+        }
+        else
+        {
+            return value;
+        }
+    }
+
+    private boolean isEmpty( final String value )
+    {
+        return ( null == value ) || ( 0 == value.trim().length() );
     }
 }
 
