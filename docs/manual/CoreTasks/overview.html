@@ -36,7 +36,7 @@ about all tasks currently known to Ant.</p></td>
   </tr>
   
   <tr valign="top">
-    <td><a href="apply.html">Apply</a></td>
+    <td><a href="apply.html">Apply/<i>ExecOn</i></a></td>
     <td><p>Executes a system command. When the <i>os</i> attribute is specified, then
 the command is only executed when Ant is run on one of the specified operating
 systems.</p></td>
@@ -53,6 +53,13 @@ file, a directory, a class in the classpath, or a JVM system resource.</p></td>
     <td><p>Changes the permissions of a file or all files inside specified directories. 
     Right now it has effect only under Unix. The permissions are also UNIX style, like 
     the argument for the chmod command.</p></td>
+  </tr>
+
+  <tr valign="top">
+    <td><a href="condition.html">Condition</a></td>
+    <td><p>Sets a property if a certain condition holds true - this is a
+    generalization of <a href="available.html">Available</a> and 
+    <a href="uptodate.html">Uptodate</a>.</p></td>
   </tr>
 
   <tr valign="top">
@@ -95,6 +102,13 @@ file, a directory, a class in the classpath, or a JVM system resource.</p></td>
   </tr>
 
   <tr valign="top">
+    <td><a href="dependset.html">Dependset</a></td>
+    <td><p>The dependset task compares a set of source files with a set of target
+    files.  If any of the source files is more recent than any of
+    the target files, all of the target files are removed. </p></td>
+  </tr>
+
+  <tr valign="top">
     <td><a href="ear.html">Ear</a></td>
     <td><p>An extension of the <a href="jar.html">Jar</a> task with special
     treatment for files that should end up in an Enterprise Application archive.</p></td>
@@ -110,16 +124,6 @@ file, a directory, a class in the classpath, or a JVM system resource.</p></td>
     <td><p>Executes a system command. When the <i>os</i> attribute is specified, then
 the command is only executed when Ant is run on one of the specified operating
 systems.</p></td>
-  </tr>
-
-  <tr valign="top">
-    <td><a href="execon.html">ExecOn</a></td>
-    <td><p>Executes a system command. When the <i>os</i> attribute is specified, then
-the command is only executed when Ant is run on one of the specified operating
-systems.</p>
-<p>The files and/or directories of a number of <a
-href="../CoreTypes/fileset.html">FileSet</a>s are passed as arguments to the system
-command. At least one nested <code>&lt;fileset&gt;</code> is required.</p></td>
   </tr>
 
   <tr valign="top">
@@ -192,15 +196,21 @@ specified.</p></td>
   <tr valign="top">
     <td><a href="mkdir.html">Mkdir</a></td>
     <td><p>Creates a directory. Also non-existent parent directories are created, when
-necessary.</p></td>
+    necessary.</p></td>
   </tr>
 
   <tr valign="top">
     <td><a href="move.html">Move</a></td>
     <td><p>Moves a file to a new file or directory, or sets of files to
-a new directory.</p></td>
+    a new directory.</p></td>
   </tr>
 
+  <tr valign="top">
+    <td><a href="parallel.html">Parallel</a></td>
+    <td><p>Parallel is a container task - it can contain other Ant tasks. Each nested
+    task within the parallel task will be executed in its own thread. </p>  </td>
+  </tr>
+  
   <tr valign="top">
     <td><a href="patch.html">Patch</a></td>
     <td><p>Applies a diff file to originals.</p></td>
@@ -215,13 +225,13 @@ a new directory.</p></td>
   <tr valign="top">
     <td><a href="property.html">Property</a></td>
     <td><p>Sets a property (by name and value), or set of properties (from file or
-resource) in the project.</p></td>
+    resource) in the project.</p></td>
   </tr>
 
   <tr valign="top">
     <td><a href="recorder.html">Record</a></td>
     <td><p>A recorder is a listener to the current build process that records the
-output to a file.</p></td>
+    output to a file.</p></td>
   </tr>
 
   <tr valign="top">
@@ -232,7 +242,7 @@ output to a file.</p></td>
   <tr valign="top">
     <td><a href="replace.html">Replace</a></td>
     <td><p>Replace is a directory based task for replacing the occurrence of a given string with another string 
-in selected file.</p></td>
+    in selected file.</p></td>
   </tr>
 
   <tr valign="top">
@@ -240,6 +250,14 @@ in selected file.</p></td>
     <td><p>Runs the rmic compiler for a certain class.</p></td>
   </tr>
 
+  <tr valign="top">
+    <td><a href="sequential.html">Sequential</a></td>
+    <td><p>Sequential is a container task - it can contain other Ant tasks. The nested 
+    tasks are simply executed in sequence. Sequential's primary use is to support 
+    the sequential execution of a subset of tasks within the 
+    <a href="parallel.html">parallel</a> task</p></td>
+  </tr>
+  
   <tr valign="top">
     <td><a href="signjar.html">SignJar</a></td>
     <td><p>Signs a jar or zip file with the javasign command line tool.</p></td>
@@ -271,13 +289,13 @@ in selected file.</p></td>
   <tr valign="top">
     <td><a href="taskdef.html">Taskdef</a></td>
     <td><p>Adds a task definition to the current project, such that this new task can be
-used in the current project.</p></td>
+    used in the current project.</p></td>
   </tr>
 
   <tr valign="top">
     <td><a href="touch.html">Touch</a></td>
     <td><p>Changes the modification time of a file and possibly creates it at
-the same time.</p></td>
+    the same time.</p></td>
   </tr>
 
   <tr valign="top">
@@ -290,7 +308,7 @@ the same time.</p></td>
   <tr valign="top">
     <td><a href="typedef.html">Typedef</a></td>
     <td><p>Adds a data type definition to the current project, such that this
-new type can be used in the current project.</p></td>
+    new type can be used in the current project.</p></td>
   </tr>
 
   <tr valign="top">
@@ -316,7 +334,7 @@ new type can be used in the current project.</p></td>
   <tr valign="top">
     <td><a href="uptodate.html">Uptodate</a></td>
     <td><p>Sets a property if a target files are more up to date than a set of
-Source files.</p></td>
+    Source files.</p></td>
   </tr>
 
   <tr valign="top">

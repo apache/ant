@@ -1,0 +1,118 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+
+<HTML>
+<HEAD>
+  <TITLE>Ant User Manual</TITLE>
+  <META http-equiv="Content-Type" content="text/html; charset=windows-1252">
+  <META http-equiv="Content-Language" content="en-us">
+  <META content="MSHTML 5.50.4522.1800" name=GENERATOR>
+</HEAD>
+
+<BODY>
+<H2><A name="fileset">Filterset</A></H2>
+
+<P>FilterSets are groups of filters. Filters can be defined as token value pairs 
+or be read in from a file. FilterSets can appear inside tasks that support this 
+feature or at the same level as <CODE>target</CODE> - i.e., as children of 
+<CODE>project</CODE>.</P>In addition, Filtersets can have begintoken and/or 
+endtoken attributes to define what to match. <BR>Filtersets are used for doing 
+replacements in tasks like copy etc.<BR>
+
+<H2>Filterset</H2>
+
+<TABLE cellSpacing=0 cellPadding=2 border=1>
+  <TR>
+    <TD vAlign=top><B>Attribute</B></TD>
+    <TD vAlign=top><B>Description</B></TD>
+    <TD vAlign=top><B>Default</B></TD>
+    <TD vAlign=top align="center"><B>Required</B></TD>
+  </TR>
+  <TR>
+    <TD vAlign=top>starttoken</TD>
+    <TD vAlign=top>The string marking the beginning of a token. eg 
+      <STRONG>@</STRONG>Date@</TD>
+    <TD vAlign=top>@</TD>
+    <TD vAlign=top align="center">No</TD>
+  </TR>
+  <TR>
+    <TD vAlign=top>endtoken</TD>
+    <TD vAlign=top>The string marking the end of a token. eg 
+      @Date<STRONG>@</STRONG></TD>
+    <TD vAlign=top>@</TD>
+    <TD vAlign=top align="center">No</TD>
+  </TR>
+</TABLE>
+
+<H2>Filter</H2>
+<TABLE cellSpacing=0 cellPadding=2 border=1>
+  <TR>
+    <TD vAlign=top><B>Attribute</B></TD>
+    <TD vAlign=top><B>Description</B></TD>
+    <TD vAlign=top align="center"><B>Required</B></TD>
+  </TR>
+  <TR>
+    <TD vAlign=top>token</TD>
+    <TD vAlign=top>The token to replace eg @<STRONG>Date</STRONG>@</TD>
+    <TD vAlign=top align="center">Yes</TD>
+  </TR>
+  <TR>
+    <TD vAlign=top>value</TD>
+    <TD vAlign=top>The value to replace it with eg Thursday, April 26, 2001</TD>
+    <TD vAlign=top align="center">Yes</TD>
+  </TR>
+</TABLE>
+
+<H2>Filtersfile</H2>
+<TABLE cellSpacing=0 cellPadding=2 border=1>
+  <TR>
+    <TD vAlign=top><B>Attribute</B></TD>
+    <TD vAlign=top><B>Description</B></TD>
+    <TD vAlign=top align="center"><B>Required</B></TD>
+  </TR>
+  <TR>
+    <TD vAlign=top>file</TD>
+    <TD vAlign=top>The file to load tokens from should be a properties file of 
+      name value pairs.</TD>
+    <TD vAlign=top align="center">Yes</TD>
+  </TR>
+</TABLE>
+
+<H4>Examples</H4>
+
+<p>You are copying the version.txt file to the dist directory from the build directory 
+but wish to replace the token @DATE@ with todays date.</p>
+<BLOCKQUOTE><PRE>
+&lt;copy file=&quot;${build.home}/version.txt&quot; toFile=&quot;${dist.home}/version.txt&quot;&lt;
+  &lt;filterset&gt;
+    &lt;filter token=&quot;DATE&quot; value=&quot;${DATE}&quot;/&gt;
+  &lt;/filterset&gt;
+&lt;/copy&gt;
+</PRE></BLOCKQUOTE>
+
+<p>You are copying the version.txt file to the dist directory from the build directory 
+but wish to replace the token %DATE* with todays date.</p>
+<BLOCKQUOTE><PRE>
+&lt;copy file=&quot;${build.home}/version.txt&quot; toFile=&quot;${dist.home}/version.txt&quot;&gt;
+  &lt;filterset begintoken=&quot;%&quot; endtoken=&quot;*&quot;&gt;
+    &lt;filter token=&quot;DATE&quot; value=&quot;${DATE}&quot;/&gt;
+  &lt;/filterset&gt;
+&lt;/copy&gt;
+</PRE></BLOCKQUOTE>
+
+<p>Copy all the docs but change all dates and appropriate notices as stored in a file.</p>
+<BLOCKQUOTE><PRE>
+&lt;copy toDir=&quot;${dist.home}/docs&quot; &gt;
+  &lt;fileset dir=&quot;${build.home}/docs&quot;&gt;
+    &lt;include name=&quot;**/*.html&quot;&gt;
+  &lt;/fileset&gt;
+  &lt;filterset begintoken=&quot;%&quot; endtoken=&quot;*&quot;&gt;
+    &lt;filter token=&quot;DATE&quot; value=&quot;${DATE}&quot;/&gt;
+    &lt;filtersfile file=&quot;${user.home}/dist.properties&quot;/&gt;
+  &lt;/filterset&gt;
+&lt;/copy&gt;
+</PRE></BLOCKQUOTE>
+
+<HR>
+
+<P align=center>Copyright &copy; 2000,2001 Apache Software Foundation. All rights 
+Reserved.</P></BODY></HTML>

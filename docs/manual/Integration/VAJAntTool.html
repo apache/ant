@@ -19,18 +19,20 @@ Version 1.1 - 2001/02/14<br>
 <h2>Table of Contents</h2>
 <ul>
   <li><a href="#introduction">Introduction</a></li>
-  <li><a href="#tasks">The Tasks</a><a href="#introduction"></a></li>
-  <ul>
-    <li><a href="#vajload">VAJLoad</a></li>
-    <li><a href="#vajexport">VAJExport</a></li>
-    <li><a href="#vajimport">VAJImport</a></li>
-  </ul>
+  <li><a href="#tasks">The Tasks</a><a href="#introduction"></a>
+    <ul>
+      <li><a href="#vajload">VAJLoad</a></li>
+      <li><a href="#vajexport">VAJExport</a></li>
+      <li><a href="#vajimport">VAJImport</a></li>
+    </ul>
+  </li>
   <li><a href="#sample_buildfile">A sample build file</a><br></li>
-  <li><a href="#plugin">The Plugin</a></li>
-  <ul>
-    <li><a href="#installation">Installation</a></li>
-    <li><a href="#usage">Usage</a></li>
-  </ul>
+  <li><a href="#plugin">The Plugin</a>
+    <ul>
+      <li><a href="#installation">Installation</a></li>
+      <li><a href="#usage">Usage</a></li>
+    </ul>
+  </li>
   <li><a href="#faq">Frequently Asked Questions</a></li>
   <li><a href="#va_versions">Visual Age Versions</a></li>
   <li><a href="#history">History</a><a href="#history"></a></li>
@@ -114,8 +116,8 @@ These tasks are described in detail below.
 <h3>Example</h3>
 <pre>
 &lt;vajload&gt;
-    &lt;vajproject name="My Testcases" version="1.7beta" /&gt;
-    &lt;vajproject name="JUnit" version="3.2" /&gt;
+    &lt;vajproject name=&quot;My Testcases&quot; version=&quot;1.7beta&quot; /&gt;
+    &lt;vajproject name=&quot;JUnit&quot; version=&quot;3.2&quot; /&gt;
 &lt;/vajload&gt;
 </pre>
 
@@ -125,7 +127,7 @@ These tasks are described in detail below.
 <h3>Description:</h3>
 <p>Exports Java source files, class files and/or resources from the workspace
 to the file system. Exports can be specified by giving the VAJ project
-name and package name(s). This works very similar to <a href="index.html#fileset">
+name and package name(s). This works very similar to <a href="../CoreTypes/fileset.html">
 FileSets</a>. </p>
 
 <h3>Parameters</h3>
@@ -143,28 +145,28 @@ FileSets</a>. </p>
      </tr>
      <tr>
        <td valign="Top">exportSources</td>
-       <td valign="Top">export source files (default: "yes")</td>
+       <td valign="Top">export source files (default: &quot;yes&quot;)</td>
        <td valign="Top" align="Center">no</td>
      </tr>
      <tr valign="Top">
        <td valign="Top">exportResources</td>
-       <td valign="Top">export resource files (default: "yes")</td>
+       <td valign="Top">export resource files (default: &quot;yes&quot;)</td>
        <td valign="Top" align="Center">no</td>
      </tr>
      <tr valign="Top">
        <td valign="Top">exportClasses</td>
-       <td valign="Top">export class files (default: "no")</td>
+       <td valign="Top">export class files (default: &quot;no&quot;)</td>
        <td valign="Top" align="Center">no</td>
      </tr>
      <tr valign="Top">
        <td valign="Top">exportDebugInfo</td>
        <td valign="Top">include debug info in exported
-       class files (default: "no")</td>
+       class files (default: &quot;no&quot;)</td>
        <td valign="Top" align="Center">no</td>
      </tr>
      <tr valign="Top">
        <td valign="Top">defaultexcludes       </td>
-       <td valign="Top">use default excludes when exporting (default: "yes")
+       <td valign="Top">use default excludes when exporting (default: &quot;yes&quot;)
        <td valign="Top" align="Center">no</td>
      </tr>
   </tbody>
@@ -212,9 +214,9 @@ specifies the packages to exclude from the export<br>
 
 <h3>Example</h3>
 <pre>
-&lt;vajexport destdir="${src.dir}" exportResources="no"&gt;
-    &lt;include name="MyProject/**"/&gt;
-    &lt;exclude name="MyProject/test/**"/&gt;
+&lt;vajexport destdir=&quot;${src.dir}&quot; exportResources=&quot;no&quot;&gt;
+    &lt;include name=&quot;MyProject/**&quot;/&gt;
+    &lt;exclude name=&quot;MyProject/test/**&quot;/&gt;
 &lt;/vajexport&gt;
 </pre>
 This example exports all packages in the VAJ project 'MyProject', except
@@ -268,7 +270,7 @@ system into VAJ. These imports can be specified with a fileset. </p>
 <h3>Parameters specified as nested elements</h3>
 
 <h4>fileset</h4>
-A <a href="index.html#fileset">FileSet</a> specifies the files to import.
+A <a href="../CoreTypes/fileset.html">FileSet</a> specifies the files to import.
 
 <h3>Example</h3>
 <pre>

@@ -1,0 +1,195 @@
+<html>
+
+<head>
+<meta http-equiv="Content-Language" content="en-us">
+<title>Ant User Manual</title>
+</head>
+
+<body>
+
+<h2><a name="foreach">Pathconvert</a></h2>
+<h3>Description</h3>
+<p>Converts a nested path, path reference, or fileset reference to the form usable on a
+   specified platform
+   and stores the result in a given property.  This operation is useful when script files
+   (batch files or shell scripts) must be generated my the build system and they contain
+   path information that must be properly formatted for the target architecture, not the
+   architecture on which the build is running, or when you need to create a list of files
+   separated by a given character, like a comma or a space.
+</p>
+<p>Prefix maps can be specified to map Windows drive letters to Unix paths and vice
+   versa.</p>
+
+<h3>Parameters</h3>
+<table border="1" cellpadding="2" cellspacing="0">
+  <tr>
+    <td valign="top"><b>Attribute</b></td>
+    <td valign="top"><b>Description</b></td>
+    <td align="center" valign="top"><b>Required</b></td>
+  </tr>
+  <tr>
+    <td valign="top">targetos</td>
+    <td valign="top">
+        The target architecture.  Must be one of 'unix' or 'windows'.  <BR>This is a
+        shorthand mechanism for specifying both <tt>pathsep</tt> and <tt>dirsep</tt>
+        according to the specified target architecture.
+    </td>
+    <td valign="top" align="center">
+       Must specify one of <tt>targetos</tt>, <tt>pathsep</tt>,or <tt>dirsep</tt>.
+    </td>
+  </tr>
+  <tr>
+    <td valign="top">dirsep</td>
+    <td valign="top">
+       The character to use as the directory separator in the generated paths.
+    </td>
+    <td valign="top" align="center">No, defaults to current JVM <tt>File.separator</tt></td>
+  </tr>
+  <tr>
+    <td valign="top">pathsep</td>
+    <td valign="top">
+       The character to use as the path element separator in the generated paths.
+    </td>
+    <td valign="top" align="center">No, defaults to current JVM <tt>File.pathSeparator</tt></td>
+  </tr>
+  <tr>
+    <td valign="top">property</td>
+    <td valign="top">The name of the property in which to place the converted path</td>
+    <td valign="top" align="center">Yes</td>
+  </tr>
+  <tr>
+    <td valign="top">refid</td>
+    <td valign="top">What to convert, given as a
+        <a href="../using.html#references">reference</a> to a PATH or FILESET
+        defined elsewhere</td>
+    <td valign="top" align="center">No, if omitted a nested &lt;path> element must be supplied.</td>
+  </tr>
+</table>
+<h3>Parameters specified as nested elements</h3>
+<h4>map</h4>
+<p>Specifies the mapping of path prefixes between Unix and Windows.</p>
+<table border="1" cellpadding="2" cellspacing="0">
+  <tr>
+    <td valign="top"><b>Attribute</b></td>
+    <td valign="top"><b>Description</b></td>
+    <td align="center" valign="top"><b>Required</b></td>
+  </tr>
+  <tr>
+    <td valign="top">from</td>
+    <td valign="top">The prefix to match.  Note that this value is case insensitive when
+    the build is running on a windows platform and case sensitive when running on a
+    Unix platform.</td>
+    <td valign="top" align="center">Yes</td>
+  </tr>
+  <tr>
+    <td valign="top">to</td>
+    <td valign="top">The replacement text to use when <i>from</i> is matched.</td>
+    <td valign="top" align="center">Yes</td>
+  </tr>
+</table>
+
+<p>Each map element specifies a single replacement map to be applied to the elements of
+   the path being processed.  If no map entries are specified, then no path prefix mapping
+   is performed.
+</p>
+<p><i>Note that the map elements are applied in the order specified and the only the first
+   matching map element is applied.  So, the ordering of your map elements can be important
+   if any <TT>from</tt> values are prefixes of other <tt>from</tt> values.</i>
+</p>   
+<h4>path</h4>
+<p>If a path reference is not supplied using the <i>refid</i> attribute, then a
+   nested path element must be supplied.  See
+   <a href="../using.html#path">Path-like Structures</a> for details.</p>
+
+<h3>Examples</h3>
+<p>In the examples below, assume that the property <b>wl.home</b> has the value
+<tt>d:\weblogic</tt> on Windows and <tt>/weblogic</tt> on Unix.</p>
+<h4>Example 1</h4>
+<pre>
+    &lt;path id="wl.path"&gt;
+      &lt;pathelement location=&quot;${wl.home}/lib/weblogicaux.jar&quot; /&gt;
+      &lt;pathelement location=&quot;${wl.home}/classes&quot; /&gt;
+      &lt;pathelement location=&quot;${wl.home}/mssqlserver4/classes&quot; /&gt;
+      &lt;pathelement location=&quot;c:\winnt\System32&quot; /&gt;
+    &lt;/path&gt;
+    
+    &lt;pathconvert targetos=&quot;unix&quot; property=&quot;newpath&quot; refid=&quot;wl.path&quot;/&gt;
+</pre>
+<p>Assuming wl.property has the value "d:\weblogic", will generate the path shown below
+   and store it in the property named <tt>newpath</tt>
+</p>   
+<pre>
+/weblogic/lib/weblogicaux.jar:/weblogic/classes:/weblogic/mssqlserver4/classes:/WINNT/SYSTEM32
+</pre>
+Note that the drive letters have been removed.  This is the default behavior when no map
+elements have been specified.
+
+<h4>Example 2</h4>
+<pre>
+    
+    &lt;pathconvert targetos=&quot;unix&quot; property=&quot;newpath&quot; &gt;
+      &lt;path id="wl.path"&gt;
+        &lt;pathelement location=&quot;${wl.home}/lib/weblogicaux.jar&quot; /&gt;
+        &lt;pathelement location=&quot;${wl.home}/classes&quot; /&gt;
+        &lt;pathelement location=&quot;${wl.home}/mssqlserver4/classes&quot; /&gt;
+        &lt;pathelement location=&quot;c:\winnt\System32&quot; /&gt;
+      &lt;/path&gt;
+    &lt;/pathconvert&gt;
+</pre>
+This generates the exact same path as the previous example.  It demonstrates the use of
+a nested path element.
+<h4>Example 3</h4>
+<pre>
+    &lt;pathconvert targetos=&quot;unix&quot; property=&quot;newpath&quot; refid=&quot;wl.path&quot;&gt;
+      &lt;map from=&quot;d:&quot; to=&quot;/foo&quot;/&gt;
+      &lt;map from=&quot;c:&quot; to=&quot;/bar&quot;/&gt;
+    &lt;/pathconvert&gt;
+</pre>
+<p>This example specifies two map entries that will convert path elements that start with
+<tt>c:</tt> to <TT>/dos</tt> and <tt>d:</tt> to <TT>/</tt>.  The resulting path is shown
+below.</p>
+<pre>
+/weblogic/lib/weblogicaux.jar:/weblogic/classes:/weblogic/mssqlserver4/classes:/dos/WINNT/SYSTEM32
+</pre>
+<h4>Example 4</h4>
+<pre>
+    &lt;pathconvert targetos=&quot;windows&quot; property=&quot;newpath&quot; &gt;
+      &lt;path id="wl.path"&gt;
+        &lt;pathelement location=&quot;${wl.home}/lib/weblogicaux.jar&quot; /&gt;
+        &lt;pathelement location=&quot;${wl.home}/classes&quot; /&gt;
+        &lt;pathelement location=&quot;${wl.home}/mssqlserver4/classes&quot; /&gt;
+        &lt;pathelement location=&quot;/dos/winnt/System32&quot; /&gt;
+      &lt;/path&gt;
+      &lt;map from=&quot;/dos&quot; to=&quot;c:\&quot;/&gt;
+      &lt;map from=&quot;/&quot; to=&quot;d:\&quot;/&gt;
+    &lt;/pathconvert&gt;
+</pre>
+<p>This example, similar to the one above but targetting windows, specifies two map
+entries that will convert path elements that start with
+<tt>/dos</tt> to <TT>c:\</tt> and <tt>/</tt> to <TT>d:\</tt>.  Note that the order of the
+map elements was important here since <tt>/</tt> is a prefix of <tt>/dos</tt>.
+The resulting path is shown below.</p>
+<pre>
+d:\weblogic\lib\weblogicaux.jar;d:\weblogic\classes;d:\weblogic\mssqlserver4\classes;c:\WINNT\SYSTEM32
+</pre>
+<h4>Example 5</h4>
+<pre>
+    &lt;fileset dir=&quot;${src.dir}&quot; id=&quot;src.files&quot;&gt;
+      &lt;include name=&quot;**/*.java&quot;/&gt;
+    &lt;/fileset&gt;
+  
+    &lt;pathconvert pathsep=&quot;,&quot; property=&quot;javafiles&quot; refid=&quot;src.files&quot;/&gt;
+</pre>
+<p>This example takes the set of files determined by the fileset (all files ending
+in <tt>.java</tt>), joins them together separated by commas, and places the resulting
+list into the property <tt>javafiles</tt>.  The directory separator is not specified, so
+it defaults to the appropriate character for the current platform.  Such a list could
+then be used in another task, like <tt>javadoc</tt>, that requires a comma separated
+list of files.
+</p>
+<hr>
+
+</body>
+</html>
+
+ 

@@ -200,7 +200,7 @@ if there is a &quot;builddir&quot; property with the value
 <code>${builddir}/classes</code>.
 This is resolved as <code>build/classes</code>.</p>
 
-<h3>Built-in Properties</h3>
+<h3><a name="built-in-props">Built-in Properties</a></h3>
 <p>Ant provides access to all system properties as if they had been
 defined using a <code>&lt;property&gt;</code> task.
 For example, <code>${os.name}</code> expands to the
@@ -216,7 +216,7 @@ ant.version         the version of Ant
 ant.project.name    the name of the project that is currently executing;
                     it is set in the name attribute of &lt;project&gt;.
 ant.java.version    the JVM version Ant detected; currently it can hold
-                    the values &quot;1.1&quot;, &quot;1.2&quot; and &quot;1.3&quot;.
+                    the values &quot;1.1&quot;, &quot;1.2&quot;, &quot;1.3&quot; and &quot;1.4&quot;.
 </pre>
 
 <h3>Example</h3>
@@ -307,7 +307,7 @@ supports <code>path</code> and
       &lt;pathelement path=&quot;${classpath}&quot;/&gt;
     &lt;/classpath&gt;
 </pre>
-<p>can be abreviated to:</p>
+<p>can be abbreviated to:</p>
 <pre>
     &lt;classpath path=&quot;${classpath}&quot;/&gt;
 </pre>

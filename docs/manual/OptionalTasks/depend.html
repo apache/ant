@@ -54,41 +54,30 @@ relationships are sufficient - it is unusual for a class to depend on another
 without having a direct relationship. With closure set, you will notice that 
 depend typically removes far more class files. </p>
 
+<p>The classpath attribute for <code>&lt;depend&gt;</code> is optional. If it is present, 
+depend will check class dependencies against classes and jars on this classpath.
+Any classes which depend on an element from this classpath and which are older 
+than that element will be deleted. A typical example where you would use this 
+facility would be where you are building a utility jar and want to make sure 
+classes which are out of date with respect to this jar are rebuilt. You should
+<b>not</b> include jars in this classpath which you do not expect to change, 
+such as the JDK runtime jar or third party jars, since doing so will just slow 
+down the dependency check. This means that if you do use a classpath for the 
+depend task it may be different from the classpath necessary to actually 
+compile your code.</p>
+
 <h3>Performance</h3> 
 
 <p> The performance of the depend task is dependent on a 
 number of factors such as class relationship complexity and how many class files 
-are out of date. The following tests have been run when build Ant itself, on the 
-author's machine using JDK1.3 </p>
-
-<table border="1" cellpadding="2" cellspacing="0">
-  <tr>
-    <td>Building Ant from clean using Javac</td>
-    <td>11 seconds</td>
-  </tr>
-  <tr>
-    <td>Building Ant from clean using Jikes</td>
-    <td>5 seconds</td>
-  </tr>
-  <tr>
-    <td>Running &lt;depend&gt; when up-to-date and no cache</td>
-    <td>4 seconds (Depend takes 2 seconds)</td>
-  </tr>
-  <tr>
-    <td>Running &lt;depend&gt; when up-to-date and with a cache</td>
-    <td>2 seconds (Depend takes 1 seconds)</td>
-  </tr>
-</table>
-
-<p> This involves compiling 177 files. The above figures are indicative only. 
-The decision about whether it is cheaper to just recompile all classes or to 
-use the depend task will depend on the size of your project and how interrelated 
-your classes are. </p>
+are out of date. The decision about whether it is cheaper to just recompile all 
+classes or to use the depend task will depend on the size of your project and 
+how interrelated your classes are. </p>
 
 
 <h3>Limitations</h3>
 
-<p> There are some dependencies which depend will not detect. </p>
+<p> There are some source dependencies which depend will not detect. </p>
 
 <ul>
 <li>If the Java compiler optimizes away a class relationship, 
@@ -112,8 +101,8 @@ your classes are. </p>
   <tr>
     <td valign="top">srcDir</td>
     <td valign="top">This is the directory where the source exists. depend
-will examine this to determine which classes. If you use multiple
-source directories you can pass this a path of source directories.</td>
+will examine this to determine which classes are out of date. If you use multiple
+source directories you can pass this attribute a path of source directories.</td>
     <td valign="top" align="center">Yes</td>
   </tr>
   <tr>
@@ -137,14 +126,31 @@ depend will traverse the class dependency graph deleting all affected
 classes. Defaults to false</td>
     <td valign="top" align="center">No</td>
   </tr>
+  <tr>
+    <td valign="top">dump</td>
+    <td valign="top">If true the dependency information will be written to the debug level log
+                     </td>
+    <td valign="top" align="center">No</td>
+  </tr>
+  <tr>
+    <td valign="top">classpath</td>
+    <td valign="top">The classpath containg jars and classes for which <code>&lt;depend&gt;</code> should also
+                     check dependencies</td>
+    <td valign="top" align="center">No</td>
+  </tr>
 </table>
+
+<h3>Nested Elements</h3>
+<p><code>depend</code>'s <i>classpath</i> attribute is a 
+<a href="../using.html#path">PATH like structure</a> and can also be set
+via a nested <i>classpath</i> element.</p>
 
 <h3>Examples</h3>
 <blockquote>
-  <pre>    &lt;depend srcdir=&quot;${java.dir}&quot;
-    destdir=&quot;${build.classes}&quot;
-    cache=&quot;depcache&quot;
-    closure=&quot;yes&quot;/&gt;</pre>
+<pre>&lt;depend srcdir=&quot;${java.dir}&quot;
+        destdir=&quot;${build.classes}&quot;
+        cache=&quot;depcache&quot;
+        closure=&quot;yes&quot;/&gt;</pre>
 </blockquote>
 
 <p> In this example classes in the ${build.classes} directory will be removed if 
