@@ -207,6 +207,13 @@
         <isset property="jdk1.2+" />
       </and>
     </condition>
+
+    <condition property="run.sqlexec.test">
+      <or>
+        <equals arg1="${junit.fork}" arg2="true" />
+        <equals arg1="${build.sysclasspath}" arg2="only" />
+      </or>
+    </condition>
   </target>
 
   <!--
@@ -885,16 +892,20 @@
           <exclude name="${optional.package}/sitraka/*.java" unless="jakarta.oro.present" />
           <exclude name="${optional.package}/ReplaceRegExpTest.java"
                    unless="some.regexp.support" />
-
-          <!-- it's an abstract class, not a test -->
-          <exclude name="org/apache/tools/ant/taskdefs/optional/AbstractXSLTLiaisonTest.java" />
-          <exclude name="org/apache/tools/ant/taskdefs/optional/XslpLiaisonTest.java" unless="xslp.present"/>
-          <exclude name="org/apache/tools/ant/taskdefs/optional/XalanLiaisonTest.java" unless="xalan.present"/>
+          <exclude name="org/apache/tools/ant/taskdefs/optional/XslpLiaisonTest.java" 
+                   unless="xslp.present"/>
+          <exclude name="org/apache/tools/ant/taskdefs/optional/XalanLiaisonTest.java" 
+                   unless="xalan.present"/>
 
           <exclude name="org/apache/tools/ant/taskdefs/optional/AdaptxLiaisonTest.java"
                    unless="adaptx.present"/>
           <exclude name="org/apache/tools/ant/taskdefs/optional/AdaptxLiaisonTest.java"
                    unless="xerces.present"/>
+          <exclude name="${optional.package}/perforce/*.java"
+                   unless="jakarta.oro.present" />
+
+          <!-- it's an abstract class, not a test -->
+          <exclude name="org/apache/tools/ant/taskdefs/optional/AbstractXSLTLiaisonTest.java" />
 
           <!-- ehm, this is not really a TraX test but rather a xalan2 test..-->
           <exclude name="org/apache/tools/ant/taskdefs/optional/TraXLiaisonTest.java" unless="xalan2.present"/>
@@ -905,11 +916,15 @@
           <exclude name="${optional.package}/junit/JUnitTestRunnerTest.java"
                    unless="jdk1.2+" />
 
-          <exclude name="${optional.package}/perforce/*.java"
-                   unless="jakarta.oro.present" />
-
           <!-- interactive test -->
           <exclude name="org/apache/tools/ant/taskdefs/TestProcess.java" />
+
+          <!--  This test only passes if SQLExecTest and SQLExec have
+          been loaded by the same classloader - will throw
+          IllegalAccessExceptions otherwise.  -->
+          <exclude name="org/apache/tools/ant/taskdefs/SQLExecTest.java"
+                   unless="run.sqlexec.test" />
+
         </fileset>
       </batchtest>
 
