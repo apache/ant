@@ -86,11 +86,13 @@ public class Copydir extends MatchingTask {
 
     public void execute() throws BuildException {
         if (srcDir == null) {
-            throw new BuildException("srcdir attribute must be set!");
+            throw new BuildException("srcdir attribute must be set!", 
+                                     location);
         }
 
         if (!srcDir.exists()) {
-            throw new BuildException("srcdir does not exist!");
+            throw new BuildException("srcdir "+srcDir.toString()
+                                     +" does not exist!", location);
         }
 
         DirectoryScanner ds = super.getDirectoryScanner(srcDir);
@@ -109,7 +111,7 @@ public class Copydir extends MatchingTask {
                 } catch (IOException ioe) {
                     String msg = "Failed to copy " + fromFile + " to " + toFile
                         + " due to " + ioe.getMessage();
-                    throw new BuildException(msg);
+                    throw new BuildException(msg, ioe, location);
                 }
             }
         }
