@@ -54,7 +54,10 @@
 
 package org.apache.tools.ant.taskdefs;
 
-import org.apache.tools.ant.*;
+import org.apache.tools.ant.BuildException;
+import org.apache.tools.ant.Project;
+import org.apache.tools.ant.ProjectHelper;
+import org.apache.tools.ant.Task;
 
 import java.io.File;
 import java.io.IOException;
@@ -92,67 +95,68 @@ import java.util.Vector;
  * @ant.task category="control"
  */
 public class ImportTask extends Task {
-    String file;
+    private String file;
 
     /**
      * the name of the file to import. How relative paths are resolved is still
      * in flux: use absolute paths for safety.
-     * @param file
+     * @param file the name of the file
      */
-    public void setFile( String file ) {
+    public void setFile(String file) {
         // I don't think we can use File - different rules
         // for relative paths.
-        this.file=file;
+        this.file = file;
     }
 
     /**
      *  This relies on the task order model.
      *
      */
-    public void execute() throws BuildException
-    {
+    public void execute() {
         if (file == null) {
             throw new BuildException("import requires file attribute");
         }
 
-        ProjectHelper helper=
-                (ProjectHelper)getProject().getReference("ant.projectHelper");
-        Vector importStack=helper.getImportStack();
-        if( importStack.size() == 0) {
+        ProjectHelper helper =
+                (ProjectHelper) getProject().getReference("ant.projectHelper");
+        Vector importStack = helper.getImportStack();
+        if (importStack.size() == 0) {
             // this happens if ant is used with a project
             // helper that doesn't set the import.
             throw new BuildException("import requires support in ProjectHelper");
         }
-        Object currentSource=importStack.elementAt(importStack.size() - 1);
+        Object currentSource = importStack.elementAt(importStack.size() - 1);
 
 //        ProjectHelper2.AntXmlContext context;
 //        context=(ProjectHelper2.AntXmlContext)project.getReference("ant.parsing.context");
 
 //        File buildFile=context.buildFile;
 //        File buildFileParent=context.buildFileParent;
-        File buildFile=(File)currentSource;
-        buildFile=new File( buildFile.getAbsolutePath());
+        File buildFile = (File) currentSource;
+        buildFile = new File(buildFile.getAbsolutePath());
         //System.out.println("Importing from " + currentSource);
-        File buildFileParent=new File(buildFile.getParent());
+        File buildFileParent = new File(buildFile.getParent());
 
-        getProject().log("Importing file "+ file +" from "+
-                    buildFile.getAbsolutePath(), Project.MSG_VERBOSE);
+        getProject().log("Importing file " + file + " from "
+                         + buildFile.getAbsolutePath(), Project.MSG_VERBOSE);
 
         // Paths are relative to the build file they're imported from,
         // *not* the current directory (same as entity includes).
         File importedFile = new File(file);
         if (!importedFile.isAbsolute()) {
-            importedFile = new File( buildFileParent, file);
+            importedFile = new File(buildFileParent, file);
         }
 
         if (!importedFile.exists()) {
-                throw new BuildException("Cannot find "+file+" imported from "+
-                                         buildFile.getAbsolutePath());
+                throw new BuildException(
+                    "Cannot find " + file + " imported from "
+                    + buildFile.getAbsolutePath());
         }
 
-        if( importStack.contains(importedFile) ) {
-            getProject().log("\nSkipped already imported file to avoid loop:\n   "+
-                    importedFile + "\n",Project.MSG_WARN);
+        if (importStack.contains(importedFile)) {
+            getProject().log(
+                "\nSkipped already imported file to avoid loop:\n   "
+                + importedFile + "\n", Project.MSG_WARN);
             return;
         }
 
@@ -176,14 +180,13 @@ public class ImportTask extends Task {
 //        context.helper.parse(project, importedFile,
 //                new ProjectHelper2.RootHandler(context));
 
-        helper.parse( getProject(), importedFile );
+        helper.parse(getProject(), importedFile);
     }
 
     private static String getPath(File file) {
         try {
             return file.getCanonicalPath();
-        }
-        catch (IOException e) {
+        } catch (IOException e) {
             return file.getAbsolutePath();
         }
     }
