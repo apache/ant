@@ -289,11 +289,11 @@ public class Copy extends Task {
         }
 
         if (destFile != null && destDir != null) {
-            throw new BuildException("Only one of destfile and destdir may be set.");
+            throw new BuildException("Only one of tofile and todir may be set.");
         }
 
         if (destFile == null && destDir == null) {
-            throw new BuildException("One of destfile or destdir must be set.");
+            throw new BuildException("One of tofile or todir must be set.");
         }
 
         if (file != null && file.exists() && file.isDirectory()) {
