@@ -24,7 +24,8 @@ Note: This document was created in the context of releasing Ant 1.5.
     merge-backs to the main branch and even selected merges from the the main 
     branch to the release branch.  
     
-    [[ TODO: More information on multiple merge-backs needed ]]
+    For more information on performing branching and merging, please visit
+    http://www.durak.org/cvswebsites/doc/cvs_54.php#SEC54
 
     Label such branches ANT_15_BRANCH.
     
