@@ -158,12 +158,12 @@ public class Manifest {
             return name;
         }
         
-        public void read(BufferedReader reader) throws IOException {
+        public String read(BufferedReader reader) throws IOException {
             Attribute attribute = null;
             while (true) { 
                 String line = reader.readLine();
                 if (line == null || line.length() == 0) {
-                    return;
+                    return null;
                 }
                 if (line.charAt(0) == ' ') {
                     // continuation line
@@ -174,8 +174,8 @@ public class Manifest {
                 }
                 else {
                     attribute = new Attribute(line);
-                    if (name == null && attribute.getName().equalsIgnoreCase(ATTR_NAME)) {
-                        throw new IOException("The " + ATTR_NAME + " header may not occur in the main section ");
+                    if (attribute.getName().equalsIgnoreCase(ATTR_NAME)) {
+                        return attribute.getValue();
                     }
                     
                     if (attribute.getName().toLowerCase().startsWith(ATTR_FROM.toLowerCase())) {
@@ -254,27 +254,37 @@ public class Manifest {
         }
         
         // This should be the manifest version
-        Attribute version = new Attribute(line);
-        if (!version.getName().equalsIgnoreCase(ATTR_MANIFEST_VERSION)) {
-            throw new IOException("Manifest must start with \"" + ATTR_MANIFEST_VERSION + 
-                                  "\" and not \"" + line + "\"");
+        String nextSectionName = mainSection.read(reader);
+        String readManifestVersion = mainSection.getAttributeValue(ATTR_MANIFEST_VERSION);
+        if (readManifestVersion != null) {
+            manifestVersion = readManifestVersion;
+            mainSection.removeAttribute(ATTR_MANIFEST_VERSION);
         }
-        manifestVersion = version.getValue();
-        mainSection.read(reader);
-        
+
         while ((line = reader.readLine()) != null) {
             if (line.length() == 0) {
                 continue;
             }
-            Attribute sectionName = new Attribute(line);
-            if (!sectionName.getName().equalsIgnoreCase(ATTR_NAME)) {
-                throw new IOException("Manifest sections should start with a \"" + ATTR_NAME + 
-                                      "\" attribute and not \"" + sectionName.getName() + "\"");
-            }
-                
+            
             Section section = new Section();
-            section.setName(sectionName.getValue());
-            section.read(reader);
+            if (nextSectionName == null) {
+                Attribute sectionName = new Attribute(line);
+                if (!sectionName.getName().equalsIgnoreCase(ATTR_NAME)) {
+                    throw new IOException("Manifest sections should start with a \"" + ATTR_NAME + 
+                                          "\" attribute and not \"" + sectionName.getName() + "\"");
+                }
+                nextSectionName = sectionName.getValue();
+            }
+            else {
+                // we have already started reading this section
+                // this line is the first attribute. set it and then let the normal
+                // read handle the rest
+                Attribute firstAttribute = new Attribute(line);
+                section.addAttribute(firstAttribute);
+            }
+                    
+            section.setName(nextSectionName);
+            nextSectionName = section.read(reader);
             sections.put(section.getName().toLowerCase(), section);
         }
     }
