@@ -10,11 +10,28 @@
 
 <h2><a name="signjar">SignJar</a></h2>
 <h3>Description</h3>
-<p>Signs jar or zip files with the javasign command line tool. The
-tool detailed dependency checking: files are only signed if they
-are not signed. The <tt>signjar</tt> attribute can point to the file to
-generate; if this file exists then
-its modification date is used as a cue as to whether to resign any JAR file.
+<p>Signs JAR files with the <tt>jarsigner</tt> command line tool. 
+It will take a named file in the <tt>jar</tt> attribute, and an optional
+<tt>destDir</tt> or <tt>signedJar</tt> attribute. Nested filesets are also
+supported; here only an (optional) <tt>destDir</tt> is allowed. If a destination
+directory or explicit JAR file name is not provided, JARs are signed in place.
+</p>
+<p>
+Dependency rules
+</p>
+<ul>
+<li>Nonexist destination JARs are created/signed</li>
+<li>Out of date destination JARs are created/signed</li>
+<li>If a destination file and a source file are the same,
+and <tt>lazy</tt> is true, the JAR is only signed if it does not 
+contain any signature.</li> 
+<li>If a destination file and a source file are the same,
+and <tt>lazy</tt> is false, the JAR is signed.</li> 
+</ul>
+
+<p>
+When checking signatures, the actual signatory itself is not verified. This
+means that "lazy" checks do not work if a JAR is signed by multiple authors.
 </p>
 
 <h3>Parameters</h3>
@@ -62,8 +79,9 @@ its modification date is used as a cue as to whether to resign any JAR file.
   </tr>
   <tr>
     <td valign="top">signedjar</td>
-    <td valign="top">name of signed JAR file</td>
-    <td valign="top" align="center">No</td>
+    <td valign="top">name of signed JAR file. This can only be set when 
+    the <tt>jar</tt> attribute is set.</td>
+    <td valign="top" align="center">No.</td>
   </tr>
   <tr>
     <td valign="top">verbose</td>
@@ -84,7 +102,8 @@ block</td>
   <tr>
     <td valign="top">lazy</td>
     <td valign="top">flag to control whether the presence of a signature
-  file means a JAR is signed</td>
+  file means a JAR is signed. This is only used when the target JAR matches
+  the source JAR</td>
     <td valign="top" align="center">No; default false</td>
   </tr>
   <tr>
@@ -95,8 +114,8 @@ block</td>
   </tr>
   <tr>
     <td valign="top">preservelastmodified</td>
-    <td valign="top">Give the signed file the same last modified
-      time as the original jar file.</td>
+    <td valign="top">Give the signed files the same last modified
+      time as the original jar files.</td>
     <td valign="top" align="center">No; default false.</td>
   </tr>
 </table>
@@ -109,11 +128,17 @@ block</td>
   </tr>
   <tr>
     <td valign="top">fileset</td>
-    <td valign="top">fileset of JAR files to sign.  Will be ignored if
-      the jar attribute of the task has been set.</td>
+    <td valign="top">fileset of JAR files to sign. </td>
     <td valign="top" align="center">No</td>
   </tr>
-</table>
+<!--   
+  <tr>
+    <td valign="top">mapper</td>
+    <td valign="top">A mapper to rename jar files during signing</td>
+    <td valign="top" align="center">No, and only one can be supplied</td>
+  </tr>
+ -->
+ </table>
 <h3>Examples</h3>
   <blockquote><pre>
 &lt;signjar jar=&quot;${dist}/lib/ant.jar&quot;
