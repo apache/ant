@@ -62,16 +62,15 @@ Perform code covering functions by comparing source code line execution to the p
     <td valign="top">
     Indicates which virtual machine to run.
     Must be one of "jdk117", "jdk118" or "java2".If "java2" is specified, the user is
-    also required to specify a path via <tt>javahome</tt>, otherwise it will check if
+    also required to specify a path via <tt>javaexe</tt>, otherwise it will check if
     the current executing VM is 1.2+ and use its java.home property to determine its
-    location.
-    in the registry for the default 1.2.x (Java 2) VM.</td>
+    location.</td>
     <td align="center" valign="top">No, default to embedded VM if 1.2+</td>
   </tr>
   <tr>
     <td valign="top">javaexe</td> 
     <td valign="top">The path to the java executable.</td>
-    <td align="center" valign="top">No, use only for java2</td>
+    <td align="center" valign="top">No, use only for java2 vm.</td>
   </tr>
   
   <tr>
