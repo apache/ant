@@ -1,0 +1,73 @@
+<html>
+<head>
+<title>LoadFile</title>
+</head>
+
+<body>
+
+<h2><a name="loadfile">LoadFile</a></h2>
+<h3>Description</h3>
+<p>
+ Load a text file into a single property. Unless an encoding is specified,
+ the encoding of the current locale is used. There is no explicit limit
+ upon the size of the file which can be loaded, but loading very large
+ files is not something anyone has yet explored. 
+ 
+</p>
+
+<h3>Parameters</h3>
+<table border="1" cellpadding="2" cellspacing="0">
+  <tr> 
+    <td valign="top"><b>Attribute</b></td>
+    <td valign="top"><b>Description</b></td>
+    <td align="center" valign="top"><b>Required</b></td>
+  </tr>
+  <tr> 
+    <td valign="top">srcFile</td>
+    <td valign="top">source file</td>
+    <td valign="top" align="center">Yes</td>
+  </tr>
+  <tr> 
+    <td valign="top">property</td>
+    <td valign="top">property to save to</td>
+    <td valign="top" align="center">Yes</td>
+  </tr>
+  <tr> 
+    <td valign="top">encoding</td>
+    <td valign="top">encoding to use when loading the file</td>
+    <td align="center" valign="top">No</td>
+  </tr>
+  <tr> 
+    <td valign="top">failonerror</td>
+    <td valign="top">Whether to halt the build on failure</td>
+    <td align="center" valign="top">No, default "true"</td>
+  </tr>
+</table>
+
+<h3>Examples</h3>
+<pre>    &lt;loadfile property="mail.recipients"
+      srcFile="recipients.txt" / &gt;
+</pre>
+Load file recipients.txt into property "mail.recipients"
+
+<pre>    &lt;loadfile property="encoded-file"
+      srcFile="loadfile.xml"
+      encoding="ISO-8859-1" / &gt;
+</pre>
+Load a file using the latin-1 encoding
+
+<pre>    &lt;loadfile 
+      property="optional.value" 
+      srcFile="optional.txt" 
+      failonerror="false" /&gt;
+</pre>
+Load a file, don't fail if it is missing (a message is printed, though) 
+
+<hr>
+
+<p align="center">Copyright &copy; 2000,2001 Apache Software Foundation. All rights
+Reserved.</p>
+
+</body>
+</html>
+
