@@ -94,7 +94,7 @@ Other changes:
 
 * The attributes zipfile, jarfile, warfile and earfile (from the Zip, 
   Jar, War and Ear tasks) have been deprecated and superseded by a 
-  new attribute "file".
+  new attribute "destfile".
 
 * Added a new condition <isset> that test for the existence of a
   property to the condition task.
