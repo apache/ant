@@ -341,8 +341,9 @@ Legal:
             destfile="../../generated-manifest.txt"
             extension-name="org.realityforge.dve"
             specification-version="1.0"
-            specification-vendor="Peter Donald"
-            >
+            specification-vendor="Peter Donald" >
+            <attribute name="Main-class"
+                       value="org.realityforg.dve.WorldGen"/>
             <depends dir="../../">
                 <include name="src/ant1compat/jar/*.jar"/>
             </depends>

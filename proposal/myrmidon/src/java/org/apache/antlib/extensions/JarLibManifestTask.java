@@ -114,6 +114,12 @@ public class JarLibManifestTask
     private String m_implementationURL;
 
     /**
+     * Extra attributes the user specifies for main section
+     * in manifest.
+     */
+    private final ArrayList m_extraAttributes = new ArrayList();
+
+    /**
      * Set the name of extension in generated manifest.
      *
      * @param extensionName the name of extension in generated manifest
@@ -213,6 +219,16 @@ public class JarLibManifestTask
         m_optionals.addElement( fileSet );
     }
 
+    /**
+     * Adds an attribute that is to be put in main section of manifest.
+     *
+     * @param attribute an attribute that is to be put in main section of manifest.
+     */
+    public void addAttribute( final ExtraAttribute attribute )
+    {
+        m_extraAttributes.add( attribute );
+    }
+
     public void execute()
         throws TaskException
     {
@@ -223,6 +239,8 @@ public class JarLibManifestTask
 
         attributes.put( Attributes.Name.MANIFEST_VERSION, MANIFEST_VERSION );
         attributes.putValue( "Created-By", Constants.BUILD_DESCRIPTION );
+
+        appendExtraAttributes( attributes );
 
         appendExtensionData( attributes );
 
@@ -266,6 +284,24 @@ public class JarLibManifestTask
             final String message =
                 REZ.getString( "manifest.bad-file.error", m_destfile );
             throw new TaskException( message );
+        }
+    }
+
+    /**
+     * Add any extra attributes to the manifest.
+     *
+     * @param attributes the manifest section to write
+     *        attributes to
+     */
+    private void appendExtraAttributes( final Attributes attributes )
+    {
+        final Iterator iterator = m_extraAttributes.iterator();
+        while( iterator.hasNext() )
+        {
+            final ExtraAttribute attribute =
+                (ExtraAttribute)iterator.next();
+            attributes.putValue( attribute.getName(),
+                                 attribute.getValue() );
         }
     }
 
