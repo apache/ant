@@ -67,7 +67,7 @@ import java.io.PrintStream;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.Task;
-import org.apache.tools.ant.util.DelayedFileOutputStream;
+import org.apache.tools.ant.util.LazyFileOutputStream;
 import org.apache.tools.ant.util.StringUtils;
 import org.apache.tools.ant.util.TeeOutputStream;
 
@@ -269,8 +269,7 @@ public class Redirector {
             errorStream = new LogOutputStream(managingTask, Project.MSG_WARN);
         } else {
             if (out != null)  {
-                outputStream
-                    = new DelayedFileOutputStream(out, append);
+                outputStream = new LazyFileOutputStream(out, append);
                 managingTask.log("Output redirected to " + out,
                                  Project.MSG_VERBOSE);
             }
@@ -296,8 +295,7 @@ public class Redirector {
         }
 
         if (error != null)  {
-            errorStream
-                = new DelayedFileOutputStream(error, append);
+            errorStream = new LazyFileOutputStream(error, append);
             managingTask.log("Error redirected to " + error,
                              Project.MSG_VERBOSE);
         }
@@ -460,8 +458,18 @@ public class Redirector {
         if (inputStream != null) {
             inputStream.close();
         }
+
+        if (outputStream instanceof LazyFileOutputStream) {
+            ((LazyFileOutputStream) outputStream).open();
+        }
         outputStream.close();
-        errorStream.close();
+
+        if (errorStream != outputStream) {
+            if (errorStream instanceof LazyFileOutputStream) {
+                ((LazyFileOutputStream) errorStream).open();
+            }
+            errorStream.close();
+        }
 
         if (baos != null) {
             setPropertyFromBAOS(baos, outputProperty);

@@ -65,7 +65,7 @@ import java.io.OutputStream;
  *
  * @since Ant 1.6
  */
-public class DelayedFileOutputStream extends OutputStream {
+public class LazyFileOutputStream extends OutputStream {
 
     private FileOutputStream fos;
     private File file;
@@ -77,7 +77,7 @@ public class DelayedFileOutputStream extends OutputStream {
      * Creates a stream that will eventually write to the file with
      * the given name and replace it.
      */
-    public DelayedFileOutputStream(String name) {
+    public LazyFileOutputStream(String name) {
         this(name, false);
     }
 
@@ -86,7 +86,7 @@ public class DelayedFileOutputStream extends OutputStream {
      * the given name and optionally append to instead of replacing
      * it.
      */
-    public DelayedFileOutputStream(String name, boolean append) {
+    public LazyFileOutputStream(String name, boolean append) {
         this(new File(name), append);
     }
 
@@ -94,7 +94,7 @@ public class DelayedFileOutputStream extends OutputStream {
      * Creates a stream that will eventually write to the file with
      * the given name and replace it.
      */
-    public DelayedFileOutputStream(File f) {
+    public LazyFileOutputStream(File f) {
         this(f, false);
     }
 
@@ -103,7 +103,7 @@ public class DelayedFileOutputStream extends OutputStream {
      * the given name and optionally append to instead of replacing
      * it.
      */
-    public DelayedFileOutputStream(File file, boolean append) {
+    public LazyFileOutputStream(File file, boolean append) {
         this.file = file;
         this.append = append;
     }
