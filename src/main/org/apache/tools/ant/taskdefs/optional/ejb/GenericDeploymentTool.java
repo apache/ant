@@ -262,10 +262,9 @@ public class GenericDeploymentTool implements EJBDeploymentTool {
            }       
         }
         catch (IOException ioe) {
-            String msg = "IOException while adding entry "
-                         + logicalFilename + " to jarfile from " + inputFile.getPath() + "."
-                         + ioe.getMessage();
-            throw new BuildException(msg, ioe);
+            log("WARNING: IOException while adding entry " + 
+                logicalFilename + " to jarfile from " + inputFile.getPath() + " " + 
+                ioe.getClass().getName() + "-" + ioe.getMessage(), Project.MSG_WARN);
         }
         finally {
             // Close up the file input stream for the class file

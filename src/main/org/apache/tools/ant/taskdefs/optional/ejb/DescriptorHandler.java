@@ -338,7 +338,8 @@ public class DescriptorHandler extends org.xml.sax.HandlerBase {
 
             // If it's a primitive wrapper then we shouldn't try and put
             // it into the jar, so ignore it.
-            if (!className.startsWith("java.lang")) {
+            if (!className.startsWith("java.") &&
+                !className.startsWith("javax.")) {
                 // Translate periods into path separators, add .class to the
                 // name, create the File object and add it to the Hashtable.
                 className = className.replace('.', File.separatorChar);
