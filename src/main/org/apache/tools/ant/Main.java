@@ -603,6 +603,7 @@ public class Main implements AntMain {
 
             PrintStream err = System.err;
             PrintStream out = System.out;
+            InputStream in = System.in;
 
             // use a system manager that prevents from System.exit()
             // only in JDK > 1.1
@@ -668,6 +669,7 @@ public class Main implements AntMain {
 
                 System.setOut(out);
                 System.setErr(err);
+                System.setIn(in);
             }
         } catch (RuntimeException exc) {
             error = exc;
