@@ -8,8 +8,8 @@
 package org.apache.tools.ant.taskdefs.exec;
 
 import java.io.IOException;
+import java.io.OutputStream;
 import org.apache.myrmidon.api.TaskException;
-import org.apache.tools.ant.Task;
 
 /**
  * Logs standard output and error of a subprocess to the log system of ant.
@@ -19,17 +19,9 @@ import org.apache.tools.ant.Task;
 public class LogStreamHandler
     extends PumpStreamHandler
 {
-    /**
-     * Creates a new instance of this class.
-     *
-     * @param task the task for whom to log
-     * @param outlevel the loglevel used to log standard output
-     * @param errlevel the loglevel used to log standard error
-     */
-    public LogStreamHandler( Task task, int outlevel, int errlevel )
+    public LogStreamHandler( final OutputStream output, final OutputStream error )
     {
-        super( new LogOutputStream( task, outlevel ),
-               new LogOutputStream( task, errlevel ) );
+        super( output, error );
     }
 
     public void stop()
