@@ -11,6 +11,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.Properties;
 import org.apache.aut.nativelib.Os;
+import org.apache.aut.nativelib.ExecManager;
 import org.apache.avalon.excalibur.i18n.ResourceManager;
 import org.apache.avalon.excalibur.i18n.Resources;
 import org.apache.myrmidon.api.AbstractTask;
@@ -171,7 +172,8 @@ public class Exec
 
         logExecDetails( environment );
 
-        final Execute2 exe = new Execute2();
+        final ExecManager execManager = (ExecManager)getService( ExecManager.class );
+        final Execute2 exe = new Execute2( execManager );
         setupLogger( exe );
         exe.setTimeout( m_timeout );
         exe.setWorkingDirectory( m_dir );

@@ -21,6 +21,7 @@ import org.apache.tools.ant.types.CommandlineJava;
 import org.apache.tools.ant.types.Path;
 import org.apache.tools.ant.types.Commandline;
 import org.apache.avalon.excalibur.io.IOUtil;
+import org.apache.aut.nativelib.ExecManager;
 
 /**
  * Simple Metamata MParse task based on the original written by <a
@@ -286,7 +287,8 @@ public class MParse
             return;
         }
 
-        final Execute2 exe = new Execute2();
+        final ExecManager execManager = (ExecManager)getService( ExecManager.class );
+        final Execute2 exe = new Execute2( execManager );
         setupLogger( exe );
         getLogger().debug( m_cmdl.toString() );
         final String[] commandline = m_cmdl.getCommandline();

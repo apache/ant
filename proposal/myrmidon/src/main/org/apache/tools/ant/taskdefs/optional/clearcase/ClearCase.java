@@ -13,6 +13,7 @@ import org.apache.myrmidon.api.TaskException;
 import org.apache.tools.ant.Task;
 import org.apache.tools.ant.taskdefs.exec.Execute2;
 import org.apache.tools.ant.types.Commandline;
+import org.apache.aut.nativelib.ExecManager;
 
 /**
  * A base class for creating tasks for executing commands on ClearCase. <p>
@@ -107,7 +108,8 @@ public abstract class ClearCase extends Task
     {
         try
         {
-            final Execute2 exe = new Execute2();
+            final ExecManager execManager = (ExecManager)getService( ExecManager.class );
+            final Execute2 exe = new Execute2( execManager );
             setupLogger( exe );
             exe.setWorkingDirectory( getBaseDirectory() );
             exe.setCommandline( cmd );

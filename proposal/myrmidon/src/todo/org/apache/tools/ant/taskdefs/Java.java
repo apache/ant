@@ -19,6 +19,7 @@ import org.apache.tools.ant.types.Commandline;
 import org.apache.tools.ant.types.CommandlineJava;
 import org.apache.tools.ant.types.EnvironmentVariable;
 import org.apache.tools.ant.types.Path;
+import org.apache.aut.nativelib.ExecManager;
 
 /**
  * This task acts as a loader for java applications but allows to use the same
@@ -217,7 +218,8 @@ public class Java
     private int run( final Commandline command )
         throws TaskException
     {
-        final Execute2 exe = new Execute2();
+        final ExecManager execManager = (ExecManager)getService( ExecManager.class );
+        final Execute2 exe = new Execute2( execManager );
         setupLogger( exe );
 
         if( m_dir == null )

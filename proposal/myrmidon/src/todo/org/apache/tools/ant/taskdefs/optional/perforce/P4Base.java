@@ -10,6 +10,7 @@ package org.apache.tools.ant.taskdefs.optional.perforce;
 import java.io.IOException;
 import org.apache.myrmidon.api.TaskException;
 import org.apache.aut.nativelib.ExecOutputHandler;
+import org.apache.aut.nativelib.ExecManager;
 import org.apache.oro.text.perl.Perl5Util;
 import org.apache.tools.ant.taskdefs.exec.Execute2;
 import org.apache.tools.ant.types.Commandline;
@@ -165,7 +166,8 @@ public abstract class P4Base
                 handler = this;
             }
 
-            final Execute2 exe = new Execute2();
+            final ExecManager execManager = (ExecManager)getService( ExecManager.class );
+            final Execute2 exe = new Execute2( execManager );
             exe.setExecOutputHandler( handler );
             exe.setCommandline( cmd );
 

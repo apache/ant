@@ -20,7 +20,6 @@ import org.apache.tools.ant.taskdefs.Java;
 import org.apache.tools.ant.taskdefs.Javac;
 import org.apache.tools.ant.taskdefs.MatchingTask;
 import org.apache.tools.ant.taskdefs.compilers.DefaultCompilerAdapter;
-import org.apache.antlib.file.Mkdir;
 import org.apache.tools.ant.types.DirectoryScanner;
 import org.apache.tools.ant.types.Path;
 
@@ -708,13 +707,9 @@ public class IContract extends MatchingTask
             // Prepare the directories for iContract. iContract will make them if they
             // don't exist, but for some reason I don't know, it will complain about the REP files
             // afterwards
-            Mkdir mkdir = (Mkdir)getProject().createTask( "mkdir" );
-            mkdir.setDir( instrumentDir );
-            mkdir.execute();
-            mkdir.setDir( buildDir );
-            mkdir.execute();
-            mkdir.setDir( repositoryDir );
-            mkdir.execute();
+            instrumentDir.mkdirs();
+            buildDir.mkdirs();
+            repositoryDir.mkdirs();
 
             // Set the classpath that is needed for regular Javac compilation
             Path baseClasspath = createClasspath();

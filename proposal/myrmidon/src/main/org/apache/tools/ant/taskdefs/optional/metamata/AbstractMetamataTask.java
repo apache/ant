@@ -25,6 +25,7 @@ import org.apache.tools.ant.types.FileSet;
 import org.apache.tools.ant.types.Path;
 import org.apache.tools.ant.types.ScannerUtil;
 import org.apache.tools.ant.types.Commandline;
+import org.apache.aut.nativelib.ExecManager;
 
 /**
  * Somewhat abstract framework to be used for other metama 2.0 tasks. This
@@ -278,7 +279,8 @@ public abstract class AbstractMetamataTask
     protected void execute0()
         throws TaskException
     {
-        final Execute2 exe = new Execute2();
+        final ExecManager execManager = (ExecManager)getService( ExecManager.class );
+        final Execute2 exe = new Execute2( execManager );
         setupLogger( exe );
         getLogger().debug( m_cmdl.toString() );
         final String[] commandline = m_cmdl.getCommandline();

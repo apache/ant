@@ -21,6 +21,7 @@ import org.apache.tools.ant.types.Path;
 import org.apache.tools.ant.types.PathUtil;
 import org.apache.tools.ant.types.Commandline;
 import org.apache.avalon.excalibur.util.StringUtil;
+import org.apache.aut.nativelib.ExecManager;
 
 /**
  * Taskdef for the JavaCC compiler compiler.
@@ -244,7 +245,8 @@ public class JavaCC extends Task
         try
         {
             getLogger().debug( cmdline.toString() );
-            final Execute2 exe = new Execute2();
+            final ExecManager execManager = (ExecManager)getService( ExecManager.class );
+            final Execute2 exe = new Execute2( execManager );
             setupLogger( exe );
             final String[] commandline = cmdline.getCommandline();
             exe.setCommandline( new Commandline( commandline ) );

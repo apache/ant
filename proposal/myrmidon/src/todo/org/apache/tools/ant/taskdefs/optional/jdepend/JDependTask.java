@@ -19,6 +19,7 @@ import org.apache.tools.ant.types.CommandlineJava;
 import org.apache.tools.ant.types.Path;
 import org.apache.tools.ant.types.Commandline;
 import org.apache.tools.ant.util.FileUtils;
+import org.apache.aut.nativelib.ExecManager;
 
 /**
  * Ant task to run JDepend tests. <p>
@@ -239,7 +240,8 @@ public class JDependTask
             commandline.addArgument( f.getPath() );
         }
 
-        final Execute2 exe = new Execute2();
+        final ExecManager execManager = (ExecManager)getService( ExecManager.class );
+        final Execute2 exe = new Execute2( execManager );
         setupLogger( exe );
 
         final String[] commandline1 = commandline.getCommandline();

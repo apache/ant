@@ -14,6 +14,7 @@ import org.apache.tools.ant.taskdefs.exec.Execute2;
 import org.apache.tools.ant.types.Commandline;
 import org.apache.tools.ant.types.Path;
 import org.apache.tools.ant.types.Argument;
+import org.apache.aut.nativelib.ExecManager;
 
 /**
  * BorlandGenerateClient is dedicated to the Borland Application Server 4.5 This
@@ -160,7 +161,8 @@ public class BorlandGenerateClient extends Task
             getLogger().info( "mode : fork" );
             getLogger().debug( "Calling java2iiop" );
 
-            final Execute2 exe = new Execute2();
+            final ExecManager execManager = (ExecManager)getService( ExecManager.class );
+            final Execute2 exe = new Execute2( execManager );
             setupLogger( exe );
             exe.setWorkingDirectory( new File( "." ) );
             exe.setCommandline( cmd );

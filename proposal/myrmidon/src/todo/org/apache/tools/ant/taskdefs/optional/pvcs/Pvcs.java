@@ -20,6 +20,7 @@ import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import org.apache.aut.nativelib.ExecOutputHandler;
+import org.apache.aut.nativelib.ExecManager;
 import org.apache.avalon.excalibur.io.IOUtil;
 import org.apache.myrmidon.api.AbstractTask;
 import org.apache.myrmidon.api.TaskException;
@@ -190,7 +191,8 @@ public class Pvcs
         getLogger().debug( "Executing " + cmd.toString() );
         try
         {
-            final Execute2 exe = new Execute2();
+            final ExecManager execManager = (ExecManager)getService( ExecManager.class );
+            final Execute2 exe = new Execute2( execManager );
             setupLogger( exe );
             exe.setWorkingDirectory( getBaseDirectory() );
             exe.setCommandline( cmd );
@@ -271,7 +273,8 @@ public class Pvcs
             tmp = File.createTempFile( "pvcs_ant_", ".log" );
             final File fileList = File.createTempFile( "pvcs_ant_", ".log" );
 
-            final Execute2 exe = new Execute2();
+            final ExecManager execManager = (ExecManager)getService( ExecManager.class );
+            final Execute2 exe = new Execute2( execManager );
             setupLogger( exe );
             exe.setExecOutputHandler( this );
             m_output = new FileOutputStream( tmp );

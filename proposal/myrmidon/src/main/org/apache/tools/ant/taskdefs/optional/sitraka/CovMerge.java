@@ -20,6 +20,7 @@ import org.apache.tools.ant.taskdefs.exec.Execute2;
 import org.apache.tools.ant.types.Commandline;
 import org.apache.tools.ant.types.FileSet;
 import org.apache.tools.ant.types.ScannerUtil;
+import org.apache.aut.nativelib.ExecManager;
 
 /**
  * Convenient task to run the snapshot merge utility for JProbe Coverage.
@@ -114,7 +115,8 @@ public class CovMerge extends Task
             }
             cmdl.addArgument( "-jp_paramfile=" + paramfile.getAbsolutePath() );
 
-            final Execute2 exe = new Execute2();
+            final ExecManager execManager = (ExecManager)getService( ExecManager.class );
+            final Execute2 exe = new Execute2( execManager );
             setupLogger( exe );
             getLogger().debug( cmdl.toString() );
             exe.setCommandline( cmdl );

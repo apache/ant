@@ -20,6 +20,7 @@ import org.apache.tools.ant.types.Commandline;
 import org.apache.tools.ant.types.DirectoryScanner;
 import org.apache.tools.ant.types.FileSet;
 import org.apache.tools.ant.types.ScannerUtil;
+import org.apache.aut.nativelib.ExecManager;
 
 /**
  * Sign a archive.
@@ -294,7 +295,8 @@ public class SignJar
         getLogger().info( message );
 
         final Commandline cmd = buildCommand( jarTarget, jarSource );
-        final Execute2 exe = new Execute2();
+        final ExecManager execManager = (ExecManager)getService( ExecManager.class );
+        final Execute2 exe = new Execute2( execManager );
         setupLogger( exe );
         exe.setCommandline( cmd );
         try

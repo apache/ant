@@ -20,6 +20,7 @@ import org.apache.tools.ant.types.Argument;
 import org.apache.tools.ant.types.CommandlineJava;
 import org.apache.tools.ant.types.Path;
 import org.apache.tools.ant.types.Commandline;
+import org.apache.aut.nativelib.ExecManager;
 
 /**
  * ANTLR task.
@@ -226,7 +227,8 @@ public class ANTLR extends Task
     private int run( final Commandline command )
         throws TaskException
     {
-        final Execute2 exe = new Execute2();
+        final ExecManager execManager = (ExecManager)getService( ExecManager.class );
+        final Execute2 exe = new Execute2( execManager );
         setupLogger( exe );
 
         if( workingdir != null )

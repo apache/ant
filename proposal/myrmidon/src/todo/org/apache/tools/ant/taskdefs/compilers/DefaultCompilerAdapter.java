@@ -21,6 +21,7 @@ import org.apache.tools.ant.types.Commandline;
 import org.apache.tools.ant.types.Path;
 import org.apache.tools.ant.types.PathUtil;
 import org.apache.tools.ant.util.FileUtils;
+import org.apache.aut.nativelib.ExecManager;
 
 /**
  * This is the default implementation for the CompilerAdapter interface.
@@ -360,7 +361,8 @@ public abstract class DefaultCompilerAdapter
 
             try
             {
-                final Execute2 exe = new Execute2();
+                final ExecManager execManager = (ExecManager)m_attributes.getService( ExecManager.class );
+                final Execute2 exe = new Execute2( execManager );
                 setupLogger( exe );
                 exe.setWorkingDirectory( m_baseDir );
                 final String[] commandline = commandArray;

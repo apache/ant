@@ -15,6 +15,7 @@ import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Iterator;
 import org.apache.aut.nativelib.Os;
+import org.apache.aut.nativelib.ExecManager;
 import org.apache.myrmidon.api.TaskException;
 import org.apache.tools.ant.types.DirectoryScanner;
 import org.apache.tools.ant.taskdefs.MatchingTask;
@@ -134,7 +135,8 @@ public class Cab
             try
             {
                 File listFile = createListFile( files );
-                Execute2 exe = new Execute2();
+                final ExecManager execManager = (ExecManager)getService( ExecManager.class );
+                Execute2 exe = new Execute2( execManager );
                 setupLogger( exe );
                 exe.setWorkingDirectory( m_baseDir );
                 final Commandline cmd = createCommand( listFile );

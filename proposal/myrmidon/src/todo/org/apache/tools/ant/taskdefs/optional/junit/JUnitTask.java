@@ -32,6 +32,7 @@ import org.apache.tools.ant.types.Path;
 import org.apache.tools.ant.types.SysProperties;
 import org.apache.tools.ant.types.PathUtil;
 import org.apache.tools.ant.types.Commandline;
+import org.apache.aut.nativelib.ExecManager;
 
 /**
  * Ant task to run JUnit tests. <p>
@@ -649,7 +650,8 @@ public class JUnitTask extends Task
             throw new TaskException( "Error creating temporary properties file.", ioe );
         }
 
-        final Execute2 exe = new Execute2();
+        final ExecManager execManager = (ExecManager)getService( ExecManager.class );
+        final Execute2 exe = new Execute2( execManager );
         setupLogger( exe );
         exe.setCommandline( new Commandline( cmd.getCommandline() ) );
         if( dir != null )

@@ -35,6 +35,11 @@ public class Execute2
     private boolean m_newEnvironment;
     private ExecOutputHandler m_handler;
     private long m_timeout;
+    private ExecManager m_execManager;
+
+    public Execute2( ExecManager execManager )
+    {
+    }
 
     public void setTimeout( final long timeout )
     {

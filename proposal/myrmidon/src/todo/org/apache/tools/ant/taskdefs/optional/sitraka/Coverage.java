@@ -21,6 +21,7 @@ import org.apache.tools.ant.types.Commandline;
 import org.apache.tools.ant.types.CommandlineJava;
 import org.apache.tools.ant.types.FileSet;
 import org.apache.tools.ant.types.Path;
+import org.apache.aut.nativelib.ExecManager;
 
 /**
  * Convenient task to run Sitraka JProbe Coverage from Ant. Options are pretty
@@ -250,7 +251,8 @@ public class Coverage
             cmdl.addArgument( "-jp_input=" + paramfile.getAbsolutePath() );
 
             // use the custom handler for stdin issues
-            final Execute2 exe = new Execute2();
+            final ExecManager execManager = (ExecManager)getService( ExecManager.class );
+            final Execute2 exe = new Execute2( execManager );
             setupLogger( exe );
             getLogger().debug( cmdl.toString() );
             exe.setCommandline( cmdl );

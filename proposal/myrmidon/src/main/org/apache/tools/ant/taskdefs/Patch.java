@@ -13,6 +13,7 @@ import org.apache.myrmidon.api.AbstractTask;
 import org.apache.myrmidon.api.TaskException;
 import org.apache.tools.ant.taskdefs.exec.Execute2;
 import org.apache.tools.ant.types.Commandline;
+import org.apache.aut.nativelib.ExecManager;
 
 /**
  * Task as a layer on top of patch. Patch applies a diff file to an original.
@@ -109,7 +110,8 @@ public class Patch
     {
         validate();
 
-        final Execute2 exe = new Execute2();
+        final ExecManager execManager = (ExecManager)getService( ExecManager.class );
+        final Execute2 exe = new Execute2( execManager );
         setupLogger( exe );
 
         final Commandline cmd = buildCommand();

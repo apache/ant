@@ -12,6 +12,7 @@ import java.io.IOException;
 import org.apache.myrmidon.api.AbstractTask;
 import org.apache.myrmidon.api.TaskException;
 import org.apache.aut.nativelib.ExecOutputHandler;
+import org.apache.aut.nativelib.ExecManager;
 import org.apache.tools.ant.taskdefs.exec.Execute2;
 import org.apache.tools.ant.types.Commandline;
 
@@ -111,7 +112,8 @@ public abstract class Continuus
     {
         try
         {
-            final Execute2 exe = new Execute2();
+            final ExecManager execManager = (ExecManager)getService( ExecManager.class );
+            final Execute2 exe = new Execute2( execManager );
             setupLogger( exe );
             if( null != handler )
             {

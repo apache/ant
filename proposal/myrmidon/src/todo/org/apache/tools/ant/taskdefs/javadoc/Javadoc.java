@@ -19,6 +19,7 @@ import org.apache.myrmidon.api.TaskException;
 import org.apache.myrmidon.framework.Pattern;
 import org.apache.aut.nativelib.Os;
 import org.apache.aut.nativelib.ExecOutputHandler;
+import org.apache.aut.nativelib.ExecManager;
 import org.apache.tools.ant.types.DirectoryScanner;
 import org.apache.tools.ant.Task;
 import org.apache.tools.ant.util.FileUtils;
@@ -811,7 +812,8 @@ public class Javadoc
 
         getLogger().info( "Javadoc execution" );
 
-        final Execute2 exe = new Execute2();
+        final ExecManager execManager = (ExecManager)getService( ExecManager.class );
+        final Execute2 exe = new Execute2( execManager );
         setupLogger( exe );
         exe.setExecOutputHandler( this );
 

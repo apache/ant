@@ -19,6 +19,7 @@ import org.apache.tools.ant.types.CommandlineJava;
 import org.apache.tools.ant.types.Path;
 import org.apache.tools.ant.types.PathUtil;
 import org.apache.tools.ant.types.Commandline;
+import org.apache.aut.nativelib.ExecManager;
 
 /**
  * Taskdef for the JJTree compiler compiler.
@@ -181,7 +182,8 @@ public class JJTree extends Task
         cmdl.addVmArgument( "-mx140M" );
         cmdl.addVmArgument( "-Dinstall.root=" + javaccHome.getAbsolutePath() );
 
-        final Execute2 exe = new Execute2();
+        final ExecManager execManager = (ExecManager)getService( ExecManager.class );
+        final Execute2 exe = new Execute2( execManager );
         setupLogger( exe );
 
         getLogger().debug( cmdl.toString() );

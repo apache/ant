@@ -12,6 +12,7 @@ import org.apache.myrmidon.api.AbstractTask;
 import org.apache.myrmidon.api.TaskException;
 import org.apache.tools.ant.taskdefs.exec.Execute2;
 import org.apache.tools.ant.types.Commandline;
+import org.apache.aut.nativelib.ExecManager;
 
 /**
  * Generates a key.
@@ -120,7 +121,8 @@ public class GenerateKey
         getLogger().info( message );
 
         final Commandline cmd = createCommand();
-        final Execute2 exe = new Execute2();
+        final ExecManager execManager = (ExecManager)getService( ExecManager.class );
+        final Execute2 exe = new Execute2( execManager );
         exe.setWorkingDirectory( getBaseDirectory() );
         exe.setCommandline( cmd );
         try
