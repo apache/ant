@@ -145,7 +145,32 @@
           </tr>
         </table>
       </subsection>
+      
+      <subsection name="Antigen">
 
+        <p>Antigen (Ant Installer Generator) is a tool to take an Ant build script, combine it with a GUI and wrap it up as an executable jar file. Its main 
+            use is for creating graphical, ant-based installers.</p>
+
+        <table class="externals">
+          <tr>
+            <th>Compatibility:</th>
+            <td>bundles Ant 1.6.2</td>
+          </tr>
+          <tr>
+            <th>URL:</th>
+            <td><a href="http://antigen.sourceforge.net/">http://antigen.sourceforge.net/</a></td>
+          </tr>
+          <tr>
+            <th>Contact:</th>
+            <td><a href ='mailto:johndavidtaylor@users.sourceforge.net'>Jon Tayler</a></td>
+          </tr>
+          <tr>
+            <th>License:</th>
+            <td>Academic Free License</td>
+          </tr>
+        </table>
+      </subsection>
+      
       <subsection name="Antlion">
 
         <p>The Antlion Project adds value to Ant build scripts by providing

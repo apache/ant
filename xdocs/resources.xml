@@ -254,6 +254,61 @@
 
     <section name="Articles">
 
+       <subsection name="Extending Ant Input Abilities">
+         <p>The contents of this document is the following:<ul>
+           <li>Section 2 provides a simple example how InputHandlers are created,</li>
+           <li>Section 3 develops an inputhandler that masks the passwords typed on the command line,</li>
+           <li>Section 4 gives two handlers, whose input is typed in graphical components,</li>
+           <li>Section 5 extends Input task so that we can use dierent input handlers on different uses of &lt;input&gt;,</li>
+           <li>Section 6 describes a problem found while writing this document,</li>
+           <li>Section 7 summarizes some dark corners the author do not understand.</li>
+         </ul></p>
+
+         <table class="externals">
+           <tr>
+             <th>Author:</th>
+             <td>Ivan Ivanov</td>
+           </tr>
+           <tr>
+             <th>URL:</th>
+             <td><a href="https://sourceforge.net/project/showfiles.php?group_id=103509">https://sourceforge.net/project/showfiles.php?group_id=103509 (Download ZIP+PDF from Sourceforge)</a></td>
+           </tr>
+         </table>
+       </subsection>
+
+
+
+      <subsection name="Keep the Ant, Hold the XML">
+        <p>Key G. Gauthier talks about writing "buildfiles" in Java.</p>
+
+        <table class="externals">
+          <tr>
+            <th>Author:</th>
+            <td>Key G. Gauthier</td>
+          </tr>
+          <tr>
+            <th>URL:</th>
+            <td><a href="http://www.ftponline.com/javapro/2004_06/magazine/features/kgauthier/">http://www.ftponline.com/javapro/2004_06/magazine/features/kgauthier/</a></td>
+          </tr>
+        </table>
+      </subsection>
+
+      <subsection name="Ant 1.6 for Task Writers">
+        <p>This article talks about XML namespace handling, Ant
+        libraries and the newly introduced type polymorphism.</p>
+
+        <table class="externals">
+          <tr>
+            <th>Author:</th>
+            <td>Stefan Bodewig</td>
+          </tr>
+          <tr>
+            <th>URL:</th>
+            <td><a href="http://otn.oracle.com/pub/articles/bodewig_taskwriters.html">http://otn.oracle.com/pub/articles/bodewig_taskwriters.html</a></td>
+          </tr>
+        </table>
+      </subsection>
+
       <subsection name="Managing Build Complexity with Apache Ant 1.6">
 
         <p>As Apache Ant is applied to increasingly difficult tasks,

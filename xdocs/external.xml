@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <!--
-   Copyright 2001-2004 The Apache Software Foundation
+   Copyright 2001-2005 The Apache Software Foundation
 
    Licensed under the Apache License, Version 2.0 (the "License");
    you may not use this file except in compliance with the License.
@@ -36,7 +36,8 @@
       <a href="faq.html#adding-external-tasks">FAQ</a>.</p>
 
       <p>Nothing listed here is directly supported by the Ant
-      developers, if you encounter any problems with them, please use
+      developers (therefore '<i>external</i> tools and tasks'),
+      if you encounter any problems with them, please use
       the contact information.</p>
 
     </section>
@@ -209,6 +210,31 @@
         </table>
       </subsection>
 
+      <subsection name="AntForm">
+
+        <p>Provides a java/swing form-based input scheme for
+        configuring ant properties and launching ant targets.</p>
+
+        <table class="externals">
+          <tr>
+            <th>Compatibility:</th>
+            <td>Ant 1.6.2.</td>
+          </tr>
+          <tr>
+            <th>URL:</th>
+            <td><a href="http://antforms.sourceforge.net/">http://antforms.sourceforge.net/</a></td>
+          </tr>
+          <tr>
+            <th>Contact:</th>
+            <td><a href="mailto:rene_ghosh@yahoo.com">Ren&#233; Ghosh</a></td>
+          </tr>
+          <tr>
+            <th>License:</th>
+            <td>GNU General Public License</td>
+          </tr>
+        </table>
+      </subsection>
+
       <subsection name="Antmerge">
 
         <p>Provides simple inheritance between ant files</p>
@@ -235,13 +261,15 @@
 
       <subsection name="Ant Pretty Build">
 
-        <p>Ant Pretty Build is a tool to show and run Ant buildfiles
-        directly from within a browser window.  It consists of a
-        single XSL file that will generate, on the fly, from
-        buildfile, a pretty interface showing project name,
-        description, properties and targets, etc. allowing to run the
-        whole project, or run selected targets in a specific
-        order.</p>
+        <p>Ant Pretty Build is a tool to easily show and run Ant
+        buildfiles directly from within a browser window.  It consists
+        of a single XSL file that will generate, on the fly, in the
+        browser, from the .xml buildfile, a pretty interface showing
+        project name, description, properties and targets, etc. sorted
+        or unsorted, allowing to modify/add properties, run the whole
+        project, or run selected set of targets in a specific order,
+        with the ability to modify logger/logfile, mode and add more
+        libs or command line arguments.</p>
 
         <table class="externals">
           <tr>
@@ -254,11 +282,40 @@
           </tr>
           <tr>
             <th>Contact:</th>
-            <td><a href="mailto:antprettybuild@free.fr">Charbel BITAR</a></td>
+            <td><a href="http://antprettybuild.free.fr/">Charbel BITAR (Project&apos;s Contact Page)</a></td>
           </tr>
           <tr>
             <th>License:</th>
-            <td>GNU General Public License (GPL)</td>
+            <td>Apache Software License 2.0</td>
+          </tr>
+        </table>
+      </subsection>
+
+      <subsection name="AntSpaces">
+
+	<p>AntSpaces provides Ant integration with JavaSpaces. This
+	allows you to coordinate Ant tasks via JavaSpaces, pull out
+	work units from a JavaSpace for distributed Ant tasks to work
+	on, and so forth.</p>
+
+	<table class="externals">
+          <tr>
+            <th>Compatibility:</th>
+            <td>Ant 1.5 and later</td>
+          </tr>
+          <tr>
+            <th>URL:</th>
+            <td>
+              <a href="http://www.oopsconsultancy.com/software/antspaces/">http://www.oopsconsultancy.com/software/antspaces/</a>
+            </td>
+          </tr>
+          <tr>
+            <th>Contact:</th>
+            <td>antspaces at oopsconsultancy.com</td>
+          </tr>
+          <tr>
+            <th>License:</th>
+            <td>Apache Software License</td>
           </tr>
         </table>
       </subsection>
@@ -387,11 +444,11 @@
           </tr>
           <tr>
             <th>URL:</th>
-            <td><a href="http://www.thecortex.net/clover/">http://www.thecortex.net/clover/</a></td>
+            <td><a href="http://www.cenqua.com/clover/">http://www.cenqua.com/clover/</a></td>
           </tr>
           <tr>
             <th>Contact:</th>
-            <td><a href="mailto:clover-support@cortexebusiness.com.au">clover-support@cortexebusiness.com.au</a></td>
+            <td><a href="mailto:clover-support@cenqua.com">clover-support@cenqua.com</a></td>
           </tr>
           <tr>
             <th>License:</th>
@@ -522,6 +579,32 @@
           </tr>
         </table>
       </subsection>
+
+      <subsection name="Dependencies">
+          <p>The dependencies task manages a set of external dependencies which
+            may be downloaded from a remote repository,
+             such as ibiblio.org. Uses a local cache to avoid repeated
+            downloads.</p>
+
+          <table class="externals">
+            <tr>
+              <th>Compatibility:</th>
+              <td>Tested with 1.5.1, should work with 1.4+.</td>
+           </tr>
+            <tr>
+              <th>URL:</th>
+              <td><a href="http://www.httpunit.org/doc/dependencies.html">http://www.httpunit.org/doc/dependencies.html</a></td>
+            </tr>
+            <tr>
+              <th>Contact:</th>
+              <td><a href="mailto:russgold@httpunit.org">Russell Gold</a></td>
+            </tr>
+            <tr>
+              <th>License:</th>
+              <td>MIT License</td>
+            </tr>
+          </table>
+    </subsection>
 
       <subsection name="Dependency Finder">
         <p>Dependency Finder extracts dependencies and OO metrics from
@@ -1006,6 +1089,32 @@
         </table>
       </subsection>
 
+      <subsection name="Ivy">
+
+        <p>Ivy is a simple yet powerful dependency manager featuring
+        continuous integration, dependencies of dependencies
+        management, multiple repositories including ibiblio and high
+        performance (use of a local cache).</p>
+
+        <table class="externals">
+          <tr>
+            <th>Compatibility:</th>
+            <td>1.5.1 or superior</td>
+          </tr>
+          <tr>
+            <th>URL:</th>
+            <td><a href="http://ivy.jayasoft.org/">http://ivy.jayasoft.org/</a></td>
+          </tr>
+          <tr>
+            <th>Contact:</th>
+            <td>contact at jayasoft dot org</td>
+          </tr>
+          <tr>
+            <th>License:</th>
+            <td>BSD License</td>
+          </tr>
+        </table>
+      </subsection>
 
       <subsection name="J2ME Ant Tasks">
 
@@ -1214,6 +1323,65 @@
         </table>
       </subsection>
 
+      <subsection name="JarBundler">
+
+        <p>JarBundler is a task that generates Mac OS X native Java
+        Application Bundles.  It is fully configurable and can be used
+        to generate Mac OS X application bundles from any supported
+        Java platform, making it ideal for targeting multiple
+        platforms with one build.</p>
+
+        <table class="externals">
+          <tr>
+            <th>Compatibility:</th>
+            <td>Ant 1.4 and later</td>
+          </tr>
+          <tr>
+            <th>URL:</th>
+            <td><a href="http://www.loomcom.com/jarbundler/">http://www.loomcom.com/jarbundler/</a></td>
+          </tr>
+          <tr>
+            <th>Contact:</th>
+            <td><a href="mailto:sethm@loomcom.com">Seth Morabito</a></td>
+          </tr>
+          <tr>
+            <th>License:</th>
+            <td>GNU General Public License</td>
+          </tr>
+        </table>
+      </subsection>
+
+      <subsection name="JarPatch">
+
+        <p>JarPatch is a task that generates a zip file resulting of
+        the diff between the content of 2 jar files.</p>
+
+        <p>The resulting diff file can be use as a patch for a
+        previous installation (just ensure that the generated
+        patch.zip file is located on the CLASSPATH before the patched
+        oldJar jar file)</p>
+
+        <table class="externals">
+          <tr>
+            <th>Compatibility:</th>
+            <td>Ant 1.5 and later</td>
+          </tr>
+          <tr>
+            <th>URL:</th>
+            <td><a
+                href="http://perso.club-internet.fr/sjobic/ant/">http://perso.club-internet.fr/sjobic/ant/</a></td>
+          </tr>
+          <tr>
+            <th>Contact:</th>
+            <td><a href="mailto:norbert.barbosa@laposte.net">Norbert Barbosa</a></td>
+          </tr>
+          <tr>
+            <th>License:</th>
+            <td>LGPL License</td>
+          </tr>
+        </table>
+      </subsection>
+
       <subsection name="Java+ Precompile Task">
 
         <p>Java+ is an open source Java preprocessor that adds these
@@ -1397,6 +1565,39 @@
         </table>
       </subsection>
 
+      <subsection name="Jdiff">
+
+        <p>A task that generates an HTML report of all the packages, classes,
+        constructors, methods, and fields which have been removed, added or
+        changed in any way, including their documentation, when two APIs are
+        compared. </p>
+
+        <table class="externals">
+          <tr>
+            <th>Compatibility:</th>
+            <td>Ant 1.6</td>
+          </tr>
+          <tr>
+            <th>URL:</th>
+            <td>
+            <a href="http://javadiff.sourceforge.net/" >
+            http://javadiff.sourceforge.net/</a></td>
+          </tr>
+          <tr>
+            <th>Task Documentation:</th>
+            <td>
+            <a 
+            href="http://cvs.sourceforge.net/viewcvs.py/*checkout*/javadiff/jdiff/jdiff.html?rev=HEAD&amp;content-type=text/html#JDiffAntTask"
+            >
+            (in CVS)</a></td>
+          </tr>
+          <tr>
+            <th>License:</th>
+            <td>LGPL</td>
+          </tr>
+        </table>
+      </subsection>
+        
       <subsection name="JFlex">
 
         <p>JFlex is a lexical analyzer generator (also known as
@@ -1637,6 +1838,37 @@
         </table>
       </subsection>
 
+      <subsection name="JudoScript Ant Task">
+
+        <p>The &lt;judoscript&gt; task is an easy way to embed JudoScript
+           code in the Ant build script. The tag format is quite simple. You can
+           either embed code directly, or can specify an external JudoScript program
+           file as the <code>src</code> attribute value. Parameters can be specified
+           as the <code>params</code> attribute; this is applicable to both embedded
+           code and external files.
+        </p>
+
+        <table class="externals">
+          <tr>
+            <th>Compatibility:</th>
+            <td>Ant 1.5 or higher</td>
+          </tr>
+          <tr>
+            <th>URL:</th>
+            <td><a
+              href="http://www.judoscript.com/articles/ant.html">http://www.judoscript.com/articles/ant.html</a></td>
+          </tr>
+          <tr>
+            <th>Contact:</th>
+            <td><a href="mailto:judoscript@hotmail.com">James Jianbo Huang</a></td>
+          </tr>
+          <tr>
+            <th>License:</th>
+            <td>Lesser GNU Public License</td>
+          </tr>
+        </table>
+      </subsection>
+
       <subsection name="Just4log Ant Task">
 
         <p>Just4log is a ant task to optimize JVM bytecode with regards
@@ -1792,6 +2024,37 @@
           <tr>
             <th>License:</th>
             <td>Apache Software Foundation License</td>
+          </tr>
+        </table>
+      </subsection>
+
+      <subsection name="Nurflugel AntScript Visualizer">
+
+        <p>The Nurflugel AntScript Visualizer takes your build file,
+        finds any imported build files, and shows all relationships
+        between targets, taskdefs, macrodefs, Ant and Antcalls; output
+        options include PDF, SVG, and PNG.  Many options including
+        grouping by build file, inclusion/exclusion of targets,
+        taskdefs, imports, etc.  Installation is via Java WebStart, so
+        you'll always have the freshest version available.</p>
+
+        <table class="externals">
+          <tr>
+            <th>Compatibility:</th>
+            <td>Ant 1.1 and later</td>
+          </tr>
+          <tr>
+            <th>URL:</th>
+            <td><a href="http://www.nurflugel.com/webstart/AntScriptVisualizer/">http://www.nurflugel.com/webstart/AntScriptVisualizer/</a></td>
+          </tr>
+          <tr>
+            <th>Contact:</th>
+            <td>dbullard &lt;at&gt; nurflugel &lt;dot&gt; com (email
+            will receive a challenge to weed out spam)</td>
+          </tr>
+          <tr>
+            <th>License:</th>
+            <td>GNU General Public License</td>
           </tr>
         </table>
       </subsection>
@@ -2197,6 +2460,37 @@
         </table>
       </subsection>
 
+      <subsection name="SQLC">
+
+        <p>SQLC generates Java classes from SQL statements obviating JDBC API
+        in your code. Introduction to SQLC:
+        <a href="http://www.pavelvlasov.com/pv/content/Articles/sqlc/sqlc.html">
+        http://www.pavelvlasov.com/pv/content/Articles/sqlc/sqlc.html</a></p>
+
+        <table class="externals">
+          <tr>
+            <th>Compatibility:</th>
+            <td>Tested with Ant 1.5.2. Compilation requires Java 1.4 and database
+              driver shall implement getParameterMetadata(). "Introduction to SQLC"
+              (see above) contains compatibility list. Generated classes work on
+              Java 1.3+
+            </td>
+          </tr>
+          <tr>
+            <th>URL:</th>
+            <td><a href="http://www.pavelvlasov.com/pv/content/Products/Common/doc/AntDoc/com/pavelvlasov/sql/java/ant/StatementCompilerTask.html">http://www.pavelvlasov.com/pv/content/Products/Common/doc/AntDoc/com/pavelvlasov/sql/java/ant/StatementCompilerTask.html</a></td>
+          </tr>
+          <tr>
+            <th>Contact:</th>
+            <td><a href="http://www.pavelvlasov.com/pv/content/contact.html">Pavel Vlasov</a></td>
+          </tr>
+          <tr>
+            <th>License:</th>
+            <td>LGPL</td>
+          </tr>
+        </table>
+      </subsection>
+
       <subsection name="Styler">
 
         <p>The styler task makes useful combinations of XSLT transformations
@@ -2505,6 +2799,38 @@
         </table>
       </subsection>
 
+      <subsection name="Xcluder">
+        <p>xcluder is an XML Inclusions (XInclude) task for Apache Ant.
+        Offers the choice of using Xerces or Elliotte Rusty Harold's XOM API.
+        </p>
+        <table class="externals">
+          <tr>
+            <th>Compatibility:</th>
+            <td>Ant 1.4 or later. XInclude compliance depends on the
+            underlying Xerces or XOM used. Xerces 2.5.0 and above works fine,
+            but please note that 2.6.1 and 2.6.2 processed the
+            http://www.w3.org/2003/XInclude, now obsolete by
+            http://www.w3.org/2001/XInclude used by the latest
+            Candidate Recommendation (13 April 2004).
+            </td>
+          </tr>
+          <tr>
+            <th>URL:</th>
+            <td><a href="http://sourceforge.net/projects/xcluder">http://sourceforge.net/projects/xcluder</a></td>
+          </tr>
+          <tr>
+            <th>Contact:</th>
+            <td><a href="mailto:mbatsis@users.sf.net">mbatsis@users.sf.net</a></td>
+          </tr>
+          <tr>
+            <th>License:</th>
+            <td>GNU General Public License (GPL), GNU Library or Lesser
+            General Public License (LGPL)
+            </td>
+          </tr>
+        </table>
+      </subsection>
+
       <subsection name="XDoclet">
 
         <p>XDoclet is an extended Javadoc Doclet engine for use in Ant.
@@ -2554,6 +2880,33 @@
           <tr>
             <th>License:</th>
             <td>Lesser GNU Public License</td>
+          </tr>
+        </table>
+      </subsection>
+
+      <subsection name="XMLReleaseNotes (XRN)">
+
+        <p>This framework is a release notes framework that enables to
+        generate textual release notes from an XML file. This is an
+        open framework that enables to integrate the information
+        coming from VSC and bug tracking solutions, for instance.</p>
+
+        <table class="externals">
+          <tr>
+            <th>Compatibility:</th>
+            <td>Ant 1.5 and later</td>
+          </tr>
+          <tr>
+            <th>URL:</th>
+            <td><a href="http://xmlreleasenotes.free.fr/">http://xmlreleasenotes.free.fr/</a></td>
+          </tr>
+          <tr>
+            <th>Contact:</th>
+            <td>Edouard Mercier</td>
+          </tr>
+          <tr>
+            <th>License:</th>
+            <td>Apache Software License</td>
           </tr>
         </table>
       </subsection>
@@ -2804,15 +3157,24 @@
         <table class="externals">
           <tr>
             <th>Compatibility:</th>
-            <td>Ant 1.3 - 1.4.1</td>
+            <td>
+              Ant 1.3 - 1.4.1
+              Bundles Ant 1.6.2 as of Eclipse 3.0.1 (tested with Ant 1.5.4 - 1.6.2)
+            </td>
           </tr>
           <tr>
             <th>URL:</th>
-            <td><a href="http://www.eclipse.org/">http://www.eclipse.org/</a></td>
+            <td>
+              <a href="http://www.eclipse.org/">http://www.eclipse.org/</a>
+              or
+              <a href="http://dev.eclipse.org/viewcvs/index.cgi/~checkout~/platform-ant-home/index.html">
+                http://dev.eclipse.org/viewcvs/index.cgi/~checkout~/platform-ant-home/index.html
+              </a> 
+            </td>
           </tr>
           <tr>
             <th>Contact:</th>
-            <td><a href="news://news.eclipse.org/eclipse.tools">news://news.eclipse.org/eclipse.tools</a></td>
+            <td><a href="news://news.eclipse.org/eclipse.platform">news://news.eclipse.org/eclipse.platform</a></td>
           </tr>
           <tr>
             <th>License:</th>
@@ -2925,7 +3287,7 @@
         </table>
       </subsection>
 
-      <subsection name="JDE(E) 2.2.8">
+      <subsection name="JDEE">
 
         <p>The Java Development Environment for Emacs (JDEE) supports
         Apache Ant as one of three built-in ways to build your
@@ -2938,7 +3300,7 @@
           </tr>
           <tr>
             <th>URL:</th>
-            <td><a href="http://jde.sunsite.dk/">http://jde.sunsite.dk/</a></td>
+            <td><a href="http://jdee.sunsite.dk/">http://jdee.sunsite.dk/</a></td>
           </tr>
           <tr>
             <th>Contact:</th>
@@ -2959,7 +3321,7 @@
         <table class="externals">
           <tr>
             <th>Compatibility:</th>
-            <td>bundles Ant 1.6.1 as of NetBeans 3.6</td>
+            <td>bundles Ant 1.6.2 as of NetBeans 4.0</td>
           </tr>
           <tr>
             <th>URL:</th>
@@ -3025,7 +3387,7 @@
 
     <section name="Source Control Systems">
       <p>There are several integration with SCM systems. Some are
-      <a href="manual/tasksoverview.html#scm">build in</a>. But some are available as
+      <a href="manual/tasksoverview.html#scm">built in</a>. But some are available as
       external libraries. Here a list of task libraries we are aware of:</p>
 
       <subsection name="Surround SCM">
