@@ -165,6 +165,24 @@ public class Expand
     protected void expandFile( final File src, final File dir )
         throws TaskException
     {
+        if( getLogger().isInfoEnabled() )
+        {
+            final String message = "Expanding: " + src + " into " + dir;
+            getLogger().info( message );
+        }
+
+        expandArchive( src, dir );
+
+        if( getLogger().isDebugEnabled() )
+        {
+            final String message = "expand complete";
+            getLogger().debug( message );
+        }
+    }
+
+    protected void expandArchive( final File src, final File dir )
+        throws TaskException
+    {
         ZipInputStream zis = null;
         try
         {
@@ -175,12 +193,11 @@ public class Expand
             while( ( ze = zis.getNextEntry() ) != null )
             {
                 final Date date = new Date( ze.getTime() );
-                extractFile(
-                    dir,
-                    zis,
-                    ze.getName(),
-                    date,
-                    ze.isDirectory() );
+                extractFile( dir,
+                             zis,
+                             ze.getName(),
+                             date,
+                             ze.isDirectory() );
             }
         }
         catch( final IOException ioe )
@@ -192,9 +209,6 @@ public class Expand
         {
             IOUtil.shutdownStream( zis );
         }
-
-        final String message = "expand complete";
-        getLogger().debug( message );
     }
 
     protected void extractFile( final File dir,
@@ -249,31 +263,33 @@ public class Expand
             }
         }
 
-        File f = FileUtil.resolveFile( dir, entryName );
+        final File file = FileUtil.resolveFile( dir, entryName );
         try
         {
-            if( !m_overwrite && f.exists()
-                && f.lastModified() >= date.getTime() )
+            if( !m_overwrite && file.exists() &&
+                file.lastModified() >= date.getTime() )
             {
-                getLogger().debug( "Skipping " + f + " as it is up-to-date" );
+                final String message = "Skipping " + file + " as it is up-to-date";
+                getLogger().debug( message );
                 return;
             }
 
-            getLogger().debug( "expanding " + entryName + " to " + f );
+            getLogger().debug( "expanding " + entryName + " to " + file );
+
             // create intermediary directories - sometimes zip don't add them
-            File dirF = f.getParentFile();
-            dirF.mkdirs();
+            final File parent = file.getParentFile();
+            parent.mkdirs();
 
             if( isDirectory )
             {
-                f.mkdirs();
+                file.mkdirs();
             }
             else
             {
                 FileOutputStream fos = null;
                 try
                 {
-                    fos = new FileOutputStream( f );
+                    fos = new FileOutputStream( file );
                     IOUtil.copy( input, fos );
                 }
                 finally
@@ -282,11 +298,12 @@ public class Expand
                 }
             }
 
-            f.setLastModified( date.getTime() );
+            file.setLastModified( date.getTime() );
         }
-        catch( FileNotFoundException ex )
+        catch( final FileNotFoundException fnfe )
         {
-            getLogger().warn( "Unable to expand to file " + f.getPath() );
+            final String message = "Unable to expand to file " + file.getPath();
+            getLogger().warn( message );
         }
     }
 }

@@ -24,15 +24,9 @@ import org.apache.myrmidon.api.TaskException;
 public class Untar
     extends Expand
 {
-    protected void expandFile( final File src, final File dir )
+    protected void expandArchive( final File src, final File dir )
         throws TaskException
     {
-        if( getLogger().isInfoEnabled() )
-        {
-            final String message = "Expanding: " + src + " into " + dir;
-            getLogger().info( message );
-        }
-
         TarInputStream input = null;
         FileInputStream fileInput = null;
         try
