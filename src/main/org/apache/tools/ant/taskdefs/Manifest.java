@@ -544,6 +544,7 @@ public class Manifest extends Task {
     public Manifest() {
         mode = new Mode();
         mode.setValue("replace");
+        manifestVersion = null;
     }
 
     /**
@@ -613,7 +614,9 @@ public class Manifest extends Task {
      *         to the Manifest spec.
      */
     public void merge(Manifest other) throws ManifestException {
-        manifestVersion = other.manifestVersion;
+        if (other.manifestVersion != null) {
+            manifestVersion = other.manifestVersion;
+        }
         mainSection.merge(other.mainSection);
         for (Enumeration e = other.sections.keys(); e.hasMoreElements();) {
             String sectionName = (String)e.nextElement();

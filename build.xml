@@ -842,6 +842,7 @@
 
 
     <junit printsummary="no" haltonfailure="yes" 
+           filtertrace="off"
            fork="${junit.fork}">
 <!--      <jvmarg value="-classic"/> -->
       <classpath refid="tests-classpath"/>
@@ -922,7 +923,8 @@
 
   <target name="run-single-test" if="testcase" depends="compile-tests">
 
-    <junit printsummary="no" haltonfailure="yes" fork="${junit.fork}">
+    <junit printsummary="no" haltonfailure="yes" fork="${junit.fork}"
+           filtertrace="off">
 <!--      <jvmarg value="-classic"/> -->
       <sysproperty key="build.tests" value="${build.tests}"/>
       <classpath location="${java.home}/lib/classes.zip" />

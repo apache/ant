@@ -55,6 +55,8 @@
 package org.apache.tools.ant.taskdefs;
 
 import java.io.File;
+import java.io.FileReader;
+import java.io.IOException;
 import java.util.Date;
 import org.apache.tools.ant.BuildFileTest;
 
@@ -192,5 +194,46 @@ public class ManifestTest extends BuildFileTest {
         executeTarget("test14");
     }
      
+    /**
+     * file attribute for manifest task is required.
+     */
+    public void testNoFile() {
+        expectBuildException("testNoFile", "file is required");
+    }
     
+    /**
+     * replace changes Manifest-Version from 2.0 to 1.0
+     */
+    public void testReplace() throws IOException, ManifestException {
+        executeTarget("testReplace");
+        Manifest mf = getManifest();
+        assertNotNull(mf);
+        assertEquals(Manifest.getDefaultManifest(), mf);
+    }
+
+    /**
+     * update keeps the Manifest-Version and adds a new attribute Foo
+     */
+    public void testUpdate() throws IOException, ManifestException {
+        executeTarget("testUpdate");
+        Manifest mf = getManifest();
+        assertNotNull(mf);
+        assertTrue(!Manifest.getDefaultManifest().equals(mf));
+        String mfAsString = mf.toString();
+        assertNotNull(mfAsString);
+        assertTrue(mfAsString.startsWith("Manifest-Version: 2.0"));
+        assertTrue(mfAsString.indexOf("Foo: Bar") > -1);
+    }
+
+    /**
+     * Reads mftest.mf.
+     */
+    private Manifest getManifest() throws IOException, ManifestException {
+        FileReader r = new FileReader("src/etc/testcases/taskdefs/mftest.mf");
+        try {
+            return new Manifest(r);
+        } finally {
+            r.close();
+        }
+    }
 }

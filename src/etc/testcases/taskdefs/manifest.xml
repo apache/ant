@@ -100,9 +100,25 @@
     </jar>
   </target>
 
+  <target name="testNoFile">
+    <manifest />
+  </target>
+
+  <target name="testReplace">
+    <copy file="manifests/test2.mf" toFile="mftest.mf" />
+    <manifest file="mftest.mf" />
+  </target>
+
+  <target name="testUpdate">
+    <copy file="manifests/test2.mf" toFile="mftest.mf" />
+    <manifest file="mftest.mf" mode="update">
+      <attribute name="Foo" value="Bar" />
+    </manifest>
+  </target>
+
   <target name="clean">
     <delete>
-      <fileset dir="." includes="mftest*.jar"/>
+      <fileset dir="." includes="mftest*"/>
     </delete>
   </target>
 </project>
