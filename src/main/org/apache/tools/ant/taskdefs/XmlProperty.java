@@ -69,9 +69,10 @@ import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.util.Vector;
 
 /**
- * Task get property values from a valid xml file.
+ * Task that gets property values from a valid xml file.
  * Example:
  *   <root-tag myattr="true">
  *     <inner-tag someattr="val">Text</inner-tag>
@@ -83,15 +84,18 @@ import java.io.IOException;
  *  root-tag.inner-tag(someattr)=val
  *  root-tag.a2.a3.a4=false
  *
- * @author <a href="mailto:barozzi@nicolaken.com">Nicola Ken Barozzi</a>
+ * @author <a href="mailto:nicolaken@apache.org">Nicola Ken Barozzi</a>
  * @author Erik Hatcher
  * @created 14 January 2002
  */
 
 public class XmlProperty extends org.apache.tools.ant.Task {
+
     private File src;
     private String prefix = "";
     private boolean keepRoot = true;
+    private boolean validate = false;
+    private boolean collapseAttributes = false;
     private org.w3c.dom.Document document;
 
     /**
@@ -115,6 +119,7 @@ public class XmlProperty extends org.apache.tools.ant.Task {
      */
     public void execute()
             throws org.apache.tools.ant.BuildException {
+            
         BufferedInputStream configurationStream = null;
 
         try {
@@ -123,7 +128,7 @@ public class XmlProperty extends org.apache.tools.ant.Task {
 
             DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
 
-            factory.setValidating(false);
+            factory.setValidating(validate);
             factory.setNamespaceAware(false);
 
             DocumentBuilder builder = factory.newDocumentBuilder();
@@ -133,33 +138,14 @@ public class XmlProperty extends org.apache.tools.ant.Task {
             NodeList topChildren = topElement.getChildNodes();
             int numChildren = topChildren.getLength();
 
-            String prefixToUse = "";
-
-            if (!(prefix.equals(""))) {
-                prefixToUse = prefix;
-            }
-
-            log("Prefix to use 1: \"" + prefixToUse + "\"", Project.MSG_DEBUG);
-
-/*
-            if ((!(prefix.equals(""))) && keepRoot) {
-                prefixToUse += ".";
-            }
-
-            log("Prefix to use 2: \"" + prefixToUse + "\"", Project.MSG_DEBUG);
+            log("Using prefix: \"" + prefix + "\"", Project.MSG_DEBUG);
 
             if (keepRoot) {
-                prefixToUse += (topElement.getNodeName());
-            }
-
-            log("Prefix to use 3: \"" + prefixToUse + "\"", Project.MSG_VERBOSE);
-*/
-            if (keepRoot) {
-                addNodeRecursively(topElement, prefixToUse, 0);
+                addNodeRecursively(topElement, prefix);
             }
             else {
                 for (int i = 0; i < numChildren; i++) {
-                    addNodeRecursively(topChildren.item(i), prefixToUse, 0);
+                    addNodeRecursively(topChildren.item(i), prefix);
                 }
             }
 
@@ -187,13 +173,21 @@ public class XmlProperty extends org.apache.tools.ant.Task {
     }
 
 
-    void addNodeRecursively(org.w3c.dom.Node node, String prefix, int index) {
+    void addNodeRecursively(org.w3c.dom.Node node, String prefix) {
 
         if (node.hasAttributes()) {
             org.w3c.dom.NamedNodeMap nodeAttributes = node.getAttributes();
             for (int i = 0; i < nodeAttributes.getLength(); i++) {
                 Node attributeNode = nodeAttributes.item(i);
-                String attributeName = prefix + (prefix.trim().equals("")?"":".") + node.getNodeName() + "(" + attributeNode.getNodeName() + ")";
+                String attributeName;
+                
+                if(collapseAttributes){
+                  attributeName = prefix + (prefix.trim().equals("")?"":".") + node.getNodeName() + "." + attributeNode.getNodeName();
+                }
+                else{
+                  attributeName = prefix + (prefix.trim().equals("")?"":".") + node.getNodeName() + "(" + attributeNode.getNodeName() + ")";
+		}              
+		  
                 String attributeValue = attributeNode.getNodeValue();
                 log(attributeName + ":" + attributeValue, Project.MSG_DEBUG);
                 project.setNewProperty(attributeName, attributeValue);
@@ -204,32 +198,19 @@ public class XmlProperty extends org.apache.tools.ant.Task {
             String nodeText = node.getNodeValue();
             if (nodeText.trim().length() != 0) {
                 log(prefix + ":" + nodeText, Project.MSG_DEBUG);
-                if (index == 0) {
-                    project.setNewProperty(prefix, nodeText);
-                }
-
-                project.setNewProperty(prefix + "[" + String.valueOf(index) + "]", nodeText);
+                 project.setNewProperty(prefix, nodeText);
             }
         }
 
         if (node.hasChildNodes()) {
             prefix += ((prefix.trim().equals("")?"":".") + node.getNodeName());
-            org.w3c.dom.NodeList nodeChildren = node.getChildNodes();
 
+            org.w3c.dom.NodeList nodeChildren = node.getChildNodes();
             int numChildren = nodeChildren.getLength();
 
-            StringBuffer childList = new StringBuffer();
-
             for (int i = 0; i < numChildren; i++) {
-                if (i != 0) {
-                    childList.append(",");
-                }
-                childList.append(node.getNodeName() + "[" + String.valueOf(index) + "]");
-                addNodeRecursively(nodeChildren.item(i), prefix, i);
+                addNodeRecursively(nodeChildren.item(i), prefix);
             }
-
-            project.setNewProperty(prefix + "[]", childList.toString());
-
         }
     }
 
@@ -244,4 +225,13 @@ public class XmlProperty extends org.apache.tools.ant.Task {
     public void setKeeproot(boolean keepRoot) {
         this.keepRoot = keepRoot;
     }
+
+    public void setValidate(boolean validate) {
+        this.validate = validate;
+    }
+
+    public void setCollapseAttributes(boolean collapseAttributes) {
+        this.collapseAttributes = collapseAttributes;
+    }
+        
 }
