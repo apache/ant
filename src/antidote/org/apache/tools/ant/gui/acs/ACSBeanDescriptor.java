@@ -53,34 +53,22 @@
  */
 package org.apache.tools.ant.gui.acs;
 
-import com.sun.xml.tree.ElementNode;
+import org.apache.tools.ant.gui.ResourceManager;
+import java.beans.*;
 
 /**
- * Class representing a project element in the build file.
+ * Specialized BeanDescriptor for providing more descriptive information.
  * 
  * @version $Revision$ 
  * @author Simeon Fitch 
  */
-public class ACSProjectElement extends ACSNamedElement {
-    public ACSProjectElement() {
-
-    }
-
-	/** 
-	 * Get the type that this BeanInfo represents.
-	 * 
-	 * @return Type.
-	 */
-    public Class getType() {
-        return ACSProjectElement.class;
-    }
-
-	/** 
-	 * Get the display name.
-	 * 
-	 * @return Display name.
-	 */
-    public String getDisplayName() {
-        return getTagName() + ": " + getName();
+class ACSBeanDescriptor extends BeanDescriptor {
+    
+    public ACSBeanDescriptor(BaseBeanInfo type) {
+        super(type.getType());
+        setDisplayName(
+            type.getResources().getString(type.getClass(), "beanName"));
+        setShortDescription(
+            type.getResources().getString(type.getClass(), "beanDescription"));
     }
 }

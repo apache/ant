@@ -95,6 +95,7 @@ public class Console extends AntEditor {
             context.getResources().getString(getClass(), "logLevel"));
         controls.add(label);
         _logLevel = new JComboBox(LogLevelEnum.getValues());
+        _logLevel.setSelectedItem(LogLevelEnum.INFO);
         controls.add(_logLevel);
         
         add(BorderLayout.NORTH, controls);

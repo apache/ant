@@ -62,31 +62,14 @@ import java.util.StringTokenizer;
  * @version $Revision$ 
  * @author Simeon Fitch 
  */
-public class ACSTargetElement extends ACSElement {
+public class ACSTargetElement extends ACSNamedElement {
+
 	/** 
 	 * Default ctor.
 	 * 
 	 */
     public ACSTargetElement() {
 
-    }
-
-	/** 
-	 * Get the target name.
-	 * 
-	 * @return Target name.
-	 */
-    public String getName() {
-        return getAttribute("name");
-    }
-
-	/** 
-	 * Get the long description of the target.
-	 * 
-	 * @return Target description.
-	 */
-    public String getDescription() {
-        return getAttribute("description");
     }
 
 	/** 

@@ -53,17 +53,44 @@
  */
 package org.apache.tools.ant.gui.acs;
 
-import com.sun.xml.tree.ElementNode;
+import org.apache.tools.ant.gui.ResourceManager;
+import java.beans.*;
 
 /**
- * Class representing a project element in the build file.
+ * Abstract base class for ACS BeanInfo classes.
  * 
  * @version $Revision$ 
  * @author Simeon Fitch 
  */
-public class ACSProjectElement extends ACSNamedElement {
-    public ACSProjectElement() {
+abstract class BaseBeanInfo extends SimpleBeanInfo {
 
+    /** Resource provider for bean info. */
+    private static ResourceManager _resources = new ResourceManager(
+        "org.apache.tools.ant.gui.acs.beaninfo");
+
+	/** 
+	 * Default ctor.
+	 * 
+	 */
+    protected BaseBeanInfo() {
+    }
+
+	/** 
+	 * Get the local resources.
+	 * 
+	 * @return Resources.
+	 */
+    ResourceManager getResources() {
+        return _resources;
+    }
+
+	/** 
+	 * Get the bean descriptor.
+	 * 
+	 * @return Bean descriptor.
+	 */
+    public BeanDescriptor getBeanDescriptor() {
+        return new ACSBeanDescriptor(this);
     }
 
 	/** 
@@ -71,16 +98,21 @@ public class ACSProjectElement extends ACSNamedElement {
 	 * 
 	 * @return Type.
 	 */
-    public Class getType() {
-        return ACSProjectElement.class;
-    }
+    public abstract Class getType();
 
-	/** 
-	 * Get the display name.
-	 * 
-	 * @return Display name.
-	 */
-    public String getDisplayName() {
-        return getTagName() + ": " + getName();
-    }
+    /**
+     * Gets the beans <code>PropertyDescriptor</code>s.
+     * 
+     * @return An array of PropertyDescriptors describing the editable
+     * properties supported by this bean.  May return null if the
+     * information should be obtained by automatic analysis.
+     * <p>
+     * If a property is indexed, then its entry in the result array will
+     * belong to the IndexedPropertyDescriptor subclass of PropertyDescriptor.
+     * A client of getPropertyDescriptors can use "instanceof" to check
+     * if a given PropertyDescriptor is an IndexedPropertyDescriptor.
+     */
+    public abstract PropertyDescriptor[] getPropertyDescriptors();
+
+
 }

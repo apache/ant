@@ -54,25 +54,66 @@
 package org.apache.tools.ant.gui.acs;
 
 import com.sun.xml.tree.ElementNode;
+import java.util.StringTokenizer;
 
 /**
- * Class representing a project element in the build file.
+ * Class representing an element with a name and description.
  * 
  * @version $Revision$ 
  * @author Simeon Fitch 
  */
-public class ACSProjectElement extends ACSNamedElement {
-    public ACSProjectElement() {
+public class ACSNamedElement extends ACSTreeNodeElement {
+    /** The 'name' property name. */
+    public static final String NAME = "name";
+    /** The discription property name. */
+    public static final String DESCRIPTION = "description";
+
+	/** 
+	 * Default ctor.
+	 * 
+	 */
+    public ACSNamedElement() {
 
     }
 
 	/** 
-	 * Get the type that this BeanInfo represents.
+	 * Get the target name.
 	 * 
-	 * @return Type.
+	 * @return Target name.
 	 */
-    public Class getType() {
-        return ACSProjectElement.class;
+    public String getName() {
+        return getAttribute(NAME);
+    }
+
+	/** 
+	 * Set the name.
+	 * 
+	 * @param name New name value.
+	 */
+    public void setName(String name) {
+        String old = getName();
+        setAttribute(NAME, name);
+        firePropertyChange(NAME, old, name);
+    }
+
+	/** 
+	 * Get the long description of the target.
+	 * 
+	 * @return Target description.
+	 */
+    public String getDescription() {
+        return getAttribute(DESCRIPTION);
+    }
+
+	/** 
+	 * Set the description
+	 * 
+	 * @param description New description value.
+	 */
+    public void setDescription(String description) {
+        String old = getDescription();
+        setAttribute(DESCRIPTION, description);
+        firePropertyChange(DESCRIPTION, old, description);
     }
 
 	/** 
@@ -83,4 +124,6 @@ public class ACSProjectElement extends ACSNamedElement {
     public String getDisplayName() {
         return getTagName() + ": " + getName();
     }
+
+
 }

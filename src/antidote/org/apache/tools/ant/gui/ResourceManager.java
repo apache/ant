@@ -67,9 +67,25 @@ import java.io.File;
  * @author Simeon H.K. Fitch 
  */
 public class ResourceManager {
-    private ResourceBundle _resources = 
-        ResourceBundle.getBundle(
-            "org.apache.tools.ant.gui.resources.antidote");
+    /** Resources to reference. */
+    private ResourceBundle _resources = null;
+
+	/** 
+	 * Default ctor. Uses the default properties file for antidote.
+	 * 
+	 */
+    public ResourceManager() {
+        this("org.apache.tools.ant.gui.resources.antidote");
+    }
+
+	/** 
+	 * Standard ctor.
+	 * 
+	 * @param propName Fully qualified name of the resources to use.
+	 */
+    public ResourceManager(String propName) {
+        _resources = ResourceBundle.getBundle(propName);
+    }
 
 	/** 
 	 * Get a string resource for the given class.

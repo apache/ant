@@ -53,17 +53,20 @@
  */
 package org.apache.tools.ant.gui.acs;
 
-import com.sun.xml.tree.ElementNode;
+import java.beans.*;
 
 /**
- * Class representing a project element in the build file.
+ * BeanInfo for the ACSTargetElement class.
  * 
  * @version $Revision$ 
  * @author Simeon Fitch 
  */
-public class ACSProjectElement extends ACSNamedElement {
-    public ACSProjectElement() {
-
+public class ACSProjectElementBeanInfo extends BaseBeanInfo {
+	/** 
+	 * Default ctor.
+	 * 
+	 */
+    public ACSProjectElementBeanInfo() {
     }
 
 	/** 
@@ -76,11 +79,28 @@ public class ACSProjectElement extends ACSNamedElement {
     }
 
 	/** 
-	 * Get the display name.
+	 * Get the property descriptors.
 	 * 
-	 * @return Display name.
+     * @return Property descriptors.
 	 */
-    public String getDisplayName() {
-        return getTagName() + ": " + getName();
+    public PropertyDescriptor[] getPropertyDescriptors() {
+        PropertyDescriptor[] retval = null;
+
+        try {
+            retval = new PropertyDescriptor[] {
+                new PropertyDescriptor(ACSProjectElement.NAME, 
+                                       ACSProjectElement.class),
+                new PropertyDescriptor(ACSProjectElement.DESCRIPTION, 
+                                       ACSProjectElement.class)
+
+            };
+        }
+        catch(IntrospectionException ex) {
+            ex.printStackTrace();
+            throw new Error(ex.toString());
+        }
+
+        return retval;
     }
+
 }

@@ -1,3 +1,8 @@
+2000-11-10  Simeon H.K. Fitch  <simeon@fitch.net>
+
+	* org/apache/tools/ant/gui/PropertyEditor.java: Added new
+	DynamicCustomizer class instead of HTML based info.
+
 2000-11-09  Simeon H.K. Fitch  <simeon@fitch.net>
 
 	* org/apache/tools/ant/gui/ProjectProxy.java: Started rework of

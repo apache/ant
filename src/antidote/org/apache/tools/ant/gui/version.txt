@@ -1,3 +1,6 @@
 VERSION=@VERSION@
 DATE=@DATE@
-CONTRIBUTORS=Simeon H.K. Fitch, Ant Development Team
+CONTRIBUTORS=\
+    Simeon H.K. Fitch, \
+    Ant Development Team, \
+    Icons Copyright &copy; 1998 Dean S. Jones

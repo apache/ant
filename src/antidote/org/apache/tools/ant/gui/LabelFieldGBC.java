@@ -51,36 +51,94 @@
  * information on the Apache Software Foundation, please see
  * <http://www.apache.org/>.
  */
-package org.apache.tools.ant.gui.acs;
+package org.apache.tools.ant.gui;
 
-import com.sun.xml.tree.ElementNode;
+import java.awt.GridBagConstraints;
+import java.awt.Insets;
+import java.awt.Container;
+import javax.swing.JLabel;
 
 /**
- * Class representing a project element in the build file.
+ * Convenience specialization of the GridBagConstraints for laying
+ * out label:field pairs.
  * 
  * @version $Revision$ 
  * @author Simeon Fitch 
  */
-public class ACSProjectElement extends ACSNamedElement {
-    public ACSProjectElement() {
-
-    }
+public class LabelFieldGBC extends GridBagConstraints {
 
 	/** 
-	 * Get the type that this BeanInfo represents.
+	 * Default ctor. Sets up the default settings.
 	 * 
-	 * @return Type.
 	 */
-    public Class getType() {
-        return ACSProjectElement.class;
-    }
+	public LabelFieldGBC() {
+		// Add small abount of padding.
+		insets = new Insets(1,3,1,3);
+		// All vertical layout is relative
+		gridy = RELATIVE;
+		// Grid dimensions are equal (one label field pair per row).
+		gridheight = 1;
+		gridwidth = 1;
+	}
 
 	/** 
-	 * Get the display name.
+	 * Set up constraint values for placing a label before a field.
 	 * 
-	 * @return Display name.
+	 * @return Constraints for a label.
 	 */
-    public String getDisplayName() {
-        return getTagName() + ": " + getName();
-    }
+	public LabelFieldGBC forLabel() {
+		// Labels should only take up as much room as needed. 
+		fill = NONE;
+		// Set location to left side.
+		gridx = 0;
+		// Move it over to be as close to field as possible.
+		anchor = EAST;
+		// Don't take up any extra.
+		weightx = 0.0;
+		return this;
+	}
+
+	/** 
+	 * Provide the same setup as forLabel(), but allow it to expand vertically
+	 * to use up any extra space there may be.
+	 * 
+	 * @return Constraints for label that sucks up vertical space.
+	 */
+	public LabelFieldGBC forLastLabel() {
+		forLabel();
+		fill = VERTICAL;
+		weighty = 1.0;
+		return this;
+	}
+
+	/** 
+	 * Set up constraint values for placing a field after a label.
+	 * 
+	 * @return Constraints for a field.
+	 */
+	public LabelFieldGBC forField() {
+		// The field should take up as much space as is necessary.
+		fill = HORIZONTAL;
+		// Set the location to the right side.
+		gridx = 1;
+		// Center the field in the space available (a noop in this case).
+		anchor = CENTER;
+		// Take up any extra space.
+		weightx = 1.0;
+		return this;
+	}
+
+	/** 
+	 * Provide the same setup as forField(), but allow it to expand vertically
+	 *
+	 * 
+	 * @return Constraintes for field that sucks up vertical space.
+	 */
+	public LabelFieldGBC forLastField() {
+		forField();
+		fill = BOTH;
+		weighty = 1.0;
+		return this;
+	}
+
 }

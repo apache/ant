@@ -52,7 +52,9 @@
  * <http://www.apache.org/>.
  */
 package org.apache.tools.ant.gui;
-import org.apache.tools.ant.gui.acs.ACSTargetElement;
+
+import org.apache.tools.ant.gui.customizer.DynamicCustomizer;
+import org.apache.tools.ant.gui.acs.*;
 import org.apache.tools.ant.gui.event.*;
 import javax.swing.*;
 import java.util.*;
@@ -68,8 +70,8 @@ import java.awt.BorderLayout;
  */
 class PropertyEditor extends AntEditor {
 
-    /** Text pane. */
-    private JEditorPane _text = null;
+    /** The property sheet. */
+    private DynamicCustomizer _customizer = null;
 
 	/** 
 	 * Standard ctor.
@@ -80,115 +82,27 @@ class PropertyEditor extends AntEditor {
         super(context);
         context.getEventBus().addMember(EventBus.MONITORING, new Handler());
         setLayout(new BorderLayout());
-
-        _text = new JEditorPane("text/html", getAppContext().getResources().
-                                getString(getClass(), "noTargets"));
-        _text.setEditable(false);
-        _text.setOpaque(false);
-
-        JScrollPane scroller = new JScrollPane(_text);
-
-        add(BorderLayout.CENTER, scroller);
 	}
 
 	/** 
-	 * Populate the display with the given target info.
+	 * Update the display for the current item. 
 	 * 
-	 * @param targets Targets to display info for.
+	 * @param item Current item.
 	 */
-    private void displayTargetInfo(ACSTargetElement[] targets) {
-
-        // The text to display.
-        String text = null;
-
-        int num = targets == null ? 0 : targets.length;
-        Object[] args = null;
-        switch(num) {
-          case 0:
-              text = getAppContext().getResources().
-                  getString(getClass(), "noTargets");
-              break;
-          case 1:
-              args = getTargetParams(targets[0]);
-              text = getAppContext().getResources().
-                  getMessage(getClass(), "oneTarget", args);
-              break;
-          default:
-              args = getTargetParams(targets);
-              text = getAppContext().getResources().
-                  getMessage(getClass(), "manyTargets", args);
-              break;
+    private void updateDisplay(ACSElement item) {
+        if(_customizer != null) {
+            remove(_customizer);
+            _customizer = null;
         }
 
-        if(text != null) {
-            _text.setText(text);
+        if(item != null) {
+            _customizer = new DynamicCustomizer(item.getClass(), true);
+            _customizer.setObject(item);
+            add(BorderLayout.CENTER, _customizer);
         }
+        validate();
     }
 
-	/** 
-	 * Get the parameters for the formatted message presented for a single
-     * target.
-	 * 
-	 * @param target Target to generate params for.
-     * @return Argument list for the formatted message.
-	 */
-    private Object[] getTargetParams(ACSTargetElement target) {
-        List args = new LinkedList();
-        args.add(target.getName());
-        args.add(target.getDescription() == null ? 
-                 "" : target.getDescription());
-        StringBuffer buf = new StringBuffer();
-        String[] depends = target.getDependencyNames();
-        for(int i = 0; i < depends.length; i++) {
-            buf.append(depends[i]);
-            if(i < depends.length - 1) {
-                buf.append(", ");
-            }
-        }
-        args.add(buf.toString());
-
-        return args.toArray();
-    }
-
-	/** 
-	 * Get the parameters for the formatted message presented for multiple
-     * targets.
-	 * 
-	 * @param target Targets to generate params for.
-     * @return Argument list for the formatted message.
-	 */
-    private Object[] getTargetParams(ACSTargetElement[] targets) {
-        List args = new LinkedList();
-
-        StringBuffer buf = new StringBuffer();
-        Set depends = new HashSet();
-        for(int i = 0; i < targets.length; i++) {
-            buf.append(targets[i].getName());
-            if(i < targets.length - 1) {
-                buf.append(", ");
-            }
-
-            String[] dependNames = targets[i].getDependencyNames();
-            for(int j = 0; j < dependNames.length; j++) {
-                depends.add(dependNames[j]);
-            }
-        }
-
-        args.add(buf.toString());
-
-        Iterator it = depends.iterator();
-        buf = new StringBuffer();
-        while(it.hasNext()) {
-            buf.append(it.next());
-            if(it.hasNext()) {
-                buf.append(", ");
-            }
-        }
-
-        args.add(buf.toString());
-
-        return args.toArray();
-    }
 
     /** Class for handling project events. */
     private class Handler implements BusMember {
@@ -212,7 +126,7 @@ class PropertyEditor extends AntEditor {
         public void eventPosted(EventObject event) {
             TargetSelectionEvent e = (TargetSelectionEvent) event;
             ACSTargetElement[] targets = e.getSelectedTargets();
-            displayTargetInfo(targets);
+            updateDisplay(targets.length == 0 ? null : targets[0]);
         }
 
     }

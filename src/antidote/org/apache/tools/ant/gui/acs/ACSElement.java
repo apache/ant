@@ -53,11 +53,10 @@
  */
 package org.apache.tools.ant.gui.acs;
 
-
-import org.w3c.dom.Node;
 import com.sun.xml.tree.ElementNode;
-import javax.swing.tree.TreeNode;
-import java.util.*;
+import java.beans.PropertyChangeListener;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeSupport; 
 
 /**
  * Abstract base class for all Ant Construction Set
@@ -65,9 +64,10 @@ import java.util.*;
  * 
  * @version $Revision$ 
  * @author Simeon Fitch */
-public abstract class ACSElement extends ElementNode implements TreeNode {
-    /** Cache of TreeNode only children. */
-    private List _treeNodeCache = null;
+public abstract class ACSElement extends ElementNode {
+
+    /** Event support. */
+    private PropertyChangeSupport _propSupport = null;
 
 	/** 
 	 * Default ctor.
@@ -87,105 +87,42 @@ public abstract class ACSElement extends ElementNode implements TreeNode {
     }
 
 	/** 
-	 * Get the cache of TreeNode only children.
+	 * Add a change listener.
 	 * 
-	 * @return List of TreeNodes that are children.
+	 * @param l Listener to add.
 	 */
-    private List getCache() {
-        if(_treeNodeCache == null) {
-            _treeNodeCache = new ArrayList();
-            
-            for(int i = 0; i < getLength(); i++) {
-                if(item(i) instanceof TreeNode) {
-                    _treeNodeCache.add(item(i));
-                }
-            }
+    public void addPropertyChangeListener(PropertyChangeListener l) {
+        if(_propSupport == null) {
+            _propSupport = new PropertyChangeSupport(this);
         }
-
-        return _treeNodeCache;
-    }
-    /**
-     * Returns the child <code>TreeNode</code> at index 
-     * <code>childIndex</code>.
-     */
-    public TreeNode getChildAt(int childIndex) {
-        List nodes = getCache();
-        return (TreeNode) nodes.get(childIndex);
+        _propSupport.addPropertyChangeListener(l);
     }
 
-    /**
-     * Returns the number of children <code>TreeNode</code>s the receiver
-     * contains.
-     */
-    public int getChildCount() {
-        List nodes = getCache();
-        return nodes.size();
-    }
 
-    /**
-     * Returns the parent <code>TreeNode</code> of the receiver.
-     */
-    public TreeNode getParent() {
-        return (TreeNode) getParent();
-    }
-
-    /**
-     * Returns the index of <code>node</code> in the receivers children.
-     * If the receiver does not contain <code>node</code>, -1 will be
-     * returned.
-     */
-    public int getIndex(TreeNode node) {
-        List nodes = getCache();
-        return nodes.indexOf(node);
-    }
-
-    /**
-     * Returns true if the receiver allows children.
-     */
-    public boolean getAllowsChildren() {
-        return true;
-    }
-
-    /**
-     * Returns true if the receiver is a leaf.
-     */
-    public boolean isLeaf() {
-        List nodes = getCache();
-        return nodes.size() <= 0;
-    }
-
-    /**
-     * Returns the children of the reciever as an Enumeration.
-     */
-    public Enumeration children() {
-        return new NodeEnum();
-    }
-
-    /** Internal iterator for the child nodes. */
-    private class NodeEnum implements Enumeration {
-        /** Current child index. */
-        private int _index = 0;
-
-        /** 
-         * Determine if there are more elements to visit.
-         * 
-         * @return True if nextElement() can be called, false otherwise.
-         */
-        public boolean hasMoreElements() {
-            List nodes = getCache();
-            return _index < nodes.size();
+	/** 
+	 * Remove a change listener
+	 * 
+	 * @param l Listener to remove.
+	 */
+    public void removePropertyChangeListener(PropertyChangeListener l) {
+        if(_propSupport == null) {
+            _propSupport = new PropertyChangeSupport(this);
         }
-
-        /** 
-         * Get the next element. hasMoreElements() must currently return true.
-         * 
-         * @return Next element
-         */
-        public Object nextElement() {
-            List nodes = getCache();
-            return nodes.get(_index++);
-        }
-
+        _propSupport.removePropertyChangeListener(l);
     }
 
+	/** 
+	 * Fire a change event to all listener.
+	 * 
+	 * @param propName Name of the property.
+	 * @param oldValue The old value.
+	 * @param newValue The new value.
+	 */
+    protected void firePropertyChange(
+        String propName, Object oldValue, Object newValue) {
+        
+        if(_propSupport != null) {
+            _propSupport.firePropertyChange(propName, oldValue, newValue);
+        }
+    }
 }
