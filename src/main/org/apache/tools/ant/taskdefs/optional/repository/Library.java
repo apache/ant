@@ -18,13 +18,15 @@
 package org.apache.tools.ant.taskdefs.optional.repository;
 
 import org.apache.tools.ant.BuildException;
+import org.apache.tools.ant.Project;
+import org.apache.tools.ant.types.Path;
 
 import java.io.File;
 
 /**
  * How we represent libraries
  *
- * @since 20-Oct-2004
+ * @since Ant1.7
  */
 public class Library {
 
@@ -44,7 +46,20 @@ public class Library {
 
     private String destinationName;
 
+    /**
+     * file mapped to this one
+     */
     private File libraryFile;
+
+    /**
+     * if clause
+     */
+    private String ifClause;
+
+    /**
+     * unless clause
+     */
+    private String unlessClause;
 
     public static final String ERROR_NO_ARCHIVE = "No archive defined";
     public static final String ERROR_NO_PROJECT = "No project defined";
@@ -57,40 +72,73 @@ public class Library {
     private String suffix = "jar";
 
 
+    /**
+     * the project that provides this library
+     * @return the project or null
+     */
     public String getProject() {
         return project;
     }
 
+    /**
+     * the project that provides this library
+     * @param project
+     */
     public void setProject(String project) {
         this.project = project;
     }
 
+    /**
+     * Get the version string of this library
+     * @return
+     */
     public String getVersion() {
         return version;
     }
 
+    /**
+     * set the version string of this library
+     * @param version
+     */
     public void setVersion(String version) {
         this.version = version;
     }
 
+    /**
+     * get the base name of this library
+     * @return
+     */
     public String getArchive() {
         return archive;
     }
 
+    /**
+     * set the base name of this library
+     * @param archive
+     */
     public void setArchive(String archive) {
         this.archive = archive;
     }
 
+    /**
+     * get the destination name attribute.
+     * @return
+     */
     public String getDestinationName() {
         return destinationName;
     }
 
+    /**
+     * set the name of the library when downloaded,
+     * relative to the base directory
+     * @param destinationName
+     */
     public void setDestinationName(String destinationName) {
         this.destinationName = destinationName;
     }
 
     /**
-     * get the suffix for this file.
+      * get the suffix for this file.
      *
      * @return
      */
@@ -98,10 +146,51 @@ public class Library {
         return suffix;
     }
 
+    /**
+     * set the suffix for this file; default is "jar"
+     * @param suffix
+     */
     public void setSuffix(String suffix) {
         this.suffix = suffix;
     }
 
+    /**
+     * a property that must be set for the library to be considered a dependency
+     * @return
+     */
+    public String getIf() {
+        return ifClause;
+    }
+
+    /**
+     * a property that must be set for the library to be considered a dependency
+     * @param ifClause
+     */
+    public void setIf(String ifClause) {
+        this.ifClause = ifClause;
+    }
+
+    /**
+     * a property that must be unset for the library to be considered a dependency
+     * @return
+     */
+    public String getUnless() {
+        return unlessClause;
+    }
+
+    /**
+     * a property that must be unset for the library to be considered a dependency
+     * @param unlessClause
+     */
+    public void setUnless(String unlessClause) {
+        this.unlessClause = unlessClause;
+    }
+
+    /**
+     * get the library file
+     * (only non-null after binding)
+     * @return library file or null
+     */
     public File getLibraryFile() {
         return libraryFile;
     }
@@ -132,6 +221,10 @@ public class Library {
         faultIfEmpty(version, ERROR_NO_SUFFIX);
     }
 
+    /**
+     * string is for debug
+     * @return
+     */
     public String toString() {
         return "Library " + getNormalFilename()
                 + " from project " + project
@@ -139,9 +232,10 @@ public class Library {
     }
 
     /**
-     * calculare the destination file of a library
+     * calculate the destination file of a library; set {@link #libraryFile}
+     * to the File thereof.
      *
-     * @param baseDir
+     * @param baseDir dir that
      *
      * @throws BuildException if invalid
      */
@@ -154,7 +248,8 @@ public class Library {
     }
 
     /**
-     * a test that is only valid after binding
+     * Test for a library
+     * only valid after binding
      *
      * @return
      */
@@ -164,7 +259,7 @@ public class Library {
 
     /**
      * get the last modified date
-     *
+     * only valid after binding
      * @return
      */
     public long getLastModified() {
@@ -214,5 +309,31 @@ public class Library {
     public String getAbsolutePath() {
         return libraryFile.getAbsolutePath();
     }
+
+    /**
+     * test for being enabled
+     * @param project
+     * @return
+     */
+    public boolean isEnabled(Project project) {
+        if (unlessClause != null && project.getProperty(unlessClause) != null) {
+            return false;
+        }
+        if (ifClause == null) {
+            return true;
+        }
+        return project.getProperty(ifClause) != null;
+    }
+
+
+    /**
+     * add our location to a filepath
+     * @param path
+     */
+    public void appendToPath(Path path) {
+        Path.PathElement pathElement = path.createPathElement();
+        pathElement.setLocation(getLibraryFile());
+    }
+
 
 }

@@ -16,7 +16,12 @@
  */
 package org.apache.tools.ant.taskdefs.optional.repository;
 
-import org.apache.commons.httpclient.*;
+import org.apache.commons.httpclient.Credentials;
+import org.apache.commons.httpclient.DefaultMethodRetryHandler;
+import org.apache.commons.httpclient.HttpClient;
+import org.apache.commons.httpclient.HttpMethod;
+import org.apache.commons.httpclient.HttpStatus;
+import org.apache.commons.httpclient.UsernamePasswordCredentials;
 import org.apache.commons.httpclient.cookie.CookiePolicy;
 import org.apache.commons.httpclient.methods.GetMethod;
 import org.apache.tools.ant.BuildException;

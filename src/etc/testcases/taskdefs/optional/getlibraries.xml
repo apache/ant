@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<project name="getlibraries" basedir="." default="all">
+<project name="getlibraries" basedir="." default="init">
 
 
   <!-- use the normal one at ibiblio-->
@@ -10,10 +10,15 @@
     <mkdir dir="${lib.dir}"/>
     <property name="commons.logging" value="commons-logging-1.0.1.jar"/>
 
-    <presetdef name="getlib">
+    <presetdef name="gl1">
       <getlibraries destDir="${lib.dir}">
-        <library archive="commons-logging" project="commons-logging" version="1.0.1"/>
       </getlibraries>
+    </presetdef>
+
+    <presetdef name="getlib">
+      <gl1 destDir="${lib.dir}">
+        <library archive="commons-logging" project="commons-logging" version="1.0.1"/>
+      </gl1>
     </presetdef>
 
     <macrodef name="assert-downloaded">
@@ -26,6 +31,18 @@
         </fail>
       </sequential>
     </macrodef>
+
+    <macrodef name="assert-not-downloaded">
+      <attribute name="library" default="${commons.logging}"/>
+      <sequential>
+        <available property="@{library}.exists"
+          file="${lib.dir}/@{library}"/>
+        <fail if="@{library}.exists">
+        Found: ${lib.dir}@{library}
+        </fail>
+      </sequential>
+    </macrodef>
+
   </target>
 
   <target name="cleanup">
@@ -108,5 +125,37 @@
     </getlib>
   </target>
 
+  <target name="testIf" depends="init">
+    <property name="trueProp" value="true" />
+    <gl1>
+      <mavenrepository/>
+      <library archive="commons-logging" project="commons-logging" version="1.0.1"
+        if="trueProp"/>
+    </gl1>
+    <assert-downloaded/>
+  </target>
+
+  <target name="testUnless" depends="init">
+    <gl1>
+      <mavenrepository/>
+      <library archive="commons-logging" project="commons-logging" version="1.0.1"
+        if="undefinedProp"/>
+    </gl1>
+    <assert-not-downloaded/>
+  </target>
+
+  <target name="testPathID" depends="init">
+    <getlib pathid="commons.logging">
+      <mavenrepository/>
+    </getlib>
+    <available
+      property="logging.found"
+      classname="org.apache.commons.logging.Log"
+      classpathref="commons.logging"
+      ignoresystemclasses="true" />
+    <fail unless="logging.found">
+      Did not find commons logging in the path
+    </fail>
+  </target>
 </project>
 

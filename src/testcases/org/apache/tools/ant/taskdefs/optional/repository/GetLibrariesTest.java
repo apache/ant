@@ -67,17 +67,19 @@ public class GetLibrariesTest extends BuildFileTest {
      * refs are  broken
      * */
     public void NotestFunctionalInline() {
-        if(offline()) {
-            return;
-        }
-        executeTarget("testFunctionalInline");
+        execIfOnline("testFunctionalInline");
     }
     
     public void testMavenInline() {
+        String targetName = "testMavenInline";
+        execIfOnline(targetName);
+    }
+
+    private void execIfOnline(String targetName) {
         if (offline()) {
             return;
         }
-        executeTarget("testMavenInline");
+        executeTarget(targetName);
     }
 
     public void testTwoRepositories() {
@@ -93,16 +95,24 @@ public class GetLibrariesTest extends BuildFileTest {
     }
 
     public void testRenaming() {
-        if (offline()) {
-            return;
-        }
-        executeTarget("testRenaming");
+        execIfOnline("testRenaming");
+
     }
 
     public void testOverwrite() {
-        if (offline()) {
-            return;
-        }
-        executeTarget("testOverwrite");
+        execIfOnline("testOverwrite");
     }
+
+    public void testIf() {
+        execIfOnline("testIf");
+    }
+
+    public void testUnless() {
+        execIfOnline("testUnless");
+    }
+
+    public void testPathID() {
+        execIfOnline("testPathID");
+    }
+
  }

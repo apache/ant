@@ -19,13 +19,16 @@ package org.apache.tools.ant.taskdefs.optional.repository;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.Task;
+import org.apache.tools.ant.types.Path;
 import org.apache.tools.ant.types.Reference;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Collection;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.NoSuchElementException;
 
 /**
  * This task will retrieve one or more libraries from a repository. <ol>
@@ -63,6 +66,13 @@ public class GetLibraries extends Task {
      */
 
     private Repository repository;
+
+    /**
+     * Optional. A name for a path to define from the dependencies specified.
+     */
+    private String pathid;
+
+
 
     public static final String ERROR_ONE_REPOSITORY_ONLY = "Only one repository is allowed";
     public static final String ERROR_NO_DEST_DIR = "No destination directory";
@@ -167,16 +177,45 @@ public class GetLibraries extends Task {
         return destDir;
     }
 
+    /**
+     * get fore download flag
+     * @return
+     */
     public boolean isForceDownload() {
         return forceDownload;
     }
 
+    /**
+     * get the list of libraries
+     * @return
+     */
     public List getLibraries() {
         return libraries;
     }
 
+    /**
+     * get our repository
+     * @return
+     */
     public Repository getRepository() {
         return repository;
+    }
+
+    /**
+     * get the pathID if defined
+     * @return
+     */
+    public String getPathid() {
+        return pathid;
+    }
+
+    /**
+     * the name of a path reference to be created referring
+     * to the libraries.
+     * @param pathid
+     */
+    public void setPathid(String pathid) {
+        this.pathid = pathid;
     }
 
     /**
@@ -208,17 +247,17 @@ public class GetLibraries extends Task {
         validate();
         Repository repo = repository.resolve();
         repo.validate();
-        int toFetch = libraries.size();
-        if (toFetch == 0) {
+        if (libraries.size() == 0) {
             throw new BuildException(ERROR_NO_LIBRARIES);
         }
-        int fetched = 0;
+        int failures = 0;
         log("Getting libraries from " + repo.toString(), Project.MSG_VERBOSE);
         log("Saving libraries to " + destDir.toString(), Project.MSG_VERBOSE);
 
         bindAllLibraries();
         if (isOffline()) {
             log("No retrieval, task is \"offline\"");
+            //when offline, we just make sure everything is in place
             verifyAllLibrariesPresent();
             return;
         }
@@ -250,18 +289,19 @@ public class GetLibraries extends Task {
             }
 
             //iterate through the libs we have
-            Iterator it = libraries.iterator();
+            Iterator it = filteredIterator();
             while (it.hasNext()) {
                 Library library = (Library) it.next();
-                library.bind(destDir);
                 try {
+                    //fetch it
                     if (repo.fetch(library)) {
-                        fetched++;
                     }
                 } catch (IOException e) {
                     //failures to fetch are logged at verbose level
                     log(ERROR_LIBRARY_FETCH_FAILED + library);
                     log(e.getMessage(), Project.MSG_VERBOSE);
+                    //add failures
+                    failures++;
                 }
             }
         } finally {
@@ -270,11 +310,17 @@ public class GetLibraries extends Task {
 
         //at this point downloads have finished.
         //we do still need to verify that everything worked.
-        if ((fetched < toFetch && forceDownload)) {
+        if ((failures>0 && forceDownload)) {
             throw new BuildException(ERROR_FORCED_DOWNLOAD_FAILED);
         }
 
+        //validate the download
         verifyAllLibrariesPresent();
+
+        //create the path
+        if(pathid!=null) {
+            createPath();
+        }
 
     }
 
@@ -296,7 +342,7 @@ public class GetLibraries extends Task {
         //iterate through the libs we have
         boolean missing = false;
 
-        Iterator it = libraries.iterator();
+        Iterator it = filteredIterator();
         while (it.hasNext()) {
             Library library = (Library) it.next();
             //check for the library existing
@@ -311,5 +357,85 @@ public class GetLibraries extends Task {
             throw new BuildException(ERROR_INCOMPLETE_RETRIEVAL);
         }
     }
+
+    /**
+     * create a path; requires pathID!=null
+     */
+    private void createPath() {
+        Path path = new Path(getProject());
+        for (Iterator iterator = filteredIterator();
+             iterator.hasNext();) {
+            ((Library) iterator.next()).appendToPath(path);
+        }
+        getProject().addReference(pathid, path);
+    }
+
+    /**
+     * get a filtered iterator of the dependencies
+     * @return a new iterator that ignores disabled libraries
+     */
+    protected Iterator filteredIterator() {
+        return new LibraryIterator(libraries,getProject());
+    }
+
+    /**
+     * iterator through a list that skips everything that
+     * is not enabled
+     */
+    private static class LibraryIterator implements Iterator {
+        private Iterator _underlyingIterator;
+        private Library _next;
+        private Project _project;
+
+
+        /**
+         * constructor
+         * @param collection
+         * @param project
+         */
+        LibraryIterator(Collection collection, Project project) {
+            _project = project;
+            _underlyingIterator = collection.iterator();
+        }
+
+
+        /**
+         * test for having another enabled component
+         * @return
+         */
+        public boolean hasNext() {
+            while (_next == null && _underlyingIterator.hasNext()) {
+                Library candidate = (Library) _underlyingIterator.next();
+                if (candidate.isEnabled(_project)) {
+                    _next = candidate;
+                }
+            }
+            return (_next != null);
+        }
+
+
+        /**
+         * get the next element
+         * @return
+         */
+        public Object next() {
+            if (!hasNext()) {
+                throw new NoSuchElementException();
+            }
+            Library result = _next;
+            _next = null;
+            return result;
+        }
+
+
+        /**
+         * removal is not supported
+         * @throws UnsupportedOperationException always
+         */
+        public void remove() {
+            throw new UnsupportedOperationException();
+        }
+    }
+
 
 }
