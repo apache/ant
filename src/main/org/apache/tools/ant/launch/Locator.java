@@ -27,7 +27,7 @@ import java.util.Locale;
 
 /**
  * The Locator is a utility class which is used to find certain items
- * in the environment
+ * in the environment.
  *
  * @since Ant 1.6
  */
@@ -53,9 +53,9 @@ public final class Locator {
     }
 
     /**
-     * Find the directory or jar a give resource has been loaded from.
+     * Find the directory or jar a given resource has been loaded from.
      *
-     * @param c the classloader to be consulted for the source
+     * @param c the classloader to be consulted for the source.
      * @param resource the resource whose location is required.
      *
      * @return the file with the resource source or null if
@@ -67,7 +67,6 @@ public final class Locator {
         if (c == null) {
             c = Locator.class.getClassLoader();
         }
-
         URL url = null;
         if (c == null) {
             url = ClassLoader.getSystemResource(resource);
@@ -115,7 +114,6 @@ public final class Locator {
         if (buf.length() > 0) {
             buf.insert(0, File.separatorChar).insert(0, File.separatorChar);
         }
-
         String file = url.getFile();
         int queryPos = file.indexOf('?');
         buf.append((queryPos < 0) ? file : file.substring(0, queryPos));
@@ -126,7 +124,6 @@ public final class Locator {
             && Character.isLetter(uri.charAt(1)) && uri.lastIndexOf(':') > -1) {
             uri = uri.substring(1);
         }
-
         StringBuffer sb = new StringBuffer();
         CharacterIterator iter = new StringCharacterIterator(uri);
         for (char c = iter.first(); c != CharacterIterator.DONE;
@@ -145,24 +142,21 @@ public final class Locator {
                 sb.append(c);
             }
         }
-
         String path = sb.toString();
         return path;
     }
-
 
     /**
      * Get the File necessary to load the Sun compiler tools. If the classes
      * are available to this class, then no additional URL is required and
      * null is returned. This may be because the classes are explicitly in the
-     * class path or provided by the JVM directly
+     * class path or provided by the JVM directly.
      *
-     * @return the tools jar as a File if required, null otherwise
+     * @return the tools jar as a File if required, null otherwise.
      */
     public static File getToolsJar() {
         // firstly check if the tools jar is already in the classpath
         boolean toolsJarAvailable = false;
-
         try {
             // just check whether this throws an exception
             Class.forName("com.sun.tools.javac.Main");
@@ -175,11 +169,9 @@ public final class Locator {
                 // ignore
             }
         }
-
         if (toolsJarAvailable) {
             return null;
         }
-
         // couldn't find compiler - try to find tools.jar
         // based on java.home setting
         String javaHome = System.getProperty("java.home");
@@ -196,17 +188,17 @@ public final class Locator {
     }
 
     /**
-     * Get an array or URLs representing all of the jar files in the
+     * Get an array of URLs representing all of the jar files in the
      * given location. If the location is a file, it is returned as the only
      * element of the array. If the location is a directory, it is scanned for
-     * jar files
+     * jar files.
      *
-     * @param location the location to scan for Jars
+     * @param location the location to scan for Jars.
      *
      * @return an array of URLs for all jars in the given location.
      *
      * @exception MalformedURLException if the URLs for the jars cannot be
-     *            formed
+     *            formed.
      */
     public static URL[] getLocationURLs(File location)
          throws MalformedURLException {
@@ -214,18 +206,18 @@ public final class Locator {
     }
 
     /**
-     * Get an array or URLs representing all of the files of a given set of
+     * Get an array of URLs representing all of the files of a given set of
      * extensions in the given location. If the location is a file, it is
      * returned as the only element of the array. If the location is a
-     * directory, it is scanned for matching files
+     * directory, it is scanned for matching files.
      *
-     * @param location the location to scan for files
+     * @param location the location to scan for files.
      * @param extensions an array of extension that are to match in the
-     *        directory search
+     *        directory search.
      *
-     * @return an array of URLs of matching files
+     * @return an array of URLs of matching files.
      * @exception MalformedURLException if the URLs for the files cannot be
-     *            formed
+     *            formed.
      */
     public static URL[] getLocationURLs(File location,
                                         final String[] extensions)
@@ -235,7 +227,6 @@ public final class Locator {
         if (!location.exists()) {
             return urls;
         }
-
         if (!location.isDirectory()) {
             urls = new URL[1];
             String path = location.getPath();
@@ -247,7 +238,6 @@ public final class Locator {
             }
             return urls;
         }
-
         File[] matches = location.listFiles(
             new FilenameFilter() {
                 public boolean accept(File dir, String name) {
@@ -259,7 +249,6 @@ public final class Locator {
                     return false;
                 }
             });
-
         urls = new URL[matches.length];
         for (int i = 0; i < matches.length; ++i) {
             urls[i] = matches[i].toURL();
