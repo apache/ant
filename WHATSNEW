@@ -232,6 +232,8 @@ Other changes:
   to the standard Java 1.4 doclet. The element is ignored when not running
   on Java 1.4.
 
+* <java>'s source attribute is now enabled for jikes as well.
+
 Changes from Ant 1.4 to Ant 1.4.1
 ===========================================
 

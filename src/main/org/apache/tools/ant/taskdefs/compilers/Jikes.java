@@ -209,6 +209,11 @@ public class Jikes extends DefaultCompilerAdapter {
             cmd.createArgument().setValue("+F");
         }
 
+        if (attributes.getSource() != null) {
+            cmd.createArgument().setValue("-source");
+            cmd.createArgument().setValue(attributes.getSource());
+        }
+
         addCurrentCompilerArgs(cmd);
 
         int firstFileName = cmd.size();
