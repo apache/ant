@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2000-2002 The Apache Software Foundation.  All rights
+ * Copyright (c) 2000-2003 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -61,6 +61,7 @@ package org.apache.tools.tar;
 
 import java.io.File;
 import java.util.Date;
+import java.util.Locale;
 
 /**
  * This class represents an entry in a Tar archive. It consists
@@ -200,16 +201,14 @@ public class TarEntry implements TarConstants {
         this.file = file;
         
         String name = file.getPath();
-        String osname = System.getProperty("os.name");
+        String osname = System.getProperty("os.name").toLowerCase(Locale.US);
         
         if (osname != null) {
         
             // Strip off drive letters!
             // REVIEW Would a better check be "(File.separator == '\')"?
-            String win32Prefix = "Windows";
-            String prefix = osname.substring(0, win32Prefix.length());
         
-            if (prefix.equalsIgnoreCase(win32Prefix)) {
+            if (osname.startsWith("windows")) {
                 if (name.length() > 2) {
                     char ch1 = name.charAt(0);
                     char ch2 = name.charAt(1);
@@ -220,7 +219,7 @@ public class TarEntry implements TarConstants {
                         name = name.substring(2);
                     } 
                 } 
-            } else if (osname.toLowerCase().indexOf("netware") > -1) {
+            } else if (osname.indexOf("netware") > -1) {
                 int colon = name.indexOf(':');
                 if (colon != -1) {
                     name = name.substring(colon + 1);

@@ -66,6 +66,10 @@ Fixed bugs:
 * <exec> output and error streams can now be redirected independently
   to either a property or a file (or both)
 
+* TarEntry's File-arg constructor would fail with a 
+  StringIndexOutOfBoundsException on all OSes where os.name is shorter
+  than seven characters.  Bugzilla Report 18105.
+
 Other changes:
 --------------
 * The filesetmanifest attribute of <jar> has been reenabled.
