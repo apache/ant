@@ -102,12 +102,6 @@
           </tr>
 
           <tr>
-            <td>PGP signing task if possible</td>
-            <td></td>
-            <td>Stefan, others welcome</td>
-          </tr>
-
-          <tr>
             <td>JUnit's System.err/.out handling</td>
             <td>Currently this is coupled to SummaryResultFormatter -
             no SummaryFormatter, no output.  Want to decouple it.</td>
@@ -144,6 +138,12 @@
             <td>update to release, add uptodateness, add a web service
             import (for Axis interop testing)</td>
             <td>Steve, in a really long meeting</td>
+          </tr>
+          <tr>
+            <td>PGP signing task if possible</td>
+            <td>Not done, but deemed impossible - at least in the 1.5
+              time frame.</td>
+            <td>Stefan, others welcome</td>
           </tr>
         </table>
       </subsection>
