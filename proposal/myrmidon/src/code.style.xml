@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<application>
+  <component class="com.intellij.psi.codeStyle.CodeStyleManager">
+    <option name="LINE_SEPARATOR" />
+    <option name="INDENT_SIZE" value="4" />
+    <option name="CONTINUATION_INDENT_SIZE" value="4" />
+    <option name="KEEP_LINE_BREAKS" value="true" />
+    <option name="KEEP_FIRST_COLUMN_COMMENT" value="false" />
+    <option name="TAB_SIZE" value="1" />
+    <option name="USE_TAB_CHARACTER" value="false" />
+    <option name="KEEP_CONTROL_STATEMENT_IN_ONE_LINE" value="true" />
+    <option name="BRACE_STYLE" value="2" />
+    <option name="CLASS_BRACE_STYLE" value="2" />
+    <option name="METHOD_BRACE_STYLE" value="2" />
+    <option name="ELSE_ON_NEW_LINE" value="true" />
+    <option name="WHILE_ON_NEW_LINE" value="false" />
+    <option name="CATCH_ON_NEW_LINE" value="true" />
+    <option name="FINALLY_ON_NEW_LINE" value="true" />
+    <option name="INDENT_CASE_FROM_SWITCH" value="true" />
+    <option name="SPECIAL_ELSE_IF_TREATMENT" value="true" />
+    <option name="ALIGN_MULTILINE_PARAMETERS" value="true" />
+    <option name="ALIGN_MULTILINE_PARAMETERS_IN_CALLS" value="true" />
+    <option name="ALIGN_MULTILINE_FOR" value="true" />
+    <option name="KEEP_BLANK_LINES_IN_DECLARATIONS" value="1" />
+    <option name="KEEP_BLANK_LINES_IN_CODE" value="1" />
+    <option name="BLANK_LINES_BEFORE_PACKAGE" value="0" />
+    <option name="BLANK_LINES_AFTER_PACKAGE" value="1" />
+    <option name="BLANK_LINES_BEFORE_IMPORTS" value="1" />
+    <option name="BLANK_LINES_AFTER_IMPORTS" value="1" />
+    <option name="BLANK_LINES_AROUND_CLASS" value="0" />
+    <option name="BLANK_LINES_AROUND_FIELD" value="0" />
+    <option name="BLANK_LINES_AROUND_METHOD" value="1" />
+    <option name="BLANK_LINES_AFTER_CLASS_HEADER" value="0" />
+    <option name="SPACE_AROUND_ASSIGNMENT_OPERATORS" value="true" />
+    <option name="SPACE_AROUND_LOGICAL_OPERATORS" value="true" />
+    <option name="SPACE_AROUND_EQUALITY_OPERATORS" value="true" />
+    <option name="SPACE_AROUND_RELATIONAL_OPERATORS" value="true" />
+    <option name="SPACE_AROUND_BITWISE_OPERATORS" value="true" />
+    <option name="SPACE_AROUND_ADDITIVE_OPERATORS" value="true" />
+    <option name="SPACE_AROUND_MULTIPLICATIVE_OPERATORS" value="true" />
+    <option name="SPACE_AROUND_SHIFT_OPERATORS" value="true" />
+    <option name="SPACE_AFTER_COMMA" value="true" />
+    <option name="SPACE_BEFORE_COMMA" value="false" />
+    <option name="SPACE_AFTER_SEMICOLON" value="true" />
+    <option name="SPACE_BEFORE_SEMICOLON" value="false" />
+    <option name="SPACE_WITHIN_PARENTHESES" value="true" />
+    <option name="SPACE_WITHIN_METHOD_CALL_PARENTHESES" value="true" />
+    <option name="SPACE_WITHIN_METHOD_PARENTHESES" value="true" />
+    <option name="SPACE_WITHIN_IF_PARENTHESES" value="true" />
+    <option name="SPACE_WITHIN_WHILE_PARENTHESES" value="true" />
+    <option name="SPACE_WITHIN_FOR_PARENTHESES" value="true" />
+    <option name="SPACE_WITHIN_CATCH_PARENTHESES" value="true" />
+    <option name="SPACE_WITHIN_SWITCH_PARENTHESES" value="true" />
+    <option name="SPACE_WITHIN_SYNCHRONIZED_PARENTHESES" value="true" />
+    <option name="SPACE_WITHIN_CAST_PARENTHESES" value="false" />
+    <option name="SPACE_WITHIN_BRACKETS" value="true" />
+    <option name="SPACE_AFTER_TYPE_CAST" value="false" />
+    <option name="SPACE_BEFORE_METHOD_CALL_PARENTHESES" value="false" />
+    <option name="SPACE_BEFORE_METHOD_PARENTHESES" value="false" />
+    <option name="SPACE_BEFORE_IF_PARENTHESES" value="false" />
+    <option name="SPACE_BEFORE_WHILE_PARENTHESES" value="false" />
+    <option name="SPACE_BEFORE_FOR_PARENTHESES" value="false" />
+    <option name="SPACE_BEFORE_CATCH_PARENTHESES" value="false" />
+    <option name="SPACE_BEFORE_SWITCH_PARENTHESES" value="false" />
+    <option name="SPACE_BEFORE_SYNCHRONIZED_PARENTHESES" value="false" />
+    <option name="SPACE_BEFORE_CLASS_LBRACE" value="true" />
+    <option name="SPACE_BEFORE_METHOD_LBRACE" value="true" />
+    <option name="SPACE_BEFORE_IF_LBRACE" value="true" />
+    <option name="SPACE_BEFORE_ELSE_LBRACE" value="true" />
+    <option name="SPACE_BEFORE_WHILE_LBRACE" value="true" />
+    <option name="SPACE_BEFORE_FOR_LBRACE" value="true" />
+    <option name="SPACE_BEFORE_DO_LBRACE" value="true" />
+    <option name="SPACE_BEFORE_SWITCH_LBRACE" value="true" />
+    <option name="SPACE_BEFORE_TRY_LBRACE" value="true" />
+    <option name="SPACE_BEFORE_CATCH_LBRACE" value="true" />
+    <option name="SPACE_BEFORE_FINALLY_LBRACE" value="true" />
+    <option name="SPACE_BEFORE_SYNCHRONIZED_LBRACE" value="true" />
+    <option name="CLASS_TEMPLATE" value="/*&#10; * Copyright (C) The Apache Software Foundation. All rights reserved.&#10; *&#10; * This software is published under the terms of the Apache Software License&#10; * version 1.1, a copy of which has been included  with this distribution in&#10; * the LICENSE.txt file.&#10; */&#10;package $PACKAGE_NAME$;&#10;&#10;/**&#10; * &#10; *&#10; * @author &lt;a href=&quot;mailto:peter@apache.org&quot;&gt;Peter Donald&lt;/a&gt;&#10; * @version $Revision$ $Date$&#10; */&#10;public class $NAME$ { }&#10;" />
+    <option name="ADJUST_CLASS_TEMPLATE" value="true" />
+    <option name="INTERFACE_TEMPLATE" value="/*&#10; * Copyright (C) The Apache Software Foundation. All rights reserved.&#10; *&#10; * This software is published under the terms of the Apache Software License&#10; * version 1.1, a copy of which has been included  with this distribution in&#10; * the LICENSE.txt file.&#10; */&#10;package $PACKAGE_NAME$;&#10;&#10;/**&#10; * &#10; *&#10; * @author &lt;a href=&quot;mailto:peter@apache.org&quot;&gt;Peter Donald&lt;/a&gt;&#10; * @version $Revision$ $Date$&#10; */&#10;public interface $NAME$ { }&#10;" />
+    <option name="ADJUST_INTERFACE_TEMPLATE" value="true" />
+    <option name="FIELD_NAME_PREFIX" value="m_" />
+    <option name="STATIC_FIELD_NAME_PREFIX" value="c_" />
+    <option name="PARAMETER_NAME_PREFIX" value="" />
+    <option name="LOCAL_VARIABLE_NAME_PREFIX" value="" />
+    <option name="FIELD_TYPE_TO_NAME">
+      <value />
+    </option>
+    <option name="STATIC_FIELD_TYPE_TO_NAME">
+      <value />
+    </option>
+    <option name="PARAMETER_TYPE_TO_NAME">
+      <value>
+        <pair name="i" type="int" />
+        <pair name="b" type="byte" />
+        <pair name="c" type="char" />
+        <pair name="l" type="long" />
+        <pair name="i" type="short" />
+        <pair name="b" type="boolean" />
+        <pair name="v" type="double" />
+        <pair name="v" type="float" />
+        <pair name="o" type="java.lang.Object" />
+        <pair name="s" type="java.lang.String" />
+        <pair name="e" type="*Exception" />
+        <pair name="event" type="*Event" />
+      </value>
+    </option>
+    <option name="LOCAL_VARIABLE_TYPE_TO_NAME">
+      <value>
+        <pair name="i" type="int" />
+        <pair name="b" type="byte" />
+        <pair name="c" type="char" />
+        <pair name="l" type="long" />
+        <pair name="i" type="short" />
+        <pair name="b" type="boolean" />
+        <pair name="v" type="double" />
+        <pair name="v" type="float" />
+        <pair name="o" type="java.lang.Object" />
+        <pair name="s" type="java.lang.String" />
+        <pair name="event" type="*Event" />
+      </value>
+    </option>
+    <option name="USE_FQ_CLASS_NAMES" value="false" />
+    <option name="USE_SINGLE_CLASS_IMPORTS" value="true" />
+    <option name="CLASS_COUNT_TO_USE_IMPORT_ON_DEMAND" value="15454" />
+    <option name="PACKAGES_TO_USE_IMPORT_ON_DEMAND">
+      <value />
+    </option>
+    <option name="IMPORT_LAYOUT_TABLE">
+      <value>
+        <package name="" withSubpackages="true" />
+        <emptyLine />
+      </value>
+    </option>
+    <option name="FIELDS_ORDER_WEIGHT" value="1" />
+    <option name="METHODS_ORDER_WEIGHT" value="3" />
+    <option name="CONSTRUCTORS_ORDER_WEIGHT" value="2" />
+    <option name="INNER_CLASSES_ORDER_WEIGHT" value="4" />
+  </component>
+</application>
+
