@@ -957,8 +957,16 @@
     <copy todir="${dist.docs}">
       <fileset dir="${docs.dir}" excludes="${unfiltered.files}">
         <patternset refid="site.excludes"/>
+        <exclude name="**/*.zip"/>
       </fileset>
       <filterchain refid="ant.filters"/>
+    </copy>
+
+    <copy todir="${dist.docs}">
+      <fileset dir="${docs.dir}" excludes="${unfiltered.files}">
+        <include name="**/*.zip"/>
+        <patternset refid="site.excludes"/>
+      </fileset>
     </copy>
 
     <copy todir="${dist.docs}" filtering="false">
