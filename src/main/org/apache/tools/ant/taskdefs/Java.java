@@ -405,9 +405,8 @@ public class Java extends Task {
      */
     public void setFailonerror(boolean fail) {
         failOnError = fail;
-        incompatibleWithSpawn = true;
+        incompatibleWithSpawn |= fail;
     }
-
     /**
      * The working directory of the process
      *
