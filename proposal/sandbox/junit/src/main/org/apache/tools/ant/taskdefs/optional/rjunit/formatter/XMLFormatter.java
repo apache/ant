@@ -211,7 +211,9 @@ public class XMLFormatter extends BaseStreamFormatter {
         String name = JUnitHelper.getTestName(evt.getName());
         test.setAttribute(ATTR_NAME, name);
         String suiteName = JUnitHelper.getSuiteName(evt.getName());
-        if ( !suiteName.equals(lastSuiteElement.getAttribute("name")) ){
+        String lastSuiteName = lastSuiteElement.getAttribute(ATTR_PACKAGE)
+                + "." + lastSuiteElement.getAttribute(ATTR_NAME);
+        if ( !suiteName.equals(lastSuiteName) ){
             throw new BuildException("Received testcase from test "
                     + suiteName + " and was expecting "
                     + lastSuiteElement.getAttribute("name"));
