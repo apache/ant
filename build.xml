@@ -1326,9 +1326,8 @@
           <exclude name="${util.package}/DateUtilsTest.java"
                    unless="jdk1.2+" />
 
+          <exclude name="${optional.package}/JspcTest.java" />
           <!-- misc oneoff tests -->
-          <exclude name="${optional.package}/JspcTest.java"
-                   unless="jasper.present" />
           <exclude name="${optional.package}/WsdlToDotnetTest.java"
                    unless="dotnetapps.found" />
 
@@ -1352,7 +1351,8 @@
 
         </fileset>
       </batchtest>
-
+      <test name="org.apache.tools.ant.taskdefs.optional.JspcTest"
+            if="jasper.present" />
     </junit>
   </target>
 
