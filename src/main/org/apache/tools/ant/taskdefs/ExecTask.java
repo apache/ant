@@ -218,21 +218,28 @@ public class ExecTask extends Task {
     }
 
     /**
-     * Run the command using the given Execute instance.
+     * A Utility method for this classes and subclasses to run an Execute instance (an external command).
      */
-    protected void runExec(Execute exe) throws BuildException {
+    protected final void runExecute(Execute exe) throws IOException {
         int err = -1; // assume the worst
 
-        try {
-            exe.setCommandline(cmdl.getCommandline());
-            err = exe.execute();
-            if (err != 0) {
-                if (failOnError) {
-                    throw new BuildException("Exec returned: "+err, location);
-                } else {
-                    log("Result: " + err, Project.MSG_ERR);
-                }
+        err = exe.execute();
+        if (err != 0) {
+            if (failOnError) {
+                throw new BuildException(taskType + " returned: "+err, location);
+            } else {
+                log("Result: " + err, Project.MSG_ERR);
             }
+        }
+    }
+    
+    /**
+     * Run the command using the given Execute instance. This may be overidden by subclasses
+     */
+    protected void runExec(Execute exe) throws BuildException {
+        exe.setCommandline(cmdl.getCommandline());
+        try {
+            runExecute(exe);
         } catch (IOException e) {
             throw new BuildException("Execute failed: " + e, e, location);
         } finally {

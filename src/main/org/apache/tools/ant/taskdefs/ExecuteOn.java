@@ -148,15 +148,7 @@ public class ExecuteOn extends ExecTask {
                     log("Executing " + Commandline.toString(command), 
                         Project.MSG_VERBOSE);
                     exe.setCommandline(command);
-                    err = exe.execute();
-                    if (err != 0) {
-                        if (failOnError) {
-                            throw new BuildException("Exec returned: "+err, 
-                                                     location);
-                        } else {
-                            log("Result: " + err, Project.MSG_ERR);
-                        }
-                    }
+                    runExecute(exe);
 
                 } else {
                     for (int j=0; j<s.length; j++) {
@@ -164,15 +156,7 @@ public class ExecuteOn extends ExecTask {
                         log("Executing " + Commandline.toString(command), 
                             Project.MSG_VERBOSE);
                         exe.setCommandline(command);
-                        err = exe.execute();
-                        if (err != 0) {
-                            if (failOnError) {
-                                throw new BuildException("Exec returned: "+err, 
-                                                         location);
-                            } else {
-                                log("Result: " + err, Project.MSG_ERR);
-                            }
-                        }
+                        runExecute(exe);
                     }
                 }
             }

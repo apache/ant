@@ -71,6 +71,7 @@ import java.util.*;
 public class Chmod extends ExecuteOn {
 
     private FileSet defaultSet = new FileSet();
+    private boolean defaultSetDefined = false;
     private boolean havePerm = false;
     
     public Chmod() {
@@ -98,6 +99,7 @@ public class Chmod extends ExecuteOn {
      * add a name entry on the include list
      */
     public PatternSet.NameEntry createInclude() {
+        defaultSetDefined = true;
         return defaultSet.createInclude();
     }
     
@@ -105,6 +107,7 @@ public class Chmod extends ExecuteOn {
      * add a name entry on the exclude list
      */
     public PatternSet.NameEntry createExclude() {
+        defaultSetDefined = true;
         return defaultSet.createExclude();
     }
 
@@ -112,6 +115,7 @@ public class Chmod extends ExecuteOn {
      * add a set of patterns
      */
     public PatternSet createPatternSet() {
+        defaultSetDefined = true;
         return defaultSet.createPatternSet();
     }
 
@@ -122,6 +126,7 @@ public class Chmod extends ExecuteOn {
      * @param includes the string containing the include patterns
      */
     public void setIncludes(String includes) {
+        defaultSetDefined = true;
         defaultSet.setIncludes(includes);
     }
 
@@ -132,6 +137,7 @@ public class Chmod extends ExecuteOn {
      * @param excludes the string containing the exclude patterns
      */
     public void setExcludes(String excludes) {
+        defaultSetDefined = true;
         defaultSet.setExcludes(excludes);
     }
 
@@ -143,6 +149,7 @@ public class Chmod extends ExecuteOn {
      *                           shouldn't be used.
      */
     public void setDefaultexcludes(boolean useDefaultExcludes) {
+        defaultSetDefined = true;
         defaultSet.setDefaultexcludes(useDefaultExcludes);
     }
     
@@ -152,11 +159,32 @@ public class Chmod extends ExecuteOn {
                                      location);
         }
         
-        if (defaultSet.getDir(project) != null) {
+        if (defaultSetDefined && defaultSet.getDir(project) != null) {
             addFileset(defaultSet);
         }
         super.checkConfiguration();
     }
+
+    public void execute() throws BuildException {
+        if (defaultSetDefined) {
+            super.execute();
+        }
+        else if (!defaultSetDefined && defaultSet.getDir(project) != null) {
+            // we are chmodding the given directory
+            createArg().setValue(defaultSet.getDir(project).getPath());
+            Execute execute = prepareExec();
+            try {
+                execute.setCommandline(cmdl.getCommandline());
+                runExecute(execute);
+            } catch (IOException e) {
+                throw new BuildException("Execute failed: " + e, e, location);
+            } finally {
+                // close the output file if required
+                logFlush();
+            }
+        }
+    }
+    
 
     public void setExecutable(String e) {
         throw new BuildException(taskType+" doesn\'t support the executable attribute", location);
