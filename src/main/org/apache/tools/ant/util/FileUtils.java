@@ -710,8 +710,8 @@ public class FileUtils {
     }
 
     /**
-     * Verifies if the filename represents is an absolute path.
-     * @param filename the file name to be checked for being an absolute path.
+     * Verifies that the specified filename represents an absolute path.
+     * @param filename the filename to be checked.
      * @return true if the filename represents an absolute path.
      */
     public static boolean isAbsolutePath(String filename) {
@@ -918,7 +918,7 @@ public class FileUtils {
      * java.io.tmpdir used if not specified.
      *
      * @return a File reference to the new temporary file.
-     * @since ant 1.5
+     * @since Ant 1.5
      */
     public File createTempFile(String prefix, String suffix, File parentDir) {
         File result = null;
