@@ -57,7 +57,7 @@ package org.apache.tools.ant.taskdefs.optional.jsp.compilers;
 import org.apache.tools.ant.Project;
 
 import org.apache.tools.ant.taskdefs.optional.jsp.JspC;
-import org.apache.tools.ant.types.Commandline;
+import org.apache.tools.ant.types.CommandlineJava;
 
 import java.util.Vector;
 import java.util.Enumeration;
@@ -83,8 +83,8 @@ public abstract class DefaultJspCompilerAdapter
      */
     protected void logAndAddFilesToCompile(JspC jspc,
                                            Vector compileList,
-                                           Commandline cmd) {
-        jspc.log("Compilation " + cmd.describeArguments(), 
+                                           CommandlineJava cmd) {
+        jspc.log("Compilation " + cmd.describeJavaCommand(),
                  Project.MSG_VERBOSE);
 
         StringBuffer niceSourceList = new StringBuffer("File");
@@ -130,7 +130,7 @@ public abstract class DefaultJspCompilerAdapter
      *
      * @param  argument  The argument
      */
-    protected void addArg(Commandline cmd, String argument) {
+    protected void addArg(CommandlineJava cmd, String argument) {
         if (argument != null && argument.length() != 0) {
            cmd.createArgument().setValue(argument);
         }
@@ -143,7 +143,7 @@ public abstract class DefaultJspCompilerAdapter
      * @param  argument  The argument
      * @param  value     the parameter
      */
-    protected void addArg(Commandline cmd, String argument, String value) {
+    protected void addArg(CommandlineJava cmd, String argument, String value) {
         if (value != null) {
             cmd.createArgument().setValue(argument);
             cmd.createArgument().setValue(value);
@@ -156,7 +156,7 @@ public abstract class DefaultJspCompilerAdapter
      * @param  argument  The argument
      * @param  file     the parameter
      */
-    protected void addArg(Commandline cmd, String argument, File file) {
+    protected void addArg(CommandlineJava cmd, String argument, File file) {
         if (file != null) {
             cmd.createArgument().setValue(argument);
             cmd.createArgument().setFile(file);
@@ -170,6 +170,14 @@ public abstract class DefaultJspCompilerAdapter
      */
     public boolean implementsOwnDependencyChecking() {
         return false;
+    }
+
+    /**
+     * get our project
+     * @return owner project data
+     */
+    public Project getProject() {
+        return getJspc().getProject();
     }
 }
 
