@@ -258,6 +258,41 @@ shell-prompt> cat < foo
       </answer>
     </faq>
 
+    <faq id="defaultexcludes">
+
+      <question>I've made a &lt;delete&gt; task to delete unwanted
+      sourcesafe control files (CVS files, editor backup files), but
+      it doesn't seem to work. The files never get deleted. What's
+      wrong?</question>
+
+      <answer>
+        <p>This is probably happening because by default, Ant excludes
+        SourceSafe control files (<code>vssver.scc</code>) and other
+        files from FileSets.</p>
+
+        <p>Here's what you probably did:</p>
+
+
+	<source><![CDATA[
+<delete>
+  <fileset dir="${build.src}" includes="**/vssver.scc"/>
+</delete>
+]]></source>
+
+        <p>You need to switch off the default exclusions and it will work:</p>
+	<source><![CDATA[
+<delete>
+  <fileset dir="${build.src}" includes="**/vssver.scc"
+           defaultexcludes="no"/>
+</delete>
+]]></source>
+        
+        <p>For a complete listing of the patterns thate are excluded
+        by default, see <a href="manual/dirtasks.html">the user
+        manual</a>.</p>
+
+      </answer>
+    </faq>
   </faqsection>
 
   <faqsection title="Ant and IDEs/Editors">

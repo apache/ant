@@ -157,6 +157,12 @@
   How do I redirect standard input or standard output
         in the <code>&lt;exec&gt;</code> task?
   </a></li>
+                    <li><a href="#defaultexcludes">
+  I've made a &lt;delete&gt; task to delete unwanted
+      sourcesafe control files (CVS files, editor backup files), but
+      it doesn't seem to work. The files never get deleted. What's
+      wrong?
+  </a></li>
                 </ul>
       </blockquote>
     </td></tr>
@@ -711,6 +717,79 @@ shell-prompt&gt; cat &lt; foo
   </div>
                                         <p>Note, that you must use the <code>value</code> attribute of
         <code>&lt;arg&gt;</code> in the last element.</p>
+                        </blockquote>
+    </td></tr>
+  </table>
+  </a>
+        <a name="defaultexcludes">
+  <table border="0" cellspacing="0" cellpadding="2" width="100%">
+    <tr><td bgcolor="#828DA6">
+      <font color="#ffffff" face="arial,helvetica,sanserif">
+        <strong>
+          I've made a &lt;delete&gt; task to delete unwanted
+      sourcesafe control files (CVS files, editor backup files), but
+      it doesn't seem to work. The files never get deleted. What's
+      wrong?
+        </strong>
+      </font>
+    </td></tr>
+    <tr><td>
+      <blockquote>
+                              <p>This is probably happening because by default, Ant excludes
+        SourceSafe control files (<code>vssver.scc</code>) and other
+        files from FileSets.</p>
+                                        <p>Here's what you probably did:</p>
+                                          <div align="left">
+    <table cellspacing="4" cellpadding="0" border="0">
+      <tr>
+        <td bgcolor="#023264" width="1" height="1"><img src="/images/void.gif" width="1" height="1" vspace="0" hspace="0" border="0"/></td>
+        <td bgcolor="#023264" height="1"><img src="/images/void.gif" width="1" height="1" vspace="0" hspace="0" border="0"/></td>
+        <td bgcolor="#023264" width="1" height="1"><img src="/images/void.gif" width="1" height="1" vspace="0" hspace="0" border="0"/></td>
+      </tr>
+      <tr>
+        <td bgcolor="#023264" width="1"><img src="/images/void.gif" width="1" height="1" vspace="0" hspace="0" border="0"/></td>
+        <td bgcolor="#ffffff"><pre>
+&lt;delete&gt;
+  &lt;fileset dir=&quot;${build.src}&quot; includes=&quot;**/vssver.scc&quot;/&gt;
+&lt;/delete&gt;
+</pre></td>
+        <td bgcolor="#023264" width="1"><img src="/images/void.gif" width="1" height="1" vspace="0" hspace="0" border="0"/></td>
+      </tr>
+      <tr>
+        <td bgcolor="#023264" width="1" height="1"><img src="/images/void.gif" width="1" height="1" vspace="0" hspace="0" border="0"/></td>
+        <td bgcolor="#023264" height="1"><img src="/images/void.gif" width="1" height="1" vspace="0" hspace="0" border="0"/></td>
+        <td bgcolor="#023264" width="1" height="1"><img src="/images/void.gif" width="1" height="1" vspace="0" hspace="0" border="0"/></td>
+      </tr>
+    </table>
+  </div>
+                                        <p>You need to switch off the default exclusions and it will work:</p>
+                                          <div align="left">
+    <table cellspacing="4" cellpadding="0" border="0">
+      <tr>
+        <td bgcolor="#023264" width="1" height="1"><img src="/images/void.gif" width="1" height="1" vspace="0" hspace="0" border="0"/></td>
+        <td bgcolor="#023264" height="1"><img src="/images/void.gif" width="1" height="1" vspace="0" hspace="0" border="0"/></td>
+        <td bgcolor="#023264" width="1" height="1"><img src="/images/void.gif" width="1" height="1" vspace="0" hspace="0" border="0"/></td>
+      </tr>
+      <tr>
+        <td bgcolor="#023264" width="1"><img src="/images/void.gif" width="1" height="1" vspace="0" hspace="0" border="0"/></td>
+        <td bgcolor="#ffffff"><pre>
+&lt;delete&gt;
+  &lt;fileset dir=&quot;${build.src}&quot; includes=&quot;**/vssver.scc&quot;
+           defaultexcludes=&quot;no&quot;/&gt;
+&lt;/delete&gt;
+</pre></td>
+        <td bgcolor="#023264" width="1"><img src="/images/void.gif" width="1" height="1" vspace="0" hspace="0" border="0"/></td>
+      </tr>
+      <tr>
+        <td bgcolor="#023264" width="1" height="1"><img src="/images/void.gif" width="1" height="1" vspace="0" hspace="0" border="0"/></td>
+        <td bgcolor="#023264" height="1"><img src="/images/void.gif" width="1" height="1" vspace="0" hspace="0" border="0"/></td>
+        <td bgcolor="#023264" width="1" height="1"><img src="/images/void.gif" width="1" height="1" vspace="0" hspace="0" border="0"/></td>
+      </tr>
+    </table>
+  </div>
+                                        <p>For a complete listing of the patterns thate are excluded
+        by default, see <a href="manual/dirtasks.html">the user
+        manual</a>.</p>
                         </blockquote>
     </td></tr>
   </table>
