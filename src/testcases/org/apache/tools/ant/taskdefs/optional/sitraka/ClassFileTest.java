@@ -81,11 +81,7 @@ public class ClassFileTest extends TestCase {
         assertEquals("ClassFileTest.java", clazzfile.getSourceFile());
         MethodInfo[] methods = clazzfile.getMethods();
         assertEquals(3, methods.length);
-        if (JavaEnvUtils.isJavaVersion(JavaEnvUtils.JAVA_1_2)) {
-            assertHasMethod("void <init>()", 1, methods);
-        } else {
-            assertHasMethod("void <init>()", 2, methods);
-        }
+        assertHasMethod("void <init>()", 1, methods);
         assertHasMethod("void testTwoLines()", 2, methods);
         assertHasMethod("void testOneLine()", 3, methods);
     }
@@ -95,7 +91,7 @@ public class ClassFileTest extends TestCase {
         for (int i = 0; i < methods.length; i++) {
             MethodInfo method = methods[i];
             if (methodsig.equals(method.getFullSignature())) {
-                
+
                 assertTrue(methodsig, method.getNumberOfLines() >= line);
                 return;
             }
