@@ -68,7 +68,7 @@ if [ -d "build/classes" ] ; then
   rm -r build/classes
 fi
 
-CLASSPATH=lib/crimson.jar:lib/jaxp.jar:${CLASSPATH}
+CLASSPATH=lib/crimson.jar:${CLASSPATH}
 
 DIRLIBS=lib/optional/*.jar
 for i in ${DIRLIBS}

@@ -13,7 +13,7 @@ if test ! -f bootstrap/lib/ant.jar -o  ! -x bootstrap/bin/ant -o ! -x bootstrap/
   exit
 fi
 
-LOCALCLASSPATH=lib/crimson.jar:lib/jaxp.jar
+LOCALCLASSPATH=lib/crimson.jar
 # add in the dependency .jar files
 DIRLIBS=lib/optional/*.jar
 for i in ${DIRLIBS}

@@ -23,7 +23,7 @@ if not "%OS%" == "Windows_NT" if exist bootstrap\nul deltree/y bootstrap
 if     "%OS%" == "Windows_NT" if exist build\classes\nul rmdir/s/q build\classes
 if not "%OS%" == "Windows_NT" if exist build\classes\nul deltree/y build\classes
 
-SET LOCALCLASSPATH=lib\crimson.jar;lib\jaxp.jar;
+SET LOCALCLASSPATH=lib\crimson.jar
 for %%i in (lib\optional\*.jar) do call src\script\lcp.bat %%i
 if exist "%JAVA_HOME%\lib\tools.jar" call src\script\lcp.bat %JAVA_HOME%\lib\tools.jar
 if exist "%JAVA_HOME%\lib\classes.zip" call src\script\lcp.bat %JAVA_HOME%\lib\classes.zip
