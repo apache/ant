@@ -234,4 +234,17 @@ Legal:
         <copy file="sample.ant" dest-file="../../dist/bin/sample.ant-copied.txt"/>
     </target>
 
+    <target name="move-test">
+        <move file="../../dist/bin/sample.ant-copied.txt"
+              dest-file="../../dist/bin/sample.ant-moved.txt"/>
+    </target>
+
+    <target name="filtered-copy-test">
+        <filtered-copy file="testdata.txt" dest-file="../../dist/bin/filtered-data.txt">
+            <filter-set>
+                <filter token="REPLACEME" value="***replacement-data-here***"/>
+            </filter-set>
+        </filtered-copy>
+    </target>
+
 </project>

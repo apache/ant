@@ -1,0 +1,5 @@
+SOme values that have a REPLACEME in them to be replaced like @REPLACEME@ or
+@REPLACEME@
+or @REPLACEME
+@
+etc
