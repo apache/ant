@@ -1,21 +1,37 @@
 <project name="embed" default="main" basedir=".">
-  <property name="ant.src" location="../.." />
-  <property name="commons.src" location="${ant.src}/../jakarta-commons" />
+  <property file="${user.home}/build.properties" />
 
-  <property name="embed.build" location="build" />
+  <property name="base.path" location="/usr/share/java"/>
+  <property name="ant.src" location="../.."/>
+  <property name="commons.src" location="${ant.src}/../jakarta-commons"/>
+  <property name="sandbox.src" location="${ant.src}/../jakarta-commons-sandbox"/>
+
+  <property name="embed.build" location="build"/>
   <property name="debug" value="true"/>
-  
-  <property name="jxpath.jar" location="${commons.src}/jxpath/dist/commons-jxpath.jar" />
+
+  <!-- Those 2 should be moved to JXPath and velocity. -->  
+  <property name="commons-logging.jar" location="${commons.src}/logging/dist/commons-logging.jar" /> 
+  <property name="jxpath.jar" location="${commons.src}/jxpath/dist/commons-jxpath.jar" /> 
+  <property name="velocity.jar" location="${base.path}/velocity/velocity-20020220.jar" />
+  <property name="velocity-dep.jar" location="${base.path}/velocity/velocity-dep-20020220.jar" />
+  <property name="discovery.jar" location="${commons.src}/discovery/dist/commons-discovery.jar" />
+  <property name="jexl.jar" location="${sandbox.src}/jexl/dist/commons-jexl.jar" />
+
+  <property name="commons-discovery.jar" location="${commons.src}/discovery/commons-discovery.jar" />
+
     
   <target name="main">
     <mkdir dir="build/classes" />
-  
     <javac srcdir="src/java"  
            debug="${debug}"
            destdir="${embed.build}/classes" >
       <include name="**" />
       <classpath>
+        <!-- all this will move to their package -->
         <pathelement location="${jxpath.jar}" />
+        <pathelement location="${velocity.jar}" />
+        <pathelement location="${jexl.jar}" />
+        <pathelement location="${discovery.jar}" />
       </classpath>
     </javac>
 
