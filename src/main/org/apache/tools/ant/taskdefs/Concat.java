@@ -73,6 +73,7 @@ import java.util.Vector;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.DirectoryScanner;
 import org.apache.tools.ant.Project;
+import org.apache.tools.ant.ProjectComponent;
 import org.apache.tools.ant.Task;
 import org.apache.tools.ant.filters.util.ChainReaderHelper;
 import org.apache.tools.ant.types.FileList;
@@ -573,7 +574,7 @@ public class Concat extends Task {
     /**
      * sub element points to a file or contains text
      */
-    public static class TextElement {
+    public static class TextElement extends ProjectComponent {
         private String   value = "";
         private boolean  trimLeading = false;
         private boolean  trim = false;
@@ -645,7 +646,7 @@ public class Concat extends Task {
          * @param value the text to place inline
          */
         public void addText(String value) {
-            this.value += value;
+            this.value += getProject().replaceProperties(value);
         }
 
         /**
