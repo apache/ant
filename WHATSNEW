@@ -554,6 +554,9 @@ If set to true, the process will be spawned. Bugzilla Report 5907.
 * <zip> and friends will consume far less memory than they used to
   when run with compress="false".  Bugzilla Report 21899.
 
+* <if/> and <unless/> attributes added to <param/> element of <style>
+   Bugzilla Report 22044
+
 Changes from Ant 1.5.2 to Ant 1.5.3
 ===================================
 
