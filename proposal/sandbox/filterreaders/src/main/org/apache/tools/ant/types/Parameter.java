@@ -53,49 +53,37 @@
  */
 package org.apache.tools.ant.types;
 
-import java.io.FilterReader;
-import java.util.Hashtable;
-import java.util.Vector;
-
-import org.apache.tools.ant.BuildException;
-
 /**
- * An AntFileReader is a wrapper class that encloses the classname
- * and configuration of a Configurable FilterReader.
+ * A parameter is composed of a name, type and value.
  *
  * @author <a href="mailto:umagesh@apache.org">Magesh Umasankar</a>
  */
-public final class AntFilterReader {
+public final class Parameter {
+    private String name = null;
+    private String type = null;
+    private String value = null;
 
-    private String className;
-
-    private final Vector parameters = new Vector();
-
-    public final void setClassName(final String className) {
-        try {
-            final Class c = Class.forName(className);
-            if (FilterReader.class.isAssignableFrom(c)) {
-                this.className = className;
-            } else {
-                throw new BuildException(className +
-                    " does not extend java.io.FilterReader");
-            }
-        } catch (final ClassNotFoundException cnfe) {
-            throw new BuildException(cnfe);
-        }
+    public final void setName(final String name) {
+        this.name = name;
     }
 
-    public final String getClassName() {
-        return className;
+    public final void setType(final String type) {
+        this.type = type;
     }
 
-    public final void addParam(final Parameter param) {
-        parameters.addElement(param);
+    public final void setValue(final String value) {
+        this.value = value;
     }
 
-    public final Parameter[] getParams() {
-        Parameter[] params = new Parameter[parameters.size()];
-        parameters.copyInto(params);
-        return params;
+    public final String getName() {
+        return name;
+    }
+
+    public final String getType() {
+        return type;
+    }
+
+    public final String getValue() {
+        return value;
     }
 }

@@ -53,7 +53,7 @@
  */
 package org.apache.tools.ant.types;
 
-import java.util.Hashtable;
+import java.util.Vector;
 
 /**
  * Parameterizable objects take genric key value pairs.
@@ -61,5 +61,5 @@ import java.util.Hashtable;
  * @author <a href="mailto:umagesh@apache.org">Magesh Umasankar</a>
  */
 public interface Parameterizable {
-    void setParameters(Hashtable parameters);
+    void setParameters(Parameter[] parameters);
 }

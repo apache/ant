@@ -58,12 +58,12 @@ import org.apache.tools.ant.Project;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.types.AntFilterReader;
 import org.apache.tools.ant.types.FilterReaderSet;
+import org.apache.tools.ant.types.Parameter;
 import org.apache.tools.ant.types.Parameterizable;
 
 import java.io.*;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
-import java.util.Hashtable;
 import java.util.Vector;
 
 /**
@@ -272,7 +272,7 @@ public final class LoadFile extends Task {
                             instream =
                                 (Reader) constructors[0].newInstance(rdr);
                             if (Parameterizable.class.isAssignableFrom(clazz)) {
-                                final Hashtable params = filter.getParams();
+                                final Parameter[] params = filter.getParams();
                                 ((Parameterizable)
                                     instream).setParameters(params);
                             }

@@ -3,8 +3,8 @@ package org.apache.tools.ant.filters;
 import java.io.FilterReader;
 import java.io.IOException;
 import java.io.Reader;
-import java.util.Hashtable;
 
+import org.apache.tools.ant.types.Parameter;
 import org.apache.tools.ant.types.Parameterizable;
 
 /**
@@ -28,7 +28,7 @@ public final class StripLineBreaks
      */
     private static final String LINE_BREAKS_KEY = "linebreaks";
 
-    private Hashtable parameters;
+    private Parameter[] parameters;
 
     /**
      * Create a new filtered reader.
@@ -73,15 +73,22 @@ public final class StripLineBreaks
      * the option is requested, then line breaks are probably in the source string.
      */
     private final String stripLineBreaks(final String source) {
-        final int len=source.length();
-        final String userDefinedLineBreaks =
-            (String) parameters.get(LINE_BREAKS_KEY);
+        final int len = source.length();
+        String userDefinedLineBreaks = null;
+        if (parameters != null) {
+            for (int i = 0; i < parameters.length; i++) {
+                if (LINE_BREAKS_KEY.equals(parameters[i].getName())) {
+                    userDefinedLineBreaks = parameters[i].getValue();
+                    break;
+                }
+            }
+        }
 
         String lineBreaks = DEFAULT_LINE_BREAKS;
         if (userDefinedLineBreaks != null) {
             lineBreaks = userDefinedLineBreaks;
         }
-        final StringBuffer dest=new StringBuffer(len);
+        final StringBuffer dest = new StringBuffer(len);
         for(int i=0;i<len;++i) {
             final char ch=source.charAt(i);
             if(lineBreaks.indexOf(ch)==-1) {
@@ -95,7 +102,7 @@ public final class StripLineBreaks
     /**
      * Set Parameters
      */
-    public final void setParameters(final Hashtable parameters) {
+    public final void setParameters(final Parameter[] parameters) {
         this.parameters = parameters;
     }
 }
