@@ -57,6 +57,10 @@ Note: This document was created in the context of releasing Ant 1.5.
     cause some PGP users problems verifying signatures even though they seem 
     OK.
 
+    Before you do that, ensure that the key you use is inside the KEYS
+    file in Ant's CVS repository - and that you perform a cvs update on
+    the KEYS file in /www/jakarta.apache.org/builds/jakarta-ant/release/
+
 8.  The beta distribution is now ready to go. Bundle it up into a tar.gz file and 
     scp to your apache account.
     
