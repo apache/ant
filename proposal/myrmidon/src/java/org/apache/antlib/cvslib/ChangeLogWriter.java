@@ -51,7 +51,7 @@ class ChangeLogWriter
         output.println( "\t<entry>" );
         output.println( "\t\t<date>" + c_outputDate.format( entry.getDate() ) + "</date>" );
         output.println( "\t\t<time>" + c_outputTime.format( entry.getDate() ) + "</time>" );
-        output.println( "\t\t<author>" + entry.getAuthor() + "</author>" );
+        output.println( "\t\t<author><![CDATA[" + entry.getAuthor() + "]]></author>" );
 
         final Iterator iterator = entry.getFiles().iterator();
         while( iterator.hasNext() )
@@ -69,7 +69,7 @@ class ChangeLogWriter
 
             output.println( "\t\t</file>" );
         }
-        output.println( "\t\t<msg>" + entry.getComment() + "</msg>" );
+        output.println( "\t\t<msg><![CDATA[" + entry.getComment() + "]]></msg>" );
         output.println( "\t</entry>" );
     }
 }

@@ -253,7 +253,7 @@ class ChangeLogParser
         saveEntry();
 
         m_revision = m_previousRevision;
-        m_status = GET_COMMENT;
+        m_status = GET_DATE;
     }
 
     /**
