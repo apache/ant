@@ -313,31 +313,32 @@
       <question>How do I redirect standard input or standard output
         in the <code>&lt;exec&gt;</code> task?</question>
       <answer>
-        <p>Say you want to redirect the standard input stream of the
-        <code>cat</code> command to read from a file, something
+        <p>Say you want to redirect the standard output stream of the
+        <code>m4</code> command to write to a file, something
         like:</p>
 
         <source><![CDATA[
-shell-prompt> cat < foo
+shell-prompt> m4 foo.m4 > foo
 ]]></source>
         
         <p>and try to translate it into</p>
 
         <source><![CDATA[
-<exec executable="cat">
-  <arg value="&lt;" />
-  <arg value="foo" />
+<exec executable="m4">
+  <arg value="foo.m4"/>
+  <arg value="&gt;"/>
+  <arg value="foo"/>
 </exec>
 ]]></source>
 
-        <p>This will not do what you expect.  The input redirection is
+        <p>This will not do what you expect.  The output redirection is
         performed by your shell, not the command itself, so this
         should read:</p>
         
         <source><![CDATA[
 <exec executable="/bin/sh">
   <arg value="-c" />
-  <arg value="cat &lt; foo" />
+  <arg value="m4 foo.m4 &gt; foo" />
 </exec>
 ]]></source>
 
@@ -347,7 +348,7 @@ shell-prompt> cat < foo
         you can use:</p>
         <source><![CDATA[
 <exec executable="/bin/sh">
-  <arg line='-c "cat &lt; foo"'/>
+  <arg line='-c "m4 foo.m4 &gt; foo"'/>
 </exec>
 ]]></source>
 

@@ -673,26 +673,27 @@
       How do I redirect standard input or standard output
         in the <code>&lt;exec&gt;</code> task?
     </p>
-                  <p>Say you want to redirect the standard input stream of the
-        <code>cat</code> command to read from a file, something
+                  <p>Say you want to redirect the standard output stream of the
+        <code>m4</code> command to write to a file, something
         like:</p>
                         <pre class="code">
-shell-prompt&gt; cat &lt; foo
+shell-prompt&gt; m4 foo.m4 &gt; foo
 </pre>
                         <p>and try to translate it into</p>
                         <pre class="code">
-&lt;exec executable=&quot;cat&quot;&gt;
-  &lt;arg value=&quot;&amp;lt;&quot; /&gt;
-  &lt;arg value=&quot;foo&quot; /&gt;
+&lt;exec executable=&quot;m4&quot;&gt;
+  &lt;arg value=&quot;foo.m4&quot;/&gt;
+  &lt;arg value=&quot;&amp;gt;&quot;/&gt;
+  &lt;arg value=&quot;foo&quot;/&gt;
 &lt;/exec&gt;
 </pre>
-                        <p>This will not do what you expect.  The input redirection is
+                        <p>This will not do what you expect.  The output redirection is
         performed by your shell, not the command itself, so this
         should read:</p>
                         <pre class="code">
 &lt;exec executable=&quot;/bin/sh&quot;&gt;
   &lt;arg value=&quot;-c&quot; /&gt;
-  &lt;arg value=&quot;cat &amp;lt; foo&quot; /&gt;
+  &lt;arg value=&quot;m4 foo.m4 &amp;gt; foo&quot; /&gt;
 &lt;/exec&gt;
 </pre>
                         <p>Note that you must use the <code>value</code> attribute of
@@ -701,7 +702,7 @@ shell-prompt&gt; cat &lt; foo
         you can use:</p>
                         <pre class="code">
 &lt;exec executable=&quot;/bin/sh&quot;&gt;
-  &lt;arg line='-c &quot;cat &amp;lt; foo&quot;'/&gt;
+  &lt;arg line='-c &quot;m4 foo.m4 &amp;gt; foo&quot;'/&gt;
 &lt;/exec&gt;
 </pre>
                         <p>Note the double-quotes nested inside the single-quotes.</p>
