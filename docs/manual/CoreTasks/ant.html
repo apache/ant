@@ -14,11 +14,16 @@
 in the supplied directory (<i>dir</i> attribute) is used.</p>
 <p>If no target attribute is supplied, the default target of the new project is
 used.</p>
-<p>The properties of the current project will be available in the new project.
-These properties will override the properties that are set in the new project.
-(See also the <a href="property.html">property task</a>). You can set properties
-in the new project from the old project by using nested property tags. This
-allows you to parameterize your subprojects.</p>
+<p>By default, all of the properties of the current project will be
+available in the new project.   Alternatively, you can
+set the <i>inheritAll</i> attribute to <code>false</code> and only
+&quot;user&quot; properties (i.e., those passed on the command-line)
+will be passed to the new project.  In either case, the set of
+properties passed to the new project will override the properties that 
+are set in the new project (See also the <a href="property.html">property task</a>).</p>
+<p>You can also set properties in the new project from the old project by
+using nested property tags. These properties are always passed regardless of the
+setting of <i>inheritAll</i>.  This allows you to parameterize your subprojects.</p>
 <h3>Parameters</h3>
 <table border="1" cellpadding="2" cellspacing="0">
   <tr>
@@ -48,6 +53,13 @@ allows you to parameterize your subprojects.</p>
     </td>
     <td align="center" valign="top">No</td>
   </tr>
+  <tr>
+    <td valign="top">inheritAll</td>
+    <td valign="top">If <code>true</code>, pass all properties to the new Ant
+    project.  Defaults to <code>true</code>.
+    </td>
+    <td align="center" valign="top">No</td>
+  </tr>
 </table>
 <h3>Examples</h3>
 <pre>
@@ -58,6 +70,10 @@ allows you to parameterize your subprojects.</p>
   &lt;ant antfile=&quot;subproject/property_based_subbuild.xml&quot;&gt;
     &lt;property name=&quot;param1&quot; value=&quot;version 1.x&quot;/&gt;
     &lt;property file=&quot;config/subproject/default.properties&quot;/&gt;
+  &lt;/ant&gt;
+
+  &lt;ant inheritAll=&quot;false&quot; antfile=&quot;subproject/subbuild.xml&quot;&gt;
+    &lt;property name=&quot;output.type&quot; value=&quot;html&quot;/&gt;
   &lt;/ant&gt;
 </pre>
 <hr>
