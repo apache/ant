@@ -316,6 +316,36 @@
         </table>
       </subsection>
 
+      <subsection name="Greebo">
+
+        <p>Greebo is an Ant-task for downloading dependency files
+        (currently only jars) from a network to a specified directory,
+        much like Maven. It supports multiple local and remote
+        repositories with either flat or maven-like structures. It can
+        read the dependency list from a Maven project file, a
+        maven-like dependency file, or directly from the build.xml
+        file.</p>
+
+        <table>
+          <tr>
+            <th>Compatibility:</th>
+            <td>Ant 1.5</td>
+          </tr>
+          <tr>
+            <th>URL:</th>
+            <td><a href="http://www.discore.com/oz/new/index.htm">http://www.discore.com/oz/new/index.htm</a></td>
+          </tr>
+          <tr>
+            <th>Contact:</th>
+            <td><a href="mailto:ozbene@discore.com">Ozben Evren</a></td>
+          </tr>
+          <tr>
+            <th>License:</th>
+            <td>Apache Software License</td>
+          </tr>
+        </table>
+      </subsection>
+
       <subsection name="Importscrubber">
         <p>Removes unnecessary import statements from a Java source code file.</p>
 
@@ -491,6 +521,29 @@
           <tr>
             <th>License:</th>
             <td>Apache Software License</td>
+          </tr>
+        </table>
+      </subsection>
+
+      <subsection name="JCSC">
+
+        <p>JCSC is a Java Coding Standard Checker which also features
+        the generation of some code metrics. It is a command line tool
+        with an Ant task to scan whole package trees. The result can
+        viewed in an JavaDoc style web page.</p>
+
+        <table>
+          <tr>
+            <th>Compatibility:</th>
+            <td>Ant &gt;1.5</td>  
+          </tr>
+          <tr>
+            <th>URL:</th>
+            <td><a href="http://jcsc.sourceforge.net/">http://jcsc.sourceforge.net/</a></td>
+          </tr>
+          <tr>
+            <th>License:</th>
+            <td>GNU General Public License</td>
           </tr>
         </table>
       </subsection>

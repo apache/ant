@@ -6,5 +6,5 @@ distribution
 *.el
 *.ipr
 *.pif
-velocity.log
+velocity.log*
 
