@@ -104,6 +104,29 @@ public abstract class AbstractSvnTask extends Task {
     private boolean failOnError = false;
 
     /**
+     * Uses the contents of the file passed as an argument to this
+     * switch for the specified subcommand.
+     */
+    private File file;
+
+    /**
+     * Forces a particular command or operation to run.
+     */
+    private boolean force;
+
+    /**
+     * Makes a subcommand recurse into subdirectories. 
+     */
+    private Boolean recursive = null;
+
+    /**
+     * Tells Subversion to get the list of files that you wish to
+     * operate on from the filename you provide instead of listing all
+     * the files on the command line.
+     */
+    private File targets;
+
+    /**
      * Create accessors for the following, to allow different handling of
      * the output.
      */
@@ -427,6 +450,70 @@ public abstract class AbstractSvnTask extends Task {
     }
 
     /**
+     * Uses the contents of the file passed as an argument to this
+     * switch for the specified subcommand.
+     */
+    public void setFile(File file) {
+        this.file = file;
+    }
+
+    /**
+     * Uses the contents of the file passed as an argument to this
+     * switch for the specified subcommand.
+     */
+    public File getFile() {
+        return file;
+    }
+
+    /**
+     * Forces a particular command or operation to run.
+     */
+    public void setForce(boolean force) {
+        this.force = force;
+    }
+
+    /**
+     * Forces a particular command or operation to run.
+     */
+    public boolean getForce() {
+        return force;
+    }
+
+    /**
+     * Makes a subcommand recurse into subdirectories. Most
+     * subcommands recurse by default.
+     */
+    public void setRecursive(Boolean recursive) {
+        this.recursive = recursive;
+    }
+
+    /**
+     * Makes a subcommand recurse into subdirectories. Most
+     * subcommands recurse by default.
+     */
+    public Boolean getRecursive() {
+        return recursive;
+    }
+
+    /**
+     * Tells Subversion to get the list of files that you wish to
+     * operate on from the filename you provide instead of listing all
+     * the files on the command line.
+     */
+    public void setTargets(File targets) {
+        this.targets = targets;
+    }
+
+    /**
+     * Tells Subversion to get the list of files that you wish to
+     * operate on from the filename you provide instead of listing all
+     * the files on the command line.
+     */
+    public File getTargets() {
+        return targets;
+    }
+
+    /**
      * This needs to be public to allow configuration
      *      of commands externally.
      * @param arg command argument
@@ -553,6 +640,24 @@ public abstract class AbstractSvnTask extends Task {
         }
         if (dryrun) {
             c.createArgument(true).setValue("--dry-run");
+        }
+        if (file != null) {
+            c.createArgument(true).setValue("--file");
+            c.createArgument(true).setFile(file);
+        }
+        if (force) {
+            c.createArgument(true).setValue("--force");
+        }
+        if (recursive != null) {
+            if (recursive.booleanValue()) {
+                c.createArgument(true).setValue("--recursive");
+            } else {
+                c.createArgument(true).setValue("--non-recursive");
+            }
+        }
+        if (targets != null) {
+            c.createArgument(true).setValue("--targets");
+            c.createArgument(true).setFile(targets);
         }
     }
 
