@@ -6,7 +6,7 @@ Other changes:
 
 * A GUI Frontend: Antidote
 
-* New tasks: propertyfile, depend, antlr, telnet
+* New tasks: propertyfile, depend, antlr, telnet, csc, ilasm
 
 * Added output attribute to <java>.
 

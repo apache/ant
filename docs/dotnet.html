@@ -1,0 +1,126 @@
+<html>
+<head>
+<title> .Net classes for Ant
+</title>
+<body>
+<h1>.Net classes for Ant</h1>
+
+
+Vision: make ant the definative build tool for .net projects, just
+as it is becoming for java projects
+<p>
+
+<h2>Detail. </h2>
+
+The emergent policy in big java projects is 'IDE for code and debug';
+Ant for builds, test and deployment. While IDEs are great for an 
+individual development task, Ant not only rebuilds everything insanely
+fast, it has great support for modern deployment tasks -ftp upload, 
+EJB servers, SQL commands, all can be done from a relatively simple
+XML declaration of what you want done. Also in a large project 
+(especially open source) there is no means of dictating which IDE to use.
+Ant gives IDE independence, cross platform portability and ease of 
+extensibility. 
+ 
+<p>
+
+Projects using .net should be able to use the same tool. This will 
+avoid everyone being dependent on Visual Studio.net (if they have it) 
+supplemented with makefiles and batch files. Anyone doing mixed java/dotnet
+development will be particulary grateful, as they can have a unified build 
+process. 
+
+<p>
+
+If at sometime in the future bits of .net do appear on different platforms 
+then ant based build files will migrate -once the ant tasks have been 
+migrated and any hard codings of DOS-descendant file system conventions 
+removed from the build.xml files
+
+<h2>Key .net Tasks</h2>
+
+<ol>
+<li>csc - csharp compiler - *.csc -&gt; output
+<li>ilasm - IL assembler - *.il -&gt;.exe or .dll
+<li>ResX - ResXToResources.exe .resx -&gt; .resources
+<li>al - assembly linker (.dll) -&gt;
+<li>Signcode - .exe + keys -&gt; .exe'
+<li>Resgen - .properties -&gt; .resources
+<li>Type Library Exporter (TlbExp.exe- .dll -&gt; .tlb
+<li>TlbImp.exe Type Library Importer 
+<li>RegAsm.exe Assembly Registration Tool .dll -&gt; .reg | registration
+<li>WebServiceUtil -SOAP proxy import, SDL generation tool
+</ol>
+
+<h2>Ant Wrapper for net tasks</h2>
+
+Rarely used .net command line tools can be invoked manually. The key tasks
+to address are the common steps in a build process and those which benefit
+from the file pattern matching function. 
+
+<p>
+
+The esoteric tasks can then supported on demand by those who need them. 
+The initial .net tasks should provide a foundation for that demand creation 
+to be simple. 
+
+<h2>Plan</h2>
+
+<ol>
+
+<li>code up C sharp task and distribute for feedback & identify possible
+aid
+<li>Add the next task I need (whatever that is)
+<li>Refactor to produce a base class for .net tasks
+<li>Leave it other people write all the other tasks
+</ol>
+
+<h2>Risks</h2>
+<ul>
+<li>
+The .net SDK is unstable; the next builds will change the commands, arguments 
+and behaviours. Probability: 100%. Impact: 2 days.
+<li>Portable tasks turn out to be harder than envisaged 
+ (=reworking if/when non Win32 .net build tools appear)
+
+</ul>
+
+<hr>
+<h2>Using Ant in .net projects</h2>
+
+<h3>
+Setup</h3>
+
+To use the net tasks one needs
+<ul>
+
+<li> A win2K box (or any other platform which supports the .net build tools)
+
+<li> JavaVM - Java1.1 or later
+
+<li> Ant downloaded and the environment and path variables set up so 
+that typing 'ant' invokes ant via a batch file.
+
+<li> An XML parser for ant. The usual distributions include an appropriate 
+version parser.jar and jaxp.jar.
+
+<li> the .net tasks archive (dotnettasks.jar) included in the
+ ant\lib directory
+
+<li> The .net sdk installed with the binaries on the path. (Test: type CSC)
+
+<li> A build.xml file to describe the build process
+</ul>
+
+An example build.xml file is included in the test directory.
+
+<h2>Task: CSC</h2>
+
+This task compiles CSharp source into executables or modules.
+Consult the javadoc file for parameter details.
+<h2> Task: ilasm <h2>
+Task to assemble .il files. 
+Consult the javadoc file for parameter details.
+
+</body>
+</html>
