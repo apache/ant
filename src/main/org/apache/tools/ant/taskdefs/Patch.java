@@ -75,29 +75,29 @@ public class Patch extends Exec {
     /**
      * The file to patch.
      */
-    public void setOriginalfile(String file) {
-        originalFile = project.resolveFile(file);
+    public void setOriginalfile(File file) {
+        originalFile = file;
     }
 
     /**
      * The file containing the diff output.
      */
-    public void setPatchfile(String file) {
-        patchFile = project.resolveFile(file);
+    public void setPatchfile(File file) {
+        patchFile = file;
     }
 
     /**
      * Shall patch write backups.
      */
-    public void setBackups(String backups) {
-        backup = Project.toBoolean(backups);
+    public void setBackups(boolean backups) {
+        backup = backups;
     }
 
     /**
      * Ignore whitespace differences.
      */
-    public void setIgnorewhitespace(String ignore) {
-        ignoreWhitespace = Project.toBoolean(ignore);
+    public void setIgnorewhitespace(boolean ignore) {
+        ignoreWhitespace = ignore;
     }
 
     /**
@@ -106,28 +106,41 @@ public class Patch extends Exec {
      *
      * <p>patch's <i>-p</i> option.
      */
-    public void setStrip(String num) {
-        strip = Integer.parseInt(num);
+    public void setStrip(int num) throws BuildException {
+        if (strip < 0) {
+            throw new BuildException("strip has to be >= 0", location);
+        }
+        strip = num;
     }
 
     /**
      * Work silently unless an error occurs.
      */
-    public void setQuiet(String q) {
-        quiet = Project.toBoolean(q);
+    public void setQuiet(boolean q) {
+        quiet = q;
     }
 
     /**
      * Assume patch was created with old and new files swapped.
      */
-    public void setReverse(String r) {
-        reverse = Project.toBoolean(r);
+    public void setReverse(boolean r) {
+        reverse = r;
+    }
+
+    public final void setCommand(String command) throws BuildException {
+        throw new BuildException("Cannot set attribute command in patch task",
+                                 location);
     }
 
     public void execute() throws BuildException {
         if (patchFile == null) {
-            throw new BuildException("patchfile argument is required");
+            throw new BuildException("patchfile argument is required", 
+                                     location);
         } 
+        if (!patchFile.exists()) {
+            throw new BuildException("patchfile "+patchFile+" doesn\'t exist", 
+                                     location);
+        }
         
         StringBuffer command = new StringBuffer("patch -i "+patchFile+" ");
 

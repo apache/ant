@@ -54,9 +54,7 @@
 
 package org.apache.tools.ant;
 
-import java.beans.*;
 import java.io.*;
-import java.lang.reflect.*;
 import java.util.*;
 import org.xml.sax.*;
 import org.w3c.dom.*;
@@ -109,10 +107,24 @@ public class ProjectHelper {
         catch(SAXParseException exc) {
             Location location =
                 new Location(buildFile.toString(), exc.getLineNumber(), exc.getColumnNumber());
-            throw new BuildException(exc.getMessage(), exc.getException(), location);
+
+            Throwable t = exc.getException();
+            if (t instanceof BuildException) {
+                BuildException be = (BuildException) t;
+                if (be.getLocation() == Location.UNKNOWN_LOCATION) {
+                    be.setLocation(location);
+                }
+                throw be;
+            }
+            
+            throw new BuildException(exc.getMessage(), t, location);
         }
         catch(SAXException exc) {
-            throw new BuildException(exc.getMessage(), exc.getException());
+            Throwable t = exc.getException();
+            if (t instanceof BuildException) {
+                throw (BuildException) t;
+            }
+            throw new BuildException(exc.getMessage(), t);
         }
         catch(FileNotFoundException exc) {
             throw new BuildException("File \"" + buildFile.toString() + "\" not found");
@@ -342,15 +354,13 @@ public class ProjectHelper {
             String text = new String(buf, start, end).trim();
             if (text.length() == 0) return;
 
+            IntrospectionHelper ih = 
+                IntrospectionHelper.getHelper(task.getClass());
+
             try {
-                Method addProp = task.getClass().getMethod("addText", new Class[]{String.class});
-                Object child = addProp.invoke(task, new Object[] {text});
-            } catch(NoSuchMethodException exc) {
-                throw new SAXParseException(task.getClass() + " does not support nested text elements", locator);
-            } catch(InvocationTargetException exc) {
-                throw new SAXParseException("Error invoking \"addText\" method", locator, exc);
-            } catch(IllegalAccessException exc) {
-                throw new SAXParseException("Unable to access \"addText\" method", locator, exc);
+                ih.addText(task, text);
+            } catch (BuildException exc) {
+                throw new SAXParseException(exc.getMessage(), locator, exc);
             }
         }
 
@@ -376,19 +386,28 @@ public class ProjectHelper {
 
         public void init(String propType, AttributeList attrs) throws SAXParseException {
             Class targetClass = target.getClass();
-
-            String methodName = "create" + Character.toUpperCase(propType.charAt(0)) + propType.substring(1);
+            IntrospectionHelper ih = 
+                IntrospectionHelper.getHelper(targetClass);
 
             try {
-                Method addProp = targetClass.getMethod(methodName, new Class[]{});
-                child = addProp.invoke(target, new Object[] {});
+                child = ih.createElement(target, propType.toLowerCase());
                 configure(child, attrs);
-            } catch(NoSuchMethodException exc) {
-                throw new SAXParseException(targetClass + " does not support nested " + propType + " properties", locator);
-            } catch(InvocationTargetException exc) {
-                throw new SAXParseException(exc.getMessage(), locator);
-            } catch(IllegalAccessException exc) {
-                throw new SAXParseException(exc.getMessage(), locator);
+            } catch (BuildException exc) {
+                throw new SAXParseException(exc.getMessage(), locator, exc);
+            }
+        }
+
+        public void characters(char[] buf, int start, int end) throws SAXParseException {
+            String text = new String(buf, start, end).trim();
+            if (text.length() == 0) return;
+
+            IntrospectionHelper ih = 
+                IntrospectionHelper.getHelper(child.getClass());
+
+            try {
+                ih.addText(child, text);
+            } catch (BuildException exc) {
+                throw new SAXParseException(exc.getMessage(), locator, exc);
             }
         }
 
@@ -401,70 +420,26 @@ public class ProjectHelper {
         if( target instanceof TaskAdapter )
             target=((TaskAdapter)target).getProxy();
 
-        // XXX
-        // instead of doing this introspection each time around, I
-        // should have a helper class to keep this info around for
-        // each kind of class
-
-        Hashtable propertySetters = new Hashtable();
-        BeanInfo beanInfo;
-        try {
-            beanInfo = Introspector.getBeanInfo(target.getClass());
-        } catch (IntrospectionException ie) {
-            String msg = "Can't introspect class: " + target.getClass();
-            throw new BuildException(msg);
-        }
-
-        PropertyDescriptor[] pda = beanInfo.getPropertyDescriptors();
-        for (int i = 0; i < pda.length; i++) {
-            PropertyDescriptor pd = pda[i];
-            String property = pd.getName();
-            Method setMethod = pd.getWriteMethod();
-            if (setMethod != null) {
-
-                // make sure that there's only 1 param and that it
-                // takes a String object, all other setMethods need
-                // to get screened out
-
-                Class[] ma =setMethod.getParameterTypes();
-                if (ma.length == 1) {
-                    Class c = ma[0];
-                    if (c.getName().equals("java.lang.String")) {
-                        propertySetters.put(property, setMethod);
-                    }
-                }
-            }
-        }
+        IntrospectionHelper ih = 
+            IntrospectionHelper.getHelper(target.getClass());
 
         for (int i = 0; i < attrs.getLength(); i++) {
             // reflect these into the target
+            String value=replaceProperties(attrs.getValue(i), 
+                                           project.getProperties() );
+            try {
+                ih.setAttribute(project, target, 
+                                attrs.getName(i).toLowerCase(), value);
 
-            Method setMethod = (Method)propertySetters.get(attrs.getName(i));
-            if (setMethod == null) {
+            } catch (BuildException be) {
                 if (attrs.getName(i).equals("id")) {
                     project.addReference(attrs.getValue(i), target);
-                    continue;
+                } else {
+                    be.setLocation(new Location(buildFile.toString(), 
+                                                locator.getLineNumber(), 
+                                                locator.getColumnNumber()));
+                    throw be;
                 }
-
-                String msg = "Class " + target.getClass() +
-                    " doesn't support the \"" + attrs.getName(i) + "\" property";
-                throw new BuildException(msg);
-            }
-
-            String value=replaceProperties(attrs.getValue(i), project.getProperties() );
-            try {
-                setMethod.invoke(target, new String[] {value});
-            } catch (IllegalAccessException iae) {
-                String msg = "Error setting value for attrib: " +
-                    attrs.getName(i);
-                iae.printStackTrace();
-                throw new BuildException(msg);
-            } catch (InvocationTargetException ie) {
-                String msg = "Error setting value for attrib: " +
-                    attrs.getName(i) + " in " + target.getClass().getName();
-                ie.printStackTrace();
-                ie.getTargetException().printStackTrace();
-                throw new BuildException(msg);
             }
         }
     }

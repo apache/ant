@@ -162,7 +162,7 @@ public class Ant extends Task {
     }
 
     // XXX replace with createProperty!!
-    public Task createProperty() {
+    public Property createProperty() {
 	Property p=(Property)p1.createTask("property");
 	p.setUserProperty(true);
 	properties.addElement( p );

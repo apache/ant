@@ -152,4 +152,11 @@ public class BuildException extends RuntimeException {
     public void setLocation(Location location) {
         this.location = location;
     }
+
+    /**
+     * Returns the file location where the error occured.
+     */
+    public Location getLocation() {
+        return location;
+    }
 }
