@@ -23,5 +23,24 @@ public class ExtensionsTest
         throws TaskException
     {
         ExtensionsLoadedClass.doSomething();
+
+        Class clazz = null;
+        try
+        {
+            clazz = Class.forName( "sun.tools.javac.Main" );
+        }
+        catch( ClassNotFoundException e )
+        {
+            try
+            {
+                clazz = Class.forName( "com.sun.tools.javac.Main" );
+            }
+            catch( ClassNotFoundException e1 )
+            {
+                throw new TaskException( "Unable to locate compilers from tools.jar" );
+            }
+        }
+
+        System.out.println( "Compiler loaded from tools.jar = " + clazz );
     }
 }

@@ -6,4 +6,6 @@ Specification-Vendor: Jakarta Apache
 Implementation-Vendor-Id: org.apache.avalon
 Implementation-Vendor: Apache Avalon Project
 Implementation-Version: 1.0.2
-
+Extension-List: tools
+tools-Extension-Name: com.sun.tools
+tools-Specification-Version: 1.0
