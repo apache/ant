@@ -521,7 +521,7 @@ If you do not want these default excludes applied, you may disable them with the
   <li><a href="#deltree">Deltree</a></li>
   <li><a href="#echo">Echo</a></li>
   <li><a href="#exec">Exec</a></li>
-  <li><a href="#expand">Expand</a></li>
+  <li><a href="#unzip">Expand</a></li>
   <li><a href="#filter">Filter</a></li>
   <li><a href="#fixcrlf">FixCRLF</a></li>
   <li><a href="#get">Get</a></li>
@@ -544,7 +544,9 @@ If you do not want these default excludes applied, you may disable them with the
   <li><a href="#touch">Touch</a></li>
   <li><a href="#tstamp">Tstamp</a></li>
   <li><a href="#style">Style</a></li>
+  <li><a href="#unzip">Unjar</a></li>
   <li><a href="#untar">Untar</a></li>
+  <li><a href="#unzip">Unzip</a></li>
   <li><a href="#zip">Zip</a></li>
 </ul>
 <hr>
@@ -1101,11 +1103,13 @@ systems.</p>
   output=&quot;dir.txt&quot; /&gt;</code></p>
 </blockquote>
 <hr>
-<h2><a name="expand">Expand</a></h2>
+<h2><a name="unzip">Expand/Unzip/Unjar</a></h2>
 <h3>Description</h3>
-<p>Unzips a zipfile.</p>
+<p>Unzips a zip- or jarfile.</p>
 <p>For JDK 1.1 "last modified time" field is set to current time instead of being 
 carried from zipfile.</p>
+<p>DEPRECATION: the expand task simply points to the unzip task and it's
+there for back compatibility reasons.</p>
 <h3>Parameters</h3>
 <table border="1" cellpadding="2" cellspacing="0">
   <tr>
@@ -1126,7 +1130,7 @@ carried from zipfile.</p>
 </table>
 <h3>Examples</h3>
 <blockquote>
-  <p><code>&lt;expand src=&quot;${tomcat_src}/tools-src.zip&quot; dest=&quot;${tools.home}&quot;
+  <p><code>&lt;unzip src=&quot;${tomcat_src}/tools-src.zip&quot; dest=&quot;${tools.home}&quot;
   /&gt;</code></p>
 </blockquote>
 <hr>
