@@ -7,8 +7,8 @@ Fixed bugs:
 * <manifest> wouldn't update an existing manifest if only an attribute
   of an existing section changed.
 
-* ant.bat now supports the ANT_ARGS environment variable again (like
-  Ant 1.5 did).
+* ant.bat now supports the ANT_ARGS and JAVACMD environment variables
+  again (like Ant 1.5 did).
 
 * The "plain" <junit> <formatter> could throw a NullPointerException
   if an error occured in setUp.

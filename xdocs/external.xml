@@ -910,6 +910,36 @@
         </table>
       </subsection>
 
+      <subsection name="yGuard">
+
+        <p>yGuard is a free Java(TM) Bytecode Obfuscator Task that
+        needs no external script or project files. It can completely
+        be configured and run through the Ant build script. The task
+        supports multiple Jar files at once and makes use of
+        patternsets and regular expressions to specify elements, which
+        should be left unobfuscated.  Additionally it can be used to
+        produce patches for obfuscated applications that have already
+        been deployed.</p>
+
+        <table>
+          <tr>
+            <th>Compatibility:</th>
+            <td>Ant 1.5 and later</td>  
+          </tr>
+          <tr>
+            <th>URL:</th>
+            <td><a href="http://www.yworks.com/products/yguard">http://www.yworks.com/products/yguard</a></td>
+          </tr>
+          <tr>
+            <th>Contact:</th>
+            <td><a href="mailto:yguard@yworks.com">yGuard@yWorks.com</a></td>
+          </tr>
+          <tr>
+            <th>License:</th>
+            <td>Library: LGPL, Task: Commercial</td>
+          </tr>
+        </table>
+      </subsection>
       
     </section>
 
