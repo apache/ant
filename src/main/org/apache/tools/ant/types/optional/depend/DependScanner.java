@@ -60,8 +60,8 @@ import org.apache.tools.ant.util.depend.Dependencies;
 import org.apache.tools.ant.util.depend.Filter;
 import org.apache.tools.ant.DirectoryScanner;
 
-import de.fub.bytecode.classfile.*;
-import de.fub.bytecode.*;
+import org.apache.bcel.classfile.*;
+import org.apache.bcel.*;
 
 /**
  * An interface used to describe the actions required by any type of 

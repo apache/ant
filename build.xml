@@ -179,7 +179,7 @@
                classname="org.apache.xerces.parsers.SAXParser" 
                classpathref="classpath" />
     <available property="bcel.present" 
-               classname="de.fub.bytecode.Constants" 
+               classname="org.apache.bcel.Constants" 
                classpathref="classpath" />
                
     <condition property="javamail.complete">

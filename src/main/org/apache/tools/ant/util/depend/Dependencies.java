@@ -55,8 +55,8 @@ package org.apache.tools.ant.util.depend;
 
 import java.io.*;
 import java.util.*;
-import de.fub.bytecode.classfile.*;
-import de.fub.bytecode.*;
+import org.apache.bcel.classfile.*;
+import org.apache.bcel.*;
 
 
 public class Dependencies implements Visitor {
