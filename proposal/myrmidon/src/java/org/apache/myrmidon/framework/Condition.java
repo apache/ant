@@ -5,7 +5,7 @@
  * version 1.1, a copy of which has been included with this distribution in
  * the LICENSE file.
  */
-package org.apache.myrmidon.components.model;
+package org.apache.myrmidon.framework;
 
 import org.apache.avalon.excalibur.property.PropertyException;
 import org.apache.avalon.excalibur.property.PropertyUtil;
@@ -23,7 +23,7 @@ public class Condition
     implements Component
 {
     private String            m_condition;
-    private boolean           m_isIfCondition; 
+    private boolean           m_isIfCondition;
 
     public Condition( final boolean isIfCondition, final String condition )
     {
