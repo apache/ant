@@ -237,10 +237,10 @@ Legal:
         <javac
             destdir="${build.classes}"
             debug="${debug}"
-            deprecation="${deprecation}" 
+            deprecation="${deprecation}"
             includeAntRuntime="false"
             includeJavaRuntime="false">
-            
+
             <classpath refid="project.class.path"/>
             <src location="src/todo"/>
             <src path="${java.dir}" />
@@ -495,6 +495,10 @@ Legal:
         </ant>
 
         <ant antfile="antlib.xml">
+            <property name="antlib.name" value="extensions"/>
+        </ant>
+
+        <ant antfile="antlib.xml">
             <property name="antlib.name" value="file"/>
         </ant>
 
@@ -546,12 +550,12 @@ Legal:
             destdir="${test.classes}"
             debug="${debug}"
             deprecation="${deprecation}">
-            
+
             <classpath>
               <pathelement location="${build.classes}"/>
               <path refid="project.class.path"/>
             </classpath>
-            
+
             <exclude name="**/SmbFileSystemTestCase.java" unless="jcifs.present"/>
             <exclude name="**/FtpFileSystemTestCase.java" unless="netcomp.present"/>
         </javac>
@@ -611,7 +615,7 @@ Legal:
             tofile="${test.classes}/META-INF/ant-descriptor.xml"/>
 
         <!-- Run all the tests -->
-        <junit printsummary="on" 
+        <junit printsummary="on"
                fork="true" failureProperty="test.failed">
             <formatter type="brief" usefile="false"/>
             <classpath>
@@ -637,7 +641,7 @@ Legal:
                     <!-- Need Ant1.5+ to run Ant1Compat tests, because of classpath
                          problems in Ant1.4 JUnit Task (prepends ant.jar to classpath) -->
                     <exclude name="**/Ant1CompatTestCase.class" unless="ant1.5"/>
-                    
+
                     <!-- This test fails, as it has no test methods -->
                     <exclude name="**/SimpleConvertersTestCase.class" unless="single.test"/>
                 </fileset>
@@ -781,7 +785,7 @@ Legal:
                 <exclude name="jdepend.jar"/>
             </fileset>
         </copy>
-        
+
         <copy todir="${dist.lib}" file="../../lib/optional/junit.jar" />
 
         <copy todir="${dist.bin}">
