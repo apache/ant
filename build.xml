@@ -632,6 +632,8 @@
       <fileset dir=".">
         <include name="LICENSE" />
         <include name="LICENSE.xerces" />
+        <include name="LICENSE.dom" />
+        <include name="LICENSE.sax" />
       </fileset>
       <mapper type="glob" from="*" to="*.txt" />
     </copy>
@@ -814,6 +816,8 @@
         <include name="README"/>
         <include name="LICENSE"/>
         <include name="LICENSE.xerces"/>
+        <include name="LICENSE.dom"/>
+        <include name="LICENSE.sax"/>
         <include name="TODO"/>
         <include name="WHATSNEW"/>
         <include name="KEYS"/>
@@ -898,6 +902,8 @@
         <include name="README"/>
         <include name="LICENSE"/>
         <include name="LICENSE.xerces"/>
+        <include name="LICENSE.dom"/>
+        <include name="LICENSE.sax"/>
         <include name="TODO"/>
         <include name="WHATSNEW"/>
         <include name="KEYS"/>
