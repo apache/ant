@@ -57,8 +57,6 @@ import org.apache.tools.ant.types.EnumeratedAttribute;
 
 import javax.media.jai.JAI;
 import javax.media.jai.PlanarImage;
-import javax.media.jai.InterpolationBilinear;
-import java.awt.RenderingHints;
 import java.awt.image.BufferedImage;
 import java.awt.image.renderable.ParameterBlock;
 

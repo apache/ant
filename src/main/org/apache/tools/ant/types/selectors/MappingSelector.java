@@ -56,7 +56,6 @@ package org.apache.tools.ant.types.selectors;
 
 import org.apache.tools.ant.types.Mapper;
 import org.apache.tools.ant.BuildException;
-import org.apache.tools.ant.taskdefs.condition.Os;
 import org.apache.tools.ant.util.IdentityMapper;
 import org.apache.tools.ant.util.FileNameMapper;
 import org.apache.tools.ant.util.FileUtils;
