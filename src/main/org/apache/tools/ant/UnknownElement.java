@@ -161,11 +161,11 @@ public class UnknownElement extends Task {
      *
      * @param line The line of output to log. Should not be <code>null</code>.
      */
-    protected void handleOutput(String line, boolean terminated) {
+    protected void handleFlush(String line) {
         if (realThing instanceof Task) {
-            ((Task) realThing).handleOutput(line, terminated);
+            ((Task) realThing).handleFlush(line);
         } else {
-            super.handleOutput(line, terminated);
+            super.handleFlush(line);
         }
     }
 
@@ -188,11 +188,11 @@ public class UnknownElement extends Task {
      *
      * @param line The error line to log. Should not be <code>null</code>.
      */
-    protected void handleErrorOutput(String line, boolean terminated) {
+    protected void handleErrorFlush(String line) {
         if (realThing instanceof Task) {
-            ((Task) realThing).handleErrorOutput(line, terminated);
+            ((Task) realThing).handleErrorOutput(line);
         } else {
-            super.handleErrorOutput(line, terminated);
+            super.handleErrorOutput(line);
         }
     }
     

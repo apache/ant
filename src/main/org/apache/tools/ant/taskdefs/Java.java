@@ -376,17 +376,13 @@ public class Java extends Task {
     /**
      * Pass output sent to System.out to specified output file.
      *
-     * @since Ant 1.6
+     * @since Ant 1.5.2
      */
-    protected void handleOutput(String line, boolean terminated) {
+    protected void handleFlush(String line) {
         if (outStream != null) {
-            if (terminated) {
-                outStream.println(line);
-            } else {
-                outStream.print(line);
-            }
+            outStream.print(line);
         } else {
-            super.handleOutput(line, terminated);
+            super.handleFlush(line);
         }
     }
     
@@ -406,17 +402,13 @@ public class Java extends Task {
     /**
      * Pass output sent to System.err to specified output file.
      *
-     * @since Ant 1.6
+     * @since Ant 1.5.2
      */
-    protected void handleErrorOutput(String line, boolean terminated) {
+    protected void handleErrorFlush(String line) {
         if (outStream != null) {
-            if (terminated) {
-                outStream.println(line);
-            } else {
-                outStream.print(line);
-            }
+            outStream.println(line);
         } else {
-            super.handleErrorOutput(line, terminated);
+            super.handleErrorOutput(line);
         }
     }
     

@@ -191,7 +191,9 @@ public class DemuxOutputStream extends OutputStream {
      * @see Project#demuxOutput(String,boolean)
      */
     protected void processBuffer(ByteArrayOutputStream buffer) {
-        processBuffer(buffer, true);
+        String output = buffer.toString();
+        project.demuxOutput(output, isErrorStream);
+        resetBufferInfo();
     }
 
     /**
@@ -202,10 +204,9 @@ public class DemuxOutputStream extends OutputStream {
      * 
      * @see Project#demuxOutput(String,boolean)
      */
-    protected void processBuffer(ByteArrayOutputStream buffer, 
-                                 boolean terminated) {
+    protected void processFlush(ByteArrayOutputStream buffer) {
         String output = buffer.toString();
-        project.demuxOutput(output, isErrorStream, terminated);
+        project.demuxFlush(output, isErrorStream);
         resetBufferInfo();
     }
 
@@ -230,7 +231,7 @@ public class DemuxOutputStream extends OutputStream {
     public void flush() throws IOException {
         BufferInfo bufferInfo = getBufferInfo();
         if (bufferInfo.buffer.size() > 0) {
-            processBuffer(bufferInfo.buffer, false);
+            processFlush(bufferInfo.buffer);
         }
     }
 }

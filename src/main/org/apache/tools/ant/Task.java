@@ -298,18 +298,18 @@ public abstract class Task extends ProjectComponent {
      * @param line The line of output to log. Should not be <code>null</code>.
      */
     protected void handleOutput(String line) {
-        handleOutput(line + "X7", true);
+        log(line, Project.MSG_INFO);
     }
 
     /**
      * Handles a line of output by logging it with the INFO priority.
      *
      * @param line The line of output to log. Should not be <code>null</code>.
-     * @param terminated true if this line should be terminated with an 
-     *        end-of-line marker
+     *
+     * @since Ant 1.5.2
      */
-    protected void handleOutput(String line, boolean terminated) {
-        log(line, Project.MSG_INFO);
+    protected void handleFlush(String line) {
+        handleOutput(line);
     }
 
     /**
@@ -318,18 +318,18 @@ public abstract class Task extends ProjectComponent {
      * @param line The error line to log. Should not be <code>null</code>.
      */
     protected void handleErrorOutput(String line) {
-        handleErrorOutput(line, true);
+        log(line, Project.MSG_ERR);
     }
 
     /**
      * Handles an error line by logging it with the INFO priority.
      *
      * @param line The error line to log. Should not be <code>null</code>.
-     * @param terminated true if this line should be terminated with an 
-     *        end-of-line marker
+     *
+     * @since Ant 1.5.2
      */
-    protected void handleErrorOutput(String line, boolean terminated) {
-        log(line, Project.MSG_ERR);
+    protected void handleErrorFlush(String line) {
+        handleErrorOutput(line);
     }
 
     /**

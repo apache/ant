@@ -188,13 +188,13 @@ public class CallTarget extends Task {
     /**
      * Pass output sent to System.out to the new project.
      *
-     * @since Ant 1.6
+     * @since Ant 1.5.2
      */
-    protected void handleOutput(String line, boolean terminated) {
+    public void handleFlush(String line) {
         if (callee != null) {
-            callee.handleOutput(line, terminated);
+            callee.handleFlush(line);
         } else {
-            super.handleOutput(line, terminated);
+            super.handleFlush(line);
         }
     }
     
@@ -214,13 +214,13 @@ public class CallTarget extends Task {
     /**
      * Pass output sent to System.err to the new project.
      *
-     * @since Ant 1.6
+     * @since Ant 1.5.2
      */
-    protected void handleErrorOutput(String line, boolean terminated) {
+    public void handleErrorFlush(String line) {
         if (callee != null) {
-            callee.handleErrorOutput(line, terminated);
+            callee.handleErrorFlush(line);
         } else {
-            super.handleErrorOutput(line, terminated);
+            super.handleErrorFlush(line);
         }
     }
 }

@@ -416,23 +416,15 @@ public class JUnitTestRunner implements TestListener {
         }
     }
     
-    protected void handleOutput(String line, boolean terminated) {
+    protected void handleFlush(String line) {
         if (systemOut != null) {
-            if (terminated) {
-                systemOut.println(line);
-            } else {
-                systemOut.print(line);
-            }
+            systemOut.print(line);
         }
     }
     
-    protected void handleErrorOutput(String line, boolean terminated) {
+    protected void handleErrorFlush(String line) {
         if (systemError != null) {
-            if (terminated) {
-                systemError.println(line);
-            } else {
-                systemError.print(line);
-            }
+            systemError.print(line);
         }
     }
     

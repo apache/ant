@@ -1228,13 +1228,24 @@ public class Project {
      *        or information (<code>false</code>).
      */
     public void demuxOutput(String line, boolean isError) {
-        demuxOutput(line, isError, true);
+        Task task = (Task) threadTasks.get(Thread.currentThread());
+        if (task == null) {
+            fireMessageLogged(this, line, isError ? MSG_ERR : MSG_INFO);
+        } else {
+            if (isError) {
+                task.handleErrorOutput(line);
+            } else {
+                task.handleOutput(line);
+            }
+        }
     }
 
     /**
-     * Demultiplexes output so that each task receives the appropriate
+     * Demultiplexes flush operation so that each task receives the appropriate
      * messages. If the current thread is not currently executing a task,
      * the message is logged directly.
+     *
+     * @since Ant 1.5.2
      *
      * @param line Message to handle. Should not be <code>null</code>.
      * @param isError Whether the text represents an error (<code>true</code>)
@@ -1242,15 +1253,15 @@ public class Project {
      * @param terminated true if this line should be terminated with an 
      *        end-of-line marker
      */
-    public void demuxOutput(String line, boolean isError, boolean terminated) {
+    public void demuxFlush(String line, boolean isError) {
         Task task = (Task) threadTasks.get(Thread.currentThread());
         if (task == null) {
             fireMessageLogged(this, line, isError ? MSG_ERR : MSG_INFO);
         } else {
             if (isError) {
-                task.handleErrorOutput(line, terminated);
+                task.handleErrorFlush(line);
             } else {
-                task.handleOutput(line, terminated);
+                task.handleFlush(line);
             }
         }
     }
