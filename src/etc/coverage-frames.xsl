@@ -18,6 +18,7 @@
 	extension-element-prefixes="redirect">
 
 <xsl:output	method="html" indent="yes"/>
+<xsl:decimal-format decimal-separator="." grouping-separator="," />
 
 <!-- default output directory is current directory -->
 <xsl:param name="output.dir" select="'.'"/>

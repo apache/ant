@@ -15,6 +15,7 @@
 
     ====================================================================== -->
 <xsl:output	method="html" indent="yes"/>
+<xsl:decimal-format decimal-separator="." grouping-separator="," />
 
 <!--
     Xalan redirect extension writes relative file based on the parent directory
