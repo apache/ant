@@ -28,50 +28,15 @@ public class EnvironmentData
         final int size = m_variables.size();
         for( int i = 0; i < size; i++ )
         {
-            final Variable variable = (Variable)m_variables.get( i );
+            final EnvironmentVariable variable = (EnvironmentVariable)m_variables.get( i );
             environment.setProperty( variable.getKey(), variable.getValue() );
         }
         return environment;
     }
 
-    public void addVariable( Variable var )
+    public void addVariable( EnvironmentVariable var )
     {
         m_variables.add( var );
     }
 
-    public static class Variable
-    {
-        private String m_key;
-        private String m_value;
-
-        public void setFile( final File file )
-        {
-            m_value = file.getAbsolutePath();
-        }
-
-        public void setKey( final String key )
-        {
-            m_key = key;
-        }
-
-        public void setPath( final Path path )
-        {
-            m_value = path.toString();
-        }
-
-        public void setValue( final String value )
-        {
-            m_value = value;
-        }
-
-        public String getKey()
-        {
-            return m_key;
-        }
-
-        public String getValue()
-        {
-            return m_value;
-        }
-    }
 }

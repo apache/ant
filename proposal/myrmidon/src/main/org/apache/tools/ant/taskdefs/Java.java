@@ -23,6 +23,7 @@ import org.apache.tools.ant.types.CommandlineJava;
 import org.apache.tools.ant.types.EnvironmentData;
 import org.apache.tools.ant.types.Path;
 import org.apache.tools.ant.types.Reference;
+import org.apache.tools.ant.types.EnvironmentVariable;
 
 /**
  * This task acts as a loader for java applications but allows to use the same
@@ -166,7 +167,7 @@ public class Java extends Task
      *
      * @param sysp The feature to be added to the Sysproperty attribute
      */
-    public void addSysproperty( EnvironmentData.Variable sysp )
+    public void addSysproperty( EnvironmentVariable sysp )
     {
         cmdl.addSysproperty( sysp );
     }

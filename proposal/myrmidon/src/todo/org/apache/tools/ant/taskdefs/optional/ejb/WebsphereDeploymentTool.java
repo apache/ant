@@ -24,6 +24,7 @@ import org.apache.tools.ant.types.Commandline;
 import org.apache.tools.ant.types.EnumeratedAttribute;
 import org.apache.tools.ant.types.EnvironmentData;
 import org.apache.tools.ant.types.Path;
+import org.apache.tools.ant.types.EnvironmentVariable;
 
 /**
  * Websphere deployment tool that augments the ejbjar task.
@@ -966,7 +967,7 @@ public class WebsphereDeploymentTool extends GenericDeploymentTool
 
                 // Set the EnvironmentData variable
 
-                EnvironmentData.Variable var = new EnvironmentData.Variable();
+                EnvironmentVariable var = new EnvironmentVariable();
                 var.setKey( "websphere.lib.dir" );
                 var.setValue( getTask().getProject().getProperty( "websphere.home" ) + "/lib" );
                 javaTask.addSysproperty( var );

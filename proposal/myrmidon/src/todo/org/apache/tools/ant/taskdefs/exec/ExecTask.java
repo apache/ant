@@ -21,6 +21,7 @@ import org.apache.tools.ant.Project;
 import org.apache.tools.ant.Task;
 import org.apache.tools.ant.types.Commandline;
 import org.apache.tools.ant.types.EnvironmentData;
+import org.apache.tools.ant.types.EnvironmentVariable;
 
 /**
  * Executes a given command if the os platform is appropriate.
@@ -175,7 +176,7 @@ public class ExecTask extends Task
      *
      * @param var The feature to be added to the Env attribute
      */
-    public void addEnv( EnvironmentData.Variable var )
+    public void addEnv( EnvironmentVariable var )
     {
         env.addVariable( var );
     }

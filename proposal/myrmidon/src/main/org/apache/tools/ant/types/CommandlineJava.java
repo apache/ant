@@ -189,7 +189,7 @@ public class CommandlineJava implements Cloneable
         return vmVersion;
     }
 
-    public void addSysproperty( EnvironmentData.Variable sysp )
+    public void addSysproperty( EnvironmentVariable sysp )
     {
         sysProperties.addVariable( sysp );
     }
@@ -341,7 +341,7 @@ public class CommandlineJava implements Cloneable
 
                 for( Iterator e = m_variables.iterator(); e.hasNext(); )
                 {
-                    EnvironmentData.Variable v = (EnvironmentData.Variable)e.next();
+                    EnvironmentVariable v = (EnvironmentVariable)e.next();
                     p.put( v.getKey(), v.getValue() );
                 }
                 System.setProperties( p );

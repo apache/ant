@@ -30,6 +30,7 @@ import org.apache.tools.ant.types.CommandlineJava;
 import org.apache.tools.ant.types.EnumeratedAttribute;
 import org.apache.tools.ant.types.EnvironmentData;
 import org.apache.tools.ant.types.Path;
+import org.apache.tools.ant.types.EnvironmentVariable;
 
 /**
  * Ant task to run JUnit tests. <p>
@@ -319,7 +320,7 @@ public class JUnitTask extends Task
      *
      * @param sysp The feature to be added to the Sysproperty attribute
      */
-    public void addSysproperty( EnvironmentData.Variable sysp )
+    public void addSysproperty( EnvironmentVariable sysp )
     {
         commandline.addSysproperty( sysp );
     }
