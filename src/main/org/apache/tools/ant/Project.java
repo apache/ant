@@ -203,9 +203,9 @@ public class Project {
         Properties systemP = System.getProperties();
         Enumeration e = systemP.keys();
         while (e.hasMoreElements()) {
-            String name = (String) e.nextElement();
-            String value = (String) systemP.get(name);
-            this.setProperty(name, value);
+            Object name = e.nextElement();
+            String value = systemP.get(name).toString();
+            this.setProperty(name.toString(), value);
         }
     }
 
