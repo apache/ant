@@ -1,4 +1,4 @@
-@echo off
+rem @echo off
 
 if exist "%HOME%\antrc_pre.bat" call "%HOME%\antrc_pre.bat"
 

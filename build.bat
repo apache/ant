@@ -1,19 +1,41 @@
 @echo off
 
-set REALANTHOME=%ANT_HOME%
+if exist build\classes\org\apache\tools\ant\Main.class goto doBuild
+
+bootstrap.bat
+
+:doBuild
+
+echo ----------------
+echo Ant Build System
+echo ----------------
+
+rem exit
+
+set LOCALCLASSPATH=build\classes
+for %%i in (lib\*.jar) do call src\script\lcp.bat %%i
+
 set ANT_HOME=.
-if exist lib\ant.jar if exist bin\ant.bat if exist bin\lcp.bat if exist bin\antRun.bat goto runAnt
-call bootstrap.bat
+
+if "%JAVA_HOME%" == "" goto noJavaHome
+if "%_JAVACMD%" == "" set _JAVACMD=%JAVA_HOME%\bin\java
+if exist "%JAVA_HOME%\lib\tools.jar" call src\script\lcp.bat "%JAVA_HOME%\lib\tools.jar"
+if exist "%JAVA_HOME%\lib\classes.zip" call src\script\lcp.bat" "%JAVA_HOME%\lib\classes.zip"
+goto runAnt
+
+:noJavaHome
+if "%_JAVACMD%" == "" set _JAVACMD=java
+echo.
+echo Warning: JAVA_HOME environment variable is not set.
+echo   If build fails because sun.* classes could not be found
+echo   you will need to set the JAVA_HOME environment variable
+echo   to the installation directory of java.
+echo.
 
 :runAnt
-if not "%REALANTHOME%" == "" goto install_ant
-call .\bin\ant.bat %1 %2 %3 %4 %5 %6 %7 %8 %9
-goto cleanup
+set CLASSPATH=%LOCALCLASSPATH%
+set LOCALCLASSPATH=
+%_JAVACMD% -classpath %CLASSPATH% %ANT_OPTS% org.apache.tools.ant.Main -logger org.apache.tools.ant.NoBannerLogger -emacs %1 %2 %3 %4 %5 %6 %7 %8
 
-:install_ant
-call .\bin\ant.bat -Dant.install="%REALANTHOME%" %1 %2 %3 %4 %5 %6 %7 %8 %9
-
-rem clean up
-:cleanup
-set ANT_HOME=%REALANTHOME%
-set REALANTHOME=
+set ANT_HOME=
+set CLASSPATH=
