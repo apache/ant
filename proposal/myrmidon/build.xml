@@ -524,9 +524,20 @@ Legal:
     </delete>
   </target>
 
+  <!-- Cleans up the compiled classes -->
+  <target name="clean-classes">
+      <delete dir="${build.classes}"/>
+  </target>
+
   <!-- Rebuilds the distribution -->
   <target name="rebuild" description="Rebuilds the distribution">
     <antcall target="clean"/>
+    <antcall target="main"/>
+  </target>
+
+  <!-- Recompiles the classes, and builds the distribution -->
+  <target name="recompile" description="Recompiles and builds the the distribution">
+    <antcall target="clean-classes"/>
     <antcall target="main"/>
   </target>
 
