@@ -10,8 +10,6 @@ Fixed bugs:
 * Translate task does not remove tokens when a key is not found.
   It logs a verbose message.  Bugzilla Report 13936.
 
-* <whichresource> failed to load classes correctly.
-
 Other changes:
 --------------
 
@@ -37,7 +35,7 @@ Other changes:
 * <fail> accepts nested conditions.
 
 Changes from Ant 1.6.1 to current Ant 1.6 CVS version
-=============================================
+=====================================================
 
 Changes that could break older environments:
 --------------------------------------------
@@ -128,10 +126,6 @@ Fixed bugs:
 
 * JDependTask did not close an output file. Bugzilla Report 28557.
 
-* <jar> can now optionally create an index for jars different than the
-  one it currently builds as well.  See the new <indexjars> element
-  for details.  Bugzilla Report 14255.
-
 * Using <macrodef> could break XmlLogger. Bugzilla Report 28993.
 
 Other changes:
@@ -177,6 +171,10 @@ Other changes:
   run all tests in a single forked JVM reducing the overhead of VM
   creation a lot.  Bugzilla Report 24697.
 
+* <jar> can now optionally create an index for jars different than the
+  one it currently builds as well.  See the new <indexjars> element
+  for details.  Bugzilla Report 14255.
+
 * Permit building under JDK 1.5. Bugzilla Report 28996.
 
 * minor Javadoc changes. Bugzilla Report 28998.
@@ -209,6 +207,8 @@ Fixed bugs:
 * Fix handling of default ant namespace for nested elements.
 
 * Fix jboss element of ejb task (introduced in ant 1.6.0).
+
+* <whichresource> failed to load classes correctly.
 
 * Ant could fail to start with a NullPointerException if
   ANT_HOME/lib/ant-launcher.jar was part of the system CLASSPATH.
