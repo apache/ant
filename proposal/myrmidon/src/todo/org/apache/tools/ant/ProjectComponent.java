@@ -17,27 +17,12 @@ import org.apache.myrmidon.api.TaskException;
  *
  * @author <a href="mailto:conor@apache.org">Conor MacNeill</a>
  */
-
 public abstract class ProjectComponent
     extends AbstractTask
 {
-    private Project m_project;
-
     public Logger hackGetLogger()
     {
         return super.getLogger();
-    }
-
-    /**
-     * Sets the project object of this component. This method is used by project
-     * when a component is added to it so that the component has access to the
-     * functions of the project. It should not be used for any other purpose.
-     *
-     * @param project Project in whose scope this component belongs.
-     */
-    public void setProject( Project project )
-    {
-        this.m_project = project;
     }
 
     /**
@@ -47,38 +32,13 @@ public abstract class ProjectComponent
      */
     public Project getProject()
     {
-        return m_project;
+        return null;
     }
 
     public void execute()
         throws TaskException
     {
         //HACK: NOOP execute - should be deleted in the future!
-    }
-
-    public void log( final String message, int priority )
-    {
-        switch( priority )
-        {
-            case Project.MSG_ERR:
-                getLogger().error( message );
-                break;
-            case Project.MSG_WARN:
-                getLogger().warn( message );
-                break;
-            case Project.MSG_INFO:
-                getLogger().info( message );
-                break;
-            case Project.MSG_VERBOSE:
-                getLogger().debug( message );
-                break;
-            case Project.MSG_DEBUG:
-                getLogger().debug( message );
-                break;
-
-            default:
-                getLogger().debug( message );
-        }
     }
 }
 
