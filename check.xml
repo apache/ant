@@ -2,7 +2,7 @@
 <project default="checkstyle" name="CheckAnt">
 
   <description>
-    Check Ants codebase against certain code styleguid rules using
+    Check Ants codebase against certain code styleguide rules using
     checkstyle and simian.
 
     Checkstyle uses an abstract syntax tree (AST) for doing checks
