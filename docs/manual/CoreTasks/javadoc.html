@@ -75,7 +75,8 @@ instead.</i></p>
     <td valign="top">sourcefiles</td>
     <td valign="top">Comma separated list of source files</td>
     <td align="center" valign="top">all</td>
-    <td align="center" valign="middle" rowspan="2">at least one of the two</td>
+    <td align="center" valign="middle" rowspan="2">at least one of the two
+    or nested <code>&lt;source&gt;</code> or <code>&lt;package&gt;</code></td>
   </tr>
   <tr>
     <td valign="top">packagenames</td>
@@ -128,6 +129,13 @@ instead.</i></p>
     <td valign="top">Read overview documentation from HTML file</td>
     <td align="center" valign="top">1.2</td>
     <td align="center" valign="top">No</td>
+  </tr>
+  <tr>
+    <td valign="top">access</td>
+    <td valign="top">Access mode: one of <code>public</code>, <code>protected</code>,
+                     <code>package</code>, or <code>private</code></td>
+    <td align="center" valign="top">all</td>
+    <td align="center" valign="top">No (default <code>protected</code>)</td>
   </tr>
   <tr>
     <td valign="top">Public</td>
@@ -382,13 +390,71 @@ recommended.</p>
 </pre></p>
 
 <h3>Parameters specified as nested elements</h3>
+
+<h4>package</h4>
+<p>Same as one entry in the list given by <code>packagenames</code>.</p>
+
+<h5>Parameters</h5>
+<table width="60%" border="1" cellpadding="2" cellspacing="0">
+  <tr>
+    <td valign="top"><b>Attribute</b></td>
+    <td valign="top"><b>Description</b></td>
+    <td align="center" valign="top"><b>Required</b></td>
+  </tr>
+  <tr>
+    <td valign="top">name</td>
+    <td valign="top">The package name (may be a wildcard)</td>
+    <td align="center" valign="top">Yes</td>
+  </tr>
+</table>
+  
+<h4>excludepackage</h4>
+<p>Same as one entry in the list given by <code>excludepackagenames</code>.</p>
+
+<h5>Parameters</h5>
+Same as for <code>package</code>.
+
+<h4>source</h4>
+<p>Same as one entry in the list given by <code>sourcefiles</code>.</p>
+
+<h5>Parameters</h5>
+<table width="60%" border="1" cellpadding="2" cellspacing="0">
+  <tr>
+    <td valign="top"><b>Attribute</b></td>
+    <td valign="top"><b>Description</b></td>
+    <td align="center" valign="top"><b>Required</b></td>
+  </tr>
+  <tr>
+    <td valign="top">file</td>
+    <td valign="top">The source file to document</td>
+    <td align="center" valign="top">Yes</td>
+  </tr>
+</table>
+
+<h4>doctitle</h4>
+
+<p>Same as the <code>doctitle</code> attribute, but you can nest text
+inside the element this way.</p>
+
+<h4>header</h4>
+
+<p>Similar to <code>&lt;doctitle&gt;</code>.</p>
+
+<h4>footer</h4>
+
+<p>Similar to <code>&lt;doctitle&gt;</code>.</p>
+
+<h4>bottom</h4>
+
+<p>Similar to <code>&lt;doctitle&gt;</code>.</p>
+
 <h4>link</h4>
 <p>Create link to javadoc output at the given URL. This performs the
 same role as the link and linkoffline attributes. You can use either
 syntax (or both at once), but with the nested elements you can easily
 specify multiple occurrences of the arguments.</p>
-<h4>Parameters</h4>
 
+<h5>Parameters</h5>
 <table width="60%" border="1" cellpadding="2" cellspacing="0">
   <tr>
     <td valign="top"><b>Attribute</b></td>
@@ -421,6 +487,7 @@ attribute. You can use either syntax (or both at once), but with the
 nested elements you can easily specify multiple occurrences of the
 arguments.</p>
 
+<h5>Parameters</h5>
 <table width="60%" border="1" cellpadding="2" cellspacing="0">
   <tr>
     <td valign="top"><b>Attribute</b></td>
@@ -430,14 +497,18 @@ arguments.</p>
   <tr>
     <td valign="top">title</td>
     <td valign="top">Title of the group</td>
-    <td align="center" valign="top">Yes</td>
+    <td align="center" valign="top">Yes, unless nested <code>&lt;title&gt;</code> given</td>
   </tr>
   <tr>
     <td valign="top">packages</td>
     <td valign="top">List of packages to include in that group. Multiple packages are separated with ':'.</td>
-    <td align="center" valign="top">Yes</td>
+    <td align="center" valign="top">Yes, unless nested <code>&lt;package&gt;</code>s given</td>
   </tr>
 </table>
+
+<p>The title may be specified as a nested <code>&lt;title&gt;</code> element
+with text contents, and the packages may be listed with nested
+<code>&lt;package&gt;</code> elements as for the main task.
 
 <h4>doclet</h4>
 <p>The doclet nested element is used to specify the doclet that javadoc will 
@@ -477,9 +548,9 @@ respectively.</p>
            author=&quot;true&quot;
            version=&quot;true&quot;
            use=&quot;true&quot;
-           windowtitle=&quot;Test API&quot;
-           doctitle=&quot;&lt;h1&gt;Test&lt;/h1&gt;&quot;
-           bottom=&quot;&lt;i&gt;Copyright &amp;#169; 2000 Dummy Corp. All Rights Reserved.&lt;/i&gt;&quot;&gt;
+           windowtitle=&quot;Test API&quot;&gt;
+    &lt;doctitle&gt;&lt;![CDATA[&lt;h1&gt;Test&lt;/h1&gt;]]&gt;&lt;/doctitle&gt;
+    &lt;bottom&gt;&lt;![CDATA[&lt;i&gt;Copyright &amp;#169; 2000 Dummy Corp. All Rights Reserved.&lt;/i&gt;]]&gt;&lt;/bottom&gt;
     &lt;group title=&quot;Group 1 Packages&quot; packages=&quot;com.dummy.test.a*&quot;/&gt;
     &lt;group title=&quot;Group 2 Packages&quot; packages=&quot;com.dummy.test.b*:com.dummy.test.c*&quot;/&gt;
     &lt;link offline=&quot;true&quot; href=&quot;http://java.sun.com/products/jdk/1.2/docs/api/&quot; packagelistLoc=&quot;C:\tmp&quot;/&gt;

@@ -164,6 +164,44 @@ public class Javadoc extends Task {
         }
     }
 
+    public static class PackageName {
+        private String name;
+        public void setName(String name) {
+            this.name = name;
+        }
+        public String getName() {
+            return name;
+        }
+    }
+
+    public static class SourceFile {
+        private File file;
+        public void setFile(File file) {
+            this.file = file;
+        }
+        public File getFile() {
+            return file;
+        }
+    }
+
+    public static class Html {
+        private StringBuffer text = new StringBuffer();
+        public void addText(String t) {
+            text.append(t);
+        }
+        public String getText() {
+            return text.toString();
+        }
+    }
+
+    public static class AccessType extends EnumeratedAttribute {
+        public String[] getValues() {
+            // Protected first so if any GUI tool offers a default
+            // based on enum #0, it will be right.
+            return new String[] {"protected", "public", "package", "private"};
+        }
+    }
+
     private Commandline cmd = new Commandline();
     private static boolean javadoc1 = 
         (Project.getJavaVersion() == Project.JAVA_1_1);
@@ -204,9 +242,9 @@ public class Javadoc extends Task {
     private boolean failOnError = false;
     private Path sourcePath = null;
     private File destDir = null;
-    private String sourceFiles = null;
-    private String packageNames = null;
-    private String excludePackageNames = null;
+    private Vector sourceFiles = new Vector();
+    private Vector packageNames = new Vector(5);
+    private Vector excludePackageNames = new Vector(1);
     private boolean author = true;
     private boolean version = true;
     private DocletInfo doclet = null;
@@ -218,6 +256,10 @@ public class Javadoc extends Task {
     private Vector links = new Vector(2);
     private Vector groups = new Vector(2);
     private boolean useDefaultExcludes = true;
+    private Html doctitle = null;
+    private Html header = null;
+    private Html footer = null;
+    private Html bottom = null;
 
     /**
      * Sets whether default exclusions should be used or not.
@@ -269,14 +311,41 @@ public class Javadoc extends Task {
         cmd.createArgument().setFile(destDir);
     }
     public void setSourcefiles(String src) {
-        sourceFiles = src;
+        StringTokenizer tok = new StringTokenizer(src, ",");
+        while (tok.hasMoreTokens()) {
+            String f = tok.nextToken();
+            SourceFile sf = new SourceFile();
+            sf.setFile(project.resolveFile(f));
+            addSource(sf);
+        }
+    }
+    public void addSource(SourceFile sf) {
+        sourceFiles.addElement(sf);
     }
     public void setPackagenames(String src) {
-        packageNames = src;
+        StringTokenizer tok = new StringTokenizer(src, ",");
+        while (tok.hasMoreTokens()) {
+            String p = tok.nextToken();
+            PackageName pn = new PackageName();
+            pn.setName(p);
+            addPackage(pn);
+        }
+    }
+    public void addPackage(PackageName pn) {
+        packageNames.addElement(pn);
     }
 
     public void setExcludePackageNames(String src) {
-        excludePackageNames = src;
+        StringTokenizer tok = new StringTokenizer(src, ",");
+        while (tok.hasMoreTokens()) {
+            String p = tok.nextToken();
+            PackageName pn = new PackageName();
+            pn.setName(p);
+            addExcludePackage(pn);
+        }
+    }
+    public void addExcludePackage(PackageName pn) {
+        excludePackageNames.addElement(pn);
     }
 
     public void setOverview(File f) {
@@ -296,6 +365,9 @@ public class Javadoc extends Task {
     }
     public void setPrivate(boolean b) {
         addArgIf(b, "-private");
+    }
+    public void setAccess(AccessType at) {
+        cmd.createArgument().setValue("-" + at.getValue());
     }
     public void setDoclet(String src) {
         if (doclet == null) {
@@ -403,20 +475,45 @@ public class Javadoc extends Task {
         add12ArgIfNotEmpty("-windowtitle", src);
     }
     public void setDoctitle(String src) {
-        add12ArgIfNotEmpty("-doctitle", src);
+        Html h = new Html();
+        h.addText(src);
+        addDoctitle(h);
+    }
+    public void addDoctitle(Html text) {
+        if (!javadoc1) {
+            doctitle = text;
+        }
     }
     public void setHeader(String src) {
-        add12ArgIfNotEmpty("-header", src);
+        Html h = new Html();
+        h.addText(src);
+        addHeader(h);
     }
-
+    public void addHeader(Html text) {
+        if (!javadoc1) {
+            header = text;
+        }
+    }
     public void setFooter(String src) {
-        add12ArgIfNotEmpty("-footer", src);
+        Html h = new Html();
+        h.addText(src);
+        addFooter(h);
     }
-
+    public void addFooter(Html text) {
+        if (!javadoc1) {
+            footer = text;
+        }
+    }
     public void setBottom(String src) {
-        add12ArgIfNotEmpty("-bottom", src);
+        Html h = new Html();
+        h.addText(src);
+        addBottom(h);
     }
-
+    public void addBottom(Html text) {
+        if (!javadoc1) {
+            bottom = text;
+        }
+    }
     public void setLinkoffline(String src) {
         if (!javadoc1) {
             LinkArgument le = createLink();
@@ -531,7 +628,8 @@ public class Javadoc extends Task {
 
     public class GroupArgument {
         private String title;
-        private String packages;
+        private Html title2;
+        private Vector packages = new Vector(3);
 
         public GroupArgument() {
         }
@@ -539,17 +637,38 @@ public class Javadoc extends Task {
         public void setTitle(String src) {
             title = src;
         }
+        public void addTitle(Html text) {
+            title2 = text;
+        }
 
         public String getTitle() {
-            return title;
+            return title2 != null ? title2.getText() : title;
         }
 
         public void setPackages(String src) {
-            packages = src;
+            StringTokenizer tok = new StringTokenizer(src, ",");
+            while (tok.hasMoreTokens()) {
+                String p = tok.nextToken();
+                PackageName pn = new PackageName();
+                pn.setName(p);
+                addPackage(pn);
+            }
+        }
+        public void addPackage(PackageName pn) {
+            packages.addElement(pn);
         }
 
         public String getPackages() {
-            return packages;
+            String p = null;
+            for (int i = 0; i < packages.size(); i++) {
+                PackageName pn = (PackageName)packages.elementAt(i);
+                if (p == null || p.equals("")) {
+                    p = pn.getName();
+                } else {
+                    p += ":" + pn.getName();
+                }
+            }
+            return p;
         }
     }
     
@@ -578,6 +697,23 @@ public class Javadoc extends Task {
         }
 
         log("Generating Javadoc", Project.MSG_INFO);
+
+        if (doctitle != null) {
+            cmd.createArgument().setValue("-doctitle");
+            cmd.createArgument().setValue(doctitle.getText());
+        }
+        if (header != null) {
+            cmd.createArgument().setValue("-header");
+            cmd.createArgument().setValue(header.getText());
+        }
+        if (footer != null) {
+            cmd.createArgument().setValue("-footer");
+            cmd.createArgument().setValue(footer.getText());
+        }
+        if (bottom != null) {
+            cmd.createArgument().setValue("-bottom");
+            cmd.createArgument().setValue(bottom.getText());
+        }
 
         Commandline toExecute = (Commandline)cmd.clone();
         toExecute.setExecutable("javadoc");
@@ -715,11 +851,12 @@ public class Javadoc extends Task {
 
         }
 
-        if ((packageNames != null) && (packageNames.length() > 0)) {
+        if (packageNames.size() > 0) {
             Vector packages = new Vector();
-            StringTokenizer tok = new StringTokenizer(packageNames, ",", false);
-            while (tok.hasMoreTokens()) {
-                String name = tok.nextToken().trim();
+            Enumeration enum = packageNames.elements();
+            while (enum.hasMoreElements()) {
+                PackageName pn = (PackageName) enum.nextElement();
+                String name = pn.getName().trim();
                 if (name.endsWith(".*")) {
                     packages.addElement(name);
                 } else {
@@ -728,10 +865,11 @@ public class Javadoc extends Task {
             }
 
             Vector excludePackages = new Vector();
-            if ((excludePackageNames != null) && (excludePackageNames.length() > 0)) {
-                StringTokenizer exTok = new StringTokenizer(excludePackageNames, ",", false);
-                while (exTok.hasMoreTokens()) {
-                    excludePackages.addElement(exTok.nextToken().trim());
+            if (excludePackageNames.size() > 0) {
+                enum = excludePackageNames.elements();
+                while (enum.hasMoreElements()) {
+                    PackageName pn = (PackageName) enum.nextElement();
+                    excludePackages.addElement(pn.getName().trim());
                 }
             }
             if (packages.size() > 0) {
@@ -739,10 +877,11 @@ public class Javadoc extends Task {
             }
         }
 
-        if ((sourceFiles != null) && (sourceFiles.length() > 0)) {
-            StringTokenizer tok = new StringTokenizer(sourceFiles, ",", false);
-            while (tok.hasMoreTokens()) {
-                toExecute.createArgument().setValue(tok.nextToken().trim());
+        if (sourceFiles.size() > 0) {
+            Enumeration enum = sourceFiles.elements();
+            while (enum.hasMoreElements()) {
+                SourceFile sf = (SourceFile) enum.nextElement();
+                toExecute.createArgument().setValue(sf.getFile().getAbsolutePath());
             }
         }
 

@@ -556,11 +556,12 @@
              author="true"
              version="true"
              windowtitle="${Name} API"
-             doctitle="${Name}"
-             bottom="Copyright &#169; 2000 Apache Software Foundation. All Rights Reserved.">
+             doctitle="${Name}">
       <group title="Ant Core" packages="org.apache.tools.ant*" />
       <group title="Core Tasks" packages="org.apache.tools.ant.taskdefs*" />
       <group title="Optional Tasks" packages="org.apache.tools.ant.taskdefs.optional*" />
+
+      <bottom>Copyright &#169; 1999-2001 Apache Software Foundation. All Rights Reserved.</bottom>
     </javadoc>
   </target>
   
