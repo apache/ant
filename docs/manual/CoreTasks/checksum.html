@@ -73,6 +73,24 @@ perform checksum verifications.
     <td valign="top" align="center">No</td>
   </tr>
   <tr>
+    <td valign="top">pattern</td>
+    <td valign="top">Specifies the pattern to use as a pattern
+    suitable for <a
+    href="http://java.sun.com/j2se/1.4.2/docs/api/java/text/MessageFormat.html">MessageFormat</a>
+    where <code>{0}</code> is replaced with the checksum and
+    <code>{1}</code> with the file name.</td>
+    <td valign="top" align="center">No - default is &quot;{0}&quot;.</td>
+  </tr>
+  <tr>
+    <td valign="top">format</td>
+    <td valign="top">Specifies the pattern to use as one of a
+    well-known format.  Supported values are &quot;CHECKSUM&quot;
+    (only the checksum itself, the default), &quot;MD5SUM&quot; the
+    format of GNU textutils md5sum and &quot;SVF&quot; the format of
+    *BSDs md5 command.</td>
+    <td valign="top" align="center">No - default is &quot;CHECKSUM&quot;.</td>
+  </tr>
+  <tr>
     <td valign="top">totalproperty</td>
     <td valign="top">If specified, this attribute specifies the name of
       the property that will hold a checksum of all the checksums and

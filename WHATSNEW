@@ -47,6 +47,9 @@ Other changes:
 * Refactored Target invocation into org.apache.tools.ant.Executor
   implementations.  Bugzilla Reports 21421, 29248.
 
+* It is now possible to specify the pattern created/parsed by <checksum>.
+  Bugzilla Report 16539.
+
 Changes from Ant 1.6.2 to current Ant 1.6 CVS version
 =====================================================
 
