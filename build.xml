@@ -1026,6 +1026,13 @@
     <copy todir="${dist.base}/rpms">
       <fileset dir="build/rpm/SRPMS"/>
     </copy>
+    <checksum fileext=".md5">
+      <fileset dir="${dist.base}/rpms/">
+        <include name="**/*" />
+        <exclude name="**/*.asc" />
+        <exclude name="**/*.md5" />
+      </fileset>
+    </checksum>
   </target>
 
   <target name="distribution" depends="main_distribution, rpm"
