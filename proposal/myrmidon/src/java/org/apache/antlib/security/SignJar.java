@@ -26,6 +26,7 @@ import org.apache.tools.ant.types.ScannerUtil;
  *
  * @author <a href="mailto:peter@apache.org">Peter Donald</a>
  * @author <a href="mailto:nick@ox.compsoc.net">Nick Fortescue</a>
+ * @ant:task name="sign-jar"
  */
 public class SignJar
     extends AbstractTask
