@@ -9,6 +9,7 @@ package org.apache.tools.ant.types;
 
 import java.io.File;
 import org.apache.myrmidon.api.TaskException;
+import org.apache.tools.ant.util.FileUtils;
 
 /**
  * Used for nested xml command line definitions.
@@ -36,7 +37,7 @@ public class Argument
     public void setLine( final String line )
         throws TaskException
     {
-        m_parts = Commandline.translateCommandline( line );
+        m_parts = FileUtils.translateCommandline( line );
     }
 
     /**
