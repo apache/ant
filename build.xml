@@ -1453,10 +1453,12 @@
                    unless="some.regexp.support"/>
           <exclude name="${ant.package}/types/selectors/ContainsRegexpTest.java"
                    unless="some.regexp.support"/>
-          <exclude name="${optional.package}/RhinoScriptTest.java"
+          <exclude name="${optional.package}/Rhino*.java"
                    unless="bsf.present"/>
-          <exclude name="${optional.package}/RhinoScriptTest.java"
+          <exclude name="${optional.package}/Rhino*.java"
                    unless="rhino.present"/>
+          <exclude name="${optional.package}/script/*.java"
+                   unless="bsf.present"/>
           <exclude name="${optional.package}/script/*.java"
                    unless="rhino.present"/>
           <exclude name="${optional.package}/BeanShellScriptTest.java"
