@@ -25,8 +25,11 @@ in class or taglib dependencies, or &lt;jsp:include&gt; references.
 By default the task uses the Jasper JSP compiler. This
 means the task needs jasper.jar and jasper-runtime.jar, which come with
 builds of Tomcat 4/Catalina from the
-<a href="http://jakarta.apache.org/tomcat/">Jakarta Tomcat project</a>.
-We recommend Tomcat version 4.1.x for the most robust version of jasper.
+<a href="http://jakarta.apache.org/tomcat/">Jakarta Tomcat project</a>,
+and any other Jar files which may be needed in future versions (it changes)
+
+We recommend (in March 2003) Tomcat version 4.1.x for the most robust version
+of Jasper.
 
 <p>
 There are many limitations with this task which partially stem from the
@@ -238,7 +241,7 @@ package heirarchy beginning with com.i3sp.jsp.
       package="com.i3sp.jsp"&gt;
   &lt;include name="**/*.jsp" /&gt;
 &lt;/jspc&gt;
-&lt;depend
+&lt;depends
          srcdir="interim"
          destdir="build"
          cache="build/dependencies"
@@ -265,8 +268,9 @@ Even when it does work, changes in
 .TLD imports or in compile time includes do not get picked up.
 
 <p>
-Jasper generates JSP pages against the JSP1.2 specification -an implementation of
-version 2.3 of the servlet specification is needed to compile or run the java code.
+Jasper generates JSP pages against the JSP1.2 specification -a copy of
+version 2.3 of the servlet specification is needed on the classpath to
+compile the Java code.
 
 <hr>
 <p align="center">Copyright &copy; 2001-2003 Apache Software Foundation. All rights
