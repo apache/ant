@@ -64,13 +64,13 @@ import javax.swing.ImageIcon;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.Task;
- 
+
 /**
  * Creates a splash screen. The splash screen is displayed
  * for the duration of the build and includes a handy progress bar as
  * well. Use in conjunction with the sound task to provide interest
  * whilst waiting for your builds to complete...
- * @since Ant1.5 
+ * @since Ant1.5
  * @author Les Hughes (leslie.hughes@rubus.com)
  */
 public class SplashTask extends Task {
@@ -92,10 +92,10 @@ public class SplashTask extends Task {
     public void setImageURL(String imgurl) {
         this.imgurl = imgurl;
     }
-    
+
     /**
      * flag to enable proxy settings; optional, deprecated : consider
-     * using &lt;setproxy&gt; instead 
+     * using &lt;setproxy&gt; instead
      * @deprecated use org.apache.tools.ant.taskdefs.optional.SetProxy
      */
     public void setUseproxy(boolean useProxy) {
@@ -105,31 +105,31 @@ public class SplashTask extends Task {
     /**
      * name of proxy; optional.
      */
-    public void setProxy(String proxy){
+    public void setProxy(String proxy) {
         this.proxy = proxy;
     }
-    
+
     /**
-     * Proxy port; optional, default 80. 
+     * Proxy port; optional, default 80.
      */
-    public void setPort(String port){
+    public void setPort(String port) {
         this.port = port;
     }
 
     /**
-     * Proxy user; optional, default =none. 
+     * Proxy user; optional, default =none.
      */
-    public void setUser(String user){
+    public void setUser(String user) {
         this.user = user;
     }
-    
+
     /**
      * Proxy password; required if <tt>user</tt> is set.
      */
-     public void setPassword(String password){
+     public void setPassword(String password) {
         this.password = password;
     }
-    
+
     /**
      * how long to show the splash screen in milliseconds,
      * optional; default 5000 ms.
@@ -137,7 +137,7 @@ public class SplashTask extends Task {
     public void setShowduration(int duration) {
         this.showDuration = duration;
     }
-   
+
 
     public void execute() throws BuildException {
         if (splash != null) {
@@ -146,33 +146,33 @@ public class SplashTask extends Task {
             splash.dispose();
             splash = null;
         }
-      
+
         log("Creating new SplashScreen", Project.MSG_VERBOSE);
         InputStream in = null;
 
         if (imgurl != null) {
             try {
                 URLConnection conn = null;
-                
+
                 if (useProxy &&
                    (proxy != null && proxy.length() > 0) &&
                    (port != null && port.length() > 0)) {
-                    
+
                     log("Using proxied Connection",  Project.MSG_DEBUG);
                     System.getProperties().put("http.proxySet", "true");
                     System.getProperties().put("http.proxyHost", proxy);
                     System.getProperties().put("http.proxyPort", port);
-                    
+
                     URL url = new URL(imgurl);
-                    
+
                     conn = url.openConnection();
                     if (user != null && user.length() > 0) {
-                        String encodedcreds = 
+                        String encodedcreds =
                             new sun.misc.BASE64Encoder().encode((new String(user + ":" + password)).getBytes());
-                        conn.setRequestProperty("Proxy-Authorization", 
+                        conn.setRequestProperty("Proxy-Authorization",
                                                 encodedcreds);
                     }
-                    
+
                 } else {
                     System.getProperties().put("http.proxySet", "false");
                     System.getProperties().put("http.proxyHost", "");
@@ -183,16 +183,16 @@ public class SplashTask extends Task {
                 }
                 conn.setDoInput(true);
                 conn.setDoOutput(false);
-                
+
                 in = conn.getInputStream();
 
                 // Catch everything - some of the above return nulls, throw exceptions or generally misbehave
                 // in the event of a problem etc
-                
+
             } catch (Throwable ioe) {
-                log("Unable to download image, trying default Ant Logo", 
+                log("Unable to download image, trying default Ant Logo",
                     Project.MSG_DEBUG);
-                log("(Exception was \"" + ioe.getMessage() + "\"", 
+                log("(Exception was \"" + ioe.getMessage() + "\"",
                     Project.MSG_DEBUG);
             }
         }
@@ -210,10 +210,10 @@ public class SplashTask extends Task {
                 while ((data = din.read()) != -1) {
                     bout.write((byte) data);
                 }
-                
+
                 log("Got ByteArray, creating splash",  Project.MSG_DEBUG);
                 ImageIcon img = new ImageIcon(bout.toByteArray());
-                
+
                 splash = new SplashScreen(img);
                 success = true;
             } catch (Exception e) {
@@ -240,6 +240,6 @@ public class SplashTask extends Task {
             Thread.currentThread().sleep(showDuration);
         } catch (InterruptedException e) {
         }
-        
+
     }
 }

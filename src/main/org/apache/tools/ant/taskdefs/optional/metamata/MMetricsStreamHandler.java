@@ -413,7 +413,7 @@ class MetricsElement {
         while ((pos = line.indexOf('\t')) != -1) {
             String token = line.substring(0, pos);
             // only parse what coudl be a valid number. ie not constructs nor no value
-            /*if (metrics.size() != 0 || token.length() != 0){
+            /*if (metrics.size() != 0 || token.length() != 0) {
                 Number num = METAMATA_NF.parse(token); // parse with Metamata NF
                 token = NEUTRAL_NF.format(num.doubleValue()); // and format with a neutral NF
             }*/

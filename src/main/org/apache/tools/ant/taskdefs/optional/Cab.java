@@ -144,7 +144,7 @@ public class Cab extends MatchingTask {
     protected void checkConfiguration() throws BuildException {
         if (baseDir == null && filesets.size() == 0) {
             throw new BuildException("basedir attribute or at least one "
-                                     + "nested filest is required!", 
+                                     + "nested filest is required!",
                                      getLocation());
         }
         if (baseDir != null && !baseDir.exists()) {
@@ -266,7 +266,7 @@ public class Cab extends MatchingTask {
             try {
                 Process p = Execute.launch(getProject(),
                                            new String[] {"listcab"}, null,
-                                           baseDir != null ? baseDir 
+                                           baseDir != null ? baseDir
                                                    : getProject().getBaseDir(),
                                            true);
                 OutputStream out = p.getOutputStream();

@@ -164,7 +164,7 @@ public class EchoProperties extends Task {
      *
      * @param file  the input file
      */
-    public void setSrcfile( File file ) {
+    public void setSrcfile(File file) {
         inFile = file;
     }
 
@@ -260,16 +260,16 @@ public class EchoProperties extends Task {
             if (inFile.exists() && !inFile.canRead()) {
                 String message = "Can not read from the specified srcfile!";
                 if (failonerror) {
-                    throw new BuildException( message, getLocation() );
+                    throw new BuildException(message, getLocation());
                 } else {
-                    log( message, Project.MSG_ERR );
+                    log(message, Project.MSG_ERR);
                 }
                 return;
             }
 
             FileInputStream in = null;
             try {
-                in = new FileInputStream( inFile );
+                in = new FileInputStream(inFile);
                 Properties props = new Properties();
                 props.load(in);
                 CollectionUtils.putAll(allProps, props);
@@ -279,21 +279,21 @@ public class EchoProperties extends Task {
                 if (failonerror) {
                     throw new BuildException(message, fnfe, getLocation());
                 } else {
-                    log( message, Project.MSG_WARN );
+                    log(message, Project.MSG_WARN);
                 }
                 return;
-            } catch( IOException ioe ) {
+            } catch(IOException ioe) {
                 String message =
                     "Could not read file " + inFile.getAbsolutePath();
                 if (failonerror) {
                     throw new BuildException(message, ioe, getLocation());
                 } else {
-                    log( message, Project.MSG_WARN );
+                    log(message, Project.MSG_WARN);
                 }
                 return;
             } finally {
                 try {
-                    if( null != in ) {
+                    if(null != in) {
                         in.close();
                     }
                 } catch(IOException ioe) {}
@@ -305,7 +305,7 @@ public class EchoProperties extends Task {
             PropertySet ps = (PropertySet) enum.nextElement();
             CollectionUtils.putAll(allProps, ps.getProperties());
         }
-        
+
         OutputStream os = null;
         try {
             if (destfile == null) {
@@ -376,7 +376,7 @@ public class EchoProperties extends Task {
         if ("text".equals(format)) {
             jdkSaveProperties(props, os, "Ant properties");
         } else if ("xml".equals(format)) {
-            xmlSaveProperties(props, os );
+            xmlSaveProperties(props, os);
         }
     }
 
@@ -384,29 +384,29 @@ public class EchoProperties extends Task {
                                      OutputStream os) throws IOException {
         // create XML document
         Document doc = getDocumentBuilder().newDocument();
-        Element rootElement = doc.createElement( PROPERTIES );
+        Element rootElement = doc.createElement(PROPERTIES);
 
         // output properties
         String name;
         Enumeration e = props.propertyNames();
-        while( e.hasMoreElements() ) {
+        while(e.hasMoreElements()) {
             name = (String)e.nextElement();
-            Element propElement = doc.createElement( PROPERTY );
-            propElement.setAttribute( ATTR_NAME, name );
-            propElement.setAttribute( ATTR_VALUE, props.getProperty( name ) );
-            rootElement.appendChild( propElement );
+            Element propElement = doc.createElement(PROPERTY);
+            propElement.setAttribute(ATTR_NAME, name);
+            propElement.setAttribute(ATTR_VALUE, props.getProperty(name));
+            rootElement.appendChild(propElement);
         }
 
         Writer wri = null;
         try {
-            wri = new OutputStreamWriter( os, "UTF8" );
-            wri.write( "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" );
-            ( new DOMElementWriter() ).write( rootElement, wri, 0, "\t" );
+            wri = new OutputStreamWriter(os, "UTF8");
+            wri.write("<?xml version=\"1.0\" encoding=\"UTF-8\"?>");
+            (new DOMElementWriter()).write(rootElement, wri, 0, "\t");
             wri.flush();
-        } catch( IOException ioe ) {
-            throw new BuildException( "Unable to write XML file", ioe );
+        } catch(IOException ioe) {
+            throw new BuildException("Unable to write XML file", ioe);
         } finally {
-            if( wri != null ) {
+            if(wri != null) {
                 wri.close();
             }
         }
@@ -414,11 +414,11 @@ public class EchoProperties extends Task {
 
     /**
      *  JDK 1.2 allows for the safer method
-     *  <tt>Properties.store( OutputStream, String )</tt>, which throws an
+     *  <tt>Properties.store(OutputStream, String)</tt>, which throws an
      *  <tt>IOException</tt> on an output error.  This method attempts to
      *  use the JDK 1.2 method first, and if that does not exist, then the
      *  JDK 1.0 compatible method
-     *  <tt>Properties.save( OutputStream, String )</tt> is used instead.
+     *  <tt>Properties.save(OutputStream, String)</tt> is used instead.
      *
      *@param props the properties to record
      *@param os record the properties to this output stream
@@ -476,8 +476,8 @@ public class EchoProperties extends Task {
     private static DocumentBuilder getDocumentBuilder() {
         try {
             return DocumentBuilderFactory.newInstance().newDocumentBuilder();
-        } catch( Exception e ) {
-            throw new ExceptionInInitializerError( e );
+        } catch(Exception e) {
+            throw new ExceptionInInitializerError(e);
         }
     }
 }

@@ -93,17 +93,17 @@ public class MParse extends AbstractMetamataTask {
     }
 
     /** set verbose mode */
-    public void setVerbose(boolean flag){
+    public void setVerbose(boolean flag) {
         verbose = flag;
     }
 
     /** set scanner debug mode; optional, default false */
-    public void setDebugscanner(boolean flag){
+    public void setDebugscanner(boolean flag) {
         debugscanner = flag;
     }
 
     /** set parser debug mode; optional, default false */
-    public void setDebugparser(boolean flag){
+    public void setDebugparser(boolean flag) {
         debugparser = flag;
     }
 
@@ -132,7 +132,7 @@ public class MParse extends AbstractMetamataTask {
     }
 
     /** return the default stream handler for this task */
-    protected ExecuteStreamHandler createStreamHandler(){
+    protected ExecuteStreamHandler createStreamHandler() {
         return new LogStreamHandler(this, Project.MSG_INFO, Project.MSG_INFO);
     }
 
@@ -145,7 +145,7 @@ public class MParse extends AbstractMetamataTask {
         // set the classpath as the jar files
         File[] jars = getMetamataLibs();
         final Path classPath = cmdl.createClasspath(getProject());
-        for (int i = 0; i < jars.length; i++){
+        for (int i = 0; i < jars.length; i++) {
             classPath.createPathElement().setLocation(jars[i]);
         }
 
@@ -186,14 +186,14 @@ public class MParse extends AbstractMetamataTask {
             if (process.execute() != 0) {
                 throw new BuildException("Metamata task failed.");
             }
-        } catch (IOException e){
+        } catch (IOException e) {
             throw new BuildException("Failed to launch Metamata task: ", e);
         }
     }
 
     /** clean up all the mess that we did with temporary objects */
-    protected void cleanUp(){
-        if (optionsFile != null){
+    protected void cleanUp() {
+        if (optionsFile != null) {
             optionsFile.delete();
             optionsFile = null;
         }
@@ -216,7 +216,7 @@ public class MParse extends AbstractMetamataTask {
      * forked process do it for you.
      * @return array of jars/zips needed to run metamata.
      */
-    protected File[] getMetamataLibs(){
+    protected File[] getMetamataLibs() {
         Vector files = new Vector();
         files.addElement(new File(metamataHome, "lib/metamata.jar"));
         files.addElement(new File(metamataHome, "bin/lib/JavaCC.zip"));
@@ -233,15 +233,15 @@ public class MParse extends AbstractMetamataTask {
      */
     protected void checkOptions() throws BuildException {
         // check that the home is ok.
-        if (metamataHome == null || !metamataHome.exists()){
+        if (metamataHome == null || !metamataHome.exists()) {
             throw new BuildException("'metamatahome' must point to Metamata home directory.");
         }
         metamataHome = getProject().resolveFile(metamataHome.getPath());
 
         // check that the needed jar exists.
         File[] jars = getMetamataLibs();
-        for (int i = 0; i < jars.length; i++){
-            if (!jars[i].exists()){
+        for (int i = 0; i < jars.length; i++) {
+            if (!jars[i].exists()) {
                 throw new BuildException(jars[i]
                     + " does not exist. Check your metamata installation.");
             }
@@ -261,20 +261,20 @@ public class MParse extends AbstractMetamataTask {
      */
     protected Vector getOptions() {
         Vector options = new Vector();
-        if (verbose){
+        if (verbose) {
             options.addElement("-verbose");
         }
-        if (debugscanner){
+        if (debugscanner) {
             options.addElement("-ds");
         }
-        if (debugparser){
+        if (debugparser) {
             options.addElement("-dp");
         }
-        if (classPath != null){
+        if (classPath != null) {
             options.addElement("-classpath");
             options.addElement(classPath.toString());
         }
-        if (sourcePath != null){
+        if (sourcePath != null) {
             options.addElement("-sourcepath");
             options.addElement(sourcePath.toString());
         }
@@ -294,17 +294,17 @@ public class MParse extends AbstractMetamataTask {
         try {
             fw = new FileWriter(tofile);
             PrintWriter pw = new PrintWriter(fw);
-            for (int i = 0; i < options.length; i++){
+            for (int i = 0; i < options.length; i++) {
                 pw.println(options[i]);
             }
             pw.flush();
-        } catch (IOException e){
+        } catch (IOException e) {
             throw new BuildException("Error while writing options file " + tofile, e);
         } finally {
-            if (fw != null){
+            if (fw != null) {
                 try {
                     fw.close();
-                } catch (IOException ignored){}
+                } catch (IOException ignored) {}
             }
         }
     }

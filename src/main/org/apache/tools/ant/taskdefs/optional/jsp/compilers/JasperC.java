@@ -132,9 +132,9 @@ public class JasperC extends DefaultJspCompilerAdapter {
             getJspc().deleteEmptyJavaFiles();
         }
     }
-    
 
-    
+
+
     /**
      * build up a command line
      * @return a command line for jasper
@@ -149,12 +149,12 @@ public class JasperC extends DefaultJspCompilerAdapter {
         addArg(cmd, "-uribase", jspc.getUribase());
         addArg(cmd, "-ieplugin", jspc.getIeplugin());
         addArg(cmd, "-webinc", jspc.getWebinc());
-        addArg(cmd, "-webxml", jspc.getWebxml());        
+        addArg(cmd, "-webxml", jspc.getWebxml());
         addArg(cmd, "-die9");
 
-        if (jspc.isMapped()){
+        if (jspc.isMapped()) {
             addArg(cmd, "-mapped");
-        }       
+        }
         if (jspc.getWebApp() != null) {
             File dir = jspc.getWebApp().getDirectory();
             addArg(cmd, "-webapp", dir);

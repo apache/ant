@@ -78,10 +78,13 @@ import org.apache.tools.ant.types.Reference;
 /**
  * Instruments Java classes with iContract DBC preprocessor.
  * <br/>
- * The task can generate a properties file for <a href="http://hjem.sol.no/hellesoy/icontrol.html">iControl</a>,
- * a graphical user interface that lets you turn on/off assertions. iControl generates a control file that you can refer to
+ * The task can generate a properties file for
+ * <a href="http://hjem.sol.no/hellesoy/icontrol.html">iControl</a>,
+ * a graphical user interface that lets you turn on/off assertions.
+ * iControl generates a control file that you can refer to
  * from this task using the controlfile attribute.
- * iContract is at <a href="http://www.reliable-systems.com/tools/">http://www.reliable-systems.com/tools/</a>
+ * iContract is at
+ * <a href="http://www.reliable-systems.com/tools/">http://www.reliable-systems.com/tools/</a>
  * <p/>
  * Thanks to Rainer Schmitz for enhancements and comments.
  *
@@ -154,22 +157,25 @@ import org.apache.tools.ant.types.Reference;
  *   </tr>
  *   <tr>
  *     <td valign="top">verbosity</td>
- *     <td valign="top">Indicates the verbosity level of iContract. Any combination
- *       of <code>error*,warning*,note*,info*,progress*,debug*</code> (comma separated) can be
- *       used. Defaults to <code>error*</code></td>
+ *     <td valign="top">Indicates the verbosity level of iContract.
+ *       Any combination of
+ *       <code>error*,warning*,note*,info*,progress*,debug*</code>
+ *       (comma separated) can be used. Defaults to <code>error*</code></td>
  *     <td valign="top" align="center">No</td>
  *   </tr>
  *   <tr>
  *     <td valign="top">quiet</td>
- *     <td valign="top">Indicates if iContract should be quiet. Turn it off if many your classes extend uninstrumented classes
- *     and you don't want warnings about this. Defaults to <code>false</code></td>
+ *     <td valign="top">Indicates if iContract should be quiet. Turn it off
+ *       if many your classes extend uninstrumented classes and you don't
+ *       want warnings about this. Defaults to <code>false</code></td>
  *     <td valign="top" align="center">No</td>
  *   </tr>
  *   <tr>
  *     <td valign="top">updateicontrol</td>
- *     <td valign="top">If set to true, it indicates that the properties file for
- *       iControl in the current directory should be updated (or created if it doesn't exist).
- *       Defaults to <code>false</code>.</td>
+ *     <td valign="top">If set to true, it indicates that the properties
+ *       file for iControl in the current directory should be updated
+ *       (or created if it doesn't exist). Defaults to <code>false</code>.
+ *     </td>
  *     <td valign="top" align="center">No</td>
  *   </tr>
  *   <tr>
@@ -614,7 +620,8 @@ public class IContract extends MatchingTask {
             if (updateIcontrol) {
                 Properties iControlProps = new Properties();
 
-                try {// to read existing propertiesfile
+                try {
+                    // to read existing propertiesfile
                     iControlProps.load(new FileInputStream("icontrol.properties"));
                 } catch (IOException e) {
                     log("File icontrol.properties not found. That's ok. Writing a default one.");
@@ -625,7 +632,8 @@ public class IContract extends MatchingTask {
                 iControlProps.setProperty("controlFile", controlFile.getAbsolutePath());
                 iControlProps.setProperty("targetsFile", targets.getAbsolutePath());
 
-                try {// to read existing propertiesfile
+                try {
+                    // to read existing propertiesfile
                     iControlProps.store(new FileOutputStream("icontrol.properties"), ICONTROL_PROPERTIES_HEADER);
                     log("Updated icontrol.properties");
                 } catch (IOException e) {
@@ -644,7 +652,8 @@ public class IContract extends MatchingTask {
                 }
                 throw new BuildException("iContract instrumentation failed. Code=" + result);
             }
-        } else {// not dirty
+        } else {
+            // not dirty
             //log( "Nothing to do. Everything up to date." );
         }
     }
@@ -664,10 +673,10 @@ public class IContract extends MatchingTask {
         if (repositoryDir == null) {
             throw new BuildException("repositorydir attribute must be set!", getLocation());
         }
-        if (updateIcontrol == true && classDir == null) {
+        if (updateIcontrol && classDir == null) {
             throw new BuildException("classdir attribute must be specified when updateicontrol=true!", getLocation());
         }
-        if (updateIcontrol == true && controlFile == null) {
+        if (updateIcontrol && controlFile == null) {
             throw new BuildException("controlfile attribute must be specified when updateicontrol=true!", getLocation());
         }
     }
@@ -719,8 +728,8 @@ public class IContract extends MatchingTask {
                     File classFile = new File(buildDir, files[i].substring(0, files[i].indexOf(".java")) + ".class");
 
                     if (srcFile.lastModified() > now) {
-                        log("Warning: file modified in the future: " +
-                            files[i], Project.MSG_WARN);
+                        log("Warning: file modified in the future: "
+                            + files[i], Project.MSG_WARN);
                     }
 
                     if (!classFile.exists() || srcFile.lastModified() > classFile.lastModified()) {

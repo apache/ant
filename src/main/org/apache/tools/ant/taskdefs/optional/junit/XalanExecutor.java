@@ -76,13 +76,13 @@ abstract class XalanExecutor {
     protected AggregateTransformer caller;
 
     /** set the caller for this object. */
-    private final void setCaller(AggregateTransformer caller){
+    private final void setCaller(AggregateTransformer caller) {
         this.caller = caller;
     }
 
     /** get the appropriate stream based on the format (frames/noframes) */
     protected OutputStream getOutputStream() throws IOException {
-        if (AggregateTransformer.FRAMES.equals(caller.format)){
+        if (AggregateTransformer.FRAMES.equals(caller.format)) {
             // dummy output for the framed report
             // it's all done by extension...
             return new ByteArrayOutputStream();
@@ -109,7 +109,7 @@ abstract class XalanExecutor {
             procVersion = Class.forName("org.apache.xalan.processor.XSLProcessorVersion");
             executor = (XalanExecutor) Class.forName(
                 "org.apache.tools.ant.taskdefs.optional.junit.Xalan2Executor").newInstance();
-        } catch (Exception xalan2missing){
+        } catch (Exception xalan2missing) {
             StringWriter swr = new StringWriter();
             xalan2missing.printStackTrace(new PrintWriter(swr));
             caller.task.log("Didn't find Xalan2.", Project.MSG_DEBUG);
@@ -118,7 +118,7 @@ abstract class XalanExecutor {
                 procVersion = Class.forName("org.apache.xalan.xslt.XSLProcessorVersion");
                 executor = (XalanExecutor) Class.forName(
                     "org.apache.tools.ant.taskdefs.optional.junit.Xalan1Executor").newInstance();
-            } catch (Exception xalan1missing){
+            } catch (Exception xalan1missing) {
                 swr = new StringWriter();
                 xalan1missing.printStackTrace(new PrintWriter(swr));
                 caller.task.log("Didn't find Xalan1.", Project.MSG_DEBUG);
@@ -137,7 +137,7 @@ abstract class XalanExecutor {
         try {
             Field f = procVersion.getField("S_VERSION");
             return f.get(null).toString();
-        } catch (Exception e){
+        } catch (Exception e) {
             return "?";
         }
     }

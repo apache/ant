@@ -84,7 +84,7 @@ public class AggregateTransformer {
     public static final String NOFRAMES = "noframes";
 
     public static class Format extends EnumeratedAttribute {
-        public String[] getValues(){
+        public String[] getValues() {
             return new String[]{FRAMES, NOFRAMES};
         }
     }
@@ -106,16 +106,16 @@ public class AggregateTransformer {
 
     /** XML Parser factory */
     private static DocumentBuilderFactory privateDBFactory;
-    
+
     /** XML Parser factory accessible to subclasses */
     protected static DocumentBuilderFactory dbfactory;
-    
+
     static {
        privateDBFactory = DocumentBuilderFactory.newInstance();
        dbfactory = privateDBFactory;
     }
 
-    public AggregateTransformer(Task task){
+    public AggregateTransformer(Task task) {
         this.task = task;
     }
 
@@ -127,12 +127,12 @@ public class AggregateTransformer {
     protected static DocumentBuilderFactory getDocumentBuilderFactory() {
         return privateDBFactory;
     }
-    
-    public void setFormat(Format format){
+
+    public void setFormat(Format format) {
         this.format = format.getValue();
     }
 
-    public void setXmlDocument(Document doc){
+    public void setXmlDocument(Document doc) {
         this.document = doc;
     }
 
@@ -151,7 +151,7 @@ public class AggregateTransformer {
             } finally {
                 in.close();
             }
-        } catch (Exception e){
+        } catch (Exception e) {
             throw new BuildException("Error while parsing document: " + xmlfile, e);
         }
     }
@@ -162,17 +162,17 @@ public class AggregateTransformer {
      * @param styledir  the directory containing the xsl files if the user
      * would like to override with its own style.
      */
-    public void setStyledir(File styledir){
+    public void setStyledir(File styledir) {
         this.styleDir = styledir;
     }
 
     /** set the destination directory */
-    public void setTodir(File todir){
+    public void setTodir(File todir) {
         this.toDir = todir;
     }
 
     /** set the extension of the output files */
-    public void setExtension(String ext){
+    public void setExtension(String ext) {
         task.log("extension is not used anymore", Project.MSG_WARN);
     }
 
@@ -182,7 +182,7 @@ public class AggregateTransformer {
         XalanExecutor executor = XalanExecutor.newInstance(this);
         try {
             executor.execute();
-        } catch (Exception e){
+        } catch (Exception e) {
             throw new BuildException("Errors while applying transformations: "
                 + e.getMessage(), e);
         }
@@ -210,18 +210,18 @@ public class AggregateTransformer {
      */
     protected String getStylesheetSystemId() throws IOException {
         String xslname = "junit-frames.xsl";
-        if (NOFRAMES.equals(format)){
+        if (NOFRAMES.equals(format)) {
             xslname = "junit-noframes.xsl";
         }
-        if (styleDir == null){
+        if (styleDir == null) {
             URL url = getClass().getResource("xsl/" + xslname);
-            if (url == null){
+            if (url == null) {
                 throw new FileNotFoundException("Could not find jar resource " + xslname);
             }
             return url.toExternalForm();
         }
         File file = new File(styleDir, xslname);
-        if (!file.exists()){
+        if (!file.exists()) {
             throw new FileNotFoundException("Could not find file '" + file + "'");
         }
         return JAXPUtils.getSystemId(file);

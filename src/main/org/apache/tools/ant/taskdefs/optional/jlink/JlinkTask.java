@@ -61,7 +61,7 @@ import org.apache.tools.ant.types.Path;
 
 /**
  * This class defines objects that can link together various jar and
- * zip files. 
+ * zip files.
  *
  * <p>It is basically a wrapper for the jlink code written originally
  * by <a href="mailto:beard@netscape.com">Patrick Beard</a>.  The
@@ -154,11 +154,11 @@ public class JlinkTask extends MatchingTask {
     public  void execute() throws BuildException {
         //Be sure everything has been set.
         if (outfile == null) {
-            throw new BuildException("outfile attribute is required! " 
+            throw new BuildException("outfile attribute is required! "
                 + "Please set.");
         }
         if (!haveAddFiles() && !haveMergeFiles()) {
-            throw new BuildException("addfiles or mergefiles required! " 
+            throw new BuildException("addfiles or mergefiles required! "
                 + "Please set.");
         }
         log("linking:     " + outfile.getPath());
@@ -181,19 +181,19 @@ public class JlinkTask extends MatchingTask {
         }
     }
 
-    private boolean haveAddFiles(){
+    private boolean haveAddFiles() {
         return haveEntries(addfiles);
     }
 
-    private boolean haveMergeFiles(){
+    private boolean haveMergeFiles() {
         return haveEntries(mergefiles);
     }
 
-    private boolean haveEntries(Path p){
-        if (p == null){
+    private boolean haveEntries(Path p) {
+        if (p == null) {
             return false;
         }
-        if (p.size() > 0){
+        if (p.size() > 0) {
             return true;
         }
         return false;

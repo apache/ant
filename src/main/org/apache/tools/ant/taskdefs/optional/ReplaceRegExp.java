@@ -102,8 +102,8 @@ import org.apache.tools.ant.util.regexp.Regexp;
  *   Call Syntax:
  *
  *     &lt;replaceregexp file="file"
- *                    match="pattern" 
- *                    replace="pattern" 
+ *                    match="pattern"
+ *                    replace="pattern"
  *                    flags="options"?
  *                    byline="true|false"? &gt;
  *       regexp?
@@ -120,9 +120,9 @@ import org.apache.tools.ant.util.regexp.Regexp;
  *   Attributes:
  *
  *     file    --&gt; A single file to operation on (mutually exclusive with the fileset subelements)
- *     match   --&gt; The Regular expression to match 
- *     replace --&gt; The Expression replacement string 
- *     flags   --&gt; The options to give to the replacement 
+ *     match   --&gt; The Regular expression to match
+ *     replace --&gt; The Expression replacement string
+ *     flags   --&gt; The options to give to the replacement
  *                 g = Substitute all occurrences. default is to replace only the first one
  *                 i = Case insensitive match
  *
@@ -202,7 +202,7 @@ public class ReplaceRegExp extends Task {
      * of the regular expression.
      * Required if no nested &lt;substitution&gt; is used
      */
-                     
+
     public void setReplace(String replace) {
         if (subs != null) {
             throw new BuildException("Only one substitution expression is "
@@ -219,12 +219,12 @@ public class ReplaceRegExp extends Task {
      * <ul>
      *  <li>g : Global replacement.  Replace all occurences found
      *  <li>i : Case Insensitive.  Do not consider case in the match
-     *  <li>m : Multiline.  Treat the string as multiple lines of input, 
+     *  <li>m : Multiline.  Treat the string as multiple lines of input,
      *         using "^" and "$" as the start or end of any line, respectively, rather than start or end of string.
      *  <li> s : Singleline.  Treat the string as a single line of input, using
      *        "." to match any character, including a newline, which normally, it would not match.
      *</ul>
-     */                     
+     */
     public void setFlags(String flags) {
         this.flags = flags;
     }
@@ -303,7 +303,7 @@ public class ReplaceRegExp extends Task {
         Regexp regexp = r.getRegexp(getProject());
 
         if (regexp.matches(input, options)) {
-            res = regexp.substitute(input, s.getExpression(getProject()), 
+            res = regexp.substitute(input, s.getExpression(getProject()),
                                     options);
         }
 
@@ -441,7 +441,7 @@ public class ReplaceRegExp extends Task {
                     fileUtils.rename(temp, f);
                     temp = null;
                 } catch (IOException e) {
-                    throw new BuildException("Couldn't rename temporary file " 
+                    throw new BuildException("Couldn't rename temporary file "
                                              + temp, getLocation());
                 }
             }
@@ -502,12 +502,12 @@ public class ReplaceRegExp extends Task {
             try {
                 doReplace(file, options);
             } catch (IOException e) {
-                log("An error occurred processing file: '" 
+                log("An error occurred processing file: '"
                     + file.getAbsolutePath() + "': " + e.toString(),
                     Project.MSG_ERR);
             }
         } else if (file != null) {
-            log("The following file is missing: '" 
+            log("The following file is missing: '"
                 + file.getAbsolutePath() + "'", Project.MSG_ERR);
         }
 
@@ -526,12 +526,12 @@ public class ReplaceRegExp extends Task {
                     try {
                         doReplace(f, options);
                     } catch (Exception e) {
-                        log("An error occurred processing file: '" 
+                        log("An error occurred processing file: '"
                             + f.getAbsolutePath() + "': " + e.toString(),
                             Project.MSG_ERR);
                     }
                 } else {
-                    log("The following file is missing: '" 
+                    log("The following file is missing: '"
                         + f.getAbsolutePath() + "'", Project.MSG_ERR);
                 }
             }

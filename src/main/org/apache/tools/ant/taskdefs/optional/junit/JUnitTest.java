@@ -76,10 +76,10 @@ import org.apache.tools.ant.Project;
  * @see JUnitTestRunner
  */
 public class JUnitTest extends BaseTest implements Cloneable {
-    
+
     /** the name of the test case */
     private String name = null;
-    
+
     /** the name of the result file */
     private String outfile = null;
 
@@ -99,7 +99,7 @@ public class JUnitTest extends BaseTest implements Cloneable {
         this.name  = name;
     }
 
-    public JUnitTest(String name, boolean haltOnError, boolean haltOnFailure, 
+    public JUnitTest(String name, boolean haltOnError, boolean haltOnFailure,
                      boolean filtertrace) {
         this.name  = name;
         this.haltOnError = haltOnError;
@@ -107,7 +107,7 @@ public class JUnitTest extends BaseTest implements Cloneable {
         this.filtertrace = filtertrace;
     }
 
-    /** 
+    /**
      * Set the name of the test class.
      */
     public void setName(String value) {
@@ -121,7 +121,7 @@ public class JUnitTest extends BaseTest implements Cloneable {
         outfile = value;
     }
 
-    /** 
+    /**
      * Get the name of the test class.
      */
     public String getName() {
@@ -130,7 +130,7 @@ public class JUnitTest extends BaseTest implements Cloneable {
 
     /**
      * Get the name of the output file
-     * 
+     *
      * @return the name of the output file.
      */
     public String getOutfile() {
@@ -150,15 +150,15 @@ public class JUnitTest extends BaseTest implements Cloneable {
     public long runCount() {
         return runs;
     }
-    
+
     public long failureCount() {
         return failures;
     }
-    
+
     public long errorCount() {
         return errors;
     }
-    
+
     public long getRunTime() {
         return runTime;
     }
@@ -166,9 +166,9 @@ public class JUnitTest extends BaseTest implements Cloneable {
     public Properties getProperties() {
         return props;
     }
-    
-    public void setProperties(Hashtable p) { 
-        props = new Properties();  
+
+    public void setProperties(Hashtable p) {
+        props = new Properties();
         for (Enumeration enum = p.keys(); enum.hasMoreElements();) {
             Object key = enum.nextElement();
             props.put(key, p.get(key));
@@ -178,7 +178,7 @@ public class JUnitTest extends BaseTest implements Cloneable {
     public boolean shouldRun(Project p) {
         if (ifProperty != null && p.getProperty(ifProperty) == null) {
             return false;
-        } else if (unlessProperty != null && 
+        } else if (unlessProperty != null &&
                    p.getProperty(unlessProperty) != null) {
             return false;
         }
@@ -195,9 +195,9 @@ public class JUnitTest extends BaseTest implements Cloneable {
     /**
      * Convenient method to add formatters to a vector
      */
-    void addFormattersTo(Vector v){
+    void addFormattersTo(Vector v) {
         final int count = formatters.size();
-        for (int i = 0; i < count; i++){
+        for (int i = 0; i < count; i++) {
             v.addElement(formatters.elementAt(i));
         }
     }

@@ -112,8 +112,8 @@ public class JavaCC extends Task {
     protected static final int TASKDEF_TYPE_JJTREE = 2;
     protected static final int TASKDEF_TYPE_JJDOC = 3;
 
-    protected static final String[] ARCHIVE_LOCATIONS = 
-        new String[] {"JavaCC.zip", "bin/lib/JavaCC.zip", 
+    protected static final String[] ARCHIVE_LOCATIONS =
+        new String[] {"JavaCC.zip", "bin/lib/JavaCC.zip",
                       "bin/lib/javacc.jar",
                       "javacc.jar", // used by jpackage for JavaCC 3.x
         };
@@ -353,7 +353,7 @@ public class JavaCC extends Task {
      * @return the file object pointing to the JavaCC archive.
      */
     protected static File getArchiveFile(File home) throws BuildException {
-        return new File(home, 
+        return new File(home,
                         ARCHIVE_LOCATIONS[getMajorVersionNumber(home) - 1]);
     }
 
@@ -365,7 +365,7 @@ public class JavaCC extends Task {
      * or if the archive could not be found despite attempts to do so.
      * @return the main class for the taskdef.
      */
-    protected static String getMainClass(File home, int type) 
+    protected static String getMainClass(File home, int type)
         throws BuildException {
 
         int majorVersion = getMajorVersionNumber(home);
@@ -398,7 +398,7 @@ public class JavaCC extends Task {
 
         case 3:
         case 4:
-            /* 
+            /*
              * This is where the fun starts, JavaCC 3.0 uses
              * org.netbeans.javacc, 3.1 uses org.javacc - I wonder
              * which version is going to use net.java.javacc.
@@ -466,7 +466,7 @@ public class JavaCC extends Task {
      * or if the archive could not be found despite attempts to do so.
      * @return a number that is useless outside the scope of this class
      */
-    protected static int getMajorVersionNumber(File home) 
+    protected static int getMajorVersionNumber(File home)
         throws BuildException {
 
         if (home == null || !home.isDirectory()) {
@@ -476,7 +476,7 @@ public class JavaCC extends Task {
         for (int i = 0; i < ARCHIVE_LOCATIONS.length; i++) {
             File f = new File(home, ARCHIVE_LOCATIONS[i]);
 
-            if (f.exists()){
+            if (f.exists()) {
                 return (i + 1);
             }
         }

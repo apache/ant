@@ -82,7 +82,7 @@ final class MAuditParser {
     /** matcher that will be used to extract the info from the line */
     private final RegexpMatcher matcher;
 
-    MAuditParser(){
+    MAuditParser() {
         /** the matcher should be the Oro one. I don't know about the other one */
         matcher = (new RegexpMatcherFactory()).newRegexpMatcher();
         matcher.setPattern(AUDIT_PATTERN);
@@ -95,9 +95,9 @@ final class MAuditParser {
      * or <tt>null</tt> if it could not parse it. (might be a
      * message info or copyright or summary).
      */
-    Violation parseLine(String line){
+    Violation parseLine(String line) {
         Vector matches = matcher.getGroups(line);
-        if (matches == null){
+        if (matches == null) {
             return null;
         }
         final String file = (String) matches.elementAt(1);

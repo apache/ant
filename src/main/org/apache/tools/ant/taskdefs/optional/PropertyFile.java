@@ -60,9 +60,6 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.OutputStream;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
 import java.text.DateFormat;
 import java.text.DecimalFormat;
 import java.text.ParseException;
@@ -195,7 +192,7 @@ public class PropertyFile extends Task {
         properties = new Properties();
         try {
             if (propertyfile.exists()) {
-                log("Updating property file: " 
+                log("Updating property file: "
                     + propertyfile.getAbsolutePath());
                 FileInputStream fis = null;
                 try {
@@ -208,7 +205,7 @@ public class PropertyFile extends Task {
                     }
                 }
             } else {
-                log("Creating new property file: " 
+                log("Creating new property file: "
                     + propertyfile.getAbsolutePath());
                 FileOutputStream out = null;
                 try {
@@ -289,40 +286,40 @@ public class PropertyFile extends Task {
         public void setKey(String value) {
             this.key = value;
         }
-        
-        /** 
+
+        /**
          * Value to set (=), to add (+) or subtract (-)
          */
         public void setValue(String value) {
             this.value = value;
         }
-        
+
         /**
-         * operation to apply. 
-         * &quot;+&quot; or &quot;=&quot; 
+         * operation to apply.
+         * &quot;+&quot; or &quot;=&quot;
          *(default) for all datatypes; &quot;-&quot; for date and int only)\.
          */
         public void setOperation(Operation value) {
             this.operation = Operation.toOperation(value.getValue());
         }
-        
+
         /**
          * Regard the value as : int, date or string (default)
          */
         public void setType(Type value) {
             this.type = Type.toType(value.getValue());
         }
-        
+
         /**
          * Initial value to set for a property if it is not
          * already defined in the property file.
          * For type date, an additional keyword is allowed: &quot;now&quot;
          */
-                     
+
         public void setDefault(String value) {
             this.defaultValue = value;
         }
-        
+
         /**
          * For int and date type only. If present, Values will
          * be parsed and formatted accordingly.
@@ -330,7 +327,7 @@ public class PropertyFile extends Task {
         public void setPattern(String value) {
             this.pattern = value;
         }
-        
+
         /**
          * The unit of the value to be applied to date +/- operations.
          *            Valid Values are:
@@ -344,7 +341,7 @@ public class PropertyFile extends Task {
          *               <li>month</li>
          *               <li>year</li>
          *            </ul>
-         *            This only applies to date types using a +/- operation.        
+         *            This only applies to date types using a +/- operation.
          * @since Ant 1.5
          */
         public void setUnit(PropertyFile.Unit unit) {
@@ -372,11 +369,11 @@ public class PropertyFile extends Task {
                 // which means do nothing
                 npe.printStackTrace();
             }
-            
+
             if (newValue == null) {
                 newValue = "";
             }
-            
+
             // Insert as a string by default
             props.put(key, newValue);
         }
@@ -400,17 +397,17 @@ public class PropertyFile extends Task {
             if (currentStringValue == null) {
                 currentStringValue = DEFAULT_DATE_VALUE;
             }
-            
+
             if ("now".equals(currentStringValue)) {
                 currentValue.setTime(new Date());
             } else {
                 try {
                     currentValue.setTime(fmt.parse(currentStringValue));
-                } catch (ParseException pe)  { 
-                    // swallow 
+                } catch (ParseException pe)  {
+                    // swallow
                 }
             }
-            
+
             if (operation != Operation.EQUALS_OPER) {
                 int offset = 0;
                 try {
@@ -454,7 +451,7 @@ public class PropertyFile extends Task {
             } catch (ParseException pe)  {
                 // swallow
             }
-            
+
             if (operation == Operation.EQUALS_OPER) {
                 newValue = currentValue;
             } else {
@@ -478,7 +475,7 @@ public class PropertyFile extends Task {
 
             this.newValue = fmt.format(newValue);
         }
-        
+
         /**
         * Handle operations for type <code>string</code>.
         *
@@ -490,11 +487,11 @@ public class PropertyFile extends Task {
             String newValue  = DEFAULT_STRING_VALUE;
 
             String currentValue = getCurrentValue(oldValue);
-            
+
             if (currentValue == null) {
                 currentValue = DEFAULT_STRING_VALUE;
             }
-            
+
             if (operation == Operation.EQUALS_OPER) {
                 newValue = currentValue;
             } else if (operation == Operation.INCREMENT_OPER) {
@@ -502,7 +499,7 @@ public class PropertyFile extends Task {
             }
             this.newValue = newValue;
         }
-        
+
         /**
          * Check if parameter combinations can be supported
          * @todo make sure the 'unit' attribute is only specified on date
@@ -511,11 +508,11 @@ public class PropertyFile extends Task {
         private void checkParameters() throws BuildException {
             if (type == Type.STRING_TYPE &&
                 operation == Operation.DECREMENT_OPER) {
-                throw new BuildException("- is not suported for string " 
+                throw new BuildException("- is not suported for string "
                     + "properties (key:" + key + ")");
             }
             if (value == null && defaultValue == null) {
-                throw new BuildException("\"value\" and/or \"default\" " 
+                throw new BuildException("\"value\" and/or \"default\" "
                     + "attribute must be specified (key:" + key + ")");
             }
             if (key == null) {
@@ -523,7 +520,7 @@ public class PropertyFile extends Task {
             }
             if (type == Type.STRING_TYPE &&
                 pattern != null) {
-                throw new BuildException("pattern is not suported for string " 
+                throw new BuildException("pattern is not suported for string "
                     + "properties (key:" + key + ")");
             }
         }
@@ -532,13 +529,13 @@ public class PropertyFile extends Task {
             String ret = null;
             if (operation == Operation.EQUALS_OPER) {
                 // If only value is specified, the property is set to it
-                // regardless of its previous value. 
+                // regardless of its previous value.
                 if (value != null && defaultValue == null) {
                     ret = value;
                 }
-                
+
                 // If only default is specified and the property previously
-                // existed in the property file, it is unchanged. 
+                // existed in the property file, it is unchanged.
                 if (value == null && defaultValue != null && oldValue != null) {
                     ret = oldValue;
                 }
@@ -548,7 +545,7 @@ public class PropertyFile extends Task {
                 if (value == null && defaultValue != null && oldValue == null) {
                     ret = defaultValue;
                 }
-                
+
                 // If value and default are both specified and the property
                 // previously existed in the property file, the property
                 // is set to value.
@@ -558,17 +555,17 @@ public class PropertyFile extends Task {
 
                 // If value and default are both specified and the property
                 // did not exist in the property file, the property is set
-                // to default. 
+                // to default.
                 if (value != null && defaultValue != null && oldValue == null) {
                     ret = defaultValue;
                 }
             } else {
                 ret = (oldValue == null) ? defaultValue : oldValue;
             }
-            
+
             return ret;
         }
-        
+
         /**
          * Enumerated attribute with the values "+", "-", "="
          */
@@ -617,7 +614,7 @@ public class PropertyFile extends Task {
             }
         }
     }
-    
+
     /**
      * Borrowed from Tstamp
      * @todo share all this time stuff across many tasks as a datetime datatype

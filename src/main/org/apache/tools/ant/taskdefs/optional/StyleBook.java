@@ -85,10 +85,10 @@ public class StyleBook
     }
 
     /**
-     * The book xml file that the documentation generation starts from; 
+     * The book xml file that the documentation generation starts from;
      * required.
      */
-     
+
     public void setBook(final File book) {
         m_book = book;
     }

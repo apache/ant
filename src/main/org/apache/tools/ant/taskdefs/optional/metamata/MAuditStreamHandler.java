@@ -205,7 +205,7 @@ class MAuditStreamHandler implements ExecuteStreamHandler {
         DOMElementWriter domWriter = new DOMElementWriter();
         try {
             domWriter.write(rootElement, xmlOut);
-        } catch (IOException e){
+        } catch (IOException e) {
             throw new BuildException(e);
         }
     }

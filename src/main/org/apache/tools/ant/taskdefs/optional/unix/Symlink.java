@@ -256,7 +256,7 @@ public class Symlink extends Task {
                             linksToStore.put(alink.getName(),
                                              alink.getCanonicalPath());
                         } catch (IOException ioe) {
-                            handleError("Couldn't get canonical " 
+                            handleError("Couldn't get canonical "
                                         + "name of a parent link");
                         }
                     }
@@ -541,7 +541,7 @@ public class Symlink extends Task {
             return;
         }
         if (link == null) {
-            handleError("Must define the link " 
+            handleError("Must define the link "
                         + "name for symlink!");
             return;
         }
@@ -573,7 +573,7 @@ public class Symlink extends Task {
      * Simultaneously get included directories and included files.
      *
      * @param ds   The scanner with which to get the files and directories.
-     * @return     A vector of <code>String</code> objects containing the 
+     * @return     A vector of <code>String</code> objects containing the
      *                included file names and directory names.
      */
 
@@ -772,7 +772,7 @@ public class Symlink extends Task {
 
             // loop through the files identified by each file set
             // and load their contents.
-            for (int j = 0; j < includedFiles.length; j++){
+            for (int j = 0; j < includedFiles.length; j++) {
                 File inc = new File(workingDir + File.separator
                                     + includedFiles[j]);
                 String inDir;

@@ -105,7 +105,7 @@ public class SoundTask extends Task {
     public SoundTask() {
     }
 
-    public void init(){
+    public void init() {
     }
 
     public void execute() {

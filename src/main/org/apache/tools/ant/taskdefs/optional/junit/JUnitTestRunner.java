@@ -247,7 +247,7 @@ public class JUnitTestRunner implements TestListener {
                 // know exactly what is the cause, but we're doing exactly
                 // the same as JUnit TestRunner do. We swallow the exceptions.
             }
-            if (suiteMethod != null){
+            if (suiteMethod != null) {
                 // if there is a suite method available, then try
                 // to extract the suite from it. If there is an error
                 // here it will be caught below and reported.

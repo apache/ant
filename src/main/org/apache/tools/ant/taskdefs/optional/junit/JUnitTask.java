@@ -911,7 +911,7 @@ public class JUnitTask extends Task {
      * @since Ant 1.2
      */
     protected ExecuteWatchdog createWatchdog() throws BuildException {
-        if (timeout == null){
+        if (timeout == null) {
             return null;
         }
         return new ExecuteWatchdog(timeout.intValue());
@@ -922,7 +922,7 @@ public class JUnitTask extends Task {
      *
      * @since Ant 1.3
      */
-    protected OutputStream getDefaultOutput(){
+    protected OutputStream getDefaultOutput() {
         return new LogOutputStream(this, Project.MSG_INFO);
     }
 
@@ -932,7 +932,7 @@ public class JUnitTask extends Task {
      *
      * @since Ant 1.3
      */
-    protected Enumeration getIndividualTests(){
+    protected Enumeration getIndividualTests() {
         final int count = batchTests.size();
         final Enumeration[] enums = new Enumeration[ count + 1];
         for (int i = 0; i < count; i++) {
@@ -954,7 +954,7 @@ public class JUnitTask extends Task {
     /**
      * @since Ant 1.3
      */
-    private FormatterElement[] mergeFormatters(JUnitTest test){
+    private FormatterElement[] mergeFormatters(JUnitTest test) {
         Vector feVector = (Vector) formatters.clone();
         test.addFormattersTo(feVector);
         FormatterElement[] feArray = new FormatterElement[feVector.size()];
@@ -968,7 +968,7 @@ public class JUnitTask extends Task {
      *
      * @since Ant 1.3
      */
-    protected File getOutput(FormatterElement fe, JUnitTest test){
+    protected File getOutput(FormatterElement fe, JUnitTest test) {
         if (fe.getUseFile()) {
             String filename = test.getOutfile() + fe.getExtension();
             File destFile = new File(test.getTodir(), filename);

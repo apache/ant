@@ -73,10 +73,7 @@ import org.apache.tools.ant.BuildException;
  * The script is meant to use get self.token and
  * set self.token in the reply.
  */
-
-public class ScriptFilter
-    extends TokenFilter.ChainableReaderFilter
-{
+public class ScriptFilter extends TokenFilter.ChainableReaderFilter {
     /** The language - attribute of element */
     private String language;
     /** The script - inline text or external file */
@@ -132,12 +129,14 @@ public class ScriptFilter
      * @exception BuildException if someting goes wrong
      */
     private void init() throws BuildException {
-        if (initialized)
+        if (initialized) {
             return;
+        }
         initialized = true;
-        if (language == null)
+        if (language == null) {
             throw new BuildException(
                 "scriptfilter: language is not defined");
+        }
 
         try {
             addBeans(getProject().getProperties());
@@ -151,14 +150,13 @@ public class ScriptFilter
 
             manager = new BSFManager ();
 
-            for (Enumeration e = beans.keys() ; e.hasMoreElements() ;) {
+            for (Enumeration e = beans.keys(); e.hasMoreElements();) {
                 String key = (String) e.nextElement();
                 Object value = beans.get(key);
                 manager.declareBean(key, value, value.getClass());
             }
 
-        }
-        catch (BSFException e) {
+        } catch (BSFException e) {
             Throwable t = e;
             Throwable te = e.getTargetException();
             if (te != null) {

@@ -110,11 +110,11 @@ public class JDependTask extends Task {
 
     static {
         try {
-            Class packageFilter = 
+            Class packageFilter =
                 Class.forName("jdepend.framework.PackageFilter");
-            packageFilterC = 
+            packageFilterC =
                 packageFilter.getConstructor(new Class[] {java.util.Collection.class});
-            setFilter = 
+            setFilter =
                 jdepend.textui.JDepend.class.getDeclaredMethod("setFilter",
                                                                new Class[] {packageFilter});
         } catch (Throwable t) {
@@ -199,9 +199,9 @@ public class JDependTask extends Task {
 
     /**
      * Gets the sourcepath.
-     * 
+     *
      * @deprecated
-     * 
+     *
      */
     public Path getSourcespath() {
         return _sourcesPath;
@@ -219,7 +219,7 @@ public class JDependTask extends Task {
 
     /**
      * Gets the classespath.
-     * 
+     *
      */
     public Path getClassespath() {
         return _classesPath;
@@ -355,7 +355,7 @@ public class JDependTask extends Task {
             }
         }
 
-        // if there is an error/failure and that it should halt, stop 
+        // if there is an error/failure and that it should halt, stop
         // everything otherwise just log a statement
         boolean errorOccurred = exitValue == JDependTask.ERRORS;
 
@@ -391,7 +391,7 @@ public class JDependTask extends Task {
             try {
                 fw = new FileWriter(getOutputFile().getPath());
             } catch (IOException e) {
-                String msg = "JDepend Failed when creating the output file: " 
+                String msg = "JDepend Failed when creating the output file: "
                     + e.getMessage();
                 log(msg);
                 throw new BuildException(msg);
@@ -507,8 +507,8 @@ public class JDependTask extends Task {
         }
 
         if (getOutputFile() != null) {
-            // having a space between the file and its path causes commandline 
-            // to add quotes around the argument thus making JDepend not taking 
+            // having a space between the file and its path causes commandline
+            // to add quotes around the argument thus making JDepend not taking
             // it into account. Thus we split it in two
             commandline.createArgument().setValue("-file");
             commandline.createArgument().setValue(_outputFile.getPath());
@@ -522,7 +522,7 @@ public class JDependTask extends Task {
 
             // not necessary as JDepend would fail, but why loose some time?
             if (!f.exists() || !f.isDirectory()) {
-                throw new BuildException("\"" + f.getPath() + "\" does not " 
+                throw new BuildException("\"" + f.getPath() + "\" does not "
                                          + "represent a valid directory. JDepend would fail.");
             }
             commandline.createArgument().setValue(f.getPath());
@@ -566,7 +566,7 @@ public class JDependTask extends Task {
 
         return null;
         /*
-          if (getTimeout() == null){
+          if (getTimeout() == null) {
           return null;
           }
           return new ExecuteWatchdog(getTimeout().intValue());

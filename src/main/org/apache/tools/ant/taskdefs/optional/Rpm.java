@@ -79,7 +79,7 @@ import org.apache.tools.ant.types.Path;
  * @author lucas@collab.net
  */
 public class Rpm extends Task {
-    
+
     /**
      * the spec file
      */
@@ -127,10 +127,10 @@ public class Rpm extends Task {
     private File error;
 
     public void execute() throws BuildException {
-        
+
         Commandline toExecute = new Commandline();
 
-        toExecute.setExecutable(rpmBuildCommand == null 
+        toExecute.setExecutable(rpmBuildCommand == null
                                 ? guessRpmBuildCommand()
                                 : rpmBuildCommand);
         if (topDir != null) {
@@ -210,7 +210,7 @@ public class Rpm extends Task {
 
     /**
      * The directory which will have the expected
-     * subdirectories, SPECS, SOURCES, BUILD, SRPMS ; optional. 
+     * subdirectories, SPECS, SOURCES, BUILD, SRPMS ; optional.
      * If this isn't specified,
      * the <tt>baseDir</tt> value is used
      */
@@ -237,7 +237,7 @@ public class Rpm extends Task {
     }
 
     /**
-     * Flag (optional, default=false) to remove 
+     * Flag (optional, default=false) to remove
      * the generated files in the BUILD directory
      */
     public void setCleanBuildDir(boolean cbd) {
@@ -252,7 +252,7 @@ public class Rpm extends Task {
     }
 
     /**
-     * Flag (optional, default=false) 
+     * Flag (optional, default=false)
      * to remove the sources after the build.
      * See the the <tt>--rmsource</tt>  option of rpmbuild.
      */
@@ -307,8 +307,8 @@ public class Rpm extends Task {
             Path p = new Path(getProject(), path);
             String[] pElements = p.list();
             for (int i = 0; i < pElements.length; i++) {
-                File f = new File(pElements[i], 
-                                  "rpmbuild" 
+                File f = new File(pElements[i],
+                                  "rpmbuild"
                                   + (Os.isFamily("dos") ? ".exe" : ""));
                 if (f.canRead()) {
                     return f.getAbsolutePath();

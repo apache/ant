@@ -70,7 +70,7 @@ import org.apache.tools.ant.types.Path;
  * <p>
  * <i>maudit</i> performs static analysis of the Java source code and byte code files to find and report
  * errors of style and potential problems related to performance, maintenance and robustness.
- *  As a convenience, a stylesheet is given in <tt>etc</tt> directory, so that an HTML report 
+ *  As a convenience, a stylesheet is given in <tt>etc</tt> directory, so that an HTML report
  * can be generated from the XML file.
  *
  * @author <a href="mailto:sbailliez@apache.org">Stephane Bailliez</a>
@@ -135,16 +135,16 @@ public class MAudit extends AbstractMetamataTask {
         super("com.metamata.gui.rc.MAudit");
     }
 
-    /** 
+    /**
      * The XML file to which the Audit result should be written to; required
      */
-     
+
     public void setTofile(File outFile) {
         this.outFile = outFile;
     }
 
     /**
-     * Automatically fix certain errors 
+     * Automatically fix certain errors
      * (those marked as fixable in the manual);
      * optional, default=false
      */
@@ -153,7 +153,7 @@ public class MAudit extends AbstractMetamataTask {
     }
 
     /**
-     * Creates listing file for each audited file; optional, default false. 
+     * Creates listing file for each audited file; optional, default false.
      * When set, a .maudit file will be generated in the
      * same location as the source file.
      */
@@ -162,9 +162,9 @@ public class MAudit extends AbstractMetamataTask {
     }
 
     /**
-     * Finds declarations unused in search paths; optional, default false. 
+     * Finds declarations unused in search paths; optional, default false.
      * It will look for unused global declarations
-     * in the source code within a use domain specified by the 
+     * in the source code within a use domain specified by the
      * <tt>searchpath</tt> element.
      */
     public void setUnused(boolean flag) {
@@ -181,7 +181,7 @@ public class MAudit extends AbstractMetamataTask {
     }
 
     /**
-     * flag to tell the task to exit after the first error. 
+     * flag to tell the task to exit after the first error.
      * internal/testing only
      * @ant.attribute ignore="true"
      */
@@ -214,9 +214,9 @@ public class MAudit extends AbstractMetamataTask {
         this.fullsemanticize = flag;
     }
 
-    /** 
+    /**
      * classpath for additional audit rules
-     * these must be placed before metamata.jar !! 
+     * these must be placed before metamata.jar !!
      */
     public Path createRulespath() {
         if (rulesPath == null) {
@@ -225,9 +225,9 @@ public class MAudit extends AbstractMetamataTask {
         return rulesPath;
     }
 
-    /** 
-     * search path to use for unused global declarations; 
-     * required when <tt>unused</tt> is set. 
+    /**
+     * search path to use for unused global declarations;
+     * required when <tt>unused</tt> is set.
      */
     public Path createSearchpath() {
         if (searchPath == null) {
@@ -333,10 +333,10 @@ public class MAudit extends AbstractMetamataTask {
         } catch (IOException e) {
             throw new BuildException(e);
         } finally {
-            if (out == null){
+            if (out == null) {
                 try {
                     out.close();
-                } catch (IOException e){
+                } catch (IOException e) {
                 }
             }
         }
@@ -350,7 +350,7 @@ public class MAudit extends AbstractMetamataTask {
         // the .maudit files match the .java files
         // we'll use includedFiles to get the .maudit files.
 
-        /*if (out != null){
+        /*if (out != null) {
             // close it if not closed by the handler...
         }*/
     }

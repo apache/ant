@@ -105,24 +105,24 @@ public class XalanLiaison implements XSLTLiaison {
             // collector will close them...whenever possible and
             // Windows may complain about not being able to delete files.
             try {
-                if (xslStream != null){
+                if (xslStream != null) {
                     xslStream.close();
                 }
-            } catch (IOException ignored){}
+            } catch (IOException ignored) {}
             try {
-                if (fis != null){
+                if (fis != null) {
                     fis.close();
                 }
-            } catch (IOException ignored){}
+            } catch (IOException ignored) {}
             try {
-                if (fos != null){
+                if (fos != null) {
                     fos.close();
                 }
-            } catch (IOException ignored){}
+            } catch (IOException ignored) {}
         }
     }
 
-    public void addParam(String name, String value){
+    public void addParam(String name, String value) {
         processor.setStylesheetParam(name, value);
     }
 

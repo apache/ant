@@ -82,13 +82,13 @@ class SplashScreen extends JWindow implements ActionListener, BuildListener {
         init(null);
         setText(msg);
     }
-        
+
     public SplashScreen(ImageIcon img) {
         init(img);
     }
 
     protected void init(ImageIcon img) {
-       
+
         JPanel pan = (JPanel) getContentPane();
         JLabel piccy;
         if (img == null) {
@@ -96,7 +96,7 @@ class SplashScreen extends JWindow implements ActionListener, BuildListener {
         } else {
             piccy = new JLabel(img);
         }
-            
+
         piccy.setBorder(BorderFactory.createLineBorder(Color.black, 1));
         text = new JLabel("Building....", JLabel.CENTER);
         text.setFont(new Font("Sans-Serif", Font.BOLD, 12));
@@ -138,16 +138,16 @@ class SplashScreen extends JWindow implements ActionListener, BuildListener {
         pb.setValue(total);
     }
 
-    public void buildStarted(BuildEvent event){ actionPerformed(null);}
-    public void buildFinished(BuildEvent event){
+    public void buildStarted(BuildEvent event) { actionPerformed(null);}
+    public void buildFinished(BuildEvent event) {
         pb.setValue(max);
         setVisible(false);
         dispose();
     }
-    public void targetStarted(BuildEvent event){actionPerformed(null);}
-    public void targetFinished(BuildEvent event){actionPerformed(null);}
-    public void taskStarted(BuildEvent event){actionPerformed(null);}
-    public void taskFinished(BuildEvent event){actionPerformed(null);}
-    public void messageLogged(BuildEvent event){actionPerformed(null);}
+    public void targetStarted(BuildEvent event) {actionPerformed(null);}
+    public void targetFinished(BuildEvent event) {actionPerformed(null);}
+    public void taskStarted(BuildEvent event) {actionPerformed(null);}
+    public void taskFinished(BuildEvent event) {actionPerformed(null);}
+    public void messageLogged(BuildEvent event) {actionPerformed(null);}
 }
 

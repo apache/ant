@@ -64,8 +64,8 @@ import java.util.NoSuchElementException;
  * @author <a href="mailto:sbailliez@imediation.com">Stephane Bailliez</a>
  */
 public final class Enumerations {
-        
-        private Enumerations(){
+
+        private Enumerations() {
         }
 
         /**
@@ -73,7 +73,7 @@ public final class Enumerations {
          * @param       array   the array of object to enumerate.
          * @return the enumeration over the array of objects.
          */
-        public static Enumeration fromArray(Object[] array){
+        public static Enumeration fromArray(Object[] array) {
                 return new ArrayEnumeration(array);
         }
 
@@ -84,7 +84,7 @@ public final class Enumerations {
         * @param        enums   the array of enumerations.
         * @return the enumeration over the array of enumerations.
          */
-        public static Enumeration fromCompound(Enumeration[] enums){
+        public static Enumeration fromCompound(Enumeration[] enums) {
                 return new CompoundEnumeration(enums);
         }
 
@@ -96,18 +96,18 @@ public final class Enumerations {
  * @author <a href="mailto:sbailliez@imediation.com">Stephane Bailliez</a>
  */
 class ArrayEnumeration implements Enumeration {
-        
+
         /** object array */
         private Object[] array;
-        
+
         /** current index */
         private int pos;
-        
+
         /**
          * Initialize a new enumeration that wraps an array.
          * @param       array   the array of object to enumerate.
          */
-        public ArrayEnumeration(Object[] array){
+        public ArrayEnumeration(Object[] array) {
                 this.array = array;
                 this.pos = 0;
         }
@@ -142,11 +142,11 @@ class ArrayEnumeration implements Enumeration {
  * Convenient enumeration over an array of enumeration. For example:
  * <pre>
  * Enumeration e1 = v1.elements();
- * while (e1.hasMoreElements()){
+ * while (e1.hasMoreElements()) {
  *    // do something
  * }
  * Enumeration e2 = v2.elements();
- * while (e2.hasMoreElements()){
+ * while (e2.hasMoreElements()) {
  *    // do the same thing
  * }
  * </pre>
@@ -154,7 +154,7 @@ class ArrayEnumeration implements Enumeration {
  * <pre>
  * Enumeration[] enums = { v1.elements(), v2.elements() };
  * Enumeration e = Enumerations.fromCompound(enums);
- * while (e.hasMoreElements()){
+ * while (e.hasMoreElements()) {
  *    // do something
  * }
  * </pre>
@@ -163,17 +163,17 @@ class ArrayEnumeration implements Enumeration {
  * <pre>
  * Enumeration[] enums = { v1.elements(), null, v2.elements() }; // a null enumeration in the array
  * Enumeration e = Enumerations.fromCompound(enums);
- * while (e.hasMoreElements()){
+ * while (e.hasMoreElements()) {
  *    // do something
  * }
  * </pre>
  * @author <a href="mailto:sbailliez@imediation.com">Stephane Bailliez</a>
  */
  class CompoundEnumeration implements Enumeration {
-        
+
         /** enumeration array */
         private Enumeration[] enumArray;
-        
+
         /** index in the enums array */
         private int index = 0;
 

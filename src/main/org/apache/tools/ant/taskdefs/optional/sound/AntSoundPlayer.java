@@ -135,7 +135,7 @@ public class AntSoundPlayer implements LineListener, BuildListener {
         try {
             audioInputStream = AudioSystem.getAudioInputStream(file);
         } catch (UnsupportedAudioFileException uafe) {
-            project.log("Audio format is not yet supported: " 
+            project.log("Audio format is not yet supported: "
                 + uafe.getMessage());
         } catch (IOException ioe) {
             ioe.printStackTrace();
@@ -205,7 +205,7 @@ public class AntSoundPlayer implements LineListener, BuildListener {
     /**
      *  Fired before any targets are started.
      */
-    public void buildStarted(BuildEvent event){
+    public void buildStarted(BuildEvent event) {
     }
 
     /**
@@ -214,7 +214,7 @@ public class AntSoundPlayer implements LineListener, BuildListener {
      *
      *  @see BuildEvent#getException()
      */
-    public void buildFinished(BuildEvent event){
+    public void buildFinished(BuildEvent event) {
         if (event.getException() == null && fileSuccess != null) {
             // build successfull!
             play(event.getProject(), fileSuccess, loopsSuccess, durationSuccess);
@@ -228,7 +228,7 @@ public class AntSoundPlayer implements LineListener, BuildListener {
      *
      *  @see BuildEvent#getTarget()
      */
-    public void targetStarted(BuildEvent event){
+    public void targetStarted(BuildEvent event) {
     }
 
     /**
@@ -237,7 +237,7 @@ public class AntSoundPlayer implements LineListener, BuildListener {
      *
      *  @see BuildEvent#getException()
      */
-    public void targetFinished(BuildEvent event){
+    public void targetFinished(BuildEvent event) {
     }
 
     /**
@@ -245,7 +245,7 @@ public class AntSoundPlayer implements LineListener, BuildListener {
      *
      *  @see BuildEvent#getTask()
      */
-    public void taskStarted(BuildEvent event){
+    public void taskStarted(BuildEvent event) {
     }
 
     /**
@@ -254,7 +254,7 @@ public class AntSoundPlayer implements LineListener, BuildListener {
      *
      *  @see BuildEvent#getException()
      */
-    public void taskFinished(BuildEvent event){
+    public void taskFinished(BuildEvent event) {
     }
 
     /**
@@ -263,7 +263,7 @@ public class AntSoundPlayer implements LineListener, BuildListener {
      *  @see BuildEvent#getMessage()
      *  @see BuildEvent#getPriority()
      */
-    public void messageLogged(BuildEvent event){
+    public void messageLogged(BuildEvent event) {
     }
 }
 

@@ -114,7 +114,7 @@ public class XMLResultAggregator extends Task implements XMLConstants {
     /**
      * Generate a report based on the document created by the merge.
      */
-    public AggregateTransformer createReport(){
+    public AggregateTransformer createReport() {
         AggregateTransformer transformer = new AggregateTransformer(this);
         transformers.addElement(transformer);
         return transformer;
@@ -126,7 +126,7 @@ public class XMLResultAggregator extends Task implements XMLConstants {
      * @param  value   the name of the file.
      * @see #setTodir(File)
      */
-    public void setTofile(String value){
+    public void setTofile(String value) {
         toFile = value;
     }
 
@@ -137,7 +137,7 @@ public class XMLResultAggregator extends Task implements XMLConstants {
      * @param value    the directory where to write the results, absolute or
      * relative.
      */
-    public void setTodir(File value){
+    public void setTodir(File value) {
         toDir = value;
     }
 
@@ -161,7 +161,7 @@ public class XMLResultAggregator extends Task implements XMLConstants {
         // write the document
         try {
             writeDOMTree(rootElement.getOwnerDocument(), destFile);
-        } catch (IOException e){
+        } catch (IOException e) {
             throw new BuildException("Unable to write test aggregate to '" + destFile + "'", e);
         }
         // apply transformation
@@ -179,11 +179,11 @@ public class XMLResultAggregator extends Task implements XMLConstants {
      * the <tt>todir</tt> and <tt>tofile</tt> attributes.
      * @return the destination file where should be written the result file.
      */
-    protected File getDestinationFile(){
-        if (toFile == null){
+    protected File getDestinationFile() {
+        if (toFile == null) {
             toFile = DEFAULT_FILENAME;
         }
-        if (toDir == null){
+        if (toDir == null) {
             toDir = getProject().resolveFile(DEFAULT_DIR);
         }
         return new File(toDir, toFile);
@@ -235,7 +235,7 @@ public class XMLResultAggregator extends Task implements XMLConstants {
             (new DOMElementWriter()).write(doc.getDocumentElement(), wri, 0, "  ");
             wri.flush();
             // writers do not throw exceptions, so check for them.
-            if (wri.checkError()){
+            if (wri.checkError()) {
                 throw new IOException("Error while writing DOM content");
             }
         } finally {
@@ -270,7 +270,7 @@ public class XMLResultAggregator extends Task implements XMLConstants {
                 //XXX there seems to be a bug in xerces 1.3.0 that doesn't like file object
                 // will investigate later. It does not use the given directory but
                 // the vm dir instead ? Works fine with crimson.
-                Document testsuiteDoc 
+                Document testsuiteDoc
                     = builder.parse("file:///" + files[i].getAbsolutePath());
                 Element elem = testsuiteDoc.getDocumentElement();
                 // make sure that this is REALLY a testsuite.
@@ -280,12 +280,12 @@ public class XMLResultAggregator extends Task implements XMLConstants {
                     // issue a warning.
                     log("the file " + files[i] + " is not a valid testsuite XML document", Project.MSG_WARN);
                 }
-            } catch (SAXException e){
+            } catch (SAXException e) {
                 // a testcase might have failed and write a zero-length document,
                 // It has already failed, but hey.... mm. just put a warning
                 log("The file " + files[i] + " is not a valid XML document. It is possibly corrupted.", Project.MSG_WARN);
                 log(StringUtils.getStackTrace(e), Project.MSG_DEBUG);
-            } catch (IOException e){
+            } catch (IOException e) {
                 log("Error while accessing file " + files[i] + ": " + e.getMessage(), Project.MSG_ERR);
             }
         }
@@ -304,7 +304,7 @@ public class XMLResultAggregator extends Task implements XMLConstants {
      *        modify the original node to change the name attribute and add
      *        a package one.
      */
-    protected void addTestSuite(Element root, Element testsuite){
+    protected void addTestSuite(Element root, Element testsuite) {
         String fullclassname = testsuite.getAttribute(ATTR_NAME);
         int pos = fullclassname.lastIndexOf('.');
 

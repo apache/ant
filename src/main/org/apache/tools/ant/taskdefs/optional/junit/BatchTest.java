@@ -65,8 +65,8 @@ import org.apache.tools.ant.types.FileSet;
 /**
  * <p> Create then run <code>JUnitTest</code>'s based on the list of files given by the fileset attribute.
  *
- * <p> Every <code>.java</code> or <code>.class</code> file in the fileset is 
- * assumed to be a testcase. 
+ * <p> Every <code>.java</code> or <code>.class</code> file in the fileset is
+ * assumed to be a testcase.
  * A <code>JUnitTest</code> is created for each of these named classes with basic setup
  * inherited from the parent <code>BatchTest</code>.
  *
@@ -88,7 +88,7 @@ public final class BatchTest extends BaseTest {
      * create a new batchtest instance
      * @param project     the project it depends on.
      */
-    public BatchTest(Project project){
+    public BatchTest(Project project) {
         this.project = project;
     }
 
@@ -107,7 +107,7 @@ public final class BatchTest extends BaseTest {
      * @return  an enumeration of all elements of this batchtest that are
      * a <tt>JUnitTest</tt> instance.
      */
-    public final Enumeration elements(){
+    public final Enumeration elements() {
         JUnitTest[] tests = createAllJUnitTest();
         return Enumerations.fromArray(tests);
     }
@@ -118,7 +118,7 @@ public final class BatchTest extends BaseTest {
      * @param v the vector to which should be added all individual tests of this
      * batch test.
      */
-    final void addTestsTo(Vector v){
+    final void addTestsTo(Vector v) {
         JUnitTest[] tests = createAllJUnitTest();
         v.ensureCapacity(v.size() + tests.length);
         for (int i = 0; i < tests.length; i++) {
@@ -131,7 +131,7 @@ public final class BatchTest extends BaseTest {
      * is configured to match this instance properties.
      * @return the array of all <tt>JUnitTest</tt>s that belongs to this batch.
      */
-    private JUnitTest[] createAllJUnitTest(){
+    private JUnitTest[] createAllJUnitTest() {
         String[] filenames = getFilenames();
         JUnitTest[] tests = new JUnitTest[filenames.length];
         for (int i = 0; i < tests.length; i++) {
@@ -151,7 +151,7 @@ public final class BatchTest extends BaseTest {
      * qualified class name (If it is not the case it will fail when running the test).
      * For the class <tt>org/apache/Whatever.class</tt> it will return <tt>org/apache/Whatever</tt>.
      */
-    private String[] getFilenames(){
+    private String[] getFilenames() {
         Vector v = new Vector();
         final int size = this.filesets.size();
         for (int j = 0; j < size; j++) {
@@ -181,7 +181,7 @@ public final class BatchTest extends BaseTest {
      * @param filename the filename to "convert" to a classname.
      * @return the classname matching the filename.
      */
-    public static final String javaToClass(String filename){
+    public static final String javaToClass(String filename) {
         return filename.replace(File.separatorChar, '.');
     }
 
@@ -192,7 +192,7 @@ public final class BatchTest extends BaseTest {
      * <tt>JUnitTest</tt>. It must be a fully qualified name.
      * @return the <tt>JUnitTest</tt> over the given classname.
      */
-    private JUnitTest createJUnitTest(String classname){
+    private JUnitTest createJUnitTest(String classname) {
         JUnitTest test = new JUnitTest();
         test.setName(classname);
         test.setHaltonerror(this.haltOnError);

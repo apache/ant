@@ -60,7 +60,7 @@ import org.apache.tools.ant.taskdefs.Java;
 /**
  * This is a primitive task to execute a unit test in the
  * org.apache.testlet framework.
- * 
+ *
  * @deprecated testlet has been abandoned in favor of JUnit by the
  * Avalon community
  *
@@ -109,17 +109,17 @@ public class Test extends Java {
 
 
     /**
-     * a boolean value indicating whether tests should display a 
+     * a boolean value indicating whether tests should display a
      * message on success; optional
      */
-    
+
     public void setShowSuccess(final boolean showSuccess) {
         createArg().setValue("-s=" + showSuccess);
     }
 
 
     /**
-     * a boolean value indicating whether a banner should be displayed 
+     * a boolean value indicating whether a banner should be displayed
      * when starting testlet engine; optional.
      */
     public void setShowBanner(final String showBanner) {
@@ -128,7 +128,7 @@ public class Test extends Java {
 
 
     /**
-     * a boolean indicating that a stack trace is displayed on 
+     * a boolean indicating that a stack trace is displayed on
      * error (but not normal failure); optional.
      */
     public void setShowTrace(final boolean showTrace) {

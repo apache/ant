@@ -337,8 +337,8 @@ public class Javah extends Task {
             throw new BuildException("Compile failed");
         }
         */
-        
-            
+
+
         try {
             Class javahMainClass = null;
             try {
@@ -348,17 +348,17 @@ public class Javah extends Task {
                 // assume older than 1.4.2 tools.jar
                 javahMainClass = Class.forName("com.sun.tools.javah.Main");
             }
-            
+
             // now search for the constructor that takes in String[] arguments.
             Class[] strings = new Class[] {String[].class};
             Constructor constructor = javahMainClass.getConstructor(strings);
-            
+
             // construct the javah Main instance
             Object javahMain = constructor.newInstance(new Object[] {cmd.getArguments()});
-            
+
             // find the run method
             Method runMethod = javahMainClass.getMethod("run",new Class[0]);
-            
+
             runMethod.invoke(javahMain,new Object[0]);
         } catch (Exception ex) {
             if (ex instanceof BuildException) {
@@ -368,7 +368,7 @@ public class Javah extends Task {
             }
         }
     }
-        
+
     /**
      * Does the command line argument processing common to classic and
      * modern.

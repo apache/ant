@@ -89,7 +89,7 @@ public class XslpLiaison implements XSLTLiaison {
         // it is really the pathname
         xslSheet = xslReader.read(fileName.getAbsolutePath());
     }
-    
+
     public void transform(File infile, File outfile) throws Exception {
         FileOutputStream fos = new FileOutputStream(outfile);
         // XSLP does not support encoding...we're in hot water.
@@ -97,7 +97,7 @@ public class XslpLiaison implements XSLTLiaison {
         processor.process(infile.getAbsolutePath(), xslSheet, out);
     }
 
-    public void addParam(String name, String expression){
+    public void addParam(String name, String expression) {
         processor.setProperty(name, expression);
     }
 

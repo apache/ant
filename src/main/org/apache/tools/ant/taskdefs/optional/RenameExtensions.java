@@ -103,7 +103,7 @@ public class RenameExtensions extends MatchingTask {
         fromExtension = from;
     }
 
-    /** 
+    /**
      * The string that renamed files will end with on
      * completion
      */
@@ -133,7 +133,7 @@ public class RenameExtensions extends MatchingTask {
 
         // first off, make sure that we've got a from and to extension
         if (fromExtension == null || toExtension == null || srcDir == null) {
-            throw new BuildException("srcDir, fromExtension and toExtension " 
+            throw new BuildException("srcDir, fromExtension and toExtension "
                 + "attributes must be set!");
         }
 
@@ -147,7 +147,7 @@ public class RenameExtensions extends MatchingTask {
         log("          from=\"*" + fromExtension + "\"", Project.MSG_INFO);
         log("          to=\"*" + toExtension + "\" />", Project.MSG_INFO);
         log("</move>", Project.MSG_INFO);
-        log("using the same patterns on <fileset> as you\'ve used here", 
+        log("using the same patterns on <fileset> as you\'ve used here",
             Project.MSG_INFO);
 
         Move move = (Move) getProject().createTask("move");

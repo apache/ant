@@ -156,10 +156,8 @@ public class ANTLR extends Task {
     public void setGlib(String superGrammar) {
         String sg = null;
         if (Os.isFamily("dos")) {
-            sg = superGrammar.replace('\\','/');
-        }
-        else
-        {
+            sg = superGrammar.replace('\\', '/');
+        } else {
             sg = superGrammar;
         }
         setGlib(fileUtils.resolveFile(getProject().getBaseDir(), sg));
@@ -304,8 +302,8 @@ public class ANTLR extends Task {
         File generatedFile = getGeneratedFile();
         boolean targetIsOutOfDate =
             target.lastModified() > generatedFile.lastModified();
-        boolean superGrammarIsOutOfDate = superGrammar != null &&
-            (superGrammar.lastModified() > generatedFile.lastModified());
+        boolean superGrammarIsOutOfDate  = superGrammar != null
+                && (superGrammar.lastModified() > generatedFile.lastModified());
         if (targetIsOutOfDate || superGrammarIsOutOfDate) {
             if (targetIsOutOfDate) {
                 log("Compiling " + target + " as it is newer than "
@@ -431,6 +429,7 @@ public class ANTLR extends Task {
             try {
                 bos.close();
             } catch (IOException e) {
+                // ignore
             }
         }
     }

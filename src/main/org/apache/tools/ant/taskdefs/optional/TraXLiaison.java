@@ -118,12 +118,12 @@ public class TraXLiaison implements XSLTLiaison, ErrorListener, XSLTLoggerAware 
     /** The In memory version of the stylesheet */
     private Templates templates;
 
-    /** 
-     * The modification time of the stylesheet from which the templates 
-     * are read 
+    /**
+     * The modification time of the stylesheet from which the templates
+     * are read
      */
     private long templatesModTime;
-        
+
     /** possible resolver for URIs */
     private URIResolver uriResolver;
 
@@ -143,10 +143,10 @@ public class TraXLiaison implements XSLTLiaison, ErrorListener, XSLTLoggerAware 
         if (this.stylesheet != null) {
             // resetting the stylesheet - reset transformer
             transformer = null;
-            
+
             // do we need to reset templates as well
             if (!this.stylesheet.equals(stylesheet)
-                || (stylesheet.lastModified() != templatesModTime)) { 
+                || (stylesheet.lastModified() != templatesModTime)) {
                 templates = null;
             }
         }
@@ -222,7 +222,7 @@ public class TraXLiaison implements XSLTLiaison, ErrorListener, XSLTLoggerAware 
     /**
      * Read in templates from the stylsheet
      */
-    private void readTemplates() 
+    private void readTemplates()
         throws IOException, TransformerConfigurationException {
         // WARN: Don't use the StreamSource(File) ctor. It won't work with
         // xalan prior to 2.2 because of systemid bugs.
@@ -233,7 +233,7 @@ public class TraXLiaison implements XSLTLiaison, ErrorListener, XSLTLoggerAware 
         // the file quickly on windows.
         InputStream xslStream = null;
         try {
-            xslStream 
+            xslStream
                 = new BufferedInputStream(new FileInputStream(stylesheet));
             templatesModTime = stylesheet.lastModified();
             StreamSource src = new StreamSource(xslStream);
@@ -247,7 +247,7 @@ public class TraXLiaison implements XSLTLiaison, ErrorListener, XSLTLoggerAware 
             }
         }
     }
-    
+
     /**
      * Create a new transformer based on the liaison settings
      * @return the newly created and configured transformer.
@@ -333,7 +333,7 @@ public class TraXLiaison implements XSLTLiaison, ErrorListener, XSLTLoggerAware 
      * string or object.
      * @since Ant 1.6
      */
-    public void setAttribute(String name, Object value){
+    public void setAttribute(String name, Object value) {
         final Object[] pair = new Object[]{name, value};
         attributes.addElement(pair);
     }

@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2000,2002 The Apache Software Foundation.  All rights 
+ * Copyright (c) 2000,2002 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -85,11 +85,11 @@ public class Native2Ascii extends MatchingTask {
     /**
      * Flag the conversion to run in the reverse sense,
      * that is Ascii to Native encoding.
-     * 
+     *
      * @param reverse True if the conversion is to be reversed,
      *                otherwise false;
      */
-    public void setReverse(boolean reverse){
+    public void setReverse(boolean reverse) {
         this.reverse = reverse;
     }
 
@@ -97,10 +97,10 @@ public class Native2Ascii extends MatchingTask {
      * Set the encoding to translate to/from.
      * If unset, the default encoding for the JVM is used.
      *
-     * @param encoding String containing the name of the Native 
+     * @param encoding String containing the name of the Native
      *                 encoding to convert from or to.
      */
-    public void setEncoding(String encoding){
+    public void setEncoding(String encoding) {
         this.encoding = encoding;
     }
 
@@ -109,7 +109,7 @@ public class Native2Ascii extends MatchingTask {
      *
      * @param srcDir directory to find input file in.
      */
-    public void setSrc(File srcDir){
+    public void setSrc(File srcDir) {
         this.srcDir = srcDir;
     }
 
@@ -119,7 +119,7 @@ public class Native2Ascii extends MatchingTask {
      *
      * @param destDir directory to place output file into.
      */
-    public void setDest(File destDir){
+    public void setDest(File destDir) {
         this.destDir = destDir;
     }
 
@@ -129,7 +129,7 @@ public class Native2Ascii extends MatchingTask {
      *
      * @param ext File extension to use for converted files.
      */
-    public void setExt(String ext){
+    public void setExt(String ext) {
         this.extension = ext;
     }
 
@@ -151,19 +151,19 @@ public class Native2Ascii extends MatchingTask {
         String[] files;                  // list of files to process
 
         // default srcDir to basedir
-        if (srcDir == null){
+        if (srcDir == null) {
             srcDir = getProject().resolveFile(".");
         }
 
         // Require destDir
-        if (destDir == null){
+        if (destDir == null) {
             throw new BuildException("The dest attribute must be set.");
         }
 
         // if src and dest dirs are the same, require the extension
         // to be set, so we don't stomp every file.  One could still
         // include a file with the same extension, but ....
-        if (srcDir.equals(destDir) && extension == null && mapper == null){
+        if (srcDir.equals(destDir) && extension == null && mapper == null) {
             throw new BuildException("The ext attribute or a mapper must be set if"
                                      + " src and dest dirs are the same.");
         }
@@ -178,7 +178,7 @@ public class Native2Ascii extends MatchingTask {
         } else {
             m = mapper.getImplementation();
         }
-        
+
         scanner = getDirectoryScanner(srcDir);
         files = scanner.getIncludedFiles();
         SourceFileScanner sfs = new SourceFileScanner(this);
@@ -190,7 +190,7 @@ public class Native2Ascii extends MatchingTask {
         String message = "Converting " + count + " file"
             + (count != 1 ? "s" : "") + " from ";
         log(message + srcDir + " to " + destDir);
-        for (int i = 0; i < files.length; i++){
+        for (int i = 0; i < files.length; i++) {
             convert(files[i], m.mapFileName(files[i])[0]);
         }
     }
@@ -209,11 +209,11 @@ public class Native2Ascii extends MatchingTask {
 
         // Set up the basic args (this could be done once, but
         // it's cleaner here)
-        if (reverse){
+        if (reverse) {
             cmd.createArgument().setValue("-reverse");
         }
 
-        if (encoding != null){
+        if (encoding != null) {
             cmd.createArgument().setValue("-encoding");
             cmd.createArgument().setValue(encoding);
         }
@@ -225,27 +225,27 @@ public class Native2Ascii extends MatchingTask {
         cmd.createArgument().setFile(srcFile);
         cmd.createArgument().setFile(destFile);
         // Make sure we're not about to clobber something
-        if (srcFile.equals(destFile)){
-            throw new BuildException("file " + srcFile 
+        if (srcFile.equals(destFile)) {
+            throw new BuildException("file " + srcFile
                                      + " would overwrite its self");
         }
 
         // Make intermediate directories if needed
         // XXX JDK 1.1 dosen't have File.getParentFile,
         String parentName = destFile.getParent();
-        if (parentName != null){
+        if (parentName != null) {
             File parentFile = new File(parentName);
-            
-            if ((!parentFile.exists()) && (!parentFile.mkdirs())){
+
+            if ((!parentFile.exists()) && (!parentFile.mkdirs())) {
                 throw new BuildException("cannot create parent directory "
                                          + parentName);
             }
         }
-                        
+
         log("converting " + srcName, Project.MSG_VERBOSE);
         sun.tools.native2ascii.Main n2a
             = new sun.tools.native2ascii.Main();
-        if (!n2a.convert(cmd.getArguments())){
+        if (!n2a.convert(cmd.getArguments())) {
             throw new BuildException("conversion failed");
         }
     }
@@ -258,7 +258,7 @@ public class Native2Ascii extends MatchingTask {
         public String[] mapFileName(String fileName) {
             int lastDot = fileName.lastIndexOf('.');
             if (lastDot >= 0) {
-                return new String[] {fileName.substring(0, lastDot) 
+                return new String[] {fileName.substring(0, lastDot)
                                          + extension};
             } else {
                 return new String[] {fileName + extension};

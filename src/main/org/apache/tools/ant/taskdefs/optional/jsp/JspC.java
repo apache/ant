@@ -164,7 +164,7 @@ public class JspC extends MatchingTask {
             src.append(srcDir);
         }
     }
-    public Path getSrcDir(){
+    public Path getSrcDir() {
         return src;
     }
 
@@ -175,28 +175,28 @@ public class JspC extends MatchingTask {
     public void setDestdir(File destDir) {
         this.destDir = destDir;
     }
-    public File getDestdir(){
+    public File getDestdir() {
         return destDir;
     }
 
     /**
      * Set the name of the package the compiled jsp files should be in.
      */
-    public void setPackage(String pkg){
+    public void setPackage(String pkg) {
         this.packageName = pkg;
     }
 
-    public String getPackage(){
+    public String getPackage() {
         return packageName;
     }
 
     /**
      * Set the verbose level of the compiler
      */
-    public void setVerbose(int i){
+    public void setVerbose(int i) {
         verbose = i;
     }
-    public int getVerbose(){
+    public int getVerbose() {
         return verbose;
     }
 
@@ -298,7 +298,7 @@ public class JspC extends MatchingTask {
     public void setClasspathRef(Reference r) {
         createClasspath().setRefid(r);
     }
-    public Path getClasspath(){
+    public Path getClasspath() {
         return classpath;
     }
 
@@ -316,7 +316,7 @@ public class JspC extends MatchingTask {
     /**
      * get the classpath used to find the compiler adapter
      */
-    public Path getCompilerclasspath(){
+    public Path getCompilerclasspath() {
         return compilerClasspath;
     }
 
@@ -389,7 +389,7 @@ public class JspC extends MatchingTask {
     /**
     * get the list of files to compile
     */
-    public Vector getCompileList(){
+    public Vector getCompileList() {
         return compileList;
     }
 
@@ -430,7 +430,7 @@ public class JspC extends MatchingTask {
         if (src == null) {
             throw new BuildException("srcdir attribute must be set!",
                                      getLocation());
-        } 
+        }
         String [] list = src.list();
         if (list.length == 0) {
             throw new BuildException("srcdir attribute must be set!",

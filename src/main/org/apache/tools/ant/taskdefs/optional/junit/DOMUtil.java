@@ -74,7 +74,7 @@ import org.w3c.dom.Text;
 public final class DOMUtil {
 
     /** unused constructor */
-    private DOMUtil(){
+    private DOMUtil() {
     }
 
     /**
@@ -98,7 +98,7 @@ public final class DOMUtil {
      * @param   recurse <tt>true</tt> if you want the list to be made recursively
      *                  otherwise <tt>false</tt>.
      */
-    public static NodeList listChildNodes(Node parent, NodeFilter filter, boolean recurse){
+    public static NodeList listChildNodes(Node parent, NodeFilter filter, boolean recurse) {
         NodeListImpl matches = new NodeListImpl();
         NodeList children = parent.getChildNodes();
         if (children != null) {
@@ -122,13 +122,13 @@ public final class DOMUtil {
 
     /** custom implementation of a nodelist */
     public static class NodeListImpl extends Vector implements NodeList {
-        public int getLength(){
+        public int getLength() {
             return size();
         }
-        public Node item(int i){
+        public Node item(int i) {
             try {
                 return (Node) elementAt(i);
-            } catch (ArrayIndexOutOfBoundsException e){
+            } catch (ArrayIndexOutOfBoundsException e) {
                 return null; // conforming to NodeList interface
             }
         }
@@ -160,7 +160,7 @@ public final class DOMUtil {
      *                  given name.
      */
     public static Element getChildByTagName (Node parent, String tagname) {
-        if (parent == null){
+        if (parent == null) {
             return null;
         }
         NodeList childList = parent.getChildNodes();
@@ -187,7 +187,7 @@ public final class DOMUtil {
      *              appended to <tt>parent</tt>.
      * @return  the cloned node that is appended to <tt>parent</tt>
      */
-    public static final Node importNode(Node parent, Node child){
+    public static final Node importNode(Node parent, Node child) {
         Node copy = null;
         final Document doc = parent.getOwnerDocument();
 
