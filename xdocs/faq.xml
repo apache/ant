@@ -622,6 +622,17 @@ shell-prompt> m4 foo.m4 > foo
   </faqsection>
 
   <faqsection title="It doesn&apos;t work (as expected)">
+    <faq id="genral-advice">
+      <question>General Advice</question>
+      <answer>
+
+        <p>There are many reasons why Ant doesn&apos;t behave as
+        expected, not all of them are due to Ant bugs.  See our <a
+        href="problems.html">Having Problems?</a> page for hints that
+        may help pinning down the reasons for your problem.</p>
+      </answer>
+    </faq>
+
     <faq id="always-recompiles">
       <question>Why does Ant always recompile all my Java files?</question>
       <answer>
