@@ -38,6 +38,7 @@ public class Launcher {
     /** The Ant Library Directory property */
     public static final String ANTLIBDIR_PROPERTY = "ant.library.dir";
 
+    /** The directory name of the per-user ant directory */
     public static final String ANT_PRIVATEDIR = ".ant";
 
     /**
@@ -46,7 +47,7 @@ public class Launcher {
     public static final String ANT_PRIVATELIB = "lib";
 
     /** The location of a per-user library directory */
-    public static final String USER_LIBDIR = ANT_PRIVATEDIR+"/"+ ANT_PRIVATELIB;
+    public static final String USER_LIBDIR = ANT_PRIVATEDIR + "/" + ANT_PRIVATELIB;
 
     /** The startup class that is to be run */
     public static final String MAIN_CLASS = "org.apache.tools.ant.Main";
