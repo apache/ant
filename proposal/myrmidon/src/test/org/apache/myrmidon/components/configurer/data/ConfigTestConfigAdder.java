@@ -5,7 +5,7 @@
  * version 1.1, a copy of which has been included  with this distribution in
  * the LICENSE.txt file.
  */
-package org.apache.myrmidon.components.configurer;
+package org.apache.myrmidon.components.configurer.data;
 
 import java.util.ArrayList;
 import org.apache.avalon.framework.configuration.Configuration;
@@ -16,7 +16,7 @@ import org.apache.avalon.framework.configuration.Configuration;
  * @author <a href="mailto:peter@apache.org">Peter Donald</a>
  * @version $Revision$ $Date$
  */
-public class ConfigTestConfigProps
+public class ConfigTestConfigAdder
 {
     private ArrayList m_configurations = new ArrayList();
 
@@ -27,7 +27,7 @@ public class ConfigTestConfigProps
 
     public boolean equals( final Object object )
     {
-        final ConfigTestConfigProps other = (ConfigTestConfigProps)object;
+        final ConfigTestConfigAdder other = (ConfigTestConfigAdder)object;
         return m_configurations.equals( other.m_configurations );
     }
 }

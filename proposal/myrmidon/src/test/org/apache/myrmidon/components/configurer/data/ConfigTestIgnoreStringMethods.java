@@ -9,9 +9,7 @@ package org.apache.myrmidon.components.configurer.data;
 
 import java.util.ArrayList;
 import junit.framework.AssertionFailedError;
-import org.apache.myrmidon.components.configurer.ConfigTestStringProps;
 import org.apache.myrmidon.components.configurer.DefaultConfigurerTest;
-import org.apache.myrmidon.components.configurer.ConfigTestMultiSetter;
 
 /**
  * A test class with multiple setters/adders/creators for a property.

@@ -8,10 +8,7 @@
 package org.apache.myrmidon.components.configurer.data;
 
 import java.util.ArrayList;
-import java.util.List;
-import org.apache.myrmidon.components.configurer.DefaultConfigurerTest;
 import org.apache.myrmidon.components.configurer.MyRole1;
-import org.apache.myrmidon.components.configurer.ConfigTestInterfaceProp;
 
 /**
  * A simple test class.

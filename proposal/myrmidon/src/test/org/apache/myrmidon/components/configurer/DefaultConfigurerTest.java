@@ -13,8 +13,32 @@ import org.apache.avalon.excalibur.i18n.ResourceManager;
 import org.apache.avalon.excalibur.i18n.Resources;
 import org.apache.avalon.framework.configuration.ConfigurationException;
 import org.apache.avalon.framework.configuration.DefaultConfiguration;
+import org.apache.avalon.framework.ExceptionUtil;
 import org.apache.myrmidon.api.TaskContext;
 import org.apache.myrmidon.components.AbstractComponentTest;
+import org.apache.myrmidon.components.configurer.data.ConfigTestAttributeConvert;
+import org.apache.myrmidon.components.configurer.data.ConfigTestContent;
+import org.apache.myrmidon.components.configurer.data.ConfigTestEmpty;
+import org.apache.myrmidon.components.configurer.data.ConfigTestInterfaceAdder;
+import org.apache.myrmidon.components.configurer.data.ConfigTestNonInterfaceAdder;
+import org.apache.myrmidon.components.configurer.data.ConfigTestPropResolution;
+import org.apache.myrmidon.components.configurer.data.ConfigTestReferenceAttribute;
+import org.apache.myrmidon.components.configurer.data.ConfigTestReferenceConversion;
+import org.apache.myrmidon.components.configurer.data.ConfigTestReferenceElement;
+import org.apache.myrmidon.components.configurer.data.ConfigTestSetAttribute;
+import org.apache.myrmidon.components.configurer.data.ConfigTestSetElement;
+import org.apache.myrmidon.components.configurer.data.ConfigTestMultipleTypedAdder;
+import org.apache.myrmidon.components.configurer.data.ConfigTestTypedAdder;
+import org.apache.myrmidon.components.configurer.data.ConfigTestTypedAdderRole;
+import org.apache.myrmidon.components.configurer.data.ConfigTestIgnoreStringMethods;
+import org.apache.myrmidon.components.configurer.data.ConfigTestTypedAdderConversion;
+import org.apache.myrmidon.components.configurer.data.ConfigTestTypedConfigAdder;
+import org.apache.myrmidon.components.configurer.data.ConfigTestIdResolve;
+import org.apache.myrmidon.components.configurer.data.ConfigTestUnknownReference;
+import org.apache.myrmidon.components.configurer.data.ConfigTestTypedAdderReference;
+import org.apache.myrmidon.components.configurer.data.ConfigTestMismatchedRefType;
+import org.apache.myrmidon.components.configurer.data.ConfigTestConfigAdder;
+import org.apache.myrmidon.components.configurer.data.ConfigTestNestedErrors;
 import org.apache.myrmidon.components.workspace.DefaultTaskContext;
 import org.apache.myrmidon.framework.DataType;
 import org.apache.myrmidon.interfaces.configurer.Configurer;
@@ -69,15 +93,15 @@ public class DefaultConfigurerTest
         final String value2 = "some other value";
         config.setAttribute( "prop", value2 );
 
-        final ConfigTestStringProps test = new ConfigTestStringProps();
+        final ConfigTestSetAttribute test = new ConfigTestSetAttribute();
 
         // Configure the object
         m_configurer.configure( test, config, m_context );
 
         // Check result
-        final ConfigTestStringProps expected = new ConfigTestStringProps();
+        final ConfigTestSetAttribute expected = new ConfigTestSetAttribute();
         expected.setSomeProp( value1 );
-        expected.addProp( value2 );
+        expected.setProp( value2 );
         assertEquals( expected, test );
     }
 
@@ -95,13 +119,13 @@ public class DefaultConfigurerTest
         // Register the converter
         registerConverter( StringToIntegerConverter.class, String.class, Integer.class );
 
-        final ConfigTestPrimConvert test = new ConfigTestPrimConvert();
+        final ConfigTestAttributeConvert test = new ConfigTestAttributeConvert();
 
         // Configure the object
         m_configurer.configure( test, config, m_context );
 
         // Check result
-        final ConfigTestPrimConvert expected = new ConfigTestPrimConvert();
+        final ConfigTestAttributeConvert expected = new ConfigTestAttributeConvert();
         expected.setIntProp( 90 );
         expected.setIntegerProp( new Integer( -401 ) );
         assertEquals( expected, test );
@@ -117,7 +141,7 @@ public class DefaultConfigurerTest
         final DefaultConfiguration config = new DefaultConfiguration( "test", "test" );
         config.setAttribute( "unknown", "some value" );
 
-        final ConfigTestStringProps test = new ConfigTestStringProps();
+        final ConfigTestEmpty test = new ConfigTestEmpty();
 
         // Configure the object
         try
@@ -149,17 +173,17 @@ public class DefaultConfigurerTest
         child2.setAttribute( "some-prop", value2 );
         config.addChild( child2 );
 
-        final ConfigTestObjectProps test = new ConfigTestObjectProps();
+        final ConfigTestSetElement test = new ConfigTestSetElement();
 
         // Configure the object
         m_configurer.configure( test, config, m_context );
 
         // Check result
-        final ConfigTestObjectProps expected = new ConfigTestObjectProps();
-        ConfigTestStringProps elem = new ConfigTestStringProps();
+        final ConfigTestSetElement expected = new ConfigTestSetElement();
+        ConfigTestSetElement elem = new ConfigTestSetElement();
         elem.setSomeProp( value1 );
-        expected.setProp( elem );
-        elem = new ConfigTestStringProps();
+        expected.addProp( elem );
+        elem = new ConfigTestSetElement();
         elem.setSomeProp( value2 );
         expected.addAnotherProp( elem );
         assertEquals( expected, test );
@@ -176,7 +200,7 @@ public class DefaultConfigurerTest
         final DefaultConfiguration elem = new DefaultConfiguration( "unknown", "test" );
         config.addChild( elem );
 
-        final ConfigTestStringProps test = new ConfigTestStringProps();
+        final ConfigTestEmpty test = new ConfigTestEmpty();
 
         // Configure the object
         try
@@ -202,13 +226,13 @@ public class DefaultConfigurerTest
         final String value1 = "some value";
         config.setValue( value1 );
 
-        final ConfigTestStringProps test = new ConfigTestStringProps();
+        final ConfigTestContent test = new ConfigTestContent();
 
         // Configure the object
         m_configurer.configure( test, config, m_context );
 
         // Check result
-        final ConfigTestStringProps expected = new ConfigTestStringProps();
+        final ConfigTestContent expected = new ConfigTestContent();
         expected.addContent( value1 );
         assertEquals( expected, test );
     }
@@ -223,7 +247,7 @@ public class DefaultConfigurerTest
         final DefaultConfiguration config = new DefaultConfiguration( "test", "test" );
         config.setValue( "some value" );
 
-        final ConfigTestObjectProps test = new ConfigTestObjectProps();
+        final ConfigTestEmpty test = new ConfigTestEmpty();
 
         // Configure the object
         try
@@ -248,7 +272,7 @@ public class DefaultConfigurerTest
         final DefaultConfiguration config = new DefaultConfiguration( "test", "test" );
         config.setAttribute( "prop", "some ${prop-a} value" );
 
-        final ConfigTestStringProps test = new ConfigTestStringProps();
+        final ConfigTestPropResolution test = new ConfigTestPropResolution();
 
         m_context.setProperty( "prop-a", "other" );
 
@@ -256,8 +280,8 @@ public class DefaultConfigurerTest
         m_configurer.configure( test, config, m_context );
 
         // Check the configured object
-        final ConfigTestStringProps expected = new ConfigTestStringProps();
-        expected.addProp( "some other value" );
+        final ConfigTestPropResolution expected = new ConfigTestPropResolution();
+        expected.setProp( "some other value" );
         assertEquals( expected, test );
     }
 
@@ -270,7 +294,7 @@ public class DefaultConfigurerTest
         final DefaultConfiguration config = new DefaultConfiguration( "test", "test" );
         config.setAttribute( "some-prop-ref", "prop-a" );
 
-        final ConfigTestStringProps test = new ConfigTestStringProps();
+        final ConfigTestReferenceAttribute test = new ConfigTestReferenceAttribute();
 
         m_context.setProperty( "prop-a", "some value" );
 
@@ -278,7 +302,7 @@ public class DefaultConfigurerTest
         m_configurer.configure( test, config, m_context );
 
         // Check the configured object
-        final ConfigTestStringProps expected = new ConfigTestStringProps();
+        final ConfigTestReferenceAttribute expected = new ConfigTestReferenceAttribute();
         expected.setSomeProp( "some value" );
         assertEquals( expected, test );
     }
@@ -294,7 +318,7 @@ public class DefaultConfigurerTest
         elem.setAttribute( "id", "prop-a" );
         config.addChild( elem );
 
-        final ConfigTestStringProps test = new ConfigTestStringProps();
+        final ConfigTestReferenceElement test = new ConfigTestReferenceElement();
 
         m_context.setProperty( "prop-a", "some value" );
 
@@ -302,8 +326,8 @@ public class DefaultConfigurerTest
         m_configurer.configure( test, config, m_context );
 
         // Check the configured object
-        final ConfigTestStringProps expected = new ConfigTestStringProps();
-        expected.setSomeProp( "some value" );
+        final ConfigTestReferenceElement expected = new ConfigTestReferenceElement();
+        expected.addSomeProp( "some value" );
         assertEquals( expected, test );
     }
 
@@ -320,7 +344,7 @@ public class DefaultConfigurerTest
         elem.setAttribute( "extra-attr", "some value" );
         config.addChild( elem );
 
-        final ConfigTestStringProps test = new ConfigTestStringProps();
+        final ConfigTestReferenceElement test = new ConfigTestReferenceElement();
 
         try
         {
@@ -330,7 +354,8 @@ public class DefaultConfigurerTest
         }
         catch( ConfigurationException e )
         {
-            final String[] messages = {
+            final String[] messages = new String[]
+            {
                 REZ.getString( "bad-configure-element.error", "some-prop-ref" ),
                 REZ.getString( "extra-config-for-ref.error" )
             };
@@ -352,14 +377,14 @@ public class DefaultConfigurerTest
 
         registerConverter( ObjectToMyRole1Converter.class, Object.class, MyRole1.class );
 
-        final ConfigTestInterfaceProp test = new ConfigTestInterfaceProp();
+        final ConfigTestReferenceConversion test = new ConfigTestReferenceConversion();
 
         // Configure
         m_configurer.configure( test, config, m_context );
 
         // Check result
-        final ConfigTestInterfaceProp expected = new ConfigTestInterfaceProp();
-        expected.addPropA( new MyRole1Adaptor( refValue ) );
+        final ConfigTestReferenceConversion expected = new ConfigTestReferenceConversion();
+        expected.setPropA( new MyRole1Adaptor( refValue ) );
         assertEquals( expected, test );
     }
 
@@ -378,13 +403,13 @@ public class DefaultConfigurerTest
         registerRole( new RoleInfo( "myrole1", null, MyRole1.class, "default-type" ) );
         registerType( MyRole1.class, "default-type", MyType1.class );
 
-        final ConfigTestInterfaceProp test = new ConfigTestInterfaceProp();
+        final ConfigTestInterfaceAdder test = new ConfigTestInterfaceAdder();
 
         // Configure object
         m_configurer.configure( test, config, m_context );
 
         // Check result
-        final ConfigTestInterfaceProp expected = new ConfigTestInterfaceProp();
+        final ConfigTestInterfaceAdder expected = new ConfigTestInterfaceAdder();
         expected.addPropA( new MyType1() );
         assertEquals( expected, test );
     }
@@ -399,7 +424,7 @@ public class DefaultConfigurerTest
         // Setup test data
         final DefaultConfiguration config = new DefaultConfiguration( "test", "test" );
 
-        final ConfigTest4 test = new ConfigTest4();
+        final ConfigTestNonInterfaceAdder test = new ConfigTestNonInterfaceAdder();
 
         try
         {
@@ -412,7 +437,7 @@ public class DefaultConfigurerTest
             final String[] messages = {
                 REZ.getString( "bad-configure-element.error", "test" ),
                 REZ.getString( "typed-adder-non-interface.error",
-                               ConfigTest4.class.getName(),
+                               ConfigTestNonInterfaceAdder.class.getName(),
                                Integer.class.getName() )
             };
             assertSameMessage( messages, ce );
@@ -428,7 +453,7 @@ public class DefaultConfigurerTest
         // Setup test data
         final DefaultConfiguration config = new DefaultConfiguration( "test", "test" );
 
-        final ConfigTestMultiTypedAdder test = new ConfigTestMultiTypedAdder();
+        final ConfigTestMultipleTypedAdder test = new ConfigTestMultipleTypedAdder();
 
         try
         {
@@ -438,10 +463,11 @@ public class DefaultConfigurerTest
         }
         catch( final ConfigurationException ce )
         {
-            final String[] messages = {
+            final String[] messages = new String[]
+            {
                 REZ.getString( "bad-configure-element.error", "test" ),
                 REZ.getString( "multiple-adder-methods-for-element.error",
-                               ConfigTestMultiTypedAdder.class.getName(),
+                               ConfigTestMultipleTypedAdder.class.getName(),
                                "" )
             };
             assertSameMessage( messages, ce );
@@ -464,12 +490,12 @@ public class DefaultConfigurerTest
         registerType( DataType.class, "my-type1", MyType1.class );
         registerType( DataType.class, "my-type2", MyType2.class );
 
-        final ConfigTestTypedProp test = new ConfigTestTypedProp();
+        final ConfigTestTypedAdder test = new ConfigTestTypedAdder();
 
         // Configure the object
         m_configurer.configure( test, config, m_context );
 
-        final ConfigTestTypedProp expected = new ConfigTestTypedProp();
+        final ConfigTestTypedAdder expected = new ConfigTestTypedAdder();
         expected.add( new MyType1() );
         expected.add( new MyType2() );
         assertEquals( expected, test );
@@ -491,13 +517,13 @@ public class DefaultConfigurerTest
         registerType( MyRole1.class, "my-type1", MyType1.class );
         registerType( DataType.class, "my-type1", StringBuffer.class );
 
-        final ConfigTestTypedProp test = new ConfigTestTypedProp();
+        final ConfigTestTypedAdderRole test = new ConfigTestTypedAdderRole();
 
         // Configure the object
         m_configurer.configure( test, config, m_context );
 
         // Check the result
-        final ConfigTestTypedProp expected = new ConfigTestTypedProp();
+        final ConfigTestTypedAdderRole expected = new ConfigTestTypedAdderRole();
         expected.add( new MyType1() );
         assertEquals( expected, test );
     }
@@ -514,45 +540,35 @@ public class DefaultConfigurerTest
         child.setAttribute( "prop", "some value" );
         config.addChild( child );
 
-        registerType( DataType.class, "some-type", ConfigTestStringProps.class );
+        registerType( DataType.class, "some-type", ConfigTestTypedAdderConversion.class );
         registerConverter( ObjectToMyRole1Converter.class, Object.class, MyRole1.class );
 
-        final ConfigTestTypedProp test = new ConfigTestTypedProp();
+        final ConfigTestTypedAdderConversion test = new ConfigTestTypedAdderConversion();
 
         // Configure the object
-        m_configurer.configure( test, config, m_context );
+            configure( test, config );
 
         // Check the result
-        final ConfigTestTypedProp expected = new ConfigTestTypedProp();
-        final ConfigTestStringProps nested = new ConfigTestStringProps();
-        nested.addProp( "some value" );
+        final ConfigTestTypedAdderConversion expected = new ConfigTestTypedAdderConversion();
+        final ConfigTestTypedAdderConversion nested = new ConfigTestTypedAdderConversion();
+        nested.setProp( "some value" );
         expected.add( new MyRole1Adaptor( nested ) );
         assertEquals( expected, test );
     }
 
-    /**
-     * Tests to see if typed adder can be used via an attribute.
-     */
-    public void testTypedAdderAttribute()
-        throws Exception
+    private void configure( final Object test,
+                            final DefaultConfiguration config )
+        throws ConfigurationException
     {
-        // Setup test data
-        final DefaultConfiguration config = new DefaultConfiguration( "test", "test" );
-        config.setAttribute( "my-role1", "some value" );
-
-        // Set up the converter and role
-        registerRole( new RoleInfo( "my-role1", MyRole1.class ) );
-        registerConverter( ObjectToMyRole1Converter.class, String.class, MyRole1.class );
-
-        final ConfigTestTypedProp test = new ConfigTestTypedProp();
-
-        // Configure the object
-        m_configurer.configure( test, config, m_context );
-
-        // Check result
-        final ConfigTestTypedProp expected = new ConfigTestTypedProp();
-        expected.add( new MyRole1Adaptor( "some value" ) );
-        assertEquals( expected, test );
+        try
+        {
+            m_configurer.configure( test, config, m_context );
+        }
+        catch( final ConfigurationException ce )
+        {
+            ExceptionUtil.printStackTrace( ce );
+            throw ce;
+        }
     }
 
     /**
@@ -568,12 +584,12 @@ public class DefaultConfigurerTest
         config.addChild( child1 );
         config.addChild( child2 );
 
-        final ConfigTestTypedConfigProp test = new ConfigTestTypedConfigProp();
+        final ConfigTestTypedConfigAdder test = new ConfigTestTypedConfigAdder();
 
         // Configure the object
         m_configurer.configure( test, config, m_context );
 
-        final ConfigTestTypedConfigProp expected = new ConfigTestTypedConfigProp();
+        final ConfigTestTypedConfigAdder expected = new ConfigTestTypedConfigAdder();
         expected.add( child1 );
         expected.add( child2 );
         assertEquals( expected, test );
@@ -592,12 +608,12 @@ public class DefaultConfigurerTest
         config.addChild( child1 );
         config.addChild( child2 );
 
-        final ConfigTestConfigProps test = new ConfigTestConfigProps();
+        final ConfigTestConfigAdder test = new ConfigTestConfigAdder();
 
         // Configure the object
         m_configurer.configure( test, config, m_context );
 
-        final ConfigTestConfigProps expected = new ConfigTestConfigProps();
+        final ConfigTestConfigAdder expected = new ConfigTestConfigAdder();
         expected.addConfig( child1 );
         expected.addConfig( child2 );
         assertEquals( expected, test );
@@ -632,16 +648,16 @@ public class DefaultConfigurerTest
         final DefaultConfiguration config = new DefaultConfiguration( "test", "test" );
         config.setAttribute( "some-prop-ref", "${id}" );
 
-        final ConfigTestStringProps test = new ConfigTestStringProps();
+        final ConfigTestIdResolve test = new ConfigTestIdResolve();
 
         m_context.setProperty( "id", "prop-a" );
         m_context.setProperty( "prop-a", "some indirect value" );
 
         // Configure the object
-        m_configurer.configure( test, config, m_context );
+        configure( test, config );
 
         // Check the configured object
-        final ConfigTestStringProps expected = new ConfigTestStringProps();
+        final ConfigTestIdResolve expected = new ConfigTestIdResolve();
         expected.setSomeProp( "some indirect value" );
         assertEquals( expected, test );
     }
@@ -656,7 +672,7 @@ public class DefaultConfigurerTest
         final DefaultConfiguration config = new DefaultConfiguration( "test", "test" );
         config.setAttribute( "some-prop-ref", "unknown-prop" );
 
-        final ConfigTestStringProps test = new ConfigTestStringProps();
+        final ConfigTestUnknownReference test = new ConfigTestUnknownReference();
 
         // Configure the object
         try
@@ -666,7 +682,8 @@ public class DefaultConfigurerTest
         }
         catch( ConfigurationException e )
         {
-            final String[] messages = {
+            final String[] messages = new String[]
+            {
                 REZ.getString( "bad-set-attribute.error", "test", "some-prop-ref" ),
                 REZ.getString( "unknown-reference.error", "unknown-prop" )
             };
@@ -684,9 +701,9 @@ public class DefaultConfigurerTest
         final DefaultConfiguration config = new DefaultConfiguration( "test", "test" );
         config.setAttribute( "some-prop-ref", "prop-a" );
 
-        final ConfigTestStringProps test = new ConfigTestStringProps();
+        final ConfigTestMismatchedRefType test = new ConfigTestMismatchedRefType();
 
-        m_context.setProperty( "prop-a", new ConfigTestObjectProps() );
+        m_context.setProperty( "prop-a", new Integer( 23 ) );
 
         // Configure the object
         try
@@ -696,7 +713,8 @@ public class DefaultConfigurerTest
         }
         catch( ConfigurationException e )
         {
-            final String[] messages = {
+            final String[] messages = new String[]
+            {
                 REZ.getString( "bad-set-attribute.error", "test", "some-prop-ref" ),
                 REZ.getString( "mismatch-ref-types.error",
                                "prop-a",
@@ -715,24 +733,21 @@ public class DefaultConfigurerTest
     {
         // Setup test data
         final DefaultConfiguration config = new DefaultConfiguration( "test", "test" );
-        config.setAttribute( "my-role1-ref", "id" );
         final DefaultConfiguration child = new DefaultConfiguration( "my-role1-ref", "test" );
         child.setAttribute( "id", "id2" );
         config.addChild( child );
 
         // Add role mapping, and add to reference to context
         registerRole( new RoleInfo( "my-role1", MyRole1.class ) );
-        m_context.setProperty( "id", new MyType1() );
         m_context.setProperty( "id2", new MyType2() );
 
-        final ConfigTestTypedProp test = new ConfigTestTypedProp();
+        final ConfigTestTypedAdderReference test = new ConfigTestTypedAdderReference();
 
         // Configure the object
         m_configurer.configure( test, config, m_context );
 
         // Compare against expected value
-        final ConfigTestTypedProp expected = new ConfigTestTypedProp();
-        expected.add( new MyType1() );
+        final ConfigTestTypedAdderReference expected = new ConfigTestTypedAdderReference();
         expected.add( new MyType2() );
         assertEquals( expected, test );
     }
@@ -748,7 +763,7 @@ public class DefaultConfigurerTest
         elem.setAttribute( "not-a-prop", "not-a-value" );
         config.addChild( elem );
 
-        final ConfigTestObjectProps test = new ConfigTestObjectProps();
+        final ConfigTestNestedErrors test = new ConfigTestNestedErrors();
 
         try
         {
@@ -778,19 +793,16 @@ public class DefaultConfigurerTest
         config.addChild( elem );
         elem = new DefaultConfiguration( "prop2", "test" );
         config.addChild( elem );
-        elem = new DefaultConfiguration( "prop3", "test" );
-        config.addChild( elem );
 
-        final ConfigTestMultiSetter test = new ConfigTestMultiSetter();
+        final ConfigTestIgnoreStringMethods test = new ConfigTestIgnoreStringMethods();
 
         // Configure the object
         m_configurer.configure( test, config, m_context );
 
         // Test expected value
-        final ConfigTestMultiSetter expected = new ConfigTestMultiSetter();
-        expected.setProp1( new ConfigTestStringProps() );
-        expected.setProp2( new ConfigTestStringProps() );
-        expected.addProp3( new ConfigTestStringProps() );
+        final ConfigTestIgnoreStringMethods expected = new ConfigTestIgnoreStringMethods();
+        expected.addProp1( new ConfigTestIgnoreStringMethods() );
+        expected.addProp2( new ConfigTestIgnoreStringMethods() );
         assertEquals( expected, test );
     }
 }
