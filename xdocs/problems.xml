@@ -157,9 +157,9 @@ D:\src\java\Unset.java<br></br>
          <p>
             If the current nightly build doesn't resolve your problem, it is
             possible that someone else has reported the issue. It is time to
-            look at the <a href="http://nagoya.apache.org/bugzilla/">
+            look at the <a href="http://issues.apache.org/bugzilla/">
             Apache Bug Database</a>.  This system is easy to use, and it will
-            let you search the <a href="http://nagoya.apache.org/bugzilla/buglist.cgi?bug_status=UNCONFIRMED&amp;bug_status=NEW&amp;bug_status=ASSIGNED&amp;bug_status=REOPENED&amp;email1=&amp;emailtype1=substring&amp;emailassigned_to1=1&amp;email2=&amp;emailtype2=substring&amp;emailreporter2=1&amp;bugidtype=include&amp;bug_id=&amp;changedin=&amp;votes=&amp;chfieldfrom=&amp;chfieldto=Now&amp;chfieldvalue=&amp;product=Ant&amp;short_desc=&amp;short_desc_type=substring&amp;long_desc=&amp;long_desc_type=substring&amp;bug_file_loc=&amp;bug_file_loc_type=substring&amp;keywords=&amp;keywords_type=anywords&amp;field0-0-0=noop&amp;type0-0-0=noop&amp;value0-0-0=&amp;order=bugs.bug_id">
+            let you search the <a href="http://issues.apache.org/bugzilla/buglist.cgi?bug_status=UNCONFIRMED&amp;bug_status=NEW&amp;bug_status=ASSIGNED&amp;bug_status=REOPENED&amp;email1=&amp;emailtype1=substring&amp;emailassigned_to1=1&amp;email2=&amp;emailtype2=substring&amp;emailreporter2=1&amp;bugidtype=include&amp;bug_id=&amp;changedin=&amp;votes=&amp;chfieldfrom=&amp;chfieldto=Now&amp;chfieldvalue=&amp;product=Ant&amp;short_desc=&amp;short_desc_type=substring&amp;long_desc=&amp;long_desc_type=substring&amp;bug_file_loc=&amp;bug_file_loc_type=substring&amp;keywords=&amp;keywords_type=anywords&amp;field0-0-0=noop&amp;type0-0-0=noop&amp;value0-0-0=&amp;order=bugs.bug_id">
             currently open</a> and resolved bugs to see if your problem has
             already been reported. If your problem has been reported, you can
             see whether any of the developers have commented, suggesting
@@ -177,6 +177,7 @@ D:\src\java\Unset.java<br></br>
          <p>
             By this time, you may have decided that there is an unreported
             bug in Ant. You have a few choices at this point. You can send
+<!--            an email to the <code>user</code> mailing list-->
             an email to the <code>ant-user</code> mailing list
             to see if
             others have encountered your issue and find out how they may
@@ -238,9 +239,11 @@ D:\src\java\Unset.java<br></br>
             <a href="http://ant.apache.org/srcdownload.cgi">
             source distributions</a>. If you
             are going to tackle the problem at this level, you may want to
+<!--            discuss some details first on the <code>dev</code>-->
             discuss some details first on the <code>ant-dev</code>
             mailing list. Once you have a fix for the problem, you may submit
             the fix as a <i>patch</i> to either the
+<!--            <code>dev</code> mailing-->
             <code>ant-dev</code> mailing
             list, or enter the bug database as described above and attach the
             patch to the bug report. Using the bug database has the advantage
@@ -248,6 +251,7 @@ D:\src\java\Unset.java<br></br>
          </p>
          <p>
             If you have a patch to submit and are sending it to the
+<!--            <code>dev</code> mailing list,-->
             <code>ant-dev</code> mailing list,
             prefix &quot;[PATCH]&quot;
             to your message subject. Please include any relevant bug numbers.

@@ -192,6 +192,7 @@
       page &quot;External Tools and Task&quot;?</question>
       <answer>
 
+<!--        <p>Join and post a message to the dev or user mailing-->
         <p>Join and post a message to the ant-dev or ant-user mailing
         list (one list is enough), including the following
         information:</p>
@@ -1212,7 +1213,7 @@ mv /tmp/foo $ANT_HOME/bin/antRun
 
         <p>This problem has been reported only hours after Ant 1.5 has
         been released, see <a
-        href="http://nagoya.apache.org/bugzilla/show_bug.cgi?id=10664">Bug
+        href="http://issues.apache.org/bugzilla/show_bug.cgi?id=10664">Bug
         10664</a> and all it's duplicates.</p>
 
         <p>A fixed version of the wrapper script can be found <a
