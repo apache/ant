@@ -299,12 +299,10 @@ task attributes. This is done by placing the property name between
 &quot;build&quot;, then this could be used in an attribute like this: &quot;${builddir}/classes&quot;.
 This is resolved as &quot;build/classes&quot;.</p>
 <h3>Token Filters</h3>
-<p>A project can have a set of tokens that will be automatically expanded if
-found when a file is copied. These might be set in the buildfile
-by the <a href="#filter">filter task</a>. If no filter task is specified, all
-file copying works normally and the files are not modified during the copy in
-any way. Otherwise, if a filter is set, the files will be <i>filtered</i> and
-each occurrency of the specified token will be replaced.</p>
+<p>A project can have a set of tokens that might be automatically expanded if
+found when a file is copied, when the filtering-copy behavior is selected in the
+tasks that support this. These might be set in the buildfile
+by the <a href="#filter">filter task</a>.&nbsp;</p>
 <p>Since this can be a very harmful behavior, the tokens in the files <b>must</b>
 be of the form<i> @token@</i> where <i>token</i> is the token name that is set
 in the filter task. This token syntax matches the syntax of other build systems
@@ -330,7 +328,7 @@ this should not cause problems.</p>
   &lt;/target&gt;
 
   &lt;target name=&quot;compile&quot; depends=&quot;prepare&quot;&gt;
-    &lt;javac srcdir=&quot;${src}&quot; destdir=&quot;${build}&quot; /&gt;
+    &lt;javac srcdir=&quot;${src}&quot; destdir=&quot;${build}&quot; filtering=&quot;on&quot;/&gt;
   &lt;/target&gt;
 
   &lt;target name=&quot;dist&quot; depends=&quot;compile&quot;&gt;
@@ -636,6 +634,12 @@ this attribute has been replaced by the <i>excludes</i> attribute.</p>
       (&quot;yes&quot;/&quot;no&quot;). Default excludes are used when omitted.</td>
     <td valign="top" align="center">No</td>
   </tr>
+  <tr>
+    <td valign="top">filtering</td>
+    <td valign="top">indicates whether token filtering should take place during
+      the copy</td>
+    <td valign="top" align="center">No</td>
+  </tr>
 </table>
 <h3>Examples</h3>
 <pre>  &lt;copydir src=&quot;${src}/resources&quot;
@@ -678,6 +682,12 @@ does not exist.</p>
     <td valign="top">dest</td>
     <td valign="top">the filename of the file where to copy to.</td>
     <td valign="top" align="center">Yes</td>
+  </tr>
+  <tr>
+    <td valign="top">filtering</td>
+    <td valign="top">indicates whether token filtering should take place during
+      the copy</td>
+    <td valign="top" align="center">No</td>
   </tr>
 </table>
 <h3>Examples</h3>
@@ -1041,13 +1051,13 @@ archive with http/ftp.</p>
 </table>
 <h3>Examples</h3>
 <pre>  &lt;fixcrlf srcdir=&quot;${src}&quot;
-       cr="remove" eof="remove"
+       cr=&quot;remove&quot; eof=&quot;remove&quot;
        includes=&quot;**/*.sh&quot;
   /&gt;</pre>
 <p>Removes carriage return and eof characters from the shell scripts.  Tabs and
 spaces are left as is.
 <pre>  &lt;fixcrlf srcdir=&quot;${src}&quot;
-       cr="add"
+       cr=&quot;add&quot;
        includes=&quot;**/*.bat&quot;
   /&gt;</pre>
 <p>Ensures that there are carriage return characters prior to evey line feed.
@@ -1055,7 +1065,7 @@ Tabs and spaces are left as is.
 EOF characters are left alone if run on
 DOS systems, and are removed if run on Unix systems.</p>
 <pre>  &lt;fixcrlf srcdir=&quot;${src}&quot;
-       tabs="add"
+       tabs=&quot;add&quot;
        includes=&quot;**/Makefile&quot;
   /&gt;</pre>
 <p>Adds or removes CR characters to match local OS conventions, and
@@ -1063,7 +1073,7 @@ converts spaces to tabs when appropriate.  EOF characters are left alone if
 run on DOS systems, and are removed if run on Unix systems.
 Many versions of make require tabs prior to commands.</p>
 <pre>  &lt;fixcrlf srcdir=&quot;${src}&quot;
-       tabs="remove"
+       tabs=&quot;remove&quot;
        includes=&quot;**/README*&quot;
   /&gt;</pre>
 <p>Adds or removes CR characters to match local OS conventions, and
@@ -1326,6 +1336,11 @@ relative to the <i>srcdir</i> directory.</p>
       information (&quot;on&quot;).</td>
     <td align="center" valign="top">No</td>
   </tr>
+  <tr>
+    <td valign="top">filtering</td>
+    <td valign="top">indicates whether token filtering should take place</td>
+    <td valign="top" align="center">No</td>
+  </tr>
 </table>
 <h3>Examples</h3>
 <pre>  &lt;javac srcdir=&quot;${src}&quot;
@@ -1384,13 +1399,13 @@ instead.</p>
     <td valign="top">sourcepath</td>
     <td valign="top">Specify where to find source files</td>
     <td align="center" valign="top">all</td>
-    <td align="center" valign="top">yes</td>
+    <td align="center" valign="top">Yes</td>
   </tr>
   <tr>
     <td valign="top">destdir</td>
     <td valign="top">Destination directory for output files</td>
     <td align="center" valign="top">all</td>
-    <td align="center" valign="top">yes</td>
+    <td align="center" valign="top">Yes</td>
   </tr>
   <tr>
     <td valign="top">sourcefiles</td>
@@ -1408,217 +1423,217 @@ instead.</p>
     <td valign="top">Classpath</td>
     <td valign="top">Specify where to find user class files</td>
     <td align="center" valign="top">all</td>
-    <td align="center" valign="top">no</td>
+    <td align="center" valign="top">No</td>
   </tr>
   <tr>
     <td valign="top">Bootclasspath</td>
     <td valign="top">Override location of class files loaded by the bootstrap
       class loader</td>
     <td align="center" valign="top">1.2</td>
-    <td align="center" valign="top">no</td>
+    <td align="center" valign="top">No</td>
   </tr>
   <tr>
     <td valign="top">Extdirs</td>
     <td valign="top">Override location of installed extensions</td>
     <td align="center" valign="top">1.2</td>
-    <td align="center" valign="top">no</td>
+    <td align="center" valign="top">No</td>
   </tr>
   <tr>
     <td valign="top">Overview</td>
     <td valign="top">Read overview documentation from HTML file</td>
     <td align="center" valign="top">1.2</td>
-    <td align="center" valign="top">no</td>
+    <td align="center" valign="top">No</td>
   </tr>
   <tr>
     <td valign="top">Public</td>
     <td valign="top">Show only public classes and members</td>
     <td align="center" valign="top">all</td>
-    <td align="center" valign="top">no</td>
+    <td align="center" valign="top">No</td>
   </tr>
   <tr>
     <td valign="top">Protected</td>
     <td valign="top">Show protected/public classes and members (default)</td>
     <td align="center" valign="top">all</td>
-    <td align="center" valign="top">no</td>
+    <td align="center" valign="top">No</td>
   </tr>
   <tr>
     <td valign="top">Package</td>
     <td valign="top">Show package/protected/public classes and members</td>
     <td align="center" valign="top">all</td>
-    <td align="center" valign="top">no</td>
+    <td align="center" valign="top">No</td>
   </tr>
   <tr>
     <td valign="top">Private</td>
     <td valign="top">Show all classes and members</td>
     <td align="center" valign="top">all</td>
-    <td align="center" valign="top">no</td>
+    <td align="center" valign="top">No</td>
   </tr>
   <tr>
     <td valign="top">Old</td>
     <td valign="top">Generate output using JDK 1.1 emulating doclet</td>
     <td align="center" valign="top">1.2</td>
-    <td align="center" valign="top">no</td>
+    <td align="center" valign="top">No</td>
   </tr>
   <tr>
     <td valign="top">Verbose</td>
     <td valign="top">Output messages about what Javadoc is doing</td>
     <td align="center" valign="top">1.2</td>
-    <td align="center" valign="top">no</td>
+    <td align="center" valign="top">No</td>
   </tr>
   <tr>
     <td valign="top">Locale</td>
     <td valign="top">Locale to be used, e.g. en_US or en_US_WIN</td>
     <td align="center" valign="top">1.2</td>
-    <td align="center" valign="top">no</td>
+    <td align="center" valign="top">No</td>
   </tr>
   <tr>
     <td valign="top">Encoding</td>
     <td valign="top">Source file encoding name</td>
     <td align="center" valign="top">all</td>
-    <td align="center" valign="top">no</td>
+    <td align="center" valign="top">No</td>
   </tr>
   <tr>
     <td valign="top">Version</td>
     <td valign="top">Include @version paragraphs</td>
     <td align="center" valign="top">all</td>
-    <td align="center" valign="top">no</td>
+    <td align="center" valign="top">No</td>
   </tr>
   <tr>
     <td valign="top">Use</td>
     <td valign="top">Create class and package usage pages</td>
     <td align="center" valign="top">1.2</td>
-    <td align="center" valign="top">no</td>
+    <td align="center" valign="top">No</td>
   </tr>
   <tr>
     <td valign="top">Author</td>
     <td valign="top">Include @author paragraphs</td>
     <td align="center" valign="top">all</td>
-    <td align="center" valign="top">no</td>
+    <td align="center" valign="top">No</td>
   </tr>
   <tr>
     <td valign="top">Splitindex</td>
     <td valign="top">Split index into one file per letter</td>
     <td align="center" valign="top">1.2</td>
-    <td align="center" valign="top">no</td>
+    <td align="center" valign="top">No</td>
   </tr>
   <tr>
     <td valign="top">Windowtitle</td>
     <td valign="top">Browser window title for the documenation (text)</td>
     <td align="center" valign="top">1.2</td>
-    <td align="center" valign="top">no</td>
+    <td align="center" valign="top">No</td>
   </tr>
   <tr>
     <td valign="top">Doctitle</td>
     <td valign="top">Include title for the package index(first) page (html-code)</td>
     <td align="center" valign="top">1.2</td>
-    <td align="center" valign="top">no</td>
+    <td align="center" valign="top">No</td>
   </tr>
   <tr>
     <td valign="top">Header</td>
     <td valign="top">Include header text for each page (html-code)</td>
     <td align="center" valign="top">1.2</td>
-    <td align="center" valign="top">no</td>
+    <td align="center" valign="top">No</td>
   </tr>
   <tr>
     <td valign="top">Footer</td>
     <td valign="top">Include footer text for each page (html-code)</td>
     <td align="center" valign="top">1.2</td>
-    <td align="center" valign="top">no</td>
+    <td align="center" valign="top">No</td>
   </tr>
   <tr>
     <td valign="top">bottom</td>
     <td valign="top">Include bottom text for each page (html-code)</td>
     <td align="center" valign="top">1.2</td>
-    <td align="center" valign="top">no</td>
+    <td align="center" valign="top">No</td>
   </tr>
   <tr>
     <td valign="top">link</td>
     <td valign="top">Create links to javadoc output at the given URL</td>
     <td align="center" valign="top">1.2</td>
-    <td align="center" valign="top">no</td>
+    <td align="center" valign="top">No</td>
   </tr>
   <tr>
     <td valign="top">linkoffline</td>
     <td valign="top">Link to docs at &lt;url&gt; using package list at
       &lt;url2&gt;</td>
     <td align="center" valign="top">1.2</td>
-    <td align="center" valign="top">no</td>
+    <td align="center" valign="top">No</td>
   </tr>
   <tr>
     <td valign="top">group</td>
     <td valign="top">Group specified packages together in overview page</td>
     <td align="center" valign="top">1.2</td>
-    <td align="center" valign="top">no</td>
+    <td align="center" valign="top">No</td>
   </tr>
   <tr>
     <td valign="top">nodeprecated</td>
     <td valign="top">Do not include @deprecated information</td>
     <td align="center" valign="top">all</td>
-    <td align="center" valign="top">no</td>
+    <td align="center" valign="top">No</td>
   </tr>
   <tr>
     <td valign="top">nodeprecatedlist</td>
     <td valign="top">Do not generate deprecated list</td>
     <td align="center" valign="top">1.2</td>
-    <td align="center" valign="top">no</td>
+    <td align="center" valign="top">No</td>
   </tr>
   <tr>
     <td valign="top">notree</td>
     <td valign="top">Do not generate class hierarchy</td>
     <td align="center" valign="top">all</td>
-    <td align="center" valign="top">no</td>
+    <td align="center" valign="top">No</td>
   </tr>
   <tr>
     <td valign="top">noindex</td>
     <td valign="top">Do not generate index</td>
     <td align="center" valign="top">all</td>
-    <td align="center" valign="top">no</td>
+    <td align="center" valign="top">No</td>
   </tr>
   <tr>
     <td valign="top">nohelp</td>
     <td valign="top">Do not generate help link</td>
     <td align="center" valign="top">1.2</td>
-    <td align="center" valign="top">no</td>
+    <td align="center" valign="top">No</td>
   </tr>
   <tr>
     <td valign="top">nonavbar</td>
     <td valign="top">Do not generate navigation bar</td>
     <td align="center" valign="top">1.2</td>
-    <td align="center" valign="top">no</td>
+    <td align="center" valign="top">No</td>
   </tr>
   <tr>
     <td valign="top">serialwarn</td>
     <td valign="top">Generate warning about @serial tag</td>
     <td align="center" valign="top">1.2</td>
-    <td align="center" valign="top">no</td>
+    <td align="center" valign="top">No</td>
   </tr>
   <tr>
     <td valign="top">helpfile</td>
     <td valign="top">Specifies the HTML help file to use</td>
     <td align="center" valign="top">1.2</td>
-    <td align="center" valign="top">no</td>
+    <td align="center" valign="top">No</td>
   </tr>
   <tr>
     <td valign="top">stylesheetfile</td>
     <td valign="top">Specifies the CSS stylesheet to use</td>
     <td align="center" valign="top">1.2</td>
-    <td align="center" valign="top">no</td>
+    <td align="center" valign="top">No</td>
   </tr>
   <tr>
     <td valign="top">charset</td>
     <td valign="top">Charset for cross-platform viewing of generated
       documentation</td>
     <td align="center" valign="top">1.2</td>
-    <td align="center" valign="top">no</td>
+    <td align="center" valign="top">No</td>
   </tr>
   <tr>
     <td valign="top">docencoding</td>
     <td valign="top">Output file encoding name</td>
     <td align="center" valign="top">1.1</td>
-    <td align="center" valign="top">no</td>
+    <td align="center" valign="top">No</td>
   </tr>
 </table>
-<h3>Examples</h3>
+<h3>Example</h3>
 <pre>  &lt;javadoc packagenames=&quot;com.dummy.test.*&quot;
            sourcepath=&quot;src&quot;
            destdir=&quot;docs/api&quot;
@@ -1805,6 +1820,11 @@ This also holds for properties loaded from a property file.</p>
     <td valign="top">class</td>
     <td valign="top">the class for which to run <code>rmic</code>.</td>
     <td valign="top" align="center">Yes</td>
+  </tr>
+  <tr>
+    <td valign="top">filtering</td>
+    <td valign="top">indicates whether token filtering should take place</td>
+    <td valign="top" align="center">No</td>
   </tr>
 </table>
 <h3>Examples</h3>
