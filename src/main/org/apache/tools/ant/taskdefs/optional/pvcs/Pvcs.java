@@ -101,7 +101,7 @@ import org.apache.tools.ant.types.Commandline;
  *
  * @author <a href="mailto:tchristensen@nordija.com">Thomas Christensen</a>
  * @author <a href="mailto:donj@apogeenet.com">Don Jeffery</a>
- * @author <a href="snewton@standard.com">Steven E. Newton</a>
+ * @author <a href="mailto:snewton@standard.com">Steven E. Newton</a>
  */
 public class Pvcs extends org.apache.tools.ant.Task {
     private String pvcsbin;
@@ -390,6 +390,12 @@ public class Pvcs extends org.apache.tools.ant.Task {
         return repository;
     }
 
+    /**
+     *  The filenameFormat attribute defines a MessageFormat string used
+     *  to parse the output of the pcli command.  It defaults to
+     *  <code>{0}-arc({1})</code>.  Repositories where the archive
+     *   extension is not  -arc should set this.
+     */
     public String getFilenameFormat() {
         return filenameFormat;
     }
@@ -405,6 +411,14 @@ public class Pvcs extends org.apache.tools.ant.Task {
         filenameFormat = f;
     }
 
+    /**
+
+     * The lineStart attribute is used to parse the output of the pcli
+     * command. It defaults to <code>&quot;P:</code>.  The parser already
+     * knows about / and \\, this property is useful in cases where the
+     * repository is accessed on a Windows platform via a drive letter
+     * mapping.
+     */
     public String getLineStart() {
         return lineStart;
     }
