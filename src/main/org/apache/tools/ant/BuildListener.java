@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2000 The Apache Software Foundation.  All rights
+ * Copyright (c) 2000,2002 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -57,62 +57,84 @@ package org.apache.tools.ant;
 import java.util.EventListener;
 
 /**
- *  Classes that implement this interface will be notified when
- *  things happend during a build.
+ * Instances of classes that implement this interface can register 
+ * to be notified when things happened during a build.
  *
- *  @see BuildEvent
- *  @see Project#addBuildListener(BuildListener)
+ * @see BuildEvent
+ * @see Project#addBuildListener(BuildListener)
  */
 public interface BuildListener extends EventListener {
 
     /**
-     *  Fired before any targets are started.
+     * Signals that a build has started. This event
+     * is fired before any targets have started.
+     * 
+     * @param event An event with any relevant extra information.
+     *              Must not be <code>null</code>.
      */
     void buildStarted(BuildEvent event);
 
     /**
-     *  Fired after the last target has finished. This event
-     *  will still be thrown if an error occured during the build.
+     * Signals that the last target has finished. This event
+     * will still be fired if an error occurred during the build.
+     * 
+     * @param event An event with any relevant extra information.
+     *              Must not be <code>null</code>.
      *
-     *  @see BuildEvent#getException()
+     * @see BuildEvent#getException()
      */
     void buildFinished(BuildEvent event);
 
     /**
-     *  Fired when a target is started.
+     * Signals that a target is starting.
+     * 
+     * @param event An event with any relevant extra information.
+     *              Must not be <code>null</code>.
      *
-     *  @see BuildEvent#getTarget()
+     * @see BuildEvent#getTarget()
      */
     void targetStarted(BuildEvent event);
 
     /**
-     *  Fired when a target has finished. This event will
-     *  still be thrown if an error occured during the build.
+     * Signals that a target has finished. This event will
+     * still be fired if an error occurred during the build.
+     * 
+     * @param event An event with any relevant extra information.
+     *              Must not be <code>null</code>.
      *
-     *  @see BuildEvent#getException()
+     * @see BuildEvent#getException()
      */
     void targetFinished(BuildEvent event);
 
     /**
-     *  Fired when a task is started.
+     * Signals that a task is starting.
+     * 
+     * @param event An event with any relevant extra information.
+     *              Must not be <code>null</code>.
      *
-     *  @see BuildEvent#getTask()
+     * @see BuildEvent#getTask()
      */
     void taskStarted(BuildEvent event);
 
     /**
-     *  Fired when a task has finished. This event will still
-     *  be throw if an error occured during the build.
+     * Signals that a task has finished. This event will still
+     * be fired if an error occurred during the build.
      *
-     *  @see BuildEvent#getException()
+     * @param event An event with any relevant extra information.
+     *              Must not be <code>null</code>.
+     *
+     * @see BuildEvent#getException()
      */
     void taskFinished(BuildEvent event);
 
     /**
-     *  Fired whenever a message is logged.
+     * Signals a message logging event.
+     * 
+     * @param event An event with any relevant extra information.
+     *              Must not be <code>null</code>.
      *
-     *  @see BuildEvent#getMessage()
-     *  @see BuildEvent#getPriority()
+     * @see BuildEvent#getMessage()
+     * @see BuildEvent#getPriority()
      */
     void messageLogged(BuildEvent event);
 }

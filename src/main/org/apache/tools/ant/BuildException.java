@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2000-2001 The Apache Software Foundation.  All rights
+ * Copyright (c) 2000-2002 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -53,12 +53,11 @@
  */
 package org.apache.tools.ant;
 
-
 import java.io.PrintWriter;
 import java.io.PrintStream;
 
 /**
- * Signals an error condition during a build.
+ * Signals an error condition during a build
  *
  * @author James Duncan Davidson
  */
@@ -79,7 +78,9 @@ public class BuildException extends RuntimeException {
 
     /**
      * Constructs an exception with the given descriptive message.
-     * @param msg Description of or information about the exception.
+     * 
+     * @param msg A description of or information about the exception.
+     *            Should not be <code>null</code>.
      */
     public BuildException(String msg) {
         super(msg);
@@ -88,8 +89,11 @@ public class BuildException extends RuntimeException {
     /**
      * Constructs an exception with the given message and exception as
      * a root cause.
-     * @param msg Description of or information about the exception.
-     * @param cause Throwable that might have cause this one.
+     * 
+     * @param msg A description of or information about the exception.
+     *            Should not be <code>null</code> unless a cause is specified.
+     * @param cause The exception that might have caused this one.
+     *              May be <code>null</code>.
      */
     public BuildException(String msg, Throwable cause) {
         super(msg);
@@ -99,9 +103,13 @@ public class BuildException extends RuntimeException {
     /**
      * Constructs an exception with the given message and exception as
      * a root cause and a location in a file.
-     * @param msg Description of or information about the exception.
-     * @param cause Exception that might have cause this one.
-     * @param location Location in the project file where the error occured.
+     * 
+     * @param msg A description of or information about the exception.
+     *            Should not be <code>null</code> unless a cause is specified.
+     * @param cause The exception that might have caused this one.
+     *              May be <code>null</code>.
+     * @param location The location in the project file where the error 
+     *                 occurred. Must not be <code>null</code>.
      */
     public BuildException(String msg, Throwable cause, Location location) {
         this(msg, cause);
@@ -110,7 +118,9 @@ public class BuildException extends RuntimeException {
 
     /**
      * Constructs an exception with the given exception as a root cause.
-     * @param cause Exception that might have caused this one.
+     * 
+     * @param cause The exception that might have caused this one.
+     *              Should not be <code>null</code>.
      */
     public BuildException(Throwable cause) {
         super(cause.toString());
@@ -118,10 +128,13 @@ public class BuildException extends RuntimeException {
     }
 
     /**
-     * Constructs an exception with the given descriptive message and a location
-     * in a file.
-     * @param msg Description of or information about the exception.
-     * @param location Location in the project file where the error occured.
+     * Constructs an exception with the given descriptive message and a 
+     * location in a file.
+     * 
+     * @param msg A description of or information about the exception.
+     *            Should not be <code>null</code>.
+     * @param location The location in the project file where the error 
+     *                 occurred. Must not be <code>null</code>.
      */
     public BuildException(String msg, Location location) {
         super(msg);
@@ -131,8 +144,11 @@ public class BuildException extends RuntimeException {
     /**
      * Constructs an exception with the given exception as
      * a root cause and a location in a file.
-     * @param cause Exception that might have cause this one.
-     * @param location Location in the project file where the error occured.
+     * 
+     * @param cause The exception that might have caused this one.
+     *              Should not be <code>null</code>.
+     * @param location The location in the project file where the error 
+     *                 occurred. Must not be <code>null</code>.
      */
     public BuildException(Throwable cause, Location location) {
         this(cause);
@@ -140,7 +156,10 @@ public class BuildException extends RuntimeException {
     }
 
     /**
-     * Returns the nested exception.
+     * Returns the nested exception, if any.
+     * 
+     * @return the nested exception, or <code>null</code> if no
+     *         exception is associated with this one
      */
     public Throwable getException() {
         return cause;
@@ -148,30 +167,47 @@ public class BuildException extends RuntimeException {
 
     /**
      * Returns the location of the error and the error message.
+     * 
+     * @return the location of the error and the error message
      */
     public String toString() {
         return location.toString() + getMessage();
     }
 
     /**
-     * Sets the file location where the error occured.
+     * Sets the file location where the error occurred.
+     * 
+     * @param location The file location where the error occurred.
+     *                 Must not be <code>null</code>.
      */
     public void setLocation(Location location) {
         this.location = location;
     }
 
     /**
-     * Returns the file location where the error occured.
+     * Returns the file location where the error occurred.
+     *
+     * @return the file location where the error occurred.
      */
     public Location getLocation() {
         return location;
     }
 
-    // Override stack trace methods to show original cause:
+    /**
+     * Prints the stack trace for this exception and any 
+     * nested exception to <code>System.err</code>.
+     */
     public void printStackTrace() {
         printStackTrace(System.err);
     }
     
+    /**
+     * Prints the stack trace of this exception and any nested
+     * exception to the specified PrintStream.
+     * 
+     * @param ps The PrintStream to print the stack trace to.
+     *           Must not be <code>null</code>.
+     */
     public void printStackTrace(PrintStream ps) {
         synchronized (ps) {
             super.printStackTrace(ps);
@@ -182,6 +218,13 @@ public class BuildException extends RuntimeException {
         }
     }
     
+    /**
+     * Prints the stack trace of this exception and any nested
+     * exception to the specified PrintWriter.
+     * 
+     * @param pw The PrintWriter to print the stack trace to.
+     *           Must not be <code>null</code>.
+     */
     public void printStackTrace(PrintWriter pw) {
         synchronized (pw) {
             super.printStackTrace(pw);

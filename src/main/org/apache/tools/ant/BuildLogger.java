@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2000-2001 The Apache Software Foundation.  All rights
+ * Copyright (c) 2000-2002 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -59,45 +59,51 @@ import java.io.PrintStream;
 /**
  * Interface used by Ant to log the build output. 
  *
- * A build logger is a build listener which has the 'right' to send output to the
- * ant log, which is usually System.out unles redirected by the -logfile option.
+ * A build logger is a build listener which has the 'right' to send output to 
+ * the ant log, which is usually <code>System.out</code> unless redirected by 
+ * the <code>-logfile</code> option.
  *
  * @author Conor MacNeill
  */
 public interface BuildLogger extends BuildListener {
+    
     /**
-     * Set the msgOutputLevel this logger is to respond to.
+     * Sets the msgOutputLevel this logger is to respond to.
      *
-     * Only messages with a message level lower than or equal to the given level are 
-     * output to the log.
+     * Only messages with a message level lower than or equal to the given 
+     * level are output to the log.
      * <P>
-     * Constants for the message levels are in Project.java. The order of
-     * the levels, from least to most verbose, is MSG_ERR, MSG_WARN,
-     * MSG_INFO, MSG_VERBOSE, MSG_DEBUG.
+     * Constants for the message levels are in the 
+     * {@link Project Project} class. The order of the levels, from least 
+     * to most verbose, is <code>MSG_ERR</code>, <code>MSG_WARN</code>, 
+     * <code>MSG_INFO</code>, <code>MSG_VERBOSE</code>, 
+     * <code>MSG_DEBUG</code>.
      *
      * @param level the logging level for the logger.
      */
     void setMessageOutputLevel(int level);
     
     /**
-     * Set the output stream to which this logger is to send its output.
+     * Sets the output stream to which this logger is to send its output.
      *
-     * @param output the output stream for the logger.
+     * @param output The output stream for the logger.
+     *               Must not be <code>null</code>.
      */
     void setOutputPrintStream(PrintStream output);
     
     /**
-     * Set this logger to produce emacs (and other editor) friendly output.
+     * Sets this logger to produce emacs (and other editor) friendly output.
      *
-     * @param emacsMode true if output is to be unadorned so that emacs and other
-     * editors can parse files names, etc.
+     * @param emacsMode <code>true</code> if output is to be unadorned so that 
+     * emacs and other editors can parse files names, etc.
      */
     void setEmacsMode(boolean emacsMode);
 
     /**
-     * Set the output stream to which this logger is to send error messages.
+     * Sets the output stream to which this logger is to send error messages.
      *
-     * @param err the error stream for the logger.
+     * @param err The error stream for the logger.
+     *            Must not be <code>null<code>.
      */
     void setErrorPrintStream(PrintStream err);    
 }
