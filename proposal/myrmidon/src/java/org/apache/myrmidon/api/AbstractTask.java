@@ -8,8 +8,6 @@
 package org.apache.myrmidon.api;
 
 import java.io.File;
-import org.apache.avalon.framework.activity.Disposable;
-import org.apache.avalon.framework.activity.Initializable;
 import org.apache.avalon.framework.context.Context;
 import org.apache.avalon.framework.context.ContextException;
 import org.apache.avalon.framework.context.Contextualizable;
@@ -22,7 +20,7 @@ import org.apache.avalon.framework.logger.AbstractLogEnabled;
  */
 public abstract class AbstractTask
     extends AbstractLogEnabled
-    implements Task, Contextualizable, Initializable, Disposable
+    implements Task, Contextualizable
 {
     ///Variable to hold context for use by sub-classes
     private TaskContext m_context;
@@ -38,16 +36,6 @@ public abstract class AbstractTask
     }
 
     /**
-     * This will be called before execute() method and checks any preconditions.
-     *
-     * @exception Exception if an error occurs
-     */
-    public void initialize()
-        throws Exception
-    {
-    }
-
-    /**
      * Execute task.
      * This method is called to perform actual work associated with task.
      * It is called after Task has been Configured and Initialized and before
@@ -57,16 +45,6 @@ public abstract class AbstractTask
      */
     public abstract void execute()
         throws TaskException;
-
-    /**
-     * This will be called after execute() method.
-     * Use this to clean up any resources associated with task.
-     *
-     * @exception Exception if an error occurs
-     */
-    public void dispose()
-    {
-    }
 
     /**
      * Convenience method for sub-class to retrieve context.
