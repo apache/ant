@@ -305,6 +305,7 @@ public class JspC extends MatchingTask
         // scan source directories and dest directory to build up both copy
         // lists and compile lists
         resetFileLists();
+		int filecount=0;
         for (int i = 0; i < list.length; i++) {
             File srcDir = (File)project.resolveFile(list[i]);
             if (!srcDir.exists()) {
@@ -315,7 +316,7 @@ public class JspC extends MatchingTask
             DirectoryScanner ds = this.getDirectoryScanner(srcDir);
 
             String[] files = ds.getIncludedFiles();
-
+			filecount=files.length;
             scanDir(srcDir, dest, files);
         }
 
@@ -325,6 +326,7 @@ public class JspC extends MatchingTask
         if (compiler == null) {
             compiler = "jasper";
         }
+		log("compiling "+compileList.size()+" files",Project.MSG_VERBOSE);
 
         if (compileList.size() > 0) {
 
@@ -348,6 +350,14 @@ public class JspC extends MatchingTask
                 }
             }
         }
+		else {
+			if(filecount==0) {
+				log("there were no files to compile",Project.MSG_INFO);
+			}
+			else {
+				log("all files are up to date",Project.MSG_VERBOSE);
+			}
+		}
     }
     /* ------------------------------------------------------------ */
     /**
