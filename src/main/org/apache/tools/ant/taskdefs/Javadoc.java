@@ -1436,6 +1436,11 @@ public class Javadoc extends Task {
 
         Vector packagesToDoc = new Vector();
         Path sourceDirs = new Path(getProject());
+
+        if (sourcePath != null) {
+            sourceDirs.addExisting(sourcePath);
+        }
+        
         parsePackages(packagesToDoc, sourceDirs);
 
         if (packagesToDoc.size() != 0 && sourceDirs.size() == 0) {
@@ -1871,6 +1876,8 @@ public class Javadoc extends Task {
                 }
             }
             if (containsPackages) {
+                // We don't need to care for duplicates here,
+                // Path.list does it for us.
                 sp.createPathElement().setLocation(baseDir);
             } else {
                 log(baseDir + " doesn\'t contain any packages, dropping it.",

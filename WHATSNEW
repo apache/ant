@@ -40,6 +40,10 @@ nested into <antcall> didn't work.
 
 * <replaceregexp> didn't work for nested <fileset>s.
 
+* <javadoc> dropped sourcepath entries if no "interesting" .java
+source files  could be found below them.  This has been backwards
+incompatible and caused problems with custom doclets like xdoclet.
+
 Other changes:
 --------------
 
