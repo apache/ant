@@ -164,12 +164,16 @@ public class JavaEnvUtils {
             return command;
         }
 
-        File jExecutable = findInDir(javaHome + "/bin", command);
+        File jExecutable = null;
 
-        if (jExecutable == null && isAix) {
+        if (isAix) {
             // On IBM's JDK 1.2 the directory layout is different, 1.3 follows
             // Sun's layout.
             jExecutable = findInDir(javaHome + "/sh", command);
+        }
+
+        if (jExecutable == null) { 
+            jExecutable = findInDir(javaHome + "/bin", command);
         }
 
         if (jExecutable != null) {
@@ -200,12 +204,16 @@ public class JavaEnvUtils {
             return command;
         }
 
-        File jExecutable = findInDir(javaHome + "/../bin", command);
+        File jExecutable = null;
 
-        if (jExecutable == null && isAix) {
+        if (isAix) {
             // On IBM's JDK 1.2 the directory layout is different, 1.3 follows
             // Sun's layout.
             jExecutable = findInDir(javaHome + "/../sh", command);
+        }
+
+        if (jExecutable == null) { 
+            jExecutable = findInDir(javaHome + "/../bin", command);
         }
 
         if (jExecutable != null) {
