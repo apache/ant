@@ -843,10 +843,10 @@
 
       <subsection name="Purge">
 
-	<p>Purge deletes all but the most recent few files from a fileset. 
-	For example: if you have generated files (logs, .ear, .war, .jar 
-	etc) accumulating in a directory, the purge task will allow you
-	to delete the older files, keeping just the most recent ones.</p>
+        <p>Purge deletes all but the most recent few files from a fileset. 
+        For example: if you have generated files (logs, .ear, .war, .jar 
+        etc) accumulating in a directory, the purge task will allow you
+        to delete the older files, keeping just the most recent ones.</p>
         <table>
           <tr>
             <th>Compatibility:</th>
@@ -869,10 +869,10 @@
 
       <subsection name="SerialVer">
 
-	<p>SerialVer adds the Java serialver functionality to Apache
-	Ant.  This project adds Tasks and FilterReaders to get, to
-	insert and to modify the serialVersionUID in the source code
-	of a serializable class.</p>
+        <p>SerialVer adds the Java serialver functionality to Apache
+        Ant.  This project adds Tasks and FilterReaders to get, to
+        insert and to modify the serialVersionUID in the source code
+        of a serializable class.</p>
 
         <table>
           <tr>
@@ -1012,7 +1012,7 @@
       </subsection>
       
       <subsection name="Version_Tool">
-	<p>A versioning tool for Ant.</p>
+        <p>A versioning tool for Ant.</p>
         <table>
           <tr>
             <th>Compatibility:</th>
@@ -1030,7 +1030,7 @@
             <th>License:</th>
             <td>BSD license</td>
           </tr>
-	</table>
+        </table>
       </subsection>
 
       <subsection name="WOProject">
