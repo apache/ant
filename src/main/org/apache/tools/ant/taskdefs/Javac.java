@@ -59,11 +59,9 @@ import org.apache.tools.ant.DirectoryScanner;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.types.*;
 import org.apache.tools.ant.util.*;
+import org.apache.tools.ant.taskdefs.compilers.*;
 
-import java.lang.reflect.Method;
-import java.lang.reflect.Constructor;
-import java.io.*;
-import java.util.*;
+import java.io.File;
 
 /**
  * Task to compile Java source files. This task can take the following
@@ -81,6 +79,9 @@ import java.util.*;
  * <li>target
  * <li>depend
  * <li>vebose
+ * <li>failonerror
+ * <li>includeantruntime
+ * <li>includejavaruntime
  * </ul>
  * Of these arguments, the <b>sourcedir</b> and <b>destdir</b> are required.
  * <p>
@@ -91,16 +92,13 @@ import java.util.*;
  * @author James Davidson <a href="mailto:duncan@x180.com">duncan@x180.com</a>
  * @author Robin Green <a href="mailto:greenrd@hotmail.com">greenrd@hotmail.com</a>
  * @author <a href="mailto:stefan.bodewig@epost.de">Stefan Bodewig</a> 
+ * @author <a href="mailto:jayglanville@home.com">J D Glanville</a>
  */
 
 public class Javac extends MatchingTask {
 
-    /**
-     * Integer returned by the "Modern" jdk1.3 compiler to indicate success.
-     */
-    private static final int
-        MODERN_COMPILER_SUCCESS = 0;
-    private static final String FAIL_MSG = "Compile failed, messages should have been provided.";
+    private static final String FAIL_MSG 
+        = "Compile failed, messages should have been provided.";
 
     private Path src;
     private File destDir;
@@ -114,7 +112,8 @@ public class Javac extends MatchingTask {
     private String target;
     private Path bootclasspath;
     private Path extdirs;
-    private static String lSep = System.getProperty("line.separator");
+    private boolean includeAntRuntime = true;
+    private boolean includeJavaRuntime = false;
 
     protected boolean failOnError = true;
     protected File[] compileList = new File[0];
@@ -143,12 +142,25 @@ public class Javac extends MatchingTask {
         }
     }
 
+    /** Gets the source dirs to find the source java files. */
+    public Path getSrcdir() {
+        return src;
+    }
+
     /**
      * Set the destination directory into which the Java source
      * files should be compiled.
      */
     public void setDestdir(File destDir) {
         this.destDir = destDir;
+    }
+
+    /** 
+     * Gets the destination directory into which the java source files
+     * should be compiled.
+     */
+    public File getDestdir() {
+        return destDir;
     }
 
     /**
@@ -160,6 +172,11 @@ public class Javac extends MatchingTask {
         } else {
             compileClasspath.append(classpath);
         }
+    }
+
+    /** Gets the classpath to be used for this compilation. */
+    public Path getClasspath() {
+        return compileClasspath;
     }
 
     /**
@@ -192,6 +209,14 @@ public class Javac extends MatchingTask {
     }
 
     /**
+     * Gets the bootclasspath that will be used to compile the classes
+     * against.
+     */
+    public Path getBootclasspath() {
+        return bootclasspath;
+    }
+
+    /**
      * Maybe creates a nested classpath element.
      */
     public Path createBootclasspath() {
@@ -221,6 +246,14 @@ public class Javac extends MatchingTask {
     }
 
     /**
+     * Gets the extension directories that will be used during the
+     * compilation.
+     */
+    public Path getExtdirs() {
+        return extdirs;
+    }
+
+    /**
      * Maybe creates a nested classpath element.
      */
     public Path createExtdirs() {
@@ -245,10 +278,22 @@ public class Javac extends MatchingTask {
     }
 
     /**
+     * Gets the failonerror flag.
+     */
+    public boolean getFailonerror() {
+        return failOnError;
+    }
+
+    /**
      * Set the deprecation flag.
      */
     public void setDeprecation(boolean deprecation) {
         this.deprecation = deprecation;
+    }
+
+    /** Gets the deprecation flag. */
+    public boolean getDeprecation() {
+        return deprecation;
     }
 
     /**
@@ -258,6 +303,11 @@ public class Javac extends MatchingTask {
         this.encoding = encoding;
     }
 
+    /** Gets the java source file encoding name. */
+    public String getEncoding() {
+        return encoding;
+    }
+
     /**
      * Set the debug flag.
      */
@@ -265,26 +315,46 @@ public class Javac extends MatchingTask {
         this.debug = debug;
     }
 
+    /** Gets the debug flag. */
+    public boolean getDebug() {
+        return debug;
+    }
+
     /**
      * Set the optimize flag.
      */
-     public void setOptimize(boolean optimize) {
-         this.optimize = optimize;
-     }
+    public void setOptimize(boolean optimize) {
+        this.optimize = optimize;
+    }
+
+    /** Gets the optimize flag. */
+    public boolean getOptimize() {
+        return optimize;
+    }
 
     /** 
      * Set the depend flag.
      */ 
-     public void setDepend(boolean depend) {
-         this.depend = depend;
-     }  
+    public void setDepend(boolean depend) {
+        this.depend = depend;
+    }  
+
+    /** Gets the depend flag. */
+    public boolean getDepend() {
+        return depend;
+    }
 
     /** 
      * Set the verbose flag.
      */ 
-     public void setVerbose(boolean verbose) {
-         this.verbose = verbose;
-     }  
+    public void setVerbose(boolean verbose) {
+        this.verbose = verbose;
+    }
+
+    /** Gets the verbose flag. */
+    public boolean getVerbose() {
+        return verbose;
+    }
 
     /**
      * Sets the target VM that the classes will be compiled for. Valid
@@ -292,6 +362,42 @@ public class Javac extends MatchingTask {
      */
     public void setTarget(String target) {
         this.target = target;
+    }
+
+    /** Gets the target VM that the classes will be compiled for. */
+    public String getTarget() {
+        return target;
+    }
+
+    /**
+     * Include ant's own classpath in this task's classpath?
+     */
+    public void setIncludeantruntime( boolean include ) {
+        includeAntRuntime = include;
+    }
+
+    /**
+     * Gets whether or not the ant classpath is to be included in the
+     * task's classpath.
+     */
+    public boolean getIncludeantruntime() {
+        return includeAntRuntime;
+    }
+
+    /**
+     * Sets whether or not to include the java runtime libraries to this
+     * task's classpath.
+     */
+    public void setIncludejavaruntime( boolean include ) {
+        includeJavaRuntime = include;
+    }
+
+    /**
+     * Gets whether or not the java runtime should be included in this
+     * task's classpath.
+     */
+    public boolean getIncludejavaruntime() {
+        return includeJavaRuntime;
     }
 
     /**
@@ -312,7 +418,7 @@ public class Javac extends MatchingTask {
             throw new BuildException("destination directory \"" + destDir + "\" does not exist or is not a directory", location);
         }
 
-        // scan source directories and dest directory to build up both copy lists and
+        // scan source directories and dest directory to build up 
         // compile lists
         resetFileLists();
         for (int i=0; i<list.length; i++) {
@@ -340,27 +446,19 @@ public class Javac extends MatchingTask {
         }
 
         if (compileList.length > 0) {
+
+            CompilerAdapter adapter = CompilerAdapterFactory.getCompiler(
+              compiler, this );
             log("Compiling " + compileList.length + 
                 " source file"
                 + (compileList.length == 1 ? "" : "s")
                 + (destDir != null ? " to " + destDir : ""));
 
-            boolean compileSucceeded = false;
-
-            if (compiler.equalsIgnoreCase("classic")) {
-                compileSucceeded = doClassicCompile();
-            } else if (compiler.equalsIgnoreCase("modern")) {
-                compileSucceeded = doModernCompile();
-            } else if (compiler.equalsIgnoreCase("jikes")) {
-                compileSucceeded = doJikesCompile();
-            } else if (compiler.equalsIgnoreCase("jvc")) {
-                compileSucceeded = doJvcCompile();
-            } else {
-                String msg = "Don't know how to use compiler " + compiler;
-                throw new BuildException(msg, location);
-            }
+            // now we need to populate the compiler adapter
+            adapter.setJavac( this );
             
-            if (!compileSucceeded) {
+            // finally, lets execute the compiler!!
+            if (!adapter.execute()) {
                 if (failOnError) {
                     throw new BuildException(FAIL_MSG, location);
                 }
@@ -382,7 +480,6 @@ public class Javac extends MatchingTask {
      * Scans the directory looking for source files to be compiled.  
      * The results are returned in the class variable compileList
      */
-
     protected void scanDir(File srcDir, File destDir, String files[]) {
         GlobPatternMapper m = new GlobPatternMapper();
         m.setFrom("*.java");
@@ -391,527 +488,19 @@ public class Javac extends MatchingTask {
         File[] newFiles = sfs.restrictAsFiles(files, srcDir, destDir, m);
         
         if (newFiles.length > 0) {
-            File[] newCompileList = new File[compileList.length + newFiles.length];
-            System.arraycopy(compileList, 0, newCompileList, 0, compileList.length);
-            System.arraycopy(newFiles, 0, newCompileList, compileList.length, newFiles.length);
+            File[] newCompileList = new File[compileList.length +
+                newFiles.length];
+            System.arraycopy(compileList, 0, newCompileList, 0,
+                    compileList.length);
+            System.arraycopy(newFiles, 0, newCompileList,
+                    compileList.length, newFiles.length);
             compileList = newCompileList;
         }
     }
 
-    /**
-     * Builds the compilation classpath.
-     *
-     * @param addRuntime Shall <code>rt.jar</code> or
-     * <code>classes.zip</code> be added to the classpath.  
-     */
-    protected Path getCompileClasspath(boolean addRuntime) {
-        Path classpath = new Path(project);
-
-        // add dest dir to classpath so that previously compiled and
-        // untouched classes are on classpath
-
-        if (destDir != null) {
-            classpath.setLocation(destDir);
-        }
-
-        // Combine the build classpath with the system classpath, in an 
-        // order determined by the value of build.classpath
-
-        if (compileClasspath == null) {
-            classpath.addExisting(Path.systemClasspath);
-        } else {
-            classpath.addExisting(compileClasspath.concatSystemClasspath());
-        }
-
-        // optionally add the runtime classes
-
-        if (addRuntime) {
-            if (System.getProperty("java.vendor").toLowerCase().indexOf("microsoft") >= 0) {
-                // Pull in *.zip from packages directory
-                FileSet msZipFiles = new FileSet();
-                msZipFiles.setDir(new File(System.getProperty("java.home") + File.separator + "Packages"));
-                msZipFiles.setIncludes("*.ZIP");
-                classpath.addFileset(msZipFiles);
-            }
-            else if (Project.getJavaVersion() == Project.JAVA_1_1) {
-                classpath.addExisting(new Path(null,
-                                                System.getProperty("java.home")
-                                                + File.separator + "lib"
-                                                + File.separator 
-                                                + "classes.zip"));
-            } else {
-                // JDK > 1.1 seems to set java.home to the JRE directory.
-                classpath.addExisting(new Path(null,
-                                                System.getProperty("java.home")
-                                                + File.separator + "lib"
-                                                + File.separator + "rt.jar"));
-                // Just keep the old version as well and let addExistingToPath
-                // sort it out.
-                classpath.addExisting(new Path(null,
-                                                System.getProperty("java.home")
-                                                + File.separator +"jre"
-                                                + File.separator + "lib"
-                                                + File.separator + "rt.jar"));
-            }
-        }
-            
-        return classpath;
+    /** Gets the list of files to be compiled. */
+    public File[] getFileList() {
+        return compileList;
     }
 
-    /**
-     * Peforms a compile using the classic compiler that shipped with
-     * JDK 1.1 and 1.2.
-     *
-     * @return true if the compile succeeded
-     */
-    private boolean doClassicCompile() throws BuildException {
-        log("Using classic compiler", Project.MSG_VERBOSE);
-        Commandline cmd = setupJavacCommand();
-
-        // Use reflection to be able to build on all JDKs
-        /*
-        // provide the compiler a different message sink - namely our own
-        sun.tools.javac.Main compiler =
-                new sun.tools.javac.Main(new LogOutputStream(this, Project.MSG_WARN), "javac");
-
-        if (!compiler.compile(cmd.getArguments())) {
-            throw new BuildException("Compile failed");
-        }
-        */
-        try {
-            // Create an instance of the compiler, redirecting output to
-            // the project log
-            OutputStream logstr = new LogOutputStream(this, Project.MSG_WARN);
-            Class c = Class.forName("sun.tools.javac.Main");
-            Constructor cons = c.getConstructor(new Class[] { OutputStream.class, String.class });
-            Object compiler = cons.newInstance(new Object[] { logstr, "javac" });
-
-            // Call the compile() method
-            Method compile = c.getMethod("compile", new Class [] { String[].class });
-            Boolean ok = (Boolean)compile.invoke(compiler, new Object[] {cmd.getArguments()});
-            return ok.booleanValue();
-        }
-        catch (ClassNotFoundException ex) {
-            throw new BuildException("Cannot use classic compiler, as it is not available"+
-            						 " A common solution is to set the environment variable"+
-                                     " JAVA_HOME to your jdk directory.", location);
-        }
-        catch (Exception ex) {
-            if (ex instanceof BuildException) {
-                throw (BuildException) ex;
-            } else {
-                throw new BuildException("Error starting classic compiler: ", ex, location);
-            }
-        }
-    }
-
-    /**
-     * Performs a compile using the newer compiler that ships with JDK 1.3
-     *
-     * @return true if the compile succeeded
-     */
-    private boolean doModernCompile() throws BuildException {
-        try {
-            Class.forName("com.sun.tools.javac.Main");
-        } catch (ClassNotFoundException cnfe) {
-            log("Modern compiler is not available - using classic compiler", Project.MSG_WARN);
-            return doClassicCompile();
-        }
-
-        log("Using modern compiler", Project.MSG_VERBOSE);
-        Commandline cmd = setupJavacCommand();
-
-        PrintStream err = System.err;
-        PrintStream out = System.out;
-
-        // Use reflection to be able to build on all JDKs >= 1.1:
-        try {
-            PrintStream logstr = 
-                new PrintStream(new LogOutputStream(this, Project.MSG_WARN));
-            System.setOut(logstr);
-            System.setErr(logstr);
-            Class c = Class.forName ("com.sun.tools.javac.Main");
-            Object compiler = c.newInstance ();
-            Method compile = c.getMethod ("compile",
-                new Class [] {(new String [] {}).getClass ()});
-            int result = ((Integer) compile.invoke
-                          (compiler, new Object[] {cmd.getArguments()})) .intValue ();
-            return (result == MODERN_COMPILER_SUCCESS);
-        } catch (Exception ex) {
-            if (ex instanceof BuildException) {
-                throw (BuildException) ex;
-            } else {
-                throw new BuildException("Error starting modern compiler", ex, location);
-            }
-        } finally {
-            System.setErr(err);
-            System.setOut(out);
-        }
-    }
-
-    /**
-     * Does the command line argument processing common to classic and
-     * modern.  
-     */
-    private Commandline setupJavacCommand() {
-        Commandline cmd = new Commandline();
-        Path classpath = getCompileClasspath(false);
-
-        if (deprecation == true) {
-            cmd.createArgument().setValue("-deprecation");
-        }
-
-        if (destDir != null) {
-            cmd.createArgument().setValue("-d");
-            cmd.createArgument().setFile(destDir);
-        }
-        
-        cmd.createArgument().setValue("-classpath");
-        // Just add "sourcepath" to classpath ( for JDK1.1 )
-        if (Project.getJavaVersion().startsWith("1.1")) {
-            cmd.createArgument().setValue(classpath.toString() 
-                                          + File.pathSeparator 
-                                          + src.toString());
-        } else {
-            cmd.createArgument().setPath(classpath);
-            cmd.createArgument().setValue("-sourcepath");
-            cmd.createArgument().setPath(src);
-            if (target != null) {
-                cmd.createArgument().setValue("-target");
-                cmd.createArgument().setValue(target);
-            }
-        }
-        if (encoding != null) {
-            cmd.createArgument().setValue("-encoding");
-            cmd.createArgument().setValue(encoding);
-        }
-        if (debug) {
-            cmd.createArgument().setValue("-g");
-        }
-        if (optimize) {
-            cmd.createArgument().setValue("-O");
-        }
-        if (bootclasspath != null) {
-            cmd.createArgument().setValue("-bootclasspath");
-            cmd.createArgument().setPath(bootclasspath);
-        }
-        if (extdirs != null) {
-            cmd.createArgument().setValue("-extdirs");
-            cmd.createArgument().setPath(extdirs);
-        }
-
-        if (depend) {
-            if (Project.getJavaVersion().startsWith("1.1")) {
-                cmd.createArgument().setValue("-depend");
-            } else if (Project.getJavaVersion().startsWith("1.2")) {
-                cmd.createArgument().setValue("-Xdepend");
-            } else {
-                log("depend attribute is not supported by the modern compiler",
-                    Project.MSG_WARN);
-            }
-        }
-
-        if (verbose) {
-            cmd.createArgument().setValue("-verbose");
-        }
-
-        logAndAddFilesToCompile(cmd);
-        return cmd;
-    }
-
-    /**
-     * Logs the compilation parameters, adds the files to compile and logs the 
-     * &qout;niceSourceList&quot;
-     */
-    protected void logAndAddFilesToCompile(Commandline cmd) {
-        log("Compilation args: " + cmd.toString(),
-            Project.MSG_VERBOSE);
-
-        StringBuffer niceSourceList = new StringBuffer("File");
-        if (compileList.length != 1) {
-            niceSourceList.append("s");
-        }
-        niceSourceList.append(" to be compiled:");
-
-        niceSourceList.append(lSep);
-
-        for (int i=0; i < compileList.length; i++) {
-            String arg = compileList[i].getAbsolutePath();
-            cmd.createArgument().setValue(arg);
-            niceSourceList.append("    " + arg + lSep);
-        }
-
-        log(niceSourceList.toString(), Project.MSG_VERBOSE);
-    }
-
-    /**
-     * Performs a compile using the Jikes compiler from IBM..
-     * Mostly of this code is identical to doClassicCompile()
-     * However, it does not support all options like
-     * bootclasspath, extdirs, deprecation and so on, because
-     * there is no option in jikes and I don't understand
-     * what they should do.
-     *
-     * It has been successfully tested with jikes >1.10
-     *
-     * @author skanthak@muehlheim.de
-     *
-     * @return true if the compile succeeded
-     */
-    private boolean doJikesCompile() throws BuildException {
-        log("Using jikes compiler", Project.MSG_VERBOSE);
-
-        Path classpath = new Path(project);
-
-        // Jikes doesn't support bootclasspath dir (-bootclasspath)
-        // so we'll emulate it for compatibility and convenience.
-        if (bootclasspath != null) {
-            classpath.append(bootclasspath);
-        }
-
-        // Jikes doesn't support an extension dir (-extdir)
-        // so we'll emulate it for compatibility and convenience.
-        addExtdirsToClasspath(classpath);
-
-        classpath.append(getCompileClasspath(true));
-
-        // Jikes has no option for source-path so we
-        // will add it to classpath.
-        classpath.append(src);
-
-        // if the user has set JIKESPATH we should add the contents as well
-        String jikesPath = System.getProperty("jikes.class.path");
-        if (jikesPath != null) {
-            classpath.append(new Path(project, jikesPath));
-        }
-        
-        Commandline cmd = new Commandline();
-        cmd.setExecutable("jikes");
-
-        if (deprecation == true)
-            cmd.createArgument().setValue("-deprecation");
-
-        if (destDir != null) {
-            cmd.createArgument().setValue("-d");
-            cmd.createArgument().setFile(destDir);
-        }
-        
-        cmd.createArgument().setValue("-classpath");
-        cmd.createArgument().setPath(classpath);
-
-        if (encoding != null) {
-            cmd.createArgument().setValue("-encoding");
-            cmd.createArgument().setValue(encoding);
-        }
-        if (debug) {
-            cmd.createArgument().setValue("-g");
-        }
-        if (optimize) {
-            cmd.createArgument().setValue("-O");
-        }
-        if (verbose) {
-            cmd.createArgument().setValue("-verbose");
-        }
-        if (depend) {
-            cmd.createArgument().setValue("-depend");
-        } 
-        /**
-         * XXX
-         * Perhaps we shouldn't use properties for these
-         * three options (emacs mode, warnings and pedantic),
-         * but include it in the javac directive?
-         */
-
-        /**
-         * Jikes has the nice feature to print error
-         * messages in a form readable by emacs, so
-         * that emacs can directly set the cursor
-         * to the place, where the error occured.
-         */
-        String emacsProperty = project.getProperty("build.compiler.emacs");
-        if (emacsProperty != null && Project.toBoolean(emacsProperty)) {
-            cmd.createArgument().setValue("+E");
-        }
-
-        /**
-         * Jikes issues more warnings that javac, for
-         * example, when you have files in your classpath
-         * that don't exist. As this is often the case, these
-         * warning can be pretty annoying.
-         */
-        String warningsProperty = project.getProperty("build.compiler.warnings");
-        if (warningsProperty != null && !Project.toBoolean(warningsProperty)) {
-            cmd.createArgument().setValue("-nowarn");
-        }
-
-        /**
-         * Jikes can issue pedantic warnings. 
-         */
-        String pedanticProperty = project.getProperty("build.compiler.pedantic");
-        if (pedanticProperty != null && Project.toBoolean(pedanticProperty)) {
-            cmd.createArgument().setValue("+P");
-        }
- 
-        /**
-         * Jikes supports something it calls "full dependency
-         * checking", see the jikes documentation for differences
-         * between -depend and +F.
-         */
-        String fullDependProperty = project.getProperty("build.compiler.fulldepend");
-        if (fullDependProperty != null && Project.toBoolean(fullDependProperty)) {
-            cmd.createArgument().setValue("+F");
-        }
-
-        int firstFileName = cmd.size();
-        logAndAddFilesToCompile(cmd);
-
-        return executeExternalCompile(cmd.getCommandline(), firstFileName) == 0;
-    }
-
-    /**
-     * Do the compile with the specified arguments.
-     * @param args - arguments to pass to process on command line
-     * @param firstFileName - index of the first source file in args
-     */
-    protected int executeExternalCompile(String[] args, int firstFileName) {
-        String[] commandArray = null;
-        File tmpFile = null;
-
-        try {
-            /*
-             * Many system have been reported to get into trouble with 
-             * long command lines - no, not only Windows ;-).
-             *
-             * POSIX seems to define a lower limit of 4k, so use a temporary 
-             * file if the total length of the command line exceeds this limit.
-             */
-            if (Commandline.toString(args).length() > 4096) {
-                PrintWriter out = null;
-                try {
-                    tmpFile = new File("jikes"+(new Random(System.currentTimeMillis())).nextLong());
-                    out = new PrintWriter(new FileWriter(tmpFile));
-                    for (int i = firstFileName; i < args.length; i++) {
-                        out.println(args[i]);
-                    }
-                    out.flush();
-                    commandArray = new String[firstFileName+1];
-                    System.arraycopy(args, 0, commandArray, 0, firstFileName);
-                    commandArray[firstFileName] = "@" + tmpFile.getAbsolutePath();
-                } catch (IOException e) {
-                    throw new BuildException("Error creating temporary file", e, location);
-                } finally {
-                    if (out != null) {
-                        try {out.close();} catch (Throwable t) {}
-                    }
-                }
-            } else {
-                commandArray = args;
-            }
-            
-            try {
-                Execute exe = new Execute(new LogStreamHandler(this, 
-                                                               Project.MSG_INFO,
-                                                               Project.MSG_WARN));
-                exe.setAntRun(project);
-                exe.setWorkingDirectory(project.getBaseDir());
-                exe.setCommandline(commandArray);
-                exe.execute();
-                return exe.getExitValue();
-            } catch (IOException e) {
-                throw new BuildException("Error running Jikes compiler", e, location);
-            }
-        } finally {
-            if (tmpFile != null) {
-                tmpFile.delete();
-            }
-        }
-    }
-
-    /**
-     * Emulation of extdirs feature in java >= 1.2.
-     * This method adds all files in the given
-     * directories (but not in sub-directories!) to the classpath,
-     * so that you don't have to specify them all one by one.
-     * @param classpath - Path to append files to
-     */
-    protected void addExtdirsToClasspath(Path classpath) {
-        if (extdirs == null) {
-            String extProp = System.getProperty("java.ext.dirs");
-            if (extProp != null) {
-                extdirs = new Path(project, extProp);
-            } else {
-                return;
-            }
-        }
-
-        String[] dirs = extdirs.list();
-        for (int i=0; i<dirs.length; i++) {
-            if (!dirs[i].endsWith(File.separator)) {
-                dirs[i] += File.separator;
-            }
-            File dir = project.resolveFile(dirs[i]);
-            FileSet fs = new FileSet();
-            fs.setDir(dir);
-            fs.setIncludes("*");
-            classpath.addFileset(fs);
-        }
-    }
-
-    /*
-     *
-     * @return true if the compile succeeded
-     */
-    private boolean doJvcCompile() throws BuildException {
-        log("Using jvc compiler", Project.MSG_VERBOSE);
-
-        Path classpath = new Path(project);
-
-        // jvc doesn't support bootclasspath dir (-bootclasspath)
-        // so we'll emulate it for compatibility and convenience.
-        if (bootclasspath != null) {
-            classpath.append(bootclasspath);
-        }
-
-        // jvc doesn't support an extension dir (-extdir)
-        // so we'll emulate it for compatibility and convenience.
-        addExtdirsToClasspath(classpath);
-
-        classpath.append(getCompileClasspath(true));
-
-        // jvc has no option for source-path so we
-        // will add it to classpath.
-        classpath.append(src);
-
-        Commandline cmd = new Commandline();
-        cmd.setExecutable("jvc");
-
-        if (destDir != null) {
-            cmd.createArgument().setValue("/d");
-            cmd.createArgument().setFile(destDir);
-        }
-        
-        // Add the Classpath before the "internal" one.
-        cmd.createArgument().setValue("/cp:p");
-        cmd.createArgument().setPath(classpath);
-
-        // Enable MS-Extensions and ...
-        cmd.createArgument().setValue("/x-");
-        // ... do not display a Message about this.
-        cmd.createArgument().setValue("/nomessage");
-        // Do not display Logo
-        cmd.createArgument().setValue("/nologo");
-
-        if (debug) {
-            cmd.createArgument().setValue("/g");
-        }
-        if (optimize) {
-            cmd.createArgument().setValue("/O");
-        }
-
-        int firstFileName = cmd.size();
-        logAndAddFilesToCompile(cmd);
-
-        return executeExternalCompile(cmd.getCommandline(), firstFileName) == 0;
-    }
 }
-

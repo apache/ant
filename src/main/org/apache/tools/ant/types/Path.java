@@ -467,15 +467,25 @@ public class Path extends DataType implements Cloneable {
     }
 
     /**
-     * Concatenates the system class path in the order specified
-     * by the ${build.sysclasspath} property.
+     * Concatenates the system class path in the order specified by
+     * the ${build.sysclasspath} property - using &quot;last&quot; as
+     * default value.
      */
     public Path concatSystemClasspath() {
+        return concatSystemClasspath("last");
+    }
+
+    /**
+     * Concatenates the system class path in the order specified by
+     * the ${build.sysclasspath} property - using the supplied value
+     * if ${build.sysclasspath} has not been set.
+     */
+    public Path concatSystemClasspath(String defValue) {
 
         Path result = new Path(project);
 
         String order = project.getProperty("build.sysclasspath");
-        if (order == null) order="last";
+        if (order == null) order=defValue;
 
         if (order.equals("only")) {
             // only: the developer knows what (s)he is doing

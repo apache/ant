@@ -3170,7 +3170,12 @@ inclusion/exclusion of files works, and how to write patterns.</p>
   <li>jvc (the Command-Line Compiler from Microsoft's SDK for Java /
     Visual J++)</li>
 </ul>
-<p>For JDK 1.1/1.2 is classic the default. For JDK 1.3 is modern the default.</p>
+<p>For JDK 1.1/1.2 is classic the default. For JDK 1.3 is modern the default.
+If you whish to use a different compiler interface then one of the four
+supplied, then write a class that implements the CompilerAdapter interface
+(package org.apache.tools.ant.taskdefs.compilers). Supply the full
+classname in the &quot;build.compiler&quot; property.
+</p>
 <h3>Parameters</h3>
 <table border="1" cellpadding="2" cellspacing="0">
   <tr>
@@ -3282,6 +3287,18 @@ inclusion/exclusion of files works, and how to write patterns.</p>
   <tr>
     <td valign="top">depend</td> <td valign="top">enables dependency
       tracking for compilers that support this (jikes and classic)</td>
+    <td align="center" valign="top">No</td>
+  </tr>
+  <tr>
+    <td valign="top">includeAntRuntime</td> 
+    <td valign="top">whether or not to include the ant runtime libraries.
+      Default is no.</td>
+    <td align="center" valign="top">No</td>
+  </tr>
+  <tr>
+    <td valign="top">includeJavaRuntim</td> 
+    <td valign="top">whether or not to include the default runtime
+      libraries from the executing virtual machine. Default is no.</td>
     <td align="center" valign="top">No</td>
   </tr>
   <tr>

@@ -355,7 +355,7 @@ public class Execute {
         exitValue = value;
     }
 
-    protected int getExitValue() {
+    public int getExitValue() {
         return exitValue;
     }
 

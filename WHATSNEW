@@ -9,6 +9,10 @@ Changes that could break older environments:
 
 * <perforce> has been replaced by a number of new tasks.
 
+* <javac> is now implemented using a factory. This makes extending
+  javac to use a new compiler a lot easier but may break custom
+  versions of this task that rely on the old implementation.
+
 Other changes:
 --------------
 
