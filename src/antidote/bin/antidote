@@ -43,29 +43,6 @@ if [ "$CLASSPATH" != "" ] ; then
   LOCALCLASSPATH=$CLASSPATH:$LOCALCLASSPATH
 fi
 
-if [ "$JAVA_HOME" != "" ] ; then
-  if test -f $JAVA_HOME/lib/tools.jar ; then
-    LOCALCLASSPATH=$LOCALCLASSPATH:$JAVA_HOME/lib/tools.jar
-  fi
 
-  if test -f $JAVA_HOME/lib/classes.zip ; then
-    LOCALCLASSPATH=$LOCALCLASSPATH:$JAVA_HOME/lib/classes.zip
-  fi
-else
-  echo "Warning: JAVA_HOME environment variable is not set."
-  echo "  If build fails because sun.* classes could not be found"
-  echo "  you will need to set the JAVA_HOME environment variable"
-  echo "  to the installation directory of java."
-fi
-
-# supply JIKESPATH to Ant as jikes.class.path
-if [ "$JIKESPATH" != "" ] ; then
-  if [ "$ANT_OPTS" != "" ] ; then
-    ANT_OPTS="$ANT_OPTS -Djikes.class.path=$JIKESPATH"
-  else
-    ANT_OPTS=-Djikes.class.path=$JIKESPATH
-  fi
-fi
-
-$JAVACMD -classpath $LOCALCLASSPATH -Dant.home=${ANT_HOME} $ANT_OPTS org.apache.tools.ant.gui.Main $@
+$JAVACMD -classpath $LOCALCLASSPATH -Dant.home=${ANT_HOME} org.apache.tools.ant.gui.Main $@
 
