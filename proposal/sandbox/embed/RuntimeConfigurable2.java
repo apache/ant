@@ -58,6 +58,7 @@ import org.apache.tools.ant.helper.*;
 import java.util.Enumeration;
 import java.util.Locale;
 import java.util.Vector;
+import java.util.Hashtable;
 import org.xml.sax.AttributeList;
 import org.xml.sax.Attributes;
 import org.xml.sax.helpers.AttributeListImpl;
@@ -98,6 +99,8 @@ public class RuntimeConfigurable2 extends RuntimeConfigurable {
         super( proxy, elementTag );
         wrappedObject = proxy;
         this.elementTag = elementTag;
+        if( proxy instanceof Task )
+            ((Task)proxy).setRuntimeConfigurableWrapper( this );
     }
 
     /**
@@ -280,7 +283,6 @@ public class RuntimeConfigurable2 extends RuntimeConfigurable {
             try {
                 ih.setAttribute(project, target, 
                                 attrs.getQName(i).toLowerCase(Locale.US), value);
-                
             } catch (BuildException be) {
                 // id attribute must be set externally
                 if (!attrs.getQName(i).equals("id")) {
@@ -329,7 +331,19 @@ public class RuntimeConfigurable2 extends RuntimeConfigurable {
         return sb.toString();
 
     }
+
+    static Hashtable propertySources=new Hashtable();
+
+    public static interface ProjectPropertySource {
+
+	public String getProperty( Project project, String key );
+	
+    }
     
+    public static void addPropertySource( String ns, ProjectPropertySource src ) {
+        propertySources.put( ns, src );
+    }
+
     
     /** Use the reference table to generate values for ${} substitution.
      *  To preserve backward compat ( as much as possible ) we'll only process
@@ -343,20 +357,6 @@ public class RuntimeConfigurable2 extends RuntimeConfigurable {
      *    bean:idName.propertyName - we get the idName and call the getter for the property. 
      */
     static String processReference( Project project, String name ) {
-        if( name.startsWith("dom:") ) {
-            name=name.substring( 4 );
-            int idx=name.indexOf(":");
-            if( idx<0 ) return null;
-
-            String objName=name.substring( 0, idx );
-            String path=name.substring( idx );
-            System.out.println("XXX dom: " + objName + " " + path );
-
-            Object v=project.getReference( objName );
-            if( v==null ) return null;
-
-        }
-
         if( name.startsWith( "toString:" )) {
             name=name.substring( "toString:".length());
             Object v=project.getReference( name );
@@ -364,26 +364,16 @@ public class RuntimeConfigurable2 extends RuntimeConfigurable {
             return v.toString();
         }
 
-        if( name.startsWith( "bean:" )) {
-            name=name.substring( "toString:".length());
-            int idx=name.indexOf(":");
-            if( idx<0 ) return null;
+        int idx=name.indexOf(":");
+        if( idx<0 ) return null;
 
-            String objName=name.substring( 0, idx );
-            String path=name.substring( idx );
-            System.out.println("XXX bean: " + objName + " " + path );
+        String ns=name.substring( 0, idx );
+        String path=name.substring( idx );
 
-            Object v=project.getReference( objName );
-            if( v==null ) return null;
+        ProjectPropertySource ps=(ProjectPropertySource)propertySources.get( ns );
+        if( ps == null )
+            return null;
 
-            return v.toString();
-        }
-
-
-        
-        // If everything else fails, use toString()
-        return null;
+        return ps.getProperty( project, path );
     }
-
-
 }
