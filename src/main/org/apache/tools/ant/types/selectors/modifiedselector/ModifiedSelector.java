@@ -927,5 +927,5 @@ public class ModifiedSelector extends BaseExtendSelector implements BuildListene
             return new String[] {"equal", "rule" };
         }
     }
-
-} //class-ModifiedSelector
+//class-ModifiedSelector
+}
