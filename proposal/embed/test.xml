@@ -1,0 +1,27 @@
+<project name="embed-test" default="main" basedir=".">
+  <property name="ant.src" location="../.." />
+  <property name="junit.jar" location="${ant.src}/lib/junit.jar" />
+  
+  <import file="build.xml" />
+
+
+  <target name="main" >
+    <antcall target="embed.main" />
+
+    <path id="myJars" >
+      <pathelement path="${junit.jar}" />
+      <pathelement path="${jxpath.jar}" />
+    </path>
+
+    <systemPath pathRef="myJars"/>
+
+    <junit id="replacedJunit" />
+  
+    <echo message="toString sample: ${toString:replacedJunit}" />
+    <echo message="${jxpath.jar}" />
+
+    <jxpath/>
+    <echo message="jxPath sample: ${jxpath:/}" />
+  </target>
+
+</project>

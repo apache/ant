@@ -1,0 +1,33 @@
+<project name="embed" default="main" basedir=".">
+  <property name="ant.src" location="../.." />
+  <property name="commons.src" location="${ant.src}/../jakarta-commons" />
+
+  <property name="embed.build" location="build" />
+  <property name="debug" value="true"/>
+  
+  <property name="jxpath.jar" location="${commons.src}/jxpath/dist/commons-jxpath.jar" />
+    
+  <target name="main">
+    <mkdir dir="build/classes" />
+  
+    <javac srcdir="src/java"  
+           debug="${debug}"
+           destdir="${embed.build}/classes" >
+      <include name="**" />
+      <classpath>
+        <pathelement location="${jxpath.jar}" />
+      </classpath>
+    </javac>
+
+    <copy toDir="${embed.build}/classes">
+      <fileset dir="src/java" includes="META-INF/**" />
+    </copy>
+
+    <jar file="${embed.build}/ant-sax2.jar" basedir="${embed.build}/classes" >
+      <include name="**" />
+    </jar>
+        
+    <copy file="${embed.build}/ant-sax2.jar" toDir="${ant.home}/lib"/>
+  </target>
+
+</project>
