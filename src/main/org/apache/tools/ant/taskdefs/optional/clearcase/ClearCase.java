@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2000-2003 The Apache Software Foundation.  All rights
+ * Copyright (c) 2000-2004 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -54,9 +54,11 @@
 
 package org.apache.tools.ant.taskdefs.optional.clearcase;
 
+import java.io.File;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.Task;
+import org.apache.tools.ant.taskdefs.ExecTask;
 import org.apache.tools.ant.taskdefs.Execute;
 import org.apache.tools.ant.taskdefs.LogStreamHandler;
 import org.apache.tools.ant.types.Commandline;
@@ -79,17 +81,18 @@ import org.apache.tools.ant.types.Commandline;
  * @author Curtis White (Extended by Sean P. Kane)
  */
 public abstract class ClearCase extends Task {
-    private String m_ClearToolDir = "";
-    private String m_viewPath = null;
-    private String m_objSelect = null;
-
+    private String mClearToolDir = "";
+    private String mviewPath = null;
+    private String mobjSelect = null;
+    private static int pcnt = 0;
+    private boolean mFailonerr = true;
     /**
      * Set the directory where the cleartool executable is located.
      *
      * @param dir the directory containing the cleartool executable
      */
     public final void setClearToolDir(String dir) {
-        m_ClearToolDir = getProject().translatePath(dir);
+        mClearToolDir = getProject().translatePath(dir);
     }
 
     /**
@@ -98,7 +101,7 @@ public abstract class ClearCase extends Task {
      * @return String containing path to the executable
      */
     protected final String getClearToolCommand() {
-        String toReturn = m_ClearToolDir;
+        String toReturn = mClearToolDir;
         if (!toReturn.equals("") && !toReturn.endsWith("/")) {
             toReturn += "/";
         }
@@ -114,16 +117,25 @@ public abstract class ClearCase extends Task {
      * @param viewPath Path to the view directory or file
      */
     public final void setViewPath(String viewPath) {
-        m_viewPath = viewPath;
+        mviewPath = viewPath;
     }
 
     /**
      * Get the path to the item in a clearcase view
      *
-     * @return m_viewPath
+     * @return mviewPath
      */
     public String getViewPath() {
-        return m_viewPath;
+        return mviewPath;
+    }
+
+    /**
+     * Get the basename path of the item in a clearcase view
+     *
+     * @return basename
+     */
+    public String getViewPathBasename() {
+        return (new File(mviewPath)).getName();
     }
 
     /**
@@ -132,18 +144,23 @@ public abstract class ClearCase extends Task {
      * @param objSelect object to operate on
      */
     public final void setObjSelect(String objSelect) {
-        m_objSelect = objSelect;
+        mobjSelect = objSelect;
     }
 
     /**
      * Get the object to operate on
      *
-     * @return m_objSelect
+     * @return mobjSelect
      */
     public String getObjSelect() {
-        return m_objSelect;
+        return mobjSelect;
     }
 
+    /**
+     * Execute the given command are return success or failure
+     * @param cmd command line to execute
+     * @return the exit status of the subprocess or <code>INVALID</code>
+     */
     protected int run(Commandline cmd) {
         try {
             Project aProj = getProject();
@@ -159,10 +176,48 @@ public abstract class ClearCase extends Task {
     }
 
     /**
+     * Execute the given command, and return it's output
+     * @param cmdline command line to execute
+     * @return output of the command line
+     */
+    protected String runS(Commandline cmdline) {
+        String   outV  = "opts.cc.runS.output" + pcnt++;
+        Project  aProj = getProject();
+        ExecTask exe   = (ExecTask) aProj.createTask("exec");
+        Commandline.Argument arg = exe.createArg();
+
+        exe.setExecutable(cmdline.getExecutable());
+        arg.setLine(cmdline.toString(cmdline.getArguments()));
+        exe.setOutputproperty(outV);
+        exe.execute();
+        // System.out.println( "runS: " + outV + " : " + aProj.getProperty( outV ));
+
+        return aProj.getProperty(outV);
+    }
+    /**
+     * If true, command will throw an exception on failure.
+     *
+     * @param failonerr the status to set the flag to
+     * @since ant 1.6.1
+     */
+    public void setFailOnErr(boolean failonerr) {
+        mFailonerr = failonerr;
+    }
+
+    /**
+     * Get failonerr flag status
+     *
+     * @return boolean containing status of failonerr flag
+     * @since ant 1.6.1
+     */
+    public boolean getFailOnErr() {
+        return mFailonerr;
+    }
+
+    /**
      * Constant for the thing to execute
      */
     private static final String CLEARTOOL_EXE = "cleartool";
-
     /**
      * The 'Update' command
      */
@@ -203,6 +258,22 @@ public abstract class ClearCase extends Task {
      * The 'Rmtype' command
      */
     public static final String COMMAND_RMTYPE = "rmtype";
+    /**
+     * The 'LsCheckout' command
+     */
+    public static final String COMMAND_LSCO = "lsco";
+    /**
+     * The 'Mkelem' command
+     */
+    public static final String COMMAND_MKELEM = "mkelem";
+    /**
+     * The 'Mkattr' command
+     */
+    public static final String COMMAND_MKATTR = "mkattr";
+    /**
+     * The 'Mkdir' command
+     */
+    public static final String COMMAND_MKDIR = "mkdir";
 
 }
 

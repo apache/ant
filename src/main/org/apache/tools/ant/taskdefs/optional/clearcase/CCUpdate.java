@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2000,2002-2003 The Apache Software Foundation.  All rights
+ * Copyright (c) 2000,2002-2004 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -107,23 +107,29 @@ import org.apache.tools.ant.types.Commandline;
  *          time. Either currenttime or preservetime can be specified.</td>
  *      <td>No</td>
  *   <tr>
+ *   <tr>
+ *      <td>failonerr</td>
+ *      <td>Throw an exception if the command fails. Default is true</td>
+ *      <td>No</td>
+ *   <tr>
  * </table>
  *
  * @author Curtis White
  */
 public class CCUpdate extends ClearCase {
-    private boolean m_Graphical = false;
-    private boolean m_Overwrite = false;
-    private boolean m_Rename = false;
-    private boolean m_Ctime = false;
-    private boolean m_Ptime = false;
-    private String m_Log = null;
+    private boolean mGraphical = false;
+    private boolean mOverwrite = false;
+    private boolean mRename = false;
+    private boolean mCtime = false;
+    private boolean mPtime = false;
+    private String mLog = null;
 
     /**
      * Executes the task.
      * <p>
      * Builds a command line to execute cleartool and then calls Exec's run method
      * to execute the command line.
+     * @throws BuildException if the command fails and failonerr is set to true
      */
     public void execute() throws BuildException {
         Commandline commandLine = new Commandline();
@@ -145,10 +151,14 @@ public class CCUpdate extends ClearCase {
         checkOptions(commandLine);
 
         // For debugging
-        System.out.println(commandLine.toString());
+        getProject().log(commandLine.toString(), Project.MSG_DEBUG);
 
+        if (!getFailOnErr()) {
+            getProject().log("Ignoring any errors that occur for: "
+                    + getViewPathBasename(), Project.MSG_VERBOSE);
+        }
         result = run(commandLine);
-        if (Execute.isFailure(result)) {
+        if (Execute.isFailure(result) && getFailOnErr()) {
             String msg = "Failed executing: " + commandLine.toString();
             throw new BuildException(msg, getLocation());
         }
@@ -200,7 +210,7 @@ public class CCUpdate extends ClearCase {
      * @param graphical the status to set the flag to
      */
     public void setGraphical(boolean graphical) {
-        m_Graphical = graphical;
+        mGraphical = graphical;
     }
 
     /**
@@ -209,7 +219,7 @@ public class CCUpdate extends ClearCase {
      * @return boolean containing status of graphical flag
      */
     public boolean getGraphical() {
-        return m_Graphical;
+        return mGraphical;
     }
 
     /**
@@ -218,7 +228,7 @@ public class CCUpdate extends ClearCase {
      * @param ow the status to set the flag to
      */
     public void setOverwrite(boolean ow) {
-        m_Overwrite = ow;
+        mOverwrite = ow;
     }
 
     /**
@@ -227,7 +237,7 @@ public class CCUpdate extends ClearCase {
      * @return boolean containing status of overwrite flag
      */
     public boolean getOverwrite() {
-        return m_Overwrite;
+        return mOverwrite;
     }
 
     /**
@@ -236,7 +246,7 @@ public class CCUpdate extends ClearCase {
      * @param ren the status to set the flag to
      */
     public void setRename(boolean ren) {
-        m_Rename = ren;
+        mRename = ren;
     }
 
     /**
@@ -245,7 +255,7 @@ public class CCUpdate extends ClearCase {
      * @return boolean containing status of rename flag
      */
     public boolean getRename() {
-        return m_Rename;
+        return mRename;
     }
 
     /**
@@ -255,7 +265,7 @@ public class CCUpdate extends ClearCase {
      * @param ct the status to set the flag to
      */
     public void setCurrentTime(boolean ct) {
-        m_Ctime = ct;
+        mCtime = ct;
     }
 
     /**
@@ -264,7 +274,7 @@ public class CCUpdate extends ClearCase {
      * @return boolean containing status of current time flag
      */
     public boolean getCurrentTime() {
-        return m_Ctime;
+        return mCtime;
     }
 
     /**
@@ -274,7 +284,7 @@ public class CCUpdate extends ClearCase {
      * @param pt the status to set the flag to
      */
     public void setPreserveTime(boolean pt) {
-        m_Ptime = pt;
+        mPtime = pt;
     }
 
     /**
@@ -283,7 +293,7 @@ public class CCUpdate extends ClearCase {
      * @return boolean containing status of preserve time flag
      */
     public boolean getPreserveTime() {
-        return m_Ptime;
+        return mPtime;
     }
 
     /**
@@ -293,7 +303,7 @@ public class CCUpdate extends ClearCase {
      * @param log the path to the log file
      */
     public void setLog(String log) {
-        m_Log = log;
+        mLog = log;
     }
 
     /**
@@ -302,8 +312,9 @@ public class CCUpdate extends ClearCase {
      * @return String containing the path to the log file
      */
     public String getLog() {
-        return m_Log;
+        return mLog;
     }
+
 
     /**
      * Get the 'log' command

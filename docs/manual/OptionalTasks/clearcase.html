@@ -10,8 +10,9 @@
 <h1>Ant ClearCase Tasks</h1>
 <p>by:<br>
 Curtis White (cwhite at aracnet dot com),<br>
-Sean P. Kane (spkane at genomatica dot com), and<br>
-Rob Anderson (Anderson.Rob at vectorscm dot com)</p>
+Sean P. Kane (spkane at genomatica dot com),<br>
+Rob Anderson (Anderson.Rob at vectorscm dot com), and<br>
+Sean Egan    (sean at cm-logic dot com)</p>
 
 <p>Version 1.6 - 02/25/2003</p>
 
@@ -28,7 +29,10 @@ Rob Anderson (Anderson.Rob at vectorscm dot com)</p>
   <li><A href="#ccrmtype">CCRmtype</a>
   <li><A href="#cclock">CCLock</a>
   <li><A href="#ccunlock">CCUnlock</a>
-  <li><A href="#ccmkbl">CCMkbl</a></li>
+  <li><A href="#ccmkbl">CCMkbl</a>
+  <li><A href="#ccmkattr">CCMkattr</a>
+  <li><A href="#ccmkdir">CCMkdir</a>
+ <li><A href="#ccmkelem">CCMkelem</a></li>
 
 </ul>
 
@@ -89,6 +93,11 @@ Task to perform a "cleartool checkin" command to ClearCase.
     <td>identical</td>
     <td>Allows the file to be checked in even if it is identical
         to the original</td>
+    <td>No</td>
+  </tr>
+  <tr>
+    <td>failonerr</td>
+    <td>Throw an exception if the command fails. Default is true</td>
     <td>No</td>
   </tr>
 </table>
@@ -163,7 +172,19 @@ Task to perform a "cleartool checkout" command to ClearCase.
     <td>Specify a file containing a comment. Only one of comment or
         commentfile may be used.</td>
     <td>No</td>
- </tr>
+  </tr>
+  <tr>
+    <td>notco</td>
+    <td>Fail if it's already checked out to the current view. Set to false to ignore it.<br>
+    Since ant 1.6.1</td>
+    <td>No</td>
+  </tr>
+  <tr>
+    <td>failonerr</td>
+    <td>Throw an exception if the command fails. Default is true.<br>
+    Since ant 1.6.1</td>
+    <td>No</td>
+  </tr>
 </table>
 <h3>Examples</h3>
 <blockquote>
@@ -200,6 +221,12 @@ Task to perform a UnCheckout command to ClearCase.
     <td>keepcopy</td>
     <td>Specifies whether to keep a copy of the file with a .keep
         extension or not</td>
+    <td>No</td>
+  </tr>
+  <tr>
+    <td>failonerr</td>
+    <td>Throw an exception if the command fails. Default is true<br>
+    Since ant 1.6.1</td>
     <td>No</td>
   </tr>
 </table>
@@ -261,6 +288,12 @@ Task to perform an "cleartool update" command to ClearCase.
     <td>Specifies that modification time should preserved from the
         VOB time. Either currenttime or preservetime can be
         specified.</td>
+    <td>No</td>
+  </tr>
+  <tr>
+    <td>failonerr</td>
+    <td>Throw an exception if the command fails. Default is true.<br>
+    Since ant 1.6.1</td>
     <td>No</td>
   </tr>
 </table>
@@ -338,6 +371,12 @@ Task to perform a "mklbtype" command to ClearCase.
     <td>Specify a file containing a comment. Only one of comment or cfile may be used.</td>
     <td>No</td>
   <tr></tr>
+  <tr>
+    <td>failonerr</td>
+    <td>Throw an exception if the command fails. Default is true<br>
+    Since ant 1.6.1</td>
+    <td>No</td>
+  </tr>
 </table>
 
 <h3>Examples</h3>
@@ -404,6 +443,12 @@ Task to perform a "mklabel" command to ClearCase.
     <td>Specify a file containing a comment. Only one of comment or cfile may be used.</td>
     <td>No</td>
   <tr></tr>
+  <tr>
+    <td>failonerr</td>
+    <td>Throw an exception if the command fails. Default is true<br>
+    Since ant 1.6.1</td>
+    <td>No</td>
+  </tr>
 </table>
 
 <h3>Examples</h3>
@@ -489,6 +534,12 @@ Task to perform a "rmtype" command to ClearCase.
     <td>Specify a file containing a comment. Only one of comment or cfile may be used.</td>
     <td>No</td>
   <tr></tr>
+  <tr>
+    <td>failonerr</td>
+    <td>Throw an exception if the command fails. Default is true
+    Since ant 1.6.1</td>
+    <td>No</td>
+  </tr>
 </table>
 
 <h3>Examples</h3>
@@ -538,19 +589,31 @@ Task to perform a "cleartool lock" command to ClearCase.
    <tr>
       <td>pname</td>
       <td>Specifies the object pathname to be locked.</td>
-      <td>Yes</td>
+      <td>No</td>
    <tr>
       <td>objselect</td>
-      <td>Specifies the object(s) to be locked.</td>
-      <td>Yes</td>
+      <td>This variable is obsolete. Should use <i>objsel</i> instead.</td>
+      <td>No</td>
    <tr>
+   <tr>
+      <td>objsel</td>
+      <td>Specifies the object(s) to be locked.<br>
+      Since ant 1.6.1</td>
+      <td>No</td>
+   <tr>
+  <tr>
+    <td>failonerr</td>
+    <td>Throw an exception if the command fails. Default is true.<br>
+    Since ant 1.6.1</td>
+    <td>No</td>
+  </tr>
 
  </table>
 <h3>Examples</h3>
 <blockquote>
 <pre>
 &lt;cclock
-    objselect="stream:Application_Integration@\MyProject_PVOB"
+    objsel="stream:Application_Integration@\MyProject_PVOB"
     /&gt;
 </pre>
 </blockquote>
@@ -575,19 +638,31 @@ Task to perform a "cleartool unlock" command to ClearCase.
    <tr>
       <td>pname</td>
       <td>Specifies the object pathname to be unlocked.</td>
-      <td>Yes</td>
+      <td>No</td>
    <tr>
       <td>objselect</td>
-      <td>Specifies the object(s) to be unlocked.</td>
-      <td>Yes</td>
+      <td>This variable is obsolete. Should use <i>objsel</i> instead.</td>
+      <td>No</td>
    <tr>
+   <tr>
+      <td>objsel</td>
+      <td>Specifies the object(s) to be unlocked.<br>
+      Since ant 1.6.1</td>
+      <td>No</td>
+   <tr>
+  <tr>
+    <td>failonerr</td>
+    <td>Throw an exception if the command fails. Default is true.<br>
+    Since ant 1.6.1</td>
+    <td>No</td>
+  </tr>
 
  </table>
  <h3>Examples</h3>
 <blockquote>
 <pre>
 &lt;ccunlock
-    objselect="stream:Application_Integration@\MyProject_PVOB"
+    objsel="stream:Application_Integration@\MyProject_PVOB"
     /&gt;
 </pre>
 </blockquote>
@@ -642,6 +717,12 @@ previous baseline.</td>
       <td>Allows the baseline to be created without a label.</td>
       <td>No</td>
    </tr>
+  <tr>
+    <td>failonerr</td>
+    <td>Throw an exception if the command fails. Default is true.<br>
+    Since ant 1.6.1</td>
+    <td>No</td>
+  </tr>
  </table>
 <h3>Examples</h3>
 <blockquote>
@@ -659,7 +740,201 @@ even if it is <i>identical</i> to a previous baseline. The new baseline with be
 incremental and named "Application_Baseline_AUTO".</p>
 <hr>
 
-<p align="center">Copyright © 2000-2003 Apache Software Foundation. All rights
+<h2><a name="ccmkattr">CCMkattr</a></h2>
+<h3>Description</h3>
+Task to perform a &quot;cleartool mkattr&quot; command to ClearCase.<br>
+Since ant 1.6.1
+<h3>Parameters</h3>
+<table border="1" cellpadding="2" cellspacing="0">
+   <tr>
+     <th>Attribute</th>
+     <th>Values</th>
+     <th>Required</th>
+   </tr>
+   <tr>
+      <td>viewpath</td>
+      <td>Path to the ClearCase view file or directory that the command will operate on</td>
+      <td>Yes</td>
+   </tr>
+   <tr>
+      <td>replace</td>
+      <td>Replace the value of the attribute if it already exists</td>
+      <td>No</td>
+   </tr>
+   <tr>
+      <td>recurse</td>
+      <td>Process each subdirectory under viewpath</td>
+      <td>No</td>
+   </tr>
+   <tr>
+      <td>version</td>
+      <td>Identify a specific version to attach the attribute to</td>
+      <td>No</td>
+   </tr>
+   <tr>
+      <td>typename</td>
+      <td>Name of the attribute type</td>
+      <td>Yes</td>
+   </tr>
+   <tr>
+      <td>typevalue</td>
+      <td>Value to attach to the attribute type</td>
+      <td>Yes</td>
+   </tr>
+   <tr>
+      <td>comment</td>
+      <td>Specify a comment. Only one of comment or cfile may be used.</td>
+      <td>No</td>
+   </tr>
+   <tr>
+      <td>commentfile</td>
+      <td>Specify a file containing a comment. Only one of comment or cfile may be used.</td>
+      <td>No</td>
+   </tr>
+   <tr>
+      <td>failonerr</td>
+      <td>Throw an exception if the command fails. Default is true</td>
+      <td>No</td>
+   </tr>
+ </table>
+<h3>Examples</h3>
+<blockquote>
+<pre>
+&lt;ccmkattr viewpath=&quot;c:/views/viewdir/afile&quot;
+    typename=&quot;BugFix&quot;
+    typevalue=&quot;34445&quot;
+    /&gt;
+</pre>
+</blockquote>
+<p>Does a ClearCase <i>mkattr</i> on the file <i>c:/views/viewdir/afile</i> and
+attaches the attribute <i>BugFix</i> with a value of <i>34445</i> to it.</p>
+<hr>
+
+<h2><a name="ccmkdir">CCMkdir</a></h2>
+<h3>Description</h3>
+Task to perform a &quot;cleartool mkdir&quot; command to ClearCase.<br>
+Since ant 1.6.1
+<h3>Parameters</h3>
+<table border="1" cellpadding="2" cellspacing="0">
+   <tr>
+     <th>Attribute</th>
+     <th>Values</th>
+     <th>Required</th>
+   </tr>
+   <tr>
+      <td>viewpath</td>
+      <td>Path to the ClearCase view directory that the command will operate on</td>
+      <td>Yes</td>
+   </tr>
+   <tr>
+      <td>comment</td>
+      <td>Specify a comment. Only one of comment or cfile may be used.</td>
+      <td>No</td>
+   </tr>
+   <tr>
+      <td>commentfile</td>
+      <td>Specify a file containing a comment. Only one of comment or cfile may be used.</td>
+      <td>No</td>
+   </tr>
+   <tr>
+      <td>nocheckout</td>
+      <td>Do not checkout after element creation</td>
+      <td>No</td>
+   </tr>
+   <tr>
+      <td>failonerr</td>
+      <td>Throw an exception if the command fails. Default is true</td>
+      <td>No</td>
+   </tr>
+ </table>
+<h3>Examples</h3>
+<blockquote>
+<pre>
+&lt;ccmkdir viewpath=&quot;c:/views/viewdir/adir&quot;
+        nochcekout=&quot;true&quot;
+        comment=&quot;Some comment text&quot;/&gt;
+</pre>
+</blockquote>
+<p>Does a ClearCase <i>mkdir</i> on the dir <i>c:/views/viewdir/adir</i> and
+does not automatically check it out.</p>
+<hr>
+
+<h2><a name="ccmkelem">CCMkelem</a></h2>
+<h3>Description</h3>
+Task to perform a &quot;cleartool mkelem&quot; command to ClearCase.<br>
+Since ant 1.6.1
+<h3>Parameters</h3>
+<table border="1" cellpadding="2" cellspacing="0">
+   <tr>
+     <th>Attribute</th>
+     <th>Values</th>
+     <th>Required</th>
+   </tr>
+   <tr>
+      <td>viewpath</td>
+      <td>Path to the ClearCase view file or directory that the command will operate on</td>
+      <td>Yes</td>
+   <tr>
+   <tr>
+      <td>comment</td>
+      <td>Specify a comment. Only one of comment or cfile may be used.</td>
+      <td>No</td>
+   <tr>
+   <tr>
+      <td>commentfile</td>
+      <td>Specify a file containing a comment. Only one of comment or cfile may be used.</td>
+      <td>No</td>
+   <tr>
+   <tr>
+      <td>nowarn</td>
+      <td>Suppress warning messages</td>
+      <td>No</td>
+   <tr>
+   <tr>
+      <td>nocheckout</td>
+      <td>Do not checkout after element creation</td>
+      <td>No</td>
+   <tr>
+   <tr>
+      <td>checkin</td>
+      <td>Checkin element after creation</td>
+      <td>No</td>
+   <tr>
+   <tr>
+      <td>preservetime</td>
+      <td>Preserve the modification time (for checkin)</td>
+      <td>No</td>
+   <tr>
+   <tr>
+      <td>master</td>
+      <td>Assign mastership of the main branch to the current site</td>
+      <td>No</td>
+   <tr>
+   <tr>
+      <td>eltype</td>
+      <td>Element type to use during element creation</td>
+      <td>No</td>
+   <tr>
+   <tr>
+      <td>failonerr</td>
+      <td>Throw an exception if the command fails. Default is true</td>
+      <td>No</td>
+   <tr>
+ </table>
+<h3>Examples</h3>
+<blockquote>
+<pre>
+&lt;ccmkelem viewpath=&quot;c:/views/viewdir/afile&quot;
+        eltype=&quot;text_file&quot;
+        checkin=&quot;true&quot;
+        comment=&quot;Some comment text&quot;/&gt;
+</pre>
+</blockquote>
+<p>Does a ClearCase <i>mkelem</i> on the file <i>c:/views/viewdir/afile</i> with
+element type <i>text_file</i>. It also checks in the file after creation.</p>
+<hr>
+
+<p align="center">Copyright &copy; 2000-2004 Apache Software Foundation. All rights
 reserved.</p>
 </body>
 </html>

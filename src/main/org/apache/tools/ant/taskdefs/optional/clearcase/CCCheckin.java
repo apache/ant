@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2000,2002-2003 The Apache Software Foundation.  All rights
+ * Copyright (c) 2000,2002-2004 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -105,23 +105,29 @@ import org.apache.tools.ant.types.Commandline;
  *      <td>Allows the file to be checked in even if it is identical to the original</td>
  *      <td>No</td>
  *   <tr>
+ *   <tr>
+ *      <td>failonerr</td>
+ *      <td>Throw an exception if the command fails. Default is true</td>
+ *      <td>No</td>
+ *   <tr>
  * </table>
  *
  * @author Curtis White
  */
 public class CCCheckin extends ClearCase {
-    private String m_Comment = null;
-    private String m_Cfile = null;
-    private boolean m_Nwarn = false;
-    private boolean m_Ptime = false;
-    private boolean m_Keep = false;
-    private boolean m_Identical = true;
+    private String mComment = null;
+    private String mCfile = null;
+    private boolean mNwarn = false;
+    private boolean mPtime = false;
+    private boolean mKeep = false;
+    private boolean mIdentical = true;
 
     /**
      * Executes the task.
      * <p>
      * Builds a command line to execute cleartool and then calls Exec's run method
      * to execute the command line.
+     * @throws BuildException if the command fails and failonerr is set to true
      */
     public void execute() throws BuildException {
         Commandline commandLine = new Commandline();
@@ -141,8 +147,12 @@ public class CCCheckin extends ClearCase {
 
         checkOptions(commandLine);
 
+        if (!getFailOnErr()) {
+            getProject().log("Ignoring any errors that occur for: "
+                    + getViewPathBasename(), Project.MSG_VERBOSE);
+        }
         result = run(commandLine);
-        if (Execute.isFailure(result)) {
+        if (Execute.isFailure(result) && getFailOnErr()) {
             String msg = "Failed executing: " + commandLine.toString();
             throw new BuildException(msg, getLocation());
         }
@@ -196,7 +206,7 @@ public class CCCheckin extends ClearCase {
      * @param comment the comment string
      */
     public void setComment(String comment) {
-        m_Comment = comment;
+        mComment = comment;
     }
 
     /**
@@ -205,7 +215,7 @@ public class CCCheckin extends ClearCase {
      * @return String containing the comment
      */
     public String getComment() {
-        return m_Comment;
+        return mComment;
     }
 
     /**
@@ -214,7 +224,7 @@ public class CCCheckin extends ClearCase {
      * @param cfile the path to the comment file
      */
     public void setCommentFile(String cfile) {
-        m_Cfile = cfile;
+        mCfile = cfile;
     }
 
     /**
@@ -223,7 +233,7 @@ public class CCCheckin extends ClearCase {
      * @return String containing the path to the comment file
      */
     public String getCommentFile() {
-        return m_Cfile;
+        return mCfile;
     }
 
     /**
@@ -232,7 +242,7 @@ public class CCCheckin extends ClearCase {
      * @param nwarn the status to set the flag to
      */
     public void setNoWarn(boolean nwarn) {
-        m_Nwarn = nwarn;
+        mNwarn = nwarn;
     }
 
     /**
@@ -241,7 +251,7 @@ public class CCCheckin extends ClearCase {
      * @return boolean containing status of nwarn flag
      */
     public boolean getNoWarn() {
-        return m_Nwarn;
+        return mNwarn;
     }
 
     /**
@@ -250,7 +260,7 @@ public class CCCheckin extends ClearCase {
      * @param ptime the status to set the flag to
      */
     public void setPreserveTime(boolean ptime) {
-        m_Ptime = ptime;
+        mPtime = ptime;
     }
 
     /**
@@ -259,7 +269,7 @@ public class CCCheckin extends ClearCase {
      * @return boolean containing status of preservetime flag
      */
     public boolean getPreserveTime() {
-        return m_Ptime;
+        return mPtime;
     }
 
     /**
@@ -268,7 +278,7 @@ public class CCCheckin extends ClearCase {
      * @param keep the status to set the flag to
      */
     public void setKeepCopy(boolean keep) {
-        m_Keep = keep;
+        mKeep = keep;
     }
 
     /**
@@ -277,7 +287,7 @@ public class CCCheckin extends ClearCase {
      * @return boolean containing status of keepcopy flag
      */
     public boolean getKeepCopy() {
-        return m_Keep;
+        return mKeep;
     }
 
     /**
@@ -287,7 +297,7 @@ public class CCCheckin extends ClearCase {
      * @param identical the status to set the flag to
      */
     public void setIdentical(boolean identical) {
-        m_Identical = identical;
+        mIdentical = identical;
     }
 
     /**
@@ -296,7 +306,7 @@ public class CCCheckin extends ClearCase {
      * @return boolean containing status of identical flag
      */
     public boolean getIdentical() {
-        return m_Identical;
+        return mIdentical;
     }
 
 

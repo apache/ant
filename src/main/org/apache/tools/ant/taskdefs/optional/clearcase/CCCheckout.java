@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2000-2003 The Apache Software Foundation.  All rights
+ * Copyright (c) 2000-2004 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -60,8 +60,6 @@ import org.apache.tools.ant.taskdefs.Execute;
 import org.apache.tools.ant.types.Commandline;
 
 
-
-
 /**
  * Performs ClearCase checkout.
  *
@@ -118,25 +116,37 @@ import org.apache.tools.ant.types.Commandline;
  *      <td>Specify a file containing a comment. Only one of comment or cfile may be used.</td>
  *      <td>No</td>
  *   <tr>
+ *   <tr>
+ *      <td>notco</td>
+ *      <td>Fail if it's already checked out to the current view. Set to false to ignore it.</td>
+ *      <td>No</td>
+ *   <tr>
+ *   <tr>
+ *      <td>failonerr</td>
+ *      <td>Throw an exception if the command fails. Default is true</td>
+ *      <td>No</td>
+ *   <tr>
  * </table>
  *
- * @author Curtis White
+ * @author Curtis White (Extended by Sean Egan)
  */
 public class CCCheckout extends ClearCase {
-    private boolean m_Reserved = true;
-    private String m_Out = null;
-    private boolean m_Ndata = false;
-    private String m_Branch = null;
-    private boolean m_Version = false;
-    private boolean m_Nwarn = false;
-    private String m_Comment = null;
-    private String m_Cfile = null;
+    private boolean mReserved = true;
+    private String mOut = null;
+    private boolean mNdata = false;
+    private String mBranch = null;
+    private boolean mVersion = false;
+    private boolean mNwarn = false;
+    private String mComment = null;
+    private String mCfile = null;
+    private boolean mNotco = true;
 
     /**
      * Executes the task.
      * <p>
      * Builds a command line to execute cleartool and then calls Exec's run method
      * to execute the command line.
+     * @throws BuildException if the command fails and failonerr is set to true
      */
     public void execute() throws BuildException {
         Commandline commandLine = new Commandline();
@@ -155,15 +165,51 @@ public class CCCheckout extends ClearCase {
         commandLine.createArgument().setValue(COMMAND_CHECKOUT);
 
         checkOptions(commandLine);
-
+        /*
+         * If configured to not care about whether the element is
+         * already checked out to the current view.
+         * Then check to see if it is checked out.
+         */
+        if (!getNotco() && lsCheckout()) {
+            getProject().log("Already checked out in this view: "
+                    + getViewPathBasename(), Project.MSG_VERBOSE);
+            return;
+        }
+        if (!getFailOnErr()) {
+            getProject().log("Ignoring any errors that occur for: "
+                    + getViewPathBasename(), Project.MSG_VERBOSE);
+        }
         result = run(commandLine);
-        if (Execute.isFailure(result)) {
+        if (Execute.isFailure(result) && getFailOnErr()) {
             String msg = "Failed executing: " + commandLine.toString();
             throw new BuildException(msg, getLocation());
         }
     }
 
+    /**
+     * Check to see if the element is checked out in the current view.
+     */
+    private boolean lsCheckout() {
+        Commandline cmdl = new Commandline();
+        String result;
 
+        // build the command line from what we got the format is
+        // cleartool lsco [options...] [viewpath ...]
+        // as specified in the CLEARTOOL.EXE help
+        cmdl.setExecutable(getClearToolCommand());
+        cmdl.createArgument().setValue(COMMAND_LSCO);
+        cmdl.createArgument().setValue("-cview");
+        cmdl.createArgument().setValue("-short");
+        cmdl.createArgument().setValue("-d");
+        // viewpath
+        cmdl.createArgument().setValue(getViewPath());
+
+        result = runS(cmdl);
+
+        // System.out.println( "lsCheckout: " + result );
+
+        return (result != null && result.length() > 0) ? true : false;
+    }
     /**
      * Check the command line options.
      */
@@ -218,6 +264,9 @@ public class CCCheckout extends ClearCase {
 
         // viewpath
         cmd.createArgument().setValue(getViewPath());
+
+        // Print out info about the notco option
+        // System.out.println( "Notco: " + (getNotco() ? "yes" : "no") );
     }
 
     /**
@@ -226,7 +275,7 @@ public class CCCheckout extends ClearCase {
      * @param reserved the status to set the flag to
      */
     public void setReserved(boolean reserved) {
-        m_Reserved = reserved;
+        mReserved = reserved;
     }
 
     /**
@@ -235,8 +284,29 @@ public class CCCheckout extends ClearCase {
      * @return boolean containing status of reserved flag
      */
     public boolean getReserved() {
-        return m_Reserved;
+        return mReserved;
     }
+
+    /**
+     * If true, checkout fails if the element is already checked out to the current view.
+     *
+     * @param notco the status to set the flag to
+     * @since ant 1.6.1
+     */
+    public void setNotco(boolean notco) {
+        mNotco = notco;
+    }
+
+    /**
+     * Get notco flag status
+     *
+     * @return boolean containing status of notco flag
+     * @since ant 1.6.1
+     */
+    public boolean getNotco() {
+        return mNotco;
+    }
+
 
     /**
      * Creates a writable file under a different filename.
@@ -244,7 +314,7 @@ public class CCCheckout extends ClearCase {
      * @param outf the path to the out file
      */
     public void setOut(String outf) {
-        m_Out = outf;
+        mOut = outf;
     }
 
     /**
@@ -253,7 +323,7 @@ public class CCCheckout extends ClearCase {
      * @return String containing the path to the out file
      */
     public String getOut() {
-        return m_Out;
+        return mOut;
     }
 
     /**
@@ -263,7 +333,7 @@ public class CCCheckout extends ClearCase {
      * @param ndata the status to set the flag to
      */
     public void setNoData(boolean ndata) {
-        m_Ndata = ndata;
+        mNdata = ndata;
     }
 
     /**
@@ -272,7 +342,7 @@ public class CCCheckout extends ClearCase {
      * @return boolean containing status of ndata flag
      */
     public boolean getNoData() {
-        return m_Ndata;
+        return mNdata;
     }
 
     /**
@@ -281,7 +351,7 @@ public class CCCheckout extends ClearCase {
      * @param branch the name of the branch
      */
     public void setBranch(String branch) {
-        m_Branch = branch;
+        mBranch = branch;
     }
 
     /**
@@ -290,7 +360,7 @@ public class CCCheckout extends ClearCase {
      * @return String containing the name of the branch
      */
     public String getBranch() {
-        return m_Branch;
+        return mBranch;
     }
 
     /**
@@ -299,7 +369,7 @@ public class CCCheckout extends ClearCase {
      * @param version the status to set the flag to
      */
     public void setVersion(boolean version) {
-        m_Version = version;
+        mVersion = version;
     }
 
     /**
@@ -308,7 +378,7 @@ public class CCCheckout extends ClearCase {
      * @return boolean containing status of version flag
      */
     public boolean getVersion() {
-        return m_Version;
+        return mVersion;
     }
 
     /**
@@ -317,7 +387,7 @@ public class CCCheckout extends ClearCase {
      * @param nwarn the status to set the flag to
      */
     public void setNoWarn(boolean nwarn) {
-        m_Nwarn = nwarn;
+        mNwarn = nwarn;
     }
 
     /**
@@ -326,7 +396,7 @@ public class CCCheckout extends ClearCase {
      * @return boolean containing status of nwarn flag
      */
     public boolean getNoWarn() {
-        return m_Nwarn;
+        return mNwarn;
     }
 
     /**
@@ -335,7 +405,7 @@ public class CCCheckout extends ClearCase {
      * @param comment the comment string
      */
     public void setComment(String comment) {
-        m_Comment = comment;
+        mComment = comment;
     }
 
     /**
@@ -344,7 +414,7 @@ public class CCCheckout extends ClearCase {
      * @return String containing the comment
      */
     public String getComment() {
-        return m_Comment;
+        return mComment;
     }
 
     /**
@@ -353,7 +423,7 @@ public class CCCheckout extends ClearCase {
      * @param cfile the path to the comment file
      */
     public void setCommentFile(String cfile) {
-        m_Cfile = cfile;
+        mCfile = cfile;
     }
 
     /**
@@ -362,16 +432,13 @@ public class CCCheckout extends ClearCase {
      * @return String containing the path to the comment file
      */
     public String getCommentFile() {
-        return m_Cfile;
+        return mCfile;
     }
 
     /**
      * Get the 'out' command
      *
-     * @return the 'out' command if the attribute was specified,
-     *         otherwise an empty string
-     *
-     * @param CommandLine containing the command line string with or
+     * @param cmd containing the command line string with or
      *                    without the out flag and path appended
      */
     private void getOutCommand(Commandline cmd) {
@@ -389,10 +456,7 @@ public class CCCheckout extends ClearCase {
     /**
      * Get the 'branch' command
      *
-     * @return the 'branch' command if the attribute was specified,
-     *         otherwise an empty string
-     *
-     * @param CommandLine containing the command line string with or
+     * @param cmd containing the command line string with or
                           without the branch flag and name appended
      */
     private void getBranchCommand(Commandline cmd) {
@@ -411,10 +475,7 @@ public class CCCheckout extends ClearCase {
     /**
      * Get the 'comment' command
      *
-     * @return the 'comment' command if the attribute was specified,
-     *         otherwise an empty string
-     *
-     * @param CommandLine containing the command line string with or
+     * @param cmd containing the command line string with or
      *                    without the comment flag and string appended
      */
     private void getCommentCommand(Commandline cmd) {
@@ -432,10 +493,7 @@ public class CCCheckout extends ClearCase {
     /**
      * Get the 'cfile' command
      *
-     * @return the 'cfile' command if the attribute was specified,
-     *         otherwise an empty string
-     *
-     * @param CommandLine containing the command line string with or
+     * @param cmd containing the command line string with or
      *                    without the cfile flag and file appended
      */
     private void getCommentFileCommand(Commandline cmd) {

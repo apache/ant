@@ -31,6 +31,14 @@ Other changes:
 * <p4submit> has 2 new attributes, needsresolveproperty and changeproperty.
   Bugzilla Report 25711.
 
+* Extending ClearCase Tasks :
+ - Added an extra option to 'failonerr' to each ClearCase task/command.
+ - Extended the functionality of cccheckout. It can check (notco) to see if
+  the desired element is already checked out to the current view. Thus it
+   won't attempt to check it out again.
+ - Added three new ClearCase commands: ccmkattr, ccmkdir, ccmkelem
+  Bugzilla Report 26253.
+
 * add description attributes to macrodef attributes and elements.
   Bugzilla Report 24711.
 
