@@ -139,7 +139,7 @@ public class DefaultLogger implements BuildLogger {
             err.println(lSep + "BUILD FAILED" + lSep);
 
             if (Project.MSG_VERBOSE <= msgOutputLevel ||
-                !(err instanceof BuildException)) {
+                !(error instanceof BuildException)) {
                 error.printStackTrace(err);
             }
             else {
