@@ -60,6 +60,7 @@ import java.util.Date;
 import java.util.Vector;
 import java.util.Enumeration;
 
+import org.apache.tools.ant.AntClassLoader;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.DirectoryScanner;
 import org.apache.tools.ant.Project;
@@ -113,6 +114,7 @@ import org.apache.tools.ant.types.Reference;
 public class JspC extends MatchingTask {
     /* ------------------------------------------------------------ */
     private Path classpath;
+    private Path compilerClasspath;
     private Path src;
     private File destDir;
     private String packageName ;
@@ -297,6 +299,35 @@ public class JspC extends MatchingTask {
         return classpath;
     }
 
+    /* ------------------------------------------------------------ */
+    /**
+     * Set the classpath to be used to find this compiler adapter 
+     */
+    public void setCompilerclasspath(Path cp) {
+        if (compilerClasspath == null) {
+            compilerClasspath = cp;
+        } else {
+            compilerClasspath.append(cp);
+        }
+    }
+
+    /**
+     * get the classpath used to find the compiler adapter
+     */
+    public Path getCompilerclasspath(){
+        return compilerClasspath;
+    }
+
+    /**
+     * Support nested compiler classpath, used to locate compiler adapter
+     */
+    public Path createCompilerclasspath() {
+        if (compilerClasspath == null) {
+            compilerClasspath = new Path(project);
+        }
+        return compilerClasspath.createPath();
+    }
+
     /**
      *  -webxml &lt;file&gt; Creates a complete web.xml when using the -webapp option.
      *
@@ -384,7 +415,8 @@ public class JspC extends MatchingTask {
 
         //bind to a compiler
         JspCompilerAdapter compiler =
-            JspCompilerAdapterFactory.getCompiler(compilerName, this);
+            JspCompilerAdapterFactory.getCompiler(compilerName, this,
+               new AntClassLoader(getProject(), compilerClasspath));
 
         // if the compiler does its own dependency stuff, we just call it right now
         if (compiler.implementsOwnDependencyChecking()) {

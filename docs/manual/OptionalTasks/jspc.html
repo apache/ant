@@ -107,6 +107,20 @@ The Task has the following attributes:<p>
     </td>
     <td valign="top" align="center">No</td>
   </tr>  
+  <tr>
+    <td valign="top">compiler</td>
+    <td valign="top">
+    Class name of jsp compiler adapter to use.  Defaults to
+    the standard adapter for Jasper.
+    </td>
+    <td valign="top" align="center">No</td>
+  </tr>
+  <tr>
+    <td valign="top">compilerclasspath</td>
+    <td valign="top">The classpath used to find the compiler adapter specified
+    by the <code>compiler</code> attribute.</td>
+    <td valign="top" align="center">No</td>
+  </tr>
   </table>
   
 <P>The <tt>mapped</tt> option will, if set to true, split the JSP text content into a
@@ -155,6 +169,10 @@ classpath.
 <h4>classpathref</h4>
 a reference to an existing classpath
 
+<h4>compilerclasspath</h4>
+
+The classpath used to locate an optional compiler adapter specified by 
+<code>compiler</code>
 <h3>Example</h3>
 <pre>
 &lt;jspc srcdir="${basedir}/src/war"
