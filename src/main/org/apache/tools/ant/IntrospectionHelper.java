@@ -25,6 +25,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Enumeration;
 import java.util.Hashtable;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -38,6 +39,13 @@ import org.apache.tools.ant.taskdefs.PreSetDef;
  * The class is final as it has a private constructor.
  */
 public final class IntrospectionHelper implements BuildListener {
+
+    /**
+     * EMPTY_MAP was added in java 1.3 (EMTPY_SET and EMPTY_LIST
+     * is in java 1.2!)
+     */
+    private static final Map EMPTY_MAP = Collections.unmodifiableMap(
+        new HashMap());
 
     /**
      * Map from attribute names to attribute types
@@ -942,7 +950,7 @@ public final class IntrospectionHelper implements BuildListener {
      */
     public Map getAttributeMap() {
         if (attributeTypes.size() < 1) {
-            return Collections.EMPTY_MAP;
+            return EMPTY_MAP;
         }
         return Collections.unmodifiableMap(attributeTypes);
     }
@@ -969,7 +977,7 @@ public final class IntrospectionHelper implements BuildListener {
      */
     public Map getNestedElementMap() {
         if (nestedTypes.size() < 1) {
-            return Collections.EMPTY_MAP;
+            return EMPTY_MAP;
         }
         return Collections.unmodifiableMap(nestedTypes);
     }
