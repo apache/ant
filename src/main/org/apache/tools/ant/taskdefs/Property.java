@@ -61,6 +61,7 @@ import java.io.InputStream;
 import java.net.URL;
 import java.util.Enumeration;
 import java.util.Properties;
+import java.util.Stack;
 import java.util.Vector;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
@@ -570,48 +571,57 @@ public class Property extends Task {
     private void resolveAllProperties(Properties props) throws BuildException {
         for (Enumeration e = props.keys(); e.hasMoreElements();) {
             String name = (String) e.nextElement();
-            String value = props.getProperty(name);
+            Stack referencesSeen = new Stack();
+            resolve(props, name, referencesSeen);
+        }
+    }
 
-            boolean resolved = false;
-            Vector expandedReferences = new Vector();
-            expandedReferences.addElement(name);
-            while (!resolved) {
-                Vector fragments = new Vector();
-                Vector propertyRefs = new Vector();
-                ProjectHelper.parsePropertyString(value, fragments,
-                                                  propertyRefs);
+    /**
+     * Recursively expand the named property using the project's
+     * reference table and the given set of properties - fail if a
+     * circular definition is detected.
+     *
+     * @param props properties object to resolve
+     * @param name of the property to resolve
+     * @param referencesSeen stack of all property names that have
+     * been tried to expand before coming here.
+     */
+    private void resolve(Properties props, String name, Stack referencesSeen)
+        throws BuildException {
+        if (referencesSeen.contains(name)) {
+            throw new BuildException("Property " + name + " was circularly "
+                                     + "defined.");
+        }
 
-                resolved = true;
-                if (propertyRefs.size() != 0) {
-                    StringBuffer sb = new StringBuffer();
-                    Enumeration i = fragments.elements();
-                    Enumeration j = propertyRefs.elements();
-                    while (i.hasMoreElements()) {
-                        String fragment = (String) i.nextElement();
-                        if (fragment == null) {
-                            String propertyName = (String) j.nextElement();
-                            if (expandedReferences.contains(propertyName)) {
-                                throw new BuildException("Property " + name
-                                                         + " was circularly "
-                                                         + "defined.");
-                            }
-                            expandedReferences.addElement(propertyName);
-                            fragment = getProject().getProperty(propertyName);
-                            if (fragment == null) {
-                                if (props.containsKey(propertyName)) {
-                                    fragment = props.getProperty(propertyName);
-                                    resolved = false;
-                                } else {
-                                    fragment = "${" + propertyName + "}";
-                                }
-                            }
+        String value = props.getProperty(name);
+        Vector fragments = new Vector();
+        Vector propertyRefs = new Vector();
+        ProjectHelper.parsePropertyString(value, fragments, propertyRefs);
+
+        if (propertyRefs.size() != 0) {
+            referencesSeen.push(name);
+            StringBuffer sb = new StringBuffer();
+            Enumeration i = fragments.elements();
+            Enumeration j = propertyRefs.elements();
+            while (i.hasMoreElements()) {
+                String fragment = (String) i.nextElement();
+                if (fragment == null) {
+                    String propertyName = (String) j.nextElement();
+                    fragment = getProject().getProperty(propertyName);
+                    if (fragment == null) {
+                        if (props.containsKey(propertyName)) {
+                            resolve(props, propertyName, referencesSeen);
+                            fragment = props.getProperty(propertyName);
+                        } else {
+                            fragment = "${" + propertyName + "}";
                         }
-                        sb.append(fragment);
                     }
-                    value = sb.toString();
-                    props.put(name, value);
                 }
+                sb.append(fragment);
             }
+            value = sb.toString();
+            props.put(name, value);
+            referencesSeen.pop();
         }
     }
 }
