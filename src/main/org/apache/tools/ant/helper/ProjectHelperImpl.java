@@ -452,7 +452,9 @@ public class ProjectHelperImpl extends ProjectHelper {
             }
 
             if (def == null) {
-                helperImpl.project.setDefaultTarget("main");
+                throw new SAXParseException("The default attribute of project "
+                                            + "is required", 
+                                            helperImpl.locator);
             } else {
                 helperImpl.project.setDefaultTarget(def);
             }
