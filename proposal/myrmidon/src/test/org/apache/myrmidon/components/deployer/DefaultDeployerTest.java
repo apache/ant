@@ -12,7 +12,7 @@ import org.apache.myrmidon.framework.DataType;
 import org.apache.myrmidon.interfaces.converter.MasterConverter;
 import org.apache.myrmidon.interfaces.deployer.ConverterDefinition;
 import org.apache.myrmidon.interfaces.deployer.Deployer;
-import org.apache.myrmidon.interfaces.deployer.GeneralTypeDefinition;
+import org.apache.myrmidon.interfaces.deployer.TypeDefinition;
 import org.apache.myrmidon.interfaces.deployer.TypeDeployer;
 import org.apache.myrmidon.interfaces.role.RoleManager;
 import org.apache.myrmidon.interfaces.type.TypeFactory;
@@ -27,9 +27,9 @@ public class DefaultDeployerTest
 {
     private Deployer m_deployer;
 
-    public DefaultDeployerTest( String s )
+    public DefaultDeployerTest( final String name )
     {
-        super( s );
+        super( name );
     }
 
     /**
@@ -52,10 +52,8 @@ public class DefaultDeployerTest
         roleManager.addNameRoleMapping( "data-type", DataType.ROLE );
 
         // Create the type definition
-        final GeneralTypeDefinition typeDef = new GeneralTypeDefinition();
-        typeDef.setType( "data-type" );
-        typeDef.setName( "test-type1" );
-        typeDef.setClassname( TestType1.class.getName() );
+        final String destType = TestType1.class.getName();
+        final TypeDefinition typeDef =  new TypeDefinition( "data-type", "test-type1", destType );
 
         // Deploy the type
         final ClassLoader classLoader = getClass().getClassLoader();
@@ -64,10 +62,10 @@ public class DefaultDeployerTest
 
         // Create an instance
         final TypeFactory typeFactory = getTypeManager().getFactory( DataType.class );
-        Object obj = typeFactory.create( "test-type1" );
+        final Object result = typeFactory.create( "test-type1" );
 
         // Check the type
-        assertTrue( obj instanceof TestType1 );
+        assertTrue( result instanceof TestType1 );
     }
 
     /**
@@ -76,10 +74,11 @@ public class DefaultDeployerTest
     public void testSingleConverter() throws Exception
     {
         // Create the type definition
-        final ConverterDefinition typeDef = new ConverterDefinition();
-        typeDef.setClassname( TestConverter1.class.getName() );
-        typeDef.setSourceType( "java.lang.String" );
-        typeDef.setDestinationType( TestType1.class.getName() );
+        final String classname = TestConverter1.class.getName();
+        final String source = "java.lang.String";
+        final String destClass = TestType1.class.getName();
+        final ConverterDefinition typeDef =
+            new ConverterDefinition( classname, source, destClass );
 
         // Deploy the type
         final ClassLoader classLoader = getClass().getClassLoader();
@@ -88,9 +87,9 @@ public class DefaultDeployerTest
 
         // Try to convert from string to test type
         final MasterConverter converter = (MasterConverter)getComponentManager().lookup( MasterConverter.ROLE );
-        Object obj = converter.convert( TestType1.class, "some-string", null );
+        final Object result = converter.convert( TestType1.class, "some-string", null );
 
         // Check the type
-        assertTrue( obj instanceof TestType1 );
+        assertTrue( result instanceof TestType1 );
     }
 }
