@@ -182,10 +182,23 @@
   <!-- =================================================================== -->
   <!-- Installs the ant.jar library and binary files into ant.home         -->
   <!-- =================================================================== -->
-  <target name="install" depends="main">
-    <echo message="installing into ${ant.home}"/>
-    <copydir src="${lib.dir}" dest="${ant.home}/lib"/>
-    <copydir src="${bin.dir}" dest="${ant.home}/bin"/>
+  <target name="bootstrap" depends="main">
+    <echo message="copying bootstrapped files into bin and lib"/>
+    <copydir src="${lib.dir}" dest="lib"/>
+    <copydir src="${bin.dir}" dest="bin"/>
+  </target>     
+
+  <target name="fullinstall" depends="dist" if="ant.install">
+    <echo message="installing full copy of ant into ${ant.install}"/>
+    <mkdir dir="${ant.install}"/>
+    <copydir src="${ant.dist.dir}" dest="${ant.install}"/>
+  </target>     
+  
+  <target name="install" depends="main" if="ant.install">
+    <echo message="copy minimal ant installtion into ${ant.install}"/>
+    <mkdir dir="${ant.install}"/>
+    <copydir src="${lib.dir}" dest="${ant.install}/lib"/>
+    <copydir src="${bin.dir}" dest="${ant.install}/bin"/>
   </target>     
 
   <!-- =================================================================== -->

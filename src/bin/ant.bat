@@ -1,33 +1,35 @@
 @echo off
-@setlocal
-if "%ANT_HOME%"=="" goto checkProgFiles
-goto checkJava
+rem find ANT_HOME
+if not "%ANT_HOME%"=="" goto checkJava
 
-:checkProgFiles
-rem check for ant on system drive
+rem check for ant in Program Files on system drive
 if not exist "%SystemDrive%\Program Files\ant" goto checkSystemDrive
-
 set ANT_HOME=%SystemDrive%\Program Files\ant
 goto checkJava
 
 :checkSystemDrive
+rem check for ant in root directory of system drive
 if not exist "%SystemDrive%\ant" goto noAntHome
 set ANT_HOME=%SystemDrive%\ant
 goto checkJava
 
 :noAntHome
-echo ANT_HOME is not set and ant could not be located
+echo ANT_HOME is not set and ant could not be located. Please set ANT_HOME.
 goto end
 
 :checkJava
 if "%JAVACMD%" == "" set JAVACMD=java
 
+set LOCALCLASSPATH=%CLASSPATH%
+for %%i in (%ANT_HOME%\lib\*.jar) do call %ANT_HOME%\bin\lcp.bat %%i
+
 if "%JAVA_HOME%" == "" goto runAnt
-set CLASSPATH=%JAVA_HOME%\lib\tools.jar;%CLASSPATH%
+if exist %JAVA_HOME%\lib\tools.jar call %ANT_HOME%\bin\lcp.bat %JAVA_HOME%\lib\tools.jar
+if exist %JAVA_HOME%\lib\classes.zip call %ANT_HOME%\bin\lcp.bat %JAVA_HOME%\lib\classes.zip
 
 :runAnt
-set CLASSPATH=%ANT_HOME%\lib\ant.jar;%ANT_HOME%\lib\xml.jar;%CLASSPATH%
-%JAVACMD% -Dant.home="%ANT_HOME%" org.apache.tools.ant.Main %1 %2 %3 %4 %5 %6 %7 %8 %9
+%JAVACMD% -classpath "%LOCALCLASSPATH%" -Dant.home="%ANT_HOME%" %ANT_OPTS% org.apache.tools.ant.Main %1 %2 %3 %4 %5 %6 %7 %8 %9
 
 :end
-@endlocal
+set LOCALCLASSPATH=
+

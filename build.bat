@@ -1,20 +1,14 @@
 @echo off
 
-set _ANTHOME=%ANT_HOME%
-if "%ANT_HOME%" == "" set ANT_HOME=.
+set REALANTHOME=%ANT_HOME%
+set ANT_HOME=.
+if not exist lib\ant.jar call bootstrap.bat
 
-set LOCALCLASSPATH=%CLASSPATH%
-for %%i in (%ANT_HOME%\lib\*.jar) do call lcp.bat %%i
-if exist %JAVA_HOME%\lib\tools.jar call lcp.bat %JAVA_HOME%\lib\tools.jar
-if exist %JAVA_HOME%\lib\classes.zip call lcp.bat %JAVA_HOME%\lib\classes.zip
-
-echo.
-echo Building with classpath: %LOCALCLASSPATH%
-echo.
-
-java -Dant.home="%ANT_HOME%" -classpath "%LOCALCLASSPATH%" %ANT_OPTS% org.apache.tools.ant.Main %1 %2 %3 %4 %5 %6 %7 %8 %9
+set ANT_INSTALL=
+if not "%REALANTHOME%" == "" set ANT_INSTALL=-Dant.install %REALANTHOME%
+call .\bin\ant %ANT_INSTALL% %1 %2 %3 %4 %5 %6 %7 %8 %9
 
 rem clean up
-set LOCALCLASSPATH=
-set ANT_HOME=%_ANTHOME%
-set _ANTHOME=
+set ANT_HOME=%REALANTHOME%
+set REALANTHOME=
+set ANT_INSTALL=

@@ -5,8 +5,9 @@ REM You will need to specify JAVA_HOME if compiling with 1.2 or later.
 set OLDJAVA=%JAVA%
 set OLDJAVAC=%JAVAC%
 set OLDCLASSPATH=%CLASSPATH%
+set OLDANTHOME=%ANT_HOME%
 
-if exist ..\antrc.bat call ..\antrc.bat
+set ANT_HOME=.
 
 if "" == "%JAVA%"  if "" == "%JAVA_HOME%" set JAVA=java
 if "" == "%JAVA%"                         set JAVA=%JAVA_HOME%\bin\java
@@ -48,12 +49,10 @@ copy %TOOLS%\ant\taskdefs\*.properties classes\org\apache\tools\ant\taskdefs
 echo.
 echo ... Building Ant Distribution
 
-%JAVA% org.apache.tools.ant.Main clean main install %1 %2 %3 %4 %5
+%JAVA% org.apache.tools.ant.Main clean main bootstrap %1 %2 %3 %4 %5
 
 echo.
 echo ... Cleaning Up Build Directories
-
-%JAVA% org.apache.tools.ant.Main clean %1 %2 %3 %4 %5
 
 if     "%OS%" == "Windows_NT" if exist classes\nul rmdir/s/q classes
 if not "%OS%" == "Windows_NT" if exist classes\nul deltree/y classes
@@ -64,9 +63,11 @@ echo ... Done Bootstrapping Ant Distribution
 set JAVA=%OLDJAVA%
 set JAVAC=%OLDJAVAC%
 set CLASSPATH=%OLDCLASSPATH%
+set ANT_HOME=%OLDANTHOME%
 set OLDJAVA=
 set OLDJAVAC=
 set OLDCLASSPATH=
 set LOCALCLASSPATH=
+set OLDANTHOME=
 set TOOLS=
 
