@@ -129,55 +129,55 @@ public class Checksum extends MatchingTask implements Condition {
     /**
      * Sets the file for which the checksum is to be calculated.
      */
-    public void setFile(File file) {
-        this.file = file;
+    public void setFile(File aFile) {
+        this.file = aFile;
     }
 
     /**
      * Sets the MessageDigest algorithm to be used
      * to calculate the checksum.
      */
-    public void setAlgorithm(String algorithm) {
-        this.algorithm = algorithm;
+    public void setAlgorithm(String aAlgorithm) {
+        this.algorithm = aAlgorithm;
     }
 
     /**
      * Sets the MessageDigest algorithm provider to be used
      * to calculate the checksum.
      */
-    public void setProvider(String provider) {
-        this.provider = provider;
+    public void setProvider(String aProvider) {
+        this.provider = aProvider;
     }
 
     /**
      * Sets the File Extension that is be to used to
      * create or identify destination file
      */
-    public void setFileext(String fileext) {
-        this.fileext = fileext;
+    public void setFileext(String aFileext) {
+        this.fileext = aFileext;
     }
 
     /**
      * Sets the property to hold the generated checksum
      */
-    public void setProperty(String property) {
-        this.property = property;
+    public void setProperty(String aProperty) {
+        this.property = aProperty;
     }
 
     /**
      * Sets verify property.  This project property holds
      * the result of a checksum verification - "true" or "false"
      */
-    public void setVerifyproperty(String verifyProperty) {
-        this.verifyProperty = verifyProperty;
+    public void setVerifyproperty(String aVerifyProperty) {
+        this.verifyProperty = aVerifyProperty;
     }
 
     /**
      * Overwrite existing file irrespective of whether it is newer than
      * the source file?  Defaults to false.
      */
-    public void setForceOverwrite(boolean forceOverwrite) {
-        this.forceOverwrite = forceOverwrite;
+    public void setForceOverwrite(boolean aForceOverwrite) {
+        this.forceOverwrite = aForceOverwrite;
     }
 
     /**
@@ -311,24 +311,24 @@ public class Checksum extends MatchingTask implements Condition {
      * Add key-value pair to the hashtable upon which
      * to later operate upon.
      */
-    private void addToIncludeFileMap(File file) throws BuildException {
-        if (file != null) {
-            if (file.exists()) {
+    private void addToIncludeFileMap(File aFile) throws BuildException {
+        if (aFile != null) {
+            if (aFile.exists()) {
                 if (property == null) {
-                    File dest = new File(file.getParent(), file.getName() + fileext);
+                    File dest = new File(aFile.getParent(), aFile.getName() + fileext);
                     if (forceOverwrite || isCondition ||
-                        (file.lastModified() > dest.lastModified())) {
-                        includeFileMap.put(file, dest);
+                        (aFile.lastModified() > dest.lastModified())) {
+                        includeFileMap.put(aFile, dest);
                     } else {
-                        log(file + " omitted as " + dest + " is up to date.",
+                        log(aFile + " omitted as " + dest + " is up to date.",
                             Project.MSG_VERBOSE);
                     }
                 } else {
-                    includeFileMap.put(file, property);
+                    includeFileMap.put(aFile, property);
                 }
             } else {
                 String message = "Could not find file "
-                                 + file.getAbsolutePath()
+                                 + aFile.getAbsolutePath()
                                  + " to generate checksum for.";
                 log(message);
                 throw new BuildException(message, location);

@@ -88,18 +88,18 @@ public abstract class Unpack extends Task {
      *             mechanism do the work and also to encapsulate operations on
      *             the type in its own class.
      */
-    public void setDest(String dest) {
+    public void setDest(String aDest) {
         log("DEPRECATED - The setDest(String) method has been deprecated."
             + " Use setDest(File) instead.");
-        setDest(project.resolveFile(dest));
+        setDest(project.resolveFile(aDest));
     }
 
     public void setSrc(File src) {
         source = src;
     }
 
-    public void setDest(File dest) {
-        this.dest = dest;
+    public void setDest(File aDest) {
+        this.dest = aDest;
     }
 
     private void validate() throws BuildException {

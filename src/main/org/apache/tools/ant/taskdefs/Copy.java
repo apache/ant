@@ -119,22 +119,22 @@ public class Copy extends Task {
     /**
      * Sets a single source file to copy.
      */
-    public void setFile(File file) {
-        this.file = file;
+    public void setFile(File aFile) {
+        this.file = aFile;
     }
 
     /**
      * Sets the destination file.
      */
-    public void setTofile(File destFile) {
-        this.destFile = destFile;
+    public void setTofile(File aDestFile) {
+        this.destFile = aDestFile;
     }
 
     /**
      * Sets the destination directory.
      */
-    public void setTodir(File destDir) {
-        this.destDir = destDir;
+    public void setTodir(File aDestDir) {
+        this.destDir = aDestDir;
     }
 
     /**
@@ -175,8 +175,8 @@ public class Copy extends Task {
     /**
      * Sets filtering.
      */
-    public void setFiltering(boolean filtering) {
-        this.filtering = filtering;
+    public void setFiltering(boolean aFiltering) {
+        this.filtering = aFiltering;
     }
 
     /**
@@ -193,8 +193,8 @@ public class Copy extends Task {
      * file will be copied into the "flattened" directory, unless
      * the forceoverwrite attribute is true.
      */
-    public void setFlatten(boolean flatten) {
-        this.flatten = flatten;
+    public void setFlatten(boolean aFlatten) {
+        this.flatten = aFlatten;
     }
 
     /**
@@ -211,8 +211,8 @@ public class Copy extends Task {
     /**
      * Used to copy empty directories.
      */
-    public void setIncludeEmptyDirs(boolean includeEmpty) {
-        this.includeEmpty = includeEmpty;
+    public void setIncludeEmptyDirs(boolean aIncludeEmpty) {
+        this.includeEmpty = aIncludeEmpty;
     }
 
     /**

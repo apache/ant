@@ -264,15 +264,15 @@ public class Move extends Copy {
      *
      * @throws IOException
      */
-    protected boolean renameFile(File sourceFile, File destFile,
-                                 boolean filtering, boolean overwrite)
+    protected boolean renameFile(File sourceFile, File aDestFile,
+                                 boolean aFiltering, boolean overwrite)
         throws IOException, BuildException {
 
         boolean renamed = true;
-        if (!filtering) {
+        if (!aFiltering) {
             // ensure that parent dir of dest file exists!
             // not using getParentFile method to stay 1.1 compat
-            String parentPath = destFile.getParent();
+            String parentPath = aDestFile.getParent();
             if (parentPath != null) {
                 File parent = new File(parentPath);
                 if (!parent.exists()) {
@@ -280,13 +280,13 @@ public class Move extends Copy {
                 }
             }
 
-            if (destFile.exists()) {
-                if (!destFile.delete()) {
+            if (aDestFile.exists()) {
+                if (!aDestFile.delete()) {
                     throw new BuildException("Unable to remove existing file "
-                                             + destFile);
+                                             + aDestFile);
                 }
             }
-            renamed = sourceFile.renameTo(destFile);
+            renamed = sourceFile.renameTo(aDestFile);
         } else {
             renamed = false;
         }
