@@ -82,7 +82,7 @@ public class DirSetTest extends AbstractFileSetTest {
             ds.getDir(getProject());
             fail("DirSet created from FileSet reference");
         } catch (BuildException e) {
-            assertEquals("dummy doesn\'t denote a dirset", e.getMessage());
+            assertEquals("dummy doesn\'t denote a DirSet", e.getMessage());
         }
 
         ds = (DirSet) getInstance();
@@ -93,7 +93,7 @@ public class DirSetTest extends AbstractFileSetTest {
             fs.getDir(getProject());
             fail("FileSet created from DirSet reference");
         } catch (BuildException e) {
-            assertEquals("dummy2 doesn\'t denote a fileset", e.getMessage());
+            assertEquals("dummy2 doesn\'t denote a FileSet", e.getMessage());
         }
     }
 
