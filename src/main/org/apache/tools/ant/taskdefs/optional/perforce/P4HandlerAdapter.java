@@ -54,7 +54,10 @@
 
 package org.apache.tools.ant.taskdefs.optional.perforce;
 
-import java.io.*;
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.taskdefs.PumpStreamHandler;
