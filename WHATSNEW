@@ -44,15 +44,18 @@ Changes that could break older environments:
   'description' attribute, unless the -verbose or -debug flag is included
   on the Ant command line.
 
+* Ant's testcases now require JUnit 3.7 or above, as they now use the new
+  assertTrue method instead of assert.
+
 Fixed bugs:
 -----------
 * Fixed bug where <move> ignored <filterset>s.
 
-* Ant works properly with the combination of Java1.4/WindowsXP
+* Ant works properly with the combination of Java1.4/WindowsXP.
 
 * Fixed bug where <java> used to sometimes invoke class constructors twice.
 
-* Fixed bug with 4NT shell support
+* Fixed bug with 4NT shell support.
 
 * Fixed bug where ant would not perform ftp without remotedir being
   specified even though this was not mandatory.
@@ -95,8 +98,26 @@ Other changes:
 * <copy>, <loadfile>, <loadproperties>, <move> support FilterChains 
   of FilterReaders.
   
-* New task <loadproperties> to load contents of file as Ant properties.
+* New task <loadproperties> to load contents of file as Ant properties,
+  with nested <filterchain> elements.
   
+* New task <loadfile> to load a whole file into a property.
+
+* New task <echoproperties> to list your current properties to the screen
+  or a file. 
+
+* New tasks <bzip2> and <bunzip2> to pack and unpack files using the 
+  BZip2 alogrithm.
+
+* New tasks <replaceregexp>, <checksum>, <translate>, <waitfor>, <input>,
+  <manifest>, <vsscp>, <vssadd>, <vsscreate>, <splash>, <basename>, <dirname>.
+
+* A new combined <mail> task, which replaces the old <mail> and
+  <mimemail> tasks, has been added.  The <mimemail> task, and 
+  old SendEmail and MimeMail classes have been deprecated.
+
+* Mail task allows specification of port number.
+
 * Users can control what <zip> and <jar> must do when duplicate files 
   are found.  A new element <zipgroupfileset> allows for multiple zip 
   files to be merged into the archive.  In addition, <jar> also has 
@@ -106,15 +127,6 @@ Other changes:
 
 * gzip now checks that the zipfile is older than the source file
   before rebuilding the zipfile. 
-
-* New task <loadfile> to load a whole file into a property
-
-* New task <echoproperties> to list your current properties to the screen
-  or a file. 
-
-* A new combined email task, which replaces the old <mail> and
-  <mimemail> tasks, has been added.  The <mimemail> task, and 
-  old SendEmail and MimeMail classes have been deprecated.
 
 * TarFileset takes in three new attributes - fullpath, prefix
   and preserveLeadingSlashes.
@@ -128,9 +140,9 @@ Other changes:
 * Exec task has extra attribute "resultproperty" to get the return code
   into a property.
   
-* Exec task prints a message when a timed out process is killed.  
+* Exec task prints a message when a timed-out process is killed.  
   
-* Added optional attributes - name, arch and version to <os>
+* Added optional attributes - name, arch and version to the <os> task.
 
 * Unjar, Untar, Unwar and Unzip now support patternsets to 
   select files from an archive for extraction.  Filesets may be 
@@ -141,25 +153,14 @@ Other changes:
   classic compiler (version 1.2 and higher) is used and debugging
   is enabled.
 
-* Mail task allows specification of port number.
-
 * Added support for specifying CVS_RSH in the <cvs/> task
-
-* New tasks bzip2 and bunzip2 to pack and unpack files using the 
-  BZip2 alogrithm, replaceregexp, checksum, translate, waitfor, input,
-  manifest, vsscp, vssadd, vsscreate, splash
 
 * The attributes zipfile, jarfile, warfile and earfile (from the Zip, 
   Jar, War and Ear tasks) have been deprecated and superseded by a 
   new attribute "destfile".
 
-* Added a new condition <isset> that test for the existence of a
-  property to the condition task.
-
-* Added new conditions <checksum>, <http>, <socket>, <contains>, <filesmatch>.
-
-* Ant's testcases require JUnit 3.7 or above as they now use the new
-  assertTrue method instead of assert.
+* Added new conditions <isset>, <checksum>, <http>, <socket>, <contains>,
+  <filesmatch>.
 
 * <taskdef> and <typedef> will now emit a warning if a task/type of
   the given name already exists.
@@ -170,7 +171,7 @@ Other changes:
 
 * Improved support for Novell NetWare.
 
-* Added an optional encoding attribute to <fixcrlf>
+* Added an optional encoding attribute to <fixcrlf>.
 
 * <apply> has a new attribute relative that allows users to pass the
   filenames as relative instead of absolute paths on the command line.
@@ -183,14 +184,14 @@ Other changes:
   unless attributes.
 
 * Ant now comes with two new BuildLogger implementations - one that 
-  can send emails containing a log of the build process (MailLogger);
-  the other that colorizes the output based on message levels using
+  can send emails containing a log of the build process (MailLogger),
+  and one that colorizes the output based on message levels, using
   ANSI color code escape sequences (AnsiColorLogger).
 
 * A "package" mapper type has been added to allow package directory
   names replaced with the dotted form.
   
-* you can now specify environment variables in the <java> and <junit> tasks 
+* You can now specify environment variables in the <java> and <junit> tasks 
   if the fork attribute has been set to true.
   
 * -propertyfile command-line option has been added to load an entire
@@ -203,14 +204,14 @@ Other changes:
   
 * <tstamp> now supports a new "prefix" attribute to prefix properties set.
 
-* you can now specify the -sourcepath for <javac> explicitly.
+* You can now specify the -sourcepath for <javac> explicitly.
 
 * <javac> now supports a new "listfiles" attribute to list the source
   files it's handing off to the compiler.
 
 * The compiler implementation for javac can now be chosen on a task by
-  task basis.  Use the new compiler attribute of <javac> to override
-  the build.compiler property.
+  task basis.  The new compiler attribute of <javac> can be used to override
+  the value of the build.compiler property, if set.
   
 * <propertyfile>'s <entry> now has a 'unit' attribute to specify the
   increment/decrement unit on date operations.
@@ -218,15 +219,15 @@ Other changes:
 * <property> now supports a 'prefix' attribute when loading from a file
   or resource.
 
-* In Ant 1.4 a feature has been added to the <junit> task that would
+* In Ant 1.4, a feature has been added to the <junit> task that would
   add ant.jar, optional.jar and junit.jar implicitly to the classpath -
   this feature can now be disabled by setting the new includeantruntime
   attribute to false.
 
-* <style> behaves different than any other directory based task as it
+* <style> behaves differently from any other directory-based task, as it
   processes all files that it finds in included directories in
-  addition to the files matched by your patterns.  There now is a new
-  attribute to suppress this behavior.
+  addition to the files matched by your patterns.  There is now a new
+  attribute, 'scanincludeddirectories', to suppress this behavior.
 
 * <javadoc> now supports a <tag> nested element to provide the -tag option
   to the standard Java 1.4 doclet. The element is ignored when not running
@@ -235,7 +236,7 @@ Other changes:
 * <javac>'s source attribute is now enabled for jikes as well.
 
 * <ftp> can now chmod files on a remote server that supports
-  "site chmod" as well as set the umask before transfering files if
+  "site chmod", as well as set the umask before transferring files, if
   the server supports "site umask".
 
 Changes from Ant 1.4 to Ant 1.4.1
