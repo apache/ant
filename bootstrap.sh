@@ -40,7 +40,7 @@ echo ... Bootstrapping Ant Distribution
 if [ -f "lib/ant.jar" ] ; then
   rm lib/ant.jar
 fi
-if [ -f "lib/otional.jar" ] ; then
+if [ -f "lib/optional.jar" ] ; then
   rm lib/optional.jar
 fi
 
