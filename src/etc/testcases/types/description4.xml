@@ -1,6 +1,0 @@
-<project name="test" default="main" basedir=".">
-  <description>Multi Instance </description>
-  <target name="main">
-      <description>Nested Project Description</description>
-  </target>
-</project>

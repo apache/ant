@@ -1,4 +1,0 @@
-Manifest-Version: 1.0
-
- Can't start with a continuation line
-

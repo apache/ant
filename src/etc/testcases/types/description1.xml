@@ -1,5 +1,0 @@
-<project name="test" default="main" basedir=".">
-  <description>Test Project Description</description>
-  <target name="main">
-  </target>
-</project>

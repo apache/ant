@@ -1,6 +1,0 @@
-<project name="test" default="main" basedir=".">
-  <description>Multi Instance </description>
-  <description>Project Description</description>
-  <target name="main">
-  </target>
-</project>
