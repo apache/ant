@@ -36,7 +36,7 @@
              excludes="**/stylesheets/** empty.xml"
              includes="**/*.xml"
              lastModifiedCheck="true"
-             velocityPropertiesFile="${docs.src}/velocity.properties">
+             templatePath="./xdocs/stylesheets">
         </anakia>
 
         <!-- In case we have images some day
