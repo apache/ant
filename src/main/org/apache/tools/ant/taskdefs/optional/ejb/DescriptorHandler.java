@@ -131,6 +131,7 @@ public class DescriptorHandler extends org.xml.sax.HandlerBase {
         if (fileDTD.exists()) {
             if (publicId != null) {
                 fileDTDs.put(publicId, fileDTD);
+                owningTask.log("Mapped publicId " + publicId + " to file " + fileDTD, Project.MSG_VERBOSE);
             }
             return;
         }
@@ -138,6 +139,7 @@ public class DescriptorHandler extends org.xml.sax.HandlerBase {
         if (getClass().getResource(location) != null) {
             if (publicId != null) {
                 resourceDTDs.put(publicId, location);
+                owningTask.log("Mapped publicId " + publicId + " to resource " + location, Project.MSG_VERBOSE);
             }
         }
     }

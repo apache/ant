@@ -77,7 +77,7 @@ public class JbossDeploymentTool extends GenericDeploymentTool {
      * Add any vendor specific files which should be included in the
      * EJB Jar.
      */
-    protected void addVendorFiles(Hashtable ejbFiles, String baseName) {
+    protected void addVendorFiles(Hashtable ejbFiles, String baseName, String descriptorFileName) {
         String ddPrefix = (usingBaseJarName() ? "" : baseName + getConfig().baseNameTerminator);
 
         File jbossDD = new File(getConfig().descriptorDir, ddPrefix + JBOSS_DD);

@@ -297,9 +297,21 @@ public class WeblogicDeploymentTool extends GenericDeploymentTool {
      * Add any vendor specific files which should be included in the 
      * EJB Jar.
      */
-    protected void addVendorFiles(Hashtable ejbFiles, String baseName) {
-        String ddPrefix = (usingBaseJarName() ? "" : baseName + getConfig().baseNameTerminator);
-
+    protected void addVendorFiles(Hashtable ejbFiles, String baseName, String descriptorFileName) {
+        String ddPrefix = null;
+        if (!usingBaseJarName()) {
+            ddPrefix = baseName + getConfig().baseNameTerminator;
+        }
+        else {
+            String canonicalDescriptor = descriptorFileName.replace('\\', '/');
+            int index = canonicalDescriptor.lastIndexOf('/');
+            if (index == -1) {
+                ddPrefix = "";
+            }
+            else {
+                ddPrefix = descriptorFileName.substring(0, index + 1);
+            }
+        }
         File weblogicDD = new File(getConfig().descriptorDir, ddPrefix + WL_DD);
 
         if (weblogicDD.exists()) {

@@ -240,7 +240,7 @@ public class BorlandDeploymentTool extends GenericDeploymentTool
      * Add any vendor specific files which should be included in the 
      * EJB Jar.
      */
-    protected void addVendorFiles(Hashtable ejbFiles, String baseName) {
+    protected void addVendorFiles(Hashtable ejbFiles, String baseName, String descriptorFileName) {
 
         File borlandDD = new File(getConfig().descriptorDir,META_DIR+BAS_DD);
         if (borlandDD.exists()) {

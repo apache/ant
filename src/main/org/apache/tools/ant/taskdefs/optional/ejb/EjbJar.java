@@ -469,6 +469,13 @@ public class EjbJar extends MatchingTask {
             throw new BuildException(msg, pce);
         }
     } // end of execute()
+
+    public static class NamignScheme extends EnumeratedAttribute {
+        public String[] getValues() {
+            return new String[] {"ejb-name", "directory", "descriptor"};
+        }
+    }
+
 }
 
 
