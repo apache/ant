@@ -367,23 +367,23 @@ public class RuntimeConfigurable implements Serializable {
             IntrospectionHelper.getHelper(p, target.getClass());
 
         if (attributeNames != null) {
-        for (int i = 0; i < attributeNames.size(); i++) {
-            String name = (String) attributeNames.get(i);
-            String value = (String) attributeMap.get(name);
-
-            // reflect these into the target
-            value = p.replaceProperties(value);
-            try {
-                ih.setAttribute(p, target,
-                        name.toLowerCase(Locale.US), value);
-            } catch (BuildException be) {
-                // id attribute must be set externally
-                if (!name.equals("id")) {
-                    throw be;
+            for (int i = 0; i < attributeNames.size(); i++) {
+                String name = (String) attributeNames.get(i);
+                String value = (String) attributeMap.get(name);
+                
+                // reflect these into the target
+                value = p.replaceProperties(value);
+                try {
+                    ih.setAttribute(p, target,
+                                    name.toLowerCase(Locale.US), value);
+                } catch (BuildException be) {
+                    // id attribute must be set externally
+                    if (!name.equals("id")) {
+                        throw be;
+                    }
                 }
             }
-        }
-        id = (String) attributeMap.get("id");
+            id = (String) attributeMap.get("id");
         }
 
         if (characters != null) {

@@ -313,27 +313,28 @@ public class UnknownElement extends Task {
         IntrospectionHelper ih = IntrospectionHelper.getHelper(parentClass);
 
         if (children != null) {
-        Iterator it = children.iterator();
-        for (int i = 0; it.hasNext(); i++) {
-            RuntimeConfigurable childWrapper = parentWrapper.getChild(i);
-            UnknownElement child = (UnknownElement) it.next();
-            
-            // backwards compatibility - element names of nested
-            // elements have been all lower-case in Ant, except for
-            // TaskContainers
-            if (!handleChild(ih, parent, child, 
-                             child.getTag().toLowerCase(Locale.US), 
-                             childWrapper)) {
-                if (!(parent instanceof TaskContainer)) {
-                    ih.throwNotSupported(getProject(), parent, child.getTag());
-                } else {
-                    // a task container - anything could happen - just add the 
-                    // child to the container
-                    TaskContainer container = (TaskContainer) parent;
-                    container.addTask(child);
+            Iterator it = children.iterator();
+            for (int i = 0; it.hasNext(); i++) {
+                RuntimeConfigurable childWrapper = parentWrapper.getChild(i);
+                UnknownElement child = (UnknownElement) it.next();
+                
+                // backwards compatibility - element names of nested
+                // elements have been all lower-case in Ant, except for
+                // TaskContainers
+                if (!handleChild(ih, parent, child, 
+                                 child.getTag().toLowerCase(Locale.US), 
+                                 childWrapper)) {
+                    if (!(parent instanceof TaskContainer)) {
+                        ih.throwNotSupported(getProject(), parent, 
+                                             child.getTag());
+                    } else {
+                        // a task container - anything could happen - just add the 
+                        // child to the container
+                        TaskContainer container = (TaskContainer) parent;
+                        container.addTask(child);
+                    }
                 }
             }
-        }
         }
     }
 
