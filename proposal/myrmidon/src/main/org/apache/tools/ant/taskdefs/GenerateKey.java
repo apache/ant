@@ -19,9 +19,9 @@ import org.apache.tools.ant.types.Commandline;
  *
  * @author <a href="mailto:donaldp@apache.org">Peter Donald</a>
  */
-public class GenerateKey extends Task
+public class GenerateKey
+    extends Task
 {
-
     /**
      * The alias of signer.
      */
