@@ -108,7 +108,7 @@ import org.apache.tools.ant.types.EnumeratedAttribute;
  */
 
 public abstract class DotnetCompile
-         extends MatchingTask {
+         extends DotnetBaseMatchingTask {
 
     /**
      *  list of reference classes. (pretty much a classpath equivalent)
@@ -131,11 +131,6 @@ public abstract class DotnetCompile
     private File win32res;
 
     /**
-     *  output file. If not supplied this is derived from the source file
-     */
-    private File outputFile;
-
-    /**
      *  flag to control action on execution trouble
      */
     private boolean failOnError;
@@ -151,11 +146,6 @@ public abstract class DotnetCompile
      *  optimise flag
      */
     private boolean optimize;
-
-    /**
-     * sets of file to compile
-     */
-    protected Vector filesets = new Vector();
 
     /**
      * a list of definitions to support;
@@ -223,11 +213,6 @@ public abstract class DotnetCompile
     protected String extraOptions;
 
     /**
-     *  source directory upon which the search pattern is applied
-     */
-    private File srcDir;
-
-    /**
      *  type of target. Should be one of exe|library|module|winexe|(null)
      *  default is exe; the actual value (if not null) is fed to the command
      *  line. <br>
@@ -244,7 +229,7 @@ public abstract class DotnetCompile
     /**
      *  list of extra modules to refer to
      */
-    String additionalModules;
+    protected String additionalModules;
 
 
     /**
@@ -553,23 +538,6 @@ public abstract class DotnetCompile
 
 
     /**
-    * Overridden because we need to be able to set the srcDir.
-    */
-    public File getSrcDir() {
-        return this.srcDir;
-    }
-
-    /**
-     *  Set the source directory of the files to be compiled.
-     *
-     *@param  srcDirName  The new SrcDir value
-     */
-    public void setSrcDir(File srcDirName) {
-        this.srcDir = srcDirName;
-    }
-
-
-    /**
      * Set the destination directory of files to be compiled.
      *
      *@param  dirName  The new DestDir value
@@ -595,12 +563,12 @@ public abstract class DotnetCompile
      */
     public void setTargetType(String ttype)
              throws BuildException {
-        targetType = ttype.toLowerCase();
-        if (targetType.equals("exe") || targetType.equals("library") ||
-                targetType.equals("module") || targetType.equals("winexe")) {
-            targetType = targetType;
+        ttype = ttype.toLowerCase();
+        if (ttype.equals("exe") || ttype.equals("library") ||
+                ttype.equals("module") || ttype.equals("winexe")) {
+            targetType = ttype;
         } else {
-            throw new BuildException("targetType " + targetType
+            throw new BuildException("targetType " + ttype
                     + " is not one of 'exe', 'module', 'winexe' or 'library'" );
         }
     }
@@ -766,17 +734,6 @@ public abstract class DotnetCompile
     }
 
 
-
-    /**
-     *  Set the name of exe/library to create.
-     *
-     *@param  file  The new outputFile value
-     */
-    public void setDestFile(File file) {
-        outputFile = file;
-    }
-
-
     /**
      *  get the argument or null for no argument needed
      *
@@ -808,14 +765,6 @@ public abstract class DotnetCompile
      */
     public boolean getFailOnError() {
         return failOnError;
-    }
-
-    /**
-     * add a new source directory to the compile
-     * @param src
-     */
-    public void addSrc(FileSet src) {
-        filesets.add(src);
     }
 
     /**
@@ -862,14 +811,6 @@ public abstract class DotnetCompile
     }
 
     /**
-     * get the destination file
-     * @return the dest file or null for not assigned
-     */
-    public File getDestFile() {
-        return outputFile;
-    }
-
-    /**
      *  do the work by building the command line and then calling it
      *
      *@throws  BuildException  if validation or execution failed
@@ -904,98 +845,6 @@ public abstract class DotnetCompile
      */
     public abstract String getFileExtension();
 
-    /**
-     * create the list of files
-     * @param filesToBuild vector to add files to
-     * @param outputTimestamp timestamp to compare against
-     * @return number of files out of date
-     */
-    protected int buildFileList(Hashtable filesToBuild, long outputTimestamp) {
-        int filesOutOfDate=0;
-        boolean scanImplicitFileset=getSrcDir()!=null || filesets.size()==0;
-        if(scanImplicitFileset) {
-            //scan for an implicit fileset if there was a srcdir set
-            //or there was no srcDir set but the @
-            if (getSrcDir() == null) {
-                //if there is no src dir here, set it
-                setSrcDir(getProject().resolveFile("."));
-            }
-            log("working from source directory " + getSrcDir(), Project.MSG_VERBOSE);
-            //get dependencies list.
-            DirectoryScanner scanner = super.getDirectoryScanner(getSrcDir());
-            filesOutOfDate = scanOneFileset(scanner, filesToBuild, outputTimestamp);
-        }
-        //get any included source directories
-        for (int i = 0; i < filesets.size(); i++) {
-            FileSet fs = (FileSet) filesets.elementAt(i);
-            filesOutOfDate+=scanOneFileset(fs.getDirectoryScanner(getProject()),
-                    filesToBuild,
-                    outputTimestamp);
-        }
-
-        return filesOutOfDate;
-    }
-
-    /**
-     * scan through one fileset for files to include
-     * @param scanner
-     * @param filesToBuild
-     * @param outputTimestamp timestamp to compare against
-     * @return #of files out of date
-     * @todo: should FAT granularity be included here?
-     */
-    protected int scanOneFileset(DirectoryScanner scanner, Hashtable filesToBuild,
-                                 long outputTimestamp) {
-        int filesOutOfDate = 0;
-        String[] dependencies = scanner.getIncludedFiles();
-        File base = scanner.getBasedir();
-        //add to the list
-        for (int i = 0; i < dependencies.length; i++) {
-            File targetFile = new File(base, dependencies[i]);
-            if(filesToBuild.get(targetFile)==null) {
-                log(targetFile.toString(), Project.MSG_VERBOSE);
-                filesToBuild.put(targetFile,targetFile);
-                if (targetFile.lastModified() > outputTimestamp) {
-                    filesOutOfDate++;
-                    log("Source file " + targetFile.toString() + " is out of date",
-                            Project.MSG_VERBOSE);
-                } else {
-                    log("Source file " + targetFile.toString() + " is up to date",
-                            Project.MSG_VERBOSE);
-                }
-            }
-        }
-        return filesOutOfDate;
-    }
-
-    /**
-     * add the list of files to a command
-     * @param filesToBuild vector of files
-     * @param command the command to append to
-     */
-    protected void addFilesToCommand(Hashtable filesToBuild, NetCommand command) {
-        int count=filesToBuild.size();
-        log("compiling " + count + " file" + ((count== 1) ? "" : "s"));
-        Enumeration files=filesToBuild.elements();
-        while (files.hasMoreElements()) {
-            File file = (File) files.nextElement();
-            command.addArgument(file.toString());
-        }
-    }
-
-    /**
-     * determine the timestamp of the output file
-     * @return a timestamp or 0 for no output file known/exists
-     */
-    protected long getOutputFileTimestamp() {
-        long outputTimestamp;
-        if (getDestFile() != null && getDestFile().exists()) {
-            outputTimestamp = getDestFile().lastModified();
-        } else {
-            outputTimestamp = 0;
-        }
-        return outputTimestamp;
-    }
 
     /**
      * fill in the common information
@@ -1034,24 +883,6 @@ public abstract class DotnetCompile
      * @param command
      */
     protected abstract void addCompilerSpecificOptions(NetCommand command);
-
-    /**
-     * finish off the command by adding all dependent files, execute
-     * @param command
-     */
-    protected void addFilesAndExecute(NetCommand command) {
-        long outputTimestamp = getOutputFileTimestamp();
-        Hashtable filesToBuild =new Hashtable();
-        int filesOutOfDate = buildFileList(filesToBuild, outputTimestamp);
-
-        //add the files to the command
-        addFilesToCommand(filesToBuild, command);
-
-        //now run the command of exe + settings + files
-        if (filesOutOfDate > 0) {
-            command.runCommand();
-        }
-    }
 
     /**
      * override point for delimiting definitions
@@ -1138,6 +969,8 @@ public abstract class DotnetCompile
             || owner.getProject().getProperty(condition) != null;
         }
     }
+
+
 }
 
 

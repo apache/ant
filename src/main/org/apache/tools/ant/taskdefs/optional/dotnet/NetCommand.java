@@ -65,9 +65,12 @@ package org.apache.tools.ant.taskdefs.optional.dotnet;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Hashtable;
+
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.Task;
+import org.apache.tools.ant.DirectoryScanner;
 import org.apache.tools.ant.taskdefs.Execute;
 import org.apache.tools.ant.taskdefs.ExecuteStreamHandler;
 import org.apache.tools.ant.taskdefs.LogStreamHandler;
@@ -258,6 +261,39 @@ public class NetCommand {
         } catch (IOException e) {
             throw new BuildException(title + " failed: " + e, e, owner.getLocation());
         }
+    }
+
+
+    /**
+     * scan through one fileset for files to include
+     * @param scanner
+     * @param filesToBuild
+     * @param outputTimestamp timestamp to compare against
+     * @return #of files out of date
+     * @todo: should FAT granularity be included here?
+     */
+    public int scanOneFileset(DirectoryScanner scanner, Hashtable filesToBuild,
+                                        long outputTimestamp) {
+        int filesOutOfDate = 0;
+        String[] dependencies = scanner.getIncludedFiles();
+        File base = scanner.getBasedir();
+        //add to the list
+        for (int i = 0; i < dependencies.length; i++) {
+            File targetFile = new File(base, dependencies[i]);
+            if (filesToBuild.get(targetFile) == null) {
+                owner.log(targetFile.toString(), Project.MSG_VERBOSE);
+                filesToBuild.put(targetFile, targetFile);
+                if (targetFile.lastModified() > outputTimestamp) {
+                    filesOutOfDate++;
+                    owner.log("Source file " + targetFile.toString() + " is out of date",
+                            Project.MSG_VERBOSE);
+                } else {
+                    owner.log("Source file " + targetFile.toString() + " is up to date",
+                            Project.MSG_VERBOSE);
+                }
+            }
+        }
+        return filesOutOfDate;
     }
 }
 

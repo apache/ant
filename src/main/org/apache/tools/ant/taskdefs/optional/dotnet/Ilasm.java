@@ -55,25 +55,16 @@
  *  build notes
  *  -The reference CD to listen to while editing this file is
  *  nap: Underworld  - Everything, Everything
- *  -variable naming policy from Fowler's refactoring book.
- *  -tested against the PDC pre-beta of csc.exe; future versions will
- *  inevitably change things
  */
-// ====================================================================
-// place in the optional ant tasks package
-// but in its own dotnet group
-// ====================================================================
 
 package org.apache.tools.ant.taskdefs.optional.dotnet;
 
-// ====================================================================
-// imports
-// ====================================================================
 
 import java.io.File;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.DirectoryScanner;
 import org.apache.tools.ant.Project;
+import org.apache.tools.ant.types.EnumeratedAttribute;
 import org.apache.tools.ant.taskdefs.MatchingTask;
 
 /**
@@ -93,15 +84,14 @@ import org.apache.tools.ant.taskdefs.MatchingTask;
  *
  *  The task is a directory based task, so attributes like <b>includes="*.il"
  *  </b> and <b>excludes="broken.il"</b> can be used to control the files pulled
- *  in. Each file is built on its own, producing an appropriately named output
- *  file unless manually specified with <b>outfile</b>
+ *  in. You can also use nested &lt;src&gt filesets to refer to source.
  *
  *@author     Steve Loughran steve_l@iseran.com
- *@version    0.5
+ *@version    0.6
  */
 
 public class Ilasm
-         extends MatchingTask {
+         extends DotnetBaseMatchingTask {
 
     /**
      *  Name of the executable. The .exe suffix is deliberately not included in
@@ -125,11 +115,6 @@ public class Ilasm
     protected static final String exe_title = "ilasm";
 
     /**
-     *  source directory upon which the search pattern is applied
-     */
-    private File srcDir;
-
-    /**
      *  type of target. Should be one of exe|library|module|winexe|(null)
      *  default is exe; the actual value (if not null) is fed to the command
      *  line. <br>
@@ -147,11 +132,6 @@ public class Ilasm
      */
 
     protected boolean listing;
-
-    /**
-     *  output file. If not supplied this is derived from the source file
-     */
-    protected File outputFile;
 
     /**
      *  resource file (.res format) to include in the app.
@@ -204,15 +184,6 @@ public class Ilasm
         extraOptions = null;
     }
 
-
-    /**
-     * Set the source directory containing the files to be compiled.
-     *
-     * @param  srcDirName  The new SrcDir value
-     */
-    public void setSrcDir(File srcDirName) {
-        srcDir = srcDirName;
-    }
 
 
     /**
@@ -324,8 +295,8 @@ public class Ilasm
 
 
     /**
-     * Set the output file.
-     *
+     * Set the output file; identical to setDestFile
+     * @see DotnetBaseMatchingTask.setDestFile
      *@param  params  The new outputFile value
      */
     public void setOutputFile(File params) {
@@ -385,7 +356,7 @@ public class Ilasm
      *
      *@return    The failFailOnError value
      */
-    public boolean getFailFailOnError() {
+    public boolean getFailOnError() {
         return failOnError;
     }
 
@@ -478,6 +449,13 @@ public class Ilasm
         }
     }
 
+    /**
+     * set the target type to one of exe|library
+     * @param targetType
+     */
+    public void setTargetType(TargetTypes targetType) {
+        this.targetType = targetType.getValue();
+    }
 
     /**
      *  This is the execution entry point. Build a list of files and call ilasm
@@ -491,32 +469,21 @@ public class Ilasm
             srcDir = getProject().resolveFile(".");
         }
 
-        //get dependencies list.
-        DirectoryScanner scanner = super.getDirectoryScanner(srcDir);
-        String[] dependencies = scanner.getIncludedFiles();
-        log("assembling " + dependencies.length + " file" + ((dependencies.length == 1) ? "" : "s"));
-        String baseDir = scanner.getBasedir().toString();
-        //add to the command
-        for (int i = 0; i < dependencies.length; i++) {
-            String targetFile = dependencies[i];
-            targetFile = baseDir + File.separator + targetFile;
-            executeOneFile(targetFile);
-        }
+        NetCommand command = buildIlasmCommand();
+
+        addFilesAndExecute(command);
 
     }
     // end execute
 
 
     /**
-     *  do the work for one file by building the command line then calling it
-     *
-     *@param  targetFile       name of the the file to assemble
-     *@throws  BuildException  if the assembly failed and FailOnError is true
+     * build up our ilasm command
+     * @return
      */
-    public void executeOneFile(String targetFile)
-             throws BuildException {
+    private NetCommand buildIlasmCommand() {
         NetCommand command = new NetCommand(this, exe_title, exe_name);
-        command.setFailOnError(getFailFailOnError());
+        command.setFailOnError(getFailOnError());
         //fill in args
         command.addArgument(getDebugParameter());
         command.addArgument(getTargetTypeParameter());
@@ -532,10 +499,23 @@ public class Ilasm
          *  command.addArgument();
          *  command.addArgument();
          */
-        command.addArgument(targetFile);
-        //now run the command of exe + settings + file
-        command.runCommand();
+        return command;
     }
-    // end executeOneFile
+
+
+
+    /**
+     * Target types to build.
+     * valid build types are exe|library|module|winexe
+     */
+    public static class TargetTypes extends EnumeratedAttribute {
+        public String[] getValues() {
+            return new String[]{
+                "exe",
+                "library",
+            };
+        }
+    }
+
 }
 
