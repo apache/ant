@@ -99,7 +99,7 @@ public class PreSetDef extends Task implements AntlibInterface, TaskContainer {
         if (uri.equals(ProjectHelper.ANT_CORE_URI)) {
             uri = "";
         }
-        if (uri.startsWith("ant:") && !uri.startsWith("antlib:")) {
+        if (uri.startsWith("ant:")) {
             throw new BuildException("Attempt to use a reserved URI " + uri);
         }
         this.uri = uri;
@@ -266,14 +266,51 @@ public class PreSetDef extends Task implements AntlibInterface, TaskContainer {
 
         /**
          * Equality method for this definition
-         * This only checks for pointer equality.
          *
          * @param other another definition
          * @param project the current project
          * @return true if the definitions are the same
          */
         public boolean sameDefinition(AntTypeDefinition other, Project project) {
-            return this == other;
+            if (other == null) {
+                return false;
+            }
+            if (other.getClass() != getClass()) {
+                return false;
+            }
+            MyAntTypeDefinition otherDef = (MyAntTypeDefinition) other;
+            if (!parent.sameDefinition(otherDef.parent, project)) {
+                return false;
+            }
+            if (!element.similar(otherDef.element)) {
+                return false;
+            }
+            return true;
+        }
+
+        /**
+         * Similiar method for this definition
+         *
+         * @param other another definition
+         * @param project the current project
+         * @return true if the definitions are the same
+         */
+        public boolean similarDefinition(
+            AntTypeDefinition other, Project project) {
+            if (other == null) {
+                return false;
+            }
+            if (!other.getClass().getName().equals(getClass().getName())) {
+                return false;
+            }
+            MyAntTypeDefinition otherDef = (MyAntTypeDefinition) other;
+            if (!parent.similarDefinition(otherDef.parent, project)) {
+                return false;
+            }
+            if (!element.similar(otherDef.element)) {
+                return false;
+            }
+            return true;
         }
     }
 }

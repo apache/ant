@@ -670,21 +670,19 @@ public class ComponentHelper  {
                 if (sameDefinition(def, old)) {
                     return;
                 }
+                int logLevel = Project.MSG_WARN;
+                if (def.similarDefinition(old, project)) {
+                    logLevel = Project.MSG_VERBOSE;
+                }
                 Class oldClass = antTypeTable.getExposedClass(name);
-                if (oldClass != null && Task.class.isAssignableFrom(oldClass)) {
-                    int logLevel = Project.MSG_WARN;
-                    if (def.getClassName().equals(old.getClassName())
-                        && def.getClassLoader() == old.getClassLoader()) {
-                        logLevel = Project.MSG_VERBOSE;
-                    }
-                    project.log(
-                        "Trying to override old definition of task "
-                        + name, logLevel);
+                boolean isTask =
+                    (oldClass != null && Task.class.isAssignableFrom(oldClass));
+                project.log(
+                    "Trying to override old definition of "
+                    + (isTask ? "task" : "datatype")
+                    + " " + name, logLevel);
+                if (isTask) {
                     invalidateCreatedTasks(name);
-                } else {
-                    project.log(
-                        "Trying to override old definition of datatype "
-                        + name, Project.MSG_WARN);
                 }
             }
             project.log(" +Datatype " + name + " " + def.getClassName(),

@@ -329,7 +329,7 @@ public class AntTypeDefinition {
     }
 
     /**
-     * Equality method for this definition
+     * Equality method for this definition (assumes the names are the same)
      *
      * @param other another definition
      * @param project the project the definition
@@ -345,6 +345,69 @@ public class AntTypeDefinition {
         if (!(other.getTypeClass(project).equals(getTypeClass(project)))) {
             return false;
         }
-        return other.getExposedClass(project).equals(getExposedClass(project));
+        if (!other.getExposedClass(project).equals(getExposedClass(project))) {
+            return false;
+        }
+        if (other.adapterClass != adapterClass) {
+            return false;
+        }
+        if (other.adaptToClass != adaptToClass) {
+            return false;
+        }
+        return true;
+    }
+
+    /**
+     * Similar definition
+     * used to compare two definitions defined twice with the same
+     * name and the same types.
+     * the classloader may be different but have the same
+     * path so #sameDefinition cannot
+     * be used.
+     * @param other the definition to compare to
+     * @param project the current project
+     * @return true if the definitions are the same
+     */
+    public boolean similarDefinition(AntTypeDefinition other, Project project) {
+        if (other == null) {
+            return false;
+        }
+        if (getClass() != other.getClass()) {
+            return false;
+        }
+        if (!getClassName().equals(other.getClassName())) {
+            return false;
+        }
+        if (!extractClassname(adapterClass).equals(
+                extractClassname(other.adapterClass))) {
+            return false;
+        }
+        if (!extractClassname(adaptToClass).equals(
+                extractClassname(other.adaptToClass))) {
+            return false;
+        }
+        // all the names are the same: check if the class path of the loader
+        // is the same
+        ClassLoader oldLoader = other.getClassLoader();
+        ClassLoader newLoader = this.getClassLoader();
+        if (oldLoader != null
+            && newLoader != null
+            && oldLoader instanceof AntClassLoader
+            && newLoader instanceof AntClassLoader
+            && ((AntClassLoader) oldLoader).getClasspath()
+            .equals(((AntClassLoader) newLoader).getClasspath())
+            ) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    private String extractClassname(Class c) {
+        if (c == null) {
+            return "<null>";
+        } else {
+            return c.getClass().getName();
+        }
     }
 }

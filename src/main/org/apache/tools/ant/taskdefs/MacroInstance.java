@@ -80,7 +80,7 @@ import org.apache.tools.ant.RuntimeConfigurable;
  * @since Ant 1.6
  */
 public class MacroInstance extends Task implements DynamicConfigurator {
-    private MacroDef template;
+    private MacroDef macroDef;
     private Map      map = new HashMap();
     private Map      elements = new HashMap();
     private Hashtable localProperties = new Hashtable();
@@ -88,10 +88,10 @@ public class MacroInstance extends Task implements DynamicConfigurator {
     /**
      * Called from MacroDef.MyAntTypeDefinition#create()
      *
-     * @param template a <code>MacroDef</code> value
+     * @param macroDef a <code>MacroDef</code> value
      */
-    protected void setTemplate(MacroDef template) {
-        this.template = template;
+    protected void setMacroDef(MacroDef macroDef) {
+        this.macroDef = macroDef;
     }
 
     /**
@@ -112,7 +112,7 @@ public class MacroInstance extends Task implements DynamicConfigurator {
      *                        has already been seen
      */
     public Object createDynamicElement(String name) throws BuildException {
-        if (template.getElements().get(name) == null) {
+        if (macroDef.getElements().get(name) == null) {
             throw new BuildException("unsupported element " + name);
         }
         if (elements.get(name) != null) {
@@ -130,7 +130,7 @@ public class MacroInstance extends Task implements DynamicConfigurator {
         private List unknownElements = new ArrayList();
 
         /**
-         * Add an unknown element (to be snipped into the template instance)
+         * Add an unknown element (to be snipped into the macroDef instance)
          *
          * @param nestedTask an unknown element
          */
@@ -225,7 +225,7 @@ public class MacroInstance extends Task implements DynamicConfigurator {
     }
 
     private String macroSubs(String s, Map macroMapping) {
-        if (template.getAttributeStyle() == MacroDef.AttributeStyle.ANT) {
+        if (macroDef.getAttributeStyle() == MacroDef.AttributeStyle.ANT) {
             return macroSubsAnt(s, macroMapping);
         } else {
             return macroSubsXPath(s, macroMapping);
@@ -259,7 +259,7 @@ public class MacroInstance extends Task implements DynamicConfigurator {
             UnknownElement unknownElement = (UnknownElement) r.getProxy();
             String tag = unknownElement.getTag();
             MacroDef.TemplateElement templateElement =
-                (MacroDef.TemplateElement) template.getElements().get(tag);
+                (MacroDef.TemplateElement) macroDef.getElements().get(tag);
             if (templateElement == null) {
                 UnknownElement child = copy(unknownElement);
                 rc.addChild(child.getWrapper());
@@ -294,9 +294,9 @@ public class MacroInstance extends Task implements DynamicConfigurator {
     public void execute() {
         localProperties = new Hashtable();
         Set copyKeys = new HashSet(map.keySet());
-        for (int i = 0; i < template.getAttributes().size(); ++i) {
+        for (int i = 0; i < macroDef.getAttributes().size(); ++i) {
             MacroDef.Attribute attribute =
-                (MacroDef.Attribute) template.getAttributes().get(i);
+                (MacroDef.Attribute) macroDef.getAttributes().get(i);
             String value = (String) map.get(attribute.getName());
             if (value == null) {
                 value = attribute.getDefault();
@@ -315,7 +315,7 @@ public class MacroInstance extends Task implements DynamicConfigurator {
         }
 
         // need to set the project on unknown element
-        UnknownElement c = copy(template.getNestedTask());
+        UnknownElement c = copy(macroDef.getNestedTask());
         c.init();
         c.perform();
     }

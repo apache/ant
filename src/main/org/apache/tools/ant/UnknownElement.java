@@ -530,4 +530,52 @@ public class UnknownElement extends Task {
         }
         return false;
     }
+
+    /**
+     * like contents equals, but ignores project
+     * @param obj the object to check against
+     * @return true if this unknownelement has the same contents the other
+     */
+    public boolean similar(Object obj) {
+        if (obj == null) {
+            return false;
+        }
+        if (!getClass().getName().equals(obj.getClass().getName())) {
+            return false;
+        }
+        UnknownElement other = (UnknownElement) obj;
+        if (!equalsString(elementName, other.elementName)) {
+            return false;
+        }
+        if (!namespace.equals(other.namespace)) {
+            return false;
+        }
+        if (!qname.equals(other.qname)) {
+            return false;
+        }
+        if (!getWrapper().getAttributeMap().equals(
+                other.getWrapper().getAttributeMap())) {
+            return false;
+        }
+        if (children == null) {
+            return other.children == null;
+        }
+        if (children.size() != other.children.size()) {
+            return false;
+        }
+        for (int i = 0; i < children.size(); ++i) {
+            UnknownElement child = (UnknownElement) children.get(i);
+            if (!child.similar(other.children.get(i))) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    private boolean equalsString(String a, String b) {
+        if (a == null) {
+            return b == null;
+        }
+        return a.equals(b);
+    }
 }

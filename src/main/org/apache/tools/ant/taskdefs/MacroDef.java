@@ -102,7 +102,7 @@ public class MacroDef extends Task implements AntlibInterface, TaskContainer {
         if (uri.equals(ProjectHelper.ANT_CORE_URI)) {
             uri = "";
         }
-        if (uri.startsWith("ant:") && !uri.startsWith("antlib:")) {
+        if (uri.startsWith("ant:")) {
             throw new BuildException("Attempt to use a reserved URI " + uri);
         }
         this.uri = uri;
@@ -283,6 +283,7 @@ public class MacroDef extends Task implements AntlibInterface, TaskContainer {
     public static class Attribute {
         private String name;
         private String defaultValue;
+
         /**
          * The name of the attribute.
          *
@@ -318,6 +319,35 @@ public class MacroDef extends Task implements AntlibInterface, TaskContainer {
          */
         public String getDefault() {
             return defaultValue;
+        }
+
+        /**
+         * equality method
+         *
+         * @param obj an <code>Object</code> value
+         * @return a <code>boolean</code> value
+         */
+        public boolean equals(Object obj) {
+            if (obj == null) {
+                return false;
+            }
+            if (obj.getClass() != getClass()) {
+                return false;
+            }
+            Attribute other = (Attribute) obj;
+            if (name == null) {
+                return other.name == null;
+            }
+            if (!name.equals(other.name)) {
+                return false;
+            }
+            if (defaultValue == null) {
+                return other.defaultValue == null;
+            }
+            if (!name.equals(other.defaultValue)) {
+                return false;
+            }
+            return true;
         }
     }
 
@@ -364,6 +394,74 @@ public class MacroDef extends Task implements AntlibInterface, TaskContainer {
         public boolean isOptional() {
             return optional;
         }
+
+        /**
+         * equality method
+         *
+         * @param obj an <code>Object</code> value
+         * @return a <code>boolean</code> value
+         */
+        public boolean equals(Object obj) {
+            if (obj == null) {
+                return false;
+            }
+            if (obj.getClass() != getClass()) {
+                return false;
+            }
+            TemplateElement other = (TemplateElement) obj;
+            if (name == null) {
+                return other.name == null;
+            }
+            if (!name.equals(other.name)) {
+                return false;
+            }
+            return optional == other.optional;
+        }
+    }
+
+    /**
+     * equality method for macrodef, ignores project and
+     * runtime info.
+     *
+     * @param obj an <code>Object</code> value
+     * @return a <code>boolean</code> value
+     */
+    public boolean equals(Object obj) {
+        if (obj == null) {
+            return false;
+        }
+        if (!obj.getClass().equals(getClass())) {
+            return false;
+        }
+        MacroDef other = (MacroDef) obj;
+        if (name == null) {
+            return other.name == null;
+        }
+        if (!name.equals(other.name)) {
+            return false;
+        }
+        if (uri == null || uri.equals("")
+            || uri.equals(ProjectHelper.ANT_CORE_URI)) {
+            return other.uri == null || other.uri.equals("")
+                || other.uri.equals(ProjectHelper.ANT_CORE_URI);
+        }
+        if (!uri.equals(other.uri)) {
+            return false;
+        }
+
+        if (attributeStyle != other.attributeStyle) {
+            return false;
+        }
+        if (!nestedTask.similar(other.nestedTask)) {
+            return false;
+        }
+        if (!attributes.equals(other.attributes)) {
+            return false;
+        }
+        if (!elements.equals(other.elements)) {
+            return false;
+        }
+        return true;
     }
 
     /**
@@ -372,15 +470,15 @@ public class MacroDef extends Task implements AntlibInterface, TaskContainer {
      * is given.
      */
     private static class MyAntTypeDefinition extends AntTypeDefinition {
-        private MacroDef    template;
+        private MacroDef    macroDef;
 
         /**
          * Creates a new <code>MyAntTypeDefinition</code> instance.
          *
-         * @param template a <code>MacroDef</code> value
+         * @param macroDef a <code>MacroDef</code> value
          */
-        public MyAntTypeDefinition(MacroDef template) {
-            this.template = template;
+        public MyAntTypeDefinition(MacroDef macroDef) {
+            this.macroDef = macroDef;
         }
 
         /**
@@ -394,20 +492,39 @@ public class MacroDef extends Task implements AntlibInterface, TaskContainer {
             if (o == null) {
                 return null;
             }
-            ((MacroInstance) o).setTemplate(template);
+            ((MacroInstance) o).setMacroDef(macroDef);
             return o;
         }
 
         /**
          * Equality method for this definition
-         * This only checks for pointer equality.
          *
          * @param other another definition
          * @param project the current project
          * @return true if the definitions are the same
          */
         public boolean sameDefinition(AntTypeDefinition other, Project project) {
-            return this == other;
+            if (!super.sameDefinition(other, project)) {
+                return false;
+            }
+            MyAntTypeDefinition otherDef = (MyAntTypeDefinition) other;
+            return macroDef.equals(otherDef.macroDef);
+        }
+
+        /**
+         * Similiar method for this definition
+         *
+         * @param other another definition
+         * @param project the current project
+         * @return true if the definitions are the same
+         */
+        public boolean similarDefinition(
+            AntTypeDefinition other, Project project) {
+            if (!super.similarDefinition(other, project)) {
+                return false;
+            }
+            MyAntTypeDefinition otherDef = (MyAntTypeDefinition) other;
+            return macroDef.equals(otherDef.macroDef);
         }
     }
 }
