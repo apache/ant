@@ -139,21 +139,21 @@ public final class SelectorUtils {
             return false;
         }
 
-        Vector patDirs = tokenizePath (pattern);
-        Vector strDirs = tokenizePath (str);
+        String[] patDirs = tokenizePathAsArray(pattern);
+        String[] strDirs = tokenizePathAsArray(str);
 
         int patIdxStart = 0;
-        int patIdxEnd   = patDirs.size()-1;
+        int patIdxEnd   = patDirs.length-1;
         int strIdxStart = 0;
-        int strIdxEnd   = strDirs.size()-1;
+        int strIdxEnd   = strDirs.length-1;
 
         // up to first '**'
         while (patIdxStart <= patIdxEnd && strIdxStart <= strIdxEnd) {
-            String patDir = (String)patDirs.elementAt(patIdxStart);
+            String patDir = patDirs[patIdxStart];
             if (patDir.equals("**")) {
                 break;
             }
-            if (!match(patDir,(String)strDirs.elementAt(strIdxStart),
+            if (!match(patDir,strDirs[strIdxStart],
                     isCaseSensitive)) {
                 return false;
             }
@@ -213,21 +213,21 @@ public final class SelectorUtils {
             return false;
         }
 
-        Vector patDirs = tokenizePath (pattern);
-        Vector strDirs = tokenizePath (str);
+        String[] patDirs = tokenizePathAsArray(pattern);
+        String[] strDirs = tokenizePathAsArray(str);
 
         int patIdxStart = 0;
-        int patIdxEnd   = patDirs.size()-1;
+        int patIdxEnd   = patDirs.length-1;
         int strIdxStart = 0;
-        int strIdxEnd   = strDirs.size()-1;
+        int strIdxEnd   = strDirs.length-1;
 
         // up to first '**'
         while (patIdxStart <= patIdxEnd && strIdxStart <= strIdxEnd) {
-            String patDir = (String)patDirs.elementAt(patIdxStart);
+            String patDir = patDirs[patIdxStart];
             if (patDir.equals("**")) {
                 break;
             }
-            if (!match(patDir,(String)strDirs.elementAt(strIdxStart),
+            if (!match(patDir,strDirs[strIdxStart],
                     isCaseSensitive)) {
                 patDirs = null; strDirs = null;
                 return false;
@@ -238,7 +238,7 @@ public final class SelectorUtils {
         if (strIdxStart > strIdxEnd) {
             // String is exhausted
             for (int i = patIdxStart; i <= patIdxEnd; i++) {
-                if (!patDirs.elementAt(i).equals("**")) {
+                if (!patDirs[i].equals("**")) {
                     patDirs = null; strDirs = null;
                     return false;
                 }
@@ -254,11 +254,11 @@ public final class SelectorUtils {
 
         // up to last '**'
         while (patIdxStart <= patIdxEnd && strIdxStart <= strIdxEnd) {
-            String patDir = (String)patDirs.elementAt(patIdxEnd);
+            String patDir = patDirs[patIdxEnd];
             if (patDir.equals("**")) {
                 break;
             }
-            if (!match(patDir,(String)strDirs.elementAt(strIdxEnd),
+            if (!match(patDir,strDirs[strIdxEnd],
                     isCaseSensitive)) {
                 patDirs = null; strDirs = null;
                 return false;
@@ -269,7 +269,7 @@ public final class SelectorUtils {
         if (strIdxStart > strIdxEnd) {
             // String is exhausted
             for (int i = patIdxStart; i <= patIdxEnd; i++) {
-                if (!patDirs.elementAt(i).equals("**")) {
+                if (!patDirs[i].equals("**")) {
                     patDirs = null; strDirs = null;
                     return false;
                 }
@@ -280,7 +280,7 @@ public final class SelectorUtils {
         while (patIdxStart != patIdxEnd && strIdxStart <= strIdxEnd) {
             int patIdxTmp = -1;
             for (int i = patIdxStart+1; i <= patIdxEnd; i++) {
-                if (patDirs.elementAt(i).equals("**")) {
+                if (patDirs[i].equals("**")) {
                     patIdxTmp = i;
                     break;
                 }
@@ -298,8 +298,8 @@ public final class SelectorUtils {
 strLoop:
             for (int i = 0; i <= strLength - patLength; i++) {
                 for (int j = 0; j < patLength; j++) {
-                    String subPat = (String)patDirs.elementAt(patIdxStart+j+1);
-                    String subStr = (String)strDirs.elementAt(strIdxStart+i+j);
+                    String subPat = patDirs[patIdxStart+j+1];
+                    String subStr = strDirs[strIdxStart+i+j];
                     if (!match(subPat,subStr, isCaseSensitive)) {
                         continue strLoop;
                     }
@@ -319,7 +319,7 @@ strLoop:
         }
 
         for (int i = patIdxStart; i <= patIdxEnd; i++) {
-            if (!patDirs.elementAt(i).equals("**")) {
+            if (!patDirs[i].equals("**")) {
                 patDirs = null; strDirs = null;
                 return false;
             }
@@ -527,6 +527,44 @@ strLoop:
             ret.addElement(st.nextToken());
         }
         return ret;
+    }
+    
+    /**
+     * Same as {@link #tokenizePath tokenizePath} but hopefully faster.
+     */
+    private static String[] tokenizePathAsArray(String path) {
+        char sep = File.separatorChar;
+        int start = 0;
+        int len = path.length();
+        int count = 0;
+        for (int pos = 0; pos < len; pos++) {
+            if (path.charAt(pos) == sep) {
+                if (pos != start) {
+                    count++;
+                }
+                start = pos + 1;
+            }
+        }
+        if (len != start) {
+            count++;
+        }
+        String[] l = new String[count];
+        count = 0;
+        start = 0;
+        for (int pos = 0; pos < len; pos++) {
+            if (path.charAt(pos) == sep) {
+                if (pos != start) {
+                    String tok = path.substring(start, pos);
+                    l[count++] = tok;
+                }
+                start = pos + 1;
+            }
+        }
+        if (len != start) {
+            String tok = path.substring(start);
+            l[count/*++*/] = tok;
+        }
+        return l;
     }
 
 
