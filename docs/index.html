@@ -17,7 +17,7 @@
   <li>Sam Ruby (<a href="mailto:rubys@us.ibm.com">rubys@us.ibm.com</a>)</li>
 </ul>
 
-<p>Version 1.0.6 - 2000/02/13</p>
+<p>Version 1.0.7 - 2000/02/28</p>
 
 <hr>
 <h2>Table of Contents</h2>
@@ -238,8 +238,6 @@ can get executed earlier when an earlier target depends on it:</p>
 <p>Suppose we want to execute target D. From its <i>depends</i> attribute, you
 might think that first target C, then B and then A is executed. Wrong! C depends
 on B, and B depends on A, so first A is executed, then B, then C, and finally D.</p>
-<p>In situations without such dependencies, you can rely on the order of the
-targets in the <i>depends</i> attributes.</p>
 <p>A target gets executed only once. Even when more targets depend on it (see
 the previous example).</p>
 <p>A target has also the ability to perform its execution if a property has been
@@ -251,6 +249,11 @@ with the name of the property that the target should react to, for example</p>
   <pre>&lt;target name=&quot;build-module-A&quot; if=&quot;module-A-present&quot;/&gt;</pre>
 </blockquote>
 <p>If no <i>if</i> attribute is present, the target will always be executed.</p>
+<p>It is a good practice to place your <a href="#property">property</a> and <a
+href="#tstamp">tstamp</a> tasks in a so called initialization target, on which
+all other targets depend. Make sure that that target is always the first one in
+the depends list of the other targets. In this manual, most initialization targets
+have the name "init".</p>
 <p>A target has the following attributes:</p>
 <table border="1" cellpadding="2" cellspacing="0">
   <tr>
@@ -1947,8 +1950,8 @@ DSTAMP is in the &quot;yyyymmdd&quot; format, the TSTAMP is in the &quot;hhmm&qu
 format and TODAY is &quot;month day year&quot;.</p>
 <p>These properties can be used in the buildfile, for instance, to create
 timestamped filenames or used to replace placeholder tags inside documents to
-indicate, for example, the release date. The best place for this task is in the <a
-href="#inittarget">init target</a>.</p>
+indicate, for example, the release date. The best place for this task is in your
+initialization target.</p>
 <h3>Parameters</h3>
 <table border="1" cellpadding="2" cellspacing="0">
   <tr>
@@ -2109,7 +2112,7 @@ task has one attribute called &quot;message&quot;.</p>
 <ol>
   <li>Make sure the class that implements your task is in the classpath when
     starting Ant.</li>
-  <li>In the <i>init</i> target, add a <i>taskdef</i> task. This actually adds
+  <li>In your initialization target, add a <i>taskdef</i> task. This actually adds
     your task to the system.</li>
   <li>Use your task in the rest of the buildfile.</li>
 </ol>
