@@ -134,5 +134,4 @@ public final class ZipShort implements Cloneable {
     public int hashCode() {
         return value;
     }
-
-}// ZipShort
+}

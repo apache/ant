@@ -100,7 +100,7 @@ public class Path extends DataType implements Cloneable {
     private Vector elements;
 
     /** The system classspath as a Path object */
-    public static Path systemClasspath = 
+    public static Path systemClasspath =
         new Path(null, System.getProperty("java.class.path"));
 
 
@@ -125,7 +125,7 @@ public class Path extends DataType implements Cloneable {
 
     /**
      * Invoked by IntrospectionHelper for <code>setXXX(Path p)</code>
-     * attribute setters.  
+     * attribute setters.
      */
     public Path(Project p, String path) {
         this(p);
@@ -195,7 +195,7 @@ public class Path extends DataType implements Cloneable {
             throw noChildrenAllowed();
         }
         elements.addElement(fs);
-        setChecked( false );
+        setChecked(false);
     }
 
     /**
@@ -206,7 +206,7 @@ public class Path extends DataType implements Cloneable {
             throw noChildrenAllowed();
         }
         elements.addElement(fl);
-        setChecked( false );
+        setChecked(false);
     }
 
     /**
@@ -217,7 +217,7 @@ public class Path extends DataType implements Cloneable {
             throw noChildrenAllowed();
         }
         elements.addElement(dset);
-        setChecked( false );
+        setChecked(false);
     }
 
     /**
@@ -229,10 +229,10 @@ public class Path extends DataType implements Cloneable {
             throw noChildrenAllowed();
         }
         elements.addElement(path);
-        setChecked( false );
-        
+        setChecked(false);
+
     }
-    
+
     /**
      * Creates a nested <code>&lt;path&gt;</code> element.
      */
@@ -242,7 +242,7 @@ public class Path extends DataType implements Cloneable {
         }
         Path p = new Path(getProject());
         elements.addElement(p);
-        setChecked( false );
+        setChecked(false);
         return p;
     }
 
@@ -268,7 +268,7 @@ public class Path extends DataType implements Cloneable {
      * @param source - source path whose components are examined for existence
      */
      public void addExisting(Path source) {
-         addExisting(source, false );
+         addExisting(source, false);
      }
 
     /** Same as addExisting, but support classpath behavior if tryUserDir
@@ -280,7 +280,7 @@ public class Path extends DataType implements Cloneable {
      */
     public void addExisting(Path source, boolean tryUserDir) {
         String[] list = source.list();
-        File userDir=(tryUserDir) ? new File(System.getProperty( "user.dir"))
+        File userDir = (tryUserDir) ? new File(System.getProperty("user.dir"))
                 : null;
 
         for (int i = 0; i < list.length; i++) {
@@ -292,8 +292,8 @@ public class Path extends DataType implements Cloneable {
             }
             // probably not the best choice, but it solves the problem of
             // relative paths in CLASSPATH
-            if( tryUserDir && ! f.exists()) {
-                f=new File( userDir, list[i]);
+            if (tryUserDir && !f.exists()) {
+                f = new File(userDir, list[i]);
             }
             if (f.exists()) {
                 setLocation(f);
@@ -328,14 +328,14 @@ public class Path extends DataType implements Cloneable {
                     throw new BuildException(msg);
                 }
             }
-            
+
             if (o instanceof String) {
                 // obtained via append
                 addUnlessPresent(result, (String) o);
             } else if (o instanceof PathElement) {
                 String[] parts = ((PathElement) o).getParts();
                 if (parts == null) {
-                    throw new BuildException("You must either set location or" 
+                    throw new BuildException("You must either set location or"
                         + " path on <pathelement>");
                 }
                 for (int j = 0; j < parts.length; j++) {
@@ -414,8 +414,8 @@ public class Path extends DataType implements Cloneable {
             try {
                 element.append(resolveFile(project, pathElement));
             } catch (BuildException e) {
-                project.log("Dropping path element " + pathElement 
-                    + " as it is not valid relative to the project", 
+                project.log("Dropping path element " + pathElement
+                    + " as it is not valid relative to the project",
                     Project.MSG_VERBOSE);
             }
             for (int i = 0; i < element.length(); i++) {
@@ -431,7 +431,7 @@ public class Path extends DataType implements Cloneable {
 
     /**
      * Returns its argument with all file separator characters
-     * replaced so that they match the local OS conventions.  
+     * replaced so that they match the local OS conventions.
      */
     public static String translateFile(String source) {
         if (source == null) {
@@ -449,7 +449,7 @@ public class Path extends DataType implements Cloneable {
     /**
      * Translates all occurrences of / or \ to correct separator of the
      * current platform and returns whether it had to do any
-     * replacements.  
+     * replacements.
      */
     protected static boolean translateFileSep(StringBuffer buffer, int pos) {
         if (buffer.charAt(pos) == '/' || buffer.charAt(pos) == '\\') {
@@ -481,9 +481,9 @@ public class Path extends DataType implements Cloneable {
 
     /**
      * Overrides the version of DataType to recurse on all DataType
-     * child elements that may have been added.  
+     * child elements that may have been added.
      */
-    protected void dieOnCircularReference(Stack stk, Project p) 
+    protected void dieOnCircularReference(Stack stk, Project p)
         throws BuildException {
 
         if (isChecked()) {
@@ -507,7 +507,7 @@ public class Path extends DataType implements Cloneable {
                 }
             }
         }
-        setChecked( true );
+        setChecked(true);
     }
 
     /**
@@ -541,7 +541,7 @@ public class Path extends DataType implements Cloneable {
             File d = new File(dir, s[j]);
             String absolutePath = d.getAbsolutePath();
             addUnlessPresent(v, translateFile(absolutePath));
-        } 
+        }
     }
 
     /**
@@ -569,11 +569,11 @@ public class Path extends DataType implements Cloneable {
                 order = o;
             }
         }
-        
+
         if (order.equals("only")) {
             // only: the developer knows what (s)he is doing
             result.addExisting(Path.systemClasspath, true);
-        
+
         } else if (order.equals("first")) {
             // first: developer could use a little help
             result.addExisting(Path.systemClasspath, true);
@@ -586,14 +586,14 @@ public class Path extends DataType implements Cloneable {
         } else {
             // last: don't trust the developer
             if (!order.equals("last")) {
-                log("invalid value for build.sysclasspath: " + order, 
+                log("invalid value for build.sysclasspath: " + order,
                     Project.MSG_WARN);
             }
 
             result.addExisting(this);
             result.addExisting(Path.systemClasspath, true);
         }
-        
+
 
         return result;
 
@@ -606,16 +606,16 @@ public class Path extends DataType implements Cloneable {
         if (System.getProperty("java.vendor").toLowerCase(Locale.US).indexOf("microsoft") >= 0) {
             // Pull in *.zip from packages directory
             FileSet msZipFiles = new FileSet();
-            msZipFiles.setDir(new File(System.getProperty("java.home") 
+            msZipFiles.setDir(new File(System.getProperty("java.home")
                 + File.separator + "Packages"));
             msZipFiles.setIncludes("*.ZIP");
             addFileset(msZipFiles);
         } else if ("Kaffe".equals(System.getProperty("java.vm.name"))) {
             FileSet kaffeJarFiles = new FileSet();
-            kaffeJarFiles.setDir(new File(System.getProperty("java.home") 
+            kaffeJarFiles.setDir(new File(System.getProperty("java.home")
                                           + File.separator + "share"
                                           + File.separator + "kaffe"));
-            
+
             kaffeJarFiles.setIncludes("*.jar");
             addFileset(kaffeJarFiles);
         } else if (JavaEnvUtils.isJavaVersion(JavaEnvUtils.JAVA_1_1)) {
@@ -639,7 +639,7 @@ public class Path extends DataType implements Cloneable {
                                  + File.separator + "rt.jar"));
 
             // Sun's and Apple's 1.4 have JCE and JSSE in separate jars.
-            String[] secJars = { "jce", "jsse" };
+            String[] secJars = {"jce", "jsse"};
             for (int i = 0; i < secJars.length; i++) {
                 addExisting(new Path(null,
                                      System.getProperty("java.home")

@@ -317,8 +317,7 @@ public class Zip extends MatchingTask {
             executeMain();
             skipWriting = false;
             executeMain();
-        }
-        else {
+        } else {
             executeMain();
         }
     }
@@ -418,7 +417,7 @@ public class Zip extends MatchingTask {
             ZipOutputStream zOut = null;
             try {
 
-                if (! skipWriting) {
+                if (!skipWriting) {
                     zOut = new ZipOutputStream(new FileOutputStream(zipFile));
 
                     zOut.setEncoding(encoding);
@@ -464,8 +463,8 @@ public class Zip extends MatchingTask {
                 // temporary file
                 if (doUpdate) {
                     if (!renamedFile.delete()) {
-                        log ("Warning: unable to delete temporary file " +
-                             renamedFile.getName(), Project.MSG_WARN);
+                        log ("Warning: unable to delete temporary file "
+                            + renamedFile.getName(), Project.MSG_WARN);
                     }
                 }
                 success = true;
@@ -504,8 +503,8 @@ public class Zip extends MatchingTask {
                 try {
                     fileUtils.rename(renamedFile, zipFile);
                 } catch (IOException e) {
-                    msg += " (and I couldn't rename the temporary file " +
-                        renamedFile.getName() + " back)";
+                    msg += " (and I couldn't rename the temporary file "
+                            + renamedFile.getName() + " back)";
                 }
             }
 
@@ -593,7 +592,7 @@ public class Zip extends MatchingTask {
                 if ("".equals(name)) {
                     continue;
                 }
-                if (resources[i].isDirectory() && ! name.endsWith("/")) {
+                if (resources[i].isDirectory() && !name.endsWith("/")) {
                     name = name + "/";
                 }
 
@@ -665,6 +664,7 @@ public class Zip extends MatchingTask {
                 try {
                     os.close();
                 } catch (IOException e) {
+                    //ignore
                 }
             }
         }
@@ -744,8 +744,8 @@ public class Zip extends MatchingTask {
                 }
             } else if (emptyBehavior.equals("fail")) {
                 throw new BuildException("Cannot create " + archiveType
-                                         + " archive " + zipFile +
-                                         ": no files were included.",
+                                         + " archive " + zipFile
+                                         + ": no files were included.",
                                          getLocation());
             } else {
                 // Create.
@@ -794,7 +794,7 @@ public class Zip extends MatchingTask {
             if (filesets[i] instanceof ZipFileSet) {
                 ZipFileSet zfs = (ZipFileSet) filesets[i];
                 if (zfs.getFullpath(getProject()) != null
-                    && !zfs.getFullpath(getProject()).equals("") ) {
+                    && !zfs.getFullpath(getProject()).equals("")) {
                     // in this case all files from origin map to
                     // the fullPath attribute of the zipfileset at
                     // destination
@@ -804,7 +804,7 @@ public class Zip extends MatchingTask {
 
                 } else if (zfs.getPrefix(getProject()) != null
                            && !zfs.getPrefix(getProject()).equals("")) {
-                    GlobPatternMapper gm=new GlobPatternMapper();
+                    GlobPatternMapper gm = new GlobPatternMapper();
                     gm.setFrom("*");
                     String prefix = zfs.getPrefix(getProject());
                     if (!prefix.endsWith("/") && !prefix.endsWith("\\")) {
@@ -888,7 +888,7 @@ public class Zip extends MatchingTask {
         log("adding directory " + vPath, Project.MSG_VERBOSE);
         addedDirs.put(vPath, vPath);
 
-        if (! skipWriting) {
+        if (!skipWriting) {
             ZipEntry ze = new ZipEntry (vPath);
             if (dir != null && dir.exists()) {
                 // ZIPs store time with a granularity of 2 seconds, round up
@@ -943,7 +943,7 @@ public class Zip extends MatchingTask {
 
         entries.put(vPath, vPath);
 
-        if (! skipWriting) {
+        if (!skipWriting) {
             ZipEntry ze = new ZipEntry(vPath);
             ze.setTime(lastModified);
 
@@ -1123,7 +1123,7 @@ public class Zip extends MatchingTask {
      *
      * @since Ant 1.5.2
      */
-    protected final static boolean isEmpty(Resource[][] r) {
+    protected static final boolean isEmpty(Resource[][] r) {
         for (int i = 0; i < r.length; i++) {
             if (r[i].length > 0) {
                 return false;

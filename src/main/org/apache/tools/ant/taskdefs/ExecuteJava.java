@@ -112,7 +112,7 @@ public class ExecuteJava implements Runnable, TimeoutObserver {
     }
 
     /**
-     * @since 1.19, Ant 1.5
+     * @since Ant 1.5
      */
     public void setTimeout(Long timeout) {
         this.timeout = timeout;
@@ -201,7 +201,7 @@ public class ExecuteJava implements Runnable, TimeoutObserver {
     }
 
     /**
-     * @since 1.19, Ant 1.5
+     * @since Ant 1.5
      */
     public void run() {
         final Object[] argument = { javaCommand.getArguments() };
@@ -222,7 +222,7 @@ public class ExecuteJava implements Runnable, TimeoutObserver {
     }
 
     /**
-     * @since 1.19, Ant 1.5
+     * @since Ant 1.5
      */
     public synchronized void timeoutOccured(Watchdog w) {
         if (thread != null) {

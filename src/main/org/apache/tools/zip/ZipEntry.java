@@ -114,7 +114,7 @@ public class ZipEntry extends java.util.zip.ZipEntry implements Cloneable {
         if (crc > 0) {
             setCrc(crc);
         }
-        
+
         byte[] extra = entry.getExtra();
         if (extra != null) {
             setExtraFields(ExtraFieldUtils.parse(extra));
@@ -168,7 +168,7 @@ public class ZipEntry extends java.util.zip.ZipEntry implements Cloneable {
             if (crc > 0) {
                 e.setCrc(crc);
             }
-            
+
             e.extraFields = (Vector) extraFields.clone();
             e.setInternalAttributes(getInternalAttributes());
             e.setExternalAttributes(getExternalAttributes());
@@ -484,8 +484,8 @@ public class ZipEntry extends java.util.zip.ZipEntry implements Cloneable {
             synchronized (lockReflection) {
                 triedToGetMethod = true;
                 try {
-                    setCompressedSizeMethod = 
-                        java.util.zip.ZipEntry.class.getMethod("setCompressedSize", 
+                    setCompressedSizeMethod =
+                        java.util.zip.ZipEntry.class.getMethod("setCompressedSize",
                                                                new Class[] {Long.TYPE});
                 } catch (NoSuchMethodException nse) {
                 }

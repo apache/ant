@@ -234,7 +234,7 @@ public class ZipOutputStream extends DeflaterOutputStream {
      * The encoding to use for filenames and the file comment.
      *
      * @return null if using the platform's default character encoding.
-     * 
+     *
      * @since 1.3
      */
     public String getEncoding() {
@@ -294,17 +294,17 @@ public class ZipOutputStream extends DeflaterOutputStream {
         } else {
             if (entry.getCrc() != realCrc) {
                 throw new ZipException("bad CRC checksum for entry "
-                                       + entry.getName() + ": " 
+                                       + entry.getName() + ": "
                                        + Long.toHexString(entry.getCrc())
-                                       + " instead of " 
+                                       + " instead of "
                                        + Long.toHexString(realCrc));
             }
 
             if (entry.getSize() != written - dataStart) {
                 throw new ZipException("bad size for entry "
-                                       + entry.getName() + ": " 
+                                       + entry.getName() + ": "
                                        + entry.getSize()
-                                       + " instead of " 
+                                       + " instead of "
                                        + (written - dataStart));
             }
 
@@ -328,7 +328,7 @@ public class ZipOutputStream extends DeflaterOutputStream {
         if (entry.getMethod() == -1) { // not specified
             entry.setMethod(method);
         }
-        
+
         if (entry.getTime() == -1) { // not specified
             entry.setTime(System.currentTimeMillis());
         }
@@ -344,7 +344,7 @@ public class ZipOutputStream extends DeflaterOutputStream {
         } else if (hasCompressionLevelChanged) {
             def.setLevel(level);
             hasCompressionLevelChanged = false;
-        }        
+        }
         writeLocalFileHeader(entry);
     }
 
@@ -471,12 +471,12 @@ public class ZipOutputStream extends DeflaterOutputStream {
             out.write((new ZipLong(ze.getSize())).getBytes());
         }
         written += 12;
-        
+
         // file name length
         byte[] name = getBytes(ze.getName());
         out.write((new ZipShort(name.length)).getBytes());
         written += 2;
-        
+
         // extra field length
         byte[] extra = ze.getLocalFileDataExtra();
         out.write((new ZipShort(extra.length)).getBytes());
@@ -552,12 +552,12 @@ public class ZipOutputStream extends DeflaterOutputStream {
         out.write((new ZipLong(ze.getCompressedSize())).getBytes());
         out.write((new ZipLong(ze.getSize())).getBytes());
         written += 12;
-        
+
         // file name length
         byte[] name = getBytes(ze.getName());
         out.write((new ZipShort(name.length)).getBytes());
         written += 2;
-        
+
         // extra field length
         byte[] extra = ze.getCentralDirectoryExtra();
         out.write((new ZipShort(extra.length)).getBytes());
@@ -571,7 +571,7 @@ public class ZipOutputStream extends DeflaterOutputStream {
         byte[] comment = getBytes(comm);
         out.write((new ZipShort(comment.length)).getBytes());
         written += 2;
-        
+
         // disk number start
         out.write(ZERO);
         written += 2;
@@ -608,7 +608,7 @@ public class ZipOutputStream extends DeflaterOutputStream {
      */
     protected void writeCentralDirectoryEnd() throws IOException {
         out.write(EOCD_SIG.getBytes());
-        
+
         // disk numbers
         out.write(ZERO);
         out.write(ZERO);
@@ -654,12 +654,12 @@ public class ZipOutputStream extends DeflaterOutputStream {
             |         (time.getHours() << 11)
             |         (time.getMinutes() << 5)
             |         (time.getSeconds() >> 1);
-        
+
         byte[] result = new byte[4];
         result[0] = (byte) ((value & 0xFF));
         result[1] = (byte) ((value & 0xFF00) >> 8);
         result[2] = (byte) ((value & 0xFF0000) >> 16);
-        result[3] = (byte) ((value & 0xFF000000l) >> 24);
+        result[3] = (byte) ((value & 0xFF000000L) >> 24);
         return new ZipLong(result);
     }
 

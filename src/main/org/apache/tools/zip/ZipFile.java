@@ -220,7 +220,7 @@ public class ZipFile {
 
     /**
      * Returns an InputStream for reading the contents of the given entry.
-     * @param the entry to get the stream for.
+     * @param ze the entry to get the stream for.
      * @return a stream to read the entry from.
      */
     public InputStream getInputStream(ZipEntry ze)
@@ -229,7 +229,7 @@ public class ZipFile {
         if (start == null) {
             return null;
         }
-        BoundedInputStream bis = 
+        BoundedInputStream bis =
             new BoundedInputStream(start.longValue(), ze.getCompressedSize());
         switch (ze.getMethod()) {
             case ZipEntry.STORED:
@@ -269,7 +269,7 @@ public class ZipFile {
      * the central directory alone, but not the data that requires the
      * local file header or additional data to be read.</p>
      */
-    private void populateFromCentralDirectory() 
+    private void populateFromCentralDirectory()
         throws IOException {
         positionAtCentralDirectory();
 
@@ -372,7 +372,7 @@ public class ZipFile {
      * it and positions the stream at the first central directory
      * record.
      */
-    private void positionAtCentralDirectory() 
+    private void positionAtCentralDirectory()
         throws IOException {
         long off = archive.length() - MIN_EOCD_SIZE;
         archive.seek(off);
@@ -443,7 +443,7 @@ public class ZipFile {
             byte[] localExtraData = new byte[extraFieldLen];
             archive.readFully(localExtraData);
             ze.setExtra(localExtraData);
-            dataOffsets.put(ze, 
+            dataOffsets.put(ze,
                             new Long(offset + LFH_OFFSET_FOR_FILENAME_LENGTH
                                      + 2 + 2 + fileNameLen + extraFieldLen));
         }
@@ -551,7 +551,7 @@ public class ZipFile {
          * Inflater's javadocs.
          */
         void addDummy() {
-            addDummyByte = true; 
+            addDummyByte = true;
         }
     }
 

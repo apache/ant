@@ -190,8 +190,11 @@ public class XMLCatalog extends DataType
 
     //-- Methods ---------------------------------------------------------------
 
+    /**
+     * Default constructor
+     */
     public XMLCatalog() {
-        setChecked( false );
+        setChecked(false);
     }
 
     /**
@@ -233,6 +236,8 @@ public class XMLCatalog extends DataType
      * is itself a reference to another catalog -- that is, a catalog
      * cannot both refer to another <em>and</em> contain elements or
      * other attributes.
+     *
+     * @return a Path instance to be configured.
      */
     public Path createClasspath() {
         if (isReference()) {
@@ -241,7 +246,7 @@ public class XMLCatalog extends DataType
         if (this.classpath == null) {
             this.classpath = new Path(getProject());
         }
-        setChecked( false );
+        setChecked(false);
         return this.classpath.createPath();
     }
 
@@ -250,6 +255,8 @@ public class XMLCatalog extends DataType
      * itself a reference to another catalog -- that is, a catalog
      * cannot both refer to another <em>and</em> contain elements or
      * other attributes.
+     *
+     * @param classpath the classpath to use to look up entities.
      */
     public void setClasspath(Path classpath) {
         if (isReference()) {
@@ -260,7 +267,7 @@ public class XMLCatalog extends DataType
         } else {
             this.classpath.append(classpath);
         }
-        setChecked( false );
+        setChecked(false);
     }
 
     /**
@@ -268,13 +275,15 @@ public class XMLCatalog extends DataType
      * itself a reference to another catalog -- that is, a catalog
      * cannot both refer to another <em>and</em> contain elements or
      * other attributes.
+     *
+     * @param r an Ant reference containing a classpath.
      */
     public void setClasspathRef(Reference r) {
         if (isReference()) {
             throw tooManyAttributes();
         }
         createClasspath().setRefid(r);
-        setChecked( false );
+        setChecked(false);
     }
 
     /** Creates a nested <code>&lt;catalogpath&gt;</code> element.
@@ -282,6 +291,7 @@ public class XMLCatalog extends DataType
      * catalog -- that is, a catalog cannot both refer to another
      * <em>and</em> contain elements or other attributes.
      *
+     * @return a path to be configured as the catalog path.
      * @exception BuildException
      * if this is a reference and no nested elements are allowed.
      */
@@ -292,7 +302,7 @@ public class XMLCatalog extends DataType
         if (this.catalogPath == null) {
             this.catalogPath = new Path(getProject());
         }
-        setChecked( false );
+        setChecked(false);
         return this.catalogPath.createPath();
     }
 
@@ -301,13 +311,16 @@ public class XMLCatalog extends DataType
      * itself a reference to another catalog -- that is, a catalog
      * cannot both refer to another <em>and</em> contain elements or
      * other attributes.
+     *
+     * @param r an Ant reference containing a classpath to be used as
+     * the catalog path.
      */
     public void setCatalogPathRef(Reference r) {
         if (isReference()) {
             throw tooManyAttributes();
         }
         createCatalogPath().setRefid(r);
-        setChecked( false );
+        setChecked(false);
     }
 
 
@@ -338,7 +351,7 @@ public class XMLCatalog extends DataType
         }
 
         getElements().addElement(dtd);
-        setChecked( false );
+        setChecked(false);
     }
 
     /**
@@ -384,7 +397,7 @@ public class XMLCatalog extends DataType
         // Append the catalog path of the nested catalog
         Path nestedCatalogPath = catalog.getCatalogPath();
         createCatalogPath().append(nestedCatalogPath);
-        setChecked( false );
+        setChecked(false);
     }
 
     /**
@@ -439,8 +452,8 @@ public class XMLCatalog extends DataType
             getCatalogResolver().resolveEntity(publicId, systemId);
 
         if (inputSource == null) {
-            log("No matching catalog entry found, parser will use: '" +
-                systemId + "'", Project.MSG_DEBUG);
+            log("No matching catalog entry found, parser will use: '"
+                + systemId + "'", Project.MSG_DEBUG);
         }
 
         return inputSource;
@@ -467,11 +480,11 @@ public class XMLCatalog extends DataType
 
         log("resolve: '" + uri + "' with base: '" + base + "'", Project.MSG_DEBUG);
 
-        source = (SAXSource)getCatalogResolver().resolve(uri, base);
+        source = (SAXSource) getCatalogResolver().resolve(uri, base);
 
         if (source == null) {
-            log("No matching catalog entry found, parser will use: '" +
-                href + "'", Project.MSG_DEBUG);
+            log("No matching catalog entry found, parser will use: '"
+                + href + "'", Project.MSG_DEBUG);
             //
             // Cannot return a null source, because we have to call
             // setEntityResolver (see setEntityResolver javadoc comment)
@@ -481,14 +494,12 @@ public class XMLCatalog extends DataType
             try {
                 if (base == null) {
                     baseURL = fileUtils.getFileURL(getProject().getBaseDir());
-                }
-                else {
+                } else {
                     baseURL = new URL(base);
                 }
                 URL url = (uri.length() == 0 ? baseURL : new URL(baseURL, uri));
                 source.setInputSource(new InputSource(url.toString()));
-            }
-            catch (MalformedURLException ex) {
+            } catch (MalformedURLException ex) {
                 // At this point we are probably in failure mode, but
                 // try to use the bare URI as a last gasp
                 source.setInputSource(new InputSource(uri));
@@ -530,19 +541,17 @@ public class XMLCatalog extends DataType
                 // available, so use it.
                 //
                 catalogResolver = new ApacheResolver(clazz, obj);
-            }
-            catch (Throwable ex) {
+            } catch (Throwable ex) {
                 //
                 // The xml-commons resolver library is not
                 // available, so we can't use it.
                 //
                 catalogResolver = new InternalResolver();
-                if (getCatalogPath() != null &&
-                    getCatalogPath().list().length != 0) {
-                        log("Warning: catalogpath listing external catalogs"+
-                                " will be ignored",
-                            Project.MSG_WARN);
-                        log("Failed to load Apache resolver: " 
+                if (getCatalogPath() != null
+                    && getCatalogPath().list().length != 0) {
+                        log("Warning: catalogpath listing external catalogs"
+                            + " will be ignored", Project.MSG_WARN);
+                        log("Failed to load Apache resolver: "
                             + ex, Project.MSG_DEBUG);
                     }
             }
@@ -577,11 +586,9 @@ public class XMLCatalog extends DataType
             spFactory.setNamespaceAware(true);
             try {
                 reader = spFactory.newSAXParser().getXMLReader();
-            }
-            catch (ParserConfigurationException ex) {
+            } catch (ParserConfigurationException ex) {
                 throw new TransformerException(ex);
-            }
-            catch (SAXException ex) {
+            } catch (SAXException ex) {
                 throw new TransformerException(ex);
             }
         }
@@ -603,7 +610,7 @@ public class XMLCatalog extends DataType
         while (enum.hasMoreElements()) {
             Object o = enum.nextElement();
             if (o instanceof ResourceLocation) {
-                element = (ResourceLocation)o;
+                element = (ResourceLocation) o;
                 if (element.getPublicId().equals(publicId)) {
                     return element;
                 }
@@ -652,8 +659,7 @@ public class XMLCatalog extends DataType
         } else {
             try {
                 baseURL = fileUtils.getFileURL(getProject().getBaseDir());
-            }
-            catch (MalformedURLException ex) {
+            } catch (MalformedURLException ex) {
                 throw new BuildException("Project basedir cannot be converted to a URL");
             }
         }
@@ -663,8 +669,7 @@ public class XMLCatalog extends DataType
 
         try {
             url = new URL(baseURL, uri);
-        }
-        catch (MalformedURLException ex) {
+        } catch (MalformedURLException ex) {
             // ignore
         }
 
@@ -678,11 +683,11 @@ public class XMLCatalog extends DataType
                         source = new InputSource(new FileInputStream(resFile));
                         String sysid = JAXPUtils.getSystemId(resFile);
                         source.setSystemId(sysid);
-                        log("catalog entry matched a readable file: '" +
-                            sysid + "'", Project.MSG_DEBUG);
-                    } catch(FileNotFoundException ex) {
+                        log("catalog entry matched a readable file: '"
+                            + sysid + "'", Project.MSG_DEBUG);
+                    } catch (FileNotFoundException ex) {
                         // ignore
-                    } catch(IOException ex) {
+                    } catch (IOException ex) {
                         // ignore
                     }
                 }
@@ -721,8 +726,8 @@ public class XMLCatalog extends DataType
             URL entryURL = loader.getResource(matchingEntry.getLocation());
             String sysid = entryURL.toExternalForm();
             source.setSystemId(sysid);
-            log("catalog entry matched a resource in the classpath: '" +
-                sysid + "'", Project.MSG_DEBUG);
+            log("catalog entry matched a resource in the classpath: '"
+                + sysid + "'", Project.MSG_DEBUG);
         }
 
         return source;
@@ -749,8 +754,7 @@ public class XMLCatalog extends DataType
         } else {
             try {
                 baseURL = fileUtils.getFileURL(getProject().getBaseDir());
-            }
-            catch (MalformedURLException ex) {
+            } catch (MalformedURLException ex) {
                 throw new BuildException("Project basedir cannot be converted to a URL");
             }
         }
@@ -760,8 +764,7 @@ public class XMLCatalog extends DataType
 
         try {
             url = new URL(baseURL, uri);
-        }
-        catch (MalformedURLException ex) {
+        } catch (MalformedURLException ex) {
             // ignore
         }
 
@@ -772,10 +775,10 @@ public class XMLCatalog extends DataType
                     source = new InputSource(is);
                     String sysid = url.toExternalForm();
                     source.setSystemId(sysid);
-                    log("catalog entry matched as a URL: '" +
-                        sysid + "'", Project.MSG_DEBUG);
+                    log("catalog entry matched as a URL: '"
+                        + sysid + "'", Project.MSG_DEBUG);
                 }
-            } catch(IOException ex) {
+            } catch (IOException ex) {
                 // ignore
             }
         }
@@ -816,9 +819,9 @@ public class XMLCatalog extends DataType
 
             if (matchingEntry != null) {
 
-                log("Matching catalog entry found for publicId: '" +
-                    matchingEntry.getPublicId() + "' location: '" +
-                    matchingEntry.getLocation() + "'",
+                log("Matching catalog entry found for publicId: '"
+                    + matchingEntry.getPublicId() + "' location: '"
+                    + matchingEntry.getLocation() + "'",
                     Project.MSG_DEBUG);
 
                 result = filesystemLookup(matchingEntry);
@@ -844,9 +847,9 @@ public class XMLCatalog extends DataType
 
             if (matchingEntry != null) {
 
-                log("Matching catalog entry found for uri: '" +
-                    matchingEntry.getPublicId() + "' location: '" +
-                    matchingEntry.getLocation() + "'",
+                log("Matching catalog entry found for uri: '"
+                    + matchingEntry.getPublicId() + "' location: '"
+                    + matchingEntry.getLocation() + "'",
                     Project.MSG_DEBUG);
 
                 //
@@ -865,8 +868,7 @@ public class XMLCatalog extends DataType
                         URL baseURL = new URL(base);
                         entryCopy = new ResourceLocation();
                         entryCopy.setBase(baseURL);
-                    }
-                    catch (MalformedURLException ex) {
+                    } catch (MalformedURLException ex) {
                         // ignore
                     }
                 }
@@ -926,24 +928,23 @@ public class XMLCatalog extends DataType
                 setXMLCatalog =
                     resolverImplClass.getMethod("setXMLCatalog",
                                                 new Class[]
-                        { XMLCatalog.class });
+                        {XMLCatalog.class});
 
                 parseCatalog =
                     resolverImplClass.getMethod("parseCatalog",
                                                 new Class[]
-                        { String.class });
+                        {String.class});
 
                 resolveEntity =
                     resolverImplClass.getMethod("resolveEntity",
                                                 new Class[]
-                        { String.class, String.class });
+                        {String.class, String.class});
 
                 resolve =
                     resolverImplClass.getMethod("resolve",
                                                 new Class[]
-                        { String.class, String.class });
-            }
-            catch (NoSuchMethodException ex) {
+                        {String.class, String.class});
+            } catch (NoSuchMethodException ex) {
                 throw new BuildException(ex);
             }
 
@@ -961,9 +962,9 @@ public class XMLCatalog extends DataType
 
             if (matchingEntry != null) {
 
-                log("Matching catalog entry found for publicId: '" +
-                    matchingEntry.getPublicId() + "' location: '" +
-                    matchingEntry.getLocation() + "'",
+                log("Matching catalog entry found for publicId: '"
+                    + matchingEntry.getPublicId() + "' location: '"
+                    + matchingEntry.getLocation() + "'",
                     Project.MSG_DEBUG);
 
                 result = filesystemLookup(matchingEntry);
@@ -975,16 +976,14 @@ public class XMLCatalog extends DataType
                 if (result == null) {
                     try {
                         result =
-                            (InputSource)resolveEntity.invoke(resolverImpl,
+                            (InputSource) resolveEntity.invoke(resolverImpl,
                                                               new Object[]
-                                { publicId, systemId });
-                    }
-                    catch (Exception ex) {
+                                {publicId, systemId});
+                    } catch (Exception ex) {
                         throw new BuildException(ex);
                     }
                 }
-            }
-            else {
+            } else {
                 //
                 // We didn't match a ResourceLocation, but since we
                 // only support PUBLIC and URI entry types internally,
@@ -995,11 +994,10 @@ public class XMLCatalog extends DataType
                 //
                 try {
                     result =
-                        (InputSource)resolveEntity.invoke(resolverImpl,
+                        (InputSource) resolveEntity.invoke(resolverImpl,
                                                           new Object[]
-                            { publicId, systemId });
-                }
-                catch (Exception ex) {
+                            {publicId, systemId});
+                } catch (Exception ex) {
                     throw new BuildException(ex);
                 }
             }
@@ -1019,9 +1017,9 @@ public class XMLCatalog extends DataType
 
             if (matchingEntry != null) {
 
-                log("Matching catalog entry found for uri: '" +
-                    matchingEntry.getPublicId() + "' location: '" +
-                    matchingEntry.getLocation() + "'",
+                log("Matching catalog entry found for uri: '"
+                    + matchingEntry.getPublicId() + "' location: '"
+                    + matchingEntry.getLocation() + "'",
                     Project.MSG_DEBUG);
 
                 //
@@ -1042,8 +1040,7 @@ public class XMLCatalog extends DataType
                         URL baseURL = new URL(base);
                         entryCopy = new ResourceLocation();
                         entryCopy.setBase(baseURL);
-                    }
-                    catch (MalformedURLException ex) {
+                    } catch (MalformedURLException ex) {
                         // ignore
                     }
                 }
@@ -1061,16 +1058,14 @@ public class XMLCatalog extends DataType
                 } else {
                     try {
                         result =
-                            (SAXSource)resolve.invoke(resolverImpl,
+                            (SAXSource) resolve.invoke(resolverImpl,
                                                       new Object[]
-                                { href, base });
-                    }
-                    catch (Exception ex) {
+                                {href, base});
+                    } catch (Exception ex) {
                         throw new BuildException(ex);
                     }
                 }
-            }
-            else {
+            } else {
                 //
                 // We didn't match a ResourceLocation, but since we
                 // only support PUBLIC and URI entry types internally,
@@ -1081,11 +1076,10 @@ public class XMLCatalog extends DataType
                 //
                 try {
                     result =
-                        (SAXSource)resolve.invoke(resolverImpl,
+                        (SAXSource) resolve.invoke(resolverImpl,
                                                   new Object[]
-                            { href, base });
-                }
-                catch (Exception ex) {
+                            {href, base});
+                } catch (Exception ex) {
                     throw new BuildException(ex);
                 }
             }
@@ -1101,32 +1095,31 @@ public class XMLCatalog extends DataType
          */
         private void processExternalCatalogs() {
 
-            if (externalCatalogsProcessed == false) {
+            if (!externalCatalogsProcessed) {
 
                 try {
                     setXMLCatalog.invoke(resolverImpl,
                                          new Object[]
-                    { XMLCatalog.this });
-                }
-                catch (Exception ex) {
+                    {XMLCatalog.this});
+                } catch (Exception ex) {
                     throw new BuildException(ex);
                 }
 
                 // Parse each catalog listed in nested <catalogpath> elements
                 Path catPath = getCatalogPath();
                 if (catPath != null) {
-                    log("Using catalogpath '" + getCatalogPath()+"'", Project.MSG_DEBUG);
+                    log("Using catalogpath '" + getCatalogPath() + "'",
+                        Project.MSG_DEBUG);
                     String[] catPathList = getCatalogPath().list();
 
-                    for (int i=0; i< catPathList.length; i++) {
+                    for (int i = 0; i < catPathList.length; i++) {
                         File catFile = new File(catPathList[i]);
-                        log("Parsing "+catFile, Project.MSG_DEBUG);
+                        log("Parsing " + catFile, Project.MSG_DEBUG);
                         try {
                             parseCatalog.invoke(resolverImpl,
                                     new Object[]
-                                    { catFile.getPath() });
-                        }
-                        catch (Exception ex) {
+                                    {catFile.getPath()});
+                        } catch (Exception ex) {
                             throw new BuildException(ex);
                         }
                     }

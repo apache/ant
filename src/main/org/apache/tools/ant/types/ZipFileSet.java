@@ -160,7 +160,7 @@ public class ZipFileSet extends FileSet {
      */
     public File getSrc(Project p) {
         if (isReference()) {
-            return ((ZipFileSet)getRef(p)).getSrc(p);
+            return ((ZipFileSet) getRef(p)).getSrc(p);
         }
         return srcFile;
     }
@@ -186,7 +186,7 @@ public class ZipFileSet extends FileSet {
      */
     public String getPrefix(Project p) {
         if (isReference()) {
-            return ((ZipFileSet)getRef(p)).getPrefix(p);
+            return ((ZipFileSet) getRef(p)).getPrefix(p);
         }
         return prefix;
     }
@@ -212,7 +212,7 @@ public class ZipFileSet extends FileSet {
      */
     public String getFullpath(Project p) {
         if (isReference()) {
-            return ((ZipFileSet)getRef(p)).getFullpath(p);
+            return ((ZipFileSet) getRef(p)).getFullpath(p);
         }
         return fullpath;
     }
@@ -259,7 +259,7 @@ public class ZipFileSet extends FileSet {
      */
     public int getFileMode(Project p) {
         if (isReference()) {
-            return ((ZipFileSet)getRef(p)).getFileMode(p);
+            return ((ZipFileSet) getRef(p)).getFileMode(p);
         }
         return fileMode;
     }
@@ -271,7 +271,7 @@ public class ZipFileSet extends FileSet {
      */
     public boolean hasFileModeBeenSet() {
         if (isReference()) {
-            return ((ZipFileSet)getRef(getProject())).hasFileModeBeenSet();
+            return ((ZipFileSet) getRef(getProject())).hasFileModeBeenSet();
         }
         return fileModeHasBeenSet;
     }
@@ -297,7 +297,7 @@ public class ZipFileSet extends FileSet {
      */
     public int getDirMode(Project p) {
         if (isReference()) {
-            return ((ZipFileSet)getRef(p)).getDirMode(p);
+            return ((ZipFileSet) getRef(p)).getDirMode(p);
         }
         return dirMode;
     }
@@ -309,7 +309,7 @@ public class ZipFileSet extends FileSet {
      */
     public boolean hasDirModeBeenSet() {
         if (isReference()) {
-            return ((ZipFileSet)getRef(getProject())).hasDirModeBeenSet();
+            return ((ZipFileSet) getRef(getProject())).hasDirModeBeenSet();
         }
         return dirModeHasBeenSet;
     }

@@ -55,7 +55,6 @@
 package org.apache.tools.ant.types;
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.Vector;
 import java.util.Hashtable;
@@ -131,8 +130,8 @@ public class ZipScanner extends DirectoryScanner {
             Vector myvector = new Vector();
             // first check if the archive needs to be scanned again
             scanme();
-            for (Enumeration e = myentries.elements(); e.hasMoreElements() ;) {
-                Resource myresource= (Resource) e.nextElement();
+            for (Enumeration e = myentries.elements(); e.hasMoreElements();) {
+                Resource myresource = (Resource) e.nextElement();
                 if (!myresource.isDirectory() && match(myresource.getName())) {
                     myvector.addElement(myresource.getName());
                 }
@@ -155,11 +154,11 @@ public class ZipScanner extends DirectoryScanner {
      */
     public String[] getIncludedDirectories() {
         if (srcFile != null) {
-            Vector myvector=new Vector();
+            Vector myvector = new Vector();
             // first check if the archive needs to be scanned again
             scanme();
-            for (Enumeration e = myentries.elements(); e.hasMoreElements() ;) {
-                Resource myresource= (Resource) e.nextElement();
+            for (Enumeration e = myentries.elements(); e.hasMoreElements();) {
+                Resource myresource = (Resource) e.nextElement();
                 if (myresource.isDirectory() && match(myresource.getName())) {
                     myvector.addElement(myresource.getName());
                 }
@@ -261,8 +260,8 @@ public class ZipScanner extends DirectoryScanner {
             while (enum.hasMoreElements()) {
                 entry = (ZipEntry) enum.nextElement();
                 myentries.put(new String(entry.getName()),
-                              new Resource(entry.getName(), true, 
-                                           entry.getTime(), 
+                              new Resource(entry.getName(), true,
+                                           entry.getTime(),
                                            entry.isDirectory()));
             }
         } finally {
