@@ -1,7 +1,7 @@
 @echo off
 
 REM
-REM Copyright  2001-2002,2004 Apache Software Foundation
+REM Copyright  2001-2002,2004 The Apache Software Foundation
 REM
 REM  Licensed under the Apache License, Version 2.0 (the "License");
 REM  you may not use this file except in compliance with the License.

@@ -5,7 +5,7 @@
   doctype-public="-//W3C//DTD HTML 4.01 Transitional//EN" />
 <xsl:decimal-format decimal-separator="." grouping-separator="," />
 <!--
-   Copyright 2001-2004 Apache Software Foundation
+   Copyright 2001-2004 The Apache Software Foundation
 
    Licensed under the Apache License, Version 2.0 (the "License");
    you may not use this file except in compliance with the License.
