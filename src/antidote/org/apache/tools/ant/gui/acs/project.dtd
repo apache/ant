@@ -58,7 +58,7 @@
 
 <!ENTITY % share-file SYSTEM "file:/share.dtd">
 %share-file;
-<!ELEMENT target (ant | antcall | available | chmod | copy | cvs | delete | deltree | echo | exec | expand | filter | get | gzip | fixcrlf | jar | java | javac | javadoc | keysubst | mkdir | property  | recorder | rename | replace | rmic | tar | taskdef | tstamp | zip | path | classpath | mail)*>
+<!ELEMENT target (ant | antcall | available | chmod | copy | cvs | delete | deltree | echo | exec | expand | fail | filter | get | gzip | fixcrlf | jar | java | javac | javadoc | keysubst |  mail | mkdir | property  | recorder | rename | replace | rmic | tar | taskdef | tstamp | uptodate | zip | path | classpath)*>
 <!ATTLIST target
 	name CDATA #REQUIRED
 	depends CDATA #IMPLIED
@@ -87,10 +87,18 @@
 	resource CDATA #REQUIRED
 	file CDATA #REQUIRED
 >
-<!ELEMENT chmod EMPTY>
+<!ELEMENT chmod (includes | excludes | patternset | fileset)*>
 <!ATTLIST chmod
-	src CDATA #REQUIRED
+	file CDATA #IMPLIED
+	dir CDATA #IMPLIED
 	perm CDATA #REQUIRED
+	includes CDATA #IMPLIED
+	includesfile CDATA #IMPLIED
+	excludes CDATA #IMPLIED
+	excludesfile CDATA #IMPLIED
+	defaultexcludes CDATA #IMPLIED
+	parallel CDATA #IMPLIED
+	type CDATA #IMPLIED
 >
 <!ELEMENT copy (fileset | mapper)*>
 <!ATTLIST copy
@@ -159,7 +167,8 @@
 	src CDATA #REQUIRED
 	zipfile CDATA #REQUIRED
 >
-<!ELEMENT fixcrlf EMPTY>
+<!ELEMENT fail EMPTY>
+<!ELEMENT fixcrlf (includes | excludes | patternset)*>
 <!ATTLIST fixcrlf
 	srcdir CDATA #REQUIRED
 	destDir CDATA #IMPLIED
@@ -168,17 +177,34 @@
 	cr CDATA #IMPLIED
 	tab CDATA #IMPLIED
 	eof CDATA #IMPLIED
+        includesfile CDATA #IMPLIED
+        excludesfile CDATA #IMPLIED
+        defaultexcludes CDATA #IMPLIED
+        tablength CDATA #IMPLIED
 >
-<!ELEMENT jar EMPTY>
+<!ELEMENT jar (metainf | include | exclude | patternset | fileset)*>
 <!ATTLIST jar
 	jarfile CDATA #REQUIRED
 	basedir CDATA #REQUIRED
-	items CDATA #IMPLIED
-	ignore CDATA #IMPLIED
+	compress CDATA #IMPLIED
 	includes CDATA #IMPLIED
+	includesfile CDATA #IMPLIED
 	excludes CDATA #IMPLIED
+	excludesfile CDATA #IMPLIED
 	defaultexcludes CDATA #IMPLIED
 	manifest CDATA #IMPLIED
+	whenempty CDATA #IMPLIED
+>
+<!ELEMENT metainf (include | exclude | patternset)*>
+<!ATTLIST metainf
+	id CDATA #IMPLIED
+	refid CDATA #IMPLIED
+	dir CDATA #REQUIRED
+	defaultexcludes CDATA #IMPLIED
+	includes CDATA #IMPLIED
+	includesfile CDATA #IMPLIED
+	excludes CDATA #IMPLIED
+	excludesfile CDATA #IMPLIED
 >
 <!ELEMENT java EMPTY>
 <!ATTLIST java
@@ -202,7 +228,7 @@
 	deprecation CDATA #IMPLIED
 	filtering CDATA #IMPLIED
 >
-<!ELEMENT javadoc EMPTY>
+<!ELEMENT javadoc (link | group | doclet | sourcepath | classpath | bootclasspath)>
 <!ATTLIST javadoc
 	sourcepath CDATA #REQUIRED
 	destdir CDATA #REQUIRED
@@ -243,6 +269,32 @@
 	stylesheetfile CDATA #IMPLIED
 	charset CDATA #IMPLIED
 	docencoding CDATA #IMPLIED
+>
+<!ELEMENT link EMPTY>
+<!ATTLIST link
+	href CDATA #REQUIRED
+	offline CDATA #IMPLIED
+	packagelistLoc CDATA #IMPLIED
+>
+<!ELEMENT group EMPTY>
+<!ATTLIST group
+	title CDATA #REQUIRED
+	packages CDATA #REQUIRED
+>
+<!ELEMENT doclet (param)*>
+<!ATTLIST doclet
+	name CDATA #REQUIRED
+	path CDATA #REQUIRED
+>
+<!ELEMENT sourcepath (pathelement | path | fileset)*>
+<!ATTLIST sourcepath
+	id CDATA #IMPLIED
+	refid CDATA #IMPLIED
+>
+<!ELEMENT bootclasspath (pathelement | path | fileset)*>
+<!ATTLIST bootclasspath
+	id CDATA #IMPLIED
+	refid CDATA #IMPLIED
 >
 <!ELEMENT keysubst EMPTY>
 <!ATTLIST keysubst
@@ -298,7 +350,7 @@
 	classname CDATA #REQUIRED
 	filtering CDATA #IMPLIED
 >
-<!ELEMENT tar EMPTY>
+<!ELEMENT tar (includes | excludes | patternset | fileset | tarfileset)*>
 <!ATTLIST tar
 	tarfile CDATA #REQUIRED
 	basedir CDATA #REQUIRED
@@ -306,13 +358,47 @@
 	excludes CDATA #IMPLIED
 	defaultexcludes CDATA #IMPLIED
 >
+<!ELEMENT tarfileset (include | exclude | patternset)*>
+<!ATTLIST tarfileset
+	id CDATA #IMPLIED
+	refid CDATA #IMPLIED
+	dir CDATA #REQUIRED
+	defaultexcludes CDATA #IMPLIED
+	includes CDATA #IMPLIED
+	includesfile CDATA #IMPLIED
+	excludes CDATA #IMPLIED
+	excludesfile CDATA #IMPLIED
+	prefix CDATA #IMPLIED
+	fullpath CDATA #IMPLIED
+	src CDATA #IMPLIED
+	mode CDATA #IMPLIED
+	username CDATA #IMPLIED
+	groupname CDATA #IMPLIED
+>
 <!ELEMENT tstamp (format)*>
 <!ELEMENT format EMPTY>
 <!ATTLIST format
 	property CDATA #REQUIRED
 	pattern CDATA #REQUIRED
 >
-<!ELEMENT zip EMPTY>
+<!ELEMENT uptodate (srcfiles | mapper)*>
+<!ATTLIST uptodate
+	property CDATA #REQUIRED
+	value CDATA #IMPLIED
+	targetfile CDATA #IMPLIED
+>
+<!ELEMENT srcfiles (include | exclude | patternset)*>
+<!ATTLIST srcfiles
+	id CDATA #IMPLIED
+	refid CDATA #IMPLIED
+	dir CDATA #REQUIRED
+	defaultexcludes CDATA #IMPLIED
+	includes CDATA #IMPLIED
+	includesfile CDATA #IMPLIED
+	excludes CDATA #IMPLIED
+	excludesfile CDATA #IMPLIED
+>
+<!ELEMENT zip (fileset | zipfileset)*>
 <!ATTLIST zip
 	zipfile CDATA #REQUIRED
 	basedir CDATA #REQUIRED
@@ -321,4 +407,18 @@
 	includes CDATA #IMPLIED
 	excludes CDATA #IMPLIED
 	defaultexcludes CDATA #IMPLIED
+>
+<!ELEMENT zipfileset (include | exclude | patternset)*>
+<!ATTLIST zipfileset
+	id CDATA #IMPLIED
+	refid CDATA #IMPLIED
+	dir CDATA #REQUIRED
+	defaultexcludes CDATA #IMPLIED
+	includes CDATA #IMPLIED
+	includesfile CDATA #IMPLIED
+	excludes CDATA #IMPLIED
+	excludesfile CDATA #IMPLIED
+	prefix CDATA #IMPLIED
+	fullpath CDATA #IMPLIED
+	src CDATA #IMPLIED
 >
