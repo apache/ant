@@ -249,7 +249,8 @@
       </subsection>
 
       <subsection name="Doxygen task">
-        <p>Ant task for running the Doxygen documentation system.</p>
+        <p>There are two Ant tasks for running the Doxygen
+        documentation system.</p>
 
         <table>
           <tr>
@@ -263,6 +264,27 @@
           <tr>
             <th>Contact:</th>
             <td><a href="mailto:mortis@voicenet.com">Kyle R. Burton</a></td>
+          </tr>
+          <tr>
+            <th>License:</th>
+            <td>Apache Software Foundation License</td>
+          </tr>
+        </table>
+
+        <p>and</p>
+
+        <table>
+          <tr>
+            <th>Compatibility:</th>
+            <td>Ant 1.5 and later</td>
+          </tr>
+          <tr>
+            <th>URL:</th>
+            <td><a href="http://ant-doxygen.sourceforge.net">http://ant-doxygen.sourceforge.net</a></td>
+          </tr>
+          <tr>
+            <th>Contact:</th>
+            <td><a href="mailto:akkumar@users.sourceforge.net">Karthik A Kumar</a></td>
           </tr>
           <tr>
             <th>License:</th>
