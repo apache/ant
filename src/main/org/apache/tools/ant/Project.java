@@ -731,7 +731,7 @@ public class Project {
     }
 
     /**
-     * Set &quot;keep-going&quot; mode. In this mode ANT will try to execute
+     * Set &quot;keep-going&quot; mode. In this mode Ant will try to execute
      * as many targets as possible. All targets that do not depend
      * on failed target(s) will be executed.  If the keepGoing settor/getter
      * methods are used in conjunction with the <code>ant.executor.class</code>
