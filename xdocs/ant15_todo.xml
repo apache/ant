@@ -1,0 +1,89 @@
+<?xml version="1.0"?>
+<document>
+
+  <properties>
+    <author email="ehatcher@apache.org">Erik Hatcher</author>
+    <title>Ant 1.5 Release To-Do List</title>
+  </properties>
+
+  <body>
+    <section name="Ant 1.5 Release To-Do List">
+      <subsection name="Open">
+        <table>
+          <tr>
+            <th>Item</th>
+            <th>Details</th>
+            <th>Assigned</th>
+          </tr>
+          
+          <tr>
+            <td>Bugzilla bugs under 30</td>
+            <td>or at least address most of them in some way</td>
+            <td>All Committers</td>
+          </tr>
+
+          <tr>
+            <td>Selectors</td>
+            <td></td>
+            <td>Magesh</td>
+          </tr>
+
+          <tr>
+            <td>&lt;input&gt;</td>
+            <td></td>
+            <td>Stefan</td>
+          </tr>
+
+          <tr>
+            <td>Document Path datatype</td>
+            <td>Its documented, but more hidden than the other types</td>
+            <td>Erik</td>
+          </tr>
+
+          <tr>
+            <td>XmlLogger implements BuildLogger</td>
+            <td>Its currently a BuildListener, lets remove the confusion</td>
+            <td>Erik</td>
+          </tr>
+
+          <tr>
+            <td>Novell NetWare support</td>
+            <td></td>
+            <td>Jeff Tulley</td>
+          </tr>
+
+          <tr>
+            <td>XMLCatalog more integrated</td>
+            <td>Several tasks could still use XMLCatalog integration</td>
+            <td></td>
+          </tr>
+
+          <tr>
+            <td>Make default excludes customizable</td>
+            <td>With the setting of an ant.default.excludes property?</td>
+            <td>Erik</td>
+          </tr>
+
+<!-- for cut and paste use
+          <tr>
+            <td></td>
+            <td></td>
+            <td></td>
+          </tr>
+-->
+          
+        </table>
+      </subsection>
+      
+      <subsection name="Done">
+        <table>
+          <tr>
+            <th>Item</th>
+            <th>Details</th>
+            <th>Assigned</th>
+          </tr>
+        </table>
+      </subsection>
+    </section>
+  </body>
+</document>
