@@ -123,12 +123,12 @@ public class SetProxy extends Task {
     /**
      * user for http only
      */
-    private String proxyUser=null;
+    private String proxyUser = null;
 
     /**
      * password for http only
      */
-    private String proxyPassword=null;
+    private String proxyPassword = null;
 
     /**
      * the HTTP/ftp proxy host. Set this to "" for the http proxy
@@ -229,7 +229,7 @@ public class SetProxy extends Task {
                     sysprops.put("https.nonProxyHosts", nonProxyHosts);
                     sysprops.put("ftp.nonProxyHosts", nonProxyHosts);
                 }
-                if (proxyUser!=null) {
+                if (proxyUser != null) {
                     sysprops.put("http.proxyUser", proxyUser);
                     sysprops.put("http.proxyPassword", proxyPassword);
                 }

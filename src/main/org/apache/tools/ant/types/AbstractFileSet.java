@@ -401,13 +401,13 @@ public abstract class AbstractFileSet extends DataType implements Cloneable,
             defaultPatterns.append((PatternSet) o, p);
         }
 
-        p.log(getDataTypeName() + ": Setup scanner in dir " + dir +
-            " with " + defaultPatterns, Project.MSG_DEBUG);
+        p.log(getDataTypeName() + ": Setup scanner in dir " + dir
+            + " with " + defaultPatterns, Project.MSG_DEBUG);
 
         ds.setIncludes(defaultPatterns.getIncludePatterns(p));
         ds.setExcludes(defaultPatterns.getExcludePatterns(p));
         if (ds instanceof SelectorScanner) {
-            SelectorScanner ss = (SelectorScanner)ds;
+            SelectorScanner ss = (SelectorScanner) ds;
             ss.setSelectors(getSelectors(p));
         }
 
@@ -641,7 +641,7 @@ public abstract class AbstractFileSet extends DataType implements Cloneable,
     public void addDepend(DependSelector selector) {
         appendSelector(selector);
     }
-    
+
     /**
      * add a regular expression selector entry on the selector list
      */
@@ -668,7 +668,7 @@ public abstract class AbstractFileSet extends DataType implements Cloneable,
         StringBuffer sb = new StringBuffer();
 
         for (int i = 0; i < files.length; i++) {
-            if (i>0) {
+            if (i > 0) {
                 sb.append(';');
             }
             sb.append(files[i]);

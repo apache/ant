@@ -375,15 +375,18 @@ public class GenericDeploymentTool implements EJBDeploymentTool {
                 addedfiles.add(logicalFilename);
            }
         } catch (IOException ioe) {
-            log("WARNING: IOException while adding entry " +
-                logicalFilename + " to jarfile from " + inputFile.getPath() + " " +
-                ioe.getClass().getName() + "-" + ioe.getMessage(), Project.MSG_WARN);
+            log("WARNING: IOException while adding entry "
+                + logicalFilename + " to jarfile from "
+                + inputFile.getPath() + " "  + ioe.getClass().getName()
+                + "-" + ioe.getMessage(), Project.MSG_WARN);
         } finally {
             // Close up the file input stream for the class file
             if (iStream != null) {
                 try {
                     iStream.close();
-                } catch (IOException closeException) {}
+                } catch (IOException closeException) {
+                    // ignore
+                }
             }
         }
     }
@@ -555,7 +558,9 @@ public class GenericDeploymentTool implements EJBDeploymentTool {
             if (descriptorStream != null) {
                 try {
                     descriptorStream.close();
-                } catch (IOException closeException) {}
+                } catch (IOException closeException) {
+                    // ignore
+                }
             }
         }
 
@@ -764,7 +769,7 @@ public class GenericDeploymentTool implements EJBDeploymentTool {
      * ejbFiles.
      */
     protected void writeJar(String baseName, File jarfile, Hashtable files,
-                            String publicId) throws BuildException{
+                            String publicId) throws BuildException {
 
         JarOutputStream jarStream = null;
         try {
@@ -860,7 +865,9 @@ public class GenericDeploymentTool implements EJBDeploymentTool {
             if (jarStream != null) {
                 try {
                     jarStream.close();
-                } catch (IOException closeException) {}
+                } catch (IOException closeException) {
+                    // ignore
+                }
             }
         }
     } // end of writeJar

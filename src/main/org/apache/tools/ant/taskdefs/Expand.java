@@ -127,8 +127,8 @@ public class Expand extends Task {
 
         if (source != null) {
             if (source.isDirectory()) {
-                throw new BuildException("Src must not be a directory." +
-                    " Use nested filesets instead.", getLocation());
+                throw new BuildException("Src must not be a directory."
+                    + " Use nested filesets instead.", getLocation());
             } else {
                 expandFile(fileUtils, source, dest);
             }
@@ -172,7 +172,9 @@ public class Expand extends Task {
             if (zf != null) {
                 try {
                     zf.close();
-                } catch (IOException e) {}
+                } catch (IOException e) {
+                    //ignore
+                }
             }
         }
     }
@@ -247,7 +249,7 @@ public class Expand extends Task {
                 Project.MSG_VERBOSE);
             // create intermediary directories - sometimes zip don't add them
             File dirF = fileUtils.getParentFile(f);
-            if ( dirF != null) {
+            if (dirF != null) {
                 dirF.mkdirs();
             }
 
@@ -271,7 +273,9 @@ public class Expand extends Task {
                     if (fos != null) {
                         try {
                             fos.close();
-                        } catch (IOException e) {}
+                        } catch (IOException e) {
+                            // ignore
+                        }
                     }
                 }
             }

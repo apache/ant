@@ -283,8 +283,8 @@ public class DependSet extends MatchingTask {
 
                  if (src.lastModified() > oldestTargetTime) {
                     upToDate = false;
-                    log(oldestTarget + " is out of date with respect to " +
-                        sourceFiles[i], Project.MSG_VERBOSE);
+                    log(oldestTarget + " is out of date with respect to "
+                        + sourceFiles[i], Project.MSG_VERBOSE);
                  }
               }
            }
@@ -311,8 +311,8 @@ public class DependSet extends MatchingTask {
 
                  if (src.lastModified() > oldestTargetTime) {
                     upToDate = false;
-                    log(oldestTarget + " is out of date with respect to " +
-                        sourceFiles[i], Project.MSG_VERBOSE);
+                    log(oldestTarget + " is out of date with respect to "
+                        + sourceFiles[i], Project.MSG_VERBOSE);
                  }
               }
            }

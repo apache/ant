@@ -106,7 +106,7 @@ public class Triggers {
          * The name of the method(s) as a regular expression. The name
          * is the fully qualified name on the form <tt>package.classname.method</tt>
          *  required.
-         */        
+         */
         public void setName(String value) {
             name = value;
         }
@@ -126,7 +126,7 @@ public class Triggers {
         /**
          * The action to execute; required. Must be one of &quot;clear&quot;,
          * &quot;pause&quot;, &quot;resume&quot;, &quot;snapshot&quot;, &quot;suspend&quot;,
-         * or &quot;exit&quot;. They respectively clear recording, pause recording, 
+         * or &quot;exit&quot;. They respectively clear recording, pause recording,
          * resume recording, take a snapshot, suspend the recording and exit the program.
          */
         public void setAction(String value) throws BuildException {

@@ -97,7 +97,7 @@ public abstract class CovBase extends Task {
                 }
             }
         }
-        
+
         return loc;
     }
 

@@ -74,28 +74,28 @@ public class URLResolver
     private File m_destdir;
     private URL m_url;
 
-    public void setUrl( final URL url) {
+    public void setUrl(final URL url) {
         m_url = url;
     }
 
-    public void setDestfile( final File destfile) {
+    public void setDestfile(final File destfile) {
         m_destfile = destfile;
     }
 
-    public void setDestdir( final File destdir) {
+    public void setDestdir(final File destdir) {
         m_destdir = destdir;
     }
 
-    public File resolve( final Extension extension,
-                         final Project project )
+    public File resolve(final Extension extension,
+                         final Project project)
         throws BuildException {
         validate();
 
         final File file = getDest();
 
-        final Get get = (Get)project.createTask( "get" );
-        get.setDest( file );
-        get.setSrc( m_url );
+        final Get get = (Get) project.createTask("get");
+        get.setDest(file);
+        get.setSrc(m_url);
         get.execute();
 
         return file;
@@ -110,29 +110,29 @@ public class URLResolver
             if (null == file || file.length() <= 1) {
                 filename = "default.file";
             } else {
-                int index = file.lastIndexOf( '/' );
+                int index = file.lastIndexOf('/');
                 if (-1 == index) {
                     index = 0;
                 }
-                filename = file.substring( index );
+                filename = file.substring(index);
             }
 
-            return new File( m_destdir, filename );
+            return new File(m_destdir, filename);
         }
     }
 
     private void validate() {
         if (null == m_url) {
             final String message = "Must specify URL";
-            throw new BuildException( message );
+            throw new BuildException(message);
         }
 
         if (null == m_destdir && null == m_destfile) {
             final String message = "Must specify destination file or directory";
-            throw new BuildException( message );
+            throw new BuildException(message);
         } else if (null != m_destdir && null != m_destfile) {
             final String message = "Must not specify both destination file or directory";
-            throw new BuildException( message );
+            throw new BuildException(message);
         }
     }
 

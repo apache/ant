@@ -73,7 +73,6 @@ import junit.framework.Test;
 import junit.framework.TestListener;
 import junit.framework.TestResult;
 import junit.framework.TestSuite;
-import org.apache.tools.ant.AntClassLoader;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.util.StringUtils;
@@ -358,14 +357,16 @@ public class JUnitTestRunner implements TestListener {
      *
      * <p>A new Test is started.
      */
-    public void startTest(Test t) {}
+    public void startTest(Test t) {
+    }
 
     /**
      * Interface TestListener.
      *
      * <p>A Test is finished.
      */
-    public void endTest(Test test) {}
+    public void endTest(Test test) {
+    }
 
     /**
      * Interface TestListener for JUnit &lt;= 3.4.

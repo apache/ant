@@ -168,34 +168,34 @@ public class SoundTask extends Task {
          * Gets the location of the file to get the audio.
          */
         public File getSource() {
-            File nofile = null ;
+            File nofile = null;
             // Check if source is a directory
             if (source.exists()) {
                 if (source.isDirectory()) {
                     // get the list of files in the dir
-                    String[] entries = source.list() ;
-                    Vector files = new Vector() ;
-                    for (int i = 0 ; i < entries.length ; i++) {
-                        File f = new File(source, entries[i]) ;
+                    String[] entries = source.list();
+                    Vector files = new Vector();
+                    for (int i = 0; i < entries.length; i++) {
+                        File f = new File(source, entries[i]);
                         if (f.isFile()) {
-                            files.addElement(f) ;
+                            files.addElement(f);
                         }
                     }
                     if (files.size() < 1) {
                         throw new BuildException("No files found in directory " + source);
                     }
-                    int numfiles = files.size() ;
+                    int numfiles = files.size();
                     // get a random number between 0 and the number of files
-                    Random rn = new Random() ;
-                    int x = rn.nextInt(numfiles) ;
+                    Random rn = new Random();
+                    int x = rn.nextInt(numfiles);
                     // set the source to the file at that location
                     this.source = (File) files.elementAt(x);
                 }
             } else {
-                log(source + ": invalid path.", Project.MSG_WARN) ;
-                this.source = nofile ;
+                log(source + ": invalid path.", Project.MSG_WARN);
+                this.source = nofile;
             }
-            return this.source ;
+            return this.source;
         }
 
         /**

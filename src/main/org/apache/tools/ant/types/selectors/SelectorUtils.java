@@ -543,7 +543,7 @@ public final class SelectorUtils {
      */
     public static Vector tokenizePath (String path, String separator) {
         Vector ret = new Vector();
-        StringTokenizer st = new StringTokenizer(path,separator);
+        StringTokenizer st = new StringTokenizer(path, separator);
         while (st.hasMoreTokens()) {
             ret.addElement(st.nextToken());
         }
@@ -669,7 +669,7 @@ public final class SelectorUtils {
      * @return true if the string contains at least a star or a question mark
      */
     public static boolean hasWildcards(String input) {
-        return (input.indexOf('*')!=-1 || input.indexOf('?')!=-1);
+        return (input.indexOf('*') != -1 || input.indexOf('?') != -1);
     }
 
     /**
@@ -680,14 +680,14 @@ public final class SelectorUtils {
     public static String rtrimWildcardTokens(String input) {
         Vector v = tokenizePath(input, File.separator);
         StringBuffer sb = new StringBuffer();
-        for (int counter=0; counter < v.size() ; counter++) {
-            if ( hasWildcards((String)v.elementAt(counter))) {
+        for (int counter = 0; counter < v.size(); counter++) {
+            if (hasWildcards((String) v.elementAt(counter))) {
                 break;
             }
-            if (counter >0) {
+            if (counter > 0) {
                 sb.append(File.separator);
             }
-            sb.append((String)v.elementAt(counter));
+            sb.append((String) v.elementAt(counter));
         }
         return sb.toString();
     }

@@ -178,8 +178,8 @@ public class WLRun extends Task {
             throw new BuildException("weblogic home must be set");
         }
         if (!weblogicSystemHome.isDirectory()) {
-            throw new BuildException("weblogic home directory " + weblogicSystemHome.getPath() +
-                                     " is not valid");
+            throw new BuildException("weblogic home directory "
+                + weblogicSystemHome.getPath() + " is not valid");
         }
 
         if (beaHome != null) {
@@ -202,8 +202,8 @@ public class WLRun extends Task {
         }
         // If we still can't find it, complain
         if (!securityPolicyFile.exists()) {
-            throw new BuildException("Security policy " + securityPolicy +
-                                     " was not found.");
+            throw new BuildException("Security policy " + securityPolicy
+                                    + " was not found.");
         }
         return securityPolicyFile;
     }
@@ -212,8 +212,8 @@ public class WLRun extends Task {
         File securityPolicyFile
             = findSecurityPolicyFile(DEFAULT_WL60_POLICY_FILE);
         if (!beaHome.isDirectory()) {
-            throw new BuildException("BEA home " + beaHome.getPath() +
-                                     " is not valid");
+            throw new BuildException("BEA home " + beaHome.getPath()
+                                     + " is not valid");
         }
 
         File configFile = new File(weblogicSystemHome, "config/"
@@ -224,7 +224,8 @@ public class WLRun extends Task {
         }
 
         if (managementPassword == null) {
-            throw new BuildException("You must supply a management password to start the server");
+            throw new BuildException("You must supply a management password "
+                                    + "to start the server");
         }
 
         Java weblogicServer = (Java) getProject().createTask("java");
@@ -275,9 +276,10 @@ public class WLRun extends Task {
             // OK, properties file may be absolute
             propertiesFile = getProject().resolveFile(weblogicPropertiesFile);
             if (!propertiesFile.exists()) {
-                throw new BuildException("Properties file " + weblogicPropertiesFile +
-                                         " not found in weblogic home " + weblogicSystemHome +
-                                         " or as absolute file");
+                throw new BuildException("Properties file "
+                    + weblogicPropertiesFile
+                    + " not found in weblogic home " + weblogicSystemHome
+                    + " or as absolute file");
             }
         }
 

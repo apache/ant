@@ -578,9 +578,8 @@ public class Execute {
         public Process exec(Project project, String[] cmd, String[] env)
              throws IOException {
             if (project != null) {
-                project.log("Execute:CommandLauncher: " +
-                            Commandline.describeCommand(cmd),
-                            Project.MSG_DEBUG);
+                project.log("Execute:CommandLauncher: "
+                    + Commandline.describeCommand(cmd), Project.MSG_DEBUG);
             }
             return Runtime.getRuntime().exec(cmd, env);
         }
@@ -625,9 +624,8 @@ public class Execute {
                 newcmd[i] = Commandline.quoteArgument(cmd[i]);
             }
             if (project != null) {
-                project.log("Execute:Java11CommandLauncher: " +
-                            Commandline.describeCommand(newcmd),
-                            Project.MSG_DEBUG);
+                project.log("Execute:Java11CommandLauncher: "
+                    + Commandline.describeCommand(newcmd), Project.MSG_DEBUG);
             }
             return Runtime.getRuntime().exec(newcmd, env);
         }
@@ -653,11 +651,10 @@ public class Execute {
                             File workingDir) throws IOException {
             try {
                 if (project != null) {
-                    project.log("Execute:Java13CommandLauncher: " +
-                                Commandline.describeCommand(cmd),
-                                Project.MSG_DEBUG);
+                    project.log("Execute:Java13CommandLauncher: "
+                        + Commandline.describeCommand(cmd), Project.MSG_DEBUG);
                 }
-                Object[] arguments = { cmd, env, workingDir };
+                Object[] arguments = {cmd, env, workingDir};
                 return (Process) _execWithCWD.invoke(Runtime.getRuntime(),
                                                      arguments);
             } catch (InvocationTargetException exc) {

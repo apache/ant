@@ -76,7 +76,7 @@ class PlainMailer extends Mailer {
      */
     public void send() {
         try {
-            MailMessage mailMessage = new MailMessage(host,port);
+            MailMessage mailMessage = new MailMessage(host, port);
 
             mailMessage.from(from.toString());
 

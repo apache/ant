@@ -540,7 +540,7 @@ public class Delete extends MatchingTask {
      * wait a little and try again.
      */
     private boolean delete(File f) {
-        if (! f.delete()) {
+        if (!f.delete()) {
             try {
                 Thread.sleep(10);
                 return f.delete();
@@ -550,7 +550,7 @@ public class Delete extends MatchingTask {
         }
         return true;
     }
-    
+
     protected void removeDir(File d) {
         String[] list = d.list();
         if (list == null) {
@@ -638,9 +638,9 @@ public class Delete extends MatchingTask {
             }
 
             if (dirCount > 0) {
-                log("Deleted " + dirCount + " director" +
-                    (dirCount == 1 ? "y" : "ies") +
-                    " from " + d.getAbsolutePath());
+                log("Deleted " + dirCount + " director"
+                    + (dirCount == 1 ? "y" : "ies")
+                    + " from " + d.getAbsolutePath());
             }
         }
     }

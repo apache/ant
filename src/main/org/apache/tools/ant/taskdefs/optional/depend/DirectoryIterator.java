@@ -179,12 +179,12 @@ public class DirectoryIterator implements ClassFileIterator {
                     } else {
 
                         // we have a file. create a stream for it
-                        FileInputStream inFileStream 
+                        FileInputStream inFileStream
                             = new FileInputStream(element);
 
                         if (element.getName().endsWith(".class")) {
 
-                            // create a data input stream from the jar 
+                            // create a data input stream from the jar
                             // input stream
                             ClassFile javaClass = new ClassFile();
 

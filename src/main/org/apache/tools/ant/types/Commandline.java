@@ -513,14 +513,14 @@ public class Commandline implements Cloneable {
      *
      * <p>This method assumes that the first entry in the array is the
      * executable to run.</p>
-     * 
+     *
      * @since Ant 1.5
      */
     public static String describeCommand(String[] args) {
         if (args == null || args.length == 0) {
             return "";
         }
-        
+
         StringBuffer buf = new StringBuffer("Executing \'");
         buf.append(args[0]);
         buf.append("\'");

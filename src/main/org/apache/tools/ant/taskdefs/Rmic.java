@@ -511,8 +511,8 @@ public class Rmic extends MatchingTask {
 
             int fileCount = compileList.size();
             if (fileCount > 0) {
-                log("RMI Compiling " + fileCount +
-                    " class" + (fileCount > 1 ? "es" : "") + " to " + baseDir,
+                log("RMI Compiling " + fileCount
+                    + " class" + (fileCount > 1 ? "es" : "") + " to " + baseDir,
                     Project.MSG_INFO);
 
                 // finally, lets execute the compiler!!
@@ -591,8 +591,8 @@ public class Rmic extends MatchingTask {
                 }
                 oldFile.delete();
             } catch (IOException ioe) {
-                String msg = "Failed to copy " + oldFile + " to " +
-                    newFile + " due to " + ioe.getMessage();
+                String msg = "Failed to copy " + oldFile + " to "
+                    + newFile + " due to " + ioe.getMessage();
                 throw new BuildException(msg, ioe, getLocation());
             }
         }
@@ -637,15 +637,15 @@ public class Rmic extends MatchingTask {
             }
             return isValidRmiRemote(testClass);
         } catch (ClassNotFoundException e) {
-            log("Unable to verify class " + classname +
-                ". It could not be found.", Project.MSG_WARN);
+            log("Unable to verify class " + classname
+                + ". It could not be found.", Project.MSG_WARN);
         } catch (NoClassDefFoundError e) {
-            log("Unable to verify class " + classname +
-                ". It is not defined.", Project.MSG_WARN);
+            log("Unable to verify class " + classname
+                + ". It is not defined.", Project.MSG_WARN);
         } catch (Throwable t) {
-            log("Unable to verify class " + classname +
-                ". Loading caused Exception: " +
-                t.getMessage(), Project.MSG_WARN);
+            log("Unable to verify class " + classname
+                + ". Loading caused Exception: "
+                + t.getMessage(), Project.MSG_WARN);
         }
         // we only get here if an exception has been thrown
         return false;

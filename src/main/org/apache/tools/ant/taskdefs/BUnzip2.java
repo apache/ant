@@ -117,22 +117,30 @@ public class BUnzip2 extends Unpack {
                 if (bis != null) {
                     try {
                         bis.close();
-                    } catch (IOException ioex) {}
+                    } catch (IOException ioex) {
+                        // ignore
+                    }
                 }
                 if (fis != null) {
                     try {
                         fis.close();
-                    } catch (IOException ioex) {}
+                    } catch (IOException ioex) {
+                        // ignore
+                    }
                 }
                 if (out != null) {
                     try {
                         out.close();
-                    } catch (IOException ioex) {}
+                    } catch (IOException ioex) {
+                        // ignore
+                    }
                 }
                 if (zIn != null) {
                     try {
                         zIn.close();
-                    } catch (IOException ioex) {}
+                    } catch (IOException ioex) {
+                        // ignore
+                    }
                 }
             }
         }

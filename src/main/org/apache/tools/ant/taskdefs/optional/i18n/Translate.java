@@ -591,8 +591,8 @@ public class Translate extends MatchingTask {
                             out.close();
                         }
                     } else {
-                        log("Skipping " + srcFiles[j] +
-                            " as destination file is up to date",
+                        log("Skipping " + srcFiles[j]
+                            + " as destination file is up to date",
                             Project.MSG_VERBOSE);
                     }
                 } catch (IOException ioe) {

@@ -82,11 +82,12 @@ public class SunRmic extends DefaultRmicAdapter {
 
         try {
             Class c = Class.forName("sun.rmi.rmic.Main");
-            Constructor cons = c.getConstructor(new Class[]  { OutputStream.class, String.class });
-            Object rmic = cons.newInstance(new Object[] { logstr, "rmic" });
+            Constructor cons
+                = c.getConstructor(new Class[]  {OutputStream.class, String.class});
+            Object rmic = cons.newInstance(new Object[] {logstr, "rmic"});
 
             Method doRmic = c.getMethod("compile",
-                                        new Class [] { String[].class });
+                                        new Class [] {String[].class});
             Boolean ok =
                 (Boolean) doRmic.invoke(rmic,
                                        (new Object[] {cmd.getArguments()}));

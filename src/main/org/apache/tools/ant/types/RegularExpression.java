@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2001-2002 The Apache Software Foundation.  All rights 
+ * Copyright (c) 2001-2002 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -83,7 +83,7 @@ import org.apache.tools.ant.util.regexp.RegexpFactory;
  * </pre>
  *
  * <pre>
- *   &lt;regexp [ [id="id"] pattern="expression" | refid="id" ] 
+ *   &lt;regexp [ [id="id"] pattern="expression" | refid="id" ]
  *   /&gt;
  * </pre>
  *
@@ -143,7 +143,7 @@ public class RegularExpression extends DataType {
             dieOnCircularReference(stk, p);
         }
 
-        
+
         Object o = getRefid().getReferencedObject(p);
         if (!(o instanceof RegularExpression)) {
             String msg = getRefid().getRefId() + " doesn\'t denote a "

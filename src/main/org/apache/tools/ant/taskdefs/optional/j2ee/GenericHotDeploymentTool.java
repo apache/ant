@@ -77,7 +77,7 @@ public class GenericHotDeploymentTool extends AbstractHotDeploymentTool {
     private String className;
 
     /** List of valid actions **/
-    private static final String[] VALID_ACTIONS = { ACTION_DEPLOY };
+    private static final String[] VALID_ACTIONS = {ACTION_DEPLOY};
 
     /**
      *  Add a nested argument element to hand to the deployment tool; optional.
@@ -150,7 +150,7 @@ public class GenericHotDeploymentTool extends AbstractHotDeploymentTool {
 
     /**
      *  The name of the class to execute to perfom
-     *  deployment; required. 
+     *  deployment; required.
      *  Example: "com.foobar.tools.deploy.DeployTool"
      *  @param className The fully qualified class name of the class
      *  to perform deployment.
@@ -158,14 +158,14 @@ public class GenericHotDeploymentTool extends AbstractHotDeploymentTool {
     public void setClassName(String className) {
         this.className = className;
     }
-    
+
     /**
      *
      */
     public Java getJava() {
         return java;
     }
-    
+
     public String getClassName() {
         return className;
     }

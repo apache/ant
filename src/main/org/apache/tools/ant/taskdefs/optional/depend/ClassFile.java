@@ -95,7 +95,7 @@ public class ClassFile {
         DataInputStream classStream = new DataInputStream(stream);
 
         if (classStream.readInt() != CLASS_MAGIC) {
-            throw new ClassFormatError("No Magic Code Found " 
+            throw new ClassFormatError("No Magic Code Found "
                 + "- probably not a Java class file.");
         }
 
@@ -112,7 +112,7 @@ public class ClassFile {
         /* int accessFlags = */ classStream.readUnsignedShort();
         int thisClassIndex = classStream.readUnsignedShort();
         /* int superClassIndex = */ classStream.readUnsignedShort();
-        ClassCPInfo classInfo 
+        ClassCPInfo classInfo
             = (ClassCPInfo) constantPool.getEntry(thisClassIndex);
         className  = classInfo.getClassName();
     }
@@ -130,7 +130,7 @@ public class ClassFile {
         for (int i = 0; i < constantPool.size(); ++i) {
             ConstantPoolEntry entry = constantPool.getEntry(i);
 
-            if (entry != null 
+            if (entry != null
                 && entry.getTag() == ConstantPoolEntry.CONSTANT_CLASS) {
                 ClassCPInfo classEntry = (ClassCPInfo) entry;
 

@@ -68,7 +68,7 @@ import org.apache.tools.ant.BuildException;
  * @since Ant 1.5
  */
 public class DefaultInputHandler implements InputHandler {
-    
+
     /**
      * Empty no-arg constructor
      */
@@ -108,7 +108,7 @@ public class DefaultInputHandler implements InputHandler {
         if (request instanceof MultipleChoiceInputRequest) {
             StringBuffer sb = new StringBuffer(prompt);
             sb.append("(");
-            Enumeration enum = 
+            Enumeration enum =
                 ((MultipleChoiceInputRequest) request).getChoices().elements();
             boolean first = true;
             while (enum.hasMoreElements()) {

@@ -60,4 +60,5 @@ package org.apache.tools.ant.taskdefs;
  * @author Stefan Bodewig
  * @ant.task ignore="true"
  */
-public class Transform extends ExecuteOn {}
+public class Transform extends ExecuteOn {
+}

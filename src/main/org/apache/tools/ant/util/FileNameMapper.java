@@ -84,7 +84,7 @@ public interface FileNameMapper {
      *
      * <p>if the given rule doesn't apply to the source file,
      * implementation must return null. SourceFileScanner will then
-     * omit the source file in question.</p> 
+     * omit the source file in question.</p>
      *
      * @param sourceFileName the name of the source file relative to
      *                       some given basedirectory.

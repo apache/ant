@@ -97,14 +97,15 @@ public class JasperC extends DefaultJspCompilerAdapter {
             // the project log
             Java java = (Java) (getProject().createTask("java"));
             if (getJspc().getClasspath() != null) {
-                getProject().log("using user supplied classpath: "+getJspc().getClasspath(),
-                    Project.MSG_DEBUG);
+                getProject().log("using user supplied classpath: "
+                    + getJspc().getClasspath(), Project.MSG_DEBUG);
                 java.setClasspath(getJspc().getClasspath()
                                   .concatSystemClasspath("ignore"));
             } else {
-                Path classpath=new Path(getProject());
-                classpath=classpath.concatSystemClasspath("only");
-                getProject().log("using system classpath: "+classpath, Project.MSG_DEBUG);
+                Path classpath = new Path(getProject());
+                classpath = classpath.concatSystemClasspath("only");
+                getProject().log("using system classpath: " + classpath,
+                                 Project.MSG_DEBUG);
                 java.setClasspath(classpath);
             }
             java.setDir(getProject().getBaseDir());

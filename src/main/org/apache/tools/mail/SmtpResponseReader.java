@@ -66,7 +66,7 @@ import java.io.InputStreamReader;
  * <p>The same rules used here would apply to FTP and other Telnet
  * based protocols as well.</p>
  *
- * @author Stefan Bodewig 
+ * @author Stefan Bodewig
  */
 public class SmtpResponseReader {
 
@@ -77,7 +77,7 @@ public class SmtpResponseReader {
      * Wrap this input stream.
      */
     public SmtpResponseReader(InputStream in) {
-        reader = new BufferedReader(new InputStreamReader(in)); 
+        reader = new BufferedReader(new InputStreamReader(in));
     }
 
     /**
@@ -94,7 +94,7 @@ public class SmtpResponseReader {
             result.append(line.substring(0, 3));
             result.append(" ");
         }
-        
+
         while (line != null) {
             append(line);
             if (!hasMoreLines(line)) {

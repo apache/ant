@@ -107,8 +107,8 @@ public class Move extends Copy {
                 File fromDir = (File) e.nextElement();
                 File toDir = (File) completeDirMap.get(fromDir);
                 try {
-                    log("Attempting to rename dir: " + fromDir +
-                        " to " + toDir, verbosity);
+                    log("Attempting to rename dir: " + fromDir
+                        + " to " + toDir, verbosity);
                     renameFile(fromDir, toDir, filtering, forceOverwrite);
                 } catch (IOException ioe) {
                     String msg = "Failed to rename dir " + fromDir
@@ -119,8 +119,8 @@ public class Move extends Copy {
             }
         }
         if (fileCopyMap.size() > 0) {   // files to move
-            log("Moving " + fileCopyMap.size() + " files to " +
-                destDir.getAbsolutePath());
+            log("Moving " + fileCopyMap.size() + " files to "
+                + destDir.getAbsolutePath());
 
             Enumeration e = fileCopyMap.keys();
             while (e.hasMoreElements()) {
@@ -139,8 +139,8 @@ public class Move extends Copy {
                     File d = new File(toFile);
 
                     try {
-                        log("Attempting to rename: " + fromFile +
-                            " to " + toFile, verbosity);
+                        log("Attempting to rename: " + fromFile
+                            + " to " + toFile, verbosity);
                         moved = renameFile(f, d, filtering, forceOverwrite);
                     } catch (IOException ioe) {
                         String msg = "Failed to rename " + fromFile

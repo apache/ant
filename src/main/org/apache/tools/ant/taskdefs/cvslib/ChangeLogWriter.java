@@ -66,10 +66,10 @@ import java.util.TimeZone;
  */
 class ChangeLogWriter {
     /** output format for dates writtn to xml file */
-    private static final SimpleDateFormat c_outputDate 
+    private static final SimpleDateFormat c_outputDate
         = new SimpleDateFormat("yyyy-MM-dd");
     /** output format for times writtn to xml file */
-    private static final SimpleDateFormat c_outputTime 
+    private static final SimpleDateFormat c_outputTime
         = new SimpleDateFormat("HH:mm");
 
     static {
@@ -107,11 +107,11 @@ class ChangeLogWriter {
      */
     private void printEntry(final PrintWriter output, final CVSEntry entry) {
         output.println("\t<entry>");
-        output.println("\t\t<date>" + c_outputDate.format(entry.getDate()) 
+        output.println("\t\t<date>" + c_outputDate.format(entry.getDate())
             + "</date>");
-        output.println("\t\t<time>" + c_outputTime.format(entry.getDate()) 
+        output.println("\t\t<time>" + c_outputTime.format(entry.getDate())
             + "</time>");
-        output.println("\t\t<author><![CDATA[" + entry.getAuthor() 
+        output.println("\t\t<author><![CDATA[" + entry.getAuthor()
             + "]]></author>");
 
         final Enumeration enumeration = entry.getFiles().elements();
@@ -121,13 +121,13 @@ class ChangeLogWriter {
 
             output.println("\t\t<file>");
             output.println("\t\t\t<name>" + file.getName() + "</name>");
-            output.println("\t\t\t<revision>" + file.getRevision() 
+            output.println("\t\t\t<revision>" + file.getRevision()
                 + "</revision>");
 
             final String previousRevision = file.getPreviousRevision();
 
             if (previousRevision != null) {
-                output.println("\t\t\t<prevrevision>" + previousRevision 
+                output.println("\t\t\t<prevrevision>" + previousRevision
                     + "</prevrevision>");
             }
 

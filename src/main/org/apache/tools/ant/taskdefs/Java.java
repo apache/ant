@@ -245,9 +245,8 @@ public class Java extends Task {
      * @ant.attribute ignore="true"
      */
     public void setArgs(String s) {
-        log("The args attribute is deprecated. " +
-            "Please use nested arg elements.",
-            Project.MSG_WARN);
+        log("The args attribute is deprecated. "
+            + "Please use nested arg elements.", Project.MSG_WARN);
         cmdl.createArgument().setLine(s);
     }
 
@@ -290,9 +289,8 @@ public class Java extends Task {
      * Set the command line arguments for the JVM.
      */
     public void setJvmargs(String s) {
-        log("The jvmargs attribute is deprecated. " +
-            "Please use nested jvmarg elements.",
-            Project.MSG_WARN);
+        log("The jvmargs attribute is deprecated. "
+            + "Please use nested jvmarg elements.", Project.MSG_WARN);
         cmdl.createVmArgument().setLine(s);
     }
 

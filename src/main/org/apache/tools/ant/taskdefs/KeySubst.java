@@ -119,12 +119,16 @@ public class KeySubst extends Task {
             if (bw != null) {
                 try {
                     bw.close();
-                } catch (IOException e) {}
+                } catch (IOException e) {
+                    // ignore
+                }
             }
             if (bw != null) {
                 try {
                     br.close();
-                } catch (IOException e) {}
+                } catch (IOException e) {
+                    // ignore
+                }
             }
         }
     }

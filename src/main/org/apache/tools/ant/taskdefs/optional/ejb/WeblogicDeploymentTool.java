@@ -457,15 +457,17 @@ public class WeblogicDeploymentTool extends GenericDeploymentTool {
             ejbFiles.put(META_DIR + WL_DD,
                 weblogicDD);
         } else {
-            log("Unable to locate weblogic deployment descriptor. It was expected to be in " +
-                weblogicDD.getPath(), Project.MSG_WARN);
+            log("Unable to locate weblogic deployment descriptor. "
+                + "It was expected to be in "
+                + weblogicDD.getPath(), Project.MSG_WARN);
             return;
         }
 
         if (!newCMP) {
             log("The old method for locating CMP files has been DEPRECATED.", Project.MSG_VERBOSE);
-            log("Please adjust your weblogic descriptor and set newCMP=\"true\" " +
-                "to use the new CMP descriptor inclusion mechanism. ", Project.MSG_VERBOSE);
+            log("Please adjust your weblogic descriptor and set "
+                + "newCMP=\"true\" to use the new CMP descriptor "
+                + "inclusion mechanism. ", Project.MSG_VERBOSE);
             // The the weblogic cmp deployment descriptor
             File weblogicCMPDD = new File(getConfig().descriptorDir, ddPrefix + WL_CMP_DD);
 
@@ -550,7 +552,7 @@ public class WeblogicDeploymentTool extends GenericDeploymentTool {
 
             javaTask.createJvmarg().setLine(additionalJvmArgs);
             if (!(sysprops.isEmpty())) {
-                for (Enumeration en = sysprops.elements() ; en.hasMoreElements();) {
+                for (Enumeration en = sysprops.elements(); en.hasMoreElements();) {
                     Environment.Variable entry
                         = (Environment.Variable) en.nextElement();
                     javaTask.addSysproperty(entry);
@@ -733,14 +735,15 @@ public class WeblogicDeploymentTool extends GenericDeploymentTool {
                 for (Enumeration e = genericEntries.keys(); e.hasMoreElements();) {
                     String filepath = (String) e.nextElement();
 
-                    if (wlEntries.containsKey(filepath)) {// File name/path match
+                    if (wlEntries.containsKey(filepath)) {
+                        // File name/path match
 
                         // Check files see if same
                         JarEntry genericEntry = (JarEntry) genericEntries.get(filepath);
                         JarEntry wlEntry = (JarEntry) wlEntries.get(filepath);
 
-                        if ((genericEntry.getCrc() != wlEntry.getCrc()) || // Crc's Match
-                        (genericEntry.getSize() != wlEntry.getSize())) {// Size Match
+                        if ((genericEntry.getCrc() != wlEntry.getCrc())
+                            || (genericEntry.getSize() != wlEntry.getSize())) {
 
                             if (genericEntry.getName().endsWith(".class")) {
                                 //File are different see if its an object or an interface
@@ -769,7 +772,8 @@ public class WeblogicDeploymentTool extends GenericDeploymentTool {
                                 }
                             }
                         }
-                    } else {// a file doesnt exist rebuild
+                    } else {
+                        // a file doesnt exist rebuild
 
                         log("File " + filepath + " not present in weblogic jar", Project.MSG_VERBOSE);
                         rebuild = true;
@@ -807,7 +811,8 @@ public class WeblogicDeploymentTool extends GenericDeploymentTool {
                             // Use the entry from the generic jar
                             je = (JarEntry) replaceEntries.get(je.getName());
                             is = genericJar.getInputStream(je);
-                        } else {//use fle from original weblogic jar
+                        } else {
+                            //use fle from original weblogic jar
 
                             is = wlJar.getInputStream(je);
                         }
@@ -824,7 +829,7 @@ public class WeblogicDeploymentTool extends GenericDeploymentTool {
                 }
 
                 if (genericLoader instanceof AntClassLoader) {
-                    AntClassLoader loader = (AntClassLoader)genericLoader;
+                    AntClassLoader loader = (AntClassLoader) genericLoader;
                     loader.cleanup();
                 }
             } else {

@@ -129,7 +129,7 @@ public class DependencyVisitor extends EmptyVisitor {
             if (index > 0) {
                 char start;
                 // check if the package structure is more than 1 level deep
-                int index2 = classname.lastIndexOf(".", index -1);
+                int index2 = classname.lastIndexOf(".", index - 1);
                 if (index2 != -1) {
                     // class name has more than 1 package level 'com.company.Class'
                     start = classname.charAt(index2 + 1);
@@ -141,8 +141,8 @@ public class DependencyVisitor extends EmptyVisitor {
                 if ((start > 0x40) && (start < 0x5B)) {
                     // first letter of the previous segment of the class name 'Class'
                     // is upper case ascii. so according to the spec it's an inner class
-                    classname = classname.substring(0, index) + "$" +
-                            classname.substring(index + 1);
+                    classname = classname.substring(0, index) + "$"
+                        + classname.substring(index + 1);
                     addClass(classname);
                 } else {
                     // Add the class in dotted notation 'com.company.Class'

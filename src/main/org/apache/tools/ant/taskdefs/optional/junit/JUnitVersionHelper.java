@@ -75,7 +75,9 @@ public class JUnitVersionHelper {
             // pre JUnit 3.7
             try {
                 testCaseName = TestCase.class.getMethod("name", new Class[0]);
-            } catch (NoSuchMethodException e2) {}
+            } catch (NoSuchMethodException e2) {
+                // ignore
+            }
         }
     }
 
@@ -93,22 +95,26 @@ public class JUnitVersionHelper {
         if (t instanceof TestCase && testCaseName != null) {
             try {
                 return (String) testCaseName.invoke(t, new Object[0]);
-            } catch (Throwable e) {}
+            } catch (Throwable e) {
+                // ignore
+            }
         } else {
             try {
                 Method getNameMethod = null;
                 try {
-                    getNameMethod = 
+                    getNameMethod =
                         t.getClass().getMethod("getName", new Class [0]);
                 } catch (NoSuchMethodException e) {
-                    getNameMethod = t.getClass().getMethod("name", 
+                    getNameMethod = t.getClass().getMethod("name",
                                                            new Class [0]);
                 }
                 if (getNameMethod != null &&
                     getNameMethod.getReturnType() == String.class) {
                     return (String) getNameMethod.invoke(t, new Object[0]);
                 }
-            } catch (Throwable e) {}
+            } catch (Throwable e) {
+                // ignore
+            }
         }
         return "unknown";
     }

@@ -88,7 +88,7 @@ public class RmicAdapterFactory {
      * @throws BuildException if the rmic type could not be resolved into
      * a rmic adapter.
      */
-    public static RmicAdapter getRmic(String rmicType, Task task) 
+    public static RmicAdapter getRmic(String rmicType, Task task)
         throws BuildException {
         if (rmicType.equalsIgnoreCase("sun")) {
             return new SunRmic();

@@ -66,6 +66,7 @@ import org.apache.tools.ant.util.JavaEnvUtils;
  * @since Ant 1.3
  */
 public class CompilerAdapterFactory {
+    private static final String MODERN_COMPILER = "com.sun.tools.javac.Main";
 
     /** This is a singleton -- can't create instances!! */
     private CompilerAdapterFactory() {
@@ -95,7 +96,7 @@ public class CompilerAdapterFactory {
      * @throws BuildException if the compiler type could not be resolved into
      * a compiler adapter.
      */
-    public static CompilerAdapter getCompiler(String compilerType, Task task) 
+    public static CompilerAdapter getCompiler(String compilerType, Task task)
         throws BuildException {
             boolean isClassicCompilerSupported = true;
             //as new versions of java come out, add them to this test
@@ -108,7 +109,7 @@ public class CompilerAdapterFactory {
             }
             if (compilerType.equalsIgnoreCase("extJavac")) {
                 return new JavacExternal();
-            }       
+            }
             if (compilerType.equalsIgnoreCase("classic") ||
                 compilerType.equalsIgnoreCase("javac1.1") ||
                 compilerType.equalsIgnoreCase("javac1.2")) {
@@ -119,7 +120,7 @@ public class CompilerAdapterFactory {
                                              + "not support the classic "
                                              + "compiler; upgrading to modern",
                                              Project.MSG_WARN);
-                    compilerType="modern";
+                    compilerType = "modern";
                 }
             }
             //on java<=1.3 the modern falls back to classic if it is not found
@@ -136,10 +137,10 @@ public class CompilerAdapterFactory {
                                  + "classic compiler", Project.MSG_WARN);
                         return new Javac12();
                     } else {
-                        throw new BuildException("Unable to find a javac " 
+                        throw new BuildException("Unable to find a javac "
                                                  + "compiler;\n"
-                                                 + "com.sun.tools.javac.Main "
-                                                 + "is not on the " 
+                                                 + MODERN_COMPILER
+                                                 + " is not on the "
                                                  + "classpath.\n"
                                                  + "Perhaps JAVA_HOME does not"
                                                  + " point to the JDK");
@@ -167,21 +168,21 @@ public class CompilerAdapterFactory {
     /**
      * query for the Modern compiler existing
      * @return true iff classic os on the classpath
-     */ 
+     */
     private static boolean doesModernCompilerExist() {
         try {
-            Class.forName("com.sun.tools.javac.Main");
+            Class.forName(MODERN_COMPILER);
             return true;
         } catch (ClassNotFoundException cnfe) {
             try {
-                CompilerAdapterFactory.class.getClassLoader().loadClass( "com.sun.tools.javac.Main" );
+                CompilerAdapterFactory.class.getClassLoader().loadClass(MODERN_COMPILER);
                 return true;
             } catch (ClassNotFoundException cnfe2) {
             }
         }
         return false;
     }
-    
+
     /**
      * Tries to resolve the given classname into a compiler adapter.
      * Throws a fit if it can't.
@@ -197,14 +198,14 @@ public class CompilerAdapterFactory {
             Object o = c.newInstance();
             return (CompilerAdapter) o;
         } catch (ClassNotFoundException cnfe) {
-            throw new BuildException("Compiler Adapter '"+className 
+            throw new BuildException("Compiler Adapter '" + className
                     + "' can\'t be found.", cnfe);
         } catch (ClassCastException cce) {
             throw new BuildException(className + " isn\'t the classname of "
                     + "a compiler adapter.", cce);
         } catch (Throwable t) {
             // for all other possibilities
-            throw new BuildException("Compiler Adapter "+className 
+            throw new BuildException("Compiler Adapter " + className
                     + " caused an interesting exception.", t);
         }
     }

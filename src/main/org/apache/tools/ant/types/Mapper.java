@@ -204,8 +204,8 @@ public class Mapper extends DataType implements Cloneable {
 
             FileNameMapper m = (FileNameMapper) c.newInstance();
             final Project project = getProject();
-            if ( project != null) {
-                project.setProjectReference( m );
+            if (project != null) {
+                project.setProjectReference(m);
             }
             m.setFrom(from);
             m.setTo(to);

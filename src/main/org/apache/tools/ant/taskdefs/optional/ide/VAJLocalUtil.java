@@ -206,7 +206,7 @@ abstract class VAJLocalUtil implements VAJUtil {
             try {
                 log("Loading '" + pe.getName() + "', Version '"
                     + ((pe.getVersionName() != null) ? pe.getVersionName()
-                        : "("+pe.getVersionStamp()+ ")")
+                        : "(" + pe.getVersionStamp() + ")")
                     + "' into Workspace", MSG_VERBOSE);
                 pe.loadIntoWorkspace();
             } catch (IvjException ex) {
@@ -315,7 +315,7 @@ abstract class VAJLocalUtil implements VAJUtil {
                 throw new BuildException("Can't determine latest edition for project " + name);
             }
             log("Using version " + ((pe.getVersionName() != null) ? pe.getVersionName()
-                    : "("+pe.getVersionStamp()+ ")")
+                    : "(" + pe.getVersionStamp() + ")")
                 + " of " + pe.getName(), MSG_INFO);
             return pe;
         } catch (IvjException e) {

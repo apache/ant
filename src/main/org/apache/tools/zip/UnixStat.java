@@ -86,9 +86,9 @@ public interface UnixStat {
      * @since 1.1
      */
     int DIR_FLAG =           040000;
-    
+
     // ----------------------------------------------------------
-    // somewhat arbitrary choices that are quite common for shared 
+    // somewhat arbitrary choices that are quite common for shared
     // installations
     // -----------------------------------------------------------
 

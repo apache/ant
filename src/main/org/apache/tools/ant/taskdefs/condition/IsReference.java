@@ -84,7 +84,7 @@ public class IsReference extends ProjectComponent implements Condition {
             throw new BuildException("No reference specified for isreference "
                                      + "condition");
         }
-        
+
         Object o = getProject().getReference(ref.getRefId());
 
         if (o == null) {
@@ -92,11 +92,11 @@ public class IsReference extends ProjectComponent implements Condition {
         } else if (type == null) {
             return true;
         } else {
-            Class typeClass = 
+            Class typeClass =
                 (Class) getProject().getDataTypeDefinitions().get(type);
 
             if (typeClass == null) {
-                typeClass = 
+                typeClass =
                     (Class) getProject().getTaskDefinitions().get(type);
             }
 

@@ -184,9 +184,8 @@ public class GenerateKey extends Task {
                                      + "specified once.");
         }
         if (null != dname) {
-            throw new BuildException("It is not possible to specify dname " +
-                                     " both " +
-                                     "as attribute and element.");
+            throw new BuildException("It is not possible to specify dname "
+                                    + " both as attribute and element.");
         }
         expandedDname = new DistinguishedName();
         return expandedDname;
@@ -199,9 +198,8 @@ public class GenerateKey extends Task {
      */
     public void setDname(final String dname) {
         if (null != expandedDname) {
-            throw new BuildException("It is not possible to specify dname " +
-                                     " both " +
-                                     "as attribute and element.");
+            throw new BuildException("It is not possible to specify dname "
+                                    + " both as attribute and element.");
         }
         this.dname = dname;
     }

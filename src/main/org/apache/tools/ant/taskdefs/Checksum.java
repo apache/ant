@@ -419,7 +419,7 @@ public class Checksum extends MatchingTask implements Condition {
                                 throw new BuildException("Couldn't read checksum file " + checksumFile, e);
                             }
                             byte[] digest = decodeHex(checksum.toCharArray());
-                            allDigests.put(file,digest );
+                            allDigests.put(file, digest);
                         }
                     }
                 } else {
@@ -478,7 +478,7 @@ public class Checksum extends MatchingTask implements Condition {
                 fis = null;
                 byte[] fileDigest = messageDigest.digest ();
                 if (totalproperty != null) {
-                    allDigests.put(src,fileDigest);
+                    allDigests.put(src, fileDigest);
                 }
                 String checksum = createDigestString(fileDigest);
                 //can either be a property name string or a file
@@ -546,12 +546,16 @@ public class Checksum extends MatchingTask implements Condition {
             if (fis != null) {
                 try {
                     fis.close();
-                } catch (IOException e) {}
+                } catch (IOException e) {
+                    // ignore
+                }
             }
             if (fos != null) {
                 try {
                     fos.close();
-                } catch (IOException e) {}
+                } catch (IOException e) {
+                    // ignore
+                }
             }
         }
         return checksumMatches;

@@ -73,7 +73,7 @@ public class RegexpPatternMapper implements FileNameMapper {
     public RegexpPatternMapper() throws BuildException {
         reg = (new RegexpMatcherFactory()).newRegexpMatcher();
     }
-    
+
     /**
      * Sets the &quot;from&quot; pattern. Required.
      */
@@ -114,7 +114,7 @@ public class RegexpPatternMapper implements FileNameMapper {
      */
     protected String replaceReferences(String source) {
         Vector v = reg.getGroups(source);
-        
+
         result.setLength(0);
         for (int i = 0; i < to.length; i++) {
             if (to[i] == '\\') {

@@ -165,15 +165,15 @@ public final class AnsiColorLogger extends DefaultLogger {
     private static final char SEPARATOR = ';';
     private static final String END_COLOR = PREFIX + SUFFIX;
 
-    private String errColor 
+    private String errColor
         = PREFIX + ATTR_DIM + SEPARATOR + FG_RED + SUFFIX;
-    private String warnColor 
+    private String warnColor
         = PREFIX + ATTR_DIM + SEPARATOR + FG_MAGENTA + SUFFIX;
-    private String infoColor 
+    private String infoColor
         = PREFIX + ATTR_DIM + SEPARATOR + FG_CYAN + SUFFIX;
-    private String verboseColor 
+    private String verboseColor
         = PREFIX + ATTR_DIM + SEPARATOR + FG_GREEN + SUFFIX;
-    private String debugColor 
+    private String debugColor
         = PREFIX + ATTR_DIM + SEPARATOR + FG_BLUE + SUFFIX;
 
     private boolean colorsSet = false;

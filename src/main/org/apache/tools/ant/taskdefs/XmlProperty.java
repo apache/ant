@@ -406,9 +406,8 @@ public class XmlProperty extends org.apache.tools.ant.Task {
                     String nodeName = attributeNode.getNodeName();
                     String attributeValue = getAttributeValue(attributeNode);
 
-                    Path containingPath =
-                        (container != null && container instanceof Path
-                         ? (Path) container : null );
+                    Path containingPath = (container != null
+                        && container instanceof Path ? (Path) container : null);
 
                     /*
                      * The main conditional logic -- if the attribute
@@ -501,7 +500,7 @@ public class XmlProperty extends org.apache.tools.ant.Task {
             // when we read them, though (instead of keeping them
             // outside of the project and batch adding them at the end)
             // to allow other properties to reference them.
-            value = (String)addedAttributes.get(name) + "," + value;
+            value = (String) addedAttributes.get(name) + "," + value;
             getProject().setProperty(name, value);
         } else {
             getProject().setNewProperty(name, value);
@@ -545,7 +544,7 @@ public class XmlProperty extends org.apache.tools.ant.Task {
      * Return whether the provided attribute name is recognized or not.
      */
     private static boolean isSemanticAttribute (String attributeName) {
-        for (int i=0;i<ATTRIBUTES.length;i++) {
+        for (int i = 0; i < ATTRIBUTES.length; i++) {
             if (attributeName.equals(ATTRIBUTES[i])) {
                 return true;
             }

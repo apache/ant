@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2001-2003 The Apache Software Foundation.  All rights 
+ * Copyright (c) 2001-2003 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -87,40 +87,46 @@ public class RegexpFactory extends RegexpMatcherFactory {
         } else {
             systemDefault = p.getProperty("ant.regexp.regexpimpl");
         }
-        
+
         if (systemDefault != null) {
             return createRegexpInstance(systemDefault);
-            // XXX     should we silently catch possible exceptions and try to 
+            // XXX     should we silently catch possible exceptions and try to
             //         load a different implementation?
         }
 
         try {
             testAvailability("java.util.regex.Matcher");
             return createRegexpInstance("org.apache.tools.ant.util.regexp.Jdk14RegexpRegexp");
-        } catch (BuildException be) {}
-        
+        } catch (BuildException be) {
+            // ignore
+        }
+
         try {
             testAvailability("org.apache.oro.text.regex.Pattern");
             return createRegexpInstance("org.apache.tools.ant.util.regexp.JakartaOroRegexp");
-        } catch (BuildException be) {}
-        
+        } catch (BuildException be) {
+            // ignore
+        }
+
         try {
             testAvailability("org.apache.regexp.RE");
             return createRegexpInstance("org.apache.tools.ant.util.regexp.JakartaRegexpRegexp");
-        } catch (BuildException be) {}
+        } catch (BuildException be) {
+            // ignore
+        }
 
         throw new BuildException("No supported regular expression matcher found");
     }
 
     /**
-     * Wrapper over RegexpMatcherFactory.createInstance that ensures that 
+     * Wrapper over RegexpMatcherFactory.createInstance that ensures that
      * we are dealing with a Regexp implementation.
      *
      * @since 1.3
-     * 
+     *
      * @see RegexpMatcherFactory#createInstance(String)
      */
-    protected Regexp createRegexpInstance(String classname) 
+    protected Regexp createRegexpInstance(String classname)
         throws BuildException {
 
         RegexpMatcher m = createInstance(classname);

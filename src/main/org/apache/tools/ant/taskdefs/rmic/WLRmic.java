@@ -84,8 +84,8 @@ public class WLRmic extends DefaultRmicAdapter {
                 c = Class.forName("weblogic.rmic", true, loader);
             }
             Method doRmic = c.getMethod("main",
-                                        new Class [] { String[].class });
-            doRmic.invoke(null, new Object[] {cmd.getArguments()  });
+                                        new Class [] {String[].class});
+            doRmic.invoke(null, new Object[] {cmd.getArguments()});
             return true;
         } catch (ClassNotFoundException ex) {
             throw new BuildException("Cannot use WebLogic rmic, as it is not "

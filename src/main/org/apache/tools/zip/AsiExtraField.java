@@ -179,7 +179,7 @@ public class AsiExtraField implements ZipExtraField, UnixStat, Cloneable {
         System.arraycopy((new ZipLong(linkArray.length)).getBytes(),
                          0, data, 2, 4);
 
-        System.arraycopy((new ZipShort(getUserId())).getBytes(), 
+        System.arraycopy((new ZipShort(getUserId())).getBytes(),
                          0, data, 6, 2);
         System.arraycopy((new ZipShort(getGroupId())).getBytes(),
                          0, data, 8, 2);
@@ -327,12 +327,12 @@ public class AsiExtraField implements ZipExtraField, UnixStat, Cloneable {
         crc.update(tmp);
         long realChecksum = crc.getValue();
         if (givenChecksum != realChecksum) {
-            throw new ZipException("bad CRC checksum " 
+            throw new ZipException("bad CRC checksum "
                                    + Long.toHexString(givenChecksum)
-                                   + " instead of " 
+                                   + " instead of "
                                    + Long.toHexString(realChecksum));
         }
-        
+
         int newMode = (new ZipShort(tmp, 0)).getValue();
         byte[] linkArray = new byte[(int) (new ZipLong(tmp, 2)).getValue()];
         uid = (new ZipShort(tmp, 6)).getValue();
@@ -362,5 +362,5 @@ public class AsiExtraField implements ZipExtraField, UnixStat, Cloneable {
         }
         return type | (mode & PERM_MASK);
     }
-    
+
 }

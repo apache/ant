@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2000-2003 The Apache Software Foundation.  All rights 
+ * Copyright (c) 2000-2003 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -62,7 +62,7 @@ import org.apache.tools.ant.BuildException;
 /**
  * Implementation of RegexpMatcher for Jakarta-Regexp.
  *
- * @author Stefan Bodewig 
+ * @author Stefan Bodewig
  * @author Matthew Inger <a href="mailto:mattinger@mindless.com">mattinger@mindless.com</a>
  */
 public class JakartaRegexpMatcher implements RegexpMatcher {

@@ -300,8 +300,8 @@ public class StarTeamCheckout extends TreeBasedTask {
             + (this.useRepositoryTimeStamp ? "repository timestamps."
                                         : "the current timestamp."));
         log("  Items will be checked out "
-            + (this.isForced() ? "regardless of" : "in accordance with") +
-            " repository status.");
+            + (this.isForced() ? "regardless of" : "in accordance with")
+            + " repository status.");
         if (this.deleteUncontrolled) {
             log("  Local items not found in the repository will be deleted.");
         }

@@ -449,19 +449,23 @@ public class Replace extends MatchingTask {
                 temp = null;
             }
         } catch (IOException ioe) {
-            throw new BuildException("IOException in " + src + " - " +
-                                     ioe.getClass().getName() + ":"
-                                     + ioe.getMessage(), ioe, getLocation());
+            throw new BuildException("IOException in " + src + " - "
+                                    + ioe.getClass().getName() + ":"
+                                    + ioe.getMessage(), ioe, getLocation());
         } finally {
             if (reader != null) {
                 try {
                     reader.close();
-                } catch (IOException e) {}
+                } catch (IOException e) {
+                    // ignore
+                }
             }
             if (writer != null) {
                 try {
                     writer.close();
-                } catch (IOException e) {}
+                } catch (IOException e) {
+                    // ignore
+                }
             }
             if (temp != null) {
                 temp.delete();

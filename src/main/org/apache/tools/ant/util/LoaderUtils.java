@@ -56,7 +56,6 @@ package org.apache.tools.ant.util;
 import java.io.File;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.net.URL;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.launch.Locator;
 

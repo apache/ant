@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2001-2002 The Apache Software Foundation.  All rights 
+ * Copyright (c) 2001-2002 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -63,7 +63,7 @@ import org.apache.tools.ant.Project;
  * that is meant to replace a regular expression.
  *
  * <pre>
- *   &lt;substitition [ [id="id"] expression="expression" | refid="id" ] 
+ *   &lt;substitition [ [id="id"] expression="expression" | refid="id" ]
  *   /&gt;
  * </pre>
  *
@@ -107,7 +107,7 @@ public class Substitution extends DataType {
             dieOnCircularReference(stk, p);
         }
 
-        
+
         Object o = getRefid().getReferencedObject(p);
         if (!(o instanceof Substitution)) {
             String msg = getRefid().getRefId() + " doesn\'t denote a substitution";

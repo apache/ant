@@ -111,8 +111,8 @@ public abstract class Pack extends Task {
         }
 
         if (zipFile.isDirectory()) {
-            throw new BuildException("zipfile attribute must not " +
-                                     "represent a directory!", getLocation());
+            throw new BuildException("zipfile attribute must not "
+                                    + "represent a directory!", getLocation());
         }
 
         if (source == null) {
@@ -120,8 +120,8 @@ public abstract class Pack extends Task {
         }
 
         if (source.isDirectory()) {
-            throw new BuildException("Src attribute must not " +
-                                     "represent a directory!", getLocation());
+            throw new BuildException("Src attribute must not "
+                                    + "represent a directory!", getLocation());
         }
     }
 
@@ -133,14 +133,14 @@ public abstract class Pack extends Task {
         validate();
 
         if (!source.exists()) {
-            log("Nothing to do: " + source.getAbsolutePath() +
-                " doesn't exist.");
+            log("Nothing to do: " + source.getAbsolutePath()
+                + " doesn't exist.");
         } else if (zipFile.lastModified() < source.lastModified()) {
             log("Building: " + zipFile.getAbsolutePath());
             pack();
         } else {
-            log("Nothing to do: " + zipFile.getAbsolutePath() +
-                " is up to date.");
+            log("Nothing to do: " + zipFile.getAbsolutePath()
+                + " is up to date.");
         }
     }
 

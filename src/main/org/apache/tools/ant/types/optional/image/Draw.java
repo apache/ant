@@ -54,7 +54,7 @@
 package org.apache.tools.ant.types.optional.image;
 
 import javax.media.jai.PlanarImage;
-import java.awt.*;
+//import java.awt.*;
 import java.awt.image.BufferedImage;
 
 /**
@@ -93,16 +93,17 @@ public class Draw extends TransformOperation {
 
     public PlanarImage executeTransformOperation(PlanarImage image) {
         BufferedImage bi = image.getAsBufferedImage();
-        Graphics2D graphics = (Graphics2D)bi.getGraphics();
+        Graphics2D graphics = (Graphics2D) bi.getGraphics();
 
-        for (int i=0; i<instructions.size(); i++) {
-            ImageOperation instr = ((ImageOperation)instructions.elementAt(i));
+        for (int i = 0; i < instructions.size(); i++) {
+            ImageOperation instr = ((ImageOperation) instructions.elementAt(i));
             if (instr instanceof DrawOperation) {
-                PlanarImage op = ((DrawOperation)instr).executeDrawOperation();
+                PlanarImage op = ((DrawOperation) instr).executeDrawOperation();
                 log("\tDrawing to x=" + xloc + " y=" + yloc);
-                graphics.drawImage(op.getAsBufferedImage(),null,xloc,yloc);
+                graphics.drawImage(op.getAsBufferedImage(), null, xloc, yloc);
             } else if (instr instanceof TransformOperation) {
-                PlanarImage op = ((TransformOperation)instr).executeTransformOperation(null);
+                PlanarImage op
+                    = ((TransformOperation) instr).executeTransformOperation(null);
                 BufferedImage child = op.getAsBufferedImage();
                 log("\tDrawing to x=" + xloc + " y=" + yloc);
                 graphics.drawImage(child, null, xloc, yloc);

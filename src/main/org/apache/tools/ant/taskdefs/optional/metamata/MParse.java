@@ -304,7 +304,9 @@ public class MParse extends AbstractMetamataTask {
             if (fw != null) {
                 try {
                     fw.close();
-                } catch (IOException ignored) {}
+                } catch (IOException ignored) {
+                    // ignore
+                }
             }
         }
     }

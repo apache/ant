@@ -185,7 +185,9 @@ public class Exec extends Task {
             }
         } catch (IOException ioe) {
             throw new BuildException("Error exec: " + command, ioe, getLocation());
-        } catch (InterruptedException ex) {}
+        } catch (InterruptedException ex) {
+            //ignore
+        }
 
         return err;
     }
@@ -256,9 +258,13 @@ public class Exec extends Task {
                         pumpStream();
                         sleep(SLEEP_TIME);
                     }
-                } catch (InterruptedException ie) {}
+                } catch (InterruptedException ie) {
+                    //ignore
+                }
                 din.close();
-            } catch (IOException ioe) {}
+            } catch (IOException ioe) {
+                // ignore
+            }
         }
     }
 }

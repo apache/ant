@@ -66,7 +66,7 @@ import org.apache.tools.ant.BuildException;
  *
  * @author Stefan Bodewig
  */
- 
+
 public class SummaryJUnitResultFormatter implements JUnitResultFormatter {
 
     /**
@@ -85,23 +85,28 @@ public class SummaryJUnitResultFormatter implements JUnitResultFormatter {
     /**
      * Empty
      */
-    public SummaryJUnitResultFormatter() {}
+    public SummaryJUnitResultFormatter() {
+    }
     /**
      * Empty
      */
-    public void startTestSuite(JUnitTest suite) {}
+    public void startTestSuite(JUnitTest suite) {
+    }
     /**
      * Empty
      */
-    public void startTest(Test t) {}
+    public void startTest(Test t) {
+    }
     /**
      * Empty
      */
-    public void endTest(Test test) {}
+    public void endTest(Test test) {
+    }
     /**
      * Empty
      */
-    public void addFailure(Test test, Throwable t) {}
+    public void addFailure(Test test, Throwable t) {
+    }
     /**
      * Interface TestListener for JUnit &gt; 3.4.
      *
@@ -113,8 +118,9 @@ public class SummaryJUnitResultFormatter implements JUnitResultFormatter {
     /**
      * Empty
      */
-    public void addError(Test test, Throwable t) {}
-    
+    public void addError(Test test, Throwable t) {
+    }
+
     public void setOutput(OutputStream out) {
         this.out = out;
     }
@@ -156,7 +162,7 @@ public class SummaryJUnitResultFormatter implements JUnitResultFormatter {
                 sb.append("Output:").append(newLine).append(systemOutput)
                     .append(newLine);
             }
-            
+
             if (systemError != null && systemError.length() > 0) {
                 sb.append("Error: ").append(newLine).append(systemError)
                     .append(newLine);
@@ -172,7 +178,9 @@ public class SummaryJUnitResultFormatter implements JUnitResultFormatter {
             if (out != System.out && out != System.err) {
                 try {
                     out.close();
-                } catch (IOException e) {}
+                } catch (IOException e) {
+                    // ignore
+                }
             }
         }
     }

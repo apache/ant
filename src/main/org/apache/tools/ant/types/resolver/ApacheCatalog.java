@@ -92,7 +92,7 @@ public class ApacheCatalog extends Catalog {
      *  will be a total of two ApacheCatalog instances, and so on.</p>
      */
     protected Catalog newCatalog() {
-        ApacheCatalog cat = (ApacheCatalog)super.newCatalog();
+        ApacheCatalog cat = (ApacheCatalog) super.newCatalog();
         cat.setResolver(resolver);
         return cat;
     }

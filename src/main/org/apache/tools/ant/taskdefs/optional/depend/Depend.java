@@ -425,9 +425,9 @@ public class Depend extends MatchingTask {
                                     String classFilePath = classURL.getFile();
                                     classpathFileObject = new File(classFilePath);
                                 }
-                                log("Class " + className +
-                                    " depends on " + classpathFileObject +
-                                    " due to " + dependency, Project.MSG_DEBUG);
+                                log("Class " + className
+                                    + " depends on " + classpathFileObject
+                                    + " due to " + dependency, Project.MSG_DEBUG);
                             }
                         }
                         classpathFileCache.put(dependency, classpathFileObject);
@@ -545,8 +545,8 @@ public class Depend extends MatchingTask {
      * Dump the dependency information loaded from the classes to the Ant log
      */
     private void dumpDependencies() {
-        log("Reverse Dependency Dump for " + affectedClassMap.size() +
-            " classes:", Project.MSG_DEBUG);
+        log("Reverse Dependency Dump for " + affectedClassMap.size()
+            + " classes:", Project.MSG_DEBUG);
 
         Enumeration classEnum = affectedClassMap.keys();
         while (classEnum.hasMoreElements()) {
@@ -617,8 +617,8 @@ public class Depend extends MatchingTask {
                     File classpathFile = (File) e2.nextElement();
                     if (classpathFile.lastModified()
                         > info.absoluteFile.lastModified()) {
-                        log("Class " + className +
-                            " is out of date with respect to " + classpathFile, Project.MSG_DEBUG);
+                        log("Class " + className
+                            + " is out of date with respect to " + classpathFile, Project.MSG_DEBUG);
                         outOfDateClasses.put(className, className);
                         break;
                     }

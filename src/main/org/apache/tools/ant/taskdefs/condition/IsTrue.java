@@ -64,14 +64,14 @@ import org.apache.tools.ant.ProjectComponent;
  * @since Ant 1.5
  */
 public class IsTrue extends ProjectComponent implements Condition {
-    /**  
+    /**
      * what we eval
-     */ 
-    private Boolean value=null;
+     */
+    private Boolean value = null;
 
     /**
      * set the value to be tested; let ant eval it to true/false
-     */ 
+     */
     public void setValue(boolean value) {
         this.value = new Boolean(value);
     }
@@ -79,7 +79,7 @@ public class IsTrue extends ProjectComponent implements Condition {
     /**
      * return the value;
      * @throws BuildException if someone forgot to spec a value
-     */ 
+     */
     public boolean eval() throws BuildException {
         if (value == null) {
             throw new BuildException("Nothing to test for truth");

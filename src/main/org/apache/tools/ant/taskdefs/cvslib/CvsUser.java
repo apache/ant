@@ -112,7 +112,7 @@ public class CvsUser {
     /**
      * validate that this objetc is configured.
      *
-     * @exception BuildException if the instance has not be correctly 
+     * @exception BuildException if the instance has not be correctly
      *            configured.
      */
     void validate() throws BuildException {

@@ -638,7 +638,7 @@ public class XSLTProcess extends MatchingTask implements XSLTLogger {
          * @return the parameter name
          * @exception BuildException if the name is not set.
          */
-        public String getName() throws BuildException{
+        public String getName() throws BuildException {
             if (name == null) {
                 throw new BuildException("Name attribute is missing.");
             }
@@ -651,7 +651,7 @@ public class XSLTProcess extends MatchingTask implements XSLTLogger {
          * @return the parameter expression
          * @exception BuildException if the expression is not set.
          */
-        public String getExpression() throws BuildException{
+        public String getExpression() throws BuildException {
             if (expression == null) {
                 throw new BuildException("Expression attribute is missing.");
             }
@@ -745,7 +745,7 @@ public class XSLTProcess extends MatchingTask implements XSLTLogger {
                 liaison.addParam(p.getName(), p.getExpression());
             }
             if (liaison instanceof TraXLiaison) {
-                configureTraXLiaison((TraXLiaison)liaison);
+                configureTraXLiaison((TraXLiaison) liaison);
             }
         } catch (Exception ex) {
             log("Failed to transform using stylesheet " + stylesheet, Project.MSG_INFO);
@@ -767,7 +767,7 @@ public class XSLTProcess extends MatchingTask implements XSLTLogger {
             for (Enumeration attrs = factory.getAttributes();
                     attrs.hasMoreElements();) {
                 Factory.Attribute attr =
-                        (Factory.Attribute)attrs.nextElement();
+                        (Factory.Attribute) attrs.nextElement();
                 liaison.setAttribute(attr.getName(), attr.getValue());
             }
         }
@@ -781,7 +781,7 @@ public class XSLTProcess extends MatchingTask implements XSLTLogger {
         // configure output properties
         for (Enumeration props = outputProperties.elements();
                 props.hasMoreElements();) {
-            OutputProperty prop = (OutputProperty)props.nextElement();
+            OutputProperty prop = (OutputProperty) props.nextElement();
             liaison.setOutputProperty(prop.getName(), prop.getValue());
         }
     }
@@ -887,7 +887,7 @@ public class XSLTProcess extends MatchingTask implements XSLTLogger {
                     // a value must be of a given type
                     // say boolean|integer|string that are mostly used.
                     if ("true".equalsIgnoreCase(value)
-                            || "false".equalsIgnoreCase(value) ) {
+                            || "false".equalsIgnoreCase(value)) {
                         this.value = new Boolean(value);
                     } else {
                         try {

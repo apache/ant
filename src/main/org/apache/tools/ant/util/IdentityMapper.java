@@ -67,12 +67,14 @@ public class IdentityMapper implements FileNameMapper {
     /**
      * Ignored.
      */
-    public void setFrom(String from) {}
+    public void setFrom(String from) {
+    }
 
     /**
      * Ignored.
      */
-    public void setTo(String to) {}
+    public void setTo(String to) {
+    }
 
     /**
      * Returns an one-element array containing the source file name.

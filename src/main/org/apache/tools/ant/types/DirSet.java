@@ -61,7 +61,7 @@ package org.apache.tools.ant.types;
  * @since Ant 1.5
  */
 public class DirSet extends AbstractFileSet {
-    
+
     public DirSet() {
         super();
     }

@@ -135,15 +135,15 @@ public class EmailTask
     private Vector files = new Vector();
     private Vector filesets = new Vector();
     /** Character set for MimeMailer*/
-    private String charset=null;
+    private String charset = null;
     /** if set to true, the email will not be actually sent */
-    private boolean debugonly=false;
+    private boolean debugonly = false;
     /** a location where to print the email message */
     private File debugoutput;
     /** User for SMTP auth */
-    private String user=null;
+    private String user = null;
     /** Password for SMTP auth */
-    private String password=null;
+    private String password = null;
     /** indicate if the user wishes SSL-TLS */
     private boolean SSL = false;
 
@@ -471,15 +471,18 @@ public class EmailTask
                     autoFound = true;
                     log("Using MIME mail", Project.MSG_VERBOSE);
                 } catch (Throwable e) {
-                    log("Failed to initialise MIME mail: "+e.getMessage(),Project.MSG_WARN);
+                    log("Failed to initialise MIME mail: "
+                        + e.getMessage(), Project.MSG_WARN);
                 }
             }
             // SMTP auth only allowed with MIME mail
-            if (autoFound==false && ((user !=null) || (password != null) ) && (encoding.equals(UU) || encoding.equals(PLAIN))) {
+            if (autoFound == false && ((user != null) || (password != null))
+                && (encoding.equals(UU) || encoding.equals(PLAIN))) {
                 throw new BuildException("SMTP auth only possible with MIME mail");
             }
             // SSL only allowed with MIME mail
-            if (autoFound==false && (SSL) && (encoding.equals(UU) || encoding.equals(PLAIN))) {
+            if (autoFound == false && (SSL)
+                && (encoding.equals(UU) || encoding.equals(PLAIN))) {
                 throw new BuildException("SSL only possible with MIME mail");
             }
 
@@ -540,7 +543,7 @@ public class EmailTask
             }
             // set the character set if not done already (and required)
             if (charset != null) {
-                if (message.getCharset()!=null) {
+                if (message.getCharset() != null) {
                     throw new BuildException("The charset can only be "
                          + "specified in one location");
                 } else {
@@ -568,7 +571,7 @@ public class EmailTask
             // let the user know what's going to happen
             log("Sending email: " + subject, Project.MSG_INFO);
             log("From " + from, Project.MSG_VERBOSE);
-            log("ReplyTo " + replyToList,Project.MSG_VERBOSE);
+            log("ReplyTo " + replyToList, Project.MSG_VERBOSE);
             log("To " + toList, Project.MSG_VERBOSE);
             log("Cc " + ccList, Project.MSG_VERBOSE);
             log("Bcc " + bccList, Project.MSG_VERBOSE);

@@ -112,7 +112,7 @@ public class JavaEnvUtils {
 
         try {
             javaVersion = JAVA_1_0;
-            javaVersionNumber=10;
+            javaVersionNumber = 10;
             Class.forName("java.lang.Void");
             javaVersion = JAVA_1_1;
             javaVersionNumber++;
@@ -273,7 +273,7 @@ public class JavaEnvUtils {
      */
 
     private static void buildJrePackages() {
-        jrePackages=new Vector();
+        jrePackages = new Vector();
         switch(javaVersionNumber) {
             case 14:
                 jrePackages.addElement("org.apache.crimson");
@@ -314,7 +314,7 @@ public class JavaEnvUtils {
      * Testing helper method; kept here for unification of changes.
      */
     public static Vector getJrePackageTestCases() {
-        Vector tests=new Vector();
+        Vector tests = new Vector();
         tests.addElement("java.lang.Object");
         switch(javaVersionNumber) {
             case 14:
@@ -358,7 +358,7 @@ public class JavaEnvUtils {
      * @return list of packages
      */
     public static Vector getJrePackages() {
-        if (jrePackages==null) {
+        if (jrePackages == null) {
             buildJrePackages();
         }
         return jrePackages;

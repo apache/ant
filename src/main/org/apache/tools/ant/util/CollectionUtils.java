@@ -152,10 +152,13 @@ public class CollectionUtils {
      * @since Ant 1.6
      */
     public static final class EmptyEnumeration implements Enumeration {
-        public EmptyEnumeration() {}
+        public EmptyEnumeration() {
+        }
+
         public boolean hasMoreElements() {
             return false;
         }
+
         public Object nextElement() throws NoSuchElementException {
             throw new NoSuchElementException();
         }

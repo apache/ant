@@ -372,12 +372,16 @@ public abstract class AbstractCvsTask extends Task {
             if (outputStream != null) {
                 try {
                     outputStream.close();
-                } catch (IOException e) {}
+                } catch (IOException e) {
+                    //ignore
+                }
             }
             if (errorStream != null) {
                 try {
                     errorStream.close();
-                } catch (IOException e) {}
+                } catch (IOException e) {
+                    //ignore
+                }
             }
         }
     }

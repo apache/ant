@@ -74,38 +74,38 @@ public class AntResolver
     private File m_destfile;
     private String m_target;
 
-    public void setAntfile( File antfile) {
+    public void setAntfile(File antfile) {
         m_antfile = antfile;
     }
 
-    public void setDestfile( File destfile) {
+    public void setDestfile(File destfile) {
         m_destfile = destfile;
     }
 
-    public void setTarget( final String target) {
+    public void setTarget(final String target) {
         m_target = target;
     }
 
-    public File resolve( final Extension extension,
-                         final Project project )
+    public File resolve(final Extension extension,
+                         final Project project)
         throws BuildException {
         validate();
 
-        final Ant ant = (Ant)project.createTask( "ant" );
-        ant.setInheritAll( false );
-        ant.setAntfile( m_antfile.getName() );
+        final Ant ant = (Ant) project.createTask("ant");
+        ant.setInheritAll(false);
+        ant.setAntfile(m_antfile.getName());
 
         try {
             final File dir =
                 m_antfile.getParentFile().getCanonicalFile();
-            ant.setDir( dir );
+            ant.setDir(dir);
         }
-        catch ( final IOException ioe) {
-            throw new BuildException( ioe.getMessage(), ioe );
+        catch (final IOException ioe) {
+            throw new BuildException(ioe.getMessage(), ioe);
         }
 
         if (null != m_target) {
-            ant.setTarget( m_target );
+            ant.setTarget(m_target);
         }
 
         ant.execute();
@@ -116,12 +116,12 @@ public class AntResolver
     private void validate() {
         if (null == m_antfile) {
             final String message = "Must specify Buildfile";
-            throw new BuildException( message );
+            throw new BuildException(message);
         }
 
         if (null == m_destfile) {
             final String message = "Must specify destination file";
-            throw new BuildException( message );
+            throw new BuildException(message);
         }
     }
 

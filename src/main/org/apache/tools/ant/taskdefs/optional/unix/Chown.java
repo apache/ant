@@ -104,7 +104,7 @@ public class Chown extends AbstractAccessTask {
      */
     protected void checkConfiguration() {
         if (!haveOwner) {
-            throw new BuildException("Required attribute owner not set in" 
+            throw new BuildException("Required attribute owner not set in"
                                      + " chown", getLocation());
         }
         super.checkConfiguration();
@@ -116,7 +116,7 @@ public class Chown extends AbstractAccessTask {
      * @param e User supplied executable that we won't accept.
      */
     public void setExecutable(String e) {
-        throw new BuildException(taskType 
+        throw new BuildException(taskType
                                  + " doesn\'t support the executable"
                                  + " attribute", getLocation());
     }

@@ -326,14 +326,14 @@ public class Sync extends Task {
     /**
      * Subclass Copy in order to access it's file/dir maps.
      */
-    public static class MyCopy
-        extends Copy {
+    public static class MyCopy extends Copy {
 
         // List of files that must be copied, irrelevant from the
         // fact that they are newer or not than the destination.
         private Hashtable _dest2src = new Hashtable();
 
-        public MyCopy() {}
+        public MyCopy() {
+        }
 
         protected void buildMap(File fromDir, File toDir, String[] names,
                                 FileNameMapper mapper, Hashtable map) {

@@ -89,12 +89,12 @@ public class RExecTask extends Task {
     private String command = null;
 
     /**
-     *  The server to connect to. 
+     *  The server to connect to.
      */
     private String server  = null;
 
     /**
-     *  The tcp port to connect to. 
+     *  The tcp port to connect to.
      */
     private int port = RExecClient.DEFAULT_PORT;
 
@@ -119,13 +119,13 @@ public class RExecTask extends Task {
      */
     private Integer defaultTimeout = null;
 
-    /**  
+    /**
      *  This class is the parent of the Read and Write tasks.
      *  It handles the common attributes for both.
      */
     public class RExecSubTask {
         protected String taskString = "";
-        public void execute(AntRExecClient rexec) 
+        public void execute(AntRExecClient rexec)
                 throws BuildException {
             throw new BuildException("Shouldn't be able instantiate a SubTask directly");
         }
@@ -150,7 +150,7 @@ public class RExecTask extends Task {
      */
     public class RExecWrite extends RExecSubTask {
         private boolean echoString = true;
-        public void execute(AntRExecClient rexec) 
+        public void execute(AntRExecClient rexec)
                throws BuildException {
            rexec.sendString(taskString, echoString);
         }
@@ -170,7 +170,7 @@ public class RExecTask extends Task {
      */
     public class RExecRead extends RExecSubTask {
         private Integer timeout = null;
-        public void execute(AntRExecClient rexec) 
+        public void execute(AntRExecClient rexec)
                throws BuildException {
             rexec.waitForString(taskString, timeout);
         }
@@ -200,16 +200,16 @@ public class RExecTask extends Task {
      */
     public class AntRExecClient extends RExecClient {
         /**
-         * Read from the rexec session until the string we are 
-         * waiting for is found 
-         * @param s The string to wait on 
+         * Read from the rexec session until the string we are
+         * waiting for is found
+         * @param s The string to wait on
          */
         public void waitForString(String s) {
             waitForString(s, null);
         }
 
         /**
-         * Read from the rexec session until the string we are 
+         * Read from the rexec session until the string we are
          * waiting for is found or the timeout has been reached
          * @param s The string to wait on
          * @param timeout The maximum number of seconds to wait
@@ -272,42 +272,42 @@ public class RExecTask extends Task {
             try {
                 StringBuffer sb = new StringBuffer();
                 if (timeout == null || timeout.intValue() == 0) {
-	            int read;
+                int read;
                     while ((read = is.read()) != -1) {
                         char c = (char) read;
                         sb.append(c);
                         if (c == '\n') {
-	                    log(sb.toString(), Project.MSG_INFO);
-	                    sb.delete(0, sb.length());
+                        log(sb.toString(), Project.MSG_INFO);
+                        sb.delete(0, sb.length());
                         }
                     }
                 } else {
                     Calendar endTime = Calendar.getInstance();
                     endTime.add(Calendar.SECOND, timeout.intValue());
-	            int read = 0;
+                int read = 0;
                     while (read != -1) {
                         while (Calendar.getInstance().before(endTime) && is.available() == 0) {
                             Thread.sleep(250);
                         }
                         if (is.available() == 0) {
-	                    log(sb.toString(), Project.MSG_INFO);
+                        log(sb.toString(), Project.MSG_INFO);
                             throw new BuildException(
                                                      "Response timed-out waiting for EOF",
                                                      getLocation());
                         }
                         read =  is.read();
                         if (read != -1) {
-	                    char c = (char) read;
-	                    sb.append(c);
-	                    if (c == '\n') {
+                        char c = (char) read;
+                        sb.append(c);
+                        if (c == '\n') {
                                 log(sb.toString(), Project.MSG_INFO);
                                 sb.delete(0, sb.length());
-	                    }
+                        }
                         }
                     }
                 }
                 if (sb.length() > 0) {
-	            log(sb.toString(), Project.MSG_INFO);
+                log(sb.toString(), Project.MSG_INFO);
                 }
             } catch (BuildException be) {
                 throw be;
@@ -318,11 +318,11 @@ public class RExecTask extends Task {
 
     }
     /**
-     *  A string to wait for from the server. 
-     *  A subTask &lt;read&gt; tag was found.  Create the object, 
+     *  A string to wait for from the server.
+     *  A subTask &lt;read&gt; tag was found.  Create the object,
      *  Save it in our list, and return it.
      */
-   
+
     public RExecSubTask createRead() {
         RExecSubTask task = (RExecSubTask) new RExecRead();
         rexecTasks.addElement(task);
@@ -330,7 +330,7 @@ public class RExecTask extends Task {
     }
     /**
      *  Add text to send to the server
-     *  A subTask &lt;write&gt; tag was found.  Create the object, 
+     *  A subTask &lt;write&gt; tag was found.  Create the object,
      *  Save it in our list, and return it.
      */
     public RExecSubTask createWrite() {
@@ -338,17 +338,17 @@ public class RExecTask extends Task {
         rexecTasks.addElement(task);
         return task;
     }
-    /** 
-     *  Verify that all parameters are included. 
+    /**
+     *  Verify that all parameters are included.
      *  Connect and possibly login
-     *  Iterate through the list of Reads and writes 
+     *  Iterate through the list of Reads and writes
      */
     public void execute() throws BuildException {
         /**  A server name is required to continue */
         if (server == null) {
             throw new BuildException("No Server Specified");
         }
-        /**  A userid and password must appear together 
+        /**  A userid and password must appear together
          *   if they appear.  They are not required.
          */
         if (userid == null && password != null) {
@@ -382,8 +382,8 @@ public class RExecTask extends Task {
         /** Keep reading input stream until end of it or time-out */
         rexec.waitForEOF(defaultTimeout);
     }
-    /**  
-     *  Process a 'typical' login.  If it differs, use the read 
+    /**
+     *  Process a 'typical' login.  If it differs, use the read
      *  and write tasks explicitely
      */
     private void login() {
@@ -396,7 +396,7 @@ public class RExecTask extends Task {
         rexec.sendString(password, false);
     }
     /**
-     * Set the the comand to execute on the server; 
+     * Set the the comand to execute on the server;
      */
     public void setCommand(String c) { this.command = c; }
     /**
@@ -407,7 +407,7 @@ public class RExecTask extends Task {
     }
     /**
      *  Set the the login password to use
-     * required if <tt>userid</tt> is set. 
+     * required if <tt>userid</tt> is set.
      */
     public void setPassword(String p) { this.password = p; }
     /**
@@ -419,15 +419,15 @@ public class RExecTask extends Task {
      */
     public void setServer(String m) { this.server = m; }
     /**
-     * set a default timeout in seconds to wait for a response, 
-     * zero means forever (the default) 
+     * set a default timeout in seconds to wait for a response,
+     * zero means forever (the default)
      */
     public void setTimeout(Integer i) {
         this.defaultTimeout = i;
     }
     /**
-     * Set the the login id to use on the server; 
-     * required if <tt>password</tt> is set. 
+     * Set the the login id to use on the server;
+     * required if <tt>password</tt> is set.
      */
     public void setUserid(String u) { this.userid = u; }
 }

@@ -107,7 +107,7 @@ public class BuildNumber
      */
     public void execute()
          throws BuildException {
-        File savedFile = m_file;// may be altered in validate
+        File savedFile = m_file; // may be altered in validate
 
         validate();
 

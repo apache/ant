@@ -68,7 +68,8 @@ public abstract class WeakishReference  {
 
     private static Constructor referenceConstructor;
 
-    private final static String WEAK_REFERENCE_NAME= "org.apache.tools.ant.util.optional.WeakishReference12";
+    private final static String WEAK_REFERENCE_NAME
+        = "org.apache.tools.ant.util.optional.WeakishReference12";
 
     /**
      * create the appropriate type of reference for the java version
@@ -76,14 +77,14 @@ public abstract class WeakishReference  {
      * @return reference to the Object.
      */
     public static WeakishReference createReference(Object object) {
-        if (referenceConstructor==null) {
+        if (referenceConstructor == null) {
             createReferenceConstructor();
         }
         try {
-            return (WeakishReference)referenceConstructor
+            return (WeakishReference) referenceConstructor
                         .newInstance(new Object[]{object});
         } catch (Exception e) {
-            throw new BuildException("while creating a weakish reference",e);
+            throw new BuildException("while creating a weakish reference", e);
         }
     }
 
@@ -91,20 +92,22 @@ public abstract class WeakishReference  {
      * create the appropriate constructor method for the
      */
     private static void createReferenceConstructor() {
-        Class[] ctor=new Class[]{Object.class};
+        Class[] ctor = new Class[]{Object.class};
         try {
-            referenceConstructor=HardReference.class.getConstructor(ctor);
+            referenceConstructor = HardReference.class.getConstructor(ctor);
         } catch (NoSuchMethodException e) {
             //deep trouble here
-            throw new BuildException("when creating a Hard Reference constructor",e);
+            throw new BuildException("when creating a Hard Reference constructor", e);
         }
         if (!JavaEnvUtils.isJavaVersion(JavaEnvUtils.JAVA_1_1)) {
             //create a weak ref constructor. If this fails we have that hard one anyway
             try {
-                Class clazz=Class.forName(WEAK_REFERENCE_NAME);
-                referenceConstructor=clazz.getConstructor(ctor);
+                Class clazz = Class.forName(WEAK_REFERENCE_NAME);
+                referenceConstructor = clazz.getConstructor(ctor);
             } catch (ClassNotFoundException e) {
+                // ignore
             } catch (NoSuchMethodException e) {
+                // ignore
             }
         }
     }

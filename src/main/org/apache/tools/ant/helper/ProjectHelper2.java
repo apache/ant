@@ -149,8 +149,8 @@ public class ProjectHelper2 extends ProjectHelper {
 //         } else if (source instanceof URL) {
 //         } else if (source instanceof InputSource) {
         } else {
-            throw new BuildException("Source " + source.getClass().getName() +
-                                     " not supported by this plugin");
+            throw new BuildException("Source " + source.getClass().getName()
+                + " not supported by this plugin");
         }
 
         FileInputStream inputStream = null;
@@ -340,8 +340,8 @@ public class ProjectHelper2 extends ProjectHelper {
         public InputSource resolveEntity(String publicId,
                                          String systemId) {
 
-            context.getProject().log("resolving systemId: " +
-                    systemId, Project.MSG_VERBOSE);
+            context.getProject().log("resolving systemId: "
+                + systemId, Project.MSG_VERBOSE);
 
             if (systemId.startsWith("file:")) {
                 String path = fu.fromURI(systemId);
@@ -356,8 +356,8 @@ public class ProjectHelper2 extends ProjectHelper {
                     inputSource.setSystemId(fu.toURI(file.getAbsolutePath()));
                     return inputSource;
                 } catch (FileNotFoundException fne) {
-                    context.getProject().log(file.getAbsolutePath() +
-                            " could not be found", Project.MSG_WARN);
+                    context.getProject().log(file.getAbsolutePath()
+                        + " could not be found", Project.MSG_WARN);
                 }
 
             }
@@ -529,9 +529,9 @@ public class ProjectHelper2 extends ProjectHelper {
                 File dupFile = new File(dup);
                 if (context.isIgnoringProjectTag() &&
                     !dupFile.equals(context.getBuildFile())) {
-                    project.log("Duplicated project name in import. Project " +
-                        context.getCurrentProjectName() + " defined first in " +
-                        dup + " and again in " + context.getBuildFile(),
+                    project.log("Duplicated project name in import. Project "
+                        + context.getCurrentProjectName() + " defined first in "
+                        + dup + " and again in " + context.getBuildFile(),
                         Project.MSG_WARN);
                 }
             }

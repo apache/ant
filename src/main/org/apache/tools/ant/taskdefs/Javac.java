@@ -861,7 +861,7 @@ public class Javac extends MatchingTask {
             if (listFiles) {
                 for (int i = 0; i < compileList.length; i++) {
                   String filename = compileList[i].getAbsolutePath();
-                  log(filename) ;
+                  log(filename);
                 }
             }
 

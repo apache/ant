@@ -142,7 +142,7 @@ public class PlainJUnitResultFormatter implements JUnitResultFormatter {
         sb.append(nf.format(suite.getRunTime() / 1000.0));
         sb.append(" sec");
         sb.append(newLine);
-        
+
         // append the err and output streams to the log
         if (systemOutput != null && systemOutput.length() > 0) {
             sb.append("------------- Standard Output ---------------")
@@ -151,7 +151,7 @@ public class PlainJUnitResultFormatter implements JUnitResultFormatter {
                 .append("------------- ---------------- ---------------")
                 .append(newLine);
         }
-        
+
         if (systemError != null && systemError.length() > 0) {
             sb.append("------------- Standard Error -----------------")
                 .append(newLine)
@@ -174,7 +174,9 @@ public class PlainJUnitResultFormatter implements JUnitResultFormatter {
                 if (out != System.out && out != System.err) {
                     try {
                         out.close();
-                    } catch (IOException e) {}
+                    } catch (IOException e) {
+                        // ignore
+                    }
                 }
             }
         }
@@ -197,7 +199,7 @@ public class PlainJUnitResultFormatter implements JUnitResultFormatter {
      */
     public void endTest(Test test) {
         synchronized (wri) {
-            wri.print("Testcase: " 
+            wri.print("Testcase: "
                       + JUnitVersionHelper.getTestCaseName(test));
             if (Boolean.TRUE.equals(failed.get(test))) {
                 return;
@@ -206,10 +208,10 @@ public class PlainJUnitResultFormatter implements JUnitResultFormatter {
             double seconds = 0;
             // can be null if an error occured in setUp
             if (l != null) {
-                seconds = 
+                seconds =
                     (System.currentTimeMillis() - l.longValue()) / 1000.0;
             }
-            
+
             wri.println(" took " + nf.format(seconds) + " sec");
         }
     }
@@ -255,5 +257,5 @@ public class PlainJUnitResultFormatter implements JUnitResultFormatter {
             wri.println("");
         }
     }
-    
+
 } // PlainJUnitResultFormatter

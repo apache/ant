@@ -73,7 +73,7 @@ public class Log4jListener implements BuildListener {
     /** Indicates if the listener was initialized. */
     private boolean initialized = false;
 
-    /** 
+    /**
      * Construct the listener and make sure there is a valid appender.
      */
     public Log4jListener() {
@@ -131,7 +131,7 @@ public class Log4jListener implements BuildListener {
             if (event.getException() == null) {
                 cat.info("Target \"" + targetName + "\" finished.");
             } else {
-                cat.error("Target \"" + targetName 
+                cat.error("Target \"" + targetName
                     + "\" finished with error.", event.getException());
             }
         }
@@ -158,7 +158,7 @@ public class Log4jListener implements BuildListener {
             if (event.getException() == null) {
                 cat.info("Task \"" + task.getTaskName() + "\" finished.");
             } else {
-                cat.error("Task \"" + task.getTaskName() 
+                cat.error("Task \"" + task.getTaskName()
                     + "\" finished with error.", event.getException());
             }
         }
@@ -177,7 +177,7 @@ public class Log4jListener implements BuildListener {
                 }
             }
 
-            Category cat 
+            Category cat
                 = Category.getInstance(categoryObject.getClass().getName());
             switch (event.getPriority()) {
                 case Project.MSG_ERR:

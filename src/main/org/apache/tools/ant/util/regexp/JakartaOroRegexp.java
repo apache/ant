@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2001-2003 The Apache Software Foundation.  All rights 
+ * Copyright (c) 2001-2003 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -96,11 +96,11 @@ public class JakartaOroRegexp extends JakartaOroMatcher implements Regexp {
                 subst.append(c);
             }
         }
-        
+
 
         // Do the substitution
-        Substitution s = 
-            new Perl5Substitution(subst.toString(), 
+        Substitution s =
+            new Perl5Substitution(subst.toString(),
                                   Perl5Substitution.INTERPOLATE_ALL);
         return Util.substitute(matcher,
                                getCompiledPattern(options),

@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2000-2002 The Apache Software Foundation.  All rights 
+ * Copyright (c) 2000-2002 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -60,7 +60,7 @@ import org.apache.tools.ant.BuildException;
 /**
  * Interface describing a regular expression matcher.
  *
- * @author Stefan Bodewig 
+ * @author Stefan Bodewig
  * @author <a href="mailto:mattinger@mindless.com">Matthew Inger</a>
  */
 public interface RegexpMatcher {
@@ -75,7 +75,7 @@ public interface RegexpMatcher {
      * Perform a case insenstive match
      */
     int MATCH_CASE_INSENSITIVE = 0x00000100;
-    
+
     /***
      * Treat the input as a multiline input
      */

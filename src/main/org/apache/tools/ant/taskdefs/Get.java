@@ -178,9 +178,9 @@ public class Get extends Task {
                 // test for 401 result (HTTP only)
                 if (httpConnection.getResponseCode()
                     == HttpURLConnection.HTTP_UNAUTHORIZED)  {
-                    String message="HTTP Authorization failure";
+                    String message = "HTTP Authorization failure";
                     if (ignoreErrors) {
-                        log(message,Project.MSG_WARN);
+                        log(message, Project.MSG_WARN);
                         return;
                     } else {
                         throw new BuildException(message);
@@ -196,7 +196,7 @@ public class Get extends Task {
             //course.
 
             InputStream is = null;
-            for (int i = 0; i < 3 ; i++) {
+            for (int i = 0; i < 3; i++) {
                 try {
                     is = connection.getInputStream();
                     break;

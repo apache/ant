@@ -80,7 +80,7 @@ public class Gcj extends DefaultCompilerAdapter {
         int firstFileName = cmd.size();
         logAndAddFilesToCompile(cmd);
 
-        return 
+        return
             executeExternalCompile(cmd.getCommandline(), firstFileName) == 0;
     }
 
@@ -118,13 +118,13 @@ public class Gcj extends DefaultCompilerAdapter {
         if (destDir != null) {
             cmd.createArgument().setValue("-d");
             cmd.createArgument().setFile(destDir);
-            
+
             if (destDir.mkdirs()) {
                 throw new BuildException("Can't make output directories. "
                                          + "Maybe permission is wrong. ");
             };
         }
-        
+
         cmd.createArgument().setValue("-classpath");
         cmd.createArgument().setPath(classpath);
 

@@ -214,5 +214,4 @@ public class Patch extends Task {
             throw new BuildException(e, getLocation());
         }
     }
-
-}// Patch
+}

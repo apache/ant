@@ -58,7 +58,7 @@ import javax.media.jai.InterpolationNearest;
 import javax.media.jai.JAI;
 import java.awt.image.renderable.ParameterBlock;
 import java.awt.image.BufferedImage;
-import java.awt.*;
+//import java.awt.*;
 
 /**
  * ImageOperation to rotate an image by a certain degree

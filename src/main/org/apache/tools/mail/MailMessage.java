@@ -168,7 +168,7 @@ public class MailMessage {
    * @exception IOException if there's any problem contacting the mail server
    */
   public MailMessage() throws IOException {
-    this("localhost",DEFAULT_PORT);
+    this("localhost", DEFAULT_PORT);
   }
 
   /**
@@ -179,7 +179,7 @@ public class MailMessage {
    * @exception IOException if there's any problem contacting the mail server
    */
   public MailMessage(String host) throws IOException {
-      this(host,DEFAULT_PORT);
+      this(host, DEFAULT_PORT);
   }
 
   /**
@@ -190,7 +190,7 @@ public class MailMessage {
    * @param port the port to connect to
    * @exception IOException if there's any problem contacting the mail server
    */
-  public MailMessage(String host, int port) throws IOException{
+  public MailMessage(String host, int port) throws IOException {
     this.port = port;
     this.host = host;
     replyto = new Vector();
@@ -400,7 +400,7 @@ public class MailMessage {
 
   void getReady() throws IOException {
     String response = in.getResponse();
-    int[] ok = { 220 };
+    int[] ok = {220};
     if (!isResponseOK(response, ok)) {
       throw new IOException(
         "Didn't get introduction from server: " + response);
@@ -409,32 +409,32 @@ public class MailMessage {
 
   void sendHelo() throws IOException {
     String local = InetAddress.getLocalHost().getHostName();
-    int[] ok = { 250 };
+    int[] ok = {250};
     send("HELO " + local, ok);
   }
 
   void sendFrom(String from) throws IOException {
-    int[] ok = { 250 };
+    int[] ok = {250};
     send("MAIL FROM: " + "<" + sanitizeAddress(from) + ">", ok);
   }
 
   void sendRcpt(String rcpt) throws IOException {
-    int[] ok = { 250, 251 };
+    int[] ok = {250, 251};
     send("RCPT TO: " + "<" + sanitizeAddress(rcpt) + ">", ok);
   }
 
   void sendData() throws IOException {
-    int[] ok = { 354 };
+    int[] ok = {354};
     send("DATA", ok);
   }
 
   void sendDot() throws IOException {
-    int[] ok = { 250 };
+    int[] ok = {250};
     send("\r\n.", ok);  // make sure dot is on new line
   }
 
     void sendQuit() throws IOException {
-        int[] ok = { 221 };
+        int[] ok = {221};
         try {
             send("QUIT", ok);
         } catch (IOException e) {

@@ -193,8 +193,8 @@ public class DepthSelector extends BaseExtendSelector {
             }
         }
         if (tok_base.hasMoreTokens()) {
-            throw new BuildException("File " + filename +
-                    " is outside of " + abs_base + "directory tree");
+            throw new BuildException("File " + filename
+                + " is outside of " + abs_base + "directory tree");
         }
         if (min > -1 && depth < min) {
             return false;

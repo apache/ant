@@ -90,7 +90,7 @@ class CVSEntry {
     void setAuthor(final String author) {
         m_author = author;
     }
-    
+
     String getAuthor() {
         return m_author;
     }
@@ -104,7 +104,7 @@ class CVSEntry {
     }
 
     public String toString() {
-        return getAuthor() + "\n" + getDate() + "\n" + getFiles() + "\n" 
+        return getAuthor() + "\n" + getDate() + "\n" + getFiles() + "\n"
             + getComment();
     }
 }

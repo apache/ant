@@ -150,8 +150,8 @@ public abstract class AbstractMetamataTask extends Task {
     }
 
     /**
-     * Sets the source path. 
-     * Overrides the SOURCEPATH environment variable. 
+     * Sets the source path.
+     * Overrides the SOURCEPATH environment variable.
      */
     public Path createSourcepath() {
         if (sourcePath == null) {
@@ -161,8 +161,8 @@ public abstract class AbstractMetamataTask extends Task {
     }
 
     /**
-     * Additional optional parameters to pass to the JVM. 
-     * You can avoid using the  <code>&lt;jvmarg&gt;</code> by adding these empty 
+     * Additional optional parameters to pass to the JVM.
+     * You can avoid using the  <code>&lt;jvmarg&gt;</code> by adding these empty
      * entries to <code>metamata.properties</code> located at <code>${metamata.home}/bin</code>
      *
      * <pre>metamata.classpath=
@@ -176,20 +176,20 @@ public abstract class AbstractMetamataTask extends Task {
 
     /**
      * Set the maximum memory for the JVM; optional.
-     * -mx or -Xmx depending on VM version 
+     * -mx or -Xmx depending on VM version
      */
     public void setMaxmemory(String max) {
         cmdl.setMaxmemory(max);
     }
 
 
-    /** 
+    /**
      * The java files or directory to audit.
-     * Whatever the filter is, only the files that end 
-     * with .java will be included for processing. 
-     * Note that the base directory used for the fileset 
+     * Whatever the filter is, only the files that end
+     * with .java will be included for processing.
+     * Note that the base directory used for the fileset
      * MUST be the root of the source files otherwise package names
-     * deduced from the file path will be incorrect. 
+     * deduced from the file path will be incorrect.
      */
     public void addFileSet(FileSet fs) {
         fileSets.addElement(fs);

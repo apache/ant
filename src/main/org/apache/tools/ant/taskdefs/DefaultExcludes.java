@@ -84,10 +84,9 @@ public class DefaultExcludes extends Task {
      */
     public void execute() throws BuildException {
         if (add.equals("") && remove.equals("") && (echo == false)) {
-            throw new BuildException("<defaultexcludes> task must set "+
-                                     "at least one atribute (echo=\"false\""+
-                                     " doesn't count since that is the "+
-                                     "default");
+            throw new BuildException("<defaultexcludes> task must set "
+                + "at least one atribute (echo=\"false\""
+                + " doesn't count since that is the default");
         }
         if (!add.equals("")) {
             DirectoryScanner.addDefaultExclude(add);
@@ -96,10 +95,10 @@ public class DefaultExcludes extends Task {
             DirectoryScanner.removeDefaultExclude(remove);
         }
         if (echo == true) {
-            StringBuffer message = new StringBuffer("Current Default "+
-                                                    "Excludes:\n");
+            StringBuffer message
+                = new StringBuffer("Current Default Excludes:\n");
             String[] excludes = DirectoryScanner.getDefaultExcludes();
-            for (int i=0;i<excludes.length;i++) {
+            for (int i = 0; i < excludes.length; i++) {
                 message.append("  " + excludes[i] + "\n");
             }
             log(message.toString(), logLevel);

@@ -292,9 +292,9 @@ public class ExecuteOn extends ExecTask {
                 if (fs instanceof DirSet) {
                     if (!"dir".equals(type)) {
                         log("Found a nested dirset but type is " + type + ". "
-                            + "Temporarily switching to type=\"dir\" on the" +
-                            " assumption that you really did mean" +
-                            " <dirset> not <fileset>.", Project.MSG_DEBUG);
+                            + "Temporarily switching to type=\"dir\" on the"
+                            + " assumption that you really did mean"
+                            + " <dirset> not <fileset>.", Project.MSG_DEBUG);
                         currentType = "dir";
                     }
                 }

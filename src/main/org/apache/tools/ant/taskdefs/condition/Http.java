@@ -65,7 +65,7 @@ import org.apache.tools.ant.ProjectComponent;
 /**
  * Condition to wait for a HTTP request to succeed. Its attribute(s) are:
  *   url - the URL of the request.
- *   errorsBeginAt - number at which errors begin at; default=400. 
+ *   errorsBeginAt - number at which errors begin at; default=400.
  * @author <a href="mailto:denis@network365.com">Denis Hennessy</a>
  * @since Ant 1.5
  */
@@ -76,12 +76,12 @@ public class Http extends ProjectComponent implements Condition {
         spec = url;
     }
 
-    private int errorsBeginAt=400;
-    
+    private int errorsBeginAt = 400;
+
     public void setErrorsBeginAt(int errorsBeginAt) {
-        this.errorsBeginAt=errorsBeginAt;
+        this.errorsBeginAt = errorsBeginAt;
     }
-    
+
     public boolean eval() throws BuildException {
         if (spec == null) {
             throw new BuildException("No url specified in http condition");
@@ -94,7 +94,7 @@ public class Http extends ProjectComponent implements Condition {
                 if (conn instanceof HttpURLConnection) {
                     HttpURLConnection http = (HttpURLConnection) conn;
                     int code = http.getResponseCode();
-                    log("Result code for " + spec + " was " + code, 
+                    log("Result code for " + spec + " was " + code,
                         Project.MSG_VERBOSE);
                     if (code > 0 && code < errorsBeginAt) {
                         return true;

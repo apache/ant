@@ -135,7 +135,7 @@ public class ProjectHelperImpl extends ProjectHelper {
      */
     public void parse(Project project, Object source) throws BuildException {
         if (!(source instanceof File)) {
-            throw new BuildException("Only File source supported by " 
+            throw new BuildException("Only File source supported by "
                 + "default plugin");
         }
         File buildFile = (File) source;
@@ -490,7 +490,7 @@ public class ProjectHelperImpl extends ProjectHelper {
             if (name.equals("target")) {
                 handleTarget(name, attrs);
             } else {
-                handleElement(helperImpl, this, helperImpl.implicitTarget, 
+                handleElement(helperImpl, this, helperImpl.implicitTarget,
                               name, attrs);
             }
         }
@@ -661,7 +661,7 @@ public class ProjectHelperImpl extends ProjectHelper {
          *                      parser at the end of the element.
          *                      Must not be <code>null</code>.
          */
-        public DescriptionHandler(ProjectHelperImpl helperImpl, 
+        public DescriptionHandler(ProjectHelperImpl helperImpl,
                                   DocumentHandler parentHandler) {
             super(helperImpl, parentHandler);
         }

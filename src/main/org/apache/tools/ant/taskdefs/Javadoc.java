@@ -1868,7 +1868,7 @@ public class Javadoc extends Task {
                                 } catch (IOException ioe) {
                                     throw new BuildException("Couldn't read "
                                         + " tag file from "
-                                        + tagDefFile.getAbsolutePath(), ioe );
+                                        + tagDefFile.getAbsolutePath(), ioe);
                                 }
                             }
                         }

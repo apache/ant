@@ -375,8 +375,8 @@ public abstract class SOS extends Task implements SOSCmd {
             if (!dir.exists()) {
                 boolean done = dir.mkdirs();
                 if (!done) {
-                    String msg = "Directory " + localPath + " creation was not " +
-                            "successful for an unknown reason";
+                    String msg = "Directory " + localPath + " creation was not "
+                        + "successful for an unknown reason";
                     throw new BuildException(msg, getLocation());
                 }
                 getProject().log("Created dir: " + dir.getAbsolutePath());

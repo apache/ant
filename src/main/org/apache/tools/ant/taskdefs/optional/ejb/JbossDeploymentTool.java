@@ -97,15 +97,18 @@ public class JbossDeploymentTool extends GenericDeploymentTool {
             return;
         }
         String descriptorFileName = JBOSS_CMP10D;
-        if ( EjbJar.CMPVersion.CMP2_0.equals( getParent().getCmpversion() )) {
+        if (EjbJar.CMPVersion.CMP2_0.equals(getParent().getCmpversion())) {
             descriptorFileName = JBOSS_CMP20D;
         }
-        File jbossCMPD = new File(getConfig().descriptorDir, ddPrefix + descriptorFileName);
+        File jbossCMPD
+            = new File(getConfig().descriptorDir, ddPrefix + descriptorFileName);
 
         if (jbossCMPD.exists()) {
             ejbFiles.put(META_DIR + descriptorFileName, jbossCMPD);
         } else {
-            log("Unable to locate jboss cmp descriptor. It was expected to be in " + jbossCMPD.getPath(), Project.MSG_WARN);
+            log("Unable to locate jboss cmp descriptor. "
+                + "It was expected to be in "
+                + jbossCMPD.getPath(), Project.MSG_WARN);
             return;
         }
     }
@@ -115,7 +118,7 @@ public class JbossDeploymentTool extends GenericDeploymentTool {
      * of this jar will be checked against the dependent bean classes.
      */
     File getVendorOutputJarFile(String baseName) {
-        return new File( getParent().getDestdir(), baseName + jarSuffix);
+        return new File(getParent().getDestdir(), baseName + jarSuffix);
     }
 
     /**
@@ -129,6 +132,6 @@ public class JbossDeploymentTool extends GenericDeploymentTool {
     }
 
     private EjbJar getParent() {
-        return ( EjbJar ) this.getTask();
+        return (EjbJar) this.getTask();
     }
 }

@@ -65,7 +65,7 @@ import org.apache.tools.ant.types.Path;
  * This is primarily a cut-and-paste from Jikes.java and
  * DefaultCompilerAdapter.
  *
- * @author <a href="mailto:tora@debian.org">Takashi Okamoto</a> 
+ * @author <a href="mailto:tora@debian.org">Takashi Okamoto</a>
  * @since Ant 1.4
  */
 public class Kjc extends DefaultCompilerAdapter {
@@ -84,22 +84,22 @@ public class Kjc extends DefaultCompilerAdapter {
 
             // Call the compile() method
             Method compile = c.getMethod("compile",
-                                         new Class [] { String [].class });
-            Boolean ok = 
-                (Boolean) compile.invoke(null, 
+                                         new Class [] {String [].class});
+            Boolean ok =
+                (Boolean) compile.invoke(null,
                                         new Object[] {cmd.getArguments()});
             return ok.booleanValue();
         } catch (ClassNotFoundException ex) {
             throw new BuildException("Cannot use kjc compiler, as it is not "
                                      + "available. A common solution is to "
                                      + "set the environment variable CLASSPATH "
-                                     + "to your kjc archive (kjc.jar).", 
+                                     + "to your kjc archive (kjc.jar).",
                                      location);
         } catch (Exception ex) {
             if (ex instanceof BuildException) {
                 throw (BuildException) ex;
             } else {
-                throw new BuildException("Error starting kjc compiler: ", 
+                throw new BuildException("Error starting kjc compiler: ",
                                          ex, location);
             }
         }
@@ -132,31 +132,31 @@ public class Kjc extends DefaultCompilerAdapter {
         if (bootclasspath != null) {
             cp.append(bootclasspath);
         }
-        
+
         if (extdirs != null) {
             cp.addExtdirs(extdirs);
         }
-        
+
         cp.append(classpath);
         if (compileSourcepath != null) {
             cp.append(compileSourcepath);
         } else {
             cp.append(src);
-        }        
+        }
 
         cmd.createArgument().setPath(cp);
-        
+
         // kjc-1.5A doesn't support -encoding option now.
         // but it will be supported near the feature.
         if (encoding != null) {
             cmd.createArgument().setValue("-encoding");
             cmd.createArgument().setValue(encoding);
         }
-        
+
         if (debug) {
             cmd.createArgument().setValue("-g");
         }
-        
+
         if (optimize) {
             cmd.createArgument().setValue("-O2");
         }

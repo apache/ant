@@ -70,19 +70,19 @@ public class LocationResolver
     implements ExtensionResolver {
     private String m_location;
 
-    public void setLocation( final String location) {
+    public void setLocation(final String location) {
         m_location = location;
     }
 
-    public File resolve( final Extension extension,
-                         final Project project )
+    public File resolve(final Extension extension,
+                        final Project project)
         throws BuildException {
         if (null == m_location) {
             final String message = "No location specified for resolver";
-            throw new BuildException( message );
+            throw new BuildException(message);
         }
 
-        return project.resolveFile( m_location );
+        return project.resolveFile(m_location);
     }
 
     public String toString() {

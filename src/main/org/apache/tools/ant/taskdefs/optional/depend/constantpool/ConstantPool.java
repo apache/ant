@@ -358,7 +358,7 @@ public class ConstantPool {
             Object element = entries.elementAt(i);
 
             if (element instanceof NameAndTypeCPInfo) {
-                NameAndTypeCPInfo nameAndTypeEntry 
+                NameAndTypeCPInfo nameAndTypeEntry
                     = (NameAndTypeCPInfo) element;
 
                 if (nameAndTypeEntry.getName().equals(name)

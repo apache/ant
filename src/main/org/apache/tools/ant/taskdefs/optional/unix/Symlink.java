@@ -564,7 +564,7 @@ public class Symlink extends Task {
         }
 
         log(cmd[0] + " " + cmd[1] + " " + cmd[2] + " " + cmd[3]);
-        Execute.runCommand(this,cmd);
+        Execute.runCommand(this, cmd);
     }
 
 

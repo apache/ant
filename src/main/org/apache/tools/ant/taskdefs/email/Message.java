@@ -75,7 +75,7 @@ public class Message extends ProjectComponent {
     private StringBuffer buffer = new StringBuffer();
     private String mimeType = "text/plain";
     private boolean specified = false;
-    private String charset=null;
+    private String charset = null;
 
     /** Creates a new empty message  */
     public Message() {
@@ -153,9 +153,9 @@ public class Message extends ProjectComponent {
          throws IOException {
         // We need character encoding aware printing here.
         // So, using PrintWriter over OutputStreamWriter instead of PrintStream
-        PrintWriter out = charset!=null?
-                          new PrintWriter(new OutputStreamWriter(ps,charset)):
-                          new PrintWriter(ps);
+        PrintWriter out
+            = charset != null ? new PrintWriter(new OutputStreamWriter(ps, charset))
+                              : new PrintWriter(ps);
         if (messageSource != null) {
             // Read message from a file
             FileReader freader = new FileReader(messageSource);

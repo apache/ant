@@ -74,21 +74,21 @@ import java.util.Vector;
  * @author Conor MacNeill
  */
 public class FilterSetCollection {
-    
+
     private Vector filterSets = new Vector();
 
     public FilterSetCollection() {
     }
-    
+
     public FilterSetCollection(FilterSet filterSet) {
         addFilterSet(filterSet);
     }
-    
-    
+
+
     public void addFilterSet(FilterSet filterSet) {
         filterSets.addElement(filterSet);
     }
-    
+
     /**
      * Does replacement on the given string with token matching.
      * This uses the defined begintoken and endtoken values which default to @ for both.
@@ -104,7 +104,7 @@ public class FilterSetCollection {
         }
         return replacedLine;
     }
-    
+
     /**
     * Test to see if this filter set it empty.
     *
@@ -120,6 +120,6 @@ public class FilterSetCollection {
         return false;
     }
 }
- 
+
 
 

@@ -97,7 +97,9 @@ public class Echo extends Task {
                 if (out != null) {
                     try {
                         out.close();
-                    } catch (IOException ioex) {}
+                    } catch (IOException ioex) {
+                        //ignore
+                    }
                 }
             }
         }

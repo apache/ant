@@ -363,13 +363,13 @@ public class FixCRLF extends MatchingTask {
         }
 
         // log options used
-        log("options:" +
-            " eol=" +
-            (eol == ASIS ? "asis" : eol == CR ? "cr" : eol == LF ? "lf" : "crlf") +
-            " tab=" + (tabs == TABS ? "add" : tabs == ASIS ? "asis" : "remove") +
-            " eof=" + (ctrlz == ADD ? "add" : ctrlz == ASIS ? "asis" : "remove") +
-            " tablength=" + tablength +
-            " encoding=" + (encoding == null ? "default" : encoding),
+        log("options:"
+            + " eol="
+            + (eol == ASIS ? "asis" : eol == CR ? "cr" : eol == LF ? "lf" : "crlf")
+            + " tab=" + (tabs == TABS ? "add" : tabs == ASIS ? "asis" : "remove")
+            + " eof=" + (ctrlz == ADD ? "add" : ctrlz == ASIS ? "asis" : "remove")
+            + " tablength=" + tablength
+            + " encoding=" + (encoding == null ? "default" : encoding),
             Project.MSG_VERBOSE);
 
         DirectoryScanner ds = super.getDirectoryScanner(srcDir);
@@ -483,10 +483,9 @@ public class FixCRLF extends MatchingTask {
                             endOfCharConst(line, terminator);
                             while (line.getNext() < line.getLookahead()) {
                                 if (line.getNextCharInc() == '\t') {
-                                    line.setColumn(line.getColumn() +
-                                                   tablength -
-                                                   (line.getColumn()
-                                                    % tablength));
+                                    line.setColumn(line.getColumn()
+                                        + tablength
+                                        - (line.getColumn() % tablength));
                                 } else {
                                     line.incColumn();
                                 }
@@ -559,9 +558,8 @@ public class FixCRLF extends MatchingTask {
                 if (!fileUtils.contentEquals(destFile, tmpFile)) {
                     log(destFile + " is being written", Project.MSG_DEBUG);
                 } else {
-                    log(destFile +
-                        " is not written, as the contents are identical",
-                        Project.MSG_DEBUG);
+                    log(destFile + " is not written, as the contents "
+                        + "are identical", Project.MSG_DEBUG);
                     destIsWrong = false;
                 }
             }
@@ -736,12 +734,11 @@ public class FixCRLF extends MatchingTask {
                 nextStop += tablength;
             }
 
-            for (; nextStop - placediff <= linestring.length()
-                          ; nextStop += tablength) {
+            for (; nextStop - placediff <= linestring.length();
+                    nextStop += tablength) {
                 for (tabCol = nextStop;
                              --tabCol - placediff >= place
-                             && linestring.charAt(tabCol - placediff) == ' '
-                             ;) {
+                             && linestring.charAt(tabCol - placediff) == ' ';) {
                     ; // Loop for the side-effects
                 }
                 // tabCol is column index of the last non-space character
@@ -796,7 +793,7 @@ public class FixCRLF extends MatchingTask {
                         (getReader(srcFile), INBUFLEN);
                 nextLine();
             } catch (IOException e) {
-                throw new BuildException(srcFile + ": "+ e.getMessage(),
+                throw new BuildException(srcFile + ": " + e.getMessage(),
                                          e, getLocation());
             }
         }
@@ -881,7 +878,7 @@ public class FixCRLF extends MatchingTask {
                 } // end of if (eolcount == 0)
 
             } catch (IOException e) {
-                throw new BuildException(srcFile + ": "+ e.getMessage(),
+                throw new BuildException(srcFile + ": " + e.getMessage(),
                                          e, getLocation());
             }
         }

@@ -89,14 +89,14 @@ public class Contains implements Condition {
 
     /**
      * Whether to search ignoring case or not.
-     * 
+     *
      * @since 1.1, Ant 1.5
      */
     public void setCasesensitive(boolean b) {
         caseSensitive = b;
     }
 
-    /** 
+    /**
      * @since 1.1, Ant 1.5
      */
     public boolean eval() throws BuildException {
@@ -105,7 +105,7 @@ public class Contains implements Condition {
                                      + "in contains");
         }
 
-        return caseSensitive 
+        return caseSensitive
             ? string.indexOf(subString) > -1
             : string.toLowerCase().indexOf(subString.toLowerCase()) > -1;
     }

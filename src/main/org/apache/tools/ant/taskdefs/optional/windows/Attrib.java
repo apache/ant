@@ -75,10 +75,10 @@ public class Attrib extends ExecuteOn {
     private static final String ATTR_READONLY = "R";
     private static final String ATTR_ARCHIVE  = "A";
     private static final String ATTR_SYSTEM   = "S";
-    private static final String ATTR_HIDDEN   = "H";                  
-    private static final String SET    = "+";                  
-    private static final String UNSET  = "-";                 
-    
+    private static final String ATTR_HIDDEN   = "H";
+    private static final String SET    = "+";
+    private static final String UNSET  = "-";
+
     private boolean haveAttr = false;
 
     public Attrib() {
@@ -92,29 +92,29 @@ public class Attrib extends ExecuteOn {
         addFileset(fs);
     }
 
-    /** set the ReadOnly file attribute */  
-    public void setReadonly(boolean value) { 
-        addArg(value, ATTR_READONLY); 
+    /** set the ReadOnly file attribute */
+    public void setReadonly(boolean value) {
+        addArg(value, ATTR_READONLY);
     }
 
-    /** set the Archive file attribute */  
-    public void setArchive(boolean value) {  
-        addArg(value, ATTR_ARCHIVE); 
+    /** set the Archive file attribute */
+    public void setArchive(boolean value) {
+        addArg(value, ATTR_ARCHIVE);
     }
 
-    /** set the System file attribute */      
-    public void setSystem(boolean value) {   
-        addArg(value, ATTR_SYSTEM); 
+    /** set the System file attribute */
+    public void setSystem(boolean value) {
+        addArg(value, ATTR_SYSTEM);
     }
 
-    /** set the Hidden file attribute */      
-    public void setHidden(boolean value) {   
-        addArg(value, ATTR_HIDDEN); 
+    /** set the Hidden file attribute */
+    public void setHidden(boolean value) {
+        addArg(value, ATTR_HIDDEN);
     }
-    
+
     protected void checkConfiguration() {
         if (!haveAttr()) {
-            throw new BuildException("Missing attribute parameter", 
+            throw new BuildException("Missing attribute parameter",
                                      getLocation());
         }
         super.checkConfiguration();
@@ -124,18 +124,16 @@ public class Attrib extends ExecuteOn {
      * @ant.attribute ignore="true"
      */
     public void setExecutable(String e) {
-        throw new BuildException(taskType + 
-                                 " doesn\'t support the executable attribute",
-                                 getLocation());
+        throw new BuildException(taskType
+            + " doesn\'t support the executable attribute", getLocation());
     }
 
     /**
      * @ant.attribute ignore="true"
      */
     public void setCommand(String e) {
-        throw new BuildException(taskType + 
-                                 " doesn\'t support the command attribute",
-                                 getLocation());
+        throw new BuildException(taskType
+            + " doesn\'t support the command attribute", getLocation());
     }
 
     /**
@@ -177,17 +175,17 @@ public class Attrib extends ExecuteOn {
         return Os.isFamily("windows") && super.isValidOs();
     }
 
-    private static String getSignString(boolean attr) { 
+    private static String getSignString(boolean attr) {
         return (attr == true ? SET : UNSET);
     }
-      
+
     private void addArg(boolean sign, String attribute) {
         createArg().setValue(getSignString(sign) + attribute);
         haveAttr = true;
     }
-    
+
     private boolean haveAttr() {
-        return haveAttr;	
+        return haveAttr;
     }
 
 }

@@ -236,11 +236,11 @@ public class Touch extends Task {
             String[] srcFiles = ds.getIncludedFiles();
             String[] srcDirs = ds.getIncludedDirectories();
 
-            for (int j = 0; j < srcFiles.length ; j++) {
+            for (int j = 0; j < srcFiles.length; j++) {
                 touch(new File(fromDir, srcFiles[j]));
             }
 
-            for (int j = 0; j < srcDirs.length ; j++) {
+            for (int j = 0; j < srcDirs.length; j++) {
                 touch(new File(fromDir, srcDirs[j]));
             }
         }

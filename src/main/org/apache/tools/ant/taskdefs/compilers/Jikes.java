@@ -65,9 +65,9 @@ import org.apache.tools.ant.types.Path;
  * was refactored.
  *
  * @author James Davidson <a href="mailto:duncan@x180.com">duncan@x180.com</a>
- * @author Robin Green 
+ * @author Robin Green
  *         <a href="mailto:greenrd@hotmail.com">greenrd@hotmail.com</a>
- * @author Stefan Bodewig 
+ * @author Stefan Bodewig
  * @author <a href="mailto:jayglanville@home.com">J D Glanville</a>
  * @since Ant 1.3
  */
@@ -122,7 +122,7 @@ public class Jikes extends DefaultCompilerAdapter {
         if (jikesPath != null) {
             classpath.append(new Path(project, jikesPath));
         }
-        
+
         Commandline cmd = new Commandline();
         String exec = getJavac().getExecutable();
         cmd.setExecutable(exec == null ? "jikes" : exec);
@@ -135,7 +135,7 @@ public class Jikes extends DefaultCompilerAdapter {
             cmd.createArgument().setValue("-d");
             cmd.createArgument().setFile(destDir);
         }
-        
+
         cmd.createArgument().setValue("-classpath");
         cmd.createArgument().setPath(classpath);
 
@@ -154,13 +154,13 @@ public class Jikes extends DefaultCompilerAdapter {
         }
         if (depend) {
             cmd.createArgument().setValue("-depend");
-        } 
-        
+        }
+
         if (target != null) {
             cmd.createArgument().setValue("-target");
             cmd.createArgument().setValue(target);
         }
-        
+
         /**
          * XXX
          * Perhaps we shouldn't use properties for these
@@ -185,7 +185,7 @@ public class Jikes extends DefaultCompilerAdapter {
          * that don't exist. As this is often the case, these
          * warning can be pretty annoying.
          */
-        String warningsProperty = 
+        String warningsProperty =
             project.getProperty("build.compiler.warnings");
         if (warningsProperty != null) {
             attributes.log("!! the build.compiler.warnings property is "
@@ -196,32 +196,32 @@ public class Jikes extends DefaultCompilerAdapter {
                 cmd.createArgument().setValue("-nowarn");
             }
         } if (attributes.getNowarn()) {
-            /* 
+            /*
              * FIXME later
              *
-             * let the magic property win over the attribute for backwards 
+             * let the magic property win over the attribute for backwards
              * compatibility
              */
             cmd.createArgument().setValue("-nowarn");
         }
 
         /**
-         * Jikes can issue pedantic warnings. 
+         * Jikes can issue pedantic warnings.
          */
-        String pedanticProperty = 
+        String pedanticProperty =
             project.getProperty("build.compiler.pedantic");
         if (pedanticProperty != null && Project.toBoolean(pedanticProperty)) {
             cmd.createArgument().setValue("+P");
         }
- 
+
         /**
          * Jikes supports something it calls "full dependency
          * checking", see the jikes documentation for differences
          * between -depend and +F.
          */
-        String fullDependProperty = 
+        String fullDependProperty =
             project.getProperty("build.compiler.fulldepend");
-        if (fullDependProperty != null 
+        if (fullDependProperty != null
             && Project.toBoolean(fullDependProperty)) {
             cmd.createArgument().setValue("+F");
         }
@@ -236,7 +236,7 @@ public class Jikes extends DefaultCompilerAdapter {
         int firstFileName = cmd.size();
         logAndAddFilesToCompile(cmd);
 
-        return 
+        return
             executeExternalCompile(cmd.getCommandline(), firstFileName) == 0;
     }
 

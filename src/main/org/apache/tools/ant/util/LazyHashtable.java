@@ -65,7 +65,7 @@ import java.util.Enumeration;
  * @since Ant 1.6
  */
 public class LazyHashtable extends Hashtable {
-    protected boolean initAllDone=false;
+    protected boolean initAllDone = false;
 
     public LazyHashtable() {
         super();
@@ -76,8 +76,10 @@ public class LazyHashtable extends Hashtable {
      * just get the tasks that we need, and avoid costly init.
      */
     protected void initAll() {
-        if (initAllDone ) return;
-        initAllDone=true;
+        if (initAllDone) {
+            return;
+        }
+        initAllDone = true;
     }
 
 
@@ -96,7 +98,7 @@ public class LazyHashtable extends Hashtable {
         return super.size();
     }
 
-    public boolean contains( Object value) {
+    public boolean contains(Object value) {
         initAll();
         return super.contains(value);
     }
@@ -109,7 +111,7 @@ public class LazyHashtable extends Hashtable {
     /**
      * Delegates to {@link #contains contains}.
      */
-    public boolean containsValue( Object value) {
+    public boolean containsValue(Object value) {
         return contains(value);
     }
 

@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2001-2002 The Apache Software Foundation.  All rights 
+ * Copyright (c) 2001-2002 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -61,18 +61,18 @@ package org.apache.tools.ant.taskdefs.optional.pvcs;
  */
 public class PvcsProject {
     private String name;
-    
+
     public PvcsProject() {
         super();
     }
-    
+
     /**
      * Set the name of the project
      */
     public void setName(String name) {
         PvcsProject.this.name = name;
     }
-    
+
     /**
      * Get the name of the project
      */

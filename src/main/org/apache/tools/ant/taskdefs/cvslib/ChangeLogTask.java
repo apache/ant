@@ -221,7 +221,7 @@ public class ChangeLogTask extends Task {
      *            cvs command
      */
     public void execute() throws BuildException {
-        File savedDir = m_dir;// may be altered in validate
+        File savedDir = m_dir; // may be altered in validate
 
         try {
 
@@ -251,7 +251,7 @@ public class ChangeLogTask extends Task {
                 // We want something of the form: -d ">=YYYY-MM-dd"
                 final String dateRange = ">=" + outputDate.format(m_start);
 
-		// Supply '-d' as a separate argument - Bug# 14397
+        // Supply '-d' as a separate argument - Bug# 14397
                 command.createArgument().setValue("-d");
                 command.createArgument().setValue(dateRange);
             }

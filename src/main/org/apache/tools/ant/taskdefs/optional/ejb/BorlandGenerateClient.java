@@ -184,8 +184,10 @@ public class BorlandGenerateClient extends Task {
             setMode(JAVA_MODE);
         }
 
-        if ( !(version == BorlandDeploymentTool.BES || version == BorlandDeploymentTool.BAS)) {
-            throw new BuildException("version "+version+" is not supported");
+        if (!(version == BorlandDeploymentTool.BES
+            || version == BorlandDeploymentTool.BAS)) {
+            throw new BuildException("version " + version
+                                      + " is not supported");
         }
 
         log("client jar file is " + clientjarfile);
@@ -200,8 +202,9 @@ public class BorlandGenerateClient extends Task {
     /** launch the generate client using java api */
     protected void executeJava() throws BuildException {
         try {
-            if ( version == BorlandDeploymentTool.BES)  {
-                throw new BuildException("java mode is supported only for previous version <="+BorlandDeploymentTool.BAS);
+            if (version == BorlandDeploymentTool.BES)  {
+                throw new BuildException("java mode is supported only for "
+                    + "previous version <=" + BorlandDeploymentTool.BAS);
             }
 
             log("mode : java");
@@ -243,10 +246,10 @@ public class BorlandGenerateClient extends Task {
 
     /** launch the generate client using system api */
     protected  void executeFork() throws BuildException {
-        if ( version == BorlandDeploymentTool.BAS) {
+        if (version == BorlandDeploymentTool.BAS) {
             executeForkV4();
         }
-        if ( version == BorlandDeploymentTool.BES) {
+        if (version == BorlandDeploymentTool.BES) {
             executeForkV5();
         }
     }
@@ -255,7 +258,7 @@ public class BorlandGenerateClient extends Task {
     protected  void executeForkV4() throws BuildException {
         try {
 
-            log("mode : fork "+BorlandDeploymentTool.BAS,Project.MSG_DEBUG);
+            log("mode : fork " + BorlandDeploymentTool.BAS, Project.MSG_DEBUG);
 
             org.apache.tools.ant.taskdefs.ExecTask execTask = null;
             execTask = (ExecTask) getProject().createTask("exec");
@@ -289,7 +292,7 @@ public class BorlandGenerateClient extends Task {
     /** launch the generate client using system api */
     protected  void executeForkV5() throws BuildException {
         try {
-            log("mode : fork "+BorlandDeploymentTool.BES,Project.MSG_DEBUG);
+            log("mode : fork " + BorlandDeploymentTool.BES, Project.MSG_DEBUG);
             org.apache.tools.ant.taskdefs.ExecTask execTask = null;
             execTask = (ExecTask) getProject().createTask("exec");
 

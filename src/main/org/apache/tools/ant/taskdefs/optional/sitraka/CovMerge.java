@@ -121,13 +121,13 @@ public class CovMerge extends CovBase {
             if (verbose) {
                 cmdl.createArgument().setValue("-v");
             }
-            cmdl.createArgument().setValue(getParamFileArgument() 
+            cmdl.createArgument().setValue(getParamFileArgument()
                                            + paramfile.getAbsolutePath());
 
             if (isJProbe4Plus()) {
                 // last argument is the output snapshot - JProbe 4.x
                 // doesn't like it in the parameter file.
-                cmdl.createArgument().setValue(tofile.getPath()); 
+                cmdl.createArgument().setValue(tofile.getPath());
             }
 
             LogStreamHandler handler = new LogStreamHandler(this, Project.MSG_INFO, Project.MSG_WARN);

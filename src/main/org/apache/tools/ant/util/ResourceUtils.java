@@ -157,7 +157,7 @@ public class ResourceUtils {
                           Project.MSG_VERBOSE);
             }
         }
-        Resource[] result= new Resource[vresult.size()];
+        Resource[] result = new Resource[vresult.size()];
         vresult.copyInto(result);
         return result;
     }

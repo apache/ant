@@ -194,8 +194,8 @@ public class DateSelector extends BaseExtendSelector {
                         setMillis(new Long(parameters[i].getValue()
                         ).longValue());
                     } catch (NumberFormatException nfe) {
-                        setError("Invalid millisecond setting " +
-                                parameters[i].getValue());
+                        setError("Invalid millisecond setting "
+                                + parameters[i].getValue());
                     }
                 } else if (DATETIME_KEY.equalsIgnoreCase(paramname)) {
                     setDatetime(parameters[i].getValue());
@@ -206,8 +206,8 @@ public class DateSelector extends BaseExtendSelector {
                         setGranularity(new Integer(parameters[i].getValue()
                         ).intValue());
                     } catch (NumberFormatException nfe) {
-                        setError("Invalid granularity setting " +
-                                parameters[i].getValue());
+                        setError("Invalid granularity setting "
+                            + parameters[i].getValue());
                     }
                 } else if (WHEN_KEY.equalsIgnoreCase(paramname)) {
                     TimeComparisons cmp = new TimeComparisons();

@@ -65,9 +65,9 @@ import org.apache.tools.ant.types.Path;
  * was refactored.
  *
  * @author James Davidson <a href="mailto:duncan@x180.com">duncan@x180.com</a>
- * @author Robin Green 
+ * @author Robin Green
  *         <a href="mailto:greenrd@hotmail.com">greenrd@hotmail.com</a>
- * @author Stefan Bodewig 
+ * @author Stefan Bodewig
  * @author <a href="mailto:jayglanville@home.com">J D Glanville</a>
  * @since Ant 1.3
  */
@@ -111,7 +111,7 @@ public class Jvc extends DefaultCompilerAdapter {
             cmd.createArgument().setValue("/d");
             cmd.createArgument().setFile(destDir);
         }
-        
+
         // Add the Classpath before the "internal" one.
         cmd.createArgument().setValue("/cp:p");
         cmd.createArgument().setPath(classpath);
@@ -147,7 +147,7 @@ public class Jvc extends DefaultCompilerAdapter {
         int firstFileName = cmd.size();
         logAndAddFilesToCompile(cmd);
 
-        return 
+        return
             executeExternalCompile(cmd.getCommandline(), firstFileName) == 0;
     }
 }

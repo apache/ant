@@ -398,7 +398,7 @@ public class CommandlineJava implements Cloneable {
         }
         // jar execution requires an additional -jar option
         if (executeJar) {
-            size++ ;
+            size++;
         }
         return size;
     }

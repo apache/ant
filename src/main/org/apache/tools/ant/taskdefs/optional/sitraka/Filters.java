@@ -77,7 +77,7 @@ public class Filters {
 
     /**
      * Automatically exclude all classes and methods
-     * unless included in nested elements; optional, default true. 
+     * unless included in nested elements; optional, default true.
      */
     public void setDefaultExclude(boolean value) {
         defaultExclude = value;
@@ -123,12 +123,12 @@ public class Filters {
         protected String method = "*"; // default is all methods
         protected boolean enabled = true; // default is enable
 
-        /** 
+        /**
          * this one is deprecated.
          * @ant.task ignore="true"
          */
-         
-        public void setName(String value) { 
+
+        public void setName(String value) {
             clazz = value;
         }
 
@@ -148,10 +148,10 @@ public class Filters {
             method = value;
         }
 
-        /** 
+        /**
          * enable or disable the filter; optional, default true
          */
-                 
+
         public void setEnabled(boolean value) {
             enabled = value;
         }

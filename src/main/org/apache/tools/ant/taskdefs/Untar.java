@@ -211,7 +211,7 @@ public class Untar extends Expand {
                 return new GZIPInputStream(istream);
             } else {
                 if (BZIP2.equals(value)) {
-                    final char[] magic = new char[] { 'B', 'Z' };
+                    final char[] magic = new char[] {'B', 'Z'};
                     for (int i = 0; i < magic.length; i++) {
                         if (istream.read() != magic[i]) {
                             throw new BuildException(

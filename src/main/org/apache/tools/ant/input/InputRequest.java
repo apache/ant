@@ -72,7 +72,7 @@ public class InputRequest {
         if (prompt == null) {
             throw new IllegalArgumentException("prompt must not be null");
         }
-        
+
         this.prompt = prompt;
     }
 
@@ -89,7 +89,7 @@ public class InputRequest {
     public void setInput(String input) {
         this.input = input;
     }
-    
+
     /**
      * Is the user input valid?
      */

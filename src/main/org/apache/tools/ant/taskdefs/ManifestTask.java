@@ -204,7 +204,9 @@ public class ManifestTask extends Task {
                 if (isr != null) {
                     try {
                         isr.close();
-                    } catch (IOException e) {}
+                    } catch (IOException e) {
+                        // ignore
+                    }
                 }
             }
         }

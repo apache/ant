@@ -138,7 +138,7 @@ public class ApacheCatalogResolver extends CatalogResolver {
      */
     public void parseCatalog(String file) {
 
-        ApacheCatalog catalog = (ApacheCatalog)getCatalog();
+        ApacheCatalog catalog = (ApacheCatalog) getCatalog();
 
         // Pass in reference to ourselves so we can be called back.
         catalog.setResolver(this);

@@ -72,6 +72,6 @@ public interface InputHandler {
      * <p>Postcondition: request.getInput will return a non-null
      * value, request.isInputValid will return true.</p>
      */
-    void handleInput(InputRequest request) 
+    void handleInput(InputRequest request)
         throws org.apache.tools.ant.BuildException;
 }

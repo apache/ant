@@ -366,15 +366,16 @@ public class AntStarTeamCheckOut extends org.apache.tools.ant.Task {
                 setFolderName(null);
             } else {
                 f = StarTeamFinder.findFolder(v.getRootFolder(), getFolderName());
-                assertTrue(null != f, "ERROR: " + getProjectName() + delim + getViewName() + delim +
-                    v.getRootFolder() + delim + getFolderName() + delim +
-                    " does not exist.");
+                assertTrue(null != f, "ERROR: " + getProjectName() + delim
+                    + getViewName() + delim + v.getRootFolder() + delim
+                    + getFolderName() + delim
+                    + " does not exist.");
             }
         }
 
         if (getVerbose() && getFolderName() != null) {
-            log("Found " + getProjectName() + delim + getViewName() +
-                delim + getFolderName() + delim + "\n");
+            log("Found " + getProjectName() + delim + getViewName()
+                + delim + getFolderName() + delim + "\n");
         }
 
         // For performance reasons, it is important to pre-fetch all the
@@ -460,7 +461,7 @@ public class AntStarTeamCheckOut extends org.apache.tools.ant.Task {
                 currentToken = pathTokenizer.nextToken();
                 if (currentToken.equals(getProjectName()) && !foundRoot) {
                     currentToken = dirName;
-                    foundRoot = true;// only want to do this the first time
+                    foundRoot = true; // only want to do this the first time
                 }
                 root = new java.io.File(root, currentToken);
             }

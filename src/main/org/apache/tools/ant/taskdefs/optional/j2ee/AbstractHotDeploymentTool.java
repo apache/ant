@@ -146,7 +146,7 @@ public abstract class AbstractHotDeploymentTool implements HotDeploymentTool {
     /**
      *  Sets the parent task.
      *  @param task a ServerDeploy object representing the parent task.
-     *  @ant.attribute ignore="true" 
+     *  @ant.attribute ignore="true"
      */
     public void setTask(ServerDeploy task) {
         this.task = task;
@@ -169,8 +169,8 @@ public abstract class AbstractHotDeploymentTool implements HotDeploymentTool {
     }
 
     /**
-     *  The classpath to be passed to the JVM running the tool; 
-     *  optional depending upon the tool. 
+     *  The classpath to be passed to the JVM running the tool;
+     *  optional depending upon the tool.
      *  The classpath may also be supplied as a nested element.
      *  @param classpath A Path object representing the "classpath" attribute.
      */
@@ -203,7 +203,7 @@ public abstract class AbstractHotDeploymentTool implements HotDeploymentTool {
     }
 
     /**
-     *  The password of the user; optional. 
+     *  The password of the user; optional.
      *  @param password A String representing the "password" attribute.
      */
     public void setPassword(String password) {

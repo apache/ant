@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2001-2002 The Apache Software Foundation.  All rights 
+ * Copyright (c) 2001-2002 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -62,7 +62,7 @@ import org.apache.tools.ant.BuildException;
  * Regular expression implementation using the Jakarta Regexp package
  * @author Matthew Inger <a href="mailto:mattinger@mindless.com">mattinger@mindless.com</a>
  */
-public class JakartaRegexpRegexp extends JakartaRegexpMatcher 
+public class JakartaRegexpRegexp extends JakartaRegexpMatcher
     implements Regexp {
 
     public JakartaRegexpRegexp() {
@@ -107,5 +107,5 @@ public class JakartaRegexpRegexp extends JakartaRegexpMatcher
         RE reg = getCompiledPattern(options);
         int sOptions = getSubsOptions(options);
         return reg.subst(input, argument, sOptions);
-    }    
+    }
 }

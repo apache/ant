@@ -94,7 +94,7 @@ public class CCMCheck extends Continuus {
      * @param v  Value to assign to file.
      */
     public void setFile(File v) {
-        log("working file "+v, Project.MSG_VERBOSE);
+        log("working file " + v, Project.MSG_VERBOSE);
         this.file = v;
     }
 
@@ -163,9 +163,9 @@ public class CCMCheck extends Continuus {
             throw new BuildException("Choose between file and fileset !");
         }
 
-        if ( getFile() !=null) {
+        if (getFile() != null) {
             doit();
-            return ;
+            return;
         }
 
         int sizeofFileSet = filesets.size();

@@ -222,8 +222,8 @@ public class Jar extends Zip {
      */
     public void setManifest(File manifestFile) {
         if (!manifestFile.exists()) {
-            throw new BuildException("Manifest file: " + manifestFile +
-                                     " does not exist.", getLocation());
+            throw new BuildException("Manifest file: " + manifestFile
+                                     + " does not exist.", getLocation());
         }
 
         this.manifestFile = manifestFile;
@@ -328,7 +328,7 @@ public class Jar extends Zip {
         mergeManifestsMain = "merge".equals(config.getValue());
 
         if (filesetManifestConfig != null
-            && ! filesetManifestConfig.getValue().equals("skip")) {
+            && !filesetManifestConfig.getValue().equals("skip")) {
 
             doubleFilePass = true;
         }
@@ -348,7 +348,7 @@ public class Jar extends Zip {
     protected void initZipOutputStream(ZipOutputStream zOut)
         throws IOException, BuildException {
 
-        if (! skipWriting) {
+        if (!skipWriting) {
             Manifest jarManifest = createManifest();
             writeManifest(zOut, jarManifest);
         }
@@ -489,7 +489,7 @@ public class Jar extends Zip {
                            long lastModified, File fromArchive, int mode)
         throws IOException {
         if (MANIFEST_NAME.equalsIgnoreCase(vPath))  {
-            if (! doubleFilePass || (doubleFilePass && skipWriting)) {
+            if (!doubleFilePass || (doubleFilePass && skipWriting)) {
                 filesetManifest(fromArchive, is);
             }
         } else if (INDEX_NAME.equalsIgnoreCase(vPath) && index) {
@@ -683,7 +683,7 @@ public class Jar extends Zip {
         super.cleanUp();
 
         // we want to save this info if we are going to make another pass
-        if (! doubleFilePass || (doubleFilePass && ! skipWriting)) {
+        if (!doubleFilePass || (doubleFilePass && !skipWriting)) {
             manifest = null;
             configuredManifest = savedConfiguredManifest;
             filesetManifest = null;

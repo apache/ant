@@ -242,7 +242,7 @@ public class JJTree extends Task {
         }
         cmdl.createArgument().setValue(target.getAbsolutePath());
 
-        cmdl.setClassname(JavaCC.getMainClass(javaccHome, 
+        cmdl.setClassname(JavaCC.getMainClass(javaccHome,
                                               JavaCC.TASKDEF_TYPE_JJTREE));
 
         final Path classpath = cmdl.createClasspath(getProject());

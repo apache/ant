@@ -124,10 +124,10 @@ public class WLStop extends Task {
         if (beaHome == null) {
             args = serverURL + " SHUTDOWN " + username + " " + password + " " + delay;
         } else {
-            args = " -url " + serverURL +
-                    " -username " + username +
-                    " -password " + password +
-                    " SHUTDOWN " + " " + delay;
+            args = " -url " + serverURL
+                    + " -username " + username
+                    + " -password " + password
+                    + " SHUTDOWN " + " " + delay;
         }
 
         weblogicAdmin.createArg().setLine(args);

@@ -57,7 +57,7 @@ import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.taskdefs.email.EmailTask;
 
 /**
- * A task to send SMTP email; Use <tt>mail</tt> instead 
+ * A task to send SMTP email; Use <tt>mail</tt> instead
  *
  * @deprecated Use {@link EmailTask} instead.
  *
@@ -75,7 +75,7 @@ public class MimeMail extends EmailTask {
      */
     public void execute()
         throws BuildException {
-        log("DEPRECATED - The " + getTaskName() + " task is deprecated. " 
+        log("DEPRECATED - The " + getTaskName() + " task is deprecated. "
             + "Use the mail task instead.");
         super.execute();
     }

@@ -258,21 +258,22 @@ public class BorlandDeploymentTool extends GenericDeploymentTool  implements Exe
     protected void addVendorFiles(Hashtable ejbFiles, String ddPrefix) {
 
         //choose the right vendor DD
-        if ( !(version == BES || version == BAS)) {
-            throw new BuildException("version "+version+" is not supported");
+        if (!(version == BES || version == BAS)) {
+            throw new BuildException("version " + version + " is not supported");
         }
 
-        String dd = ( version == BES ? BES_DD : BAS_DD);
+        String dd = (version == BES ? BES_DD : BAS_DD);
 
-        log("vendor file : "+ddPrefix + dd,Project.MSG_DEBUG);
+        log("vendor file : " + ddPrefix + dd, Project.MSG_DEBUG);
 
         File borlandDD = new File(getConfig().descriptorDir, ddPrefix + dd);
         if (borlandDD.exists()) {
             log("Borland specific file found " + borlandDD,  Project.MSG_VERBOSE);
             ejbFiles.put(META_DIR + dd ,  borlandDD);
         } else {
-            log("Unable to locate borland deployment descriptor. It was expected to be in " +
-                borlandDD.getPath(), Project.MSG_WARN);
+            log("Unable to locate borland deployment descriptor. "
+                + "It was expected to be in "
+                + borlandDD.getPath(), Project.MSG_WARN);
             return;
         }
     }
@@ -290,15 +291,16 @@ public class BorlandDeploymentTool extends GenericDeploymentTool  implements Exe
      * @param sourceJar java.io.File representing the produced jar file
      */
     private void verifyBorlandJar(File sourceJar) {
-        if ( version == BAS) {
+        if (version == BAS) {
             verifyBorlandJarV4(sourceJar);
-            return ;
+            return;
         }
-        if ( version == BES) {
+        if (version == BES) {
             verifyBorlandJarV5(sourceJar);
             return;
         }
-        log("verify jar skipped because the version is invalid ["+version+"]",Project.MSG_WARN);
+        log("verify jar skipped because the version is invalid ["
+            + version + "]", Project.MSG_WARN);
     }
 
     /**
@@ -426,8 +428,8 @@ public class BorlandDeploymentTool extends GenericDeploymentTool  implements Exe
         //no TIE classes
         commandline.createArgument().setValue("-no_tie");
 
-        if ( java2iioparams != null) {
-            log("additional  "+java2iioparams +" to java2iiop " ,0);
+        if (java2iioparams != null) {
+            log("additional  " + java2iioparams + " to java2iiop ", 0);
             commandline.createArgument().setValue(java2iioparams);
         }
 

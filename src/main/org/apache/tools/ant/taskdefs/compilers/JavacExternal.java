@@ -78,7 +78,7 @@ public class JavacExternal extends DefaultCompilerAdapter {
         int firstFileName = assumeJava11() ? -1 : cmd.size();
         logAndAddFilesToCompile(cmd);
 
-        return 
+        return
             executeExternalCompile(cmd.getCommandline(), firstFileName,
                                    true)
             == 0;

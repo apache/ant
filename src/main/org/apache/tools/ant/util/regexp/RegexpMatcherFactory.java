@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2000-2003 The Apache Software Foundation.  All rights 
+ * Copyright (c) 2000-2003 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -62,15 +62,16 @@ import org.apache.tools.ant.Project;
  * RegexpMatcher based on the system property
  * <code>ant.regexp.matcherimpl</code> and the classes
  * available.
- * 
+ *
  * <p>In a more general framework this class would be abstract and
  * have a static newInstance method.</p>
  *
- * @author Stefan Bodewig 
+ * @author Stefan Bodewig
  */
 public class RegexpMatcherFactory {
 
-    public RegexpMatcherFactory() {}
+    public RegexpMatcherFactory() {
+    }
 
     /***
      * Create a new regular expression instance.
@@ -92,32 +93,38 @@ public class RegexpMatcherFactory {
         } else {
             systemDefault = p.getProperty("ant.regexp.regexpimpl");
         }
-        
+
         if (systemDefault != null) {
             return createInstance(systemDefault);
-            // XXX     should we silently catch possible exceptions and try to 
+            // XXX     should we silently catch possible exceptions and try to
             //         load a different implementation?
         }
 
         try {
             testAvailability("java.util.regex.Matcher");
             return createInstance("org.apache.tools.ant.util.regexp.Jdk14RegexpMatcher");
-        } catch (BuildException be) {}
-        
+        } catch (BuildException be) {
+            // ignore
+        }
+
         try {
             testAvailability("org.apache.oro.text.regex.Pattern");
             return createInstance("org.apache.tools.ant.util.regexp.JakartaOroMatcher");
-        } catch (BuildException be) {}
-        
+        } catch (BuildException be) {
+            // ignore
+        }
+
         try {
             testAvailability("org.apache.regexp.RE");
             return createInstance("org.apache.tools.ant.util.regexp.JakartaRegexpMatcher");
-        } catch (BuildException be) {}
+        } catch (BuildException be) {
+            // ignore
+        }
 
         throw new BuildException("No supported regular expression matcher found");
    }
 
-    protected RegexpMatcher createInstance(String className) 
+    protected RegexpMatcher createInstance(String className)
         throws BuildException {
         try {
             Class implClass = Class.forName(className);
@@ -126,7 +133,7 @@ public class RegexpMatcherFactory {
             throw new BuildException(t);
         }
     }
-    
+
     protected void testAvailability(String className) throws BuildException {
         try {
             Class implClass = Class.forName(className);

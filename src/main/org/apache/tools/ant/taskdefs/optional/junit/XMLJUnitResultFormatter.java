@@ -79,7 +79,7 @@ import org.w3c.dom.Text;
  * @author Stefan Bodewig
  * @author <a href="mailto:ehatcher@apache.org">Erik Hatcher</a>
  *
- * @see FormatterElement 
+ * @see FormatterElement
  */
 
 public class XMLJUnitResultFormatter implements JUnitResultFormatter, XMLConstants {
@@ -117,7 +117,8 @@ public class XMLJUnitResultFormatter implements JUnitResultFormatter, XMLConstan
      */
     private OutputStream out;
 
-    public XMLJUnitResultFormatter() {}
+    public XMLJUnitResultFormatter() {
+    }
 
     public void setOutput(OutputStream out) {
         this.out = out;
@@ -177,7 +178,9 @@ public class XMLJUnitResultFormatter implements JUnitResultFormatter, XMLConstan
                     if (wri != null) {
                         try {
                             wri.close();
-                        } catch (IOException e) {}
+                        } catch (IOException e) {
+                            // ignore
+                        }
                     }
                 }
             }
@@ -209,7 +212,7 @@ public class XMLJUnitResultFormatter implements JUnitResultFormatter, XMLConstan
         Element currentTest = null;
         if (!failedTests.containsKey(test)) {
             currentTest = doc.createElement(TESTCASE);
-            currentTest.setAttribute(ATTR_NAME, 
+            currentTest.setAttribute(ATTR_NAME,
                                      JUnitVersionHelper.getTestCaseName(test));
             rootElement.appendChild(currentTest);
             testElements.put(test, currentTest);

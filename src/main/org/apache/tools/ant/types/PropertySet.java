@@ -115,8 +115,8 @@ public class PropertySet extends DataType {
             }
 
             if (++count != 1) {
-                throw new BuildException("Attributes name, regex, and " +
-                                         "prefix are mutually exclusive");
+                throw new BuildException("Attributes name, regex, and "
+                    + "prefix are mutually exclusive");
             }
         }
 

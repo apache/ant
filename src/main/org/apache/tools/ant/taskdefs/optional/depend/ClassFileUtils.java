@@ -59,7 +59,7 @@ package org.apache.tools.ant.taskdefs.optional.depend;
  * file format and those commonly used in Java programming.
  *
  * @author Conor MacNeill
- * 
+ *
  */
 public class ClassFileUtils {
 

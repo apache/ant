@@ -319,8 +319,8 @@ public class WLJspc extends MatchingTask {
             File classFile = new File(this.destinationDirectory, filePath);
 
             if (srcFile.lastModified() > now) {
-                log("Warning: file modified in the future: " +
-                    files[i], Project.MSG_WARN);
+                log("Warning: file modified in the future: "
+                    + files[i], Project.MSG_WARN);
             }
             if (srcFile.lastModified() > classFile.lastModified()) {
                 filesToDo.addElement(files[i]);

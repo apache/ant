@@ -91,13 +91,11 @@ public class ExtraFieldUtils {
             ZipExtraField ze = (ZipExtraField) c.newInstance();
             implementations.put(ze.getHeaderId(), c);
         } catch (ClassCastException cc) {
-            throw new RuntimeException(c + 
-                                       " doesn\'t implement ZipExtraField");
+            throw new RuntimeException(c + " doesn\'t implement ZipExtraField");
         } catch (InstantiationException ie) {
             throw new RuntimeException(c + " is not a concrete class");
         } catch (IllegalAccessException ie) {
-            throw new RuntimeException(c + 
-                                       "\'s no-arg constructor is not public");
+            throw new RuntimeException(c + "\'s no-arg constructor is not public");
         }
     }
 
@@ -149,7 +147,7 @@ public class ExtraFieldUtils {
             throw new ZipException("data starting at " + start
                 + " is in unknown format");
         }
-        
+
         ZipExtraField[] result = new ZipExtraField[v.size()];
         v.copyInto(result);
         return result;

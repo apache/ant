@@ -68,27 +68,27 @@ public final class TaskLogger {
      */
     private Task m_task;
 
-    public TaskLogger( final Task task) {
+    public TaskLogger(final Task task) {
         this.m_task = task;
     }
 
-    public void info( final String message) {
-        m_task.log( message, Project.MSG_INFO );
+    public void info(final String message) {
+        m_task.log(message, Project.MSG_INFO);
     }
 
-    public void error( final String message) {
-        m_task.log( message, Project.MSG_ERR );
+    public void error(final String message) {
+        m_task.log(message, Project.MSG_ERR);
     }
 
-    public void warning( final String message) {
-        m_task.log( message, Project.MSG_WARN );
+    public void warning(final String message) {
+        m_task.log(message, Project.MSG_WARN);
     }
 
-    public void verbose( final String message) {
-        m_task.log( message, Project.MSG_VERBOSE );
+    public void verbose(final String message) {
+        m_task.log(message, Project.MSG_VERBOSE);
     }
 
-    public void debug( final String message) {
-        m_task.log( message, Project.MSG_DEBUG );
+    public void debug(final String message) {
+        m_task.log(message, Project.MSG_DEBUG);
     }
 }

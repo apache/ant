@@ -212,8 +212,8 @@ public class ClasspathUtils {
             Object reusedLoader = p.getReference(loaderId);
             if (reusedLoader != null &&
                 !(reusedLoader instanceof ClassLoader)) {
-                throw new BuildException("The specified loader id " + loaderId +
-                                         " does not reference a class loader");
+                throw new BuildException("The specified loader id " + loaderId
+                    + " does not reference a class loader");
             }
 
             cl = (ClassLoader) reusedLoader;
@@ -437,13 +437,12 @@ public class ClasspathUtils {
          */
         public ClassLoader getClassLoader() {
             ClassLoader cl;
-            cl= ClasspathUtils.getClassLoaderForPath(
+            cl = ClasspathUtils.getClassLoaderForPath(
                     getContextProject(),
                     this.classpath,
                     getClassLoadId(),
                     this.reverseLoader,
-                    loaderId != null
-                    || isMagicPropertySet(getContextProject()));
+                    loaderId != null || isMagicPropertySet(getContextProject()));
             return cl;
         }
 

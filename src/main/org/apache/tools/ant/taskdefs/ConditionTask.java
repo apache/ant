@@ -86,7 +86,9 @@ public class ConditionTask extends ConditionBase {
      *
      * @since Ant 1.4
      */
-    public void setProperty(String p) {property = p;}
+    public void setProperty(String p) {
+        property = p;
+    }
 
     /**
      * The value for the property to set, if condition evaluates to true.
@@ -94,7 +96,9 @@ public class ConditionTask extends ConditionBase {
      *
      * @since Ant 1.4
      */
-    public void setValue(String v) {value = v;}
+    public void setValue(String v) {
+        value = v;
+    }
 
     /**
      * See whether our nested condition holds and set the property.
@@ -116,11 +120,11 @@ public class ConditionTask extends ConditionBase {
 
         Condition c = (Condition) getConditions().nextElement();
         if (c.eval()) {
-            log("Condition true; setting "+property+" to "+value,
+            log("Condition true; setting " + property + " to " + value,
                 Project.MSG_DEBUG);
             getProject().setNewProperty(property, value);
         } else {
-            log("Condition false; not setting "+property,
+            log("Condition false; not setting " + property,
                 Project.MSG_DEBUG);
         }
     }

@@ -60,7 +60,7 @@ import org.apache.tools.ant.types.Path;
 import org.apache.tools.ant.util.FileNameMapper;
 
 /**
- * The interface that all rmic adapters must adher to.  
+ * The interface that all rmic adapters must adher to.
  *
  * <p>A rmic adapter is an adapter that interprets the rmic's
  * parameters in preperation to be passed off to the compiler this
@@ -70,7 +70,7 @@ import org.apache.tools.ant.util.FileNameMapper;
  * reflection).</p>
  *
  * @author <a href="mailto:tokamoto@rd.nttdata.co.jp">Takashi Okamoto</a>
- * @author Stefan Bodewig 
+ * @author Stefan Bodewig
  * @since Ant 1.4
  */
 

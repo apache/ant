@@ -120,11 +120,11 @@ public class WhichResource extends Task {
      * validate
      */
     private void validate() {
-        int setcount=0;
+        int setcount = 0;
         if (classname != null) {
             setcount++;
         }
-        if (resource!=null) {
+        if (resource != null) {
             setcount++;
         }
 
@@ -137,7 +137,7 @@ public class WhichResource extends Task {
             throw new BuildException(
                     "Only one of classname or resource can be specified");
         }
-        if (property==null) {
+        if (property == null) {
             throw new BuildException("No property defined");
         }
     }
@@ -148,10 +148,10 @@ public class WhichResource extends Task {
      */
     public void execute() throws BuildException {
         validate();
-        if (classpath!= null) {
+        if (classpath != null) {
             getProject().log("using user supplied classpath: " + classpath,
                     Project.MSG_DEBUG);
-            classpath=classpath.concatSystemClasspath("ignore");
+            classpath = classpath.concatSystemClasspath("ignore");
         } else {
             classpath = new Path(getProject());
             classpath = classpath.concatSystemClasspath("only");
@@ -161,23 +161,23 @@ public class WhichResource extends Task {
         loader = new AntClassLoader(getProject().getCoreLoader(),
                     getProject(),
                     classpath, false);
-        String location=null;
-        if (classname!=null) {
+        String location = null;
+        if (classname != null) {
             //convert a class name into a resource
-            classname= classname.replace('.', '/');
-            resource="/"+ classname +".class";
+            classname = classname.replace('.', '/');
+            resource = "/" + classname + ".class";
         } else {
             if (!resource.startsWith("/")) {
-                resource="/"+resource;
+                resource = "/" + resource;
             }
         }
-        log("Searching for "+resource,Project.MSG_VERBOSE);
+        log("Searching for " + resource, Project.MSG_VERBOSE);
         URL url;
-        url=loader.getResource(resource);
-        if (url!=null) {
+        url = loader.getResource(resource);
+        if (url != null) {
             //set the property
             location = url.toExternalForm();
-            getProject().setNewProperty(property,location);
+            getProject().setNewProperty(property, location);
         }
     }
 

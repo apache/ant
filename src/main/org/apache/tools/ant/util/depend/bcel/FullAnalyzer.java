@@ -77,7 +77,7 @@ public class FullAnalyzer extends AbstractAnalyzer {
             // ignore
         }
     }
-    
+
     /**
      * Determine the dependencies of the configured root classes.
      *

@@ -72,7 +72,7 @@ import org.apache.tools.ant.util.JavaEnvUtils;
  * @author duncan@x180.com
  * @author ludovic.claude@websitewatchers.co.uk
  * @author David Maclean <a href="mailto:david@cm.co.za">david@cm.co.za</a>
- * @author Stefan Bodewig 
+ * @author Stefan Bodewig
  * @author <a href="tokamoto@rd.nttdata.co.jp">Takashi Okamoto</a>
  * @since Ant 1.4
  */
@@ -96,15 +96,15 @@ public abstract class DefaultRmicAdapter implements RmicAdapter {
 
     protected String getStubClassSuffix() {
         return "_Stub";
-    }        
+    }
 
     protected String getSkelClassSuffix() {
         return "_Skel";
-    }        
+    }
 
     protected String getTieClassSuffix() {
         return "_Tie";
-    }        
+    }
 
     /**
      * This implementation returns a mapper that may return up to two
@@ -142,9 +142,9 @@ public abstract class DefaultRmicAdapter implements RmicAdapter {
         // untouched classes are on classpath
         classpath.setLocation(attributes.getBase());
 
-        // Combine the build classpath with the system classpath, in an 
+        // Combine the build classpath with the system classpath, in an
         // order determined by the value of build.sysclasspath
-        
+
         Path cp = attributes.getClasspath();
         if (cp == null) {
             cp = new Path(attributes.getProject());
@@ -249,7 +249,7 @@ public abstract class DefaultRmicAdapter implements RmicAdapter {
      }
 
     /**
-     * Logs the compilation parameters, adds the files to compile and logs the 
+     * Logs the compilation parameters, adds the files to compile and logs the
      * &qout;niceSourceList&quot;
      */
     protected void logAndAddFilesToCompile(Commandline cmd) {
@@ -290,22 +290,25 @@ public abstract class DefaultRmicAdapter implements RmicAdapter {
      */
     private class RmicFileNameMapper implements FileNameMapper {
 
-        RmicFileNameMapper() {}
+        RmicFileNameMapper() {
+        }
 
         /**
          * Empty implementation.
          */
-        public void setFrom(String s) {}
+        public void setFrom(String s) {
+        }
         /**
          * Empty implementation.
          */
-        public void setTo(String s) {}
+        public void setTo(String s) {
+        }
 
         public String[] mapFileName(String name) {
             if (name == null
                 || !name.endsWith(".class")
-                || name.endsWith(getStubClassSuffix() + ".class") 
-                || name.endsWith(getSkelClassSuffix() + ".class") 
+                || name.endsWith(getStubClassSuffix() + ".class")
+                || name.endsWith(getSkelClassSuffix() + ".class")
                 || name.endsWith(getTieClassSuffix() + ".class")) {
                 // Not a .class file or the one we'd generate
                 return null;
@@ -366,12 +369,12 @@ public abstract class DefaultRmicAdapter implements RmicAdapter {
                     if (c.isInterface()) {
                         // only stub, no tie
                         target = new String[] {
-                            dirname + "_" + filename + getStubClassSuffix() 
+                            dirname + "_" + filename + getStubClassSuffix()
                             + ".class"
                         };
                     } else {
                         /*
-                         * stub is derived from implementation, 
+                         * stub is derived from implementation,
                          * tie from interface name.
                          */
                         Class interf = attributes.getRemoteInterface(c);
@@ -387,17 +390,17 @@ public abstract class DefaultRmicAdapter implements RmicAdapter {
                             iDir = iName.substring(0, iIndex);
                             iDir = iDir.replace('.', File.separatorChar);
                         }
-                        
+
                         target = new String[] {
-                            dirname + "_" + filename + getTieClassSuffix() 
+                            dirname + "_" + filename + getTieClassSuffix()
                             + ".class",
-                            iDir + "_" + iName.substring(iIndex) 
+                            iDir + "_" + iName.substring(iIndex)
                             + getStubClassSuffix() + ".class"
                         };
                     }
                 } catch (ClassNotFoundException e) {
                     attributes.log("Unable to verify class " + classname
-                                   + ". It could not be found.", 
+                                   + ". It could not be found.",
                                    Project.MSG_WARN);
                 } catch (NoClassDefFoundError e) {
                     attributes.log("Unable to verify class " + classname

@@ -340,8 +340,8 @@ public class PathConvert extends Task {
      */
     public void execute() throws BuildException {
         Path savedPath = path;
-        String savedPathSep = pathSep;// may be altered in validateSetup
-        String savedDirSep = dirSep;// may be altered in validateSetup
+        String savedPathSep = pathSep; // may be altered in validateSetup
+        String savedDirSep = dirSep; // may be altered in validateSetup
 
         try {
             // If we are a reference, create a Path from the reference
@@ -372,7 +372,7 @@ public class PathConvert extends Task {
                 }
             }
 
-            validateSetup();// validate our setup
+            validateSetup(); // validate our setup
 
             // Currently, we deal with only two path formats: Unix and Windows
             // And Unix is everything that is not Windows
@@ -392,7 +392,7 @@ public class PathConvert extends Task {
             for (int i = 0; i < elems.length; i++) {
                 String elem = elems[i];
 
-                elem = mapElement(elem);// Apply the path prefix map
+                elem = mapElement(elem); // Apply the path prefix map
 
                 // Now convert the path and file separator characters from the
                 // current os to the target os.
@@ -464,7 +464,7 @@ public class PathConvert extends Task {
 
                 if (newElem != elem) {
                     elem = newElem;
-                    break;// We applied one, so we're done
+                    break; // We applied one, so we're done
                 }
             }
         }
@@ -505,11 +505,13 @@ public class PathConvert extends Task {
             dsep = targetWindows ? "\\" : "/";
         }
 
-        if (pathSep != null) {// override with pathsep=
+        if (pathSep != null) {
+            // override with pathsep=
             psep = pathSep;
         }
 
-        if (dirSep != null) {// override with dirsep=
+        if (dirSep != null) {
+            // override with dirsep=
             dsep = dirSep;
         }
 

@@ -74,7 +74,7 @@ public abstract class DefaultJspCompilerAdapter
     private static String lSep = System.getProperty("line.separator");
 
     /**
-     * Logs the compilation parameters, adds the files to compile and logs the 
+     * Logs the compilation parameters, adds the files to compile and logs the
      * &quot;niceSourceList&quot;
      */
     protected void logAndAddFilesToCompile(JspC jspc,
@@ -120,7 +120,7 @@ public abstract class DefaultJspCompilerAdapter
         return owner;
     }
 
-    
+
     /**
      *  add an argument oneple to the argument list, if the value aint null
      *

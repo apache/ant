@@ -184,10 +184,10 @@ public class RecorderEntry implements BuildLogger {
 
                 for (int i = 0; i < size; i++) {
                     buf.append(" ");
-                }// for
+                }
                 buf.append(label);
-            }// if
-        }// if
+            }
+        }
         buf.append(event.getMessage());
 
         log(buf.toString(), event.getPriority());

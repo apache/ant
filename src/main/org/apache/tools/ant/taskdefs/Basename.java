@@ -90,53 +90,53 @@ import org.apache.tools.ant.Task;
  */
 
 public class Basename extends Task {
-  private File file;
-  private String property;
-  private String suffix;
+    private File file;
+    private String property;
+    private String suffix;
 
-  /**
-   * File or directory to get base name from.
-   */
-  public void setFile(File file) {
-    this.file = file;
-  }
+    /**
+    * File or directory to get base name from.
+    */
+    public void setFile(File file) {
+        this.file = file;
+    }
 
-  /**
-   * Property to set base name to.
-   */
-  public void setProperty(String property) {
-    this.property  = property ;
-  }
+    /**
+    * Property to set base name to.
+    */
+    public void setProperty(String property) {
+        this.property  = property;
+    }
 
-  /**
-   * Optional suffix to remove from base name.
-   */
-  public void setSuffix(String suffix) {
-    this.suffix = suffix;
-  }
+    /**
+    * Optional suffix to remove from base name.
+    */
+    public void setSuffix(String suffix) {
+        this.suffix = suffix;
+    }
 
 
-  // The method executing the task
-  public void execute() throws BuildException {
-      if (property == null) {
-          throw new BuildException("property attribute required", getLocation());
-      }
-      if (file == null) {
-          throw new BuildException("file attribute required", getLocation());
-      }
-      String value = file.getName();
-      if (suffix != null && value.endsWith(suffix)) {
-          // if the suffix does not starts with a '.' and the
-          // char preceding the suffix is a '.', we assume the user
-          // wants to remove the '.' as well (see docs)
-          int pos = value.length() - suffix.length();
-          if (pos > 0 && suffix.charAt(0) != '.'
-              && value.charAt(pos - 1) == '.') {
-              pos--;
-          }
-          value = value.substring(0, pos);
-      }
-      getProject().setNewProperty(property, value);
-  }
+    // The method executing the task
+    public void execute() throws BuildException {
+        if (property == null) {
+            throw new BuildException("property attribute required", getLocation());
+        }
+        if (file == null) {
+            throw new BuildException("file attribute required", getLocation());
+        }
+        String value = file.getName();
+        if (suffix != null && value.endsWith(suffix)) {
+            // if the suffix does not starts with a '.' and the
+            // char preceding the suffix is a '.', we assume the user
+            // wants to remove the '.' as well (see docs)
+            int pos = value.length() - suffix.length();
+            if (pos > 0 && suffix.charAt(0) != '.'
+                && value.charAt(pos - 1) == '.') {
+                pos--;
+            }
+            value = value.substring(0, pos);
+        }
+        getProject().setNewProperty(property, value);
+    }
 }
 

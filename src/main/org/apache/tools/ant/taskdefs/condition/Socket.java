@@ -87,7 +87,7 @@ public class Socket extends ProjectComponent implements Condition {
         if (port == 0) {
             throw new BuildException("No port specified in socket condition");
         }
-        log("Checking for listener at " + server + ":" + port, 
+        log("Checking for listener at " + server + ":" + port,
             Project.MSG_VERBOSE);
         try {
             new java.net.Socket(server, port);

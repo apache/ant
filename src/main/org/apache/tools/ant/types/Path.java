@@ -654,7 +654,8 @@ public class Path extends DataType implements Cloneable {
 
             // IBM's 1.4 has rt.jar split into 4 smaller jars and a combined
             // JCE/JSSE in security.jar.
-            String[] ibmJars = { "core", "graphics", "security", "server", "xml" };
+            String[] ibmJars
+                = {"core", "graphics", "security", "server", "xml"};
             for (int i = 0; i < ibmJars.length; i++) {
                 addExisting(new Path(null,
                                      System.getProperty("java.home")

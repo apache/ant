@@ -442,8 +442,9 @@ public class EjbJar extends MatchingTask {
             config.namingScheme = new NamingScheme();
             config.namingScheme.setValue(NamingScheme.BASEJARNAME);
         } else if (!config.namingScheme.getValue().equals(NamingScheme.BASEJARNAME)) {
-            throw new BuildException("The basejarname attribute is not compatible with the " +
-                                     config.namingScheme.getValue() + " naming scheme");
+            throw new BuildException("The basejarname attribute is not "
+                + "compatible with the "
+                + config.namingScheme.getValue() + " naming scheme");
         }
     }
 
@@ -457,8 +458,9 @@ public class EjbJar extends MatchingTask {
         config.namingScheme = namingScheme;
         if (!config.namingScheme.getValue().equals(NamingScheme.BASEJARNAME) &&
             config.baseJarName != null) {
-            throw new BuildException("The basejarname attribute is not compatible with the " +
-                                     config.namingScheme.getValue() + " naming scheme");
+            throw new BuildException("The basejarname attribute is not "
+                + "compatible with the "
+                + config.namingScheme.getValue() + " naming scheme");
         }
     }
 
@@ -505,7 +507,7 @@ public class EjbJar extends MatchingTask {
      * Initially, only the JBoss implementation does something specific for CMP 2.0.<br/>
      * @since ant 1.6
      */
-    public void setCmpversion( CMPVersion version) {
+    public void setCmpversion(CMPVersion version) {
         this.cmpVersion = version.getValue();
     }
 
@@ -578,8 +580,8 @@ public class EjbJar extends MatchingTask {
             config.namingScheme.setValue(NamingScheme.DESCRIPTOR);
         } else if (config.namingScheme.getValue().equals(NamingScheme.BASEJARNAME) &&
                  config.baseJarName == null) {
-            throw new BuildException("The basejarname attribute must be specified " +
-                                     "with the basejarname naming scheme");
+            throw new BuildException("The basejarname attribute must "
+                + "be specified with the basejarname naming scheme");
         }
     }
 

@@ -375,7 +375,7 @@ public class SQLExec extends JDBCTask {
                 String[] srcFiles = ds.getIncludedFiles();
 
                 // Make a transaction for each file
-                for (int j = 0 ; j < srcFiles.length ; j++) {
+                for (int j = 0; j < srcFiles.length; j++) {
                     Transaction t = createTransaction();
                     t.setSrc(new File(srcDir, srcFiles[j]));
                 }
@@ -424,14 +424,18 @@ public class SQLExec extends JDBCTask {
                 if (!isAutocommit() && conn != null && onError.equals("abort")) {
                     try {
                         conn.rollback();
-                    } catch (SQLException ex) {}
+                    } catch (SQLException ex) {
+                        // ignore
+                    }
                 }
                 throw new BuildException(e, location);
             } catch (SQLException e) {
                 if (!isAutocommit() && conn != null && onError.equals("abort")) {
                     try {
                         conn.rollback();
-                    } catch (SQLException ex) {}
+                    } catch (SQLException ex) {
+                        // ignore
+                    }
                 }
                 throw new BuildException(e, location);
             } finally {
@@ -442,11 +446,13 @@ public class SQLExec extends JDBCTask {
                     if (conn != null) {
                         conn.close();
                     }
-                } catch (SQLException e) {}
+                } catch (SQLException ex) {
+                    // ignore
+                }
             }
 
-            log(goodSql + " of " + totalSql +
-                " SQL statements executed successfully");
+            log(goodSql + " of " + totalSql
+                + " SQL statements executed successfully");
         } finally {
             transactions = savedTransaction;
             sqlCommand = savedSqlCommand;

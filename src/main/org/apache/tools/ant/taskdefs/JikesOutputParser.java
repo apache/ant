@@ -86,12 +86,14 @@ public class JikesOutputParser implements ExecuteStreamHandler {
     /**
      * Ignore.
      */
-    public void setProcessInputStream(OutputStream os) {}
+    public void setProcessInputStream(OutputStream os) {
+    }
 
     /**
      * Ignore.
      */
-    public void setProcessErrorStream(InputStream is) {}
+    public void setProcessErrorStream(InputStream is) {
+    }
 
     /**
      * Set the inputstream
@@ -110,7 +112,8 @@ public class JikesOutputParser implements ExecuteStreamHandler {
     /**
      * Ignore.
      */
-    public void stop() {}
+    public void stop() {
+    }
 
     /**
      * Construct a new Parser object

@@ -73,7 +73,7 @@ import org.apache.tools.ant.types.Commandline;
 import org.apache.tools.ant.types.FileSet;
 
 /**
- * @author Patrick G. Heck 
+ * @author Patrick G. Heck
  *         <a href="mailto:gus.heck@olin.edu">gus.heck@olin.edu</a>
  * @since Ant 1.6
  *
@@ -107,7 +107,7 @@ public abstract class AbstractAccessTask
      * @param cmdl A user supplied command line that we won't accept.
      */
     public void setCommand(Commandline cmdl) {
-        throw new BuildException(taskType 
+        throw new BuildException(taskType
                                  + " doesn\'t support the command attribute",
                                  getLocation());
     }

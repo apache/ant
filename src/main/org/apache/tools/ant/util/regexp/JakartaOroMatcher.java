@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2000-2003 The Apache Software Foundation.  All rights 
+ * Copyright (c) 2000-2003 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -64,7 +64,7 @@ import org.apache.tools.ant.BuildException;
 /**
  * Implementation of RegexpMatcher for Jakarta-ORO.
  *
- * @author Stefan Bodewig 
+ * @author Stefan Bodewig
  * @author <a href="mailto:mattinger@mindless.com">Matthew Inger</a>
  */
 public class JakartaOroMatcher implements RegexpMatcher {
@@ -73,7 +73,8 @@ public class JakartaOroMatcher implements RegexpMatcher {
     protected final Perl5Compiler compiler = new Perl5Compiler();
     protected final Perl5Matcher matcher = new Perl5Matcher();
 
-    public JakartaOroMatcher() {}
+    public JakartaOroMatcher() {
+    }
 
     /**
      * Set the regexp pattern from the String description.
@@ -166,7 +167,7 @@ public class JakartaOroMatcher implements RegexpMatcher {
         if (RegexpUtil.hasFlag(options, MATCH_SINGLELINE)) {
             cOptions |= Perl5Compiler.SINGLELINE_MASK;
         }
-        
+
         return cOptions;
     }
 

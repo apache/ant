@@ -105,7 +105,7 @@ public class Equals implements Condition {
             arg1 = arg1.trim();
             arg2 = arg2.trim();
         }
-        
+
         return caseSensitive ? arg1.equals(arg2) : arg1.equalsIgnoreCase(arg2);
     }
 }

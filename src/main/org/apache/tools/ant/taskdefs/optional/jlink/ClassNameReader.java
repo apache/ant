@@ -67,7 +67,7 @@ import java.io.InputStream;
  */
 class ConstantPool {
 
-    static final 
+    static final
         byte UTF8 = 1, UNUSED = 2, INTEGER = 3, FLOAT = 4, LONG = 5, DOUBLE = 6,
         CLASS = 7, STRING = 8, FIELDREF = 9, METHODREF = 10,
         INTERFACEMETHODREF = 11, NAMEANDTYPE = 12;
@@ -90,33 +90,33 @@ class ConstantPool {
             case UTF8 :
                 values[i] = data.readUTF();
                 break;
-                                
+
             case UNUSED :
                 break;
-                                
+
             case INTEGER :
                 values[i] = new Integer(data.readInt());
                 break;
-                                
+
             case FLOAT :
                 values[i] = new Float(data.readFloat());
                 break;
-                                
+
             case LONG :
                 values[i] = new Long(data.readLong());
                 ++i;
                 break;
-                                
+
             case DOUBLE :
                 values[i] = new Double(data.readDouble());
                 ++i;
                 break;
-                                
+
             case CLASS :
             case STRING :
                 values[i] = new Integer(data.readUnsignedShort());
                 break;
-                                
+
             case FIELDREF :
             case METHODREF :
             case INTERFACEMETHODREF :

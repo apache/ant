@@ -118,7 +118,7 @@ public class ExecuteJava implements Runnable, TimeoutObserver {
         this.timeout = timeout;
     }
 
-    public void execute(Project project) throws BuildException{
+    public void execute(Project project) throws BuildException {
         final String classname = javaCommand.getExecutable();
 
         AntClassLoader loader = null;
@@ -127,7 +127,7 @@ public class ExecuteJava implements Runnable, TimeoutObserver {
                 sysProperties.setSystem();
             }
 
-            final Class[] param = { Class.forName("[Ljava.lang.String;") };
+            final Class[] param = {Class.forName("[Ljava.lang.String;")};
             Class target = null;
             if (classpath == null) {
                 target = Class.forName(classname);
@@ -166,7 +166,9 @@ public class ExecuteJava implements Runnable, TimeoutObserver {
                     w.start();
                     try {
                         wait();
-                    } catch (InterruptedException e) {}
+                    } catch (InterruptedException e) {
+                        // ignore
+                    }
                     if (timedOut) {
                         project.log("Timeout: sub-process interrupted",
                                     Project.MSG_WARN);
@@ -204,7 +206,7 @@ public class ExecuteJava implements Runnable, TimeoutObserver {
      * @since Ant 1.5
      */
     public void run() {
-        final Object[] argument = { javaCommand.getArguments() };
+        final Object[] argument = {javaCommand.getArguments()};
         try {
             main.invoke(null, argument);
         } catch (InvocationTargetException e) {

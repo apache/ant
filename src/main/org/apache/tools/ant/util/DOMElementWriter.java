@@ -108,11 +108,11 @@ public class DOMElementWriter {
      *
      * @param element the Root DOM element of the tree
      * @param out where to send the output
-     * @param indent number of 
+     * @param indent number of
      * @param indentWith string that should be used to indent the corresponding tag.
      * @throws IOException if an error happens while writing to the stream.
      */
-    public void write(Element element, Writer out, int indent, 
+    public void write(Element element, Writer out, int indent,
                       String indentWith)
         throws IOException {
 
@@ -144,7 +144,7 @@ public class DOMElementWriter {
             Node child = children.item(i);
 
             switch (child.getNodeType()) {
-                
+
             case Node.ELEMENT_NODE:
                 if (!hasChildren) {
                     out.write(lSep);
@@ -152,11 +152,11 @@ public class DOMElementWriter {
                 }
                 write((Element) child, out, indent + 1, indentWith);
                 break;
-                
+
             case Node.TEXT_NODE:
                 out.write(encode(child.getNodeValue()));
                 break;
-                
+
             case Node.CDATA_SECTION_NODE:
                 out.write("<![CDATA[");
                 out.write(encodedata(((Text) child).getData()));
@@ -268,11 +268,11 @@ public class DOMElementWriter {
         while (cdEnd != -1) {
             sb.setLength(cdEnd);
             sb.append("&#x5d;&#x5d;&gt;")
-                .append(result.substring(cdEnd+3));
+                .append(result.substring(cdEnd + 3));
             result = sb.substring(0);
             cdEnd = result.indexOf("]]>");
         }
-        
+
         return result;
     }
 

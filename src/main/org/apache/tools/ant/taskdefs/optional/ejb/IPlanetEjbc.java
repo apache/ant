@@ -266,7 +266,7 @@ public class IPlanetEjbc {
 
         EjbInfo[] ejbs = handler.getEjbs();
 
-        for (int i = 0; i < ejbs.length ; i++) {
+        for (int i = 0; i < ejbs.length; i++) {
             List descriptors = (List) ejbs[i].getCmpDescriptors();
             returnList.addAll(descriptors);
         }
@@ -409,7 +409,7 @@ public class IPlanetEjbc {
 
         EjbInfo[] ejbs = getEjbs(); // Returns list of EJBs for processing
 
-        for (int i = 0; i < ejbs.length ; i++) {
+        for (int i = 0; i < ejbs.length; i++) {
             log("EJBInfo...");
             log(ejbs[i].toString());
         }

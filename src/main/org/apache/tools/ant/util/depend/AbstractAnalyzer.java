@@ -115,7 +115,7 @@ public abstract class AbstractAnalyzer implements DependencyAnalyzer {
      */
     public Enumeration getFileDependencies() {
         if (!supportsFileDependencies()) {
-            throw new RuntimeException("File dependencies are not supported " 
+            throw new RuntimeException("File dependencies are not supported "
                 + "by this analyzer");
         }
         if (!determined) {
@@ -142,7 +142,7 @@ public abstract class AbstractAnalyzer implements DependencyAnalyzer {
      * Get the file that contains the class definition
      *
      * @param classname the name of the required class
-     * @return the file instance, zip or class, containing the 
+     * @return the file instance, zip or class, containing the
      *         class or null if the class could not be found.
      * @exception IOException if the files in the classpath cannot be read.
      */
@@ -157,7 +157,7 @@ public abstract class AbstractAnalyzer implements DependencyAnalyzer {
      * Get the file that contains the class source.
      *
      * @param classname the name of the required class
-     * @return the file instance, zip or java, containing the 
+     * @return the file instance, zip or java, containing the
      *         source or null if the source for the class could not be found.
      * @exception IOException if the files in the sourcepath cannot be read.
      */
@@ -244,7 +244,7 @@ public abstract class AbstractAnalyzer implements DependencyAnalyzer {
     /**
      * Get an enumeration of the root classes
      *
-     * @return an enumeration of Strings, each of which is a class name 
+     * @return an enumeration of Strings, each of which is a class name
      *         for a root class.
      */
     protected Enumeration getRootClasses() {
@@ -252,7 +252,7 @@ public abstract class AbstractAnalyzer implements DependencyAnalyzer {
     }
 
     /**
-     * Indicate if the analyzer is required to follow 
+     * Indicate if the analyzer is required to follow
      * indirect class relationships.
      *
      * @return true if indirect relationships should be followed.
@@ -284,7 +284,7 @@ public abstract class AbstractAnalyzer implements DependencyAnalyzer {
      *
      * @param resourceLocation the name of the required resource.
      * @param paths the paths which will be searched for the resource.
-     * @return the file instance, zip or class, containing the 
+     * @return the file instance, zip or class, containing the
      *         class or null if the class could not be found.
      * @exception IOException if the files in the given paths cannot be read.
      */

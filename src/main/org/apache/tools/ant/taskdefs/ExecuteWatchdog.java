@@ -111,7 +111,7 @@ public class ExecuteWatchdog implements TimeoutObserver {
      * (1.4.x compatibility)
      */
     public ExecuteWatchdog(int timeout) {
-        this((long)timeout);
+        this((long) timeout);
     }
 
     /**

@@ -138,16 +138,33 @@ class SplashScreen extends JWindow implements ActionListener, BuildListener {
         pb.setValue(total);
     }
 
-    public void buildStarted(BuildEvent event) { actionPerformed(null);}
+    public void buildStarted(BuildEvent event) {
+        actionPerformed(null);
+    }
+
     public void buildFinished(BuildEvent event) {
         pb.setValue(max);
         setVisible(false);
         dispose();
     }
-    public void targetStarted(BuildEvent event) {actionPerformed(null);}
-    public void targetFinished(BuildEvent event) {actionPerformed(null);}
-    public void taskStarted(BuildEvent event) {actionPerformed(null);}
-    public void taskFinished(BuildEvent event) {actionPerformed(null);}
-    public void messageLogged(BuildEvent event) {actionPerformed(null);}
+    public void targetStarted(BuildEvent event) {
+        actionPerformed(null);
+    }
+
+    public void targetFinished(BuildEvent event) {
+        actionPerformed(null);
+    }
+
+    public void taskStarted(BuildEvent event) {
+        actionPerformed(null);
+    }
+
+    public void taskFinished(BuildEvent event) {
+        actionPerformed(null);
+    }
+
+    public void messageLogged(BuildEvent event) {
+        actionPerformed(null);
+    }
 }
 

@@ -61,7 +61,7 @@ import org.apache.tools.ant.BuildException;
 /**
  * This Interface describes classes that format the results of a JUnit
  * testrun.
- * 
+ *
  * @author Stefan Bodewig
  */
 public interface JUnitResultFormatter extends TestListener {
@@ -69,7 +69,7 @@ public interface JUnitResultFormatter extends TestListener {
      * The whole testsuite started.
      */
     void startTestSuite(JUnitTest suite) throws BuildException;
-    
+
     /**
      * The whole testsuite ended.
      */

@@ -54,7 +54,8 @@
 
 package org.apache.tools.ant.taskdefs.optional.clearcase;
 
-import org.apache.tools.ant.*;
+import org.apache.tools.ant.BuildException;
+import org.apache.tools.ant.Project;
 import org.apache.tools.ant.types.Commandline;
 
 /**
@@ -150,7 +151,7 @@ public class CCRmtype extends ClearCase {
         checkOptions(commandLine);
 
         result = run(commandLine);
-        if ( result != 0) {
+        if (result != 0) {
             String msg = "Failed executing: " + commandLine.toString();
             throw new BuildException(msg, location);
         }

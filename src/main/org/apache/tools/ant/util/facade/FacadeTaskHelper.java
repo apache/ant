@@ -153,7 +153,7 @@ public class FacadeTaskHelper {
     public String[] getArgs() {
         Vector tmp = new Vector(args.size());
         for (Enumeration enum = args.elements(); enum.hasMoreElements();) {
-            ImplementationSpecificArgument arg = 
+            ImplementationSpecificArgument arg =
                 ((ImplementationSpecificArgument) enum.nextElement());
             String[] curr = arg.getParts(getImplementation());
             for (int i = 0; i < curr.length; i++) {

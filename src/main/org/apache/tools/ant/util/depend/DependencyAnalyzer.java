@@ -147,7 +147,7 @@ public interface DependencyAnalyzer {
      * Get the file that contains the class definition
      *
      * @param classname the name of the required class
-     * @return the file instance, zip or class, containing the 
+     * @return the file instance, zip or class, containing the
      *         class or null if the class could not be found.
      * @exception IOException if the files in the classpath cannot be read.
      */
@@ -157,7 +157,7 @@ public interface DependencyAnalyzer {
      * Get the file that contains the class source.
      *
      * @param classname the name of the required class
-     * @return the file instance, zip or java, containing the 
+     * @return the file instance, zip or java, containing the
      *         source or null if the source for the class could not be found.
      * @exception IOException if the files in the sourcepath cannot be read.
      */

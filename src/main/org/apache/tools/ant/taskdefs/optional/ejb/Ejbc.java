@@ -114,24 +114,25 @@ public class Ejbc extends MatchingTask {
     public void execute() throws BuildException {
         if (descriptorDirectory == null ||
             !descriptorDirectory.isDirectory()) {
-            throw new BuildException("descriptors directory " + descriptorDirectory.getPath() +
-                                     " is not valid");
+            throw new BuildException("descriptors directory "
+                + descriptorDirectory.getPath() + " is not valid");
         }
         if (generatedFilesDirectory == null ||
             !generatedFilesDirectory.isDirectory()) {
-            throw new BuildException("dest directory " + generatedFilesDirectory.getPath() +
-                                     " is not valid");
+            throw new BuildException("dest directory "
+                + generatedFilesDirectory.getPath() + " is not valid");
         }
 
         if (sourceDirectory == null ||
             !sourceDirectory.isDirectory()) {
-            throw new BuildException("src directory " + sourceDirectory.getPath() +
-                                     " is not valid");
+            throw new BuildException("src directory "
+                + sourceDirectory.getPath() + " is not valid");
         }
 
         String systemClassPath = System.getProperty("java.class.path");
-        String execClassPath = getProject().translatePath(systemClassPath + ":" + classpath +
-                                                         ":" + generatedFilesDirectory);
+        String execClassPath
+            = getProject().translatePath(systemClassPath + ":" + classpath
+                                         + ":" + generatedFilesDirectory);
         // get all the files in the descriptor directory
         DirectoryScanner ds = super.getDirectoryScanner(descriptorDirectory);
 

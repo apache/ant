@@ -162,9 +162,8 @@ public abstract class MatchingTask extends Task implements SelectorContainer {
      * @param itemString the string containing the files to include.
      */
     public void XsetItems(String itemString) {
-        log("The items attribute is deprecated. " +
-            "Please use the includes attribute.",
-            Project.MSG_WARN);
+        log("The items attribute is deprecated. "
+            + "Please use the includes attribute.", Project.MSG_WARN);
         if (itemString == null || itemString.equals("*")
             || itemString.equals(".")) {
             createInclude().setName("**");
@@ -196,9 +195,8 @@ public abstract class MatchingTask extends Task implements SelectorContainer {
      * @param ignoreString the string containing the files to ignore.
      */
     public void XsetIgnore(String ignoreString) {
-        log("The ignore attribute is deprecated." +
-            "Please use the excludes attribute.",
-            Project.MSG_WARN);
+        log("The ignore attribute is deprecated."
+            + "Please use the excludes attribute.", Project.MSG_WARN);
         if (ignoreString != null && ignoreString.length() > 0) {
             StringTokenizer tok = new StringTokenizer(ignoreString, ", ",
                                                       false);

@@ -258,7 +258,7 @@ public class Pvcs extends org.apache.tools.ant.Task {
             commandLine.clearArgs();
             commandLine.setExecutable(getExecutable(GET_EXE));
 
-            if (getConfig() != null && getConfig().length()>0) {
+            if (getConfig() != null && getConfig().length() > 0) {
                 commandLine.createArgument().setValue("-c" + getConfig());
             }
 
@@ -330,13 +330,12 @@ public class Pvcs extends org.apache.tools.ant.Task {
             String line = in.readLine();
             while (line != null) {
                 log("Considering \"" + line + "\"", Project.MSG_VERBOSE);
-                if (line.startsWith("\"\\") ||
-                    line.startsWith("\"/") ||
-                    (line.length() >3 &&
-                     line.startsWith("\"") &&
-                     Character.isLetter(line.charAt(1)) &&
-                     String.valueOf(line.charAt(2)).equals(":") &&
-                     String.valueOf(line.charAt(3)).equals("\\"))) {
+                if (line.startsWith("\"\\")
+                    || line.startsWith("\"/")
+                    || (line.length() > 3 && line.startsWith("\"")
+                        && Character.isLetter(line.charAt(1))
+                        && String.valueOf(line.charAt(2)).equals(":")
+                        && String.valueOf(line.charAt(3)).equals("\\"))) {
                     Object[] objs = mf.parse(line);
                     String f = (String) objs[1];
                     // Extract the name of the directory from the filename

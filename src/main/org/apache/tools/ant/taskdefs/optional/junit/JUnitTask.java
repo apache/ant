@@ -894,7 +894,7 @@ public class JUnitTask extends Task {
 
             runner.run();
             return runner.getRetCode();
-        } finally{
+        } finally {
             if (sysProperties != null) {
                 sysProperties.restoreSystem();
             }
@@ -947,7 +947,7 @@ public class JUnitTask extends Task {
      * @since Ant 1.3
      */
     protected Enumeration allTests() {
-        Enumeration[] enums = { tests.elements(), batchTests.elements() };
+        Enumeration[] enums = {tests.elements(), batchTests.elements()};
         return Enumerations.fromCompound(enums);
     }
 
@@ -1032,7 +1032,7 @@ public class JUnitTask extends Task {
                     OutputStream out = new FileOutputStream(outFile);
                     formatter.setOutput(out);
                     formatter.startTestSuite(test);
-                    test.setCounts(0,0,1);
+                    test.setCounts(0, 0, 1);
                     Test t = new Test() {
                         public int countTestCases() { return 0; }
                         public void run(TestResult r) {
@@ -1045,7 +1045,9 @@ public class JUnitTask extends Task {
                                   new AssertionFailedError("Timeout occurred"));
 
                     formatter.endTestSuite(test);
-                } catch (IOException e) {}
+                } catch (IOException e) {
+                    // ignore
+                }
             }
         }
     }

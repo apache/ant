@@ -394,8 +394,8 @@ public class SignJar extends Task {
                 }
                 return false;
             } else {
-                return jarFile.getEntry(SIG_START + alias.toUpperCase() +
-                                        SIG_END) != null;
+                return jarFile.getEntry(SIG_START + alias.toUpperCase()
+                                        + SIG_END) != null;
             }
         } catch (IOException e) {
             return false;

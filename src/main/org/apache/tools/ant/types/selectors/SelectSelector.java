@@ -169,8 +169,8 @@ public class SelectSelector extends BaseSelectorContainer {
     public void verifySettings() {
         int cnt = selectorCount();
         if (cnt < 0 || cnt > 1) {
-            setError("Only one selector is allowed within the " +
-                    "<selector> tag");
+            setError("Only one selector is allowed within the "
+                + "<selector> tag");
         }
     }
 

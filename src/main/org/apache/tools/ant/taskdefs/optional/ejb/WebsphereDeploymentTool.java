@@ -440,8 +440,9 @@ public class WebsphereDeploymentTool extends GenericDeploymentTool {
             ejbFiles.put(META_DIR + WAS_EXT,
                 websphereEXT);
         } else {
-            log("Unable to locate websphere extensions. It was expected to be in " +
-                websphereEXT.getPath(), Project.MSG_VERBOSE);
+            log("Unable to locate websphere extensions. "
+                + "It was expected to be in "
+                + websphereEXT.getPath(), Project.MSG_VERBOSE);
         }
 
         File websphereBND = new File(getConfig().descriptorDir, ddPrefix + WAS_BND);
@@ -450,14 +451,17 @@ public class WebsphereDeploymentTool extends GenericDeploymentTool {
             ejbFiles.put(META_DIR + WAS_BND,
                 websphereBND);
         } else {
-            log("Unable to locate websphere bindings. It was expected to be in " +
-                websphereBND.getPath(), Project.MSG_VERBOSE);
+            log("Unable to locate websphere bindings. "
+                + "It was expected to be in "
+                + websphereBND.getPath(), Project.MSG_VERBOSE);
         }
 
         if (!newCMP) {
-            log("The old method for locating CMP files has been DEPRECATED.", Project.MSG_VERBOSE);
-            log("Please adjust your websphere descriptor and set newCMP=\"true\" " +
-                "to use the new CMP descriptor inclusion mechanism. ", Project.MSG_VERBOSE);
+            log("The old method for locating CMP files has been DEPRECATED.",
+                Project.MSG_VERBOSE);
+            log("Please adjust your websphere descriptor and set "
+                + "newCMP=\"true\" to use the new CMP descriptor "
+                + "inclusion mechanism. ", Project.MSG_VERBOSE);
         } else {
             // We attempt to put in the MAP and Schema files of CMP beans
             try {
@@ -469,8 +473,8 @@ public class WebsphereDeploymentTool extends GenericDeploymentTool {
                     ejbFiles.put(META_DIR + WAS_CMP_MAP,
                         websphereMAP);
                 } else {
-                    log("Unable to locate the websphere Map: " +
-                        websphereMAP.getPath(), Project.MSG_VERBOSE);
+                    log("Unable to locate the websphere Map: "
+                        + websphereMAP.getPath(), Project.MSG_VERBOSE);
                 }
 
                 File websphereSchema = new File(getConfig().descriptorDir,
@@ -480,13 +484,13 @@ public class WebsphereDeploymentTool extends GenericDeploymentTool {
                     ejbFiles.put(META_DIR + SCHEMA_DIR + WAS_CMP_SCHEMA,
                         websphereSchema);
                 } else {
-                    log("Unable to locate the websphere Schema: " +
-                        websphereSchema.getPath(), Project.MSG_VERBOSE);
+                    log("Unable to locate the websphere Schema: "
+                        + websphereSchema.getPath(), Project.MSG_VERBOSE);
                 }
                 // Theres nothing else to see here...keep moving sonny
             } catch (Exception e) {
-                String msg = "Exception while adding Vendor specific files: " +
-                    e.toString();
+                String msg = "Exception while adding Vendor specific files: "
+                    + e.toString();
 
                 throw new BuildException(msg, e);
             }
@@ -557,7 +561,7 @@ public class WebsphereDeploymentTool extends GenericDeploymentTool {
         }
 
         return options.toString();
-    }// end getOptions
+    }
 
 
     /**
@@ -773,7 +777,8 @@ public class WebsphereDeploymentTool extends GenericDeploymentTool {
                                 break;
                             }
                         }
-                    } else {// a file doesnt exist rebuild
+                    } else {
+                        // a file doesn't exist rebuild
 
                         log("File " + filepath + " not present in websphere jar", Project.MSG_VERBOSE);
                         rebuild = true;
@@ -812,7 +817,8 @@ public class WebsphereDeploymentTool extends GenericDeploymentTool {
                             // Use the entry from the generic jar
                             je = (JarEntry) replaceEntries.get(je.getName());
                             is = genericJar.getInputStream(je);
-                        } else {//use fle from original websphere jar
+                        } else {
+                            //use fle from original websphere jar
 
                             is = wasJar.getInputStream(je);
                         }

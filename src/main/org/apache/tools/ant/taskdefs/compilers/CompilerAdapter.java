@@ -58,7 +58,7 @@ import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.taskdefs.Javac;
 
 /**
- * The interface that all compiler adapters must adher to.  
+ * The interface that all compiler adapters must adher to.
  *
  * <p>A compiler adapter is an adapter that interprets the javac's
  * parameters in preperation to be passed off to the compier this
@@ -67,7 +67,7 @@ import org.apache.tools.ant.taskdefs.Javac;
  * task, the execute command and a parameterless constructor (for
  * reflection).</p>
  *
- * @author Jay Dickon Glanville 
+ * @author Jay Dickon Glanville
  *         <a href="mailto:jayglanville@home.com">jayglanville@home.com</a>
  * @since Ant 1.3
  */

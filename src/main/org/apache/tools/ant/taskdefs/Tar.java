@@ -392,7 +392,7 @@ public class Tar extends MatchingTask {
                         longWarningGiven = true;
                     }
                 } else if (longFileMode.isFailMode()) {
-                    throw new BuildException( "Entry: " + vPath
+                    throw new BuildException("Entry: " + vPath
                         + " longer than " + TarConstants.NAMELEN
                         + "characters.", getLocation());
                 }

@@ -78,7 +78,7 @@ public class GlobPatternMapper implements FileNameMapper {
      * Part of &quot;from&quot; pattern after the *.
      */
     protected String fromPostfix = null;
-    
+
     /**
      * Length of the prefix (&quot;from&quot; pattern).
      */
@@ -98,7 +98,7 @@ public class GlobPatternMapper implements FileNameMapper {
      * Part of &quot;to&quot; pattern after the *.
      */
     protected String toPostfix = null;
-    
+
     /**
      * Sets the &quot;from&quot; pattern. Required.
      */
@@ -135,12 +135,12 @@ public class GlobPatternMapper implements FileNameMapper {
      * translated file otherwise.
      */
     public String[] mapFileName(String sourceFileName) {
-        if (fromPrefix == null 
-            || !sourceFileName.startsWith(fromPrefix) 
+        if (fromPrefix == null
+            || !sourceFileName.startsWith(fromPrefix)
             || !sourceFileName.endsWith(fromPostfix)) {
             return null;
         }
-        return new String[] {toPrefix 
+        return new String[] {toPrefix
                                  + extractVariablePart(sourceFileName)
                                  + toPostfix};
     }

@@ -108,7 +108,7 @@ public abstract class DataType extends ProjectComponent {
      * Sets a description of the current data type. It will be useful
      * in commenting what we are doing.
      */
-    public void setDescription( final String desc) {
+    public void setDescription(final String desc) {
         description = desc;
     }
 
@@ -134,7 +134,7 @@ public abstract class DataType extends ProjectComponent {
      * thus override this method. if they do the must call
      * <code>super.setRefid</code>.</p>
      */
-    public void setRefid( final Reference ref) {
+    public void setRefid(final Reference ref) {
         this.ref = ref;
         checked = false;
     }
@@ -155,8 +155,8 @@ public abstract class DataType extends ProjectComponent {
      * anything if {@link #checked <code>checked</code>} is true and
      * set it to true on exit.</p>
      */
-    protected void dieOnCircularReference( final Stack stack,
-                                           final Project project )
+    protected void dieOnCircularReference(final Stack stack,
+                                          final Project project)
         throws BuildException {
 
         if (checked || !isReference()) {
@@ -180,8 +180,8 @@ public abstract class DataType extends ProjectComponent {
      * Performs the check for circular references and returns the
      * referenced object.
      */
-    protected Object getCheckedRef( final Class requiredClass,
-                                    final String dataTypeName) {
+    protected Object getCheckedRef(final Class requiredClass,
+                                   final String dataTypeName) {
         if (!checked) {
             Stack stk = new Stack();
             stk.push(this);
@@ -228,7 +228,7 @@ public abstract class DataType extends ProjectComponent {
         return checked;
     }
 
-    protected void setChecked( final boolean checked) {
+    protected void setChecked(final boolean checked) {
         this.checked = checked;
     }
 

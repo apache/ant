@@ -107,16 +107,16 @@ public class SourceFileScanner implements ResourceFactory {
             v.addElement(new Resource(files[i], src.exists(),
                                       src.lastModified(), src.isDirectory()));
         }
-        Resource[] sourceresources= new Resource[v.size()];
+        Resource[] sourceresources = new Resource[v.size()];
         v.copyInto(sourceresources);
 
         // build the list of sources which are out of date with
         // respect to the target
-        Resource[] outofdate = 
+        Resource[] outofdate =
             ResourceUtils.selectOutOfDateSources(task, sourceresources,
                                                  mapper, this);
         String[] result = new String[outofdate.length];
-        for (int counter=0; counter < outofdate.length; counter++) {
+        for (int counter = 0; counter < outofdate.length; counter++) {
             result[counter] = outofdate[counter].getName();
         }
         return result;

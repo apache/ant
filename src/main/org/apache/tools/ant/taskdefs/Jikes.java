@@ -123,14 +123,18 @@ public class Jikes {
                         out.println(args[i]);
                     }
                     out.flush();
-                    commandArray = new String[] { command,
-                                                  "@" + tmpFile.getAbsolutePath()};
+                    commandArray = new String[] {command,
+                                               "@" + tmpFile.getAbsolutePath()};
                 } catch (IOException e) {
                     throw new BuildException("Error creating temporary file",
                                              e);
                 } finally {
                     if (out != null) {
-                        try {out.close();} catch (Throwable t) {}
+                        try {
+                            out.close();
+                        } catch (Throwable t) {
+                            // ignore
+                        }
                     }
                 }
             } else {

@@ -74,7 +74,7 @@ import org.apache.tools.ant.util.JavaEnvUtils;
  * Currently, this is a cut-and-paste of the original javac task.
  *
  * @author James Davidson <a href="mailto:duncan@x180.com">duncan@x180.com</a>
- * @author Robin Green 
+ * @author Robin Green
  *         <a href="mailto:greenrd@hotmail.com">greenrd@hotmail.com</a>
  * @author Stefan Bodewig
  * @author <a href="mailto:jayglanville@home.com">J D Glanville</a>
@@ -217,7 +217,7 @@ public abstract class DefaultCompilerAdapter implements CompilerAdapter {
         if (memoryInitialSize != null) {
             if (!attributes.isForkedJavac()) {
                 attributes.log("Since fork is false, ignoring "
-                               + "memoryInitialSize setting.", 
+                               + "memoryInitialSize setting.",
                                Project.MSG_WARN);
             } else {
                 cmd.createArgument().setValue(memoryParameterPrefix
@@ -435,7 +435,7 @@ public abstract class DefaultCompilerAdapter implements CompilerAdapter {
              * POSIX seems to define a lower limit of 4k, so use a temporary
              * file if the total length of the command line exceeds this limit.
              */
-            if (Commandline.toString(args).length() > 4096 
+            if (Commandline.toString(args).length() > 4096
                 && firstFileName >= 0) {
                 PrintWriter out = null;
                 try {
@@ -459,11 +459,15 @@ public abstract class DefaultCompilerAdapter implements CompilerAdapter {
                     System.arraycopy(args, 0, commandArray, 0, firstFileName);
                     commandArray[firstFileName] = "@" + tmpFile;
                 } catch (IOException e) {
-                    throw new BuildException("Error creating temporary file", 
+                    throw new BuildException("Error creating temporary file",
                                              e, location);
                 } finally {
                     if (out != null) {
-                        try {out.close();} catch (Throwable t) {}
+                        try {
+                            out.close();
+                        } catch (Throwable t) {
+                            // ignore
+                        }
                     }
                 }
             } else {
@@ -511,9 +515,9 @@ public abstract class DefaultCompilerAdapter implements CompilerAdapter {
      */
     protected boolean assumeJava11() {
         return "javac1.1".equals(attributes.getCompilerVersion()) ||
-            ("classic".equals(attributes.getCompilerVersion()) 
+            ("classic".equals(attributes.getCompilerVersion())
              && JavaEnvUtils.isJavaVersion(JavaEnvUtils.JAVA_1_1)) ||
-            ("extJavac".equals(attributes.getCompilerVersion()) 
+            ("extJavac".equals(attributes.getCompilerVersion())
              && JavaEnvUtils.isJavaVersion(JavaEnvUtils.JAVA_1_1));
     }
 
@@ -523,9 +527,9 @@ public abstract class DefaultCompilerAdapter implements CompilerAdapter {
      */
     protected boolean assumeJava12() {
         return "javac1.2".equals(attributes.getCompilerVersion()) ||
-            ("classic".equals(attributes.getCompilerVersion()) 
+            ("classic".equals(attributes.getCompilerVersion())
              && JavaEnvUtils.isJavaVersion(JavaEnvUtils.JAVA_1_2)) ||
-            ("extJavac".equals(attributes.getCompilerVersion()) 
+            ("extJavac".equals(attributes.getCompilerVersion())
              && JavaEnvUtils.isJavaVersion(JavaEnvUtils.JAVA_1_2));
     }
 
@@ -535,11 +539,11 @@ public abstract class DefaultCompilerAdapter implements CompilerAdapter {
      */
     protected boolean assumeJava13() {
         return "javac1.3".equals(attributes.getCompilerVersion()) ||
-            ("classic".equals(attributes.getCompilerVersion()) 
+            ("classic".equals(attributes.getCompilerVersion())
              && JavaEnvUtils.isJavaVersion(JavaEnvUtils.JAVA_1_3)) ||
-            ("modern".equals(attributes.getCompilerVersion()) 
+            ("modern".equals(attributes.getCompilerVersion())
              && JavaEnvUtils.isJavaVersion(JavaEnvUtils.JAVA_1_3)) ||
-            ("extJavac".equals(attributes.getCompilerVersion()) 
+            ("extJavac".equals(attributes.getCompilerVersion())
              && JavaEnvUtils.isJavaVersion(JavaEnvUtils.JAVA_1_3));
     }
 

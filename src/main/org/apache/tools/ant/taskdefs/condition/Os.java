@@ -79,7 +79,8 @@ public class Os implements Condition {
     private String version;
     private String arch;
 
-    public Os() {}
+    public Os() {
+    }
 
     public Os(String family) {
         setFamily(family);
@@ -103,7 +104,9 @@ public class Os implements Condition {
      *               <li>os/400</li>
      *               </ul>
      */
-    public void setFamily(String f) {family = f.toLowerCase(Locale.US);}
+    public void setFamily(String f) {
+        family = f.toLowerCase(Locale.US);
+    }
 
     /**
      * Sets the desired OS name

@@ -70,9 +70,9 @@ import org.apache.tools.ant.types.FileSet;
  * @author <a href="mailto:hengels@innovidata.com">Holger Engels</a>
  */
 public class ClassfileSet extends FileSet {
-    /** 
-     * The list of root classes for this class file set. These are the 
-     * classes which must be included in the fileset and which are the 
+    /**
+     * The list of root classes for this class file set. These are the
+     * classes which must be included in the fileset and which are the
      * starting point for the dependency search.
      */
     private Vector rootClasses = new Vector();
@@ -81,23 +81,23 @@ public class ClassfileSet extends FileSet {
      * The list of filesets which contain root classes
      */
     private Vector rootFileSets = new Vector();
-    
+
     /**
      * Inner class used to contain info about root classes
      */
     public static class ClassRoot {
         /** The name of the root class */
         private String rootClass;
-        
-        /** 
-         * Set the root class name 
+
+        /**
+         * Set the root class name
          *
-         * @param name the name of the root class 
+         * @param name the name of the root class
          */
         public void setClassname(String name) {
             this.rootClass = name;
         }
-        
+
         /**
          * Get the name of the root class
          *
@@ -113,10 +113,10 @@ public class ClassfileSet extends FileSet {
      */
     public ClassfileSet() {
     }
-    
+
     /**
-     * Add a fileset to which contains a collection of root classes used to 
-     * drive the search from classes 
+     * Add a fileset to which contains a collection of root classes used to
+     * drive the search from classes
      *
      * @param rootFileSet a root file set to be used to search for dependent
      * classes
@@ -124,7 +124,7 @@ public class ClassfileSet extends FileSet {
     public void addRootFileset(FileSet rootFileSet) {
         rootFileSets.addElement(rootFileSet);
     }
-    
+
     /**
      * Create a ClassfileSet from another ClassfileSet
      *
@@ -164,31 +164,31 @@ public class ClassfileSet extends FileSet {
             String[] files = additionalScanner.getIncludedFiles();
             for (int i = 0; i < files.length; ++i) {
                 if (files[i].endsWith(".class")) {
-                    String classFilePath 
+                    String classFilePath
                         = files[i].substring(0, files[i].length() - 6);
-                    String className 
+                    String className
                         = classFilePath.replace('/', '.').replace('\\', '.');
                     allRootClasses.addElement(className);
                 }
             }
-        }    
-                
-        
+        }
+
+
         DirectoryScanner parentScanner = super.getDirectoryScanner(p);
         DependScanner scanner = new DependScanner(parentScanner);
         scanner.setBasedir(getDir(p));
         scanner.setRootClasses(allRootClasses);
         scanner.scan();
         return scanner;
-    } 
-    
-    /** 
+    }
+
+    /**
      * Add a nested root class definition to this class file set
      *
      * @param root the configured class root.
      */
     public void addConfiguredRoot(ClassRoot root) {
-        rootClasses.addElement(root.getClassname());    
+        rootClasses.addElement(root.getClassname());
     }
 
     /**

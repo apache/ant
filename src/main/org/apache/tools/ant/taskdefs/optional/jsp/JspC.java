@@ -249,7 +249,7 @@ public class JspC extends MatchingTask {
      * @param  uribase  The new Uribase value
      */
     public void setUribase(File uribase) {
-        log( "Uribase is currently an unused parameter", Project.MSG_WARN);
+        log("Uribase is currently an unused parameter", Project.MSG_WARN);
     }
 
     public File getUribase() {
@@ -407,10 +407,8 @@ public class JspC extends MatchingTask {
         }
 
         if (!destDir.isDirectory()) {
-            throw new
-                BuildException("destination directory \"" + destDir +
-                               "\" does not exist or is not a directory",
-                               getLocation());
+            throw new BuildException("destination directory \"" + destDir
+                    + "\" does not exist or is not a directory", getLocation());
         }
 
         File dest = getActualDestDir();
@@ -421,7 +419,7 @@ public class JspC extends MatchingTask {
                 getProject().createClassLoader(compilerClasspath));
 
         //if we are a webapp, hand off to the compiler, which had better handle it
-        if (webApp!=null) {
+        if (webApp != null) {
             doCompilation(compiler);
             return;
         }
@@ -454,8 +452,8 @@ public class JspC extends MatchingTask {
         for (int i = 0; i < list.length; i++) {
             File srcDir = getProject().resolveFile(list[i]);
             if (!srcDir.exists()) {
-                throw new BuildException("srcdir \"" + srcDir.getPath() +
-                                         "\" does not exist!", getLocation());
+                throw new BuildException("srcdir \"" + srcDir.getPath()
+                    + "\" does not exist!", getLocation());
             }
             DirectoryScanner ds = this.getDirectoryScanner(srcDir);
             String[] files = ds.getIncludedFiles();
@@ -469,8 +467,7 @@ public class JspC extends MatchingTask {
 
         if (compileList.size() > 0) {
 
-            log("Compiling " + compileList.size() +
-                " source file"
+            log("Compiling " + compileList.size() + " source file"
                 + (compileList.size() == 1 ? "" : "s")
                 + dest);
             doCompilation(compiler);
@@ -493,8 +490,8 @@ public class JspC extends MatchingTask {
         if (packageName == null) {
             dest = destDir;
         } else {
-            String path = destDir.getPath() + File.separatorChar +
-                packageName.replace('.', File.separatorChar);
+            String path = destDir.getPath() + File.separatorChar
+                + packageName.replace('.', File.separatorChar);
             dest = new File(path);
         }
         return dest;
@@ -537,7 +534,7 @@ public class JspC extends MatchingTask {
             String filename = files[i];
             File srcFile = new File(srcDir, filename);
             File javaFile = mapToJavaFile(mangler, srcFile, srcDir, dest);
-            if (javaFile==null) {
+            if (javaFile == null) {
                 continue;
             }
 

@@ -66,9 +66,9 @@ import org.apache.tools.ant.types.Commandline;
  * was refactored.
  *
  * @author James Davidson <a href="mailto:duncan@x180.com">duncan@x180.com</a>
- * @author Robin Green 
+ * @author Robin Green
  *         <a href="mailto:greenrd@hotmail.com">greenrd@hotmail.com</a>
- * @author Stefan Bodewig 
+ * @author Stefan Bodewig
  * @author <a href="mailto:jayglanville@home.com">J D Glanville</a>
  *
  * @since Ant 1.3
@@ -103,7 +103,7 @@ public class Javac13 extends DefaultCompilerAdapter {
             if (ex instanceof BuildException) {
                 throw (BuildException) ex;
             } else {
-                throw new BuildException("Error starting modern compiler", 
+                throw new BuildException("Error starting modern compiler",
                                          ex, location);
             }
         }

@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2001-2003 The Apache Software Foundation.  All rights 
+ * Copyright (c) 2001-2003 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -104,7 +104,7 @@ public class Jdk14RegexpRegexp extends Jdk14RegexpMatcher implements Regexp {
             }
         }
         argument = subst.toString();
-        
+
         int sOptions = getSubsOptions(options);
         Pattern p = getCompiledPattern(options);
         StringBuffer sb = new StringBuffer();
@@ -123,5 +123,5 @@ public class Jdk14RegexpRegexp extends Jdk14RegexpMatcher implements Regexp {
         }
 
         return sb.toString();
-    }    
+    }
 }
