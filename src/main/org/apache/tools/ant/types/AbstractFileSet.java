@@ -54,8 +54,8 @@ import org.apache.tools.ant.types.selectors.modifiedselector.ModifiedSelector;
  * <p>Common base class for DirSet and FileSet.</p>
  *
  */
-public abstract class AbstractFileSet extends DataType implements Cloneable,
-        SelectorContainer {
+public abstract class AbstractFileSet extends DataType
+    implements Cloneable, SelectorContainer {
 
     private PatternSet defaultPatterns = new PatternSet();
     private Vector additionalPatterns = new Vector();
@@ -127,10 +127,7 @@ public abstract class AbstractFileSet extends DataType implements Cloneable,
      * @return <code>File</code>.
      */
     public File getDir(Project p) {
-        if (isReference()) {
-            return getRef(p).getDir(p);
-        }
-        return dir;
+        return (isReference()) ? getRef(p).getDir(p) : dir;
     }
 
     /**
@@ -400,12 +397,10 @@ public abstract class AbstractFileSet extends DataType implements Cloneable,
         }
         Object o = getRefid().getReferencedObject(p);
         if (!getClass().isAssignableFrom(o.getClass())) {
-            String msg = getRefid().getRefId() + " doesn\'t denote a "
-                + getDataTypeName();
-            throw new BuildException(msg);
-        } else {
-            return (AbstractFileSet) o;
+            throw new BuildException(getRefid().getRefId()
+                + " doesn\'t denote a " + getDataTypeName());
         }
+        return (AbstractFileSet) o;
     }
 
     // SelectorContainer methods
@@ -416,10 +411,8 @@ public abstract class AbstractFileSet extends DataType implements Cloneable,
      * @return whether any selectors are in this container.
      */
     public boolean hasSelectors() {
-        if (isReference() && getProject() != null) {
-            return getRef(getProject()).hasSelectors();
-        }
-        return !(selectors.isEmpty());
+        return (isReference() && getProject() != null)
+            ? getRef(getProject()).hasSelectors() : !(selectors.isEmpty());
     }
 
     /**
@@ -450,10 +443,8 @@ public abstract class AbstractFileSet extends DataType implements Cloneable,
      * @return the number of selectors in this container as an <code>int</code>.
      */
     public int selectorCount() {
-        if (isReference() && getProject() != null) {
-            return getRef(getProject()).selectorCount();
-        }
-        return selectors.size();
+        return (isReference() && getProject() != null)
+            ? getRef(getProject()).selectorCount() : selectors.size();
     }
 
     /**
@@ -462,10 +453,8 @@ public abstract class AbstractFileSet extends DataType implements Cloneable,
      * @return a <code>FileSelector[]</code> of the selectors in this container.
      */
     public FileSelector[] getSelectors(Project p) {
-        if (isReference()) {
-            return getRef(p).getSelectors(p);
-        }
-        return (FileSelector[])(selectors.toArray(
+        return (isReference())
+            ? getRef(p).getSelectors(p) : (FileSelector[])(selectors.toArray(
             new FileSelector[selectors.size()]));
     }
 
@@ -475,10 +464,8 @@ public abstract class AbstractFileSet extends DataType implements Cloneable,
      * @return an <code>Enumeration</code> of selectors.
      */
     public Enumeration selectorElements() {
-        if (isReference() && getProject() != null) {
-            return getRef(getProject()).selectorElements();
-        }
-        return selectors.elements();
+        return (isReference() && getProject() != null)
+            ? getRef(getProject()).selectorElements() : selectors.elements();
     }
 
     /**
