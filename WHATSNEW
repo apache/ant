@@ -1,4 +1,17 @@
-Changes from Ant 1.3 to CVS Version
+Changes from Ant 1.4 to current CVS version
+===========================================
+
+Changes that could break older environments:
+--------------------------------------------
+
+Other changes:
+--------------
+
+Fixed bugs:
+-----------
+
+
+Changes from Ant 1.3 to Ant 1.4
 ===========================================
 
 Changes that could break older environments:
