@@ -140,6 +140,7 @@ public class Main {
             } else if (arg.equals("-quiet") || arg.equals("-q")) {
                 msgOutputLevel = Project.MSG_WARN;
             } else if (arg.equals("-verbose") || arg.equals("-v")) {
+                printVersion();
                 msgOutputLevel = Project.MSG_VERBOSE;
             } else if (arg.equals("-logfile") || arg.equals("-l")) {
                 try {
