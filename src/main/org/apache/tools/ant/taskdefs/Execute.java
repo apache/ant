@@ -575,7 +575,7 @@ public class Execute {
      */
     public static boolean isFailure(int exitValue) {
         if (Os.isFamily("openvms")) {
-            // odd exit value signals failure
+            // even exit value signals failure
             return (exitValue % 2) == 0;
         } else {
             // non zero exit value signals failure

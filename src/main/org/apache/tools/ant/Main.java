@@ -189,7 +189,7 @@ public class Main implements AntMain {
                 exitCode = 0;
             } catch (ExitStatusException ese) {
                 exitCode = ese.getStatus();
-                if (exitCode > 0) {
+                if (exitCode != 0) {
                     throw ese;
                 }
             }
