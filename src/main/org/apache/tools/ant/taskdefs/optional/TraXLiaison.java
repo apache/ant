@@ -63,6 +63,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.Vector;
+import java.util.Enumeration;
 import javax.xml.parsers.SAXParserFactory;
 import javax.xml.transform.ErrorListener;
 import javax.xml.transform.Source;
@@ -77,9 +78,11 @@ import javax.xml.transform.stream.StreamResult;
 import javax.xml.transform.stream.StreamSource;
 import javax.xml.transform.TransformerConfigurationException;
 import org.apache.tools.ant.BuildException;
-import org.apache.tools.ant.taskdefs.XSLTLiaison;
+import org.apache.tools.ant.taskdefs.XSLTLiaison2;
+import org.apache.tools.ant.taskdefs.XSLTProcess;
 import org.apache.tools.ant.taskdefs.XSLTLogger;
 import org.apache.tools.ant.taskdefs.XSLTLoggerAware;
+import org.apache.tools.ant.types.XMLCatalog;
 import org.apache.tools.ant.util.JAXPUtils;
 import org.xml.sax.EntityResolver;
 import org.xml.sax.InputSource;
@@ -93,7 +96,7 @@ import org.xml.sax.XMLReader;
  * @author <a href="mailto:sbailliez@apache.org">Stephane Bailliez</a>
  * @since Ant 1.3
  */
-public class TraXLiaison implements XSLTLiaison, ErrorListener, XSLTLoggerAware {
+public class TraXLiaison implements XSLTLiaison2, ErrorListener, XSLTLoggerAware {
 
     /**
      * the name of the factory implementation class to use
@@ -430,4 +433,40 @@ public class TraXLiaison implements XSLTLiaison, ErrorListener, XSLTLoggerAware 
         return JAXPUtils.getSystemId(file);
     }
 
-} //-- TraXLiaison
+
+    /**
+     * Specific configuration for the TRaX liaison.
+     * @param xsltTask the XSLTProcess task instance from which this liasion
+     *        is to be configured.
+     */
+    public void configure(XSLTProcess xsltTask) {
+        XSLTProcess.Factory factory = xsltTask.getFactory();
+        if (factory != null) {
+            setFactory(factory.getName());
+
+            // configure factory attributes
+            for (Enumeration attrs = factory.getAttributes();
+                    attrs.hasMoreElements();) {
+                XSLTProcess.Factory.Attribute attr =
+                        (XSLTProcess.Factory.Attribute) attrs.nextElement();
+                setAttribute(attr.getName(), attr.getValue());
+            }
+        }
+
+        XMLCatalog xmlCatalog = xsltTask.getXMLCatalog();
+        // use XMLCatalog as the entity resolver and URI resolver
+        if (xmlCatalog != null) {
+            setEntityResolver(xmlCatalog);
+            setURIResolver(xmlCatalog);
+        }
+
+
+        // configure output properties
+        for (Enumeration props = xsltTask.getOutputProperties();
+                props.hasMoreElements();) {
+            XSLTProcess.OutputProperty prop
+                = (XSLTProcess.OutputProperty) props.nextElement();
+            setOutputProperty(prop.getName(), prop.getValue());
+        }
+    }
+}

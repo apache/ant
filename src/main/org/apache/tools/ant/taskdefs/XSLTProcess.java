@@ -62,7 +62,6 @@ import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.DirectoryScanner;
 import org.apache.tools.ant.DynamicConfigurator;
 import org.apache.tools.ant.Project;
-import org.apache.tools.ant.taskdefs.optional.TraXLiaison;
 import org.apache.tools.ant.types.Path;
 import org.apache.tools.ant.types.Reference;
 import org.apache.tools.ant.types.XMLCatalog;
@@ -559,6 +558,29 @@ public class XSLTProcess extends MatchingTask implements XSLTLogger {
     }
 
     /**
+     * Get the factory instance configured for this processor
+     *
+     * @return the factory instance in use
+     */
+    public Factory getFactory() {
+        return factory;
+    }
+
+    /**
+     * Get the XML catalog containing entity definitions
+     *
+     * @return the XML catalog for the task.
+     */
+    public XMLCatalog getXMLCatalog() {
+        return xmlCatalog;
+    }
+
+    public Enumeration getOutputProperties() {
+        return outputProperties.elements();
+    }
+
+
+    /**
      * Get the Liason implementation to use in processing.
      *
      * @return an instance of the XSLTLiason interface.
@@ -793,45 +815,13 @@ public class XSLTProcess extends MatchingTask implements XSLTLogger {
                     liaison.addParam(p.getName(), p.getExpression());
                 }
             }
-            if (liaison instanceof TraXLiaison) {
-                configureTraXLiaison((TraXLiaison) liaison);
+            if (liaison instanceof XSLTLiaison2) {
+                ((XSLTLiaison2) liaison).configure(this);
             }
         } catch (Exception ex) {
-            log("Failed to transform using stylesheet " + stylesheet, Project.MSG_INFO);
+            log("Failed to transform using stylesheet " + stylesheet,
+                 Project.MSG_INFO);
             throw new BuildException(ex);
-        }
-    }
-
-    /**
-     * Specific configuration for the TRaX liaison. Support for
-     * all others has been dropped so this liaison will soon look
-     * like the exact copy of JAXP interface..
-     * @param liaison the TRaXLiaison to configure.
-     */
-    protected void configureTraXLiaison(TraXLiaison liaison) {
-        if (factory != null) {
-            liaison.setFactory(factory.getName());
-
-            // configure factory attributes
-            for (Enumeration attrs = factory.getAttributes();
-                    attrs.hasMoreElements();) {
-                Factory.Attribute attr =
-                        (Factory.Attribute) attrs.nextElement();
-                liaison.setAttribute(attr.getName(), attr.getValue());
-            }
-        }
-
-        // use XMLCatalog as the entity resolver and URI resolver
-        if (xmlCatalog != null) {
-            liaison.setEntityResolver(xmlCatalog);
-            liaison.setURIResolver(xmlCatalog);
-        }
-
-        // configure output properties
-        for (Enumeration props = outputProperties.elements();
-                props.hasMoreElements();) {
-            OutputProperty prop = (OutputProperty) props.nextElement();
-            liaison.setOutputProperty(prop.getName(), prop.getValue());
         }
     }
 
