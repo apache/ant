@@ -17,6 +17,7 @@ REM  limitations under the License.
 if exist "%HOME%\antrc_pre.bat" call "%HOME%\antrc_pre.bat"
 
 if "%OS%"=="Windows_NT" @setlocal
+if "%OS%"=="WINNT" @setlocal
 
 rem %~dp0 is expanded pathname of the current script under NT
 set DEFAULT_ANT_HOME=%~dp0..
@@ -100,6 +101,7 @@ set _JAVACMD=
 set ANT_CMD_LINE_ARGS=
 
 if "%OS%"=="Windows_NT" @endlocal
+if "%OS%"=="WINNT" @endlocal
 
 :mainEnd
 if exist "%HOME%\antrc_post.bat" call "%HOME%\antrc_post.bat"

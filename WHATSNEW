@@ -135,6 +135,10 @@ Fixed bugs:
 * oata.types.Description.getDescription(Project) would throw a
   NullPointerException when the "ant.targets" reference was unset.
 
+* Wrapper scripts did not detect WINNT value of dynamic OS environment
+  variable when logged into workstations using Novell authentication.
+  Bugzilla Report 30366.
+
 Changes from Ant 1.6.1 to Ant 1.6.2
 ===================================
 

@@ -18,6 +18,7 @@ REM
 REM
 
 if "%OS%"=="Windows_NT" @setlocal
+if "%OS%"=="WINNT" @setlocal
 
 if ""%1""=="""" goto runCommand
 
@@ -42,4 +43,5 @@ rem echo %ANT_RUN_CMD%
 %ANT_RUN_CMD%
 
 if "%OS%"=="Windows_NT" @endlocal
+if "%OS%"=="WINNT" @endlocal
 
