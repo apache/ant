@@ -201,6 +201,20 @@ public class DefaultProjectManager
         return entry;
     }
 
+    private Project getProject( final String name, final Project project )
+        throws TaskException
+    {
+        final Project other = project.getProject( name );
+        
+        if( null == other )
+        {
+            //TODO: Fix this so location information included in description
+            throw new TaskException( "Project '" + name + "' not found." );
+        }
+
+        return other;
+    }
+
     /**
      * Helper method to execute a target.
      *
@@ -215,6 +229,20 @@ public class DefaultProjectManager
                           final ProjectEntry entry )
         throws TaskException
     {
+        final int index = targetName.indexOf( "->" );
+        if( -1 != index )
+        {
+            final String name = targetName.substring( 0, index );
+            final String otherTargetName = targetName.substring( index + 2 );
+
+            final Project otherProject = getProject( name, project );
+            final ProjectEntry otherEntry = getProjectEntry( otherProject );
+
+            //Execute target in referenced project 
+            execute( otherProject, otherTargetName, otherEntry );
+            return;
+        }
+
         final Target target = project.getTarget( targetName );
         if( null == target )
         {
