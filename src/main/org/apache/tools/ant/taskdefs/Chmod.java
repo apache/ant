@@ -168,8 +168,9 @@ public class Chmod extends ExecuteOn {
 
     protected boolean isValidOs() {
         // XXX if OS=unix
-        return System.getProperty("path.separator").equals(":") &&
-            !System.getProperty("os.name").startsWith("Mac") && 
-            super.isValidOs();
+        return System.getProperty("path.separator").equals(":") 
+            && (!System.getProperty("os.name").startsWith("Mac") 
+                 || System.getProperty("os.name").endsWith("X"))
+            && super.isValidOs();
     }
 }
