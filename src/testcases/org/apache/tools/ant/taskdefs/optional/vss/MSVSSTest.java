@@ -71,7 +71,7 @@ import org.apache.tools.ant.types.Path;
  *
  * @author Jesse Stockall
  */
-public class MSVSSTest extends BuildFileTest {
+public class MSVSSTest extends BuildFileTest implements MSVSSConstants {
 
     private Project project;
     private Commandline commandline;
@@ -84,6 +84,7 @@ public class MSVSSTest extends BuildFileTest {
     private static final String LOCAL_PATH = "testdir";
     private static final String SRC_FILE = "Class1.java";
     private static final String SRC_LABEL = "label1";
+    private static final String LONG_LABEL = "123456789012345678901234567890";
     private static final String SRC_COMMENT = "I fixed a bug";
     private static final String VERSION = "007";
     private static final String DATE = "00-00-00";
@@ -107,7 +108,6 @@ public class MSVSSTest extends BuildFileTest {
      */
     protected void setUp()
         throws Exception {
-        ;
         project = new Project();
         project.setBasedir(".");
     }
@@ -131,7 +131,7 @@ public class MSVSSTest extends BuildFileTest {
                 MSVSS.FLAG_OVERRIDE_WORKING_DIR + project.getBaseDir().getAbsolutePath()
                  + File.separator + LOCAL_PATH, MSVSS.FLAG_AUTORESPONSE_DEF,
                 MSVSS.FLAG_RECURSION, MSVSS.FLAG_VERSION + VERSION, MSVSS.FLAG_LOGIN
-                 + VSS_USERNAME + "," + VSS_PASSWORD};
+                 + VSS_USERNAME + "," + VSS_PASSWORD, FLAG_FILETIME_UPDATED, FLAG_SKIP_WRITABLE};
 
         // Set up a VSSGet task
         MSVSSGET vssGet = new MSVSSGET();
@@ -144,6 +144,12 @@ public class MSVSSTest extends BuildFileTest {
         vssGet.setDate(DATE);
         vssGet.setLabel(SRC_LABEL);
         vssGet.setVsspath(VSS_PROJECT_PATH);
+        MSVSS.CurrentModUpdated cmu = new MSVSS.CurrentModUpdated();
+        cmu.setValue(TIME_UPDATED);
+        vssGet.setFileTimeStamp(cmu);
+        MSVSS.WritableFiles wf = new MSVSS.WritableFiles();
+        wf.setValue(WRITABLE_SKIP);
+        vssGet.setWritableFiles(wf);
 
         commandline = vssGet.buildCmdLine();
 
@@ -157,7 +163,7 @@ public class MSVSSTest extends BuildFileTest {
     }
 
     /**  Tests Label commandline generation.  */
-    public void testLabelCommandLine() {
+    public void testLabelCommandLine1() {
         String[] sTestCmdLine = {MSVSS.SS_EXE, MSVSS.COMMAND_LABEL, DS_VSS_PROJECT_PATH,
                 MSVSS.FLAG_COMMENT + SRC_COMMENT, MSVSS.FLAG_AUTORESPONSE_YES,
                 MSVSS.FLAG_LABEL + SRC_LABEL, MSVSS.FLAG_VERSION + VERSION, MSVSS.FLAG_LOGIN
@@ -178,6 +184,26 @@ public class MSVSSTest extends BuildFileTest {
         checkCommandLines(sTestCmdLine, commandline.getCommandline());
     }
 
+    /**  Tests Label commandline generation with a label of more than 31 chars.  */
+    public void testLabelCommandLine2() {
+        String[] sTestCmdLine = {MSVSS.SS_EXE, MSVSS.COMMAND_LABEL, DS_VSS_PROJECT_PATH,
+                MSVSS.FLAG_COMMENT + SRC_COMMENT, MSVSS.FLAG_AUTORESPONSE_DEF,
+                MSVSS.FLAG_LABEL + LONG_LABEL,
+                MSVSS.FLAG_LOGIN + VSS_USERNAME + "," + VSS_PASSWORD};
+
+        // Set up a VSSLabel task
+        MSVSSLABEL vssLabel = new MSVSSLABEL();
+        vssLabel.setProject(project);
+        vssLabel.setComment(SRC_COMMENT);
+        vssLabel.setLogin(VSS_USERNAME + "," + VSS_PASSWORD);
+        vssLabel.setLabel(LONG_LABEL + "blahblah");
+        vssLabel.setVsspath(VSS_PROJECT_PATH);
+
+        commandline = vssLabel.buildCmdLine();
+
+        checkCommandLines(sTestCmdLine, commandline.getCommandline());
+    }
+
     /**
      * Test VSSLabel required attributes.
      */
@@ -190,7 +216,7 @@ public class MSVSSTest extends BuildFileTest {
     /**  Tests VSSHistory commandline generation with from label.  */
     public void testHistoryCommandLine1() {
         String[] sTestCmdLine = {MSVSS.SS_EXE, MSVSS.COMMAND_HISTORY, DS_VSS_PROJECT_PATH,
-                MSVSS.FLAG_AUTORESPONSE_DEF, MSVSS.FLAG_VERSION_LABEL + SRC_LABEL
+                MSVSS.FLAG_AUTORESPONSE_DEF, MSVSS.FLAG_VERSION_LABEL + LONG_LABEL
                  + MSVSS.VALUE_FROMLABEL + SRC_LABEL, MSVSS.FLAG_LOGIN + VSS_USERNAME
                  + "," + VSS_PASSWORD, MSVSS.FLAG_OUTPUT + project.getBaseDir().getAbsolutePath()
                  + File.separator + OUTPUT};
@@ -202,7 +228,7 @@ public class MSVSSTest extends BuildFileTest {
         vssHistory.setLogin(VSS_USERNAME + "," + VSS_PASSWORD);
 
         vssHistory.setFromLabel(SRC_LABEL);
-        vssHistory.setToLabel(SRC_LABEL);
+        vssHistory.setToLabel(LONG_LABEL + "blahblah");
         vssHistory.setVsspath(VSS_PROJECT_PATH);
         vssHistory.setRecursive(false);
         vssHistory.setOutput(new File(project.getBaseDir().getAbsolutePath(), OUTPUT));
@@ -307,7 +333,8 @@ public class MSVSSTest extends BuildFileTest {
     public void testCheckoutCommandLine() {
         String[] sTestCmdLine = {SS_DIR + File.separator + MSVSS.SS_EXE, MSVSS.COMMAND_CHECKOUT,
                 DS_VSS_PROJECT_PATH, MSVSS.FLAG_AUTORESPONSE_DEF, MSVSS.FLAG_RECURSION,
-                MSVSS.FLAG_VERSION_DATE + DATE, MSVSS.FLAG_LOGIN + VSS_USERNAME};
+                MSVSS.FLAG_VERSION_DATE + DATE, MSVSS.FLAG_LOGIN + VSS_USERNAME,
+                FLAG_FILETIME_MODIFIED, FLAG_NO_GET};
 
         // Set up a VSSCheckOut task
         MSVSSCHECKOUT vssCheckout = new MSVSSCHECKOUT();
@@ -316,7 +343,12 @@ public class MSVSSTest extends BuildFileTest {
         vssCheckout.setVsspath(DS_VSS_PROJECT_PATH);
         vssCheckout.setRecursive(true);
         vssCheckout.setDate(DATE);
+        vssCheckout.setLabel(SRC_LABEL);
         vssCheckout.setSsdir(SS_DIR);
+        MSVSS.CurrentModUpdated cmu = new MSVSS.CurrentModUpdated();
+        cmu.setValue(TIME_MODIFIED);
+        vssCheckout.setFileTimeStamp(cmu);
+        vssCheckout.setGetLocalCopy(false);
 
         commandline = vssCheckout.buildCmdLine();
 
@@ -329,6 +361,7 @@ public class MSVSSTest extends BuildFileTest {
     public void testCheckoutExceptions() {
         configureProject("src/etc/testcases/taskdefs/optional/vss/vss.xml");
         expectSpecificBuildException("vsscheckout.1", "some cause", "vsspath attribute must be set!");
+        expectSpecificBuildException("vsscheckout.2", "some cause", "blah is not a legal value for this attribute");
     }
 
     /**  Tests Add commandline generation.  */
