@@ -314,7 +314,7 @@ public class ScriptDef extends DefBase {
         runner.addBean("attributes", attributes);
         runner.addBean("elements", elements);
         runner.addBean("project", getProject());
-        runner.executeScript("scriptdef <" + name + ">");
+        runner.executeScript("scriptdef_" + name);
     }
 
 

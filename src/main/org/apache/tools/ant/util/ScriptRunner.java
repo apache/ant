@@ -33,6 +33,19 @@ import java.util.Iterator;
  * @author Conor MacNeill
  */
 public class ScriptRunner {
+
+    // Register Groovy ourselves, since BSF does not
+    // natively support it (yet).
+    // This "hack" can be removed once BSF has been
+    // modified to support Groovy or more dynamic
+    // registration.
+    static {
+        BSFManager.registerScriptingEngine(
+            "groovy",
+            "org.codehaus.groovy.bsf.GroovyEngine",
+            new String[] {"groovy", "gy"});
+    }
+
     /** Script language */
     private String language;
 
