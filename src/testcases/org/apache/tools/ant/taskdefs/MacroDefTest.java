@@ -108,5 +108,25 @@ public class MacroDefTest extends BuildFileTest {
             "attribute.description",
             "description is hello world");
     }
+    public void testImplicit() {
+        expectLog(
+            "implicit", "Before implicitIn implicitAfter implicit");
+    }
+    public void testImplicitNotOptional() {
+        expectSpecificBuildException(
+            "implicit.notoptional",
+            "Missing nested elements for implicit element implicit",
+            "Missing nested elements for implicit element implicit");
+    }
+    public void testImplicitOptional() {
+        expectLog(
+            "implicit.optional", "Before implicitAfter implicit");
+    }
+    public void testImplicitExplicit() {
+        expectSpecificBuildException(
+            "implicit.explicit",
+            "Only one element allowed when using implicit elements",
+            "Only one element allowed when using implicit elements");
+    }
 }
 

@@ -168,4 +168,59 @@
     <d description="hello world"/>
   </target>
 
+  <target name="implicit">
+    <macrodef name="implicit">
+      <element name="implicit" implicit="yes"/>
+      <sequential>
+        <echo>Before implicit</echo>
+        <implicit/>
+        <echo>After implicit</echo>
+      </sequential>
+    </macrodef>
+
+    <implicit>
+      <echo>In implicit</echo>
+    </implicit>
+  </target>
+
+  <target name="implicit.notoptional">
+    <macrodef name="implicit">
+      <element name="implicit" implicit="yes"/>
+      <sequential>
+        <echo>Before implicit</echo>
+        <implicit/>
+        <echo>After implicit</echo>
+      </sequential>
+    </macrodef>
+
+    <implicit>
+    </implicit>
+  </target>
+
+  <target name="implicit.optional">
+    <macrodef name="implicit">
+      <element name="implicit" optional="yes" implicit="yes"/>
+      <sequential>
+        <echo>Before implicit</echo>
+        <implicit/>
+        <echo>After implicit</echo>
+      </sequential>
+    </macrodef>
+
+    <implicit>
+    </implicit>
+  </target>
+
+  <target name="implicit.explicit">
+    <macrodef name="implicit">
+      <element name="explicit" optional="yes"/>
+      <element name="implicit" optional="yes" implicit="yes"/>
+      <sequential>
+        <implicit/>
+        <explicit/>
+      </sequential>
+    </macrodef>
+
+  </target>
+
 </project>

@@ -414,7 +414,7 @@ public final class IntrospectionHelper implements BuildListener {
             return true;
         }
 
-        if  ("setTaskType".equals(name)
+        if ("setTaskType".equals(name)
              && java.lang.String.class.equals(type)) {
             return true;
         }
@@ -453,7 +453,8 @@ public final class IntrospectionHelper implements BuildListener {
      *
      * @return a helper for the specified class
      */
-    public static synchronized IntrospectionHelper getHelper(Project p, Class c) {
+    public static synchronized IntrospectionHelper getHelper(Project p, 
+                                                             Class c) {
         IntrospectionHelper ih = (IntrospectionHelper) helpers.get(c);
         if (ih == null) {
             ih = new IntrospectionHelper(c);
@@ -485,13 +486,30 @@ public final class IntrospectionHelper implements BuildListener {
     public void setAttribute(Project p, Object element, String attributeName,
                              String value) throws BuildException {
         AttributeSetter as
-            = (AttributeSetter) attributeSetters.get(attributeName);
+            = (AttributeSetter) attributeSetters.get(
+                attributeName.toLowerCase(Locale.US));
         if (as == null) {
-            if (element instanceof DynamicConfigurator) {
-                DynamicConfigurator dc = (DynamicConfigurator) element;
-                dc.setDynamicAttribute(attributeName, value);
+            if (element instanceof DynamicAttributeNS) {
+                DynamicAttributeNS dc = (DynamicAttributeNS) element;
+                String uriPlusPrefix =
+                    ProjectHelper.extractUriFromComponentName(attributeName);
+                String uri =
+                    ProjectHelper.extractUriFromComponentName(uriPlusPrefix);
+                String localName =
+                    ProjectHelper.extractNameFromComponentName(attributeName);
+                String qName = ("".equals(uri)
+                                ? localName : (uri + ":" + localName));
+
+                dc.setDynamicAttribute(uri, localName, qName, value);
+                return;
+            } else if (element instanceof DynamicAttribute) {
+                DynamicAttribute dc = (DynamicAttribute) element;
+                dc.setDynamicAttribute(attributeName.toLowerCase(Locale.US), value);
                 return;
             } else {
+                if (attributeName.indexOf(':') != -1) {
+                    return; // Ignore attribute from unknown uri's
+                }
                 String msg = getElementName(p, element)
                     + " doesn't support the \"" + attributeName
                     + "\" attribute.";
@@ -511,6 +529,7 @@ public final class IntrospectionHelper implements BuildListener {
             throw new BuildException(t);
         }
     }
+    
 
     /**
      * Adds PCDATA to an element, using the element's
@@ -573,7 +592,7 @@ public final class IntrospectionHelper implements BuildListener {
 
     private NestedCreator getNestedCreator(
         Project project, String parentUri, Object parent,
-        String elementName) throws BuildException {
+        String elementName, UnknownElement child) throws BuildException {
 
         String uri = ProjectHelper.extractUriFromComponentName(elementName);
         String name = ProjectHelper.extractNameFromComponentName(elementName);
@@ -592,8 +611,37 @@ public final class IntrospectionHelper implements BuildListener {
         if (nc == null) {
             nc = createAddTypeCreator(project, parent, elementName);
         }
-        if (nc == null && parent instanceof DynamicConfigurator) {
-            DynamicConfigurator dc = (DynamicConfigurator) parent;
+        if (nc == null && parent instanceof DynamicElementNS) {
+            DynamicElementNS dc = (DynamicElementNS) parent;
+            String qName = (child == null ? name : child.getQName());
+            final Object nestedElement =
+                dc.createDynamicElement(
+                    (child == null ? "" : child.getNamespace()),
+                    name, qName);
+            if (nestedElement != null) {
+                nc = new NestedCreator() {
+                    public boolean isPolyMorphic() {
+                        return false;
+                    }
+                    public Class getElementClass() {
+                        return null;
+                    }
+
+                    public Object getRealObject() {
+                        return null;
+                    }
+
+                    public Object create(
+                        Project project, Object parent, Object ignore) {
+                        return nestedElement;
+                    }
+                    public void store(Object parent, Object child) {
+                    }
+                };
+            }
+        }
+        if (nc == null && parent instanceof DynamicElement) {
+            DynamicElement dc = (DynamicElement) parent;
             final Object nestedElement =
                 dc.createDynamicElement(name.toLowerCase(Locale.US));
             if (nestedElement != null) {
@@ -648,7 +696,7 @@ public final class IntrospectionHelper implements BuildListener {
      */
     public Object createElement(Project project, Object parent,
         String elementName) throws BuildException {
-        NestedCreator nc = getNestedCreator(project, "", parent, elementName);
+        NestedCreator nc = getNestedCreator(project, "", parent, elementName, null);
         try {
             Object nestedElement = nc.create(project, parent, null);
             if (project != null) {
@@ -687,7 +735,7 @@ public final class IntrospectionHelper implements BuildListener {
         Project project, String parentUri, Object parent, String elementName,
         UnknownElement ue) {
         NestedCreator nc = getNestedCreator(
-            project, parentUri, parent, elementName);
+            project, parentUri, parent, elementName, ue);
         return new Creator(project, parent, nc);
     }
 
@@ -701,7 +749,8 @@ public final class IntrospectionHelper implements BuildListener {
      */
     public boolean supportsNestedElement(String elementName) {
         return nestedCreators.containsKey(elementName.toLowerCase(Locale.US))
-            || DynamicConfigurator.class.isAssignableFrom(bean)
+            || DynamicElement.class.isAssignableFrom(bean)
+            || DynamicElementNS.class.isAssignableFrom(bean)
             || addTypeMethods.size() != 0;
     }
 
@@ -727,7 +776,8 @@ public final class IntrospectionHelper implements BuildListener {
         return (
             nestedCreators.containsKey(name.toLowerCase(Locale.US))
             && (uri.equals(parentUri))) // || uri.equals("")))
-            || DynamicConfigurator.class.isAssignableFrom(bean)
+            || DynamicElement.class.isAssignableFrom(bean)
+            || DynamicElementNS.class.isAssignableFrom(bean)
             || addTypeMethods.size() != 0;
     }
 
@@ -1113,8 +1163,7 @@ public final class IntrospectionHelper implements BuildListener {
                 Class elementClass = nestedCreator.getElementClass();
                 ComponentHelper helper =
                     ComponentHelper.getComponentHelper(project);
-                nestedObject = ComponentHelper.getComponentHelper(project)
-                    .createComponent(polyType);
+                nestedObject = helper.createComponent(polyType);
                 if (nestedObject == null) {
                     throw new BuildException(
                         "Unable to create object of type " + polyType);

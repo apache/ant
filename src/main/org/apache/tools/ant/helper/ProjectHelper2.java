@@ -944,19 +944,22 @@ public class ProjectHelper2 extends ProjectHelper {
                 = new RuntimeConfigurable(task, task.getTaskName());
 
             for (int i = 0; i < attrs.getLength(); i++) {
+                String name = attrs.getLocalName(i);
                 String attrUri = attrs.getURI(i);
                 if (attrUri != null
                     && !attrUri.equals("")
                     && !attrUri.equals(uri)) {
-                    continue; // Ignore attributes from unknown uris
+                    name = attrUri + ":" + attrs.getQName(i);
                 }
-                String name = attrs.getLocalName(i);
                 String value = attrs.getValue(i);
                 // PR: Hack for ant-type value
                 //  an ant-type is a component name which can
                 // be namespaced, need to extract the name
                 // and convert from qualified name to uri/name
-                if (name.equals("ant-type")) {
+                if (ANT_TYPE.equals(name)
+                    || (ANT_CORE_URI.equals(attrUri)
+                        && ANT_TYPE.equals(attrs.getLocalName(i)))) {
+                    name = ANT_TYPE;
                     int index = value.indexOf(":");
                     if (index != -1) {
                         String prefix = value.substring(0, index);

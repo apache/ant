@@ -29,7 +29,7 @@ import java.util.Hashtable;
 import java.util.Enumeration;
 
 import org.apache.tools.ant.BuildException;
-import org.apache.tools.ant.DynamicConfigurator;
+import org.apache.tools.ant.DynamicAttribute;
 import org.apache.tools.ant.ProjectHelper;
 import org.apache.tools.ant.RuntimeConfigurable;
 import org.apache.tools.ant.Target;
@@ -44,13 +44,15 @@ import org.apache.tools.ant.UnknownElement;
  * the parameter values in attributes and text.
  * @since Ant 1.6
  */
-public class MacroInstance extends Task implements DynamicConfigurator {
+public class MacroInstance extends Task implements DynamicAttribute, TaskContainer {
     private MacroDef macroDef;
     private Map      map = new HashMap();
     private Map      nsElements = null;
     private Map      presentElements = new HashMap();
     private Hashtable localProperties = new Hashtable();
     private String    text = null;
+    private String    implicitTag =     null;
+    private List      unknownElements = new ArrayList();
 
     /**
      * Called from MacroDef.MyAntTypeDefinition#create()
@@ -79,22 +81,14 @@ public class MacroInstance extends Task implements DynamicConfigurator {
     }
 
     /**
-     * Add an element.
-     * @param name the name of the element
-     * @return an inner Element type
-     * @throws BuildException if the name is not known or if this element
-     *                        has already been seen
+     * Method present for BC purposes.
+     * @param name not used
+     * @return nothing
+     * @deprecated
+     * @throws BuildException always
      */
     public Object createDynamicElement(String name) throws BuildException {
-        if (getNsElements().get(name) == null) {
-            throw new BuildException("unsupported element " + name);
-        }
-        if (presentElements.get(name) != null) {
-            throw new BuildException("Element " + name + " already present");
-        }
-        Element ret = new Element();
-        presentElements.put(name, ret);
-        return ret;
+        throw new BuildException("Not implemented any more");
     }
 
     private Map getNsElements() {
@@ -105,9 +99,41 @@ public class MacroInstance extends Task implements DynamicConfigurator {
                 Map.Entry entry = (Map.Entry) i.next();
                 nsElements.put((String) entry.getKey(),
                                entry.getValue());
+                MacroDef.TemplateElement te = (MacroDef.TemplateElement)
+                    entry.getValue();
+                if (te.isImplicit()) {
+                    implicitTag = te.getName();
+                }
             }
         }
         return nsElements;
+    }
+
+    /**
+     * Add a unknownElement for the macro instances nested elements.
+     *
+     * @param nestedTask a nested element.
+     */
+    public void addTask(Task nestedTask) {
+        unknownElements.add(nestedTask);
+    }
+
+    private void processTasks() {
+        if (implicitTag != null) {
+            return;
+        }
+        for (Iterator i = unknownElements.iterator(); i.hasNext();) {
+            UnknownElement ue = (UnknownElement) i.next();
+            String name = ProjectHelper.extractNameFromComponentName(
+                ue.getTag()).toLowerCase(Locale.US);
+            if (getNsElements().get(name) == null) {
+                throw new BuildException("unsupported element " + name);
+            }
+            if (presentElements.get(name) != null) {
+                throw new BuildException("Element " + name + " already present");
+            }
+            presentElements.put(name, ue.getChildren());
+        }
     }
 
     /**
@@ -255,9 +281,21 @@ public class MacroInstance extends Task implements DynamicConfigurator {
                 UnknownElement child = copy(unknownElement);
                 rc.addChild(child.getWrapper());
                 ret.addChild(child);
+            } else if (templateElement.isImplicit()) {
+                if (unknownElements.size() == 0 && !templateElement.isOptional()) {
+                    throw new BuildException(
+                        "Missing nested elements for implicit element "
+                        + templateElement.getName());
+                }
+                for (Iterator i = unknownElements.iterator();
+                     i.hasNext();) {
+                    UnknownElement child = (UnknownElement) i.next();
+                    rc.addChild(child.getWrapper());
+                    ret.addChild(child);
+                }
             } else {
-                Element element = (Element) presentElements.get(tag);
-                if (element == null) {
+                List list = (List) presentElements.get(tag);
+                if (list == null) {
                     if (!templateElement.isOptional()) {
                         throw new BuildException(
                             "Required nested element "
@@ -265,7 +303,7 @@ public class MacroInstance extends Task implements DynamicConfigurator {
                     }
                     continue;
                 }
-                for (Iterator i = element.getUnknownElements().iterator();
+                for (Iterator i = list.iterator();
                      i.hasNext();) {
                     UnknownElement child = (UnknownElement) i.next();
                     rc.addChild(child.getWrapper());
@@ -283,6 +321,8 @@ public class MacroInstance extends Task implements DynamicConfigurator {
      *
      */
     public void execute() {
+        getNsElements();
+        processTasks();
         localProperties = new Hashtable();
         Set copyKeys = new HashSet(map.keySet());
         for (Iterator i = macroDef.getAttributes().iterator(); i.hasNext();) {
