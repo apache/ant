@@ -23,7 +23,7 @@
  *    Alternately, this acknowlegement may appear in the software itself,
  *    if and wherever such third-party acknowlegements normally appear.
  *
- * 4. The names "The Jakarta Project", "Tomcat", and "Apache Software
+ * 4. The names "The Jakarta Project", "Ant", and "Apache Software
  *    Foundation" must not be used to endorse or promote products derived
  *    from this software without prior written permission. For written 
  *    permission, please contact apache@apache.org.
@@ -59,7 +59,8 @@ import org.apache.tools.ant.DirectoryScanner;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.taskdefs.MatchingTask;
 import org.apache.tools.ant.types.Commandline;
-import org.apache.tools.ant.types.Commandline.Argument;
+import org.apache.tools.ant.types.Mapper;
+import org.apache.tools.ant.util.*;
 
 import java.io.File;
 
@@ -67,6 +68,7 @@ import java.io.File;
  * Convert files from native encodings to ascii.
  *
  * @author Drew Sudell <asudell@acm.org>
+ * @author <a href="mailto:stefan.bodewig@epost.de">Stefan Bodewig</a>
  */
 public class Native2Ascii extends MatchingTask {
 
@@ -76,6 +78,7 @@ public class Native2Ascii extends MatchingTask {
     private File destDir = null;      // Where to put output files
     private String extension = null;  // Extension of output files if different
 
+    private Mapper mapper;
 
     /**
      * Flag the conversion to run in the reverse sense,
@@ -128,6 +131,18 @@ public class Native2Ascii extends MatchingTask {
         this.extension = ext;
     }
 
+    /**
+     * Defines the FileNameMapper to use (nested mapper element).
+     */
+    public Mapper createMapper() throws BuildException {
+        if (mapper != null) {
+            throw new BuildException("Cannot define more than one mapper",
+                                     location);
+        }
+        mapper = new Mapper(project);
+        return mapper;
+    }
+
     public void execute() throws BuildException {
 
         Commandline baseCmd = null;      // the common portion of our cmd line
@@ -147,16 +162,35 @@ public class Native2Ascii extends MatchingTask {
         // if src and dest dirs are the same, require the extension
         // to be set, so we don't stomp every file.  One could still
         // include a file with the same extension, but ....
-        if (srcDir.equals(destDir) && (extension == null)){
-            throw new BuildException("The ext attribut must be set if"
+        if (srcDir.equals(destDir) && extension == null && mapper == null){
+            throw new BuildException("The ext attribute or a mapper must be set if"
                                      + " src and dest dirs are the same.");
         }
 
+        FileNameMapper m = null;
+        if (mapper == null) {
+            if (extension == null) {
+                m = new IdentityMapper();
+            } else {
+                m = new ExtMapper();
+            }
+        } else {
+            m = mapper.getImplementation();
+        }
+        
         scanner = getDirectoryScanner(srcDir);
-        log("Converting files from " + srcDir + " to " + destDir);
         files = scanner.getIncludedFiles();
+        SourceFileScanner sfs = new SourceFileScanner(this);
+        files = sfs.restrict(files, srcDir, destDir, m);
+        int count = files.length;
+        if (count == 0) {
+            return;
+        }
+        String message = "Converting "+ count + " file"
+            + (count != 1 ? "s" : "") + " from ";
+        log(message + srcDir + " to " + destDir);
         for (int i = 0; i < files.length; i++){
-            convert(files[i]);
+            convert(files[i], m.mapFileName(files[i])[0]);
         }
     }
 
@@ -165,7 +199,7 @@ public class Native2Ascii extends MatchingTask {
      *
      * @param fileName Name of the file to convert (relative to srcDir).
      */
-    private void convert(String fileName) throws BuildException {
+    private void convert(String srcName, String destName) throws BuildException {
 
         Commandline cmd = new Commandline();  // Command line to run
         File srcFile;                         // File to convert
@@ -182,49 +216,49 @@ public class Native2Ascii extends MatchingTask {
             cmd.createArgument().setValue(encoding);
         }
 
-        // Build the full file names, substuting the extension on the
-        // destination file if needed.
-        srcFile = new File(srcDir, fileName);
+        // Build the full file names
+        srcFile = new File(srcDir, srcName);
+        destFile = new File(destDir, destName);
 
-        if (extension != null){
-            destFile
-                = new File(destDir,
-                           fileName.substring(0, fileName.lastIndexOf('.'))
-                           + extension);
-        }else{
-            destFile = new File(destDir, fileName);
-        }
-        
         cmd.createArgument().setFile(srcFile);
         cmd.createArgument().setFile(destFile);
+        // Make sure we're not about to clobber something
+        if (srcFile.equals(destFile)){
+            throw new BuildException("file " + srcFile 
+                                     + " would overwrite its self");
+        }
 
-        // Only process if dest not newer than src
-        if (! destFile.exists()
-            || (destFile.lastModified() < srcFile.lastModified())){
-
-            // Make sure we're not about to clobber something
-            if (srcFile.equals(destFile)){
-                throw new BuildException("file " + srcFile 
-                                         + " would overwrite its self");
+        // Make intermediate directories if needed
+        // XXX JDK 1.1 dosen't have File.getParentFile,
+        String parentName = destFile.getParent();
+        if (parentName != null){
+            File parentFile = new File(parentName);
+            
+            if ((! parentFile.exists()) && ( ! parentFile.mkdirs())){
+                throw new BuildException("cannot create parent directory "
+                                         + parentName);
             }
-
-            // Make intermediate directories if needed
-            // XXX JDK 1.1 dosen't have File.getParentFile,
-            String parentName = destFile.getParent();
-            if (parentName != null){
-                File parentFile = new File(parentName);
-             
-                if ((! parentFile.exists()) && ( ! parentFile.mkdirs())){
-                    throw new BuildException("cannot create parent directory "
-                                             + parentName);
-                }
-            }
+        }
                         
-            log("converting " + fileName, Project.MSG_VERBOSE);
-            sun.tools.native2ascii.Main n2a
-                = new sun.tools.native2ascii.Main();
-            if(! n2a.convert(cmd.getArguments())){
-                throw new BuildException("conversion failed");
+        log("converting " + srcName, Project.MSG_VERBOSE);
+        sun.tools.native2ascii.Main n2a
+            = new sun.tools.native2ascii.Main();
+        if(! n2a.convert(cmd.getArguments())){
+            throw new BuildException("conversion failed");
+        }
+    }
+
+    private class ExtMapper implements FileNameMapper {
+
+        public void setFrom(String s) {}
+        public void setTo(String s) {}
+
+        public String[] mapFileName(String fileName) {
+            int lastDot = fileName.lastIndexOf('.');
+            if (lastDot >= 0) {
+                return new String[] {fileName.substring(0, lastDot) + extension};
+            } else {
+                return new String[] {fileName + extension};
             }
         }
     }
