@@ -10,7 +10,7 @@
 <h2><a name="script">Script</a></h2>
 <h3>Description</h3>
 <p>Execute a script in a 
-  <a href="http://www-124.ibm.com/developerworks/projects/bsf" target="_top">BSF</a> supported language.</p>
+  <a href="http://jakarta.apache.org/bsf" target="_top">Apache BSF</a> supported language.</p>
 <p><b>Note:</b> This task depends on external libraries not included in the Ant distribution.
 See <a href="../install.html#librarydependencies">Library Dependencies</a> for more information.</p>
 <p>All items (tasks, targets, etc) of the running project are
@@ -19,10 +19,6 @@ accessible from the script, using either their <code>name</code> or
 valid Java identifiers, that is). 
 The name "project" is a pre-defined reference to the Project, which can be
 used instead of the project name.</p>
-<p><b>BeanShell users:</b> This task now natively supports the BeanShell
-scripting language, using language="beanshell". The BeanShell engine is
-still required.
-</p>
 <p>Scripts can do almost anything a task written in Java could do.</p>
 <h3>Parameters</h3>
 <table border="1" cellpadding="2" cellspacing="0">
@@ -34,7 +30,7 @@ still required.
   <tr>
     <td valign="top">language</td>
     <td valign="top">The programming language the script is written in.
-      Must be a supported BSF language</td>
+      Must be a supported Apache BSF language</td>
     <td valign="top" align="center">Yes</td>
   </tr>
   <tr>

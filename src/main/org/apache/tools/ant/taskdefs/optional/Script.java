@@ -53,13 +53,13 @@
  */
 package org.apache.tools.ant.taskdefs.optional;
 
-import com.ibm.bsf.BSFException;
-import com.ibm.bsf.BSFManager;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.Enumeration;
 import java.util.Hashtable;
+import org.apache.bsf.BSFException;
+import org.apache.bsf.BSFManager;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Task;
 
@@ -73,16 +73,6 @@ public class Script extends Task {
     private String language;
     private String script = "";
     private Hashtable beans = new Hashtable();
-
-    // Register BeanShell ourselves, since BSF does not
-    // natively support it (yet).
-    // This "hack" can be removed once BSF has been
-    // modified to support BeanShell or more dynamic
-    // registration.
-    static {
-        BSFManager.registerScriptingEngine( "beanshell",
-            "bsh.util.BeanShellBSFEngine", new String [] { "bsh" } );
-    }
 
     /**
      * Add a list of named objects to the list to be exported to the script
@@ -99,7 +89,7 @@ public class Script extends Task {
             }
 
             if (isValid) {
-              beans.put(key, dictionary.get(key));
+                beans.put(key, dictionary.get(key));
             }
         }
     }

@@ -319,7 +319,7 @@
     <available property="jdk1.4+" classname="java.lang.CharSequence"/>
     <available property="kaffe" classname="kaffe.util.NotImplemented"/>
     <available property="bsf.present"
-               classname="com.ibm.bsf.BSFManager"
+               classname="org.apache.bsf.BSFManager"
                classpathref="classpath"/>
     <condition property="netrexx.present">
       <and>
@@ -840,7 +840,7 @@
       <selector refid="needs.commons.logging"/>
     </jar>
 
-    <jar destfile="${build.lib}/${optional.jars.prefix}-bsf.jar"
+    <jar destfile="${build.lib}/${optional.jars.prefix}-apache-bsf.jar"
          basedir="${build.classes}"
          manifest="${manifest.tmp}">
       <selector refid="needs.bsf"/>
