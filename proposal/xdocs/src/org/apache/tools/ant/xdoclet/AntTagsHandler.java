@@ -1,0 +1,306 @@
+/*
+ * The Apache Software License, Version 1.1
+ *
+ * Copyright (c) 2002 The Apache Software Foundation.  All rights
+ * reserved.
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions
+ * are met:
+ *
+ * 1. Redistributions of source code must retain the above copyright
+ *    notice, this list of conditions and the following disclaimer.
+ *
+ * 2. Redistributions in binary form must reproduce the above copyright
+ *    notice, this list of conditions and the following disclaimer in
+ *    the documentation and/or other materials provided with the
+ *    distribution.
+ *
+ * 3. The end-user documentation included with the redistribution, if
+ *    any, must include the following acknowlegement:
+ *       "This product includes software developed by the
+ *        Apache Software Foundation (http://www.apache.org/)."
+ *    Alternately, this acknowlegement may appear in the software itself,
+ *    if and wherever such third-party acknowlegements normally appear.
+ *
+ * 4. The names "The Jakarta Project", "Ant", and "Apache Software
+ *    Foundation" must not be used to endorse or promote products derived
+ *    from this software without prior written permission. For written
+ *    permission, please contact apache@apache.org.
+ *
+ * 5. Products derived from this software may not be called "Apache"
+ *    nor may "Apache" appear in their names without prior written
+ *    permission of the Apache Group.
+ *
+ * THIS SOFTWARE IS PROVIDED ``AS IS'' AND ANY EXPRESSED OR IMPLIED
+ * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
+ * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+ * DISCLAIMED.  IN NO EVENT SHALL THE APACHE SOFTWARE FOUNDATION OR
+ * ITS CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+ * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+ * LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF
+ * USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
+ * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
+ * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT
+ * OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
+ * SUCH DAMAGE.
+ * ====================================================================
+ *
+ * This software consists of voluntary contributions made by many
+ * individuals on behalf of the Apache Software Foundation.  For more
+ * information on the Apache Software Foundation, please see
+ * <http://www.apache.org/>.
+ */
+package org.apache.tools.ant.xdoclet;
+
+import com.sun.javadoc.ClassDoc;
+import com.sun.javadoc.MethodDoc;
+import xdoclet.XDocletException;
+import xdoclet.XDocletTagSupport;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Properties;
+
+/**
+ * Custom tag handler for XDoclet templates for Ant-specific processing.
+ *
+ * @author     Erik Hatcher
+ * @created    February 17, 2002
+ *
+ * @todo clean up logic so that all setters are gathered first (even
+ * superclass) and sorted along wih them
+ * @todo need to create better logic for finding proper setters
+ * @todo add ifIsAntTask, among other convenience tags
+ */
+public class AntTagsHandler extends XDocletTagSupport {
+
+    /**
+     * Iterates over all Ant attributes.
+     *
+     *@param  template              XDoclet template
+     *@param  attributes            Tag parameters
+     *@exception  XDocletException  Oops!
+     */
+    public void forAllAttributes(String template, Properties attributes) throws XDocletException {
+        // throw exception if not an Ant task
+
+        ClassDoc cur_class = getCurrentClass();
+
+        MethodDoc[] methods = getAttributeMethods(cur_class);
+
+        for (int i = 0; i < methods.length; i++) {
+            setCurrentMethod(methods[i]);
+            generate(template);
+        }
+    }
+
+    /**
+     *  Iterates over all Ant nested element methods (addXXX, addConfiguredXXX, addXXX)
+     *
+     *@param  template              XDoclet template
+     *@param  attributes            Tag parameters
+     *@exception  XDocletException  Oops!
+     */
+    public void forAllElements(String template, Properties attributes) throws XDocletException {
+        // throw exception if not an Ant task
+
+        ClassDoc cur_class = getCurrentClass();
+
+        MethodDoc[] methods = getElementMethods(cur_class);
+
+        for (int i = 0; i < methods.length; i++) {
+            setCurrentMethod(methods[i]);
+            generate(template);
+        }
+    }
+
+    /**
+     * Provides the element name for the current method
+     */
+    public String elementName() throws XDocletException {
+        String methodName = getCurrentMethod().name();
+        System.out.println(">>>> " + methodName);
+        String elementName = "<not a valid element>";
+        if (methodName.startsWith("addConfigured")) {
+            elementName = methodName.substring(13,methodName.length());
+        } else if (methodName.startsWith("add")) {
+            elementName = methodName.substring(3,methodName.length());
+        } else if (methodName.startsWith("create")) {
+            elementName = methodName.substring(6,methodName.length());
+        }
+        System.out.println("        = " + elementName);
+        return elementName.toLowerCase();
+    }
+
+
+    /**
+     * Provides the Ant task name.
+     *
+     * @see getTaskName
+     */
+    public String taskName() throws XDocletException {
+        return getTaskName(getCurrentClass());
+    }
+
+    /**
+     * Provides the Ant task name.
+     *
+     * Order of rules:
+     * <ol>
+     *   <li>Value of @ant:task name="..."</li>
+     *   <li>Lowercased classname with "Task" suffix removed</li>
+     * </ol>
+     */
+    public static final String getTaskName(ClassDoc clazz) throws XDocletException {
+        // sheesh!  There should be a friendlier method than this!
+        String tagValue = getTagValue(clazz, "ant:task", "name", -1,
+                null, null, null, null,
+                null, false, XDocletTagSupport.FOR_CLASS, false);
+
+        if (tagValue == null) {
+            // use classname, but strip "Task" suffix if there
+            tagValue = clazz.name();
+
+            if (tagValue.endsWith("Task")) {
+                tagValue = tagValue.substring(0, tagValue.indexOf("Task"));
+            }
+
+            tagValue = tagValue.toLowerCase();
+        }
+        return tagValue;
+    }
+
+
+    /**
+     * Returns true if the method corresponds to an Ant task attribute using
+     * the rules from IntrospectionHelper
+     *
+     * @todo filter out deprecated methods
+     *       only filter org.apache.tools.ant.Task setters that are hidden
+     *       check that it returns void and only has single argument
+     *       incorporate rules for argument types from IntrospectionHelper
+     *           - i.e. not an array
+     *           - primitives/wrappers
+     *           - File
+     *           - Path
+     *           - EnumeratedAttribute
+     *           - Class with string constructor
+     */
+    private boolean isAntAttribute(MethodDoc method) {
+        String[] excludeList = new String[]{"setLocation", "setDescription", "setOwningTarget", "setRuntimeConfigurableWrapper",
+                                            "setTaskName", "setTaskType", "setProject"};
+        for (int i = 0; i < excludeList.length; i++) {
+            if (excludeList[i].equals(method.name())) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    /**
+     * @todo need to add checks for number of parameters and non-supported parameters
+     */
+    private MethodDoc[] getAttributeMethods(ClassDoc cur_class) throws XDocletException {
+        MethodDoc[] methods = getMethods(cur_class);
+        List attributeMethods = new ArrayList();
+
+        for (int i = 0; i < methods.length; i++) {
+            if (!methods[i].name().startsWith("set")) {
+                continue;
+            }
+
+            // if superclass is org.apache.tools.ant.Task then
+            // remove some known unallowed properties
+            if (isAntAttribute(methods[i])) {
+                continue;
+            }
+
+            attributeMethods.add(methods[i]);
+        }
+
+        return (MethodDoc[]) attributeMethods.toArray(new MethodDoc[0]);
+    }
+
+    /**
+     * @todo add checks for number parameters and appropriate return value
+     *       check for proper exception too?
+     *       method prefixes: add, create, addConfigured (but not addText)
+     */
+    private MethodDoc[] getElementMethods(ClassDoc cur_class) throws XDocletException {
+        MethodDoc[] methods = getMethods(cur_class);
+        List attributeMethods = new ArrayList();
+
+        for (int i = 0; i < methods.length; i++) {
+            String name = methods[i].name();
+
+            if ((name.startsWith("add") && !name.equals("addTask")) ||
+                    name.startsWith("create")) {
+                attributeMethods.add(methods[i]);
+            }
+
+        }
+
+        return (MethodDoc[]) attributeMethods.toArray(new MethodDoc[0]);
+    }
+
+
+    /**
+     * This is a slightly refactored (thank you IntelliJ) version of
+     * some cut-and-paste from XDoclet code.  It sorts all methods together
+     * rather than in batches of superclasses like XDoclet stuff does.
+     */
+    private MethodDoc[] getMethods(ClassDoc cur_class) throws XDocletException {
+        Map already = new HashMap();
+
+        List methods = new ArrayList();
+
+        while (cur_class != null) {
+            List curMethods = Arrays.asList(cur_class.methods());
+
+            for (int j = 0; j < curMethods.size(); j++) {
+                MethodDoc method = (MethodDoc) curMethods.get(j);
+                if (method.containingClass() == cur_class) {
+                    if (already.containsKey(method) == false) {
+                        already.put(method, method);
+                        methods.add(method);
+                    }
+                }
+            }
+
+            cur_class = cur_class.superclass();
+        }
+
+        return sortMethods(methods);
+    }
+
+    private MethodDoc[] sortMethods(List methods) {
+        //sort methods
+        Collections.sort(methods,
+                new Comparator() {
+                    public int compare(Object o1, Object o2) {
+                        MethodDoc m1 = (MethodDoc) o1;
+                        MethodDoc m2 = (MethodDoc) o2;
+
+                        return m1.name().compareTo(m2.name());
+                    }
+
+
+                    public boolean equals(Object obj) {
+                        //dumb
+                        return obj == this;
+                    }
+                });
+
+        return (MethodDoc[]) methods.toArray(new MethodDoc[0]);
+    }
+
+
+}
+
