@@ -39,6 +39,10 @@ Changes that could break older environments:
   defined in the project.  If you rely on the task waiting for input,
   don't use the addproperty attribute.
 
+* The Class-Path attribute in manifests will no longer merge the
+  entries of all manifests found, but will be treated like all other
+  manifest attributes - the most recent attribute(s) will be used.
+
 Fixed bugs:
 -----------
 * Filter readers were not handling line endings properly.  Bugzilla
@@ -181,6 +185,9 @@ Fixed bugs:
 
 * Nested websphere element for ejbjar does not support spaces in file name.
   Bugzilla Report 21298
+
+* Don't multiply Class-Path attributes when updating jars.  Bugzilla
+  Report 21170.
 
 Other changes:
 --------------

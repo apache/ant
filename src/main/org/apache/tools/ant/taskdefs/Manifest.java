@@ -459,21 +459,29 @@ public class Manifest {
             }
 
             Enumeration e = section.getAttributeKeys();
+            Attribute classpathAttribute = null;
             while (e.hasMoreElements()) {
                 String attributeName = (String) e.nextElement();
                 Attribute attribute = section.getAttribute(attributeName);
-                if (attributeName.equals(ATTRIBUTE_CLASSPATH) &&
-                        attributes.containsKey(attributeName)) {
-                    Attribute ourClassPath = getAttribute(attributeName);
+                if (attributeName.equals(ATTRIBUTE_CLASSPATH)) {
+                    if (classpathAttribute == null) {
+                        classpathAttribute = new Attribute();
+                        classpathAttribute.setName(ATTRIBUTE_CLASSPATH);
+                    }
                     Enumeration cpe = attribute.getValues();
                     while (cpe.hasMoreElements()) {
                         String value = (String) cpe.nextElement();
-                        ourClassPath.addValue(value);
+                        classpathAttribute.addValue(value);
                     }
                 } else {
                     // the merge file always wins
                     storeAttribute(attribute);
                 }
+            }
+
+            if (classpathAttribute != null) {
+                // the merge file *always* wins, even for Class-Path
+                storeAttribute(classpathAttribute);
             }
 
             // add in the warnings
