@@ -58,7 +58,6 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Enumeration;
 import java.util.Hashtable;
-import java.util.Properties;
 
 /**
  * A class used to parse the output of the CVS log command.
