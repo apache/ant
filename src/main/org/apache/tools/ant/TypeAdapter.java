@@ -98,7 +98,7 @@ public interface TypeAdapter {
      * Check if the proxy class is compatible with this adapter - i.e.
      * the adapter will be able to adapt instances of the give class.
      *
-     * @patam proxyClass the class to be checked.
+     * @param proxyClass the class to be checked.
      */
     void checkProxyClass(Class proxyClass);
 }
