@@ -99,7 +99,7 @@ public class ProjectHelper {
      * implementations.
      */
     public static final String SERVICE_ID =
-        "/META-INF/services/org.apache.tools.ant.ProjectHelper";
+        "META-INF/services/org.apache.tools.ant.ProjectHelper";
 
     /**
      * Configures the project with the contents of the specified XML file.
