@@ -79,6 +79,8 @@ import java.util.Properties;
 import java.util.Random;
 import java.util.Vector;
 
+import java.net.URL;
+
 /**
  * Ant task to run JUnit tests.
  *
@@ -278,6 +280,17 @@ public class JUnitTask extends Task {
      */
     public JUnitTask() throws Exception {
         commandline.setClassname("org.apache.tools.ant.taskdefs.optional.junit.JUnitTestRunner");
+    }
+
+    /**
+     * Adds the jars or directories containing Ant, this task and
+     * JUnit to the classpath - this should make the forked JVM work
+     * without having to specify the directly.
+     */
+    public void init() {
+        addClasspathEntry("/junit/framework/TestCase.class");
+        addClasspathEntry("/org/apache/tools/ant/Task.class");
+        addClasspathEntry("/org/apache/tools/ant/taskdefs/optional/junit/JUnitTestRunner.class");
     }
 
     /**
@@ -521,6 +534,38 @@ public class JUnitTask extends Task {
             return project.resolveFile(absFilename);
         }
         return null;
+    }
+
+    /**
+     * Search for the given resource and add the directory or archive
+     * that contains it to the classpath.
+     *
+     * <p>Doesn't work for archives in JDK 1.1 as the URL returned by
+     * getResource doesn't contain the name of the archive.</p>
+     */
+    protected void addClasspathEntry(String resource) {
+        URL url = getClass().getResource(resource);
+        if (url != null) {
+            String u = url.toString();
+            if (u.startsWith("jar:file:")) {
+                int pling = u.indexOf("!");
+                String jarName = u.substring(9, pling);
+                log("Implicitly adding "+jarName+" to classpath", 
+                    Project.MSG_DEBUG);
+                createClasspath().setLocation(new File((new File(jarName)).getAbsolutePath()));
+            } else if (u.startsWith("file:")) {
+                int tail = u.indexOf(resource);
+                String dirName = u.substring(5, tail);
+                log("Implicitly adding "+dirName+" to classpath", 
+                    Project.MSG_DEBUG);
+                createClasspath().setLocation(new File((new File(dirName)).getAbsolutePath()));
+            } else {
+                log("Don\'t know how to handle resource URL "+u, 
+                    Project.MSG_DEBUG);
+            }
+        } else {
+            log("Couldn\'t find "+resource, Project.MSG_DEBUG);
+        }
     }
 
 }

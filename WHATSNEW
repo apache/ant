@@ -166,6 +166,9 @@ Fixed bugs:
 
 * <ftp> closes remote connection when it's done.
 
+* <junit> tries to include all necessary classes for the task itself
+  to the classpath when running in fork mode - doesn't work for JDK 1.1
+
 Changes from Ant 1.2 to Ant 1.3
 ===========================================
 

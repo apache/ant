@@ -711,13 +711,4 @@
     <antcall target="dist-lite"/>
   </target>
   
-  <!--
-       =================================================================== 
-         Creates the Ant website
-       =================================================================== 
-  -->
-  <target name="website"
-          description="--> creates the Ant website">
-    <ant dir="webpage" target="docs" />
-  </target>
 </project>
