@@ -80,6 +80,13 @@ public class ExecuteOn extends ExecTask {
     }
 
     /**
+     * Adds a reference to a set of files (nested filesetref element).
+     */
+    public void addFilesetref(Reference ref) {
+        filesets.addElement(ref);
+    }
+
+    /**
      * Shall the command work on all specified files in parallel?
      */
     public void setParallel(boolean parallel) {
@@ -98,7 +105,22 @@ public class ExecuteOn extends ExecTask {
 
             Vector v = new Vector();
             for (int i=0; i<filesets.size(); i++) {
-                FileSet fs = (FileSet) filesets.elementAt(i);
+
+                Object o = filesets.elementAt(i);
+                FileSet fs = null;
+                if (o instanceof FileSet) {
+                    fs = (FileSet) o;
+                } else {
+                    Reference r = (Reference) o;
+                    o = r.getReferencedObject(project);
+                    if (o instanceof FileSet) {
+                        fs = (FileSet) o;
+                    } else {
+                        String msg = r.getRefId()+" doesn\'t denote a fileset";
+                        throw new BuildException(msg, location);
+                    }
+                }
+                
                 DirectoryScanner ds = fs.getDirectoryScanner(project);
                 String[] s = ds.getIncludedFiles();
                 for (int j=0; j<s.length; j++) {
