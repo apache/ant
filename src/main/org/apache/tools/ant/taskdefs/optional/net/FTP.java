@@ -379,8 +379,6 @@ public class FTP
      * @since ant 1.6
      */
     private boolean isFunctioningAsFile(FTPClient ftp, String dir, FTPFile file) {
-        String testDirectory =  dir + remoteFileSep + file.getName();
-        System.out.println("checking dir entry " + testDirectory);
         if (file.isDirectory()) {
             return false;
         } else if (file.isFile()) {
