@@ -1572,6 +1572,8 @@
           IllegalAccessExceptions otherwise.  -->
           <exclude name="${ant.package}/taskdefs/SQLExecTest.java"
                    unless="tests.and.ant.share.classloader"/>
+          <exclude name="${ant.package}/taskdefs/cvslib/ChangeLogWriterTest.java"
+                   unless="tests.and.ant.share.classloader"/>
           <exclude name="${optional.package}/sos/SOSTest.java"
                    unless="tests.and.ant.share.classloader"/>
           <exclude name="${optional.package}/vss/MSVSSTest.java"
