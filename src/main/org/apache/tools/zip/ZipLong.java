@@ -29,6 +29,7 @@ public final class ZipLong implements Cloneable {
 
     /**
      * Create instance from a number.
+     * @param value the long to store as a ZipLong
      * @since 1.1
      */
     public ZipLong(long value) {
@@ -37,6 +38,7 @@ public final class ZipLong implements Cloneable {
 
     /**
      * Create instance from bytes.
+     * @param bytes the bytes to store as a ZipLong
      * @since 1.1
      */
     public ZipLong (byte[] bytes) {
@@ -45,6 +47,8 @@ public final class ZipLong implements Cloneable {
 
     /**
      * Create instance from the four bytes starting at offset.
+     * @param bytes the bytes to store as a ZipLong
+     * @param offset the offset to start
      * @since 1.1
      */
     public ZipLong (byte[] bytes, int offset) {
@@ -54,14 +58,16 @@ public final class ZipLong implements Cloneable {
     /**
      * Get value as four bytes in big endian byte order.
      * @since 1.1
+     * @return value as four bytes in big endian order
      */
     public byte[] getBytes() {
         return ZipLong.getBytes(value);
     }
 
     /**
-     * Get value as Java int.
+     * Get value as Java long.
      * @since 1.1
+     * @return value as a long
      */
     public long getValue() {
         return value;
@@ -82,10 +88,10 @@ public final class ZipLong implements Cloneable {
     }
 
     /**
-     * Helper method to get the value as a java long from four bytes starting at given array offset
+     * Helper method to get the value as a Java long from four bytes starting at given array offset
      * @param bytes the array of bytes
      * @param offset the offset to start
-     * @return the correspondanding java int value
+     * @return the correspondanding Java long value
      */
     public static long getValue(byte[] bytes, int offset){
         long value = (bytes[offset + 3] << 24) & 0xFF000000L;
@@ -96,9 +102,9 @@ public final class ZipLong implements Cloneable {
     }
 
     /**
-     * Helper method to get the value as a java long from a four-byte array
+     * Helper method to get the value as a Java long from a four-byte array
      * @param bytes the array of bytes
-     * @return the correspondanding java long value
+     * @return the correspondanding Java long value
      */
     public static long getValue(byte[] bytes){
         return getValue(bytes, 0);
@@ -106,7 +112,7 @@ public final class ZipLong implements Cloneable {
 
     /**
      * Override to make two instances with same value equal.
-     *
+     * @param o an object to compare
      * @since 1.1
      */
     public boolean equals(Object o) {
@@ -118,7 +124,7 @@ public final class ZipLong implements Cloneable {
 
     /**
      * Override to make two instances with same value equal.
-     *
+     * @return the value stored in the ZipLong
      * @since 1.1
      */
     public int hashCode() {

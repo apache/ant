@@ -29,7 +29,7 @@ public final class ZipShort implements Cloneable {
 
     /**
      * Create instance from a number.
-     *
+     * @param value the int to store as a ZipShort
      * @since 1.1
      */
     public ZipShort (int value) {
@@ -38,6 +38,7 @@ public final class ZipShort implements Cloneable {
 
     /**
      * Create instance from bytes.
+     * @param bytes the bytes to store as a ZipShort
      * @since 1.1
      */
     public ZipShort (byte[] bytes) {
@@ -46,6 +47,8 @@ public final class ZipShort implements Cloneable {
 
     /**
      * Create instance from the two bytes starting at offset.
+     * @param bytes the bytes to store as a ZipShort
+     * @param offset the offset to start
      * @since 1.1
      */
     public ZipShort (byte[] bytes, int offset) {
@@ -54,6 +57,7 @@ public final class ZipShort implements Cloneable {
 
     /**
      * Get value as two bytes in big endian byte order.
+     * @return the value as a a two byte array in big endian byte order
      * @since 1.1
      */
     public byte[] getBytes() {
@@ -65,6 +69,7 @@ public final class ZipShort implements Cloneable {
 
     /**
      * Get value as Java int.
+     * @return value as a Java int
      * @since 1.1
      */
     public int getValue() {
@@ -73,6 +78,8 @@ public final class ZipShort implements Cloneable {
 
     /**
      * Get value as two bytes in big endian byte order.
+     * @param value the Java int to convert to bytes
+     * @return the converted int as a byte array in big endian byte order
      */
     public static byte[] getBytes(int value){
         byte[] result = new byte[2];
@@ -104,7 +111,7 @@ public final class ZipShort implements Cloneable {
 
     /**
      * Override to make two instances with same value equal.
-     *
+     * @param o an object to compare
      * @since 1.1
      */
     public boolean equals(Object o) {
@@ -116,7 +123,7 @@ public final class ZipShort implements Cloneable {
 
     /**
      * Override to make two instances with same value equal.
-     *
+     * @return the value stored in the ZipShort
      * @since 1.1
      */
     public int hashCode() {
