@@ -920,6 +920,11 @@ public class FileUtils {
         try {
             path = normalize(path).getAbsolutePath();
             sb.append("//");
+            // add an extra slash for filesystems with drive-specifiers
+            if (!path.startsWith("/")) {
+                sb.append("/");
+            }
+            
         } catch (BuildException e) {
             // relative path
         }
@@ -960,6 +965,11 @@ public class FileUtils {
         }
 
         uri = uri.replace('/', File.separatorChar);
+        if (Os.isFamily("dos") && uri.startsWith("\\") && uri.length() > 2
+            && Character.isLetter(uri.charAt(1)) && uri.charAt(2) == ':') {
+            uri = uri.substring(1);
+        }
+
         StringBuffer sb = new StringBuffer();
         CharacterIterator iter = new StringCharacterIterator(uri);
         for (char c = iter.first(); c != CharacterIterator.DONE; 

@@ -76,9 +76,11 @@ import org.xml.sax.XMLReader;
 public class JAXPUtils {
 
     /**
-     * The file protocol: 'file://'
+     * Helper for systemId.
+     *
+     * @since Ant 1.6
      */
-    private static final String FILE_PROTOCOL_PREFIX = "file://";
+    private static final FileUtils fu = FileUtils.newFileUtils();
 
     /**
      * Parser factory to use to create parsers.
@@ -163,15 +165,7 @@ public class JAXPUtils {
      * @since Ant 1.5.2
      */
     public static String getSystemId(File file){
-        String path = file.getAbsolutePath();
-        path = path.replace('\\', '/');
-
-        // on Windows, use 'file:///'
-        if (File.separatorChar == '\\') {
-            return FILE_PROTOCOL_PREFIX + "/" + path;
-        }
-        // Unix, use 'file://'
-        return FILE_PROTOCOL_PREFIX + path;
+        return fu.toURI(file.getAbsolutePath());
     }
 
     /**

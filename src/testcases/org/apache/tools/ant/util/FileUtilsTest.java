@@ -412,8 +412,8 @@ public class FileUtilsTest extends TestCase {
      * test toUri
      */
     public void testToURI() {
-        if (Os.isFamily("windows")) {
-            assertEquals("file://C:/foo", fu.toURI("c:\\foo"));
+        if (Os.isFamily("dos")) {
+            assertEquals("file:///C:/foo", fu.toURI("c:\\foo"));
         }
         assertEquals("file:///foo", fu.toURI("/foo"));
         assertEquals("file:./foo",  fu.toURI("./foo"));
@@ -429,8 +429,8 @@ public class FileUtilsTest extends TestCase {
      * test fromUri
      */
     public void testFromURI() {
-        if (Os.isFamily("windows")) {
-            assertEquals("C:\\foo", fu.fromURI("file://c:/foo"));
+        if (Os.isFamily("dos")) {
+            assertEquals("C:\\foo", fu.fromURI("file:///c:/foo"));
         }
         assertEquals(localize("/foo"), fu.fromURI("file:///foo"));
         assertEquals("." + File.separator + "foo", 
