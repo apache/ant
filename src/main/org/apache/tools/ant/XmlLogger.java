@@ -58,6 +58,7 @@ import java.io.*;
 import java.util.*;
 import javax.xml.parsers.*;
 import org.w3c.dom.*;
+import org.apache.tools.ant.util.DOMElementWriter;
 
 /**
  *  Generates a "log.xml" file in the current directory with
@@ -134,7 +135,7 @@ public class XmlLogger implements BuildListener {
 
             Writer out = new FileWriter(outFilename);
             out.write("<?xml:stylesheet type=\"text/xsl\" href=\"log.xsl\"?>\n\n");
-            write(buildElement, out, 0);
+            (new DOMElementWriter()).write(buildElement, out, 0, "\t");
             out.flush();
             out.close();
             
@@ -228,63 +229,4 @@ public class XmlLogger implements BuildListener {
         }
     }
 
-    /**
-     *  Writes a DOM element to a file.
-     */
-    private static void write(Element element, Writer out, int indent) throws IOException {
-
-        // Write indent characters
-        for (int i = 0; i < indent; i++) {
-            out.write("\t");
-        }
-
-        // Write element
-        out.write("<");
-        out.write(element.getTagName());
-
-        // Write attributes
-        NamedNodeMap attrs = element.getAttributes();
-        for (int i = 0; i < attrs.getLength(); i++) {
-            Attr attr = (Attr) attrs.item(i);
-            out.write(" ");
-            out.write(attr.getName());
-            out.write("=\"");
-            out.write(attr.getValue());
-            out.write("\"");
-        }
-        out.write(">");
-
-        // Write child attributes and text
-        boolean hasChildren = false;
-        NodeList children = element.getChildNodes();
-        for (int i = 0; i < children.getLength(); i++) {
-            Node child = children.item(i);
-
-            if (child.getNodeType() == Node.ELEMENT_NODE) {
-                if (!hasChildren) {
-                    out.write("\n");
-                    hasChildren = true;
-                }
-                write((Element)child, out, indent + 1);
-            }
-
-            if (child.getNodeType() == Node.TEXT_NODE) {
-                out.write(((Text)child).getData());
-            }
-        }
-
-        // If we had child elements, we need to indent before we close
-        // the element, otherwise we're on the same line and don't need
-        // to indent
-        if (hasChildren) {
-            for (int i = 0; i < indent; i++) {
-                out.write("\t");
-            }
-        }
-
-        // Write element close
-        out.write("</");
-        out.write(element.getTagName());
-        out.write(">\n");
-    }
 }
