@@ -3,7 +3,7 @@
   <types>
 
     <!-- basic tasks/datatypes/coverters required in most environments -->
-    <task name="echo" classname="org.apache.myrmidon.libs.core.Echo" />
+    <task name="log" classname="org.apache.myrmidon.libs.core.Log" />
     <task name="property" classname="org.apache.myrmidon.libs.core.Property" />
 
   </types>

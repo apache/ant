@@ -11,11 +11,11 @@ import org.apache.myrmidon.api.AbstractTask;
 import org.apache.myrmidon.api.TaskException;
 
 /**
- * This is the echo task to display a message.
+ * This is a task used to log messages in the build file.
  *
  * @author <a href="mailto:peter@apache.org">Peter Donald</a>
  */
-public class Echo
+public class Log
     extends AbstractTask
 {
     private String      m_message;

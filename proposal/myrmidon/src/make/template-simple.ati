@@ -9,11 +9,11 @@
   <target name="main">
     <property name="year" value="2000"/>
 
-    <echo message="Before template"/>
-    <echo-template msg="Template echo 1!" />
-    <echo-template msg="Template echo 2!" />
-    <echo-template msg="Template echo 3!" />
-    <echo message="After template"/>
+    <log message="Before template"/>
+    <log-template msg="Template log 1!" />
+    <log-template msg="Template log 2!" />
+    <log-template msg="Template log 3!" />
+    <log message="After template"/>
   </target>
 
 </project>

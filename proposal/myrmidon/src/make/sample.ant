@@ -26,7 +26,7 @@ Legal:
 
   <target name="all" depends="property-test, typedef-test, converterdef-test, ant-call-test, datatype-test, namespace-test, ant1-tasklib-test, prim->main" />
 
-<!--    
+<!--
     <register-tasklib lib="../../dist/lib/core.atl" />
 -->
 
@@ -34,16 +34,16 @@ Legal:
     <property name="blah" value="fred" />
     <property name="${blah}" value="barney" />
 
-    <echo message="Doing the funky Echo with ${blah} ${fred} Year=${year}!"/>
+    <log message="Doing the funky Echo with ${blah} ${fred} Year=${year}!"/>
   </target>
 
   <target name="typedef-test">
-    <typedef name="echo2" 
-             type="task" 
-             classname="org.apache.myrmidon.libs.core.Echo" 
+    <typedef name="log2"
+             type="task"
+             classname="org.apache.myrmidon.libs.core.Log"
              lib="../../dist/lib/core.atl" />
 
-    <echo2 message="Luke to Echo base. Can you hear me?"/>
+    <log2 message="Luke to Echo base. Can you hear me?"/>
   </target>
 
   <target name="converterdef-test">
@@ -51,11 +51,11 @@ Legal:
                   source-type="java.lang.String"
                   destination-type="java.lang.Class"
                   lib="../../dist/lib/core.atl" />
-  </target> 
+  </target>
 
   <target name="ant-call-test">
     <!-- test elided until we decide scope and necessity of ant-call -->
-    <echo message="AntCall test elided until we decide scope and necessity of ant-call"/>
+    <log message="AntCall test elided until we decide scope and necessity of ant-call"/>
 <!--
     <ant-call target="ant-call-test-target">
       <param name="blah" value="blah-value" />
@@ -64,9 +64,9 @@ Legal:
   </target>
 
   <target name="ant-call-test-target">
-    <echo message="This should fail ...."/>
-    <echo message="${blah}"/>
-    <echo message="Whoa - it no fail. You used ant-call to call me and set param blah!"/>
+    <log message="This should fail ...."/>
+    <log message="${blah}"/>
+    <log message="Whoa - it no fail. You used ant-call to call me and set param blah!"/>
   </target>
 
   <target name="datatype-test">
@@ -76,26 +76,26 @@ Legal:
 
     <pattern id="foo2" value="*.java" if="..." />
 
-    <echo message="foo=${foo}" />
-    <echo message="foo2=${foo2}" />
+    <log message="foo=${foo}" />
+    <log message="foo2=${foo2}" />
   </target>
 
   <target name="namespace-test">
 
     <!-- ant and doc are built in namespaces -->
-    <echo ant:fail-on-error="true" message="Some random message">
+    <log ant:fail-on-error="true" message="Some random message">
       <doc:description>
         Test case for aspects
       </doc:description>
       <ant:some-element some-attribute="blah"/>
-    </echo>
+    </log>
 
     <!-- load facility for blee: namespace -->
     <facility namespace="blee">
       <noop/>
     </facility>
 
-    <echo blee:some-param="blah" message="Blee namespace test successful!"/>
+    <log blee:some-param="blah" message="Blee namespace test successful!"/>
 
   </target>
 
@@ -104,7 +104,7 @@ Legal:
   <!--
     <ant1-tasklib prefix="a1-" lib="../../dist/lib/ant1-compat.jar"/>
 
-    <a1-echo message="Boo!" />
+    <a1-log message="Boo!" />
     <a1-mkdir dir="../../dist/test"/>
     <a1-copy file="../../tools/lib/ant.jar" tofile="../../dist/test/ant1-compat.jar" />
   -->

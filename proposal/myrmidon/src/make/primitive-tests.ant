@@ -6,7 +6,7 @@
  Basic tests build file
 
 Authors:
- Peter Donald <donaldp@apache.org>
+ Peter Donald <peter@apache.org>
 
 Legal:
   Copyright (c) 2000 The Apache Software Foundation. All Rights Reserved.
@@ -26,24 +26,24 @@ Legal:
     <!--
     <file-manip-test base-directory=".">
       <source>
-        <include value="**/*.java" />       
+        <include value="**/*.java" />
       </source>
     </file-manip-test>
     -->
   </target>
 
   <target name="undefined-task">
-    <echo message="About to execute task that hasn't been defined"/>
-    <echo2 message="This should have failed"/>
+    <log message="About to execute task that hasn't been defined"/>
+    <log2 message="This should have failed"/>
   </target>
 
   <target name="no-test-target" if="no-do-tests">
-    <echo message="No tests done here"/>
+    <log message="No tests done here"/>
   </target>
 
   <target name="test-target" depends="no-test-target,extensions-test" unless="no-do-tests">
 
-    <echo message="Tests away"/>
+    <log message="Tests away"/>
 
     <prim-test
         integer="1"
@@ -67,9 +67,9 @@ Legal:
     </sub-elements-test>
 
     <conf-test message="..." />
-    
+
     <content-test>123</content-test>
-    
+
   </target>
 
   <target name="extensions-test">
