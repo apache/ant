@@ -154,10 +154,9 @@ public class XSLTProcess extends MatchingTask {
         if (xslFile != null) {
             try {
                 // Create a new XSL processor with the specified stylesheet
-                File file = new File( baseDir, xslFile.toString() );
-                styleSheetLastModified = file.lastModified();
-                log( "Loading stylesheet " + file, Project.MSG_INFO);
-                liaison.setStylesheet( file.toString() );
+                styleSheetLastModified = xslFile.lastModified();
+                log( "Loading stylesheet " + xslFile, Project.MSG_INFO);
+                liaison.setStylesheet( xslFile.toString() );
                 for(Enumeration e = params.elements();e.hasMoreElements();) {
                     Param p = (Param)e.nextElement();
                     liaison.addParam( p.getName(), p.getExpression() );
@@ -216,8 +215,8 @@ public class XSLTProcess extends MatchingTask {
     /**
      * Sets the file to use for styling relative to the base directory.
      */
-    public void setStyle(String xslFile) {
-        this.xslFile = new File(xslFile);
+    public void setStyle(File xslFile) {
+        this.xslFile = xslFile;
     }
 
     /**
