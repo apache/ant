@@ -134,6 +134,29 @@
         </table>
       </subsection>
 
+      <subsection name="GenJar">
+        <p>Builds a jar file based on class dependencies rather than simply the contents of a directory</p>
+
+        <table>
+          <tr>
+            <th>Compatibility:</th>
+            <td>Ant 1.4 alpha (built after 2001/08/04) and later</td>
+          </tr>
+          <tr>
+            <th>URL:</th>
+            <td><a href="http://www.riggshill.com/projects/genjar/">http://www.riggshill.com/projects/genjar/</a></td>
+          </tr>
+          <tr>
+            <th>Contact:</th>
+            <td><a href="mailto:jake@riggshill.com">John Kohler</a></td>
+          </tr>
+          <tr>
+            <th>License:</th>
+            <td>Apache Software Foundation License</td>
+          </tr>
+        </table>
+      </subsection>
+
       <subsection name="Importscrubber">
         <p>Removes unncessary import statements from a Java source code file.</p>
 
