@@ -247,7 +247,7 @@
 
     <faq id="adding-external-tasks">
       <question>How do I add an external task that I&apos;ve written to the
-      page &quot;External Tools and Task&quot;?</question>
+      page &quot;External Tools and Tasks&quot;?</question>
       <answer>
 
         <p>Join and post a message to the dev or user mailing
@@ -279,6 +279,22 @@
         The procedure to add it is the same. The file to patch is <a
         href="http://cvs.apache.org/viewcvs.cgi/~checkout~/ant/xdocs/projects.xml">this</a>
         document. The syntax of that file is the same.</p>
+
+      </answer>
+    </faq>
+    
+    <faq id="create-extensions">
+      <question>How do I create new tasks?</question>
+      <answer>
+        <p>Apart from a lot of information on using Ant, the 
+        <a href="manual/index.html">Manual</a> also contains information 
+        on how to extend Ant with new tasks. This information 
+        can be found under &quot;Developing with Ant&quot;.</p>
+        
+        <p>Chances are that someone else already created the task you
+        want to create, it may be wise to see 
+        <a href="external.html">External Tools and Tasks</a> and
+        <a href="projects.html">Related Projects</a> first.</p>
       </answer>
     </faq>
 
@@ -473,7 +489,7 @@ shell-prompt> m4 foo.m4 > foo
 
         <p>Note: <code>&lt;antcall&gt;</code> tasks do <em>not</em> pass
         property changes back up to the environment they were called
-        from, so you would&apos;nt be able to, for example, set a
+        from, so you wouldn&apos;t be able to, for example, set a
         <code>result</code> property in the <code>cond-if-3</code> target,
         then do
         <code>&lt;echo message=&quot;result is ${result}&quot;/&gt;</code>
@@ -770,7 +786,7 @@ shell-prompt> m4 foo.m4 > foo
       <answer>
 
         <p>When <code>ant</code> loads properties from an external
-        file it dosn&apos;t touch the value of properties, trailing blanks
+        file it doesn&apos;t touch the value of properties, trailing blanks
         will not be trimmed for example.</p>
 
         <p>If the value represents a file path, like a jar needed to
