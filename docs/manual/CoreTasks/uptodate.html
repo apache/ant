@@ -46,7 +46,7 @@ target execution depending on the relative age of the specified files.</p>
   </tr>
   <tr>
     <td valign="top">srcfile</td>
-    <td valign="top">The file to check against the target file.</td>
+    <td valign="top">The file to check against the target file(s).</td>
     <td valign="top" align="center">Yes, unless a nested
       <code>&lt;srcfiles&gt;</code> element is present.</td>
   </tr>
@@ -70,9 +70,6 @@ attribute or nested <code>&lt;srcfiles&gt;</code> elements, but not both.
 <p>The nested <code>&lt;mapper&gt;</code> element allows you to specify
 a set of target files to check for being up-to-date with respect to a
 set of source files.</p>
-
-<p><strong>Note:</strong> The nested <code>&lt;mapper&gt;</code> element is
-only valid when used with the <code>&lt;srcfiles&gt;</code> element.
 
 <h3>Examples</h3>
 <pre>  &lt;uptodate property=&quot;xmlBuild.notRequired&quot; targetfile=&quot;${deploy}\xmlClasses.jar&quot; &gt;
