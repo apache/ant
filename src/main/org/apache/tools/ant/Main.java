@@ -357,7 +357,7 @@ public class Main implements AntMain {
             } else if (arg.startsWith("-D")) {
 
                 /* Interestingly enough, we get to here when a user
-                 * uses -Dname=value. However, in some cases, the JDK
+                 * uses -Dname=value. However, in some cases, the OS
                  * goes ahead and parses this out to args
                  *   {"-Dname", "value"}
                  * so instead of parsing on "=", we just make the "-D"
@@ -921,7 +921,7 @@ public class Main implements AntMain {
             printSubTargets = true;
         }
         if (printSubTargets) {
-            printTargets(project, subNames, null, "Subtargets:", 0);
+            printTargets(project, subNames, null, "Other targets:", 0);
         }
 
         String defaultTarget = project.getDefaultTarget();
