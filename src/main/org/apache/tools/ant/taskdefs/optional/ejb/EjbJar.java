@@ -77,7 +77,7 @@ import org.apache.tools.ant.types.FileSet;
 
 /**
  * <p>
- * Provides automated ejb jar file creation for ant. Extends the
+ * Provides automated EJB JAR file creation. Extends the
  * MatchingTask class provided in the default ant distribution to provide a
  * directory scanning EJB jarfile generator.
  * </p>
@@ -239,8 +239,7 @@ public class EjbJar extends MatchingTask {
     }
 
     /**
-     * Create a weblogic nested element used to configure a
-     * deployment tool for Weblogic server.
+     * Adds a deployment tool for Weblogic server.
      *
      * @return the deployment tool instance to be configured.
      */
@@ -251,8 +250,7 @@ public class EjbJar extends MatchingTask {
     }
 
     /**
-     * Create a websphere nested element used to configure a
-     * deployment tool for Websphere 4.0 server.
+     * Adds a deployment tool for Websphere 4.0 server.
      *
      * @return the deployment tool instance to be configured.
      */
@@ -263,8 +261,7 @@ public class EjbJar extends MatchingTask {
     }
 
     /**
-     * Create a Borland nested element used to configure a
-     * deployment tool for Borland server.
+     * Adds a deployment tool for Borland server.
      *
      * @return the deployment tool instance to be configured.
      */
@@ -278,8 +275,7 @@ public class EjbJar extends MatchingTask {
     }
 
     /**
-     * Create a nested element used to configure a deployment tool for iPlanet
-     * Application Server.
+     * Adds a deployment tool for iPlanet Application Server.
      *
      * @return the deployment tool instance to be configured.
      */
@@ -292,8 +288,7 @@ public class EjbJar extends MatchingTask {
     }
 
     /**
-     * Create a jboss nested element used to configure a
-     * deployment tool for Jboss server.
+     * Adds a deployment tool for JBoss server.
      *
      * @return the deployment tool instance to be configured.
      */
@@ -304,8 +299,7 @@ public class EjbJar extends MatchingTask {
     }
 
     /**
-     * Create a jonas nested element used to configure a
-     * deployment tool for JOnAS server.
+     * Adds a deployment tool for JOnAS server.
      *
      * @return the deployment tool instance to be configured.
      */
@@ -318,8 +312,8 @@ public class EjbJar extends MatchingTask {
     }
 
     /**
-     * Create a nested element for weblogic when using the Toplink
-     * Object- Relational mapping.
+     * Adds a deployment tool for Weblogic when using the Toplink
+     * Object-Relational mapping.
      *
      * @return the deployment tool instance to be configured.
      */
@@ -334,10 +328,8 @@ public class EjbJar extends MatchingTask {
     }
 
     /**
-     * creates a nested classpath element.
-     *
-     * This classpath is used to locate the super classes and interfaces
-     * of the classes that will make up the EJB jar.
+     * Adds to the classpath used to locate the super classes and
+     * interfaces of the classes that will make up the EJB JAR.
      *
      * @return the path to be configured.
      */
@@ -363,7 +355,7 @@ public class EjbJar extends MatchingTask {
     }
 
     /**
-     * Create a file set for support elements
+     * Adds a fileset for support elements.
      *
      * @return a fileset which can be populated with support files.
      */
@@ -390,7 +382,7 @@ public class EjbJar extends MatchingTask {
      }
 
     /**
-     * Set the srcdir attribute. The source directory is the directory that
+     * Sets the source directory, which is the directory that
      * contains the classes that will be added to the EJB jar. Typically
      * this will include the home and remote interfaces and the bean class.
      *
@@ -414,7 +406,7 @@ public class EjbJar extends MatchingTask {
     }
 
     /**
-     * Set the analyzer to use when adding in dependencies to the jar
+     * Set the analyzer to use when adding in dependencies to the JAR.
      *
      * @param analyzer the name of the dependency analyzer or a class.
      */
@@ -423,7 +415,7 @@ public class EjbJar extends MatchingTask {
     }
 
     /**
-     * Set the base name of the EJB jar that is to be created if it is not
+     * Set the base name of the EJB JAR that is to be created if it is not
      * to be determined from the name of the deployment descriptor files.
      *
      * @param inValue the basename that will be used when writing the jar
@@ -480,9 +472,9 @@ public class EjbJar extends MatchingTask {
     }
 
     /**
-     * Set the flat dest dir flag. This flag controls whether the
+     * Controls whether the
      * destination jars are written out in the destination directory with
-     * the same hierarchal structure from which the deployment descriptors
+     * the same hierarchical structure from which the deployment descriptors
      * have been read. If this is set to true the generated EJB jars are
      * written into the root of the destination directory, otherwise they
      * are written out in the same relative position as the deployment
@@ -508,8 +500,8 @@ public class EjbJar extends MatchingTask {
     }
 
     /**
-     * Set the baseNameTerminator. The basename terminator is the string
-     * which terminates the bean name. The convention used by this task is
+     * The string which terminates the bean name.
+     * The convention used by this task is
      * that bean descriptors are named as the BeanName with some suffix. The
      * baseNameTerminator string separates the bean name and the suffix and
      * is used to determine the bean name.

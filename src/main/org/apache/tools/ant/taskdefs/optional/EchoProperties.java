@@ -135,7 +135,8 @@ public class EchoProperties extends Task {
 
 
     /**
-     *  Sets the failure mode for the task.
+     * If true, the task will fail if an error occurs writing the properties
+     * file, otherwise errors are just logged.
      *
      *@param  failonerror  <tt>true</tt> if IO exceptions are reported as build
      *      exceptions, or <tt>false</tt> if IO exceptions are ignored.
