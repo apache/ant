@@ -42,8 +42,8 @@ Fixed bugs:
 
 * <chmod> didn't work when used as a directory based task.
 
-* Path didn't resolve relative filenames with respect to the Project's
-basedir.
+* Path, Available, Property didn't resolve relative filenames with
+respect to the Project's basedir.
 
 * Project didn't interpret the basedir attribute correctly in all
 cases.
