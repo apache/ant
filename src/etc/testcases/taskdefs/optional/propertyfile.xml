@@ -69,6 +69,20 @@
      </propertyfile>
      <property file="${test.propertyfile}"/>
    </target>
+    <target name="createfile">
+       <echo file="${overwrite.test.propertyfile}">
+ foo=3
+       </echo>
+    </target>
+    <target name="bugDemo1" depends="createfile,bugDemoInit"/>
+    <target name="bugDemo2" depends="bugDemoInit">
+        <property file="${overwrite.test.propertyfile}"/>
+    </target>
+    <target name="bugDemoInit">
+       <propertyfile file="${overwrite.test.propertyfile}">
+          <entry key="foo" default="0" value="1" operation="+" type="int"/>
+       </propertyfile>
+    </target>
 
 </project>
 

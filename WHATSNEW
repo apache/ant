@@ -49,6 +49,10 @@ Changes that could break older environments:
   allows a per-user library location to be used if the main Ant install
   is locked down.
 
+* The Entry nested element of PropertyFile will not any more have its value
+  attribute (actually increment) overwritten with the new value of the entry
+  after execution.
+
 Fixed bugs:
 -----------
 * Filter readers were not handling line endings properly.  Bugzilla
@@ -194,6 +198,10 @@ Fixed bugs:
 
 * Don't multiply Class-Path attributes when updating jars.  Bugzilla
   Report 21170.
+
+* Do not overwrite the value (increment) attribute of PropertyFile nested Entry element.
+  Bugzilla Report 21505.
+
 
 Other changes:
 --------------

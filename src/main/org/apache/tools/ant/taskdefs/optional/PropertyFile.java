@@ -249,23 +249,7 @@ public class PropertyFile extends Task {
         BufferedOutputStream bos = null;
         try {
             bos = new BufferedOutputStream(new FileOutputStream(propertyfile));
-
-            // Properties.store is not available in JDK 1.1
-            Method m =
-                Properties.class.getMethod("store",
-                                           new Class[] {
-                                               OutputStream.class,
-                                               String.class});
-            m.invoke(properties, new Object[] {bos, comment});
-
-        } catch (NoSuchMethodException nsme) {
-            properties.save(bos, comment);
-        } catch (InvocationTargetException ite) {
-            Throwable t = ite.getTargetException();
-            throw new BuildException(t, getLocation());
-        } catch (IllegalAccessException iae) {
-            // impossible
-            throw new BuildException(iae, getLocation());
+            properties.store(bos, comment);
         } catch (IOException ioe) {
             throw new BuildException(ioe, getLocation());
         } finally {
@@ -275,14 +259,6 @@ public class PropertyFile extends Task {
                 } catch (IOException ioex) {}
             }
         }
-    }
-
-    /**
-    * Returns whether the given parameter has been defined.
-    * @todo IDEA is saying this method is never used - remove?
-    */
-    private boolean checkParam(String param) {
-        return !((param == null) || (param.equals("null")));
     }
 
     private boolean checkParam(File param) {
@@ -303,6 +279,7 @@ public class PropertyFile extends Task {
         private int                 operation = Operation.EQUALS_OPER;
         private String              value = null;
         private String              defaultValue = null;
+        private String              newValue = null;
         private String              pattern = null;
         private int                 field = Calendar.DATE;
 
@@ -396,12 +373,12 @@ public class PropertyFile extends Task {
                 npe.printStackTrace();
             }
             
-            if (value == null) {
-                value = "";
+            if (newValue == null) {
+                newValue = "";
             }
             
             // Insert as a string by default
-            props.put(key, value);
+            props.put(key, newValue);
         }
 
         /**
@@ -447,7 +424,7 @@ public class PropertyFile extends Task {
                 currentValue.add(field, offset);
             }
 
-            value = fmt.format(currentValue.getTime());
+            newValue = fmt.format(currentValue.getTime());
         }
 
 
@@ -466,7 +443,12 @@ public class PropertyFile extends Task {
             DecimalFormat fmt = (pattern != null) ? new DecimalFormat(pattern)
                                                     : new DecimalFormat();
             try {
-                currentValue = fmt.parse(getCurrentValue(oldValue)).intValue();
+                String curval = getCurrentValue(oldValue);
+                if (curval != null) {
+                    currentValue = fmt.parse(curval).intValue();
+                } else {
+                    currentValue = 0;
+                }
             } catch (NumberFormatException nfe) {
                 // swallow
             } catch (ParseException pe)  {
@@ -494,7 +476,7 @@ public class PropertyFile extends Task {
                 }
             }
 
-            value = fmt.format(newValue);
+            this.newValue = fmt.format(newValue);
         }
         
         /**
@@ -518,7 +500,7 @@ public class PropertyFile extends Task {
             } else if (operation == Operation.INCREMENT_OPER) {
                 newValue = currentValue + value;
             }
-            value = newValue;
+            this.newValue = newValue;
         }
         
         /**

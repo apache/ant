@@ -1,7 +1,7 @@
 /*
  *  The Apache Software License, Version 1.1
  *
- *  Copyright (c) 2001-2002 The Apache Software Foundation.  All rights
+ *  Copyright (c) 2001-2003 The Apache Software Foundation.  All rights
  *  reserved.
  *
  *  Redistribution and use in source and binary forms, with or without
@@ -85,6 +85,7 @@ public class PropertyFileTest extends BuildFileTest {
         initTestPropFile();
         initBuildPropFile();
         configureProject(projectFilePath);
+        project.setProperty(valueDoesNotGetOverwrittenPropertyFileKey,valueDoesNotGetOverwrittenPropertyFile);
     }
 
 
@@ -134,6 +135,12 @@ public class PropertyFileTest extends BuildFileTest {
         assertEquals("6",project.getProperty("int.without.value"));
     }
 
+    public void testValueDoesNotGetOverwritten() {
+        // this test shows that the bug report 21505 is fixed
+        executeTarget("bugDemo1");
+        executeTarget("bugDemo2");
+        assertEquals("5", project.getProperty("foo"));
+    }
 /*
     public void testDirect() throws Exception {
         PropertyFile pf = new PropertyFile();
@@ -175,7 +182,7 @@ public class PropertyFileTest extends BuildFileTest {
         testProps.put("existing.prop", "37");
       
         FileOutputStream fos = new FileOutputStream(testPropsFilePath);
-        testProps.save(fos, "defaults");
+        testProps.store(fos, "defaults");
         fos.close();
     }
 
@@ -191,7 +198,7 @@ public class PropertyFileTest extends BuildFileTest {
         buildProps.put(DATE_KEY, NEW_DATE);
       
         FileOutputStream fos = new FileOutputStream(buildPropsFilePath);
-        buildProps.save(fos, null);
+        buildProps.store(fos, null);
         fos.close();
     }
 
@@ -204,6 +211,10 @@ public class PropertyFileTest extends BuildFileTest {
         tempFile = new File(buildPropsFilePath);
         tempFile.delete();
         tempFile = null;
+
+        tempFile = new File(valueDoesNotGetOverwrittenPropsFilePath);
+        tempFile.delete();
+        tempFile = null;
     }
    
 
@@ -214,7 +225,11 @@ public class PropertyFileTest extends BuildFileTest {
         testPropertyFile    = "propertyfile.test.properties",
         testPropertyFileKey = "test.propertyfile",
         testPropsFilePath   = "src/etc/testcases/taskdefs/optional/" + testPropertyFile,
-      
+
+        valueDoesNotGetOverwrittenPropertyFile    = "overwrite.test.properties",
+        valueDoesNotGetOverwrittenPropertyFileKey = "overwrite.test.propertyfile",
+        valueDoesNotGetOverwrittenPropsFilePath   = "src/etc/testcases/taskdefs/optional/" + valueDoesNotGetOverwrittenPropertyFile,
+
         buildPropsFilePath  = "src/etc/testcases/taskdefs/optional/propertyfile.build.properties",
       
         FNAME     = "Bruce",
