@@ -699,6 +699,26 @@ Legal:
             style="${ant.home}/etc/jdepend-frames.xsl"/>
     </target>
 
+    <target name="docs" description="Generate documentation and website">
+        <taskdef name="anakia"
+            classname="org.apache.velocity.anakia.AnakiaTask">
+            <classpath>
+                <fileset dir="${jakarta-site.dir}/lib">
+                    <include name="*.jar"/>
+                </fileset>
+            </classpath>
+        </taskdef>
+
+        <anakia basedir="src/xdocs"
+            destdir="docs"
+            style="docs.vsl"
+            projectfile="stylesheets/project.xml"
+            includes="**/*.xml"
+            excludes="stylesheets/**"
+            velocitypropertiesfile="src/xdocs/velocity.properties"
+            />
+    </target>
+
     <!-- Creates the distribution -->
     <target name="dist-lite"
         depends="jars"
