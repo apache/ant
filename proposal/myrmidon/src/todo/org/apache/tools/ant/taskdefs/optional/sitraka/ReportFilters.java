@@ -18,20 +18,15 @@ import org.apache.tools.ant.util.regexp.RegexpMatcherFactory;
  */
 public class ReportFilters
 {
-
     /**
      * user defined filters
      */
-    protected ArrayList filters = new ArrayList();
+    private ArrayList filters = new ArrayList();
 
     /**
      * cached matcher for each filter
      */
-    protected ArrayList matchers = null;
-
-    public ReportFilters()
-    {
-    }
+    private ArrayList m_matchers;
 
     /**
      * Check whether a given &lt;classname&gt;&lt;method&gt;() is accepted by
@@ -45,7 +40,7 @@ public class ReportFilters
     {
         // I'm deferring matcher instantiations at runtime to avoid computing
         // the filters at parsing time
-        if( matchers == null )
+        if( m_matchers == null )
         {
             createMatchers();
         }
@@ -55,7 +50,7 @@ public class ReportFilters
         for( int i = 0; i < size; i++ )
         {
             FilterElement filter = (FilterElement)filters.get( i );
-            RegexpMatcher matcher = (RegexpMatcher)matchers.get( i );
+            RegexpMatcher matcher = (RegexpMatcher)m_matchers.get( i );
             if( filter instanceof Include )
             {
                 result = result || matcher.matches( methodname );
@@ -95,69 +90,15 @@ public class ReportFilters
     {
         RegexpMatcherFactory factory = new RegexpMatcherFactory();
         final int size = filters.size();
-        matchers = new ArrayList();
+        m_matchers = new ArrayList();
         for( int i = 0; i < size; i++ )
         {
             FilterElement filter = (FilterElement)filters.get( i );
             RegexpMatcher matcher = factory.newRegexpMatcher();
             String pattern = filter.getAsPattern();
             matcher.setPattern( pattern );
-            matchers.add( matcher );
+            m_matchers.add( matcher );
         }
-    }
-
-    /**
-     * concrete exclude class
-     *
-     * @author RT
-     */
-    public static class Exclude extends FilterElement
-    {
-    }
-
-    /**
-     * default abstract filter element class
-     *
-     * @author RT
-     */
-    public abstract static class FilterElement
-    {
-        protected String clazz = "*";// default is all classes
-        protected String method = "*";// default is all methods
-
-        public void setClass( String value )
-        {
-            clazz = value;
-        }
-
-        public void setMethod( String value )
-        {
-            method = value;
-        }
-
-        public String getAsPattern()
-        {
-            StringBuffer buf = new StringBuffer( toString() );
-            StringUtil.replace( buf, ".", "\\." );
-            StringUtil.replace( buf, "*", ".*" );
-            StringUtil.replace( buf, "(", "\\(" );
-            StringUtil.replace( buf, ")", "\\)" );
-            return buf.toString();
-        }
-
-        public String toString()
-        {
-            return clazz + "." + method + "()";
-        }
-    }
-
-    /**
-     * concrete include class
-     *
-     * @author RT
-     */
-    public static class Include extends FilterElement
-    {
     }
 }
 

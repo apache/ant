@@ -2,23 +2,42 @@
  * Copyright (C) The Apache Software Foundation. All rights reserved.
  *
  * This software is published under the terms of the Apache Software License
- * version 1.1, a copy of which has been included with this distribution in
+ * version 1.1, a copy of which has been included  with this distribution in
  * the LICENSE.txt file.
  */
 package org.apache.tools.ant.taskdefs.optional.sitraka;
 
 /**
- * String utilities method.
- *
- * @author <a href="mailto:sbailliez@imediation.com">Stephane Bailliez</a>
+ * default abstract filter element class
  */
-public final class StringUtil
+public abstract class FilterElement
 {
-    /**
-     * private constructor, it's a utility class
-     */
-    private StringUtil()
+    protected String clazz = "*";// default is all classes
+    protected String method = "*";// default is all methods
+
+    public void setClass( String value )
     {
+        clazz = value;
+    }
+
+    public void setMethod( String value )
+    {
+        method = value;
+    }
+
+    public String getAsPattern()
+    {
+        StringBuffer buf = new StringBuffer( toString() );
+        replace( buf, ".", "\\." );
+        replace( buf, "*", ".*" );
+        replace( buf, "(", "\\(" );
+        replace( buf, ")", "\\)" );
+        return buf.toString();
+    }
+
+    public String toString()
+    {
+        return clazz + "." + method + "()";
     }
 
     /**

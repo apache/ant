@@ -395,7 +395,7 @@ public class CovReport extends Task
             {
                 createFilters();
                 getLogger().debug( "Adding default include filter to *.*()" );
-                ReportFilters.Include include = new ReportFilters.Include();
+                Include include = new Include();
                 filters.addInclude( include );
             }
             try
