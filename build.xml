@@ -555,6 +555,9 @@
     <available property="beanshell.present"
                classname="bsh.StringUtil"
                classpathref="classpath"/>
+    <available property="xerces1.present"
+               classname="org.apache.xerces.framework.XMLParser"
+               classpathref="classpath"/>
     <available property="jsch.present"
                classname="com.jcraft.jsch.Session"
                classpathref="classpath"/>
@@ -1497,6 +1500,10 @@
           <!-- needs BSF to work -->
           <exclude name="${optional.package}/XalanLiaisonTest.java"
                    unless="bsf.present"/>
+          <exclude name="${optional.package}/XalanLiaisonTest.java"
+                   unless="xerces1.present"/>
+          <exclude name="${optional.package}/XslpLiaisonTest.java"
+                   unless="xerces1.present"/>
 
           <!-- needs resolver.jar to work -->
           <exclude name="${optional.package}/XmlValidateCatalogTest.java"
