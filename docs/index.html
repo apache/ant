@@ -4037,7 +4037,7 @@ them.</p>
 <blockquote><pre>  
 &lt;replace dir=&quot;${src}&quot; value=&quot;wombat&quot;&gt;
   &lt;include name=&quot;**/*.html&quot; /&gt;
-  &lt;replacetoken&gt;&lt;[CDATA[multi line
+  &lt;replacetoken&gt;&lt;![CDATA[multi line
 token]]>&lt;/replacetoken&gt;
 &lt;/replace&gt;
 </pre></blockquote>
@@ -4047,9 +4047,9 @@ HTML files in the directory <code>${src}</code>.Where <em>\n</em> is
 the platform specific line separator.</p>
 <blockquote><pre>  
 &lt;replace file=&quot;${src}/index.html&quot;&gt;
-  &lt;replacetoken&gt;&lt;[CDATA[two line
+  &lt;replacetoken&gt;&lt;![CDATA[two line
 token]]>&lt;/replacetoken&gt;
-  &lt;replacevalue&gt;&lt;[CDATA[two line
+  &lt;replacevalue&gt;&lt;![CDATA[two line
 token]]>&lt;/replacevalue&gt;
 &lt;/replace&gt;
 </pre></blockquote>
