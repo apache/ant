@@ -578,7 +578,7 @@ public class Path extends DataType implements Cloneable {
      * This method adds all files in the given
      * directories (but not in sub-directories!) to the classpath,
      * so that you don't have to specify them all one by one.
-     * @param classpath - Path to append files to
+     * @param extdirs - Path to append files to
      */
     public void addExtdirs(Path extdirs) {
         if (extdirs == null) {
