@@ -67,7 +67,6 @@ import java.io.*;
 public class Cvs extends Exec {
 
     private String cvsRoot;
-    private String dest;
     private String pack;
     private String tag;
     
@@ -76,11 +75,7 @@ public class Cvs extends Exec {
 	// XXX: we should use JCVS (www.ice.com/JCVS) instead of command line
 	// execution so that we don't rely on having native CVS stuff around (SM)
 	
-	String ant=project.getProperty("ant.home");
-	if(ant==null) throw new BuildException("Needs ant.home");
-
 	StringBuffer sb=new StringBuffer();
-	sb.append(ant).append("/bin/antRun ").append(dest);
 	sb.append(" cvs -d ").append( cvsRoot ).append(" checkout ");
 	if (tag!=null)
             sb.append("-r ").append(tag).append(" ");
@@ -95,7 +90,7 @@ public class Cvs extends Exec {
     }
 
     public void setDest(String dest) {
-	this.dest = dest;
+	setDir(dest);
     }
 
     public void setPackage(String p) {
