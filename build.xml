@@ -20,8 +20,8 @@
 
   <property name="Name" value="Apache Ant"/>
   <property name="name" value="ant"/>
-  <property name="version" value="1.5alpha"/>
-  <property name="manifest-version" value="1.4.9"/>
+  <property name="version" value="1.5Beta1"/>
+  <property name="manifest-version" value="1.4.91"/>
 
   <property name="debug" value="true" />
   <property name="chmod.fail" value="true" />
