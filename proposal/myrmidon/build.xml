@@ -460,9 +460,7 @@ Legal:
     <path id="xdoclet.classpath">
       <pathelement location="lib/xdoclet.jar"/>
       <pathelement location="lib/log4j-core.jar"/>
-      <!-- javadoc is needed -->
-      <pathelement path="${java.class.path}"/>
-      <pathelement location="${build.classes}"/>
+      <path refid="project.class.path"/>
     </path>
     <taskdef name="xdoclet"
            classname="xdoclet.DocletTask"
