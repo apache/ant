@@ -14,10 +14,8 @@ import java.io.PrintWriter;
 import org.apache.avalon.excalibur.util.StringUtil;
 import org.apache.avalon.framework.logger.AbstractLogEnabled;
 import org.apache.myrmidon.api.TaskException;
-import org.apache.tools.ant.Project;
 import org.apache.tools.ant.taskdefs.Javac;
-import org.apache.tools.ant.taskdefs.exec.Execute;
-import org.apache.tools.ant.taskdefs.exec.LogOutputStream;
+import org.apache.tools.ant.taskdefs.exec.Execute2;
 import org.apache.tools.ant.types.Commandline;
 import org.apache.tools.ant.types.Path;
 
@@ -53,7 +51,7 @@ public abstract class DefaultCompilerAdapter
     protected boolean m_includeJavaRuntime;
     protected String m_memoryInitialSize;
     protected String m_memoryMaximumSize;
-    protected Project m_project;
+    protected File m_baseDir;
 
     /*
      * jdg - TODO - all these attributes are currently protected, but they
@@ -78,7 +76,7 @@ public abstract class DefaultCompilerAdapter
         m_extdirs = attributes.getExtdirs();
         m_compileList = attributes.getFileList();
         m_compileClasspath = attributes.getClasspath();
-        m_project = attributes.getProject();
+        m_baseDir = attributes.getBaseDirectory();
         m_includeAntRuntime = attributes.getIncludeantruntime();
         m_includeJavaRuntime = attributes.getIncludejavaruntime();
         m_memoryInitialSize = attributes.getMemoryInitialSize();
@@ -391,10 +389,9 @@ public abstract class DefaultCompilerAdapter
 
             try
             {
-                final Execute exe = new Execute();
-                exe.setOutput( new LogOutputStream( m_attributes.hackGetLogger(), false ) );
-                exe.setError( new LogOutputStream( m_attributes.hackGetLogger(), true ) );
-                exe.setWorkingDirectory( m_project.getBaseDir() );
+                final Execute2 exe = new Execute2();
+                setupLogger( exe );
+                exe.setWorkingDirectory( m_baseDir );
                 exe.setCommandline( commandArray );
                 return exe.execute();
             }
