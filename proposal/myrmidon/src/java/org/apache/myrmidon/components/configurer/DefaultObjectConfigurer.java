@@ -47,6 +47,11 @@ class DefaultObjectConfigurer
     private final List m_allProps = new ArrayList();
 
     /**
+     * The typed property configurer.
+     */
+    private PropertyConfigurer m_typedPropConfigurer;
+
+    /**
      * Content configurer.
      */
     private PropertyConfigurer m_contentConfigurer;
@@ -67,15 +72,15 @@ class DefaultObjectConfigurer
     public void enableAll()
         throws ConfigurationException
     {
-        // TODO - get rid of creators, and either setter or adders
-        enableAdders();
+        // TODO - get rid of creators
+        enableProperties();
         enableContent();
     }
 
     /**
      * Enables all creators + adders.
      */
-    public void enableAdders()
+    private void enableProperties()
         throws ConfigurationException
     {
         final Map creators = findCreators();
@@ -119,6 +124,16 @@ class DefaultObjectConfigurer
                 type = addMethod.getParameterTypes()[ 0 ];
             }
 
+            final boolean isTypedProp = (propName.length() == 0);
+            if( isTypedProp && !type.isInterface() )
+            {
+                final String message =
+                    REZ.getString( "typed-adder-non-interface.error",
+                                   m_class.getName(),
+                                   type.getName() );
+                throw new ConfigurationException( message );
+            }
+
             // Determine the max count for the property
             int maxCount = Integer.MAX_VALUE;
             if( addMethod != null && addMethod.getName().startsWith( "set" ) )
@@ -132,8 +147,15 @@ class DefaultObjectConfigurer
                                                createMethod,
                                                addMethod,
                                                maxCount );
-            m_props.put( propName, configurer );
             m_allProps.add( configurer );
+            if( isTypedProp )
+            {
+                m_typedPropConfigurer = configurer;
+            }
+            else
+            {
+                m_props.put( propName, configurer );
+            }
         }
     }
 
@@ -160,19 +182,7 @@ class DefaultObjectConfigurer
                 continue;
             }
 
-            final boolean isTypedAdder = methodName.equals( "add" );
-
-            final Class paramType = method.getParameterTypes()[ 0 ];
-            if( isTypedAdder && !paramType.isInterface() )
-            {
-                final String message =
-                    REZ.getString( "typed-adder-non-interface.error",
-                                   m_class.getName(),
-                                   paramType.getName() );
-                throw new ConfigurationException( message );
-            }
-
-            // TODO - un-hard-code this
+            // Skip the text content method
             if( methodName.equals( "addContent" ) )
             {
                 continue;
@@ -180,8 +190,7 @@ class DefaultObjectConfigurer
 
             // Extract property name
             final String propName = extractName( 3, methodName );
-
-            final Class type = paramType;
+            final Class type = method.getParameterTypes()[0];
 
             // Add to the adders map
             if( adders.containsKey( propName ) )
@@ -190,15 +199,7 @@ class DefaultObjectConfigurer
                 final Class currentType = candidate.getParameterTypes()[ 0 ];
 
                 // Ditch the string version, if any
-                if( isTypedAdder )
-                {
-                    // Both are string, or both are not string
-                    final String message =
-                        REZ.getString( "multiple-typed-adder-methods-for-element.error",
-                                       m_class.getName() );
-                    throw new ConfigurationException( message );
-                }
-                else if( currentType != String.class && type == String.class )
+                if( currentType != String.class && type == String.class )
                 {
                     // New type is string, and current type is not.  Ignore
                     // the new method
@@ -217,6 +218,7 @@ class DefaultObjectConfigurer
                 // Else, current type is string, and new type is not, so
                 // continue below, and overwrite the current method
             }
+
             adders.put( propName, method );
         }
         return adders;
@@ -253,7 +255,7 @@ class DefaultObjectConfigurer
                 final String message =
                     REZ.getString( "multiple-creator-methods-for-element.error",
                                    m_class.getName(),
-                                   elemName );
+                                   methodName );
                 throw new ConfigurationException( message );
             }
             creators.put( elemName, method );
@@ -264,9 +266,13 @@ class DefaultObjectConfigurer
     /**
      * Enables content.
      */
-    public void enableContent()
+    private void enableContent()
         throws ConfigurationException
     {
+        // TODO - should be using 'setContent', rather than 'addContent',
+        // to better match the call-at-most-once semantics of the other
+        // setter methods
+
         // Locate any 'addContent' methods, which return void, and take
         // a single parameter.
         final Method[] methods = m_class.getMethods();
@@ -355,16 +361,25 @@ class DefaultObjectConfigurer
             return configurer;
         }
 
-        //Maybe there is a typed adder??
-        configurer = (PropertyConfigurer)m_props.get( "" );
-        if( null != configurer )
+        // Unknown property
+        final String message = REZ.getString( "unknown-property.error", m_class.getName(), name );
+        throw new NoSuchPropertyException( message );
+    }
+
+    /**
+     * Returns a configurer for the typed property of this class.
+     */
+    public PropertyConfigurer getTypedProperty()
+        throws NoSuchPropertyException
+    {
+        if( null != m_typedPropConfigurer )
         {
-            return configurer;
+            return m_typedPropConfigurer;
         }
         else
         {
-            // Unknown property
-            final String message = REZ.getString( "unknown-property.error", m_class.getName(), name );
+            // No typed property
+            final String message = REZ.getString( "no-typed-property.error", m_class.getName() );
             throw new NoSuchPropertyException( message );
         }
     }

@@ -58,4 +58,14 @@ interface ObjectConfigurer
      */
     PropertyConfigurer getContentConfigurer()
         throws NoSuchPropertyException;
+
+    /**
+     * Returns a configurer for the typed property of this class.
+     *
+     * @return A configurer for the typed property.
+     * @throws NoSuchPropertyException If the class does not have a typed
+     *         property.
+     */
+    PropertyConfigurer getTypedProperty()
+        throws NoSuchPropertyException;
 }

@@ -38,6 +38,9 @@ import org.apache.myrmidon.interfaces.deployer.Deployer;
 import org.apache.myrmidon.interfaces.extensions.ExtensionManager;
 import org.apache.myrmidon.interfaces.role.RoleManager;
 import org.apache.myrmidon.interfaces.type.TypeManager;
+import org.apache.myrmidon.interfaces.type.TypeException;
+import org.apache.myrmidon.interfaces.type.DefaultTypeFactory;
+import org.apache.myrmidon.converter.Converter;
 
 /**
  * A base class for tests for the default components.
@@ -143,6 +146,21 @@ public abstract class AbstractComponentTest
                 composable.compose( m_componentManager );
             }
         }
+    }
+
+    /**
+     * Utility method to register a Converter.
+     */
+    protected void registerConverter( final Class converterClass,
+                                      final Class sourceClass,
+                                      final Class destClass )
+        throws ComponentException, TypeException
+    {
+        ConverterRegistry converterRegistry = (ConverterRegistry)getComponentManager().lookup( ConverterRegistry.ROLE );
+        converterRegistry.registerConverter( converterClass.getName(), sourceClass.getName(), destClass.getName() );
+        DefaultTypeFactory factory = new DefaultTypeFactory( getClass().getClassLoader() );
+        factory.addNameClassMapping( converterClass.getName(), converterClass.getName() );
+        getTypeManager().registerType( Converter.class, converterClass.getName(), factory );
     }
 
     /**

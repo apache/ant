@@ -28,6 +28,8 @@ import org.apache.myrmidon.interfaces.converter.MasterConverter;
 import org.apache.myrmidon.interfaces.type.TypeException;
 import org.apache.myrmidon.interfaces.type.TypeFactory;
 import org.apache.myrmidon.interfaces.type.TypeManager;
+import org.apache.myrmidon.interfaces.role.RoleManager;
+import org.apache.myrmidon.framework.DataType;
 
 /**
  * Class used to configure tasks.
@@ -48,6 +50,9 @@ public class DefaultConfigurer
     //TypeManager to use to create types in typed adders
     private TypeManager m_typeManager;
 
+    //RoleManager to use to map from type names -> role shorthand
+    private RoleManager m_roleManager;
+
     ///Cached object configurers.  This is a map from Class to the
     ///ObjectConfigurer for that class.
     private Map m_configurerCache = new HashMap();
@@ -57,6 +62,7 @@ public class DefaultConfigurer
     {
         m_converter = (MasterConverter)componentManager.lookup( MasterConverter.ROLE );
         m_typeManager = (TypeManager)componentManager.lookup( TypeManager.ROLE );
+        m_roleManager = (RoleManager)componentManager.lookup( RoleManager.ROLE );
     }
 
     /**
@@ -122,7 +128,6 @@ public class DefaultConfigurer
                 }
                 catch( final ConfigurationException ce )
                 {
-                    ce.fillInStackTrace();
                     throw ce;
                 }
                 catch( final CascadingException ce )
@@ -151,7 +156,6 @@ public class DefaultConfigurer
                 }
                 catch( final ConfigurationException ce )
                 {
-                    ce.fillInStackTrace();
                     throw ce;
                 }
                 catch( final CascadingException ce )
@@ -180,13 +184,12 @@ public class DefaultConfigurer
                 }
                 catch( final ConfigurationException ce )
                 {
-                    ce.fillInStackTrace();
                     throw ce;
                 }
                 catch( final CascadingException ce )
                 {
                     final String message =
-                        REZ.getString( "bad-set-element.error", name );
+                        REZ.getString( "bad-set-element.error", elemName, name );
                     throw new ConfigurationException( message, ce );
                 }
             }
@@ -269,8 +272,8 @@ public class DefaultConfigurer
         final String name = element.getName();
 
         // Locate the configurer for the child element
-        final PropertyConfigurer childConfigurer =
-            state.getConfigurer().getProperty( name );
+        final PropertyConfigurer childConfigurer
+            = getConfigurerFromName( state.getConfigurer(), name, true );
 
         // Create & configure the child element
         final Object child =
@@ -288,9 +291,6 @@ public class DefaultConfigurer
                                      final Context context )
         throws CascadingException
     {
-        // Adjust the name
-        final String elementName = element.getName();
-        final String name = elementName.substring( 0, elementName.length() - 4 );
 
         // Extract the id
         final String id = element.getAttribute( "id" );
@@ -302,6 +302,7 @@ public class DefaultConfigurer
         }
 
         // Set the property
+        final String name = element.getName();
         setReference( state, name, id, context );
     }
 
@@ -309,13 +310,17 @@ public class DefaultConfigurer
      * Sets a property using a reference.
      */
     private void setReference( final ConfigurationState state,
-                               final String name,
+                               final String refName,
                                final String unresolvedId,
                                final Context context )
         throws CascadingException
     {
-        // Locate the configurer for the child element
-        final PropertyConfigurer childConfigurer = state.getConfigurer().getProperty( name );
+        // Adjust the name
+        final String name = refName.substring( 0, refName.length() - 4 );
+
+        // Locate the configurer for the property
+        final PropertyConfigurer childConfigurer
+            = getConfigurerFromName( state.getConfigurer(), name, false );
 
         // Resolve any props in the id
         Object id = PropertyUtil.resolveProperty( unresolvedId, context, false );
@@ -356,14 +361,13 @@ public class DefaultConfigurer
         if( name.toLowerCase().endsWith( "-ref" ) )
         {
             // A reference
-            final String refName = name.substring( 0, name.length() - 4 );
-            setReference( state, refName, value, context );
+            setReference( state, name, value, context );
         }
         else
         {
             // Set the value
-            final PropertyConfigurer propConfigurer =
-                state.getConfigurer().getProperty( name );
+            PropertyConfigurer propConfigurer
+                = getConfigurerFromName( state.getConfigurer(), name, false );
             setValue( propConfigurer, state, value, context );
         }
     }
@@ -424,7 +428,7 @@ public class DefaultConfigurer
         }
         else if( null == child )
         {
-            // Create an instance using the default constructor
+            // Create an instance
             if( type.isInterface() )
             {
                 child = createdTypedObject( name, type );
@@ -440,17 +444,61 @@ public class DefaultConfigurer
     }
 
     /**
+     * Determines the property configurer to use for a particular element
+     * or attribute.  If the supplied name matches a property of the
+     * class being configured, that property configurer is returned.  If
+     * the supplied name matches the role shorthand for the class' typed
+     * property, then the typed property configurer is used.
+     *
+     * @param configurer The configurer for the class being configured.
+     * @param name The attribute/element name.
+     */
+    private PropertyConfigurer getConfigurerFromName( final ObjectConfigurer configurer,
+                                                      final String name,
+                                                      boolean ignoreRoleName )
+        throws NoSuchPropertyException
+    {
+        // Try a named property
+        final NoSuchPropertyException exc;
+        try
+        {
+            return configurer.getProperty( name );
+        }
+        catch( NoSuchPropertyException e )
+        {
+            // Keep for later
+            exc = e;
+        }
+
+        // Try a typed property
+        final PropertyConfigurer propertyConfigurer = configurer.getTypedProperty();
+        if( ! ignoreRoleName )
+        {
+            final String roleShorthand = m_roleManager.getNameForRole( propertyConfigurer.getType().getName() );
+            if( ! name.equalsIgnoreCase(roleShorthand) )
+            {
+                // Rethrow the original exception
+                throw exc;
+            }
+        }
+
+        return propertyConfigurer;
+    }
+
+    /**
      * Utility method to create an instance of the
-     * specified type that satisfied supplied interface.
+     * specified type that satisfies supplied interface.
      */
     private Object createdTypedObject( final String name,
                                        final Class type )
         throws ConfigurationException
     {
-        final TypeFactory factory = getTypeFactory( type );
+        // Attempt to create the object
+        final Object obj;
         try
         {
-            return factory.create( name );
+            final TypeFactory factory = getTypeFactory( DataType.class );
+            obj = factory.create( name );
         }
         catch( final Exception e )
         {
@@ -460,6 +508,16 @@ public class DefaultConfigurer
                                type.getName() );
             throw new ConfigurationException( message, e );
         }
+
+        // Check the types
+        if( ! type.isInstance( obj ) )
+        {
+            final String message =
+                REZ.getString( "mismatched-typed-object.error", name, type.getName() );
+            throw new ConfigurationException( message );
+        }
+
+        return obj;
     }
 
     /**

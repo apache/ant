@@ -7,6 +7,8 @@
  */
 package org.apache.myrmidon.components.configurer;
 
+import org.apache.myrmidon.framework.DataType;
+
 /**
  * A basic interface to test configurer.
  *
@@ -14,5 +16,7 @@ package org.apache.myrmidon.components.configurer;
  * @version $Revision$ $Date$
  */
 public interface MyRole1
+    extends DataType
 {
+    String ROLE = MyRole1.class.getName();
 }

@@ -8,7 +8,7 @@
 package org.apache.myrmidon.components.configurer;
 
 import java.io.File;
-import junit.framework.AssertionFailedError;
+import org.apache.antlib.core.StringToIntegerConverter;
 import org.apache.avalon.excalibur.i18n.ResourceManager;
 import org.apache.avalon.excalibur.i18n.Resources;
 import org.apache.avalon.framework.configuration.ConfigurationException;
@@ -16,7 +16,9 @@ import org.apache.avalon.framework.configuration.DefaultConfiguration;
 import org.apache.myrmidon.api.TaskContext;
 import org.apache.myrmidon.components.AbstractComponentTest;
 import org.apache.myrmidon.components.workspace.DefaultTaskContext;
+import org.apache.myrmidon.framework.DataType;
 import org.apache.myrmidon.interfaces.configurer.Configurer;
+import org.apache.myrmidon.interfaces.role.RoleManager;
 import org.apache.myrmidon.interfaces.type.DefaultTypeFactory;
 
 /**
@@ -81,6 +83,35 @@ public class DefaultConfigurerTest
     }
 
     /**
+     * Tests attribute conversion.
+     */
+    public void testAttributeConvert()
+        throws Exception
+    {
+        // Setup test data
+        final DefaultConfiguration config = new DefaultConfiguration( "test", "test" );
+        config.setAttribute( "int-prop", "90" );
+        config.setAttribute( "integer-prop", "-401" );
+
+        // Register the converter
+        final Class converterClass = StringToIntegerConverter.class;
+        final Class sourceClass = String.class;
+        final Class destClass = Integer.class;
+        registerConverter( converterClass, sourceClass, destClass );
+
+        final ConfigTest10 test = new ConfigTest10();
+
+        // Configure the object
+        m_configurer.configure( test, config, m_context );
+
+        // Check result
+        final ConfigTest10 expected = new ConfigTest10();
+        expected.setIntProp( 90 );
+        expected.setIntegerProp( new Integer(-401) );
+        assertEquals( expected, test );
+    }
+
+    /**
      * Tests setting an unknown attribute.
      */
     public void testSetUnknownAttribute()
@@ -96,7 +127,7 @@ public class DefaultConfigurerTest
         try
         {
             m_configurer.configure( test, config, m_context );
-            throw new AssertionFailedError();
+            fail();
         }
         catch( final ConfigurationException ce )
         {
@@ -155,7 +186,7 @@ public class DefaultConfigurerTest
         try
         {
             m_configurer.configure( test, config, m_context );
-            throw new AssertionFailedError();
+            fail();
         }
         catch( final ConfigurationException ce )
         {
@@ -202,7 +233,7 @@ public class DefaultConfigurerTest
         try
         {
             m_configurer.configure( test, config, m_context );
-            throw new AssertionFailedError();
+            fail();
         }
         catch( final ConfigurationException ce )
         {
@@ -281,6 +312,34 @@ public class DefaultConfigurerTest
     }
 
     /**
+     * Tests that extra content is not allowed in a reference element.
+     */
+    public void testReferenceElementExtra()
+        throws Exception
+    {
+        // Setup test data
+        final DefaultConfiguration config = new DefaultConfiguration( "test", "test" );
+        final DefaultConfiguration elem = new DefaultConfiguration( "some-prop-ref", "test" );
+        elem.setAttribute( "id", "prop-a" );
+        elem.setAttribute( "extra-attr", "some value" );
+        config.addChild( elem );
+
+        final ConfigTest1 test = new ConfigTest1();
+
+        try
+        {
+            // Configure the object
+            m_configurer.configure( test, config, m_context );
+            fail();
+        }
+        catch( ConfigurationException e )
+        {
+            final String message = REZ.getString( "extra-config-for-ref.error" );
+            assertSameMessage( message, e );
+        }
+    }
+
+    /**
      * Tests whether an object with a non-iterface typed adder causes an
      * exception.
      */
@@ -326,8 +385,9 @@ public class DefaultConfigurerTest
         }
         catch( final ConfigurationException ce )
         {
-            final String message = REZ.getString( "multiple-typed-adder-methods-for-element.error",
-                                                  ConfigTest5.class.getName() );
+            final String message = REZ.getString( "multiple-adder-methods-for-element.error",
+                                                  ConfigTest5.class.getName(),
+                                                  "");
             assertSameMessage( message, ce );
         }
     }
@@ -349,8 +409,8 @@ public class DefaultConfigurerTest
         final DefaultTypeFactory factory = new DefaultTypeFactory( loader );
         factory.addNameClassMapping( "my-type1", MyType1.class.getName() );
         factory.addNameClassMapping( "my-type2", MyType2.class.getName() );
-        getTypeManager().registerType( MyRole1.class, "my-type1", factory );
-        getTypeManager().registerType( MyRole1.class, "my-type2", factory );
+        getTypeManager().registerType( DataType.class, "my-type1", factory );
+        getTypeManager().registerType( DataType.class, "my-type2", factory );
 
         final ConfigTest6 test = new ConfigTest6();
 
@@ -360,6 +420,32 @@ public class DefaultConfigurerTest
         final ConfigTest6 expected = new ConfigTest6();
         expected.add( new MyType1() );
         expected.add( new MyType2() );
+        assertEquals( expected, test );
+    }
+
+    /**
+     * Tests to see if typed adder can be used via an attribute.
+     */
+    public void testTypedAdderAttribute()
+        throws Exception
+    {
+        // Setup test data
+        final DefaultConfiguration config = new DefaultConfiguration( "test", "test" );
+        config.setAttribute( "my-role1", "some value" );
+
+        // Set up the converter and role
+        RoleManager roleMgr = (RoleManager)getComponentManager().lookup( RoleManager.ROLE );
+        roleMgr.addNameRoleMapping( "my-role1", MyRole1.ROLE );
+        registerConverter( StringToMyRole1Converter.class, String.class, MyRole1.class );
+
+        final ConfigTest6 test = new ConfigTest6();
+
+        // Configure the object
+        m_configurer.configure( test, config, m_context );
+
+        // Check result
+        final ConfigTest6 expected = new ConfigTest6();
+        expected.add( new MyType1() );
         assertEquals( expected, test );
     }
 
@@ -388,7 +474,7 @@ public class DefaultConfigurerTest
     }
 
     /**
-     * Tests to see if typed adder works, with Configuration objects.
+     * Tests to see if adder works, with Configuration objects.
      */
     public void testConfigAdder()
         throws Exception
@@ -470,7 +556,7 @@ public class DefaultConfigurerTest
         try
         {
             m_configurer.configure( test, config, m_context );
-            throw new AssertionFailedError();
+            fail();
         }
         catch( ConfigurationException e )
         {
@@ -498,7 +584,7 @@ public class DefaultConfigurerTest
         try
         {
             m_configurer.configure( test, config, m_context );
-            throw new AssertionFailedError();
+            fail();
         }
         catch( ConfigurationException e )
         {
@@ -508,6 +594,38 @@ public class DefaultConfigurerTest
                                                   ConfigTest2.class.getName() );
             assertSameMessage( message, e );
         }
+    }
+
+    /**
+     * Tests using a reference with a typed adder.  Tests using an attribute
+     * and a nested element.
+     */
+    public void testTypedAdderReference()
+        throws Exception
+    {
+        // Setup test data
+        final DefaultConfiguration config = new DefaultConfiguration( "test", "test" );
+        config.setAttribute( "my-role1-ref", "id" );
+        final DefaultConfiguration child = new DefaultConfiguration( "my-role1-ref", "test" );
+        child.setAttribute( "id", "id2" );
+        config.addChild( child );
+
+        // Add role mapping, and add to reference to context
+        final RoleManager roleMgr = (RoleManager)getComponentManager().lookup( RoleManager.ROLE );
+        roleMgr.addNameRoleMapping( "my-role1", MyRole1.class.getName() );
+        m_context.setProperty( "id", new MyType1() );
+        m_context.setProperty( "id2", new MyType2() );
+
+        final ConfigTest6 test = new ConfigTest6();
+
+        // Configure the object
+        m_configurer.configure( test, config, m_context );
+
+        // Compare against expected value
+        final ConfigTest6 expected = new ConfigTest6();
+        expected.add( new MyType1() );
+        expected.add( new MyType2() );
+        assertEquals( expected, test );
     }
 
     /**
@@ -527,7 +645,7 @@ public class DefaultConfigurerTest
         {
             // Configure the object
             m_configurer.configure( test, config, m_context );
-            throw new AssertionFailedError();
+            fail();
         }
         catch( ConfigurationException e )
         {
