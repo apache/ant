@@ -35,6 +35,11 @@ enhancements of existing tasks.
 
   Could be part of the same module task would be developed in?
 
+* make the default logger's output clear, informative, and terse.
+
+  Actually, this is a little bit abstract, but doesn't apply to the
+  core either.
+
 II. Abstract goals that need to be abstract until we get into design
 decisions.
 ======================================================================
@@ -54,6 +59,8 @@ decisions.
 
 * keep the interface for Tasks as similar to the one of Ant1 as
   possible - i.e. don't break something just because we can.
+
+* Ant should be cancelable
 
 III. Things that are simple, easy to implement, where we expect the
 committers to agree
@@ -237,4 +244,6 @@ V. Things we probably don't agree on.
   friendly, allows for property expansions ...
 
 * Make loggers configurable via build.xml.
+
+* tasks should have access to its own XML representation.
 
