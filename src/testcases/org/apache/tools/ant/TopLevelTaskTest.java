@@ -54,6 +54,9 @@
 
 package org.apache.tools.ant;
 
+// This test will fail with embed, or if top-level is moved out of
+// dependency - as 'echo' happens as part of configureProject stage.
+
 /**
  * Tests for builds with tasks at the top level
  *
