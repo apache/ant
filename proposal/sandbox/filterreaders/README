@@ -25,7 +25,7 @@ Design:
 * Each AntFilterReader encloses the custom class representing 
   the actual java.io.FilterReader and contains configuration 
   parameters that may be used by the custom class if it
-  implements the org.apache.tools.ant.types.Configurable
+  implements the org.apache.tools.ant.types.Parameterizable
   interface.
   
 * Custom filter readers can be created easily even
@@ -33,7 +33,7 @@ Design:
   do to create a custom filter is to extend 
   java.io.FilterReader.
   
-* If the extended class also implements Configurable,
+* If the extended class also implements Parameterizable,
   operation parameters can be made available to the
   custom filter.
 
