@@ -65,6 +65,8 @@ Fixed bugs:
 
 * <jar update="true"> would remove the original manifest.
 
+* fix up folder creation in PVCS task
+
 Other changes:
 --------------
 
