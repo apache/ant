@@ -52,7 +52,7 @@
  * <http://www.apache.org/>.
  */
 
-package org.apache.tools.ant.taskdefs.optional.javacc;
+package org.apache.tools.ant.taskdefs.optional.metamata;
 
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
@@ -69,7 +69,7 @@ import java.io.IOException;
  *
  * @author thomas.haas@softwired-inc.com
  */
-public class JavaCC extends Task {
+public class MParse extends Task {
 
     private Path userclasspath = null;
     private File metahome = null;
@@ -104,7 +104,7 @@ public class JavaCC extends Task {
         cleanupHack = value;
     }
 
-    public JavaCC() {
+    public MParse() {
         cmdl.setVm("java");
         cmdl.setClassname("com.metamata.jj.MParse");
     }
@@ -161,7 +161,7 @@ public class JavaCC extends Task {
         try {
             try {
                 if (process.execute() != 0) {
-                    throw new BuildException("JavaCC failed.");
+                    throw new BuildException("MParse failed.");
                 }
             } finally {
                 if (cleanupHack) {
@@ -182,7 +182,7 @@ public class JavaCC extends Task {
             }
         }
         catch (IOException e) {
-            throw new BuildException("Failed to launch JavaCC: " + e);
+            throw new BuildException("Failed to launch MParse: " + e);
         }
     }
 
