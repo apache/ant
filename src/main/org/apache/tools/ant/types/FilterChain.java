@@ -55,6 +55,7 @@ package org.apache.tools.ant.types;
 
 import java.util.Vector;
 
+import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.filters.ClassConstants;
 import org.apache.tools.ant.filters.ExpandProperties;
 import org.apache.tools.ant.filters.HeadFilter;
@@ -75,7 +76,7 @@ import org.apache.tools.ant.filters.TailFilter;
  */
 public final class FilterChain extends DataType implements Cloneable {
 
-    private final Vector filterReaders = new Vector();
+    private Vector filterReaders = new Vector();
 
     public final void addFilterReader(final AntFilterReader filterReader) {
         filterReaders.addElement(filterReader);
@@ -135,5 +136,31 @@ public final class FilterChain extends DataType implements Cloneable {
 
     public final void addTailFilter(final TailFilter tailFilter) {
         filterReaders.addElement(tailFilter);
+    }
+
+    /**
+     * Makes this instance in effect a reference to another FilterChain instance
+     *
+     * <p>You must not set another attribute or nest elements inside
+     * this element if you make it a reference.</p>
+     *
+     * @param r the reference to which this instance is associated
+     * @exception BuildException if this instance already has been configured.
+     */
+    public void setRefid(Reference r) throws BuildException {
+        if (!filterReaders.isEmpty()) {
+            throw tooManyAttributes();
+        }
+        // change this to get the objects from the other reference
+        Object o = r.getReferencedObject(getProject());
+        if (o instanceof FilterChain) {
+            FilterChain fc = (FilterChain) o;
+            filterReaders = fc.getFilterReaders();
+        } else {
+            String msg = r.getRefId() + " doesn\'t refer to a FilterChain";
+            throw new BuildException(msg);
+        }
+
+        super.setRefid(r);
     }
 }
