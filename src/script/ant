@@ -83,7 +83,7 @@ do
       if [ -z "$LOCALCLASSPATH" ] ; then
         LOCALCLASSPATH=$i
       else
-        LOCALCLASSPATH=$LOCALCLASSPATH:"$i"
+        LOCALCLASSPATH="$i":$LOCALCLASSPATH
       fi
     fi
 done
