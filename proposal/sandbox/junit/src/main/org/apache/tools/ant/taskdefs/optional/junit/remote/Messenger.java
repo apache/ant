@@ -90,7 +90,7 @@ public class Messenger {
         }
     }
 
-    public TestRunEvent read() throws IOException {
+    public TestRunEvent read() throws Exception {
         return (TestRunEvent)((ObjectInputStream)in).readObject();
     }
 

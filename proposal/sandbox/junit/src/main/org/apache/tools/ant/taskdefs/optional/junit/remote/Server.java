@@ -125,15 +125,21 @@ public class Server {
     public void cancel() {
         if (isRunning()) {
             TestRunEvent evt = new TestRunEvent(new Integer(-1), TestRunEvent.RUN_STOP);
-            messenger.writeEvent(evt);
+            try {
+                messenger.writeEvent(evt);
+            } catch (IOException e){
+            }
         }
     }
 
     /** shutdown the server and any running client */
     public void shutdown() {
-        if (messenger != null) {
-            messenger.close();
-            messenger = null;
+        try {
+            if (messenger != null) {
+                messenger.close();
+                messenger = null;
+            }
+        } catch (IOException e){
         }
         try {
             if (client != null) {
@@ -165,7 +171,7 @@ public class Server {
                 while ( (evt = messenger.read()) != null ) {
                     dispatcher.dispatchEvent(evt);
                 }
-            } catch (IOException e) {
+            } catch (Exception e) {
                 //@fixme this stacktrace might be normal when closing
                 // the socket. So decompose the above in distinct steps
                 e.printStackTrace();
