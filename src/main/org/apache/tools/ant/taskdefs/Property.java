@@ -245,8 +245,12 @@ public class Property extends Task {
             for (Enumeration e = osEnv.elements(); e.hasMoreElements(); ) {
                 String entry = (String)e.nextElement();
                 int pos = entry.indexOf('=');
-                props.put(prefix + entry.substring(0, pos), 
-                          entry.substring(pos + 1));
+                if (pos == -1) {
+                    log("Ignoring: " + entry, Project.MSG_WARN);
+                } else {
+                    props.put(prefix + entry.substring(0, pos), 
+                              entry.substring(pos + 1));
+                }
             }
             addProperties(props);
         } catch (Exception ex) {
