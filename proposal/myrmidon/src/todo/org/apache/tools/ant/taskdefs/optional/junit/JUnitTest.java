@@ -12,6 +12,7 @@ import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.Properties;
 import org.apache.tools.ant.Project;
+import org.apache.myrmidon.api.TaskContext;
 
 /**
  * <p>
@@ -161,14 +162,14 @@ public class JUnitTest extends BaseTest
         return m_runs;
     }
 
-    public boolean shouldRun( Project p )
+    public boolean shouldRun( final TaskContext context )
     {
-        if( ifProperty != null && p.getProperty( ifProperty ) == null )
+        if( ifProperty != null && context.getProperty( ifProperty ) == null )
         {
             return false;
         }
         else if( unlessProperty != null &&
-            p.getProperty( unlessProperty ) != null )
+            context.getProperty( unlessProperty ) != null )
         {
             return false;
         }

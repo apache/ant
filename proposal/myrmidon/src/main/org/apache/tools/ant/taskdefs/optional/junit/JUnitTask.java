@@ -21,6 +21,7 @@ import java.util.Properties;
 import java.util.Random;
 import org.apache.aut.nativelib.ExecManager;
 import org.apache.myrmidon.api.TaskException;
+import org.apache.myrmidon.api.TaskContext;
 import org.apache.tools.ant.Task;
 import org.apache.myrmidon.framework.Execute;
 import org.apache.tools.ant.taskdefs.exec.LogOutputStream;
@@ -390,7 +391,8 @@ public class JUnitTask extends Task
         while( list.hasNext() )
         {
             JUnitTest test = (JUnitTest)list.next();
-            if( test.shouldRun( null ) )
+            final TaskContext context = getContext();
+            if( test.shouldRun( context ) )
             {
                 execute( test );
             }
