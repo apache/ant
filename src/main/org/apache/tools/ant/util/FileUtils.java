@@ -122,7 +122,7 @@ public class FileUtils {
      * Method to retrieve The FileUtils, which is shared by all users of this
      * method.
      * @return an instance of FileUtils.
-     * @since Ant 1.7
+     * @since Ant 1.6.3
      */
     public static FileUtils getFileUtils() {
         return PRIMARY_INSTANCE;
@@ -963,7 +963,7 @@ public class FileUtils {
      * @return true if the content of the files is the same.
      *
      * @throws IOException if the files cannot be read.
-     * @since ant 1.7
+     * @since Ant 1.6.3
      */
     public boolean contentEquals(File f1, File f2, boolean textfile) throws IOException {
         if (f1.exists() != f2.exists()) {
@@ -1064,7 +1064,7 @@ public class FileUtils {
 
     /**
      * This was originally an emulation of {@link File#getParentFile} for JDK 1.1,
-     * but it is now implemented using that method (Ant 1.7 onwards).
+     * but it is now implemented using that method (Ant 1.6.3 onwards).
      * @param f the file whose parent is required.
      * @return the given file's parent, or null if the file does not have a
      *         parent.
@@ -1119,7 +1119,7 @@ public class FileUtils {
 
     /**
      * This was originally an emulation of File.createNewFile for JDK 1.1,
-     * but it is now implemented using that method (Ant1.7 onwards).
+     * but it is now implemented using that method (Ant 1.6.3 onwards).
      *
      * <p>This method has historically <strong>not</strong> guaranteed that the
      * operation was atomic. In its current implementation it is.
@@ -1346,7 +1346,7 @@ public class FileUtils {
      * @param granularity an offset added to the source time.
      * @return true if the source is older than the dest after accounting
      *              for granularity.
-     * @since Ant1.7
+     * @since Ant 1.6.3
      */
     public boolean isUpToDate(File source, File dest, long granularity) {
         //do a check for the destination file existing
@@ -1365,7 +1365,7 @@ public class FileUtils {
      * @param source source file (should be the older).
      * @param dest dest file (should be the newer).
      * @return true if the source is older than the dest, taking the granularity into account.
-     * @since Ant1.7
+     * @since Ant 1.6.3
      */
     public boolean isUpToDate(File source, File dest) {
         return isUpToDate(source, dest, getFileTimestampGranularity());
