@@ -87,7 +87,7 @@ public class Available extends Task {
     }
 
     public void setFile(String filename) {
-        this.file = file;
+        this.file = filename;
     }
 
     public void setResource(String resource) {
