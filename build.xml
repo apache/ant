@@ -189,15 +189,17 @@
     <copydir src="${bin.dir}" dest="bin"/>
   </target>     
 
-  <target name="fullinstall" depends="dist" if="ant.install">
+  <target name="install" depends="dist" if="ant.install">
     <echo message="installing full copy of ant into ${ant.install}"/>
     <mkdir dir="${ant.install}"/>
     <copydir src="${ant.dist.dir}" dest="${ant.install}"/>
     <chmod perm="+x" file="${ant.install}/bin/ant"/>
     <chmod perm="+x" file="${ant.install}/bin/antRun"/>
   </target>     
+
+  <target name="fullinstall" depends="install"/>
   
-  <target name="install" depends="main" if="ant.install">
+  <target name="mininstall" depends="main" if="ant.install">
     <echo message="copy minimal ant installtion into ${ant.install}"/>
     <mkdir dir="${ant.install}"/>
     <copydir src="${lib.dir}" dest="${ant.install}/lib"/>
