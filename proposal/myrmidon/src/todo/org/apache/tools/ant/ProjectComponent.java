@@ -52,12 +52,6 @@ public abstract class ProjectComponent
         //HACK: NOOP execute - should be deleted in the future!
     }
 
-    protected File resolveFile( final String name )
-        throws TaskException
-    {
-        return FileUtils.newFileUtils().resolveFile( project.getBaseDir(), name );
-    }
-
     /**
      * Log a mesage with the give priority.
      *
