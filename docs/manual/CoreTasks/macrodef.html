@@ -333,13 +333,13 @@
     </p>
     <blockquote>
 <pre class="code">
-&lt;macrodef name="test"/&gt;
+&lt;macrodef name="test"&gt;
    &lt;attribute name="one"/&gt;                     <b>*1</b>
    &lt;attribute name="two" default="@{one}"/&gt;    <b>*2</b>
    &lt;sequential&gt;
       &lt;echo&gt;one=@{one}   two=@{two}&lt;/echo&gt;
    &lt;/sequential&gt;
-&lt;/macrodef/&gt;
+&lt;/macrodef&gt;
 &lt;test one="test"/&gt;
 </pre>
     </blockquote>
