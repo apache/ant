@@ -53,87 +53,75 @@
  */
 package org.apache.ant.antlib.system;
 import java.io.File;
+import org.apache.ant.common.antlib.AbstractTask;
+import org.apache.ant.common.antlib.AntContext;
 import org.apache.ant.common.model.Project;
 import org.apache.ant.common.service.ExecService;
-import org.apache.ant.common.service.MagicProperties;
 import org.apache.ant.common.util.ExecutionException;
-import org.apache.ant.common.util.FileUtils;
 
 /**
- * The Ant task - used to execute a different build file
+ * A Task to create a project reference.
  *
  * @author Conor MacNeill
- * @created 4 February 2002
+ * @created 17 April 2002
  */
-public class Ant extends AntBase {
-    /** The ant file to be run */
-    private String antFileName;
-    /** the base directory to use for the run */
-    private File baseDir;
-    /** File to capture any output */
-    private File outputFile;
+public class Ref extends AbstractTask {
+
+    /** The project file containing the project to be referenced. */
+    private File projectFile;
+
+    /** THe name under which this project is to be referenced. */
+    private String name;
+
+    /** The core's ExecutionService for running builds and external programs */
+    private ExecService execService;
 
 
     /**
-     * sets the file containing the XML representation model to build
+     * Initialise this task
      *
-     * @param antFileName the file to build
+     * @param context core's context
+     * @param componentType the component type of this component (i.e its
+     *      defined name in the build file)
+     * @exception ExecutionException if we can't access the data service
      */
-    public void setAntFile(String antFileName) {
-        this.antFileName = antFileName;
+    public void init(AntContext context, String componentType)
+         throws ExecutionException {
+        super.init(context, componentType);
+        execService = (ExecService) getCoreService(ExecService.class);
     }
 
 
     /**
-     * Set the base directory for the execution of the build
+     * Sets the file containing the XML representation model of the referenced
+     * project
      *
-     * @param baseDir the base directory for the build
+     * @param projectFile the file to build
      */
-    public void setDir(File baseDir) {
-        this.baseDir = baseDir;
+    public void setProject(File projectFile) {
+        this.projectFile = projectFile;
     }
 
 
     /**
-     * The output file for capturing the build output
+     * Set the name under which the project will be referenced
      *
-     * @param outputFile the output file for capturing the build output
+     * @param name the reference label
      */
-    public void setOutput(File outputFile) {
-        this.outputFile = outputFile;
+    public void setName(String name) {
+        this.name = name;
     }
 
 
     /**
-     * Run the sub-build
+     * Create the project reference
      *
-     * @exception ExecutionException if the build can't be run
+     * @exception ExecutionException if the project cannot be referenced.
      */
     public void execute() throws ExecutionException {
-        if (baseDir == null) {
-            baseDir = getExecService().getBaseDir();
-        }
+        Project model = execService.parseXMLBuildFile(projectFile);
 
-        File antFile = null;
-
-        if (antFileName == null) {
-            antFile = new File(baseDir, "build.ant");
-            if (!antFile.exists()) {
-                antFile = new File(baseDir, "build.xml");
-            }
-        } else {
-            antFile
-                 = FileUtils.newFileUtils().resolveFile(baseDir, antFileName);
-        }
-
-        setProperty(MagicProperties.BASEDIR, baseDir.getAbsolutePath());
-
-        ExecService execService = getExecService();
-        Project model = execService.parseXMLBuildFile(antFile);
-        Object key = execService.setupBuild(model, getProperties());
-
-        setSubBuildKey(key);
-        execService.runBuild(key, getTargets());
+        execService.createProjectReference(name, model);
     }
 }
 

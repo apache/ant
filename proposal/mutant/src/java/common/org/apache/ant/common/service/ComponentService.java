@@ -147,7 +147,7 @@ public interface ComponentService {
     void importLibrary(String libraryId) throws ExecutionException;
 
     /**
-     * Imports a component defined in a nother frame.
+     * Imports a component defined in another frame.
      *
      * @param relativeName the qualified name of the component relative to
      *      this execution frame

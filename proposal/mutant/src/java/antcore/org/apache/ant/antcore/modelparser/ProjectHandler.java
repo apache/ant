@@ -158,18 +158,7 @@ public class ProjectHandler extends ModelElementHandler {
                              Attributes attributes)
          throws SAXParseException {
 
-        if (qualifiedName.equals(REF_ELEMENT)) {
-            RefHandler refHandler = new RefHandler();
-            refHandler.start(getParseContext(), getXMLReader(), this,
-                getLocator(), attributes, getElementSource(),
-                qualifiedName);
-            try {
-                project.referenceProject(refHandler.getRefName(),
-                    refHandler.getReferencedProject());
-            } catch (ModelException e) {
-                throw new SAXParseException(e.getMessage(), getLocator(), e);
-            }
-        } else if (qualifiedName.equals(INCLUDE_ELEMENT)) {
+        if (qualifiedName.equals(INCLUDE_ELEMENT)) {
             IncludeHandler includeHandler = new IncludeHandler(project);
             includeHandler.start(getParseContext(), getXMLReader(),
                 this, getLocator(), attributes, getElementSource(),
@@ -193,7 +182,7 @@ public class ProjectHandler extends ModelElementHandler {
             project.addTask(buildElementHandler.getBuildElement());
         } else {
           // ignore namespaced elements
-          throw new SAXParseException("Only the \"ant\" namespace is "
+          throw new SAXParseException("namespace support is not "
             + "currently recognized (" + qualifiedName + ")", getLocator());
         }
     }

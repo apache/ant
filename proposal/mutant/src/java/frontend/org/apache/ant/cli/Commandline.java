@@ -53,7 +53,6 @@
  */
 package org.apache.ant.cli;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.PrintStream;
@@ -66,10 +65,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import org.apache.ant.antcore.config.AntConfig;
-import org.apache.ant.antcore.config.AntConfigHandler;
 import org.apache.ant.antcore.execution.ExecutionManager;
 import org.apache.ant.antcore.modelparser.XMLProjectParser;
-import org.apache.ant.antcore.xml.ParseContext;
 import org.apache.ant.antcore.xml.XMLParseException;
 import org.apache.ant.common.event.BuildEvent;
 import org.apache.ant.common.event.BuildListener;

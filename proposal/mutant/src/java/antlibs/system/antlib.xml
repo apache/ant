@@ -7,6 +7,8 @@
 
   <taskdef name="ant" classname="org.apache.ant.antlib.system.Ant"/>
   <taskdef name="antcall" classname="org.apache.ant.antlib.system.AntCall"/>
+
+  <taskdef name="ref" classname="org.apache.ant.antlib.system.Ref"/>
  
   <taskdef name="parallel" classname="org.apache.ant.antlib.system.Parallel"/>
   <taskdef name="sequential" classname="org.apache.ant.antlib.system.Sequential"/>

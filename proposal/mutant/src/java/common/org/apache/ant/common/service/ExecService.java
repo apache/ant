@@ -67,56 +67,71 @@ import org.apache.ant.common.util.ExecutionException;
  */
 public interface ExecService {
     /**
-     * Setup a sub-build.
+     * Parse an XML file into a build model.
      *
-     * @param antFile the file containing the XML description of the model
-     * @param properties the initiali properties to be used in the build
-     * @exception ExecutionException if the subbuild cannot be setup
-     * @return a key to the build allowing it to be executed and managed
+     * @param xmlBuildFile The file containing the XML build description.
+     * @return A Project model for the build.
+     * @exception ExecutionException if the build cannot be parsed
      */
-    Object setupBuild(File antFile, Map properties)
+    Project parseXMLBuildFile(File xmlBuildFile) throws ExecutionException;
+
+
+    /**
+     * Create a project reference.
+     *
+     * @param referenceName the name under which the project will be
+     *      referenced.
+     * @param model the project model.
+     * @exception ExecutionException if the project cannot be referenced.
+     */
+    void createProjectReference(String referenceName, Project model)
          throws ExecutionException;
+
 
     /**
      * Setup a sub-build.
      *
      * @param model the project model to be used for the build
      * @param properties the initiali properties to be used in the build
-     * @exception ExecutionException if the subbuild cannot be setup
      * @return a key to the build allowing it to be executed and managed
+     * @exception ExecutionException if the subbuild cannot be setup
      */
     Object setupBuild(Project model, Map properties)
          throws ExecutionException;
+
 
     /**
      * Setup a sub-build using the current frame's project model
      *
      * @param properties the initiali properties to be used in the build
-     * @exception ExecutionException if the subbuild cannot be setup
      * @return a key to the build allowing it to be executed and managed
+     * @exception ExecutionException if the subbuild cannot be setup
      */
     Object setupBuild(Map properties)
          throws ExecutionException;
+
 
     /**
      * Run a build which have been previously setup
      *
      * @param buildKey the buildKey returned previously when the build was
-     *        setup
+     *      setup
      * @param targets A list of targets to be run
      * @exception ExecutionException if the build cannot be run
      */
-   void runBuild(Object buildKey, List targets) throws ExecutionException;
-         
+    void runBuild(Object buildKey, List targets) throws ExecutionException;
+
+
     /**
-     * execute a task. The task should have already been initialised by
-     * the core
+     * execute a task. The task should have already been initialised by the
+     * core
      *
-     * @param task the task to be executed. 
+     * @param task the task to be executed.
      * @exception ExecutionException if there is a problem in execution.
      */
     void executeTask(Task task) throws ExecutionException;
-    
+
+
     /**
      * get the name of the project associated with this execution.
      *
@@ -124,23 +139,24 @@ public interface ExecService {
      */
     String getProjectName();
 
+
     /**
      * Get the basedir for the current execution
      *
      * @return the base directory for this execution of Ant
      */
     File getBaseDir();
-    
+
+
     /**
      * Handle subbuild output.
      *
      * @param subbuildKey the core's key for managing the subbuild.
      * @param line the content produce by the current thread.
      * @param isErr true if this content is from the thread's error stream.
-     *
      * @exception ExecutionException if the subbuild cannot be found.
      */
-    void handleBuildOutput(Object subbuildKey, String line, boolean isErr) 
-        throws ExecutionException;
+    void handleBuildOutput(Object subbuildKey, String line, boolean isErr)
+         throws ExecutionException;
 }
 

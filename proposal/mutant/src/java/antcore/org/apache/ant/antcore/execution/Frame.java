@@ -56,9 +56,10 @@ import java.io.File;
 import java.net.URL;
 import java.util.HashMap;
 import java.util.Iterator;
-import java.util.List;
 import java.util.Map;
 import java.util.StringTokenizer;
+import java.util.List;
+import java.util.ArrayList;
 import org.apache.ant.antcore.config.AntConfig;
 import org.apache.ant.common.antlib.Task;
 import org.apache.ant.common.event.BuildListener;
@@ -72,7 +73,6 @@ import org.apache.ant.common.service.EventService;
 import org.apache.ant.common.service.ExecService;
 import org.apache.ant.common.service.FileService;
 import org.apache.ant.common.service.MagicProperties;
-import org.apache.ant.common.util.ConfigException;
 import org.apache.ant.common.util.DemuxOutputReceiver;
 import org.apache.ant.common.util.ExecutionException;
 import org.apache.ant.common.util.FileUtils;
@@ -173,7 +173,8 @@ public class Frame implements DemuxOutputReceiver {
      * @return the string with all property references replaced
      * @exception ExecutionException if any of the properties do not exist
      */
-    public String replacePropertyRefs(String value) throws ExecutionException {
+    protected String replacePropertyRefs(String value) 
+         throws ExecutionException {
         return dataService.replacePropertyRefs(value);
     }
 
@@ -189,15 +190,6 @@ public class Frame implements DemuxOutputReceiver {
         this.project = project;
         referencedFrames = new HashMap();
 
-        for (Iterator i = project.getReferencedProjectNames(); i.hasNext();) {
-            String referenceName = (String) i.next();
-            Project referencedProject
-                 = project.getReferencedProject(referenceName);
-            Frame referencedFrame = createFrame(referencedProject);
-
-            referencedFrames.put(referenceName, referencedFrame);
-        }
-
         configureServices();
         componentManager.setStandardLibraries(standardLibs);
         setMagicProperties();
@@ -209,7 +201,7 @@ public class Frame implements DemuxOutputReceiver {
      *
      * @return the project's name
      */
-    public String getProjectName() {
+    protected String getProjectName() {
         if (project != null) {
             return project.getName();
         }
@@ -547,6 +539,20 @@ public class Frame implements DemuxOutputReceiver {
         }
     }
 
+    /**
+     * Create a project reference.
+     *
+     * @param name the name under which the project will be
+     *      referenced.
+     * @param project the project model.
+     * @exception ExecutionException if the project cannot be referenced.
+     */
+    protected void createProjectReference(String name, Project project) 
+        throws ExecutionException {
+       Frame referencedFrame = createFrame(project);
+       referencedFrames.put(name, referencedFrame);
+       referencedFrame.initialize();
+    }
 
     /**
      * Create a new frame for a given project
@@ -618,8 +624,6 @@ public class Frame implements DemuxOutputReceiver {
      * @exception ExecutionException if there is a problem in the build
      */
     protected void runBuild(List targets) throws ExecutionException {
-        determineBaseDirs();
-
         initialize();
         if (targets.isEmpty()) {
             // we just execute the default target if any
@@ -641,6 +645,77 @@ public class Frame implements DemuxOutputReceiver {
     }
 
 
+
+    /**
+     * Given a fully qualified target name, this method returns the fully
+     * qualified name of the project
+     *
+     * @param fullTargetName the full qualified target name
+     * @return the full name of the containing project
+     */
+    private String getFullProjectName(String fullTargetName) {
+        int index = fullTargetName.lastIndexOf(Project.REF_DELIMITER);
+        if (index == -1) {
+            return null;
+        }
+
+        return fullTargetName.substring(0, index);
+    }
+
+    /**
+     * Flatten the dependencies to the given target
+     *
+     * @param flattenedList the List of targets that must be executed before
+     *      the given target
+     * @param fullTargetName the fully qualified name of the target
+     * @exception ExecutionException if the given target does not exist in the
+     *      project hierarchy
+     */
+    private void flattenDependency(List flattenedList, String fullTargetName)
+         throws ExecutionException {
+        if (flattenedList.contains(fullTargetName)) {
+            return;
+        }
+        String fullProjectName = getFullProjectName(fullTargetName);
+        Frame frame = getContainingFrame(fullTargetName);
+        String localTargetName = getNameInFrame(fullTargetName);
+        Target target = frame.getProject().getTarget(localTargetName);
+        if (target == null) {
+            throw new ExecutionException("Target " + fullTargetName
+                 + " does not exist");
+        }
+        for (Iterator i = target.getDependencies(); i.hasNext();) {
+            String localDependencyName = (String) i.next();
+            String fullDependencyName = localDependencyName;
+            if (fullProjectName != null) {
+                fullDependencyName = fullProjectName + Project.REF_DELIMITER 
+                    + localDependencyName;
+            }
+            flattenDependency(flattenedList, fullDependencyName);
+            if (!flattenedList.contains(fullDependencyName)) {
+                flattenedList.add(fullDependencyName);
+            }
+        }
+    }
+
+    /**
+     * get the list of dependent targets which must be evaluated for the
+     * given target.
+     *
+     * @param fullTargetName the full name (in reference space) of the
+     *      target
+     * @return the flattened list of targets
+     * @exception ExecutionException if the given target could not be found
+     */
+    protected List getTargetDependencies(String fullTargetName)
+         throws ExecutionException {
+        List flattenedList = new ArrayList();
+        flattenDependency(flattenedList, fullTargetName);
+        flattenedList.add(fullTargetName);
+        return flattenedList;
+    }
+
+
     /**
      * Execute the tasks of a target in this frame with the given name
      *
@@ -649,22 +724,19 @@ public class Frame implements DemuxOutputReceiver {
      *      of the target
      */
     protected void executeTarget(String targetName) throws ExecutionException {
+
         // to execute a target we must determine its dependencies and
         // execute them in order.
 
-        try {
-            // firstly build a list of fully qualified target names to execute.
-            List dependencyOrder = project.getTargetDependencies(targetName);
+        // firstly build a list of fully qualified target names to execute.
+        List dependencyOrder = getTargetDependencies(targetName);
 
-            for (Iterator i = dependencyOrder.iterator(); i.hasNext();) {
-                String fullTargetName = (String) i.next();
-                Frame frame = getContainingFrame(fullTargetName);
-                String localTargetName = getNameInFrame(fullTargetName);
+        for (Iterator i = dependencyOrder.iterator(); i.hasNext();) {
+            String fullTargetName = (String) i.next();
+            Frame frame = getContainingFrame(fullTargetName);
+            String localTargetName = getNameInFrame(fullTargetName);
 
-                frame.executeTargetTasks(localTargetName);
-            }
-        } catch (ConfigException e) {
-            throw new ExecutionException(e);
+            frame.executeTargetTasks(localTargetName);
         }
     }
 
@@ -767,11 +839,7 @@ public class Frame implements DemuxOutputReceiver {
      *      failed
      */
     protected void initialize() throws ExecutionException {
-        for (Iterator i = getReferencedFrames(); i.hasNext();) {
-            Frame referencedFrame = (Frame) i.next();
-
-            referencedFrame.initialize();
-        }
+        determineBaseDir();
 
         Iterator taskIterator = project.getTasks();
 
@@ -785,7 +853,7 @@ public class Frame implements DemuxOutputReceiver {
      * @exception ExecutionException if the base directories cannot be
      *      determined
      */
-    private void determineBaseDirs() throws ExecutionException {
+    private void determineBaseDir() throws ExecutionException {
         if (isDataValueSet(MagicProperties.BASEDIR)) {
             baseDir
                  = new File(getDataValue(MagicProperties.BASEDIR).toString());
@@ -809,12 +877,6 @@ public class Frame implements DemuxOutputReceiver {
             }
         }
         setDataValue(MagicProperties.BASEDIR, baseDir.getAbsolutePath(), true);
-
-        for (Iterator i = getReferencedFrames(); i.hasNext();) {
-            Frame refFrame = (Frame) i.next();
-
-            refFrame.determineBaseDirs();
-        }
     }
 
 

@@ -199,22 +199,19 @@ public class CoreExecService implements ExecService {
 
 
     /**
-     * Setup a sub-build.
+     * Parse an XML file into a build model.
      *
-     * @param antFile the file containing the XML description of the model
-     * @param properties the initiali properties to be used in the build
-     * @return Description of the Return Value
-     * @exception ExecutionException if the subbuild cannot be run
+     * @param xmlBuildFile The file containing the XML build description.
+     * @return A Project model for the build.
+     * @exception ExecutionException if the build cannot be parsed
      */
-    public Object setupBuild(File antFile, Map properties)
+    public Project parseXMLBuildFile(File xmlBuildFile)
          throws ExecutionException {
         try {
             // Parse the build file into a project
             XMLProjectParser parser = new XMLProjectParser();
-            Project project
-                 = parser.parseBuildFile(InitUtils.getFileURL(antFile));
 
-            return setupBuild(project, properties);
+            return parser.parseBuildFile(InitUtils.getFileURL(xmlBuildFile));
         } catch (MalformedURLException e) {
             throw new ExecutionException(e);
         } catch (XMLParseException e) {
@@ -223,6 +220,44 @@ public class CoreExecService implements ExecService {
     }
 
 
+    /**
+     * Create a project reference.
+     *
+     * @param referenceName the name under which the project will be
+     *      referenced.
+     * @param model the project model.
+     * @exception ExecutionException if the project cannot be referenced.
+     */
+    public void createProjectReference(String referenceName, Project model)
+         throws ExecutionException {
+        frame.createProjectReference(referenceName, model);     
+    }
+
+
+    /**
+     * Setup a sub-build.
+     *
+     * @param properties the initiali properties to be used in the build
+     * @param model XXX Description of the Parameter
+     * @return Description of the Return Value
+     * @exception ExecutionException if the subbuild cannot be run
+     */
+    /*
+    public Object setupBuild(File antFile, Map properties)
+         throws ExecutionException {
+        try {
+            // Parse the build file into a project
+            XMLProjectParser parser = new XMLProjectParser();
+            Project project
+                 = parser.parseBuildFile(InitUtils.getFileURL(antFile));
+            return setupBuild(project, properties);
+        } catch (MalformedURLException e) {
+            throw new ExecutionException(e);
+        } catch (XMLParseException e) {
+            throw new ExecutionException(e);
+        }
+    }
+*/
     /**
      * Setup a sub-build.
      *
