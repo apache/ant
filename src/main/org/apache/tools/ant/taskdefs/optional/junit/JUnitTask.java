@@ -1262,11 +1262,10 @@ public class JUnitTask extends Task {
                     classpath.append(antRuntimeClasses);
                 }
                 classLoader = getProject().createClassLoader(classpath);
-                log("Using CLASSPATH " + classLoader.getClasspath(),
-                Project.MSG_VERBOSE);
                 classLoader.setParentFirst(false);
                 classLoader.addJavaLibraries();
-                log("Using CLASSPATH " + classLoader.getClasspath(), Project.MSG_VERBOSE);
+                log("Using CLASSPATH " + classLoader.getClasspath(), 
+                    Project.MSG_VERBOSE);
                 // make sure the test will be accepted as a TestCase
                 classLoader.addSystemPackageRoot("junit");
                 // will cause trouble in JDK 1.1 if omitted
