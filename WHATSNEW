@@ -225,6 +225,8 @@ Other changes:
 
 * <sql> has a new attribute to control escape processing.
 
+* <javah> will invoke oldjavah on JDK 1.4.2.  Bugzilla Report 18667.
+
 Changes from Ant 1.5.2 to Ant 1.5.3
 ===================================
 

@@ -55,6 +55,8 @@
 package org.apache.tools.ant.taskdefs.optional;
 
 import java.io.File;
+import java.lang.reflect.Constructor;
+import java.lang.reflect.Method;
 import java.util.Enumeration;
 import java.util.StringTokenizer;
 import java.util.Vector;
@@ -335,15 +337,29 @@ public class Javah extends Task {
             throw new BuildException("Compile failed");
         }
         */
+        
+            
         try {
-            // Javac uses logstr to change the output stream and calls
-            // the constructor's invoke method to create a compiler instance
-            // dynamically. However, javah has a different interface and this
-            // makes it harder, so here's a simple alternative.
-            //------------------------------------------------------------------
-            com.sun.tools.javah.Main main 
-                = new com.sun.tools.javah.Main(cmd.getArguments());
-            main.run();
+            Class javahMainClass = null;
+            try {
+                // first search for the "old" javah class in 1.4.2 tools.jar
+                javahMainClass = Class.forName("com.sun.tools.javah.oldjavah.Main");
+            } catch(ClassNotFoundException cnfe) {
+                // assume older than 1.4.2 tools.jar
+                javahMainClass = Class.forName("com.sun.tools.javah.Main");
+            }
+            
+            // now search for the constructor that takes in String[] arguments.
+            Class[] strings = new Class[] {String[].class};
+            Constructor constructor = javahMainClass.getConstructor(strings);
+            
+            // construct the javah Main instance
+            Object javahMain = constructor.newInstance(new Object[] {cmd.getArguments()});
+            
+            // find the run method
+            Method runMethod = javahMainClass.getMethod("run",new Class[0]);
+            
+            runMethod.invoke(javahMain,new Object[0]);
         } catch (Exception ex) {
             if (ex instanceof BuildException) {
                 throw (BuildException) ex;
@@ -352,7 +368,7 @@ public class Javah extends Task {
             }
         }
     }
-
+        
     /**
      * Does the command line argument processing common to classic and
      * modern.
