@@ -1,5 +1,5 @@
 /*
- * Copyright  2000-2004 The Apache Software Foundation
+ * Copyright  2000-2005 The Apache Software Foundation
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -568,7 +568,8 @@ public class SQLExec extends JDBCTask {
 
     /**
      * print any results in the statement
-     * @deprecated use {@link #printResults(java.sql.ResultSet, java.io.PrintStream) the two arg version} instead.
+     * @deprecated use {@link #printResults(java.sql.ResultSet, java.io.PrintStream)
+     *             the two arg version} instead.
      * @param out the place to print results
      * @throws SQLException on SQL problems.
      */
