@@ -65,6 +65,8 @@ import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 
+import org.w3c.dom.Document;
+
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.Task;
@@ -73,7 +75,6 @@ import org.apache.tools.ant.taskdefs.LogStreamHandler;
 import org.apache.tools.ant.types.Commandline;
 import org.apache.tools.ant.types.EnumeratedAttribute;
 import org.apache.tools.ant.types.Path;
-import org.w3c.dom.Document;
 
 
 /**
@@ -131,7 +132,7 @@ public class CovReport extends Task {
       /*
 
       /** coverage home,  mandatory */
-            private File home = null;
+    private File home = null;
 
     /** format of generated report, optional */
     private String format = null;
@@ -227,7 +228,7 @@ public class CovReport extends Task {
     }
 
     //@todo to remove
-            public Path createCoveragepath() {
+    public Path createCoveragepath() {
         if (coveragePath == null) {
             coveragePath = new Path(project);
         }

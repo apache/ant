@@ -68,10 +68,9 @@ package org.apache.tools.ant.taskdefs.optional.dotnet;
 import java.io.File;
 import java.io.IOException;
 
-
-import org.apache.tools.ant.Task;
-import org.apache.tools.ant.Project;
 import org.apache.tools.ant.BuildException;
+import org.apache.tools.ant.Project;
+import org.apache.tools.ant.Task;
 import org.apache.tools.ant.taskdefs.Execute;
 import org.apache.tools.ant.taskdefs.ExecuteStreamHandler;
 import org.apache.tools.ant.taskdefs.LogStreamHandler;
@@ -79,136 +78,135 @@ import org.apache.tools.ant.types.Commandline;
 
 
 /**
-This is a helper class to spawn net commands out. 
+This is a helper class to spawn net commands out.
 In its initial form it contains no .net specifics, just contains
 all the command line/exe construction stuff. However, it may be handy in future
 to have a means of setting the path to point to the dotnet bin directory; in which
 case the shared code should go in here.
-@author Steve Loughran steve_l@iseran.com
-@created 2000-11-01
-@version 0.3
+ @author Steve Loughran steve_l@iseran.com
+ @created 2000-11-01
+ @version 0.3
  */
 
 public class NetCommand {
-    
+
     /** constructor
-    @param owning task
-    @param title (for logging/errors)
-    @param executable. Leave off the '.exe. for future portability
-    */
-    
+     @param owning task
+     @param title (for logging/errors)
+     @param executable. Leave off the '.exe. for future portability
+     */
+
     public NetCommand(Task owner, String title, String program) {
-        _owner=owner;
-        _title=title;
-        _program=program;
-        _commandLine=new Commandline();
+        _owner = owner;
+        _title = title;
+        _program = program;
+        _commandLine = new Commandline();
         _commandLine.setExecutable(_program);
         prepareExecutor();
-        }
-    
+    }
+
     /** owner project
      */
     protected Task _owner;
-    
+
     /** executabe
      */
     protected Execute _exe;
-    
+
     /** what is the command line
      */
     protected Commandline _commandLine;
-    
+
     /** title of the command
      */
     protected String _title;
-    
+
     /** actual program to invoke
      */
     protected String _program;
-    
+
     /** trace flag
      */
-    protected boolean _traceCommandLine=false;
-    
+    protected boolean _traceCommandLine = false;
+
     /**
      * turn tracing on or off
      * @param b trace flag
      */
-    public void setTraceCommandLine(boolean b){
-        _traceCommandLine=b;
+    public void setTraceCommandLine(boolean b) {
+        _traceCommandLine = b;
     }
-    
+
     /** flag to control action on execution trouble
-    */
+     */
     protected boolean _failOnError;
-    
+
     /**
      * set fail on error flag
      * @param b fail flag -set to true to cause an exception to be raised if
      * the return value != 0
      */
-    public void setFailOnError(boolean b){
-        _failOnError=b;
+    public void setFailOnError(boolean b) {
+        _failOnError = b;
     }
-    
+
     /** query fail on error flag
-    */
+     */
     public boolean getFailFailOnError() {
         return _failOnError;
     }
-    
-    /** 
+
+    /**
      * verbose text log
      * @param msg string to add to log iff verbose is defined for the build
      */
-    protected void logVerbose(String msg){
-        _owner.getProject().log(msg,Project.MSG_VERBOSE);
-        }
-    
-    
+    protected void logVerbose(String msg) {
+        _owner.getProject().log(msg, Project.MSG_VERBOSE);
+    }
+
+
     /**
      * error text log
      * @param  msg  message to display as an error
      */
     protected void logError(String msg) {
-        _owner.getProject().log(msg,Project.MSG_ERR);
+        _owner.getProject().log(msg, Project.MSG_ERR);
     }
-    
+
     /**
      * add an argument to a command line; do nothing if the arg is null or empty string
-     * @param  argument  The feature to be added to the Argument attribute 
+     * @param  argument  The feature to be added to the Argument attribute
      */
-    public void addArgument(String argument){
-        if(argument!=null && argument.length()!=0) {
+    public void addArgument(String argument) {
+        if (argument != null && argument.length() != 0) {
             _commandLine.createArgument().setValue(argument);
         }
     }
-    
+
     /**
      * set up the command sequence..
      */
     protected void prepareExecutor() {
         // default directory to the project's base directory
         File dir = _owner.getProject().getBaseDir();
-        ExecuteStreamHandler handler=new LogStreamHandler(_owner,
-                   Project.MSG_INFO, Project.MSG_WARN);
+        ExecuteStreamHandler handler = new LogStreamHandler(_owner,
+                Project.MSG_INFO, Project.MSG_WARN);
         _exe = new Execute(handler, null);
         _exe.setAntRun(_owner.getProject());
         _exe.setWorkingDirectory(dir);
     }
-    
+
     /**
      * Run the command using the given Execute instance.
      * @throws an exception of something goes wrong and the failOnError flag is true
      */
     public void runCommand()
-        throws BuildException {
+            throws BuildException {
         int err = -1; // assume the worst
         try {
-            if(_traceCommandLine) {
+            if (_traceCommandLine) {
                 _owner.log(_commandLine.toString());
-            }
-            else {
+            } else {
                 //in verbose mode we always log stuff
                 logVerbose(_commandLine.toString());
             }
@@ -216,13 +214,13 @@ public class NetCommand {
             err = _exe.execute();
             if (err != 0) {
                 if (_failOnError) {
-                    throw new BuildException(_title+" returned: "+err, _owner.getLocation());
+                    throw new BuildException(_title + " returned: " + err, _owner.getLocation());
                 } else {
-                    _owner.log(_title+"  Result: " + err, Project.MSG_ERR);
+                    _owner.log(_title + "  Result: " + err, Project.MSG_ERR);
                 }
             }
         } catch (IOException e) {
-            throw new BuildException(_title+" failed: " + e, e, _owner.getLocation());
+            throw new BuildException(_title + " failed: " + e, e, _owner.getLocation());
         }
     }
 } //class

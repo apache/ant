@@ -54,9 +54,10 @@
 
 package org.apache.tools.ant.taskdefs.optional.sitraka.bytecode;
 
+import java.util.Vector;
+
 import org.apache.tools.ant.taskdefs.optional.depend.constantpool.ConstantPool;
 import org.apache.tools.ant.taskdefs.optional.depend.constantpool.Utf8CPInfo;
-import java.util.Vector;
 
 /**
  * Utilities mostly to manipulate methods and access flags.
@@ -92,7 +93,7 @@ public class Utils {
     public final static short ACC_STRICT = 2048;
 
     /** private constructor */
-    private Utils(){
+    private Utils() {
     }
 
     /**
@@ -102,8 +103,8 @@ public class Utils {
      * @return the value of the string if it exists
      * @throws ClassCastException if the index is not an UTF8 constant.
      */
-    public static String getUTF8Value(ConstantPool pool, int index){
-        return ((Utf8CPInfo)pool.getEntry(index)).getValue();
+    public static String getUTF8Value(ConstantPool pool, int index) {
+        return ((Utf8CPInfo) pool.getEntry(index)).getValue();
     }
 
     /**
@@ -113,18 +114,18 @@ public class Utils {
      * represent a java object with its fully qualified classname or the
      * primitive name such as int, long, ...
      */
-    public static String[] getMethodParams(String descriptor){
+    public static String[] getMethodParams(String descriptor) {
         int i = 0;
-        if (descriptor.charAt(i) != '('){
+        if (descriptor.charAt(i) != '(') {
             throw new IllegalArgumentException("Method descriptor should start with a '('");
         }
         Vector params = new Vector();
         StringBuffer param = new StringBuffer();
         i++;
-        while ( (i = descriptor2java(descriptor, i, param)) < descriptor.length() ){
+        while ((i = descriptor2java(descriptor, i, param)) < descriptor.length()) {
             params.add(param.toString());
             param.setLength(0); // reset
-            if (descriptor.charAt(i) == ')'){
+            if (descriptor.charAt(i) == ')') {
                 i++;
                 break;
             }
@@ -139,7 +140,7 @@ public class Utils {
      * @param descriptor
      * @return get the return type objet of a given descriptor
      */
-    public static String getMethodReturnType(String descriptor){
+    public static String getMethodReturnType(String descriptor) {
         int pos = descriptor.indexOf(')');
         StringBuffer rettype = new StringBuffer();
         descriptor2java(descriptor, pos + 1, rettype);
@@ -153,23 +154,41 @@ public class Utils {
      * @param sb the stringbuffer to return the java equivalent of the symbol
      * @return the index after the descriptor symbol
      */
-    public static int descriptor2java(String descriptor, int i, StringBuffer sb){
+    public static int descriptor2java(String descriptor, int i, StringBuffer sb) {
         // get the dimension
         StringBuffer dim = new StringBuffer();
-        for (;descriptor.charAt(i) == '['; i++){
+        for (; descriptor.charAt(i) == '['; i++) {
             dim.append("[]");
         }
         // now get the type
-        switch (descriptor.charAt(i)){
-            case 'B': sb.append("byte"); break;
-            case 'C': sb.append("char"); break;
-            case 'D': sb.append("double"); break;
-            case 'F': sb.append("float"); break;
-            case 'I': sb.append("int"); break;
-            case 'J': sb.append("long"); break;
-            case 'S': sb.append("short"); break;
-            case 'Z': sb.append("boolean"); break;
-            case 'V': sb.append("void"); break;
+        switch (descriptor.charAt(i)) {
+            case 'B':
+                sb.append("byte");
+                break;
+            case 'C':
+                sb.append("char");
+                break;
+            case 'D':
+                sb.append("double");
+                break;
+            case 'F':
+                sb.append("float");
+                break;
+            case 'I':
+                sb.append("int");
+                break;
+            case 'J':
+                sb.append("long");
+                break;
+            case 'S':
+                sb.append("short");
+                break;
+            case 'Z':
+                sb.append("boolean");
+                break;
+            case 'V':
+                sb.append("void");
+                break;
             case 'L':
                 // it is a class
                 int pos = descriptor.indexOf(';', i + 1);
@@ -196,6 +215,7 @@ public class Utils {
     public static boolean isAbstract(int access_flags) {
         return (access_flags & ACC_ABSTRACT) != 0;
     }
+
     /**
      * check for public access
      * @param access_flags access flags
@@ -203,6 +223,7 @@ public class Utils {
     public static boolean isPublic(int access_flags) {
         return (access_flags & ACC_PUBLIC) != 0;
     }
+
     /**
      * check for a static access
      * @param access_flags access flags
@@ -210,6 +231,7 @@ public class Utils {
     public static boolean isStatic(int access_flags) {
         return (access_flags & ACC_STATIC) != 0;
     }
+
     /**
      *  check for native access
      * @param access_flags access flags
@@ -217,6 +239,7 @@ public class Utils {
     public static boolean isNative(int access_flags) {
         return (access_flags & ACC_NATIVE) != 0;
     }
+
     /**
      * check for class access
      * @param access_flags access flags
@@ -224,6 +247,7 @@ public class Utils {
     public static boolean isClass(int access_flags) {
         return !isInterface(access_flags);
     }
+
     /**
      * check for strict access
      * @param access_flags access flags
@@ -231,6 +255,7 @@ public class Utils {
     public static boolean isStrict(int access_flags) {
         return (access_flags & ACC_STRICT) != 0;
     }
+
     /**
      * check for interface access
      * @param access_flags access flags
@@ -238,6 +263,7 @@ public class Utils {
     public static boolean isInterface(int access_flags) {
         return (access_flags & ACC_INTERFACE) != 0;
     }
+
     /**
      * check for private access
      * @param access_flags access flags
@@ -245,6 +271,7 @@ public class Utils {
     public static boolean isPrivate(int access_flags) {
         return (access_flags & ACC_PRIVATE) != 0;
     }
+
     /**
      * check for transient flag
      * @param access_flags access flags
@@ -252,13 +279,15 @@ public class Utils {
     public static boolean isTransient(int access_flags) {
         return (access_flags & ACC_TRANSIENT) != 0;
     }
+
     /**
      * check for volatile flag
      * @param access_flags access flags
      */
-    public static boolean isVolatile(int access_flags){
+    public static boolean isVolatile(int access_flags) {
         return (access_flags & ACC_VOLATILE) != 0;
     }
+
     /**
      * check for super flag
      * @param access_flags access flag
@@ -266,6 +295,7 @@ public class Utils {
     public static boolean isSuper(int access_flags) {
         return (access_flags & ACC_SUPER) != 0;
     }
+
     /**
      * check for protected flag
      * @param access_flags access flags
@@ -273,6 +303,7 @@ public class Utils {
     public static boolean isProtected(int access_flags) {
         return (access_flags & ACC_PROTECTED) != 0;
     }
+
     /**
      * chck for final flag
      * @param access_flags access flags
@@ -280,6 +311,7 @@ public class Utils {
     public static boolean isFinal(int access_flags) {
         return (access_flags & ACC_FINAL) != 0;
     }
+
     /**
      * check for synchronized flag
      * @param access_flags access flags
@@ -295,26 +327,26 @@ public class Utils {
      */
     public static String getMethodAccess(int access_flags) {
         StringBuffer sb = new StringBuffer();
-        if(isPublic(access_flags)){
+        if (isPublic(access_flags)) {
             sb.append("public ");
-        } else if(isPrivate(access_flags)){
+        } else if (isPrivate(access_flags)) {
             sb.append("private ");
-        } else if(isProtected(access_flags)){
+        } else if (isProtected(access_flags)) {
             sb.append("protected ");
         }
-        if(isFinal(access_flags)){
+        if (isFinal(access_flags)) {
             sb.append("final ");
         }
-        if(isStatic(access_flags)){
+        if (isStatic(access_flags)) {
             sb.append("static ");
         }
-        if(isSynchronized(access_flags)){
+        if (isSynchronized(access_flags)) {
             sb.append("synchronized ");
         }
-        if(isNative(access_flags)){
+        if (isNative(access_flags)) {
             sb.append("native ");
         }
-        if(isAbstract(access_flags)){
+        if (isAbstract(access_flags)) {
             sb.append("abstract ");
         }
         return sb.toString().trim();
@@ -327,23 +359,23 @@ public class Utils {
      */
     public static String getFieldAccess(int access_flags) {
         StringBuffer sb = new StringBuffer();
-        if(isPublic(access_flags)){
+        if (isPublic(access_flags)) {
             sb.append("public ");
-        } else if(isPrivate(access_flags)){
+        } else if (isPrivate(access_flags)) {
             sb.append("private ");
-        } else if (isProtected(access_flags)){
+        } else if (isProtected(access_flags)) {
             sb.append("protected ");
         }
-        if(isFinal(access_flags)){
+        if (isFinal(access_flags)) {
             sb.append("final ");
         }
-        if(isStatic(access_flags)){
+        if (isStatic(access_flags)) {
             sb.append("static ");
         }
-        if(isVolatile(access_flags)){
+        if (isVolatile(access_flags)) {
             sb.append("volatile ");
         }
-        if(isTransient(access_flags)){
+        if (isTransient(access_flags)) {
             sb.append("transient ");
         }
         return sb.toString().trim();
@@ -356,26 +388,26 @@ public class Utils {
      */
     public static String getClassAccess(int access_flags) {
         StringBuffer sb = new StringBuffer();
-        if(isPublic(access_flags)){
+        if (isPublic(access_flags)) {
             sb.append("public ");
-        } else if (isProtected(access_flags)){
+        } else if (isProtected(access_flags)) {
             sb.append("protected ");
-        } else if (isPrivate(access_flags)){
+        } else if (isPrivate(access_flags)) {
             sb.append("private ");
         }
-        if(isFinal(access_flags)){
+        if (isFinal(access_flags)) {
             sb.append("final ");
         }
-        if(isSuper(access_flags)){
+        if (isSuper(access_flags)) {
             sb.append("/*super*/ ");
         }
-        if(isInterface(access_flags)){
+        if (isInterface(access_flags)) {
             sb.append("interface ");
         }
-        if(isAbstract(access_flags)){
+        if (isAbstract(access_flags)) {
             sb.append("abstract ");
         }
-        if(isClass(access_flags)){
+        if (isClass(access_flags)) {
             sb.append("class ");
         }
         return sb.toString().trim();

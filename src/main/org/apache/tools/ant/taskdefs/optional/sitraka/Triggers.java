@@ -77,7 +77,7 @@ public class Triggers {
     }
 
     // -jp_trigger=ClassName.*():E:S,ClassName.MethodName():X:X
-            public String toString() {
+    public String toString() {
         StringBuffer buf = new StringBuffer();
         final int size = triggers.size();
         for (int i = 0; i < size; i++) {
@@ -119,7 +119,7 @@ public class Triggers {
         }
 
         // return <name>:<event>:<action>[:param]
-                public String toString() {
+        public String toString() {
             StringBuffer buf = new StringBuffer();
             buf.append(name).append(":"); //@todo name must not be null, check for it
             buf.append(eventMap.get(event)).append(":");

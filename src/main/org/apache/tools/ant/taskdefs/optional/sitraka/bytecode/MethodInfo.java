@@ -78,7 +78,7 @@ public final class MethodInfo {
         access_flags = dis.readShort();
 
         int name_index = dis.readShort();
-        name =  Utils.getUTF8Value(constantPool, name_index);
+        name = Utils.getUTF8Value(constantPool, name_index);
 
         int descriptor_index = dis.readShort();
         descriptor = Utils.getUTF8Value(constantPool, descriptor_index);
@@ -99,7 +99,7 @@ public final class MethodInfo {
 
     protected void readCode(ConstantPool constantPool, DataInputStream dis) throws IOException {
         // skip max_stack (short), max_local (short)
-        dis.skipBytes(2*2);
+        dis.skipBytes(2 * 2);
 
         // skip bytecode...
         int bytecode_len = dis.readInt();
