@@ -29,6 +29,10 @@ import java.util.Enumeration;
 import java.util.Hashtable;
 import java.util.Properties;
 import java.util.Vector;
+import java.util.List;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Iterator;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import org.apache.tools.ant.BuildException;
@@ -342,20 +346,60 @@ public class EchoProperties extends Task {
         }
     }
 
+    /**
+     * a tuple for the sort list.
+     */
+    private static class Tuple implements Comparable{
+        public String key;
+        public String value;
+
+        public Tuple(String key, String value) {
+            this.key = key;
+            this.value = value;
+        }
+
+        /**
+         * Compares this object with the specified object for order.
+         * @param o the Object to be compared.
+         * @return a negative integer, zero, or a positive integer as this object is
+         *         less than, equal to, or greater than the specified object.
+         * @throws ClassCastException if the specified object's type prevents it
+         *                            from being compared to this Object.
+         */
+        public int compareTo(Object o) {
+            Tuple that=(Tuple) o;
+            return key.compareTo(that.key);
+        }
+    }
+
+    private List sortProperties(Properties props) {
+        //sort the list. Makes SCM and manual diffs easier.
+        List sorted = new ArrayList(props.size());
+        Enumeration e = props.propertyNames();
+        while (e.hasMoreElements()) {
+            String name = (String) e.nextElement();
+            sorted.add(new Tuple(name, props.getProperty(name)));
+        }
+        Collections.sort(sorted);
+        return sorted;
+    }
+
     protected void xmlSaveProperties(Properties props,
                                      OutputStream os) throws IOException {
         // create XML document
         Document doc = getDocumentBuilder().newDocument();
         Element rootElement = doc.createElement(PROPERTIES);
 
+        List sorted=sortProperties(props);
+
+
         // output properties
-        String name;
-        Enumeration e = props.propertyNames();
-        while (e.hasMoreElements()) {
-            name = (String) e.nextElement();
+        Iterator iten = sorted.iterator();
+        while (iten.hasNext()) {
+            Tuple tuple = (Tuple) iten.next();
             Element propElement = doc.createElement(PROPERTY);
-            propElement.setAttribute(ATTR_NAME, name);
-            propElement.setAttribute(ATTR_VALUE, props.getProperty(name));
+            propElement.setAttribute(ATTR_NAME, tuple.key);
+            propElement.setAttribute(ATTR_VALUE, tuple.value);
             rootElement.appendChild(propElement);
         }
 
