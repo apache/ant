@@ -254,6 +254,21 @@
 
     <section name="Articles">
 
+      <subsection name="Keep the Ant, Hold the XML">
+        <p>Key G. Gauthier talks about writing "buildfiles" in Java.</p>
+
+        <table class="externals">
+          <tr>
+            <th>Author:</th>
+            <td>Key G. Gauthier</td>
+          </tr>
+          <tr>
+            <th>URL:</th>
+            <td><a href="http://www.ftponline.com/javapro/2004_06/magazine/features/kgauthier/">http://www.ftponline.com/javapro/2004_06/magazine/features/kgauthier/</a></td>
+          </tr>
+        </table>
+      </subsection>
+
       <subsection name="Ant 1.6 for Task Writers">
         <p>This article talks about XML namespace handling, Ant
         libraries and the newly introduced type polymorphism.</p>
