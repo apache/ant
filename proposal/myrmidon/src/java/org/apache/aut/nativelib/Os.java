@@ -37,115 +37,51 @@ public class Os
     public final static OsFamily OS_FAMILY_WINDOWS = new OsFamily( "windows" );
 
     /** All DOS based OSes. */
-    public final static OsFamily OS_FAMILY_DOS
-        = new OsFamily( "dos" );
+    public final static OsFamily OS_FAMILY_DOS = new OsFamily( "dos" );
 
     /** All Windows NT based OSes. */
-    public final static OsFamily OS_FAMILY_WINNT
-        = new OsFamily( "nt", new OsFamily[]{OS_FAMILY_WINDOWS} );
+    public final static OsFamily OS_FAMILY_WINNT =
+        new OsFamily( "nt", new OsFamily[]{OS_FAMILY_WINDOWS} );
 
     /** All Windows 9x based OSes. */
-    public final static OsFamily OS_FAMILY_WIN9X
-        = new OsFamily( "win9x", new OsFamily[]{OS_FAMILY_WINDOWS, OS_FAMILY_DOS} );
+    public final static OsFamily OS_FAMILY_WIN9X =
+        new OsFamily( "win9x", new OsFamily[]{OS_FAMILY_WINDOWS, OS_FAMILY_DOS} );
 
     /** OS/2 */
-    public final static OsFamily OS_FAMILY_OS2
-        = new OsFamily( "os/2", new OsFamily[]{OS_FAMILY_DOS} );
+    public final static OsFamily OS_FAMILY_OS2 =
+        new OsFamily( "os/2", new OsFamily[]{OS_FAMILY_DOS} );
 
     /** Netware */
-    public final static OsFamily OS_FAMILY_NETWARE
-        = new OsFamily( "netware" );
+    public final static OsFamily OS_FAMILY_NETWARE =
+        new OsFamily( "netware" );
 
     /** All UNIX based OSes. */
-    public final static OsFamily OS_FAMILY_UNIX
-        = new OsFamily( "unix" );
+    public final static OsFamily OS_FAMILY_UNIX = new OsFamily( "unix" );
 
     /** All Mac based OSes. */
-    public final static OsFamily OS_FAMILY_MAC
-        = new OsFamily( "mac" );
+    public final static OsFamily OS_FAMILY_MAC = new OsFamily( "mac" );
 
     /** OSX */
-    public final static OsFamily OS_FAMILY_OSX
-        = new OsFamily( "osx", new OsFamily[]{OS_FAMILY_UNIX, OS_FAMILY_MAC} );
+    public final static OsFamily OS_FAMILY_OSX =
+        new OsFamily( "osx", new OsFamily[]{OS_FAMILY_UNIX, OS_FAMILY_MAC} );
 
-    private final static OsFamily[] ALL_FAMILIES =
-        {
-            OS_FAMILY_DOS,
-            OS_FAMILY_MAC,
-            OS_FAMILY_NETWARE,
-            OS_FAMILY_OS2,
-            OS_FAMILY_OSX,
-            OS_FAMILY_UNIX,
-            OS_FAMILY_WINDOWS,
-            OS_FAMILY_WINNT,
-            OS_FAMILY_WIN9X
-        };
+    private final static OsFamily[] ALL_FAMILIES = new OsFamily[]
+    {
+        OS_FAMILY_DOS,
+        OS_FAMILY_MAC,
+        OS_FAMILY_NETWARE,
+        OS_FAMILY_OS2,
+        OS_FAMILY_OSX,
+        OS_FAMILY_UNIX,
+        OS_FAMILY_WINDOWS,
+        OS_FAMILY_WINNT,
+        OS_FAMILY_WIN9X
+    };
 
     static
     {
-        // Determine the most specific OS family
-        if( OS_NAME.indexOf( "windows" ) > -1 )
-        {
-            if( OS_NAME.indexOf( "xp" ) > -1
-                || OS_NAME.indexOf( "2000" ) > -1
-                || OS_NAME.indexOf( "nt" ) > -1 )
-            {
-                OS_FAMILY = OS_FAMILY_WINNT;
-            }
-            else
-            {
-                OS_FAMILY = OS_FAMILY_WIN9X;
-            }
-        }
-        else if( OS_NAME.indexOf( "os/2" ) > -1 )
-        {
-            OS_FAMILY = OS_FAMILY_OS2;
-        }
-        else if( OS_NAME.indexOf( "netware" ) > -1 )
-        {
-            OS_FAMILY = OS_FAMILY_NETWARE;
-        }
-        else if( OS_NAME.indexOf( "mac" ) > -1 )
-        {
-            if( OS_NAME.endsWith( "x" ) )
-            {
-                OS_FAMILY = OS_FAMILY_OSX;
-            }
-            else
-            {
-                OS_FAMILY = OS_FAMILY_MAC;
-            }
-        }
-        else if( PATH_SEP.equals( ":" ) )
-        {
-            OS_FAMILY = OS_FAMILY_UNIX;
-        }
-        else
-        {
-            OS_FAMILY = null;
-        }
-
-        // Otherwise, unknown OS
-
-        // Determine all families the current OS belongs to
-        Set allFamilies = new HashSet();
-        if( OS_FAMILY != null )
-        {
-            List queue = new ArrayList();
-            queue.add( OS_FAMILY );
-            while( queue.size() > 0 )
-            {
-                final OsFamily family = (OsFamily)queue.remove( 0 );
-                allFamilies.add( family );
-                final OsFamily[] families = family.getFamilies();
-                for( int i = 0; i < families.length; i++ )
-                {
-                    OsFamily parent = families[ i ];
-                    queue.add( parent );
-                }
-            }
-        }
-        OS_ALL_FAMILIES = (OsFamily[])allFamilies.toArray( new OsFamily[ allFamilies.size() ] );
+        OS_FAMILY = determineOsFamily();
+        OS_ALL_FAMILIES = determineAllFamilies();
     }
 
     /**
@@ -315,5 +251,73 @@ public class Os
             }
         }
         return false;
+    }
+
+    private static OsFamily[] determineAllFamilies()
+    {
+        // Determine all families the current OS belongs to
+        Set allFamilies = new HashSet();
+        if( OS_FAMILY != null )
+        {
+            List queue = new ArrayList();
+            queue.add( OS_FAMILY );
+            while( queue.size() > 0 )
+            {
+                final OsFamily family = (OsFamily)queue.remove( 0 );
+                allFamilies.add( family );
+                final OsFamily[] families = family.getFamilies();
+                for( int i = 0; i < families.length; i++ )
+                {
+                    OsFamily parent = families[ i ];
+                    queue.add( parent );
+                }
+            }
+        }
+        return (OsFamily[])allFamilies.toArray( new OsFamily[ allFamilies.size() ] );
+    }
+
+    private static OsFamily determineOsFamily()
+    {
+        // Determine the most specific OS family
+        if( OS_NAME.indexOf( "windows" ) > -1 )
+        {
+            if( OS_NAME.indexOf( "xp" ) > -1 ||
+                OS_NAME.indexOf( "2000" ) > -1 ||
+                OS_NAME.indexOf( "nt" ) > -1 )
+            {
+                return OS_FAMILY_WINNT;
+            }
+            else
+            {
+                return OS_FAMILY_WIN9X;
+            }
+        }
+        else if( OS_NAME.indexOf( "os/2" ) > -1 )
+        {
+            return OS_FAMILY_OS2;
+        }
+        else if( OS_NAME.indexOf( "netware" ) > -1 )
+        {
+            return OS_FAMILY_NETWARE;
+        }
+        else if( OS_NAME.indexOf( "mac" ) > -1 )
+        {
+            if( OS_NAME.endsWith( "x" ) )
+            {
+                return OS_FAMILY_OSX;
+            }
+            else
+            {
+                return OS_FAMILY_MAC;
+            }
+        }
+        else if( PATH_SEP.equals( ":" ) )
+        {
+            return OS_FAMILY_UNIX;
+        }
+        else
+        {
+            return null;
+        }
     }
 }
