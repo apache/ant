@@ -127,9 +127,11 @@ public class SummaryJUnitResultFormatter implements JUnitResultFormatter {
         } catch (IOException ioex) {
             throw new BuildException("Unable to write summary output", ioex);
         } finally {
-            try {
-                out.close();
-            } catch (IOException e) {}
+            if (out != System.out && out != System.err) {
+                try {
+                    out.close();
+                } catch (IOException e) {}
+            }
         }
     }
 }

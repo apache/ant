@@ -277,7 +277,7 @@
   <!-- =================================================================== -->
   <!-- Compile testcases                                                   -->
   <!-- =================================================================== -->
-  <target name="compiletests" depends="jar">
+  <target name="compiletests" depends="jar" if="junit.present">
     <mkdir dir="${build.tests}"/>
 
     <javac srcdir="${src.tests.dir}"
@@ -288,16 +288,6 @@
         <pathelement location="${lib.dir}/${name}.jar" />
         <path refid="classpath" />
       </classpath>
-      <include name="**/*.java"/>
-      <exclude name="**/AllJUnitTests.java" unless="junit.present" />
-      <exclude name="**/EnumeratedAttributeTest.java" unless="junit.present" />
-      <exclude name="**/IntrospectionHelperTest.java" unless="junit.present" />
-      <exclude name="**/PathTest.java" unless="junit.present" />
-      <exclude name="**/CommandlineTest.java" unless="junit.present" />
-      <exclude name="**/CommandlineJavaTest.java" unless="junit.present" />
-      <exclude name="**/ProjectTest.java" unless="junit.present" />
-      <exclude name="**/PatternSetTest.java" unless="junit.present" />
-      <exclude name="**/FileSetTest.java" unless="junit.present" />
     </javac>
    </target>
 
@@ -305,7 +295,7 @@
   <!-- Run testcase                                                        -->
   <!-- =================================================================== -->
   <target name="runtests" depends="compiletests" if="junit.present">
-    <junit printsummary="yes" fork="yes" haltonfailure="yes">
+    <junit printsummary="no" fork="yes" haltonfailure="yes">
       <classpath>
         <pathelement location="${lib.dir}/${name}.jar" />
         <pathelement location="${build.tests}" />

@@ -142,10 +142,12 @@ public class XMLJUnitResultFormatter implements JUnitResultFormatter {
             } catch(IOException exc) {
                 throw new BuildException("Unable to write log file", exc);
             } finally {
-                if (wri != null) {
-                    try {
-                        wri.close();
-                    } catch (IOException e) {}
+                if (out != System.out && out != System.err) {
+                    if (wri != null) {
+                        try {
+                            wri.close();
+                        } catch (IOException e) {}
+                    }
                 }
             }
         }
