@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2000 The Apache Software Foundation.  All rights
+ * Copyright (c) 2001 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -51,41 +51,29 @@
  * information on the Apache Software Foundation, please see
  * <http://www.apache.org/>.
  */
-
 package org.apache.tools.ant.taskdefs;
+ 
+import java.io.File;
 import org.apache.tools.ant.BuildFileTest;
 import org.apache.tools.ant.util.FileUtils;
 
 /**
- * @author Nico Seessle <nico@seessle.de> 
  * @author <a href="mailto:stefan.bodewig@epost.de">Stefan Bodewig</a>
+ * @version $Revision$
  */
-public class UnzipTest extends BuildFileTest { 
+public class UntarTest extends BuildFileTest { 
     
-    public UnzipTest(String name) { 
+    public UntarTest(String name) { 
         super(name);
     }    
     
     public void setUp() { 
-        configureProject("src/etc/testcases/taskdefs/unzip.xml");
+        configureProject("src/etc/testcases/taskdefs/untar.xml");
     }
-    
+
     public void tearDown() {
         executeTarget("cleanup");
     }
-
-    public void test1() { 
-        expectBuildException("test1", "required argument not specified");
-    }
-
-    public void test2() { 
-        expectBuildException("test2", "required argument not specified");
-    }
-
-    public void test3() { 
-        expectBuildException("test3", "required argument not specified");
-    }
-
 
     public void testRealTest() throws java.io.IOException {
         FileUtils fileUtils = FileUtils.newFileUtils();
@@ -94,9 +82,9 @@ public class UnzipTest extends BuildFileTest {
                                            project.resolveFile("asf-logo.gif")));
     }
     
-    public void testTestZipTask() throws java.io.IOException {
+    public void testTestTarTask() throws java.io.IOException {
         FileUtils fileUtils = FileUtils.newFileUtils();
-        executeTarget("testZipTask");
+        executeTarget("testTarTask");
         assertTrue(fileUtils.contentEquals(project.resolveFile("../asf-logo.gif"),
                                            project.resolveFile("asf-logo.gif")));
     }

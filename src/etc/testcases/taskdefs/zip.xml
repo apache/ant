@@ -48,7 +48,11 @@
     </zip>
   </target>
 
-
+  <target name="feather">
+    <zip zipfile="asf-logo.gif.zip" 
+         basedir=".."
+         includes="asf-logo.gif" />
+  </target>
 
   <target name="cleanup">
     <delete file="test3.zip"/>
@@ -57,5 +61,6 @@
     <delete file="test6.zip"/>
     <delete file="inner7.zip"/>
     <delete file="test7.zip"/>
+    <delete file="asf-logo.gif.zip"/>
   </target>
 </project>

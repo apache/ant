@@ -30,6 +30,14 @@
   <target name="cleanup"> 
     <delete file="test4.tar"/>
     <delete file="test5.tar"/>
+    <delete file="asf-logo.gif.tar"/>
     <delete dir="test5dir"/>
   </target>
+
+  <target name="feather">
+    <tar tarfile="asf-logo.gif.tar" 
+         basedir=".."
+         includes="asf-logo.gif" />
+  </target>
+
 </project>

@@ -1,0 +1,19 @@
+<?xml version="1.0"?>
+
+<project basedir="." default="cleanup">
+
+  <target name="cleanup">
+    <delete file="asf-logo.gif" />
+  </target>
+
+  <target name="testTarTask">
+    <ant antfile="tar.xml" target="feather" />
+    <untar src="asf-logo.gif.tar" dest="." />
+    <ant antfile="tar.xml" target="cleanup" />
+  </target>
+
+  <target name="realTest">
+    <untar src="expected/asf-logo.gif.tar" dest="." />
+  </target>
+
+</project>
