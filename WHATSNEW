@@ -244,6 +244,9 @@ Fixed bugs:
 
 * Get with usetimestamp did not work when local timestamp roughly >= now.
 
+* The framed JUnit report now handles multiple reports for the same
+  testcase properly.  Bugzilla Report 32745.
+
 Changes from Ant 1.6.1 to Ant 1.6.2
 ===================================
 

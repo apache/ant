@@ -1,5 +1,5 @@
 /*
- * Copyright  2001,2004 The Apache Software Foundation
+ * Copyright  2001,2004-2005 The Apache Software Foundation
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -86,4 +86,6 @@ public interface XMLConstants {
     /** classname attribute for testcase elements */
     String ATTR_CLASSNAME = "classname";
 
+    /** id attribute */
+    String ATTR_ID = "id";
 }
