@@ -200,7 +200,9 @@ followed by <code>&lt;filterset&gt;</code> elements.
 <pre>
   &lt;copy todir=&quot;../backup/dir&quot;&gt;
     &lt;fileset dir=&quot;src_dir&quot;/&gt;
-    &lt;mapper type=&quot;glob&quot; from=&quot;*&quot; to=&quot;*.bak&quot;/&gt;
+    &lt;mapper&gt;
+        &lt;globmapper from=&quot;*&quot; to=&quot;*.bak&quot;/&gt;
+    &lt;/mapper&gt;
   &lt;/copy&gt;
 </pre>
 
