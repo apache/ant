@@ -54,6 +54,64 @@ public final class LogLevel
     }
 
     /**
+     * Log a message.
+     *
+     * @param level the level to write the log message at.
+     * @param message the message to write.
+     */
+    public static void log( final TaskContext context,
+                            final LogLevel level,
+                            final String message )
+    {
+        if( LogLevel.ERROR == level )
+        {
+            context.error( message );
+        }
+        else if( LogLevel.WARN == level )
+        {
+            context.warn( message );
+        }
+        else if( LogLevel.INFO == level )
+        {
+            context.info( message );
+        }
+        else
+        {
+            context.debug( message );
+        }
+    }
+
+    /**
+     * Log a message.
+     *
+     * @param level the level to write the log message at.
+     * @param message the message to write.
+     * @param throwable the throwable.
+     */
+    public static void log( final TaskContext context,
+                            final LogLevel level,
+                            final String message,
+                            final Throwable throwable )
+    {
+        if( LogLevel.ERROR == level )
+        {
+            context.error( message, throwable );
+        }
+        else if( LogLevel.WARN == level )
+        {
+            context.warn( message, throwable );
+        }
+        else if( LogLevel.INFO == level )
+        {
+            context.info( message, throwable );
+        }
+        else
+        {
+            context.debug( message, throwable );
+        }
+    }
+
+    /**
      * Private constructor so no instance except here can be defined.
      *
      * @param name the name of Log Level

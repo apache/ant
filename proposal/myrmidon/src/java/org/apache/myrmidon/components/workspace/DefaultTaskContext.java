@@ -18,7 +18,6 @@ import org.apache.avalon.framework.context.ContextException;
 import org.apache.avalon.framework.logger.Logger;
 import org.apache.avalon.framework.service.ServiceException;
 import org.apache.avalon.framework.service.ServiceManager;
-import org.apache.myrmidon.api.LogLevel;
 import org.apache.myrmidon.api.TaskContext;
 import org.apache.myrmidon.api.TaskException;
 import org.apache.myrmidon.interfaces.model.DefaultNameValidator;
@@ -38,6 +37,7 @@ public class DefaultTaskContext
 
     // Property name validator allows digits, but no internal whitespace.
     private static DefaultNameValidator m_propertyNameValidator = new DefaultNameValidator();
+
     static
     {
         m_propertyNameValidator.setAllowInternalWhitespace( false );
@@ -146,7 +146,6 @@ public class DefaultTaskContext
     public Object resolveValue( final String value )
         throws TaskException
     {
-
         try
         {
             // Lazy lookup of the PropertyResolver
@@ -211,67 +210,6 @@ public class DefaultTaskContext
         checkPropertyName( name );
         checkPropertyValid( name, value );
         m_contextData.put( name, value );
-    }
-
-    /**
-     * Log a message.
-     *
-     * @param level the level to write the log message at.
-     * @param message the message to write.
-     */
-    public void log( LogLevel level, String message )
-    {
-        if( LogLevel.FATAL_ERROR == level )
-        {
-            m_logger.fatalError( message );
-        }
-        else if( LogLevel.ERROR == level )
-        {
-            m_logger.error( message );
-        }
-        else if( LogLevel.WARN == level )
-        {
-            m_logger.warn( message );
-        }
-        else if( LogLevel.INFO == level )
-        {
-            m_logger.info( message );
-        }
-        else
-        {
-            m_logger.debug( message );
-        }
-    }
-
-    /**
-     * Log a message.
-     *
-     * @param level the level to write the log message at.
-     * @param message the message to write.
-     * @param throwable the throwable.
-     */
-    public void log( LogLevel level, String message, Throwable throwable )
-    {
-        if( LogLevel.FATAL_ERROR == level )
-        {
-            m_logger.fatalError( message, throwable );
-        }
-        else if( LogLevel.ERROR == level )
-        {
-            m_logger.error( message, throwable );
-        }
-        else if( LogLevel.WARN == level )
-        {
-            m_logger.warn( message, throwable );
-        }
-        else if( LogLevel.INFO == level )
-        {
-            m_logger.info( message, throwable );
-        }
-        else
-        {
-            m_logger.debug( message, throwable );
-        }
     }
 
     /**

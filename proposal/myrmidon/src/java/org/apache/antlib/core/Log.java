@@ -65,7 +65,7 @@ public class Log
     public void execute()
         throws TaskException
     {
-        getContext().log( m_level, m_message );
+        LogLevel.log( getContext(), m_level, m_message );
     }
 
     /**
