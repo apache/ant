@@ -140,14 +140,25 @@ public class Main {
             } else if (arg.startsWith("-D")) {
 
                 /* Interestingly enough, we get to here when a user
-                 * uses -Dname=value. However, the JDK goes ahead
-                 * and parses this out to args {"-Dname", "value"}
+                 * uses -Dname=value. However, in some cases, the JDK
+                 * goes ahead * and parses this out to args 
+                 *   {"-Dname", "value"}
                  * so instead of parsing on "=", we just make the "-D"
                  * characters go away and skip one argument forward.
+                 *
+                 * I don't know how to predict when the JDK is going
+                 * to help or not, so we simply look for the equals sign.
                  */
 
                 String name = arg.substring(2, arg.length());
-                String value = args[++i];
+                String value = null;
+                int posEq = name.indexOf("=");
+                if (posEq > 0) {
+                    value = name.substring(posEq+1);
+                    name = name.substring(0, posEq);
+                } else if (i < args.length)
+                    value = args[++i];
+
                 definedProps.put(name, value);
             } else if (arg.startsWith("-")) {
                 // we don't have any more args to recognize!

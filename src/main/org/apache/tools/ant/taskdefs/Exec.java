@@ -97,29 +97,17 @@ public class Exec extends Task {
 
             // exec command on system runtime
             Process proc = Runtime.getRuntime().exec(command);
-            
-            // get process response
-            BufferedReader din = new BufferedReader(new InputStreamReader(proc.getInputStream()));
 
-            // if "out" attribute is present, redirect to it
-            PrintWriter fos = null;
-            if (out != null)  {
-                fos = new PrintWriter(new FileWriter(out));
+            PrintWriter fos=null;
+            if( out!=null )  {
+                fos=new PrintWriter( new FileWriter( out ) );
                 project.log("Output redirected to " + out, Project.MSG_VERBOSE);
             }
+            pipeOutput(proc.getInputStream(), "exec", fos);
+            pipeOutput(proc.getErrorStream(), "error", fos);
+            if (null != fos)
+        	fos.close();
 
-
-            // pipe the process output
-            String line;
-            while((line = din.readLine()) != null) {
-                if (fos == null) {
-                    project.log(line, "exec", Project.MSG_INFO);
-                } else {
-                    fos.println(line);
-                }
-            }
-
-            // wait until the process is finished
             proc.waitFor();
             
             // close the output file if required 
@@ -150,5 +138,22 @@ public class Exec extends Task {
 
     public void setOutput(String out) {
         this.out = out;
+    }
+
+    private void pipeOutput(InputStream is, String name, PrintWriter fos) 
+        throws IOException 
+    {
+project.log("pipeOutput", name, Project.MSG_INFO);
+        InputStreamReader isr=new InputStreamReader(is);
+        BufferedReader din = new BufferedReader(isr);
+
+        // pipe output to STDOUT
+        String line;
+        while((line = din.readLine()) != null) {
+        if( fos==null)
+            project.log(line, name, Project.MSG_INFO);
+        else
+            fos.println(line);
+        }
     }
 }

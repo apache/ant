@@ -270,6 +270,8 @@ public class Project {
         }
 
         log("Detected Java Version: " + javaVersion);
+
+        log("Detected OS: " + System.getProperty("os.name"), MSG_VERBOSE);
     }
 
     public void addTaskDefinition(String taskName, Class taskClass) {
