@@ -320,15 +320,42 @@ public class ZipFile {
         }
     }
 
+    private static final int MIN_EOCD_SIZE =
+        /* end of central dir signature    */ 4 +
+        /* number of this disk             */ 2 +
+        /* number of the disk with the     */   +
+        /* start of the central directory  */ 2 +
+        /* total number of entries in      */   +
+        /* the central dir on this disk    */ 2 +
+        /* total number of entries in      */   +
+        /* the central dir                 */ 2 +
+        /* size of the central directory   */ 4 +
+        /* offset of start of central      */   +
+        /* directory with respect to       */   +
+        /* the starting disk number        */ 4 +
+        /* zipfile comment length          */ 2;
+
+    private static final int CFD_LOCATOR_OFFSET =
+        /* end of central dir signature    */ 4 +
+        /* number of this disk             */ 2 +
+        /* number of the disk with the     */   +
+        /* start of the central directory  */ 2 +
+        /* total number of entries in      */   +
+        /* the central dir on this disk    */ 2 +
+        /* total number of entries in      */   +
+        /* the central dir                 */ 2 +
+        /* size of the central directory   */ 4;
+
     /**
-     * Searches for the first occurence of the central file header
-     * signature.
+     * Searches for the &quot;End of central dir record&quot;, parses
+     * it and positions the stream at the first central directory
+     * record.
      */
     private void positionAtCentralDirectory() 
         throws IOException, ZipException {
-        archive.seek(0);
-        int off = 0;
-        byte[] sig = ZipOutputStream.CFH_SIG.getBytes();
+        long off = archive.length() - MIN_EOCD_SIZE;
+        archive.seek(off);
+        byte[] sig = ZipOutputStream.EOCD_SIG.getBytes();
         int curr = archive.read();
         boolean found = false;
         while (curr != -1) {
@@ -344,16 +371,17 @@ public class ZipFile {
                         }
                     }
                 }
-                archive.seek(++off);
-            } else {
-                off++;
             }
+            archive.seek(--off);
             curr = archive.read();
         }
         if (!found) {
             throw new ZipException("archive is not a ZIP archive");
         }
-        archive.seek(off);
+        archive.seek(off + CFD_LOCATOR_OFFSET);
+        byte[] cfdOffset = new byte[4];
+        archive.readFully(cfdOffset);
+        archive.seek((new ZipLong(cfdOffset)).getValue());
     }
 
     /**

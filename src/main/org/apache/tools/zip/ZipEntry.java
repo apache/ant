@@ -417,7 +417,7 @@ public class ZipEntry extends java.util.zip.ZipEntry implements Cloneable {
      * @since 1.10
      */
     public boolean isDirectory() {
-	return getName().endsWith("/");
+        return getName().endsWith("/");
     }
 
     protected void setName(String name) {
