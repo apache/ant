@@ -68,6 +68,7 @@ public abstract class Task extends ProjectComponent {
     protected String taskName = null;
     protected String taskType = null;
     protected RuntimeConfigurable wrapper;
+    private boolean invalid = false;
 
     /**
      * Sets the target object of this task.
@@ -174,8 +175,12 @@ public abstract class Task extends ProjectComponent {
      * Configure this task - if it hasn't been done already.
      */
     public void maybeConfigure() throws BuildException {
-        if (wrapper != null) {
-            wrapper.maybeConfigure(project);
+        if (!invalid) {
+            if (wrapper != null) {
+                wrapper.maybeConfigure(project);
+            }
+        } else {
+            getReplacement();
         }
     }
 
@@ -211,22 +216,56 @@ public abstract class Task extends ProjectComponent {
      * Perform this task
      */
     public final void perform() {
-        try {
-            project.fireTaskStarted(this);
-            maybeConfigure();
-            execute();
-            project.fireTaskFinished(this, null);
-        }
-        catch(RuntimeException exc) {
-            if (exc instanceof BuildException) {
-                BuildException be = (BuildException) exc;
-                if (be.getLocation() == Location.UNKNOWN_LOCATION) {
-                    be.setLocation(getLocation());
-                }
+        if (!invalid) {
+            try {
+                project.fireTaskStarted(this);
+                maybeConfigure();
+                execute();
+                project.fireTaskFinished(this, null);
             }
-            project.fireTaskFinished(this, exc);
-            throw exc;
+            catch(RuntimeException exc) {
+                if (exc instanceof BuildException) {
+                    BuildException be = (BuildException) exc;
+                    if (be.getLocation() == Location.UNKNOWN_LOCATION) {
+                        be.setLocation(getLocation());
+                    }
+                }
+                project.fireTaskFinished(this, exc);
+                throw exc;
+            }
+        } else {
+            UnknownElement ue = getReplacement();
+            Task task = ue.getTask();
+            task.perform();
         }
+    }
+
+    /**
+     * Mark this task as invalid.
+     */
+    final void markInvalid() {
+        invalid = true;
+    }
+
+    private UnknownElement replacement;
+
+    /**
+     * Create an UnknownElement that can be used to replace this task.
+     */
+    private UnknownElement getReplacement() {
+        if (replacement == null) {
+            replacement = new UnknownElement(taskType);
+            replacement.setProject(project);
+            replacement.setTaskType(taskType);
+            replacement.setTaskName(taskName);
+            replacement.setLocation(location);
+            replacement.setOwningTarget(target);
+            replacement.setRuntimeConfigurableWrapper(wrapper);
+            wrapper.setProxy(replacement);
+            target.replaceChild(this, replacement);
+            replacement.maybeConfigure();
+        }
+        return replacement;
     }
 }
 

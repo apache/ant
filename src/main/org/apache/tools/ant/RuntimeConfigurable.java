@@ -138,7 +138,7 @@ public class RuntimeConfigurable {
      * Configure the wrapped element and all children.
      */
     public void maybeConfigure(Project p) throws BuildException {
-    String id = null;
+        String id = null;
 
         if (attributes != null) {
             ProjectHelper.configure(wrappedObject, attributes, p);
@@ -152,7 +152,13 @@ public class RuntimeConfigurable {
         Enumeration enum = children.elements();
         while (enum.hasMoreElements()) {
             RuntimeConfigurable child = (RuntimeConfigurable) enum.nextElement();
-            child.maybeConfigure(p);
+            if (child.wrappedObject instanceof Task) {
+                Task childTask = (Task) child.wrappedObject;
+                childTask.setRuntimeConfigurableWrapper(child);
+                childTask.maybeConfigure();
+            } else {
+                child.maybeConfigure(p);
+            }
             ProjectHelper.storeChild(p, wrappedObject, child.wrappedObject, child.getElementTag().toLowerCase(Locale.US));
         }
 

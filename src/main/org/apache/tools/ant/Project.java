@@ -114,6 +114,7 @@ public class Project {
     private String defaultTarget;
     private Hashtable dataClassDefinitions = new Hashtable();
     private Hashtable taskClassDefinitions = new Hashtable();
+    private Hashtable createdTasks = new Hashtable();
     private Hashtable targets = new Hashtable();
     private FilterSet globalFilterSet = new FilterSet();
     private FilterSetCollection globalFilters = new FilterSetCollection(globalFilterSet);
@@ -589,9 +590,18 @@ public class Project {
      * conditions, that will cause the task execution to fail.
      */
     public void addTaskDefinition(String taskName, Class taskClass) throws BuildException {
-        if (null != taskClassDefinitions.get(taskName)) {
-            log("Trying to override old definition of task "+taskName, 
-                MSG_WARN);
+        Class old = (Class)taskClassDefinitions.get(taskName);
+        if (null != old) {
+            if (old.equals(taskClass)) {
+                log("Ignoring override for task " + taskName 
+                    + ", it is already defined by the same class.", 
+                    MSG_VERBOSE);
+                return;
+            } else {
+                log("Trying to override old definition of task "+taskName, 
+                    MSG_WARN);
+                invalidateCreatedTasks(taskName);
+            }
         }
 
         String msg = " +User task: " + taskName + "     " + taskClass.getName();
@@ -751,11 +761,46 @@ public class Project {
 
             String msg = "   +Task: " + taskType;
             log (msg, MSG_DEBUG);
+            addCreatedTask(taskType, task);
             return task;
         } catch (Throwable t) {
             String msg = "Could not create task of type: "
                  + taskType + " due to " + t;
             throw new BuildException(msg, t);
+        }
+    }
+
+    /**
+     * Keep a record of all tasks that have been created so that they
+     * can be invalidated if a taskdef overrides the definition.
+     */
+    private void addCreatedTask(String type, Task task) {
+        synchronized (createdTasks) {
+            Vector v = (Vector) createdTasks.get(type);
+            if (v == null) {
+                v = new Vector();
+                createdTasks.put(type, v);
+            }
+            v.addElement(task);
+        }
+    }
+
+    /**
+     * Mark tasks as invalid which no longer are of the correct type
+     * for a given taskname.
+     */
+    private void invalidateCreatedTasks(String type) {
+        synchronized (createdTasks) {
+            Vector v = (Vector) createdTasks.get(type);
+            if (v != null) {
+                Enumeration enum = v.elements();
+                while (enum.hasMoreElements()) {
+                    Task t = (Task) enum.nextElement();
+                    t.markInvalid();
+                }
+                v.removeAllElements();
+                createdTasks.remove(type);
+            }
         }
     }
 

@@ -238,4 +238,14 @@ public class UnknownElement extends Task {
             super.getTaskName() : ((Task) realThing).getTaskName();
     }
 
+    /**
+     * Return the task instance after it has been created (and if it is a task.
+     */
+    public Task getTask() {
+        if (realThing != null && realThing instanceof Task) {
+            return (Task) realThing;
+        }
+        return null;
+    }
+
 }// UnknownElement
