@@ -369,6 +369,8 @@ public class GenericDeploymentTool implements EJBDeploymentTool {
         Iterator entryIterator = null;
         String entryName = null;
         File entryFile = null;
+	File entryDir = null;
+	String innerfiles[] = null;
 
         try {
             /* If the jarfile already exists then whack it and recreate it.
@@ -398,6 +400,27 @@ public class GenericDeploymentTool implements EJBDeploymentTool {
                 addFileToJar(jarStream,
                              new FileInputStream(entryFile),
                              entryName);
+
+		// See if there are any inner classes for this class and add them in if there are
+		InnerClassFilenameFilter flt = new InnerClassFilenameFilter(entryFile.getName());
+		entryDir = entryFile.getParentFile();
+		innerfiles = entryDir.list(flt);
+		for (int i=0, n=innerfiles.length; i < n; i++) {
+	
+			//get and clean up innerclass name
+			entryName = entryName.substring(0, entryName.lastIndexOf(entryFile.getName())-1) + File.separatorChar + innerfiles[i];
+
+			// link the file
+			entryFile = new File(srcDir, entryName);
+
+			getTask().log("adding innerclass file '" + entryName + "'", 
+				    Project.MSG_VERBOSE);
+
+			addFileToJar(jarStream,
+                                     new FileInputStream(entryFile),
+                                     entryName);
+
+		}
             }
             // All done.  Close the jar stream.
             jarStream.close();
@@ -410,6 +433,9 @@ public class GenericDeploymentTool implements EJBDeploymentTool {
             throw new BuildException(msg, ioe);
         }
     } // end of writeJar
+
+ 
+
     
 
     /**
