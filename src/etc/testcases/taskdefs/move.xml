@@ -41,6 +41,15 @@
     </move>
   </target>
 
+  <!-- Bugzilla Report 18886 -->
+  <target name="testDirectoryRetaining">
+    <mkdir dir="A"/>
+    <mkdir dir="E"/>
+    <move todir="E">
+      <fileset dir="A"/>
+    </move>
+  </target>
+
   <target name="cleanup"> 
     <delete file="move.filterset.tmp"/>
     <delete file="move.filterchain.tmp"/>

@@ -109,4 +109,11 @@ public class MoveTest extends BuildFileTest {
         assertTrue(!getProject().resolveFile("A/C").exists());
         assertTrue(!getProject().resolveFile("A/D").exists());
     }
+
+    /** Bugzilla Report 18886 */
+    public void testDirectoryRetaining() throws IOException {
+        executeTarget("testDirectoryRetaining");
+        assertTrue(getProject().resolveFile("E").exists());
+        assertTrue(getProject().resolveFile("A").exists());
+    }
 }
