@@ -112,19 +112,17 @@ public class HeadTailTest extends BuildFileTest {
         assertTrue("testHeadLinesSkip: Result not like expected", fu.contentEquals(expected, result));
     }
 
-/*
     public void testFilterReaderHeadLinesSkip() throws IOException {
         executeTarget("testFilterReaderHeadLinesSkip");
         File expected = getProject().resolveFile(
-            "expected/head-tail.filterReaderHeadLinesSkip.test");
+            "expected/head-tail.headLinesSkip.test");
         File result = getProject().resolveFile(
-            "result/head-tail.headLinesSkip.test");
+            "result/head-tail.filterReaderHeadLinesSkip.test");
         FileUtils fu = FileUtils.newFileUtils();
         assertTrue("testFilterReaderHeadLinesSkip: Result not like expected",
                    fu.contentEquals(expected, result));
     }
 
-*/
     public void testTail() throws IOException {
         executeTarget("testTail");
         File expected = getProject().resolveFile("expected/head-tail.tail.test");
@@ -157,18 +155,16 @@ public class HeadTailTest extends BuildFileTest {
         assertTrue("testTailLinesSkip: Result not like expected", fu.contentEquals(expected, result));
     }
 
-/*
     public void testFilterReaderTailLinesSkip() throws IOException {
         executeTarget("testFilterReaderTailLinesSkip");
         File expected = getProject().resolveFile(
-            "expected/head-tail.filterReaderTailLinesSkip.test");
+            "expected/head-tail.tailLinesSkip.test");
         File result = getProject().resolveFile(
-            "result/head-tail.tailLinesSkip.test");
+            "result/head-tail.filterReaderTailLinesSkip.test");
         FileUtils fu = FileUtils.newFileUtils();
         assertTrue("testFilterReaderTailLinesSkip: Result not like expected",
                    fu.contentEquals(expected, result));
     }
-*/
 
     public void testHeadTail() throws IOException {
         executeTarget("testHeadTail");

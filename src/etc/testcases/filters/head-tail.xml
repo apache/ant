@@ -43,6 +43,18 @@
     </copy>
   </target>
 
+  <target name="testFilterReaderHeadLinesSkip" depends="init">
+    <copy file="input/head-tail.test" 
+          tofile="result/head-tail.filterReaderHeadLinesSkip.test">
+      <filterchain>
+        <filterreader classname="org.apache.tools.ant.filters.HeadFilter">
+          <param name="lines" value="2"/>
+          <param name="skip" value="2"/>
+        </filterreader>
+      </filterchain>
+    </copy>
+  </target>
+
   <target name="testHeadAllSkip" depends="init">
     <copy file="input/head-tail.test" tofile="result/head-tail.headAllSkip.test">
       <filterchain>
@@ -81,6 +93,18 @@
     <copy file="input/head-tail.test" tofile="result/head-tail.tailLinesSkip.test">
       <filterchain>
         <tailfilter lines="2" skip="2"/>
+      </filterchain>
+    </copy>
+  </target>
+
+  <target name="testFilterReaderTailLinesSkip" depends="init">
+    <copy file="input/head-tail.test" 
+          tofile="result/head-tail.filterReaderTailLinesSkip.test">
+      <filterchain>
+        <filterreader classname="org.apache.tools.ant.filters.TailFilter">
+          <param name="lines" value="2"/>
+          <param name="skip" value="2"/>
+        </filterreader>
       </filterchain>
     </copy>
   </target>

@@ -132,14 +132,8 @@ public final class StripJavaComments
                     if (ch == '/') {
                         ch = in.read();
                         if (ch == '/') {
-                            int prevCh = -1;
-                            while (ch != '\n' && ch != -1) {
-                                prevCh = ch;
+                            while (ch != '\n' && ch != -1 && ch != '\r') {
                                 ch = in.read();
-                            }
-                            if ( ch == '\n' && prevCh == '\r' ) {
-                                readAheadCh = ch;
-                                ch = prevCh;
                             }
                         } else if (ch == '*') {
                             while (ch != -1) {
