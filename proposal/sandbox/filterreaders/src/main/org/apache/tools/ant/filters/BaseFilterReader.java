@@ -141,7 +141,7 @@ public abstract class BaseFilterReader
         }
 
         for (long i = 0; i < n; i++) {
-            if (in.read() == -1) {
+            if (read() == -1) {
                 return i;
             }
         }
