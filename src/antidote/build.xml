@@ -1,0 +1,130 @@
+<?xml version="1.0"?>
+
+<!-- ======================================================================= -->
+<!-- Ant GUI build file                                                      -->
+<!-- ======================================================================= -->
+
+<project name="Antidote" default="compile" basedir=".">
+
+  <!-- Give user a chance to override without editing this file 
+       (and without typing -D each time it compiles it) -->
+  <property file="${user.home}/.ant.properties" />
+
+  <property name="Name" value="Antidote"/>
+  <property name="name" value="antidote"/>
+  <property name="version" value="0.1"/>
+
+  <property name="src.dir" value="."/>
+  <property name="build.dir" value="../../../build/antidote"/>
+  <property name="lib.dir" value="${build.dir}/lib"/>
+  <property name="build.classes" value="${build.dir}/classes"/>
+  <property name="build.javadocs" value="${build.dir}/javadocs"/>
+  <property name="manifest" value="${src.dir}/etc/manifest"/>
+
+  <path id="classpath">
+  </path>
+  <property name="packages" value="org.apache.tools.*"/>
+
+
+  <!-- =================================================================== -->
+  <!-- Set some the defaults the user can override in .ant.properties      -->
+  <!-- =================================================================== -->
+  <property name="build.compiler" value="classic"/>
+  <property name="build.compiler.emacs" value="on"/>
+  <property name="junit.fork" value="false" />
+
+  <!-- =================================================================== -->
+  <!-- Prepares the build directory                                        -->
+  <!-- =================================================================== -->
+  <target name="prepare">
+    <mkdir dir="${build.dir}"/>
+    <tstamp />
+  </target>
+
+  <!-- =================================================================== -->
+  <!-- Compiles the source code                                            -->
+  <!-- =================================================================== -->
+  <target name="compile" depends="prepare">
+    <mkdir dir="${build.classes}"/>
+
+    <javac srcdir="${src.dir}"
+           destdir="${build.classes}"
+           debug="on"
+           deprecation="off"
+           optimize="on" >
+      <classpath refid="classpath" />
+    </javac>
+ 
+    <copy todir="${build.classes}">
+      <fileset dir="${src.dir}">
+        <include name="**/*.properties" />
+        <include name="**/*.gif" />
+      </fileset>
+    </copy>
+
+    <filter token="VERSION" value="${version}" />
+    <filter token="DATE" value="${TODAY}" />
+    <filter token="TIME" value="${TSTAMP}" />
+    <copy    todir="${build.classes}" 
+             overwrite="true"
+             filtering="on">
+      <fileset dir="${src.dir}">
+        <include name="**/version.txt" />
+      </fileset>
+    </copy>
+  </target>
+
+  <!-- =================================================================== -->
+  <!-- Creates the jar archive                                             -->
+  <!-- =================================================================== -->
+  <target name="jar" depends="compile">
+    <mkdir dir="${lib.dir}"/>
+    <jar jarfile="${lib.dir}/${name}.jar"
+         basedir="${build.classes}"
+         includes="org/**"
+         manifest="${manifest}"/>
+  </target>
+
+  <!-- =================================================================== -->
+  <!-- Creates the API documentation                                       -->
+  <!-- =================================================================== -->
+  <target name="javadocs" depends="prepare" 
+    description="Creates the API documentation">
+    <mkdir dir="${build.javadocs}"/>
+    <javadoc packagenames="${packages}"
+             sourcepath="${basedir}/${src.dir}"
+             destdir="${build.javadocs}"
+             author="true"
+             version="true"
+             windowtitle="${Name} API"
+             doctitle="${Name}"
+             bottom="Copyright &#169; 2000 Apache Software Foundation. All Rights Reserved.">
+      <group title="Ant Gui" packages="org.apache.tools.ant.gui*" />
+    </javadoc>
+  </target>
+
+
+  <!-- =================================================================== -->
+  <!-- Run the GUI                                                         -->
+  <!-- =================================================================== -->
+  <target name="run" depends="compile" description="Run Antidote">
+    <java classname="org.apache.tools.ant.gui.Main" 
+          fork="yes" 
+          dir="${user.home}">
+      <jvmarg value="-Djava.compiler=NONE"/>
+      <classpath>
+        <pathelement location="${build.classes}"/>
+        <pathelement location="${ant.home}/lib/ant.jar"/>
+      </classpath>
+    </java>
+  </target>
+
+  <!-- =================================================================== -->
+  <!-- Cleans up generated stuff                                           -->
+  <!-- =================================================================== -->
+  <target name="clean">
+    <delete dir="${build.dir}"/>
+  </target>
+
+</project>
+

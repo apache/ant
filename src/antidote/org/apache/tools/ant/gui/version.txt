@@ -1,0 +1,3 @@
+VERSION=@VERSION@
+DATE=@DATE@
+CONTRIBUTORS=Simeon H.K. Fitch, Ant Development Team

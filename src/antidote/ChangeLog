@@ -1,0 +1,13 @@
+2000-11-02  Simeon H.K. Fitch  <simeon@fitch.net>
+
+	* org/apache/tools/ant/gui/event/EventBus.java: Added interrupt
+	level support.
+
+	* org/apache/tools/ant/gui/About.java: Created
+	
+2000-11-01  Simeon H.K. Fitch  <simeon@fitch.net>
+
+	* org/apache/tools/ant/gui/Main.java: Added XMLHelper.init() call
+	
+	* build.xml: Updated run target to include ant.jar in classpath.
+
