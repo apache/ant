@@ -191,9 +191,9 @@ Legal:
       <classpath refid="project.class.path"/>
     </javac>
 
-    <copy file="${manifest.dir}/ant-descriptor.template" tofile="${custom-package-dir}/ant-descriptor.j"/>
-    <copy file="${manifest.dir}/ant-roles.template" tofile="${custom-package-dir}/ant-roles.j"/>
-    <copy file="${manifest.dir}/type.j" tofile="${custom-package-dir}/type.j"/>
+    <copy file="${manifest.dir}/ant-descriptor.j" todir="${custom-package-dir}"/>
+    <copy file="${manifest.dir}/ant-roles.j" todir="${custom-package-dir}"/>
+    <copy file="${manifest.dir}/type.j" todir="${custom-package-dir}"/>
 
     <taskdef name="antlib-jar" classname="org.apache.myrmidon.build.AntlibJarTask">
       <classpath location="${custom-tasks-dir}"/>
