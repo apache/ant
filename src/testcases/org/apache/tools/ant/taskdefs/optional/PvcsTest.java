@@ -81,4 +81,16 @@ public class PvcsTest extends TaskdefsTest {
     public void test3() { 
         executeTarget("test3");
     }
+
+    public void test4() { 
+        executeTarget("test4");
+    }
+
+    public void test5() { 
+        executeTarget("test5");
+    }
+
+    public void test6() { 
+        expectBuildException("test6", "Failed executing: /never/heard/of/a/directory/structure/like/this/pcli lvf -z -aw -pr//ct4serv2/pvcs/monitor /. Exception: /never/heard/of/a/directory/structure/like/this/pcli: not found");
+    }
 }

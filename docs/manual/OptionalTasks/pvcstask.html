@@ -12,11 +12,14 @@ Ant Pvcs Task User Manual</h1>
 by
 <br><!-- Names are in alphabetical order, on last name -->
 <ul>
-<li>
-Thomas Christensen (<a href="mailto:tchristensen@nordija.com">tchristensen@nordija.com</a>)</li>
+  <li>Thomas Christensen (<a href="mailto:tchristensen@nordija.com">tchristensen@nordija.com</a>)</li>
+  <li>Don Jeffery (<a href="mailto:donj@apogeenet.com">donj@apogeenet.com</a>)</li>
 </ul>
-Version 1.0 - 2001/01/31
-<br>
+Version 1.1 - 2001/06/27<br>
+<p>Problems with UNC pathnames and the use of () in paths are fixed and an updateonly 
+  argument introduced.</p>
+Version 1.0 - 2001/01/31<br>
+<p>Initial release.</p>
 <hr>
 <h2>
 Table of Contents</h2>
@@ -130,6 +133,18 @@ tag expects the executables to be found using the PATH environment variable.</td
 
 <td VALIGN=TOP WIDTH="10%">No</td>
 </tr>
+    <tr> 
+      <td VALIGN=TOP WIDTH="12%">ignorereturncode</td>
+      <td VALIGN=TOP WIDTH="78%">If set to <i>true</i> the return value from executing 
+        the pvcs commands are ignored.</td>
+      <td VALIGN=TOP WIDTH="10%">No</td>
+    </tr>
+    <tr> 
+      <td VALIGN=TOP WIDTH="12%">updateonly</td>
+      <td VALIGN=TOP WIDTH="78%">If set to <i>true</i> files are gotten only if 
+        newer than existing local files.</td>
+      <td VALIGN=TOP WIDTH="10%">No</td>
+    </tr>
 </table>
 <h3><a name="nested">Nested Elements</a></h3>
 

@@ -1,8 +1,8 @@
 /* ====================================================================
- * 
+ *
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 1999 The Apache Software Foundation.  All rights 
+ * Copyright (c) 1999 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -10,7 +10,7 @@
  * are met:
  *
  * 1. Redistributions of source code must retain the above copyright
- *    notice, this list of conditions and the following disclaimer. 
+ *    notice, this list of conditions and the following disclaimer.
  *
  * 2. Redistributions in binary form must reproduce the above copyright
  *    notice, this list of conditions and the following disclaimer in
@@ -18,15 +18,15 @@
  *    distribution.
  *
  * 3. The end-user documentation included with the redistribution, if
- *    any, must include the following acknowlegement:  
- *       "This product includes software developed by the 
+ *    any, must include the following acknowlegement:
+ *       "This product includes software developed by the
  *        Apache Software Foundation (http://www.apache.org/)."
  *    Alternately, this acknowlegement may appear in the software itself,
  *    if and wherever such third-party acknowlegements normally appear.
  *
  * 4. The names "The Jakarta Project", "Tomcat", and "Apache Software
  *    Foundation" must not be used to endorse or promote products derived
- *    from this software without prior written permission. For written 
+ *    from this software without prior written permission. For written
  *    permission, please contact apache@apache.org.
  *
  * 5. Products derived from this software may not be called "Apache"
@@ -74,7 +74,19 @@ import org.apache.tools.ant.types.Commandline;
 /**
  * A task that fetches source files from a PVCS archive
  *
+ * <b>19-04-2001</b> <p>The task now has a more robust
+ * parser. It allows for platform independant file paths
+ * and supports file names with <i>()</i>. Thanks to Erik Husby for
+ * bringing the bug to my attention.
+ *
+ * <b>27-04-2001</b> <p>UNC paths are now handled properly. 
+ * Fix provided by Don Jeffery. He also added an <i>UpdateOnly</i> flag
+ * that, when true, conditions the PVCS get using the -U option to only 
+ * update those files that have a modification time (in PVCS) that is newer 
+ * than the existing workfile.
+ *
  * @author Thomas Christensen <tchristensen@nordija.com>
+ * @author Don Jeffery <donj@apogeenet.com>
  */
 public class Pvcs extends org.apache.tools.ant.Task {
     private String pvcsbin;
@@ -86,6 +98,7 @@ public class Pvcs extends org.apache.tools.ant.Task {
     private String promotiongroup;
     private String label;
     private boolean ignorerc;
+    private boolean updateOnly;
 
     /**
      * Constant for the thing to execute
@@ -113,7 +126,7 @@ public class Pvcs extends org.apache.tools.ant.Task {
             return exe.execute();
         }
         catch (java.io.IOException e) {
-            String msg = "Failed executing: " + cmd.toString();
+            String msg = "Failed executing: " + cmd.toString() + ". Exception: "+e.getMessage();
             throw new BuildException(msg, location);
         }
     }
@@ -169,8 +182,12 @@ public class Pvcs extends org.apache.tools.ant.Task {
         }
 
         File tmp = null;
+        File tmp2 = null;
         try {
-            tmp = new File("pvcs_ant_"+(new Random(System.currentTimeMillis())).nextLong()+".log");
+            Random rand = new Random(System.currentTimeMillis());
+            tmp = new File("pvcs_ant_"+rand.nextLong()+".log");
+            tmp2 = new File("pvcs_ant_"+rand.nextLong()+".log");
+            log("Executing " + commandLine.toString(), Project.MSG_VERBOSE);
             result = runCmd(commandLine, new PumpStreamHandler(new FileOutputStream(tmp), new LogOutputStream(this,Project.MSG_WARN)));
             if ( result != 0 && !ignorerc) {
                 String msg = "Failed executing: " + commandLine.toString();
@@ -178,10 +195,14 @@ public class Pvcs extends org.apache.tools.ant.Task {
             }
 
             if(!tmp.exists())
-                throw new BuildException("Communication between ant and pvcs failed");
-                                
-            // Create foldes in workspace
+                throw new BuildException("Communication between ant and pvcs failed. No output generated from executing PVCS commandline interface \"pcli\" and \"get\"");
+
+            // Create folders in workspace
+            log("Creating folders", Project.MSG_INFO);
             createFolders(tmp);
+
+            // Massage PCLI lvf output transforming '\' to '/' so get command works appropriately
+            massagePCLI(tmp, tmp2);
 
             // Launch get on output captured from PCLI lvf
             commandLine.clearArgs();
@@ -198,25 +219,35 @@ public class Pvcs extends org.apache.tools.ant.Task {
                 if(getLabel()!=null)
                     commandLine.createArgument().setValue("-r"+getLabel());
             }
-            commandLine.createArgument().setValue("@"+tmp.getAbsolutePath());
+
+            if (updateOnly) {
+                commandLine.createArgument().setValue("-U");
+            }
+
+            commandLine.createArgument().setValue("@"+tmp2.getAbsolutePath());
+            log("Getting files", Project.MSG_INFO);
+            log("Executing " + commandLine.toString(), Project.MSG_VERBOSE);
             result = runCmd(commandLine, new LogStreamHandler(this,Project.MSG_INFO, Project.MSG_WARN));
             if ( result != 0 && !ignorerc) {
-                String msg = "Failed executing: " + commandLine.toString();
+                String msg = "Failed executing: " + commandLine.toString() + ". Return code was "+result;
                 throw new BuildException(msg, location);
             }
 
         } catch(FileNotFoundException e) {
-            String msg = "Failed executing: " + commandLine.toString();
-            throw new BuildException(e.getMessage(),location);
+            String msg = "Failed executing: " + commandLine.toString() + ". Exception: "+e.getMessage();
+            throw new BuildException(msg,location);
         } catch(IOException e) {
-            String msg = "Failed executing: " + commandLine.toString();
-            throw new BuildException(e.getMessage(),location);
+            String msg = "Failed executing: " + commandLine.toString() + ". Exception: "+e.getMessage();
+            throw new BuildException(msg,location);
         } catch(ParseException e) {
-            String msg = "Failed executing: " + commandLine.toString();
-            throw new BuildException(e.getMessage(),location);
+            String msg = "Failed executing: " + commandLine.toString() + ". Exception: "+e.getMessage();
+            throw new BuildException(msg,location);
         } finally {
             if (tmp != null) {
                 tmp.delete();
+            }
+            if (tmp2 != null) {
+                tmp2.delete();
             }
         }
     }
@@ -226,21 +257,55 @@ public class Pvcs extends org.apache.tools.ant.Task {
      */
     private void createFolders(File file) throws IOException, ParseException {
         BufferedReader in = new BufferedReader(new FileReader(file));
-        MessageFormat mf = new MessageFormat("{0}({1})");
+        MessageFormat mf = new MessageFormat("{0}-arc({1})");
         String line = in.readLine();
         while(line != null) {
-            if(line.startsWith("\"")) {
+            log("Considering \""+line+"\"", Project.MSG_VERBOSE);
+            if(line.startsWith("\"\\") || line.startsWith("\"/")) {
                 Object[] objs = mf.parse(line);
                 String f = (String)objs[1];
                 // Extract the name of the directory from the filename
-                File dir = new File(f.substring(0,f.lastIndexOf(File.separator)));
-                if(!dir.exists())
-                    dir.mkdirs();
+                int index = f.lastIndexOf(File.separator);
+                if (index > -1) {
+                    File dir = new File(f.substring(0, index));
+                    if(!dir.exists()) {
+                        log("Creating "+dir.getAbsolutePath(), Project.MSG_VERBOSE);
+                        if(dir.mkdirs()) {
+                            log("Created "+dir.getAbsolutePath(), Project.MSG_INFO);
+                        } else {
+                            log("Failed to create "+dir.getAbsolutePath(), Project.MSG_INFO);
+                        }
+                    } else {
+                        log(dir.getAbsolutePath() + " exists. Skipping", Project.MSG_VERBOSE);
+                    }
+                } else {
+                    log("File separator problem with " + line, 
+                        Project.MSG_WARN);
+                }
+            } else {
+                log("Skipped \""+line+"\"", Project.MSG_VERBOSE);
             }
             line = in.readLine();
         }
     }
-         
+
+    /**
+     * Simple hack to handle the PVCS command-line tools botch when handling UNC notation.
+     */
+    private void massagePCLI(File in, File out) throws FileNotFoundException, IOException
+    {
+        BufferedReader inReader = new BufferedReader(new FileReader(in));
+        BufferedWriter outWriter = new BufferedWriter(new FileWriter(out));
+        String s = null;
+        while ((s = inReader.readLine()) != null) {
+            String sNormal = s.replace('\\', '/');
+            outWriter.write(sNormal);
+            outWriter.newLine();
+        }
+        inReader.close();
+        outWriter.close();
+    }
+
     /**
      * Get network name of the PVCS repository
      * @return String
@@ -368,23 +433,16 @@ public class Pvcs extends org.apache.tools.ant.Task {
      * Get value of ignorereturncode
      * @return String
      */
-    public String getIgnoreReturnCode() {
-        if(ignorerc)
-            return "true";
-        else
-            return "false";
+    public boolean getIgnoreReturnCode() {
+        return ignorerc;
     }
 
     /**
      * If set to true the return value from executing the pvcs 
      * commands are ignored.
-     * @param l String "true/false"
      */
-    public void setIgnoreReturnCode(String l) {
-        if(l.trim().equalsIgnoreCase("true"))
-            ignorerc=true;
-        else
-            ignorerc=false;
+    public void setIgnoreReturnCode(boolean b) {
+        ignorerc = b;
     }
 
     /**
@@ -393,6 +451,18 @@ public class Pvcs extends org.apache.tools.ant.Task {
      */
     public void addPvcsproject(PvcsProject p) {
         pvcsProjects.addElement(p);
+    }
+
+    public boolean getUpdateOnly() {
+        return updateOnly;
+    }
+
+    /**
+     * If set to true files are gotten only if newer
+     * than existing local files.
+     */
+    public void setUpdateOnly(boolean l) {
+        updateOnly = l;
     }
 
     /**
@@ -409,5 +479,6 @@ public class Pvcs extends org.apache.tools.ant.Task {
         promotiongroup=null;
         label=null;
         ignorerc=false;
+        updateOnly = false;
     }
 }
