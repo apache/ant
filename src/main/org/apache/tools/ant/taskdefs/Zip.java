@@ -465,7 +465,9 @@ public class Zip extends MatchingTask {
         byte[] buffer = new byte[8 * 1024];
         int count = 0;
         do {
-            zOut.write(buffer, 0, count);
+            if (count != 0) {
+                zOut.write(buffer, 0, count);
+            }
             count = in.read(buffer, 0, buffer.length);
         } while (count != -1);
     }
