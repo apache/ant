@@ -180,12 +180,13 @@ public class Java extends Task {
                 log("bootclasspath ignored when same JVM is used.",
                     Project.MSG_WARN);
             }
-
+            /*
             if (perm == null && failOnError == true) {
                 perm = new Permissions();
                 log("running " + this.cmdl.getClassname()
                     + " with default permissions (exit forbidden)", Project.MSG_VERBOSE);
             }
+            */
             log("Running in same VM " + cmdl.describeJavaCommand(),
                 Project.MSG_VERBOSE);
         }
