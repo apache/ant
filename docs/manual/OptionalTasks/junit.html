@@ -43,12 +43,23 @@ elements</a>.</p>
        run.</td>
     <td align="center" valign="top">No, default is "off"</td>
   </tr>
+<tr>
+    <td valign="top">errorProperty</td> 
+    <td valign="top">The name of a property to set in the event of an error.</td> 
+    <td align="center" valign="top">No.</td>
+</tr>
   <tr>
     <td valign="top">haltonfailure</td> 
     <td valign="top">Stop the build process if a test fails (errors are 
       considered failures as well).</td>
     <td align="center" valign="top">No, default is "off"</td>
   </tr>
+<tr>
+    <td valign="top">failureProperty</td> 
+    <td valign="top">The name of a property to set in the event of a failure
+      (errors are considered failures as well).</td> 
+    <td align="center" valign="top">No.</td>
+</tr>
   <tr>
     <td valign="top">timeout</td> 
     <td valign="top">Cancel the individual tests if the don't finish
@@ -190,6 +201,12 @@ can be specified.</p>
        run. Overrides value set in <code>&lt;junit&gt;</code>.</td>
     <td align="center" valign="top">No</td>
   </tr>
+<tr>
+    <td valign="top">errorProperty</td> 
+    <td valign="top">The name of a property to set in the event of an error.
+      Overrides value set in &lt;junit&gt;.</td> 
+    <td align="center" valign="top">No.</td>
+</tr>
   <tr>
     <td valign="top">haltonfailure</td> 
     <td valign="top">Stop the build process if a test fails (errors are 
@@ -197,6 +214,12 @@ can be specified.</p>
       <code>&lt;junit&gt;</code>.</td>
     <td align="center" valign="top">No</td>
   </tr>
+<tr>
+    <td valign="top">failureProperty</td> 
+    <td valign="top">The name of a property to set in the event of a failure
+      (errors are considered failures as well). Overrides value set in &lt;junit&gt;.</td> 
+    <td align="center" valign="top">No.</td>
+</tr>
   <tr>
     <td valign="top">todir</td> 
     <td valign="top">Directory to write the reports to.</td>
@@ -253,6 +276,12 @@ generates a test class name for each file that ends in
        run. Overrides value set in <code>&lt;junit&gt;</code>.</td>
     <td align="center" valign="top">No</td>
   </tr>
+<tr>
+    <td valign="top">errorProperty</td> 
+    <td valign="top">The name of a property to set in the event of an error.
+      Overrides value set in &lt;junit&gt;.</td> 
+    <td align="center" valign="top">No.</td>
+</tr>
   <tr>
     <td valign="top">haltonfailure</td> 
     <td valign="top">Stop the build process if a test fails (errors are 
@@ -260,6 +289,12 @@ generates a test class name for each file that ends in
       <code>&lt;junit&gt;</code>.</td>
     <td align="center" valign="top">No</td>
   </tr>
+<tr>
+    <td valign="top">failureProperty</td> 
+    <td valign="top">The name of a property to set in the event of a failure
+      (errors are considered failures as well). Overrides value set in &lt;junit&gt;</td> 
+    <td align="center" valign="top">No.</td>
+</tr>
   <tr>
     <td valign="top">todir</td> 
     <td valign="top">Directory to write the reports to.</td>
@@ -335,6 +370,10 @@ will be output to <code>result.xml</code>.</p>
 test is run in a separate VM. If a test fails, the build process is
 aborted. Results are collected in files named
 <code>TEST-<em>name</em>.txt</code> and written to <code>${reports.tests}</code>.</p>
+
+<p>By using the errorProperty and failureProperty tags, it is possible to
+perform setup work (such as starting an external server), execute the test,
+clean up, and still fail the build in the event of a failure.</p>
 
 </body>
 </html>
