@@ -1,5 +1,11 @@
 #!/bin/sh
 
+# Make sure that the classpath & java_home are in Unix format before we use them
+if [ "$OSTYPE" = "cygwin32" ] || [ "$OSTYPE" = "cygwin" ] ; then
+  CLASSPATH=`cygpath --path --unix "$CLASSPATH"`
+  JAVA_HOME=`cygpath --unix "$JAVA_HOME"`
+fi
+
 # You will need to specify JAVA_HOME if compiling with 1.2 or later.
 
 if [ -n "$JAVA_HOME" ] ; then
@@ -49,11 +55,6 @@ if [ ! -x "$JAVACMD" ] ; then
   exit
 fi
 
-# More Cygwin support
-if [ "$OSTYPE" = "cygwin32" ] || [ "$OSTYPE" = "cygwin" ] ; then
-  CLASSPATH=`cygpath --path --unix "$CLASSPATH"`
-fi
-
 ANT_HOME=.
 export ANT_HOME
 
@@ -97,7 +98,7 @@ mkdir -p bin
 
 echo ... Compiling Ant Classes
 
-${JAVAC} -d ${CLASSDIR} ${TOOLS}/tar/*.java ${TOOLS}/zip/*.java \
+"${JAVAC}" -d ${CLASSDIR} ${TOOLS}/tar/*.java ${TOOLS}/zip/*.java \
     ${TOOLS}/ant/util/regexp/RegexpMatcher.java \
     ${TOOLS}/ant/util/regexp/RegexpMatcherFactory.java \
     ${TOOLS}/ant/util/*.java ${TOOLS}/ant/types/*.java \
@@ -118,7 +119,7 @@ echo ... Building Ant Distribution
 
 cp -r ${CLASSDIR} build
 
-${JAVACMD} -classpath ${CLASSPATH} -Dant.home=. org.apache.tools.ant.Main -emacs bootstrap
+"${JAVACMD}" -classpath "${CLASSPATH}" -Dant.home=. org.apache.tools.ant.Main -emacs bootstrap
 
 echo ... Cleaning Up Build Directories
 
