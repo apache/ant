@@ -616,7 +616,7 @@ public class JUnitTask extends Task {
                 cl.addSystemPackageRoot("junit");
                 // will cause trouble in JDK 1.1 if omitted
                 cl.addSystemPackageRoot("org.apache.tools.ant");
-                cl.setThreadContextLoader();
+                //cl.setThreadContextLoader();
             }
             runner = new JUnitTestRunner(test, test.getHaltonerror(), test.getFiltertrace(), test.getHaltonfailure(), cl);
             if (summary) {
@@ -647,7 +647,7 @@ public class JUnitTask extends Task {
             if (sysProperties != null) {
                 sysProperties.restoreSystem();
             }
-            cl.resetThreadContextLoader();
+            //cl.resetThreadContextLoader();
         }
     }
 
