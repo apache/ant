@@ -574,6 +574,32 @@
         </table>
       </subsection>
 
+      <subsection name="ImTask">
+
+        <p>ImTask is a task to allow one to send an Instant
+        Message. Currently supports yahoo!, AIM, and Jabber</p>
+
+
+        <table class="externals">
+          <tr>
+            <th>Compatibility:</th>
+            <td>Ant 1.5 or higher</td>
+          </tr>
+          <tr>
+            <th>URL:</th>
+            <td><a href="http://imtask.sourceforge.net/">http://imtask.sourceforge.net</a></td>
+          </tr>
+          <tr>
+            <th>Contact:</th>
+            <td><a href="mailto:djallstar@users.sourceforge.net">Jon Madison</a></td>
+          </tr>
+          <tr>
+            <th>License:</th>
+            <td>GNU LGPL</td>
+          </tr>
+        </table>
+      </subsection>
+
       <subsection name="Interactive">
 
         <p>Task allowing to run a dialog within a build used to setup
