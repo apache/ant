@@ -56,6 +56,8 @@ package org.apache.tools.ant.taskdefs;
 
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
+import org.apache.tools.ant.Task;
+import org.apache.tools.ant.types.Commandline;
 
 import java.io.File;
 import java.io.IOException;
@@ -81,20 +83,59 @@ public class Execute {
     private ExecuteStreamHandler streamHandler;
     private ExecuteWatchdog watchdog;
     private File workingDirectory = null;
-    private String antRun;
+    private Project project = null;
 
     private static String antWorkingDirectory = System.getProperty("user.dir");
-    private static String myos = System.getProperty("os.name");
+    private static CommandLauncher launcher = createCommandLauncher();
 
-    private static Method execWithCWD = null;
-    static {
-	try {
-	    // JDK 1.3 API extension:
-	    // Runtime.exec(String[] cmdarray, String[] envp, File dir)
-	    execWithCWD = Runtime.class.getMethod("exec", new Class[] {String[].class, String[].class, File.class});
-	} catch (NoSuchMethodException nsme) {
-	    // OK.
-	}
+    /** 
+     * Builds a command launcher for the OS and JVM we are running under
+     */
+    private static CommandLauncher createCommandLauncher()
+    {
+        // Try using a JDK 1.3 launcher
+        try {
+            return new Java13CommandLauncher();
+        }
+        catch ( NoSuchMethodException exc ) {
+            // Ignore and keep try
+        }
+
+        String osname = System.getProperty("os.name").toLowerCase();
+        if ( osname.indexOf("mac os") >= 0 ) {
+            // Mac
+            return new MacCommandLauncher(new CommandLauncher());
+        }
+        else if ( osname.indexOf("os/2") >= 0 ) {
+            // OS/2 - use same mechanism as Windows 2000
+            return new WinNTCommandLauncher(new CommandLauncher());
+        }
+        else if ( osname.indexOf("windows") >= 0 ) {
+            // Windows.  Need to determine which JDK we're running in
+            CommandLauncher baseLauncher;
+            if ( System.getProperty("java.version").startsWith("1.1") ) {
+                // JDK 1.1
+                baseLauncher = new Java11CommandLauncher();
+            }
+            else {
+                // JDK 1.2
+                baseLauncher = new CommandLauncher();
+            }
+
+            // Determine if we're running under 2000/NT or 98/95
+            if ( osname.indexOf("nt") >= 0 || osname.indexOf("2000") >= 0 ) {
+                // Windows 2000/NT
+                return new WinNTCommandLauncher(baseLauncher);
+            }
+            else {
+                // Windows 98/95 - need to use an auxiliary script
+                return new ScriptCommandLauncher("bin/antRun.bat", baseLauncher);
+            }
+        }
+        else {
+            // Generic
+            return new ScriptCommandLauncher("bin/antRun", new CommandLauncher());
+        }
     }
 
     /**
@@ -192,19 +233,7 @@ public class Execute {
      * @param project the current project.
      */
     public void setAntRun(Project project) throws BuildException {
-    	if (myos.equals("Mac OS") || execWithCWD != null)
-            return;
-
-        String ant = project.getProperty("ant.home");
-        if (ant == null) {
-            throw new BuildException("Property 'ant.home' not found");
-        }
-
-        if (myos.toLowerCase().indexOf("windows") >= 0) {
-            antRun = project.resolveFile(ant + "/bin/antRun.bat").toString();
-        } else {
-            antRun = project.resolveFile(ant + "/bin/antRun").toString();
-        }
+        this.project = project;
     }
 
     /**
@@ -215,7 +244,7 @@ public class Execute {
      *            of the subprocess failed
      */
     public int execute() throws IOException {
-        final Process process = exec();
+        final Process process = launcher.exec(project, getCommandline(), getEnvironment(), workingDirectory);
         try {
             streamHandler.setProcessInputStream(process.getOutputStream());
             streamHandler.setProcessOutputStream(process.getInputStream());
@@ -233,63 +262,6 @@ public class Execute {
         return getExitValue();
     }
 
-
-    protected Process exec() throws IOException {
-	if (workingDirectory == null) {
-	    // Easy.
-	    return Runtime.getRuntime().exec(cmdl, getEnvironment());
-	} else if (execWithCWD != null) {
-	    // The best way to set cwd, if you have JDK 1.3.
-	    try {
-		Object[] arguments = new Object[] {getCommandline(), getEnvironment(), workingDirectory};
-		return (Process)execWithCWD.invoke(Runtime.getRuntime(), arguments);
-            } catch (InvocationTargetException ite) {
-                Throwable t = ite.getTargetException();
-                if (t instanceof ThreadDeath) {
-                    throw (ThreadDeath)t;
-                } else if (t instanceof IOException) {
-                    throw (IOException)t;
-                } else {
-                    throw new IOException(t.toString());
-                }
-	    } catch (Exception e) {
-		// IllegalAccess, IllegalArgument, ClassCast
-		throw new IOException(e.toString());
-	    }
-	} else if (myos.equals("Mac OS")) {
-	    // Dubious Mac hack.
-	    System.getProperties().put("user.dir", 
-				       workingDirectory.getAbsolutePath());
-	    try {
-		return Runtime.getRuntime().exec(cmdl, getEnvironment());
-	    } finally {
-                System.getProperties().put("user.dir", antWorkingDirectory);
-	    }
-	} else if ((myos.toLowerCase().indexOf("windows") >= 0 &&
-                       (myos.toLowerCase().indexOf("nt") >= 0 ||
-                        myos.indexOf("2000") >= 0))
-                      // cmd /c cd works OK on Windows NT & friends.
-                   || myos.toLowerCase().indexOf("os/2") >= 0
-                      // as well as on OS/2
-                   ) {
-	    String[] commandLine = new String[cmdl.length+5];
-	    commandLine[0] = "cmd";
-	    commandLine[1] = "/c";
-	    commandLine[2] = "cd";
-	    commandLine[3] = workingDirectory.getAbsolutePath();
-	    commandLine[4] = "&&";
-	    System.arraycopy(cmdl, 0, commandLine, 5, cmdl.length);
-	    return Runtime.getRuntime().exec(commandLine, getEnvironment());
-	} else {
-	    // Fallback to the antRun wrapper script (POSIX, Win95/98, etc.):
-	    String[] commandLine = new String[cmdl.length+2];
-	    commandLine[0] = antRun;
-	    commandLine[1] = workingDirectory.getAbsolutePath();
-	    System.arraycopy(cmdl, 0, commandLine, 2, cmdl.length);
-	    return Runtime.getRuntime().exec(commandLine, getEnvironment());
-	}
-    }
-
     protected void waitFor(Process process) {
         try {
             process.waitFor();
@@ -303,5 +275,272 @@ public class Execute {
 
     protected int getExitValue() {
         return exitValue;
+    }
+
+    /**
+     * A utility method that runs an external command.  Writes the output and
+     * error streams of the command to the project log.
+     *
+     * @param task      The task that the command is part of.  Used for logging
+     * @param cmdline   The command to execute.
+     *
+     * @throws BuildException if the command does not return 0.
+     */
+    public static void runCommand(Task task, String[] cmdline) throws BuildException
+    {
+        try {
+            task.log(Commandline.toString(cmdline), Project.MSG_VERBOSE);
+            Execute exe = new Execute(new LogStreamHandler(task, 
+                                                           Project.MSG_INFO,
+                                                           Project.MSG_ERR));
+            exe.setAntRun(task.getProject());
+            exe.setCommandline(cmdline);
+            int retval = exe.execute();
+            if ( retval != 0 ) {
+                throw new BuildException(cmdline[0] + " failed with return code " + retval, task.getLocation());
+            }
+        } 
+        catch (java.io.IOException exc) {
+            throw new BuildException("Could not launch " + cmdline[0] + ": " + exc, task.getLocation());
+        }
+    }
+
+    /**
+     * A command launcher for a particular JVM/OS platform.  This class is
+     * a general purpose command launcher which can only launch commands in
+     * the current working directory.
+     */
+    private static class CommandLauncher
+    {
+        /** 
+         * Launches the given command in a new process.
+         *
+         * @param project       The project that the command is part of
+         * @param cmd           The command to execute
+         * @param env           The environment for the new process.  If null,
+         *                      the environment of the current proccess is used.
+         */
+        public Process exec(Project project, String[] cmd, String[] env) throws IOException
+        {
+            return Runtime.getRuntime().exec(cmd, env);
+        }
+
+        /** 
+         * Launches the given command in a new process, in the given working
+         * directory.
+         *
+         * @param project       The project that the command is part of
+         * @param cmd           The command to execute
+         * @param env           The environment for the new process.  If null,
+         *                      the environment of the current proccess is used.
+         * @param workingDir    The directory to start the command in.  If null,
+         *                      the current directory is used
+         */
+        public Process exec(Project project, String[] cmd, String[] env, File workingDir) throws IOException
+        {
+            if ( workingDir == null ) {
+                return exec(project, cmd, env);
+            }
+            throw new IOException("Cannot execute a process in different directory under this JVM");
+        }
+    }
+
+    /**
+     * A command launcher for JDK/JRE 1.1 under Windows.  Fixes quoting problems
+     * in Runtime.exec().  Can only launch commands in the current working
+     * directory
+     */
+    private static class Java11CommandLauncher extends CommandLauncher
+    {
+        /**
+         * Launches the given command in a new process.  Needs to quote
+         * arguments
+         */
+        public Process exec(Project project, String[] cmd, String[] env) throws IOException 
+        {
+            // Need to quote arguments with spaces, and to escape quote characters
+            String[] newcmd = new String[cmd.length];
+            for ( int i = 0; i < cmd.length; i++ ) {
+                newcmd[i] = Commandline.quoteArgument(cmd[i]);
+            }
+            return Runtime.getRuntime().exec(newcmd, env);
+        }
+    }
+
+    /**
+     * A command launcher for JDK/JRE 1.3 (and higher).  Uses the built-in
+     * Runtime.exec() command
+     */
+    private static class Java13CommandLauncher extends CommandLauncher
+    {
+        public Java13CommandLauncher() throws NoSuchMethodException
+        {
+            // Locate method Runtime.exec(String[] cmdarray, String[] envp, File dir)
+            _execWithCWD = Runtime.class.getMethod("exec", new Class[] {String[].class, String[].class, File.class});
+        }
+
+        /** 
+         * Launches the given command in a new process, in the given working
+         * directory
+         */
+        public Process exec(Project project, String[] cmd, String[] env, File workingDir) throws IOException
+        {
+ 	    try {
+		Object[] arguments = { cmd, env, workingDir };
+		return (Process)_execWithCWD.invoke(Runtime.getRuntime(), arguments);
+            } 
+            catch ( InvocationTargetException exc ) {
+                Throwable realexc = exc.getTargetException();
+                if ( realexc instanceof ThreadDeath ) {
+                    throw (ThreadDeath)realexc;
+                } 
+                else if ( realexc instanceof IOException ) {
+                    throw (IOException)realexc;
+                } 
+                else {
+                    throw new IOException(realexc.getMessage());
+                }
+	    } 
+            catch ( Exception exc ) {
+		// IllegalAccess, IllegalArgument, ClassCast
+		throw new IOException(exc.getMessage());
+	    }
+        }
+
+        private Method _execWithCWD;
+    }
+
+    /**
+     * A command launcher that proxies another command launcher.  
+     *
+     * Sub-classes override exec(args, env, workdir)
+     */
+    private static class CommandLauncherProxy extends CommandLauncher
+    {
+        CommandLauncherProxy(CommandLauncher launcher)
+        {
+            _launcher = launcher;
+        }
+
+        /** 
+         * Launches the given command in a new process.  Delegates this
+         * method to the proxied launcher
+         */
+        public Process exec(Project project, String[] cmd, String[] env) throws IOException
+        {
+            return _launcher.exec(project, cmd, env);
+        }
+
+        private CommandLauncher _launcher;
+    }
+
+    /**
+     * A command launcher for Windows 2000/NT that uses 'cmd.exe' when
+     * launching commands in directories other than the current working
+     * directory.
+     */
+    private static class WinNTCommandLauncher extends CommandLauncherProxy
+    {
+        WinNTCommandLauncher(CommandLauncher launcher)
+        {
+            super(launcher);
+        }
+
+        /** 
+         * Launches the given command in a new process, in the given working
+         * directory.
+         */
+        public Process exec(Project project, String[] cmd, String[] env, File workingDir) throws IOException
+        {
+            if ( workingDir == null ) {
+                return exec(project, cmd, env);
+            }
+
+            // Use cmd.exe to change to the specified directory before running
+            // the command
+	    String[] newcmd = new String[cmd.length+5];
+	    newcmd[0] = "cmd";
+	    newcmd[1] = "/c";
+	    newcmd[2] = "cd";
+	    newcmd[3] = workingDir.getAbsolutePath();
+	    newcmd[4] = "&&";
+	    System.arraycopy(cmd, 0, newcmd, 5, cmd.length);
+            return exec(project, newcmd, env);
+        }
+    }
+
+    /**
+     * A command launcher for Mac that uses a dodgy mechanism to change
+     * working directory before launching commands.
+     */
+    private static class MacCommandLauncher extends CommandLauncherProxy
+    {
+        MacCommandLauncher(CommandLauncher launcher)
+        {
+            super(launcher);
+        }
+
+        /** 
+         * Launches the given command in a new process, in the given working
+         * directory
+         */
+        public Process exec(Project project, String[] cmd, String[] env, File workingDir) throws IOException
+        {
+            if ( workingDir == null ) {
+                return exec(project, cmd, env);
+            }
+
+	    System.getProperties().put("user.dir", workingDir.getAbsolutePath());
+	    try {
+		return exec(project, cmd, env);
+	    } 
+            finally {
+                System.getProperties().put("user.dir", antWorkingDirectory);
+	    }
+        }
+    }
+
+    /**
+     * A command launcher that uses an auxiliary script to launch commands
+     * in directories other than the current working directory.
+     */
+    private static class ScriptCommandLauncher extends CommandLauncherProxy
+    {
+        ScriptCommandLauncher(String script, CommandLauncher launcher)
+        {
+            super(launcher);
+            _script = script;
+        }
+
+        /** 
+         * Launches the given command in a new process, in the given working
+         * directory
+         */
+        public Process exec(Project project, String[] cmd, String[] env, File workingDir) throws IOException
+        {
+            if ( workingDir == null ) {
+                return exec(project, cmd, env);
+            }
+
+            // Locate the auxiliary script
+            if ( project == null ) {
+                throw new IOException("Cannot locate antRun script: No project provided");
+            }
+            String antHome = project.getProperty("ant.home");
+            if ( antHome == null ) {
+                throw new IOException("Cannot locate antRun script: Property 'ant.home' not found");
+            }
+            String antRun = project.resolveFile(antHome + File.separator + _script).toString();
+
+            // Build the command
+	    String[] newcmd = new String[cmd.length + 2];
+	    newcmd[0] = antRun;
+	    newcmd[1] = workingDir.getAbsolutePath();
+	    System.arraycopy(cmd, 0, newcmd, 2, cmd.length);
+
+            return exec(project, newcmd, env);
+        }
+
+        private String _script;
     }
 }

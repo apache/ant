@@ -7,12 +7,12 @@ shift
 
 set PARAMS=
 :loop
-if "%1" == "" goto runCommand
+if ""%1 == "" goto runCommand
 set PARAMS=%PARAMS% %1
 shift
 goto loop
 
 :runCommand
-echo %ANT_RUN_CMD% %PARAMS%
+rem echo %ANT_RUN_CMD% %PARAMS%
 %ANT_RUN_CMD% %PARAMS%
 

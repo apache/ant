@@ -80,7 +80,7 @@ import java.util.StringTokenizer;
  * <code>createAcommandline</code> which returns an instance of this class.
  *
  * @author thomas.haas@softwired-inc.com
- * @author <a href="mailto:stefan.bodewig@megabit.net">Stefan Bodewig</a> 
+ * @author <a href="mailto:stefan.bodewig@epost.de">Stefan Bodewig</a> 
  */
 public class Commandline implements Cloneable {
 
@@ -226,6 +226,30 @@ public class Commandline implements Cloneable {
         return toString(getCommandline());
     }
 
+    /**
+     * Put quotes around the given String if necessary.
+     *
+     * <p>If the argument doesn't include spaces or quotes, return it
+     * as is. If it contains double quotes, use single quotes - else
+     * surround the argument by double quotes.</p>
+     *
+     * @exception BuildException if the argument contains both, single
+     *                           and double quotes.  
+     */
+    public static String quoteArgument(String argument) {
+        if (argument.indexOf("\"") > -1) {
+            if (argument.indexOf("\'") > -1) {
+                throw new BuildException("Can\'t handle single and double quotes in same argument");
+            } else {
+                return '\''+argument+'\'';
+            }
+        } else if (argument.indexOf("\'") > -1 || argument.indexOf(" ") > -1) {
+            return '\"'+argument+'\"';
+        } else {
+            return argument;
+        }
+    }
+
     public static String toString(String [] line) {
         // empty path return empty string
         if (line == null || line.length == 0) return "";
@@ -236,20 +260,7 @@ public class Commandline implements Cloneable {
             if (i > 0) {
                 result.append(' ');
             }
-
-            // try to place quotes around arguments that need them
-            if (line[i].indexOf("\"") > -1) {
-                if (line[i].indexOf("\'") > -1) {
-                    throw new BuildException("Can\'t handle single and double quotes in same argument");
-                } else {
-                    result.append('\'').append(line[i]).append('\'');
-                }
-            } else if (line[i].indexOf("\'") > -1 
-                       || line[i].indexOf(" ") > -1) {
-                result.append('\"').append(line[i]).append('\"');
-            } else {
-                result.append(line[i]);
-            }
+            result.append(quoteArgument(line[i]));
         }
         return result.toString();
     }
@@ -328,8 +339,7 @@ public class Commandline implements Cloneable {
     }
 
     /**
-     * Clear out the whole command line.
-     */
+     * Clear out the whole command line.  */
     public void clear() {
         executable = null;
         arguments.removeAllElements();
