@@ -1089,6 +1089,27 @@ mv /tmp/foo $ANT_HOME/bin/antRun
       </answer>
     </faq>
 
+    <faq id="winxp-jdk14-ant14">
+      <question>When running Ant 1.4 on Windows XP and JDK 1.4, I get
+      various errors when trying to <code>&lt;exec&gt;</code>, fork
+      <code>&lt;java&gt;</code> or access environment
+      variables.</question>
+
+      <answer>
+
+        <p>Ant &lt; 1.5 doesn&apos;t recognize Windows XP as a flavor
+        of Windows that runs <code>CMD.EXE</code> instead of
+        <code>COMMAND.COM</code>.  JDK 1.3 will tell Ant that Windows
+        XP is Windows 2000 so the problem doesn&apos;t show up
+        there.</p>
+
+        <p>Apart from upgrading to Ant 1.5 or better, setting the
+        environment variable <code>ANT_OPTS</code> to
+        <code>-Dos.name=Windows_NT</code> prior to invoking Ant has
+        been confirmed as a workaround.</p>
+      </answer>
+    </faq>
+
     <faq id="1.5-cygwin-sh">
       <question>The <code>ant</code> wrapper script of Ant 1.5 fails
       for Cygwin if <code>ANT_HOME</code> is set to a Windows style
