@@ -23,7 +23,7 @@
              includes="Junk2.java"
              javafiles="true"
              tab="add"
-	     cr="add"
+             cr="add"
              eol="crlf"
              eof="asis"
              />
@@ -62,7 +62,7 @@
     <fixcrlf srcdir="input" destdir="result"
              includes="Junk6.java"
              tab="add"
-	     cr="remove"
+             cr="remove"
              eol="crlf"
              eof="asis"
              />
@@ -72,7 +72,7 @@
     <fixcrlf srcdir="input" destdir="result"
              includes="Junk7.java"
              tab="add"
-	     cr="add"
+             cr="add"
              eof="asis"
              />
   </target>
@@ -80,9 +80,9 @@
   <target name="test8" depends="init">
     <fixcrlf srcdir="input" destdir="result"
              includes="Junk8.java"
-	     javafiles="true"
+             javafiles="true"
              tab="add"
-	     cr="add"
+             cr="add"
              eof="add"
              />
   </target>
@@ -90,9 +90,9 @@
   <target name="test9" depends="init">
     <fixcrlf srcdir="input" destdir="result"
              includes="Junk9.java"
-	     javafiles="true"
+             javafiles="true"
              tab="remove"
-	     cr="remove"
+             cr="remove"
              eof="remove"
              />
   </target>
@@ -100,8 +100,8 @@
   <target name="testEncoding" depends="init">
     <fixcrlf srcdir="input" destdir="result"
              includes="input.crlf.utf16"
-	     javafiles="false"
-	     cr="remove"
+             javafiles="false"
+             cr="remove"
              encoding="UTF16"
              />
   </target>

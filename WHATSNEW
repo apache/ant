@@ -59,6 +59,8 @@ Other changes:
 
 * Improved support for Novell NetWare.
 
+* Added an optional encoding attribute to <fixcrlf>
+
 Changes from Ant 1.4 to Ant 1.4.1
 ===========================================
 

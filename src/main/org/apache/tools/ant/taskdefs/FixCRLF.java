@@ -393,8 +393,8 @@ public class FixCRLF extends MatchingTask {
      * Checks for the inequality of two files
      */
     private boolean filesEqual(File file1, File file2) {
-        BufferedReader reader1;
-        BufferedReader reader2;
+        BufferedReader reader1 = null;
+        BufferedReader reader2 = null;
         char buf1[] = new char[INBUFLEN];
         char buf2[] = new char[INBUFLEN];
         int buflen;
@@ -415,20 +415,26 @@ public class FixCRLF extends MatchingTask {
                  // know what it is
                  for (int i = 0; i < buflen; i++) {
                      if (buf1[i] != buf2[i]) {
-                         reader1.close();
-                         reader2.close();
                          return false;
                      } // end of if (buf1[i] != buf2[i])
                  }
              }
-             reader1.close();
-             reader2.close();
              return true;   // equal
         } catch (IOException e) {
             throw new BuildException("IOException in filesEqual: " +
                                       file1 + " : " + file2);
-        } // end of try-catch
-                 
+        } finally {
+            if (reader1 != null) {
+                try {
+                    reader1.close();
+                } catch (IOException e) {}
+            }
+            if (reader2 != null) {
+                try {
+                    reader2.close();
+                } catch (IOException e) {}
+            }
+        }
     }
 
 
@@ -572,10 +578,16 @@ public class FixCRLF extends MatchingTask {
                 } else if (ctrlz == ADD){
                     outWriter.write(CTRLZ);
                 }
-                outWriter.close();
             } catch (IOException e) {
                 throw new BuildException(e);
-            } // end of try-catch
+            } finally {
+                try {
+                    outWriter.close();
+                } catch (IOException e) {
+                    throw new BuildException(e);
+                }
+            }
+            
             
             File destFile = new File(destD, file);
 
