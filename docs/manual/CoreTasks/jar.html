@@ -38,10 +38,6 @@ JAR file already exists. When set to <code>yes</code>, the JAR file is
 updated with the files specified. When set to <code>no</code> (the
 default) the JAR file is overwritten. An example use of this is
 provided in the <a href="zip.html">Zip task documentation</a>.</p>
-<p>The <code>whenempty</code> parameter controls what happens when no files match.
-If <code>create</code> (the default), the JAR is created anyway with only a manifest.
-If <code>skip</code>, the JAR is not created and a warning is issued.
-If <code>fail</code>, the JAR is not created and the build is halted with an error.</p>
 <p>(The Jar task is a shortcut for specifying the manifest file of a JAR file. 
 The same thing can be accomplished by using the <i>fullpath</i>
 attribute of a zipfileset in a Zip task. The one difference is that if the
@@ -122,11 +118,6 @@ include an empty one for you.)</p>
     <td valign="top">update</td>
     <td valign="top">indicates whether to update or overwrite
       the destination file if it already exists.</td>
-    <td valign="top" align="center">No</td>
-  </tr>
-  <tr>
-    <td valign="top">whenempty</td>
-    <td valign="top">Behavior to use if no files match.</td>
     <td valign="top" align="center">No</td>
   </tr>
 </table>

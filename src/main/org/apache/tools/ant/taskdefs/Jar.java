@@ -91,6 +91,11 @@ public class Jar extends Zip {
         setEncoding("UTF8");
     }
 
+    public void setWhenempty(WhenEmpty we) {
+        log("JARs are never empty, they contain at least a manifest file",
+            Project.MSG_WARN);
+    }
+
     /**
      * @deprecated use setFile(File) instead.
      */

@@ -24,6 +24,10 @@ Fixed bugs:
   that only one test could be running at the same time - this is not
   necessarily true, see junit.extensions.ActiveTestSuite.
 
+* <jar>'s whenEmpty attribute is useless as JARs are never empty, they
+  contain at least a manifest file, therefore it will now print a
+  warning and do nothing.
+
 Other changes:
 --------------
 
