@@ -94,6 +94,11 @@ public class Jar extends Zip {
         super.addFileset(fs);
     }
 
+    public void addMetainf(ZipFileSet fs) {
+        // We just set the prefix for this fileset, and pass it up.
+        fs.setPrefix("META-INF/");
+        super.addFileset(fs);
+    }
 
     protected void initZipOutputStream(ZipOutputStream zOut)
         throws IOException, BuildException

@@ -101,6 +101,12 @@ href="../CoreTypes/fileset.html">FileSet</a>. All files included in this fileset
 end up in the <code>WEB-INF</code> directory of the war file. If this
 fileset includes a file named <code>web.xml</code>, the file is
 ignored and you will get a warning.</p>
+<h4>metainf</h4>
+<p>The nested <code>metainf</code> element specifies a <a
+href="../CoreTypes/fileset.html">FileSet</a>. All files included in this fileset will
+end up in the <code>META-INF</code> directory of the war file. If this
+fileset includes a file named <code>MANIFEST.MF</code>, the file is
+ignored and you will get a warning.</p>
 <h3>Examples</h3>
 <p>Assume the following structure in the project's base directory:</p>
 <pre>

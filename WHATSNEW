@@ -36,6 +36,9 @@ Other changes:
 
 * <sql> now supports REM comments as well as // and --
 
+* <jar> now has a nested <metainf> element following the same idea as
+  <war>'s <webinf>.
+
 Fixed bugs:
 -----------
 

@@ -14,7 +14,7 @@ treatment for files that should end up in an Enterprise Application archive.</p>
 <p>(The Ear task is a shortcut for specifying the particular layout of a EAR file. 
 The same thing can be accomplished by using the <i>prefix</i> and <i>fullpath</i>
 attributes of zipfilesets in a Zip or Jar task.)</p>
-<p>The extended zipfileset element from the zip task (with attributes <i>prefix</i>, <i>fullpath</i>, and <i>src</i>) is available in the War task.</p>
+<p>The extended zipfileset element from the zip task (with attributes <i>prefix</i>, <i>fullpath</i>, and <i>src</i>) is available in the Ear task.</p>
 
 <h3>Parameters</h3>
 <table border="1" cellpadding="2" cellspacing="0">
@@ -84,6 +84,13 @@ attributes of zipfilesets in a Zip or Jar task.)</p>
     <td valign="top" align="center">No</td>
   </tr>
 </table>
+<h3>Nested elements</h3>
+<h4>metainf</h4>
+<p>The nested <code>metainf</code> element specifies a <a
+href="../CoreTypes/fileset.html">FileSet</a>. All files included in this fileset will
+end up in the <code>META-INF</code> directory of the ear file. If this
+fileset includes a file named <code>MANIFEST.MF</code>, the file is
+ignored and you will get a warning.</p>
 <h2>Example</h2>
 <pre>
     &lt;ear earfile="${build.dir}/myapp.ear" appxml="${src.dir}/metadata/application.xml"&gt;
