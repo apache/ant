@@ -101,14 +101,31 @@ import org.xml.sax.XMLReader;
  * the XMLCatalog object and must be labeled <code>dtd</code> and
  * <code>entity</code> respectively.</p>
  *
- * <p>Possible future extension could allow a catalog file instead of nested
- * elements, or use Norman Walsh's entity resolver from xml-commons</p>
+ * <p>The following is a description of the resolution algorithm:
+ * entities/URIs/dtds are looked up in each of the following contexts,
+ * stopping when a valid and readable resource is found:
+ * <ol>
+ * <li>In the local filesystem</li>
+ * <li>In the classpath</li>
+ * <li>In URL-space</li>
+ * </ol>
+ * </p>
+ *
+ * <p>See {@link
+ * org.apache.tools.ant.taskdefs.optional.XMLValidateTask
+ * XMLValidateTask} for an example of a task that has integrated
+ * support for XMLCatalogs.</p>
+ *
+ * <p>Possible future extension could provide for additional OASIS
+ * entry types to be specified inline, and external catalog files
+ * using the xml-commons resolver library</p>
  *
  * @author dIon Gillard
  * @author Erik Hatcher
+ * @author <a href="mailto:cstrong@arielpartners.com">Craeg Strong</a>
  * @version $Id$
  */
-public class XMLCatalog extends DataType implements Cloneable, EntityResolver {
+public class XMLCatalog extends DataType implements Cloneable, EntityResolver, URIResolver {
     /** File utilities instance */
     private FileUtils fileUtils = FileUtils.newFileUtils();
 
@@ -117,11 +134,21 @@ public class XMLCatalog extends DataType implements Cloneable, EntityResolver {
     /** holds dtd/entity objects until needed */
     private Vector elements = new Vector();
 
+    /**
+     * Classpath in which to attempt to resolve resources.
+     */
     private Path classpath;
 
     //-- Methods ---------------------------------------------------------------
 
+    public XMLCatalog() {
+        checked = false;
+    }
+
     /**
+     * Returns the elements of the catalog - ResolverLocation and
+     * FileSet objects.
+     *
      * @return the elements of the catalog - DTDLocation objects
      */
     private Vector getElements() {
