@@ -699,6 +699,13 @@ public class WebsphereDeploymentTool extends GenericDeploymentTool {
      */
     public void validateConfigured() throws BuildException {
         super.validateConfigured();
+        if (ejbdeploy) {
+            String home = getTask().getProject().getProperty("websphere.home");
+            if (home == null) {
+                throw new BuildException("The 'websphere.home' property must be set when 'ejbdeploy=true'");
+            }
+            websphereHome = getTask().getProject().resolveFile(home);
+        }
     }
 
 
