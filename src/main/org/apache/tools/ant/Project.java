@@ -105,6 +105,28 @@ public class Project {
 
     private Vector listeners = new Vector();
 
+    static {
+
+        // Determine the Java version by looking at available classes
+        // java.lang.StrictMath was introduced in JDK 1.3
+        // java.lang.ThreadLocal was introduced in JDK 1.2
+        // java.lang.Void was introduced in JDK 1.1
+        // Count up version until a NoClassDefFoundError ends the try
+
+        try {
+            javaVersion = JAVA_1_0;
+            Class.forName("java.lang.Void");
+            javaVersion = JAVA_1_1;
+            Class.forName("java.lang.ThreadLocal");
+            javaVersion = JAVA_1_2;
+            Class.forName("java.lang.StrictMath");
+            javaVersion = JAVA_1_3;
+        } catch (ClassNotFoundException cnfe) {
+            // swallow as we've hit the max class version that
+            // we have
+        }
+    }
+
     public Project() {
     }
 
@@ -115,8 +137,8 @@ public class Project {
      * system properties.
      */
     public void init() throws BuildException {
-        detectJavaVersion();
-
+        setJavaVersionProperty();
+        
         String defs = "/org/apache/tools/ant/taskdefs/defaults.properties";
 
         try {
@@ -281,26 +303,7 @@ public class Project {
         return javaVersion;
     }
 
-    public void detectJavaVersion() {
-
-        // Determine the Java version by looking at available classes
-        // java.lang.StrictMath was introduced in JDK 1.3
-        // java.lang.ThreadLocal was introduced in JDK 1.2
-        // java.lang.Void was introduced in JDK 1.1
-        // Count up version until a NoClassDefFoundError ends the try
-
-        try {
-            javaVersion = JAVA_1_0;
-            Class.forName("java.lang.Void");
-            javaVersion = JAVA_1_1;
-            Class.forName("java.lang.ThreadLocal");
-            javaVersion = JAVA_1_2;
-            Class.forName("java.lang.StrictMath");
-            javaVersion = JAVA_1_3;
-        } catch (ClassNotFoundException cnfe) {
-            // swallow as we've hit the max class version that
-            // we have
-        }
+    public void setJavaVersionProperty() {
         setProperty("ant.java.version", javaVersion);
 
         // sanity check

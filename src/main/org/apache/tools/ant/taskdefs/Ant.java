@@ -89,7 +89,7 @@ public class Ant extends Task {
 
     public void init() {
         p1 = new Project();
-        p1.detectJavaVersion();
+        p1.setJavaVersionProperty();
         p1.addTaskDefinition("property", 
                              (Class)project.getTaskDefinitions().get("property"));
     }

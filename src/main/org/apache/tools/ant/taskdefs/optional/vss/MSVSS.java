@@ -146,7 +146,7 @@ public abstract class MSVSS extends Task {
      * @return m_vssPath
      */
     public String getVsspath() {
-        return new String(m_vssPath);
+        return m_vssPath;
     }
 
 
