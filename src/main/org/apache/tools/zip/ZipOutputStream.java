@@ -24,6 +24,7 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.io.RandomAccessFile;
 import java.io.UnsupportedEncodingException;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.Hashtable;
 import java.util.Vector;
@@ -769,17 +770,19 @@ public class ZipOutputStream extends FilterOutputStream {
      * @since 1.1
      */
     protected static ZipLong toDosTime(Date time) {
-        int year = time.getYear() + 1900;
-        int month = time.getMonth() + 1;
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(time);
+        int year = cal.get(Calendar.YEAR);
+        int month = cal.get(Calendar.MONTH) + 1;
         if (year < 1980) {
             return DOS_TIME_MIN;
         }
         long value =  ((year - 1980) << 25)
             |         (month << 21)
-            |         (time.getDate() << 16)
-            |         (time.getHours() << 11)
-            |         (time.getMinutes() << 5)
-            |         (time.getSeconds() >> 1);
+            |	      (cal.get(Calendar.DAY_OF_MONTH) << 16)
+            |         (cal.get(Calendar.HOUR_OF_DAY) << 11)
+            |         (cal.get(Calendar.MINUTE) << 5)
+            |         (cal.get(Calendar.SECOND) >> 1);
 
         byte[] result = new byte[4];
         result[0] = (byte) ((value & 0xFF));
