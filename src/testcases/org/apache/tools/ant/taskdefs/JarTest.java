@@ -67,6 +67,7 @@ import org.apache.tools.ant.BuildFileTest;
 public class JarTest extends BuildFileTest {
 
     private static String tempJar = "tmp.jar";
+    private static String tempDir = "jartmp/";
     private Reader r1, r2;
 
     public JarTest(String name) {
@@ -170,9 +171,9 @@ public class JarTest extends BuildFileTest {
         executeTarget("testManifestStaysIntact");
 
         r1 = new FileReader(getProject()
-                            .resolveFile("jartmp/manifest"));
+                            .resolveFile(tempDir + "manifest"));
         r2 = new FileReader(getProject()
-                            .resolveFile("jartmp/META-INF/MANIFEST.MF"));
+                            .resolveFile(tempDir + "META-INF/MANIFEST.MF"));
         Manifest mf1 = new Manifest(r1);
         Manifest mf2 = new Manifest(r2);
         assertEquals(mf1, mf2);
@@ -218,5 +219,11 @@ public class JarTest extends BuildFileTest {
         executeTarget("testCreateWithEmptyFilesetSetUp");
         executeTarget("testCreateWithEmptyFileset");
         executeTarget("testCreateWithEmptyFileset");
+    }
+
+    public void testUpdateIfOnlyManifestHasChanged() {
+        executeTarget("testUpdateIfOnlyManifestHasChanged");
+        File jarXml = getProject().resolveFile(tempDir + "jar.xml");
+        assertTrue(jarXml.exists());
     }
 }

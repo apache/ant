@@ -189,4 +189,15 @@
     </jar>
   </target>
 
+  <!-- bug 17780 -->
+  <target name="testUpdateIfOnlyManifestHasChanged"
+          depends="test4">
+    <jar destfile="${tmp.jar}" update="true">
+      <manifest>
+        <attribute name="Foo" value="bar"/>
+      </manifest>
+    </jar>
+    <mkdir dir="${tmp.dir}"/>
+    <unzip src="${tmp.jar}" dest="${tmp.dir}"/>
+  </target>
 </project>

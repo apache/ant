@@ -535,11 +535,12 @@ public class Jar extends Zip {
      * out-of-date.  Subclasses overriding this method are supposed to
      * set this value correctly in their call to
      * super.getResourcesToAdd.
-     * @return an array of resources to add for each fileset passed in.
+     * @return an array of resources to add for each fileset passed in as well
+     *         as a flag that indicates whether the archive is uptodate.
      *
      * @exception BuildException if it likes
      */
-    protected Resource[][] getResourcesToAdd(FileSet[] filesets,
+    protected ArchiveState getResourcesToAdd(FileSet[] filesets,
                                              File zipFile,
                                              boolean needsUpdate)
         throws BuildException {
@@ -585,7 +586,8 @@ public class Jar extends Zip {
         
         ZipOutputStream zOut = null;
         try {
-            log("Building jar: " + getDestFile().getAbsolutePath());
+            log("Building MANIFEST-only jar: " 
+                + getDestFile().getAbsolutePath());
             zOut = new ZipOutputStream(new FileOutputStream(getDestFile()));
 
             zOut.setEncoding(getEncoding());
