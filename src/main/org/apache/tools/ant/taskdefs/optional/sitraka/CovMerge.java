@@ -157,14 +157,16 @@ public class CovMerge extends Task {
 		if (tofile == null) {
 			throw new BuildException("'tofile' attribute must be set.");
 		}
-		if (home == null) {
-			throw new BuildException("'home' attribute must be set to JProbe Coverage home directory");
+
+		// check coverage home
+		if (home == null || !home.isDirectory() ) {
+			throw new BuildException("Invalid home directory. Must point to JProbe home directory");
 		}
+		home = new File(home,"Coverage");
 		File jar = new File(home, "coverage.jar");
 		if (!jar.exists()) {
-			throw new BuildException("'home' attribute is not set to Coverage home directory: " + home);
+			throw new BuildException("Cannot find Coverage directory: " + home);
 		}
-		
 	}
 
 	/** get the snapshots from the filesets */
