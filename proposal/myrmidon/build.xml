@@ -306,6 +306,7 @@ Legal:
       <include name="org/apache/myrmidon/interfaces/**" />
       <include name="org/apache/myrmidon/listeners/*" />
       <include name="org/apache/myrmidon/framework/**" />
+      <include name="org/apache/aut/**" />
       <include name="org/apache/tools/**" />
 <!--      <include name="org/apache/myrmidon/*" />
       <include name="org/apache/myrmidon/components/**"/>
@@ -347,6 +348,13 @@ Legal:
       <include name="org/apache/antlib/core/**" />
       <zipfileset dir="${manifest.dir}" fullpath="META-INF/ant-descriptor.xml">
         <include name="core-ant-descriptor.xml"/>
+      </zipfileset>
+    </jar>
+
+    <jar jarfile="${build.lib}/cvslib.atl" basedir="${build.classes}">
+      <include name="org/apache/antlib/cvslib/**" />
+      <zipfileset dir="${manifest.dir}" fullpath="META-INF/ant-descriptor.xml">
+        <include name="cvslib-ant-descriptor.xml"/>
       </zipfileset>
     </jar>
 
@@ -398,7 +406,6 @@ Legal:
     <mkdir dir="${dist.lib}"/>
     <mkdir dir="${dist.ext}"/>
 
-    <copy file="${lib.dir}/ant.jar" tofile="${dist.lib}/ant1-compat.jar" />
     <copy file="${build.lib}/myrmidon-launcher.jar" tofile="${dist.bin}/myrmidon-launcher.jar" />
     <copy file="${build.lib}/myrmidon-container.jar" tofile="${dist.bin}/lib/myrmidon-container.jar" />
 
