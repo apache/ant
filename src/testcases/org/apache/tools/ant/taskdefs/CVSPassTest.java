@@ -138,13 +138,21 @@ public class CVSPassTest extends TaskdefsTest {
     }
 
     private String readFile(File f) throws Exception {
-        BufferedReader reader = new BufferedReader(new FileReader(f));
+        BufferedReader reader = null; 
+        
+        try {
+            reader = new BufferedReader(new FileReader(f));
 
-        StringBuffer buf = new StringBuffer();
-        String line=null;
-        while((line=reader.readLine())!=null){
-            buf.append(line + EOL);
+            StringBuffer buf = new StringBuffer();
+            String line=null;
+            while((line=reader.readLine())!=null){
+                buf.append(line + EOL);
+            }
+            return buf.toString();
+        } finally {
+            if (reader != null) {
+                reader.close();
+            }
         }
-        return buf.toString();
     }
 }
