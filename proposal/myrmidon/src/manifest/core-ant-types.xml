@@ -1,0 +1,55 @@
+<ant-lib>
+  
+  <types>
+
+    <!-- core tasks for operation -->
+    <task name="register-tasklet" classname="org.apache.ant.modules.core.RegisterTasklet" />
+    <task name="register-converter" classname="org.apache.ant.modules.core.RegisterConverter" />
+    <task name="register-datatype" classname="org.apache.ant.modules.core.RegisterDataType" />
+
+    <!-- tasks to test operation of engine -->
+    <task name="prim-test" classname="org.apache.ant.modules.test.PrimitiveTypesTest" />
+    <task name="sub-elements-test" classname="org.apache.ant.modules.test.SubElementTest" />
+    <task name="conf-test" classname="org.apache.ant.modules.test.ConfigurationTest" />
+    <task name="content-test" classname="org.apache.ant.modules.test.ContentTest" />
+
+    <!-- basic tasks/datatypes/coverters required in most environments -->
+    <task name="echo" classname="org.apache.ant.modules.basic.Echo" />
+    <task name="property" classname="org.apache.ant.modules.basic.Property" />
+    <task name="ant-call" classname="org.apache.ant.modules.basic.AntCall" />
+
+    <task name="pattern" classname="org.apache.myrmidon.framework.TypeInstanceTask" />
+    <data-type name="pattern" classname="org.apache.ant.modules.basic.Pattern" />
+
+  </types>
+  
+  <converters>
+
+    <converter classname="org.apache.ant.modules.basic.StringToLongConverter" 
+               source="java.lang.String" 
+               destination="java.lang.Long" />
+    <converter classname="org.apache.ant.modules.basic.StringToIntegerConverter" 
+               source="java.lang.String" 
+               destination="java.lang.Integer" />
+    <converter classname="org.apache.ant.modules.basic.StringToShortConverter" 
+               source="java.lang.String" 
+               destination="java.lang.Short" />
+    <converter classname="org.apache.ant.modules.basic.StringToByteConverter" 
+               source="java.lang.String" 
+               destination="java.lang.Byte" />
+    <converter classname="org.apache.ant.modules.basic.StringToDoubleConverter" 
+               source="java.lang.String" 
+               destination="java.lang.Double" />
+    <converter classname="org.apache.ant.modules.basic.StringToFloatConverter" 
+               source="java.lang.String" 
+               destination="java.lang.Float" />
+    <converter classname="org.apache.ant.modules.basic.StringToClassConverter" 
+               source="java.lang.String" 
+               destination="java.lang.Class" />
+    <converter classname="org.apache.ant.modules.basic.StringToURLConverter" 
+               source="java.lang.String" 
+               destination="java.net.URL" />
+
+  </converters>
+
+</ant-lib>
