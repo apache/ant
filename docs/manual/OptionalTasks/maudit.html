@@ -75,8 +75,17 @@ An evaluation version is available at <a href="http://www.webgain.com/products/q
 <h3>Nested elements</h3>
 <h4>jvmarg</h4>
 <p>Additional parameters may be passed to the VM via nested <code>&lt;jvmarg&gt;</code>
-attributes. <code>&lt;jvmarg&gt;</code> allows all attributes described in <a href="../using.html#arg">Command
-line arguments</a>.</p>
+attributes. <code>&lt;jvmarg&gt;</code> allows all attributes described in 
+<a href="../using.html#arg">Command line arguments</a>.</p>
+<p>
+You can avoid using the  <code>&lt;jvmarg&gt;</code> by adding these empty 
+entries to <code>metamata.properties</code> located at <code>${metamata.home}/bin</code>
+</p>
+<pre>metamata.classpath=
+metamata.sourcepath=
+metamata.baseclasspath=
+</pre>
+</p>
 <h4>classpath</h4>
 <p>Sets class path (also source path unless one explicitly set). Overrides
 METAPATH/CLASSPATH environment variables. The <tt>classpath</tt> element represents a <a href="../using.html#path">PATH like
@@ -117,7 +126,7 @@ The stylesheet takes an <i>output.dir</i> parameter (otherwise it will be genera
 in the current directory), it can be run in Ant as follows:
 <pre>
 &lt;style in=java &quot;${audit.xml}&quot; style=&quot;maudit-frames.xsl&quot; out="null.tmp"&gt;
-    &lt;param name=&quot;output.dir&quot; expression=&quot;${report.dir}quot;/&gt;
+    &lt;param name=&quot;output.dir&quot; expression=&quot;${report.dir}&quot;/&gt;
 &lt;/style&gt;
 </pre>
 
