@@ -1,5 +1,5 @@
 /*
- * Copyright  2000-2004 The Apache Software Foundation
+ * Copyright  2000-2005 The Apache Software Foundation
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -43,7 +43,7 @@ public class CommandlineJavaTest extends TestCase {
         project.setProperty("build.sysclasspath", "ignore");
     }
 
-    public void testGetCommandline() {
+    public void testGetCommandline() throws CloneNotSupportedException {
         CommandlineJava c = new CommandlineJava();
         c.createArgument().setValue("org.apache.tools.ant.CommandlineJavaTest");
         c.setClassname("junit.textui.TestRunner");
@@ -131,7 +131,7 @@ public class CommandlineJavaTest extends TestCase {
         assertNull(System.getProperty("key2"));
     }
 
-    public void testAssertions() {
+    public void testAssertions() throws CloneNotSupportedException {
         if (JavaEnvUtils.isJavaVersion(JavaEnvUtils.JAVA_1_2)
             || JavaEnvUtils.isJavaVersion(JavaEnvUtils.JAVA_1_3)) {
             return;

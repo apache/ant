@@ -1,5 +1,5 @@
 /*
- * Copyright  2000-2004 The Apache Software Foundation
+ * Copyright  2000-2005 The Apache Software Foundation
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -20,6 +20,7 @@ package org.apache.tools.ant;
 import org.apache.tools.ant.input.DefaultInputHandler;
 import org.apache.tools.ant.input.InputHandler;
 import org.apache.tools.ant.input.PropertyFileInputHandler;
+import org.apache.tools.ant.taskdefs.condition.Os;
 import org.apache.tools.ant.types.*;
 import org.apache.tools.ant.util.JavaEnvUtils;
 
@@ -74,6 +75,7 @@ public class ProjectTest extends TestCase {
         assertEquals(File.separator,
                      p.resolveFile("\\", null).getPath());
 
+        if (!Os.isFamily("unix")) {
         /*
          * throw in drive letters
          */
@@ -94,6 +96,7 @@ public class ProjectTest extends TestCase {
                      p.resolveFile(driveSpec + "/////", null).getPath());
         assertEquals(driveSpec + "\\",
                      p.resolveFile(driveSpec + "\\\\\\\\\\\\", null).getPath());
+        }
 
         /*
          * Now test some relative file name magic.

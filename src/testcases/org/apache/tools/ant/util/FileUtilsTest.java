@@ -1,5 +1,5 @@
 /*
- * Copyright  2001-2004 The Apache Software Foundation
+ * Copyright  2001-2005 The Apache Software Foundation
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -17,7 +17,9 @@
 
 package org.apache.tools.ant.util;
 
-import java.io.*;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
 
 import junit.framework.TestCase;
 
@@ -64,21 +66,14 @@ public class FileUtilsTest extends TestCase {
          * granularity (should be > 2s to account for Windows FAT).
          */
         try {
-            Thread.currentThread().sleep(5000);
+            Thread.sleep(5000);
         } catch (InterruptedException ie) {
             fail(ie.getMessage());
         }
 
         fu.setFileLastModified(removeThis, -1);
         long secondModTime = removeThis.lastModified();
-        try {
-            Class.forName("java.lang.ThreadLocal");
-            assertTrue(secondModTime > modTime);
-        } catch (ClassNotFoundException e) {
-            // JDK 1.1
-            assertEquals(modTime, secondModTime);
-        }
-
+        assertTrue(secondModTime > modTime);
 
         // number of milliseconds in a day
         final int millisperday=24 * 3600 * 1000;
@@ -87,19 +82,13 @@ public class FileUtilsTest extends TestCase {
         // it did not work on a computer running JDK 1.4.1_02 + Windows 2000
         fu.setFileLastModified(removeThis, secondModTime + millisperday);
         long thirdModTime = removeThis.lastModified();
-        try {
-            Class.forName("java.lang.ThreadLocal");
-            /*
-             * I would love to compare this with 123456, but depending on
-             * the filesystems granularity it can take an arbitrary value.
-             *
-             * Just assert the time has changed.
-             */
-            assertTrue(thirdModTime != secondModTime);
-        } catch (ClassNotFoundException e) {
-            // JDK 1.1
-            assertEquals(modTime, thirdModTime);
-        }
+        /*
+         * I would love to compare this with 123456, but depending on
+         * the filesystems granularity it can take an arbitrary value.
+         *
+         * Just assert the time has changed.
+         */
+        assertTrue(thirdModTime != secondModTime);
     }
 
     public void testResolveFile() {
@@ -111,6 +100,7 @@ public class FileUtilsTest extends TestCase {
         assertEquals(File.separator,
                      fu.resolveFile(null, "\\").getPath());
 
+        if (!Os.isFamily("unix")) {
         /*
          * throw in drive letters
          */
@@ -131,17 +121,18 @@ public class FileUtilsTest extends TestCase {
                      fu.resolveFile(null, driveSpec + "/////").getPath());
         assertEquals(driveSpec + "\\",
                      fu.resolveFile(null, driveSpec + "\\\\\\\\\\\\").getPath());
+        }
 
         if (Os.isFamily("netware")) {
             /*
              * throw in NetWare volume names
              */
-            driveSpec = "SYS:";
+            String driveSpec = "SYS:";
             assertEquals(driveSpec,
                          fu.resolveFile(null, driveSpec + "/").getPath());
             assertEquals(driveSpec,
                          fu.resolveFile(null, driveSpec + "\\").getPath());
-            driveSpecLower = "sys:";
+            String driveSpecLower = "sys:";
             assertEquals(driveSpec,
                          fu.resolveFile(null, driveSpecLower + "/").getPath());
             assertEquals(driveSpec,
@@ -193,6 +184,7 @@ public class FileUtilsTest extends TestCase {
         assertEquals(File.separator,
                      fu.normalize("\\").getPath());
 
+        if (!Os.isFamily("unix")) {
         /*
          * throw in drive letters
          */
@@ -215,19 +207,19 @@ public class FileUtilsTest extends TestCase {
                      fu.normalize(driveSpec + "/////").getPath());
         assertEquals(driveSpec + "\\",
                      fu.normalize(driveSpec + "\\\\\\\\\\\\").getPath());
-
+        }
         if (Os.isFamily("netware")) {
             /*
              * throw in NetWare volume names
              */
-            driveSpec = "SYS:";
+            String driveSpec = "SYS:";
             assertEquals(driveSpec,
                          fu.normalize(driveSpec).getPath());
             assertEquals(driveSpec,
                          fu.normalize(driveSpec + "/").getPath());
             assertEquals(driveSpec,
                          fu.normalize(driveSpec + "\\").getPath());
-            driveSpecLower = "sys:";
+            String driveSpecLower = "sys:";
             assertEquals(driveSpec,
                          fu.normalize(driveSpecLower).getPath());
             assertEquals(driveSpec,
