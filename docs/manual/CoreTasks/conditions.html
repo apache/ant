@@ -334,7 +334,7 @@ that is "true","yes", or "on"</p>
     existence of any signature
   </p>
   <p>
-    This condition has been added in Apache Ant 1.7.
+    This condition was added in Apache Ant 1.7.
   </p>
   <table border="1" cellpadding="2" cellspacing="0">
   <tr>
@@ -361,7 +361,7 @@ that is "true","yes", or "on"</p>
     Test whether a file passes an embedded selector.
   </p>
   <p>
-    This condition has been added in Apache Ant 1.7.
+    This condition was added in Apache Ant 1.7.
   </p>
   <table border="1" cellpadding="2" cellspacing="0">
   <tr>
@@ -398,7 +398,7 @@ that is "true","yes", or "on"</p>
 its implementation class can be loaded. Types include
 tasks, datatypes, scriptdefs, macrodefs and presetdefs.</p>
 
-<p>This condition has been added in Apache Ant 1.7.</p>
+<p>This condition was added in Apache Ant 1.7.</p>
 
 <table border="1" cellpadding="2" cellspacing="0">
   <tr>
@@ -413,8 +413,60 @@ tasks, datatypes, scriptdefs, macrodefs and presetdefs.</p>
   </tr>
 </table>
 
+<h4>scriptcondition</h4>
+
+<p>Evaluate a condition based on a script in any
+<a href="http://jakarta.apache.org/bsf" target="_top">Apache BSF</a>
+supported language.</p>
+<p>
+See the <a href="../OptionalTasks/script.html">Script</a> task for
+an explanation of scripts and dependencies.
+</p>
+
+<p>This condition was added in Apache Ant 1.7.</p>
+
+<table border="1" cellpadding="2" cellspacing="0">
+  <tr>
+    <td valign="top"><b>Attribute</b></td>
+    <td valign="top"><b>Description</b></td>
+    <td align="center" valign="top"><b>Required</b></td>
+  </tr>
+  <tr>
+    <td valign="top">language</td>
+    <td valign="top">script language</td>
+    <td valign="top" align="center">Yes</td>
+  </tr>
+  <tr>
+    <td valign="top">value</td>
+    <td valign="top">default boolean value</td>
+    <td valign="top" align="center">No -default is "false"</td>
+  </tr>  
+  <tr>
+    <td valign="top">src</td>
+    <td valign="top">filename of script source</td>
+    <td valign="top" align="center">No</td>
+  </tr>  
+</table>
+<p>
+The script supports script language inline, this script has access to the
+same beans as the <code>&lt;script&gt;</code> task, and to the <code>
+self</code> bean, which refers back to the condition itself. The
+<code>value</code> property of this bean sets the return value:
+</p>
+<p>
+Example:
+</p>
+<pre>
+    &lt;scriptcondition language=&quot;javascript&quot;
+            value=&quot;true&quot;&gt;
+        self.setValue(false);
+    &lt;/scriptcondition&gt;
+</pre>
+
+Sets the default value of the condition to true, then in the script, 
+sets the value to false. This condition always evaluates to "false"
 <hr>
-<p align="center">Copyright &copy; 2001-2004 Apache Software
+<p align="center">Copyright &copy; 2001-2005 Apache Software
 Foundation. All rights Reserved.</p>
 
 </body>

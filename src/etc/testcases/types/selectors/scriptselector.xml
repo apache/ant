@@ -46,8 +46,6 @@
         </scriptselector>
       </selector>
     </testselected>
-    <scriptdef name="nolang">
-    </scriptdef>
   </target>
 
   <target name="testSelectionSetByDefault">
