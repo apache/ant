@@ -200,7 +200,7 @@ public class Cab extends MatchingTask {
 
         if (cmdOptions != null)
         {
-            command.createArgument().setValue(cmdOptions);
+            command.createArgument().setLine(cmdOptions);
         }
         
         command.createArgument().setValue("n");

@@ -26,6 +26,9 @@ Fixed bugs:
 
 * <javac> didn't ignore memory settings in non-fork mode
 
+* <cab> didn't split the options attribute into several command line
+  arguments correctly.
+
 Other changes:
 --------------
 
