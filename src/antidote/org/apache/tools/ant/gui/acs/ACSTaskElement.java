@@ -53,7 +53,9 @@
  */
 package org.apache.tools.ant.gui.acs;
 
-import com.sun.xml.tree.ElementNode;
+import org.w3c.dom.Node;
+import org.w3c.dom.NamedNodeMap;
+import java.util.*;
 
 /**
  * Element containing a property definition.
@@ -64,6 +66,9 @@ import com.sun.xml.tree.ElementNode;
 public class ACSTaskElement extends ACSTreeNodeElement {
     /** Property name for the task type. */
     public static final String TASK_TYPE = "taskType";
+    /** Property name for attributes. It's called "namedValues" so
+     *  it doesn't collide with the Node.getAttributes() method. */
+    public static final String NAMED_VALUES = "namedValues";
 
 	/** 
 	 * Default ctor.
@@ -79,6 +84,62 @@ public class ACSTaskElement extends ACSTreeNodeElement {
 	 */
     public String getTaskType() {
         return getTagName();
+    }
+
+
+	/** 
+	 * Get the attributes (named value mappings). This method is not named
+     * getAttributes() because there is already a method of that name in
+     * the Node interface.
+	 * 
+	 * @return Name-value mappings.
+	 */
+    public Properties getNamedValues() {
+        Properties retval = new Properties();
+
+        NamedNodeMap attribs = getAttributes();
+        for(int i = 0, len = attribs.getLength(); i < len; i++) {
+            Node n = attribs.item(i);
+            retval.setProperty(n.getNodeName(), n.getNodeValue());
+        }
+        return retval;
+    }
+
+
+	/** 
+	 * Set the attributes. This method sets the Node attirbutes using 
+     * the given Map containing name-value pairs.
+	 * 
+	 * @param attributes New attribute set.
+	 */
+    public void setNamedValues(Properties props) {
+        // XXX this code really sucks. It is really annoying that the 
+        // DOM interfaces don't have a general "setAttributes()" or
+        // "removeAllAttributes()" method, but instead make you 
+        // remove each attribute individually, or require you to figure
+        // out what the differences are between the two. 
+
+        // Although this is very inefficient, I'm taking the conceptually
+        // simplistic approach to this and brute force removing the existing 
+        // set and replacing it with a brand new set. If this becomes a 
+        // performance concern (which I doubt it will) it can be optimized 
+        // later.
+
+        Properties old = getNamedValues();
+
+        Enumeration enum = old.propertyNames();
+        while(enum.hasMoreElements()) {
+            String name = (String) enum.nextElement();
+            removeAttribute(name);
+        }
+        
+        enum = props.propertyNames();
+        while(enum.hasMoreElements()) {
+            String key = (String) enum.nextElement();
+            setAttribute(key, props.getProperty(key));
+        }
+
+        firePropertyChange(NAMED_VALUES, old, props);
     }
 
 }

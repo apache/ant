@@ -101,6 +101,8 @@ public class ACSTaskElementBeanInfo extends BaseBeanInfo {
                 new PropertyDescriptor(ACSTaskElement.TASK_TYPE, 
                                        ACSTaskElement.class,
                                        "getTaskType", null),
+                new PropertyDescriptor(ACSTaskElement.NAMED_VALUES, 
+                                       ACSTaskElement.class),
                 new PropertyDescriptor(ACSTaskElement.XML_STRING, 
                                        ACSTaskElement.class,
                                        "getXMLString", null)
@@ -109,6 +111,8 @@ public class ACSTaskElementBeanInfo extends BaseBeanInfo {
             retval[0].setDisplayName(getResources().getString(
                 getClass(),ACSTaskElement.TASK_TYPE));
             retval[1].setDisplayName(getResources().getString(
+                getClass(),ACSTaskElement.NAMED_VALUES));
+            retval[2].setDisplayName(getResources().getString(
                 getClass(),ACSTaskElement.XML_STRING));
 
             setSortingOrder(retval);

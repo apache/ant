@@ -83,6 +83,8 @@ public class DynamicCustomizer extends JPanel implements Customizer {
 			double.class, DoublePropertyEditor.class);
 		PropertyEditorManager.registerEditor(
 			Double.class, DoublePropertyEditor.class);
+		PropertyEditorManager.registerEditor(
+			Properties.class, PropertiesPropertyEditor.class);
 	}
 
     /** Property name that PropertyDescriptors can save in their property
@@ -105,6 +107,9 @@ public class DynamicCustomizer extends JPanel implements Customizer {
     /** List of property change listeners interested when the bean
      *  being edited has been changed. */
     private List _changeListeners = new LinkedList();
+    /** Flag to trun off event propogation. */
+    private boolean _squelchChangeEvents = false;
+
 
 
 	/** 
@@ -209,6 +214,9 @@ public class DynamicCustomizer extends JPanel implements Customizer {
         } 
         _value = value;
         
+        // Disable event generation.
+        _squelchChangeEvents = true;
+
         // Iterate over each property, doing a lookup on the associated editor
         // and setting the editor's value to the value of the property.
         Iterator it = _prop2Editor.keySet().iterator();
@@ -229,6 +237,10 @@ public class DynamicCustomizer extends JPanel implements Customizer {
                 }
             }
         }
+
+        // Enable event generation.
+        _squelchChangeEvents = false;
+
     }
 
 	/** 
@@ -306,6 +318,8 @@ public class DynamicCustomizer extends JPanel implements Customizer {
     /** Class for receiving change events from the PropertyEditor objects. */
     private class EditorChangeListener implements PropertyChangeListener {
         public void propertyChange(PropertyChangeEvent e) {
+            if(_squelchChangeEvents) return;
+
             PropertyEditor editor = (PropertyEditor) e.getSource();
             PropertyDescriptor prop =
                 (PropertyDescriptor) _editor2Prop.get(editor);
