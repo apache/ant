@@ -73,6 +73,9 @@ public abstract class BaseTest {
     /** destination directory */
     protected File destDir = null;
 
+    protected String failureProperty;
+    protected String errorProperty;
+
     public void setFork(boolean value) {
         fork = value;
     }
@@ -127,4 +130,19 @@ public abstract class BaseTest {
         return null;
     }
 
+    public java.lang.String getFailureProperty() {
+        return failureProperty;
+    }
+    
+    public void setFailureProperty(String failureProperty) {
+        this.failureProperty = failureProperty;
+    }
+    
+    public java.lang.String getErrorProperty() {
+        return errorProperty;
+    }
+    
+    public void setErrorProperty(String errorProperty) {
+        this.errorProperty = errorProperty;
+    }
 }

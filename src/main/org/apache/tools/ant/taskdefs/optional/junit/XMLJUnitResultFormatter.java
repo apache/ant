@@ -55,7 +55,6 @@
 package org.apache.tools.ant.taskdefs.optional.junit;
 
 import java.io.*;
-import java.text.NumberFormat;
 import java.text.CharacterIterator;
 import java.text.StringCharacterIterator;
 import java.util.*;
@@ -85,11 +84,6 @@ public class XMLJUnitResultFormatter implements JUnitResultFormatter, XMLConstan
             throw new ExceptionInInitializerError(exc);
         }
     }
-
-    /**
-     * Formatter for timings.
-     */
-    private NumberFormat nf = NumberFormat.getInstance(Locale.US);
 
     /**
      * The XML document.
@@ -157,8 +151,7 @@ public class XMLJUnitResultFormatter implements JUnitResultFormatter, XMLConstan
         rootElement.setAttribute(ATTR_TESTS, ""+suite.runCount());
         rootElement.setAttribute(ATTR_FAILURES, ""+suite.failureCount());
         rootElement.setAttribute(ATTR_ERRORS, ""+suite.errorCount());
-        rootElement.setAttribute(ATTR_TIME,
-                                 nf.format(suite.getRunTime()/1000.0));
+        rootElement.setAttribute(ATTR_TIME, ""+(suite.getRunTime()/1000.0));
         if (out != null) {
             Writer wri = null;
             try {
@@ -199,7 +192,7 @@ public class XMLJUnitResultFormatter implements JUnitResultFormatter, XMLConstan
      */
     public void endTest(Test test) {
         currentTest.setAttribute(ATTR_TIME,
-                                 nf.format((System.currentTimeMillis()-lastTestStart)
+                                 ""+((System.currentTimeMillis()-lastTestStart)
                                            / 1000.0));
     }
 

@@ -84,18 +84,65 @@ import java.net.URL;
 /**
  * Ant task to run JUnit tests.
  *
- * <p>JUnit is a framework to create unit test. It has been initially
+ * <p> JUnit is a framework to create unit test. It has been initially
  * created by Erich Gamma and Kent Beck.  JUnit can be found at <a
  * href="http://www.junit.org">http://www.junit.org</a>.
  *
- * <p> To spawn a new Java VM to prevent interferences between
- * different testcases, you need to enable <code>fork</code>.
+ * <p> <code>JUnitTask</code> can run a single specific <code>JUnitTest</code> using the <code>test</code> element. 
+ * For example, the following target <code><pre>
+ *   &lt;target name="test-int-chars" depends="jar-test"&gt;
+ *       &lt;echo message="testing international characters"/&gt;
+ *       &lt;junit printsummary="no" haltonfailure="yes" fork="false"&gt;
+ *           &lt;classpath refid="classpath"/&gt;
+ *           &lt;formatter type="plain" usefile="false" /&gt;
+ *           &lt;test name="org.apache.ecs.InternationalCharTest" /&gt;
+ *       &lt;/junit&gt;
+ *   &lt;/target&gt;
+ * </pre></code> runs a single junit test (<code>org.apache.ecs.InternationalCharTest</code>) 
+ * in the current VM using the path with id <code>classpath</code> as classpath 
+ * and presents the results formatted using the standard <code>plain</code> formatter on the command line.
  *
+ * <p> This task can also run batches of tests. 
+ * The <code>batchtest</code> element creates a <code>BatchTest</code> based on a fileset. 
+ * This allows, for example, all classes found in directory to be run as testcases. 
+ * For example, <code><pre>
+ * &lt;target name="run-tests" depends="dump-info,compile-tests" if="junit.present"&gt;
+ *   &lt;junit printsummary="no" haltonfailure="yes" fork="${junit.fork}"&gt;
+ *     &lt;jvmarg value="-classic"/&gt;
+ *     &lt;classpath refid="tests-classpath"/&gt;
+ *     &lt;sysproperty key="build.tests" value="${build.tests}"/&gt;
+ *     &lt;formatter type="brief" usefile="false" /&gt;
+ *     &lt;batchtest&gt;
+ *       &lt;fileset dir="${tests.dir}"&gt;
+ *         &lt;include name="**&#047;*Test*" /&gt;
+ *       &lt;/fileset&gt;
+ *     &lt;/batchtest&gt;
+ *   &lt;/junit&gt;
+ * &lt;/target&gt;
+ * </pre></code> this target finds any classes with a <code>test</code> directory anywhere in their path
+ * (under the top <code>${tests.dir}</code>, of course) and creates <code>JUnitTest</code>'s for each one.
+ *
+ * <p> Of course, <code>&lt;junit&gt;</code> and <code>&lt;batch&gt;</code> elements can be combined
+ * for more complex tests. For an example, see the ant <code>build.xml</code> target <code>run-tests</code> 
+ * (the second example is an edited version).
+ * 
+ * <p> To spawn a new Java VM to prevent interferences between
+ * different testcases, you need to enable <code>fork</code>. 
+ * A number of attributes and elements allow you to set up how this JVM runs.
+ * <ul>
+ * <li>{@link #setTimeout} property sets the maximum time allowed before a test is 'timed out'
+ * <li>{@link #setMaxmemory} property sets memory assignment for the forked jvm
+ * <li>{@link #setJvm} property allows the jvm to be specified
+ * <li>The <code>&lt;jvmarg&gt;</code> element sets arguements to be passed to the forked jvm 
+ * </ul>
  * @author Thomas Haas
  * @author <a href="mailto:stefan.bodewig@epost.de">Stefan Bodewig</a>
  * @author <a href="mailto:sbailliez@imediation.com">Stephane Bailliez</a>
- * @author <a href="mailto:Gerrit.Riessen@web.de">Gerrit Riessen</a> -
+ * @author <a href="mailto:Gerrit.Riessen@web.de">Gerrit Riessen</a>
  * @author <a href="mailto:erik@hatcher.net">Erik Hatcher</a>
+ *
+ * @see JUnitTest
+ * @see BatchTest
  */
 public class JUnitTask extends Task {
 
@@ -113,7 +160,7 @@ public class JUnitTask extends Task {
      * Tells this task to halt when there is an error in a test.
      * this property is applied on all BatchTest (batchtest) and JUnitTest (test)
      * however it can possibly be overridden by their own properties.
-     * @param   value   <tt>true</tt> if it should halt, otherwise <tt>false<tt>
+     * @param   value   <tt>true</tt> if it should halt, otherwise <tt>false</tt>
      */
     public void setHaltonerror(boolean value) {
         Enumeration enum = allTests();
@@ -124,10 +171,24 @@ public class JUnitTask extends Task {
     }
 
     /**
+     * Tells this task to set the named property to "true" when there is a error in a test.
+     * This property is applied on all BatchTest (batchtest) and JUnitTest (test),
+     * however, it can possibly be overriden by their own properties.
+     * @param  value  the name of the property to set in the event of an error.
+     */
+    public void setErrorProperty(String propertyName) {
+        Enumeration enum = allTests();
+        while (enum.hasMoreElements()) {
+            BaseTest test = (BaseTest) enum.nextElement();
+            test.setErrorProperty(propertyName);
+        }
+    }
+
+    /**
      * Tells this task to halt when there is a failure in a test.
      * this property is applied on all BatchTest (batchtest) and JUnitTest (test)
      * however it can possibly be overridden by their own properties.
-     * @param   value   <tt>true</tt> if it should halt, otherwise <tt>false<tt>
+     * @param   value   <tt>true</tt> if it should halt, otherwise <tt>false</tt>
      */
     public void setHaltonfailure(boolean value) {
         Enumeration enum = allTests();
@@ -137,15 +198,27 @@ public class JUnitTask extends Task {
         }
     }
 
+    /**
+     * Tells this task to set the named property to "true" when there is a failure in a test.
+     * This property is applied on all BatchTest (batchtest) and JUnitTest (test),
+     * however, it can possibly be overriden by their own properties.
+     * @param  value  the name of the property to set in the event of an failure.
+     */
+    public void setFailureProperty(String propertyName) {
+        Enumeration enum = allTests();
+        while (enum.hasMoreElements()) {
+            BaseTest test = (BaseTest) enum.nextElement();
+            test.setFailureProperty(propertyName);
+        }
+    }
 
     /**
      * Tells whether a JVM should be forked for each testcase. It avoids interference
      * between testcases and possibly avoids hanging the build.
      * this property is applied on all BatchTest (batchtest) and JUnitTest (test)
      * however it can possibly be overridden by their own properties.
-     * @param   value   <tt>true</tt> if a JVM should be forked, otherwise <tt>false<tt>
-     * @see #setTimeout(Integer)
-     * @see #haltOntimeout(boolean)
+     * @param   value   <tt>true</tt> if a JVM should be forked, otherwise <tt>false</tt>
+     * @see #setTimeout
      */
     public void setFork(boolean value) {
         Enumeration enum = allTests();
@@ -190,7 +263,6 @@ public class JUnitTask extends Task {
      * @param   value   the maximum time (in milliseconds) allowed before declaring the test
      *                  as 'timed-out'
      * @see #setFork(boolean)
-     * @see #haltOnTimeout(boolean)
      */
     public void setTimeout(Integer value) {
         timeout = value;
@@ -244,6 +316,9 @@ public class JUnitTask extends Task {
         commandline.addSysproperty(sysp);
     }
     
+    /**
+     * <code>&lt;classpath&gt;</code> allows classpath to be set for tests.
+     */
     public Path createClasspath() {
         return commandline.createClasspath(project).createPath();
     }
@@ -306,6 +381,9 @@ public class JUnitTask extends Task {
         }
     }
 
+    /**
+     * Run the tests.
+     */
     protected void execute(JUnitTest test) throws BuildException {
         // set the default values if not specified
         //@todo should be moved to the test class instead.
@@ -335,12 +413,22 @@ public class JUnitTask extends Task {
         // just log a statement
         boolean errorOccurredHere = exitValue == JUnitTestRunner.ERRORS;
         boolean failureOccurredHere = exitValue != JUnitTestRunner.SUCCESS;
-        if (errorOccurredHere && test.getHaltonerror()
-            || failureOccurredHere && test.getHaltonfailure()) {
-            throw new BuildException("Test "+test.getName()+" failed"+(wasKilled ? " (timeout)" : ""),
-                                     location);
-        } else if (errorOccurredHere || failureOccurredHere) {
-            log("TEST "+test.getName()+" FAILED" + (wasKilled ? " (timeout)" : ""), Project.MSG_ERR);
+        if (errorOccurredHere || failureOccurredHere) {
+            if (errorOccurredHere && test.getHaltonerror()
+                || failureOccurredHere && test.getHaltonfailure()) {
+                throw new BuildException("Test "+test.getName()+" failed"
+                                         +(wasKilled ? " (timeout)" : ""),
+                                         location);
+            } else {
+                log("TEST "+test.getName()+" FAILED" 
+                    + (wasKilled ? " (timeout)" : ""), Project.MSG_ERR);
+                if (errorOccurredHere && test.getErrorProperty() != null) {
+                    project.setProperty(test.getErrorProperty(), "true");
+                }
+                if (failureOccurredHere && test.getFailureProperty() != null) {
+                    project.setProperty(test.getFailureProperty(), "true");
+                }
+            }
         }
     }
 
@@ -492,7 +580,7 @@ public class JUnitTask extends Task {
     }
 
     /**
-     * get the default output for a formatter.
+     * Get the default output for a formatter.
      */
     protected OutputStream getDefaultOutput(){
         return new LogOutputStream(this, Project.MSG_INFO);
