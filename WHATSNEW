@@ -64,6 +64,9 @@ Fixed bugs:
 * <splash> used to break the build on non-GUI environments.  Bugzilla
   report 11482.
 
+* Ant 1.6.0 cannot run build scripts in directories with non-ASCII names.
+  Bugzilla Report 26642.
+
 Other changes:
 --------------
 * Shipped XML parser is now Xerces-J 2.6.1
