@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2001-2002 The Apache Software Foundation.  All rights
+ * Copyright (c) 2001-2003 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -83,7 +83,7 @@ public class ConditionTask extends ConditionBase {
 
     /**
      * The name of the property to set. Required.
-     *
+     * @param p the name of the property
      * @since Ant 1.4
      */
     public void setProperty(String p) {
@@ -93,7 +93,7 @@ public class ConditionTask extends ConditionBase {
     /**
      * The value for the property to set, if condition evaluates to true.
      * Defaults to "true".
-     *
+     * @param v the value of the property
      * @since Ant 1.4
      */
     public void setValue(String v) {
@@ -104,6 +104,7 @@ public class ConditionTask extends ConditionBase {
      * See whether our nested condition holds and set the property.
      *
      * @since Ant 1.4
+     * @exception BuildException if an error occurs
      */
     public void execute() throws BuildException {
         if (countConditions() > 1) {

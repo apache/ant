@@ -54,9 +54,7 @@
 
 package org.apache.tools.ant.taskdefs;
 
-import java.io.BufferedInputStream;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.Hashtable;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -296,8 +294,9 @@ public class XmlProperty extends org.apache.tools.ant.Task {
         } catch (SAXException sxe) {
             // Error generated during parsing
             Exception x = sxe;
-            if (sxe.getException() != null)
+            if (sxe.getException() != null) {
                 x = sxe.getException();
+            }
             throw new BuildException(x);
 
         } catch (ParserConfigurationException pce) {
@@ -572,6 +571,7 @@ public class XmlProperty extends org.apache.tools.ant.Task {
 
     /**
      * The XML file to parse; required.
+     * @param src the file to parse
      */
     public void setFile(File src) {
         this.src = src;
@@ -579,6 +579,7 @@ public class XmlProperty extends org.apache.tools.ant.Task {
 
     /**
      * the prefix to prepend to each property
+     * @param prefix the prefix to prepend to each property
      */
     public void setPrefix(String prefix) {
         this.prefix = prefix.trim();
@@ -588,6 +589,7 @@ public class XmlProperty extends org.apache.tools.ant.Task {
      * flag to include the xml root tag as a
      * first value in the property name; optional,
      * default is true
+     * @param keepRoot if true (default), include the xml root tag
      */
     public void setKeeproot(boolean keepRoot) {
         this.keepRoot = keepRoot;
@@ -595,6 +597,7 @@ public class XmlProperty extends org.apache.tools.ant.Task {
 
     /**
      * flag to validate the XML file; optional, default false
+     * @param validate if true validate the XML file, default false
      */
     public void setValidate(boolean validate) {
         this.validate = validate;
@@ -603,6 +606,7 @@ public class XmlProperty extends org.apache.tools.ant.Task {
     /**
      * flag to treat attributes as nested elements;
      * optional, default false
+     * @param collapseAttributes if true treat attributes as nested elements
      */
     public void setCollapseAttributes(boolean collapseAttributes) {
         this.collapseAttributes = collapseAttributes;

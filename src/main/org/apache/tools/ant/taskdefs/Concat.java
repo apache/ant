@@ -101,7 +101,7 @@ import org.apache.tools.ant.util.FileUtils;
  * @author Peter Reilly
  */
 public class Concat extends Task {
-    
+
     // The size of buffers to be used
     private static final int BUFFER_SIZE = 8192;
 
