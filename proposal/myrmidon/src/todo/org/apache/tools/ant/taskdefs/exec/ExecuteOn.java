@@ -18,7 +18,7 @@ import org.apache.tools.ant.types.EnumeratedAttribute;
 import org.apache.tools.ant.types.FileSet;
 import org.apache.tools.ant.types.Mapper;
 import org.apache.tools.ant.types.Marker;
-import org.apache.tools.ant.util.FileNameMapper;
+import org.apache.tools.ant.util.mappers.FileNameMapper;
 import org.apache.tools.ant.types.SourceFileScanner;
 import org.apache.avalon.excalibur.util.StringUtil;
 

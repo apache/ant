@@ -18,7 +18,7 @@ import org.apache.tools.ant.types.DirectoryScanner;
 import org.apache.tools.ant.taskdefs.rmic.RmicAdapter;
 import org.apache.tools.ant.taskdefs.rmic.RmicAdapterFactory;
 import org.apache.tools.ant.types.Path;
-import org.apache.tools.ant.util.FileNameMapper;
+import org.apache.tools.ant.util.mappers.FileNameMapper;
 import org.apache.tools.ant.types.SourceFileScanner;
 
 /**

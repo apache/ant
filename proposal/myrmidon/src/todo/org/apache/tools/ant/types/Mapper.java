@@ -11,7 +11,7 @@ import java.net.URL;
 import java.net.URLClassLoader;
 import org.apache.myrmidon.api.TaskException;
 import org.apache.tools.ant.ProjectComponent;
-import org.apache.tools.ant.util.FileNameMapper;
+import org.apache.tools.ant.util.mappers.FileNameMapper;
 
 /**
  * Element to define a FileNameMapper.

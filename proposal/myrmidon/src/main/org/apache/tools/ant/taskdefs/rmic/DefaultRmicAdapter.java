@@ -15,7 +15,7 @@ import org.apache.myrmidon.api.TaskException;
 import org.apache.tools.ant.taskdefs.Rmic;
 import org.apache.tools.ant.types.Commandline;
 import org.apache.tools.ant.types.Path;
-import org.apache.tools.ant.util.FileNameMapper;
+import org.apache.tools.ant.util.mappers.FileNameMapper;
 
 /**
  * This is the default implementation for the RmicAdapter interface. Currently,

@@ -15,8 +15,8 @@ import org.apache.tools.ant.types.DirectoryScanner;
 import org.apache.tools.ant.taskdefs.condition.Condition;
 import org.apache.tools.ant.types.FileSet;
 import org.apache.tools.ant.types.Mapper;
-import org.apache.tools.ant.util.FileNameMapper;
-import org.apache.tools.ant.util.MergingMapper;
+import org.apache.tools.ant.util.mappers.FileNameMapper;
+import org.apache.tools.ant.util.mappers.MergingMapper;
 import org.apache.tools.ant.types.SourceFileScanner;
 
 /**

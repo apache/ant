@@ -14,8 +14,8 @@ import org.apache.tools.ant.types.Commandline;
 import org.apache.tools.ant.types.DirectoryScanner;
 import org.apache.tools.ant.types.Mapper;
 import org.apache.tools.ant.types.SourceFileScanner;
-import org.apache.tools.ant.util.FileNameMapper;
-import org.apache.tools.ant.util.IdentityMapper;
+import org.apache.tools.ant.util.mappers.FileNameMapper;
+import org.apache.tools.ant.util.mappers.IdentityMapper;
 
 /**
  * Convert files from native encodings to ascii.

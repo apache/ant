@@ -14,7 +14,7 @@ import org.apache.avalon.excalibur.io.FileUtil;
 import org.apache.avalon.framework.logger.AbstractLogEnabled;
 import org.apache.myrmidon.api.TaskException;
 import org.apache.tools.ant.Task;
-import org.apache.tools.ant.util.FileNameMapper;
+import org.apache.tools.ant.util.mappers.FileNameMapper;
 
 /**
  * Utility class that collects the functionality of the various scanDir methods

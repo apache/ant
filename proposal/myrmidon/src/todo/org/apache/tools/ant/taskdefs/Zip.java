@@ -27,7 +27,7 @@ import org.apache.tools.ant.types.EnumeratedAttribute;
 import org.apache.tools.ant.types.FileSet;
 import org.apache.tools.ant.types.ZipFileSet;
 import org.apache.tools.ant.types.ZipScanner;
-import org.apache.tools.ant.util.MergingMapper;
+import org.apache.tools.ant.util.mappers.MergingMapper;
 import org.apache.tools.ant.types.SourceFileScanner;
 import org.apache.tools.zip.ZipEntry;
 import org.apache.tools.zip.ZipOutputStream;

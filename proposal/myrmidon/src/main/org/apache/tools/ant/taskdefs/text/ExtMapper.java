@@ -7,7 +7,7 @@
  */
 package org.apache.tools.ant.taskdefs.text;
 
-import org.apache.tools.ant.util.FileNameMapper;
+import org.apache.tools.ant.util.mappers.FileNameMapper;
 
 class ExtMapper
     implements FileNameMapper

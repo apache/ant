@@ -18,7 +18,7 @@ import org.apache.tools.ant.taskdefs.compilers.CompilerAdapter;
 import org.apache.tools.ant.taskdefs.compilers.CompilerAdapterFactory;
 import org.apache.tools.ant.types.Argument;
 import org.apache.tools.ant.types.Path;
-import org.apache.tools.ant.util.GlobPatternMapper;
+import org.apache.tools.ant.util.mappers.GlobPatternMapper;
 import org.apache.tools.ant.types.SourceFileScanner;
 
 /**

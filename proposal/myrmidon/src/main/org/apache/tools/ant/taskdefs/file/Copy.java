@@ -21,10 +21,10 @@ import org.apache.tools.ant.types.FileSet;
 import org.apache.tools.ant.types.FilterSet;
 import org.apache.tools.ant.types.FilterSetCollection;
 import org.apache.tools.ant.types.Mapper;
-import org.apache.tools.ant.util.FileNameMapper;
+import org.apache.tools.ant.util.mappers.FileNameMapper;
 import org.apache.tools.ant.util.FileUtils;
-import org.apache.tools.ant.util.FlatFileNameMapper;
-import org.apache.tools.ant.util.IdentityMapper;
+import org.apache.tools.ant.util.mappers.FlatFileNameMapper;
+import org.apache.tools.ant.util.mappers.IdentityMapper;
 import org.apache.tools.ant.types.SourceFileScanner;
 
 /**
