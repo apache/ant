@@ -193,6 +193,33 @@
         </table>
       </subsection>
 
+      <subsection name="AntTimerTask">
+        <p><a href="http://www.jeckle.de/freeStuff/AntTimerTask/index.html">Timer</a>
+        is task for measuring the time elapsed to complete other
+        tasks</p>
+
+        <table class="externals">
+          <tr>
+            <th>Compatibility:</th>
+            <td>Ant 1.6</td>
+          </tr>
+          <tr>
+            <th>URL:</th>
+            <td>
+              <a href="http://www.jeckle.de/freeStuff/AntTimerTask/index.html">http://www.jeckle.de/freeStuff/AntTimerTask/index.html</a>
+            </td>
+          </tr>
+          <tr>
+            <th>Contact:</th>
+            <td><a href="mailto:mario@jeckle.de">mario@jeckle.de</a></td>
+          </tr>
+          <tr>
+            <th>License:</th>
+            <td>Lesser GNU Public License</td>
+          </tr>
+        </table>
+      </subsection>
+
       <subsection name="Checkstyle">
 
         <p>Checkstyle is a development tool to help programmers write
@@ -388,6 +415,39 @@
           <tr>
             <th>License:</th>
             <td>LGPL</td>
+          </tr>
+        </table>
+      </subsection>
+
+      <subsection name="Dependency Finder">
+        <p>Dependency Finder extracts dependencies and OO metrics from
+        Java class files produced by most Java compilers. It can compute
+        API differences between versions;  no sources needed. It includes
+        Ant tasks, web, Swing, and command-line interfaces, with XSL
+        stylesheets for formatting output.</p>
+
+        <p>You can use it to extract dependencies between packages, classes,
+        or even methods, or any combination thereof.  You can use Perl
+        regular expressions to filter the information and pinpoint only
+        what you need.  There is even a Web Application version (WAR file)
+        so a whole group of developers can share a common view.</p>
+
+        <table class="externals">
+          <tr>
+            <th>Compatibility:</th>
+            <td>Tested with 1.5.3, should work with 1.4+.</td>
+         </tr>
+          <tr>
+            <th>URL:</th>
+            <td><a href="http://depfind.sourceforge.net/">http://depfind.sourceforge.net/</a></td>
+          </tr>
+          <tr>
+            <th>Contact:</th>
+            <td><a href="mailto:jeantessier@users.sourceforge.net">Jean Tessier</a></td>
+          </tr>
+          <tr>
+            <th>License:</th>
+            <td>BSD-like License</td>
           </tr>
         </table>
       </subsection>
@@ -1369,32 +1429,32 @@
         stays OS independent (because Kanaputs uses Java) and is
         completely integrated with Ant as you can give Ant properties
         to the Kanaputs code and get back the results in other
-        properties.</p> 
+        properties.</p>
 
         <p>Moreover, as you can invoke any kind of Java code with
         Kanaputs, you can popup windows from your Ant file to ask the
         user to do a choice.</p>
         <table class="externals">
           <tr>
-            <th>Compatibility:</th> 
-            <td>Ant 1.2 and above</td> 
+            <th>Compatibility:</th>
+            <td>Ant 1.2 and above</td>
           </tr>
           <tr>
-            <th>URL:</th> 
+            <th>URL:</th>
             <td>
-              <a href="http://www.kanaputs.org/">http://www.kanaputs.org/</a> 
-              <a href="http://www.kanaputs.org/ant.html">http://www.kanaputs.org/ant.html</a> 
+              <a href="http://www.kanaputs.org/">http://www.kanaputs.org/</a>
+              <a href="http://www.kanaputs.org/ant.html">http://www.kanaputs.org/ant.html</a>
             </td>
           </tr>
           <tr>
-            <th>Contact:</th> 
+            <th>Contact:</th>
             <td>
-              <a href="mailto:kfra@kanaputs.org">kfra@kanaputs.org</a> 
+              <a href="mailto:kfra@kanaputs.org">kfra@kanaputs.org</a>
             </td>
           </tr>
           <tr>
-            <th>License:</th> 
-            <td>Freeware</td> 
+            <th>License:</th>
+            <td>Freeware</td>
           </tr>
         </table>
       </subsection>
@@ -1430,6 +1490,33 @@
         </table>
       </subsection>
 
+      <subsection name="mtxslt">
+
+        <p>The mtxslt (Multi-XSLT) extends the standard Ant "xslt/style" task
+        to make it easy to use multiple XSLT engines during the same build.
+        This is useful for regression testing of XSLT scripts against several
+        engines.</p>
+
+        <table class="externals">
+          <tr>
+            <th>Compatibility:</th>
+            <td>Ant 1.5</td>
+          </tr>
+          <tr>
+            <th>URL:</th>
+            <td><a href="http://mtxslt.sourceforge.net/">http://mtxslt.sourceforge.net/</a></td>
+          </tr>
+          <tr>
+            <th>Contact:</th>
+            <td><a href="mailto:abcoates@theOffice.net">Anthony B. Coates</a></td>
+          </tr>
+          <tr>
+            <th>License:</th>
+            <td>Apache Software Foundation License</td>
+          </tr>
+        </table>
+      </subsection>
+
       <subsection name="pack">
 
         <p>pack is a task to build the smallest possible JAR to link
@@ -1451,6 +1538,58 @@
           <tr>
             <th>License:</th>
             <td>GNU Lesser General Public License</td>
+          </tr>
+        </table>
+      </subsection>
+
+      <subsection name="Pamda">
+        <p><a href="http://www.pavelvlasov.com/pv/content/menu.show?id=menu.1.4">Pamda</a>
+        is an MDA tool (UML2Code generator) implemented as Ant task. Pamda supports
+        Aspect-Oriented Modeling (AOM) and comes with AOM UML Profile and sample project.
+        The tool uses XMI as its input and Velocity as template engine. All elements in
+        the metamodel have navigate(XPath expression) and iterate(XPath expression)
+        (powered by JXPath) which make templates easy to write.<br/>
+        Tested with XMI produced by Enterprise Architect.</p>
+
+        <table class="externals">
+          <tr>
+            <th>Compatibility:</th>
+            <td>Ant 1.5.2</td>
+          </tr>
+          <tr>
+            <th>URL:</th>
+            <td><a href="http://www.pavelvlasov.com/pv/content/menu.show?id=menu.1.4">http://www.pavelvlasov.com/pv/content/menu.show?id=menu.1.4</a></td>
+          </tr>
+          <tr>
+            <th>Contact:</th>
+            <td><a href="http://www.pavelvlasov.com/pv/content/contact.html">Contact Page</a></td>
+          </tr>
+          <tr>
+            <th>License:</th>
+            <td>GPL</td>
+          </tr>
+        </table>
+      </subsection>
+
+      <subsection name="PCT">
+        <p>PCT is a task to compile Progress code, and in a more general
+        way, to deal with Progress procedures and databases.</p>
+        <table class="externals">
+          <tr>
+            <th>Compatibility:</th>
+            <td>Ant 1.5</td>
+          </tr>
+          <tr>
+            <th>URL:</th>
+            <td><a href="http://pct.sourceforge.net">http://pct.sourceforge.net</a></td>
+          </tr>
+          <tr>
+            <th>Contact:</th>
+            <td><a href="mailto:justus_phenix@users.sourceforge.net">Gilles QUERRET</a></td>
+          </tr>
+          <tr>
+            <th>Licence:</th>
+            <td>Apache Software Foundation License</td>
           </tr>
         </table>
       </subsection>
@@ -1951,6 +2090,36 @@
         </table>
       </subsection>
 
+      <subsection name="WSDLValidate">
+        <p>WSDLValidate is, as it sounds, a tool to validate WSDL files.
+        <a href="http://dev.eclipse.org/viewcvs/indextech.cgi/~checkout~/wsvt-home/docs/articles/wsdl20Validator/wsdlvalidateant.html">WSDLValidate</a>
+        is similar in configuration to the optional Ant task <a href="http://ant.apache.org/manual/OptionalTasks/xmlvalidate.html">XMLValidate</a>.
+        WSDLValidate can optionally validate a WSDL document against the <a href="http://www.ws-i.org">WS-I Basic Profile</a>.
+        </p>
+        <p>WSDLValidate is available as an Ant task, an Eclipse plug-in and a
+        command line utility.</p>
+        <table class="externals">
+          <tr>
+            <th>Compatibility:</th>
+            <td>Ant 1.5 or later</td>
+          </tr>
+          <tr>
+            <th>URL:</th>
+            <td><a href="http://www.eclipse.org/wsvt">http://www.eclipse.org/wsvt</a></td>
+          </tr>
+          <tr>
+            <th>Contact:</th>
+            <td><a href="http://www.eclipse.org/wsvt">Project newsgroup and
+            mailing list</a></td>
+          </tr>
+          <tr>
+            <th>License:</th>
+            <td><a href="http://www-124.ibm.com/developerworks/oss/CPLv1.0.htm">Common Public
+            License (CPL)</a></td>
+          </tr>
+        </table>
+      </subsection>
+
       <subsection name="XDoclet">
 
         <p>XDoclet is an extended Javadoc Doclet engine for use in Ant.
@@ -2399,12 +2568,13 @@
 
       <subsection name="NetBeans / Sun ONE Studio">
 
-        <p>A module that integrates Ant into the NetBeans or Sun ONE Studio (formerly Forte for Java) IDEs.</p>
+        <p>A module that integrates Ant into the NetBeans or Sun Java Studio (formerly
+        Forte for Java and Sun ONE Studio) IDEs.</p>
 
         <table class="externals">
           <tr>
             <th>Compatibility:</th>
-            <td>bundles Ant 1.5.1</td>
+            <td>bundles Ant 1.6.0 as of NetBeans 3.6</td>
           </tr>
           <tr>
             <th>URL:</th>
