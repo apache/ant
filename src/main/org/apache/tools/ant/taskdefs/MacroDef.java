@@ -81,6 +81,7 @@ public class MacroDef extends AntlibDefinition  {
     private String     name;
     private List       attributes = new ArrayList();
     private Map        elements   = new HashMap();
+    private String     textName   = null;
 
     /**
      * Name of the definition
@@ -88,6 +89,25 @@ public class MacroDef extends AntlibDefinition  {
      */
      public void setName(String name) {
         this.name = name;
+    }
+
+    /**
+     * Name of the text attribute.
+     * @param textName the name of the attribute to use for the
+     *                 text content of the macro.
+     * @since ant 1.6.1
+     */
+    public void setTextName(String textName) {
+        this.textName = textName;
+    }
+
+    /**
+     * @return the name of the text content attribute
+     * @since ant 1.6.1
+     */
+
+    public String getTextName() {
+        return textName;
     }
 
     /**
@@ -222,6 +242,11 @@ public class MacroDef extends AntlibDefinition  {
             throw new BuildException(
                 "the attribute nested element needed a \"name\" attribute");
         }
+        if (attribute.getName().equals(textName)) {
+            throw new BuildException(
+                "the attribute name \"" + attribute.getName()
+                + "\" has already been used by the textname attribute");
+        }
         for (int i = 0; i < attributes.size(); ++i) {
             if (((Attribute) attributes.get(i)).getName().equals(
                     attribute.getName())) {
@@ -324,14 +349,16 @@ public class MacroDef extends AntlibDefinition  {
 
         /**
          * @param desc Description of the element.
+         * @since ant 1.6.1
          */
         public void setDescription(String desc) {
             description = desc;
         }
 
         /**
-         * @return the description of the element, or <code>null</code> if   
+         * @return the description of the element, or <code>null</code> if
          *         no description is available.
+         * @since ant 1.6.1
          */
         public String getDescription() {
             return description;
@@ -383,7 +410,7 @@ public class MacroDef extends AntlibDefinition  {
     public static class TemplateElement {
         private String name;
         private boolean optional = false;
-	private String description;
+        private String description;
 
         /**
          * The name of the element.
@@ -424,14 +451,16 @@ public class MacroDef extends AntlibDefinition  {
 
         /**
          * @param desc Description of the element.
+         * @since ant 1.6.1
          */
         public void setDescription(String desc) {
             description = desc;
         }
 
         /**
-         * @return the description of the element, or <code>null</code> if   
+         * @return the description of the element, or <code>null</code> if
          *         no description is available.
+         * @since ant 1.6.1
          */
         public String getDescription() {
             return description;
@@ -489,6 +518,15 @@ public class MacroDef extends AntlibDefinition  {
         }
         if (!name.equals(other.name)) {
             return false;
+        }
+        if (textName == null) {
+            if (other.textName != null) {
+                return false;
+            }
+        } else {
+            if (!textName.equals(other.textName)) {
+                return false;
+            }
         }
         if (getURI() == null || getURI().equals("")
             || getURI().equals(ProjectHelper.ANT_CORE_URI)) {

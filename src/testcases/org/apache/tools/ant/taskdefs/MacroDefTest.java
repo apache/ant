@@ -115,5 +115,16 @@ public class MacroDefTest extends BuildFileTest {
             "ignore-element-case",
             "nested elementnested element");
     }
+
+    public void testTextName() {
+        expectLogContaining(
+            "textname", "Hello world");
+    }
+
+    public void testDuplicateTextName() {
+        expectBuildException(
+            "duplicatetextname",
+            "the attribute text has already been specified");
+    }
 }
 

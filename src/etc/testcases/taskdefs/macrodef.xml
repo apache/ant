@@ -101,4 +101,24 @@
       </MYELEMENT>
     </ignore>
   </target>
+
+  <target name="textname">
+    <macrodef name="echotest" textname="text">
+      <sequential>
+        <echo>@{text}</echo>
+      </sequential>
+    </macrodef>
+    <echotest>
+      Hello world
+    </echotest>
+  </target>
+
+  <target name="duplicatetextname">
+    <macrodef name="echotest" textname="text">
+      <attribute name="text"/>
+      <sequential>
+        <echo>@{text}</echo>
+      </sequential>
+    </macrodef>
+  </target>
 </project>
