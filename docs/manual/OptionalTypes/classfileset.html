@@ -1,0 +1,87 @@
+<html>
+<head>
+<meta http-equiv="Content-Language" content="en-us">
+<title>ClassFileSet Type</title>
+</head>
+
+<body>
+<h2><a name="fileset">ClassFileSet</a></h2>
+<p>A classfileset is a specialised type of fileset which, given a set of 
+&quot;root&quot; classes, will include all of the class files upon which the 
+root classes depend. This is typically used to create a jar with all of the
+required classes for a particular application.
+</p>
+<p>
+classfilesets are typically used by reference. They are declared with an
+&quot;id&quot; value and this is then used as a reference where a normal fileset
+is expected.
+</p>
+<p>
+This type requires the <code>jakarta-BCEL</code> library.
+</p>
+
+
+<h3>Attributes</h3>
+<p>The class fileset support the following attributes in addition
+to those supported by the 
+<a href="../CoreTypes/fileset.html">standard fileset</a>:
+</p>
+ 
+<table border="1" cellpadding="2" cellspacing="0">
+  <tr>
+    <td valign="top"><b>Attribute</b></td>
+    <td valign="top"><b>Description</b></td>
+    <td align="center" valign="top"><b>Required</b></td>
+  </tr>
+  <tr>
+    <td valign="top">rootclass</td>
+    <td valign="top">A single root class name</td>
+    <td valign="top" align="center">No</td>
+  </tr>
+</table>
+
+<h3>Nested Elements</h3>
+
+<h4>Root</h4>
+<p>
+When more than one root class is required, multiple nested &lt;root&gt; elements
+may be used
+</p>
+<table border="1" cellpadding="2" cellspacing="0">
+  <tr>
+    <td valign="top"><b>Attribute</b></td>
+    <td valign="top"><b>Description</b></td>
+    <td align="center" valign="top"><b>Required</b></td>
+  </tr>
+  <tr>
+    <td valign="top">classname</td>
+    <td valign="top">The fully qualified name of the root class</td>
+    <td align="center" valign="top">Yes</td>
+  </tr>
+</table>
+
+<h4>Examples</h4>
+<blockquote><pre>
+&lt;classfileset id=&quot;reqdClasses" dir=&quot;${classes.dir}&quot;&gt;
+  &lt;root classname=&quot;org.apache.tools.ant.Project&quot; /&gt;
+&lt;/classfileset&gt;
+</pre></blockquote>
+
+<p>This example creates a fileset containing all the class files upon which the 
+<code>org.apache.tools.ant.Project</code> class depends. This fileset could 
+then be used to create a jar. 
+</p>
+
+<blockquote><pre>
+&lt;jar destfile=&quot;minimal.jar&quot; &gt;
+  &lt;fileset refid=&quot;reqdClasses&quot;/&gt;
+&lt;/jar&gt;
+</pre></blockquote>
+
+<hr>
+<p align="center">Copyright &copy; 2001 Apache Software Foundation. All rights
+Reserved.</p>
+
+</body>
+</html>
+
