@@ -77,10 +77,9 @@ import org.apache.tools.ant.UnknownElement;
  * @author Peter Reilly
  * @since Ant 1.6
  */
-public class PreSetDef extends Task implements AntlibInterface, TaskContainer {
+public class PreSetDef extends AntlibDefinition implements TaskContainer {
     private UnknownElement nestedTask;
     private String         name;
-    private String         uri;
 
     /**
      * Name of the definition
@@ -89,29 +88,6 @@ public class PreSetDef extends Task implements AntlibInterface, TaskContainer {
      public void setName(String name) {
         this.name = name;
     }
-    /**
-     * The URI for this definition.
-     * @param uri the namespace URI
-     * @throws BuildException if uri is not allowed
-     */
-    public void setURI(String uri) throws BuildException {
-        if (uri.equals(ProjectHelper.ANT_CORE_URI)) {
-            uri = "";
-        }
-        if (uri.startsWith("ant:")) {
-            throw new BuildException("Attempt to use a reserved URI " + uri);
-        }
-        this.uri = uri;
-    }
-    /**
-     * Set the class loader.
-     * Not used
-     * @param classLoader a <code>ClassLoader</code> value
-     */
-    public void setAntlibClassLoader(ClassLoader classLoader) {
-        // Ignore
-    }
-
 
     /**
      * Add a nested task to predefine attributes and elements on
@@ -140,7 +116,7 @@ public class PreSetDef extends Task implements AntlibInterface, TaskContainer {
             throw new BuildException("Name not specified");
         }
 
-        name = ProjectHelper.genComponentName(uri, name);
+        name = ProjectHelper.genComponentName(getURI(), name);
 
         ComponentHelper helper = ComponentHelper.getComponentHelper(
             getProject());
