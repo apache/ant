@@ -101,13 +101,17 @@ public class DefaultConfigurerTest
         m_componentManager.put( Configurer.ROLE, component );
         components.add( component );
 
+        // Setup a context
+        m_context = new DefaultTaskContext();
+        components.add( m_context );
+
         // Log enable the components
         for( Iterator iterator = components.iterator(); iterator.hasNext(); )
         {
-            component = (Component)iterator.next();
-            if( component instanceof LogEnabled )
+            Object obj = iterator.next();
+            if( obj instanceof LogEnabled )
             {
-                final LogEnabled logEnabled = (LogEnabled)component;
+                final LogEnabled logEnabled = (LogEnabled)obj;
                 logEnabled.enableLogging( m_logger );
             }
         }
@@ -115,21 +119,21 @@ public class DefaultConfigurerTest
         // Compose the components
         for( Iterator iterator = components.iterator(); iterator.hasNext(); )
         {
-            component = (Component)iterator.next();
-            if( component instanceof Composable )
+            Object obj = iterator.next();
+            if( obj instanceof Composable )
             {
-                final Composable composable = (Composable)component;
+                final Composable composable = (Composable)obj;
                 composable.compose( m_componentManager );
             }
         }
 
+        // Configure the context
+        final File baseDir = new File( "." ).getAbsoluteFile();
+        m_context.setProperty( TaskContext.BASE_DIRECTORY, baseDir );
+
         // Find the configurer
         m_configurer = (Configurer)m_componentManager.lookup( Configurer.ROLE );
 
-        // Setup a context
-        m_context = new DefaultTaskContext();
-        final File baseDir = new File( "." ).getAbsoluteFile();
-        m_context.setProperty( TaskContext.BASE_DIRECTORY, baseDir );
     }
 
     /**
