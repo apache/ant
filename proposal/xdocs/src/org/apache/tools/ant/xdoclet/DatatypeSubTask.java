@@ -79,7 +79,6 @@ public class DatatypeSubTask extends TemplateSubTask {
      */
     protected boolean matchesGenerationRules(ClassDoc clazz) throws XDocletException {
         return isAntDatatype(clazz);
-        ;
     }
 
     /**
