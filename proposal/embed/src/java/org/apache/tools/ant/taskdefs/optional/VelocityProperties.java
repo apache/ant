@@ -104,7 +104,7 @@ public class VelocityProperties extends Task implements PropertyInterceptor {
     
     public void execute() {
         try {
-            PropertyHelper phelper=PropertyHelper.getPropertyHelper( project );
+            PropertyHelper2 phelper=PropertyHelper2.getPropertyHelper( project );
             phelper.addPropertyInterceptor( this );
 
             engine=new VelocityEngine();

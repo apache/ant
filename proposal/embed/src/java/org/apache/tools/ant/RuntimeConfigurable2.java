@@ -281,7 +281,7 @@ public class RuntimeConfigurable2 extends RuntimeConfigurable {
         if( proxyConfigured ) {
             return;
         }
-        PropertyHelper ph=PropertyHelper.getPropertyHelper(p);
+        PropertyHelper2 ph=PropertyHelper2.getPropertyHelper(p);
 
         if (attributes != null) {
             ph.configure(wrappedObject, attributes, p);

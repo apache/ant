@@ -128,7 +128,7 @@ public class JXPath extends Task implements PropertyInterceptor {
     public void execute() {
         JXPathIntrospector.registerDynamicClass(Hashtable.class, JXPathHashtableHandler.class);
 
-        PropertyHelper phelper=PropertyHelper.getPropertyHelper( project );
+        PropertyHelper2 phelper=PropertyHelper2.getPropertyHelper( project );
         phelper.addPropertyInterceptor( this );
 
         project.addReference( "jxpathTask", this );

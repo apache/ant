@@ -95,7 +95,7 @@ public class JexlProperties extends Task implements PropertyInterceptor {
     
     
     public void execute() {
-        PropertyHelper phelper=PropertyHelper.getPropertyHelper( project );
+        PropertyHelper2 phelper=PropertyHelper2.getPropertyHelper( project );
         phelper.addPropertyInterceptor( this );
 
         /*

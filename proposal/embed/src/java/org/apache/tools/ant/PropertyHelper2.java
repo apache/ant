@@ -75,11 +75,11 @@ import org.xml.sax.helpers.AttributesImpl;
  *
  * @author Costin Manolache
  */
-public class PropertyHelper {
+public class PropertyHelper2 {
     Project project;
     Vector propertyInterceptors=new Vector();
     
-    protected PropertyHelper() {
+    protected PropertyHelper2() {
     }
 
     public void setProject(Project p ) {
@@ -91,13 +91,13 @@ public class PropertyHelper {
      *  in future it may use discovery of config to return a
      *  customized version, for integration in other apps.
      */
-    public static PropertyHelper getPropertyHelper(Project project) {
-        PropertyHelper ph=(PropertyHelper)project.getReference( "ant.PropertyHelper" ); 
+    public static PropertyHelper2 getPropertyHelper(Project project) {
+        PropertyHelper2 ph=(PropertyHelper2)project.getReference( "ant.PropertyHelper2" );
         if( ph!=null ) return ph;
-        ph=new PropertyHelper();
+        ph=new PropertyHelper2();
         ph.setProject( project );
 
-        project.addReference( "ant.PropertyHelper",ph );
+        project.addReference( "ant.PropertyHelper2",ph );
         return ph;
     }
     
