@@ -339,7 +339,12 @@ public class RuntimeConfigurable implements Serializable {
             if (configureChildren) {
                 if (child.wrappedObject instanceof Task) {
                     Task childTask = (Task) child.wrappedObject;
-                    childTask.maybeConfigure();
+                    
+                    // we don't configure tasks of task containers These
+                    // we be configured at the time they are used.
+                    if (!(target instanceof TaskContainer)) {
+                        childTask.maybeConfigure();
+                    }
                 } else {
                     child.maybeConfigure(p);
                 }

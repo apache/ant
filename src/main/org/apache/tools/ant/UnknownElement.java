@@ -144,8 +144,7 @@ public class UnknownElement extends Task {
         // configure attributes of the object and it's children. If it is
         // a task container, defer the configuration till the task container
         // attempts to use the task
-        getWrapper().maybeConfigure(getProject(), 
-            !(realThing instanceof TaskContainer));
+        getWrapper().maybeConfigure(getProject());
     }
 
     /**
@@ -305,10 +304,6 @@ public class UnknownElement extends Task {
             }
 
             child.handleChildren(realChild, childWrapper);
-
-//            if (parent instanceof TaskContainer) {
-//                ((Task) realChild).maybeConfigure();
-//            }
         }
     }
 
