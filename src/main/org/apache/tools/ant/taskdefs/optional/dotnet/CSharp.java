@@ -753,7 +753,8 @@ public class CSharp
                 targetType.equals("module") || targetType.equals("winexe")) {
             targetType = targetType;
         } else {
-            throw new BuildException("targetType " + targetType + " is not a valid type");
+            throw new BuildException("targetType " + targetType 
+                    + " is not one of 'exe', 'module', 'winexe' or 'library'" );
         }
     }
 
