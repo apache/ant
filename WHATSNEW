@@ -135,6 +135,9 @@ Fixed bugs:
 * NPE using XmlLogger and antlib.
   Bugzilla report 31840.
 
+* Properties.propertyNames() should be used instead of .keys().
+  Bugzilla report 27261.
+
 Changes from Ant 1.6.1 to Ant 1.6.2
 ===================================
 

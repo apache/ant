@@ -828,7 +828,7 @@ public class Project {
      */
     public void setSystemProperties() {
         Properties systemP = System.getProperties();
-        Enumeration e = systemP.keys();
+        Enumeration e = systemP.propertyNames();
         while (e.hasMoreElements()) {
             Object name = e.nextElement();
             String value = systemP.get(name).toString();

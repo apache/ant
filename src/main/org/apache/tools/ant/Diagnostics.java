@@ -266,7 +266,7 @@ public final class Diagnostics {
      * @param out the stream to print the properties to.
      */
     private static void doReportSystemProperties(PrintStream out) {
-        for (Enumeration keys = System.getProperties().keys();
+        for (Enumeration keys = System.getProperties().propertyNames();
             keys.hasMoreElements();) {
             String key = (String) keys.nextElement();
             out.println(key + " : " + System.getProperty(key));
