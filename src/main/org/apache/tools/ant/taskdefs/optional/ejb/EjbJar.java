@@ -219,6 +219,19 @@ public class EjbJar extends MatchingTask {
     }
 
     /**
+     * Create a websphere nested element used to configure a
+     * deployment tool for Websphere 4.0 server.
+     *
+     * @return the deployment tool instance to be configured.
+     */
+    public WebsphereDeploymentTool createWebsphere() {
+        WebsphereDeploymentTool tool = new WebsphereDeploymentTool();
+        tool.setTask(this);
+        deploymentTools.add(tool);
+        return tool;
+    }
+
+    /**
      * Create a Borland nested element used to configure a
      * deployment tool for Borland server.
      *

@@ -60,6 +60,9 @@ import java.io.InputStream;
 import java.io.FileOutputStream;
 import java.util.Hashtable;
 import java.util.List;
+import java.util.Set;
+import java.util.TreeSet;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.ArrayList;
 import java.util.jar.JarOutputStream;
@@ -71,6 +74,13 @@ import javax.xml.parsers.SAXParser;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
+import org.apache.tools.ant.*;
+import org.apache.tools.ant.types.*;
+import org.apache.tools.ant.util.depend.Dependencies;
+import org.apache.tools.ant.util.depend.Filter;
+import org.apache.bcel.classfile.*;
+import org.apache.bcel.*;
+
 import org.apache.tools.ant.Task;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Location;
@@ -79,6 +89,7 @@ import org.apache.tools.ant.DirectoryScanner;
 import org.apache.tools.ant.AntClassLoader;
 import org.apache.tools.ant.types.Path;
 import org.apache.tools.ant.types.FileSet;
+
 
 /**
  * A deployment tool which creates generic EJB jars. Generic jars contains
@@ -204,7 +215,7 @@ public class GenericDeploymentTool implements EJBDeploymentTool {
 
     /**
      * Get the classpath by combining the one from the surrounding task, if any
-     * and the one from tis tool.
+     * and the one from this tool.
      */
     protected Path getCombinedClasspath() {
         Path combinedPath = classpath;
@@ -339,8 +350,8 @@ public class GenericDeploymentTool implements EJBDeploymentTool {
             // now the vendor specific files, if any             
             addVendorFiles(ejbFiles, ddPrefix);
 
-            // add any inherited files
-            checkAndAddInherited(ejbFiles);
+            // add any dependent files
+            checkAndAddDependants(ejbFiles);
 
             // Lastly create File object for the Jar files. If we are using
             // a flat destination dir, then we need to redefine baseName!
@@ -585,6 +596,7 @@ public class GenericDeploymentTool implements EJBDeploymentTool {
      * </code>.  If the <code>jarFile</code>'s timestamp is more recent than
      * each EJB file, <code>true</code> is returned.  Otherwise, <code>false
      * </code> is returned.
+     * TODO: find a way to check the manifest-file, that is found by naming convention
      *
      * @param ejbFiles Hashtable of EJB classes (and other) files that will be
      *                 added to the completed JAR file
@@ -596,6 +608,7 @@ public class GenericDeploymentTool implements EJBDeploymentTool {
     protected boolean needToRebuild(Hashtable ejbFiles, File jarFile) {
         if (jarFile.exists()) {
             long lastBuild = jarFile.lastModified();
+
             if (config.manifest != null && config.manifest.exists() &&
                 config.manifest.lastModified() > lastBuild) {
                 log("Build needed because manifest " + config.manifest + " is out of date",
@@ -660,7 +673,11 @@ public class GenericDeploymentTool implements EJBDeploymentTool {
             InputStream in = null;
             Manifest manifest = null;
             try {
-                if (config.manifest != null) {
+                File manifestFile = new File(getConfig().descriptorDir, baseName + "-manifest.mf");
+                if (manifestFile.exists()) {
+                    in = new FileInputStream(manifestFile);
+                }
+                else if (config.manifest != null) {
                     in = new FileInputStream(config.manifest);
                     if ( in == null ) {
                         throw new BuildException("Could not find manifest file: " + config.manifest, 
@@ -744,106 +761,63 @@ public class GenericDeploymentTool implements EJBDeploymentTool {
         }
     } // end of writeJar
 
+
     /**
-     * Check if a EJB Class Inherits from a Superclass, and if a Remote Interface
-     * extends an interface other then javax.ejb.EJBObject directly.  Then add those 
-     * classes to the generic-jar so they dont have to added elsewhere.
-     *
+     * Add all available classes, that depend on Remote, Home, Bean, PK
+     * @param checkEntries files, that are extracted from the deployment descriptor
      */
-    protected void checkAndAddInherited(Hashtable checkEntries) throws BuildException
+    protected void checkAndAddDependants(Hashtable checkEntries)
+        throws BuildException
     {
-        //Copy hashtable so were not changing the one we iterate through
-        Hashtable copiedHash = (Hashtable)checkEntries.clone();
+        Dependencies visitor = new Dependencies();
+        Set set = new TreeSet();
+        Set newSet = new HashSet();
+        final String base = config.srcDir.getAbsolutePath() + File.separator;
 
-        // Walk base level EJBs and see if they have superclasses or extend extra interfaces which extend EJBObject
-        for (Iterator entryIterator = copiedHash.keySet().iterator(); entryIterator.hasNext(); ) 
-        {
-            String entryName = (String)entryIterator.next();
-            File entryFile = (File)copiedHash.get(entryName);
-
-            // only want class files, xml doesnt reflect very well =)
+        Iterator i = checkEntries.keySet().iterator();
+        while (i.hasNext()) {
+            String entryName = (String)i.next();
             if (entryName.endsWith(".class"))
-            {
-                String classname = entryName.substring(0,entryName.lastIndexOf(".class")).replace(File.separatorChar,'.');
-                ClassLoader loader = getClassLoaderForBuild();
+                newSet.add(entryName.substring(0, entryName.length() - ".class".length()).replace(File.separatorChar, '/'));
+        }
+        set.addAll(newSet);
+
+        do {
+            i = newSet.iterator();
+            while (i.hasNext()) {
+                String fileName = base + ((String)i.next()).replace('/', File.separatorChar) + ".class";
+
                 try {
-                    Class c = loader.loadClass(classname);
-
-                    // No primatives!!  sanity check, probably not nessesary
-                    if (!c.isPrimitive())
-                    {
-                        if (c.isInterface()) //get as an interface
-                        {
-                            log("looking at interface " + c.getName(),  Project.MSG_VERBOSE);
-                            Class[] interfaces = c.getInterfaces();
-                            for (int i = 0; i < interfaces.length; i++){
-                                log("     implements " + interfaces[i].getName(),  Project.MSG_VERBOSE);
-                                addInterface(interfaces[i], checkEntries);
-                            }
-                        }
-                        else  // get as a class
-                        {
-                            log("looking at class " + c.getName(),  Project.MSG_VERBOSE);
-                            Class s = c.getSuperclass();
-                            addSuperClass(c.getSuperclass(), checkEntries);
-                        }
-                    } //if primative
+                    JavaClass javaClass = new ClassParser(fileName).parse();
+                    javaClass.accept(visitor);
                 }
-                catch (ClassNotFoundException cnfe) {
-                    log("Could not load class " + classname + " for super class check", 
-                                  Project.MSG_WARN);
-                }                            
-                catch (NoClassDefFoundError ncdfe) {
-                    log("Could not fully load class " + classname + " for super class check", 
-                                  Project.MSG_WARN);
-                }                            
-            } //if 
-        } // while 
-    }
-
-    private void addInterface(Class theInterface, Hashtable checkEntries) {
-        if (!theInterface.getName().startsWith("java")) // do not add system interfaces
-        { 
-            File interfaceFile = new File(config.srcDir.getAbsolutePath() 
-                                        + File.separatorChar 
-                                        + theInterface.getName().replace('.',File.separatorChar)
-                                        + ".class"
-                                        );
-            if (interfaceFile.exists() && interfaceFile.isFile())
-            {
-                checkEntries.put(theInterface.getName().replace('.',File.separatorChar)+".class",
-                                 interfaceFile);
-                Class[] superInterfaces = theInterface.getInterfaces();
-                for (int i = 0; i < superInterfaces.length; i++) {
-                    addInterface(superInterfaces[i], checkEntries);
+                catch (IOException e) {
+                    log("exception: " +  e.getMessage(), Project.MSG_INFO);
                 }
             }
+            newSet.clear();
+            newSet.addAll(visitor.getDependencies());
+            visitor.clearDependencies();
+
+            Dependencies.applyFilter(newSet, new Filter() {
+                    public boolean accept(Object object) {
+                        String fileName = base + ((String)object).replace('/', File.separatorChar) + ".class";
+                        return new File(fileName).exists();
+                    }
+                });
+            newSet.removeAll(set);
+            set.addAll(newSet);
+        }
+        while (newSet.size() > 0);
+
+        i = set.iterator();
+        while (i.hasNext()) {
+            String next = ((String)i.next()).replace('/', File.separatorChar);
+            checkEntries.put(next + ".class", new File(base + next + ".class"));
+            log("dependent class: " + next + ".class" + " - " + base + next + ".class", Project.MSG_VERBOSE);
         }
     }
-     
-    private void addSuperClass(Class superClass, Hashtable checkEntries) {
-    
-        if (!superClass.getName().startsWith("java"))
-        {
-            File superClassFile = new File(config.srcDir.getAbsolutePath() 
-                                            + File.separatorChar 
-                                            + superClass.getName().replace('.',File.separatorChar)
-                                            + ".class");
-            if (superClassFile.exists() && superClassFile.isFile())
-            {
-                checkEntries.put(superClass.getName().replace('.',File.separatorChar) + ".class", 
-                                 superClassFile);
-                
-                // now need to get super classes and interfaces for this class
-                Class[] superInterfaces = superClass.getInterfaces();
-                for (int i = 0; i < superInterfaces.length; i++) {
-                    addInterface(superInterfaces[i], checkEntries);
-                }
-                
-                addSuperClass(superClass.getSuperclass(), checkEntries);
-            }               
-        }
-    }
+
     
     /**
      * Returns a Classloader object which parses the passed in generic EjbJar classpath.
