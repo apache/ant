@@ -177,8 +177,7 @@ D:\src\java\Unset.java<br></br>
          <p>
             By this time, you may have decided that there is an unreported
             bug in Ant. You have a few choices at this point. You can send
-<!--            an email to the <code>user</code> mailing list-->
-            an email to the <code>ant-user</code> mailing list
+            an email to the <code>user</code> mailing list
             to see if
             others have encountered your issue and find out how they may
             have worked around it. If after some discussion, you feel it
@@ -239,20 +238,17 @@ D:\src\java\Unset.java<br></br>
             <a href="http://ant.apache.org/srcdownload.cgi">
             source distributions</a>. If you
             are going to tackle the problem at this level, you may want to
-<!--            discuss some details first on the <code>dev</code>-->
-            discuss some details first on the <code>ant-dev</code>
+            discuss some details first on the <code>dev</code>
             mailing list. Once you have a fix for the problem, you may submit
             the fix as a <i>patch</i> to either the
-<!--            <code>dev</code> mailing-->
-            <code>ant-dev</code> mailing
+            <code>dev</code> mailing
             list, or enter the bug database as described above and attach the
             patch to the bug report. Using the bug database has the advantage
             of being able to track the progress of your patch.
          </p>
          <p>
             If you have a patch to submit and are sending it to the
-<!--            <code>dev</code> mailing list,-->
-            <code>ant-dev</code> mailing list,
+            <code>dev</code> mailing list,
             prefix &quot;[PATCH]&quot;
             to your message subject. Please include any relevant bug numbers.
             Patch files should be created with the <code>-u</code>
