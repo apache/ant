@@ -28,7 +28,7 @@ public class AntCall
     extends AbstractTask
     implements Composable
 {
-    private ProjectManager        m_projectEngine;
+    private ProjectManager        m_projectManager;
     private Project               m_project;
     private String                m_target;
     private ArrayList             m_properties     = new ArrayList();
@@ -45,7 +45,7 @@ public class AntCall
         throws ComponentException
     {
         m_componentManager = componentManager;
-        m_projectEngine = (ProjectManager)componentManager.lookup( ProjectManager.ROLE );
+        m_projectManager = (ProjectManager)componentManager.lookup( ProjectManager.ROLE );
         m_project = (Project)componentManager.lookup( Project.ROLE );
     }
 
@@ -81,7 +81,11 @@ public class AntCall
         }
 
         getLogger().info( "Calling target " + m_target );
+
         //This calls startProject() which is probably not wanted???
-        m_projectEngine.executeTarget( m_project, m_target, m_childContext );
+        //TODO: FIXME when scoping is decided
+        //m_projectManager.executeProject( m_project, m_target );
+        getLogger().warn( "ANTCALL NOT IMPLEMENTED - waiting for " + 
+                          "scope rules to be decided" );
     }
 }
