@@ -113,6 +113,9 @@ public class Main implements AntMain {
     /** Indicates whether this build is to support interactive input */
     private boolean allowInput = true;
 
+    /** keep going mode */
+    private boolean keepGoingMode = false;
+
     /**
      * The Ant logger class. There may be only one logger. It will have
      * the right to use the 'out' PrintStream. The class must implements the
@@ -422,6 +425,8 @@ public class Main implements AntMain {
                         "using the -propertyfile argument";
                     throw new BuildException(msg);
                 }
+            } else if (arg.equals("-k") || arg.equals("-keep-going")) {
+                keepGoingMode = true;
             } else if (arg.startsWith("-")) {
                 // we don't have any more args to recognize!
                 String msg = "Unknown argument: " + arg;
@@ -634,6 +639,8 @@ public class Main implements AntMain {
                 project.setUserProperty("ant.file",
                                         buildFile.getAbsolutePath());
 
+                project.setKeepGoingMode(keepGoingMode);
+
                 ProjectHelper.configureProject(project, buildFile);
 
                 if (projectHelp) {
@@ -800,6 +807,8 @@ public class Main implements AntMain {
         msg.append("    -file    <file>              ''" + lSep);
         msg.append("    -f       <file>              ''" + lSep);
         msg.append("  -D<property>=<value>   use value for given property" + lSep);
+        msg.append("  -keep-going, -k        execute all targets that do not depend" + lSep);
+        msg.append("                         on failed target(s)" + lSep);
         msg.append("  -propertyfile <name>   load all properties from file with -D" + lSep);
         msg.append("                         properties taking precedence" + lSep);
         msg.append("  -inputhandler <class>  the class which will handle input requests" + lSep);

@@ -65,6 +65,8 @@ import java.util.Hashtable;
 import java.util.Properties;
 import java.util.Stack;
 import java.util.Vector;
+import java.util.Set;
+import java.util.HashSet;
 import org.apache.tools.ant.input.DefaultInputHandler;
 import org.apache.tools.ant.input.InputHandler;
 import org.apache.tools.ant.types.FilterSet;
@@ -208,6 +210,11 @@ public class Project {
     private InputStream defaultInputStream = null;
 
     /**
+     * Keep going flag
+     */
+    private boolean keepGoingMode = false;
+
+    /**
      * Sets the input handler
      *
      * @param handler the InputHandler instance to use for gathering input.
@@ -272,6 +279,7 @@ public class Project {
     public void initSubProject(Project subProject) {
         ComponentHelper.getComponentHelper(subProject)
             .initSubProject(ComponentHelper.getComponentHelper(this));
+        subProject.setKeepGoingMode(this.isKeepGoingMode());
     }
 
     /**
@@ -779,6 +787,26 @@ public class Project {
     }
 
     /**
+     * Sets "keep-going" mode. In this mode ANT will try to execute
+     * as many targets as possible. All targets that do not depend
+     * on failed target(s) will be executed.
+     * @param keepGoingMode "keep-going" mode
+     * @since Ant 1.6
+     */
+    public void setKeepGoingMode(boolean keepGoingMode) {
+        this.keepGoingMode = keepGoingMode;
+    }
+
+    /**
+     * Returns the keep-going mode.
+     * @return "keep-going" mode
+     * @since Ant 1.6
+     */
+    public boolean isKeepGoingMode() {
+        return this.keepGoingMode;
+    }
+
+    /**
      * Returns the version of Java this class is running under.
      * @return the version of Java as a String, e.g. "1.1"
      * @see org.apache.tools.ant.util.JavaEnvUtils#getJavaVersion
@@ -1174,13 +1202,70 @@ public class Project {
         // graph.
         Vector sortedTargets = topoSort(targetName, targets);
 
-        int curidx = 0;
-        Target curtarget;
-
-        do {
-            curtarget = (Target) sortedTargets.elementAt(curidx++);
-            curtarget.performTasks();
-        } while (!curtarget.getName().equals(targetName));
+        Set succeededTargets = new HashSet();
+        BuildException buildException = null; // first build exception
+        for (Enumeration iter = sortedTargets.elements();
+             iter.hasMoreElements();) {
+            Target curtarget = (Target) iter.nextElement();
+            boolean canExecute = true;
+            for (Enumeration depIter = curtarget.getDependencies();
+                 depIter.hasMoreElements();) {
+                String dependencyName = ((String) depIter.nextElement());
+                if (!succeededTargets.contains(dependencyName)) {
+                    canExecute = false;
+                    log(curtarget,
+                        "Cannot execute '" + curtarget.getName() + "' - '"
+                        + dependencyName + "' failed or was not executed.",
+                        MSG_ERR);
+                    break;
+                }
+            }
+            if (canExecute) {
+                Throwable thrownException = null;
+                try {
+                    curtarget.performTasks();
+                    succeededTargets.add(curtarget.getName());
+                } catch (RuntimeException ex) {
+                    if (!(keepGoingMode)) {
+                        throw ex; // throw further
+                    }
+                    thrownException = ex;
+                } catch (Throwable ex) {
+                    if (!(keepGoingMode)) {
+                        throw new BuildException(ex);
+                    }
+                    thrownException = ex;
+                }
+                if (thrownException != null) {
+                    if (thrownException instanceof BuildException) {
+                        log(curtarget,
+                            "Target '" + curtarget.getName()
+                            + "' failed with message '"
+                            + thrownException.getMessage() + "'.", MSG_ERR);
+                        // only the first build exception is reported
+                        if (buildException == null) {
+                            buildException = (BuildException) thrownException;
+                        }
+                    } else {
+                        log(curtarget,
+                            "Target '" + curtarget.getName()
+                            + "' failed with message '"
+                            + thrownException.getMessage() + "'.", MSG_ERR);
+                        thrownException.printStackTrace(System.err);
+                        if (buildException == null) {
+                            buildException =
+                                new BuildException(thrownException);
+                        }
+                    }
+                }
+            }
+            if (curtarget.getName().equals(targetName)) { // old exit condition
+                break;
+            }
+        }
+        if (buildException != null) {
+            throw buildException;
+        }
     }
 
     /**

@@ -134,18 +134,57 @@ public class SubAnt
             target = getOwningTarget().getName();
         }
 */
+        BuildException buildException = null;
         for (int i = 0; i < count; ++i) {
-            File directory = null;
-            File file = new File(filenames[i]);
-            if (file.isDirectory()) {
-                if (genericantfile != null) {
-                    directory = file;
-                    file = genericantfile;
+            File file = null;
+            Throwable thrownException = null;
+            try {
+                File directory = null;
+                file = new File(filenames[i]);
+                if (file.isDirectory()) {
+                    if (genericantfile != null) {
+                        directory = file;
+                        file = genericantfile;
+                    } else {
+                        file = new File(file, antfile);
+                    }
+                }
+                execute(file, directory);
+            } catch (RuntimeException ex) {
+                if (!(getProject().isKeepGoingMode())) {
+                    throw ex; // throw further
+                }
+                thrownException = ex;
+            } catch (Throwable ex) {
+                if (!(getProject().isKeepGoingMode())) {
+                    throw new BuildException(ex);
+                }
+                thrownException = ex;
+            }
+            if (thrownException != null) {
+                if (thrownException instanceof BuildException) {
+                    log("File '" + file
+                        + "' failed with message '"
+                        + thrownException.getMessage() + "'.", Project.MSG_ERR);
+                    // only the first build exception is reported
+                    if (buildException == null) {
+                        buildException = (BuildException) thrownException;
+                    }
                 } else {
-                    file = new File(file, antfile);
+                    log("Target '" + file
+                        + "' failed with message '"
+                        + thrownException.getMessage() + "'.", Project.MSG_ERR);
+                    thrownException.printStackTrace(System.err);
+                    if (buildException == null) {
+                        buildException =
+                            new BuildException(thrownException);
+                    }
                 }
             }
-            execute(file, directory);
+        }
+        // check if one of the builds failed in keep going mode
+        if (buildException != null) {
+            throw buildException;
         }
     }
 
