@@ -51,6 +51,9 @@ Fixed bugs:
 * Typo in definition of <cvsversion> task causing it not to be defined.
   Bugzilla 31403.
 
+* Execution of top level tasks in imported files get delayed by targets.
+  Bugzilla report 31487.
+
 Changes from Ant 1.6.1 to Ant 1.6.2
 ===================================
 
