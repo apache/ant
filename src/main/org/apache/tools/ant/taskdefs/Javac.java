@@ -143,6 +143,9 @@ public class Javac extends MatchingTask {
     private String source;
     private String debugLevel;
 
+    /**
+     * Javac task for compilation of Java files.
+     */
     public Javac() {
         if (JavaEnvUtils.getJavaVersion() != JavaEnvUtils.JAVA_1_1 &&
             JavaEnvUtils.getJavaVersion() != JavaEnvUtils.JAVA_1_2) {

@@ -420,6 +420,9 @@ public class ExecuteOn extends ExecTask {
      * for the type attribute.  
      */
     public static class FileDirBoth extends EnumeratedAttribute {
+        /**
+         * @see EnumeratedAttribute#getValues
+         */
         public String[] getValues() {
             return new String[] {"file", "dir", "both"};
         }

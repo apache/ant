@@ -108,7 +108,6 @@ import org.apache.tools.ant.util.JavaEnvUtils;
  *
  * @ant.task category="java"
  */
-
 public class Javadoc extends Task {
 
     public class DocletParam {

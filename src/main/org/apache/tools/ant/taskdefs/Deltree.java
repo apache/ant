@@ -74,10 +74,21 @@ public class Deltree extends Task {
 
     private File dir;
 
+    /**
+     * Set the directory to be deleted
+     *
+     * @param dir the root of the tree to be removed.
+     */
     public void setDir(File dir) {
         this.dir = dir;
     }
 
+    /**
+     * Do the work.
+     *
+     * @exception BuildException if the task is not configured correctly or
+     * the tree cannot be removed.
+     */
     public void execute() throws BuildException {
         log("DEPRECATED - The deltree task is deprecated.  "
             + "Use delete instead.");

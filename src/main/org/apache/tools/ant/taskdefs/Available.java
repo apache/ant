@@ -69,7 +69,7 @@ import org.apache.tools.ant.util.StringUtils;
 
 /**
  * Will set the given property if the requested resource is available at 
- * runtime.
+ * runtime. This task may also be used as a condition by the condition task.
  *
  * @author Stefano Mazzocchi 
  *         <a href="mailto:stefano@apache.org">stefano@apache.org</a>
@@ -93,10 +93,21 @@ public class Available extends Task implements Condition {
     private boolean isTask = false;
     private boolean ignoreSystemclasses = false;
 
+    /**
+     * Set the classpath to be used when searching for classes and resources
+     * 
+     * @param classpath an Ant Path object containing the search path.
+     */
     public void setClasspath(Path classpath) {
         createClasspath().append(classpath);
     }
 
+    /**
+     * Create a classpath object to be configured by Ant. The resulting
+     * path will be used when searching for classes or resources
+     *
+     * @return an empty Path instance to be configured by Ant.
+     */
     public Path createClasspath() {
         if (this.classpath == null) {
             this.classpath = new Path(project);
@@ -104,14 +115,31 @@ public class Available extends Task implements Condition {
         return this.classpath.createPath();
     }
 
+    /**
+     * Set the classpath by reference.
+     *
+     * @param r a Reference to a Path instance to be used as the classpath 
+     *          value.
+     */
     public void setClasspathRef(Reference r) {
         createClasspath().setRefid(r);
     }
 
+    /**
+     * Set the path to use when looking for a file
+     *
+     * @param filepath a Path instance containing the search path for files.
+     */
     public void setFilepath(Path filepath) {
         createFilepath().append(filepath);
     }
 
+    /**
+     * Create a filepath to be configured by Ant.
+     *
+     * @return a new Path instance which Ant will configure with a file search
+     *         path.
+     */
     public Path createFilepath() {
         if (this.filepath == null) {
             this.filepath = new Path(project);
@@ -119,24 +147,53 @@ public class Available extends Task implements Condition {
         return this.filepath.createPath();
     }
 
+    /**
+     * Set the name of the property which will be set if the particular resource
+     * is available.
+     *
+     * @param property the name of the property to set.
+     */
     public void setProperty(String property) {
         this.property = property;
     }
 
+    /**
+     * Set the value to be given to the property of the desired resource is
+     * available.
+     *
+     * @param value the value to be given.
+     */
     public void setValue(String value) {
         this.value = value;
     }
 
+    /**
+     * Set a classname of a class which must be available to set the given 
+     * property.
+     *
+     * @param classname the name of the class required.
+     */
     public void setClassname(String classname) {
         if (!"".equals(classname)) {
             this.classname = classname;
         }
     }
 
+    /**
+     * Set the file which must be present in the file system to set the given
+     * property.
+     *
+     * @param file the name of the file which is required.
+     */
     public void setFile(String file) {
         this.file = file;
     }
 
+    /**
+     * Set the name of a Java resouirce which is required to set the property.
+     *
+     * @param resource the name of a resource which is required to be available.
+     */
     public void setResource(String resource) {
         this.resource = resource;
     }
@@ -154,14 +211,32 @@ public class Available extends Task implements Condition {
         this.type.setValue(type);
     }
 
+    /**
+     * Set what type of file is required - either a directory or a file.
+     *
+     * @param type an instance of the FileDir enumeratedAttribute indicating
+     *             whether the file required is to be a directory or a plain 
+     *             file.
+     */
     public void setType(FileDir type) {
         this.type = type;
     }
 
+    /**
+     * Set whether the search for classes should ignore the runtime classes and
+     * just use the given classpath.
+     *
+     * @param ignore true if system classes are to be ignored.
+     */
     public void setIgnoresystemclasses(boolean ignore) {
         this.ignoreSystemclasses = ignore;
     }
 
+    /**
+     * Entry point when operating as a task.
+     *
+     * @exception BuildException if the task is not configured correctly.
+     */
     public void execute() throws BuildException {
         if (property == null) {
             throw new BuildException("property attribute is required", 
@@ -185,14 +260,20 @@ public class Available extends Task implements Condition {
         }
     }
 
+    /**
+     * Evaluate the availability of a resource.
+     *
+     * @return boolean is the resource is available.
+     * @exception if the condition is not configured correctly
+     */
     public boolean eval() throws BuildException {
         if (classname == null && file == null && resource == null) {
             throw new BuildException("At least one of (classname|file|"
                                      + "resource) is required", location);
         }
 
-        if (type != null){
-            if (file == null){
+        if (type != null) {
+            if (file == null) {
                 throw new BuildException("The type attribute is only valid "
                                          + "when specifying the file "
                                          + "attribute.", location);
@@ -422,24 +503,38 @@ public class Available extends Task implements Condition {
         }
     }
 
+    /**
+     * EnumeratedAttribute covering the file types to be checked for, either
+     * file or dir.
+     */
     public static class FileDir extends EnumeratedAttribute {
 
         private static final String[] values = {"file", "dir"};
 
+        /**
+         * @see EnumeratedAttribute#getValues
+         */
         public String[] getValues() {
             return values;
         }
 
+        /**
+         * Indicate if the value specifies a directory.
+         *
+         * @return true if the value specifies a directory.
+         */
         public boolean isDir() {
             return "dir".equalsIgnoreCase(getValue());
         }
 
+        /**
+         * Indicate if the value specifies a file.
+         *
+         * @return true if the value specifies a file.
+         */
         public boolean isFile() {
             return "file".equalsIgnoreCase(getValue());
         }
 
-        public String toString() {
-            return getValue();
-        }
     }
 }

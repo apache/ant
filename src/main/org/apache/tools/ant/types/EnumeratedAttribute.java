@@ -143,4 +143,15 @@ public abstract class EnumeratedAttribute {
     public final int getIndex() {
         return index;
     }
+
+
+    /**
+     * Convert the value to its string form.
+     *
+     * @return the string form of the value.
+     */        
+    public String toString() {
+        return getValue();
+    }
+
 }

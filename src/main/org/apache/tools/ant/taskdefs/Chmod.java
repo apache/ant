@@ -82,6 +82,9 @@ public class Chmod extends ExecuteOn {
     private boolean defaultSetDefined = false;
     private boolean havePerm = false;
 
+    /**
+     * Chmod task for setting file and directory permissions.
+     */
     public Chmod() {
         super.setExecutable("chmod");
         super.setParallel(true);

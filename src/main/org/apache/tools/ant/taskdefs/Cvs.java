@@ -74,7 +74,9 @@ package org.apache.tools.ant.taskdefs;
  */
 public class Cvs extends AbstractCvsTask {
 
+    /**
+     * CVS Task - now implemented by the Abstract CVS Task base class
+     */
     public Cvs() {
-        setTaskName("cvs");
     }
 }

@@ -535,16 +535,29 @@ public class Ant extends Task {
     public static class Reference
         extends org.apache.tools.ant.types.Reference {
 
+        /** Creates a reference to be configured by Ant */
         public Reference() {
             super();
         }
 
         private String targetid = null;
 
+        /**
+         * Set the id that this reference to be stored under in the
+         * new project.
+         *
+         * @param targetid the id under which this reference will be passed to 
+         *        the new project */ 
         public void setToRefid(String targetid) {
             this.targetid = targetid; 
         }
 
+        /**
+         * Get the id under which this reference will be stored in the new
+         * project
+         *
+         * @return the id of the reference in the new project.
+         */
         public String getToRefid() { 
             return targetid; 
         }

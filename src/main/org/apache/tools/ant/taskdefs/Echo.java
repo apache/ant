@@ -163,6 +163,9 @@ public class Echo extends Task {
     }
 
     public static class EchoLevel extends EnumeratedAttribute {
+        /**
+         * @see EnumeratedAttribute#getValues
+         */
         public String[] getValues() {
             return new String[] {"error", "warning", "info", 
                                  "verbose", "debug"};

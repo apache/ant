@@ -1036,6 +1036,9 @@ public class FixCRLF extends MatchingTask {
      * Enumerated attribute with the values "asis", "cr", "lf" and "crlf".
      */
     public static class CrLf extends EnumeratedAttribute {
+        /**
+         * @see EnumeratedAttribute#getValues
+         */
         public String[] getValues() {
             return new String[] {"asis", "cr", "lf", "crlf"};
         }
