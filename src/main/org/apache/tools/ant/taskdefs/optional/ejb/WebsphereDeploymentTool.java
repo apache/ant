@@ -130,13 +130,7 @@ public class WebsphereDeploymentTool extends GenericDeploymentTool {
 
     /** Instance variable that determines whether generic ejb jars are kept. */
 
-    private boolean keepgenerated = false;
-
-    private String additionalArgs = "";
-
     private boolean keepGeneric = false;
-
-    private String compiler = null;
 
     private boolean alwaysRebuild = true;
 
@@ -184,8 +178,8 @@ public class WebsphereDeploymentTool extends GenericDeploymentTool {
     /** the scratchdir for the ejbdeploy operation */
     private String tempdir = "_ejbdeploy_temp";
 
-    /** the websphere home set in the property file */
-    private File websphereHome = null;
+    /** the home directory for websphere */
+    private File websphereHome;
 
     /** Get the classpath to the websphere classpaths */
     public Path createWASClasspath() {
@@ -220,7 +214,7 @@ public class WebsphereDeploymentTool extends GenericDeploymentTool {
     /**
      * Sets the name of the Database to create; optional.
      *
-     * @param String
+     * @param dbName name of the database
      */
     public void setDbname(String dbName) {
         this.dbName = dbName;
@@ -230,7 +224,7 @@ public class WebsphereDeploymentTool extends GenericDeploymentTool {
     /**
      * Sets the name of the schema to create; optional.
      *
-     * @param String
+     * @param dbSchema name of the schema
      */
     public void setDbschema(String dbSchema) {
         this.dbSchema = dbSchema;
@@ -238,7 +232,7 @@ public class WebsphereDeploymentTool extends GenericDeploymentTool {
 
 
     /**
-     * Flag, default false, to only generate the deployment 
+     * Flag, default false, to only generate the deployment
      * code, do not run RMIC or Javac
      *
      * @param codegen option
@@ -249,7 +243,7 @@ public class WebsphereDeploymentTool extends GenericDeploymentTool {
 
 
     /**
-     * Flag, default true, to only output error messages. 
+     * Flag, default true, to only output error messages.
      *
      * @param quiet option
      */
@@ -281,7 +275,7 @@ public class WebsphereDeploymentTool extends GenericDeploymentTool {
     /**
      * Flag to disable informational messages; optional, default false.
      *
-     * @param noinfom 
+     * @param noinfom
      */
     public void setNoinform(boolean noinfom) {
         this.noinform = noinform;
@@ -302,8 +296,8 @@ public class WebsphereDeploymentTool extends GenericDeploymentTool {
      *
      * @param options
      */
-    public void setRmicoptions(String options) { 
-        this.rmicOptions = options; 
+    public void setRmicoptions(String options) {
+        this.rmicOptions = options;
     }
 
     /**
@@ -313,14 +307,6 @@ public class WebsphereDeploymentTool extends GenericDeploymentTool {
      */
     public void setUse35(boolean attr) {
         use35MappingRules = attr;
-    }
-
-
-    /**
-     * The compiler (switch <code>-compiler</code>) to use 
-     */
-    public void setCompiler(String compiler) {
-        this.compiler = compiler;
     }
 
 
@@ -355,17 +341,6 @@ public class WebsphereDeploymentTool extends GenericDeploymentTool {
 
 
     /**
-     * Sets whether -keepgenerated is passed to ejbdeploy (that is, the .java
-     * source files are kept).
-     *
-     * @param inValue either 'true' or 'false'
-     */
-    public void setKeepgenerated(String inValue) {
-        this.keepgenerated = Boolean.valueOf(inValue).booleanValue();
-    }
-
-
-    /**
      * Decide, wether ejbdeploy should be called or not;
      * optional, default true.
      *
@@ -373,12 +348,6 @@ public class WebsphereDeploymentTool extends GenericDeploymentTool {
      */
     public void setEjbdeploy(boolean ejbdeploy) {
         this.ejbdeploy = ejbdeploy;
-    }
-
-
-    /** sets some additional args to send to ejbdeploy. */
-    public void setArgs(String args) {
-        this.additionalArgs = args;
     }
 
 
@@ -625,9 +594,9 @@ public class WebsphereDeploymentTool extends GenericDeploymentTool {
                 // Set the Environment variable
                 Environment.Variable var = new Environment.Variable();
 
-                File libDir = new File(websphereHome, "lib");
                 var.setKey("websphere.lib.dir");
-                var.setValue(libDir.getAbsolutePath());
+                File libdir = new File(websphereHome, "lib");
+                var.setValue(libdir.getAbsolutePath());
                 javaTask.addSysproperty(var);
 
                 // Set the working directory
@@ -704,9 +673,9 @@ public class WebsphereDeploymentTool extends GenericDeploymentTool {
         super.validateConfigured();
         String home = getTask().getProject().getProperty("websphere.home");
         if (home == null) {
-            throw new BuildException("Please set the property websphere.home in your project");
+            throw new BuildException("Please set the property 'websphere.home' in your buildfile");
         }
-        websphereHome = getTask().getProject().resolveFile(home);        
+        websphereHome = getTask().getProject().resolveFile(home);
     }
 
 
