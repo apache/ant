@@ -60,6 +60,9 @@ import org.apache.tools.ant.BuildException;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.TreeMap;
+import java.util.Arrays;
+import java.util.Iterator;
 
 /**
  * Quick and dirty index.html generator for proposal/xdocs
@@ -74,6 +77,8 @@ public class IndexGen extends Task {
     }
 
     public void execute() throws BuildException {
+        TreeMap data = new TreeMap();
+
         String[] categories = rootDir.list();
 
         StringBuffer sb = new StringBuffer();
@@ -83,6 +88,7 @@ public class IndexGen extends Task {
         int catCount = 0;
         int taskCount = 0;
 
+        // grab all categories and tasks
         for (int i=0; i < categories.length; i++) {
             String category = categories[i];
             File catDir = new File(rootDir, category);
@@ -91,13 +97,22 @@ public class IndexGen extends Task {
                 continue;
             }
 
+            String[] tasks = catDir.list();
+            Arrays.sort(tasks);
+
+            data.put(category, tasks);
+        }
+
+        Iterator iter = data.keySet().iterator();
+        while (iter.hasNext()) {
             catCount++;
+            String category = (String) iter.next();
 
             sb.append("<h2>" + category + "</h2>");
 
             sb.append("<ul>");
 
-            String[] tasks = catDir.list();
+            String[] tasks = (String[]) data.get(category);
 
             for (int j=0; j < tasks.length; j++) {
                 taskCount++;
@@ -108,7 +123,6 @@ public class IndexGen extends Task {
             }
 
             sb.append("</ul>");
-
         }
 
         sb.append("</body></html>");
