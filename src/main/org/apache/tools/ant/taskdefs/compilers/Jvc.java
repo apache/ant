@@ -43,8 +43,9 @@ public class Jvc extends DefaultCompilerAdapter {
 
         // jvc doesn't support bootclasspath dir (-bootclasspath)
         // so we'll emulate it for compatibility and convenience.
-        if (bootclasspath != null) {
-            classpath.append(bootclasspath);
+        Path p = getBootClassPath();
+        if (p.size() > 0) {
+            classpath.append(p);
         }
 
         if (includeJavaRuntime) {
