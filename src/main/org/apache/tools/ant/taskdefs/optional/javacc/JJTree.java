@@ -202,6 +202,7 @@ public class JJTree extends Task {
         final Path classpath = cmdl.createClasspath(project);
         classpath.createPathElement().setPath(javaccHome.getAbsolutePath() +
                                                   "/JavaCC.zip");
+        classpath.addJavaRuntime();
 
         final Commandline.Argument arg = cmdl.createVmArgument();
         arg.setValue("-mx140M");

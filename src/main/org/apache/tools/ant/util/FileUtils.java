@@ -496,10 +496,14 @@ public class FileUtils {
     public File createTempFile(String prefix, String suffix, File parentDir) {
 
         File result = null;
+        String parent = null;
+        if (parentDir != null) {
+            parent = parentDir.getPath();
+        }
         DecimalFormat fmt = new DecimalFormat("#####");
         synchronized (rand) {
             do {
-                result = new File(parentDir, 
+                result = new File(parent, 
                                   prefix + fmt.format(rand.nextInt()) 
                                   + suffix);
             } while (result.exists());
