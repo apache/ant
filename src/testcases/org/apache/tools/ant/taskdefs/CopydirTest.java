@@ -70,6 +70,10 @@ public class CopydirTest extends BuildFileTest {
         configureProject("src/etc/testcases/taskdefs/copydir.xml");
     }
     
+    public void tearDown() {
+        executeTarget("cleanup");
+    }
+    
     public void test1() { 
         expectBuildException("test1", "required argument not specified");
     }

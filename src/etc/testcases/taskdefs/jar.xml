@@ -21,8 +21,6 @@
   </target>
 
   <target name="test4">
-   <!-- delete the tmp.jar or the next test will fail -->
-   <delete file="tmp.jar"/>
    <jar
     	destfile="tmp.jar"
 	basedir="."
@@ -37,6 +35,10 @@
 	basedir="."
 	includes="jar.xml"
     />
+  </target>
+
+  <target name="cleanup">
+    <delete file="tmp.jar" />
   </target>
 
 </project>

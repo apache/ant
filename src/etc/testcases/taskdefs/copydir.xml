@@ -30,4 +30,8 @@
              dest="template.xml"/>
   </target>
 
+  <target name="cleanup">
+    <delete dir="../taskdefs.tmp" />
+  </target>
+
 </project>

@@ -178,8 +178,12 @@ public class MapperTest extends TestCase {
 
     public void testCopyTaskWithTwoFilesets() {
         TaskdefForCopyTest t = new TaskdefForCopyTest("test1");
-        t.setUp();
-        t.test1();
+        try {
+            t.setUp();
+            t.test1();
+        } finally {
+            t.tearDown();
+        }
     }
 
     private class TaskdefForCopyTest extends BuildFileTest {
@@ -189,6 +193,10 @@ public class MapperTest extends TestCase {
 
         public void setUp() { 
             configureProject("src/etc/testcases/types/mapper.xml");
+        }
+
+        public void tearDown() {
+            executeTarget("cleanup");
         }
 
         public void test1() { 

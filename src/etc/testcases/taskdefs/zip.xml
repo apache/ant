@@ -68,6 +68,7 @@
     <delete file="test6.zip"/>
     <delete file="inner7.zip"/>
     <delete file="test7.zip"/>
+    <delete file="test8.zip"/>
     <delete file="asf-logo.gif.zip"/>
   </target>
 </project>

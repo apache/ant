@@ -74,6 +74,10 @@ public class FilterTest extends BuildFileTest {
         configureProject("src/etc/testcases/taskdefs/filter.xml");
     }
 
+    public void tearDown() {
+        executeTarget("cleanup");
+    }
+    
     public void test1() { 
         expectBuildException("test1", "required argument missing");
     }

@@ -3,7 +3,6 @@
 <project name="copy-test" basedir="." default="test1">
 
   <target name="test1">
-    <delete dir="copytest" />
     <mkdir dir="copytest" />
     <copy todir="copytest">
       <fileset dir="../../../main">
@@ -14,6 +13,10 @@
       </fileset>
       <mapper type="flatten" />
     </copy>
+  </target>
+
+  <target name="cleanup">
+    <delete dir="copytest" />
   </target>
 
 </project>

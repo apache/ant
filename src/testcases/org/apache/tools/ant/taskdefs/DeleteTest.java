@@ -69,6 +69,10 @@ public class DeleteTest extends BuildFileTest {
         configureProject("src/etc/testcases/taskdefs/delete.xml");
     }
 
+    public void tearDown() {
+        executeTarget("cleanup");
+    }
+    
     public void test1() { 
         expectBuildException("test1", "required argument not specified");
     }
@@ -76,11 +80,6 @@ public class DeleteTest extends BuildFileTest {
     public void test2() { 
         executeTarget("test2");
     }
-
-    // delete now handles files *and* directories --SB
-//    public void test3() { 
-//        expectBuildException("test3", "Not a directory");
-//    }
 
     public void test4() { 
         executeTarget("test4");

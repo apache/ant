@@ -68,6 +68,13 @@ public class XalanLiaisonTest extends AbstractXSLTLiaisonTest {
         super(name);
     }
 
+    public void tearDown() {
+        File f = new File("xalan1-redirect-out.tmp");
+        if (f.exists()) {
+            f.delete();
+        }
+    }
+
     protected XSLTLiaison createLiaison() throws Exception {
         return new XalanLiaison();
     }

@@ -81,6 +81,10 @@ public class ANTLRTest extends BuildFileTest {
         configureProject(TASKDEFS_DIR + "antlr.xml");
     }
 
+    public void tearDown() {
+        executeTarget("cleanup");
+    }
+    
     public void test1() {
         expectBuildException("test1", "required argument, target, missing");
     }

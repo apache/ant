@@ -69,6 +69,13 @@ public class TraXLiaisonTest extends AbstractXSLTLiaisonTest {
         super(name);
     }
 
+    public void tearDown() {
+        File f = new File("xalan2-redirect-out.tmp");
+        if (f.exists()) {
+            f.delete();
+        }
+    }
+
     public XSLTLiaison createLiaison() throws Exception {
         return new TraXLiaison();
     }
