@@ -7,6 +7,9 @@ Fixed bugs:
 * The sh wrapper script didn't work under Cygwin if ANT_HOME wasn't
   set with a Unix style filename.
 
+* The sh wrapper script could fail if you started Ant from a directory
+  with whitespace in its name.
+
 Other changes:
 --------------
 
