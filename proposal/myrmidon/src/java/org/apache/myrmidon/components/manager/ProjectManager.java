@@ -7,8 +7,8 @@
  */
 package org.apache.myrmidon.components.manager;
 
+import java.util.Map;
 import org.apache.avalon.framework.component.Component;
-import org.apache.myrmidon.api.TaskContext;
 import org.apache.myrmidon.api.TaskException;
 import org.apache.myrmidon.components.model.Project;
 import org.apache.myrmidon.listeners.ProjectListener;
@@ -39,13 +39,13 @@ public interface ProjectManager
     void removeProjectListener( ProjectListener listener );
 
     /**
-     * Execute a target in a particular project, in a particular context.
+     * Execute a target in a particular project.
      *
      * @param project the Project
      * @param target the name of the target
-     * @param context the context
+     * @param defines the defines
      * @exception TaskException if an error occurs
      */
-    void executeTarget( Project project, String target, TaskContext context )
+    void executeProject( Project project, String target )
         throws TaskException;
 }
