@@ -94,12 +94,19 @@ public class Recorder extends Task {
     }
 
 
-    /** Whether or not the logger should append to a previous file.  */
+    /**
+     * Whether or not the logger should append to a previous file.
+     * @param append if true, append to a previous file.
+     */
     public void setAppend(boolean append) {
-        this.append = new Boolean(append);
+        this.append = (append ? Boolean.TRUE : Boolean.FALSE);
     }
 
 
+    /**
+     * Set emacs mode.
+     * @param emacsMode if true use emacs mode
+     */
     public void setEmacsMode(boolean emacsMode) {
         this.emacsMode = emacsMode;
     }
@@ -130,7 +137,10 @@ public class Recorder extends Task {
     //////////////////////////////////////////////////////////////////////
     // CORE / MAIN BODY
 
-    /** The main execution.  */
+    /**
+     * The main execution.
+     * @throws BuildException on error
+     */
     public void execute() throws BuildException {
         if (filename == null) {
             throw new BuildException("No filename specified");
@@ -163,11 +173,13 @@ public class Recorder extends Task {
      * Possible values include: start and stop.
      */
     public static class ActionChoices extends EnumeratedAttribute {
-        private static final String[] values = {"start", "stop"};
+        private static final String[] VALUES = {"start", "stop"};
 
-
+        /**
+         * @see EnumeratedAttribute#getValues()
+         */
         public String[] getValues() {
-            return values;
+            return VALUES;
         }
     }
 
@@ -177,12 +189,14 @@ public class Recorder extends Task {
      * Possible values include: error, warn, info, verbose, debug.
      */
     public static class VerbosityLevelChoices extends EnumeratedAttribute {
-        private static final String[] values = {"error", "warn", "info",
+        private static final String[] VALUES = {"error", "warn", "info",
             "verbose", "debug"};
 
-
+        /**
+         * @see EnumeratedAttribute#getValues()
+         */
         public String[] getValues() {
-            return values;
+            return VALUES;
         }
     }
 
@@ -190,6 +204,10 @@ public class Recorder extends Task {
     /**
      * Gets the recorder that's associated with the passed in name. If the
      * recorder doesn't exist, then a new one is created.
+     * @param name the name of the recoder
+     * @param proj the current project
+     * @return a recorder
+     * @throws BuildException on error
      */
     protected RecorderEntry getRecorder(String name, Project proj)
          throws BuildException {
