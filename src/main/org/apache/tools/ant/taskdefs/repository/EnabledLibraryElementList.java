@@ -44,8 +44,8 @@ public class EnabledLibraryElementList extends LinkedList {
      * iterator through a list that skips everything that is not enabled
      */
     private static class EnabledIterator implements Iterator {
-        private Iterator _underlyingIterator;
-        private EnabledLibraryElement _next;
+        private Iterator underlyingIterator;
+        private EnabledLibraryElement next;
 
 
         /**
@@ -54,7 +54,7 @@ public class EnabledLibraryElementList extends LinkedList {
          * @param collection
          */
         EnabledIterator(Collection collection) {
-            _underlyingIterator = collection.iterator();
+            underlyingIterator = collection.iterator();
         }
 
 
@@ -64,13 +64,14 @@ public class EnabledLibraryElementList extends LinkedList {
          * @return
          */
         public boolean hasNext() {
-            while (_next == null && _underlyingIterator.hasNext()) {
-                EnabledLibraryElement candidate = (EnabledLibraryElement) _underlyingIterator.next();
+            while (next == null && underlyingIterator.hasNext()) {
+                EnabledLibraryElement candidate =
+                    (EnabledLibraryElement) underlyingIterator.next();
                 if (candidate.getEnabled()) {
-                    _next = candidate;
+                    next = candidate;
                 }
             }
-            return (_next != null);
+            return (next != null);
         }
 
         /**
@@ -82,8 +83,8 @@ public class EnabledLibraryElementList extends LinkedList {
             if (!hasNext()) {
                 throw new NoSuchElementException();
             }
-            EnabledLibraryElement result = _next;
-            _next = null;
+            EnabledLibraryElement result = next;
+            next = null;
             return result;
         }
 
