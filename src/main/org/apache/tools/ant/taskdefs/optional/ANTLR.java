@@ -66,6 +66,7 @@ import org.apache.tools.ant.Task;
 import org.apache.tools.ant.taskdefs.Execute;
 import org.apache.tools.ant.taskdefs.LogOutputStream;
 import org.apache.tools.ant.taskdefs.PumpStreamHandler;
+import org.apache.tools.ant.taskdefs.condition.Os;
 import org.apache.tools.ant.types.Commandline;
 import org.apache.tools.ant.types.CommandlineJava;
 import org.apache.tools.ant.types.Path;
@@ -143,9 +144,18 @@ public class ANTLR extends Task {
 
     /**
      * Sets an optional super grammar file.
+     * @TODO change the semantic from String to File
      */
     public void setGlib(String superGrammar) {
-        this.superGrammar = superGrammar;
+        String sg = null;
+        if (Os.isFamily("dos")) {
+            sg = superGrammar.replace('\\','/');
+        }
+        else
+        {
+            sg = superGrammar;
+        }
+        this.superGrammar = sg;
     }
 
     /**
