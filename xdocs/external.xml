@@ -107,6 +107,60 @@
         </table>
       </subsection>
 
+      <subsection name="Antmerge">
+
+        <p>Provides simple inheritance between ant files</p>
+
+        <table class="externals">
+          <tr>
+            <th>Compatibility:</th>
+            <td>Tested with 1.5. Should work with all versions.</td>
+          </tr>
+          <tr>
+            <th>URL:</th>
+            <td><a href="http://www.russet.org.uk/antmerge.html">http://www.russet.org.uk/antmerge.html</a></td>
+          </tr>
+          <tr>
+            <th>Contact:</th>
+            <td><a href="mailto:p.lord@russet.org.uk">Phillip Lord</a></td>
+          </tr>
+          <tr>
+            <th>License:</th>
+            <td>GNU Lesser General Public License</td>
+          </tr>
+        </table>
+      </subsection>
+
+      <subsection name="Ant Pretty Build">
+
+        <p>Ant Pretty Build is a tool to show and run Ant buildfiles
+        directly from within a browser window.  It consists of a
+        single XSL file that will generate, on the fly, from
+        buildfile, a pretty interface showing project name,
+        description, properties and targets, etc. allowing to run the
+        whole project, or run selected targets in a specific
+        order.</p>
+
+        <table class="externals">
+          <tr>
+            <th>Compatibility:</th>
+            <td>All Ant versions</td>
+          </tr>
+          <tr>
+            <th>URL:</th>
+            <td><a href="http://antprettybuild.free.fr/">http://antprettybuild.free.fr/</a></td>
+          </tr>
+          <tr>
+            <th>Contact:</th>
+            <td><a href="mailto:antprettybuild@free.fr">Charbel BITAR</a></td>
+          </tr>
+          <tr>
+            <th>License:</th>
+            <td>GNU General Public License (GPL)</td>
+          </tr>
+        </table>
+      </subsection>
+
       <subsection name="Checkstyle">
 
         <p>Checkstyle is a development tool to help programmers write
@@ -919,6 +973,31 @@
         </table>
       </subsection>
 
+      <subsection name="Jegustator">
+
+        <p>Jegustator is an Ant task which preforms source code and
+        bytecode reviews and also documents source and bytecode.</p>
+
+        <table class="externals">
+          <tr>
+            <th>Compatibility:</th>
+            <td>Tested with Ant 1.5.2</td>
+          </tr>
+          <tr>
+            <th>URL:</th>
+            <td><a href="http://jegustator.pavelvlasov.com/">http://jegustator.pavelvlasov.com/</a></td>
+          </tr>
+          <tr>
+            <th>Contact:</th>
+            <td><a href="mailto:jegustator@pavelvlasov.com">jegustator@pavelvlasov.com</a></td>
+          </tr>
+          <tr>
+            <th>License:</th>
+            <td>GNU General Public License (GPL)</td>
+          </tr>
+        </table>
+      </subsection>
+
       <subsection name="JFlex">
 
         <p>JFlex is a lexical analyzer generator (also known as
@@ -1105,7 +1184,7 @@
           </tr>
         </table>
       </subsection>
-      
+
       <subsection name="Just4log Ant Task">
 
         <p>Just4log is a ant task to optimize JVM bytecode with regards 
@@ -1656,6 +1735,26 @@
           <tr>
             <th>License:</th>
             <td>Library: LGPL, Task: Commercial</td>
+          </tr>
+        </table>
+      </subsection>
+
+      <subsection name="Zelix KlassMaster">
+
+        <p>The task ZKMTask allows the Zelix KlassMaster Java obfuscator to be integrated into an Ant build.</p>
+
+        <table class="externals">
+          <tr>
+            <th>Compatibility:</th>
+            <td>Ant 1.4.1 and later</td>  
+          </tr>
+          <tr>
+            <th>URL:</th>
+            <td><a href="http://www.zelix.com/klassmaster/docs/buildToolApi.html">http://www.zelix.com/klassmaster/docs/buildToolApi.html</a></td>
+          </tr>
+          <tr>
+            <th>License:</th>
+            <td>Commercial</td>
           </tr>
         </table>
       </subsection>
