@@ -1689,6 +1689,26 @@
           </tr>
         </table>
       </subsection>
+
+      <subsection name="Zelix KlassMaster">
+
+        <p>The task ZKMTask allows the Zelix KlassMaster Java obfuscator to be integrated into an Ant build.</p>
+
+        <table class="externals">
+          <tr>
+            <th>Compatibility:</th>
+            <td>Ant 1.4.1 and later</td>  
+          </tr>
+          <tr>
+            <th>URL:</th>
+            <td><a href="http://www.zelix.com/klassmaster/docs/buildToolApi.html">http://www.zelix.com/klassmaster/docs/buildToolApi.html</a></td>
+          </tr>
+          <tr>
+            <th>License:</th>
+            <td>Commercial</td>
+          </tr>
+        </table>
+      </subsection>
       
     </section>
 
