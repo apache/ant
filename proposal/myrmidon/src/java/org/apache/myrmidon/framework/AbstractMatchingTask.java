@@ -23,6 +23,14 @@ public abstract class AbstractMatchingTask
     private FileSet m_fileset = new FileSet();
 
     /**
+     * Retrieve fileset for Matching task.
+     */
+    protected FileSet getFileSet()
+    {
+        return m_fileset;
+    }
+
+    /**
      * The attribute that contains a list of itesm to be included.
      */
     public void setIncludes( final String includes )
