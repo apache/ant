@@ -2015,7 +2015,8 @@ public class Project {
             if (loggingMessage) {
                 throw new BuildException("Listener attempted to access "
                     + (priority == MSG_ERR ? "System.err" : "System.out")
-                    + " - infinite loop terminated");
+                    + " with message [" + message
+                    + "] - infinite loop terminated");
             }
             try {
                 loggingMessage = true;
