@@ -145,4 +145,15 @@
       </sequential>
     </macrodef>
   </target>
+
+  <target name="escape">
+    <macrodef name="escape">
+      <attribute name="a"/>
+      <attribute name="b"/>
+      <sequential>
+        <echo>a@b or a@@b is @{a}@@@{b}</echo>
+      </sequential>
+    </macrodef>
+    <escape a="avalue" b="bvalue"/>
+  </target>
 </project>

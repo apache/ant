@@ -99,5 +99,10 @@ public class MacroDefTest extends BuildFileTest {
             "duplicatetextname2",
             "the attribute name \"text\" has already been used by the text element");
     }
+    public void testEscape() {
+        expectLog(
+            "escape",
+            "a@b or a@b is avalue@bvalue");
+    }
 }
 

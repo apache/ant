@@ -10,6 +10,9 @@ Fixed bugs:
 
 * subant haltonfailure=false did not catch all failures. Bugzilla Report 27007.
 
+* macrodef @@ escaping was broken.  Bugzilla Report 27069.
+
+
 
 Other changes:
 --------------
