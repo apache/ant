@@ -84,6 +84,16 @@ Legal:
 
     <echo message="foo=${foo}" />
 
+    <register-datatype lib="../../dist/lib/core.tsk" 
+                       name="pattern2"
+                       classname="org.apache.ant.datatypes.Pattern" />
+
+    <property name="foo2">
+      <pattern name="*.java"/>
+    </property>
+
+    <echo message="foo2=${foo2}" />
+
   </target>
 
   <target name="property-test2">

@@ -8,6 +8,7 @@
   <task name="register-tasklet" classname="org.apache.ant.tasks.core.RegisterTasklet" />
   <task name="register-converter" classname="org.apache.ant.tasks.core.RegisterConverter" />
   <task name="ant-call" classname="org.apache.ant.tasks.core.AntCall" />
+  <task name="register-datatype" classname="org.apache.ant.tasks.core.RegisterDataType" />
 
   <datatype name="pattern" classname="org.apache.ant.datatypes.Pattern" />
 
