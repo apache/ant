@@ -11,9 +11,9 @@ import com.ibm.ivj.util.base.IvjException;
 import com.ibm.ivj.util.base.Package;
 import com.ibm.ivj.util.base.Project;
 import java.io.File;
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.StringTokenizer;
-import java.util.ArrayList;
 import org.apache.tools.ant.DirectoryScanner;
 
 /**

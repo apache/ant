@@ -160,7 +160,7 @@ public class Ejbc extends MatchingTask
 
         String systemClassPath = System.getProperty( "java.class.path" );
         String execClassPath = getProject().translatePath( systemClassPath + ":" + classpath +
-                                                      ":" + generatedFilesDirectory );
+                                                           ":" + generatedFilesDirectory );
         // get all the files in the descriptor directory
         DirectoryScanner ds = super.getDirectoryScanner( descriptorDirectory );
 

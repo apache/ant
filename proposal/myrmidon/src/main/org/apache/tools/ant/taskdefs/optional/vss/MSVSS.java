@@ -227,7 +227,6 @@ public abstract class MSVSS extends Task
                 exe.setEnvironment( newEnv );
             }
 
-            exe.setAntRun( getProject() );
             exe.setWorkingDirectory( getBaseDirectory() );
             exe.setCommandline( cmd.getCommandline() );
             return exe.execute();

@@ -340,7 +340,6 @@ public class JDependTask extends Task
         if( getDir() != null )
         {
             execute.setWorkingDirectory( getDir() );
-            execute.setAntRun( getProject() );
         }
 
         if( getOutputFile() != null )

@@ -38,12 +38,12 @@ import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 import java.beans.PropertyChangeListener;
 import java.util.ArrayList;
+import org.apache.avalon.framework.ExceptionUtil;
 import org.apache.myrmidon.api.TaskException;
 import org.apache.tools.ant.BuildEvent;
 import org.apache.tools.ant.BuildListener;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.util.StringUtils;
-import org.apache.avalon.framework.ExceptionUtil;
 
 /**
  * This is a simple grafical user interface to provide the information needed by

@@ -37,7 +37,7 @@ public class BUnzip2 extends Unpack
         if( source.lastModified() > dest.lastModified() )
         {
             getLogger().info( "Expanding " + source.getAbsolutePath() + " to "
-                 + dest.getAbsolutePath() );
+                              + dest.getAbsolutePath() );
 
             FileOutputStream out = null;
             CBZip2InputStream zIn = null;

@@ -26,10 +26,10 @@ import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.sql.SQLWarning;
 import java.sql.Statement;
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.Properties;
 import java.util.StringTokenizer;
-import java.util.ArrayList;
 import org.apache.myrmidon.api.TaskException;
 import org.apache.tools.ant.AntClassLoader;
 import org.apache.tools.ant.DirectoryScanner;
@@ -366,7 +366,7 @@ public class SQLExec extends Task
      * @return Description of the Returned Value
      */
     public Path createClasspath()
-    throws TaskException
+        throws TaskException
     {
         if( this.classpath == null )
         {
@@ -580,7 +580,7 @@ public class SQLExec extends Task
         }
 
         getLogger().info( goodSql + " of " + totalSql +
-             " SQL statements executed successfully" );
+                          " SQL statements executed successfully" );
     }
 
     /**

@@ -15,8 +15,8 @@ import java.net.URL;
 import org.apache.myrmidon.api.TaskException;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.Task;
-import org.apache.tools.ant.taskdefs.exec.Execute;
 import org.apache.tools.ant.taskdefs.ExecuteJava;
+import org.apache.tools.ant.taskdefs.exec.Execute;
 import org.apache.tools.ant.taskdefs.exec.LogStreamHandler;
 import org.apache.tools.ant.types.Commandline;
 import org.apache.tools.ant.types.CommandlineJava;
@@ -229,7 +229,6 @@ public class ANTLR extends Task
     {
         Execute exe = new Execute( new LogStreamHandler( this, Project.MSG_INFO,
                                                          Project.MSG_WARN ), null );
-        exe.setAntRun( getProject() );
         if( workingdir != null )
         {
             exe.setWorkingDirectory( workingdir );

@@ -8,8 +8,8 @@
 package org.apache.tools.ant.taskdefs.optional.jsp;
 
 import java.io.File;
-import java.util.Date;
 import java.util.ArrayList;
+import java.util.Date;
 import org.apache.myrmidon.api.TaskException;
 import org.apache.tools.ant.DirectoryScanner;
 import org.apache.tools.ant.Project;
@@ -389,9 +389,9 @@ public class JspC extends MatchingTask
             CompilerAdapter adapter =
                 CompilerAdapterFactory.getCompiler( compiler, this );
             getLogger().info( "Compiling " + compileList.size() +
-                 " source file"
-                 + ( compileList.size() == 1 ? "" : "s" )
-                 + ( destDir != null ? " to " + destDir : "" ) );
+                              " source file"
+                              + ( compileList.size() == 1 ? "" : "s" )
+                              + ( destDir != null ? " to " + destDir : "" ) );
 
             // now we need to populate the compiler adapter
             adapter.setJspc( this );

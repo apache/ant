@@ -8,9 +8,9 @@
 package org.apache.tools.ant.taskdefs.optional.jsp;//java imports
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.StringTokenizer;
-import java.util.ArrayList;
 import org.apache.myrmidon.api.TaskException;
 import org.apache.tools.ant.DirectoryScanner;
 import org.apache.tools.ant.Project;

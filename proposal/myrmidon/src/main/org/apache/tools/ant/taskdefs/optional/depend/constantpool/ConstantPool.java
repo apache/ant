@@ -9,9 +9,9 @@ package org.apache.tools.ant.taskdefs.optional.depend.constantpool;
 
 import java.io.DataInputStream;
 import java.io.IOException;
-import java.util.Iterator;
-import java.util.Hashtable;
 import java.util.ArrayList;
+import java.util.Hashtable;
+import java.util.Iterator;
 
 /**
  * The constant pool of a Java class. The constant pool is a collection of

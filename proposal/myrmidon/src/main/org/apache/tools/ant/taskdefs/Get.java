@@ -271,7 +271,7 @@ public class Get extends Task
                 {
                     Date t = new Date( remoteTimestamp );
                     getLogger().info( "last modified = " + t.toString()
-                         + ( ( remoteTimestamp == 0 ) ? " - using current time instead" : "" ) );
+                                      + ( ( remoteTimestamp == 0 ) ? " - using current time instead" : "" ) );
                 }
                 if( remoteTimestamp != 0 )
                     touchFile( dest, remoteTimestamp );

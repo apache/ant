@@ -12,8 +12,8 @@ import com.ibm.bsf.BSFManager;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
-import java.util.Iterator;
 import java.util.Hashtable;
+import java.util.Iterator;
 import org.apache.myrmidon.api.TaskException;
 import org.apache.tools.ant.Task;
 

@@ -8,8 +8,8 @@
 package org.apache.tools.ant.taskdefs;
 
 import java.io.File;
-import java.util.Iterator;
 import java.util.ArrayList;
+import java.util.Iterator;
 import org.apache.myrmidon.api.TaskException;
 import org.apache.myrmidon.framework.Os;
 import org.apache.tools.ant.DirectoryScanner;
@@ -774,9 +774,9 @@ public class Javac extends MatchingTask
             CompilerAdapter adapter = CompilerAdapterFactory.getCompiler(
                 compiler, this );
             getLogger().info( "Compiling " + compileList.length +
-                 " source file"
-                 + ( compileList.length == 1 ? "" : "s" )
-                 + ( destDir != null ? " to " + destDir : "" ) );
+                              " source file"
+                              + ( compileList.length == 1 ? "" : "s" )
+                              + ( destDir != null ? " to " + destDir : "" ) );
 
             // now we need to populate the compiler adapter
             adapter.setJavac( this );

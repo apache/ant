@@ -7,8 +7,8 @@
  */
 package org.apache.tools.ant.taskdefs.optional.jsp.compilers;
 
-import java.util.Iterator;
 import java.util.ArrayList;
+import java.util.Iterator;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.taskdefs.optional.jsp.JspC;
 import org.apache.tools.ant.types.Commandline;

@@ -998,7 +998,7 @@ public class AntStarTeamCheckOut extends org.apache.tools.ant.Task
         if( getVerbose() && getFolderName() != null )
         {
             getLogger().info( "Found " + getProjectName() + delim + getViewName() +
-                 delim + getFolderName() + delim + "\n" );
+                              delim + getFolderName() + delim + "\n" );
         }
 
         // For performance reasons, it is important to pre-fetch all the

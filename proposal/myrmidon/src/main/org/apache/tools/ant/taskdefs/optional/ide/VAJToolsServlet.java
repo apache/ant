@@ -12,9 +12,9 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import org.apache.avalon.framework.ExceptionUtil;
 import org.apache.myrmidon.api.TaskException;
 import org.apache.tools.ant.util.StringUtils;
-import org.apache.avalon.framework.ExceptionUtil;
 
 /**
  * Abstract base class to provide common services for the VAJ tool API servlets

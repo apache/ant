@@ -20,12 +20,11 @@ import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.io.Reader;
 import java.io.Writer;
-import java.util.Properties;
 import java.util.ArrayList;
+import java.util.Properties;
 import org.apache.myrmidon.api.TaskException;
 import org.apache.tools.ant.DirectoryScanner;
 import org.apache.tools.ant.Project;
-import org.apache.tools.ant.util.FileUtils;
 
 /**
  * Replaces all occurrences of one or more string tokens with given values in

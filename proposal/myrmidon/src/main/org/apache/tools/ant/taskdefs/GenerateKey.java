@@ -7,13 +7,12 @@
  */
 package org.apache.tools.ant.taskdefs;
 
-import java.util.Iterator;
 import java.util.ArrayList;
+import java.util.Iterator;
 import org.apache.myrmidon.api.TaskException;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.Task;
 import org.apache.tools.ant.taskdefs.exec.ExecTask;
-import org.apache.tools.ant.types.Commandline;
 
 /**
  * Generates a key.

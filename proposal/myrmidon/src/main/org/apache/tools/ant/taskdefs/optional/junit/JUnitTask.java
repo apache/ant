@@ -12,11 +12,11 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.net.URL;
-import java.util.Iterator;
+import java.util.ArrayList;
 import java.util.Hashtable;
+import java.util.Iterator;
 import java.util.Properties;
 import java.util.Random;
-import java.util.ArrayList;
 import org.apache.myrmidon.api.TaskException;
 import org.apache.tools.ant.AntClassLoader;
 import org.apache.tools.ant.Project;
@@ -28,7 +28,7 @@ import org.apache.tools.ant.taskdefs.exec.LogStreamHandler;
 import org.apache.tools.ant.types.Commandline;
 import org.apache.tools.ant.types.CommandlineJava;
 import org.apache.tools.ant.types.EnumeratedAttribute;
-import org.apache.tools.ant.types.Environment;
+import org.apache.tools.ant.types.EnvironmentData;
 import org.apache.tools.ant.types.Path;
 
 /**
@@ -319,7 +319,7 @@ public class JUnitTask extends Task
      *
      * @param sysp The feature to be added to the Sysproperty attribute
      */
-    public void addSysproperty( Environment.Variable sysp )
+    public void addSysproperty( EnvironmentData.Variable sysp )
     {
         commandline.addSysproperty( sysp );
     }
@@ -675,7 +675,6 @@ public class JUnitTask extends Task
 
         Execute execute = new Execute( new LogStreamHandler( this, Project.MSG_INFO, Project.MSG_WARN ), watchdog );
         execute.setCommandline( cmd.getCommandline() );
-        execute.setAntRun( getProject() );
         if( dir != null )
         {
             execute.setWorkingDirectory( dir );

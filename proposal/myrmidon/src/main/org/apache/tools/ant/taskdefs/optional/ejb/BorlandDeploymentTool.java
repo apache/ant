@@ -13,14 +13,14 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
+import java.util.ArrayList;
 import java.util.Hashtable;
 import java.util.Iterator;
-import java.util.ArrayList;
 import org.apache.myrmidon.api.TaskException;
 import org.apache.tools.ant.Project;
+import org.apache.tools.ant.taskdefs.Java;
 import org.apache.tools.ant.taskdefs.exec.Execute;
 import org.apache.tools.ant.taskdefs.exec.ExecuteStreamHandler;
-import org.apache.tools.ant.taskdefs.Java;
 import org.apache.tools.ant.types.Commandline;
 import org.apache.tools.ant.types.Path;
 
@@ -361,7 +361,6 @@ public class BorlandDeploymentTool extends GenericDeploymentTool implements Exec
 
         execTask = new Execute( this );
         Project project = getTask().getProject();
-        execTask.setAntRun( project );
         execTask.setWorkingDirectory( project.getBaseDir() );
 
         Commandline commandline = new Commandline();
@@ -418,7 +417,7 @@ public class BorlandDeploymentTool extends GenericDeploymentTool implements Exec
     {
         //UGLY HACK!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
         //getTask().getProject().addTaskDefinition( "internal_bas_generateclient",
-       //org.apache.tools.ant.taskdefs.optional.ejb.BorlandGenerateClient.class );
+        //org.apache.tools.ant.taskdefs.optional.ejb.BorlandGenerateClient.class );
 
         org.apache.tools.ant.taskdefs.optional.ejb.BorlandGenerateClient gentask = null;
         log( "generate client for " + sourceJar, Project.MSG_INFO );

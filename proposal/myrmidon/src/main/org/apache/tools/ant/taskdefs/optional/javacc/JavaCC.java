@@ -8,9 +8,8 @@
 package org.apache.tools.ant.taskdefs.optional.javacc;
 
 import java.io.File;
-import java.util.Iterator;
-import java.util.Hashtable;
 import java.util.Enumeration;
+import java.util.Hashtable;
 import org.apache.myrmidon.api.TaskException;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.Task;

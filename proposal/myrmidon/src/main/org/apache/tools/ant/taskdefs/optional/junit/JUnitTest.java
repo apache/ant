@@ -7,10 +7,10 @@
  */
 package org.apache.tools.ant.taskdefs.optional.junit;
 
-import java.util.Iterator;
-import java.util.Hashtable;
-import java.util.Properties;
 import java.util.ArrayList;
+import java.util.Hashtable;
+import java.util.Iterator;
+import java.util.Properties;
 import org.apache.tools.ant.Project;
 
 /**

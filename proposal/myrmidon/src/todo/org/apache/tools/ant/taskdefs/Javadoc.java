@@ -12,9 +12,9 @@ import java.io.FileWriter;
 import java.io.FilenameFilter;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.StringTokenizer;
-import java.util.ArrayList;
 import org.apache.myrmidon.api.TaskException;
 import org.apache.myrmidon.framework.Os;
 import org.apache.tools.ant.DirectoryScanner;
@@ -28,7 +28,6 @@ import org.apache.tools.ant.types.EnumeratedAttribute;
 import org.apache.tools.ant.types.FileSet;
 import org.apache.tools.ant.types.Path;
 import org.apache.tools.ant.types.Reference;
-import org.apache.tools.ant.util.FileUtils;
 
 /**
  * This task makes it easy to generate Javadoc documentation for a collection of
@@ -918,7 +917,6 @@ public class Javadoc extends Task
         JavadocOutputStream out = new JavadocOutputStream( Project.MSG_INFO );
         JavadocOutputStream err = new JavadocOutputStream( Project.MSG_WARN );
         Execute exe = new Execute( new PumpStreamHandler( out, err ) );
-        exe.setAntRun( getProject() );
 
         /*
          * No reason to change the working directory as all filenames and

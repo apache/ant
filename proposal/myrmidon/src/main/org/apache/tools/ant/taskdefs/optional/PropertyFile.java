@@ -20,12 +20,12 @@ import java.text.DateFormat;
 import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.Iterator;
 import java.util.GregorianCalendar;
+import java.util.Iterator;
 import java.util.Properties;
-import java.util.ArrayList;
 import org.apache.myrmidon.api.TaskException;
 import org.apache.tools.ant.Task;
 import org.apache.tools.ant.types.EnumeratedAttribute;
@@ -247,7 +247,7 @@ public class PropertyFile extends Task
             else
             {
                 getLogger().info( "Creating new property file: " +
-                     m_propertyfile.getAbsolutePath() );
+                                  m_propertyfile.getAbsolutePath() );
                 FileOutputStream out = null;
                 try
                 {

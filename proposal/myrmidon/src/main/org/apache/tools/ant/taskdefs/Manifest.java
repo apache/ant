@@ -18,10 +18,10 @@ import java.io.PrintWriter;
 import java.io.Reader;
 import java.io.StringWriter;
 import java.io.UnsupportedEncodingException;
-import java.util.Iterator;
-import java.util.Hashtable;
 import java.util.ArrayList;
 import java.util.Enumeration;
+import java.util.Hashtable;
+import java.util.Iterator;
 import org.apache.myrmidon.api.TaskException;
 import org.apache.tools.ant.Task;
 import org.apache.tools.ant.types.EnumeratedAttribute;
@@ -735,15 +735,15 @@ public class Manifest extends Task
             if( attribute.getName().equalsIgnoreCase( ATTRIBUTE_NAME ) )
             {
                 warnings.add( "\"" + ATTRIBUTE_NAME + "\" attributes should not occur in the " +
-                                     "main section and must be the first element in all " +
-                                     "other sections: \"" + attribute.getName() + ": " + attribute.getValue() + "\"" );
+                              "main section and must be the first element in all " +
+                              "other sections: \"" + attribute.getName() + ": " + attribute.getValue() + "\"" );
                 return attribute.getValue();
             }
 
             if( attribute.getName().toLowerCase().startsWith( ATTRIBUTE_FROM.toLowerCase() ) )
             {
                 warnings.add( "Manifest attributes should not start with \"" +
-                                     ATTRIBUTE_FROM + "\" in \"" + attribute.getName() + ": " + attribute.getValue() + "\"" );
+                              ATTRIBUTE_FROM + "\" in \"" + attribute.getName() + ": " + attribute.getValue() + "\"" );
             }
             else
             {

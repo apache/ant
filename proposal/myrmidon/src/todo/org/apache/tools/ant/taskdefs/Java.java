@@ -16,11 +16,11 @@ import org.apache.myrmidon.api.TaskException;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.Task;
 import org.apache.tools.ant.taskdefs.exec.Execute;
-import org.apache.tools.ant.taskdefs.exec.PumpStreamHandler;
 import org.apache.tools.ant.taskdefs.exec.LogStreamHandler;
+import org.apache.tools.ant.taskdefs.exec.PumpStreamHandler;
 import org.apache.tools.ant.types.Commandline;
 import org.apache.tools.ant.types.CommandlineJava;
-import org.apache.tools.ant.types.Environment;
+import org.apache.tools.ant.types.EnvironmentData;
 import org.apache.tools.ant.types.Path;
 import org.apache.tools.ant.types.Reference;
 
@@ -166,7 +166,7 @@ public class Java extends Task
      *
      * @param sysp The feature to be added to the Sysproperty attribute
      */
-    public void addSysproperty( Environment.Variable sysp )
+    public void addSysproperty( EnvironmentData.Variable sysp )
     {
         cmdl.addSysproperty( sysp );
     }
@@ -384,8 +384,6 @@ public class Java extends Task
                 fos = new FileOutputStream( out );
                 exe = new Execute( new PumpStreamHandler( fos ), null );
             }
-
-            exe.setAntRun( getProject() );
 
             if( dir == null )
             {

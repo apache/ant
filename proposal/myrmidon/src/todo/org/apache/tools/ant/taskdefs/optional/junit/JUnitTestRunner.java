@@ -17,20 +17,20 @@ import java.io.PrintWriter;
 import java.io.StringReader;
 import java.io.StringWriter;
 import java.lang.reflect.Method;
-import java.util.Iterator;
-import java.util.Hashtable;
-import java.util.Properties;
 import java.util.ArrayList;
+import java.util.Hashtable;
+import java.util.Iterator;
+import java.util.Properties;
 import junit.framework.AssertionFailedError;
 import junit.framework.Test;
 import junit.framework.TestListener;
 import junit.framework.TestResult;
 import junit.framework.TestSuite;
+import org.apache.avalon.framework.ExceptionUtil;
 import org.apache.myrmidon.api.TaskException;
 import org.apache.tools.ant.AntClassLoader;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.util.StringUtils;
-import org.apache.avalon.framework.ExceptionUtil;
 
 /**
  * Simple Testrunner for JUnit that runs all tests of a testsuite. <p>
@@ -541,7 +541,7 @@ public class JUnitTestRunner implements TestListener
             for( int i = 0; i < formatters.size(); i++ )
             {
                 ( (TestListener)formatters.get( i ) ).addError( null,
-                                                                      exception );
+                                                                exception );
             }
             junitTest.setCounts( 1, 0, 1 );
             junitTest.setRunTime( 0 );

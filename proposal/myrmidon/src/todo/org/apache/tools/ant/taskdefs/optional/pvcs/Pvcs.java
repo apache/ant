@@ -17,9 +17,9 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.text.MessageFormat;
 import java.text.ParseException;
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.Random;
-import java.util.ArrayList;
 import org.apache.myrmidon.api.TaskException;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.taskdefs.exec.Execute;
@@ -452,7 +452,6 @@ public class Pvcs extends org.apache.tools.ant.Task
         {
             Project aProj = getProject();
             Execute exe = new Execute( out );
-            exe.setAntRun( aProj );
             exe.setWorkingDirectory( getBaseDirectory() );
             exe.setCommandline( cmd.getCommandline() );
             return exe.execute();

@@ -10,9 +10,9 @@ package org.apache.tools.ant.taskdefs.optional.depend;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.Stack;
-import java.util.ArrayList;
 
 /**
  * An iterator which iterates through the contents of a java directory. The

@@ -18,7 +18,7 @@ import org.apache.myrmidon.api.TaskException;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.Task;
 import org.apache.tools.ant.types.Commandline;
-import org.apache.tools.ant.types.Environment;
+import org.apache.tools.ant.types.EnvironmentData;
 
 /**
  * Executes a given command if the os platform is appropriate.
@@ -35,7 +35,7 @@ public class ExecTask extends Task
     protected boolean failOnError = false;
     protected boolean newEnvironment = false;
     private Integer timeout = null;
-    private Environment env = new Environment();
+    private EnvironmentData env = new EnvironmentData();
     protected Commandline cmdl = new Commandline();
     private FileOutputStream fos = null;
     private ByteArrayOutputStream baos = null;
@@ -173,7 +173,7 @@ public class ExecTask extends Task
      *
      * @param var The feature to be added to the Env attribute
      */
-    public void addEnv( Environment.Variable var )
+    public void addEnv( EnvironmentData.Variable var )
     {
         env.addVariable( var );
     }
@@ -393,7 +393,6 @@ public class ExecTask extends Task
         log( cmdl.toString(), Project.MSG_VERBOSE );
 
         Execute exe = new Execute( createHandler(), createWatchdog() );
-        exe.setAntRun( getProject() );
         exe.setWorkingDirectory( dir );
         exe.setVMLauncher( vmLauncher );
         String[] environment = env.getVariables();

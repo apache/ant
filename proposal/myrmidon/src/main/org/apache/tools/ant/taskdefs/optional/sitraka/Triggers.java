@@ -7,8 +7,8 @@
  */
 package org.apache.tools.ant.taskdefs.optional.sitraka;
 
-import java.util.Hashtable;
 import java.util.ArrayList;
+import java.util.Hashtable;
 import org.apache.myrmidon.api.TaskException;
 
 /**

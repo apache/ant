@@ -8,8 +8,8 @@
 package org.apache.tools.ant.taskdefs;
 
 import java.io.File;
-import java.util.Iterator;
 import java.util.ArrayList;
+import java.util.Iterator;
 import org.apache.myrmidon.api.TaskException;
 import org.apache.tools.ant.DirectoryScanner;
 import org.apache.tools.ant.Project;

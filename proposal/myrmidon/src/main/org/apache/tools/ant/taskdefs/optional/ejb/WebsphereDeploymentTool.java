@@ -11,7 +11,6 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.Iterator;
 import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.jar.JarEntry;
@@ -23,7 +22,7 @@ import org.apache.tools.ant.Project;
 import org.apache.tools.ant.taskdefs.Java;
 import org.apache.tools.ant.types.Commandline;
 import org.apache.tools.ant.types.EnumeratedAttribute;
-import org.apache.tools.ant.types.Environment;
+import org.apache.tools.ant.types.EnvironmentData;
 import org.apache.tools.ant.types.Path;
 
 /**
@@ -965,9 +964,9 @@ public class WebsphereDeploymentTool extends GenericDeploymentTool
 
 
 
-                // Set the Environment variable
+                // Set the EnvironmentData variable
 
-                Environment.Variable var = new Environment.Variable();
+                EnvironmentData.Variable var = new EnvironmentData.Variable();
                 var.setKey( "websphere.lib.dir" );
                 var.setValue( getTask().getProject().getProperty( "websphere.home" ) + "/lib" );
                 javaTask.addSysproperty( var );

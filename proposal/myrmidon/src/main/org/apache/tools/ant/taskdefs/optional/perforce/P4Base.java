@@ -167,8 +167,6 @@ public abstract class P4Base extends org.apache.tools.ant.Task
 
             Execute exe = new Execute( handler, null );
 
-            exe.setAntRun( getProject() );
-
             exe.setCommandline( commandline.getCommandline() );
 
             try
