@@ -9,6 +9,8 @@
     
     <body>
     <menu name="Ant">
+        <item name="Front Page"            
+              href="/index.html"/>
         <item name="News"                 
               href="/antnews.html"/>
         <item name="External Resources"
@@ -16,7 +18,6 @@
     </menu>
 
     <menu name="Jakarta">
-        <item name="Front Page"            href="/index.html"/>
         <item name="News &amp; Status"     href="/site/news.html"/>
         <item name="Mission"               href="/site/mission.html"/>
         <item name="Guidelines Notes"      href="/site/guidelines.html"/>
