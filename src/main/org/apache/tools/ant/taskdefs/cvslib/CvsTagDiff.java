@@ -411,7 +411,9 @@ public class CvsTagDiff extends AbstractCvsTask {
         Element ent = doc.createElement("entry");
         Element f = DOMUtils.createChildElement(ent, "file");
         DOMUtils.appendCDATAElement(f, "name", entry.getFile());
-        DOMUtils.appendTextElement(f, "revision", entry.getRevision());
+        if (entry.getRevision() != null) {
+            DOMUtils.appendTextElement(f, "revision", entry.getRevision());
+        }
         if (entry.getPreviousRevision() != null) {
             DOMUtils.appendTextElement(f, "prevrevision",
                                        entry.getPreviousRevision());
