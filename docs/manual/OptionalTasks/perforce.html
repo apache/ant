@@ -384,7 +384,8 @@ is not the latest any more.
   </tr>
   <tr>
     <td valign="top">view</td>
-    <td valign="top">client view to use for label</td>
+    <td valign="top">client view to use for label<br/>
+    The view can contain multiple lines separated by ; or :</td>
     <td valign="top" align="center">No</td>
   </tr>
   <tr>
@@ -406,6 +407,7 @@ is not the latest any more.
 	name=&quot;NightlyBuild:${DSTAMP}:${TSTAMP}&quot; 
 	desc=&quot;Auto Nightly Build&quot;
 	lock=&quot;locked&quot;
+	label=&quot;//firstdepot/...;//secondepot/foo/bar/...&quot;
 /&gt;
 </pre>
 <hr>
