@@ -537,7 +537,14 @@ public class WeblogicDeploymentTool extends GenericDeploymentTool {
                         int bytesRead;
                         InputStream is;
                         JarEntry je = (JarEntry)e.nextElement();
-                        
+                        if (je.getCompressedSize() == -1 ||
+                                je.getCompressedSize() == je.getSize()) {
+                            newJarStream.setLevel(0);
+                        }
+                        else {
+                            newJarStream.setLevel(9);
+                        }
+                            
                         // Update with changed Bean class
                         if (replaceEntries.containsKey(je.getName()))
                         {
