@@ -74,7 +74,7 @@ public class Mkdir extends Task {
         }
 
         if (dir.isFile()) {
-            log("Warning: Specified directory is a file: " + dir.getAbsolutePath());
+            throw new BuildException("Unable to create directory as a file already exists with that name: " + dir.getAbsolutePath());
         }
 	
         if (!dir.exists()) {
