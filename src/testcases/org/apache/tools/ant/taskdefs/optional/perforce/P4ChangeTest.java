@@ -36,14 +36,14 @@ public class P4ChangeTest extends TestCase {
 
     public void testBackslash(){
         String input = "comment with a / inside";
-        String output = p4change.backslash(input);
+        String output = P4Change.backslash(input);
         assertEquals("comment with a \\/ inside", output);
     }
 
     public void testSubstitute(){
         Perl5Util util = new Perl5Util();
         String tosubstitute = "xx<here>xx";
-        String input = p4change.backslash("/a/b/c/");
+        String input = P4Change.backslash("/a/b/c/");
         String output = util.substitute("s/<here>/" + input + "/", tosubstitute);
         assertEquals("xx/a/b/c/xx", output);
     }

@@ -112,7 +112,7 @@ public class FixCrLfTest extends BuildFileTest {
          * granularity (should be > 2s to account for Windows FAT).
          */
         try {
-            Thread.currentThread().sleep(5000);
+            Thread.sleep(5000);
         } catch (InterruptedException ie) {
             fail(ie.getMessage());
         } // end of try-catch

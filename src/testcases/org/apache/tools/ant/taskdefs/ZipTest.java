@@ -122,7 +122,7 @@ public class ZipTest extends BuildFileTest {
         throws InterruptedException {
         executeTarget("testFilesOnlyDoesntCauseRecreateSetup");
         long l = getProject().resolveFile("test3.zip").lastModified();
-        Thread.currentThread().sleep(3000);
+        Thread.sleep(3000);
         executeTarget("testFilesOnlyDoesntCauseRecreate");
         assertEquals(l, getProject().resolveFile("test3.zip").lastModified());
     }

@@ -96,7 +96,7 @@ public class JarTest extends BuildFileTest {
         File jarFile = new File(getProjectDir(), tempJar);
         long jarModifiedDate = jarFile.lastModified();
         try {
-            Thread.currentThread().sleep(2500);
+            Thread.sleep(2500);
         } catch (InterruptedException e) {
         } // end of try-catch
         executeTarget(secondTarget);
@@ -127,7 +127,7 @@ public class JarTest extends BuildFileTest {
         long sleeptime = 3000
             + FileUtils.newFileUtils().getFileTimestampGranularity();
         try {
-            Thread.currentThread().sleep(sleeptime);
+            Thread.sleep(sleeptime);
         } catch (InterruptedException e) {
         } // end of try-catch
         File jarFile = new File(getProjectDir(), tempJar);

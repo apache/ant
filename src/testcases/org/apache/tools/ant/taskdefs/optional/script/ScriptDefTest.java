@@ -42,9 +42,9 @@ public class ScriptDefTest extends BuildFileTest {
     public void testSimple() {
         executeTarget("simple");
         // get the fileset and its basedir
-        Project project = getProject();
-        FileSet fileset = (FileSet) project.getReference("testfileset");
-        File baseDir = fileset.getDir(project);
+        Project p = getProject();
+        FileSet fileset = (FileSet) p.getReference("testfileset");
+        File baseDir = fileset.getDir(p);
         String log = getLog();
         assertTrue("Expecting attribute value printed",
             log.indexOf("Attribute attr1 = test") != -1);
@@ -68,9 +68,9 @@ public class ScriptDefTest extends BuildFileTest {
     public void testNestedByClassName() {
         executeTarget("nestedbyclassname");
         // get the fileset and its basedir
-        Project project = getProject();
-        FileSet fileset = (FileSet) project.getReference("testfileset");
-        File baseDir = fileset.getDir(project);
+        Project p = getProject();
+        FileSet fileset = (FileSet) p.getReference("testfileset");
+        File baseDir = fileset.getDir(p);
         String log = getLog();
         assertTrue("Expecting attribute value to be printed",
             log.indexOf("Attribute attr1 = test") != -1);
@@ -107,7 +107,6 @@ public class ScriptDefTest extends BuildFileTest {
     public void testProperty() {
         executeTarget("property");
         // get the fileset and its basedir
-        Project project = getProject();
         String log = getLog();
         assertTrue("Expecting property in attribute value replaced",
             log.indexOf("Attribute value = test") != -1);

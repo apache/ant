@@ -29,7 +29,7 @@ public class Sleeper extends TestCase {
 
     public void testSleep() {
         try {
-            Thread.currentThread().sleep(5 * 1000);
+            Thread.sleep(5 * 1000);
         } catch (InterruptedException e) {
         } // end of try-catch
     }
