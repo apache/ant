@@ -342,21 +342,6 @@ public class Project {
     }
 
     /**
-     * unset a named property, unless it is a user property. 
-     * <i>the immutability policy is not implemented at this level</i> 
-     * @param name name of property
-     */
-    public void unsetProperty(String name) {
-        // command line properties take precedence
-        if (null != userProperties.get(name)) {
-            log("Won\'t unset user property " + name, MSG_VERBOSE);
-            return;
-        }
-        log("Unsetting project property: " + name, MSG_DEBUG);
-        properties.remove(name);
-    }
-
-    /**
      * set a user property, which can not be overwritten by
      * set/unset property calls
      * @see #setProperty(String,String)
