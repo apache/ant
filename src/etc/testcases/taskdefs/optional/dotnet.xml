@@ -1,0 +1,108 @@
+<?xml version="1.0"?>
+
+<project name="dotnet" basedir="." default="init">
+  <property environment="env"/>
+  <property name="build.dir" location="dotnet/build"/>
+  <property name="src.dir" location="dotnet"/>
+  
+  <property name="out.csc" location="${src.dir}/out.cs"/>
+  <property name="out.app" location="${classes.dir}/out.exe"/>
+  <property name="out.type" value="exe"/>  
+  
+  
+  <target name="probe_for_apps" >
+   <condition property="ilasm.found">
+      <or>
+        <available file="ilasm"     filepath="${env.PATH}" />
+        <available file="ilasm.exe" filepath="${env.PATH}" />
+        <available file="ilasm.exe" filepath="${env.Path}" />
+      </or>
+    </condition>
+   <echo> ilasm.found=${ilasm.found}</echo>
+   <condition property="csc.found">
+      <or>
+        <available file="csc"     filepath="${env.PATH}" />
+        <available file="csc.exe" filepath="${env.PATH}" />
+        <available file="csc.exe" filepath="${env.Path}" />
+      </or>
+    </condition>
+   <echo> csc.found=${csc.found}</echo>
+<!--    <condition property="vbc.found">
+      <or>
+        <available file="vbc"     filepath="${env.PATH}" />
+        <available file="vbc.exe" filepath="${env.PATH}" />
+        <available file="vbc.exe" filepath="${env.Path}" />
+      </or>
+    </condition> 
+   <echo> vbc.found=${vbc.found}</echo>
+   -->
+   <condition property="dotnetapps.found">
+      <and>
+        <isset property="csc.found"/>
+<!--         <isset property="vbc.found"/> -->
+        <isset property="ilasm.found"/>
+      </and>
+    </condition>
+   <echo> dotnetapps.found=${dotnetapps.found}</echo>
+  </target>
+    
+    
+  <target name="validate" depends="probe_for_apps" >
+    <fail unless="dotnetapps.found">Needed .net apps are missing</fail>
+  </target>  
+    
+    
+  <target name="init" depends="validate">
+    <mkdir dir="${build.dir}"/>
+  </target>
+
+  <target name="teardown">
+    <delete dir="${build.dir}"/>
+  </target>    
+    
+  <target name="testCSC" depends="init">
+    <property name="testCSC.exe" 
+      location="${build.dir}/ExampleCsc.exe" />
+    <csc 
+      destFile="${testCSC.exe}"
+      targetType="exe" 
+      >
+      <src dir="${src.dir}" includes="**/*.cs"/>
+    </csc>
+    <available property="app.created" file="${testCSC.exe}"/>
+    <fail unless="app.created">No app  ${testCSC.exe}created</fail>
+    <exec executable="${testCSC.exe}" failonerror="true" />
+  </target>
+  
+  <target name="testILASM"  depends="init">
+    <property name="testILASM.exe" 
+      location="${build.dir}/ExampleIlasm.exe" />
+    <ilasm 
+      destFile="${testILASM.exe}"
+      targetType="exe" 
+      >
+      <src dir="${src.dir}" includes="**/*.il"/>
+    </ilasm>
+    <available property="app.created" file="${testILASM.exe}"/>
+    <fail unless="app.created">No app  ${testCSC.exe}created</fail>
+    <exec executable="${testILASM.exe}" failonerror="true" />
+  </target>  
+
+  <!-- not including this in the test as it creates an exe in the src dir -->
+  
+  <target name="testIlasmNoDestFile"  depends="init">
+    <ilasm 
+      targetType="exe" 
+      >
+      <src dir="${src.dir}" includes="**/*.il"/>
+    </ilasm>
+  </target>    
+  
+  <!-- just here to look at fileset refid conversion by hand -->
+  <target name="echoFileset">
+    <fileset id="ilasm" dir="${src.dir}" includes="**/*.il" /> 
+    <property name="ilasm.string" refid="ilasm"/>
+    <echo>${ilasm.string}</echo>
+  </target>
+</project>
+
