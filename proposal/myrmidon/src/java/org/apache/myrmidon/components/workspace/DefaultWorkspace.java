@@ -283,11 +283,17 @@ public class DefaultWorkspace
 
         try
         {
-            final Logger logger = new LogKitLogger( m_hierarchy.getLoggerFor( "project" + m_projectID ) );
+            final Logger logger =
+                new LogKitLogger( m_hierarchy.getLoggerFor( "project" + m_projectID ) );
             m_projectID++;
 
             frame.enableLogging( logger );
             frame.contextualize( context );
+
+            /**
+             *  @todo Should no occur but done for the time being to simplify evolution.
+             */
+            componentManager.put( ExecutionFrame.ROLE, frame );
         }
         catch( final Exception e )
         {
