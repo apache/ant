@@ -96,6 +96,9 @@ Other changes:
 
 * New attribute alwayslog for <redirector> type.
 
+* Use org.apache.log4j.Logger instead of org.apache.log4j.Category.
+  Bugzilla Report 31951.
+
 Fixed bugs:
 -----------
 
