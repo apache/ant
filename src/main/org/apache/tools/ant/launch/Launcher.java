@@ -193,6 +193,10 @@ public class Launcher {
         // now update the class.path property
         StringBuffer baseClassPath
             = new StringBuffer(System.getProperty("java.class.path"));
+        if (baseClassPath.charAt(baseClassPath.length() - 1)
+                == File.pathSeparatorChar) {
+            baseClassPath.setLength(baseClassPath.length() - 1);
+        }
 
         for (int i = 0; i < jars.length; ++i) {
             baseClassPath.append(File.pathSeparatorChar);
