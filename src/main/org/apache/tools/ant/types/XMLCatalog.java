@@ -168,7 +168,7 @@ public class XMLCatalog extends DataType implements Cloneable, EntityResolver {
         Vector ourElements = getElements();
         Enumeration enum = newElements.elements();
         while (enum.hasMoreElements()) {
-            ourElements.add(enum.nextElement());
+            ourElements.addElement(enum.nextElement());
         }
     }
 
