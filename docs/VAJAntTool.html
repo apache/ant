@@ -1,0 +1,135 @@
+<!DOCTYPE html PUBLIC "-//w3c//dtd html 4.0 transitional//en">
+<html>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta http-equiv="Content-Language" content="en-us">
+  <title>Ant VisualAge for Java Tool Integration</title>
+</head>
+<body>
+<h1>Ant PlugIn for VisualAge for Java</h1>
+<a name="authors"></a>by
+<ul>
+  <li>Wolf Siberski (<a href="mailto:wolf.siberski@tui.de">
+    wolf.siberski@tui.de</a>)</li>
+  <li>Christoph Wilhelms (<a href="mailto:christoph.wilhelms@tui.de">
+    christoph.wilhelms@tui.de</a>)</li>
+</ul>
+Version 1.0 - 2000/11/09<br>
+<hr>
+<h2>Table of Contents</h2>
+<ul>
+  <li><a href="#introduction">Introduction</a></li>
+  <li><a href="#installation">Installation</a></li>
+  <li><a href="#usage">Usage</a></li>
+  <li><a href="#faq">Frequently Asked Questions</a></li>
+  <li><a href="#va_versions">Visual Age Versions</a></li>
+</ul>
+<hr>
+<h2><a name="introduction"></a>Introduction</h2>
+Visual Age for Java is a great Java IDE, but it lacks decent build support
+for creating deliveries. On the other hand, Ant supports the build process
+very good, but is (at least at the moment) command line based. So we decided
+to write a small visual Ant frontend to make running Ant from VAJ possible.
+We use the Tool API to integrate Ant in VisualAge for Java. In combination
+with the VAJ targets (vajload, vajexport, vajimport) you can load defined
+defined versions of projects into your workspace, export the source code,
+compile it with an external compiler and build a jar without leaving the
+IDE. Of course compile messages are viewed in a logging window. Concluding:
+This tool provides a comfortable deployment VAJ has not (out of the box)!<br>
+<hr>
+<h2><a name="installation"></a>Installation</h2>
+At the moment the installation has it's rough edges. If something described
+below doesn't work for You, it's probably not Your fault but incomplete/wrong
+instructions. In this case, please contact one of the <a href="#authors">
+authors</a>.<br>
+We assume <font face="Courier">C:\IBMVJava</font> as VAJ install directory.
+If You have installed it elsewhere, adapt the pathes below. Execute following
+steps to get the PlugIn up and running:
+<ul>
+  <li>import the Ant sources into VAJ.</li>
+  <li>import an appropriate XML parser to VAJ (we use Xerces 1.2.0 and are
+    happy with it). Unfortunately the XML parser delivered with VAJ (in the
+    project 'IBM XML Parser for Java') doesn't work with Ant. You have to
+    remove that project (temporarily) from the workspace before importing
+    another XML implementation.</li>
+  <li>Create the directory <font face="Courier">
+    C:\IBMVJava\ide\tools\org-apache-tools-ant</font>.</li>
+  <li>export the Ant and XML parser class files into this directory. Be sure
+    to select class files and resources. Sources don't have to be exported.
+    Some optional tasks have errors and can't be exported when You don't have
+    the necessary packages in Your workspace (e.g. junit task, ejbc task).
+    If You need this tasks either import these packages into VAJ, too,
+    or copy the .class files directly from the binary distribution</li>
+  <li>copy <font face="Courier">default.ini</font> (in
+    <font face="Courier">jakarta-ant\src\...\taskdefs\optional\ide</font>)
+    to <font face="Courier">
+    C:\IBMVJava\ide\tools\org-apache-tools-ant\default.ini</font>.</li>
+  <li>if&nbsp; you want to access this help from the Workbench, create the
+    directory <font face="Courier">
+    C:\IBMVJava\ide\tools\org-apache-tools-ant\doc</font> and copy the files
+    <font face="Courier">VAJAntTool.html</font>,
+    <font face="Courier">toolmenu.gif</font> and
+    <font face="Courier">anttool1.gif</font> to it.</li>
+  <li>VAJ has to be restarted to recognize the new tool.</li>
+  <li>Now if You open the context menu of a project, You should see the entry
+    'Ant Build' in the Tools submenu (see <a href="#usage">Usage</a>).</li>
+  <li>Make sure the tool works as expected. Now You can remove Ant and the
+    imported XML parser from Your workspace (and optionally add the IBM parser
+    again).</li>
+</ul>
+<hr>
+<h2><a name="usage"></a>Usage</h2>
+Beeing sure the tool is installed correctly and your Ant build file is
+configured, it is really easy to use.<br>
+Go to your Workbench, select the project you want to deploy and open
+its context menu. In the submenu <i>Tools</i> you should find the new
+entry <i>Ant Build</i>. Klick it to start the tool!
+<p><center><img src="toolmenu.gif" border="0" height="246" width="393">
+</center></p>
+After a short time this frame should pop up:
+<p><center><img src="anttool1.gif" border="0" height="222" width="389">
+</center></p>
+This frame contains the following:
+<ul>
+  <li>A menubar with some options described later</li>
+  <li>The name of your selected VAJ project</li>
+  <li>An entry field for the Ant XML buildfile with a browse [...] button. The
+    full qualified filename, including the directory is needed here.</li>
+  <li>A list with tasks specified in the buildfile. Until your first save of
+    the build info (described later), this list will be empty. When loading a
+    build file by the <i>Reload Project</i> button, this list is filled with
+    all tasks which have a description attribute. The task you select in this
+    list will be executed when pressing the <i>Execute Task</i> button.</li>
+  <li>A pulldown box for specifying the log level.</li>
+  <li>Three buttons. Two of them I have already described and the third one
+    is just the <i>Close </i>button to exit our small tool!</li>
+</ul>
+After you have set up your buildprocess you might find it useful to save
+the data you've just entered, so we implemented an option to save it to
+the repository into your selected project. Make sure that you have an open
+edition of your project before selecting <i>Save BuildInfo To Repository</i>
+from the <i>File</i> menu. Now your information is saved to this edition
+of your project and will be loaded automatically the next time you start
+<i>Ant Build</i>.<br>
+If you have closed the log window accidentally, it can be reopened with
+the <i>Log</i> item in the <i>File</i> menu, and if you want to know who
+developed this, just select <i>About</i> in the <i>Help</i> menu.
+<br>
+<hr>
+<h2><a name="faq"></a>Frequently Asked Questions</h2>
+<p>F: I want to load, export and build more then one Visual Age project to
+one jar! How to?<br>
+A: The VA tasks are able to load and export several Projects all at
+once. You can choose whatever project you like for storing the tool
+information, it doesn't really matter.</p>
+<hr>
+<h2><a name="va_versions"></a>VisualAge for Java Versions</h2>
+This tool integration has been tested with versions 3.02 and 3.5 of VisualAge
+for Java. It should run with the 2.x Versions, too, but we didn't try.
+The graphical user interface is build with AWT so it is JDK independent
+by now!<br>
+<hr>
+<p><center>Copyright &copy; 2000 Apache Software Foundation.
+All rights Reserved.</center></p>
+</body>
+</html>
