@@ -280,9 +280,9 @@ public class Copy extends Task {
     public Mapper createMapper() throws BuildException {
         if (mapperElement != null) {
             throw new BuildException("Cannot define more than one mapper",
-                                     location);
+                                     getLocation());
         }
-        mapperElement = new Mapper(project);
+        mapperElement = new Mapper(getProject());
         return mapperElement;
     }
 
@@ -316,12 +316,12 @@ public class Copy extends Task {
             // will be removed in validateAttributes
             savedFileSet = (FileSet) filesets.elementAt(0);
         }
-        
+
         // make sure we don't have an illegal set of options
         validateAttributes();
 
         try {
-            
+
             // deal with the single file
             if (file != null) {
                 if (file.exists()) {
@@ -330,6 +330,7 @@ public class Copy extends Task {
                     }
 
                     if (forceOverwrite ||
+                        !destFile.exists() ||
                         (file.lastModified() > destFile.lastModified())) {
                         fileCopyMap.put(file.getAbsolutePath(), 
                                         destFile.getAbsolutePath());
@@ -351,9 +352,9 @@ public class Copy extends Task {
             // deal with the filesets
             for (int i = 0; i < filesets.size(); i++) {
                 FileSet fs = (FileSet) filesets.elementAt(i);
-                DirectoryScanner ds = fs.getDirectoryScanner(project);
-                File fromDir = fs.getDir(project);
-                
+                DirectoryScanner ds = fs.getDirectoryScanner(getProject());
+                File fromDir = fs.getDir(getProject());
+
                 String[] srcFiles = ds.getIncludedFiles();
                 String[] srcDirs = ds.getIncludedDirectories();
                 boolean isEverythingIncluded = ds.isEverythingIncluded();
@@ -363,7 +364,7 @@ public class Copy extends Task {
                 }
                 scan(fromDir, destDir, srcFiles, srcDirs);
             }
-            
+
             // do all the copy operations now...
             doFileOperations();
         } finally {
@@ -416,7 +417,7 @@ public class Copy extends Task {
                     "Cannot concatenate multiple files into a single file.");
             } else {
                 FileSet fs = (FileSet) filesets.elementAt(0);
-                DirectoryScanner ds = fs.getDirectoryScanner(project);
+                DirectoryScanner ds = fs.getDirectoryScanner(getProject());
                 String[] srcFiles = ds.getIncludedFiles();
 
                 if (srcFiles.length == 0) {
@@ -517,21 +518,21 @@ public class Copy extends Task {
                         new FilterSetCollection();
                     if (filtering) {
                         executionFilters
-                            .addFilterSet(project.getGlobalFilterSet());
+                            .addFilterSet(getProject().getGlobalFilterSet());
                     }
                     for (Enumeration filterEnum = filterSets.elements(); 
                          filterEnum.hasMoreElements();) {
                         executionFilters
                             .addFilterSet((FilterSet) filterEnum.nextElement());
                     }
-                    fileUtils.copyFile(fromFile, toFile, executionFilters, 
-                                       filterChains, forceOverwrite, 
-                                       preserveLastModified, encoding, 
-                                       project);
+                    fileUtils.copyFile(fromFile, toFile, executionFilters,
+                                       filterChains, forceOverwrite,
+                                       preserveLastModified, encoding,
+                                       getProject());
                 } catch (IOException ioe) {
                     String msg = "Failed to copy " + fromFile + " to " + toFile
                         + " due to " + ioe.getMessage();
-                    throw new BuildException(msg, ioe, location);
+                    throw new BuildException(msg, ioe, getLocation());
                 }
             }
         }
