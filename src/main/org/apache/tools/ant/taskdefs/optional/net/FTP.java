@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2000-2002 The Apache Software Foundation.  All rights
+ * Copyright (c) 2000-2003 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -603,6 +603,9 @@ public class FTP
      */
     protected void createParents(FTPClient ftp, String filename)
          throws IOException, BuildException {
+
+        String cwd = ftp.printWorkingDirectory();
+        
         Vector parents = new Vector();
         File dir = new File(filename);
         String dirname;
@@ -612,16 +615,43 @@ public class FTP
             parents.addElement(dir);
         }
 
-        for (int i = parents.size() - 1; i >= 0; i--) {
+        // find first non cached dir
+        int i = parents.size() - 1;
+        while (i >= 0) {
             dir = (File) parents.elementAt(i);
             if (!dirCache.contains(dir)) {
-                log("creating remote directory " + resolveFile(dir.getPath()),
-                    Project.MSG_VERBOSE);
-                if(!ftp.makeDirectory(resolveFile(dir.getPath()))) {
-                    handleMkDirFailure(ftp);
+                break;
+            }
+            i--;
+        }
+                
+        if (i >= 0) {
+            String parent = dir.getParent();
+            if (parent != null) {
+                if (!ftp.changeWorkingDirectory(parent)) {
+                    throw new BuildException("could not change to " 
+                        + "directory: " + ftp.getReplyString());
+                }
+            }
+            
+            while (i >= 0) {
+                dir = (File) parents.elementAt(i--);
+                // check if dir exists by trying to change into it.
+                if (!ftp.changeWorkingDirectory(dir.getName())) {
+                    // could not change to it - try to create it
+                    log("creating remote directory " 
+                        + resolveFile(dir.getPath()), Project.MSG_VERBOSE);
+                    if(!ftp.makeDirectory(dir.getName())) {
+                        handleMkDirFailure(ftp);
+                    }
+                    if (!ftp.changeWorkingDirectory(dir.getName())) {
+                        throw new BuildException("could not change to " 
+                            + "directory: " + ftp.getReplyString());
+                    }
                 }
                 dirCache.addElement(dir);
             }
+            ftp.changeWorkingDirectory(cwd);            
         }
     }
 
@@ -960,9 +990,7 @@ public class FTP
             // directory is the directory to create.
 
             if (action == MK_DIR) {
-
                 makeRemoteDir(ftp, remotedir);
-
             } else {
                 if (remotedir != null) {
                     log("changing the remote directory", Project.MSG_VERBOSE);
