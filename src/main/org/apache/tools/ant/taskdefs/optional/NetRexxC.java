@@ -57,6 +57,8 @@ import java.io.File;
 import java.io.IOException;
 import java.io.StringWriter;
 import java.io.PrintWriter;
+import java.io.StringReader;
+import java.io.BufferedReader;
 
 import java.util.Vector;
 import java.util.Hashtable;
@@ -471,8 +473,8 @@ public class NetRexxC extends MatchingTask {
             // if it's a source file, see if the destination class file
             // needs to be recreated via compilation
             if (filename.toLowerCase().endsWith(".nrx")) {
-                File classFile = 
-                    new File(destDir, 
+                File classFile =
+                    new File(destDir,
                              filename.substring(0, filename.lastIndexOf('.')) + ".class");
 
                 if (!compile || srcFile.lastModified() > classFile.lastModified()) {
@@ -564,27 +566,44 @@ public class NetRexxC extends MatchingTask {
         currentProperties.put("java.class.path", classpath);
 
         try {
-            StringWriter out = new StringWriter(); 
+            StringWriter out = new StringWriter();
             int rc = COM.ibm.netrexx.process.NetRexxC.
                 main(new Rexx(compileArgs), new PrintWriter(out));
-
-            if (rc > 1) { // 1 is warnings from real NetRexxC
-                log(out.toString(), Project.MSG_ERR);
-                String msg = "Compile failed, messages should have been provided.";
-                throw new BuildException(msg);
+            String sdir=srcDir.getAbsolutePath();
+            String ddir=destDir.getAbsolutePath();
+            int dlen=ddir.length();
+            String l;
+            StringBuffer lb;
+            BufferedReader in=new BufferedReader(new StringReader(out.toString()));
+            log("replacing destdir '"+ddir+"' through sourcedir '"+sdir+"'", Project.MSG_VERBOSE);
+            while ((l=in.readLine())!=null) {
+            	lb=new StringBuffer(l);
+                int idx;
+                while ((idx=l.indexOf(ddir))!=-1) { // path is mentioned in the message
+                    lb.replace(idx,idx+dlen,sdir);
+                    l=lb.toString();
+                }
+                if (l.indexOf("Error:")!=-1) {
+                    log(l, Project.MSG_ERR);
+                } else if (l.indexOf("Warning:")!=-1) {
+                    log(l, Project.MSG_WARN);
+                } else {
+                    log(l, Project.MSG_INFO);
+                }
             }
-            else if (rc == 1) {
-                log(out.toString(), Project.MSG_WARN);
+            if (rc>1) {
+                throw new BuildException("Compile failed, messages should have been provided.");
             }
-            else {
-                log(out.toString(), Project.MSG_INFO);
-            }        
+        } catch (IOException ioe) {
+            ioe.printStackTrace(); // we would like to know WHY this happened. Should never!
+            throw new BuildException("Unexpected IOException while playing with Strings: "+ioe.toString());
         } finally {
             // need to reset java.class.path property
             // since the NetRexx compiler has no option for the classpath
             currentProperties = System.getProperties();
             currentProperties.put("java.class.path", currentClassPath);
         }
+
     }
 
     /**
