@@ -281,7 +281,14 @@ public class Copy extends Task {
 
         String[] toCopy = null;
         if (forceOverwrite) {
-            toCopy = names;
+            Vector v = new Vector();
+            for (int i=0; i<names.length; i++) {
+                if (mapper.mapFileName(names[i]) != null) {
+                    v.addElement(names[i]);
+                }
+            }
+            toCopy = new String[v.size()];
+            v.copyInto(toCopy);
         } else {
             SourceFileScanner ds = new SourceFileScanner(this);
             toCopy = ds.restrict(names, fromDir, toDir, mapper);
