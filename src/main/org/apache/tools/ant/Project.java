@@ -212,13 +212,7 @@ public class Project {
             throw new BuildException("Can't load default datatype list");
         }
 
-        Properties systemP = System.getProperties();
-        Enumeration e = systemP.keys();
-        while (e.hasMoreElements()) {
-            Object name = e.nextElement();
-            String value = systemP.get(name).toString();
-            this.setProperty(name.toString(), value);
-        }
+        setSystemProperties();
     }
 
     public void setSystemLoader(ClassLoader systemLoader) {
@@ -381,6 +375,16 @@ public class Project {
         log("Detected Java version: " + javaVersion + " in: " + System.getProperty("java.home"), MSG_VERBOSE);
 
         log("Detected OS: " + System.getProperty("os.name"), MSG_VERBOSE);
+    }
+
+    public void setSystemProperties() {
+        Properties systemP = System.getProperties();
+        Enumeration e = systemP.keys();
+        while (e.hasMoreElements()) {
+            Object name = e.nextElement();
+            String value = systemP.get(name).toString();
+            this.setProperty(name.toString(), value);
+        }
     }
 
     public void addTaskDefinition(String taskName, Class taskClass) {
