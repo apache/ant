@@ -138,7 +138,12 @@ public class DefaultLogger implements BuildLogger {
         else {
             err.println(lSep + "BUILD FAILED" + lSep);
 
-            error.printStackTrace(err);
+            if (Project.MSG_VERBOSE <= msgOutputLevel) {
+                error.printStackTrace(err);
+            }
+            else {
+                err.println(error.getMessage());
+            }
         }
 
         out.println(lSep + "Total time: " + formatTime(System.currentTimeMillis() - startTime));

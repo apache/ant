@@ -53,16 +53,20 @@
  */
 
 package org.apache.tools.ant.taskdefs;
-
+import org.apache.tools.ant.Project;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.DirectoryScanner;
-import org.apache.tools.ant.Project;
 import org.apache.tools.ant.types.EnumeratedAttribute;
 
 import java.io.*;
 import java.util.*;
 
 /**
+ * FixCRLF.java
+ *
+ * Based on FixCR.java
+ * by Sam Ruby <a href="mailto:rubys@us.ibm.com">rubys@us.ibm.com</a>.
+ *
  * Task to convert text source files to local OS formatting conventions, as
  * well as repair text files damaged by misconfigured or misguided editors or
  * file transfer programs.
@@ -133,6 +137,7 @@ public class FixCRLF extends MatchingTask {
     private StringBuffer linebuf = new StringBuffer(1024);
     private StringBuffer linebuf2 = new StringBuffer(1024);
     private int eol;
+    private int addcr = UNDEF;
     private String eolstr;
     private int ctrlz;
     private int tabs;
@@ -307,13 +312,12 @@ public class FixCRLF extends MatchingTask {
             ctrlz = ADD;
         }
     }
-
     /**
      * Executes the task.
      */
     public void execute() throws BuildException {
         // first off, make sure that we've got a srcdir and destdir
-
+	
         if (srcDir == null) {
             throw new BuildException("srcdir attribute must be set!");
         }
@@ -332,6 +336,57 @@ public class FixCRLF extends MatchingTask {
             }
         }
 
+	// Set up the correct EOL values
+	if (eol == UNDEF) {
+	    if (addcr == UNDEF) {
+		// Neither eol not addcr has been defined
+		// go for the system defaults
+		if (System.getProperty("line.separator").equals("\r")) {
+		    eol = CR;
+		} else if (System.getProperty("line.separator").equals("\n")) {
+		    eol = LF;
+		} else {
+		    eol = CRLF;
+		}
+		
+	    } // end of if (addcr == UNDEF)
+	    else {
+		// addcr has been defined - translate to eol values
+		switch (addcr) {
+		case ADD:
+		    eol = CRLF;
+		    break;
+		    
+		case REMOVE:
+		    eol = LF;
+		    break;
+		    
+		case ASIS:
+		    eol = ASIS;
+		    break;
+
+		} // end of switch (addcr)
+		
+	    } // end of if (addcr == UNDEF)else
+	    
+	} // end of if (eol == UNDEF)
+
+	switch (eol) {
+	    // set eolstr value unless ASIS
+	case CR:
+	    eolstr = new String("\r");
+	    break;
+	    
+	case LF:
+	    eolstr = new String("\n");
+	    break;
+	    
+	case CRLF:
+	    eolstr = new String("\r\n");
+	    break;
+	    
+	} // end of switch (eol)
+	
         // log options used
         log("options:" +
             " eol=" +
@@ -361,6 +416,49 @@ public class FixCRLF extends MatchingTask {
             return new File(destDir, name);
         }
     }
+
+    /**
+     * Checks for the inequality of two files
+     */
+    private boolean filesEqual(File file1, File file2) {
+        BufferedReader reader1;
+        BufferedReader reader2;
+        char buf1[] = new char[INBUFLEN];
+        char buf2[] = new char[INBUFLEN];
+        int buflen;
+
+        if (file1.length() != file2.length()) {
+            return false;
+        }
+        
+        try {
+             reader1 = new BufferedReader
+                     (new FileReader(file1), INBUFLEN);
+             reader2 = new BufferedReader
+                     (new FileReader(file2), INBUFLEN);
+             while ((buflen = reader1.read(buf1, 0, INBUFLEN)) != -1 ) {
+                 reader2.read(buf2, 0, INBUFLEN);
+                 // Compare the contents of the buffers
+                 // There must be an easier way to do this, but I don''t
+                 // know what it is
+                 for (int i = 0; i < buflen; i++) {
+                     if (buf1[i] != buf2[i]) {
+                         reader1.close();
+                         reader2.close();
+                         return false;
+                     } // end of if (buf1[i] != buf2[i])
+                 }
+             }
+             reader1.close();
+             reader2.close();
+             return true;   // equal
+        } catch (IOException e) {
+            throw new BuildException("IOException in filesEqual: " +
+                                      file1 + " : " + file2);
+        } // end of try-catch
+                 
+    }
+
 
     private void processFile(String file) throws BuildException {
         File srcFile = new File(srcDir, file);
@@ -515,20 +613,47 @@ public class FixCRLF extends MatchingTask {
             catch (IOException e) {
                 throw new BuildException("Unable to close source file " + srcFile);
             }
-                                     
+
             if (destFile.exists()) {
-                if (!destFile.delete()) {
-                    throw new BuildException("Unable to delete " + destFile);
+                // Compare the destination with the temp file
+                System.out.println("destFile exists");
+                if ( ! filesEqual(destFile, tmpFile)) {
+                    System.out.println("destFile exists: files not equal");
+                    log(destFile + " is being written", Project.MSG_VERBOSE);
+                    if (!destFile.delete()) {
+                        throw new BuildException("Unable to delete "
+                                                 + destFile);
+                    }
+                    if (!tmpFile.renameTo(destFile)) {
+                        throw new BuildException(
+                                "Failed to transform " + srcFile
+                                + " to " + destFile
+                                + ". Couldn't rename temporary file: "
+                                + tmpFile);
+                    }
+
+                } else { // destination is equal to temp file
+                    System.out.println("destFile exists: files equal");
+                    log(destFile +
+                        " is not written, as the contents are identical",
+                        Project.MSG_VERBOSE);
+                    if (!tmpFile.delete()) {
+                        throw new BuildException("Unable to delete "
+                                                 + destFile);
+                    }
+                }
+            } else { // destFile does not exist - write the temp file
+                System.out.println("destFile does not exist");
+                if (!tmpFile.renameTo(destFile)) {
+                    throw new BuildException(
+                            "Failed to transform " + srcFile
+                            + " to " + destFile
+                            + ". Couldn't rename temporary file: "
+                            + tmpFile);
                 }
             }
-                                     
-            if (!tmpFile.renameTo(destFile)) {
-                throw new BuildException("Failed to transform " + srcFile
-                                         + " to " + destFile
-                                         + ". Couldn't rename temporary file: " + tmpFile);
-            } else {
-                tmpFile = null;
-            }
+
+            tmpFile = null;
 
         } finally {
             try {
