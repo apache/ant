@@ -15,7 +15,8 @@ the filtering attribute.
 * Path and EnumeratedAttribute have been moved from
 org.apache.tools.ant to org.apache.tools.ant.types.
 
-* the class attribute of <java> has been removed.
+* the class attributes of <available>, <java>, <rmic> and <taskdef>
+has been removed.
 
 * the src attribute of <chmod> has been removed.
 

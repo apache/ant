@@ -75,7 +75,7 @@ public class Available extends Task {
         this.property = property;
     }
 
-    public void setClass(String classname) {
+    public void XsetClass(String classname) {
         log("The class attribute is deprecated. " +
             "Please use the classname attribute.",
             Project.MSG_WARN);

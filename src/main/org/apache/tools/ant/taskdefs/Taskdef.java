@@ -94,7 +94,7 @@ public class Taskdef extends Task {
 	this.name = name;
     }
 
-    public void setClass(String v) {
+    public void XsetClass(String v) {
         log("The class attribute is deprecated. " +
             "Please use the classname attribute.",
             Project.MSG_WARN);

@@ -103,7 +103,7 @@ public class Rmic extends MatchingTask {
         this.base = base;
     }
 
-    public void setClass(String classname) {
+    public void XsetClass(String classname) {
         log("The class attribute is deprecated. " +
             "Please use the classname attribute.",
             Project.MSG_WARN);
