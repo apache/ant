@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2001 The Apache Software Foundation.  All rights
+ * Copyright (c) 2001-2002 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -61,6 +61,7 @@ import org.apache.tools.ant.types.Commandline;
 
 import java.util.Vector;
 import java.util.Enumeration;
+import java.io.File;
 
 /**
  * This is the default implementation for the CompilerAdapter interface.
@@ -102,14 +103,52 @@ public abstract class DefaultCompilerAdapter
 
         jspc.log(niceSourceList.toString(), Project.MSG_VERBOSE);
     }
-    /* ------------------------------------------------------------ */
-    protected JspC attributes;
-    public void setJspc( JspC attributes ) {
-        this.attributes = attributes;
+    protected JspC owner;
+
+    public void setJspc( JspC owner ) {
+        this.owner = owner;
     }
     public JspC getJspc() {
-        return attributes;
+        return owner;
     }
-    /* ------------------------------------------------------------ */
+
+    
+    /**
+     *  add an argument oneple to the argument list, if the value aint null
+     *
+     * @param  argument  The argument
+     */
+    protected void addArg(Commandline cmd,String argument) {
+        if(argument != null && argument.length() != 0) {
+           cmd.createArgument().setValue(argument);
+        }
+    }
+
+
+    /**
+     *  add an argument tuple to the argument list, if the value aint null
+     *
+     * @param  argument  The argument
+     * @param  value     the parameter
+     */
+    protected void addArg(Commandline cmd, String argument, String value) {
+        if(value!= null) {
+            cmd.createArgument().setValue(argument);
+            cmd.createArgument().setValue(value);
+        }
+    }
+
+    /**
+     *  add an argument tuple to the arg list, if the file parameter aint null
+     *
+     * @param  argument  The argument
+     * @param  file     the parameter
+     */
+    protected void addArg(Commandline cmd, String argument, File file) {
+        if(file != null) {
+            cmd.createArgument().setValue(argument);
+            cmd.createArgument().setFile(file);
+        }
+    }    
 }
 

@@ -67,6 +67,7 @@ import org.apache.tools.ant.taskdefs.optional.jsp.compilers.CompilerAdapter;
 import org.apache.tools.ant.taskdefs.optional.jsp.compilers.CompilerAdapterFactory;
 
 import org.apache.tools.ant.types.Path;
+import org.apache.tools.ant.types.FileSet;
 import org.apache.tools.ant.types.Reference;
 
 /** Ant task to run the jsp compiler.
@@ -99,13 +100,14 @@ import org.apache.tools.ant.types.Reference;
  * &lt;/jspc&gt;
  * </pre>
  *
- * @version $Revision$ $Date$
+ * @author Steve Loughran
  * @author <a href="mailto:mattw@i3sp.com">Matthew Watson</a>
  * <p> Large Amount of cutting and pasting from the Javac task...
  * @author James Davidson <a href="mailto:duncan@x180.com">duncan@x180.com</a>
  * @author Robin Green <a href="mailto:greenrd@hotmail.com">greenrd@hotmail.com</a>
  * @author <a href="mailto:stefan.bodewig@epost.de">Stefan Bodewig</a>
  * @author <a href="mailto:jayglanville@home.com">J D Glanville</a>
+ * @since 1.5
  */
 public class JspC extends MatchingTask
 {
@@ -114,10 +116,19 @@ public class JspC extends MatchingTask
     private Path src;
     private File destDir;
     private String packageName ;
+    /** name of the compiler to use */
+    private String compiler="jasper";
+
+    /**
+     *  -ieplugin <clsid>Java Plugin classid for Internet Explorer
+     */
     private String iepluginid ;
     private boolean mapped ;
     private int verbose = 0;
     protected Vector compileList = new Vector();
+    /**
+     *  flag to control action on execution trouble
+     */
     protected boolean failOnError = true;
         
     /**
@@ -132,6 +143,24 @@ public class JspC extends MatchingTask
      *  against, 
      */
     private File uriroot;
+
+    /**
+     *  -webinc <file>Creates partial servlet mappings for the -webapp option
+     */
+    private File webinc;
+
+    /**
+     *  -webxml <file>Creates a complete web.xml when using the -webapp option.
+     */
+
+    private File webxml;
+
+    /**
+     *  web apps
+     */
+    protected WebAppParameter webApp;
+
+
         
     private final static String FAIL_MSG
         = "Compile failed, messages should have been provided.";
@@ -269,14 +298,73 @@ public class JspC extends MatchingTask
     public Path getClasspath(){
         return classpath;
     }
-    /* ------------------------------------------------------------ */
+
+    /**
+     *  -webxml <file>Creates a complete web.xml when using the -webapp option.
+     *
+     * @param  webxml  The new Webxml value
+     */
+    public void setWebxml(File webxml) {
+        this.webxml = webxml;
+    }
+
+    public File getWebxml() {
+        return this.webxml;
+    }
+ 
+    /**
+     *  name output file for the fraction of web.xml that lists
+     *  servlets
+     * @param  webinc  The new Webinc value
+     */
+    public void setWebinc(File webinc) {
+        this.webinc = webinc;
+    }
+    
+    public File getWebinc() {
+        return this.webinc;
+    }
+    
+    /**
+     *  web apps param. only one is allowed.
+     *
+     * @param  fs  add a web app fileset
+     */
+    public void addWebApp(WebAppParameter webappParam) 
+        throws BuildException {
+        //demand create vector of filesets
+        if(webApp == null) {
+            webApp = webappParam;
+        }
+        else {
+            throw new BuildException("Only one webapp can be specified");
+        }
+    }
+
+    public WebAppParameter getWebApp() {
+        return webApp;
+    }
+
+    /**
+     *  set the compiler. optional: default=jasper
+     */
+    public void setCompiler(String compiler) {
+        this.compiler=compiler;
+    }
+
+    /**
+    * get the list of files to compile
+    */
     public Vector getCompileList(){
         return compileList;
     }
-    /* ------------------------------------------------------------ */
+    
+    /**
+     * execute by building up a list of files that
+     * have changed and hand them off to a jsp compiler
+     */
     public void execute()
-        throws BuildException
-    {
+        throws BuildException {
         // first off, make sure that we've got a srcdir
         if (src == null) {
             throw new BuildException("srcdir attribute must be set!",
@@ -325,10 +413,6 @@ public class JspC extends MatchingTask
 
         // compile the source files
 
-        String compiler = project.getProperty("jsp.compiler");
-        if (compiler == null) {
-            compiler = "jasper";
-        }
         log("compiling "+compileList.size()+" files",Project.MSG_VERBOSE);
 
         if (compileList.size() > 0) {
@@ -379,36 +463,72 @@ public class JspC extends MatchingTask
         long now = (new Date()).getTime();
 
         for (int i = 0; i < files.length; i++) {
-            File srcFile = new File(srcDir, files[i]);
-            if (files[i].endsWith(".jsp")) {
-                // drop leading path (if any)
-                int fileStart =
-                    files[i].lastIndexOf(File.separatorChar) + 1;
-                File javaFile = new File(destDir, files[i].substring(fileStart,
-                                                                     files[i].indexOf(".jsp")) + ".java");
+            String filename=files[i];
+            File srcFile = new File(srcDir, filename);
+            File javaFile=mapToJavaFile(srcFile);
 
-                if (srcFile.lastModified() > now) {
-                    log("Warning: file modified in the future: " +
-                        files[i], Project.MSG_WARN);
-                }
+            if (srcFile.lastModified() > now) {
+                    log("Warning: file modified in the future: " +filename,
+                            Project.MSG_WARN);
+            }
+            boolean shouldCompile=false;
 
-                if (!javaFile.exists() ||
-                    srcFile.lastModified() > javaFile.lastModified())
-                    {
-                        if (!javaFile.exists()) {
-                            log("Compiling " + srcFile.getPath() +
-                                " because java file "
-                                + javaFile.getPath() + " does not exist",
-                                Project.MSG_DEBUG);
-                        } else {
-                            log("Compiling " + srcFile.getPath() +
-                                " because it is out of date with respect to "
-                                + javaFile.getPath(), Project.MSG_DEBUG);
-                        }
-                        compileList.addElement(srcFile.getAbsolutePath());
+            if (!javaFile.exists()) {
+                shouldCompile=true;
+                log("Compiling " + srcFile.getPath() +
+                        " because java file "+ javaFile.getPath() + " does not exist",
+                        Project.MSG_DEBUG);
+                } else {
+                    if( srcFile.lastModified() > javaFile.lastModified()) {
+                        shouldCompile=true;
+                        log("Compiling " + srcFile.getPath() +
+                            " because it is out of date with respect to " + javaFile.getPath(),
+                            Project.MSG_DEBUG);
                     }
+            }
+            if(shouldCompile) {
+                compileList.addElement(srcFile.getAbsolutePath());
             }
         }
     }
-    /* ------------------------------------------------------------ */
+
+    /**
+     * get a filename from our jsp file
+     */
+    protected File mapToJavaFile(File srcFile) {
+        if (!srcFile.getName().endsWith(".jsp")) {
+            return null;
+        }
+        JspNameMangler mangler=new JspNameMangler();
+        return new File(destDir, mangler.mapJspToJavaName(srcFile));
+    }
+
+    /**
+     * static inner class used as a parameter element
+     */
+    public static class WebAppParameter {
+        
+        /**
+         * the sole option
+         */
+        private File directory;
+
+        /**
+         * query current directory
+         */
+         
+        public File getDirectory() {
+            return directory;
+        }
+        
+    /**
+     * set directory; alternate syntax
+     */
+        public void setBaseDir(File directory) {
+            this.directory=directory;
+        }
+    //end inner class    
+    }
+
+//end class
 }

@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2001 The Apache Software Foundation.  All rights
+ * Copyright (c) 2001-2002 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -57,41 +57,55 @@ package org.apache.tools.ant.taskdefs.optional.jsp.compilers;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.types.Commandline;
+import org.apache.tools.ant.types.Path;
 import org.apache.tools.ant.taskdefs.optional.jsp.JspC;
 import org.apache.tools.ant.taskdefs.Java;
+
+import java.io.File;
 
 /**
  * The implementation of the jasper compiler.
  * This is a cut-and-paste of the original Jspc task.
  *
  * @author Matthew Watson <a href="mailto:mattw@i3sp.com">mattw@i3sp.com</a>
+ * @author steve loughran
+ * @since ant1.5
  */
 public class JasperC extends DefaultCompilerAdapter
 {
-    /* ------------------------------------------------------------ */
+    /**
+     * our execute method
+     */
     public boolean execute()
-        throws BuildException
-    {
+        throws BuildException {
         getJspc().log("Using jasper compiler", Project.MSG_VERBOSE);
         Commandline cmd = setupJasperCommand();
 
         try {
             // Create an instance of the compiler, redirecting output to
             // the project log
+            // REVISIT. ugly. 
             Java java = (Java)(getJspc().getProject()).createTask("java");
             if (getJspc().getClasspath() != null) {
                 java.setClasspath(getJspc().getClasspath());
+            }
+            else {
+                java.setClasspath(Path.systemClasspath);
             }
             java.setClassname("org.apache.jasper.JspC");
             String args[] = cmd.getArguments();
             for (int  i =0; i < args.length; i++) {
                 java.createArg().setValue(args[i]);
             }
-            java.setFailonerror(true);
+            java.setFailonerror(getJspc().getFailonerror());
+            //we are forking here to be sure that if JspC calls
+            //System.exit() it doesn't halt the build
+            java.setFork(true);
             java.execute();
             return true;
         }
         catch (Exception ex) {
+            //@todo implement failonerror support here?
             if (ex instanceof BuildException) {
                 throw (BuildException) ex;
             } else {
@@ -100,38 +114,30 @@ public class JasperC extends DefaultCompilerAdapter
             }
         }
     }
-    /* ------------------------------------------------------------ */
+    
+
+    
+    /**
+     * build up a command line
+     * @return a command line for jasper
+     */
     private Commandline setupJasperCommand() {
         Commandline cmd = new Commandline();
         JspC jspc = getJspc();
-        if (jspc.getDestdir() != null) {
-            cmd.createArgument().setValue("-d");
-            cmd.createArgument().setFile(jspc.getDestdir());
-        }
-        if (jspc.getPackage() != null){
-            cmd.createArgument().setValue("-p");
-            cmd.createArgument().setValue(jspc.getPackage());
-        }
-        if (jspc.getVerbose() != 0) {
-            cmd.createArgument().setValue("-v" + jspc.getVerbose());
-        }
+        addArg(cmd,"-d",jspc.getDestdir());
+        addArg(cmd,"-p",jspc.getPackage());
+        addArg(cmd,"-v"+jspc.getVerbose());
+        addArg(cmd,"-uriroot",jspc.getUriroot());
+        addArg(cmd,"-uribase",jspc.getUribase());
+        addArg(cmd,"-ieplugin",jspc.getIeplugin());
         if (jspc.isMapped()){
-            cmd.createArgument().setValue("-mapped");
-        }
-        if (jspc.getIeplugin() != null){
-            cmd.createArgument().setValue("-ieplugin");
-            cmd.createArgument().setValue(jspc.getIeplugin());
-        }
-        if (jspc.getUriroot() != null){
-            cmd.createArgument().setValue("-uriroot");
-            cmd.createArgument().setValue(jspc.getUriroot().toString());
-        }
-        if (jspc.getUribase() != null){
-            cmd.createArgument().setValue("-uribase");
-            cmd.createArgument().setValue(jspc.getUribase().toString());
+            addArg(cmd,"-mapped");
+        }       
+        if(jspc.getWebApp()!=null) {
+            File dir=jspc.getWebApp().getDirectory();
+            addArg(cmd,"-webapp",dir);
         }
         logAndAddFilesToCompile(getJspc(), getJspc().getCompileList(), cmd);
         return cmd;
     }
-    /* ------------------------------------------------------------ */        
 }
