@@ -23,6 +23,11 @@ instead.</p>
 <p>See the section on <a href="../dirtasks.html#directorybasedtasks">directory based
 tasks</a>, on how the inclusion/exclusion of files works, and how to
 write patterns.</p>
+<p>
+<b>Warning: </b> for the get and delete actions to work properly 
+with a Windows 2000 ftp server, it needs to be configured to generate
+Unix style listings, and not the default MS-DOS listing. Or someone needs to write
+the code to parse MS-DOS listings -any takers?
 <h3>Parameters</h3>
 <table border="1" cellpadding="2" cellspacing="0">
   <tr>
@@ -196,11 +201,13 @@ into.  The file structure from the FTP site is preserved on the local machine.</
 <p>Logs in to <code>ftp.apache.org</code> as <code>anonymous</code> and 
 recursively downloads all .html files from default directory for that user 
 into the <code>htdocs/manual</code> directory on the local machine.</p>
+. 
 <h3>Deleting Files</h3>
 As you've probably guessed by now, you use nested fileset elements to 
 select the files to delete from the remote FTP server.  Again, the 
 filesets are relative to the remote directory, not a local directory.  In
 fact, the dir attribute of the fileset is ignored completely.
+
 <pre>
   &lt;ftp action=&quot;del&quot;
        server=&quot;ftp.apache.org&quot;
