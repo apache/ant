@@ -670,7 +670,7 @@ public class CommandlineJava implements Cloneable {
      * @since 1.7
      */
     private boolean isCloneVm() {
-        return cloneVm 
+        return cloneVm
             || "true".equals(System.getProperty("ant.build.clonevm"));
     }
 }
