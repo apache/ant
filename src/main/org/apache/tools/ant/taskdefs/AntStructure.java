@@ -192,7 +192,17 @@ public class AntStructure extends Task {
         }
         visited.put(name, "");
 
-        IntrospectionHelper ih = IntrospectionHelper.getHelper(element);
+        IntrospectionHelper ih = null;
+        try {
+            ih = IntrospectionHelper.getHelper(element);
+        } catch (Throwable t) {
+            /*
+             * XXX - failed to load the class properly.
+             *
+             * should we print a warning here?
+             */
+            return;
+        }
 
         StringBuffer sb = new StringBuffer("<!ELEMENT ");
         sb.append(name).append(" ");
