@@ -92,19 +92,25 @@ import java.lang.reflect.Modifier;
  * @since Ant1.6
  */
 public class ComponentHelper  {
-    // Map from task names to implementing classes - not used anymore
-    private Hashtable taskClassDefinitions = new Hashtable();
-
     /** Map from compoennt name to anttypedefinition */
     private AntTypeTable antTypeTable;
 
+    /** Map of tasks generated from antTypeTable */
+    private Hashtable taskClassDefinitions = new Hashtable();
+    /** flag to rebuild taskClassDefinitions */
+    private boolean rebuildTaskClassDefinitions = true;
+
+    /** Map of types generated from antTypeTable */
+    private Hashtable typeClassDefinitions = new Hashtable();
+    /** flag to rebuild typeClassDefinitions */
+    private boolean rebuildTypeClassDefinitions = true;
+    
     /**
      * Map from task names to vectors of created tasks
      * (String to Vector of Task). This is used to invalidate tasks if
      * the task definition changes.
      */
     private Hashtable createdTasks = new Hashtable();
-
 
     protected ComponentHelper next;
     protected Project project;
@@ -301,13 +307,68 @@ public class ComponentHelper  {
     /**
      * Returns the current task definition hashtable. The returned hashtable is
      * "live" and so should not be modified.
-     * This table does not contain any information
      *
      * @return a map of from task name to implementing class
      *         (String to Class).
      */
     public Hashtable getTaskDefinitions() {
+        synchronized(taskClassDefinitions) {
+            synchronized (antTypeTable) {
+                if (rebuildTaskClassDefinitions) {
+                    taskClassDefinitions.clear();
+                    for (Iterator i = antTypeTable.keySet().iterator();
+                         i.hasNext();)
+                    {
+                        String name = (String) i.next();
+                        Class clazz =
+                            (Class) antTypeTable.getExposedClass(name);
+                        if (clazz == null) {
+                            continue;
+                        }
+                        if (Task.class.isAssignableFrom(clazz)) {
+                            taskClassDefinitions.put(
+                                name, antTypeTable.getTypeClass(name));
+                        }
+                    }
+                    rebuildTaskClassDefinitions = false;
+                }
+            }
+        }
         return taskClassDefinitions;
+    }
+    
+
+    /**
+     * Returns the current type definition hashtable. The returned hashtable is
+     * "live" and so should not be modified.
+     *
+     * @return a map of from type name to implementing class
+     *         (String to Class).
+     */
+    public Hashtable getDataTypeDefinitions() {
+        synchronized(typeClassDefinitions) {
+            synchronized (antTypeTable) {
+                if (rebuildTypeClassDefinitions) {
+                    typeClassDefinitions.clear();
+                    for (Iterator i = antTypeTable.keySet().iterator();
+                         i.hasNext();)
+                    {
+                        String name = (String) i.next();
+                        Class clazz =
+                            (Class) antTypeTable.getExposedClass(name);
+                        if (clazz == null) {
+                            continue;
+                        }
+                        if (! Task.class.isAssignableFrom(clazz)) {
+                            typeClassDefinitions.put(
+                                name, antTypeTable.getTypeClass(name));
+                        }
+                    }
+                    rebuildTypeClassDefinitions = false;
+                }
+            }
+        }
+        return typeClassDefinitions;
     }
     
     /**
@@ -350,7 +411,7 @@ public class ComponentHelper  {
      * @return a map of from datatype name to implementing class
      *         (String to Class).
      */
-    public Hashtable getDataTypeDefinitions() {
+    public Hashtable getAntTypeTable() {
         return antTypeTable;
     }
 
@@ -525,6 +586,8 @@ public class ComponentHelper  {
     private void updateDataTypeDefinition(AntTypeDefinition def) {
         String name = def.getName();
         synchronized (antTypeTable) {
+            rebuildTaskClassDefinitions = true;
+            rebuildTypeClassDefinitions = true;
             AntTypeDefinition old = antTypeTable.getDefinition(name);
             if (old != null) {
                 if (sameDefinition(def, old)) {
@@ -682,8 +745,6 @@ public class ComponentHelper  {
         }
 
         public boolean contains(Object clazz) {
-            // only used in unit test ProjectTest
-            // needed ??? 
             for (Iterator i = values().iterator(); i.hasNext();) {
                 AntTypeDefinition def = (AntTypeDefinition) i.next();
                 Class c = def.getExposedClass();
