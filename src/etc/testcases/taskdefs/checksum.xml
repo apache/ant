@@ -4,7 +4,11 @@
   <target name="cleanup">
     <delete file="../asf-logo.gif.MD5" />
     <delete file="../asf-logo.gif.md5" />
-    <delete>
+    <delete file="../asf-logo.gif.MD5SUM" />
+    <delete file="../asf-logo.gif.md5sum" />
+    <delete file="../asf-logo.gif.SVF" />
+    <delete file="../asf-logo.gif.svf" />
+	<delete>
       <fileset dir="checksum">
         <include name="**/*.MD5"/>
       </fileset>
@@ -14,6 +18,18 @@
 
   <target name="createMd5">
     <checksum file="../asf-logo.gif" fileext=".MD5" />
+  </target>
+
+  <target name="createMD5SUMformat">
+    <checksum file="../asf-logo.gif" format="MD5SUM" fileext=".MD5SUM" />
+  </target>
+
+  <target name="createSVFformat">
+    <checksum file="../asf-logo.gif" format="SVF" fileext=".SVF" />
+  </target>
+
+  <target name="createPattern">
+    <checksum file="../asf-logo.gif" pattern="foo{0}bar" fileext=".PATTERN" />
   </target>
 
   <target name="setProperty">
@@ -29,6 +45,17 @@
           overwrite="true" />
     <checksum file="../asf-logo.gif" fileext=".MD5"
               verifyproperty="no.logo.MD5" />
+  </target>
+
+  <target name="verifyMD5SUMAsTask">
+    <copy file="expected/asf-logo.gif.md5sum" todir=".." />
+    <checksum file="../asf-logo.gif" fileext=".md5sum"
+              verifyproperty="logo.MD5" format="MD5SUM"/>
+
+    <copy file="checksum.xml" tofile="../asf-logo.gif.MD5SUM"
+          overwrite="true" />
+    <checksum file="../asf-logo.gif" fileext=".MD5SUM"
+              verifyproperty="no.logo.MD5" format="MD5SUM"/>
   </target>
 
   <target name="verifyAsCondition">

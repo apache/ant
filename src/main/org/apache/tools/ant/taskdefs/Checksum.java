@@ -34,12 +34,16 @@ import java.util.Hashtable;
 import java.util.Enumeration;
 import java.util.Set;
 import java.util.Arrays;
+import java.text.MessageFormat;
+import java.text.ParseException;
 
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.DirectoryScanner;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.taskdefs.condition.Condition;
+import org.apache.tools.ant.types.EnumeratedAttribute;
 import org.apache.tools.ant.types.FileSet;
+import org.apache.tools.ant.util.StringUtils;
 
 /**
  * Used to create or verify file checksums.
@@ -127,6 +131,11 @@ public class Checksum extends MatchingTask implements Condition {
     private int readBufferSize = 8 * 1024;
 
     /**
+     * Formater for the checksum file.
+     */
+    private MessageFormat format = FormatElement.getDefault().getFormat();
+
+    /**
      * Sets the file for which the checksum is to be calculated.
      */
     public void setFile(File file) {
@@ -209,6 +218,26 @@ public class Checksum extends MatchingTask implements Condition {
     }
 
     /**
+     * Select the in/output pattern via a well know format name.
+     *
+     * @since 1.7.0
+     */
+    public void setFormat(FormatElement e) {
+        format = e.getFormat();
+    }
+
+    /**
+     * Specify the pattern to use as a MessageFormat pattern.
+     *
+     * <p>{0} gets replaced by the checksum, {1} by the filename.</p>
+     *
+     * @since 1.7.0
+     */
+    public void setPattern(String p) {
+        format = new MessageFormat(p);
+    }
+
+    /**
      * Files to generate checksums for.
      */
     public void addFileset(FileSet set) {
@@ -223,7 +252,7 @@ public class Checksum extends MatchingTask implements Condition {
         boolean value = validateAndExecute();
         if (verifyProperty != null) {
             getProject().setNewProperty(verifyProperty,
-                                new Boolean(value).toString());
+                                        new Boolean(value).toString());
         }
     }
 
@@ -246,39 +275,39 @@ public class Checksum extends MatchingTask implements Condition {
 
         if (file == null && filesets.size() == 0) {
             throw new BuildException(
-                "Specify at least one source - a file or a fileset.");
+                                     "Specify at least one source - a file or a fileset.");
         }
 
         if (file != null && file.exists() && file.isDirectory()) {
             throw new BuildException(
-                "Checksum cannot be generated for directories");
+                                     "Checksum cannot be generated for directories");
         }
 
         if (file != null && totalproperty != null) {
             throw new BuildException(
-                "File and Totalproperty cannot co-exist.");
+                                     "File and Totalproperty cannot co-exist.");
         }
 
         if (property != null && fileext != null) {
             throw new BuildException(
-                "Property and FileExt cannot co-exist.");
+                                     "Property and FileExt cannot co-exist.");
         }
 
         if (property != null) {
             if (forceOverwrite) {
                 throw new BuildException(
-                    "ForceOverwrite cannot be used when Property is specified");
+                                         "ForceOverwrite cannot be used when Property is specified");
             }
 
             if (file != null) {
                 if (filesets.size() > 0) {
                     throw new BuildException("Multiple files cannot be used "
-                        + "when Property is specified");
+                                             + "when Property is specified");
                 }
             } else {
                 if (filesets.size() > 1) {
                     throw new BuildException("Multiple files cannot be used "
-                        + "when Property is specified");
+                                             + "when Property is specified");
                 }
             }
         }
@@ -289,12 +318,12 @@ public class Checksum extends MatchingTask implements Condition {
 
         if (verifyProperty != null && forceOverwrite) {
             throw new BuildException(
-                "VerifyProperty and ForceOverwrite cannot co-exist.");
+                                     "VerifyProperty and ForceOverwrite cannot co-exist.");
         }
 
         if (isCondition && forceOverwrite) {
             throw new BuildException("ForceOverwrite cannot be used when "
-                + "conditions are being used.");
+                                     + "conditions are being used.");
         }
 
         messageDigest = null;
@@ -323,7 +352,7 @@ public class Checksum extends MatchingTask implements Condition {
             fileext = "." + algorithm;
         } else if (fileext.trim().length() == 0) {
             throw new BuildException(
-                "File extension when specified must not be an empty string");
+                                     "File extension when specified must not be an empty string");
         }
 
         try {
@@ -371,15 +400,7 @@ public class Checksum extends MatchingTask implements Condition {
                             Project.MSG_VERBOSE);
                         if (totalproperty != null) {
                             // Read the checksum from disk.
-                            String checksum = null;
-                            try {
-                                BufferedReader diskChecksumReader
-                                    = new BufferedReader(new FileReader(checksumFile));
-                                checksum = diskChecksumReader.readLine();
-                            } catch (IOException e) {
-                                throw new BuildException("Couldn't read checksum file "
-                                    + checksumFile, e);
-                            }
+                            String checksum = readChecksum(checksumFile);
                             byte[] digest = decodeHex(checksum.toCharArray());
                             allDigests.put(file, digest);
                         }
@@ -389,8 +410,8 @@ public class Checksum extends MatchingTask implements Condition {
                 }
             } else {
                 String message = "Could not find file "
-                                 + file.getAbsolutePath()
-                                 + " to generate checksum for.";
+                    + file.getAbsolutePath()
+                    + " to generate checksum for.";
                 log(message);
                 throw new BuildException(message, getLocation());
             }
@@ -457,23 +478,26 @@ public class Checksum extends MatchingTask implements Condition {
                     if (isCondition) {
                         File existingFile = (File) destination;
                         if (existingFile.exists()) {
-                            fis = new FileInputStream(existingFile);
-                            InputStreamReader isr = new InputStreamReader(fis);
-                            BufferedReader br = new BufferedReader(isr);
-                            String suppliedChecksum = br.readLine();
-                            fis.close();
-                            fis = null;
-                            br.close();
-                            isr.close();
-                            checksumMatches = checksumMatches
-                                && checksum.equals(suppliedChecksum);
+                            try {
+                                String suppliedChecksum = 
+                                    readChecksum(existingFile);
+                                checksumMatches = checksumMatches
+                                    && checksum.equals(suppliedChecksum);
+                            } catch (BuildException be) {
+                                // file is on wrong format, swallow
+                                checksumMatches = false;
+                            }
                         } else {
                             checksumMatches = false;
                         }
                     } else {
                         File dest = (File) destination;
                         fos = new FileOutputStream(dest);
-                        fos.write(checksum.getBytes());
+                        fos.write(format.format(new Object[] {
+                                                    checksum,
+                                                    src.getName(),
+                                                }).getBytes());
+                        fos.write(StringUtils.LINE_SEP.getBytes());
                         fos.close();
                         fos = null;
                     }
@@ -561,5 +585,70 @@ public class Checksum extends MatchingTask implements Condition {
         }
 
         return out;
+    }
+
+    /**
+     * reads the checksum from a file using the specified format.
+     *
+     * @since 1.7
+     */
+    private String readChecksum(File f) {
+        BufferedReader diskChecksumReader = null;
+        try {
+            diskChecksumReader = new BufferedReader(new FileReader(f));
+            Object[] result = format.parse(diskChecksumReader.readLine());
+            if (result == null || result.length == 0 || result[0] == null) {
+                throw new BuildException("failed to find a checksum");
+            }
+            return (String) result[0];
+        } catch (IOException e) {
+            throw new BuildException("Couldn't read checksum file " + f, e);
+        } catch (ParseException e) {
+            throw new BuildException("Couldn't read checksum file " + f, e);
+        } finally {
+            if (diskChecksumReader != null) {
+                try {
+                    diskChecksumReader.close();
+                } catch (IOException e) {
+                    // ignore
+                }
+            }
+        }
+    }
+
+    /**
+     * Helper class for the format attribute.
+     *
+     * @since 1.7
+     */
+    public static class FormatElement extends EnumeratedAttribute {
+        private static HashMap formatMap = new HashMap();
+        private static final String CHECKSUM = "CHECKSUM";
+        private static final String MD5SUM = "MD5SUM";
+        private static final String SVF = "SVF";
+
+        static {
+            formatMap.put(CHECKSUM, new MessageFormat("{0}"));
+            formatMap.put(MD5SUM, new MessageFormat("{0} *{1}")); 
+            formatMap.put(SVF, new MessageFormat("MD5 ({1}) = {0}"));
+        }
+
+        public FormatElement() {
+            super();
+        }
+
+        public static FormatElement getDefault() {
+            FormatElement e = new FormatElement();
+            e.setValue(CHECKSUM);
+            return e;
+        }
+        
+        public MessageFormat getFormat() {
+            return (MessageFormat) formatMap.get(getValue());
+        }
+
+        public String[] getValues() {
+            return new String[] {CHECKSUM, MD5SUM, SVF};
+        }
     }
 }
