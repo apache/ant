@@ -273,17 +273,23 @@ public class MAudit extends AbstractMetamataTask {
     }
 
     protected ExecuteStreamHandler createStreamHandler() throws BuildException {
-        ExecuteStreamHandler handler = null;
         // if we didn't specify a file, then use a screen report
         if (outFile == null) {
-            handler = new LogStreamHandler(this, Project.MSG_INFO, Project.MSG_INFO);
-        } else {
-            try {
-                //XXX
-                OutputStream out = new FileOutputStream(outFile);
-                handler = new MAuditStreamHandler(this, out);
-            } catch (IOException e) {
-                throw new BuildException(e);
+            return new LogStreamHandler(this, Project.MSG_INFO, Project.MSG_ERR);
+        }
+        ExecuteStreamHandler handler = null;
+        OutputStream out = null;
+        try {
+            out = new FileOutputStream(outFile);
+            handler = new MAuditStreamHandler(this, out);
+        } catch (IOException e) {
+            throw new BuildException(e);
+        } finally {
+            if (out == null){
+                try {
+                    out.close();
+                } catch (IOException e){
+                }
             }
         }
         return handler;
@@ -299,12 +305,6 @@ public class MAudit extends AbstractMetamataTask {
         /*if (out != null){
             // close it if not closed by the handler...
         }*/
-    }
-
-    /** the inner class used to report violation information */
-    final static class Violation {
-        String line;
-        String error;
     }
 
 }

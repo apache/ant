@@ -72,6 +72,7 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
 import org.apache.tools.ant.Project;
+import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.taskdefs.ExecuteStreamHandler;
 import org.apache.tools.ant.taskdefs.LogOutputStream;
 import org.apache.tools.ant.taskdefs.StreamPumper;
@@ -106,9 +107,6 @@ class MAuditStreamHandler implements ExecuteStreamHandler {
     /** reader for stdout */
     private BufferedReader br;
 
-    /** matcher that will be used to extract the info from the line */
-    private RegexpMatcher matcher;
-
     /**
      * this is where the XML output will go, should mostly be a file
      * the caller is responsible for flushing and closing this stream
@@ -133,9 +131,6 @@ class MAuditStreamHandler implements ExecuteStreamHandler {
     MAuditStreamHandler(MAudit task, OutputStream xmlOut) {
         this.task = task;
         this.xmlOut = xmlOut;
-        /** the matcher should be the Oro one. I don't know about the other one */
-        matcher = (new RegexpMatcherFactory()).newRegexpMatcher();
-        matcher.setPattern(MAudit.AUDIT_PATTERN);
     }
 
     /** Ignore. */
@@ -205,7 +200,7 @@ class MAuditStreamHandler implements ExecuteStreamHandler {
             clazz.setAttribute("violations", String.valueOf(violationCount));
             errors += violationCount;
             for (int i = 0; i < violationCount; i++) {
-                MAudit.Violation violation = (MAudit.Violation) v.elementAt(i);
+                MAuditParser.Violation violation = (MAuditParser.Violation) v.elementAt(i);
                 Element error = doc.createElement("violation");
                 error.setAttribute("line", violation.line);
                 error.setAttribute("message", violation.error);
@@ -216,21 +211,11 @@ class MAuditStreamHandler implements ExecuteStreamHandler {
         rootElement.setAttribute("violations", String.valueOf(errors));
 
         // now write it to the outputstream, not very nice code
-        Writer wri = null;
+        DOMElementWriter domWriter = new DOMElementWriter();
         try {
-            wri = new OutputStreamWriter(xmlOut, "UTF-8");
-            wri.write("<?xml version=\"1.0\"?>\n");
-            (new DOMElementWriter()).write(rootElement, wri, 0, "  ");
-            wri.flush();
-        } catch (IOException exc) {
-            task.log("Unable to write log file", Project.MSG_ERR);
-        } finally {
-            if (wri != null) {
-                try {
-                    wri.close();
-                } catch (IOException e) {
-                }
-            }
+            domWriter.write(rootElement, xmlOut);
+        } catch (IOException e){
+            throw new BuildException(e);
         }
     }
 
@@ -255,37 +240,21 @@ class MAuditStreamHandler implements ExecuteStreamHandler {
     /** read each line and process it */
     protected void parseOutput(BufferedReader br) throws IOException {
         String line = null;
+        final MAuditParser parser = new MAuditParser();
         while ((line = br.readLine()) != null) {
-            processLine(line);
-        }
-    }
-
-    // we suppose here that there is only one report / line.
-    // There will obviouslly be a problem if the message is on several lines...
-    protected void processLine(String line) {
-        Vector matches = matcher.getGroups(line);
-        if (matches != null) {
-            String file = (String) matches.elementAt(1);
-            MAudit.Violation violation = new MAudit.Violation();
-            violation.line = (String) matches.elementAt(2);
-            violation.error = (String) matches.elementAt(3);
-            // remove the pathname from any messages and let the classname only.
-            final int pos = file.lastIndexOf(File.separatorChar);
-            if ((pos != -1) && (pos != file.length() - 1)) {
-                String filename = file.substring(pos + 1);
-                violation.error = StringUtils.replace(violation.error,
-                        "file:" + file, filename);
+            final MAuditParser.Violation violation = parser.parseLine(line);
+            if (violation != null) {
+                addViolation(violation.file, violation);
+            } else {
+                // this doesn't match..report it as info, it could be
+                // either the copyright, summary or a multiline message (damn !)
+                task.log(line, Project.MSG_INFO);
             }
-            addViolationEntry(file, violation);
-        } else {
-            // this doesn't match..report it as info, it could be
-            // either the copyright, summary or a multiline message (damn !)
-            task.log(line, Project.MSG_INFO);
         }
     }
 
     /** add a violation entry for the file */
-    protected void addViolationEntry(String file, MAudit.Violation entry) {
+    private void addViolation(String file, MAuditParser.Violation entry) {
         Vector violations = (Vector) auditedFiles.get(file);
         // if there is no decl for this file yet, create it.
         if (violations == null) {
