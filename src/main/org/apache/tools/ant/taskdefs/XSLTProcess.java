@@ -211,6 +211,9 @@ public class XSLTProcess extends MatchingTask implements XSLTLogger {
             throw new BuildException("no stylesheet specified", getLocation());
         }
 
+        if (inFile != null && !inFile.exists()) {
+            throw new BuildException("input file " + inFile.toString() + " does not exist", getLocation());
+        }
         try {
             if (baseDir == null) {
                 baseDir = getProject().resolveFile(".");
