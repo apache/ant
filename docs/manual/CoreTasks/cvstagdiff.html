@@ -102,40 +102,40 @@
 <h3>Examples</h3>
 <pre>  &lt;cvstagdiff cvsRoot=&quot;:pserver:anoncvs@cvs.apache.org:/home/cvspublic&quot;
                 destfile=&quot;tagdiff.xml&quot;
-                package=&quot;jakarta-ant&quot;
+                package=&quot;ant&quot;
                 startTag=&quot;ANT_14&quot;
                 endTag=&quot;ANT_141&quot;
   /&gt;</pre>
 
 <p>Generates a tagdiff report for all the changes that have been made
-in the <code>jakarta-ant</code> module between the tags <code>ANT_14</code> and <code>ANT_141</code>.
+in the <code>ant</code> module between the tags <code>ANT_14</code> and <code>ANT_141</code>.
 It writes these changes into the file <code>tagdiff.xml</code>.</p>
 
 <pre>  &lt;cvstagdiff
                 destfile=&quot;tagdiff.xml&quot;
-                package=&quot;jakarta-ant&quot;
+                package=&quot;ant&quot;
                 startDate=&quot;2002-01-01&quot;
                 endDate=&quot;2002-31-01&quot;
   /&gt;</pre>
 
 <p>Generates a tagdiff report for all the changes that have been made
-in the <code>jakarta-ant</code> module in january 2002. In this example <code>cvsRoot</code>
+in the <code>ant</code> module in january 2002. In this example <code>cvsRoot</code>
 has not been set. The current <code>cvsRoot</code> will be used (assuming the build is started
 from a folder stored in <code>cvs</code>.
 It writes these changes into the file <code>tagdiff.xml</code>.</p>
 
 <pre>  &lt;cvstagdiff
                 destfile=&quot;tagdiff.xml&quot;
-                package=&quot;jakarta-ant&quot;
-                rootdir=&quot;jakarta/ant&quot;
+                package=&quot;ant&quot;
+                rootdir=&quot;apache/ant&quot;
                 startDate=&quot;2002-01-01&quot;
                 endDate=&quot;2002-31-01&quot;
   /&gt;</pre>
 
 <p>Generates a tagdiff report for all the changes that have been made
-in the <code>jakarta-ant</code> module in january 2002, with <code>rootdir</code> indicating that 
-the actual location of the <code>jakarta-ant</code> module in cvs is <code>jakarta/ant</code> 
-rather than <code>jakarta-ant</code>. In this example <code>cvsRoot</code>
+in the <code>ant</code> module in january 2002, with <code>rootdir</code> indicating that
+the actual location of the <code>ant</code> module in cvs is <code>apache/ant</code>
+rather than <code>ant</code>. In this example <code>cvsRoot</code>
 has not been set. The current <code>cvsRoot</code> will be used (assuming the build is started
 from a folder stored in <code>cvs</code>.
 It writes these changes into the file <code>tagdiff.xml</code>.</p>
@@ -150,7 +150,7 @@ how to generate a HTML report from the XML report.</p>
                out="tagdiff.html" 
                style="${ant.home}/etc/tagdiff.xsl"&gt;
           &lt;param name="title" expression="Ant Diff"/&gt;
-          &lt;param name="module" expression="jakarta-ant"/&gt;
+          &lt;param name="module" expression="ant"/&gt;
           &lt;param name="cvsweb" expression="http://cvs.apache.org/viewcvs/"/&gt;
         &lt;/style&gt;
 </pre>
@@ -169,7 +169,7 @@ how to generate a HTML report from the XML report.</p>
 &lt;/tagdiff&gt;
 </pre>
 
-<hr><p align="center">Copyright &copy; 2002 Apache Software Foundation. All rights
+<hr><p align="center">Copyright &copy; 2002-2003 Apache Software Foundation. All rights
 Reserved.</p>
 
 </body>
