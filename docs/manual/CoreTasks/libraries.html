@@ -381,12 +381,12 @@ expected.</P>
     &lt;/libraries&gt;
 </pre>
 
-<P>Load in versions from a file, then download the relevant archives. No
+<p>Load in versions from a file, then download the relevant archives. No
 update schedule is defined, but a path is created for insertion into a
 classpath. This property file driven dependency model is what we recommend
 over hard coding versions in a build file. 
-</P>
- <PRE>   &lt;libraries destDir="build/lib" offline="${offline}" flatten="true"&gt;
+</p>
+ <pre>   &lt;libraries destDir="build/lib" offline="${offline}" flatten="true"&gt;
       &lt;mavenrepository url="${private.server}"/&gt;
       &lt;library project="doomed" archive="dead-code"
         suffix=".war"
@@ -395,11 +395,13 @@ over hard coding versions in a build file.
       &lt;scheduledupdate markerfile="build/lib/marker.properties"
         hours="11" /&gt;
     &lt;/libraries&gt;
-</PRE>
+</pre>
 
-<P>Download doomed/dead-code.LATEST.war from a private repository, save it to
+<p>Download doomed/dead-code.LATEST.war from a private repository, save it to
 build/lib/product.war with an update schedule of every eleven hours. 
-</P>
+</p>
+
+<hr/>
 
 <p align="center">Copyright &copy; 2005 The Apache Software Foundation. All rights
 Reserved.</p>
