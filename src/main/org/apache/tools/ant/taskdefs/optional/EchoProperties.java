@@ -58,7 +58,6 @@ import org.apache.tools.ant.Task;
 import org.apache.tools.ant.BuildException;
 
 import java.util.Properties;
-import java.util.Hashtable;
 import java.util.Enumeration;
 
 import java.io.ByteArrayOutputStream;
