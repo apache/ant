@@ -75,7 +75,7 @@ public class DefaultConfigurerTest
         m_configurer = (Configurer)getServiceManager().lookup( Configurer.ROLE );
 
         // Setup a context
-        m_context = new DefaultTaskContext();
+        m_context = new DefaultTaskContext( null, getServiceManager(), getLogger() );
         final File baseDir = new File( "." ).getAbsoluteFile();
         m_context.setProperty( TaskContext.BASE_DIRECTORY, baseDir );
     }

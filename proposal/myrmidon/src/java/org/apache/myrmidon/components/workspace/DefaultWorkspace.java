@@ -142,7 +142,7 @@ public class DefaultWorkspace
     private TaskContext createBaseContext()
         throws TaskException
     {
-        final TaskContext context = new DefaultTaskContext();
+        final TaskContext context = new DefaultTaskContext( null, null, null );
 
         final String[] names = m_parameters.getNames();
         for( int i = 0; i < names.length; i++ )
@@ -256,15 +256,15 @@ public class DefaultWorkspace
             serviceManager.put( Project.ROLE + "/" + name, other );
         }
 
-        // Create and configure the context
-        final DefaultTaskContext context =
-            new DefaultTaskContext( m_baseContext, serviceManager );
-        context.setProperty( TaskContext.BASE_DIRECTORY, project.getBaseDirectory() );
-
         // Create a logger
         final Logger logger =
             new LogKitLogger( m_hierarchy.getLoggerFor( "project" + m_projectID ) );
         m_projectID++;
+
+        // Create and configure the context
+        final DefaultTaskContext context =
+            new DefaultTaskContext( m_baseContext, serviceManager, logger );
+        context.setProperty( TaskContext.BASE_DIRECTORY, project.getBaseDirectory() );
 
         final DefaultExecutionFrame frame = new DefaultExecutionFrame( logger, context, typeManager );
 

@@ -101,6 +101,94 @@ public interface TaskContext
         throws TaskException;
 
     /**
+     * Log a debug message.
+     *
+     * @param message the message
+     */
+    void debug( String message );
+
+    /**
+     * Log a debug message.
+     *
+     * @param message the message
+     * @param throwable the throwable
+     */
+    void debug( String message, Throwable throwable );
+
+    /**
+     * Determine if messages of priority "debug" will be logged.
+     *
+     * @return true if "debug" messages will be logged
+     */
+    boolean isDebugEnabled();
+
+    /**
+     * Log a info message.
+     *
+     * @param message the message
+     */
+    void info( String message );
+
+    /**
+     * Log a info message.
+     *
+     * @param message the message
+     * @param throwable the throwable
+     */
+    void info( String message, Throwable throwable );
+
+    /**
+     * Determine if messages of priority "info" will be logged.
+     *
+     * @return true if "info" messages will be logged
+     */
+    boolean isInfoEnabled();
+
+    /**
+     * Log a warn message.
+     *
+     * @param message the message
+     */
+    void warn( String message );
+
+    /**
+     * Log a warn message.
+     *
+     * @param message the message
+     * @param throwable the throwable
+     */
+    void warn( String message, Throwable throwable );
+
+    /**
+     * Determine if messages of priority "warn" will be logged.
+     *
+     * @return true if "warn" messages will be logged
+     */
+    boolean isWarnEnabled();
+
+    /**
+     * Log a error message.
+     *
+     * @param message the message
+     */
+    void error( String message );
+
+    /**
+     * Log a error message.
+     *
+     * @param message the message
+     * @param throwable the throwable
+     */
+    void error( String message, Throwable throwable );
+
+    /**
+     * Determine if messages of priority "error" will be logged.
+     *
+     * @return true if "error" messages will be logged
+     */
+    boolean isErrorEnabled();
+
+    /**
      * Create a Child Context.
      * This allows separate hierarchly contexts to be easily constructed.
      *

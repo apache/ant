@@ -13,6 +13,7 @@ import java.util.Map;
 import org.apache.avalon.excalibur.i18n.ResourceManager;
 import org.apache.avalon.excalibur.i18n.Resources;
 import org.apache.avalon.excalibur.io.FileUtil;
+import org.apache.avalon.framework.logger.Logger;
 import org.apache.avalon.framework.service.ServiceException;
 import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.myrmidon.api.TaskContext;
@@ -33,64 +34,18 @@ public class DefaultTaskContext
     private final Map m_contextData = new Hashtable();
     private final TaskContext m_parent;
     private ServiceManager m_serviceManager;
-
-    /**
-     * Constructor for Context with no parent contexts.
-     */
-    public DefaultTaskContext()
-    {
-        this( null, null );
-    }
-
-    /**
-     * Constructor that specified parent context.
-     */
-    public DefaultTaskContext( final TaskContext parent )
-    {
-        this( parent, null );
-    }
-
-    /**
-     * Constructor that specifies the service directory for context.
-     */
-    public DefaultTaskContext( final ServiceManager serviceManager )
-    {
-        this( null, serviceManager );
-    }
+    private Logger m_logger;
 
     /**
      * Constructor that takes both parent context and a service directory.
      */
     public DefaultTaskContext( final TaskContext parent,
-                               final ServiceManager serviceManager )
+                               final ServiceManager serviceManager,
+                               final Logger logger )
     {
         m_parent = parent;
         m_serviceManager = serviceManager;
-    }
-
-    /**
-     * Retrieve a property.
-     */
-    private Object get( final String key )
-    {
-        final Object data = m_contextData.get( key );
-        if( null != data )
-        {
-            //            if( data instanceof Resolvable )
-            //            {
-            //                return ( (Resolvable)data ).resolve( this );
-            //            }
-            return data;
-        }
-
-        // If data was null, check the parent
-        if( null == m_parent )
-        {
-            // There was no parent, and no data
-            return null;
-        }
-
-        return m_parent.getProperty( key );
+        m_logger = logger;
     }
 
     /**
@@ -100,7 +55,7 @@ public class DefaultTaskContext
      */
     public String getName()
     {
-        return (String)get( NAME );
+        return (String)m_contextData.get( NAME );
     }
 
     /**
@@ -110,7 +65,7 @@ public class DefaultTaskContext
      */
     public File getBaseDirectory()
     {
-        return (File)get( BASE_DIRECTORY );
+        return (File)m_contextData.get( BASE_DIRECTORY );
     }
 
     /**
@@ -206,7 +161,7 @@ public class DefaultTaskContext
      */
     public Object getProperty( final String name )
     {
-        return get( name );
+        return m_contextData.get( name );
     }
 
     /**
@@ -233,6 +188,130 @@ public class DefaultTaskContext
     }
 
     /**
+     * Log a debug message.
+     *
+     * @param message the message
+     */
+    public void debug( final String message )
+    {
+        m_logger.debug( message );
+    }
+
+    /**
+     * Log a debug message.
+     *
+     * @param message the message
+     * @param throwable the throwable
+     */
+    public void debug( final String message, final Throwable throwable )
+    {
+        m_logger.debug( message, throwable );
+    }
+
+    /**
+     * Determine if messages of priority "debug" will be logged.
+     *
+     * @return true if "debug" messages will be logged
+     */
+    public boolean isDebugEnabled()
+    {
+        return m_logger.isDebugEnabled();
+    }
+
+    /**
+     * Log a info message.
+     *
+     * @param message the message
+     */
+    public void info( final String message )
+    {
+        m_logger.info( message );
+    }
+
+    /**
+     * Log a info message.
+     *
+     * @param message the message
+     * @param throwable the throwable
+     */
+    public void info( final String message, final Throwable throwable )
+    {
+        m_logger.info( message, throwable );
+    }
+
+    /**
+     * Determine if messages of priority "info" will be logged.
+     *
+     * @return true if "info" messages will be logged
+     */
+    public boolean isInfoEnabled()
+    {
+        return m_logger.isInfoEnabled();
+    }
+
+    /**
+     * Log a warn message.
+     *
+     * @param message the message
+     */
+    public void warn( final String message )
+    {
+        m_logger.warn( message );
+    }
+
+    /**
+     * Log a warn message.
+     *
+     * @param message the message
+     * @param throwable the throwable
+     */
+    public void warn( final String message, final Throwable throwable )
+    {
+        m_logger.warn( message, throwable );
+    }
+
+    /**
+     * Determine if messages of priority "warn" will be logged.
+     *
+     * @return true if "warn" messages will be logged
+     */
+    public boolean isWarnEnabled()
+    {
+        return m_logger.isWarnEnabled();
+    }
+
+    /**
+     * Log a error message.
+     *
+     * @param message the message
+     */
+    public void error( final String message )
+    {
+        m_logger.error( message );
+    }
+
+    /**
+     * Log a error message.
+     *
+     * @param message the message
+     * @param throwable the throwable
+     */
+    public void error( final String message, final Throwable throwable )
+    {
+        m_logger.error( message, throwable );
+    }
+
+    /**
+     * Determine if messages of priority "error" will be logged.
+     *
+     * @return true if "error" messages will be logged
+     */
+    public boolean isErrorEnabled()
+    {
+        return m_logger.isErrorEnabled();
+    }
+
+    /**
      * Create a Child Context.
      * This allows separate hierarchly contexts to be easily constructed.
      *
@@ -243,7 +322,9 @@ public class DefaultTaskContext
     public TaskContext createSubContext( final String name )
         throws TaskException
     {
-        final DefaultTaskContext context = new DefaultTaskContext( this );
+        final Logger logger = m_logger.getChildLogger( name );
+        final DefaultTaskContext context =
+            new DefaultTaskContext( this, m_serviceManager, logger );
 
         context.setProperty( TaskContext.NAME, getName() + "." + name );
         context.setProperty( TaskContext.BASE_DIRECTORY, getBaseDirectory() );
