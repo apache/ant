@@ -57,9 +57,12 @@ import org.apache.tools.ant.Task;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.types.FilterChain;
+import org.apache.tools.ant.filters.StringInputStream;
 import org.apache.tools.ant.filters.util.ChainReaderHelper;
 
 import java.io.*;
+import java.util.Enumeration;
+import java.util.Properties;
 import java.util.Vector;
 
 /**
@@ -131,42 +134,20 @@ public final class LoadProperties extends Task {
                 text = text + "\n";
             }
 
-            int index = 0;
-
             if (text != null) {
-                while (index != -1) {
-                    int oldIndex = index;
-                    index = text.indexOf("\n", oldIndex);
-                    if (index != -1) {
-                        String line = text.substring(oldIndex, index);
-                        if (line.endsWith("\r")) {
-                            line = line.substring(0, line.length() - 1);
-                        }
-                        int equalIndex = line.indexOf("=");
-                        int spaceIndex = line.indexOf(" ");
-                        int sepIndex = -1;
-
-                        if (equalIndex != -1 || spaceIndex != -1) {
-                            if (equalIndex == -1) {
-                                sepIndex = spaceIndex;
-                            } else if (spaceIndex == -1) {
-                                sepIndex = equalIndex;
-                            } else {
-                                sepIndex = Math.min(spaceIndex, equalIndex);
-                            }
-                        }
-
-                        if (sepIndex != -1) {
-                            String key = line.substring(0, sepIndex);
-                            String value = line.substring(sepIndex + 1);
-                            if (value != null && value.trim().length() > 0) {
-                                project.setNewProperty(key, value);
-                            }
-                        }
-
-                        ++index;
+                StringInputStream sis = new StringInputStream(text);
+                Properties props = new Properties();
+                props.load(sis);
+                Enumeration e = props.keys();
+                while (e.hasMoreElements()) {
+                    String key = (String) e.nextElement();
+                    String value = props.getProperty(key);
+                    if (key != null && value != null
+                            && value.trim().length() > 0) {
+                        project.setNewProperty(key, value);
                     }
                 }
+                sis.close();
             }
 
         } catch (final IOException ioe) {
