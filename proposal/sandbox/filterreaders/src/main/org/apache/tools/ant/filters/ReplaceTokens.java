@@ -17,7 +17,7 @@ import org.apache.tools.ant.types.Parameterizable;
  *    <param type="tokenchar" name="begintoken" value="#"/>
  *    <param type="tokenchar" name="endtoken" value="#"/>
  *    <param type="token" name="DATE" value="${DATE}"/>
- * <filterreader>
+ * </filterreader>
  *
  * @author <a href="mailto:umagesh@apache.org">Magesh Umasankar</a>
  */
@@ -29,7 +29,7 @@ public final class ReplaceTokens
 
     private static final char DEFAULT_END_TOKEN = '@';
 
-    private String storedData = null;
+    private String queuedData = null;
 
     private Parameter[] parameters;
 
@@ -59,19 +59,19 @@ public final class ReplaceTokens
             initialized = true;
         }
 
-        if (storedData != null && storedData.length() > 0) {
-            int ch = storedData.charAt(0);
-            if (storedData.length() > 1) {
-                storedData = storedData.substring(1);
+        if (queuedData != null && queuedData.length() > 0) {
+            final int ch = queuedData.charAt(0);
+            if (queuedData.length() > 1) {
+                queuedData = queuedData.substring(1);
             } else {
-                storedData = null;
+                queuedData = null;
             }
             return ch;
         }
 
         int ch = in.read();
         if (ch == beginToken) {
-            StringBuffer key = new StringBuffer("");
+            final StringBuffer key = new StringBuffer("");
             do  {
                 ch = in.read();
                 if (ch != -1) {
@@ -82,16 +82,16 @@ public final class ReplaceTokens
             } while (ch != endToken);
 
             if (ch == -1) {
-                storedData = beginToken + key.toString();
+                queuedData = beginToken + key.toString();
                 return read();
             } else {
                 key.setLength(key.length() - 1);
                 final String replaceWith = (String) hash.get(key.toString());
                 if (replaceWith != null) {
-                    storedData = replaceWith;
+                    queuedData = replaceWith;
                     return read();
                 } else {
-                    storedData = beginToken + key.toString() + endToken;
+                    queuedData = beginToken + key.toString() + endToken;
                     return read();
                 }
             }
