@@ -99,13 +99,13 @@ public final class Libraries extends Task {
      * where maven stores stuff, and where we save stuff too, unless
      * declared otherwise.
      */
-    public static final String MAVEN_LOCATION=".maven/repository";
+    public static final String MAVEN_LOCATION = ".maven/repository";
 
     /**
      * name of the property which can provide an override of the repository dir
      * from {@link #MAVEN_LOCATION}
      */
-    public static final String REPOSITORY_DIR_PROPERTY="ant.maven.repository.dir";
+    public static final String REPOSITORY_DIR_PROPERTY = "ant.maven.repository.dir";
     /**
      * name of the property which can provide an override of the repository URL
      */
@@ -134,8 +134,8 @@ public final class Libraries extends Task {
         File mavenDir
                 = new File(System.getProperty("user.home"), MAVEN_LOCATION);
         String propertyDir = getProject().getProperty(REPOSITORY_DIR_PROPERTY);
-        if(propertyDir!=null) {
-            mavenDir=getProject().resolveFile(propertyDir);
+        if (propertyDir != null) {
+            mavenDir = getProject().resolveFile(propertyDir);
         }
         return mavenDir;
     }
@@ -359,11 +359,12 @@ public final class Libraries extends Task {
      */
     public void validate() {
         if (destDir == null) {
-            destDir=locateDefaultDestDirectory();
+            destDir = locateDefaultDestDirectory();
         }
         if (repository == null) {
-            MavenRepository maven=(MavenRepository)getProject().createDataType(MavenRepository.TYPE_NAME);
-            repository=maven;
+            MavenRepository maven =
+                (MavenRepository) getProject().createDataType(MavenRepository.TYPE_NAME);
+            repository = maven;
         }
         Iterator it = libraries.iterator();
         while (it.hasNext()) {
@@ -433,7 +434,7 @@ public final class Libraries extends Task {
 
         if (isOffline()) {
             log("No retrieval, task is \"offline\"");
-            retrieve=false;
+            retrieve = false;
         }
 
         //see if we need to do a download
@@ -568,7 +569,7 @@ public final class Libraries extends Task {
             Library library = (Library) it.next();
             if (library.isToFetch()) {
                 count++;
-            };
+            }
         }
         return count;
     }

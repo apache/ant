@@ -74,12 +74,12 @@ public class MavenRepository extends HttpRepository {
      * @throws BuildException if unhappy
      */
     public void validate() {
-        if(getUrl()==null) {
+        if (getUrl() == null) {
             //we have no URL yet; so use the maven one
-            if(getProject()!=null) {
-                String urlProperty=getProject()
+            if (getProject() != null) {
+                String urlProperty = getProject()
                         .getProperty(Libraries.REPOSITORY_URL_PROPERTY);
-                if(urlProperty!=null) {
+                if (urlProperty != null) {
                     setUrl(urlProperty);
                 } else {
                     setUrl(MAVEN_URL);
