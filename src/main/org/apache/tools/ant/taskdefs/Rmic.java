@@ -97,17 +97,9 @@ public class Rmic extends MatchingTask {
     private boolean filtering = false;
 
     private Vector compileList = new Vector();
-    private Vector classpathReferences = new Vector();
 
     public void setBase(String base) {
         this.base = base;
-    }
-
-    public void XsetClass(String classname) {
-        log("The class attribute is deprecated. " +
-            "Please use the classname attribute.",
-            Project.MSG_WARN);
-        this.classname = classname;
     }
 
     public void setClassname(String classname) {
@@ -122,8 +114,8 @@ public class Rmic extends MatchingTask {
         this.stubVersion = stubVersion;
     }
 
-    public void setFiltering(String filter) {
-        filtering = Project.toBoolean(filter);
+    public void setFiltering(boolean filter) {
+        filtering = filter;
     }
 
     /**
@@ -138,37 +130,28 @@ public class Rmic extends MatchingTask {
     }
 
     /**
-     * Maybe creates a nested classpath element.
+     * Creates a nested classpath element.
      */
     public Path createClasspath() {
         if (compileClasspath == null) {
             compileClasspath = new Path(project);
         }
-        return compileClasspath;
+        return compileClasspath.createPath();
     }
 
     /**
-     * Adds a reference to a CLASSPATH defined elsewhere - nested
-     * <classpathref> element.
-     */
-    public void addClasspathRef(Reference r) {
-        classpathReferences.addElement(r);
-    }
-
-    /**
-     * Adds a reference to a CLASSPATH defined elsewhere - nested
-     * <classpathref> element.
+     * Adds a reference to a CLASSPATH defined elsewhere.
      */
     public void setClasspathRef(Reference r) {
-        classpathReferences.addElement(r);
+        createClasspath().setRefid(r);
     }
 
     /**
      * Indicates that the classes found by the directory match should be
      * checked to see if they implement java.rmi.Remote.
      * This defaults to false if not set.  */
-    public void setVerify(String verify) {
-        this.verify = Project.toBoolean(verify);
+    public void setVerify(boolean verify) {
+        this.verify = verify;
     }
 
     public void execute() throws BuildException {
@@ -188,18 +171,6 @@ public class Rmic extends MatchingTask {
             sourceBaseFile = project.resolveFile(sourceBase);
         }
         Path classpath = getCompileClasspath(baseDir);
-
-        for (int i=0; i<classpathReferences.size(); i++) {
-            Reference r = (Reference) classpathReferences.elementAt(i);
-            Object o = r.getReferencedObject(project);
-            if (o instanceof Path) {
-                classpath.append((Path) o);
-            } else {
-                String msg = r.getRefId()+" doesn\'t denote a classpath";
-                throw new BuildException(msg, location);
-            }
-        }
-        
 
         // scan base dirs to build up compile lists only if a
         // specific classname is not given
@@ -406,45 +377,21 @@ public class Rmic extends MatchingTask {
         // add our classpath to the mix
 
         if (compileClasspath != null) {
-            addExistingToClasspath(classpath,compileClasspath);
+            classpath.addExisting(compileClasspath);
         }
 
         // add the system classpath
-        addExistingToClasspath(classpath, Path.systemClasspath);
+        classpath.addExisting(Path.systemClasspath);
 
         // in jdk 1.2, the system classes are not on the visible classpath.
         if (Project.getJavaVersion().startsWith("1.2")) {
             String bootcp = System.getProperty("sun.boot.class.path");
             if (bootcp != null) {
-                addExistingToClasspath(classpath, new Path(project, bootcp));
+                classpath.addExisting(new Path(project, bootcp));
             }
         }
         return classpath;
     }
 
-     /**
-     * Takes a classpath-like string, and adds each element of
-     * this string to a new classpath, if the components exist.
-     * Components that don't exist, aren't added.
-     * We do this, because jikes issues warnings for non-existant
-     * files/dirs in his classpath, and these warnings are pretty
-     * annoying.
-     * @param target - target classpath
-     * @param source - source classpath
-     * to get file objects.
-     */
-    private void addExistingToClasspath(Path target, Path source) {
-        String[] list = source.list();
-        for (int i=0; i<list.length; i++) {
-            File f = project.resolveFile(list[i]);
-
-            if (f.exists()) {
-                target.setLocation(f);
-           } else {
-               log("Dropping from classpath: "+
-                   f.getAbsolutePath(), Project.MSG_VERBOSE);
-           }
-        }
-    }
 }
 

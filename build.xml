@@ -27,7 +27,8 @@
   <property name="build.tests" value="${build.dir}/testcases"/>
   <property name="ant.dist.dir" value="../dist/ant"/>
 
-  <property name="classpath" value=""/>
+  <path id="classpath">
+  </path>
   <property name="packages" value="org.apache.tools.*"/>
   <property name="manifest" value="src/etc/manifest"/>
 
@@ -79,10 +80,11 @@
 
     <javac srcdir="${src.dir}"
            destdir="${build.classes}"
-           classpath="${classpath}"
            debug="on"
            deprecation="off"
            optimize="on" >
+      <classpath refid="classpath" />
+
       <exclude name="**/Script.java" unless="bsf.present" />
       <exclude name="**/NetRexxC.java" unless="netrexx.present" />
       <exclude name="**/XslpLiaison.java" unless="xslp.present" />
@@ -282,7 +284,7 @@
            optimize="on" >
       <classpath>
         <pathelement location="${lib.dir}/${name}.jar" />
-        <pathelement path="${classpath}" />
+        <path refid="classpath" />
       </classpath>
       <include name="**/*.java"/>
       <exclude name="**/AllJUnitTests.java" unless="junit.present" />
@@ -308,7 +310,7 @@
       <classpath>
         <pathelement location="${lib.dir}/${name}.jar" />
         <pathelement location="${build.tests}" />
-        <pathelement path="${classpath}" />
+        <path refid="classpath" />
         <pathelement path="${java.class.path}" />
       </classpath>
 
@@ -328,7 +330,7 @@
       <classpath>
         <pathelement location="${lib.dir}/${name}.jar" />
         <pathelement location="${build.tests}" />
-        <pathelement path="${classpath}" />
+        <path refid="classpath" />
         <pathelement path="${java.class.path}" />
       </classpath>
     </java>

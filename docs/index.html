@@ -573,13 +573,13 @@ example.</p>
 
   &lt;target ... &gt;
     &lt;rmic ...&gt;
-      &lt;classpathref refid=&quot;project.class.path&quot; /&gt;
+      &lt;classpath refid=&quot;project.class.path&quot; /&gt;
     &lt;/rmic&gt;
   &lt;/target&gt;
 
   &lt;target ... &gt;
     &lt;javac ...&gt;
-      &lt;classpathref refid=&quot;project.class.path&quot; /&gt;
+      &lt;classpath refid=&quot;project.class.path&quot; /&gt;
     &lt;/javac&gt;
   &lt;/target&gt;
 &lt;/project&gt;
@@ -2263,12 +2263,10 @@ the one that is currently running Ant.</p>
 <p>Use nested <code>&lt;arg&gt;</code> and <code>&lt;jvmarg&gt;</code>
 elements to specify arguments for the or the forked VM. See <a
 href="index.html#arg">Command line arguments</a>.</p>
-<h4>classpath and classpathref</h4>
+<h4>classpath</h4>
 <p><code>Java</code>'s <em>classpath</em> attribute is a <a
 href="#path">PATH like structure</a> and can also be set via a nested
-<em>classpath</em> element. PATHs defined elsewhere can be
-<a href="#references">referred</a> to via nested <em>classpathref</em>
-elements.</p>
+<em>classpath</em> element.</p>
 <h5>Example</h5>
 <pre>  
        &lt;java classname=&quot;test.Main&quot; &gt;
@@ -2429,14 +2427,12 @@ supports all attributes of <code>&lt;fileset&gt;</code>
 <code>&lt;include&gt;</code>, <code>&lt;exclude&gt;</code>,
 <code>&lt;patternset&gt;</code> and <code>&lt;patternsetref&gt;</code>
 elements.</p>
-<h4>src, classpath, classpathref, bootclasspath, bootclasspathref and extdirs</h4>
+<h4>src, classpath, bootclasspath and extdirs</h4>
 <p><code>Javac</code>'s <em>srcdir</em>, <em>classpath</em>,
 <em>bootclasspath</em> and <em>extdirs</em> attributes are <a
 href="#path">PATH like structure</a> and can also be set via nested
 <em>src</em>, <em>classpath</em>, <em>bootclasspath</em> and
-<em>extdirs</em> elements respectively. PATHs defined elsewhere can be
-<a href="#references">referred</a> to via nested <em>classpathref</em>
-and <em>bootclasspathref</em> elements.</p>
+<em>extdirs</em> elements respectively.</p>
 
 <h3>Examples</h3>
 <pre>  &lt;javac srcdir=&quot;${src}&quot;
@@ -2525,8 +2521,7 @@ instead.</p>
     <td valign="top">Specify where to find source files</td>
     <td align="center" valign="top">all</td>
     <td align="center" rowspan="2">At least one of the two or nested
-      <code>&lt;sourcepath&gt;</code> or
-      <code>&lt;sourcepathref&gt;</code></td>
+      <code>&lt;sourcepath&gt;</code></td>
   </tr>
   <tr>
     <td valign="top">sourcepathref</td>
@@ -2885,15 +2880,12 @@ arguments.</p>
   </tr>
 </table>
 
-<h4>sourcepath, classpath, bootclasspath, sourcepathref, classpathref
-and bootclasspathref</h4>
+<h4>sourcepath, classpath and bootclasspath</h4>
 <p><code>Javadoc</code>'s <em>sourcepath</em>, <em>classpath</em> and
 <em>bootclasspath</em> attributes are <a href="#path">PATH like
 structure</a> and can also be set via nested <em>sourcepath</em>,
 <em>classpath</em> and <em>bootclasspath</em> elements
-respectively. PATHs defined elsewhere can be <a
-href="#references">referred</a> to via nested <em>sourcepathref</em>,
-<em>classpathref</em> and <em>bootclasspathref</em> elements.</p>
+respectively.</p>
 
 <h3>Example</h3>
 <pre>  &lt;javadoc packagenames=&quot;com.dummy.test.*&quot;
@@ -3300,12 +3292,10 @@ elements.</p>
   </tr>
 </table>
 <h3>Parameters specified as nested elements</h3>
-<h4>classpath and classpathref</h4>
+<h4>classpath</h4>
 <p><code>Rmic</code>'s <em>classpath</em> attribute is a <a
 href="#path">PATH like structure</a> and can also be set via a nested
-<em>classpath</em> elements. PATHs defined elsewhere can be
-<a href="#references">referred</a> to via nested <em>classpathref</em>
-elements.</p>
+<em>classpath</em> elements.</p>
 <h3>Examples</h3>
 <pre>  &lt;rmic classname=&quot;com.xyz.FooBar&quot; base=&quot;${build}/classes&quot; /&gt;</pre>
 <p>runs the rmic compiler for the class <code>com.xyz.FooBar</code>. The

@@ -120,7 +120,6 @@ public class Javadoc extends Task {
         private Path path;
         
         private Vector params = new Vector();
-        private Vector pathRefs = new Vector();
 
         public void setName(String name) {
             this.name = name;
@@ -139,7 +138,6 @@ public class Javadoc extends Task {
         }
 
         public Path getPath() {
-            addReferencesToPath(pathRefs, path);
             return path;
         }
         
@@ -147,23 +145,14 @@ public class Javadoc extends Task {
             if (path == null) {
                 path = new Path(getProject());
             }
-            return path;
+            return path.createPath();
         }
 
         /**
-         * Adds a reference to a CLASSPATH defined elsewhere - nested
-         * <pathref> element.
-         */
-        public void addPathRef(Reference r) {
-            pathRefs.addElement(r);
-        }
-
-        /**
-         * Adds a reference to a CLASSPATH defined elsewhere - nested
-         * <pathref> element.
+         * Adds a reference to a CLASSPATH defined elsewhere.
          */
         public void setPathRef(Reference r) {
-            pathRefs.addElement(r);
+            createPath().setRefid(r);
         }
 
         public DocletParam createParam() {
@@ -216,9 +205,6 @@ public class Javadoc extends Task {
     private String packageList = null;
     private Vector links = new Vector(2);
     private Vector groups = new Vector(2);
-    private Vector classpathReferences = new Vector();
-    private Vector bootClasspathReferences = new Vector();
-    private Vector sourcepathReferences = new Vector();
 
     public void setMaxmemory(String max){
         if(javadoc1){
@@ -243,22 +229,14 @@ public class Javadoc extends Task {
         if (sourcePath == null) {
             sourcePath = new Path(project);
         }
-        return sourcePath;
-    }
-    /**
-     * Adds a reference to a CLASSPATH defined elsewhere - nested
-     * <sourcepathref> element.
-     */
-    public void addSourcepathRef(Reference r) {
-        sourcepathReferences.addElement(r);
+        return sourcePath.createPath();
     }
 
     /**
-     * Adds a reference to a CLASSPATH defined elsewhere - nested
-     * <sourcepathref> element.
+     * Adds a reference to a CLASSPATH defined elsewhere.
      */
     public void setSourcepathRef(Reference r) {
-        sourcepathReferences.addElement(r);
+        createSourcepath().setRefid(r);
     }
 
     public void setDestdir(File dir) {
@@ -306,7 +284,7 @@ public class Javadoc extends Task {
         if (doclet == null) {
             doclet = new DocletInfo();
         }
-        doclet.setPathRef(r);
+        doclet.createPath().setRefid(r);
     }
 
     public DocletInfo createDoclet() {
@@ -328,22 +306,14 @@ public class Javadoc extends Task {
         if (classpath == null) {
             classpath = new Path(project);
         }
-        return classpath;
-    }
-    /**
-     * Adds a reference to a CLASSPATH defined elsewhere - nested
-     * <classpathref> element.
-     */
-    public void addClasspathRef(Reference r) {
-        classpathReferences.addElement(r);
+        return classpath.createPath();
     }
 
     /**
-     * Adds a reference to a CLASSPATH defined elsewhere - nested
-     * <classpathref> element.
+     * Adds a reference to a CLASSPATH defined elsewhere.
      */
     public void setClasspathRef(Reference r) {
-        classpathReferences.addElement(r);
+        createClasspath().setRefid(r);
     }
 
     public void setBootclasspath(Path src) {
@@ -357,22 +327,14 @@ public class Javadoc extends Task {
         if (bootclasspath == null) {
             bootclasspath = new Path(project);
         }
-        return bootclasspath;
-    }
-    /**
-     * Adds a reference to a CLASSPATH defined elsewhere - nested
-     * <bootclasspathref> element.
-     */
-    public void addBootClasspathRef(Reference r) {
-        classpathReferences.addElement(r);
+        return bootclasspath.createPath();
     }
 
     /**
-     * Adds a reference to a CLASSPATH defined elsewhere - nested
-     * <bootclasspathref> element.
+     * Adds a reference to a CLASSPATH defined elsewhere.
      */
     public void setBootClasspathRef(Reference r) {
-        classpathReferences.addElement(r);
+        createBootclasspath().setRefid(r);
     }
 
     public void setExtdirs(String src) {
@@ -598,9 +560,6 @@ public class Javadoc extends Task {
         if (classpath == null)
             classpath = Path.systemClasspath;
 
-        addReferencesToPath(classpathReferences, classpath);
-        addReferencesToPath(sourcepathReferences, sourcePath);
-
         if (!javadoc1) {
             toExecute.createArgument().setValue("-classpath");
             toExecute.createArgument().setPath(classpath);
@@ -655,9 +614,7 @@ public class Javadoc extends Task {
                     }                        
                 }
             } 
-            if (bootclasspath != null || bootClasspathReferences.size() > 0) {
-                addReferencesToPath(bootClasspathReferences, 
-                                    createBootclasspath());
+            if (bootclasspath != null) {
                 toExecute.createArgument().setValue("-bootclasspath");
                 toExecute.createArgument().setPath(bootclasspath);
             }
@@ -781,25 +738,6 @@ public class Javadoc extends Task {
         }
     }
 
-    /**
-     * Appends the referenced Path instances to the other path.
-     *
-     * @param v Vector of Reference objects referring to Path objects.
-     * @param p Path to append to.
-     */
-    private void addReferencesToPath(Vector v, Path p) {
-        for (int i=0; i<v.size(); i++) {
-            Reference r = (Reference) v.elementAt(i);
-            Object o = r.getReferencedObject(project);
-            if (o instanceof Path) {
-                p.append((Path) o);
-            } else {
-                String msg = r.getRefId()+" doesn\'t denote a classpath";
-                throw new BuildException(msg, location);
-            }
-        }
-    }
-        
     /**
      * Given a source path, a list of package patterns, fill the given list
      * with the packages found in that path subdirs matching one of the given

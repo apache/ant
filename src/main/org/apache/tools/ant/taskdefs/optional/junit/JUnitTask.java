@@ -88,7 +88,6 @@ import java.util.Vector;
 public class JUnitTask extends Task {
 
     private CommandlineJava commandline = new CommandlineJava();
-    private Vector classpathReferences = new Vector();
     private Vector tests = new Vector();
     private Vector batchTests = new Vector();
     private Vector formatters = new Vector();
@@ -134,16 +133,8 @@ public class JUnitTask extends Task {
 	return commandline.createVmArgument();
     }
 
-    /**
-     * Adds a reference to a CLASSPATH defined elsewhere - nested
-     * <classpathref> element.
-     */
-    public void addClasspathRef(Reference r) {
-        classpathReferences.addElement(r);
-    }
-
     public Path createClasspath() {
-        return commandline.createClasspath(project);
+        return commandline.createClasspath(project).createPath();
     }
 
     public void addTest(JUnitTest test) {
@@ -179,19 +170,6 @@ public class JUnitTask extends Task {
     public void execute() throws BuildException {
         boolean errorOccurred = false;
         boolean failureOccurred = false;
-
-        Path classpath = commandline.createClasspath(project);
-        for (int i=0; i<classpathReferences.size(); i++) {
-            Reference r = (Reference) classpathReferences.elementAt(i);
-            Object o = r.getReferencedObject(project);
-            if (o instanceof Path) {
-                classpath.append((Path) o);
-            } else {
-                String msg = r.getRefId()+" doesn\'t denote a classpath";
-                throw new BuildException(msg, location);
-            }
-        }
-        
 
         Enumeration list = batchTests.elements();
         while (list.hasMoreElements()) {

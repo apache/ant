@@ -102,13 +102,11 @@ public class Javac extends MatchingTask {
     private File destDir;
     private Path compileClasspath;
     private String encoding;
-    private Vector classpathReferences = new Vector();
     private boolean debug = false;
     private boolean optimize = false;
     private boolean deprecation = false;
     private String target;
     private Path bootclasspath;
-    private Vector bootClasspathReferences = new Vector();
     private Path extdirs;
     private static String lSep = System.getProperty("line.separator");
 
@@ -124,7 +122,7 @@ public class Javac extends MatchingTask {
         if (src == null) {
             src = new Path(project);
         }
-        return src;
+        return src.createPath();
     }
 
     /**
@@ -164,23 +162,14 @@ public class Javac extends MatchingTask {
         if (compileClasspath == null) {
             compileClasspath = new Path(project);
         }
-        return compileClasspath;
+        return compileClasspath.createPath();
     }
 
     /**
-     * Adds a reference to a CLASSPATH defined elsewhere - nested
-     * <classpathref> element.
-     */
-    public void addClasspathRef(Reference r) {
-        classpathReferences.addElement(r);
-    }
-
-    /**
-     * Adds a reference to a CLASSPATH defined elsewhere - nested
-     * <classpathref> element.
+     * Adds a reference to a CLASSPATH defined elsewhere.
      */
     public void setClasspathRef(Reference r) {
-        classpathReferences.addElement(r);
+        createClasspath().setRefid(r);
     }
 
     /**
@@ -202,23 +191,14 @@ public class Javac extends MatchingTask {
         if (bootclasspath == null) {
             bootclasspath = new Path(project);
         }
-        return bootclasspath;
+        return bootclasspath.createPath();
     }
 
     /**
-     * Adds a reference to a CLASSPATH defined elsewhere - nested
-     * <classpathref> element.
-     */
-    public void addBootClasspathRef(Reference r) {
-        bootClasspathReferences.addElement(r);
-    }
-
-    /**
-     * Adds a reference to a CLASSPATH defined elsewhere - nested
-     * <classpathref> element.
+     * Adds a reference to a CLASSPATH defined elsewhere.
      */
     public void setBootClasspathRef(Reference r) {
-        bootClasspathReferences.addElement(r);
+        createBootclasspath().setRefid(r);
     }
 
     /**
@@ -240,7 +220,7 @@ public class Javac extends MatchingTask {
         if (extdirs == null) {
             extdirs = new Path(project);
         }
-        return extdirs;
+        return extdirs.createPath();
     }
 
     /**
@@ -408,7 +388,6 @@ public class Javac extends MatchingTask {
         if (compileClasspath != null) {
             classpath.addExisting(compileClasspath);
         }
-        addReferencesToPath(classpathReferences, classpath);
 
         // add the system classpath
 
@@ -534,8 +513,7 @@ public class Javac extends MatchingTask {
         if (optimize) {
             cmd.createArgument().setValue("-O");
         }
-        if (bootclasspath != null || bootClasspathReferences.size() > 0) {
-            addReferencesToPath(bootClasspathReferences, createBootclasspath());
+        if (bootclasspath != null) {
             cmd.createArgument().setValue("-bootclasspath");
             cmd.createArgument().setPath(bootclasspath);
         }
@@ -589,8 +567,7 @@ public class Javac extends MatchingTask {
 
         // Jikes doesn't support bootclasspath dir (-bootclasspath)
         // so we'll emulate it for compatibility and convenience.
-        if (bootclasspath != null || bootClasspathReferences.size() > 0) {
-            addReferencesToPath(bootClasspathReferences, createBootclasspath());
+        if (bootclasspath != null) {
             classpath.append(bootclasspath);
         }
 
@@ -776,25 +753,6 @@ public class Javac extends MatchingTask {
         }
     }
 
-    /**
-     * Appends the referenced Path instances to the other path.
-     *
-     * @param v Vector of Reference objects referring to Path objects.
-     * @param p Path to append to.
-     */
-    private void addReferencesToPath(Vector v, Path p) {
-        for (int i=0; i<v.size(); i++) {
-            Reference r = (Reference) v.elementAt(i);
-            Object o = r.getReferencedObject(project);
-            if (o instanceof Path) {
-                p.append((Path) o);
-            } else {
-                String msg = r.getRefId()+" doesn\'t denote a classpath";
-                throw new BuildException(msg, location);
-            }
-        }
-    }
-        
     private void doJvcCompile() throws BuildException {
         log("Using jvc compiler", Project.MSG_VERBOSE);
 
@@ -802,8 +760,7 @@ public class Javac extends MatchingTask {
 
         // jvc doesn't support bootclasspath dir (-bootclasspath)
         // so we'll emulate it for compatibility and convenience.
-        if (bootclasspath != null || bootClasspathReferences.size() > 0) {
-            addReferencesToPath(bootClasspathReferences, createBootclasspath());
+        if (bootclasspath != null) {
             classpath.append(bootclasspath);
         }
 
