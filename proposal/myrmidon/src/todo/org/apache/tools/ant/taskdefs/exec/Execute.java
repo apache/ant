@@ -33,13 +33,8 @@ import org.apache.tools.ant.types.Commandline;
  */
 public class Execute
 {
-    /**
-     * Invalid exit code.
-     */
-    public final static int INVALID = Integer.MAX_VALUE;
-
     private static final CommandLauncher c_launcher = new DefaultCommandLauncher();
-    private static CommandLauncher c_shellLauncher;
+    private static final CommandLauncher c_shellLauncher = createShellLauncher();
 
     /**
      * Used to destroy processes when the VM exits.
@@ -49,7 +44,7 @@ public class Execute
     private ExecMetaData m_metaData;
     private String[] m_command;
     private Properties m_environment;
-    private int m_exitValue = INVALID;
+    private int m_exitValue;
     private File m_workingDirectory = new File( "." );
     private Project m_project;
     private boolean m_newEnvironment;
@@ -60,14 +55,6 @@ public class Execute
     private boolean m_useVMLauncher = true;
     private ExecuteStreamHandler m_streamHandler;
     private ExecuteWatchdog m_watchdog;
-
-    /**
-     * Builds a command launcher for the OS and JVM we are running under
-     */
-    static
-    {
-        c_shellLauncher = createShellLauncher();
-    }
 
     private static CommandLauncher createShellLauncher()
     {

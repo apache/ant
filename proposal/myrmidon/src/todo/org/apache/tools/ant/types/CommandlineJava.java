@@ -12,6 +12,7 @@ import java.util.Iterator;
 import java.util.Properties;
 import org.apache.myrmidon.api.TaskException;
 import org.apache.myrmidon.framework.Os;
+import org.apache.myrmidon.framework.exec.Environment;
 import org.apache.tools.ant.Project;
 
 /**
@@ -136,7 +137,7 @@ public class CommandlineJava implements Cloneable
         // properties are part of the vm options...
         if( sysProperties.size() > 0 )
         {
-            System.arraycopy( sysProperties.getVariables(), 0,
+            System.arraycopy( sysProperties.getJavaVariables(), 0,
                               result, pos, sysProperties.size() );
             pos += sysProperties.size();
         }
@@ -338,7 +339,7 @@ public class CommandlineJava implements Cloneable
             {
                 Properties p = new Properties( sys = System.getProperties() );
 
-                for( Iterator e = variables.iterator(); e.hasNext(); )
+                for( Iterator e = m_variables.iterator(); e.hasNext(); )
                 {
                     EnvironmentData.Variable v = (EnvironmentData.Variable)e.next();
                     p.put( v.getKey(), v.getValue() );
@@ -351,10 +352,10 @@ public class CommandlineJava implements Cloneable
             }
         }
 
-        public String[] getVariables()
+        public String[] getJavaVariables()
             throws TaskException
         {
-            String props[] = super.getVariables();
+            String props[] = Environment.toNativeFormat( super.getVariables() );
 
             if( props == null )
                 return null;
@@ -371,7 +372,7 @@ public class CommandlineJava implements Cloneable
             try
             {
                 SysProperties c = (SysProperties)super.clone();
-                c.variables = (ArrayList)variables.clone();
+                c.m_variables.addAll( (ArrayList)m_variables.clone() );
                 return c;
             }
             catch( CloneNotSupportedException e )
@@ -399,7 +400,7 @@ public class CommandlineJava implements Cloneable
 
         public int size()
         {
-            return variables.size();
+            return m_variables.size();
         }
 
     }

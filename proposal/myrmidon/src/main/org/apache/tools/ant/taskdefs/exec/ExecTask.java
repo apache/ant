@@ -14,6 +14,8 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.StringReader;
+import java.util.Iterator;
+import java.util.Properties;
 import org.apache.myrmidon.api.TaskException;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.Task;
@@ -392,19 +394,20 @@ public class ExecTask extends Task
         // show the command
         log( cmdl.toString(), Project.MSG_VERBOSE );
 
-        Execute exe = new Execute( createHandler(), createWatchdog() );
+        final Execute exe = new Execute( createHandler(), createWatchdog() );
         exe.setWorkingDirectory( dir );
         exe.setVMLauncher( vmLauncher );
-        String[] environment = env.getVariables();
-        if( environment != null )
-        {
-            for( int i = 0; i < environment.length; i++ )
-            {
-                log( "Setting environment variable: " + environment[ i ],
-                     Project.MSG_VERBOSE );
-            }
-        }
         exe.setNewenvironment( newEnvironment );
+
+        final Properties environment = env.getVariables();
+        final Iterator keys = environment.keySet().iterator();
+        while( keys.hasNext() )
+        {
+            final String key = (String)keys.next();
+            final String value = environment.getProperty( key );
+            log( "Setting environment variable: " + key + "=" + value,
+                 Project.MSG_VERBOSE );
+        }
         exe.setEnvironment( environment );
         return exe;
     }

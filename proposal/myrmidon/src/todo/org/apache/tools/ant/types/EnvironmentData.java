@@ -8,6 +8,8 @@
 package org.apache.tools.ant.types;
 
 import java.util.ArrayList;
+import java.util.Properties;
+import java.io.File;
 import org.apache.myrmidon.api.TaskException;
 
 /**
@@ -17,82 +19,59 @@ import org.apache.myrmidon.api.TaskException;
  */
 public class EnvironmentData
 {
-    protected ArrayList variables;
+    protected final ArrayList m_variables = new ArrayList();
 
-    public EnvironmentData()
-    {
-        variables = new ArrayList();
-    }
-
-    public String[] getVariables()
+    public Properties getVariables()
         throws TaskException
     {
-        if( variables.size() == 0 )
+        final Properties environment = new Properties();
+        final int size = m_variables.size();
+        for( int i = 0; i < size; i++ )
         {
-            return null;
+            final Variable variable = (Variable)m_variables.get( i );
+            environment.setProperty( variable.getKey(), variable.getValue() );
         }
-        String[] result = new String[ variables.size() ];
-        for( int i = 0; i < result.length; i++ )
-        {
-            result[ i ] = ( (Variable)variables.get( i ) ).getContent();
-        }
-        return result;
+        return environment;
     }
 
     public void addVariable( Variable var )
     {
-        variables.add( var );
+        m_variables.add( var );
     }
 
     public static class Variable
     {
-        private String key, value;
+        private String m_key;
+        private String m_value;
 
-        public Variable()
+        public void setFile( final File file )
         {
-            super();
+            m_value = file.getAbsolutePath();
         }
 
-        public void setFile( java.io.File file )
+        public void setKey( final String key )
         {
-            this.value = file.getAbsolutePath();
+            m_key = key;
         }
 
-        public void setKey( String key )
+        public void setPath( final Path path )
         {
-            this.key = key;
+            m_value = path.toString();
         }
 
-        public void setPath( Path path )
+        public void setValue( final String value )
         {
-            this.value = path.toString();
-        }
-
-        public void setValue( String value )
-        {
-            this.value = value;
-        }
-
-        public String getContent()
-            throws TaskException
-        {
-            if( key == null || value == null )
-            {
-                throw new TaskException( "key and value must be specified for environment variables." );
-            }
-            StringBuffer sb = new StringBuffer( key.trim() );
-            sb.append( "=" ).append( value.trim() );
-            return sb.toString();
+            m_value = value;
         }
 
         public String getKey()
         {
-            return this.key;
+            return m_key;
         }
 
         public String getValue()
         {
-            return this.value;
+            return m_value;
         }
     }
 }
