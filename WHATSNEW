@@ -61,6 +61,9 @@ Other changes:
   silently ignores the message.  BuildListeners still should avoid
   accessing either stream.
 
+* Added a comment attribute to the zip task.
+  Bugzilla report 22793.
+
 * Overloaded FileUtils.createNewFile with a boolean mkdirs attribute
   to create nonexistent parent directories.
 
@@ -102,22 +105,32 @@ Other changes:
 * Pathconvert no longer requires that one of (targetos|pathsep|dirsep)
   be set; platform defaults are used when this is the case.
 
+* Added preservelastmodified attribute to fixcrlf task. Bugzilla 25770.
+
 * Added isfileselected condition.
 
 * Added verbose="true|false" attribute to <subant>. When verbose is enabled,
   the directory name is logged on entry and exit of the sub-build. Bugzilla 33787.
 
+* Added -nouserlib option to allow running ant without automatically loading
+  up ${user.home}/.lib/ant. This is useful when compiling ant, and antlibs.
+  Modified the build.sh and build.bat to use the option.
+
+* Added -noclasspath option to allow running ant WITHOUT using CLASSPATH env
+  variable. Modified ant.bat to do this so that %CLASSPATH% is not looked at.
+
 * Add else attribute to the condition task, which specifies an
   optional alternate value to set the property to if the nested
   condition evaluates to false. Bugzilla report 33074.
 
+* Ant generated jar files should now be detected as jar files by
+  Solaris.  Bugzilla Report 32649.
+  
 Fixed bugs:
 -----------
 
 * AbstractCvsTask prematurely closed its outputStream and errorStream.
   Bugzilla 30097.
-
-* Target Location was always UNKNOWN_LOCATION due to an omitted merge.
 
 * Impossible to use implicit classpath for <taskdef>
   when Ant core loader != Java application loader and
@@ -188,9 +201,8 @@ Fixed bugs:
 
 * forked <javac> won't pass -source to a JDK 1.1 or 1.2 javac anymore.
   Bugzilla report 32948
-  
-* filenames with colon on second position are not handled correctly by ant.
-  Bugzilla report 32979
+
+* propertyset references did not handle nested propertyset references.
 
 * oata.types.Description.getDescription(Project) would throw a
   NullPointerException when the "ant.targets" reference was unset.
@@ -231,13 +243,6 @@ Fixed bugs:
 * Get with usetimestamp did not work on Java 1.2.
 
 * Get with usetimestamp did not work when local timestamp roughly >= now.
-
-* Added -nouserlib option to allow running ant without automatically loading
-  up ${user.home}/.lib/ant. This is useful when compiling ant, and antlibs.
-  Modified the build.sh and build.bat to use the option.
-
-* Added -noclasspath option to allow running ant WITHOUT using CLASSPATH env
-  variable. Modified ant.bat to do this so that %CLASSPATH% is not looked at.
 
 Changes from Ant 1.6.1 to Ant 1.6.2
 ===================================
@@ -532,10 +537,16 @@ Other changes:
 --------------
 * Shipped XML parser is now Xerces-J 2.6.1
 
+* Translate task logs a debug message specifying the number of files
+  that it processed.  Bugzilla Report 13938.
+
 * <fixcrlf> has a new attribute - fixlast. Bugzilla Report 23262.
 
 * <p4submit> has 2 new attributes, needsresolveproperty and changeproperty.
   Bugzilla Report 25711.
+
+* add description attributes to macrodef attributes and elements.
+  Bugzilla Report 24711.
 
 * Extending ClearCase Tasks :
  - Added an extra option to 'failonerr' to each ClearCase task/command.
@@ -545,8 +556,10 @@ Other changes:
  - Added three new ClearCase commands: ccmkattr, ccmkdir, ccmkelem
   Bugzilla Report 26253.
 
-* add description attributes to macrodef attributes and elements.
-  Bugzilla Report 24711.
+* New condition <typefound> that can be used to probe for the declaration 
+  and implementation of a task, type, preset, macro, scriptdef, whatever. 
+  As it tests for the implementation, it can be used to check for optional
+  tasks being available. 
 
 * added nested text support to <macrodef>
   
@@ -758,6 +771,12 @@ Fixed bugs:
 * <cvstagdiff> cvsroot and package attributes added to the root
   element tagdiff of the xml output
   Bugzilla Report 16081.
+
+* <cvstagdiff> had a problem with aliased modules and with requests for multiple modules
+  Bugzilla Reports 21373 and 22877.
+
+* <cvstagdiff> could not parse properly the revision number of new files with CVS 1.11.9 or higher
+  Bugzilla Report 24406.
 
 * <fixcrlf> make fixcrlf create its temporary files in the default directory
   of FileUtils#createTempFile instead of the destination dir of fixcrlf.
