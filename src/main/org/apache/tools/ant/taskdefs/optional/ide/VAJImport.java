@@ -234,6 +234,7 @@ public class VAJImport extends VAJTask {
     protected void importFileset(FileSet fileset) {
         LocalDirectoryScanner ds = new LocalDirectoryScanner();
         fileset.setupDirectoryScanner(ds, this.getProject());
+        ds.scan();
         if (ds.getIncludedFiles().length == 0) {
             return;
         }

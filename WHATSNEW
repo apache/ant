@@ -20,6 +20,9 @@ Fixed bugs:
   causing problems when using a Windows VAJ server from a UNIX server.
   Bugzilla Report 20457.
 
+* VAJImport task failed with NullPointerException when using DirectoryScanner.
+  Bugzilla Report 22080.
+
 Other changes:
 --------------
 
