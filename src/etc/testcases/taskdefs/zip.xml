@@ -134,6 +134,11 @@
 		<zip destfile="test3.zip" basedir="empty" update="true"/>
   </target>
 
+  <target name="zipEmptyCreate">
+      <mkdir dir="empty"/>
+      <zip destfile="test3.zip" basedir="empty" whenempty="create" includes="*.xyz"/>
+  </target>
+
   <target name="cleanup">
     <delete file="test3.zip"/>
     <delete file="test4.zip"/>

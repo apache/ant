@@ -257,4 +257,9 @@ public class JarTest extends BuildFileTest {
             }
         }
     }
+    public void testManifestOnlyJar() {
+        executeTarget("testManifestOnlyJar");
+        File manifestFile = getProject().resolveFile(tempDir + "META-INF" + File.separator + "MANIFEST.MF");
+        assertTrue(manifestFile.exists());
+    }
 }

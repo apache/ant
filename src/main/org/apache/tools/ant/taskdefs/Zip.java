@@ -800,7 +800,9 @@ public class Zip extends MatchingTask {
                                          getLocation());
             } else {
                 // Create.
-                createEmptyZip(zipFile);
+                if (!zipFile.exists())  {
+                    needsUpdate = true;
+                }
             }
             return new ArchiveState(needsUpdate, initialResources);
         }
