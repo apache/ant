@@ -31,6 +31,13 @@
     <echo message="jxPath /references[@name='myJars']: ${jxpath:/references[@name='myJars']}" />
     <echo message="jxPath /references/myJars: ${jxpath:/references/myJars}" />
 
+    <!-- This is XMLDOM.java - a datatype that holds an xml DOM  -->
+    <typedef name="xmldom" classname="org.apache.tools.ant.types.XMLDOM"/>
+
+    <!-- Init XMLDOM. The DOM of file test.xml will be referenced via the id-->
+    <xmldom id="test.xml" file="test.xml"/>  
+
+    <echo message="XMLDOM: ${jxpath:/references/test.xml/root/project/@name}" />
   </target>
 
 

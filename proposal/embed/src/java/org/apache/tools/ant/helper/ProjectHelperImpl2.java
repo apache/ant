@@ -539,6 +539,11 @@ public class ProjectHelperImpl2 extends ProjectHelper {
             if (qname.equals("project")) {
                 return ProjectHelperImpl2.projectHandler;
             } else {
+//                 if( context.importlevel > 0 ) {
+//                     // we are in an imported file. Allow top-level <target>.
+//                     if( qname.equals( "target" ) )
+//                         return ProjectHelperImpl2.targetHandler;
+//                 }
                 throw new SAXParseException("Unexpected element \"" + qname + "\" " + name, context.locator);
             }
         }        
