@@ -159,29 +159,53 @@ public class DirectoryScanner
     /**
      * Patterns which should be excluded by default.
      *
+     * <p>Note that you can now add patterns to the list of default
+     * excludes.  Added patterns will not become part of this array
+     * that has only been kept around for backwards compatibility
+     * reasons.</p>
+     *
+     * @deprecated use the {@link #getDefaultExcludes
+     * getDefaultExcludes} method instead.
+     */
+    protected static final String[] DEFAULTEXCLUDES = {
+        // Miscellaneous typical temporary files
+        "**/*~",
+        "**/#*#",
+        "**/.#*",
+        "**/%*%",
+        "**/._*",
+        
+        // CVS
+        "**/CVS",
+        "**/CVS/**",
+        "**/.cvsignore",
+
+        // SCCS
+        "**/SCCS",
+        "**/SCCS/**",
+
+        // Visual SourceSafe
+        "**/vssver.scc",
+
+        // Subversion
+        "**/.svn",
+        "**/.svn/**",
+
+        // Mac
+        "**/.DS_Store"
+    };
+
+    /**
+     * Patterns which should be excluded by default.
+     *
      * @see #addDefaultExcludes()
      */
     private static Vector defaultExcludes = new Vector();  
 
     static {
-        defaultExcludes.add("**/*~");
-        defaultExcludes.add("**/#*#");
-        defaultExcludes.add("**/.#*");
-        defaultExcludes.add("**/%*%");
-        defaultExcludes.add("**/._*");
-
-        defaultExcludes.add("**/CVS");
-        defaultExcludes.add("**/CVS/**");
-        defaultExcludes.add("**/.cvsignore");
-
-        defaultExcludes.add("**/SCCS");
-        defaultExcludes.add("**/SCCS/**");
-
-        defaultExcludes.add("**/vssver.scc");
-
-        defaultExcludes.add("**/.svn");
-        defaultExcludes.add("**/.svn/**");
-        defaultExcludes.add("**/.DS_Store");
+        for (int i = 0; i < DEFAULTEXCLUDES.length; i++) {
+            defaultExcludes.add(DEFAULTEXCLUDES[i]);
+        }
     }
 
     /** The base directory to be scanned. */
@@ -384,9 +408,12 @@ public class DirectoryScanner
      * @return An array of <code>String</code> based on the current 
      *         contents of the <code>defaultExcludes</code> 
      *         <code>Vector</code>.
+     *
+     * @since Ant 1.6
      */
     public static String[] getDefaultExcludes() {
-        return (String[]) defaultExcludes.toArray(new String[defaultExcludes.size()]);
+        return (String[]) defaultExcludes.toArray(new String[defaultExcludes
+                                                             .size()]);
     }
 
     /**
@@ -397,6 +424,8 @@ public class DirectoryScanner
      * @return    <code>true</code> if the string was added 
      *            <code>false</code> if it already
      *            existed.
+     *
+     * @since Ant 1.6
      */
     public static boolean addDefaultExclude(String s){
         if (defaultExcludes.indexOf(s) == -1) {
@@ -414,6 +443,8 @@ public class DirectoryScanner
      *            exclude (and thus was removed),
      *            <code>false</code> if <code>s</code> was not
      *            in the default excludes list to begin with
+     *
+     * @since Ant 1.6
      */
     public static boolean removeDefaultExclude(String s) {
         return defaultExcludes.remove(s);
@@ -982,9 +1013,9 @@ public class DirectoryScanner
         }
         String[] defaultExcludesTemp = getDefaultExcludes();
         for (int i = 0; i < defaultExcludesTemp.length; i++) {
-            newExcludes[i + excludesLength] = defaultExcludesTemp[i].
-                replace('/', File.separatorChar).
-                replace('\\', File.separatorChar);
+            newExcludes[i + excludesLength] = 
+                defaultExcludesTemp[i].replace('/', File.separatorChar)
+                .replace('\\', File.separatorChar);
         }
         excludes = newExcludes;
     }
