@@ -70,16 +70,16 @@
     <section name="WIKIs">
       <subsection name="Apache">
 
-        <p>The ASF provides a Wiki for several topics. </p>
+        <p>The ASF provides a Wiki farm for Apache projects.</p>
 
         <table class="externals">
           <tr>
             <th>Main page:</th>
-            <td><a href="http://nagoya.apache.org/wiki/apachewiki.cgi">http://nagoya.apache.org/wiki/apachewiki.cgi</a></td>
+            <td><a href="http://wiki.apache.org/general">Apache Wiki Farm</a></td>
           </tr>
           <tr>
-            <th>Ant main page:</th>
-            <td><a href="http://nagoya.apache.org/wiki/apachewiki.cgi?AntProjectPages">http://nagoya.apache.org/wiki/apachewiki.cgi?AntProjectPages</a></td>
+            <th>Ant Wiki:</th>
+            <td><a href="http://wiki.apache.org/ant/">Ant Wiki</a></td>
           </tr>
         </table>
       </subsection>
