@@ -106,7 +106,7 @@ import org.apache.tools.ant.taskdefs.email.EmailTask;
  * @author glenn_twiggs@bmc.com
  * @author <a href="mailto:umagesh@rediffmail.com">Magesh Umasankar</a>
  *
- * @ant:task name="mail" category="network"
+ * @ant.task name="mail" category="network"
  */
 public class SendEmail extends EmailTask
 {

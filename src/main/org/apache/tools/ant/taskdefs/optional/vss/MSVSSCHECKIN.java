@@ -64,6 +64,8 @@ import java.io.File;
  * Task to perform CheckIn commands to Microsoft Visual Source Safe.
  *
  * @author Martin Poeschl
+ *
+ * @ant.task name="vsscheckin" category="scm"
  */
 public class MSVSSCHECKIN extends MSVSS {
 

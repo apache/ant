@@ -120,6 +120,8 @@ import org.apache.tools.ant.BuildException;
  *
  * @see    IPlanetEjbc
  * @author Greg Nelson <a href="mailto:greg@netscape.com">greg@netscape.com</a>
+ *
+ * @ant.task name="iplanet-ejbc" category="ejb"
  */
 public class IPlanetEjbcTask extends Task {
 

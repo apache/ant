@@ -78,7 +78,7 @@ import java.util.zip.ZipEntry;
  * @author <a href="mailto:stefan.bodewig@epost.de">Stefan Bodewig</a>
  * @author <a href="mailto:umagesh@apache.org">Magesh Umasankar</a>
  *
- * @ant:task category="packaging"
+ * @ant.task category="packaging"
  *           name="unzip"
  *           name="unjar"
  *           name="unwar"

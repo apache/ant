@@ -71,7 +71,7 @@ import org.apache.tools.ant.Project;
  *
  * @author <a href="mailto:usch@usch.net">Ulrich Schmidt</a>
  *
- * @ant:task category="control"
+ * @ant.task category="control"
  */
 public class Input extends Task {
     private String validargs = null;

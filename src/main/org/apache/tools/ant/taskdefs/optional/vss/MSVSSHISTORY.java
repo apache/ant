@@ -69,6 +69,8 @@ import java.text.ParseException;
  *
  * @author Balazs Fejes 2
  * @author Glenn_Twiggs@bmc.com
+ *
+ * @ant.task name="vsshistory" category="scm"
  */
 
 public class MSVSSHISTORY extends MSVSS {

@@ -118,7 +118,7 @@ import java.util.NoSuchElementException;
  * @author <a href="mailto:pbwest@powerup.com.au">Peter B. West</a>
  * @version $Revision$ $Name$
  *
- * @ant:task category="filesystem"
+ * @ant.task category="filesystem"
  */
 
 public class FixCRLF extends MatchingTask {

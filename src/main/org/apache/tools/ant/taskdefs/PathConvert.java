@@ -73,7 +73,7 @@ import java.io.File;
  *
  * @author Larry Streepy <a href="mailto:streepy@healthlanguage.com">streepy@healthlanguage.com</a>
  *
- * @ant:task category="utility"
+ * @ant.task category="utility"
  */
 public class PathConvert extends Task {
 

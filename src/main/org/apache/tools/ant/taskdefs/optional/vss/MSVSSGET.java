@@ -126,6 +126,8 @@ import java.io.File;
  *
  * @author Craig Cottingham
  * @author Andrew Everitt
+ *
+ * @ant.task name="vssget" category="scm"
  */
 public class MSVSSGET extends MSVSS {
 

@@ -112,6 +112,8 @@ import org.apache.tools.ant.Project;
  * @author <A HREF="mailto:stevec@ignitesports.com">Steve Cohen</A>
  * @version 1.0
  * @see <A HREF="http://www.starbase.com/">StarBase Web Site</A>
+ *
+ * @ant.task name="starteam" category="scm"
  */
 public class AntStarTeamCheckOut extends org.apache.tools.ant.Task
 {

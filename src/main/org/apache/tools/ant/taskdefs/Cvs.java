@@ -65,7 +65,7 @@ package org.apache.tools.ant.taskdefs;
  * @author Wolfgang Werner <a href="mailto:wwerner@picturesafe.de">wwerner@picturesafe.de</a>
  * @author Kevin Ross <a href="mailto:kevin.ross@bredex.com">kevin.ross@bredex.com</a>
  *
- * @ant:task category="scm"
+ * @ant.task category="scm"
  */
 public class Cvs extends AbstractCvsTask {
 

@@ -105,7 +105,7 @@ import java.util.Vector;
  *
  * @version $Revision$
  *
- * @ant:task category="java"
+ * @ant.task category="java"
  */
 
 public class Javac extends MatchingTask {

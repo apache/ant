@@ -86,6 +86,8 @@ import org.apache.tools.ant.Project;
  * @author <a href="mailto:stevec@ignitesports.com">Steve Cohen</a>
  * @version 1.1
  * @see <A HREF="http://www.starbase.com/">StarBase Web Site</A>
+ *
+ * @ant.task name="stcheckout" category="scm"
  */
 public class StarTeamCheckout extends TreeBasedTask {
 

@@ -90,7 +90,7 @@ import org.apache.tools.zip.ZipEntry;
  * @author Jon S. Stevens <a href="mailto:jon@clearink.com">jon@clearink.com</a>
  * @author <a href="mailto:stefan.bodewig@epost.de">Stefan Bodewig</a>
  *
- * @ant:task category="packaging"
+ * @ant.task category="packaging"
  */
 public class Zip extends MatchingTask {
 

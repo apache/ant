@@ -67,7 +67,7 @@ import java.util.Enumeration;
  * <p>
  * @author Thomas Christen <a href="mailto:chr@active.ch">chr@active.ch</a>
  *
- * @ant:task category="control"
+ * @ant.task category="control"
  */
 public class Sequential extends Task
                         implements TaskContainer {

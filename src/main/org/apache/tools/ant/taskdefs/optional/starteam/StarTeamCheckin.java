@@ -77,6 +77,8 @@ import org.apache.tools.ant.Project;
  *
  * @author <a href="mailto:scohen@localhost.localdomain">Steve Cohen</a>
  * @version 1.0
+ *
+ * @ant.task name="stcheckin" category="scm" product="Starteam"
  */
 public class StarTeamCheckin extends TreeBasedTask {
 

@@ -108,6 +108,8 @@ import org.apache.tools.ant.types.Commandline;
  * </table>
  *
  * @author Phillip Wells
+ *
+ * @ant.task name="vsslabel" category="scm"
  */
 public class MSVSSLABEL extends MSVSS
 {

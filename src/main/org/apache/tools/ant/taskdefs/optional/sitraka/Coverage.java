@@ -83,6 +83,8 @@ import org.apache.tools.ant.types.Path;
  * For additional information, visit <a href="http://www.sitraka.com">www.sitraka.com</a>
  *
  * @author <a href="sbailliez@imediation.com">Stephane Bailliez</a>
+ *
+ * @ant.task name="jpcoverage" category="metrics"
  */
 public class Coverage extends Task {
 

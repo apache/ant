@@ -64,6 +64,8 @@ import java.io.File;
  * Task to perform CheckOut commands to Microsoft Visual Source Safe.
  *
  * @author Martin Poeschl
+ *
+ * @ant.task name="vsscheckout" category="scm"
  */
 public class MSVSSCHECKOUT extends MSVSS {
 

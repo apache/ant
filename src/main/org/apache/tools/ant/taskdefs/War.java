@@ -68,7 +68,7 @@ import java.io.IOException;
  * 
  * @author <a href="mailto:stefan.bodewig@epost.de">Stefan Bodewig</a> 
  *
- * @ant:task category="packaging"
+ * @ant.task category="packaging"
  */
 public class War extends Jar {
 

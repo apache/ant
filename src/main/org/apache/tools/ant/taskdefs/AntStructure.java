@@ -79,7 +79,7 @@ import java.io.IOException;
  *
  * @version $Revision$
  *
- * @ant:task category="xml"
+ * @ant.task category="xml"
  */
 
 public class AntStructure extends Task {

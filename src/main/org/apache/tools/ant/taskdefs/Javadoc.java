@@ -102,7 +102,7 @@ import org.apache.tools.ant.util.FileUtils;
  * @author Ernst de Haan <a href="mailto:ernst@jollem.com">ernst@jollem.com</a>
  * @author <a href="mailto:stefan.bodewig@epost.de">Stefan Bodewig</a>
  *
- * @ant:task category="java"
+ * @ant.task category="java"
  */
 
 public class Javadoc extends Task {

@@ -91,6 +91,8 @@ import org.apache.tools.ant.util.StringUtils;
  * is IMHO the simplest way to do it to avoid this file hacking thing.
  *
  * @author <a href="mailto:sbailliez@imediation.com">Stephane Bailliez</a>
+ *
+ * @ant.task name="junitreport" category="testing"
  */
 public class XMLResultAggregator extends Task implements XMLConstants {
 

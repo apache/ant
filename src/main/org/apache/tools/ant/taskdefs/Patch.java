@@ -66,7 +66,7 @@ import java.io.IOException;
  *
  * @author <a href="mailto:stefan.bodewig@epost.de">Stefan Bodewig</a>
  *
- * @ant:task category="utility"
+ * @ant.task category="utility"
  */
 public class Patch extends Task {
 

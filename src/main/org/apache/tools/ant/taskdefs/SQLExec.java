@@ -100,7 +100,7 @@ import java.sql.ResultSetMetaData;
  * @author <A href="mailto:gholam@xtra.co.nz">Michael McCallum</A>
  * @author <A href="mailto:tim.stephenson@sybase.com">Tim Stephenson</A>
  *
- * @ant:task name="sql" category="database"
+ * @ant.task name="sql" category="database"
  */
 public class SQLExec extends Task {
 

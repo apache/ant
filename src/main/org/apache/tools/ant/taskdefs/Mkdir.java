@@ -63,7 +63,7 @@ import java.io.File;
  *
  * @author duncan@x180.com
  *
- * @ant:task category="filesystem"
+ * @ant.task category="filesystem"
  */
 
 public class Mkdir extends Task {

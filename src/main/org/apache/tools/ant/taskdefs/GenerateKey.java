@@ -65,7 +65,7 @@ import org.apache.tools.ant.types.Commandline;
  * 
  * @author <a href="mailto:donaldp@apache.org">Peter Donald</a>
  *
- * @ant:task name="genkey" category="java"
+ * @ant.task name="genkey" category="java"
  */
 public class GenerateKey extends Task {
 

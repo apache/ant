@@ -67,7 +67,7 @@ import java.io.IOException;
  *
  * @author costin@dnt.ro
  *
- * @ant:task category="utility"
+ * @ant.task category="utility"
  */
 public class Echo extends Task {
     protected String message = ""; // required

@@ -68,7 +68,7 @@ import org.apache.tools.bzip2.CBZip2OutputStream;
  *
  * @author <a href="mailto:umagesh@rediffmail.com">Magesh Umasankar</a>
  *
- * @ant:task category="packaging"
+ * @ant.task category="packaging"
  */
 
 public class BZip2 extends Pack {

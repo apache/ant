@@ -78,7 +78,7 @@ import java.util.Enumeration;
  * 
  * @author James Davidson <a href="mailto:duncan@x180.com">duncan@x180.com</a>
  *
- * @ant:task category="packaging"
+ * @ant.task category="packaging"
  */
 public class Jar extends Zip {
     /** The index file name. */

@@ -81,6 +81,8 @@ import org.apache.tools.ant.BuildException;
  * @author Christopher Charlier, ThoughtWorks, Inc. 2001
  * @author <a href="mailto:jcyip@thoughtworks.com">Jason Yip</a>
  * @see <A HREF="http://www.starbase.com/">StarBase Web Site</A>
+ *
+ * @ant.task name="stlabel" category="scm"
  */
 public class StarTeamLabel extends StarTeamTask {
 

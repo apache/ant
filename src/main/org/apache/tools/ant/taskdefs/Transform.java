@@ -59,6 +59,6 @@ package org.apache.tools.ant.taskdefs;
  *
  * @author <a href="mailto:stefan.bodewig@epost.de">Stefan Bodewig</a> 
  *
- * @ant:task name="apply" category="control"
+ * @ant.task name="apply" category="control"
  */
 public class Transform extends ExecuteOn {}

@@ -73,7 +73,7 @@ import java.io.IOException;
  * @author <a href="jeff@custommonkey.org">Jeff Martin</a>
  * @version $Revision$
  *
- * @ant:task category="scm"
+ * @ant.task category="scm"
  */
 public class CVSPass extends Task {
     /** CVS Root */

@@ -74,6 +74,8 @@ import org.apache.tools.ant.BuildException;
  *
  * @author <a href="mailto:stevec@ignitesports.com">Steve Cohen</a>
  * @version 1.0
+ *
+ * @ant.task name="stlist" category="scm"
  */
 
 public class StarTeamList extends TreeBasedTask {

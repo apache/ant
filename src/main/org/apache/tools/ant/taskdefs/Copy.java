@@ -91,7 +91,7 @@ import java.util.Enumeration;
  *
  * @version $Revision$
  *
- * @ant:task category="filesystem"
+ * @ant.task category="filesystem"
  */
 public class Copy extends Task {
     protected File file = null;     // the source file

@@ -94,7 +94,7 @@ import org.apache.tools.ant.util.FileUtils;
  * @author <a href="mailto:russgold@acm.org">Russell Gold</a>
  * @author <a href="stefan.bodewig@epost.de">Stefan Bodewig</a>
  *
- * @ant:task name="style" category="xml"
+ * @ant.task name="style" category="xml"
  */
 
 public class XSLTProcess extends MatchingTask implements XSLTLogger {

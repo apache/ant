@@ -73,7 +73,9 @@ import java.io.IOException;
  * Executes a given command, supplying a set of files as arguments. 
  *
  * @author <a href="mailto:stefan.bodewig@epost.de">Stefan Bodewig</a> 
- * @author <a href="mailto:mariusz@rakiura.org">Mariusz Nowostawski</a> 
+ * @author <a href="mailto:mariusz@rakiura.org">Mariusz Nowostawski</a>
+ *
+ * @ant.task name="execon"
  */
 public class ExecuteOn extends ExecTask {
 

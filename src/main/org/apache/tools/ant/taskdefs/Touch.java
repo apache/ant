@@ -86,7 +86,7 @@ import java.util.Vector;
  * @author <a href="mailto:mj@servidium.com">Michael J. Sikorsky</a>
  * @author <a href="mailto:shaw@servidium.com">Robert Shaw</a>
  *
- * @ant:task category="filesystem"
+ * @ant.task category="filesystem"
  */
 public class Touch extends Task {
 

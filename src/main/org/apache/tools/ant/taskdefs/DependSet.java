@@ -108,7 +108,7 @@ import org.apache.tools.ant.types.FileList;
  * </li></ul>
  * 
  * @author <a href="mailto:cstrong@arielpartners.com">Craeg Strong</a>
- * @ant:task category="filesystem"
+ * @ant.task category="filesystem"
  * @version $Revision$ $Date$
  */
 public class DependSet extends MatchingTask {

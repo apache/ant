@@ -72,7 +72,7 @@ import java.io.IOException;
  * @author <a href="mailto:stefan.bodewig@epost.de">Stefan Bodewig</a>
  * @author <a href="mailto:umagesh@rediffmail.com">Magesh Umasankar</a>
  *
- * @ant:task category="packaging"
+ * @ant.task category="packaging"
  */
 public class Untar extends Expand {
 

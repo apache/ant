@@ -132,6 +132,7 @@ History
  @version 0.3
  @author Steve Loughran steve_l@iseran.com
 
+ * @ant.task name="csc" category="dotnet"
  */
 
 public class CSharp

@@ -81,6 +81,8 @@ import org.apache.tools.ant.types.Path;
  * Convenient task to run the snapshot merge utility for JProbe Coverage 3.0.
  *
  * @author <a href="sbailliez@imediation.com">Stephane Bailliez</a>
+ *
+ * @ant.task name="jpcovreport" category="metrics"
  */
 public class CovReport extends Task {
     /*

@@ -69,7 +69,7 @@ import org.apache.tools.bzip2.CBZip2InputStream;
  *
  * @author <a href="mailto:umagesh@rediffmail.com">Magesh Umasankar</a>
  *
- * @ant:task category="packaging"
+ * @ant.task category="packaging"
  */
 
 public class BUnzip2 extends Unpack {

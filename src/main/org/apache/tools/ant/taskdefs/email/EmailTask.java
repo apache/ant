@@ -77,6 +77,8 @@ import org.apache.tools.ant.types.FileSet;
  * @author paulo.gaspar@krankikom.de Paulo Gaspar
  * @author roxspring@yahoo.com Rob Oxspring
  * @since 1.5
+ *
+ * @ant.task name="mail" category="network"
  */
 public class EmailTask
     extends Task

@@ -64,7 +64,7 @@ import org.apache.tools.ant.BuildException;
  *
  * @author <a href="mailto:nico@seessle.de">Nico Seessle</a>
  *
- * @ant:task name="fail" category="control"
+ * @ant.task name="fail" category="control"
  */
 public class Exit extends Task { 
     private String message;

@@ -65,7 +65,7 @@ import java.io.*;
  *
  * @author Steve Loughran
  *
- * @ant:task category="utility"
+ * @ant.task category="utility"
  */
 public class LoadFile extends Task {
 

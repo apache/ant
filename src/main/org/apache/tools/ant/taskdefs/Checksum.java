@@ -79,7 +79,7 @@ import org.apache.tools.ant.types.FileSet;
  *
  * @author <a href="mailto:umagesh@apache.org">Magesh Umasankar</a>
  *
- * @ant:task category="control"
+ * @ant.task category="control"
  */
 public class Checksum extends MatchingTask implements Condition {
     /**

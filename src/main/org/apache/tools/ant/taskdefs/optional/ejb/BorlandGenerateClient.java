@@ -78,6 +78,7 @@ import org.apache.tools.ant.types.Reference;
  * 
  * @author  <a href="mailto:benoit.moussaud@criltelecom.com">Benoit Moussaud</a>
  *
+ * @ant.task name="blgenclient" category="ejb"
  */
 public class BorlandGenerateClient extends Task
 {
