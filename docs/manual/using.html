@@ -93,7 +93,9 @@ should react to. For example:</p>
 <p>If no <code>if</code> and no <code>unless</code> attribute is present,
 the target will always be executed.</p>
 <p>The optional <code>description</code> attribute can be used to provide a one-line description of this target, which is printed by the
-<nobr><code>-projecthelp</code></nobr> command-line option.</p>
+<nobr><code>-projecthelp</code></nobr> command-line option. Targets
+without such a description are deemed internal and will not be listed. 
+</p>
 <p>It is a good practice to place your <a
 href="CoreTasks/tstamp.html">tstamp</a> tasks in a so-called
 <i>initialization</i> target, on which
@@ -137,6 +139,16 @@ have the name &quot;init&quot;.</p>
   </tr>
 </table>
 
+A target name can be any alphanumeric string valid in the encoding of the XML
+file. The empty string "" is in this set, as is comma "," and space " ".
+Please avoid using these as they will not be supported in future ant versions
+because of all the confusion they cause. IDEs support of unusual target names
+-or any target name containing spaces, varies with the IDE. 
+
+<p>
+
+Targets beginning with a hyphen such as "-restart" are valid, and can be used
+to name targets which must not be called directly from the command like.
 
 <h3><a name="tasks">Tasks</a></h3>
 <p>A task is a piece of code that can be executed.</p>
