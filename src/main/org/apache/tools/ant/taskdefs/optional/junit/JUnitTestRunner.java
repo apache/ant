@@ -78,6 +78,7 @@ import org.apache.tools.ant.AntClassLoader;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.util.StringUtils;
+import org.apache.tools.ant.util.TeeOutputStream;
 
 /**
  * Simple Testrunner for JUnit that runs all tests of a testsuite.
@@ -302,17 +303,12 @@ public class JUnitTestRunner implements TestListener {
                     System.setErr(systemError);
                 } else {
                     System.setOut(new PrintStream(
-                                      new TeeOutputStream(
-                                          new OutputStream[] {savedOut, 
-                                                              systemOut}
-                                          )
+                                      new TeeOutputStream(savedOut, systemOut)
                                       )
                                   );
                     System.setErr(new PrintStream(
-                                      new TeeOutputStream(
-                                          new OutputStream[] {savedErr, 
-                                                              systemError}
-                                          )
+                                      new TeeOutputStream(savedErr, 
+                                                          systemError)
                                       )
                                   );
                 }
@@ -613,25 +609,4 @@ public class JUnitTestRunner implements TestListener {
         return false;
     }
     
-    /**
-     * Helper class that sends output sent to multiple streams.
-     *
-     * @since Ant 1.5
-     */
-    private class TeeOutputStream extends OutputStream {
-
-        private OutputStream[] outs;
-
-        private TeeOutputStream(OutputStream[] outs) {
-            this.outs = outs;
-        }
-
-        public void write(int b) throws IOException {
-            for (int i = 0; i  < outs.length; i++) {
-                outs[i].write(b);
-            }
-        }
-
-    }
-
 } // JUnitTestRunner

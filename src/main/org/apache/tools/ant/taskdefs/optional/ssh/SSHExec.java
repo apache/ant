@@ -56,6 +56,7 @@ package org.apache.tools.ant.taskdefs.optional.ssh;
 
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
+import org.apache.tools.ant.util.TeeOutputStream;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -165,7 +166,7 @@ public class SSHExec extends SSHBase {
         }
 
         ByteArrayOutputStream out = new ByteArrayOutputStream();
-        Tee tee = new Tee(out, System.out);
+        TeeOutputStream tee = new TeeOutputStream(out, System.out);
 
         try {
             // execute the command
@@ -249,67 +250,6 @@ public class SSHExec extends SSHBase {
             if (out != null) {
                 out.close();
             }
-        }
-    }
-
-    /**
-     * Similar to standard unix "tee" utility, sends output to two streams.
-     *
-     * @author    Dale Anson, danson@germane-software.com
-     * @version   $Revision$
-     */
-    public class Tee extends OutputStream {
-
-        private OutputStream left = null;
-        private OutputStream right = null;
-
-        /**
-         * Constructor for Tee, sends output to both of the given
-         * streams, which are referred to as the "teed" streams.
-         *
-         * @param left   one stream to write to
-         * @param right  the other stream to write to
-         */
-        public Tee(OutputStream left, OutputStream right) {
-            if (left == null || right == null) {
-                throw new IllegalArgumentException("Both streams are required.");
-            }
-            this.left = left;
-            this.right = right;
-        }
-
-        /**
-         * Writes the specified byte to both of the teed streams. Per java api,
-         * the general contract for write is that one byte is written to the
-         * output stream. The byte to be written is the eight low-order bits of
-         * the argument b. The 24 high-order bits of b are ignored.
-         *
-         * @param b
-         * @exception IOException  If an IO error occurs
-         */
-        public void write( int b ) throws IOException {
-            left.write( b );
-            right.write( b );
-        }
-
-        /**
-         * Closes both of the teed streams.
-         *
-         * @exception IOException  If an IO error occurs
-         */
-        public void close() throws IOException {
-            left.close();
-            right.close();
-        }
-
-        /**
-         * Flushes both of the teed streams.
-         *
-         * @exception IOException  If an IO error occurs
-         */
-        public void flush() throws IOException {
-            left.flush();
-            right.flush();
         }
     }
 
