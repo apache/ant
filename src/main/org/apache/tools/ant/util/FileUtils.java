@@ -338,59 +338,77 @@ public class FileUtils {
                 BufferedReader in = null;
                 BufferedWriter out = null;
 
-                if (encoding == null) {
-                    in = new BufferedReader(new FileReader(sourceFile));
-                    out = new BufferedWriter(new FileWriter(destFile));
-                } else {
-                    in = new BufferedReader(new InputStreamReader(
-                            new FileInputStream(sourceFile), encoding));
-                    out = new BufferedWriter(new OutputStreamWriter(
-                            new FileOutputStream(destFile), encoding));
-                }
-
-                if (filterChainsAvailable) {
-                    ChainReaderHelper crh = new ChainReaderHelper();
-                    crh.setBufferSize(8192);
-                    crh.setPrimaryReader(in);
-                    crh.setFilterChains(filterChains);
-                    crh.setProject(project);
-                    Reader rdr = crh.getAssembledReader();
-                    in = new BufferedReader(rdr);
-                }
-
-                int length;
-                String newline = null;
-                String line = in.readLine();
-                while (line != null) {
-                    if (line.length() == 0) {
-                        out.newLine();
+                try {
+                    if (encoding == null) {
+                        in = new BufferedReader(new FileReader(sourceFile));
+                        out = new BufferedWriter(new FileWriter(destFile));
                     } else {
-                        if (filterSetsAvailable) {
-                            newline = filters.replaceTokens(line);
-                        } else {
-                            newline = line;
-                        }
-                        out.write(newline);
-                        out.newLine();
+                        in = 
+                            new BufferedReader(new InputStreamReader(
+                                                 new FileInputStream(sourceFile), 
+                                                 encoding));
+                        out = 
+                            new BufferedWriter(new OutputStreamWriter(
+                                                 new FileOutputStream(destFile), 
+                                                 encoding));
                     }
-                    line = in.readLine();
+
+                    if (filterChainsAvailable) {
+                        ChainReaderHelper crh = new ChainReaderHelper();
+                        crh.setBufferSize(8192);
+                        crh.setPrimaryReader(in);
+                        crh.setFilterChains(filterChains);
+                        crh.setProject(project);
+                        Reader rdr = crh.getAssembledReader();
+                        in = new BufferedReader(rdr);
+                    }
+                    
+                    int length;
+                    String newline = null;
+                    String line = in.readLine();
+                    while (line != null) {
+                        if (line.length() == 0) {
+                            out.newLine();
+                        } else {
+                            if (filterSetsAvailable) {
+                                newline = filters.replaceTokens(line);
+                            } else {
+                                newline = line;
+                            }
+                            out.write(newline);
+                            out.newLine();
+                        }
+                        line = in.readLine();
+                    }
+                } finally {
+                    if (out != null) {
+                        out.close();
+                    }
+                    if (in != null) {
+                        in.close();
+                    }
                 }
-
-                out.close();
-                in.close();
             } else {
-                FileInputStream in = new FileInputStream(sourceFile);
-                FileOutputStream out = new FileOutputStream(destFile);
+                FileInputStream in = null;
+                FileOutputStream out = null;
+                try {
+                    in = new FileInputStream(sourceFile);
+                    out = new FileOutputStream(destFile);
 
-                byte[] buffer = new byte[8 * 1024];
-                int count = 0;
-                do {
-                    out.write(buffer, 0, count);
-                    count = in.read(buffer, 0, buffer.length);
-                } while (count != -1);
-
-                in.close();
-                out.close();
+                    byte[] buffer = new byte[8 * 1024];
+                    int count = 0;
+                    do {
+                        out.write(buffer, 0, count);
+                        count = in.read(buffer, 0, buffer.length);
+                    } while (count != -1);
+                } finally {
+                    if (out != null) {
+                        out.close();
+                    }
+                    if (in != null) {
+                        in.close();
+                    }
+                }
             }
 
             if (preserveLastModified) {
