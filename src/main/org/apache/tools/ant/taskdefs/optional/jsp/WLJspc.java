@@ -100,15 +100,15 @@ import java.util.StringTokenizer;
  * 
  * <pre>
  * example
- * <target name="jspcompile" depends="compile">
- *   <wljspc src="c:\\weblogic\\myserver\\public_html" dest="c:\\weblogic\\myserver\\serverclasses" package="myapp.jsp" >
- *   <classpath>
- *          <pathelement location="${weblogic.classpath}" />
- *           <pathelement path="${compile.dest}" />
- *      </classpath>
+ * &lt;target name="jspcompile" depends="compile"&gt;
+ *   &lt;wljspc src="c:\\weblogic\\myserver\\public_html" dest="c:\\weblogic\\myserver\\serverclasses" package="myapp.jsp"&gt;
+ *   &lt;classpath&gt;
+ *          &lt;pathelement location="${weblogic.classpath}" /&gt;
+ *           &lt;pathelement path="${compile.dest}" /&gt;
+ *      &lt;/classpath&gt;
  * 
- *   </wljspc>
- * </target>
+ *   &lt;/wljspc&gt;
+ * &lt;/target&gt;
  * </pre>
  * 
  */

@@ -69,7 +69,7 @@ import java.util.Vector;
 /**
  * Class to provide automated telnet protocol support for the Ant build tool
  *
- * @author Scott Carlson<a href="mailto:ScottCarlson@email.com">ScottCarlson@email.com</a>
+ * @author <a href="mailto:ScottCarlson@email.com">ScottCarlson@email.com</a>
  * @version $Revision$
  */
 
@@ -206,7 +206,7 @@ public class TelnetTask extends Task {
     }
 
     /**
-     *  A subTask <read> tag was found.  Create the object, 
+     *  A subTask &lt;read&gt; tag was found.  Create the object, 
      *  Save it in our list, and return it.
      */
    
@@ -218,7 +218,7 @@ public class TelnetTask extends Task {
     }
 
     /**
-     *  A subTask <write> tag was found.  Create the object, 
+     *  A subTask &lt;write&gt; tag was found.  Create the object, 
      *  Save it in our list, and return it.
      */
     public TelnetSubTask createWrite()

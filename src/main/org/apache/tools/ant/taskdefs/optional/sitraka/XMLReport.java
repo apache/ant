@@ -258,7 +258,7 @@ public class XMLReport {
     }
 
     /**
-     * Convert to a CovReport-like signature ie, <classname>.<method>()
+     * Convert to a CovReport-like signature ie, &lt;classname&gt;.&lt;method&gt;()
      */
     protected String getMethodSignature(ClassFile clazz, MethodInfo method) {
         StringBuffer buf = new StringBuffer(clazz.getFullName());

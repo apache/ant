@@ -132,7 +132,7 @@ public class DescriptorHandler extends org.xml.sax.HandlerBase {
     protected Hashtable ejbFiles = null;
 
     /**
-     * Instance variable that stores the value found in the <ejb-name> element
+     * Instance variable that stores the value found in the &lt;ejb-name&gt; element
      */
     protected String ejbName = null;
 
@@ -243,7 +243,7 @@ public class DescriptorHandler extends org.xml.sax.HandlerBase {
     }
 
      /**
-     * Getter method that returns the value of the <ejb-name> element.
+     * Getter method that returns the value of the &lt;ejb-name&gt; element.
      */
     public String getEjbName() {
         return ejbName;

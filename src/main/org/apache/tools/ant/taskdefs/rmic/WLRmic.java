@@ -67,7 +67,7 @@ import java.lang.reflect.Method;
 /**
  * The implementation of the rmic for WebLogic
  *
- * @author Takashi Okamoto <tokamoto@rd.nttdata.co.jp>
+ * @author <a href="mailto:tokamoto@rd.nttdata.co.jp">Takashi Okamoto</a>
  */
 public class WLRmic extends DefaultRmicAdapter {
 

@@ -61,16 +61,16 @@ import org.apache.tools.ant.BuildException;
  * Call another target in the same project.
  *
  *  <pre>
- *    <target name="foo">
- *      <antcall target="bar">
- *        <param name="property1" value="aaaaa" />
- *        <param name="foo" value="baz" />
- *       </antcall>
- *    </target>
+ *    &lt;target name="foo"&gt;
+ *      &lt;antcall target="bar"&gt;
+ *        &lt;param name="property1" value="aaaaa" /&gt;
+ *        &lt;param name="foo" value="baz" /&gt;
+ *       &lt;/antcall&gt;
+ *    &lt;/target&gt;
  *
- *    <target name="bar" depends="init">
- *      <echo message="prop is ${property1} ${foo}" />
- *    </target>
+ *    &lt;target name="bar" depends="init"&gt;
+ *      &lt;echo message="prop is ${property1} ${foo}" /&gt;
+ *    &lt;/target&gt;
  * </pre>
  *
  * <p>This only works as expected if neither property1 nor foo are

@@ -463,7 +463,7 @@ public class Replace extends MatchingTask {
     }
     
     /**
-     * Nested <replacetoken> element.
+     * Nested &lt;replacetoken&gt; element.
      */
     public NestedString createReplaceToken() {
         if (token == null) {
@@ -473,7 +473,7 @@ public class Replace extends MatchingTask {
     }
 
     /**
-     * Nested <replacevalue> element.
+     * Nested &lt;replacevalue&gt; element.
      */
     public NestedString createReplaceValue() {
         return value;
@@ -487,7 +487,7 @@ public class Replace extends MatchingTask {
     }
 
     /**
-     * Add nested <replacefilter> element.
+     * Add nested &lt;replacefilter&gt; element.
      */
     public Replacefilter createReplacefilter() {
         Replacefilter filter = new Replacefilter();

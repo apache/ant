@@ -431,8 +431,8 @@ public class BorlandDeploymentTool extends GenericDeploymentTool  implements Exe
 
     /**
      *
-     * @param param1 <description>
-     * @exception java.io.IOException <description>
+     * @param is
+     * @exception java.io.IOException
      */
     public void setProcessOutputStream(InputStream is) throws IOException
     {
@@ -458,8 +458,8 @@ public class BorlandDeploymentTool extends GenericDeploymentTool  implements Exe
     }
 
     /**
-     * @param param1 <description>
-     * @exception java.io.IOException <description>
+     * @param param1
+     * @exception java.io.IOException
      */
     public void setProcessErrorStream(InputStream is) throws IOException
     {

@@ -73,16 +73,16 @@ import java.util.Enumeration;
  * Call Ant in a sub-project
  *
  *  <pre>
- *    <target name="foo" depends="init">
- *    <ant antfile="build.xml" target="bar" >
- *      <property name="property1" value="aaaaa" />
- *      <property name="foo" value="baz" />
- *     </ant>
- *  </target>
+ *  &lt;target name=&quot;foo&quot; depends=&quot;init&quot;&gt;
+ *    &lt;ant antfile=&quot;build.xml&quot; target=&quot;bar&quot; &gt;
+ *      &lt;property name=&quot;property1&quot; value=&quot;aaaaa&quot; /&gt;
+ *      &lt;property name=&quot;foo&quot; value=&quot;baz&quot; /&gt;
+ *    &lt;/ant&gt;</SPAN>
+ *  &lt;/target&gt;</SPAN>
  *
- * <target name="bar" depends="init">
- *    <echo message="prop is ${property1} ${foo}" />
- * </target>
+ *  &lt;target name=&quot;bar&quot; depends=&quot;init&quot;&gt;
+ *    &lt;echo message=&quot;prop is ${property1} ${foo}&quot; /&gt;
+ *  &lt;/target&gt;
  * </pre>
  *
  *

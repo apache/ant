@@ -62,7 +62,7 @@ import org.apache.tools.ant.ProjectHelper;
  * Just exit the active build, giving an additional message 
  * if available.
  *
- * @author Nico Seessle <nico@seessle.de>
+ * @author <a href="mailto:nico@seessle.de">Nico Seessle</a>
  */
 public class Exit extends Task { 
     private String message;

@@ -149,7 +149,7 @@ import java.text.DecimalFormat;
  *a newline delimiter charater.
  *
  * @author Thomas Christen <a href="mailto:chr@active.ch">chr@active.ch</a>
- * @author Jeremy Mawson <a href="mailto:jem@loftinspace.com.au>jem@loftinspace.com.au</a>
+ * @author Jeremy Mawson <a href="mailto:jem@loftinspace.com.au">jem@loftinspace.com.au</a>
 */
 public class PropertyFile extends Task
 {

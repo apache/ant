@@ -72,7 +72,10 @@ import java.text.SimpleDateFormat;
  *
  *  Label name defaults to AntLabel if none set.
  *
- * Example Usage: <P4Label name="MyLabel-${TSTAMP}-${DSTAMP}" desc="Auto Build Label" />
+ * Example Usage: 
+ * <pre>
+ *   &lt;P4Label name="MyLabel-${TSTAMP}-${DSTAMP}" desc="Auto Build Label" /&gt;
+ * </pre>
  *
  * @author <A HREF="mailto:leslie.hughes@rubus.com">Les Hughes</A>
  */

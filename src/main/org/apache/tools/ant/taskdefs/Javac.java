@@ -168,10 +168,10 @@ public class Javac extends MatchingTask {
     }
 
     /**
-     * Create a nested <src ...> element for multiple source path
+     * Create a nested src element for multiple source path
      * support.
      *
-     * @return a nexted src element.
+     * @return a nested src element.
      */
     public Path createSrc() {
         if (src == null) {

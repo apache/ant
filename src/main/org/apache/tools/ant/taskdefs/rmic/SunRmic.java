@@ -67,7 +67,7 @@ import java.lang.reflect.Method;
 /**
  * The implementation of the rmic for SUN's JDK.
  *
- * @author Takashi Okamoto <tokamoto@rd.nttdata.co.jp>
+ * @author <a href="mailto:tokamoto@rd.nttdata.co.jp">Takashi Okamoto</a>
  */
 public class SunRmic extends DefaultRmicAdapter {
 

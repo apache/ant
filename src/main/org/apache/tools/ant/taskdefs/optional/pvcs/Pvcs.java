@@ -93,9 +93,9 @@ import org.apache.tools.ant.types.Commandline;
  * update those files that have a modification time (in PVCS) that is newer 
  * than the existing workfile.
  *
- * @author Thomas Christensen <tchristensen@nordija.com>
- * @author Don Jeffery <donj@apogeenet.com>
- * @author Steven E. Newton <snewton@standard.com>
+ * @author <a href="mailto:tchristensen@nordija.com">Thomas Christensen</a>
+ * @author <a href="mailto:donj@apogeenet.com">Don Jeffery</a>
+ * @author <a href="snewton@standard.com">Steven E. Newton</a>
  */
 public class Pvcs extends org.apache.tools.ant.Task {
     private String pvcsbin;

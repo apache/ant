@@ -67,7 +67,7 @@ import org.apache.log4j.helpers.NullEnumeration;
 /**
  *  Listener which sends events to Log4j logging system
  *
- * @author <a href="mailto:conor@apache.org>Conor MacNeill </a>
+ * @author <a href="mailto:conor@apache.org">Conor MacNeill</a>
  */
 public class Log4jListener implements BuildListener {
     final static String LOG4J_CONFIG_PROPERTY = "log4j.configuration";

@@ -95,7 +95,7 @@ import org.apache.tools.ant.types.FileList;
  * source vs target combination unnecessarily.
  * </p><p>
  * Example uses: 
- * <ulist><li>
+ * <ul><li>
  * Record the fact that an XML file must be up to date
  * with respect to its XSD (Schema file), even though the XML file
  * itself includes no reference to its XSD.
@@ -105,7 +105,7 @@ import org.apache.tools.ant.types.FileList;
  * </li><li>
  * Record the fact that java files must be recompiled if the ant build
  * file changes
- * </li></ulist>
+ * </li></ul>
  * 
  * @author <a href="mailto:cstrong@arielpartners.com">Craeg Strong</a>
  * @version $Revision$ $Date$

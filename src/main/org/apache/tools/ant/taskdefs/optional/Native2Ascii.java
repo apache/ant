@@ -69,7 +69,7 @@ import java.io.File;
 /**
  * Convert files from native encodings to ascii.
  *
- * @author Drew Sudell <asudell@acm.org>
+ * @author <a href="asudell@acm.org">Drew Sudell</a>
  * @author <a href="mailto:stefan.bodewig@epost.de">Stefan Bodewig</a>
  */
 public class Native2Ascii extends MatchingTask {

@@ -78,7 +78,7 @@ public class Socket {
         port = value.intValue();
     }
 
-    /** if no host is set, returning ':<port>', will take localhost */
+    /** if no host is set, returning ':&lt;port&gt;', will take localhost */
     public String toString() {
         return host + ":" + port;
     }

@@ -70,7 +70,7 @@ import java.util.Hashtable;
 
 /**
  * This task is the manager for RecorderEntry's.  It is this class
- * that holds all entries, modifies them every time the <recorder>
+ * that holds all entries, modifies them every time the &lt;recorder&gt;
  * task is called, and addes them to the build listener process.
  * @see RecorderEntry
  * @author <a href="mailto:jayglanville@home.com">J D Glanville</a>

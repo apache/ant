@@ -69,7 +69,7 @@ import org.apache.tools.ant.util.FileNameMapper;
  * task, the execute command and a parameterless constructor (for
  * reflection).</p>
  *
- * @author Takashi Okamoto <tokamoto@rd.nttdata.co.jp>
+ * @author <a href="mailto:tokamoto@rd.nttdata.co.jp">Takashi Okamoto</a>
  * @author <a href="mailto:stefan.bodewig@epost.de">Stefan Bodewig</a> 
  */
 

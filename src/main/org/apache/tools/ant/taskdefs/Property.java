@@ -74,8 +74,8 @@ import java.util.Enumeration;
  * Will not override values set by the command line or parent projects.
  *
  * @author costin@dnt.ro
- * @author Sam Ruby <rubys@us.ibm.com>
- * @author Glenn McAllister <glennm@ca.ibm.com>
+ * @author <a href="mailto:rubys@us.ibm.com">Sam Ruby</a>
+ * @author <a href="mailto:glennm@ca.ibm.com">Glenn McAllister</a>
  */
 public class Property extends Task {
 

@@ -59,7 +59,7 @@ package org.apache.tools.ant.types;
 /**
  * Description is used to provide a project-wide description element
  * (that is, a description that applies to a buildfile as a whole).
- * If present, the <description> element is printed out before the
+ * If present, the &lt;description&gt; element is printed out before the
  * target descriptions.
  * 
  * Description has no attributes, only text.  There can only be one
