@@ -1,0 +1,82 @@
+<?xml version="1.0"?>
+<?xml-stylesheet href="docbookx.css" type="text/css"?>
+<!--DOCTYPE article SYSTEM "docbookx.dtd"-->
+<article> 
+  <artheader> 
+	 <title>Utah Design and Programmer's Guide</title> 
+	 <author> 
+		<firstname>James Duncan</firstname> 
+		<surname>Davidson</surname> 
+	 </author> 
+	 <copyright> 
+		<year>2000</year> 
+		<holder>The Apache Software Foundation</holder> 
+	 </copyright> 
+  </artheader> 
+  <para>This document describes the design goals for Utah, a proposed
+	 replacement for the current Ant build tool. I'm calling this work "Utah" as I
+	 hope to be done with it by the end of the W3C DOM Working Group meeting taking
+	 place in Orem Utah Mar 20-23. No other meaning is intended to be conveyed by
+	 the codename.</para> 
+  <sect1> 
+	 <title>History</title> 
+	 <para>Ant was originally designed as a small, lightweight
+		<trademark>Java</trademark> based build tool. It was first created out of shear
+		frustration with make and all its variants. </para> 
+	 <para>This first public version of Ant, Ant 1.0 which was released as part
+		of the Tomcat and Watchdog code drops from Sun Microsystems, was quite popular.
+		Everyone loved its simplicity. However, everyone wanted to do something
+		different. Lots of solutions were proposed, some were hacked in. At some point
+		it was necessary to take a clean look at what it was becoming and the types of
+		problems it was really intended to solve.Utah is that fresh look It is probably
+		not going to be entirely backwards compatible, but it is hoped that by starting
+		out with a fresh look at the goals and requirements of Ant, we can end up with
+		a better tool.</para> 
+  </sect1> 
+  <sect1> 
+	 <title>Design Goals</title> 
+	 <para>Simplicity: </para> 
+	 <para>Ant must be simple to use and simple to extend. Of course, the
+		definition of simple can vary depending on which audience is chosen. For Ant,
+		since it is a build tool aimed at Java developers, the goal is simplicity of
+		use and extension for a competent Java programmer.</para> 
+	 <para>Understandability: </para> 
+	 <para>The way Ant works should be clearly understandable for a first time
+		as well as a veteran user. The mechanism to extend Amsterdam must be
+		understandable. And the build file syntax must be eminently
+		understandable.</para> 
+	 <para>Extensibility: </para> 
+	 <para>Ant must provide an easy to use extensibility path. Extensions must
+		be easy to write for the programmer and easy to place where they can best be
+		used.</para> 
+  </sect1> 
+  <sect1> 
+	 <title>Runtime Conceptual Overview</title> 
+	 <para>Ant works with entities called Projects. A Project is a collection of
+		Property definitions, Task definitions, and Targets.</para> 
+	 <para>A Property is a mutable name-value pair that is scoped to the
+		Project. As Tasks within Targets are executed, the Property list of the Project
+		can be added to, Property values can be changed, and Properties can even be
+		removed. This allows runtime information to be passed to the Tasks either by
+		the user or by programmatic result of preceding Tasks.</para> 
+	 <para>A Target is a unit of work within the Project. For example, a Project
+		could have a Target that built a set of classes in development mode, another
+		Target that packaged the classes into a distributable form, and yet another
+		Target that cleaned up everything. Targets can indicate that they depend on
+		other Targets. If such a dependency is indicated, the runtime ensures that the
+		Target that is depended on is executed before executing any Tasks for the
+		current Target.</para> 
+	 <para>Targets contain Tasks. More accurately, they contain implementations
+		of a Task. For example, a Task that performs basic Java classfile compilation
+		is provided with Ant. Another task that performs the JAR operation is provided.
+		These Tasks are very different, but each implements the Task interface. Each
+		Task is configured for its purpose. When a Target is executed, the sequence of
+		Tasks within that target are executed in turn.</para> 
+	 <para>More specifically, when a Target is executed, the list of Tasks for
+		that Target is retrieved by the runtime. Each Task is created as a new object,
+		its configuration methods called with the information that is used, and then
+		the Task is executed. By performing configuration just before the Task is
+		executed, any properties that were defined or modified by other Tasks can
+		affect the currently running task.</para> 
+  </sect1>
+</article>

@@ -1,0 +1,64 @@
+
+/* Use Times New Roman for default font */
+$DOCUMENT {
+  font-family: "Times New Roman";
+  font-size: 12pt;
+  margin-top: 5px;
+  margin-left: 5px;
+}
+
+$COMMENT {
+  display: block;
+  color: purple;
+  white-space: pre;
+}
+
+$PROCINS {
+  color: black;
+  background-color: #c0c0c0;
+}
+
+abbrev, abstract, ackno, acronym, address, affiliation, alt, answer, appendix, areaset, areaspec, arg, artheader, article, artpagenums, attribution, audioobject, author, authorblurb, authorgroup, authorinitials, bibliodiv, biblioentry, bibliography, bibliomisc, bibliomixed, biblioset, blockquote, book, bookbiblio, bookinfo, bridgehead, callout, calloutlist, caption, caution, chapter, citerefentry, citetitle, cmdsynopsis, collab, collabname, colophon, command, comment, confdates, confgroup, confnum, confsponsor, conftitle, contractnum, contractsponsor, contrib, copyright, corpauthor, corpname, date, dedication, docinfo, edition, editor, entry, entrytbl, epigraph, equation, example, figure, firstname, footnote, formalpara, funcdef, funcprototype, funcsynopsis, funcsynopsisinfo, glossary, glossdef, glossdiv, glossentry, glosslist, glosssee, glossseealso, glossterm, graphicco, group, guibutton, guiicon, guilabel, guimenu, guimenuitem, guisubmenu, highlights, holder, honorific, imageobject, imageobjectco, important, index, indexdiv, indexentry, indexterm, informalequation, informalexample, informalfigure, informaltable, inlineequation, inlinemediaobject, interface, invpartnumber, isbn, issn, issuenum, itemizedlist, itermset, jobtitle, keycap, keycombo, keysym, keyword, keywordset, label, legalnotice, lineage, link, listitem, literallayout, lot, lotentry, manvolnum, mediaobject, mediaobjectco, member, menuchoice, modespec, mousebutton, msg, msgaud, msgentry, msgexplan, msginfo, msglevel, msgmain, msgorig, msgrel, msgset, msgsub, msgtext, note, objectinfo, olink, option, orderedlist, orgdiv, orgname, othercredit, othername, pagenums, para, paramdef, part, partintro, phrase, preface, primary, primaryie, printhistory, procedure, productname, productnumber, programlisting, programlistingco, pubdate, publisher, publishername, pubsnumber, qandadiv, qandaentry, qandaset, question, refclass, refdescriptor, refentry, refentrytitle, reference, refmeta, refmiscinfo, refname, refnamediv, refpurpose, refsect1, refsect1info, refsect2, refsect2info, refsect3, refsect3info, refsynopsisdiv, refsynopsisdivinfo, releaseinfo, replaceable, revhistory, revision, revnumber, revremark, row, screen, screenco, screeninfo, screenshot, secondary, secondaryie, sect1, sect1info, sect2, sect2info, sect3, sect3info, sect4, sect4info, sect5, sect5info, section, sectioninfo, see, seealso, seealsoie, seeie, seg, seglistitem, segmentedlist, segtitle, seriesinfo, seriesvolnums, set, setindex, setinfo, shortaffil, shortcut, sidebar, simpara, simplelist, simplesect, step, subject, subjectset, subjectterm, substeps, subtitle, surname, synopfragment, synopfragmentref, synopsis, table, tbody, term, tertiary, tertiaryie, textobject, tfoot, tgroup, thead, tip, title, titleabbrev, toc, tocback, tocchap, tocentry, tocfront, toclevel1, toclevel2, toclevel3, toclevel4, toclevel5, tocpart, ulink, variablelist, varlistentry, videoobject, volumenum, warning, year {
+  display: block;
+}
+
+surname {
+  display: inline;
+}
+
+firstname {
+  display: inline;
+}
+
+year {
+  display: inline;
+}
+
+holder {
+  display: inline;
+}
+
+title {
+  margin-bottom: 6pt;
+  font-weight: bold;
+  font-size: 12pt;
+  margin-top: 12pt;
+}
+
+author {
+  font-family: sans-serif;
+}
+
+article {
+  font-family: sans-serif;
+  font-size: 10pt;
+}
+
+para {
+  margin-top: 6pt;
+  margin-bottom: 6pt;
+}
+
+itemizedlist {
+  margin-left: 24pt;
+}
