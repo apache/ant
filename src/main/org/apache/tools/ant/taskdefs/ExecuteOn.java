@@ -118,49 +118,35 @@ public class ExecuteOn extends ExecTask {
     protected void runExec(Execute exe) throws BuildException {
         try {
 
-            Vector v = new Vector();
             for (int i=0; i<filesets.size(); i++) {
+                Vector v = new Vector();
                 FileSet fs = (FileSet) filesets.elementAt(i);
+                File base = fs.getDir(project);
                 DirectoryScanner ds = fs.getDirectoryScanner(project);
 
                 if (!"dir".equals(type)) {
-                    String[] s = ds.getIncludedFiles();
+                    String[] s = getFiles(base, ds);
                     for (int j=0; j<s.length; j++) {
-                        v.addElement(new File(fs.getDir(project), s[j]).getAbsolutePath());
+                        v.addElement(s[j]);
                     }
                 }
 
                 if (!"file".equals(type)) {
-                    String[] s = ds.getIncludedDirectories();
+                    String[] s = getDirs(base, ds);;
                     for (int j=0; j<s.length; j++) {
-                        v.addElement(new File(fs.getDir(project), s[j]).getAbsolutePath());
-                    }
-                }
-            }
-
-            String[] s = new String[v.size()];
-            v.copyInto(s);
-
-            int err = -1;
-
-            if (parallel) {
-                String[] command = getCommandline(s);
-                log("Executing " + Commandline.toString(command), Project.MSG_VERBOSE);
-                exe.setCommandline(command);
-                err = exe.execute();
-                if (err != 0) {
-                    if (failOnError) {
-                        throw new BuildException("Exec returned: "+err, 
-                                                 location);
-                    } else {
-                        log("Result: " + err, Project.MSG_ERR);
+                        v.addElement(s[j]);
                     }
                 }
 
-            } else {
-                for (int i=0; i<s.length; i++) {
-                    String[] command = getCommandline(s[i]);
-                    log("Executing " + Commandline.toString(command), Project.MSG_VERBOSE);
+                String[] s = new String[v.size()];
+                v.copyInto(s);
+
+                int err = -1;
+                
+                if (parallel) {
+                    String[] command = getCommandline(s, base);
+                    log("Executing " + Commandline.toString(command), 
+                        Project.MSG_VERBOSE);
                     exe.setCommandline(command);
                     err = exe.execute();
                     if (err != 0) {
@@ -169,6 +155,23 @@ public class ExecuteOn extends ExecTask {
                                                      location);
                         } else {
                             log("Result: " + err, Project.MSG_ERR);
+                        }
+                    }
+
+                } else {
+                    for (int j=0; j<s.length; j++) {
+                        String[] command = getCommandline(s[j], base);
+                        log("Executing " + Commandline.toString(command), 
+                            Project.MSG_VERBOSE);
+                        exe.setCommandline(command);
+                        err = exe.execute();
+                        if (err != 0) {
+                            if (failOnError) {
+                                throw new BuildException("Exec returned: "+err, 
+                                                         location);
+                            } else {
+                                log("Result: " + err, Project.MSG_ERR);
+                            }
                         }
                     }
                 }
@@ -186,8 +189,9 @@ public class ExecuteOn extends ExecTask {
      * Construct the command line for parallel execution.
      *
      * @param srcFiles The filenames to add to the commandline
+     * @param baseDir filenames are relative to this dir
      */
-    protected String[] getCommandline(String[] srcFiles) {
+    protected String[] getCommandline(String[] srcFiles, File baseDir) {
         String[] orig = cmdl.getCommandline();
         String[] result = new String[orig.length+srcFiles.length];
 
@@ -196,7 +200,11 @@ public class ExecuteOn extends ExecTask {
             index = srcFilePos.getPosition();
         }
         System.arraycopy(orig, 0, result, 0, index);
-        System.arraycopy(srcFiles, 0, result, index, srcFiles.length);
+
+        for (int i=0; i < srcFiles.length; i++) {
+            result[index+i] = (new File(baseDir, srcFiles[i])).getAbsolutePath();
+        }
+        
         System.arraycopy(orig, index, result, index+srcFiles.length, 
                          orig.length-index);
         return result;
@@ -206,9 +214,26 @@ public class ExecuteOn extends ExecTask {
      * Construct the command line for serial execution.
      *
      * @param srcFile The filename to add to the commandline
+     * @param baseDir filename is relative to this dir
      */
-    protected String[] getCommandline(String srcFile) {
-        return getCommandline(new String[] {srcFile});
+    protected String[] getCommandline(String srcFile, File baseDir) {
+        return getCommandline(new String[] {srcFile}, baseDir);
+    }
+
+    /**
+     * Return the list of files from this DirectoryScanner that should
+     * be included on the command line.
+     */
+    protected String[] getFiles(File basedir, DirectoryScanner ds) {
+        return ds.getIncludedFiles();
+    }
+
+    /**
+     * Return the list of Directories from this DirectoryScanner that
+     * should be included on the command line.
+     */
+    protected String[] getDirs(File basedir, DirectoryScanner ds) {
+        return ds.getIncludedDirectories();
     }
 
     /**
@@ -220,5 +245,4 @@ public class ExecuteOn extends ExecTask {
             return new String[] {"file", "dir", "both"};
         }
     }
-
 }
