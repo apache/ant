@@ -14,7 +14,7 @@
 list, delete files, and create directories.  See below for descriptions and examples of how
 to perform each task.</p>
 <p><b>Note:</b> This task depends on external libraries not included in the Ant distribution.
-See <a href="../install.html#librarydependencies">Library Dependencies</a> for more information.</p>
+See <a href="../install.html#commons-net">Library Dependencies</a> for more information.</p>
 <p>The ftp task makes no attempt to determine what file system syntax is
 required by the remote server, and defaults to Unix standards.
 <i>remotedir</i> must be specified in the exact syntax required by the ftp
@@ -29,13 +29,6 @@ This task does not currently use the proxy information set by the
 <a href="setproxy.html">&lt;setproxy&gt;</a> task, and cannot go through
 a firewall via socks. 
 <p>
-<b>Use of the FTP task with Microsoft FTP servers
-</b>
-<p>
-To use the FTP task with Microsoft FTP servers, 
-you need CVS HEAD of commons-net and jakarta-oro after 2004-02-01 
-or a release of commons-net after 1.1.0 and jakarta-oro after 2.0.8.
-</p>
 <b>Warning: </b> there have been problems reported concerning the ftp get with newer attribute.
 Problems might be due to format of ls -l differing from what is expected by commons-net,
 for instance due to specificities of langage used by the ftp server in the directory listing.
