@@ -1,5 +1,5 @@
 /*
- * Copyright  2001-2002,2004 The Apache Software Foundation
+ * Copyright  2001-2002,2004-2005 The Apache Software Foundation
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -39,6 +39,7 @@ public abstract class Unpack extends Task {
      *             mechanism do the work and also to encapsulate operations on
      *             the type in its own class.
      * @ant.attribute ignore="true"
+     * @param src a <code>String</code> value
      */
     public void setSrc(String src) {
         log("DEPRECATED - The setSrc(String) method has been deprecated."
@@ -52,6 +53,7 @@ public abstract class Unpack extends Task {
      *             mechanism do the work and also to encapsulate operations on
      *             the type in its own class.
      * @ant.attribute ignore="true"
+     * @param dest a <code>String</code> value
      */
     public void setDest(String dest) {
         log("DEPRECATED - The setDest(String) method has been deprecated."
@@ -103,7 +105,8 @@ public abstract class Unpack extends Task {
         int len = sourceName.length();
         if (defaultExtension != null
             && len > defaultExtension.length()
-            && defaultExtension.equalsIgnoreCase(sourceName.substring(len - defaultExtension.length()))) {
+            && defaultExtension.equalsIgnoreCase(
+                sourceName.substring(len - defaultExtension.length()))) {
             dest = new File(dest, sourceName.substring(0,
                                                        len - defaultExtension.length()));
         } else {
@@ -111,6 +114,10 @@ public abstract class Unpack extends Task {
         }
     }
 
+    /**
+     * Execute the task.
+     * @throws BuildException on error
+     */
     public void execute() throws BuildException {
         File savedDest = dest; // may be altered in validate
         try {
@@ -121,6 +128,16 @@ public abstract class Unpack extends Task {
         }
     }
 
+    /**
+     * Get the extension.
+     * This is to be overridden by subclasses.
+     * @return the default extension.
+     */
     protected abstract String getDefaultExtension();
+
+    /**
+     * Do the uncompressing.
+     * This is to be overridden by subclasses.
+     */
     protected abstract void extract();
 }
