@@ -118,5 +118,11 @@ public class XmlValidateTest extends BuildFileTest {
     public void testXmlCatalog() {
         executeTarget("xmlcatalog");
     }
-}
 
+    /**
+     * Test nested xmlcatalog definitions
+     */
+    public void testXmlCatalogNested() {
+        executeTarget("xmlcatalognested");
+    }
+}

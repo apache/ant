@@ -67,6 +67,7 @@ import org.apache.tools.ant.types.Reference;
 import org.apache.tools.ant.util.FileUtils;
 import org.apache.tools.ant.types.XMLCatalog;
 import org.xml.sax.EntityResolver;
+import javax.xml.transform.URIResolver;
 
 /**
  * A Task to process via XSLT a set of XML documents. This is
@@ -662,14 +663,19 @@ public class XSLTProcess extends MatchingTask implements XSLTLogger {
                 liaison.addParam(p.getName(), p.getExpression());
             }
             // if liaison is a TraxLiason, use XMLCatalog as the entity
-            // resolver
+            // resolver and URI resolver
             if (liaison.getClass().getName().equals(TRAX_LIAISON_CLASS) &&
                 xmlCatalog != null) {
-                log("Configuring TraxLiaison and calling entity resolver",
-                    Project.MSG_DEBUG);
+                log("Configuring TraxLiaison: setting entity resolver " +
+                    "and setting URI resolver", Project.MSG_DEBUG);
                 Method resolver = liaison.getClass()
-                                    .getDeclaredMethod("setEntityResolver", 
-                                        new Class[] {EntityResolver.class});
+                    .getDeclaredMethod("setEntityResolver", 
+                                       new Class[] {EntityResolver.class});
+                resolver.invoke(liaison, new Object[] {xmlCatalog});
+
+                resolver = liaison.getClass()
+                    .getDeclaredMethod("setURIResolver", 
+                                       new Class[] {URIResolver.class});
                 resolver.invoke(liaison, new Object[] {xmlCatalog});
             }
         } catch (Exception ex) {

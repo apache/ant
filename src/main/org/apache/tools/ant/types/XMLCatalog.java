@@ -58,17 +58,30 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStream;
 import java.io.IOException;
+import java.io.FileNotFoundException;
 import java.net.URL;
+import java.net.MalformedURLException;
 import java.util.Enumeration;
+import java.util.Stack;
 import java.util.Vector;
+import javax.xml.transform.Source;
+import javax.xml.transform.TransformerException;
+import javax.xml.transform.URIResolver;
+import javax.xml.transform.sax.SAXSource;
+import javax.xml.parsers.SAXParserFactory;
+import javax.xml.parsers.ParserConfigurationException;
+
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.AntClassLoader;
+import org.apache.tools.ant.util.FileUtils;
+
 import org.xml.sax.EntityResolver;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
-import org.apache.tools.ant.util.LoaderUtils;
-import org.apache.tools.ant.util.FileUtils;
+import org.xml.sax.XMLReader;
+
+
 
 /**
  * This data type provides a catalog of DTD locations.
@@ -83,7 +96,7 @@ import org.apache.tools.ant.util.FileUtils;
  * </code>
  * <p>
  * The object implemention <code>sometask</code> must provide a method called
- * <code>createXMLCatalog</code> which returns an instance of 
+ * <code>createXMLCatalog</code> which returns an instance of
  * <code>XMLCatalog</code>. Nested DTD and entity definitions are handled by
  * the XMLCatalog object and must be labeled <code>dtd</code> and
  * <code>entity</code> respectively.</p>
@@ -98,16 +111,16 @@ import org.apache.tools.ant.util.FileUtils;
 public class XMLCatalog extends DataType implements Cloneable, EntityResolver {
     /** File utilities instance */
     private FileUtils fileUtils = FileUtils.newFileUtils();
-    
+
     //-- Fields ----------------------------------------------------------------
-    
+
     /** holds dtd/entity objects until needed */
     private Vector elements = new Vector();
 
     private Path classpath;
 
     //-- Methods ---------------------------------------------------------------
-    
+
     /**
      * @return the elements of the catalog - DTDLocation objects
      */
@@ -116,6 +129,8 @@ public class XMLCatalog extends DataType implements Cloneable, EntityResolver {
     }
 
     /**
+     * Returns the classpath in which to attempt to resolve resources.
+     *
      * @return the classpath
      */
     private Path getClasspath() {
@@ -123,25 +138,22 @@ public class XMLCatalog extends DataType implements Cloneable, EntityResolver {
     }
 
     /**
-     * Set the list of DTDLocation object sin the catalog
+     * Set the list of DTDLocation objects in the catalog.  Not
+     * allowed if this catalog is itself a reference to another
+     * catalog -- that is, a catalog cannot both refer to another
+     * <em>and</em> contain elements or other attributes.
      *
      * @param aVector the new list of DTD Locations to use in the catalog.
      */
     private void setElements(Vector aVector) {
         elements = aVector;
     }
-    
-    /**
-     * Add a DTD Location to the catalog
-     *
-     * @param aDTD the DTDLocation instance to be aded to the catalog
-     */
-    private void addElement(DTDLocation aDTD) {
-        getElements().addElement(aDTD);
-    }
 
     /**
-     * Allows nested classpath elements
+     * Allows nested classpath elements. Not allowed if this catalog
+     * is itself a reference to another catalog -- that is, a catalog
+     * cannot both refer to another <em>and</em> contain elements or
+     * other attributes.
      */
     public Path createClasspath() {
         if (isReference()) {
@@ -150,11 +162,15 @@ public class XMLCatalog extends DataType implements Cloneable, EntityResolver {
         if (this.classpath == null) {
             this.classpath = new Path(getProject());
         }
+        checked = false;
         return this.classpath.createPath();
     }
 
     /**
-     * Allows simple classpath string
+     * Allows simple classpath string.  Not allowed if this catalog is
+     * itself a reference to another catalog -- that is, a catalog
+     * cannot both refer to another <em>and</em> contain elements or
+     * other attributes.
      */
     public void setClasspath(Path classpath) {
         if (isReference()) {
@@ -165,23 +181,32 @@ public class XMLCatalog extends DataType implements Cloneable, EntityResolver {
         } else {
             this.classpath.append(classpath);
         }
+        checked = false;
     }
 
     /**
-     * Allows classpath reference
+     * Allows classpath reference.  Not allowed if this catalog is
+     * itself a reference to another catalog -- that is, a catalog
+     * cannot both refer to another <em>and</em> contain elements or
+     * other attributes.
      */
     public void setClasspathRef(Reference r) {
         if (isReference()) {
             throw tooManyAttributes();
         }
         createClasspath().setRefid(r);
+        checked = false;
     }
 
     /**
-     * Creates the nested <code>&lt;dtd&gt;</code> element.
+     * Creates the nested <code>&lt;dtd&gt;</code> element.  Not
+     * allowed if this catalog is itself a reference to another
+     * catalog -- that is, a catalog cannot both refer to another
+     * <em>and</em> contain elements or other attributes.
      *
-     * @param dtd the infromation about the DTD to be added to the catalog
-     * @exception BuildException if this is a reference and no nested 
+     * @param dtd the information about the PUBLIC resource mapping to
+     *            be added to the catalog
+     * @exception BuildException if this is a reference and no nested
      *       elements are allowed.
      */
     public void addDTD(DTDLocation dtd) throws BuildException {
@@ -190,13 +215,18 @@ public class XMLCatalog extends DataType implements Cloneable, EntityResolver {
         }
 
         getElements().addElement(dtd);
+        checked = false;
     }
-    
+
     /**
-     * Creates the nested <code>&lt;entity&gt;</code> element
+     * Creates the nested <code>&lt;entity&gt;</code> element.    Not
+     * allowed if this catalog is itself a reference to another
+     * catalog -- that is, a catalog cannot both refer to another
+     * <em>and</em> contain elements or other attributes.
      *
-     * @param dtd the infromation about the DTD to be added to the catalog
-     * @exception BuildException if this is a reference and no nested 
+     * @param dtd the information about the URI resource mapping to be
+     *       added to the catalog
+     * @exception BuildException if this is a reference and no nested
      *       elements are allowed.
      */
     public void addEntity(DTDLocation dtd) throws BuildException {
@@ -204,7 +234,10 @@ public class XMLCatalog extends DataType implements Cloneable, EntityResolver {
     }
 
     /**
-     * Loads a nested XMLCatalog into our definition
+     * Loads a nested <code>&lt;xmlcatalog&gt;</code> into our
+     * definition.  Not allowed if this catalog is itself a reference
+     * to another catalog -- that is, a catalog cannot both refer to
+     * another <em>and</em> contain elements or other attributes.
      *
      * @param catalog Nested XMLCatalog
      */
@@ -224,15 +257,19 @@ public class XMLCatalog extends DataType implements Cloneable, EntityResolver {
         // Append the classpath of the nested catalog
         Path nestedClasspath = catalog.getClasspath();
         createClasspath().append(nestedClasspath);
+        checked = false;
     }
 
     /**
-     * Makes this instance in effect a reference to another XCatalog instance.
+     * Makes this instance in effect a reference to another XMLCatalog
+     * instance.
      *
-     * <p>You must not set another attribute or nest elements inside
-     * this element if you make it a reference.</p>
+     * <p>You must not set another attribute or nest elements inside *
+     * this element if you make it a reference.  That is, a catalog
+     * cannot both refer to another <em>and</em> contain elements or
+     * attributes.</p>
      *
-     * @param r the reference to which this catalogi instance is associated
+     * @param r the reference to which this catalog instance is associated
      * @exception BuildException if this instance already has been configured.
      */
     public void setRefid(Reference r) throws BuildException {
@@ -241,7 +278,7 @@ public class XMLCatalog extends DataType implements Cloneable, EntityResolver {
         }
         // change this to get the objects from the other reference
         Object o = r.getReferencedObject(getProject());
-        // we only support references to other XCatalogs
+        // we only support references to other XMLCatalogs
         if (o instanceof XMLCatalog) {
             // set all elements from referenced catalog to this one
             XMLCatalog catalog = (XMLCatalog) o;
@@ -250,81 +287,81 @@ public class XMLCatalog extends DataType implements Cloneable, EntityResolver {
             String msg = r.getRefId() + " does not refer to an XMLCatalog";
             throw new BuildException(msg);
         }
-
         super.setRefid(r);
     }
 
     /**
+     * Implements the EntityResolver.resolveEntity() interface method.
+     *
      * @see org.xml.sax.EntityResolver#resolveEntity
      */
     public InputSource resolveEntity(String publicId, String systemId)
         throws SAXException, IOException {
-        InputSource source = null;
-        DTDLocation matchingDTD = findMatchingDTD(publicId);
-        if (matchingDTD != null) {
-            // check if publicId is mapped to a file
-            log("Matching DTD found for publicId: '" + publicId +
-                "' location: '" + matchingDTD.getLocation() + "'",
-                Project.MSG_DEBUG);
-            File dtdFile = project.resolveFile(matchingDTD.getLocation());
-            if (dtdFile.exists() && dtdFile.canRead()) {
-                source = new InputSource(new FileInputStream(dtdFile));
-                URL dtdFileURL = fileUtils.getFileURL(dtdFile);
-                source.setSystemId(dtdFileURL.toExternalForm());
-                log("matched a readable file", Project.MSG_DEBUG);
-            } else {
-                // check if publicId is a resource
 
-                AntClassLoader loader = null;
-                if (classpath != null) {
-                    loader = new AntClassLoader(project, classpath);
-                } else {
-                    loader = new AntClassLoader(project, Path.systemClasspath);
-                }
+       if (!checked) {
+          // make sure we don't have a circular reference here
+          Stack stk = new Stack();
+          stk.push(this);
+          dieOnCircularReference(stk, getProject());
+       }
 
-                InputStream is
-                    = loader.getResourceAsStream(matchingDTD.getLocation());
-                if (is != null) {
-                    source = new InputSource(is);
-                    source.setSystemId(loader.getResource(
-                        matchingDTD.getLocation()).toExternalForm());
-                    log("matched a resource", Project.MSG_DEBUG);
-                } else {
-                    // check if it's a URL
-                    try {
-                        URL dtdUrl = new URL(matchingDTD.getLocation());
-                        InputStream dtdIs = dtdUrl.openStream();
-                        if (dtdIs != null) {
-                            source = new InputSource(dtdIs);
-                            source.setSystemId(dtdUrl.toExternalForm());
-                            log("matched as a URL", Project.MSG_DEBUG);
-                        } else {
-                            log("No match, parser will use: '" + systemId + "'",
-                                Project.MSG_DEBUG);
-                        }
-                    } catch (IOException ioe) {
-                        //ignore
-                    }
-                }
-            }
-        } else {
-            log("No match, parser will use: '" + systemId + "'",
-                Project.MSG_DEBUG);
+        log("resolveEntity: '" + publicId + "': '" + systemId + "'",
+            Project.MSG_DEBUG);
+
+        InputSource inputSource = resolveEntityImpl(publicId, systemId);
+
+        if (inputSource == null) {
+            log("No matching catalog entry found, parser will use: '" +
+                systemId + "'", Project.MSG_DEBUG);
         }
-        // else let the parser handle it as a URI as we don't know what to
-        // do with it
+
+        return inputSource;
+    }
+
+    /**
+     * Implements the URIResolver.resolve() interface method.
+     *
+     * @see javax.xml.transform.URIResolver#resolve
+     */
+    public Source resolve(String href, String base)
+        throws TransformerException {
+
+       if (!checked) {
+          // make sure we don't have a circular reference here
+          Stack stk = new Stack();
+          stk.push(this);
+          dieOnCircularReference(stk, getProject());
+       }
+
+        SAXSource source = null;
+        InputSource inputSource = null;
+
+        String uri = removeFragment(href);
+
+        log("resolve: '" + uri + "' with base: '" + base + "'", Project.MSG_DEBUG);
+
+        source = resolveImpl(uri, base);
+
+        if (source == null) {
+            log("No matching catalog entry found, parser will use: '" +
+                href + "'", Project.MSG_DEBUG);
+        }
+        else {
+            setEntityResolver(source);
+        }
+
         return source;
     }
-    
+
     /**
      * Find a DTDLocation instance for the given publicId.
      *
-     * @param publicId the publicId of the DTD for which local information is 
-     *        required
-     * @return a DTDLocation instance with information on the local location 
-     *         of the DTD or null if no such information is available
+     * @param publicId the publicId of the Resource for which local information
+     *        is required
+     * @return a DTDLocation instance with information on the local location
+     *         of the Resource or null if no such information is available
      */
-    private DTDLocation findMatchingDTD(String publicId) {
+    private DTDLocation findMatchingEntry(String publicId) {
         Enumeration elements = getElements().elements();
         DTDLocation element = null;
         while (elements.hasMoreElements()) {
@@ -335,6 +372,246 @@ public class XMLCatalog extends DataType implements Cloneable, EntityResolver {
         }
         return null;
     }
-      
-}
 
+    /**
+     * <p>This is called from the URIResolver to set an EntityResolver
+     * on the SAX parser to be used for new XML documents that are
+     * encountered as a result of the document() function, xsl:import,
+     * or xsl:include.  This is done because the XSLT processor calls
+     * out to the SAXParserFactory itself to create a new SAXParser to
+     * parse the new document.  The new parser does not automatically
+     * inherit the EntityResolver of the original (although arguably
+     * it should).  See below:</p>
+     *
+     * <tt>"If an application wants to set the ErrorHandler or
+     * EntityResolver for an XMLReader used during a transformation,
+     * it should use a URIResolver to return the SAXSource which
+     * provides (with getXMLReader) a reference to the XMLReader"</tt>
+     *
+     * <p>...quoted from page 118 of the Java API for XML
+     * Processing 1.1 specification</p>
+     *
+     */
+    private void setEntityResolver(SAXSource source) throws TransformerException {
+
+        XMLReader reader = source.getXMLReader();
+        if (reader == null) {
+            SAXParserFactory spFactory = SAXParserFactory.newInstance();
+            spFactory.setNamespaceAware(true);
+            try {
+                reader = spFactory.newSAXParser().getXMLReader();
+            }
+            catch (ParserConfigurationException ex) {
+                throw new TransformerException(ex);
+            }
+            catch (SAXException ex) {
+                throw new TransformerException(ex);
+            }
+        }
+        reader.setEntityResolver(this);
+        source.setXMLReader(reader);
+    }
+
+    /**
+     * Utility method to remove trailing fragment from a URI.
+     * For example,
+     * <code>http://java.sun.com/index.html#chapter1</code>
+     * would return <code>http://java.sun.com/index.html</code>.
+     *
+     * @param uri The URI to process.  It may or may not contain a
+     *            fragment.
+     * @return The URI sans fragment.
+     */
+    private String removeFragment(String uri) {
+        String result = uri;
+        String fragment = null;
+        int hashPos = uri.indexOf("#");
+        if (hashPos >= 0) {
+            result = uri.substring(0, hashPos);
+            fragment = uri.substring(hashPos+1);
+        }
+        return result;
+    }
+
+    /**
+     * Utility method to lookup a DTDLocation in the filesystem.
+     *
+     * @return An InputSource for reading the file, or <code>null</code>
+     *     if the file does not exist or is not readable.
+     */
+    private InputSource filesystemLookup(DTDLocation matchingEntry) {
+
+        String uri = matchingEntry.getLocation();
+        File basedir = null;
+
+        //
+        // The DTDLocation may specify a relative path for its
+        // location attribute.  This is resolved using the appropriate
+        // base.
+        //
+        File resFile = project.resolveFile(uri);
+        InputSource source = null;
+
+        if (resFile.exists() && resFile.canRead()) {
+            try {
+                source = new InputSource(new FileInputStream(resFile));
+                URL resFileURL = fileUtils.getFileURL(resFile);
+                String sysid = resFileURL.toExternalForm();
+                source.setSystemId(sysid);
+                log("catalog entry matched a readable file: '" +
+                    sysid + "'", Project.MSG_DEBUG);
+            } catch(FileNotFoundException ex) {
+                // ignore
+            } catch(MalformedURLException ex) {
+                // ignore
+            } catch(IOException ex) {
+                // ignore
+            }
+        }
+
+        return source;
+    }
+
+    /**
+     * Utility method to lookup a DTDLocation in the classpath.
+     *
+     * @return An InputSource for reading the resource, or <code>null</code>
+     *    if the resource does not exist in the classpath or is not readable.
+     */
+    private InputSource classpathLookup(DTDLocation matchingEntry) {
+
+        InputSource source = null;
+
+        AntClassLoader loader = null;
+        if (classpath != null) {
+            loader = new AntClassLoader(project, classpath);
+        } else {
+            loader = new AntClassLoader(project, Path.systemClasspath);
+        }
+
+        //
+        // for classpath lookup we ignore the base directory
+        //
+        InputStream is
+            = loader.getResourceAsStream(matchingEntry.getLocation());
+
+        if (is != null) {
+            source = new InputSource(is);
+            URL entryURL = loader.getResource(matchingEntry.getLocation());
+            String sysid = entryURL.toExternalForm();
+            source.setSystemId(sysid);
+            log("catalog entry matched a resource in the classpath: '" +
+                sysid + "'", Project.MSG_DEBUG);
+        }
+
+        return source;
+    }
+
+    /**
+     * Utility method to lookup a DTDLocation in URL-space.
+     *
+     * @return An InputSource for reading the resource, or <code>null</code>
+     *    if the resource does not identify a valid URL or is not readable.
+     */
+    private InputSource urlLookup(String uri, String base) {
+
+        InputSource source = null;
+        URL url = null;
+
+        try {
+            if (base == null) {
+                url = new URL(uri);
+            }
+            else {
+                URL baseURL = new URL(base);
+                url = (uri.length() == 0 ? baseURL : new URL(baseURL, uri));
+            }
+        }
+        catch (MalformedURLException ex) {
+            // ignore
+        }
+
+        if (url != null) {
+            try {
+                InputStream is = url.openStream();
+                if (is != null) {
+                    source = new InputSource(is);
+                    String sysid = url.toExternalForm();
+                    source.setSystemId(sysid);
+                    log("catalog entry matched as a URL: '" +
+                        sysid + "'", Project.MSG_DEBUG);
+                }
+            } catch(IOException ex) {
+                // ignore
+            }
+        }
+
+        return source;
+
+    }
+
+    /**
+     * Implements the guts of the resolveEntity() lookup strategy.
+     */
+    private InputSource resolveEntityImpl(String publicId,
+                                          String systemId) {
+
+        InputSource result = null;
+
+        DTDLocation matchingEntry = findMatchingEntry(publicId);
+
+        if (matchingEntry != null) {
+
+            log("Matching catalog entry found for publicId: '" +
+                matchingEntry.getPublicId() + "' location: '" +
+                matchingEntry.getLocation() + "'",
+                Project.MSG_DEBUG);
+
+            result = filesystemLookup(matchingEntry);
+
+            if (result == null) {
+                result = classpathLookup(matchingEntry);
+            }
+
+            if (result == null) {
+                result = urlLookup(matchingEntry.getLocation(), null);
+            }
+        }
+        return result;
+    }
+
+    /**
+     * Implements the guts of the resolve() lookup strategy.
+     */
+    private SAXSource resolveImpl(String href, String base)
+        throws TransformerException {
+
+        SAXSource result = null;
+        InputSource source = null;
+
+        DTDLocation matchingEntry = findMatchingEntry(href);
+
+        if (matchingEntry != null) {
+
+            log("Matching catalog entry found for uri: '" +
+                matchingEntry.getPublicId() + "' location: '" +
+                matchingEntry.getLocation() + "'",
+                Project.MSG_DEBUG);
+
+            source = filesystemLookup(matchingEntry);
+
+            if (source == null) {
+                source = classpathLookup(matchingEntry);
+            }
+
+            if (source == null) {
+                source = urlLookup(matchingEntry.getLocation(), base);
+            }
+
+            if (source != null) {
+                result = new SAXSource(source);
+            }
+        }
+        return result;
+    }
+}
