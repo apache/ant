@@ -77,6 +77,7 @@ import org.apache.tools.ant.RuntimeConfigurable;
  * and makes a copy of the unknown element, substituting
  * the the parameter values in attributes and text.
  * @author Peter Reilly
+ * @since Ant 1.6
  */
 public class MacroInstance extends Task implements DynamicConfigurator {
     private MacroDef template;

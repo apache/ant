@@ -72,6 +72,7 @@ import org.apache.tools.ant.UnknownElement;
  * Describe class <code>MacroDef</code> here.
  *
  * @author Peter Reilly
+ * @since Ant 1.6
  */
 public class MacroDef extends Task implements AntlibInterface, TaskContainer {
     private UnknownElement nestedTask;

@@ -75,6 +75,7 @@ import org.apache.tools.ant.UnknownElement;
  * </pre>
  *
  * @author Peter Reilly
+ * @since Ant 1.6
  */
 public class PreSetDef extends Task implements AntlibInterface, TaskContainer {
     private UnknownElement nestedTask;
