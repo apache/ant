@@ -9,8 +9,11 @@
 
 <h2><a name="mail">Mail</a></h2>
 <h3>Description</h3>
-<p>A task to send SMTP email. This task can send mail using either plain
-text, UU encoding, or MIME format mail, depending on what is available.
+<p>A task to send SMTP email.<br/><br/>
+This task can send mail using either plain
+text, UU encoding, or MIME format mail, depending on what is available.<br/>
+<br/>
+If you need SMTP auth, you have to use MIME (and therefore to install JavaMail).<br/><br/>
 Attachments may be sent using nested
 <a href="../CoreTypes/fileset.html">fileset</a> elements.</p>
 <p><strong>Note:</strong> This task may depend on external libraries
@@ -99,10 +102,23 @@ Library Dependencies</a> for more information.
     <td align="center" valign="top">No</td>
   </tr>
   <tr>
+    <td valign="top">user</td>
+    <td valign="top">user name for SMTP auth</td>
+    <td valign="center">Yes, if SMTP auth is required on your SMTP server<br/>
+    the email message will be then sent using Mime and requires JavaMail</td>
+  </tr>
+  <tr>
+    <td valign="top">password</td>
+    <td valign="top">password for SMTP auth</td>
+    <td valign="center">Yes, if SMTP auth is required on your SMTP server<br/>
+    the email message will be then sent using Mime and requires JavaMail</td>
+  </tr>
+  <tr>
     <td valign="top">encoding</td>
     <td valign="top">Specifies the encoding to use for the content of the email.
     Values are <code>mime</code>, <code>uu</code>, <code>plain</code>, or
-      <code>auto</code>.  The default value is <code>auto</code>.</td>
+      <code>auto</code>.  The default value is <code>auto</code>.
+      <code>uu</code> or <code>plain</code> are not compatible with SMTP auth</td>
     <td align="center" valign="top">No</td>
   </tr>
   <tr>
