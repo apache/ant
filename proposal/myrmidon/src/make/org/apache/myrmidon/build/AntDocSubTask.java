@@ -33,9 +33,8 @@ public class AntDocSubTask
     public AntDocSubTask()
     {
         setDestinationFile( GENERATED_FILE_NAME );
-        final String templateFile =
-            getClass().getResource( DEFAULT_TEMPLATE_FILE ).getFile();
-        setTemplateFile( new File( templateFile ) );
+        final URL resource = getClass().getResource( DEFAULT_TEMPLATE_FILE );
+        setTemplateURL( resource );
 
         final TemplateSubTask.ExtentTypes extent = new TemplateSubTask.ExtentTypes();
         extent.setValue( "hierarchy" );
