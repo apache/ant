@@ -496,6 +496,32 @@
           </tr>
         </table>
       </subsection>
+
+      <subsection name="XML Publication">
+
+        <p>XML Publication is a set of tools to generate Web pages
+        from desktop documents or other structured documents using
+        XSLT and Ant.</p>
+
+        <table>
+          <tr>
+            <th>Compatibility:</th>
+            <td>Ant 1.4</td>
+          </tr>
+          <tr>
+            <th>URL:</th>
+            <td><a href="http://XMLpublication.org/">http://XMLpublication.org/</a></td>
+          </tr>
+          <tr>
+            <th>Contact:</th>
+            <td><a href ="mailto:jmvanel@free.fr">Jean-Marc Vanel</a></td>
+          </tr>
+          <tr>
+            <th>License:</th>
+            <td>GNU General Public License.</td>
+          </tr>
+        </table>
+      </subsection>
     </section>
 
   </body>
