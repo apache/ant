@@ -11,6 +11,8 @@ import org.apache.avalon.framework.component.ComponentException;
 import org.apache.avalon.framework.component.ComponentManager;
 import org.apache.avalon.framework.component.Composable;
 import org.apache.avalon.framework.context.Context;
+import org.apache.avalon.excalibur.i18n.ResourceManager;
+import org.apache.avalon.excalibur.i18n.Resources;
 import org.apache.avalon.framework.logger.AbstractLoggable;
 import org.apache.myrmidon.components.converter.MasterConverter;
 import org.apache.myrmidon.components.type.TypeException;
@@ -28,6 +30,9 @@ public class DefaultMasterConverter
     extends AbstractLoggable
     implements MasterConverter, Composable
 {
+    private static final Resources REZ =
+        ResourceManager.getPackageResources( DefaultMasterConverter.class );
+
     private final static boolean DEBUG                = false;
 
     private ConverterRegistry    m_registry;
@@ -48,7 +53,8 @@ public class DefaultMasterConverter
         try { m_factory = typeManager.getFactory( Converter.ROLE ); }
         catch( final TypeException te )
         {
-            throw new ComponentException( "Unable to retrieve factory from TypeManager", te );
+            final String message = REZ.getString( "no-converter-factory.error" );
+            throw new ComponentException( message, te );
         }
     }
 
@@ -73,8 +79,11 @@ public class DefaultMasterConverter
 
         if( DEBUG )
         {
-            getLogger().debug( "Looking for converter from " + originalClass.getName() +
-                               " to " + destination.getName() );
+            final String message = 
+                REZ.getString( "converter-lookup.notice", 
+                               originalClass.getName(), 
+                               destination.getName() );
+            getLogger().debug( message );
         }
 
         //TODO: Start searching inheritance hierarchy for converter
@@ -83,9 +92,11 @@ public class DefaultMasterConverter
 
         if( null == name )
         {
-            throw new ConverterException( "Unable to find converter for " +
-                                          originalClass.getName() + " to " +
-                                          destination.getName() + " conversion" );
+            final String message = 
+                REZ.getString( "no-converter.notice", 
+                               originalClass.getName(), 
+                               destination.getName() );
+            throw new ConverterException( message );
         }
 
         try
@@ -93,18 +104,18 @@ public class DefaultMasterConverter
             //TODO: Start caching converters instead of repeatedly instantiating em.
             final Converter converter = (Converter)m_factory.create( name );
 
-
             if( DEBUG )
             {
-                getLogger().debug( "Found Converter: " + converter );
+                final String message = REZ.getString( "found-converter.notice", converter );
+                getLogger().debug( message );
             }
 
             return converter.convert( destination, original, context );
         }
         catch( final TypeException te )
         {
-            throw new ConverterException( "Badly configured TypeManager missing " +
-                                          "converter definition", te );
+            final String message = REZ.getString( "bad-typemanager.error" );
+            throw new ConverterException( message, te );
         }
     }
 }
