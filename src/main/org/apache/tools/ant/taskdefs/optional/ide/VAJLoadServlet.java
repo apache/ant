@@ -45,6 +45,9 @@ import java.util.Vector;
 public class VAJLoadServlet extends VAJToolsServlet {
 
     // constants for servlet param names
+    /**
+     * the version param string
+     */
     public static final String VERSION_PARAM = "version";
 
     /**

@@ -82,6 +82,7 @@ public class VAJLoad extends VAJTask {
 
     /**
      * Add a project description entry on the project list.
+     * @return a project description
      */
     public VAJProjectDescription createVAJProject() {
         VAJProjectDescription d = new VAJProjectDescription();
