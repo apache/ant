@@ -803,7 +803,7 @@ public class Project {
     /**
      * Calls File.setLastModified(long time) in a Java 1.1 compatible way.
      */
-    void setFileLastModified(File file, long time) throws BuildException {
+    public void setFileLastModified(File file, long time) throws BuildException {
         if (getJavaVersion() == JAVA_1_1) {
             log("Cannot change the modification time of " + file
                 + " in JDK 1.1", Project.MSG_WARN);

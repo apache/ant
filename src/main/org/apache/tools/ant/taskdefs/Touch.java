@@ -81,9 +81,6 @@ public class Touch extends Task {
     private long millis = -1;
     private String dateTime;
 
-    private static Method setLastModified = null;
-    private static Object lockReflection = new Object();
-
     /**
      * The name of the file to touch.
      */
@@ -157,40 +154,10 @@ public class Touch extends Task {
             return;
         }
 
-        if (setLastModified == null) {
-            synchronized (lockReflection) {
-                if (setLastModified == null) {
-                    try {
-                        setLastModified = 
-                            java.io.File.class.getMethod("setLastModified", 
-                                                         new Class[] {Long.TYPE});
-                    } catch (NoSuchMethodException nse) {
-                        throw new BuildException("File.setlastModified not in JDK > 1.1?",
-                                                 nse, location);
-                    }
-                }
-            }
-        }
-        
-        Long[] times = new Long[1];
         if (millis < 0) {
-            times[0] = new Long(System.currentTimeMillis());
+            project.setFileLastModified(file, System.currentTimeMillis());
         } else {
-            times[0] = new Long(millis);
-        }
-
-        try {
-            log("Setting modification time for "+file, 
-                Project.MSG_VERBOSE);
-
-            setLastModified.invoke(file, times);
-        } catch (InvocationTargetException ite) {
-            Throwable nested = ite.getTargetException();
-            throw new BuildException("Exception setting the modification time of "
-                                     + file, nested, location);
-        } catch (Throwable other) {
-            throw new BuildException("Exception setting the modification time of "
-                                     + file, other, location);
+            project.setFileLastModified(file, millis);
         }
     }
 
