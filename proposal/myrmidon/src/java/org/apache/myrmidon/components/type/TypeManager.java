@@ -24,4 +24,6 @@ public interface TypeManager
 
     TypeFactory getFactory( String role )
         throws TypeException;
+
+    TypeManager createChildTypeManager();
 }

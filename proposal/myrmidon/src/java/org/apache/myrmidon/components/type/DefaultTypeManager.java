@@ -48,6 +48,11 @@ public class DefaultTypeManager
         return createFactory( role );
     }
 
+    public TypeManager createChildTypeManager()
+    {
+        return new DefaultTypeManager( this );
+    }
+
     protected final MultiSourceTypeFactory lookupFactory( final String role )
     {
         return (MultiSourceTypeFactory)m_roleMap.get( role );
@@ -76,7 +81,7 @@ public class DefaultTypeManager
             factory = new MultiSourceTypeFactory( parentFactory );
         }
 
-        ///If we haven't goa factory try to create a new one
+        ///If we haven't got factory try to create a new one
         if( null == factory )
         {
             try
