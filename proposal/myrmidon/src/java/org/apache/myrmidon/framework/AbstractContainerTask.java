@@ -89,10 +89,27 @@ public abstract class AbstractContainerTask
      * @param element the configuration element
      * @exception ConfigurationException if an error occurs
      */
-    protected final void configureElement( final Object object, final Configuration element )
+    protected final void configureElement( final Object object,
+                                           final Configuration element )
         throws ConfigurationException
     {
         m_configurer.configureElement( object, element, getContext() );
+    }
+
+    /**
+     * Configure an object using specific configuration element.
+     *
+     * @param object the object
+     * @param clazz the class to use when configuring element
+     * @param element the configuration element
+     * @exception ConfigurationException if an error occurs
+     */
+    protected final void configureElement( final Object object,
+                                           final Class clazz,
+                                           final Configuration element )
+        throws ConfigurationException
+    {
+        m_configurer.configureElement( object, clazz, element, getContext() );
     }
 
     /**
@@ -107,6 +124,23 @@ public abstract class AbstractContainerTask
         throws ConfigurationException
     {
         m_configurer.configureAttribute( object, name, value, getContext() );
+    }
+
+    /**
+     * Configure an objects attribute using parameters.
+     *
+     * @param object the object
+     * @param clazz the class to use when configuring element
+     * @param name the attibute name
+     * @param value the attibute value
+     * @exception ConfigurationException if an error occurs
+     */
+    protected final void configureAttribute( final Object object,
+                                             final Class clazz,
+                                             final String name, final String value )
+        throws ConfigurationException
+    {
+        m_configurer.configureAttribute( object, clazz, name, value, getContext() );
     }
 
     /**
