@@ -70,7 +70,7 @@ public class Property extends Task {
 
     String name;
     String value;
-    String file;
+    File file;
     String resource;
 
     boolean userProperty=false; // set read-only properties
@@ -91,11 +91,11 @@ public class Property extends Task {
 	return value;
     }
 
-    public void setFile(String file) {
+    public void setFile(File file) {
         this.file = file;
     }
 
-    public String getFile() {
+    public File getFile() {
         return file;
     }
 
@@ -122,15 +122,16 @@ public class Property extends Task {
         }
     }
 
-    private void loadFile (String name) throws BuildException {
+    private void loadFile (File file) throws BuildException {
         Properties props = new Properties();
         log("Loading " + name, Project.MSG_VERBOSE);
         try {
-            if (new File(name).exists()) {
-                props.load(new FileInputStream(name));
+            if (file.exists()) {
+                props.load(new FileInputStream(file));
                 addProperties(props);
             } else {
-                log("Unable to find " + name, Project.MSG_VERBOSE);
+                log("Unable to find " + file.getAbsolutePath(), 
+                    Project.MSG_VERBOSE);
             }
         } catch(Exception ex) {
             throw new BuildException(ex.getMessage(), ex, location);
