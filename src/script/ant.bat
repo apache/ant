@@ -15,8 +15,15 @@ set DEFAULT_ANT_HOME=%DEFAULT_ANT_HOME:\bin\=%
 if "%ANT_HOME%"=="" set ANT_HOME=%DEFAULT_ANT_HOME%
 set DEFAULT_ANT_HOME=
 
+rem Need to check if we are using the 4NT shell...
+if "%eval[2+2]" == "4" goto setup4NT
+
 rem On NT/2K grab all arguments at once
 set ANT_CMD_LINE_ARGS=%*
+goto doneStart
+
+:setup4NT
+set ANT_CMD_LINE_ARGS=%$
 goto doneStart
 
 :win9xStart
