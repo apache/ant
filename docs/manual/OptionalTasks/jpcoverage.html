@@ -60,12 +60,12 @@ Perform code covering functions by comparing source code line execution to the p
   <tr>
     <td valign="top">vm</td> 
     <td valign="top">
-	Indicates which virtual machine to run.
-	Must be one of "jdk117", "jdk118" or "java2".If "java2" is specified, the user is
-	also required to specify a path via <tt>javahome</tt>, otherwise it will check if
-	the current executing VM is 1.2+ and use its java.home property to determine its
-	location.
-	in the registry for the default 1.2.x (Java 2) VM.</td>
+    Indicates which virtual machine to run.
+    Must be one of "jdk117", "jdk118" or "java2".If "java2" is specified, the user is
+    also required to specify a path via <tt>javahome</tt>, otherwise it will check if
+    the current executing VM is 1.2+ and use its java.home property to determine its
+    location.
+    in the registry for the default 1.2.x (Java 2) VM.</td>
     <td align="center" valign="top">No, default to embedded VM if 1.2+</td>
   </tr>
   <tr>
@@ -77,35 +77,35 @@ Perform code covering functions by comparing source code line execution to the p
   <tr>
     <td valign="top">applet</td> 
     <td valign="top">Run an applet. The default is false, unless the file under
-	analysis ends with htm or html.</td>
+    analysis ends with htm or html.</td>
     <td align="center" valign="top">No, default is "false".</td>
   </tr>
   <tr>
     <td valign="top">seedname</td>
     <td valign="top">Seed name for the temporary snapshot files (files will be named
-	seed.jpc, seed1.jpc, seed2.jpc, ...)</td>
+    seed.jpc, seed1.jpc, seed2.jpc, ...)</td>
     <td align="center" valign="top">No, default to &quot;snapshot&quot;</td>
   </tr>
   
   <tr>
     <td valign="top">exitprompt</td> 
     <td valign="top">Toggles display of the console prompt: &quot;Press Enter to close
-	this window.&quot; &quot;always&quot;: Always displays the prompt. &quot;never&quot;: Never displays the
-	prompt. &quot;error&quot;: Only displays prompt after an error.</td>
+    this window.&quot; &quot;always&quot;: Always displays the prompt. &quot;never&quot;: Never displays the
+    prompt. &quot;error&quot;: Only displays prompt after an error.</td>
     <td align="center" valign="top">No, default is "never"</td>
   </tr>
   
   <tr>
     <td valign="top">finalsnapshot</td> 
     <td valign="top">Type of snapshot to send at program termination. Must be one
-	of &quot;none&quot;,&quot;coverage&quot;,&quot;all&quot;</td> 
+    of &quot;none&quot;,&quot;coverage&quot;,&quot;all&quot;</td> 
     <td align="center" valign="top">No, default to &quot;coverage&quot;</td>
   </tr>
   <tr>
     <td valign="top">recordfromstart</td>
     <td valign="top">Must be one of "coverage", "all", "none". If you want
-	Coverage to start analyzing as soon as the program begins to run, use "all".
-	If not, select "none".</td>
+    Coverage to start analyzing as soon as the program begins to run, use "all".
+    If not, select "none".</td>
     <td align="center" valign="top">No, default to "coverage"</td>
   </tr>
   <tr>
@@ -116,8 +116,8 @@ Perform code covering functions by comparing source code line execution to the p
   <tr>
     <td valign="top">snapshotdir</td>
     <td valign="top">The path to the directory where snapshot files are stored.
-	Choose a directory that is reachable by both the remote and local computers,
-	and enter the same path on the command line and in the viewer.</td>
+    Choose a directory that is reachable by both the remote and local computers,
+    and enter the same path on the command line and in the viewer.</td>
     <td align="center" valign="top">No, default to current directory</td>
   </tr>
   <tr>
@@ -128,7 +128,7 @@ Perform code covering functions by comparing source code line execution to the p
   <tr>
     <td valign="top">tracknatives</td>
     <td valign="top">Test native methods. Note that testing native methods with
-	Java 2 disables the JIT</td>
+    Java 2 disables the JIT</td>
     <td align="center" valign="top">No, default to &quot;false&quot;.</td>
   </tr> 
   <tr>
@@ -213,8 +213,8 @@ The syntax is filters is similar to a <a href="../CoreTypes/fileset.html">filese
   &lt;filters&gt;
     &lt;exclude class=&quot;*&quot; method=&quot;*&quot;/&gt;
   &lt;/filters&gt;
-</pre>	
-	</td>
+</pre>  
+    </td>
     <td align="center">No, default to "true"</td>
   </tr>
 </table>
@@ -273,21 +273,21 @@ on method) and it has the following attributes:
   <tr>
     <td valign="top">name</td> 
     <td valign="top">The name of the method(s) as a regular expression. The name
-	is the fully qualified name on the form <tt>package.classname.method</tt></td>
+    is the fully qualified name on the form <tt>package.classname.method</tt></td>
     <td align="center" valign="top">Yes</td>
   </tr>
   <tr>
     <td valign="top">event</td> 
     <td valign="top">the event on the method that will trigger the action. Must be
-	&quot;enter&quot; or &quot;exit&quot;.</td>
+    &quot;enter&quot; or &quot;exit&quot;.</td>
     <td align="center" valign="top">Yes</td>
   </tr>
   <tr>
     <td valign="top">action</td> 
     <td valign="top">the action to execute. Must be one of &quot;clear&quot;,
-	&quot;pause&quot;, &quot;resume&quot;, &quot;snapshot&quot;, &quot;suspend&quot;,
-	or &quot;exit&quot;. They respectively clear recording, pause recording, 
-	resume recording, take a snapshot, suspend the recording and exit the program.
+    &quot;pause&quot;, &quot;resume&quot;, &quot;snapshot&quot;, &quot;suspend&quot;,
+    or &quot;exit&quot;. They respectively clear recording, pause recording, 
+    resume recording, take a snapshot, suspend the recording and exit the program.
 </td>
     <td align="center" valign="top">Yes</td>
   </tr>
@@ -316,26 +316,26 @@ same class.</p>
 <h3>Parameters</h3>
 <table border="1" cellpadding="2" cellspacing="0">
 <tr>
-	<td width="12%" valign="top"><b>Attribute</b></td>
-	<td width="78%" valign="top"><b>Description</b></td>
-	<td width="10%" valign="top"><b>Required</b></td>
+    <td width="12%" valign="top"><b>Attribute</b></td>
+    <td width="78%" valign="top"><b>Description</b></td>
+    <td width="10%" valign="top"><b>Required</b></td>
 </tr>
 <tr>
-	<td valign="top">home</td>
+    <td valign="top">home</td>
     <td valign="top">The directory where JProbe is installed.</td>
     <td align="center" valign="top">Yes</td>
 </tr>
 <tr>
-	<td valign="top">tofile</td>
-	<td valign="top">the output filename that will be the result
-	of the name.</td>
-	<td align="center" valign="top">Yes</td>
+    <td valign="top">tofile</td>
+    <td valign="top">the output filename that will be the result
+    of the name.</td>
+    <td align="center" valign="top">Yes</td>
 </tr>
 <tr>
-	<td valign="top">verbose</td>
-	<td valign="top">Perform the merge in verbose mode giving
-	details about the snapshot processing.</td>
-	<td align="center" valign="top">No. Default to false</td>
+    <td valign="top">verbose</td>
+    <td valign="top">Perform the merge in verbose mode giving
+    details about the snapshot processing.</td>
+    <td align="center" valign="top">No. Default to false</td>
 </tr>
 </table>
 
@@ -370,47 +370,47 @@ Oro</a> in Ant classpath, to run the <tt>reference</tt> feature.</p>
 <h3>Parameters</h3>
 <table border="1" cellpadding="2" cellspacing="0">
 <tr>
-	<td width="12%" valign="top"><b>Attribute</b></td>
-	<td width="78%" valign="top"><b>Description</b></td>
-	<td width="10%" valign="top"><b>Required</b></td>
+    <td width="12%" valign="top"><b>Attribute</b></td>
+    <td width="78%" valign="top"><b>Description</b></td>
+    <td width="10%" valign="top"><b>Required</b></td>
 </tr>
 <tr>
-	<td valign="top">home</td>
+    <td valign="top">home</td>
     <td valign="top">The directory where JProbe is intalled.</td>
     <td align="center" valign="top">Yes</td>
 </tr>
 <tr>
-	<td valign="top">format</td>
-	<td valign="top">The format of the generated report. Must be &quot;xml&quot;, &quot;html&quot; or &quot;text&quot;</td>
-	<td align="center" valign="top">No, default to &quot;html&quot;</td>
+    <td valign="top">format</td>
+    <td valign="top">The format of the generated report. Must be &quot;xml&quot;, &quot;html&quot; or &quot;text&quot;</td>
+    <td align="center" valign="top">No, default to &quot;html&quot;</td>
 </tr>
 <tr>
-	<td valign="top">type</td>
-	<td valign="top">The type of report to be generated. Must be &quot;executive&quot;,
-	&quot;summary&quot;, &quot;detailed&quot; or &quot;verydetailed&quot;</td>
-	<td align="center" valign="top">No. Default to &quot;detailed&quot;</td>
+    <td valign="top">type</td>
+    <td valign="top">The type of report to be generated. Must be &quot;executive&quot;,
+    &quot;summary&quot;, &quot;detailed&quot; or &quot;verydetailed&quot;</td>
+    <td align="center" valign="top">No. Default to &quot;detailed&quot;</td>
 </tr>
 <tr>
-	<td valign="top">percent</td>
-	<td valign="top">A numeric value for the threshold for printing methods. Must
-	be between 0 and 100.</td>
-	<td align="center" valign="top">No, default to 100</td>
+    <td valign="top">percent</td>
+    <td valign="top">A numeric value for the threshold for printing methods. Must
+    be between 0 and 100.</td>
+    <td align="center" valign="top">No, default to 100</td>
 </tr>
 <tr>
-	<td valign="top">snapshot</td>
-	<td valign="top">The name of the snapshot file that is the source to the report.</td>
-	<td align="center" valign="top">Yes</td>
+    <td valign="top">snapshot</td>
+    <td valign="top">The name of the snapshot file that is the source to the report.</td>
+    <td align="center" valign="top">Yes</td>
 </tr>
 <tr>
-	<td valign="top">tofile</td>
-	<td valign="top">The name of the generated output file</td>
-	<td align="center" valign="top">Yes</td>
+    <td valign="top">tofile</td>
+    <td valign="top">The name of the generated output file</td>
+    <td align="center" valign="top">Yes</td>
 </tr>
 <tr>
-	<td valign="top">includesource</td>
-	<td valign="top">Include text of the source code lines. Only applies to
+    <td valign="top">includesource</td>
+    <td valign="top">Include text of the source code lines. Only applies to
       format=&quot;xml&quot; and type=&quot;verydetailed&quot;</td>
-	<td align="center" valign="top">No. Defaults to &quot;yes&quot;</td>
+    <td align="center" valign="top">No. Defaults to &quot;yes&quot;</td>
 </tr>
 </table>
 
@@ -519,7 +519,7 @@ one for JUnit. It needs either Xalan 1.2.2 or Xalan 2.x.</p>
 </p>
 <pre>&lt;style processor=&quot;xalan&quot; in=&quot;./reports/xml/results.xml&quot; out=&quot;./reports/html/dummy.file&quot;
  style=&quot;${ant.home}/etc/coverage-frames.xsl&quot;&gt;
-	&lt;param name=&quot;output.dir&quot; expression=&quot;'${basedir}/reports/html'&quot;/&gt;
+    &lt;param name=&quot;output.dir&quot; expression=&quot;'${basedir}/reports/html'&quot;/&gt;
 &lt;/style&gt;</pre>
 <p>Xalan 2.x (note the parameter without single quote)</p>
 <pre>&lt;style processor=&quot;trax&quot; in=&quot;./reports/xml/results.xml&quot; out=&quot;./reports/html/dummy.file&quot;
