@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2001-2002 The Apache Software Foundation.  All rights
+ * Copyright (c) 2001-2003 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -59,6 +59,8 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.PrintStream;
+import java.util.Enumeration;
+import java.util.Vector;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.Task;
@@ -67,11 +69,14 @@ import org.apache.tools.ant.taskdefs.ExecuteStreamHandler;
 import org.apache.tools.ant.taskdefs.LogOutputStream;
 import org.apache.tools.ant.taskdefs.LogStreamHandler;
 import org.apache.tools.ant.taskdefs.PumpStreamHandler;
+import org.apache.tools.ant.taskdefs.condition.Os;
 import org.apache.tools.ant.types.Commandline;
+import org.apache.tools.ant.types.Path;
 
 /**
  * Invokes the rpm tool to build a Linux installation file.
- *  @author lucas@collab.net
+ *
+ * @author lucas@collab.net
  */
 public class Rpm extends Task {
     
@@ -89,6 +94,12 @@ public class Rpm extends Task {
      * the rpm command to use
      */
     private String command = "-bb";
+
+    /**
+     * The executable to use for building the packages.
+     * @since Ant 1.6
+     */
+    private String rpmBuildCommand = null;
 
     /**
      * clean BUILD directory
@@ -119,7 +130,9 @@ public class Rpm extends Task {
         
         Commandline toExecute = new Commandline();
 
-        toExecute.setExecutable("rpm");
+        toExecute.setExecutable(rpmBuildCommand == null 
+                                ? guessRpmBuildCommand()
+                                : rpmBuildCommand);
         if (topDir != null) {
             toExecute.createArgument().setValue("--define");
             toExecute.createArgument().setValue("_topdir" + topDir);
@@ -206,7 +219,7 @@ public class Rpm extends Task {
     }
 
     /**
-     * What command to issue to the rpm tool; optional.
+     * What command to issue to the rpm build tool; optional.
      * The default is "-bb"
      */
     public void setCommand(String c) {
@@ -259,5 +272,50 @@ public class Rpm extends Task {
      */
     public void setError(File error) {
         this.error = error;
+    }
+
+    /**
+     * The executable to run when building; optional.
+     * The default is <code>rpmbuild</code>.
+     *
+     * @since Ant 1.6
+     * @param c the rpm build executable
+     */
+    public void setRpmBuildCommand(String c) {
+        this.rpmBuildCommand = c;
+    }
+
+    /**
+     * Checks whether <code>rpmbuild</code> is on the PATH and returns
+     * the absolute path to it - falls back to <code>rpm</code>
+     * otherwise.
+     *
+     * @since 1.6
+     */
+    protected String guessRpmBuildCommand() {
+        Vector env = Execute.getProcEnvironment();
+        String path = null;
+        for (Enumeration enum = env.elements(); enum.hasMoreElements();) {
+            String var = (String) enum.nextElement();
+            if (var.startsWith("PATH=") || var.startsWith("Path=")) {
+                path = var.substring(6 /* "PATH=".length() + 1 */);
+                break;
+            }
+        }
+
+        if (path != null) {
+            Path p = new Path(getProject(), path);
+            String[] pElements = p.list();
+            for (int i = 0; i < pElements.length; i++) {
+                File f = new File(pElements[i], 
+                                  "rpmbuild" 
+                                  + (Os.isFamily("dos") ? ".exe" : ""));
+                if (f.canRead()) {
+                    return f.getAbsolutePath();
+                }
+            }
+        }
+
+        return "rpm";
     }
 }

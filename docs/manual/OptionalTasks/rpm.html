@@ -23,7 +23,7 @@
   </tr>
   <tr>
     <td valign="top">specFile</td>
-    <td valign="top">The name of the spec File to be used.</td>
+    <td valign="top">The name of the spec file to be used.</td>
     <td valign="top" align="center">Yes</td>
   </tr>
   <tr>
@@ -52,7 +52,17 @@ directory.</td>
         to remove the sources after the build.
         See the the <tt>--rmsource</tt>  option of rpmbuild.</td>
     <td align="center" valign="top">No</td>
-  </tr>  <tr>
+  </tr>
+  <tr>
+    <td valign="top">rpmBuildCommand</td>
+    <td valign="top">The executable to use for building the RPM.
+      Defaults to <code>rpmbuild</code> if it can be found or
+      <code>rpm</code> otherwise.  Set this if you don't have either on
+      your PATH or want to use a different executable.  <em>Since Ant
+      1.6</em>.</td>
+    <td valign="top" align="center">No</td>
+  </tr>
+  <tr>
     <td valign="top">command</td>
     <td valign="top">very similar idea to the cvs task.  the default is "-bb"</td>
     <td align="center" valign="top">No</td>
@@ -65,7 +75,7 @@ directory.</td>
 </table>
 <hr>
 
-<p align="center">Copyright &copy; 2001-2002 Apache Software Foundation. All rights
+<p align="center">Copyright &copy; 2001-2003 Apache Software Foundation. All rights
 Reserved.</p>
 
 </body>

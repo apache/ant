@@ -313,6 +313,9 @@ Other changes:
   add new-line characters at the end of files that get concatenated but
   don't end in newlines.  Bugzilla Report 12511.
 
+* <rpm> will detect the rpmbuild executable of RedHat 8.0 and newer
+  and use that if it is on your PATH.  Bugzilla Report 14650.
+
 Changes from Ant 1.5.2 to Ant 1.5.3
 ===================================
 
