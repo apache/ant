@@ -171,7 +171,7 @@ public class SystemPath extends Task {
                         Class taskClass = acl.loadClass(c.getName());
                         //project.addTaskDefinition(key, taskClass);
                         project.getTaskDefinitions().put(key, taskClass);
-                        System.out.println("Loaded " + key + " " + taskClass.getClassLoader() );
+                        //System.out.println("Loaded " + key + " " + taskClass.getClassLoader() );
                     } catch (NoClassDefFoundError ncdfe) {
                         log("Could not load a dependent class ("
                             + ncdfe.getMessage() + ") for task " + key, Project.MSG_DEBUG);
