@@ -72,6 +72,7 @@ public class JavacExternal extends DefaultCompilerAdapter {
         attributes.log("Using external javac compiler", Project.MSG_VERBOSE);
 
         Commandline cmd = new Commandline();
+        cmd.setExecutable("javac");
         setupJavacCommandlineSwitches(cmd);
         int firstFileName = cmd.size();
         logAndAddFilesToCompile(cmd);
