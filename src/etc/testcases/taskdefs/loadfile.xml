@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
 <project name="loadfile-test" basedir="." default="testLoadAFile">
 
-  <!-- this is a latin one file containing the UKP £ symbol -->
-  
+ 
   <target name="init">
   </target>
 
