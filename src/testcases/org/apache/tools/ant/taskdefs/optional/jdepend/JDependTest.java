@@ -96,7 +96,7 @@ public class JDependTest extends BuildFileTest {
      */
     public void testXml() {
         expectOutputContaining(
-            "xml", "<Package>java.lang</Package>");
+            "xml", "<DependsUpon>");
     }
 
     /**
@@ -113,7 +113,7 @@ public class JDependTest extends BuildFileTest {
      */
     public void testForkXml() {
         expectLogContaining(
-            "fork-xml", "<Package>java.lang</Package>");
+            "fork-xml", "<DependsUpon>");
     }
 
     /**
