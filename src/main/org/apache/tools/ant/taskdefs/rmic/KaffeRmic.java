@@ -1,5 +1,5 @@
 /*
- * Copyright  2001-2002,2004 The Apache Software Foundation
+ * Copyright  2001-2002,2004-2005 The Apache Software Foundation
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -56,6 +56,9 @@ public class KaffeRmic extends DefaultRmicAdapter {
                                      + "JAVA_HOME or CLASSPATH.",
                                      getRmic().getLocation());
         }
+
+        getRmic().log("Using: " + c.getName());
+        getRmic().log(Commandline.describeCommand(cmd));
 
         try {
             Constructor cons = c.getConstructor(new Class[] {String[].class});
