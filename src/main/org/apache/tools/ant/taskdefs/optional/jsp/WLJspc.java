@@ -305,7 +305,9 @@ public class WLJspc extends MatchingTask {
                 = files[i].lastIndexOf(File.separator) != -1 ? files[i].lastIndexOf(File.separator) + 1 : 0;
             int endingIndex = files[i].indexOf(".jsp");
             if (endingIndex == -1) {
-                break;
+                log("Skipping " + files[i] + ". Not a JSP", 
+                    Project.MSG_VERBOSE);
+                continue;
             }
             
             filePath += files[i].substring(startingIndex, endingIndex);
