@@ -2020,7 +2020,7 @@ public class Project {
          */
         public Object get(Object key) {
             //System.out.println("AntRefTable.get " + key);
-            Object o = super.get(key);
+            Object o = getReal(key);
             if (o instanceof UnknownElement) {
                 // Make sure that
                 UnknownElement ue = (UnknownElement) o;
