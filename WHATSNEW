@@ -22,7 +22,7 @@ Other changes:
 --------------
 
 * New tasks: ear, p4counter, record, cvspass, vsscheckin, vsscheckout,
-  typedef
+  typedef, sleep
 
 * Ant now uses JAXP 1.1
 
