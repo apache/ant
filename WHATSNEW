@@ -1,5 +1,5 @@
-Changes from Ant 1.5 to current CVS version
-===========================================
+Changes from Ant 1.5.1 to current CVS version
+=============================================
 
 Changes that could break older environments:
 --------------------------------------------
@@ -17,45 +17,10 @@ Changes that could break older environments:
 Fixed bugs:
 -----------
 
-* The sh wrapper script didn't work under Cygwin if ANT_HOME wasn't
-  set with a Unix style filename.
-
-* The sh wrapper script could fail if you started Ant from a directory
-  with whitespace in its name.
-
-* ant -diagnostics was not working properly when the task dependency
-  was missing and was just printing the missing dependency.
-
-* The ExpandProperties filter threw NPEs when defined using
-  the <filterreader> format.
-
-* If a task got redefined via <taskdef>, it lost its child elements.
-
-* <property>'s classpathref attribute was broken.
-
-* <arg line="''" /> would result in no command line argument, will now
-  be a single empty argument.  Use <arg value="''"/> if you need the
-  quotes literally.
-
-* <replaceregexp> could append a newline character at the end of the
-  file.
-
-* <tstamp>'s prefix attribute failed to apply to nested <format> elements.
-
-* <junitreport> created an empty junit-noframes.html if no format had
-  been specified.
-
-* <basename> would remove more than it should if the file name
-  contained more than one dot.
-
 * <property environment=... /> now works on OS/400.
-
-* <filterset>s nested into <filterset>s didn't work.
 
 Other changes:
 --------------
-
-* Shipped XML parser is now Xerces 2.2.0
 
 * <loadproperties> has a new encoding attribute.
 
@@ -70,23 +35,9 @@ Other changes:
 
 * All tasks can be used outside of <target>s
 
-* Appendix E of Java Development with Ant (Loughran/Hatcher)
-  contributed to the docs
-
-* <available> will only print deprecration warnings if it is actually
-  used to change the value of a property.
-  
 * Added <image> task (requires JAI).
 
-* Filesets now support a 'file' attribute, allowing a single-file
-  fileset to be constructed without having to specify its parent
-  directory separately.
-
 * New condition <isreference>
-
-* <junit> will now return the result of a call to getName instead of
-  "unknown" for Test implementations that don't extend TestCase but have
-  a public String getName() method.
 
 * <ftp> now has a preservelastmodified attribute to preserve the
   timestamp of a downloaded file.
@@ -97,6 +48,88 @@ Other changes:
   vsspath or projectpath.
 
 * OS/400 now gets detected by the os condition.
+
+Changes from Ant 1.5.1Beta1 to 1.5.1
+====================================
+
+Fixed bugs:
+-----------
+
+* <tstamp>'s prefix attribute failed to apply to nested <format> elements.
+
+* <junitreport> created an empty junit-noframes.html if no format had
+  been specified.
+
+* <basename> would remove more than it should if the file name
+  contained more than one dot.
+
+* <filterset>s nested into <filterset>s didn't work.
+
+Other changes:
+--------------
+
+* Shipped XML parser is now Xerces 2.2.0
+
+* Filesets now support a 'file' attribute, allowing a single-file
+  fileset to be constructed without having to specify its parent
+  directory separately.
+
+* <junit> will now return the result of a call to getName instead of
+  "unknown" for Test implementations that don't extend TestCase but have
+  a public String getName() method.
+
+Changes from Ant 1.5 to 1.5.1Beta1
+==================================
+
+Fixed bugs:
+-----------
+* Date/time in CvsChangeLog was in local timezone and 12 hour format leading
+  to a problem when sorting by time. It is now UTC (GMT) and in 24-hour
+  format as per cvs 'specifications'.
+
+* CvsTagDiff now supports ampersand modules or modules that have a different
+  root directory than their name.
+  
+* EjbJar threw NPEs for the Websphere element. The property 'websphere.home'
+  was not documented.
+
+* Mail example in the documentation was not correct.
+
+* Checksum was broken in the following scenario: 
+  (using verifyproperty OR in a condition) AND using filesets 
+  with multiple files.
+
+* The ExpandProperties filter threw NPEs when defined using
+  the <filterreader> format.
+
+* The sh wrapper script didn't work under Cygwin if ANT_HOME wasn't
+  set with a Unix style filename.
+
+* The sh wrapper script could fail if you started Ant from a directory
+  with whitespace in its name.
+
+* ant -diagnostics was not working properly when the task dependency
+  was missing and was just printing the missing dependency.
+
+* If a task got redefined via <taskdef>, it lost its child elements.
+
+* <property>'s classpathref attribute was broken.
+
+* <arg line="''" /> would result in no command line argument, will now
+  be a single empty argument.  Use <arg value="''"/> if you need the
+  quotes literally.
+
+* <replaceregexp> could append a newline character at the end of the
+  file.
+
+Other changes:
+--------------
+
+* Appendix E of Java Development with Ant (Loughran/Hatcher) was
+  contributed to the docs.
+
+* <available> will only print deprecration warnings if it is actually
+  used to change the value of a property.
 
 Changes from Ant 1.5beta3 to Ant 1.5
 ====================================
