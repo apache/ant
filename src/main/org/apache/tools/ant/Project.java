@@ -1185,6 +1185,7 @@ public class Project {
     /**
      * Executes a <code>Vector</code> of sorted targets.
      * @param sortedTargets   the aforementioned <code>Vector</code>.
+     * @throws BuildException on error.
      */
     public void executeSortedTargets(Vector sortedTargets)
         throws BuildException {
@@ -1691,7 +1692,7 @@ public class Project {
      * @exception BuildException if a non-existent target is specified or if
      *                           a circular dependency is detected.
      */
-    private final void tsort(String root, Hashtable targets,
+    private void tsort(String root, Hashtable targets,
                              Hashtable state, Stack visiting,
                              Vector ret)
         throws BuildException {
@@ -1982,7 +1983,7 @@ public class Project {
         }
         synchronized (this) {
             if (loggingMessage) {
-                /* 
+                /*
                  * One of the Listeners has attempted to access
                  * System.err or System.out.
                  *
