@@ -187,7 +187,7 @@ public class Rpm extends Task
             streamhandler = new PumpStreamHandler( outputstream, errorstream );
         }
 
-        Execute exe = new Execute( streamhandler, null );
+        Execute exe = new Execute( streamhandler );
 
         if( topDir == null ) topDir = getBaseDirectory();
         exe.setWorkingDirectory( topDir );

@@ -203,7 +203,7 @@ public class NetCommand
         File dir = _owner.getBaseDirectory();
         ExecuteStreamHandler handler = new LogStreamHandler( _owner,
                                                              Project.MSG_INFO, Project.MSG_WARN );
-        _exe = new Execute( handler, null );
+        _exe = new Execute( handler );
         _exe.setWorkingDirectory( dir );
     }
 }//class

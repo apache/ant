@@ -229,7 +229,7 @@ public class ANTLR extends Task
         throws TaskException
     {
         Execute exe = new Execute( new LogStreamHandler( this, Project.MSG_INFO,
-                                                         Project.MSG_WARN ), null );
+                                                         Project.MSG_WARN ) );
         if( workingdir != null )
         {
             exe.setWorkingDirectory( workingdir );

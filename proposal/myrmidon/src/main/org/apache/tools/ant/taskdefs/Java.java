@@ -378,13 +378,12 @@ public class Java extends Task
             if( out == null )
             {
                 exe = new Execute( new LogStreamHandler( this, Project.MSG_INFO,
-                                                         Project.MSG_WARN ),
-                                   null );
+                                                         Project.MSG_WARN ) );
             }
             else
             {
                 fos = new FileOutputStream( out );
-                exe = new Execute( new PumpStreamHandler( fos ), null );
+                exe = new Execute( new PumpStreamHandler( fos ) );
             }
 
             if( dir == null )

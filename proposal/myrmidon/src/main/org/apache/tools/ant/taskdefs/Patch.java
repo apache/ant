@@ -143,8 +143,7 @@ public class Patch extends Task
         }
 
         Execute exe = new Execute( new LogStreamHandler( this, Project.MSG_INFO,
-                                                         Project.MSG_WARN ),
-                                   null );
+                                                         Project.MSG_WARN ) );
         exe.setCommandline( toExecute.getCommandline() );
         try
         {

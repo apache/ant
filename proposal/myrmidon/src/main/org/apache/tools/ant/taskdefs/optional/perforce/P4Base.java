@@ -165,8 +165,7 @@ public abstract class P4Base extends org.apache.tools.ant.Task
             if( handler == null )
                 handler = new SimpleP4OutputHandler( this );
 
-            Execute exe = new Execute( handler, null );
-
+            final Execute exe = new Execute( handler );
             exe.setCommandline( commandline.getCommandline() );
 
             try

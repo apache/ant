@@ -188,8 +188,7 @@ public class JJTree extends Task
         final Execute process =
             new Execute( new LogStreamHandler( this,
                                                Project.MSG_INFO,
-                                               Project.MSG_INFO ),
-                         null );
+                                               Project.MSG_INFO ) );
         log( cmdl.toString(), Project.MSG_VERBOSE );
         process.setCommandline( cmdl.getCommandline() );
 

@@ -140,7 +140,7 @@ public class Execute
      */
     public Execute()
     {
-        this( new PumpStreamHandler(), null );
+        this( new PumpStreamHandler() );
     }
 
     /**
@@ -149,7 +149,7 @@ public class Execute
      * @param streamHandler the stream handler used to handle the input and
      *      output streams of the subprocess.
      */
-    public Execute( ExecuteStreamHandler streamHandler )
+    public Execute( final ExecuteStreamHandler streamHandler )
     {
         this( streamHandler, null );
     }
@@ -320,7 +320,7 @@ public class Execute
         {
             m_watchdog.checkException();
         }
-        return process.exitValue();;
+        return process.exitValue();
     }
 
     private CommandLauncher getLauncher()
