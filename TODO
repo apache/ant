@@ -11,8 +11,6 @@ remove items from this list once they are complete.
 
 * Fix or at least document support for tomcat 5.0 jsp
 
-* gcj support in Path.addJavaRuntime [Stefan]
-
 * review claimed AntClassLoader memory leak [Stefan]
 
 * <junitreport> and JDK 1.5 [Stefan hopes that Stephane solves it for

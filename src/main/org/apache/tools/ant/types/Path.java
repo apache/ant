@@ -66,6 +66,15 @@ public class Path extends DataType implements Cloneable {
 
 
     /**
+     * The system bootclassspath as a Path object.
+     *
+     * @since Ant 1.6.2
+     */
+    public static Path systemBootClasspath =
+        new Path(null, System.getProperty("sun.boot.class.path"));
+
+
+    /**
      * Helper class, holds the nested <code>&lt;pathelement&gt;</code> values.
      */
     public class PathElement {
@@ -365,7 +374,7 @@ public class Path extends DataType implements Cloneable {
     public static String[] translatePath(Project project, String source) {
         final Vector result = new Vector();
         if (source == null) {
-          return new String[0];
+            return new String[0];
         }
 
         PathTokenizer tok = new PathTokenizer(source);
@@ -576,6 +585,8 @@ public class Path extends DataType implements Cloneable {
                 kaffeJarFiles.setIncludes("*.jar");
                 addFileset(kaffeJarFiles);
             }
+        } else if ("GNU libgcj".equals(System.getProperty("java.vm.name"))) {
+            addExisting(systemBootClasspath);
         }
 
         if (System.getProperty("java.vendor").toLowerCase(Locale.US).indexOf("microsoft") >= 0) {
