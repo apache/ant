@@ -56,9 +56,14 @@ public abstract class AbstractComponentTest
     /**
      * Returns the component manager containing the components to test.
      */
-    protected ServiceManager getServiceManager()
+    protected final ServiceManager getServiceManager()
     {
         return m_serviceManager;
+    }
+
+    protected final Logger getLogger()
+    {
+        return m_logger;
     }
 
     /**
