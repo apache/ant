@@ -245,13 +245,31 @@
 
     <section name="Articles and Presentations">
 
-      <p>The following sections list articles and presentations written about Apache Ant.  If
-      you've written something that should be included, please post it to one
-      of the mailing lists.</p>
+      <p>The following sections list articles and presentations
+      written about Apache Ant.  If you've written something that
+      should be included, please post it to one of the mailing
+      lists.</p>
 
     </section>
 
     <section name="Articles">
+
+      <subsection name="New Ant 1.6 Features for Big Projects">
+        <p>This article describes the &lt;macrodef&gt;, &lt;import&gt;
+          and &lt;subant&gt; in detail and shows how they help in
+          building bigger systems.</p>
+
+        <table class="externals">
+          <tr>
+            <th>Author:</th>
+            <td>Stefan Bodewig</td>
+          </tr>
+          <tr>
+            <th>URL:</th>
+            <td><a href="http://otn.oracle.com/pub/articles/bodewig_ant1.6.html">http://otn.oracle.com/pub/articles/bodewig_ant1.6.html</a></td>
+          </tr>
+        </table>
+      </subsection>
 
       <subsection name="Programmieren für Ant">
         <p>This article describes the main topics of programming your own tasks.
