@@ -310,9 +310,12 @@ public class MailMessage {
    * @exception IOException if there's any problem reported by the mail server
    */
   public void sendAndClose() throws IOException {
-    sendDot();
-    sendQuit();
-    disconnect();
+      try {
+          sendDot();
+          sendQuit();
+      } finally {
+          disconnect();
+      }
   }
 
   // Make a limited attempt to extract a sanitized email address
@@ -398,21 +401,23 @@ public class MailMessage {
     send("\r\n.", ok);  // make sure dot is on new line
   }
 
-  void sendQuit() throws IOException {
-    int[] ok = { 221 };
-    send("QUIT", ok);
-  }
-
-  void send(String msg, int[] ok) throws IOException {
-    out.rawPrint(msg + "\r\n");  // raw supports <CRLF>.<CRLF>
-    //System.out.println("S: " + msg);
-    String response = in.getResponse();
-    //System.out.println("R: " + response);
-    if (!isResponseOK(response, ok)) {
-      throw new IOException(
-        "Unexpected reply to command: " + msg + ": " + response);
+    void sendQuit() throws IOException {
+        int[] ok = { 221 };
+        try {
+            send("QUIT", ok);
+        } catch (IOException e) {
+            throw new ErrorInQuitException(e);
+        }
     }
-  }
+
+    void send(String msg, int[] ok) throws IOException {
+        out.rawPrint(msg + "\r\n");  // raw supports <CRLF>.<CRLF>
+        String response = in.getResponse();
+        if (!isResponseOK(response, ok)) {
+            throw new IOException("Unexpected reply to command: " 
+                                  + msg + ": " + response);
+        }
+    }
 
   boolean isResponseOK(String response, int[] ok) {
     // Check that the response is one of the valid codes
@@ -424,11 +429,23 @@ public class MailMessage {
     return false;
   }
 
-  void disconnect() throws IOException {
-    if (out != null) out.close(); 
-    if (in != null) in.close(); 
-    if (socket != null) socket.close();
-  }
+    void disconnect() throws IOException {
+        if (out != null) {
+            out.close(); 
+        }
+        if (in != null) {
+            try {
+                in.close(); 
+            } catch (IOException e) {
+            }
+        }
+        if (socket != null) {
+            try {
+                socket.close(); 
+            } catch (IOException e) {
+            }
+        }
+    }
 }
 
 // This PrintStream subclass makes sure that <CRLF>. becomes <CRLF>..

@@ -62,6 +62,7 @@ import java.io.IOException;
 import java.util.Vector;
 import java.util.StringTokenizer;
 import java.util.Enumeration;
+import org.apache.tools.mail.ErrorInQuitException;
 import org.apache.tools.mail.MailMessage;
 
 import org.apache.tools.ant.Task;
@@ -305,12 +306,11 @@ public class SendEmail extends Task {
             log("Sending email");
             mailMessage.sendAndClose();
         } catch (IOException ioe) {
-            String err="IO error sending mail "+ioe.toString();
-            if(failOnError) {
+            String err="IO error sending mail: "+ioe.toString();
+            if (!failOnError || ioe instanceof ErrorInQuitException) {
+                log(err, Project.MSG_ERR);
+            } else {
                 throw new BuildException(err,ioe,location);
-            }
-            else {
-                log(err,Project.MSG_ERR);
             }
         }
     }
