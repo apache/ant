@@ -197,17 +197,22 @@ public class Scp extends SSHBase {
 
         Session session = null;
         try {
-            session = openSession();
             List list = new ArrayList(fileSet.size());
             for (Iterator i = fileSet.iterator(); i.hasNext();) {
                 FileSet set = (FileSet) i.next();
-                list.add(createDirectory(set));
+                Directory d = createDirectory(set);
+                if (d != null) {
+                    list.add(d);
+                }
             }
+            if (!list.isEmpty()) {
+            session = openSession();
             ScpToMessage message = new ScpToMessage(session,
                                                      list,
                                                      file);
             message.setLogListener(this);
             message.execute();
+            }
         } finally {
             if (session != null) {
                 session.disconnect();
@@ -275,6 +280,7 @@ public class Scp extends SSHBase {
         DirectoryScanner scanner = set.getDirectoryScanner(getProject());
         Directory root = new Directory(scanner.getBasedir());
         String[] files = scanner.getIncludedFiles();
+        if (files.length != 0) {
         for (int j = 0; j < files.length; j++) {
             String[] path = Directory.getPath(files[j]);
             Directory current = root;
@@ -290,7 +296,10 @@ public class Scp extends SSHBase {
                 }
             }
         }
-
+        } else {
+            // skip
+            root = null;
+        }
         return root;
     }
 }
