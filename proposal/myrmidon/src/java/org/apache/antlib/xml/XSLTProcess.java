@@ -177,7 +177,7 @@ public class XSLTProcess
     {
         if( m_classpath == null )
         {
-            m_classpath = new Path( getProject() );
+            m_classpath = new Path();
         }
         return m_classpath.createPath();
     }
