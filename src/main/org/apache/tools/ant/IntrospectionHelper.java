@@ -119,23 +119,26 @@ public class IntrospectionHelper implements BuildListener {
      */
     private static Hashtable helpers = new Hashtable();
 
-	/** 
-	 * Map from primitive types to wrapper classes for use in 
-	 * createAttributeSetter (Class to Class). Note that char 
-	 * and boolean are in here even though they get special treatment
-	 * - this way we only need to test for the wrapper class.
-	 */
-	private static final Hashtable PRIMITIVE_TYPE_MAP = new Hashtable(8);
-	
-	// Set up PRIMITIVE_TYPE_MAP
-	static {
-	    Class[] primitives = {Boolean.TYPE, Byte.TYPE, Character.TYPE, Short.TYPE, 
-	        Integer.TYPE, Long.TYPE, Float.TYPE, Double.TYPE};
-	    Class[] wrappers = {Boolean.class, Byte.class, Character.class, Short.class, 
-	        Integer.class, Long.class, Float.class, Double.class};
-	    for (int i=0; i < primitives.length; i++)
-	        PRIMITIVE_TYPE_MAP.put (primitives[i], wrappers[i]);
-	}
+    /** 
+     * Map from primitive types to wrapper classes for use in 
+     * createAttributeSetter (Class to Class). Note that char 
+     * and boolean are in here even though they get special treatment
+     * - this way we only need to test for the wrapper class.
+     */
+    private static final Hashtable PRIMITIVE_TYPE_MAP = new Hashtable(8);
+
+    // Set up PRIMITIVE_TYPE_MAP
+    static {
+        Class[] primitives = {Boolean.TYPE, Byte.TYPE, Character.TYPE, 
+                              Short.TYPE, Integer.TYPE, Long.TYPE, 
+                              Float.TYPE, Double.TYPE};
+        Class[] wrappers = {Boolean.class, Byte.class, Character.class, 
+                            Short.class, Integer.class, Long.class, 
+                            Float.class, Double.class};
+        for (int i=0; i < primitives.length; i++) {
+            PRIMITIVE_TYPE_MAP.put (primitives[i], wrappers[i]);
+        }
+    }
 
     // XXX: (Jon Skeet) The documentation below doesn't draw a clear 
     // distinction between addConfigured and add. It's obvious what the
@@ -387,7 +390,7 @@ public class IntrospectionHelper implements BuildListener {
         throws BuildException {
         AttributeSetter as = (AttributeSetter) attributeSetters.get(attributeName);
         if (as == null) {
-            String msg = getElementName(p, element) +
+            String msg = p.getElementName(element) +
             //String msg = "Class " + element.getClass().getName() +
                 " doesn't support the \"" + attributeName + "\" attribute.";
             throw new BuildException(msg);
@@ -432,7 +435,7 @@ public class IntrospectionHelper implements BuildListener {
             }
             else {
                 // Not whitespace - fail
-                String msg = getElementName(project, element) +
+                String msg = project.getElementName(element) +
                     " doesn't support nested text data.";
                 throw new BuildException(msg);
             }
@@ -476,7 +479,7 @@ public class IntrospectionHelper implements BuildListener {
         throws BuildException {
         NestedCreator nc = (NestedCreator) nestedCreators.get(elementName);
         if (nc == null) {
-            String msg = getElementName(project, parent) +
+            String msg = project.getElementName(parent) +
                 " doesn't support the nested \"" + elementName + "\" element.";
             throw new BuildException(msg);
         }
@@ -655,9 +658,9 @@ public class IntrospectionHelper implements BuildListener {
      */
     private AttributeSetter createAttributeSetter(final Method m,
                                                   Class arg) {
-		// use wrappers for primitive classes, e.g. int and Integer are treated identically
-		final Class reflectedArg = PRIMITIVE_TYPE_MAP.containsKey (arg) ?
-		    (Class) PRIMITIVE_TYPE_MAP.get(arg) : arg;
+        // use wrappers for primitive classes, e.g. int and Integer are treated identically
+        final Class reflectedArg = PRIMITIVE_TYPE_MAP.containsKey (arg) 
+            ? (Class) PRIMITIVE_TYPE_MAP.get(arg) : arg;
 
         // simplest case - setAttribute expects String
         if (java.lang.String.class.equals(reflectedArg)) {
@@ -786,33 +789,7 @@ public class IntrospectionHelper implements BuildListener {
      */
     protected String getElementName(Project project, Object element)
     {
-        Hashtable elements = project.getTaskDefinitions();
-        String typeName = "task";
-        if (!elements.contains( element.getClass() ))
-        {
-            elements = project.getDataTypeDefinitions();
-            typeName = "data type";
-            if (!elements.contains( element.getClass() ))
-            {
-                elements = null;
-            }
-        }
-
-        if (elements != null)
-        {
-            Enumeration e = elements.keys();
-            while (e.hasMoreElements())
-            {
-                String elementName = (String) e.nextElement();
-                Class elementClass = (Class) elements.get( elementName );
-                if ( element.getClass().equals( elementClass ) )
-                {
-                    return "The <" + elementName + "> " + typeName;
-                }
-            }
-        }
-
-        return "Class " + element.getClass().getName();
+        return project.getElementName(element);
     }
 
     /**
