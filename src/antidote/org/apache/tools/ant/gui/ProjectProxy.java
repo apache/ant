@@ -64,6 +64,7 @@ import javax.swing.tree.TreeSelectionModel;
 import javax.swing.event.TreeSelectionEvent;
 import javax.swing.event.TreeSelectionListener;
 import java.util.*;
+import org.xml.sax.SAXException;
 
 /**
  * This class provides the gateway interface to the data model for
@@ -92,7 +93,8 @@ public class ProjectProxy {
 	 * 
 	 * @param file File containing build file to load.
 	 */
-    public ProjectProxy(AppContext context, File file) throws IOException {
+    public ProjectProxy(AppContext context, File file) 
+        throws IOException, SAXException {
         _file = file;
         _context = context;
         loadProject();
@@ -102,7 +104,7 @@ public class ProjectProxy {
 	 * Load the project from the build file.
 	 * 
 	 */
-    private void loadProject() throws IOException {
+    private void loadProject() throws IOException, SAXException {
         _project = ACSFactory.getInstance().load(_file);
         _selections = new ElementSelectionModel();
         _selections.addTreeSelectionListener(new SelectionForwarder());
