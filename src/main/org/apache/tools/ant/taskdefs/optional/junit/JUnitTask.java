@@ -529,7 +529,7 @@ public class JUnitTask extends Task {
             if (classpath != null) {
                 log("Using CLASSPATH " + classpath, Project.MSG_VERBOSE);
 
-                cl = new AntClassLoader(project, classpath, false);
+                cl = new AntClassLoader(null, project, classpath, false);
                 // make sure the test will be accepted as a TestCase
                 cl.addSystemPackageRoot("junit");
                 // will cause trouble in JDK 1.1 if omitted

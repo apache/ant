@@ -129,13 +129,10 @@ public class Main {
     }
 
     /**
-     * Command line entry point. This method kicks off the building
-     * of a project object and executes a build using either a given
-     * target or the default target.
-     *
-     * @param args Command line args.
+     * Entry point allowing for more options from other front ends
      */
-    public static void main(String[] args) {
+    public static void start(String[] args, Properties additionalUserProperties,
+                             ClassLoader systemLoader) {
         Main m = null;
 
         try {
@@ -145,8 +142,16 @@ public class Main {
             System.exit(1);
         }
 
+        if (additionalUserProperties != null) {
+            for (Enumeration e = additionalUserProperties.keys(); e.hasMoreElements(); ) {
+                String key = (String) e.nextElement();
+                String property = additionalUserProperties.getProperty(key);
+                m.definedProps.put(key, property);
+            }
+        }
+        
         try {
-            m.runBuild();
+            m.runBuild(systemLoader);
             System.exit(0);
         } catch (BuildException be) {
             if (m.err != System.err) {
@@ -157,6 +162,19 @@ public class Main {
             printMessage(exc);
             System.exit(1);
         }
+    }
+                                 
+    
+    
+    /**
+     * Command line entry point. This method kicks off the building
+     * of a project object and executes a build using either a given
+     * target or the default target.
+     *
+     * @param args Command line args.
+     */
+    public static void main(String[] args) {
+        start(args, null, null);
     }
 
     protected Main(String[] args) throws BuildException {
@@ -364,7 +382,7 @@ public class Main {
     /**
      * Executes the build.
      */
-    private void runBuild() throws BuildException {
+    private void runBuild(ClassLoader systemLoader) throws BuildException {
 
         if (!readyToRun) {
             return;
@@ -377,7 +395,8 @@ public class Main {
         }
 
         Project project = new Project();
-
+        project.setSystemLoader(systemLoader);
+        
         Throwable error = null;
 
         try {

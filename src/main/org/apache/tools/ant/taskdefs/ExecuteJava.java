@@ -119,7 +119,8 @@ public class ExecuteJava {
             if (classpath == null) {
                 target = Class.forName(classname);
             } else {
-                AntClassLoader loader = new AntClassLoader(project, classpath, false);
+                AntClassLoader loader 
+                    = new AntClassLoader(project.getSystemLoader(), project, classpath, false);
                 loader.setIsolated(true);
                 target = loader.forceLoadClass(classname);
                 AntClassLoader.initializeClass(target);

@@ -59,7 +59,7 @@ import java.net.*;
 import java.io.*;
 
 /**
- * The AntClassLoader is a type of URL classloader which reverse the standard
+ * The AntClassLoader is a type of URL classloader which reverses the standard
  * lookup order to load things from the URLs first and then to use the parent class
  * loader only if the class does not exist in the URLs.
  *

@@ -111,6 +111,9 @@ public class Project {
     private static java.lang.reflect.Method setLastModified = null;
     private static Object lockReflection = new Object();
 
+    /** The system classloader - may be null */    
+    private ClassLoader systemLoader = null;
+    
     static {
 
         // Determine the Java version by looking at available classes
@@ -212,6 +215,14 @@ public class Project {
         }
     }
 
+    public void setSystemLoader(ClassLoader systemLoader) {
+        this.systemLoader = systemLoader;
+    }
+    
+    public ClassLoader getSystemLoader() {
+        return systemLoader;
+    }
+    
     public void addBuildListener(BuildListener listener) {
         listeners.addElement(listener);
     }
