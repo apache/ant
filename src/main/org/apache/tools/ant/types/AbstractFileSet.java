@@ -122,6 +122,14 @@ public abstract class AbstractFileSet extends DataType
 
     /**
      * Retrieves the base-directory for this instance.
+     * @return <code>File</code>.
+     */
+    public synchronized File getDir() {
+        return getDir(getProject());
+    }
+
+    /**
+     * Retrieves the base-directory for this instance.
      * @param p the <code>Project</code> against which the
      *          reference is resolved, if set.
      * @return <code>File</code>.
@@ -384,6 +392,15 @@ public abstract class AbstractFileSet extends DataType
 
     /**
      * Returns the directory scanner needed to access the files to process.
+     * @return a <code>DirectoryScanner</code> instance.
+     */
+    public DirectoryScanner getDirectoryScanner() {
+        return getDirectoryScanner(getProject());
+    }
+
+    /**
+     * Returns the directory scanner needed to access the files to process.
+     * @param p the Project against which the DirectoryScanner should be configured.
      * @return a <code>DirectoryScanner</code> instance.
      */
     public DirectoryScanner getDirectoryScanner(Project p) {
