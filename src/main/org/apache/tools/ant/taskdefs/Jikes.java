@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2000 The Apache Software Foundation.  All rights
+ * Copyright (c) 2000,2002 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -63,12 +63,18 @@ import org.apache.tools.ant.BuildException;
 import java.util.Random;
 
 /**
- * Encapsulates a Jikes compiler, by
- * directly executing an external process.
+ * Encapsulates a Jikes compiler, by directly executing an external
+ * process.
+ *
+ * <p><strong>As of Ant 1.2, this class is considered to be dead code
+ * by the Ant developers and is unmaintained.  Don't use
+ * it.</strong></p>
+ *
  * @author skanthak@muehlheim.de
  * @deprecated merged into the class Javac.
  */
 public class Jikes {
+
     protected JikesOutputParser jop;
     protected String command;
     protected Project project;
@@ -80,6 +86,11 @@ public class Jikes {
      */
     protected Jikes(JikesOutputParser jop,String command, Project project) {
         super();
+
+        System.err.println("As of Ant 1.2 released in October 2000, the Jikes class");
+        System.err.println("is considered to be dead code by the Ant developers and is unmaintained.");
+        System.err.println("Don\'t use it!");
+
         this.jop = jop;
         this.command = command;
         this.project = project;

@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2000 The Apache Software Foundation.  All rights
+ * Copyright (c) 2000,2002 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -67,6 +67,10 @@ import java.io.IOException;
  * logged with "info" priority:
  * <pre>System.setOut(new PrintStream(new TaskOutputStream(project, Project.MSG_INFO)));</pre>
  *
+ * <p><strong>As of Ant 1.2, this class is considered to be dead code
+ * by the Ant developers and is unmaintained.  Don't use
+ * it.</strong></p>
+ *
  * @author James Duncan Davidson (duncan@x180.com)
  * @deprecated use LogOutputStream instead.
  */
@@ -83,6 +87,10 @@ public class TaskOutputStream extends OutputStream {
      */
 
     TaskOutputStream(Task task, int msgOutputLevel) {
+        System.err.println("As of Ant 1.2 released in October 2000, the TaskOutputStream class");
+        System.err.println("is considered to be dead code by the Ant developers and is unmaintained.");
+        System.err.println("Don\'t use it!");
+
         this.task = task;
         this.msgOutputLevel = msgOutputLevel;
 

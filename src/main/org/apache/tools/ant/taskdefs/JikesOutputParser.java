@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2000 The Apache Software Foundation.  All rights
+ * Copyright (c) 2000,2002 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -67,8 +67,10 @@ import java.io.InputStreamReader;
  * passes errors and warnings
  * into the right logging channels of Project.
  *
- * TODO: 
- * Parsing could be much better
+ * <p><strong>As of Ant 1.2, this class is considered to be dead code
+ * by the Ant developers and is unmaintained.  Don't use
+ * it.</strong></p>
+ *
  * @author skanthak@muehlheim.de
  * @deprecated use Jikes' exit value to detect compilation failure.
  */
@@ -116,6 +118,11 @@ public class JikesOutputParser implements ExecuteStreamHandler {
      */
     protected JikesOutputParser(Task task, boolean emacsMode) {
         super();
+
+        System.err.println("As of Ant 1.2 released in October 2000, the JikesOutputParser class");
+        System.err.println("is considered to be dead code by the Ant developers and is unmaintained.");
+        System.err.println("Don\'t use it!");
+
         this.task = task;
         this.emacsMode = emacsMode;
     }

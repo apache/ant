@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2000 The Apache Software Foundation.  All rights
+ * Copyright (c) 2000,2002 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -68,11 +68,15 @@ import java.io.InputStreamReader;
 /**
  * Executes a given command if the os platform is appropriate.
  *
+ * <p><strong>As of Ant 1.2, this class is no longer the
+ * implementation of Ant's &lt;exec&gt; task - it is considered to be
+ * dead code by the Ant developers and is unmaintained.  Don't use
+ * it.</strong></p>
+
  * @author duncan@x180.com
  * @author rubys@us.ibm.com
  *
- * @deprecated Instead of using this class, please extend ExecTask or
- * delegate to Execute.  
+ * @deprecated delegate to {@link * org.apache.tools.ant.taskdefs.Execute Execute} instead.
  */
 public class Exec extends Task {
     private String os;
@@ -83,6 +87,12 @@ public class Exec extends Task {
     private boolean failOnError = false;
 
     private final static int BUFFER_SIZE = 512;
+
+    public Exec() {
+        System.err.println("As of Ant 1.2 released in October 2000, the Exec class");
+        System.err.println("is considered to be dead code by the Ant developers and is unmaintained.");
+        System.err.println("Don\'t use it!");
+    }
 
     public void execute() throws BuildException {
         run(command);
