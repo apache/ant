@@ -18,6 +18,7 @@
 
   <properties>
     <title>Apache Ant Mission</title>
+    <author email="">Apache Ant PMC</author>
   </properties>
 
 <body>
