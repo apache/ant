@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2001-2002 The Apache Software Foundation.  All rights
+ * Copyright (c) 2001-2003 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -86,18 +86,10 @@ public abstract class P4HandlerAdapter implements P4Handler {
             }
 
             //Now read any input and process
-
-            BufferedReader input = new BufferedReader(
-                    new InputStreamReader(
-                            new SequenceInputStream(is, es)));
-
-            String line;
-            while ((line = input.readLine()) != null) {
-                process(line);
-            }
-
-            input.close();
-
+            Thread output = new Thread(new Reader(is));
+            Thread error = new Thread(new Reader(es));
+            output.start();
+            error.start();
 
         } catch (Exception e) {
             throw new BuildException(e);
@@ -122,4 +114,32 @@ public abstract class P4HandlerAdapter implements P4Handler {
 
     public void stop() {
     }
+    public class Reader implements Runnable {
+        protected InputStream mystream;
+        public Reader(InputStream is)
+        {
+            mystream=is;
+        }
+        public void setStream(InputStream is) {
+            mystream=is;
+        }
+        public void run() {
+            BufferedReader input = new BufferedReader(
+                    new InputStreamReader(mystream));
+
+            String line;
+            try {
+                while ((line = input.readLine()) != null) {
+                    synchronized (this){
+                        process(line);
+                    }
+                }
+            }
+            catch (Exception e) {
+                throw new BuildException(e);
+            }
+        }
+
+    }
 }
+
