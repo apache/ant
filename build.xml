@@ -899,6 +899,8 @@
                unless="xalan.present"/>
       <exclude name="${optional.package}/TraXLiaisonTest.java"
                unless="trax.present"/>
+
+      <!-- uses the context classloader -->
       <exclude name="${optional.package}/junit/JUnitClassLoaderTest.java"
                unless="jdk1.2+"/>
 
@@ -994,6 +996,8 @@
                    unless="xslp.present"/>
           <exclude name="org/apache/tools/ant/taskdefs/optional/XalanLiaisonTest.java" 
                    unless="xalan.present"/>
+
+          <!-- uses the context classloader -->
           <exclude name="${optional.package}/junit/JUnitClassLoaderTest.java"
                    unless="jdk1.2+"/>
 
