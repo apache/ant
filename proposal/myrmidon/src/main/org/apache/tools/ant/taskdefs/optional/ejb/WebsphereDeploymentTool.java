@@ -959,14 +959,15 @@ public class WebsphereDeploymentTool
 
                 EnvironmentVariable var = new EnvironmentVariable();
                 var.setKey( "websphere.lib.dir" );
-                var.setValue( getTask().getProject().getProperty( "websphere.home" ) + "/lib" );
+                final String webshpereHome = getTask().getProperty( "websphere.home" ).toString();
+                var.setValue( webshpereHome + "/lib" );
                 javaTask.addSysproperty( var );
 
 
 
                 // Set the working directory
 
-                javaTask.setDir( new File( getTask().getProject().getProperty( "websphere.home" ) ) );
+                javaTask.setDir( new File( webshpereHome ) );
 
 
 
