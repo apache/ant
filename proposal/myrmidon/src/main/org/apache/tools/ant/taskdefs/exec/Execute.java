@@ -38,14 +38,12 @@ public class Execute
     /**
      * Used to destroy processes when the VM exits.
      */
-    private static ProcessDestroyer c_processDestroyer = new ProcessDestroyer();
+    private static final ProcessDestroyer c_processDestroyer = new ProcessDestroyer();
 
     private ExecMetaData m_metaData;
     private String[] m_command;
     private Properties m_environment;
-    private int m_exitValue;
     private File m_workingDirectory = new File( "." );
-    private Project m_project;
     private boolean m_newEnvironment;
 
     /**
@@ -222,9 +220,9 @@ public class Execute
      *
      * @param newenv whether to propagate the process environment.
      */
-    public void setNewenvironment( boolean newenv )
+    public void setNewenvironment( boolean newEnvironment )
     {
-        m_newEnvironment = newenv;
+        m_newEnvironment = newEnvironment;
     }
 
     /**
@@ -237,7 +235,7 @@ public class Execute
      */
     public void setVMLauncher( boolean useVMLauncher )
     {
-        this.m_useVMLauncher = useVMLauncher;
+        m_useVMLauncher = useVMLauncher;
     }
 
     /**
@@ -251,29 +249,14 @@ public class Execute
     }
 
     /**
-     * Returns the environment used to create a subprocess.
+     * test for an untimely death of the process
      *
-     * @return the environment used to create a subprocess
+     * @return true iff a watchdog had to kill the process
+     * @since 1.5
      */
-    private String[] getEnvironment()
-        throws TaskException
+    public boolean killedProcess()
     {
-        if( m_newEnvironment )
-        {
-            return Environment.toNativeFormat( m_environment );
-        }
-        else
-        {
-            try
-            {
-                Environment.addNativeEnvironment( m_environment );
-                return Environment.toNativeFormat( m_environment );
-            }
-            catch( final IOException ioe )
-            {
-                throw new TaskException( ioe.getMessage(), ioe );
-            }
-        }
+        return m_watchdog != null && m_watchdog.killedProcess();
     }
 
     /**
@@ -287,7 +270,7 @@ public class Execute
     {
 
         final ExecMetaData metaData =
-            new ExecMetaData( m_command, getEnvironment(),
+            new ExecMetaData( m_command, getNativeEnvironment(),
                               m_workingDirectory, false );
 
         final CommandLauncher launcher = getLauncher();
@@ -351,13 +334,28 @@ public class Execute
     }
 
     /**
-     * test for an untimely death of the process
+     * Returns the environment used to create a subprocess.
      *
-     * @return true iff a watchdog had to kill the process
-     * @since 1.5
+     * @return the environment used to create a subprocess
      */
-    public boolean killedProcess()
+    private String[] getNativeEnvironment()
+        throws TaskException
     {
-        return m_watchdog != null && m_watchdog.killedProcess();
+        if( m_newEnvironment )
+        {
+            return Environment.toNativeFormat( m_environment );
+        }
+        else
+        {
+            try
+            {
+                Environment.addNativeEnvironment( m_environment );
+                return Environment.toNativeFormat( m_environment );
+            }
+            catch( final IOException ioe )
+            {
+                throw new TaskException( ioe.getMessage(), ioe );
+            }
+        }
     }
 }
