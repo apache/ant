@@ -8,6 +8,10 @@ Fixed bugs:
 -----------
 * Translate task does not remove tokens when a key is not found.  
   It logs a verbose message.  Bugzilla Report 13936.
+* Fix spurious infinite loop detection for filters (introduced in ant 1.6.0).
+  Bugzilla Report 23154.
+* Fix handling of default ant namespace for nested elements.
+* Fix jboss element of ejb task (introduced in ant 1.6.0).
 
 Other changes:
 --------------
