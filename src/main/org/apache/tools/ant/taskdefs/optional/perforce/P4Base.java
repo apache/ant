@@ -132,6 +132,14 @@ public abstract class P4Base extends org.apache.tools.ant.Task {
     public void setUser(String P4User) {
         this.P4User = "-u" + P4User;
     }
+    
+    /**
+     * Set global P4 options; Used on all
+     * of the Perforce tasks.
+     */ 
+    public void setGlobalopts(String P4Opts) {
+        this.P4Opts = P4Opts;
+    }
 
     /**
      * The client, branch or label view to operate upon;
@@ -198,6 +206,9 @@ public abstract class P4Base extends org.apache.tools.ant.Task {
             }
             if (P4Client != null && P4Client.length() != 0) {
                 commandline.createArgument().setValue(P4Client);
+            }
+            if (P4Opts != null && P4Opts.length() != 0) {
+                commandline.createArgument().setValue(P4Opts);
             }
             commandline.createArgument().setLine(command);
 

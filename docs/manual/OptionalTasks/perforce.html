@@ -8,8 +8,9 @@
 <ul>
     <li>Les Hughes (<a href="mailto:leslie.hughes@rubus.com">leslie.hughes@rubus.com</a>)</li>
     <li>Kirk Wylie (<a href="mailto:kirk@radik.com">kirk@radik.com</a>)</li>
+    <li>Matt Bishop (<a href="mailto:matt@thebishops.org">matt@thebishops.org</a>)</li>
 </ul>
-<p>Version 1.1 - 2001/01/09</p>
+<p>Version 1.2 - 2002/10/08</p>
 <hr>
 <h2>Contents</h2>
 <ul>
@@ -122,8 +123,11 @@ or environment variables. These are
   </tr>
 
 </table>
-<p>
-Your local installation of Perforce may require other settings (e.g. P4PASSWD, P4CONFIG). At the moment, these can only be set outside of Ant, as environment variables.
+<p> Your local installation of Perforce may require other settings (e.g.
+P4PASSWD, P4CONFIG). Many of these settings can be set using the globalopts
+attribute (described below), but not all. If a setting cannot be set
+by the command-line options, then it can only be set outside of Ant as an 
+environment variable.
 </p>
 <p>
 Additionally, you may also specify the following attributes:
@@ -142,6 +146,16 @@ Additionally, you may also specify the following attributes:
      or keep going (<code>false</code>|<code>no</code>|<code>off</code>)
      if an error is returned from the p4 command.</td>
     <td valign="top">No; defaults to true.</td>
+  </tr>
+  <tr>
+      <td valign="top">globalopts<br></td>
+      <td valign="top">Specifies global options for perforce to use while
+      executing the task. These properties should be concatenated into one
+      string,<br>
+      such as "-P <i>password</i> -C EUCJIS". Use the command-line option
+      syntax, NOT the environment variable names. See the<br>
+      Perforce Command Reference for details.</td>
+      <td valign="top">No<br></td>
   </tr>
 </table>
 </p>
@@ -569,7 +583,15 @@ and submit
 <tr>
     <td valign="top">Jan 2001</td>
     <td valign="top">V1.1</td>
-    <td valign="top">fixed cross platform (NT/Unix) bug<br>refactored p4 output handling code<br>refactored exec'ing code</td>
+    <td valign="top">Fixed cross platform (NT/Unix) bug<br>
+    Refactored p4 output handling code<br>
+    Refactored exec'ing code</td>    
+</tr>
+<tr>
+    <td valign="top">Nov 2002</td>
+    <td valign="top">V1.2</td>
+    <td valign="top">Added globalopts to P4Base to allow<br>
+    additional global options to be set.</td>
 </tr>
 </table>
 <hr>
