@@ -100,7 +100,8 @@ public final class Diagnostics {
             Class optional = Class.forName("org.apache.tools.ant.taskdefs.optional.Test");
             String coreVersion = getImplementationVersion(Main.class);
             String optionalVersion = getImplementationVersion(optional);
-            if (coreVersion == null || !coreVersion.equals(optionalVersion) ){
+            
+            if (coreVersion != null && !coreVersion.equals(optionalVersion) ){
                 throw new BuildException(
                         "Invalid implementation version between Ant core and Ant optional tasks.\n" +
                         " core    : " + coreVersion + "\n" +
@@ -149,13 +150,19 @@ public final class Diagnostics {
      * '?.?' for JDK 1.0 or 1.1.
      */
     private static String getImplementationVersion(Class clazz){
-        if (JavaEnvUtils.isJavaVersion(JavaEnvUtils.JAVA_1_0)
-            || JavaEnvUtils.isJavaVersion(JavaEnvUtils.JAVA_1_1)){
-                return "?.?";
-        }
-        Package pkg = clazz.getPackage();
-        if (pkg != null) {
-            return pkg.getImplementationVersion();
+        try {
+          // Package pkg = clazz.getPackage();        
+          Method method = Class.class.getMethod("getPackage", new Class[0]);
+          Object pkg = method.invoke(clazz, null);
+          if (pkg != null) {
+              // pkg.getImplementationVersion();
+              method = pkg.getClass().getMethod("getImplementationVersion", new Class[0]);
+              Object version = method.invoke(pkg, null);          
+              return (String)version;
+          }
+        } catch (Exception e){
+          // JDK < 1.2 should land here because the methods above don't exist.
+          return "?.?";
         }
         return null;
     }
@@ -171,15 +178,15 @@ public final class Diagnostics {
         out.println("-------------------------------------------");
         out.println(" Implementation Version (JDK1.2+ only)");
         out.println("-------------------------------------------");
-        out.println(" core tasks     : " + getImplementationVersion(Main.class));
+        out.println("core tasks     : " + getImplementationVersion(Main.class));
 
         Class optional = null;
         try {
             optional = Class.forName(
                     "org.apache.tools.ant.taskdefs.optional.Test");
-            out.println(" optional tasks : " + getImplementationVersion(optional));
+            out.println("optional tasks : " + getImplementationVersion(optional));
         } catch (ClassNotFoundException e){
-            out.println(" optional tasks : not available");
+            out.println("optional tasks : not available");
         }
 
         out.println();
@@ -192,6 +199,19 @@ public final class Diagnostics {
                     + " (" + libs[i].length() + " bytes)");
         }
 
+/*
+        out.println();
+        out.println("-------------------------------------------");
+        out.println(" Core tasks availability");
+        out.println("-------------------------------------------");
+        Properties props = new Properties();
+        InputStream is = Main.class.getResourceAsStream("org/apache/tools/ant/taskdefs/default.properties");
+
+        out.println();
+        out.println("-------------------------------------------");
+        out.println(" Optional tasks availability");
+        out.println("-------------------------------------------");
+*/
         out.println();
         Throwable error = null;
         try {
@@ -227,5 +247,27 @@ public final class Diagnostics {
 
         out.println();
     }
+
+/*
+    private void doReportTasksAvailability(PrintStream out, InputStream in) {
+        if (is == null) {
+            out.println("None available");
+        } else {
+            props.load(is);
+            for (Enumeration keys = props.keys(); keys.hasMoreElements();){
+                String key = (String)keys.nextElement();
+                String classname = props.getProperty(key);
+                try {
+                    Class.forName(classname);
+                    props.remove(key);
+                } catch (ClassNotFoundException e){
+                    out.println(classname + " : Not Available");
+                }
+            }
+            if (props.size() == 0){
+                out.println("All defined tasks are available");
+            }          
+        }      
+    } */
 
 }
