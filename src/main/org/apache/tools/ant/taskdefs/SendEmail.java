@@ -107,9 +107,15 @@ import org.apache.tools.ant.BuildException;
  * <td>Message to send inthe body of the email.</td>
  * </tr>
  * </table>
+ * <tr>
+ * <td>includefilenames</td>
+ * <td>Includes filenames before file contents when set to true.</td>
+ * <td>No, default is <I>false</I></td>
+ * </tr>
  * <p>
  *
  * @author glenn_twiggs@bmc.com
+ * @author <a href="mailto:umagesh@rediffmail.com">Magesh Umasankar</a>
  */
 public class SendEmail extends Task {
     private String from;
@@ -119,6 +125,7 @@ public class SendEmail extends Task {
     private String toList;
     private String subject;
     private Vector files = new Vector();
+    private boolean includefilenames;
   
     /** Creates new SendEmail */
     public SendEmail() {
@@ -191,6 +198,15 @@ public class SendEmail extends Task {
     }
 
     /**
+     * Sets Includefilenames attribute
+     *
+     * @param includefilenames Set to true if file names are to be included.
+     */
+    public void setIncludefilenames(boolean includefilenames) {
+        this.includefilenames = includefilenames;
+    }
+
+    /**
      * Executes this build task.
      *
      * @throws BuildException if there is an error during task execution.
@@ -230,14 +246,24 @@ public class SendEmail extends Task {
                         int bufsize = 1024;
                         int length;
                         byte[] buf = new byte[bufsize];
-
+                        if (includefilenames) {
+                            String filename = file.getName();
+                            int filenamelength = filename.length();
+                            out.println(filename);
+                            for (int star=0; star < filenamelength; star++) {
+                                out.print('=');
+                            }
+                            out.println();
+                        }
                         BufferedInputStream in = null;
                         try {
                             in = new BufferedInputStream(
                                 new FileInputStream(file), bufsize);
-    
                             while ((length = in.read(buf, 0, bufsize)) != -1) {
                                 out.write(buf, 0, length);
+                            }
+                            if (includefilenames) {
+                                out.println();
                             }
                         } finally {
                             if (in != null) {
