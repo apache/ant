@@ -9,6 +9,7 @@ package org.apache.myrmidon.components.service.test;
 
 import junit.framework.Assert;
 import org.apache.avalon.framework.activity.Initializable;
+import org.apache.avalon.framework.activity.Disposable;
 import org.apache.avalon.framework.logger.LogEnabled;
 import org.apache.avalon.framework.logger.Logger;
 import org.apache.avalon.framework.parameters.ParameterException;
@@ -17,6 +18,9 @@ import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.avalon.framework.service.ServiceException;
 import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.avalon.framework.service.Serviceable;
+import org.apache.avalon.framework.context.Contextualizable;
+import org.apache.avalon.framework.context.Context;
+import org.apache.avalon.framework.context.ContextException;
 
 /**
  * A basic class that asserts that the object is correctly set-up.
@@ -26,7 +30,7 @@ import org.apache.avalon.framework.service.Serviceable;
  */
 public class LifecycleValidator
     extends Assert
-    implements LogEnabled, Serviceable, Parameterizable, Initializable
+    implements LogEnabled, Contextualizable, Serviceable, Parameterizable, Initializable, Disposable
 {
     private String m_state = STATE_NOT_INIT;
 
@@ -34,7 +38,9 @@ public class LifecycleValidator
     private final static String STATE_LOG_ENABLED = "log-enabled";
     private final static String STATE_SERVICED = "serviced";
     private final static String STATE_PARAMETERISED = "parameterised";
-    protected final static String STATE_INITIALISED = "initialised";
+    private final static String STATE_INITIALISED = "initialised";
+    private final static String STATE_CONTEXTUALISED = "contextualised";
+    private final static String STATE_DISPOSED = "disposed";
 
     public void enableLogging( final Logger logger )
     {
@@ -42,13 +48,19 @@ public class LifecycleValidator
         m_state = STATE_LOG_ENABLED;
     }
 
-    public void service( final ServiceManager serviceManager ) throws ServiceException
+    public void contextualize( final Context context ) throws ContextException
     {
         assertEquals( STATE_LOG_ENABLED, m_state );
+        m_state = STATE_CONTEXTUALISED;
+    }
+
+    public void service( final ServiceManager serviceManager ) throws ServiceException
+    {
+        assertEquals( STATE_CONTEXTUALISED, m_state );
         m_state = STATE_SERVICED;
     }
 
-    public void parameterize( Parameters parameters ) throws ParameterException
+    public void parameterize( final Parameters parameters ) throws ParameterException
     {
         assertEquals( STATE_SERVICED, m_state );
         m_state = STATE_PARAMETERISED;
@@ -60,8 +72,19 @@ public class LifecycleValidator
         m_state = STATE_INITIALISED;
     }
 
+    public void dispose()
+    {
+        assertEquals( STATE_INITIALISED, m_state );
+        m_state = STATE_DISPOSED;
+    }
+
     protected void assertSetup()
     {
         assertEquals( STATE_INITIALISED, m_state );
+    }
+
+    protected void assertDisposed()
+    {
+        assertEquals( STATE_DISPOSED, m_state );
     }
 }

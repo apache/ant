@@ -7,10 +7,10 @@
  */
 package org.apache.myrmidon.components.service.test;
 
-import org.apache.avalon.excalibur.i18n.ResourceManager;
 import org.apache.avalon.excalibur.i18n.Resources;
 import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.avalon.framework.service.ServiceException;
+import org.apache.avalon.framework.context.DefaultContext;
 import org.apache.myrmidon.components.AbstractComponentTest;
 import org.apache.myrmidon.components.service.InstantiatingServiceManager;
 import org.apache.myrmidon.interfaces.role.RoleInfo;
@@ -31,7 +31,6 @@ public class InstantiatingServiceManagerTestCase
     private final static Resources REZ = getResourcesForTested( InstantiatingServiceManagerTestCase.class );
 
     private InstantiatingServiceManager m_serviceManager;
-    private Parameters m_parameters = new Parameters();
 
     public InstantiatingServiceManagerTestCase( final String name )
     {
@@ -47,8 +46,9 @@ public class InstantiatingServiceManagerTestCase
         // Set-up the service manager
         m_serviceManager = new InstantiatingServiceManager();
         m_serviceManager.enableLogging( getLogger() );
+        m_serviceManager.contextualize( new DefaultContext() );
         m_serviceManager.service( getServiceManager() );
-        m_serviceManager.parameterize( m_parameters );
+        m_serviceManager.parameterize( new Parameters() );
     }
 
     /**
@@ -101,7 +101,14 @@ public class InstantiatingServiceManagerTestCase
         assertTrue( service.getClass() == TestServiceImpl2.class );
 
         // Assert the service has been setup correctly
-        service.doWork();
+        LifecycleValidator validate = (LifecycleValidator)service;
+        validate.assertSetup();
+
+        // Cleanup
+        m_serviceManager.dispose();
+
+        // Assert the service has been shutdown correctly
+        validate.assertDisposed();
     }
 
     /**

@@ -8,13 +8,10 @@
 package org.apache.myrmidon.framework.factories;
 
 import java.io.File;
-import org.apache.aut.nativelib.ExecException;
 import org.apache.aut.nativelib.impl.DefaultExecManager;
-import org.apache.avalon.excalibur.i18n.ResourceManager;
-import org.apache.avalon.excalibur.i18n.Resources;
-import org.apache.avalon.framework.parameters.Parameterizable;
-import org.apache.avalon.framework.parameters.Parameters;
-import org.apache.avalon.framework.parameters.ParameterException;
+import org.apache.avalon.framework.context.Context;
+import org.apache.avalon.framework.context.ContextException;
+import org.apache.avalon.framework.context.Contextualizable;
 import org.apache.myrmidon.interfaces.service.AntServiceException;
 import org.apache.myrmidon.interfaces.service.ServiceFactory;
 
@@ -25,17 +22,13 @@ import org.apache.myrmidon.interfaces.service.ServiceFactory;
  * @version $Revision$ $Date$
  */
 public class ExecManagerFactory
-    implements ServiceFactory, Parameterizable
+    implements ServiceFactory, Contextualizable
 {
-    private static final Resources REZ =
-        ResourceManager.getPackageResources( ExecManagerFactory.class );
+    private File m_homeDir;
 
-    private Parameters m_parameters;
-
-    public void parameterize( final Parameters parameters )
-        throws ParameterException
+    public void contextualize( final Context context ) throws ContextException
     {
-        m_parameters = parameters;
+        m_homeDir = (File)context.get( "myrmidon.home" );
     }
 
     /**
@@ -46,28 +39,11 @@ public class ExecManagerFactory
     {
         try
         {
-            final File home = getHomeDirectory();
-            return new DefaultExecManager( home );
+            return new DefaultExecManager( m_homeDir );
         }
         catch( final Exception ee )
         {
             throw new AntServiceException( ee.getMessage(), ee );
         }
-    }
-
-    /**
-     * Utility method to retrieve home directory.
-     */
-    private File getHomeDirectory()
-        throws Exception
-    {
-        final String home = m_parameters.getParameter( "myrmidon.home" );
-        if( null == home )
-        {
-            final String message = REZ.getString( "missing-home-dir.error" );
-            throw new AntServiceException( message );
-        }
-
-        return new File( home );
     }
 }

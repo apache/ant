@@ -19,6 +19,9 @@ import org.apache.avalon.excalibur.i18n.Resources;
 import org.apache.avalon.excalibur.io.ExtensionFileFilter;
 import org.apache.avalon.excalibur.io.FileUtil;
 import org.apache.avalon.framework.CascadingException;
+import org.apache.avalon.framework.context.Contextualizable;
+import org.apache.avalon.framework.context.Context;
+import org.apache.avalon.framework.context.ContextException;
 import org.apache.avalon.framework.activity.Disposable;
 import org.apache.avalon.framework.activity.Initializable;
 import org.apache.avalon.framework.activity.Startable;
@@ -62,7 +65,7 @@ import org.apache.myrmidon.components.store.DefaultPropertyStore;
  */
 public class DefaultEmbeddor
     extends AbstractLogEnabled
-    implements Embeddor, Parameterizable, Initializable, Startable, Disposable
+    implements Embeddor, Contextualizable, Initializable, Startable, Disposable
 {
     private static final Resources REZ =
         ResourceManager.getPackageResources( DefaultEmbeddor.class );
@@ -76,17 +79,15 @@ public class DefaultEmbeddor
 
     private List m_components = new ArrayList();
     private DefaultServiceManager m_serviceManager = new DefaultServiceManager();
-    private Parameters m_parameters;
+    private Context m_context;
 
     /**
      * Setup basic properties of engine.
      * Called before init() and can be used to specify alternate components in system.
-     *
-     * @param parameters the parameters.
      */
-    public void parameterize( final Parameters parameters )
+    public void contextualize( final Context context ) throws ContextException
     {
-        m_parameters = parameters;
+        m_context = context;
     }
 
     /**
@@ -137,7 +138,7 @@ public class DefaultEmbeddor
     {
         final Workspace workspace =
             (Workspace)createService( Workspace.class, PREFIX + "workspace.DefaultWorkspace" );
-        setupObject( workspace, m_workspaceServiceManager, m_parameters );
+        setupObject( workspace, m_workspaceServiceManager, null );
 
         // Create the property store
         final PropertyStore propStore = createBaseStore( properties );
@@ -185,7 +186,7 @@ public class DefaultEmbeddor
         final ServiceManager projServiceManager
             = (ServiceManager)createService( ServiceManager.class,
                                              PREFIX + "service.InstantiatingServiceManager" );
-        setupObject( projServiceManager, m_serviceManager, m_parameters );
+        setupObject( projServiceManager, m_serviceManager, null );
         m_components.add( projServiceManager );
 
         // setup a service manager to be used by workspaces
@@ -204,8 +205,8 @@ public class DefaultEmbeddor
 
         // Deploy all type libraries in the lib directory
         final ExtensionFileFilter filter = new ExtensionFileFilter( ".atl" );
-        final File taskLibDir = new File( m_parameters.getParameter( "myrmidon.lib.path" ) );
-        deployFromDirectory( m_deployer, taskLibDir, filter );
+        final File[] taskLibDirs = (File[])m_context.get( "myrmidon.lib.path" );
+        deployFromDirectories( m_deployer, taskLibDirs, filter );
     }
 
     /**
@@ -236,7 +237,7 @@ public class DefaultEmbeddor
         m_components = null;
         m_deployer = null;
         m_serviceManager = null;
-        m_parameters = null;
+        m_context = null;
     }
 
     /**
@@ -266,7 +267,7 @@ public class DefaultEmbeddor
         for( Iterator iterator = m_components.iterator(); iterator.hasNext(); )
         {
             final Object component = iterator.next();
-            setupObject( component, m_serviceManager, m_parameters );
+            setupObject( component, m_serviceManager, null );
         }
     }
 
@@ -294,8 +295,8 @@ public class DefaultEmbeddor
     private Object createService( final Class roleType, final String defaultImpl )
         throws Exception
     {
-        final String role = roleType.getName();
-        final String className = m_parameters.getParameter( role, defaultImpl );
+        // TODO - need to be able to provide different implementations
+        final String className = defaultImpl;
 
         try
         {
@@ -341,12 +342,17 @@ public class DefaultEmbeddor
     {
         setupLogger( object );
 
+        if(object instanceof Contextualizable )
+        {
+            ( (Contextualizable)object ).contextualize( m_context );
+
+        }
         if( object instanceof Serviceable )
         {
             ( (Serviceable)object ).service( serviceManager );
         }
 
-        if( object instanceof Parameterizable )
+        if( parameters != null && object instanceof Parameterizable )
         {
             ( (Parameterizable)object ).parameterize( parameters );
         }
@@ -360,16 +366,20 @@ public class DefaultEmbeddor
     /**
      * Deploys all type libraries in a directory.
      */
-    private void deployFromDirectory( final Deployer deployer,
-                                      final File directory,
-                                      final FilenameFilter filter )
+    private void deployFromDirectories( final Deployer deployer,
+                                        final File[] directories,
+                                        final FilenameFilter filter )
         throws DeploymentException
     {
-        final File[] files = directory.listFiles( filter );
-
-        if( null != files )
+        for( int i = 0; i < directories.length; i++ )
         {
-            deployFiles( deployer, files );
+            File directory = directories[i ];
+            final File[] files = directory.listFiles( filter );
+
+            if( null != files )
+            {
+                deployFiles( deployer, files );
+            }
         }
     }
 

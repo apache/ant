@@ -11,12 +11,12 @@ import java.io.File;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.util.Enumeration;
+import java.util.Map;
+import org.apache.avalon.excalibur.i18n.Resources;
 import org.apache.myrmidon.components.AbstractComponentTest;
 import org.apache.myrmidon.components.classloader.DefaultClassLoaderManager;
-import org.apache.myrmidon.interfaces.classloader.ClassLoaderManager;
 import org.apache.myrmidon.interfaces.classloader.ClassLoaderException;
-import org.apache.avalon.framework.parameters.Parameters;
-import org.apache.avalon.excalibur.i18n.Resources;
+import org.apache.myrmidon.interfaces.classloader.ClassLoaderManager;
 
 /**
  * Test cases for the DefaultClassLoaderManager.
@@ -87,10 +87,10 @@ public class DefaultClassLoaderManagerTestCase
      * Creates the parameters for the test.  Sub-classes can override this
      * method to set-up the parameters.
      */
-    protected Parameters getParameters()
+    protected Map getParameters()
     {
-        final Parameters parameters = super.getParameters();
-        parameters.setParameter( "myrmidon.ext.path", getTestDirectory( "ext" ).getAbsolutePath() );
+        final Map parameters = super.getParameters();
+        parameters.put( "myrmidon.ext.path", new File[] { getTestDirectory( "ext" ) } );
         return parameters;
     }
 

@@ -9,7 +9,7 @@ package org.apache.myrmidon.components.embeddor.test;
 
 import java.io.File;
 import java.util.HashMap;
-import org.apache.avalon.framework.parameters.Parameters;
+import org.apache.avalon.framework.context.DefaultContext;
 import org.apache.avalon.framework.logger.Logger;
 import org.apache.myrmidon.AbstractProjectTest;
 import org.apache.myrmidon.LogMessageTracker;
@@ -62,10 +62,9 @@ public class DefaultEmbeddorTest
             m_embeddor = new DefaultEmbeddor();
             m_embeddor.enableLogging( logger );
 
-            final Parameters params = new Parameters();
-            final File instDir = getInstallDirectory();
-            params.setParameter( "myrmidon.home", instDir.getAbsolutePath() );
-            m_embeddor.parameterize( params );
+            final DefaultContext context = new DefaultContext();
+            context.put( "myrmidon.home", getInstallDirectory() );
+            m_embeddor.contextualize( context );
             m_embeddor.initialize();
             m_embeddor.start();
         }

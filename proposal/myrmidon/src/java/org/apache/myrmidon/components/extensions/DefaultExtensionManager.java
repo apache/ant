@@ -13,14 +13,13 @@ import org.apache.avalon.excalibur.extension.Extension;
 import org.apache.avalon.excalibur.extension.OptionalPackage;
 import org.apache.avalon.excalibur.i18n.ResourceManager;
 import org.apache.avalon.excalibur.i18n.Resources;
-import org.apache.avalon.excalibur.util.StringUtil;
 import org.apache.avalon.framework.activity.Disposable;
 import org.apache.avalon.framework.activity.Initializable;
+import org.apache.avalon.framework.context.Context;
+import org.apache.avalon.framework.context.ContextException;
+import org.apache.avalon.framework.context.Contextualizable;
 import org.apache.avalon.framework.logger.LogEnabled;
 import org.apache.avalon.framework.logger.Logger;
-import org.apache.avalon.framework.parameters.ParameterException;
-import org.apache.avalon.framework.parameters.Parameterizable;
-import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.myrmidon.interfaces.extensions.ExtensionManager;
 
 /**
@@ -31,7 +30,7 @@ import org.apache.myrmidon.interfaces.extensions.ExtensionManager;
  */
 public class DefaultExtensionManager
     extends DefaultPackageRepository
-    implements LogEnabled, Parameterizable, Initializable, Disposable, ExtensionManager
+    implements LogEnabled, Contextualizable, Initializable, Disposable, ExtensionManager
 {
     private static final Resources REZ =
         ResourceManager.getPackageResources( DefaultExtensionManager.class );
@@ -50,7 +49,7 @@ public class DefaultExtensionManager
         File.separator + "lib" + File.separator + "tools.jar";
 
     private Logger m_logger;
-    private String m_path;
+    private File[] m_path;
 
     public DefaultExtensionManager()
     {
@@ -67,24 +66,15 @@ public class DefaultExtensionManager
         m_logger = logger;
     }
 
-    public void parameterize( final Parameters parameters )
-        throws ParameterException
+    public void contextualize( final Context context ) throws ContextException
     {
-        m_path = parameters.getParameter( "myrmidon.ext.path" );
+        m_path = (File[])context.get( "myrmidon.ext.path" );
     }
 
     public void initialize()
         throws Exception
     {
-        final String[] pathElements = StringUtil.split( m_path, File.pathSeparator );
-        final File[] dirs = new File[ pathElements.length ];
-        for( int i = 0; i < dirs.length; i++ )
-        {
-            dirs[ i ] = new File( pathElements[ i ] );
-        }
-
-        setPath( dirs );
-
+        setPath( m_path );
         scanPath();
 
         // Add the JVM's tools.jar as an extension

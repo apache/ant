@@ -7,19 +7,22 @@
  */
 package org.apache.myrmidon.components;
 
+import java.io.File;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
-import java.io.File;
+import java.util.Map;
 import org.apache.aut.converter.Converter;
+import org.apache.avalon.framework.activity.Initializable;
+import org.apache.avalon.framework.context.Context;
+import org.apache.avalon.framework.context.Contextualizable;
+import org.apache.avalon.framework.context.DefaultContext;
 import org.apache.avalon.framework.logger.LogEnabled;
 import org.apache.avalon.framework.logger.Logger;
 import org.apache.avalon.framework.service.DefaultServiceManager;
 import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.avalon.framework.service.Serviceable;
-import org.apache.avalon.framework.parameters.Parameters;
-import org.apache.avalon.framework.parameters.Parameterizable;
-import org.apache.avalon.framework.activity.Initializable;
 import org.apache.myrmidon.AbstractMyrmidonTest;
 import org.apache.myrmidon.components.classloader.DefaultClassLoaderManager;
 import org.apache.myrmidon.components.configurer.DefaultConfigurer;
@@ -124,6 +127,18 @@ public abstract class AbstractComponentTest
                 }
             }
 
+            // Contextualise the components
+            final Context context = new DefaultContext( getParameters() );
+            for( Iterator iterator = components.iterator(); iterator.hasNext(); )
+            {
+                Object obj = iterator.next();
+                if( obj instanceof Contextualizable )
+                {
+                    final Contextualizable contextualizable = (Contextualizable)obj;
+                    contextualizable.contextualize( context );
+                }
+            }
+
             // Compose the components
             for( Iterator iterator = components.iterator(); iterator.hasNext(); )
             {
@@ -132,18 +147,6 @@ public abstract class AbstractComponentTest
                 {
                     final Serviceable serviceable = (Serviceable)obj;
                     serviceable.service( m_serviceManager );
-                }
-            }
-
-            // Parameterise the components
-            final Parameters parameters = getParameters();
-            for( Iterator iterator = components.iterator(); iterator.hasNext(); )
-            {
-                Object obj = iterator.next();
-                if( obj instanceof Parameterizable )
-                {
-                    final Parameterizable parameterizable = (Parameterizable)obj;
-                    parameterizable.parameterize( parameters );
                 }
             }
 
@@ -173,12 +176,12 @@ public abstract class AbstractComponentTest
      * Creates the parameters for the test.  Sub-classes can override this
      * method to set-up the parameters.
      */
-    protected Parameters getParameters()
+    protected Map getParameters()
     {
-        final Parameters parameters = new Parameters();
-        final String homeDir = getInstallDirectory().getAbsolutePath();
-        parameters.setParameter( "myrmidon.home", homeDir );
-        parameters.setParameter( "myrmidon.ext.path", homeDir + File.separatorChar + "ext" );
+        final Map parameters = new HashMap();
+        final File homeDir = getInstallDirectory();
+        parameters.put( "myrmidon.home", homeDir );
+        parameters.put( "myrmidon.ext.path", new File[] { new File ( homeDir, "ext" ) } );
         return parameters;
     }
 

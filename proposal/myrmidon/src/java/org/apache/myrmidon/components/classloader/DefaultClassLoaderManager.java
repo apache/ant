@@ -12,16 +12,19 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
-import java.util.HashSet;
-import java.util.jar.Manifest;
 import java.util.jar.JarFile;
+import java.util.jar.Manifest;
+import org.apache.aut.nativelib.PathUtil;
 import org.apache.avalon.excalibur.extension.Extension;
 import org.apache.avalon.excalibur.extension.OptionalPackage;
 import org.apache.avalon.excalibur.i18n.ResourceManager;
 import org.apache.avalon.excalibur.i18n.Resources;
-import org.apache.avalon.framework.activity.Initializable;
+import org.apache.avalon.framework.context.Context;
+import org.apache.avalon.framework.context.ContextException;
+import org.apache.avalon.framework.context.Contextualizable;
 import org.apache.avalon.framework.logger.AbstractLogEnabled;
 import org.apache.avalon.framework.service.ServiceException;
 import org.apache.avalon.framework.service.ServiceManager;
@@ -30,7 +33,6 @@ import org.apache.myrmidon.interfaces.classloader.ClassLoaderException;
 import org.apache.myrmidon.interfaces.classloader.ClassLoaderManager;
 import org.apache.myrmidon.interfaces.deployer.DeploymentException;
 import org.apache.myrmidon.interfaces.extensions.ExtensionManager;
-import org.apache.aut.nativelib.PathUtil;
 
 /**
  * A default implementation of a ClassLoader manager.
@@ -40,7 +42,7 @@ import org.apache.aut.nativelib.PathUtil;
  */
 public class DefaultClassLoaderManager
     extends AbstractLogEnabled
-    implements ClassLoaderManager, Serviceable, Initializable
+    implements ClassLoaderManager, Serviceable, Contextualizable
 {
     private static final Resources REZ =
         ResourceManager.getPackageResources( DefaultClassLoaderManager.class );
@@ -62,11 +64,11 @@ public class DefaultClassLoaderManager
         m_commonClassLoader = commonClassLoader;
     }
 
-    public void initialize() throws Exception
+    public void contextualize( final Context context ) throws ContextException
     {
         if( null == m_commonClassLoader )
         {
-            m_commonClassLoader = Thread.currentThread().getContextClassLoader();
+            m_commonClassLoader = (ClassLoader)context.get( "myrmidon.shared.classloader" );
         }
     }
 

@@ -12,11 +12,11 @@ import java.util.HashMap;
 import org.apache.avalon.excalibur.i18n.ResourceManager;
 import org.apache.avalon.excalibur.i18n.Resources;
 import org.apache.avalon.framework.configuration.Configuration;
+import org.apache.avalon.framework.context.Context;
+import org.apache.avalon.framework.context.ContextException;
+import org.apache.avalon.framework.context.Contextualizable;
 import org.apache.avalon.framework.logger.AbstractLogEnabled;
 import org.apache.avalon.framework.logger.Logger;
-import org.apache.avalon.framework.parameters.ParameterException;
-import org.apache.avalon.framework.parameters.Parameterizable;
-import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.avalon.framework.service.DefaultServiceManager;
 import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.myrmidon.api.TaskContext;
@@ -44,7 +44,7 @@ import org.apache.myrmidon.listeners.ProjectListener;
  */
 public class DefaultWorkspace
     extends AbstractLogEnabled
-    implements Workspace, ExecutionContainer, Parameterizable
+    implements Workspace, ExecutionContainer, Contextualizable
 {
     private static final Resources REZ =
         ResourceManager.getPackageResources( DefaultWorkspace.class );
@@ -52,10 +52,10 @@ public class DefaultWorkspace
     private Executor m_executor;
     private ProjectListenerSupport m_listenerSupport = new ProjectListenerSupport();
     private ServiceManager m_serviceManager;
-    private Parameters m_parameters;
     private PropertyStore m_baseStore;
     private TypeManager m_typeManager;
     private Deployer m_deployer;
+    private Context m_context;
 
     /** A map from Project object -> ProjectEntry for that project. */
     private HashMap m_entries = new HashMap();
@@ -92,10 +92,9 @@ public class DefaultWorkspace
         m_deployer = (Deployer)m_serviceManager.lookup( Deployer.ROLE );
     }
 
-    public void parameterize( final Parameters parameters )
-        throws ParameterException
+    public void contextualize( final Context context ) throws ContextException
     {
-        m_parameters = parameters;
+        m_context = context;
     }
 
     /**
@@ -127,21 +126,23 @@ public class DefaultWorkspace
         //workspace specific)
         final String name = libraryName.replace( '/', File.separatorChar ) + ".atl";
 
-        final String home = m_parameters.getParameter( "myrmidon.home" );
-        final File homeDir = new File( home + File.separatorChar + "ext" );
-
-        final File library = new File( homeDir, name );
-
-        if( library.exists() )
+        final File[] extPath = (File[])m_context.get( "myrmidon.antlib.path" );
+        for( int i = 0; i < extPath.length; i++ )
         {
-            if( !library.canRead() )
+            final File extDir = extPath[ i ];
+            final File library = new File( extDir, name );
+
+            if( library.exists() )
             {
-                final String message = REZ.getString( "no-read.error", library );
-                throw new TaskException( message );
-            }
-            else
-            {
-                return library;
+                if( !library.canRead() )
+                {
+                    final String message = REZ.getString( "no-read.error", library );
+                    throw new TaskException( message );
+                }
+                else
+                {
+                    return library;
+                }
             }
         }
 

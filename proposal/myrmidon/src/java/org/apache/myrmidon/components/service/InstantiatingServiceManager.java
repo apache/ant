@@ -23,6 +23,9 @@ import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.avalon.framework.service.ServiceException;
 import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.avalon.framework.service.Serviceable;
+import org.apache.avalon.framework.context.Contextualizable;
+import org.apache.avalon.framework.context.Context;
+import org.apache.avalon.framework.context.ContextException;
 import org.apache.myrmidon.interfaces.role.RoleInfo;
 import org.apache.myrmidon.interfaces.role.RoleManager;
 import org.apache.myrmidon.interfaces.service.ServiceFactory;
@@ -37,9 +40,12 @@ import org.apache.myrmidon.interfaces.type.TypeManager;
  * and running the service instances through the service lifecycle:
  * <ul>
  * <li>log enable
+ * <li>contextualise
  * <li>service
  * <li>parameterise
  * <li>initialise
+ * <li>use
+ * <li>dispose
  * </ul>
  *
  * @author <a href="mailto:adammurdoch@apache.org">Adam Murdoch</a>
@@ -47,7 +53,7 @@ import org.apache.myrmidon.interfaces.type.TypeManager;
  */
 public class InstantiatingServiceManager
     extends AbstractLogEnabled
-    implements ServiceManager, Parameterizable, Serviceable, Disposable
+    implements ServiceManager, Contextualizable, Parameterizable, Serviceable, Disposable
 {
     private static final Resources REZ =
         ResourceManager.getPackageResources( InstantiatingServiceManager.class );
@@ -64,8 +70,14 @@ public class InstantiatingServiceManager
     private ServiceManager m_serviceManager;
     private Parameters m_parameters;
     private TypeManager m_typeManager;
+    private Context m_context;
 
-    public void parameterize( Parameters parameters ) throws ParameterException
+    public void contextualize( final Context context ) throws ContextException
+    {
+        m_context = context;
+    }
+
+    public void parameterize( final Parameters parameters ) throws ParameterException
     {
         m_parameters = parameters;
     }
@@ -211,12 +223,17 @@ public class InstantiatingServiceManager
     {
         setupLogger( object );
 
+        if( m_context != null && object instanceof Contextualizable )
+        {
+            ( (Contextualizable)object ).contextualize( m_context );
+        }
+
         if( object instanceof Serviceable )
         {
             ( (Serviceable)object ).service( m_serviceManager );
         }
 
-        if( object instanceof Parameterizable )
+        if( m_parameters != null && object instanceof Parameterizable )
         {
             ( (Parameterizable)object ).parameterize( m_parameters );
         }

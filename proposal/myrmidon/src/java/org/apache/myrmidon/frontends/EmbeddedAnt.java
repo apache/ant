@@ -14,11 +14,14 @@ import java.util.Map;
 import org.apache.avalon.excalibur.i18n.ResourceManager;
 import org.apache.avalon.excalibur.i18n.Resources;
 import org.apache.avalon.excalibur.io.FileUtil;
+import org.apache.avalon.excalibur.util.StringUtil;
 import org.apache.avalon.framework.activity.Disposable;
 import org.apache.avalon.framework.activity.Initializable;
 import org.apache.avalon.framework.activity.Startable;
+import org.apache.avalon.framework.context.Context;
+import org.apache.avalon.framework.context.Contextualizable;
+import org.apache.avalon.framework.context.DefaultContext;
 import org.apache.avalon.framework.logger.AbstractLogEnabled;
-import org.apache.avalon.framework.parameters.Parameterizable;
 import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.myrmidon.api.TaskException;
 import org.apache.myrmidon.interfaces.embeddor.Embeddor;
@@ -48,13 +51,14 @@ public class EmbeddedAnt
     private static final String DEFAULT_EMBEDDOR_CLASS =
         "org.apache.myrmidon.components.embeddor.DefaultEmbeddor";
 
+    private final ArrayList m_listeners = new ArrayList();
+    private final Parameters m_builderProps = new Parameters();
+    private final Map m_embeddorParameters = new HashMap();
+    private final Map m_workspaceProperties = new HashMap();
+
     private String m_projectFile = "build.ant";
     private Project m_project;
     private String m_listenerName = "default";
-    private ArrayList m_listeners = new ArrayList();
-    private Parameters m_builderProps = new Parameters();
-    private Parameters m_embeddorParameters = new Parameters();
-    private Map m_workspaceProperties = new HashMap();
     private ClassLoader m_sharedClassLoader;
     private Embeddor m_embeddor;
     private File m_homeDir;
@@ -63,8 +67,8 @@ public class EmbeddedAnt
     /**
      * Sets the Myrmidon home directory.  Default is to use the current
      * directory.
-     * 
-     * @todo Autodetect myrmidon home, rather than using current directory 
+     *
+     * @todo Autodetect myrmidon home, rather than using current directory
      *       as the default (which is a dud default).
      */
     public void setHomeDirectory( final File homeDir )
@@ -144,8 +148,7 @@ public class EmbeddedAnt
      */
     public void setEmbeddorProperty( final String name, final Object value )
     {
-        // TODO - Make properties Objects, not Strings
-        m_embeddorParameters.setParameter( name, value.toString() );
+        m_embeddorParameters.put( name, value.toString() );
     }
 
     /**
@@ -163,15 +166,16 @@ public class EmbeddedAnt
      */
     public void executeTargets( final String[] targets ) throws Exception
     {
+        Map embeddorParameters = new HashMap( m_embeddorParameters );
+        setupPaths( embeddorParameters );
+
         if( m_sharedClassLoader != null )
         {
-            Thread.currentThread().setContextClassLoader( m_sharedClassLoader );
+            embeddorParameters.put( "myrmidon.shared.classloader", m_sharedClassLoader );
         }
 
-        checkHomeDir();
-
         // Prepare the embeddor, and project model
-        final Embeddor embeddor = prepareEmbeddor();
+        final Embeddor embeddor = prepareEmbeddor( embeddorParameters );
         final Project project = prepareProjectModel( embeddor );
 
         // Create a new workspace
@@ -233,16 +237,16 @@ public class EmbeddedAnt
 
     /**
      * Make sure myrmidon home directory has been specified, and is a
-     * directory.
+     * directory.  Set the paths that the embeddor expects.
      */
-    private void checkHomeDir() throws Exception
+    private void setupPaths(  Map parameters ) throws Exception
     {
         if( m_homeDir == null )
         {
             m_homeDir = new File( "." ).getAbsoluteFile();
         }
         checkDirectory( m_homeDir, "home-dir.name" );
-        m_embeddorParameters.setParameter( "myrmidon.home", m_homeDir.getAbsolutePath() );
+        parameters.put( "myrmidon.home", m_homeDir );
 
         if( getLogger().isInfoEnabled() )
         {
@@ -250,28 +254,36 @@ public class EmbeddedAnt
             getLogger().info( message );
         }
 
-        String path = m_embeddorParameters.getParameter( "myrmidon.lib.path", "lib" );
-        File dir = resolveDirectory( m_homeDir, path, "task-lib-dir.name" );
-        m_embeddorParameters.setParameter( "myrmidon.lib.path", dir.getAbsolutePath() );
+        // Build the lib path
+        String path = (String)parameters.get( "myrmidon.lib.path" );
+        File[] dirs = buildPath( m_homeDir, path, "lib", "lib-dir.name" );
+        parameters.put( "myrmidon.lib.path", dirs );
 
-        path = m_embeddorParameters.getParameter( "myrmidon.ext.path", "ext" );
-        dir = resolveDirectory( m_homeDir, path, "ext-dir.name" );
-        m_embeddorParameters.setParameter( "myrmidon.ext.path", dir.getAbsolutePath() );
+        // Build the antlib search path
+        path = (String)parameters.get( "myrmidon.antlib.path" );
+        dirs = buildPath( m_homeDir, path, "ext", "task-lib-dir.name" );
+        parameters.put( "myrmidon.antlib.path", dirs );
+
+        // Build the extension search path
+        path = (String)parameters.get( "myrmidon.ext.path" );
+        dirs = buildPath( m_homeDir, path, "ext", "ext-dir.name" );
+        parameters.put( "myrmidon.ext.path", dirs );
     }
 
     /**
      * Prepares and returns the embeddor to use.
      */
-    private Embeddor prepareEmbeddor()
+    private Embeddor prepareEmbeddor( final Map parameters )
         throws Exception
     {
         if( m_embeddor == null )
         {
             m_embeddor = createEmbeddor();
             setupLogger( m_embeddor );
-            if( m_embeddor instanceof Parameterizable )
+            if( m_embeddor instanceof Contextualizable )
             {
-                ( (Parameterizable)m_embeddor ).parameterize( m_embeddorParameters );
+                final Context context = new DefaultContext( parameters );
+                ( (Contextualizable)m_embeddor ).contextualize( context );
             }
             if( m_embeddor instanceof Initializable )
             {
@@ -310,7 +322,7 @@ public class EmbeddedAnt
         final int count = m_listeners.size();
         for( int i = 0; i < count; i++ )
         {
-            final ProjectListener listener = (ProjectListener)m_listeners.get(i );
+            final ProjectListener listener = (ProjectListener)m_listeners.get( i );
             workspace.addProjectListener( listener );
         }
     }
@@ -352,12 +364,38 @@ public class EmbeddedAnt
     /**
      * Resolve a directory relative to another base directory.
      */
-    private File resolveDirectory( final File baseDir, final String dir, final String name )
+    private File[] buildPath( final File baseDir,
+                              final String path,
+                              final String defaultPath,
+                              final String name )
         throws Exception
     {
-        final File file = FileUtil.resolveFile( baseDir, dir );
-        checkDirectory( file, name );
-        return file;
+        // Build the canonical list of files
+        final ArrayList files = new ArrayList();
+
+        // Add the default path
+        files.add( FileUtil.resolveFile( baseDir, defaultPath ) );
+
+        // Add the additional path
+        if( path != null )
+        {
+            final String[] split = StringUtil.split( path, File.pathSeparator );
+            for( int i = 0; i < split.length; i++ )
+            {
+                final String s = split[ i ];
+                final File file = new File( s ).getAbsoluteFile();
+                files.add( file );
+            }
+        }
+
+        // Check each one
+        for( int i = 0; i < files.size(); i++ )
+        {
+            File file = (File)files.get( i );
+            checkDirectory( file, name );
+        }
+
+        return (File[])files.toArray( new File[ files.size() ] );
     }
 
     /**

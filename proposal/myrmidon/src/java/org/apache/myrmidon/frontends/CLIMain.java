@@ -51,18 +51,19 @@ public class CLIMain
     private static final int VERSION_OPT = 1;
     private static final int LISTENER_OPT = 2;
     private static final int TASKLIB_DIR_OPT = 5;
-    private static final int INCREMENTAL_OPT = 6;
-    private static final int HOME_DIR_OPT = 7;
-    private static final int DRY_RUN_OPT = 8;
-    private static final int DEBUG_OPT = 9;
-    private static final int TYPE_OPT = 10;
+    private static final int EXTLIB_DIR_OPT = 6;
+    private static final int INCREMENTAL_OPT = 7;
+    private static final int HOME_DIR_OPT = 8;
+    private static final int DRY_RUN_OPT = 9;
+    private static final int DEBUG_OPT = 10;
+    private static final int TYPE_OPT = 11;
 
     //incompatable options for info options
     private static final int[] INFO_OPT_INCOMPAT = new int[]
     {
         HELP_OPT, QUIET_OPT, VERBOSE_OPT, FILE_OPT,
         LOG_LEVEL_OPT, BUILDER_PARAM_OPT, NO_PREFIX_OPT,
-        VERSION_OPT, LISTENER_OPT, TASKLIB_DIR_OPT,
+        VERSION_OPT, LISTENER_OPT, TASKLIB_DIR_OPT, EXTLIB_DIR_OPT,
         INCREMENTAL_OPT, HOME_DIR_OPT, DRY_RUN_OPT, TYPE_OPT
     };
 
@@ -191,10 +192,14 @@ public class CLIMain
                                     VERSION_OPT,
                                     REZ.getString( "version.opt" ),
                                     INFO_OPT_INCOMPAT ),
-            new CLOptionDescriptor( "task-lib-dir",
+            new CLOptionDescriptor( "antlib-path",
                                     CLOptionDescriptor.ARGUMENT_REQUIRED,
                                     TASKLIB_DIR_OPT,
                                     REZ.getString( "tasklib.opt" ) ),
+            new CLOptionDescriptor( "ext-path",
+                                    CLOptionDescriptor.ARGUMENT_REQUIRED,
+                                    EXTLIB_DIR_OPT,
+                                    REZ.getString( "extlib.opt" ) ),
             new CLOptionDescriptor( "incremental",
                                     CLOptionDescriptor.ARGUMENT_DISALLOWED,
                                     INCREMENTAL_OPT,
@@ -257,7 +262,10 @@ public class CLIMain
                     m_embedded.setEmbeddorProperty( "myrmidon.home", option.getArgument() );
                     break;
                 case TASKLIB_DIR_OPT:
-                    m_embedded.setEmbeddorProperty( "myrmidon.lib.path", option.getArgument() );
+                    m_embedded.setEmbeddorProperty( "myrmidon.antlib.path", option.getArgument() );
+                    break;
+                case EXTLIB_DIR_OPT:
+                    m_embedded.setEmbeddorProperty( "myrmidon.ext.path", option.getArgument() );
                     break;
 
                 case LOG_LEVEL_OPT:
