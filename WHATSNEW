@@ -52,18 +52,11 @@ Other changes:
 * A new base class DispatchTask has been added to facilitate elegant 
   creation of tasks with multiple actions.
 
-* Added <target> nested elements to <ant> and <antcall> to allow
-  specification of multiple sub-build targets, which are executed
-  with a single dependency analysis.
-  
 * Major revision of <wsdltodotnet>. Supports mono wsdl and the microsoft
   wsdl run on mono, as well as most of the .NET WSE2.0 options. Extra
   schemas (files or urls) can be named in the <schema> element.
   Compilers can be selected using the compiler attribute, which defaults
   to "microsoft" on windows, and "mono" on everything else.
-
-* Refactored Target invocation into org.apache.tools.ant.Executor
-  implementations.  Bugzilla Reports 21421, 29248.
 
 * It is now possible to specify the pattern created/parsed by <checksum>.
   Bugzilla Report 16539.
@@ -145,6 +138,13 @@ Other changes:
 * Add xmlcatalog nested element to XmlProperty. Bugzilla report 27053.
 
 * New attribute alwayslog for <redirector> type.
+
+* Added <target> nested elements to <ant> and <antcall> to allow
+  specification of multiple sub-build targets, which are executed
+  with a single dependency analysis.
+  
+* Refactored Target invocation into org.apache.tools.ant.Executor
+  implementations.  Bugzilla Reports 21421, 29248.
 
 Fixed bugs:
 -----------
