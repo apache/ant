@@ -416,6 +416,14 @@ means any VM of at least version 1.2.</p>
     <td align="center" valign="top">1.4+</td>
     <td align="center" valign="top">No</td>
   </tr>
+  <tr>
+    <td valign="top">noqualifier</td>
+    <td valign="top">Enables the <code>-noqualifier</code> argument -
+      must be <code>all</code> or a colon separated list of packages.
+      <em>since Ant 1.6</em>.</td>
+    <td align="center" valign="top">1.4+</td>
+    <td align="center" valign="top">No</td>
+  </tr>
 </table>
 
 <h4><a name="groupattribute">Format of the group attribute</a></h4>
@@ -608,6 +616,10 @@ of the doclet element is shown below:</p>
 <p>The tag nested element is used to specify custom tags. This option
 is only available with Java 1.4.</p>
 
+<p>If you want to specify a standard tag using a nested tag element
+because you want to determine the order the tags are output, you must
+not set the description attribute for those tags.</p>
+
 <h5>Parameters</h5>
 <table width="60%" border="1" cellpadding="2" cellspacing="0">
   <tr>
@@ -623,7 +635,8 @@ is only available with Java 1.4.</p>
   <tr>
     <td valign="top">description</td>
     <td valign="top">Description for tag (e.g. <code>To do:</code>)</td>
-    <td align="center" valign="top">Yes, unless the <code>dir</code> attribute is specified.</td>
+    <td align="center" valign="top">Yes, unless the <code>dir</code>
+      attribute is specified or name is a standard tag.</td>
   </tr>
   <tr>
     <td valign="top">enabled</td>
@@ -689,6 +702,12 @@ only available with Java 1.4.</p>
 structure</a> and can also be set via nested <i>sourcepath</i>,
 <i>classpath</i> and <i>bootclasspath</i> elements
 respectively.</p>
+
+<h4>arg</h4>
+
+<p>Use nested <code>&lt;arg&gt;</code> to specify additional
+arguments.  See <a href="../using.html#arg">Command line
+arguments</a>. <em>Since Ant 1.6</em></p>
 
 <h3>Example</h3>
 <pre>  &lt;javadoc packagenames=&quot;com.dummy.test.*&quot;

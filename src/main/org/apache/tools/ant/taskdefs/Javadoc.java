@@ -468,6 +468,7 @@ public class Javadoc extends Task {
     private String source = null;
     private boolean linksource = false;
     private boolean breakiterator = false;
+    private String noqualifier;
 
     private Vector fileSets = new Vector();
     private Vector packageSets = new Vector();
@@ -516,6 +517,14 @@ public class Javadoc extends Task {
      */
     public void setAdditionalparam(String add){
         cmd.createArgument().setLine(add);
+    }
+
+    /**
+     * Adds a command-line argument.
+     * @since Ant 1.6
+     */
+    public Commandline.Argument createArg() {
+        return cmd.createArgument();
     }
 
     /**
@@ -1382,13 +1391,12 @@ public class Javadoc extends Task {
             if (name == null || name.equals("")) {
                 throw new BuildException ("No name specified for custom tag.");
             }
-            if (description == null || description.equals("")){
-                throw new BuildException
-                    ("No description specified for custom tag " + name);
+            if (description != null) {
+                return name + ":" + (enabled ? "" : "X")
+                    + scope + ":" + description;
+            } else {
+                return name;
             }
-
-            return name + ":" + (enabled ? "" : "X")
-                + scope + ":" + description;
         }
     }
 
@@ -1530,6 +1538,20 @@ public class Javadoc extends Task {
                  Project.MSG_VERBOSE);
         }
         this.breakiterator = b;       
+    }
+
+    /**
+     * Enables the -noqualifier switch, will be ignored if javadoc is not
+     * the 1.4 version.
+     *
+     * @since Ant 1.5
+     */
+    public void setNoqualifier(String noq) {
+        if (!javadoc4) {
+            log ("-noqualifier option not supported on JavaDoc < 1.4",
+                 Project.MSG_VERBOSE);
+        }
+        this.noqualifier = noqualifier;
     }
 
     public void execute() throws BuildException {
@@ -1830,6 +1852,10 @@ public class Javadoc extends Task {
                 if (breakiterator && doclet == null) {
                     toExecute.createArgument().setValue("-breakiterator");
                 }
+                if (noqualifier != null && doclet == null) {
+                    toExecute.createArgument().setValue("-noqualifier");
+                    toExecute.createArgument().setValue(noqualifier);
+                }
             }
 
         }
@@ -1868,7 +1894,11 @@ public class Javadoc extends Task {
                 SourceFile sf = (SourceFile) enum.nextElement();
                 String sourceFileName = sf.getFile().getAbsolutePath();
                 if (useExternalFile) {
-                    srcListWriter.println(sourceFileName);
+                    if (javadoc4 && sourceFileName.indexOf(" ") > -1) {
+                        srcListWriter.println("\"" + sourceFileName + "\"");
+                    } else {
+                        srcListWriter.println(sourceFileName);
+                    }
                 } else {
                     toExecute.createArgument().setValue(sourceFileName);
                 }

@@ -124,6 +124,9 @@ Fixed bugs:
 
 * URL-encoding in <vaj*port> didn't work properly.
 
+* file names that include spaces need to be quoted inside the @argfile
+  argument using <javadoc> and JDK 1.4.  Bugzilla Report 16871.
+
 Other changes:
 --------------
 * Six new Clearcase tasks added.
@@ -318,6 +321,15 @@ Other changes:
 
 * A new task <rexec> has been added that requires commons-net to work.
   Bugzilla Report 19541.
+
+* <javadoc> now supports a nested <arg> element in addition to the
+  additionalparams attribute.
+
+* You can now determine the order of standard tags in <javadoc> via
+  <tag> elements - you must not use the description attribute for them.
+  Bugzilla Report 18912.
+
+* <javadoc> now supports the -noqualifier switch.  Bugzilla Report 19288.
 
 Changes from Ant 1.5.2 to Ant 1.5.3
 ===================================
