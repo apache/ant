@@ -230,6 +230,16 @@ public class ExecuteOn extends ExecTask {
     }
 
     /**
+     * A nested filenamemapper
+     * @param fileNameMapper the mapper to add
+     * @since Ant 1.6.3
+     */
+    public void add(FileNameMapper fileNameMapper) {
+        createMapper().add(fileNameMapper);
+    }
+
+
+    /**
      * @todo using taskName here is brittle, as a user could override it.
      *       this should probably be modified to use the classname instead.
      */

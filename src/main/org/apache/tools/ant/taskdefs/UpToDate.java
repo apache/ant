@@ -117,6 +117,15 @@ public class UpToDate extends Task implements Condition {
     }
 
     /**
+     * A nested filenamemapper
+     * @param fileNameMapper the mapper to add
+     * @since Ant 1.6.3
+     */
+    public void add(FileNameMapper fileNameMapper) {
+        createMapper().add(fileNameMapper);
+    }
+
+    /**
      * Evaluate (all) target and source file(s) to
      * see if the target(s) is/are up-to-date.
      */

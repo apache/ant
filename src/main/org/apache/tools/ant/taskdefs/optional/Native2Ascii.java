@@ -111,6 +111,16 @@ public class Native2Ascii extends MatchingTask {
     }
 
     /**
+     * A nested filenamemapper
+     * @param fileNameMapper the mapper to add
+     * @since Ant 1.6.3
+     */
+    public void add(FileNameMapper fileNameMapper) {
+        createMapper().add(fileNameMapper);
+    }
+
+
+    /**
      * Execute the task
      *
      * @throws BuildException is there is a problem in the task execution.
