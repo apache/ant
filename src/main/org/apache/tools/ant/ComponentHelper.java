@@ -85,10 +85,10 @@ public class ComponentHelper  {
     private Project project;
 
     /**
-     * find a project component for a specific project, creating
-     * it if it does not exist
-     * @param project the project
-     * @return the project component for a specific project
+     * Find a project component for a specific project, creating
+     * it if it does not exist.
+     * @param project the project.
+     * @return the project component for a specific project.
      */
     public static ComponentHelper getComponentHelper(Project project) {
         // Singleton for now, it may change ( per/classloader )
@@ -111,27 +111,27 @@ public class ComponentHelper  {
     }
 
     /**
-     * Set the next chained component helper
+     * Set the next chained component helper.
      *
-     * @param next the next chained component helper
+     * @param next the next chained component helper.
      */
     public void setNext(ComponentHelper next) {
         this.next = next;
     }
 
     /**
-     * Get the next chained component helper
+     * Get the next chained component helper.
      *
-     * @return the next chained component helper
+     * @return the next chained component helper.
      */
     public ComponentHelper getNext() {
         return next;
     }
 
     /**
-     * Sets the project for this component helper
+     * Sets the project for this component helper.
      *
-     * @param project the project for this helper
+     * @param project the project for this helper.
      */
     public void setProject(Project project) {
         this.project = project;
@@ -142,7 +142,7 @@ public class ComponentHelper  {
      * Used with creating child projects. Each child
      * project inherits the component definitions
      * from its parent.
-     * @param helper the component helper of the parent project
+     * @param helper the component helper of the parent project.
      */
     public void initSubProject(ComponentHelper helper) {
         // add the types of the parent project
@@ -162,12 +162,12 @@ public class ComponentHelper  {
      *
      * This should be called by UnknownElement.
      *
-     * @param ue The Unknown Element creating this component
-     * @param ns Namespace URI. Also available as ue.getNamespace()
+     * @param ue The Unknown Element creating this component.
+     * @param ns Namespace URI. Also available as ue.getNamespace().
      * @param componentType The component type,
-     *                       Also available as ue.getComponentName()
-     * @return the created component
-     * @throws BuildException if an error occurs
+     *                       Also available as ue.getComponentName().
+     * @return the created component.
+     * @throws BuildException if an error occurs.
      */
     public Object createComponent(UnknownElement ue,
                                   String ns,
@@ -191,7 +191,7 @@ public class ComponentHelper  {
      *
      * @param componentName the name of the component, if
      *                      the component is in a namespace, the
-     *                      name is prefixed with the namespace uri and ":"
+     *                      name is prefixed with the namespace uri and ":".
      * @return the class if found or null if not.
      */
     public Object createComponent(String componentName) {
@@ -204,7 +204,7 @@ public class ComponentHelper  {
      *
      * @param componentName the name of the component, if
      *                      the component is in a namespace, the
-     *                      name is prefixed with the namespace uri and ":"
+     *                      name is prefixed with the namespace uri and ":".
      * @return the class if found or null if not.
      */
     public Class getComponentClass(String componentName) {
@@ -213,9 +213,9 @@ public class ComponentHelper  {
     }
 
     /**
-     * Return the antTypeDefinition for a componentName
-     * @param componentName the name of the component
-     * @return the ant definition or null if not present
+     * Return the antTypeDefinition for a componentName.
+     * @param componentName the name of the component.
+     * @return the ant definition or null if not present.
      */
     public AntTypeDefinition getDefinition(String componentName) {
         checkNamespace(componentName);
@@ -392,7 +392,7 @@ public class ComponentHelper  {
     /**
      * Describe <code>addDataTypeDefinition</code> method here.
      *
-     * @param def an <code>AntTypeDefinition</code> value
+     * @param def an <code>AntTypeDefinition</code> value.
      */
     public void addDataTypeDefinition(AntTypeDefinition def) {
         updateDataTypeDefinition(def);
@@ -456,10 +456,7 @@ public class ComponentHelper  {
      */
     private Task createNewTask(String taskType) throws BuildException {
         Class c = getComponentClass(taskType);
-        if (c == null) {
-            return null;
-        }
-        if (!(Task.class.isAssignableFrom(c))) {
+        if (c == null || !(Task.class.isAssignableFrom(c))) {
             return null;
         }
         Task task = (Task) createComponent(taskType);
@@ -605,17 +602,13 @@ public class ComponentHelper  {
                 if (sameDefinition(def, old)) {
                     return;
                 }
-                int logLevel = Project.MSG_WARN;
-                if (def.similarDefinition(old, project)) {
-                    logLevel = Project.MSG_VERBOSE;
-                }
                 Class oldClass = antTypeTable.getExposedClass(name);
                 boolean isTask =
                     (oldClass != null && Task.class.isAssignableFrom(oldClass));
-                project.log(
-                    "Trying to override old definition of "
-                    + (isTask ? "task" : "datatype")
-                    + " " + name, logLevel);
+                project.log( "Trying to override old definition of "
+                    + (isTask ? "task " : "datatype ") + name,
+                    (def.similarDefinition(old, project))
+                    ? Project.MSG_VERBOSE : Project.MSG_WARN);
                 if (isTask) {
                     invalidateCreatedTasks(name);
                 }
