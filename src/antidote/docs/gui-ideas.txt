@@ -1,0 +1,335 @@
+(NOTE: the following text is a vision for an Ant GUI by Stefan Vaillant
+<mailto:Stephan.Vaillant@nokia.com> called Anttool. It is included here in the
+Antidote docs section as it provides a better vision for what the GUI should be
+than the current requirements document, and should be considered an integral
+part of the long-term plans for Antidote. Simeon Fitch)
+
+
+-----------------------------------------------------------------------
+
+********************
+**Anttool Proposal**
+********************
+
+By: Stefan Vaillant <mailto:Stephan.Vaillant@nokia.com>
+
+-----------------------------------------------------------------------
+
+Anttool Overview:
+-----------------
+
+With Anttool a user can manage the build process for existing ant build files.
+By using the grafical user interface, the user can adjust certain properties to
+his environment, start and cancel builds, monitor their progress and call
+appropiate programs to fix problems.  It is not possible to modify the build
+file. Instead, an external XML editor or antidote should be used.
+
+
+For inexperienced users, the tool provides an easy and efficient way to install
+open source software: load software to the local system, build it and install
+it.  The tool can be used without any knowledge of XML or the ant DTD.  Instead,
+the user just adjusts the relevant properties to his environment and starts the
+build.
+
+For programmers, the tool supports the basic build/test/edit cycle.  Given an
+existing ant build file, the programmer can use the grafical user interface to
+execute individual targets, browse the effects of the build and start editors to
+fix problems that occured during the build.
+
+
+I general, anttool is ment for users who see the build file as a black-box: They
+are not primarily interested in the internal structure of the build file nor in
+modifiying it.  Instead, they want to call ant with the appropiate arguments and
+want to see, what is the result of the build.
+
+Therefore, anttool only shows targets and properties that are relevant for these
+users. Tasks are not shown at all.
+
+
+Anttool User Interface:
+-----------------------
+
+The user interface of anttool is devided into two panels: The "Control Panel"
+shows all loaded build files and their targets.  The "Project Panel" shows
+details for one project, including the logging information from the last
+build(s), the editable properties of an build and relevant files of that build.
+
+By default, the user interface does not show targets or properties that have no
+description or a descriuption starting with a ".".  These targets or properties
+are called "hidden" in the following text.
+
+
+The Control Panel:
+------------------
+
+The Control Panel shows a tree with all loaded projects.  For each project the
+non-hidden targets are shown.  (Anttool can be configured to show also hidden
+targets, see Configuration below).
+
+If you move the cursor over a project or target, a description for it will be
+shown as a tooltip.
+
+Two icons are prefixing the name of the project or target: one is visualizing
+the state of the project or target, the other is a button to start or cancel the
+project or target.  The state icon can have the following different colors:
+	- green if the execution was successfull.
+	- yellow if an execution is needed because the output files are
+      out-of-date [not possible with current ant version?]
+	- red if the execution resulted in errors.
+	- white (i.e. nothing) if the state is unknown
+[Alternative: what about buttons labeled with the target name?
+ The button is used for start/stopping the build.
+ No tree required then. ]
+
+	
+If you select a node in the tree, the Project Panel (see below) will show
+details for the relevant project.
+
+If you right-click on a node in the tree, a pop-up menu will show the following
+commands:
+	edit: open XML editor at selected element
+	open: in new window  [? is that needed]
+		
+		
+The Project Panel:
+------------------
+
+The Project Panel consists of three tabs: 
+
+The "Build Log" tab shows information about the last build(s), the "Properties"
+tab shows non-hidden properties and the "Files" tab shows files relevant for the
+project.
+
+The Build Log Tab:
+
+In this tab you can monitor the build on detail.  A tree shows the executed
+targets of a build, their tasks and log messages for each task.  The start time
+is noted after the build name.
+
+In the pop-up menu, you can choose from the following commands:
+		edit: open editor for shown file at shown location.
+		show log level->Error/Warning/Info/Verbose/Debug
+			(only the items possible are shown,
+			 see configuration.)
+
+The Properties Tab:
+
+The properties tab shows all non-hidden properties of the project.  (optionally,
+also hidden properties can be shown, see Configuratin below.)
+
+Each Property is shown as follows:
+	<Name>: <entry field>     <reset checkbox>
+where
+       	<Name> is name of the property, with "." and "-" replaced by " "
+	and first letters capatilized.
+	<entry field> is a text field to enter a value for the properts.
+	In some cases, special benas are shown:
+		Name ends with ".dir"	=> provide a file chooser to select a directory
+		Name ends with ".lib"   => provide a file chooser to select .jar file
+		Name is "build.compiler" => provide combo box with possible compilers.
+			[selecting JDK's seems not well support in ant?
+			 If you have e.g. JDK 1.2.1 and 1.2.2 installed,
+	 		 how to easily select the compiler version?]
+		Name ends with ".jdk"   => let the user select one of the configures
+JDK's
+			[more general then build.compiler, but supported by ant?]
+		Name ends with ".file"  => provide a file chooser
+	<reset checkbox> resets the value to the (default) value that is
+contained in the .xml file
+
+All values entered are save in a file
+$HOME/.ant/<full-path-build-file>.property.  (See also Configuration.)
+
+If property values are changed, then ant is called with
+main("-Dproperty1=value1 ..").
+	
+[show also (class)pathes as property, use id instead of name?  But: is that
+ required? Why not simply define individual properties for the required
+ libraries and combine them then to a path.  ]
+		
+
+	
+The File Set Tab:
+
+This tab show files that are releated to the project.  For each non-hidden
+fileset of the project, the id of the fileset is shown and all files included to
+that fileset.
+
+If you right-click on a file, a pop-up menu is shown with which you can start
+programs to deal with these files.  The relevant configuration information is
+extracted from the existing operation system settings.
+
+[or: one tab for each fileset?] 
+
+Repository:
+-----------
+
+[This needs some more work.]
+
+Anttool also simplyfies the loading of source files form the web.  By using the
+repository mechanism of anttool, you can perform the complete workflow from
+download to install with just a few mouse clicks:
+
+	select one out of the Repositories from the main menu.
+		Anttool will query the server for a list of up-to-date
+		packages.
+		
+	select one of the presented packages
+		Anttool will then download the selected package:
+		In case a .zip (or similar) package was selected,
+		the file is downloaded and
+		unpacked to "/Users/"<name>.
+		In case a CVS repository was selected, 
+		the files are downloaded to "/Users/"<name>.
+		
+		Afterwards
+		a file with the name "build.xml" is searched 
+		and loaded to anttool.
+		Optionally, the file "$HOME/.ant/default.properties"
+		is copied to "$HOME/.ant/<full-path-build-file>.properties,
+		overwriting the defaults in the downloaded build file
+		with your preferences (e.g. installation directory, JDK, ...)
+		[copy only relevant properties?]		
+
+	check if the properties in the selected project match your intention.
+
+	press "start" on the project
+		
+
+Anttool Configuration:
+-----------------------
+
+The menu "Tools" in the menu bar allows you to adjust Anttool behavior to your
+preferences and environment.
+
+The following menu entries are available:
+
+Configure JDKs:
+	Can be used to configure the JDKs available
+	on your system. The configured values are offered
+	for properties that end with ".jdk".
+	
+	The screen offers a table to edit a set of names
+	and pathes.
+	By pressing "rescan" the system is scanned for new JDKs
+	by consulting the installed software.
+
+	[Should there be one combo box
+		Anttool JDK:   <internal|JDK list|....>
+	 that indicates the JDK that should be used to run ant?
+	 Should that be even project specific setting?
+	]
+
+Configure Repository: [better name?]
+	Anttool is aware of certain places where Anttool supporting software
+	can be found on the internet.
+	These URLs can be configured here.
+	These repositories are offered to the user when he selects 
+	the "Repository" menu in the menu bar.
+
+	The screen offers a table to edit a set of names
+	and URLs.
+
+Configure Libraries:
+	Can be used to configure the libraries available
+	on your system. The configured values are offered
+	for properties that end with ".lib".
+	
+	The screen offers a table to edit a set of names
+	and pathes.
+	By pressing "rescan" the system is scanned for new libraries
+	by searching below a directory.
+
+
+Preferences:
+	show hidden targets: bool 
+		[or: offer addition menu to start hidden targets?]
+	show hidden filesets: bool
+	show hidden properties: bool	
+
+	log level used for build: ...
+	number of log files saved: 
+	number of log files shown in UI:
+
+	Directory to save property values:
+
+	file name remembered in file menu: 
+
+	checkig for new files in filesets: [seconds]	
+	autoload new buildfile: [seconds, 0= never]
+
+
+General features:
+-----------------
+The menubar menu's are 
+	File
+		Open...
+		Close
+		-------
+		1 buildfile.xml
+		2 ....
+		3 ...
+		------
+		Exit
+	Repository
+		Apache...		as configured
+		<name2>...	        
+		....	      	
+	Options
+		Configure JDKs...
+		Configure Repository...
+		Configure Libraries...
+		Preferences...
+		Look&Feel...
+	Help
+		Antool Help...
+		Ant Web Home		calls netscape
+		-----------
+		About...
+
+
+Build files can be dragged and dropped into anttool.	
+
+The set off loaded build files should be saved on exit and
+reloaded on restart automatically.
+
+
+
+Technical questions on the internals of anttool
+-----------------------------------------------
+- How to detect if a target needs to be run (yellow color)?
+  Seems not be possible currently.
+  One solution [what will ant 2.0 contain?]:
+	Define new abstract class "MonitoredTask", inherited from Task.
+	Copy, Javac, javadoc, etc inherit from these.
+	MonitoredTask defines:
+		execute() { prepareTask(); if (executionNeeded) { perform() }; }
+		executionNeeded: boolean // signals that I need to run because output is
+older than input
+		perform()
+		performMap() // what will happen with each file, i.e.
+				Main.java  -> Main.class
+				UI.java    -> UI.class
+				...
+			     or
+			        Main.class -> lib.jar
+				UI.class   -> lib.jar
+			     size of Map should be equal to number of steps reported in loggin.
+
+  Only "executionNeeded" is required to add a yellow flag for targets.  The
+  performMap would be nice to have. It could be used later to show a finegrained
+  graph (or matrix) about what is happening during a build.
+
+  Add configuration item on how often call the funtions (i.e. how often to do
+  the polling.)
+	
+- How to do the calling of the external tools?
+	XML editor? (how to generate the dtd? How to execute "antstructure"
+    withour changing the build file.)
+	How to simulate the windows functionality for e.g. open java source with
+    JBuilder?
+		How to read the registry information?
+		How to do DDE calls?
+
+- is there any free installation tool for java?
+	(to install anttool itself)
