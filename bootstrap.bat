@@ -17,8 +17,12 @@ if "" == "%JAVAC%"                        set JAVAC=%JAVA_HOME%\bin\javac
 echo.
 echo ... Bootstrapping Ant Distribution
 
-set CLASSPATH=src\main;classes;%CLASSPATH%
-if exist %JAVA_HOME%\lib\tools.jar set CLASSPATH=%CLASSPATH%;%JAVA_HOME%\lib\tools.jar
+SET LOCALCLASSPATH=classes
+if exist lib\ant.jar erase lib\ant.jar
+for %%i in (lib\*.jar) do call lcp.bat %%i
+if exist %JAVA_HOME%\lib\tools.jar call lcp.bat %JAVA_HOME%\lib\tools.jar
+if exist %JAVA_HOME%\lib\classes.zip call lcp.bat %JAVA_HOME%\lib\classes.zip
+SET CLASSPATH=%CLASSPATH%;%LOCALCLASSPATH%
 
 echo JAVA_HOME=%JAVA_HOME%
 echo JAVA=%JAVA%
@@ -44,8 +48,7 @@ copy %TOOLS%\ant\taskdefs\*.properties classes\org\apache\tools\ant\taskdefs
 echo.
 echo ... Building Ant Distribution
 
-%JAVA% org.apache.tools.ant.Main clean main %1 %2 %3 %4 %5
-%JAVA% org.apache.tools.ant.Main install %1 %2 %3 %4 %5
+%JAVA% org.apache.tools.ant.Main clean main install %1 %2 %3 %4 %5
 
 echo.
 echo ... Cleaning Up Build Directories
@@ -64,5 +67,6 @@ set CLASSPATH=%OLDCLASSPATH%
 set OLDJAVA=
 set OLDJAVAC=
 set OLDCLASSPATH=
+set LOCALCLASSPATH=
 set TOOLS=
 
