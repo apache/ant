@@ -8,7 +8,6 @@
 package org.apache.tools.ant.taskdefs.compilers;
 
 import org.apache.myrmidon.api.TaskException;
-import org.apache.tools.ant.taskdefs.Javac;
 
 /**
  * The interface that all compiler adapters must adher to. <p>

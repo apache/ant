@@ -16,7 +16,6 @@ import org.apache.avalon.excalibur.io.IOUtil;
 import org.apache.avalon.excalibur.util.StringUtil;
 import org.apache.avalon.framework.logger.AbstractLogEnabled;
 import org.apache.myrmidon.api.TaskException;
-import org.apache.tools.ant.taskdefs.Javac;
 import org.apache.myrmidon.framework.Execute;
 import org.apache.tools.ant.types.Commandline;
 import org.apache.tools.ant.types.Path;
@@ -71,7 +70,7 @@ public abstract class DefaultCompilerAdapter
         m_destDir = attributes.getDestdir();
         m_encoding = attributes.getEncoding();
         m_debug = attributes.getDebug();
-        m_optimize = attributes.getOptimize();
+        m_optimize = attributes.isOptimize();
         m_deprecation = attributes.getDeprecation();
         m_depend = attributes.getDepend();
         m_verbose = attributes.getVerbose();

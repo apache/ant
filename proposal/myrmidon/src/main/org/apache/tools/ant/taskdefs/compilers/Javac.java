@@ -5,7 +5,7 @@
  * version 1.1, a copy of which has been included with this distribution in
  * the LICENSE.txt file.
  */
-package org.apache.tools.ant.taskdefs;
+package org.apache.tools.ant.taskdefs.compilers;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -13,13 +13,11 @@ import java.util.Iterator;
 import org.apache.aut.nativelib.Os;
 import org.apache.myrmidon.api.TaskException;
 import org.apache.myrmidon.framework.JavaVersion;
-import org.apache.tools.ant.taskdefs.compilers.CompilerAdapter;
-import org.apache.tools.ant.taskdefs.compilers.CompilerAdapterFactory;
-import org.apache.tools.ant.types.Argument;
 import org.apache.tools.ant.types.DirectoryScanner;
 import org.apache.tools.ant.types.Path;
 import org.apache.tools.ant.types.SourceFileScanner;
 import org.apache.tools.ant.util.mappers.GlobPatternMapper;
+import org.apache.tools.ant.taskdefs.MatchingTask;
 
 /**
  * Task to compile Java source files. This task can take the following
@@ -54,84 +52,74 @@ import org.apache.tools.ant.util.mappers.GlobPatternMapper;
  * @author <a href="mailto:stefan.bodewig@epost.de">Stefan Bodewig</a>
  * @author <a href="mailto:jayglanville@home.com">J D Glanville</a>
  */
-
-public class Javac extends MatchingTask
+public class Javac
+    extends MatchingTask
 {
     private final static String FAIL_MSG
         = "Compile failed, messages should have been provided.";
-    private boolean debug = false;
-    private boolean optimize = false;
-    private boolean deprecation = false;
-    private boolean depend = false;
-    private boolean verbose = false;
-    private boolean includeAntRuntime = true;
-    private boolean includeJavaRuntime = false;
-    private String fork = "false";
-    private String forkedExecutable = null;
-    private boolean nowarn = false;
-    private ArrayList implementationSpecificArgs = new ArrayList();
 
-    protected boolean failOnError = true;
-    protected File[] compileList = new File[ 0 ];
-    private Path bootclasspath;
-    private Path compileClasspath;
-    private String debugLevel;
-    private File destDir;
-    private String encoding;
-    private Path extdirs;
-    private String memoryInitialSize;
-    private String memoryMaximumSize;
+    private boolean m_debug;
+    private boolean m_optimize;
+    private boolean m_deprecation;
+    private boolean m_depend;
+    private boolean m_verbose;
+    private boolean m_includeAntRuntime = true;
+    private boolean m_includeJavaRuntime;
+    private boolean m_fork;
+    private String m_forkedExecutable;
+    private boolean m_nowarn;
+    private ArrayList m_implementationSpecificArgs = new ArrayList();
 
-    private String source;
-
-    private Path src;
-    private String target;
+    protected File[] m_compileList = new File[ 0 ];
+    private Path m_bootclasspath;
+    private Path m_compileClasspath;
+    private String m_debugLevel;
+    private File m_destDir;
+    private String m_encoding;
+    private Path m_extdirs;
+    private String m_memoryInitialSize;
+    private String m_memoryMaximumSize;
+    private String m_source;
+    private Path m_src;
+    private String m_target;
 
     /**
      * Adds an element to the bootclasspath that will be used to compile the
      * classes against.
-     *
-     * @param bootclasspath The new Bootclasspath value
      */
     public void addBootclasspath( Path bootclasspath )
-        throws TaskException
     {
-        if( this.bootclasspath == null )
+        if( m_bootclasspath == null )
         {
-            this.bootclasspath = bootclasspath;
+            m_bootclasspath = bootclasspath;
         }
         else
         {
-            this.bootclasspath.addPath( bootclasspath );
+            m_bootclasspath.addPath( bootclasspath );
         }
     }
 
     /**
      * Adds an element to the classpath to be used for this compilation.
-     *
-     * @param classpath The new Classpath value
      */
     public void addClasspath( Path classpath )
-        throws TaskException
     {
-        if( compileClasspath == null )
+        if( m_compileClasspath == null )
         {
-            compileClasspath = classpath;
+            m_compileClasspath = classpath;
         }
         else
         {
-            compileClasspath.addPath( classpath );
+            m_compileClasspath.addPath( classpath );
         }
     }
 
     /**
      * Set the debug flag.
-     *
-     * @param debug The new Debug value
      */
-    public void setDebug( boolean debug )
+    public void setDebug( final boolean debug )
     {
-        this.debug = debug;
+        m_debug = debug;
     }
 
     /**
@@ -141,7 +129,7 @@ public class Javac extends MatchingTask
      */
     public void setDebugLevel( String v )
     {
-        this.debugLevel = v;
+        m_debugLevel = v;
     }
 
     /**
@@ -151,7 +139,7 @@ public class Javac extends MatchingTask
      */
     public void setDepend( boolean depend )
     {
-        this.depend = depend;
+        m_depend = depend;
     }
 
     /**
@@ -161,7 +149,7 @@ public class Javac extends MatchingTask
      */
     public void setDeprecation( boolean deprecation )
     {
-        this.deprecation = deprecation;
+        m_deprecation = deprecation;
     }
 
     /**
@@ -172,7 +160,7 @@ public class Javac extends MatchingTask
      */
     public void setDestdir( File destDir )
     {
-        this.destDir = destDir;
+        m_destDir = destDir;
     }
 
     /**
@@ -182,7 +170,7 @@ public class Javac extends MatchingTask
      */
     public void setEncoding( String encoding )
     {
-        this.encoding = encoding;
+        m_encoding = encoding;
     }
 
     /**
@@ -194,51 +182,25 @@ public class Javac extends MatchingTask
     public void addExtdirs( Path extdirs )
         throws TaskException
     {
-        if( this.extdirs == null )
+        if( m_extdirs == null )
         {
-            this.extdirs = extdirs;
+            m_extdirs = extdirs;
         }
         else
         {
-            this.extdirs.addPath( extdirs );
+            m_extdirs.addPath( extdirs );
         }
-    }
-
-    /**
-     * Throw a TaskException if compilation fails
-     *
-     * @param fail The new Failonerror value
-     */
-    public void setFailonerror( boolean fail )
-    {
-        failOnError = fail;
     }
 
     /**
      * Sets whether to fork the javac compiler.
-     *
-     * @param f "true|false|on|off|yes|no" or the name of the javac executable.
      */
-    public void setFork( String f )
+    public void setFork( final boolean fork )
     {
-        if( f.equalsIgnoreCase( "on" )
-            || f.equalsIgnoreCase( "true" )
-            || f.equalsIgnoreCase( "yes" ) )
+        m_fork = fork;
+        if( fork )
         {
-            fork = "true";
-            forkedExecutable = getSystemJavac();
-        }
-        else if( f.equalsIgnoreCase( "off" )
-            || f.equalsIgnoreCase( "false" )
-            || f.equalsIgnoreCase( "no" ) )
-        {
-            fork = "false";
-            forkedExecutable = null;
-        }
-        else
-        {
-            fork = "true";
-            forkedExecutable = f;
+            m_forkedExecutable = getSystemJavac();
         }
     }
 
@@ -249,7 +211,7 @@ public class Javac extends MatchingTask
      */
     public void setIncludeantruntime( boolean include )
     {
-        includeAntRuntime = include;
+        m_includeAntRuntime = include;
     }
 
     /**
@@ -260,7 +222,7 @@ public class Javac extends MatchingTask
      */
     public void setIncludejavaruntime( boolean include )
     {
-        includeJavaRuntime = include;
+        m_includeJavaRuntime = include;
     }
 
     /**
@@ -270,7 +232,7 @@ public class Javac extends MatchingTask
      */
     public void setMemoryInitialSize( String memoryInitialSize )
     {
-        this.memoryInitialSize = memoryInitialSize;
+        m_memoryInitialSize = memoryInitialSize;
     }
 
     /**
@@ -280,7 +242,7 @@ public class Javac extends MatchingTask
      */
     public void setMemoryMaximumSize( String memoryMaximumSize )
     {
-        this.memoryMaximumSize = memoryMaximumSize;
+        m_memoryMaximumSize = memoryMaximumSize;
     }
 
     /**
@@ -290,7 +252,7 @@ public class Javac extends MatchingTask
      */
     public void setNowarn( boolean flag )
     {
-        this.nowarn = flag;
+        m_nowarn = flag;
     }
 
     /**
@@ -300,17 +262,7 @@ public class Javac extends MatchingTask
      */
     public void setOptimize( boolean optimize )
     {
-        this.optimize = optimize;
-    }
-
-    /**
-     * Proceed if compilation fails
-     *
-     * @param proceed The new Proceed value
-     */
-    public void setProceed( boolean proceed )
-    {
-        failOnError = !proceed;
+        m_optimize = optimize;
     }
 
     /**
@@ -320,7 +272,7 @@ public class Javac extends MatchingTask
      */
     public void setSource( String v )
     {
-        this.source = v;
+        m_source = v;
     }
 
     /**
@@ -331,13 +283,13 @@ public class Javac extends MatchingTask
     public void addSrcdir( Path srcDir )
         throws TaskException
     {
-        if( src == null )
+        if( m_src == null )
         {
-            src = srcDir;
+            m_src = srcDir;
         }
         else
         {
-            src.addPath( srcDir );
+            m_src.addPath( srcDir );
         }
     }
 
@@ -349,7 +301,7 @@ public class Javac extends MatchingTask
      */
     public void setTarget( String target )
     {
-        this.target = target;
+        m_target = target;
     }
 
     /**
@@ -359,7 +311,7 @@ public class Javac extends MatchingTask
      */
     public void setVerbose( boolean verbose )
     {
-        this.verbose = verbose;
+        m_verbose = verbose;
     }
 
     /**
@@ -369,7 +321,7 @@ public class Javac extends MatchingTask
      */
     public Path getBootclasspath()
     {
-        return bootclasspath;
+        return m_bootclasspath;
     }
 
     /**
@@ -379,7 +331,7 @@ public class Javac extends MatchingTask
      */
     public Path getClasspath()
     {
-        return compileClasspath;
+        return m_compileClasspath;
     }
 
     protected File getBaseDir()
@@ -395,7 +347,7 @@ public class Javac extends MatchingTask
     public String[] getCurrentCompilerArgs()
     {
         ArrayList args = new ArrayList();
-        for( Iterator enum = implementationSpecificArgs.iterator();
+        for( Iterator enum = m_implementationSpecificArgs.iterator();
              enum.hasNext();
             )
         {
@@ -417,7 +369,7 @@ public class Javac extends MatchingTask
      */
     public boolean getDebug()
     {
-        return debug;
+        return m_debug;
     }
 
     /**
@@ -427,7 +379,7 @@ public class Javac extends MatchingTask
      */
     public String getDebugLevel()
     {
-        return debugLevel;
+        return m_debugLevel;
     }
 
     /**
@@ -437,7 +389,7 @@ public class Javac extends MatchingTask
      */
     public boolean getDepend()
     {
-        return depend;
+        return m_depend;
     }
 
     /**
@@ -447,7 +399,7 @@ public class Javac extends MatchingTask
      */
     public boolean getDeprecation()
     {
-        return deprecation;
+        return m_deprecation;
     }
 
     /**
@@ -458,7 +410,7 @@ public class Javac extends MatchingTask
      */
     public File getDestdir()
     {
-        return destDir;
+        return m_destDir;
     }
 
     /**
@@ -468,7 +420,7 @@ public class Javac extends MatchingTask
      */
     public String getEncoding()
     {
-        return encoding;
+        return m_encoding;
     }
 
     /**
@@ -478,17 +430,7 @@ public class Javac extends MatchingTask
      */
     public Path getExtdirs()
     {
-        return extdirs;
-    }
-
-    /**
-     * Gets the failonerror flag.
-     *
-     * @return The Failonerror value
-     */
-    public boolean getFailonerror()
-    {
-        return failOnError;
+        return m_extdirs;
     }
 
     /**
@@ -498,7 +440,7 @@ public class Javac extends MatchingTask
      */
     public File[] getFileList()
     {
-        return compileList;
+        return m_compileList;
     }
 
     /**
@@ -509,7 +451,7 @@ public class Javac extends MatchingTask
      */
     public boolean getIncludeantruntime()
     {
-        return includeAntRuntime;
+        return m_includeAntRuntime;
     }
 
     /**
@@ -520,7 +462,7 @@ public class Javac extends MatchingTask
      */
     public boolean getIncludejavaruntime()
     {
-        return includeJavaRuntime;
+        return m_includeJavaRuntime;
     }
 
     /**
@@ -530,15 +472,15 @@ public class Javac extends MatchingTask
      */
     public String getJavacExecutable()
     {
-        if( forkedExecutable == null && isForkedJavac() )
+        if( m_forkedExecutable == null && isForkedJavac() )
         {
-            forkedExecutable = getSystemJavac();
+            m_forkedExecutable = getSystemJavac();
         }
-        else if( forkedExecutable != null && !isForkedJavac() )
+        else if( m_forkedExecutable != null && !isForkedJavac() )
         {
-            forkedExecutable = null;
+            m_forkedExecutable = null;
         }
-        return forkedExecutable;
+        return m_forkedExecutable;
     }
 
     /**
@@ -548,7 +490,7 @@ public class Javac extends MatchingTask
      */
     public String getMemoryInitialSize()
     {
-        return memoryInitialSize;
+        return m_memoryInitialSize;
     }
 
     /**
@@ -558,7 +500,7 @@ public class Javac extends MatchingTask
      */
     public String getMemoryMaximumSize()
     {
-        return memoryMaximumSize;
+        return m_memoryMaximumSize;
     }
 
     /**
@@ -568,7 +510,7 @@ public class Javac extends MatchingTask
      */
     public boolean getNowarn()
     {
-        return nowarn;
+        return m_nowarn;
     }
 
     /**
@@ -576,9 +518,9 @@ public class Javac extends MatchingTask
      *
      * @return The Optimize value
      */
-    public boolean getOptimize()
+    public boolean isOptimize()
     {
-        return optimize;
+        return m_optimize;
     }
 
     /**
@@ -588,7 +530,7 @@ public class Javac extends MatchingTask
      */
     public String getSource()
     {
-        return source;
+        return m_source;
     }
 
     /**
@@ -598,7 +540,7 @@ public class Javac extends MatchingTask
      */
     public Path getSrcdir()
     {
-        return src;
+        return m_src;
     }
 
     /**
@@ -608,7 +550,7 @@ public class Javac extends MatchingTask
      */
     public String getTarget()
     {
-        return target;
+        return m_target;
     }
 
     /**
@@ -618,7 +560,7 @@ public class Javac extends MatchingTask
      */
     public boolean getVerbose()
     {
-        return verbose;
+        return m_verbose;
     }
 
     /**
@@ -628,8 +570,7 @@ public class Javac extends MatchingTask
      */
     public boolean isForkedJavac()
     {
-        return !"false".equals( fork ) ||
-            "extJavac".equals( getContext().getProperty( "build.compiler" ) );
+        return m_fork;
     }
 
     /**
@@ -637,11 +578,11 @@ public class Javac extends MatchingTask
      *
      * @return Description of the Returned Value
      */
-    public ImplementationSpecificArgument createCompilerArg()
+    public org.apache.tools.ant.taskdefs.compilers.ImplementationSpecificArgument createCompilerArg()
     {
-        ImplementationSpecificArgument arg =
-            new ImplementationSpecificArgument();
-        implementationSpecificArgs.add( arg );
+        org.apache.tools.ant.taskdefs.compilers.ImplementationSpecificArgument arg =
+            new org.apache.tools.ant.taskdefs.compilers.ImplementationSpecificArgument( this );
+        m_implementationSpecificArgs.add( arg );
         return arg;
     }
 
@@ -655,19 +596,19 @@ public class Javac extends MatchingTask
     {
         // first off, make sure that we've got a srcdir
 
-        if( src == null )
+        if( m_src == null )
         {
             throw new TaskException( "srcdir attribute must be set!" );
         }
-        String[] list = src.list();
+        String[] list = m_src.list();
         if( list.length == 0 )
         {
             throw new TaskException( "srcdir attribute must be set!" );
         }
 
-        if( destDir != null && !destDir.isDirectory() )
+        if( m_destDir != null && !m_destDir.isDirectory() )
         {
-            throw new TaskException( "destination directory \"" + destDir + "\" does not exist or is not a directory" );
+            throw new TaskException( "destination directory \"" + m_destDir + "\" does not exist or is not a directory" );
         }
 
         // scan source directories and dest directory to build up
@@ -682,25 +623,25 @@ public class Javac extends MatchingTask
                 throw new TaskException( "srcdir \"" + srcDir.getPath() + "\" does not exist!" );
             }
 
-            DirectoryScanner ds = this.getDirectoryScanner( srcDir );
+            DirectoryScanner ds = getDirectoryScanner( srcDir );
 
             String[] files = ds.getIncludedFiles();
 
-            scanDir( srcDir, destDir != null ? destDir : srcDir, files );
+            scanDir( srcDir, m_destDir != null ? m_destDir : srcDir, files );
         }
 
         // compile the source files
 
         String compiler = determineCompiler();
 
-        if( compileList.length > 0 )
+        if( m_compileList.length > 0 )
         {
 
             CompilerAdapter adapter = CompilerAdapterFactory.getCompiler(
                 compiler, getLogger() );
-            final String message = "Compiling " + compileList.length + " source file" +
-                ( compileList.length == 1 ? "" : "s" ) +
-                ( destDir != null ? " to " + destDir : "" );
+            final String message = "Compiling " + m_compileList.length + " source file" +
+                ( m_compileList.length == 1 ? "" : "s" ) +
+                ( m_destDir != null ? " to " + m_destDir : "" );
             getLogger().info( message );
 
             // now we need to populate the compiler adapter
@@ -709,14 +650,7 @@ public class Javac extends MatchingTask
             // finally, lets execute the compiler!!
             if( !adapter.execute() )
             {
-                if( failOnError )
-                {
-                    throw new TaskException( FAIL_MSG );
-                }
-                else
-                {
-                    getLogger().error( FAIL_MSG );
-                }
+                throw new TaskException( FAIL_MSG );
             }
         }
     }
@@ -731,8 +665,8 @@ public class Javac extends MatchingTask
         // on Windows java.home doesn't always refer to the correct location,
         // so we need to fall back to assuming java is somewhere on the
         // PATH.
-        java.io.File jExecutable =
-            new java.io.File( System.getProperty( "java.home" ) +
+        File jExecutable =
+            new File( System.getProperty( "java.home" ) +
                               "/../bin/javac" + extension );
 
         if( jExecutable.exists() && !Os.isFamily( Os.OS_FAMILY_NETWARE ) )
@@ -760,7 +694,7 @@ public class Javac extends MatchingTask
      */
     protected void resetFileLists()
     {
-        compileList = new File[ 0 ];
+        m_compileList = new File[ 0 ];
     }
 
     /**
@@ -783,39 +717,35 @@ public class Javac extends MatchingTask
 
         if( newFiles.length > 0 )
         {
-            File[] newCompileList = new File[ compileList.length +
+            File[] newCompileList = new File[ m_compileList.length +
                 newFiles.length ];
-            System.arraycopy( compileList, 0, newCompileList, 0,
-                              compileList.length );
+            System.arraycopy( m_compileList, 0, newCompileList, 0,
+                              m_compileList.length );
             System.arraycopy( newFiles, 0, newCompileList,
-                              compileList.length, newFiles.length );
-            compileList = newCompileList;
+                              m_compileList.length, newFiles.length );
+            m_compileList = newCompileList;
         }
     }
 
-    private String determineCompiler()
+    protected String determineCompiler()
     {
         Object compiler = getContext().getProperty( "build.compiler" );
-
-        if( !"false".equals( fork ) )
+        if( compiler != null )
         {
-            if( compiler != null )
+            if( isJdkCompiler( compiler.toString() ) )
             {
-                if( isJdkCompiler( compiler.toString() ) )
-                {
-                    final String message = "Since fork is true, ignoring build.compiler setting.";
-                    getLogger().warn( message );
-                    compiler = "extJavac";
-                }
-                else
-                {
-                    getLogger().warn( "Since build.compiler setting isn't classic or modern, ignoring fork setting." );
-                }
+                final String message = "Since fork is true, ignoring build.compiler setting.";
+                getLogger().warn( message );
+                compiler = "extJavac";
             }
             else
             {
-                compiler = "extJavac";
+                getLogger().warn( "Since build.compiler setting isn't classic or modern, ignoring fork setting." );
             }
+        }
+        else
+        {
+            compiler = "extJavac";
         }
 
         if( compiler == null )
@@ -831,35 +761,4 @@ public class Javac extends MatchingTask
         }
         return compiler.toString();
     }
-
-    /**
-     * Adds an "implementation" attribute to Commandline$Attribute used to
-     * filter command line attributes based on the current implementation.
-     *
-     * @author RT
-     */
-    public class ImplementationSpecificArgument
-        extends Argument
-    {
-
-        private String impl;
-
-        public void setImplementation( String impl )
-        {
-            this.impl = impl;
-        }
-
-        public String[] getParts()
-        {
-            if( impl == null || impl.equals( determineCompiler() ) )
-            {
-                return super.getParts();
-            }
-            else
-            {
-                return new String[ 0 ];
-            }
-        }
-    }
-
 }
