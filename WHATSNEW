@@ -18,8 +18,8 @@ Fixed bugs:
 
 * <junit> will now produce output when a test times out as well.
 
-  Other changes:
-  --------------
+* <replace> would count some internal character replacements when
+  reporting the number of replaced tokens.
 
 
 Changes from Ant 1.5.1Beta1 to 1.5.1
