@@ -21,7 +21,6 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import org.apache.tools.ant.types.Mapper;
-import org.apache.tools.ant.util.FileNameMapper;
 
 /**
  * A filenamemapper that contains other filename mappers.
@@ -50,7 +49,7 @@ public class ContainerMapper implements FileNameMapper {
     public void addConfiguredMapper(Mapper mapper) {
         mappers.add(mapper.getImplementation());
     }
-                    
+
     /**
      * Set the chained attribute.
      *
