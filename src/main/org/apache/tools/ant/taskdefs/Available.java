@@ -143,7 +143,14 @@ public class Available extends Task {
             if (loader != null) {
                 loader.loadClass(classname);
             } else {
-                this.getClass().getClassLoader().loadClass(classname);
+                ClassLoader l = this.getClass().getClassLoader();
+                // Can return null to represent the bootstrap class loader.
+                // see API docs of Class.getClassLoader.
+                if (l != null) {
+                    l.loadClass(classname);
+                } else {
+                    Class.forName(classname);
+                }
             }
             return true;
         } catch (ClassNotFoundException e) {
